@@ -525,10 +525,10 @@ function LoadKeyHandler()
               onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">&nbsp;All
       </td> -->
       <td align=left >
-          <input type="radio" name="rVersion" value="All" <%if(sVersion.equals("All")){%> checked <%}%>
+          <input type="radio" name="rVersion" value="All" onclick="javascript:removeOtherText();" <%if(sVersion.equals("All")){%> checked <%}%>
               onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
           All&nbsp;
-          <input type="radio" name="rVersion" value="Yes" <%if(sVersion.equals("Yes")){%> checked <%}%>
+          <input type="radio" name="rVersion" value="Yes" onclick="javascript:removeOtherText();" <%if(sVersion.equals("Yes")){%> checked <%}%>
           onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
           Latest&nbsp;
           <input type="radio" name="rVersion" value="Other" <% if (sVersion.equals("Other")) { %> checked <% } %>

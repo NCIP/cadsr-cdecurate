@@ -1887,8 +1887,8 @@ public class InsACService implements Serializable
             {
               dec.setDEC_OCL_IDSEQ(sOCL_IDSEQ);
               dec.setDEC_OC_CONDR_IDSEQ(sOCL_CONDR_IDSEQ);
+              req.setAttribute("OCL_IDSEQ", sOCL_IDSEQ);
             }
-            req.setAttribute("OCL_IDSEQ", sOCL_IDSEQ);
             if (sReturnCode != null && !sReturnCode.equals(""))  // && !sReturnCode.equals("API_OC_500"))
             {
                 this.storeStatusMsg(sReturnCode + " : Unable to create Object Class ");
@@ -2043,6 +2043,7 @@ public class InsACService implements Serializable
             CStmt.setString(2,sContextID);
              // Now we are ready to call the stored procedure
             boolean bExcuteOk = CStmt.execute();
+            sReturnCode = CStmt.getString(3);
             sPROPL_IDSEQ = CStmt.getString(4);
             if(sPROPL_IDSEQ == null) sPROPL_IDSEQ = "";
             String sPROPL_CONDR_IDSEQ = CStmt.getString(21);
@@ -2051,10 +2052,8 @@ public class InsACService implements Serializable
             {
               dec.setDEC_PROPL_IDSEQ(sPROPL_IDSEQ);
               dec.setDEC_PROP_CONDR_IDSEQ(sPROPL_CONDR_IDSEQ);
-            }
-            req.setAttribute("PROPL_IDSEQ", sPROPL_IDSEQ);
-            
-            sReturnCode = CStmt.getString(3);
+              req.setAttribute("PROPL_IDSEQ", sPROPL_IDSEQ);
+            }            
             session.setAttribute("newProperty", "");
             if (sReturnCode != null && !sReturnCode.equals(""))  // && !sReturnCode.equals("API_PROP_500"))
             {
@@ -2224,15 +2223,16 @@ public class InsACService implements Serializable
             if(sREP_CONDR_IDSEQ == null) sREP_CONDR_IDSEQ = "";
             session.setAttribute("newRepTerm", "");
        
-            if(VD != null)
+            if(VD != null  && (sReturnCode == null || sReturnCode.equals("") || sReturnCode.equals("API_REP_500")))
             {
               VD.setVD_REP_IDSEQ(sREP_IDSEQ);
               VD.setVD_REP_CONDR_IDSEQ(sREP_CONDR_IDSEQ);
+              req.setAttribute("REP_IDSEQ", sREP_IDSEQ);
             }
-            req.setAttribute("REP_IDSEQ", sREP_IDSEQ);
             if (sReturnCode != null && !sReturnCode.equals("")  && !sReturnCode.equals("API_REP_500"))
             {
                 this.storeStatusMsg("\\t " + sReturnCode + " : Unable to update Rep Term.");
+                m_classReq.setAttribute("retcode", sReturnCode);
             }
           }
        }

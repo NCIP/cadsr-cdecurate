@@ -9,7 +9,7 @@
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/popupMenus.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
 <%@ page import="com.scenpro.NCICuration.*" %>
-<%@ page import= "java.util.*" %>
+<%@ page import= "java.util.*"%>
 <%@ page import= "org.apache.log4j.*" %>
 <%
    Logger logger = Logger.getLogger("jsp");
@@ -1035,75 +1035,78 @@ var SelectAllOn = <%=sSelectAll%>;
   <!-- stores results ID and preferred Names -->
 <select size="1" name="hiddenSearch" style="visibility:hidden;width:50">
 <%   
-                      vSearchName = (Vector)session.getAttribute("SearchName");
-                      if (vSearchName == null)  vSearchName = new Vector();
-                      for (int i = 0; vSearchID.size()>i; i++)
-                      {
-                        String sID = (String)vSearchID.elementAt(i);
-                        String sName = "";
-                        if (vSearchName.size() > i)
-                          sName = (String)vSearchName.elementAt(i);
-                        else
-                          sName = "";
-%>
-                      <option value="<%=sID%>"><%=sName%></option>
-<%
-                      }
-%>
+      vSearchID = (Vector)session.getAttribute("SearchID");
+      if (vSearchID == null)  vSearchID = new Vector();
+      vSearchName = (Vector)session.getAttribute("SearchName");
+      if (vSearchName == null)  vSearchName = new Vector();
+      for (int i = 0; vSearchID.size()>i; i++)
+      {
+        String sID = (String)vSearchID.elementAt(i);
+        String sName = "";
+        if (vSearchName.size() > i)
+          sName = (String)vSearchName.elementAt(i);
+        else
+          sName = "";
+  %>
+      <option value="<%=sID%>"><%=sName%></option>
+  <%
+      }
+  %>
   </select>
   <!-- stores results longname and Designated IDs -->
 <select size="1" name="hiddenName" style="visibility:hidden;">
 <% 
-
-                      for (int i = 0; vSearchASL.size()>i; i++)
-                      {
-                        String sASL = (String)vSearchASL.elementAt(i);
-                          if(sASL == null) sASL = "";
+    vSearchASL = (Vector)session.getAttribute("SearchASL");
+    if (vSearchASL == null)  vSearchASL = new Vector();
+    for (int i = 0; vSearchASL.size()>i; i++)
+    {
+      String sASL = (String)vSearchASL.elementAt(i);
+        if(sASL == null) sASL = "";
 %>
-                      <option value="<%=sASL%>"><%=sASL%></option>
+    <option value="<%=sASL%>"><%=sASL%></option>
 <%
-                      }
+    }
 %>
 </select>
  <!-- stores results longname and Designated IDs -->
 <select size="1" name="hiddenName2" style="visibility:hidden;width:100;">
 
-<%                    for (int i = 0; vSearchLongName.size()>i; i++)
-                      {
-                        String sName = (String)vSearchLongName.elementAt(i);
+<%    for (int i = 0; vSearchLongName.size()>i; i++)
+      {
+        String sName = (String)vSearchLongName.elementAt(i);
 %>
-                      <option value="<%=sName%>"><%=sName%></option>
+      <option value="<%=sName%>"><%=sName%></option>
 <%
-                      }
+      }
 %>
 </select>
 <!-- store definition and context here to use it later in javascript -->
 <select size="1" name="hiddenDefSource" style="visibility:hidden;width:100">
 <%
-                      String sDef = "";
-                      for (int i = 0; vSearchDefinitionAC.size()>i; i++)
-                      {
-                          sDef = (String)vSearchDefinitionAC.elementAt(i);
-                          String sUsed = "";
-                          if (vSearchUsedContext.size() > i)
-                             sUsed = (String)vSearchUsedContext.elementAt(i);
-                          if (sUsed == null) sUsed = "";
+      String sDef = "";
+      for (int i = 0; vSearchDefinitionAC.size()>i; i++)
+      {
+          sDef = (String)vSearchDefinitionAC.elementAt(i);
+          String sUsed = "";
+          if (vSearchUsedContext.size() > i)
+             sUsed = (String)vSearchUsedContext.elementAt(i);
+          if (sUsed == null) sUsed = "";
 %>
-                      <option value="<%=sUsed%>"><%=sDef%></option>
+      <option value="<%=sUsed%>"><%=sDef%></option>
 <%
-                      }
+      }
 %>
   </select>
 <select size="1" name="hiddenMeanDescription" style="visibility:hidden;width:100">
 <%
-                      String sDesc = "";
-                      for (int i = 0; vSearchMeanDescription.size()>i; i++)
-                      {
-                          sDesc = (String)vSearchMeanDescription.elementAt(i);
+      String sDesc = "";
+      for (int i = 0; vSearchMeanDescription.size()>i; i++)
+      {
+          sDesc = (String)vSearchMeanDescription.elementAt(i);
 %>
-                      <option value="<%=sDesc%>"><%=sDesc%></option>
+      <option value="<%=sDesc%>"><%=sDesc%></option>
 <%
-                      }
+      }
 %>
   </select>
 <select size="1" name="hiddenPVValue" style="visibility:hidden;">
