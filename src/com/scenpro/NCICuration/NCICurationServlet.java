@@ -1485,8 +1485,10 @@ logger.debug(pageVD.getAC_PREF_NAME_TYPE() + " pref " + pageVD.getVD_PREFERRED_N
                {
                   DECBean = serAC.getDECAttributes(DECBean, "Edit", "Edit");   //get DEC other Attributes
                   //store the bean in the session attribute
-                  session.setAttribute("m_DEC", DECBean);                      
-                  session.setAttribute("oldDECBean", DECBean);
+                  session.setAttribute("m_DEC", DECBean); 
+                  DEC_Bean oldDEC = new DEC_Bean();
+                  oldDEC = oldDEC.cloneDEC_Bean(DECBean);
+                  session.setAttribute("oldDECBean", oldDEC);
                   ForwardJSP(req, res, "/EditDECPage.jsp");   //forward to editDEC page
                }
                //go back to editDE with message if no permission
@@ -1564,7 +1566,10 @@ logger.debug(pageVD.getAC_PREF_NAME_TYPE() + " pref " + pageVD.getVD_PREFERRED_N
                   VDBean = serAC.getVDAttributes(VDBean, "Edit", sMenuAction);   //get VD other Attributes
 
                   session.setAttribute("m_VD", VDBean);
-                  session.setAttribute("oldVDBean", VDBean);
+                  VD_Bean oldVD = new VD_Bean();
+                  oldVD = oldVD.cloneVD_Bean(VDBean);
+                  session.setAttribute("oldVDBean", oldVD);
+                 // session.setAttribute("oldVDBean", VDBean);
                   ForwardJSP(req, res, "/EditVDPage.jsp");   //forward to editVD page
                }
                //go back to editDE with message if no permission
@@ -5102,7 +5107,7 @@ logger.debug(pageVD.getAC_PREF_NAME_TYPE() + " pref " + pageVD.getVD_PREFERRED_N
       DEC_Bean oldDECBean = (DEC_Bean)session.getAttribute("oldDECBean");
       String sMenu = (String)session.getAttribute("MenuAction");
       InsACService insAC = new InsACService(req, res, this);
-      doInsertDECBlocks(req, res, null);  //insert any building blocks from Thesaurus first
+     // doInsertDECBlocks(req, res, null);  //insert any building blocks from Thesaurus first
 
       //udpate the status message with DEC name and ID
       insAC.storeStatusMsg("Data Element Concept Name : " + DECBean.getDEC_LONG_NAME());
@@ -5170,7 +5175,7 @@ logger.debug(pageVD.getAC_PREF_NAME_TYPE() + " pref " + pageVD.getVD_PREFERRED_N
       DEC_Bean DECBean = (DEC_Bean)session.getAttribute("m_DEC");
       DEC_Bean oldDECBean = (DEC_Bean)session.getAttribute("oldDECBean");
       String sMenu = (String)session.getAttribute("MenuAction");
-      doInsertDECBlocks(req, res, null);  //insert any building blocks from Thesaurus first
+  //    doInsertDECBlocks(req, res, null);  //insert any building blocks from Thesaurus first
       String ret = insAC.setDEC("INS", DECBean, "New", oldDECBean);
       //add new dec attributes to de bean and forward to create de page if success.
       if ((ret == null) || ret.equals(""))
@@ -7078,7 +7083,10 @@ logger.debug("doInsertDECBlocks");
        m_DEC.setDEC_ASL_NAME("DRAFT NEW");
        m_DEC.setAC_PREF_NAME_TYPE("SYS");
        session.setAttribute("m_DEC", m_DEC);
-       session.setAttribute("oldDECBean", m_DEC);
+       DEC_Bean oldDEC = new DEC_Bean();
+       oldDEC = oldDEC.cloneDEC_Bean(m_DEC);
+       session.setAttribute("oldDECBean", oldDEC);
+      // session.setAttribute("oldDECBean", m_DEC);
        ForwardJSP(req, res, "/CreateDECPage.jsp");
   }
 
@@ -7302,7 +7310,10 @@ logger.debug("doInsertDECBlocks");
        }
 
        session.setAttribute("m_VD", m_VD);
-       session.setAttribute("oldVDBean", m_VD);
+       VD_Bean oldVD = new VD_Bean();
+       oldVD = oldVD.cloneVD_Bean(m_VD);
+       session.setAttribute("oldVDBean", oldVD);
+       //session.setAttribute("oldVDBean", m_VD);
        ForwardJSP(req, res, "/CreateVDPage.jsp");
   }
 
