@@ -1,0 +1,227 @@
+  body
+  {
+     background-color: #FFFFFF;
+     font-color: #000000;
+     font-family: Arial, Helvetica, sans-serif;
+     font-size: 16px;
+  }
+
+
+  h2.main
+  {
+     color:#660066;
+     font-size: 22px;
+     font-family: Arial Helvetica, sans-serif;
+     margin: 0 0 0 .25in;
+  }
+
+  table
+  {
+     border: 0;
+     cellspacing=0;
+     cellpadding=0;
+     width="800";
+     col-width="60%";
+     col-width="40%";
+  }
+
+
+  td, th
+  {
+     font-family: Arial, Helvetica, sans-serif;
+     font-size: 16px;
+     padding: 4px 4px 2px 4px;
+  }
+
+  td.TitleTopic
+  {
+     font-family: Arial, Helvetica, sans-serif;
+     font-size: 24px;
+     font-weight: bold;
+     padding:  20px 4px 10px 4px;  
+  }
+
+  td.mainTopic
+  {
+     font-family: Arial, Helvetica, sans-serif;
+     font-size: 18px;
+     font-weight: bold;
+     padding:  20px 4px 10px 4px;  
+  }
+
+  td.subTopic1
+  {
+     font-family: Arial, Helvetica, sans-serif;
+     font-size: 18px;
+     font-weight: bold;
+     padding:  15px 4px 5px 16px;
+  }
+
+  td.subTopic2
+  {
+     font-family: Arial, Helvetica, sans-serif;
+     font-size: 18px;
+     font-weight: bold;
+     padding:  15px 4px 5px 28px;
+  }
+
+  td.subTopic3
+  {
+     font-family: Arial, Helvetica, sans-serif;
+     font-size: 18px;
+     font-weight: bold;
+     padding:  15px 4px 5px 40px;
+  }
+
+  td.subTopic4
+  {
+     font-family: Arial, Helvetica, sans-serif;
+     font-size: 18px;
+     font-weight: bold;
+     padding:  15px 4px 5px 52px;
+  }
+
+  td.image
+  {
+     align: left;
+     text-align: bottom;
+  }
+  
+  td.imageText
+  {
+     color: #333399;
+     font-weight: bold;
+     vertical-align: text-top;
+     text-align: center;
+     padding: 0px 0px 20px 0px;
+  }
+
+  span.standOut
+  {
+     color: red;
+     font.weight: bold;
+  }
+
+  span.red
+  {
+     color: red;
+  }
+
+  span.navigation
+  {
+     color: #333399;
+  }
+
+  span.valid
+  {
+     color: #339966;
+  }
+
+  span.then
+  {
+     color: #333399;
+     font-family:Wingdings
+  }
+
+  span.figureText
+  {
+     color: #333399;
+     font.weight: bold;
+  }
+
+  p.returnLink
+  {
+     text-align: right;
+  }
+
+  td.bullet
+  {
+     border: solid silver 1.0pt;
+     background: #666699;
+     padding: 0in 2.15pt 0in 2.15pt;
+     color: white;
+     font-family: Arial, Helvetica, sans-serif;
+     font-size: 20px;
+     font.weight: bold;
+     height: 34;
+  }
+
+  tr
+  {
+     padding: 0 0 0 5px;
+  }
+
+  tr.firstRow
+  {
+     padding: 10px 0 0 5px;
+  }
+
+  tr.lastRow
+  {
+     padding: 0 0 10px 5px;
+  }
+
+  textarea
+  {
+     font-family: Arial, Helvetica, sans-serif;
+     font-size: 12px;
+  }
+
+
+  // Specific to the login pages
+
+  table.login
+  {
+     background-color: #CCCCCC;
+	  font-family: Arial, Helvetica, sans-serif;
+	  font-size: 14px;
+     font-weight: bold;
+  }
+
+  td.loginHdr
+  {
+     background-color: #CCCCCC;
+	  font-family: Arial, Helvetica, sans-serif;
+	  font-size: 16px;
+     font-weight: bold;
+  }
+
+  input.smallText
+  {
+     font-size: 8pt;
+  }
+
+  a:link
+  {
+     color:blue;
+  }
+
+  a:visited
+  {
+     color:purple
+  }
+
+  p.indentLevel1
+  { 
+     text-indent: 25px;
+  }
+
+  p.indentLevel2
+  { 
+     text-indent: 50px;
+  }
+
+  p.indentLevel3
+  { 
+     text-indent: 75px;
+  }
+
+  p.indentLevel4
+  { 
+     text-indent: 100px;
+  }
+
+  p.indentLevel5
+  { 
+     text-indent: 125px;
+  }
