@@ -115,7 +115,6 @@
         
    function ShowUseSelection(vCompAction)
    {
-//alert(" sComp: " + sComp);  //MenuAction for version like edit?
       if(vCompAction == "BEDisplay") vCompAction = "searchForCreate";
       var LongName = "";
       var PrefName  = "";
@@ -1072,7 +1071,7 @@ function createNames(acType)
       {
           document.searchResultsForm.editSelectedBtn.disabled=true;
           document.searchResultsForm.btnSubConcepts.disabled=true;
-          document.searchResultsForm.btnSubConcepts.disabled=true;
+          document.searchResultsForm.btnSuperConcepts.disabled=true;
          // if (varSearchAC == "EVSValueMeaning" || varSearchAC == "ParentConceptVM")
          //    StoreSelectedRow("false", rowNo);
           if (checked)
@@ -1118,7 +1117,15 @@ function createNames(acType)
       sCCodeDB = document.searchResultsForm.hiddenCCodeDB[rowNo].value;  //evs vocabulary
       sCCode = document.searchResultsForm.hiddenCCode[rowNo].value;   //evs code
       if(sCCode == null || sCCode == "null") sCCode = "";
-      if(sCCodeDB == null || sCCodeDB == "null") sCCodeDB = "";     
+      if(sCCodeDB == null || sCCodeDB == "null") sCCodeDB = "";   
+      
+      //disable sub concept and super concept if meta or cadsr
+      if (sCCodeDB == "caDSR" || sCCodeDB == "NCI Metathesaurus")
+      {
+        document.searchResultsForm.btnSuperConcepts.disabled=true;
+        document.searchResultsForm.btnSubConcepts.disabled=true;
+      } 
+      
    }
 
   function SelectAll(numRecs)
