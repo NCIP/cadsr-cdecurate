@@ -19,7 +19,15 @@
     </init-param>
     <init-param>
       <param-name>server</param-name>
-      <param-value>CBPROD</param-value>
+      <param-value>jdbc:oracle:oci:@CBPROD.nci.nih.gov</param-value>
+    </init-param>
+    <init-param>
+      <param-name>iMinConns</param-name>
+      <param-value>1</param-value>
+    </init-param>
+    <init-param>
+      <param-name>iMaxConns</param-name>  
+      <param-value>5</param-value>
     </init-param>
     <init-param>
       <param-name>protocol</param-name>
@@ -35,11 +43,11 @@
     </init-param>
     <init-param>
       <param-name>username</param-name>
-      <param-value>pfowler</param-value>
+      <param-value>web</param-value>
     </init-param>
     <init-param>
       <param-name>password</param-name>
-      <param-value>pfowler</param-value>
+      <param-value>readonly</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
 
@@ -58,10 +66,9 @@
     <session-timeout>45</session-timeout>
   </session-config>
 
- <welcome-file-list>
-    <welcome-file>jsp/LoginSplash.jsp</welcome-file>
+  <welcome-file-list>
+    <welcome-file>LoginE.jsp</welcome-file>
   </welcome-file-list>
-
 
   <!-- Application Tag Library Descriptor -->
   <taglib>
@@ -76,9 +83,6 @@
     <form-error-page>LoginE.jsp</form-error-page>
     </form-login-config>
   </login-config>
-
-
- 
 
 </web-app>
 
