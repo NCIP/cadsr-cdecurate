@@ -534,6 +534,13 @@ function selectAttr(idx, vAttr)
     document.searchParmsForm.rVersion[2].checked = true;
   }
   
+  //remove the other text when all or latest was selected
+  function removeOtherText()
+  {
+    if (document.searchParmsForm.tVersion != null)
+      document.searchParmsForm.tVersion.value = "";
+  }
+  
   //do conceptual domain searh for dec or vd search
   function doCDSearch()
   {

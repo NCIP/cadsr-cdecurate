@@ -799,7 +799,7 @@
 		   serverName = serverName.toLowerCase();
        cdeServer = serverName;   //defaults to curation tool server
        if (serverName == "localhost")
-          cdeServer = "cdebrowser-dev.nci.nih.gov";
+          cdeServer = "cdebrowser-qa.nci.nih.gov";
        else if (serverName == "protocol.scenpro.net")
           cdeServer = "cdebrowser-dev.nci.nih.gov";
 		   else if (serverName == "ncicb-dev.nci.nih.gov" || serverName == "cdecurate-dev.nci.nih.gov")

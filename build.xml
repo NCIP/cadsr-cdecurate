@@ -49,7 +49,7 @@
 
     <!-- init target -->
     <target name="init">
-        <echo message="This build script must be run with the name of the desired target: build-proto, build-dev, build-qa, build-stage, build-prod."/>
+        <echo message="This build script must be run with the name of the desired target: build-local, build-dev, build-qa, build-stage, build-prod."/>
     </target>
 
     <!-- make temporary build directory  -->
@@ -143,6 +143,7 @@
 
     <!-- do the antcall for local environ -->
     <target name="build-local">
+        <echo message="Building : local war file."/>
         <!-- copy qa caBIO.jar to lib directory and copy local web.xml to conf/web-->
         <copy file="${m_lib}/cabio-qa/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>
         <copy file="conf/local/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
@@ -155,6 +156,7 @@
 
     <!-- do the antcall for dev environ -->
     <target name="build-dev">
+        <echo message="Building : dev war file."/>
         <!-- copy qa cabio.jar to lib directory and copy dev web.xml to conf/web-->
         <copy file="${m_lib}/cabio-qa/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>
         <copy file="conf/dev/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
@@ -167,6 +169,7 @@
 
     <!-- do the antcall for qa environ -->
     <target name="build-qa">
+        <echo message="Building : qa war file."/>
         <!-- copy qa cabio.jar to lib directory and copy qa web.xml to conf/web-->
         <copy file="${m_lib}/cabio-qa/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>
         <copy file="conf/qa/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
@@ -179,6 +182,7 @@
 
     <!-- do the antcall for stage environ -->
     <target name="build-stage">
+        <echo message="Building : stage war file."/>
         <!-- copy stage cabio.jar to lib directory and copy stage web.xml to conf/web-->
         <copy file="${m_lib}/cabio-stage/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>
         <copy file="conf/stage/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
@@ -191,6 +195,7 @@
 
     <!-- do the antcall for prod environ -->
     <target name="build-prod">
+        <echo message="Building : prod war file."/>
         <!-- copy stage cabio.jar to lib directory and copy prod web.xml to conf/web-->
         <copy file="${m_lib}/cabio-stage/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>
         <copy file="conf/prod/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>

@@ -601,7 +601,7 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
     String sSearchAC = (String)session.getAttribute("creSearchAC");
     if(sSearchAC == null) sSearchAC = "";
     Integer id = new Integer(0);
-// System.out.println("expandNode dtsVocab: " + dtsVocab + " nodeName: " + nodeName + "nodeCode: " + nodeCode + " m_dtsVocab: " + m_dtsVocab + " sSearchAC: " + sSearchAC);
+ System.out.println("expandNode dtsVocab: " + dtsVocab + " nodeName: " + nodeName + "nodeCode: " + nodeCode + " m_dtsVocab: " + m_dtsVocab + " sSearchAC: " + sSearchAC);
     if(sSearchAC.equals("ParentConceptVM"))
       id = (Integer)m_treesHashParent.get("nodeID");
     else
@@ -1193,6 +1193,7 @@ public void collapseAllNodes()
       if(vSuperConceptNames != null && vSuperConceptNames.size() > 0)
       {
         sSuperConceptName = (String)vSuperConceptNames.elementAt(0);
+System.out.println("openTreeToParentConcept sSuperConceptName: " + sSuperConceptName);
         if(sSuperConceptName.equals(parentName))
         {
           sRoot = "true";
@@ -1355,6 +1356,7 @@ public void collapseAllNodes()
     while(stackSuperConcepts.size()>0)
     {
       sSuperConceptName = (String)stackSuperConcepts.pop();
+System.out.println("expandParentTreeToConcept: " + sSuperConceptName + " parentName: " + parentName);
       rendHTML = this.expandNode(sSuperConceptName, m_dtsVocab, "No", sCCode, sNameToFindInTree);
     }
     Tree baseTree = (Tree)m_treesHashParent.get("parentTree" + parentName);

@@ -19,7 +19,7 @@
     </init-param>
     <init-param>
       <param-name>server</param-name>
-      <param-value>jdbc:oracle:oci:@CBDEV.nci.nih.gov</param-value>
+      <param-value>jdbc:oracle:oci:@CBSTG.nci.nih.gov</param-value>
     </init-param>
     <init-param>
       <param-name>iMinConns</param-name>
@@ -47,7 +47,7 @@
     </init-param>
     <init-param>
       <param-name>password</param-name>
-      <param-value>jjuser</param-value>
+      <param-value>rulive01</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
 
