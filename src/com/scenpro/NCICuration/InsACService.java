@@ -1397,7 +1397,7 @@ public class InsACService implements Serializable
         String sOCName = "";
         if (dec.getDEC_OCL_NAME() != null) sOCName = dec.getDEC_OCL_NAME();
         if(oldDEC != null) sOldOCName = oldDEC.getDEC_OCL_NAME();
-        if((sOCName == null || sOCName.equals("")) && sAction.equals("UPD")&& !sOCName.equals(sOldOCName))
+        if((sOCName == null || sOCName.equals("")) && sAction.equals("UPD") && !sOCName.equals(sOldOCName))
         {
           sOCID = " ";
           dec.setDEC_OCL_IDSEQ("");
