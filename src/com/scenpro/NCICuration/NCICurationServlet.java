@@ -5491,7 +5491,9 @@ logger.debug("doInsertDECBlocks");
         //add the new one on the list.
         if (!isCreated)
         {
-          session.setAttribute("statusMessage", "Permissible Value created/updated successfully.");
+          session.setAttribute("statusMessage", "Permissible Value(s) updated successfully, " + 
+              "but will not be \\n associated to the Value Domain or written to the database \\n" + 
+              " until the Value Domain has been successfully submitted.");
           if (sPVSubmit.equals("createPV"))
           {
             m_PV.setVP_SUBMIT_ACTION("INS");
