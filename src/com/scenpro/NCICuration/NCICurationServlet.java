@@ -1,6 +1,6 @@
 package com.scenpro.NCICuration;
 
-
+//import files
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -667,6 +667,7 @@ public class NCICurationServlet extends HttpServlet
       GetACService getAC = new GetACService(req, res, this);  //
       HttpSession session = req.getSession();
       clearSessionAttributes(req, res);
+      this.clearBuildingBlockSessionAttributes(req, res);
       String context = (String)session.getAttribute("sDefaultContext");  // from Login.jsp
       String ContextInList = (String)session.getAttribute("ContextInList");
       session.setAttribute("MenuAction", "nothing");
@@ -1685,6 +1686,7 @@ logger.debug(pageVD.getAC_PREF_NAME_TYPE() + " pref " + pageVD.getVD_PREFERRED_N
       //open the create DE page or search result page
       else if (sAction.equals("backToDE"))
       {
+         this.clearBuildingBlockSessionAttributes(req, res);
          if (sMenuAction.equals("NewDECTemplate") || sMenuAction.equals("NewDECVersion"))
          {
             DEC_Bean DECBean = (DEC_Bean)session.getAttribute("m_DEC");
@@ -1922,6 +1924,7 @@ logger.debug(pageVD.getAC_PREF_NAME_TYPE() + " pref " + pageVD.getVD_PREFERRED_N
       else if (sAction.equals("backToDE"))
       {
          this.clearCreateSessionAttributes(req, res);
+         this.clearBuildingBlockSessionAttributes(req, res);
          if (sMenuAction.equals("NewVDTemplate") || sMenuAction.equals("NewVDVersion"))
          {
             VD_Bean VDBean = (VD_Bean)session.getAttribute("m_VD");
@@ -2055,8 +2058,8 @@ logger.debug(pageVD.getAC_PREF_NAME_TYPE() + " pref " + pageVD.getVD_PREFERRED_N
       //open the Edit DE page or search page with
       else if (sAction.equals("backToDE"))
       {
-      //System.out.println(sOriginAction + "backtode" + sMenuAction);
           //forward the page to editDE if originated from DE
+         this.clearBuildingBlockSessionAttributes(req, res);
          if (sOriginAction.equalsIgnoreCase("editVDfromDE"))
             ForwardJSP(req, res, "/EditDEPage.jsp");
          //forward the page to search if originated from Search
@@ -9890,6 +9893,7 @@ logger.debug("doInsertDECBlocks");
   {
     HttpSession session = req.getSession();
     clearSessionAttributes(req, res);
+    this.clearBuildingBlockSessionAttributes(req, res);
     String sMAction = (String)req.getParameter("hidMenuAction");
     if (sMAction == null) sMAction = "nothing";
     String searchAC = "DataElement";

@@ -4130,7 +4130,7 @@ public class GetACSearch implements Serializable
     logger.info(m_servlet.getLogMessage(m_classReq, "do_caDSRSearch", "end search", exDate,  new java.util.Date()));
   }  //endOC search
   
- /**
+/**
    * To get resultSet from database for DataElementConcept Component called from getACKeywordResult method.
    *
    * calls oracle stored procedure
@@ -4233,7 +4233,6 @@ public class GetACSearch implements Serializable
     }
     return  sDEC;
   }  //end getDECUsing
-
  /**
    * @param condr_idseq.
    * @return sCUIString
@@ -5849,8 +5848,8 @@ public void do_MetaCodeSearch(String termStr, String source)
           }
           if(dlcsc != null && prefName != null)
           {
-            dlcsc.setSearchTerm(prefName);
-            dlc = dlcsc.getConceptByName(dlcsc);
+            //dlcsc.setSearchTerm(prefName);
+            //dlc = dlcsc.getConceptByName(dlcsc);
             if(dtsVocab.substring(0,2).equalsIgnoreCase("GO") || dtsVocab.substring(0,3).equalsIgnoreCase("NCI") 
             || dtsVocab.substring(0,3).equalsIgnoreCase("MGE") || dtsVocab.substring(0,3).equalsIgnoreCase("Med"))
             {
