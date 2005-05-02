@@ -80,7 +80,25 @@
 
     sObjClass = serUtil.parsedString(sObjClass);    //call the function to handle doubleQuote
     sPropClass = serUtil.parsedString(sPropClass);    //call the function to handle doubleQuote
-    
+
+    boolean nameTypeChange = false;
+    String sNewOC = (String)session.getAttribute("newObjectClass");
+    if (sNewOC == null) sNewOC = "";
+    if(sNewOC.equals("true")) nameTypeChange = true;
+    String sNewProp = (String)session.getAttribute("newProperty");
+    if (sNewProp == null) sNewProp = "";
+    if(sNewProp.equals("true")) nameTypeChange = true;
+    String sRemoveOCBlock = (String)session.getAttribute("RemoveOCBlock");
+    if (sRemoveOCBlock == null) sRemoveOCBlock = "";
+    if(sRemoveOCBlock.equals("true")) nameTypeChange = true;
+    String sRemovePropBlock = (String)session.getAttribute("RemovePropBlock");
+    if (sRemovePropBlock == null) sRemovePropBlock = "";
+    if(sRemovePropBlock.equals("true")) nameTypeChange = true;
+    String sOCFont = "#000000", sPropFont = "#000000"; //black color
+    if(sOriginAction.equals("BlockEditDEC") && (sNewOC.equals("true") || sRemoveOCBlock.equals("true")) && !sObjClass.equals(""))
+      sPropFont = "#C0C0C0";  // property is grey color and not editable
+    if(sOriginAction.equals("BlockEditDEC") && (sNewProp.equals("true") || sRemovePropBlock.equals("true")) && !sPropClass.equals(""))
+      sOCFont = "#C0C0C0"; //object is grey color and not editable
     // javascript is handling the name change before it gets here
     sLongName = m_DEC.getDEC_LONG_NAME();
     sLongName = serUtil.parsedString(sLongName);    //call the function to handle doubleQuote
@@ -89,6 +107,7 @@
     sName = m_DEC.getDEC_PREFERRED_NAME();
     sName = serUtil.parsedString(sName);    //call the function to handle doubleQuote
     if (sName == null) sName = "";
+    if(sOriginAction.equals("BlockEditDEC")) sName = "";
     int sNameCount = sName.length();  
      String sPrefType = m_DEC.getAC_PREF_NAME_TYPE();
     if (sPrefType == null) sPrefType = ""; 
@@ -102,10 +121,6 @@
     
     String sDefinition = m_DEC.getDEC_PREFERRED_DEFINITION();
     if (sDefinition == null) sDefinition = "";
-   /* String sObjDefinition = m_DEC.getDEC_Obj_Definition();
-    if (sObjDefinition == null) sObjDefinition = "";
-    String sPropDefinition = m_DEC.getDEC_Prop_Definition();
-    if (sPropDefinition == null) sPropDefinition = ""; */
 
     String sVersion = m_DEC.getDEC_VERSION();
     if (sVersion == null) sVersion = "1.0";
@@ -345,13 +360,13 @@
     </tr>
       
     <tr height="25" valign="bottom">
-       <%if(sOriginAction.equals("BlockEditDEC")){%>
-        <td align=right><font color="#C0C0C0"><%=item++%>)</font></td>
-        <td><font color="#C0C0C0">Select Data Element Concept Name Components</font></td>
-      <% } else {%>
         <td align=right><%=item++%>)</td>
-        <td><font color="#FF0000">Select </font>Data Element Concept Name Components</td>
-      <% } %>
+        <!-- label to allow changing only one.  Grey out the other one if changed.-->
+        <td><font color="#FF0000">Select </font>Data Element Concept Name Components
+          <%if(sOriginAction.equals("BlockEditDEC")){%> 
+            (You may change either Object Class or Property. Click Clear button to restore to the original.)
+          <%}%>
+        </td>
     </tr>  
       <tr valign="bottom">
         <td></td>
@@ -364,67 +379,44 @@
                   <col width="20%"><col width="15%"><col width="14%"><col width="26%"><col width="10%"><col width="14%">
                   <tr height="8"><td></td></tr>
                   <tr>
-                   <%if(sOriginAction.equals("BlockEditDEC")){%>
-                    <td colspan="1" align="left"><font color="#C0C0C0">Object Class <br>Long Name</font></td>
-                    <% } else {%>
-                    <td colspan="1" align="left">Object Class <br>Long Name</td>
-                     <% } %>
+                    <td colspan="1" align="left"><font color="<%=sOCFont%>">Object Class <br>Long Name </font></td>
                     <td colspan="5" align="left">
                       <input type="text" name="txtObjClass" value="<%=sObjClass%>" style="width=95%" valign="top" readonly="readonly">
                     </td>
                   </tr>
                   <tr height="8"><td></td></tr>
                   <tr valign="bottom">
-                   <%if(sOriginAction.equals("BlockEditDEC")){%>
-                   
-                    <td align="left" valign="top"><font color="#C0C0C0">Qualifier <br> Concepts</font></td>
+                    <td align="left" valign="top"><font color="<%=sOCFont%>">Qualifier <br> Concepts</font></td>
                     <td align="center" valign="middle">
                      <!-- <input type="button" name="btnSerSecOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('ObjectQualifier', 'false');">-->
-                    <font color="#C0C0C0">Search</font>
+                      <%if (sOCFont.equals("#000000")) {%> 
+                        <font color="#FF0000">  <a href="javascript:SearchBuildingBlocks('ObjectQualifier', 'false')">Search</a></font>
+                      <%}%>
                     </td>
                     <td align="center" valign="middle">
                      <!-- <input type="button" name="btnRmSecOC" value="Remove" style="width:90%" onClick="javascript:removeQualifier();">-->
-                      <font color="#C0C0C0">Remove</font>  
+                      <%if (sOCFont.equals("#000000")) {%> 
+                        <font color="#FF0000"><a href="javascript:RemoveBuildingBlocks('ObjectQualifier')">Remove</a></font>  
+                      <%}%>
                     </td>
-                    <td align="left" valign="top"><font color="#C0C0C0">Primary <br>Concept</font></td>
+                    <td align="left" valign="top"><font color="<%=sOCFont%>">Primary <br>Concept</font></td>
                     <td align="center" valign="middle">
                       <!--<input type="button" name="btnSerPriOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('ObjectClass', 'false');">-->
-                       <font color="#C0C0C0">Search</font> 
+                      <%if (sOCFont.equals("#000000")) {%> 
+                        <font color="#FF0000"><a href="javascript:SearchBuildingBlocks('ObjectClass', 'false')">Search</a></font> 
+                      <%}%>
                     </td>
                     <td align="center" valign="middle">
                       <!--<input type="button" name="btnRmPriOC" value="Remove" style="width:90%" onClick="">-->
-                       <font color="#C0C0C0">Remove</font>  
+                      <%if (sOCFont.equals("#000000")) {%> 
+                        <font color="#FF0000"><a href="javascript:RemoveBuildingBlocks('ObjectClass')">Remove</a></font>  
+                      <%}%>
                     </td>
-                    
-                    <% } else {%>
-                    
-                    <td align="left" valign="top">Qualifier <br> Concepts</td>
-                    <td align="center" valign="middle">
-                     <!-- <input type="button" name="btnSerSecOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('ObjectQualifier', 'false');">-->
-                    <font color="#FF0000">  <a href="javascript:SearchBuildingBlocks('ObjectQualifier', 'false')">Search</a></font>
-                    </td>
-                    <td align="center" valign="middle">
-                     <!-- <input type="button" name="btnRmSecOC" value="Remove" style="width:90%" onClick="javascript:removeQualifier();">-->
-                      <font color="#FF0000"><a href="javascript:RemoveBuildingBlocks('ObjectQualifier')">Remove</a></font>  
-                    </td>
-                    <td align="left" valign="top">Primary <br>Concept</td>
-                    <td align="center" valign="middle">
-                      <!--<input type="button" name="btnSerPriOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('ObjectClass', 'false');">-->
-                      <font color="#FF0000"><a href="javascript:SearchBuildingBlocks('ObjectClass', 'false')">Search</a></font> 
-                    </td>
-                    <td align="center" valign="middle">
-                      <!--<input type="button" name="btnRmPriOC" value="Remove" style="width:90%" onClick="">-->
-                      <font color="#FF0000"><a href="javascript:RemoveBuildingBlocks('ObjectClass')">Remove</a></font>  
-                    </td>
-                    
-                     <% } %>
-                     
                   </tr>
                   <tr align="left">
                     <td colspan="3" valign="top">
-                         <select name="selObjectQualifier" size ="2" style="width=98%" valign="top" onClick="ShowEVSInfo('ObjectQualifier')"
-                          <%if(sOriginAction.equals("BlockEditDEC")){%>readonly<%}%>  onHelp = "showHelp('Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
-                        <%if(!sOriginAction.equals("BlockEditDEC")){%>
+                       <select name="selObjectQualifier" size ="2" style="width=98%" valign="top" onClick="ShowEVSInfo('ObjectQualifier')"
+                          onHelp = "showHelp('Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
                           <%if (vOCQualifierNames.size()<1) {%>  
                             <option value=""></option>
                           <% } else { %>
@@ -435,12 +427,11 @@
                             <option value="<%=sQualName%>"><%=sQualName%></option>
                             <%}%>
                           <%}%>
-                         <%}%>
                         </select>
                     </td>
                     <td colspan="3" valign="top">
                       <select name="selObjectClass" style="width=98%" valign="top" size="1" multiple
-                       <%if(sOriginAction.equals("BlockEditDEC")){%>readonly<%}%>  onHelp = "showHelp('Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
+                        onHelp = "showHelp('Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
                             <option value="<%=sObjClassPrimary%>"><%=sObjClassPrimary%></option>
                       </select>
                     </td>
@@ -456,76 +447,54 @@
                         onclick="javascript:SearchBuildingBlocks('ObjectClass', 'true')"></label></a></td>
                   </tr>  
                   <tr height="6"><td></td></tr>
-                   </table>
+                </table>
               </td>        
-            <td>
+              <td>
                 <table border="0" width="100%">
                   <col width="20%"><col width="15%"><col width="14%"><col width="26%"><col width="10%"><col width="14%">
                   <tr height="8"><td></td></tr>
                   <tr>
-                  <%if(sOriginAction.equals("BlockEditDEC")){%>
-                     <td colspan="1"><font color="#C0C0C0">Property <br>Long Name</font></td>
-                    <% } else {%>
-                    <td colspan="1">Property <br>Long Name</td>
-                    <% } %>
+                    <td colspan="1"><font color="<%=sPropFont%>">Property <br>Long Name</font></td>
                     <td colspan="5" align="left">
                       <input type="text" name="txtPropClass" value="<%=sPropClass%>" style="width=95%" valign="top" readonly="readonly">
                     </td>
                   </tr>
                   <tr height="6"><td></td></tr>
                   <tr valign="bottom">
-                   <%if(sOriginAction.equals("BlockEditDEC")){%>
-                   
-                    <td align="left" valign="top"><font color="#C0C0C0">Qualifier <br> Concepts</font></td>
+                    <td align="left" valign="top"><font color="<%=sPropFont%>">Qualifier <br> Concepts</font></td>
                     <td align="center" valign="middle">
                       <!--<input type="button" name="btnSerSecProp" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('PropertyQualifier', 'false');">-->
-                     <font color="#C0C0C0">Search</font>
+                      <%if (sPropFont.equals("#000000")) {%> 
+                        <font color="#FF0000"> <a href="javascript:SearchBuildingBlocks('PropertyQualifier', 'false')">Search</a></font>
+                      <%}%>
                     </td>
                     <td align="center" valign="middle">
                      <!-- <input type="button" name="btnRmSecProp" value="Remove" style="width:90%" onClick="javascript:removeQualifier();"> -->
-                      <font color="#C0C0C0">Remove</font>
+                      <%if (sPropFont.equals("#000000")) {%> 
+                        <font color="#FF0000"><a href="javascript:RemoveBuildingBlocks('PropertyQualifier')">Remove</a></font>
+                      <%}%>
                     </td>
-                    <td align="left" valign="top"><font color="#C0C0C0">Primary <br> Concept</font></td>
+                    <td align="left" valign="top"><font color="<%=sPropFont%>">Primary <br> Concept</font></td>
                     <td align="center" valign="middle">
                       <!-- <input type="button" name="btnSerPriOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('PropertyClass', 'false');">-->
-                      <font color="#C0C0C0">Search</font> 
+                      <%if (sPropFont.equals("#000000")) {%> 
+                        <font color="#FF0000"> <a href="javascript:SearchBuildingBlocks('PropertyClass', 'false')">Search</a></font> 
+                      <%}%>
                     </td>
                     <td align="center" valign="middle">
                       <!--<input type="button" name="btnRmPriOC" value="Remove" style="width:90%" onClick="">-->
-                      <font color="#C0C0C0">Remove</font>
+                      <%if (sPropFont.equals("#000000")) {%> 
+                        <font color="#FF0000"><a href="javascript:RemoveBuildingBlocks('Property')">Remove</a></font>
+                      <%}%>
                     </td>
-                    
-                    <% } else {%>
-                    <td align="left" valign="top">Qualifier <br> Concepts</td>
-                    <td align="center" valign="middle">
-                      <!--<input type="button" name="btnSerSecProp" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('PropertyQualifier', 'false');">-->
-                     <font color="#FF0000"> <a href="javascript:SearchBuildingBlocks('PropertyQualifier', 'false')">Search</a></font>
-                    </td>
-                    <td align="center" valign="middle">
-                     <!-- <input type="button" name="btnRmSecProp" value="Remove" style="width:90%" onClick="javascript:removeQualifier();"> -->
-                      <font color="#FF0000"><a href="javascript:RemoveBuildingBlocks('PropertyQualifier')">Remove</a></font>
-                    </td>
-                    <td align="left" valign="top">Primary <br> Concept</td>
-                    <td align="center" valign="middle">
-                      <!-- <input type="button" name="btnSerPriOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('PropertyClass', 'false');">-->
-                      <font color="#FF0000"> <a href="javascript:SearchBuildingBlocks('PropertyClass', 'false')">Search</a></font> 
-                    </td>
-                    <td align="center" valign="middle">
-                      <!--<input type="button" name="btnRmPriOC" value="Remove" style="width:90%" onClick="">-->
-                      <font color="#FF0000"><a href="javascript:RemoveBuildingBlocks('Property')">Remove</a></font>
-                    </td>
-                    
-                   <% } %>
-                     
                   </tr>
                          
                   <tr align="left">
                     <td colspan="3" valign="top">
                          <select name="selPropertyQualifier" size ="2" style="width=98%" valign="top" onClick="ShowEVSInfo('PropertyQualifier')"
-                          <%if(sOriginAction.equals("BlockEditDEC")){%>readonly<%}%> onHelp = "showHelp('Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
-                           <%if(!sOriginAction.equals("BlockEditDEC")){%> 
+                          onHelp = "showHelp('Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
                             <%if (vPropQualifierNames.size()<1) {%>  
-                            <option value=""></option>
+                                <option value=""></option>
                             <% } else { %>
                             <%for (int i = 0; vPropQualifierNames.size()>i; i++)
                               {
@@ -534,13 +503,12 @@
                             <option value="<%=sQualName%>"><%=sQualName%></option>
                             <%}%>
                           <%}%>
-                         <%}%>
                         </select>
                     </td>
                     <td colspan="3" valign="top">
                        <select name="selPropertyClass" style="width=98%" valign="top" size="1" multiple
                         onHelp = "showHelp('Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
-                         <%if(sOriginAction.equals("BlockEditDEC")){%>readonly<%}%> <option value="<%=sPropClassPrimary%>"><%=sPropClassPrimary%></option>
+                         <option value="<%=sPropClassPrimary%>"><%=sPropClassPrimary%></option>
                       </select>
                     </td>
                   </tr>
@@ -578,7 +546,7 @@
           <%if(sOriginAction.equals("BlockEditDEC")){%>readonly<%}%>
             onHelp = "showHelp('Help_CreateDEC.html#newDECForm_txtLongName'); return false">
             &nbsp;&nbsp;&nbsp;
-        <input name="txtLongNameCount" type="text" size="1" readonly="true"
+        <input name="txtLongNameCount" type="text" size="1" readonly
           onHelp = "showHelp('Help_CreateDEC.html#newDECForm_txtLongName'); return false">
           <%if(sOriginAction.equals("BlockEditDEC")){%>
             <font color="#C0C0C0"> Character Count &nbsp;&nbsp;(Database Max = 255)</font>
@@ -588,15 +556,9 @@
       </td>
     </tr>
     <tr height="25" valign="bottom">
-      <%if(sOriginAction.equals("BlockEditDEC")){%>
-        <td align=right><font color="#C0C0C0"><%=item++%>)</font></td>
-        <td><font color="#C0C0C0">Update Data Element Concept Preferred Name</font></td>
-      <% } else {%>
-        <td align=right><font color="#FF0000">*&nbsp;&nbsp;</font><%=item++%>)</td>
+        <td align=right><%if(!sOriginAction.equals("BlockEditDEC")){%><font color="#FF0000">*&nbsp;&nbsp;</font><%}%><%=item++%>)</td>
         <td><font color="#FF0000">Update</font><font color="#000000"> Data Element Concept Preferred Name </font></td>
-      <% } %>
     </tr>
-  <%if(!sOriginAction.equals("BlockEditDEC")){%>
     <tr>
       <td>&nbsp;</td>
       <td height="24" valign="bottom">Select Preferred Name Naming Standard</td>
@@ -609,10 +571,9 @@
         <input name="rNameConv" type="radio" value="ABBR" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("ABBR")) {%> 
           checked <%}%>>Abbreviated &nbsp;&nbsp;&nbsp; 
         <input name="rNameConv" type="radio" value="USER" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("USER")) {%> 
-          checked <%}%>>Existing Name (Editable)  <!--User Maintained-->
+          checked <%}%>>Existing Name <%if(sOriginAction.equals("BlockEditDEC")){%>(Not Editable)<% } else { %>(Editable)<% } %>  
       </td>
     </tr>  
-  <% } %>
     <tr>
       <td>&nbsp;</td>
       <td valign="top">
@@ -971,6 +932,8 @@
 <input type="hidden" name="selPropQRow" value="">
 
 <input type="hidden" name="sCompBlocks" value="">
+<!-- oc and prop change status -->
+<input type="hidden" name="nameTypeChange" value="<%=nameTypeChange%>">
 
 <input type="hidden" name="PropDefinition" value="">
 <input type="hidden" name="ObjDefinition" value="">

@@ -98,12 +98,18 @@ public class SetACService implements Serializable
   UtilService m_util = new UtilService();
   NCICurationServlet m_servlet;
   Logger logger = Logger.getLogger(GetACSearch.class.getName());
+  Vector m_vRetWFS = new Vector();
  /**
   * Instantiate the class
   */
   public SetACService(NCICurationServlet CurationServlet)
   {
     m_servlet = CurationServlet;
+    
+    m_vRetWFS.addElement("RETIRED ARCHIVED");
+    m_vRetWFS.addElement("RETIRED DELETED");
+    m_vRetWFS.addElement("RETIRED PHASED OUT");
+    m_vRetWFS.addElement("RETIRED WITHDRAWN");
   }
  /**
   * To check validity of the data for Data Element component before submission, called from NCICurationServlet.
@@ -226,21 +232,23 @@ public class SetACService implements Serializable
       if (s == null) s = "";
       strInValid = "";
  
-        if (s.equalsIgnoreCase("Standard") || s.equalsIgnoreCase("Candidate") || s.equalsIgnoreCase("Proposed"))
-          strInValid = this.checkDECOCExist(m_DE.getDE_DEC_IDSEQ(), req, res);
+      if (s.equalsIgnoreCase("Standard") || s.equalsIgnoreCase("Candidate") || s.equalsIgnoreCase("Proposed"))
+        strInValid = this.checkDECOCExist(m_DE.getDE_DEC_IDSEQ(), req, res);
       setValPageVector(vValidate, "Registration Status", s, bNotMandatory, 50, strInValid, sOriginAction);
 
-        s = m_DE.getDE_BEGIN_DATE();
-        if (s == null) s = "";
-        if (sDEAction.equals("Edit"))
-            setValPageVector(vValidate, "Effective Begin Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
-        else
-            setValPageVector(vValidate, "Effective Begin Date", s, bMandatory, iNoLengthLimit, "", sOriginAction);
+      s = m_DE.getDE_BEGIN_DATE();
+      if (s == null) s = "";
+      if (sDEAction.equals("Edit"))
+          setValPageVector(vValidate, "Effective Begin Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+      else
+          setValPageVector(vValidate, "Effective Begin Date", s, bMandatory, iNoLengthLimit, "", sOriginAction);
 
       s = m_DE.getDE_END_DATE();
       if (s == null) s = "";
       String wfs = m_DE.getDE_ASL_NAME();
-      if (wfs.equals("RETIRED ARCHIVED") || wfs.equals("RETIRED DELETED") || wfs.equals("RETIRED PHASED OUT"))
+      wfs = wfs.toUpperCase();
+     // if (wfs.equals("RETIRED ARCHIVED") || wfs.equals("RETIRED DELETED") || wfs.equals("RETIRED PHASED OUT"))
+      if (m_vRetWFS.contains(wfs))
         setValPageVector(vValidate, "Effective End Date", s, bMandatory, iNoLengthLimit, "", sOriginAction);
       else
         setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
@@ -517,7 +525,9 @@ public class SetACService implements Serializable
       s = m_DEC.getDEC_END_DATE();
       if (s == null) s = "";
       String wfs = m_DEC.getDEC_ASL_NAME();
-      if(wfs.equals("RETIRED ARCHIVED") || wfs.equals("RETIRED DELETED") || wfs.equals("RETIRED PHASED OUT"))
+      wfs = wfs.toUpperCase();
+     // if (wfs.equals("RETIRED ARCHIVED") || wfs.equals("RETIRED DELETED") || wfs.equals("RETIRED PHASED OUT"))
+      if (m_vRetWFS.contains(wfs))
         setValPageVector(vValidate, "Effective End Date", s, bMandatory, iNoLengthLimit, "", sOriginAction);
       else
         setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
@@ -729,7 +739,9 @@ public class SetACService implements Serializable
       s = m_VD.getVD_END_DATE();
       if (s == null) s = "";
       String wfs = m_VD.getVD_ASL_NAME();
-      if(wfs.equals("RETIRED ARCHIVED") || wfs.equals("RETIRED DELETED") || wfs.equals("RETIRED PHASED OUT"))
+      wfs = wfs.toUpperCase();
+     // if (wfs.equals("RETIRED ARCHIVED") || wfs.equals("RETIRED DELETED") || wfs.equals("RETIRED PHASED OUT"))
+      if (m_vRetWFS.contains(wfs))
         setValPageVector(vValidate, "Effective End Date", s, bMandatory, iNoLengthLimit, "", sOriginAction);
       else
         setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
@@ -931,7 +943,7 @@ public class SetACService implements Serializable
      if (sACType.equals("DataElementConcept"))
       {
         //validate naming components
-        //vValidate = this.setValidateNameComp(vValidate, sACType, req, res, dec, oc, pc, null, null);
+        vValidate = this.setValidateNameComp(vValidate, sACType, req, res, dec, oc, pc, null, null);
         //cd attribute
         s = dec.getDEC_CD_NAME();
         if (s == null) s = "";
@@ -1742,7 +1754,9 @@ public class SetACService implements Serializable
           acName = dec.getDEC_LONG_NAME();   //long name
           sWF = dec.getDEC_ASL_NAME();    //workflow status attributes          
           sBD = dec.getDEC_BEGIN_DATE();    //begin date attribute          
-          sED = dec.getDEC_END_DATE();      //end date attributes          
+          sED = dec.getDEC_END_DATE();      //end date attributes 
+         // String sCont = dec.getDEC_CONTE_IDSEQ();
+         // req.setAttribute("blockContext", sCont);
         }
         else if (sACType.equals("ValueDomain"))
         {
@@ -1764,12 +1778,13 @@ public class SetACService implements Serializable
         //check begin date end date relationship
         if (sED != null && !sED.equals(""))
         {
-          if (sBD == null || sBD.equals(""))
+        /*  if (sBD == null || sBD.equals(""))
           {
             if (!bdValid.equals("")) bdValid = bdValid + ", ";    //add the comma for next selected ac
             bdValid = bdValid + acName;           //begin date cannot be null 
           }
-          else
+          else */
+          if (sBD != null && !sBD.equals(""))
           {
             String dValid = compareDates(sED, sBD);
             if (dValid == null) dValid = "";
@@ -1784,12 +1799,13 @@ public class SetACService implements Serializable
         }
         else  //end date cannot be null for some workflow status
         {
-          if(sWF.equalsIgnoreCase("RETIRED ARCHIVED") || sWF.equalsIgnoreCase("RETIRED DELETED")
-                || sWF.equalsIgnoreCase("RETIRED PHASED OUT"))
+          sWF = sWF.toUpperCase();
+          //if(sWF.equalsIgnoreCase("RETIRED ARCHIVED") || sWF.equalsIgnoreCase("RETIRED DELETED")
+          //      || sWF.equalsIgnoreCase("RETIRED PHASED OUT"))
+          if (m_vRetWFS.contains(sWF))
           {
             if (!wfValid.equals("")) wfValid = wfValid + ", ";    //add the comma for next selected ac
             wfValid = wfValid + acName;
-      //System.out.println(" wf valid " + wfValid);
           }
         }
       }   //end loop
@@ -1895,6 +1911,7 @@ public class SetACService implements Serializable
      //make the query 
     sSQL = "SELECT distinct DEC_ID FROM DATA_ELEMENT_CONCEPTS_VIEW DEC WHERE DEC.CONTE_IDSEQ = '" + sContID + "'" 
             + ocSQL + propSQL + editSQL;      //versSQL + editSQL;           
+ //System.out.println(sSQL); 
 
     String sDECID = getAC.isUniqueInContext(sSQL);
     if (sDECID == null || sDECID.equals(""))
@@ -2679,14 +2696,14 @@ public class SetACService implements Serializable
     {
       sName = m_util.removeNewLineChar(sName);   //replace newline with empty string
       m_DE.setDE_PREFERRED_NAME(sName);
-      String sNameType = (String)req.getParameter("rNameConv");
+    /*  String sNameType = (String)req.getParameter("rNameConv");
       m_DE.setAC_PREF_NAME_TYPE(sNameType);
       String sSysName = m_DE.getAC_SYS_PREF_NAME();
       String sAbbName = m_DE.getAC_ABBR_PREF_NAME();
       //make sure to capture the user typed name at any page refresh.
       if (sName != null && !sName.equals("") && !sName.equals("(Generated by the System)") 
         && !sName.equals(sSysName) && !sName.equals(sAbbName) && sNameType != null && sNameType.equals("USER"))
-        m_DE.setAC_USER_PREF_NAME(sName);  
+        m_DE.setAC_USER_PREF_NAME(sName);  */
     }
 
     //set DE_PREFERRED_DEFINITION
@@ -3531,7 +3548,9 @@ public class SetACService implements Serializable
       String sIdx, sID;
       String sName = "";
       //set PV_ID
- 
+      PV_Bean oldPV = new PV_Bean();
+      oldPV = oldPV.copyBean(m_PV);
+      
       sName = (String)req.getParameter("selValidValue");
       if(sName == null) sName = "";
       m_PV.setQUESTION_VALUE_IDSEQ(sName); 
@@ -3545,6 +3564,7 @@ public class SetACService implements Serializable
       if(sName == null) sName = "";
       sName = m_util.removeNewLineChar(sName);   //replace newline with empty string
       m_PV.setPV_VALUE(sName);
+      m_PV = this.getModifiedPV(m_PV, oldPV, req);   //handle the changed pv
 
        //set PV_VERSION
       sName = (String)req.getParameter("selShortMeanings");
@@ -3574,6 +3594,39 @@ public class SetACService implements Serializable
       m_PV.setPV_END_DATE(sName);
   } // end of setPVValueFromPage
 
+  /**
+   * need to allow editing of the existing pv. mark the pv as new and 
+   * update vdpvs list with the old one marking as deleted to remove its relationship with the vd. 
+   * @param pv current pv bean
+   * @param req request variable.
+   * @return PV_Bean modified current pv bean
+   */
+  private PV_Bean getModifiedPV(PV_Bean pv, PV_Bean oldPV, HttpServletRequest req)
+  {
+      HttpSession session = req.getSession();
+      if (oldPV == null) oldPV = new PV_Bean();
+      String sOldName = oldPV.getPV_VALUE();
+      if (sOldName == null) sOldName = "";
+      String sOldID = oldPV.getPV_PV_IDSEQ();
+      if (sOldID == null) sOldID = "";
+      String sName = pv.getPV_VALUE();
+      if (sName == null) sName = "";
+      //check if name was changed
+      if (!sName.equals(sOldName) && !sOldID.equals(""))
+      {
+        //make current pv as new
+        pv.setPV_PV_IDSEQ("EVS_" + sName);
+        pv.setVP_SUBMIT_ACTION("INS");  
+        pv.setPV_VDPVS_IDSEQ("");
+        //mark the old pv as deleted and add it the vector in the end.
+        oldPV.setVP_SUBMIT_ACTION("DEL");
+        Vector vVDPVList = (Vector)session.getAttribute("VDPVList");
+        if (vVDPVList == null) vVDPVList = new Vector();
+        vVDPVList.addElement(oldPV);
+        session.setAttribute("VDPVList", vVDPVList);        
+      }
+      return pv;
+  }
   /**
    * To set the values from request to Value Meanings Bean and Permissible Values Bean, called from NCICurationServlet.
    *
@@ -4066,7 +4119,11 @@ public class SetACService implements Serializable
         session.setAttribute("m_PV", new PV_Bean());
     }
     if (!strInvalid.equals(""))
-      session.setAttribute("statusMessage", strInvalid);
+    {
+      InsACService insAC = new InsACService(req, res, m_servlet);
+      insAC.storeStatusMsg(strInvalid);
+      //session.setAttribute("statusMessage", strInvalid);
+    }
   }  //end addremovepagevdpvs
   
 }   //close the class

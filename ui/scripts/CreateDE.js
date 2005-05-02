@@ -258,8 +258,14 @@ function SubmitValidate(origin)
           nameType = document.newCDEForm.rNameConv[2].checked;
         if (nameType == null || nameType == false)
         {
-          isValid = "invalid";
-          alert("Please select the desired Preferred Name Type.");
+          //stop it only if dec vd was changed
+          if (document.newCDEForm.nameTypeChange.value == "true")
+          {
+            isValid = "invalid";
+            alert("Please select the desired Preferred Name Type.");
+          }
+          else
+            document.newCDEForm.rNameConv[2].checked = true;
         }
       }
       return isValid;
@@ -423,7 +429,13 @@ function Back()
 
 function isDateValid()
 {
-	if(document.newCDEForm.BeginDate.value != "")
+		var beginDate = document.newCDEForm.BeginDate.value;
+		var endDate = document.newCDEForm.EndDate.value;
+    var acAction = document.newCDEForm.DEAction.value;
+    if (acAction == "EditDE" || acAction == "BlockEdit") acAction = "Edit";
+    return areDatesValid(beginDate, endDate, acAction);
+    
+	/*if(document.newCDEForm.BeginDate.value != "")
 	{
 		var beginDate = document.newCDEForm.BeginDate.value
 			var endDate = document.newCDEForm.EndDate.value
@@ -453,8 +465,8 @@ function isDateValid()
   else
 		alert("Begin Date cannot be empty");
 	
-	return "invalid";	
-}
+	return "invalid";	*/
+} 
 
 function EnableChecks(checked, currentField)
 {

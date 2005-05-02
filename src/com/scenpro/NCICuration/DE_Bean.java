@@ -188,6 +188,8 @@ public class DE_Bean implements Serializable
   private String AC_PREF_NAME_TYPE;
   private DEC_Bean DE_DEC_Bean;
   private VD_Bean DE_VD_Bean;
+  
+  private boolean DEC_VD_CHANGED;
  /**
    * Constructor
   */
@@ -322,107 +324,9 @@ public class DE_Bean implements Serializable
       this.setAC_USER_PREF_NAME(copyBean.getAC_USER_PREF_NAME());
       this.setAC_PREF_NAME_TYPE(copyBean.getAC_PREF_NAME_TYPE());
 
+      this.setDEC_VD_CHANGED(copyBean.getDEC_VD_CHANGED());
       return this;
   }
-
-  /**
-   * copies some (non edited) attributes from one bean to another. 
-   *
-   * @param fromBean a bean to copy the attributes from.
-   *
-   * @return DE_Bean returns to bean after copying  attributes
-   */
- /* public DE_Bean copyBeanAttributes(DE_Bean fromBean)
-  {
-      this.setDE_PROTOCOL_ID(fromBean.getDE_PROTOCOL_ID());
-      this.setDE_CRF_NAME(fromBean.getDE_CRF_NAME());
-      this.setDE_CRF_IDSEQ(fromBean.getDE_CRF_IDSEQ());
-      this.setDE_TYPE_NAME(fromBean.getDE_TYPE_NAME());
-      this.setDE_DES_ALIAS_ID(fromBean.getDE_DES_ALIAS_ID());
-      this.setDE_ALIAS_NAME(fromBean.getDE_ALIAS_NAME());
-      this.setDE_USEDBY_CONTEXT(fromBean.getDE_USEDBY_CONTEXT());
-     // this.setDE_MIN_CDE_ID(fromBean.getDE_MIN_CDE_ID());
-      this.setDE_HIST_CDE_ID(fromBean.getDE_HIST_CDE_ID());
-      this.setDE_Permissible_Value(fromBean.getDE_Permissible_Value());
-      this.setDOC_TEXT_HISTORIC_NAME(fromBean.getDOC_TEXT_HISTORIC_NAME());
-      this.setDOC_TEXT_HISTORIC_COUNT(fromBean.getDOC_TEXT_HISTORIC_COUNT());
-      this.setDOC_TEXT_REFERENCE(fromBean.getDOC_TEXT_REFERENCE());
-      this.setDOC_TEXT_REFERENCE_COUNT(fromBean.getDOC_TEXT_REFERENCE_COUNT());
-      this.setDOC_TEXT_EXAMPLE(fromBean.getDOC_TEXT_EXAMPLE());
-      this.setDOC_TEXT_EXAMPLE_COUNT(fromBean.getDOC_TEXT_EXAMPLE_COUNT());
-      this.setDOC_TEXT_COMMENT(fromBean.getDOC_TEXT_COMMENT());
-      this.setDOC_TEXT_COMMENT_COUNT(fromBean.getDOC_TEXT_COMMENT_COUNT());
-      this.setDOC_TEXT_NOTE(fromBean.getDOC_TEXT_NOTE());
-      this.setDOC_TEXT_NOTE_COUNT(fromBean.getDOC_TEXT_NOTE_COUNT());
-      this.setDOC_TEXT_DESCRIPTION(fromBean.getDOC_TEXT_DESCRIPTION());
-      this.setDOC_TEXT_DESCRIPTION_COUNT(fromBean.getDOC_TEXT_DESCRIPTION_COUNT());
-      this.setDOC_TEXT_IMAGE_FILE(fromBean.getDOC_TEXT_IMAGE_FILE());
-      this.setDOC_TEXT_IMAGE_FILE_COUNT(fromBean.getDOC_TEXT_IMAGE_FILE_COUNT());
-      this.setDOC_TEXT_VALID_VALUE_SOURCE(fromBean.getDOC_TEXT_VALID_VALUE_SOURCE());
-      this.setDOC_TEXT_VALID_VALUE_SOURCE_COUNT(fromBean.getDOC_TEXT_VALID_VALUE_SOURCE_COUNT());
-      this.setDOC_TEXT_DATA_ELEMENT_SOURCE(fromBean.getDOC_TEXT_DATA_ELEMENT_SOURCE());
-      this.setDOC_TEXT_DATA_ELEMENT_SOURCE_COUNT(fromBean.getDOC_TEXT_DATA_ELEMENT_SOURCE_COUNT());
-      this.setDOC_TEXT_UML_Class(fromBean.getDOC_TEXT_UML_Class());
-      this.setDOC_TEXT_UML_Class_Count(fromBean.getDOC_TEXT_UML_Class_Count());
-      this.setDOC_TEXT_DETAIL_DESCRIPTION(fromBean.getDOC_TEXT_DETAIL_DESCRIPTION());
-      this.setDOC_TEXT_DETAIL_DESCRIPTION_COUNT(fromBean.getDOC_TEXT_DETAIL_DESCRIPTION_COUNT());
-      this.setDOC_TEXT_TECHNICAL_GUIDE(fromBean.getDOC_TEXT_TECHNICAL_GUIDE());
-      this.setDOC_TEXT_TECHNICAL_GUIDE_COUNT(fromBean.getDOC_TEXT_TECHNICAL_GUIDE_COUNT());
-      this.setDOC_TEXT_UML_Attribute(fromBean.getDOC_TEXT_UML_Attribute());
-      this.setDOC_TEXT_UML_Attribute_Count(fromBean.getDOC_TEXT_UML_Attribute_Count());
-      this.setDOC_TEXT_LABEL(fromBean.getDOC_TEXT_LABEL());
-      this.setDOC_TEXT_LABEL_COUNT(fromBean.getDOC_TEXT_LABEL_COUNT());
-      this.setDOC_TEXT_OTHER_REF_TYPES(fromBean.getDOC_TEXT_OTHER_REF_TYPES());
-      this.setDOC_TEXT_OTHER_REF_TYPES_COUNT(fromBean.getDOC_TEXT_OTHER_REF_TYPES_COUNT());
-
-     // this.setDE_PREFERRED_NAME(fromBean.getDE_PREFERRED_NAME());
-     // this.setDE_LONG_NAME(fromBean.getDE_LONG_NAME());
-     // this.setDE_PREFERRED_DEFINITION(fromBean.getDE_PREFERRED_DEFINITION());
-     // this.setDE_ASL_NAME(fromBean.getDE_ASL_NAME());
-     // this.setDE_REG_STATUS(fromBean.getDE_REG_STATUS());
-     // this.setDE_REG_STATUS_IDSEQ(fromBean.getDE_REG_STATUS_IDSEQ());
-     // this.setDE_CONTE_IDSEQ(fromBean.getDE_CONTE_IDSEQ());
-     // this.setDE_BEGIN_DATE(fromBean.getDE_BEGIN_DATE());
-     // this.setDE_END_DATE(fromBean.getDE_END_DATE());
-     // this.setDE_VERSION(fromBean.getDE_VERSION());
-     // this.setDE_DE_IDSEQ(fromBean.getDE_DE_IDSEQ());
-     // this.setDE_CHANGE_NOTE(fromBean.getDE_CHANGE_NOTE());
-     // this.setDE_CONTEXT_NAME(fromBean.getDE_CONTEXT_NAME());
-    //  this.setDE_DEC_NAME(fromBean.getDE_DEC_NAME());
-    //  this.setDE_DEC_IDSEQ(fromBean.getDE_DEC_IDSEQ());
-    //  this.setDE_DEC_PREFERRED_NAME(fromBean.getDE_PREFERRED_NAME());
-    //  this.setDE_VD_NAME(fromBean.getDE_VD_NAME());
-    //  this.setDE_VD_PREFERRED_NAME(fromBean.getDE_VD_PREFERRED_NAME());
-    //  this.setDE_VD_IDSEQ(fromBean.getDE_VD_IDSEQ());
-    //  this.setDE_SOURCE(fromBean.getDE_SOURCE());
-    //  this.setDE_LANGUAGE(fromBean.getDE_LANGUAGE());
-    //  this.setDE_LANGUAGE_IDSEQ(fromBean.getDE_LANGUAGE_IDSEQ());
-    //  this.setDE_Question_ID(fromBean.getDE_Question_ID());
-    //  this.setDE_Question_Name(fromBean.getDE_Question_Name());
-
-    //  this.setDE_DATE_CREATED(fromBean.getDE_DATE_CREATED());
-    //  this.setDE_DATE_MODIFIED(fromBean.getDE_DATE_MODIFIED());
-    //  this.setDE_CREATED_BY(fromBean.getDE_CREATED_BY());
-    //  this.setDE_MODIFIED_BY(fromBean.getDE_MODIFIED_BY());
-      
-    //  this.setDE_CS_NAME(fromBean.getDE_CS_NAME());
-   //   this.setDE_CS_ID(fromBean.getDE_CS_ID());
-    //  this.setDE_CSI_NAME(fromBean.getDE_CSI_NAME());
-   //   this.setDE_CSI_ID(fromBean.getDE_CSI_ID());
-   //   this.setDE_AC_CSI_VECTOR(fromBean.getDE_AC_CSI_VECTOR());
-   //   this.setDE_AC_CSI_ID(fromBean.getDE_AC_CSI_ID());
-   //   this.setDE_CS_CSI_ID(fromBean.getDE_CS_CSI_ID());
-
-   //   this.setDE_VD_Definition(fromBean.getDE_VD_Definition());
-   //   this.setDE_DEC_Definition(fromBean.getDE_DEC_Definition());
-   //   this.setDE_LATEST_VERSION_IND(fromBean.getDE_LATEST_VERSION_IND());
-   //   this.setDE_SOURCE_IDSEQ(fromBean.getDE_SOURCE_IDSEQ());
-
-    //  this.setDOC_TEXT_LONG_NAME(fromBean.getDOC_TEXT_LONG_NAME());
-   //   this.setDOC_TEXT_LONG_NAME_IDSEQ(fromBean.getDOC_TEXT_LONG_NAME_IDSEQ());
-
-      return this;
-  } */
 
   /**
    * The setRETURN_CODE method sets the RETURN_CODE for this bean.
@@ -1289,6 +1193,15 @@ public class DE_Bean implements Serializable
   public void setDE_VD_Bean(VD_Bean bean)
   {
       this.DE_VD_Bean = bean;
+  }
+  /**
+   * The setDEC_VD_CHANGED method sets the DEC_VD_CHANGED for this bean.
+   *
+   * @param b The DEC_VD_CHANGED to set
+  */
+  public void setDEC_VD_CHANGED(boolean b)
+  {
+      this.DEC_VD_CHANGED = b;
   }
 
 
@@ -2159,6 +2072,15 @@ public class DE_Bean implements Serializable
   public VD_Bean getDE_VD_Bean()
   {
       return this.DE_VD_Bean;
+  }
+  /**
+  * The getDEC_VD_CHANGED method returns the DEC_VD_CHANGED for this bean.
+  *
+  * @return boolean The DEC_VD_CHANGED
+  */
+  public boolean getDEC_VD_CHANGED()
+  {
+      return this.DEC_VD_CHANGED;
   }
 
 //end of class

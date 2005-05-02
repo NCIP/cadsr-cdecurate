@@ -579,7 +579,7 @@ function getRowNumbersOfUniqueConcepts()
   return uniqueRowArray;
 }
 
-function getSubConceptsAll()
+function getSubConceptsAll2(sUISearchType)
 {
       var sSearch = false;
       var url = "";
@@ -595,7 +595,7 @@ function getSubConceptsAll()
         {
         
           hourglass();
-          url = "../../cdecurate/NCICurationServlet?reqType=getSubConcepts&&searchType=All&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName;
+          url = "../../cdecurate/NCICurationServlet?reqType=getSubConcepts&&searchType=All&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&UISearchType=" + sUISearchType;
           document.searchResultsForm.action = url;
           document.searchResultsForm.submit(); 
           window.status = "Refereshing the page, it may take a minute, please wait.....";
@@ -604,8 +604,9 @@ function getSubConceptsAll()
       }
    }
    
-  function getSubConceptsImmediate()
+  function getSubConceptsImmediate2(sUISearchType)
 {
+//alert("js sUISearchType: " + sUISearchType);
       var url = "";
       var nodeCode = sCCode;
       var nodeName = editLongName;
@@ -617,7 +618,7 @@ function getSubConceptsAll()
         if (sSearch == true)
         {
           hourglass();
-          url = "../../cdecurate/NCICurationServlet?reqType=getSubConcepts&&searchType=Immediate&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&defSource=" + defSource;   
+          url = "../../cdecurate/NCICurationServlet?reqType=getSubConcepts&&searchType=Immediate&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&defSource=" + defSource + "&&UISearchType=" + sUISearchType;   
           document.searchResultsForm.action = url;
           document.searchResultsForm.submit(); 
           window.status = "Refereshing the page, it may take a minute, please wait.....";
@@ -627,7 +628,7 @@ function getSubConceptsAll()
       else
       {
         hourglass();
-        url = "../../cdecurate/NCICurationServlet?reqType=getSubConcepts&&searchType=Immediate&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&defSource=" + defSource;   
+        url = "../../cdecurate/NCICurationServlet?reqType=getSubConcepts&&searchType=Immediate&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&defSource=" + defSource + "&&UISearchType=" + sUISearchType;   
         document.searchResultsForm.action = url;
         document.searchResultsForm.submit(); 
         window.status = "Refereshing the page, it may take a minute, please wait.....";
@@ -635,7 +636,7 @@ function getSubConceptsAll()
       }
    }
    
-function getSuperConcepts()
+function getSuperConcepts2(sUISearchType)
 {
       var url = "";
       var nodeCode = sCCode;
@@ -643,7 +644,7 @@ function getSuperConcepts()
       var vocab = sCCodeDB;
       var defSource = editDefSource;
       hourglass();
-      url = "../../cdecurate/NCICurationServlet?reqType=getSuperConcepts&&searchType=All&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&defSource=" + defSource;
+      url = "../../cdecurate/NCICurationServlet?reqType=getSuperConcepts&&searchType=All&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&defSource=" + defSource + "&&UISearchType=" + sUISearchType;
       document.searchResultsForm.action = url;
       document.searchResultsForm.submit(); 
       window.status = "Refereshing the page, it may take a minute, please wait.....";

@@ -744,6 +744,7 @@ fill selectedCSI options.
         else
           removeUsedByAttr(sContext);
       }
+      document.designateDEForm.Message.style.visibility="visible";
       storeAltHiddenFields();  //store/select alternate name properties
       storeRefHiddenFields();  //select ref doc attributes
       selectMultiSelectList();  //select cscsi attributes

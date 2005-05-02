@@ -95,6 +95,7 @@
         strIsQualifier = "true";
         
   String sUISearchType2 = (String)request.getAttribute("UISearchType");
+//System.out.println("jsp srbl sUISearchType2: " + sUISearchType2);
   if (sUISearchType2 == null || sUISearchType2.equals("nothing") 
   || sUISearchType2.equals("")) 
     sUISearchType2 = "term";
@@ -175,6 +176,20 @@
       EnableCheckButtons(checked, currentField, "<%=sMAction%>")
    }
 
+function getSubConceptsAll()
+{
+   getSubConceptsAll2("<%=sUISearchType2%>")  
+}
+   
+function getSubConceptsImmediate()
+{
+  getSubConceptsImmediate2("<%=sUISearchType2%>")
+}
+   
+function getSuperConcepts()
+{
+   getSuperConcepts2("<%=sUISearchType2%>")  
+}
 
 </SCRIPT>
 

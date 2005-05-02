@@ -70,12 +70,6 @@
     String sPropClass = m_VD.getVD_PROP_CLASS();
     sPropClass = serUtil.parsedString(sPropClass);    //call the function to handle doubleQuote
     if (sPropClass == null) sPropClass = "";
-   /* String sRepQual = m_VD.getVD_REP_QUAL();
-    sRepQual = serUtil.parsedString(sRepQual);    //call the function to handle doubleQuote
-    if (sRepQual == null) sRepQual = "";
-    String sRepTerm = m_VD.getVD_REP_TERM();
-    sRepTerm = serUtil.parsedString(sRepTerm);    //call the function to handle doubleQuote 
-    if (sRepTerm == null) sRepTerm = "";*/
     String sRepTermID = m_VD.getVD_REP_IDSEQ();
     if (sRepTermID == null) sRepTermID = "";
     String sRepTerm = "";   //make the rep term using the concepts
@@ -104,7 +98,6 @@
     String sRepCCodeDB = m_VD.getVD_REP_EVS_CUI_ORIGEN();
     String sRepCCode = m_VD.getVD_REP_CONCEPT_CODE();
     String sRepTermPrimary = m_VD.getVD_REP_NAME_PRIMARY();
-  //  if(sRepTerm == null) sRepTerm = "";
     if(sRepTermPrimary == null) sRepTermPrimary = "";
     if(sRepTermPrimary.equals(""))
     {
@@ -119,7 +112,6 @@
         sRepQualLN = (String)vRepQualifierNames.elementAt(i);
       else
         sRepQualLN = sRepQualLN + " " + (String)vRepQualifierNames.elementAt(i);
-  //System.out.println(i + " rep qual " + sRepQualLN);
     }
     //add rep qual names to rep term
     if (sRepQualLN != null && !sRepQualLN.equals("") && !sRepQualLN.equals(" "))
@@ -132,14 +124,6 @@
       if (sRepTerm != null && !sRepTerm.equals("")) sRepTerm += " ";
       sRepTerm += sRepTermPrimary;  //add rep term primary
     }
-       
-  /*  if(sRepQualLN.length()>0 && sRepTermPrimary.length()>0)
-      sRepTerm = sRepQualLN + " " + sRepTermPrimary;
-    else if(sRepQualLN.length()>0 && sRepTermPrimary.length()==0)
-      sRepTerm = sRepQualLN;
-    else
-      sRepTerm = sRepTermPrimary; */
-
     sRepTerm = serUtil.parsedString(sRepTerm);    //call the function to handle doubleQuote
 
     if(sRepCCodeDB == null) sRepCCodeDB = "";
@@ -147,13 +131,13 @@
     if(sRepTerm == null) sRepTerm = "";
     
     // Make Preferred Name for Obj Qual
- //   String sRepQualPN = "";
     String sRepQualLong = "";
     for (int i = 0; vRepQualifierNames.size()>i; i++)
     {
        sRepQualLong = (String)vRepQualifierNames.elementAt(i);
        if(sRepQualLong == null) sRepQualLong = "";
     }
+    boolean nameChanged = m_VD.getVDNAME_CHANGED();
      
     String sName = m_VD.getVD_PREFERRED_NAME();
     sName = serUtil.parsedString(sName);    //call the function to handle doubleQuote
@@ -161,7 +145,6 @@
     int sNameCount = sName.length();
     String sPrefType = m_VD.getAC_PREF_NAME_TYPE();
     if (sPrefType == null) sPrefType = ""; 
-//System.out.println("editVD sPrefType: " + sPrefType + " sName: " + sName);
     String sDefinition = m_VD.getVD_PREFERRED_DEFINITION();
     if (sDefinition == null) sDefinition = "";
     String sObjDefinition = m_VD.getVD_Obj_Definition();
@@ -284,7 +267,6 @@
     int item = 1;
     
     String sSearchAC = (String)session.getAttribute("creSearchAC");
-// //System.out.println("edit VD jsp sSearchAC: " + sSearchAC);
 %>
 
 <SCRIPT LANGUAGE="JavaScript">
@@ -302,11 +284,9 @@
   {
   <%
     Vector vCSIList = (Vector)session.getAttribute("CSCSIList");
-//System.out.println("before csi bean");
     for (int i=0; i<vCSIList.size(); i++)  //loop csi vector
     {
       thisCSI = (CSI_Bean)vCSIList.elementAt(i);  //get the csi bean
-      //System.out.println(thisCSI.getCSI_CS_IDSEQ() + " : " + thisCSI.getCSI_LABEL());
    %>
       //create new csi object
       var aIndex = <%=i%>;  //get the index
@@ -328,16 +308,13 @@
 
    function loadSelCSCSI()
    {
-<%    //Vector vACCSIList = (Vector)request.getAttribute("vACCSIList");
-   // System.out.println("in load sel cscsi");   
+<%       
       if (vACCSIList != null)
       {      
-    //  System.out.println("before  accsi loop");   
         for (int j=0; j<vACCSIList.size(); j++)  //loop csi vector
         {
           thisACCSI = (AC_CSI_Bean)vACCSIList.elementAt(j);  //get the csi bean
           thisCSI = (CSI_Bean)thisACCSI.getCSI_BEAN();
-         // System.out.println("jsp " + thisCSI.getCSI_NAME() + " : " + thisACCSI.getAC_LONG_NAME());
  %>
           //create new accsi object
           var aIndex = <%=j%>;  //get the index
@@ -366,7 +343,6 @@
               selCSCSI_id, selACCSI_id, selAC_id, selAC_longName, selP_CSCSIid, 
               selCSILevel, selCSILabel, selCSIDisp);
 <%      } %>   
-    <%  //System.out.println("after accsi loop");    %>
         //call the method to fill selCSIArray
         makeSelCSIList();
 <%   }   %>
@@ -434,10 +410,8 @@ function setup()
 				onHelp = "showHelp('Help_CreateVD.html#createVDForm_Validation'); return false">
           &nbsp;&nbsp;
     <!--no need for clear button in the block edit-->
-<%//if(!sOriginAction.equals("BlockEditVD")){%>
         <input type="button" name="btnClear" value="Clear" style="width: 125", "height: 30" onClick="ClearBoxes();">
           &nbsp;&nbsp;
-<%// } %>
 <% if (!sOriginAction.equals("NewVDFromMenu")){%>
         <input type="button" name="btnBack" value="Back" style="width: 125", "height: 30" onClick="Back();">
           &nbsp;&nbsp;
@@ -556,24 +530,12 @@ function setup()
                           onHelp = "showHelp('Help_CreateVD.html#createVDForm_nameBlocks'); return false">
                               <option value="<%=sObjClass%>"><%=sObjClass%></option>
                         </select>
-                      <!--  <input type="text" name="selObjectClass" value="<%=sObjClass%>" size="30"
-                               onkeydown="javascript:removeAllText('selObjectClass');"
-                               onkeyup="javascript:removeAllText('selObjectClass');"
-                               onkeypress="javascript:removeAllText('selObjectClass');"
-                               onpaste="return false"
-                          onHelp = "showHelp('Help_CreateVD.html#createVDForm_nameBlocks'); return false"> -->
                       </td>
                       <td colspan="3">
                          <select name="selPropertyClass" style="width:98%" valign="top" size="1" multiple
                             onHelp = "showHelp('Help_CreateVD.html#createVDForm_nameBlocks'); return false">
                                 <option value="<%=sPropClass%>"><%=sPropClass%></option>
                          </select>
-                       <!--   <input type="text" name="selPropertyClass" value="<%=sPropClass%>" size="30"
-                                onkeydown="javascript:removeAllText('selPropertyClass');"
-                                onkeyup="javascript:removeAllText('selPropertyClass');"
-                                onkeypress="javascript:removeAllText('selPropertyClass');"
-                               onpaste="return false"
-                          onHelp = "showHelp('Help_CreateVD.html#createVDForm_nameBlocks'); return false">-->
                       </td>
                     </tr>
                     <tr height="105"><td>&nbsp;</td></tr>
@@ -972,8 +934,6 @@ function setup()
     </td>
   </tr>
   <tr><td>&nbsp; </td></tr>
-  <!---enumerated -->
-<% if (sTypeFlag.equals("E")) { %> 
 <% if (sMenuAction.equals("Questions") && vQVList.size() > 0) { %>   <!-- when questions -->
   <tr height="25" valign="bottom">
     <td>&nbsp;</td>
@@ -997,6 +957,8 @@ function setup()
     </td>
   </tr>
 <% } %>  <!-- end question -->
+  <!---enumerated -->
+<% if (sTypeFlag.equals("E")) { %> 
   <tr>
     <td>&nbsp;</td>
     <td>&nbsp;&nbsp;
@@ -1497,6 +1459,7 @@ function setup()
 <input type="hidden" name="RepQualCCodeDB" value="">
 <input type="hidden" name="RepCCode" value="<%=sRepCCode%>">
 <input type="hidden" name="RepCCodeDB" value="<%=sRepCCodeDB%>">
+<input type="hidden" name="nameTypeChange" value="<%=nameChanged%>">
 
 <input type="hidden" name="pvSortColumn" value="">
 <select size="1" name="hiddenPVID" style="visibility:hidden;width:160" multiple>

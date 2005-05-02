@@ -135,14 +135,14 @@ public class GetACService implements Serializable
       HttpSession session = req.getSession();
       Vector vsm;
       Vector vsd;
-        if(session.getAttribute("vPVM") == null)
-          {
-            vsm = new Vector(); // short meanings
-            vsd = new Vector(); // short meanings
-            //getValueMeaningsList("", vsm, vsd);    //get the Permissable Values list
-            session.setAttribute("vPVM", vsm);  //set ValueMeanings name attribute
-            session.setAttribute("vMeanDesc", vsd);
-          }
+      if(session.getAttribute("vPVM") == null)
+      {
+        vsm = new Vector(); // short meanings
+        vsd = new Vector(); // short meanings
+        //getValueMeaningsList("", vsm, vsd);    //get the Permissable Values list
+        session.setAttribute("vPVM", vsm);  //set ValueMeanings name attribute
+        session.setAttribute("vMeanDesc", vsd);
+      }
     }
     catch(Exception e)
     {
@@ -170,7 +170,7 @@ public class GetACService implements Serializable
     {
       //capture the duration
       java.util.Date startDate = new java.util.Date();          
-      logger.info(m_servlet.getLogMessage(req, "getACList", "started", startDate, startDate));
+    //  logger.info(m_servlet.getLogMessage(req, "getACList", "started", startDate, startDate));
 
       HttpSession session = req.getSession();
       if (m_sbr_db_conn == null || m_sbr_db_conn.isClosed())
@@ -191,8 +191,8 @@ public class GetACService implements Serializable
           session.setAttribute("ContextInList", sContext);
           //get cs-csi relationship data
           getCSCSIListBean();
-      
-          if(session.getAttribute("vContext") == null)
+          Vector vCon = (Vector)session.getAttribute("vContext");
+          if(vCon == null || vCon.size() < 2)
           {
             v = new Vector();
             vID = new Vector();
@@ -361,7 +361,7 @@ public class GetACService implements Serializable
            session.setAttribute("RefDocTypes", vList);
         }        
         m_sbr_db_conn.close();
-        logger.info(m_servlet.getLogMessage(req, "getACList", "ended", startDate, new java.util.Date()));
+      //  logger.info(m_servlet.getLogMessage(req, "getACList", "ended", startDate, new java.util.Date()));
       }
       else
       {

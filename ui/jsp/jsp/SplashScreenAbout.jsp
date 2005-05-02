@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*" errorPage="" %>
-<%@ taglib uri="/WEB-INF/tlds/curate.tld" prefix="curate" %>
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
 
 <html>
 <head>

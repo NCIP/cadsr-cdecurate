@@ -852,5 +852,31 @@ function show_yearly_calendar(p_item, p_year, p_format) {
 		return true; 
 }
 
+  //allow emtpy  begin date and end dates but check validity if not empty 
+  function areDatesValid(beginDate, endDate, acAct)
+  {    
+    var isValid = "valid";
+    //first validate the begin date if not empty and do not allow if end date is greater than the begin date 
+    if (beginDate != "")
+    {
+			var status = validateDate(beginDate, endDate); //validateDate is in date-picker.js
+      if (!status) isValid = "invalid";
+      return isValid;
+    }
+    //do not allow to use end date if no begin date for new acs
+    else if (endDate != "" && acAct != "Edit")
+    {
+      alert("If you select an End Date, you must also select a Begin Date");
+      return "invalid";
+    }
+    //if no begin date, validate end date if not empty for editing ac
+    else if (endDate != "")
+    {
+      var status = validateEndDate(endDate);
+      if (!status) isValid = "invalid";
+      return isValid;
+    }	
+    return isValid;	
+  }
 
 

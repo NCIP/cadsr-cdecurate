@@ -10,13 +10,11 @@
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
 <%@ page import="com.scenpro.NCICuration.*" %>
 <%@ page import= "java.util.*"%>
-<%@ page import= "org.apache.log4j.*" %>
 <%
-   Logger logger = Logger.getLogger("jsp");
    UtilService serUtil = new UtilService();
    //capture the duration
    Date sDate = new Date();
-   logger.info(serUtil.makeLogMessage(session, "SearchResults", "begin page", sDate, sDate));
+ //  logger.info(serUtil.makeLogMessage(session, "SearchResults", "begin page", sDate, sDate));
    
    String strInitiatedFrom = (String)session.getAttribute("initiatedFrom");
    Vector results = new Vector();
@@ -32,8 +30,8 @@
    if (vSearchName == null)  vSearchName = new Vector();
    Vector vSearchLongName = (Vector)session.getAttribute("SearchLongName");
    if (vSearchLongName == null)  vSearchLongName = new Vector();
-    Vector vSearchASL = (Vector)session.getAttribute("SearchASL");
-    if (vSearchASL == null)  vSearchASL = new Vector();
+   Vector vSearchASL = (Vector)session.getAttribute("SearchASL");
+   if (vSearchASL == null)  vSearchASL = new Vector();
    Vector vSearchDefinitionAC = (Vector)session.getAttribute("SearchDefinitionAC");
    if (vSearchDefinitionAC == null)  vSearchDefinitionAC = new Vector();
    Vector vSearchDefSource = (Vector)session.getAttribute("SearchDefSource");
@@ -1140,6 +1138,6 @@ getSearchComponent();
 </body>
 <% 
     //capture duration
-    logger.info(serUtil.makeLogMessage(session, "SearchResults", "end page", sDate, new Date())); 
+  //  logger.info(serUtil.makeLogMessage(session, "SearchResults", "end page", sDate, new Date())); 
 %>
 </html>

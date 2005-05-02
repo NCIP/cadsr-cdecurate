@@ -560,7 +560,12 @@ function removeAllText(thisBlock)
 
   function isDateValid()
   {
-    if(document.createVDForm.BeginDate.value != "")
+      var beginDate = document.createVDForm.BeginDate.value;
+      var endDate = document.createVDForm.EndDate.value;
+      var acAction = document.createVDForm.VDAction.value;
+      if (acAction == "EditVD" || acAction == "BlockEdit") acAction = "Edit";
+      return areDatesValid(beginDate, endDate, acAction);
+    /*if(document.createVDForm.BeginDate.value != "")
     {
       var beginDate = document.createVDForm.BeginDate.value
       var endDate = document.createVDForm.EndDate.value
@@ -590,7 +595,7 @@ function removeAllText(thisBlock)
     else
       alert("Begin Date cannot be empty");
       
-    return "invalid";	
+    return "invalid";	*/
   }
   
   //alerts if preferred name type was not selected
@@ -609,8 +614,14 @@ function removeAllText(thisBlock)
           nameType = document.createVDForm.rNameConv[2].checked;
         if (nameType == null || nameType == false)
         {
-          isValid = "invalid";
-          alert("Please select the desired Preferred Name Type.");
+          //stop it only if dec vd was changed
+          if (document.createVDForm.nameTypeChange.value == "true")
+          {
+            isValid = "invalid";
+            alert("Please select the desired Preferred Name Type.");
+          }
+          else
+            document.createVDForm.rNameConv[2].checked = true;
         }
       }
       return isValid;

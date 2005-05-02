@@ -159,7 +159,7 @@ public class GetACSearch implements Serializable
       HttpSession session = req.getSession();     //get the session
       //capture the duration
       java.util.Date startDate = new java.util.Date();          
-      logger.info(m_servlet.getLogMessage(req, "getACKeywordResult", "starting search", startDate, startDate));
+   //   logger.info(m_servlet.getLogMessage(req, "getACKeywordResult", "starting search", startDate, startDate));
       
       Vector vAC = new Vector();
       Vector vS = new Vector();
@@ -569,7 +569,7 @@ public class GetACSearch implements Serializable
         }
       }
       //capture the duration
-      logger.info(m_servlet.getLogMessage(req, "getKeywordResult", "ending search", startDate, new java.util.Date()));
+   //   logger.info(m_servlet.getLogMessage(req, "getKeywordResult", "ending search", startDate, new java.util.Date()));
     }
     catch(Exception e)
     {
@@ -1037,8 +1037,8 @@ public class GetACSearch implements Serializable
         getVDResult(req, res, vResult, "");
       else if (sSearchAC.equals("PermissibleValue"))
         getPVVMResult(req, res, vResult, "");
-       else if (sSearchAC.equals("ReferenceValue"))
-        getRefResult(req, res, vResult);
+     //  else if (sSearchAC.equals("ReferenceValue"))
+     //   getRefResult(req, res, vResult);
       else if (sSearchAC.equals("Questions"))
         getQuestionResult(req, res, vResult);
       else if (sSearchAC.equals("ConceptualDomain"))
@@ -1507,7 +1507,7 @@ public class GetACSearch implements Serializable
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "start desearch call", startDate, startDate));
+  //  logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "start desearch call", startDate, startDate));
     Connection sbr_db_conn = null;
     ResultSet rs = null;
     CallableStatement CStmt = null;
@@ -1571,10 +1571,10 @@ public class GetACSearch implements Serializable
          // Now we are ready to call the stored procedure
         boolean bExcuteOk = CStmt.execute();
         //capture the duration
-        logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "end executing search", startDate, new java.util.Date()));
+     //   logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "end executing search", startDate, new java.util.Date()));
         //store the output in the resultset
         rs = (ResultSet) CStmt.getObject(7);
-        logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "got resultset object", startDate, new java.util.Date()));
+    //    logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "got resultset object", startDate, new java.util.Date()));
         String s;
         Integer iCount;
         Vector vStoredIDs = new Vector();
@@ -1687,9 +1687,10 @@ public class GetACSearch implements Serializable
                    }
                }
             } 
+  //  System.out.println(rs.getString("de_idseq") + " des " + rs.getString("u_desig_idseq") + " con " + rs.getString("used_by_conte_idseq"));
           }  //END WHILE
           //capture the duration
-          logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "end resultset", startDate, new java.util.Date()));
+      //    logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "end resultset", startDate, new java.util.Date()));
         }   //END IF
       }
     }
@@ -1970,7 +1971,7 @@ public class GetACSearch implements Serializable
   {
     //capture the duration
     java.util.Date exDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "doDECSearch", "begin search", exDate, exDate));
+   // logger.info(m_servlet.getLogMessage(m_classReq, "doDECSearch", "begin search", exDate, exDate));
     Connection sbr_db_conn = null;
     ResultSet rs = null;
     CallableStatement CStmt = null;
@@ -2011,7 +2012,7 @@ public class GetACSearch implements Serializable
         //store the output in the resultset
         rs = (ResultSet) CStmt.getObject(7);
         //capture the duration
-        logger.info(m_servlet.getLogMessage(m_classReq, "doDECSearch", "got object", exDate,  new java.util.Date()));
+     //   logger.info(m_servlet.getLogMessage(m_classReq, "doDECSearch", "got object", exDate,  new java.util.Date()));
         String s;
         Vector vStoredIDs = new Vector();
         String oc_condr_idseq = "";
@@ -2117,28 +2118,26 @@ public class GetACSearch implements Serializable
           session.setAttribute("vObjectClass", vOCConcepts);
         // Primary concept
           EVS_Bean m_OC = (EVS_Bean)vOCConcepts.elementAt(0);
-          if (m_OC == null)
-          {
-            m_OC = new EVS_Bean();        
-          }
+          if (m_OC == null) m_OC = new EVS_Bean();        
           m_DEC.setDEC_OCL_NAME_PRIMARY(m_OC.getLONG_NAME());
           m_DEC.setDEC_OC_CONCEPT_CODE(m_OC.getNCI_CC_VAL());
           m_DEC.setDEC_OC_EVS_CUI_ORIGEN(m_OC.getEVS_DATABASE());
-  
           for(int i=1;i<vOCConcepts.size();i++)
           {
             EVS_Bean m_OCQ = (EVS_Bean)vOCConcepts.elementAt(i);
-            if (m_OCQ == null)
-              m_OCQ = new EVS_Bean();        
+            if (m_OCQ == null) m_OCQ = new EVS_Bean();        
             Vector vOCQualifierNames = m_DEC.getDEC_OC_QUALIFIER_NAMES();
             if (vOCQualifierNames == null) vOCQualifierNames = new Vector();
             vOCQualifierNames.addElement(m_OCQ.getLONG_NAME());
+            
             Vector vOCQualifierCodes = m_DEC.getDEC_OC_QUALIFIER_CODES();
             if (vOCQualifierCodes == null) vOCQualifierCodes = new Vector();
             vOCQualifierCodes.addElement(m_OCQ.getNCI_CC_VAL());
+            
             Vector vOCQualifierDB = m_DEC.getDEC_OC_QUALIFIER_DB();
             if (vOCQualifierDB == null) vOCQualifierDB = new Vector();
             vOCQualifierDB.addElement(m_OCQ.getEVS_DATABASE());
+            
             m_DEC.setDEC_OC_QUALIFIER_NAMES(vOCQualifierNames);
             m_DEC.setDEC_OC_QUALIFIER_CODES(vOCQualifierCodes);
             m_DEC.setDEC_OC_QUALIFIER_DB(vOCQualifierDB);
@@ -2157,7 +2156,7 @@ public class GetACSearch implements Serializable
    * @throws Exception
    * 
    */
-  public void fillPropVectors(String oc_condr_idseq, DEC_Bean m_DEC, String sMenu)
+  public void fillPropVectors(String prop_condr_idseq, DEC_Bean m_DEC, String sMenu)
   throws Exception
   { 
      if (m_DEC != null)
@@ -2166,8 +2165,8 @@ public class GetACSearch implements Serializable
       //get vd parent attributes
       GetACService getAC = new GetACService(m_classReq, m_classRes, m_servlet);
       Vector vPCConcepts = new Vector();
-      if (oc_condr_idseq != null && !oc_condr_idseq.equals(""))
-        vPCConcepts = getAC.getAC_Concepts(oc_condr_idseq, null, true);
+      if (prop_condr_idseq != null && !prop_condr_idseq.equals(""))
+        vPCConcepts = getAC.getAC_Concepts(prop_condr_idseq, null, true);
       
       if (vPCConcepts != null) 
       {
@@ -2446,7 +2445,7 @@ public class GetACSearch implements Serializable
       logger.fatal("ERROR - GetACSearch-doVDSearch for close : " + ee.toString());
     }
     //capture the duration
-    logger.info(m_servlet.getLogMessage(m_classReq, "doVDSearch", "end search", exDate,  new java.util.Date()));
+  //  logger.info(m_servlet.getLogMessage(m_classReq, "doVDSearch", "end search", exDate,  new java.util.Date()));
   }  //endVD search
 
  
@@ -2473,7 +2472,7 @@ public class GetACSearch implements Serializable
   {
     //capture the duration
     java.util.Date exDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "begin search", exDate, exDate));
+ //   logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "begin search", exDate, exDate));
     Connection sbr_db_conn = null;
     ResultSet rs = null;
     CallableStatement CStmt = null;
@@ -2510,7 +2509,7 @@ public class GetACSearch implements Serializable
         //store the output in the resultset
         rs = (ResultSet) CStmt.getObject(7);
         //capture the duration
-        logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "got rsObject", exDate,  new java.util.Date()));
+    //    logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "got rsObject", exDate,  new java.util.Date()));
 
         String s;
 
@@ -2578,7 +2577,7 @@ public class GetACSearch implements Serializable
       logger.fatal("ERROR - GetACSearch-CDSearch for close : " + ee.toString());
     }
     //capture the duration
-    logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "end search", exDate,  new java.util.Date()));
+ //   logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "end search", exDate,  new java.util.Date()));
   }  //endCDsearch
 
   /**
@@ -3087,16 +3086,9 @@ public class GetACSearch implements Serializable
         vRSel = (Vector)session.getAttribute("vACSearch");
       else
         vRSel = (Vector)session.getAttribute("vSelRows");  
-    //  if (menuAction.equals("searchForCreate"))  vRSel = null;
-      
-    //  if (vRSel == null)
-    //  {
-    //    vRSel = vDE;
-    //  }
             
       // Do this so vRSel is not null when SearchIn is changed to ProtocolID/CRFName
       if(vRSel == null) vRSel = new Vector();
-  //System.out.println(actType + " deResult act " + menuAction + " size " + vRSel.size());
       Integer recs = new Integer(0);
       if(vRSel.size()>0)
        recs = new Integer(vRSel.size());
@@ -3189,7 +3181,6 @@ public class GetACSearch implements Serializable
       session.setAttribute("SearchUsedContext", vUsedContext);
       // for Back button, put search results on a stack
     //  if(!refresh.equals("true") && (!menuAction.equals("searchForCreate")))
-//System.out.println("getDE_Res vSearchASL.size: " + vSearchASL.size());
       if(!menuAction.equals("searchForCreate"))
         this.stackSearchComponents("DataElement", vDE, vRSel, vSearchID, vSearchName, vResult, vSearchASL);
     }
@@ -3893,7 +3884,6 @@ public class GetACSearch implements Serializable
       session.setAttribute("SearchASL", vSearchASL);  
       session.setAttribute("SearchDefinitionAC", vSearchDefinition);
       session.setAttribute("SearchUsedContext", vUsedContext);
-//System.out.println("getVD_Res vSearchASL.size: " + vSearchASL.size());
       // for Back button, put search results on a stack
       if(!refresh.equals("true") && (!menuAction.equals("searchForCreate")))
         this.stackSearchComponents("ValueDomain", vVD, vRSel, vSearchID, vSearchName, vResult, vSearchASL);
@@ -4007,7 +3997,6 @@ public class GetACSearch implements Serializable
       session.setAttribute("SearchASL", vSearchASL);     
       session.setAttribute("SearchDefinitionAC", vSearchDefinition);
       session.setAttribute("SearchUsedContext", vUsedContext);
-//System.out.println("getCD_Res vSearchASL.size: " + vSearchASL.size());
       // for Back button, put search results and attributes on a stack
       if(!refresh.equals("true") && (!menuAction.equals("searchForCreate")))
         this.stackSearchComponents("ConceptualDomain", vCD, vRSel, vSearchID, vSearchName, vResult, vSearchASL);
@@ -4036,7 +4025,7 @@ public class GetACSearch implements Serializable
   {
     //capture the duration
     java.util.Date exDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "do_caDSRSearch", "begin search", exDate, exDate));
+  //  logger.info(m_servlet.getLogMessage(m_classReq, "do_caDSRSearch", "begin search", exDate, exDate));
     Connection sbr_db_conn = null;
     ResultSet rs = null;
     CallableStatement CStmt = null;
@@ -4073,7 +4062,7 @@ public class GetACSearch implements Serializable
         //store the output in the resultset
         rs = (ResultSet) CStmt.getObject(5);
         //capture the duration
-        logger.info(m_servlet.getLogMessage(m_classReq, "do_caDSRSearch", "got rsObject", exDate, new java.util.Date()));
+    //    logger.info(m_servlet.getLogMessage(m_classReq, "do_caDSRSearch", "got rsObject", exDate, new java.util.Date()));
         String s;
         if(rs!=null)
         {
@@ -4127,7 +4116,7 @@ public class GetACSearch implements Serializable
       logger.fatal("GetACSearch-do_caDSRSearch for close : " + ee.toString());
     }
     //capture the duration
-    logger.info(m_servlet.getLogMessage(m_classReq, "do_caDSRSearch", "end search", exDate,  new java.util.Date()));
+ //   logger.info(m_servlet.getLogMessage(m_classReq, "do_caDSRSearch", "end search", exDate,  new java.util.Date()));
   }  //endOC search
   
 /**
@@ -4284,18 +4273,18 @@ public class GetACSearch implements Serializable
    */
  public Vector getRootConcepts(String dtsVocab, boolean codeOrNames) 
 { 
-//System.out.println("getRoots dtsVocab: " + dtsVocab + " codeOrNames: " + codeOrNames);
+  //System.out.println("getRoots dtsVocab: " + dtsVocab + " codeOrNames: " + codeOrNames);
     Vector vRoot = new Vector();
     DescLogicConcept dlc = null;
     dlc = new DescLogicConcept();
      if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("") ||
-     dtsVocab.equals("NCI Thesaurus"))
+     dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
       dtsVocab = m_servlet.m_VOCAB_NCI; //"NCI_Thesaurus";
-    else if(dtsVocab.equals("VA NDFRT"))
+    else if(dtsVocab.equals("VA NDFRT") || dtsVocab.equals("VA_NDFRT"))
       dtsVocab = m_servlet.m_VOCAB_VA;  //"VA_NDFRT";
     else if(dtsVocab.equals("UWD VISUAL ANATOMIST") || dtsVocab.equals("UWD_VISUAL_ANATOMIST"))
       dtsVocab = m_servlet.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
-    else if(dtsVocab.equals("MGED")) 
+    else if(dtsVocab.equals("MGED") || dtsVocab.equals("MGED_Ontology")) 
       dtsVocab = m_servlet.m_VOCAB_MGE;  //"MGED_Ontology";
     else if(dtsVocab.equals("GO"))
       dtsVocab = m_servlet.m_VOCAB_GO;
@@ -4323,7 +4312,7 @@ public class GetACSearch implements Serializable
          vRoot.addElement("Biochemical_Pathway");
          vRoot.addElement("Biological_Process");
          vRoot.addElement("Chemotherapy_Regimen");
-         vRoot.addElement("Clinical_or_Research_Activities");
+         vRoot.addElement("Clinical_or_Research_Activity");
          vRoot.addElement("Conceptual_Entities");
          vRoot.addElement("Diagnostic_Therapeutic_and_Research_Equipment");
          vRoot.addElement("Diagnostic_or_Prognostic_Factor");
@@ -4911,20 +4900,27 @@ public class GetACSearch implements Serializable
  
     String[] stringArray = null;
     Vector vSub = new Vector();
+     if(dtsVocab.equals("GO") && (conceptName.equals("double-strand break repair via homologous recombination ")
+     || conceptName.equals("double-strand break repair via homologous recombination")))
+    {
+      conceptName = "double-strand break repair via homologous recombination_";
+    }
      if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
      || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
      {
       dtsVocab = m_servlet.m_VOCAB_NCI; //"NCI_Thesaurus";
       conceptName = filterName(conceptName, "js");
      }
-    else if(dtsVocab.equals("VA NDFRT"))
+    else if(dtsVocab.equals("VA NDFRT") || dtsVocab.equals("VA_NDFRT"))
       dtsVocab = m_servlet.m_VOCAB_VA;  //"VA_NDFRT";
     else if(dtsVocab.equals("UWD VISUAL ANATOMIST") || dtsVocab.equals("UWD_VISUAL_ANATOMIST"))
       dtsVocab = m_servlet.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
-    else if(dtsVocab.equals("MGED")) 
+    else if(dtsVocab.equals("MGED") || dtsVocab.equals("MGED_Ontology")) 
       dtsVocab = m_servlet.m_VOCAB_MGE;  //"MGED_Ontology";
     else if(dtsVocab.equals("GO"))
+    {
       dtsVocab = m_servlet.m_VOCAB_GO;
+    }
     else if(dtsVocab.equals("LOINC"))
       dtsVocab = m_servlet.m_VOCAB_LOI;
     else if(dtsVocab.equals("MedDRA"))
@@ -4932,7 +4928,6 @@ public class GetACSearch implements Serializable
     else if(dtsVocab.equals("HL7_V3")) 
       dtsVocab = m_servlet.m_VOCAB_HL7;
       
-
     if(!dtsVocab.equals("NCI Metathesaurus"))
     {
      try
@@ -4951,7 +4946,7 @@ public class GetACSearch implements Serializable
           }
           catch(Exception ee)
           {
-            //System.err.println("problem0 in Thesaurus GetACSearch-getSubConceptNames: " + ee);
+            System.err.println("problem0 in Thesaurus GetACSearch-getSubConceptNames: " + ee);
             stringArray = null;
           }
           if(stringArray != null && stringArray.length > 0)
@@ -4973,17 +4968,20 @@ public class GetACSearch implements Serializable
               }
               catch(Exception ee)
               {
-                //System.err.println("problem1 in Thesaurus GetACSearch-getSubConceptNames: " + ee);
+                System.err.println("problem1 in Thesaurus GetACSearch-getSubConceptNames: " + ee);
                 stringArray = null;
               }
               if(stringArray != null)
               {
+                 String  prefName2 = "";
                 for(int j=0; j < stringArray.length; j++) 
                 {
-                 String  prefName2 = dlc.getConceptNameByCode(dtsVocab, stringArray[j]);
+                 prefName2 = dlc.getConceptNameByCode(dtsVocab, stringArray[j]);
                   vSub.addElement(prefName2);
                 }
               }
+           //   else
+              //  System.err.println("getSubConceptName stringArray null.");
             }
           } 
         }
@@ -4995,7 +4993,7 @@ public class GetACSearch implements Serializable
           }
           catch(Exception ee)
           {
-            //System.err.println("problem2 in Thesaurus GetACSearch-getSubConcepts: " + ee);
+            System.err.println("problem2All in Thesaurus GetACSearch-getSubConcepts: " + ee);
             stringArray = null;
           }
           if(stringArray != null)
@@ -5013,7 +5011,7 @@ public class GetACSearch implements Serializable
                 }
                 catch(Exception ee)
                 {
-                  //System.err.println("problem1 in Thesaurus GetACSearch-getSubConcepts: " + ee);
+                  System.err.println("problem1 in Thesaurus GetACSearch-getSubConcepts: " + ee);
                   stringArray = null;
                 }
                 if(stringArray != null)
@@ -5026,7 +5024,7 @@ public class GetACSearch implements Serializable
       }
       catch(Exception ee)
       {
-            //System.err.println("problem in Thesaurus syn GetACSearch-getSubConcepts: " + ee);
+            System.err.println("problem in Thesaurus syn GetACSearch-getSubConcepts: " + ee);
             logger.fatal("ERROR - GetACSearch-getSubConcepts for Thesaurus : " + ee.toString());
             return vSub;
       }
@@ -5062,13 +5060,7 @@ public class GetACSearch implements Serializable
     return vSub;
  }
    
-/**
-   * This method searches EVS vocabularies and returns subconcepts, which are used
-   * to construct an EVS Tree. 
-   * @param String dtsVocab the EVS Vocabulary
-   * @param String conceptName the root concept.
-   *
-*/
+
 
 /**
    * This method searches EVS vocabularies and returns subconcepts, which are used
@@ -5144,18 +5136,18 @@ public int getLevelDownFromParent(String prefName, String dtsVocab)
 { 
    //capture the duration
    java.util.Date exDate = new java.util.Date();          
-   logger.info(m_servlet.getLogMessage(m_classReq, "getLevelDownFromParent", "begin leveldown", exDate, exDate));
+   //logger.info(m_servlet.getLogMessage(m_classReq, "getLevelDownFromParent", "begin leveldown", exDate, exDate));
 
    if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
      || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
     {
       dtsVocab = m_servlet.m_VOCAB_NCI; //"NCI_Thesaurus";
     }
-    else if(dtsVocab.equals("VA NDFRT"))
+    else if(dtsVocab.equals("VA NDFRT") || dtsVocab.equals("VA_NDFRT"))
       dtsVocab = m_servlet.m_VOCAB_VA;  //"VA_NDFRT";
     else if(dtsVocab.equals("UWD VISUAL ANATOMIST") || dtsVocab.equals("UWD_VISUAL_ANATOMIST"))
       dtsVocab = m_servlet.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
-    else if(dtsVocab.equals("MGED")) 
+    else if(dtsVocab.equals("MGED") || dtsVocab.equals("MGED_Ontology")) 
       dtsVocab = m_servlet.m_VOCAB_MGE;  //"MGED_Ontology";
     else if(dtsVocab.equals("GO"))
       dtsVocab = m_servlet.m_VOCAB_GO;
@@ -5192,9 +5184,8 @@ public int getLevelDownFromParent(String prefName, String dtsVocab)
       if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
       || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
         sParent = filterName(sParent, "js");
-      else
-        sParent = filterName(sParent, "display");
-// System.err.println("getLevelDownFromParent: sParent: " + sParent);
+  
+//System.err.println("getLevelDownFromParent: sParent: " + sParent + " prefName: " + prefName);
       if(prefName.equals(sParent))
        matchParent = "true";
       if(sParent != null && !sParent.equals(""))
@@ -5208,19 +5199,13 @@ public int getLevelDownFromParent(String prefName, String dtsVocab)
           }
           catch(Exception ee)
           {
-              //System.err.println("problem2 in Thesaurus GetACSearch-getLevelDownFromParent: " + ee);
+              System.err.println("problem2 in Thesaurus GetACSearch-getLevelDownFromParent: " + ee);
               stringArray = null;
           }
-          if(stringArray != null && stringArray.length>0)
+          if(stringArray != null && stringArray.length == 1)  // == 1
           {
             level++;
             sSuperConceptName = (String)stringArray[0];
-            if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
-            || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
-            {
-              sParent = filterName(sParent, "js");
-            }
-//  System.out.println("levelDown sSuperConceptName: " + sSuperConceptName + " sParent: " + sParent);
             if(sSuperConceptName.equals(sParent))
             {            
               matchParent = "true";
@@ -5228,15 +5213,90 @@ public int getLevelDownFromParent(String prefName, String dtsVocab)
             else
               prefName = sSuperConceptName;
           }
+          else if(stringArray != null && stringArray.length > 1)
+          {
+            level++;
+            sSuperConceptName = findThePath(dtsVocab, stringArray, sParent);
+            if(sSuperConceptName.equals(""))
+              sSuperConceptName = (String)stringArray[0];
+            if(sSuperConceptName.equals(sParent))
+            {            
+              matchParent = "true";
+            }
+            else
+              prefName = sSuperConceptName;
+          } 
           else
               matchParent = "true";
         }
       }
     }
     //capture the duration
-    logger.info(m_servlet.getLogMessage(m_classReq, "getLevelDownFromParent", "end leveldown", exDate,  new java.util.Date()));
+ //   logger.info(m_servlet.getLogMessage(m_classReq, "getLevelDownFromParent", "end leveldown", exDate,  new java.util.Date()));
 // System.err.println("getLevelDownFromParent level: " + level);
     return level;
+}
+
+/**
+   * When getting superConcepts, sometimes more than one is returned in the superConcepts array. 
+   * This method looks at each member of the array and checks which one leads up
+   * to the parent concept, then returns the superconcept which leads up to parent
+   * to construct an EVS Tree. 
+   * @param String dtsVocab the EVS Vocabulary
+   * @param String[] stringArray.
+   * @param String sParent 
+   *
+*/
+public String findThePath(String dtsVocab, String[] stringArray, String sParent) 
+{
+  Boolean flagOne = new java.lang.Boolean(false);
+  Boolean flagTwo = new Boolean(false);
+  DescLogicConcept dlc = null;
+  String[] stringArray2 = null;
+  dlc = new DescLogicConcept();
+  String sSuperConceptName = "";
+  String sCorrectSuperConceptName = "";
+  String matchParent = "false";
+  String prefName = "";  
+  String prefNameCurrent = ""; 
+  for(int j=0; j < stringArray.length; j++) 
+  {
+     matchParent = "false";
+    prefName = (String)stringArray[j];
+    prefNameCurrent = (String)stringArray[j];
+    if(prefName.equals(sParent))
+    {
+       matchParent = "true";
+       sCorrectSuperConceptName = prefName;
+    }  
+    while(matchParent.equals("false"))
+    {
+      try
+      {
+        if(prefName != null && !prefName.equals(""))
+          stringArray2 = dlc.getSuperConcepts(dtsVocab,prefName,flagOne,flagTwo);
+      }
+      catch(Exception ee)
+      {
+        stringArray2 = null;
+      }
+      if(stringArray2 != null && stringArray2.length > 0)  // == 1
+      {
+        sSuperConceptName = (String)stringArray2[0]; 
+        if(sSuperConceptName.equals(sParent))
+        {            
+          matchParent = "true";
+          sCorrectSuperConceptName = prefNameCurrent;
+          break;
+        }
+        else
+          prefName = sSuperConceptName;
+      }
+      else
+          matchParent = "true";
+    }      
+  } 
+  return sCorrectSuperConceptName;
 }
    
 /**
@@ -5250,7 +5310,7 @@ public String[] getAllSubConceptNames(String dtsVocab, String[] stringArray, Vec
 { 
     //capture the duration
     java.util.Date exDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "getAllSubConceptNames", "begin allsub", exDate, exDate));
+  //  logger.info(m_servlet.getLogMessage(m_classReq, "getAllSubConceptNames", "begin allsub", exDate, exDate));
 
     String[] stringArray2 = null;
     String[] stringArray3 = null;
@@ -5259,12 +5319,19 @@ public String[] getAllSubConceptNames(String dtsVocab, String[] stringArray, Vec
     DescLogicConcept dlc = null;
     dlc = new DescLogicConcept();
     String getMoreSubConcepts = "";
+    String  prefName = "";
   
     if(stringArray != null && stringArray.length>0)
     {
       for(int j=0; j < stringArray.length; j++) 
       {
-        String  prefName = filterName(stringArray[j], "js");
+        if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
+        || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
+        {
+           prefName = filterName(stringArray[j], "js");
+        }
+        else
+          prefName = stringArray[j];
         vSub.addElement(prefName);
         try
         {
@@ -5291,7 +5358,7 @@ public String[] getAllSubConceptNames(String dtsVocab, String[] stringArray, Vec
       }
     }   
     //capture the duration
-    logger.info(m_servlet.getLogMessage(m_classReq, "getAllSubConceptNames", "end allsub", exDate,  new java.util.Date()));
+  //  logger.info(m_servlet.getLogMessage(m_classReq, "getAllSubConceptNames", "end allsub", exDate,  new java.util.Date()));
 
     return stringArray;
 }
@@ -5333,11 +5400,11 @@ public Vector getSuperConceptNames(String dtsVocab, String conceptName, String c
       dtsVocab = m_servlet.m_VOCAB_NCI; //"NCI_Thesaurus";
      
     }
-    else if(dtsVocab.equals("VA NDFRT"))
+    else if(dtsVocab.equals("VA NDFRT")|| dtsVocab.equals("VA_NDFRT"))
       dtsVocab = m_servlet.m_VOCAB_VA;  //"VA_NDFRT";
     else if(dtsVocab.equals("UWD VISUAL ANATOMIST") || dtsVocab.equals("UWD_VISUAL_ANATOMIST"))
       dtsVocab = m_servlet.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
-    else if(dtsVocab.equals("MGED")) 
+    else if(dtsVocab.equals("MGED") || dtsVocab.equals("MGED_Ontology")) 
       dtsVocab = m_servlet.m_VOCAB_MGE;  //"MGED_Ontology";
     else if(dtsVocab.equals("GO"))
       dtsVocab = m_servlet.m_VOCAB_GO;
@@ -5443,7 +5510,7 @@ public String[] getAllSuperConceptNames(String dtsVocab, String[] stringArray, V
 { 
     //capture the duration
     java.util.Date exDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "getAllSuperConceptNames", "begin getallsuper", exDate, exDate));
+ //   logger.info(m_servlet.getLogMessage(m_classReq, "getAllSuperConceptNames", "begin getallsuper", exDate, exDate));
 
     String[] stringArray2 = null;
     String[] stringArray3 = null;
@@ -5479,7 +5546,7 @@ public String[] getAllSuperConceptNames(String dtsVocab, String[] stringArray, V
         }
     }   
     //capture the duration
-    logger.info(m_servlet.getLogMessage(m_classReq, "getAllSuperConceptNames", "end getallsuper", exDate,  new java.util.Date()));
+ //   logger.info(m_servlet.getLogMessage(m_classReq, "getAllSuperConceptNames", "end getallsuper", exDate,  new java.util.Date()));
 
     return stringArray;
 }
@@ -5520,20 +5587,22 @@ public void do_MetaCodeSearch(String termStr, String source)
    */
  public void do_EVSSearch(String termStr,
       Vector vList, String dtsVocab, String sSearchInEVS,
-      String sMetaSource , int sMetaLimit, String sUISearchType, String sRetired, String sConte_idseq) 
+      String sMetaSource , int sMetaLimit, String sUISearchType, String sRetired,
+      String sConte_idseq, int iLevelImmediate) 
   {
     //capture the duration
     java.util.Date exDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "do_EVSSearch", "begin search", exDate, exDate));
+ //   logger.info(m_servlet.getLogMessage(m_classReq, "do_EVSSearch", "begin search", exDate, exDate));
 
     String prefName = "";
+    String prefNameConcept = "";
     String tempCuiVal = "";
     String tempCuiType = "";
     String umlsCuiType = "";
     String umlsCuiVal = "";
     String CCode = "";
-    int ilevel = 1;
-    int ilevelInit = 1;
+    int ilevel = 0;
+    int ilevelImmediate = 0;
     boolean isRetired = false;
     boolean isMetaCodeSearch = false;
     boolean codeFoundInThesaurus = false;
@@ -5549,7 +5618,7 @@ public void do_MetaCodeSearch(String termStr, String source)
     if(sMetaLimit == 1000) sMetaLimit = 980;
   
     if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("") ||
-    dtsVocab.equals("NCI Thesaurus"))
+    dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
     {
       dtsVocab = m_servlet.m_VOCAB_NCI; //"NCI_Thesaurus";
       sAltNameType = "NCI_CONCEPT_CODE";
@@ -5563,13 +5632,13 @@ public void do_MetaCodeSearch(String termStr, String source)
       sUISearchType = "term";
     }
     //for Meta searches only (no Thes search), like in getSuperConcepts Meta
-     else if(dtsVocab.equals("NCI Metathesaurus"))
+    else if(dtsVocab.equals("NCI Metathesaurus"))
     {
-      sAltNameType = "UMLS CUI";
+      sAltNameType = "UMLS_CUI";
       isMetaCodeSearch = false;
       sUISearchType = "term";
     }
-    else if(dtsVocab.equals("VA NDFRT"))
+    else if(dtsVocab.equals("VA NDFRT") || dtsVocab.equals("VA_NDFRT"))
     {
       dtsVocab = m_servlet.m_VOCAB_VA;  //"VA_NDFRT";
       sAltNameType = "VA_NDF_CODE";
@@ -5579,7 +5648,7 @@ public void do_MetaCodeSearch(String termStr, String source)
       dtsVocab = m_servlet.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
       sAltNameType = "UWD_VA_CODE";
     }
-    else if(dtsVocab.equals("MGED")) 
+    else if(dtsVocab.equals("MGED") || dtsVocab.equals("MGED_Ontology")) 
     {
       dtsVocab = m_servlet.m_VOCAB_MGE;  //"MGED_Ontology";
       sAltNameType = "NCI_MO_CODE";
@@ -5606,7 +5675,7 @@ public void do_MetaCodeSearch(String termStr, String source)
     }
     else
       sAltNameType = "";
-//System.out.println("do_EVSSearch dtsVocab: " + dtsVocab + " termStr: " + termStr);
+//System.out.println("do_EVSSearch dtsVocab: " + dtsVocab + " termStr: " + termStr + " iLevelImmediate: " + iLevelImmediate);
    try
    {
       DescLogicConceptSearchCriteria dlcsc = new DescLogicConceptSearchCriteria();
@@ -5631,12 +5700,11 @@ public void do_MetaCodeSearch(String termStr, String source)
         isRetired = false;
        if(isRetired == false)
        {
-        prefName = dlc.getConceptNameByCode(dtsVocab, termStr);
-        CCode = termStr;
-        
-        if(dlc != null && prefName != null)
+        prefNameConcept = dlc.getConceptNameByCode(dtsVocab, termStr);
+        CCode = termStr;   
+        if(dlc != null && prefNameConcept != null)
           conceptUID = dlc.getConceptUniqueIdentifier();
-        if (conceptUID != null && prefName != null)
+        if (conceptUID != null && prefNameConcept != null)
         {
           boolean umls = conceptUID.isUMLS();
           if (umls == false) // is TEMP CUI
@@ -5653,17 +5721,17 @@ public void do_MetaCodeSearch(String termStr, String source)
           if (umlsCuiVal == null || umlsCuiVal.equals("")) umlsCuiVal = "No value returned.";
           if (tempCuiVal == null || tempCuiVal.equals("")) tempCuiVal = "No value returned.";
         }
-        if(dlcsc != null && prefName != null && !prefName.equals(""))
+        if(dlcsc != null && prefNameConcept != null && !prefNameConcept.equals(""))
         {
           codeFoundInThesaurus = true;
-          dlcsc.setSearchTerm(prefName);
+          dlcsc.setSearchTerm(prefNameConcept);
           dlc = dlcsc.getConceptByName(dlcsc);
           if(dtsVocab.substring(0,2).equalsIgnoreCase("GO") || dtsVocab.substring(0,3).equalsIgnoreCase("NCI") 
           || dtsVocab.substring(0,3).equalsIgnoreCase("MGE") || dtsVocab.substring(0,3).equalsIgnoreCase("Med")) // both have Preferred_Name property
           {
-            Preferred_Name = dlc.getPropertyValues(dtsVocab, prefName, "Preferred_Name");
+            Preferred_Name = dlc.getPropertyValues(dtsVocab, prefNameConcept, "Preferred_Name");
             if(Preferred_Name != null && Preferred_Name.length > 0)
-              prefName = Preferred_Name[0];  
+              prefName = Preferred_Name[0];    
           }
 
           // For referenced VD's, exclude Header concepts from list of possible values
@@ -5690,35 +5758,15 @@ public void do_MetaCodeSearch(String termStr, String source)
             }
           }
         }   
-        if(dlc != null && dlc.getDefinitions()!= null && prefName != null)
+        if(dlc != null && dlc.getDefinitions()!= null && prefNameConcept != null)
 			  {  
           Definition[] definitionArray = dlc.getDefinitions(); 
           String definition = "";
           String source = "";
-        if(sSearchAC.equals("ParentConceptVM")) // && sSearchType.equals("Immediate"))
-        {
-              String sParent = (String)session.getAttribute("ParentConcept");
-              if(sParent == null) sParent = "";
-              sParent = filterName(sParent, "display");
-              if(prefName.equals(sParent))
-                ilevelInit = 0;
-              else
-              {
-                String sMetaLevel = (String)session.getAttribute("ConceptLevel");
-                if(sMetaLevel != null && !sMetaLevel.equals(""))
-                {
-                  Integer IsMetaLevel = new Integer(sMetaLevel);
-                  int iMetaLevel = IsMetaLevel.intValue();
-                  ilevelInit = iMetaLevel + 1;
-                }
-                else
-                  ilevelInit = 1;
-              }
-          }
           if(dtsVocab.equals("GO") || dtsVocab.substring(0,3).equalsIgnoreCase("MGE")
           || dtsVocab.substring(0,3).equalsIgnoreCase("HL7"))
           {
-              Definition_Array = dlc.getPropertyValues(dtsVocab, prefName, "DEFINITION");
+              Definition_Array = dlc.getPropertyValues(dtsVocab, prefNameConcept, "DEFINITION");
               if(Definition_Array != null && Definition_Array.length > 0)
                 definition = Definition_Array[0];
               if(definition == null || definition.equals("")) 
@@ -5740,7 +5788,7 @@ public void do_MetaCodeSearch(String termStr, String source)
                      if(dtsVocab.equals("GO") || dtsVocab.substring(0,3).equalsIgnoreCase("MGE")
                       || dtsVocab.substring(0,3).equalsIgnoreCase("HL7"))
                     {
-                      Definition_Array = dlc.getPropertyValues(dtsVocab, prefName, "DEFINITION");
+                      Definition_Array = dlc.getPropertyValues(dtsVocab, prefNameConcept, "DEFINITION");
                       if(Definition_Array != null && Definition_Array.length > 0)
                         definition = Definition_Array[0];
                       if(definition == null || definition.equals("")) 
@@ -5761,11 +5809,12 @@ public void do_MetaCodeSearch(String termStr, String source)
              
               if(synonymIsHeader.equals("false"))
               {
-                if(sSearchAC.equals("ParentConceptVM"))  // && !sSearchType.equals("Immediate") && ilevel != 0)
-                  ilevel = getLevelDownFromParent(prefName, dtsVocab);
-                if(ilevelInit > ilevel) ilevel = ilevelInit;
+                if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
+                  ilevel = ilevelImmediate;
+                else if(sSearchAC.equals("ParentConceptVM"))
+                  ilevel = getLevelDownFromParent(prefNameConcept, dtsVocab);
                 EVS_Bean OCBean = new EVS_Bean();
-                OCBean.setEVSBean(definition, source, prefName, sAltNameType, umlsCuiType, tempCuiType,
+                OCBean.setEVSBean(definition, source, prefNameConcept, sAltNameType, umlsCuiType, tempCuiType,
                 CCode, umlsCuiVal, tempCuiVal, dtsVocab, ilevel, "", sConte_idseq, ""); 
                 vList.addElement(OCBean);    //add OC bean to vector
               }
@@ -5774,11 +5823,13 @@ public void do_MetaCodeSearch(String termStr, String source)
         else if (prefName != null && synonymIsHeader.equals("false"))  // conceptObj.getDefinitions()== null
         {
            
-            if(sSearchAC.equals("ParentConceptVM")) // && !sSearchType.equals("Immediate") && ilevel != 0)
-              ilevel = getLevelDownFromParent(prefName, dtsVocab);
-            if(ilevelInit > ilevel) ilevel = ilevelInit;
+          if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
+            ilevel = ilevelImmediate;
+          else if(sSearchAC.equals("ParentConceptVM"))
+            ilevel = getLevelDownFromParent(prefNameConcept, dtsVocab);
+  //    System.out.println("do_EVSSearch ilevelImmed4: " + ilevelImmediate + " ilevel: " + ilevel);   
             EVS_Bean OCBean = new EVS_Bean();
-            OCBean.setEVSBean("No value exists.", "", prefName, sAltNameType, umlsCuiType, tempCuiType,
+            OCBean.setEVSBean("No value exists.", "", prefNameConcept, sAltNameType, umlsCuiType, tempCuiType,
             CCode, umlsCuiVal, tempCuiVal, dtsVocab, ilevel, "", sConte_idseq, ""); 
             vList.addElement(OCBean);    //add OC bean to vector
         }
@@ -5795,11 +5846,12 @@ public void do_MetaCodeSearch(String termStr, String source)
      {
       try
       {
+//System.out.println("do_EVSSearch get stringArray");
         stringArray = dlc.findConceptWithPropertyMatching(dtsVocab,sSearchInEVS,termStr,10000);
       // Do this type of search because exact match "Synonym" searches sometimes 
       // do not return concept. Always do this for UWD_Visual_Anatomist, as a Synonym
       // search does not return the concept, only synonyms 
-       if(stringArray.length == 0 && !dtsVocab.equals("NCI_Thesaurus"))
+      if(stringArray.length == 0 && !dtsVocab.equals("NCI_Thesaurus"))
       {  
         conceptArray = null;  
         dlcsc.setSearchTerm(termStr);
@@ -5815,6 +5867,7 @@ public void do_MetaCodeSearch(String termStr, String source)
       for(int i=0; i<stringArray.length; i++)
       {
         prefName = (String)stringArray[i];
+//System.out.println("do_EVSSearch prefName: " + prefName);
         if(dlcsc != null && dlc != null &&  prefName != null)
         {
           dlcsc.setSearchTerm(prefName);
@@ -5848,8 +5901,6 @@ public void do_MetaCodeSearch(String termStr, String source)
           }
           if(dlcsc != null && prefName != null)
           {
-            //dlcsc.setSearchTerm(prefName);
-            //dlc = dlcsc.getConceptByName(dlcsc);
             if(dtsVocab.substring(0,2).equalsIgnoreCase("GO") || dtsVocab.substring(0,3).equalsIgnoreCase("NCI") 
             || dtsVocab.substring(0,3).equalsIgnoreCase("MGE") || dtsVocab.substring(0,3).equalsIgnoreCase("Med"))
             {
@@ -5865,28 +5916,6 @@ public void do_MetaCodeSearch(String termStr, String source)
             Definition[] definitionArray = dlc.getDefinitions();  
             String definition = "";
             String source = "";
-           if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate"))
-            {
-              String sParent = (String)session.getAttribute("ParentConcept");
-              if(sParent == null) sParent = "";
-              sParent = filterName(sParent, "display");
-              if(prefName.equals(sParent))
-              {
-                ilevelInit = 0;
-              }
-              else
-              {
-                String sMetaLevel = (String)session.getAttribute("ConceptLevel");
-                if(sMetaLevel != null && !sMetaLevel.equals(""))
-                {
-                  Integer IsMetaLevel = new Integer(sMetaLevel);
-                  int iMetaLevel = IsMetaLevel.intValue();
-                  ilevelInit = iMetaLevel + 1;
-                }
-                else
-                  ilevelInit = 1;
-              }
-            }
             if(dtsVocab.substring(0,2).equalsIgnoreCase("GO") || dtsVocab.substring(0,3).equalsIgnoreCase("MGE") 
               || dtsVocab.substring(0,3).equalsIgnoreCase("HL7"))
             {
@@ -5934,9 +5963,11 @@ public void do_MetaCodeSearch(String termStr, String source)
                 if(definition == null) definition = "";
                 if(!source.equals(""))
                   source = trimDefSource(source);
-                if(sSearchAC.equals("ParentConceptVM") && !sSearchType.equals("Immediate")  && ilevel != 0)
-                  ilevel = getLevelDownFromParent(prefName, dtsVocab);
-                 if(ilevelInit > ilevel) ilevel = ilevelInit;
+                if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
+                  ilevel = ilevelImmediate;
+                else if(sSearchAC.equals("ParentConceptVM"))
+                  ilevel = getLevelDownFromParent(prefNameConcept, dtsVocab);
+   //   System.out.println("do_EVSSearch ilevelImmed5: " + ilevelImmediate + " ilevel: " + ilevel);
                 EVS_Bean OCBean = new EVS_Bean();
                 OCBean.setEVSBean(definition, source, prefName, sAltNameType, umlsCuiType, tempCuiType,
                 CCode, umlsCuiVal, tempCuiVal, dtsVocab, ilevel, "", sConte_idseq, ""); 
@@ -5946,9 +5977,11 @@ public void do_MetaCodeSearch(String termStr, String source)
           else if(prefName != null && !prefName.equals("")) // conceptObj.getDefinitions()== null
           {
             EVS_Bean OCBean = new EVS_Bean();
-            if(sSearchAC.equals("ParentConceptVM") && !sSearchType.equals("Immediate")  && ilevel != 0)
-              ilevel = getLevelDownFromParent(prefName, dtsVocab);
-            if(ilevelInit > ilevel) ilevel = ilevelInit;
+            if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
+              ilevel = ilevelImmediate;
+            else if(sSearchAC.equals("ParentConceptVM"))
+              ilevel = getLevelDownFromParent(prefNameConcept, dtsVocab);
+   //   System.out.println("do_EVSSearch prefName2: " + prefName);
             OCBean.setEVSBean("No value exists.", "", prefName, sAltNameType, umlsCuiType, tempCuiType,
               CCode, umlsCuiVal, tempCuiVal, dtsVocab, ilevel, "", sConte_idseq, "");
             vList.addElement(OCBean);    //add OC bean to vector
@@ -5963,7 +5996,8 @@ public void do_MetaCodeSearch(String termStr, String source)
           logger.fatal("ERROR - GetACSearch-do_EVSSearch for Thesaurus : " + ee.toString());
       }
      }
-    if((dtsVocab.equals("NCI_Thesaurus") || dtsVocab.equals("NCI Metathesaurus")) && sUISearchType.equals("term") && !termStr.equals(""))
+    if((dtsVocab.equals("NCI_Thesaurus") 
+    || dtsVocab.equals("NCI Metathesaurus")) && sUISearchType.equals("term") && !termStr.equals(""))
     {
       // Search the Metathesaurus
       MetaThesaurusConceptSearchCriteria mtcsc = new MetaThesaurusConceptSearchCriteria();
@@ -6073,28 +6107,6 @@ public void do_MetaCodeSearch(String termStr, String source)
 				  Definition[] definitionArray = conceptObj.getDefinitions();
           String definition = "";
           String source = "";
-         if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate"))
-          {
-            sParent = (String)session.getAttribute("ParentConcept");
-            if(sParent == null) sParent = "";
-            sParent = filterName(sParent, "display");
-            if(prefName.equals(sParent))
-            {
-              ilevelInit = 0;
-            }
-            else
-            {
-              String sMetaLevel = (String)session.getAttribute("ConceptLevel");
-              if(sMetaLevel != null && !sMetaLevel.equals(""))
-              {
-                Integer IsMetaLevel = new Integer(sMetaLevel);
-                int iMetaLevel = IsMetaLevel.intValue();
-                ilevelInit = iMetaLevel + 1;
-              }
-              else
-                ilevelInit = 1;
-            }
-          }
           if(definitionArray.length > 0)
           {
             for (int j=0;j<definitionArray.length; j++)
@@ -6110,9 +6122,11 @@ public void do_MetaCodeSearch(String termStr, String source)
               if(sourceString.indexOf(sMetaSource)>-1 || sMetaSource.equals("All Sources"))
               {
                 source = trimDefSource(source);
-                if(!sSearchType.equals("Immediate"))
+                if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
+                  ilevel = ilevelImmediate;
+                else if(sSearchAC.equals("ParentConceptVM"))
                   ilevel = getLevelDownFromParentMeta(prefName, dtsVocab, source);
-                if(ilevelInit > ilevel) ilevel = ilevelInit;
+               
                 EVS_Bean OCBean = new EVS_Bean();
                 OCBean.setEVSBean(definition, source, prefName, sAltNameType, umlsCuiType, tempCuiType,
                 CCode, umlsCuiVal, tempCuiVal, "NCI Metathesaurus", ilevel, "", sConte_idseq, sMetaSource);
@@ -6123,9 +6137,10 @@ public void do_MetaCodeSearch(String termStr, String source)
           else if(sourceString.indexOf(sMetaSource)>-1 || sMetaSource.equals("All Sources")
           && prefName != null && !prefName.equals(""))//definitionArray.length=0
           {
-            if(sSearchAC.equals("ParentConceptVM") && !sSearchType.equals("Immediate"))
+            if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
+              ilevel = ilevelImmediate;
+            else if(sSearchAC.equals("ParentConceptVM"))
               ilevel = getLevelDownFromParentMeta(prefName, dtsVocab, source);
-            if(ilevelInit > ilevel) ilevel = ilevelInit;
             EVS_Bean OCBean = new EVS_Bean();
             OCBean.setEVSBean("No value exists.", "", prefName, sAltNameType, umlsCuiType, tempCuiType,
               CCode, umlsCuiVal, tempCuiVal, "NCI Metathesaurus", ilevel, "", sConte_idseq, sMetaSource);
@@ -6248,28 +6263,6 @@ public void do_MetaCodeSearch(String termStr, String source)
 				  Definition[] definitionArray = conceptObj.getDefinitions();
           String definition = "";
           String source = "";
-         if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate"))
-          {
-            String sParent = (String)session.getAttribute("ParentConcept");
-            if(sParent == null) sParent = "";
-            sParent = filterName(sParent, "display");
-            if(prefName.equals(sParent))
-            {
-              ilevelInit = 0;
-            }
-            else
-            {
-              String sMetaLevel = (String)session.getAttribute("ConceptLevel");
-              if(sMetaLevel != null && !sMetaLevel.equals(""))
-              {
-                Integer IsMetaLevel = new Integer(sMetaLevel);
-                int iMetaLevel = IsMetaLevel.intValue();
-                ilevelInit = iMetaLevel + 1;
-              }
-              else
-                ilevelInit = 1;
-            }
-          }
           if(definitionArray.length > 0)
           {
             // each definition/source will have its own OCbean add to vector
@@ -6285,9 +6278,10 @@ public void do_MetaCodeSearch(String termStr, String source)
               if(sourceString.indexOf(sMetaSource)>-1 || sMetaSource.equals("All Sources"))
               {
                 source = trimDefSource(source);
-               if(sSearchAC.equals("ParentConceptVM") && !sSearchType.equals("Immediate"))
+                if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
+                  ilevel = ilevelImmediate;
+                else if(sSearchAC.equals("ParentConceptVM"))
                   ilevel = getLevelDownFromParentMeta(prefName, dtsVocab, source);
-                if(ilevelInit > ilevel) ilevel = ilevelInit;
                 EVS_Bean OCBean = new EVS_Bean();
                 OCBean.setEVSBean(definition, source, prefName, sAltNameType, umlsCuiType, tempCuiType,
                   CCode, umlsCuiVal, tempCuiVal, "NCI Metathesaurus", ilevel, "", sConte_idseq, sMetaSource);
@@ -6298,9 +6292,10 @@ public void do_MetaCodeSearch(String termStr, String source)
           else if((sourceString.indexOf(sMetaSource)>-1 || sMetaSource.equals("All Sources"))
           && prefName != null && !prefName.equals(""))//definitionArray.length=0
           {
-            if(sSearchAC.equals("ParentConceptVM") && !sSearchType.equals("Immediate"))
+            if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
+              ilevel = ilevelImmediate;
+            else if(sSearchAC.equals("ParentConceptVM"))
               ilevel = getLevelDownFromParentMeta(prefName, dtsVocab, source);
-            if(ilevelInit > ilevel) ilevel = ilevelInit;
             EVS_Bean OCBean = new EVS_Bean();
             OCBean.setEVSBean("No value exists.", "", prefName, sAltNameType, umlsCuiType, tempCuiType,
               CCode, umlsCuiVal, tempCuiVal, "NCI Metathesaurus", ilevel, "", sConte_idseq, sMetaSource);
@@ -6323,11 +6318,9 @@ public void do_MetaCodeSearch(String termStr, String source)
     logger.fatal("ERROR - GetACSearch-do_EVSSearch for other : " + e.toString());
   }
   //capture the duration
-  logger.info(m_servlet.getLogMessage(m_classReq, "do_EVSSearch", "end search", exDate,  new java.util.Date()));
+//  logger.info(m_servlet.getLogMessage(m_classReq, "do_EVSSearch", "end search", exDate,  new java.util.Date()));
 
 }  //endOC_EVS search
-
-
 
 /**
    * does evs code search
@@ -6340,7 +6333,7 @@ public String do_getEVSCode(String prefName, String dtsVocab)
     //capture the duration
   //  java.util.Date exDate = new java.util.Date();          
   //  logger.info(m_servlet.getLogMessage(m_classReq, "do_getEVSCode", "begin evscode", exDate, exDate));
-
+//System.err.println("do_getEVSCode prefName: " + prefName);   
     Concept[] conceptArray = null; 
     String[] stringArray = null;
     Concept conceptObj = null;
@@ -6348,23 +6341,31 @@ public String do_getEVSCode(String prefName, String dtsVocab)
     if (dtsVocab == null) dtsVocab = "";
     String CCode = ""; 
     if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("") ||
-    dtsVocab.equals("NCI Thesaurus"))
+    dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
       dtsVocab = m_servlet.m_VOCAB_NCI; //"NCI_Thesaurus";
-    else if(dtsVocab.equals("VA NDFRT"))
+    else if(dtsVocab.equals("VA NDFRT") || dtsVocab.equals("VA_NDFRT"))
+    {
+      prefName = filterName(prefName, "display");
       dtsVocab = m_servlet.m_VOCAB_VA;  //"VA_NDFRT";
+    }
     else if(dtsVocab.equals("UWD VISUAL ANATOMIST") || dtsVocab.equals("UWD_VISUAL_ANATOMIST"))
       dtsVocab = m_servlet.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
-    else if(dtsVocab.equals("MGED")) 
+    else if(dtsVocab.equals("MGED") || dtsVocab.equals("MGED_Ontology")) 
       dtsVocab = m_servlet.m_VOCAB_MGE;  //"MGED_Ontology";
     else if(dtsVocab.equals("GO"))
       dtsVocab = m_servlet.m_VOCAB_GO;
     else if(dtsVocab.equals("LOINC"))
+    {
       dtsVocab = m_servlet.m_VOCAB_LOI;
+      prefName = filterName(prefName, "display");
+    }
     else if(dtsVocab.equals("MedDRA"))
+    {
       dtsVocab = m_servlet.m_VOCAB_MED;
+      prefName = filterName(prefName, "display");
+    }
     else if(dtsVocab.equals("HL7_V3")) 
-      dtsVocab = m_servlet.m_VOCAB_HL7;
-      
+      dtsVocab = m_servlet.m_VOCAB_HL7;    
   if(!dtsVocab.equals("NCI Metathesaurus"))
   {
     DescLogicConceptSearchCriteria dlcsc = new DescLogicConceptSearchCriteria();
@@ -6390,7 +6391,7 @@ public String do_getEVSCode(String prefName, String dtsVocab)
           for(int m=0; m<conceptArray.length; m++)
           {
             conceptObj = (Concept)conceptArray[m];
-            prefName = conceptObj.getName().toString();
+            prefName = conceptObj.getName().toString();    
             stringArray[m] = prefName;
           }  
           for(int i=0; i<stringArray.length; i++)
@@ -6400,14 +6401,19 @@ public String do_getEVSCode(String prefName, String dtsVocab)
         {
           try
           {
-            dlcsc.setSearchTerm(prefName);
+            dlcsc.setSearchTerm(prefName);    
             dlc = dlcsc.getConceptByName(dlcsc);
             if(dlc != null)
               CCode = dlc.getConceptCode();
+            if(dtsVocab.equals("GO") && (prefName.equals("double-strand break repair via homologous recombination ")
+                                          || prefName.equals("double-strand break repair via homologous recombination")))
+            { 
+              CCode = "GO:0000724";          
+            } 
           }
           catch(Exception ee)
           {
-            //System.err.println("other problem2 in master GetACSearch-do_getEVSCode: " + ee);
+            System.err.println("other problem2 in master GetACSearch-do_getEVSCode: " + ee);
             logger.fatal("ERROR - GetACSearch-do_getEVSCode for other : " + ee.toString());
             dlcsc.setSearchTerm(prefName);
             dlc = dlcsc.getConceptByName(dlcsc);
@@ -6418,7 +6424,7 @@ public String do_getEVSCode(String prefName, String dtsVocab)
       }
       catch(Exception e)
       {
-        //System.err.println("other problem in master GetACSearch-do_getEVSCode: " + e);
+        System.err.println("other problem in master GetACSearch-do_getEVSCode: " + e);
         logger.fatal("ERROR - GetACSearch-do_getEVSCode for other : " + e.toString());
       }
   }
@@ -6458,7 +6464,7 @@ public String do_getEVSCode(String prefName, String dtsVocab)
   }
   //capture the duration
  // logger.info(m_servlet.getLogMessage(m_classReq, "do_getEVSCode", "end codesearch", exDate,  new java.util.Date()));
-
+//System.err.println("do_getEVSCode return CCode: " + CCode);
   return CCode;
 }
 
@@ -6730,141 +6736,6 @@ public String do_getEVSCode(String prefName, String dtsVocab)
    * @param res
    * @param vResult
    */
-  public void getRefResult(HttpServletRequest req, HttpServletResponse res,
-         Vector vResult)
-  {
-    Vector vOC = new Vector();
-    try
-    {
-      HttpSession session = req.getSession();
-      String menuAction = (String)session.getAttribute("MenuAction");
-      boolean bName = false;
-      boolean bDefinition = false;
-      boolean bContext = false;
-      boolean bDefSource = false;
-      boolean bUMLS = false;
-      boolean bDB = false;
-      boolean bCCode = false;
-      boolean bUMLS_CUI = false;
-      boolean bTEMP_CUI = false;
-  
-      
-      Vector vSelAttr = new Vector();
-      if (menuAction.equals("searchForCreate"))
-          vSelAttr =(Vector)session.getAttribute("creSelectedAttr");
-      else
-          vSelAttr =(Vector)session.getAttribute("selectedAttr");
-      if (vSelAttr != null)
-      {
-        for (int i =0; i < vSelAttr.size(); i++)
-        {
-          String sAttr = (String)vSelAttr.elementAt(i);
-          if (sAttr.equals("Concept Name"))
-            bName = true;
-          else if (sAttr.equals("Definition"))
-            bDefinition = true;
-          else if (sAttr.equals("Definition Source"))
-            bDefSource = true;
-          else if (sAttr.equals("Context") || sAttr.equals("Owned By"))
-            bContext = true;
-          else if (sAttr.equals("Identifier"))
-            bUMLS = true;
-          else if (sAttr.equals("Vocabulary"))
-            bDB = true;
-          else if (sAttr.equals("NCI Concept Code"))
-            bCCode = true;
-          else if (sAttr.equals("UMLS_CUI"))
-            bUMLS_CUI = true;
-          else if (sAttr.equals("NCI_META_CUI"))
-            bTEMP_CUI = true;
-        }
-      }
-      vOC = (Vector)session.getAttribute("vACSearch");
-      Vector vRSel = (Vector)session.getAttribute("vSelRows");    //from selected rows
-      if (menuAction.equals("searchForCreate"))  vRSel = null;
-      if (vRSel == null)
-        vRSel = vOC;
-      Integer recs = new Integer(vRSel.size());
-      String recs2 = recs.toString();
-      String sKeyword = "";
-      if (menuAction.equals("searchForCreate"))
-      {
-         req.setAttribute("creRecsFound", recs2);
-         sKeyword = (String)session.getAttribute("creKeyword");
-      }
-      else
-      {
-          req.setAttribute("recsFound", recs2);
-          sKeyword = (String)session.getAttribute("serKeyword");
-      }
-      if (sKeyword == null) sKeyword = "";
-      req.setAttribute("labelKeyword", "Object Class - " + sKeyword);   //make the label
-      Vector vSearchID = new Vector();
-      Vector vSearchName = new Vector();
-      Vector vSearchDefinition = new Vector();
-      Vector vSearchDefSource = new Vector();
-      Vector vSearchDatabase = new Vector();
-      Vector vCCode = new Vector();
-      Vector vUMLS = new Vector();
-      Vector vTEMP = new Vector();
-      String evsDB = "";
-      String umlsCUI = "";
-      String tempCUI = "";
-      String ccode = "";
-
-      for(int i=0; i<(vRSel.size()); i++)
-      {
-        EVS_Bean OCBean = new EVS_Bean();
-        OCBean = (EVS_Bean)vRSel.elementAt(i);
-        evsDB = OCBean.getEVS_DATABASE();
-        umlsCUI = OCBean.getUMLS_CUI_VAL();
-        tempCUI = OCBean.getTEMP_CUI_VAL();
-        ccode = OCBean.getNCI_CC_VAL();
-        vSearchID.addElement(OCBean.getIDSEQ());
-        vSearchName.addElement(OCBean.getPREFERRED_NAME());
-        vSearchDefinition.addElement(OCBean.getPREFERRED_DEFINITION());
-        vSearchDefSource.addElement(OCBean.getEVS_DEF_SOURCE());
-        vSearchDatabase.addElement(OCBean.getEVS_DATABASE());
-        if (bName == true) vResult.addElement(OCBean.getPREFERRED_NAME());
-        if (bUMLS == true && evsDB == "caDSR")
-           vResult.addElement(OCBean.getID());
-        else if (bUMLS == true && evsDB == "NCI Thesaurus")
-           vResult.addElement(OCBean.getNCI_CC_VAL());
-        else if (bUMLS == true && evsDB == "NCI Metathesaurus" && umlsCUI != "No value returned." && umlsCUI != "")
-           vResult.addElement(OCBean.getUMLS_CUI_VAL());
-        else if (bUMLS == true && evsDB == "NCI Metathesaurus" && tempCUI != "No value returned." && tempCUI != "")
-           vResult.addElement(OCBean.getTEMP_CUI_VAL());
-        else if (bUMLS == true)
-           vResult.addElement(OCBean.getNCI_CC_VAL());
-        if (bDefinition == true) vResult.addElement(OCBean.getPREFERRED_DEFINITION());
-        if (bDefSource == true) vResult.addElement(OCBean.getEVS_DEF_SOURCE());
-        if (bContext == true) vResult.addElement(OCBean.getCONTEXT_NAME());
-        if (bDB == true) vResult.addElement(OCBean.getEVS_DATABASE());
-        if (bCCode == true) vResult.addElement(OCBean.getNCI_CC_VAL());
-        if (bUMLS_CUI == true) vResult.addElement(OCBean.getUMLS_CUI_VAL());
-        if (bTEMP_CUI == true) vResult.addElement(OCBean.getTEMP_CUI_VAL());
-        // 
-        vCCode.addElement(OCBean.getNCI_CC_VAL());
-        vUMLS.addElement(OCBean.getUMLS_CUI_VAL());
-        vTEMP.addElement(OCBean.getTEMP_CUI_VAL());
-      }
-      session.setAttribute("SearchID", vSearchID);
-      session.setAttribute("SearchName", vSearchName);
-      session.setAttribute("SearchDefinition", vSearchDefinition);
-      session.setAttribute("SearchDefSource", vSearchDefSource);
-      session.setAttribute("SearchDatabase", vSearchDatabase);
-      session.setAttribute("vCCode", vCCode);
-      session.setAttribute("vUMLS", vUMLS);
-      session.setAttribute("vTEMP", vTEMP);
-    }
-    catch(Exception e)
-    {
-      //System.err.println("ERROR in GetACSearch-getRefResult: " + e);
-      logger.fatal("ERROR in GetACSearch-getRefResult : " + e.toString());
-    }
-  }
-
-
 
   /**
    * To get final result vector of selected attributes/rows to display for Object Class component,
@@ -7280,7 +7151,7 @@ public String do_getEVSCode(String prefName, String dtsVocab)
                Quest_Bean selQuestBean = new Quest_Bean();
                selQuestBean = (Quest_Bean)vSRows.elementAt(i);
                session.setAttribute("m_Quest", selQuestBean);
-               doSelectDEforQuestion(req, res, selQuestBean, getAC);
+               isValid = doSelectDEforQuestion(req, res, selQuestBean, getAC);
                break;
             }
           }
@@ -7341,15 +7212,15 @@ public String do_getEVSCode(String prefName, String dtsVocab)
       if (!sMenu.equals("NewDECTemplate"))
       {
         Vector vACCSI = this.doCSCSI_ACSearch(DECBean.getDEC_DEC_IDSEQ(), DECBean.getDEC_LONG_NAME());
-        if (vACCSI != null)
-        {
+      //  if (vACCSI != null)
+      //  {
           Vector vCS = (Vector)m_classReq.getAttribute("selCSNames");
           Vector vCSid = (Vector)m_classReq.getAttribute("selCSIDs"); 
       
           DECBean.setDEC_CS_NAME(vCS);
           DECBean.setDEC_CS_ID(vCSid);
           DECBean.setDEC_AC_CSI_VECTOR(vACCSI);
-        }
+      //  }
       }
       //make some attributes default/empty for NUE action
       if (sMenu.equals("NewDECTemplate"))
@@ -7466,14 +7337,14 @@ public String do_getEVSCode(String prefName, String dtsVocab)
       if (!sMenu.equals("NewDETemplate") && !sAction.equals("Template"))
       {
         Vector vACCSI = this.doCSCSI_ACSearch(DEBean.getDE_DE_IDSEQ(), DEBean.getDE_LONG_NAME());
-        if (vACCSI != null)
-        {
+       // if (vACCSI != null)
+       // {
           Vector vCS = (Vector)m_classReq.getAttribute("selCSNames");
           Vector vCSid = (Vector)m_classReq.getAttribute("selCSIDs");    
           DEBean.setDE_CS_NAME(vCS);
           DEBean.setDE_CS_ID(vCSid);
           DEBean.setDE_AC_CSI_VECTOR(vACCSI);
-        }
+       // }
       }
 
       //get alternate names and reference documents if menu is edit des
@@ -7555,14 +7426,14 @@ public String do_getEVSCode(String prefName, String dtsVocab)
       if (!sMenu.equals("NewVDTemplate"))
       {
         Vector vACCSI = this.doCSCSI_ACSearch(VDBean.getVD_VD_IDSEQ(), VDBean.getVD_LONG_NAME());
-        if (vACCSI != null)
-        {
+      //  if (vACCSI != null)
+      //  {
           Vector vCS = (Vector)m_classReq.getAttribute("selCSNames");
           Vector vCSid = (Vector)m_classReq.getAttribute("selCSIDs"); 
           VDBean.setVD_CS_NAME(vCS);
           VDBean.setVD_CS_ID(vCSid);
           VDBean.setVD_AC_CSI_VECTOR(vACCSI);
-        }        
+      //  }        
       }
       //make some attributes default/empty for NUE action
       if (sMenu.equals("NewVDTemplate"))
@@ -7904,15 +7775,15 @@ public String do_getEVSCode(String prefName, String dtsVocab)
    * @param sUserName User Name.
    * @param getAC reference to class GetACService.
    *
-   * @return String strInValid 'no write permission' if not empty.
+   * @return boolean isValid if no write permission
    */
-   private void doSelectDEforQuestion(HttpServletRequest req, HttpServletResponse res,
+   private boolean doSelectDEforQuestion(HttpServletRequest req, HttpServletResponse res,
                   Quest_Bean QuestBean, GetACService getAC) throws Exception
    {
        HttpSession session = req.getSession();
        String strInValid = "";
        String sDEID = QuestBean.getDE_IDSEQ();   //get the associated deID from the bean
-
+       boolean isValid = true;
        DE_Bean DEBean = new DE_Bean();
        //call search_DE to get all the attributes of DE with this de_id if exists
        if (sDEID != null && !sDEID.equals(""))
@@ -7945,7 +7816,8 @@ public String do_getEVSCode(String prefName, String dtsVocab)
                    Vector vResult = new Vector();
                    getQuestionResult(req, res, vResult);
                    session.setAttribute("results", vResult);
-                   return;
+                   isValid = false;
+                   return isValid;
                 }
                 //get other de attributes for edit
                 DEBean = this.getDEAttributes(DEBean, "Edit", "Question");                
@@ -8011,7 +7883,7 @@ public String do_getEVSCode(String prefName, String dtsVocab)
       session.setAttribute("m_DE", DEBean);
       DE_Bean oldDE = new DE_Bean();
       session.setAttribute("oldDEBean", oldDE.cloneDE_Bean(DEBean, "Complete"));     //store the bean in the oldDEbean to use it later
-      return;
+      return isValid;
    }
 
   /**
@@ -9483,7 +9355,6 @@ public String do_getEVSCode(String prefName, String dtsVocab)
               s = m_util.getCurationDate(s);
             PVBean.setPV_END_DATE(s);
             PVBean.setPV_MEANING_DESCRIPTION(rs.getString("vm_description"));  //from meanings table
-            PVBean.setPV_VM_CONDR_IDSEQ(rs.getString("condr_idseq")); 
             //add the CD name and version in decimal number together
             String CDNameVersion = "";
             if (rs.getString("version") != null && !rs.getString("version").equals(""))
@@ -9494,14 +9365,20 @@ public String do_getEVSCode(String prefName, String dtsVocab)
                   CDNameVersion = rs.getString(7) + " - Version " + rs.getString("version") + ".0";
             }
             PVBean.setPV_CONCEPTUAL_DOMAIN(CDNameVersion);
-            //fill in the empty fields for the evs attributes
-            PVBean.setPV_EVS_SOURCE("");
-            PVBean.setPV_NCI_CC_TYPE("");
-            PVBean.setPV_NCI_CC_VAL("");
-            PVBean.setPV_UMLS_CUI_VAL("");
-            PVBean.setPV_UMLS_CUI_TYPE("");
-            PVBean.setPV_TEMP_CUI_VAL("");
-            PVBean.setPV_TEMP_CUI_TYPE("");
+            
+            //get vm concept attributes
+            String sCondr = rs.getString("condr_idseq");
+            EVS_Bean vmConcept = new EVS_Bean();
+            vmConcept.setCONDR_IDSEQ(sCondr);            
+            if (sCondr != null && !sCondr.equals(""))
+            {
+              GetACService getAC = new GetACService(m_classReq, m_classRes, m_servlet);
+              Vector vConList = getAC.getAC_Concepts(sCondr, null, true);
+              if (vConList != null && vConList.size() > 0) 
+                vmConcept = (EVS_Bean)vConList.elementAt(0);
+            }
+            PVBean.setVM_CONCEPT(vmConcept);
+            //get database attribute
             PVBean.setPV_EVS_DATABASE("caDSR");
             vList.addElement(PVBean);  //add the bean to a vector
           }  //END WHILE
@@ -9610,18 +9487,10 @@ public String do_getEVSCode(String prefName, String dtsVocab)
         if (vSelAttr.contains("Conceptual Domain")) vResult.addElement(PVBean.getPV_CONCEPTUAL_DOMAIN());
         if (vSelAttr.contains("Effective Begin Date")) vResult.addElement(PVBean.getPV_BEGIN_DATE());
         if (vSelAttr.contains("Effective End Date")) vResult.addElement(PVBean.getPV_END_DATE());
-        if (vSelAttr.contains("Identifier"))
-        {
-          if (evsDB == "NCI Thesaurus") 
-            vResult.addElement(PVBean.getPV_NCI_CC_VAL());
-          else if (evsDB == "NCI Metathesaurus" && umlsCUI != "No value returned." && umlsCUI != "")
-            vResult.addElement(PVBean.getPV_UMLS_CUI_VAL());
-          else if (evsDB == "NCI Metathesaurus" && tempCUI != "No value returned." && tempCUI != "")
-            vResult.addElement(PVBean.getPV_TEMP_CUI_VAL());
-          else
-            vResult.addElement(PVBean.getPV_NCI_CC_VAL());
-        }
-        if (vSelAttr.contains("Description Source")) vResult.addElement(PVBean.getPV_EVS_SOURCE());
+        EVS_Bean vmCon = PVBean.getVM_CONCEPT();
+        if (vmCon == null) vmCon = new EVS_Bean();
+        if (vSelAttr.contains("EVS Identifier")) vResult.addElement(vmCon.getNCI_CC_VAL());
+        if (vSelAttr.contains("Description Source")) vResult.addElement(vmCon.getEVS_DEF_SOURCE());
         if (vSelAttr.contains("Vocabulary")) vResult.addElement(PVBean.getPV_EVS_DATABASE());
       }
       session.setAttribute("SearchID", vSearchID);
@@ -9653,6 +9522,8 @@ public String do_getEVSCode(String prefName, String dtsVocab)
     String returnValue = "";
     try
     {
+      EVS_Bean vmCon = curBean.getVM_CONCEPT();
+      if (vmCon == null) vmCon = new EVS_Bean();
       if (curField.equals("value"))
         returnValue = curBean.getPV_VALUE();
       else if (curField.equals("meaning"))
@@ -9662,9 +9533,9 @@ public String do_getEVSCode(String prefName, String dtsVocab)
       else if (curField.equals("database"))
         returnValue = curBean.getPV_EVS_DATABASE();
       else if (curField.equals("descSource"))
-        returnValue = curBean.getPV_EVS_SOURCE();
-      else if (curField.equals("Ident"))
-        returnValue = curBean.getPV_NCI_CC_VAL();
+        returnValue = vmCon.getEVS_DEF_SOURCE(); // curBean.getPV_EVS_SOURCE();
+      else if (curField.equals("umls") || curField.equals("Ident"))
+        returnValue = vmCon.getNCI_CC_VAL();    //curBean.getPV_NCI_CC_VAL();
       else if (curField.equals("ConDomain"))
         returnValue = curBean.getPV_CONCEPTUAL_DOMAIN();
       else if (curField.equals("BeginDate"))
@@ -10453,7 +10324,8 @@ boolean isIntSearch)
      session.setAttribute("creCreator", sCreator);   //store Creator in the session
 	   if ((sCreator == null) || sCreator.equals("allUsers")) sCreator = "";
      
-     String sUISearchType = (String)session.getAttribute("UISearchType");
+    // String sUISearchType = (String)session.getAttribute("UISearchType");
+     String sUISearchType = (String)req.getAttribute("UISearchType");
      if (sUISearchType == null || sUISearchType.equals("nothing")) 
       sUISearchType = "term";
 
@@ -10628,7 +10500,7 @@ boolean isIntSearch)
         if (isIntSearch == false)
         {
            do_EVSSearch(sKeyword, vAC, "NCI_Thesaurus", "Synonym", "All Sources",
-           100, sUISearchType, sRetired, ""); // search both Thesaurus and Metathesaurus
+           100, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
            get_Result(req, res, vResult, "DEF");
         }
 
@@ -10645,7 +10517,7 @@ boolean isIntSearch)
       else if (sSearchAC.equals("EVSValueMeaning"))
       {
         do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-        intMetaLimit, sUISearchType, sRetired, ""); // search both Thesaurus and Metathesaurus
+        intMetaLimit, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
         session.setAttribute("vACSearch", vAC);
         if(vAC != null)
           session.setAttribute("vEVSValueMeaning", vAC);
@@ -10654,7 +10526,7 @@ boolean isIntSearch)
        else if (sSearchAC.equals("CreateVM_EVSValueMeaning"))
       {
         do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-        intMetaLimit, sUISearchType, sRetired, ""); // search both Thesaurus and Metathesaurus
+        intMetaLimit, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
         session.setAttribute("vACSearch", vAC);
         if(vAC != null)
           session.setAttribute("vCreateVM_EVSValueMeaning", vAC);
@@ -10665,7 +10537,7 @@ boolean isIntSearch)
         String sConteIdseq = (String)req.getParameter("sConteIdseq");
         if (sConteIdseq == null) sConteIdseq = "";
         do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-        intMetaLimit, sUISearchType, sRetired, sConteIdseq); // search both Thesaurus and Metathesaurus
+        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
         session.setAttribute("vACSearch", vAC);
         if(vAC != null)
           session.setAttribute("vParentConcept", vAC);
@@ -10676,7 +10548,7 @@ boolean isIntSearch)
         String sConteIdseq = (String)req.getParameter("sConteIdseq");
         if (sConteIdseq == null) sConteIdseq = "";
         do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-        intMetaLimit, sUISearchType, sRetired, sConteIdseq); // search both Thesaurus and Metathesaurus
+        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
         session.setAttribute("vACSearch", vAC);
         if(vAC != null)
           session.setAttribute("vParentConceptVM", vAC);
@@ -10695,7 +10567,7 @@ boolean isIntSearch)
           do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "OC");
         }
         do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-        intMetaLimit, sUISearchType, sRetired, sConteIdseq); // search both Thesaurus and Metathesaurus
+        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
         session.setAttribute("vACSearch", vAC);
         get_Result(req, res, vResult, "");
      }
@@ -10712,7 +10584,7 @@ boolean isIntSearch)
             do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "PROP");
         }      
         do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource, 
-        intMetaLimit, sUISearchType, sRetired, sConteIdseq); // search both Thesaurus and Metathesaurus
+        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
         session.setAttribute("vACSearch", vAC);
         get_Result(req, res, vResult, "");
      }
@@ -10729,7 +10601,7 @@ boolean isIntSearch)
           do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "REP");
         }
         do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-        intMetaLimit, sUISearchType, sRetired, sConteIdseq); // search both Thesaurus and Metathesaurus
+        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
         session.setAttribute("vACSearch", vAC);
         get_Result(req, res, vResult, "");
      }
@@ -10743,7 +10615,7 @@ boolean isIntSearch)
             sKeyword = filterName(sKeyword, "display");
         }
         do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-        intMetaLimit, sUISearchType, sRetired, sConteIdseq); // search both Thesaurus and Metathesaurus
+        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
         session.setAttribute("vACSearch", vAC);
         get_Result(req, res, vResult, "");
      }
@@ -10757,7 +10629,7 @@ boolean isIntSearch)
             sKeyword = filterName(sKeyword, "display");
         }
         do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-        intMetaLimit, sUISearchType, sRetired, sConteIdseq); // search both Thesaurus and Metathesaurus
+        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
         session.setAttribute("vACSearch", vAC);
         get_Result(req, res, vResult, "");
      }
@@ -10771,7 +10643,7 @@ boolean isIntSearch)
             sKeyword = filterName(sKeyword, "display");
         }
         do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-        intMetaLimit, sUISearchType, sRetired, sConteIdseq); // search both Thesaurus and Metathesaurus
+        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
         session.setAttribute("vACSearch", vAC);
         get_Result(req, res, vResult, "");
      }
@@ -12308,8 +12180,10 @@ boolean isIntSearch)
         if (sRetired == null) sRetired = "Exclude";
         req.setAttribute("creRetired", sRetired);
         
-        String sUISearchType = (String)session.getAttribute("UISearchType");
-        if (sUISearchType == null || sUISearchType.equals("nothing")) sUISearchType = "term";
+     //   String sUISearchType = (String)session.getAttribute("UISearchType");
+        String sUISearchType = (String)req.getAttribute("UISearchType");
+        if (sUISearchType == null || sUISearchType.equals("nothing")) 
+          sUISearchType = "term";
 
         String sMetaLimit = (String)req.getParameter("listMetaLimit");
         int intMetaLimit = 0;
@@ -12326,7 +12200,7 @@ boolean isIntSearch)
         if (sConteIdseq == null) sConteIdseq = "";
         
         do_EVSSearch(termStr, vAC, dtsVocab, sSearchInEVS, sMetaSource, 
-        intMetaLimit, sUISearchType, sRetired, sConteIdseq);
+        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1);
         session.setAttribute("vACSearch", vAC);
         get_Result(req, res, vResult, "DEF");
         session.setAttribute("EVSresults", vResult);

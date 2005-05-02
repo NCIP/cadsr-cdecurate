@@ -133,11 +133,11 @@ public class EVSMasterTree
     if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
      || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
       dtsVocab = m_servlet.m_VOCAB_NCI; //"NCI_Thesaurus";
-    else if(dtsVocab.equals("VA NDFRT"))
+    else if(dtsVocab.equals("VA NDFRT") || dtsVocab.equals("VA_NDFRT"))
       dtsVocab = m_servlet.m_VOCAB_VA;  //"VA_NDFRT";
     else if(dtsVocab.equals("UWD VISUAL ANATOMIST") || dtsVocab.equals("UWD_VISUAL_ANATOMIST"))
       dtsVocab = m_servlet.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
-    else if(dtsVocab.equals("MGED")) 
+    else if(dtsVocab.equals("MGED") || dtsVocab.equals("MGED_Ontology")) 
       dtsVocab = m_servlet.m_VOCAB_MGE;  //"MGED_Ontology";
     else if(dtsVocab.equals("GO"))
       dtsVocab = m_servlet.m_VOCAB_GO;
@@ -194,14 +194,15 @@ public class EVSMasterTree
    */
 	public String populateTreeRoots(String dtsVocab) 
   {	
+//System.out.println("popTree dtsVocab: " + dtsVocab);
     if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
      || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
       dtsVocab = m_servlet.m_VOCAB_NCI; //"NCI_Thesaurus";
-    else if(dtsVocab.equals("VA NDFRT"))
+    else if(dtsVocab.equals("VA NDFRT")|| dtsVocab.equals("VA_NDFRT"))
       dtsVocab = m_servlet.m_VOCAB_VA;  //"VA_NDFRT";
     else if(dtsVocab.equals("UWD VISUAL ANATOMIST") || dtsVocab.equals("UWD_VISUAL_ANATOMIST"))
       dtsVocab = m_servlet.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
-    else if(dtsVocab.equals("MGED")) 
+    else if(dtsVocab.equals("MGED") || dtsVocab.equals("MGED_Ontology")) 
       dtsVocab = m_servlet.m_VOCAB_MGE;  //"MGED_Ontology";
     else if(dtsVocab.equals("GO"))
       dtsVocab = m_servlet.m_VOCAB_GO;
@@ -295,6 +296,7 @@ public class EVSMasterTree
 	 */
 	private String renderHTML(Tree tree) 
   {
+//System.out.println("renderHTML: ");
     if(tree == null)
       return "";
     String sSearchAC = "";
@@ -391,6 +393,7 @@ public class EVSMasterTree
 			}
 		}
 		buf.append("\n</TABLE>\n");
+//System.out.println("renderHTML5: ");
 		return buf.toString();
 	}
   
@@ -500,10 +503,19 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
 	 */
 	private String filterName(String nodeName, String type)
   {
+//System.out.println("filterName0: " + nodeName);
     if(type.equals("display"))
+    {
+    //  nodeName = nodeName.replaceAll("__","q9");
       nodeName = nodeName.replaceAll("_"," ");
+   //   nodeName = nodeName.replaceAll("q9","_");
+    }
     else if(type.equals("js"))
+    {
+  //    nodeName = nodeName.replaceAll("_","__");
       nodeName = nodeName.replaceAll(" ","_");
+    }
+//System.out.println("filterName1: " + nodeName);
       return nodeName;
   }
 
@@ -569,22 +581,31 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
   public String expandNode(String nodeName, String dtsVocab, String strRenderHTML, String nodeCode, String sCodeToFindInTree) 
   {
     HttpSession session = m_classReq.getSession();
+    String nodeNameJS = "";
     if(dtsVocab.equals(""))
       dtsVocab = m_dtsVocab;
-    if(!dtsVocab.equals("Thesaurus/Metathesaurus") && !dtsVocab.equals("NCI_Thesaurus")
-     && !dtsVocab.equals("NCI Thesaurus"))
+    // Need to change nodeNames to 'display' for most vocabs because html has to display all
+    // with underscores in name to avoid javascript errors
+    if(dtsVocab.equals("GO") && nodeName.equals("double-strand break repair via homologous recombination_"))
+      System.out.println("");
+    else if(!dtsVocab.equals("Thesaurus/Metathesaurus") && !dtsVocab.equals("NCI_Thesaurus")
+    && !dtsVocab.equals("NCI Thesaurus"))
       nodeName = filterName(nodeName, "display");
-    else if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("") 
+    if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("") 
     || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
+      nodeName = filterName(nodeName, "js");
+    // This handles the three 'underscored' concepts in GO
+    if(dtsVocab.equals("GO") && (nodeName.equals("biological process") 
+    || nodeName.equals("cellular component") || nodeName.equals("molecular function")))
       nodeName = filterName(nodeName, "js");
     if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("") 
     || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
       dtsVocab = m_servlet.m_VOCAB_NCI; //"NCI_Thesaurus";
-    else if(dtsVocab.equals("VA NDFRT"))
+    else if(dtsVocab.equals("VA NDFRT")|| dtsVocab.equals("VA_NDFRT"))
       dtsVocab = m_servlet.m_VOCAB_VA;  //"VA_NDFRT";
     else if(dtsVocab.equals("UWD VISUAL ANATOMIST") || dtsVocab.equals("UWD_VISUAL_ANATOMIST"))
       dtsVocab = m_servlet.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
-    else if(dtsVocab.equals("MGED")) 
+    else if(dtsVocab.equals("MGED")|| dtsVocab.equals("MGED_Ontology")) 
       dtsVocab = m_servlet.m_VOCAB_MGE;  //"MGED_Ontology";
     else if(dtsVocab.equals("GO"))
       dtsVocab = m_servlet.m_VOCAB_GO;
@@ -601,7 +622,9 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
     String sSearchAC = (String)session.getAttribute("creSearchAC");
     if(sSearchAC == null) sSearchAC = "";
     Integer id = new Integer(0);
- System.out.println("expandNode dtsVocab: " + dtsVocab + " nodeName: " + nodeName + "nodeCode: " + nodeCode + " m_dtsVocab: " + m_dtsVocab + " sSearchAC: " + sSearchAC);
+    String foundCodeInTree = "false";
+// System.out.println("expandNode dtsVocab: " + dtsVocab + " nodeName: " + nodeName + " nodeCode: " + nodeCode + " m_dtsVocab: " + m_dtsVocab + " sSearchAC: " + sSearchAC);
+//  System.out.println("expandNode sCodeToFindInTree: " + sCodeToFindInTree);
     if(sSearchAC.equals("ParentConceptVM"))
       id = (Integer)m_treesHashParent.get("nodeID");
     else
@@ -611,7 +634,7 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
     GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
     if(nodeCode.equals("") && !nodeName.equals(""))
      nodeCode = serAC.do_getEVSCode(nodeName, dtsVocab);   
-  
+// System.out.println("expandNode nodeCode: " + nodeCode);
 	  String rendHTML = "";
     Vector vRoot = new Vector();
     Vector vSubNames = new Vector();
@@ -626,13 +649,18 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
     else
       nodeChildrenTree = (Tree)m_treesHash.get(nodeName);
     // Root level of Thesaurus has "_" in names
+    if(nodeChildrenTree == null )
+    {
+      nodeNameJS = filterName(nodeName, "js");
+      if(sSearchAC.equals("ParentConceptVM"))
+        nodeChildrenTree = (Tree)m_treesHashParent.get(nodeNameJS);
+      else
+        nodeChildrenTree = (Tree)m_treesHash.get(nodeNameJS);
+    } 
     if(nodeChildrenTree == null)
     {
-      nodeName = filterName(nodeName, "js");
-      if(sSearchAC.equals("ParentConceptVM"))
-        nodeChildrenTree = (Tree)m_treesHashParent.get(nodeName);
-      else
-        nodeChildrenTree = (Tree)m_treesHash.get(nodeName);
+//System.out.println("expandNode0 null");
+      nodeChildrenTree = new Tree(1);
     }
     TreeNode expandedNode = new TreeNode(1, "", "",1);
     if(m_treeNodesHash != null)
@@ -645,16 +673,18 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
     // if null, look for the nodeName with "_"
     if(expandedNode == null)
     {
-      nodeName = filterName(nodeName, "js");
+      nodeNameJS = filterName(nodeName, "js");
       if(sSearchAC.equals("ParentConceptVM"))
-        expandedNode = (TreeNode)m_treeNodesHashParent.get(nodeName);
+        expandedNode = (TreeNode)m_treeNodesHashParent.get(nodeNameJS);
       else
-        expandedNode = (TreeNode)m_treeNodesHash.get(nodeName);
-    }  
+        expandedNode = (TreeNode)m_treeNodesHash.get(nodeNameJS);
+    } 
+   
     int nodeLevel = 0;
     int numChildren = 0;
     String subNodeCode = ""; 
     String subNodeName = ""; 
+//System.out.println("expandNode00");
     if(expandedNode != null)
     {
         nodeLevel = expandedNode.getLevel();
@@ -663,11 +693,13 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
            m_expandedTreeNodesParent.push(nodeName);
         else
           m_expandedTreeNodes.push(nodeName);
-    }
+    } 
     if(nodeChildrenTree != null)
         numChildren = nodeChildrenTree.size();   
+// System.out.println("expandNode000 numChildren: " + numChildren);
     if(numChildren > 0 && nodeChildrenTree != null) //children already exist, set them visible
     {
+// System.out.println("expandNode1 numChildren: " + numChildren);
         for(int i=0;i<numChildren;i++)
         {
           if(nodeChildrenTree.getChild(i).getType() == 0) //node
@@ -676,16 +708,41 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
             tn.setExpanded(false);
             tn.setVisible(true);
             if(!sCodeToFindInTree.equals(""))
+            {
+              subNodeCode = tn.getCode();
+  // System.out.println("expandNode1b subNodeCode: " + subNodeCode);
+             // if(subNodeCode == null || subNodeCode.equals("") && i < 40
+              if(subNodeCode == null || subNodeCode.equals("")
+              && foundCodeInTree.equals("false"))
+                subNodeCode = serAC.do_getEVSCode(tn.getName(), dtsVocab);
+              if(subNodeCode != null)
+                tn.setCode(subNodeCode);
               if(tn.getCode().equals(sCodeToFindInTree) || tn.getName().equals(nodeName))
+              {
+                foundCodeInTree = "true";
                 tn.setBold(true);
+              }
+            }
           }
           else if(nodeChildrenTree.getChild(i).getType() == 1) // leaf
           {
             TreeLeaf tl = (TreeLeaf)nodeChildrenTree.getChild(i);
             tl.setVisible(true);
              if(!sCodeToFindInTree.equals(""))
-              if(tl.getCode().equals(sCodeToFindInTree) || tl.getName().equals(nodeName))
-                tl.setBold(true);
+             {
+                subNodeCode = tl.getCode();
+                // do not do this for > 40 subconcepts, because slows down performance too much
+                if(subNodeCode == null || subNodeCode.equals("")
+                && foundCodeInTree.equals("false"))
+                  subNodeCode = serAC.do_getEVSCode(tl.getName(), dtsVocab);
+                if(subNodeCode != null)
+                  tl.setCode(subNodeCode);
+                if(tl.getCode().equals(sCodeToFindInTree) || tl.getName().equals(nodeName))
+                {
+                  foundCodeInTree = "true";
+                  tl.setBold(true);
+                }
+             }
           }
         }
       }
@@ -697,10 +754,12 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
           for(int j=0; j < vSubNames.size(); j++) 
           { 
             subNodeName = (String)vSubNames.elementAt(j);
-            subNodeCode = serAC.do_getEVSCode(subNodeName, dtsVocab);   
+            subNodeCode = serAC.do_getEVSCode(subNodeName, dtsVocab);  
+//System.out.println("expandNode2aa subNodeCode: " + subNodeCode);
             vSubConcepts2 = serAC.getSubConceptNames(dtsVocab, subNodeName, "", subNodeCode, "");
-            if(vSubConcepts2.size()>0)
+            if(vSubConcepts2.size()>0) 
             {
+ // System.out.println("expandNode2aaa vSubConcepts2.size(): " + vSubConcepts2.size());
               TreeNode tn = new TreeNode(newNodeID++, subNodeName, subNodeCode, nodeLevel+1);
               tn.setExpanded(false);
               tn.setVisible(true);
@@ -725,11 +784,30 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
               TreeLeaf tl = new TreeLeaf(subNodeName, subNodeCode, nodeLevel+1);
               nodeChildrenTree.addChild(tl);
               tl.setVisible(true);
-               if(!sCodeToFindInTree.equals(""))
-              if(tl.getCode().equals(sCodeToFindInTree) || tl.getName().equals(nodeName))
+              if(!sCodeToFindInTree.equals(""))
+              {
+                if(tl.getCode().equals(sCodeToFindInTree) || tl.getName().equals(nodeName))
                   tl.setBold(true);
+              }
               tl.setLevel(nodeLevel+1);
             }
+          }
+        }
+        else if(vSubNames != null && vSubNames.size()>9 && nodeName.equals("OrphanConcepts")) //MGED OrphanConcepts should all be leafs
+        {
+          for(int n=0; n < vSubNames.size(); n++) 
+          { 
+            subNodeName = (String)vSubNames.elementAt(n);
+            subNodeCode = serAC.do_getEVSCode(subNodeName, dtsVocab);   
+            TreeLeaf tl = new TreeLeaf(subNodeName, subNodeCode, nodeLevel+1);
+            nodeChildrenTree.addChild(tl);
+            tl.setVisible(true);
+            if(!sCodeToFindInTree.equals(""))
+            {
+              if(tl.getCode().equals(sCodeToFindInTree) || tl.getName().equals(nodeName))
+                tl.setBold(true);
+            }
+            tl.setLevel(nodeLevel+1);
           }
         }
         else if(vSubNames != null && vSubNames.size()>9)
@@ -742,8 +820,19 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
             tn.setExpanded(false);
             tn.setVisible(true);
             if(!sCodeToFindInTree.equals(""))
+            {
+              subNodeCode = tn.getCode();
+              if(subNodeCode == null || subNodeCode.equals("")
+              && foundCodeInTree.equals("false"))
+                subNodeCode = serAC.do_getEVSCode(tn.getName(), dtsVocab);
+              if(subNodeCode != null)
+                tn.setCode(subNodeCode);
               if(tn.getCode().equals(sCodeToFindInTree) || tn.getName().equals(nodeName))
+              {
+                foundCodeInTree = "true";
                 tn.setBold(true);
+              }
+            }
             tn.getChildren().setLevel(nodeLevel+2);
             nodeChildrenTree.addChild(tn);
             if(sSearchAC.equals("ParentConceptVM"))
@@ -758,14 +847,25 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
             }
           }
         }
-        else if(nodeChildrenTree != null)
+        else if(nodeChildrenTree != null) // no subConcepts
         {
           TreeLeaf tl = new TreeLeaf(nodeName, nodeCode, nodeLevel+1);
           nodeChildrenTree.addChild(tl);
           tl.setVisible(true);
            if(!sCodeToFindInTree.equals(""))
+           {
+              subNodeCode = tl.getCode();
+              if(subNodeCode == null || subNodeCode.equals("")
+              && foundCodeInTree.equals("false"))
+                subNodeCode = serAC.do_getEVSCode(tl.getName(), dtsVocab);
+              if(subNodeCode != null)
+                tl.setCode(subNodeCode);
               if(tl.getCode().equals(sCodeToFindInTree) || tl.getName().equals(nodeName))
+              {
+                foundCodeInTree = "true";
                 tl.setBold(true);
+              }
+           }
           tl.setLevel(nodeLevel+1);
         }
     }
@@ -804,8 +904,10 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
           m_treesHashParent.put("parentTree" + nodeName, baseTree);
         }
     }
-    if(!strRenderHTML.equals("No"))
+    if(!strRenderHTML.equals("No")) // && !strRenderHTML.equals("Last"))
+    {    
         rendHTML = renderHTML(baseTree); 
+    }
     }
   } 
   catch(Exception e) 
@@ -831,20 +933,25 @@ public String collapseNode(String nodeName, String dtsVocab, String shouldRender
     if(sSearchAC == null) sSearchAC = "";
     if(nodeName.equals("Gene Ontology")) nodeName = "Gene_Ontology";
     boolean isExpanded;
-     if(!dtsVocab.equals("Thesaurus/Metathesaurus") && !dtsVocab.equals("NCI_Thesaurus")
+     if(dtsVocab.equals("GO") && nodeName.equals("double-strand break repair via homologous recombination_"))
+      System.out.println("");
+    else if(!dtsVocab.equals("Thesaurus/Metathesaurus") && !dtsVocab.equals("NCI_Thesaurus")
       && !dtsVocab.equals("NCI Thesaurus"))
       nodeName = filterName(nodeName, "display");
-     else if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("") 
+    else if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("") 
     || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
-      nodeName = filterName(nodeName, "js");     
+      nodeName = filterName(nodeName, "js"); 
+    if(dtsVocab.equals("GO") && (nodeName.equals("biological process") 
+    || nodeName.equals("cellular component") || nodeName.equals("molecular function")))
+      nodeName = filterName(nodeName, "js");
     if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
      || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
       dtsVocab = m_servlet.m_VOCAB_NCI; //"NCI_Thesaurus";
-    else if(dtsVocab.equals("VA NDFRT"))
+    else if(dtsVocab.equals("VA NDFRT")|| dtsVocab.equals("VA_NDFRT"))
       dtsVocab = m_servlet.m_VOCAB_VA;  //"VA_NDFRT";
     else if(dtsVocab.equals("UWD VISUAL ANATOMIST") || dtsVocab.equals("UWD_VISUAL_ANATOMIST"))
       dtsVocab = m_servlet.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
-    else if(dtsVocab.equals("MGED")) 
+    else if(dtsVocab.equals("MGED")|| dtsVocab.equals("MGED_Ontology")) 
       dtsVocab = m_servlet.m_VOCAB_MGE;  //"MGED_Ontology";
     else if(dtsVocab.equals("GO"))
       dtsVocab = m_servlet.m_VOCAB_GO;
@@ -1146,11 +1253,11 @@ public void collapseAllNodes()
     if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
     || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
       dtsVocab = m_servlet.m_VOCAB_NCI; //"NCI_Thesaurus";
-    else if(dtsVocab.equals("VA NDFRT"))
+    else if(dtsVocab.equals("VA NDFRT")|| dtsVocab.equals("VA_NDFRT"))
       dtsVocab = m_servlet.m_VOCAB_VA;  //"VA_NDFRT";
     else if(dtsVocab.equals("UWD VISUAL ANATOMIST") || dtsVocab.equals("UWD_VISUAL_ANATOMIST"))
       dtsVocab = m_servlet.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
-    else if(dtsVocab.equals("MGED")) 
+    else if(dtsVocab.equals("MGED")|| dtsVocab.equals("MGED_Ontology")) 
       dtsVocab = m_servlet.m_VOCAB_MGE;  //"MGED_Ontology";
     else if(dtsVocab.equals("GO"))
       dtsVocab = m_servlet.m_VOCAB_GO;
@@ -1193,7 +1300,7 @@ public void collapseAllNodes()
       if(vSuperConceptNames != null && vSuperConceptNames.size() > 0)
       {
         sSuperConceptName = (String)vSuperConceptNames.elementAt(0);
-System.out.println("openTreeToParentConcept sSuperConceptName: " + sSuperConceptName);
+//System.out.println("openTreeToParentConcept sSuperConceptName: " + sSuperConceptName);
         if(sSuperConceptName.equals(parentName))
         {
           sRoot = "true";
@@ -1299,8 +1406,8 @@ System.out.println("openTreeToParentConcept sSuperConceptName: " + sSuperConcept
     HttpSession session = m_classReq.getSession();
     String sSearchAC = (String)session.getAttribute("creSearchAC");
     if(sSearchAC == null) sSearchAC = "";
- //System.out.println("expandTreeToConcept  sCCodeDB: " + sCCodeDB + " sSearchAC: " + sSearchAC + " sCodeToFindInTree: " + sCodeToFindInTree);  
-//System.out.println("expandTreeToConcept sCCode: " + sCCode);
+// System.out.println("expandTreeToConcept  sCCodeDB: " + sCCodeDB + " sSearchAC: " + sSearchAC + " sCodeToFindInTree: " + sCodeToFindInTree);  
+//System.out.println("expandTreeToConcept sCCode: " + sCCode + " stackSuperConcepts.size(): " + stackSuperConcepts.size());
     if(sCCodeDB.equals("NCI Thesaurus") || sCCodeDB.equals("NCI_Thesaurus")
      || sCCodeDB.equals("Thesaurus/Metathesaurus")) 
         sCCodeDB = "NCI_Thesaurus";
@@ -1308,13 +1415,14 @@ System.out.println("openTreeToParentConcept sSuperConceptName: " + sSuperConcept
     while(stackSuperConcepts.size()>0)
     {
       sSuperConceptName = (String)stackSuperConcepts.pop();
+//System.out.println("expandTreeToConcept sSuperConceptName: " + sSuperConceptName);
       if(stackSuperConcepts.size()>0)
       {
-       rendHTML = this.expandNode(sSuperConceptName, sCCodeDB, "No", sCCode, sCodeToFindInTree);  
+       rendHTML = this.expandNode(sSuperConceptName, sCCodeDB, "No", "", sCodeToFindInTree);  
       }
       else
       {
-        rendHTML = this.expandNode(sSuperConceptName, sCCodeDB, "No", sCCode, sCodeToFindInTree);
+        rendHTML = this.expandNode(sSuperConceptName, sCCodeDB, "Last", "", sCodeToFindInTree);
         if(sSearchAC.equals("ParentConceptVM"))
           baseTree = (Tree)m_treesHashParent.get(sCCodeDB);  
         else
@@ -1356,7 +1464,7 @@ System.out.println("openTreeToParentConcept sSuperConceptName: " + sSuperConcept
     while(stackSuperConcepts.size()>0)
     {
       sSuperConceptName = (String)stackSuperConcepts.pop();
-System.out.println("expandParentTreeToConcept: " + sSuperConceptName + " parentName: " + parentName);
+//System.out.println("expandParentTreeToConcept: " + sSuperConceptName + " parentName: " + parentName);
       rendHTML = this.expandNode(sSuperConceptName, m_dtsVocab, "No", sCCode, sNameToFindInTree);
     }
     Tree baseTree = (Tree)m_treesHashParent.get("parentTree" + parentName);
@@ -1373,6 +1481,7 @@ System.out.println("expandParentTreeToConcept: " + sSuperConceptName + " parentN
    */
 	public String refreshTree(String dtsVocab, String sRender) 
   {		
+System.out.println("refreshTree: dtsVocab: " + dtsVocab);
 		Tree dtsTree = new Tree("dtsTree");
     GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);  
     String rendHTML = "";

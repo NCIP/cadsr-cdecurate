@@ -271,11 +271,13 @@
   //back button
   function Back()
   {
+		document.designateDEForm.Message.style.visibility="visible";
     document.designateDEForm.newCDEPageAction.value = "backToSearch";
     document.designateDEForm.submit();
   }
   function ClearBoxes()
   {
+		document.designateDEForm.Message.style.visibility="visible";
     document.designateDEForm.newCDEPageAction.value = "clearBoxes";
     document.designateDEForm.submit();
   }
