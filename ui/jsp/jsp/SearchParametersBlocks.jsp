@@ -85,6 +85,7 @@
   String sVersion = (String)session.getAttribute("sVersion");
   if (sVersion == null) sVersion = "";
   String sUISearchType = (String)request.getAttribute("UISearchType");
+//System.out.println("spb sUISearchType: " + sUISearchType);
   if (sUISearchType == null || sUISearchType.equals("nothing") 
   || sUISearchType.equals("") || dtsVocab.equals("NCI Metathesaurus")) 
     sUISearchType = "term";

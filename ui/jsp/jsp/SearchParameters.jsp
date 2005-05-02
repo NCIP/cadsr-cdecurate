@@ -123,7 +123,7 @@
   if (sContext == null) sContext = "AllContext";
   if (sContextUse == null || sContextUse == "")  sContextUse = "BOTH";
   if (sSearchIn.equals("CRFName")) sContextUse = "OWNED_BY";
-  if (sVersion == null || sVersion == "") sVersion = "All";
+  if (sVersion == null || sVersion == "") sVersion = "Yes";  //"All";
   if (!sVersion.equals("Other")) txVersion = "";    
       
   if (sCreatedFrom == null) sCreatedFrom = "";
@@ -157,13 +157,11 @@
   {
     sUIFilter = "simple";
     sSearchIn = "";
-    sContext = "";
+    sContext = "AllContext";
     sContextUse = "BOTH";
     sVersion = "All";
     selCD = "All Domains";
   }
-//System.out.println("sparam jsp sSearchAC: " + sSearchAC + " sMenuAction: " + sMenuAction);
-
 %>
 
 <SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
@@ -518,12 +516,6 @@ function LoadKeyHandler()
     </tr>
     <tr>
       <td>&nbsp;</td>
-  <!--    <td align=left >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="rVersion" value="Yes" <%if(sVersion.equals("Yes")){%> checked <%}%>
-          onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
-          Latest&nbsp;&nbsp;&nbsp;&nbsp;
-          <input type="radio" name="rVersion" value="All" <%if(sVersion.equals("All")){%> checked <%}%>
-              onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">&nbsp;All
-      </td> -->
       <td align=left >
           <input type="radio" name="rVersion" value="All" onclick="javascript:removeOtherText();" <%if(sVersion.equals("All")){%> checked <%}%>
               onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">

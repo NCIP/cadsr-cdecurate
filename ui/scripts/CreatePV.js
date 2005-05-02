@@ -80,18 +80,18 @@
  
  function isDateValid()
  {
-	if (document.createPVForm.BeginDate.value != "")
-	{
-		var beginDate = document.createPVForm.BeginDate.value
-		var endDate = document.createPVForm.EndDate.value
-		var status = validateDate(beginDate, endDate); //validateDate is in date-picker.js
-		if (status) status = "valid";
-		return status;
-	}
-	//else
-		//alert("Begin Date cannot be empty");
-
-	return "valid";	
+    var beginDate = document.createPVForm.BeginDate.value;
+    var endDate = document.createPVForm.EndDate.value;
+    return areDatesValid(beginDate, endDate, "EditPV");
+    
+   /* if (document.createPVForm.BeginDate.value != "")
+    {
+      var beginDate = document.createPVForm.BeginDate.value
+      var endDate = document.createPVForm.EndDate.value
+      var status = validateDate(beginDate, endDate); //validateDate is in date-picker.js
+      if (!status) return "invalid";
+    }
+    return "valid";	*/
  }
 
 

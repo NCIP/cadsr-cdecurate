@@ -463,6 +463,11 @@ public class InsACService implements Serializable
               this.storeStatusMsg("\\t Successfully updated Value Domain");
            }
         } //end sinsertfor not update
+        else
+        {
+          if (sReturnCode != null && !sReturnCode.equals(""))
+            this.storeStatusMsg("\\t Unable to update the preferred name of the Value Domain.");
+        }
       }
       this.storeStatusMsg("\\n");
       //capture the duration
@@ -565,7 +570,13 @@ public class InsACService implements Serializable
         String sValue = pv.getPV_VALUE();
         String sShortMeaning = pv.getPV_SHORT_MEANING();
         String sMeaningDescription = pv.getPV_MEANING_DESCRIPTION();
-        String sBeginDate = m_util.getOracleDate(pv.getPV_BEGIN_DATE());
+        String sBeginDate = pv.getPV_BEGIN_DATE();
+        if (sBeginDate == null || sBeginDate.equals(""))
+        {
+          SimpleDateFormat formatter = new SimpleDateFormat ("MM/dd/yyyy");
+          sBeginDate = formatter.format(new java.util.Date());
+        }
+        sBeginDate = m_util.getOracleDate(sBeginDate);
         String sEndDate = m_util.getOracleDate(pv.getPV_END_DATE());
 
         //check if it already exists
@@ -949,7 +960,6 @@ public class InsACService implements Serializable
     }
     catch (Exception e)
     {
-      //System.out.println("vm error: " + e);
       logger.fatal("ERROR in InsACService-setEVS_VM for other : " + e.toString());
       m_classReq.setAttribute("retcode", "Exception");
       this.storeStatusMsg("\\t Exception : Unable to update VM attributes.");
@@ -1116,16 +1126,16 @@ public class InsACService implements Serializable
                   String vmErr = (String)m_classReq.getAttribute("pvvmError");
                   m_classReq.setAttribute("pvvmError", "");  //empty it first
                   if (vmErr != null && (vmErr.equals("vmError") || vmErr.indexOf("API_VM") > -1)) continue;
-                  //create new pv if not exists already.
                   pvBean.setPV_SHORT_MEANING(vm.getVM_SHORT_MEANING());   //reset vm to handle case sensitive vm
-                  if (sPVid == null || sPVid.equals("") || (sPVid.length()>3 && sPVid.indexOf("EVS")>-1))   
-                    ret = this.setPV("INS", sPVid, pvBean);
-                  //do not contiue with creatin vdpvs if pv has error
-                  String pvErr = (String)m_classReq.getAttribute("pvvmError");
-                  m_classReq.setAttribute("pvvmError", "");  //empty it first
-                  if (pvErr != null && pvErr.indexOf("API_PV") > -1) continue;                  
                 }
               }              
+              //create new pv if not exists already.
+              if (sPVid == null || sPVid.equals("") || (sPVid.length()>3 && sPVid.indexOf("EVS")>-1))   
+                ret = this.setPV("INS", sPVid, pvBean);
+              //do not contiue with creatin vdpvs if pv has error
+              String pvErr = (String)m_classReq.getAttribute("pvvmError");
+              m_classReq.setAttribute("pvvmError", "");  //empty it first
+              if (pvErr != null && pvErr.indexOf("API_PV") > -1) continue;                  
             }
             //remove olny if it was already existed in the database 
             ret = this.setVD_PVS(pvBean, vd);
@@ -1386,11 +1396,42 @@ public class InsACService implements Serializable
       //store versioned status message 
       if (sInsertFor.equals("Version"))
         this.storeStatusMsg("\\t Created new version successfully.");
-
+      //check if it is valid oc/prop for block dec at submit
+      boolean bValidOC_PROP = true;
+      if (sInsertFor.equals("BlockEdit"))
+      {
+        //do the oc prop pair checking only if they exist
+        if ((dec.getDEC_OC_CONDR_IDSEQ() == null || dec.getDEC_OC_CONDR_IDSEQ().equals("")) && 
+              (dec.getDEC_PROP_CONDR_IDSEQ() == null || dec.getDEC_PROP_CONDR_IDSEQ().equals("")))
+        {
+          //display message if sys or abbr was selected for non oc prop dec.
+          if (dec.getAC_PREF_NAME_TYPE() != null && (dec.getAC_PREF_NAME_TYPE().equals("SYS") || dec.getAC_PREF_NAME_TYPE().equals("ABBR")))
+          {
+            this.storeStatusMsg("\\t Unable to change the Preferred Name type to System Generated or Abbreviated" + 
+                  "\\n\\t\\t because Object Class and Property do not exist.");
+            bValidOC_PROP = false;
+          }
+        }
+        else
+        {
+          SetACService setAC = new SetACService(m_servlet);
+          String validOCProp = setAC.checkUniqueOCPropPair(dec, m_classReq, m_classRes, "EditDEC");
+          if (validOCProp != null && !validOCProp.equals("") && validOCProp.indexOf("Warning") < 0)
+          {
+            bValidOC_PROP = false;
+            this.storeStatusMsg("\\t " + validOCProp);  //append the message
+            //reset back to old one
+            dec.setDEC_OC_CONDR_IDSEQ(oldDEC.getDEC_OC_CONDR_IDSEQ());
+            dec.setDEC_OCL_IDSEQ(oldDEC.getDEC_OCL_IDSEQ());
+            dec.setDEC_PROP_CONDR_IDSEQ(oldDEC.getDEC_PROP_CONDR_IDSEQ());
+            dec.setDEC_PROPL_IDSEQ(oldDEC.getDEC_PROPL_IDSEQ());
+          }
+        }
+      }
       String sOCID = "";
       String sPropL = "";
-      //get the system generated name for DEC from OC and Prop
-      if (!sInsertFor.equals("BlockEdit"))
+      //get the system generated name for DEC from OC and Prop if oc-prop combination is valid
+      if (bValidOC_PROP == true)
       {
        //need to send in ids not names
         String sOldOCName = "";
@@ -1416,32 +1457,11 @@ public class InsACService implements Serializable
         }
         else
           sPropL = dec.getDEC_PROPL_IDSEQ();
-          
-        String sysName = this.getDECSysName(dec);
-        if (sysName == null) sysName = "";
-        dec.setAC_SYS_PREF_NAME(sysName);
-        if (dec.getAC_PREF_NAME_TYPE() != null && dec.getAC_PREF_NAME_TYPE().equals("SYS"))
-        {
-          dec.setDEC_PREFERRED_NAME(sysName);
-          //check the preferred name uniquess before sbumitting
-          SetACService setAC = new SetACService(m_servlet);
-          GetACService getAC = new GetACService(m_classReq, m_classRes, m_servlet);
-          String sDECAction = "create";
-          if (sAction.equals("UPD")) sDECAction = "Edit";
-          String sValid = setAC.checkUniqueInContext("Name", "DEC", null, dec, null, getAC, sDECAction);
-          if (sValid == null || sValid.equals(""))
-            sName = sysName;
-          else
-          {
-            if (sAction.equals("UPD")) sDECAction = "update";
-            this.storeStatusMsg("\\tUnable to " + sDECAction 
-                + " this Data Element Concept because the system generated \\n\\t" + 
-                "Preferred Name " + sysName + " already exists in the database for this " +
-                "Context and Version. \\n\\tClick OK to return to the Data Element Concept screen " +
-                "to " + sDECAction + " a unique Preferred Name.");
-            return "Unique Constraint";
-          }
-        }
+        //get the valid preferred name
+        DEC_Bean vDEC = this.changeDECPrefName(dec, oldDEC, sInsertFor, sAction);
+        if (vDEC == null) return "Unique Constraint";
+        else dec = vDEC;
+        sName = dec.getDEC_PREFERRED_NAME();  // update submit variable
       }
        //get the old attributes from the oldbean
       if(oldDEC != null && !oldDEC.equals(""))
@@ -1465,23 +1485,21 @@ public class InsACService implements Serializable
         sChangeNote = " ";
       
       //pass empty string if changed to null
+      sBeginDate = dec.getDEC_BEGIN_DATE();
+      if(oldDEC != null) oldBeginDate  = oldDEC.getDEC_BEGIN_DATE();
+      if(oldBeginDate == null) oldBeginDate = "";
+      if(sBeginDate == null) sBeginDate = "";
+      if((sBeginDate == null || sBeginDate.equals(""))&& sAction.equals("UPD")&& !sBeginDate.equals(oldBeginDate))
+        sBeginDate = " ";
+      else
+        sBeginDate = m_util.getOracleDate(dec.getDEC_BEGIN_DATE());
+
       sEndDate = dec.getDEC_END_DATE();
       if(oldDEC != null) oldEndDate  = oldDEC.getDEC_END_DATE();
       if(oldEndDate == null) oldEndDate = "";
       if(sEndDate == null) sEndDate = "";
       if((sEndDate == null || sEndDate.equals(""))&& sAction.equals("UPD")&& !sEndDate.equals(oldEndDate))
-      {
         sEndDate = " ";
-         // if endDate was deleted and beginDate was also deleted, need to send in " " for beginDate also so there will not be an API_211 error
-        sBeginDate = dec.getDEC_BEGIN_DATE();
-        if(oldDEC != null) oldBeginDate  = oldDEC.getDEC_BEGIN_DATE();
-        if(oldBeginDate == null) oldBeginDate = "";
-        if(sBeginDate == null) sBeginDate = "";
-        if((sBeginDate == null || sBeginDate.equals(""))&& sAction.equals("UPD")&& !sBeginDate.equals(oldBeginDate))
-          sBeginDate = " ";
-        else
-          sBeginDate = m_util.getOracleDate(dec.getDEC_BEGIN_DATE());
-      }
       else
         sEndDate = m_util.getOracleDate(dec.getDEC_END_DATE());
 
@@ -1549,7 +1567,6 @@ public class InsACService implements Serializable
         CStmt.setString(17,sEndDate);       //sEndDate  - can be null
         CStmt.setString(18,sChangeNote);
         CStmt.setString(24,sSource);
-
          // Now we are ready to call the stored procedure
         boolean bExcuteOk = CStmt.execute();
         //capture the duration
@@ -1648,6 +1665,77 @@ public class InsACService implements Serializable
     return sReturnCode;
   }
 
+  private DEC_Bean changeDECPrefName(DEC_Bean dec, DEC_Bean oldDEC, String sInsFor, String sAction) 
+      throws Exception
+  {
+      String sName = dec.getDEC_PREFERRED_NAME();
+      if (sName == null) sName = "";
+      String sNameType = dec.getAC_PREF_NAME_TYPE();
+      if (sNameType == null) sNameType = "";
+      String oldAslName = oldDEC.getDEC_ASL_NAME();
+      if (oldAslName == null) oldAslName = "";
+      //display messge if released dec 
+      if (oldAslName.equals("RELEASED") && sInsFor.equals("BlockEdit") 
+          && !sNameType.equals("") && !sNameType.equals("USER"))
+      {
+        this.storeStatusMsg("\\t Preferred Name of the RELEASED Data Element Concept cannot be changed.");
+        return dec;
+      }
+      //get teh right sys name
+      String curType = "existing";
+      if (sNameType.equals("SYS"))
+      {
+        curType = "system generated";
+        String sysName = this.getDECSysName(dec);
+        if (sysName == null) sysName = "";
+        dec.setAC_SYS_PREF_NAME(sysName);
+        dec.setDEC_PREFERRED_NAME(sysName);
+      }
+      //abbreviated type  
+      if (sNameType.equals("ABBR"))
+      {
+        curType = "abbreviated";
+        //get abbr name for block edit or version
+        if (sInsFor.equals("BlockEdit") || (sAction.equals("UPD") && sInsFor.equals("Version")))
+        {
+          GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
+          if (dec.getDEC_OC_CONDR_IDSEQ() != null && !dec.getDEC_OC_CONDR_IDSEQ().equals(""))
+            serAC.fillOCVectors(dec.getDEC_OC_CONDR_IDSEQ(), dec, sAction);
+          if (dec.getDEC_PROP_CONDR_IDSEQ() != null && !dec.getDEC_PROP_CONDR_IDSEQ().equals(""))
+            serAC.fillPropVectors(dec.getDEC_PROP_CONDR_IDSEQ(), dec, sAction);
+          dec = m_servlet.doGetDECNames(m_classReq, m_classRes, null, "SubmitDEC", dec);
+          dec.setDEC_PREFERRED_NAME(dec.getAC_ABBR_PREF_NAME());
+        }
+      }
+      SetACService setAC = new SetACService(m_servlet);
+      GetACService getAC = new GetACService(m_classReq, m_classRes, m_servlet);
+      String sDECAction = "create";
+      if (sAction.equals("UPD")) sDECAction = "Edit";
+      String sValid = setAC.checkUniqueInContext("Name", "DEC", null, dec, null, getAC, sDECAction);
+      if (sValid != null && !sValid.equals(""))
+      {
+        if (sAction.equals("UPD")) sDECAction = "update";
+        String sMsg = "\\tUnable to " + sDECAction 
+            + " this Data Element Concept because the " + curType + "\\n\\t" + 
+            "Preferred Name " + dec.getDEC_PREFERRED_NAME() + " already exists in the database for this " +
+            "Context and Version.";
+        //add moreMsg and return with error for create new dec
+        if (!sAction.equals("UPD")) 
+        { 
+          String sMoreMsg = "\\n\\tClick OK to return to the Data Element Concept screen " +
+              "to " + sDECAction + " a unique Preferred Name.";
+          this.storeStatusMsg(sMsg + sMoreMsg);
+          //return "Unique Constraint";
+          return null;
+        }
+        else  //reset pref name back to earlier name and continue with other submissions for upd dec
+        {
+          dec.setDEC_PREFERRED_NAME(sName);  //back to the old name
+          this.storeStatusMsg(sMsg);
+        }
+      }
+      return dec;
+  }
   /**
   * to add or remove cs-csi relationship for the selected AC.
   * Called from setDE, setVD, setDEC.
@@ -1844,7 +1932,12 @@ public class InsACService implements Serializable
           }
       }
       if (sOCCondr == null) sOCCondr = "";
-      if (!sContextID.equals("") && !sOCCondrString.equals(""))
+   //   if (sContextID == null || sContextID.equals(""))
+   //     sContextID = (String)req.getAttribute("blockContext");
+      if (sContextID == null) sContextID = "";
+        //System.out.println(sOCCondrString + " set oc " + sContextID);
+    //  if (!sContextID.equals("") && !sOCCondrString.equals(""))
+      if (!sOCCondrString.equals(""))
       {
           sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
           if (sbr_db_conn == null)
@@ -1875,13 +1968,14 @@ public class InsACService implements Serializable
             // Set the In parameters (which are inherited from the PreparedStatement class)
             CStmt.setString(1,sOCCondrString); //comma-delimited con idseqs
             CStmt.setString(2,sContextID);
+        //System.out.println(sOCCondrString + " set oc execute " + sContextID);
             boolean bExcuteOk = CStmt.execute();
             sReturnCode = CStmt.getString(3);
             sOCL_IDSEQ = CStmt.getString(4); 
             if(sOCL_IDSEQ == null) sOCL_IDSEQ = "";
             String sOCL_CONDR_IDSEQ = CStmt.getString(21);
             if(sOCL_CONDR_IDSEQ == null) sOCL_CONDR_IDSEQ = "";
-            session.setAttribute("newObjectClass", "");
+           // session.setAttribute("newObjectClass", "");
             //store the idseq in the bean
             if(dec != null && (sReturnCode == null || sReturnCode.equals("") || sReturnCode.equals("API_OC_500")))
             {
@@ -1891,6 +1985,9 @@ public class InsACService implements Serializable
             }
             if (sReturnCode != null && !sReturnCode.equals(""))  // && !sReturnCode.equals("API_OC_500"))
             {
+                sReturnCode = sReturnCode.replaceAll("\\n", " ");
+                sReturnCode = sReturnCode.replaceAll("\\t", " ");
+                sReturnCode = sReturnCode.replaceAll("\"", "");                
                 this.storeStatusMsg(sReturnCode + " : Unable to create Object Class ");
                 m_classReq.setAttribute("retcode", sReturnCode);
             }
@@ -2010,7 +2107,11 @@ public class InsACService implements Serializable
           }
       }
       if (sPCCondr == null) sPCCondr = "";
-      if (!sContextID.equals("") && !sPCCondrString.equals(""))
+  //    if (sContextID == null || sContextID.equals(""))
+  //      sContextID = (String)req.getAttribute("blockContext");
+      if (sContextID == null) sContextID = "";
+  //    if (!sContextID.equals("") && !sPCCondrString.equals(""))
+      if (!sPCCondrString.equals(""))
       {
           sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
           if (sbr_db_conn == null)
@@ -2054,7 +2155,7 @@ public class InsACService implements Serializable
               dec.setDEC_PROP_CONDR_IDSEQ(sPROPL_CONDR_IDSEQ);
               req.setAttribute("PROPL_IDSEQ", sPROPL_IDSEQ);
             }            
-            session.setAttribute("newProperty", "");
+           // session.setAttribute("newProperty", "");
             if (sReturnCode != null && !sReturnCode.equals(""))  // && !sReturnCode.equals("API_PROP_500"))
             {
                 this.storeStatusMsg(sReturnCode + " : Unable to create Property ");
@@ -2180,7 +2281,8 @@ public class InsACService implements Serializable
       }
           
       if (sOCCondr == null) sOCCondr = ""; 
-      if (!sContextID.equals("") && !sOCCondrString.equals(""))
+    //  if (!sContextID.equals("") && !sOCCondrString.equals(""))
+      if (!sOCCondrString.equals(""))
       {
        if (!sREPName.equals(null) || !sREPName.equals(""))
        {
@@ -2548,24 +2650,20 @@ public class InsACService implements Serializable
       if((sChangeNote == null || sChangeNote.equals(""))&& sAction.equals("UPD")&& !sChangeNote.equals(oldChangeNote))
         sChangeNote = " ";
 
+      sBeginDate = de.getDE_BEGIN_DATE();
+      if(sBeginDate == null) sBeginDate = "";
+      if(oldDE != null) oldBeginDate  = oldDE.getDE_BEGIN_DATE();
+      if(oldBeginDate == null) oldBeginDate = "";
+      if((sBeginDate == null || sBeginDate.equals(""))&& sAction.equals("UPD")&& !sBeginDate.equals(oldBeginDate))
+        sBeginDate = " ";
+      else
+        sBeginDate = m_util.getOracleDate(de.getDE_BEGIN_DATE());
+
       sEndDate = de.getDE_END_DATE();
       if(oldDE != null) oldEndDate  = oldDE.getDE_END_DATE();
       if(sEndDate == null) sEndDate = "";
       if((sEndDate == null || sEndDate.equals(""))&& sAction.equals("UPD")&& !sEndDate.equals(oldEndDate))
-      {
         sEndDate = " ";
-        // if endDate was deleted and beginDate was also deleted, need to send in " " for beginDate also so there will not be an API_211 error
-        sBeginDate = de.getDE_BEGIN_DATE();
-        if(oldDE != null) oldBeginDate  = oldDE.getDE_BEGIN_DATE();
-        if(oldBeginDate == null) oldBeginDate = "";
-        if(sBeginDate == null) sBeginDate = "";
-        if((sBeginDate == null || sBeginDate.equals(""))&& sAction.equals("UPD")&& !sBeginDate.equals(oldBeginDate))
-          sBeginDate = " ";
-        else if (sBeginDate.equals(""))
-          sBeginDate = " ";
-        else
-          sBeginDate = m_util.getOracleDate(de.getDE_BEGIN_DATE());
-      }
       else
         sEndDate = m_util.getOracleDate(de.getDE_END_DATE());
 
@@ -2960,15 +3058,23 @@ public class InsACService implements Serializable
               Hashtable desTable = (Hashtable)session.getAttribute("desHashTable");
               if (desTable == null) desTable = new Hashtable();
               //add or remove from hash table according to the action
-              if (sAction.equals("INS") && !desTable.contains(sContext + "," + sAC_ID))
-                 desTable.put(sContext + "," + sAC_ID, desIDSEQ);
-              else if (sAction.equals("DEL") && desTable.contains(sContext + "," + sAC_ID))
-                 desTable.remove(sContext + "," + sAC_ID);
-              //store it back
-              session.setAttribute("desHashTable", desTable);
-              //refresh used by context in the search results list
-              GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
-              serAC.refreshDesData(sAC_ID, desIDSEQ, sValue, sContext, sContextID, sAction);
+              if (desIDSEQ == null || desIDSEQ.equals(""))
+              {
+                this.storeStatusMsg("\\t " + sReturnCode + " : Unable to get the ID of Alternate Name - " + sValue + " of Type " + desType + ".");                
+                m_classReq.setAttribute("retcode", sReturnCode);
+              }
+              else
+              {
+                if (sAction.equals("INS") && !desTable.contains(sContext + "," + sAC_ID))
+                   desTable.put(sContext + "," + sAC_ID, desIDSEQ);
+                else if (sAction.equals("DEL") && desTable.contains(sContext + "," + sAC_ID))
+                   desTable.remove(sContext + "," + sAC_ID);
+                //store it back
+                session.setAttribute("desHashTable", desTable);
+                //refresh used by context in the search results list
+                GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
+                serAC.refreshDesData(sAC_ID, desIDSEQ, sValue, sContext, sContextID, sAction);
+              }
            }
         }
         else
@@ -2985,9 +3091,9 @@ public class InsACService implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR in InsACService-setDES for exception : " + e.toString());
+      logger.fatal("ERROR in InsACService-setDES for exception : " + e.getMessage());
       m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception : Unable to update or remove an Alternate Name.");
+      this.storeStatusMsg("\\t Exception e : Unable to update or remove an Alternate Name.");
     }
     try
     {
@@ -2999,7 +3105,7 @@ public class InsACService implements Serializable
     {
       logger.fatal("ERROR in InsACService-setDES for close : " + ee.toString());
       m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception : Unable to update or remove an Alternate Name.");
+      this.storeStatusMsg("\\t Exception ee : Unable to update or remove an Alternate Name.");
     }
     return sReturnCode;
   } //end set DES
@@ -4351,7 +4457,6 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
         vACList.addElement(deBean);
         vACID.addElement(deBean.getDE_DE_IDSEQ());
       }
-      ////System.out.println("ac list " + vACList.size());
       for (int k=0; k<vACList.size(); k++)
       {
         m_classReq.setAttribute("retcode", "");
@@ -4587,7 +4692,6 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
             }
             else */if (!sAction.equals("UPD"))   //call method to create alternate name in the database
               ret = this.setDES(sAction, sAC, sContID, sCont, sType, sName, "ENGLISH", sID); 
-        ////System.out.println(i + sType + sAC + sName + sCont + sAction);        
           }
         }        
       }
@@ -4679,7 +4783,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
       GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
       Vector vAC = new Vector();
       getAC.do_EVSSearch(sConceptName, vAC, "NCI_Thesaurus", "Synonym",
-          "All Sources", 100, "termThesOnly", "Exclude", sContextID);
+          "All Sources", 100, "termThesOnly", "Exclude", sContextID, -1);
       for(int i=0; i<(vAC.size()); i++)
       {
         EVS_Bean OCBean = new EVS_Bean();

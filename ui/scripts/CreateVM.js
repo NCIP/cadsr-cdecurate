@@ -89,18 +89,18 @@ var evsWindow = null;
  
  function isDateValid()
  {
-	if(document.createVMForm.BeginDate.value != "")
-	{
-		var beginDate = document.createVMForm.BeginDate.value
-		var endDate = document.createVMForm.EndDate.value
-		var status = validateDate(beginDate, endDate); //validateDate is in date-picker.js
-		if (status) status = "valid";
-		return status;
-	}
-	else
-		alert("Begin Date cannot be empty");
-
-	return "invalid";	
+    var beginDate = document.createVMForm.BeginDate.value;
+    var endDate = document.createVMForm.EndDate.value;
+    return areDatesValid(beginDate, endDate, "EditVM");
+    
+   /* if(document.createVMForm.BeginDate.value != "")
+    {
+      var beginDate = document.createVMForm.BeginDate.value;
+      var endDate = document.createVMForm.EndDate.value;
+      var status = validateDate(beginDate, endDate); //validateDate is in date-picker.js
+      if (!status) return "invalid";
+    }
+    return "valid";	*/
 }
  
    function fillCDName()

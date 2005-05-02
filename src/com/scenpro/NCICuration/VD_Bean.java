@@ -195,6 +195,8 @@ public class VD_Bean  implements Serializable
   private String AC_ABBR_PREF_NAME;
   private String AC_USER_PREF_NAME;
   private String AC_PREF_NAME_TYPE;
+
+  private boolean VDNAME_CHANGED;
      
   /**
    * Constructor
@@ -211,8 +213,7 @@ public class VD_Bean  implements Serializable
    */
   public VD_Bean cloneVD_Bean(VD_Bean copyBean)
   {
-//System.out.println("cloneVDBean copyBean.getVD_REP_EVS_CUI_ORIGEN()0: " + copyBean.getVD_REP_EVS_CUI_ORIGEN());
-		this.setVD_PREFERRED_NAME(copyBean.getVD_PREFERRED_NAME());
+      this.setVD_PREFERRED_NAME(copyBean.getVD_PREFERRED_NAME());
       this.setVD_LONG_NAME(copyBean.getVD_LONG_NAME());
       this.setVD_PREFERRED_DEFINITION(copyBean.getVD_PREFERRED_DEFINITION());
       this.setVD_ASL_NAME(copyBean.getVD_ASL_NAME());
@@ -286,16 +287,6 @@ public class VD_Bean  implements Serializable
       this.setVD_REP_EVS_CUI_SOURCE(copyBean.getVD_REP_EVS_CUI_SOURCE());
       this.setVD_REP_DEFINITION_SOURCE(copyBean.getVD_REP_DEFINITION_SOURCE());
     
-   //   this.setVD_REP_QUAL_CONCEPT_CODE(copyBean.getVD_REP_QUAL_CONCEPT_CODE());
-   //   this.setVD_REP_QUAL_EVS_CUI_ORIGEN(copyBean.getVD_REP_QUAL_EVS_CUI_ORIGEN());
-   //   this.setVD_REP_QUAL_EVS_CUI_SOURCE(copyBean.getVD_REP_QUAL_EVS_CUI_SOURCE());
-   //   this.setVD_REP_QUAL_DEFINITION_SOURCE(copyBean.getVD_REP_QUAL_DEFINITION_SOURCE());    
-      
- //     this.setVD_PARENT_CODES(copyBean.getVD_PARENT_CODES());
- //    this.setVD_PARENT_NAMES(copyBean.getVD_PARENT_NAMES());
-  //    this.setVD_PARENT_DB(copyBean.getVD_PARENT_DB());
-  //    this.setVD_PARENT_LIST(copyBean.getVD_PARENT_LIST());
-      
       this.setVD_REP_CONDR_IDSEQ(copyBean.getVD_REP_CONDR_IDSEQ());     
       this.setVD_PAR_CONDR_IDSEQ(copyBean.getVD_PAR_CONDR_IDSEQ());     
       this.setVD_REP_NAME_PRIMARY(copyBean.getVD_REP_NAME_PRIMARY());    
@@ -309,6 +300,7 @@ public class VD_Bean  implements Serializable
       this.setAC_USER_PREF_NAME(copyBean.getAC_USER_PREF_NAME());
       this.setAC_PREF_NAME_TYPE(copyBean.getAC_PREF_NAME_TYPE());
 
+      this.setVDNAME_CHANGED(copyBean.getVDNAME_CHANGED());
       return this;
   }
 
@@ -1187,6 +1179,15 @@ public class VD_Bean  implements Serializable
   {
       this.AC_PREF_NAME_TYPE = s;
   }
+   /**
+   * The setVDNAME_CHANGED method sets the VDNAME_CHANGED for this bean.
+   *
+   * @param b The VDNAME_CHANGED to set
+  */
+  public void setVDNAME_CHANGED(boolean b)
+  {
+      this.VDNAME_CHANGED = b;
+  }
   
   
  
@@ -2058,4 +2059,16 @@ public class VD_Bean  implements Serializable
   {
       return this.AC_PREF_NAME_TYPE;
   }
+   /**
+  * The getVDNAME_CHANGED method returns the VDNAME_CHANGED for this bean.
+  *
+  * @return boolean The VDNAME_CHANGED
+  */
+  public boolean getVDNAME_CHANGED()
+  {
+      return this.VDNAME_CHANGED;
+  }
+
+
+
 }

@@ -33,11 +33,6 @@
       
     String sOriginAction = (String)session.getAttribute("originAction");
     if (sOriginAction == null) sOriginAction = "";
- /*   String sDEEditAction = (String)session.getAttribute("DEEditAction");
-    if (sDEEditAction == null)
-      sDEEditAction = "";
-    else
-      session.setAttribute("DEEditAction", ""); //reset this */
 
     DE_Bean m_DE = (DE_Bean)session.getAttribute("m_DE");
     if (m_DE == null) m_DE = new DE_Bean();
@@ -57,72 +52,36 @@
     String sLongName = m_DE.getDE_LONG_NAME();
     sLongName = serUtil.parsedString(sLongName);    //call the function to handle doubleQuote
     if (sLongName == null) sLongName = "";
-   // if(sOriginAction.equals("BlockEditDE")) sLongName = "";
     int sLongNameCount = sLongName.length();
     String sName = m_DE.getDE_PREFERRED_NAME();
     if (sName != null) sName = serUtil.parsedString(sName);    //call the function to handle doubleQuote
     if (sName == null) sName = "";
-   // if(sOriginAction.equals("BlockEditDE")) sName = "";
     int sNameCount = sName.length();
     String sPrefType = m_DE.getAC_PREF_NAME_TYPE();
     if (sPrefType == null) sPrefType = ""; 
-//System.out.println("jsp  name type " + sPrefType);
 
     String sDefinition = m_DE.getDE_PREFERRED_DEFINITION();
     if (sDefinition == null) sDefinition = "";
     if(sOriginAction.equals("BlockEditDE")) sDefinition = "";
     
-  /*  String sDECDefinition = m_DE.getDE_DEC_Definition();
-    if (sDECDefinition == null) sDECDefinition = "";
-    String sVDDefinition = m_DE.getDE_VD_Definition();
-    if (sVDDefinition == null) sVDDefinition = ""; */
-
     //get dec attributes
     DEC_Bean dec = m_DE.getDE_DEC_Bean();
     if (dec == null) dec = new DEC_Bean();    
     String sDECID = dec.getDEC_DEC_IDSEQ();    //m_DE.getDE_DEC_IDSEQ();
-  //  if (sDECID == null) sDECID = (String)session.getAttribute("DECLongID");
     if ((sDECID == null) || (sDECID.equals("nothing"))) sDECID = "";
     String sDEC = dec.getDEC_LONG_NAME();   //m_DE.getDE_DEC_NAME();
     if (sDEC == null) sDEC = "";
     sDEC = serUtil.parsedString(sDEC);     //call the function to handle doubleQuote
-   // if(sOriginAction.equals("BlockEditDE") && !sDEEditAction.equals("DEBlockEdit")) sDEC = "";
- /*   String sPrefDEC = m_DE.getDE_DEC_PREFERRED_NAME();
-    if (sPrefDEC != null) sPrefDEC = serUtil.parsedString(sPrefDEC);    //call the function to handle doubleQuote
-    if (sPrefDEC == null) sPrefDEC = ""; */
-   // if(sOriginAction.equals("BlockEditDE")&& sDEEditAction.equals("")) sPrefDEC = "";
     VD_Bean vd = m_DE.getDE_VD_Bean();
     if (vd == null) vd = new VD_Bean();
     String sVDID = vd.getVD_VD_IDSEQ();  // m_DE.getDE_VD_IDSEQ();
-   // if (sVDID == null) sVDID = (String)session.getAttribute("VDLongID");
     if ((sVDID == null) || (sVDID.equals("nothing"))) sVDID = "";
     String sVD = vd.getVD_LONG_NAME();  // m_DE.getDE_VD_NAME();
     sVD = serUtil.parsedString(sVD);    //call the function to handle doubleQuote
     if (sVD == null) sVD = "";
-  //  if(sOriginAction.equals("BlockEditDE") && !sDEEditAction.equals("DEBlockEdit")) sVD = "";
-  /*  String sPrefVD = m_DE.getDE_VD_PREFERRED_NAME();
-    if (sPrefVD != null) sPrefVD = serUtil.parsedString(sPrefVD);    //call the function to handle doubleQuote
-    if (sPrefVD == null) sPrefVD = ""; */
 
-    // A JavaScript string enclosed within single quotes does not allow a single quote
-    // character within the string.  Here a new string is formed to send to the javascript
-    // function, resetBoxes, that adds the escape character before the single quote.
- /*   String tmpDEC = sDEC;
-    String escapeChar = "\\";
-    int idx = sDEC.indexOf("'");
-    while (idx != -1)
-    {
-       tmpDEC = sDEC.substring(0, idx) + escapeChar + sDEC.substring(idx, sDEC.length());
-       idx = tmpDEC.indexOf("'", idx + 2);
-    }
-    String tmpVD = sVD;
-    idx = sVD.indexOf("'");
-    while (idx != -1)
-    {
-       tmpVD = sVD.substring(0, idx) + escapeChar + sVD.substring(idx, sVD.length());
-       idx = tmpVD.indexOf("'", idx + 2);
-    } */
-
+    boolean decvdChanged = m_DE.getDEC_VD_CHANGED();
+System.out.println("jsap " + decvdChanged);
     String sVersion = m_DE.getDE_VERSION();
     if (sVersion == null) 
       sVersion = "1.0";
@@ -135,23 +94,15 @@
     String sRegStatusIDSEQ = m_DE.getDE_REG_STATUS_IDSEQ();
     if (sRegStatusIDSEQ == null) sRegStatusIDSEQ = "";
     
-  //  if(sOriginAction.equals("BlockEditDE")&& !sDEEditAction.equals("DEBlockEdit")) sStatus = "";
     String sCDEID = m_DE.getDE_MIN_CDE_ID();
     if (sCDEID == null) sCDEID = "";
     if(sOriginAction.equals("BlockEditDE")) sCDEID = "";
     String sBeginDate = m_DE.getDE_BEGIN_DATE();
     if (sBeginDate == null) sBeginDate = "";
-  //  if(sOriginAction.equals("BlockEditDE")&& !sDEEditAction.equals("DEBlockEdit")) sBeginDate = "";
     String sDocText = m_DE.getDOC_TEXT_LONG_NAME();
     if (sDocText == null) sDocText = "";
-   // if(sOriginAction.equals("BlockEditDE")&& !sDEEditAction.equals("DEBlockEdit")) sDocText = "";
     String sDocTextIDSEQ = m_DE.getDOC_TEXT_LONG_NAME_IDSEQ();
     if (sDocTextIDSEQ == null) sDocTextIDSEQ = "";
-/*    String sLanguage = m_DE.getDE_LANGUAGE();
-    if (sLanguage == null) sLanguage = "";
-  //  if(sOriginAction.equals("BlockEditDE")&& !sDEEditAction.equals("DEBlockEdit")) sLanguage = "";
-    String sLanguageIDSEQ = m_DE.getDE_LANGUAGE_IDSEQ();
-    if (sLanguageIDSEQ == null) sLanguageIDSEQ = ""; */
     String sSourceIDSEQ = m_DE.getDE_SOURCE_IDSEQ();
     if (sSourceIDSEQ == null) sSourceIDSEQ = "";
     String sSource = m_DE.getDE_SOURCE();
@@ -162,7 +113,6 @@
     //get cs-csi attributes
     Vector vSelCSList = m_DE.getDE_CS_NAME();
     if (vSelCSList == null) vSelCSList = new Vector();
- //   System.out.println("cs jsp " + vSelCSList.size());
     Vector vSelCSIDList = m_DE.getDE_CS_ID();
     Vector vACCSIList = m_DE.getDE_AC_CSI_VECTOR();
     Vector vACId = (Vector)session.getAttribute("vACId");
@@ -170,21 +120,17 @@
     //initialize the beans
     CSI_Bean thisCSI = new CSI_Bean();
     AC_CSI_Bean thisACCSI = new AC_CSI_Bean();
-    
-  //  if(sOriginAction.equals("BlockEditDE")&& !sDEEditAction.equals("DEBlockEdit")) sSource = "";
 
     String sEndDate = m_DE.getDE_END_DATE();
     if (sEndDate == null) sEndDate = "";
-  //  if(sOriginAction.equals("BlockEditDE")&& !sDEEditAction.equals("DEBlockEdit")) sEndDate = "";
-
     //remove standard and candidate from the dropdown list if block edit
-    if (sOriginAction.equals("BlockEditDE"))
+ /*   if (sOriginAction.equals("BlockEditDE"))
     {
       if (vRegStatus.contains("Candidate"))
         vRegStatus.removeElement("Candidate");
       if (vRegStatus.contains("Standard"))
         vRegStatus.removeElement("Standard");
-    }
+    } */
 
     //these are for DEC and VD searches.
     session.setAttribute("MenuAction", "searchForCreate");
@@ -192,7 +138,6 @@
     session.setAttribute("results", vResult);
     session.setAttribute("creRecsFound", "No ");
     session.setAttribute("creKeyword", "");
-    //session.setAttribute("initiatedFrom", "DE");
 
     // for DDE
     String sSelRepType = (String)session.getAttribute("sRepType");
@@ -229,7 +174,6 @@
   var selCSIArray = new Array();  //for selected csi list
   var selACCSIArray = new Array();  //for selected AC-csi list
   var writeContArray = new Array();
-  //var formName = "document.newCDEForm";
   
   function loadCSCSI()
   {
@@ -240,7 +184,6 @@
     for (int i=0; i<vCSIList.size(); i++)  //loop csi vector
     {
       thisCSI = (CSI_Bean)vCSIList.elementAt(i);  //get the csi bean
-      //System.out.println(thisCSI.getCSI_CS_IDSEQ() + " : " + thisCSI.getCSI_LABEL());
    %>
       //create new csi object
       var aIndex = <%=i%>;  //get the index
@@ -262,14 +205,13 @@
 
    function loadSelCSCSI()
    {
-<%    //Vector vACCSIList = (Vector)request.getAttribute("vACCSIList");
+<%    
       if (vACCSIList != null)
       {      
         for (int j=0; j<vACCSIList.size(); j++)  //loop csi vector
         {
           thisACCSI = (AC_CSI_Bean)vACCSIList.elementAt(j);  //get the csi bean
           thisCSI = (CSI_Bean)thisACCSI.getCSI_BEAN();
-          //System.out.println("jsp " + thisCSI.getCSI_NAME() + " : " + thisACCSI.getAC_LONG_NAME());
 %>
           //create new accsi object
           var aIndex = <%=j%>;  //get the index
@@ -297,7 +239,6 @@
           selACCSIArray[aIndex] = new Array(selCS_id, selCS_name, selCSI_id, selCSI_name, 
               selCSCSI_id, selACCSI_id, selAC_id, selAC_longName, selP_CSCSIid, 
               selCSILevel, selCSILabel, selCSIDisp);
-          //alert("laoding " + selCSI_name);
 <%      } %>   
         //call the method to fill selCSIArray
         makeSelCSIList();
@@ -338,17 +279,6 @@
 %>
     window.status = "Edit the Existing Data Element, choose context first"
   }
-
-/*function openBEDisplayWindow()
-{
-    var evsWindow = "";
-    if (evsWindow && !evsWindow.closed)
-      evsWindow.focus();
-    else
-    {
-      evsWindow = window.open("jsp/OpenBlockEditWindow.jsp", "BEWindow", "width=750,height=350,top=0,left=0,resizable=yes,scrollbars=yes");
-    }
-} */
 
 </Script>
 </head>
@@ -674,10 +604,14 @@
               for (int i = 0; vRegStatus.size()>i; i++)
               {
                 String sReg = (String)vRegStatus.elementAt(i);
+                boolean isOK = true;
+                if(sOriginAction.equals("BlockEditDE") && (sReg.equalsIgnoreCase("Candidate") || sReg.equalsIgnoreCase("Standard")))
+                  isOK = false;
+                if (isOK) {
 %>
               <option value="<%=sReg%>" <%if(sReg.equals(sRegStatus)){%>selected<%}%>><%=sReg%></option>
 <%
-            } }
+            } } }
 %>
         </select>
       </td>
@@ -1024,6 +958,7 @@
 <input type="hidden" name="regStatusIDSEQ" value="<%=sRegStatusIDSEQ%>">
 <input type="hidden" name="selDECText" value="<%=sDEC%>">
 <input type="hidden" name="selVDText" value="<%=sVD%>">
+<input type="hidden" name="nameTypeChange" value="<%=decvdChanged%>">
 <input type="hidden" name="MenuAction" value="<%=sMenuAction%>">
 <select name="hiddenSelCSI" style="visibility:hidden;"></select>
 <!-- stores the selected rows to get the bean from the search results -->

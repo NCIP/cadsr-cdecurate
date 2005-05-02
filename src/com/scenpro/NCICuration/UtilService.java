@@ -641,6 +641,33 @@ public class UtilService implements Serializable
       return sPrName;
     }
   /**
+   * remove double backslash from newline character from the string for success messages.
+   * @param sMsg
+   * @return fomated string
+   */
+    public String parsedStringMsgNewLine(String sMsg)
+    {
+      int index = 0;
+      if (sMsg != null && !sMsg.equals(""))
+      {
+        do
+        {
+          if (index > 0)
+            index = sMsg.indexOf('\n',index);
+          else
+            index = sMsg.indexOf('\n');
+        System.out.println(index + " msg " + sMsg);
+          if (index > -1)
+          {
+            sMsg = sMsg.substring(0, index) + " " + sMsg.substring(index+2);
+            index = index + 3;
+          }
+        }
+        while (index > 0);
+      }
+      return sMsg;
+    } 
+  /**
   * sort DE Component vectors against last vector: vDECompOrder
   *
   * @param vDEComp  A Vector.
@@ -701,30 +728,23 @@ public class UtilService implements Serializable
    */
   public String formatStringVDSubmit(String sAct, String sField, VD_Bean newVD, VD_Bean oldVD)
   {
- // System.out.println(sAct + " format string " + sField);
     if (sField.equals("EndDate") || sField.equals("BeginDate"))
     {
-      String sEndDate = "", oldEndDate = "", sBeginDate = "", oldBeginDate = "";
-      sEndDate = this.getOracleDate(newVD.getVD_END_DATE());
-      sBeginDate = this.getOracleDate(newVD.getVD_BEGIN_DATE());
-      if (oldVD != null) oldEndDate  = this.getOracleDate(oldVD.getVD_END_DATE());
-      if (oldEndDate == null) oldEndDate = "";
-      if (sEndDate == null) sEndDate = "";
-      if (sEndDate.equals("") && sAct.equals("UPD") && !sEndDate.equals(oldEndDate))
+      String sDate = "", oldDate = "";
+      if (oldVD != null)
       {
-        sEndDate = " ";
-         // if endDate was deleted and beginDate was also deleted, need to send in " " for beginDate also so there will not be an API_211 error
-        if (oldVD != null) oldBeginDate  = this.getOracleDate(oldVD.getVD_BEGIN_DATE());
-        if (oldBeginDate == null) oldBeginDate = "";
-        if (sBeginDate == null) sBeginDate = "";
-        if (sBeginDate.equals("") && sAct.equals("UPD") && !sBeginDate.equals(oldBeginDate))
-          sBeginDate = " ";
+        if (sField.equals("BeginDate")) oldDate  = this.getOracleDate(oldVD.getVD_BEGIN_DATE());
+        if (sField.equals("EndDate")) oldDate  = this.getOracleDate(oldVD.getVD_END_DATE());
       }
+      if (sField.equals("BeginDate")) sDate = this.getOracleDate(newVD.getVD_BEGIN_DATE());
+      if (sField.equals("EndDate")) sDate = this.getOracleDate(newVD.getVD_END_DATE());
+       // if date is removed, pass in empty string
+      if (sDate == null) sDate = "";
+      if (oldDate == null) oldDate = "";
+      if (sDate.equals("") && sAct.equals("UPD") && !sDate.equals(oldDate))
+        sDate = " ";
       //return the string
-      if (sField.equals("EndDate"))
-        return sEndDate;
-      if (sField.equals("BeginDate"))
-        return sBeginDate;
+      return sDate;
     }
     else if (sField.equals("Source") || sField.equals("ChangeNote") || sField.equals("UOMLName") 
          || sField.equals("UOMLDesc") || sField.equals("FORMLName") || sField.equals("LowValue")

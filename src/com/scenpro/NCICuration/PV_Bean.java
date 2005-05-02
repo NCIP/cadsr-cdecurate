@@ -132,6 +132,7 @@ public class PV_Bean implements Serializable
   public PV_Bean copyBean(PV_Bean fromBean)
   {
     this.setPV_PV_IDSEQ(fromBean.getPV_PV_IDSEQ());
+    this.setPV_VDPVS_IDSEQ(fromBean.getPV_VDPVS_IDSEQ());
     this.setQUESTION_VALUE(fromBean.getQUESTION_VALUE());
     this.setQUESTION_VALUE_IDSEQ(fromBean.getQUESTION_VALUE_IDSEQ());
     this.setPV_VALUE(fromBean.getPV_VALUE());

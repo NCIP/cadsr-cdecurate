@@ -16,7 +16,7 @@
     <property name="app_class" location="${app_classes}/com/scenpro/NCICuration"/>
     <property name="app_jclass" location="${app_classes}/org/apache/jsp"/>
     <property name="app_lib" location="${app_webinf}/lib"/>
-    <property name="app_tld" location="${app_webinf}/tlds"/>
+    <property name="app_tld" location="${app_webinf}/tld"/>
     <property name="app_war" location="distrib/war"/>
     <property name="b_class" location="build/bin/com/scenpro/NCICuration"/>
     <property name="bgen_class" location="build-gen/bin/org/apache/jsp"/>

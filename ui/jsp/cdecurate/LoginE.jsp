@@ -182,7 +182,7 @@ session.setAttribute("ErrorMessage", "");
     <td width=""  align="center">
     <table width="394" border="4" bgcolor = "#CCCCCC">  
 	  <tr>
-          <td width="387" height="52" valign="center" align="center">
+          <td width="387" height="52" valign="middle" align="center">
              <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">This window is no longer active.</font></h3>
           </td>
        </tr>
@@ -192,17 +192,17 @@ session.setAttribute("ErrorMessage", "");
 
       </tr>
     <tr>
-      <td width="100%" align="center" valign="center">
+      <td width="100%" align="center" valign="middle">
         <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">User session has expired.</font></h3>
       </td>
     </tr>  
     <tr>
-      <td width="100%" align="center" valign="center">
+      <td width="100%" align="center" valign="middle">
         <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">Close window and log in again.</font></h3>
       </td>
     </tr>  
     <tr height="40">
-       <td width="100%" colspan="1" align="center" valign="center"> 
+       <td width="100%" colspan="1" align="center" valign="middle"> 
          <input type="button" name="closeBtn" value="Close Window" onClick="javascript:CloseWindow();" style="width: 95","height: 26">
       </td>
 	   </tr>
@@ -260,13 +260,13 @@ session.setAttribute("ErrorMessage", "");
 
      <% if (errMessage.equals("")) { %>
 	      <tr>
-          <td width="387" height="67" valign="center" align="center">
+          <td width="387" height="67" valign="middle" align="center">
              <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">Please enter User Name and Password.</font></h3>
           </td>
         </tr>
       <%} else { %>
 	      <tr>
-          <td width="387" height="67" valign="center" align="center">
+          <td width="387" height="67" valign="middle" align="center">
               <h4 align="center"><font color="#FF0000" style="font-size:18px"><%=errMessage%></font></h4>
           </td>
        </tr>

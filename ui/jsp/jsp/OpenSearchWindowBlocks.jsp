@@ -1,6 +1,6 @@
 <!-- OpenSearchWindowBlocks.jsp -->
 <%@ page errorPage="ErrorPage.jsp" %>
-<%@ taglib uri="/WEB-INF/tlds/curate.tld" prefix="curate" %>
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
 <html>
 <head>
 <title>CDE Curation: Search</title>

@@ -709,8 +709,10 @@
 			   document.searchResultsForm.actSelected.value = "createDesignate";		   
 		//   desWindow = window.open("jsp/DesignateComponent.jsp", "designateComponent", "width=700,height=610,top=0,left=0,resizable=yes,scrollbars=yes")
 //		   desWindow = window.open("jsp/EditDesignateDEPage.jsp", "designateComponent", "width=700,height=610,top=0,left=0,resizable=yes,scrollbars=yes")
-			   document.searchResultsForm.actSelected.value = "EditDesignateDE";
-         document.searchResultsForm.submit();
+       window.status = "Opening page to designate, it may take a minute, please wait....."
+       document.searchResultsForm.Message.style.visibility="visible";
+			 document.searchResultsForm.actSelected.value = "EditDesignateDE";
+       document.searchResultsForm.submit();
 	   }
 	   else
 	   {

@@ -40,6 +40,7 @@ function ViewConceptInTree()
 <body>
 <form name="createPVForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=newPV">
 <%
+    UtilService serUtil = new UtilService();
     String sPVAction = (String)session.getAttribute("PVAction");
     if (sPVAction == null) sPVAction = "createPV";
  // System.out.println(" pv action " + sPVAction);
@@ -54,12 +55,12 @@ function ViewConceptInTree()
     //make it new if no pvidseq.
     String sPVid = m_PV.getPV_PV_IDSEQ();
     if (sPVid == null) sPVid = "";
-    //if (sPVid.equals("")) sPVAction = "createPV";
     String sVV = m_PV.getQUESTION_VALUE();
     if (sVV == null) sVV = "";
     String sVVid = m_PV.getQUESTION_VALUE_IDSEQ();
     if (sVVid == null) sVVid = "";
     String sValue = m_PV.getPV_VALUE();
+    sValue = serUtil.parsedString(sValue);    //call the function to handle doubleQuote
     if (sValue == null) sValue = ""; 
     String sVMMeaning = m_PV.getPV_SHORT_MEANING();
     if (sVMMeaning == null) sVMMeaning = ""; 
@@ -76,12 +77,9 @@ function ViewConceptInTree()
     if (sEVSid == null) sEVSid = "";
     String sEVSdb = vmConcept.getEVS_DATABASE();
     if (sEVSdb == null) sEVSdb = "";
-    //String sEVStype = vmConcept.getNCI_CC_TYPE();
 
     String sOrigin = m_PV.getPV_VALUE_ORIGIN();
-   // if (sOrigin == null || sOrigin.equals("")) sOrigin = m_VD.getVD_SOURCE();  //get vds origin if none
     if (sOrigin == null) sOrigin = "";
-//System.out.println("create pv " + sOrigin);
 
     String sBeginDate = m_PV.getPV_BEGIN_DATE();
     if (sBeginDate == null && sPVAction.equals("createPV"))
@@ -175,7 +173,7 @@ function ViewConceptInTree()
         </tr>
 <%  } %>
     <tr height="25" valign="bottom">
-      <%if (sPVAction.equals("createPV") || (sPVAction.equals("editPV") && sPVid != null && sPVid.indexOf("EVS")>-1)) { %> 
+      <%if (sPVAction.equals("createPV") || (sPVAction.equals("editPV") && sValue != null && !sValue.equals(""))) { %> 
         <td align=right><font color="#FF0000"><%if (!sPVAction.equals("editPV")) { %>*<% } %> &nbsp;</font> <%=item++%>)</td>
         <td colspan=2><font color="#FF0000">Create</font> New Value</td>
       <% } else { %>        
@@ -186,7 +184,7 @@ function ViewConceptInTree()
     <tr>
       <td> &nbsp; </td>
       <td valign="bottom"  colspan=2>
-       <%if (sPVAction.equals("createPV") || (sPVAction.equals("editPV") && sPVid != null && sPVid.indexOf("EVS")>-1)) { %> 
+       <%if (sPVAction.equals("createPV") || (sPVAction.equals("editPV") && sValue != null && !sValue.equals(""))) { %> 
         <input type="text" name="txtPermValue" style="width:50%" value="<%=sValue%>" 
           onHelp = "showHelp('Help_CreateVD.html#createPVForm_CreateValue'); return false" size="20">
        <% } else { %>
@@ -237,9 +235,6 @@ function ViewConceptInTree()
         <input type="text" name="EVSConceptID" size="25"  value="<%=sEVSid%>" style="color:#696969" readonly
             onHelp = "showHelp('Help_CreateVD.html#createPVForm_CreateValue'); return false">
         &nbsp;&nbsp;&nbsp;
-   <!--     <% if (sEVSid != null && !sEVSid.equals("")) { %>
-        <font color="#FF0000"><a href="javascript:ViewConceptInTree()">View VM Concept In Tree</a></font>
-        <% } %> -->
       </td>
 	  </tr>
 

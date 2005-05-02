@@ -151,17 +151,45 @@ function openAltNameWindow()
 	    alert("Please select a context first");
     else
     {
-      document.SearchActionForm.searchComp.value = thisBlock;
-      document.newDECForm.openToTree.value = openToTree;
-	    document.SearchActionForm.isValidSearch.value = "false";
-      if (searchWindow && !searchWindow.closed)
-         searchWindow.close();
-      searchWindow = window.open("jsp/OpenSearchWindowBlocks.jsp", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes")
+      if (isNameChangeOK(vAction, thisBlock) == true)
+      {
+        document.SearchActionForm.searchComp.value = thisBlock;
+        document.newDECForm.openToTree.value = openToTree;
+        document.SearchActionForm.isValidSearch.value = "false";
+        if (searchWindow && !searchWindow.closed)
+           searchWindow.close();
+        searchWindow = window.open("jsp/OpenSearchWindowBlocks.jsp", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes")
+      }
     }
  }
  
-function RemoveBuildingBlocks(thisBlock)
-{
+ //allow only one of the comp to change for block edit
+ function isNameChangeOK(vAction, thisBlock)
+ {
+    var isOK = true;
+    //do not change both object and property for block edit
+    if (vAction == "BlockEdit")
+    {
+      if (thisBlock == "ObjectClass" || thisBlock == "ObjectQualifier")
+      {
+        var txProp = document.newDECForm.txtPropClass.value
+        if (txProp != null && txProp != "")
+          isOK = false;
+      }
+      else
+      {
+        var txOC = document.newDECForm.txtObjClass.value
+        if (txOC != null && txOC != "")
+          isOK = false;
+      }
+      if (isOK == false)
+        alert("Both Object Class and Property cannot be changed in block edit of Data Element Concept");
+    }
+    return isOK;
+ }
+ 
+  function RemoveBuildingBlocks(thisBlock)
+  {
       var selIdx = 0;
       document.newDECForm.sCompBlocks.value = thisBlock;
       if (thisBlock == "ObjectClass")
@@ -374,22 +402,25 @@ function SearchCDValue()
   function isNameTypeValid()
   {
       var isValid = "valid";
-      if (document.newDECForm.DECAction.value != "BlockEdit")
+      //check if sys was selected
+      var nameType = document.newDECForm.rNameConv[0].checked;
+      //check if abbr was selected if not sys
+      if (nameType == null || nameType == false)
+        nameType = document.newDECForm.rNameConv[1].checked;
+      //cehck if user was selcted if neither of abve
+      if (nameType == null || nameType == false)
+        nameType = document.newDECForm.rNameConv[2].checked;
+      if (nameType == null || nameType == false)
       {
-        //check if sys was selected
-        var nameType = document.newDECForm.rNameConv[0].checked;
-        //check if abbr was selected if not sys
-        if (nameType == null || nameType == false)
-          nameType = document.newDECForm.rNameConv[1].checked;
-        //cehck if user was selcted if neither of abve
-        if (nameType == null || nameType == false)
-          nameType = document.newDECForm.rNameConv[2].checked;
-        if (nameType == null || nameType == false)
+        //display the message only if name was changed
+        if (document.newDECForm.nameTypeChange.value == "true")
         {
           isValid = "invalid";
           alert("Please select the desired Preferred Name Type.");
         }
-      }
+        else
+          document.newDECForm.rNameConv[2].checked = true;
+      }      
       return isValid;
   }
 
@@ -418,7 +449,13 @@ function Back()
 
   function isDateValid()
   {
-    if(document.newDECForm.BeginDate.value != "")
+      var beginDate = document.newDECForm.BeginDate.value;
+      var endDate = document.newDECForm.EndDate.value;
+      var acAction = document.newDECForm.DECAction.value;
+      if (acAction == "EditDEC" || acAction == "BlockEdit") acAction = "Edit";
+      return areDatesValid(beginDate, endDate, acAction);
+      
+  /*  if(document.newDECForm.BeginDate.value != "")
     {
       var beginDate = document.newDECForm.BeginDate.value
       var endDate = document.newDECForm.EndDate.value
@@ -449,7 +486,7 @@ function Back()
     else
       alert("Begin Date cannot be empty");
   
-    return "invalid";	
+    return "invalid";	*/
   }
 
  function EnableChecks(checked, currentField)
