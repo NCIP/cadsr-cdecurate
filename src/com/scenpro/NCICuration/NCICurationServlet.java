@@ -1426,6 +1426,7 @@ public class NCICurationServlet extends HttpServlet
  // System.out.println(sSysName.length() + " sys name " + sSysName + " type " + sNameType);
     if (sNameType.equals("SYS"))
     {
+      if (sSysName == null) sSysName = "";
       //limit to 30 characters
       if (sSysName.length() > 30)
         sSysName = sSysName.substring(sSysName.length()-30);
@@ -6518,7 +6519,8 @@ public class NCICurationServlet extends HttpServlet
                 ret = insAC.setAC_VERSION(null, DECBeanSR, null, "DataElementConcept");
              if (ret == null || ret.equals(""))
              {
-                ret = insAC.setDEC("UPD", DECBeanSR, "Version", oldDECBean);
+                ret = insAC.setDEC("UPD", DECBeanSR, "BlockVersion", oldDECBean);
+               // ret = insAC.setDEC("UPD", DECBeanSR, "Version", oldDECBean);
                // resetEVSBeans(req, res);
                 //add this bean into the session vector
                 if (ret == null || ret.equals(""))

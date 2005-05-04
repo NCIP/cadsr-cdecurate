@@ -1373,9 +1373,15 @@ public class InsACService implements Serializable
     try
     {
       m_classReq.setAttribute("retcode", "");   //empty retcode to track returncodes
+      String sInsFor = sInsertFor;
+      if (sInsFor.equals("BlockVersion"))
+        sInsertFor = "Version";
       //add the dec name into the message
       if (sAction.equals("INS"))
         this.storeStatusMsg("Data Element Concept Name : " + dec.getDEC_LONG_NAME());
+      //store versioned status message 
+      if (sInsertFor.equals("Version"))
+        this.storeStatusMsg("\\t Created new version successfully.");
 
       if(oldDEC == null) oldDEC = new DEC_Bean();
       String sName = dec.getDEC_PREFERRED_NAME();
@@ -1393,12 +1399,9 @@ public class InsACService implements Serializable
       String sDEC_ID = dec.getDEC_DEC_IDSEQ();
       String sChangeNote = dec.getDEC_CHANGE_NOTE();
 
-      //store versioned status message 
-      if (sInsertFor.equals("Version"))
-        this.storeStatusMsg("\\t Created new version successfully.");
       //check if it is valid oc/prop for block dec at submit
       boolean bValidOC_PROP = true;
-      if (sInsertFor.equals("BlockEdit"))
+      if (sInsFor.equals("BlockEdit") || sInsFor.equals("BlockVersion"))
       {
         //do the oc prop pair checking only if they exist
         if ((dec.getDEC_OC_CONDR_IDSEQ() == null || dec.getDEC_OC_CONDR_IDSEQ().equals("")) && 
