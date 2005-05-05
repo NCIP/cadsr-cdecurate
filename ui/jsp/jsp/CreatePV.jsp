@@ -309,6 +309,7 @@ displayStatusMessage();
 <input type="hidden" name="VMEvsDB" value="">
 <input type="hidden" name="pvID" value="<%=sPVid%>">
 <input type="hidden" name="txValidValue" value="">
+<input type="hidden" name="PVAction" value="<%=sPVAction%>">
 </form>
 
 <form name="SearchActionForm" method="post" action="">
@@ -316,7 +317,7 @@ displayStatusMessage();
   <input type="hidden" name="searchEVS" value="PermissibleValue">
   <input type="hidden" name="isValidSearch" value="false">
   <input type="hidden" name="SelCDid" value="<%=sCDid%>">
-   <input type="hidden" name="sCCodeDB" value="<%=sEVSdb%>">
+  <input type="hidden" name="sCCodeDB" value="<%=sEVSdb%>">
   <input type="hidden" name="sCCode" value="<%=sEVSid%>">
   <input type="hidden" name="sCCodeName" value="<%=sEVSname%>">
   <input type="hidden" name="openToTree" value=""> 
