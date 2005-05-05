@@ -10219,7 +10219,7 @@ boolean isIntSearch)
           
      //filter by version
 	   String sVersion = (String)req.getParameter("rVersion");
-     if (isIntSearch == true && sSearchAC.equals("ConceptualDomain")) sVersion = "All";  //make it all
+     if (isIntSearch == true && sSearchAC.equals("ConceptualDomain")) sVersion = "Yes";  //"All";  //make it all
      session.setAttribute("creVersion", sVersion);   //store version in the session
      //get the version number if other
      String txVersion = "";
@@ -10561,11 +10561,11 @@ boolean isIntSearch)
         if (sSearchIn.equals("publicID"))
           do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "OC"); 
         else
-        {
-          if(dtsVocab.equals("NCI_Thesaurus") || dtsVocab.equals("Thesaurus/Metathesaurus"))
-            sKeyword = filterName(sKeyword, "display");
           do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "OC");
-        }
+        
+        //To search synonym you need to filter
+        if(dtsVocab.equals("NCI_Thesaurus") || dtsVocab.equals("Thesaurus/Metathesaurus"))
+          sKeyword = filterName(sKeyword, "display");
         do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
         intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
         session.setAttribute("vACSearch", vAC);
@@ -10577,12 +10577,12 @@ boolean isIntSearch)
         if (sConteIdseq == null) sConteIdseq = "";
         if (sSearchIn.equals("publicID"))
           do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "PROP");
-         else
-        {
-          if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
-            sKeyword = filterName(sKeyword, "display");
-            do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "PROP");
-        }      
+        else
+          do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "PROP");
+
+        //To search synonym you need to filter
+        if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
+          sKeyword = filterName(sKeyword, "display");
         do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource, 
         intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
         session.setAttribute("vACSearch", vAC);
@@ -10595,11 +10595,11 @@ boolean isIntSearch)
         if (sSearchIn.equals("publicID"))
           do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "REP"); 
         else
-        {
-          if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
-            sKeyword = filterName(sKeyword, "display");
           do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "REP");
-        }
+
+        //To search synonym you need to filter
+        if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
+          sKeyword = filterName(sKeyword, "display");
         do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
         intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
         session.setAttribute("vACSearch", vAC);

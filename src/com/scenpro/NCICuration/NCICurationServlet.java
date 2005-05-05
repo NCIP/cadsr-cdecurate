@@ -4318,7 +4318,7 @@ public class NCICurationServlet extends HttpServlet
         m_DEC.setDEC_PROPL_NAME_PRIMARY("");
         m_DEC.setDEC_PROP_CONCEPT_CODE("");
         m_DEC.setDEC_PROP_EVS_CUI_ORIGEN("");
-        m_DEC.setDEC_OCL_IDSEQ("");
+        m_DEC.setDEC_PROPL_IDSEQ("");
         session.setAttribute("RemovePropBlock", "true");
         session.setAttribute("newProperty", "true");
     }
@@ -9585,11 +9585,7 @@ public class NCICurationServlet extends HttpServlet
     HttpServletResponse res) throws Exception
   {
     HttpSession session = req.getSession();
-    Vector vMsg = new Vector();
-    vMsg.addElement("first Object");
-    vMsg.addElement("second Object");
-    vMsg.addElement("third Object");
-    session.setAttribute("vStatMsg", vMsg);
+    session.setAttribute("vStatMsg", new Vector());
     session.setAttribute("MenuAction", "nothing");
     session.setAttribute("LastMenuButtonPressed", "Search");
     Vector vDefaultAttr = new Vector();
