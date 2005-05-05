@@ -82,7 +82,9 @@
  {
     var beginDate = document.createPVForm.BeginDate.value;
     var endDate = document.createPVForm.EndDate.value;
-    return areDatesValid(beginDate, endDate, "EditPV");
+    var acAction = document.createPVForm.PVAction.value;
+    if (acAction == "editPV" || acAction == "EditPV") acAction = "Edit";
+    return areDatesValid(beginDate, endDate, acAction);
     
    /* if (document.createPVForm.BeginDate.value != "")
     {
