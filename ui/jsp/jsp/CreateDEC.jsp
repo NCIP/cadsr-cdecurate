@@ -286,7 +286,7 @@
 <form name="SearchActionForm" method="post" action="/cdecurate/NCICurationServlet?reqType=closeWindow">
 <input type="hidden" name="searchComp" value="">
 <input type="hidden" name="searchEVS" value="DataElementConcept">
-<input type="hidden" name="isValidSearch" value="false">
+<input type="hidden" name="isValidSearch" value="true">
 <input type="hidden" name="SelContext" value="">
 <input type="hidden" name="acID" value="<%=sDECIDSEQ%>">
 <input type="hidden" name="itemType" value="">
@@ -405,7 +405,7 @@
                               {
                                 String sQualName = (String)vOCQualifierNames.elementAt(i);
                               %>
-                            <option value="<%=sQualName%>"><%=sQualName%></option>
+                            <option value="<%=sQualName%>" <%if(i==0){%>selected<%}%>><%=sQualName%></option>
                             <%}%>
                           <% } %>
                         </select>
@@ -472,7 +472,7 @@
                               {
                                 String sQualName = (String)vPropQualifierNames.elementAt(i);
                               %>
-                            <option value="<%=sQualName%>"><%=sQualName%></option>
+                            <option value="<%=sQualName%>" <%if(i==0){%>selected<%}%>><%=sQualName%></option>
                             <%}%>
                           <%}%>
                         </select>
@@ -807,6 +807,7 @@
 <input type="hidden" name="selObjQRow" value="">
 <input type="hidden" name="selPropQRow" value=""> 
 
+<input type="hidden" name="selCompBlockRow" value=""> 
 <input type="hidden" name="sCompBlocks" value="">
 <!-- oc and prop change status -->
 <input type="hidden" name="nameTypeChange" value="<%=nameTypeChange%>">
@@ -890,6 +891,8 @@ displayStatusMessage();
 changeCountLN();
 changeCountPN();
 loadCSCSI();
+ShowEVSInfo('ObjectQualifier');
+ShowEVSInfo('PropertyQualifier');
 </script>
 </form>
 </body>

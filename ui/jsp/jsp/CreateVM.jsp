@@ -33,6 +33,7 @@
     else
     {
       // document.SearchActionForm.searchEVS.value = "EVSValueMeaning";
+       document.SearchActionForm.isValidSearch.value = "false";
        document.SearchActionForm.searchComp.value = "CreateVM_EVSValueMeaning";
        evsWindow = window.open("jsp/OpenSearchWindowBlocks.jsp", "EVSWindow", "width=950,height=700,top=0,left=0,resizable=yes,scrollbars=yes");    
     }
@@ -58,7 +59,7 @@ function displayStatusMessage()
 <body onLoad="JavaScript:currentDate();">
 <form name="SearchActionForm" method="post" action="">
 <input type="hidden" name="searchComp" value="">
-<input type="hidden" name="isValidSearch" value="false">
+<input type="hidden" name="isValidSearch" value="true">
 <input type="hidden" name="searchEVS" value="ValueMeaning">
 </form>
 <form name="createVMForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=newVM">
@@ -216,7 +217,7 @@ System.out.println(" evs " + sEVS);
     <tr>
       <td>&nbsp;</td>
 	    <td valign="top" align="left" colspan=2> 
-        <input type="text" name="EVSConceptID" size="20"  value="<%=sEVS%>" style="color:#696969" readonly
+        <input type="text" name="EVSConceptID" size="60"  value="<%=sEVS%>" style="color:#696969" readonly
             onHelp = "showHelp('Help_CreateVD.html#createPVForm_CreateValue'); return false">
       </td>
 	  </tr>
@@ -228,7 +229,7 @@ System.out.println(" evs " + sEVS);
     <tr>
       <td>&nbsp;</td>
       <td valign="top" align="left">
-        <textarea name="taComments" cols="50"
+        <textarea name="taComments" cols="70"
         onHelp = "showHelp('Help_CreateVD.html#createVMForm_CreateVM'); return false" rows="2"><%=sComments%></textarea>
       </td>
     </tr>

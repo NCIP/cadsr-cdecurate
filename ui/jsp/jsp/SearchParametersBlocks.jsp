@@ -10,89 +10,81 @@
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/SearchParameters.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
 <%
-   String sSearchAC = "";
    Vector vSelectedAttr = new Vector();
-   sSearchAC = (String)session.getAttribute("creSearchAC");
    String sMenuAction = (String)session.getAttribute("MenuAction");
    String ac = (String)session.getAttribute("parentAC");
-   String sLastKeyword = "", sContext = "", sRetired = "", sMetaCode = "No";
+   String sMetaCode = "No";
    Vector vStatus = new Vector();
    String strHTML = (String)session.getAttribute("strHTML");
+   //get the session attributes
+   String sSearchAC = (String)session.getAttribute("creSearchAC");
+   if (sSearchAC == null) sSearchAC = "ObjectClass";
    
-   if (sMenuAction.equals("searchForCreate"))
-   {
-     sSearchAC = (String)session.getAttribute("creSearchAC");
-     sLastKeyword = (String)request.getAttribute("creKeyword");
-     if (sLastKeyword == null) sLastKeyword = "";
-     sContext = (String)request.getAttribute("creContextBlocks");
-     vStatus = (Vector)request.getAttribute("creStatusBlocks");
-     sRetired = (String)request.getAttribute("creRetired");
-  }
-  if (sSearchAC == null)
-     sSearchAC = "ObjectClass";
-   if (sRetired == null)
-     sRetired = "Exclude";
-  if (sMetaCode == null)
-     sMetaCode = "No";
-  if (sSearchAC.equals("PropertyClass")) 
-    sSearchAC = "Property";
-  String sLongAC = "";
-  if (sSearchAC.equals("ObjectClass"))
+   //display names for the components
+   if (sSearchAC.equals("PropertyClass") || sSearchAC.equals("VDPropertyClass")) 
+      sSearchAC = "Property";
+   String sLongAC = "";
+   if (sSearchAC.equals("ObjectClass") || sSearchAC.equals("VDObjectClass"))
      sLongAC = "Object Class";
-  else if (sSearchAC.equals("Property"))
+   else if (sSearchAC.equals("Property") || sSearchAC.equals("VDProperty"))
      sLongAC = "Property";
-  else if (sSearchAC.equals("ObjectQualifier"))
+   else if (sSearchAC.equals("ObjectQualifier"))
      sLongAC = "Object Qualifier";
-  else if (sSearchAC.equals("PropertyQualifier"))
+   else if (sSearchAC.equals("PropertyQualifier"))
      sLongAC = "Property Qualifier";
-  else if (sSearchAC.equals("RepQualifier"))
+   else if (sSearchAC.equals("RepQualifier"))
      sLongAC = "Rep Qualifier";
-  else if (sSearchAC.equals("RepTerm"))
+   else if (sSearchAC.equals("RepTerm"))
      sLongAC = "Rep Term";
-  else if (sSearchAC.equals("EVSValueMeaning") 
+   else if (sSearchAC.equals("EVSValueMeaning") 
           || sSearchAC.equals("CreateVM_EVSValueMeaning")
           || sSearchAC.equals("PV_ValueMeaning"))
      sLongAC = "Value Meaning";
-  else if (sSearchAC.equals("ParentConcept"))
+   else if (sSearchAC.equals("ParentConcept"))
      sLongAC = "Parent Concept";
-  else if (sSearchAC.equals("ParentConceptVM"))
-  {
+   else if (sSearchAC.equals("ParentConceptVM"))
+   {
      sLongAC = "Value Meaning";
      String vdType = (String)session.getAttribute("pageVDType");
      if (vdType != null && vdType.equals("N"))
        sLongAC = "Parent Concept";
-  }
-  if (sLastKeyword == null)
-      sLastKeyword = "";
-  if (sContext == null)
-      sContext = "All Contexts";
+   }
 
-  String sSearchIn = (String)request.getAttribute("creSearchIn");
-  if (sSearchIn == null) sSearchIn = "longName";
-  String sSearchInEVS = (String)request.getAttribute("SearchInEVS");
-  if (sSearchInEVS == null) sSearchInEVS = "Synonym";
-  if(sSearchInEVS.equals("Code")) sMetaCode = "Yes";
-  String sMetaSource = (String)request.getAttribute("MetaSource");
-  if (sMetaSource == null) sMetaSource = "All Sources";
-  String dtsVocab = (String)session.getAttribute("dtsVocab");
-  if (dtsVocab == null) dtsVocab = "Thesaurus/Metathesaurus";
-  if (dtsVocab.equals("MGED")) dtsVocab = "MGED_Ontology";
+   //get the session attributes
+   String sLastKeyword = (String)request.getAttribute("creKeyword");
+   if (sLastKeyword == null) sLastKeyword = "";
+   String sContext = (String)session.getAttribute("creContextBlocks");
+   if (sContext == null) sContext = "All Contexts";
+   //Vector vStatus = (Vector)session.getAttribute("creStatusBlocks");
+   String sRetired = (String)session.getAttribute("creRetired");
+   if (sRetired == null) sRetired = "Exclude";
+   String sSearchIn = (String)session.getAttribute("creSearchInBlocks");
+   if (sSearchIn == null) sSearchIn = "longName";
+   String sSearchInEVS = (String)session.getAttribute("SearchInEVS");
+   if (sSearchInEVS == null) sSearchInEVS = "Synonym";
+   if(sSearchInEVS.equals("Code")) sMetaCode = "Yes";
+   String sMetaSource = (String)session.getAttribute("MetaSource");
+   if (sMetaSource == null) sMetaSource = "All Sources";
+   String dtsVocab = (String)session.getAttribute("dtsVocab");
+   if (dtsVocab == null) dtsVocab = "Thesaurus/Metathesaurus";
+   if (dtsVocab.equals("MGED")) dtsVocab = "MGED_Ontology";
 //System.out.println("spb dtsVocab: " + dtsVocab);
-  session.setAttribute("dtsVocab", null);
-  Vector vSource = (Vector)session.getAttribute("MetaSources");
-  if(vSource == null) vSource = new Vector();
-  String sMetaLimit = "100";
-  String sVersion = (String)session.getAttribute("sVersion");
-  if (sVersion == null) sVersion = "";
-  String sUISearchType = (String)request.getAttribute("UISearchType");
+  //session.setAttribute("dtsVocab", null);
+   Vector vSource = (Vector)session.getAttribute("MetaSources");
+   if(vSource == null) vSource = new Vector();
+   String sMetaLimit = "100";
+   String sVersion = (String)session.getAttribute("sVersion");
+   if (sVersion == null) sVersion = "";
+   String sUISearchType = (String)request.getAttribute("UISearchType");
 //System.out.println("spb sUISearchType: " + sUISearchType);
-  if (sUISearchType == null || sUISearchType.equals("nothing") 
-  || sUISearchType.equals("") || dtsVocab.equals("NCI Metathesaurus")) 
+   if (sUISearchType == null || sUISearchType.equals("nothing") 
+        || sUISearchType.equals("") || dtsVocab.equals("NCI Metathesaurus")) 
     sUISearchType = "term";
 
   String sOpenTreeToConcept = (String)request.getAttribute("OpenTreeToConcept");
   if (sOpenTreeToConcept == null || sOpenTreeToConcept.equals("")) sOpenTreeToConcept = "false";
 
+  //make the default displayable attributes with cadsr fields
   Vector vOCAttr = new Vector();
   vOCAttr.addElement("Concept Name");
   vOCAttr.addElement("Public ID");
@@ -101,17 +93,26 @@
   vOCAttr.addElement("Definition Source");
   vOCAttr.addElement("Context");
   vOCAttr.addElement("Vocabulary");
-  vOCAttr.addElement("DEC's Using");
-  
+  vOCAttr.addElement("caDSR Component");
+  if (sLongAC.equals("Object Class") || sLongAC.equals("Property"))
+    vOCAttr.addElement("DEC's Using");
+  //all displayable attributes without cadsr properties
   Vector vQualAttr = new Vector();
   vQualAttr.addElement("Concept Name");
   vQualAttr.addElement("EVS Identifier");
   vQualAttr.addElement("Definition");
   vQualAttr.addElement("Definition Source");
-  if (!sSearchAC.equals("EVSValueMeaning") && !sSearchAC.equals("CreateVM_EVSValueMeaning"))
-    vQualAttr.addElement("Comments");
   vQualAttr.addElement("Vocabulary");
 
+  //get the seleected displayable attributes
+  Vector vSelDispAttr = (Vector)session.getAttribute("creSelectedAttr");
+  if (vSelDispAttr == null) vSelDispAttr = new Vector();
+  //get the search result records
+  Vector vSerResult = (Vector)session.getAttribute("results");
+  boolean hasRecords = false;
+  if (vSerResult != null && vSerResult.size() >0) hasRecords = true;
+  String updFunction = "displayAttributes('" + hasRecords + "');";
+  
    Vector vVocab = new Vector();
    if (!sSearchAC.equals("ParentConcept") && !sSearchAC.equals("ParentConceptVM"))
    {
@@ -139,69 +140,80 @@
 <SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
   function populateAttr()
   {
-      getCompCreate();
+    getCompCreate();
 
-      var vSearchAC = document.searchParmsForm.listSearchFor.options[document.searchParmsForm.listSearchFor.selectedIndex].value;
-      var idx = -1;
-      if(document.searchParmsForm.listAttrFilter != null)
-        document.searchParmsForm.listAttrFilter.length = 0;
-      if (vSearchAC == "ObjectClass" || vSearchAC == "Property" || vSearchAC == "RepTerm")
-      {
-       <% if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("NCI_Thesaurus")
-        || dtsVocab.equals("NCI Metathesaurus")) { %> 
-        if(document.searchParmsForm.listSearchIn != null)
-          document.searchParmsForm.listSearchIn.length = 3;
-    <%}else{ %>
+    var vSearchAC = document.searchParmsForm.listSearchFor.options[document.searchParmsForm.listSearchFor.selectedIndex].value;
+    var idx = -1;
+    if(document.searchParmsForm.listAttrFilter != null)
+      document.searchParmsForm.listAttrFilter.length = 0;
+    //if (vSearchAC == "ObjectClass" || vSearchAC == "Property" || vSearchAC == "RepTerm")
+    if (vSearchAC != "ParentConcept" && vSearchAC != "ParentConceptVM")
+    {
+      <% if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("NCI_Thesaurus")
+            || dtsVocab.equals("NCI Metathesaurus")) { %> 
           if(document.searchParmsForm.listSearchIn != null)
-           document.searchParmsForm.listSearchIn.length = 2;
-    <%} %>
+            document.searchParmsForm.listSearchIn.length = 4;
+     <%} else { %>
+          if(document.searchParmsForm.listSearchIn != null)
+           document.searchParmsForm.listSearchIn.length = 3;
+     <%} %>
 
-<%      //add the attribute list
-      if(!sSearchAC.equals("ParentConceptVM"))
-      {
+     <% //if(!sSearchAC.equals("ParentConceptVM"))  //add the attribute list
+      //{
         for (int i = 0; i < vOCAttr.size(); i++)
         {
-          String sAttr = (String)vOCAttr.elementAt(i);
-%>        idx++;
+          String sAttr = (String)vOCAttr.elementAt(i); %>
+          idx++;
           var vAttr = "<%=sAttr%>";
           selectAttr(idx, vAttr);     //call the function
-<%}} %>
-      }
+      <% }%>  //} 
+    }
+ /*   qual and vm searches have cadsr only parent should be here without cadsr change.
       else if (vSearchAC == "ObjectQualifier" || vSearchAC == "PropertyQualifier" 
       || vSearchAC == "RepQualifier" || vSearchAC == "EVSValueMeaning" 
       || vSearchAC == "CreateVM_EVSValueMeaning" || vSearchAC == "PV_ValueMeaning"
-      || vSearchAC == "ParentConcept" || vSearchAC == "ParentConceptVM")
+      || vSearchAC == "ParentConcept" || vSearchAC == "ParentConceptVM") */
+      else
       {
-       <% if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("NCI_Thesaurus")
-        || dtsVocab.equals("NCI Metathesaurus")) { %>   
-         if(document.searchParmsForm.listSearchIn != null)
-          document.searchParmsForm.listSearchIn.length = 3;
-        if(document.searchParmsForm.listSearchInEVS != null)
-          document.searchParmsForm.listSearchInEVS.length = 3;
-    <%}else{ %>
-           if(document.searchParmsForm.listSearchIn != null)
-            document.searchParmsForm.listSearchIn.length = 2;
+       <%if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("NCI_Thesaurus")
+              || dtsVocab.equals("NCI Metathesaurus")) { %>   
+         // if(document.searchParmsForm.listSearchIn != null)
+         //   document.searchParmsForm.listSearchIn.length = 3;
+          if(document.searchParmsForm.listSearchInEVS != null)
+            document.searchParmsForm.listSearchInEVS.length = 3;
+      <%}else{ %>
+         // if(document.searchParmsForm.listSearchIn != null)
+          //  document.searchParmsForm.listSearchIn.length = 2;
           if(document.searchParmsForm.listSearchInEVS != null)
             document.searchParmsForm.listSearchInEVS.length = 2;
-    <%} %>
+      <%} %>
         
-<%      //add the attribute list
-      if(!sSearchAC.equals("ParentConceptVM"))
+      <% if(!sSearchAC.equals("ParentConceptVM")) //add the attribute list only for parent search not parent vm search
       {
         for (int i = 0; i < vQualAttr.size(); i++)
         {
-          String sAttr = (String)vQualAttr.elementAt(i);
-%>        idx++;
+          String sAttr = (String)vQualAttr.elementAt(i);  %>
+          idx++;
           var vAttr = "<%=sAttr%>";
           selectAttr(idx, vAttr);     //call the function
-<%
-  }
-}
- %>
-      }
+      <% }} %>
+     }
+
+      //check if newly opened
+      var isSearched = "false";
+      if (opener.document.SearchActionForm != null && opener.document.SearchActionForm.isValidSearch != null)
+        isSearched = opener.document.SearchActionForm.isValidSearch.value;
+      if(isSearched != null && isSearched == "false")
+      {
+         hourglass();
+         window.status = "Displaying selected attributes, it may take a minute, please wait....."
+         document.searchParmsForm.actSelect.value = "FirstSearch";
+         opener.document.SearchActionForm.isValidSearch.value = "true";
+         document.searchParmsForm.submit();
+      }          
 
       //keyword empty if dropdown is not same as searched component
-      if (vSearchAC != "<%=sSearchAC%>" && document.searchParmsForm.keyword != null)
+  /*    if (vSearchAC != "<%=sSearchAC%>" && document.searchParmsForm.keyword != null)
       {
           if(document.searchParmsForm.keyword != null)
             document.searchParmsForm.keyword.value = "";
@@ -213,7 +225,7 @@
               document.searchParmsForm.listSearchInEVS[0].selected = true;
               document.searchParmsForm.submit();  //submit the form
           }
-      }
+      } */
   }
 
   //submits the page if Vocab changed.
@@ -250,15 +262,18 @@
      var selIdx = document.searchParmsForm.listSearchInEVS.selectedIndex;
      if (document.searchParmsForm.listSearchIn != null)
      {
-      if(document.searchParmsForm.listSearchIn[selIdx] != null)
-        document.searchParmsForm.listSearchIn[selIdx].selected = true;
+       if (selIdx > 0) selIdx = selIdx + 1;
+       if (document.searchParmsForm.listSearchIn[selIdx] != null)
+         document.searchParmsForm.listSearchIn[selIdx].selected = true;
      }
   }
 
   function populateEVSSearchIn()
   {
      var selIdx = document.searchParmsForm.listSearchIn.selectedIndex;
-     document.searchParmsForm.listSearchInEVS[selIdx].selected = true;
+     if (selIdx > 1) selIdx = selIdx - 1;
+     if (document.searchParmsForm.listSearchInEVS[selIdx] != null)
+        document.searchParmsForm.listSearchInEVS[selIdx].selected = true;
   }
 
   function Setup()
@@ -306,7 +321,7 @@
     }
   }
 <% }%>
-    if(document.searchParmsForm.openToTree.value == "true" && actSelect != "OpenTreeToParentConcept")
+    if(document.searchParmsForm.openToTree != null && document.searchParmsForm.openToTree.value == "true" && actSelect != "OpenTreeToParentConcept")
     {
       window.status = "Submitting the page, please wait.....";
       document.searchResultsForm.Message.style.visibility="visible";
@@ -510,8 +525,8 @@ function doMetaCodeSearch()
         </div>
       </th>
   </tr>
-  <%if(!sSearchAC.equals("EVSValueMeaning") && !sSearchAC.equals("CreateVM_EVSValueMeaning") 
-    && !sSearchAC.equals("ParentConcept") && !sSearchAC.equals("ParentConceptVM")){%>
+  <%//if(!sSearchAC.equals("EVSValueMeaning") && !sSearchAC.equals("CreateVM_EVSValueMeaning") 
+    if(!sSearchAC.equals("ParentConcept") && !sSearchAC.equals("ParentConceptVM")){%>
    <tr>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;caDSR</td>
   </tr>
@@ -522,6 +537,7 @@ function doMetaCodeSearch()
             onHelp = "showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
             <option value="longName" <%if(sSearchIn.equals("longName")){%>selected<%}%>>Names and Definition</option>
             <option value="publicID" <%if(sSearchIn.equals("publicID")){%>selected<%}%>>Public ID</option>
+            <option value="evsIdentifier" <%if(sSearchIn.equals("evsIdentifier")){%>selected<%}%>>EVS Identifier</option>
             <option value="Code" <%if(sSearchIn.equals("Code")){%>selected<%}%>>None</option>
           </select>
         </p>
@@ -601,8 +617,8 @@ function doMetaCodeSearch()
         <div align="left"><%=iItem++%>) Filter Search By:</div>
       </th>
   </tr>
-<%if(!sSearchAC.equals("EVSValueMeaning") && !sSearchAC.equals("ValueMeaning") && !sSearchAC.equals("CreateVM_EVSValueMeaning")
-    && !sSearchAC.equals("ParentConcept") && !sSearchAC.equals("ParentConceptVM")){%> 
+<% //if(!sSearchAC.equals("EVSValueMeaning") && !sSearchAC.equals("ValueMeaning") && !sSearchAC.equals("CreateVM_EVSValueMeaning")
+  if (!sSearchAC.equals("ParentConcept") && !sSearchAC.equals("ParentConceptVM")){%> 
    <tr>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>caDSR</b></td>
   </tr>
@@ -626,7 +642,7 @@ function doMetaCodeSearch()
               <option value"<%=sContextName%>"  <%if(sContextName.equals(sContext)){%>selected<%}%>><%=sContextName%></option>
 <%
             }
-         }
+          }
 %>
         </select>
       </p>
@@ -717,7 +733,7 @@ function doMetaCodeSearch()
   <tr>
     <td class="dashed-black">
       <div align="left"><b><%=iItem++%>) Display Attributes:</b>
-        &nbsp;&nbsp;<input type="button" name="updateDisplayBtn" value="Update" onClick="displayAttributes();" style="width: 50", "height: 20"
+        &nbsp;&nbsp;<input type="button" name="updateDisplayBtn" value="Update" onClick="<%=updFunction%>"  style="width:50"
         onHelp = "showHelp('../Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
       </div>
       <br>
@@ -748,18 +764,15 @@ function doMetaCodeSearch()
   </tr>
 <% } %>
   <select size="1" name="hidListAttr" style="visibility:hidden;">
-                      <option value="EVS CUI (ID)">EVS CUI (ID)</option>
-                      <option value="EVS Identifier">EVS Identifier</option>
-                      <option value="Public ID">Public ID</option>
-                      <option value="Concept Name">Concept Name</option>
-                      <option value="Definition">Definition</option>
-                      <option value="Definition Source">Definition Source</option>
-                      <option value="Context">Context</option>
-                      <option value="Vocabulary">Vocabulary</option>
-                      <option value="Preferred Name">Name</option>
-                      <option value="Description">Description</option>
-                      <option value="Comments">Comments</option>
-                      <option value="DEC's Using">DEC's Using</option>
+<%  for (int i = 0; vSelDispAttr.size()>i; i++)
+    {
+      String sName = (String)vSelDispAttr.elementAt(i);
+      if (sName != null) {
+%>
+    <option value="<%=sName%>"><%=sName%></option>
+<%
+    } }
+%>
   </select>
   <input type="hidden" name="actSelect" value="Search" style="visibility:hidden;">
   <input type="hidden" name="sCCodeDB" value="">

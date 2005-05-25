@@ -106,6 +106,8 @@ public class EVS_Bean implements Serializable{
   private String EVS_DEF_SOURCE;
   private String EVS_CONCEPT_SOURCE;
   private String EVS_DATABASE;
+  private String EVS_ORIGIN;
+  private String caDSR_COMPONENT;
   private String ID;
   private boolean CHECKED;
   private String DESCRIPTION;
@@ -308,6 +310,24 @@ public class EVS_Bean implements Serializable{
   public void setEVS_DATABASE(String s)
   {
       this.EVS_DATABASE = s;
+  }
+   /**
+   * The setEVS_ORIGIN method sets the EVS_ORIGIN for this bean.
+   *
+   * @param s The EVS_ORIGIN to set
+  */
+  public void setEVS_ORIGIN(String s)
+  {
+      this.EVS_ORIGIN = s;
+  }
+   /**
+   * The setcaDSR_COMPONENT method sets the caDSR_COMPONENT for this bean.
+   *
+   * @param s The caDSR_COMPONENT to set
+  */
+  public void setcaDSR_COMPONENT(String s)
+  {
+      this.caDSR_COMPONENT = s;
   }
   /**
    * The setID method sets the ID for this bean.
@@ -575,6 +595,24 @@ public class EVS_Bean implements Serializable{
   {
       return this.EVS_DATABASE;
   }
+   /**
+  * The getEVS_ORIGIN method returns the EVS_ORIGIN for this bean.
+  *
+  * @return String The EVS_ORIGIN
+  */
+  public String getEVS_ORIGIN()
+  {
+      return this.EVS_ORIGIN;
+  }
+   /**
+  * The getcaDSR_COMPONENT method returns the caDSR_COMPONENT for this bean.
+  *
+  * @return String The caDSR_COMPONENT
+  */
+  public String getcaDSR_COMPONENT()
+  {
+      return this.caDSR_COMPONENT;
+  }
   /**
   * The getID method returns the ID for this bean.
   *
@@ -677,6 +715,7 @@ public class EVS_Bean implements Serializable{
     if (database != null && database.equals("NCI_Thesaurus")) database = "NCI Thesaurus";
     else if(database != null && database.equals("MGED_Ontology")) database = "MGED";
     this.setEVS_DATABASE(database);
+    this.setEVS_ORIGIN(database);
     this.setDEC_USING("");
     this.setLEVEL(iLevel);
     this.setCONDR_IDSEQ(condr_idseq);

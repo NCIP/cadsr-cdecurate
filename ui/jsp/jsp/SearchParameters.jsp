@@ -118,6 +118,11 @@
   if (sProtoKeyword == null) sProtoKeyword = "";
   sProtoKeyword = util.parsedString(sProtoKeyword);
   //System.out.println("check vcontext");
+  //get the search result records
+  Vector vSerResult = (Vector)session.getAttribute("results");
+  boolean hasRecords = false;
+  if (vSerResult != null && vSerResult.size() >0) hasRecords = true;
+  String updFunction = "displayAttributes('" + hasRecords + "');";
   
   if (vContext == null) vContext = new Vector();   
   if (sContext == null) sContext = "AllContext";
@@ -845,8 +850,8 @@ function LoadKeyHandler()
       <td class="dashed-black" colspan=2>
         <div align="left"><b><%=item++%>)&nbsp;&nbsp;Display Attributes:</b>
           <%  if (!sSearchAC.equals("ValueMeaning"))   { %>
-            &nbsp;<input type="button" name="updateDisplayBtn" value="Update" onClick="displayAttributes();"  style="width:50"
-              onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
+            &nbsp;&nbsp;<input type="button" name="updateDisplayBtn" value="Update" onClick="<%=updFunction%>"  style="width:50"
+            onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
           <%} %>            
         </div>
         <br>

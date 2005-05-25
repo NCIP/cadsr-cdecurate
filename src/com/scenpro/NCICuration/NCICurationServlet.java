@@ -2218,8 +2218,19 @@ public class NCICurationServlet extends HttpServlet
               if (sCon == null || sCon.equalsIgnoreCase("No value returned."))
                 sCon = eBean.getTEMP_CUI_VAL();
               eBean.setNCI_CC_VAL(sCon);
+              if (sCon == null) sCon = "";
+              eBean.setNCI_CC_VAL(sCon);
+              //get origin for cadsr result
+              String eDB = eBean.getEVS_DATABASE();
+              if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
+                eBean.setEVS_DATABASE(eBean.getEVS_ORIGIN());
               //store the concept attributes in vm bean
               vmBean.setVM_CONCEPT(eBean);
+              //get the proper vm comments
+              String vmComments = sCon;
+              if (!vmComments.equals("")) vmComments += " : ";
+              if (eBean.getEVS_ORIGIN() != null) vmComments += eBean.getEVS_ORIGIN();
+              vmBean.setVM_COMMENTS(vmComments);
               session.setAttribute("EVSSearched", "searched");  //store evs or not
               break;
             }
@@ -3018,6 +3029,10 @@ public class NCICurationServlet extends HttpServlet
           if (isExist == false)
           {
             eBean.setCON_AC_SUBMIT_ACTION("INS");
+            //get origin for cadsr result
+            String eDB = eBean.getEVS_DATABASE();
+            if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
+              eBean.setEVS_DATABASE(eBean.getEVS_ORIGIN());
             vList.addElement(eBean);  
           }          
         }
@@ -3289,24 +3304,24 @@ public class NCICurationServlet extends HttpServlet
   public void splitIntoConceptsVD(String sComp, EVS_Bean m_Bean, HttpServletRequest req,
                                 HttpServletResponse res, String nameAction)
   {   
-  try
-  {
-    HttpSession session = req.getSession(); 
-    String sSelRow = "";
-    VD_Bean m_VD = (VD_Bean)session.getAttribute("m_VD");
-    if (m_VD == null) m_VD = new VD_Bean();
-    m_setAC.setVDValueFromPage(req, res, m_VD);
-    Vector vRepTerm = (Vector)session.getAttribute("vRepTerm");
-    if (vRepTerm == null) vRepTerm = new Vector();
-    String sCondr = m_Bean.getCONDR_IDSEQ();
-    String sLongName = m_Bean.getLONG_NAME();
-    String sIDSEQ = m_Bean.getIDSEQ();
-    if(sComp.equals("RepTerm") || sComp.equals("RepQualifier"))
+    try
     {
-        m_VD.setVD_REP_TERM(sLongName);
-        m_VD.setVD_REP_IDSEQ(sIDSEQ);
-    }
-    String sRepTerm = m_VD.getVD_REP_TERM();
+      HttpSession session = req.getSession(); 
+      String sSelRow = "";
+      VD_Bean m_VD = (VD_Bean)session.getAttribute("m_VD");
+      if (m_VD == null) m_VD = new VD_Bean();
+      m_setAC.setVDValueFromPage(req, res, m_VD);
+      Vector vRepTerm = (Vector)session.getAttribute("vRepTerm");
+      if (vRepTerm == null) vRepTerm = new Vector();
+      String sCondr = m_Bean.getCONDR_IDSEQ();
+      String sLongName = m_Bean.getLONG_NAME();
+      String sIDSEQ = m_Bean.getIDSEQ();
+      if(sComp.equals("RepTerm") || sComp.equals("RepQualifier"))
+      {
+          m_VD.setVD_REP_TERM(sLongName);
+          m_VD.setVD_REP_IDSEQ(sIDSEQ);
+      }
+      String sRepTerm = m_VD.getVD_REP_TERM();
       if (sCondr != null && !sCondr.equals(""))
       {
         GetACService getAC = new GetACService(req, res, this);
@@ -3320,61 +3335,9 @@ public class NCICurationServlet extends HttpServlet
             if(bean != null)
             {
               if(j == 0) // Primary Concept
-              {
-                bean.setCON_AC_SUBMIT_ACTION("INS");
-                bean.setCONTE_IDSEQ(m_VD.getVD_CONTE_IDSEQ());
-                if(sComp.equals("RepTerm") || sComp.equals("RepQualifier"))
-                {
-                  m_VD.setVD_REP_TERM(sLongName);
-                  if(vRepTerm.size()<1)
-                    vRepTerm.addElement(bean);
-                  else
-                    vRepTerm.setElementAt(bean, 0);
-                  session.setAttribute("vRepTerm", vRepTerm);
-                  session.setAttribute("newRepTerm", "true");              
-                  m_VD.setVD_REP_NAME_PRIMARY(bean.getLONG_NAME());
-                  m_VD.setVD_REP_CONCEPT_CODE(bean.getNCI_CC_VAL());
-                  m_VD.setVD_REP_EVS_CUI_ORIGEN(bean.getEVS_DATABASE());   
-                  session.setAttribute("m_REP", bean);
-                  session.setAttribute("selRepRow", sSelRow);
-                  //add to name if appending
-                  if (nameAction.equals("appendName"))
-                    m_VD = this.doGetVDNames(req, res, bean, "Search", m_VD);
-                } 
-              }
+                m_VD = this.addRepConcepts(req, res, nameAction, m_VD, bean, "Primary");
               else //Secondary Concepts
-              {
-                bean.setCON_AC_SUBMIT_ACTION("INS");
-                bean.setCONTE_IDSEQ(m_VD.getVD_CONTE_IDSEQ());
-                if(sComp.equals("RepTerm") || sComp.equals("RepQualifier"))
-                {
-                    bean = (EVS_Bean)vCon.elementAt(j);
-                    if(bean != null)
-                    {
-                      vRepTerm.addElement(bean);
-                      session.setAttribute("vRepTerm", vRepTerm);
-                      session.setAttribute("newRepTerm", "true");
-                      Vector vRepQualifierNames = m_VD.getVD_REP_QUALIFIER_NAMES();
-                      if (vRepQualifierNames == null) vRepQualifierNames = new Vector();
-                      vRepQualifierNames.addElement(bean.getLONG_NAME());
-                      Vector vRepQualifierCodes = m_VD.getVD_REP_QUALIFIER_CODES();
-                      if (vRepQualifierCodes == null) vRepQualifierCodes = new Vector();
-                      vRepQualifierCodes.addElement(bean.getNCI_CC_VAL());
-                      Vector vRepQualifierDB = m_VD.getVD_REP_QUALIFIER_DB();
-                      if (vRepQualifierDB == null) vRepQualifierDB = new Vector();
-                      vRepQualifierDB.addElement(bean.getEVS_DATABASE());
-                      m_VD.setVD_REP_QUALIFIER_NAMES(vRepQualifierNames);
-                      m_VD.setVD_REP_QUALIFIER_CODES(vRepQualifierCodes);
-                      m_VD.setVD_REP_QUALIFIER_DB(vRepQualifierDB);
-                      session.setAttribute("vRepQResult", null);
-                      session.setAttribute("m_REPQ", bean);
-                      session.setAttribute("selRepQRow", sSelRow);
-                      //add to name if appending
-                      if (nameAction.equals("appendName"))
-                        m_VD = this.doGetVDNames(req, res, bean, "Search", m_VD);
-                    }
-                }
-              }
+                m_VD = this.addRepConcepts(req, res, nameAction, m_VD, bean, "Qualifier");
             }
           }
         }
@@ -3385,7 +3348,6 @@ public class NCICurationServlet extends HttpServlet
       this.logger.fatal("ERROR - splitintoConceptVD : " + e.toString());
   }
 }
-
   
 /**
    * splits the dec object class or property from cadsr into individual concepts
@@ -3402,153 +3364,62 @@ public class NCICurationServlet extends HttpServlet
   public void splitIntoConcepts(String sComp, EVS_Bean m_Bean, HttpServletRequest req,
                                 HttpServletResponse res, String nameAction)
   {      
-  try
-  {
-    HttpSession session = req.getSession(); 
-    String sSelRow = "";
-    DEC_Bean m_DEC = (DEC_Bean)session.getAttribute("m_DEC");
-    if (m_DEC == null) m_DEC = new DEC_Bean();
-    m_setAC.setDECValueFromPage(req, res, m_DEC);
-    Vector vObjectClass = (Vector)session.getAttribute("vObjectClass");
-    if (vObjectClass == null) vObjectClass = new Vector();
-    Vector vProperty = (Vector)session.getAttribute("vProperty");
-    if (vProperty == null) vProperty = new Vector();
-    String sCondr = m_Bean.getCONDR_IDSEQ();
-    String sLongName = m_Bean.getLONG_NAME();
-    String sIDSEQ = m_Bean.getIDSEQ();
-    if(sIDSEQ == null) sIDSEQ = "";
-    if(sComp.equals("ObjectClass") || sComp.equals("ObjectQualifier"))
+    try
     {
-      m_DEC.setDEC_OCL_NAME(sLongName);
-      m_DEC.setDEC_OCL_IDSEQ(sIDSEQ);
-    }
-    else if(sComp.equals("Property") || sComp.equals("PropertyClass") || sComp.equals("PropertyQualifier"))
-    { 
-      m_DEC.setDEC_PROPL_NAME(sLongName);
-      m_DEC.setDEC_PROPL_IDSEQ(sIDSEQ);
-    }
-    String sObjClass = m_DEC.getDEC_OCL_NAME();
-    if (sCondr != null && !sCondr.equals(""))
-    {
+      HttpSession session = req.getSession(); 
+      String sSelRow = "";
+      DEC_Bean m_DEC = (DEC_Bean)session.getAttribute("m_DEC");
+      if (m_DEC == null) m_DEC = new DEC_Bean();
+      m_setAC.setDECValueFromPage(req, res, m_DEC);
+      Vector vObjectClass = (Vector)session.getAttribute("vObjectClass");
+      if (vObjectClass == null) vObjectClass = new Vector();
+      Vector vProperty = (Vector)session.getAttribute("vProperty");
+      if (vProperty == null) vProperty = new Vector();
+      String sCondr = m_Bean.getCONDR_IDSEQ();
+      String sLongName = m_Bean.getLONG_NAME();
+      String sIDSEQ = m_Bean.getIDSEQ();
+      if(sIDSEQ == null) sIDSEQ = "";
+      if(sComp.equals("ObjectClass") || sComp.equals("ObjectQualifier"))
+      {
+        m_DEC.setDEC_OCL_NAME(sLongName);
+        m_DEC.setDEC_OCL_IDSEQ(sIDSEQ);
+      }
+      else if(sComp.equals("Property") || sComp.equals("PropertyClass") || sComp.equals("PropertyQualifier"))
+      { 
+        m_DEC.setDEC_PROPL_NAME(sLongName);
+        m_DEC.setDEC_PROPL_IDSEQ(sIDSEQ);
+      }
+      String sObjClass = m_DEC.getDEC_OCL_NAME();
+      if (sCondr != null && !sCondr.equals(""))
+      {
         GetACService getAC = new GetACService(req, res, this);
         Vector vCon = getAC.getAC_Concepts(sCondr, null, true);
         if (vCon != null && vCon.size() > 0)
         {
-            // Primary concept, last element in the vector
-            EVS_Bean bean = new EVS_Bean();
-            bean = (EVS_Bean)vCon.elementAt(0);
-            if(bean != null)
-            {
-                bean.setCON_AC_SUBMIT_ACTION("INS");
-                bean.setCONTE_IDSEQ(m_DEC.getDEC_CONTE_IDSEQ());
-                if(sComp.equals("ObjectClass") || sComp.equals("ObjectQualifier"))
-                {
-                  m_DEC.setDEC_OCL_NAME(sLongName);
-                  if(vObjectClass.size()<1)
-                    vObjectClass.addElement(bean);
-                  else
-                    vObjectClass.setElementAt(bean, 0);
-                  session.setAttribute("vObjectClass", vObjectClass);
-                  session.setAttribute("newObjectClass", "true");
-                  m_DEC.setDEC_OCL_NAME_PRIMARY(bean.getLONG_NAME());
-                  m_DEC.setDEC_OC_CONCEPT_CODE(bean.getNCI_CC_VAL());
-                  m_DEC.setDEC_OC_EVS_CUI_ORIGEN(bean.getEVS_DATABASE());   
-                  session.setAttribute("m_OC", bean);
-                  session.setAttribute("selObjRow", sSelRow);
-                  //add to name if appending
-                  if (nameAction.equals("appendName"))
-                    m_DEC = this.doGetDECNames(req, res, bean, "Search", m_DEC);
-                }
-                else if(sComp.equals("Property") || sComp.equals("PropertyClass")
-                        || sComp.equals("PropertyQualifier"))
-                {
-                  m_DEC.setDEC_PROPL_NAME(sLongName);
-                  if(vProperty.size()<1)
-                    vProperty.addElement(bean);
-                  else
-                    vProperty.setElementAt(bean, 0);
-                  session.setAttribute("vProperty", vProperty);
-                  session.setAttribute("newProperty", "true");
-                  m_DEC.setDEC_PROPL_NAME_PRIMARY(bean.getLONG_NAME());
-                  m_DEC.setDEC_PROP_CONCEPT_CODE(bean.getNCI_CC_VAL());
-                  m_DEC.setDEC_PROP_EVS_CUI_ORIGEN(bean.getEVS_DATABASE());
-                  session.setAttribute("m_PC", bean);
-                  session.setAttribute("selPropRow", sSelRow);
-                  //add to name if appending
-                  if (nameAction.equals("appendName"))
-                    m_DEC = this.doGetDECNames(req, res, bean, "Search", m_DEC);
-                }
-          }
-          //Secondary Concepts
-          for (int j=1; j<vCon.size(); j++)
+          for (int j=0; j<vCon.size(); j++)
           {
-           // int g = vCon.size()-1; 
-            bean = new EVS_Bean();
+            EVS_Bean bean = new EVS_Bean();
             bean = (EVS_Bean)vCon.elementAt(j);
             if(bean != null)
             {
-                bean.setCON_AC_SUBMIT_ACTION("INS");
-                bean.setCONTE_IDSEQ(m_DEC.getDEC_CONTE_IDSEQ());
-                if(sComp.equals("ObjectClass") || sComp.equals("ObjectQualifier"))
-                {
-                    bean = (EVS_Bean)vCon.elementAt(j);
-                    if(bean != null)
-                    {
-                      vObjectClass.addElement(bean);
-                      session.setAttribute("vObjectClass", vObjectClass);
-                      session.setAttribute("newObjectClass", "true");
-                      Vector vOCQualifierNames = m_DEC.getDEC_OC_QUALIFIER_NAMES();
-                      if (vOCQualifierNames == null) vOCQualifierNames = new Vector();
-                      vOCQualifierNames.addElement(bean.getLONG_NAME());
-                      Vector vOCQualifierCodes = m_DEC.getDEC_OC_QUALIFIER_CODES();
-                      if (vOCQualifierCodes == null) vOCQualifierCodes = new Vector();
-                      vOCQualifierCodes.addElement(bean.getNCI_CC_VAL());
-                      Vector vOCQualifierDB = m_DEC.getDEC_OC_QUALIFIER_DB();
-                      if (vOCQualifierDB == null) vOCQualifierDB = new Vector();
-                      vOCQualifierDB.addElement(bean.getEVS_DATABASE());
-                      m_DEC.setDEC_OC_QUALIFIER_NAMES(vOCQualifierNames);
-                      m_DEC.setDEC_OC_QUALIFIER_CODES(vOCQualifierCodes);
-                      m_DEC.setDEC_OC_QUALIFIER_DB(vOCQualifierDB);
-                      session.setAttribute("m_OCQ", bean);
-                      session.setAttribute("selObjQRow", sSelRow);
-                      //add to name if appending
-                      if (nameAction.equals("appendName"))
-                        m_DEC = this.doGetDECNames(req, res, bean, "Search", m_DEC);
-                    }
-                }
-                 else if(sComp.equals("Property") || sComp.equals("PropertyClass")
-                        || sComp.equals("PropertyQualifier"))
-                {
-                   // EVS_Bean bean = new EVS_Bean();
-                    bean = (EVS_Bean)vCon.elementAt(j);
-                    if(bean != null)
-                    {
-                      vProperty.addElement(bean);
-                      session.setAttribute("vProperty", vProperty);
-                      session.setAttribute("newProperty", "true");
-                      Vector vPropQualifierNames = m_DEC.getDEC_PROP_QUALIFIER_NAMES();
-                      if (vPropQualifierNames == null) vPropQualifierNames = new Vector();
-                      vPropQualifierNames.addElement(bean.getLONG_NAME());
-                      Vector vPropQualifierCodes = m_DEC.getDEC_PROP_QUALIFIER_CODES();
-                      if (vPropQualifierCodes == null) vPropQualifierCodes = new Vector();
-                      vPropQualifierCodes.addElement(bean.getNCI_CC_VAL());
-                      Vector vPropQualifierDB = m_DEC.getDEC_PROP_QUALIFIER_DB();
-                      if (vPropQualifierDB == null) vPropQualifierDB = new Vector(); 
-                      vPropQualifierDB.addElement(bean.getEVS_DATABASE());
-                      m_DEC.setDEC_PROP_QUALIFIER_NAMES(vPropQualifierNames);
-                      m_DEC.setDEC_PROP_QUALIFIER_CODES(vPropQualifierCodes);
-                      m_DEC.setDEC_PROP_QUALIFIER_DB(vPropQualifierDB);
-                      session.setAttribute("m_PCQ", bean);
-                      session.setAttribute("selObjQRow", sSelRow);
-                      //add to name if appending
-                      if (nameAction.equals("appendName"))
-                        m_DEC = this.doGetDECNames(req, res, bean, "Search", m_DEC);
-                    }
-                }
+              if(sComp.equals("ObjectClass") || sComp.equals("ObjectQualifier"))
+              {
+                if(j == 0) // Primary Concept
+                  m_DEC = this.addOCConcepts(req, res, nameAction, m_DEC, bean, "Primary");
+                else //Secondary Concepts
+                  m_DEC = this.addOCConcepts(req, res, nameAction, m_DEC, bean, "Qualifier");
+              }
+              else if(sComp.equals("Property") || sComp.equals("PropertyClass") || sComp.equals("PropertyQualifier"))
+              { 
+                if(j == 0) // Primary Concept
+                  m_DEC = this.addPropConcepts(req, res, nameAction, m_DEC, bean, "Primary");
+                else //Secondary Concepts
+                  m_DEC = this.addPropConcepts(req, res, nameAction, m_DEC, bean, "Qualifier");
               }
             }
-          }//vCon != null
-        }//sCondr != null
+          }
+        }
+      }//sCondr != null
     }
     catch (Exception e)
     {
@@ -3898,220 +3769,228 @@ public class NCICurationServlet extends HttpServlet
    */
   public void doDECUseSelection(HttpServletRequest req, HttpServletResponse res, String nameAction)
   {    
-   try
-   {
-    HttpSession session = req.getSession(); 
-    String sSelRow = "";
-    InsACService insAC = new InsACService(req, res, this);
-    DEC_Bean m_DEC = (DEC_Bean)session.getAttribute("m_DEC");
-    if (m_DEC == null) m_DEC = new DEC_Bean();
-    m_setAC.setDECValueFromPage(req, res, m_DEC);
-    Vector vObjectClass = (Vector)session.getAttribute("vObjectClass");
-    if (vObjectClass == null) vObjectClass = new Vector();
-    Vector vProperty = (Vector)session.getAttribute("vProperty");
-    if (vProperty == null) vProperty = new Vector();
-    
-    Vector vAC = null;
-    EVS_Bean m_OC = new EVS_Bean();
-    EVS_Bean m_PC = new EVS_Bean();
-    EVS_Bean m_OCQ = new EVS_Bean();
-    EVS_Bean m_PCQ = new EVS_Bean();
-    String sComp = (String)req.getParameter("sCompBlocks");
-    if(sComp == null) sComp = "";
-    if(sComp.equals("ObjectClass"))
+    try
     {
-      sSelRow = (String)req.getParameter("selObjRow");
+      HttpSession session = req.getSession(); 
+      String sSelRow = "";
+      InsACService insAC = new InsACService(req, res, this);
+      DEC_Bean m_DEC = (DEC_Bean)session.getAttribute("m_DEC");
+      if (m_DEC == null) m_DEC = new DEC_Bean();
+      m_setAC.setDECValueFromPage(req, res, m_DEC);
+      Vector vObjectClass = (Vector)session.getAttribute("vObjectClass");
+      if (vObjectClass == null) vObjectClass = new Vector();
+      Vector vProperty = (Vector)session.getAttribute("vProperty");
+      if (vProperty == null) vProperty = new Vector();
+      
+      Vector vAC = null;
+  //    EVS_Bean m_OC = new EVS_Bean();
+  //    EVS_Bean m_PC = new EVS_Bean();
+  //    EVS_Bean m_OCQ = new EVS_Bean();
+  //    EVS_Bean m_PCQ = new EVS_Bean();
+      EVS_Bean blockBean = new EVS_Bean();
+      String sComp = (String)req.getParameter("sCompBlocks");
+      if(sComp == null) sComp = "";
+      
+      //get the search bean from teh selected row
+      sSelRow = (String)req.getParameter("selCompBlockRow");
+    //  vAC = (Vector)session.getAttribute("vRepResult");
       vAC = (Vector)session.getAttribute("vACSearch");
       if (vAC == null) vAC = new Vector();
-      if (sSelRow != null && !(sSelRow.equals("")))
+      if (sSelRow != null && !sSelRow.equals(""))
       {
         String sObjRow = sSelRow.substring(2);
         Integer intObjRow = new Integer(sObjRow);
         int intObjRow2 = intObjRow.intValue();
-        if(vAC.size()>intObjRow2-1)
-          m_OC = (EVS_Bean)vAC.elementAt(intObjRow2);
-        if(m_OC.getEVS_DATABASE().equals("caDSR"))
+        if (vAC.size() > intObjRow2-1)
+          blockBean = (EVS_Bean)vAC.elementAt(intObjRow2);
+      }
+      else
+      {
+        insAC.storeStatusMsg("Unable to get the selected row from the " + sComp + " search results.");
+        return;
+      }
+      //do the primary search selection action
+      if(sComp.equals("ObjectClass") || sComp.equals("Property") || sComp.equals("PropertyClass"))
+      {
+        if(blockBean.getEVS_DATABASE().equals("caDSR"))
         {
-          if(m_OC.getCONDR_IDSEQ() == null || m_OC.getCONDR_IDSEQ().equals(""))
-            insAC.storeStatusMsg("This Object Class is not associated to a concept, so the data is suspect. \\n" +
-            "Please choose another Object Class.");
-          else
-            splitIntoConcepts(sComp, m_OC, req, res, nameAction);
+          //split it if rep term, add concept class to the list if evs id exists 
+          if(blockBean.getCONDR_IDSEQ() == null || blockBean.getCONDR_IDSEQ().equals(""))
+          {
+            if(blockBean.getNCI_CC_VAL() == null || blockBean.getNCI_CC_VAL().equals(""))
+            {
+              insAC.storeStatusMsg("This " + sComp + " is not associated to a concept, so the data is suspect. \\n" +
+              "Please choose another " + sComp + " .");
+            }
+            else  //concept class search results
+            {
+              if (sComp.equals("ObjectClass"))
+                m_DEC = this.addOCConcepts(req, res, nameAction, m_DEC, blockBean, "Primary");
+              else
+                m_DEC = this.addPropConcepts(req, res, nameAction, m_DEC, blockBean, "Primary");
+            }
+          }
+          else  //split it into concepts for object class or property search results
+            splitIntoConcepts(sComp, blockBean, req, res, nameAction);
         }
-        else
+        else  //evs search results
         {
-          m_OC.setCON_AC_SUBMIT_ACTION("INS");
-          m_OC.setCONTE_IDSEQ(m_DEC.getDEC_CONTE_IDSEQ());
-          if(vObjectClass.size()<1)
-            vObjectClass.addElement(m_OC);
+          if(sComp.equals("ObjectClass"))
+            m_DEC = this.addOCConcepts(req, res, nameAction, m_DEC, blockBean, "Primary");
           else
-            vObjectClass.setElementAt(m_OC, 0);
-          session.setAttribute("vObjectClass", vObjectClass);      
-          session.setAttribute("newObjectClass", "true");
-          m_DEC.setDEC_OCL_NAME_PRIMARY(m_OC.getLONG_NAME());
-          m_DEC.setDEC_OC_CONCEPT_CODE(m_OC.getNCI_CC_VAL());
-          m_DEC.setDEC_OC_EVS_CUI_ORIGEN(m_OC.getEVS_DATABASE());   
-          m_DEC.setDEC_OCL_IDSEQ(m_OC.getIDSEQ());
-          session.setAttribute("m_OC", m_OC);
-          session.setAttribute("selObjRow", sSelRow);
-          //add to name if appending
-          if (nameAction.equals("appendName"))
-            m_DEC = this.doGetDECNames(req, res, m_OC, "Search", m_DEC);
+            m_DEC = this.addPropConcepts(req, res, nameAction, m_DEC, blockBean, "Primary");
         }
       }
-    }
-    else if(sComp.equals("Property") || sComp.equals("PropertyClass"))
-    {
-      sSelRow = (String)req.getParameter("selPropRow");
-    //  vAC = (Vector)session.getAttribute("vPropResult");
-      vAC = (Vector)session.getAttribute("vACSearch");
-      if (vAC == null) vAC = new Vector();
-      if (sSelRow != null && !(sSelRow.equals("")))
+      else if(sComp.equals("ObjectQualifier"))
       {
-        String sPropRow = sSelRow.substring(2);
-        Integer intPropRow = new Integer(sPropRow);
-        int intPropRow2 = intPropRow.intValue();
-        if(vAC.size()>intPropRow2-1)
-          m_PC = (EVS_Bean)vAC.elementAt(intPropRow2);
-        if(m_PC.getEVS_DATABASE().equals("caDSR"))
+        // Do this to reserve zero position in vector for primary concept
+        if(vObjectClass.size()<1)
         {
-          if(m_PC.getCONDR_IDSEQ() == null || m_PC.getCONDR_IDSEQ().equals(""))
-            insAC.storeStatusMsg("This Property is not associated to a concept, so the data is suspect. " +
-            "Please choose another Property.");
-          else
-          splitIntoConcepts(sComp, m_PC, req, res, nameAction);
-        }
-        else
-        {
-          m_PC.setCON_AC_SUBMIT_ACTION("INS");
-          m_PC.setCONTE_IDSEQ(m_DEC.getDEC_CONTE_IDSEQ());
-          if(vProperty.size()<1)
-            vProperty.addElement(m_PC);
-          else
-            vProperty.setElementAt(m_PC, 0);
-          session.setAttribute("vProperty", vProperty);
-          session.setAttribute("newProperty", "true");
-          m_DEC.setDEC_PROPL_NAME_PRIMARY(m_PC.getLONG_NAME());
-          m_DEC.setDEC_PROP_CONCEPT_CODE(m_PC.getNCI_CC_VAL());
-          m_DEC.setDEC_PROP_EVS_CUI_ORIGEN(m_PC.getEVS_DATABASE());
-          m_DEC.setDEC_PROPL_IDSEQ(m_OC.getIDSEQ());
-      //    session.setAttribute("vPropResult", null);
-          session.setAttribute("m_PC", m_PC);
-          session.setAttribute("selPropRow", sSelRow);
-          //add to name if appending
-          if (nameAction.equals("appendName"))
-            m_DEC = this.doGetDECNames(req, res, m_PC, "Search", m_DEC);
-        }
-      }
-    }
-    else if(sComp.equals("ObjectQualifier"))
-    {
-      // Do this to reserve zero position in vector for primary concept
-      if(vObjectClass.size()<1)
-      {
-        EVS_Bean OCBean = new EVS_Bean();
-        vObjectClass.addElement(OCBean);
-      }
-      sSelRow = (String)req.getParameter("selObjQRow");
-      vAC = (Vector)session.getAttribute("vACSearch");
-      if (vAC == null) vAC = new Vector();
-      if (sSelRow != null && !(sSelRow.equals("")))
-      {
-        String sObjRow = sSelRow.substring(2);
-        Integer intObjRow = new Integer(sObjRow);
-        int intObjRow2 = intObjRow.intValue();
-        m_OCQ = (EVS_Bean)vAC.elementAt(intObjRow2);
-        if(m_OCQ.getEVS_DATABASE().equals("caDSR"))
-          splitIntoConcepts(sComp, m_OCQ, req, res, nameAction);
-        else
-        {
-          m_OCQ.setCON_AC_SUBMIT_ACTION("INS");
-          m_OCQ.setCONTE_IDSEQ(m_DEC.getDEC_CONTE_IDSEQ());
-          vObjectClass.addElement(m_OCQ);
+          EVS_Bean OCBean = new EVS_Bean();
+          vObjectClass.addElement(OCBean);
           session.setAttribute("vObjectClass", vObjectClass);
-          session.setAttribute("newObjectClass", "true");
-          Vector vOCQualifierNames = m_DEC.getDEC_OC_QUALIFIER_NAMES();
-          if (vOCQualifierNames == null) vOCQualifierNames = new Vector();
-          vOCQualifierNames.addElement(m_OCQ.getLONG_NAME());
-          Vector vOCQualifierCodes = m_DEC.getDEC_OC_QUALIFIER_CODES();
-          if (vOCQualifierCodes == null) vOCQualifierCodes = new Vector();
-          vOCQualifierCodes.addElement(m_OCQ.getNCI_CC_VAL());
-          Vector vOCQualifierDB = m_DEC.getDEC_OC_QUALIFIER_DB();
-          if (vOCQualifierDB == null) vOCQualifierDB = new Vector();   
-          vOCQualifierDB.addElement(m_OCQ.getEVS_DATABASE());
-          m_DEC.setDEC_OC_QUALIFIER_NAMES(vOCQualifierNames);
-          m_DEC.setDEC_OC_QUALIFIER_CODES(vOCQualifierCodes);
-          m_DEC.setDEC_OC_QUALIFIER_DB(vOCQualifierDB);
-           if(vOCQualifierNames.size()>0)
-              m_DEC.setDEC_OBJ_CLASS_QUALIFIER((String)vOCQualifierNames.elementAt(0));
-          session.setAttribute("m_OCQ", m_OCQ);
-          session.setAttribute("selObjQRow", sSelRow);
-          //add to name if appending
-          if (nameAction.equals("appendName"))
-            m_DEC = this.doGetDECNames(req, res, m_OCQ, "Search", m_DEC);
         }
+        m_DEC = this.addOCConcepts(req, res, nameAction, m_DEC, blockBean, "Qualifier");
       }
-    }
-    else if(sComp.equals("PropertyQualifier"))
-    {
-      // Do this to reserve zero position in vector for primary concept
-      if(vProperty.size()<1)
+      else if(sComp.equals("PropertyQualifier"))
       {
-        EVS_Bean PCBean = new EVS_Bean();
-        vProperty.addElement(PCBean);
-      }
-      sSelRow = (String)req.getParameter("selPropQRow");
-      vAC = (Vector)session.getAttribute("vACSearch");
-      if (vAC == null) vAC = new Vector();
-      if (sSelRow != null && !(sSelRow.equals("")))
-      {
-        String sPropRow = sSelRow.substring(2);
-        Integer intPropRow = new Integer(sPropRow);
-        int intPropRow2 = intPropRow.intValue();
-        m_PCQ = (EVS_Bean)vAC.elementAt(intPropRow2);
-        if(m_PCQ.getEVS_DATABASE().equals("caDSR"))
-          splitIntoConcepts(sComp, m_PCQ, req, res, nameAction);
-        else
+        // Do this to reserve zero position in vector for primary concept
+        if(vProperty.size()<1)
         {
-          m_PCQ.setCON_AC_SUBMIT_ACTION("INS");
-          m_PCQ.setCONTE_IDSEQ(m_DEC.getDEC_CONTE_IDSEQ());
-          vProperty.addElement(m_PCQ);
-          session.setAttribute("vProperty", vProperty); 
-          session.setAttribute("newProperty", "true");
-          Vector vPropQualifierNames = m_DEC.getDEC_PROP_QUALIFIER_NAMES();
-          if (vPropQualifierNames == null) vPropQualifierNames = new Vector();
-          vPropQualifierNames.addElement(m_PCQ.getLONG_NAME());
-          Vector vPropQualifierCodes = m_DEC.getDEC_PROP_QUALIFIER_CODES();
-          if (vPropQualifierCodes == null) vPropQualifierCodes = new Vector();
-          vPropQualifierCodes.addElement(m_PCQ.getNCI_CC_VAL());
-          Vector vPropQualifierDB = m_DEC.getDEC_PROP_QUALIFIER_DB();
-          if (vPropQualifierDB == null) vPropQualifierDB = new Vector(); 
-          vPropQualifierDB.addElement(m_PCQ.getEVS_DATABASE());
-          m_DEC.setDEC_PROP_QUALIFIER_NAMES(vPropQualifierNames);
-          m_DEC.setDEC_PROP_QUALIFIER_CODES(vPropQualifierCodes);
-          m_DEC.setDEC_PROP_QUALIFIER_DB(vPropQualifierDB);
-          if(vPropQualifierNames.size()>0)
-              m_DEC.setDEC_PROPERTY_QUALIFIER((String)vPropQualifierNames.elementAt(0));
-          session.setAttribute("m_PCQ", m_PCQ);
-          session.setAttribute("selObjQRow", sSelRow);
-          //add to name if appending
-          if (nameAction.equals("appendName"))
-            m_DEC = this.doGetDECNames(req, res, m_PCQ, "Search", m_DEC);
+          EVS_Bean PCBean = new EVS_Bean();
+          vProperty.addElement(PCBean);
+          session.setAttribute("vProperty", vProperty);
         }
+        m_DEC = this.addPropConcepts(req, res, nameAction, m_DEC, blockBean, "Qualifier");
       }
-    }
-    //rebuild new name if not appending
-    if (nameAction.equals("newName"))
-      m_DEC = this.doGetDECNames(req, res, null, "Search", m_DEC);
-    else if (nameAction.equals("blockName"))
-      m_DEC = this.doGetDECNames(req, res, null, "blockName", m_DEC);
-    session.setAttribute("m_DEC", m_DEC); 
+      
+      //rebuild new name if not appending
+      if (nameAction.equals("newName"))
+        m_DEC = this.doGetDECNames(req, res, null, "Search", m_DEC);
+      else if (nameAction.equals("blockName"))
+        m_DEC = this.doGetDECNames(req, res, null, "blockName", m_DEC);
+      session.setAttribute("m_DEC", m_DEC); 
     }
     catch (Exception e)
     {
       this.logger.fatal("ERROR - doDECUseSelection : " + e.toString());
     }
   } // end of doDECUseSelection
+
+  private DEC_Bean addOCConcepts(HttpServletRequest req, HttpServletResponse res, 
+      String nameAction, DEC_Bean decBean, EVS_Bean eBean, String ocType) throws Exception
+  {
+    HttpSession session = req.getSession();
+    //add the concept bean to the OC vector and store it in the vector
+    Vector vObjectClass = (Vector)session.getAttribute("vObjectClass");
+    if (vObjectClass == null) vObjectClass = new Vector();
+    
+    eBean.setCON_AC_SUBMIT_ACTION("INS");
+    eBean.setCONTE_IDSEQ(decBean.getDEC_CONTE_IDSEQ());
+    String eDB = eBean.getEVS_DATABASE();
+    if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
+      eBean.setEVS_DATABASE(eBean.getEVS_ORIGIN());
+
+    //add to the vector and store it in the session, reset if primary and alredy existed, add otehrwise
+    if (ocType.equals("Primary") && vObjectClass.size() > 0)
+      vObjectClass.setElementAt(eBean, 0);
+    else
+      vObjectClass.addElement(eBean);
+    session.setAttribute("vObjectClass", vObjectClass);
+    session.setAttribute("newObjectClass", "true");
+    
+    //add rep primary attributes to the vd bean
+    if (ocType.equals("Primary"))
+    {
+      decBean.setDEC_OCL_NAME_PRIMARY(eBean.getLONG_NAME());
+      decBean.setDEC_OC_CONCEPT_CODE(eBean.getNCI_CC_VAL());
+      decBean.setDEC_OC_EVS_CUI_ORIGEN(eBean.getEVS_DATABASE());   
+      decBean.setDEC_OCL_IDSEQ(eBean.getIDSEQ());
+      session.setAttribute("m_OC", eBean);
+    }
+    //update qualifier vectors
+    else
+    {
+      //add it othe qualifiers attributes of the selected DEC
+      Vector vOCQualifierNames = decBean.getDEC_OC_QUALIFIER_NAMES();
+      if (vOCQualifierNames == null) vOCQualifierNames = new Vector();
+      vOCQualifierNames.addElement(eBean.getLONG_NAME());
+      Vector vOCQualifierCodes = decBean.getDEC_OC_QUALIFIER_CODES();
+      if (vOCQualifierCodes == null) vOCQualifierCodes = new Vector();
+      vOCQualifierCodes.addElement(eBean.getNCI_CC_VAL());
+      Vector vOCQualifierDB = decBean.getDEC_OC_QUALIFIER_DB();
+      if (vOCQualifierDB == null) vOCQualifierDB = new Vector();   
+      vOCQualifierDB.addElement(eBean.getEVS_DATABASE());
+      decBean.setDEC_OC_QUALIFIER_NAMES(vOCQualifierNames);
+      decBean.setDEC_OC_QUALIFIER_CODES(vOCQualifierCodes);
+      decBean.setDEC_OC_QUALIFIER_DB(vOCQualifierDB);
+      if (vOCQualifierNames.size()>0)
+        decBean.setDEC_OBJ_CLASS_QUALIFIER((String)vOCQualifierNames.elementAt(0));
+      //store it in the session
+      session.setAttribute("m_OCQ", eBean);
+    }
+  //  session.setAttribute("selObjQRow", sSelRow);
+    //add to name if appending
+    if (nameAction.equals("appendName"))
+      decBean = this.doGetDECNames(req, res, eBean, "Search", decBean);
+    return decBean;
+  }  //end addOCConcepts
+  
+  private DEC_Bean addPropConcepts(HttpServletRequest req, HttpServletResponse res, 
+      String nameAction, DEC_Bean decBean, EVS_Bean eBean, String propType) throws Exception
+  {
+    HttpSession session = req.getSession();
+    //add the concept bean to the OC vector and store it in the vector
+    Vector vProperty = (Vector)session.getAttribute("vProperty");
+    if (vProperty == null) vProperty = new Vector();
+    eBean.setCON_AC_SUBMIT_ACTION("INS");
+    eBean.setCONTE_IDSEQ(decBean.getDEC_CONTE_IDSEQ());
+    String eDB = eBean.getEVS_DATABASE();
+    if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
+      eBean.setEVS_DATABASE(eBean.getEVS_ORIGIN());
+
+    //add to the vector and store it in the session, reset if primary and alredy existed, add otehrwise
+    if (propType.equals("Primary") && vProperty.size() > 0)
+      vProperty.setElementAt(eBean, 0);
+    else
+      vProperty.addElement(eBean);
+    session.setAttribute("vProperty", vProperty); 
+    session.setAttribute("newProperty", "true");
+    
+    //add rep primary attributes to the vd bean
+    if (propType.equals("Primary"))
+    {
+      decBean.setDEC_PROPL_NAME_PRIMARY(eBean.getLONG_NAME());
+      decBean.setDEC_PROP_CONCEPT_CODE(eBean.getNCI_CC_VAL());
+      decBean.setDEC_PROP_EVS_CUI_ORIGEN(eBean.getEVS_DATABASE());   
+      decBean.setDEC_PROPL_IDSEQ(eBean.getIDSEQ());
+      session.setAttribute("m_PC", eBean);
+    }
+    //update qualifier vectors
+    else
+    {
+      Vector vPropQualifierNames = decBean.getDEC_PROP_QUALIFIER_NAMES();
+      if (vPropQualifierNames == null) vPropQualifierNames = new Vector();
+      vPropQualifierNames.addElement(eBean.getLONG_NAME());
+      Vector vPropQualifierCodes = decBean.getDEC_PROP_QUALIFIER_CODES();
+      if (vPropQualifierCodes == null) vPropQualifierCodes = new Vector();
+      vPropQualifierCodes.addElement(eBean.getNCI_CC_VAL());
+      Vector vPropQualifierDB = decBean.getDEC_PROP_QUALIFIER_DB();
+      if (vPropQualifierDB == null) vPropQualifierDB = new Vector(); 
+      vPropQualifierDB.addElement(eBean.getEVS_DATABASE());
+      decBean.setDEC_PROP_QUALIFIER_NAMES(vPropQualifierNames);
+      decBean.setDEC_PROP_QUALIFIER_CODES(vPropQualifierCodes);
+      decBean.setDEC_PROP_QUALIFIER_DB(vPropQualifierDB);
+      if(vPropQualifierNames.size()>0)
+          decBean.setDEC_PROPERTY_QUALIFIER((String)vPropQualifierNames.elementAt(0));
+      session.setAttribute("m_PCQ", eBean);
+    }
+   // session.setAttribute("selObjQRow", sSelRow);
+    //add to name if appending
+    if (nameAction.equals("appendName"))
+      decBean = this.doGetDECNames(req, res, eBean, "Search", decBean);
+    return decBean;
+  } //end addPropConcepts
 
 /**
    *
@@ -4137,108 +4016,59 @@ public class NCICurationServlet extends HttpServlet
 
       Vector vAC = new Vector();;
       EVS_Bean m_REP = new EVS_Bean();
-      EVS_Bean m_REPQ = new EVS_Bean();
       String sComp = (String)req.getParameter("sCompBlocks"); 
-
-      if(sComp.equals("RepTerm"))
+      //get rep term components
+      if (sComp.equals("RepTerm") || sComp.equals("RepQualifier"))
       {
         sSelRow = (String)req.getParameter("selRepRow");
       //  vAC = (Vector)session.getAttribute("vRepResult");
         vAC = (Vector)session.getAttribute("vACSearch");
         if (vAC == null) vAC = new Vector();
-        if (sSelRow != null && !(sSelRow.equals("")))
+        if (sSelRow != null && !sSelRow.equals(""))
         {
           String sObjRow = sSelRow.substring(2);
           Integer intObjRow = new Integer(sObjRow);
           int intObjRow2 = intObjRow.intValue();
-          if(vAC.size()>intObjRow2-1)
+          if (vAC.size() > intObjRow2-1)
             m_REP = (EVS_Bean)vAC.elementAt(intObjRow2);
-
+        }
+        else
+        {
+          insAC.storeStatusMsg("Unable to get the selected row from the Rep Term search results.");
+          return;
+        }
+        //handle the primary search
+        if(sComp.equals("RepTerm"))
+        {
           if(m_REP.getEVS_DATABASE().equals("caDSR"))
           {
+            //split it if rep term, add concept class to the list if evs id exists 
             if(m_REP.getCONDR_IDSEQ() == null || m_REP.getCONDR_IDSEQ().equals(""))
             {
-              insAC.storeStatusMsg("This Rep Term is not associated to a concept, so the data is suspect. \\n" +
-              "Please choose another Rep Term.");
+              if(m_REP.getNCI_CC_VAL() == null || m_REP.getNCI_CC_VAL().equals(""))
+              {
+                insAC.storeStatusMsg("This Rep Term is not associated to a concept, so the data is suspect. \\n" +
+                "Please choose another Rep Term.");
+              }
+              else
+                m_VD = this.addRepConcepts(req, res, nameAction, m_VD, m_REP, "Primary");
             }
             else
               splitIntoConceptsVD(sComp, m_REP, req, res, nameAction);
           }
           else
-          {
-            m_REP.setCON_AC_SUBMIT_ACTION("INS");
-            m_REP.setCONTE_IDSEQ(m_VD.getVD_CONTE_IDSEQ());
-            if(vRepTerm.size()<1)
-              vRepTerm.addElement(m_REP);
-            else
-              vRepTerm.setElementAt(m_REP, 0);
-            session.setAttribute("vRepTerm", vRepTerm);
-            session.setAttribute("newRepTerm", "true");
-
-            m_VD.setVD_REP_NAME_PRIMARY(m_REP.getLONG_NAME());
-            m_VD.setVD_REP_CONCEPT_CODE(m_REP.getNCI_CC_VAL());
-            m_VD.setVD_REP_EVS_CUI_ORIGEN(m_REP.getEVS_DATABASE());   
-            m_VD.setVD_REP_IDSEQ(m_REP.getIDSEQ());
-
-            session.setAttribute("m_REP", m_REP);
-            session.setAttribute("selRepRow", sSelRow);
-            //add to name if appending
-            if (nameAction.equals("appendName"))
-              m_VD = this.doGetVDNames(req, res, m_REP, "Search", m_VD);
-          }
+            m_VD = this.addRepConcepts(req, res, nameAction, m_VD, m_REP, "Primary");
         }
-      }
-      else if(sComp.equals("RepQualifier"))
-      { 
-           // Do this to reserve zero position in vector for primary concept
-        if(vRepTerm.size()<1)
-        {
-          EVS_Bean OCBean = new EVS_Bean();
-          vRepTerm.addElement(OCBean);
-        }
-        sSelRow = (String)req.getParameter("selRepQRow");
-        vAC = (Vector)session.getAttribute("vACSearch");
-        if (vAC == null) vAC = new Vector();
-        if (sSelRow != null && !(sSelRow.equals("")))
-        {
-          String sObjRow = sSelRow.substring(2);
-          Integer intObjRow = new Integer(sObjRow);
-          int intObjRow2 = intObjRow.intValue();
-          m_REPQ = (EVS_Bean)vAC.elementAt(intObjRow2);
-          if(m_REPQ.getEVS_DATABASE().equals("caDSR"))
-            splitIntoConceptsVD(sComp, m_REPQ, req, res, nameAction);
-          else
+        else if(sComp.equals("RepQualifier"))
+        { 
+          // Do this to reserve zero position in vector for primary concept
+          if(vRepTerm.size()<1)
           {
-            m_REPQ.setCON_AC_SUBMIT_ACTION("INS");
-            m_REPQ.setCONTE_IDSEQ(m_VD.getVD_CONTE_IDSEQ());
-
-            vRepTerm.addElement(m_REPQ);
+            EVS_Bean OCBean = new EVS_Bean();
+            vRepTerm.addElement(OCBean);
             session.setAttribute("vRepTerm", vRepTerm);
-            session.setAttribute("newRepTerm", "true");
-
-            Vector vRepQualifierNames = m_VD.getVD_REP_QUALIFIER_NAMES();
-            if (vRepQualifierNames == null) vRepQualifierNames = new Vector();
-            vRepQualifierNames.addElement(m_REPQ.getLONG_NAME());
-            Vector vRepQualifierCodes = m_VD.getVD_REP_QUALIFIER_CODES();
-            if (vRepQualifierCodes == null) vRepQualifierCodes = new Vector();
-            vRepQualifierCodes.addElement(m_REPQ.getNCI_CC_VAL());
-            Vector vRepQualifierDB = m_VD.getVD_REP_QUALIFIER_DB();
-            if (vRepQualifierDB == null) vRepQualifierDB = new Vector();
-            vRepQualifierDB.addElement(m_REPQ.getEVS_DATABASE());  
-            m_VD.setVD_REP_QUALIFIER_NAMES(vRepQualifierNames);
-            m_VD.setVD_REP_QUALIFIER_CODES(vRepQualifierCodes);
-            m_VD.setVD_REP_QUALIFIER_DB(vRepQualifierDB);
-            if(vRepQualifierNames.size()>0)
-            {
-                m_VD.setVD_REP_QUAL((String)vRepQualifierNames.elementAt(0));
-            }
-            session.setAttribute("vRepQResult", null);
-            session.setAttribute("m_REPQ", m_REPQ);
-            session.setAttribute("selRepQRow", sSelRow);
-            //add to name if appending
-            if (nameAction.equals("appendName"))
-              m_VD = this.doGetVDNames(req, res, m_REPQ, "Search", m_VD);
           }
+          m_VD = this.addRepConcepts(req, res, nameAction, m_VD, m_REP, "Qualifier");
         }
       }
       else
@@ -4273,6 +4103,63 @@ public class NCICurationServlet extends HttpServlet
     }
   } // end of doVDUseSelection
 
+  private VD_Bean addRepConcepts(HttpServletRequest req, HttpServletResponse res, 
+      String nameAction, VD_Bean vdBean, EVS_Bean eBean, String repType) throws Exception
+  {
+    HttpSession session = req.getSession();
+    //add the concept bean to the OC vector and store it in the vector
+    Vector vRepTerm = (Vector)session.getAttribute("vRepTerm");
+    if (vRepTerm == null)  vRepTerm = new Vector();
+    eBean.setCON_AC_SUBMIT_ACTION("INS");
+    eBean.setCONTE_IDSEQ(vdBean.getVD_CONTE_IDSEQ());
+    String eDB = eBean.getEVS_DATABASE();
+    if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
+      eBean.setEVS_DATABASE(eBean.getEVS_ORIGIN());
+      
+    //add to the vector and store it in the session, reset if primary and alredy existed, add otehrwise
+    if (repType.equals("Primary") && vRepTerm.size() > 0)
+      vRepTerm.setElementAt(eBean, 0);
+    else
+      vRepTerm.addElement(eBean);
+    session.setAttribute("vRepTerm", vRepTerm);
+    session.setAttribute("newRepTerm", "true");
+    
+    //add rep primary attributes to the vd bean
+    if (repType.equals("Primary"))
+    {
+      vdBean.setVD_REP_NAME_PRIMARY(eBean.getLONG_NAME());
+      vdBean.setVD_REP_CONCEPT_CODE(eBean.getNCI_CC_VAL());
+      vdBean.setVD_REP_EVS_CUI_ORIGEN(eBean.getEVS_DATABASE());   
+      vdBean.setVD_REP_IDSEQ(eBean.getIDSEQ());
+      session.setAttribute("m_REP", eBean);
+    }
+    else
+    {
+      //add rep qualifiers to the vector
+      Vector vRepQualifierNames = vdBean.getVD_REP_QUALIFIER_NAMES();
+      if (vRepQualifierNames == null) vRepQualifierNames = new Vector();
+      vRepQualifierNames.addElement(eBean.getLONG_NAME());
+      Vector vRepQualifierCodes = vdBean.getVD_REP_QUALIFIER_CODES();
+      if (vRepQualifierCodes == null) vRepQualifierCodes = new Vector();
+      vRepQualifierCodes.addElement(eBean.getNCI_CC_VAL());
+      Vector vRepQualifierDB = vdBean.getVD_REP_QUALIFIER_DB();
+      if (vRepQualifierDB == null) vRepQualifierDB = new Vector();
+      vRepQualifierDB.addElement(eBean.getEVS_DATABASE());  
+      vdBean.setVD_REP_QUALIFIER_NAMES(vRepQualifierNames);
+      vdBean.setVD_REP_QUALIFIER_CODES(vRepQualifierCodes);
+      vdBean.setVD_REP_QUALIFIER_DB(vRepQualifierDB);
+      if(vRepQualifierNames.size()>0)
+          vdBean.setVD_REP_QUAL((String)vRepQualifierNames.elementAt(0));
+      session.setAttribute("vRepQResult", null);
+      session.setAttribute("m_REPQ", eBean);
+    }
+   // session.setAttribute("selRepQRow", sSelRow);
+    //add to name if appending
+    if (nameAction.equals("appendName"))
+      vdBean = this.doGetVDNames(req, res, eBean, "Search", vdBean);
+    return vdBean;
+  }  //end addRepConcepts
+  
 
 /**
    *
@@ -7402,7 +7289,7 @@ public class NCICurationServlet extends HttpServlet
              getACSearch.getACShowResult(req, res, "Attribute");
              ForwardJSP(req, res, "/OpenSearchWindowReference.jsp");
           }
-           else if (actType.equals("doVocabChange"))
+      /*     else if (actType.equals("doVocabChange"))
           {
              String sVocab = (String)req.getParameter("listContextFilterVocab");
              String sSearchFor = (String)req.getParameter("listSearchFor");
@@ -7422,7 +7309,7 @@ public class NCICurationServlet extends HttpServlet
                 ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
              else if (sUISearchType.equals("tree"))
                 this.doTreeSearch(req, res, sUISearchType, sSearchFor); 
-          } 
+          } */
           //set the attribute send the page back to refresh.
           else if(actType.equals("searchInSelect"))
                doRefreshPageForSearchIn(req, res);
@@ -7711,23 +7598,24 @@ public class NCICurationServlet extends HttpServlet
       Vector vResult = new Vector();
       if (sKeywordID != null)
       {
-        if(!sSearchAC.equals("ParentConcept") && !sSearchAC.equals("ParentConceptVM")
-        && !sSearchAC.equals("EVSValueMeaning") && !sOpenToTree.equals("true"))
+        if(!sSearchAC.equals("ParentConcept") && !sSearchAC.equals("ParentConceptVM"))
+    //    && !sSearchAC.equals("EVSValueMeaning") && !sOpenToTree.equals("true"))
         {
-          if(sVocab.equals("Thesaurus/Metathesaurus") || sVocab.equals("NCI_Thesaurus")
+        /*  if(sVocab.equals("Thesaurus/Metathesaurus") || sVocab.equals("NCI_Thesaurus")
           || sVocab.equals("NCI Thesaurus") || sVocab.equals("MedDRA")
           || sVocab.equals("LOINC") || sVocab.equals("VA_NDFRT") 
           || sVocab.equals("GO"))
             sKeywordName = filterName(sKeywordName, "display");
-//System.out.println("doTreeSearchRequest sKeywordName: " + sKeywordName);
             // to avoid two "*" if user typed on e there
             if (sKeywordName.substring(sKeywordName.length()-1, sKeywordName.length()).equals("*"))
                 sKeywordName = sKeywordName.substring(0, sKeywordName.length()-1);
-            sKeywordName = sKeywordName + "*";
+            sKeywordName = sKeywordName + "*"; */
+//System.out.println(sKeywordID + " doTreeSearchRequest sKeywordName: " + sKeywordName);
             
           if(sSearchAC.equals("ObjectClass") || sSearchAC.equals("Property") 
             || sSearchAC.equals("RepTerm"))
-            serAC.do_caDSRSearch(sKeywordName, "", "", "", vAC, sSearchType);
+            serAC.do_caDSRSearch(sKeywordID, "", "", "", vAC, sSearchType);
+          vAC = serAC.do_ConceptSearch(sKeywordID, "", "", "", "", vAC);
         }
         if (sKeywordID != null && !sKeywordID.equals("")) 
           serAC.do_EVSSearch(sKeywordID, vAC, sVocab, "Concept Code",
@@ -7742,7 +7630,9 @@ public class NCICurationServlet extends HttpServlet
         else if(sSearchAC.equals("ParentConceptVM"))
           session.setAttribute("vParResultVM", vAC);
 
-        if (sSearchAC.equals("EVSValueMeaning"))
+        serAC.get_Result(req, res, vResult, "");
+        session.setAttribute("results", vResult);
+      /*  if (sSearchAC.equals("EVSValueMeaning"))
         {
           serAC.get_Result(req, res, vResult, "DEF");
           session.setAttribute("EVSresults", vResult);
@@ -7752,7 +7642,7 @@ public class NCICurationServlet extends HttpServlet
         {
           serAC.get_Result(req, res, vResult, "");
           session.setAttribute("results", vResult);
-        }       
+        }      */ 
         session.setAttribute("creKeyword", sKeywordID);
         req.setAttribute("labelKeyword", sKeywordName);
         Integer recs = new Integer(vAC.size());
@@ -8590,7 +8480,7 @@ public class NCICurationServlet extends HttpServlet
           }
           else if (actType.equals("FirstSearch"))
           { 
-            session.setAttribute("creContext", "");
+        /*    session.setAttribute("creContext", "");
             req.setAttribute("creSearchIn", "longName");
             if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("UWD VISUAL ANATOMIST")
             || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
@@ -8604,7 +8494,8 @@ public class NCICurationServlet extends HttpServlet
               sSearchInEVS = "Name";
             req.setAttribute("SearchInEVS", sSearchInEVS);
             this.doCollapseAllNodes(req, dtsVocab);
-            req.setAttribute("UISearchType", "term");
+            req.setAttribute("UISearchType", "term");*/
+            this.getDefaultBlockAttr(req, res, "Thesaurus/Metathesaurus");
             ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
           }
           else if (actType.equals("OpenTreeToConcept"))
@@ -8646,7 +8537,7 @@ public class NCICurationServlet extends HttpServlet
           }
           else if (actType.equals("doVocabChange"))
           {
-            session.setAttribute("dtsVocab", dtsVocab);
+         /*   session.setAttribute("dtsVocab", dtsVocab);
             req.setAttribute("creSearchIn", "longName");
             if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("UWD VISUAL ANATOMIST")
             || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
@@ -8660,8 +8551,9 @@ public class NCICurationServlet extends HttpServlet
               sSearchInEVS = "Name";
             req.setAttribute("SearchInEVS", sSearchInEVS);
             getCompAttrList(req, res, sSearchFor, "searchForCreate");
-            this.doCollapseAllNodes(req, dtsVocab);
-            req.setAttribute("UISearchType", "term");
+            this.doCollapseAllNodes(req, dtsVocab);*/
+            this.getDefaultBlockAttr(req, res, dtsVocab);
+            req.setAttribute("UISearchType", "term"); 
             ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
           } 
           else if (actType.equals("term") || actType.equals("tree")) 
@@ -9769,7 +9661,7 @@ public class NCICurationServlet extends HttpServlet
       vDefaultAttr.addElement("Definition Source");
       vDefaultAttr.addElement("Vocabulary");
     }
-     else if (searchAC.equals("EVSValueMeaning") || searchAC.equals("ParentConcept")
+/*     else if (searchAC.equals("EVSValueMeaning") || searchAC.equals("ParentConcept")
               || searchAC.equals("PV_ValueMeaning"))
     {
       vDefaultAttr.addElement("Concept Name");
@@ -9786,7 +9678,7 @@ public class NCICurationServlet extends HttpServlet
        vDefaultAttr.addElement("Definition Source");
        vDefaultAttr.addElement("Vocabulary");
        vDefaultAttr.addElement("Level");
-    }
+    } */
     else if (searchAC.equals("Questions"))
     {
        vDefaultAttr.addElement("Question Text");
@@ -9842,6 +9734,31 @@ public class NCICurationServlet extends HttpServlet
     return vDefaultAttr;
  }
  
+  public void getDefaultBlockAttr(HttpServletRequest req, HttpServletResponse res, 
+      String dtsVocab) throws Exception
+  {
+    HttpSession session = req.getSession();
+    String sSearchInEVS = "Name";
+    if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("UWD VISUAL ANATOMIST")
+    || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
+      sSearchInEVS = "Synonym";
+    else if(dtsVocab.equals("VA NDFRT") || dtsVocab.equals("VA_NDFRT"))
+      sSearchInEVS = "Search_Name";
+   // else if(dtsVocab.equals("MGED") || dtsVocab.equals("MGED_Ontology") 
+   // || dtsVocab.equals("GO") || dtsVocab.equals("LOINC")) 
+    //  sSearchInEVS = "Name";
+      
+    session.setAttribute("dtsVocab", dtsVocab);
+    session.setAttribute("SearchInEVS", sSearchInEVS);
+    session.setAttribute("creSearchInBlocks", "longName");
+    session.setAttribute("creContextBlocks", "All Contexts");
+    session.setAttribute("creRetired", "Exclude");
+    session.setAttribute("MetaSource", "All Sources");
+    
+    this.doCollapseAllNodes(req, dtsVocab);    
+  System.out.println("default block " + dtsVocab);
+  }
+
   /**
   * To get the default filter by attributes for the selected Component.
   *
@@ -10095,8 +10012,7 @@ public class NCICurationServlet extends HttpServlet
        vCompAtt.addElement("Vocabulary");
        session.setAttribute("creSelectedAttr", vCompAtt);
     }
-     else if (selSearch.equals("EVSValueMeaning") || selSearch.equals("ParentConcept")
-     || selSearch.equals("CreateVM_EVSValueMeaning") || selSearch.equals("PV_ValueMeaning"))
+    else if (selSearch.equals("ParentConcept") || selSearch.equals("PV_ValueMeaning"))
     {
        vCompAtt.addElement("Concept Name");
        vCompAtt.addElement("EVS Identifier");
@@ -10158,11 +10074,14 @@ public class NCICurationServlet extends HttpServlet
        vCompAtt.addElement("Context");
        vCompAtt.addElement("All Attributes");
     }
-     else if (selSearch.equals("ObjectClass")
-     || selSearch.equals("Property") || selSearch.equals("PropertyClass")
-     || selSearch.equals("RepTerm") || selSearch.equals("VDObjectClass")
-     || selSearch.equals("VDProperty") || selSearch.equals("VDPropertyClass")
-     || selSearch.equals("VDRepTerm"))
+     else if (selSearch.equals("ObjectClass") || selSearch.equals("Property") 
+       || selSearch.equals("PropertyClass") || selSearch.equals("RepTerm") 
+       || selSearch.equals("VDObjectClass") || selSearch.equals("VDProperty") 
+       || selSearch.equals("VDPropertyClass") || selSearch.equals("VDRepTerm") 
+       || selSearch.equals("RepQualifier") || selSearch.equals("ObjectQualifier") 
+       || selSearch.equals("PropertyQualifier") || selSearch.equals("VDRepQualifier")
+       || selSearch.equals("VDObjectQualifier") || selSearch.equals("VDPropertyQualifier")
+       || selSearch.equals("EVSValueMeaning") || selSearch.equals("CreateVM_EVSValueMeaning"))
     {
        vCompAtt.addElement("Concept Name");
        vCompAtt.addElement("Public ID");
@@ -10171,21 +10090,13 @@ public class NCICurationServlet extends HttpServlet
        vCompAtt.addElement("Definition Source");
        vCompAtt.addElement("Context");
        vCompAtt.addElement("Vocabulary");
-       vCompAtt.addElement("DEC's Using");
+       vCompAtt.addElement("caDSR Component");
+       if (selSearch.equals("ObjectClass") || selSearch.equals("Property") || selSearch.equals("PropertyClass")
+          || selSearch.equals("VDObjectClass") || selSearch.equals("VDProperty") || selSearch.equals("VDPropertyClass"))
+         vCompAtt.addElement("DEC's Using");
        session.setAttribute("creSelectedAttr", vCompAtt);
     }
-     else if (selSearch.equals("RepQualifier") || selSearch.equals("ObjectQualifier") 
-     || selSearch.equals("PropertyQualifier") || selSearch.equals("VDRepQualifier")
-     || selSearch.equals("VDObjectQualifier") || selSearch.equals("VDPropertyQualifier"))
-    {     
-       vCompAtt.addElement("Concept Name");
-       vCompAtt.addElement("EVS Identifier");
-       vCompAtt.addElement("Definition");
-       vCompAtt.addElement("Definition Source");
-       vCompAtt.addElement("Comments");
-       vCompAtt.addElement("Vocabulary");
-       session.setAttribute("creSelectedAttr", vCompAtt);
-    }
+    //store it in the session
     if (sMenu.equals("searchForCreate"))
        session.setAttribute("creAttributeList", vCompAtt);
     else

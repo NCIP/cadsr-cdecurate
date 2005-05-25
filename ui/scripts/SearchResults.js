@@ -89,7 +89,16 @@
   function SetSortTypeJS(sortBy, menuAction)
   {
     var isSubmitOk = true;
-    var vSearchAC = document.searchParmsForm.listSearchFor.options[document.searchParmsForm.listSearchFor.selectedIndex].value;
+    if (document.searchResultsForm.serRecCount != null)
+    {
+      var dCount = document.searchResultsForm.serRecCount.value;
+      if (dCount == null || dCount == "No " || dCount == "0")
+      {
+        isSubmitOk = false;
+        alert("Search results must be present before sorting the column"); 
+      }
+    }
+ /*   var vSearchAC = document.searchParmsForm.listSearchFor.options[document.searchParmsForm.listSearchFor.selectedIndex].value;
     //make sure it is searched before the sorting action in search for create page.
     if (menuAction != null && menuAction == "searchForCreate")
     {
@@ -101,7 +110,7 @@
           alert("Please make sure that initial search has been done before sorting the column"); 
         }
       }
-    }
+    } */
     if (isSubmitOk == true)
     {
       window.status = "Submitting the page, it may take a minute, please wait....."

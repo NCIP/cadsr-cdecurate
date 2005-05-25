@@ -4,9 +4,9 @@
     }
     
     // submits the page when clicked on updatedisplaybutton to get the data for selected attributes.
-    function displayAttributes()
+    function displayAttributes(isSubmitOk)
     {
-      var isSubmitOk = true;
+     /* var isSubmitOk = true;
       bSParmSubmited = 0;
       if (opener && opener.document != null && opener.document.SearchActionForm != null)
       {
@@ -15,14 +15,17 @@
           alert("Please make sure that initial search has been done before the update attribute action");
           isSubmitOk = false;
         } 
-      }
-      if (isSubmitOk == true)
+      } */
+      if (isSubmitOk == "true")
       { 
          hourglass();
          window.status = "Displaying selected attributes, it may take a minute, please wait....."
          document.searchParmsForm.actSelect.value = "Attribute";
          document.searchParmsForm.submit();
       }
+      else
+        alert("Search results must be present before updating the attributes"); 
+        //alert("Please make sure that search is done before the update attribute action");
     }
 
    //fuction to refresh the page for simple/advanced filter
@@ -67,7 +70,7 @@
   function getCompCreate()
   {
 
-    if (opener && opener.document != null && opener.document.SearchActionForm != null)
+    if (opener && opener.document != null && opener.document.SearchActionForm != null && opener.document.SearchActionForm.searchComp != null)
     {
       var sSelComp = opener.document.SearchActionForm.searchComp.value;
       if (sSelComp != null)

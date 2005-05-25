@@ -278,7 +278,7 @@
 <form name="SearchActionForm" method="post" action="">
 <input type="hidden" name="searchComp" value="">
 <input type="hidden" name="searchEVS" value="DataElement">
-<input type="hidden" name="isValidSearch" value="false">
+<input type="hidden" name="isValidSearch" value="true">
 <input type="hidden" name="acID" value="<%=sDEIDSEQ%>">
 <input type="hidden" name="itemType" value="">
 </form>
