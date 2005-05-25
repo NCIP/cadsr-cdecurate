@@ -1,6 +1,7 @@
 <!-- SearchResultsBlocks.jsp -->
 
 <%@ page import= "java.util.*" %>
+<%@ page import="com.scenpro.NCICuration.*" %>
 <html>
 <head>
 <title>Search Results</title>
@@ -11,9 +12,10 @@
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/popupMenus.js"></SCRIPT>
 <%
-   Vector results = null;
-   results = (Vector)session.getAttribute("results");
+   //displayable result vector
+   Vector results = (Vector)session.getAttribute("results");
    if (results == null) results = new Vector();
+   
    Vector vSearchID = (Vector)session.getAttribute("SearchID");
    if (vSearchID == null) vSearchID = new Vector();
    Vector vSearchName = (Vector)session.getAttribute("SearchName");
@@ -43,11 +45,9 @@
        sSelectedParentCC = (String)session.getAttribute("SelectedParentCC");
        sSelectedParentDB = (String)session.getAttribute("SelectedParentDB");
        vSelAttr = (Vector)session.getAttribute("creSelectedAttr");
-//System.out.println("srBlocksxxx jsp sKeyword: " + sKeyword);
    }
 
    String sLabelKeyword =  (String)request.getAttribute("labelKeyword");
-//System.out.println("srBlocksxxx jsp labelKeyword: " + sLabelKeyword);
    if (sLabelKeyword == null)
       sLabelKeyword = "";
    if (sKeyword == null)
@@ -60,6 +60,7 @@
       sSelAC = "";
 //System.out.println("jsp srbl sSelAC1: " + sSelAC);
   boolean isSelAll = false;
+  boolean isEVSvm = true;
   //allow multiple select only for select values from vd page
   if (sSelAC.equals("EVSValueMeaning") || sSelAC.equals("ParentConceptVM"))  
     isSelAll = true;
@@ -86,13 +87,16 @@
   else if (sSelAC.equals("ParentConcept"))
      sSelAC = "Parent Concept";
   else if (sSelAC.equals("ParentConceptVM"))
+  {
      sSelAC = "Value Meaning";
+     isEVSvm = false;
+  }
 
 //System.out.println("jsp srbl2 sSelAC1: " + sSelAC); 
   String strIsQualifier = "false";
-  if(sSelAC.equals("Rep Qualifier") || sSelAC.equals("Property Qualifier") || 
-     sSelAC.equals("Object Qualifier") || sSelAC.equals("Qualifier"))
-        strIsQualifier = "true";
+//  if(sSelAC.equals("Rep Qualifier") || sSelAC.equals("Property Qualifier") || 
+//     sSelAC.equals("Object Qualifier") || sSelAC.equals("Qualifier"))
+//        strIsQualifier = "true";
         
   String sUISearchType2 = (String)request.getAttribute("UISearchType");
 //System.out.println("jsp srbl sUISearchType2: " + sUISearchType2);
@@ -145,13 +149,18 @@
                   sComp == "CreateVM_EVSValueMeaning" || 
                   sComp == "ParentConceptVM") type = "Value Meaning";
         else if (sComp == "ParentConcept") type = "Parent Concept";
-        if(type != "<%=sSelAC%>")
+        
+        //check if newly opened
+   /*     var isSearched = "false";
+        if (opener.document.SearchActionForm != null && opener.document.SearchActionForm.isValidSearch != null)
+          isSearched = opener.document.SearchActionForm.isValidSearch.value;
+        if(type != "<%=sSelAC%>" || (isSearched != null && isSearched == "false"))
         {
             document.searchResultsForm.actSelected.value = "FirstSearch";
             document.searchResultsForm.searchComp.value = sComp;
+            opener.document.SearchActionForm.isValidSearch.value = "true";
             document.searchResultsForm.submit();
-        }
-          
+        }  */         
     <% } else { %>
         sComp = "<%=sSelAC%>";
     <% } %>
@@ -273,10 +282,6 @@ function getSuperConcepts()
             <th method="get"><a href="javascript:SetSortType('source')"
               onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
               Definition Source</a></th>
-<%        } else if (sAttr == null || sAttr.equals("Comments")) { %>
-            <th method="get"><a href="javascript:SetSortType('comment')"
-             onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-             Comments</a></th>
 <%        } else if (sAttr == null || sAttr.equals("Context")) { %>
             <th method="get"><a href="javascript:SetSortType('context')"
              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
@@ -285,39 +290,22 @@ function getSuperConcepts()
             <th method="get"><a href="javascript:SetSortType('db')"
               onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
               Vocabulary</a></th>
+<%        }   else if (sAttr == null || sAttr.equals("caDSR Component")) { %>
+            <th method="get"><a href="javascript:SetSortType('cadsrComp')"
+              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
+              caDSR Component</a></th>
 <%        }   else if (sAttr == null || sAttr.equals("DEC's Using")) { %>
             <th method="get"><a href="javascript:SetSortType('decUse')"
               onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
               DEC's Using</a></th>
-<%        } else if (sAttr.equals("Value")) { %>
-            <th method="get"><a href="javascript:SetSortType('value')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Value</a></th>
-<%        } else if (sAttr.equals("Value Meaning")) { %>
-            <th method="get"><a href="javascript:SetSortType('meaning')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Value Meaning</a></th>
-<%        } else if (sAttr.equals("Value Meaning Description")) { %>
-            <th method="get"><a href="javascript:SetSortType('MeanDesc')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Value Meaning Description</a></th>
-<%        } else if (sAttr.equals("Description Source")) { %>
-            <th method="get"><a href="javascript:SetSortType('descSource')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Description Source</a></th>
 <%        } else if (sAttr.equals("Level")) { %>
             <th method="get"><a href="javascript:SetSortType('Level')"
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
               Level</a></th>
-<%        } else if (sAttr.equals("Identifier")) { %>
-            <th method="get"><a href="javascript:SetSortType('Ident')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Identifier</a></th>
 <%
 	        }  }  }
 %>
     </tr>
-
 <%
     String strResult = "";
     String strVocab = "";
@@ -328,28 +316,36 @@ function getSuperConcepts()
       {
        String ckName = ("CK" + j);
        strResult = (String)results.get(i);
-       if((strIsQualifier.equals("true")) && ((i+5)<results.size()))
-        strVocab = (String)results.get(i+5);
-       else if(sSelAC.equals("Value Meaning") && ((i+4)<results.size()))
-        strVocab = (String)results.get(i+4); 
-       else if(sSelAC.equals("Parent Concept") && ((i+5)<results.size()))
-        strVocab = (String)results.get(i+5); 
-       else if((i+6)<results.size())
-        strVocab = (String)results.get(i+6);
+       if (j < vSearchDatabase.size())
+         strVocab = (String)vSearchDatabase.elementAt(j);
        if (strResult == null) strResult = "";
        if (strVocab == null) strVocab = "";
+       boolean hasLink = false;
        String showConceptInTree = "javascript:showConceptInTree('" + ckName + "');";
+       //no hyperlink for meta, cadsr, parentvm searches
        if(strVocab.equals("NCI Metathesaurus") || strVocab.equals("caDSR") 
-       || sSelAC.equals("Value Meaning")) { // || sSelAC.equals("Parent Concept")) {
+          || (sSelAC.equals("Value Meaning") && isEVSvm == false))
+          hasLink = false;
+       else
+       {
+          //hyperlink only if first column is concept name or eve id
+          if (vSelAttr.contains("Concept Name") || (vSelAttr.contains("EVS Identifier") && !vSelAttr.contains("Public ID")))
+            hasLink = true;
+          else
+            hasLink = false;
+       }
+        
+       //do not put hyperlink, concept name or evsid not selected 
+       if (hasLink == false) {
 %>
          <tr>
           <td width="5"><input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);"></td>
           <td width="150"><%=strResult%></td>
-<%}else{%>
+<%    }else{%>
         <tr>
           <td width="5"><input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);"></td>
           <td width="150"><a href="<%=showConceptInTree%>"><%=strResult%></a></td>
-<%}%>
+<%    } %>
 <%
 		   for (int m = 1; m < k; m++)
 		   {
@@ -365,6 +361,7 @@ function getSuperConcepts()
     }
 	 }
 %>
+
 </table>
 <table>
 <input type="hidden" name="AttChecked" value="<%=(k-5)%>">

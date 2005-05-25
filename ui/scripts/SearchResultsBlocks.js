@@ -42,7 +42,8 @@
         if (dCount == null || dCount == 0 || dCount < 0)
         {
           isSubmitOk = false;
-          alert("Please make sure that initial search has been done before sorting the column"); 
+          alert("Search results must be present before sorting the column"); 
+          //alert("Please make sure that initial search has been done before sorting the column"); 
         }
       }
       if (isSubmitOk == true)
@@ -80,24 +81,26 @@
       {
         var source = opener.document.newDECForm.DECAction.value;
         opener.document.newDECForm.sCompBlocks.value = sComp;
-        if (sComp == "ObjectClass" && opener.document.newDECForm != null)
+        opener.document.newDECForm.selCompBlockRow.value = selRow;
+      /*  if (sComp == "ObjectClass" && opener.document.newDECForm != null)
           opener.document.newDECForm.selObjRow.value = selRow;
         else if (sComp == "PropertyClass" && opener.document.newDECForm != null)
           opener.document.newDECForm.selPropRow.value = selRow;
         else if (sComp == "ObjectQualifier" && opener.document.newDECForm != null)
           opener.document.newDECForm.selObjQRow.value = selRow;
         else if (sComp == "PropertyQualifier" && opener.document.newDECForm != null)
-          opener.document.newDECForm.selPropQRow.value = selRow;
+          opener.document.newDECForm.selPropQRow.value = selRow; */
         opener.SubmitValidate("UseSelection");
        window.close();
       }
       else if(opener.document.createVDForm != null)
       {
          opener.document.createVDForm.sCompBlocks.value = sComp;
-         if (sComp == "RepTerm" && opener.document.createVDForm != null)
+         opener.document.createVDForm.selRepRow.value = selRow;
+       /*  if (sComp == "RepTerm" && opener.document.createVDForm != null)
           opener.document.createVDForm.selRepRow.value = selRow;
          else if (sComp == "RepQualifier" && opener.document.createVDForm != null)
-          opener.document.createVDForm.selRepQRow.value = selRow;
+          opener.document.createVDForm.selRepQRow.value = selRow; */
         opener.SubmitValidate("UseSelection");
        window.close();
       }
@@ -242,19 +245,17 @@
         }
 
       if(sConfirm == true)
-      {
           opener.AllocSelRowOptions(selRowArray3);  //allocate option for hidden row and select it.      
-      }
       else
           opener.AllocSelRowOptions(selRowArray); 
-        //submit the vd form to store these in pv bean and refresh the page
-        opener.document.createVDForm.newCDEPageAction.value = "addSelectedVM";
-        opener.SubmitValidate("addSelectedVM");
-        //disable button and de-count the checked numbers
-        numRowsSelected = 0;
-        document.searchResultsForm.hiddenSelectedRow.length = 0;
-        document.searchResultsForm.editSelectedBtn.disabled=true;
-        document.searchResultsForm.btnSubConcepts.disabled=true;
+      //submit the vd form to store these in pv bean and refresh the page
+      opener.document.createVDForm.newCDEPageAction.value = "addSelectedVM";
+      opener.SubmitValidate("addSelectedVM");
+      //disable button and de-count the checked numbers
+      numRowsSelected = 0;
+      document.searchResultsForm.hiddenSelectedRow.length = 0;
+      document.searchResultsForm.editSelectedBtn.disabled=true;
+      document.searchResultsForm.btnSubConcepts.disabled=true;
       //  opener.document.createVDForm.searchComp.value = sComp;
      // }
     }
@@ -275,7 +276,7 @@
           var sCode = sCCode + " : " + sCCodeDB;
           opener.document.createVMForm.CreateDescription.value = editDefinition;
           opener.document.createVMForm.selShortMeanings.value = editNameLong;
-          opener.document.createVMForm.taComments.value = sCode;
+         // opener.document.createVMForm.taComments.value = sCode;
           opener.document.createVMForm.EVSConceptID.value = sCode;
           opener.document.createVMForm.selShortMeanings.disabled = true;
           if(selDefinition != null && selDefinition != "")

@@ -393,8 +393,6 @@ function setup()
 {
     RepTerm.innerText = "<%=sRepTermVocab%>";
     RepTermID.innerText = "<%=sRepTerm_ID%>";
-    RepQual.innerText = "<%=sRepQualVocab%>";
-    RepQualID.innerText = "<%=sRepQualID%>";
     var selDType = document.createVDForm.tfLowValue.value;
 }
 
@@ -593,7 +591,7 @@ function setup()
                               {
                                 String sQualName = (String)vRepQualifierNames.elementAt(i);
                               %>
-                            <option value="<%=sQualName%>"><%=sQualName%></option>
+                            <option value="<%=sQualName%>" <%if(i==0){%>selected<%}%>><%=sQualName%></option>
                             <%}%>
                           <% } %>
                         </select>
@@ -1586,12 +1584,13 @@ createObject("document.createVDForm");
 displayStatusMessage();
 loadCSCSI();
 selectParent();   //do the parent select action if the parent was selected.
+ShowEVSInfo('RepQualifier');
 </script>
 </form>
 <form name="SearchActionForm" method="post" action="">
 <input type="hidden" name="searchComp" value="<%=sSearchAC%>">
 <input type="hidden" name="searchEVS" value="ValueDomain">
-<input type="hidden" name="isValidSearch" value="false">
+<input type="hidden" name="isValidSearch" value="true">
 <input type="hidden" name="CDVDcontext" value="">
 <input type="hidden" name="SelContext" value="">
 <input type="hidden" name="acID" value="<%=sVDIDSEQ%>">

@@ -1023,6 +1023,8 @@ var SelectAllOn = <%=sSelectAll%>;
 <input type="hidden" name="AppendAction" value="NotAppended">
 <input type="hidden" name="SelectAll" value="">
 <input type="hidden" name="isValid" value="false">
+<input type="hidden" name="serMenuAct" value="<%=sMAction%>">
+<input type="hidden" name="serRecCount" value="<%=nRecs%>">
   <!-- stores Designation Name and ID -->
 <select size="1" name="hiddenDesIDName" style="visibility:hidden;" multiple>
 </select>
