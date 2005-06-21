@@ -322,10 +322,35 @@ public class EVSSearch implements Serializable
           {
               aDescLogicConcept = (DescLogicConcept)concepts.get(i);
               prefNameConcept = (String)aDescLogicConcept.getName();
-              if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
-                ilevel = ilevelImmediate;
-              else if(sSearchAC.equals("ParentConceptVM"))
-                ilevel = getLevelDownFromParent(CCode, dtsVocab);         
+ // System.out.println("do_EVSSearch prefNameConcept: " + prefNameConcept); 
+ 
+              // For ParentConceptVM, use node or leaf object to get their level down from parent
+              EVSMasterTree tree = new EVSMasterTree(m_classReq, dtsVocab, m_servlet);
+              int nodeLevel = 0;
+              if(tree.m_treeNodesHashParent != null && sSearchAC.equals("ParentConceptVM"))
+              {
+                TreeNode expandedNode = new TreeNode(1, "", "",1);
+                TreeLeaf expandedLeaf = new TreeLeaf(1, "", "",1);
+                expandedNode = (TreeNode)tree.m_treeNodesHashParent.get(prefNameConcept);
+                if(expandedNode != null)
+                  nodeLevel = expandedNode.getLevel()-1;
+                else if(expandedNode == null || nodeLevel == 0)
+                {
+                  expandedLeaf = (TreeLeaf)tree.m_treeLeafsHashParent.get(prefNameConcept);
+                  if(expandedLeaf != null)
+                    nodeLevel = expandedLeaf.getLevel()-1;
+                }
+              } 
+              if(nodeLevel > 0)
+                ilevel = nodeLevel;
+              else //fallback if node/leaf doesn't have level info
+              {
+                if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
+                  ilevel = ilevelImmediate;
+                else if(sSearchAC.equals("ParentConceptVM"))
+                  ilevel = getLevelDownFromParent(CCode, dtsVocab); 
+              }
+ //  System.out.println("do_EVSSearch  iLevel: " + ilevel);              
               if(dtsVocab.length()>2 && dtsVocab.substring(0,3).equalsIgnoreCase("NCI")) 
                // || dtsVocab.substring(0,3).equalsIgnoreCase("Med")) // both have Preferred_Name property
               {
@@ -454,10 +479,10 @@ public class EVSSearch implements Serializable
               isRetired = new Boolean(false);
             if(isRetired.equals(bFalse))
             {
-              if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
-                ilevel = ilevelImmediate;
-              else if(sSearchAC.equals("ParentConceptVM"))
-                ilevel = getLevelDownFromParent(CCode, dtsVocab);
+           //   if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
+           //     ilevel = ilevelImmediate;
+           //   else if(sSearchAC.equals("ParentConceptVM"))
+            //    ilevel = getLevelDownFromParent(CCode, dtsVocab);
               
               if(dtsVocab.length()>2 && dtsVocab.substring(0,3).equalsIgnoreCase("NCI")) 
              // || dtsVocab.substring(0,3).equalsIgnoreCase("Med")) // both have Preferred_Name property
@@ -669,7 +694,7 @@ public class EVSSearch implements Serializable
    */
 public String do_getEVSCode(String prefName, String dtsVocab) 
 {
-// System.out.println("do_getEVSCode prefName: " + prefName + " dtsVocab: " + dtsVocab);
+ System.out.println("do_getEVSCode prefName: " + prefName + " dtsVocab: " + dtsVocab);
     if(prefName == null || prefName.equals(""))
       return "";
     ApplicationService evsService =
@@ -717,7 +742,7 @@ public String do_getEVSCode(String prefName, String dtsVocab)
     }
     catch(Exception ex)
     {
-      System.out.println("Error do_getEVSCode: " + ex.toString());
+System.out.println("Error do_getEVSCode1: " + ex.toString());
       prefName = filterName(prefName, "display");
       codequery.getConceptCodeByName(dtsVocab,prefName);
       codes = null;
@@ -727,7 +752,7 @@ public String do_getEVSCode(String prefName, String dtsVocab)
       }
       catch(Exception ex2)
       {
-        System.out.println("Error do_getEVSCode: " + ex2.toString());
+  System.out.println("Error do_getEVSCode2: " + ex2.toString());
         prefName = filterName(prefName, "js");
         codequery.getConceptCodeByName(dtsVocab,prefName);
         codes = null;
@@ -1771,7 +1796,8 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
 */
 public String findThePath(String dtsVocab, String[] stringArray, String sParent) 
 {
-  Boolean flagOne = new java.lang.Boolean(false);
+System.out.println("findThePath");
+  Boolean flagOne = new java.lang.Boolean(true);
   Boolean flagTwo = new Boolean(false);
   String[] stringArray2 = null;
   String sSuperConceptName = "";
@@ -1785,11 +1811,13 @@ public String findThePath(String dtsVocab, String[] stringArray, String sParent)
   {
     matchParent = "false";
     prefName = (String)stringArray[j];
+System.out.println("findThePath prefName: " + prefName + " dtsVocab: " + dtsVocab + " sParent: " + sParent);
     prefNameCurrent = (String)stringArray[j];
     if(prefName != null && prefName.equals(sParent))
     {
        matchParent = "true";
        sCorrectSuperConceptName = prefName;
+System.out.println("findThePath matchParent = true");
     }  
     while(matchParent.equals("false"))
     {
@@ -1800,11 +1828,13 @@ public String findThePath(String dtsVocab, String[] stringArray, String sParent)
         evsService =
         ApplicationService.getRemoteInstance(m_servlet.m_EVS_CONNECT);
         EVSQuery query = new EVSQueryImpl();
-        query.getSuperConcepts(dtsVocab,prefName,flagOne,flagTwo);
+        query.getSuperConcepts(dtsVocab,prefName,flagOne,flagOne);
         List supers = null;
         try
         {
+  System.out.println("findThePath try evs.search prefName: " + prefName);
           supers = evsService.evsSearch(query);
+  System.out.println("findThePath done evs.search");
         }
         catch(Exception ex)
         {
@@ -2296,6 +2326,7 @@ public String getDefinition(String termStr)
    String definition = "";
 try
 {
+//System.err.println("getDefinition: " + termStr);
   int length = 0;  //<def-source>,  <def-definition>
   length = termStr.length();
   int iStartDef = 0;
@@ -2303,7 +2334,8 @@ try
  
   if(length > 0)
   {
-    iStartDef = termStr.lastIndexOf("<def-definition>");
+    iStartDef = termStr.lastIndexOf("<def-definition>") + 16;
+//System.err.println("getDefinition: iStartDef: " + iStartDef);
     iEndDef = termStr.indexOf("</def-definition>");
       definition = termStr.substring(iStartDef, iEndDef);   
   }
@@ -2477,7 +2509,7 @@ return definition;
         vSearchID.addElement(OCBean.getIDSEQ());
         vSearchName.addElement(OCBean.getLONG_NAME());
         vSearchLongName.addElement(OCBean.getLONG_NAME());
-//System.out.println("get_Result long name: " + OCBean.getLONG_NAME());
+//System.out.println("get_Result public id: " + OCBean.getID());
         vSearchDefinition.addElement(OCBean.getPREFERRED_DEFINITION());
         vSearchDefSource.addElement(OCBean.getEVS_DEF_SOURCE());
         vSearchDatabase.addElement(OCBean.getEVS_DATABASE());

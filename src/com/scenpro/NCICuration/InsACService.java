@@ -2717,6 +2717,7 @@ public class InsACService implements Serializable
   */
   public String setDE(String sAction, DE_Bean de,  String sInsertFor, DE_Bean oldDE)
   {
+ System.out.println("setDE");
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
     logger.info(m_servlet.getLogMessage(m_classReq, "setDE", "starting set", startDate, startDate));
@@ -2908,7 +2909,7 @@ public class InsACService implements Serializable
             
           de.setDE_MODIFIED_BY(getFullName(CStmt.getString(18)));
           de.setDE_DATE_MODIFIED(m_util.getCurationDate(CStmt.getString(19)));
-
+System.out.println("setDE2");
           // insert row into DES (designation) to create CDEID for new DE or copies from old if new version
           if (sInsertFor.equals("Version"))
           {
@@ -3002,6 +3003,7 @@ public class InsACService implements Serializable
       m_classReq.setAttribute("retcode", "Exception");
       this.storeStatusMsg("\\t Exception : Unable to update Data Element Attributes");
     }
+System.out.println("done setDE");
     return sReturnCode;
   }  //end set DE
 

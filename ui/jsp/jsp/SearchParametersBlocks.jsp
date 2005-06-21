@@ -69,11 +69,11 @@
    String sMetaSource = (String)session.getAttribute("MetaSource");
    if (sMetaSource == null) sMetaSource = "All Sources";
    String dtsVocab = (String)session.getAttribute("dtsVocab");
-System.out.println("spb dtsVocab: " + dtsVocab);
+//System.out.println("spb dtsVocab: " + dtsVocab);
    if (dtsVocab == null || dtsVocab.equals("NCI_Thesaurus")) 
     dtsVocab = "Thesaurus/Metathesaurus";
    if (dtsVocab.equals("MGED")) dtsVocab = "MGED_Ontology";
-System.out.println("spb dtsVocab: " + dtsVocab);
+//System.out.println("spb dtsVocab: " + dtsVocab);
   //session.setAttribute("dtsVocab", null);
    Vector vSource = (Vector)session.getAttribute("MetaSources");
    if(vSource == null) vSource = new Vector();

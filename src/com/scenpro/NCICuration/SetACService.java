@@ -883,6 +883,7 @@ System.out.println("val VD vParList.size(): " + vParList.size());
   public void setValidateBlockEdit(HttpServletRequest req, HttpServletResponse res, 
       String sACType) throws Exception
   {
+System.out.println("in setValidateBlockEdit");
      HttpSession session = req.getSession();
      Vector vValidate = new Vector();
      boolean bMandatory = true;
