@@ -287,7 +287,7 @@ System.out.println("jsap " + decvdChanged);
 </Script>
 </head>
 
-<body>
+<body onUnload="closeDep();">
 <form name="FormNewDEC" method="post" action="/cdecurate/NCICurationServlet?reqType=createNewDEC"></form>
 <form name="FormNewVD" method="post" action="/cdecurate/NCICurationServlet?reqType=createNewVD"></form>
 <form name="SearchActionForm" method="post" action="">

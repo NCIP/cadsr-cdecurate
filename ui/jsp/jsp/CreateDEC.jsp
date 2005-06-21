@@ -285,7 +285,7 @@
 </Script>
 </head>
 
-<body onLoad="setup();">
+<body onLoad="setup();" onUnload="closeDep();">
 <form name="SearchActionForm" method="post" action="/cdecurate/NCICurationServlet?reqType=closeWindow">
 <input type="hidden" name="searchComp" value="">
 <input type="hidden" name="searchEVS" value="DataElementConcept">

@@ -7831,6 +7831,7 @@ System.out.println("in doUpdateDEActionBE");
 
        HttpSession session = req.getSession();
        String actType = (String)req.getParameter("actSelect");
+//System.out.println("doGetACSearchActions  + actType: " + actType);
        String menuAction = (String)session.getAttribute("MenuAction");
        String sUISearchType = (String)req.getAttribute("UISearchType");
        if(sUISearchType == null || sUISearchType.equals("nothing")) sUISearchType = "";
@@ -8212,20 +8213,20 @@ System.out.println("doTreeSearchRequest sConceptName: " + sConceptName + " sConc
         sSearchType = "PropQ";
        else if(sSearchAC.equals("RepQualifier"))
         sSearchType = "RepQ";
-//System.out.println("doTreeSearchRequest sVocab: " + sVocab);
+//System.out.println("doTreeSearchRequest sVocab: " + sVocab + " sSearchAC: " +  sSearchAC);
       Vector vAC = new Vector();
       Vector vResult = new Vector();
       GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this); 
       if (sKeywordID != null)
       {
-        if(!sSearchAC.equals("ParentConcept"))
+        if(!sSearchAC.equals("ParentConcept") && !sSearchAC.equals("ParentConceptVM"))
         {
           if(sSearchAC.equals("ObjectClass") || sSearchAC.equals("Property") 
             || sSearchAC.equals("RepTerm"))
           serAC.do_caDSRSearch(sKeywordID, "", "", "", vAC, sSearchType);
           vAC = serAC.do_ConceptSearch(sKeywordID, "", "", "", "", vAC);
         }
-    //  }
+  
         session.setAttribute("creKeyword", sKeywordID);
         if (sKeywordID != null && !sKeywordID.equals("")) 
           evs.do_EVSSearch(sKeywordID, vAC, sVocab, "Concept Code",

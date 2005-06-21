@@ -144,6 +144,11 @@ function removeAllText(thisBlock)
     }
  }
 
+ function closeDep() 
+  {
+    if (searchWindow && searchWindow.open && !searchWindow.closed) 
+      searchWindow.close();
+  }
 //called when hits the link to create new value or edit or remove existing ones. 
 /*function CreateNewValue(pvAction)
 {

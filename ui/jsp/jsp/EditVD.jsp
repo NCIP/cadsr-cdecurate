@@ -405,7 +405,7 @@ function setup()
 </SCRIPT>
 </head>
 
-<body onLoad="setup();">
+<body onLoad="setup();" onUnload="closeDep();">
 <form name="createVDForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=editVD">
   <table width="100%" border="0">
     <tr>

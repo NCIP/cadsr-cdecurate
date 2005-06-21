@@ -306,14 +306,6 @@ function createNew()
 
 function SearchDECValue()
 {
-	//	var selIdx = document.newCDEForm.selContext.selectedIndex;
-	//if (document.newCDEForm.selContext[selIdx].text == "")
-	//	alert("Please select a context first");
-	//else
-	//{
-//  if (document.newCDEForm.rNameConv != null)
- //   document.newCDEForm.rNameConv[0].checked = true;  //make system generated selected  
-
 	document.SearchActionForm.searchComp.value = "DataElementConcept";
 	document.SearchActionForm.isValidSearch.value = "false";
 	
@@ -325,8 +317,6 @@ function SearchDECValue()
 
 function SearchVDValue()
 {
- // if (document.newCDEForm.rNameConv != null)
-//    document.newCDEForm.rNameConv[0].checked = true;  //make system generated selected  
 	document.SearchActionForm.searchComp.value = "ValueDomain";
 	document.SearchActionForm.isValidSearch.value = "false";
 	if (searchWindow && !searchWindow.closed)
@@ -334,7 +324,11 @@ function SearchVDValue()
 	searchWindow = window.open("jsp/OpenSearchWindow.jsp", "searchWindow", "width=975,height=650,top=0,left=0,resizable=yes,scrollbars=yes")
 }
 
-
+ function closeDep() 
+  {
+    if (searchWindow && searchWindow.open && !searchWindow.closed) 
+      searchWindow.close();
+  }
 
 function RTrim(str)
 {

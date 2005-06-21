@@ -185,6 +185,7 @@ System.out.println("jsp srbl sLabelKeyword: " + sLabelKeyword);
 
    function EnableButtons(checked, currentField)
    {
+     
       EnableCheckButtons(checked, currentField, "<%=sMAction%>")
    }
 

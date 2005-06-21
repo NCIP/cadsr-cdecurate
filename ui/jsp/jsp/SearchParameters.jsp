@@ -31,7 +31,7 @@
   if (sMenuAction.equals("searchForCreate"))
   {
      sSearchAC = (String)session.getAttribute("creSearchAC");  //done now in CDEHomePage
-System.out.println("search parameters jsp sfc sSearchAC: " + sSearchAC);
+//System.out.println("search parameters jsp sfc sSearchAC: " + sSearchAC);
      sLastKeyword = (String)session.getAttribute("creKeyword");
      sContext = (String)session.getAttribute("creContext");
      vContext = (Vector)session.getAttribute("creMultiContext");
@@ -65,7 +65,7 @@ System.out.println("search parameters jsp sfc sSearchAC: " + sSearchAC);
   {
 //  System.out.println("inside if ");
      sSearchAC = (String)session.getAttribute("searchAC");  //done now in CDEHomePage
-System.out.println("search parameters else jsp sSearchAC: " + sSearchAC);
+//System.out.println("search parameters else jsp sSearchAC: " + sSearchAC);
      sLastKeyword = (String)session.getAttribute("serKeyword");
      sProtoKeyword = (String)session.getAttribute("serProtoID");
      sContext = (String)session.getAttribute("serContext");
