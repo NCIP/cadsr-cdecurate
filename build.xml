@@ -101,6 +101,12 @@
         <!-- copy caBIO.jar to cdecurate/WEB-INF/lib directory  -->
         <copy todir="${app_lib}" overwrite="YES">
           <fileset file="${m_lib}/client.jar"/>
+       <!--   <fileset file="${m_lib}/xerces.jar"/>
+          <fileset file="${m_lib}/alteredHibernate2.jar"/>
+          <fileset file="${m_lib}/aspectjrt.jar"/>
+          <fileset file="${m_lib}/aspectjtools.jar"/>
+          <fileset file="${m_lib}/cglib-full-2.0.1.jar"/>
+          <fileset file="${m_lib}/hibernate3.jar"/>  -->
         </copy>
         <!-- copy tld to cdecurate/WEB-INF/tld directory  -->
         <copy todir="${app_tld}" overwrite="YES">
@@ -211,30 +217,6 @@
             <param name="conf" value="conf/prod"/>
             <param name="jdebug" value="on"/>
         </antcall>
-    </target>
-
-    <!-- do the antcall for qa environ -->
-    <target name="copy-nci-cvs">
-        <echo message="copy changed files to NCI-CVS directory."/>
-        <property name="nci_cvs" location="E:/NCI_CVS/cdecurate"/>  <!--main folder -->
-        <property name="nci_java" location="${nci_cvs}/src"/>  <!--java source folder -->
-        <property name="nci_web" location="${nci_cvs}/ui"/>    <!--UI/ web contentfolder -->
-        <property name="nci_tld" location="${nci_cvs}/conf/web/tld"/>   <!--tld under conf folder -->
-        <property name="nci_lib" location="${nci_cvs}/lib"/>   <!--lib folder -->
-        <!-- copy scr, ui directory -->
-        <copy todir="${nci_java}">
-            <fileset dir="${m_java}" excludes="**/*CVS*"/>
-        </copy>
-        <copy todir="${nci_web}">
-            <fileset dir="${m_web}" excludes="**/*CVS*"/>
-        </copy>        
-        <copy todir="${nci_tld}">
-            <fileset dir="${m_tld}" excludes="**/*CVS*"/>
-        </copy>        
-        <copy todir="${nci_lib}">
-            <fileset dir="${m_lib}" excludes="**/*CVS*"/>
-        </copy>        
-        <delete dir="${nci_web}/WEB-INF"/>
     </target>
 
 </project>
