@@ -761,7 +761,7 @@ public class GetACSearch implements Serializable
        HttpSession session = m_classReq.getSession();
        if(sSearchACStack != null)
       {
-System.out.println("pushAll sSearchAC: " + sSearchAC + " vSearchLongNameStack: " + vSearchLongNameStack);
+//System.out.println("pushAll sSearchAC: " + sSearchAC + " vSearchLongNameStack: " + vSearchLongNameStack);
         sSearchACStack.push(sSearchAC);
         session.setAttribute("sSearchACStack", sSearchACStack);
       }
@@ -1003,7 +1003,7 @@ System.out.println("pushAll sSearchAC: " + sSearchAC + " vSearchLongNameStack: "
   {
     try
     {
-//System.out.println("getACShowResult actType: " + actType);
+
       HttpSession session = req.getSession();
       String sSearchAC = "";
       String menuAction = (String)session.getAttribute("MenuAction");
@@ -1015,7 +1015,7 @@ System.out.println("pushAll sSearchAC: " + sSearchAC + " vSearchLongNameStack: "
       //selected more attributes from the display attribute list.
       if (actType.equals("Attribute"))
         setAttributeValues(req, res, sSearchAC, menuAction);
-
+//System.out.println("getACShowResult actType: " + actType + " sSearchAC: " + sSearchAC);
       //store the append action in the session to handle new search
       String sAppendAct = (String)req.getParameter("AppendAction");
       if (sAppendAct != null)
@@ -1053,6 +1053,8 @@ System.out.println("pushAll sSearchAC: " + sSearchAC + " vSearchLongNameStack: "
         getCDResult(req, res, vResult, "");
       else if (sSearchAC.equals("ClassSchemeItems"))
         getCSIResult(req, res, vResult, "");
+      else if (sSearchAC.equals("ObjectClass") || sSearchAC.equals("Property"))
+        evs.get_Result(req, res, vResult, "");
       else if (isBlockSearch == true)
         evs.get_Result(req, res, vResult, "");
   
@@ -4004,7 +4006,7 @@ System.out.println("pushAll sSearchAC: " + sSearchAC + " vSearchLongNameStack: "
   public Vector do_ConceptSearch(String InString, String conIdseq, 
       String ContName, String ASLName, String conID, Vector vList)  // returns list of Concepts
   {
-//System.out.println("do_conceptSearch InString: " + InString + " conIdseq: " + conIdseq);
+System.out.println("do_conceptSearch InString: " + InString + " conIdseq: " + conIdseq);
     //capture the duration
  //   java.util.Date exDate = new java.util.Date();          
  //   logger.info(m_servlet.getLogMessage(m_classReq, "do_ConceptSearch", "begin search", exDate, exDate));

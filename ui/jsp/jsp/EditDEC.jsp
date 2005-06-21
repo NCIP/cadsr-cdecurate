@@ -292,7 +292,7 @@
   
 </Script>
 </head>
-<body onLoad="setup();">
+<body onLoad="setup();" onUnload="closeDep();">
 
 <form name="SearchActionForm" method="post" action="">
 <input type="hidden" name="searchComp" value="">

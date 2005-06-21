@@ -1035,12 +1035,22 @@ function createNames(acType)
       var varSearchAC = document.searchParmsForm.listSearchFor.value;
       var nonEnumVD = false;
       //is this non enumerated
-      if (opener != null && opener.document.createVDForm != null && opener.document.createVDForm.listVDType != null)
+      if (opener != null)
       {
-        var eInd = opener.document.createVDForm.listVDType.selectedIndex;
-        if (eInd > -1 && opener.document.createVDForm.listVDType[eInd].value == "N" && varSearchAC == "ParentConceptVM")
-          nonEnumVD = true;
+      if (opener.document != null)
+      {
+        if (opener.document.createVDForm != null)
+        {
+          if (opener.document.createVDForm.listVDType != null)
+          {
+          var eInd = opener.document.createVDForm.listVDType.selectedIndex;
+          if (eInd > -1 && opener.document.createVDForm.listVDType[eInd].value == "N" && varSearchAC == "ParentConceptVM")
+            nonEnumVD = true;
+          }
+        }
+        }
       }
+    
       //enable disable according to no of rows selected
       if (numRowsSelected > 0)
       {
