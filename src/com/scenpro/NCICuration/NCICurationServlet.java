@@ -845,7 +845,7 @@ System.out.println("servlet reqType!: "+ reqType);
      //   m_EVS_CONNECT = "http://cbioqatest501.nci.nih.gov:8080/cacore30/server/HTTPServer";  //3.0.1
          m_EVS_CONNECT = "http://cbioqatest501.nci.nih.gov:8080/cacoreevs301/server/HTTPServer";  // new 3.0.1
 
- System.out.println("doHomePage evsconnection m_EVS_CONNECT: " + m_EVS_CONNECT);
+// System.out.println("doHomePage evsconnection m_EVS_CONNECT: " + m_EVS_CONNECT);
         HttpSession session = req.getSession();
         m_classReq = req;
         m_classRes = res;
@@ -925,13 +925,11 @@ System.out.println("servlet reqType!: "+ reqType);
   {
     try
     {  
-  System.out.println("servlet getVocabs");
       HttpSession session = req.getSession();
       ApplicationService evsService =
       ApplicationService.getRemoteInstance(m_EVS_CONNECT);
       EVSQuery query = new EVSQueryImpl();
       query.getVocabularyNames();
-   System.out.println("servlet getVocabs0");
       java.util.List vocabs = null;
       String vocab = "";
  System.out.println("servlet getVocabs1 m_EVS_CONNECT: " + m_EVS_CONNECT);
@@ -941,12 +939,10 @@ System.out.println("servlet reqType!: "+ reqType);
       }
       catch(Exception ex)
       {
- System.out.println("servlet getVocabs error: " + ex.toString());
         ex.printStackTrace();
       } 
       if(vocabs != null && vocabs.size()>0)
       {
- System.out.println("servlet getVocabs vocabs.size(): " + vocabs.size());
         DescLogicConcept aDescLogicConcept = new DescLogicConcept();
         ArrayList vVocabs = null;
         Source sVocab = null;
@@ -1130,6 +1126,7 @@ System.out.println("servlet reqType!: "+ reqType);
    public void doEditDEActions(HttpServletRequest req, HttpServletResponse res)
    throws Exception
    {
+
       HttpSession session = req.getSession();
       String sPageAction = (String)req.getParameter("newCDEPageAction");
       if (sPageAction != null)
@@ -1141,7 +1138,7 @@ System.out.println("servlet reqType!: "+ reqType);
       session.setAttribute("DEAction", sSubAction);
       String sButtonPressed = (String)session.getAttribute("LastMenuButtonPressed");
       String sOriginAction = (String)session.getAttribute("originAction");
-
+System.out.println("doEditDEActions sOriginAction: " + sOriginAction);
       // save DDE info every case except back from DEComp
       String ddeType = (String)req.getParameter("selRepType");
       if (ddeType != null && !ddeType.equals(""))
@@ -1888,7 +1885,7 @@ System.out.println("servlet reqType!: "+ reqType);
       String sSubAction = (String)req.getParameter("VDAction");
       session.setAttribute("VDAction", sSubAction);
       String sOriginAction = (String)session.getAttribute("originAction");
-System.out.println("doCreateVDActions: sAction: " + sAction + " sSubAction: " + sSubAction);
+//System.out.println("doCreateVDActions: sAction: " + sAction + " sSubAction: " + sSubAction);
       if(sAction.equals("changeContext"))
         doChangeContext(req, res, "vd");
       else if(sAction.equals("validate"))
@@ -5041,6 +5038,7 @@ System.out.println("doCreateVDActions: sAction: " + sAction + " sSubAction: " + 
    public void doInsertDE(HttpServletRequest req, HttpServletResponse res)
    throws Exception
    {
+  
       HttpSession session = req.getSession();
       //make sure that status message is empty
       session.setAttribute("statusMessage", "");
@@ -6674,7 +6672,7 @@ System.out.println("doCreateVDActions: sAction: " + sAction + " sSubAction: " + 
       String oldDEC = DEBeanSR.getDE_DEC_IDSEQ();
       String oldVD = DEBeanSR.getDE_VD_IDSEQ();
       String oldReg = DEBeanSR.getDE_REG_STATUS();
-  System.out.println(RegStatus + " before insert " + oldReg);
+//  System.out.println(RegStatus + " before insert " + oldReg);
       //update the bean with only the changed data
       if (!sDEC_ID.equals("")) DEBeanSR.setDE_DEC_IDSEQ(sDEC_ID);
       if (!sVD_ID.equals("")) DEBeanSR.setDE_VD_IDSEQ(sVD_ID);
@@ -7053,6 +7051,7 @@ System.out.println("doCreateVDActions: sAction: " + sAction + " sSubAction: " + 
    public void doUpdateDEActionBE(HttpServletRequest req, HttpServletResponse res)
    throws Exception
    {
+System.out.println("in doUpdateDEActionBE");
       HttpSession session = req.getSession();
       DE_Bean DEBean = (DE_Bean)session.getAttribute("m_DE");
       String ret = ":";
@@ -7091,7 +7090,7 @@ System.out.println("doCreateVDActions: sAction: " + sAction + " sSubAction: " + 
           if (newVersion.equals("Point") || newVersion.equals("Whole"))  // block version
           {
              String validVer = this.InsertVersionDEBeanSR(DEBeanSR, DEBean, req, res);
-             if (validVer.equals("valid"))
+             if (validVer != null && validVer.equals("valid"))
              {
                //insert a new row with new version
                String strValid = m_setAC.checkUniqueInContext("Version", "DE", DEBeanSR, null, null, getAC, "version");
@@ -7141,6 +7140,7 @@ System.out.println("doCreateVDActions: sAction: " + sAction + " sSubAction: " + 
          session.setAttribute("results", vResult);    //store the final result in the session
          session.setAttribute("DEPageAction", "nothing");
       }
+ System.out.println("done doUpdateDEActionBE"); 
       //forward to search page.
       ForwardJSP(req, res, "/SearchResultsPage.jsp");
    }
@@ -7973,15 +7973,13 @@ System.out.println("doCreateVDActions: sAction: " + sAction + " sSubAction: " + 
   */
   private void doCollapseAllNodes(HttpServletRequest req, String dtsVocab)  throws Exception
   {
-System.out.println("doCollapseAllNodes: dtsVocab: " + dtsVocab);
+//System.out.println("doCollapseAllNodes: dtsVocab: " + dtsVocab);
     HttpSession session = req.getSession();
     session.setAttribute("results", null);
     session.setAttribute("vACSearch", null);
     session.setAttribute("ConceptLevel", "0");
     req.setAttribute("UISearchType", "term");
-System.out.println("doCollapseAllNodes:2");
     EVSMasterTree tree = new EVSMasterTree(req, dtsVocab, this);
-System.out.println("doCollapseAllNodes:3");
     tree.collapseAllNodes();
   }
   
@@ -8025,7 +8023,7 @@ System.out.println("doCollapseAllNodes:3");
   private void doTreeOpenToConcept(HttpServletRequest req, HttpServletResponse res, 
    String actType, String searchType, String sCCode, String sCCodeDB, String sCCodeName, String sNodeID)  throws Exception
   {
-System.out.println("doTreeOpenToConcept actType: " + actType + " sCCodeName: " + sCCodeName + " sCCodeDB: " + sCCodeDB);
+//System.out.println("doTreeOpenToConcept actType: " + actType + " sCCodeName: " + sCCodeName + " sCCodeDB: " + sCCodeDB);
       HttpSession session = req.getSession();
       String strHTML = "";
       String sOpenToTree = (String)req.getParameter("openToTree");
@@ -8092,7 +8090,7 @@ System.out.println("doTreeOpenToConcept actType: " + actType + " sCCodeName: " +
             sCCodeName = filterName(sCCodeName, "js");
           session.setAttribute("ParentConceptCode", sCCode);
           session.setAttribute("ParentConcept", sCCodeName);
-  System.out.println("doTreeOpenToConcept sCCodeDB: " + sCCodeDB);
+//  System.out.println("doTreeOpenToConcept sCCodeDB: " + sCCodeDB);
           this.doTreeSearchRequest(req, res, sCCodeName, sCCode, "false", sCCodeDB);
           req.setAttribute("UISearchType", "tree");
           EVSMasterTree tree = new EVSMasterTree(req, sCCodeDB, this);
@@ -8101,7 +8099,7 @@ System.out.println("doTreeOpenToConcept actType: " + actType + " sCCodeName: " +
           strHTML = tree.showParentConceptTree(sCCode, sCCodeDB, sCCodeName);
           session.setAttribute("strHTML", strHTML);
       }
-       else if (actType.equals("OpenParentTreeToConcept"))
+   /*   else if (actType.equals("OpenParentTreeToConcept"))
       {
    System.out.println("doTreeOpenToConceptQQ sCCodeDB: " + sCCodeDB);
           this.doTreeSearchRequest(req, res, sCCodeName, sCCode, "false", sCCodeDB);
@@ -8110,7 +8108,7 @@ System.out.println("doTreeOpenToConcept actType: " + actType + " sCCodeName: " +
           strHTML = tree.populateTreeRoots(sCCodeDB);
           strHTML = tree.openParentTreeToConcept(sCCode, sCCodeDB, sCCodeName, sNodeID);
           session.setAttribute("strHTML", strHTML);
-      }
+      } */
       ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
   }
   
@@ -8165,7 +8163,7 @@ System.out.println("doTreeOpenToConcept actType: " + actType + " sCCodeName: " +
   private void doTreeSearchRequest(HttpServletRequest req, HttpServletResponse res, 
   String sConceptName, String sConceptID, String strForward, String dtsVocab)  throws Exception
   {
-//System.out.println("doTreeSearchRequest sConceptName: " + sConceptName + " sConceptID: " + sConceptID);
+System.out.println("doTreeSearchRequest sConceptName: " + sConceptName + " sConceptID: " + sConceptID);
       HttpSession session = req.getSession();
       session.setAttribute("ConceptLevel", "0");
       String sUISearchType = (String)req.getAttribute("UISearchType");
@@ -8285,10 +8283,10 @@ System.out.println("doTreeOpenToConcept actType: " + actType + " sCCodeName: " +
       if (sConteIdseq == null) sConteIdseq = "";
       
       String sUISearchType = (String)req.getParameter("UISearchType");
-//System.out.println("doGetSubConcepts sSearchType: " + sSearchType + " sUISearchType: " + sUISearchType);
+System.out.println("doGetSubConcepts sSearchType: " + sSearchType + " sUISearchType: " + sUISearchType);
       if(sUISearchType == null || sUISearchType.equals("nothing")) 
         sUISearchType = "term";
-// System.out.println("doGetSubConcepts  sConceptName: " + sConceptName + " dtsVocab: " + dtsVocab);    
+ System.out.println("doGetSubConcepts  sConceptName: " + sConceptName + " dtsVocab: " + dtsVocab);    
     if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
      || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
       dtsVocab = this.m_VOCAB_NCI; //"NCI_Thesaurus";
@@ -8318,7 +8316,7 @@ System.out.println("doTreeOpenToConcept actType: " + actType + " sCCodeName: " +
       Vector vSubConceptNames = null;
       
       String sParent = (String)session.getAttribute("ParentConcept");
- // System.out.println("doGetSubConcepts sParent: " + sParent);
+  System.out.println("doGetSubConcepts sParent: " + sParent + " sSearchAC: " + sSearchAC);
       if(sParent == null) sParent = "";
       String sParentSource = "";
       if(dtsVocab.equals("NCI Metathesaurus") && sSearchAC.equals("ParentConceptVM"))
@@ -8374,7 +8372,7 @@ System.out.println("doTreeOpenToConcept actType: " + actType + " sCCodeName: " +
         { 
           String sName = (String)vSubConceptNames.elementAt(j);
           String sCode = evs.do_getEVSCode(sName, dtsVocab);   
- // System.out.println("servlet Immediate sName: " + sName + " sCode: " + sCode);
+  System.out.println("servlet Immediate sName: " + sName + " sCode: " + sCode);
           evs.do_EVSSearch(sCode, vAC, dtsVocab, "Concept Code",
           sDefSource, 100, sUISearchType, sRetired, sConteIdseq, ilevelImmediate);         
         }
@@ -8392,7 +8390,8 @@ System.out.println("doTreeOpenToConcept actType: " + actType + " sCCodeName: " +
     
       if (sSearchAC.equals("EVSValueMeaning"))
       {
-        evs.get_Result(req, res, vResult, "DEF");
+      //  evs.get_Result(req, res, vResult, "DEF");
+        evs.get_Result(req, res, vResult, "");
         session.setAttribute("EVSresults", vResult);
         session.setAttribute("results", vResult);
       }
@@ -10733,7 +10732,7 @@ System.out.println("clearCreateSessionAttributes");
        vCompAtt.addElement("Context");
        vCompAtt.addElement("All Attributes");
     }
-     else if (selSearch.equals("ObjectClass") || selSearch.equals("Property") 
+    else if (selSearch.equals("ObjectClass") || selSearch.equals("Property") 
        || selSearch.equals("PropertyClass") || selSearch.equals("RepTerm") 
        || selSearch.equals("VDObjectClass") || selSearch.equals("VDProperty") 
        || selSearch.equals("VDPropertyClass") || selSearch.equals("VDRepTerm") 

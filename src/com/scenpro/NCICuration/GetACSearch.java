@@ -10064,6 +10064,7 @@ boolean isIntSearch)
   */
   private void doVMSearch(String InString, String cd_idseq, Vector vList)  // returns list of Data Elements
   {
+System.out.println("in doVMSearch InString: " + InString);
     Connection sbr_db_conn = null;
     ResultSet rs = null;
     CallableStatement CStmt = null;
