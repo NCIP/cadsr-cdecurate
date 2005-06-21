@@ -1398,7 +1398,7 @@ public class InsACService implements Serializable
       String sSource = dec.getDEC_SOURCE();
       String sDEC_ID = dec.getDEC_DEC_IDSEQ();
       String sChangeNote = dec.getDEC_CHANGE_NOTE();
-
+      
       //check if it is valid oc/prop for block dec at submit
       boolean bValidOC_PROP = true;
       if (sInsFor.equals("BlockEdit") || sInsFor.equals("BlockVersion"))
@@ -1417,8 +1417,9 @@ public class InsACService implements Serializable
         }
         else
         {
-          SetACService setAC = new SetACService(m_servlet);
-          String validOCProp = setAC.checkUniqueOCPropPair(dec, m_classReq, m_classRes, "EditDEC");
+          //SetACService setAC = new SetACService(m_servlet);
+          //String validOCProp = setAC.checkUniqueOCPropPair(dec, m_classReq, m_classRes, "EditDEC");
+          String validOCProp = this.checkUniqueOCPropPair(dec, "Unique", "EditDEC");
           if (validOCProp != null && !validOCProp.equals("") && validOCProp.indexOf("Warning") < 0)
           {
             bValidOC_PROP = false;
@@ -1671,6 +1672,7 @@ public class InsACService implements Serializable
   private DEC_Bean changeDECPrefName(DEC_Bean dec, DEC_Bean oldDEC, String sInsFor, String sAction) 
       throws Exception
   {
+      EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet); 
       String sName = dec.getDEC_PREFERRED_NAME();
       if (sName == null) sName = "";
       String sNameType = dec.getAC_PREF_NAME_TYPE();
@@ -1703,9 +1705,9 @@ public class InsACService implements Serializable
         {
           GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
           if (dec.getDEC_OC_CONDR_IDSEQ() != null && !dec.getDEC_OC_CONDR_IDSEQ().equals(""))
-            serAC.fillOCVectors(dec.getDEC_OC_CONDR_IDSEQ(), dec, sAction);
+            evs.fillOCVectors(dec.getDEC_OC_CONDR_IDSEQ(), dec, sAction);
           if (dec.getDEC_PROP_CONDR_IDSEQ() != null && !dec.getDEC_PROP_CONDR_IDSEQ().equals(""))
-            serAC.fillPropVectors(dec.getDEC_PROP_CONDR_IDSEQ(), dec, sAction);
+            evs.fillPropVectors(dec.getDEC_PROP_CONDR_IDSEQ(), dec, sAction);
           dec = m_servlet.doGetDECNames(m_classReq, m_classRes, null, "SubmitDEC", dec);
           dec.setDEC_PREFERRED_NAME(dec.getAC_ABBR_PREF_NAME());
         }
@@ -1856,11 +1858,12 @@ public class InsACService implements Serializable
   * @param dec DEC Bean.
   * @param req  HttpServletRequest Object.
   *
-  * @return String return code from the stored procedure call. null if no error occurred.
+  * @return DEC_Bean return bean updated with change attributes.
   */
-  public String setObjectClassDEC(String sAction, DEC_Bean dec, HttpServletRequest req)
+  public DEC_Bean setObjectClassDEC(String sAction, DEC_Bean dec, HttpServletRequest req)
   {
     //capture the duration
+ System.err.println("in setOblClassDEC");
     java.util.Date startDate = new java.util.Date();          
     logger.info(m_servlet.getLogMessage(m_classReq, "setObjectClassDEC", "starting set", startDate, startDate));
 
@@ -1912,7 +1915,9 @@ public class InsACService implements Serializable
         }
       }     
       //Primary 
-      EVS_Bean OCBean = (EVS_Bean)vObjectClass.elementAt(0);  
+      EVS_Bean OCBean = new EVS_Bean();
+      if (vObjectClass.size() > 0)
+        OCBean = (EVS_Bean)vObjectClass.elementAt(0);  
       if (OCBean != null && OCBean.getLONG_NAME() != null)
       {
           if (sContextID == null || sContextID.equals(""))
@@ -1934,6 +1939,7 @@ public class InsACService implements Serializable
             }
           }
       }
+ //System.err.println("in setObjectClassDEc sOCCondrString: " + sOCCondrString);
       if (sOCCondr == null) sOCCondr = "";
    //   if (sContextID == null || sContextID.equals(""))
    //     sContextID = (String)req.getAttribute("blockContext");
@@ -1947,7 +1953,7 @@ public class InsACService implements Serializable
             m_servlet.ErrorLogin(m_classReq, m_classRes);
           else
           {         
-            CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_OC_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_OC_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //return code
             CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       // OCL IDSEQ
             CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       // preferred_name
@@ -1967,23 +1973,25 @@ public class InsACService implements Serializable
             CStmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //modified_by
             CStmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //deleted_ind
             CStmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //oc_condr_idseq
+            CStmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //oc_id
 
             // Set the In parameters (which are inherited from the PreparedStatement class)
             CStmt.setString(1,sOCCondrString); //comma-delimited con idseqs
             CStmt.setString(2,sContextID);
-        //System.out.println(sOCCondrString + " set oc execute " + sContextID);
             boolean bExcuteOk = CStmt.execute();
             sReturnCode = CStmt.getString(3);
             sOCL_IDSEQ = CStmt.getString(4); 
             if(sOCL_IDSEQ == null) sOCL_IDSEQ = "";
             String sOCL_CONDR_IDSEQ = CStmt.getString(21);
             if(sOCL_CONDR_IDSEQ == null) sOCL_CONDR_IDSEQ = "";
-           // session.setAttribute("newObjectClass", "");
+         System.out.println(sOCCondrString + " set oc execute " + sOCL_IDSEQ + " ret " + sReturnCode + " condr " + sOCL_CONDR_IDSEQ + " asl " + CStmt.getString(9));
+          // session.setAttribute("newObjectClass", "");
             //store the idseq in the bean
             if(dec != null && (sReturnCode == null || sReturnCode.equals("") || sReturnCode.equals("API_OC_500")))
             {
               dec.setDEC_OCL_IDSEQ(sOCL_IDSEQ);
               dec.setDEC_OC_CONDR_IDSEQ(sOCL_CONDR_IDSEQ);
+              dec.setDEC_OBJ_ASL_NAME(CStmt.getString(9));
               req.setAttribute("OCL_IDSEQ", sOCL_IDSEQ);
             }
             if (sReturnCode != null && !sReturnCode.equals(""))  // && !sReturnCode.equals("API_OC_500"))
@@ -1993,6 +2001,7 @@ public class InsACService implements Serializable
                 sReturnCode = sReturnCode.replaceAll("\"", "");                
                 this.storeStatusMsg(sReturnCode + " : Unable to create Object Class ");
                 m_classReq.setAttribute("retcode", sReturnCode);
+                dec.setDEC_OCL_IDSEQ("");
             }
           }
        }
@@ -2017,7 +2026,7 @@ public class InsACService implements Serializable
       m_classReq.setAttribute("retcode", "Exception");
       this.storeStatusMsg("Exception Error : Unable to create Object Class.");
     }
-    return sReturnCode;
+    return dec;
   }
 
   /**
@@ -2032,9 +2041,9 @@ public class InsACService implements Serializable
   * @param dec DEC Bean.
   * @param req  HttpServletRequest Object.
   *
-  * @return String return code from the stored procedure call. null if no error occurred.
+  * @return DEC_Bean return bean updated with change attributes.
   */
-  public String setPropertyDEC(String sAction, DEC_Bean dec, HttpServletRequest req)
+  public DEC_Bean setPropertyDEC(String sAction, DEC_Bean dec, HttpServletRequest req)
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
@@ -2087,7 +2096,9 @@ public class InsACService implements Serializable
       }
       
        //Primary 
-      EVS_Bean PCBean = (EVS_Bean)vProperty.elementAt(0);  
+      EVS_Bean PCBean = new EVS_Bean();
+      if (vProperty.size() > 0)
+        PCBean = (EVS_Bean)vProperty.elementAt(0);  
       if (PCBean != null && PCBean.getLONG_NAME() != null)
       {
           if (sContextID == null || sContextID.equals(""))
@@ -2121,7 +2132,7 @@ public class InsACService implements Serializable
             m_servlet.ErrorLogin(m_classReq, m_classRes);
           else
           {
-            CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_PROP_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_PROP_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //return code
             CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       // PROP_IDSEQ
             CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       // preferred_name
@@ -2141,6 +2152,7 @@ public class InsACService implements Serializable
             CStmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //modified_by
             CStmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //deleted_ind
             CStmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //prop_condr_idseq
+            CStmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //prop_id
 
             // Set the In parameters (which are inherited from the PreparedStatement class)
             CStmt.setString(1,sPCCondrString);       //comma-delimited con idseqs
@@ -2152,10 +2164,12 @@ public class InsACService implements Serializable
             if(sPROPL_IDSEQ == null) sPROPL_IDSEQ = "";
             String sPROPL_CONDR_IDSEQ = CStmt.getString(21);
             if (sPROPL_CONDR_IDSEQ == null) sPROPL_CONDR_IDSEQ = "";
+         System.out.println(sPCCondrString + " set prop execute " + sPROPL_IDSEQ + " ret " + sReturnCode + " condr " + sPROPL_CONDR_IDSEQ + " asl " + CStmt.getString(9));
             if (dec != null && (sReturnCode == null || sReturnCode.equals("") || sReturnCode.equals("API_PROP_500")))
             {
               dec.setDEC_PROPL_IDSEQ(sPROPL_IDSEQ);
               dec.setDEC_PROP_CONDR_IDSEQ(sPROPL_CONDR_IDSEQ);
+              dec.setDEC_PROP_ASL_NAME(CStmt.getString(9));
               req.setAttribute("PROPL_IDSEQ", sPROPL_IDSEQ);
             }            
            // session.setAttribute("newProperty", "");
@@ -2163,6 +2177,7 @@ public class InsACService implements Serializable
             {
                 this.storeStatusMsg(sReturnCode + " : Unable to create Property ");
                 m_classReq.setAttribute("retcode", sReturnCode);
+                dec.setDEC_PROPL_IDSEQ("");
             }
           }
        }
@@ -2187,7 +2202,7 @@ public class InsACService implements Serializable
       m_classReq.setAttribute("retcode", "Exception");
       this.storeStatusMsg("Exception Error : Unable to create Property.");
     }
-    return sReturnCode;
+    return dec;
   }
   
   /**
@@ -2295,7 +2310,7 @@ public class InsACService implements Serializable
             m_servlet.ErrorLogin(m_classReq, m_classRes);
           else
           {
-            CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_REP_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_REP_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //return code
             CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       // OCL IDSEQ
             CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       // preferred_name
@@ -2315,6 +2330,7 @@ public class InsACService implements Serializable
             CStmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //modified_by
             CStmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //deleted_ind
             CStmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //rep_condr_idseq
+            CStmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //rep_id
 
             // Set the In parameters (which are inherited from the PreparedStatement class)
             CStmt.setString(1,sOCCondrString); //comma-delimited con idseqs
@@ -2324,20 +2340,23 @@ public class InsACService implements Serializable
  
             sREP_IDSEQ = CStmt.getString(4);
             if(sREP_IDSEQ == null) sREP_IDSEQ = "";
+            sREP_IDSEQ = sREP_IDSEQ.trim();
             String sREP_CONDR_IDSEQ = CStmt.getString(21);
             if(sREP_CONDR_IDSEQ == null) sREP_CONDR_IDSEQ = "";
             session.setAttribute("newRepTerm", "");
-       
+         System.out.println(sOCCondrString + " set oc execute " + sREP_IDSEQ + " ret " + sReturnCode + " condr " + sREP_CONDR_IDSEQ + " asl " + CStmt.getString(9));
             if(VD != null  && (sReturnCode == null || sReturnCode.equals("") || sReturnCode.equals("API_REP_500")))
             {
               VD.setVD_REP_IDSEQ(sREP_IDSEQ);
               VD.setVD_REP_CONDR_IDSEQ(sREP_CONDR_IDSEQ);
+              VD.setVD_REP_ASL_NAME(CStmt.getString(9));
               req.setAttribute("REP_IDSEQ", sREP_IDSEQ);
             }
             if (sReturnCode != null && !sReturnCode.equals("")  && !sReturnCode.equals("API_REP_500"))
             {
                 this.storeStatusMsg("\\t " + sReturnCode + " : Unable to update Rep Term.");
                 m_classReq.setAttribute("retcode", sReturnCode);
+                VD.setVD_REP_IDSEQ("");
             }
           }
        }
@@ -2365,6 +2384,123 @@ public class InsACService implements Serializable
     }
     return sReturnCode;
   }
+
+ /**
+  * To check whether data is unique value in the database for the selected component,
+  * called from setValidatePageValuesDE, setValidatePageValuesDEC, setValidatePageValuesVD methods.
+  * Creates the sql queries for the selected field, to check if the value exists in the database.
+  * Calls 'getAC.doComponentExist' to execute the query.
+  * 
+  * @param sField selected field.
+  * @param ACType input data.
+  * @param mDE Data Element Bean.
+  * @param mDEC Data Element Concept Bean.
+  * @param mVD Value Domain Bean.
+  * @param getAC reference to GetACService class.
+  *
+  * @return String retValue message if exists already. Otherwise empty string.
+  */
+  public String checkUniqueOCPropPair(DEC_Bean mDEC, String editAct, String setAction)
+  {
+    Connection sbr_db_conn = null;
+    ResultSet rs = null;
+    PreparedStatement pstmt = null; 
+    String uniqueMsg = "";
+    try
+    {
+      HttpSession session = m_classReq.getSession();
+      String menuAction = (String)session.getAttribute("MenuAction");
+      String sContID = mDEC.getDEC_CONTE_IDSEQ();
+      String sPublicID = "";   //mDEC.getDEC_DEC_ID();
+      String sOCID = mDEC.getDEC_OCL_IDSEQ();
+      if (sOCID == null) sOCID = "";
+      String sPropID = mDEC.getDEC_PROPL_IDSEQ();
+      if (sPropID == null) sPropID = "";
+      String sOCasl = mDEC.getDEC_OBJ_ASL_NAME();
+      String sPROPasl = mDEC.getDEC_PROP_ASL_NAME();
+      String sReturnID = "";
+      if (setAction.equalsIgnoreCase("EditDEC") || setAction.equalsIgnoreCase("editDECfromDE") 
+              || menuAction.equals("NewDECVersion"))
+          sPublicID = mDEC.getDEC_DEC_ID();
+      //Create a Callable Statement object.
+      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (sbr_db_conn == null)
+        m_servlet.ErrorLogin(m_classReq, m_classRes);
+      else
+      {
+        pstmt = sbr_db_conn.prepareStatement("Select Sbrext_Common_Routines.get_dec_conte(?,?,?,?) from DUAL");
+        pstmt.setString(1, sOCID);       //oc id
+        pstmt.setString(2, sPropID);       //prop id
+        pstmt.setString(3, sContID);       //dec context
+        pstmt.setString(4, sPublicID);           // dec pubilic id
+        rs = pstmt.executeQuery();  //call teh query
+        while (rs.next())
+          sReturnID = rs.getString(1);
+        //oc-prop-context is not unique
+        if (sReturnID != null && !sReturnID.equals(""))
+          uniqueMsg = "Combination of Object Class, Property and Context already exists in DEC with Public ID(s): " + sReturnID;
+        else  //check if it exists in other contexts
+        {
+          pstmt = sbr_db_conn.prepareStatement("Select Sbrext_Common_Routines.get_dec_list(?,?,?) from DUAL");
+          pstmt.setString(1, sOCID);       //oc id
+          pstmt.setString(2, sPropID);       //prop id
+          pstmt.setString(3, sPublicID);           // dec pubilic id
+          rs = pstmt.executeQuery();  //call teh query
+          while (rs.next())
+            sReturnID = rs.getString(1);
+          //oc-prop is not unique in other contexts
+          if (sReturnID != null && !sReturnID.equals(""))
+            uniqueMsg = "Warning: DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): " + sReturnID;
+          //create new version here for single dec  
+       /*   if (editAct.equals("UniqueAndVersion"))
+          {
+            //allow creating new version of object class here if asl name is not released
+            if (!sOCID.equals("") && sOCasl != null && !sOCasl.equals("RELEASED"))
+            {
+              System.out.println("create OC new version here");
+              String newID = this.setOC_PROP_REP_VERSION(sOCID, "ObjectClass");
+              if (newID != null && !newID.equals(""))
+                mDEC.setDEC_OCL_IDSEQ(newID);
+              else
+              {
+                String retCode = (String)m_classReq.getAttribute("retcode");
+                uniqueMsg = retCode + " : Unable to create new version of the Object Class";
+              }
+            }
+            //allow creating new version of property here if asl name is not released
+            if (!sPropID.equals("") && sPROPasl != null && !sPROPasl.equals("RELEASED"))
+            {
+              System.out.println("create PROP new version here");
+              String newID = this.setOC_PROP_REP_VERSION(sPropID, "Property");
+              if (newID != null && !newID.equals(""))
+                mDEC.setDEC_PROPL_IDSEQ(newID);
+              else
+              {
+                String retCode = (String)m_classReq.getAttribute("retcode");
+                uniqueMsg = retCode + " : Unable to create new version of the Property";
+              }
+            }
+          } */
+        }
+      }
+    }
+    catch(Exception e)
+    {
+      logger.fatal("ERROR in InsACService-checkUniqueOCPropPair for exception : " + e.toString());
+    }
+    try
+    {
+      if(rs!=null) rs.close();
+      if(pstmt!=null) pstmt.close();
+      if(sbr_db_conn != null) sbr_db_conn.close();
+    }
+    catch(Exception ee)
+    {
+      logger.fatal("ERROR in InsACService-checkUniqueOCPropPair for close : " + ee.toString());
+    }
+    return uniqueMsg;
+  }
+
 
    /**
   * To insert a Qualifier Term or update the existing one in the database after the validation.
@@ -2786,20 +2922,21 @@ public class InsACService implements Serializable
           String sReturn = "";
    
           // insert/upadte row into RD (REFERENCE DOCUMENTS )    //right now only for INS.
+          String sLang = "ENGLISH";
           if ((sDocText != null) && (!sDocText.equals("")))
           {
               de.setDOC_TEXT_LONG_NAME_IDSEQ(getRD_ID(sDE_ID));
               if (sDocText.length() > 30)
                  sDocText = sDocText.substring(0, 29);
               if (de.getDOC_TEXT_LONG_NAME_IDSEQ() == null || de.getDOC_TEXT_LONG_NAME_IDSEQ().equals(""))
-                 sReturn = setRD("INS", sDocText, sDE_ID, de.getDOC_TEXT_LONG_NAME(), "LONG_NAME", "", sContextID, de.getDOC_TEXT_LONG_NAME_IDSEQ());   //?????
+                 sReturn = setRD("INS", sDocText, sDE_ID, de.getDOC_TEXT_LONG_NAME(), "LONG_NAME", "", sContextID, de.getDOC_TEXT_LONG_NAME_IDSEQ(), sLang);   //?????
               else
-                 sReturn = setRD("UPD", sDocText, sDE_ID, de.getDOC_TEXT_LONG_NAME(), "LONG_NAME", "", sContextID, de.getDOC_TEXT_LONG_NAME_IDSEQ());   //?????
+                 sReturn = setRD("UPD", sDocText, sDE_ID, de.getDOC_TEXT_LONG_NAME(), "LONG_NAME", "", sContextID, de.getDOC_TEXT_LONG_NAME_IDSEQ(), sLang);   //?????
           }
           else
           {   //delete RD if null
               if (de.getDOC_TEXT_LONG_NAME_IDSEQ() != null && !de.getDOC_TEXT_LONG_NAME_IDSEQ().equals(""))
-                 sReturn = setRD("DEL", sDocText, sDE_ID, de.getDOC_TEXT_LONG_NAME(), "LONG_NAME", "", "", de.getDOC_TEXT_LONG_NAME_IDSEQ());   //?????
+                 sReturn = setRD("DEL", sDocText, sDE_ID, de.getDOC_TEXT_LONG_NAME(), "LONG_NAME", "", "", de.getDOC_TEXT_LONG_NAME_IDSEQ(), sLang);   //?????
           }
           //store returncode in request to track it all through this request
           if (sAction.equals("UPD") && sReturn != null && !sReturn.equals(""))
@@ -2973,6 +3110,96 @@ public class InsACService implements Serializable
       this.storeStatusMsg("\\t Exception : Unable to version an Administered Component.");
     }
     return sReturnCode;
+  }
+
+ /**
+  * To insert create a new version for an Administered component.
+  * Called from NCICurationServlet.
+  * Calls oracle stored procedure  according to the selected AC.
+  *   "{call META_CONFIG_MGMT.DE_VERSION(?,?,?,?)}" to create new version
+  * update the respective bean with the new idseq if successful
+  *
+  * @param de DE_Bean.
+  * @param dec DEC_Bean.
+  * @param vd VD_Bean.
+  * @param String ACName administerd component.
+  *
+  * @return String return code from the stored procedure call. null if no error occurred.
+  */
+  public String setOC_PROP_REP_VERSION(String acIDseq, String ACType)
+  {
+    //capture the duration
+    java.util.Date startDate = new java.util.Date();          
+    logger.info(m_servlet.getLogMessage(m_classReq, "setOC_PROP_REP_VERSION", "starting set", startDate, startDate));
+
+    Connection sbr_db_conn = null;
+    ResultSet rs = null;
+    CallableStatement CStmt = null;
+    String newACID = "";
+    try
+    {
+      //Create a Callable Statement object.
+      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (sbr_db_conn == null)
+        m_servlet.ErrorLogin(m_classReq, m_classRes);
+      else
+      {
+        String sReturnCode = "None";
+        String sVersion = "";
+        acIDseq = acIDseq.trim();
+        //call the methods according to the ac componenets
+        if (ACType.equals("ObjectClass"))
+           CStmt = sbr_db_conn.prepareCall("{call META_CONFIG_MGMT.OC_VERSION(?,?,?)}");
+        else if (ACType.equals("Property"))
+           CStmt = sbr_db_conn.prepareCall("{call META_CONFIG_MGMT.PROP_VERSION(?,?,?)}");
+        else if (ACType.equals("RepTerm"))
+           CStmt = sbr_db_conn.prepareCall("{call META_CONFIG_MGMT.REP_VERSION(?,?,?)}");
+
+        // Set the out parameters (which are inherited from the PreparedStatement class)
+        CStmt.registerOutParameter(2, java.sql.Types.VARCHAR);       //NEW ID
+        CStmt.registerOutParameter(3, java.sql.Types.VARCHAR);       //RETURN CODE
+
+        CStmt.setString(1, acIDseq);       //AC idseq
+
+         // Now we are ready to call the stored procedure
+        boolean bExcuteOk = CStmt.execute();
+        sReturnCode = CStmt.getString(3);
+        newACID = CStmt.getString(2);
+  System.out.println(acIDseq + ":" + newACID);
+        //trim off the extra spaces in it
+        if ((sReturnCode == null || sReturnCode.equals("")) && newACID != null && !newACID.equals(""))
+           newACID = newACID.trim();
+        else
+        {
+          newACID = "";
+          String stmsg = sReturnCode + " : Unable to version an Administered Component - " + ACType + ".";
+          logger.fatal(stmsg);
+          m_classReq.setAttribute("retcode", sReturnCode);
+          this.storeStatusMsg("\\t : " + stmsg);          
+        }
+      }
+      //capture the duration
+      logger.info(m_servlet.getLogMessage(m_classReq, "setOC_PROP_REP_VERSION", "end set", startDate, new java.util.Date()));  
+    }
+    catch(Exception e)
+    {
+      logger.fatal("ERROR in InsACService-setOC_PROP_REP_VERSION for exception : " + e.toString());
+      m_classReq.setAttribute("retcode", "Exception");
+      this.storeStatusMsg("\\t Exception : Unable to version an Administered Component.");
+    }
+    try
+    {
+      if(rs!=null) rs.close();
+      if(CStmt!=null) CStmt.close();
+      if(sbr_db_conn != null) sbr_db_conn.close();
+    }
+    catch(Exception ee)
+    {
+      logger.fatal("ERROR in InsACService-setOC_PROP_REP_VERSION for close : " + ee.toString());
+      m_classReq.setAttribute("retcode", "Exception");
+      this.storeStatusMsg("\\t Exception : Unable to version an Administered Component.");
+    }
+    return newACID;
   }
 
  /**
@@ -3364,7 +3591,8 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
                     String sRDType,
                     String sRDURL,
                     String sRDCont,
-                    String rdIDSEQ)
+                    String rdIDSEQ,
+                    String sLang)
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
@@ -3422,6 +3650,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
           CStmt.setString(6,sDE_ID);           //ac id - must be NULL FOR UPDATE
         CStmt.setString(9,sDocText);     //doc text -
         CStmt.setString(11,sRDURL);     //URL -
+        CStmt.setString(16,sLang);     //URL -
         CStmt.setString(17,sRDCont);     //context -
          // Now we are ready to call the stored procedure
         boolean bExcuteOk = CStmt.execute();
@@ -4511,12 +4740,14 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
       Vector vContID = (Vector)session.getAttribute("vWriteContextDE_ID");
       String useContName = m_util.getNameByID(vContName, vContID, useCont);
       Vector vUsedCont = (Vector)deBean.getDE_USEDBY_CONTEXT_ID();
+      String sLang = (String)m_classReq.getParameter("dispLanguage");
+      if (sLang == null || sLang.equals("")) sLang = "ENGLISH";
       if ((vUsedCont == null || !vUsedCont.contains(useCont)) && desAction.equals("create"))
       {
         String deCont = deBean.getDE_CONTE_IDSEQ();
         //create usedby only if not in the same context as the ac is
         if (!deCont.equals(useCont))
-          this.setDES("INS", CompID, useCont, useContName, "USED_BY", useContName, "ENGLISH", "");
+          this.setDES("INS", CompID, useCont, useContName, "USED_BY", useContName, sLang, "");
         else
         {
           this.storeStatusMsg("\\t API_DES_00: Unable to designate in the same context as the owned by context.");            
@@ -4529,7 +4760,9 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
          String desID = (String)desTable.get(useContName + "," + CompID);
          //call method to delete designation if desidseq is found
          if (desID != null && !desID.equals(""))          
-            this.setDES("DEL", CompID, useCont, useContName, "USED_BY", useContName, "ENGLISH", desID);
+            this.setDES("DEL", CompID, useCont, useContName, "USED_BY", useContName, sLang, desID);
+            
+         
       }
   } 
 
@@ -4658,6 +4891,61 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
     try
     {
       HttpSession session = m_classReq.getSession();
+      String sCont = m_classReq.getParameter("selContext");
+      if (sCont == null) sCont = "";
+      Vector vAllAltName = (Vector)session.getAttribute("AllAltNameList"); 
+      if (vAllAltName == null) vAllAltName = new Vector();
+      for (int i =0; i<vAllAltName.size(); i++)
+      {
+        ALT_NAME_Bean altNameBean = (ALT_NAME_Bean)vAllAltName.elementAt(i);
+        if (altNameBean == null) altNameBean = new ALT_NAME_Bean();
+        String altAC = altNameBean.getAC_IDSEQ();
+        //remove it only for matching ac
+        if (altAC != null && sDE.equals(altAC))
+        {
+          //mark the all its alt names to be deleted if action is to undesignate
+          String altContID = altNameBean.getCONTE_IDSEQ();
+          if (desAction.equals("remove") && altContID != null && sCont != null && altContID.equals(sCont))
+            altNameBean.setALT_SUBMIT_ACTION("DEL");  
+          //get other attributes
+          String altID = altNameBean.getALT_NAME_IDSEQ();
+          String altType = altNameBean.getALT_TYPE_NAME();
+          String altSubmit = altNameBean.getALT_SUBMIT_ACTION();
+          String altName = altNameBean.getALTERNATE_NAME();
+          String altContext = altNameBean.getCONTEXT_NAME();
+          String altLang = altNameBean.getAC_LANGUAGE();
+          //mark the new ones ins or upd according to add or remove
+          if (altID == null || altID.equals("") || altID.equals("new")) 
+          {
+            if (desAction.equals("remove") || altSubmit.equals("DEL")) altSubmit = "UPD";  //mark new one as update so that it won't create 
+            else altSubmit = "INS";
+          }
+          
+          String ret = "";
+          if (!altSubmit.equals("UPD"))   //call method to create alternate name in the database
+            ret = this.setDES(altSubmit, altAC, altContID, altContext, altType, altName, altLang, altID); 
+        }
+      }
+    }
+    catch(Exception e)
+    {
+      logger.fatal("ERROR in InsACService-addRemoveAltNames for exception : " + e.toString());
+    }
+  } //end doAddRemoveAltNames
+
+/*  /**
+   * add revove alternate name attributes for the selected ac
+   * loops through the list of selected types and looks for the matching ac
+   * calls setDES to create or insert according to the submit action
+   * 
+   * @param sDE unique id of an AC.
+   * @param deCont owned by context id of the ac.
+   */
+/*  public void doAddRemoveAltNames(String sDE, String deCont, String desAction)
+  {
+    try
+    {
+      HttpSession session = m_classReq.getSession();
       
       String sAltIDs[] = m_classReq.getParameterValues("selAltIDHidden");
       String sAltTypes[] = m_classReq.getParameterValues("selAltTypeHidden");
@@ -4666,6 +4954,8 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
       String sAltConts[] = m_classReq.getParameterValues("selAltContHidden");
       String sAltContIDs[] = m_classReq.getParameterValues("selAltContIDHidden");
       String sAltActs[] = m_classReq.getParameterValues("selAltActHidden");
+      String sLang = (String)m_classReq.getParameter("dispLanguage");
+      if (sLang == null || sLang.equals("")) sLang = "ENGLISH";
       if (sAltTypes != null && sAltNames != null && sAltACs != null && sAltContIDs != null && sAltActs != null)
       {
         for (int i=0; i<sAltTypes.length; i++)
@@ -4693,8 +4983,8 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
               this.storeStatusMsg("\\t Unable to designate in the same context as the owned by context for " + sName + ".");            
               m_classReq.setAttribute("retcode", "API_DES_00");
             }
-            else */if (!sAction.equals("UPD"))   //call method to create alternate name in the database
-              ret = this.setDES(sAction, sAC, sContID, sCont, sType, sName, "ENGLISH", sID); 
+            else *//*if (!sAction.equals("UPD"))   //call method to create alternate name in the database
+              ret = this.setDES(sAction, sAC, sContID, sCont, sType, sName, sLang, sID); 
           }
         }        
       }
@@ -4703,9 +4993,9 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
     {
       logger.fatal("ERROR in InsACService-addRemoveAltNames for exception : " + e.toString());
     }
-  } //end doAddRemoveAltNames
+  } *///end doAddRemoveAltNames
 
-  /**
+/*  /**
    * add revove reference documents attributes for the selected ac
    * loops through the list of selected types and looks for the matching ac
    * calls setRD to create or insert according to the submit action
@@ -4713,7 +5003,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
    * @param sDE unique id of an AC.
    * @param deCont owned by context id of the ac.
    */
-  public void doAddRemoveRefDocs(String sDE, String deCont, String desAction)
+/*  public void doAddRemoveRefDocs(String sDE, String deCont, String desAction)
   {
     try
     {
@@ -4727,6 +5017,8 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
       String sRefACs[] = m_classReq.getParameterValues("selRefACHidden");
       String sRefContIDs[] = m_classReq.getParameterValues("selRefContIDHidden");
       String sRefActs[] = m_classReq.getParameterValues("selRefActHidden");
+      String sLang = (String)m_classReq.getParameter("dispLanguage");
+      if (sLang == null || sLang.equals("")) sLang = "ENGLISH";
       if (sRefTypes != null && sRefNames != null && sRefACs != null && sRefContIDs != null && sRefActs != null)
       {
         for (int i=0; i<sRefTypes.length; i++)
@@ -4750,9 +5042,65 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
             //check if creating used by in the same context as created DE
             String ret = "";
             if (!sAction.equals("UPD"))   //call method to create reference documents in the database
-              ret = this.setRD(sAction, sName, sAC, sText, sType, sURL, sContID, sID); 
+              ret = this.setRD(sAction, sName, sAC, sText, sType, sURL, sContID, sID, sLang); 
           }
         }        
+      }
+    }
+    catch(Exception e)
+    {
+      logger.fatal("ERROR in InsACService-addRemoveRefDocs for exception : " + e.toString());
+    }
+  } */ //end doAddRemoveAltNames
+  
+  /**
+   * add revove reference documents attributes for the selected ac
+   * loops through the list of selected types and looks for the matching ac
+   * calls setRD to create or insert according to the submit action
+   * 
+   * @param sDE unique id of an AC.
+   * @param deCont owned by context id of the ac.
+   */
+  public void doAddRemoveRefDocs(String sDE, String deCont, String desAction)
+  {
+    try
+    {
+      HttpSession session = m_classReq.getSession();
+      String sCont = m_classReq.getParameter("selContext");
+      if (sCont == null) sCont = "";
+      
+      //get reference doc attributes
+      Vector vAllRefDoc = (Vector)session.getAttribute("AllRefDocList"); 
+      if (vAllRefDoc == null) vAllRefDoc = new Vector();
+      for (int i =0; i<vAllRefDoc.size(); i++)
+      {
+        REF_DOC_Bean refDocBean = (REF_DOC_Bean)vAllRefDoc.elementAt(i);
+        if (refDocBean == null) refDocBean = new REF_DOC_Bean();
+        String refAC = refDocBean.getAC_IDSEQ();
+        if (refAC != null && sDE.equals(refAC))
+        {
+          //mark the all its alt names to be deleted if action is to undesignate
+          String refContID = refDocBean.getCONTE_IDSEQ();
+          if (desAction.equals("remove") && refContID != null && sCont != null && refContID.equals(sCont))
+            refDocBean.setREF_SUBMIT_ACTION("DEL");  
+          String refID = refDocBean.getREF_DOC_IDSEQ();
+          String refType = refDocBean.getDOC_TYPE_NAME();
+          String refName = refDocBean.getDOCUMENT_NAME();
+          String refText = refDocBean.getDOCUMENT_TEXT();
+          String refURL = refDocBean.getDOCUMENT_URL();
+          String refSubmit = refDocBean.getREF_SUBMIT_ACTION();
+          String refContext = refDocBean.getCONTEXT_NAME();
+          String refLang = refDocBean.getAC_LANGUAGE();
+          if (refID == null || refID.equals("") || refID.equals("new"))
+          {
+            if (desAction.equals("remove") || refSubmit.equals("DEL")) refSubmit = "UPD";  //mark new one as update so that it won't create 
+            else refSubmit = "INS";
+          }
+          //check if creating used by in the same context as created DE
+          String ret = "";
+          if (!refSubmit.equals("UPD"))   //call method to create reference documents in the database
+            ret = this.setRD(refSubmit, refName, refAC, refText, refType, refURL, refContID, refID, refLang); 
+        }
       }
     }
     catch(Exception e)
@@ -4784,8 +5132,10 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
     try
     {
       GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
+      EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
       Vector vAC = new Vector();
-      getAC.do_EVSSearch(sConceptName, vAC, "NCI_Thesaurus", "Synonym",
+      session.setAttribute("creKeyword", sConceptName);  //store it in the session before calling
+      evs.do_EVSSearch(sConceptName, vAC, "NCI_Thesaurus", "Synonym",
           "All Sources", 100, "termThesOnly", "Exclude", sContextID, -1);
       for(int i=0; i<(vAC.size()); i++)
       {
@@ -4866,7 +5216,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
         }
        }
       //return the concept id if the concept alredy exists in caDSR.
-      conIdseq = this.getConcept(sReturnCode, evsBean);
+      conIdseq = this.getConcept(sReturnCode, evsBean, false);
       if (conIdseq == null || conIdseq.equals(""))
       {          
         //Create a Callable Statement object.
@@ -4959,7 +5309,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
   * 
   *  @return String con_idseq from the stored procedure call.
   */
-  public String getConcept(String sReturn, EVS_Bean evsBean)
+  public String getConcept(String sReturn, EVS_Bean evsBean, boolean bValidateConceptCodeUnique)
   {
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -4999,8 +5349,8 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
         CStmt.setString(2, evsBean.getCON_IDSEQ());       // con idseq
         CStmt.setString(3, evsBean.getNCI_CC_VAL());       // concept code
        // CStmt.setString(4, evsBean.getCONTE_IDSEQ());       // context id
-        CStmt.setString(5, "1.0");       // version to 1
-       
+       // CStmt.setString(5, "1.0");       // version to 1
+ // System.err.println("in getConcept evsBean.getNCI_CC_VAL(): " + evsBean.getNCI_CC_VAL());      
          // Now we are ready to call the stored procedure
         boolean bExcuteOk = CStmt.execute();
         sCON_IDSEQ = (String)CStmt.getObject(2);
@@ -5008,11 +5358,25 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
         sReturn = (String)CStmt.getObject(1);
         if (sReturn == null || sReturn.equals(""))
         {
-          //set the bean with complete concept data
-          evsBean.setEVSBean((String)CStmt.getObject(6), (String)CStmt.getObject(9), 
+          // Sometimes we use this method to validate a concept code is unique across databases
+          if(bValidateConceptCodeUnique == true)
+          {
+            String dbOrigin = (String)CStmt.getObject(13);
+            String evsOrigin = evsBean.getEVS_ORIGIN();
+            if (dbOrigin != null && evsOrigin != null && !dbOrigin.equals(evsOrigin))
+            {
+              sCON_IDSEQ = "Another Concept Exists in caDSR with same Concept Code "
+              + evsBean.getNCI_CC_VAL() + 
+              ", but in a different Vocabulary (" + dbOrigin + "). New concept therefore cannot be created. Please choose another concept.";
+            }
+          }
+          else
+          {
+            evsBean.setEVSBean((String)CStmt.getObject(6), (String)CStmt.getObject(9), 
                               (String)CStmt.getObject(7), (String)CStmt.getObject(11), 
                                 "", "", (String)CStmt.getObject(3), "", "", 
                               (String)CStmt.getObject(13), 0, "", (String)CStmt.getObject(4), "");
+          }
         }
       }
     }
@@ -5125,9 +5489,10 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
     String sAction = parBean.getCON_AC_SUBMIT_ACTION();
     if (sAction == null || sAction.equals("")) sAction = "INS";
     String sRet = "";
+    String sLang = "ENGLISH";
     if (rdIDseq != null && !rdIDseq.equals(""))
     {
-      sRet = this.setRD("DEL", sMetaSource, sACid, sCuiVal, "META_CONCEPT_SOURCE", "", sCont, rdIDseq);         
+      sRet = this.setRD("DEL", sMetaSource, sACid, sCuiVal, "META_CONCEPT_SOURCE", "", sCont, rdIDseq, sLang);         
     }
 } 
   
@@ -5143,6 +5508,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
       Vector vParentCon = (Vector)session.getAttribute("VDParentConcept");
       if (vParentCon == null) vParentCon = new Vector();
       String sRet = "";
+      String sLang = "ENGLISH";
       for (int m=0; m<vParentCon.size(); m++)
       {
         EVS_Bean parBean = (EVS_Bean)vParentCon.elementAt(m);
@@ -5167,7 +5533,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
             if (sAction.equals("DEL") && (rdIDseq == null || rdIDseq.equals("")))
               continue;
             if (!sAction.equals("UPD"))
-              sRet = this.setRD(sAction, sName, sACid, sDoc, sType, sURL, sCont, rdIDseq);
+              sRet = this.setRD(sAction, sName, sACid, sDoc, sType, sURL, sCont, rdIDseq, sLang);
           }
         }
       }
@@ -5205,9 +5571,10 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
             String rdIDseq = null;  //parBean.getCON_IDSEQ();
             String sAction = parBean.getCON_AC_SUBMIT_ACTION();
             if (sAction == null || sAction.equals("")) sAction = "INS";
+            String sLang = "ENGLISH";
             if (sAction.equals("INS") && !sMetaSource.equals("") && !sMetaSource.equals("All Sources") && !sCuiVal.equals(""))
             {
-              sRet = this.setRD("INS", sMetaSource, sACid, sCuiVal, "META_CONCEPT_SOURCE", "", sCont, rdIDseq);
+              sRet = this.setRD("INS", sMetaSource, sACid, sCuiVal, "META_CONCEPT_SOURCE", "", sCont, rdIDseq, sLang);
             }
           }
         }
