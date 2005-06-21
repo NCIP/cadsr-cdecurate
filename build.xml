@@ -4,14 +4,11 @@
     </description>
     <!--Note: Curation tool uses java sdk 1.4.2. Please set the environment variable and class path this-->
 
-    <!--Set the environment package-->
-    <property environment="env"/>
+    <!-- set global properties for this build -->
+    <property name="temp" location="tmp"/>
 
     <!-- set global properties for compiled temp directory -->
-    <property name="isOverWrite" value="NO"/>   <!-- set this to YES when jar file changed or when files need copying regardless of the data change -->
-
-    <!-- set global properties for output directory -->
-    <property name="app_root" location="${env.CATALINA_HOME}/webapps/cdecurate"/>
+    <property name="app_root" location="tmp/cdecurate"/>
     <property name="app_jsp" location="${app_root}/jsp"/>
     <property name="app_asset" location="${app_root}/Assets"/>
     <property name="app_webinf" location="${app_root}/WEB-INF"/>
@@ -21,11 +18,13 @@
     <property name="app_lib" location="${app_webinf}/lib"/>
     <property name="app_tld" location="${app_webinf}/tld"/>
     <property name="app_war" location="distrib/war"/>
+    <property name="b_class" location="build/bin/com/scenpro/NCICuration"/>
+    <property name="bgen_class" location="build-gen/bin/org/apache/jsp"/>
     
     <!-- set global properties for source directory -->
     <property name="m_java" location="src"/>
-    <property name="m_xml" location="ui/WEB-INF"/>
-    <property name="m_tld" location="ui/WEB-INF/tld"/>
+    <property name="m_xml" location="conf/web"/>
+    <property name="m_tld" location="conf/web/tld"/>
     <property name="m_lib" location="lib"/>
     <property name="m_web" location="ui"/>
     
@@ -62,8 +61,8 @@
 
     <!-- make temporary build directory  -->
     <target name="clean">
-      <property name="isOverWrite" value="YES"/>
     	<delete dir="${app_root}"/>
+    	<mkdir dir="${temp}"/>
     	<mkdir dir="${app_root}"/>
     	<mkdir dir="${app_jsp}"/>
     	<mkdir dir="${app_asset}"/>
@@ -71,39 +70,40 @@
     	<mkdir dir="${app_classes}"/>
     	<mkdir dir="${app_lib}"/>
     	<mkdir dir="${app_tld}"/>
+    	<mkdir dir="${b_class}"/>
+    	<mkdir dir="${bgen_class}"/>
     </target>
  
-    <!-- copy web content to app_root (tomcat) build directory  
-    <target name="setup" depends="clean">-->
-    <target name="setup">
+    <!-- copy web content to temporary build directory  -->
+    <target name="setup" depends="clean">
         <!-- copy html, css, login jsp to cdecurate directory  -->
-        <copy todir="${app_root}" overwrite="${isOverWrite}">
+        <copy todir="${app_root}" overwrite="YES">
             <fileset dir="${m_web}/css/cdecurate" excludes="**/*CVS*"/>
             <fileset dir="${m_web}/jsp/cdecurate" excludes="**/*CVS*"/>
             <fileset dir="${m_web}/html/cdecurate" excludes="**/*CVS*"/>
         </copy>
         <!-- copy css, all jsp to cdecurate/jsp directory  -->
-        <copy todir="${app_jsp}" overwrite="${isOverWrite}">
+        <copy todir="${app_jsp}" overwrite="YES">
             <fileset dir="${m_web}/css/jsp" excludes="**/*CVS*"/>
             <fileset dir="${m_web}/jsp/jsp" excludes="**/*CVS*"/>
         </copy>
         <!-- copy css, html, script, images to cdecurate/Assets directory  -->
-        <copy todir="${app_asset}" overwrite="${isOverWrite}">
+        <copy todir="${app_asset}" overwrite="YES">
             <fileset dir="${m_web}/css/asset" excludes="**/*CVS*"/>
             <fileset dir="${m_web}/html/asset" excludes="**/*CVS*"/>
             <fileset dir="${m_web}/scripts" excludes="**/*CVS*"/>
             <fileset dir="${m_web}/images" excludes="**/*CVS*"/>
         </copy>
-        <!-- copy web.xml to cdecurate/WEB-INF directory needes when not deploying -->
+        <!-- copy web.xml to cdecurate/WEB-INF directory not needes since passed in the war task
         <copy todir="${app_webinf}" overwrite="YES">
             <fileset file="${m_xml}/web.xml"/>
-        </copy> 
-       <!-- copy caBIO.jar to cdecurate/WEB-INF/lib directory  -->
-       <copy todir="${app_lib}" overwrite="${isOverWrite}">
+        </copy> -->
+        <!-- copy caBIO.jar to cdecurate/WEB-INF/lib directory  -->
+        <copy todir="${app_lib}" overwrite="YES">
           <fileset file="${m_lib}/client.jar"/>
-        </copy>  
+        </copy>
         <!-- copy tld to cdecurate/WEB-INF/tld directory  -->
-        <copy todir="${app_tld}" overwrite="${isOverWrite}">
+        <copy todir="${app_tld}" overwrite="YES">
             <fileset dir="${m_tld}" excludes="**/*CVS*"/>
         </copy>
     </target>
@@ -116,60 +116,56 @@
           <src refid="srcpath"/>
           <include name="**/*.java" />
       </javac>
-      <!-- compile jsp files which makes jsp.java file  --> 
+      <!-- compile jsp files which makes jsp.java file --> 
       <jspc srcdir="${app_jsp}" destdir="${app_classes}" compiler="jasper41"> 
         <classpath refid="libpath"/>
         <include name="**/*.jsp" />
-      </jspc>  
-      <!-- compile jsp.java files   -->
+      </jspc>
+      <!-- compile jsp.java files --> 
       <javac destdir="${app_classes}" encoding="Cp1252">
           <classpath refid="libpath"/>
           <src refid="jspsrcpath"/>
           <include name="**/*.java" />
-      </javac> 
+      </javac>
       <!-- copy property file to cdecurate/WEB-INF/classes/com/scenpro/NCICuration directory  -->
-      <copy file="${m_java}/com/scenpro/NCICuration/NCICuration.properties" tofile="${app_class}/NCICuration.properties" overwrite="${isOverWrite}"/>      
-    </target>
-    
-    <!-- only compiles both jsp and java files and outputs to app_root-->
-    <target name="make" depends="compile"/>
+      <copy file="${m_java}/com/scenpro/NCICuration/NCICuration.properties" tofile="${app_class}/NCICuration.properties" overwrite="YES"/>
 
-    <!--cleans, compiles both jsp and java files and outputs to app_root-->
-    <target name="rebuild" depends="clean,compile"/>
-  
+      <!-- copy compiled file to build directory  -->
+      <copy todir="${b_class}" overwrite="YES">
+          <fileset dir="${app_class}"/>
+      </copy>
+      <copy todir="${bgen_class}" overwrite="YES">
+          <fileset dir="${app_jclass}"/>
+      </copy>
+      
+    </target>
+
     <!-- deploy the war file -->
-    <target name="deploy" depends="make">
+    <target name="deploy" depends="compile">
         <delete file="${app_war}/cdecurate.war"/>
         <delete dir="${app_classes}/jsp"/>
-        <delete file="${app_webinf}/web.xml"/>  <!-- remove it to make war -->
-        <!-- make war -->
         <war destfile="${app_war}/cdecurate.war" basedir="${app_root}" update="true" webxml="${m_xml}/web.xml">
         </war>
-        <!-- copy web.xml back to cdecurate/WEB-INF directory-->
-        <copy todir="${app_webinf}" overwrite="YES">
-            <fileset file="${m_xml}/web.xml"/>
-        </copy> 
     </target>
 
     <!-- do the antcall for local environ -->
     <target name="build-local">
         <echo message="Building : local war file."/>
-        <!-- copy qa caBIO.jar to lib directory and copy local web.xml to conf/web
-        <copy file="${m_lib}/cabio-stage/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>-->
+        <!-- copy qa caBIO.jar to lib directory and copy local web.xml to conf/web-->
+        <copy file="${m_lib}/cabio-qa/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>
         <copy file="conf/local/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
-       <!--  do antcall task to deply war -->
+        <!-- do antcall task to deply war -->
         <antcall target="deploy">
             <param name="conf" value="conf/local"/>
             <param name="jdebug" value="on"/>
         </antcall>
-        <copy file="${app_war}/cdecurate.war" tofile="D:/jboss-4.0.1/server/default/deploy/cdecurate.war" overwrite="YES"/>
     </target>
 
     <!-- do the antcall for dev environ -->
-    <target name="build-dev" depends="clean">
+    <target name="build-dev">
         <echo message="Building : dev war file."/>
-        <!-- copy qa cabio.jar to lib directory and copy dev web.xml to conf/web
-        <copy file="${m_lib}/cabio-dev/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>-->
+        <!-- copy qa cabio.jar to lib directory and copy dev web.xml to conf/web-->
+        <copy file="${m_lib}/cabio-dev/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>
         <copy file="conf/dev/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
@@ -179,10 +175,10 @@
     </target>
 
     <!-- do the antcall for qa environ -->
-    <target name="build-qa" depends="clean">
+    <target name="build-qa">
         <echo message="Building : qa war file."/>
-        <!-- copy qa cabio.jar to lib directory and copy qa web.xml to conf/web
-        <copy file="${m_lib}/cabio-qa/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>-->
+        <!-- copy qa cabio.jar to lib directory and copy qa web.xml to conf/web-->
+        <copy file="${m_lib}/cabio-qa/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>
         <copy file="conf/qa/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
@@ -194,8 +190,8 @@
     <!-- do the antcall for stage environ -->
     <target name="build-stage">
         <echo message="Building : stage war file."/>
-        <!-- copy stage cabio.jar to lib directory and copy stage web.xml to conf/web
-        <copy file="${m_lib}/cabio-stage/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>-->
+        <!-- copy stage cabio.jar to lib directory and copy stage web.xml to conf/web-->
+        <copy file="${m_lib}/cabio-stage/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>
         <copy file="conf/stage/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
@@ -207,8 +203,8 @@
     <!-- do the antcall for prod environ -->
     <target name="build-prod">
         <echo message="Building : prod war file."/>
-        <!-- copy stage cabio.jar to lib directory and copy prod web.xml to conf/web
-        <copy file="${m_lib}/cabio-prod/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>-->
+        <!-- copy stage cabio.jar to lib directory and copy prod web.xml to conf/web-->
+        <copy file="${m_lib}/cabio-prod/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>
         <copy file="conf/prod/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
