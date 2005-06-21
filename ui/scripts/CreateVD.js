@@ -565,37 +565,6 @@ function removeAllText(thisBlock)
       var acAction = document.createVDForm.VDAction.value;
       if (acAction == "EditVD" || acAction == "BlockEdit") acAction = "Edit";
       return areDatesValid(beginDate, endDate, acAction);
-    /*if(document.createVDForm.BeginDate.value != "")
-    {
-      var beginDate = document.createVDForm.BeginDate.value
-      var endDate = document.createVDForm.EndDate.value
-      var status = validateDate(beginDate, endDate); //validateDate is in date-picker.js
-      if (status) status = "valid";
-      return status;
-    }
-    else if (document.createVDForm.VDAction.value == "EditVD")
-    {	//end date must be empty if begin date empty
-      if (document.createVDForm.EndDate.value != "")
-        alert("If you select an End Date, you must also select a Begin Date");
-      else
-        return "valid";
-    }
-    else if (document.createVDForm.VDAction.value == "BlockEdit")  //do the date validation injava
-    {
-      if(document.createVDForm.EndDate.value != "")
-      {
-        var endDate = document.createVDForm.EndDate.value
-        var status = validateEndDate(endDate);
-        if (status) status = "valid";
-        return status;
-      }
-      else
-        return "valid";
-    }
-    else
-      alert("Begin Date cannot be empty");
-      
-    return "invalid";	*/
   }
   
   //alerts if preferred name type was not selected
@@ -688,7 +657,7 @@ function removeAllText(thisBlock)
 
 function enableValueNum()
 {
-   var sDataType = document.createVDForm.selDataType.options[document.createVDForm.selDataType.selectedIndex].text;
+   var sDataType = document.createVDForm.selDataType.options[document.createVDForm.selDataType.selectedIndex].text;   
    sDataType = sDataType.toUpperCase();
    if ((sDataType == "NUMBER") || (sDataType == "NUMERIC"))	
    {
@@ -706,7 +675,21 @@ function enableValueNum()
    }
 
 }
-
+ function changeDataType()
+ {
+    var dtInd = document.createVDForm.selDataType.selectedIndex;
+    var sDataType = document.createVDForm.selDataType.options[document.createVDForm.selDataType.selectedIndex].text;
+    if (dtInd > -1 && document.createVDForm.datatypeDesc != null && document.createVDForm.datatypeDesc.length >0)
+    {
+      var sDTDesc = document.createVDForm.datatypeDesc[dtInd].value;
+      var sDTComm = document.createVDForm.datatypeDesc[dtInd].text;
+      lblDTDesc.innerText = sDTDesc;
+      lblDTComment.innerText = sDTComm;
+    }
+    //call function to handle enabling
+    enableValueNum();
+ }
+ 
  function EnableChecks(checked, currentField)
  {
     var field = currentField.name;

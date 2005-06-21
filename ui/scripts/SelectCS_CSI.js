@@ -11,6 +11,8 @@ var obj_hidCSCSI;
 var obj_hidACCSI; 
 var obj_hidAC;
 var obj_ACid, obj_ACname, obj_ACaction;
+var altNameCount = 0;
+var refDocCount = 0;
 
 //creates these objects
 function createObject(formName)
@@ -731,57 +733,30 @@ fill selectedCSI options.
   
   function submitDesignate(sAction)
   {
+    //check for context if removr or create designation
     var sContext = document.designateDEForm.selContext[document.designateDEForm.selContext.selectedIndex].value;
-    if (sContext == null || sContext == "")
-      alert("Select a designate context from the drop down list.");
-    else
+    if (sAction == "remove" || sAction == "create")
     {
-      if (sAction == "remove")
+      if (sContext == null || sContext == "")
+      {
+        alert("Select a designate context from the drop down list.");
+        return;
+      }
+      else if (sAction == "remove")
       {
         var isOK = confirm("Click OK to continue with removing selected used by context and other attributes");
         if (isOK == false)
           return;
-        else
-          removeUsedByAttr(sContext);
       }
-      document.designateDEForm.Message.style.visibility="visible";
-      storeAltHiddenFields();  //store/select alternate name properties
-      storeRefHiddenFields();  //select ref doc attributes
-      selectMultiSelectList();  //select cscsi attributes
-      //alert("submiting " + sAction);
-      document.designateDEForm.newCDEPageAction.value = sAction;
-      document.designateDEForm.submit();
     }
+    document.designateDEForm.Message.style.visibility="visible";
+    var sContName = document.designateDEForm.selContext[document.designateDEForm.selContext.selectedIndex].text;
+    document.designateDEForm.contextName.value = sContName;
+    selectMultiSelectList();  //select cscsi attributes
+    document.designateDEForm.newCDEPageAction.value = sAction;
+    document.designateDEForm.submit();
   }
 
-  //marks as deleted when removing used by context
-  function removeUsedByAttr(sContext)
-  {
-    //mark as removed for each ac
-    for (var j=0; j<document.designateDEForm.selACHidden.length; j++)
-    {
-      var selAC = document.designateDEForm.selACHidden[j].value;
-      //mark as removed for alternate names
-      for (var k=0; k<selAltNameArray.length; k++)
-      {
-        if (selAC == selAltNameArray[k].ac_idseq && sContext == selAltNameArray[k].conte_id)
-        {
-          //update the submit action to be removed
-          selAltNameArray[k].submit_action = "DEL";
-        }
-      }  
-      //mark as removed for reference documents
-      for (var k=0; k<selRefDocArray.length; k++)
-      {
-        if (selAC == selRefDocArray[k].ac_idseq && sContext == selRefDocArray[k].conte_id)
-        {
-          //update the submit action to be removed
-          selRefDocArray[k].submit_action = "DEL";
-        }
-      }  
-    }  
-  }
-  
   //restrict the input of the text if exceeds the max length
   function textCounter(field, maxlimit) 
   {
@@ -791,56 +766,31 @@ fill selectedCSI options.
   }
 
 //-------------alternate names begin ---------------
-  //define altNames object
-  function altNames()
+  //enable or disable the remove button of the alternate names
+  function enableAltNames(checked)
   {
-    this.idseq = "";
-    this.conte_name = "";
-    this.conte_id = "";
-    this.alt_name = "";
-    this.type_name = "";
-    this.ac_name = "";
-    this.ac_idseq = "";
-    this.ac_language = "";
-    this.submit_action = "";
-    return this;
-  } 
-
-  //referesh alt name select object
-  function refreshAltNameSelect()
-  {
-    //remove all the existing ones
-    document.designateDEForm.selAltNameText.length = 0;
-    document.designateDEForm.selAltNameType.length = 0;
-    if (selAltNameArray != null)
-    {
-      for (var i=0; i<selAltNameArray.length; i++)
-      {
-        //check if it already in the select list.
-        var thisType = selAltNameArray[i].type_name;
-        var thisName = selAltNameArray[i].alt_name;
-        var isExist = false;
-        for (var j=0; j<document.designateDEForm.selAltNameText.length; j++)
-        {
-          var selType = document.designateDEForm.selAltNameText[j].value;
-          var selName = document.designateDEForm.selAltNameText[j].text;
-          //loop till same type and name found in the list
-          if (thisType == selType && thisName == selName)
-          {
-            isExist = true;
-            break;
-          }
-        }
-        if (isExist == false && selAltNameArray[i].submit_action != "DEL")
-        {
-          var dCount = document.designateDEForm.selAltNameText.length;
-          document.designateDEForm.selAltNameText[dCount] = new Option(thisName, thisType);
-          document.designateDEForm.selAltNameType[dCount] = new Option(thisType, thisType);
-        }
-      }  
-    }
+     if (checked)
+       ++altNameCount;
+     else
+       --altNameCount;
+     if (altNameCount == 1)
+     {
+        //document.designateDEForm.altCheckGif.alt = "Unselect All";
+        document.designateDEForm.btnRemAltName.disabled = false;
+     }
+     else
+     {
+        //document.designateDEForm.altCheckGif.alt = "Select All";
+        document.designateDEForm.btnRemAltName.disabled = true;
+     }
   }
-  
+  //sort the alternate name columns
+  function sortAlt(sfield)
+  {
+    document.designateDEForm.sortColumn.value = sfield;
+    submitDesignate("sortAlt");
+  }
+   
   //adds newly created alternate name into selected alt name list.
   function addAltName()
   {
@@ -853,263 +803,50 @@ fill selectedCSI options.
       alert("Select a type of alternate name from the drop down list.");
     else if (sName == null || sName == "")
       alert("Please enter a text for the alternate name");
-    else
-    {
-      if (selAltNameArray != null)
-      {
-        var isAltExist = false; 
-        for (var i=0; i<selAltNameArray.length; i++)
-        {
-          //check if it already in the select list.
-          var thisType = selAltNameArray[i].type_name;
-          var thisName = selAltNameArray[i].alt_name;
-          //check if the type and name exists already in the list
-          if (thisType == sType && thisName == sName)
-          {
-            isAltExist = true;
-            break;
-          }
-        } 
-        //display the added item if not displayed (new one or removed and added back)
-        var dCount = document.designateDEForm.selAltNameText.length;
-        var isDisp = false;
-        //check if already selected in the list
-        for (var k=0; k<dCount; k++)
-        {
-          var dispName = document.designateDEForm.selAltNameText[k].text;
-          var dispType = document.designateDEForm.selAltNameText[k].value;
-          if (dispName == sName && dispType == sType)
-          {
-            isDisp = true;
-            break;
-          }
-        }
-        //add them if not existed
-        if (isDisp == false)
-        {
-          document.designateDEForm.selAltNameText[dCount] = new Option(sName, sType);
-          document.designateDEForm.selAltNameType[dCount] = new Option(sType, sType);
-        }
-        
-        //create alt in the array if not exists
-        if (isAltExist == false)
-        {
-          //create altname array 
-          fillAltAttrArray("ALL_AC");
-        }
-        else
-        {
-            //check if type, name, ac and context exist in the list
-          for (var j=0; j<document.designateDEForm.selACHidden.length; j++)
-          {
-            var isAltACExist = false;
-            var selAC = document.designateDEForm.selACHidden[j].value;
-            for (var k=0; k<selAltNameArray.length; k++)
-            {
-              //check if all four exists
-              if (selAC == selAltNameArray[k].ac_idseq && sContext == selAltNameArray[k].conte_id
-                   && sType == selAltNameArray[k].type_name && sName == selAltNameArray[k].alt_name)
-              {
-                if (selAltNameArray[k].submit_action == "DEL")
-                  selAltNameArray[k].submit_action = "UPD";
-                isAltACExist = true;
-                //alert("Selected " + sType + " and " + sName + "already exists in the list.");
-                break;
-              }
-            }  
-            //create alt in the array if not exists for this ac and context
-            if (isAltACExist == false)
-            {
-     // alert("adding to array");
-              fillAltAttrArray(selAC);
-            }
-          } 
-        }
-      }
-      //clear the fields
-      document.designateDEForm.selAltType[0].selected = true;
-      document.designateDEForm.txtAltName.value = "";      
-    }
+    else  //ok to submit
+      submitDesignate("addAlt");
   }
+  
   //remove the alternate name from the list
   function removeAltName()
   {
-    var sContext = "";
-    if (document.designateDEForm.selContext.selectedIndex > -1)
-      sContext = document.designateDEForm.selContext[document.designateDEForm.selContext.selectedIndex].value;
-    var altName = "";
-    var altType = "";
-    if (document.designateDEForm.selAltNameText.selectedIndex > -1)
-    {
-      altName = document.designateDEForm.selAltNameText[document.designateDEForm.selAltNameText.selectedIndex].text;
-      altType = document.designateDEForm.selAltNameText[document.designateDEForm.selAltNameText.selectedIndex].value;
-    }
-    var isOK = true;
-    if (sContext == null || sContext == "")
-      alert("Select a designate context from the drop down list.");
-    else if (altType == null || altType == "" || altName == null || altName == "")
-      alert("Select an item to be removed from the list of selected alternate names.");
-    else
-    {
-      isOK = confirm("Please click OK to continue removing the selected alternate type and name");
-      if (isOK == true)
-      {
-        var isAltRemoved = false;
-          //check if type, name, ac and context exist in the list
-        for (var j=0; j<document.designateDEForm.selACHidden.length; j++)
-        {
-          var selAC = document.designateDEForm.selACHidden[j].value;
-          for (var k=0; k<selAltNameArray.length; k++)
-          {
-            //check if all four exists
-            if (selAC == selAltNameArray[k].ac_idseq && sContext == selAltNameArray[k].conte_id
-                 && altType == selAltNameArray[k].type_name && altName == selAltNameArray[k].alt_name)
-            {
-              isAltRemoved = true;
-              //update the submit action to be removed
-              selAltNameArray[k].submit_action = "DEL";
-            }
-          }  
-        }
-        if (isAltRemoved == true)
-          refreshAltNameSelect();       //refresh the select list
-        else
-          alert("Unable to remove the selected Alternate Name, because it does not exist in the selected Context.");
-      }
-    }
+    var isOK = confirm("Please click OK to continue removing the selected alternate type and name.");
+    if (isOK == true)  //ok to submit
+      submitDesignate("removeAlt");
   }
-  
-  //make the other attribute list selected
-  function selectedAltList(sList)
-  {
-    var sIndex;
-    if (sList == 'altType')
-      sIndex = document.designateDEForm.selAltNameType.selectedIndex;
-    else if (sList = 'altName')
-      sIndex = document.designateDEForm.selAltNameText.selectedIndex;
-    if (sIndex > -1)
-    {
-      document.designateDEForm.selAltNameType[sIndex].selected = true;
-      document.designateDEForm.selAltNameText[sIndex].selected = true;      
-    }
-  }
-  
-  //store the alt name attributes in the array
-  function fillAltAttrArray(acid)
-  {
-    //check if type, name, ac and context exist in the list
-    for (var j=0; j<document.designateDEForm.selACHidden.length; j++)
-    {
-      var thisAC = document.designateDEForm.selACHidden[j].value;
-      var thisACName = document.designateDEForm.selACHidden[j].text;
-      //create object and add to array if new one or matching ac id
-      if (acid == "ALL_AC" || acid == thisAC)
-      {
-        var objAltName = new altNames();
-        objAltName.idseq = "new";
-        var iType = document.designateDEForm.selContext.selectedIndex;
-        objAltName.conte_name = document.designateDEForm.selContext[iType].text;
-        objAltName.conte_id = document.designateDEForm.selContext[iType].value;
-        iType = document.designateDEForm.selAltType.selectedIndex;
-        objAltName.type_name = document.designateDEForm.selAltType[iType].value;
-        objAltName.alt_name = document.designateDEForm.txtAltName.value;
-        objAltName.ac_name = thisACName;
-        objAltName.ac_idseq = thisAC;
-        objAltName.ac_language = "ENGLISH";
-        objAltName.submit_action = "INS";
-        selAltNameArray[selAltNameArray.length] = objAltName;  
-      }
-    } 
-  }
-  
-  //store the array in hidden field for the requests
-  function storeAltHiddenFields()
-  {
-      //store them in the hidden fields and keep it selected
-    for (var k=0; k<selAltNameArray.length; k++)
-    {
-      document.designateDEForm.selAltIDHidden.options[k] = new Option(selAltNameArray[k].idseq, selAltNameArray[k].idseq);
-      document.designateDEForm.selAltIDHidden.options[k].selected = true;
-
-      document.designateDEForm.selAltNameHidden.options[k] = new Option(selAltNameArray[k].alt_name, selAltNameArray[k].alt_name);
-      document.designateDEForm.selAltNameHidden.options[k].selected = true;
-
-      document.designateDEForm.selAltTypeHidden.options[k] = new Option(selAltNameArray[k].type_name, selAltNameArray[k].type_name);
-      document.designateDEForm.selAltTypeHidden.options[k].selected = true;
-
-      document.designateDEForm.selAltACHidden.options[k] = new Option(selAltNameArray[k].ac_idseq, selAltNameArray[k].ac_idseq);
-      document.designateDEForm.selAltACHidden.options[k].selected = true;
-
-      document.designateDEForm.selAltContHidden.options[k] = new Option(selAltNameArray[k].conte_name, selAltNameArray[k].conte_name);
-      document.designateDEForm.selAltContHidden.options[k].selected = true;
-
-      document.designateDEForm.selAltContIDHidden.options[k] = new Option(selAltNameArray[k].conte_id, selAltNameArray[k].conte_id);
-      document.designateDEForm.selAltContIDHidden.options[k].selected = true;
-
-      document.designateDEForm.selAltActHidden.options[k] = new Option(selAltNameArray[k].submit_action, selAltNameArray[k].submit_action);
-      document.designateDEForm.selAltActHidden.options[k].selected = true;
-    }  
-  }
-  
+    
 //-------------alternate names  end ---------------
 
 
 //-------------reference documents begin ---------------
-  function refDocs()
+
+  //enable or disable the remove button of the alternate names
+  function enableRefDocs(checked)
   {
-    this.idseq = "";
-    this.conte_name = "";
-    this.conte_id = "";
-    this.ref_name = "";
-    this.ref_text = "";
-    this.ref_URL = "";
-    this.type_name = "";
-    this.ac_name = "";
-    this.ac_idseq = "";
-    this.ac_language = "";
-    this.submit_action = "";
-    return this; 
+     if (checked)
+       ++refDocCount;
+     else
+       --refDocCount;
+     if (refDocCount == 1)
+     {
+        //document.designateDEForm.refCheckGif.alt = "Unselect All";
+        document.designateDEForm.btnRemRefDoc.disabled = false;
+     }
+     else
+     {
+        //document.designateDEForm.refCheckGif.alt = "Select All";
+        document.designateDEForm.btnRemRefDoc.disabled = true;
+     }
   }
 
-  //referesh Ref Doc select object
-  function refreshRefDocSelect()
+  //sort the alternate name columns
+  function sortRef(sfield)
   {
-    //remove all the existing ones
-    document.designateDEForm.selRefDocType.length = 0;
-    document.designateDEForm.selRefDocName.length = 0;
-    document.designateDEForm.selRefDocText.length = 0;
-    document.designateDEForm.selRefDocURL.length = 0;
-    if (selRefDocArray != null)
-    {
-      for (var i=0; i<selRefDocArray.length; i++)
-      {
-        //check if it already in the select list.
-        var thisType = selRefDocArray[i].type_name;
-        var thisName = selRefDocArray[i].ref_name;
-        var isExist = false;
-        for (var j=0; j<document.designateDEForm.selRefDocName.length; j++)
-        {
-          var selType = document.designateDEForm.selRefDocName[j].value;
-          var selName = document.designateDEForm.selRefDocName[j].text;
-          //loop till same type and name found in the list
-          if (thisType == selType && thisName == selName)
-          {
-            isExist = true;
-            break;
-          }
-        }
-        if (isExist == false && selRefDocArray[i].submit_action != "DEL")
-        {
-          var dCount = document.designateDEForm.selRefDocText.length;
-          document.designateDEForm.selRefDocType[dCount] = new Option(thisType, thisType);
-          document.designateDEForm.selRefDocName[dCount] = new Option(selRefDocArray[i].ref_name, thisType);
-          document.designateDEForm.selRefDocText[dCount] = new Option(selRefDocArray[i].ref_text, thisType);
-          document.designateDEForm.selRefDocURL[dCount] = new Option(selRefDocArray[i].ref_URL, thisType);
-        }
-      } 
-    }
+    alert("sorting ref " + sfield);
+    document.designateDEForm.sortColumn.value = sfield;
+    submitDesignate("sortRef");
   }
-
+    
   //adds newly created reference into selected reference documents list.
   function addRefDoc()
   {
@@ -1122,220 +859,16 @@ fill selectedCSI options.
       alert("Select a type of Reference Documents from the drop down list.");
     else if (sName == null || sName == "")
       alert("Please enter a text for the Reference Document Name");
-    else
-    {
-      if (selRefDocArray != null)
-      {
-        var isRefExist = false; 
-        for (var i=0; i<selRefDocArray.length; i++)
-        {
-          //check if it already in the select list.
-          var thisType = selRefDocArray[i].type_name;
-          var thisName = selRefDocArray[i].ref_name;
-          //check if the type and name exists already in the list
-          if (thisType == sType && thisName == sName)
-          {
-            isRefExist = true;
-            break;
-          }
-        }  
-        //display the added item if not displayed (new one or removed and added back)
-        var dCount = document.designateDEForm.selRefDocName.length;
-        var isDisp = false;
-        //check if already selected in the list
-        for (var k=0; k<dCount; k++)
-        {
-          var dispName = document.designateDEForm.selRefDocName[k].text;
-          var dispType = document.designateDEForm.selRefDocType[k].text;
-          if (dispName == sName && dispType == sType)
-          {
-            isDisp = true;
-            break;
-          }
-        }
-        //add them if not existed
-        if (isDisp == false)
-        {
-          var sText = document.designateDEForm.txtRefText.value;
-          var sURL = document.designateDEForm.txtRefURL.value;
-          document.designateDEForm.selRefDocName[dCount] = new Option(sName, sType);
-          document.designateDEForm.selRefDocType[dCount] = new Option(sType, sType);
-          document.designateDEForm.selRefDocText[dCount] = new Option(sText, sType);
-          document.designateDEForm.selRefDocURL[dCount] = new Option(sURL, sType);
-        }
-        //create ref in the array if not exists
-        if (isRefExist == false)
-        {
-          //create refname array 
-          fillRefAttrArray("ALL_AC");
-        }
-        else
-        {
-            //check if type, name, ac and context exist in the list
-          for (var j=0; j<document.designateDEForm.selACHidden.length; j++)
-          {
-            var isRefACExist = false;
-            var selAC = document.designateDEForm.selACHidden[j].value;
-            for (var k=0; k<selRefDocArray.length; k++)
-            {
-              //check if all four exists
-              if (selAC == selRefDocArray[k].ac_idseq && sContext == selRefDocArray[k].conte_id
-                   && sType == selRefDocArray[k].type_name && sName == selRefDocArray[k].ref_name)
-              {
-                if (selRefDocArray[k].submit_action == "DEL")
-                  selRefDocArray[k].submit_action = "UPD";
-                isRefACExist = true;
-                //alert("Selected " + sType + " and " + sName + "already exists in the list.");
-                break;
-              }
-            }  
-            //create ref in the array if not exists for this ac and context
-            if (isRefACExist == false)
-            {
-     // alert("adding to array");
-              fillRefAttrArray(selAC);
-            }
-          } 
-        }
-      }
-      //clear all the fields
-      document.designateDEForm.selRefType[0].selected = true;
-      document.designateDEForm.txtRefName.value = "";
-      document.designateDEForm.txtRefText.value = "";
-      document.designateDEForm.txtRefURL.value = "";
-    }
-  }
-
-  //store the ref name attributes in the array
-  function fillRefAttrArray(acid)
-  {
-    //check if type, name, ac and context exist in the list
-    for (var j=0; j<document.designateDEForm.selACHidden.length; j++)
-    {
-      var thisAC = document.designateDEForm.selACHidden[j].value;
-      var thisACName = document.designateDEForm.selACHidden[j].text;
-      //create object and add to array if new one or matching ac id
-      if (acid == "ALL_AC" || acid == thisAC)
-      {
-        var objRefDoc = new refDocs();
-        objRefDoc.idseq = "new";
-        var iType = document.designateDEForm.selContext.selectedIndex;
-        objRefDoc.conte_name = document.designateDEForm.selContext[iType].text;
-        objRefDoc.conte_id = document.designateDEForm.selContext[iType].value;
-        iType = document.designateDEForm.selRefType.selectedIndex;
-        objRefDoc.type_name = document.designateDEForm.selRefType[iType].value;
-        objRefDoc.ref_name = document.designateDEForm.txtRefName.value;
-        objRefDoc.ref_text = document.designateDEForm.txtRefText.value;
-        objRefDoc.ref_URL = document.designateDEForm.txtRefURL.value;
-        objRefDoc.ac_name = thisACName;
-        objRefDoc.ac_idseq = thisAC;
-        objRefDoc.ac_language = "ENGLISH";
-        objRefDoc.submit_action = "INS";
-        selRefDocArray[selRefDocArray.length] = objRefDoc;  
-      }
-    } 
+    else  //ok to submit
+      submitDesignate("addRefDoc");
   }
 
   //remove the reference documents from the list
   function removeRefDoc()
   {  
-    var sContext = "";
-    if (document.designateDEForm.selContext.selectedIndex > -1)
-      sContext = document.designateDEForm.selContext[document.designateDEForm.selContext.selectedIndex].value;
-    var refName = "";
-    var refType = "";
-    if (document.designateDEForm.selRefDocName.selectedIndex > -1)
-    {
-      refName = document.designateDEForm.selRefDocName[document.designateDEForm.selRefDocName.selectedIndex].text;
-      refType = document.designateDEForm.selRefDocName[document.designateDEForm.selRefDocName.selectedIndex].value;
-    }
-    var isOK = true;
-    if (sContext == null || sContext == "")
-      alert("Select a designate context from the drop down list.");
-    else if (refType == null || refType == "" || refName == null || refName == "")
-      alert("Select an item to be removed from the list of selected Reference Documents.");
-    else
-    {
-      isOK = confirm("Please click OK to continue removing the selected Reference Document.");
-      if (isOK == true)
-      {
-        var isAltRemoved = false;
-          //check if type, name, ac and context exist in the list
-        for (var j=0; j<document.designateDEForm.selACHidden.length; j++)
-        {
-          var selAC = document.designateDEForm.selACHidden[j].value;
-          for (var k=0; k<selRefDocArray.length; k++)
-          {
-            //check if all four exists
-            if (selAC == selRefDocArray[k].ac_idseq && sContext == selRefDocArray[k].conte_id
-                 && refType == selRefDocArray[k].type_name && refName == selRefDocArray[k].ref_name)
-            {
-              isAltRemoved = true;
-              //update the submit action to be removed
-              selRefDocArray[k].submit_action = "DEL";
-            }
-          }  
-        }
-        if (isAltRemoved == true)
-          refreshRefDocSelect();       //refresh the select list
-        else
-          alert("Unable to remove selected Reference Document, because it does not exist in the selected Context.");
-      }
-    }
+    var isOK = confirm("Please click OK to continue removing the selected Reference Document.");
+    if (isOK == true)  //ok to submit
+      submitDesignate("removeRefDoc");
   }
   
-  //make the other Reference Doc attribute selected
-  function selectedRefList(sList)
-  {
-    var sIndex;
-    if (sList == 'refType')
-      sIndex = document.designateDEForm.selRefDocType.selectedIndex;
-    else if (sList == 'refName')
-      sIndex = document.designateDEForm.selRefDocName.selectedIndex;
-    else if (sList == 'refText')
-      sIndex = document.designateDEForm.selRefDocText.selectedIndex;
-    else if (sList == 'refURL')
-      sIndex = document.designateDEForm.selRefDocURL.selectedIndex;
-    if (sIndex > -1)
-    {
-      document.designateDEForm.selRefDocType[sIndex].selected = true;
-      document.designateDEForm.selRefDocName[sIndex].selected = true;      
-      document.designateDEForm.selRefDocText[sIndex].selected = true;
-      document.designateDEForm.selRefDocURL[sIndex].selected = true;      
-    }
-  }
-  
-  //store the array in hidden field for the requests
-  function storeRefHiddenFields()
-  {
-      //store them in the hidden fields and keep it selected
-    for (var k=0; k<selRefDocArray.length; k++)
-    {
-      document.designateDEForm.selRefIDHidden.options[k] = new Option(selRefDocArray[k].idseq, selRefDocArray[k].idseq);
-      document.designateDEForm.selRefIDHidden.options[k].selected = true;
-
-      document.designateDEForm.selRefNameHidden.options[k] = new Option(selRefDocArray[k].ref_name, selRefDocArray[k].ref_name);
-      document.designateDEForm.selRefNameHidden.options[k].selected = true;
-
-      document.designateDEForm.selRefTypeHidden.options[k] = new Option(selRefDocArray[k].type_name, selRefDocArray[k].type_name);
-      document.designateDEForm.selRefTypeHidden.options[k].selected = true;
-
-      document.designateDEForm.selRefTextHidden.options[k] = new Option(selRefDocArray[k].ref_text, selRefDocArray[k].ref_text);
-      document.designateDEForm.selRefTextHidden.options[k].selected = true;
-
-      document.designateDEForm.selRefURLHidden.options[k] = new Option(selRefDocArray[k].ref_URL, selRefDocArray[k].ref_URL);
-      document.designateDEForm.selRefURLHidden.options[k].selected = true;
-
-      document.designateDEForm.selRefACHidden.options[k] = new Option(selRefDocArray[k].ac_idseq, selRefDocArray[k].ac_idseq);
-      document.designateDEForm.selRefACHidden.options[k].selected = true;
-
-      document.designateDEForm.selRefContIDHidden.options[k] = new Option(selRefDocArray[k].conte_id, selRefDocArray[k].conte_id);
-      document.designateDEForm.selRefContIDHidden.options[k].selected = true;
-
-      document.designateDEForm.selRefActHidden.options[k] = new Option(selRefDocArray[k].submit_action, selRefDocArray[k].submit_action);
-      document.designateDEForm.selRefActHidden.options[k].selected = true;
-    }  
-  }
-  
-
 //-------------reference documents  end ---------------

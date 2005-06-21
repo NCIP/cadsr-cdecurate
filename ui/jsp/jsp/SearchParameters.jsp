@@ -31,7 +31,7 @@
   if (sMenuAction.equals("searchForCreate"))
   {
      sSearchAC = (String)session.getAttribute("creSearchAC");  //done now in CDEHomePage
-//System.out.println("sSearchAC: " + sSearchAC);
+System.out.println("search parameters jsp sfc sSearchAC: " + sSearchAC);
      sLastKeyword = (String)session.getAttribute("creKeyword");
      sContext = (String)session.getAttribute("creContext");
      vContext = (Vector)session.getAttribute("creMultiContext");
@@ -65,6 +65,7 @@
   {
 //  System.out.println("inside if ");
      sSearchAC = (String)session.getAttribute("searchAC");  //done now in CDEHomePage
+System.out.println("search parameters else jsp sSearchAC: " + sSearchAC);
      sLastKeyword = (String)session.getAttribute("serKeyword");
      sProtoKeyword = (String)session.getAttribute("serProtoID");
      sContext = (String)session.getAttribute("serContext");
@@ -115,15 +116,17 @@
 
   if (sLastKeyword == null)  sLastKeyword = "";
   sLastKeyword = util.parsedString(sLastKeyword);
+  sLastKeyword = sLastKeyword.trim();
   if (sProtoKeyword == null) sProtoKeyword = "";
   sProtoKeyword = util.parsedString(sProtoKeyword);
+  sProtoKeyword = sProtoKeyword.trim();
   //System.out.println("check vcontext");
   //get the search result records
   Vector vSerResult = (Vector)session.getAttribute("results");
   boolean hasRecords = false;
   if (vSerResult != null && vSerResult.size() >0) hasRecords = true;
   String updFunction = "displayAttributes('" + hasRecords + "');";
-  
+    
   if (vContext == null) vContext = new Vector();   
   if (sContext == null) sContext = "AllContext";
   if (sContextUse == null || sContextUse == "")  sContextUse = "BOTH";
@@ -850,8 +853,8 @@ function LoadKeyHandler()
       <td class="dashed-black" colspan=2>
         <div align="left"><b><%=item++%>)&nbsp;&nbsp;Display Attributes:</b>
           <%  if (!sSearchAC.equals("ValueMeaning"))   { %>
-            &nbsp;&nbsp;<input type="button" name="updateDisplayBtn" value="Update" onClick="<%=updFunction%>"  style="width:50"
-            onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
+            &nbsp;<input type="button" name="updateDisplayBtn" value="Update" onClick="<%=updFunction%>"  style="width:50"
+              onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
           <%} %>            
         </div>
         <br>
@@ -907,6 +910,7 @@ function LoadKeyHandler()
   <input type="hidden" name="QCValueName" value="">
   <input type="hidden" name="CDVDContext" value="same">
   <input type="hidden" name="selCDID" value="">
+  <input type="hidden" name="serMenuAct" value="<%=sMenuAction%>">
   
    <input type="hidden" name="outPrint" value="Print" style="visibility:hidden;"
   <% out.println(""+vACAttr.size());// leave this in, it slows jsp load down so no jasper error%> >

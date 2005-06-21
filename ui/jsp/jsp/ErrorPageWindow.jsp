@@ -110,7 +110,7 @@ if (errMessage == null) errMessage = "";
     <table width="394" border="4" bgcolor = "#CCCCCC">  
 	  <tr>
       <td width="387" height="45" valign="center" align="center">
-          <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">This window is no longer active..</font></h3>
+          <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">This session is no longer active..</font></h3>
       </td>
     </tr>
   </table>
@@ -123,7 +123,7 @@ if (errMessage == null) errMessage = "";
     </tr>  
     <tr>
       <td width="100%" align="center" valign="center">
-        <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">Close window and log in again.</font></h3>
+        <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">Close session and log in again.</font></h3>
       </td>
     </tr>  
     <tr height="40">

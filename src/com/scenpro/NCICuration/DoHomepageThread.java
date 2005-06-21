@@ -102,8 +102,6 @@ public class DoHomepageThread extends Thread
     m_servlet = CurationServlet;
   }
   
-
-  
   /**
    * The run method is called when this class is created as a thread and
    * started.
@@ -112,14 +110,16 @@ public class DoHomepageThread extends Thread
   {
     try
     {
-//System.err.println("thread run1");
+System.err.println("thread run1");
+      
       HttpSession session = m_classReq.getSession();
-      GetACService getAC = new GetACService(m_classReq, m_classRes, m_servlet);
-      getAC.getMetaSources(m_classReq, m_classRes);
+      EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet); 
+      evs.getMetaSources(m_classReq, m_classRes);
       EVSMasterTree tree = new EVSMasterTree(m_classReq, "Thesaurus/Metathesaurus", m_servlet);
       String strHTML = tree.populateTreeRoots("Thesaurus/Metathesaurus");
-      session.setAttribute("strHTML", strHTML); 
-//System.err.println("done thread");
+      if(session != null)
+        session.setAttribute("strHTML", strHTML); 
+System.err.println("done thread");
     }
     catch (Exception ee)
     {

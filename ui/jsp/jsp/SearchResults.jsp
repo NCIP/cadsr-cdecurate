@@ -30,6 +30,7 @@
    if (vSearchName == null)  vSearchName = new Vector();
    Vector vSearchLongName = (Vector)session.getAttribute("SearchLongName");
    if (vSearchLongName == null)  vSearchLongName = new Vector();
+//System.out.println("sr jsp vSearchLongName.size: " + vSearchLongName.size()); 
    Vector vSearchASL = (Vector)session.getAttribute("SearchASL");
    if (vSearchASL == null)  vSearchASL = new Vector();
    Vector vSearchDefinitionAC = (Vector)session.getAttribute("SearchDefinitionAC");
@@ -116,7 +117,11 @@
     sMAction = "Edit Selection";
   else if (sSelAC.equals("Questions") && !sMAction.equals("searchForCreate"))
     sMAction = "Complete Selected DE";
-
+    
+  if (sSelAC.equals("ObjectClass") || sSelAC.equals("Property"))
+    sMAction = "nothing";
+    
+//System.out.println("XXX sr jsp sSelAC: " + sSelAC + " sMAction: " + sMAction);
   Vector vNewPV = (Vector)request.getAttribute("newPVData");
   if (vNewPV == null) vNewPV = new Vector();
 
@@ -146,6 +151,7 @@
   sSelectAll = "true";
  else
   sSelectAll = "false";
+//System.out.println("XXX sr done");
 %>
 
 <SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
@@ -240,6 +246,24 @@ var SelectAllOn = <%=sSelectAll%>;
        //   }
           session.setAttribute("vSearchNameStack", vSearchNameStack);
           session.setAttribute("SearchName", vNames);
+        }
+      
+      Stack vSearchLongNameStack = (Stack)session.getAttribute("vSearchLongNameStack");
+       Vector vLongNames = (Vector)session.getAttribute("SearchLongName");
+        if(vSearchLongNameStack != null && vSearchLongNameStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
+        {
+          vLongNames = (Vector)vSearchLongNameStack.pop();
+        } 
+        if(vSearchLongNameStack != null && vSearchLongNameStack.size()>0)
+        {
+          vLongNames = (Vector)vSearchLongNameStack.pop();
+          // do not lose the very first search result
+       //   if(vSearchNameStack.size()==0) 
+        //  {
+            vSearchLongNameStack.push(vLongNames);
+       //   }
+          session.setAttribute("vSearchLongNameStack", vSearchLongNameStack);
+          session.setAttribute("SearchLongName", vLongNames);
         }
         
       Stack vACSearchStack = (Stack)session.getAttribute("vACSearchStack");
@@ -825,7 +849,7 @@ var SelectAllOn = <%=sSelectAll%>;
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
               Identifier</a></th>
 <%        }   else if (sAttr == null || sAttr.equals("DEC's Using")) { %>
-            <th method="get"><a href="javascript:SetSortType('db')"
+            <th method="get"><a href="javascript:SetSortType('decUse')"
               onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
               DEC's Using</a></th>
 <%        } else if (sAttr.equals("CSI Name")) { %>
@@ -1025,6 +1049,7 @@ var SelectAllOn = <%=sSelectAll%>;
 <input type="hidden" name="isValid" value="false">
 <input type="hidden" name="serMenuAct" value="<%=sMAction%>">
 <input type="hidden" name="serRecCount" value="<%=nRecs%>">
+<input type="hidden" name="selRowID" value="">
   <!-- stores Designation Name and ID -->
 <select size="1" name="hiddenDesIDName" style="visibility:hidden;" multiple>
 </select>

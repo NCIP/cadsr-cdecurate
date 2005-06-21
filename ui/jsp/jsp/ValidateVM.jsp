@@ -17,7 +17,7 @@
         isValid = false;
     }
     String isVMExist = (String)request.getAttribute("VMExist");
-    
+    session.setAttribute("statusMessage", "");  //remove the status messge if any    
 %>
 <script language="JavaScript">
    var evsWindow = null;

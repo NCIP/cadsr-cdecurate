@@ -16,6 +16,7 @@
    var sPCCCodeDB = "";
    var sPCCCode = "";
    var sSelectedParent = "";
+   var detailWindow = null;
   
   
    //  checks the status message everytime page opens and alerts the  message
@@ -55,11 +56,21 @@
       }
    }
    
+   //opens the details for using decs
+   function openDECDetail(selRowID)
+   {
+  //alert("link " + selRowID);
+      document.searchResultsForm.selRowID.value = selRowID;
+      if (detailWindow && !detailWindow.closed)
+          detailWindow.close();
+      detailWindow = window.open("jsp/DECDetailWindow.jsp", "DECDetails", "width=750,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
+   }
+   
    function showConceptInTree(sCKName)
    {
       StoreSelectedRow("true", sCKName);
       document.searchResultsForm.OCCCodeDB.value = sCCodeDB;
-      if(sCCodeDB != "caDSR" && sCCodeDB != "NCI Metathesaurus")
+      if (sCCodeDB != "caDSR" && sCCodeDB != "NCI Metathesaurus")
       {
         window.status = "Submitting the page, it may take a minute, please wait....."
         document.searchResultsForm.Message.style.visibility="visible";
@@ -91,7 +102,7 @@
         else if (sComp == "PropertyQualifier" && opener.document.newDECForm != null)
           opener.document.newDECForm.selPropQRow.value = selRow; */
         opener.SubmitValidate("UseSelection");
-       window.close();
+        window.close();
       }
       else if(opener.document.createVDForm != null)
       {
@@ -102,7 +113,7 @@
          else if (sComp == "RepQualifier" && opener.document.createVDForm != null)
           opener.document.createVDForm.selRepQRow.value = selRow; */
         opener.SubmitValidate("UseSelection");
-       window.close();
+        window.close();
       }
     }
     //stores the selected row in the hidden array and submits the form to refresh
@@ -244,18 +255,18 @@
           formObj.checked=false;
         }
 
-      if(sConfirm == true)
-          opener.AllocSelRowOptions(selRowArray3);  //allocate option for hidden row and select it.      
-      else
-          opener.AllocSelRowOptions(selRowArray); 
-      //submit the vd form to store these in pv bean and refresh the page
-      opener.document.createVDForm.newCDEPageAction.value = "addSelectedVM";
-      opener.SubmitValidate("addSelectedVM");
-      //disable button and de-count the checked numbers
-      numRowsSelected = 0;
-      document.searchResultsForm.hiddenSelectedRow.length = 0;
-      document.searchResultsForm.editSelectedBtn.disabled=true;
-      document.searchResultsForm.btnSubConcepts.disabled=true;
+        if(sConfirm == true)
+            opener.AllocSelRowOptions(selRowArray3);  //allocate option for hidden row and select it.      
+        else
+            opener.AllocSelRowOptions(selRowArray); 
+        //submit the vd form to store these in pv bean and refresh the page
+        opener.document.createVDForm.newCDEPageAction.value = "addSelectedVM";
+        opener.SubmitValidate("addSelectedVM");
+        //disable button and de-count the checked numbers
+        numRowsSelected = 0;
+        document.searchResultsForm.hiddenSelectedRow.length = 0;
+        document.searchResultsForm.editSelectedBtn.disabled=true;
+        document.searchResultsForm.btnSubConcepts.disabled=true;
       //  opener.document.createVDForm.searchComp.value = sComp;
      // }
     }
@@ -607,12 +618,12 @@ function getSubConceptsAll2(sUISearchType)
    
   function getSubConceptsImmediate2(sUISearchType)
 {
-//alert("js sUISearchType: " + sUISearchType);
       var url = "";
       var nodeCode = sCCode;
       var nodeName = editLongName;
       var vocab = sCCodeDB;
       var defSource = editDefSource;
+//alert("nodeCode: " + nodeCode + " nodeName: " + nodeName + " vocab: " + vocab +  " defSource: " + defSource);
       if(vocab == "NCI Metathesaurus")
       {
         sSearch = confirm("The hierarchy of subconcepts in the Metathesaurus may be different from that in the source Vocabulary. Continue?");

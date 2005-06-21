@@ -86,6 +86,15 @@
       statusWindow = window.open("jsp/OpenStatusWindow.jsp", "statusWindow", "width=475,height=545,top=0,left=" + windowW + ",resizable=yes,scrollbars=yes")      
   }
 
+  //opens the details for using decs
+  function openDECDetail(selRowID)
+  {
+      document.searchResultsForm.selRowID.value = selRowID;
+      if (detailWindow && !detailWindow.closed)
+          detailWindow.close();
+      detailWindow = window.open("jsp/DECDetailWindow.jsp", "DECDetails", "width=750,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
+  }
+   
   function SetSortTypeJS(sortBy, menuAction)
   {
     var isSubmitOk = true;

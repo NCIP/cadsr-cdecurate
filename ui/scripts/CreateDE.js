@@ -246,8 +246,8 @@ function SubmitValidate(origin)
   function isNameTypeValid()
   {
       var isValid = "valid";
-      if (document.newCDEForm.DEAction.value != "BlockEdit")
-      {
+    //  if (document.newCDEForm.DEAction.value != "BlockEdit")
+   //   {
         //check if sys was selected
         var nameType = document.newCDEForm.rNameConv[0].checked;
         //check if abbr was selected if not sys
@@ -258,7 +258,7 @@ function SubmitValidate(origin)
           nameType = document.newCDEForm.rNameConv[2].checked;
         if (nameType == null || nameType == false)
         {
-          //stop it only if dec vd was changed
+          //stop it only if dec or vd was changed
           if (document.newCDEForm.nameTypeChange.value == "true")
           {
             isValid = "invalid";
@@ -267,7 +267,7 @@ function SubmitValidate(origin)
           else
             document.newCDEForm.rNameConv[2].checked = true;
         }
-      }
+   //   }
       return isValid;
   }
   
@@ -319,7 +319,7 @@ function SearchDECValue()
 	
 	if (searchWindow && !searchWindow.closed)
 		searchWindow.close()
-		searchWindow = window.open("jsp/OpenSearchWindow.jsp", "searchWindow", "width=975,height=570,top=0,left=0,resizable=yes,scrollbars=yes")
+	searchWindow = window.open("jsp/OpenSearchWindow.jsp", "searchWindow", "width=975,height=570,top=0,left=0,resizable=yes,scrollbars=yes")
 		//}
 }
 
@@ -331,7 +331,7 @@ function SearchVDValue()
 	document.SearchActionForm.isValidSearch.value = "false";
 	if (searchWindow && !searchWindow.closed)
 		searchWindow.close()
-		searchWindow = window.open("jsp/OpenSearchWindow.jsp", "searchWindow", "width=975,height=650,top=0,left=0,resizable=yes,scrollbars=yes")
+	searchWindow = window.open("jsp/OpenSearchWindow.jsp", "searchWindow", "width=975,height=650,top=0,left=0,resizable=yes,scrollbars=yes")
 }
 
 
@@ -1306,7 +1306,7 @@ function SearchDEValue()
 	
 	if (searchWindow && !searchWindow.closed)
 		searchWindow.close()
-		searchWindow = window.open("jsp/OpenSearchWindow.jsp", "searchWindow", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes")
+	searchWindow = window.open("jsp/OpenSearchWindow.jsp", "searchWindow", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes")
 }
 
 //select the Ordered DEComp when Order list is selected.

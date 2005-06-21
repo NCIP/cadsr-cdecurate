@@ -221,7 +221,7 @@ function ViewConceptInTree()
     <tr>
       <td>&nbsp;</td>
 	    <td  valign="top" align="left"  colspan=2> 
-        <textarea name="CreateDescription" rows="4" cols="100%" style="color:#696969" readonly
+        <textarea name="CreateDescription" rows="4" style="color:#696969; width:80%" readonly
             onHelp = "showHelp('Help_CreateVD.html#createPVForm_CreateValue'); return false"><%=sDescription%></textarea>
       </td>
 	  </tr>
@@ -317,7 +317,7 @@ displayStatusMessage();
   <input type="hidden" name="searchEVS" value="PermissibleValue">
   <input type="hidden" name="isValidSearch" value="false">
   <input type="hidden" name="SelCDid" value="<%=sCDid%>">
-  <input type="hidden" name="sCCodeDB" value="<%=sEVSdb%>">
+   <input type="hidden" name="sCCodeDB" value="<%=sEVSdb%>">
   <input type="hidden" name="sCCode" value="<%=sEVSid%>">
   <input type="hidden" name="sCCodeName" value="<%=sEVSname%>">
   <input type="hidden" name="openToTree" value=""> 

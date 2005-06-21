@@ -99,10 +99,10 @@ public class DEC_Bean implements Serializable{
   private String DEC_LATEST_VERSION_IND;
   private String DEC_LONG_NAME;
   private String DEC_OCL_NAME;
-  private String DEC_OBJ_CLASS_QUALIFIER;
+  private String DEC_OBJ_ASL_NAME;
   private String DEC_OCL_IDSEQ;
   private String DEC_PROPL_NAME;
-  private String DEC_PROPERTY_QUALIFIER;
+  private String DEC_PROP_ASL_NAME;
   private String DEC_PROPL_IDSEQ;
   private String DEC_BEGIN_DATE;
   private String DEC_END_DATE;
@@ -209,8 +209,8 @@ public class DEC_Bean implements Serializable{
 			this.setDEC_PROPL_NAME(copyBean.getDEC_PROPL_NAME());
 			this.setDEC_PROPL_IDSEQ(copyBean.getDEC_PROPL_IDSEQ());
 			this.setDEC_Prop_Definition(copyBean.getDEC_Prop_Definition());
-			this.setDEC_OBJ_CLASS_QUALIFIER(copyBean.getDEC_OBJ_CLASS_QUALIFIER());
-			this.setDEC_PROPERTY_QUALIFIER(copyBean.getDEC_PROPERTY_QUALIFIER());
+			this.setDEC_OBJ_ASL_NAME(copyBean.getDEC_OBJ_ASL_NAME());
+			this.setDEC_PROP_ASL_NAME(copyBean.getDEC_PROP_ASL_NAME());
 			this.setDEC_LANGUAGE(copyBean.getDEC_LANGUAGE());
 			this.setDEC_LANGUAGE_IDSEQ(copyBean.getDEC_LANGUAGE_IDSEQ());
 			this.setDEC_CD_IDSEQ(copyBean.getDEC_CD_IDSEQ());
@@ -544,9 +544,9 @@ public class DEC_Bean implements Serializable{
    *
    * @param s The RETURN_CODE to set
   */
-  public void setDEC_OBJ_CLASS_QUALIFIER(String s)
+  public void setDEC_OBJ_ASL_NAME(String s)
   {
-      this.DEC_OBJ_CLASS_QUALIFIER = s;
+      this.DEC_OBJ_ASL_NAME = s;
   }
    /**
    * The setRETURN_CODE method sets the RETURN_CODE for this bean.
@@ -571,9 +571,9 @@ public class DEC_Bean implements Serializable{
    *
    * @param s The RETURN_CODE to set
   */
-  public void setDEC_PROPERTY_QUALIFIER(String s)
+  public void setDEC_PROP_ASL_NAME(String s)
   {
-      this.DEC_PROPERTY_QUALIFIER = s;
+      this.DEC_PROP_ASL_NAME = s;
   }
   /**
    * The setRETURN_CODE method sets the RETURN_CODE for this bean.
@@ -1117,22 +1117,22 @@ public class DEC_Bean implements Serializable{
       return this.DEC_OCL_IDSEQ;
   }
   /**
-  * The getDEC_OBJ_CLASS_QUALIFIER method returns the DEC_OBJ_CLASS_QUALIFIER for this bean.
+  * The getDEC_OBJ_ASL_NAME method returns the DEC_OBJ_ASL_NAME for this bean.
   *
-  * @return String The DEC_OBJ_CLASS_QUALIFIER
+  * @return String The DEC_OBJ_ASL_NAME
   */
-  public String getDEC_OBJ_CLASS_QUALIFIER()
+  public String getDEC_OBJ_ASL_NAME()
   {
-      return this.DEC_OBJ_CLASS_QUALIFIER;
+      return this.DEC_OBJ_ASL_NAME;
   }
    /**
-  * The getDEC_PROPERTY_QUALIFIER method returns the DEC_PROPERTY_QUALIFIER for this bean.
+  * The getDEC_PROP_ASL_NAME method returns the DEC_PROP_ASL_NAME for this bean.
   *
-  * @return String The DEC_PROPERTY_QUALIFIER
+  * @return String The DEC_PROP_ASL_NAME
   */
-  public String getDEC_PROPERTY_QUALIFIER()
+  public String getDEC_PROP_ASL_NAME()
   {
-      return this.DEC_PROPERTY_QUALIFIER;
+      return this.DEC_PROP_ASL_NAME;
   }
   /**
   * The getDEC_PROPL_NAME method returns the DEC_PROPL_NAME for this bean.

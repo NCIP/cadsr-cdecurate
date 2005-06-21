@@ -51,7 +51,6 @@ String sSearchAC5 = "";
 %>
 </head>
 <curate:checkLogon name="Userbean" page="/index.htm" />
-<body bgcolor="#FFFFFF" text="#000000">
 <table width="100%" border="2" cellpadding="0" cellspacing="0">
 <col width="21%">
 <col width="79%">

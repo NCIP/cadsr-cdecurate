@@ -15,6 +15,10 @@ var sentinelWindow = null;
       if(confirm("Are you sure you want to logout?"))
         document.LogoutForm.submit();
    }
+   function callTimeout()
+   {
+      document.LogoutForm.submit();
+   }
 
    function callHelp()
    {

@@ -177,7 +177,7 @@ if (exceptionMessage == null) exceptionMessage = "";
     </tr>  
     <tr>
       <td width="100%" align="center">
-        <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">Close window and log in again.</font></h3>
+        <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">Close session and log in again.</font></h3>
       </td>
     </tr>  
     <tr>

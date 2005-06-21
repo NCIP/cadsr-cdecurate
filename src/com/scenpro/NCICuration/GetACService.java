@@ -12,11 +12,11 @@ import javax.servlet.http.*;
 import java.io.*;
 
 //import gov.nih.nci.EVS.bean.*;
-import gov.nih.nci.EVS.domain.*;
-import gov.nih.nci.EVS.search.*;
-import gov.nih.nci.EVS.exception.*;
-import gov.nih.nci.common.util.*;
-import gov.nih.nci.common.exception.*;
+//import gov.nih.nci.EVS.domain.*;
+//import gov.nih.nci.EVS.search.*;
+//import gov.nih.nci.EVS.exception.*;
+//import gov.nih.nci.common.util.*;
+//import gov.nih.nci.common.exception.*;
 
 import org.apache.log4j.*;
 
@@ -327,8 +327,12 @@ public class GetACService implements Serializable
         if(session.getAttribute("vDataType") == null)
         {
           v = new Vector();
-          getDataTypesList(v);    //get the Workflow status list
-          session.setAttribute("vDataType", v);  //set Workflow status list attribute
+          Vector vDesc = new Vector();
+          Vector vComm = new Vector();
+          getDataTypesList(v, vDesc, vComm);    //get the Workflow status list
+          session.setAttribute("vDataType", v);  //set data type names list attribute
+          session.setAttribute("vDataTypeDesc", vDesc);  //set data type description list attribute
+          session.setAttribute("vDataTypeComment", vComm);  //set data type comment list attribute
         }
 
         if(session.getAttribute("vUOM") == null)
@@ -852,12 +856,12 @@ public class GetACService implements Serializable
   * @param vList  A Vector of Data Types names.
   *
   */
-  public void getDataTypesList(Vector vList)  // returns list of DataTypes
+  public void getDataTypesList(Vector vList, Vector vDesc, Vector vComment)  // returns list of DataTypes
   {
     try
     {
         String sAPI = "{call SBREXT_CDE_CURATOR_PKG.get_datatypes_list(?)}";
-        getDataListStoreProcedure(vList, null, null, null, sAPI, "", "", 1);
+        getDataListStoreProcedure(vList, vDesc, vComment, null, sAPI, "", "", 1);
     }
     catch(Exception e)
     {
@@ -1577,44 +1581,7 @@ public class GetACService implements Serializable
     return blockID;
   } //end doComponentExist
 
-    /**
-   * To get final result vector of selected attributes/rows to display for Rep Term component,
-   * gets the selected attributes from session vector 'selectedAttr'.
-   * loops through the RepBean vector 'vACSearch' and adds the selected fields to result vector.
-   *
-   * @param req The HttpServletRequest object.
-   * @param res HttpServletResponse object.
-   *
-   */
-  public void getMetaSources(HttpServletRequest req, HttpServletResponse res)
-  {
-    Vector vMetaSources = new Vector();
-    HttpSession session = req.getSession(); 
-    try
-    {   
-      MetaThesaurusConceptSearchCriteria mtcsc = new MetaThesaurusConceptSearchCriteria();
-      MetaThesaurusConcept mtc = new MetaThesaurusConcept();
-      MetaThesaurusConcept[] mtcArray = null;
-      mtcsc.setSearchTerm("protocol");
-      mtcsc.setLimit(3);
-      Concept conArray[]= mtc.search(mtcsc);
-      Source[] sources = conArray[0].getAllSources();
-      String src = "";
-  		if (sources!=null)
-      for(int i=0; i<sources.length; i++)
-      {
-        src = sources[i].getAbbreviation();
-        vMetaSources.addElement(src);
-      }	 
-      session.setAttribute("MetaSources", vMetaSources);
-    }
-    catch(Exception e)
-    {
-      session.setAttribute("MetaSources", vMetaSources); //if error, create this attribute with empty vector
-      //System.err.println("ERROR in GetACService-getMetaSources: " + e);
-      logger.fatal("ERROR in GetACService-getMetaSources : " + e.toString());
-    }
-  }
+  
 
   /**
   * Called to get all the concepts from condr_idseq.

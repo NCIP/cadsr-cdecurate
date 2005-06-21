@@ -202,10 +202,10 @@ System.out.println(" evs " + sEVS);
       <td align=right> &nbsp 5) </td>
       <td><font color="#FF0000">Verify<font color="#000000"> Description </font></font></td>
 	  </tr>
-      <tr>
-        <td>&nbsp;</td>
-	    <td  valign="top" align="left">
-        <textarea name="CreateDescription" cols="140" rows="4" <%if(sEVS != null && !sEVS.equals("")) {%>disabled<% } %>
+    <tr>
+      <td>&nbsp;</td>
+      <td  valign="top" align="left">
+        <textarea name="CreateDescription" style="width:80%" rows=4 <%if(sEVS != null && !sEVS.equals("")) {%>disabled<% } %>
         onHelp = "showHelp('Help_CreateVD.html#createVMForm_CreateVM'); return false"><%=sDescription%></textarea>
         &nbsp;&nbsp;<font color="#FF0000"> <a href="javascript:ClearMeaning()">Clear</a></font>
       </td>

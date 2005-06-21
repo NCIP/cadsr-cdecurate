@@ -31,6 +31,7 @@
    Vector vCCodeDB = (Vector)session.getAttribute("vCCodeDB");
    if (vCCodeDB == null) vCCodeDB = new Vector();
    String sKeyword = "", nRecs = "", sSelAC = "";
+   String sSelAC_VM = "";
    String sSelectedParentName = "", sSelectedParentCC = "", sSelectedParentDB = "";
  
    Vector vSelAttr = new Vector();
@@ -48,6 +49,7 @@
    }
 
    String sLabelKeyword =  (String)request.getAttribute("labelKeyword");
+System.out.println("jsp srbl sLabelKeyword: " + sLabelKeyword);
    if (sLabelKeyword == null)
       sLabelKeyword = "";
    if (sKeyword == null)
@@ -89,6 +91,7 @@
   else if (sSelAC.equals("ParentConceptVM"))
   {
      sSelAC = "Value Meaning";
+
      isEVSvm = false;
   }
 
@@ -99,10 +102,10 @@
 //        strIsQualifier = "true";
         
   String sUISearchType2 = (String)request.getAttribute("UISearchType");
-//System.out.println("jsp srbl sUISearchType2: " + sUISearchType2);
   if (sUISearchType2 == null || sUISearchType2.equals("nothing") 
   || sUISearchType2.equals("")) 
     sUISearchType2 = "term";
+//System.out.println("jsp srbl sUISearchType2: " + sUISearchType2);
 %>
 
 <SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
@@ -322,6 +325,7 @@ function getSuperConcepts()
        if (strVocab == null) strVocab = "";
        boolean hasLink = false;
        String showConceptInTree = "javascript:showConceptInTree('" + ckName + "');";
+
        //no hyperlink for meta, cadsr, parentvm searches
        if(strVocab.equals("NCI Metathesaurus") || strVocab.equals("caDSR") 
           || (sSelAC.equals("Value Meaning") && isEVSvm == false))
@@ -379,6 +383,7 @@ function getSuperConcepts()
 <input type="hidden" name="numAttSelected" value="">
 <input type="hidden" name="blockSortType" value="nothing"> 
 <input type="hidden" name="UISearchType" value="<%=sUISearchType2%>">
+<input type="hidden" name="selRowID" value="">
 <select size="1" name="hiddenSearch" style="visibility:hidden;width:50">
 <%                    for (int i = 0; vSearchID.size()>i; i++)
                       {

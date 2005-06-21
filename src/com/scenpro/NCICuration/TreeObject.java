@@ -83,12 +83,46 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 public abstract class TreeObject {
 
     private int type;
+    private String name;
+    private String code;
+    private int id;
+    private int level;
 
     public TreeObject(int type) {
         this.type = type;
     }
+    
+    public TreeObject(int id, String name, String code, int level) {
+        this.id = id;
+        this.name = name;
+        this.code = code;
+        this.level = level;
+    }
     public int getType() {
         return type;
     }
-    public abstract String getName();
+     public int getId() {
+        return id;
+    }
+    public String getName() {
+        return name;
+    }
+     public String getCode() {
+        return code;
+    }
+    public int getLevel() {
+        return level;
+    }
+     public void setId( int id ) {
+        this.id = id;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+     public void setCode(String code) {
+        this.code = code;
+    }
+    public void setLevel(int level) {
+        this.level = level;
+    }
 } 

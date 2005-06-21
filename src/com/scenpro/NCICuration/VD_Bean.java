@@ -145,7 +145,7 @@ public class VD_Bean  implements Serializable
   private String VD_PROP_QUAL;
   private String VD_PROP_CLASS;
   private String VD_PROP_IDSEQ;
-  private String VD_REP_QUAL;
+  private String VD_REP_ASL_NAME;
   private String VD_REP_TERM;
   private String VD_REP_IDSEQ;
   private String VD_Obj_Definition;
@@ -231,7 +231,7 @@ public class VD_Bean  implements Serializable
       this.setVD_PROP_CLASS(copyBean.getVD_PROP_CLASS());
       this.setVD_PROP_QUAL(copyBean.getVD_PROP_QUAL());
       this.setVD_REP_TERM(copyBean.getVD_REP_TERM());
-      this.setVD_REP_QUAL(copyBean.getVD_REP_QUAL());
+      this.setVD_REP_ASL_NAME(copyBean.getVD_REP_ASL_NAME());
       this.setVD_LANGUAGE(copyBean.getVD_LANGUAGE());
       this.setVD_LANGUAGE_IDSEQ(copyBean.getVD_LANGUAGE_IDSEQ());
       this.setVD_CHAR_SET_NAME(copyBean.getVD_CHAR_SET_NAME());
@@ -745,13 +745,13 @@ public class VD_Bean  implements Serializable
       this.VD_PROP_IDSEQ = s;
   }
   /**
-  * The setVD_REP_QUAL method sets the VD_REP_QUAL for this bean.
+  * The setVD_REP_ASL_NAME method sets the VD_REP_ASL_NAME for this bean.
   *
-  * @param s The VD_REP_QUAL to set
+  * @param s The VD_REP_ASL_NAME to set
   */
-  public void setVD_REP_QUAL(String s)
+  public void setVD_REP_ASL_NAME(String s)
   {
-      this.VD_REP_QUAL = s;
+      this.VD_REP_ASL_NAME = s;
   }
   /**
   * The setVD_REP_TERM method sets the VD_REP_TERM for this bean.
@@ -1008,7 +1008,7 @@ public class VD_Bean  implements Serializable
   }
   
 /**
-   * The setVD_REP_QUAL_CONCEPT_CODE method sets the VD_REP_QUAL_CONCEPT_CODE for this bean.
+   * The setVD_REP_ASL_NAME_CONCEPT_CODE method sets the VD_REP_QUAL_CONCEPT_CODE for this bean.
    *
    * @param s The VD_REP_QUAL_CONCEPT_CODE to set
 */
@@ -1625,13 +1625,13 @@ public class VD_Bean  implements Serializable
       return this.VD_PROP_IDSEQ;
   }
   /**
-  * The getVD_REP_QUAL method returns the VD_REP_QUAL for this bean.
+  * The getVD_REP_ASL_NAME method returns the VD_REP_ASL_NAME for this bean.
   *
-  * @return String The VD_REP_QUAL
+  * @return String The VD_REP_ASL_NAME
   */
-  public String getVD_REP_QUAL()
+  public String getVD_REP_ASL_NAME()
   {
-      return this.VD_REP_QUAL;
+      return this.VD_REP_ASL_NAME;
   }
   /**
   * The getVD_REP_TERM method returns the VD_REP_TERM for this bean.

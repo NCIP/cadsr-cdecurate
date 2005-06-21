@@ -92,6 +92,7 @@ public class TreeNode extends TreeObject {
     private Tree children;
     private int id;
     private int level;
+    private int parentNodeID;
  
     public TreeNode( int id, String name, String code, int level) 
     {
@@ -104,6 +105,12 @@ public class TreeNode extends TreeObject {
         visible = false;
         bold = false;
         children = new Tree(level);
+    }
+     public int getParentNodeID() {
+        return this.parentNodeID;
+    }
+    public void setParentNodeID(int parentNodeID) {
+        this.parentNodeID = parentNodeID;
     }
     public void addChild(TreeObject child) {
         children.addChild(child);
