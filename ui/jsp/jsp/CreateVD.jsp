@@ -16,6 +16,8 @@
     Vector vContextID = (Vector)session.getAttribute("vWriteContextVD_ID");
     Vector vStatus = (Vector)session.getAttribute("vStatusVD");
     Vector vDataTypes = (Vector)session.getAttribute("vDataType");
+    Vector vDataTypeDesc = (Vector)session.getAttribute("vDataTypeDesc");
+    Vector vDataTypeCom = (Vector)session.getAttribute("vDataTypeComment");
     Vector vUOM = (Vector)session.getAttribute("vUOM");
     Vector vUOMFormat = (Vector)session.getAttribute("vUOMFormat");
     Vector vCD = (Vector)session.getAttribute("vCD");
@@ -66,6 +68,9 @@
     sName = serUtil.parsedString(sName);    //call the function to handle doubleQuote
     if (sName == null) sName = "";
     int sNameCount = sName.length();
+    String lblUserType = "Existing Name (Editable)";  //make string for user defined label
+    String sUserEnt = m_VD.getAC_USER_PREF_NAME();
+    if (sUserEnt == null || sUserEnt.equals("")) lblUserType = "User Entered";
     
     String sObjQual = m_VD.getVD_OBJ_QUAL();
     sObjQual = serUtil.parsedString(sObjQual);    //call the function to handle doubleQuote
@@ -670,7 +675,7 @@ function setup()
       <input name="rNameConv" type="radio" value="ABBR" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("ABBR")) {%> 
         checked <%}%>>Abbreviated &nbsp;&nbsp;&nbsp; 
       <input name="rNameConv" type="radio" value="USER" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("USER")) {%> 
-        checked <%}%>>Existing Name (Editable)  <!--User Maintained-->
+        checked <%}%>><%=lblUserType%>   <!--Existing Name (Editable) User Maintained-->
     </td>
   </tr>
   <tr>
@@ -685,17 +690,20 @@ function setup()
         &nbsp;&nbsp;(Database Max = 30)
     </td>
   </tr>
-  <tr height="25" valign="bottom">
-      <td align=right><font color="#FF0000" >* &nbsp;&nbsp;</font><%=item++%>)</td>
-      <td> <font color="#FF0000">Create/Search</font> for Definition</td>
+  <tr><td height="8" valign="top"></tr>
+  <tr height="25" valign="top">
+    <td align=right><font color="#FF0000" >* &nbsp;&nbsp;</font><%=item++%>)</td>
+    <td> <font color="#FF0000">Create/Search</font> for Definition
+          (Changes of naming components would replace any user entered definition. 
+          Please make any desired changes after selecting the naming components.)</td>
   </tr>
     
   <tr>
      <td>&nbsp;</td>
     <td  valign="top" align="left">
-      <textarea name="CreateDefinition" cols="120"
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_CreateDefinition'); return false" rows=2><%=sDefinition%></textarea>
-      &nbsp;&nbsp; <font color="#FF0000"> <a href="javascript:OpenEVSWindow()">Search</a></font>
+      <textarea name="CreateDefinition" style="width:80%" rows=6
+        onHelp = "showHelp('Help_CreateVD.html#createVDForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
+     <!--  &nbsp;&nbsp; <font color="#FF0000"> <a href="javascript:OpenEVSWindow()">Search</a></font>  -->
     </td>
   </tr>
   <tr height="25" valign="bottom">
@@ -760,22 +768,32 @@ function setup()
       <td align=right><font color="#FF0000">* </font><%=item++%>)</td>
       <td> <font color="#FF0000">Select</font> Data Type</td>
   </tr>
-    
+  <tr height="8"><td>&nbsp;</td></tr>    
   <tr>
     <td>&nbsp;</td>
     <td>
-    <select name= "selDataType" size ="1" onChange="javascript:enableValueNum();" style="width:20%"
-      onHelp = "showHelp('Help_CreateVD.html#createVDForm_selDataType'); return false">
+      <table width="90%" border="1">
+        <col width="20%"><col width="35%"><col width="35%">
+        <tr>
+          <td valign="top">
+            <select name= "selDataType" size ="1" onChange="javascript:changeDataType();"  style="width:90%"
+              onHelp = "showHelp('Help_CreateVD.html#createVDForm_selDataType'); return false">
 <%
-        for (int i = 0; vDataTypes.size()>i; i++)
-        {
-           String sCD = (String)vDataTypes.elementAt(i);
+              for (int i = 0; vDataTypes.size()>i; i++)
+              {
+                 String sCD = (String)vDataTypes.elementAt(i);
 %>
-        <option value="<%=sCD%>" <%if(sCD.equalsIgnoreCase(sDataType)){%>selected<%}%> ><%=sCD%></option>
+              <option value="<%=sCD%>" <%if(sCD.equalsIgnoreCase(sDataType)){%>selected<%}%> ><%=sCD%></option>
 <%
-        }
+              }
 %>
-      </select> </td>
+            </select>
+          </td>
+          <td valign="top" height="25">Data Type Description:<br><label id="lblDTDesc" for="selDataType" style="width:95%" title=""></label></td>
+          <td valign="top" height="25">Data Type Comment:<br><label id="lblDTComment" for="selDataType" style="width:95%" title=""></label></td>
+        </tr> 
+      </table>
+    </td>
   </tr>
   <tr height="15"><td> </td></tr>
   <tr>
@@ -1487,6 +1505,27 @@ function setup()
   }   
 %>
 </select>
+<!-- store datatype description to use later -->
+<select name= "datatypeDesc" size ="1" style="visibility:hidden;width:100;"  multiple>
+<%if (vDataTypes != null) 
+  {
+    for (int i = 0; vDataTypes.size()>i; i++)
+    {
+      String sDType = (String)vDataTypes.elementAt(i);
+      String sDTDesc = "", sDTComm = "";
+      if (i < vDataTypeDesc.size())
+        sDTDesc = (String)vDataTypeDesc.elementAt(i);
+      if (sDTDesc == null || sDTDesc.equals("")) sDTDesc = sDType;
+      if (i < vDataTypeCom.size())
+        sDTComm = (String)vDataTypeCom.elementAt(i);
+      if (sDTComm == null) sDTComm = "";
+%>
+      <option value="<%=sDTDesc%>"><%=sDTComm%></option>
+<%  }
+  }   
+%>
+</select>
+
 <!-- stores selected VMs from EVS before submitting -->
 <select name= "selVMConCode" size ="1" style="visibility:hidden;width:160"  multiple></select>
 <select name= "selVMConName" size ="1" style="visibility:hidden;width:160"  multiple></select>
@@ -1509,6 +1548,7 @@ changeCountPN();
 loadCSCSI();
 selectParent();   //do the parent select action if the parent was selected.
 ShowEVSInfo('RepQualifier');
+changeDataType();
 </script>
 </form>
 <form name="SearchActionForm" method="post" action="">

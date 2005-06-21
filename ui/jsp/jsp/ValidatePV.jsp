@@ -17,6 +17,7 @@
       if(sStat.equals("Valid")==false)
         isValid = false;
     }
+    session.setAttribute("statusMessage", "");  //remove the status messge if any
 %>
 <script language="JavaScript">
    var evsWindow = null;

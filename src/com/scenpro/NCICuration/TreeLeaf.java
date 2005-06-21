@@ -88,7 +88,7 @@ public class TreeLeaf extends TreeObject {
     private boolean visible;
     private boolean bold;
 
-    public TreeLeaf(String name, String code, int level ) {
+    public TreeLeaf( int id, String name, String code, int level ) {
         super(Tree.LEAF);
         this.id = id;
         this.name = name;

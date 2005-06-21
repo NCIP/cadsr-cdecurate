@@ -35,6 +35,7 @@ CreateOrDisplayDEC
     isValid = isValidFlag;
 //System.out.println("isValid: " + isValid);
     String sDECAction = (String)session.getAttribute("DECAction");
+    session.setAttribute("statusMessage", "");  //remove the status messge if any
 %>
 <script language="JavaScript">
    var evsWindow = null;

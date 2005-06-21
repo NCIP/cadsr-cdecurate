@@ -38,6 +38,7 @@ Validate Data Element
     }
     String sDEAction = (String)session.getAttribute("DEAction");
     String sMenuAction = (String)session.getAttribute("MenuAction");
+    session.setAttribute("statusMessage", "");  //remove the status messge if any
 
 %>
 

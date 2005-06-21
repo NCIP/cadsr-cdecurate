@@ -16,10 +16,11 @@
    String sMetaCode = "No";
    Vector vStatus = new Vector();
    String strHTML = (String)session.getAttribute("strHTML");
+
    //get the session attributes
    String sSearchAC = (String)session.getAttribute("creSearchAC");
    if (sSearchAC == null) sSearchAC = "ObjectClass";
-   
+ 
    //display names for the components
    if (sSearchAC.equals("PropertyClass") || sSearchAC.equals("VDPropertyClass")) 
       sSearchAC = "Property";
@@ -48,11 +49,13 @@
      String vdType = (String)session.getAttribute("pageVDType");
      if (vdType != null && vdType.equals("N"))
        sLongAC = "Parent Concept";
+
    }
 
    //get the session attributes
    String sLastKeyword = (String)request.getAttribute("creKeyword");
    if (sLastKeyword == null) sLastKeyword = "";
+   sLastKeyword = sLastKeyword.trim();
    String sContext = (String)session.getAttribute("creContextBlocks");
    if (sContext == null) sContext = "All Contexts";
    //Vector vStatus = (Vector)session.getAttribute("creStatusBlocks");
@@ -66,9 +69,11 @@
    String sMetaSource = (String)session.getAttribute("MetaSource");
    if (sMetaSource == null) sMetaSource = "All Sources";
    String dtsVocab = (String)session.getAttribute("dtsVocab");
-   if (dtsVocab == null) dtsVocab = "Thesaurus/Metathesaurus";
+System.out.println("spb dtsVocab: " + dtsVocab);
+   if (dtsVocab == null || dtsVocab.equals("NCI_Thesaurus")) 
+    dtsVocab = "Thesaurus/Metathesaurus";
    if (dtsVocab.equals("MGED")) dtsVocab = "MGED_Ontology";
-//System.out.println("spb dtsVocab: " + dtsVocab);
+System.out.println("spb dtsVocab: " + dtsVocab);
   //session.setAttribute("dtsVocab", null);
    Vector vSource = (Vector)session.getAttribute("MetaSources");
    if(vSource == null) vSource = new Vector();
@@ -403,7 +408,7 @@ function searchType(type)
 }
 
 //fuction to search or expand or collapse tree
-function doTreeAction(type, nodeCode, vocab, nodeName)
+function doTreeAction(type, nodeCode, vocab, nodeName, nodeID)
 {
     var url = "";
     hourglass();
@@ -411,11 +416,11 @@ function doTreeAction(type, nodeCode, vocab, nodeName)
     document.searchResultsForm.Message.style.visibility="visible";
   //  opener.document.SearchActionForm.searchComp.value = "<%=sSearchAC%>";
     if(type == 'search')
-      url = "../../cdecurate/NCICurationServlet?reqType=treeSearch&&keywordID=" + nodeCode + "&&vocab=" + vocab + "&&keywordName=" + nodeName;
+      url = "../../cdecurate/NCICurationServlet?reqType=treeSearch&&keywordID=" + nodeCode + "&&vocab=" + vocab + "&&keywordName=" + nodeName + "&&nodeID=" + nodeID;
     else if(type == 'expand')
-      url = "../../cdecurate/NCICurationServlet?reqType=treeExpand&&nodeName=" + nodeName + "&&vocab=" + vocab + "&&nodeCode=" + nodeCode;
+      url = "../../cdecurate/NCICurationServlet?reqType=treeExpand&&nodeName=" + nodeName + "&&vocab=" + vocab + "&&nodeCode=" + nodeCode + "&&nodeID=" + nodeID;
     else if(type == 'collapse')
-      url = "../../cdecurate/NCICurationServlet?reqType=treeCollapse&&nodeName=" + nodeName + "&&vocab=" + vocab + "&&nodeCode=" + nodeCode;
+      url = "../../cdecurate/NCICurationServlet?reqType=treeCollapse&&nodeName=" + nodeName + "&&vocab=" + vocab + "&&nodeCode=" + nodeCode + "&&nodeID=" + nodeID;
     document.searchParmsForm.action = url;
     document.searchParmsForm.submit();
 }

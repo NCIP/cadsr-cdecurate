@@ -87,6 +87,7 @@ public class Tree {
     private int selected;
     private String name;
     private int level;
+    private int parentNodeID;
 
     public static int NODE = 0;
     public static int LEAF = 1;
@@ -107,6 +108,12 @@ public class Tree {
     }
     public int getLevel() {
         return this.level;
+    }
+     public int getParentNodeID() {
+        return this.parentNodeID;
+    }
+    public void setParentNodeID(int parentNodeID) {
+        this.parentNodeID = parentNodeID;
     }
     public void setName( String name ) {
         this.name = name;

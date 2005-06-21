@@ -3,6 +3,7 @@
 <head>
 <title>CDE Curation: Login</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<%@ page import="java.util.*" %>
 <script language="JavaScript" type="text/JavaScript">
 <!--
 function MM_reloadPage(init) {  //reloads the window if Nav4 resized
@@ -37,7 +38,7 @@ function linkNCICB()
   else
    	winNCICB = window.open("http://ncicb.nci.nih.gov", "NCICB", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
-var userid = "nciuser";
+/*var userid = "nciuser";
  var password = "1121demo7";
  var ok = false;
 
@@ -56,15 +57,15 @@ function isOk(){
 //     window.open("CDEHomePage.jsp");
 
   dotcycle();
- }
+ } */
 
  function callMessageGifLogin()
-   {
+ {
      document.LoginForm.Message.style.visibility="visible";
      window.status = "Loading data, it may take a minute, please wait....."
      document.LoginForm.submit();   
      dotcycle(); 
-   }
+ }
 
 var dotCntr = -1;
 function dotcycle()
@@ -129,227 +130,190 @@ function linkFirstGov()
 
 function CloseWindow()
 {
-  opener.callLogout();
+  if (opener != null)
+    opener.callTimeout();
+ // opener.callLogout();
  // opener.closeWindow();
   window.close();
 }
 
 //-->
-function setup()
+function onFirstLoad()
 {
   if (window.opener != null)
       window.opener = null;
+  if(document.LoginForm.Username != null)
+      document.LoginForm.Username.focus();
+  document.onkeypress = keypress_handler;
 }
 
-function onLoad()
+function keypress_handler()
 {
- if(document.LoginForm.Username != null)
-  document.LoginForm.Username.focus();
+    var keycode = window.event.keyCode;
+    if(keycode == 13)
+    {      
+      callMessageGifLogin();   //submit the form
+    }
+    return;  // only interest on return kay
 }
+
 </script>
 </head>
 
-<body setup();>
+<body>
 <%
-String errMessage = (String)session.getAttribute("ErrorMessage");
-if (errMessage == "") errMessage = "Problem with login. User name/password may be incorrect, or database connection can not be established.";
-if (errMessage == null) errMessage = "";
-if (errMessage == "java.lang.NullPointerException") errMessage = "Session terminated. Please login again.";
-session.setAttribute("ErrorMessage", "");
+  String errMessage = (String)session.getAttribute("ErrorMessage");
+  if (errMessage == null) errMessage = "";
+ // if (errMessage == "") errMessage = "Problem with login. User name/password may be incorrect, or database connection can not be established.";
+  if (errMessage == "java.lang.NullPointerException") errMessage = "Session terminated. Please login again.";
+  session.setAttribute("ErrorMessage", "");
+  String reqType = (String)session.getAttribute("LatestReqType"); 
+  if(reqType == null) reqType = "";
+  //these are requests used for second window open
+  Vector lstWinOpenReqs = new Vector();
+  lstWinOpenReqs.addElement("searchEVS");
+  lstWinOpenReqs.addElement("searchBlocks");
+  lstWinOpenReqs.addElement("searchQualifiers");
+  lstWinOpenReqs.addElement("getRefDocument");
+  lstWinOpenReqs.addElement("treeExpand");
+  lstWinOpenReqs.addElement("treeCollapse");
+  lstWinOpenReqs.addElement("doSortBlocks");
+  lstWinOpenReqs.addElement("doSortQualifiers");
+  //handle search for create items (de, dec, vd, pv, vm searches)
+  String menuAct = (String)session.getAttribute("serMenuAct");
+  if (menuAct == null) menuAct = "";
+  if (menuAct.equals("searchForCreate") && !errMessage.equals(""))
+  {
+    lstWinOpenReqs.addElement("searchForCreate");
+    reqType = "searchForCreate";
+    session.setAttribute("serMenuAct", "");
+  }
+  
 %>
-<% String reqType = (String)session.getAttribute("LatestReqType"); 
-   if(reqType == null) reqType = "";
-  if (reqType.equals("searchEVS") || reqType.equals("searchBlocks")
-    || reqType.equals("searchQualifiers") || reqType.equals("getRefDocument")
-    || reqType.equals("getAltNames") || reqType.equals("treeSearch") 
-    || reqType.equals("treeExpand")  || reqType.equals("treeCollapse")
-    || reqType.equals("doSortBlocks")|| reqType.equals("doSortQualifiers")) //for windows that are open
-{%> 
-
-<table width="100%" border="4" bgcolor = "#CCCCCC">
-<tr>
-  <table width="100%" height="140" border=0>
-  <tr>
-      <td width="33%" align="center"> <img src="Assets/curation_banner2.gif" name="TopMap" border="0" usemap="#TopMapMap" id="TopMap">
-      </td>
-  </tr>
-  <tr height="200"></tr>
-  <tr width="100%" align="center">
-  <!--beginning of login table -->
-  <table>
-  <tr height="60"></tr>
-    <td width="40%"></td> 
-    <td width=""  align="center">
-    <table width="394" border="4" bgcolor = "#CCCCCC">  
-	  <tr>
-          <td width="387" height="52" valign="middle" align="center">
-             <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">This window is no longer active.</font></h3>
-          </td>
-       </tr>
-     
-     </table>
-  <table width="394" border="4" bgcolor = "#CCCCCC">
-
-      </tr>
+  <table width="100%" border="0" bgcolor = "#FFFFFF" valign="middle" align="center">
+    <col width="30%"><col width="40%"><col width="30%">
+    <tr><td>&nbsp;</td></tr>
+    <tr><td>&nbsp;</td></tr>
     <tr>
-      <td width="100%" align="center" valign="middle">
-        <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">User session has expired.</font></h3>
+      <td colspan="3" width="33%" align="center"> <img src="Assets/curation_banner2.gif" name="TopMap" border="0" usemap="#TopMapMap" id="TopMap">
       </td>
-    </tr>  
+    </tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr><td>&nbsp;</td></tr>
+    <%
+    /*  if (reqType.equals("searchEVS") || reqType.equals("searchBlocks")
+        || reqType.equals("searchQualifiers") || reqType.equals("getRefDocument")
+        || reqType.equals("getAltNames") || reqType.equals("treeSearch") 
+        || reqType.equals("treeExpand")  || reqType.equals("treeCollapse")
+        || reqType.equals("doSortBlocks")|| reqType.equals("doSortQualifiers"))*/ //for windows that are open
+    if (lstWinOpenReqs.contains(reqType))  //for second windows open, display different message
+    { %> 
     <tr>
-      <td width="100%" align="center" valign="middle">
-        <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">Close window and log in again.</font></h3>
+      <td>&nbsp;</td>
+      <td align="center" valign="middle">
+        <table width="394" border="4" bgcolor="#CCCCCC">  
+          <tr>
+            <td width="387" valign="middle" align="center">
+              <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">This session is no longer active.</font></h3>
+            </td>
+          </tr>     
+          <tr>
+            <td width="100%" align="center" valign="middle">
+              <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">User session has expired.</font></h3>
+            </td>
+          </tr>  
+          <tr>
+            <td width="100%" align="center" valign="middle">
+              <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">Close session and log in again.</font></h3>
+            </td>
+          </tr>  
+          <tr height="40">
+            <td width="100%" colspan="1" align="center" valign="middle"> 
+              <input type="button" name="closeBtn" value="Close Window" onClick="javascript:CloseWindow();" style="width: 95, height: 26">
+            </td>
+          </tr>
+        </table>
       </td>
-    </tr>  
-    <tr height="40">
-       <td width="100%" colspan="1" align="center" valign="middle"> 
-         <input type="button" name="closeBtn" value="Close Window" onClick="javascript:CloseWindow();" style="width: 95","height: 26">
-      </td>
-	   </tr>
-    </tr>
-  </table>
-    </td>
- <tr height="100"></tr>
-</table>
-  </tr>
-<tr height="100"></tr>
-  <tr>
-    <td align="center">
-<table width="100%" border=0>
-  <tr  height="150">
-    <td width="20%" align="center" valign="bottom"> <img src="Assets/Shorten_Bottom_Logo.gif" border="0" usemap="#BottomMap"> 
-    </td>
-  </tr>
-</table>
-    </td>
-  </tr>
-</table>
-</table>
-<!-- end of login table -->
-<map name="BottomMap">
-  <area shape="rect" coords="63,0,225,55" onClick = "linkCancerGov();" >
-  <area shape="rect" coords="227,1,517,55" onClick = "linkNIH();" >
-  <area shape="rect" coords="519,2,706,53" onClick = "linkDHHS();" >
-  <area shape="rect" coords="710,4,993,57" onClick = "linkFirstGov();" >
-</map>
-<map name="TopMapMap">
-  <area shape="rect" coords="21,1,167,54" onClick = "linkcaDSR();" >
-  <area shape="rect" coords="189,1,367,54" onClick = "linkNCI();" >
-  <area shape="rect" coords="471,1,1005,56" onClick = "linkNCICB();">
-</map>
-
-    
-<%}else{%>
-
-<table width="100%" border="4" bgcolor = "#CCCCCC">
-<tr>
-<table width="100%" height="140" border=0>
-  <tr>
-      <td width="33%" align="center"> <img src="Assets/curation_banner2.gif" name="TopMap" border="0" usemap="#TopMapMap" id="TopMap">
-      </td>
-</tr>
-<tr height="200"></tr>
-
-<!--beginning of login table -->
-<table>
-<tr height="60"></tr>
-<td width="40%"></td>
-    <td width=""  align="center">
-   <form name="LoginForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=login">
-    <table width="394" border="4" bgcolor = "#CCCCCC">
-
-     <% if (errMessage.equals("")) { %>
-	      <tr>
-          <td width="387" height="67" valign="middle" align="center">
-             <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">Please enter User Name and Password.</font></h3>
-          </td>
-        </tr>
-      <%} else { %>
-	      <tr>
-          <td width="387" height="67" valign="middle" align="center">
-              <h4 align="center"><font color="#FF0000" style="font-size:18px"><%=errMessage%></font></h4>
-          </td>
-       </tr>
-    <% } %>
-     </table>
-  <table width="394" border="4" bgcolor = "#CCCCCC">
-
+      <td>&nbsp;</td>
+    </tr>          
+    <%} else {%>
+    <!--beginning of login table -->
     <tr>
-      <td width="115" height="30" valign="top" align="center" >
-        <h4><font face="Arial, Helvetica, sans-serif" style="font-size:15px">User Name:</font></h4>
+      <td>&nbsp;</td>
+      <td align="center" valign="middle">
+        <form name="LoginForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=login">
+          <table border="4" bgcolor = "#CCCCCC">
+            <tr>
+              <td colspan="3" height="50" valign="middle" align="center">
+                <% if (errMessage.equals("")) { %>
+                   <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">Please enter User Name and Password.</font></h3>
+                <%} else { %>
+                    <h4 align="center"><font color="#FF0000" style="font-size:18px"><%=errMessage%></font></h4>
+                <% } %>
+              </td>
+            </tr>
+            <tr>
+              <td width="120" valign="top" align="right" height="50">
+                <h4><font face="Arial, Helvetica, sans-serif" style="font-size:15px">User Name</font>&nbsp;</h4>
+              </td>
+              <td width="205" valign="top">
+                <input type="text" name="Username">
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" align="right" height="50">
+                <h4><font face="Arial, Helvetica, sans-serif" style="font-size:15px">Password</font>&nbsp;</h4>
+              </td>
+              <td valign="top" width="205">
+                <input type="password" name="Password">
+              </td>
+            </tr>
+            <tr>
+              <td valign="middle" align="right"  height="50">
+                <input name="Submit"  height="25" type="button" value="Login" onClick="callMessageGifLogin();">&nbsp;
+              </td>                    
+              <td valign="top" width="205"> <img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+              </td>
+              <td width="55">&nbsp;</td>
+            </tr>
+          </table>
+        </form>
       </td>
-      <td width="231" valign="top">
-        <input type="text" name="Username">
-      </td>
-      <td width="20"></td>
+      <td>&nbsp;</td>
     </tr>
+    <%}%>
     <tr>
-      <td height="30" valign="top" width="115" align="center">
-        <h4><font face="Arial, Helvetica, sans-serif" style="font-size:15px">Password</font></h4>
-      </td>
-      <td valign="top" width="231">
-        <input type="password" name="Password">
-      </td>
-      <td width="20"></td>
-    </tr>
-
-      <td height="55" colspan="1" valign="top" width="115">
-        <input name="Submit" type="submit" value="Login" onClick="callMessageGifLogin()">
-      </td>
-
-      <td valign="top" width="231"> <img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
-      </td>
-      <td width="20">
-	<select name="Context" style="visibility:hidden;">
-	 <option></option>
-	</select>
-      </td>
-
-    </tr>
-  </table>
-</form>
-
-    </td>
-<tr height="60">
-      <td width="100"></td>
-      <td width="400" height="30" valign="top" align="center" >
+      <td>&nbsp;</td>
+      <td valign="top" align="center" >
         <h5><font face="Arial, Helvetica, sans-serif" style="font-size:15px">Do not use your browser's "Back" button to navigate once you have logged in. Doing so may cause the tool to function incorrectly.</font></h5>
       </td>
-</tr>
-
-</table>
-  </tr>
-<tr height="100"></tr>
-
-  <tr>
-    <td align="center">
-<table width="100%" border=0>
-  <tr>
-          <td width="20%" align="center"> <img src="Assets/Shorten_Bottom_Logo.gif" border="0" usemap="#BottomMap"> 
-		  
-          </td>
-   
-  </tr>
-</table>
-    </td>
-  </tr>
-</table>
-</table>
-<!-- end of login table -->
-<map name="BottomMap">
-  <area shape="rect" coords="63,0,225,55" onClick = "linkCancerGov();" >
-  <area shape="rect" coords="227,1,517,55" onClick = "linkNIH();" >
-  <area shape="rect" coords="519,2,706,53" onClick = "linkDHHS();" >
-  <area shape="rect" coords="710,4,993,57" onClick = "linkFirstGov();" >
-</map>
-<map name="TopMapMap">
-  <area shape="rect" coords="5,1,110,54" onClick = "linkNCI();" >
-  <area shape="rect" coords="120,1,267,54" onClick = "linkcaDSR();" >
-</map>
-<script language = "javascript">
-onLoad();
-</script>
-<%}%>
+      <td>&nbsp;</td>
+    </tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr>
+      <td colspan="3" width="20%" align="center"> <img src="Assets/Shorten_Bottom_Logo.gif" border="0" usemap="#BottomMap"> 		  
+      </td>   
+    </tr>
+  </table>
+  <!-- end of login table -->
+  <map name="BottomMap">
+    <area shape="rect" coords="63,0,225,55" onClick = "linkCancerGov();" >
+    <area shape="rect" coords="227,1,517,55" onClick = "linkNIH();" >
+    <area shape="rect" coords="519,2,706,53" onClick = "linkDHHS();" >
+    <area shape="rect" coords="710,4,993,57" onClick = "linkFirstGov();" >
+  </map>
+  <map name="TopMapMap">
+    <area shape="rect" coords="5,1,110,54" onClick = "linkNCI();" >
+    <area shape="rect" coords="120,1,267,54" onClick = "linkcaDSR();" >
+  </map>
+  <%
+    if (!lstWinOpenReqs.contains(reqType))  //for windows that are open
+    { %> 
+      <script language = "javascript">
+      onFirstLoad();
+      </script>
+  <% } %>
 </body>
 </html>
 

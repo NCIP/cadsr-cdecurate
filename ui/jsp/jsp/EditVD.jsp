@@ -14,6 +14,8 @@
 <%
     Vector vStatus = (Vector)session.getAttribute("vStatusVD");
     Vector vDataTypes = (Vector)session.getAttribute("vDataType");
+    Vector vDataTypeDesc = (Vector)session.getAttribute("vDataTypeDesc");
+    Vector vDataTypeCom = (Vector)session.getAttribute("vDataTypeComment");
     Vector vUOM = (Vector)session.getAttribute("vUOM");
     Vector vUOMFormat = (Vector)session.getAttribute("vUOMFormat");
     Vector vCD = (Vector)session.getAttribute("vCD");
@@ -145,6 +147,10 @@
     int sNameCount = sName.length();
     String sPrefType = m_VD.getAC_PREF_NAME_TYPE();
     if (sPrefType == null) sPrefType = ""; 
+    String lblUserType = "Existing Name (Editable)";  //make string for user defined label
+    String sUserEnt = m_VD.getAC_USER_PREF_NAME();
+    if (sUserEnt == null || sUserEnt.equals("")) lblUserType = "User Entered";
+
     String sDefinition = m_VD.getVD_PREFERRED_DEFINITION();
     if (sDefinition == null) sDefinition = "";
     String sObjDefinition = m_VD.getVD_Obj_Definition();
@@ -674,7 +680,7 @@ function setup()
         <input name="rNameConv" type="radio" value="ABBR" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("ABBR")) {%> 
           checked <%}%>>Abbreviated &nbsp;&nbsp;&nbsp; 
         <input name="rNameConv" type="radio" value="USER" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("USER")) {%> 
-          checked <%}%>>Existing Name (Editable)  <!--User Maintained-->
+          checked <%}%>><%=lblUserType%>   <!--Existing Name (Editable)  User Maintained-->
       </td>
     </tr>
   <% } %>
@@ -706,26 +712,29 @@ function setup()
           value="<%=sPublicVDID%>" size="20" readonly 
           onHelp = "showHelp('Help_CreateVD.html#createVDForm_CDE_IDTxt'); return false"></font></td>
     </tr>
-    <tr height="25" valign="bottom">
+    <tr><td height="8" valign="top"></tr>
+    <tr height="25" valign="top">
       <%if(sOriginAction.equals("BlockEditVD")){%>
         <td align=right><font color="#C0C0C0"><%=item++%>) </font></td>
         <td><font color="#C0C0C0">Create/Search for Definition </font></td>
       <% } else {%>
          <td align=right><font color="#FF0000">* &nbsp; </font><%=item++%>) </td>
-         <td><font color="#FF0000">Create/Search</font> for Definition </td>
+         <td><font color="#FF0000">Create/Search</font> for Definition 
+            (Changes of naming components would replace any user entered definition. 
+            Please make any desired changes after selecting the naming components.)</td>
       <% } %>
     </tr>      
     <tr>
       <td>&nbsp;</td>
       <td valign="top" align="left">
         <%if(sOriginAction.equals("BlockEditVD")){%>
-          <textarea name="CreateDefinition" cols=100% readonly
-            onHelp = "showHelp('Help_CreateVD.html#createVDForm_CreateDefinition'); return false" rows=2><%=sDefinition%></textarea>
-          &nbsp;&nbsp; <font color="#C0C0C0">Search</a></font>
+          <textarea name="CreateDefinition"  style="width:80%"  rows=6 readonly
+            onHelp = "showHelp('Help_CreateVD.html#createVDForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
+          <!--  &nbsp;&nbsp; <font color="#C0C0C0">Search</a></font> -->
         <% } else {%>
-          <textarea name="CreateDefinition" cols=100%
-            onHelp = "showHelp('Help_CreateVD.html#createVDForm_CreateDefinition'); return false" rows=2><%=sDefinition%></textarea>
-          &nbsp;&nbsp; <font color="#FF0000"> <a href="javascript:OpenEVSWindow()">Search</a></font>
+          <textarea name="CreateDefinition" style="width:80%" rows=6
+            onHelp = "showHelp('Help_CreateVD.html#createVDForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
+          <!-- &nbsp;&nbsp; <font color="#FF0000"> <a href="javascript:OpenEVSWindow()">Search</a></font> --> 
         <% } %>
       </td>
     </tr>
@@ -816,23 +825,33 @@ function setup()
       <td align=right><%if(!sOriginAction.equals("BlockEditVD")){%><font color="#FF0000">*&nbsp;</font><%}%><%=item++%>) </td>
       <td><font color="#FF0000"> Select</font> Data Type </td>
     </tr>  
-    <tr>
-   	 <td>&nbsp;</td>
-   		<td>
-        <select name= "selDataType" size ="1" onChange="javascript:enableValueNum();"
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_selDataType'); return false">
-        <option value="" selected="selected"></option>
+  <tr height="8"><td>&nbsp;</td></tr>    
+  <tr>
+    <td>&nbsp;</td>
+    <td>
+      <table width="90%" border="1">
+        <col width="20%"><col width="35%"><col width="35%">
+        <tr>
+          <td valign="top">
+            <select name= "selDataType" size ="1" onChange="javascript:changeDataType();"  style="width:90%"
+              onHelp = "showHelp('Help_CreateVD.html#createVDForm_selDataType'); return false">
 <%
-          for (int i = 0; vDataTypes.size()>i; i++)
-          {
-             String sCD = (String)vDataTypes.elementAt(i);
+              for (int i = 0; vDataTypes.size()>i; i++)
+              {
+                 String sCD = (String)vDataTypes.elementAt(i);
 %>
-                <option value="<%=sCD%>" <%if(sCD.equalsIgnoreCase(sDataType)){%>selected<%}%> ><%=sCD%></option>
+              <option value="<%=sCD%>" <%if(sCD.equalsIgnoreCase(sDataType)){%>selected<%}%> ><%=sCD%></option>
 <%
-          }
+              }
 %>
-        </select> </td>
-    </tr>
+            </select>
+          </td>
+          <td valign="top" height="25">Data Type Description:<br><label id="lblDTDesc" for="selDataType" style="width:95%" title=""></label></td>
+          <td valign="top" height="25">Data Type Comment:<br><label id="lblDTComment" for="selDataType" style="width:95%" title=""></label></td>
+        </tr> 
+      </table>
+    </td>
+  </tr>
 <%if (!sOriginAction.equals("BlockEditVD")) {%>
     <tr height="15"><td> </td></tr>
     <tr>
@@ -1575,8 +1594,29 @@ function setup()
   }   
 %>
 </select>
+<!-- store datatype description to use later -->
+<select name= "datatypeDesc" size ="1" style="visibility:hidden;width:100;"  multiple>
+<%if (vDataTypes != null) 
+  {
+    for (int i = 0; vDataTypes.size()>i; i++)
+    {
+      String sDType = (String)vDataTypes.elementAt(i);
+      String sDTDesc = "", sDTComm = "";
+      if (i < vDataTypeDesc.size())
+        sDTDesc = (String)vDataTypeDesc.elementAt(i);
+      if (sDTDesc == null || sDTDesc.equals("")) sDTDesc = sDType;
+      if (i < vDataTypeCom.size())
+        sDTComm = (String)vDataTypeCom.elementAt(i);
+      if (sDTComm == null) sDTComm = "";
+%>
+      <option value="<%=sDTDesc%>"><%=sDTComm%></option>
+<%  }
+  }   
+%>
+</select>
+
 <!-- stores the selected rows to get the bean from the search results -->
-<select name= "hiddenSelRow" size="1" style="visibility:hidden;width:160"  multiple></select>
+<select name= "hiddenSelRow" size="1" style="visibility:hidden;width:100"  multiple></select>
 </table>
 <script language = "javascript">
 //call function to initiate form objects
@@ -1585,6 +1625,7 @@ displayStatusMessage();
 loadCSCSI();
 selectParent();   //do the parent select action if the parent was selected.
 ShowEVSInfo('RepQualifier');
+changeDataType();
 </script>
 </form>
 <form name="SearchActionForm" method="post" action="">

@@ -22,6 +22,12 @@
       <param-value>jdbc:oracle:oci:@CBSTG.nci.nih.gov</param-value>
     </init-param>
     <init-param>
+      <param-name>evsconnection</param-name>
+      <param-value>
+	 	http://cbioqatest501.nci.nih.gov:8080/cacoreevs301/server/HTTPServer
+	</param-value>
+    </init-param>
+    <init-param>
       <param-name>iMinConns</param-name>
       <param-value>1</param-value>
     </init-param>

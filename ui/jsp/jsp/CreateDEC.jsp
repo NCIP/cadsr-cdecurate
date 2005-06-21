@@ -47,6 +47,9 @@
     sName = serUtil.parsedString(sName);    //call the function to handle doubleQuote
     if (sName == null) sName = "";
     int sNameCount = sName.length();
+    String lblUserType = "Existing Name (Editable)";  //make string for user defined label
+    String sUserEnt = m_DEC.getAC_USER_PREF_NAME();
+    if (sUserEnt == null || sUserEnt.equals("")) lblUserType = "User Entered";
 
     Vector vOCQualifierNames = m_DEC.getDEC_OC_QUALIFIER_NAMES();
     if (vOCQualifierNames == null) vOCQualifierNames = new Vector();
@@ -533,7 +536,7 @@
           <input name="rNameConv" type="radio" value="ABBR" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("ABBR")) {%> 
             checked <%}%>>Abbreviated &nbsp;&nbsp;&nbsp; 
           <input name="rNameConv" type="radio" value="USER" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("USER")) {%> 
-            checked <%}%>>Existing Name (Editable)  <!--User Maintained-->
+            checked <%}%>><%=lblUserType%>   <!--Existing Name (Editable)  User Maintained-->
         </td>
       </tr>  
       <tr>
@@ -549,17 +552,20 @@
           &nbsp;&nbsp;(Database Max = 30)
         </td>
       </tr>
-      <tr height="25" valign="bottom">
+      <tr><td height="8" valign="top"></tr>
+      <tr height="25" valign="top">
         <td align=right><font color="#FF0000" >* &nbsp;</font><%=item++%>)</td>
-        <td> <font color="#FF0000">Create/Search</font> for Definition</td>
+        <td> <font color="#FF0000">Create/Search</font> for Definition
+            (Changes of naming components would replace any user entered definition. 
+            Please make any desired changes after selecting the naming components.)</td>
       </tr>
      
       <tr>
         <td><font color="#FF0000"> </font></td>
         <td valign="top" align="left">
-          <textarea name="CreateDefinition"  cols="120"
-            onHelp = "showHelp('Help_CreateDEC.html#newDECForm_CreateDefinition'); return false" rows="2"><%=sDefinition%></textarea>
-	 &nbsp;&nbsp; <font color="#FF0000"> <a href="javascript:OpenEVSWindow()">Search</a></font>
+          <textarea name="CreateDefinition" style="width:80%" rows=6
+            onHelp = "showHelp('Help_CreateDEC.html#newDECForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
+	<!-- &nbsp;&nbsp; <font color="#FF0000"> <a href="javascript:OpenEVSWindow()">Search</a></font> --> 
         </td>
       </tr>
       <tr height="25" valign="bottom">

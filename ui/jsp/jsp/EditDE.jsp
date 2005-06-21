@@ -51,14 +51,18 @@
     
     String sLongName = m_DE.getDE_LONG_NAME();
     sLongName = serUtil.parsedString(sLongName);    //call the function to handle doubleQuote
-    if (sLongName == null) sLongName = "";
+    if (sLongName == null || sOriginAction.equals("BlockEditDE")) sLongName = "";
     int sLongNameCount = sLongName.length();
     String sName = m_DE.getDE_PREFERRED_NAME();
     if (sName != null) sName = serUtil.parsedString(sName);    //call the function to handle doubleQuote
-    if (sName == null) sName = "";
+    if (sName == null || sOriginAction.equals("BlockEditDE")) sName = "";
     int sNameCount = sName.length();
     String sPrefType = m_DE.getAC_PREF_NAME_TYPE();
     if (sPrefType == null) sPrefType = ""; 
+    String lblUserType = "Existing Name (Editable)";  //make string for user defined label
+    String sUserEnt = m_DE.getAC_USER_PREF_NAME();
+    if(sOriginAction.equals("BlockEditDE")) lblUserType = "Existing Name (Not Editable)";
+    else if (sUserEnt == null || sUserEnt.equals("")) lblUserType = "User Entered";
 
     String sDefinition = m_DE.getDE_PREFERRED_DEFINITION();
     if (sDefinition == null) sDefinition = "";
@@ -355,11 +359,12 @@ System.out.println("jsap " + decvdChanged);
       </td>
     </tr>
     <tr valign="bottom" height="25">
-      <% if(sOriginAction.equals("BlockEditDE")){%>
+      <!-- add the hyperlink do not allow update if alredy vd selected in the block edit-->
+      <% if (sOriginAction.equals("BlockEditDE") && sVDID != null && !sVDID.equals("")){%>
         <td align=right><font color="#C0C0C0"><%=item++%>)</font></td>
         <td><font color="#C0C0C0">Select Data Element Concept Long Name</font></td>
       <%} else {%>
-        <td align=right><font color="#FF0000">*&nbsp;&nbsp;</font><%=item++%>)</td>
+        <td align=right><font color="#FF0000"><% if(!sOriginAction.equals("BlockEditDE")){%>*<%}%>&nbsp;&nbsp;</font><%=item++%>)</td>
         <td><font color="#FF0000">Select </font>Data Element Concept Long Name</td>
       <%}%>
     </tr>  
@@ -371,21 +376,25 @@ System.out.println("jsap " + decvdChanged);
             onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selDEC'); return false">
            <option value="<%=sDECID%>"><%=sDEC%></option>
         </select>
-          <%if(!sOriginAction.equals("BlockEditDE")){%>
+        <!-- add the hyperlink do not allow search if alredy vd selected in the block edit-->
+        <% if(!(sOriginAction.equals("BlockEditDE") && sVDID != null && !sVDID.equals(""))){%>
           &nbsp;&nbsp;<a href="javascript:SearchDECValue();">Search</a>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="javascript:EditDECValue();">Edit DEC</a>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="javascript:CreateNewDECValue();">Create New DEC</a>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <%}%>
+        <%if(!sOriginAction.equals("BlockEditDE")){%>
+          <a href="javascript:EditDECValue();">Edit DEC</a>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="javascript:CreateNewDECValue();">Create New DEC</a>
         <% }%>
       </td>
     </tr>
     <tr valign="bottom" height="25">
-      <% if(sOriginAction.equals("BlockEditDE")){%>
+      <!-- add the hyperlink do not allow update if alredy dec selected in the block edit-->
+      <% if(sOriginAction.equals("BlockEditDE") && sDECID != null && !sDECID.equals("")){%>
         <td align=right><font color="#C0C0C0"><%=item++%>)</font></td>
         <td><font color="#C0C0C0">Select Value Domain Long Name</font></td>
       <%} else {%>
-        <td align=right><font color="#FF0000">*&nbsp;&nbsp;</font><%=item++%>)</td>
+        <td align=right><font color="#FF0000"><% if(!sOriginAction.equals("BlockEditDE")){%>*<%}%>&nbsp;&nbsp;</font><%=item++%>)</td>
         <td><font color="#FF0000">Select </font>Value Domain Long Name</td>
       <%}%>
     </tr>  
@@ -396,13 +405,17 @@ System.out.println("jsap " + decvdChanged);
           onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selVD'); return false">
           <option value="<%=sVDID%>"><%=sVD%></option>
         </select>
-            <%if(!sOriginAction.equals("BlockEditDE")){%>
+        <!-- add the hyperlink do not allow search if alredy dec selected in the block edit-->
+        <% if(!(sOriginAction.equals("BlockEditDE") && sDECID != null && !sDECID.equals(""))){%>
             &nbsp;&nbsp;<a href="javascript:SearchVDValue()">Search</a>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <a href="javascript:EditVDValue()">Edit VD</a>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <a href="javascript:CreateNewVDValue()">Create New VD</a> 
-        <%  } %>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <%}%>
+        <%if(!sOriginAction.equals("BlockEditDE")){%>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="javascript:EditVDValue()">Edit VD</a>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="javascript:CreateNewVDValue()">Create New VD</a> 
+        <%}%>
       </td>
     </tr>
   	<tr valign="bottom" height="25">
@@ -439,28 +452,26 @@ System.out.println("jsap " + decvdChanged);
         <td><font color="#FF0000">Update</font><font color="#000000"> Data Element Preferred Name</font></td>
       <% } %>
     </tr>
-    <%if(!sOriginAction.equals("BlockEditDE")){%>
-      <tr>
-        <td>&nbsp;</td>
-        <td height="24" valign="bottom">Select Preferred Name Naming Standard</td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td height="24" valign="top">
-          <input name="rNameConv" type="radio" value="SYS" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("SYS")) {%> 
-            checked <%}%>>System Generated &nbsp;&nbsp;&nbsp; 
-          <input name="rNameConv" type="radio" value="ABBR" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("ABBR")) {%> 
-            checked <%}%>>Abbreviated &nbsp;&nbsp;&nbsp; 
-          <input name="rNameConv" type="radio" value="USER" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("USER")) {%> 
-            checked <%}%>>Existing Name (Editable)  <!--User Maintained-->
-        </td>
-      </tr> 
-    <% } %>
+    <tr>
+      <td>&nbsp;</td>
+      <td height="24" valign="bottom">Select Preferred Name Naming Standard</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td height="24" valign="top">
+        <input name="rNameConv" type="radio" value="SYS" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("SYS")) {%> 
+          checked <%}%>>System Generated &nbsp;&nbsp;&nbsp; 
+        <input name="rNameConv" type="radio" value="ABBR" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("ABBR")) {%> 
+          checked <%}%>>Abbreviated &nbsp;&nbsp;&nbsp; 
+        <input name="rNameConv" type="radio" value="USER" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("USER")) {%> 
+          checked <%}%>><%=lblUserType%>   <!--Existing Name (Editable)  User Maintained-->
+      </td>
+    </tr> 
     <tr>
     	<td>&nbsp;</td>
      	<td height="24" valign="top" >
 	      <input name="txtPreferredName" type="text" size="80" value="<%=sName%>" onKeyUp="changeCountPN();"
-          <%if (sOriginAction.equals("BlockEditDE") || sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")){%>readonly<%}%>
+          <% if (sOriginAction.equals("BlockEditDE") || sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")){ %>readonly<%}%>
 	        onHelp = "showHelp('Help_CreateDE.html#newCDEForm_txtPreferredName'); return false">
           &nbsp;&nbsp;&nbsp; 
         <input name="txtPrefNameCount" type="text" size="1" value="<%=sNameCount%>" readonly
@@ -484,26 +495,29 @@ System.out.println("jsap " + decvdChanged);
           onHelp = "showHelp('Help_CreateDE.html#newCDEForm_CDE_IDTxt'); return false"></font></td>
     </tr>
 
-    <tr valign="bottom" height="25">
+    <tr><td height="8" valign="top"></tr>
+    <tr height="25" valign="top">
       <%if(sOriginAction.equals("BlockEditDE")){%>
         <td align=right><font color="#C0C0C0"><%=item++%>)</font></td>
         <td><font color="#C0C0C0">Create/Search for Definition</font></td>
       <% } else {%>
         <td align=right><font color="#FF0000">*&nbsp;&nbsp;</font><%=item++%>)</td>
-        <td><font color="#FF0000">Create/Search</font> for Definition</td>
+        <td><font color="#FF0000">Create/Search</font> for Definition
+            (Changes of naming components would replace any user entered definition. 
+            Please make any desired changes after selecting the naming components.)</td>
       <% } %>
     </tr>
     <tr> 
       <td>&nbsp;</td>
       <td valign="top" align="left">
         <%if(sOriginAction.equals("BlockEditDE")){%>
-          <textarea name="CreateDefinition" cols="100" readonly
-            onHelp = "showHelp('Help_CreateDE.html#newCDEForm_CreateDefinition'); return false" rows=2><%=sDefinition%></textarea>
-            &nbsp;&nbsp;<font color="#C0C0C0">Search</a></font>
+          <textarea name="CreateDefinition" style="width:80%" rows=6 readonly
+            onHelp = "showHelp('Help_CreateDE.html#newCDEForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
+        <!--  &nbsp;&nbsp;<font color="#C0C0C0">Search</a></font>  -->
         <% } else {%>
-          <textarea name="CreateDefinition" cols="100"
-            onHelp = "showHelp('Help_CreateDE.html#newCDEForm_CreateDefinition'); return false" rows=2><%=sDefinition%></textarea>
-            &nbsp;&nbsp;<a href="javascript:AccessEVS()">Search</a></font>
+          <textarea name="CreateDefinition" style="width:80%" rows=6
+            onHelp = "showHelp('Help_CreateDE.html#newCDEForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
+           <!--   &nbsp;&nbsp;<a href="javascript:AccessEVS()">Search</a></font> -->
         <% } %>
       </td>
     </tr>
@@ -544,9 +558,9 @@ System.out.println("jsap " + decvdChanged);
 
     <tr height="25" valign="bottom">
       <% if (sOriginAction.equals("BlockEditDE")){%>
-        <td align=right><font color="#C0C0C0"><%=item++%>)</font></td>
-        <td height="25" valign="bottom"><font color="#C0C0C0">Check Box to Create New Version</font>
-          <!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://ncicb.nci.nih.gov/NCICB/core/caDSR/BusinessRules" target="_blank">Business Rules</a>-->
+        <td align=right><%=item++%>)</td>
+        <td height="25" valign="bottom">Check Box to Create New Version
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://ncicb.nci.nih.gov/NCICB/core/caDSR/BusinessRules" target="_blank">Business Rules</a>
         </td>
       <% } else {%>
         <td align=right><font color="#C0C0C0"><%=item++%>)</font></td>
@@ -563,20 +577,20 @@ System.out.println("jsap " + decvdChanged);
                 <!--Version check is checked only if the sVersion is either Whole or Point   -->
                 <td valign="top">&nbsp;&nbsp;
                   <input type="checkbox" name="VersionCheck" onClick="javascript:EnableChecks(checked,this);" value="ON"
-                      <%if(sVersion.equals("Whole") || sVersion.equals("Point")) {%>checked<%}%> disabled
+                      <%if(sVersion.equals("Whole") || sVersion.equals("Point")) {%>checked<%}%>
 											onHelp = "showHelp('Help_CreateDE.html#createCDEForm_BlockVersion'); return false"></td>
                 <!--Point check is checked only if the sVersion is Point and disabled otherwise  -->
                 <td>
                   <input type="checkbox" name="PointCheck" onClick="javascript:EnableChecks(checked,this);" value="ON"
                       <%if(sVersion.equals("Point")){%> checked <%} else {%> disabled <%}%>
 											onHelp = "showHelp('Help_CreateDE.html#createCDEForm_BlockVersion'); return false">
-                      <font color="#C0C0C0">&nbsp;Point Increase</font></td>
+                      &nbsp;Point Increase</td>
                 <!--Whole check is checked only if the sVersion is Whole and disabled otherwise  -->
                 <td colspan=2>
                   <input type="checkbox" name="WholeCheck" onClick="javascript:EnableChecks(checked,this)" value="ON"
                       <%if(sVersion.equals("Whole")){%> checked <%} else {%> disabled <%}%>
 											onHelp = "showHelp('Help_CreateDE.html#createCDEForm_BlockVersion'); return false">
-                      <font color="#C0C0C0">&nbsp;Whole Increase</font>
+                      &nbsp;Whole Increase
                 </td>
               </tr>
             </table> 
@@ -605,8 +619,8 @@ System.out.println("jsap " + decvdChanged);
               {
                 String sReg = (String)vRegStatus.elementAt(i);
                 boolean isOK = true;
-                if(sOriginAction.equals("BlockEditDE") && (sReg.equalsIgnoreCase("Candidate") || sReg.equalsIgnoreCase("Standard")))
-                  isOK = false;
+             //   if(sOriginAction.equals("BlockEditDE") && (sReg.equalsIgnoreCase("Candidate") || sReg.equalsIgnoreCase("Standard")))
+             //     isOK = false;
                 if (isOK) {
 %>
               <option value="<%=sReg%>" <%if(sReg.equals(sRegStatus)){%>selected<%}%>><%=sReg%></option>

@@ -396,7 +396,7 @@ public class SetACService implements Serializable
   */
   public void setValidatePageValuesDEC(HttpServletRequest req,
           HttpServletResponse res, DEC_Bean m_DEC, EVS_Bean m_OC, EVS_Bean m_PC, 
-           GetACService getAC) 
+           GetACService getAC, EVS_Bean m_OCQ, EVS_Bean m_PCQ) 
           throws ServletException,IOException, Exception
   {
 //System.out.println("setValidatePageValuesDEC");
@@ -422,14 +422,14 @@ public class SetACService implements Serializable
       // mandatory for both Edit and New
       s = m_DEC.getDEC_CONTEXT_NAME();
       String sID = m_DEC.getDEC_CONTE_IDSEQ();
-  
+ // System.out.println("setValidatePageValuesDEC0");
       if ((sUser != null) && (sID != null))
         strInValid = checkWritePermission("dec", sUser, sID, getAC);
       if (strInValid.equals("")) session.setAttribute("sDefaultContext", s);
       setValPageVector(vValidate, "Context", s, bMandatory, 36, strInValid, sOriginAction);
       //validate naming components
       vValidate = this.setValidateNameComp(vValidate, "DataElementConcept", req, res, m_DEC, m_OC, m_PC, null, null);
-  
+ // System.out.println("setValidatePageValuesDEC2");
       s = m_DEC.getDEC_LONG_NAME();
       if (s == null) s = "";
       strInValid = "";
@@ -474,7 +474,7 @@ public class SetACService implements Serializable
       s = m_DEC.getDEC_CD_NAME();
       if (s == null) s = "";
       setValPageVector(vValidate, "Conceptual Domain", s, bMandatory, iNoLengthLimit, "", sOriginAction);
-
+System.out.println("setValidatePageValuesDEC3");
       s = m_DEC.getDEC_ASL_NAME();
       if (s == null) s = "";  
       if(s.equals("Released") || s.equals("RELEASED"))
@@ -491,7 +491,6 @@ public class SetACService implements Serializable
             oc_id = m_OC.getIDSEQ();
           if(m_PC != null)
             prop_id = m_PC.getIDSEQ();
-
           strInValid = checkOCPropWorkFlowStatuses(req, res, oc_id, prop_id, strInValid);
         }
       }
@@ -574,6 +573,7 @@ public class SetACService implements Serializable
         
       // finaly, send vector to JSP
       req.setAttribute("vValidate", vValidate);
+// System.err.println("done validateDEC");
   }
 
  /**
@@ -595,6 +595,7 @@ public class SetACService implements Serializable
         VD_Bean m_VD, EVS_Bean m_OC, EVS_Bean m_PC, EVS_Bean m_REP, EVS_Bean m_OCQ, 
         EVS_Bean m_PCQ, EVS_Bean m_REPQ, GetACService getAC) throws ServletException,IOException, Exception
   {
+//System.out.println("setValidatePageValuesVD");
       HttpSession session = req.getSession();
       GetACSearch getACSer = new GetACSearch(req, res, m_servlet);
       Vector vValidate = new Vector();
@@ -698,9 +699,14 @@ public class SetACService implements Serializable
    
       //get the parent concept
       s = "";
+      strInValid = "";
       Vector vParList = (Vector)session.getAttribute("VDParentConcept");
+      InsACService insAC = new InsACService(req, res, m_servlet);
+      if(vParList != null)
+            strInValid = checkConceptCodeExistsInOtherDB(vParList, insAC, null);
       if (vParList != null && vParList.size()>0)
       {
+System.out.println("val VD vParList.size(): " + vParList.size());
         for (int i =0; i<vParList.size(); i++)
         {
           EVS_Bean parBean = (EVS_Bean)vParList.elementAt(i);
@@ -724,7 +730,7 @@ public class SetACService implements Serializable
         }
       }
 
-      setValPageVector(vValidate, "Parent Concept", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+      setValPageVector(vValidate, "Parent Concept", s, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
       //no need to put values as it does not exist.
       if (m_VD.getVD_TYPE_FLAG().equals("E"))
         vValidate = this.validateVDPVS(req, res, m_VD, vValidate, sOriginAction);
@@ -904,6 +910,9 @@ public class SetACService implements Serializable
      EVS_Bean oc = (EVS_Bean)session.getAttribute("m_OC");
      EVS_Bean pc = (EVS_Bean)session.getAttribute("m_PC");
      EVS_Bean rep = (EVS_Bean)session.getAttribute("m_REP");
+     EVS_Bean ocq = (EVS_Bean)session.getAttribute("m_OCQ");
+     EVS_Bean pcq = (EVS_Bean)session.getAttribute("m_PCQ");
+     EVS_Bean repq = (EVS_Bean)session.getAttribute("m_REPQ");
      if (sACType.equals("DataElement"))
      {
         sVer = de.getDE_VERSION();
@@ -940,7 +949,20 @@ public class SetACService implements Serializable
         vACCSI = (Vector)vd.getVD_AC_CSI_VECTOR();
         vAC_CS = vd.getVD_AC_CSI_VECTOR();
      }
-     if (sACType.equals("DataElementConcept"))
+     
+     //add them to validate pages
+     if (sACType.equals("DataElement"))
+     {
+        //dec attribute
+        s = de.getDE_DEC_NAME();
+        if (s == null) s = "";
+        setValPageVector(vValidate, "Data Element Concept", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
+        //vd attribute
+        s = de.getDE_VD_NAME();
+        if (s == null) s = "";
+        setValPageVector(vValidate, "Value Domain", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
+     } 
+     else if (sACType.equals("DataElementConcept"))
       {
         //validate naming components
         vValidate = this.setValidateNameComp(vValidate, sACType, req, res, dec, oc, pc, null, null);
@@ -962,13 +984,10 @@ public class SetACService implements Serializable
       if (sWF == null) sWF = "";
       setValPageVector(vValidate, "Workflow Status", sWF, bNotMandatory, 20, "", sOriginAction);
     
-      //version for only dec and vd
-      if (!sACType.equals("DataElement"))
-      {      
-        if (sVer == null) sVer = "";
-        strInValid = "";
-        setValPageVector(vValidate, "Version", sVer, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
-      }
+      //version
+      if (sVer == null) sVer = "";
+      strInValid = "";
+      setValPageVector(vValidate, "Version", sVer, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
       
         //registration status
       if (sACType.equals("DataElement"))
@@ -1086,9 +1105,20 @@ public class SetACService implements Serializable
           VD_Bean m_VD, EVS_Bean m_REP) 
           throws ServletException,IOException, Exception
   {
+System.out.println("setValidateNameComp");
       HttpSession session = req.getSession();
       GetACSearch getACSer = new GetACSearch(req, res, m_servlet);
+      InsACService insAC = new InsACService(req, res, m_servlet);
       String sOriginAction = (String)session.getAttribute("originAction");
+      Vector vOC = new Vector();
+      Vector vPROP = new Vector();
+      Vector vREP = new Vector();
+      vOC = (Vector)session.getAttribute("vObjectClass");
+      vPROP = (Vector)session.getAttribute("vProperty");
+      vREP = (Vector)session.getAttribute("vRepTerm");
+      if (vOC == null) vOC = new Vector();
+      if (vPROP == null) vPROP = new Vector();
+      if (vREP == null) vREP = new Vector();
       String s = "";
       boolean bMandatory = true;
       boolean bNotMandatory = false;
@@ -1104,7 +1134,6 @@ public class SetACService implements Serializable
            sDECAction = "Edit";
         else
            sDECAction = "Create";
-
         String ss = "";
         String sP = m_DEC.getDEC_OCL_NAME_PRIMARY();
         if (sP == null) sP = "";
@@ -1112,12 +1141,15 @@ public class SetACService implements Serializable
         Vector vQ = m_DEC.getDEC_OC_QUALIFIER_NAMES();
         if (vQ != null && vQ.size() > 0)
           sQ = (String)vQ.elementAt(0);
+        if (sQ == null) sQ = "";
         //check validity of object class before creating one
         String sOCL = m_DEC.getDEC_OCL_NAME();
         String strOCInvalid = "";
         if(!sQ.equals("") && sP.equals(""))
           strOCInvalid = "Cannot have Secondary Concepts without a Primary Concept.\n";
-          //do de-oc validation
+        if(!sQ.equals("") || !sP.equals("") && m_OC != null)
+          strOCInvalid = strOCInvalid + checkConceptCodeExistsInOtherDB(vOC, insAC, null);
+//System.out.println("setValidateNameComp05");
         if ((sOCL == null || sOCL.equals("")) && sDECAction.equals("Edit"))  
           strOCInvalid = strOCInvalid + checkDEUsingDEC("ObjectClass", m_DEC, getACSer);
         else if (sOCL == null || sOCL.equals(""))
@@ -1137,14 +1169,17 @@ public class SetACService implements Serializable
           
         if(!sQual.equals("") && sProp.equals(""))
           strPropInvalid = "Cannot have Secondary Concepts without a Primary Concept.\n"; 
+         if(!sQual.equals("") || !sProp.equals("") && m_PC != null)
+          strPropInvalid = strPropInvalid + checkConceptCodeExistsInOtherDB(vPROP, insAC, null);
         //create object class and property only if valid
         if ((strOCInvalid == null || strOCInvalid.equals("")) && (strPropInvalid == null || strPropInvalid.equals("")))
-            m_servlet.doInsertDECBlocks(req, res, m_DEC);        
+            m_DEC = m_servlet.doInsertDECBlocks(req, res, m_DEC);        
         //check oc prop combination already exists in the database         
         String objID = m_DEC.getDEC_OCL_IDSEQ();
         String propID = m_DEC.getDEC_PROPL_IDSEQ();
         //display error if not created properly.
         String retCode = (String)req.getAttribute("retcode");
+  System.out.println(retCode + " : " + objID + " : " + propID);
         if (retCode != null && !retCode.equals(""))
         {
           //display error if unable to create object class.
@@ -1155,10 +1190,55 @@ public class SetACService implements Serializable
           if (sPropL != null && !sPropL.equals("") && (propID == null || propID.equals("")))
             strPropInvalid = strPropInvalid + sMsg;
         }
-        else
+        //do only new version of oc/prop if necessary for DEC without unique check
+        else if (!sOriginAction.equals("BlockEditDEC"))
         {
           if ((objID != null && !objID.equals("")) || (propID != null && !propID.equals("")))
-            strInValid = checkUniqueOCPropPair(m_DEC, req, res, sOriginAction); 
+            strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction); 
+           // strInValid = checkUniqueOCPropPair(m_DEC, req, res, sOriginAction); 
+        }
+    System.out.println(sOriginAction + " oc prop invalid " + strInValid);
+        //create new version if unique for single or block edit dec
+        if (strInValid == null || strInValid.equals("") || strInValid.indexOf("Warning") > 0)
+        {
+          //allow creating new version of object class here if asl name is not released
+          if (objID != null && !objID.equals(""))
+          {
+            req.setAttribute("retcode", "");
+            String sOCasl = m_DEC.getDEC_OBJ_ASL_NAME();
+            String newID = "";
+            System.out.println(sOCasl + " create block OC new version here");
+            if (sOCasl != null && !sOCasl.equals("RELEASED"))
+            {
+              newID = insAC.setOC_PROP_REP_VERSION(objID, "ObjectClass");
+              if (newID != null && !newID.equals(""))
+                m_DEC.setDEC_OCL_IDSEQ(newID);
+              else
+              {
+                String errCode = (String)req.getAttribute("retcode");
+                strOCInvalid += errCode + " : Unable to create new version of the Object Class";
+              }
+            }
+          }
+          //allow creating new version of property here if asl name is not released
+          if (propID != null && !propID.equals(""))
+          {
+            req.setAttribute("retcode", "");
+            String sPROPasl = m_DEC.getDEC_PROP_ASL_NAME();
+            String newID = "";
+            System.out.println(sPROPasl + " create block PROP new version here");
+            if (sPROPasl != null && !sPROPasl.equals("RELEASED"))
+            {
+              newID = insAC.setOC_PROP_REP_VERSION(propID, "Property");
+              if (newID != null && !newID.equals(""))
+                m_DEC.setDEC_PROPL_IDSEQ(newID);
+              else
+              {
+                String errCode = (String)req.getAttribute("retcode");
+                strPropInvalid += errCode + " : Unable to create new version of the Property";
+              }
+            }
+          }
         }
         //append it to oc invalid
         strOCInvalid = strOCInvalid + strInValid; 
@@ -1190,6 +1270,8 @@ public class SetACService implements Serializable
           sQ = (String)vQual.elementAt(0);
         if(!sQ.equals("") && sP.equals(""))
           strInValid = "Cannot have Secondary Concepts without a Primary Concept.\n";
+        if(!sQ.equals("") || !sP.equals("") && m_REP != null)
+          strInValid = strInValid + checkConceptCodeExistsInOtherDB(vREP, insAC, null);
         ss = m_VD.getVD_REP_TERM();
         setValPageVector(vValidate, "Rep Term", ss, bNotMandatory, 255, strInValid, sOriginAction);
       }
@@ -1466,7 +1548,8 @@ public class SetACService implements Serializable
   * @throws ServletException  If servlet exception occured
   */
   public void setValidatePageValuesVM(HttpServletRequest req,
-          HttpServletResponse res, VM_Bean m_VM, GetACService getAC) throws ServletException,IOException
+          HttpServletResponse res, VM_Bean m_VM, GetACService getAC) 
+          throws ServletException,IOException, Exception
   {
       HttpSession session = req.getSession();
       Vector vValidate = new Vector();
@@ -1476,7 +1559,6 @@ public class SetACService implements Serializable
       String strInValid = "";
       int iLengthLimit = 30;
       int iNoLengthLimit = -1;
-
         s = m_VM.getVM_SHORT_MEANING();
         if (s == null) s = "";
         req.setAttribute("VMExist", "false");
@@ -1486,6 +1568,9 @@ public class SetACService implements Serializable
           strInValid = "Value Meaning exists in caDSR.";
           req.setAttribute("VMExist", "true");
         }
+        InsACService insAC = new InsACService(req, res, m_servlet);
+        if(!s.equals("") && m_VM != null)
+          strInValid = strInValid + checkConceptCodeExistsInOtherDB(null, insAC, m_VM);
         setValPageVector(vValidate, "Value Meaning", s, bMandatory, 2000, strInValid, "");
 
         s = m_VM.getVM_CD_NAME();
@@ -1911,7 +1996,7 @@ public class SetACService implements Serializable
      //make the query 
     sSQL = "SELECT distinct DEC_ID FROM DATA_ELEMENT_CONCEPTS_VIEW DEC WHERE DEC.CONTE_IDSEQ = '" + sContID + "'" 
             + ocSQL + propSQL + editSQL;      //versSQL + editSQL;           
- //System.out.println(sSQL); 
+  logger.debug("oc prop pair " + sSQL); 
 
     String sDECID = getAC.isUniqueInContext(sSQL);
     if (sDECID == null || sDECID.equals(""))
@@ -2183,6 +2268,66 @@ public class SetACService implements Serializable
     }
     return strInvalid;
   }
+  
+  
+ /**
+  * To check whether data is unique value in the database for the building blocks,
+  * called from setValidatePageValuesDEC, setValidatePageValuesVD methods.
+  * Creates the sql queries for the selected type, to check if the value exists in the database.
+  * Calls 'getAC.doBlockExist' to execute the query.
+  *
+  * @param ACType String selected block type.
+  * @param sContext String selected context.
+  * @param sValue String field value.
+  * @param getAC reference to GetACService class.
+  *
+  * @return String retValue message if exists already. Otherwise empty string.
+  */
+  public String checkConceptCodeExistsInOtherDB(Vector vAC, InsACService insAC, VM_Bean m_VM) throws Exception
+  {
+      String strInValid = "";
+      String sRet = "";
+      boolean blnBadData = false;
+      if(vAC != null)
+      {
+        for (int m=0; m<vAC.size(); m++)
+        {
+          EVS_Bean evsBean = (EVS_Bean)vAC.elementAt(m);
+          if(evsBean != null && evsBean.getCON_AC_SUBMIT_ACTION() != null && !evsBean.getCON_AC_SUBMIT_ACTION().equals("DEL"))
+          {
+            strInValid = insAC.getConcept(sRet, evsBean, true);
+            if(strInValid == null)
+              strInValid = "";
+            if(strInValid.length()>2)
+            {
+              if(!strInValid.substring(0,2).equals("An"))
+                strInValid = "";
+              else
+                break;
+            }
+          }
+        }
+      }
+      else if(m_VM != null)
+      {
+        EVS_Bean evsBean = m_VM.getVM_CONCEPT();
+        if(evsBean != null)
+        {
+            strInValid = insAC.getConcept(sRet, evsBean, true);
+            if(strInValid == null)
+              strInValid = "";
+            if(strInValid.length()>2)
+            {
+              if(!strInValid.substring(0,2).equals("An"))
+                strInValid = "";
+            }
+        }
+      }
+System.out.println("done checkConceptCodeExistsInOtherDB");
+      return strInValid;
+
+  }
+              
   /**
   * To check whether data is unique value in the database for the building blocks,
   * called from setValidatePageValuesDEC, setValidatePageValuesVD methods.
@@ -2843,6 +2988,7 @@ public class SetACService implements Serializable
   public void setDECValueFromPage(HttpServletRequest req,
           HttpServletResponse res, DEC_Bean m_DEC) throws ServletException,IOException
   {
+ System.err.println("in setDECVals");
       HttpSession session = req.getSession();
       String sOriginAction = (String)session.getAttribute("originAction");
       if (sOriginAction == null) sOriginAction.equals("");
@@ -2866,7 +3012,7 @@ public class SetACService implements Serializable
         sID = "";
       else
         sID = (String)req.getParameter("selContext");
-
+System.err.println("in setDECVals1");
       if ((sID != null) || (!sID.equals("")))
       {
         sName = m_util.getNameByID((Vector)session.getAttribute("vContext"), (Vector)session.getAttribute("vContext_ID"), sID);
@@ -2882,7 +3028,7 @@ public class SetACService implements Serializable
       if(s != null)
         m_DEC.setDEC_PROPL_NAME(s);
         
- 
+ System.err.println("in setDECVals2");
       sName = "";
       if(sOriginAction.equals("BlockEditDEC"))
         sName = "";
@@ -3050,6 +3196,7 @@ public class SetACService implements Serializable
       //get associated cs-id
       sIDs = req.getParameterValues("selectedCS");
       m_DEC.setDEC_CS_ID(this.getSelectionFromPage(sIDs));    
+System.err.println("done setDECVals");
   } // end of setDECValueFromPage
 
   /**

@@ -19,7 +19,8 @@
     Vector vCS_ID = (Vector)session.getAttribute("vCS_ID");
     Vector vAltTypes = (Vector)session.getAttribute("AltNameTypes");
     Vector vRefTypes = (Vector)session.getAttribute("RefDocTypes");
-
+    Vector vLanguage = (Vector)session.getAttribute("vLanguage");
+    
     String sMenuAction = (String)session.getAttribute("MenuAction");
     String sOriginAction = (String)session.getAttribute("originAction");
     if (sOriginAction == null) sOriginAction = "";
@@ -29,10 +30,15 @@
     String sDEIDSEQ = m_DE.getDE_DE_IDSEQ();
     if (sDEIDSEQ == null) sDEIDSEQ = "";
 
-    String sContext = m_DE.getDE_CONTEXT_NAME();
+    String sContext = (String)request.getAttribute("desContext");
+    if (sContext == null) sContext = "";
+    String sDesLang = (String)request.getAttribute("desLang");
+    if (sDesLang == null || sDesLang.equals("")) sDesLang = "ENGLISH";
+    
+  /*  String sContext = m_DE.getDE_CONTEXT_NAME();
     if (sContext == null) sContext = "";
     String sContID = m_DE.getDE_CONTE_IDSEQ();
-    if (sContID == null) sContID = "";
+    if (sContID == null) sContID = ""; */
 
     String sLongName = m_DE.getDE_LONG_NAME();
     sLongName = serUtil.parsedString(sLongName);    //call the function to handle doubleQuote
@@ -56,9 +62,43 @@
     //get alternate name attributs
     Vector vAllAltName = (Vector)session.getAttribute("AllAltNameList"); 
     if (vAllAltName == null) vAllAltName = new Vector();
+    Vector vDispAlt = new Vector();
+    for (int i =0; i<vAllAltName.size(); i++)
+    {
+      ALT_NAME_Bean altNameBean = (ALT_NAME_Bean)vAllAltName.elementAt(i);
+      if (altNameBean == null) altNameBean = new ALT_NAME_Bean();
+      String altType = altNameBean.getALT_TYPE_NAME();
+      String altSubmit = altNameBean.getALT_SUBMIT_ACTION();
+      String altName = altNameBean.getALTERNATE_NAME();
+      String altContext = altNameBean.getCONTEXT_NAME();
+      String curAlt = altType + " " + altName + " " + altContext;
+      //do not count if used by, del, or alredy displayed
+      if ((altType != null && altType.equals("USED_BY")) || (altSubmit != null 
+        && altSubmit.equals("DEL")) || vDispAlt.contains(curAlt))
+        continue;
+      //do the count and chek box name
+      vDispAlt.addElement(curAlt);
+    }
     //get reference doc attributes
     Vector vAllRefDoc = (Vector)session.getAttribute("AllRefDocList"); 
     if (vAllRefDoc == null) vAllRefDoc = new Vector();
+    Vector vDispRef = new Vector();
+    for (int i =0; i<vAllRefDoc.size(); i++)
+    {
+      REF_DOC_Bean refDocBean = (REF_DOC_Bean)vAllRefDoc.elementAt(i);
+      if (refDocBean == null) refDocBean = new REF_DOC_Bean();
+      String refType = refDocBean.getDOC_TYPE_NAME();
+      String refSubmit = refDocBean.getREF_SUBMIT_ACTION();
+      String refName = refDocBean.getDOCUMENT_NAME();
+      String refContext = refDocBean.getCONTEXT_NAME();
+      String curRef = refType + " " + refName + " " + refContext;
+      //do not count if used by, del, or alredy displayed
+      if ((refType != null && refType.equals("USED_BY")) || (refSubmit != null 
+        && refSubmit.equals("DEL")) || vDispRef.contains(curRef))
+        continue;
+      //do the count and chek box name
+      vDispRef.addElement(curRef);
+    }
     
     int item = 1;
         
@@ -71,8 +111,8 @@
   var selCSIArray = new Array();  //for selected csi list
   var selACCSIArray = new Array();  //for selected AC-csi list
   var writeContArray = new Array();
-  var selRefDocArray = new Array();  //for selected reference doc list
-  var selAltNameArray = new Array();  //for selected alternate name list
+//  var selRefDocArray = new Array();  //for selected reference doc list
+//  var selAltNameArray = new Array();  //for selected alternate name list
   var browseWindow = null;
   
   function loadCSCSI()
@@ -181,93 +221,6 @@
     window.status = "Edit the Designated Data Element, choose context first"
   }
 
-  //store reference documents in the array
-  function loadRefDocArray()
-  {
-<%  if (vAllRefDoc != null)
-    {
-      for (int i=0; i<vAllRefDoc.size(); i++)
-      {
-        REF_DOC_Bean refDocBean = (REF_DOC_Bean)vAllRefDoc.elementAt(i);
-        if (refDocBean == null) refDocBean = new REF_DOC_Bean();
-        //System.out.println(i + " RefDoc : " + refDocBean.getDOCUMENT_TEXT());
-%>
-        var aIndex = <%=i%>;  //get the index
-        var objRefDoc = new refDocs();
-        objRefDoc.idseq = "<%=refDocBean.getREF_DOC_IDSEQ()%>";
-        objRefDoc.conte_name = "<%=refDocBean.getCONTEXT_NAME()%>";
-        objRefDoc.conte_id = "<%=refDocBean.getCONTE_IDSEQ()%>";
-        <% //parse the string for quotation character
-          String docName = refDocBean.getDOCUMENT_NAME();
-          docName = serUtil.removeNewLineChar(docName);
-          docName = serUtil.parsedStringDoubleQuote(docName);%>
-        objRefDoc.ref_name = "<%=docName%>";
-        <% //parse the string for quotation character
-          String docText = refDocBean.getDOCUMENT_TEXT();
-          docText = serUtil.removeNewLineChar(docText);
-          docText = serUtil.parsedStringDoubleQuote(docText);%>
-        objRefDoc.ref_text = "<%=docText%>";
-        <% //parse the string for quotation character
-          String docURL = refDocBean.getDOCUMENT_URL();
-          docURL = serUtil.removeNewLineChar(docURL);
-          docURL = serUtil.parsedStringDoubleQuote(docURL);%>
-        objRefDoc.ref_URL = "<%=docURL%>";
-        objRefDoc.type_name = "<%=refDocBean.getDOC_TYPE_NAME()%>";
-        <% //parse the string for quotation character
-          String acName = refDocBean.getAC_LONG_NAME();
-          acName = serUtil.parsedStringDoubleQuote(acName);%>
-        objRefDoc.ac_name = "<%=acName%>";
-        objRefDoc.ac_idseq = "<%=refDocBean.getAC_IDSEQ()%>";
-        objRefDoc.ac_language = "<%=refDocBean.getAC_LANGUAGE()%>";
-        objRefDoc.submit_action = "<%=refDocBean.getREF_SUBMIT_ACTION()%>";
-        selRefDocArray[aIndex] = objRefDoc;
-<%    }
-    }
-%>
-    refreshRefDocSelect();  //fill the select fields
-  }
-  //store alternate names in the array
-  function loadAltNameArray()
-  {
-<%  if (vAllAltName != null)
-    {
-      for (int i=0; i<vAllAltName.size(); i++)
-      {
-        ALT_NAME_Bean altNameBean = (ALT_NAME_Bean)vAllAltName.elementAt(i);
-        if (altNameBean == null) altNameBean = new ALT_NAME_Bean();
-        //System.out.println(i + " alt before : " + altNameBean.getALT_TYPE_NAME());
-        String altType = altNameBean.getALT_TYPE_NAME();
-        if (altType != null && altType.equals("USED_BY"))
-          continue;
-        //System.out.println(i + " alt after : " + altNameBean.getALT_TYPE_NAME());          
-%>
-          var aIndex = <%=i%>;  //get the index
-          var objAltName = new altNames();
-          objAltName.idseq = "<%=altNameBean.getALT_NAME_IDSEQ()%>";
-          objAltName.conte_name = "<%=altNameBean.getCONTEXT_NAME()%>";
-          objAltName.conte_id = "<%=altNameBean.getCONTE_IDSEQ()%>";
-          <% //parse the string for quotation character
-            String altName = altNameBean.getALTERNATE_NAME();
-            altName = serUtil.removeNewLineChar(altName);
-            altName = serUtil.parsedStringDoubleQuote(altName);%>
-          objAltName.alt_name = "<%=altName%>";
-          objAltName.type_name = "<%=altNameBean.getALT_TYPE_NAME()%>";
-          <% //parse the string for quotation character
-            String acName = altNameBean.getAC_LONG_NAME();
-            acName = serUtil.parsedStringDoubleQuote(acName);%>
-          objAltName.ac_name = "<%=acName%>";
-          objAltName.ac_idseq = "<%=altNameBean.getAC_IDSEQ()%>";
-          objAltName.ac_language = "<%=altNameBean.getAC_LANGUAGE()%>";
-          objAltName.submit_action = "<%=altNameBean.getALT_SUBMIT_ACTION()%>";
-          selAltNameArray[aIndex] = objAltName;
-         // alert(selAltNameArray.length + " alt name " + aIndex + " : " + selAltNameArray[aIndex].alt_name);
-<%    
-      }
-    }
-%>
-    refreshAltNameSelect();  //fill the select fields
-  }
-
   //back button
   function Back()
   {
@@ -310,7 +263,7 @@
       </td>
     </tr>
   </table>
-  <table width="900" border=0>
+  <table width="98%" border=0>
     <col width="4%"><col width="95%">
   	<tr valign="middle"> 
       <th colspan=2 height="40"> <div align="left"> 
@@ -343,7 +296,7 @@
              String sContextName = (String)vContext.elementAt(i);
              String sContextID = (String)vContextID.elementAt(i);
 %>
-            <option value="<%=sContextID%>" <%if(sContextName.equals(sContext)){%>selected<%}%> ><%=sContextName%></option>
+            <option value="<%=sContextID%>" <% if(sContextID.equals(sContext)){%>selected<%}%> ><%=sContextName%></option>
 <%
            }
 %>
@@ -375,6 +328,30 @@
         </select>
       </td>
     </tr>
+    <!-- select the language -->
+  	<tr valign="bottom" height="40">
+        <td align=right><%=item++%>)</td>
+        <td><font color="#FF0000">Select </font>Language</td>
+    </tr>
+    <tr> 
+      <td>&nbsp;</td>
+      <td height="24" valign="top">
+        <select name="dispLanguage" size="1"  style="width:50%"
+          onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContext'); return false">
+          <%if (vLanguage != null) 
+            {
+              for (int i = 0; vLanguage.size()>i; i++)
+              {
+                String sLang = (String)vLanguage.elementAt(i);
+                if (sLang == null) sLang = "";
+          %>
+                <option value="<%=sLang%>" <%if(sLang.equals(sDesLang)){%>selected<%}%>><%=sLang%></option>
+          <%  }
+            }   %>
+        </select>
+      </td>
+    </tr>
+    
     <!-- alternate Names -->
   	<tr valign="bottom" height="40">
         <td align=right><%=item++%>)</td>
@@ -383,7 +360,7 @@
     <tr>
       <td align="left">&nbsp;</td>
       <td>
-        <table width="70%" border="0">
+        <table width="90%" border="0">
           <col width="33%"><col width="33%"><col width="33%">
           <tr valign="bottom" height="25">
               <td colspan="3">Select Alternate Name Type</td>
@@ -427,21 +404,103 @@
           </tr>
           <tr><td height="12" valign="top"></tr>    
           <tr>
-            <td align="left">Selected Alternate Name Type</td>
-            <td align="left">&nbsp;Alternate Name </td>
+            <td colspan="2" align="left">Selected Alternate Name Attributes</td>
             <td align="right"><input  type="button" name="btnRemAltName" value="Remove Item" 
-                style="width:85,height:9" onClick="removeAltName();">&nbsp;&nbsp;&nbsp;</td>
+                style="width:85,height:9" onClick="removeAltName();" disabled>&nbsp;&nbsp;&nbsp;</td>
           </tr>
           <tr>
-            <td align="left">
-              <select name="selAltNameType" size="4" style="width:99%" onclick="javascript:selectedAltList('altType');"
-                onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContext'); return false">
-              </select>  
-            </td>
-            <td align="left" colspan="2">
-              <select name="selAltNameText" size="4" style="width:100%" onclick="javascript:selectedAltList('altText');"
-                onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContext'); return false">
-              </select> 
+            <td colspan="3">
+              <table width="100%" border="1">
+                <tr>
+                  <td>
+                    <table width="99%" border="0">
+                      <col width="2%"><col width="28%"><col width="45%"><col width="13%"><col width="15%">
+                      <tr valign="middle">
+                        <th><%if (vDispAlt.size() > 0){%>
+                            <img id="altCheckGif" src="../../cdecurate/Assets/CheckBox.gif" border="0"> 
+                          <% } %>
+                        </th>
+                        <th align="center"><b>Alternate Name Type</b></th>
+                        <th align="center"><b>Alternate Name</b></th>
+                        <th align="center"><b>Context</b></th>
+                        <th align="center"><b>Language</b></th>       
+                     <!--   <th align="center"><a href="javascript:sortAlt('type');">Alternate Name Type</a></th>
+                        <th align="center"><a href="javascript:sortAlt('name');">Alternate Name</a></th>
+                        <th align="center"><a href="javascript:sortAlt('context');">Context</a></th>
+                        <th align="center"><a href="javascript:sortAlt('lang');">Language</a></th>   -->    
+                     </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>   
+                  <td>
+        <%
+                    int iDivHt = 30;
+                    if (vDispAlt.size() > 4) iDivHt = 150;
+                    else if (vDispAlt.size() > 0) iDivHt = ((30 * vDispAlt.size()) + 10);
+        %>
+                    <div id="Layer1" style="position:relative; z-index:1; overflow:auto; width:100%; height:<%=iDivHt%>;">
+                    <table width="100%" border="1">
+                      <col width="2%"><col width="28%"><col width="42%"><col width="15%"><col width="10%">
+        <%  
+                      if (vAllAltName.size()> 0)
+                      {
+                        int ckCount = 0;
+                        Vector dispAltAttr = new Vector();
+                        for (int i=0; i<vAllAltName.size(); i++)
+                        {
+                          ALT_NAME_Bean altNameBean = (ALT_NAME_Bean)vAllAltName.elementAt(i);
+                          if (altNameBean == null) altNameBean = new ALT_NAME_Bean();
+                          //System.out.println(i + " alt before : " + altNameBean.getALT_TYPE_NAME());
+                          String altType = altNameBean.getALT_TYPE_NAME();
+                          String altSubmit = altNameBean.getALT_SUBMIT_ACTION();
+                          if ((altType != null && altType.equals("USED_BY")) || (altSubmit != null && altSubmit.equals("DEL")))
+                            continue;
+                          //System.out.println(i + " alt after : " + altNameBean.getALT_TYPE_NAME());  
+                          //get other alt attributes
+                          String altIdseq = altNameBean.getALT_NAME_IDSEQ();
+                          String altContext = altNameBean.getCONTEXT_NAME();
+                         //parse the string for quotation character
+                          String altName = altNameBean.getALTERNATE_NAME();
+                          altName = serUtil.removeNewLineChar(altName);
+                          altName = serUtil.parsedStringDoubleQuote(altName);
+                         //parse the string for quotation character
+                          String acName = altNameBean.getAC_LONG_NAME();
+                          acName = serUtil.parsedStringDoubleQuote(acName);
+                          String altLang = altNameBean.getAC_LANGUAGE();
+                          if (altLang == null) altLang = "";
+                          //check if the combination is already displayed
+                          String curAltAttr = altType + " " + altName + " " + altContext;
+                          if (dispAltAttr.contains(curAltAttr)) continue;
+                          //do the count and chek box name
+                          dispAltAttr.addElement(curAltAttr);
+                          String ckName = "ACK"+ ckCount;
+                          ckCount += 1;  //increase the count by one                          
+            %>
+                          <tr>
+                            <td align="right" valign="top"><input type="checkbox" name="<%=ckName%>" 
+                                size="5" onClick="javascript:enableAltNames(checked);"></td>
+                            <td valign="top"><%=altType%></td>
+                            <td valign="top"><%=altName%></td>
+                            <td valign="top"><%=altContext%></td>
+                            <td valign="top"><%=altLang%></td>
+                          </tr>  
+            <%          }
+                      } else {
+            %>
+                          <tr>
+                            <td align="right">&nbsp;</td>
+                            <td valign="top">&nbsp;</td>
+                            <td valign="top">&nbsp;</td>
+                            <td valign="top">&nbsp;</td>
+                            <td valign="top">&nbsp;</td>
+                          </tr>  
+            <%         }  %>
+                    </table>
+                    </div>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
         </table>
@@ -455,14 +514,14 @@
     <tr>
       <td align="left">&nbsp;</td>
       <td>
-        <table width="90%" border="0">
-          <col width="50%"><col width="25%"><col width="25%">
+        <table width="100%" border="0">
+          <col width="55%"><col width="45%">
           <tr valign="bottom" height="25">
-            <td colspan="3">Select Reference Document Type</td>
+            <td colspan="2">Select Reference Document Type</td>
           </tr>
           <tr valign="middle">
-            <td colspan="3">
-              <select name="selRefType" size="1"  style="width:75%"
+            <td colspan="2">
+              <select name="selRefType" size="1"  style="width:60%"
                 onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContext'); return false">
                 <option value="" selected="selected"></option>
                 <%if (vRefTypes != null) 
@@ -479,34 +538,34 @@
             </td>
           </tr>
           <tr valign="bottom" height="25">
-              <td colspan="3">Create Reference Document Name (maximum 30 characters)</td>
+              <td colspan="2">Create Reference Document Name (maximum 30 characters)</td>
           </tr>
           <tr valign="middle">
-            <td colspan="3">
-              <input name="txtRefName" type="text" value = "" style="width:90%"   
+            <td colspan="2">
+              <input name="txtRefName" type="text" value = "" style="width:70%"   
                 onkeydown="javascript:textCounter('txtRefName', 30);"
                 onkeyup="javascript:textCounter('txtRefName', 30);"
                 onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContext'); return false">
             </td>
           </tr>
           <tr valign="bottom" height="25">
-              <td colspan="3">Create Reference Document Text (maximum 4000 characters)</td>
+              <td colspan="2">Create Reference Document Text (maximum 4000 characters)</td>
           </tr>
           <tr valign="middle">
-            <td colspan="3">
-              <textarea name="txtRefText"  style="width:90%" rows=2  
+            <td colspan="2">
+              <textarea name="txtRefText"  style="width:70%" rows=2  
                 onkeydown="javascript:textCounter('txtRefText', 4000);"
                 onkeyup="javascript:textCounter('txtRefText', 4000);"
                 onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContext'); return false"></textarea>
             </td>
           </tr>
           <tr valign="bottom" height="25">
-              <td colspan="2">Create Reference Document URL (maximum 240 characters)</td>
+              <td>Create Reference Document URL (maximum 240 characters)</td>
               <td><a href="javascript:uploadDocument();">Upload Document</a></td>
           </tr>
           <tr valign="middle">
-            <td colspan="3">
-              <input name="txtRefURL" type="text" value="" style="width:90%" 
+            <td colspan="2">
+              <input name="txtRefURL" type="text" value="" style="width:70%" 
                 onkeydown="javascript:textCounter('txtRefURL', 240);"
                 onkeyup="javascript:textCounter('txtRefURL', 240);"
                 onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContext'); return false">
@@ -518,36 +577,117 @@
           </tr>
           <tr><td height="12" valign="top"></tr>    
           <tr>
-            <td align="left">Selected Reference Document Type</td>
-            <td align="left">&nbsp;Reference Document Name</td>
-            <td align="center"><input  type="button" name="btnRemRefDoc" value="Remove Item" style="width:100" onClick="removeRefDoc();"></td>
+            <td>Selected Reference Document Attributes</td>
+            <td align="right"><input  type="button" name="btnRemRefDoc" value="Remove Item" 
+                    style="width:100" onClick="removeRefDoc();" disabled>&nbsp;&nbsp;&nbsp;</td>
           </tr>
           <tr>
-            <td align="left">
-              <select name="selRefDocType" size="4" style="width:100%" onclick="javascript:selectedRefList('refType');"
-                onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContext'); return false">
-              </select>  
-            </td>
-            <td align="left" colspan="2">
-              <select name="selRefDocName" size="4" style="width:95%" onclick="javascript:selectedRefList('refName');"
-                onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContext'); return false">
-              </select> 
-            </td>
-          </tr>
-          <tr>
-            <td align="left">Reference Document Text</td>
-            <td align="left" colspan="2">Reference Document URL</td>
-          </tr>
-          <tr>
-            <td align="left">
-              <select name="selRefDocText" size="4" style="width:100%" onclick="javascript:selectedRefList('refText');"
-                onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContext'); return false">
-              </select>  
-            </td>
-            <td align="left" colspan="2">
-              <select name="selRefDocURL" size="4" style="width:95%" onclick="javascript:selectedRefList('refURL');"
-                onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContext'); return false">
-              </select> 
+            <td colspan="2">
+              <table width="100%" border="1">
+                <tr>
+                  <td>
+                    <table width="99%" border="0">
+                      <col width="2%"><col width="20%"><col width="18%"><col width="25%"><col width="19%"><col width="8%"><col width="10%">
+                      <tr valign="middle">
+                        <th><%if (vDispRef.size() > 0){%>
+                            <img id="refCheckGif" src="../../cdecurate/Assets/CheckBox.gif" border="0"> 
+                          <% } %>
+                        </th>
+                        <th align="center"><b>Reference Document <br>Type</b></th>
+                        <th align="center"><b>Reference Document <br>Name</b></th>
+                        <th align="center"><b>Reference Document <br>Text</b></th>
+                        <th align="center"><b>Reference Document <br>URL</b></th>
+                        <th align="center"><b>Context</b></th>
+                        <th align="center"><b>Language</b></th>       
+                     <!--   <th align="center"><a href="javascript:sortRef('type');">Reference Document Type</a></th>
+                        <th align="center"><a href="javascript:sortRef('name');">Reference Document Name</a></th>
+                        <th align="center"><a href="javascript:sortRef('text');">Reference Document Text</a></th>
+                        <th align="center"><a href="javascript:sortRef('url');">Reference Document URL</a></th>
+                        <th align="center"><a href="javascript:sortRef('context');">Context</a></th>
+                        <th align="center"><a href="javascript:sortRef('lang');">Language</a></th>    -->   
+                     </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>   
+                  <td>
+        <%
+                    iDivHt = 30;
+                    if (vDispRef.size() > 4) iDivHt = 150;
+                    else if (vDispRef.size() > 0) iDivHt = ((30 * vDispRef.size()) + 10);
+        %>
+                    <div id="Layer2" style="position:relative; z-index:1; overflow:auto; width:100%; height:<%=iDivHt%>;">
+                    <table width="100%" border="1">
+                      <col width="2%"><col width="18%"><col width="18%"><col width="25%"><col width="18%"><col width="8%"><col width="8%">
+        <%  
+                      if (vAllRefDoc.size()> 0)
+                      {
+                        int ckCount = 0;
+                        Vector dispRefAttr = new Vector();
+                        for (int i=0; i<vAllRefDoc.size(); i++)
+                        {
+                          REF_DOC_Bean refDocBean = (REF_DOC_Bean)vAllRefDoc.elementAt(i);
+                          if (refDocBean == null) refDocBean = new REF_DOC_Bean();
+                          String refDocType = refDocBean.getDOC_TYPE_NAME();
+                          String refDocSubmit = refDocBean.getREF_SUBMIT_ACTION();
+                          if (refDocSubmit != null && refDocSubmit.equals("DEL"))
+                            continue;
+                          System.out.println(i + " refDoc after : " + refDocBean.getDOC_TYPE_NAME());          
+                          String refDocIdseq = refDocBean.getREF_DOC_IDSEQ();
+                          String refDocContext = refDocBean.getCONTEXT_NAME();
+                         //parse the string for quotation character
+                          String refDocName = refDocBean.getDOCUMENT_NAME();
+                          refDocName = serUtil.removeNewLineChar(refDocName);
+                          refDocName = serUtil.parsedStringDoubleQuote(refDocName);
+                         //parse the string for quotation character
+                          String refDocText = refDocBean.getDOCUMENT_TEXT();
+                          refDocText = serUtil.removeNewLineChar(refDocText);
+                          refDocText = serUtil.parsedStringDoubleQuote(refDocText);
+                         //parse the string for quotation character
+                          String refDocURL = refDocBean.getDOCUMENT_URL();
+                          refDocURL = serUtil.removeNewLineChar(refDocURL);
+                          refDocURL = serUtil.parsedStringDoubleQuote(refDocURL);
+                         //parse the string for quotation character
+                          String acName = refDocBean.getAC_LONG_NAME();
+                          acName = serUtil.parsedStringDoubleQuote(acName);
+                          String refDocLang = refDocBean.getAC_LANGUAGE();
+                          if (refDocLang == null) refDocLang = "";
+                          //check if the combination is already displayed
+                          String curRefAttr = refDocType + " " + refDocName + " " + refDocContext;
+                          if (dispRefAttr.contains(curRefAttr)) continue;
+                          //do the count and chek box name
+                          dispRefAttr.addElement(curRefAttr);
+                          String ckName = "RCK"+ ckCount;
+                          ckCount += 1;  //increase the count by one
+            %>
+                          <tr>
+                            <td valign="top"><input type="checkbox" name="<%=ckName%>" 
+                                  size="5" onClick="javascript:enableRefDocs(checked);"></td>
+                            <td valign="top"><%=refDocType%></td>
+                            <td valign="top"><%=refDocName%></td>
+                            <td valign="top"><%=refDocText%></td>
+                            <td valign="top"><%=refDocURL%></td>
+                            <td valign="top"><%=refDocContext%></td>
+                            <td valign="top"><%=refDocLang%></td>
+                          </tr>  
+            <%          }
+                      } else {
+            %>
+                          <tr>
+                            <td align="right">&nbsp;</td>
+                            <td valign="top">&nbsp;</td>
+                            <td valign="top">&nbsp;</td>
+                            <td valign="top">&nbsp;</td>
+                            <td valign="top">&nbsp;</td>
+                            <td valign="top">&nbsp;</td>
+                            <td valign="top">&nbsp;</td>
+                          </tr>  
+            <%         }  %>
+                    </table>
+                    </div>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
         </table>
@@ -689,31 +829,16 @@ This is refilled with ac id from ac-csi to use it for block edit-->
   }   %>
 </select>
 <input type="hidden" name="originActionHidden" value="<%=sOriginAction%>">
-<!-- alternate name attributes -->
-<select name="selAltIDHidden" size ="1" style="visibility:hidden;"  multiple></select>
-<select name="selAltNameHidden" size ="1" style="visibility:hidden;"  multiple></select>
-<select name="selAltTypeHidden" size ="1" style="visibility:hidden;"  multiple></select>
-<select name="selAltACHidden" size="1" style="visibility:hidden;"  multiple></select>
-<select name="selAltContIDHidden" size="1" style="visibility:hidden;"  multiple></select>
-<select name="selAltContHidden" size="1" style="visibility:hidden;"  multiple></select>
-<select name="selAltActHidden" size="1" style="visibility:hidden;"  multiple></select>
-<!-- Refernece Documents attributes -->
-<select name="selRefIDHidden" size ="1" style="visibility:hidden;"  multiple></select>
-<select name="selRefNameHidden" size ="1" style="visibility:hidden;"  multiple></select>
-<select name="selRefTypeHidden" size ="1" style="visibility:hidden;"  multiple></select>
-<select name="selRefTextHidden" size="1" style="visibility:hidden;"  multiple></select>
-<select name="selRefURLHidden" size="1" style="visibility:hidden;"  multiple></select>
-<select name="selRefACHidden" size="1" style="visibility:hidden;"  multiple></select>
-<select name="selRefContIDHidden" size="1" style="visibility:hidden;"  multiple></select>
-<select name="selRefActHidden" size="1" style="visibility:hidden;"  multiple></select>
+<input type="hidden" name="contextName" value="">
+<input type="hidden" name="sortColumn" value="">
 
 <script language = "javascript">
 //call function to initiate form objects
 createObject("document.designateDEForm");
 displayStatusMessage();
 loadCSCSI();
-loadAltNameArray();
-loadRefDocArray();
+//loadAltNameArray();
+//loadRefDocArray();
 </script>
 </form>
 </body>

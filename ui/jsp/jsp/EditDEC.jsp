@@ -109,8 +109,12 @@
     if (sName == null) sName = "";
     if(sOriginAction.equals("BlockEditDEC")) sName = "";
     int sNameCount = sName.length();  
-     String sPrefType = m_DEC.getAC_PREF_NAME_TYPE();
+    String sPrefType = m_DEC.getAC_PREF_NAME_TYPE();
     if (sPrefType == null) sPrefType = ""; 
+    String lblUserType = "Existing Name (Editable)";  //make string for user defined label
+    String sUserEnt = m_DEC.getAC_USER_PREF_NAME();
+    if(sOriginAction.equals("BlockEditDEC")) lblUserType = "Existing Name (Not Editable)";
+    else if (sUserEnt == null || sUserEnt.equals("")) lblUserType = "User Entered";
      
     String sContext = m_DEC.getDEC_CONTEXT_NAME();
     if (sContext == null) sContext = "";
@@ -350,7 +354,7 @@
         <td> <font color="#C0C0C0">Context</font></td>
     </tr>
     <tr>
-       <td>&nbsp;</td>
+      <td>&nbsp;</td>
       <td valign="top">        
         <select name="selContext" size="1"  readonly
             onHelp = "showHelp('Help_CreateDEC.html#newDECForm_selContext'); return false">
@@ -491,19 +495,19 @@
                          
                   <tr align="left">
                     <td colspan="3" valign="top">
-                         <select name="selPropertyQualifier" size ="2" style="width=98%" valign="top" onClick="ShowEVSInfo('PropertyQualifier')"
-                          onHelp = "showHelp('Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
-                            <%if (vPropQualifierNames.size()<1) {%>  
-                                <option value=""></option>
-                            <% } else { %>
-                            <%for (int i = 0; vPropQualifierNames.size()>i; i++)
-                              {
-                                String sQualName = (String)vPropQualifierNames.elementAt(i);
-                              %>
-                            <option value="<%=sQualName%>" <%if(i==0){%>selected<%}%>><%=sQualName%></option>
-                            <%}%>
+                      <select name="selPropertyQualifier" size ="2" style="width=98%" valign="top" onClick="ShowEVSInfo('PropertyQualifier')"
+                        onHelp = "showHelp('Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
+                        <%if (vPropQualifierNames.size()<1) {%>  
+                              <option value=""></option>
+                        <% } else { %>
+                          <%for (int i = 0; vPropQualifierNames.size()>i; i++)
+                            {
+                              String sQualName = (String)vPropQualifierNames.elementAt(i);
+                          %>
+                              <option value="<%=sQualName%>" <% if(i==0){%>selected<%}%>><%=sQualName%></option>
                           <%}%>
-                        </select>
+                        <%}%>
+                      </select>
                     </td>
                     <td colspan="3" valign="top">
                        <select name="selPropertyClass" style="width=98%" valign="top" size="1" multiple
@@ -571,7 +575,7 @@
         <input name="rNameConv" type="radio" value="ABBR" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("ABBR")) {%> 
           checked <%}%>>Abbreviated &nbsp;&nbsp;&nbsp; 
         <input name="rNameConv" type="radio" value="USER" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("USER")) {%> 
-          checked <%}%>>Existing Name <%if(sOriginAction.equals("BlockEditDEC")){%>(Not Editable)<% } else { %>(Editable)<% } %>  
+          checked <%}%>><%=lblUserType%>   <!--Existing Name <%if(sOriginAction.equals("BlockEditDEC")){%>(Not Editable)<% } else { %>(Editable)<% } %>  -->
       </td>
     </tr>  
     <tr>
@@ -583,7 +587,7 @@
           &nbsp;&nbsp;&nbsp;
         <input name="txtPrefNameCount" type="text" size="1" value="<%=sNameCount%>" readonly
           onHelp = "showHelp('Help_CreateDEC.html#newDECForm_txtPreferredName'); return false">
-        <%if(sOriginAction.equals("BlockEditDEC")){%>
+        <% if(sOriginAction.equals("BlockEditDEC")){%>
           <font color="#C0C0C0"> Character Count &nbsp;&nbsp;(Database Max = 30)</font>
         <% } else {%>
           <font color="#000000"> Character Count &nbsp;&nbsp;(Database Max = 30)</font>
@@ -603,26 +607,29 @@
 						</td>
     </tr>
 
-    <tr height="25" valign="bottom">
+    <tr><td height="8" valign="top"></tr>
+    <tr height="25" valign="top">
       <%if(sOriginAction.equals("BlockEditDEC")){%>
         <td align=right><font color="#C0C0C0"><%=item++%>)</font></td>
         <td><font color="#C0C0C0">Create/Search for Definition </font></td>
       <% } else { %>
         <td align=right><font color="#FF0000">*&nbsp;&nbsp;</font><%=item++%>)</td>
-        <td><font color="#FF0000">Create/Search </font> for Definition</td>
+        <td><font color="#FF0000">Create/Search </font> for Definition
+            (Changes of naming components would replace any user entered definition. 
+            Please make any desired changes after selecting the naming components.)</td>
       <% }%>
     </tr>
     <tr>
       <td>&nbsp;</td>
       <td valign="top" align="left">
         <%if(sOriginAction.equals("BlockEditDEC")){%>
-          <textarea name="CreateDefinition"  cols="120" readonly
-            onHelp = "showHelp('Help_CreateDEC.html#newDECForm_CreateDefinition'); return false" rows=2><%=sDefinition%></textarea>
-            &nbsp;&nbsp; <font color="#C0C0C0">Search</a></font>
+          <textarea name="CreateDefinition"  style="width:80%" rows=6 readonly
+            onHelp = "showHelp('Help_CreateDEC.html#newDECForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
+            <!-- &nbsp;&nbsp; <font color="#C0C0C0">Search</a></font> --> 
         <% } else { %>
-          <textarea name="CreateDefinition"  cols="120"
-            onHelp = "showHelp('Help_CreateDEC.html#newDECForm_CreateDefinition'); return false" rows=2><%=sDefinition%></textarea>
-            &nbsp;&nbsp; <font color="#FF0000"><a href="javascript:OpenEVSWindow()">Search</a></font>
+          <textarea name="CreateDefinition"  style="width:80%" rows=6
+            onHelp = "showHelp('Help_CreateDEC.html#newDECForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
+            <!--  &nbsp;&nbsp; <font color="#FF0000"><a href="javascript:OpenEVSWindow()">Search</a></font> -->
         <% }%>
       </td>
     </tr>
