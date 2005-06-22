@@ -668,6 +668,49 @@ public class UtilService implements Serializable
       return sMsg;
     } 
   /**
+   * remove tab and new line from teh vector from the string for success messages.
+   * @param sMsg
+   * @return fomated string
+   */
+    public String parsedStringMsgVectorTabs(String sMsg)
+    {
+      int index = 0;
+      if (sMsg != null && !sMsg.equals(""))
+      {
+        //do the new line character
+        do
+        {
+          if (index > 0)
+            index = sMsg.indexOf("\\n",index);
+          else
+            index = sMsg.indexOf("\\n");
+     //   System.out.println(index + " msg newline " + sMsg);
+          if (index > -1)
+          {
+            sMsg = sMsg.substring(0, index) + " " + sMsg.substring(index+2);
+            index = index + 3;
+          }
+        }
+        while (index > 0);
+        //do the tab character
+        do
+        {
+          if (index > 0)
+            index = sMsg.indexOf("\\t",index);
+          else
+            index = sMsg.indexOf("\\t");
+   //     System.out.println(index + " msg tab " + sMsg);
+          if (index > -1)
+          {
+            sMsg = sMsg.substring(0, index) + " " + sMsg.substring(index+2);
+            index = index + 3;
+          }
+        }
+        while (index > 0);    
+      }
+      return sMsg;
+    } 
+  /**
   * sort DE Component vectors against last vector: vDECompOrder
   *
   * @param vDEComp  A Vector.

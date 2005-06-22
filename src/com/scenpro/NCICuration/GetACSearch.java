@@ -3577,7 +3577,7 @@ public class GetACSearch implements Serializable
         DECBean = (DEC_Bean)vRSel.elementAt(i);
         vSearchID.addElement(DECBean.getDEC_DEC_IDSEQ());
         vSearchName.addElement(DECBean.getDEC_PREFERRED_NAME());
- System.out.println("getDECResult DECBean.getDEC_LONG_NAME(): " + DECBean.getDEC_LONG_NAME());
+ //System.out.println("getDECResult DECBean.getDEC_LONG_NAME(): " + DECBean.getDEC_LONG_NAME());
         vSearchLongName.addElement(DECBean.getDEC_LONG_NAME());
         vSearchASL.addElement(DECBean.getDEC_ASL_NAME());
         vSearchDefinition.addElement(DECBean.getDEC_PREFERRED_DEFINITION());
@@ -4006,7 +4006,7 @@ public class GetACSearch implements Serializable
   public Vector do_ConceptSearch(String InString, String conIdseq, 
       String ContName, String ASLName, String conID, Vector vList)  // returns list of Concepts
   {
-System.out.println("do_conceptSearch InString: " + InString + " conIdseq: " + conIdseq);
+//System.out.println("do_conceptSearch InString: " + InString + " conIdseq: " + conIdseq);
     //capture the duration
  //   java.util.Date exDate = new java.util.Date();          
  //   logger.info(m_servlet.getLogMessage(m_classReq, "do_ConceptSearch", "begin search", exDate, exDate));
@@ -10066,7 +10066,7 @@ boolean isIntSearch)
   */
   private void doVMSearch(String InString, String cd_idseq, Vector vList)  // returns list of Data Elements
   {
-System.out.println("in doVMSearch InString: " + InString);
+//System.out.println("in doVMSearch InString: " + InString);
     Connection sbr_db_conn = null;
     ResultSet rs = null;
     CallableStatement CStmt = null;

@@ -165,7 +165,7 @@ function keypress_handler()
   String errMessage = (String)session.getAttribute("ErrorMessage");
   if (errMessage == null) errMessage = "";
  // if (errMessage == "") errMessage = "Problem with login. User name/password may be incorrect, or database connection can not be established.";
-  if (errMessage == "java.lang.NullPointerException") errMessage = "Session terminated. Please login again.";
+  if (errMessage == "java.lang.NullPointerException") errMessage = "NullPointer : Session terminated. Please login again.";
   session.setAttribute("ErrorMessage", "");
   String reqType = (String)session.getAttribute("LatestReqType"); 
   if(reqType == null) reqType = "";
