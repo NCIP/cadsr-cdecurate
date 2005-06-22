@@ -615,10 +615,10 @@
 		   }
 		   //for selected component's ID, Name, workflow status for designations.
 		   var selComp = document.searchParmsForm.listSearchFor.value;
-		   if ((editName != null || editName != "") && (selComp == "DataElement" || selComp == "DataElementConcept" || selComp == "ValueDomain"))
+		   if ((editLongName != null || editLongName != "") && (selComp == "DataElement" || selComp == "DataElementConcept" || selComp == "ValueDomain"))
 		   {
 			   var dCount = document.searchResultsForm.hiddenDesIDName.length;
-			   searchResultsForm.hiddenDesIDName.options[i] = new Option(editUsedby,editName); //name must be stored both in text and value to handle special characters
+			   searchResultsForm.hiddenDesIDName.options[i] = new Option(editUsedby,editLongName); //name must be stored both in text and value to handle special characters
 			   searchResultsForm.hiddenACIDStatus.options[i] = new Option(editASL, editID);
 			   searchResultsForm.hiddenACIDStatus.options[i].selected = true;
 			   searchResultsForm.hiddenDesIDName.options[i].selected = true;
@@ -712,7 +712,7 @@
 		   if (!(ACStatus == "RELEASED" || ACStatus == "APPRVD FOR TRIAL USE" || ACStatus == "CMTE SUBMTD USED" || 
 			   ACStatus == "DRAFT MOD" || ACStatus == "CMTE APPROVED" || ACStatus == "RELEASED-NON-CMPLNT"))
 		   {
-			   ACNames = ACNames + document.searchResultsForm.hiddenDesIDName[k].value + "\n"
+			   ACNames = ACNames + document.searchResultsForm.hiddenDesIDName[k].value + "\n\t"
 				   isStatusValid = false;
 		   }
 	   }

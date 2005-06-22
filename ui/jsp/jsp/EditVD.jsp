@@ -835,6 +835,7 @@ function setup()
           <td valign="top">
             <select name= "selDataType" size ="1" onChange="javascript:changeDataType();"  style="width:90%"
               onHelp = "showHelp('Help_CreateVD.html#createVDForm_selDataType'); return false">
+              <option value="" selected="selected"></option>              
 <%
               for (int i = 0; vDataTypes.size()>i; i++)
               {
