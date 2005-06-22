@@ -474,7 +474,7 @@ public class SetACService implements Serializable
       s = m_DEC.getDEC_CD_NAME();
       if (s == null) s = "";
       setValPageVector(vValidate, "Conceptual Domain", s, bMandatory, iNoLengthLimit, "", sOriginAction);
-System.out.println("setValidatePageValuesDEC3");
+//System.out.println("setValidatePageValuesDEC3");
       s = m_DEC.getDEC_ASL_NAME();
       if (s == null) s = "";  
       if(s.equals("Released") || s.equals("RELEASED"))
@@ -706,7 +706,7 @@ System.out.println("setValidatePageValuesDEC3");
             strInValid = checkConceptCodeExistsInOtherDB(vParList, insAC, null);
       if (vParList != null && vParList.size()>0)
       {
-System.out.println("val VD vParList.size(): " + vParList.size());
+//System.out.println("val VD vParList.size(): " + vParList.size());
         for (int i =0; i<vParList.size(); i++)
         {
           EVS_Bean parBean = (EVS_Bean)vParList.elementAt(i);
@@ -883,7 +883,7 @@ System.out.println("val VD vParList.size(): " + vParList.size());
   public void setValidateBlockEdit(HttpServletRequest req, HttpServletResponse res, 
       String sACType) throws Exception
   {
-System.out.println("in setValidateBlockEdit");
+//System.out.println("in setValidateBlockEdit");
      HttpSession session = req.getSession();
      Vector vValidate = new Vector();
      boolean bMandatory = true;
@@ -1106,7 +1106,7 @@ System.out.println("in setValidateBlockEdit");
           VD_Bean m_VD, EVS_Bean m_REP) 
           throws ServletException,IOException, Exception
   {
-System.out.println("setValidateNameComp");
+//System.out.println("setValidateNameComp");
       HttpSession session = req.getSession();
       GetACSearch getACSer = new GetACSearch(req, res, m_servlet);
       InsACService insAC = new InsACService(req, res, m_servlet);
@@ -1180,7 +1180,7 @@ System.out.println("setValidateNameComp");
         String propID = m_DEC.getDEC_PROPL_IDSEQ();
         //display error if not created properly.
         String retCode = (String)req.getAttribute("retcode");
-  System.out.println(retCode + " : " + objID + " : " + propID);
+ // System.out.println(retCode + " : " + objID + " : " + propID);
         if (retCode != null && !retCode.equals(""))
         {
           //display error if unable to create object class.
@@ -1198,7 +1198,7 @@ System.out.println("setValidateNameComp");
             strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction); 
            // strInValid = checkUniqueOCPropPair(m_DEC, req, res, sOriginAction); 
         }
-    System.out.println(sOriginAction + " oc prop invalid " + strInValid);
+   // System.out.println(sOriginAction + " oc prop invalid " + strInValid);
         //create new version if unique for single or block edit dec
         if (strInValid == null || strInValid.equals("") || strInValid.indexOf("Warning") > 0)
         {
@@ -2324,7 +2324,7 @@ System.out.println("setValidateNameComp");
             }
         }
       }
-System.out.println("done checkConceptCodeExistsInOtherDB");
+//System.out.println("done checkConceptCodeExistsInOtherDB");
       return strInValid;
 
   }
@@ -3013,7 +3013,7 @@ System.out.println("done checkConceptCodeExistsInOtherDB");
         sID = "";
       else
         sID = (String)req.getParameter("selContext");
-System.err.println("in setDECVals1");
+//System.err.println("in setDECVals1");
       if ((sID != null) || (!sID.equals("")))
       {
         sName = m_util.getNameByID((Vector)session.getAttribute("vContext"), (Vector)session.getAttribute("vContext_ID"), sID);
@@ -3197,7 +3197,7 @@ System.err.println("in setDECVals1");
       //get associated cs-id
       sIDs = req.getParameterValues("selectedCS");
       m_DEC.setDEC_CS_ID(this.getSelectionFromPage(sIDs));    
-System.err.println("done setDECVals");
+//System.err.println("done setDECVals");
   } // end of setDECValueFromPage
 
   /**

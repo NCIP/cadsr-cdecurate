@@ -141,19 +141,15 @@ public class InsACService implements Serializable
           statusMsg = statusMsg + sMsg + "\\n"; 
         session.setAttribute("statusMessage", statusMsg);
       }
-      //put nbsp for the tab at the begginning of the msg for vector.
       int iTab = sMsg.indexOf("\\t");
       if (iTab > -1)
-          sMsg = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".concat(sMsg.substring(2)); 
-      //remove tab and newline from the msg for vector
-      if (!sMsg.equalsIgnoreCase("\\n") && !sMsg.equalsIgnoreCase("\n"))
-        sMsg = m_util.parsedStringMsgVectorTabs(sMsg);
+          sMsg = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".concat(sMsg.substring(2));
       vStatMsg.addElement(sMsg);
       session.setAttribute("vStatMsg", vStatMsg);    
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR in InsACService-storeStatusMsg for exception : " + e.toString());
+      logger.fatal("ERROR in InsACService-setRD for exception : " + e.toString());
       m_classReq.setAttribute("retcode", "Message Exception");
     }
   }
@@ -179,8 +175,8 @@ public class InsACService implements Serializable
   public String setVD(String sAction, VD_Bean vd, String sInsertFor, VD_Bean oldVD)
   {
     //capture the duration
-    java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setVD", "starting set", startDate, startDate));
+  //  java.util.Date startDate = new java.util.Date();          
+  //  logger.info(m_servlet.getLogMessage(m_classReq, "setVD", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -197,7 +193,6 @@ public class InsACService implements Serializable
       if (oldVD == null) oldVD = new VD_Bean();
       String sVD_ID = vd.getVD_VD_IDSEQ();
       String sName = vd.getVD_PREFERRED_NAME();
-      if (sName == null) sName = "";
       String pageVDType = vd.getVD_TYPE_FLAG();
       String sContextID = vd.getVD_CONTE_IDSEQ();
       String sLongName = vd.getVD_LONG_NAME();
@@ -362,7 +357,7 @@ public class InsACService implements Serializable
         } //end sinsertfor not update
         boolean bExcuteOk = CStmt.execute();
         //capture the duration
-        logger.info(m_servlet.getLogMessage(m_classReq, "setVD", "execute ok", startDate, new java.util.Date()));
+     //   logger.info(m_servlet.getLogMessage(m_classReq, "setVD", "execute ok", startDate, new java.util.Date()));
 
         sReturnCode = CStmt.getString(1);
         String prefName = CStmt.getString(5);
@@ -372,9 +367,9 @@ public class InsACService implements Serializable
           if (sReturnCode == null || sReturnCode.equals(""))
           {
             m_servlet.clearBuildingBlockSessionAttributes(m_classReq, m_classRes);
-            vd.setVD_REP_QUALIFIER_NAMES(new Vector());
-            vd.setVD_REP_QUALIFIER_CODES(new Vector());
-            vd.setVD_REP_QUALIFIER_DB(new Vector());
+            vd.setVD_REP_QUALIFIER_NAMES(null);
+            vd.setVD_REP_QUALIFIER_CODES(null);
+            vd.setVD_REP_QUALIFIER_DB(null);
           }
           vd.setVD_PAR_CONDR_IDSEQ(CStmt.getString(35)); 
           sVD_ID = CStmt.getString(4);
@@ -383,11 +378,8 @@ public class InsACService implements Serializable
           if (sAction.equals("INS"))
             this.storeStatusMsg("Value Domain Name : " + vd.getVD_LONG_NAME());
           //continue update even if not null
-          if (sReturnCode != null && sAction.equals("INS"))
-          {
+          if (sReturnCode != null && sAction.equals("INS")) 
              this.storeStatusMsg("\\t " + sReturnCode + " : Unable to create new Value Domain Successully.");
-             logger.fatal(sReturnCode + " Unable to create new Value Domain Successully.");
-          }
           else if ((sReturnCode == null || (sReturnCode != null && sAction.equals("UPD"))) && !sVD_ID.equals(""))
           {
               //store the status message in the session
@@ -471,15 +463,15 @@ public class InsACService implements Serializable
               this.storeStatusMsg("\\t Successfully updated Value Domain");
            }
         } //end sinsertfor not update
-        else if (sReturnCode != null && !sReturnCode.equals(""))
-        {          
+        else
+        {
+          if (sReturnCode != null && !sReturnCode.equals(""))
             this.storeStatusMsg("\\t Unable to update the preferred name of the Value Domain.");
-            logger.fatal(sReturnCode + " Unable to update the preferred name of the Value Domain.");
         }
       }
       this.storeStatusMsg("\\n");
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setVD", "done set", startDate, new java.util.Date()));
+   //   logger.info(m_servlet.getLogMessage(m_classReq, "setVD", "done set", startDate, new java.util.Date()));
     }
     catch(Exception e)
     {
@@ -500,6 +492,7 @@ public class InsACService implements Serializable
       m_classReq.setAttribute("retcode", "Exception");
       this.storeStatusMsg("\\t Exception : Unable to update Value Domain attributes.");
     }
+  System.out.println("done setVD");
     return sReturnCode;
   }
 
@@ -1992,7 +1985,7 @@ public class InsACService implements Serializable
             if(sOCL_IDSEQ == null) sOCL_IDSEQ = "";
             String sOCL_CONDR_IDSEQ = CStmt.getString(21);
             if(sOCL_CONDR_IDSEQ == null) sOCL_CONDR_IDSEQ = "";
-         //System.out.println(sOCCondrString + " set oc execute " + sOCL_IDSEQ + " ret " + sReturnCode + " condr " + sOCL_CONDR_IDSEQ + " asl " + CStmt.getString(9));
+         System.out.println(sOCCondrString + " set oc execute " + sOCL_IDSEQ + " ret " + sReturnCode + " condr " + sOCL_CONDR_IDSEQ + " asl " + CStmt.getString(9));
           // session.setAttribute("newObjectClass", "");
             //store the idseq in the bean
             if(dec != null && (sReturnCode == null || sReturnCode.equals("") || sReturnCode.equals("API_OC_500")))
@@ -2172,7 +2165,7 @@ public class InsACService implements Serializable
             if(sPROPL_IDSEQ == null) sPROPL_IDSEQ = "";
             String sPROPL_CONDR_IDSEQ = CStmt.getString(21);
             if (sPROPL_CONDR_IDSEQ == null) sPROPL_CONDR_IDSEQ = "";
-         //System.out.println(sPCCondrString + " set prop execute " + sPROPL_IDSEQ + " ret " + sReturnCode + " condr " + sPROPL_CONDR_IDSEQ + " asl " + CStmt.getString(9));
+         System.out.println(sPCCondrString + " set prop execute " + sPROPL_IDSEQ + " ret " + sReturnCode + " condr " + sPROPL_CONDR_IDSEQ + " asl " + CStmt.getString(9));
             if (dec != null && (sReturnCode == null || sReturnCode.equals("") || sReturnCode.equals("API_PROP_500")))
             {
               dec.setDEC_PROPL_IDSEQ(sPROPL_IDSEQ);
@@ -2231,8 +2224,8 @@ public class InsACService implements Serializable
                     VD_Bean VD, EVS_Bean rep, HttpServletRequest req)
   {
     //capture the duration
-    java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setRepresentation", "starting set", startDate, startDate));
+ //   java.util.Date startDate = new java.util.Date();          
+ //   logger.info(m_servlet.getLogMessage(m_classReq, "setRepresentation", "starting set", startDate, startDate));
 
     HttpSession session = m_classReq.getSession();
     Connection sbr_db_conn = null;
@@ -2352,7 +2345,7 @@ public class InsACService implements Serializable
             String sREP_CONDR_IDSEQ = CStmt.getString(21);
             if(sREP_CONDR_IDSEQ == null) sREP_CONDR_IDSEQ = "";
             session.setAttribute("newRepTerm", "");
-         //System.out.println(sOCCondrString + " set oc execute " + sREP_IDSEQ + " ret " + sReturnCode + " condr " + sREP_CONDR_IDSEQ + " asl " + CStmt.getString(9));
+     System.out.println(sOCCondrString + " set oc execute " + sREP_IDSEQ + " ret " + sReturnCode + " condr " + sREP_CONDR_IDSEQ + " asl " + CStmt.getString(9));
             if(VD != null  && (sReturnCode == null || sReturnCode.equals("") || sReturnCode.equals("API_REP_500")))
             {
               VD.setVD_REP_IDSEQ(sREP_IDSEQ);
@@ -2370,7 +2363,7 @@ public class InsACService implements Serializable
        }
       }
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setRepresentation", "end set", startDate, new java.util.Date()));  
+   //   logger.info(m_servlet.getLogMessage(m_classReq, "setRepresentation", "end set", startDate, new java.util.Date()));  
     }
     catch(Exception e)
     {
@@ -2725,7 +2718,7 @@ public class InsACService implements Serializable
   */
   public String setDE(String sAction, DE_Bean de,  String sInsertFor, DE_Bean oldDE)
   {
- //System.out.println("setDE");
+ System.out.println("setDE");
     //capture the duration
  //   java.util.Date startDate = new java.util.Date();          
   //  logger.info(m_servlet.getLogMessage(m_classReq, "setDE", "starting set", startDate, startDate));
@@ -2917,7 +2910,7 @@ public class InsACService implements Serializable
             
           de.setDE_MODIFIED_BY(getFullName(CStmt.getString(18)));
           de.setDE_DATE_MODIFIED(m_util.getCurationDate(CStmt.getString(19)));
-//System.out.println("setDE2");
+System.out.println("setDE2");
           // insert row into DES (designation) to create CDEID for new DE or copies from old if new version
           if (sInsertFor.equals("Version"))
           {
@@ -3011,7 +3004,7 @@ public class InsACService implements Serializable
       m_classReq.setAttribute("retcode", "Exception");
       this.storeStatusMsg("\\t Exception : Unable to update Data Element Attributes");
     }
-//System.out.println("done setDE");
+System.out.println("done setDE");
     return sReturnCode;
   }  //end set DE
 
@@ -3175,7 +3168,7 @@ public class InsACService implements Serializable
         boolean bExcuteOk = CStmt.execute();
         sReturnCode = CStmt.getString(3);
         newACID = CStmt.getString(2);
-  //System.out.println(acIDseq + ":" + newACID);
+  System.out.println(acIDseq + ":" + newACID);
         //trim off the extra spaces in it
         if ((sReturnCode == null || sReturnCode.equals("")) && newACID != null && !newACID.equals(""))
            newACID = newACID.trim();
