@@ -7051,7 +7051,7 @@ System.out.println("doEditDEActions sOriginAction: " + sOriginAction);
    public void doUpdateDEActionBE(HttpServletRequest req, HttpServletResponse res)
    throws Exception
    {
-System.out.println("in doUpdateDEActionBE");
+//System.out.println("in doUpdateDEActionBE");
       HttpSession session = req.getSession();
       DE_Bean DEBean = (DE_Bean)session.getAttribute("m_DE");
       String ret = ":";
@@ -7104,6 +7104,7 @@ System.out.println("in doUpdateDEActionBE");
                   ret = insAC.setDE("UPD", DEBeanSR, "Version", oldDEBean);
                   if ((ret == null) || ret.equals(""))
                   {
+                     ret = insAC.setDDE(DEBeanSR.getDE_DE_IDSEQ(), "");   // set DEComp rules and relations
                      //save the status message and retain the this row in the vector
                      serAC.refreshData(req, res, DEBeanSR, null, null,  null, "Version", oldID);
                      isRefreshed = true;
@@ -7140,7 +7141,7 @@ System.out.println("in doUpdateDEActionBE");
          session.setAttribute("results", vResult);    //store the final result in the session
          session.setAttribute("DEPageAction", "nothing");
       }
- System.out.println("done doUpdateDEActionBE"); 
+// System.out.println("done doUpdateDEActionBE"); 
       //forward to search page.
       ForwardJSP(req, res, "/SearchResultsPage.jsp");
    }

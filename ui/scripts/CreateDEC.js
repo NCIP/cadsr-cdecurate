@@ -163,11 +163,16 @@ function openAltNameWindow()
     }
  }
  
-  function closeDep() 
+ function closeDep() 
   {
     if (searchWindow && searchWindow.open && !searchWindow.closed) 
       searchWindow.close();
+    if(altWindow && altWindow.open && ! altWindow.closed)
+      altWindow.close();
+    if(statusWindow && statusWindow.open && !statusWindow.closed)
+      statusWindow.close();
   }
+
  //allow only one of the comp to change for block edit
  function isNameChangeOK(vAction, thisBlock)
  {

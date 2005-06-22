@@ -2719,8 +2719,8 @@ public class InsACService implements Serializable
   {
  System.out.println("setDE");
     //capture the duration
-    java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setDE", "starting set", startDate, startDate));
+ //   java.util.Date startDate = new java.util.Date();          
+  //  logger.info(m_servlet.getLogMessage(m_classReq, "setDE", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -2869,7 +2869,7 @@ public class InsACService implements Serializable
          // Now we are ready to call the stored procedure
         boolean bExcuteOk = CStmt.execute();
         //capture the duration
-        logger.info(m_servlet.getLogMessage(m_classReq, "setDE", "end execute", startDate, new java.util.Date())); 
+    //    logger.info(m_servlet.getLogMessage(m_classReq, "setDE", "end execute", startDate, new java.util.Date())); 
 
         sDE_ID = CStmt.getString(3);
         sReturnCode = CStmt.getString(1);
@@ -2982,7 +2982,7 @@ System.out.println("setDE2");
       }
       this.storeStatusMsg("\\n");
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setDE", "end set", startDate, new java.util.Date()));  
+   //   logger.info(m_servlet.getLogMessage(m_classReq, "setDE", "end set", startDate, new java.util.Date()));  
 
     }
     catch(Exception e)
@@ -3355,9 +3355,10 @@ System.out.println("done setDE");
   */
   public String setDDE(String sP_DE_IDSEQ, String sOverRideAction)
   {
+//System.out.println("done setDDE sP_DE_IDSEQ: " + sP_DE_IDSEQ);
     //capture the duration
-    java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setDDE", "starting set", startDate, startDate));
+ //   java.util.Date startDate = new java.util.Date();          
+ //   logger.info(m_servlet.getLogMessage(m_classReq, "setDDE", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     CallableStatement CStmt = null;
@@ -3377,6 +3378,7 @@ System.out.println("done setDE");
     String sDDERule = (String)session.getAttribute("sRule");
     String sDDEMethod = (String)session.getAttribute("sMethod");
     String sDDEConcatChar = (String)session.getAttribute("sConcatChar");
+//System.out.println(" setDDE sDDERule: " + sDDERule + " sDDEMethod: " + sDDEMethod);
     //get DEComp, DECompID and DECompOrder vector from session, which be set in doUpdateDDEInfo
     Vector vDEComp = new Vector();
     Vector vDECompID = new Vector();
@@ -3390,6 +3392,8 @@ System.out.println("done setDE");
     vDECompRelID = (Vector)session.getAttribute("vDECompRelID");
     vDECompDelete = (Vector)session.getAttribute("vDECompDelete");
     vDECompDelName = (Vector)session.getAttribute("vDECompDelName");
+//if(vDEComp != null)
+//System.out.println(" setDDE vDEComp.size: " + vDEComp.size());
     // put them into DB tables
     try
     {
@@ -3436,7 +3440,7 @@ System.out.println("done setDE");
         bExcuteOk = CStmt.execute();
         sReturnCode = CStmt.getString(11);
         //capture the duration
-        logger.info(m_servlet.getLogMessage(m_classReq, "setDDE", "execute complexDE", startDate, new java.util.Date()));
+      //  logger.info(m_servlet.getLogMessage(m_classReq, "setDDE", "execute complexDE", startDate, new java.util.Date()));
 
         //add error message to list
         if (sReturnCode != null && !sReturnCode.equals(""))
@@ -3489,7 +3493,7 @@ System.out.println("done setDE");
         }  // end of if(!vDEComp.isEmpty())
       } // end of if (sbr_db_conn == null)
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setDDE", "end complexDE", startDate, new java.util.Date()));
+   //   logger.info(m_servlet.getLogMessage(m_classReq, "setDDE", "end complexDE", startDate, new java.util.Date()));
     }  // end of try
     catch(Exception e)
     {
