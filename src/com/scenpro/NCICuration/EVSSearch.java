@@ -598,7 +598,9 @@ public class EVSSearch implements Serializable
   || dtsVocab.equals("NCI Metathesaurus")) && sUISearchType.equals("term")
   && !termStr.equals("") && !sTreeSearch.equals("true") && codeFoundInThesaurus.equals(bFalse))
   {
-//System.out.println("do_EVSSearch Meta termStr: " + termStr + " sMetaSource: " + sMetaSource + " sMetaLimit: " + sMetaLimit + " isMetaCodeSearch: " + isMetaCodeSearch);
+//System.out.println("do_EVSSearch Meta termStr: " + termStr + " sMetaSource: " 
+//+ sMetaSource + " sMetaLimit: " + sMetaLimit +
+//" isMetaCodeSearch: " + isMetaCodeSearch + " sSearchInEVS: " + sSearchInEVS);
       int length = 0;
       length = termStr.length();
       EVSQuery query = new EVSQueryImpl();
@@ -627,7 +629,7 @@ public class EVSSearch implements Serializable
               break;  
             aMetaThesaurusConcept = (MetaThesaurusConcept)concepts.get(i);
             prefNameConcept = (String)aMetaThesaurusConcept.getName();
- // System.out.println("do_EVSSearch Meta prefNameConcept: " + prefNameConcept);
+  System.out.println("do_EVSSearch Meta prefNameConcept: " + prefNameConcept);
             CCode = (String)aMetaThesaurusConcept.getCui();
             if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
                 ilevel = ilevelImmediate;
@@ -649,7 +651,7 @@ public class EVSSearch implements Serializable
                     sourceString = sourceString + ", " + sourceObj.getAbbreviation();
                 }
               }
-   //  System.out.println("do_EVSSearch Meta sourceString: " + sourceString); 
+     System.out.println("do_EVSSearch Meta sourceString: " + sourceString + " sMetaSource: " + sMetaSource); 
             }   
 
             vMetaDefs = aMetaThesaurusConcept.getDefinitionCollection();
