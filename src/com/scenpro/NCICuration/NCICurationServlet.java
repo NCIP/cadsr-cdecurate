@@ -7286,6 +7286,7 @@ public class NCICurationServlet extends HttpServlet
       String sMenuAction = (String)session.getAttribute("MenuAction");
       if (sMenuAction == null) sMenuAction = "";
       VD_Bean oldVDBean = (VD_Bean)session.getAttribute("oldVDBean");
+      if (oldVDBean == null) oldVDBean = new VD_Bean();
       String ret = "";
       boolean isUpdateSuccess = true; 
       doInsertVDBlocks(req, res, null);

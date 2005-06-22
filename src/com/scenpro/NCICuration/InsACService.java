@@ -383,8 +383,11 @@ public class InsACService implements Serializable
           if (sAction.equals("INS"))
             this.storeStatusMsg("Value Domain Name : " + vd.getVD_LONG_NAME());
           //continue update even if not null
-          if (sReturnCode != null && sAction.equals("INS")) 
+          if (sReturnCode != null && sAction.equals("INS"))
+          {
              this.storeStatusMsg("\\t " + sReturnCode + " : Unable to create new Value Domain Successully.");
+             logger.fatal(sReturnCode + " Unable to create new Value Domain Successully.");
+          }
           else if ((sReturnCode == null || (sReturnCode != null && sAction.equals("UPD"))) && !sVD_ID.equals(""))
           {
               //store the status message in the session
@@ -468,10 +471,10 @@ public class InsACService implements Serializable
               this.storeStatusMsg("\\t Successfully updated Value Domain");
            }
         } //end sinsertfor not update
-        else
-        {
-          if (sReturnCode != null && !sReturnCode.equals(""))
+        else if (sReturnCode != null && !sReturnCode.equals(""))
+        {          
             this.storeStatusMsg("\\t Unable to update the preferred name of the Value Domain.");
+            logger.fatal(sReturnCode + " Unable to update the preferred name of the Value Domain.");
         }
       }
       this.storeStatusMsg("\\n");
