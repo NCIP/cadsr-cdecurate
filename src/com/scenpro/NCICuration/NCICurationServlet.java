@@ -381,7 +381,7 @@ public class NCICurationServlet extends HttpServlet
     {
       String reqType = req.getParameter("reqType");
 //logger.debug("servlet reqType!: "+ reqType);
-//System.out.println("servlet reqType!: "+ reqType);
+System.out.println("servlet reqType!: "+ reqType);
       session.setAttribute("LatestReqType", reqType); 
       if (reqType != null)
       {
@@ -901,7 +901,7 @@ public class NCICurationServlet extends HttpServlet
         logger.fatal("Servlet-doHomePage : " + e.toString());
         String msg = e.getMessage().substring(0, 12);
         if(msg.equals("Io exception"))
-          ForwardErrorJSP(req, res, "Io exception : Session terminated. Please log in again.");
+          ForwardErrorJSP(req, res, "Session terminated. Please log in again.");
         else
            ForwardErrorJSP(req, res, "Incorrect Username or Password. Please re-enter.");
        }
@@ -932,7 +932,7 @@ public class NCICurationServlet extends HttpServlet
       query.getVocabularyNames();
       java.util.List vocabs = null;
       String vocab = "";
- //System.out.println("servlet getVocabs1 m_EVS_CONNECT: " + m_EVS_CONNECT);
+ System.out.println("servlet getVocabs1 m_EVS_CONNECT: " + m_EVS_CONNECT);
       try
       {
         vocabs = evsService.evsSearch(query);
@@ -951,7 +951,7 @@ public class NCICurationServlet extends HttpServlet
         {
             sVocab = (Source)vocabs.get(i);
             vocab = (String)sVocab.getAbbreviation();
-      //System.out.println("servlet getVocabs: vocab: " + vocab);
+      System.out.println("servlet getVocabs: vocab: " + vocab);
             if(vocab.length()>4 && vocab.substring(0,5).equalsIgnoreCase("NCI_T"))
             {
               m_VOCAB_NCI = vocab;
@@ -1138,7 +1138,7 @@ public class NCICurationServlet extends HttpServlet
       session.setAttribute("DEAction", sSubAction);
       String sButtonPressed = (String)session.getAttribute("LastMenuButtonPressed");
       String sOriginAction = (String)session.getAttribute("originAction");
-//System.out.println("doEditDEActions sOriginAction: " + sOriginAction);
+System.out.println("doEditDEActions sOriginAction: " + sOriginAction);
       // save DDE info every case except back from DEComp
       String ddeType = (String)req.getParameter("selRepType");
       if (ddeType != null && !ddeType.equals(""))
@@ -1365,7 +1365,7 @@ public class NCICurationServlet extends HttpServlet
       pageDE.setDEC_VD_CHANGED(true);  //mark as changed
     }
     
-  //System.out.println(pageDE.getDE_PREFERRED_NAME() + " get name " + selNameType);
+  System.out.println(pageDE.getDE_PREFERRED_NAME() + " get name " + selNameType);
     //update session attributes
     session.setAttribute("m_DE", pageDE); 
     return pageDE;
@@ -2566,7 +2566,7 @@ public class NCICurationServlet extends HttpServlet
             }
           }
           else
-            stgContMsg += "\\n \\t" + altName + " in " + altCont + " Context ";
+            stgContMsg += "\\n\\t" + altName + " in " + altCont + " Context ";
           break;
         }
       }
@@ -2722,10 +2722,10 @@ public class NCICurationServlet extends HttpServlet
             }
           }
           else
-            stgContMsg += "\\n \\t" + refName + " in " + refCont + " Context "; 
+            stgContMsg += "\\n\\t" + refName + " in " + refCont + " Context "; 
           break;
         }
-        //System.out.println(j + " ref " + curRefAttr);
+        System.out.println(j + " ref " + curRefAttr);
       }
     }      
     if (stgContMsg != null && !stgContMsg.equals(""))
@@ -3487,8 +3487,6 @@ public class NCICurationServlet extends HttpServlet
    */
   public VD_Bean doGetVDSystemName(HttpServletRequest req, VD_Bean vd, Vector vParent) throws Exception
   {
-    try
-    {
     //make the system generated name
     String sysName = "";
     for (int i = vParent.size()-1; i > -1; i--)
@@ -3521,11 +3519,7 @@ public class NCICurationServlet extends HttpServlet
     String sPrefName = (String)req.getParameter("txPreferredName");
     if (selNameType != null && selNameType.equals("USER") && sPrefName != null)
       vd.setAC_USER_PREF_NAME(sPrefName);
-    }
-    catch (Exception e)
-    {
-      this.logger.fatal("ERROR - doGetVDSystemName : " + e.toString());
-    }
+      
     return vd;
   }
   /**
@@ -6142,16 +6136,19 @@ public class NCICurationServlet extends HttpServlet
          if (sOriginAction.equals("editVDfromDE") || sOriginAction.equals("EditDE"))
          {
             DE_Bean DEBean = (DE_Bean)session.getAttribute("m_DE");
-            DEBean.setDE_VD_IDSEQ(VDBean.getVD_VD_IDSEQ());
-            DEBean.setDE_VD_PREFERRED_NAME(VDBean.getVD_PREFERRED_NAME());
-            DEBean.setDE_VD_NAME(VDBean.getVD_LONG_NAME());
-            //reset the attributes
-            session.setAttribute("originAction", "");
-            //add DEC Bean into DE BEan
-            DEBean.setDE_VD_Bean(VDBean);
-            session.setAttribute("m_DE", DEBean);
-           // DEBean = this.doGetDENames(req, res, "noChange", "editVD", DEBean);
-            DEBean = this.doGetDENames(req, res, "new", "editVD", DEBean);
+            if(DEBean != null)
+            {
+              DEBean.setDE_VD_IDSEQ(VDBean.getVD_VD_IDSEQ());
+              DEBean.setDE_VD_PREFERRED_NAME(VDBean.getVD_PREFERRED_NAME());
+              DEBean.setDE_VD_NAME(VDBean.getVD_LONG_NAME());
+              //reset the attributes
+              session.setAttribute("originAction", "");
+              //add DEC Bean into DE BEan
+              DEBean.setDE_VD_Bean(VDBean);
+              session.setAttribute("m_DE", DEBean);
+            // DEBean = this.doGetDENames(req, res, "noChange", "editVD", DEBean);
+              DEBean = this.doGetDENames(req, res, "new", "editVD", DEBean);
+            }
             ForwardJSP(req, res, "/EditDEPage.jsp");
          }
          //go to search page with refreshed list
@@ -6202,7 +6199,7 @@ public class NCICurationServlet extends HttpServlet
       GetACService getAC = new GetACService(req, res, this);
       Vector vStatMsg = new Vector();
       String sNewRep = (String)session.getAttribute("newRepTerm");
-      if (sNewRep == null) sNewRep = "";
+
       Vector vBERows = (Vector)session.getAttribute("vBEResult");
       int vBESize = vBERows.size();
       Integer vBESize2 = new Integer(vBESize);
@@ -6281,10 +6278,10 @@ public class NCICurationServlet extends HttpServlet
              }
              //alerady exists
              else if (ret.indexOf("unique constraint") >= 0)
-                insAC.storeStatusMsg("\\t New version " + VDBeanSR.getVD_VERSION() + " already exists in the data base. \\n");
+                insAC.storeStatusMsg("\\t New version " + VDBeanSR.getVD_VERSION() + " already exists in the data base.\\n");
              //some other problem
              else
-                insAC.storeStatusMsg("\\t " + ret + " : Unable to create new version " + VDBeanSR.getVD_VERSION() +  ". \\n");
+                insAC.storeStatusMsg("\\t " + ret + " : Unable to create new version " + VDBeanSR.getVD_VERSION() +  ".\\n");
           }
           else  // block edit
           {
@@ -6696,16 +6693,16 @@ public class NCICurationServlet extends HttpServlet
         if (!sDEC_ID.equals(""))
         {
           DEBeanSR.setDE_DEC_IDSEQ(oldDEC);
-          changeAC = "\\t Unable to update the Data Element Concept because \\n \\t";
+          changeAC = "\\t Unable to update the Data Element Concept because \\n\\t";
           newDECVD = false;
         }
         else if (!sVD_ID.equals("")) 
         {
           DEBeanSR.setDE_VD_IDSEQ(oldVD);
-          changeAC = "\\t Unable to update the Value Domain because \\n \\t";
+          changeAC = "\\t Unable to update the Value Domain because \\n\\t";
           newDECVD = false;
         }
-        insAC.storeStatusMsg(changeAC + "the combination of DEC, VD and Context already exists in other Data Elements. \\n");
+        insAC.storeStatusMsg(changeAC + "the combination of DEC, VD and Context already exists in other Data Elements.\\n");
       }
       //do the validation for reg status
       String sReg = RegStatus;
@@ -6726,7 +6723,7 @@ public class NCICurationServlet extends HttpServlet
             if (!oldReg.equalsIgnoreCase("Standard") && !oldReg.equalsIgnoreCase("Candidate") && !oldReg.equalsIgnoreCase("Proposed"))
             {
               DEBeanSR.setDE_REG_STATUS(oldReg);
-              changeAC = "\\t Unable to update the Registration Status because \\n \\t";
+              changeAC = "\\t Unable to update the Registration Status because \\n\\t";
               isRegChange = true;
             }
           }
@@ -6734,10 +6731,10 @@ public class NCICurationServlet extends HttpServlet
           if (!sDEC_ID.equals("") && isRegChange == false)
           {
             DEBeanSR.setDE_DEC_IDSEQ(oldDEC);
-            changeAC = "\\t Unable to update the Data Element Concept because \\n \\t";
+            changeAC = "\\t Unable to update the Data Element Concept because \\n\\t";
             newDECVD = false;
           }
-          insAC.storeStatusMsg(changeAC + "the Data Element Concept is not associated with an Object Class. \\n");
+          insAC.storeStatusMsg(changeAC + "the Data Element Concept is not associated with an Object Class.\\n");
         }
       }
       //update the names and the bean if dec and vd are valid
@@ -6762,13 +6759,13 @@ public class NCICurationServlet extends HttpServlet
       if (oldASL == null) oldASL = "";
       String pageVer = de.getDE_VERSION();
       if (pageVer == null) pageVer = "";
-  //System.out.println(de.getDE_PREFERRED_NAME() + " pref name " + oldName);
+  System.out.println(de.getDE_PREFERRED_NAME() + " pref name " + oldName);
       if (prefType != null && !prefType.equals("USER"))
       {
         DEBeanSR.setAC_PREF_NAME_TYPE(prefType);
         if (oldASL.equals("RELEASED") && !(pageVer.equals("Point") || pageVer.equals("Whole")))
           insAC.storeStatusMsg("\\t Unable to update the preferred name because \\n" + 
-              "\\t the Workflow Status of the Data Element is RELEASED. \\n");
+              "\\t the Workflow Status of the Data Element is RELEASED.\\n");
         else
           DEBeanSR = this.doGetDENames(req, res, "noChange", "openDE", DEBeanSR);
       }
@@ -6820,7 +6817,7 @@ public class NCICurationServlet extends HttpServlet
       if (sValid != null && !sValid.equals(""))  //version only if valid dec-vd pair
       {
         insAC.storeStatusMsg("\\t Unable to create new version because \\n" + 
-          "\\t the combination of DEC, VD and Context already exists in other Data Elements. \\n");          
+          "\\t the combination of DEC, VD and Context already exists in other Data Elements.\\n");          
         verError = "decvdError";
       }
       else //get the right version number
@@ -6831,7 +6828,7 @@ public class NCICurationServlet extends HttpServlet
         else
         {
           insAC.storeStatusMsg("\\t Unable to create new version because \\n" + 
-            "\\t new version of the Data Element is not available. \\n");          
+            "\\t new version of the Data Element is not available.\\n");          
           verError = "verNumError";
         }          
       }
@@ -7008,10 +7005,10 @@ public class NCICurationServlet extends HttpServlet
              }
              //alerady exists
              else if (ret.indexOf("unique constraint") >= 0)
-                insAC.storeStatusMsg("\\t The version " + DECBeanSR.getDEC_VERSION() + " already exists in the data base. \\n");
+                insAC.storeStatusMsg("\\t The version " + DECBeanSR.getDEC_VERSION() + " already exists in the data base.\\n");
              //some other problem
              else
-                insAC.storeStatusMsg("\\t " + ret + " : Unable to create new version " + DECBeanSR.getDEC_VERSION() + ". \\n");
+                insAC.storeStatusMsg("\\t " + ret + " : Unable to create new version " + DECBeanSR.getDEC_VERSION() + ".\\n");
           }
           else  // block edit
           {
@@ -7122,7 +7119,7 @@ public class NCICurationServlet extends HttpServlet
                }
                //alerady exists
                else if (ret.indexOf("unique constraint") >= 0)
-                  insAC.storeStatusMsg("\\t The new version " + DEBeanSR.getDE_VERSION() + " already exists in the data base. \\n");
+                  insAC.storeStatusMsg("\\t The new version " + DEBeanSR.getDE_VERSION() + " already exists in the data base.\\n");
                //some other problem
                else
                   insAC.storeStatusMsg("\\t " + ret + " : Unable to create new version " + DEBeanSR.getDE_VERSION() + "\\n");
@@ -7147,6 +7144,7 @@ public class NCICurationServlet extends HttpServlet
          session.setAttribute("results", vResult);    //store the final result in the session
          session.setAttribute("DEPageAction", "nothing");
       }
+// System.out.println("done doUpdateDEActionBE"); 
       //forward to search page.
       ForwardJSP(req, res, "/SearchResultsPage.jsp");
    }
@@ -7224,9 +7222,7 @@ public class NCICurationServlet extends HttpServlet
       String sRemoveRepBlock = (String)session.getAttribute("RemoveRepBlock");
       if(sRemoveRepBlock == null) sRemoveRepBlock = "";
       EVS_Bean REPBean = (EVS_Bean)session.getAttribute("m_REP");
-      if (REPBean == null) REPBean = new EVS_Bean();
       EVS_Bean REPQBean = (EVS_Bean)session.getAttribute("m_REPQ");
-      if (REPQBean == null) REPQBean = new EVS_Bean();
       String sNewRep = (String)session.getAttribute("newRepTerm");
       if(sNewRep == null) sNewRep = "";
 
@@ -7242,7 +7238,7 @@ public class NCICurationServlet extends HttpServlet
       if (sNewRep.equals("true"))
           retRepQual = insAC.setRepresentation("INS", sREP_IDSEQ, VDBeanSR, REPQBean, req);
       else if(sRemoveRepBlock.equals("true"))
-        retObj = insAC.setRepresentation("INS", sREP_IDSEQ, VDBeanSR, REPBean, req);
+        retObj = insAC.setRepresentation("INS" , sREP_IDSEQ, VDBeanSR, REPBean, req);
       //create new version if not released
       sREP_IDSEQ = VDBeanSR.getVD_REP_IDSEQ();  
       if (sREP_IDSEQ != null && !sREP_IDSEQ.equals(""))
@@ -7278,15 +7274,15 @@ public class NCICurationServlet extends HttpServlet
    public void doInsertVDfromMenuAction(HttpServletRequest req, HttpServletResponse res)
    throws Exception
    {
+  System.out.println("doInsertVDfromMenuAction");
       HttpSession session = req.getSession();
       VD_Bean VDBean = (VD_Bean)session.getAttribute("m_VD");
 
       InsACService insAC = new InsACService(req, res, this);
       GetACSearch serAC = new GetACSearch(req, res, this);
       String sMenuAction = (String)session.getAttribute("MenuAction");
-      if (sMenuAction == null) sMenuAction = "";
       VD_Bean oldVDBean = (VD_Bean)session.getAttribute("oldVDBean");
-      if (oldVDBean == null) oldVDBean = new VD_Bean();
+      if(oldVDBean == null) oldVDBean = new VD_Bean();
       String ret = "";
       boolean isUpdateSuccess = true; 
       doInsertVDBlocks(req, res, null);
@@ -8174,7 +8170,7 @@ public class NCICurationServlet extends HttpServlet
   private void doTreeSearchRequest(HttpServletRequest req, HttpServletResponse res, 
   String sConceptName, String sConceptID, String strForward, String dtsVocab)  throws Exception
   {
-//System.out.println("doTreeSearchRequest sConceptName: " + sConceptName + " sConceptID: " + sConceptID);
+System.out.println("doTreeSearchRequest sConceptName: " + sConceptName + " sConceptID: " + sConceptID);
       HttpSession session = req.getSession();
       session.setAttribute("ConceptLevel", "0");
       String sUISearchType = (String)req.getAttribute("UISearchType");
@@ -8294,10 +8290,10 @@ public class NCICurationServlet extends HttpServlet
       if (sConteIdseq == null) sConteIdseq = "";
       
       String sUISearchType = (String)req.getParameter("UISearchType");
-//System.out.println("doGetSubConcepts sSearchType: " + sSearchType + " sUISearchType: " + sUISearchType);
+System.out.println("doGetSubConcepts sSearchType: " + sSearchType + " sUISearchType: " + sUISearchType);
       if(sUISearchType == null || sUISearchType.equals("nothing")) 
         sUISearchType = "term";
- //System.out.println("doGetSubConcepts  sConceptName: " + sConceptName + " dtsVocab: " + dtsVocab);    
+ System.out.println("doGetSubConcepts  sConceptName: " + sConceptName + " dtsVocab: " + dtsVocab);    
     if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
      || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
       dtsVocab = this.m_VOCAB_NCI; //"NCI_Thesaurus";
@@ -8327,7 +8323,7 @@ public class NCICurationServlet extends HttpServlet
       Vector vSubConceptNames = null;
       
       String sParent = (String)session.getAttribute("ParentConcept");
-  //System.out.println("doGetSubConcepts sParent: " + sParent + " sSearchAC: " + sSearchAC);
+  System.out.println("doGetSubConcepts sParent: " + sParent + " sSearchAC: " + sSearchAC);
       if(sParent == null) sParent = "";
       String sParentSource = "";
       if(dtsVocab.equals("NCI Metathesaurus") && sSearchAC.equals("ParentConceptVM"))
@@ -8383,7 +8379,7 @@ public class NCICurationServlet extends HttpServlet
         { 
           String sName = (String)vSubConceptNames.elementAt(j);
           String sCode = evs.do_getEVSCode(sName, dtsVocab);   
-  //System.out.println("servlet Immediate sName: " + sName + " sCode: " + sCode);
+  System.out.println("servlet Immediate sName: " + sName + " sCode: " + sCode);
           evs.do_EVSSearch(sCode, vAC, dtsVocab, "Concept Code",
           sDefSource, 100, sUISearchType, sRetired, sConteIdseq, ilevelImmediate);         
         }
@@ -9626,7 +9622,7 @@ public class NCICurationServlet extends HttpServlet
       else
       {
         session.setAttribute("originAction", "EditDE");
-        session.setAttribute("statusMessage", "Unable to open the Create or Edit page. \\n" +
+        session.setAttribute("statusMessage", "Unable to open the Create or Edit page.\\n" +
              "Please try again.");
         ForwardJSP(req, res, "/SearchResultsPage.jsp");
       }    
@@ -9678,7 +9674,7 @@ public class NCICurationServlet extends HttpServlet
        else
       {
         session.setAttribute("originAction", "EditDEC");
-        session.setAttribute("statusMessage", "Unable to open the Create or Edit page. \\n" +
+        session.setAttribute("statusMessage", "Unable to open the Create or Edit page.\\n" +
              "Please try again.");
         ForwardJSP(req, res, "/SearchResultsPage.jsp");
       }
@@ -9730,7 +9726,7 @@ public class NCICurationServlet extends HttpServlet
       else
       {
         session.setAttribute("originAction", "EditVD");
-        session.setAttribute("statusMessage", "Unable to open the Create or Edit page. \\n" +
+        session.setAttribute("statusMessage", "Unable to open the Create or Edit page.\\n" +
              "Please try again.");
         ForwardJSP(req, res, "/SearchResultsPage.jsp");
       }
@@ -9788,7 +9784,7 @@ public class NCICurationServlet extends HttpServlet
         }
         else
         {
-            session.setAttribute("statusMessage", "Unable to open the Create or Edit page. \\n" +
+            session.setAttribute("statusMessage", "Unable to open the Create or Edit page.\\n" +
                  "Please try again.");
             ForwardJSP(req, res, "/SearchResultsPage.jsp");
         }
@@ -10280,7 +10276,7 @@ public class NCICurationServlet extends HttpServlet
   */
   public void clearCreateSessionAttributes(HttpServletRequest req, HttpServletResponse res) throws Exception
   {
-//System.out.println("clearCreateSessionAttributes");
+System.out.println("clearCreateSessionAttributes");
         HttpSession session = req.getSession();
         //parent concept for the VD
         session.setAttribute("VDParentConcept", new Vector());
@@ -10423,7 +10419,7 @@ public class NCICurationServlet extends HttpServlet
     session.setAttribute("MetaSource", "All Sources");
     
     this.doCollapseAllNodes(req, dtsVocab);    
-  //System.out.println("default block " + dtsVocab);
+  System.out.println("default block " + dtsVocab);
   }
   /**
   * To get the default filter by attributes for the selected Component.
@@ -10794,7 +10790,7 @@ public class NCICurationServlet extends HttpServlet
   {
       try
       {
-         ForwardErrorJSP(req, res, "Error : Session terminated. Please log in again.");
+         ForwardErrorJSP(req, res, "Session terminated. Please log in again.");
       }
       catch (Exception e)
       {
