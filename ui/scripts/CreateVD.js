@@ -683,7 +683,7 @@ function enableValueNum()
  function changeDataType()
  {
     var dtInd = document.createVDForm.selDataType.selectedIndex;
-    var sDataType = document.createVDForm.selDataType.options[document.createVDForm.selDataType.selectedIndex].text;
+    var sDataType = document.createVDForm.selDataType.options[document.createVDForm.selDataType.selectedIndex].text; 
     if (sDataType != null && sDataType != "" && dtInd > -1 && document.createVDForm.datatypeDesc != null && document.createVDForm.datatypeDesc.length >0)
     {
       var sDTDesc = document.createVDForm.datatypeDesc[dtInd].value;

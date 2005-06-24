@@ -130,8 +130,8 @@ function linkFirstGov()
 
 function CloseWindow()
 {
-  if (opener != null)
-    opener.callTimeout();
+ // if (opener != null)
+   // opener.callTimeout();
  // opener.callLogout();
  // opener.closeWindow();
   window.close();
@@ -164,11 +164,13 @@ function keypress_handler()
 <%
   String errMessage = (String)session.getAttribute("ErrorMessage");
   if (errMessage == null) errMessage = "";
+System.out.println("LoginE errMessage: " + errMessage);
  // if (errMessage == "") errMessage = "Problem with login. User name/password may be incorrect, or database connection can not be established.";
   if (errMessage == "java.lang.NullPointerException") errMessage = "NullPointer : Session terminated. Please login again.";
   session.setAttribute("ErrorMessage", "");
-  String reqType = (String)session.getAttribute("LatestReqType"); 
+  String reqType = (String)request.getAttribute("LatestReqType"); 
   if(reqType == null) reqType = "";
+
   //these are requests used for second window open
   Vector lstWinOpenReqs = new Vector();
   lstWinOpenReqs.addElement("searchEVS");
@@ -182,6 +184,7 @@ function keypress_handler()
   //handle search for create items (de, dec, vd, pv, vm searches)
   String menuAct = (String)session.getAttribute("serMenuAct");
   if (menuAct == null) menuAct = "";
+System.out.println("LoginE reqType: " + reqType + " menuAct: " + menuAct);
   if (menuAct.equals("searchForCreate") && !errMessage.equals(""))
   {
     lstWinOpenReqs.addElement("searchForCreate");
@@ -201,11 +204,7 @@ function keypress_handler()
     <tr><td>&nbsp;</td></tr>
     <tr><td>&nbsp;</td></tr>
     <%
-    /*  if (reqType.equals("searchEVS") || reqType.equals("searchBlocks")
-        || reqType.equals("searchQualifiers") || reqType.equals("getRefDocument")
-        || reqType.equals("getAltNames") || reqType.equals("treeSearch") 
-        || reqType.equals("treeExpand")  || reqType.equals("treeCollapse")
-        || reqType.equals("doSortBlocks")|| reqType.equals("doSortQualifiers"))*/ //for windows that are open
+    //for windows that are open
     if (lstWinOpenReqs.contains(reqType))  //for second windows open, display different message
     { %> 
     <tr>
@@ -213,17 +212,17 @@ function keypress_handler()
       <td align="center" valign="middle">
         <table width="394" border="4" bgcolor="#CCCCCC">  
           <tr>
-            <td width="387" valign="middle" align="center">
+            <td width="387" valign="bottom" align="center">
               <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">This session is no longer active.</font></h3>
             </td>
           </tr>     
           <tr>
-            <td width="100%" align="center" valign="middle">
+            <td width="100%" align="center" valign="bottom">
               <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">User session has expired.</font></h3>
             </td>
           </tr>  
           <tr>
-            <td width="100%" align="center" valign="middle">
+            <td width="100%" align="center" valign="bottom">
               <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">Close session and log in again.</font></h3>
             </td>
           </tr>  
