@@ -11,13 +11,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
 
-//import gov.nih.nci.EVS.bean.*;
-//import gov.nih.nci.EVS.domain.*;
-//import gov.nih.nci.EVS.search.*;
-//import gov.nih.nci.EVS.exception.*;
-//import gov.nih.nci.common.util.*;
-//import gov.nih.nci.common.exception.*;
-
 import org.apache.log4j.*;
 
 /**

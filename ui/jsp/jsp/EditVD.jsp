@@ -12,10 +12,20 @@
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/SelectCS_CSI.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
 <%
+    String sOriginAction = (String)session.getAttribute("originAction");
     Vector vStatus = (Vector)session.getAttribute("vStatusVD");
     Vector vDataTypes = (Vector)session.getAttribute("vDataType");
     Vector vDataTypeDesc = (Vector)session.getAttribute("vDataTypeDesc");
     Vector vDataTypeCom = (Vector)session.getAttribute("vDataTypeComment");
+//System.out.println("jsp before vDataTypes.size(): " + vDataTypes.size());
+    if(sOriginAction.equals("BlockEditVD"))
+    {
+      vDataTypeDesc.add(0,"");
+      vDataTypes.add(0,"");
+      vDataTypeCom.add(0,"");
+    }
+//System.out.println("jsp after vDataTypes.size(): " + vDataTypes.size());
+    
     Vector vUOM = (Vector)session.getAttribute("vUOM");
     Vector vUOMFormat = (Vector)session.getAttribute("vUOMFormat");
     Vector vCD = (Vector)session.getAttribute("vCD");
@@ -33,7 +43,7 @@
     
     UtilService serUtil = new UtilService();
     String sMenuAction = (String)session.getAttribute("MenuAction");
-    String sOriginAction = (String)session.getAttribute("originAction");
+   
 
     String sVDIDSEQ = m_VD.getVD_VD_IDSEQ();
     if (sVDIDSEQ == null) sVDIDSEQ = "";
@@ -834,8 +844,7 @@ function setup()
         <tr>
           <td valign="top">
             <select name= "selDataType" size ="1" onChange="javascript:changeDataType();"  style="width:90%"
-              onHelp = "showHelp('Help_CreateVD.html#createVDForm_selDataType'); return false">
-              <option value="" selected="selected"></option>              
+              onHelp = "showHelp('Help_CreateVD.html#createVDForm_selDataType'); return false">             
 <%
               for (int i = 0; vDataTypes.size()>i; i++)
               {
@@ -1599,6 +1608,7 @@ function setup()
 <select name= "datatypeDesc" size ="1" style="visibility:hidden;width:100;"  multiple>
 <%if (vDataTypes != null) 
   {
+//System.out.println("datatypeDesc vDataTypes.size(): " + vDataTypes.size());
     for (int i = 0; vDataTypes.size()>i; i++)
     {
       String sDType = (String)vDataTypes.elementAt(i);

@@ -382,7 +382,7 @@ public class NCICurationServlet extends HttpServlet
       String reqType = req.getParameter("reqType");
 //logger.debug("servlet reqType!: "+ reqType);
 System.out.println("servlet reqType!: "+ reqType);
-      session.setAttribute("LatestReqType", reqType); 
+      req.setAttribute("LatestReqType", reqType); 
       if (reqType != null)
       {
         //check the validity of the user login
