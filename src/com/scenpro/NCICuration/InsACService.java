@@ -492,7 +492,7 @@ public class InsACService implements Serializable
       m_classReq.setAttribute("retcode", "Exception");
       this.storeStatusMsg("\\t Exception : Unable to update Value Domain attributes.");
     }
-  System.out.println("done setVD");
+ // System.out.println("done setVD");
     return sReturnCode;
   }
 
@@ -1365,7 +1365,6 @@ public class InsACService implements Serializable
     String oldName = "";
     String oldContextID = "";
     String oldAslName = "";
- //   String oldLanguage = "";
     String oldSource = "";
     String oldEndDate = "";
     String oldBeginDate = "";
@@ -1806,9 +1805,9 @@ public class InsACService implements Serializable
 
 /**
   *
-  * @param sOCL_IDSEQ.
+  * @param sCondrString.
   *
-  * @return String return code from the stored procedure call. null if no error occurred.
+  * @return sCondrString
   */
   public String prepCondrStringForSubmit(String sCondrString)
   { 
@@ -1864,7 +1863,7 @@ public class InsACService implements Serializable
   public DEC_Bean setObjectClassDEC(String sAction, DEC_Bean dec, HttpServletRequest req)
   {
     //capture the duration
- System.err.println("in setOblClassDEC");
+ //System.err.println("in setOblClassDEC");
     java.util.Date startDate = new java.util.Date();          
     logger.info(m_servlet.getLogMessage(m_classReq, "setObjectClassDEC", "starting set", startDate, startDate));
 
@@ -1940,13 +1939,8 @@ public class InsACService implements Serializable
             }
           }
       }
- //System.err.println("in setObjectClassDEc sOCCondrString: " + sOCCondrString);
       if (sOCCondr == null) sOCCondr = "";
-   //   if (sContextID == null || sContextID.equals(""))
-   //     sContextID = (String)req.getAttribute("blockContext");
       if (sContextID == null) sContextID = "";
-        //System.out.println(sOCCondrString + " set oc " + sContextID);
-    //  if (!sContextID.equals("") && !sOCCondrString.equals(""))
       if (!sOCCondrString.equals(""))
       {
           sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
@@ -2122,10 +2116,7 @@ public class InsACService implements Serializable
           }
       }
       if (sPCCondr == null) sPCCondr = "";
-  //    if (sContextID == null || sContextID.equals(""))
-  //      sContextID = (String)req.getAttribute("blockContext");
       if (sContextID == null) sContextID = "";
-  //    if (!sContextID.equals("") && !sPCCondrString.equals(""))
       if (!sPCCondrString.equals(""))
       {
           sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
@@ -2345,7 +2336,7 @@ public class InsACService implements Serializable
             String sREP_CONDR_IDSEQ = CStmt.getString(21);
             if(sREP_CONDR_IDSEQ == null) sREP_CONDR_IDSEQ = "";
             session.setAttribute("newRepTerm", "");
-     System.out.println(sOCCondrString + " set oc execute " + sREP_IDSEQ + " ret " + sReturnCode + " condr " + sREP_CONDR_IDSEQ + " asl " + CStmt.getString(9));
+  //   System.out.println(sOCCondrString + " set oc execute " + sREP_IDSEQ + " ret " + sReturnCode + " condr " + sREP_CONDR_IDSEQ + " asl " + CStmt.getString(9));
             if(VD != null  && (sReturnCode == null || sReturnCode.equals("") || sReturnCode.equals("API_REP_500")))
             {
               VD.setVD_REP_IDSEQ(sREP_IDSEQ);
@@ -2452,36 +2443,6 @@ public class InsACService implements Serializable
           //oc-prop is not unique in other contexts
           if (sReturnID != null && !sReturnID.equals(""))
             uniqueMsg = "Warning: DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): " + sReturnID;
-          //create new version here for single dec  
-       /*   if (editAct.equals("UniqueAndVersion"))
-          {
-            //allow creating new version of object class here if asl name is not released
-            if (!sOCID.equals("") && sOCasl != null && !sOCasl.equals("RELEASED"))
-            {
-              System.out.println("create OC new version here");
-              String newID = this.setOC_PROP_REP_VERSION(sOCID, "ObjectClass");
-              if (newID != null && !newID.equals(""))
-                mDEC.setDEC_OCL_IDSEQ(newID);
-              else
-              {
-                String retCode = (String)m_classReq.getAttribute("retcode");
-                uniqueMsg = retCode + " : Unable to create new version of the Object Class";
-              }
-            }
-            //allow creating new version of property here if asl name is not released
-            if (!sPropID.equals("") && sPROPasl != null && !sPROPasl.equals("RELEASED"))
-            {
-              System.out.println("create PROP new version here");
-              String newID = this.setOC_PROP_REP_VERSION(sPropID, "Property");
-              if (newID != null && !newID.equals(""))
-                mDEC.setDEC_PROPL_IDSEQ(newID);
-              else
-              {
-                String retCode = (String)m_classReq.getAttribute("retcode");
-                uniqueMsg = retCode + " : Unable to create new version of the Property";
-              }
-            }
-          } */
         }
       }
     }
@@ -2736,7 +2697,6 @@ public class InsACService implements Serializable
     String oldAslName = "";
     String sDE_ID = "";
     String oldDocText = "";
- //   String oldLanguage = "";
     String oldSource = "";
     String oldEndDate = "";
     String oldBeginDate = "";
@@ -2910,7 +2870,6 @@ public class InsACService implements Serializable
             
           de.setDE_MODIFIED_BY(getFullName(CStmt.getString(18)));
           de.setDE_DATE_MODIFIED(m_util.getCurationDate(CStmt.getString(19)));
-System.out.println("setDE2");
           // insert row into DES (designation) to create CDEID for new DE or copies from old if new version
           if (sInsertFor.equals("Version"))
           {
@@ -3004,7 +2963,7 @@ System.out.println("setDE2");
       m_classReq.setAttribute("retcode", "Exception");
       this.storeStatusMsg("\\t Exception : Unable to update Data Element Attributes");
     }
-System.out.println("done setDE");
+//System.out.println("done setDE");
     return sReturnCode;
   }  //end set DE
 
@@ -3168,7 +3127,7 @@ System.out.println("done setDE");
         boolean bExcuteOk = CStmt.execute();
         sReturnCode = CStmt.getString(3);
         newACID = CStmt.getString(2);
-  System.out.println(acIDseq + ":" + newACID);
+ // System.out.println(acIDseq + ":" + newACID);
         //trim off the extra spaces in it
         if ((sReturnCode == null || sReturnCode.equals("")) && newACID != null && !newACID.equals(""))
            newACID = newACID.trim();
@@ -4940,125 +4899,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
     }
   } //end doAddRemoveAltNames
 
-/*  /**
-   * add revove alternate name attributes for the selected ac
-   * loops through the list of selected types and looks for the matching ac
-   * calls setDES to create or insert according to the submit action
-   * 
-   * @param sDE unique id of an AC.
-   * @param deCont owned by context id of the ac.
-   */
-/*  public void doAddRemoveAltNames(String sDE, String deCont, String desAction)
-  {
-    try
-    {
-      HttpSession session = m_classReq.getSession();
-      
-      String sAltIDs[] = m_classReq.getParameterValues("selAltIDHidden");
-      String sAltTypes[] = m_classReq.getParameterValues("selAltTypeHidden");
-      String sAltNames[] = m_classReq.getParameterValues("selAltNameHidden");
-      String sAltACs[] = m_classReq.getParameterValues("selAltACHidden");
-      String sAltConts[] = m_classReq.getParameterValues("selAltContHidden");
-      String sAltContIDs[] = m_classReq.getParameterValues("selAltContIDHidden");
-      String sAltActs[] = m_classReq.getParameterValues("selAltActHidden");
-      String sLang = (String)m_classReq.getParameter("dispLanguage");
-      if (sLang == null || sLang.equals("")) sLang = "ENGLISH";
-      if (sAltTypes != null && sAltNames != null && sAltACs != null && sAltContIDs != null && sAltActs != null)
-      {
-        for (int i=0; i<sAltTypes.length; i++)
-        {
-          String sID = "", sType = "", sName = "", sAC = "", sCont = "", sContID = "", sAction = "";
-          if (sAltACs[i] != null) sAC = sAltACs[i];
-          if (sAC != null && sDE.equals(sAC))
-          {
-            if (sAltIDs[i] != null) sID = sAltIDs[i];
-            if (sAltTypes[i] != null) sType = sAltTypes[i];
-            if (sAltNames[i] != null) sName = sAltNames[i];
-            if (sAltContIDs[i] != null) sContID = sAltContIDs[i];
-            if (sAltConts[i] != null) sCont = sAltConts[i];
-            if (sAltActs[i] != null) sAction = sAltActs[i]; 
-            //make as new one aciton INS
-            if (sID == null || sID.equals("") || sID.equals("new")) 
-            {
-              if (desAction.equals("remove") || sAction.equals("DEL")) sAction = "UPD";  //mark new one as update so that it won't create 
-              else sAction = "INS";
-            }
-            //check if creating used by in the same context as created DE
-            String ret = "";
-          /*  if (sContID != null && deCont.equals(sContID) && sAction.equals("INS") && sType.equals("USED_BY"))
-            {
-              this.storeStatusMsg("\\t Unable to designate in the same context as the owned by context for " + sName + ".");            
-              m_classReq.setAttribute("retcode", "API_DES_00");
-            }
-            else *//*if (!sAction.equals("UPD"))   //call method to create alternate name in the database
-              ret = this.setDES(sAction, sAC, sContID, sCont, sType, sName, sLang, sID); 
-          }
-        }        
-      }
-    }
-    catch(Exception e)
-    {
-      logger.fatal("ERROR in InsACService-addRemoveAltNames for exception : " + e.toString());
-    }
-  } *///end doAddRemoveAltNames
 
-/*  /**
-   * add revove reference documents attributes for the selected ac
-   * loops through the list of selected types and looks for the matching ac
-   * calls setRD to create or insert according to the submit action
-   * 
-   * @param sDE unique id of an AC.
-   * @param deCont owned by context id of the ac.
-   */
-/*  public void doAddRemoveRefDocs(String sDE, String deCont, String desAction)
-  {
-    try
-    {
-      HttpSession session = m_classReq.getSession();
-      
-      String sRefIDs[] = m_classReq.getParameterValues("selRefIDHidden");
-      String sRefTypes[] = m_classReq.getParameterValues("selRefTypeHidden");
-      String sRefNames[] = m_classReq.getParameterValues("selRefNameHidden");
-      String sRefTexts[] = m_classReq.getParameterValues("selRefTextHidden");
-      String sRefURLs[] = m_classReq.getParameterValues("selRefURLHidden");
-      String sRefACs[] = m_classReq.getParameterValues("selRefACHidden");
-      String sRefContIDs[] = m_classReq.getParameterValues("selRefContIDHidden");
-      String sRefActs[] = m_classReq.getParameterValues("selRefActHidden");
-      String sLang = (String)m_classReq.getParameter("dispLanguage");
-      if (sLang == null || sLang.equals("")) sLang = "ENGLISH";
-      if (sRefTypes != null && sRefNames != null && sRefACs != null && sRefContIDs != null && sRefActs != null)
-      {
-        for (int i=0; i<sRefTypes.length; i++)
-        {
-          String sID = "", sType = "", sName = "", sAC = "", sText = "", sURL = "", sContID = "", sAction = "";
-          if (sRefACs[i] != null) sAC = sRefACs[i];
-          if (sAC != null && sDE.equals(sAC))
-          {
-            if(sRefIDs[i] != null) sID = sRefIDs[i];
-            if(sRefTypes[i] != null) sType = sRefTypes[i];
-            if (sRefNames[i] != null) sName = sRefNames[i];
-            if (sRefContIDs[i] != null) sContID = sRefContIDs[i];
-            if (sRefTexts[i] != null) sText = sRefTexts[i];
-            if (sRefURLs[i] != null) sURL = sRefURLs[i];
-            if (sRefActs[i] != null) sAction = sRefActs[i];  
-            if (sID == null || sID.equals("") || sID.equals("new"))
-            {
-              if (desAction.equals("remove") || sAction.equals("DEL")) sAction = "UPD";  //mark new one as update so that it won't create 
-              else sAction = "INS";
-            }
-            //check if creating used by in the same context as created DE
-            String ret = "";
-            if (!sAction.equals("UPD"))   //call method to create reference documents in the database
-              ret = this.setRD(sAction, sName, sAC, sText, sType, sURL, sContID, sID, sLang); 
-          }
-        }        
-      }
-    }
-    catch(Exception e)
-    {
-      logger.fatal("ERROR in InsACService-addRemoveRefDocs for exception : " + e.toString());
-    }
-  } */ //end doAddRemoveAltNames
   
   /**
    * add revove reference documents attributes for the selected ac
@@ -5355,9 +5196,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
 
         CStmt.setString(2, evsBean.getCON_IDSEQ());       // con idseq
         CStmt.setString(3, evsBean.getNCI_CC_VAL());       // concept code
-       // CStmt.setString(4, evsBean.getCONTE_IDSEQ());       // context id
-       // CStmt.setString(5, "1.0");       // version to 1
- // System.err.println("in getConcept evsBean.getNCI_CC_VAL(): " + evsBean.getNCI_CC_VAL());      
+     
          // Now we are ready to call the stored procedure
         boolean bExcuteOk = CStmt.execute();
         sCON_IDSEQ = (String)CStmt.getObject(2);

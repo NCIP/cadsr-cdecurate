@@ -24,7 +24,7 @@
     <init-param>
       <param-name>evsconnection</param-name>
       <param-value>
-	   http://cbioqatest501.nci.nih.gov:8080/cacoreevs301/server/HTTPServer
+	   http://cbioqa601.nci.nih.gov:29080/cacore301hql/server/HTTPServer
 	</param-value>
     </init-param>
     <init-param>

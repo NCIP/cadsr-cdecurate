@@ -49,7 +49,7 @@
    }
 
    String sLabelKeyword =  (String)request.getAttribute("labelKeyword");
-System.out.println("jsp srbl sLabelKeyword: " + sLabelKeyword);
+//System.out.println("jsp srbl sLabelKeyword: " + sLabelKeyword);
    if (sLabelKeyword == null)
       sLabelKeyword = "";
    if (sKeyword == null)
@@ -153,17 +153,6 @@ System.out.println("jsp srbl sLabelKeyword: " + sLabelKeyword);
                   sComp == "ParentConceptVM") type = "Value Meaning";
         else if (sComp == "ParentConcept") type = "Parent Concept";
         
-        //check if newly opened
-   /*     var isSearched = "false";
-        if (opener.document.SearchActionForm != null && opener.document.SearchActionForm.isValidSearch != null)
-          isSearched = opener.document.SearchActionForm.isValidSearch.value;
-        if(type != "<%=sSelAC%>" || (isSearched != null && isSearched == "false"))
-        {
-            document.searchResultsForm.actSelected.value = "FirstSearch";
-            document.searchResultsForm.searchComp.value = sComp;
-            opener.document.SearchActionForm.isValidSearch.value = "true";
-            document.searchResultsForm.submit();
-        }  */         
     <% } else { %>
         sComp = "<%=sSelAC%>";
     <% } %>
@@ -171,7 +160,9 @@ System.out.println("jsp srbl sLabelKeyword: " + sLabelKeyword);
      
   function ShowSelection()
   {
-       ShowUseSelection("<%=sMAction%>");
+     if (opener.document == null)
+        window.close();
+      ShowUseSelection("<%=sMAction%>");
   }
 
    function reSetAttribute()
@@ -185,22 +176,29 @@ System.out.println("jsp srbl sLabelKeyword: " + sLabelKeyword);
 
    function EnableButtons(checked, currentField)
    {
-     
+      if (opener.document == null)
+        window.close();
       EnableCheckButtons(checked, currentField, "<%=sMAction%>")
    }
 
 function getSubConceptsAll()
 {
+   if (opener.document == null)
+        window.close();
    getSubConceptsAll2("<%=sUISearchType2%>")  
 }
    
 function getSubConceptsImmediate()
 {
+   if (opener.document == null)
+        window.close();
   getSubConceptsImmediate2("<%=sUISearchType2%>")
 }
    
 function getSuperConcepts()
 {
+   if (opener.document == null)
+        window.close();
    getSuperConcepts2("<%=sUISearchType2%>")  
 }
 

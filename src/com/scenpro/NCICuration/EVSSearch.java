@@ -255,11 +255,14 @@ public class EVSSearch implements Serializable
     //  m_EVS_CONNECT = "http://cbioapp102.nci.nih.gov:29080/cacore30/server/HTTPServer";  //prod
     //   m_EVS_CONNECT = "http://cbioqatest501.nci.nih.gov:8080/cacore30/server/HTTPServer";  //3.0.1
     //     m_EVS_CONNECT = "http://cbioqatest501.nci.nih.gov:8080/cacoreevs301/server/HTTPServer";  // new 3.0.1
+      //   "http://cbioqa601.nci.nih.gov:29080/cacore301hql/server/HTTPServer"
       
     ApplicationService evsService =
     ApplicationService.getRemoteInstance(m_servlet.m_EVS_CONNECT);
     
-//System.out.println("do_EVSSearch dtsVocab: " + dtsVocab + " termStr: " + termStr + " sUISearchType: " + sUISearchType);
+ System.out.println("do_EVSSearch m_servlet.m_EVS_CONNECT: " + m_servlet.m_EVS_CONNECT);
+    
+  System.out.println("do_EVSSearch dtsVocab: " + dtsVocab + " termStr: " + termStr + " sUISearchType: " + sUISearchType);
 //System.out.println("do_EVSSearch sSearchInEVS: " + sSearchInEVS + " isMetaCodeSearch: " + isMetaCodeSearch + " sRetiredxx: " + sRetired);
  
   // Search By Concept Code
@@ -282,6 +285,7 @@ public class EVSSearch implements Serializable
       catch(Exception ex)
       {
         ex.printStackTrace();
+        System.out.println("Error0 do_EVSSearch: " + ex.toString());
       }
       isRetired = (Boolean)bool.get(0);
     }
@@ -297,7 +301,7 @@ public class EVSSearch implements Serializable
       }
       catch(Exception ex)
       {
-        System.out.println("Error do_EVSSearch: " + ex.toString());
+        System.out.println("Error1 do_EVSSearch: " + ex.toString());
       }
       if(concepts != null && concepts.size()>0)
       {
@@ -312,7 +316,7 @@ public class EVSSearch implements Serializable
         }
         catch(Exception ex)
         {
-          System.out.println("Error do_EVSSearch: " + ex.toString());
+          System.out.println("Error2 do_EVSSearch: " + ex.toString());
         }
         if(concepts != null)
         {
@@ -363,7 +367,7 @@ public class EVSSearch implements Serializable
                 }
                 catch(Exception ex)
                 {
-                  System.out.println("Error do_EVSSearch: " + ex.toString());
+                  System.out.println("Error3 do_EVSSearch: " + ex.toString());
                 }
                 if(concepts4 != null && concepts4.size()>0)
                 {
@@ -383,7 +387,7 @@ public class EVSSearch implements Serializable
               }
               catch(Exception ex)
               {
-                System.out.println("Error do_EVSSearch: " + ex.toString());
+                System.out.println("Error4 do_EVSSearch: " + ex.toString());
               }
               if(concepts3 != null && concepts3.size()>0)
               {
@@ -441,7 +445,7 @@ public class EVSSearch implements Serializable
         }
         catch(Exception ex)
         {
-          System.out.println("Error do_EVSSearch: " + ex.toString());
+          System.out.println("Error5 do_EVSSearch: " + ex.toString());
         }
         if(concepts != null)
         {
@@ -471,7 +475,7 @@ public class EVSSearch implements Serializable
             }
             catch(Exception ex)
             {
-              System.out.println("Error do_EVSSearch: " + ex.toString());
+              System.out.println("Error6 do_EVSSearch: " + ex.toString());
             }
          
             isRetired = (Boolean)bool2.get(0);
@@ -496,7 +500,7 @@ public class EVSSearch implements Serializable
                 }
                 catch(Exception ex)
                 {
-                  System.out.println("Error do_EVSSearch: " + ex.toString());
+                  System.out.println("Error7 do_EVSSearch: " + ex.toString());
                 }
                 if(concepts4 != null && concepts4.size()>0)
                 {
@@ -517,7 +521,7 @@ public class EVSSearch implements Serializable
               }
               catch(Exception ex)
               {
-                System.out.println("Error do_EVSSearch: " + ex.toString());
+                System.out.println("Error8 do_EVSSearch: " + ex.toString());
               }
               if(concepts3 != null && concepts3.size()>0)
               {
@@ -561,7 +565,7 @@ public class EVSSearch implements Serializable
                 }
                 catch(Exception ex)
                 {
-                  System.out.println("Error do_EVSSearch: " + ex.toString());
+                  System.out.println("Error9 do_EVSSearch: " + ex.toString());
                 }
                 if(concepts4 != null && concepts4.size()>0)
                 {
@@ -598,9 +602,9 @@ public class EVSSearch implements Serializable
   || dtsVocab.equals("NCI Metathesaurus")) && sUISearchType.equals("term")
   && !termStr.equals("") && !sTreeSearch.equals("true") && codeFoundInThesaurus.equals(bFalse))
   {
-//System.out.println("do_EVSSearch Meta termStr: " + termStr + " sMetaSource: " 
-//+ sMetaSource + " sMetaLimit: " + sMetaLimit +
-//" isMetaCodeSearch: " + isMetaCodeSearch + " sSearchInEVS: " + sSearchInEVS);
+System.out.println("do_EVSSearch Meta termStr: " + termStr + " sMetaSource: " 
++ sMetaSource + " sMetaLimit: " + sMetaLimit +
+" isMetaCodeSearch: " + isMetaCodeSearch + " sSearchInEVS: " + sSearchInEVS);
       int length = 0;
       length = termStr.length();
       EVSQuery query = new EVSQueryImpl();
@@ -617,7 +621,7 @@ public class EVSSearch implements Serializable
       }
       catch(Exception ex)
       {
-        System.out.println("Error do_EVSSearch Meta: " + ex.toString());
+        System.out.println("Error10 do_EVSSearch Meta: " + ex.toString());
       }
       if(concepts != null)
       {
@@ -629,7 +633,7 @@ public class EVSSearch implements Serializable
               break;  
             aMetaThesaurusConcept = (MetaThesaurusConcept)concepts.get(i);
             prefNameConcept = (String)aMetaThesaurusConcept.getName();
-  System.out.println("do_EVSSearch Meta prefNameConcept: " + prefNameConcept);
+//  System.out.println("do_EVSSearch Meta prefNameConcept: " + prefNameConcept);
             CCode = (String)aMetaThesaurusConcept.getCui();
             if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
                 ilevel = ilevelImmediate;
@@ -651,7 +655,7 @@ public class EVSSearch implements Serializable
                     sourceString = sourceString + ", " + sourceObj.getAbbreviation();
                 }
               }
-     System.out.println("do_EVSSearch Meta sourceString: " + sourceString + " sMetaSource: " + sMetaSource); 
+ //    System.out.println("do_EVSSearch Meta sourceString: " + sourceString + " sMetaSource: " + sMetaSource); 
             }   
 
             vMetaDefs = aMetaThesaurusConcept.getDefinitionCollection();
@@ -696,7 +700,7 @@ public class EVSSearch implements Serializable
    */
 public String do_getEVSCode(String prefName, String dtsVocab) 
 {
- System.out.println("do_getEVSCode prefName: " + prefName + " dtsVocab: " + dtsVocab);
+ //System.out.println("do_getEVSCode prefName: " + prefName + " dtsVocab: " + dtsVocab);
     if(prefName == null || prefName.equals(""))
       return "";
     ApplicationService evsService =
@@ -744,7 +748,7 @@ public String do_getEVSCode(String prefName, String dtsVocab)
     }
     catch(Exception ex)
     {
-System.out.println("Error do_getEVSCode1: " + ex.toString());
+//System.out.println("Error do_getEVSCode1: " + ex.toString());
       prefName = filterName(prefName, "display");
       codequery.getConceptCodeByName(dtsVocab,prefName);
       codes = null;
@@ -754,7 +758,7 @@ System.out.println("Error do_getEVSCode1: " + ex.toString());
       }
       catch(Exception ex2)
       {
-  System.out.println("Error do_getEVSCode2: " + ex2.toString());
+ // System.out.println("Error do_getEVSCode2: " + ex2.toString());
         prefName = filterName(prefName, "js");
         codequery.getConceptCodeByName(dtsVocab,prefName);
         codes = null;
@@ -1033,8 +1037,6 @@ public String do_getConceptName(String CCode, String dtsVocab)
           m_VD.setVD_REP_QUALIFIER_NAMES(vRepQualifierNames);
           m_VD.setVD_REP_QUALIFIER_CODES(vRepQualifierCodes);
           m_VD.setVD_REP_QUALIFIER_DB(vRepQualifierDB);
-        //  if(vRepQualifierNames.size()>0)
-        //      m_VD.setVD_REP_QUAL((String)vRepQualifierNames.elementAt(0));
         }
       } 
     }
@@ -1661,6 +1663,7 @@ public Vector getSubConceptCodes(String dtsVocab, String conceptName, String typ
 */
 public int getLevelDownFromParent(String CCode, String dtsVocab) 
 { 
+//System.err.println("getLevelDownFromParent CCode: " + CCode + " dtsVocab: " + dtsVocab);
    int level = 0;
    String[] stringArrayInit = new String[20];
    String[] stringArray = null;
@@ -1798,7 +1801,7 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
 */
 public String findThePath(String dtsVocab, String[] stringArray, String sParent) 
 {
-System.out.println("findThePath");
+//System.out.println("findThePath");
   Boolean flagOne = new java.lang.Boolean(true);
   Boolean flagTwo = new Boolean(false);
   String[] stringArray2 = null;
@@ -1813,13 +1816,13 @@ System.out.println("findThePath");
   {
     matchParent = "false";
     prefName = (String)stringArray[j];
-System.out.println("findThePath prefName: " + prefName + " dtsVocab: " + dtsVocab + " sParent: " + sParent);
+//System.out.println("findThePath prefName: " + prefName + " dtsVocab: " + dtsVocab + " sParent: " + sParent);
     prefNameCurrent = (String)stringArray[j];
     if(prefName != null && prefName.equals(sParent))
     {
        matchParent = "true";
        sCorrectSuperConceptName = prefName;
-System.out.println("findThePath matchParent = true");
+//System.out.println("findThePath matchParent = true");
     }  
     while(matchParent.equals("false"))
     {
@@ -1834,9 +1837,9 @@ System.out.println("findThePath matchParent = true");
         List supers = null;
         try
         {
-  System.out.println("findThePath try evs.search prefName: " + prefName);
+ // System.out.println("findThePath try evs.search prefName: " + prefName);
           supers = evsService.evsSearch(query);
-  System.out.println("findThePath done evs.search");
+ // System.out.println("findThePath done evs.search");
         }
         catch(Exception ex)
         {
@@ -2300,11 +2303,12 @@ try
   length = termStr.length();
   int iStartDefSource = 0;
   int iEndDefSource = 0;
-  if(length > 0)
+  if(length > 24)
   {
     iStartDefSource = termStr.lastIndexOf("<def-source>");
     iEndDefSource = termStr.indexOf("</def-source>");
-    source = termStr.substring(iStartDefSource, iEndDefSource);     
+    if(iEndDefSource>12)
+      source = termStr.substring(iStartDefSource, iEndDefSource);     
   }
 }
 catch(Exception ee)
@@ -2333,13 +2337,14 @@ try
   length = termStr.length();
   int iStartDef = 0;
   int iEndDef = 0;
- 
-  if(length > 0)
+ int iStartDefLastIndex = 0;
+  if(length > 16)
   {
-    iStartDef = termStr.lastIndexOf("<def-definition>") + 16;
-//System.err.println("getDefinition: iStartDef: " + iStartDef);
+    iStartDef = termStr.indexOf("<def-definition>");
+//System.err.println("getDefinition: iStartDef: " + iStartDef + " iStartDefLastIndex: " + iStartDefLastIndex);
     iEndDef = termStr.indexOf("</def-definition>");
-      definition = termStr.substring(iStartDef, iEndDef);   
+    if(iEndDef>20)
+      definition = termStr.substring(iStartDef+16, iEndDef);   
   }
 }
 catch(Exception ee)
@@ -2703,5 +2708,84 @@ return definition;
   evsService = null;
   session.setAttribute("MetaSources", vMetaSources); 
   }
+  
+    /**
+   *
+   * @param req The HttpServletRequest object.
+   * @param res HttpServletResponse object.
+   *
+   */
+ /* public void getVocabHandles(HttpServletRequest req, HttpServletResponse res)
+  {
+    try
+    {  
+      HttpSession session = req.getSession();
+      ApplicationService evsService =
+      ApplicationService.getRemoteInstance(m_servlet.m_EVS_CONNECT);
+      EVSQuery query = new EVSQueryImpl();
+      query.getVocabularyNames();
+      java.util.List vocabs = null;
+      String vocab = "";
+ System.out.println("servlet getVocabs1 m_EVS_CONNECT: " + m_servlet.m_EVS_CONNECT);
+      try
+      {
+        vocabs = evsService.evsSearch(query);
+      }
+      catch(Exception ex)
+      {
+        ex.printStackTrace();
+      } 
+      if(vocabs != null && vocabs.size()>0)
+      {
+        DescLogicConcept aDescLogicConcept = new DescLogicConcept();
+        ArrayList vVocabs = null;
+        Source sVocab = null;
+        Vector vCTVocabs = new Vector();
+        for (int i = 0; i < vocabs.size(); i++)
+        {
+            sVocab = (Source)vocabs.get(i);
+            vocab = (String)sVocab.getAbbreviation();
+      System.out.println("servlet getVocabs: vocab: " + vocab);
+            if(vocab.length()>4 && vocab.substring(0,5).equalsIgnoreCase("NCI_T"))
+            {
+              m_servlet.m_VOCAB_NCI = vocab;
+              vCTVocabs.addElement(vocab);
+            }
+            else if(vocab.length()>2 && vocab.substring(0,3).equalsIgnoreCase("Med"))
+            {
+              m_servlet.m_VOCAB_MED = vocab;
+              vCTVocabs.addElement(vocab);
+            }
+            else if(vocab.length()>2 && vocab.substring(0,3).equalsIgnoreCase("MGE"))
+            {
+              m_servlet.m_VOCAB_MGE = vocab;
+              vCTVocabs.addElement(vocab);
+            }
+            else if(vocab.length()>2 && vocab.substring(0,3).equalsIgnoreCase("LOI"))
+            {
+              m_servlet.m_VOCAB_LOI = vocab;
+              vCTVocabs.addElement(vocab);
+            }
+            else if(vocab.length()>2 && vocab.substring(0,2).equalsIgnoreCase("VA_"))
+            {
+              m_servlet.m_VOCAB_VA = vocab;
+              vCTVocabs.addElement(vocab);
+            }
+            else if(vocab.length()>1 && vocab.substring(0,2).equalsIgnoreCase("GO"))
+            {
+              m_servlet.m_VOCAB_GO = vocab;
+              vCTVocabs.addElement(vocab);
+            }
+        }
+        session.setAttribute("vCTVocabs", "vCTVocabs");
+      }
+      evsService = null;
+    }
+    catch(Exception e)
+    {
+      this.logger.fatal("ERROR in EVSSearch-getVocabHandles : " + e.toString());
+    }
+  } */
+ 
 //close the class
 } 

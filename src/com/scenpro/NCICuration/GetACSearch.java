@@ -4006,7 +4006,7 @@ public class GetACSearch implements Serializable
   public Vector do_ConceptSearch(String InString, String conIdseq, 
       String ContName, String ASLName, String conID, Vector vList)  // returns list of Concepts
   {
-System.out.println("do_conceptSearch InString: " + InString + " conIdseq: " + conIdseq);
+//System.out.println("do_conceptSearch InString: " + InString + " conIdseq: " + conIdseq);
     //capture the duration
  //   java.util.Date exDate = new java.util.Date();          
  //   logger.info(m_servlet.getLogMessage(m_classReq, "do_ConceptSearch", "begin search", exDate, exDate));

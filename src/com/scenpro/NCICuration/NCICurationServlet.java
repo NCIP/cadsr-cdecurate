@@ -382,7 +382,7 @@ public class NCICurationServlet extends HttpServlet
       String reqType = req.getParameter("reqType");
 //logger.debug("servlet reqType!: "+ reqType);
 System.out.println("servlet reqType!: "+ reqType);
-      req.setAttribute("LatestReqType", reqType); 
+      req.setAttribute("LatestReqType", reqType);  
       if (reqType != null)
       {
         //check the validity of the user login
@@ -835,16 +835,16 @@ System.out.println("servlet reqType!: "+ reqType);
    {
     try
     {
-      //  m_EVS_CONNECT = getServletConfig().getInitParameter("evsconnection");
-    //    if(m_EVS_CONNECT == null || m_EVS_CONNECT.equals(""))
-     //     m_EVS_CONNECT = "http://cabio.nci.nih.gov/cacore30/server/HTTPServer";   //default
+        m_EVS_CONNECT = getServletConfig().getInitParameter("evsconnection");
+        if(m_EVS_CONNECT == null || m_EVS_CONNECT.equals(""))
+          m_EVS_CONNECT = "http://cabio.nci.nih.gov/cacore30/server/HTTPServer";   //default
      
    //     m_EVS_CONNECT = "http://cbiodev104.nci.nih.gov:29080/cacoreevs301/server/HTTPServer";  //dev
      //   m_EVS_CONNECT = "http://cbioqa101.nci.nih.gov:29080/cacore30/server/HTTPServer";  //qa
      //   m_EVS_CONNECT = "http://cbioapp102.nci.nih.gov:29080/cacore30/server/HTTPServer";  //prod
      //   m_EVS_CONNECT = "http://cbioqatest501.nci.nih.gov:8080/cacore30/server/HTTPServer";  //3.0.1
-         m_EVS_CONNECT = "http://cbioqatest501.nci.nih.gov:8080/cacoreevs301/server/HTTPServer";  // new 3.0.1
-
+      //   m_EVS_CONNECT = "http://cbioqatest501.nci.nih.gov:8080/cacoreevs301/server/HTTPServer";  // new 3.0.1
+      //   m_EVS_CONNECT = "http://cbioqa601.nci.nih.gov:29080/cacore301hql/server/HTTPServer";
 // System.out.println("doHomePage evsconnection m_EVS_CONNECT: " + m_EVS_CONNECT);
         HttpSession session = req.getSession();
         m_classReq = req;
@@ -880,6 +880,7 @@ System.out.println("servlet reqType!: "+ reqType);
       
         if (!ConnectedToDB.equals("No"))
         {
+         // EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
           getVocabHandles(req, res);
           DoHomepageThread thread = new DoHomepageThread(req, res, this);
           thread.start();
@@ -912,10 +913,7 @@ System.out.println("servlet reqType!: "+ reqType);
     }
   }
 
-  /**
-   * To get final result vector of selected attributes/rows to display for Rep Term component,
-   * gets the selected attributes from session vector 'selectedAttr'.
-   * loops through the RepBean vector 'vACSearch' and adds the selected fields to result vector.
+   /**
    *
    * @param req The HttpServletRequest object.
    * @param res HttpServletResponse object.
@@ -989,9 +987,9 @@ System.out.println("servlet reqType!: "+ reqType);
     }
     catch(Exception e)
     {
-      this.logger.fatal("ERROR in Servlet-getVocabHandles : " + e.toString());
+      this.logger.fatal("ERROR in EVSSearch-getVocabHandles : " + e.toString());
     }
-  }
+  } 
  
   /**
   * The doCreateDEActions method handles CreateDE or EditDE actions of the request.
@@ -1138,7 +1136,7 @@ System.out.println("servlet reqType!: "+ reqType);
       session.setAttribute("DEAction", sSubAction);
       String sButtonPressed = (String)session.getAttribute("LastMenuButtonPressed");
       String sOriginAction = (String)session.getAttribute("originAction");
-System.out.println("doEditDEActions sOriginAction: " + sOriginAction);
+//System.out.println("doEditDEActions sOriginAction: " + sOriginAction);
       // save DDE info every case except back from DEComp
       String ddeType = (String)req.getParameter("selRepType");
       if (ddeType != null && !ddeType.equals(""))
@@ -4222,17 +4220,12 @@ System.out.println("doEditDEActions sOriginAction: " + sOriginAction);
       if (vProperty == null) vProperty = new Vector();
       
       Vector vAC = null;
-  //    EVS_Bean m_OC = new EVS_Bean();
-  //    EVS_Bean m_PC = new EVS_Bean();
-  //    EVS_Bean m_OCQ = new EVS_Bean();
-  //    EVS_Bean m_PCQ = new EVS_Bean();
       EVS_Bean blockBean = new EVS_Bean();
       String sComp = (String)req.getParameter("sCompBlocks");
       if(sComp == null) sComp = "";
       
       //get the search bean from teh selected row
       sSelRow = (String)req.getParameter("selCompBlockRow");
-    //  vAC = (Vector)session.getAttribute("vRepResult");
       vAC = (Vector)session.getAttribute("vACSearch");
       if (vAC == null) vAC = new Vector();
       if (sSelRow != null && !sSelRow.equals(""))
@@ -5612,10 +5605,6 @@ System.out.println("doEditDEActions sOriginAction: " + sOriginAction);
       else if(sRemovePropBlock.equals("true"))
         DECBeanSR = insAC.setPropertyDEC("INS", DECBeanSR, req);
 
-    // session.setAttribute("RemoveOCBlock", "");
-    // session.setAttribute("RemovePropBlock", "");
-    // session.setAttribute("newObjectClass", "");
-    // session.setAttribute("newProperty", "");
       return DECBeanSR;
    }
 
@@ -8353,7 +8342,7 @@ System.out.println("doEditDEActions sOriginAction: " + sOriginAction);
        //   ilevelStartingConcept = evs.getLevelDownFromParentMeta(sConceptName, dtsVocab, sDefSource);
       //  else 
         EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this); 
-        ilevelStartingConcept = evs.getLevelDownFromParent(sConceptName, dtsVocab);
+        ilevelStartingConcept = evs.getLevelDownFromParent(sConceptCode, dtsVocab);
       }
       
       ilevelImmediate = ilevelStartingConcept + 1;
@@ -8476,6 +8465,10 @@ System.out.println("doEditDEActions sOriginAction: " + sOriginAction);
       String dtsVocab = (String)req.getParameter("vocab");
       String sDefSource = (String)req.getParameter("defSource");
       String sSearchType = (String)req.getParameter("searchType");
+      String sUISearchType = (String)req.getParameter("UISearchType");
+//System.out.println("doGetSubConcepts sSearchType: " + sSearchType + " sUISearchType: " + sUISearchType);
+      if(sUISearchType == null || sUISearchType.equals("nothing")) 
+        sUISearchType = "term";
       String sRetired = "";  //(String)req.getParameter("rRetired");
     //  if (sRetired == null) sRetired = "Exclude";
       String sConteIdseq = (String)req.getParameter("sConteIdseq");
@@ -8586,7 +8579,10 @@ System.out.println("doEditDEActions sOriginAction: " + sOriginAction);
       String recs2 = recs.toString();
       req.setAttribute("creRecsFound", recs2);  
       session.setAttribute("vACSearch", vAC);
-      req.setAttribute("UISearchType", "tree");
+      if(sSearchAC.equals("ParentConceptVM"))
+        sUISearchType = "tree";
+      req.setAttribute("UISearchType", sUISearchType);
+
       ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
   }
 
@@ -9093,7 +9089,7 @@ System.out.println("doEditDEActions sOriginAction: " + sOriginAction);
        HttpSession session = req.getSession();
        String actType = (String)req.getParameter("actSelect");
        if(actType == null) actType = "";
-System.out.println("doBlockSearch actType: " + actType);
+//System.out.println("doBlockSearch actType: " + actType);
        String sSearchFor = (String)req.getParameter("listSearchFor");
        String dtsVocab = req.getParameter("listContextFilterVocab");
        String sSearchInEVS = "";

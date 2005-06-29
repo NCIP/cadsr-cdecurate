@@ -275,6 +275,9 @@
 
     int item = 1;
     String sSearchAC = (String)session.getAttribute("creSearchAC");
+    String reqType = "";
+    reqType = request.getParameter("reqType");
+    if(reqType == null) reqType = "";
 %>
 
 <SCRIPT LANGUAGE="JavaScript">
@@ -420,10 +423,20 @@ function setup()
     RepTermID.innerText = "<%=sRepTerm_ID%>";
 }
 
+function closeDep() 
+{
+  if (searchWindow && searchWindow.open && !searchWindow.closed) 
+    searchWindow.close();
+  if(altWindow && altWindow.open && ! altWindow.closed)
+    altWindow.close();
+  if(statusWindow && statusWindow.open && !statusWindow.closed)
+      statusWindow.close();
+}
+
 </SCRIPT>
 </head>
 
-<body onLoad="setup();" onUnload="closeDep();">
+<body onLoad="setup();" >
 <form name="createVDForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=newVDfromForm">
   <table width="100%" border="0">
     <tr>
