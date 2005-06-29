@@ -216,21 +216,6 @@
          opener.document.SearchActionForm.isValidSearch.value = "true";
          document.searchParmsForm.submit();
       }          
-
-      //keyword empty if dropdown is not same as searched component
-  /*    if (vSearchAC != "<%=sSearchAC%>" && document.searchParmsForm.keyword != null)
-      {
-          if(document.searchParmsForm.keyword != null)
-            document.searchParmsForm.keyword.value = "";
-          if (vSearchAC == "EVSValueMeaning" && document.searchParmsForm.listSearchInEVS != null)  //submit the form to refresh the page
-          {
-              //make synonym selected
-              document.searchParmsForm.listSearchInEVS[0].value = "Synonym";
-              document.searchParmsForm.listSearchInEVS[0].text = "Synonym";
-              document.searchParmsForm.listSearchInEVS[0].selected = true;
-              document.searchParmsForm.submit();  //submit the form
-          }
-      } */
   }
 
   //submits the page if Vocab changed.

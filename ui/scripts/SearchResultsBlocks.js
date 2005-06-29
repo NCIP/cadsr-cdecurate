@@ -129,6 +129,7 @@
         
    function ShowUseSelection(vCompAction)
    {
+//alert("showUseSelection sComp: " + sComp);
       if(vCompAction == "BEDisplay") vCompAction = "searchForCreate";
       var LongName = "";
       var PrefName  = "";
@@ -210,6 +211,7 @@
     //opened from create or edit VD form.
     else if ((sComp == "EVSValueMeaning" || sComp == "ParentConceptVM") && opener.document.createVDForm != null)
     {
+//alert("showUseSelection sComp2: " + sComp);
         var sConfirm = false;
         var selRowArray2 = new Array();
         var selRowArray3 = new Array();
@@ -240,7 +242,7 @@
           else
             return;
         }        
-     
+//  alert("showUseSelection sComp3: " + sComp);   
         //store the selrow in an array 
         var selRowArray = new Array();        
         var dCount = document.searchResultsForm.hiddenSelectedRow.length;
@@ -269,6 +271,7 @@
         document.searchResultsForm.btnSubConcepts.disabled=true;
       //  opener.document.createVDForm.searchComp.value = sComp;
      // }
+//alert("done showUseSelection");
     }
     if (sComp == "CreateVM_EVSValueMeaning")
     { 
@@ -1026,6 +1029,7 @@ function createNames(acType)
 
    function EnableCheckButtons(checked, currentField, editAction)
    {
+  // alert("enableCheckButtons1");
       if(editAction == "BEDisplay") editAction = "searchForCreate";
       if (checked)
          ++numRowsSelected;
@@ -1036,13 +1040,13 @@ function createNames(acType)
       var nonEnumVD = false;
       //is this non enumerated
       if (opener != null)
-      {
+      { 
       if (opener.document != null)
-      {
+      { 
         if (opener.document.createVDForm != null)
-        {
+        { 
           if (opener.document.createVDForm.listVDType != null)
-          {
+          { 
           var eInd = opener.document.createVDForm.listVDType.selectedIndex;
           if (eInd > -1 && opener.document.createVDForm.listVDType[eInd].value == "N" && varSearchAC == "ParentConceptVM")
             nonEnumVD = true;
@@ -1228,36 +1232,3 @@ function createNames(acType)
       }
   }
   
-/*   function PasteDefinition()
-   {
-      sComp = opener.document.SearchActionForm.searchEVS.value;
-      if (sComp == "DataElementConcept")
-      {
-         opener.document.newDECForm.CreateDefinition.value = selDefinition;
-      }
-      else if (sComp == "ValueDomain")
-      {
-	       opener.document.createVDForm.CreateDefinition.value = selDefinition;
-      }
-      else if (sComp == "DataElement")
-      {
-        opener.document.newCDEForm.CreateDefinition.value = selDefinition;
-      }
-      else if (sComp == "PermissableValue")
-      {
-        opener.document.createPVForm.CreateDescription.value = selDefinition;
-      }
-      else if (sComp == "ValueMeaning")
-      {
-        opener.document.createVMForm.CreateDescription.value = selDefinition;
-        opener.document.createVMForm.selShortMeanings.value = selName;
-        opener.document.createVMForm.taComments.value = selIdentifier;
-        opener.document.createVMForm.selShortMeanings.disabled = true;
-        if(selDefinition != null && selDefinition != "")
-          opener.document.createVMForm.CreateDescription.disabled = true;
-        else
-          opener.document.createVMForm.CreateDescription.disabled = false;
-        opener.document.createVMForm.hiddenEVSSearch.value = "Searched"; 
-      }
-      window.close();
-   } */

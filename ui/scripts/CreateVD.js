@@ -144,16 +144,6 @@ function removeAllText(thisBlock)
     }
  }
 
-function closeDep() 
-{
-    if (searchWindow && searchWindow.open && !searchWindow.closed) 
-      searchWindow.close();
-    if(altWindow && altWindow.open && ! altWindow.closed)
-      altWindow.close();
-    if(statusWindow && statusWindow.open && !statusWindow.closed)
-      statusWindow.close();
-}
-
 
   //called when hits the link to create new value or edit or remove existing ones. 
   function doPVAction(pvAction)
@@ -247,17 +237,6 @@ function closeDep()
       else
         return;
         
-  /*    take this out for now
-      if (document.createVDForm.listParentConcept[sInd].value == "Non_EVS")
-        alert("Removing Non EVS Referenced Parent " + parString);
-      else
-       remPVs = confirm("Removing EVS Referenced Parent " + parString + ".\n\n" + 
-          "Click OK to remove all its restricted values");
-      //submit the form to remove parent with or without its values 
-      if (remPVs == true)
-        document.createVDForm.newCDEPageAction.value = "removePVandParent";
-      else
-        document.createVDForm.newCDEPageAction.value = "removeParent";  */
       //store the concept information in hidden selected fields
       var sParentCode = document.createVDForm.ParentCodes.options[sInd].value;
       var sParentName = document.createVDForm.ParentNames.options[sInd].text;
