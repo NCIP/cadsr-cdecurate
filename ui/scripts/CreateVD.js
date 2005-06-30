@@ -195,7 +195,7 @@ function removeAllText(thisBlock)
             var sCD = document.createVDForm.selConceptualDomain[0].text;
             if ((pvAction != "removePV") && (sCD == null || sCD == ""))
             {
-              alert("Please select Conceptual Domain before Permissible Values Search.");
+              alert("Please select Conceptual Domain before selecting or editing Permissible Values.");
               return;
             }
             //submits the form to forward to create pv page.	

@@ -55,6 +55,7 @@ function ViewConceptInTree()
     //make it new if no pvidseq.
     String sPVid = m_PV.getPV_PV_IDSEQ();
     if (sPVid == null) sPVid = "";
+//System.out.println(sPVAction + " page pv id " + sPVid); 
     String sVV = m_PV.getQUESTION_VALUE();
     if (sVV == null) sVV = "";
     String sVVid = m_PV.getQUESTION_VALUE_IDSEQ();
