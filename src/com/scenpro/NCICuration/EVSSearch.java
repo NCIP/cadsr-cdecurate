@@ -261,8 +261,7 @@ public class EVSSearch implements Serializable
     ApplicationService.getRemoteInstance(m_servlet.m_EVS_CONNECT);
     
  System.out.println("do_EVSSearch m_servlet.m_EVS_CONNECT: " + m_servlet.m_EVS_CONNECT);
-    
-  System.out.println("do_EVSSearch dtsVocab: " + dtsVocab + " termStr: " + termStr + " sUISearchType: " + sUISearchType);
+ System.out.println("do_EVSSearch dtsVocab: " + dtsVocab + " termStr: " + termStr + " sUISearchType: " + sUISearchType);
 //System.out.println("do_EVSSearch sSearchInEVS: " + sSearchInEVS + " isMetaCodeSearch: " + isMetaCodeSearch + " sRetiredxx: " + sRetired);
  
   // Search By Concept Code
@@ -418,10 +417,9 @@ public class EVSSearch implements Serializable
                   vList.addElement(OCBean);    //add OC bean to vector
               } 
           }
-  
         }    
        } 
-    }
+      }
      } 
      catch(Exception ee)
       {
@@ -605,12 +603,35 @@ public class EVSSearch implements Serializable
 System.out.println("do_EVSSearch Meta termStr: " + termStr + " sMetaSource: " 
 + sMetaSource + " sMetaLimit: " + sMetaLimit +
 " isMetaCodeSearch: " + isMetaCodeSearch + " sSearchInEVS: " + sSearchInEVS);
+      EVSQuery query = new EVSQueryImpl();
+      EVSQuery query2 = new EVSQueryImpl();
+System.out.println("do_EVSSearch sMetaSource: " + sMetaSource);
       int length = 0;
       length = termStr.length();
-      EVSQuery query = new EVSQueryImpl();
+    
       List concepts = null;
+      List concepts2 = null;
+      String sCCode_AllSources = "false";
       if(isMetaCodeSearch == true)
         query.searchByLoincId(termStr,sMetaSource);
+      else if(sMetaSource.equals("All Sources") && sSearchInEVS.equals("Concept Code"))
+      { // do this because the API does not understand "All Sources"
+        sCCode_AllSources = "true";
+        query2.getMetaConceptNameByCode(termStr);
+        try
+        {
+          concepts2 = evsService.evsSearch(query2);
+        }
+        catch(Exception ex)
+        {
+          System.out.println("Error9a do_EVSSearch Meta: " + ex.toString());
+        }
+        if(concepts2 != null)
+        {
+          prefNameConcept = (String)concepts2.get(0);
+          query.searchMetaThesaurus(prefNameConcept,sMetaLimit,sMetaSource, false, false, false);
+        }
+      }
       else if(sSearchInEVS.equals("Concept Code"))
         query.searchMetaThesaurus(termStr,sMetaLimit,sMetaSource, true, false, false);
       else if(!sSearchInEVS.equals("Concept Code"))  
@@ -633,11 +654,15 @@ System.out.println("do_EVSSearch Meta termStr: " + termStr + " sMetaSource: "
               break;  
             aMetaThesaurusConcept = (MetaThesaurusConcept)concepts.get(i);
             prefNameConcept = (String)aMetaThesaurusConcept.getName();
-//  System.out.println("do_EVSSearch Meta prefNameConcept: " + prefNameConcept);
             CCode = (String)aMetaThesaurusConcept.getCui();
+            if(sCCode_AllSources.equals("true"))
+            {
+              if(!CCode.equals(termStr))
+                break;
+            }
             if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
                 ilevel = ilevelImmediate;
-            
+
             ArrayList sourceArray = new ArrayList();
             String sourceString = "";  
             if( aMetaThesaurusConcept != null)
@@ -2708,84 +2733,6 @@ return definition;
   evsService = null;
   session.setAttribute("MetaSources", vMetaSources); 
   }
-  
-    /**
-   *
-   * @param req The HttpServletRequest object.
-   * @param res HttpServletResponse object.
-   *
-   */
- /* public void getVocabHandles(HttpServletRequest req, HttpServletResponse res)
-  {
-    try
-    {  
-      HttpSession session = req.getSession();
-      ApplicationService evsService =
-      ApplicationService.getRemoteInstance(m_servlet.m_EVS_CONNECT);
-      EVSQuery query = new EVSQueryImpl();
-      query.getVocabularyNames();
-      java.util.List vocabs = null;
-      String vocab = "";
- System.out.println("servlet getVocabs1 m_EVS_CONNECT: " + m_servlet.m_EVS_CONNECT);
-      try
-      {
-        vocabs = evsService.evsSearch(query);
-      }
-      catch(Exception ex)
-      {
-        ex.printStackTrace();
-      } 
-      if(vocabs != null && vocabs.size()>0)
-      {
-        DescLogicConcept aDescLogicConcept = new DescLogicConcept();
-        ArrayList vVocabs = null;
-        Source sVocab = null;
-        Vector vCTVocabs = new Vector();
-        for (int i = 0; i < vocabs.size(); i++)
-        {
-            sVocab = (Source)vocabs.get(i);
-            vocab = (String)sVocab.getAbbreviation();
-      System.out.println("servlet getVocabs: vocab: " + vocab);
-            if(vocab.length()>4 && vocab.substring(0,5).equalsIgnoreCase("NCI_T"))
-            {
-              m_servlet.m_VOCAB_NCI = vocab;
-              vCTVocabs.addElement(vocab);
-            }
-            else if(vocab.length()>2 && vocab.substring(0,3).equalsIgnoreCase("Med"))
-            {
-              m_servlet.m_VOCAB_MED = vocab;
-              vCTVocabs.addElement(vocab);
-            }
-            else if(vocab.length()>2 && vocab.substring(0,3).equalsIgnoreCase("MGE"))
-            {
-              m_servlet.m_VOCAB_MGE = vocab;
-              vCTVocabs.addElement(vocab);
-            }
-            else if(vocab.length()>2 && vocab.substring(0,3).equalsIgnoreCase("LOI"))
-            {
-              m_servlet.m_VOCAB_LOI = vocab;
-              vCTVocabs.addElement(vocab);
-            }
-            else if(vocab.length()>2 && vocab.substring(0,2).equalsIgnoreCase("VA_"))
-            {
-              m_servlet.m_VOCAB_VA = vocab;
-              vCTVocabs.addElement(vocab);
-            }
-            else if(vocab.length()>1 && vocab.substring(0,2).equalsIgnoreCase("GO"))
-            {
-              m_servlet.m_VOCAB_GO = vocab;
-              vCTVocabs.addElement(vocab);
-            }
-        }
-        session.setAttribute("vCTVocabs", "vCTVocabs");
-      }
-      evsService = null;
-    }
-    catch(Exception e)
-    {
-      this.logger.fatal("ERROR in EVSSearch-getVocabHandles : " + e.toString());
-    }
-  } */
- 
+   
 //close the class
 } 
