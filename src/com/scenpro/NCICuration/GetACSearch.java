@@ -7416,7 +7416,7 @@ boolean isIntSearch)
      String sMetaSource = (String)req.getParameter("listContextFilterSource");
      if (sMetaSource == null) sMetaSource = "All Sources";
      session.setAttribute("MetaSource", sMetaSource);
-
+ System.out.println("getACKeyword sMetaSource: " + sMetaSource);
      String sMetaLimit = (String)req.getParameter("listMetaLimit");
      int intMetaLimit = 0;
      if(sMetaLimit != null)
@@ -7433,7 +7433,7 @@ boolean isIntSearch)
      if (sKeyword == null) sKeyword = "";
      if (isIntSearch == true) sKeyword = "";  //make keyword empty if initial search for window open
      session.setAttribute("creKeyword", sKeyword);   //keep the old criteria
- //System.out.println("getACKeyword sKeyword: " + sKeyword);   
+ System.out.println("getACKeyword sKeyword: " + sKeyword);   
      UtilService util = new UtilService();
      sKeyword = util.parsedStringSingleQuoteOracle(sKeyword);
      if(sSearchInEVS.equals("Code"))// search Meta by LOINC code
@@ -7887,17 +7887,19 @@ boolean isIntSearch)
      {
         String sConteIdseq = (String)req.getParameter("sConteIdseq");
         if (sConteIdseq == null) sConteIdseq = "";
- System.out.println("OCQ start do)ConceptSearch");
+// System.out.println("OCQ start do)ConceptSearch");
         if (sSearchIn.equals("publicID"))
           vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, vAC);
         else if (!sSearchIn.equals("Code"))   //do concept search
           vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", vAC);
-  System.out.println("OCQ don do)ConceptSearch");      
+ // System.out.println("OCQ don do)ConceptSearch");      
         //To search synonym you need to filter
         if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
           sKeyword = filterName(sKeyword, "display");
+   System.out.println("getACKeyword ocQ sKeyword: " + sKeyword);
         evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
         intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+   System.out.println("getACKeyword ocQ done: ");    
         session.setAttribute("vACSearch", vAC);
         evs.get_Result(req, res, vResult, "");
      }
@@ -7940,7 +7942,7 @@ boolean isIntSearch)
   }
   catch(Exception e)
   {
-    //System.err.println("ERROR in GetACSearch-getACSearchForCreate: " + e);
+    System.err.println("ERROR in GetACSearch-getACSearchForCreate: " + e);
     logger.fatal("ERROR - GetACSearch-getACSearchForCreate: " + e.toString());
   }
 }
