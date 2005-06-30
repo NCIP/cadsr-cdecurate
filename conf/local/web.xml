@@ -19,7 +19,7 @@
     </init-param>
     <init-param>
       <param-name>server</param-name>
-      <param-value>jdbc:oracle:oci:@CBDEV</param-value>
+      <param-value>jdbc:oracle:oci:@CBTEST</param-value>
     </init-param>
     <init-param>
       <param-name>iMinConns</param-name>
@@ -28,7 +28,7 @@
     <init-param>
       <param-name>evsconnection</param-name>
       <param-value>
-	 	http://cbioqatest501.nci.nih.gov:8080/cacoreevs301/server/HTTPServer
+	   http://cbioqa601.nci.nih.gov:29080/cacore301hql/server/HTTPServer
 	</param-value>
     </init-param>
     <init-param>
@@ -53,7 +53,7 @@
     </init-param>
     <init-param>
       <param-name>password</param-name>
-      <param-value>jjuser</param-value>
+      <param-value>i1sn0w</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
 
