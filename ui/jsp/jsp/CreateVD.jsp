@@ -887,10 +887,7 @@ function closeDep()
                   if (pDB.equals("Non_EVS")) sParListString = pName + "        " + pDB;
                   else pDB = "EVS";                  
                   vdCONs += 1;  //increase the count
- //   System.out.println("CreateVD 1");      
- //String sParentList = (String)vParentList.elementAt(i);
                   //keep the last parent selected if page's last action was selecting a parent
-                  
               %>
                 <option value="<%=pDB%>" <%if(sLastAction.equals("parSelected") && i == vdParent.size()-1){%>selected<%}%>><%=sParListString%></option> 
               <%  }
@@ -923,11 +920,7 @@ function closeDep()
         for (int i = 0; vQVList.size()>i; i++)
         {
           String sVV = (String)vQVList.elementAt(i);
-          /*Quest_Value_Bean qvBean = (Quest_Value_Bean)vQVList.elementAt(i);
-          if (qvBean != null)
-          {
-            String sQ = qvBean.getQUESTION_VALUE();
-            String sQid = qvBean.getQUESTION_VALUE_IDSEQ(); */
+          if (sVV == null) sVV = "";
 %>
             <option value="<%=sVV%>"><%=sVV%></option>
 <%
@@ -1044,6 +1037,7 @@ function closeDep()
                   String sPVid = (String)pvBean.getPV_PV_IDSEQ();
                   if (sPVid == null || sPVid.equals("")) sPVid = "EVS_" + sPVVal;
                   vPVIDList.addElement(sPVid);  //add the ones on the page
+                  
                   String sPVMean = (String)pvBean.getPV_SHORT_MEANING();
                   if (sPVMean == null) sPVMean = "";
                   String sPVDesc = (String)pvBean.getPV_MEANING_DESCRIPTION();
@@ -1417,6 +1411,9 @@ function closeDep()
     for (int i = 0; vPVIDList.size()>i; i++)
     {
       String sPV_ID = (String)vPVIDList.elementAt(i);
+      if (sPV_ID == null) sPV_ID = "";
+      //replace the double quote with the empty space
+      sPV_ID = sPV_ID.replace('"', ' ');     //serUtil.parsedStringJSPDoubleQuote(sPV_ID);
 %>
       <option value="<%=sPV_ID%>" selected="selected"><%=sPV_ID%></option>
 <%  }

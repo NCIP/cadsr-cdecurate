@@ -3763,11 +3763,13 @@ public class SetACService implements Serializable
       if (!sName.equals(sOldName) && !sOldID.equals(""))
       {
         //make current pv as new
+       // sName = m_util.parsedStringJSPDoubleQuote(sName);
         pv.setPV_PV_IDSEQ("EVS_" + sName);
         pv.setVP_SUBMIT_ACTION("INS");  
         pv.setPV_VDPVS_IDSEQ("");
         //mark the old pv as deleted and add it the vector in the end.
         oldPV.setVP_SUBMIT_ACTION("DEL");
+        oldPV.setPV_CHECKED(false);
         Vector vVDPVList = (Vector)session.getAttribute("VDPVList");
         if (vVDPVList == null) vVDPVList = new Vector();
         vVDPVList.addElement(oldPV);
@@ -4206,12 +4208,18 @@ public class SetACService implements Serializable
         if (rSel != null)
         {                
           String pvID = sPV_IDs[j];    //(String)vPVIDList.elementAt(j);
+          if (pvID == null) pvID = "";
           //reset the bean with selected row for the selected component
           for (int k=0; k<vVDPVList.size(); k++)
           {
             PV_Bean pvBean = (PV_Bean)vVDPVList.elementAt(k);
+            //since double quote from remove the double quote to match id from the jsp.  
+            String beanPVID = pvBean.getPV_PV_IDSEQ();
+            if (beanPVID == null) beanPVID = "";
+            beanPVID = beanPVID.replace('"', ' ');    
+    //  System.out.println(pvID + " sel pv " + pvBean.getPV_PV_IDSEQ() + " changed " + beanPVID);
             //match hte ids to get the correct bean
-            if (pvBean.getPV_PV_IDSEQ().equalsIgnoreCase(pvID))
+            if (beanPVID.equalsIgnoreCase(pvID))
             {
               //store match pv id in the vector
               if (pvAction.equals("removePV"))

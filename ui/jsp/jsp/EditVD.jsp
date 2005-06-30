@@ -1495,7 +1495,9 @@ function setup()
     for (int i = 0; vPVIDList.size()>i; i++)
     {
       String sPV_ID = (String)vPVIDList.elementAt(i);
-  //System.out.println("pvid " + sPV_ID);
+      if (sPV_ID == null) sPV_ID = "";
+      //replace the double quote with the empty space
+      sPV_ID = sPV_ID.replace('"', ' ');     //serUtil.parsedStringJSPDoubleQuote(sPV_ID);
 %>
       <option value="<%=sPV_ID%>" selected="selected"><%=sPV_ID%></option>
 <%  }
