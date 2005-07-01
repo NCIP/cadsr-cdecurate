@@ -323,6 +323,10 @@ public class GetACService implements Serializable
           Vector vDesc = new Vector();
           Vector vComm = new Vector();
           getDataTypesList(v, vDesc, vComm);    //get the Workflow status list
+          //add emtpy data at the beginning
+          v.insertElementAt("", 0);
+          vDesc.insertElementAt("", 0);
+          vComm.insertElementAt("", 0);
           session.setAttribute("vDataType", v);  //set data type names list attribute
           session.setAttribute("vDataTypeDesc", vDesc);  //set data type description list attribute
           session.setAttribute("vDataTypeComment", vComm);  //set data type comment list attribute
