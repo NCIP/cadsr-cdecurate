@@ -142,6 +142,8 @@ public class SetACService implements Serializable
       String sDEAction = (String)session.getAttribute("DEAction");
       String sOriginAction = (String)session.getAttribute("originAction");
       String sMenu = (String)session.getAttribute("MenuAction");
+      String sDDEAction = (String)session.getAttribute("DDEAction");
+System.out.println(sOriginAction + " begin de validate " + sMenu + " de " + sDEAction);
 
       //check edit or create
       if (sDEAction.equals("EditDE"))
@@ -300,11 +302,13 @@ public class SetACService implements Serializable
      
       // add DDE info to DE validate page
      // if (!sOriginAction.equals("BlockEditDE") && !sOriginAction.equals("CreateNewDEFComp"))
-      if (!sOriginAction.equals("CreateNewDEFComp"))
+      if (!sDDEAction.equals("CreateNewDEFComp"))
         addDDEToDEValidatePage(req, res, vValidate, sOriginAction);
 
       // finaly, send vector to JSP
       req.setAttribute("vValidate", vValidate);
+System.out.println(sOriginAction + " end de page values " + sMenu);
+
   } // end of setValidatePageValues
 
  /**
@@ -2766,6 +2770,7 @@ public class SetACService implements Serializable
     String sOriginAction = (String)session.getAttribute("originAction");
     if (sOriginAction == null) sOriginAction.equals("");
     String sMenu = (String)session.getAttribute("MenuAction");
+System.out.println(sOriginAction + " end de page values " + sMenu);
       
     //get the selected contexts from the DE bean
     DE_Bean selDE = (DE_Bean)session.getAttribute("m_DE");      
@@ -2973,6 +2978,7 @@ public class SetACService implements Serializable
       
     //cs-csi relationship
     m_DE = this.setDECSCSIfromPage(req, m_DE);
+System.out.println("end de page values " );
  } // end of setDEValueFromPage
 
 

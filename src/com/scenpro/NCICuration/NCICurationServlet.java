@@ -678,6 +678,7 @@ System.out.println("servlet reqType!: "+ reqType);
       String context = (String)session.getAttribute("sDefaultContext");  // from Login.jsp
       String ContextInList = (String)session.getAttribute("ContextInList");
       session.setAttribute("MenuAction", "nothing");
+      session.setAttribute("DDEAction", "nothing");  //reset from "CreateNewDEFComp"
 
       String sOriginAction = (String)session.getAttribute("originAction");
       session.setAttribute("sCDEAction", "nothing");
@@ -851,6 +852,7 @@ System.out.println("servlet reqType!: "+ reqType);
         m_classRes = res;
         session.setAttribute("MenuAction", "nothing");
         session.setAttribute("originAction", "nothing");
+        session.setAttribute("DDEAction", "nothing");  //to separate from DDE with simple de
         session.setAttribute("VMMeaning", "nothing");
         session.setAttribute("ConnectedToDB", "nothing");
         req.setAttribute("UISearchType", "nothing"); 
@@ -1022,8 +1024,10 @@ System.out.println("servlet reqType!: "+ reqType);
       String sOriginAction = (String)session.getAttribute("originAction");
       // save DDE info every case except back from DEComp
       String ddeType = (String)req.getParameter("selRepType");
+   System.out.println(ddeType + " createde " + sPageAction + sMenuAction + sSubAction + sOriginAction);     
       if (ddeType != null && !ddeType.equals(""))
-        doUpdateDDEInfo(req, res);     
+        doUpdateDDEInfo(req, res);  
+      //handle all page actions
       if(sPageAction.equals("changeContext"))
         doChangeContext(req, res, "de");
       else if(sPageAction.equals("submit"))
@@ -1082,6 +1086,7 @@ System.out.println("servlet reqType!: "+ reqType);
            DEBean.setAC_PREF_NAME_TYPE("SYS");
            this.doInitDDEInfo(req, res);
          }
+         //get the clone copy of hte updated bean to open the page
          DE_Bean pgBean = new DE_Bean();
          session.setAttribute("m_DE", pgBean.cloneDE_Bean(DEBean, "Complete"));
          ForwardJSP(req, res, "/CreateDEPage.jsp");
@@ -5047,7 +5052,7 @@ System.out.println("servlet reqType!: "+ reqType);
       String sMenu = (String)session.getAttribute("MenuAction");
       if (sAction == null)
         sAction = "submitting"; //covers direct submits without going to Validate page
-
+System.out.println(" insertde " + sDEEditAction + sDEAction + sMenu + sAction + sOriginAction);
       if (sAction != null)
       {
          //go back from validation page according editing or creating action
@@ -5178,8 +5183,10 @@ System.out.println("servlet reqType!: "+ reqType);
       boolean isUpdateSuccess = true;
       String sMenuAction = (String)session.getAttribute("MenuAction");
       String sOriginAction = (String)session.getAttribute("originAction");
-
-      if(sOriginAction.equals("CreateNewDEFComp"))
+      String sDDEAction = (String)session.getAttribute("DDEAction");
+  System.out.println(" menu action " + sDDEAction + sOriginAction + sMenuAction);
+      //insert the new DE for DDE
+      if (sDDEAction.equals("CreateNewDEFComp"))
       {
           doInsertDEComp(req, res);
           return;
@@ -5326,9 +5333,11 @@ System.out.println("servlet reqType!: "+ reqType);
       InsACService insAC = new InsACService(req, res, this);
       String sMenuAction = (String)session.getAttribute("MenuAction");
       String ret = "";
-
+System.out.println(" ins " + sMenuAction);
       DE_Bean DEBean = (DE_Bean)session.getAttribute("m_DE");
       DE_Bean oldDEBean = (DE_Bean)session.getAttribute("oldDEBean");
+      DE_Bean pDEBean = (DE_Bean)session.getAttribute("p_DEBean");
+      DE_Bean pOldBean = (DE_Bean)session.getAttribute("p_oldBean");
       //insert a new one
       ret = insAC.setDE("INS", DEBean, "New", oldDEBean);
       
@@ -5361,7 +5370,9 @@ System.out.println("servlet reqType!: "+ reqType);
           session.setAttribute("vDECompRelID", vDECompRelID);
           //change flag
           session.setAttribute("originAction", "DECompCreated");
-          session.setAttribute("m_DE", oldDEBean);  // back old DE (replace DDE) to session for edit
+          session.setAttribute("DDEAction", "nothing");  //reset from "CreateNewDEFComp"
+          session.setAttribute("m_DE", pDEBean);  // back old DE (replace DDE) to session for edit
+          session.setAttribute("oldDEBean", pOldBean);  // store old de bean back
           session.setAttribute("sCDEAction", "nothing");
           session.setAttribute("DECLongID", "nothing");
           session.setAttribute("VDLongID", "nothing");
@@ -7599,16 +7610,24 @@ System.out.println("servlet reqType!: "+ reqType);
    throws Exception
   {
        HttpSession session = req.getSession();
-       session.setAttribute("originAction", "CreateNewDEFComp");
+      // session.setAttribute("originAction", "CreateNewDEFComp");
+       session.setAttribute("DDEAction", "CreateNewDEFComp");
+       //store the old bean into primary old bean
+       DE_Bean oldBean = (DE_Bean)session.getAttribute("oldDEBean");
+       if (oldBean == null) oldBean = new DE_Bean();
+       DE_Bean primBean = oldBean.cloneDE_Bean(oldBean, "Complete");
+       session.setAttribute("p_oldBean", primBean);
+       //store the page bean into primary bean
        DE_Bean m_DE = (DE_Bean)session.getAttribute("m_DE");
        if (m_DE == null) m_DE = new DE_Bean();
        m_setAC.setDEValueFromPage(req, res, m_DE);   //store DE bean
-       session.setAttribute("oldDEBean", m_DE);    // save primary DE to oldDEBean
+       session.setAttribute("p_DEBean", m_DE);    // save primary DE 
        // clear DEBean because new DE Comp
        DE_Bean de = new DE_Bean();
        de.setDE_ASL_NAME("DRAFT NEW");
        de.setAC_PREF_NAME_TYPE("SYS");
        session.setAttribute("m_DE", de);
+       session.setAttribute("oldDEBean", new DE_Bean());
        ForwardJSP(req, res, "/CreateDEPage.jsp");
   }
 
@@ -7627,10 +7646,16 @@ System.out.println("servlet reqType!: "+ reqType);
   {
       HttpSession session = req.getSession();
       String sPageAction = (String)req.getParameter("newCDEPageAction");
+      session.setAttribute("DDEAction", "nothing");  //reset from "CreateNewDEFComp"
       //set primary DE back         
-      DE_Bean oldDEBean = new DE_Bean();
-      oldDEBean = (DE_Bean)session.getAttribute("oldDEBean");
-      session.setAttribute("m_DE", oldDEBean);
+      DE_Bean pDEBean = new DE_Bean();
+      pDEBean = (DE_Bean)session.getAttribute("p_DEBean");
+      session.setAttribute("m_DE", pDEBean);
+
+      //set primary oldDE back         
+      DE_Bean pOldBean = new DE_Bean();
+      pOldBean = (DE_Bean)session.getAttribute("p_oldBean");
+      session.setAttribute("oldDEBean", pOldBean);
 
       if(sPageAction.equals("DECompBackToNewDE"))
       {
@@ -10521,6 +10546,7 @@ System.out.println("servlet reqType!: "+ reqType);
     this.clearBuildingBlockSessionAttributes(req, res);
     String sMAction = (String)req.getParameter("hidMenuAction");
     if (sMAction == null) sMAction = "nothing";
+    session.setAttribute("DDEAction", "nothing");  //reset from "CreateNewDEFComp"
     String searchAC = "DataElement";
     //sets the session attributes of the selection menu action and selected component
     if (sMAction.equals("editDE") || sMAction.equals("editDEC") || sMAction.equals("editVD"))
