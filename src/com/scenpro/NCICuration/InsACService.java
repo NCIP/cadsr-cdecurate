@@ -141,15 +141,19 @@ public class InsACService implements Serializable
           statusMsg = statusMsg + sMsg + "\\n"; 
         session.setAttribute("statusMessage", statusMsg);
       }
+      //put nbsp for the tab at the begginning of the msg for vector.
       int iTab = sMsg.indexOf("\\t");
       if (iTab > -1)
-          sMsg = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".concat(sMsg.substring(2));
+          sMsg = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".concat(sMsg.substring(2)); 
+      //remove tab and newline from the msg for vector
+      if (!sMsg.equalsIgnoreCase("\\n") && !sMsg.equalsIgnoreCase("\n"))
+        sMsg = m_util.parsedStringMsgVectorTabs(sMsg);
       vStatMsg.addElement(sMsg);
       session.setAttribute("vStatMsg", vStatMsg);    
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR in InsACService-setRD for exception : " + e.toString());
+      logger.fatal("ERROR in InsACService-storeStatusMsg for exception : " + e.toString());
       m_classReq.setAttribute("retcode", "Message Exception");
     }
   }
@@ -193,6 +197,7 @@ public class InsACService implements Serializable
       if (oldVD == null) oldVD = new VD_Bean();
       String sVD_ID = vd.getVD_VD_IDSEQ();
       String sName = vd.getVD_PREFERRED_NAME();
+      if (sName == null) sName = "";
       String pageVDType = vd.getVD_TYPE_FLAG();
       String sContextID = vd.getVD_CONTE_IDSEQ();
       String sLongName = vd.getVD_LONG_NAME();
@@ -379,7 +384,10 @@ public class InsACService implements Serializable
             this.storeStatusMsg("Value Domain Name : " + vd.getVD_LONG_NAME());
           //continue update even if not null
           if (sReturnCode != null && sAction.equals("INS")) 
+          {
              this.storeStatusMsg("\\t " + sReturnCode + " : Unable to create new Value Domain Successully.");
+             logger.fatal(sReturnCode + " Unable to create new Value Domain Successully.");
+          }
           else if ((sReturnCode == null || (sReturnCode != null && sAction.equals("UPD"))) && !sVD_ID.equals(""))
           {
               //store the status message in the session
@@ -463,10 +471,10 @@ public class InsACService implements Serializable
               this.storeStatusMsg("\\t Successfully updated Value Domain");
            }
         } //end sinsertfor not update
-        else
-        {
-          if (sReturnCode != null && !sReturnCode.equals(""))
+        else if (sReturnCode != null && !sReturnCode.equals(""))
+        {          
             this.storeStatusMsg("\\t Unable to update the preferred name of the Value Domain.");
+            logger.fatal(sReturnCode + " Unable to update the preferred name of the Value Domain.");
         }
       }
       this.storeStatusMsg("\\n");
@@ -3338,7 +3346,7 @@ public class InsACService implements Serializable
     String sDDERule = (String)session.getAttribute("sRule");
     String sDDEMethod = (String)session.getAttribute("sMethod");
     String sDDEConcatChar = (String)session.getAttribute("sConcatChar");
-//System.out.println(" setDDE sDDERule: " + sDDERule + " sDDEMethod: " + sDDEMethod);
+System.out.println(" setDDE sDDERule: " + sDDERule + " sDDEMethod: " + sDDEMethod);
     //get DEComp, DECompID and DECompOrder vector from session, which be set in doUpdateDDEInfo
     Vector vDEComp = new Vector();
     Vector vDECompID = new Vector();
@@ -3352,8 +3360,8 @@ public class InsACService implements Serializable
     vDECompRelID = (Vector)session.getAttribute("vDECompRelID");
     vDECompDelete = (Vector)session.getAttribute("vDECompDelete");
     vDECompDelName = (Vector)session.getAttribute("vDECompDelName");
-//if(vDEComp != null)
-//System.out.println(" setDDE vDEComp.size: " + vDEComp.size());
+if(vDEComp != null)
+System.out.println(" setDDE vDEComp.size: " + vDEComp.size());
     // put them into DB tables
     try
     {
@@ -3395,7 +3403,7 @@ public class InsACService implements Serializable
         CStmt.setString(4,sDDERule);              //  rule
         CStmt.setString(5,sDDEConcatChar);              //  conca char
         CStmt.setString(6,sDDERepType);              //  rep type
-
+System.out.println("dde " + sP_DE_IDSEQ + " act " + sAction + " meth " + sDDEMethod + sDDERepType);
          // Now we are ready to call the stored procedure
         bExcuteOk = CStmt.execute();
         sReturnCode = CStmt.getString(11);
