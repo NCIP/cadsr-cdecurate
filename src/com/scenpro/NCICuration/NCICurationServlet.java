@@ -904,7 +904,7 @@ System.out.println("servlet reqType!: "+ reqType);
         logger.fatal("Servlet-doHomePage : " + e.toString());
         String msg = e.getMessage().substring(0, 12);
         if(msg.equals("Io exception"))
-          ForwardErrorJSP(req, res, "Session terminated. Please log in again.");
+          ForwardErrorJSP(req, res, "Io exception : Session terminated. Please log in again.");
         else
            ForwardErrorJSP(req, res, "Incorrect Username or Password. Please re-enter.");
        }
@@ -3490,39 +3490,45 @@ System.out.println("servlet reqType!: "+ reqType);
    */
   public VD_Bean doGetVDSystemName(HttpServletRequest req, VD_Bean vd, Vector vParent) throws Exception
   {
-    //make the system generated name
-    String sysName = "";
-    for (int i = vParent.size()-1; i > -1; i--)
+    try
     {
-      EVS_Bean par = (EVS_Bean)vParent.elementAt(i);
-      String evsDB = par.getEVS_DATABASE();
-      String subAct = par.getCON_AC_SUBMIT_ACTION();
-      if (subAct != null && !subAct.equals("DEL") && evsDB != null && !evsDB.equals("Non_EVS"))
+      //make the system generated name
+      String sysName = "";
+      for (int i = vParent.size()-1; i > -1; i--)
       {
-        //add the concept id to sysname if less than 20 characters
-        if (sysName.equals("") || sysName.length() < 20)
-          sysName += par.getNCI_CC_VAL() + ":";
-        else
-          break;
+        EVS_Bean par = (EVS_Bean)vParent.elementAt(i);
+        String evsDB = par.getEVS_DATABASE();
+        String subAct = par.getCON_AC_SUBMIT_ACTION();
+        if (subAct != null && !subAct.equals("DEL") && evsDB != null && !evsDB.equals("Non_EVS"))
+        {
+          //add the concept id to sysname if less than 20 characters
+          if (sysName.equals("") || sysName.length() < 20)
+            sysName += par.getNCI_CC_VAL() + ":";
+          else
+            break;
+        }
       }
+      //append vd public id and version in the end
+      if (vd.getVD_VD_ID() != null) sysName += vd.getVD_VD_ID();
+      if (vd.getVD_VERSION() != null) sysName += "v" + vd.getVD_VERSION();
+      //limit to 30 characters
+      if (sysName.length() > 30)
+        sysName = sysName.substring(sysName.length()-30);
+      vd.setAC_SYS_PREF_NAME(sysName);  //store it in vd bean
+  
+      //make system name preferrd name if sys was selected
+      String selNameType = (String)req.getParameter("rNameConv");
+      if (selNameType != null && selNameType.equals("SYS"))
+        vd.setVD_PREFERRED_NAME(sysName);
+      //store the keyed in text in the user field for later use.
+      String sPrefName = (String)req.getParameter("txPreferredName");
+      if (selNameType != null && selNameType.equals("USER") && sPrefName != null)
+        vd.setAC_USER_PREF_NAME(sPrefName);
     }
-    //append vd public id and version in the end
-    if (vd.getVD_VD_ID() != null) sysName += vd.getVD_VD_ID();
-    if (vd.getVD_VERSION() != null) sysName += "v" + vd.getVD_VERSION();
-    //limit to 30 characters
-    if (sysName.length() > 30)
-      sysName = sysName.substring(sysName.length()-30);
-    vd.setAC_SYS_PREF_NAME(sysName);  //store it in vd bean
-
-    //make system name preferrd name if sys was selected
-    String selNameType = (String)req.getParameter("rNameConv");
-    if (selNameType != null && selNameType.equals("SYS"))
-      vd.setVD_PREFERRED_NAME(sysName);
-    //store the keyed in text in the user field for later use.
-    String sPrefName = (String)req.getParameter("txPreferredName");
-    if (selNameType != null && selNameType.equals("USER") && sPrefName != null)
-      vd.setAC_USER_PREF_NAME(sPrefName);
-      
+    catch (Exception e)
+    {
+      this.logger.fatal("ERROR - doGetVDSystemName : " + e.toString());
+    }      
     return vd;
   }
   /**
@@ -6207,6 +6213,7 @@ System.out.println(" ins " + sMenuAction);
       GetACService getAC = new GetACService(req, res, this);
       Vector vStatMsg = new Vector();
       String sNewRep = (String)session.getAttribute("newRepTerm");
+      if (sNewRep == null) sNewRep = "";
 
       Vector vBERows = (Vector)session.getAttribute("vBEResult");
       int vBESize = vBERows.size();
@@ -7115,6 +7122,7 @@ System.out.println(" ins " + sMenuAction);
                   ret = insAC.setDE("UPD", DEBeanSR, "Version", oldDEBean);
                   if ((ret == null) || ret.equals(""))
                   {
+                  System.out.println(DEBeanSR.getDE_LONG_NAME() + " block version " + DEBeanSR.getDE_DE_IDSEQ());
                      ret = insAC.setDDE(DEBeanSR.getDE_DE_IDSEQ(), "");   // set DEComp rules and relations
                      //save the status message and retain the this row in the vector
                      serAC.refreshData(req, res, DEBeanSR, null, null,  null, "Version", oldID);
@@ -7231,7 +7239,9 @@ System.out.println(" ins " + sMenuAction);
       String sRemoveRepBlock = (String)session.getAttribute("RemoveRepBlock");
       if(sRemoveRepBlock == null) sRemoveRepBlock = "";
       EVS_Bean REPBean = (EVS_Bean)session.getAttribute("m_REP");
+      if (REPBean == null) REPBean = new EVS_Bean();
       EVS_Bean REPQBean = (EVS_Bean)session.getAttribute("m_REPQ");
+      if (REPQBean == null) REPQBean = new EVS_Bean();
       String sNewRep = (String)session.getAttribute("newRepTerm");
       if(sNewRep == null) sNewRep = "";
 
@@ -7247,7 +7257,7 @@ System.out.println(" ins " + sMenuAction);
       if (sNewRep.equals("true"))
           retRepQual = insAC.setRepresentation("INS", sREP_IDSEQ, VDBeanSR, REPQBean, req);
       else if(sRemoveRepBlock.equals("true"))
-        retObj = insAC.setRepresentation("INS" , sREP_IDSEQ, VDBeanSR, REPBean, req);
+        retObj = insAC.setRepresentation("INS", sREP_IDSEQ, VDBeanSR, REPBean, req);
       //create new version if not released
       sREP_IDSEQ = VDBeanSR.getVD_REP_IDSEQ();  
       if (sREP_IDSEQ != null && !sREP_IDSEQ.equals(""))
