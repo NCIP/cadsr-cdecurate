@@ -92,16 +92,16 @@ function displayStatusMessage()
     if (sDescription == null) sDescription = ""; 
     String sShortMeanings = m_VM.getVM_SHORT_MEANING();
     if (sShortMeanings == null) sShortMeanings = "";
-System.out.println("before vmconcept");
+//System.out.println("before vmconcept");
     EVS_Bean eBean = (EVS_Bean)m_VM.getVM_CONCEPT();
     if (eBean == null) eBean = new EVS_Bean();
   //  String sEVS = "";
-System.out.println(eBean.getNCI_CC_VAL() + " : " + eBean.getTEMP_CUI_VAL() + " : " + eBean.getUMLS_CUI_VAL());
+//System.out.println(eBean.getNCI_CC_VAL() + " : " + eBean.getTEMP_CUI_VAL() + " : " + eBean.getUMLS_CUI_VAL());
     String sEVS = eBean.getNCI_CC_VAL();
     if (sEVS == null) sEVS = "";
     if (!sEVS.equals(""))
       sEVS = sEVS + " : " + eBean.getEVS_DATABASE();
-System.out.println(" evs " + sEVS);
+//System.out.println(" evs " + sEVS);
     String sComments = m_VM.getVM_COMMENTS();
     if (sComments == null) sComments = "";
     boolean bDataFound = false;    

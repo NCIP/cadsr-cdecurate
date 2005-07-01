@@ -560,9 +560,10 @@ function CreateNewDEValue()
 //Called from local funcs, for create derived DE, save DDE into to hidden sels for Servlet pick them up
 function SaveDDEInfor()
 {
-    if(document.newCDEForm.MenuAction.value == "EditDesDE" || 
+   /* if(document.newCDEForm.MenuAction.value == "EditDesDE" || 
         document.newCDEForm.originActionHidden.value == "CreateNewDEFComp" ||
-        document.newCDEForm.originActionHidden.value == "BlockEditDE")  //no DDE part
+        document.newCDEForm.originActionHidden.value == "BlockEditDE")  //no DDE part */
+    if (document.newCDEForm.DDEMethod == null)
       return;
 //  if(document.newCDEForm.originActionHidden.value != "NewDEFromMenu")
 //      return;
@@ -672,9 +673,10 @@ function changeOrder()
 //enable/disable method and concaChar control when rep type changed.
 function changeRepType(action)
 {
-    if (document.newCDEForm.MenuAction.value == "EditDesDE" || 
+   /* if (document.newCDEForm.MenuAction.value == "EditDesDE" || 
         document.newCDEForm.originActionHidden.value == "CreateNewDEFComp" ||
-        document.newCDEForm.originActionHidden.value == "BlockEditDE")  //no DDE part
+        document.newCDEForm.originActionHidden.value == "BlockEditDE")  //no DDE part */
+    if (document.newCDEForm.DDEMethod == null)
       return;
     if(action == "change")
     {
@@ -772,9 +774,10 @@ function removeDEComp()
 
 function isDECompOrderValid()
 {
-  if(document.newCDEForm.MenuAction.value == "EditDesDE" ||
+ /* if(document.newCDEForm.MenuAction.value == "EditDesDE" ||
       document.newCDEForm.originActionHidden.value == "CreateNewDEFComp" || 
-      document.newCDEForm.originActionHidden.value == "BlockEditDE" )
+      document.newCDEForm.originActionHidden.value == "BlockEditDE" ) */
+  if (document.newCDEForm.DDEMethod == null)
     return "valid";
     
   if(document.newCDEForm.selDEComp.options.length < 1)

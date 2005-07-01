@@ -614,9 +614,7 @@
         <td><font color="#C0C0C0">Create/Search for Definition </font></td>
       <% } else { %>
         <td align=right><font color="#FF0000">*&nbsp;&nbsp;</font><%=item++%>)</td>
-        <td><font color="#FF0000">Create/Search </font> for Definition
-            (Changes of naming components would replace any user entered definition. 
-            Please make any desired changes after selecting the naming components.)</td>
+        <td><font color="#FF0000">Create/Edit</font> Definition</td>
       <% }%>
     </tr>
     <tr>

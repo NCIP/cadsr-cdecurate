@@ -28,6 +28,7 @@
 
     String sMenuAction = (String)session.getAttribute("MenuAction");
     String sOriginAction = (String)session.getAttribute("originAction");
+    String sDDEAction = (String)session.getAttribute("DDEAction");
     DE_Bean m_DE = new DE_Bean();
     m_DE = (DE_Bean)session.getAttribute("m_DE");
     if (m_DE == null) m_DE = new DE_Bean();
@@ -138,7 +139,8 @@
     Vector vDECompID = new Vector();
     Vector vDECompOrder = new Vector();
     Vector vDECompRelID = new Vector();
-    if(sOriginAction != "CreateNewDEFComp")
+    //if(sOriginAction != "CreateNewDEFComp")
+    if(sDDEAction != "CreateNewDEFComp")
     {
         vRepType = (Vector)session.getAttribute("vRepType");
         vDEComp = (Vector)session.getAttribute("vDEComp");
@@ -296,7 +298,7 @@
           &nbsp;&nbsp;
         <input type="button" name="btnClear" value="Clear" style="width: 125", "height: 30" onClick="ClearBoxes();">
           &nbsp;&nbsp;
-        <% if (sMenuAction.equals("Questions") || sMenuAction.equals("NewDETemplate") || sMenuAction.equals("NewDEVersion") || sOriginAction.equals("CreateNewDEFComp")){%>
+        <% if (sMenuAction.equals("Questions") || sMenuAction.equals("NewDETemplate") || sMenuAction.equals("NewDEVersion") || sDDEAction.equals("CreateNewDEFComp")){%>
         <input type="button" name="btnBack" value="Back" style="width: 125", "height: 30" onClick="Back();"> 
           &nbsp;&nbsp;
         <% } %>
@@ -314,7 +316,7 @@
      <tr valign="middle"> 
       <th colspan=2 height="40"> <div align="left"> 
           <label><font size=4>Create New <font color="#FF0000">Data Element </font> 
-              <%if(sOriginAction.equals("CreateNewDEFComp")){%>Component 
+              <%if(sDDEAction.equals("CreateNewDEFComp")){%>Component 
               <% } else if (sMenuAction.equals("NewDEVersion")) { %>Version
               <% } else if (sMenuAction.equals("NewDETemplate")) { %>Using Existing
               <% } %>
@@ -431,9 +433,9 @@
     <tr><td height="8" valign="top"></tr>
     <tr height="25" valign="top">
       <td align=right><font color="#FF0000">* &nbsp;</font><%=item++%>)</td>
-      <td><font color="#FF0000">Create/Search</font> for Definition 
-            (Changes of naming components would replace any user entered definition. 
-            Please make any desired changes after selecting the naming components.)</td>
+      <td><font color="#FF0000">Create/Edit</font> Definition<br>
+        (Changes to naming components will replace existing definition text.)
+      </td>
     </tr>
     <tr> 
       <td><font color="#FF0000"> </font></td>
@@ -655,7 +657,7 @@
     </tr>
   </table>
   <hr>  
-<%if(!sOriginAction.equalsIgnoreCase("CreateNewDEFComp")) {%>
+<%if(!sDDEAction.equalsIgnoreCase("CreateNewDEFComp")) {%>
 
   <!--********************************************************************************************************************-->
   <!--if not for create new from DDE or not for Block edit  -->
@@ -848,6 +850,7 @@ This is refilled with ac id from ac-csi to use it for block edit-->
 <select name= "selDECompRelIDHidden" size ="1" style="visibility:hidden;"  multiple></select>
 <select name= "selDECompDeleteHidden" size ="1" style="visibility:hidden;"  multiple></select>
 <select name= "selDECompDelNameHidden" size ="1" style="visibility:hidden;"  multiple></select>
+<% if (sDDEAction.equals("CreateNewDEFComp")) sOriginAction = sDDEAction; %>
 <input type="hidden" name="originActionHidden" value="<%=sOriginAction%>">
 
 <script language = "javascript">

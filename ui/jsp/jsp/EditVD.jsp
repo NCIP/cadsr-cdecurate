@@ -17,14 +17,6 @@
     Vector vDataTypes = (Vector)session.getAttribute("vDataType");
     Vector vDataTypeDesc = (Vector)session.getAttribute("vDataTypeDesc");
     Vector vDataTypeCom = (Vector)session.getAttribute("vDataTypeComment");
-//System.out.println("jsp before vDataTypes.size(): " + vDataTypes.size());
-    if(sOriginAction.equals("BlockEditVD"))
-    {
-      vDataTypeDesc.add(0,"");
-      vDataTypes.add(0,"");
-      vDataTypeCom.add(0,"");
-    }
-//System.out.println("jsp after vDataTypes.size(): " + vDataTypes.size());
     
     Vector vUOM = (Vector)session.getAttribute("vUOM");
     Vector vUOMFormat = (Vector)session.getAttribute("vUOMFormat");
@@ -204,8 +196,7 @@
     String sCharSet = m_VD.getVD_CHAR_SET_NAME();
     if (sCharSet == null) sCharSet = "";
     String sDataType = m_VD.getVD_DATA_TYPE();
-    if (sDataType == null && !sOriginAction.equals("BlockEditVD")) sDataType = "ALPHANUMERIC";
-    if (sDataType == null) sDataType = "";
+    if (sDataType == null || sOriginAction.equals("BlockEditVD")) sDataType = "";
     String sTypeFlag = m_VD.getVD_TYPE_FLAG();
     if (sTypeFlag == null) sTypeFlag = "E";
     session.setAttribute("pageVDType", sTypeFlag);
@@ -729,9 +720,7 @@ function setup()
         <td><font color="#C0C0C0">Create/Search for Definition </font></td>
       <% } else {%>
          <td align=right><font color="#FF0000">* &nbsp; </font><%=item++%>) </td>
-         <td><font color="#FF0000">Create/Search</font> for Definition 
-            (Changes of naming components would replace any user entered definition. 
-            Please make any desired changes after selecting the naming components.)</td>
+         <td><font color="#FF0000">Create/Edit</font> Definition</td>
       <% } %>
     </tr>      
     <tr>
@@ -848,9 +837,9 @@ function setup()
 <%
               for (int i = 0; vDataTypes.size()>i; i++)
               {
-                 String sCD = (String)vDataTypes.elementAt(i);
+                 String sDT = (String)vDataTypes.elementAt(i);
 %>
-              <option value="<%=sCD%>" <%if(sCD.equalsIgnoreCase(sDataType)){%>selected<%}%> ><%=sCD%></option>
+              <option value="<%=sDT%>" <%if(sDT.equalsIgnoreCase(sDataType)){%>selected<%}%> ><%=sDT%></option>
 <%
               }
 %>
