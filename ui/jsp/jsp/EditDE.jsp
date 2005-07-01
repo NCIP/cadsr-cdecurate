@@ -33,6 +33,7 @@
       
     String sOriginAction = (String)session.getAttribute("originAction");
     if (sOriginAction == null) sOriginAction = "";
+    String sDDEAction = (String)session.getAttribute("DDEAction");
 
     DE_Bean m_DE = (DE_Bean)session.getAttribute("m_DE");
     if (m_DE == null) m_DE = new DE_Bean();
@@ -127,14 +128,6 @@ System.out.println("jsap " + decvdChanged);
 
     String sEndDate = m_DE.getDE_END_DATE();
     if (sEndDate == null) sEndDate = "";
-    //remove standard and candidate from the dropdown list if block edit
- /*   if (sOriginAction.equals("BlockEditDE"))
-    {
-      if (vRegStatus.contains("Candidate"))
-        vRegStatus.removeElement("Candidate");
-      if (vRegStatus.contains("Standard"))
-        vRegStatus.removeElement("Standard");
-    } */
 
     //these are for DEC and VD searches.
     session.setAttribute("MenuAction", "searchForCreate");
@@ -153,7 +146,7 @@ System.out.println("jsap " + decvdChanged);
     Vector vDECompID = new Vector();
     Vector vDECompOrder = new Vector();
     Vector vDECompRelID = new Vector();
-    if(sOriginAction != "CreateNewDEFComp")
+    if(sDDEAction != "CreateNewDEFComp")
     {
         vRepType = (Vector)session.getAttribute("vRepType");
         vDEComp = (Vector)session.getAttribute("vDEComp");
@@ -499,12 +492,12 @@ System.out.println("jsap " + decvdChanged);
     <tr height="25" valign="top">
       <%if(sOriginAction.equals("BlockEditDE")){%>
         <td align=right><font color="#C0C0C0"><%=item++%>)</font></td>
-        <td><font color="#C0C0C0">Create/Search for Definition</font></td>
+        <td><font color="#C0C0C0">Create/Edit Definition</font></td>
       <% } else {%>
         <td align=right><font color="#FF0000">*&nbsp;&nbsp;</font><%=item++%>)</td>
-        <td><font color="#FF0000">Create/Search</font> for Definition
-            (Changes of naming components would replace any user entered definition. 
-            Please make any desired changes after selecting the naming components.)</td>
+        <td><font color="#FF0000">Create/Edit</font> Definition<br>
+          (Changes to naming components will replace existing definition text.)
+        </td>
       <% } %>
     </tr>
     <tr> 
@@ -932,7 +925,8 @@ System.out.println("jsap " + decvdChanged);
 <%
                 }
 %>
-              </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
             <td colspan=1 valign="top">
               <select name= "selOrderList" size ="3" style="width:130" onChange="javascript:selectODEComp();"
                 onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selOrderList'); return false" >
@@ -1007,6 +1001,7 @@ This is refilled with ac id from ac-csi to use it for block edit-->
 <select name= "selDECompRelIDHidden" size ="1" style="visibility:hidden;"  multiple></select>
 <select name= "selDECompDeleteHidden" size ="1" style="visibility:hidden;"  multiple></select>
 <select name= "selDECompDelNameHidden" size ="1" style="visibility:hidden;"  multiple></select>
+<% if (sDDEAction.equals("CreateNewDEFComp")) sOriginAction = sDDEAction; %>
 <input type="hidden" name="originActionHidden" value="<%=sOriginAction%>">
 
 <script language = "javascript">

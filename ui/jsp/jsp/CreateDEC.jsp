@@ -555,9 +555,9 @@
       <tr><td height="8" valign="top"></tr>
       <tr height="25" valign="top">
         <td align=right><font color="#FF0000" >* &nbsp;</font><%=item++%>)</td>
-        <td> <font color="#FF0000">Create/Search</font> for Definition
-            (Changes of naming components would replace any user entered definition. 
-            Please make any desired changes after selecting the naming components.)</td>
+        <td> <font color="#FF0000">Create/Edit</font> Definition<br>
+            (Changes to naming components will replace existing definition text.)
+        </td>
       </tr>
      
       <tr>
