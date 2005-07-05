@@ -703,6 +703,7 @@ public class EVS_Bean implements Serializable{
     String database = dtsVocab;
     if (definition == null || definition.equals("")) definition = "No Value Exists.";
     this.setPREFERRED_DEFINITION(definition);
+    source = source.replaceFirst("<def-source>", "");
     this.setEVS_DEF_SOURCE(source);
     this.setPREFERRED_NAME(prefName);
     this.setLONG_NAME(prefName);
