@@ -158,6 +158,8 @@ public class EVSSearch implements Serializable
       String sMetaSource , int sMetaLimit, String sUISearchType, String sRetired,
       String sConte_idseq, int iLevelImmediate) 
   {
+System.out.println("do_EVSSearch dtsVocab: " + dtsVocab + " termStr: " + termStr + " sUISearchType: " + sUISearchType);
+System.out.println("do_EVSSearch sSearchInEVS: " + sSearchInEVS  + " sRetiredxx: " + sRetired + " sConte_idseq: " + sConte_idseq);
     //capture the duration
     java.util.Date exDate = new java.util.Date();          
     String prefName = "";
@@ -262,7 +264,8 @@ public class EVSSearch implements Serializable
     
  System.out.println("do_EVSSearch m_servlet.m_EVS_CONNECT: " + m_servlet.m_EVS_CONNECT);
  System.out.println("do_EVSSearch dtsVocab: " + dtsVocab + " termStr: " + termStr + " sUISearchType: " + sUISearchType);
-//System.out.println("do_EVSSearch sSearchInEVS: " + sSearchInEVS + " isMetaCodeSearch: " + isMetaCodeSearch + " sRetiredxx: " + sRetired);
+System.out.println("do_EVSSearch sSearchInEVS: " + sSearchInEVS + " isMetaCodeSearch: " + isMetaCodeSearch + " sRetiredxx: " + sRetired);
+
  
   // Search By Concept Code
   if(sSearchInEVS.equals("Concept Code") && !termStr.equals("")

@@ -3326,8 +3326,8 @@ public class GetACSearch implements Serializable
   public void getDDEInfo(String P_DE_IDSEQ)
   {
     //capture the duration
-    java.util.Date exDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "getDDEInfo", "begin getComplexDE", exDate, exDate));
+ //   java.util.Date exDate = new java.util.Date();          
+  //  logger.info(m_servlet.getLogMessage(m_classReq, "getDDEInfo", "begin getComplexDE", exDate, exDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -3368,10 +3368,11 @@ public class GetACSearch implements Serializable
         //assign output DDE info from the result
         sRepType = (String) CStmt.getString(5);
         //capture the duration
-      	logger.info(m_servlet.getLogMessage(m_classReq, "getDDEInfo", "get object", exDate, new java.util.Date()));
+   //   	logger.info(m_servlet.getLogMessage(m_classReq, "getDDEInfo", "get object", exDate, new java.util.Date()));
         if(sRepType != null && sRepType.length() > 1)
         {
             sMethod = (String) CStmt.getString(2);
+  System.err.println("getDDEInfo sMethod: " + sMethod);
             sRule = (String) CStmt.getString(3);
             sConcatChar = (String) CStmt.getString(4);
             if(sMethod == null)
@@ -3429,7 +3430,7 @@ public class GetACSearch implements Serializable
       logger.fatal("ERROR - getDDEInfo for close : " + ee.toString());
     }
     //capture the duration
-    logger.info(m_servlet.getLogMessage(m_classReq, "getDDEInfo", "end search", exDate, new java.util.Date()));
+  //  logger.info(m_servlet.getLogMessage(m_classReq, "getDDEInfo", "end search", exDate, new java.util.Date()));
   }  //end getDDEInfo
 
  /**
