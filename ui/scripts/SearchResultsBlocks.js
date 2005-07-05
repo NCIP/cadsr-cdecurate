@@ -1200,8 +1200,10 @@ function createNames(acType)
    }
 
   function NewTermSuggested()
-  {
-      var sComp1 = opener.document.SearchActionForm.searchEVS.value;
+  {      
+     var sComp1 = "";
+     if (opener != null && opener.document.SearchActionForm != null && opener.document.SearchActionForm.searchEVS != null)
+        sCompl = opener.document.SearchActionForm.searchEVS.value;
      if (sComp1 == "DataElementConcept")
      {
         var decDef = opener.document.newDECForm.CreateDefinition.value;
