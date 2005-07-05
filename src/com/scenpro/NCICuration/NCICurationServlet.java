@@ -7072,6 +7072,7 @@ System.out.println(" ins " + sMenuAction);
 //System.out.println("in doUpdateDEActionBE");
       HttpSession session = req.getSession();
       DE_Bean DEBean = (DE_Bean)session.getAttribute("m_DE");
+      if (DEBean == null) DEBean = new DE_Bean();
       String ret = ":";
       session.setAttribute("DEEditAction", ""); //reset this
       boolean isRefreshed = false;
@@ -7123,6 +7124,9 @@ System.out.println(" ins " + sMenuAction);
                   if ((ret == null) || ret.equals(""))
                   {
                   System.out.println(DEBeanSR.getDE_LONG_NAME() + " block version " + DEBeanSR.getDE_DE_IDSEQ());
+                     //do dde updates for new version
+                     serAC.getDDEInfo(oldDEBean.getDE_DE_IDSEQ()); // get info, set session attributes  
+                     session.setAttribute("sRulesAction", "newRule");  //reset the rules action attribute
                      ret = insAC.setDDE(DEBeanSR.getDE_DE_IDSEQ(), "");   // set DEComp rules and relations
                      //save the status message and retain the this row in the vector
                      serAC.refreshData(req, res, DEBeanSR, null, null,  null, "Version", oldID);

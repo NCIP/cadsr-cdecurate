@@ -2729,7 +2729,7 @@ public class InsACService implements Serializable
       String sEndDate = m_util.getOracleDate(de.getDE_END_DATE());
       String sChangeNote = de.getDE_CHANGE_NOTE();
       String sSource = de.getDE_SOURCE();
-   //   String sLanguage = de.getDE_LANGUAGE();
+      String sLanguage = de.getDE_LANGUAGE();
       if(sSource == null) sSource = "";
 
       //store versioned status message 
@@ -2809,6 +2809,7 @@ public class InsACService implements Serializable
         if ((sAction.equals("UPD")) || (sAction.equals("DEL")))
         {
           sDE_ID = de.getDE_DE_IDSEQ();
+   System.out.println("setDE UPD sDE_ID: " + sDE_ID);
           CStmt.setString(3,sDE_ID);
         }
         //make it null for editing released elements
@@ -2842,6 +2843,7 @@ public class InsACService implements Serializable
 
         sDE_ID = CStmt.getString(3);
         sReturnCode = CStmt.getString(1);
+  System.out.println("setDE done UPD sDE_ID: " + sDE_ID + " sReturnCode: " + sReturnCode);
         //store ac name in the status message 
         if (sAction.equals("INS"))
           this.storeStatusMsg("Data Element Name : " + de.getDE_LONG_NAME());
@@ -3323,7 +3325,8 @@ public class InsACService implements Serializable
   */
   public String setDDE(String sP_DE_IDSEQ, String sOverRideAction)
   {
-//System.out.println("done setDDE sP_DE_IDSEQ: " + sP_DE_IDSEQ);
+System.out.println("in setDDE sP_DE_IDSEQ: " + sP_DE_IDSEQ);
+
     //capture the duration
  //   java.util.Date startDate = new java.util.Date();          
  //   logger.info(m_servlet.getLogMessage(m_classReq, "setDDE", "starting set", startDate, startDate));
@@ -3338,8 +3341,10 @@ public class InsACService implements Serializable
     //get DEComp rule... from page
     String sRulesAction = (String)session.getAttribute("sRulesAction");
     String sDDERepType = (String)session.getAttribute("sRepType");
+System.out.println(" setDDE sRulesAction: " + sRulesAction + " sDDERepType: " + sDDERepType); 
     if((sRulesAction == null || sRulesAction.equals("newRule")) && (sDDERepType == null || sDDERepType.length() < 1))
     {
+System.out.println(" setDDE return nada");
         return "";
     }
 
@@ -3397,6 +3402,7 @@ System.out.println(" setDDE vDEComp.size: " + vDEComp.size());
         CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //cdt_date_modified
         CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //return code
         // Set the In parameters (which are inherited from the PreparedStatement class)
+    System.out.println(" setDDE Set_Complex_DE sAction: " + sAction + " sP_DE_IDSEQ: " + sP_DE_IDSEQ);
         CStmt.setString(1,sAction);              //  action
         CStmt.setString(2,sP_DE_IDSEQ);              //  primary DE idseq
         CStmt.setString(3,sDDEMethod);              // method
@@ -3407,6 +3413,7 @@ System.out.println("dde " + sP_DE_IDSEQ + " act " + sAction + " meth " + sDDEMet
          // Now we are ready to call the stored procedure
         bExcuteOk = CStmt.execute();
         sReturnCode = CStmt.getString(11);
+System.out.println(" setDDE Set_Complex_DE sReturnCode: " + sReturnCode);
         //capture the duration
       //  logger.info(m_servlet.getLogMessage(m_classReq, "setDDE", "execute complexDE", startDate, new java.util.Date()));
 
@@ -3448,6 +3455,8 @@ System.out.println("dde " + sP_DE_IDSEQ + " act " + sAction + " meth " + sDDEMet
               }
               if(sOverRideAction.length() > 0)
                   sAction = sOverRideAction;
+   System.out.println(" setDDE Set_CDE_Relationship sAction: " + sAction + " sP_DE_IDSEQ: " + sP_DE_IDSEQ);
+     System.out.println(" setDDE Set_CDE_Relationship sDECompID: " + sDECompID + " sDECompOrder: " + sDECompOrder);        
               CStmt.setString(1,sAction);              //  action
               CStmt.setString(3,sP_DE_IDSEQ);              //  primary DE idseq
               CStmt.setString(4,sDECompID);              // DE Comp ID
@@ -3455,6 +3464,7 @@ System.out.println("dde " + sP_DE_IDSEQ + " act " + sAction + " meth " + sDDEMet
                // Now we are ready to call the stored procedure
               bExcuteOk = CStmt.execute();
               sReturnCode = CStmt.getString(10);
+  System.out.println(" setDDE Set_CDE_Relationship sReturnCode: " + sReturnCode);
               if (sReturnCode != null && !sReturnCode.equals(""))
                 this.storeStatusMsg("\\t " + sReturnCode + " : Unable to update Derived Data Element Component " + sDECompName);              
             }  // end of for
