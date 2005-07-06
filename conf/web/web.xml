@@ -19,17 +19,16 @@
     </init-param>
     <init-param>
       <param-name>server</param-name>
-      <param-value>jdbc:oracle:oci:@CBTEST</param-value>
+      <param-value>jdbc:oracle:oci:@CBTEST.nci.nih.gov</param-value>
+    </init-param>
+    <init-param>
+      <param-name>evsconnection</param-name>
+      <param-value>	   http://cbioqa101.nci.nih.gov:29080/cacore301hql/server/HTTPServer
+	</param-value>
     </init-param>
     <init-param>
       <param-name>iMinConns</param-name>
       <param-value>1</param-value>
-    </init-param>
-    <init-param>
-      <param-name>evsconnection</param-name>
-      <param-value>
-	 	http://cbioqatest501.nci.nih.gov:8080/cacoreevs301/server/HTTPServer
-	</param-value>
     </init-param>
     <init-param>
       <param-name>iMaxConns</param-name>  
@@ -56,7 +55,6 @@
       <param-value>i1sn0w</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
-
   </servlet>
 
   <servlet-mapping>
