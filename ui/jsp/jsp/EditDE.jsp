@@ -86,7 +86,7 @@
     if (sVD == null) sVD = "";
 
     boolean decvdChanged = m_DE.getDEC_VD_CHANGED();
-System.out.println("jsap " + decvdChanged);
+//System.out.println("jsap " + decvdChanged);
     String sVersion = m_DE.getDE_VERSION();
     if (sVersion == null) 
       sVersion = "1.0";

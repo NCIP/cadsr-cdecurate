@@ -51,7 +51,7 @@
     //get cs-csi attributes
     Vector vSelCSList = m_DE.getDE_CS_NAME();
     if (vSelCSList == null) vSelCSList = new Vector();
- //   System.out.println("cs jsp " + vSelCSList.size());
+
     Vector vSelCSIDList = m_DE.getDE_CS_ID();
     Vector vACCSIList = m_DE.getDE_AC_CSI_VECTOR();
     Vector vACId = (Vector)session.getAttribute("vACId");
@@ -122,7 +122,6 @@
     for (int i=0; i<vCSIList.size(); i++)  //loop csi vector
     {
       thisCSI = (CSI_Bean)vCSIList.elementAt(i);  //get the csi bean
-      //System.out.println(thisCSI.getCSI_CS_IDSEQ() + " : " + thisCSI.getCSI_LABEL());
    %>
       //create new csi object
       var aIndex = <%=i%>;  //get the index
@@ -151,7 +150,6 @@
         {
           thisACCSI = (AC_CSI_Bean)vACCSIList.elementAt(j);  //get the csi bean
           thisCSI = (CSI_Bean)thisACCSI.getCSI_BEAN();
-         // System.out.println("jsp " + thisCSI.getCSI_NAME() + " : " + thisACCSI.getAC_LONG_NAME());
 %>
           //create new accsi object
           var aIndex = <%=j%>;  //get the index
@@ -451,12 +449,11 @@
                         {
                           ALT_NAME_Bean altNameBean = (ALT_NAME_Bean)vAllAltName.elementAt(i);
                           if (altNameBean == null) altNameBean = new ALT_NAME_Bean();
-                          //System.out.println(i + " alt before : " + altNameBean.getALT_TYPE_NAME());
+
                           String altType = altNameBean.getALT_TYPE_NAME();
                           String altSubmit = altNameBean.getALT_SUBMIT_ACTION();
                           if ((altType != null && altType.equals("USED_BY")) || (altSubmit != null && altSubmit.equals("DEL")))
                             continue;
-                          //System.out.println(i + " alt after : " + altNameBean.getALT_TYPE_NAME());  
                           //get other alt attributes
                           String altIdseq = altNameBean.getALT_NAME_IDSEQ();
                           String altContext = altNameBean.getCONTEXT_NAME();
@@ -632,7 +629,7 @@
                           String refDocSubmit = refDocBean.getREF_SUBMIT_ACTION();
                           if (refDocSubmit != null && refDocSubmit.equals("DEL"))
                             continue;
-                          System.out.println(i + " refDoc after : " + refDocBean.getDOC_TYPE_NAME());          
+
                           String refDocIdseq = refDocBean.getREF_DOC_IDSEQ();
                           String refDocContext = refDocBean.getCONTEXT_NAME();
                          //parse the string for quotation character
@@ -755,14 +752,12 @@
 <%                  //store selected cs list on load 
                 if (vSelCSIDList != null) 
                 {
-            //      System.out.println("cs size " + vSelCSIDList.size());
-                  for (int i = 0; vSelCSIDList.size()>i; i++)
+                   for (int i = 0; vSelCSIDList.size()>i; i++)
                   {
                     String sCS_ID = (String)vSelCSIDList.elementAt(i);
                     String sCSName = "";
                     if (vSelCSList != null && vSelCSList.size() > i)
                        sCSName = (String)vSelCSList.elementAt(i);
-       //             System.out.println("selected " + sCSName);
 %>
                     <option value="<%=sCS_ID%>"><%=sCSName%></option>
 <%                  }
@@ -822,7 +817,6 @@ This is refilled with ac id from ac-csi to use it for block edit-->
       String sACName = "";
       if (vACName != null && vACName.size() > i)
          sACName = (String)vACName.elementAt(i);
-  //    System.out.println("selected " + sACName);
 %>
       <option value="<%=sAC_ID%>" selected><%=sACName%></option>
 <%  }

@@ -718,9 +718,9 @@ function changeRepType(action)
     }
     else     //empty, delete all DDE info
     {
-        document.newCDEForm.DDEMethod.disabled=true;
-        document.newCDEForm.DDEConcatChar.disabled=true;
-        document.newCDEForm.DDERule.disabled=true;
+        document.newCDEForm.DDEMethod.disabled=false;
+        document.newCDEForm.DDEConcatChar.disabled=false;
+        document.newCDEForm.DDERule.disabled=false;
         if(action != "init")
         {
             //remove all Relationship IDs by moving them into delete array
