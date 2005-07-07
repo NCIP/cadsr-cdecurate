@@ -380,8 +380,7 @@ public class NCICurationServlet extends HttpServlet
     try
     {
       String reqType = req.getParameter("reqType");
-//logger.debug("servlet reqType!: "+ reqType);
-System.out.println("servlet reqType!: "+ reqType);
+      logger.info("servlet reqType!: "+ reqType);  //log the request
       req.setAttribute("LatestReqType", reqType);  
       if (reqType != null)
       {
@@ -846,7 +845,6 @@ System.out.println("servlet reqType!: "+ reqType);
      //   m_EVS_CONNECT = "http://cbioqatest501.nci.nih.gov:8080/cacore30/server/HTTPServer";  //3.0.1
       //   m_EVS_CONNECT = "http://cbioqatest501.nci.nih.gov:8080/cacoreevs301/server/HTTPServer";  // new 3.0.1
       //   m_EVS_CONNECT = "http://cbioqa601.nci.nih.gov:29080/cacore301hql/server/HTTPServer";
-// System.out.println("doHomePage evsconnection m_EVS_CONNECT: " + m_EVS_CONNECT);
         HttpSession session = req.getSession();
         m_classReq = req;
         m_classRes = res;
@@ -932,7 +930,6 @@ System.out.println("servlet reqType!: "+ reqType);
       query.getVocabularyNames();
       java.util.List vocabs = null;
       String vocab = "";
- System.out.println("servlet getVocabs1 m_EVS_CONNECT: " + m_EVS_CONNECT);
       try
       {
         vocabs = evsService.evsSearch(query);
@@ -951,7 +948,6 @@ System.out.println("servlet reqType!: "+ reqType);
         {
             sVocab = (Source)vocabs.get(i);
             vocab = (String)sVocab.getAbbreviation();
-      System.out.println("servlet getVocabs: vocab: " + vocab);
             if(vocab.length()>4 && vocab.substring(0,5).equalsIgnoreCase("NCI_T"))
             {
               m_VOCAB_NCI = vocab;
@@ -1024,7 +1020,6 @@ System.out.println("servlet reqType!: "+ reqType);
       String sOriginAction = (String)session.getAttribute("originAction");
       // save DDE info every case except back from DEComp
       String ddeType = (String)req.getParameter("selRepType");
-   System.out.println(ddeType + " createde " + sPageAction + sMenuAction + sSubAction + sOriginAction);     
       if (ddeType != null && !ddeType.equals(""))
         doUpdateDDEInfo(req, res);  
       //handle all page actions
@@ -1141,7 +1136,6 @@ System.out.println("servlet reqType!: "+ reqType);
       session.setAttribute("DEAction", sSubAction);
       String sButtonPressed = (String)session.getAttribute("LastMenuButtonPressed");
       String sOriginAction = (String)session.getAttribute("originAction");
-//System.out.println("doEditDEActions sOriginAction: " + sOriginAction);
       // save DDE info every case except back from DEComp
       String ddeType = (String)req.getParameter("selRepType");
       if (ddeType != null && !ddeType.equals(""))
@@ -1368,7 +1362,6 @@ System.out.println("servlet reqType!: "+ reqType);
       pageDE.setDEC_VD_CHANGED(true);  //mark as changed
     }
     
-  System.out.println(pageDE.getDE_PREFERRED_NAME() + " get name " + selNameType);
     //update session attributes
     session.setAttribute("m_DE", pageDE); 
     return pageDE;
@@ -1483,7 +1476,6 @@ System.out.println("servlet reqType!: "+ reqType);
         && !sPrefName.equals(sSysName) && !sPrefName.equals(sAbbName))
        pageVD.setAC_USER_PREF_NAME(sPrefName); //store typed one in de bean 
     //reset system generated or abbr accoring 
- // System.out.println(sSysName.length() + " sys name " + sSysName + " type " + sNameType);
     if (sNameType.equals("SYS"))
     {
       if (sSysName == null) sSysName = "";
@@ -1888,7 +1880,6 @@ System.out.println("servlet reqType!: "+ reqType);
       String sSubAction = (String)req.getParameter("VDAction");
       session.setAttribute("VDAction", sSubAction);
       String sOriginAction = (String)session.getAttribute("originAction");
-//System.out.println("doCreateVDActions: sAction: " + sAction + " sSubAction: " + sSubAction);
       if(sAction.equals("changeContext"))
         doChangeContext(req, res, "vd");
       else if(sAction.equals("validate"))
@@ -2034,7 +2025,6 @@ System.out.println("servlet reqType!: "+ reqType);
       String sSearchAC = (String)session.getAttribute("SearchAC");
       if (sSearchAC == null) sSearchAC = "";
       String sOriginAction = (String)session.getAttribute("originAction");
-      //System.out.println(" edit vd " + sAction);
 
       if (sAction.equals("submit"))
         doSubmitVD(req, res);
@@ -2384,9 +2374,9 @@ System.out.println("servlet reqType!: "+ reqType);
         }
         //do sorting
         else if (sAction.equals("sortAlt"))
-          System.out.println("sort alt");
+          logger.fatal("sort alt");
         else if (sAction.equals("sortRef"))
-          System.out.println("sort ref");
+          logger.fatal("sort ref");
         
         //forward to search results page if created or going back
         if (sAction.equals("backToSearch") || sAction.equals("create") || sAction.equals("remove"))
@@ -2474,7 +2464,6 @@ System.out.println("servlet reqType!: "+ reqType);
       {
         ALT_NAME_Bean altBean = (ALT_NAME_Bean)vAltNames.elementAt(k);
         //check if it was existed in the list already
-    //System.out.println(selType + "-" + selName + " -" + sContID + "-" + acID);
         if (altBean.getALT_TYPE_NAME().equals(selType) && altBean.getALTERNATE_NAME().equals(selName)
               && altBean.getCONTE_IDSEQ().equals(sContID) && altBean.getAC_IDSEQ().equals(acID))
         {
@@ -2628,7 +2617,6 @@ System.out.println("servlet reqType!: "+ reqType);
       {
         REF_DOC_Bean refBean = (REF_DOC_Bean)vRefDocs.elementAt(k);
         //check if it was existed in the list already
-    //System.out.println(selType + "-" + selName + " -" + sContID + "-" + acID);
         if (refBean.getDOC_TYPE_NAME().equals(selType) && refBean.getDOCUMENT_NAME().equals(selName)
               && refBean.getCONTE_IDSEQ().equals(sContID) && refBean.getAC_IDSEQ().equals(acID))
         {
@@ -2728,7 +2716,6 @@ System.out.println("servlet reqType!: "+ reqType);
             stgContMsg += "\\n\\t" + refName + " in " + refCont + " Context "; 
           break;
         }
-        System.out.println(j + " ref " + curRefAttr);
       }
     }      
     if (stgContMsg != null && !stgContMsg.equals(""))
@@ -3426,7 +3413,6 @@ System.out.println("servlet reqType!: "+ reqType);
     if (vRSel == null) vRSel = new Vector();
     //get the array from teh hidden list
     String selRows[] = req.getParameterValues("hiddenSelRow");
-//System.out.println("getEVSSelRowVector vList.size: " + vList.size() + " vRSel.size: " + vRSel.size());
     if (selRows == null)
       session.setAttribute("StatusMessage", "Unable to select Concept, please try again");    
     else
@@ -3451,7 +3437,6 @@ System.out.println("servlet reqType!: "+ reqType);
             {
               EVS_Bean thisBean = (EVS_Bean)vList.elementAt(k);
               String thisBeanDB = thisBean.getEVS_DATABASE();
-  //  System.out.println("getEVSSelRowVector thisBean name: " + thisBean.getLONG_NAME());
               if (thisBean.getNCI_CC_VAL().equals(eBean.getNCI_CC_VAL()) && eBeanDB.equals(thisBeanDB))
               {
                 String acAct = thisBean.getCON_AC_SUBMIT_ACTION();
@@ -3468,7 +3453,6 @@ System.out.println("servlet reqType!: "+ reqType);
           if (isExist == false)
           {
             eBean.setCON_AC_SUBMIT_ACTION("INS");
- //  System.out.println("getEVSSelRowVector eBean name: " + eBean.getLONG_NAME());
             //get origin for cadsr result
             String eDB = eBean.getEVS_DATABASE();
             if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
@@ -3546,7 +3530,6 @@ System.out.println("servlet reqType!: "+ reqType);
     if (vParentCon == null) vParentCon = new Vector();
     vParentCon = this.getEVSSelRowVector(req, vParentCon);
     session.setAttribute("VDParentConcept", vParentCon);
-//System.out.println("doSelectParentVD vParentCon.size(): " + vParentCon.size());      
     VD_Bean m_VD = (VD_Bean)session.getAttribute("m_VD");  //new VD_Bean();
     m_setAC.setVDValueFromPage(req, res, m_VD);
     //make vd's system preferred name
@@ -3665,8 +3648,6 @@ System.out.println("servlet reqType!: "+ reqType);
     if (vParentCon == null) vParentCon = new Vector();    
     //get the selected parent info from teh request
     String sParentCC = (String)req.getParameter("selectedParentConceptCode");
-//System.out.println("doRemoveParent sParentCC :" + sParentCC + " sPVAction: " 
-//+ sPVAction + " vParentCon.size(): " + vParentCon.size());  
     if (sParentCC != null)
     {
       for (int i=0; i<vParentCon.size(); i++)
@@ -3680,7 +3661,6 @@ System.out.println("servlet reqType!: "+ reqType);
         String thisParentDB = eBean.getEVS_DATABASE();
         if(thisParentDB.equals("NCI Thesaurus")) thisParentDB = "NCI_Thesaurus";
         if (thisParentDB == null) thisParentDB = "";
- // System.out.println("doRemoveParent: thisParentName: "  + thisParentName + " thisParent: " + thisParent);
         if (sParentCC.equals(thisParent))
         {
           String strHTML = "";
@@ -5058,7 +5038,6 @@ System.out.println("servlet reqType!: "+ reqType);
       String sMenu = (String)session.getAttribute("MenuAction");
       if (sAction == null)
         sAction = "submitting"; //covers direct submits without going to Validate page
-System.out.println(" insertde " + sDEEditAction + sDEAction + sMenu + sAction + sOriginAction);
       if (sAction != null)
       {
          //go back from validation page according editing or creating action
@@ -5190,7 +5169,6 @@ System.out.println(" insertde " + sDEEditAction + sDEAction + sMenu + sAction + 
       String sMenuAction = (String)session.getAttribute("MenuAction");
       String sOriginAction = (String)session.getAttribute("originAction");
       String sDDEAction = (String)session.getAttribute("DDEAction");
-  System.out.println(" menu action " + sDDEAction + sOriginAction + sMenuAction);
       //insert the new DE for DDE
       if (sDDEAction.equals("CreateNewDEFComp"))
       {
@@ -5339,7 +5317,6 @@ System.out.println(" insertde " + sDEEditAction + sDEAction + sMenu + sAction + 
       InsACService insAC = new InsACService(req, res, this);
       String sMenuAction = (String)session.getAttribute("MenuAction");
       String ret = "";
-System.out.println(" ins " + sMenuAction);
       DE_Bean DEBean = (DE_Bean)session.getAttribute("m_DE");
       DE_Bean oldDEBean = (DE_Bean)session.getAttribute("oldDEBean");
       DE_Bean pDEBean = (DE_Bean)session.getAttribute("p_DEBean");
@@ -5611,7 +5588,6 @@ System.out.println(" ins " + sMenuAction);
       String sRemovePropBlock = (String)session.getAttribute("RemovePropBlock");
       if(sRemoveOCBlock == null) sRemoveOCBlock = "";
       if(sRemovePropBlock == null) sRemovePropBlock = "";
- //System.out.println("ins decblock " + sNewOC); 
       if (sNewOC.equals("true"))
         DECBeanSR = insAC.setObjectClassDEC("INS", DECBeanSR, req);
       else if(sRemoveOCBlock.equals("true"))
@@ -6057,7 +6033,6 @@ System.out.println(" ins " + sMenuAction);
    public void doInsertVD(HttpServletRequest req, HttpServletResponse res)
    throws Exception
    {
-//System.out.println("doInsertVD");
       HttpSession session = req.getSession();
       //make sure that status message is empty
       session.setAttribute("statusMessage", "");
@@ -6071,10 +6046,8 @@ System.out.println(" ins " + sMenuAction);
       String sMenuAction = (String)session.getAttribute("MenuAction");
       String sButtonPressed = (String)session.getAttribute("LastMenuButtonPressed");
       String sOriginAction = (String)session.getAttribute("originAction");
-//System.out.println("doInsertVD sOriginAction: " + sOriginAction);
       if (sAction == null)
         sAction = "submitting"; //for direct submit without validating
-//System.out.println("doInsertVD1 sAction: " + sAction);
       String sNewCDEPageAction = (String)req.getParameter("newCDEPageAction");
       if (sAction != null)
       {  //goes back to create/edit pages from validation page
@@ -6087,8 +6060,6 @@ System.out.println(" ins " + sMenuAction);
         }
         else
         {
-//  System.out.println("doInsertVD2 sVDAction: " + sVDAction + " sOriginAction: "
- // + sOriginAction + " sVDEditAction: " + sVDEditAction);
           //edit the existing vd
           if (sVDAction.equals("NewVD") && sOriginAction.equals("NewVDFromMenu"))
              doInsertVDfromMenuAction(req, res);
@@ -6690,7 +6661,6 @@ System.out.println(" ins " + sMenuAction);
       String oldDEC = DEBeanSR.getDE_DEC_IDSEQ();
       String oldVD = DEBeanSR.getDE_VD_IDSEQ();
       String oldReg = DEBeanSR.getDE_REG_STATUS();
-//  System.out.println(RegStatus + " before insert " + oldReg);
       //update the bean with only the changed data
       if (!sDEC_ID.equals("")) DEBeanSR.setDE_DEC_IDSEQ(sDEC_ID);
       if (!sVD_ID.equals("")) DEBeanSR.setDE_VD_IDSEQ(sVD_ID);
@@ -6774,7 +6744,6 @@ System.out.println(" ins " + sMenuAction);
       if (oldASL == null) oldASL = "";
       String pageVer = de.getDE_VERSION();
       if (pageVer == null) pageVer = "";
-  System.out.println(de.getDE_PREFERRED_NAME() + " pref name " + oldName);
       if (prefType != null && !prefType.equals("USER"))
       {
         DEBeanSR.setAC_PREF_NAME_TYPE(prefType);
@@ -7069,7 +7038,6 @@ System.out.println(" ins " + sMenuAction);
    public void doUpdateDEActionBE(HttpServletRequest req, HttpServletResponse res)
    throws Exception
    {
-//System.out.println("in doUpdateDEActionBE");
       HttpSession session = req.getSession();
       DE_Bean DEBean = (DE_Bean)session.getAttribute("m_DE");
       if (DEBean == null) DEBean = new DE_Bean();
@@ -7100,10 +7068,9 @@ System.out.println(" ins " + sMenuAction);
             //gets the version from the page
           String newVersion = (String)DEBean.getDE_VERSION();
           if (newVersion == null) newVersion = "";
-    //  System.out.println(DEBeanSR.getDE_MIN_CDE_ID() + " before insert " + newVersion);
           //gets all the data from the page
           InsertEditsIntoDEBeanSR(DEBeanSR, DEBean, req, res);
-          session.setAttribute("m_DE", DEBeanSR);
+         // session.setAttribute("m_DE", DEBeanSR);
           String oldID = oldDEBean.getDE_DE_IDSEQ();
           //creates a new version
           if (newVersion.equals("Point") || newVersion.equals("Whole"))  // block version
@@ -7123,7 +7090,6 @@ System.out.println(" ins " + sMenuAction);
                   ret = insAC.setDE("UPD", DEBeanSR, "Version", oldDEBean);
                   if ((ret == null) || ret.equals(""))
                   {
-                  System.out.println(DEBeanSR.getDE_LONG_NAME() + " block version " + DEBeanSR.getDE_DE_IDSEQ());
                      //do dde updates for new version
                      serAC.getDDEInfo(oldDEBean.getDE_DE_IDSEQ()); // get info, set session attributes  
                      session.setAttribute("sRulesAction", "newRule");  //reset the rules action attribute
@@ -7164,7 +7130,6 @@ System.out.println(" ins " + sMenuAction);
          session.setAttribute("results", vResult);    //store the final result in the session
          session.setAttribute("DEPageAction", "nothing");
       }
-// System.out.println("done doUpdateDEActionBE"); 
       //forward to search page.
       ForwardJSP(req, res, "/SearchResultsPage.jsp");
    }
@@ -7237,7 +7202,6 @@ System.out.println(" ins " + sMenuAction);
    public void doInsertVDBlocks(HttpServletRequest req, HttpServletResponse res, VD_Bean VDBeanSR)
    throws Exception
    {
-//System.out.println("doInsertVDBlocks");
       HttpSession session = req.getSession();
       if (VDBeanSR == null) VDBeanSR = (VD_Bean)session.getAttribute("m_VD");
       String sRemoveRepBlock = (String)session.getAttribute("RemoveRepBlock");
@@ -7297,7 +7261,6 @@ System.out.println(" ins " + sMenuAction);
    public void doInsertVDfromMenuAction(HttpServletRequest req, HttpServletResponse res)
    throws Exception
    {
- // System.out.println("doInsertVDfromMenuAction");
       HttpSession session = req.getSession();
       VD_Bean VDBean = (VD_Bean)session.getAttribute("m_VD");
 
@@ -7307,7 +7270,6 @@ System.out.println(" ins " + sMenuAction);
       VD_Bean oldVDBean = (VD_Bean)session.getAttribute("oldVDBean");
       if(oldVDBean == null) oldVDBean = new VD_Bean();
       String ret = "";
-// System.out.println("doInsertVDfromMenuAction sMenuAction: " + sMenuAction);
       boolean isUpdateSuccess = true; 
       doInsertVDBlocks(req, res, null);
       if (sMenuAction.equals("NewVDVersion"))
@@ -7874,7 +7836,6 @@ System.out.println(" ins " + sMenuAction);
 
        HttpSession session = req.getSession();
        String actType = (String)req.getParameter("actSelect");
-//System.out.println("doGetACSearchActions  + actType: " + actType);
        String menuAction = (String)session.getAttribute("MenuAction");
        String sUISearchType = (String)req.getAttribute("UISearchType");
        if(sUISearchType == null || sUISearchType.equals("nothing")) sUISearchType = "";
@@ -8017,7 +7978,6 @@ System.out.println(" ins " + sMenuAction);
   */
   private void doCollapseAllNodes(HttpServletRequest req, String dtsVocab)  throws Exception
   {
-//System.out.println("doCollapseAllNodes: dtsVocab: " + dtsVocab);
     HttpSession session = req.getSession();
     session.setAttribute("results", null);
     session.setAttribute("vACSearch", null);
@@ -8039,7 +7999,6 @@ System.out.println(" ins " + sMenuAction);
   private void doTreeSearch(HttpServletRequest req, HttpServletResponse res, 
    String actType, String searchType)  throws Exception
   {
-//System.out.println("doBlockSearch doTreeSearch");
       HttpSession session = req.getSession();
       GetACSearch getACSearch = new GetACSearch(req, res, this);
       String dtsVocab = req.getParameter("listContextFilterVocab");
@@ -8067,7 +8026,6 @@ System.out.println(" ins " + sMenuAction);
   private void doTreeOpenToConcept(HttpServletRequest req, HttpServletResponse res, 
    String actType, String searchType, String sCCode, String sCCodeDB, String sCCodeName, String sNodeID)  throws Exception
   {
-//System.out.println("doTreeOpenToConcept actType: " + actType + " sCCodeName: " + sCCodeName + " sCCodeDB: " + sCCodeDB);
       HttpSession session = req.getSession();
       String strHTML = "";
       String sOpenToTree = (String)req.getParameter("openToTree");
@@ -8077,7 +8035,6 @@ System.out.println(" ins " + sMenuAction);
        if(sCCodeDB.equals("Thesaurus/Metathesaurus") || sCCodeDB.equals("")
      || sCCodeDB.equals("NCI Thesaurus") || sCCodeDB.equals("NCI_Thesaurus"))
       sCCodeDB = this.m_VOCAB_NCI; //"NCI_Thesaurus"; 
-//System.out.println("doTreeOpenToConcept sOpenTreeToConcept: " + sOpenTreeToConcept);
      // get the concept name from the ccode
       GetACSearch serAC = new GetACSearch(req, res, this);
       EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
@@ -8098,12 +8055,9 @@ System.out.println(" ins " + sMenuAction);
         
           Vector vSuperImmediate = evs.getSuperConceptNamesImmediate(sCCodeDB, sCCodeName, sCCode, "");
           session.setAttribute("vSuperImmediate", vSuperImmediate);
- // System.out.println("doTreeOpenToConcept call buildVectorOfSuperConceptStacks openTree sCCode: " + sCCode + " sCCodeName: " + sCCodeName);        
           vStackVector2 = tree.buildVectorOfSuperConceptStacks(stackSuperConcepts, sCCodeDB, sCCode, vStackVector);
- //  System.out.println("doTreeOpenToConcept done!!!  buildVectorOfSuper!!! vStackVector.size(): " + vStackVector.size());
           if(vStackVector.size()<1) // must be a root concept
           {
- // System.out.println("doTreeOpenToConcept vStackVector.size()<1"); 
             if(sCCodeDB.equals("MGED"))
               sCCodeDB = "MGED_Ontology";
             Tree RootTree = (Tree)tree.m_treesHash.get(sCCodeDB);
@@ -8112,20 +8066,16 @@ System.out.println(" ins " + sMenuAction);
           }
           else
           {
-//System.out.println("doTreeOpenToConcept vStackVector.size(): " + vStackVector.size()); 
             Stack vStack = new Stack();
             for(int j=0; j<vStackVector.size(); j++)
             {
               vStack = (Stack)vStackVector.elementAt(j);
-//  System.out.println("uuuuuuuuuuuuuuuuuuuuuuuuu vStackVector j: "
- // + j + " vStack.size(): " + vStack.size());
               if(vStack.size()>0)
                 strHTML = tree.expandTreeToConcept(vStack, sCCodeDB, sCCode);
             }
           }
           session.setAttribute("strHTML", strHTML);
           session.setAttribute("vSuperImmediate", null);
-   // System.out.println("doTreeOpenToConcept set session strHTML");
       }
       else if (actType.equals("parentTree"))
       {
@@ -8134,7 +8084,6 @@ System.out.println(" ins " + sMenuAction);
             sCCodeName = filterName(sCCodeName, "js");
           session.setAttribute("ParentConceptCode", sCCode);
           session.setAttribute("ParentConcept", sCCodeName);
-//  System.out.println("doTreeOpenToConcept sCCodeDB: " + sCCodeDB);
           this.doTreeSearchRequest(req, res, sCCodeName, sCCode, "false", sCCodeDB);
           req.setAttribute("UISearchType", "tree");
           EVSMasterTree tree = new EVSMasterTree(req, sCCodeDB, this);
@@ -8143,16 +8092,6 @@ System.out.println(" ins " + sMenuAction);
           strHTML = tree.showParentConceptTree(sCCode, sCCodeDB, sCCodeName);
           session.setAttribute("strHTML", strHTML);
       }
-   /*   else if (actType.equals("OpenParentTreeToConcept"))
-      {
-   System.out.println("doTreeOpenToConceptQQ sCCodeDB: " + sCCodeDB);
-          this.doTreeSearchRequest(req, res, sCCodeName, sCCode, "false", sCCodeDB);
-          req.setAttribute("UISearchType", "tree");
-          EVSMasterTree tree = new EVSMasterTree(req, sCCodeDB, this);
-          strHTML = tree.populateTreeRoots(sCCodeDB);
-          strHTML = tree.openParentTreeToConcept(sCCode, sCCodeDB, sCCodeName, sNodeID);
-          session.setAttribute("strHTML", strHTML);
-      } */
       ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
   }
   
@@ -8207,15 +8146,12 @@ System.out.println(" ins " + sMenuAction);
   private void doTreeSearchRequest(HttpServletRequest req, HttpServletResponse res, 
   String sConceptName, String sConceptID, String strForward, String dtsVocab)  throws Exception
   {
-//System.out.println("doTreeSearchRequest sConceptName: " + sConceptName + " sConceptID: " + sConceptID);
       HttpSession session = req.getSession();
       session.setAttribute("ConceptLevel", "0");
       String sUISearchType = (String)req.getAttribute("UISearchType");
       if (sUISearchType == null || sUISearchType.equals("nothing")) sUISearchType = "Concept Code";
- // System.out.println("doTreeSearchRequest sUISearchType: " + sUISearchType);   
       String sKeywordID = (String)req.getParameter("keywordID");
       String sKeywordName = (String)req.getParameter("keywordName");
-//System.out.println("doTreeSearchRequest sKeywordName: " + sKeywordName + " dtsVocab: " + dtsVocab);
       if (sKeywordID == null || sKeywordID.equals("")) 
         sKeywordID = sConceptID;
       if (sKeywordName == null || sKeywordName.equals("")) 
@@ -8229,7 +8165,6 @@ System.out.println(" ins " + sMenuAction);
       EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
       if(sKeywordID.equals("") && !sKeywordName.equals(""))
         sKeywordID = evs.do_getEVSCode(sKeywordName, sVocab);   
-//System.out.println("doTreeSearchRequest sKeywordID: " + sKeywordID);
       String sOpenToTree = (String)req.getParameter("openToTree");
       if(sOpenToTree == null) sOpenToTree = "";
 
@@ -8256,7 +8191,6 @@ System.out.println(" ins " + sMenuAction);
         sSearchType = "PropQ";
        else if(sSearchAC.equals("RepQualifier"))
         sSearchType = "RepQ";
-//System.out.println("doTreeSearchRequest sVocab: " + sVocab + " sSearchAC: " +  sSearchAC);
       Vector vAC = new Vector();
       Vector vResult = new Vector();
       GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this); 
@@ -8327,28 +8261,26 @@ System.out.println(" ins " + sMenuAction);
       if (sConteIdseq == null) sConteIdseq = "";
       
       String sUISearchType = (String)req.getParameter("UISearchType");
-//System.out.println("doGetSubConcepts sSearchType: " + sSearchType + " sUISearchType: " + sUISearchType);
       if(sUISearchType == null || sUISearchType.equals("nothing")) 
         sUISearchType = "term";
- //System.out.println("doGetSubConcepts  sConceptName: " + sConceptName + " dtsVocab: " + dtsVocab);    
-    if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
-     || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
-      dtsVocab = this.m_VOCAB_NCI; //"NCI_Thesaurus";
-    else if(dtsVocab.equals("VA NDFRT") || dtsVocab.equals("VA_NDFRT"))
-      dtsVocab = this.m_VOCAB_VA;  //"VA_NDFRT";
-    else if(dtsVocab.equals("UWD VISUAL ANATOMIST") || dtsVocab.equals("UWD_VISUAL_ANATOMIST"))
-      dtsVocab = this.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
-    else if(dtsVocab.equals("MGED") || dtsVocab.equals("MGED_Ontology")) 
-      dtsVocab = this.m_VOCAB_MGE;  //"MGED_Ontology";
-    else if(dtsVocab.equals("GO"))
-      dtsVocab = this.m_VOCAB_GO;
-    else if(dtsVocab.equals("LOINC"))
-      dtsVocab = this.m_VOCAB_LOI;
-    else if(dtsVocab.equals("MedDRA"))
-      dtsVocab = this.m_VOCAB_MED;
-    else if(dtsVocab.equals("HL7_V3")) 
-      dtsVocab = this.m_VOCAB_HL7;
-      
+      if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
+       || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
+        dtsVocab = this.m_VOCAB_NCI; //"NCI_Thesaurus";
+      else if(dtsVocab.equals("VA NDFRT") || dtsVocab.equals("VA_NDFRT"))
+        dtsVocab = this.m_VOCAB_VA;  //"VA_NDFRT";
+      else if(dtsVocab.equals("UWD VISUAL ANATOMIST") || dtsVocab.equals("UWD_VISUAL_ANATOMIST"))
+        dtsVocab = this.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
+      else if(dtsVocab.equals("MGED") || dtsVocab.equals("MGED_Ontology")) 
+        dtsVocab = this.m_VOCAB_MGE;  //"MGED_Ontology";
+      else if(dtsVocab.equals("GO"))
+        dtsVocab = this.m_VOCAB_GO;
+      else if(dtsVocab.equals("LOINC"))
+        dtsVocab = this.m_VOCAB_LOI;
+      else if(dtsVocab.equals("MedDRA"))
+        dtsVocab = this.m_VOCAB_MED;
+      else if(dtsVocab.equals("HL7_V3")) 
+        dtsVocab = this.m_VOCAB_HL7;
+        
      if (dtsVocab == null) dtsVocab = "";
      if (sConceptName == null || sConceptCode == null || dtsVocab == null) 
         return;
@@ -8360,7 +8292,6 @@ System.out.println(" ins " + sMenuAction);
       Vector vSubConceptNames = null;
       
       String sParent = (String)session.getAttribute("ParentConcept");
- // System.out.println("doGetSubConcepts sParent: " + sParent + " sSearchAC: " + sSearchAC);
       if(sParent == null) sParent = "";
       String sParentSource = "";
       if(dtsVocab.equals("NCI Metathesaurus") && sSearchAC.equals("ParentConceptVM"))
@@ -8371,15 +8302,11 @@ System.out.println(" ins " + sMenuAction);
       || (dtsVocab.length()>2 && dtsVocab.substring(0,3).equalsIgnoreCase("LOI")) 
       || (dtsVocab.length()>2 && dtsVocab.substring(0,3).equalsIgnoreCase("Med")))
         sParent = filterName(sParent, "display");
-//System.out.println("doGetSubConcepts sParentFiltered: " + sParent);
      
       if(sConceptName.equals(sParent))
         ilevelStartingConcept = 0;
       else
       {
-       // if(dtsVocab.equals("NCI Metathesaurus"))
-       //   ilevelStartingConcept = evs.getLevelDownFromParentMeta(sConceptName, dtsVocab, sDefSource);
-      //  else 
         EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this); 
         ilevelStartingConcept = evs.getLevelDownFromParent(sConceptCode, dtsVocab);
       }
@@ -8388,7 +8315,6 @@ System.out.println(" ins " + sMenuAction);
       String sLevelStartingConcept = "";
       Integer ILevelStartingConcept = new Integer(ilevelStartingConcept);
       sLevelStartingConcept = ILevelStartingConcept.toString();
-   //System.out.println("doGetSubConcepts sLevelStartingConcept: " + sLevelStartingConcept + " ilevelImmediate: " + ilevelImmediate);
       session.setAttribute("ConceptLevel", sLevelStartingConcept);
       if(dtsVocab.equals("NCI Metathesaurus"))
       {
@@ -8402,25 +8328,23 @@ System.out.println(" ins " + sMenuAction);
         vSubConceptNames = evs.getSubConceptNames(dtsVocab, sConceptName, "All", sConceptCode, sDefSource);
         for(int j=0; j < vSubConceptNames.size(); j++) 
         { 
- // System.out.println("servlet doGetSubConcepts All vSubConceptNames.size(): " + vSubConceptNames.size());
           String sName = (String)vSubConceptNames.elementAt(j);
           String sCode = evs.do_getEVSCode(sName, dtsVocab);   
           evs.do_EVSSearch(sCode, vAC, dtsVocab, "Concept Code",
           sDefSource, 100, sUISearchType, sRetired, sConteIdseq, -1);         
         }
       }
-       else if(sSearchType.equals("Immediate"))
-       {
+      else if(sSearchType.equals("Immediate"))
+      {
         vSubConceptNames = evs.getSubConceptNames(dtsVocab, sConceptName, "Immediate", sConceptCode, sDefSource);
         for(int j=0; j < vSubConceptNames.size(); j++) 
         { 
           String sName = (String)vSubConceptNames.elementAt(j);
           String sCode = evs.do_getEVSCode(sName, dtsVocab);   
- // System.out.println("servlet Immediate sName: " + sName + " sCode: " + sCode);
           evs.do_EVSSearch(sCode, vAC, dtsVocab, "Concept Code",
           sDefSource, 100, sUISearchType, sRetired, sConteIdseq, ilevelImmediate);         
         }
-       }
+      }
       session.setAttribute("vACSearch", vAC);
       if(sSearchAC.equals("ParentConcept"))
         session.setAttribute("vParResult", vAC);
@@ -8505,7 +8429,6 @@ System.out.println(" ins " + sMenuAction);
       String sDefSource = (String)req.getParameter("defSource");
       String sSearchType = (String)req.getParameter("searchType");
       String sUISearchType = (String)req.getParameter("UISearchType");
-//System.out.println("doGetSubConcepts sSearchType: " + sSearchType + " sUISearchType: " + sUISearchType);
       if(sUISearchType == null || sUISearchType.equals("nothing")) 
         sUISearchType = "term";
       String sRetired = "";  //(String)req.getParameter("rRetired");
@@ -8513,24 +8436,24 @@ System.out.println(" ins " + sMenuAction);
       String sConteIdseq = (String)req.getParameter("sConteIdseq");
       if (sConteIdseq == null) sConteIdseq = "";
       
-    if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
-    || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
-      dtsVocab = this.m_VOCAB_NCI; //"NCI_Thesaurus";
-    else if(dtsVocab.equals("VA NDFRT") || dtsVocab.equals("VA_NDFRT"))
-      dtsVocab = this.m_VOCAB_VA;  //"VA_NDFRT";
-    else if(dtsVocab.equals("UWD VISUAL ANATOMIST") || dtsVocab.equals("UWD_VISUAL_ANATOMIST"))
-      dtsVocab = this.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
-    else if(dtsVocab.equals("MGED") || dtsVocab.equals("MGED_Ontology")) 
-      dtsVocab = this.m_VOCAB_MGE;  //"MGED_Ontology";
-    else if(dtsVocab.equals("GO"))
-      dtsVocab = this.m_VOCAB_GO;
-    else if(dtsVocab.equals("LOINC"))
-      dtsVocab = this.m_VOCAB_LOI;
-    else if(dtsVocab.equals("MedDRA"))
-      dtsVocab = this.m_VOCAB_MED;
-    else if(dtsVocab.equals("HL7_V3")) 
-      dtsVocab = this.m_VOCAB_HL7;
-      
+      if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
+      || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
+        dtsVocab = this.m_VOCAB_NCI; //"NCI_Thesaurus";
+      else if(dtsVocab.equals("VA NDFRT") || dtsVocab.equals("VA_NDFRT"))
+        dtsVocab = this.m_VOCAB_VA;  //"VA_NDFRT";
+      else if(dtsVocab.equals("UWD VISUAL ANATOMIST") || dtsVocab.equals("UWD_VISUAL_ANATOMIST"))
+        dtsVocab = this.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
+      else if(dtsVocab.equals("MGED") || dtsVocab.equals("MGED_Ontology")) 
+        dtsVocab = this.m_VOCAB_MGE;  //"MGED_Ontology";
+      else if(dtsVocab.equals("GO"))
+        dtsVocab = this.m_VOCAB_GO;
+      else if(dtsVocab.equals("LOINC"))
+        dtsVocab = this.m_VOCAB_LOI;
+      else if(dtsVocab.equals("MedDRA"))
+        dtsVocab = this.m_VOCAB_MED;
+      else if(dtsVocab.equals("HL7_V3")) 
+        dtsVocab = this.m_VOCAB_HL7;
+        
       if (sConceptName == null || sConceptCode == null || dtsVocab == null) 
         return;
       Vector vAC = new Vector();
@@ -8678,7 +8601,6 @@ System.out.println(" ins " + sMenuAction);
   */
   private void doTreeCollapseRequest(HttpServletRequest req, HttpServletResponse res)  throws Exception
   {
-//System.out.println("doTreeCollapseRequest");
       HttpSession session = req.getSession();
       String sSearchAC = (String)session.getAttribute("creSearchAC");
       if(sSearchAC == null)
@@ -8692,12 +8614,10 @@ System.out.println(" ins " + sMenuAction);
       String nodeName = req.getParameter("nodeName");
       String vocab = req.getParameter("vocab");
       String nodeID = req.getParameter("nodeID");
-//System.out.println("doTreeCollapseRequest nodeName: " + nodeName + " nodeID: " + nodeID + " vocab: " + vocab);
       if(vocab == null) vocab = "NCI_Thesaurus";
       session.setAttribute("dtsVocab", vocab);  
       EVSMasterTree tree = new EVSMasterTree(req, vocab, this);
       String strHTML = tree.collapseNode(nodeID, vocab, "", nodeName);
-//System.out.println("doTreeCollapseRequest4");
       session.setAttribute("strHTML", strHTML);
       req.setAttribute("UISearchType", "tree");
       ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
@@ -9128,7 +9048,6 @@ System.out.println(" ins " + sMenuAction);
        HttpSession session = req.getSession();
        String actType = (String)req.getParameter("actSelect");
        if(actType == null) actType = "";
-//System.out.println("doBlockSearch actType: " + actType);
        String sSearchFor = (String)req.getParameter("listSearchFor");
        String dtsVocab = req.getParameter("listContextFilterVocab");
        String sSearchInEVS = "";
@@ -9188,11 +9107,8 @@ System.out.println(" ins " + sMenuAction);
             if(!sCCode.equals(""))
             {
               if(sCCodeDB.equals("NCI Thesaurus"))  sCCodeDB = "Thesaurus/Metathesaurus";
-     //   System.out.println("doBlockSearch 2 sCCodeDB: " + sCCodeDB);
               this.doCollapseAllNodes(req, treeName);
-     //   System.out.println("doBlockSearch3");
               this.doTreeOpenToConcept(req, res, "parentTree", "Blocks", sCCode, sCCodeDB, sCCodeName, sNodeID);
-       //  System.out.println("doBlockSearch4");  
             }
             else 
             {
@@ -9873,7 +9789,6 @@ System.out.println(" ins " + sMenuAction);
     String acName = (String)req.getParameter("acName");
     if (acName == null || acName.equals("")) acName = "doneSearch";
     Vector vList = new Vector();
-//System.out.println(acName + " ac " + acID);
     if (acID != null && !acID.equals(""))
     {
       if (acName != null && acName.equals("ObjectClass"))
@@ -9883,8 +9798,6 @@ System.out.println(" ins " + sMenuAction);
     }
     req.setAttribute("pageAct", acName);
     req.setAttribute("lstDECResult", vList);
-//    Vector res = (Vector)req.getAttribute("lstDECResult");
-//System.out.println(res.size() + " res " + vList.size());
 
     ForwardJSP(req, res, "/DECDetailWindow.jsp");
   }
@@ -9910,21 +9823,16 @@ System.out.println(" ins " + sMenuAction);
   private void doGetAssociatedAC(HttpServletRequest req, HttpServletResponse res, String assocAC, String sSearchAC)
   throws Exception
   {
-//System.out.println("doGetAssoc assocAC: " + assocAC + " sSearchAC: " + sSearchAC);
      HttpSession session = req.getSession();
      int thisInd = 0;
      //get the searched ID and Name vectors
      Vector vIDs = (Vector)session.getAttribute("SearchID");
-// if(vIDs != null)
-//  System.out.println("doGetAssoc vIDs.size: " + vIDs.size());
      //get the long / names of the selected ac
      Vector vNames = new Vector();     
      if (sSearchAC.equals("DataElementConcept") || sSearchAC.equals("ValueDomain")
         || sSearchAC.equals("ConceptualDomain") || sSearchAC.equals("DataElement"))
      {
        vNames = (Vector)session.getAttribute("SearchLongName");
- // if(vNames != null)
- // System.out.println("doGetAssoc vNames.size: " + vNames.size());
      }
      //PermissibleValue, ClassSchemeItems, ObjectClass, Property
      else
@@ -9940,7 +9848,6 @@ System.out.println(" ins " + sMenuAction);
      Integer curInd = new Integer((String)req.getParameter("hiddenSelectedRow"));
      if (curInd != null)
       thisInd = curInd.intValue();
- //System.out.println("doGetAssoc thisInd: " + thisInd);
      if (vIDs != null && !vIDs.equals("") && vIDs.size()>0 && (thisInd < vIDs.size()))
      {
         sID = (String)vIDs.elementAt(thisInd);
@@ -10040,7 +9947,6 @@ System.out.println(" ins " + sMenuAction);
         String labelWord = "";
         labelWord = " associated with " + oldSearch + " - " + sName;   //make the label
         req.setAttribute("labelKeyword", newSearch + labelWord);   //make the label
-//System.out.println("doGetAssoc oldSearch: " + oldSearch + " sName: " + sName + " newSearch: " + newSearch);
         //save the last word in the request attribute
         session.setAttribute("LastAppendWord", labelWord);
         session.setAttribute("results", vResult);      //store result vector in the attribute
@@ -10100,7 +10006,6 @@ System.out.println(" ins " + sMenuAction);
        EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this); 
        String actType = (String)req.getParameter("actSelected");
        String sComp = (String)req.getParameter("searchComp");
-//System.out.println("doSortBlocks sComp: " + sComp + " actType: " + actType);
        String sSelectedParentCC = (String)req.getParameter("selectedParentConceptCode");
        if(sSelectedParentCC == null) sSelectedParentCC = "";
        String sSelectedParentName = (String)req.getParameter("selectedParentConceptName"); 
@@ -10134,7 +10039,6 @@ System.out.println(" ins " + sMenuAction);
           String sNodeID = (String)req.getParameter("nodeID");
           if(sCCode == null || sCCode.equals(""))
             sCCode = evs.do_getEVSCode(sCCodeName, sCCodeDB);
-//System.out.println("doSortBlocks showConceptInTree sCCode: " + sCCode  + " sCCodeName: " + sCCodeName + " sCCodeDB: " + sCCodeDB);
           if(!sCCode.equals("")) // && !sComp.equals("ParentConcept"))
           {
             if(sCCodeDB.equals("NCI Thesaurus"))  
@@ -10213,7 +10117,6 @@ System.out.println(" ins " + sMenuAction);
   */
   public void clearSessionAttributes(HttpServletRequest req, HttpServletResponse res) throws Exception
   {
-//System.out.println("clearSessionAttributes");
         HttpSession session = req.getSession();
         session.setAttribute("vSearchIDStack", null);
         session.setAttribute("SearchID", null);
@@ -10323,7 +10226,6 @@ System.out.println(" ins " + sMenuAction);
   */
   public void clearCreateSessionAttributes(HttpServletRequest req, HttpServletResponse res) throws Exception
   {
-//System.out.println("clearCreateSessionAttributes");
         HttpSession session = req.getSession();
         //parent concept for the VD
         session.setAttribute("VDParentConcept", new Vector());
@@ -10466,7 +10368,6 @@ System.out.println(" ins " + sMenuAction);
     session.setAttribute("MetaSource", "All Sources");
     
     this.doCollapseAllNodes(req, dtsVocab);    
-  System.out.println("default block " + dtsVocab);
   }
   /**
   * To get the default filter by attributes for the selected Component.

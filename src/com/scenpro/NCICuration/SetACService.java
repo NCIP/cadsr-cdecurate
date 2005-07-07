@@ -97,7 +97,7 @@ public class SetACService implements Serializable
 {
   UtilService m_util = new UtilService();
   NCICurationServlet m_servlet;
-  Logger logger = Logger.getLogger(GetACSearch.class.getName());
+  Logger logger = Logger.getLogger(SetACService.class.getName());
   Vector m_vRetWFS = new Vector();
  /**
   * Instantiate the class
@@ -143,7 +143,7 @@ public class SetACService implements Serializable
       String sOriginAction = (String)session.getAttribute("originAction");
       String sMenu = (String)session.getAttribute("MenuAction");
       String sDDEAction = (String)session.getAttribute("DDEAction");
-System.out.println(sOriginAction + " begin de validate " + sMenu + " de " + sDEAction);
+//System.out.println(sOriginAction + " begin de validate " + sMenu + " de " + sDEAction);
 
       //check edit or create
       if (sDEAction.equals("EditDE"))
@@ -307,7 +307,7 @@ System.out.println(sOriginAction + " begin de validate " + sMenu + " de " + sDEA
 
       // finaly, send vector to JSP
       req.setAttribute("vValidate", vValidate);
-System.out.println(sOriginAction + " end de page values " + sMenu);
+//System.out.println(sOriginAction + " end de page values " + sMenu);
 
   } // end of setValidatePageValues
 
@@ -1212,7 +1212,7 @@ System.out.println(sOriginAction + " end de page values " + sMenu);
             req.setAttribute("retcode", "");
             String sOCasl = m_DEC.getDEC_OBJ_ASL_NAME();
             String newID = "";
-            System.out.println(sOCasl + " create block OC new version here");
+            //System.out.println(sOCasl + " create block OC new version here");
             if (sOCasl != null && !sOCasl.equals("RELEASED"))
             {
               newID = insAC.setOC_PROP_REP_VERSION(objID, "ObjectClass");
@@ -1231,7 +1231,7 @@ System.out.println(sOriginAction + " end de page values " + sMenu);
             req.setAttribute("retcode", "");
             String sPROPasl = m_DEC.getDEC_PROP_ASL_NAME();
             String newID = "";
-            System.out.println(sPROPasl + " create block PROP new version here");
+            //System.out.println(sPROPasl + " create block PROP new version here");
             if (sPROPasl != null && !sPROPasl.equals("RELEASED"))
             {
               newID = insAC.setOC_PROP_REP_VERSION(propID, "Property");
@@ -2770,7 +2770,7 @@ System.out.println(sOriginAction + " end de page values " + sMenu);
     String sOriginAction = (String)session.getAttribute("originAction");
     if (sOriginAction == null) sOriginAction.equals("");
     String sMenu = (String)session.getAttribute("MenuAction");
-System.out.println(sOriginAction + " end de page values " + sMenu);
+//System.out.println(sOriginAction + " end de page values " + sMenu);
       
     //get the selected contexts from the DE bean
     DE_Bean selDE = (DE_Bean)session.getAttribute("m_DE");      
@@ -2978,7 +2978,7 @@ System.out.println(sOriginAction + " end de page values " + sMenu);
       
     //cs-csi relationship
     m_DE = this.setDECSCSIfromPage(req, m_DE);
-System.out.println("end de page values " );
+//System.out.println("end de page values " );
  } // end of setDEValueFromPage
 
 

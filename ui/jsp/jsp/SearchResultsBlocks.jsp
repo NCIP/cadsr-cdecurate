@@ -49,7 +49,6 @@
    }
 
    String sLabelKeyword =  (String)request.getAttribute("labelKeyword");
-//System.out.println("jsp srbl sLabelKeyword: " + sLabelKeyword);
    if (sLabelKeyword == null)
       sLabelKeyword = "";
    if (sKeyword == null)
@@ -60,7 +59,7 @@
       sMAction = "";
   if (sSelAC == null)
       sSelAC = "";
-//System.out.println("jsp srbl sSelAC1: " + sSelAC);
+
   boolean isSelAll = false;
   boolean isEVSvm = true;
   //allow multiple select only for select values from vd page
@@ -95,17 +94,12 @@
      isEVSvm = false;
   }
 
-//System.out.println("jsp srbl2 sSelAC1: " + sSelAC); 
   String strIsQualifier = "false";
-//  if(sSelAC.equals("Rep Qualifier") || sSelAC.equals("Property Qualifier") || 
-//     sSelAC.equals("Object Qualifier") || sSelAC.equals("Qualifier"))
-//        strIsQualifier = "true";
         
   String sUISearchType2 = (String)request.getAttribute("UISearchType");
   if (sUISearchType2 == null || sUISearchType2.equals("nothing") 
   || sUISearchType2.equals("")) 
     sUISearchType2 = "term";
-//System.out.println("jsp srbl sUISearchType2: " + sUISearchType2);
 %>
 
 <SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
@@ -263,7 +257,6 @@ function getSuperConcepts()
         for (int i =0; i < vSelAttr.size(); i++)
         {
           String sAttr = (String)vSelAttr.elementAt(i);
- // System.out.println("srb sAttr: " + sAttr);
           if (sAttr == null || sAttr.equals("Concept Name")) { %>
             <th method="get"><a href="javascript:SetSortType('name')"
               onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">

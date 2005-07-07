@@ -500,7 +500,6 @@ public class InsACService implements Serializable
       m_classReq.setAttribute("retcode", "Exception");
       this.storeStatusMsg("\\t Exception : Unable to update Value Domain attributes.");
     }
- // System.out.println("done setVD");
     return sReturnCode;
   }
 
@@ -689,6 +688,8 @@ public class InsACService implements Serializable
     String ret2 = "";
     try
     {
+      logger.info("getVM " + vm.getVM_SHORT_MEANING());     
+    
         //Create a Callable Statement object.
       sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
       if (sbr_db_conn == null)
@@ -894,6 +895,8 @@ public class InsACService implements Serializable
         {          
           sCondr = vmConcept.getCONDR_IDSEQ();
           sConID = vmConcept.getNCI_CC_VAL();
+        logger.info(sConID + " setVM conid/meaning" + vm.getVM_SHORT_MEANING());     
+
           //create concept this vm has concept attr and no condr id (new concept)
           if (sConID != null && !sConID.equals("") && (sCondr == null || sCondr.equals("")))
             sConIDseq = this.setConcept("INS", sRet, vmConcept);
@@ -960,6 +963,7 @@ public class InsACService implements Serializable
               vm.setVM_END_DATE(CStmt.getString(7));
               vmConcept.setCONDR_IDSEQ(CStmt.getString(12));
               vm.setVM_CONCEPT(vmConcept);
+              logger.info(vmConcept.getNCI_CC_VAL() + " set vm " + vm.getVM_SHORT_MEANING());
               //do the cdvms relationship here itself
               sReturnCode = this.setCDVMS("INS", vm);
             }
@@ -1987,7 +1991,6 @@ public class InsACService implements Serializable
             if(sOCL_IDSEQ == null) sOCL_IDSEQ = "";
             String sOCL_CONDR_IDSEQ = CStmt.getString(21);
             if(sOCL_CONDR_IDSEQ == null) sOCL_CONDR_IDSEQ = "";
-         System.out.println(sOCCondrString + " set oc execute " + sOCL_IDSEQ + " ret " + sReturnCode + " condr " + sOCL_CONDR_IDSEQ + " asl " + CStmt.getString(9));
           // session.setAttribute("newObjectClass", "");
             //store the idseq in the bean
             if(dec != null && (sReturnCode == null || sReturnCode.equals("") || sReturnCode.equals("API_OC_500")))
@@ -2164,7 +2167,6 @@ public class InsACService implements Serializable
             if(sPROPL_IDSEQ == null) sPROPL_IDSEQ = "";
             String sPROPL_CONDR_IDSEQ = CStmt.getString(21);
             if (sPROPL_CONDR_IDSEQ == null) sPROPL_CONDR_IDSEQ = "";
-         System.out.println(sPCCondrString + " set prop execute " + sPROPL_IDSEQ + " ret " + sReturnCode + " condr " + sPROPL_CONDR_IDSEQ + " asl " + CStmt.getString(9));
             if (dec != null && (sReturnCode == null || sReturnCode.equals("") || sReturnCode.equals("API_PROP_500")))
             {
               dec.setDEC_PROPL_IDSEQ(sPROPL_IDSEQ);
@@ -2344,7 +2346,6 @@ public class InsACService implements Serializable
             String sREP_CONDR_IDSEQ = CStmt.getString(21);
             if(sREP_CONDR_IDSEQ == null) sREP_CONDR_IDSEQ = "";
             session.setAttribute("newRepTerm", "");
-  //   System.out.println(sOCCondrString + " set oc execute " + sREP_IDSEQ + " ret " + sReturnCode + " condr " + sREP_CONDR_IDSEQ + " asl " + CStmt.getString(9));
             if(VD != null  && (sReturnCode == null || sReturnCode.equals("") || sReturnCode.equals("API_REP_500")))
             {
               VD.setVD_REP_IDSEQ(sREP_IDSEQ);
@@ -2687,7 +2688,6 @@ public class InsACService implements Serializable
   */
   public String setDE(String sAction, DE_Bean de,  String sInsertFor, DE_Bean oldDE)
   {
- System.out.println("setDE");
     //capture the duration
  //   java.util.Date startDate = new java.util.Date();          
   //  logger.info(m_servlet.getLogMessage(m_classReq, "setDE", "starting set", startDate, startDate));
@@ -2809,7 +2809,6 @@ public class InsACService implements Serializable
         if ((sAction.equals("UPD")) || (sAction.equals("DEL")))
         {
           sDE_ID = de.getDE_DE_IDSEQ();
-   System.out.println("setDE UPD sDE_ID: " + sDE_ID);
           CStmt.setString(3,sDE_ID);
         }
         //make it null for editing released elements
@@ -2843,7 +2842,6 @@ public class InsACService implements Serializable
 
         sDE_ID = CStmt.getString(3);
         sReturnCode = CStmt.getString(1);
-  System.out.println("setDE done UPD sDE_ID: " + sDE_ID + " sReturnCode: " + sReturnCode);
         //store ac name in the status message 
         if (sAction.equals("INS"))
           this.storeStatusMsg("Data Element Name : " + de.getDE_LONG_NAME());
@@ -2973,7 +2971,6 @@ public class InsACService implements Serializable
       m_classReq.setAttribute("retcode", "Exception");
       this.storeStatusMsg("\\t Exception : Unable to update Data Element Attributes");
     }
-//System.out.println("done setDE");
     return sReturnCode;
   }  //end set DE
 
@@ -3137,7 +3134,6 @@ public class InsACService implements Serializable
         boolean bExcuteOk = CStmt.execute();
         sReturnCode = CStmt.getString(3);
         newACID = CStmt.getString(2);
- // System.out.println(acIDseq + ":" + newACID);
         //trim off the extra spaces in it
         if ((sReturnCode == null || sReturnCode.equals("")) && newACID != null && !newACID.equals(""))
            newACID = newACID.trim();
@@ -3325,8 +3321,6 @@ public class InsACService implements Serializable
   */
   public String setDDE(String sP_DE_IDSEQ, String sOverRideAction)
   {
-System.out.println("in setDDE sP_DE_IDSEQ: " + sP_DE_IDSEQ);
-
     //capture the duration
  //   java.util.Date startDate = new java.util.Date();          
  //   logger.info(m_servlet.getLogMessage(m_classReq, "setDDE", "starting set", startDate, startDate));
@@ -3341,17 +3335,15 @@ System.out.println("in setDDE sP_DE_IDSEQ: " + sP_DE_IDSEQ);
     //get DEComp rule... from page
     String sRulesAction = (String)session.getAttribute("sRulesAction");
     String sDDERepType = (String)session.getAttribute("sRepType");
-System.out.println(" setDDE sRulesAction: " + sRulesAction + " sDDERepType: " + sDDERepType); 
     if((sRulesAction == null || sRulesAction.equals("newRule")) && (sDDERepType == null || sDDERepType.length() < 1))
     {
-System.out.println(" setDDE return nada");
+        logger.fatal(" setDDE return nada");
         return "";
     }
 
     String sDDERule = (String)session.getAttribute("sRule");
     String sDDEMethod = (String)session.getAttribute("sMethod");
     String sDDEConcatChar = (String)session.getAttribute("sConcatChar");
-System.out.println(" setDDE sDDERule: " + sDDERule + " sDDEMethod: " + sDDEMethod);
     //get DEComp, DECompID and DECompOrder vector from session, which be set in doUpdateDDEInfo
     Vector vDEComp = new Vector();
     Vector vDECompID = new Vector();
@@ -3365,8 +3357,6 @@ System.out.println(" setDDE sDDERule: " + sDDERule + " sDDEMethod: " + sDDEMetho
     vDECompRelID = (Vector)session.getAttribute("vDECompRelID");
     vDECompDelete = (Vector)session.getAttribute("vDECompDelete");
     vDECompDelName = (Vector)session.getAttribute("vDECompDelName");
-if(vDEComp != null)
-System.out.println(" setDDE vDEComp.size: " + vDEComp.size());
     // put them into DB tables
     try
     {
@@ -3402,18 +3392,15 @@ System.out.println(" setDDE vDEComp.size: " + vDEComp.size());
         CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //cdt_date_modified
         CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //return code
         // Set the In parameters (which are inherited from the PreparedStatement class)
-    System.out.println(" setDDE Set_Complex_DE sAction: " + sAction + " sP_DE_IDSEQ: " + sP_DE_IDSEQ);
         CStmt.setString(1,sAction);              //  action
         CStmt.setString(2,sP_DE_IDSEQ);              //  primary DE idseq
         CStmt.setString(3,sDDEMethod);              // method
         CStmt.setString(4,sDDERule);              //  rule
         CStmt.setString(5,sDDEConcatChar);              //  conca char
         CStmt.setString(6,sDDERepType);              //  rep type
-System.out.println("dde " + sP_DE_IDSEQ + " act " + sAction + " meth " + sDDEMethod + sDDERepType);
          // Now we are ready to call the stored procedure
         bExcuteOk = CStmt.execute();
         sReturnCode = CStmt.getString(11);
-System.out.println(" setDDE Set_Complex_DE sReturnCode: " + sReturnCode);
         //capture the duration
       //  logger.info(m_servlet.getLogMessage(m_classReq, "setDDE", "execute complexDE", startDate, new java.util.Date()));
 
@@ -3455,8 +3442,6 @@ System.out.println(" setDDE Set_Complex_DE sReturnCode: " + sReturnCode);
               }
               if(sOverRideAction.length() > 0)
                   sAction = sOverRideAction;
-   System.out.println(" setDDE Set_CDE_Relationship sAction: " + sAction + " sP_DE_IDSEQ: " + sP_DE_IDSEQ);
-     System.out.println(" setDDE Set_CDE_Relationship sDECompID: " + sDECompID + " sDECompOrder: " + sDECompOrder);        
               CStmt.setString(1,sAction);              //  action
               CStmt.setString(3,sP_DE_IDSEQ);              //  primary DE idseq
               CStmt.setString(4,sDECompID);              // DE Comp ID
@@ -3464,7 +3449,6 @@ System.out.println(" setDDE Set_Complex_DE sReturnCode: " + sReturnCode);
                // Now we are ready to call the stored procedure
               bExcuteOk = CStmt.execute();
               sReturnCode = CStmt.getString(10);
-  System.out.println(" setDDE Set_CDE_Relationship sReturnCode: " + sReturnCode);
               if (sReturnCode != null && !sReturnCode.equals(""))
                 this.storeStatusMsg("\\t " + sReturnCode + " : Unable to update Derived Data Element Component " + sDECompName);              
             }  // end of for
@@ -5075,10 +5059,11 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
        {
         if(evsBean.getEVS_DATABASE().equals("NCI Metathesaurus"))
         {
-         sEvsSource = evsBean.getEVS_DEF_SOURCE();
-         if(sEvsSource == null) sEvsSource = "";
+          sEvsSource = evsBean.getEVS_DEF_SOURCE();
+          if(sEvsSource == null) sEvsSource = "";
           if(sEvsSource.equalsIgnoreCase("NCI-Gloss") || sEvsSource.equalsIgnoreCase("NCI04"))   
-            evsBean = takeThesaurusConcept(evsBean); 
+            evsBean = takeThesaurusConcept(evsBean);
+          logger.info("after takeThes " + evsBean.getNCI_CC_VAL());     
         }
        }
       //return the concept id if the concept alredy exists in caDSR.
@@ -5127,6 +5112,8 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
           CStmt.setString(13, evsBean.getEVS_DEF_SOURCE());
           CStmt.setString(14, evsBean.getNCI_CC_TYPE());
            // Now we are ready to call the stored procedure
+          logger.info("setConcept " + evsBean.getNCI_CC_VAL());     
+
           boolean bExcuteOk = CStmt.execute();
           sReturnCode = CStmt.getString(1);
           conIdseq = CStmt.getString(3);
@@ -5145,7 +5132,6 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
     catch(Exception e)
     {
       logger.fatal("ERROR in InsACService-setConcept for other : " + e.toString());
-      //System.out.println("set concept other " + e);
       m_classReq.setAttribute("retcode", "Exception");
       this.storeStatusMsg("\\t Exception : Unable to update Concept attributes.");
     }
@@ -5214,7 +5200,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
 
         CStmt.setString(2, evsBean.getCON_IDSEQ());       // con idseq
         CStmt.setString(3, evsBean.getNCI_CC_VAL());       // concept code
-     
+      logger.info("getConcept code " + evsBean.getNCI_CC_VAL());     
          // Now we are ready to call the stored procedure
         boolean bExcuteOk = CStmt.execute();
         sCON_IDSEQ = (String)CStmt.getObject(2);

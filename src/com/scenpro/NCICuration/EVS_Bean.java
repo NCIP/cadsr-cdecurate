@@ -3,6 +3,7 @@ package com.scenpro.NCICuration;
 import java.io.*;
 import java.util.*;
 import java.io.Serializable;
+import org.apache.log4j.*;
 
 /**
  * The DEC_Bean encapsulates the DE information and is stored in the
@@ -85,7 +86,10 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-public class EVS_Bean implements Serializable{
+public class EVS_Bean implements Serializable
+{
+  //init the logger
+  Logger logger = Logger.getLogger(EVS_Bean.class.getName());
 
 // attributes
   private String RETURN_CODE;
@@ -700,41 +704,50 @@ public class EVS_Bean implements Serializable{
   String umlsCuiType, String tempCuiType, String CCode, String umlsCuiVal, 
   String tempCuiVal, String dtsVocab, int iLevel, String condr_idseq, String CONTE_IDSEQ, String sConceptSource)
   {
-    String database = dtsVocab;
-    if (definition == null || definition.equals("")) definition = "No Value Exists.";
-    this.setPREFERRED_DEFINITION(definition);
-    source = source.replaceFirst("<def-source>", "");
-    this.setEVS_DEF_SOURCE(source);
-    this.setPREFERRED_NAME(prefName);
-    this.setLONG_NAME(prefName);
-    this.setNCI_CC_TYPE(sAltNameType);
-    this.setUMLS_CUI_TYPE("UMLS_CUI");
-    this.setTEMP_CUI_TYPE("NCI_META_CUI");
-    this.setNCI_CC_VAL(CCode);
-    this.setUMLS_CUI_VAL(umlsCuiVal);
-    this.setTEMP_CUI_VAL(tempCuiVal);
-    if (database != null && database.equals("NCI_Thesaurus")) database = "NCI Thesaurus";
-    else if(database != null && database.equals("MGED_Ontology")) database = "MGED";
-    this.setEVS_DATABASE(database);
-    this.setEVS_ORIGIN(database);
-    this.setDEC_USING("");
-    this.setLEVEL(iLevel);
-    this.setCONDR_IDSEQ(condr_idseq);
-    this.setCONTE_IDSEQ(CONTE_IDSEQ);
-    //store the concept id and type in one property
-    if (CCode == null || CCode.equals("") || CCode.equalsIgnoreCase("No Value Returned."))
+    try
     {
-      if (umlsCuiVal != null && !umlsCuiVal.equals("") && !umlsCuiVal.equalsIgnoreCase("No Value Returned."))
+      String database = dtsVocab;
+      if (definition == null || definition.equals("")) definition = "No Value Exists.";
+      this.setPREFERRED_DEFINITION(definition);
+      if (source != null && !source.equals(""))
+        source = source.replaceFirst("<def-source>", "");
+      this.setEVS_DEF_SOURCE(source);
+      this.setPREFERRED_NAME(prefName);
+      this.setLONG_NAME(prefName);
+      this.setNCI_CC_TYPE(sAltNameType);
+      this.setUMLS_CUI_TYPE("UMLS_CUI");
+      this.setTEMP_CUI_TYPE("NCI_META_CUI");
+      this.setNCI_CC_VAL(CCode);
+      this.setUMLS_CUI_VAL(umlsCuiVal);
+      this.setTEMP_CUI_VAL(tempCuiVal);
+      if (database != null && database.equals("NCI_Thesaurus")) database = "NCI Thesaurus";
+      else if(database != null && database.equals("MGED_Ontology")) database = "MGED";
+      this.setEVS_DATABASE(database);
+      this.setEVS_ORIGIN(database);
+      this.setDEC_USING("");
+      this.setLEVEL(iLevel);
+      this.setCONDR_IDSEQ(condr_idseq);
+      this.setCONTE_IDSEQ(CONTE_IDSEQ);
+      //store the concept id and type in one property
+      if (CCode == null || CCode.equals("") || CCode.equalsIgnoreCase("No Value Returned."))
       {
-        this.setNCI_CC_VAL(umlsCuiVal);
-        this.setNCI_CC_TYPE("UMLS_CUI");
+        if (umlsCuiVal != null && !umlsCuiVal.equals("") && !umlsCuiVal.equalsIgnoreCase("No Value Returned."))
+        {
+          this.setNCI_CC_VAL(umlsCuiVal);
+          this.setNCI_CC_TYPE("UMLS_CUI");
+        }
+        else
+        {
+          this.setNCI_CC_VAL(tempCuiVal);
+          this.setNCI_CC_TYPE("NCI_META_CUI");
+        }
       }
-      else
-      {
-        this.setNCI_CC_VAL(tempCuiVal);
-        this.setNCI_CC_TYPE("NCI_META_CUI");
-      }
+      this.setEVS_CONCEPT_SOURCE(sConceptSource);
     }
-    this.setEVS_CONCEPT_SOURCE(sConceptSource);
+    catch(Exception e)
+    {
+      System.out.println("EVS_Bean.java setEVS " + e.toString());
+      logger.fatal("EVS_Bean.java setEVS " + e.toString());
+    }
   }
 }

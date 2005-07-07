@@ -592,14 +592,12 @@
 <%                  //store selected cs list on load 
                   if (vSelCSIDList != null) 
                   {
-               //     System.out.println("cs size " + vSelCSIDList.size());
                     for (int i = 0; vSelCSIDList.size()>i; i++)
                     {
                       String sCS_ID = (String)vSelCSIDList.elementAt(i);
                       String sCSName = "";
                       if (vSelCSList != null && vSelCSList.size() > i)
                          sCSName = (String)vSelCSList.elementAt(i);
-            //          System.out.println("selected " + sCSName);
 %>
                       <option value="<%=sCS_ID%>"><%=sCSName%></option>
 <%                  }
@@ -835,7 +833,6 @@ This is refilled with ac id from ac-csi to use it for block edit-->
       String sACName = "";
       if (vACName != null && vACName.size() > i)
          sACName = (String)vACName.elementAt(i);
-//      System.out.println("selected " + sACName);
 %>
       <option value="<%=sAC_ID%>"><%=sACName%></option>
 <%  }

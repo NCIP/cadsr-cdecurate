@@ -93,25 +93,13 @@
         var source = opener.document.newDECForm.DECAction.value;
         opener.document.newDECForm.sCompBlocks.value = sComp;
         opener.document.newDECForm.selCompBlockRow.value = selRow;
-      /*  if (sComp == "ObjectClass" && opener.document.newDECForm != null)
-          opener.document.newDECForm.selObjRow.value = selRow;
-        else if (sComp == "PropertyClass" && opener.document.newDECForm != null)
-          opener.document.newDECForm.selPropRow.value = selRow;
-        else if (sComp == "ObjectQualifier" && opener.document.newDECForm != null)
-          opener.document.newDECForm.selObjQRow.value = selRow;
-        else if (sComp == "PropertyQualifier" && opener.document.newDECForm != null)
-          opener.document.newDECForm.selPropQRow.value = selRow; */
         opener.SubmitValidate("UseSelection");
         window.close();
       }
       else if(opener.document.createVDForm != null)
       {
-         opener.document.createVDForm.sCompBlocks.value = sComp;
-         opener.document.createVDForm.selRepRow.value = selRow;
-       /*  if (sComp == "RepTerm" && opener.document.createVDForm != null)
-          opener.document.createVDForm.selRepRow.value = selRow;
-         else if (sComp == "RepQualifier" && opener.document.createVDForm != null)
-          opener.document.createVDForm.selRepQRow.value = selRow; */
+        opener.document.createVDForm.sCompBlocks.value = sComp;
+        opener.document.createVDForm.selRepRow.value = selRow;
         opener.SubmitValidate("UseSelection");
         window.close();
       }
@@ -129,7 +117,6 @@
         
    function ShowUseSelection(vCompAction)
    {
-//alert("showUseSelection sComp: " + sComp);
       if(vCompAction == "BEDisplay") vCompAction = "searchForCreate";
       var LongName = "";
       var PrefName  = "";
@@ -211,7 +198,6 @@
     //opened from create or edit VD form.
     else if ((sComp == "EVSValueMeaning" || sComp == "ParentConceptVM") && opener.document.createVDForm != null)
     {
-//alert("showUseSelection sComp2: " + sComp);
         var sConfirm = false;
         var selRowArray2 = new Array();
         var selRowArray3 = new Array();
@@ -241,8 +227,7 @@
           }
           else
             return;
-        }        
-//  alert("showUseSelection sComp3: " + sComp);   
+        }         
         //store the selrow in an array 
         var selRowArray = new Array();        
         var dCount = document.searchResultsForm.hiddenSelectedRow.length;
@@ -358,6 +343,7 @@ function checkDuplicateConcept()
     }
     return dupNames;
 }
+
 
 //alerts if more than one concept with same name is selected
 function getDuplicateNameArray()
@@ -495,11 +481,16 @@ function getRowNumbersOfUniqueConcepts()
     for (var k=0; k<multiNamesArray.length; k++)
     {
       var index = k;
+      var lastDuplicate = "false";
+      if(k == (multiNamesArray.length-1))
+        lastDuplicate = "true";
       var lastDuplicateFirstRowNo = 0;
       if(k > 0)// Made it all the way through the first duplicate, so now add the right one to array
       {
-        if(foundRightOneNCI == "true")       
-          uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI;
+        if(foundRightOneNCI == "true")
+        {
+          uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI;         
+        }
         else if(foundRightOneNCIGLOSS == "true")    
           uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCIGLOSS;
         else if(foundRightOneNCI04 == "true")    
@@ -511,10 +502,21 @@ function getRowNumbersOfUniqueConcepts()
           lastDuplicateFirstRowNo = firstOneRow - firstDuplicateIndexTracker;
           uniqueRowArray[uniqueRowArray.length] = lastDuplicateFirstRowNo;
         }
-        
+        foundRightOneNCI = "false";
+        foundRightOneNCIGLOSS = "false";
+        foundRightOneNCI04 = "false";
+        foundRightOneNCICB = "false";
+        foundRightRowNoNCI = "";
+        foundRightRowNoNCIGLOSS = "";
+        foundRightRowNoNCI04 = "";
+        foundRightRowNoNCICB = "";
       }
       var dName = multiNamesArray[k];
       var firstDuplicateIndexTracker = -1;
+      foundRightOneNCI = "false";
+      foundRightOneNCIGLOSS = "false";
+      foundRightOneNCI04 = "false";
+      foundRightOneNCICB = "false";
       foundRightRowNo = "";
       foundRightRowNoNCI = "";
       foundRightRowNoNCIGLOSS = "";
@@ -524,11 +526,12 @@ function getRowNumbersOfUniqueConcepts()
       {
         var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
         var rowName = document.searchResultsForm.hiddenName[rowNo].value;  //concept name 
+//alert("dName: " + dName + " rowName: " + rowName + " rowNo: " + rowNo + " foundRightRowNoNCI: " + foundRightRowNoNCI);
         if (dName == rowName)
         {
           firstOneRow = rowNo;
           firstDuplicateIndexTracker++;
-          var sDefSource = document.searchResultsForm.hiddenDefSource[rowNo].value; 
+          var sDefSource = document.searchResultsForm.hiddenDefSource[rowNo].value;        
           if(sDefSource == "NCI")
           {
             foundRightRowNoNCI = rowNo;
@@ -550,31 +553,34 @@ function getRowNumbersOfUniqueConcepts()
             foundRightOneNCICB = "true";
           }
         }
-        else // not a duplicate
-        { 
-          if(k == lastDup) // if the last duplicate has been passed through, add it
-          {
-              if(foundRightOneNCI == "true")        
-                uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI;
-              else if(foundRightOneNCIGLOSS == "true")    
-                uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCIGLOSS;
-              else if(foundRightOneNCI04 == "true")    
-                uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI04;
-              else if(foundRightOneNCICB == "true")    
-                uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCICB;
-              else
-              {
-                lastDuplicateFirstRowNo = firstOneRow - firstDuplicateIndexTracker;
-                uniqueRowArray[uniqueRowArray.length] = lastDuplicateFirstRowNo;
-              }
-              foundRightRowNoNCI = "";
-              foundRightRowNoNCIGLOSS = "";
-              foundRightRowNoNCI04 = "";
-              foundRightRowNoNCICB = "";
-          }
-        }
       }
-    }
+    
+      if(lastDuplicate == "true")// Made it all the way through the first duplicate, so now add the right one to array
+      {
+        if(foundRightOneNCI == "true")
+        {
+          uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI;   
+        }
+        else if(foundRightOneNCIGLOSS == "true")
+        {
+          uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCIGLOSS;       
+        }
+        else if(foundRightOneNCI04 == "true")    
+          uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI04;
+        else if(foundRightOneNCICB == "true")    
+          uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCICB;
+        else
+        {
+          lastDuplicateFirstRowNo = firstOneRow - firstDuplicateIndexTracker;
+          uniqueRowArray[uniqueRowArray.length] = lastDuplicateFirstRowNo;
+        }
+        foundRightRowNoNCI = "";
+        foundRightRowNoNCIGLOSS = "";
+        foundRightRowNoNCI04 = "";
+        foundRightRowNoNCICB = "";
+      }
+      }
+    }  
     // Now add the non-duplicates to array
     for (var p=0; p<dCount; p++)
     {
@@ -588,9 +594,10 @@ function getRowNumbersOfUniqueConcepts()
           isDup = "true"
       }
       if(isDup == "false")
+      {
         uniqueRowArray[uniqueRowArray.length] = rowNo2;
+      }
     }
-  }
   return uniqueRowArray;
 }
 
