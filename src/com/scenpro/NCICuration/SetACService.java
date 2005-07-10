@@ -1366,7 +1366,7 @@ public class SetACService implements Serializable
           vm.setVM_CD_IDSEQ(sCDIDSEQ);
           //check if the meaning exists in the caDSR
           retCode = "";
-          retCode = this.getVM(req, res, vm);
+          retCode = this.getVM(req, res, vm);   // this.getVM(req, res, vm);
           if (retCode != null && !retCode.equals("")) 
           {
             // return no meaning exists in caDSR
@@ -1557,6 +1557,7 @@ public class SetACService implements Serializable
           throws ServletException,IOException, Exception
   {
       HttpSession session = req.getSession();
+      InsACService insAC = new InsACService(req, res, m_servlet);
       Vector vValidate = new Vector();
       String s;
       boolean bMandatory = true;
@@ -1564,16 +1565,18 @@ public class SetACService implements Serializable
       String strInValid = "";
       int iLengthLimit = 30;
       int iNoLengthLimit = -1;
-        s = m_VM.getVM_SHORT_MEANING();
-        if (s == null) s = "";
         req.setAttribute("VMExist", "false");
-        String vmExist = checkVMExists(req, res, s, m_VM.getVM_DESCRIPTION(), m_VM.getVM_CD_IDSEQ());
-        if (vmExist.equals("true"))
+        //check if existnce 
+        m_VM = insAC.getExistingVM(m_VM);
+        String  sRet = m_VM.getRETURN_CODE();
+        if (sRet == null || sRet.equals(""))  //already exists
         {
           strInValid = "Value Meaning exists in caDSR.";
           req.setAttribute("VMExist", "true");
         }
-        InsACService insAC = new InsACService(req, res, m_servlet);
+        s = m_VM.getVM_SHORT_MEANING();
+        if (s == null) s = "";
+        //check if exists in antoher db
         if(!s.equals("") && m_VM != null)
           strInValid = strInValid + checkConceptCodeExistsInOtherDB(null, insAC, m_VM);
         setValPageVector(vValidate, "Value Meaning", s, bMandatory, 2000, strInValid, "");

@@ -121,7 +121,7 @@ function onLoad()
 <body>
 <%
 String errMessage = (String)session.getAttribute("ErrorMessage");
-System.err.println("in ErrorPage!!Body!!! errMessage: " + errMessage); 
+//System.err.println("in ErrorPage!!Body!!! errMessage: " + errMessage); 
 if (errMessage == null) errMessage = "";
 session.setAttribute("ErrorMessage", "");
 

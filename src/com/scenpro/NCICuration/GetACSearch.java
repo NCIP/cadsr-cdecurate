@@ -6711,7 +6711,7 @@ public class GetACSearch implements Serializable
 
         if (vSelAttr.contains("Value")) vResult.addElement(PVBean.getPV_VALUE());
         if (vSelAttr.contains("Value Meaning")) vResult.addElement(PVBean.getPV_SHORT_MEANING());
-        if (vSelAttr.contains("PV Meaning Description")) vResult.addElement(PVBean.getPV_MEANING_DESCRIPTION());
+        if (vSelAttr.contains("Value Meaning Description")) vResult.addElement(PVBean.getPV_MEANING_DESCRIPTION());
         if (vSelAttr.contains("Conceptual Domain")) vResult.addElement(PVBean.getPV_CONCEPTUAL_DOMAIN());
         if (vSelAttr.contains("Effective Begin Date")) vResult.addElement(PVBean.getPV_BEGIN_DATE());
         if (vSelAttr.contains("Effective End Date")) vResult.addElement(PVBean.getPV_END_DATE());
