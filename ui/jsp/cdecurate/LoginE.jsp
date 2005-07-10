@@ -164,7 +164,7 @@ function keypress_handler()
 <%
   String errMessage = (String)session.getAttribute("ErrorMessage");
   if (errMessage == null) errMessage = "";
-System.out.println("LoginE errMessage: " + errMessage);
+//System.out.println("LoginE errMessage: " + errMessage);
  // if (errMessage == "") errMessage = "Problem with login. User name/password may be incorrect, or database connection can not be established.";
   if (errMessage == "java.lang.NullPointerException") errMessage = "NullPointer : Session terminated. Please login again.";
   session.setAttribute("ErrorMessage", "");
@@ -184,7 +184,7 @@ System.out.println("LoginE errMessage: " + errMessage);
   //handle search for create items (de, dec, vd, pv, vm searches)
   String menuAct = (String)session.getAttribute("serMenuAct");
   if (menuAct == null) menuAct = "";
-System.out.println("LoginE reqType: " + reqType + " menuAct: " + menuAct);
+//System.out.println("LoginE reqType: " + reqType + " menuAct: " + menuAct);
   if (menuAct.equals("searchForCreate") && !errMessage.equals(""))
   {
     lstWinOpenReqs.addElement("searchForCreate");

@@ -5884,6 +5884,7 @@ public class NCICurationServlet extends HttpServlet
       String sEVSSearch = (String)session.getAttribute("EVSSearched");
       session.setAttribute("statusMessage", "");
       boolean isSuccessSubmit = false;
+      if (sAction == null) sAction = "";
       if (sAction != null && sAction.equals("reEditPV"))
       {
         session.setAttribute("VMBack", "true");
@@ -5892,27 +5893,26 @@ public class NCICurationServlet extends HttpServlet
       else
       {
         insAC.storeStatusMsg("Value Meaning : " + m_VM.getVM_SHORT_MEANING());
-        m_VM = insAC.getVM(m_VM);
-        //create new one if not exists
-        ret = m_VM.getRETURN_CODE();
-        if (ret != null && !ret.equals(""))
-          ret = insAC.setVM("INS", m_VM);
-        //empty the vmconcept if not continues as evs search
-        if (sEVSSearch == null || sEVSSearch.equals(""))
-        {
-          m_VM.setVM_CONCEPT(new EVS_Bean());
-          ret = (String)req.getAttribute("retcode");
-          if (ret == null || ret.equals(""))  //update cd vm relationship
-            insAC.setCDVMS("INS", m_VM);
-        }
-        else      //call to update vm with evs attributes        
-          ret = insAC.setVM_EVS("UPD", m_VM);
-          
+        //if use the existing just update vm-cd continue
+        if (sAction.equals("useExistVM"))
+          insAC.setCDVMS("INS", m_VM);
+        else
+        { 
+          //call to update vm with evs attributes 
+          if (sEVSSearch != null && sEVSSearch.equals("searched"))
+            ret = insAC.setVM_EVS("INS", m_VM);
+          else     //user entered
+          {
+            m_VM.setVM_CONCEPT(new EVS_Bean());
+            ret = insAC.setVM("INS", m_VM);
+          }
+        }        
         //display success message if no error exists and update pv bean
         String sReturn = (String)req.getAttribute("retcode");
         if (sReturn == null || sReturn.equals(""))
         {
             insAC.storeStatusMsg("\\t Successfully updated Value Meaning Attributes");
+            session.setAttribute("EVSSearched", "");
             PV_Bean m_PV = (PV_Bean)session.getAttribute("m_PV");
             String sName = m_VM.getVM_SHORT_MEANING();
             m_PV.setPV_SHORT_MEANING(sName);
@@ -10261,7 +10261,7 @@ public class NCICurationServlet extends HttpServlet
     {
       vDefaultAttr.addElement("Value");
       vDefaultAttr.addElement("Value Meaning");
-      vDefaultAttr.addElement("PV Meaning Description");
+      vDefaultAttr.addElement("Value Meaning Description");
       vDefaultAttr.addElement("Conceptual Domain");
       vDefaultAttr.addElement("Vocabulary");
     }
@@ -10607,7 +10607,7 @@ public class NCICurationServlet extends HttpServlet
     {
        vCompAtt.addElement("Value");
        vCompAtt.addElement("Value Meaning");
-       vCompAtt.addElement("PV Meaning Description");
+       vCompAtt.addElement("Value Meaning Description");
        vCompAtt.addElement("Conceptual Domain");
        vCompAtt.addElement("Effective Begin Date");
        vCompAtt.addElement("Effective End Date");

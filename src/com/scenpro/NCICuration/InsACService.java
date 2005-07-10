@@ -577,6 +577,7 @@ public class InsACService implements Serializable
     {
         String sValue = pv.getPV_VALUE();
         String sShortMeaning = pv.getPV_SHORT_MEANING();
+  //System.out.println(sAction + " set vm in pv " + sShortMeaning);
         String sMeaningDescription = pv.getPV_MEANING_DESCRIPTION();
         String sBeginDate = pv.getPV_BEGIN_DATE();
         if (sBeginDate == null || sBeginDate.equals(""))
@@ -688,8 +689,6 @@ public class InsACService implements Serializable
     String ret2 = "";
     try
     {
-      logger.info("getVM " + vm.getVM_SHORT_MEANING());     
-    
         //Create a Callable Statement object.
       sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
       if (sbr_db_conn == null)
@@ -711,17 +710,14 @@ public class InsACService implements Serializable
           CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //condr_idseq
           // Set the In parameters (which are inherited from the PreparedStatement class)
           CStmt.setString(2, vm.getVM_SHORT_MEANING());
-
            // Now we are ready to call the stored procedure
           boolean bExcuteOk = CStmt.execute();
           sReturnCode = CStmt.getString(1);
+          vm.setRETURN_CODE(sReturnCode);
+//System.out.println(sReturnCode + " get vm " + vm.getVM_SHORT_MEANING());
           //update vm bean if found
           if (sReturnCode == null || sReturnCode.equals(""))
           {
-            vm.setRETURN_CODE(sReturnCode);
-            vm.setVM_SHORT_MEANING(CStmt.getString(2));
-            vm.setVM_DESCRIPTION(CStmt.getString(3));
-            vm.setVM_COMMENTS(CStmt.getString(4));
             String sCondr = CStmt.getString(11);
             if (sCondr != null && !sCondr.equals(""))
             {
@@ -730,11 +726,19 @@ public class InsACService implements Serializable
               Vector vCon = getAC.getAC_Concepts(sCondr, null, true);
               //get the evs bean from teh vector and store it in vm concept
               if (vCon != null && vCon.size() > 0)
-                vm.setVM_CONCEPT((EVS_Bean)vCon.elementAt(0));
-            }                        
-          }
-          else
-            vm.setRETURN_CODE(sReturnCode);
+              {
+                //get the origin information from the cadsr one and from selected term
+                EVS_Bean vmCon = (EVS_Bean)vCon.elementAt(0);
+                if (vmCon == null) vmCon = new EVS_Bean();
+                vm.setVM_CONCEPT(vmCon);
+              }
+              //update all other attributes
+              vm.setRETURN_CODE(sReturnCode);
+              vm.setVM_SHORT_MEANING(CStmt.getString(2));
+              vm.setVM_DESCRIPTION(CStmt.getString(3));
+              vm.setVM_COMMENTS(CStmt.getString(4));
+            }
+          }            
       }
     }
     catch(Exception e)
@@ -752,6 +756,61 @@ public class InsACService implements Serializable
     {
       logger.fatal("ERROR in InsACService-getVM for close : " + ee.toString());
       sReturnCode = "000";
+    }
+    return vm;
+  }
+ /**
+  * To check a Value Meaing exist in the database for this meaning.
+  * Called from setVDfromPage method.
+  * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
+  * Calls oracle stored procedure
+  *   "{call SBREXT_get_Row.GET_VM(?,?,?,?,?,?,?,?,?,?,?)}" to submit
+  *
+  * @param vm VM Bean.
+  *
+  * @return String return code from the stored procedure call. null if no error occurred.
+  */
+  public VM_Bean getExistingVM(VM_Bean vm)
+  {
+    EVS_Bean evsCon = vm.getVM_CONCEPT();
+    if (evsCon == null) evsCon = new EVS_Bean();
+    String sMean = vm.getVM_SHORT_MEANING();
+    String evsID = evsCon.getNCI_CC_VAL();
+    if (evsID == null) evsID = "";
+    m_classReq.setAttribute("selConcept", evsCon);
+    vm = this.getVM(vm);  //first check if vm with the same concept name exists
+    String sRet = vm.getRETURN_CODE();
+    if (sRet == null || sRet.equals(""))  //yes it exists already
+    {
+      EVS_Bean cadsrCon = vm.getVM_CONCEPT();
+      if (cadsrCon == null) cadsrCon = new EVS_Bean();
+      String sCondr = cadsrCon.getCONDR_IDSEQ();
+      //do the concept info check only if exists
+      if (sCondr != null && !sCondr.equals("") && evsID != null && !evsID.equals(""))
+      {
+        String cadsrID = cadsrCon.getNCI_CC_VAL();
+        if (cadsrID == null) cadsrID = "";
+        String cadsrVocab = cadsrCon.getEVS_DATABASE();
+        if (cadsrVocab == null) cadsrVocab = "";
+        String evsVocab = evsCon.getEVS_DATABASE();
+        if (evsVocab == null) evsVocab = "";
+        //if origin is same as selected, continue with the updates
+  //System.out.println(evsID + " vm id " + cadsrID + " vm origin " + evsVocab + " vm dbOri " + cadsrVocab);
+        //check if the db con and evs con are the same by checking conid and vocabs 
+        String vmMean = "";
+        if (evsID.equalsIgnoreCase(cadsrID) && evsVocab.equalsIgnoreCase(cadsrVocab))
+          return vm;
+        else if (evsID.equalsIgnoreCase(cadsrID))  //only ids are same (diff vocabs)
+          vmMean = sMean + " : " + evsID + " : " + evsVocab;
+        else  //different ids 
+          vmMean = sMean + " : " + evsID;
+        //update vm bean and check it again
+        vm.setVM_SHORT_MEANING(vmMean);  //vm with con id          
+        vm.setVM_CONCEPT(evsCon);  //reset to evs con
+        vm.setVM_DESCRIPTION(evsCon.getPREFERRED_DEFINITION());
+        vm.setVM_COMMENTS(evsID + " : " + evsVocab);
+        this.getVM(vm);  //call to check if another vm with this origin existed               
+      }        
     }
     return vm;
   }
@@ -877,25 +936,27 @@ public class InsACService implements Serializable
     try
     {
         String sConID = "", sConIDseq = "", sRet = "", sCondr = "";
+        EVS_Bean oldCon = vm.getVM_CONCEPT();
         //check if it already exists for the evs vm and mark it as update if exists.
         if (sAction == null || !sAction.equals("UPD"))
         {
-          vm = this.getVM(vm);
+          m_classReq.setAttribute("selConcept", vm.getVM_CONCEPT());
+          vm = this.getExistingVM(vm);
           sRet = vm.getRETURN_CODE();
-          if (sRet == null || sRet.equals("")) sAction = "UPD";          
+          if (sRet == null || sRet.equals("")) 
+            sAction = "UPD";  
+          else
+            sAction = "INS";
         }
         //store vm attributes
-        String sComments = vm.getVM_COMMENTS();
         String sShortMeaning = vm.getVM_SHORT_MEANING();
-        String sMeaningDescription = vm.getVM_DESCRIPTION();
-        String sBeginDate = m_util.getOracleDate(vm.getVM_BEGIN_DATE());
-        String sEndDate = m_util.getOracleDate(vm.getVM_END_DATE());
         EVS_Bean vmConcept = (EVS_Bean)vm.getVM_CONCEPT();
+        String conName = vmConcept.getLONG_NAME();
         if (vmConcept != null)
         {          
           sCondr = vmConcept.getCONDR_IDSEQ();
           sConID = vmConcept.getNCI_CC_VAL();
-        logger.info(sConID + " setVM conid/meaning" + vm.getVM_SHORT_MEANING());     
+        //System.out.println(sConID + " setVM conid/meaning" + sShortMeaning + " condr " + sCondr);     
 
           //create concept this vm has concept attr and no condr id (new concept)
           if (sConID != null && !sConID.equals("") && (sCondr == null || sCondr.equals("")))
@@ -903,23 +964,46 @@ public class InsACService implements Serializable
           //only update the cd vm relationship since condr exists already.
           else if (sAction.equals("UPD"))
           {
+            //check if it is valid condr (concept-vm relationship)
+           /* String conID = vmConcept.getNCI_CC_VAL();
+            String oldName = oldCon.getLONG_NAME();
+            String oldID = oldCon.getNCI_CC_VAL();
+            //same concept but different IDs lead to different concept-vm relationship
+            if (conName.equalsIgnoreCase(oldName) && !conID.equalsIgnoreCase(oldID))
+            {              
+              String conMsg = "\\tError: Unable to add Value Meaning " + sShortMeaning + 
+                " with Concept Code " + oldID + "\\n\\t to the Value Domain because another Concept Name " + 
+                conName + "\\n\\t with the different Concept Code " + sConID + " exists in caDSR database." +
+                "\\n\\t Please contact NCICB Applications Support at http://ncicbsupport.nci.nih.gov/sw/\\n";
+              this.storeStatusMsg(conMsg);
+              logger.fatal(conMsg);
+              m_classReq.setAttribute("retcode", "vmError");
+              m_classReq.setAttribute("pvvmError", "vmError");  //store it capture check for pv creation
+              return "vmError";
+            }  */
             //just do the cdvms relationship
             sRet = this.setCDVMS("INS", vm);
             return "";
           }
           //throw error message if valuemeaning and concept name are same 
-          String conName = vmConcept.getLONG_NAME();
-          if (!sShortMeaning.equalsIgnoreCase(conName))
+       /*   if (!sShortMeaning.equalsIgnoreCase(conName))
           {
-            this.storeStatusMsg("\\tError: Unable to add Value Meaning " + sShortMeaning + 
+            String conMsg = "\\tError: Unable to add Value Meaning " + sShortMeaning + 
               "\\n\\t to the Value Domain because another Concept Name " + conName + 
               "\\n\\t with the same Concept Code " + sConID + " exists in caDSR database." +
-              "\\n\\t Please contact NCICB Applications Support at http://ncicbsupport.nci.nih.gov/sw/\\n");
+              "\\n\\t Please contact NCICB Applications Support at http://ncicbsupport.nci.nih.gov/sw/\\n";
+            this.storeStatusMsg(conMsg);
+            logger.fatal(conMsg);
             m_classReq.setAttribute("retcode", "vmError");
             m_classReq.setAttribute("pvvmError", "vmError");  //store it capture check for pv creation
             return "vmError";
-          }
+          } */
         }
+        //get vm attributes
+        String sComments = vm.getVM_COMMENTS();
+        String sMeaningDescription = vm.getVM_DESCRIPTION();
+        String sBeginDate = m_util.getOracleDate(vm.getVM_BEGIN_DATE());
+        String sEndDate = m_util.getOracleDate(vm.getVM_END_DATE());
           //Create a Callable Statement object.
           sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
           if (sbr_db_conn == null)
@@ -942,8 +1026,7 @@ public class InsACService implements Serializable
             // Set the In parameters (which are inherited from the PreparedStatement class)
             CStmt.setString(1, sConIDseq);
             //set value meaning if action is to update
-            if (sAction.equals("UPD"))
-              CStmt.setString(3, sShortMeaning);
+            CStmt.setString(3, sShortMeaning);
              // Now we are ready to call the stored procedure
             boolean bExcuteOk = CStmt.execute();
             sReturnCode = CStmt.getString(2);
@@ -963,7 +1046,6 @@ public class InsACService implements Serializable
               vm.setVM_END_DATE(CStmt.getString(7));
               vmConcept.setCONDR_IDSEQ(CStmt.getString(12));
               vm.setVM_CONCEPT(vmConcept);
-              logger.info(vmConcept.getNCI_CC_VAL() + " set vm " + vm.getVM_SHORT_MEANING());
               //do the cdvms relationship here itself
               sReturnCode = this.setCDVMS("INS", vm);
             }
@@ -1099,10 +1181,8 @@ public class InsACService implements Serializable
     String sReturnCode = "";
     try
     {
-      //Vector vPV = (Vector)session.getAttribute("PVIDList");
       Vector vVDPVS = (Vector)session.getAttribute("VDPVList");     //("serVDPVSID");
       if (vVDPVS == null) vVDPVS = new Vector();
-      //if (vPV == null) vPV = new Vector();
       //insert or update vdpvs relationship
       String ret = "";
       for (int j=0; j<vVDPVS.size(); j++)
@@ -1170,7 +1250,6 @@ public class InsACService implements Serializable
           }
         }  //end loop
         session.setAttribute("VDPVList", vVDPVS);
-        //session.setAttribute("PVIDList", vPV);
         sReturnCode = (String)m_classReq.getAttribute("retcode");
     }
     catch(Exception e)
@@ -5200,11 +5279,11 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
 
         CStmt.setString(2, evsBean.getCON_IDSEQ());       // con idseq
         CStmt.setString(3, evsBean.getNCI_CC_VAL());       // concept code
-      logger.info("getConcept code " + evsBean.getNCI_CC_VAL());     
          // Now we are ready to call the stored procedure
         boolean bExcuteOk = CStmt.execute();
         sCON_IDSEQ = (String)CStmt.getObject(2);
         evsBean.setCON_IDSEQ(sCON_IDSEQ);
+      logger.info(sCON_IDSEQ + " getConcept code " + evsBean.getNCI_CC_VAL());     
         sReturn = (String)CStmt.getObject(1);
         if (sReturn == null || sReturn.equals(""))
         {

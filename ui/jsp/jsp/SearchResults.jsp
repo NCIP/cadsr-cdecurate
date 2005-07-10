@@ -828,10 +828,10 @@ var SelectAllOn = <%=sSelectAll%>;
             <th method="get"><a href="javascript:SetSortType('meaning')"
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
               Value Meaning</a></th>
-<%        } else if (sAttr.equals("PV Meaning Description")) { %>
+<%        } else if (sAttr.equals("Value Meaning Description")) { %>
             <th method="get"><a href="javascript:SetSortType('MeanDesc')"
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Permissible Value Meaning Description</a></th>
+              Value Meaning Description</a></th>
 <%        } else if (sAttr.equals("Meaning Description")) { %>
             <th method="get"><a href="javascript:SetSortType('MeanDesc')"
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
