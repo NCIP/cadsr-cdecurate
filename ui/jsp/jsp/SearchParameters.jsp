@@ -122,9 +122,11 @@
   sProtoKeyword = sProtoKeyword.trim();
   //System.out.println("check vcontext");
   //get the search result records
+  String sBack =  (String)session.getAttribute("backFromGetAssociated");
+  if (sBack == null) sBack = "";
   Vector vSerResult = (Vector)session.getAttribute("results");
   boolean hasRecords = false;
-  if (vSerResult != null && vSerResult.size() >0) hasRecords = true;
+  if ((vSerResult != null && vSerResult.size() >0) || sBack.equals("backFromGetAssociated")) hasRecords = true;
   String updFunction = "displayAttributes('" + hasRecords + "');";
     
   if (vContext == null) vContext = new Vector();   
