@@ -801,14 +801,14 @@ public class InsACService implements Serializable
         if (evsID.equalsIgnoreCase(cadsrID) && evsVocab.equalsIgnoreCase(cadsrVocab))
           return vm;
         else if (evsID.equalsIgnoreCase(cadsrID))  //only ids are same (diff vocabs)
-          vmMean = sMean + " : " + evsID + " : " + evsVocab;
+          vmMean = sMean + ": " + evsID + ": " + evsVocab;
         else  //different ids 
-          vmMean = sMean + " : " + evsID;
+          vmMean = sMean + ": " + evsID;
         //update vm bean and check it again
         vm.setVM_SHORT_MEANING(vmMean);  //vm with con id          
         vm.setVM_CONCEPT(evsCon);  //reset to evs con
         vm.setVM_DESCRIPTION(evsCon.getPREFERRED_DEFINITION());
-        vm.setVM_COMMENTS(evsID + " : " + evsVocab);
+        vm.setVM_COMMENTS(evsID + ": " + evsVocab);
         this.getVM(vm);  //call to check if another vm with this origin existed               
       }        
     }
@@ -960,7 +960,11 @@ public class InsACService implements Serializable
 
           //create concept this vm has concept attr and no condr id (new concept)
           if (sConID != null && !sConID.equals("") && (sCondr == null || sCondr.equals("")))
+          {
             sConIDseq = this.setConcept("INS", sRet, vmConcept);
+  System.out.println("setVM_EVS sConIDseq: " + sConIDseq);
+  System.out.println("setVM_EVS sShortMeaning: " + sShortMeaning);
+          }
           //only update the cd vm relationship since condr exists already.
           else if (sAction.equals("UPD"))
           {
@@ -5200,7 +5204,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
           if (sReturnCode != null)
           {
             this.storeStatusMsg("\\t " + sReturnCode + " : Unable to update Concept attributes - " 
-                + evsBean.getNCI_CC_VAL() + " : " + evsBean.getLONG_NAME() + ".");
+                + evsBean.getNCI_CC_VAL() + ": " + evsBean.getLONG_NAME() + ".");
             m_classReq.setAttribute("retcode", sReturnCode);      //store returncode in request to track it all through this request    
           }
         }

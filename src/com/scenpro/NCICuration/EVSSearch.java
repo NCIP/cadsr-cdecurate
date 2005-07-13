@@ -256,6 +256,8 @@ public class EVSSearch implements Serializable
     //   m_EVS_CONNECT = "http://cbioqatest501.nci.nih.gov:8080/cacore30/server/HTTPServer";  //3.0.1
     //     m_EVS_CONNECT = "http://cbioqatest501.nci.nih.gov:8080/cacoreevs301/server/HTTPServer";  // new 3.0.1
       //   "http://cbioqa601.nci.nih.gov:29080/cacore301hql/server/HTTPServer"
+      // http://cabio-stage.nci.nih.gov/cacore30/server/HTTPServer
+
       
     ApplicationService evsService =
     ApplicationService.getRemoteInstance(m_servlet.m_EVS_CONNECT);

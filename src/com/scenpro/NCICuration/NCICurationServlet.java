@@ -380,7 +380,7 @@ public class NCICurationServlet extends HttpServlet
     try
     {
       String reqType = req.getParameter("reqType");
-      logger.info("servlet reqType!: "+ reqType);  //log the request
+   //   logger.info("servlet reqType!: "+ reqType);  //log the request
       req.setAttribute("LatestReqType", reqType);  
       if (reqType != null)
       {
@@ -948,6 +948,7 @@ public class NCICurationServlet extends HttpServlet
         {
             sVocab = (Source)vocabs.get(i);
             vocab = (String)sVocab.getAbbreviation();
+//  System.out.println("vocab: " + vocab);
             if(vocab.length()>4 && vocab.substring(0,5).equalsIgnoreCase("NCI_T"))
             {
               m_VOCAB_NCI = vocab;
@@ -2278,7 +2279,7 @@ public class NCICurationServlet extends HttpServlet
               vmBean.setVM_CONCEPT(eBean);
               //get the proper vm comments
               String vmComments = sCon;
-              if (!vmComments.equals("")) vmComments += " : ";
+              if (!vmComments.equals("")) vmComments += ": ";
               if (eBean.getEVS_ORIGIN() != null) vmComments += eBean.getEVS_ORIGIN();
               vmBean.setVM_COMMENTS(vmComments);
               session.setAttribute("EVSSearched", "searched");  //store evs or not
