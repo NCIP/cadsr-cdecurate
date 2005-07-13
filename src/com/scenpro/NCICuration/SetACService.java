@@ -2998,7 +2998,7 @@ public class SetACService implements Serializable
   public void setDECValueFromPage(HttpServletRequest req,
           HttpServletResponse res, DEC_Bean m_DEC) throws ServletException,IOException
   {
- System.err.println("in setDECVals");
+// System.err.println("in setDECVals");
       HttpSession session = req.getSession();
       String sOriginAction = (String)session.getAttribute("originAction");
       if (sOriginAction == null) sOriginAction.equals("");
@@ -3038,7 +3038,7 @@ public class SetACService implements Serializable
       if(s != null)
         m_DEC.setDEC_PROPL_NAME(s);
         
- System.err.println("in setDECVals2");
+// System.err.println("in setDECVals2");
       sName = "";
       if(sOriginAction.equals("BlockEditDEC"))
         sName = "";
@@ -4122,9 +4122,10 @@ public class SetACService implements Serializable
    {
         HttpSession session = req.getSession(); 
         String strInvalid = "";
+        String strVMInvalid = "";
         //get current value domains vd-pv attributes
         Vector vVDPVS = (Vector)session.getAttribute("VDPVList");  
-        
+        InsACService insAC = new InsACService(req, res, m_servlet);
         String vdID = m_VD.getVD_VD_IDSEQ();
         //remove vdidseq if new vd
         if (vdID == null || sOriginAction.equalsIgnoreCase("newVD")) vdID = "";
@@ -4163,18 +4164,30 @@ public class SetACService implements Serializable
               }
               sPVVal += thisPV.getPV_VALUE();
               sPVMean += thisPV.getPV_SHORT_MEANING();              
+              //check if same identifier exists in other vocab 
+              EVS_Bean vmCon = thisPV.getVM_CONCEPT();
+              if (vmCon != null && (vmCon.getCONDR_IDSEQ() == null || vmCon.getCONDR_IDSEQ().equals("")))  //not exists in caDSR already
+              {
+                String sRet = "";
+                String sValid = insAC.getConcept(sRet, vmCon, true);
+                if (sValid != null && sValid.indexOf("Another") > -1)
+                  strVMInvalid += vmCon.getLONG_NAME() + " - " + vmCon.getNCI_CC_VAL() + ",\n";
+              }
             }
           }
           if (isChanged)
             session.setAttribute("VDPVList", vVDPVS);           
         }
-
+        //append the error message with the evs term info
+        if (strVMInvalid != null && !strVMInvalid.equals(""))
+          strVMInvalid = "The following Concepts with the same Concept ID, but different Vocabulary exists in caDSR.\n" + strVMInvalid;
+          
         String s = m_VD.getVD_TYPE_FLAG();
         if (s == null) s = "";
         if (s.equals("E"))
         {
             setValPageVector(vValidate, "Values", sPVVal, true, -1, strInvalid, sOriginAction);
-            setValPageVector(vValidate, "Value Meanings", sPVMean, true, -1, "", sOriginAction);
+            setValPageVector(vValidate, "Value Meanings", sPVMean, true, -1, strVMInvalid, sOriginAction);
         }
         return vValidate;
    }    //end validateVDPVS
