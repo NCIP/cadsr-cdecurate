@@ -962,8 +962,8 @@ public class InsACService implements Serializable
           if (sConID != null && !sConID.equals("") && (sCondr == null || sCondr.equals("")))
           {
             sConIDseq = this.setConcept("INS", sRet, vmConcept);
-  System.out.println("setVM_EVS sConIDseq: " + sConIDseq);
-  System.out.println("setVM_EVS sShortMeaning: " + sShortMeaning);
+ // System.out.println("setVM_EVS sConIDseq: " + sConIDseq);
+ // System.out.println("setVM_EVS sShortMeaning: " + sShortMeaning);
           }
           //only update the cd vm relationship since condr exists already.
           else if (sAction.equals("UPD"))
@@ -3446,6 +3446,7 @@ public class InsACService implements Serializable
       //Create a Callable Statement object.
       sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
       //set DDE info
+//  System.out.println(vDECompDelete.isEmpty() + " before complex " + sRulesAction + " action " + sOverRideAction + " type " + sDDERepType);
       if (sbr_db_conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
@@ -3453,7 +3454,7 @@ public class InsACService implements Serializable
         // call Set_Complex_DE to ins/upd/del rules
         if(sRulesAction.equals("existedRule"))
         {
-            if(sDDERepType.length() < 1)   // existed rule be deleted
+            if(sDDERepType == null || sDDERepType.length() < 1)   // existed rule be deleted
             {
               sAction = "DEL";              //  action
               if(!vDECompDelete.isEmpty())
@@ -3491,8 +3492,9 @@ public class InsACService implements Serializable
         if (sReturnCode != null && !sReturnCode.equals(""))
           this.storeStatusMsg("\\t " + sReturnCode + " : Unable to update Derived Data Element attributes");
         // call Set_CDE_Relationship for DEComps
-       // check if any DEComp removed
-        if(!vDECompDelete.isEmpty())
+       // check if any DEComp removed (only for de updates) commented by sumana 7/14/05)
+ // System.out.println(vDECompDelete.isEmpty() + " before delete " + sRulesAction);
+        if(!vDECompDelete.isEmpty() && sRulesAction.equals("existedRule"))
           deleteDEComp(sbr_db_conn, session, vDECompDelete, vDECompDelName);
         // insert or update DEComp
         if(!vDEComp.isEmpty())
@@ -3516,7 +3518,7 @@ public class InsACService implements Serializable
               String sDECompOrder = (String)vDECompOrder.elementAt(i);
               String sDECompRelID = (String)vDECompRelID.elementAt(i);
               // Set the In parameters (which are inherited from the PreparedStatement class)
-              if(sDECompRelID.equals("newDEComp"))
+              if(sDECompRelID.equals("newDEComp") || sRulesAction.equals("newRule"))  //insert if new rule
                   sAction = "INS";              //  action
               else
               {
@@ -3598,6 +3600,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
             // Set the In parameters (which are inherited from the PreparedStatement class)
             CStmt.setString(1,"DEL");              //  action
             CStmt.setString(2,sDECompDeleteID);              //  Complex DE Relationship idseq, key field
+  //    System.out.println(" dde id " + sDECompDeleteID);
             CStmt.setString(3,"");              //  primary DE idseq
             CStmt.setString(4,"");              // DE Comp ID
             CStmt.setString(5,"");              //  DE Comp Order

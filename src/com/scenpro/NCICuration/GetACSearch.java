@@ -4635,7 +4635,8 @@ public class GetACSearch implements Serializable
              
       if (!sAction.equals("BlockEdit") && !sAction.equals("EditDesDE"))      
         getDDEInfo(DEBean.getDE_DE_IDSEQ());  // get DDE info and set them to session
-
+      if (sMenu.equals("NewDETemplate") || sMenu.equals("NewDEVersion"))
+        session.setAttribute("sRulesAction", "newRule");   //reset to new rule
       //make some attributes to default/empty if NUE
       if (sMenu.equals("NewDETemplate") || sAction.equals("Template"))
       {
