@@ -1137,9 +1137,12 @@ public class NCICurationServlet extends HttpServlet
       session.setAttribute("DEAction", sSubAction);
       String sButtonPressed = (String)session.getAttribute("LastMenuButtonPressed");
       String sOriginAction = (String)session.getAttribute("originAction");
+      if (sOriginAction == null) sOriginAction = "";
       // save DDE info every case except back from DEComp
       String ddeType = (String)req.getParameter("selRepType");
-      if (ddeType != null && !ddeType.equals(""))
+      String oldDDEType = (String)session.getAttribute("sRepType");
+      //update the dde info if new one or if old one if not block edit
+      if (!sOriginAction.equals("BlockEditDE") && ((ddeType != null && !ddeType.equals("")) || (oldDDEType != null && !oldDDEType.equals(""))))
         doUpdateDDEInfo(req, res);
       if(sPageAction.equals("submit"))
           doSubmitDE(req, res);
@@ -7704,6 +7707,7 @@ public class NCICurationServlet extends HttpServlet
               String sDECompDelName = sDECompDelNames[i];
               vDECompDelete.addElement(sDECompDelete);
               vDECompDelName.addElement(sDECompDelName);
+       // System.out.println(sDECompDelName + " updte dde info " + sDECompDelete);
           }
         }
         // save it to session
