@@ -732,12 +732,12 @@ public class InsACService implements Serializable
                 if (vmCon == null) vmCon = new EVS_Bean();
                 vm.setVM_CONCEPT(vmCon);
               }
-              //update all other attributes
-              vm.setRETURN_CODE(sReturnCode);
-              vm.setVM_SHORT_MEANING(CStmt.getString(2));
-              vm.setVM_DESCRIPTION(CStmt.getString(3));
-              vm.setVM_COMMENTS(CStmt.getString(4));
             }
+            //update all other attributes
+            //vm.setRETURN_CODE(sReturnCode);
+            vm.setVM_SHORT_MEANING(CStmt.getString(2));
+            vm.setVM_DESCRIPTION(CStmt.getString(3));
+            vm.setVM_COMMENTS(CStmt.getString(4));
           }            
       }
     }
@@ -795,7 +795,7 @@ public class InsACService implements Serializable
         String evsVocab = evsCon.getEVS_DATABASE();
         if (evsVocab == null) evsVocab = "";
         //if origin is same as selected, continue with the updates
-  //System.out.println(evsID + " vm id " + cadsrID + " vm origin " + evsVocab + " vm dbOri " + cadsrVocab);
+ // System.out.println(evsID + " vm id " + cadsrID + " vm origin " + evsVocab + " vm dbOri " + cadsrVocab);
         //check if the db con and evs con are the same by checking conid and vocabs 
         String vmMean = "";
         if (evsID.equalsIgnoreCase(cadsrID) && evsVocab.equalsIgnoreCase(cadsrVocab))
