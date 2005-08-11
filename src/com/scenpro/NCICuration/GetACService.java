@@ -98,6 +98,7 @@ public class GetACService implements Serializable
 {
   Connection m_sbr_db_conn = null;
   NCICurationServlet m_servlet;
+  UtilService m_util = new UtilService();
   HttpServletRequest m_classReq = null;
   HttpServletResponse m_classRes = null;
   Logger logger = Logger.getLogger(GetACService.class.getName());
@@ -684,6 +685,7 @@ public class GetACService implements Serializable
            {
                String csName = (String)vList.elementAt(i);
                String csContext = (String)vContextList.elementAt(i);
+               csName = m_util.removeNewLineChar(csName);   //remove the new line char here itself
                vList.setElementAt(csName + " - " + csContext, i);
            }
     }
@@ -711,6 +713,18 @@ public class GetACService implements Serializable
     {
         String sAPI = "{call SBREXT_CDE_CURATOR_PKG.get_class_scheme_items_list(?)}";
         getDataListStoreProcedure(vIDList, vList, null, null, sAPI, "", "", 1);
+        if (vList != null && vList.size() > 0)
+        {
+          for (int i = 0; i < vList.size(); i++)
+          {
+            String csiName = (String)vList.elementAt(i);
+            if (csiName != null && !csiName.equals(""))
+            {
+              csiName = m_util.removeNewLineChar(csiName);
+              vList.setElementAt(csiName, i);
+            }
+          }
+        }
     }
     catch(Exception e)
     {
@@ -792,9 +806,13 @@ public class GetACService implements Serializable
             CSIBean.setP_CSCSI_IDSEQ(rs.getString("p_cs_csi_idseq"));
             CSIBean.setCSI_DISPLAY_ORDER(rs.getString("display_order"));
             CSIBean.setCSI_LABEL(rs.getString("label"));
-            CSIBean.setCSI_CS_NAME(rs.getString("cs_name"));
-            CSIBean.setCSI_CS_LONG_NAME(rs.getString("cs_name"));
-            CSIBean.setCSI_NAME(rs.getString("csi_name"));
+            String csName = rs.getString("cs_name");
+            csName = m_util.removeNewLineChar(csName);
+            CSIBean.setCSI_CS_NAME(csName);
+            CSIBean.setCSI_CS_LONG_NAME(csName);
+            String csiName = rs.getString("csi_name");
+            csiName = m_util.removeNewLineChar(csiName);
+            CSIBean.setCSI_NAME(csiName);
             CSIBean.setCSI_LEVEL(rs.getString("level"));
 
             vList.addElement(CSIBean);  //add the bean to a vector

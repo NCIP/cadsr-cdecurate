@@ -29,6 +29,7 @@
     String sMenuAction = (String)session.getAttribute("MenuAction");
     String sOriginAction = (String)session.getAttribute("originAction");
     String sDDEAction = (String)session.getAttribute("DDEAction");
+    if (sDDEAction == null) sDDEAction = "";
     DE_Bean m_DE = new DE_Bean();
     m_DE = (DE_Bean)session.getAttribute("m_DE");
     if (m_DE == null) m_DE = new DE_Bean();
@@ -302,7 +303,7 @@
         <input type="button" name="btnBack" value="Back" style="width: 125", "height: 30" onClick="Back();"> 
           &nbsp;&nbsp;
         <% } %>
-<%if (sMenuAction.equals("NewDEVersion")) {%>
+<%if (sMenuAction.equals("NewDEVersion") && !sDDEAction.equals("CreateNewDEFComp")) {%>
         <input type="button" name="btnAltName" value="Alternate Names" style="width: 125", "height: 30" onClick="openAltNameWindow();"
 				onHelp = "showHelp('Help_Updates.html#newCDEForm_altNames'); return false">
           &nbsp;&nbsp;
@@ -674,7 +675,7 @@
     </tr>
     <tr height="25" valign="bottom"> 
       <td align=right><font color="#FF0000">*</font><%=item++%>)</td>
-      <td colspan=3><font color="#FF0000">Select</font> Representation Type</td>
+      <td colspan=3><font color="#FF0000">Select</font> Derivation Type</td>
     </tr>
     <tr>
       <td>&nbsp;</td>
@@ -697,7 +698,7 @@
     <tr>
       <td>&nbsp;</td>
       <td height="35" valign="top" colspan=3>
-        <textarea name="DDERule" cols="69" disabled
+        <textarea name="DDERule" cols="69"
           onHelp = "showHelp('Help_CreateDE.html#newCDEForm_DDERule'); return false" rows="2"><%=sSelRule%></textarea>
       </td>
     </tr>
@@ -708,7 +709,7 @@
     <tr>
       <td>&nbsp;</td>
       <td height="35" valign="top" colspan=3>
-        <textarea name="DDEMethod" cols="69" disabled
+        <textarea name="DDEMethod" cols="69"
           onHelp = "showHelp('Help_CreateDE.html#newCDEForm_DDEMethod'); return false" rows="2"><%=sSelMethod%></textarea>
       </td>
     </tr>
@@ -719,7 +720,7 @@
     <tr>
       <td>&nbsp;</td>
       <td valign="top" colspan=3 > <input name="DDEConcatChar" type="text" value="<%=sSelConcatChar%>" size="5" maxlength=1
-          onHelp = "showHelp('Help_CreateDE.html#newCDEForm_DDEConcatChar'); return false" disabled></td>
+          onHelp = "showHelp('Help_CreateDE.html#newCDEForm_DDEConcatChar'); return false"></td>
     </tr>
     
   <!--<table width=70% border="0">
@@ -855,7 +856,7 @@ displayStatusMessage();
 loadCSCSI();
 changeCountPN();
 changeCountLN();
-changeRepType('init');
+//changeRepType('init');
 </script>
 </form>
 </body>

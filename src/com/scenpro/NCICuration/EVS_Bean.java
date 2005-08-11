@@ -10,7 +10,7 @@ import org.apache.log4j.*;
  * session after the user has created a new Data Element Concept.
  * <P>
  * @author Tom Phillips
- * @version 3.0
+ * @version 3.0.1
  */
 
  /*

@@ -836,6 +836,10 @@ var SelectAllOn = <%=sSelectAll%>;
             <th method="get"><a href="javascript:SetSortType('MeanDesc')"
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
               Value Meaning Description</a></th>
+<%        }   else if (sAttr == null || sAttr.equals("caDSR Component")) { %>
+            <th method="get"><a href="javascript:SetSortType('cadsrComp')"
+              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
+              caDSR Component</a></th>
 <%        } else if (sAttr.equals("Vocabulary")) { %>
             <th method="get"><a href="javascript:SetSortType('database')"
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">

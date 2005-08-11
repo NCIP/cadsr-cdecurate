@@ -204,10 +204,13 @@
         var multiNames = checkDuplicateConcept();
         if (multiNames != null && multiNames != "")
         {
-          sConfirm = confirm("Duplicate Concept Names are selected. \n" + multiNames 
-                + "\n Click OK: Default definition - NCI source will be selected. \n"
-                + " If no NCI definition is present, the first definition associated with the Concept will be used. \n"
-                + " Click CANCEL to go back and manually de-select the unwanted duplicates.");
+          sConfirm = confirm("Duplicate Concept Names are selected either because they have " 
+                + "multiple definitions \nor they are contained in multiple hierachical " 
+                + "locations within their source vocabulory.\n\n" 
+                + "Click OK: Default definition - NCI source will be selected. \n"
+                + "If no NCI definition is present, the first definition associated with the Concept will be used. \n\n"
+                + "Click CANCEL to go back and manually de-select the unwanted duplicates.\n\n" 
+                + "Duplicate Concepts : \n\t" + multiNames);
 
           if (sConfirm == true)
           {
@@ -330,7 +333,9 @@ function checkDuplicateConcept()
             if (dupExists == false)
             {
               dupNameArray[dupNameArray.length] = rowName;
-              dupNames = dupNames + rowName + "\n";  //add to name list
+              //cut off the list of names to be displayed if more than 30 numbers to fit it within the window
+              if (dupNameArray.length < 31)
+                dupNames = dupNames + rowName + "\n\t";  //add to name list
             }
             isMatch = true;
             break;
@@ -341,6 +346,10 @@ function checkDuplicateConcept()
       if (isMatch == false)
         selNameArray[selNameArray.length] = rowName;
     }
+    //let the users know if more than 30 duplicates exist
+    if (dupNameArray != null && dupNameArray.length > 30)
+      dupNames = dupNames + "\n" + (dupNameArray.length - 30) + " more duplicates exist .......\n";
+    //return the list of duplicate names
     return dupNames;
 }
 
