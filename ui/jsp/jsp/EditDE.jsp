@@ -822,7 +822,7 @@
     </tr>
     <tr height="25" valign="bottom"> 
       <td align=right><font color="#FF0000">* </font><%=item++%>)</td>
-      <td colspan=3><font color="#FF0000">Select</font> Representation Type</td>
+      <td colspan=3><font color="#FF0000">Select</font> Derivation Type</td>
     </tr>
     <tr>
       <td>&nbsp;</td>
@@ -856,7 +856,7 @@
     <tr>
       <td>&nbsp;</td>
       <td height="35" valign="top" colspan=3>
-        <textarea name="DDEMethod" cols="69" disabled
+        <textarea name="DDEMethod" cols="69"
           onHelp = "showHelp('Help_CreateDE.html#newCDEForm_DDEMethod'); return false" rows=2><%=sSelMethod%></textarea>
       </td>
     </tr>
@@ -867,7 +867,7 @@
     <tr>
       <td>&nbsp;</td>
       <td valign="top" colspan=3> <input name="DDEConcatChar" type="text" value="<%=sSelConcatChar%>" size="5" maxlength=1
-          onHelp = "showHelp('Help_CreateDE.html#newCDEForm_DDEConcatChar'); return false" disabled></td>
+          onHelp = "showHelp('Help_CreateDE.html#newCDEForm_DDEConcatChar'); return false"></td>
     </tr>
     <tr height="25" valign="bottom">
       <td align=right><%=item++%>)</td>
@@ -1009,7 +1009,7 @@ displayStatusMessage();
 changeCountPN();
 changeCountLN();
 loadCSCSI();
-changeRepType('init');
+//changeRepType('init');
 </script>
 </form>
 </body>

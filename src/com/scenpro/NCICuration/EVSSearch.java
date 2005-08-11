@@ -250,15 +250,12 @@ public class EVSSearch implements Serializable
     else
       sAltNameType = "";
       
-    //     m_EVS_CONNECT = "http://cbiodev104.nci.nih.gov:29080/cacoreevs301/server/HTTPServer";  //dev
+    //   m_EVS_CONNECT = "http://cbiodev104.nci.nih.gov:29080/cacoreevs301/server/HTTPServer";  //dev
     //   m_EVS_CONNECT = "http://cbioqa101.nci.nih.gov:29080/cacore30/server/HTTPServer";  //qa
-    //  m_EVS_CONNECT = "http://cbioapp102.nci.nih.gov:29080/cacore30/server/HTTPServer";  //prod
-    //   m_EVS_CONNECT = "http://cbioqatest501.nci.nih.gov:8080/cacore30/server/HTTPServer";  //3.0.1
-    //     m_EVS_CONNECT = "http://cbioqatest501.nci.nih.gov:8080/cacoreevs301/server/HTTPServer";  // new 3.0.1
-      //   "http://cbioqa601.nci.nih.gov:29080/cacore301hql/server/HTTPServer"
-      // http://cabio-stage.nci.nih.gov/cacore30/server/HTTPServer
+    //   m_EVS_CONNECT = "http://cabio-stage.nci.nih.gov/cacore30/server/HTTPServer";  //stage
+    //   m_EVS_CONNECT = "http://cabio.nci.nih.gov/cacore30/server/HTTPServer";  //prod
 
-      
+// System.out.println("do_EVSSearch m_EVS_CONNECT: " + m_servlet.m_EVS_CONNECT);     
     ApplicationService evsService =
     ApplicationService.getRemoteInstance(m_servlet.m_EVS_CONNECT);
   // Search By Concept Code
@@ -266,7 +263,7 @@ public class EVSSearch implements Serializable
   && isMetaCodeSearch == false && !dtsVocab.equals("NCI Metathesaurus"))
   {
    try
-   {
+   {     
     if(sRetired.equals("Include") || sTreeSearch.equals("true")) // do this if all concepts, including retired, should be included
       isRetired = new Boolean(false);
     else
@@ -280,10 +277,15 @@ public class EVSSearch implements Serializable
       }
       catch(Exception ex)
       {
-        ex.printStackTrace();
+        System.out.println("do_EVSSearch error: " + ex.toString());
         logger.fatal("Error0 do_EVSSearch: " + ex.toString());
       }
-      isRetired = (Boolean)bool.get(0);
+      if(bool != null)
+      {   
+        isRetired = (Boolean)bool.get(0);
+        if(isRetired == null)
+          isRetired = new Boolean(false);
+      }
     }
     if(isRetired.equals(bFalse))
     {
@@ -297,6 +299,7 @@ public class EVSSearch implements Serializable
       }
       catch(Exception ex)
       {
+        System.out.println("do_EVSSearch error2: " + ex.toString());
         logger.fatal("Error1 do_EVSSearch: " + ex.toString());
       }
       if(concepts != null && concepts.size()>0)
@@ -304,6 +307,7 @@ public class EVSSearch implements Serializable
         codeFoundInThesaurus = new Boolean(true);
         prefNameConcept = (String)concepts.get(0);
         prefNameConceptOriginal = (String)concepts.get(0);
+//System.out.println("do_EVSSearch prefNameConceptOriginal: " + prefNameConceptOriginal);
         query.searchDescLogicConcepts(dtsVocab,prefNameConcept,1000);
         concepts = null;
         try
@@ -322,7 +326,7 @@ public class EVSSearch implements Serializable
           {
               aDescLogicConcept = (DescLogicConcept)concepts.get(i);
               prefNameConcept = (String)aDescLogicConcept.getName();
- 
+  //  System.out.println("do_EVSSEarch prefNameConcept: " + prefNameConcept +  " CCode: " + CCode);
               // For ParentConceptVM, use node or leaf object to get their level down from parent
               EVSMasterTree tree = new EVSMasterTree(m_classReq, dtsVocab, m_servlet);
               int nodeLevel = 0;
@@ -332,12 +336,14 @@ public class EVSSearch implements Serializable
                 TreeLeaf expandedLeaf = new TreeLeaf(1, "", "",1);
                 expandedNode = (TreeNode)tree.m_treeNodesHashParent.get(prefNameConcept);
                 if(expandedNode != null)
-                  nodeLevel = expandedNode.getLevel()-1;
+                {
+                  nodeLevel = expandedNode.getLevel()-1;              
+                }
                 else if(expandedNode == null || nodeLevel == 0)
                 {
                   expandedLeaf = (TreeLeaf)tree.m_treeLeafsHashParent.get(prefNameConcept);
                   if(expandedLeaf != null)
-                    nodeLevel = expandedLeaf.getLevel()-1;
+                    nodeLevel = expandedLeaf.getLevel()-1; 
                 }
               } 
               if(nodeLevel > 0)
@@ -346,11 +352,10 @@ public class EVSSearch implements Serializable
               {
                 if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
                   ilevel = ilevelImmediate;
-                else if(sSearchAC.equals("ParentConceptVM"))
+                else if(sSearchAC.equals("ParentConceptVM") && CCode != null && !CCode.equals(""))
                   ilevel = getLevelDownFromParent(CCode, dtsVocab); 
-              }
+              } 
               if(dtsVocab.length()>2 && dtsVocab.substring(0,3).equalsIgnoreCase("NCI")) 
-               // || dtsVocab.substring(0,3).equalsIgnoreCase("Med")) // both have Preferred_Name property
               {
                 EVSQuery query4 = new EVSQueryImpl(); 
                 query4.getPropertyValues(dtsVocab, prefNameConcept, "Preferred_Name");
@@ -430,7 +435,9 @@ public class EVSSearch implements Serializable
         if(dtsVocab.equals("NCI_Thesaurus"))  // || dtsVocab.equals("MedDRA"))
           query.getConceptWithPropertyMatching(dtsVocab,sSearchInEVS,termStr,10000);
          else
+         {
             query.searchDescLogicConcepts(dtsVocab,termStr,10000);
+         }
         List concepts = null;
         try
         {
@@ -438,6 +445,7 @@ public class EVSSearch implements Serializable
         }
         catch(Exception ex)
         {
+          System.out.println("do_EVSSearch error8: " + ex.toString());
           logger.fatal("Error5 do_EVSSearch: " + ex.toString());
         }
         if(concepts != null)
@@ -474,12 +482,7 @@ public class EVSSearch implements Serializable
             if(sRetired.equals("Include")) // do this if all concepts, including retired, should be included
               isRetired = new Boolean(false);
             if(isRetired.equals(bFalse))
-            {
-           //   if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
-           //     ilevel = ilevelImmediate;
-           //   else if(sSearchAC.equals("ParentConceptVM"))
-            //    ilevel = getLevelDownFromParent(CCode, dtsVocab);
-              
+            {        
               if(dtsVocab.length()>2 && dtsVocab.substring(0,3).equalsIgnoreCase("NCI")) 
              // || dtsVocab.substring(0,3).equalsIgnoreCase("Med")) // both have Preferred_Name property
               {
@@ -624,8 +627,10 @@ public class EVSSearch implements Serializable
       }
       else if(sSearchInEVS.equals("Concept Code"))
         query.searchMetaThesaurus(termStr,sMetaLimit,sMetaSource, true, false, false);
-      else if(!sSearchInEVS.equals("Concept Code"))  
+      else if(!sSearchInEVS.equals("Concept Code"))
+      {
         query.searchMetaThesaurus(termStr,sMetaLimit,sMetaSource, false, false, false);
+      }
       try
       {
         concepts = evsService.evsSearch(query);
@@ -1284,8 +1289,401 @@ public Vector putRootsInAlphabeticalOrder(List vocabRoots)
   }
   evsService = null;
   return vRoot;
-}   
+} 
 
+/**
+   * This method searches EVS vocabularies and returns subconcepts, which are used
+   * to construct an EVS Tree. 
+   * @param dtsVocab the EVS Vocabulary
+   * @param conceptName the root concept.
+   * @param type
+   * @param conceptCode the root concept.
+   * @param defSource
+   *
+ */
+public Vector getAllSubConceptCodes(String dtsVocab, String conceptName, String type, String conceptCode, String defSource) 
+{
+System.out.println("getAllSubConceptCodes conceptName: " + conceptName);
+    String[] stringArray =  new String[10000];
+    Vector vSub = new Vector();
+     if(dtsVocab.equals("GO") && (conceptName.equals("double-strand break repair via homologous recombination ")
+     || conceptName.equals("double-strand break repair via homologous recombination")))
+    {
+      conceptName = "double-strand break repair via homologous recombination_";
+    }
+     if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
+     || dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
+     {
+      dtsVocab = m_servlet.m_VOCAB_NCI; //"NCI_Thesaurus";
+      conceptName = filterName(conceptName, "js");
+     }
+    else if(dtsVocab.equals("VA NDFRT") || dtsVocab.equals("VA_NDFRT"))
+      dtsVocab = m_servlet.m_VOCAB_VA;  //"VA_NDFRT";
+    else if(dtsVocab.equals("UWD VISUAL ANATOMIST") || dtsVocab.equals("UWD_VISUAL_ANATOMIST"))
+      dtsVocab = m_servlet.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
+    else if(dtsVocab.equals("MGED") || dtsVocab.equals("MGED_Ontology")) 
+      dtsVocab = m_servlet.m_VOCAB_MGE;  //"MGED_Ontology";
+    else if(dtsVocab.equals("GO"))
+      dtsVocab = m_servlet.m_VOCAB_GO;
+    else if(dtsVocab.equals("LOINC"))
+      dtsVocab = m_servlet.m_VOCAB_LOI;
+    else if(dtsVocab.equals("MedDRA"))
+      dtsVocab = m_servlet.m_VOCAB_MED;
+    else if(dtsVocab.equals("HL7_V3")) 
+      dtsVocab = m_servlet.m_VOCAB_HL7;
+    Boolean flagOne = new java.lang.Boolean(false);
+    Boolean flagTwo = new Boolean(false); 
+    Boolean flagThree = new Boolean(true); 
+    
+    ApplicationService evsService =
+    ApplicationService.getRemoteInstance(m_servlet.m_EVS_CONNECT);
+    
+    EVSQuery query = new EVSQueryImpl();
+    List subs = null;
+    if(!dtsVocab.equals("NCI Metathesaurus"))
+    {
+     try
+     {
+          String prefName = "";
+          if(!conceptCode.equals(""))//try it with ConceptCode
+          {
+            try
+            {
+              query.getAllSubConceptCodes(dtsVocab,conceptCode);
+              subs = evsService.evsSearch(query);
+            }
+            catch(Exception ex)
+            {
+              ex.printStackTrace();
+            }  
+            if(subs != null && subs.size()>0)
+            {
+              for (int c = 0; c < subs.size(); c++)
+              {
+                stringArray[c] = (String)subs.get(c);
+//  System.out.println("All subconcept codes: " + stringArray[c]);
+                vSub.addElement((String)subs.get(c));
+              }
+            }
+          }
+      }
+      catch(Exception ee)
+      {
+            System.err.println("problemYY in Thesaurus syn EVSSearch-getSubConcepts: " + ee);
+            logger.fatal("ERROR - EVSSearch-getSubConcepts for Thesaurus : " + ee.toString());
+            return vSub;
+      }
+    }
+    else if(dtsVocab.equals("NCI Metathesaurus"))
+    {
+      try
+      {
+        if(!conceptCode.equals("") && !defSource.equals(""))
+        {
+        /*  MetaThesaurusConceptSearchCriteria mtcsc = new MetaThesaurusConceptSearchCriteria();
+          MetaThesaurusConcept mtc = new MetaThesaurusConcept();
+          MetaThesaurusConcept[] mtcChildren = mtc.getChildren(conceptCode,defSource);
+          if(mtcChildren != null)
+          {
+            for(int a =0 ; a< mtcChildren.length; a++)
+            {
+              vSub.addElement(mtcChildren[a].getName());
+            }
+          } */
+        }
+      } 
+      catch(Exception eef)
+      {
+            //System.err.println("problem in Thesaurus syn EVSSearch-getSubConceptsMeta: " + eef);
+            logger.fatal("ERROR - EVSSearch-getAllSubConcepts for Thesaurus : " + eef.toString());
+            return vSub;
+      }
+    } 
+    evsService = null;
+    return vSub;
+ }
+
+/**
+   * This method searches EVS vocabularies and returns subconcepts, which are used
+   * to construct an EVS Tree. 
+   * @param dtsVocab the EVS Vocabulary
+   * @param conceptName the root concept.
+   * @param type
+   * @param conceptCode the root concept.
+   * @param defSource
+   *
+ */
+public void getChildConcepts(Vector vList, String dtsVocab, String conceptName, String conceptCode, int initLevel, String type) 
+{
+//System.out.println("getChildConcepts conceptName: " + conceptName + " conceptCode: " + conceptCode + " initLevel: " + initLevel);
+    String prefName = "";
+    String prefNameJS = "";
+    String prefNameConcept = "";
+    String CCode = "";
+    int ilevel = 0;
+    ilevel = initLevel + 1;
+    int ilevelImmediate = 0;
+    HttpSession session = m_classReq.getSession();
+    String sAltNameType = "";
+    Source src = new Source();
+    String source = "";
+    String definition = "";
+  
+    if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("") ||
+    dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
+    {
+      dtsVocab = m_servlet.m_VOCAB_NCI; //"NCI_Thesaurus";
+      sAltNameType = "NCI_CONCEPT_CODE";
+    }
+    // for search Meta by (LOINC) code
+    else if(dtsVocab.equals("VA NDFRT") || dtsVocab.equals("VA_NDFRT"))
+    {
+      dtsVocab = m_servlet.m_VOCAB_VA;  //"VA_NDFRT";
+      sAltNameType = "VA_NDF_CODE";
+    }
+    else if(dtsVocab.equals("UWD VISUAL ANATOMIST") || dtsVocab.equals("UWD_VISUAL_ANATOMIST"))
+    {
+      dtsVocab = m_servlet.m_VOCAB_UWD;  //"UWD_Visual_Anatomist";
+      sAltNameType = "UWD_VA_CODE";
+    }
+    else if(dtsVocab.equals("MGED") || dtsVocab.equals("MGED_Ontology")) 
+    {
+      dtsVocab = m_servlet.m_VOCAB_MGE;  //"MGED_Ontology";
+      sAltNameType = "NCI_MO_CODE";
+    }
+    else if(dtsVocab.equals("GO"))
+    {
+      dtsVocab = m_servlet.m_VOCAB_GO;
+      sAltNameType = "GO_CODE";
+    }
+    else if(dtsVocab.equals("LOINC"))
+    {
+      dtsVocab = m_servlet.m_VOCAB_LOI;
+      sAltNameType = "LOINC_CODE";
+    }
+    else if(dtsVocab.equals("MedDRA"))
+    {
+      dtsVocab = m_servlet.m_VOCAB_MED;
+      sAltNameType = "MEDDRA_CODE";
+    }
+    else if(dtsVocab.equals("HL7_V3")) 
+    {
+      sAltNameType = "HL7_V3_CODE";
+      dtsVocab = m_servlet.m_VOCAB_HL7;
+    }
+    else
+      sAltNameType = "";
+    ApplicationService evsService =
+    ApplicationService.getRemoteInstance(m_servlet.m_EVS_CONNECT);
+    EVSQuery query = new EVSQueryImpl();
+    List concepts = null;
+    DescLogicConcept aDescLogicConcept = new DescLogicConcept(); 
+    try
+    {
+      if(!conceptCode.equals("")) //try it with ConceptCode
+      {
+        try
+        {
+          query.getChildConcepts(dtsVocab,conceptCode,true);
+          concepts = evsService.evsSearch(query);
+        }
+        catch(Exception ex)
+        {
+          logger.fatal("error getSubConcepts");
+        } 
+        if(concepts != null)
+        {
+          for (int i = 0; i < concepts.size(); i++)
+          {
+            aDescLogicConcept = (DescLogicConcept)concepts.get(i);
+            prefName = (String)aDescLogicConcept.getName();
+            CCode = (String)aDescLogicConcept.getCode();
+ //  System.out.println("getChildConcepts orig prefName: " + prefName  + " CCode: " + CCode);
+            if(dtsVocab.length()>2 && dtsVocab.substring(0,3).equalsIgnoreCase("NCI")) 
+            {
+              prefName = filterName(prefName, "js");
+ // System.out.println("getChildConcepts js prefName: " + prefName);
+              EVSQuery query4 = new EVSQueryImpl(); 
+              query4.getPropertyValues(dtsVocab, prefName, "Preferred_Name");
+              List concepts4 = null;
+              try
+              {
+                concepts4 = evsService.evsSearch(query4);
+              }
+              catch(Exception ex)
+              {
+                logger.fatal("Error3 do_EVSSearch: " + ex.toString());
+              }
+              if(concepts4 != null && concepts4.size()>0)
+              {
+                String results = "";
+                for (int m = 0; m < 1; m++)
+                {
+                  prefName = concepts4.get(0).toString();
+                }
+              }
+            }
+          if(dtsVocab.length()>2 && dtsVocab.substring(0,3).equalsIgnoreCase("NCI")) 
+          {
+            prefNameJS = filterName(prefName, "js");
+          }
+            EVSQuery query3 = new EVSQueryImpl(); 
+ // System.out.println("getChild def prefName: " + prefName);
+            query3.getPropertyValues(dtsVocab, prefNameJS, "DEFINITION");
+            List concepts3 = null;
+            try
+            {
+              concepts3 = evsService.evsSearch(query3);
+            }
+            catch(Exception ex)
+            {
+              logger.fatal("Error4 do_EVSSearch: " + ex.toString());
+            }
+            if(concepts3 != null && concepts3.size()>0)
+            {
+              String results = "";
+              for (int m = 0; m < concepts3.size(); m++)
+              {
+                results = concepts3.get(m).toString();
+ // System.out.println("getChild def results: " + results + " dtsVocab: " + dtsVocab);
+                if(dtsVocab.equals("NCI_Thesaurus"))
+                {
+                  definition = getDefinition(results);
+                  source = getSource(results); 
+   //System.out.println("getChild def definition: " + definition);
+                }
+                else if(dtsVocab.equals("GO") || dtsVocab.equals("MGED_Ontology"))
+                {
+                  definition = results;
+                }
+                EVS_Bean OCBean = new EVS_Bean();
+                OCBean.setEVSBean(definition, source, prefName, sAltNameType, "", "",
+                CCode, "", "", dtsVocab, ilevel, "", "", ""); 
+                vList.addElement(OCBean);    //add OC bean to vector
+              }
+            }
+            else // no definitions
+            {
+  //System.out.println("getChild in def else");
+                EVS_Bean OCBean = new EVS_Bean();
+                OCBean.setEVSBean("No value exists.", "", prefName, sAltNameType, "", "",
+                CCode, "", "", dtsVocab, ilevel, "", "", ""); 
+                vList.addElement(OCBean);    //add OC bean to vector
+            }
+          
+            Boolean bHasChildren = new Boolean(false);
+            bHasChildren = aDescLogicConcept.hasChildren();
+            boolean bool = bHasChildren.booleanValue();
+            if(bool && type.equals("All"))
+              getChildConcepts(vList, dtsVocab, prefName, CCode, ilevel, "All");
+          }
+        }
+      }
+    }
+    catch(Exception ex2)
+    {
+        logger.fatal("Error6 do_EVSSearch: " + ex2.toString());
+    }   
+}          
+              
+              
+              
+          /*    if(concepts != null && concepts.size()>0)
+              {
+                for (int b = 0; b < concepts.size(); b++)
+                {
+                  aDescLogicConcept = (DescLogicConcept)concepts.get(i);
+                  prefName = (String)aDescLogicConcept.getName();
+                }
+              }
+            }
+            else if(conceptName != null && !conceptName.equals(""))
+            {    
+              try
+              {
+                query.getSubConcepts(dtsVocab,conceptName,flagOne,flagTwo);
+                subs = evsService.evsSearch(query);
+              }
+              catch(Exception ex)
+              {
+                ex.printStackTrace();
+              } 
+              if(subs != null && subs.size()>0)
+              {
+                for (int i = 0; i < subs.size(); i++)
+                {
+                  stringArray[i] = (String)subs.get(i);
+                  vSub.addElement((String)subs.get(i));
+                }
+              } 
+            }
+            evsService = null;
+          }
+          catch(Exception ee)
+          {
+            logger.fatal("problem0 in Thesaurus EVSSearch-getSubConceptNames: " + ee);
+            stringArray = null;
+          }
+        } */
+    /*    else if(type.equals("All"))
+        {
+          if(!conceptCode.equals(""))//try it with ConceptCode
+          {
+            try
+            {
+              query.getSubConcepts(dtsVocab,conceptCode,flagThree,flagTwo);
+              subs = evsService.evsSearch(query);
+            }
+            catch(Exception ex)
+            {
+              ex.printStackTrace();
+            }  
+            if(subs != null && subs.size()>0)
+            {
+              for (int c = 0; c < subs.size(); c++)
+              {
+                stringArray[c] = (String)subs.get(c);
+                vSub.addElement((String)subs.get(c));
+              }
+            }
+          }
+          else if(conceptName != null && !conceptName.equals(""))
+          {
+            try
+            {
+              query.getSubConcepts(dtsVocab,conceptName,flagOne,flagTwo);
+              subs = evsService.evsSearch(query);
+            }
+            catch(Exception ex)
+            {
+              ex.printStackTrace();
+            }  
+            if(subs != null && subs.size()>0)
+            {
+              for (int i = 0; i < subs.size(); i++)
+              {
+                stringArray[i] = (String)subs.get(i);
+                vSub.addElement((String)subs.get(i));
+              }
+            }
+           }
+          if(stringArray != null)
+          {
+             stringArray = getAllSubConceptNames(dtsVocab,stringArray, vSub);
+          }
+        }
+      }
+      catch(Exception ee)
+      {
+            System.err.println("problemYY in Thesaurus syn EVSSearch-getSubConcepts: " + ee);
+            logger.fatal("ERROR - EVSSearch-getSubConcepts for Thesaurus : " + ee.toString());
+            return vSub;
+      }
+    }
+    evsService = null;
+    return vSub;
+ } */
+ 
 /**
    * This method searches EVS vocabularies and returns subconcepts, which are used
    * to construct an EVS Tree. 
@@ -1580,7 +1978,14 @@ public Vector getSubConceptCodes(String dtsVocab, String conceptName, String typ
             stringArray = null;
           }
         }
-        else if(type.equals("All"))
+        if(type.equals("All"))
+        {
+          String sCode = "";
+          String sDefSource = (String)m_classReq.getParameter("defSource");
+          if(sDefSource == null) sDefSource = "";
+          vSub = this.getAllSubConceptCodes(dtsVocab, conceptName, "All", conceptCode, sDefSource);
+        }
+     /*   else if(type.equals("All"))
         {
           try
           {
@@ -1623,7 +2028,7 @@ public Vector getSubConceptCodes(String dtsVocab, String conceptName, String typ
           {
              stringArray = getAllSubConceptCodes(dtsVocab,stringArray, vSub);
           }
-        }
+        } */
       }
       catch(Exception ee)
       {
@@ -1631,7 +2036,7 @@ public Vector getSubConceptCodes(String dtsVocab, String conceptName, String typ
             logger.fatal("ERROR - EVSSearch-getSubConceptCodes for Thesaurus : " + ee.toString());
             return vSub;
       }
-    }
+    } 
     else if(dtsVocab.equals("NCI Metathesaurus"))
     {
       try
@@ -1660,7 +2065,6 @@ public Vector getSubConceptCodes(String dtsVocab, String conceptName, String typ
     evsService = null;
     return vSub;
  }
-   
 
 
 /**
@@ -1672,6 +2076,7 @@ public Vector getSubConceptCodes(String dtsVocab, String conceptName, String typ
 */
 public int getLevelDownFromParent(String CCode, String dtsVocab) 
 { 
+ //System.out.println("do_EVSSEarch getLevelDownFromParent");
    int level = 0;
    String[] stringArrayInit = new String[20];
    String[] stringArray = null;
@@ -1768,6 +2173,7 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
           {
             level++;
             sSuperConceptCode = (String)stringArray[0];
+ // System.out.println("do_EVSSEarch getLevelDownFromParent sSuperConceptCode0: " + sSuperConceptCode);
             if(sSuperConceptCode.equals(sParent))
             {            
               matchParent = "true";
@@ -1779,14 +2185,18 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
           {
             level++;
             sSuperConceptCode = findThePath(dtsVocab, stringArray, sParent);
+ // System.out.println("do_EVSSEarch getLevelDownFromParent FTP sSuperConceptCode1: " + sSuperConceptCode);
             if(sSuperConceptCode.equals(""))
               sSuperConceptCode = (String)stringArray[0];
+ // System.out.println("do_EVSSEarch getLevelDownFromParent FTP sSuperConceptCode2: " + sSuperConceptCode);
             if(sSuperConceptCode.equals(sParent))
             {            
               matchParent = "true";
             }
-            else
+            else if(!sSuperConceptCode.equals(""))
               CCode = sSuperConceptCode;
+            else if(sSuperConceptCode.equals(""))
+              matchParent = "true"; //stringArray[0] == ""
           } 
           else
               matchParent = "true";
@@ -1804,7 +2214,7 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
    * @param dtsVocab the EVS Vocabulary
    * @param stringArray.
    * @param sParent 
-   * @return sCorrectSuperConceptName
+   * @return sCorrectSuperConceptCode
    *
 */
 public String findThePath(String dtsVocab, String[] stringArray, String sParent) 
@@ -1812,8 +2222,8 @@ public String findThePath(String dtsVocab, String[] stringArray, String sParent)
   Boolean flagOne = new java.lang.Boolean(true);
   Boolean flagTwo = new Boolean(false);
   String[] stringArray2 = null;
-  String sSuperConceptName = "";
-  String sCorrectSuperConceptName = "";
+  String sSuperConceptCode = "";
+  String sCorrectSuperConceptCode = "";
   String matchParent = "false";
   String prefName = "";  
   String prefNameCurrent = ""; 
@@ -1827,7 +2237,7 @@ public String findThePath(String dtsVocab, String[] stringArray, String sParent)
     if(prefName != null && prefName.equals(sParent))
     {
        matchParent = "true";
-       sCorrectSuperConceptName = prefName;
+       sCorrectSuperConceptCode = prefName;
     }  
     while(matchParent.equals("false"))
     {
@@ -1838,6 +2248,7 @@ public String findThePath(String dtsVocab, String[] stringArray, String sParent)
         evsService =
         ApplicationService.getRemoteInstance(m_servlet.m_EVS_CONNECT);
         EVSQuery query = new EVSQueryImpl();
+//  System.out.println("findThePath dtsVocab: " + dtsVocab + " prefName: " + prefName + " stringArray.length: " + stringArray.length);
         query.getSuperConcepts(dtsVocab,prefName,flagOne,flagOne);
         List supers = null;
         try
@@ -1846,7 +2257,7 @@ public String findThePath(String dtsVocab, String[] stringArray, String sParent)
         }
         catch(Exception ex)
         {
-          ex.printStackTrace();
+          System.out.println("ERROR findThePath: " + ex.toString());
         } 
         if(supers != null && supers.size()>0)
         {
@@ -1867,24 +2278,43 @@ public String findThePath(String dtsVocab, String[] stringArray, String sParent)
       {
         stringArray2 = null;
       }
-      if(stringArray2 != null && stringArray2.length > 0)  // == 1
+      if(stringArray2 != null && stringArray2.length == 1)
       {
-        sSuperConceptName = (String)stringArray2[0]; 
-        if(sSuperConceptName.equals(sParent))
+        sSuperConceptCode = (String)stringArray2[0]; 
+        if(sSuperConceptCode.equals(sParent))
         {            
           matchParent = "true";
-          sCorrectSuperConceptName = prefNameCurrent;
+          sCorrectSuperConceptCode = prefNameCurrent;
           break;
         }
         else
-          prefName = sSuperConceptName;
+          prefName = sSuperConceptCode;
       }
-      else
+      else if(stringArray2 != null && stringArray2.length > 1)  // == 1
+      {
+        for (int i = 0; i < stringArray2.length; i++)
+        {
+          sSuperConceptCode = (String)stringArray2[i]; 
+          if(sSuperConceptCode.equals(sParent))
+          {            
+            matchParent = "true";
+            sCorrectSuperConceptCode = prefNameCurrent;
+            break;
+          }
+        }
+        if(matchParent.equals("false"))
+        {
+            prefName = findThePath(dtsVocab, stringArray2, sParent);
+            if(prefName.equals(""))
+              matchParent = "true"; // stop the loop
+        }
+      }
+      else  // stringArray2.length == 0
           matchParent = "true";
     } 
   evsService = null;
   } 
-  return sCorrectSuperConceptName;
+  return sCorrectSuperConceptCode;
 }
    
 /**
@@ -1969,7 +2399,7 @@ public String[] getAllSubConceptNames(String dtsVocab, String[] stringArray, Vec
    * @return stringArray
    *
 */
-public String[] getAllSubConceptCodes(String dtsVocab, String[] stringArray, Vector vSub) 
+/*public String[] getAllSubConceptCodes(String dtsVocab, String[] stringArray, Vector vSub) 
 { 
     String[] stringArray2 = null;  
     String[] stringArray3 = new String[10000];
@@ -2027,7 +2457,7 @@ public String[] getAllSubConceptCodes(String dtsVocab, String[] stringArray, Vec
   }
     evsService = null;
     return stringArray;
-} 
+} */
     
  /**
 	 * Puts in and takes out "_"
@@ -2573,8 +3003,9 @@ public String getDefinition(String termStr)
     }
     catch(Exception e)
     {
-      System.err.println("ERROR in EVSSearch-get_Result: " + e);
-      logger.fatal("ERROR in EVSSearch-get_Result : " + e.toString());
+     // System.err.println("ERROR in EVSSearch-get_Result: " + e);
+      if(!e.toString().equals("java.lang.NullPointerException"))
+        logger.fatal("ERROR in EVSSearch-get_Result : " + e.toString());
     }
   }
 
@@ -2684,7 +3115,7 @@ public String getDefinition(String termStr)
     ApplicationService.getRemoteInstance(m_servlet.m_EVS_CONNECT);
     EVSQuery query = new EVSQueryImpl(); 
     query.getMetaSources(); 
-    List concepts = null;
+    List concepts = null;  
     try
     {
       concepts = evsService.evsSearch(query);
@@ -2694,7 +3125,7 @@ public String getDefinition(String termStr)
           ex.printStackTrace();
     }
     if(concepts != null)
-    {
+    { 
       MetaThesaurusConcept aMetaThesaurusConcept = new MetaThesaurusConcept();
       for (int i = 0; i < concepts.size(); i++)
       {
@@ -2704,7 +3135,7 @@ public String getDefinition(String termStr)
         vMetaSources.addElement(source);
       }      
     }
-  evsService = null;
+  evsService = null; 
   session.setAttribute("MetaSources", vMetaSources); 
   }
    

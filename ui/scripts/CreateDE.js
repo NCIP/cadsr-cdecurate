@@ -691,8 +691,30 @@ function changeRepType(action)
     var sRepType = "";
     if (document.newCDEForm.selRepType != null && document.newCDEForm.selRepType.value != "")
         sRepType = document.newCDEForm.selRepType.value;
-        
-    if(sRepType == "CALCULATED" || sRepType == "COMPLEX RECODE")
+    //clear all the data if it is empty type
+    if (sRepType == null || sRepType == "")
+    {
+        if(action != "init")
+        {
+            //remove all Relationship IDs by moving them into delete array
+            var idx = document.newCDEForm.selDECompDeleteHidden.length;     // save DE Relation ID before remove
+            for(var i=0; i<document.newCDEForm.selOrderList.length; i++)
+            {
+              var RelID = document.newCDEForm.selOrderList.options[i].value;
+              var relName = document.newCDEForm.selDEComp.options[i].text;
+              document.newCDEForm.selDECompDeleteHidden.options[idx] = new Option(RelID, RelID);
+              document.newCDEForm.selDECompDeleteHidden.options[idx].selected = true;
+              document.newCDEForm.selDECompDelNameHidden.options[idx] = new Option(relName, relName);
+              document.newCDEForm.selDECompDelNameHidden.options[idx].selected = true;
+              idx++;
+            }
+            document.newCDEForm.selDEComp.length = 0;
+            document.newCDEForm.selOrderedDEComp.length = 0;
+            document.newCDEForm.selOrderList.length = 0;
+            document.newCDEForm.txtDECompOrder.value = "";
+        }
+    }    
+  /*  else if(sRepType == "CALCULATED" || sRepType == "COMPLEX RECODE")
     {
         document.newCDEForm.DDEMethod.disabled=false;
         document.newCDEForm.DDEConcatChar.disabled=false;
@@ -716,31 +738,12 @@ function changeRepType(action)
         document.newCDEForm.DDEConcatChar.disabled=true;
         document.newCDEForm.DDERule.disabled=false;
     }
-    else     //empty, delete all DDE info
+    else     //enable all fields for all other types
     {
         document.newCDEForm.DDEMethod.disabled=false;
         document.newCDEForm.DDEConcatChar.disabled=false;
         document.newCDEForm.DDERule.disabled=false;
-        if(action != "init")
-        {
-            //remove all Relationship IDs by moving them into delete array
-            var idx = document.newCDEForm.selDECompDeleteHidden.length;     // save DE Relation ID before remove
-            for(var i=0; i<document.newCDEForm.selOrderList.length; i++)
-            {
-              var RelID = document.newCDEForm.selOrderList.options[i].value;
-              var relName = document.newCDEForm.selDEComp.options[i].text;
-              document.newCDEForm.selDECompDeleteHidden.options[idx] = new Option(RelID, RelID);
-              document.newCDEForm.selDECompDeleteHidden.options[idx].selected = true;
-              document.newCDEForm.selDECompDelNameHidden.options[idx] = new Option(relName, relName);
-              document.newCDEForm.selDECompDelNameHidden.options[idx].selected = true;
-              idx++;
-            }
-            document.newCDEForm.selDEComp.length = 0;
-            document.newCDEForm.selOrderedDEComp.length = 0;
-            document.newCDEForm.selOrderList.length = 0;
-            document.newCDEForm.txtDECompOrder.value = "";
-        }
-    }
+    } */
 }
 
 //remove DEComp from all DEComp list.

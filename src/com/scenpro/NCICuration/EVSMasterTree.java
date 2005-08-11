@@ -92,16 +92,16 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 public class EVSMasterTree
 {
   // class variables
-	public static Hashtable m_treesHash; // nodeName, with tree of it's children
-	public static Hashtable m_treeNodesHash;	// holds an easy-lookup of open nodes while rendering HTML
-  private static Hashtable m_treesHashParent; // nodeName, with tree of it's children
-	public static Hashtable m_treeNodesHashParent;	// h
-  public static Hashtable m_treeLeafsHashParent;
-  private static Hashtable m_treeIDtoNameHash;
-  private static Hashtable m_treeIDtoNameHashParent;
-  private static Stack m_expandedTreeNodes;
-  private static Stack m_expandedTreeNodesParent;
-  private static Vector m_expandedTreeNodesVector;
+	public Hashtable m_treesHash; // nodeName, with tree of it's children
+	public Hashtable m_treeNodesHash;	// holds an easy-lookup of open nodes while rendering HTML
+  private Hashtable m_treesHashParent; // nodeName, with tree of it's children
+	public Hashtable m_treeNodesHashParent;	// h
+  public Hashtable m_treeLeafsHashParent;
+  private Hashtable m_treeIDtoNameHash;
+  private Hashtable m_treeIDtoNameHashParent;
+  private Stack m_expandedTreeNodes;
+  private Stack m_expandedTreeNodesParent;
+  private Vector m_expandedTreeNodesVector;
   private String treeName;
 	private String collapsedImage="plus.png";			// image for collapsed nodes
 	private String openedImage="ominus.png";			// image for expanded nodes
@@ -132,7 +132,9 @@ public class EVSMasterTree
     m_servlet = CurationServlet;
     m_classReq = req;
     m_dtsVocab = dtsVocab;
-    m_ServletContext = m_servlet.getServletContext();
+    HttpSession session = req.getSession();
+  
+  //  m_ServletContext = m_servlet.getServletContext();
     
     // Use the servlet's official Vocabulary names
     if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("")
@@ -153,8 +155,72 @@ public class EVSMasterTree
     else if(dtsVocab.equals("HL7_V3")) 
       dtsVocab = m_servlet.m_VOCAB_HL7;
       
+    if(session != null)
+    { 
+      m_treesHash = (Hashtable)session.getAttribute("treesHash");
+      if(m_treesHash == null)
+      {
+        m_treesHash = new Hashtable();
+        session.setAttribute("treesHash",m_treesHash);
+      }
+      m_treesHashParent = (Hashtable)session.getAttribute("treesHashParent");
+      if(m_treesHashParent == null)
+      {
+        m_treesHashParent = new Hashtable();
+        session.setAttribute("treesHashParent",m_treesHashParent);
+      }
+      m_treeNodesHashParent = (Hashtable)session.getAttribute("treeNodesHashParent");    
+      if(m_treeNodesHashParent == null)
+      {
+        m_treeNodesHashParent = new Hashtable();
+        session.setAttribute("treeNodesHashParent", m_treeNodesHashParent);
+      }
+      m_treeNodesHash = (Hashtable)session.getAttribute("treeNodesHash");    
+      if(m_treeNodesHash == null)
+      {
+        m_treeNodesHash = new Hashtable();
+        session.setAttribute("treeNodesHash", m_treeNodesHash);
+      }
+      m_treeLeafsHashParent = (Hashtable)session.getAttribute("treeLeafsHashParent");    
+      if(m_treeLeafsHashParent == null)
+      {
+        m_treeLeafsHashParent = new Hashtable();
+        session.setAttribute("treeLeafsHashParent", m_treeLeafsHashParent);
+      } 
+      m_treeIDtoNameHash = (Hashtable)session.getAttribute("treeIDtoNameHash"); 
+      if(m_treeIDtoNameHash == null)
+      {
+        m_treeIDtoNameHash = new Hashtable();
+        session.setAttribute("treeIDtoNameHash", m_treeIDtoNameHash);
+      }
+      m_treeIDtoNameHashParent = (Hashtable)session.getAttribute("treeIDtoNameHashParent");    
+      if(m_treeIDtoNameHashParent == null)
+      {
+        m_treeIDtoNameHashParent = new Hashtable();
+        session.setAttribute("treeIDtoNameHashParent", m_treeIDtoNameHashParent);
+      }
+      m_expandedTreeNodes = (Stack)session.getAttribute("expandedTreeNodes");    
+      if(m_expandedTreeNodes == null)
+      {
+        m_expandedTreeNodes = new Stack();
+        session.setAttribute("expandedTreeNodes", m_expandedTreeNodes);
+      }
+      m_expandedTreeNodesParent = (Stack)session.getAttribute("expandedTreeNodesParent");    
+      if(m_expandedTreeNodesParent == null)
+      {
+        m_expandedTreeNodesParent = new Stack();
+        session.setAttribute("expandedTreeNodesParent", m_expandedTreeNodesParent);
+      }
+      m_expandedTreeNodesVector = (Vector)session.getAttribute("expandedTreeNodesVector");    
+      if(m_expandedTreeNodesVector == null)
+      {
+        m_expandedTreeNodesVector = new Vector();
+        session.setAttribute("expandedTreeNodesVector", m_expandedTreeNodesVector);
+      }
+    }
+
     // retrieve info stored in servletContext 
-    if(m_ServletContext != null)
+ /*   if(m_ServletContext != null)
       m_treesHash = ( Hashtable)m_ServletContext.getAttribute("treesHash");
     if(m_treesHash == null) 
       m_treesHash = new Hashtable();
@@ -190,7 +256,7 @@ public class EVSMasterTree
     if(m_ServletContext != null)
      m_expandedTreeNodesParent = (Stack)m_ServletContext.getAttribute("expandedTreeNodesParent");    
     if(m_expandedTreeNodesParent == null) 
-      m_expandedTreeNodesParent = new Stack();
+      m_expandedTreeNodesParent = new Stack();*/
   }
   
 /**
@@ -239,6 +305,23 @@ public class EVSMasterTree
       dtsVocab = m_servlet.m_VOCAB_HL7;   
 		Tree dtsTree = new Tree("dtsTree");
     HttpSession session = m_classReq.getSession();
+    
+    m_treesHashParent = (Hashtable)session.getAttribute("treesHashParent");
+    if(m_treesHashParent == null) 
+      m_treesHashParent = new Hashtable();
+     m_treeNodesHashParent = (Hashtable)session.getAttribute("treeNodesHashParent");    
+    if(m_treeNodesHashParent == null) 
+      m_treeNodesHashParent = new Hashtable();
+     m_treeLeafsHashParent = (Hashtable)session.getAttribute("treeLeafsHashParent");    
+    if(m_treeLeafsHashParent == null) 
+      m_treeLeafsHashParent = new Hashtable();
+     m_treeIDtoNameHashParent = (Hashtable)session.getAttribute("treeIDtoNameHashParent");    
+    if(m_treeIDtoNameHashParent == null) 
+      m_treeIDtoNameHashParent = new Hashtable();
+     m_expandedTreeNodesParent = (Stack)session.getAttribute("expandedTreeNodesParent");    
+    if(m_expandedTreeNodesParent == null) 
+      m_expandedTreeNodesParent = new Stack();
+
     dtsVocab = filterName(dtsVocab, "js");
     GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
     EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet); 
@@ -269,9 +352,11 @@ public class EVSMasterTree
       }
       else
       {  
+//System.out.println("popTree  vocabTree == null");
         // Get the Root concepts, names and codes.
         m_vRootNames = evs.getRootConcepts(dtsVocab, true);
         m_vRootCodes = evs.getRootConcepts(dtsVocab, false);
+  //System.out.println("popTree  done getRootConcepts");
         // For each Root, get the Subconcepts. If subconcepts exist, build a Node
         // object, else build a Leaf object
         for(int j=0; j < m_vRootNames.size(); j++) 
@@ -317,16 +402,16 @@ public class EVSMasterTree
         //Keep track of number of nodes in m_treesHash (nodeID is incremented above, each time new node is created
         Integer nodeid = new Integer(lastNodeID);    
         m_treesHash.put("lastNodeID", nodeid);
+//System.out.println("popTree 7");
         if(dtsTree != null)
         {  
           rendHTML = renderHTML(dtsTree);  
         } 
-        //Store the hash tables in servler context, so they are available to all clients using the servlet
-        if(m_ServletContext != null)
+        if(session != null)
         {
-          m_ServletContext.setAttribute("treesHash", m_treesHash);
-          m_ServletContext.setAttribute("treeNodesHash", m_treeNodesHash);
-          m_ServletContext.setAttribute("treeIDtoNameHash", m_treeIDtoNameHash);
+          session.setAttribute("treesHash", m_treesHash);
+          session.setAttribute("treeNodesHash", m_treeNodesHash);
+          session.setAttribute("treeIDtoNameHash", m_treeIDtoNameHash);
         }
       }
 		} 
@@ -334,6 +419,7 @@ public class EVSMasterTree
     {
 			System.out.println("Error in populateTreeRoots: " + e.toString());
 		}
+//System.out.println("popTree done");
   return rendHTML;	
 	}
 
@@ -672,7 +758,7 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
     Vector vSubCodes = new Vector();
     Vector vSubConcepts = new Vector();
     Vector vSubConcepts2 = new Vector();
-     int nodeLevel = 0;
+    int nodeLevel = 0;
     int numChildren = 0;
     String subNodeCode = ""; 
     String subNodeName = ""; 
@@ -718,11 +804,13 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
     if(sSearchAC == null) sSearchAC = "";
     Integer id = new Integer(0);
     String foundCodeInTree = "false";
+//System.out.println("expandNode get lastNodeid");
     if(sSearchAC.equals("ParentConceptVM"))
       id = (Integer)m_treesHashParent.get("lastNodeID");
     else
       id = (Integer)m_treesHash.get("lastNodeID"); // for new nodes will need the last used nodeID
     if(id == null) id = new Integer(0);
+ //System.out.println("expandNode got lastNodeid: " + id);  
     int newNodeID = id.intValue();
     
     GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
@@ -736,9 +824,14 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
   try
   {
     if(nodeID == null || nodeID.equals(""))
+    {
+      if(sSearchAC.equals("ParentConceptVM"))
+        nodeID = (String)m_treeIDtoNameHashParent.get(nodeName);
+      else
         nodeID = (String)m_treeIDtoNameHash.get(nodeName);
+    }
     if(nodeID == null) nodeID = "";
-//System.out.println("expandNode  nodeID: " + nodeID);  
+//System.out.println("expandNode  nodeID: " + nodeID + " nodeName: " + nodeName);  
     // check to see if its the right nodeID 
     Tree nodeChildrenTree = new Tree(1);
     String sTreeParentID = "";
@@ -753,29 +846,32 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
     
     // Get the parent's id of the node being expanded
     int iExName = 0;
-    TreeNode exNode =  (TreeNode)m_treeNodesHash.get(nodeID);
-    if(exNode != null)  
-      iExName = exNode.getParentNodeID();
-
-    // Get the node id of the previous node expanded (which is the parent of the current node
-    // if the mode is 'expandTreeToConcept' i.e. nodeLevelToFind > 0)
-    Integer iNodeID = new Integer(nodeID);
-    Integer iLastNodeIDExpanded = new Integer(sLastNodeIDExpanded);
-    int iID = iNodeID.intValue();
-    int iLast = iLastNodeIDExpanded.intValue();
-
-    String nodeIDOriginal = nodeID;
-    // Do this to get the correct nodeTreeChildren, not one currently cached by same name
-    if(iExName != iLast && nodeLevelToFind>0)
+    int iID = 0;
+    if(!nodeID.equals(""))
     {
-//System.out.println("expandNode nodeID: " + nodeID);
+      TreeNode exNode =  (TreeNode)m_treeNodesHash.get(nodeID);
+      if(exNode != null)  
+        iExName = exNode.getParentNodeID();
+//System.out.println("expandNode  nodeID: " + nodeID); 
+      // Get the node id of the previous node expanded (which is the parent of the current node
+      // if the mode is 'expandTreeToConcept' i.e. nodeLevelToFind > 0)
+      Integer iNodeID = new Integer(nodeID);
+      Integer iLastNodeIDExpanded = new Integer(sLastNodeIDExpanded);
+      iID = iNodeID.intValue();
+      int iLast = iLastNodeIDExpanded.intValue();
+      String nodeIDOriginal = nodeID;
+    // Do this to get the correct nodeTreeChildren, not one currently cached by same name
+      if(iExName != iLast && nodeLevelToFind>0)
+      {
+//System.out.println("expandNode6 nodeID: " + nodeID);
       nodeID = getCorrectNodeID(nodeName, iLast);
       if(nodeID.equals("none"))
         nodeID = nodeIDOriginal;
       nodeChildrenTree = (Tree)m_treesHash.get(nodeID);
-    }
-    iNodeID = new Integer(nodeID);
-    iID = iNodeID.intValue();
+      }
+      iNodeID = new Integer(nodeID);
+      iID = iNodeID.intValue();
+  }
 //System.out.println("expandNode33 nodeID: " + nodeID);    
     if(nodeLevelToFind>0) //only set this on expandTreeToConcept
       session.setAttribute("LastNodeIDExpanded", nodeID); 
@@ -887,6 +983,7 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
               nodeChildrenTree.addChild(tn);
               if(sSearchAC.equals("ParentConceptVM"))
               {
+ // System.out.println("expandNode m_treeNodesHashParent.put(tn.getName(): " + tn.getName());
                 m_treeNodesHashParent.put(tn.getName(), tn);
                 m_treeIDtoNameHashParent.put(tn.getName(), sNodeID); 
                 m_treesHashParent.put(tn.getName(), tn.getChildren()); 
@@ -1181,8 +1278,21 @@ public String collapseNode(String nodeID, String dtsVocab, String shouldRender, 
 public void collapseAllNodes() 
 {
 //System.out.println("collapseAllNodes!!!");
-   HttpSession session = m_classReq.getSession();
+  HttpSession session = m_classReq.getSession();
   String sSearchAC = (String)session.getAttribute("creSearchAC");
+  Stack m_expandedTreeNodes = (Stack)session.getAttribute("expandedTreeNodes");
+  Stack m_expandedTreeNodesParent = (Stack)session.getAttribute("expandedTreeNodesParent");
+  Hashtable m_treeNodesHash = (Hashtable)session.getAttribute("treeNodesHash");
+  Hashtable m_treeNodesHashParent = (Hashtable)session.getAttribute("treeNodesHashParent");
+  Hashtable m_treesHash = (Hashtable)session.getAttribute("treesHash");
+  Hashtable m_treesHashParent = (Hashtable)session.getAttribute("treesHashParent");
+  if(m_expandedTreeNodes == null) m_expandedTreeNodes = new Stack();
+  if(m_expandedTreeNodesParent == null) m_expandedTreeNodesParent = new Stack();
+  if(m_treeNodesHash == null) m_treeNodesHash = new Hashtable();
+  if(m_treeNodesHashParent == null) m_treeNodesHashParent = new Hashtable();
+  if(m_treesHash == null) m_treesHash = new Hashtable();
+  if(m_treesHashParent == null) m_treesHashParent = new Hashtable();
+
   if(sSearchAC == null) sSearchAC = "";
   String nodeName = "";
   TreeNode expandedNode = new TreeNode(1, "", "",1);
@@ -1226,9 +1336,9 @@ public void collapseAllNodes()
           }
         }
         m_treesHash.put(nodeName, nodeChildrenTree);	// Store the tree in the static Hashtable
-        if(m_ServletContext != null)
+        if(session != null)
         {
-            m_ServletContext.setAttribute("expandedTreeNodes", m_expandedTreeNodes);
+            session.setAttribute("expandedTreeNodes", m_expandedTreeNodes);
         }
       }
     }
@@ -1278,10 +1388,10 @@ public void collapseAllNodes()
         if(sSearchAC.equals("ParentConceptVM"))
            m_treesHashParent.put(nodeName, nodeChildrenTree);
       
-        if(m_ServletContext != null)
+       if(session != null)
         {
           if(sSearchAC.equals("ParentConceptVM"))
-            m_ServletContext.setAttribute("expandedTreeNodesParent", m_expandedTreeNodesParent);
+            session.setAttribute("expandedTreeNodesParent", m_expandedTreeNodesParent);
         }
       }
     }
@@ -1404,6 +1514,7 @@ public void collapseAllNodes()
 */
   public String showParentConceptTree(String sCCode, String sCCodeDB, String sCCodeName) 
   {
+// System.out.println("showParentConceptTree");
     if(sCCodeDB.equals("NCI Thesaurus") || sCCodeDB.equals("Thesaurus/Metathesaurus") ||
     sCCodeDB.equals("NCI_Thesaurus") || sCCodeDB.equals(""))
     {
@@ -1450,11 +1561,12 @@ public void collapseAllNodes()
         Integer nodeid = new Integer(lastNodeID);
         m_treesHashParent.put("lastNodeID", nodeid);
         rendHTML = renderHTML(parentTree);
+ // System.out.println("showParentConceptTree1");
         HttpSession session = m_classReq.getSession();
-        if(m_ServletContext != null)
+        if(session != null)
         {
-          m_ServletContext.setAttribute("treesHashParent", m_treesHashParent);
-          m_ServletContext.setAttribute("treeNodesHashParent", m_treeNodesHashParent);
+          session.setAttribute("treesHashParent", m_treesHashParent);
+          session.setAttribute("treeNodesHashParent", m_treeNodesHashParent);
         }
       }
 		} 
@@ -1538,7 +1650,7 @@ public void collapseAllNodes()
    *  @param sNameToFindInTree    The name of the concept to find in tree, then stop expanding
    *  @return rendHTML            The string of html
 */
-  public String expandParentTreeToConcept(Stack stackSuperConcepts, String parentName, String sCCode, String sNameToFindInTree, String nodeID) 
+ /* public String expandParentTreeToConcept(Stack stackSuperConcepts, String parentName, String sCCode, String sNameToFindInTree, String nodeID) 
   {
     String rendHTML = "";
     String sMatch = "false";
@@ -1553,7 +1665,7 @@ public void collapseAllNodes()
     if(baseTree != null)
       rendHTML = renderHTML(baseTree);
     return rendHTML;
-  } 
+  } */
   
 
 /**
@@ -1568,29 +1680,30 @@ public void collapseAllNodes()
     GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);  
     String rendHTML = "";
     
-      m_treesHash = new Hashtable();
-      m_treeNodesHash = new Hashtable();
-      m_treeIDtoNameHash = new Hashtable();
-      m_expandedTreeNodes = new Stack();
-      m_treesHashParent = new Hashtable();
-      m_treeNodesHashParent = new Hashtable();
-      m_treeLeafsHashParent = new Hashtable();
-      m_treeIDtoNameHashParent = new Hashtable();
-      m_expandedTreeNodesParent = new Stack();
-      if(m_ServletContext != null)
-      {
-//System.out.println("refreshTree: m_ServletContext != null");
-        m_ServletContext.setAttribute("treesHash", m_treesHash);
-        m_ServletContext.setAttribute("treeNodesHash", m_treeNodesHash);
-        m_ServletContext.setAttribute("treeIDtoNameHash", m_treeIDtoNameHash);
-        m_ServletContext.setAttribute("expandedTreeNodes", m_expandedTreeNodes);
-        m_ServletContext.setAttribute("expandedTreeNodesParent", m_expandedTreeNodesParent);
-        m_ServletContext.setAttribute("treesHashParent", m_treesHashParent);
-        m_ServletContext.setAttribute("treeNodesHashParent", m_treeNodesHashParent);
-        m_ServletContext.setAttribute("treeLeafsHashParent", m_treeLeafsHashParent);
-        m_ServletContext.setAttribute("treeIDtoNameHashParent", m_treeIDtoNameHashParent);
-      }
-      
+    HttpSession session = m_classReq.getSession();
+    m_treesHash = new Hashtable();
+    m_treeNodesHash = new Hashtable();
+    m_treeIDtoNameHash = new Hashtable();
+    m_expandedTreeNodes = new Stack();
+    m_treesHashParent = new Hashtable();
+    m_treeNodesHashParent = new Hashtable();
+    m_treeLeafsHashParent = new Hashtable();
+    m_treeIDtoNameHashParent = new Hashtable();
+    m_expandedTreeNodesParent = new Stack();
+    if(session != null)
+    {
+//System.out.println("refreshTree: session != null");
+        session.setAttribute("treesHash", m_treesHash);
+        session.setAttribute("treeNodesHash", m_treeNodesHash);
+        session.setAttribute("treeIDtoNameHash", m_treeIDtoNameHash);
+        session.setAttribute("expandedTreeNodes", m_expandedTreeNodes);
+        session.setAttribute("expandedTreeNodesParent", m_expandedTreeNodesParent);
+        session.setAttribute("treesHashParent", m_treesHashParent);
+        session.setAttribute("treeNodesHashParent", m_treeNodesHashParent);
+        session.setAttribute("treeLeafsHashParent", m_treeLeafsHashParent);
+        session.setAttribute("treeIDtoNameHashParent", m_treeIDtoNameHashParent);
+    }
+    
 		try 
     {     
     //  Tree vocabTree = (Tree)m_treesHash.remove(dtsVocab);

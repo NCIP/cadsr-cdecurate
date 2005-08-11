@@ -2387,7 +2387,7 @@ public class InsACService implements Serializable
     //  if (!sContextID.equals("") && !sOCCondrString.equals(""))
       if (!sOCCondrString.equals(""))
       {
-       if (!sREPName.equals(null) || !sREPName.equals(""))
+       if (sREPName != null || !sREPName.equals(""))
        {
           //Create a Callable Statement object.
           sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);

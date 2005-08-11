@@ -2879,7 +2879,7 @@ public class GetACSearch implements Serializable
          return -1;
 
       if (sField.equals("minID") || sField.equals("MaxLength") ||
-            sField.equals("MinLength") || sField.equals("Decimal"))
+            sField.equals("MinLength") || sField.equals("Decimal") || sField.equals("decUse"))
       {
          Integer iName1 = new Integer(firstName);
          Integer iName2 = new Integer(SecondName);
@@ -5369,19 +5369,23 @@ public class GetACSearch implements Serializable
             //store it in the csi bean and store the bean in ac_csi bean
             CSI_Bean csiBean = new CSI_Bean();
             csiBean.setCSI_CS_IDSEQ(rs.getString("CS_IDSEQ"));
-            csiBean.setCSI_CS_LONG_NAME(rs.getString("long_name"));
+            String aName = rs.getString("long_name");
+            aName = m_util.removeNewLineChar(aName);  //remove carriage return
+            csiBean.setCSI_CS_LONG_NAME(aName);
             csiBean.setCSI_CSI_IDSEQ(rs.getString("csi_idseq"));
-            csiBean.setCSI_NAME(rs.getString("CSI_NAME"));
+            aName = rs.getString("CSI_NAME");
+            aName = m_util.removeNewLineChar(aName); //remove carriage return
+            csiBean.setCSI_NAME(aName);
             csiBean.setCSI_CSCSI_IDSEQ(rs.getString("cs_csi_idseq"));
             csiBean.setP_CSCSI_IDSEQ(rs.getString("p_cs_csi_idseq"));
-            csiBean.setCSI_LABEL(rs.getString("label"));
+            aName = rs.getString("label");
+            aName = m_util.removeNewLineChar(aName); //remove carriage return
+            csiBean.setCSI_LABEL(aName);
             csiBean.setCSI_DISPLAY_ORDER(rs.getString("display_order"));
             csiBean.setCSI_LEVEL(rs.getString("csi_level"));
             acCSIBean.setCSI_BEAN(csiBean);
             //get ac attributes.
             acCSIBean.setAC_IDSEQ(AC_IDseq);
-            UtilService util = new UtilService();
-            //AC_Name = util.parsedString(AC_Name);
             acCSIBean.setAC_LONG_NAME(AC_Name);
             acCSIBean.setAC_TYPE_NAME("DE_CONCEPT");
             if (vCSNames == null) vCSNames = new Vector();
@@ -7960,6 +7964,8 @@ boolean isIntSearch)
         Vector vResult = new Vector();
         getEVSSortedRows(req, res);
         evs.get_Result(req, res, vResult, "");
+        String key = (String)session.getAttribute("labelKeyword");
+        req.setAttribute("labelKeyword", key);
         session.setAttribute("results", vResult);
       }
     }
@@ -8281,7 +8287,7 @@ boolean isIntSearch)
         returnValue = returnValue.valueOf(rValue);
       }
       else if (curField.equals("decUse"))
-        returnValue = curBean.getDEC_USING();
+        returnValue = this.getDECCount(curBean.getDEC_USING());   // curBean.getDEC_USING();
       else if (curField.equals("cadsrComp"))
         returnValue = curBean.getcaDSR_COMPONENT();
       else if (curField.equals("comment"))
@@ -8445,7 +8451,7 @@ boolean isIntSearch)
       else if (curField.equals("minID") || curField.equals("publicID"))
         returnValue = curBean.getID();
       else if (curField.equals("decUse"))
-        returnValue = curBean.getDEC_USING();
+        returnValue = this.getDECCount(curBean.getDEC_USING());   // curBean.getDEC_USING();
       if (returnValue == null)
         returnValue = "";
     }
@@ -8457,6 +8463,22 @@ boolean isIntSearch)
     return returnValue;
   }
 
+  private String getDECCount(String sDECCon) throws Exception
+  {
+    String sCount = "";
+    if (sDECCon != null && !sDECCon.equals(""))
+    {
+      int begInd = 0;
+      int endInd = 0;
+      begInd = sDECCon.indexOf("<b>");
+      if (begInd > 0)
+        endInd = sDECCon.indexOf("</b>", begInd);
+      if (begInd > 0 && endInd > 0)
+        sCount = sDECCon.substring(begInd + 3, endInd);
+//System.out.println(sCount + " dec count " + sDECCon);
+    }
+    return sCount;
+  }
   /**
    * To get the sorted vector for the selected field in the PC component, called from getBlockSortedResult.
    * gets the 'blockSortType' from request and 'vACSearch' vector from session.
@@ -8592,22 +8614,6 @@ boolean isIntSearch)
         returnValue = curBean.getLONG_NAME();  //getPREFERRED_NAME();
       else if (curField.equals("umls") || curField.equals("Ident"))
         returnValue = curBean.getNCI_CC_VAL();
-    /*  else if (curField.equals("umls") || curField.equals("Ident"))
-      {
-        String evsDB = curBean.getEVS_DATABASE();
-        String umlsCUI = curBean.getUMLS_CUI_VAL();
-        String tempCUI = curBean.getTEMP_CUI_VAL();
-        if (evsDB.equals("NCI Thesaurus"))
-           returnValue = curBean.getNCI_CC_VAL();
-        else if (evsDB.equals("NCI Metathesaurus") && !umlsCUI.equalsIgnoreCase("No value returned."))
-           returnValue = curBean.getUMLS_CUI_VAL();
-        else if (evsDB.equals("NCI Metathesaurus") && tempCUI.equalsIgnoreCase("No value returned."))
-           returnValue = curBean.getTEMP_CUI_VAL();
-        else if (evsDB.equals("caDSR"))
-           returnValue = curBean.getID();
-        else
-           returnValue = curBean.getNCI_CC_VAL();
-      } */
       else if (curField.equals("def"))
         returnValue = curBean.getPREFERRED_DEFINITION();
       else if (curField.equals("source"))
@@ -8619,7 +8625,7 @@ boolean isIntSearch)
       else if (curField.equals("minID") || curField.equals("publicID"))
         returnValue = curBean.getID();
       else if (curField.equals("decUse"))
-        returnValue = curBean.getDEC_USING();
+        returnValue = this.getDECCount(curBean.getDEC_USING());   // curBean.getDEC_USING();
       if (returnValue == null)
         returnValue = "";
     }
@@ -10144,6 +10150,8 @@ boolean isIntSearch)
     String returnValue = "";
     try
     {
+      EVS_Bean curEVS = curBean.getVM_CONCEPT();
+      if (curEVS == null) curEVS = new EVS_Bean();
       if (curField.equals("meaning"))
         returnValue = curBean.getVM_SHORT_MEANING();
       else if (curField.equals("MeanDesc"))
@@ -10152,6 +10160,13 @@ boolean isIntSearch)
         returnValue = curBean.getVM_COMMENTS();
       else if (curField.equals("ConDomain"))
         returnValue = curBean.getVM_CD_NAME();
+      else if (curField.equals("umls"))
+        returnValue = curEVS.getNCI_CC_VAL();
+      else if (curField.equals("source"))
+        returnValue = curEVS.getEVS_DEF_SOURCE();
+      else if (curField.equals("database"))
+        returnValue = curEVS.getEVS_DATABASE();
+        
       if (returnValue == null)
         returnValue = "";
     }

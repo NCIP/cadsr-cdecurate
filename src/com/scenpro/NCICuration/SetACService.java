@@ -143,14 +143,19 @@ public class SetACService implements Serializable
       String sOriginAction = (String)session.getAttribute("originAction");
       String sMenu = (String)session.getAttribute("MenuAction");
       String sDDEAction = (String)session.getAttribute("DDEAction");
-//System.out.println(sOriginAction + " begin de validate " + sMenu + " de " + sDEAction);
+      boolean isUserEnter = false;
+//System.out.println(sOriginAction + " validate  " + sMenu + " de " + sDEAction);
 
       //check edit or create
       if (sDEAction.equals("EditDE"))
          sDEAction = "Edit";
       else
          sDEAction = "Create";
-
+      //get the right label for pref type
+      if (sDEAction.equals("Create") && (sMenu.equalsIgnoreCase("nothing") 
+          || sMenu.equalsIgnoreCase("NewDEFromMenu") || sDDEAction.equals("CreateNewDEFComp")))
+        isUserEnter = true;
+        
       String sUser = (String)session.getAttribute("Username");
       // mandatory
       s = m_DE.getDE_CONTEXT_NAME();
@@ -196,6 +201,10 @@ public class SetACService implements Serializable
           }
           setValPageVector(vValidate, "Preferred Name", s, bMandatory, 30, strInValid, sOriginAction);
 
+      //pref name type
+      s = m_DE.getAC_PREF_NAME_TYPE();
+      vValidate = this.setValidatePrefNameType(s, isUserEnter, vValidate, sOriginAction);
+      
       s = m_DE.getDE_PREFERRED_DEFINITION();
       if (s == null) s = "";
       strInValid = "";
@@ -204,7 +213,6 @@ public class SetACService implements Serializable
       //workflow status
       s = m_DE.getDE_ASL_NAME();
       if (s == null) s = "";
-  
       setValPageVector(vValidate, "Workflow Status", s, bMandatory, 20, "", sOriginAction);
 
       s = m_DE.getDE_VERSION();
@@ -341,7 +349,7 @@ public class SetACService implements Serializable
       if(sRepType == null || sRepType.length() < 1)
           return;
       else
-          setValPageVector(vValidate, "Representation Type", sRepType, bMandatory, iNoLengthLimit, "", sOriginAction);
+          setValPageVector(vValidate, "Derivation Type", sRepType, bMandatory, iNoLengthLimit, "", sOriginAction);
 
       if(sRule == null)
           sRule = "";
@@ -409,12 +417,20 @@ public class SetACService implements Serializable
       String sDECAction = (String)session.getAttribute("DECAction");
       String sUser = (String)session.getAttribute("Username");
       String sOriginAction = (String)session.getAttribute("originAction");
+      String sMenu = (String)session.getAttribute("MenuAction");
+//System.out.println(sOriginAction + " validate  " + sMenu + " dec " + sDECAction);
+      boolean isUserEnter = false;
       //check edit or create
       if (sDECAction.equals("EditDEC"))
          sDECAction = "Edit";
       else
          sDECAction = "Create";
 
+      //get the right label for pref type
+      if (sDECAction.equals("Create") && (sMenu.equalsIgnoreCase("nothing") 
+          || sMenu.equalsIgnoreCase("NewDECFromMenu") || sOriginAction.indexOf("CreateNewDEC") > -1))
+        isUserEnter = true;
+        
       Vector vValidate = new Vector();
       String s;
       boolean bMandatory = true;
@@ -469,7 +485,11 @@ public class SetACService implements Serializable
          }
       }
       setValPageVector(vValidate, "Preferred Name", s, bMandatory, 30, strInValid, sOriginAction);
-
+      
+      //pref name type
+      s = m_DEC.getAC_PREF_NAME_TYPE();
+      vValidate = this.setValidatePrefNameType(s, isUserEnter, vValidate, sOriginAction);
+      
       s = m_DEC.getDEC_PREFERRED_DEFINITION();
       if (s == null) s = "";
       strInValid = "";
@@ -478,7 +498,7 @@ public class SetACService implements Serializable
       s = m_DEC.getDEC_CD_NAME();
       if (s == null) s = "";
       setValPageVector(vValidate, "Conceptual Domain", s, bMandatory, iNoLengthLimit, "", sOriginAction);
-//System.out.println("setValidatePageValuesDEC3");
+
       s = m_DEC.getDEC_ASL_NAME();
       if (s == null) s = "";  
       if(s.equals("Released") || s.equals("RELEASED"))
@@ -612,12 +632,19 @@ public class SetACService implements Serializable
       String sVDAction = (String)session.getAttribute("VDAction");
       String sOriginAction = (String)session.getAttribute("originAction");
       String sUser = (String)session.getAttribute("Username");
+      String sMenu = (String)session.getAttribute("MenuAction");
+      boolean isUserEnter = false;
 
       //check edit or create
       if (sVDAction.equals("EditVD"))
          sVDAction = "Edit";
       else
          sVDAction = "Create";
+
+      //get the right label for pref type
+      if (sVDAction.equals("Create") && (sMenu.equalsIgnoreCase("nothing") 
+          || sMenu.equalsIgnoreCase("NewVDFromMenu") || sOriginAction.indexOf("CreateNewVD") > -1))
+        isUserEnter = true;
 
       // mandatory for both EDit + editSQL); and Create
       s = m_VD.getVD_CONTEXT_NAME();
@@ -662,7 +689,11 @@ public class SetACService implements Serializable
          }
       }
       setValPageVector(vValidate, "Preferred Name", s, bMandatory, 30, strInValid, sOriginAction);
-
+      
+      //pref name type
+      s = m_VD.getAC_PREF_NAME_TYPE();
+      vValidate = this.setValidatePrefNameType(s, isUserEnter, vValidate, sOriginAction);
+      
       s = m_VD.getVD_PREFERRED_DEFINITION();
       if (s == null) s = "";
       strInValid = "";
@@ -670,8 +701,7 @@ public class SetACService implements Serializable
 
       //same for both edit and new
       s = m_VD.getVD_CD_NAME();
-      if (s == null) s = "";
-  
+      if (s == null) s = "";  
       setValPageVector(vValidate, "Conceptual Domain", s, bMandatory, iNoLengthLimit, "", sOriginAction);
   
       s = m_VD.getVD_ASL_NAME();
@@ -878,6 +908,36 @@ public class SetACService implements Serializable
    }  // end of setValidatePageValuesPV
 
   /**
+   * add the validate message the validation vector
+   * @param sType String selected pref name type
+   * @param sAction String edit or create action
+   * @param vValidate Vector validate message vector
+   * @param sOrigin String originAction
+   * @return vValidate the vector of updated validate message
+   */
+  private Vector setValidatePrefNameType(String sType, boolean isUser, Vector vValidate, String sOrigin)
+  {
+    try
+    {
+      if (sType == null || sType.equals("")) sType = "USER";
+      //use the exanded description of the type
+      if(sType.equalsIgnoreCase("ABBR")) sType = "Abbreviated";
+      else if(sType.equalsIgnoreCase("SYS")) sType = "System Generated";
+      else if(sType.equalsIgnoreCase("USER"))
+      {
+        if (isUser) sType = "User Entered";  //edit/version/nue pages
+        else sType = "Existing Name";      //create new page
+      }
+      setValPageVector(vValidate, "Preferred Name Type", sType, true, -1, "", sOrigin);
+    }
+    catch (Exception e)
+    {
+      logger.fatal("ERROR in setValidatePrefNameType " + e.toString());
+    }
+    //return the validate vector
+    return vValidate;
+  }
+  /**
    * makes validation for block edit
    * @param req
    * @param res
@@ -966,11 +1026,23 @@ public class SetACService implements Serializable
         s = de.getDE_VD_NAME();
         if (s == null) s = "";
         setValPageVector(vValidate, "Value Domain", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
+        //pref name type
+        s = de.getAC_PREF_NAME_TYPE();
+        if (s != null && !s.equals("")) //add the value only if was selected
+          vValidate = this.setValidatePrefNameType(s, false, vValidate, sOriginAction); 
+        else
+          setValPageVector(vValidate, "Preferred Name Type", "", false, -1, "", sOriginAction);
      } 
      else if (sACType.equals("DataElementConcept"))
       {
         //validate naming components
         vValidate = this.setValidateNameComp(vValidate, sACType, req, res, dec, oc, pc, null, null);
+        //pref name type only if was selected
+        s = dec.getAC_PREF_NAME_TYPE();
+        if (s != null && !s.equals("")) //add the value only if was selected
+          vValidate = this.setValidatePrefNameType(s, false, vValidate, sOriginAction); 
+        else
+          setValPageVector(vValidate, "Preferred Name Type", "", false, -1, "", sOriginAction);
         //cd attribute
         s = dec.getDEC_CD_NAME();
         if (s == null) s = "";
@@ -1204,7 +1276,7 @@ public class SetACService implements Serializable
         }
    // System.out.println(sOriginAction + " oc prop invalid " + strInValid);
         //create new version if unique for single or block edit dec
-        if (strInValid == null || strInValid.equals("") || strInValid.indexOf("Warning") > 0)
+        if (strInValid == null || strInValid.equals("") || strInValid.indexOf("Warning") > -1)
         {
           //allow creating new version of object class here if asl name is not released
           if (objID != null && !objID.equals(""))

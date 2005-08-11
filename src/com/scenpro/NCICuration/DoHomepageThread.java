@@ -100,6 +100,8 @@ public class DoHomepageThread extends Thread
     m_classReq = req;
     m_classRes = res;
     m_servlet = CurationServlet;
+    if(m_classReq == null && m_servlet != null)
+      m_classReq = m_servlet.m_classReq;
   }
   
   /**
@@ -110,13 +112,13 @@ public class DoHomepageThread extends Thread
   {
     try
     {
-System.err.println("thread run1");
-      
+System.err.println("thread run1");   
       HttpSession session = m_classReq.getSession();
-      EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet); 
-      evs.getMetaSources(m_classReq, m_classRes);
+      EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);   
+      evs.getMetaSources(m_classReq, m_classRes); 
+//System.err.println("thread run12");  
       EVSMasterTree tree = new EVSMasterTree(m_classReq, "Thesaurus/Metathesaurus", m_servlet);
-      String strHTML = tree.populateTreeRoots("Thesaurus/Metathesaurus");
+      String strHTML = tree.populateTreeRoots("Thesaurus/Metathesaurus");  
       if(session != null)
         session.setAttribute("strHTML", strHTML); 
 System.err.println("done thread");
@@ -124,7 +126,7 @@ System.err.println("done thread");
     catch (Exception ee)
     {
       System.err.println("ERROR - thread run : " + ee);
-      m_servlet.log("ERROR-doHomePageThread : " + ee.toString());
+    //  m_servlet.log("ERROR-doHomePageThread : " + ee.toString());
     }
   }
 }
