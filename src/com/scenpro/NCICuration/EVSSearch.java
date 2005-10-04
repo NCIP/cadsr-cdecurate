@@ -607,7 +607,7 @@ public class EVSSearch implements Serializable
       String sCCode_AllSources = "false";
       if(isMetaCodeSearch == true)
         query.searchByLoincId(termStr,sMetaSource);
-      else if(sMetaSource.equals("All Sources") && sSearchInEVS.equals("Concept Code"))
+  /*    else if(sMetaSource.equals("All Sources") && sSearchInEVS.equals("Concept Code"))
       { // do this because the API does not understand "All Sources"
         sCCode_AllSources = "true";
         query2.getMetaConceptNameByCode(termStr);
@@ -624,7 +624,7 @@ public class EVSSearch implements Serializable
           prefNameConcept = (String)concepts2.get(0);
           query.searchMetaThesaurus(prefNameConcept,sMetaLimit,sMetaSource, false, false, false);
         }
-      }
+      } */
       else if(sSearchInEVS.equals("Concept Code"))
         query.searchMetaThesaurus(termStr,sMetaLimit,sMetaSource, true, false, false);
       else if(!sSearchInEVS.equals("Concept Code"))
@@ -650,11 +650,11 @@ public class EVSSearch implements Serializable
             aMetaThesaurusConcept = (MetaThesaurusConcept)concepts.get(i);
             prefNameConcept = (String)aMetaThesaurusConcept.getName();
             CCode = (String)aMetaThesaurusConcept.getCui();
-            if(sCCode_AllSources.equals("true"))
+          /*  if(sCCode_AllSources.equals("true"))
             {
               if(!CCode.equals(termStr))
                 break;
-            }
+            } */
             if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
                 ilevel = ilevelImmediate;
 
