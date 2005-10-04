@@ -17,9 +17,6 @@
     <property name="app_jclass" location="${app_classes}/org/apache/jsp"/>
     <property name="app_lib" location="${app_webinf}/lib"/>
     <property name="app_tld" location="${app_webinf}/tld"/>
-    <property name="app_war" location="distrib/war"/>
-    <property name="b_class" location="build/bin/com/scenpro/NCICuration"/>
-    <property name="bgen_class" location="build-gen/bin/org/apache/jsp"/>
     
     <!-- set global properties for source directory -->
     <property name="m_java" location="src"/>
@@ -27,6 +24,11 @@
     <property name="m_tld" location="conf/web/tld"/>
     <property name="m_lib" location="lib"/>
     <property name="m_web" location="ui"/>
+    <property name="app_war" location="distrib/war"/>
+    <property name="m_javadoc" location="doc/javadoc"/>
+    <property name="b_class" location="build/bin/com/scenpro/NCICuration"/>
+    <property name="bgen_class" location="build-gen/bin/org/apache/jsp"/>
+    
     
     <!--Set the source path for java files and jsp files to compile-->
     <path id="srcpath">
@@ -94,11 +96,7 @@
             <fileset dir="${m_web}/scripts" excludes="**/*CVS*"/>
             <fileset dir="${m_web}/images" excludes="**/*CVS*"/>
         </copy>
-        <!-- copy web.xml to cdecurate/WEB-INF directory not needes since passed in the war task
-        <copy todir="${app_webinf}" overwrite="YES">
-            <fileset file="${m_xml}/web.xml"/>
-        </copy> -->
-        <!-- copy caBIO.jar to cdecurate/WEB-INF/lib directory  -->
+        <!-- copy client.jar to cdecurate/WEB-INF/lib directory -->
         <copy todir="${app_lib}" overwrite="YES">
           <fileset file="${m_lib}/client.jar"/>
         </copy>
@@ -139,6 +137,92 @@
       </copy>
       
     </target>
+    <!-- make download package -->
+    <target name="ospack">
+        <delete dir="ospackage"/>
+        <mkdir dir="ospackage"/>
+        <copy todir="ospackage">
+            <fileset file="build.xml"/>
+        </copy>
+        <mkdir dir="ospackage/conf/web/tld"/>
+        <copy todir="ospackage/conf/web/tld">
+            <fileset dir="conf/web/tld" excludes="**/*CVS*"/>
+        </copy>
+        <mkdir dir="ospackage/conf/prod"/>
+        <copy todir="ospackage/conf/prod">
+            <fileset dir="conf/osi" excludes="**/*CVS*"/>
+        </copy>
+        <mkdir dir="ospackage/conf/stage"/>
+        <copy todir="ospackage/conf/stage">
+            <fileset dir="conf/osi" excludes="**/*CVS*"/>
+        </copy>
+        <mkdir dir="ospackage/conf/qa"/>
+        <copy todir="ospackage/conf/qa">
+            <fileset dir="conf/osi" excludes="**/*CVS*"/>
+        </copy>
+        <mkdir dir="ospackage/conf/dev"/>
+        <copy todir="ospackage/conf/dev">
+            <fileset dir="conf/osi" excludes="**/*CVS*"/>
+        </copy>
+        <mkdir dir="ospackage/distrib/war"/>
+        <mkdir dir="ospackage/doc"/>
+        <copy todir="ospackage/doc">
+            <fileset dir="doc" excludes="**/*CVS*"/>
+        </copy>
+        <mkdir dir="ospackage/lib"/>
+        <copy todir="ospackage/lib">
+            <fileset dir="lib">
+              <include name="*.jar"/>
+              <exclude name="caBIO.jar"/>
+            </fileset>
+        </copy>
+        <mkdir dir="ospackage/src"/>
+        <copy todir="ospackage/src">
+            <fileset dir="src" excludes="**/*CVS*"/>
+        </copy>
+        <mkdir dir="ospackage/ui"/>
+        <copy todir="ospackage/ui">
+            <fileset dir="ui" excludes="**/*CVS*"/>
+        </copy>
+        <!--zip the file   -->
+        <zip destfile="ospackage/cdecurate.zip">
+            <zipfileset dir="ospackage"/>
+        </zip>
+        <!--tar and zip it   -->
+        <tar destfile="ospackage/cdecurate.tar" basedir="ospackage">
+            <exclude name="*.zip"/>
+        </tar>
+        <gzip zipfile="ospackage/cdecurate.tar.gz" src="ospackage/cdecurate.tar"/>        
+    </target>
+    <!-- make javadoc  -->
+    <target name="build-javadoc">
+        <mkdir dir="${m_javadoc}"/>
+        <javadoc
+                destdir="${m_javadoc}"
+                Private="true"
+                author="true"
+                version="true"
+                use="true"
+                windowtitle="CDE Curation Tool API">
+            <classpath refid="libpath"/>
+           <!-- <classpath>
+                <fileset dir="${lib}">
+                    <include name="**/*.jar" />
+                </fileset>
+            </classpath>  -->
+			
+            <packageset dir="${m_java}" defaultexcludes="yes"/>
+              <!--  <include name="com/scenpro/DSRAlert/**" /> 
+            </packageset>-->
+			
+            <doctitle><![CDATA[<h1>CDE Curation Tool</h1>]]></doctitle>
+            <bottom><![CDATA[<i>Copyright &#169; 2005 ScenPro, Inc. All Rights Reserved.</i>]]></bottom>
+            <tag name="todo" scope="all" description="To do:" />
+            <group title="Source Package" packages="com.scenpro.NCICuration"/>
+            <link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="D:\temp"/>
+            <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
+        </javadoc>
+    </target>
 
     <!-- deploy the war file -->
     <target name="deploy" depends="compile">
@@ -151,8 +235,6 @@
     <!-- do the antcall for local environ -->
     <target name="build-local">
         <echo message="Building : local war file."/>
-        <!-- copy qa caBIO.jar to lib directory and copy local web.xml to conf/web
-        <copy file="${m_lib}/cabio-qa/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>-->
         <copy file="conf/local/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
@@ -164,8 +246,6 @@
     <!-- do the antcall for dev environ -->
     <target name="build-dev">
         <echo message="Building : dev war file."/>
-        <!-- copy qa cabio.jar to lib directory and copy dev web.xml to conf/web
-        <copy file="${m_lib}/cabio-dev/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>-->
         <copy file="conf/dev/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
@@ -177,8 +257,6 @@
     <!-- do the antcall for qa environ -->
     <target name="build-qa">
         <echo message="Building : qa war file."/>
-        <!-- copy qa cabio.jar to lib directory and copy qa web.xml to conf/web
-        <copy file="${m_lib}/cabio-qa/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>-->
         <copy file="conf/qa/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
@@ -190,8 +268,6 @@
     <!-- do the antcall for stage environ -->
     <target name="build-stage">
         <echo message="Building : stage war file."/>
-        <!-- copy stage cabio.jar to lib directory and copy stage web.xml to conf/web
-        <copy file="${m_lib}/cabio-stage/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>-->
         <copy file="conf/stage/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
@@ -203,14 +279,17 @@
     <!-- do the antcall for prod environ -->
     <target name="build-prod">
         <echo message="Building : prod war file."/>
-        <!-- copy stage cabio.jar to lib directory and copy prod web.xml to conf/web
-        <copy file="${m_lib}/cabio-prod/caBIO.jar" tofile="${m_lib}/caBIO.jar" overwrite="YES"/>-->
         <copy file="conf/prod/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
             <param name="conf" value="conf/prod"/>
             <param name="jdebug" value="on"/>
         </antcall>
+    </target>
+    <!-- do antcall for javadoc and ospack -->
+    <target name="build-ospackage">
+        <antcall target="build-javadoc"/>
+        <antcall target="ospack"/>
     </target>
 
 </project>
