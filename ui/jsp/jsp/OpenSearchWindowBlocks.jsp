@@ -1,5 +1,5 @@
 <!-- OpenSearchWindowBlocks.jsp -->
-<%@ page errorPage="ErrorPage.jsp" %>
+<%//@ page errorPage="ErrorPage.jsp" %>
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
 <html>
 <head>

@@ -193,12 +193,15 @@ function keypress_handler()
   }
   
 %>
-  <table width="100%" border="0" bgcolor = "#FFFFFF" valign="middle" align="center">
+  <table width="100%" border="0" bgcolor = "#FFFFFF" valign="middle" align="center" cellspacing="0">
     <col width="30%"><col width="40%"><col width="30%">
-    <tr><td>&nbsp;</td></tr>
-    <tr><td>&nbsp;</td></tr>
+		<tr bgcolor="#A90101">
+				<td  align="left"><a href="http://www.cancer.gov" target=_blank><img src="Assets/brandtype.gif" border="0" alt="NCI Logo"></a></td>
+				<td>&nbsp;</td>
+				<td  align="right"><a href="http://www.cancer.gov" target=_blank><img src="Assets/tagline_nologo.gif" border="0" alt="NCI Logo"></a></td>
+		</tr>
     <tr>
-      <td colspan="3" width="33%" align="center"> <img src="Assets/curation_banner2.gif" name="TopMap" border="0" usemap="#TopMapMap" id="TopMap">
+      <td colspan="3" width="100%" align="left"> <img src="Assets/curation_banner2.gif" name="TopMap" border="0" usemap="#TopMapMap" id="TopMap">
       </td>
     </tr>
     <tr><td>&nbsp;</td></tr>

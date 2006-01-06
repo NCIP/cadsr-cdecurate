@@ -97,6 +97,8 @@
            var selIdx = opener.document.newDECForm.selContext.selectedIndex;
            var conte_idseq = opener.document.newDECForm.selContext[selIdx].value;
            if(conte_idseq == null) conte_idseq = "";
+           if (document.searchParmsForm.sCCodeName != null)
+           {
            document.searchParmsForm.sCCodeName.value = oc;
            document.searchParmsForm.sConteIdseq.value = conte_idseq;
            document.searchParmsForm.listSearchFor[0].value = "ObjectClass";
@@ -105,6 +107,7 @@
            document.searchParmsForm.sCCodeDB.value = opener.ObjClass.innerText;
            document.searchParmsForm.openToTree.value = opener.document.newDECForm.openToTree.value;
            opener.document.newDECForm.openToTree.value = ""; // reset this
+           }
          }
          else if (sSelComp == "VDObjectClass")
          {
@@ -163,6 +166,7 @@
            document.searchParmsForm.sConteIdseq.value = conte_idseq;
            document.searchParmsForm.listSearchFor[0].value = "ParentConceptVM";
            document.searchParmsForm.listSearchFor[0].text = "Value Meaning";
+          // document.searchParmsForm.listSearchFor[0].selected = true;
           //make the search as parent concept when viewing the parent for non enum vd
          }
          else if (sSelComp == "ObjectQualifier")
@@ -244,10 +248,10 @@
   }
 
 //adds options for attributes list and keeps it selected if it was selected before
-function selectAttr(idx, vAttr)
+/*function selectAttr(idx, vAttr)
 {
 	if (vAttr == "Name" && document.searchParmsForm.listAttrFilter != null) 
-      	document.searchParmsForm.listAttrFilter[idx]= new Option("Preferred Name",vAttr);
+      	document.searchParmsForm.listAttrFilter[idx]= new Option("Short Name",vAttr);
 	else if (vAttr == "Alias Name" && document.searchParmsForm.listAttrFilter != null) 
       	document.searchParmsForm.listAttrFilter[idx]= new Option("Name/Alias Name",vAttr);
 	else if (document.searchParmsForm.listAttrFilter != null) 
@@ -262,7 +266,7 @@ function selectAttr(idx, vAttr)
         searchParmsForm.listAttrFilter[idx].selected = true;
     }
   }
-}	
+}	*/
 
   //submits the page if selected searchIn CRFName to create two input fields.
   function doSearchInChange()

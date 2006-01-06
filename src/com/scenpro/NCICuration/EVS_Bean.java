@@ -1,6 +1,8 @@
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/EVS_Bean.java,v 1.6 2006-01-06 21:53:57 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.NCICuration;
 
-import java.io.*;
 import java.util.*;
 import java.io.Serializable;
 import org.apache.log4j.*;
@@ -94,7 +96,7 @@ public class EVS_Bean implements Serializable
 // attributes
   private String RETURN_CODE;
   private String IDSEQ;
-  private String PREFERRED_NAME;
+  private String CONCEPT_NAME;
   private String LONG_NAME;
   private String CONTE_IDSEQ;
   private String CONTEXT_NAME;
@@ -103,10 +105,10 @@ public class EVS_Bean implements Serializable
   private String ASL_NAME;
   private String NCI_CC_TYPE;
   private String NCI_CC_VAL;
-  private String UMLS_CUI_TYPE;
-  private String UMLS_CUI_VAL;
+  private String META_CODE_TYPE;
+  private String META_CODE_VAL;
   private String TEMP_CUI_TYPE;
-  private String TEMP_CUI_VAL;
+  private String EVS_SEMANTIC;
   private String EVS_DEF_SOURCE;
   private String EVS_CONCEPT_SOURCE;
   private String EVS_DATABASE;
@@ -129,7 +131,7 @@ public class EVS_Bean implements Serializable
   /**
    * Constructor
   */
-  public void EVS_Bean() {
+  public EVS_Bean() {
   };
 
   /**
@@ -151,13 +153,13 @@ public class EVS_Bean implements Serializable
       this.IDSEQ = s;
   }
   /**
-   * The setPREFERRED_NAME method sets the PREFERRED_NAME for this bean.
+   * The setCONCEPT_NAME method sets the CONCEPT_NAME for this bean.
    *
-   * @param s The PREFERRED_NAME to set
+   * @param s The CONCEPT_NAME to set
   */
-  public void setPREFERRED_NAME(String s)
+  public void setCONCEPT_NAME(String s)
   {
-      this.PREFERRED_NAME = s;
+      this.CONCEPT_NAME = s;
   }
   /**
    * The setLONG_NAME method sets the LONG_NAME for this bean.
@@ -251,22 +253,22 @@ public class EVS_Bean implements Serializable
       this.NCI_CC_VAL = s;
   }
   /**
-   * The setUMLS_CUI_TYPE method sets the UMLS_CUI_TYPE for this bean.
+   * The setMETA_CODE_TYPE method sets the META_CODE_TYPE for this bean.
    *
-   * @param s The UMLS_CUI_TYPE to set
+   * @param s The META_CODE_TYPE to set
   */
-  public void setUMLS_CUI_TYPE(String s)
+  public void setMETA_CODE_TYPE(String s)
   {
-      this.UMLS_CUI_TYPE = s;
+      this.META_CODE_TYPE = s;
   }
   /**
-   * The setUMLS_CUI_VAL method sets the UMLS_CUI_VAL for this bean.
+   * The setMETA_CODE_VAL method sets the META_CODE_VAL for this bean.
    *
-   * @param s The UMLS_CUI_VAL to set
+   * @param s The META_CODE_VAL to set
   */
-  public void setUMLS_CUI_VAL(String s)
+  public void setMETA_CODE_VAL(String s)
   {
-      this.UMLS_CUI_VAL = s;
+      this.META_CODE_VAL = s;
   }
    /**
    * The setTEMP_CUI_TYPE method sets the TEMP_CUI_TYPE for this bean.
@@ -278,13 +280,13 @@ public class EVS_Bean implements Serializable
       this.TEMP_CUI_TYPE = s;
   }
   /**
-   * The setTEMP_CUI_VAL method sets the TEMP_CUI_VAL for this bean.
+   * The setEVS_SEMANTIC method sets the EVS_SEMANTIC for this bean.
    *
-   * @param s The TEMP_CUI_VAL to set
+   * @param s The EVS_SEMANTIC to set
   */
-  public void setTEMP_CUI_VAL(String s)
+  public void setEVS_SEMANTIC(String s)
   {
-      this.TEMP_CUI_VAL = s;
+      this.EVS_SEMANTIC = s;
   }
    /**
    * The setEVS_DEF_SOURCE method sets the EVS_DEF_SOURCE for this bean.
@@ -438,13 +440,13 @@ public class EVS_Bean implements Serializable
       return this.IDSEQ;
   }
   /**
-  * The getPREFERRED_NAME method returns the PREFERRED_NAME for this bean.
+  * The getCONCEPT_NAME method returns the CONCEPT_NAME for this bean.
   *
-  * @return String The PREFERRED_NAME
+  * @return String The CONCEPT_NAME
   */
-  public String getPREFERRED_NAME()
+  public String getCONCEPT_NAME()
   {
-      return this.PREFERRED_NAME;
+      return this.CONCEPT_NAME;
   }
   /**
   * The getLONG_NAME method returns the LONG_NAME for this bean.
@@ -528,22 +530,22 @@ public class EVS_Bean implements Serializable
       return this.NCI_CC_VAL;
   }
   /**
-  * The getUMLS_CUI_TYPE method returns the UMLS_CUI_TYPE for this bean.
+  * The getMETA_CODE_TYPE method returns the META_CODE_TYPE for this bean.
   *
-  * @return String The UMLS_CUI_TYPE
+  * @return String The META_CODE_TYPE
   */
-  public String getUMLS_CUI_TYPE()
+  public String getMETA_CODE_TYPE()
   {
-      return this.UMLS_CUI_TYPE;
+      return this.META_CODE_TYPE;
   }
   /**
-  * The getUMLS_CUI_VAL method returns the UMLS_CUI_VAL for this bean.
+  * The getMETA_CODE_VAL method returns the META_CODE_VAL for this bean.
   *
-  * @return String The UMLS_CUI_VAL
+  * @return String The META_CODE_VAL
   */
-  public String getUMLS_CUI_VAL()
+  public String getMETA_CODE_VAL()
   {
-      return this.UMLS_CUI_VAL;
+      return this.META_CODE_VAL;
   }
   /**
   * The getCOMMENTS method returns the COMMENTS for this bean.
@@ -564,13 +566,13 @@ public class EVS_Bean implements Serializable
       return this.TEMP_CUI_TYPE;
   }
   /**
-  * The getTEMP_CUI_VAL method returns the TEMP_CUI_VAL for this bean.
+  * The getEVS_SEMANTIC method returns the EVS_SEMANTIC for this bean.
   *
-  * @return String The TEMP_CUI_VAL
+  * @return String The EVS_SEMANTIC
   */
-  public String getTEMP_CUI_VAL()
+  public String getEVS_SEMANTIC()
   {
-      return this.TEMP_CUI_VAL;
+      return this.EVS_SEMANTIC;
   }
   /**
   * The getEVS_DEF_SOURCE method returns the EVS_DEF_SOURCE for this bean.
@@ -699,10 +701,125 @@ public class EVS_Bean implements Serializable
       return this.CON_AC_SUBMIT_ACTION;
   }
   
+  //get the vocab attributes from teh user bean using filter attr and filter value to check and return its equivaltnt attrs
+  public String getVocabAttr(EVS_UserBean eUser, String sFilterValue, String sFilterAttr, String sRetAttr)
+  {
+    //go back if origin is emtpy
+    if (sFilterValue == null || sFilterValue.equals(""))
+      return "";
+    
+    String sRetValue = sFilterValue;    
+    Hashtable eHash = eUser.getVocab_Attr();
+    Vector vVocabs = eUser.getVocabNameList();
+    if (vVocabs == null) vVocabs = new Vector();
+    //handle teh special case to make sure vocab for api query is valid
+    if (sFilterAttr == null || sFilterAttr.equals(""))
+    {
+      //it is valid vocab name
+      if (vVocabs.contains(sFilterValue))
+        return sFilterValue; //found it
+      else
+      {
+        //first check if filter value is from diplay vocab list
+        Vector vDisplay = eUser.getVocabDisplayList();
+        if (vDisplay != null && vDisplay.contains(sFilterValue))
+        {
+          int iIndex = vDisplay.indexOf(sFilterValue);
+          sRetValue = (String)vVocabs.elementAt(iIndex);
+          return sRetValue;  //found it
+        }
+        else
+          sFilterAttr = "vocabDBOrigin";   //filter it as dborigin
+      }
+    }
+    for (int i=0; i<vVocabs.size(); i++)
+    {
+      String sName = (String)vVocabs.elementAt(i);
+      EVS_UserBean usrVocab = (EVS_UserBean)eHash.get(sName);
+      String sValue = "";
+      //check if the vocab is meta thesaurus
+      String sMeta = usrVocab.getIncludeMeta();
+      if (sMeta != null && !sMeta.equals("") && sMeta.equals(sFilterValue))
+        return "MetaValue";
+      //get teh data from teh bean to match search
+      if (sFilterAttr.equalsIgnoreCase("vocabDisplay"))
+        sValue = usrVocab.getVocabDisplay();
+      else if (sFilterAttr.equalsIgnoreCase("vocabDBOrigin"))
+        sValue = usrVocab.getVocabDBOrigin();
+      else if (sFilterAttr.equalsIgnoreCase("vocabName"))
+        sValue = usrVocab.getVocabName();
+      //do matching and return the value
+    //  System.out.println(sFilterValue + " getvocab " + sValue);
+      if (sFilterValue.equalsIgnoreCase(sValue))
+      {
+        //get its value from teh bean for the return attr
+        if (sRetAttr.equalsIgnoreCase("vocabDisplay"))
+          sRetValue = usrVocab.getVocabDisplay();
+        else if (sRetAttr.equalsIgnoreCase("vocabDBOrigin"))
+          sRetValue = usrVocab.getVocabDBOrigin();
+        else if (sRetAttr.equalsIgnoreCase("vocabName"))
+          sRetValue = usrVocab.getVocabName();
+        break;
+      }
+    }
+    //return the first vocab if null
+  //  if ((sRetValue == null || sRetValue.equals("")) && vVocabs != null)
+  //    sRetValue = (String)vVocabs.elementAt(0);
+System.out.println(sRetValue + sFilterValue + sFilterAttr + sRetAttr);
+    if (sRetValue == null) sRetValue = "";
+    return sRetValue;
+  }
+
+  public void setEVSBean(String definition, String defSource, String conName, String dispName, String sMetaCodeType, 
+  String conCode, String dtsVocab, String dbVocab, int iLevel, String condr_idseq, String CONTE_IDSEQ, 
+  String sConceptSource, String aslName, String semType, String vocabMetaType, String vocabMetaCode)
+  {
+    try
+    {
+      UtilService util = new UtilService();  //make sure new line character trimmed out
+      if (definition == null || definition.equals("")) definition = "No Value Exists.";
+      definition = util.removeNewLineChar(definition);
+      this.setPREFERRED_DEFINITION(definition);
+      defSource = defSource.trim();
+      this.setEVS_DEF_SOURCE(defSource);
+      conName = util.removeNewLineChar(conName);
+      this.setCONCEPT_NAME(conName);
+      dispName = util.removeNewLineChar(dispName);
+      this.setLONG_NAME(dispName);
+      this.setNCI_CC_TYPE(sMetaCodeType);
+   System.out.println(conCode.length() + " set evs bean before " + conCode + ";");
+      conCode = util.removeNewLineChar(conCode);
+   System.out.println(conCode.length() + " set evs bean after " + conCode + ";");
+      this.setNCI_CC_VAL(conCode);
+      this.setMETA_CODE_TYPE(vocabMetaType);
+      this.setMETA_CODE_VAL(vocabMetaCode);
+     // this.setTEMP_CUI_TYPE("NCI_META_CUI");
+     // this.setTEMP_CUI_VAL(tempCuiVal);
+   //   if (database != null && database.equals("NCI_Thesaurus")) database = "NCI Thesaurus";
+   //   else if(database != null && database.equals("MGED_Ontology")) database = "MGED";
+      this.setEVS_ORIGIN(dtsVocab);
+      if (dbVocab == null || dbVocab.equals("")) dbVocab = dtsVocab; //add database origin format here.
+      this.setEVS_DATABASE(dbVocab);
+      this.setDEC_USING("");
+      this.setLEVEL(iLevel);
+      this.setCONDR_IDSEQ(condr_idseq);
+      this.setCONTE_IDSEQ(CONTE_IDSEQ);
+      this.setEVS_CONCEPT_SOURCE(sConceptSource);
+      this.setASL_NAME(aslName);
+      semType = util.removeNewLineChar(semType);
+      this.setEVS_SEMANTIC(semType);
+    }
+    catch(Exception e)
+    {
+      System.out.println("EVS_Bean.java setEVS " + e.toString());
+      logger.fatal("EVS_Bean.java setEVS " + e.toString());
+    }
+  }
    
-  public void setEVSBean(String definition, String source, String prefName, String sAltNameType, 
+ /* public void setEVSBean(String definition, String source, String prefName, String sAltNameType, 
   String umlsCuiType, String tempCuiType, String CCode, String umlsCuiVal, 
-  String tempCuiVal, String dtsVocab, int iLevel, String condr_idseq, String CONTE_IDSEQ, String sConceptSource)
+  String tempCuiVal, String dtsVocab, int iLevel, String condr_idseq, String CONTE_IDSEQ, 
+  String sConceptSource, String aslName, String semType)
   {
     try
     {
@@ -719,7 +836,7 @@ public class EVS_Bean implements Serializable
       this.setTEMP_CUI_TYPE("NCI_META_CUI");
       this.setNCI_CC_VAL(CCode);
       this.setUMLS_CUI_VAL(umlsCuiVal);
-      this.setTEMP_CUI_VAL(tempCuiVal);
+     // this.setTEMP_CUI_VAL(tempCuiVal);
       if (database != null && database.equals("NCI_Thesaurus")) database = "NCI Thesaurus";
       else if(database != null && database.equals("MGED_Ontology")) database = "MGED";
       this.setEVS_DATABASE(database);
@@ -743,11 +860,13 @@ public class EVS_Bean implements Serializable
         }
       }
       this.setEVS_CONCEPT_SOURCE(sConceptSource);
+      this.setASL_NAME(aslName);
+      this.setEVS_SEMANTIC(semType);
     }
     catch(Exception e)
     {
       System.out.println("EVS_Bean.java setEVS " + e.toString());
       logger.fatal("EVS_Bean.java setEVS " + e.toString());
     }
-  }
+  } */
 }

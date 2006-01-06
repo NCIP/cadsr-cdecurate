@@ -2,7 +2,10 @@
 <!DOCTYPE web-app PUBLIC
      "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
     "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
-
+<!-- 
+    $Header: /cvsshare/content/cvsroot/cdecurate/conf/osi/web.xml,v 1.2 2006-01-06 21:53:57 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
 <web-app>
   <description>cdecurate</description>
 

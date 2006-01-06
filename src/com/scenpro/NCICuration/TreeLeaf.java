@@ -1,3 +1,5 @@
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/TreeLeaf.java,v 1.3 2006-01-06 21:53:58 hegdes Exp $
+// $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
 
@@ -83,15 +85,17 @@ public class TreeLeaf extends TreeObject {
 
     private int id;
     private String name;
+    private String dispName;
     private String code;
     private int level;
     private boolean visible;
     private boolean bold;
 
-    public TreeLeaf( int id, String name, String code, int level ) {
+    public TreeLeaf( int id, String name, String dispName, String code, int level ) {
         super(Tree.LEAF);
         this.id = id;
         this.name = name;
+        this.dispName = dispName;
         this.code = code;
         this.level = level;
         visible = false;
@@ -103,6 +107,9 @@ public class TreeLeaf extends TreeObject {
     }
     public String getName() {
         return name;
+    }
+    public String getDispName() {
+        return dispName;
     }
     public String getCode() {
         return code;
@@ -121,6 +128,9 @@ public class TreeLeaf extends TreeObject {
     }
     public void setName(String name ) {
         this.name = name;
+    }
+    public void setDispName(String name ) {
+        this.dispName = name;
     }
     public void setCode(String code) {
         this.code = code;

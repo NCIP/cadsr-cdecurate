@@ -1,6 +1,10 @@
+// Copyright (c) 2005 ScenPro, Inc.
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/VD_Bean.java,v 1.4 2006-01-06 21:53:58 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.NCICuration;
 
-import java.io.*;
 import java.util.*;
 
 /**
@@ -84,8 +88,10 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-public class VD_Bean  implements Serializable
+public class VD_Bean extends AC_Bean
 {
+  private static final long serialVersionUID = -2456878461098933694L;
+  
 // Attributes
   private String RETURN_CODE;
   private String VD_VD_IDSEQ;
@@ -168,6 +174,16 @@ public class VD_Bean  implements Serializable
   private Vector VD_AC_CSI_ID;
   private Vector VD_CS_CSI_ID;
   
+  //altname ref docs
+  private Vector AC_ALT_NAMES;
+  private Vector AC_REF_DOCS;
+  //concept name
+  private String AC_CONCEPT_NAME;
+  //contact inf
+  private Hashtable AC_CONTACTS;
+  private String REFERENCE_DOCUMENT;
+  private String ALTERNATE_NAME;
+  
   private String VD_REP_CONCEPT_CODE;
   private String VD_REP_EVS_CUI_ORIGEN;
   private String VD_REP_EVS_CUI_SOURCE;
@@ -201,7 +217,7 @@ public class VD_Bean  implements Serializable
   /**
    * Constructor
   */
-  public void VD_Bean() {
+  public VD_Bean() {
   };
 
   /**
@@ -273,14 +289,20 @@ public class VD_Bean  implements Serializable
       this.setVD_DATE_MODIFIED(copyBean.getVD_DATE_MODIFIED());
       this.setVD_MODIFIED_BY(copyBean.getVD_MODIFIED_BY());
       
-      this.setVD_SELECTED_CONTEXT_ID(copyBean.getVD_SELECTED_CONTEXT_ID());
-      this.setVD_CS_NAME(copyBean.getVD_CS_NAME());
-      this.setVD_CS_ID(copyBean.getVD_CS_ID());
-      this.setVD_CSI_NAME(copyBean.getVD_CSI_NAME());
-      this.setVD_CSI_ID(copyBean.getVD_CSI_ID());
-      this.setVD_AC_CSI_VECTOR(copyBean.getVD_AC_CSI_VECTOR());
-      this.setVD_AC_CSI_ID(copyBean.getVD_AC_CSI_ID());
-      this.setVD_CS_CSI_ID(copyBean.getVD_CS_CSI_ID());
+      this.setAC_SELECTED_CONTEXT_ID(copyBean.getAC_SELECTED_CONTEXT_ID());
+      this.setAC_CS_NAME(copyBean.getAC_CS_NAME());
+      this.setAC_CS_ID(copyBean.getAC_CS_ID());
+      this.setAC_CSI_NAME(copyBean.getAC_CSI_NAME());
+      this.setAC_CSI_ID(copyBean.getAC_CSI_ID());
+      this.setAC_AC_CSI_VECTOR(copyBean.getAC_AC_CSI_VECTOR());
+      this.setAC_AC_CSI_ID(copyBean.getAC_AC_CSI_ID());
+      this.setAC_CS_CSI_ID(copyBean.getAC_CS_CSI_ID());
+      this.setAC_ALT_NAMES(copyBean.getAC_ALT_NAMES());
+      this.setAC_REF_DOCS(copyBean.getAC_REF_DOCS());
+      this.setAC_CONCEPT_NAME(copyBean.getAC_CONCEPT_NAME());
+      this.setAC_CONTACTS(copyBean.getAC_CONTACTS());
+      this.setREFERENCE_DOCUMENT(copyBean.getREFERENCE_DOCUMENT());
+      this.setALTERNATE_NAME(copyBean.getALTERNATE_NAME());
       
       this.setVD_REP_CONCEPT_CODE(copyBean.getVD_REP_CONCEPT_CODE());
       this.setVD_REP_EVS_CUI_ORIGEN(copyBean.getVD_REP_EVS_CUI_ORIGEN());
@@ -898,76 +920,128 @@ public class VD_Bean  implements Serializable
       this.VD_CHECKED = b;
   }
   /**
-   * The setVD_SELECTED_CONTEXT_ID method sets the VD_SELECTED_CONTEXT_ID for this bean.
+   * The setAC_SELECTED_CONTEXT_ID method sets the VD_SELECTED_CONTEXT_ID for this bean.
    *
    * @param s The VD_SELECTED_CONTEXT_ID to set
    */
-  public void setVD_SELECTED_CONTEXT_ID(Vector s)
+  public void setAC_SELECTED_CONTEXT_ID(Vector s)
   {
       this.VD_SELECTED_CONTEXT_ID = s;
   }
   /**
-   * The setVD_CS method sets the VD_CS for this bean.
+   * The setAC_CS method sets the VD_CS for this bean.
    *
    * @param s The VD_CS to set
   */
-  public void setVD_CS_NAME(Vector v)
+  public void setAC_CS_NAME(Vector v)
   {
       this.VD_CS_NAME = v;
   }
   /**
-   * The setVD_CS_ID method sets the VD_CS_ID for this bean.
+   * The setAC_CS_ID method sets the VD_CS_ID for this bean.
    *
    * @param s The VD_CS_ID to set
   */
-  public void setVD_CS_ID(Vector v)
+  public void setAC_CS_ID(Vector v)
   {
       this.VD_CS_ID = v;
   }
   /**
-   * The setVD_CSI method sets the VD_CSI for this bean.
+   * The setAC_CSI method sets the VD_CSI for this bean.
    *
    * @param s The VD_CSI to set
   */
-  public void setVD_CSI_NAME(Vector v)
+  public void setAC_CSI_NAME(Vector v)
   {
       this.VD_CSI_NAME = v;
   }
   /**
-   * The setVD_CSI_ID method sets the VD_CSI_ID for this bean.
+   * The setAC_CSI_ID method sets the VD_CSI_ID for this bean.
    *
    * @param s The VD_CSI_ID to set
   */
-  public void setVD_CSI_ID(Vector v)
+  public void setAC_CSI_ID(Vector v)
   {
       this.VD_CSI_ID = v;
   }
   /**
-   * The setVD_AC_CSI_VECTOR method sets the VD_AC_CSI_VECTOR for this bean.
+   * The setAC_AC_CSI_VECTOR method sets the VD_AC_CSI_VECTOR for this bean.
    *
    * @param s The VD_AC_CSI_VECTOR to set
   */
-  public void setVD_AC_CSI_VECTOR(Vector v)
+  public void setAC_AC_CSI_VECTOR(Vector v)
   {
       this.VD_AC_CSI_VECTOR = v;
   }
   /**
-   * The setVD_AC_CSI_ID method sets the VD_AC_CSI_ID for this bean.
+   * The setAC_AC_CSI_ID method sets the VD_AC_CSI_ID for this bean.
    *
    * @param s The VD_AC_CSI_ID to set
   */
-  public void setVD_AC_CSI_ID(Vector v)
+  public void setAC_AC_CSI_ID(Vector v)
   {
       this.VD_AC_CSI_ID = v;
   }
   /**
-   * The setVD_CS_CSI_ID method sets the VD_CS_CSI_ID for this bean.
+   * The setAC_CS_CSI_ID method sets the VD_CS_CSI_ID for this bean.
    *
    * @param s The VD_CS_CSI_ID to set
   */
-  public void setVD_CS_CSI_ID(Vector v)
+  public void setAC_CS_CSI_ID(Vector v)
   {
       this.VD_CS_CSI_ID = v;
+  }
+  /**
+   * The setAC_ALT_NAMES method sets the AC_ALT_NAMES for this bean.
+   *
+   * @param s The AC_ALT_NAMES to set
+  */
+  public void setAC_ALT_NAMES(Vector v)
+  {
+      this.AC_ALT_NAMES = v;
+  }
+  /**
+   * The setAC_REF_DOCS method sets the AC_REF_DOCS for this bean.
+   *
+   * @param s The AC_REF_DOCS to set
+  */
+  public void setAC_REF_DOCS(Vector v)
+  {
+      this.AC_REF_DOCS = v;
+  }
+  /**
+   * The setAC_CONCEPT_NAME method sets the AC_CONCEPT_NAME for this bean.
+   *
+   * @param s The AC_CONCEPT_NAME to set
+  */
+  public void setAC_CONCEPT_NAME(String s)
+  {
+      this.AC_CONCEPT_NAME = s;
+  }
+  /**
+   * @param ac_contacts The aC_CONTACTS to set.
+   */
+  public void setAC_CONTACTS(Hashtable ac_contacts)
+  {
+    AC_CONTACTS = ac_contacts;
+  }
+
+  /**
+   * The setREFERENCE_DOCUMENT_ method sets the REFERENCE_DOCUMENT for this bean.
+   *
+   * @param s The REFERENCE_DOCUMENT to set
+  */
+  public void setREFERENCE_DOCUMENT(String s)
+  {
+      this.REFERENCE_DOCUMENT = s;
+  }
+
+  /**
+   * @param alternate_name The aLTERNATE_NAME to set.
+   */
+  public void setALTERNATE_NAME(String alternate_name)
+  {
+    ALTERNATE_NAME = alternate_name;
   }
   
 /**
@@ -1210,6 +1284,12 @@ public class VD_Bean  implements Serializable
   {
       return this.VD_VD_IDSEQ;
   }
+  
+  public String getIDSEQ()
+  {
+      return getVD_VD_IDSEQ();
+  }
+  
 	/**
   * The getVD_PREFERRED_NAME method returns the VD_PREFERRED_NAME for this bean.
   *
@@ -1779,78 +1859,130 @@ public class VD_Bean  implements Serializable
       return this.VD_CHECKED;
   }
    /**
-  * The getVD_SELECTED_CONTEXT_ID method returns the VD_SELECTED_CONTEXT_ID for this bean.
+  * The getAC_SELECTED_CONTEXT_ID method returns the VD_SELECTED_CONTEXT_ID for this bean.
   *
   * @return Vector The VD_SELECTED_CONTEXT_ID
   */
-  public Vector getVD_SELECTED_CONTEXT_ID()
+  public Vector getAC_SELECTED_CONTEXT_ID()
   {
       return this.VD_SELECTED_CONTEXT_ID;
   }
   /**
-  * The getVD_CS method returns the VD_CS for this bean.
+  * The getAC_CS method returns the VD_CS for this bean.
   *
   * @return Vector The VD_CS
   */
-  public Vector getVD_CS_NAME()
+  public Vector getAC_CS_NAME()
   {
       return this.VD_CS_NAME;
   }
   /**
-  * The getVD_CS_ID method returns the VD_CS_ID for this bean.
+  * The getAC_CS_ID method returns the VD_CS_ID for this bean.
   *
   * @return Vector The VD_CS_ID
   */
-  public Vector getVD_CS_ID()
+  public Vector getAC_CS_ID()
   {
       return this.VD_CS_ID;
   }
   /**
-  * The getVD_CSI method returns the VD_CSI for this bean.
+  * The getAC_CSI method returns the VD_CSI for this bean.
   *
   * @return String The VD_CSI
   */
-  public Vector getVD_CSI_NAME()
+  public Vector getAC_CSI_NAME()
   {
       return this.VD_CSI_NAME;
   }
   /**
-  * The getVD_CSI_ID method returns the VD_CSI_ID for this bean.
+  * The getAC_CSI_ID method returns the VD_CSI_ID for this bean.
   *
   * @return String The VD_CSI_ID
   */
-  public Vector getVD_CSI_ID()
+  public Vector getAC_CSI_ID()
   {
       return this.VD_CSI_ID;
   }
   
   /**
-  * The getVD_AC_CSI_VECTOR method returns the VD_AC_CSI_VECTOR for this bean.
+  * The getAC_AC_CSI_VECTOR method returns the VD_AC_CSI_VECTOR for this bean.
   *
   * @return Vector The VD_AC_CSI_VECTOR
   */
-  public Vector getVD_AC_CSI_VECTOR()
+  public Vector getAC_AC_CSI_VECTOR()
   {
       return this.VD_AC_CSI_VECTOR;
   }
   /**
-  * The getVD_AC_CSI_ID method returns the VD_AC_CSI_ID for this bean.
+  * The getAC_AC_CSI_ID method returns the VD_AC_CSI_ID for this bean.
   *
   * @return Vector The VD_AC_CSI_ID
   */
-  public Vector getVD_AC_CSI_ID()
+  public Vector getAC_AC_CSI_ID()
   {
       return this.VD_AC_CSI_ID;
   }
 /**
-  * The getVD_CS_CSI_ID method returns the VD_CS_CSI_ID for this bean.
+  * The getAC_CS_CSI_ID method returns the VD_CS_CSI_ID for this bean.
   *
   * @return Vector The VD_CS_CSI_ID
   */
-  public Vector getVD_CS_CSI_ID()
+  public Vector getAC_CS_CSI_ID()
   {
       return this.VD_CS_CSI_ID;
   }
+  /**
+   * The getAC_ALT_NAMES method returns the AC_ALT_NAMES for this bean.
+   *
+   * @return Vector The AC_ALT_NAMES
+   */
+  public Vector getAC_ALT_NAMES()
+  {
+       return this.AC_ALT_NAMES;
+  }
+  /**
+   * The getAC_REF_DOCS method returns the AC_REF_DOCS for this bean.
+   *
+   * @return Vector The AC_REF_DOCS
+   */
+  public Vector getAC_REF_DOCS()
+  {
+       return this.AC_REF_DOCS;
+  }
+  /**
+   * The getAC_CONCEPT_NAME method returns the AC_CONCEPT_NAME for this bean.
+   *
+   * @return String The AC_CONCEPT_NAME
+   */
+   public String getAC_CONCEPT_NAME()
+   {
+       return this.AC_CONCEPT_NAME;
+   }
+   /**
+    * @return Returns the aC_CONTACTS.
+    */
+   public Hashtable getAC_CONTACTS()
+   {
+     return AC_CONTACTS;
+   }
+
+   /**
+    * The getREFERENCE_DOCUMENT method returns the REFERENCE_DOCUMENT for this bean.
+    *
+    * @return String The REFERENCE_DOCUMENT
+    */
+    public String getREFERENCE_DOCUMENT()
+    {
+        return this.REFERENCE_DOCUMENT;
+    }
+    
+    /**
+     * @return Returns the aLTERNATE_NAME.
+     */
+    public String getALTERNATE_NAME()
+    {
+      return ALTERNATE_NAME;
+    }
   
  /**
   * The getVD_REP_CONCEPT_CODE method returns the VD_REP_CONCEPT_CODE for this bean.

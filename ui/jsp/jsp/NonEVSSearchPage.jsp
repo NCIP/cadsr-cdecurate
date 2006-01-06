@@ -34,6 +34,12 @@
   //paste the text back to vd page
   function useSelection()
   {
+    var sURL = document.nonEVSSearchPage.txtRefURL.value;
+    if (sURL != null && sURL != "" && (sURL.length < 7 || (sURL.length >= 7 && sURL.substring(0,7) != "http://")))
+    {
+      alert("Reference Document URL Text must begin with 'http://'");
+      return;
+    }
     if (opener.document != null && opener.document.createVDForm != null)
     {
       opener.document.createVDForm.hiddenParentName.value = document.nonEVSSearchPage.txtRefName.value;
@@ -159,7 +165,7 @@
                 <img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
               </td>
             <tr><td height="7" valign="top"></tr>   
-            </tr>
+            <tr></tr>
           </table>
           <table width="90%" border="0" align="center">
             <col width="60%"><col width="25%"><col width="15%">
@@ -173,7 +179,7 @@
               <td colspan="2">
                 <input type="TEXT" name="txtRefType"  style="width:100%" value="Value Domain Reference" readonly></input>
               </td>
-              </td>
+              <td></td>
             </tr>
             <tr valign="bottom" height="25">
                 <td colspan="3"><b>Reference Name</b> (maximum 30 characters)</td>
@@ -185,7 +191,7 @@
                   onkeyup="javascript:textCounter('txtRefName', 30);"
                   value="<%=sName%>" <% if(!sName.equals("")) {%>readonly<%}%>></input>
               </td>
-              </td>
+              <td></td>
             </tr>
             <tr valign="bottom" height="25">
                 <td colspan="3"><b>Reference Document Text</b> (maximum 4000 characters)</td>
@@ -197,12 +203,11 @@
                   onkeyup="javascript:textCounter('txtRefText', 4000);"
                   <% if(!sName.equals("")) {%>readonly<%}%>><%=sDoc%></textarea>
               </td>
-              </td>
+              <td></td>
             </tr>
             <tr valign="bottom" height="25">
-                <td><b>Reference URL</b> (maximum 240 characters)</td>
-                <td align="center"><a href="javascript:uploadDocument();">Upload Document</a></td>
-                </td>
+                <td colspan="2"><b>Reference URL</b> (maximum 240 characters)</td>
+                <td></td>
             </tr>
             <tr valign="middle">
               <td colspan="2">

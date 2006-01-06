@@ -28,8 +28,9 @@ Validate Data Element
         if(sStat.length()>44)
           sStat2 = sStat.substring(0,43);
         if(sStat2 == null) sStat2 = "";
-        if(sStat.equals("Valid") || sStat.equals("Warning: A Data Element with a duplicate DEC and VD pair already exists within the selected context. ")
-        || sStat.equals("No Change") || sStat2.equals("Warning: Combination of DEC, VD and Context"))
+       // if(sStat.equals("Valid") || sStat.equals("Warning: A Data Element with a duplicate DEC and VD pair already exists within the selected context. ")
+       // || sStat.equals("No Change") || sStat2.equals("Warning: Combination of DEC, VD and Context"))
+        if(sStat.equals("Valid") || sStat.equals("No Change") || sStat.indexOf("Warning: ") > -1)
           isValid = true; // this just keeps the status quo
         else
           isValidFlag = false; // we have true failure here

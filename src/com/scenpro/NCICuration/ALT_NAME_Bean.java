@@ -1,7 +1,9 @@
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/ALT_NAME_Bean.java,v 1.2 2006-01-06 21:53:57 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.NCICuration;
 
 import java.io.*;
-import java.util.*;
 
 /**
  * The ALT_NAME_Bean encapsulates the ALTERNAME NAME information and is stored in the
@@ -86,6 +88,8 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public class ALT_NAME_Bean implements Serializable
 {
+  private static final long serialVersionUID = -4088077713048082910L;
+  
 //Attributes
   private String RETURN_CODE;
   private String ALT_NAME_IDSEQ;
@@ -101,7 +105,7 @@ public class ALT_NAME_Bean implements Serializable
   /**
   * Constructor
   */
-  public void ALT_NAME_Bean() {
+  public ALT_NAME_Bean() {
   };
   
   /**

@@ -61,7 +61,7 @@ function ViewConceptInTree()
     String sVVid = m_PV.getQUESTION_VALUE_IDSEQ();
     if (sVVid == null) sVVid = "";
     String sValue = m_PV.getPV_VALUE();
-    sValue = serUtil.parsedString(sValue);    //call the function to handle doubleQuote
+    sValue = serUtil.parsedStringDoubleQuoteJSP(sValue);    //call the function to handle doubleQuote
     if (sValue == null) sValue = ""; 
     String sVMMeaning = m_PV.getPV_SHORT_MEANING();
     if (sVMMeaning == null) sVMMeaning = ""; 

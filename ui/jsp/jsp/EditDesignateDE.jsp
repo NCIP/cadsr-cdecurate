@@ -1,6 +1,5 @@
 <html>
 <head>
-<title>Edit Designated Data Element</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <%@ page import="java.util.*" %>
 <%@ page import="com.scenpro.NCICuration.*" %>
@@ -20,15 +19,56 @@
     Vector vAltTypes = (Vector)session.getAttribute("AltNameTypes");
     Vector vRefTypes = (Vector)session.getAttribute("RefDocTypes");
     Vector vLanguage = (Vector)session.getAttribute("vLanguage");
-    
+    //get the display type of designation, altnames, refdocs etc
+    String dispType = (String)request.getAttribute("displayType");
+    if (dispType == null) dispType = "";
+    String acType = (String)session.getAttribute("dispACType");
+    if (acType == null) acType = "";
     String sMenuAction = (String)session.getAttribute("MenuAction");
     String sOriginAction = (String)session.getAttribute("originAction");
     if (sOriginAction == null) sOriginAction = "";
-    DE_Bean m_DE = (DE_Bean)session.getAttribute("m_DE");
-    if (m_DE == null) m_DE = new DE_Bean();
+    String sACIDSEQ = "", sLongName = "";
+    DE_Bean m_DE = null;
+    DEC_Bean m_DEC = null;
+    VD_Bean m_VD = null;
+    //get cs-csi attributes
+    Vector vSelCSList = new Vector();
+    Vector vSelCSIDList = new Vector();
+    Vector vACCSIList = new Vector();
+    if (acType.equals("DataElement"))
+    {
+      m_DE = (DE_Bean)session.getAttribute("m_DE");
+      if (m_DE == null) m_DE = new DE_Bean();
+      vSelCSList = m_DE.getAC_CS_NAME();
+      vSelCSIDList = m_DE.getAC_CS_ID();
+      vACCSIList = m_DE.getAC_AC_CSI_VECTOR();
+    }
+    if (acType.equals("DataElementConcept"))
+    {
+      m_DEC = (DEC_Bean)session.getAttribute("m_DEC");
+      if (m_DEC == null) m_DEC = new DEC_Bean();
+      vSelCSList = m_DEC.getAC_CS_NAME();
+      vSelCSIDList = m_DEC.getAC_CS_ID();
+      vACCSIList = m_DEC.getAC_AC_CSI_VECTOR();
+    }
+    if (acType.equals("ValueDomain"))
+    {
+      m_VD = (VD_Bean)session.getAttribute("m_VD");
+      if (m_VD == null) m_VD = new VD_Bean();
+      vSelCSList = m_VD.getAC_CS_NAME();
+      vSelCSIDList = m_VD.getAC_CS_ID();
+      vACCSIList = m_VD.getAC_AC_CSI_VECTOR();
+    }
+    //make sure the vectors are not null
+    if (vSelCSList == null) vSelCSList = new Vector();
+    if (vSelCSIDList == null) vSelCSIDList = new Vector();
+    if (vSelCSList == null) vSelCSList = new Vector();
+    Vector vACId = (Vector)session.getAttribute("vACId");
+    Vector vACName = (Vector)session.getAttribute("vACName");
+
    // session.setAttribute("DEEditAction", "");
-    String sDEIDSEQ = m_DE.getDE_DE_IDSEQ();
-    if (sDEIDSEQ == null) sDEIDSEQ = "";
+ /*    String sDEIDSEQ = m_DE.getDE_DE_IDSEQ();
+    if (sDEIDSEQ == null) sDEIDSEQ = ""; */
 
     String sContext = (String)request.getAttribute("desContext");
     if (sContext == null) sContext = "";
@@ -40,25 +80,18 @@
     String sContID = m_DE.getDE_CONTE_IDSEQ();
     if (sContID == null) sContID = ""; */
 
-    String sLongName = m_DE.getDE_LONG_NAME();
-    sLongName = serUtil.parsedString(sLongName);    //call the function to handle doubleQuote
+  /*  String sLongName = m_DE.getDE_LONG_NAME();
+    sLongName = serUtil.parsedStringDoubleQuoteJSP(sLongName);    //call the function to handle doubleQuote
     if (sLongName == null) sLongName = "";
       
     String sStatus = m_DE.getDE_ASL_NAME();
     if (sStatus == null && sOriginAction.equals("BlockEditDE")) sStatus = "";
-    else if (sStatus == null) sStatus = "DRAFT NEW";
+    else if (sStatus == null) sStatus = "DRAFT NEW"; */
 
-    //get cs-csi attributes
-    Vector vSelCSList = m_DE.getDE_CS_NAME();
-    if (vSelCSList == null) vSelCSList = new Vector();
-
-    Vector vSelCSIDList = m_DE.getDE_CS_ID();
-    Vector vACCSIList = m_DE.getDE_AC_CSI_VECTOR();
-    Vector vACId = (Vector)session.getAttribute("vACId");
-    Vector vACName = (Vector)session.getAttribute("vACName");
     //initialize the beans
     CSI_Bean thisCSI = new CSI_Bean();
     AC_CSI_Bean thisACCSI = new AC_CSI_Bean();
+   	String AltRefStatus = "";
     //get alternate name attributs
     Vector vAllAltName = (Vector)session.getAttribute("AllAltNameList"); 
     if (vAllAltName == null) vAllAltName = new Vector();
@@ -72,6 +105,8 @@
       String altName = altNameBean.getALTERNATE_NAME();
       String altContext = altNameBean.getCONTEXT_NAME();
       String curAlt = altType + " " + altName + " " + altContext;
+      if (AltRefStatus.equals("") && (altSubmit != null && !altSubmit.equals("UPD")))
+        AltRefStatus = "changed";
       //do not count if used by, del, or alredy displayed
       if ((altType != null && altType.equals("USED_BY")) || (altSubmit != null 
         && altSubmit.equals("DEL")) || vDispAlt.contains(curAlt))
@@ -92,6 +127,8 @@
       String refName = refDocBean.getDOCUMENT_NAME();
       String refContext = refDocBean.getCONTEXT_NAME();
       String curRef = refType + " " + refName + " " + refContext;
+      if (AltRefStatus.equals("") && (refSubmit != null && !refSubmit.equals("UPD")))
+        AltRefStatus = "changed";
       //do not count if used by, del, or alredy displayed
       if ((refType != null && refType.equals("USED_BY")) || (refSubmit != null 
         && refSubmit.equals("DEL")) || vDispRef.contains(curRef))
@@ -99,9 +136,13 @@
       //do the count and chek box name
       vDispRef.addElement(curRef);
     }
-    
+    String updLink = "";
+    //make function call accordiing ot what is disptype
+    if (!dispType.equals("") && !dispType.equals("Designation"))
+      updLink = "javascript:updateAttributes('" + dispType + "', '" + acType + "', '" + AltRefStatus + "');";
+ // System.out.println(dispType + acType + updLink); 
     int item = 1;
-        
+    int iDivHt = 0;    
 %>
 
 <Script Language="JavaScript">
@@ -222,26 +263,46 @@
   //back button
   function Back()
   {
-		document.designateDEForm.Message.style.visibility="visible";
+	document.designateDEForm.Message.style.visibility="visible";
     document.designateDEForm.newCDEPageAction.value = "backToSearch";
     document.designateDEForm.submit();
   }
   function ClearBoxes()
   {
-		document.designateDEForm.Message.style.visibility="visible";
+	document.designateDEForm.Message.style.visibility="visible";
     document.designateDEForm.newCDEPageAction.value = "clearBoxes";
     document.designateDEForm.submit();
   }
   
+  function refreshPage()
+  {
+  	var sType = "<%=dispType%>";
+    if (sType == null || sType == "")
+    {
+      if (opener.document != null && opener.document.SearchActionForm != null)
+        sType = opener.document.SearchActionForm.itemType.value;
+      if (sType != null && sType != "")
+      {
+		document.designateDEForm.Message.style.visibility = "visible";
+        document.designateDEForm.newCDEPageAction.value = "open for " + sType;  //"refreshPage";
+        document.designateDEForm.submit();
+      }
+     // else
+        //alert("don't know what to do");
+    }
+  }
+  
 </Script>
+<title>Maintain <%=acType %> <%=dispType %> Attributes</title>
 </head>
 
-<body>
+<body onload="refreshPage();">
 <form name="designateDEForm" method="post" action="/cdecurate/NCICurationServlet?reqType=designateDE">
   <table width="100%" border=0>
     <!--DWLayoutTable-->
     <tr>
       <td align="left" valign="top" colspan=2>
+      <%if (dispType.equals("Designation")) { %>
         <input type="button" name="btnUpdate" value="Update Used By Attributes" style="width:170" 
               onClick="javascript:submitDesignate('create');"
               onHelp = "showHelp('Help_CreateDE.html#newCDEForm_Validation'); return false">
@@ -257,7 +318,18 @@
         <input type="button" name="btnDetails" value="Details" onClick="javascript:openBEDisplayWindow();"
 				onHelp = "showHelp('Help_Updates.html#newCDEForm_details'); return false">
           &nbsp;&nbsp;
-		  <img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+      <% } %>
+      <%if (!dispType.equals("") && !dispType.equals("Designation")) { %>
+        <input type="button" name="btnUpdate" value="Update Attributes" style="width:170" 
+              onClick="<%=updLink%>"
+              onHelp = "showHelp('Help_CreateDE.html#newCDEForm_Validation'); return false">
+          &nbsp;&nbsp;&nbsp;&nbsp;
+      <% } %>
+      <%if (!dispType.equals("Designation")) { %>
+        <input type="button" name="btnClose" value="Close Window" onClick="window.close();">
+          &nbsp;&nbsp;&nbsp;&nbsp;
+      <% } %>
+        <img name="Message" src="../../cdecurate/Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;"> 
       </td>
     </tr>
   </table>
@@ -265,6 +337,7 @@
     <col width="4%"><col width="95%">
   	<tr valign="middle"> 
       <th colspan=2 height="40"> <div align="left"> 
+      <%if (dispType.equals("Designation")) { %>
        <% if (sMenuAction.equals("EditDesDE") && sOriginAction.equals("BlockEditDE")){%>
           <label><font size=4>Block Designate <font color="#FF0000">Data Elements</font>
           </font></label>
@@ -272,13 +345,17 @@
           <label><font size=4>Designate<font color="#FF0000"> Data Element</font>
           </font></label>
         <% } %>
-        </div></th>
+      <% } else if (!dispType.equals("")) { %>
+          <label><font size=4>Create<font color="#FF0000"> <%=dispType%></font> Attributes
+          </font></label>
+      <% } %>
+      </div></th>
     </tr>
-    
     <tr valign="bottom" height="25">
       <td align="left" colspan=2 height="11"><font color="#FF0000">&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;</font>Indicates Required Field</td>
     </tr>
     
+<%if (dispType.equals("Designation")) { %>
     <tr height="25" valign="bottom">
         <td align=right><font color="#FF0000">*&nbsp;</font><%=item++%>)</td>
         <td><font color="#FF0000">Designate </font>in Context</td>
@@ -326,6 +403,7 @@
         </select>
       </td>
     </tr>
+<% } %>    <!-- end designation type -->
     <!-- select the language -->
   	<tr valign="bottom" height="40">
         <td align=right><%=item++%>)</td>
@@ -351,9 +429,10 @@
     </tr>
     
     <!-- alternate Names -->
-  	<tr valign="bottom" height="40">
-        <td align=right><%=item++%>)</td>
-        <td><font color="#FF0000">Create </font>Alternate Name Attributes</td>
+  <%if (dispType.equals("Designation") || dispType.equals("Alternate Names")) { %>
+    <tr valign="bottom" height="40">
+      <td align=right><%=item++%>)</td>
+      <td><font color="#FF0000">Create </font>Alternate Name Attributes</td>
     </tr>
     <tr>
       <td align="left">&nbsp;</td>
@@ -422,10 +501,6 @@
                         <th align="center"><b>Alternate Name</b></th>
                         <th align="center"><b>Context</b></th>
                         <th align="center"><b>Language</b></th>       
-                     <!--   <th align="center"><a href="javascript:sortAlt('type');">Alternate Name Type</a></th>
-                        <th align="center"><a href="javascript:sortAlt('name');">Alternate Name</a></th>
-                        <th align="center"><a href="javascript:sortAlt('context');">Context</a></th>
-                        <th align="center"><a href="javascript:sortAlt('lang');">Language</a></th>   -->    
                      </tr>
                     </table>
                   </td>
@@ -433,7 +508,7 @@
                 <tr>   
                   <td>
         <%
-                    int iDivHt = 30;
+                    iDivHt = 30;
                     if (vDispAlt.size() > 4) iDivHt = 150;
                     else if (vDispAlt.size() > 0) iDivHt = ((30 * vDispAlt.size()) + 10);
         %>
@@ -503,11 +578,15 @@
         </table>
       </td>
     </tr>
+<% } %>    <!-- end alternate names -->
     <!-- Reference Documents -->
+<%if (dispType.equals("Designation")) { %>
   	<tr valign="bottom" height="40">
       <td align=right><%=item++%>)</td>
       <td><font color="#FF0000">Create </font>Reference Document Attributes</td>
     </tr>
+<% } %><!-- end rd label for designation type -->
+<%if (dispType.equals("Designation") || dispType.equals("Reference Documents")) { %>
     <tr>
       <td align="left">&nbsp;</td>
       <td>
@@ -558,8 +637,8 @@
           </tr>
           <tr valign="bottom" height="25">
               <td>Create Reference Document URL (maximum 240 characters)</td>
-              <td><a href="javascript:uploadDocument();">Upload Document</a></td>
-          </tr>
+              <td></td>
+          </tr> 
           <tr valign="middle">
             <td colspan="2">
               <input name="txtRefURL" type="text" value="" style="width:70%" 
@@ -575,8 +654,10 @@
           <tr><td height="12" valign="top"></tr>    
           <tr>
             <td>Selected Reference Document Attributes</td>
-            <td align="right"><input  type="button" name="btnRemRefDoc" value="Remove Item" 
-                    style="width:100" onClick="removeRefDoc();" disabled>&nbsp;&nbsp;&nbsp;</td>
+            <td align="right">
+              <input  type="button" name="btnRemRefDoc" value="Remove Item" 
+                    style="width:100" onClick="removeRefDoc();" disabled>&nbsp;&nbsp;&nbsp;
+            </td>
           </tr>
           <tr>
             <td colspan="2">
@@ -596,12 +677,6 @@
                         <th align="center"><b>Reference Document <br>URL</b></th>
                         <th align="center"><b>Context</b></th>
                         <th align="center"><b>Language</b></th>       
-                     <!--   <th align="center"><a href="javascript:sortRef('type');">Reference Document Type</a></th>
-                        <th align="center"><a href="javascript:sortRef('name');">Reference Document Name</a></th>
-                        <th align="center"><a href="javascript:sortRef('text');">Reference Document Text</a></th>
-                        <th align="center"><a href="javascript:sortRef('url');">Reference Document URL</a></th>
-                        <th align="center"><a href="javascript:sortRef('context');">Context</a></th>
-                        <th align="center"><a href="javascript:sortRef('lang');">Language</a></th>    -->   
                      </tr>
                     </table>
                   </td>
@@ -690,8 +765,9 @@
         </table>
       </td>
     </tr>
+<% } %><!-- end reference documents -->
         <!-- Classification Scheme and items -->          
-        
+<%if (dispType.equals("Designation")) { %>        
     <tr valign="bottom" height="40">
       <td align=right><%=item++%>)</td>
       <td><font color="#FF0000">Select </font>Classification Scheme and Classification Scheme Items</td>
@@ -768,14 +844,14 @@
 						<%if (sOriginAction.equals("BlockEditDE")){%>
               <select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();"
                    onHelp = "showHelp('Help_CreateDE.html#newCDEForm_BlockselCS'); return false">
-									<% } else { %>
-									<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();"
-											 onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selCS'); return false">
-									<% } %>
+					<% } else { %>
+					<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();"
+							 onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selCS'); return false">
+					<% } %>
 	              </select>
             </td>
           </tr>
-<%if (sOriginAction.equals("BlockEditDE")){%>
+      <%if (sOriginAction.equals("BlockEditDE")){%>
           <tr><td height="12" valign="top"></tr>    
           <tr>
             <td colspan=3>&nbsp;</td>
@@ -789,10 +865,11 @@
               </select>
             </td>
           </tr>
-<%}%>
+      <%}%>
         </table>
       </td>
     </tr>
+<%}%> <!-- end cscsi for designation type -->
   </table> 
 <input type="hidden" name="newCDEPageAction" value="nothing">
 <%if(sOriginAction.equals("BlockEditDE")){%>
@@ -800,7 +877,7 @@
 <% } else {%>
 <input type="hidden" name="DEAction" value="EditDE">
 <% } %>
-<input type="hidden" name="deIDSEQ" value="<%=sDEIDSEQ%>">
+<input type="hidden" name="deIDSEQ" value="<%=sACIDSEQ%>">
 <input type="hidden" name="txtLongName" value="<%=sLongName%>">
 <!-- source, language, doctext ids from des/rd tables  -->
 <select name= "selCSCSIHidden" size ="1" style="visibility:hidden;"  multiple></select>
@@ -825,12 +902,15 @@ This is refilled with ac id from ac-csi to use it for block edit-->
 <input type="hidden" name="originActionHidden" value="<%=sOriginAction%>">
 <input type="hidden" name="contextName" value="">
 <input type="hidden" name="sortColumn" value="">
+<input type="hidden" name="pageDisplayType" value="<%=dispType%>">
 
 <script language = "javascript">
 //call function to initiate form objects
+<%if (dispType.equals("Designation")) { %>
 createObject("document.designateDEForm");
-displayStatusMessage();
 loadCSCSI();
+<% } %>
+displayStatusMessage();
 //loadAltNameArray();
 //loadRefDocArray();
 </script>

@@ -1,5 +1,8 @@
-
 // Copyright (c) 2002 ScenPro, Inc.
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/UserBean.java,v 1.2 2006-01-06 21:53:58 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.NCICuration;
 
 import java.io.Serializable;

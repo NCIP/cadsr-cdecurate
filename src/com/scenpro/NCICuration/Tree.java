@@ -1,3 +1,5 @@
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/Tree.java,v 1.3 2006-01-06 21:53:58 hegdes Exp $
+// $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
 import java.util.Vector;
@@ -86,6 +88,7 @@ public class Tree {
     private Vector children;
     private int selected;
     private String name;
+    private String dispName;
     private int level;
     private int parentNodeID;
 
@@ -102,9 +105,11 @@ public class Tree {
         this.name = name;
         children = new Vector();
     }
-
     public String getName() {
         return this.name;
+    }
+    public String getDispName() {
+        return dispName;
     }
     public int getLevel() {
         return this.level;
@@ -118,29 +123,27 @@ public class Tree {
     public void setName( String name ) {
         this.name = name;
     }
+    public void setDispName(String name ) {
+        this.dispName = name;
+    }
     public void setLevel(int level) {
         this.level = level;
     }
     public int getSelected() {
         return this.selected;
     }
-
     public void setSelected( int selected ) {
         this.selected = selected;
     }
-
     public void addChild (TreeObject child) {
         children.addElement(child);
     }
-
     public TreeObject getChild(int index) {
         return (TreeObject)children.elementAt(index);
-    }
-    
+    }    
     public Vector getChildren() {
         return (Vector)children;
-    }
-    
+    }    
     public int size() {
         return children.size();
     }

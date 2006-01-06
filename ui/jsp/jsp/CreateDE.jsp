@@ -19,9 +19,9 @@
     Vector vRegStatus = (Vector)session.getAttribute("vRegStatus");
     Vector vCS = (Vector)session.getAttribute("vCS");
     Vector vCS_ID = (Vector)session.getAttribute("vCS_ID");
-    Vector vLanguage = (Vector)session.getAttribute("vLanguage");
+   // Vector vLanguage = (Vector)session.getAttribute("vLanguage");
     Vector vSource = (Vector)session.getAttribute("vSource");
-	  int count =0;
+	//  int count =0;
     String sDECLongID = "";
 
     UtilService serUtil = new UtilService();
@@ -45,12 +45,12 @@
     String sContID = m_DE.getDE_CONTE_IDSEQ();
     if (sContID == null) sContID = "";
     String sLongName = m_DE.getDE_LONG_NAME();
-    sLongName = serUtil.parsedString(sLongName);    //call the function to handle doubleQuote
+    sLongName = serUtil.parsedStringDoubleQuoteJSP(sLongName);    //call the function to handle doubleQuote
     if (sLongName == null) sLongName = "";
     int sLongNameCount = sLongName.length();
 
     String sName = m_DE.getDE_PREFERRED_NAME();
-    sName = serUtil.parsedString(sName);    //call the function to handle doubleQuote
+    sName = serUtil.parsedStringDoubleQuoteJSP(sName);    //call the function to handle doubleQuote
     if (sName == null) sName = "";
     int sNameCount = sName.length();
     String lblUserType = "Existing Name (Editable)";
@@ -69,18 +69,18 @@
     if ((sDECID == null) || (sDECID.equals("nothing"))) sDECID = "";
     String sDEC = dec.getDEC_LONG_NAME();   //m_DE.getDE_DEC_NAME();
     if (sDEC == null) sDEC = "";
-    sDEC = serUtil.parsedString(sDEC);     //call the function to handle doubleQuote
+    sDEC = serUtil.parsedStringDoubleQuoteJSP(sDEC);     //call the function to handle doubleQuote
 
     VD_Bean vd = m_DE.getDE_VD_Bean();
     if (vd == null) vd = new VD_Bean();
     String sVDID = vd.getVD_VD_IDSEQ();  // m_DE.getDE_VD_IDSEQ();
     if ((sVDID == null) || (sVDID.equals("nothing"))) sVDID = "";
     String sVD = vd.getVD_LONG_NAME();  // m_DE.getDE_VD_NAME();
-    sVD = serUtil.parsedString(sVD);    //call the function to handle doubleQuote
+    sVD = serUtil.parsedStringDoubleQuoteJSP(sVD);    //call the function to handle doubleQuote
     if (sVD == null) sVD = "";
 
     boolean decvdChanged = m_DE.getDEC_VD_CHANGED();
-
+    
     String sVersion = m_DE.getDE_VERSION();
     if (sVersion == null) sVersion = "1.0";
     String sStatus = m_DE.getDE_ASL_NAME();
@@ -97,9 +97,9 @@
        SimpleDateFormat formatter = new SimpleDateFormat ("MM/dd/yyyy");
        sBeginDate = formatter.format(currentDate);
     }
-    String sDocText = m_DE.getDOC_TEXT_LONG_NAME();
+    String sDocText = m_DE.getDOC_TEXT_PREFERRED_QUESTION();
     if (sDocText == null) sDocText = "";
-    String sDocTextIDSEQ = m_DE.getDOC_TEXT_LONG_NAME_IDSEQ();
+    String sDocTextIDSEQ = m_DE.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ();
     if (sDocTextIDSEQ == null) sDocTextIDSEQ = "";
     String sChangeNote = m_DE.getDE_CHANGE_NOTE();
     if (sChangeNote == null) sChangeNote = "";
@@ -110,10 +110,10 @@
     if (sSource == null) sSource = "";
 
     //get cs-csi attributes
-    Vector vSelCSList = m_DE.getDE_CS_NAME();
+    Vector vSelCSList = m_DE.getAC_CS_NAME();
     if (vSelCSList == null) vSelCSList = new Vector();
-    Vector vSelCSIDList = m_DE.getDE_CS_ID();
-    Vector vACCSIList = m_DE.getDE_AC_CSI_VECTOR();
+    Vector vSelCSIDList = m_DE.getAC_CS_ID();
+    Vector vACCSIList = m_DE.getAC_AC_CSI_VECTOR();
     Vector vACId = (Vector)session.getAttribute("vACId");
     Vector vACName = (Vector)session.getAttribute("vACName");
     //initialize the beans
@@ -122,14 +122,19 @@
     
     String sEndDate = m_DE.getDE_END_DATE();
     if (sEndDate == null) sEndDate = "";
-    
+    //get the contact hashtable for the de
+    Hashtable hContacts = m_DE.getAC_CONTACTS();
+    if (hContacts == null) hContacts = new Hashtable();
+    session.setAttribute("AllContacts", hContacts);
     //these are for DEC and VD searches.
     session.setAttribute("MenuAction", "searchForCreate");
     Vector vResult = new Vector();
     session.setAttribute("results", vResult);
     session.setAttribute("creRecsFound", "No ");
     session.setAttribute("creKeyword", "");
-
+    //for altnames and ref docs
+    session.setAttribute("dispACType", "DataElement");
+    
     // for DDE
     String sSelRepType = (String)session.getAttribute("sRepType");
     String sSelConcatChar = (String)session.getAttribute("sConcatChar");
@@ -294,20 +299,21 @@
     <col width="5%"><col width="95%">
     <tr>
       <td align="left" valign="top" colspan=2>
-        <input type="button" name="btnValidate" value="Validate" style="width: 125", "height: 30" onClick="SubmitValidate('validate')"
+        <input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate')"
 				onHelp = "showHelp('Help_CreateDE.html#newCDEForm_Validation'); return false">&nbsp;&nbsp;
           &nbsp;&nbsp;
-        <input type="button" name="btnClear" value="Clear" style="width: 125", "height: 30" onClick="ClearBoxes();">
+        <input type="button" name="btnClear" value="Clear" style="width: 125" onClick="ClearBoxes();">
           &nbsp;&nbsp;
         <% if (sMenuAction.equals("Questions") || sMenuAction.equals("NewDETemplate") || sMenuAction.equals("NewDEVersion") || sDDEAction.equals("CreateNewDEFComp")){%>
-        <input type="button" name="btnBack" value="Back" style="width: 125", "height: 30" onClick="Back();"> 
+        <input type="button" name="btnBack" value="Back" style="width: 125" onClick="Back();"> 
           &nbsp;&nbsp;
         <% } %>
-<%if (sMenuAction.equals("NewDEVersion") && !sDDEAction.equals("CreateNewDEFComp")) {%>
-        <input type="button" name="btnAltName" value="Alternate Names" style="width: 125", "height: 30" onClick="openAltNameWindow();"
-				onHelp = "showHelp('Help_Updates.html#newCDEForm_altNames'); return false">
+        <input type="button" name="btnAltName" value="Alternate Names" style="width:125" onClick="openDesignateWindow('Alternate Names');"
+				onHelp = "showHelp('Help_Updates.html#newDECForm_altNames'); return false">
           &nbsp;&nbsp;
-<%}%>          
+        <input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');"
+				onHelp = "showHelp('Help_Updates.html#newDECForm_refDocs'); return false">
+          &nbsp;&nbsp;
         <img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
       </td>
     </tr>
@@ -386,8 +392,8 @@
       </td>
     <tr height="25" valign="bottom" >
       <td align=right><font color="#FF0000">* &nbsp;</font><%=item++%>)</td>
-      <td><font color="#FF0000">Verify
-        <font color="#000000"> Data Element Long Name </font></font></td>
+      <td><font color="#FF0000">Verify </font>
+        <font color="#000000"> Data Element Long Name (* ISO Preferred Name)</font></td>
     </tr>
     <tr>
       <td><font color="#FF0000"> </font></td>
@@ -402,31 +408,34 @@
     </tr>
     <tr height="25" valign="bottom" >
       <td align=right><font color="#FF0000">* &nbsp;</font><%=item++%>)</td>
-      <td><font color="#FF0000">Update </font>Data Element Preferred Name</td>
+      <td><font color="#FF0000">Update </font>Data Element Short Name</td>
     </tr>
     <tr>
     	<td>&nbsp;</td>
-     	<td height="24" valign="bottom">Select Preferred Name Naming Standard</td>
+     	<td height="24" valign="bottom">Select Short Name Naming Standard</td>
     </tr>
     <tr>
     	<td>&nbsp;</td>
      	<td height="24" valign="top">
-	      <input name="rNameConv" type="radio" value="SYS" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("SYS")) {%> 
-          checked <%}%>>System Generated &nbsp;&nbsp;&nbsp; 
-        <input name="rNameConv" type="radio" value="ABBR" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("ABBR")) {%> 
-          checked <%}%>>Abbreviated &nbsp;&nbsp;&nbsp; 
-        <input name="rNameConv" type="radio" value="USER" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("USER")) {%> 
-          checked <%}%>><%=lblUserType%>   <!--Existing Name (Editable)  User Maintained-->
+	      <input name="rNameConv" type="radio" value="SYS" 
+	      	onclick="javascript:SubmitValidate('changeNameType');" 
+	      	<%if (sPrefType.equals("SYS")) {%>checked <%}%>>System Generated &nbsp;&nbsp;&nbsp; 
+        <input name="rNameConv" type="radio" value="ABBR" 
+        	onclick="javascript:SubmitValidate('changeNameType');" 
+        	<%if (sPrefType.equals("ABBR")) {%>checked <%}%>>Abbreviated &nbsp;&nbsp;&nbsp; 
+        <input name="rNameConv" type="radio" value="USER" 
+        	onclick="javascript:SubmitValidate('changeNameType');" 
+        	<%if (sPrefType.equals("USER")) {%> checked <%}%>><%=lblUserType%>   <!--Existing Name (Editable)  User Maintained-->
       </td>
     </tr> 
     <tr>
       <td><font color="#FF0000"> </font></td>
       <td height="24" valign="top">
 	     <input name="txtPreferredName" type="text" value="<%=sName%>" size="80" maxlength=30 onKeyUp="changeCountPN();"
-           <%if (sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")) {%> readonly <%}%>
+           <%if (sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")) {%> readonly<%}%>
   	       onHelp = "showHelp('Help_CreateDE.html#newCDEForm_txtLongName'); return false">
           &nbsp;&nbsp;&nbsp; <font color="#666666">
-        <input name="txtPrefNameCount" type="text" size="1"  value="<%=sNameCount%>" readonly >
+        <input name="txtPrefNameCount" type="text" size="1"  value="<%=sNameCount%>" readonly>
           <font color="#000000"> Character Count</font></font>
           &nbsp;&nbsp;(Database Max = 30)
       </td>
@@ -539,7 +548,7 @@
     
     <tr height="25" valign="bottom">
       <td align=right><%=item++%>)</td>
-      <td><font color="#FF0000">Create</font> Document Text</td>
+      <td><font color="#FF0000">Create</font> Preferred Question Text</td>
     </tr>
     <tr>
       <td>&nbsp;</td>
@@ -614,6 +623,52 @@
         </table>
       </td>
     </tr>
+ <!-- contact info -->
+    <tr><td height="12" valign="top"></tr>    
+  	<tr valign="bottom" height="40">
+      <td colspan=2>
+        <table width=60% border="0">
+          <col width="2%"><col width="40%"><col width="15%"> <col width="15%"><col width="15%">
+		  <tr>
+		    <td align=right><%=item++%>)</td>
+		    <td><font color="#FF0000">Select </font>Contacts</td>
+            <td align="left"><input type="button" name="btnViewCt" value="View Details" 
+            	style="width:100" onClick="javascript:editContact('view');" disabled></td>
+            <td align="left"><input type="button" name="btnCreateCt" value="Create New" 
+            	style="width:100" onClick="javascript:editContact('new');"></td>
+            <td align="center"><input type="button" name="btnRmvCt" value="Remove Item" 
+            	style="width:100" onClick="javascript:editContact('remove');" disabled></td>
+		  </tr>
+		  <tr> 
+	      	<td>&nbsp;</td>
+	      	<td colspan=4 valign="top">
+	          <select name="selContact" size="4"  style="width:100%" onchange="javascript:enableContButtons();" 
+	          	onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContact'); return false">
+<%	
+				Enumeration enum1 = hContacts.keys();
+				while (enum1.hasMoreElements())
+				{
+				  String contName = (String)enum1.nextElement();
+				  AC_CONTACT_Bean acCont = (AC_CONTACT_Bean)hContacts.get(contName);				  
+				  if (acCont == null) acCont = new AC_CONTACT_Bean();
+				  String ctSubmit = acCont.getACC_SUBMIT_ACTION();
+				  if (ctSubmit != null && ctSubmit.equals("DEL"))
+				    continue;
+				  /*  String accID = acCont.getAC_CONTACT_IDSEQ();
+				  String contName = acCont.getORG_NAME();
+				  if (contName == null || contName.equals(""))
+				    contName = acCont.getPERSON_NAME(); */
+%>
+				  <option value="<%=contName%>"><%=contName%></option>
+<%				  
+				}
+%>	          	
+	          </select>
+	      	</td>
+		  </tr>
+		</table>
+	  </td>
+	</tr>
 <!-- origin -->
     <tr height="25" valign="bottom">
       <td align=right><%=item++%>)</td>
@@ -635,10 +690,10 @@
       </td>
     </tr>
 
-    </tr>
+    <tr> </tr>
     <tr height="25" valign="bottom">
       <td align=right><%=item++%>)</td>
-      <td><font color="#FF0000">Create</font> Comment/Change Note</td>
+      <td><font color="#FF0000">Create</font> Change Note</td>
     </tr>
 
     <tr>
@@ -669,7 +724,7 @@
           <label><font size=4>Derived Data Element Derivation Rules and Components</font></label>
         </div> </legend></th>
     </tr>
-    </tr>
+    <tr> </tr>
     <tr height="25" valign="middle">
         <td colspan =4><font color="#FF0000">&nbsp;&nbsp;&nbsp;* &nbsp;</font>Indicates Required Fields for Derived Data Elements</td>
     </tr>
@@ -682,6 +737,7 @@
       <td height="26" valign="top" colspan=3 > 
         <select name="selRepType" size="1" onChange="javascript:changeRepType('change')"
           onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selRepType'); return false">
+          <option value="" selected></option>
 <%        for (int i = 0; vRepType.size()>i; i++)
           {
             String sRepType = (String)vRepType.elementAt(i);

@@ -1,3 +1,6 @@
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/InsACService.java,v 1.22 2006-01-06 21:53:57 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.NCICuration;
 
 import java.io.Serializable;
@@ -385,8 +388,8 @@ public class InsACService implements Serializable
           //continue update even if not null
           if (sReturnCode != null && sAction.equals("INS")) 
           {
-             this.storeStatusMsg("\\t " + sReturnCode + " : Unable to create new Value Domain Successully.");
-             logger.fatal(sReturnCode + " Unable to create new Value Domain Successully.");
+             this.storeStatusMsg("\\t " + sReturnCode + " : Unable to create new Value Domain Successfully.");
+             logger.fatal(sReturnCode + " Unable to create new Value Domain Successfully.");
           }
           else if ((sReturnCode == null || (sReturnCode != null && sAction.equals("UPD"))) && !sVD_ID.equals(""))
           {
@@ -460,11 +463,28 @@ public class InsACService implements Serializable
                vd.setVD_VD_ID(oldVD.getVD_VD_ID());   //adds public id to the bean
             }
             //insert and delete ac-csi relationship
-            Vector vAC_CS = vd.getVD_AC_CSI_VECTOR();
+            Vector vAC_CS = vd.getAC_AC_CSI_VECTOR();
             GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, m_servlet);          
             Vector vRemove_ACCSI = getAC.doCSCSI_ACSearch(sVD_ID, "");  //(Vector)session.getAttribute("vAC_CSI");
             Vector vACID = (Vector)session.getAttribute("vACId");
             this.addRemoveACCSI(sVD_ID, vAC_CS, vRemove_ACCSI, vACID, sInsertFor, sLongName);                      
+
+            //store back altname and ref docs to session
+            m_servlet.doMarkACBeanForAltRef(m_classReq, m_classRes, "ValueDomain", "all", "submitAR");
+            //do alternate names create
+            if (sInsertFor.equalsIgnoreCase("Version"))
+              this.doAltVersionUpdate(sVD_ID, oldVD.getVD_VD_IDSEQ());
+            this.doAddRemoveAltNames(sVD_ID, sContextID, "create");
+            //do reference docuemnts create
+            if (sInsertFor.equalsIgnoreCase("Version"))
+              this.doRefVersionUpdate(sVD_ID, oldVD.getVD_VD_IDSEQ());
+            this.doAddRemoveRefDocs(sVD_ID, sContextID, "create");
+            
+            //do contact updates
+            Hashtable vdConts = vd.getAC_CONTACTS();
+            if (vdConts != null && vdConts.size() > 0)
+              vd.setAC_CONTACTS(this.addRemoveAC_Contacts(vdConts, sVD_ID, sInsertFor));
+            
             //add success message if no error
             sReturn = (String)m_classReq.getAttribute("retcode");
             if (sAction.equals("UPD") && (sReturn == null || sReturn.equals("")))
@@ -473,8 +493,8 @@ public class InsACService implements Serializable
         } //end sinsertfor not update
         else if (sReturnCode != null && !sReturnCode.equals(""))
         {          
-            this.storeStatusMsg("\\t Unable to update the preferred name of the Value Domain.");
-            logger.fatal(sReturnCode + " Unable to update the preferred name of the Value Domain.");
+            this.storeStatusMsg("\\t Unable to update the Short Name of the Value Domain.");
+            logger.fatal(sReturnCode + " Unable to update the Short Name of the Value Domain.");
         }
       }
       this.storeStatusMsg("\\n");
@@ -1006,6 +1026,7 @@ public class InsACService implements Serializable
         //get vm attributes
         String sComments = vm.getVM_COMMENTS();
         String sMeaningDescription = vm.getVM_DESCRIPTION();
+    System.out.println(sMeaningDescription + " : " + vmConcept.getPREFERRED_DEFINITION());
         String sBeginDate = m_util.getOracleDate(vm.getVM_BEGIN_DATE());
         String sEndDate = m_util.getOracleDate(vm.getVM_END_DATE());
           //Create a Callable Statement object.
@@ -1351,7 +1372,7 @@ public class InsACService implements Serializable
               sDate = m_util.getOracleDate(sDate);
            CStmt.setString(13, sDate);  // end date);
            CStmt.setString(14, conIDseq);
-
+System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
            boolean bExcuteOk = CStmt.execute();
            retCode = CStmt.getString(1);
            //store the status message if children row exist
@@ -1505,7 +1526,7 @@ public class InsACService implements Serializable
           //display message if sys or abbr was selected for non oc prop dec.
           if (dec.getAC_PREF_NAME_TYPE() != null && (dec.getAC_PREF_NAME_TYPE().equals("SYS") || dec.getAC_PREF_NAME_TYPE().equals("ABBR")))
           {
-            this.storeStatusMsg("\\t Unable to change the Preferred Name type to System Generated or Abbreviated" + 
+            this.storeStatusMsg("\\t Unable to change the Short Name type to System Generated or Abbreviated" + 
                   "\\n\\t\\t because Object Class and Property do not exist.");
             bValidOC_PROP = false;
           }
@@ -1688,7 +1709,7 @@ public class InsACService implements Serializable
         }
         // insert newly created row into hold vector
         if (sReturnCode != null && sAction.equals("INS")) 
-           this.storeStatusMsg("\\t " + sReturnCode + " : Unable to create new Data Element Concept Successully.");
+           this.storeStatusMsg("\\t " + sReturnCode + " : Unable to create new Data Element Concept Successfully.");
         else if ((sReturnCode == null || (sReturnCode != null && sAction.equals("UPD"))) && !sDEC_ID.equals(""))
         {
             //store the status message in the session
@@ -1728,12 +1749,28 @@ public class InsACService implements Serializable
            }
            String sReturn = "";
           //insert and delete ac-csi relationship
-          Vector vAC_CS = dec.getDEC_AC_CSI_VECTOR();
+          Vector vAC_CS = dec.getAC_AC_CSI_VECTOR();
           GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, m_servlet);          
           Vector vRemove_ACCSI = getAC.doCSCSI_ACSearch(sDEC_ID, "");  //(Vector)session.getAttribute("vAC_CSI");
           Vector vACID = (Vector)session.getAttribute("vACId");
           this.addRemoveACCSI(sDEC_ID, vAC_CS, vRemove_ACCSI, vACID, sInsertFor, sLongName);
 
+          //store back altname and ref docs to session
+          m_servlet.doMarkACBeanForAltRef(m_classReq, m_classRes, "DataElementConcept", "all", "submitAR");
+          //do alternate names create
+          if (sInsertFor.equalsIgnoreCase("Version"))
+            this.doAltVersionUpdate(sDEC_ID, oldDECID);
+          this.doAddRemoveAltNames(sDEC_ID, sContextID, "create");
+          //do reference docuemnts create
+          if (sInsertFor.equalsIgnoreCase("Version"))
+            this.doRefVersionUpdate(sDEC_ID, oldDECID);
+          this.doAddRemoveRefDocs(sDEC_ID, sContextID, "create");
+          
+          //do contact updates
+          Hashtable decConts = dec.getAC_CONTACTS();
+          if (decConts != null && decConts.size() > 0)
+            dec.setAC_CONTACTS(this.addRemoveAC_Contacts(decConts, sDEC_ID, sInsertFor));
+          
           sReturn = (String)m_classReq.getAttribute("retcode");
           if (sAction.equals("UPD") && (sReturn == null || sReturn.equals("")))
             this.storeStatusMsg("\\t Successfully updated Data Element Concept");
@@ -1778,7 +1815,7 @@ public class InsACService implements Serializable
       if (oldAslName.equals("RELEASED") && sInsFor.equals("BlockEdit") 
           && !sNameType.equals("") && !sNameType.equals("USER"))
       {
-        this.storeStatusMsg("\\t Preferred Name of the RELEASED Data Element Concept cannot be changed.");
+        this.storeStatusMsg("\\t Short Name of the RELEASED Data Element Concept cannot be changed.");
         return dec;
       }
       //get teh right sys name
@@ -1817,13 +1854,13 @@ public class InsACService implements Serializable
         if (sAction.equals("UPD")) sDECAction = "update";
         String sMsg = "\\tUnable to " + sDECAction 
             + " this Data Element Concept because the " + curType + "\\n\\t" + 
-            "Preferred Name " + dec.getDEC_PREFERRED_NAME() + " already exists in the database for this " +
+            "Short Name " + dec.getDEC_PREFERRED_NAME() + " already exists in the database for this " +
             "Context and Version.";
         //add moreMsg and return with error for create new dec
         if (!sAction.equals("UPD")) 
         { 
           String sMoreMsg = "\\n\\tClick OK to return to the Data Element Concept screen " +
-              "to " + sDECAction + " a unique Preferred Name.";
+              "to " + sDECAction + " a unique Short Name.";
           this.storeStatusMsg(sMsg + sMoreMsg);
           //return "Unique Constraint";
           return null;
@@ -2018,6 +2055,8 @@ public class InsACService implements Serializable
           if (sContextID == null || sContextID.equals(""))
             sContextID = OCBean.getCONTE_IDSEQ();
           if (sContextID == null) sContextID = "";
+          if(OCBean.getCON_AC_SUBMIT_ACTION() == null) 
+            OCBean.setCON_AC_SUBMIT_ACTION("");
           if (!OCBean.getCON_AC_SUBMIT_ACTION().equals("DEL"))
           {
             String sRet = "";
@@ -2034,6 +2073,7 @@ public class InsACService implements Serializable
             }
           }
       }
+  System.out.println(sContextID + " oc submit ready " + sOCCondrString);
       if (sOCCondr == null) sOCCondr = "";
       if (sContextID == null) sContextID = "";
       if (!sOCCondrString.equals(""))
@@ -2193,6 +2233,8 @@ public class InsACService implements Serializable
           if (sContextID == null || sContextID.equals(""))
             sContextID = PCBean.getCONTE_IDSEQ();
           if (sContextID == null) sContextID = "";
+          if(PCBean.getCON_AC_SUBMIT_ACTION() == null) 
+            PCBean.setCON_AC_SUBMIT_ACTION("");
           if (!PCBean.getCON_AC_SUBMIT_ACTION().equals("DEL"))
           {
             String sRet = "";
@@ -2366,6 +2408,8 @@ public class InsACService implements Serializable
           if (sContextID == null || sContextID.equals(""))
             sContextID = REPBean.getCONTE_IDSEQ();
           if (sContextID == null) sContextID = "";
+          if(REPBean.getCON_AC_SUBMIT_ACTION() == null) 
+            REPBean.setCON_AC_SUBMIT_ACTION("");
           if (!REPBean.getCON_AC_SUBMIT_ACTION().equals("DEL"))
           {
             String sRet = "";
@@ -2570,7 +2614,7 @@ public class InsACService implements Serializable
   *
   * @return String return code from the stored procedure call. null if no error occurred.
   */
-  public String setVDQualifier(String sAction, String typeQual,    //out
+/*  public String setVDQualifier(String sAction, String typeQual,    //out
                     VD_Bean VD, EVS_Bean cq, HttpServletRequest req)
   {
     Connection sbr_db_conn = null;
@@ -2584,10 +2628,10 @@ public class InsACService implements Serializable
        String sName = VD.getVD_LONG_NAME();
        String sContextID = VD.getVD_CONTE_IDSEQ();
        String sCCVal = cq.getNCI_CC_VAL();
-       if(sCCVal.equals("No value returned."))
-        sCCVal = cq.getUMLS_CUI_VAL();
-       if(sCCVal.equals("No value returned."))
-        sCCVal = cq.getTEMP_CUI_VAL();
+      // if(sCCVal.equals("No value returned."))
+       // sCCVal = cq.getUMLS_CUI_VAL();
+      // if(sCCVal.equals("No value returned."))
+      //  sCCVal = cq.getTEMP_CUI_VAL();
        String sQName = "";
        String sQDescription = "";
        sQName = cq.getPREFERRED_NAME();
@@ -2651,7 +2695,7 @@ public class InsACService implements Serializable
       this.storeStatusMsg("\\t Exception : Unable to update or remove Qualifier.");
     }
     return sReturnCode;
-  }
+  } */
 
    /**
   * To insert a Qualifier Term or update the existing one in the database after the validation.
@@ -2667,7 +2711,7 @@ public class InsACService implements Serializable
   *
   * @return String return code from the stored procedure call. null if no error occurred.
   */
-  public String setDECQualifier(String sAction, String typeQual,    //out
+/*  public String setDECQualifier(String sAction, String typeQual,    //out
                     DEC_Bean DEC, EVS_Bean cq, HttpServletRequest req)
   {
     Connection sbr_db_conn = null;
@@ -2681,10 +2725,10 @@ public class InsACService implements Serializable
        String sName = DEC.getDEC_LONG_NAME();
        String sContextID = DEC.getDEC_CONTE_IDSEQ();
        String sCCVal = cq.getNCI_CC_VAL();
-       if(sCCVal.equals("No value returned."))
-        sCCVal = cq.getUMLS_CUI_VAL();
-       if(sCCVal.equals("No value returned."))
-        sCCVal = cq.getTEMP_CUI_VAL();
+      // if(sCCVal.equals("No value returned."))
+       // sCCVal = cq.getUMLS_CUI_VAL();
+      // if(sCCVal.equals("No value returned."))
+      //  sCCVal = cq.getTEMP_CUI_VAL();
        String sQName = "";
        String sQDescription = "";
        sQName = cq.getPREFERRED_NAME();
@@ -2746,7 +2790,7 @@ public class InsACService implements Serializable
       this.storeStatusMsg("\\t Exception : Unable to update or remove Qualifier.");
     }
     return sReturnCode;
-  }
+  }  */
 
 
  /**
@@ -2807,7 +2851,7 @@ public class InsACService implements Serializable
       String sDEC_ID = de.getDE_DEC_IDSEQ();
       String sVD_ID = de.getDE_VD_IDSEQ();
       String sLongName = de.getDE_LONG_NAME();
-      String sDocText = de.getDOC_TEXT_LONG_NAME();
+      String sDocText = de.getDOC_TEXT_PREFERRED_QUESTION();
       String sBeginDate = m_util.getOracleDate(de.getDE_BEGIN_DATE());
       String sEndDate = m_util.getOracleDate(de.getDE_END_DATE());
       String sChangeNote = de.getDE_CHANGE_NOTE();
@@ -2930,7 +2974,7 @@ public class InsACService implements Serializable
           this.storeStatusMsg("Data Element Name : " + de.getDE_LONG_NAME());
         //continue with other  attributes if success or not success and update
         if (sReturnCode != null && sAction.equals("INS")) 
-           this.storeStatusMsg("\\t " + sReturnCode + " : Unable to create new Data Element Successully.");
+           this.storeStatusMsg("\\t " + sReturnCode + " : Unable to create new Data Element Successfully.");
         else if ((sReturnCode == null || (sReturnCode != null && sAction.equals("UPD"))) 
           && !sDE_ID.equals(""))
         {
@@ -2977,18 +3021,18 @@ public class InsACService implements Serializable
           String sLang = "ENGLISH";
           if ((sDocText != null) && (!sDocText.equals("")))
           {
-              de.setDOC_TEXT_LONG_NAME_IDSEQ(getRD_ID(sDE_ID));
+              de.setDOC_TEXT_PREFERRED_QUESTION_IDSEQ(getRD_ID(sDE_ID));
               if (sDocText.length() > 30)
                  sDocText = sDocText.substring(0, 29);
-              if (de.getDOC_TEXT_LONG_NAME_IDSEQ() == null || de.getDOC_TEXT_LONG_NAME_IDSEQ().equals(""))
-                 sReturn = setRD("INS", sDocText, sDE_ID, de.getDOC_TEXT_LONG_NAME(), "LONG_NAME", "", sContextID, de.getDOC_TEXT_LONG_NAME_IDSEQ(), sLang);   //?????
+              if (de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ() == null || de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ().equals(""))
+                 sReturn = setRD("INS", sDocText, sDE_ID, de.getDOC_TEXT_PREFERRED_QUESTION(), "Preferred Question Text", "", sContextID, de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ(), sLang);   //?????
               else
-                 sReturn = setRD("UPD", sDocText, sDE_ID, de.getDOC_TEXT_LONG_NAME(), "LONG_NAME", "", sContextID, de.getDOC_TEXT_LONG_NAME_IDSEQ(), sLang);   //?????
+                 sReturn = setRD("UPD", sDocText, sDE_ID, de.getDOC_TEXT_PREFERRED_QUESTION(), "Preferred Question Text", "", sContextID, de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ(), sLang);   //?????
           }
           else
           {   //delete RD if null
-              if (de.getDOC_TEXT_LONG_NAME_IDSEQ() != null && !de.getDOC_TEXT_LONG_NAME_IDSEQ().equals(""))
-                 sReturn = setRD("DEL", sDocText, sDE_ID, de.getDOC_TEXT_LONG_NAME(), "LONG_NAME", "", "", de.getDOC_TEXT_LONG_NAME_IDSEQ(), sLang);   //?????
+              if (de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ() != null && !de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ().equals(""))
+                 sReturn = setRD("DEL", sDocText, sDE_ID, de.getDOC_TEXT_PREFERRED_QUESTION(), "Preferred Question Text", "", "", de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ(), sLang);   //?????
           }
           //store returncode in request to track it all through this request
           if (sAction.equals("UPD") && sReturn != null && !sReturn.equals(""))
@@ -3019,13 +3063,29 @@ public class InsACService implements Serializable
               m_classReq.setAttribute("retcode", sReturn);
 
           //insert and delete ac-csi relationship
-          Vector vAC_CS = de.getDE_AC_CSI_VECTOR();
+          Vector vAC_CS = de.getAC_AC_CSI_VECTOR();
           GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, m_servlet);          
           Vector vRemove_ACCSI = getAC.doCSCSI_ACSearch(sDE_ID, "");  //search for cscsi again with de idseq.
           Vector vACID = (Vector)session.getAttribute("vACId");
           this.addRemoveACCSI(sDE_ID, vAC_CS, vRemove_ACCSI, vACID, sInsertFor, sLongName);          
-          //reset return code if other attribute return is not fixed.            
 
+          //store back altname and ref docs to session
+          m_servlet.doMarkACBeanForAltRef(m_classReq, m_classRes, "DataElement", "all", "submitAR");
+          //do alternate names create          
+          if (sInsertFor.equalsIgnoreCase("Version"))
+            this.doAltVersionUpdate(sDE_ID, oldDEID);
+          this.doAddRemoveAltNames(sDE_ID, sContextID, "create");
+          //do reference docuemnts create
+          if (sInsertFor.equalsIgnoreCase("Version"))
+            this.doRefVersionUpdate(sDE_ID, oldDEID);
+          this.doAddRemoveRefDocs(sDE_ID, sContextID, "create");
+          
+          //do contact updates
+          Hashtable deConts = de.getAC_CONTACTS();
+          if (deConts != null && deConts.size() > 0)
+            de.setAC_CONTACTS(this.addRemoveAC_Contacts(deConts, sDE_ID, sInsertFor));
+          
+          //reset return code if other attribute return is not fixed.            
           String otherRet = (String)m_classReq.getAttribute("retcode");
           if (sAction.equals("UPD") && (otherRet == null || otherRet.equals("")))
             this.storeStatusMsg("\\t Successfully updated Data Element attributes");
@@ -3633,7 +3693,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
   * @param sRDName any text value.
   * @param sDE_ID DE idseq.
   * @param sDocText value of document text.
-  * @param sRDType LONG_NAME for Doc Text and DATA_ELEMENT_SOURCE for source.
+  * @param sRDType Preferred Question Text for Doc Text and DATA_ELEMENT_SOURCE for source.
   * @param rdIDSEQ reference document's idseq for update.
   *
   * @return String return code from the stored procedure call. null if no error occurred.
@@ -3700,6 +3760,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
         CStmt.setString(2,sAction);              //ACTION - INS, UPD or DEL
         CStmt.setString(4,sRDName);             //rd name - cannot be null
         CStmt.setString(5,sRDType);        //dCtl name - long name for refrence document
+ logger.debug(sRDType + " set rd " + sRDName);       
         if(sAction.equals("INS"))
           CStmt.setString(6,sDE_ID);           //ac id - must be NULL FOR UPDATE
         CStmt.setString(9,sDocText);     //doc text -
@@ -4243,7 +4304,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
   * Called from 'setDE' method.
   * Sets in parameters, and registers output parameter.
   *
-  * @param sName Preferred Name.
+  * @param sName Short Name.
   * @param sContextID .
    @param sACType .
   */
@@ -4328,7 +4389,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
         CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
         CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //oc  id
         CStmt.registerOutParameter(4,java.sql.Types.DECIMAL);       //version
-        CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //PREFERRED name
+        CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //Short Name
         CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       // definiton
         CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //context id
         CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //asl id
@@ -4450,7 +4511,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
       {
         CStmt = sbr_db_conn.prepareCall("{call SBREXT_COMMON_ROUTINES.GET_RD_IDSEQ(?,?,?)}");
         CStmt.setString(1, acID);
-        CStmt.setString(2, "LONG_NAME");
+        CStmt.setString(2, "Preferred Question Text");
         CStmt.registerOutParameter(3,OracleTypes.CURSOR);
         boolean bExcuteOk = CStmt.execute();
         rs = (ResultSet) CStmt.getObject(3);
@@ -4764,7 +4825,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
         //insert and delete ac-csi relationship
         SetACService setAC = new SetACService(m_servlet);
         deBean = setAC.setDECSCSIfromPage(m_classReq, deBean);
-        Vector vAC_CS = deBean.getDE_AC_CSI_VECTOR();
+        Vector vAC_CS = deBean.getAC_AC_CSI_VECTOR();
         Vector vRemove_ACCSI = getAC.doCSCSI_ACSearch(deID, "");  //(Vector)session.getAttribute("vAC_CSI");
         this.addRemoveACCSI(deID, vAC_CS, vRemove_ACCSI, vACID, "designate", deName);
         //display success message if no error exists for each DE
@@ -4932,6 +4993,118 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
     return sPublicID;
   }  //end getPublicID
 
+  private void doAltVersionUpdate(String newAC, String oldAC)
+  {
+    HttpSession session = m_classReq.getSession();
+    GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
+    //first get the alt and ref for new version
+    Vector vNewAlt = new Vector();
+    Vector vOldAlt = (Vector)session.getAttribute("AllAltNameList");
+    //search if alt names exists before versioning
+    if (vOldAlt != null && vOldAlt.size() > 0)
+      vNewAlt = getAC.doAltNameSearch(newAC, "", "", "EditDesDE", "Version");
+    //loop through the lists to find the old alt/ref matching ac and table id
+    if (vNewAlt != null)
+    {
+      for(int i=0; i<vOldAlt.size(); i++)
+      {
+        ALT_NAME_Bean thisAlt = (ALT_NAME_Bean)vOldAlt.elementAt(i);
+        String altAC = thisAlt.getAC_IDSEQ();
+        //udpate the idseq if found
+        if (altAC.equals(oldAC))
+        {
+          thisAlt.setAC_IDSEQ(newAC);
+          //find the matching altname, context, alttype in new list to get altidseq
+          String altName = thisAlt.getALTERNATE_NAME();
+          if (altName == null) altName = "";
+          String altCont = thisAlt.getCONTE_IDSEQ();
+          if (altCont == null) altCont = "";
+          String altType = thisAlt.getALT_TYPE_NAME();
+          if (altType == null) altType = "";
+          for (int k =0; k<vNewAlt.size(); k++)
+          {
+            ALT_NAME_Bean newAlt = (ALT_NAME_Bean)vNewAlt.elementAt(k);
+            String nName = newAlt.getALTERNATE_NAME();
+            if (nName == null) nName = "";
+            String nCont = newAlt.getCONTE_IDSEQ();
+            if (nCont == null) nCont = "";
+            String nType = newAlt.getALT_TYPE_NAME();
+            if (nType == null) nType = "";
+            //replace it in the bean if found
+         System.out.println(nType + " new alts " + nName);
+            if (nName.equals(altName) && altCont.equals(nCont) && altType.equals(nType))
+            {
+              String altID = newAlt.getALT_NAME_IDSEQ();
+              if (altID != null && !altID.equals(""))
+                thisAlt.setALT_NAME_IDSEQ(altID);
+              break;
+            }            
+          }
+          //update the bean and vector
+          vOldAlt.setElementAt(thisAlt, i);
+        }
+      }
+      //set it back in the session
+      session.setAttribute("AllAltNameList", vOldAlt);
+    }   
+  }
+  
+  private void doRefVersionUpdate(String newAC, String oldAC)
+  {
+    HttpSession session = m_classReq.getSession();
+    GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
+    //first get the alt and ref for new version
+    Vector vNewRef = new Vector();
+    Vector vOldRef = (Vector)session.getAttribute("AllRefDocList");
+    //search if Ref names exists before versioning
+    if (vOldRef != null && vOldRef.size() > 0)
+      vNewRef = getAC.doRefDocSearch(newAC, "ALL TYPES", "Version");
+    //loop through the lists to find the old Ref/ref matching ac and table id
+    if (vNewRef != null)
+    {
+      for(int i=0; i<vOldRef.size(); i++)
+      {
+        REF_DOC_Bean thisRef = (REF_DOC_Bean)vOldRef.elementAt(i);
+        String RefAC = thisRef.getAC_IDSEQ();
+        //udpate the idseq if found
+        if (RefAC.equals(oldAC))
+        {
+          thisRef.setAC_IDSEQ(newAC);
+          //find the matching Refname, context, Reftype in new list to get Refidseq
+          String RefName = thisRef.getDOCUMENT_NAME();
+          if (RefName == null) RefName = "";
+          String RefCont = thisRef.getCONTE_IDSEQ();
+          if (RefCont == null) RefCont = "";
+          String RefType = thisRef.getDOC_TYPE_NAME();
+          if (RefType == null) RefType = "";
+          for (int k =0; k<vNewRef.size(); k++)
+          {
+            REF_DOC_Bean newRef = (REF_DOC_Bean)vNewRef.elementAt(k);
+            String nName = newRef.getDOCUMENT_NAME();
+            if (nName == null) nName = "";
+            String nCont = newRef.getCONTE_IDSEQ();
+            if (nCont == null) nCont = "";
+            String nType = newRef.getDOC_TYPE_NAME();
+            if (nType == null) nType = "";
+        System.out.println(nType + " new ref " + nName);
+           //replace it in the bean if found
+            if (nName.equals(RefName) && RefCont.equals(nCont) && RefType.equals(nType))
+            {
+              String RefID = newRef.getREF_DOC_IDSEQ();
+              if (RefID != null && !RefID.equals(""))
+                thisRef.setREF_DOC_IDSEQ(RefID);
+              break;
+            }            
+          }
+          //update the bean and vector
+          vOldRef.setElementAt(thisRef, i);
+        }
+      }
+      //set it back in the session
+      session.setAttribute("AllRefDocList", vOldRef);
+    }   
+  }
+  
   /**
    * add revove alternate name attributes for the selected ac
    * loops through the list of selected types and looks for the matching ac
@@ -4944,6 +5117,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
   {
     try
     {
+//  System.out.println(sDE + " add alt names " + deCont);
       HttpSession session = m_classReq.getSession();
       String sCont = m_classReq.getParameter("selContext");
       if (sCont == null) sCont = "";
@@ -4954,11 +5128,19 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
         ALT_NAME_Bean altNameBean = (ALT_NAME_Bean)vAllAltName.elementAt(i);
         if (altNameBean == null) altNameBean = new ALT_NAME_Bean();
         String altAC = altNameBean.getAC_IDSEQ();
-        //remove it only for matching ac
+        //new de from owning context
+        if (altAC == null || altAC.equals("") || altAC.equals("new"))
+          altAC = sDE;
+    System.out.println(sDE + " add alt names AC " + altAC);
+       //remove it only for matching ac
         if (altAC != null && sDE.equals(altAC))
         {
-          //mark the all its alt names to be deleted if action is to undesignate
           String altContID = altNameBean.getCONTE_IDSEQ();
+          //new context from owning context
+          if (altContID == null || altContID.equals("") || altContID.equals("new"))
+            altContID = deCont;
+         // System.out.println(deCont + " add alt names context " + altContID);
+          //mark the all its alt names to be deleted if action is to undesignate
           if (desAction.equals("remove") && altContID != null && sCont != null && altContID.equals(sCont))
             altNameBean.setALT_SUBMIT_ACTION("DEL");  
           //get other attributes
@@ -4974,7 +5156,8 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
             if (desAction.equals("remove") || altSubmit.equals("DEL")) altSubmit = "UPD";  //mark new one as update so that it won't create 
             else altSubmit = "INS";
           }
-          
+         // System.out.println(desAction + " add alt names submit " + altSubmit);
+        
           String ret = "";
           if (!altSubmit.equals("UPD"))   //call method to create alternate name in the database
             ret = this.setDES(altSubmit, altAC, altContID, altContext, altType, altName, altLang, altID); 
@@ -5003,8 +5186,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
     {
       HttpSession session = m_classReq.getSession();
       String sCont = m_classReq.getParameter("selContext");
-      if (sCont == null) sCont = "";
-      
+      if (sCont == null) sCont = "";      
       //get reference doc attributes
       Vector vAllRefDoc = (Vector)session.getAttribute("AllRefDocList"); 
       if (vAllRefDoc == null) vAllRefDoc = new Vector();
@@ -5013,10 +5195,18 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
         REF_DOC_Bean refDocBean = (REF_DOC_Bean)vAllRefDoc.elementAt(i);
         if (refDocBean == null) refDocBean = new REF_DOC_Bean();
         String refAC = refDocBean.getAC_IDSEQ();
-        if (refAC != null && sDE.equals(refAC))
+        //new de from owning context
+        if (refAC == null || refAC.equals("") || refAC.equals("new"))
+          refAC = sDE;
+  //  System.out.println(sDE + " add refdocs AC " + refAC);
+       if (refAC != null && sDE.equals(refAC))
         {
           //mark the all its alt names to be deleted if action is to undesignate
           String refContID = refDocBean.getCONTE_IDSEQ();
+          //new context from owning context
+          if (refContID == null || refContID.equals("") || refContID.equals("new"))
+            refContID = deCont;
+        //  System.out.println(deCont + " add refdocs context " + refContID);
           if (desAction.equals("remove") && refContID != null && sCont != null && refContID.equals(sCont))
             refDocBean.setREF_SUBMIT_ACTION("DEL");  
           String refID = refDocBean.getREF_DOC_IDSEQ();
@@ -5032,6 +5222,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
             if (desAction.equals("remove") || refSubmit.equals("DEL")) refSubmit = "UPD";  //mark new one as update so that it won't create 
             else refSubmit = "INS";
           }
+        //  System.out.println(desAction + " add refdocs submit " + refSubmit);
           //check if creating used by in the same context as created DE
           String ret = "";
           if (!refSubmit.equals("UPD"))   //call method to create reference documents in the database
@@ -5044,33 +5235,13 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
       logger.fatal("ERROR in InsACService-addRemoveRefDocs for exception : " + e.toString());
     }
   } //end doAddRemoveAltNames
-
-  /**
-   * takes Thesaurus term for Meta
-   * @param evsBean
-   * @return 
-   */
-  public EVS_Bean takeThesaurusConcept(EVS_Bean evsBean)
-  {
-    HttpSession session = m_classReq.getSession();
-    String sConceptName = evsBean.getLONG_NAME();
-    String sContextID = evsBean.getCONTE_IDSEQ();
-    String sConID = evsBean.getNCI_CC_VAL();
-    if (sConID != null && !sConID.equals(""))
-    {
-      String altType = "UMLS_CUI";
-      if (sConID.indexOf("CL") >= 0) altType = "NCI_META_CUI";
-      EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
-      evsBean = evs.do_EVSPropSearch(sConID, altType, evsBean);      
-    }
-    return evsBean;
-  }
-  /**
+  
+ /* /**
    * takes the thesaurus concept if meta was selected
    * @param evsBean EVS_Bean of the selected concept
    * @return EVS_Bean
    */
-  public EVS_Bean takeThesaurusConcept_old(EVS_Bean evsBean)
+ /*  public EVS_Bean takeThesaurusConcept(EVS_Bean evsBean)
   {
     HttpSession session = m_classReq.getSession();
     String sConceptName = evsBean.getLONG_NAME();
@@ -5091,8 +5262,9 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
       EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
       Vector vAC = new Vector();
       session.setAttribute("creKeyword", sConceptName);  //store it in the session before calling
-      evs.do_EVSSearch(sConceptName, vAC, "NCI_Thesaurus", "Synonym",
-          "All Sources", 100, "termThesOnly", "Exclude", sContextID, -1);
+      vAC = evs.doVocabSearch(vAC, sConceptName, "NCI_Thesarus", "Synonym", "", "", "Exclude", "", 100, false, -1, "");
+     // evs.do_EVSSearch(sConceptName, vAC, "NCI_Thesaurus", "Synonym",
+     //     "All Sources", 100, "termThesOnly", "Exclude", sContextID, -1);
       for(int i=0; i<(vAC.size()); i++)
       {
         EVS_Bean OCBean = new EVS_Bean();
@@ -5109,7 +5281,6 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
          sDefinition = sDefinition.substring(5,15);
         if(sName.equalsIgnoreCase(sConceptName))
         {
- //  System.out.println("do the switch sDefinition: " + sDefinition + " sConceptDefinition: " + sConceptDefinition); 
           if(sDefinition.equalsIgnoreCase(sConceptDefinition))      
             return OCBean; 
         }
@@ -5120,21 +5291,21 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
       logger.fatal("ERROR in InsACService-takeThesaurusConcep for other : " + e.toString());
     }
   return evsBean; 
-  }
+  } */
 
-   /**
+/*   /**
 	 * Puts in and takes out "_"
    *  @param String nodeName.
    *  @param String type.
 	 */
-	private final String filterName(String nodeName, String type)
+/*	private final String filterName(String nodeName, String type)
   {
     if(type.equals("display"))
       nodeName = nodeName.replaceAll("_"," ");
     else if(type.equals("js"))
       nodeName = nodeName.replaceAll(" ","_");
       return nodeName;
-  }
+  } */
   
  /**
   * To insert a new concept from evs to cadsr.
@@ -5162,16 +5333,17 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
     try
     {
         // If the concept is from Metathesaurus, try to take it from Thesaurus
-       if(evsBean != null && evsBean.getEVS_DATABASE() != null)
+    /*   if(evsBean != null && evsBean.getEVS_DATABASE() != null)
        {
         if(evsBean.getEVS_DATABASE().equals("NCI Metathesaurus"))
         {
           sEvsSource = evsBean.getEVS_DEF_SOURCE();
           if(sEvsSource == null) sEvsSource = "";
-            evsBean = takeThesaurusConcept(evsBean);    
-          logger.info("after takeThes " + evsBean.getNCI_CC_VAL());
+          if(sEvsSource.equalsIgnoreCase("NCI-Gloss") || sEvsSource.equalsIgnoreCase("NCI04"))   
+            evsBean = takeThesaurusConcept(evsBean);
+          logger.info("after takeThes " + evsBean.getNCI_CC_VAL());     
         }
-       }
+       }  */
       //return the concept id if the concept alredy exists in caDSR.
       conIdseq = this.getConcept(sReturnCode, evsBean, false);
       if (conIdseq == null || conIdseq.equals(""))
@@ -5276,6 +5448,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
     try
     {
       //Create a Callable Statement object.
+      HttpSession session = (HttpSession)m_classReq.getSession();
       sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
       if (sbr_db_conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
@@ -5310,7 +5483,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
         boolean bExcuteOk = CStmt.execute();
         sCON_IDSEQ = (String)CStmt.getObject(2);
         evsBean.setCON_IDSEQ(sCON_IDSEQ);
-      logger.info(sCON_IDSEQ + " getConcept code " + evsBean.getNCI_CC_VAL());     
+      logger.info(sCON_IDSEQ + " getConcept code " + evsBean.getNCI_CC_VAL() + evsBean.getEVS_ORIGIN());     
         sReturn = (String)CStmt.getObject(1);
         if (sReturn == null || sReturn.equals(""))
         {
@@ -5318,7 +5491,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
           if(bValidateConceptCodeUnique == true)
           {
             String dbOrigin = (String)CStmt.getObject(13);
-            String evsOrigin = evsBean.getEVS_ORIGIN();
+            String evsOrigin = evsBean.getEVS_DATABASE();  // evsBean.getEVS_ORIGIN();
             if (dbOrigin != null && evsOrigin != null && !dbOrigin.equals(evsOrigin))
             {
               sCON_IDSEQ = "Another Concept Exists in caDSR with same Concept Code "
@@ -5328,10 +5501,18 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
           }
           else
           {
-            evsBean.setEVSBean((String)CStmt.getObject(6), (String)CStmt.getObject(9), 
-                              (String)CStmt.getObject(7), (String)CStmt.getObject(11), 
-                                "", "", (String)CStmt.getObject(3), "", "", 
-                              (String)CStmt.getObject(13), 0, "", (String)CStmt.getObject(4), "");
+            String dbOrigin = (String)CStmt.getObject(13);
+            EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+            if (eUser == null) eUser = new EVS_UserBean();
+            String sDef = (String)CStmt.getObject(6);
+            if (sDef == null || sDef.equals("")) sDef = eUser.getDefDefaultValue();
+            EVS_Bean vmConcept = new EVS_Bean();
+            String evsOrigin = vmConcept.getVocabAttr(eUser, dbOrigin, "vocabDBOrigin", "vocabName");            
+            evsBean.setEVSBean(sDef, (String)CStmt.getObject(9), 
+                              (String)CStmt.getObject(7), (String)CStmt.getObject(7), 
+                              (String)CStmt.getObject(11), (String)CStmt.getObject(3), 
+                              evsOrigin, dbOrigin, 0, "", (String)CStmt.getObject(4), "", 
+                              (String)CStmt.getObject(8), "", "", "");
           }
         }
       }
@@ -5426,7 +5607,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
     
     //sUMLS_CUI = new Concept().getConceptCodeByName(sParent); 
     GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
-    getAC.doRefDocSearch(vd.getVD_VD_IDSEQ(), "META_CONCEPT_SOURCE");
+    Vector vRef = getAC.doRefDocSearch(vd.getVD_VD_IDSEQ(), "META_CONCEPT_SOURCE", "open");
     Vector vList = (Vector)m_classReq.getAttribute("RefDocList");
       if (vList != null && vList.size() > 0)
       {
@@ -5537,6 +5718,357 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
       }
     return sRet;
   }  //non evs parent concept 
-//close the class
-}
+
+  //store the contact related info into the database
+  private Hashtable addRemoveAC_Contacts(Hashtable hConts, String acID, String acAct)
+  {
+    try
+    {
+      //loop through the contacts in the hash table
+      if (hConts != null) 
+      {            
+        Enumeration enum1 = hConts.keys();
+        while (enum1.hasMoreElements())
+        {
+          String sName = (String)enum1.nextElement();
+          AC_CONTACT_Bean acc = (AC_CONTACT_Bean)hConts.get(sName);
+          if (acc == null) acc = new AC_CONTACT_Bean();
+          String conSubmit = acc.getACC_SUBMIT_ACTION();
+          if (conSubmit == null || conSubmit.equals("")) conSubmit = "INS";
+          //for new version or new AC, make it a new record if not deleted
+          if (acAct.equalsIgnoreCase("Version") || acAct.equalsIgnoreCase("New"))
+          {
+            if(conSubmit.equals("DEL")) 
+              conSubmit = "NONE";  //do not add the deleted ones
+            else
+              conSubmit = "INS";
+          }
+          //check if contact attributes has changed
+          if (!conSubmit.equals("NONE"))
+          {   
+            acc.setAC_IDSEQ(acID);
+            String sOrgID = acc.getORG_IDSEQ();
+            String sPerID = acc.getPERSON_IDSEQ();
+            //call method to do contact comm updates
+            Vector vComms = acc.getACC_COMM_List();
+            if (vComms != null)
+              acc.setACC_COMM_List(this.setContact_Comms(vComms, sOrgID, sPerID));
+            //call method to do contact addr update
+            Vector vAddrs = acc.getACC_ADDR_List();
+            if (vAddrs != null)
+              acc.setACC_ADDR_List(this.setContact_Addrs(vAddrs, sOrgID, sPerID));
+            //call method to do contact attribute updates
+            acc = this.setAC_Contact(acc);
+            hConts.put(sName, acc);
+          }
+        }
+      }
+    }
+    catch(Exception e)
+    {
+      logger.fatal("Error - setAC_Contacts : " + e.toString());
+    }
+    return hConts;
+  }
+  
+  private Vector setContact_Comms(Vector vCom, String orgID, String perID)
+  {
+    java.util.Date startDate = new java.util.Date();          
+    logger.info(m_servlet.getLogMessage(m_classReq, "setContact_Comms", "starting set", startDate, startDate));
+
+    Connection sbr_db_conn = null;
+    ResultSet rs = null;
+    CallableStatement CStmt = null;
+    String sReturnCode = "";
+    try
+    {
+      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (sbr_db_conn == null)
+        m_servlet.ErrorLogin(m_classReq, m_classRes);
+      else
+      {
+        for (int i =0; i<vCom.size(); i++)
+        {
+          try
+          {
+            AC_COMM_Bean comBean = (AC_COMM_Bean)vCom.elementAt(i);
+            String sAction = "INS";
+            if (comBean != null) sAction = comBean.getCOMM_SUBMIT_ACTION();
+            if (!sAction.equals("NONE"))
+            {
+              CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_CONTACT_COMM(?,?,?,?,?,?,?,?,?,?,?,?)}");
+              CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+              CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //comm idseq
+              CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //org idseq
+              CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //per idseq
+              CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //ctlname
+              CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //rank order
+              CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //cyber address
+              CStmt.registerOutParameter(9,java.sql.Types.DATE);   //.VARCHAR);       //created by
+              CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //date created
+              CStmt.registerOutParameter(11,java.sql.Types.DATE);   //.VARCHAR);       //modified by
+              CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //date modified
+
+              // Set the In parameters (which are inherited from the PreparedStatement class)
+              if ((sAction.equals("UPD")) || (sAction.equals("DEL")))
+              {
+                if ((comBean.getAC_COMM_IDSEQ() != null) && (!comBean.getAC_COMM_IDSEQ().equals("")))
+                  CStmt.setString(3,comBean.getAC_COMM_IDSEQ());              //comm idseq if updated
+                else
+                  sAction = "INS";              //INSERT A NEW RECORD IF NOT EXISTED
+              }
+              CStmt.setString(2, sAction);       //ACTION - INS, UPD or DEL
+              CStmt.setString(4, orgID);         //org idseq
+              CStmt.setString(5, perID);        //per idseq
+              CStmt.setString(6, comBean.getCTL_NAME());       //selected comm type
+              CStmt.setString(7, comBean.getRANK_ORDER());     //rank order for the comm 
+              CStmt.setString(8, comBean.getCYBER_ADDR());     //comm value
+               // Now we are ready to call the stored procedure
+              boolean bExcuteOk = CStmt.execute();
+              sReturnCode = CStmt.getString(1);
+              if (sReturnCode != null && !sReturnCode.equals(""))  // && !sReturnCode.equals("API_OC_500"))
+              {
+                String comName = comBean.getCTL_NAME() + "_" + comBean.getRANK_ORDER() + "_" + comBean.getCYBER_ADDR();
+                this.storeStatusMsg(sReturnCode + " : Unable to create contact communication - " + comName);
+                m_classReq.setAttribute("retcode", sReturnCode);
+              }
+              else
+              {
+                comBean.setAC_COMM_IDSEQ(CStmt.getString(3)); 
+                comBean.setCOMM_SUBMIT_ACTION("NONE");
+                vCom.setElementAt(comBean, i);
+              }
+            }
+          }
+          catch(Exception ee)
+          {
+            logger.fatal("ERROR in InsACService-setContact_Comms for bean : " + ee.toString());
+            m_classReq.setAttribute("retcode", "Exception");
+            this.storeStatusMsg("\\t Exception ee : Unable to update or remove an Communication attributes.");
+            continue;  //continue with other ones
+          }
+        }
+      }
+    }
+    catch (Exception e)
+    {
+      logger.fatal("Error - setContact_Comms : " + e.toString());
+    }
+    try
+    {
+      if(rs!=null) rs.close();
+      if(CStmt!=null) CStmt.close();
+      if(sbr_db_conn != null) sbr_db_conn.close();
+    }
+    catch(Exception ee)
+    {
+      logger.fatal("ERROR in InsACService-setContact_Comms for close : " + ee.toString());
+      m_classReq.setAttribute("retcode", "Exception");
+      this.storeStatusMsg("\\t Exception ee : Unable to update or remove communication attributes.");
+    }
+    return vCom;
+  }
+
+  private Vector setContact_Addrs(Vector vAdr, String orgID, String perID)
+  {
+    java.util.Date startDate = new java.util.Date();          
+    logger.info(m_servlet.getLogMessage(m_classReq, "setContact_Addrs", "starting set", startDate, startDate));
+
+    Connection sbr_db_conn = null;
+    ResultSet rs = null;
+    CallableStatement CStmt = null;
+    String sReturnCode = "";
+    try
+    {
+      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (sbr_db_conn == null)
+        m_servlet.ErrorLogin(m_classReq, m_classRes);
+      else
+      {
+        for (int i =0; i<vAdr.size(); i++)
+        {
+          try
+          {
+            AC_ADDR_Bean adrBean = (AC_ADDR_Bean)vAdr.elementAt(i);
+            String sAction = "INS";
+            if (adrBean != null) sAction = adrBean.getADDR_SUBMIT_ACTION();
+            if (!sAction.equals("NONE"))
+            {
+              CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_CONTACT_ADDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+              CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+              CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //addr idseq
+              CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //org idseq
+              CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //per idseq
+              CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //atlname
+              CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //rank order
+              CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //address line 1
+              CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //address line 2
+              CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //city
+              CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //state
+              CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //country
+              CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //postal code
+              CStmt.registerOutParameter(14,java.sql.Types.DATE);   //.VARCHAR);       //created by
+              CStmt.registerOutParameter(15,java.sql.Types.VARCHAR);      //date created
+              CStmt.registerOutParameter(16,java.sql.Types.DATE);   //.VARCHAR);      //modified by
+              CStmt.registerOutParameter(17,java.sql.Types.VARCHAR);      //date modified
+
+              // Set the In parameters (which are inherited from the PreparedStatement class)
+              if ((sAction.equals("UPD")) || (sAction.equals("DEL")))
+              {
+                if ((adrBean.getAC_ADDR_IDSEQ() != null) && (!adrBean.getAC_ADDR_IDSEQ().equals("")))
+                  CStmt.setString(3, adrBean.getAC_ADDR_IDSEQ());              //comm idseq if updated
+                else
+                  sAction = "INS";              //INSERT A NEW RECORD IF NOT EXISTED
+              }
+              CStmt.setString(2, sAction);       //ACTION - INS, UPD or DEL
+              CStmt.setString(4, orgID);         //org idseq
+              CStmt.setString(5, perID);        //per idseq
+              CStmt.setString(6, adrBean.getATL_NAME());       //selected addr type
+              CStmt.setString(7, adrBean.getRANK_ORDER());     //rank order for the addr 
+              CStmt.setString(8, adrBean.getADDR_LINE1());     //addr line 1
+              CStmt.setString(9, adrBean.getADDR_LINE2());     //addr line 2
+              CStmt.setString(10, adrBean.getCITY());         //city
+              CStmt.setString(11, adrBean.getSTATE_PROV());   //state
+              CStmt.setString(12, adrBean.getCOUNTRY());     //country
+              CStmt.setString(13, adrBean.getPOSTAL_CODE());  //zip code
+
+               // Now we are ready to call the stored procedure
+              boolean bExcuteOk = CStmt.execute();
+              sReturnCode = CStmt.getString(1);
+              if (sReturnCode != null && !sReturnCode.equals(""))  // && !sReturnCode.equals("API_OC_500"))
+              {
+                String adrName = adrBean.getATL_NAME() + "_" + adrBean.getRANK_ORDER() + "_" + adrBean.getADDR_LINE1();
+                this.storeStatusMsg(sReturnCode + " : Unable to create contact address - " + adrName);
+                m_classReq.setAttribute("retcode", sReturnCode);
+              }
+              else
+              {
+                adrBean.setAC_ADDR_IDSEQ(CStmt.getString(3)); 
+                adrBean.setADDR_SUBMIT_ACTION("NONE");
+                vAdr.setElementAt(adrBean, i);
+              }
+            }
+          }
+          catch(Exception ee)
+          {
+            logger.fatal("ERROR in InsACService-setContact_Addrs for bean : " + ee.toString());
+            m_classReq.setAttribute("retcode", "Exception");
+            this.storeStatusMsg("\\t Exception ee : Unable to update or remove an Address attributes.");
+            continue;  //continue with other ones
+          }
+        }
+      }
+    }
+    catch (Exception e)
+    {
+      logger.fatal("Error - setContact_Addrs : " + e.toString());
+      m_classReq.setAttribute("retcode", "Exception");
+      this.storeStatusMsg("\\t Exception ee : Unable to update or remove an Address attributes.");
+    }
+    try
+    {
+      if(rs!=null) rs.close();
+      if(CStmt!=null) CStmt.close();
+      if(sbr_db_conn != null) sbr_db_conn.close();
+    }
+    catch(Exception ee)
+    {
+      logger.fatal("ERROR in InsACService-setContact_Addrs for close : " + ee.toString());
+      m_classReq.setAttribute("retcode", "Exception");
+      this.storeStatusMsg("\\t Exception ee : Unable to update or remove an Address attributes.");
+    }
+    return vAdr;
+  }
+
+  private AC_CONTACT_Bean setAC_Contact(AC_CONTACT_Bean accB)
+  {
+    java.util.Date startDate = new java.util.Date();          
+    logger.info(m_servlet.getLogMessage(m_classReq, "setAC_Contact", "starting set", startDate, startDate));
+
+    Connection sbr_db_conn = null;
+    ResultSet rs = null;
+    CallableStatement CStmt = null;
+    String sReturnCode = "";
+    try
+    {
+      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (sbr_db_conn == null)
+        m_servlet.ErrorLogin(m_classReq, m_classRes);
+      else
+      {
+        String sAction = accB.getACC_SUBMIT_ACTION();
+        if (sAction == null || sAction.equals("")) sAction = "INS";
+        if (!sAction.equals("NONE"))
+        {
+          CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_AC_CONTACT(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+          CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+          CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //comm idseq
+          CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //org idseq
+          CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //per idseq
+          CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //AC idseq
+          CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //rank order
+          CStmt.registerOutParameter(8,java.sql.Types.DATE);   //.VARCHAR);       //created by
+          CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //date created
+          CStmt.registerOutParameter(10,java.sql.Types.DATE);   //.VARCHAR);       //modified by
+          CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //date modified
+          CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //p_cscsi_idseq
+          CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //p_csi_idseq
+          CStmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //p_contact role
+
+          // Set the In parameters (which are inherited from the PreparedStatement class)
+          if ((sAction.equals("UPD")) || (sAction.equals("DEL")))
+          {
+            if ((accB.getAC_CONTACT_IDSEQ() != null) && (!accB.getAC_CONTACT_IDSEQ().equals("")))
+              CStmt.setString(3,accB.getAC_CONTACT_IDSEQ());              //acc idseq if updated
+            else
+              sAction = "INS";              //INSERT A NEW RECORD IF NOT EXISTED
+          }
+          CStmt.setString(2, sAction);       //ACTION - INS, UPD or DEL
+          CStmt.setString(4, accB.getORG_IDSEQ());         //org idseq
+          CStmt.setString(5, accB.getPERSON_IDSEQ());        //per idseq
+          CStmt.setString(6, accB.getAC_IDSEQ());       //ac idseq
+          CStmt.setString(7, accB.getRANK_ORDER());     //rank order
+          CStmt.setString(14, accB.getCONTACT_ROLE());     //contact role 
+           // Now we are ready to call the stored procedure
+          boolean bExcuteOk = CStmt.execute();
+          sReturnCode = CStmt.getString(1);
+          if (sReturnCode != null && !sReturnCode.equals(""))  // && !sReturnCode.equals("API_OC_500"))
+          {
+            String accName = accB.getORG_NAME();
+            if (accName == null || accName.equals("")) accName = accB.getPERSON_NAME();
+            this.storeStatusMsg(sReturnCode + " : Unable to create contact attributes - " + accName);
+            m_classReq.setAttribute("retcode", sReturnCode);
+          }
+          else
+          {
+            accB.setAC_CONTACT_IDSEQ(CStmt.getString(3)); 
+            accB.setACC_SUBMIT_ACTION("NONE");
+          }
+        }
+      }
+    }
+    catch (Exception e)
+    {
+      logger.fatal("Error - setAC_Contact : " + e.toString());
+      m_classReq.setAttribute("retcode", "Exception");
+      this.storeStatusMsg("\\t Exception ee : Unable to update or remove contact attributes.");
+    }
+    try
+    {
+      if(rs!=null) rs.close();
+      if(CStmt!=null) CStmt.close();
+      if(sbr_db_conn != null) sbr_db_conn.close();
+    }
+    catch(Exception ee)
+    {
+      logger.fatal("ERROR in InsACService-setAC_Contact for close : " + ee.toString());
+      m_classReq.setAttribute("retcode", "Exception");
+      this.storeStatusMsg("\\t Exception ee : Unable to update or remove contact attributes.");
+    }
+    return accB;
+  }
+
+
+  
+}//close the class
 
