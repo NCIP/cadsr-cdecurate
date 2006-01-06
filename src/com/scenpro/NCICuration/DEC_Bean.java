@@ -1,8 +1,11 @@
+// Copyright (c) 2005 ScenPro, Inc.
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/DEC_Bean.java,v 1.3 2006-01-06 21:53:57 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.NCICuration;
 
-import java.io.*;
 import java.util.*;
-import java.io.Serializable;
 
 /**
  * The DEC_Bean encapsulates the DEC information and is stored in the
@@ -85,8 +88,10 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-public class DEC_Bean implements Serializable{
+public class DEC_Bean extends AC_Bean {
 
+  private static final long serialVersionUID = 5924881666562977357L;
+  
 // attributes
   private String RETURN_CODE;
   private String DEC_DEC_IDSEQ;
@@ -140,11 +145,21 @@ public class DEC_Bean implements Serializable{
   private Vector DEC_AC_CSI_ID;
   private Vector DEC_CS_CSI_ID;
   
+  //altname ref docs
+  private Vector AC_ALT_NAMES;
+  private Vector AC_REF_DOCS;
+  //concept name
+  private String AC_CONCEPT_NAME;
+  //contact inf
+  private Hashtable AC_CONTACTS;
+  private String REFERENCE_DOCUMENT;
+  private String ALTERNATE_NAME;
+  
   private Vector DEC_OC_QUALIFIER_NAMES;
   private Vector DEC_PROP_QUALIFIER_NAMES;
-   private Vector DEC_OC_QUALIFIER_CODES;
+  private Vector DEC_OC_QUALIFIER_CODES;
   private Vector DEC_PROP_QUALIFIER_CODES;
-   private Vector DEC_OC_QUALIFIER_DB;
+  private Vector DEC_OC_QUALIFIER_DB;
   private Vector DEC_PROP_QUALIFIER_DB;
    
   private String DEC_OC_CONCEPT_CODE;
@@ -179,7 +194,7 @@ public class DEC_Bean implements Serializable{
   /**
    * Constructor
   */
-  public void DEC_Bean() {
+  public DEC_Bean() {
   }
 
   /**
@@ -227,14 +242,20 @@ public class DEC_Bean implements Serializable{
       this.setDEC_DATE_MODIFIED(copyBean.getDEC_DATE_MODIFIED());
       this.setDEC_MODIFIED_BY(copyBean.getDEC_MODIFIED_BY());
       
-      this.setDEC_SELECTED_CONTEXT_ID(copyBean.getDEC_SELECTED_CONTEXT_ID());
-      this.setDEC_CS_NAME(copyBean.getDEC_CS_NAME());
-      this.setDEC_CS_ID(copyBean.getDEC_CS_ID());
-      this.setDEC_CSI_NAME(copyBean.getDEC_CSI_NAME());
-      this.setDEC_CSI_ID(copyBean.getDEC_CSI_ID());
-      this.setDEC_AC_CSI_VECTOR(copyBean.getDEC_AC_CSI_VECTOR());
-      this.setDEC_AC_CSI_ID(copyBean.getDEC_AC_CSI_ID());
-      this.setDEC_CS_CSI_ID(copyBean.getDEC_CS_CSI_ID());
+      this.setAC_SELECTED_CONTEXT_ID(copyBean.getAC_SELECTED_CONTEXT_ID());
+      this.setAC_CS_NAME(copyBean.getAC_CS_NAME());
+      this.setAC_CS_ID(copyBean.getAC_CS_ID());
+      this.setAC_CSI_NAME(copyBean.getAC_CSI_NAME());
+      this.setAC_CSI_ID(copyBean.getAC_CSI_ID());
+      this.setAC_AC_CSI_VECTOR(copyBean.getAC_AC_CSI_VECTOR());
+      this.setAC_AC_CSI_ID(copyBean.getAC_AC_CSI_ID());
+      this.setAC_CS_CSI_ID(copyBean.getAC_CS_CSI_ID());
+      this.setAC_ALT_NAMES(copyBean.getAC_ALT_NAMES());
+      this.setAC_REF_DOCS(copyBean.getAC_REF_DOCS());
+      this.setAC_CONCEPT_NAME(copyBean.getAC_CONCEPT_NAME());
+      this.setAC_CONTACTS(copyBean.getAC_CONTACTS());
+      this.setREFERENCE_DOCUMENT(copyBean.getREFERENCE_DOCUMENT());
+      this.setALTERNATE_NAME(copyBean.getALTERNATE_NAME());
       
       this.setDEC_OC_CONCEPT_CODE(copyBean.getDEC_OC_CONCEPT_CODE());
 			this.setDEC_OC_EVS_CUI_ORIGEN(copyBean.getDEC_OC_EVS_CUI_ORIGEN());
@@ -632,79 +653,132 @@ public class DEC_Bean implements Serializable{
       this.DEC_CHECKED = b;
   }
   /**
-   * The setDEC_SELECTED_CONTEXT_ID method sets the DEC_SELECTED_CONTEXT_ID for this bean.
+   * The setAC_SELECTED_CONTEXT_ID method sets the DEC_SELECTED_CONTEXT_ID for this bean.
    *
    * @param s The DEC_SELECTED_CONTEXT_ID to set
    */
-  public void setDEC_SELECTED_CONTEXT_ID(Vector s)
+  public void setAC_SELECTED_CONTEXT_ID(Vector s)
   {
       this.DEC_SELECTED_CONTEXT_ID = s;
   }
   /**
-   * The setDEC_CS method sets the DEC_CS for this bean.
+   * The setAC_CS method sets the DEC_CS for this bean.
    *
    * @param s The DEC_CS to set
   */
-  public void setDEC_CS_NAME(Vector v)
+  public void setAC_CS_NAME(Vector v)
   {
       this.DEC_CS_NAME = v;
   }
   /**
-   * The setDEC_CS_ID method sets the DEC_CS_ID for this bean.
+   * The setAC_CS_ID method sets the DEC_CS_ID for this bean.
    *
    * @param s The DEC_CS_ID to set
   */
-  public void setDEC_CS_ID(Vector v)
+  public void setAC_CS_ID(Vector v)
   {
       this.DEC_CS_ID = v;
   }
   /**
-   * The setDEC_CSI method sets the DEC_CSI for this bean.
+   * The setAC_CSI method sets the DEC_CSI for this bean.
    *
    * @param s The DEC_CSI to set
   */
-  public void setDEC_CSI_NAME(Vector v)
+  public void setAC_CSI_NAME(Vector v)
   {
       this.DEC_CSI_NAME = v;
   }
   /**
-   * The setDEC_CSI_ID method sets the DEC_CSI_ID for this bean.
+   * The setAC_CSI_ID method sets the DEC_CSI_ID for this bean.
    *
    * @param s The DEC_CSI_ID to set
   */
-  public void setDEC_CSI_ID(Vector v)
+  public void setAC_CSI_ID(Vector v)
   {
       this.DEC_CSI_ID = v;
   }
   /**
-   * The setDEC_AC_CSI_VECTOR method sets the DEC_AC_CSI_VECTOR for this bean.
+   * The setAC_AC_CSI_VECTOR method sets the DEC_AC_CSI_VECTOR for this bean.
    *
    * @param s The DEC_AC_CSI_VECTOR to set
   */
-  public void setDEC_AC_CSI_VECTOR(Vector v)
+  public void setAC_AC_CSI_VECTOR(Vector v)
   {
       this.DEC_AC_CSI_VECTOR = v;
   }
   /**
-   * The setDEC_AC_CSI_ID method sets the DEC_AC_CSI_ID for this bean.
+   * The setAC_AC_CSI_ID method sets the DEC_AC_CSI_ID for this bean.
    *
    * @param s The DEC_AC_CSI_ID to set
   */
-  public void setDEC_AC_CSI_ID(Vector v)
+  public void setAC_AC_CSI_ID(Vector v)
   {
       this.DEC_AC_CSI_ID = v;
   }
   /**
-   * The setDEC_CS_CSI_ID method sets the DEC_CS_CSI_ID for this bean.
+   * The setAC_CS_CSI_ID method sets the DEC_CS_CSI_ID for this bean.
    *
    * @param s The DEC_CS_CSI_ID to set
   */
-  public void setDEC_CS_CSI_ID(Vector v)
+  public void setAC_CS_CSI_ID(Vector v)
   {
       this.DEC_CS_CSI_ID = v;
   }
-    
-/**
+  /**
+   * The setAC_ALT_NAMES method sets the AC_ALT_NAMES for this bean.
+   *
+   * @param s The AC_ALT_NAMES to set
+  */
+  public void setAC_ALT_NAMES(Vector v)
+  {
+      this.AC_ALT_NAMES = v;
+  }
+  /**
+   * The setAC_REF_DOCS method sets the AC_REF_DOCS for this bean.
+   *
+   * @param s The AC_REF_DOCS to set
+  */
+  public void setAC_REF_DOCS(Vector v)
+  {
+      this.AC_REF_DOCS = v;
+  }
+  /**
+   * The setAC_CONCEPT_NAME method sets the AC_CONCEPT_NAME for this bean.
+   *
+   * @param s The AC_CONCEPT_NAME to set
+  */
+  public void setAC_CONCEPT_NAME(String s)
+  {
+      this.AC_CONCEPT_NAME = s;
+  }
+
+  /**
+   * @param ac_contacts The aC_CONTACTS to set.
+   */
+  public void setAC_CONTACTS(Hashtable ac_contacts)
+  {
+    AC_CONTACTS = ac_contacts;
+  }
+
+  /**
+   * The setREFERENCE_DOCUMENT_ method sets the REFERENCE_DOCUMENT for this bean.
+   *
+   * @param s The REFERENCE_DOCUMENT to set
+  */
+  public void setREFERENCE_DOCUMENT(String s)
+  {
+      this.REFERENCE_DOCUMENT = s;
+  }
+
+  /**
+   * @param alternate_name The aLTERNATE_NAME to set.
+   */
+  public void setALTERNATE_NAME(String alternate_name)
+  {
+    ALTERNATE_NAME = alternate_name;
+  }
+
+  /**
    * The setDEC_OC_CONCEPT_CODE method sets the DEC_OC_CONCEPT_CODE for this bean.
    *
    * @param s The DEC_OC_CONCEPT_CODE to set
@@ -1008,6 +1082,12 @@ public class DEC_Bean implements Serializable{
   {
       return this.DEC_DEC_IDSEQ;
   }
+  
+  public String getIDSEQ()
+  {
+      return getDEC_DEC_IDSEQ();
+  }
+  
 	/**
   * The getDEC_PREFERRED_NAME method returns the DEC_PREFERRED_NAME for this bean.
   *
@@ -1345,79 +1425,132 @@ public class DEC_Bean implements Serializable{
       return this.DEC_CHECKED;
   }
    /**
-  * The getDEC_SELECTED_CONTEXT_ID method returns the DEC_SELECTED_CONTEXT_ID for this bean.
+  * The getAC_SELECTED_CONTEXT_ID method returns the DEC_SELECTED_CONTEXT_ID for this bean.
   *
   * @return Vector The DEC_SELECTED_CONTEXT_ID
   */
-  public Vector getDEC_SELECTED_CONTEXT_ID()
+  public Vector getAC_SELECTED_CONTEXT_ID()
   {
       return this.DEC_SELECTED_CONTEXT_ID;
   }
   /**
-  * The getDEC_CS method returns the DEC_CS for this bean.
+  * The getAC_CS method returns the DEC_CS for this bean.
   *
   * @return Vector The DEC_CS
   */
-  public Vector getDEC_CS_NAME()
+  public Vector getAC_CS_NAME()
   {
       return this.DEC_CS_NAME;
   }
   /**
-  * The getDEC_CS_ID method returns the DEC_CS_ID for this bean.
+  * The getAC_CS_ID method returns the DEC_CS_ID for this bean.
   *
   * @return Vector The DEC_CS_ID
   */
-  public Vector getDEC_CS_ID()
+  public Vector getAC_CS_ID()
   {
       return this.DEC_CS_ID;
   }
   /**
-  * The getDEC_CSI method returns the DEC_CSI for this bean.
+  * The getAC_CSI method returns the DEC_CSI for this bean.
   *
   * @return String The DEC_CSI
   */
-  public Vector getDEC_CSI_NAME()
+  public Vector getAC_CSI_NAME()
   {
       return this.DEC_CSI_NAME;
   }
   /**
-  * The getDEC_CSI_ID method returns the DEC_CSI_ID for this bean.
+  * The getAC_CSI_ID method returns the DEC_CSI_ID for this bean.
   *
   * @return String The DEC_CSI_ID
   */
-  public Vector getDEC_CSI_ID()
+  public Vector getAC_CSI_ID()
   {
       return this.DEC_CSI_ID;
   }
   
   /**
-  * The getDEC_AC_CSI_VECTOR method returns the DEC_AC_CSI_VECTOR for this bean.
+  * The getAC_AC_CSI_VECTOR method returns the DEC_AC_CSI_VECTOR for this bean.
   *
   * @return Vector The DEC_AC_CSI_VECTOR
   */
-  public Vector getDEC_AC_CSI_VECTOR()
+  public Vector getAC_AC_CSI_VECTOR()
   {
       return this.DEC_AC_CSI_VECTOR;
   }
   /**
-  * The getDEC_AC_CSI_ID method returns the DEC_AC_CSI_ID for this bean.
+  * The getAC_AC_CSI_ID method returns the DEC_AC_CSI_ID for this bean.
   *
   * @return Vector The DEC_AC_CSI_ID
   */
-  public Vector getDEC_AC_CSI_ID()
+  public Vector getAC_AC_CSI_ID()
   {
       return this.DEC_AC_CSI_ID;
   }
   
 /**
-  * The getDEC_CS_CSI_ID method returns the DEC_CS_CSI_ID for this bean.
+  * The getAC_CS_CSI_ID method returns the DEC_CS_CSI_ID for this bean.
   *
   * @return Vector The DEC_CS_CSI_ID
   */
-  public Vector getDEC_CS_CSI_ID()
+  public Vector getAC_CS_CSI_ID()
   {
       return this.DEC_CS_CSI_ID;
   }
+  /**
+   * The getAC_ALT_NAMES method returns the AC_ALT_NAMES for this bean.
+   *
+   * @return Vector The AC_ALT_NAMES
+   */
+  public Vector getAC_ALT_NAMES()
+  {
+       return this.AC_ALT_NAMES;
+  }
+  /**
+   * The getAC_REF_DOCS method returns the AC_REF_DOCS for this bean.
+   *
+   * @return Vector The AC_REF_DOCS
+   */
+  public Vector getAC_REF_DOCS()
+  {
+       return this.AC_REF_DOCS;
+  }
+  /**
+   * The getAC_CONCEPT_NAME method returns the AC_CONCEPT_NAME for this bean.
+   *
+   * @return String The AC_CONCEPT_NAME
+   */
+   public String getAC_CONCEPT_NAME()
+   {
+       return this.AC_CONCEPT_NAME;
+   }
+   
+   /**
+    * @return Returns the aC_CONTACTS.
+    */
+   public Hashtable getAC_CONTACTS()
+   {
+     return AC_CONTACTS;
+   }
+
+   /**
+    * The getREFERENCE_DOCUMENT method returns the REFERENCE_DOCUMENT for this bean.
+    *
+    * @return String The REFERENCE_DOCUMENT
+    */
+    public String getREFERENCE_DOCUMENT()
+    {
+        return this.REFERENCE_DOCUMENT;
+    }
+    
+    /**
+     * @return Returns the aLTERNATE_NAME.
+     */
+    public String getALTERNATE_NAME()
+    {
+      return ALTERNATE_NAME;
+    }
 
 /**
   * The getDEC_OC_CONCEPT_CODE method returns the DEC_OC_CONCEPT_CODE for this bean.

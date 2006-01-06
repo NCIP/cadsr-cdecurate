@@ -1,7 +1,9 @@
-
 // Copyright (c) 2002 ScenPro, Inc.
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/DoHomepageThread.java,v 1.4 2006-01-06 21:53:57 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.NCICuration;
-import javax.servlet.*;
 import javax.servlet.http.*;
 
 /**
@@ -112,10 +114,11 @@ public class DoHomepageThread extends Thread
   {
     try
     {
-System.err.println("thread run1");   
+//System.err.println("thread run1");   
       HttpSession session = m_classReq.getSession();
-      EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);   
-      evs.getMetaSources(m_classReq, m_classRes); 
+//System.err.println("thread run2");   
+   //   EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);   
+   //   evs.getMetaSources(); 
 //System.err.println("thread run12");  
       EVSMasterTree tree = new EVSMasterTree(m_classReq, "Thesaurus/Metathesaurus", m_servlet);
       String strHTML = tree.populateTreeRoots("Thesaurus/Metathesaurus");  

@@ -19,8 +19,8 @@
    if (results == null)
     results = (Vector)session.getAttribute("results");
   // Do this so page will not bomb before it re-submits
-  if(strBEDisplaySubmitted == "false")
-    results = null;
+   if(strBEDisplaySubmitted == "false")
+      results = null;
   
   // String sMAction = (String)session.getAttribute("MenuAction");
  //  session.setAttribute("MenuAction", "searchForCreate");
@@ -34,7 +34,7 @@
    if (nRecs == null)
       nRecs = "No ";
    if (sSelAC == null) sSelAC = "";
-   if(sSelAC.equals("DataElement"))
+   if (sSelAC.equals("DataElement"))
       sSelAC = "Data Element"; 
    else if(sSelAC.equals("DataElementConcept"))
       sSelAC = "Data Element Concept";
@@ -124,7 +124,7 @@ function setup()
         {
           String sAttr = (String)vSelAttr.elementAt(i);
           if (sAttr.equals("Name")) { %>
-            <th method="get"><font size="2">Preferred Name</font></th>
+            <th method="get"><font size="2">Short Name</font></th>
 <%        } else if (sAttr.equals("Alias Name")) { %>
             <th method="get"><font size="2"> Name/Alias Name</font></th>
 <%        } else if (sAttr.equals("Long Name")) { %>
@@ -262,39 +262,39 @@ function setup()
 <%        }   else if (sAttr.equals("Database")) { %>
             <th method="get"><font size="2">Database</font></th>
 <%        }   else if (sAttr.equals("Comment Document Text")) { %>
-            <th method="get"><font size="2">Comment Document Text</a></th>
+            <th method="get"><font size="2">Comment Document Text</font></th>
 <%        }   else if (sAttr.equals("Data Element Source Document Text")) { %>
-            <th method="get"><font size="2">Data Element Source Document Text</a></th>
+            <th method="get"><font size="2">Data Element Source Document Text</font></th>
 <%        }   else if (sAttr.equals("Description Document Text")) { %>
-            <th method="get"><font size="2">Description Document Text</a></th>
+            <th method="get"><font size="2">Description Document Text</font></th>
 <%        }   else if (sAttr.equals("Detail Description Document Text")) { %>
-            <th method="get"><font size="2">Detail Description Document Text</a></th>
+            <th method="get"><font size="2">Detail Description Document Text</font></th>
 <%        }   else if (sAttr.equals("Example Document Text")) { %>
-            <th method="get"><font size="2">Example Document Text</a></th>
+            <th method="get"><font size="2">Example Document Text</font></th>
 <%        }   else if (sAttr.equals("Image File Document Text")) { %>
-            <th method="get"><font size="2">Image File Document Text</a></th>
+            <th method="get"><font size="2">Image File Document Text</font></th>
 <%        }   else if (sAttr.equals("Label Document Text")) { %>
-            <th method="get"><font size="2">Label Document Text</a></th>
+            <th method="get"><font size="2">Label Document Text</font></th>
 <%        }   else if (sAttr.equals("Note Document Text")) { %>
-            <th method="get"><font size="2">Note Document Text</a></th>
+            <th method="get"><font size="2">Note Document Text</font></th>
 <%        }   else if (sAttr.equals("Reference Document Text")) { %>
-            <th method="get"><font size="2">Reference Document Text</a></th>
+            <th method="get"><font size="2">Reference Document Text</font></th>
 <%        }   else if (sAttr.equals("Reference Documents")) { %>
-            <th method="get"><font size="2">Reference Documents</a></th>
+            <th method="get"><font size="2">Reference Documents</font></th>
 <%        }   else if (sAttr.equals("Technical Guide Document Text")) { %>
-            <th method="get"><font size="2">Technical Guide Document Text</a></th>
+            <th method="get"><font size="2">Technical Guide Document Text</font></th>
 <%        }   else if (sAttr.equals("UML Attribute Document Text")) { %>
-            <th method="get"><font size="2">UML Attribute Document Text</a></th>
+            <th method="get"><font size="2">UML Attribute Document Text</font></th>
 <%        }   else if (sAttr.equals("UML Class Document Text")) { %>
-            <th method="get"><font size="2">UML Class Document Text</a></th>
+            <th method="get"><font size="2">UML Class Document Text</font></th>
 <%        }   else if (sAttr.equals("Valid Value Source Document Text")) { %>
-            <th method="get"><font size="2">Valid Value Source Document Text</a></th>
+            <th method="get"><font size="2">Valid Value Source Document Text</font></th>
 <%        }   else if (sAttr.equals("Other Types Document Text")) { %>
-            <th method="get"><font size="2">Other Types Document Text</a></th>
-<%        }   else if (sAttr.equals("Long Name Document Text")) { %>
-            <th method="get"><font size="2">Long Name Document Text</a></th>
+            <th method="get"><font size="2">Other Types Document Text</font></th>
+<%        }   else if (sAttr.equals("Preferred Question Text Document Text")) { %>
+            <th method="get"><font size="2">Preferred Question Text Document Text</font></th>
 <%        }   else if (sAttr.equals("Historic Short CDE Name Document Text")) { %>
-            <th method="get"><font size="2">"Historic Short CDE Name Document Text</a></th>
+            <th method="get"><font size="2">"Historic Short CDE Name Document Text</font></th>
 <%
 	        }  }  }
 %>

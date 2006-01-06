@@ -13,23 +13,25 @@
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/popupMenus.js"></SCRIPT>
 <%
    //displayable result vector
+System.out.println(" search results ");
+   UtilService serUtil = new UtilService();
    Vector results = (Vector)session.getAttribute("results");
    if (results == null) results = new Vector();
-   
-   Vector vSearchID = (Vector)session.getAttribute("SearchID");
-   if (vSearchID == null) vSearchID = new Vector();
-   Vector vSearchName = (Vector)session.getAttribute("SearchName");
-   if (vSearchName == null)  vSearchName = new Vector();
-   Vector vSearchDefinition = (Vector)session.getAttribute("SearchDefinition");
-   if (vSearchDefinition == null)  vSearchDefinition = new Vector();
-   Vector vSearchDefSource = (Vector)session.getAttribute("SearchDefSource");
-   if (vSearchDefSource == null) vSearchDefSource = new Vector();
-   Vector vSearchDatabase = (Vector)session.getAttribute("SearchDatabase");
-   if (vSearchDatabase == null) vSearchDatabase = new Vector();
-   Vector vCCode = (Vector)session.getAttribute("vCCode");
-   if (vCCode == null) vCCode = new Vector();
-   Vector vCCodeDB = (Vector)session.getAttribute("vCCodeDB");
-   if (vCCodeDB == null) vCCodeDB = new Vector();
+   EVS_UserBean uBean = (EVS_UserBean)session.getAttribute("EvsUserBean");
+   if (uBean == null) uBean = new EVS_UserBean();
+   Vector vrVocab = uBean.getVocabNameList();   //(Vector)session.getAttribute("dtsVocabNames");  //list of vocabulary names
+   if (vrVocab == null) vrVocab = new Vector();
+   //get meta name
+   String metaName = uBean.getMetaDispName();
+   if (metaName == null) metaName = "";
+   String dsrName = uBean.getDSRDispName();
+   if (dsrName == null) dsrName = "";
+   //list of def sources to filter duplicates
+   Vector vDefSrc = uBean.getNCIDefSrcList();
+   if (vDefSrc == null) vDefSrc = new Vector();
+  // Vector vrDisplay = uBean.getVocabDisplayList();  // (Vector)session.getAttribute("dtsVocabDisplay");  //list of vocabulary display names
+  // if (vrDisplay == null) vrDisplay = new Vector();
+  // EVS_Bean eBean = new EVS_Bean();
    String sKeyword = "", nRecs = "", sSelAC = "";
    String sSelAC_VM = "";
    String sSelectedParentName = "", sSelectedParentCC = "", sSelectedParentDB = "";
@@ -48,6 +50,9 @@
        vSelAttr = (Vector)session.getAttribute("creSelectedAttr");
    }
 
+   Vector vSearchRes = (Vector)session.getAttribute("vACSearch");
+   if (vSearchRes == null) vSearchRes = new Vector();
+   if (sSelAC == null || sSelAC.equals("ConceptualDomain")) vSearchRes = new Vector();
    String sLabelKeyword =  (String)request.getAttribute("labelKeyword");
    if (sLabelKeyword == null)
       sLabelKeyword = "";
@@ -90,15 +95,13 @@
   else if (sSelAC.equals("ParentConceptVM"))
   {
      sSelAC = "Value Meaning";
-
      isEVSvm = false;
   }
 
   String strIsQualifier = "false";
         
   String sUISearchType2 = (String)request.getAttribute("UISearchType");
-  if (sUISearchType2 == null || sUISearchType2.equals("nothing") 
-  || sUISearchType2.equals("")) 
+  if (sUISearchType2 == null || sUISearchType2.equals("nothing") || sUISearchType2.equals("")) 
     sUISearchType2 = "term";
 %>
 
@@ -107,6 +110,11 @@
  var selDefinition = null;
  var numRowsSelected = 0;
  var checkBoxArray = new Array();
+ var conArray = new Array();
+ var metaName = "";
+ var dsrName = "";
+ var arrDefSrc = new Array();
+
 
    function setup()
    {
@@ -122,6 +130,12 @@
     session.setAttribute("statusMessage", "");
  %>
     window.status = "Enter the keyword to search a component"
+    //make the message visible.
+    var pageOpen = "";
+    if (document.searchParmsForm.actSelect != null)
+      pageOpen = document.searchParmsForm.actSelect.value;
+    if (pageOpen == "FirstSearch" || pageOpen == "OpenTreeToConcept" || pageOpen == "OpenTreeToParentConcept")
+      document.searchResultsForm.Message.style.visibility="visible";
    }
 
    function getSearchComponent()
@@ -175,27 +189,79 @@
       EnableCheckButtons(checked, currentField, "<%=sMAction%>")
    }
 
-function getSubConceptsAll()
-{
-   if (opener.document == null)
-        window.close();
-   getSubConceptsAll2("<%=sUISearchType2%>")  
-}
-   
-function getSubConceptsImmediate()
-{
-   if (opener.document == null)
-        window.close();
-  getSubConceptsImmediate2("<%=sUISearchType2%>")
-}
-   
-function getSuperConcepts()
-{
-   if (opener.document == null)
-        window.close();
-   getSuperConcepts2("<%=sUISearchType2%>")  
-}
+  function getSubConceptsAll()
+  {
+     if (opener.document == null)
+          window.close();
+     getSubConceptsAll2("<%=sUISearchType2%>")  
+  }
+     
+  function getSubConceptsImmediate()
+  {
+     if (opener.document == null)
+          window.close();
+    getSubConceptsImmediate2("<%=sUISearchType2%>")
+  }
+     
+  function getSuperConcepts()
+  {
+     if (opener.document == null)
+          window.close();
+     getSuperConcepts2("<%=sUISearchType2%>")  
+  }
 
+  //stores the search resuls in the array
+  function storeResultInArray()
+  {
+<%  
+	try
+	{
+	  for(int i=0; i<vSearchRes.size(); i++)
+	  {
+	      EVS_Bean evsBean = (EVS_Bean)vSearchRes.elementAt(i);
+	      if (evsBean == null) evsBean = new EVS_Bean();
+	%>
+	      //store con attributes in an array
+	      var aIndex = <%=i%>;  //get the index
+	      var conID = "<%=evsBean.getNCI_CC_VAL()%>";  //get evs identifier
+	      <% //parse the string for quotation character
+	        String sData = evsBean.getLONG_NAME();
+	        sData = serUtil.parsedStringDoubleQuote(sData);%>
+	      var conName = "<%=sData%>";
+	      <% //parse the string for quotation character
+	        sData = evsBean.getPREFERRED_DEFINITION();
+	        sData = serUtil.parsedStringDoubleQuote(sData);%>
+	      var conDef = "<%=sData%>";
+	      var conDefSrc = "<%=evsBean.getEVS_DEF_SOURCE()%>";
+	      var conVocab = "<%=evsBean.getEVS_DATABASE()%>";
+	      var conDBOrg = "<%=evsBean.getEVS_ORIGIN()%>";
+	      var conLvl = "<%=evsBean.getLEVEL()%>";
+	      var conStatus = "<%=evsBean.getASL_NAME()%>";
+	      //create multi dimentional array with concept attributes 
+	      conArray[aIndex] = fillConArray(conID, conName, conDef, conDefSrc, conVocab, conDBOrg, conLvl, conStatus);      
+	<%        
+	  }
+	}
+	catch (Exception e)
+	{
+	  System.out.println("Exception in search results blocks " + e.toString());
+	}
+%>
+    //also store other variables
+    metaName = "<%=metaName%>";
+    dsrName = "<%=dsrName%>";
+<%   //add teh defintion sources to filter duplicates
+    for (int k=0; k<vDefSrc.size(); k++)
+    {
+      String sSrc = (String)vDefSrc.elementAt(k);
+%>
+      var kI = <%=k%>
+      arrDefSrc[kI] = "<%=sSrc%>";
+<%        
+    }
+%>
+  }
+  
 </SCRIPT>
 
 </head>
@@ -269,6 +335,10 @@ function getSuperConcepts()
             <th method="get"><a href="javascript:SetSortType('publicID')"
               onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
               Public_ID</a></th>
+<%        }   else if (sAttr == null || sAttr.equals("Version")) { %>
+            <th method="get"><a href="javascript:SetSortType('version')"
+              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
+              Version</a></th>
 <%        }   else if (sAttr == null || sAttr.equals("Definition")) { %>
             <th method="get"><a href="javascript:SetSortType('def')"
               onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
@@ -277,10 +347,18 @@ function getSuperConcepts()
             <th method="get"><a href="javascript:SetSortType('source')"
               onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
               Definition Source</a></th>
+<%        } else if (sAttr == null || sAttr.equals("Workflow Status")) { %>
+            <th method="get"><a href="javascript:SetSortType('asl')"
+             onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
+             Workflow Status</a></th>
 <%        } else if (sAttr == null || sAttr.equals("Context")) { %>
             <th method="get"><a href="javascript:SetSortType('context')"
              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
              Context</a></th>
+<%        } else if (sAttr == null || sAttr.equals("Semantic Type")) { %>
+            <th method="get"><a href="javascript:SetSortType('semantic')"
+             onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
+             Semantic Type</a></th>
 <%        }   else if (sAttr == null || sAttr.equals("Vocabulary")) { %>
             <th method="get"><a href="javascript:SetSortType('db')"
               onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
@@ -303,46 +381,53 @@ function getSuperConcepts()
     </tr>
 <%
     String strResult = "";
-    String strVocab = "";
+    String vName = "";
+   // String strVocab = "";
     if (results != null)
     {
       int j = 0;
       for (int i = 0; i < results.size(); i+=k)
       {
-       String ckName = ("CK" + j);
-       strResult = (String)results.get(i);
-       if (j < vSearchDatabase.size())
-         strVocab = (String)vSearchDatabase.elementAt(j);
-       if (strResult == null) strResult = "";
-       if (strVocab == null) strVocab = "";
-       boolean hasLink = false;
-       String showConceptInTree = "javascript:showConceptInTree('" + ckName + "');";
-
-       //no hyperlink for meta, cadsr, parentvm searches
-       if(strVocab.equals("NCI Metathesaurus") || strVocab.equals("caDSR") 
-          || (sSelAC.equals("Value Meaning") && isEVSvm == false))
-          hasLink = false;
-       else
-       {
-          //hyperlink only if first column is concept name or eve id
-          if (vSelAttr.contains("Concept Name") || (vSelAttr.contains("EVS Identifier") && !vSelAttr.contains("Public ID")))
-            hasLink = true;
-          else
+        if (vSearchRes.size() > j)
+        {
+          EVS_Bean eBean = (EVS_Bean)vSearchRes.get(j);
+          if (eBean == null) eBean = new EVS_Bean();
+          String strVocab = eBean.getEVS_DATABASE();  
+          vName = eBean.getVocabAttr(uBean, strVocab, "vocabDBOrigin", "vocabName");
+   // System.out.println(vName + " jsp vocab " + strVocab);
+        }
+         String ckName = ("CK" + j);
+         strResult = (String)results.get(i);
+         if (strResult == null) strResult = "";
+         //if (strVocab == null) strVocab = "";
+         //String vName = eBean.getVocabAttr(uBean, strVocab, "vocabDBOrigin", "vocabName");
+         boolean hasLink = false;
+         String showConceptInTree = "javascript:showConceptInTree('" + ckName + "');";
+  
+         //no hyperlink for meta, cadsr, parentvm searches
+         if(vName.equals("") || !vrVocab.contains(vName) || (sSelAC.equals("Value Meaning") && isEVSvm == false)) //strVocab.equals("NCI Metathesaurus") || strVocab.equals("caDSR")           
             hasLink = false;
-       }
-        
-       //do not put hyperlink, concept name or evsid not selected 
-       if (hasLink == false) {
-%>
-         <tr>
-          <td width="5"><input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);"></td>
-          <td width="150"><%=strResult%></td>
-<%    }else{%>
-        <tr>
-          <td width="5"><input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);"></td>
-          <td width="150"><a href="<%=showConceptInTree%>"><%=strResult%></a></td>
-<%    } %>
-<%
+         else
+         {
+            //hyperlink only if first column is concept name or eve id
+            if (vSelAttr.contains("Concept Name") || (vSelAttr.contains("EVS Identifier") && !vSelAttr.contains("Public ID")))
+              hasLink = true;
+            else
+              hasLink = false;
+         }
+          
+         //do not put hyperlink, concept name or evsid not selected 
+         if (hasLink == false) {
+  %>
+           <tr>
+            <td width="5"><input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);"></td>
+            <td width="150"><%=strResult%></td>
+  <%    }else{%>
+          <tr>
+            <td width="5"><input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);"></td>
+            <td width="150"><a href="<%=showConceptInTree%>"><%=strResult%></a></td>
+  <%    } %>
+  <%
 		   for (int m = 1; m < k; m++)
 		   {
            strResult = (String)results.get(i+m);
@@ -376,127 +461,19 @@ function getSuperConcepts()
 <input type="hidden" name="blockSortType" value="nothing"> 
 <input type="hidden" name="UISearchType" value="<%=sUISearchType2%>">
 <input type="hidden" name="selRowID" value="">
-<select size="1" name="hiddenSearch" style="visibility:hidden;width:50">
-<%                    for (int i = 0; vSearchID.size()>i; i++)
-                      {
-                        String sID = (String)vSearchID.elementAt(i);
-                         String sName = "";
-                        if (vSearchName.size() > i)
-                          sName = (String)vSearchName.elementAt(i);
-                        else
-                          sName = "";
-%>
-                      <option value="<%=sID%>"><%=sName%></option>
-<%
-                      }
-%>
-  </select>
-<select size="1" name="hiddenSearch2" style="visibility:hidden;width:50">
-<%                    for (int i = 0; vSearchName.size()>i; i++)
-                      {
-                         String sName = "";
-                        if (vSearchName.size() > i)
-                          sName = (String)vSearchName.elementAt(i);
-                        else
-                          sName = "";
-%>
-                      <option value="<%=sName%>"><%=sName%></option>
-<%
-                      }
-%>
-  </select>
-<select size="1" name="hiddenName" style="visibility:hidden;width:50">
-<%                    for (int i = 0; vSearchName.size()>i; i++)
-                      {
-                        String sName = (String)vSearchName.elementAt(i);
-%>
-                      <option value="<%=sName%>"><%=sName%></option>
-<%
-                      }
-%>
-  </select>
-<select size="1" name="hiddenDatabase" style="visibility:hidden;">
-<%                    for (int i = 0; vSearchDatabase.size()>i; i++)
-                      {
-                        String sName = (String)vSearchDatabase.elementAt(i);
-%>
-                      <option value="<%=sName%>"><%=sName%></option>
-<%
-                      }
-%>
-  </select>
-<select size="1" name="hiddenDefSource" style="visibility:hidden;width:145">
-<%                    String sSource = "";
-                      String sDef = "";
-                      for (int i = 0; vSearchDefinition.size()>i; i++)
-                      {
-                          sDef = (String)vSearchDefinition.elementAt(i);
-                          sSource = (String)vSearchDefSource.elementAt(i);
-%>
-                      <option value="<%=sSource%>"><%=sDef%></option>
-<%
-                      }
-%>
- </select>
-<select size="1" name="hiddenCCode" style="visibility:hidden;width:145">
-<%                
-                      String sCode = "";
-                      for (int i = 0; vCCode.size()>i; i++)
-                      {
-                          sCode = (String)vCCode.elementAt(i);
-%>
-                      <option value="<%=sCode%>"><%=sCode%></option>
-<%
-                      }
-%>
- </select>
-<select size="1" name="hiddenCCodeDB" style="visibility:hidden;width:145">
-<%                
-                      String sCuiDB = "";
-                      for (int i = 0; vCCodeDB.size()>i; i++)
-                      {
-                          sCuiDB = (String)vCCodeDB.elementAt(i);
-%>
-                      <option value="<%=sCuiDB%>"><%=sCuiDB%></option>
-<%
-                      }
-%>
-</select>
-<select size="1" name="hiddenPVValue" style="visibility:hidden;">
-  </select>
-<select size="1" name="hiddenPVMean" style="visibility:hidden;">
-  </select>
+<select size="1" name="hiddenPVValue" style="visibility:hidden;"></select>
+<select size="1" name="hiddenPVMean" style="visibility:hidden;"></select>
   
 <select size="1" name="hiddenResults" style="visibility:hidden;width:145">
-<%        for (int m = 0; results.size()>m; m++)
-          {
-             String sName = (String)results.elementAt(m);
+<%  for (int m = 0; results.size()>m; m++)
+    {
+       String sName = (String)results.elementAt(m);
 %>
-             <option value="<%=sName%>"><%=sName%></option>
+       <option value="<%=sName%>"><%=sName%></option>
 <%
-          }
+    }
 %>
-        </select>
-        <select size="1" name="hiddenName2" style="visibility:hidden;width:145">
-<%        for (int i = 0; i<results.size(); i+=k)
-          {
-             String sName = (String)results.elementAt(i);
-%>
-             <option value="<%=sName%>"><%=sName%></option>
-<%
-          }
-%>
-        </select>
-        <select size="1" name="hiddenIdentifier" style="visibility:hidden;width:145">
-<%        for (int i = 1; i<results.size(); i+=k)
-          {
-             String sName = (String)results.elementAt(i);
-%>
-             <option value="<%=sName%>"><%=sName%></option>
-<%
-          }
-%>
-        </select>
+</select>
 <select size="1" name="hiddenSelectedRow" style="visibility:hidden;"> </select>
 </table>
 <div id="divAssACMenu" style="position:absolute;z-index:1;visibility:hidden;width:185px;">
@@ -508,6 +485,8 @@ function getSuperConcepts()
 <script language = "javascript">
 getSearchComponent();
 initPopupMenu2();
+storeResultInArray();
+
 </script>
 </form>
 </body>

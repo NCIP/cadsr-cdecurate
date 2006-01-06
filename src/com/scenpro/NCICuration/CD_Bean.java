@@ -1,8 +1,9 @@
-package com.scenpro.NCICuration;
+// Copyright (c) 2005 ScenPro, Inc.
 
-import java.io.*;
-import java.util.*;
-import java.io.Serializable;
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/CD_Bean.java,v 1.2 2006-01-06 21:53:57 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
+package com.scenpro.NCICuration;
 
 /**
  * The CD_Bean encapsulates the CD information
@@ -85,8 +86,10 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-public class CD_Bean implements Serializable{
+public class CD_Bean extends AC_Bean {
 
+  private static final long serialVersionUID = -5257694129718861644L;
+  
 // attributes
   private String RETURN_CODE;
   private String CD_CD_IDSEQ;
@@ -114,7 +117,7 @@ public class CD_Bean implements Serializable{
   /**
    * Constructor
   */
-  public void CD_Bean() {
+  public CD_Bean() {
   }
 
   /**
@@ -363,7 +366,13 @@ public class CD_Bean implements Serializable{
   {
       return this.CD_CD_IDSEQ;
   }
-	/**
+  
+  public String getIDSEQ()
+  {
+      return getCD_CD_IDSEQ();
+  }
+
+  /**
   * The getCD_PREFERRED_NAME method returns the CD_PREFERRED_NAME for this bean.
   *
   * @return String The CD_PREFERRED_NAME

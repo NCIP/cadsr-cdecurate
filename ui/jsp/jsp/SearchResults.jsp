@@ -126,7 +126,8 @@
   if (vNewPV == null) vNewPV = new Vector();
 
   //get the server name to open cdeBrowser
-  String thisServer = request.getServerName();
+  //String thisServer = request.getServerName();
+  String browserURL = (String)session.getAttribute("BrowserURL");
   String sAppendAct = (String)request.getParameter("AppendAction");
    // this session attribute says the Back button on a getAssociated search result was hit,
    // so search results will be popped off of stack (in setup method)
@@ -155,194 +156,195 @@
 %>
 
 <SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
-var numRows2;
-var SelectAllOn = <%=sSelectAll%>;
-   function setup()
-   {
-      <!-- enables/disables associated sub menus -->
-       initPopupMenu(document.searchParmsForm.listSearchFor.value);
-       if (document.searchResultsForm.CheckGif != null)
-       {
-         if(SelectAllOn == true)
-          document.searchResultsForm.CheckGif.alt = "Unselect All";
-         else
-          document.searchResultsForm.CheckGif.alt = "Select All";
-       }
-      //display status message if any 
- <%
-    String statusMessage = (String)session.getAttribute("statusMessage");
-    if (statusMessage == null) statusMessage = "";
-//statusMessage = "Value Domain Name : Malignant Neoplasm Neoplastic Cell\\nPublic ID : 2296135\\n\\t Successfully created New Value Domain";
-    String sSubmitAction = (String)session.getAttribute("MenuAction");
-    if (sSubmitAction == null) sSubmitAction = "nothing";
-    Vector vStat = (Vector)session.getAttribute("vStatMsg");
-    if (vStat != null && vStat.size() > 30)
-    {%>
-      displayStatusWindow();
-    <% }
-    else if (statusMessage != null && !statusMessage.equals(""))
-    { 
-      session.setAttribute("vStatMsg", new Vector());
-    %>
-      displayStatus("<%=statusMessage%>", "<%=sSubmitAction%>");
-    <% }
-    //reset the message attributes   
-    session.setAttribute("statusMessage", "");
-    if (vCheckList != null && vCheckList.size() >0)
+    var numRows2;
+    var SelectAllOn = <%=sSelectAll%>;
+    function setup()
     {
- // System.out.println("vchecklist " + vCheckList.size());
-       for (int i=0; i<vCheckList.size(); i++)
-       {
+        <!-- enables/disables associated sub menus -->
+        initPopupMenu(document.searchParmsForm.listSearchFor.value);
+        if (document.searchResultsForm.CheckGif != null)
+        {
+            if(SelectAllOn == true)
+                document.searchResultsForm.CheckGif.alt = "Unselect All";
+            else
+                document.searchResultsForm.CheckGif.alt = "Select All";
+        }
+        //display status message if any 
+ <%
+        String statusMessage = (String)session.getAttribute("statusMessage");
+        if (statusMessage == null) statusMessage = "";
+        //statusMessage = "Value Domain Name : Malignant Neoplasm Neoplastic Cell\\nPublic ID : 2296135\\n\\t Successfully created New Value Domain";
+        String sSubmitAction = (String)session.getAttribute("MenuAction");
+        if (sSubmitAction == null) sSubmitAction = "nothing";
+        Vector vStat = (Vector)session.getAttribute("vStatMsg");
+        if (vStat != null && vStat.size() > 30)
+        { %>
+            displayStatusWindow();
+     <% }
+        else if (statusMessage != null && !statusMessage.equals(""))
+        { 
+            session.setAttribute("vStatMsg", new Vector());
+        %>
+            displayStatus("<%=statusMessage%>", "<%=sSubmitAction%>");
+     <% }
+        //reset the message attributes   
+        session.setAttribute("statusMessage", "");
+        if (vCheckList != null && vCheckList.size() >0)
+        {
+            // System.out.println("vchecklist " + vCheckList.size());
+            for (int i=0; i<vCheckList.size(); i++)
+            {
+            %>
+                EnableButtons("checked", "<%=vCheckList.elementAt(i)%>");
+            <%
+            }
+        }
 %>
-          EnableButtons("checked", "<%=vCheckList.elementAt(i)%>");
-<%
-       }
-    }
-%>
-    window.status = "Enter the keyword to search a component";
+        window.status = "Enter the keyword to search a component";
     
-  <% if (sBackFromGetAssociated.equals("backFromGetAssociated"))
-  {
-       Stack vSearchIDStack = (Stack)session.getAttribute("vSearchIDStack");
-       Vector vIDs = (Vector)session.getAttribute("SearchID");
-        if(vSearchIDStack != null && vSearchIDStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
+<%
+        if (sBackFromGetAssociated.equals("backFromGetAssociated"))
         {
+            Stack vSearchIDStack = (Stack)session.getAttribute("vSearchIDStack");
+            Vector vIDs = (Vector)session.getAttribute("SearchID");
+            if (vSearchIDStack != null && vSearchIDStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
+            {
 //System.out.println("sr jsp before 1pop vSearchIDStack.size: " + vSearchIDStack.size());
-          vIDs = (Vector)vSearchIDStack.pop();
-        } 
-        if(vSearchIDStack != null && vSearchIDStack.size()>0)
-        {
-          vIDs = (Vector)vSearchIDStack.pop();
+                vIDs = (Vector)vSearchIDStack.pop();
+            } 
+            if (vSearchIDStack != null && vSearchIDStack.size()>0)
+            {
+                vIDs = (Vector)vSearchIDStack.pop();
 //System.out.println("sr jsp after 2pop vSearchIDStack.size: " + vSearchIDStack.size());
           // do not lose the very first search result
       //    if(vSearchIDStack.size()==0) 
       //    {
-            vSearchIDStack.push(vIDs);
+                vSearchIDStack.push(vIDs);
 //System.out.println("sr jsp after push vSearchIDStack.size: " + vSearchIDStack.size());
        //   }
-          session.setAttribute("vSearchIDStack", vSearchIDStack);
-          session.setAttribute("SearchID", vIDs);
-          // Set the nRecs when Back button hit
-          Integer nRecsInt;
-          if(vIDs != null)
-            nRecsInt = new Integer(vIDs.size());
-          else
-            nRecsInt = new Integer(0);
-          nRecs = nRecsInt.toString();
-        }
-       Stack vSearchNameStack = (Stack)session.getAttribute("vSearchNameStack");
-       Vector vNames = (Vector)session.getAttribute("SearchName");
-        if(vSearchNameStack != null && vSearchNameStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
-        {
-          vNames = (Vector)vSearchNameStack.pop();
-        } 
-        if(vSearchNameStack != null && vSearchNameStack.size()>0)
-        {
-          vNames = (Vector)vSearchNameStack.pop();
+                session.setAttribute("vSearchIDStack", vSearchIDStack);
+                session.setAttribute("SearchID", vIDs);
+                // Set the nRecs when Back button hit
+                Integer nRecsInt;
+                if (vIDs != null)
+                    nRecsInt = new Integer(vIDs.size());
+                else
+                    nRecsInt = new Integer(0);
+                nRecs = nRecsInt.toString();
+            }
+            Stack vSearchNameStack = (Stack)session.getAttribute("vSearchNameStack");
+            Vector vNames = (Vector)session.getAttribute("SearchName");
+            if (vSearchNameStack != null && vSearchNameStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
+            {
+                vNames = (Vector)vSearchNameStack.pop();
+            }
+            if (vSearchNameStack != null && vSearchNameStack.size()>0)
+            {
+                vNames = (Vector)vSearchNameStack.pop();
           // do not lose the very first search result
        //   if(vSearchNameStack.size()==0) 
         //  {
-            vSearchNameStack.push(vNames);
+                vSearchNameStack.push(vNames);
        //   }
-          session.setAttribute("vSearchNameStack", vSearchNameStack);
-          session.setAttribute("SearchName", vNames);
-        }
+                session.setAttribute("vSearchNameStack", vSearchNameStack);
+                session.setAttribute("SearchName", vNames);
+            }
       
-      Stack vSearchLongNameStack = (Stack)session.getAttribute("vSearchLongNameStack");
-       Vector vLongNames = (Vector)session.getAttribute("SearchLongName");
-        if(vSearchLongNameStack != null && vSearchLongNameStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
-        {
-          vLongNames = (Vector)vSearchLongNameStack.pop();
-        } 
-        if(vSearchLongNameStack != null && vSearchLongNameStack.size()>0)
-        {
-          vLongNames = (Vector)vSearchLongNameStack.pop();
+            Stack vSearchLongNameStack = (Stack)session.getAttribute("vSearchLongNameStack");
+            Vector vLongNames = (Vector)session.getAttribute("SearchLongName");
+            if (vSearchLongNameStack != null && vSearchLongNameStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
+            {
+                vLongNames = (Vector)vSearchLongNameStack.pop();
+            } 
+            if (vSearchLongNameStack != null && vSearchLongNameStack.size()>0)
+            {
+                vLongNames = (Vector)vSearchLongNameStack.pop();
           // do not lose the very first search result
        //   if(vSearchNameStack.size()==0) 
         //  {
-            vSearchLongNameStack.push(vLongNames);
+                vSearchLongNameStack.push(vLongNames);
        //   }
-          session.setAttribute("vSearchLongNameStack", vSearchLongNameStack);
-          session.setAttribute("SearchLongName", vLongNames);
-        }
+                session.setAttribute("vSearchLongNameStack", vSearchLongNameStack);
+                session.setAttribute("SearchLongName", vLongNames);
+            }
         
-      Stack vACSearchStack = (Stack)session.getAttribute("vACSearchStack");
-      Vector vACSearch = (Vector)session.getAttribute("vACSearch");
-      if(vACSearchStack != null && vACSearchStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
-      {
-        vACSearch = (Vector)vACSearchStack.pop();
-      } 
-      if(vACSearchStack != null && vACSearchStack.size()>0)
-      {
-         vACSearch = (Vector)vACSearchStack.pop();
+            Stack vACSearchStack = (Stack)session.getAttribute("vACSearchStack");
+            Vector vACSearch = (Vector)session.getAttribute("vACSearch");
+            if (vACSearchStack != null && vACSearchStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
+            {
+                vACSearch = (Vector)vACSearchStack.pop();
+            } 
+            if (vACSearchStack != null && vACSearchStack.size()>0)
+            {
+                vACSearch = (Vector)vACSearchStack.pop();
         // do not lose the very first search result
      //   if(vACSearchStack.size()==0) 
      //   {
-          vACSearchStack.push(vACSearch);
+                vACSearchStack.push(vACSearch);
       //  }
-          session.setAttribute("vACSearchStack", vACSearchStack);
-          session.setAttribute("vACSearch", vACSearch);
-      }
+                session.setAttribute("vACSearchStack", vACSearchStack);
+                session.setAttribute("vACSearch", vACSearch);
+            }
       
-      Stack vSearchASLStack = (Stack)session.getAttribute("vSearchASLStack");
-      vSearchASL = (Vector)session.getAttribute("SearchASL");
-      if (vSearchASL == null)  vSearchASL = new Vector();
-      if(vSearchASLStack != null && vSearchASLStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
-      {
-        vSearchASL = (Vector)vSearchASLStack.pop();
-      } 
-      if(vSearchASLStack != null && vSearchASLStack.size()>0)
-      {
-         vSearchASL = (Vector)vSearchASLStack.pop();
+            Stack vSearchASLStack = (Stack)session.getAttribute("vSearchASLStack");
+            vSearchASL = (Vector)session.getAttribute("SearchASL");
+            if (vSearchASL == null)  vSearchASL = new Vector();
+            if (vSearchASLStack != null && vSearchASLStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
+            {
+                vSearchASL = (Vector)vSearchASLStack.pop();
+            } 
+            if (vSearchASLStack != null && vSearchASLStack.size()>0)
+            {
+                vSearchASL = (Vector)vSearchASLStack.pop();
 //System.out.println("sr jsp 2pop vSearchASL2.size: " + vSearchASL.size());
         // do not lose the very first search result
     //    if(vSearchASLStack.size()==0) 
      //   {
-          vSearchASLStack.push(vSearchASL);
+                vSearchASLStack.push(vSearchASL);
      //   }
-          session.setAttribute("vSearchASLStack", vSearchASLStack);
-          session.setAttribute("SearchASL", vSearchASL);
-      } 
+                session.setAttribute("vSearchASLStack", vSearchASLStack);
+                session.setAttribute("SearchASL", vSearchASL);
+            } 
 
-      Stack vSelRowsStack = (Stack)session.getAttribute("vSelRowsStack");
-      Vector vRSel = (Vector)session.getAttribute("vSelRows");
-      if(vSelRowsStack != null && vSelRowsStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
-      {
-        vRSel = (Vector)vSelRowsStack.pop();
-      } 
-      if(vSelRowsStack != null && vSelRowsStack.size()>0)
-      {
-         vRSel = (Vector)vSelRowsStack.pop();
+            Stack vSelRowsStack = (Stack)session.getAttribute("vSelRowsStack");
+            Vector vRSel = (Vector)session.getAttribute("vSelRows");
+            if (vSelRowsStack != null && vSelRowsStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
+            {
+                vRSel = (Vector)vSelRowsStack.pop();
+            } 
+            if (vSelRowsStack != null && vSelRowsStack.size()>0)
+            {
+                vRSel = (Vector)vSelRowsStack.pop();
 
         // do not lose the very first search result
      //   if(vSelRowsStack.size()==0) 
      //   {
-          vSelRowsStack.push(vRSel);
+                vSelRowsStack.push(vRSel);
      //   }
-        session.setAttribute("vSelRowsStack", vSelRowsStack);
-        session.setAttribute("vSelRows", vRSel);
-      }
+                session.setAttribute("vSelRowsStack", vSelRowsStack);
+                session.setAttribute("vSelRows", vRSel);
+            }
 
       // set number of records variable
-      if(vRSel != null) numRows = vRSel.size();
+            if (vRSel != null) numRows = vRSel.size();
 
-      if (vResultStack != null && vResultStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
-      {
-        results = (Vector)vResultStack.pop();
-      } 
-      if (vResultStack != null && vResultStack.size()>0)
-      {
-        results = (Vector)vResultStack.pop();
+            if (vResultStack != null && vResultStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
+            {
+                results = (Vector)vResultStack.pop();
+            } 
+            if (vResultStack != null && vResultStack.size()>0)
+            {
+                results = (Vector)vResultStack.pop();
      //   if(vResultStack.size()==0) 
       //  {
-          vResultStack.push(results);
-          pushBoolean = "true";
+                vResultStack.push(results);
+                pushBoolean = "true";
      //   }
-        session.setAttribute("vResultStack", vResultStack);
-        session.setAttribute("results", results);
-      }
-  }%>
-}
+                session.setAttribute("vResultStack", vResultStack);
+                session.setAttribute("results", results);
+            }
+        } %>
+    }
 
   function Back()
   {
@@ -470,7 +472,7 @@ var SelectAllOn = <%=sSelectAll%>;
   //get detail button and calls the function in the js passing server name from the request.
   function GetDetails()
   {
-      GetDetailsJS("<%=thisServer%>");
+      GetDetailsJS("<%=browserURL%>");
   }
   //sorts by heading.  called from column heading Hyperlink click event
   function SetSortType(sortBy)
@@ -526,77 +528,91 @@ var SelectAllOn = <%=sSelectAll%>;
 <table width="100%" border="0" valign="top">
   <tr><td height="7"></tr>   
   <tr height="20" valign="top">
-  <!-- makes use selection button if page opened from createDE or VD pages   -->
+
     <td align="left" >
   <% if (sMAction.equals("searchForCreate")) { %>
+  <!-- searchForCreate -->
       <input type="button" name="editSelectedBtn" value="Use Selection" onClick="ShowUseSelection();" disabled style="width: 97", "height: 30">
         &nbsp;
-  <!-- makes editSelection button if page opened from createFromTemplate or createNewVersion or Edit or Question -->
-  <%} else if ((sMAction.equals("Edit Selection") || sMAction.equals("nothing")) && ((sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")))) {%>
+  <% } else if ((sMAction.equals("Edit Selection") || sMAction.equals("nothing")) && ((sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")))) {%>
+  <!-- nothing -->
       <input type="button" name="editSelectedBtn" value="Edit Selection" onClick="ShowEditSelection();" disabled 
 			onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_Editing'); return false" style="width: 97", "height: 30">
         &nbsp;
-  <%} else if (!sMAction.equals("Create New from Existing") && !sMAction.equals("Create New Version") &&(sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain"))) {%>
+  <% } else if (!sMAction.equals("Create New from Existing") && !sMAction.equals("Create New Version") &&(sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain"))) {%>
+  <!-- Create New from Existing -->
       <input type="button" name="editSelectedBtn" value="Edit Selection" onClick="ShowEditSelection();" disabled 
 			onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_Editing'); return false" style="width: 97", "height: 30">
         &nbsp;  
-  <%} else if (!sMAction.equals("nothing") && !sSelAC.equals("Values/Meanings") && !sSelAC.equals("Questions") && !sSelAC.equals("Class Scheme Items") && !sSelAC.equals("Conceptual Domain")) {%>
+  <% } else if (!sMAction.equals("nothing") && !sSelAC.equals("Values/Meanings") && !sSelAC.equals("Questions") && !sSelAC.equals("Class Scheme Items") && !sSelAC.equals("Conceptual Domain")) {%>
+  <!-- other -->
       <input type="button" name="editSelectedBtn" value="<%=sMAction%>" onClick="ShowEditSelection();" disabled style="width: 165", "height: 30">
         &nbsp;
-   <%} else if (sMAction.equals("Complete Selected DE") && sSelAC.equals("Questions")) {%>
+  <% } else if (sMAction.equals("Complete Selected DE") && sSelAC.equals("Questions")) {%>
+  <!-- Complete Selected DE -->
       <input type="button" name="editSelectedBtn" value="<%=sMAction%>" onClick="ShowEditSelection();" disabled 
 			onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_completeSelectedDE'); return false" style="width: 165", "height: 30">
         &nbsp;
-  <%} else if (sButtonPressed.equals("Search") && (sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain"))) {%>
+  <% } else if (sButtonPressed.equals("Search") && (sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain"))) {%>
+  <!-- Search -->
       <input type="button" name="editSelectedBtn" value="Edit Selection" onClick="ShowEditSelection();" disabled style="width: 97", "height: 30">
         &nbsp;
-  <% } %>
-  <!-- designation button only for DE, DEC, VD in both the searches, exclude DDE  -->
-<% if (sSelAC.equals("Data Element") && !sMAction.equals("searchForCreate"))  // || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain") || (sSelAC.equals("Questions") && sMAction.equals("searchForCreate")))
+  <% }
+     if ((sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")) && !sMAction.equals("searchForCreate")) { %>
+  <!-- !searchForCreate -->
+      <input type="button" name="monitorBtn" value="Monitor" onClick="monitorCmd();" disabled
+      onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_monitor'); return false">&nbsp;
+      <input type="button" name="unmonitorBtn" value="Unmonitor" onClick="unmonitorCmd();" disabled
+      onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_monitor'); return false">&nbsp;
+     <input type="button" name="uploadBtn" value="Upload Document(s)" onClick="uploadCmd();" disabled
+      onHelp = "showHelp('Help_SearchAC.html#Upload_Attachments'); return false">&nbsp;
+   <% } 
+   if (sSelAC.equals("Data Element") && !sMAction.equals("searchForCreate"))  // || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain") || (sSelAC.equals("Questions") && sMAction.equals("searchForCreate")))
    {  %>
+  <!-- designation button only for DE, DEC, VD in both the searches, exclude DDE  -->
       <input type="button" name="designateBtn" value="Designations" onClick="designateRecord();" disabled 
 			onHelp = "showHelp('Help_DesignateDE.html#searchResultsForm_designateDE'); return false" style="width: 85", "height: 30">
         &nbsp;
-<% } %>
+<% } 
+     if (sSelAC.equals("Data Element") && !sMAction.equals("searchForCreate")) { %>
   <!-- details button only for DE, exclude DDE  -->
-  <% if (sSelAC.equals("Data Element") && !sMAction.equals("searchForCreate")) { %>
       <input type="button" name="detailsBtn" value="Details" onClick="GetDetails();" disabled 
 			onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_Details'); return false" style="width: 65", "height: 30">
         &nbsp;
-  <% } %>
+  <% } 
+     if ((sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")) && !sMAction.equals("searchForCreate")) { %>
   <!-- Append button only for DE, DEC, VD in only the main search  -->
-  <% if ((sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")) && !sMAction.equals("searchForCreate")) { %>
       <input type="button" name="AppendBtn" value="Append" onClick="setAppendAction();" disabled 
 			onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_append'); return false" style="width: 65", "height: 30">
         &nbsp;
-  <% } %>
+  <% } 
+     if (sSelAC.equals("Value Meaning")) { %>
   <!-- create new VM button for value meanings  -->
-  <% if (sSelAC.equals("Value Meaning")) { %>
       <input type="button" name="createVM" value="Create New"  onClick="javascript:createNewVM();"
 			onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_append'); return false" style="width: 97", "height: 30">
         &nbsp;
-  <% } %>
+  <% } 
+     if (sMAction.equals("searchForCreate")) { %>
    <!-- makes close button only if page opened from createDE or VD pages   -->
-  <% if (sMAction.equals("searchForCreate")) { %>
       <input type="button" name="closeBtn" value="Close Window" onClick="javascript:closeWindow();" style="width: 97", "height: 30">
         &nbsp;
-  <!-- makes showSelection, designate, clear buttons otherwise   -->
   <% } else { %>
+  <!-- makes showSelection, designate, clear buttons otherwise   -->
       <input type="button" name="showSelectedBtn" value="Show Selected Rows" onClick="ShowSelectedRows(true);" disabled
            onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_showSelectedBtn'); return false" style="width: 135", "height: 30">
        &nbsp;
+       <% if (!sSelAC.equals("Questions")) { %>
         <!-- button get Associated with popup menu   -->
-       <% if (!sMAction.equals("searchForCreate") && !sSelAC.equals("Questions")) { %>
           <input id="assACBtn" type=button name="associateACBtn" value="Get Associated"  onmouseover="controlsubmenu(event,'divAssACMenu',null,null,null)" onmouseout="closeall()" style="width:130;" disabled
 					onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_getAssociated'); return false">
           &nbsp;
        <% } %>
       <input type="button" name="clearBtn" value="Clear Records" onClick="clearRecords();"
-        <% if(nRecs.equals("No ") || nRecs.equals("0")){%>disabled<%}%>
+        <% if(nRecs.equals("No ") || nRecs.equals("0")){ %>disabled<% } %>
            onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_clearBtn'); return false" style="width: 100", "height: 30">
        &nbsp;
-  <% } %>
-    <%//System.out.println("SR.jsp!!! vResultStack.size: " + vResultStack.size()); 
+  <% } 
+      //System.out.println("SR.jsp!!! vResultStack.size: " + vResultStack.size()); 
       if (((vResultStack.size()>0 && sBackFromGetAssociated.equals("backFromGetAssociated") && !pushBoolean.equals("true"))
           || vResultStack.size()>1) && !sMAction.equals("searchForCreate")) {%>
         <input type="button" name="btnBack" value="Back" style="width: 65", "height: 30" onClick="Back();">
@@ -646,7 +662,7 @@ var SelectAllOn = <%=sSelectAll%>;
           if (sAttr.equals("Name")) { %>
             <th method="get"><a href="javascript:SetSortType('name')"
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Preferred Name</a>
+              Short Name</a>
             </th>
 <%        } else if (sAttr.equals("Alias Name")) { %>
             <th method="get"><a href="javascript:SetSortType('aliasName')"
@@ -712,10 +728,6 @@ var SelectAllOn = <%=sSelectAll%>;
             <th method="get"><a href="javascript:SetSortType('version')"
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
               Version</a></th>
-<%        } else if (sAttr.equals("Long Name Document Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('DocText')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Long Name Document Text</a></th>
 <%        } else if (sAttr.equals("Public ID")) { %>
             <th method="get"><a href="javascript:SetSortType('minID')"
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
@@ -752,18 +764,14 @@ var SelectAllOn = <%=sSelectAll%>;
             <th method="get"><a href="javascript:SetSortType('language')"
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
               Language</a></th>
-<%        } else if (sAttr.equals("Comments/Change Note")) { %>
+<%        } else if (sAttr.equals("Change Note")) { %>
             <th method="get"><a href="javascript:SetSortType('Comments')"
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Comments/Change Note</a></th>
+              Change Note</a></th>
 <%        } else if (sAttr.equals("Origin")) { %>
             <th method="get"><a href="javascript:SetSortType('Origin')"
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
               Origin</a></th>
-<%        } else if (sAttr.equals("Historic Short CDE Name Document Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('HistoricName')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Historic Short CDE Name Document Text</a></th>
 <%        } else if (sAttr.equals("Conceptual Domain")) { %>
             <th method="get"><a href="javascript:SetSortType('ConDomain')"
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
@@ -789,7 +797,7 @@ var SelectAllOn = <%=sSelectAll%>;
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
               Data Type</a></th>
 <%        } else if (sAttr == null || sAttr.equals("Comments")) { %>
-            <th method="get"><a href="javascript:SetSortType('context')"
+            <th method="get"><a href="javascript:SetSortType('comment')"
              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
              Comments</a></th>
 <%        } else if (sAttr.equals("Display Format")) { %>
@@ -876,10 +884,6 @@ var SelectAllOn = <%=sSelectAll%>;
             <th method="get"><a href="javascript:SetSortType('CSName')"
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
               CS Long Name</a></th>
-<%        } else if (sAttr.equals("Historical CDE ID")) { %>
-            <th method="get"><a href="javascript:SetSortType('HistID')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Historical CDE ID</a></th>
 <%        } else if (sAttr.equals("Registration Status")) { %>
             <th method="get"><a href="javascript:SetSortType('regStatus')"
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
@@ -901,7 +905,7 @@ var SelectAllOn = <%=sSelectAll%>;
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
               Modifier</a></th>
 <%        }   else if (sAttr == null || sAttr.equals("Concept Name")) { %>
-            <th method="get"><a href="javascript:SetSortType('name')"
+            <th method="get"><a href="javascript:SetSortType('conName')"
               onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
               Concept Name</a></th>
 <%        }   else if (sAttr == null || sAttr.equals("EVS Identifier")) { %>
@@ -920,64 +924,14 @@ var SelectAllOn = <%=sSelectAll%>;
             <th method="get"><a href="javascript:SetSortType('db')"
               onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
               Database</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Comment Document Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('CommentDocText')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Comment Document Text</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Data Element Source Document Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('DESourceDocText')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Data Element Source Document Text</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Description Document Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('DescDocText')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Description Document Text</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Detail Description Document Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('DetailDescDocText')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Detail Description Document Text</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Example Document Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('ExampleDocText')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Example Document Text</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Image File Document Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('ImageFileDocText')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Image File Document Text</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Label Document Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('LabelDocText')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Label Document Text</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Note Document Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('NoteDocText')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Note Document Text</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Reference Document Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('ReferenceDocText')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Reference Document Text</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Technical Guide Document Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('TechGuideDocText')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Technical Guide Document Text</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("UML Attribute Document Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('UMLAttrDocText')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              UML Attribute Document Text</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("UML Class Document Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('UMLClassDocText')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              UML Class Document Text</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Valid Value Source Document Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('VVSourceDocText')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Valid Value Source Document Text</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Other Types Document Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('OtherTypesDocText')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Other Types Document Text</a></th>
+<%        }   else if (sAttr == null || sAttr.equals("Alternate Names")) { %>
+            <th method="get"><a href="javascript:SetSortType('altNames')">Alternate Names</a></th>
 <%        }   else if (sAttr == null || sAttr.equals("Reference Documents")) { %>
-            <th>Reference Documents</th>
+            <th method="get"><a href="javascript:SetSortType('refDocs')">Reference Documents</a></th>
+<%        }   else if (sAttr == null || sAttr.equals("Derivation Relationship")) { %>
+            <th method="get"><a href="javascript:SetSortType('DerRelation')"
+              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
+              Derivation Relationship</a></th>
 <%        } else if (sAttr.equals("Dimensionality")) { %>
             <th method="get"><a href="javascript:SetSortType('dimension')"
                  onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
@@ -1061,7 +1015,7 @@ var SelectAllOn = <%=sSelectAll%>;
 <select size="1" name="hiddenACIDStatus" style="visibility:hidden;" multiple>
 </select>
 
-  <!-- stores results ID and preferred Names -->
+  <!-- stores results ID and Short Names -->
 <select size="1" name="hiddenSearch" style="visibility:hidden;width:50">
 <%   
       vSearchID = (Vector)session.getAttribute("SearchID");
@@ -1161,6 +1115,7 @@ getSearchComponent();
 </form>
 <form name="SearchActionForm" method="post" action="">
 <input type="hidden" name="acID" value="">
+<input type="hidden" name="ac2ID" value="">
 <input type="hidden" name="itemType" value="">
 <input type="hidden" name="isValidSearch" value="false">
 <input type="hidden" name="searchComp" value="">

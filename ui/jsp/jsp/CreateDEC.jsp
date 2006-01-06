@@ -40,11 +40,11 @@
     if (sPublicDECID == null) sPublicDECID = "";
     
     String sLongName = m_DEC.getDEC_LONG_NAME();
-    sLongName = serUtil.parsedString(sLongName);    //call the function to handle doubleQuote
+    sLongName = serUtil.parsedStringDoubleQuoteJSP(sLongName);    //call the function to handle doubleQuote
     if (sLongName == null) sLongName = "";
     int sLongNameCount = sLongName.length();
     String sName = m_DEC.getDEC_PREFERRED_NAME();
-    sName = serUtil.parsedString(sName);    //call the function to handle doubleQuote
+    sName = serUtil.parsedStringDoubleQuoteJSP(sName);    //call the function to handle doubleQuote
     if (sName == null) sName = "";
     int sNameCount = sName.length();
     String lblUserType = "Existing Name (Editable)";  //make string for user defined label
@@ -86,8 +86,8 @@
     if(sOCCCode == null) sOCCCode = "";
     if(sPCCCodeDB == null) sPCCCodeDB = "";
     if(sPCCCode == null) sPCCCode = "";
-    sObjClass = serUtil.parsedString(sObjClass);    //call the function to handle doubleQuote
-    sPropClass = serUtil.parsedString(sPropClass);    //call the function to handle doubleQuote
+    sObjClass = serUtil.parsedStringDoubleQuoteJSP(sObjClass);    //call the function to handle doubleQuote
+    sPropClass = serUtil.parsedStringDoubleQuoteJSP(sPropClass);    //call the function to handle doubleQuote
     
     boolean nameTypeChange = false;
     String sNewOC = (String)session.getAttribute("newObjectClass");
@@ -136,11 +136,11 @@
     String sChangeNote = m_DEC.getDEC_CHANGE_NOTE();
     if (sChangeNote == null) sChangeNote = "";
 
-    Vector vSelCSList = m_DEC.getDEC_CS_NAME();
+    Vector vSelCSList = m_DEC.getAC_CS_NAME();
     if (vSelCSList == null) vSelCSList = new Vector();
  //   System.out.println("cs jsp " + vSelCSList.size());
-    Vector vSelCSIDList = m_DEC.getDEC_CS_ID();
-    Vector vACCSIList = m_DEC.getDEC_AC_CSI_VECTOR();
+    Vector vSelCSIDList = m_DEC.getAC_CS_ID();
+    Vector vACCSIList = m_DEC.getAC_AC_CSI_VECTOR();
     Vector vACId = (Vector)session.getAttribute("vACId");
     Vector vACName = (Vector)session.getAttribute("vACName");
     //initialize the beans
@@ -151,12 +151,18 @@
     if (sEndDate == null) sEndDate = "";
     int longNameCount = 0;
     boolean bDataFound = false;
+    //get the contact hashtable for the de
+    Hashtable hContacts = m_DEC.getAC_CONTACTS();
+    if (hContacts == null) hContacts = new Hashtable();
+    session.setAttribute("AllContacts", hContacts);
 
      //these are for DEC and VD searches.
     session.setAttribute("MenuAction", "searchForCreate");
     Vector vResult = new Vector();
     session.setAttribute("results", vResult);
     session.setAttribute("creRecsFound", "No ");
+    //for altnames and ref docs
+    session.setAttribute("dispACType", "DataElementConcept");
 
     session.setAttribute("parentAC", "DEC");
     int item = 1;
@@ -299,21 +305,22 @@
   <table width="100%" border="0">
     <tr>
       <td height="26" align="left" valign="top">
-        <input type="button" name="btnValidate" value="Validate" style="width: 125", "height: 30" onClick="SubmitValidate('validate');"
+        <input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate');"
 				onHelp = "showHelp('Help_CreateDEC.html#newDECForm_Validation'); return false">
           &nbsp;&nbsp;
-        <input type="button" name="btnClear" value="Clear" style="width: 125", "height: 30" onClick="ClearBoxes();">
+        <input type="button" name="btnClear" value="Clear" style="width: 125" onClick="ClearBoxes();">
           &nbsp;&nbsp;
 <% if (sOriginAction.equals("CreateNewDECfromCreateDE") || sOriginAction.equals("CreateNewDECfromEditDE") || sOriginAction.equals("CreateNewDEC") 
             || sMenuAction.equals("NewDECTemplate") || sMenuAction.equals("NewDECVersion")){%>
-        <input type="button" name="btnBack" value="Back" style="width: 125", "height: 30" onClick="Back();">
+        <input type="button" name="btnBack" value="Back" style="width: 125" onClick="Back();">
           &nbsp;&nbsp;
 <% } %>
-<%if (sMenuAction.equals("NewDECVersion")) {%>
-        <input type="button" name="btnAltName" value="Alternate Names" style="width: 125", "height: 30" onClick="openAltNameWindow();"
+        <input type="button" name="btnAltName" value="Alternate Names" style="width:125" onClick="openDesignateWindow('Alternate Names');"
 				onHelp = "showHelp('Help_Updates.html#newDECForm_altNames'); return false">
           &nbsp;&nbsp;
-<%}%>          
+        <input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');"
+				onHelp = "showHelp('Help_Updates.html#newDECForm_refDocs'); return false">
+          &nbsp;&nbsp;
 	     <img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
       </td>
     </tr>
@@ -506,7 +513,7 @@
       </tr>
       <tr height="25" valign="bottom">
         <td align=right><font color="#FF0000" >* &nbsp;</font><%=item++%>)</td>
-        <td> <font color="#FF0000">Verify </font>Data Element Concept Long Name</td>
+        <td> <font color="#FF0000">Verify </font>Data Element Concept Long Name (* ISO Preferred Name)</td>
       </tr>
      
       <tr>
@@ -522,11 +529,11 @@
       </tr>
       <tr height="25" valign="bottom">
         <td align=right><font color="#FF0000">* &nbsp;</font><%=item++%>)</td>
-        <td> <font color="#FF0000">Update</font> Data Element Concept Preferred Name</td>
+        <td> <font color="#FF0000">Update</font> Data Element Concept Short Name</td>
       </tr>
       <tr>
         <td>&nbsp;</td>
-        <td height="24" valign="bottom">Select Preferred Name Naming Standard</td>
+        <td height="24" valign="bottom">Select Short Name Naming Standard</td>
       </tr>
       <tr>
         <td>&nbsp;</td>
@@ -573,7 +580,7 @@
         <td> <font color="#FF0000">Select</font> Conceptual Domain</td>
       </tr>
       
-      </tr>
+      <tr></tr>
       <tr>
         <td><font color="#FF0000"> </font></td>
         <td valign="top">
@@ -730,6 +737,52 @@
         </td>
       </tr>
      
+ <!-- contact info -->
+    <tr><td height="12" valign="top"></tr>    
+  	<tr valign="bottom" height="40">
+      <td colspan=2>
+        <table width=60% border="0">
+          <col width="2%"><col width="40%"><col width="15%"> <col width="15%"><col width="15%">
+		  <tr>
+		    <td align=right><%=item++%>)</td>
+		    <td><font color="#FF0000">Select </font>Contacts</td>
+            <td align="left"><input type="button" name="btnViewCt" value="View Details" 
+            	style="width:100" onClick="javascript:editContact('view');" disabled></td>
+            <td align="left"><input type="button" name="btnCreateCt" value="Create New" 
+            	style="width:100" onClick="javascript:editContact('new');"></td>
+            <td align="center"><input type="button" name="btnRmvCt" value="Remove Item" 
+            	style="width:100" onClick="javascript:editContact('remove');" disabled></td>
+		  </tr>
+		  <tr> 
+	      	<td>&nbsp;</td>
+	      	<td colspan=4 valign="top">
+	          <select name="selContact" size="4"  style="width:100%" onchange="javascript:enableContButtons();" 
+	          	onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContact'); return false">
+<%	
+				Enumeration enum1 = hContacts.keys();
+				while (enum1.hasMoreElements())
+				{
+				  String contName = (String)enum1.nextElement();
+				  AC_CONTACT_Bean acCont = (AC_CONTACT_Bean)hContacts.get(contName);				  
+				  if (acCont == null) acCont = new AC_CONTACT_Bean();
+				  String ctSubmit = acCont.getACC_SUBMIT_ACTION();
+				  if (ctSubmit != null && ctSubmit.equals("DEL"))
+				    continue;
+				  /*  String accID = acCont.getAC_CONTACT_IDSEQ();
+				  String contName = acCont.getORG_NAME();
+				  if (contName == null || contName.equals(""))
+				    contName = acCont.getPERSON_NAME(); */
+%>
+				  <option value="<%=contName%>"><%=contName%></option>
+<%				  
+				}
+%>	          	
+	          </select>
+	      	</td>
+		  </tr>
+		</table>
+	  </td>
+	</tr>
         <!-- DEC origin --> 
       
     <tr height="25" valign="bottom">
@@ -757,7 +810,7 @@
     
     <tr height="25" valign="bottom">
       <td align=right>&nbsp;<%=item++%>)</td>
-      <td align=left><font color="#FF0000">Create </font>Comment/Change Note </td>
+      <td align=left><font color="#FF0000">Create </font>Change Note </td>
     </tr>    
    
     <tr>

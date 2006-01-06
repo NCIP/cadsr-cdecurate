@@ -158,6 +158,7 @@ fill selectedCSI options.
         obj_selACHidden[idx] = new Option(selACCSIArray[idx][6], selACCSIArray[idx][6]);
         obj_selACHidden[idx].selected = true;
      }
+    // alert(obj_selectedCS.length + " cscsi " + selACCSIArray.length);
   }
  
   //called to load selCSI list when cs drowdown changes.
@@ -714,7 +715,13 @@ fill selectedCSI options.
   //display message to upload document
   function uploadDocument()
   {
-    alert("The Upload Document function will be available in a future release.");
+    var docWindow = "";
+    if (docWindow && !docWindow.closed)
+      docWindow.focus();
+    else
+    {
+      docWindow = window.open("jsp/UploadDocument.jsp", "UpdDocWindow", "width=550,height=350,top=0,left=0,resizable=yes,scrollbars=yes");
+    }
   }
   
   //open window to browse
@@ -733,30 +740,59 @@ fill selectedCSI options.
   
   function submitDesignate(sAction)
   {
-    //check for context if removr or create designation
-    var sContext = document.designateDEForm.selContext[document.designateDEForm.selContext.selectedIndex].value;
-    if (sAction == "remove" || sAction == "create")
+    var dispType = document.designateDEForm.pageDisplayType.value;
+    if (dispType == null) dispType = "";
+ // alert(dispType + " submit " + sAction);
+    if (dispType == "Designation")
     {
-      if (sContext == null || sContext == "")
+      //check for context if removr or create designation
+      var sContext = document.designateDEForm.selContext[document.designateDEForm.selContext.selectedIndex].value;
+      if (sAction == "remove" || sAction == "create")
       {
-        alert("Select a designate context from the drop down list.");
-        return;
-      }
-      else if (sAction == "remove")
-      {
-        var isOK = confirm("Click OK to continue with removing selected used by context and other attributes");
-        if (isOK == false)
+        if (sContext == null || sContext == "")
+        {
+          alert("Select a designate context from the drop down list.");
           return;
+        }
+        else if (sAction == "remove")
+        {
+          var isOK = confirm("Click OK to continue with removing selected used by context and other attributes");
+          if (isOK == false)
+            return;
+        }
       }
+      var sContName = document.designateDEForm.selContext[document.designateDEForm.selContext.selectedIndex].text;
+      document.designateDEForm.contextName.value = sContName;
+      selectMultiSelectList();  //select cscsi attributes
     }
-    document.designateDEForm.Message.style.visibility="visible";
-    var sContName = document.designateDEForm.selContext[document.designateDEForm.selContext.selectedIndex].text;
-    document.designateDEForm.contextName.value = sContName;
-    selectMultiSelectList();  //select cscsi attributes
-    document.designateDEForm.newCDEPageAction.value = sAction;
-    document.designateDEForm.submit();
+    if (dispType != "") //submit the page only if not empty
+    {
+      document.designateDEForm.Message.style.visibility="visible";
+      document.designateDEForm.newCDEPageAction.value = sAction;
+      document.designateDEForm.submit();
+    }
   }
 
+  //to udpate alternate names and reference documents for owning context
+  function updateAttributes(sDisp, sAC, ARStatus)
+  {
+  	if (ARStatus == "changed")
+  	{
+  	  var longAC = sAC;
+  	  if (sAC == "DataElement") longAC = "Data Element";
+  	  else if (sAC == "DataElementConcept") longAC = "Data Element Concept";
+  	  else if (sAC == "ValueDomain") longAC = "Value Domain";
+  	  //display alert message
+  	  alert("Updates to " + sDisp + " will not be associated to the " + longAC + 
+  			" or written to the database until the " + longAC + " has been successfully submitted.");
+	  
+	  //make the action string
+	  var subAct = "Store " + sDisp;
+	  opener.SubmitValidate(subAct);
+	}
+  	window.close();
+  }
+  
   //restrict the input of the text if exceeds the max length
   function textCounter(field, maxlimit) 
   {
@@ -796,9 +832,14 @@ fill selectedCSI options.
   {
     var sType = document.designateDEForm.selAltType[document.designateDEForm.selAltType.selectedIndex].value;
     var sName = document.designateDEForm.txtAltName.value;
-    var sContext = document.designateDEForm.selContext[document.designateDEForm.selContext.selectedIndex].value;
-    if (sContext == null || sContext == "")
-      alert("Select a designate context from the drop down list.");
+    var isCon = true;
+    if (document.designateDEForm.selContext != null)
+    {
+      var sContext = document.designateDEForm.selContext[document.designateDEForm.selContext.selectedIndex].value;
+      if (sContext == null || sContext == "") isCon = false;
+    }
+    if (isCon == false) 
+      alert("Select a designate context from the drop down list.");    
     else if (sType == null || sType == "")
       alert("Select a type of alternate name from the drop down list.");
     else if (sName == null || sName == "")
@@ -852,13 +893,23 @@ fill selectedCSI options.
   {
     var sType = document.designateDEForm.selRefType[document.designateDEForm.selRefType.selectedIndex].value;
     var sName = document.designateDEForm.txtRefName.value;
-    var sContext = document.designateDEForm.selContext[document.designateDEForm.selContext.selectedIndex].value;
-    if (sContext == null || sContext == "")
+    var sURL = document.designateDEForm.txtRefURL.value;
+    var isCon = true;
+    if (document.designateDEForm.selContext != null)
+    {
+      var sContext = document.designateDEForm.selContext[document.designateDEForm.selContext.selectedIndex].value;
+      if (sContext == null || sContext == "") isCon = false;
+    }
+    //check the validity
+    if (isCon == false) 
       alert("Select a designate context from the drop down list.");
     else if (sType == null || sType == "")
       alert("Select a type of Reference Documents from the drop down list.");
     else if (sName == null || sName == "")
       alert("Please enter a text for the Reference Document Name");
+      //if less than 7 or does not have http:// at the begging
+    else if (sURL != null && sURL != "" && (sURL.length < 7 || (sURL.length >= 7 && sURL.substring(0,7) != "http://")))
+      alert("Reference Document URL Text must begin with 'http://'");
     else  //ok to submit
       submitDesignate("addRefDoc");
   }

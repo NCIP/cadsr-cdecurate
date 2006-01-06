@@ -215,8 +215,9 @@ function SubmitValidate(origin)
        selectMultiSelectList();
        
        SaveDDEInfor();
+       
        		   
-		   if (origin == "validate")
+	/*	   if (origin == "validate")
 		   {
          document.newCDEForm.newCDEPageAction.value = "validate";
          window.status = "Validating data, it may take a minute, please wait.....";
@@ -235,41 +236,40 @@ function SubmitValidate(origin)
 		   {
 			   document.newCDEForm.newCDEPageAction.value = "changeNameType";
          window.status = "Refreshing the page, it may take a minute, please wait.....";
-		   }     
+		   }     */
 
+           document.newCDEForm.newCDEPageAction.value = origin;
+           window.status = "Validating data, it may take a minute, please wait.....";
 		   document.newCDEForm.Message.style.visibility="visible";
 		   document.newCDEForm.submit();
 	   }
 }
 
-  //alerts if preferred name type was not selected
-  function isNameTypeValid()
-  {
-      var isValid = "valid";
-    //  if (document.newCDEForm.DEAction.value != "BlockEdit")
-   //   {
-        //check if sys was selected
-        var nameType = document.newCDEForm.rNameConv[0].checked;
-        //check if abbr was selected if not sys
-        if (nameType == null || nameType == false)
-          nameType = document.newCDEForm.rNameConv[1].checked;
-        //cehck if user was selcted if neither of abve
-        if (nameType == null || nameType == false)
-          nameType = document.newCDEForm.rNameConv[2].checked;
-        if (nameType == null || nameType == false)
-        {
-          //stop it only if dec or vd was changed
-          if (document.newCDEForm.nameTypeChange.value == "true")
-          {
-            isValid = "invalid";
-            alert("Please select the desired Preferred Name Type.");
-          }
-          else
-            document.newCDEForm.rNameConv[2].checked = true;
-        }
-   //   }
-      return isValid;
-  }
+//alerts if preferred name type was not selected
+function isNameTypeValid()
+{
+    var isValid = "valid";
+    //check if sys was selected
+    var nameType = document.newCDEForm.rNameConv[0].checked;
+    //check if abbr was selected if not sys
+    if (nameType == null || nameType == false)
+      nameType = document.newCDEForm.rNameConv[1].checked;
+    //cehck if user was selcted if neither of abve
+    if (nameType == null || nameType == false)
+      nameType = document.newCDEForm.rNameConv[2].checked;
+    if (nameType == null || nameType == false)
+    {
+      //stop it only if dec or vd was changed
+      if (document.newCDEForm.nameTypeChange.value == "true")
+      {
+        isValid = "invalid";
+        alert("Please select the desired Short Name Type.");
+      }
+      else
+        document.newCDEForm.rNameConv[2].checked = true;
+    }
+    return isValid;
+}
   
 
 function SubmitCDE()
@@ -303,7 +303,6 @@ function SearchDECValue()
 	if (searchWindow && !searchWindow.closed)
 		searchWindow.close()
 	searchWindow = window.open("jsp/OpenSearchWindow.jsp", "searchWindow", "width=975,height=570,top=0,left=0,resizable=yes,scrollbars=yes")
-		//}
 }
 
 function SearchVDValue()
@@ -377,15 +376,22 @@ function AccessEVS()
 		document.SearchActionForm.searchEVS.value = "DataElement";
     }
 }
-//open alternate names window
-function openAltNameWindow()
+//open alternate names reference documents window
+function openDesignateWindow(sType)
 {
     if (altWindow && !altWindow.closed)
       altWindow.close();
-      
+   /* var acAction = document.newCDEForm.DEAction.value;
+    if (acAction != "BlockEdit" && document.newCDEForm.selContext[selIdx].text == "")
+    {
+      alert("Please select a context first");
+      return;
+    } */
     document.SearchActionForm.isValidSearch.value = "false";  
-    var windowW = screen.width - 510;
-    altWindow = window.open("jsp/AlternateNameWindow.jsp", "AltNameWindow", "width=500,height=350,top=0,left=" + windowW + ",resizable=yes,scrollbars=yes");
+    document.SearchActionForm.itemType.value = sType
+ // alert(" depage " + sType);
+    //var windowW = screen.width - 410;
+    altWindow = window.open("jsp/EditDesignateDE.jsp", "designate", "width=700,height=650,top=0,left=0,resizable=yes,scrollbars=yes");
 }
 
 function MM_callJS(jsStr) { //v2.0
@@ -475,6 +481,48 @@ function EnableChecks(checked, currentField)
               "Click the Business Rules hyperlink to get more information.");              
     }
   }
+}
+
+function editContact(sAction)
+{
+    var selInd = document.newCDEForm.selContact.selectedIndex;
+    var sCont = "";
+    if (selInd >= 0)
+    {
+    	sCont = document.newCDEForm.selContact[selInd].value; 
+    	if (sAction == "remove")
+    	{
+	        var removeOK = confirm("Click OK to continue with removing selected Contact.");
+	        if (removeOK == true) SubmitValidate("removeContact");
+    		return;
+    	}
+    }
+    else if (sAction != "new")
+    {
+    	alert("Please select contact to do " + sAction + " action.");
+    	return;
+    }  
+    //continue with opening contacts for edit or new 
+    document.SearchActionForm.acID.value = sCont; 
+    document.SearchActionForm.isValidSearch.value = "false";  
+    document.SearchActionForm.itemType.value = sAction;
+    if (altWindow && !altWindow.closed)
+      altWindow.close();
+    altWindow = window.open("jsp/EditACContact.jsp", "Contact", "width=800,height=650,top=0,left=0,resizable=yes,scrollbars=yes");
+}
+//enable view and remove buttons for contact
+function enableContButtons()
+{
+    var selInd = document.newCDEForm.selContact.selectedIndex;
+    if (selInd >= 0)
+    {
+    	var sCont = document.newCDEForm.selContact[selInd].value;
+    	if (sCont != null && sCont != "")
+    	{
+    		document.newCDEForm.btnViewCt.disabled = false;
+    		document.newCDEForm.btnRmvCt.disabled = false;
+    	}
+    }
 }
 
 function ClearBoxes()
@@ -656,11 +704,14 @@ function changeOrder()
         var iChar = tx.charCodeAt(i);
         if(iChar < 48 || iChar > 57)
         {
-            alert("Please enter integer only for thid field!");
+            alert("Please enter integer only for this field!");
             document.newCDEForm.txtDECompOrder.value = "";
             return;
         }
     }
+    
+    if(tx.length < 1)   // have to be a integer, empty is not allowed
+        return;
 
     //using the selected index of the DEComp, 
     var thisIdx = document.newCDEForm.selDEComp.selectedIndex;

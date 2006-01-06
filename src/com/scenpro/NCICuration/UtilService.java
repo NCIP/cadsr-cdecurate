@@ -1,5 +1,8 @@
-
 // Copyright (c) 2000 ScenPro, Inc.
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/UtilService.java,v 1.4 2006-01-06 21:53:58 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.NCICuration;
 
 import java.io.Serializable;
@@ -93,6 +96,7 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public class UtilService implements Serializable
 {
+
 
   /**
   * The setMultSelection method: ID's from sSelList are looped through and added
@@ -457,7 +461,7 @@ public class UtilService implements Serializable
    * @param sPrName
    * @return fomated string
    */
-    public String parsedString(String sPrName)
+    public String parsedStringDoubleQuoteJSP(String sPrName)
     {
       int index = 0;
       if (sPrName != null && !sPrName.equals(""))

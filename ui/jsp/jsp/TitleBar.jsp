@@ -1,8 +1,5 @@
-<html>
-<head>
-<title>TitleBar</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<% String thisServer2 = request.getServerName(); %>
+<% //String thisServer2 = request.getServerName(); 
+   String sentinelURL = (String)session.getAttribute("SentinelURL");%>
 <script language="JavaScript">
 <!--
 var dotCntr = -1;
@@ -46,17 +43,18 @@ var sentinelWindow = null;
   
   function callSentinel()
   {
-      callSentinelJS("<%=thisServer2%>");
+      callSentinelJS("<%=sentinelURL%>");
   }
   
   
   function callSentinelJS(serverName)
   {
+  	   
 	   if (serverName != null && serverName != "")  
-
 	   {
-		   serverName = serverName.toLowerCase();
-       var cdeServer = serverName;   //defaults to curation tool server
+//		   serverName = serverName.toLowerCase();
+		   var cdeServer = serverName
+/*       var cdeServer = serverName;   //defaults to curation tool server
        if (serverName == "localhost")
           cdeServer = "biotite.scenpro.net:8080";
        else if (serverName == "protocol.scenpro.net")
@@ -68,12 +66,12 @@ var sentinelWindow = null;
        else if (serverName == "ncicb-stage.nci.nih.gov" || serverName == "cdecurate-stage.nci.nih.gov")
           cdeServer =  "cadsrsentinel-stage.nci.nih.gov/";   //"ncicb-stage.nci.nih.gov/cadsrsentinel";
        else if (serverName == "ncicb.nci.nih.gov" || serverName == "cdecurate.nci.nih.gov")
-          cdeServer = "cadsrsentinel.nci.nih.gov/"; //"ncicb-nci.nih.gov/cadsrsentinel";
+          cdeServer = "cadsrsentinel.nci.nih.gov/"; //"ncicb-nci.nih.gov/cadsrsentinel";*/
 		    //open the window
         if (sentinelWindow && !sentinelWindow.closed)
           sentinelWindow.focus();
         else
-          sentinelWindow = window.open("http://" + cdeServer);
+          sentinelWindow = window.open(cdeServer);
         //  sentinelWindow = window.open("http://" + cdeServer + "/DSRAlert/DSRAlert/cdecuration", "_blank");
 	   }
 	   else
@@ -200,20 +198,38 @@ function linkNCICB()
     String Username = (String)session.getAttribute("Username");
     String Context = (String)session.getAttribute("sDefaultContext");
 %>
-<div id="Layer3" style="position:absolute; width:575px; height:44px; z-index:1; left: 222px; top: 75px"> 
-  <script webstyle3>document.write('<scr'+'ipt src="Assets/xaramenu.js">'+'</scr'+'ipt>');document.write('<scr'+'ipt 				src="Assets/biztech_button.js">'+'</scr'+'ipt>');/*img src="Assets/biztech_button.gif" moduleid="myzara 					(project)\biztech_button_off.xws"*/</script>
-	</div>
-
-<div id="Layer5" style="position:absolute; width:153px; height:17px; z-index:4; left: 42px; top: 75px; font-size:12px">
-  <!-- Context: <%=Context%>--> <br>
-  User Name : <%=Username%> </div> 
-
-<div id="Layer4" style="position:absolute; z-index:5; left: 19px; top: 22px;; width: 600px; height: 21px">
-  <img width="850"; height="50" src="Assets/curation_banner2.gif" name="InternalMap" border="0" usemap="#InternalMap" id="InternalMap">
-  <map name="InternalMap" >
-    <area shape="rect" coords="1,1,80,50" onClick = "linkNCI();" >
-    <area shape="rect" coords="80,1,180,50" onClick = "link_caDSR();" >
-  </map>
-</div>
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" >
+	<col width="1px">
+	<col width="*">
+	<tr bgcolor="#A90101">
+		<td align="left"><a href="http://www.cancer.gov" target=_blank><img src="Assets/brandtype.gif" border="0"></a></td>
+		<td align="right"><a href="http://www.cancer.gov" target=_blank><img src="Assets/tagline_nologo.gif" border="0"></a></td>
+	</tr>
+	
+	<tr>
+	<td colspan="2">
+  		<img src="Assets/curation_banner2.gif" name="InternalMap" border="0" usemap="#InternalMap" id="InternalMap">
+  		<map name="InternalMap" >
+	  	<area shape="rect" coords="1,1,80,50" onClick = "linkNCI();" >
+    	<area shape="rect" coords="80,1,180,50" onClick = "link_caDSR();" >
+  		</map>
+	</td>	
+	</tr>
+	
+	<tr>	
+	<td colspan="2">
+	<table style="border-collapse: collapse">
+	<colgroup>
+	<col />
+	<col />
+	</colgroup><TBODY/>
+	<tr>
+	<td style="padding: 0in 1in 0in 0in">User&nbsp;Name&nbsp;:&nbsp;<%=Username%></td>
+	<td style="padding: 0in 0in 0in 0in"><script webstyle3>document.write('<scr'+'ipt src="Assets/xaramenu.js">'+'</scr'+'ipt>');document.write('<scr'+'ipt 				src="Assets/biztech_button.js">'+'</scr'+'ipt>');/*img src="Assets/biztech_button.gif" moduleid="myzara 					(project)\biztech_button_off.xws"*/</script></td>
+	</tr>	
+	</table>
+	</td>
+	</tr>	
+	</table>
 </body>
 </html>

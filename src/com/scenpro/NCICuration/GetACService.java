@@ -1,5 +1,8 @@
-
 // Copyright (c) 2000 ScenPro, Inc.
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/GetACService.java,v 1.7 2006-01-06 21:53:57 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.NCICuration;
 
 import java.io.Serializable;
@@ -96,6 +99,10 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public class GetACService implements Serializable
 {
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 6486668887681006373L;
   Connection m_sbr_db_conn = null;
   NCICurationServlet m_servlet;
   UtilService m_util = new UtilService();
@@ -276,13 +283,13 @@ public class GetACService implements Serializable
              getRegStatusList(v);    //get the Registration list
              session.setAttribute("vRegStatus", v);  //set Registration list attribute
           }
-
+          //list of ref documents used in the search
           if(session.getAttribute("vRDocType") == null)
           {
               v = new Vector();
               this.getRDocTypesList(v);    //get the Reference Document List
               session.setAttribute("vRDocType", v);  //set Reference Document list attribute
-          }
+          } 
           if((session.getAttribute("vCS") == null && sContext != null) || bNewContext)
           {
               v = new Vector();
@@ -332,36 +339,45 @@ public class GetACService implements Serializable
           session.setAttribute("vDataTypeDesc", vDesc);  //set data type description list attribute
           session.setAttribute("vDataTypeComment", vComm);  //set data type comment list attribute
         }
-
+        //list of uoml list 
         if(session.getAttribute("vUOM") == null)
         {
           v = new Vector();
-          getUOMList(v);    //get the Workflow status list
-          session.setAttribute("vUOM", v);  //set Workflow status list attribute
+          getUOMList(v);    //get the vUOM list
+          session.setAttribute("vUOM", v);  //set vUOM list attribute
         }
-
+        //list of uoml format for vd
         if(session.getAttribute("vUOMFormat") == null)
         {
           v = new Vector();
-          getUOMFormatList(v);    //get the Workflow status list
-          session.setAttribute("vUOMFormat", v);  //set Workflow status list attribute
+          getUOMFormatList(v);    //get the vUOMFormat list
+          session.setAttribute("vUOMFormat", v);  //set vUOMFormat list attribute
         }
-        //list of alternate names
+        //list of alternate names for create
         if(session.getAttribute("AltNameTypes") == null)
-        {
-           Vector vList = new Vector();
-           String sQuery = "select detl_name from designation_types_lov_view";
-           getDataListSQL(null, vList, sQuery);
-           session.setAttribute("AltNameTypes", vList);
-        }
-        //list of reference documents
+          this.getAltNamesList(session);
+        //list of reference documents for create
         if(session.getAttribute("RefDocTypes") == null)
-        {
-           Vector vList = new Vector();
-           String sQuery = "select dctl_name from document_types_lov_view";
-           getDataListSQL(null, vList, sQuery);
-           session.setAttribute("RefDocTypes", vList);
-        }        
+          this.getRefDocsList(session);
+        //list of derivation types for create
+        if(session.getAttribute("vRepType") == null)
+          this.getDerTypesList(session);
+        //list of organizations
+        if(session.getAttribute("Organizations") == null)
+          this.getOrganizeList();
+        //list of organizations
+        if(session.getAttribute("Persons") == null)
+          this.getPersonsList();
+        //list of organizations
+        if(session.getAttribute("ContactRoles") == null)
+          this.getContactRolesList();
+        //list of organizations
+        if(session.getAttribute("CommType") == null)
+          this.getCommTypeList();
+        //list of organizations
+        if(session.getAttribute("AddrType") == null)
+          this.getAddrTypeList();
+        
         m_sbr_db_conn.close();
       //  logger.info(m_servlet.getLogMessage(req, "getACList", "ended", startDate, new java.util.Date()));
       }
@@ -387,6 +403,57 @@ public class GetACService implements Serializable
         logger.fatal("ERROR in GetACService-getACList close: " + ee.toString());
     }
   }  // end of getACList
+
+/**
+  * The getConnection method queries the db to test the connection and
+  * sets the ConnectedToDB variable.
+  *  
+  *  ConnectedToDB = "Nothing" (default)
+  *  ConnectedToDB = "Yes" (connection availble)
+  *  ConnectedToDB = "No" (no connection availble)
+  *  
+  * @param req The HttpServletRequest from the client
+  * @param res The HttpServletResponse back to the client
+  * @param sContext String context.
+  * @param bNewContext Boolean indicating whether context is new.
+  * @param sACType The type of page being called, i.e. de, dec, or vd
+  *
+  */
+  public void getConnection(HttpServletRequest req, HttpServletResponse res)
+  {
+    try
+    {
+      
+    //  logger.info(m_servlet.getLogMessage(req, "getACList", "started", startDate, startDate));
+
+      HttpSession session = req.getSession();
+      if (m_sbr_db_conn == null || m_sbr_db_conn.isClosed())
+        m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (m_sbr_db_conn != null)
+      {
+        session.setAttribute("ConnectedToDB", "Yes");
+        m_sbr_db_conn.close();
+      }
+      else
+      {
+        logger.fatal("getConnection: no db connection");
+        session.setAttribute("ConnectedToDB", "No");
+      }
+    }
+    catch(Exception e)
+    {
+        try{if (m_sbr_db_conn != null) m_sbr_db_conn.close();}catch(Exception f){} 
+        logger.fatal("ERROR in GetACService-getConnection : " + e.toString());
+    }
+    try
+    {
+        if (m_sbr_db_conn != null) m_sbr_db_conn.close();    
+    }
+    catch(Exception ee)
+    {
+        logger.fatal("ERROR in GetACService-getConnection close: " + ee.toString());
+    }
+  }  // end of getConnection
 
 
   /**
@@ -733,7 +800,7 @@ public class GetACService implements Serializable
     }
   } //end Classification Scheme Items Lists
 
-  /**
+/*  /**
   * The getCSCSIList method queries the db for lists Classification Schemes and Items
   * ID's (which are stored in vectors) given the Classification Scheme ID.
   * Calls the stored procedure:
@@ -744,7 +811,7 @@ public class GetACService implements Serializable
   * @param sCSID  The ID of the Classification Scheme.
   *
   */
-  public void getCSCSIList(Vector vCSIDList, Vector vCSIIDList, String sCSID)  // returns list of Classification Scheme Items Lists
+/*  public void getCSCSIList(Vector vCSIDList, Vector vCSIIDList, String sCSID)  // returns list of Classification Scheme Items Lists
   {
     try
     {
@@ -758,6 +825,7 @@ public class GetACService implements Serializable
       logger.fatal("ERROR in GetACService-getCSCSIList : " + e.toString());
     }
   } //end Classification Scheme Items Lists
+*/
 
   /**
    * To get List for Class Scheme Items from database called from ?. 
@@ -813,7 +881,7 @@ public class GetACService implements Serializable
             String csiName = rs.getString("csi_name");
             csiName = m_util.removeNewLineChar(csiName);
             CSIBean.setCSI_NAME(csiName);
-            CSIBean.setCSI_LEVEL(rs.getString("level"));
+            CSIBean.setCSI_LEVEL(rs.getString("lvl"));
 
             vList.addElement(CSIBean);  //add the bean to a vector
 
@@ -826,7 +894,7 @@ public class GetACService implements Serializable
     catch(Exception e)
     {
       //System.err.println("other problem in GetACService-getCSCSIList: " + e);
-      logger.fatal("ERROR - GetACService-getCSCSIList for other : " + e.toString());
+      logger.fatal("ERROR - GetACService-getCSCSIListBean for other : " + e.toString());
     }
     try
     {
@@ -837,7 +905,7 @@ public class GetACService implements Serializable
     catch(Exception ee)
     {
       //System.err.println("Problem closing in GetACService-getCSCSIList: " + ee);
-      logger.fatal("ERROR - GetACService-getCSCSIList for close : " + ee.toString());
+      logger.fatal("ERROR - GetACService-getCSCSIListBean for close : " + ee.toString());
     }
   }  //endGetACService-getCSCSIList
 
@@ -893,7 +961,7 @@ public class GetACService implements Serializable
   * @param vList  A Vector of Rerence Doc Types names.
   *
   */
-  public void getRDocTypesList(Vector vList)  // returns list of DataTypes
+  public Vector getRDocTypesList(Vector vList)  // returns list of DataTypes
   {
     try
     {
@@ -902,14 +970,14 @@ public class GetACService implements Serializable
         //sort the doc types such that long name and hist short cde name is on the top
         if (vList != null)
         {
-          //remove long_name and historic short cde name from the list
-          if (vList.contains("LONG_NAME"))
-            vList.remove("LONG_NAME");
+          //remove Preferred Question Text and historic short cde name from the list
+          if (vList.contains("Preferred Question Text"))
+            vList.remove("Preferred Question Text");
           if (vList.contains("HISTORIC SHORT CDE NAME"))
             vList.remove("HISTORIC SHORT CDE NAME");
-          //add long_name and historic short cde name on the top
-          if (!vList.contains("LONG_NAME"))
-            vList.insertElementAt("LONG_NAME", 0);
+          //add Preferred Question Text and historic short cde name on the top
+          if (!vList.contains("Preferred Question Text"))
+            vList.insertElementAt("Preferred Question Text", 0);
           if (!vList.contains("HISTORIC SHORT CDE NAME"))
             vList.insertElementAt("HISTORIC SHORT CDE NAME", 1);
         }
@@ -919,6 +987,7 @@ public class GetACService implements Serializable
       //System.err.println("Problem getRDocTypesList: " + e);
       logger.fatal("ERROR in GetACService-getRDocTypesList : " + e.toString());
     }
+    return vList;
   } //end RDocTypes
 
    /**
@@ -1489,7 +1558,7 @@ public class GetACService implements Serializable
     return isExist;
   } //end doComponentExist
 
-   /**
+  /**
   * The isUniqueInContext method queries the db, checking whether DE is unique in context.
   *
   * @param sSQL  A sql statement
@@ -1544,7 +1613,6 @@ public class GetACService implements Serializable
     return sName;
   } //end isUniqueInContext
 
-
   /**
   * The doBlockExist method queries the db, checking whether component exists.
   *
@@ -1595,8 +1663,6 @@ public class GetACService implements Serializable
     }
     return blockID;
   } //end doComponentExist
-
-  
 
   /**
   * Called to get all the concepts from condr_idseq.
@@ -1709,5 +1775,310 @@ public class GetACService implements Serializable
     }
    return newVector;
   }
+
+  public void getAltNamesList(HttpSession session)
+  {
+    try
+    {
+      Vector vT = new Vector();
+      String sQuery = "select detl_name from designation_types_lov_view";
+      getDataListSQL(null, vT, sQuery);
+      Vector vList = new Vector();
+      Vector vTypes = this.getToolOptionData("CURATION", "DESIGNATION_TYPE", "");  // 
+      if (vTypes != null && vTypes.size() > 0)
+      {
+        for (int i=0; i<vTypes.size(); i++)
+        {
+          TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vTypes.elementAt(i);
+          if (tob != null)
+          {
+            String sValue = tob.getVALUE();
+            if (vT != null && sValue != null && vT.contains(sValue))
+              vList.addElement(sValue);
+          }
+        }
+      }
+      session.setAttribute("AltNameTypes", vList);
+    }
+    catch(Exception e)
+    {
+       logger.fatal("Error - getAltNamesList : " + e.toString());
+    }
+  }
+
+  public void getRefDocsList(HttpSession session)
+  {
+    try
+    {
+       Vector vT = new Vector();
+       String sQuery = "select dctl_name from document_types_lov_view";
+       getDataListSQL(null, vT, sQuery);
+       Vector vList = new Vector();
+       Vector vTypes = this.getToolOptionData("CURATION", "DOCUMENT_TYPE", "");  // 
+       if (vTypes != null && vTypes.size() > 0)
+       {
+         for (int i=0; i<vTypes.size(); i++)
+         {
+           TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vTypes.elementAt(i);
+           if (tob != null)
+           {
+             String sValue = tob.getVALUE();
+             if (vT != null && sValue != null && vT.contains(sValue))
+               vList.addElement(sValue);
+           }
+         }
+       }
+       session.setAttribute("RefDocTypes", vList);
+    }  
+    catch(Exception e)
+    {
+       logger.fatal("Error - getRefDocsList : " + e.toString());
+    }
+  }
+
+  public void getDerTypesList(HttpSession session)
+  {
+    try
+    {
+      Vector vT = new Vector();
+      String sAPI = "{call SBREXT_CDE_CURATOR_PKG.GET_COMPLEX_REP_TYPE(?)}";
+      getDataListStoreProcedure(vT, null, null, null, sAPI, "", "", 1);
+      //store it in the session for later use
+      if (vT != null) 
+        session.setAttribute("allDerTypes", vT);
+      Vector vList = new Vector();
+      Vector vTypes = this.getToolOptionData("CURATION", "DERIVATION_TYPE", "");  // 
+      if (vTypes != null && vTypes.size() > 0)
+      {
+        for (int i=0; i<vTypes.size(); i++)
+        {
+          TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vTypes.elementAt(i);
+          if (tob != null)
+          {
+            String sValue = tob.getVALUE();
+            if (vT != null && sValue != null && vT.contains(sValue))
+              vList.addElement(sValue);
+          }
+        }
+      }
+      session.setAttribute("vRepType", vList);
+    }  
+    catch(Exception e)
+    {
+       logger.fatal("Error - getDerTypesList : " + e.toString());
+    }
+  }
+
+  public Vector getToolOptionData(String toolName, String sProperty, String sValue)  // returns data from tool options
+  {
+    ResultSet rs = null;
+    CallableStatement CStmt = null;
+    Vector vList = new Vector();
+    try
+    {
+      //Create a Callable Statement object.
+      if (m_sbr_db_conn == null || m_sbr_db_conn.isClosed())
+        m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (m_sbr_db_conn == null)
+        m_servlet.ErrorLogin(m_classReq, m_classRes);
+      else
+      {
+        CStmt = m_sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_TOOL_OPTIONS(?,?,?,?,?)}");
+
+        CStmt.registerOutParameter(4, OracleTypes.CURSOR);
+        CStmt.registerOutParameter(5, OracleTypes.VARCHAR);
+
+        CStmt.setString(1, toolName);
+        CStmt.setString(2, sProperty);
+        CStmt.setString(3, sValue);
+
+         // Now we are ready to call the stored procedure
+        boolean bExcuteOk = CStmt.execute();
+
+        //store the output in the resultset
+        rs = (ResultSet) CStmt.getObject(4);
+        String sRet = (String)CStmt.getString(5);
+        String s;
+        if(rs!=null)
+        {
+          //loop through the resultSet and add them to the bean
+          while(rs.next())
+          {
+            TOOL_OPTION_Bean TO_Bean = new TOOL_OPTION_Bean();
+            TO_Bean.setTOOL_OPTION_IDSEQ(rs.getString("TOOL_IDSEQ"));
+            TO_Bean.setTOOL_NAME(rs.getString("TOOL_NAME"));
+            TO_Bean.setPROPERTY(rs.getString("PROPERTY"));
+            TO_Bean.setVALUE(rs.getString("VALUE"));
+            TO_Bean.setLANGUAGE(rs.getString("UA_NAME"));   
+            vList.addElement(TO_Bean);  //add the bean to a vector
+          }  //END WHILE
+        }   //END IF
+      }
+    }
+    catch(Exception e)
+    {
+      System.err.println("other problem in GetACService-getToolOptionData: " + e);
+      logger.fatal("ERROR - GetACService-getToolOptionData for other : " + e.toString());
+    }
+    try
+    {
+      if(rs!=null) rs.close();
+      if(CStmt!=null) CStmt.close();
+     // if(m_sbr_db_conn != null) m_sbr_db_conn.close();
+    }
+    catch(Exception ee)
+    {
+      System.err.println("Problem closing in GetACService-getToolOptionData: " + ee);
+      logger.fatal("ERROR - GetACService-getToolOptionData for close : " + ee.toString());
+    }
+    return vList;
+  }  //endGetACService-getToolOptionData
+
+  private Hashtable getHashListFromAPI(String sAPI)
+  {
+    Hashtable hRes = new Hashtable();
+    Connection sbr_db_conn = null;
+    CallableStatement CStmt = null;
+    ResultSet rs = null;
+    try
+    {
+      //Create a Callable Statement object.
+      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (sbr_db_conn == null)
+        m_servlet.ErrorLogin(m_classReq, m_classRes);
+      else
+      {
+        CStmt = sbr_db_conn.prepareCall(sAPI);
+        //out parameter
+        CStmt.registerOutParameter(1, OracleTypes.CURSOR);       //return cursor
+         // Now we are ready to call the stored procedure
+        boolean bExcuteOk = CStmt.execute();
+        //store the output in the resultset
+        rs = (ResultSet) CStmt.getObject(1);
+        String s;
+        if(rs!=null)
+        {
+          //loop through the resultSet and add them to the bean
+          while(rs.next())
+          {
+            String sID = rs.getString(1);
+            String sName = rs.getString(2);
+            if (sName == null) sName = sID;
+            hRes.put(sID, sName);  //add it to the hash table
+          }
+        }
+      }
+    }
+    catch(Exception e)
+    {
+      logger.fatal("ERROR in GetACService- getHashListFromAPI for exception : " + sAPI + " : " + e.toString());
+    }
+    try
+    {
+      if(rs!=null) rs.close();
+      if(CStmt!=null) CStmt.close();
+      if(sbr_db_conn != null) sbr_db_conn.close();
+    }
+    catch(Exception ee)
+    {
+      logger.fatal("ERROR in GetACService-getHashListFromAPI for close : " + ee.toString());
+    }
+    
+    return hRes;
+  } //end getHashListFromAPI
+
+  public void getOrganizeList()
+  {
+    String sAPI = "{call SBREXT_CDE_CURATOR_PKG.GET_ORGANIZATION_LIST(?)}";
+    Hashtable hOrg = this.getHashListFromAPI(sAPI);
+    HttpSession session = (HttpSession)m_classReq.getSession();
+    session.setAttribute("Organizations", hOrg);
+  }
   
+  public void getContactRolesList()
+  {
+    String sAPI = "{call SBREXT.SBREXT_CDE_CURATOR_PKG.GET_CONTACT_ROLES_LIST(?)}";
+    Hashtable hOrg = this.getHashListFromAPI(sAPI);
+    HttpSession session = (HttpSession)m_classReq.getSession();
+    session.setAttribute("ContactRoles", hOrg);
+  System.out.println("get contact roles " + hOrg.size());
+  }
+  
+  public void getCommTypeList()
+  {
+    String sAPI = "{call SBREXT_CDE_CURATOR_PKG.GET_COMM_TYPE_LIST(?)}";
+    Hashtable hOrg = this.getHashListFromAPI(sAPI);
+    HttpSession session = (HttpSession)m_classReq.getSession();
+    session.setAttribute("CommType", hOrg);
+  }
+  
+  public void getAddrTypeList()
+  {
+    String sAPI = "{call SBREXT_CDE_CURATOR_PKG.GET_ADDR_TYPE_LIST(?)}";
+    Hashtable hOrg = this.getHashListFromAPI(sAPI);
+    HttpSession session = (HttpSession)m_classReq.getSession();
+    session.setAttribute("AddrType", hOrg);
+  }
+
+  public void getPersonsList()
+  {
+    Hashtable hPer = new Hashtable();
+    Connection sbr_db_conn = null;
+    CallableStatement CStmt = null;
+    ResultSet rs = null;
+    try
+    {
+      //Create a Callable Statement object.
+      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (sbr_db_conn == null)
+        m_servlet.ErrorLogin(m_classReq, m_classRes);
+      else
+      {
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_PERSONS_LIST(?)}");
+        //out parameter
+        CStmt.registerOutParameter(1, OracleTypes.CURSOR);       //return cursor
+         // Now we are ready to call the stored procedure
+        boolean bExcuteOk = CStmt.execute();
+        //store the output in the resultset
+        rs = (ResultSet) CStmt.getObject(1);
+        String s;
+        if(rs!=null)
+        {
+          //loop through the resultSet and add them to the bean
+          while(rs.next())
+          {
+            String sID = rs.getString("per_idseq");
+            String lName = rs.getString("lname");
+            String fName = rs.getString("fname");
+            String sOrg = rs.getString("org_idseq");
+            String sName = "";
+            //append the last name and first name together
+            if (lName != null && !lName.equals(""))
+              sName = lName;
+            if (!sName.equals("") && fName != null && !fName.equals("")) sName += ", ";
+            sName += fName;
+            hPer.put(sID, sName);  //add it to the hash table
+          }
+        }
+      }
+    }
+    catch(Exception e)
+    {
+      logger.fatal("ERROR in GetACService- getPersonsList for exception : " + e.toString());
+    }
+    try
+    {
+      if(rs!=null) rs.close();
+      if(CStmt!=null) CStmt.close();
+      if(sbr_db_conn != null) sbr_db_conn.close();
+    }
+    catch(Exception ee)
+    {
+      logger.fatal("ERROR in GetACService-getPersonsList for close : " + ee.toString());
+    }
+    //store it in the session attributes
+    HttpSession session = (HttpSession)m_classReq.getSession();
+    session.setAttribute("Persons", hPer);
+  } //getPersonsList
+
 }//close the class

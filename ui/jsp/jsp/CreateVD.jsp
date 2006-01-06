@@ -61,11 +61,11 @@
     String sContID = m_VD.getVD_CONTE_IDSEQ();
     if (sContID == null) sContID = "";
     String sLongName = m_VD.getVD_LONG_NAME();
-    sLongName = serUtil.parsedString(sLongName);    //call the function to handle doubleQuote
+    sLongName = serUtil.parsedStringDoubleQuoteJSP(sLongName);    //call the function to handle doubleQuote
     if (sLongName == null) sLongName = "";
     int sLongNameCount = sLongName.length();
     String sName = m_VD.getVD_PREFERRED_NAME();
-    sName = serUtil.parsedString(sName);    //call the function to handle doubleQuote
+    sName = serUtil.parsedStringDoubleQuoteJSP(sName);    //call the function to handle doubleQuote
     if (sName == null) sName = "";
     int sNameCount = sName.length();
     String lblUserType = "Existing Name (Editable)";  //make string for user defined label
@@ -73,26 +73,26 @@
     if (sUserEnt == null || sUserEnt.equals("")) lblUserType = "User Entered";
     
     String sObjQual = m_VD.getVD_OBJ_QUAL();
-    sObjQual = serUtil.parsedString(sObjQual);    //call the function to handle doubleQuote
+    sObjQual = serUtil.parsedStringDoubleQuoteJSP(sObjQual);    //call the function to handle doubleQuote
     if (sObjQual == null) sObjQual = "";
     String sObjClass = m_VD.getVD_OBJ_CLASS();
-    sObjClass = serUtil.parsedString(sObjClass);    //call the function to handle doubleQuote
+    sObjClass = serUtil.parsedStringDoubleQuoteJSP(sObjClass);    //call the function to handle doubleQuote
     if (sObjClass == null) sObjClass = "";
     String sPropQual = m_VD.getVD_PROP_QUAL();
-    sPropQual = serUtil.parsedString(sPropQual);    //call the function to handle doubleQuote
+    sPropQual = serUtil.parsedStringDoubleQuoteJSP(sPropQual);    //call the function to handle doubleQuote
     if (sPropQual == null) sPropQual = "";
     String sPropClass = m_VD.getVD_PROP_CLASS();
-    sPropClass = serUtil.parsedString(sPropClass);    //call the function to handle doubleQuote
+    sPropClass = serUtil.parsedStringDoubleQuoteJSP(sPropClass);    //call the function to handle doubleQuote
     if (sPropClass == null) sPropClass = "";
     String sRepTerm = "";  //use the concepts to create rep term
     String sRepTermID = m_VD.getVD_REP_IDSEQ();
     if (sRepTermID == null) sRepTermID = ""; 
     
     String sRepTermVocab = m_VD.getVD_REP_EVS_CUI_ORIGEN();
-    sRepTermVocab = serUtil.parsedString(sRepTermVocab);    //call the function to handle doubleQuote
+    sRepTermVocab = serUtil.parsedStringDoubleQuoteJSP(sRepTermVocab);    //call the function to handle doubleQuote
     if (sRepTermVocab == null || sRepTermVocab.equals("null")) sRepTermVocab = "";
     String sRepQualVocab = m_VD.getVD_REP_QUAL_EVS_CUI_ORIGEN();
-    sRepQualVocab = serUtil.parsedString(sRepQualVocab);    //call the function to handle doubleQuote
+    sRepQualVocab = serUtil.parsedStringDoubleQuoteJSP(sRepQualVocab);    //call the function to handle doubleQuote
     if (sRepQualVocab == null || sRepQualVocab.equals("null")) sRepQualVocab = "";
     String sRepQualID = m_VD.getVD_REP_QUAL_CONCEPT_CODE();
     if (sRepQualID == null || sRepQualID.equals("null")) sRepQualID = "";
@@ -142,7 +142,7 @@
       if (sRepTerm != null && !sRepTerm.equals("")) sRepTerm += " ";
       sRepTerm += sRepTermPrimary;  //add rep term primary
     }   
-    sRepTerm = serUtil.parsedString(sRepTerm);    //call the function to handle doubleQuote
+    sRepTerm = serUtil.parsedStringDoubleQuoteJSP(sRepTerm);    //call the function to handle doubleQuote
 
     //naming to here    
     String sPrefType = m_VD.getAC_PREF_NAME_TYPE();
@@ -210,12 +210,18 @@
     String sSource = m_VD.getVD_SOURCE();
     if (sSource == null) sSource = "";
     boolean bDataFound = false;
+    //get the contact hashtable for the de
+    Hashtable hContacts = m_VD.getAC_CONTACTS();
+    if (hContacts == null) hContacts = new Hashtable();
+    session.setAttribute("AllContacts", hContacts);
 
     //these are for value/meaning search.
     session.setAttribute("MenuAction", "searchForCreate");
     Vector vResult = new Vector();
     session.setAttribute("results", vResult);
     session.setAttribute("creRecsFound", "No ");
+    //for altnames and ref docs
+    session.setAttribute("dispACType", "ValueDomain");
     
     //get parent attributes
     String sLastAction = (String)request.getAttribute("LastAction");
@@ -263,10 +269,10 @@
     session.setAttribute("PVAction", "");
 
     //cs-csi data
-    Vector vSelCSList = m_VD.getVD_CS_NAME();
+    Vector vSelCSList = m_VD.getAC_CS_NAME();
     if (vSelCSList == null) vSelCSList = new Vector();
-    Vector vSelCSIDList = m_VD.getVD_CS_ID();
-    Vector vACCSIList = m_VD.getVD_AC_CSI_VECTOR();
+    Vector vSelCSIDList = m_VD.getAC_CS_ID();
+    Vector vACCSIList = m_VD.getAC_AC_CSI_VECTOR();
     Vector vACId = (Vector)session.getAttribute("vACId");
     Vector vACName = (Vector)session.getAttribute("vACName");
     //initialize the beans
@@ -399,17 +405,6 @@
 %>
   }
 
-//open cd alternate names window
-function openAltNameWindow()
-{
-    if (altWindow && !altWindow.closed)
-      altWindow.close();
-      
-    document.SearchActionForm.isValidSearch.value = "false";  
-    var windowW = screen.width - 510;
-    altWindow = window.open("jsp/AlternateNameWindow.jsp", "AltNameWindow", "width=500,height=350,top=0,left=" + windowW + ",resizable=yes,scrollbars=yes");
-}
-
   function createOrigin()
   {
     var newOrigin = prompt('Enter a new Origin : ','')
@@ -452,11 +447,12 @@ function closeDep()
         <input type="button" name="btnBack" value="Back" style="width: 125", "height: 30" onClick="Back();">
           &nbsp;&nbsp;
 <% } %>
-<%if (sMenuAction.equals("NewVDVersion")) {%>
-        <input type="button" name="btnAltName" value="Alternate Names" style="width: 125", "height: 30" onClick="openAltNameWindow();"
-				onHelp = "showHelp('Help_Updates.html#createVDForm_altNames'); return false">
+        <input type="button" name="btnAltName" value="Alternate Names" style="width:125" onClick="openDesignateWindow('Alternate Names');"
+				onHelp = "showHelp('Help_Updates.html#newDECForm_altNames'); return false">
           &nbsp;&nbsp;
-<%}%>          
+        <input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');"
+				onHelp = "showHelp('Help_Updates.html#newDECForm_refDocs'); return false">
+          &nbsp;&nbsp;
  	     <img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" 	style="visibility:hidden;">
       </td>
     </tr>
@@ -657,7 +653,7 @@ function closeDep()
   <tr height="15"></tr>
   <tr height="25" valign="bottom">
       <td align=right><font color="#FF0000" >* &nbsp;&nbsp;</font><%=item++%>)</td>
-      <td> <font color="#FF0000">Verify </font>Value Domain Long Name</td>
+      <td> <font color="#FF0000">Verify </font>Value Domain Long Name (* ISO Preferred Name)</td>
   </tr>
   <tr>
     <td>&nbsp;</td>
@@ -674,11 +670,11 @@ function closeDep()
   </tr>
   <tr height="25" valign="bottom">
     <td align=right><font color="#FF0000" >* &nbsp;&nbsp;</font><%=item++%>)</td>
-    <td> <font color="#FF0000">Update </font>Value Domain Preferred Name</td>
+    <td> <font color="#FF0000">Update </font>Value Domain Short Name</td>
   </tr>   
   <tr>
     <td>&nbsp;</td>
-    <td height="24" valign="bottom">Select Preferred Name Naming Standard</td>
+    <td height="24" valign="bottom">Select Short Name Naming Standard</td>
   </tr>
   <tr>
     <td>&nbsp;</td>
@@ -1312,7 +1308,53 @@ function closeDep()
       </table>
     </td>
   </tr>
-     
+ <!-- contact info -->
+    <tr><td height="12" valign="top"></tr>    
+  	<tr valign="bottom" height="40">
+      <td colspan=2>
+        <table width=60% border="0">
+          <col width="2%"><col width="40%"><col width="15%"> <col width="15%"><col width="15%">
+		  <tr>
+		    <td align=right><%=item++%>)</td>
+		    <td><font color="#FF0000">Select </font>Contacts</td>
+            <td align="left"><input type="button" name="btnViewCt" value="View Details" 
+            	style="width:100" onClick="javascript:editContact('view');" disabled></td>
+            <td align="left"><input type="button" name="btnCreateCt" value="Create New" 
+            	style="width:100" onClick="javascript:editContact('new');"></td>
+            <td align="center"><input type="button" name="btnRmvCt" value="Remove Item" 
+            	style="width:100" onClick="javascript:editContact('remove');" disabled></td>
+		  </tr>
+		  <tr> 
+	      	<td>&nbsp;</td>
+	      	<td colspan=4 valign="top">
+	          <select name="selContact" size="4"  style="width:100%" onchange="javascript:enableContButtons();" 
+	          	onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContact'); return false">
+<%	
+				Enumeration enum1 = hContacts.keys();
+				while (enum1.hasMoreElements())
+				{
+				  String contName = (String)enum1.nextElement();
+				  AC_CONTACT_Bean acCont = (AC_CONTACT_Bean)hContacts.get(contName);				  
+				  if (acCont == null) acCont = new AC_CONTACT_Bean();
+				  String ctSubmit = acCont.getACC_SUBMIT_ACTION();
+				  if (ctSubmit != null && ctSubmit.equals("DEL"))
+				    continue;
+				  /*  String accID = acCont.getAC_CONTACT_IDSEQ();
+				  String contName = acCont.getORG_NAME();
+				  if (contName == null || contName.equals(""))
+				    contName = acCont.getPERSON_NAME(); */
+%>
+				  <option value="<%=contName%>"><%=contName%></option>
+<%				  
+				}
+%>	          	
+	          </select>
+	      	</td>
+		  </tr>
+		</table>
+	  </td>
+	</tr>
+<!-- vd origin -->     
   <tr height="25" valign="bottom">
       <td align=right><%=item++%>)</td>
       <td> <font color="#FF0000"> Select </font>Value Domain Origin </td>
@@ -1337,7 +1379,7 @@ function closeDep()
 
   <tr height="25" valign="bottom">
       <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000"> Create</font> Comment/Change Note </td>
+      <td> <font color="#FF0000"> Create</font> Change Note </td>
   </tr>
     
   <tr>

@@ -104,15 +104,16 @@ function displayStatusWindow()
     }
   }
 
-//open alternate names window
-function openAltNameWindow()
+//open alternate names reference document window
+function openDesignateWindow(sType)
 {
     if (altWindow && !altWindow.closed)
       altWindow.close();
-      
     document.SearchActionForm.isValidSearch.value = "false";  
-    var windowW = screen.width - 510;
-    altWindow = window.open("jsp/AlternateNameWindow.jsp", "AltNameWindow", "width=500,height=350,top=0,left=" + windowW + ",resizable=yes,scrollbars=yes");
+    document.SearchActionForm.itemType.value = sType
+ // alert(" depage " + sType);
+    //var windowW = screen.width - 410;
+    altWindow = window.open("jsp/EditDesignateDE.jsp", "designate", "width=700,height=650,top=0,left=0,resizable=yes,scrollbars=yes");
 }
 
  function SearchBuildingBlocks(thisBlock, openToTree)
@@ -121,27 +122,27 @@ function openAltNameWindow()
     var vAction = document.newDECForm.DECAction.value;
     var selIdx = document.newDECForm.selContext.selectedIndex;
     if(openToTree == "true")
-    {
+    { //remove this and add meta search display
       if(thisBlock == "ObjectClass" && (ObjClass.innerText == null || ObjClass.innerText == ""
-        || ObjClass.innerText == "NCI Metathesaurus" || ObjClass.innerText == "caDSR"))
+        || ObjClass.innerText == "caDSR"))   //|| ObjClass.innerText == "NCI Metathesaurus" 
       {
         alert("Cannot open to tree for this database.");
         return;
       }
       else if(thisBlock == "PropertyClass" && (PropClass.innerText == null || PropClass.innerText == ""
-      || PropClass.innerText == "NCI Metathesaurus" || PropClass.innerText == "caDSR"))
+        || PropClass.innerText == "caDSR"))   //|| PropClass.innerText == "NCI Metathesaurus" 
       {
         alert("Cannot open to tree for this database.");
         return;
       }
       else if(thisBlock == "ObjectQualifier" && (ObjQual.innerText == null || ObjQual.innerText == ""
-        || ObjQual.innerText == "NCI Metathesaurus" || ObjQual.innerText == "caDSR"))
+        || ObjQual.innerText == "caDSR"))   //|| ObjQual.innerText == "NCI Metathesaurus" 
       {
         alert("Cannot open to tree for this database.");
         return;
       }
       else if(thisBlock == "PropertyQualifier" && (PropQual.innerText == null || PropQual.innerText == ""
-        || PropQual.innerText == "NCI Metathesaurus" || PropQual.innerText == "caDSR"))
+        || PropQual.innerText == "caDSR"))  //|| PropQual.innerText == "NCI Metathesaurus" 
       {
         alert("Cannot open to tree for this database.");
         return;
@@ -332,6 +333,50 @@ function SearchCDValue()
      window.status = "submitting data, it may take a minute, please wait....."
      document.newDECForm.submit();
   }
+  
+  //contact edits
+	function editContact(sAction)
+	{
+	    var selInd = document.newDECForm.selContact.selectedIndex;
+	    var sCont = "";
+	    if (selInd >= 0)
+	    {
+	    	sCont = document.newDECForm.selContact[selInd].value; 
+	    	if (sAction == "remove")
+	    	{
+		        var removeOK = confirm("Click OK to continue with removing selected Contact.");
+		        if (removeOK == true) SubmitValidate("removeContact");
+	    		return;
+	    	}
+	    }
+	    else if (sAction != "new")
+	    {
+	    	alert("Please select contact to do " + sAction + " action.");
+	    	return;
+	    }  
+	    //continue with opening contacts for edit or new 
+	    document.SearchActionForm.acID.value = sCont; 
+	    document.SearchActionForm.isValidSearch.value = "false";  
+	    document.SearchActionForm.itemType.value = sAction;
+	    if (altWindow && !altWindow.closed)
+	      altWindow.close();
+	    altWindow = window.open("jsp/EditACContact.jsp", "Contact", "width=800,height=650,top=0,left=0,resizable=yes,scrollbars=yes");
+	}
+	//enable view and remove buttons for contact
+	function enableContButtons()
+	{
+	    var selInd = document.newDECForm.selContact.selectedIndex;
+	    if (selInd >= 0)
+	    {
+	    	var sCont = document.newDECForm.selContact[selInd].value;
+	    	if (sCont != null && sCont != "")
+	    	{
+	    		document.newDECForm.btnViewCt.disabled = false;
+	    		document.newDECForm.btnRmvCt.disabled = false;
+	    	}
+	    }
+	}
+
 
   function ClearBoxes()
   { 
@@ -365,15 +410,15 @@ function SearchCDValue()
       isValid = isDateValid();
     if (isValid == "valid" && origin == "validate") 
       isValid = isNameTypeValid(); 
-	  if (isValid == "valid")
-	  {
+	if (isValid == "valid")
+	{
        hourglass();
        //keep the blocks selection list selected
        selectBlocksList();
        //keep the cscsi selection list selected
        selectMultiSelectList();
        
-       if (origin == "validate")
+    /*   if (origin == "validate")
        {
            document.newDECForm.newCDEPageAction.value = "validate";
            window.status = "Validating data, it may take a minute, please wait.....";
@@ -402,7 +447,10 @@ function SearchCDValue()
       {
          document.newDECForm.newCDEPageAction.value = "changeNameType";
          window.status = "Refreshing the page, it may take a minute, please wait.....";
-      }     
+      }   */  
+       if (origin == "refresh") origin = "refreshCreateDEC";
+       document.newDECForm.newCDEPageAction.value = origin;
+       window.status = "Submitting data, it may take a minute, please wait.....";
        document.newDECForm.Message.style.visibility="visible";
        document.newDECForm.submit();
     }
@@ -426,7 +474,7 @@ function SearchCDValue()
         if (document.newDECForm.nameTypeChange.value == "true")
         {
           isValid = "invalid";
-          alert("Please select the desired Preferred Name Type.");
+          alert("Please select the desired Short Name Type.");
         }
         else
           document.newDECForm.rNameConv[2].checked = true;

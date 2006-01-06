@@ -1,3 +1,5 @@
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/TreeObject.java,v 1.3 2006-01-06 21:53:58 hegdes Exp $
+// $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
 
@@ -84,6 +86,7 @@ public abstract class TreeObject {
 
     private int type;
     private String name;
+    private String dispName;
     private String code;
     private int id;
     private int level;
@@ -92,9 +95,10 @@ public abstract class TreeObject {
         this.type = type;
     }
     
-    public TreeObject(int id, String name, String code, int level) {
+    public TreeObject(int id, String name, String dispName, String code, int level) {
         this.id = id;
         this.name = name;
+        this.dispName = dispName;
         this.code = code;
         this.level = level;
     }
@@ -107,6 +111,9 @@ public abstract class TreeObject {
     public String getName() {
         return name;
     }
+    public String getDispName() {
+        return dispName;
+    }
      public String getCode() {
         return code;
     }
@@ -118,6 +125,9 @@ public abstract class TreeObject {
     }
     public void setName(String name) {
         this.name = name;
+    }
+    public void setDispName(String name ) {
+        this.dispName = name;
     }
      public void setCode(String code) {
         this.code = code;

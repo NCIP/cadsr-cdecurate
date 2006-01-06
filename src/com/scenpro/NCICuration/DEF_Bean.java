@@ -1,8 +1,9 @@
-package com.scenpro.NCICuration;
+// Copyright (c) 2005 ScenPro, Inc.
 
-import java.io.*;
-import java.util.*;
-import java.io.Serializable;
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/DEF_Bean.java,v 1.2 2006-01-06 21:53:57 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
+package com.scenpro.NCICuration;
 
 /**
  * The DEF_Bean encapsulates the DEFINITION information and is stored in the
@@ -85,8 +86,10 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-public class DEF_Bean implements Serializable{
+public class DEF_Bean extends AC_Bean {
 
+  private static final long serialVersionUID = 1622023626619349808L;
+  
 // attributes
   private String RETURN_CODE;
   private String DEF_DEF_IDSEQ;
@@ -110,7 +113,7 @@ public class DEF_Bean implements Serializable{
   /**
    * Constructor
   */
-  public void DEF_Bean() {
+  public DEF_Bean() {
   };
 
   /**
@@ -298,6 +301,12 @@ public class DEF_Bean implements Serializable{
   {
       return this.DEF_DEF_IDSEQ;
   }
+  
+  public String getIDSEQ()
+  {
+      return getDEF_DEF_IDSEQ();
+  }
+
   /**
   * The getDEF_PREFERRED_NAME method returns the DEF_PREFERRED_NAME for this bean.
   *

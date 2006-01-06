@@ -101,15 +101,16 @@ function removeAllText(thisBlock)
     }
   }
 
-  //open alternate names window
-  function openAltNameWindow()
+  //open alternate names reference document window
+  function openDesignateWindow(sType)
   {
-      if (altWindow && !altWindow.closed)
-        altWindow.close();
-        
-      document.SearchActionForm.isValidSearch.value = "false";  
-      var windowW = screen.width - 510;
-      altWindow = window.open("jsp/AlternateNameWindow.jsp", "AltNameWindow", "width=500,height=350,top=0,left=" + windowW + ",resizable=yes,scrollbars=yes");
+    if (altWindow && !altWindow.closed)
+      altWindow.close();
+    document.SearchActionForm.isValidSearch.value = "false";  
+    document.SearchActionForm.itemType.value = sType
+ // alert(" depage " + sType);
+    //var windowW = screen.width - 410;
+    altWindow = window.open("jsp/EditDesignateDE.jsp", "designate", "width=700,height=650,top=0,left=0,resizable=yes,scrollbars=yes");
   }
 
  function SearchBuildingBlocks(thisBlock, openToTree)
@@ -119,13 +120,13 @@ function removeAllText(thisBlock)
      if(openToTree == "true")
     {
       if(thisBlock == "RepTerm" && (RepTerm.innerText == null || RepTerm.innerText == ""
-        || RepTerm.innerText == "NCI Metathesaurus" || RepTerm.innerText == "caDSR"))
+        || RepTerm.innerText == "caDSR"))  //|| RepTerm.innerText == "NCI Metathesaurus" 
       {
         alert("Cannot open to tree for this database.");
         return;
       }
       else if(thisBlock == "RepQualifier" && (RepQual.innerText == null || RepQual.innerText == ""
-        || RepQual.innerText == "NCI Metathesaurus" || RepQual.innerText == "caDSR"))
+        || RepQual.innerText == "caDSR"))  //|| RepQual.innerText == "NCI Metathesaurus" 
       {
         alert("Cannot open to tree for this database.");
         return;
@@ -437,6 +438,49 @@ function removeAllText(thisBlock)
       searchWindow = window.open("jsp/OpenSearchWindow.jsp", "searchWindow", "width=775,height=700,top=0,left=0,resizable=yes,scrollbars=yes")
     }
  }
+ //add remove contacts
+function editContact(sAction)
+{
+    var selInd = document.createVDForm.selContact.selectedIndex;
+    var sCont = "";
+    if (selInd >= 0)
+    {
+    	sCont = document.createVDForm.selContact[selInd].value; 
+    	if (sAction == "remove")
+    	{
+	        var removeOK = confirm("Click OK to continue with removing selected Contact.");
+	        if (removeOK == true) SubmitValidate("removeContact");
+    		return;
+    	}
+    }
+    else if (sAction != "new")
+    {
+    	alert("Please select contact to do " + sAction + " action.");
+    	return;
+    }  
+    //continue with opening contacts for edit or new 
+    document.SearchActionForm.acID.value = sCont; 
+    document.SearchActionForm.isValidSearch.value = "false";  
+    document.SearchActionForm.itemType.value = sAction;
+    if (altWindow && !altWindow.closed)
+      altWindow.close();
+    altWindow = window.open("jsp/EditACContact.jsp", "Contact", "width=800,height=650,top=0,left=0,resizable=yes,scrollbars=yes");
+}
+//enable view and remove buttons for contact
+function enableContButtons()
+{
+    var selInd = document.createVDForm.selContact.selectedIndex;
+    if (selInd >= 0)
+    {
+    	var sCont = document.createVDForm.selContact[selInd].value;
+    	if (sCont != null && sCont != "")
+    	{
+    		document.createVDForm.btnViewCt.disabled = false;
+    		document.createVDForm.btnRmvCt.disabled = false;
+    	}
+    }
+}
+
 
     function showValueMessage()
    {
@@ -511,7 +555,7 @@ function removeAllText(thisBlock)
     	//select cs-csi multi select lists
       selectMultiSelectList();
      
-      if (origin == "validate")
+   /*   if (origin == "validate")
       {
         document.createVDForm.newCDEPageAction.value = "validate";
         window.status = "Validating data, it may take a minute, please wait.....";
@@ -535,8 +579,12 @@ function removeAllText(thisBlock)
       {
         document.createVDForm.newCDEPageAction.value = "changeNameType";
         window.status = "Refreshing the page, it may take a minute, please wait.....";          
-      }          
+      }    */
+            
       //submit the form
+      if (origin == "refresh") origin = "refreshCreateVD";
+      document.createVDForm.newCDEPageAction.value = origin;
+      window.status = "Validating the page, it may take a minute, please wait.....";          
       document.createVDForm.Message.style.visibility="visible";
       document.createVDForm.submit();
     }
@@ -571,7 +619,7 @@ function removeAllText(thisBlock)
           if (document.createVDForm.nameTypeChange.value == "true")
           {
             isValid = "invalid";
-            alert("Please select the desired Preferred Name Type.");
+            alert("Please select the desired Short Name Type.");
           }
           else
             document.createVDForm.rNameConv[2].checked = true;

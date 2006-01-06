@@ -2,7 +2,10 @@
 <!DOCTYPE web-app PUBLIC
      "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
     "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
-
+<!-- 
+    $Header: /cvsshare/content/cvsroot/cdecurate/conf/dev/web.xml,v 1.6 2006-01-06 21:53:57 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
 <web-app>
   <description>cdecurate</description>
 
@@ -14,46 +17,16 @@
          com.scenpro.NCICuration.NCICurationServlet
      </servlet-class>
 	<init-param>
-      <param-name>driverType</param-name>
-      <param-value>oci8</param-value>
-    </init-param>
-    <init-param>
-      <param-name>server</param-name>
-      <param-value>jdbc:oracle:oci:@CBDEV.nci.nih.gov</param-value>
-    </init-param>
-    <init-param>
-      <param-name>evsconnection</param-name>
-      <param-value>
-	   http://cbioqa101.nci.nih.gov:29080/cacore301hql/server/HTTPServer
-	</param-value>
-    </init-param>
-    <init-param>
-      <param-name>iMinConns</param-name>
-      <param-value>1</param-value>
-    </init-param>
-    <init-param>
-      <param-name>iMaxConns</param-name>  
-      <param-value>5</param-value>
-    </init-param>
-    <init-param>
-      <param-name>protocol</param-name>
-      <param-value>tcp</param-value>
-    </init-param>
-    <init-param>
-      <param-name>sid</param-name>
-      <param-value>orcl</param-value>
-    </init-param>
-    <init-param>
-      <param-name>port</param-name>
-      <param-value>1521</param-value>
+      <param-name>jbossDataSource</param-name>
+      <param-value>jdbc/CDECurateDS</param-value>
     </init-param>
     <init-param>
       <param-name>username</param-name>
-      <param-value>sbrext</param-value>
+      <param-value>cdecurate</param-value>
     </init-param>
     <init-param>
       <param-name>password</param-name>
-      <param-value>jjuser</param-value>
+      <param-value>cdecurate</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
 

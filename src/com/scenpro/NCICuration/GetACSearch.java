@@ -1,19 +1,20 @@
 
 // Copyright (c) 2000 ScenPro, Inc.
-package com.scenpro.NCICuration;
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/GetACSearch.java,v 1.18 2006-01-06 21:53:57 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
+package com.scenpro.NCICuration;     
 
 import java.io.Serializable;
 import java.util.*;
 import java.sql.*;
-import java.math.*;
 import oracle.jdbc.driver.*;
-import javax.servlet.*;
 import javax.servlet.http.*;
-import java.io.*;
 import java.text.*;
 
 import org.apache.log4j.*;
-
+ 
 /**
  * GetACSearch class is for search action of the tool for all components.
  * <P>
@@ -97,6 +98,7 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public class GetACSearch implements Serializable
 {
+  private static final long serialVersionUID = 1127639772054694933L;
   NCICurationServlet m_servlet = null;
   UtilService m_util = new UtilService();
   HttpServletRequest m_classReq = null;
@@ -144,7 +146,6 @@ public class GetACSearch implements Serializable
    * @param res HttpServletResponse object.
    *
    */
-
   public void getACKeywordResult(HttpServletRequest req, HttpServletResponse res)
   {
     try
@@ -152,7 +153,7 @@ public class GetACSearch implements Serializable
       HttpSession session = req.getSession();     //get the session
       //capture the duration
       java.util.Date startDate = new java.util.Date();          
-   //   logger.info(m_servlet.getLogMessage(req, "getACKeywordResult", "starting search", startDate, startDate));
+      logger.info(m_servlet.getLogMessage(req, "getACKeywordResult", "starting search", startDate, startDate));
       
       Vector vAC = new Vector();
       Vector vS = new Vector();
@@ -245,25 +246,22 @@ public class GetACSearch implements Serializable
         sVDType = sVDType.trim();  //trim extra spaces if any
 
         String sSchemes = "";
-      //  if (sSearchAC.equals("ClassSchemeItems"))
-      //  {
-           sSchemes = (String)req.getParameter("listCSName");    //get selected CSI
-           if (sSchemes != null && sSchemes.equalsIgnoreCase("AllSchemes"))
-              sSchemes = "";
-           session.setAttribute("selCS", sSchemes);
-      //  }
+        sSchemes = (String)req.getParameter("listCSName");    //get selected CSI
+        if (sSchemes != null && sSchemes.equalsIgnoreCase("AllSchemes"))
+          sSchemes = "";
+        session.setAttribute("selCS", sSchemes);
         
         String sCDid = "";
-      //  if (sSearchAC.equals("PermissibleValue"))
-      //  {
-           sCDid = (String)req.getParameter("listCDName");    //get selected cd
-           session.setAttribute("serSelectedCD", sCDid);
-           if (sCDid != null && sCDid.equalsIgnoreCase("All Domains"))
-              sCDid = "";
-      //  }
+        sCDid = (String)req.getParameter("listCDName");    //get selected cd
+        session.setAttribute("serSelectedCD", sCDid);
+        if (sCDid != null && sCDid.equalsIgnoreCase("All Domains"))
+          sCDid = "";
       
         //filter by workflow status
-        String sStatus = getStatusValues(req, res, sSearchAC, "MainSearch");   //to get a string from multiselect list
+        boolean isBlock = false;
+        if (sSearchAC.equals("ObjectClass") || sSearchAC.equals("Property") || sSearchAC.equals("ConceptClass"))
+          isBlock = true;
+        String sStatus = getStatusValues(req, res, sSearchAC, "MainSearch", isBlock);   //to get a string from multiselect list
         if ((sStatus == null) || sStatus.equals("AllStatus"))
            sStatus = "";
      
@@ -272,32 +270,42 @@ public class GetACSearch implements Serializable
         session.setAttribute("serRegStatus", sRegStatus);   //store regstatus in the session
         if (sRegStatus == null || sRegStatus.equals("allReg")) sRegStatus = "";
 
-        //fitler by date created from date
+        //filter by derivation type
+        String sDerType = (String)req.getParameter("listDeriveType");
+        session.setAttribute("serDerType", sDerType);   //store Derivation Type in the session
+        if (sDerType == null || sDerType.equals("allDer")) sDerType = "";
+
+        //filter by domain data type
+        String sDataType = (String)req.getParameter("listDataType");
+        session.setAttribute("serDataType", sDataType);   //store Data Type in the session
+        if (sDataType == null || sDataType.equals("allData")) sDataType = "";        
+        
+        //filter by date created from date
         String sCreatedFrom = (String)req.getParameter("createdFrom");
         session.setAttribute("serCreatedFrom", sCreatedFrom);   //store date created From in the session
         if (sCreatedFrom == null) sCreatedFrom = "";
 
-        //fitler by date created To date
+        //filter by date created To date
         String sCreatedTo = (String)req.getParameter("createdTo");
         session.setAttribute("serCreatedTo", sCreatedTo);   //store date created To in the session
         if (sCreatedTo == null) sCreatedTo = "";
 
-        //fitler by date Modified from date
+        //filter by date Modified from date
         String sModifiedFrom = (String)req.getParameter("modifiedFrom");
         session.setAttribute("serModifiedFrom", sModifiedFrom);   //store date Modified From in the session
         if (sModifiedFrom == null) sModifiedFrom = "";
 
-        //fitler by date Modified To date
+        //filter by date Modified To date
         String sModifiedTo = (String)req.getParameter("modifiedTo");
         session.setAttribute("serModifiedTo", sModifiedTo);   //store date Modified To in the session
         if (sModifiedTo == null) sModifiedTo = "";
 
-        //fitler by Modifier type
+        //filter by Modifier type
         String sModifier = (String)req.getParameter("modifier");
         session.setAttribute("serModifier", sModifier);   //store Modifier in the session
         if ((sModifier == null) || sModifier.equals("allUsers")) sModifier = "";
 
-        //fitler by Creator type
+        //filter by Creator type
         String sCreator = (String)req.getParameter("creator");
         session.setAttribute("serCreator", sCreator);   //store Creator in the session
         if ((sCreator == null) || sCreator.equals("allUsers")) sCreator = "";
@@ -310,37 +318,37 @@ public class GetACSearch implements Serializable
         if (sSearchIn.equals("minID"))
         {
            String sMinID = sKeyword;
-           if ((sMinID != "") && sSearchAC.equals("DataElement"))
-           {
+//           if ((sMinID != "") && sSearchAC.equals("DataElement"))
+           //sMinID could be empty when search all Public ID for, example, a creator			           
+           if (sSearchAC.equals("DataElement"))
+           { 
              doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, 
                   sRegStatus, sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, 
-                  sModifier, "", "", sMinID, "", "", "", "", "", "", "", "", "", "",vAC);  //get the list of Data Elements
+                  sModifier, "", "", sMinID, "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements
            }
-           else if ((sMinID != "") && sSearchAC.equals("DataElementConcept"))
+           else if (sSearchAC.equals("DataElementConcept"))
            {
              doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
                   sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID, "", "", "", 
-                  dVersion, sCDid, "", vAC);  //get the list of Data Element Concepts
+                  dVersion, sCDid, "", "", "", "", vAC);  //get the list of Data Element Concepts
            }
-           else if ((sMinID != "") && sSearchAC.equals("ValueDomain"))
+           else if (sSearchAC.equals("ValueDomain"))
            {
              doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
                   sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID,  
-                  "", "", dVersion, sCDid, "", "", vAC);  //get the list of Value Domains
+                  "", "", dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains
            }
-           else if ((sMinID != "") && sSearchAC.equals("ConceptualDomain"))
+           else if (sSearchAC.equals("ConceptualDomain"))
            {
              doCDSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
-                  sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID, "", dVersion, vAC);  //get the list of Conceptual Domains
+                  sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID, "", dVersion, "", "", "", vAC);  //get the list of Conceptual Domains
            }
-           else if ((sMinID != "") && sSearchAC.equals("ObjectClass"))
-           {
-                do_caDSRSearch("", sContext, sStatus, sMinID, vAC, "OC");
-           }
-           else if ((sMinID != "") && sSearchAC.equals("Property"))
-           {
-                do_caDSRSearch("", sContext, sStatus, sMinID, vAC, "PROP");
-           }  
+           else if (sSearchAC.equals("ObjectClass"))
+                do_caDSRSearch("", sContext, sStatus, sMinID, vAC, "OC", "", "");
+           else if (sSearchAC.equals("Property"))
+                do_caDSRSearch("", sContext, sStatus, sMinID, vAC, "PROP", "", "");
+           else if (sSearchAC.equals("ConceptClass"))
+                vAC = this.do_ConceptSearch("", "", sContext, sStatus, sMinID, "", "", vAC);
 
         }
         //call function if seach in is crfName
@@ -357,7 +365,7 @@ public class GetACSearch implements Serializable
            {
               doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, 
                   sRegStatus, sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, 
-                  sModifier, "", "", "", "", "", "", sProtoID, sCRFName, "", "", "", "", "", vAC);  //get the list of Data Elements             
+                  sModifier, "", "", "", "", "", "", sProtoID, sCRFName, "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements             
            }
 
              // doDE_CRFSearch(sProtoID, sKeyword, sContext, sVersion, sStatus, sRegStatus, 
@@ -378,13 +386,13 @@ public class GetACSearch implements Serializable
            {
              doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, 
                   sRegStatus, sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, 
-                  sModifier, sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", vAC);   //get the list of Data Elements for docText searchin
+                  sModifier, sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);   //get the list of Data Elements for docText searchin
            }
         }
         //search in by names adn doc text long name and historic short cde name
         else if (sSearchIn.equals("NamesAndDocText"))
         {
-           String sDocTypes = "LONG_NAME, HISTORIC SHORT CDE NAME";         
+           String sDocTypes = "Preferred Question Text, HISTORIC SHORT CDE NAME";         
            String sDocText = sKeyword;
            if (sDocText == null || sDocText.equals(""))
               sDocText = "*";
@@ -392,7 +400,7 @@ public class GetACSearch implements Serializable
            {
              doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, 
                   sRegStatus, sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, 
-                  sModifier, sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", vAC);   //get the list of Data Elements for Names and docText searchin
+                  sModifier, sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);   //get the list of Data Elements for Names and docText searchin
            }
         }
         //search in by historical cde id
@@ -403,7 +411,7 @@ public class GetACSearch implements Serializable
            {
              doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, 
                   sRegStatus, sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, 
-                  sModifier, "", "", "", sHistID, "", "", "", "", "", "", "", "", "", vAC);  //get the list of Data Elements for Historical ID seach in
+                  sModifier, "", "", "", sHistID, "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements for Historical ID seach in
            }       
         }
         //search in by permissible value
@@ -414,13 +422,13 @@ public class GetACSearch implements Serializable
            {
              doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                   sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
-                  "", "", "", "", permValue, "", "", "", "", "", "", "", "", vAC); //get the list of Data Elements for permissible value search in
+                  "", "", "", "", permValue, "", "", "", "", "", "", "", "", "", "", sDerType, vAC); //get the list of Data Elements for permissible value search in
            }
            else if ((permValue != "") && sSearchAC.equals("ValueDomain"))
            {
              doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
                   sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",  
-                  permValue, "", dVersion, sCDid, "", "", vAC);  //get the list of Value Domains for permissible value search in
+                  permValue, "", dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains for permissible value search in
            }
         }
        
@@ -432,25 +440,59 @@ public class GetACSearch implements Serializable
            {
              doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                   sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
-                  "", "", "", "", "", sOrigin, "", "", "", "", "", "", "", vAC);  //get the list of Data Elements for origin search in
+                  "", "", "", "", "", sOrigin, "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements for origin search in
            }
            else if ((sOrigin != "") && sSearchAC.equals("DataElementConcept"))
            {
              doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
                   sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", sOrigin, 
-                  dVersion, sCDid, "", vAC);  //get the list of Data Element Concepts for origin search in
+                  dVersion, sCDid, "", "", "", "", vAC);  //get the list of Data Element Concepts for origin search in
            }
            else if ((sOrigin != "") && sSearchAC.equals("ValueDomain"))
            {
              doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
                   sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",  "", 
-                  sOrigin, dVersion, sCDid, "", "", vAC);  //get the list of Value Domains for origin search in
+                  sOrigin, dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains for origin search in
            }
            else if ((sOrigin != "") && sSearchAC.equals("ConceptualDomain"))
            {
              doCDSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
-                  sModifiedFrom, sModifiedTo, sCreator, sModifier, "", sOrigin, dVersion, vAC);  //get the list of Conceptual Domains for origin search in
+                  sModifiedFrom, sModifiedTo, sCreator, sModifier, "", sOrigin, dVersion, "", "", "", vAC);  //get the list of Conceptual Domains for origin search in
            }
+        }
+        //search in by conName
+        else if (sSearchIn.equals("concept"))
+        {
+           String sCon = sKeyword;
+           if ((sCon != "") && sSearchAC.equals("DataElement"))
+           {
+             doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
+                  sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
+                  "", "", "", "", "", "", "", "", "", "", "", "", "", "", sCon, sDerType, vAC);  //get the list of Data Elements for origin search in
+           }
+           else if ((sCon != "") && sSearchAC.equals("DataElementConcept"))
+           {
+             doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
+                  sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", "", 
+                  dVersion, sCDid, "", "", "", sCon, vAC);  //get the list of Data Element Concepts for origin search in
+           }
+           else if ((sCon != "") && sSearchAC.equals("ValueDomain"))
+           {
+             doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
+                  sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",  "", 
+                  "", dVersion, sCDid, "", "", "", "", sCon, sDataType, vAC);  //get the list of Value Domains for origin search in
+           }
+           else if ((sCon != "") && sSearchAC.equals("ConceptualDomain"))
+           {
+             doCDSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
+                  sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", dVersion, sCon, "", "", vAC);  //get the list of Conceptual Domains for origin search in
+           }
+           else if (sSearchAC.equals("PermissibleValue"))
+             doPVVMSearch("", sCDid, sCon, "", vAC);  //get the list of PVVM's
+          else if (sSearchAC.equals("ObjectClass"))
+            do_caDSRSearch("", sContext, sStatus, "", vAC, "OC", sCon, "");
+          else if (sSearchAC.equals("Property"))
+             do_caDSRSearch("", sContext, sStatus, "", vAC, "PROP", sCon, "");
         }
         //search in by names and definitions
         else
@@ -460,38 +502,41 @@ public class GetACSearch implements Serializable
           {
              doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                 sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
-                "", "", "", "", "", "", "", "", "", "", "", "", "", vAC);  //get the list of Data Elements
+                "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements
           }
           else if (sSearchAC.equals("DataElementConcept"))
           {
              doDECSearch("", sKeyword, "", sContext, sVersion, sStatus, sCreatedFrom, 
-                sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", "", dVersion, sCDid, "", vAC);  //get the list of Data Element Concepts for keyword
+                sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", 
+                "", "", dVersion, sCDid, "", "", "", "", vAC);  //get the list of Data Element Concepts for keyword
           }
           else if (sSearchAC.equals("ValueDomain"))
           {
              doVDSearch("", sKeyword, "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
                 sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",  
-                "", "", dVersion, sCDid, "", "", vAC);  //get the list of Value Domains for permissible value search in
+                "", "", dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains for permissible value search in
           }
           else if (sSearchAC.equals("PermissibleValue"))
-             doPVVMSearch(sKeyword, sCDid, vAC);  //get the list of PVVM's
+             doPVVMSearch(sKeyword, sCDid, "", "", vAC);  //get the list of PVVM's
           else if (sSearchAC.equals("ObjectClass"))
           {
-            sKeyword = filterName(sKeyword, "display");
-            do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "OC");
+            //sKeyword = filterName(sKeyword, "display");
+            do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "OC", "", "");
           }
           else if (sSearchAC.equals("Property"))
           {
-             sKeyword = filterName(sKeyword, "display");
-             do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "PROP");
+             //sKeyword = filterName(sKeyword, "display");
+             do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "PROP", "", "");
           }
           else if (sSearchAC.equals("ConceptualDomain"))
           {
              doCDSearch("", sKeyword, "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
-                sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", dVersion, vAC);  //get the list of Conceptual Domains
+                sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", dVersion, "", "", "", vAC);  //get the list of Conceptual Domains
           }
           else if (sSearchAC.equals("ClassSchemeItems"))
             doCSISearch(sKeyword, sContext, sSchemes, vAC);  //get the list of Class Scheme Items
+          else if (sSearchAC.equals("ConceptClass"))
+            vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
         }
 
         //append the searched data with old data.
@@ -510,10 +555,11 @@ public class GetACSearch implements Serializable
             session.setAttribute("CheckList", vCheckList); //empty the check list in the new search when not appended.
         }
         // do ID's up here because it will need an existing ID stack first time into getResult
-        if (sSearchAC.equals("DataElement")||sSearchAC.equals("DataElementConcept")
-        || sSearchAC.equals("ValueDomain")||sSearchAC.equals("ConceptualDomain")
-        || sSearchAC.equals("ObjectClass")||sSearchAC.equals("Property")
-        || sSearchAC.equals("ClassSchemeItems")||sSearchAC.equals("PermissibleValue"))
+        if (sSearchAC.equals("DataElement") || sSearchAC.equals("DataElementConcept")
+        || sSearchAC.equals("ValueDomain") || sSearchAC.equals("ConceptualDomain")
+        || sSearchAC.equals("ObjectClass") || sSearchAC.equals("Property")
+        || sSearchAC.equals("ClassSchemeItems") || sSearchAC.equals("PermissibleValue")
+        || sSearchAC.equals("ConceptClass"))
         {
           Stack vSearchIDStack = new Stack();
           session.setAttribute("vSearchIDStack", vSearchIDStack); 
@@ -558,6 +604,8 @@ public class GetACSearch implements Serializable
             getCDResult(req, res, vResult, "");
           else if (sSearchAC.equals("ClassSchemeItems"))
             getCSIResult(req, res, vResult, "");
+          else if (sSearchAC.equals("ConceptClass"))
+             evs.get_Result(req, res, vResult, "");
   
           //store result vector in the attribute
           session.setAttribute("results", vResult);
@@ -689,7 +737,7 @@ public class GetACSearch implements Serializable
            session.setAttribute("serSelectedCD", sStatus);
         }
         else
-           sStatus = getStatusValues(m_classReq, m_classRes, sSearchAC, "MainSearch");   //to get a string from multiselect list
+           sStatus = getStatusValues(m_classReq, m_classRes, sSearchAC, "MainSearch", false);   //to get a string from multiselect list
 
         if ((sStatus == null) || sStatus.equals("AllStatus") || sStatus.equals("All Domains"))
            sStatus = "";
@@ -853,7 +901,7 @@ public class GetACSearch implements Serializable
       // for Back button, put search results on a stack
     if (sSearchAC.equals("DataElement")||sSearchAC.equals("DataElementConcept")
     || sSearchAC.equals("ValueDomain")||sSearchAC.equals("ConceptualDomain")
-    || sSearchAC.equals("ObjectClass")||sSearchAC.equals("Property")
+    || sSearchAC.equals("ObjectClass")||sSearchAC.equals("Property")||sSearchAC.equals("ConceptClass")
     || sSearchAC.equals("ClassSchemeItems")||sSearchAC.equals("PermissibleValue"))
     {
     try
@@ -1023,6 +1071,10 @@ public class GetACSearch implements Serializable
       //call the method to get the selected rows
       if (menuAction.equals("BEDisplay"))
          getRowSelectedBEDisplay(req, res);
+      else if (actType.equals("Monitor"))
+          getRowSelected(req, res, false);
+      else if (actType.equals("Unmonitor"))
+          getRowSelected(req, res, false);
       //get checked rows for data element in all cases and all others only for search for create
       else if (sSearchAC.equals("DataElement") || (!menuAction.equals("searchForCreate") && !actType.equals("Attribute")))
          getRowSelected(req, res, false);
@@ -1047,7 +1099,7 @@ public class GetACSearch implements Serializable
         getCDResult(req, res, vResult, "");
       else if (sSearchAC.equals("ClassSchemeItems"))
         getCSIResult(req, res, vResult, "");
-      else if (sSearchAC.equals("ObjectClass") || sSearchAC.equals("Property"))
+      else if (sSearchAC.equals("ObjectClass") || sSearchAC.equals("Property") || sSearchAC.equals("ConceptClass"))
         evs.get_Result(req, res, vResult, "");
       else if (isBlockSearch == true)
         evs.get_Result(req, res, vResult, "");
@@ -1066,6 +1118,56 @@ public class GetACSearch implements Serializable
       logger.fatal("ERROR - GetACSearch-showResult : " + e.toString());
     }
   }
+
+  /**
+   * Refresh the search results.
+   * 
+   * @param req Servlet request.
+   * @param res Servlet response.
+   * @param actType The action string.
+   */
+  public void getACShowResult2(HttpServletRequest req, HttpServletResponse res, String actType)
+  {
+      HttpSession session = req.getSession();
+      String sSearchAC = "";
+      String menuAction = (String)session.getAttribute("MenuAction");
+      if (menuAction.equals("searchForCreate"))
+          sSearchAC = (String)session.getAttribute("creSearchAC");
+      else
+          sSearchAC = (String)session.getAttribute("searchAC");
+
+   /*   EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet); 
+      boolean isBlockSearch = false;
+      String dtsVocab = req.getParameter("listContextFilterVocab");
+      if (dtsVocab != null && !dtsVocab.equals("")) isBlockSearch = true; */
+      
+      //call method to get the final result vector
+      Vector vResult = new Vector();
+        //get the final result for selected component
+      if (sSearchAC.equals("DataElement"))
+        getDEResult(req, res, vResult, "");
+      else if (sSearchAC.equals("DataElementConcept"))
+        getDECResult(req, res, vResult, "");
+      else if (sSearchAC.equals("ValueDomain"))
+        getVDResult(req, res, vResult, "");
+      else if (sSearchAC.equals("PermissibleValue"))
+        getPVVMResult(req, res, vResult, "");
+      else if (sSearchAC.equals("Questions"))
+        getQuestionResult(req, res, vResult);
+      else if (sSearchAC.equals("ConceptualDomain"))
+        getCDResult(req, res, vResult, "");
+      else if (sSearchAC.equals("ClassSchemeItems"))
+        getCSIResult(req, res, vResult, "");
+    //  else if (sSearchAC.equals("ObjectClass") || sSearchAC.equals("Property"))
+    //    evs.get_Result(req, res, vResult, "");
+    //  else if (isBlockSearch == true)
+    //    evs.get_Result(req, res, vResult, "");
+  
+      if(actType.equals("BEDisplayRows")) 
+        session.setAttribute("resultsBEDisplay", vResult);
+      else
+        session.setAttribute("results", vResult);
+}
 
   /**
    * To get the sorted result vector to display for selected sort type, called from NCICurationServlet.
@@ -1155,6 +1257,11 @@ public class GetACSearch implements Serializable
           evs.get_Result(req, res, vResult, "");
           //get_Result(req, res, vResult, "true");
         }
+        else if (sComponent.equals("ConceptClass"))
+        {
+          this.getEVSSortedRows(req, res);          //sort the concept class
+          evs.get_Result(req, res, vResult, "");
+        }
         session.setAttribute("results", vResult);
       }
     }
@@ -1225,7 +1332,7 @@ public class GetACSearch implements Serializable
    */
   private void doDE_CRFSearch(String ProtoWord, String CRFWord, String ContName, String sVersion, 
           String ASLName, String regStatus, String sCreatedFrom, String sCreatedTo, String sModifiedFrom, 
-          String sModifiedTo, String sCreator, String sModifier, Vector vList)  // returns list of Data Elements
+          String sModifiedTo, String sCreator, String sModifier, String derType, Vector vList)  // returns list of Data Elements
   {
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -1238,7 +1345,7 @@ public class GetACSearch implements Serializable
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_CRF_DE(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_CRF_DE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
 
         // Now tie the placeholders for out parameters.
         CStmt.registerOutParameter(6, OracleTypes.CURSOR);
@@ -1257,6 +1364,7 @@ public class GetACSearch implements Serializable
         CStmt.setString(12, sModifier);
         CStmt.setString(13, sVersion);
         CStmt.setString(14, regStatus);
+        CStmt.setString(15, derType);
 
          // Now we are ready to call the stored procedure
         boolean bExcuteOk = CStmt.execute();
@@ -1324,8 +1432,8 @@ public class GetACSearch implements Serializable
             //get pv and historic cde id with counts
             DEBean = this.getMultiRecordsResultOther(rs, DEBean, false);
             //doc text attributes
-            DEBean.setDOC_TEXT_LONG_NAME(rs.getString("long_name_doc_text"));
-            DEBean.setDOC_TEXT_HISTORIC_NAME(rs.getString("hist_cde_doc_text"));
+            DEBean.setDOC_TEXT_PREFERRED_QUESTION(rs.getString("long_name_doc_text"));
+           // DEBean.setDOC_TEXT_HISTORIC_NAME(rs.getString("hist_cde_doc_text"));
             //DEBean = this.getMultiRecordsResult(rs, DEBean);
 
             vList.addElement(DEBean);  //add the bean to a vector
@@ -1508,9 +1616,10 @@ public class GetACSearch implements Serializable
   public void doDESearch(String DE_IDSEQ, String InString, String ContID, String ContName, 
       String ContUse, String sVersion, double dVersion, String ASLName, String regStatus, 
       String sCreatedFrom, String sCreatedTo, String sModifiedFrom, String sModifiedTo, 
-      String sCreator, String sModifier, String DocText, String docTypes, String CDE_ID, String histID, 
-      String permValue, String sOrigin, String sProtoId, String crfName, String pvIDseq, 
-      String vdIDseq, String decIDseq, String cdIDseq, String cscsiIDseq, Vector vList)  // returns list of Data Elements
+      String sCreator, String sModifier, String DocText, String docTypes, String CDE_ID, 
+      String histID, String permValue, String sOrigin, String sProtoId, String crfName, 
+      String pvIDseq, String vdIDseq, String decIDseq, String cdIDseq, String cscsiIDseq, 
+      String conIDseq, String conName, String derType, Vector vList)  // returns list of Data Elements
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
@@ -1527,6 +1636,8 @@ public class GetACSearch implements Serializable
       boolean isProtoCRF = false;
       if (sProtoId != null && !sProtoId.equals("")) isProtoCRF = true;
       if (isProtoCRF == false && crfName != null && !crfName.equals("")) isProtoCRF = true;
+      Vector derAllTypes = (Vector)session.getAttribute("allDerTypes");
+      if (derAllTypes == null) derAllTypes = new Vector();
       
       //get the existing desHash table if appendsearch
       String strAppend = (String)session.getAttribute("AppendAction");
@@ -1539,8 +1650,8 @@ public class GetACSearch implements Serializable
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_DE" + 
-            "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_DE" + 
+        "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
 
         // Now tie the placeholders for out parameters.
         CStmt.registerOutParameter(7, OracleTypes.CURSOR);
@@ -1573,6 +1684,9 @@ public class GetACSearch implements Serializable
         CStmt.setString(27, vdIDseq);
         CStmt.setString(28, cscsiIDseq);
         CStmt.setString(29, cdIDseq);
+        CStmt.setString(30, derType);
+        CStmt.setString(31, conName);
+        CStmt.setString(32, conIDseq);
         //capture the duration
         //logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "begin executing search", startDate, new java.util.Date()));
          // Now we are ready to call the stored procedure
@@ -1668,10 +1782,23 @@ public class GetACSearch implements Serializable
                //get pv and historic cde id with counts
                DEBean = this.getMultiRecordsResultOther(rs, DEBean, isProtoCRF);
                //doc text attributes
-               DEBean.setDOC_TEXT_LONG_NAME(rs.getString("long_name_doc_text"));
-               DEBean.setDOC_TEXT_HISTORIC_NAME(rs.getString("hist_cde_doc_text"));
+               DEBean.setDOC_TEXT_PREFERRED_QUESTION(rs.getString("long_name_doc_text"));
+              // DEBean.setDOC_TEXT_HISTORIC_NAME(rs.getString("hist_cde_doc_text"));
               // DEBean = this.getMultiRecordsResultDocText(rs, DEBean);
-               
+               //check if it is component
+               String derRel = rs.getString("derivation_type");
+               if (derRel == null) derRel = "";
+               String acID = DEBean.getDE_DE_IDSEQ();
+               if (!derRel.equals("") && !derAllTypes.contains(derRel))
+               {
+                 acID = derRel;
+                 derRel = "Component";
+               }              
+               DEBean.setDE_DER_RELATION(derRel);
+               DEBean.setDE_DER_REL_IDSEQ(acID);
+               DEBean.setAC_CONCEPT_NAME(rs.getString("con_name"));
+               DEBean.setALTERNATE_NAME(rs.getString("alt_name"));
+               DEBean.setREFERENCE_DOCUMENT(rs.getString("rd_name"));
                DEBean.setDE_TYPE_NAME("PRIMARY");                   
                //add the combination usedbycontext+acID and desIdseq in the hash table
                if ((rs.getString("used_by_context") != null) && !rs.getString("used_by_context").equals(""))
@@ -1702,7 +1829,7 @@ public class GetACSearch implements Serializable
     }
     catch(Exception e)
     {
-      //System.err.println("other problem in GetACSearch-DESearch: " + e);
+System.err.println("other problem in GetACSearch-DESearch: " + e);
       logger.fatal("ERROR - GetACSearch-DESearch for other : " + e.toString());
     }
     try
@@ -1735,7 +1862,7 @@ public class GetACSearch implements Serializable
      String sText = "";
      Integer iCount;
     //doc type min_hist_cde_id
-     sText = rst.getString("min_hist_cde_name");
+/*     sText = rst.getString("min_hist_cde_name");
      if (sText != null && !sText.equals(""))
      {
        deBean.setDE_HIST_CDE_ID(sText);
@@ -1743,7 +1870,7 @@ public class GetACSearch implements Serializable
        iCount = new Integer(sText);
        deBean.setDE_HIST_CDE_ID_COUNT(iCount);                 
      }
-     //permissible value 
+*/     //permissible value 
      sText = rst.getString("min_value");
      if (sText != null && !sText.equals(""))
      {
@@ -1786,7 +1913,7 @@ public class GetACSearch implements Serializable
    * 
    * @throws Exception
    */
-  private DE_Bean getMultiRecordsResultDocText(ResultSet rst, DE_Bean deBean) throws Exception
+ /* private DE_Bean getMultiRecordsResultDocText(ResultSet rst, DE_Bean deBean) throws Exception
   {
      String sText = "";
      Integer iCount;
@@ -1839,10 +1966,10 @@ public class GetACSearch implements Serializable
      sText = rst.getString("long_name_doc_text");
      if (sText != null && !sText.equals(""))
      {
-       deBean.setDOC_TEXT_LONG_NAME(sText);
+       deBean.setDOC_TEXT_PREFERRED_QUESTION(sText);
        sText = rst.getString("long_name_doc_cnt");
        iCount = new Integer(sText);
-       deBean.setDOC_TEXT_LONG_NAME_COUNT(iCount);                 
+       deBean.setDOC_TEXT_PREFERRED_QUESTION_COUNT(iCount);                 
      }
      //doc type IMAGE_FILE
      sText = rst.getString("img_file_doc_text");
@@ -1935,7 +2062,7 @@ public class GetACSearch implements Serializable
        deBean.setDOC_TEXT_OTHER_REF_TYPES_COUNT(iCount);                 
      }
      return deBean;
-  }
+  } */
  
 
  /**
@@ -1973,7 +2100,8 @@ public class GetACSearch implements Serializable
   public void doDECSearch(String DEC_IDSEQ, String InString, String ContID, String ContName, 
       String sVersion, String ASLName, String sCreatedFrom, String sCreatedTo, String sModifiedFrom, 
       String sModifiedTo, String sCreator, String sModifier, String DEC_ID, String sObject, 
-      String sProperty, String sOrigin, double dVersion, String sCDid, String deIDseq, Vector vList)  // returns list of Data Element Concepts
+      String sProperty, String sOrigin, double dVersion, String sCDid, String deIDseq, 
+      String cscsiIDseq, String conIDseq, String conName, Vector vList)  // returns list of Data Element Concepts
   {
     //capture the duration
     java.util.Date exDate = new java.util.Date();          
@@ -1990,7 +2118,7 @@ public class GetACSearch implements Serializable
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_DEC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+          CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_DEC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
         // Now tie the placeholders with actual parameters.
         CStmt.registerOutParameter(7, OracleTypes.CURSOR);
         CStmt.setString(1,ContID);
@@ -2012,6 +2140,9 @@ public class GetACSearch implements Serializable
         CStmt.setDouble(18, dVersion);
         CStmt.setString(19, sCDid);
         CStmt.setString(20, deIDseq);
+        CStmt.setString(21, cscsiIDseq);
+        CStmt.setString(22, conName);
+        CStmt.setString(23, conIDseq);
 
          // Now we are ready to call the stored procedure
         boolean bExcuteOk = CStmt.execute();
@@ -2077,6 +2208,9 @@ public class GetACSearch implements Serializable
              DECBean.setDEC_MODIFIED_BY(rs.getString("modified_by"));  
              DECBean.setDEC_OBJ_ASL_NAME(rs.getString("oc_asl_name"));
              DECBean.setDEC_PROP_ASL_NAME(rs.getString("prop_asl_name"));  
+             DECBean.setAC_CONCEPT_NAME(rs.getString("con_name"));
+             DECBean.setALTERNATE_NAME(rs.getString("alt_name"));
+             DECBean.setREFERENCE_DOCUMENT(rs.getString("rd_name"));
              
              vList.addElement(DECBean);    //add DEC bean to vector
              //store the ocl name or propl name in the request 
@@ -2087,7 +2221,7 @@ public class GetACSearch implements Serializable
                 m_classReq.setAttribute("resultLabel", reslabel + DECBean.getDEC_PROPL_NAME());
           }  //END WHILE
         }   //END IF
-      }
+      } 
     }
     catch(Exception e)
     {
@@ -2146,7 +2280,8 @@ public class GetACSearch implements Serializable
   public void doVDSearch(String VD_IDSEQ, String InString, String ContID, String ContName, 
       String sVersion, String VDType, String ASLName, String sCreatedFrom, String sCreatedTo, 
       String sModifiedFrom, String sModifiedTo, String sCreator, String sModifier, String VD_ID, 
-      String sPermValue, String sOrigin, double dVersion, String sCDid, String pvIDseq, String deIDseq, Vector vList)  // returns list of Value Domains
+      String sPermValue, String sOrigin, double dVersion, String sCDid, String pvIDseq, 
+      String deIDseq, String cscsiIDseq, String conIDseq, String conName, String sData, Vector vList)  // returns list of Value Domains
   {
     //capture the duration
     java.util.Date exDate = new java.util.Date();          
@@ -2163,7 +2298,7 @@ public class GetACSearch implements Serializable
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_VD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+          CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
         // Now tie the placeholders with actual parameters.
         CStmt.registerOutParameter(7, OracleTypes.CURSOR);
         CStmt.setString(1,ContID);
@@ -2186,7 +2321,10 @@ public class GetACSearch implements Serializable
         CStmt.setString(19, sCDid);
         CStmt.setString(20, pvIDseq);
         CStmt.setString(21, deIDseq);
-       
+        CStmt.setString(22, sData);
+        CStmt.setString(23, cscsiIDseq);
+        CStmt.setString(24, conName);
+        CStmt.setString(25, conIDseq);
          // Now we are ready to call the stored procedure
         boolean bExcuteOk = CStmt.execute();
         //store the output in the resultset
@@ -2258,6 +2396,9 @@ public class GetACSearch implements Serializable
              VDBean.setVD_CREATED_BY(rs.getString("created_by"));
              VDBean.setVD_MODIFIED_BY(rs.getString("modified_by"));
              VDBean.setVD_REP_ASL_NAME(rs.getString("rep_asl_name"));
+             VDBean.setAC_CONCEPT_NAME(rs.getString("con_name"));
+             VDBean.setALTERNATE_NAME(rs.getString("alt_name"));
+             VDBean.setREFERENCE_DOCUMENT(rs.getString("rd_name"));
              //get permissible value
              s = rs.getString("min_value");
              if (s != null && !s.equals(""))
@@ -2318,10 +2459,10 @@ public class GetACSearch implements Serializable
    * @param vList returns Vector of DEbean.
    *
    */
-   public void doCDSearch(String CD_IDSEQ, String InString, String ContID, String ContName, 
+   public Vector doCDSearch(String CD_IDSEQ, String InString, String ContID, String ContName, 
         String sVersion, String ASLName, String sCreatedFrom, String sCreatedTo, String sModifiedFrom, 
         String sModifiedTo, String sCreator, String sModifier, String CD_ID, String sOrigin, 
-        double dVersion, Vector vList)  // returns list of conceptual domains
+        double dVersion, String conName, String conID, String sVM, Vector vList)  // returns list of conceptual domains
   {
     //capture the duration
     java.util.Date exDate = new java.util.Date();          
@@ -2337,7 +2478,7 @@ public class GetACSearch implements Serializable
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_CD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
 
         CStmt.registerOutParameter(7, OracleTypes.CURSOR);
         CStmt.setString(1,InString);
@@ -2355,6 +2496,9 @@ public class GetACSearch implements Serializable
         CStmt.setString(14, sModifier);
         CStmt.setString(15, sVersion);
         CStmt.setDouble(16, dVersion);
+        CStmt.setString(17, conName);
+        CStmt.setString(18, conID);
+        CStmt.setString(19, sVM);
 
          // Now we are ready to call the stored procedure
         boolean bExcuteOk = CStmt.execute();
@@ -2431,6 +2575,7 @@ public class GetACSearch implements Serializable
     }
     //capture the duration
  //   logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "end search", exDate,  new java.util.Date()));
+    return vList;
   }  //endCDsearch
 
   /**
@@ -2693,7 +2838,7 @@ public class GetACSearch implements Serializable
    *
    */
   public String getStatusValues(HttpServletRequest req, HttpServletResponse res,
-         String sSearchAC, String sAction)
+         String sSearchAC, String sAction, boolean isBlockSearch)
   {
     String sStatus = "";
     if(sSearchAC == null) sSearchAC = "";
@@ -2743,6 +2888,8 @@ public class GetACSearch implements Serializable
           sStatus = "DRAFT NEW";
           vStatusList.addElement("DRAFT NEW");
         }
+        else if (isBlockSearch)  //select version and workflow status to display if not already
+          this.selVerWFStatBlock(sAction);
       }
       //store it in the session to refresh the list on the page
       if (sAction.equals("searchForCreate"))
@@ -2761,6 +2908,46 @@ public class GetACSearch implements Serializable
     return sStatus;
   }
 
+  private void selVerWFStatBlock(String sAction)
+  {
+    try
+    {
+      HttpSession session = m_classReq.getSession();
+      Vector vSel = new Vector();
+      Vector vDisp = new Vector();
+      if (sAction.equals("searchForCreate"))
+      {
+        vSel = (Vector)session.getAttribute("creSelectedAttr");
+        vDisp = (Vector)session.getAttribute("creAttributeList");
+      }
+      else
+      {
+        vSel = (Vector)session.getAttribute("selectedAttr");
+        vDisp = (Vector)session.getAttribute("serAttributeList");        
+      }
+      //first get the index of version and add it to vsel
+      int iInd = -1;
+      if (vDisp.contains("Version"))
+        iInd = vDisp.indexOf("Version");
+      if (!vSel.contains("Version") && iInd > 0)
+        vSel.insertElementAt("Version", iInd);
+      //get index of wf status and add it to vsel
+      iInd = -1;
+      if (vDisp.contains("Workflow Status"))
+        iInd = vDisp.indexOf("Workflow Status");
+      if (!vSel.contains("Workflow Status") && iInd > 0)
+        vSel.insertElementAt("Workflow Status", iInd);
+      //store it back in teh session
+      if (sAction.equals("searchForCreate"))
+        session.setAttribute("creSelectedAttr", vSel);
+      else
+        session.setAttribute("selectedAttr", vSel);
+    }
+    catch(Exception e)
+    {
+      logger.fatal("Error - selVerWFStatBlock " + e.toString());
+    }
+  }
    /**
    * To get the list of doc types selected, called from getACKeywordResult and getACShowResult methods.
    * selected attribute values from the multi select list is stored in session vector 'selectedAttr'.
@@ -2822,8 +3009,8 @@ public class GetACSearch implements Serializable
         vSelectedAttr = (Vector)session.getAttribute("selectedAttr");
       }
       //add the selected type to the default display attributes
-      if (vDocTypeList.contains("LONG_NAME") && !vSelectedAttr.contains("Long Name Document Text"))
-        vSelectedAttr.addElement("Long Name Document Text");
+      if (vDocTypeList.contains("Preferred Question Text") && !vSelectedAttr.contains("Preferred Question Text Document Text"))
+        vSelectedAttr.addElement("Preferred Question Text Document Text");
         
       if (vDocTypeList.contains("HISTORIC SHORT CDE NAME") && !vSelectedAttr.contains("Historic Short CDE Name Document Text"))
         vSelectedAttr.addElement("Historic Short CDE Name Document Text");
@@ -2983,7 +3170,9 @@ public class GetACSearch implements Serializable
       {
         DE_Bean DEBean = new DE_Bean();
         DEBean = (DE_Bean)vRSel.elementAt(i);
-
+        String sName = DEBean.getDE_LONG_NAME();
+        if (sName == null || sName.equals("")) sName = DEBean.getDE_PREFERRED_NAME();
+        
         vSearchID.addElement(DEBean.getDE_DE_IDSEQ());
         vSearchName.addElement(DEBean.getDE_PREFERRED_NAME());
         vSearchLongName.addElement(DEBean.getDE_LONG_NAME());
@@ -3002,6 +3191,8 @@ public class GetACSearch implements Serializable
         if (vSelAttr.contains("Value Domain")) vResult.addElement(DEBean.getDE_VD_NAME());
         if (vSelAttr.contains("Name")) vResult.addElement(DEBean.getDE_PREFERRED_NAME());
         if (vSelAttr.contains("Origin")) vResult.addElement(DEBean.getDE_SOURCE());
+        if (vSelAttr.contains("Concept Name")) 
+          vResult = this.addMultiRecordConcept(DEBean.getAC_CONCEPT_NAME(), sName, DEBean.getDE_DEC_IDSEQ(), DEBean.getDE_VD_IDSEQ(), "DataElement", vResult);
        // if (vSelAttr.contains("Protocol ID")) vResult.addElement(DEBean.getDE_PROTOCOL_ID());
        // if (vSelAttr.contains("CRF Name")) vResult.addElement(DEBean.getDE_CRF_NAME());
         //put protocol id and crf with more hyperlink for multirecord attributes          
@@ -3012,19 +3203,19 @@ public class GetACSearch implements Serializable
         if (vSelAttr.contains("Date Created")) vResult.addElement(DEBean.getDE_DATE_CREATED());
         if (vSelAttr.contains("Modifier")) vResult.addElement(DEBean.getDE_MODIFIED_BY());
         if (vSelAttr.contains("Date Modified")) vResult.addElement(DEBean.getDE_DATE_MODIFIED());
-        if (vSelAttr.contains("Comments/Change Note")) vResult.addElement(DEBean.getDE_CHANGE_NOTE());
+        if (vSelAttr.contains("Change Note")) vResult.addElement(DEBean.getDE_CHANGE_NOTE());
    //     if (vSelAttr.contains("Language")) vResult.addElement(DEBean.getDE_LANGUAGE());
         //get doc text and other multirecord attributes          
         vResult = this.addMultiRecordResultOther(vSelAttr, DEBean, vResult, "Other");
-        if (vSelAttr.contains("Long Name Document Text")) vResult.addElement(DEBean.getDOC_TEXT_LONG_NAME());          
-        if (vSelAttr.contains("Historic Short CDE Name Document Text")) vResult.addElement(DEBean.getDOC_TEXT_HISTORIC_NAME());          
+       // if (vSelAttr.contains("Preferred Question Text Document Text")) vResult.addElement(DEBean.getDOC_TEXT_PREFERRED_QUESTION());          
+       // if (vSelAttr.contains("Historic Short CDE Name Document Text")) vResult.addElement(DEBean.getDOC_TEXT_HISTORIC_NAME());          
+        if (vSelAttr.contains("Alternate Names"))
+          vResult = this.addMultiRecordAltName(DEBean.getALTERNATE_NAME(), sName, DEBean.getDE_DE_IDSEQ(), vResult);
         if (vSelAttr.contains("Reference Documents"))
-        {
-            String hyperText = "<a href=" + "\"" + "javascript:openRefDocWindow('ALL TYPES','" + 
-            DEBean.getDE_DE_IDSEQ() + "')" + "\"" + "><b>Details_>></b></a>";
-            vResult.addElement(hyperText);          
-        }
+          vResult = this.addMultiRecordRDName(DEBean.getREFERENCE_DOCUMENT(), sName, DEBean.getDE_DE_IDSEQ(), vResult);
         //vResult = this.addMultiRecordResultDocText(vSelAttr, DEBean, vResult);
+        if (vSelAttr.contains("Derivation Relationship"))
+          vResult = this.addMultiRecordDerDE(DEBean, vResult);
       }
       session.setAttribute("SearchID", vSearchID);
       session.setAttribute("SearchName", vSearchName);
@@ -3072,6 +3263,107 @@ public class GetACSearch implements Serializable
     }
   }
 
+  private Vector addMultiRecordDerDE(DE_Bean de, Vector vRes)
+  {
+    String hyperText = "";
+    String derRel = de.getDE_DER_RELATION();
+    if (derRel != null && !derRel.equals(""))
+    {
+      String acID = de.getDE_DER_REL_IDSEQ();            
+      hyperText = derRel + "\n<a href=" + "\"" + "javascript:openDerRelationDetail('" + 
+      de.getDE_LONG_NAME() + "', '" + acID  + "', '" + derRel + "')" + "\"><b>Details_>></b></a>";
+    }
+    vRes.addElement(hyperText); 
+    //return teh vector
+    return vRes;
+  }
+
+  /**
+   * adds more hyperlink for concept attributes in the search results, which would open new window to get concepts of AC
+    * @param vSel vector of ac display attributes bean 
+    * @param deBean current de bean
+    * @param vRes display result vector
+    * @param disType type of attribute to make the more hyperlink
+    * @return vector of modified display result vector
+    * @throws java.lang.Exception
+   */
+   private Vector addMultiRecordConDomain(String cdName, String acName, Vector vRes) throws Exception
+   {
+     String hyperText = "";
+     if (cdName != null && !cdName.equals(""))
+     {
+       UtilService util = new UtilService();
+       acName = util.parsedStringSingleQuote(acName);
+       acName = util.parsedStringDoubleQuoteJSP(acName);
+       hyperText = "<a href=" + "\"" + "javascript:openConDomainWindow('" + 
+         acName + "')" + "\"" + "><br><b>Details_>></b></a>";
+       vRes.addElement(cdName + "  " + hyperText);      
+     }
+     else
+       vRes.addElement("");
+     return vRes;
+   }
+
+   /**
+    * adds more hyperlink for concept attributes in the search results, which would open new window to get concepts of AC
+     * @param vSel vector of ac display attributes bean 
+     * @param deBean current de bean
+     * @param vRes display result vector
+     * @param disType type of attribute to make the more hyperlink
+     * @return vector of modified display result vector
+     * @throws java.lang.Exception
+    */
+    private Vector addMultiRecordConcept(String conName, String acName, 
+        String acIDseq, String ac2IDseq, String acType, Vector vRes) throws Exception
+    {
+      String hyperText = "";
+      if (conName != null && !conName.equals(""))
+      {
+        UtilService util = new UtilService();
+        acName = util.parsedStringSingleQuote(acName);
+        acName = util.parsedStringDoubleQuoteJSP(acName);
+        hyperText = "<a href=" + "\"" + "javascript:openConceptWindow('" + acName +"','" + 
+              acIDseq + "','" + ac2IDseq + "','" + acType + "')" + "\"" + "><br><b>Details_>></b></a>";
+        vRes.addElement(conName + "  " + hyperText);      
+      }
+      else
+        vRes.addElement("");
+      return vRes;
+    }
+
+     private Vector addMultiRecordAltName(String altName, String acName, String acID, Vector vRes) throws Exception
+     {
+       String hyperText = "";
+       if (altName != null && !altName.equals(""))
+       {
+         UtilService util = new UtilService();
+         acName = util.parsedStringSingleQuote(acName);
+         acName = util.parsedStringDoubleQuoteJSP(acName);
+         hyperText = "<a href=" + "\"" + "javascript:openAltNameWindow('ALL','" + 
+                 acID + "')" + "\"" + "><br><b>Details_>></b></a>";
+         vRes.addElement(altName + "  " + hyperText);      
+       }
+       else
+         vRes.addElement("");
+       return vRes;
+     }
+
+     private Vector addMultiRecordRDName(String rdName, String acName, String acID, Vector vRes) throws Exception
+     {
+       String hyperText = "";
+       if (rdName != null && !rdName.equals(""))
+       {
+         UtilService util = new UtilService();
+         acName = util.parsedStringSingleQuote(acName);
+         acName = util.parsedStringDoubleQuoteJSP(acName);
+         hyperText = "<a href=" + "\"" + "javascript:openRefDocWindow('ALL TYPES','" +
+               acID + "')" + "\"" + "><br><b>Details_>></b></a>";
+         vRes.addElement(rdName + "  " + hyperText);      
+       }
+       else
+         vRes.addElement("");
+       return vRes;
+     }
 
  /**
   * adds more hyperlink for some attributes in the search results, which would open new window to get all attributes of AC
@@ -3095,7 +3387,7 @@ public class GetACSearch implements Serializable
             if (acName == null || acName.equals("")) acName = deBean.getDE_PREFERRED_NAME();
             UtilService util = new UtilService();
             acName = util.parsedStringSingleQuote(acName);
-            acName = util.parsedString(acName);
+            acName = util.parsedStringDoubleQuoteJSP(acName);
             hyperText = "<a href=" + "\"" + "javascript:openProtoCRFWindow('" + acName +"','" + 
                   deBean.getDE_DE_IDSEQ() + "')" + "\"" + "><b>More_>></b></a>";
             vRes.addElement(deBean.getDE_PROTOCOL_ID() + "  " + hyperText);
@@ -3110,7 +3402,7 @@ public class GetACSearch implements Serializable
             if (acName == null || acName.equals("")) acName = deBean.getDE_PREFERRED_NAME();
             UtilService util = new UtilService();
             acName = util.parsedStringSingleQuote(acName);
-            acName = util.parsedString(acName);
+            acName = util.parsedStringDoubleQuoteJSP(acName);
             hyperText = "<a href=" + "\"" + "javascript:openProtoCRFWindow('" + acName +"','" + 
                   deBean.getDE_DE_IDSEQ() + "')" + "\"" + "><b>More_>></b></a>";
             vRes.addElement(deBean.getDE_CRF_NAME() + "  " + hyperText);
@@ -3120,7 +3412,7 @@ public class GetACSearch implements Serializable
     else
     {
         //historical cde id
-        if (vSel.contains("Historical CDE ID") && deBean.getDE_HIST_CDE_ID_COUNT() != null 
+/*        if (vSel.contains("Historical CDE ID") && deBean.getDE_HIST_CDE_ID_COUNT() != null 
               && deBean.getDE_HIST_CDE_ID_COUNT().intValue() >= 1) 
         {
             hyperText = "<a href=" + "\"" + "javascript:openAltNameWindow('HISTORICAL_CDE_ID','" + 
@@ -3128,7 +3420,7 @@ public class GetACSearch implements Serializable
             vRes.addElement(deBean.getDE_HIST_CDE_ID() + "  " + hyperText);
         }
         else if (vSel.contains("Historical CDE ID")) vRes.addElement(deBean.getDE_HIST_CDE_ID());
-        
+*/        
         //permissible value
         if (vSel.contains("Permissible Value") && deBean.getDE_Permissible_Value_Count() != null 
               && deBean.getDE_Permissible_Value_Count().intValue() >= 1) 
@@ -3137,7 +3429,7 @@ public class GetACSearch implements Serializable
             if (acName == null || acName.equals("")) acName = deBean.getDE_PREFERRED_NAME();
             UtilService util = new UtilService();
             acName = util.parsedStringSingleQuote(acName);
-            acName = util.parsedString(acName);
+            acName = util.parsedStringDoubleQuoteJSP(acName);
             hyperText = "<a href=" + "\"" + "javascript:openPermValueWindow('" + acName +"','" + 
                   deBean.getDE_VD_IDSEQ() + "')" + "\"" + "><b>More_>></b></a>";
             vRes.addElement(deBean.getDE_Permissible_Value() + "  " + hyperText);
@@ -3147,25 +3439,25 @@ public class GetACSearch implements Serializable
     return vRes;
   }
   
-  /**
+/*  *//**
    * makes the more hyperlink to display in the search result.
    * @param vSel vector of ac display attributes bean 
    * @param deBean current de bean
    * @param vRes display result vector
    * @return vector of modified display result vector
    * @throws java.lang.Exception
-   */
+   *//*
   private Vector addMultiRecordResultDocText(Vector vSel, DE_Bean deBean, Vector vRes) throws Exception
   {
     String hyperText = "";
     //document text long name
-    if (vSel.contains("Long Name Document Text") && deBean.getDOC_TEXT_LONG_NAME_COUNT() != null && deBean.getDOC_TEXT_LONG_NAME_COUNT().intValue() >1) 
+    if (vSel.contains("Preferred Question Text Document Text") && deBean.getDOC_TEXT_PREFERRED_QUESTION_COUNT() != null && deBean.getDOC_TEXT_PREFERRED_QUESTION_COUNT().intValue() >1) 
     {
-        hyperText = "<a href=" + "\"" + "javascript:openRefDocWindow('LONG_NAME','" + 
+        hyperText = "<a href=" + "\"" + "javascript:openRefDocWindow('Preferred Question Text','" + 
               deBean.getDE_DE_IDSEQ() + "')" + "\"" + "><b>More_>></b></a>";
-        vRes.addElement(deBean.getDOC_TEXT_LONG_NAME() + "  " + hyperText);
+        vRes.addElement(deBean.getDOC_TEXT_PREFERRED_QUESTION() + "  " + hyperText);
     }
-    else if (vSel.contains("Long Name Document Text")) vRes.addElement(deBean.getDOC_TEXT_LONG_NAME());
+    else if (vSel.contains("Preferred Question Text Document Text")) vRes.addElement(deBean.getDOC_TEXT_PREFERRED_QUESTION());
 
     //document text historic short cde name
     if (vSel.contains("Historic Short CDE Name Document Text") && deBean.getDOC_TEXT_HISTORIC_COUNT() != null && deBean.getDOC_TEXT_HISTORIC_COUNT().intValue() >1) 
@@ -3304,7 +3596,7 @@ public class GetACSearch implements Serializable
     
     return vRes;
   }
-  
+*/  
  /**
    * get DDE info, including RepType, rule, method, Conca_Char and all DE Components
    * and set them to session
@@ -3346,7 +3638,7 @@ public class GetACSearch implements Serializable
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_COMPLEX_DE(?,?,?,?,?,?)}");
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.GET_COMPLEX_DE(?,?,?,?,?,?,?,?,?)}");
 
         // Now tie the placeholders for out parameters.
         CStmt.registerOutParameter(2, java.sql.Types.VARCHAR);
@@ -3354,6 +3646,9 @@ public class GetACSearch implements Serializable
         CStmt.registerOutParameter(4, java.sql.Types.VARCHAR);
         CStmt.registerOutParameter(5, java.sql.Types.VARCHAR);
         CStmt.registerOutParameter(6, OracleTypes.CURSOR);
+        CStmt.registerOutParameter(7, java.sql.Types.VARCHAR);
+        CStmt.registerOutParameter(8, java.sql.Types.VARCHAR);
+        CStmt.registerOutParameter(9, java.sql.Types.VARCHAR);
         // Now tie the placeholders for In parameters.
         CStmt.setString(1, P_DE_IDSEQ);
          // Now we are ready to call the stored procedure
@@ -3362,6 +3657,7 @@ public class GetACSearch implements Serializable
         sRepType = (String) CStmt.getString(5);
         //capture the duration
    //   	logger.info(m_servlet.getLogMessage(m_classReq, "getDDEInfo", "get object", exDate, new java.util.Date()));
+        DDE_Bean dde = new DDE_Bean();
         if(sRepType != null && sRepType.length() > 1)
         {
             sMethod = (String) CStmt.getString(2);
@@ -3374,6 +3670,18 @@ public class GetACSearch implements Serializable
             if(sConcatChar == null)
                 sConcatChar = "";
             sRulesAction = "existedRule";
+            //add to dde bean
+            dde.setDE_IDSEQ(P_DE_IDSEQ);
+            dde.setCRTL_NAME(sRepType);
+            dde.setMETHOD(sMethod);
+            dde.setRULE(sRule);
+            dde.setCONCAT_CHAR(sConcatChar);
+            dde.setRULES_ACTION(sRulesAction);
+            dde.setDE_NAME(CStmt.getString(7));
+            dde.setDE_ID(CStmt.getString(8));
+            dde.setDE_VERSION(CStmt.getString(9));
+            dde.setSUBMIT_ACTION("NONE");
+            Vector vComps = new Vector();
             //set DE Comp vectors from resultset
             rs = (ResultSet) CStmt.getObject(6);
             if (rs!=null)
@@ -3385,7 +3693,19 @@ public class GetACSearch implements Serializable
                 vDEComp.addElement(rs.getString(2));
                 vDECompID.addElement(rs.getString(3));
                 vDECompOrder.addElement(rs.getString(4));
+                //add to de comp bean
+                DE_COMP_Bean dcomp = new DE_COMP_Bean();
+                dcomp.setCOMP_REL_IDSEQ(rs.getString(1));  // to be a new field in cursor
+                dcomp.setCOMP_NAME(rs.getString(2));
+                dcomp.setCOMP_IDSEQ(rs.getString(3));
+                dcomp.setDISPLAY_ORDER(rs.getString(4));
+                dcomp.setPUBLIC_ID(rs.getString(5));
+                dcomp.setVERSION(rs.getString(6));
+                dcomp.setPARENT_IDSEQ(P_DE_IDSEQ);
+                dcomp.setSUBMIT_ACTION("NONE");
+                vComps.addElement(dcomp);  //add to vector
               }  //END WHILE
+              dde.setDE_COMP_List(vComps);  //add vector to dde bean
               //sort vDEComp against DECompOrder
               UtilService util = new UtilService();
               util.sortDEComps(vDEComp, vDECompID, vDECompRelID, vDECompOrder);
@@ -3393,6 +3713,7 @@ public class GetACSearch implements Serializable
         }
 
         // save them to session, even empty, refresh it
+        session.setAttribute("DerivedDE", dde);  //store dde bean in the session
         session.setAttribute("vDEComp", vDEComp);
         session.setAttribute("vDECompID", vDECompID);
         session.setAttribute("vDECompOrder", vDECompOrder);
@@ -3425,7 +3746,7 @@ public class GetACSearch implements Serializable
   //  logger.info(m_servlet.getLogMessage(m_classReq, "getDDEInfo", "end search", exDate, new java.util.Date()));
   }  //end getDDEInfo
 
- /**
+/* /**
    * get Complex RepType and set them to session for DDE page repType drop list
    * 
    * calls oracle stored procedure
@@ -3435,7 +3756,7 @@ public class GetACSearch implements Serializable
    * @param 
    *
    */
-  public void getComplexRepType()
+/*  public void getComplexRepType()
 
   {
     Connection sbr_db_conn = null;
@@ -3494,7 +3815,7 @@ public class GetACSearch implements Serializable
       //System.err.println("Problem closing in getComplexRepType: " + ee);
       logger.fatal("ERROR - getComplexRepType for close : " + ee.toString());
     }
-  }  //end getComplexRepType
+  } */ //end getComplexRepType
 
   /**
    * To get final result vector of selected attributes/rows to display for Data Element Concept component,
@@ -3568,6 +3889,9 @@ public class GetACSearch implements Serializable
       {
         DEC_Bean DECBean = new DEC_Bean();
         DECBean = (DEC_Bean)vRSel.elementAt(i);
+        String sName = DECBean.getDEC_LONG_NAME();
+        if (sName == null || sName.equals("")) sName = DECBean.getDEC_PREFERRED_NAME();
+
         vSearchID.addElement(DECBean.getDEC_DEC_IDSEQ());
         vSearchName.addElement(DECBean.getDEC_PREFERRED_NAME());
         vSearchLongName.addElement(DECBean.getDEC_LONG_NAME());
@@ -3584,13 +3908,19 @@ public class GetACSearch implements Serializable
         if (vSelAttr.contains("Name")) vResult.addElement(DECBean.getDEC_PREFERRED_NAME());
         if (vSelAttr.contains("Conceptual Domain")) vResult.addElement(DECBean.getDEC_CD_NAME());
         if (vSelAttr.contains("Origin")) vResult.addElement(DECBean.getDEC_SOURCE());
+        if (vSelAttr.contains("Concept Name")) 
+          vResult = this.addMultiRecordConcept(DECBean.getAC_CONCEPT_NAME(), sName, DECBean.getDEC_DEC_IDSEQ(), "", "DataElementConcept", vResult);
         if (vSelAttr.contains("Effective Begin Date")) vResult.addElement(DECBean.getDEC_BEGIN_DATE());
         if (vSelAttr.contains("Effective End Date")) vResult.addElement(DECBean.getDEC_END_DATE());
         if (vSelAttr.contains("Creator")) vResult.addElement(DECBean.getDEC_CREATED_BY());
         if (vSelAttr.contains("Date Created")) vResult.addElement(DECBean.getDEC_DATE_CREATED());
         if (vSelAttr.contains("Modifier")) vResult.addElement(DECBean.getDEC_MODIFIED_BY());
         if (vSelAttr.contains("Date Modified")) vResult.addElement(DECBean.getDEC_DATE_MODIFIED());
-        if (vSelAttr.contains("Comments/Change Note")) vResult.addElement(DECBean.getDEC_CHANGE_NOTE());
+        if (vSelAttr.contains("Change Note")) vResult.addElement(DECBean.getDEC_CHANGE_NOTE());
+        if (vSelAttr.contains("Alternate Names"))
+          vResult = this.addMultiRecordAltName(DECBean.getALTERNATE_NAME(), sName, DECBean.getDEC_DEC_IDSEQ(), vResult);
+        if (vSelAttr.contains("Reference Documents"))
+          vResult = this.addMultiRecordRDName(DECBean.getREFERENCE_DOCUMENT(), sName, DECBean.getDEC_DEC_IDSEQ(), vResult);
      //   if (vSelAttr.contains("Language")) vResult.addElement(DECBean.getDEC_LANGUAGE());
    }
       session.setAttribute("SearchID", vSearchID);
@@ -3684,6 +4014,9 @@ public class GetACSearch implements Serializable
       {
         VD_Bean VDBean = new VD_Bean();
         VDBean = (VD_Bean)vRSel.elementAt(i);
+        String sName = VDBean.getVD_LONG_NAME();
+        if (sName == null || sName.equals("")) sName = VDBean.getVD_PREFERRED_NAME();
+
         vSearchID.addElement(VDBean.getVD_VD_IDSEQ());
         vSearchName.addElement(VDBean.getVD_PREFERRED_NAME());
         vSearchLongName.addElement(VDBean.getVD_LONG_NAME());
@@ -3701,13 +4034,15 @@ public class GetACSearch implements Serializable
         if (vSelAttr.contains("Conceptual Domain")) vResult.addElement(VDBean.getVD_CD_NAME());
         if (vSelAttr.contains("Data Type")) vResult.addElement(VDBean.getVD_DATA_TYPE());
         if (vSelAttr.contains("Origin")) vResult.addElement(VDBean.getVD_SOURCE());
+        if (vSelAttr.contains("Concept Name")) 
+          vResult = this.addMultiRecordConcept(VDBean.getAC_CONCEPT_NAME(), sName, "", VDBean.getVD_VD_IDSEQ(), "ValueDomain", vResult);
         if (vSelAttr.contains("Effective Begin Date")) vResult.addElement(VDBean.getVD_BEGIN_DATE());
         if (vSelAttr.contains("Effective End Date")) vResult.addElement(VDBean.getVD_END_DATE());
         if (vSelAttr.contains("Creator")) vResult.addElement(VDBean.getVD_CREATED_BY());
         if (vSelAttr.contains("Date Created")) vResult.addElement(VDBean.getVD_DATE_CREATED());
         if (vSelAttr.contains("Modifier")) vResult.addElement(VDBean.getVD_MODIFIED_BY());
         if (vSelAttr.contains("Date Modified")) vResult.addElement(VDBean.getVD_DATE_MODIFIED());
-        if (vSelAttr.contains("Comments/Change Note")) vResult.addElement(VDBean.getVD_CHANGE_NOTE());
+        if (vSelAttr.contains("Change Note")) vResult.addElement(VDBean.getVD_CHANGE_NOTE());
       //  if (vSelAttr.contains("Language")) vResult.addElement(VDBean.getVD_LANGUAGE());
         if (vSelAttr.contains("Unit of Measures")) vResult.addElement(VDBean.getVD_UOML_NAME());
         if (vSelAttr.contains("Display Format")) vResult.addElement(VDBean.getVD_FORML_NAME());
@@ -3724,12 +4059,16 @@ public class GetACSearch implements Serializable
             if (acName == null || acName.equals("")) acName = VDBean.getVD_PREFERRED_NAME();
             UtilService util = new UtilService();
             acName = util.parsedStringSingleQuote(acName);
-            acName = util.parsedString(acName);
+            acName = util.parsedStringDoubleQuoteJSP(acName);
             String hyperText = "<a href=" + "\"" + "javascript:openPermValueWindow('" + acName +"','" + 
                   VDBean.getVD_VD_IDSEQ() + "')" + "\"" + "><b>More_>></b></a>";
             vResult.addElement(VDBean.getVD_Permissible_Value() + "  " + hyperText);
         }
         else if (vSelAttr.contains("Permissible Value")) vResult.addElement(VDBean.getVD_Permissible_Value());
+        if (vSelAttr.contains("Alternate Names"))
+          vResult = this.addMultiRecordAltName(VDBean.getALTERNATE_NAME(), sName, VDBean.getVD_VD_IDSEQ(), vResult);
+        if (vSelAttr.contains("Reference Documents"))
+          vResult = this.addMultiRecordRDName(VDBean.getREFERENCE_DOCUMENT(), sName, VDBean.getVD_VD_IDSEQ(), vResult);
       }
       session.setAttribute("SearchID", vSearchID);
       session.setAttribute("SearchName", vSearchName);
@@ -3820,13 +4159,15 @@ public class GetACSearch implements Serializable
       {
         CD_Bean CDBean = new CD_Bean();
         CDBean = (CD_Bean)vRSel.elementAt(i);
+        String sName = CDBean.getCD_LONG_NAME();
+        if (sName == null || sName.equals("")) sName = CDBean.getCD_PREFERRED_NAME();
+
         vSearchID.addElement(CDBean.getCD_CD_IDSEQ());
         vSearchName.addElement(CDBean.getCD_PREFERRED_NAME());
         vSearchLongName.addElement(CDBean.getCD_LONG_NAME());
         vSearchASL.addElement(CDBean.getCD_ASL_NAME());
         vSearchDefinition.addElement(CDBean.getCD_PREFERRED_DEFINITION());
         vUsedContext.addElement(CDBean.getCD_CONTEXT_NAME());
-
         if (vSelAttr.contains("Long Name")) vResult.addElement(CDBean.getCD_LONG_NAME());
         if (vSelAttr.contains("Public ID")) vResult.addElement(CDBean.getCD_CD_ID());
         if (vSelAttr.contains("Version")) vResult.addElement(CDBean.getCD_VERSION());
@@ -3835,6 +4176,8 @@ public class GetACSearch implements Serializable
         if (vSelAttr.contains("Definition")) vResult.addElement(CDBean.getCD_PREFERRED_DEFINITION());
         if (vSelAttr.contains("Name")) vResult.addElement(CDBean.getCD_PREFERRED_NAME());
         if (vSelAttr.contains("Origin")) vResult.addElement(CDBean.getCD_SOURCE());
+      //  if (vSelAttr.contains("Concept Name")) 
+      //    vResult = this.addMultiRecordConcept("", sName, CDBean.getCD_CD_IDSEQ(), "ConceptualDomain", vResult);
         //if (vSelAttr.contains("Dimensionality")) vResult.addElement(CDBean.getCD_DIMENSIONALITY());
         if (vSelAttr.contains("Effective Begin Date")) vResult.addElement(CDBean.getCD_BEGIN_DATE());
         if (vSelAttr.contains("Effective End Date")) vResult.addElement(CDBean.getCD_END_DATE());
@@ -3842,7 +4185,7 @@ public class GetACSearch implements Serializable
         if (vSelAttr.contains("Date Created")) vResult.addElement(CDBean.getCD_DATE_CREATED());
         if (vSelAttr.contains("Modifier")) vResult.addElement(CDBean.getCD_MODIFIED_BY());
         if (vSelAttr.contains("Date Modified")) vResult.addElement(CDBean.getCD_DATE_MODIFIED());
-        if (vSelAttr.contains("Comments/Change Note")) vResult.addElement(CDBean.getCD_CHANGE_NOTE());
+        if (vSelAttr.contains("Change Note")) vResult.addElement(CDBean.getCD_CHANGE_NOTE());
       }
       session.setAttribute("SearchID", vSearchID);
       session.setAttribute("SearchName", vSearchName);
@@ -3873,8 +4216,8 @@ public class GetACSearch implements Serializable
    * @param vList returns Vector of DEC bean.
    *
 */
-  public void do_caDSRSearch(String InString,
-      String ContName, String ASLName, String ID, Vector vList, String type)  // returns list of Data Element Concepts
+  public void do_caDSRSearch(String InString, String ContName, String ASLName, 
+      String ID, Vector vList, String type, String conName, String conID)  // returns list of Data Element Concepts
   {
     //capture the duration
     java.util.Date exDate = new java.util.Date();          
@@ -3894,19 +4237,19 @@ public class GetACSearch implements Serializable
         m_servlet.ErrorLogin(m_classReq, m_classRes);
         if(type.equals("OC") || type.equals("ObjQ"))
         {
-          CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_OC(?,?,?,?,?)}");
+          CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_OC(?,?,?,?,?,?,?)}");
           CStmt.registerOutParameter(5, OracleTypes.CURSOR);
           compType = "Object Class";
         }
         else if(type.equals("PROP") || type.equals("PropQ"))
         {
-          CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_PROP(?,?,?,?,?)}");
+          CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PROP(?,?,?,?,?,?,?)}");
           CStmt.registerOutParameter(5, OracleTypes.CURSOR);
           compType = "Property";
         }
         else if(type.equals("REP")  || type.equals("RepQ"))
         {
-          CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_REP(?,?,?,?,?)}");
+          CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_REP(?,?,?,?,?,?,?)}");
           CStmt.registerOutParameter(5, OracleTypes.CURSOR);
           compType = "Rep Term";
         }
@@ -3914,6 +4257,8 @@ public class GetACSearch implements Serializable
         CStmt.setString(2,ASLName);
         CStmt.setString(3,ContName);
         CStmt.setString(4,ID);
+        CStmt.setString(6,conName);
+        CStmt.setString(7,conID);
        // Now we are ready to call the stored procedure
         boolean bExcuteOk = CStmt.execute();   
         //store the output in the resultset
@@ -3927,12 +4272,20 @@ public class GetACSearch implements Serializable
           while(rs.next())
           {
             EVS_Bean OCBean = new EVS_Bean();
-            OCBean.setPREFERRED_NAME(rs.getString(1));
-            OCBean.setLONG_NAME(rs.getString(2));
-            OCBean.setPREFERRED_DEFINITION(rs.getString(3));
+            String sName = m_util.removeNewLineChar(rs.getString(1));
+            OCBean.setCONCEPT_NAME(sName);
+            String slName = m_util.removeNewLineChar(rs.getString(2));
+            OCBean.setLONG_NAME(slName);
+            String sDef = m_util.removeNewLineChar(rs.getString(3));
+            OCBean.setPREFERRED_DEFINITION(sDef);
             OCBean.setCONTE_IDSEQ(rs.getString(4));
             OCBean.setASL_NAME(rs.getString(5));
             OCBean.setIDSEQ(rs.getString(6)); 
+            //add the decimal number
+            if (rs.getString("version").indexOf('.') >= 0)
+              OCBean.setVERSION(rs.getString("version"));
+            else
+              OCBean.setVERSION(rs.getString("version") + ".0");
             OCBean.setEVS_DEF_SOURCE(rs.getString(12));
             OCBean.setCONDR_IDSEQ(rs.getString("condr_idseq"));
             OCBean.setEVS_DATABASE("caDSR");
@@ -3957,6 +4310,7 @@ public class GetACSearch implements Serializable
             EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet); 
             sCUIString = evs.getEVSIdentifierString(rs.getString("condr_idseq"));
             if(sCUIString == null) sCUIString = "";
+            sCUIString = m_util.removeNewLineChar(sCUIString);
             OCBean.setNCI_CC_VAL(sCUIString);
             
             vList.addElement(OCBean);    //add OC bean to vector
@@ -3995,15 +4349,20 @@ public class GetACSearch implements Serializable
    * @param vList returns Vector of DEC bean.
    *
 */
-  public Vector do_ConceptSearch(String InString, String conIdseq, 
-      String ContName, String ASLName, String conID, Vector vList)  // returns list of Concepts
+  public Vector do_ConceptSearch(String InString, String conIdseq, String ContName, 
+      String ASLName, String conID, String decID, String vdID, Vector vList)  // returns list of Concepts
   {
     //capture the duration
- //   java.util.Date exDate = new java.util.Date();          
- //   logger.info(m_servlet.getLogMessage(m_classReq, "do_ConceptSearch", "begin search", exDate, exDate));
+    java.util.Date exDate = new java.util.Date();          
+    logger.info(m_servlet.getLogMessage(m_classReq, "do_ConceptSearch", "begin search", exDate, exDate));
     Connection sbr_db_conn = null;
     ResultSet rs = null;
     CallableStatement CStmt = null;
+    HttpSession session = (HttpSession)m_classReq.getSession();
+    EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+    String menuAction = (String)session.getAttribute("MenuAction");
+    if (menuAction == null) menuAction = "";
+    if (eUser == null) eUser = new EVS_UserBean();          
     boolean bVListExist = false;
     //mark it if oc/prop/rep search was done earlier
     if (vList != null && vList.size()>0) bVListExist = true;
@@ -4013,13 +4372,15 @@ public class GetACSearch implements Serializable
       sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
       if (sbr_db_conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
-      CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?)}");
+      CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?)}");
       CStmt.registerOutParameter(6, OracleTypes.CURSOR);
       CStmt.setString(1, InString);
       CStmt.setString(2, ASLName);
       CStmt.setString(3, ContName);
       CStmt.setString(4, conID);
       CStmt.setString(5, conIdseq);
+      CStmt.setString(7, decID);
+      CStmt.setString(8, vdID);
      // Now we are ready to call the stored procedure
       boolean bExcuteOk = CStmt.execute();   
       //store the output in the resultset
@@ -4033,20 +4394,35 @@ public class GetACSearch implements Serializable
         while(rs.next())
         {
           EVS_Bean conBean = new EVS_Bean();
-          conBean.setPREFERRED_NAME(rs.getString("preferred_name"));
-          conBean.setLONG_NAME(rs.getString("long_name"));
-          conBean.setPREFERRED_DEFINITION(rs.getString("preferred_definition"));
+          String sConName = m_util.removeNewLineChar(rs.getString("long_name"));
+          conBean.setCONCEPT_NAME(sConName);  
+          conBean.setLONG_NAME(sConName);  //rs.getString("long_name"));
+          String sDef = m_util.removeNewLineChar(rs.getString("preferred_definition"));
+          conBean.setPREFERRED_DEFINITION(sDef);
           conBean.setCONTE_IDSEQ(rs.getString("conte_idseq"));
           conBean.setASL_NAME(rs.getString("asl_name"));
           conBean.setIDSEQ(rs.getString("con_idseq")); 
           conBean.setEVS_DEF_SOURCE(rs.getString("definition_source"));
-          conBean.setEVS_DATABASE("caDSR");
-          conBean.setcaDSR_COMPONENT("Concept Class");
-          conBean.setEVS_ORIGIN(rs.getString("origin"));
+          String sVocab = rs.getString("origin");
+          if (menuAction.equals("searchForCreate"))
+            conBean.setEVS_DATABASE("caDSR");
+          else  //make the vocab as evs origin from cadsr for main page concept class search
+            conBean.setEVS_DATABASE(sVocab);
+          conBean.setcaDSR_COMPONENT("Concept Class"); 
+          String selVocab = conBean.getVocabAttr(eUser, sVocab, "vocabDBOrigin", "vocabName");
+          //store evs vocab name in evs origin and leave meta out
+          if (selVocab.equals("MetaValue")) conBean.setEVS_ORIGIN(sVocab);
+          else conBean.setEVS_ORIGIN(selVocab);
+          
           conBean.setID(rs.getString("con_ID"));//public id
+          if (rs.getString("version").indexOf('.') >= 0)
+            conBean.setVERSION(rs.getString("version"));
+          else
+            conBean.setVERSION(rs.getString("version") + ".0");
           conBean.setCONTEXT_NAME(rs.getString("context"));
           conBean.setDEC_USING("");
-          conBean.setNCI_CC_VAL(rs.getString("preferred_name"));
+          String sPref = m_util.removeNewLineChar(rs.getString("preferred_name"));
+          conBean.setNCI_CC_VAL(sPref);  //cui
           conBean.setNCI_CC_TYPE(rs.getString("evs_source"));
           //make sure it is included only once by matching evsId and concept name only if oc/prop/rep search was done earlier.
           boolean isExist = false;
@@ -4069,9 +4445,10 @@ public class GetACSearch implements Serializable
             }
           }
           if (isExist == false)
-            vList.addElement(conBean);    //add concept bean to vector
+            vList.addElement(conBean);    //add concept bean to vector 
         }  //END WHILE
       }   //END IF
+    System.out.println(decID + " id " + vdID + " con search " + vList.size());
     }
     catch(Exception e)
     {
@@ -4088,24 +4465,24 @@ public class GetACSearch implements Serializable
       logger.fatal("GetACSearch-do_conceptSearch for close : " + ee.toString());
     }
     //capture the duration
- //   logger.info(m_servlet.getLogMessage(m_classReq, "do_conceptSearch", "end search", exDate,  new java.util.Date()));
+    logger.info(m_servlet.getLogMessage(m_classReq, "do_conceptSearch", "end search", exDate,  new java.util.Date()));
     return vList;
   }  //endconcept search
   
 
- /**
+/* /**
 	 * Puts in and takes out "_"
    *  @param String nodeName.
    *  @param String type.
 	 */
-	private final String filterName(String nodeName, String type)
+/*	private final String filterName(String nodeName, String type)
   {
     if(type.equals("display"))
       nodeName = nodeName.replaceAll("_"," ");
     else if(type.equals("js"))
       nodeName = nodeName.replaceAll(" ","_");
       return nodeName;
-  }
+  } */
 
 
   /**
@@ -4308,6 +4685,8 @@ public class GetACSearch implements Serializable
       String sUser = (String)session.getAttribute("Username");
       String sMenuAction = (String)session.getAttribute("MenuAction");
       session.setAttribute("statusMessage", "");
+      session.setAttribute("AllAltNameList", new Vector());
+      session.setAttribute("AllRefDocList", new Vector());
       String sSearchAC = (String)session.getAttribute("searchAC");   //get the selected component
       Vector vSRows = (Vector)session.getAttribute("vSelRows");   //get the selected rows
       Vector vCheckList = new Vector();
@@ -4529,15 +4908,17 @@ public class GetACSearch implements Serializable
       if (!sMenu.equals("NewDECTemplate"))
       {
         Vector vACCSI = this.doCSCSI_ACSearch(DECBean.getDEC_DEC_IDSEQ(), DECBean.getDEC_LONG_NAME());
-      //  if (vACCSI != null)
-      //  {
-          Vector vCS = (Vector)m_classReq.getAttribute("selCSNames");
-          Vector vCSid = (Vector)m_classReq.getAttribute("selCSIDs"); 
-      
-          DECBean.setDEC_CS_NAME(vCS);
-          DECBean.setDEC_CS_ID(vCSid);
-          DECBean.setDEC_AC_CSI_VECTOR(vACCSI);
-      //  }
+        Vector vCS = (Vector)m_classReq.getAttribute("selCSNames");
+        Vector vCSid = (Vector)m_classReq.getAttribute("selCSIDs"); 
+    
+        DECBean.setAC_CS_NAME(vCS);
+        DECBean.setAC_CS_ID(vCSid);
+        DECBean.setAC_AC_CSI_VECTOR(vACCSI);
+        //get ref docs and alt names for this dec
+        Vector vRef = this.doRefDocSearch(DECBean.getDEC_DEC_IDSEQ(), "ALL TYPES", "open");
+        DECBean.setAC_REF_DOCS(vRef);
+        Vector vAlt = this.doAltNameSearch(DECBean.getDEC_DEC_IDSEQ(), "", "", "EditDesDE", "open");
+        DECBean.setAC_ALT_NAMES(vAlt);
       }
       //make some attributes default/empty for NUE action
       if (sMenu.equals("NewDECTemplate"))
@@ -4597,13 +4978,17 @@ public class GetACSearch implements Serializable
       {
         selContext.addElement(sContID);
         m_classReq.setAttribute("SelectedContext", selContext);  //add to the request
-        DECBean.setDEC_SELECTED_CONTEXT_ID(selContext);     //add to the DEC bean
+        DECBean.setAC_SELECTED_CONTEXT_ID(selContext);     //add to the DEC bean
       }
                                   
       //get the cd name with the context
       acName = this.getCDContext(DECBean.getDEC_CD_IDSEQ());
       if (acName !=null && !acName.equals(""))
          DECBean.setDEC_CD_NAME(acName);
+
+      //get contact informatin
+      if (!sAction.equals("BlockEdit"))
+        DECBean.setAC_CONTACTS(this.getAC_Contacts(DECBean.getDEC_DEC_IDSEQ(), ""));        
 
       //store ac names and ids in the req attribute
       m_classReq.setAttribute("vACId", vACid);
@@ -4631,7 +5016,7 @@ public class GetACSearch implements Serializable
       //get doc text long name idseq for edit
       InsACService insAC = new InsACService(m_classReq, m_classRes, m_servlet);
       String desID = insAC.getRD_ID(DEBean.getDE_DE_IDSEQ());
-      if (desID != null) DEBean.setDOC_TEXT_LONG_NAME_IDSEQ(desID);
+      if (desID != null) DEBean.setDOC_TEXT_PREFERRED_QUESTION_IDSEQ(desID);
              
       if (!sAction.equals("BlockEdit") && !sAction.equals("EditDesDE"))      
         getDDEInfo(DEBean.getDE_DE_IDSEQ());  // get DDE info and set them to session
@@ -4649,28 +5034,23 @@ public class GetACSearch implements Serializable
       if (sMenu.equals("NewDEVersion"))
         DEBean.setDE_ASL_NAME("");
         
-      //get this ac cs-csi attributes not for template
       if (!sMenu.equals("NewDETemplate") && !sAction.equals("Template"))
       {
+        //get this ac cs-csi attributes not for template
         Vector vACCSI = this.doCSCSI_ACSearch(DEBean.getDE_DE_IDSEQ(), DEBean.getDE_LONG_NAME());
-       // if (vACCSI != null)
-       // {
-          Vector vCS = (Vector)m_classReq.getAttribute("selCSNames");
-          Vector vCSid = (Vector)m_classReq.getAttribute("selCSIDs");    
-          DEBean.setDE_CS_NAME(vCS);
-          DEBean.setDE_CS_ID(vCSid);
-          DEBean.setDE_AC_CSI_VECTOR(vACCSI);
-       // }
-      }
+        Vector vCS = (Vector)m_classReq.getAttribute("selCSNames");
+        Vector vCSid = (Vector)m_classReq.getAttribute("selCSIDs");    
+        DEBean.setAC_CS_NAME(vCS);
+        DEBean.setAC_CS_ID(vCSid);
+        DEBean.setAC_AC_CSI_VECTOR(vACCSI);
 
-      //get alternate names and reference documents if menu is edit des
-      if (sAction.equals("EditDesDE"))
-      {
-        //get ref docs for this de
-        this.doRefDocSearch(DEBean.getDE_DE_IDSEQ(), "ALL TYPES");
-        //get alt names for this DE
-        this.doAltNameSearch(DEBean.getDE_DE_IDSEQ(), "", "", "EditDesDE");
+        //get ref docs and alt names for this de
+        Vector vRef = this.doRefDocSearch(DEBean.getDE_DE_IDSEQ(), "ALL TYPES", "open");
+        DEBean.setAC_REF_DOCS(vRef);
+        Vector vAlt = this.doAltNameSearch(DEBean.getDE_DE_IDSEQ(), "", "", "EditDesDE", "open");
+        DEBean.setAC_ALT_NAMES(vAlt);
       }
+      
       //get all the selected ac id and name
       Vector vACid = (Vector)m_classReq.getAttribute("vACId");
       Vector vACName = (Vector)m_classReq.getAttribute("vACName");
@@ -4692,7 +5072,7 @@ public class GetACSearch implements Serializable
       {
         selContext.addElement(sContID);
         m_classReq.setAttribute("SelectedContext", selContext);  //add to the request
-        DEBean.setDE_SELECTED_CONTEXT_ID(selContext);     //add to the de bean
+        DEBean.setAC_SELECTED_CONTEXT_ID(selContext);     //add to the de bean
       }
       
       //get associated dec and vd beans into de bean
@@ -4703,18 +5083,22 @@ public class GetACSearch implements Serializable
         DEBean.setAC_PREF_NAME_TYPE("");
         String sDECid = DEBean.getDE_DEC_IDSEQ();
         Vector vDECList = new Vector();
-        this.doDECSearch(sDECid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", vDECList);
+        this.doDECSearch(sDECid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", vDECList);
         if (vDECList != null && vDECList.size() > 0)
           DEBean.setDE_DEC_Bean((DEC_Bean)vDECList.elementAt(0));
         String sVDid = DEBean.getDE_VD_IDSEQ();
         Vector vVDList = new Vector();
-        this.doVDSearch(sVDid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", vVDList);
+        this.doVDSearch(sVDid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", "", "", vVDList);
         if (vVDList != null && vVDList.size() > 0)
           DEBean.setDE_VD_Bean((VD_Bean)vVDList.elementAt(0));
         //store teh current one as user preferred
         //get system and abbr name to use it later
         DEBean = m_servlet.doGetDENames(m_classReq, m_classRes, "noChange", "OpenDE", DEBean);
       }
+      //get contact informatin
+      if (!sAction.equals("BlockEdit") && !sAction.equals("EditDesDE"))
+        DEBean.setAC_CONTACTS(this.getAC_Contacts(DEBean.getDE_DE_IDSEQ(), ""));        
+
       //store ac names and ids in the req attribute
       m_classReq.setAttribute("vACId", vACid);
       m_classReq.setAttribute("vACName", vACName);
@@ -4743,14 +5127,16 @@ public class GetACSearch implements Serializable
       if (!sMenu.equals("NewVDTemplate"))
       {
         Vector vACCSI = this.doCSCSI_ACSearch(VDBean.getVD_VD_IDSEQ(), VDBean.getVD_LONG_NAME());
-      //  if (vACCSI != null)
-      //  {
-          Vector vCS = (Vector)m_classReq.getAttribute("selCSNames");
-          Vector vCSid = (Vector)m_classReq.getAttribute("selCSIDs"); 
-          VDBean.setVD_CS_NAME(vCS);
-          VDBean.setVD_CS_ID(vCSid);
-          VDBean.setVD_AC_CSI_VECTOR(vACCSI);
-      //  }        
+        Vector vCS = (Vector)m_classReq.getAttribute("selCSNames");
+        Vector vCSid = (Vector)m_classReq.getAttribute("selCSIDs"); 
+        VDBean.setAC_CS_NAME(vCS);
+        VDBean.setAC_CS_ID(vCSid);
+        VDBean.setAC_AC_CSI_VECTOR(vACCSI);
+        //get ref docs alt names for this vd
+        Vector vRef = this.doRefDocSearch(VDBean.getVD_VD_IDSEQ(), "ALL TYPES", "open");
+        VDBean.setAC_REF_DOCS(vRef);
+        Vector vAlt = this.doAltNameSearch(VDBean.getVD_VD_IDSEQ(), "", "", "EditDesDE", "open");
+        VDBean.setAC_ALT_NAMES(vAlt);
       }
       //make some attributes default/empty for NUE action
       if (sMenu.equals("NewVDTemplate"))
@@ -4797,7 +5183,7 @@ public class GetACSearch implements Serializable
       {
         selContext.addElement(sContID);
         m_classReq.setAttribute("SelectedContext", selContext);  //add to the request
-        VDBean.setVD_SELECTED_CONTEXT_ID(selContext);     //add to the de bean
+        VDBean.setAC_SELECTED_CONTEXT_ID(selContext);     //add to the de bean
       }
                                   
       //get the cd name with the context
@@ -4830,6 +5216,10 @@ public class GetACSearch implements Serializable
          
         session.setAttribute("VDParentConcept", vParent);  
       }
+      //get contact informatin
+      if (!sAction.equals("BlockEdit"))
+        VDBean.setAC_CONTACTS(this.getAC_Contacts(VDBean.getVD_VD_IDSEQ(), ""));        
+      
       //store ac names and ids in the req attribute
       m_classReq.setAttribute("vACId", vACid);
       m_classReq.setAttribute("vACName", vACName);
@@ -4852,7 +5242,7 @@ public class GetACSearch implements Serializable
  
     if(PageVD != null)
     {
-      this.doRefDocSearch(PageVD.getVD_VD_IDSEQ(), "META_CONCEPT_SOURCE");
+      Vector vRef = this.doRefDocSearch(PageVD.getVD_VD_IDSEQ(), "META_CONCEPT_SOURCE", "open");
       Vector vList = (Vector)m_classReq.getAttribute("RefDocList");
       if (vList != null && vList.size() > 0)
       {
@@ -4886,7 +5276,7 @@ public class GetACSearch implements Serializable
   public Vector getNonEVSParent(Vector vParent, VD_Bean vd, String menuAct) throws Exception
   {
     //search the existing reference document 
-    this.doRefDocSearch(vd.getVD_VD_IDSEQ(), "VD REFERENCE");
+    Vector vRef = this.doRefDocSearch(vd.getVD_VD_IDSEQ(), "VD REFERENCE", "open");
     Vector vList = (Vector)m_classReq.getAttribute("RefDocList");
     if (vList != null && vList.size() > 0)
     {
@@ -4950,12 +5340,12 @@ public class GetACSearch implements Serializable
       if (sSearchAC.equals("DataElementConcept"))
       {
         DEC_Bean bDECBean = new DEC_Bean();   //remove all other attributes
-        bDECBean.setDEC_CS_NAME(vCS);
-        bDECBean.setDEC_CS_ID(vCSid);
-        bDECBean.setDEC_AC_CSI_VECTOR(vACCSI);
+        bDECBean.setAC_CS_NAME(vCS);
+        bDECBean.setAC_CS_ID(vCSid);
+        bDECBean.setAC_AC_CSI_VECTOR(vACCSI);
         //add selected contexts to the bean
         Vector selContext = (Vector)m_classReq.getAttribute("SelectedContext");
-        bDECBean.setDEC_SELECTED_CONTEXT_ID(selContext);
+        bDECBean.setAC_SELECTED_CONTEXT_ID(selContext);
         session.setAttribute("m_DEC", bDECBean);
         DEC_Bean clBean = new DEC_Bean();
         session.setAttribute("oldDECBean",  clBean.cloneDEC_Bean(bDECBean));
@@ -4963,12 +5353,12 @@ public class GetACSearch implements Serializable
       else if (sSearchAC.equals("ValueDomain"))
       {
         VD_Bean bVDBean = new VD_Bean();   //remove all other attributes
-        bVDBean.setVD_CS_NAME(vCS);
-        bVDBean.setVD_CS_ID(vCSid);
-        bVDBean.setVD_AC_CSI_VECTOR(vACCSI);
+        bVDBean.setAC_CS_NAME(vCS);
+        bVDBean.setAC_CS_ID(vCSid);
+        bVDBean.setAC_AC_CSI_VECTOR(vACCSI);
         //add selected contexts to the bean
         Vector selContext = (Vector)m_classReq.getAttribute("SelectedContext");
-        bVDBean.setVD_SELECTED_CONTEXT_ID(selContext);
+        bVDBean.setAC_SELECTED_CONTEXT_ID(selContext);
         session.setAttribute("m_VD", bVDBean);
         VD_Bean clBean = new VD_Bean();
         session.setAttribute("oldVDBean",  clBean.cloneVD_Bean(bVDBean));
@@ -4976,12 +5366,12 @@ public class GetACSearch implements Serializable
       else if (sSearchAC.equals("DataElement"))
       {
         DE_Bean bDEBean = new DE_Bean();   //remove all other attributes
-        bDEBean.setDE_CS_NAME(vCS);
-        bDEBean.setDE_CS_ID(vCSid);
-        bDEBean.setDE_AC_CSI_VECTOR(vACCSI);
+        bDEBean.setAC_CS_NAME(vCS);
+        bDEBean.setAC_CS_ID(vCSid);
+        bDEBean.setAC_AC_CSI_VECTOR(vACCSI);
         //add selected contexts to the bean
         Vector selContext = (Vector)m_classReq.getAttribute("SelectedContext");
-        bDEBean.setDE_SELECTED_CONTEXT_ID(selContext);
+        bDEBean.setAC_SELECTED_CONTEXT_ID(selContext);
         session.setAttribute("m_DE", bDEBean);
         DE_Bean clBean = new DE_Bean();
         session.setAttribute("oldDEBean",  clBean.cloneDE_Bean(bDEBean, "Complete"));
@@ -5106,7 +5496,7 @@ public class GetACSearch implements Serializable
        if (sDEID != null && !sDEID.equals(""))
        {  
           Vector vList = new Vector();
-          doDESearch(sDEID, "", "","","","", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", vList);
+          doDESearch(sDEID, "", "","","","", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", vList);
           if (vList != null && vList.size()>0)
              DEBean = (DE_Bean)vList.elementAt(0);
           //check permission, get cs and csi, check create or edit
@@ -5147,7 +5537,7 @@ public class GetACSearch implements Serializable
        {
           DEBean.setDE_CONTE_IDSEQ(QuestBean.getCONTE_IDSEQ());   //question context id
           DEBean.setDE_CONTEXT_NAME(QuestBean.getCONTEXT_NAME()); //question context name
-          DEBean.setDOC_TEXT_LONG_NAME(QuestBean.getQUEST_NAME());  //question name
+          DEBean.setDOC_TEXT_PREFERRED_QUESTION(QuestBean.getQUEST_NAME());  //question name
 
           //add vd attribute if VD exists already for the question
           if ((QuestBean.getVD_IDSEQ() != null) && (!QuestBean.getVD_IDSEQ().equals("")))
@@ -5178,7 +5568,7 @@ public class GetACSearch implements Serializable
           {
             String sVDid = DEBean.getDE_VD_IDSEQ();
             Vector vVDList = new Vector();
-            this.doVDSearch(sVDid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", vVDList);
+            this.doVDSearch(sVDid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", "", "", vVDList);
             if (vVDList != null && vVDList.size() > 0)
               DEBean.setDE_VD_Bean((VD_Bean)vVDList.elementAt(0));
             //get system and abbr name to use it later
@@ -5215,7 +5605,6 @@ public class GetACSearch implements Serializable
    * @param getAC reference to class GetACService.
    *
    */
-
 
   /**
    * To get search result from database for permissible values Component
@@ -5689,12 +6078,12 @@ public class GetACSearch implements Serializable
         returnValue = curBean.getDE_DATE_MODIFIED();
       else if (curField.equals("modifier"))
         returnValue = curBean.getDE_MODIFIED_BY();
-      else if (curField.equals("HistID"))
-        returnValue = curBean.getDE_HIST_CDE_ID();
+     // else if (curField.equals("HistID"))
+     //   returnValue = curBean.getDE_HIST_CDE_ID();
       else if (curField.equals("permValue"))
         returnValue = curBean.getDE_Permissible_Value();
-      else if (curField.equals("DocText"))
-        returnValue = curBean.getDOC_TEXT_LONG_NAME();
+/*    else if (curField.equals("DocText"))
+        returnValue = curBean.getDOC_TEXT_PREFERRED_QUESTION();
       else if (curField.equals("HistoricName"))
         returnValue = curBean.getDOC_TEXT_HISTORIC_NAME();
       else if (curField.equals("CommentDocText"))
@@ -5723,6 +6112,15 @@ public class GetACSearch implements Serializable
         returnValue = curBean.getDOC_TEXT_UML_Class();
       else if (curField.equals("VVSourceDocText"))
         returnValue = curBean.getDOC_TEXT_VALID_VALUE_SOURCE();
+*/      
+      else if (curField.equals("conName"))
+        returnValue = curBean.getAC_CONCEPT_NAME();
+      else if (curField.equals("altNames"))
+        returnValue = curBean.getALTERNATE_NAME();
+      else if (curField.equals("refDocs"))
+        returnValue = curBean.getREFERENCE_DOCUMENT();
+      else if (curField.equals("DerRelation"))
+        returnValue = curBean.getDE_DER_RELATION();
       //else if (curField.equals("OtherTypesDocText"))
       //  returnValue = curBean.getDOC_TEXT_OTHER_REF_TYPES();
      // else if (curField.equals("referenceDoc"))
@@ -5905,6 +6303,12 @@ public class GetACSearch implements Serializable
       returnValue = curBean.getDEC_DATE_MODIFIED();
     else if (curField.equals("modifier"))
       returnValue = curBean.getDEC_MODIFIED_BY();
+    else if (curField.equals("conName"))
+      returnValue = curBean.getAC_CONCEPT_NAME();
+    else if (curField.equals("altNames"))
+      returnValue = curBean.getALTERNATE_NAME();
+    else if (curField.equals("refDocs"))
+      returnValue = curBean.getREFERENCE_DOCUMENT();
 
     if (returnValue == null)
         returnValue = "";
@@ -6103,6 +6507,12 @@ public class GetACSearch implements Serializable
       returnValue = curBean.getVD_MODIFIED_BY();
     else if (curField.equals("permValue"))
       returnValue = curBean.getVD_Permissible_Value();
+    else if (curField.equals("conName"))
+      returnValue = curBean.getAC_CONCEPT_NAME();
+    else if (curField.equals("altNames"))
+      returnValue = curBean.getALTERNATE_NAME();
+    else if (curField.equals("refDocs"))
+      returnValue = curBean.getREFERENCE_DOCUMENT();
 
     if (returnValue == null)
         returnValue = "";
@@ -6365,6 +6775,8 @@ public class GetACSearch implements Serializable
         if (vSelAttr.contains("CSI Type")) vResult.addElement(CSIBean.getCSI_CSITL_NAME());
         if (vSelAttr.contains("CSI Definition")) vResult.addElement(CSIBean.getCSI_DEFINITION());
         if (vSelAttr.contains("CS Long Name")) vResult.addElement(CSIBean.getCSI_CS_LONG_NAME());
+      //  if (vSelAttr.contains("Concept Name")) 
+      //    vResult = this.addMultiRecordConcept("", CSIBean.getCSI_NAME(), CSIBean.getCSI_NAME(), "ClassSchemeItem", vResult);
         if (vSelAttr.contains("Context")) vResult.addElement(CSIBean.getCSI_CONTEXT_NAME());
       }
       session.setAttribute("SearchID", vSearchID);
@@ -6545,7 +6957,8 @@ public class GetACSearch implements Serializable
    * @param vList returns Vector of PVbean.
    *
   */
-  private void doPVVMSearch(String InString, String cd_idseq, Vector vList)  // returns list of Data Elements
+  private void doPVVMSearch(String InString, String cd_idseq, String conName, 
+      String conID, Vector vList)  // returns list of Data Elements
   {
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -6558,12 +6971,14 @@ public class GetACSearch implements Serializable
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_PVVM(?,?,?)}");
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PVVM(?,?,?,?,?)}");
         // Now tie the placeholders for out parameters.
         CStmt.registerOutParameter(3, OracleTypes.CURSOR);
         // Now tie the placeholders for In parameters.
         CStmt.setString(1,InString);
         CStmt.setString(2,cd_idseq);
+        CStmt.setString(4,conName);
+        CStmt.setString(5,conID);
          // Now we are ready to call the stored procedure
         boolean bExcuteOk = CStmt.execute();
         //store the output in the resultset
@@ -6589,7 +7004,7 @@ public class GetACSearch implements Serializable
             PVBean.setPV_END_DATE(s);
             PVBean.setPV_MEANING_DESCRIPTION(rs.getString("vm_description"));  //from meanings table
             //add the CD name and version in decimal number together
-            String CDNameVersion = "";
+        /*    String CDNameVersion = "";
             if (rs.getString("version") != null && !rs.getString("version").equals(""))
             {
                if (rs.getString("version").indexOf('.') >= 0)
@@ -6597,7 +7012,8 @@ public class GetACSearch implements Serializable
                else
                   CDNameVersion = rs.getString(7) + " - Version " + rs.getString("version") + ".0";
             }
-            PVBean.setPV_CONCEPTUAL_DOMAIN(CDNameVersion);
+            PVBean.setPV_CONCEPTUAL_DOMAIN(CDNameVersion); */
+            PVBean.setPV_CONCEPTUAL_DOMAIN(rs.getString("cd_name"));
             
             //get vm concept attributes
             String sCondr = rs.getString("condr_idseq");
@@ -6635,8 +7051,6 @@ public class GetACSearch implements Serializable
       logger.fatal("ERROR - GetACSearch-searchPVVM for close : " + ee.toString());
     }
   }  //endPVVM search
-
- 
  
   /**
    * To get final result vector of selected attributes/rows to display for Permissible Values component,
@@ -6717,7 +7131,8 @@ public class GetACSearch implements Serializable
         if (vSelAttr.contains("Value")) vResult.addElement(PVBean.getPV_VALUE());
         if (vSelAttr.contains("Value Meaning")) vResult.addElement(PVBean.getPV_SHORT_MEANING());
         if (vSelAttr.contains("Value Meaning Description")) vResult.addElement(PVBean.getPV_MEANING_DESCRIPTION());
-        if (vSelAttr.contains("Conceptual Domain")) vResult.addElement(PVBean.getPV_CONCEPTUAL_DOMAIN());
+        if (vSelAttr.contains("Conceptual Domain")) 
+          vResult = this.addMultiRecordConDomain(PVBean.getPV_CONCEPTUAL_DOMAIN(), PVBean.getPV_SHORT_MEANING(), vResult);
         if (vSelAttr.contains("Effective Begin Date")) vResult.addElement(PVBean.getPV_BEGIN_DATE());
         if (vSelAttr.contains("Effective End Date")) vResult.addElement(PVBean.getPV_END_DATE());
         EVS_Bean vmCon = PVBean.getVM_CONCEPT();
@@ -7394,7 +7809,8 @@ boolean isIntSearch)
      boolean isBlockSearch = false;
      String dtsVocab = req.getParameter("listContextFilterVocab");
      if (dtsVocab != null && !dtsVocab.equals("")) isBlockSearch = true;
-     if(dtsVocab == null) dtsVocab = "NCI_Thesaurus";
+     if(dtsVocab == null) dtsVocab = "";  // "NCI_Thesaurus";
+System.out.println(" dtsVocab " + dtsVocab);
      session.setAttribute("dtsVocab", dtsVocab); 
 
      String sSearchInEVS = (String)req.getParameter("listSearchInEVS");
@@ -7427,8 +7843,8 @@ boolean isIntSearch)
      session.setAttribute("creKeyword", sKeyword);   //keep the old criteria
      UtilService util = new UtilService();
      sKeyword = util.parsedStringSingleQuoteOracle(sKeyword);
-     if(sSearchInEVS.equals("Code"))// search Meta by LOINC code
-      dtsVocab = "Metathesaurus";
+    // if(sSearchInEVS.equals("Code"))// search Meta by LOINC code
+   //   dtsVocab = "Metathesaurus";
       
      //call the method to set the attribute checked values if not the initial value
      if (isIntSearch == false)
@@ -7514,14 +7930,27 @@ boolean isIntSearch)
      if (isIntSearch == true && sSearchAC.equals("ConceptualDomain"))
         session.setAttribute("creStatus", new Vector());  //make it all status for cd open
      else
-        sStatus = getStatusValues(req, res, sSearchAC, "searchForCreate");
+        sStatus = getStatusValues(req, res, sSearchAC, "searchForCreate", isBlockSearch);
 	   if ((sStatus == null) || (sStatus.equals("AllStatus")))
 	       sStatus = "";
+     //store it in the session for block search
+     if (isBlockSearch && sStatus.equals("")) session.setAttribute("creStatusBlocks", "AllStatus");
+     else if (isBlockSearch) session.setAttribute("creStatusBlocks", sStatus);
      
      //filter by registration status
 	   String sRegStatus = (String)req.getParameter("listRegStatus");
      session.setAttribute("creRegStatus", sRegStatus);   //store regstatus in the session
 	   if (sRegStatus == null || sRegStatus.equals("allReg")) sRegStatus = "";
+
+     //filter by derivation type
+     String sDerType = (String)req.getParameter("listDeriveType");
+     session.setAttribute("creDerType", sDerType);   //store Derivation Type in the session
+     if (sDerType == null || sDerType.equals("allDer")) sDerType = "";
+     
+     //filter by data type
+     String sDataType = (String)req.getParameter("listDataType");
+     session.setAttribute("creDataType", sDataType);   //store Data Type in the session
+     if (sDataType == null || sDataType.equals("allData")) sDataType = "";
 
      //fitler by date created from date
 	   String sCreatedFrom = (String)req.getParameter("createdFrom");
@@ -7573,14 +8002,14 @@ boolean isIntSearch)
         {
            doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                 sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
-                "", "", sMinID, "", "", "", "", "", "", "", "", "", "", vAC);  //get the list of Data Elements
+                "", "", sMinID, "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements
         }
         else if (sSearchIn.equals("histID"))
         {
            String sHistID = sKeyword;
            doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                 sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier,
-                "", "", "", sHistID, "", "", "", "", "", "", "", "", "", vAC);  //get the list of Data Elements
+                "", "", "", sHistID, "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements
         }
         //search in by doc text
         else if (sSearchIn.equals("docText"))
@@ -7597,13 +8026,13 @@ boolean isIntSearch)
            {
              doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                   sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
-                  sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", vAC);   //get the list of Data Elements for docText searchin
+                  sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);   //get the list of Data Elements for docText searchin
            }
         }
         //search in by names adn doc text long name and historic short cde name
         else if (sSearchIn.equals("NamesAndDocText"))
         {
-           String sDocTypes = "LONG_NAME, HISTORIC SHORT CDE NAME";         
+           String sDocTypes = "Preferred Question Text, HISTORIC SHORT CDE NAME";         
            String sDocText = sKeyword;
            if (sDocText == null || sDocText.equals(""))
               sDocText = "*";
@@ -7611,7 +8040,7 @@ boolean isIntSearch)
            {
              doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                   sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
-                  sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", vAC);   //get the list of Data Elements for Names and docText searchin
+                  sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);   //get the list of Data Elements for Names and docText searchin
            }
         }
         //search in for origin
@@ -7620,7 +8049,7 @@ boolean isIntSearch)
            String sOrigin = sKeyword;
            doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                 sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier,
-                "", "", "", "", "", sOrigin, "", "", "", "", "", "", "", vAC);  //get the list of Data Elements
+                "", "", "", "", "", sOrigin, "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements
         }
         //search in by permissible value
         else if (sSearchIn.equals("permValue"))
@@ -7628,13 +8057,21 @@ boolean isIntSearch)
            String permValue = sKeyword;
            doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                   sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
-                  "", "", "", "", permValue, "", "", "", "", "", "", "", "", vAC); //get the list of Data Elements for permissible value search in
+                  "", "", "", "", permValue, "", "", "", "", "", "", "", "", "", "", sDerType, vAC); //get the list of Data Elements for permissible value search in
+        }       
+        //search in by concept name/identifier
+        else if (sSearchIn.equals("concept"))
+        {
+           String sCon = sKeyword;
+           doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
+                  sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
+                  "", "", "", "", "", "", "", "", "", "", "", "", "", "", sCon, sDerType, vAC); //get the list of Data Elements for permissible value search in
         }       
         else
         {
            doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                 sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
-                "", "", "", "", "", "", "", "", "", "", "", "", "", vAC);  //get the list of Data Elements
+                "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements
         }
         session.setAttribute("vACSearch", vAC);
         getDEResult(req, res, vResult, "");
@@ -7644,18 +8081,28 @@ boolean isIntSearch)
         if (sSearchIn.equals("minID"))
         {
            doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
-                sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID, "", "", "", dVersion, sCDid, "", vAC);  //get the list of Data Element Concepts
+                sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID, "", "", "", 
+                dVersion, sCDid, "", "", "", "", vAC);  //get the list of Data Element Concepts
         }
         else if (sSearchIn.equals("origin"))
         {
            String sOrigin = sKeyword;
            doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
-                sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", sOrigin, dVersion, sCDid, "", vAC);  //get the list of Data Element Concepts
+                sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", sOrigin, 
+                dVersion, sCDid, "", "", "", "", vAC);  //get the list of Data Element Concepts
         }        
+        else if (sSearchIn.equals("concept"))
+        {
+           String sCon = sKeyword;
+           doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
+               sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", "", 
+               dVersion, sCDid, "", "", "", sCon, vAC);  //get the list of Data Element Concepts
+        }       
         else
         {
            doDECSearch("", sKeyword, "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
-                sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", "", dVersion, sCDid, "", vAC);  //get the list of Data Element Concepts
+                sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", "", dVersion, 
+                sCDid, "", "", "", "", vAC);  //get the list of Data Element Concepts
         }        
 
         session.setAttribute("vACSearch", vAC);
@@ -7667,27 +8114,34 @@ boolean isIntSearch)
         {
            doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
                 sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID,  
-                "", "", dVersion, sCDid, "", "", vAC);  //get the list of Value Domains
+                "", "", dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains
         }
         else if (sSearchIn.equals("permValue"))
         {
            String sPermValue = sKeyword;
            doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
                 sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", 
-                sPermValue, "", dVersion, sCDid, "", "", vAC);  //get the list of Value Domains
+                sPermValue, "", dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains
         }        
         else if (sSearchIn.equals("origin"))
         {
            String sOrigin = sKeyword;
-            doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
+           doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
                 sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",  "", 
-                sOrigin, dVersion, sCDid, "", "", vAC);  //get the list of Value Domains
+                sOrigin, dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains
         }        
+        else if (sSearchIn.equals("concept"))
+        {
+           String sCon = sKeyword;
+           doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
+               sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",  "", 
+               "", dVersion, sCDid, "", "", "", "", sCon, sDataType, vAC);  //get the list of Value Domains
+        }       
         else
         {
            doVDSearch("", sKeyword, "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
                 sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",  
-                "", "", dVersion, sCDid, "", "", vAC);  //get the list of Value Domains
+                "", "", dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains
         }
 
         session.setAttribute("vACSearch", vAC);
@@ -7701,18 +8155,18 @@ boolean isIntSearch)
           if (sSearchIn.equals("minID"))    //public id   
           {
              doCDSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
-                  sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID, "", dVersion, vAC);  //get the list of Conceptual Domains
+                  sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID, "", dVersion, "", "", "", vAC);  //get the list of Conceptual Domains
           }
           else if (sSearchIn.equals("origin"))
           {
              String sOrigin = sKeyword;
              doCDSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
-                  sModifiedFrom, sModifiedTo, sCreator, sModifier, "", sOrigin, dVersion, vAC);  //get the list of Conceptual Domains
+                  sModifiedFrom, sModifiedTo, sCreator, sModifier, "", sOrigin, dVersion, "", "", "", vAC);  //get the list of Conceptual Domains
           }        
           else
           {
              doCDSearch("", sKeyword, "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
-                  sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", dVersion, vAC);  //get the list of Conceptual Domains
+                  sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", dVersion, "", "", "", vAC);  //get the list of Conceptual Domains
           }
           session.setAttribute("vACSearch", vAC);
           getCDResult(req, res, vResult, "");          
@@ -7729,13 +8183,15 @@ boolean isIntSearch)
            session.setAttribute("selCRFValueID", crfValueID);
            session.setAttribute("selQCValueName", crfValueName);
         } 
-        doPVVMSearch(sKeyword, sStatus, vAC);
+        doPVVMSearch(sKeyword, sStatus, "", "", vAC);
         getPVVMResult(req, res, vResult, "");
          
         if (isIntSearch == false)
         {
-           evs.do_EVSSearch(sKeyword, vAC, "NCI_Thesaurus", "Synonym", "All Sources",
-           100, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
+           //evs.do_EVSSearch(sKeyword, vAC, "NCI_Thesaurus", "Synonym", "All Sources",
+          // 100, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
+          //**************why is this needed******************
+           vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
            evs.get_Result(req, res, vResult, "DEF");
         }
 
@@ -7753,12 +8209,13 @@ boolean isIntSearch)
       {
         //first do the concept class search
         if (sSearchIn.equals("publicID"))
-          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, vAC);
+          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
         else if (!sSearchIn.equals("Code"))
-          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", vAC);
+          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
         //now the evs search
-        evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-          intMetaLimit, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
+       // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+       //   intMetaLimit, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
+        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         if(vAC != null)
           session.setAttribute("vEVSValueMeaning", vAC);
@@ -7768,12 +8225,13 @@ boolean isIntSearch)
       {
         //first do the concept class search
         if (sSearchIn.equals("publicID"))
-          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, vAC);
+          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
         else if (!sSearchIn.equals("Code"))
-          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", vAC);
+          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
         //now the evs search
-        evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-          intMetaLimit, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
+        //evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+        //  intMetaLimit, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
+        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         if(vAC != null)
           session.setAttribute("vCreateVM_EVSValueMeaning", vAC);
@@ -7783,8 +8241,9 @@ boolean isIntSearch)
       {
         String sConteIdseq = (String)req.getParameter("sConteIdseq");
         if (sConteIdseq == null) sConteIdseq = "";
-        evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+       // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+       // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         if(vAC != null)
           session.setAttribute("vParentConcept", vAC);
@@ -7794,8 +8253,9 @@ boolean isIntSearch)
       {
         String sConteIdseq = (String)req.getParameter("sConteIdseq");
         if (sConteIdseq == null) sConteIdseq = "";
-        evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+       // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+       // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, false, -1, "");
         session.setAttribute("vACSearch", vAC);
         if(vAC != null)
           session.setAttribute("vParentConceptVM", vAC);
@@ -7807,21 +8267,22 @@ boolean isIntSearch)
         if (sConteIdseq == null) sConteIdseq = "";
         if (sSearchIn.equals("publicID"))
         {
-          do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "OC"); 
-          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, vAC);
+          do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "OC", "", ""); 
+          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
         }
-        else if (!sSearchIn.equals("Code"))
+        else if (!sSearchIn.equals("MetaCode"))
         {
-          do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "OC");
-          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", vAC);
+          do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "OC", "", "");
+          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
         }
         // To search Synonym in EVS, need to filter
-        if((dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
+    /*    if ((dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
         && !sSearchIn.equals("publicID"))
-            sKeyword = filterName(sKeyword, "display");
+            sKeyword = filterName(sKeyword, "display"); */
 
-        evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-              intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+      //  evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+      //        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         evs.get_Result(req, res, vResult, "");
      }
@@ -7831,19 +8292,20 @@ boolean isIntSearch)
         if (sConteIdseq == null) sConteIdseq = "";
         if (sSearchIn.equals("publicID"))
         {
-          do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "PROP");
-          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, vAC);
+          do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "PROP", "", "");
+          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
         }
-        else if (!sSearchIn.equals("Code"))
+        else if (!sSearchIn.equals("MetaCode"))
         {
-          do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "PROP");
-          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", vAC);
+          do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "PROP", "", "");
+          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
         }
         //To search synonym you need to filter
-        if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
-          sKeyword = filterName(sKeyword, "display");
-        evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource, 
-            intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+     //   if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
+      //    sKeyword = filterName(sKeyword, "display");
+       // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource, 
+       //     intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         evs.get_Result(req, res, vResult, "");
      }
@@ -7853,24 +8315,25 @@ boolean isIntSearch)
         if (sConteIdseq == null) sConteIdseq = "";
         if (sSearchIn.equals("publicID"))
         {
-          do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "REP"); 
-          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, vAC);
+          do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "REP", "", ""); 
+          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
         }
-        else if (!sSearchIn.equals("Code"))
+        else if (!sSearchIn.equals("MetaCode"))
         {
-          do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "REP");
-          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", vAC);
+          do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "REP", "", "");
+          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
         }
         // To search Synonym in EVS, need to filter
-        if((dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
+     /*   if((dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
         && !sSearchIn.equals("publicID"))
-            sKeyword = filterName(sKeyword, "display");
+            sKeyword = filterName(sKeyword, "display"); 
         //To search synonym you need to filter
         if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
-          sKeyword = filterName(sKeyword, "display");
+          sKeyword = filterName(sKeyword, "display"); */
           
-        evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-            intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+       // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+       //     intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         evs.get_Result(req, res, vResult, "");
      }
@@ -7879,14 +8342,15 @@ boolean isIntSearch)
         String sConteIdseq = (String)req.getParameter("sConteIdseq");
         if (sConteIdseq == null) sConteIdseq = "";
         if (sSearchIn.equals("publicID"))
-          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, vAC);
-        else if (!sSearchIn.equals("Code"))   //do concept search
-          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", vAC);
+          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
+        else if (!sSearchIn.equals("MetaCode"))   //do concept search
+          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
         //To search synonym you need to filter
-        if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
-          sKeyword = filterName(sKeyword, "display");
-        evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+      //  if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
+      //    sKeyword = filterName(sKeyword, "display");
+        //evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+        //intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         evs.get_Result(req, res, vResult, "");
      }
@@ -7895,15 +8359,16 @@ boolean isIntSearch)
         String sConteIdseq = (String)req.getParameter("sConteIdseq");
         if (sConteIdseq == null) sConteIdseq = "";
         if (sSearchIn.equals("publicID"))
-          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, vAC);
-        else if (!sSearchIn.equals("Code"))   //do concept search
-          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", vAC);
+          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
+        else if (!sSearchIn.equals("MetaCode"))   //do concept search
+          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
 
         //To search synonym you need to filter
-        if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
-          sKeyword = filterName(sKeyword, "display");
-        evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+      //  if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
+      //    sKeyword = filterName(sKeyword, "display");
+       // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+       // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         evs.get_Result(req, res, vResult, "");
      }
@@ -7912,15 +8377,16 @@ boolean isIntSearch)
         String sConteIdseq = (String)req.getParameter("sConteIdseq");
         if (sConteIdseq == null) sConteIdseq = "";
         if (sSearchIn.equals("publicID"))
-          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, vAC);
-        else if (!sSearchIn.equals("Code"))   //do concept search
-          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", vAC);
+          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
+        else if (!sSearchIn.equals("MetaCode"))   //do concept search
+          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
 
         //To search synonym you need to filter
-        if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
-          sKeyword = filterName(sKeyword, "display");
-        evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+     //   if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
+      //    sKeyword = filterName(sKeyword, "display");
+        //evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+       // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         evs.get_Result(req, res, vResult, "");
      }
@@ -8254,25 +8720,10 @@ boolean isIntSearch)
     String returnValue = "";
    try
     {
-      if (curField.equals("name"))
+      if (curField.equals("name") || curField.equals("conName"))
         returnValue = curBean.getLONG_NAME();
       else if (curField.equals("umls") || curField.equals("Ident"))
         returnValue = curBean.getNCI_CC_VAL();
-    /*  {
-        String evsDB = curBean.getEVS_DATABASE();
-        String umlsCUI = curBean.getUMLS_CUI_VAL();
-        String tempCUI = curBean.getTEMP_CUI_VAL();
-        if (evsDB.equals("NCI Thesaurus"))
-           returnValue = curBean.getNCI_CC_VAL();
-        else if (evsDB.equals("NCI Metathesaurus") && !umlsCUI.equalsIgnoreCase("No value returned."))
-           returnValue = curBean.getUMLS_CUI_VAL();
-        else if (evsDB.equals("NCI Metathesaurus") && tempCUI.equalsIgnoreCase("No value returned."))
-           returnValue = curBean.getTEMP_CUI_VAL();
-        else if (evsDB.equals("caDSR"))
-           returnValue = curBean.getID();
-        else
-           returnValue = curBean.getNCI_CC_VAL();
-      } */
       else if (curField.equals("def"))
         returnValue = curBean.getPREFERRED_DEFINITION();
       else if (curField.equals("source"))
@@ -8294,6 +8745,12 @@ boolean isIntSearch)
         returnValue = curBean.getCOMMENTS();
       else if (curField.equals("publicID"))
         returnValue = curBean.getID();
+      else if (curField.equals("asl") || curField.equals("Status"))
+        returnValue = curBean.getASL_NAME();
+      else if (curField.equals("version"))
+        returnValue = curBean.getVERSION();
+      else if (curField.equals("semantic"))
+        returnValue = curBean.getEVS_SEMANTIC();
       if (returnValue == null)
         returnValue = "";
     }
@@ -8452,6 +8909,10 @@ boolean isIntSearch)
         returnValue = curBean.getID();
       else if (curField.equals("decUse"))
         returnValue = this.getDECCount(curBean.getDEC_USING());   // curBean.getDEC_USING();
+      else if (curField.equals("asl") || curField.equals("Status"))
+        returnValue = curBean.getASL_NAME();
+      else if (curField.equals("version"))
+        returnValue = curBean.getVERSION();
       if (returnValue == null)
         returnValue = "";
     }
@@ -8626,6 +9087,10 @@ boolean isIntSearch)
         returnValue = curBean.getID();
       else if (curField.equals("decUse"))
         returnValue = this.getDECCount(curBean.getDEC_USING());   // curBean.getDEC_USING();
+      else if (curField.equals("asl") || curField.equals("Status"))
+        returnValue = curBean.getASL_NAME();
+      else if (curField.equals("version"))
+        returnValue = curBean.getVERSION();
       if (returnValue == null)
         returnValue = "";
     }
@@ -8637,7 +9102,7 @@ boolean isIntSearch)
     return returnValue;
   }
 
-  /**
+ /* /**
    * To get the sorted vector for the selected field in the Rep component, called from getBlockSortedResult.
    * gets the 'blockSortType' from request and 'vACSearch' vector from session.
    * calls 'getRepFieldValue' to extract the value from the bean for the selected sortType.
@@ -8648,7 +9113,7 @@ boolean isIntSearch)
    * @param res HttpServletResponse object.
    *
    */
-  public void getRepSortedRows(HttpServletRequest req, HttpServletResponse res)
+ /* public void getRepSortedRows(HttpServletRequest req, HttpServletResponse res)
   {
     try
     {
@@ -8724,7 +9189,7 @@ boolean isIntSearch)
    *
    * @return String RepField Value if selected field is found. otherwise empty string.
    */
-  private String getRepFieldValue(EVS_Bean curBean, String curField)
+ /* private String getRepFieldValue(EVS_Bean curBean, String curField)
   {
     String returnValue = "";
     try
@@ -8735,13 +9200,13 @@ boolean isIntSearch)
       {
         String evsDB = curBean.getEVS_DATABASE();
         String umlsCUI = curBean.getUMLS_CUI_VAL();
-        String tempCUI = curBean.getTEMP_CUI_VAL();
+       // String tempCUI = curBean.getTEMP_CUI_VAL();
         if (evsDB.equals("NCI Thesaurus"))
            returnValue = curBean.getNCI_CC_VAL();
         else if (evsDB.equals("NCI Metathesaurus") && !umlsCUI.equalsIgnoreCase("No value returned."))
            returnValue = curBean.getUMLS_CUI_VAL();
-        else if (evsDB.equals("NCI Metathesaurus") && tempCUI.equalsIgnoreCase("No value returned."))
-           returnValue = curBean.getTEMP_CUI_VAL();
+      //  else if (evsDB.equals("NCI Metathesaurus") && tempCUI.equalsIgnoreCase("No value returned."))
+      //     returnValue = curBean.getTEMP_CUI_VAL();
         else if (evsDB.equals("caDSR"))
            returnValue = curBean.getID();
         else
@@ -8778,7 +9243,7 @@ boolean isIntSearch)
    * @param res HttpServletResponse object.
    *
    */
-  public void getQSortedRows(HttpServletRequest req, HttpServletResponse res)
+ /* public void getQSortedRows(HttpServletRequest req, HttpServletResponse res)
   {
     try
     {
@@ -8854,7 +9319,7 @@ boolean isIntSearch)
    *
    * @return String QField Value if selected field is found. otherwise empty string.
    */
-  private String getQFieldValue(EVS_Bean curBean, String curField)
+/*  private String getQFieldValue(EVS_Bean curBean, String curField)
   {
     String returnValue = "";
     try
@@ -8865,13 +9330,13 @@ boolean isIntSearch)
       {
         String evsDB = curBean.getEVS_DATABASE();
         String umlsCUI = curBean.getUMLS_CUI_VAL();
-        String tempCUI = curBean.getTEMP_CUI_VAL();
+      //  String tempCUI = curBean.getTEMP_CUI_VAL();
         if (evsDB.equals("NCI Thesaurus"))
            returnValue = curBean.getNCI_CC_VAL();
         else if (evsDB.equals("NCI Metathesaurus") && !umlsCUI.equalsIgnoreCase("No value returned."))
            returnValue = curBean.getUMLS_CUI_VAL();
-        else if (evsDB.equals("NCI Metathesaurus") && tempCUI.equalsIgnoreCase("No value returned."))
-           returnValue = curBean.getTEMP_CUI_VAL();
+      //  else if (evsDB.equals("NCI Metathesaurus") && tempCUI.equalsIgnoreCase("No value returned."))
+      //     returnValue = curBean.getTEMP_CUI_VAL();
         else
            returnValue = curBean.getNCI_CC_VAL();
       }
@@ -8892,7 +9357,7 @@ boolean isIntSearch)
       logger.fatal("ERROR in GetACSearch-getQField : " + e.toString());
     }
     return returnValue;
-  }
+  } */
 
   /**
    * To get final result vector of selected attributes/rows to display for Permissible Values component,
@@ -9444,7 +9909,7 @@ boolean isIntSearch)
       //  session.setAttribute("creSearchInBlocks", sSearchIn);  //keep the search in criteria
 
         String dtsVocab = req.getParameter("listContextFilterVocab");
-        if(dtsVocab == null) dtsVocab = "NCI_Thesaurus";
+        if(dtsVocab == null) dtsVocab = "";  // "NCI_Thesaurus";
      //   session.setAttribute("dtsVocab", dtsVocab); 
 
         String sSearchInEVS = (String)req.getParameter("listSearchInEVS");
@@ -9480,8 +9945,9 @@ boolean isIntSearch)
         session.setAttribute("creKeyword", termStr);
         //call the method to search
         EVSSearch evs = new EVSSearch(req, res, m_servlet);
-        evs.do_EVSSearch(termStr, vAC, dtsVocab, sSearchInEVS, sMetaSource, 
-        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1);
+      //  evs.do_EVSSearch(termStr, vAC, dtsVocab, sSearchInEVS, sMetaSource, 
+      //  intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1);
+        vAC = evs.doVocabSearch(vAC, termStr, dtsVocab, sSearchInEVS, "", "", sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         evs.get_Result(req, res, vResult, "DEF");
         session.setAttribute("EVSresults", vResult);
@@ -9509,7 +9975,8 @@ boolean isIntSearch)
    * @param detlName String the detl type of the selected AC.
    *
    */
-  public void doAltNameSearch(String acIdseq, String detlName, String CD_ID, String sOrigin)  // 
+  public Vector doAltNameSearch(String acIdseq, String detlName, 
+        String CD_ID, String sOrigin, String sFor)  // 
   {
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -9544,8 +10011,11 @@ boolean isIntSearch)
 
         String s;
         //get the current session list of ref doc to append to all DEs
-        Vector vAllAltName = (Vector)session.getAttribute("AllAltNameList"); 
+        Vector  vAllAltName = new Vector();
+        if (!sFor.equals("Version"))
+          vAllAltName = (Vector)session.getAttribute("AllAltNameList"); 
         if (vAllAltName == null) vAllAltName = new Vector();
+
         if(rs!=null)
         {
           //loop through the resultSet and add them to the bean
@@ -9564,10 +10034,12 @@ boolean isIntSearch)
             AltNameBean.setAC_LANGUAGE(rs.getString("lae_name"));
             AltNameBean.setALT_SUBMIT_ACTION("UPD");
             vList.addElement(AltNameBean);  //add the bean to a vector
-            vAllAltName.addElement(AltNameBean);
+            if (!sFor.equals("Version"))
+              vAllAltName.addElement(AltNameBean);
           }  //END WHILE
         }   //END IF
-        session.setAttribute("AllAltNameList", vAllAltName);
+        if (!sFor.equals("Version"))
+          session.setAttribute("AllAltNameList", vAllAltName);
       }
       m_classReq.setAttribute("AltNameList", vList);
       m_classReq.setAttribute("itemType", detlName);
@@ -9588,6 +10060,7 @@ boolean isIntSearch)
       //System.err.println("Problem closing in GetACSearch-doAltNameSearch : " + ee);
       logger.fatal("ERROR - GetACSearch-doAltNameSearch for close : " + ee.toString());
     }
+    return vList;
   }  //doAltNameSearch search
 
   /**
@@ -9602,7 +10075,7 @@ boolean isIntSearch)
    * @param docType String the type of reference document.
    *
    */
-  public void doRefDocSearch(String acIdseq, String docType)  // 
+  public Vector doRefDocSearch(String acIdseq, String docType, String sFor)  // 
   {
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -9637,7 +10110,9 @@ boolean isIntSearch)
 
         String s;
         //get the current session list of ref doc to append to all DEs
-        Vector vAllRefDoc = (Vector)session.getAttribute("AllRefDocList"); 
+        Vector  vAllRefDoc = new Vector();
+        if (!sFor.equals("Version"))
+          vAllRefDoc = (Vector)session.getAttribute("AllRefDocList"); 
         if (vAllRefDoc == null) vAllRefDoc = new Vector();
         if(rs!=null)
         {
@@ -9661,10 +10136,12 @@ boolean isIntSearch)
             RefDocBean.setAC_LANGUAGE(rs.getString("rd_lae_name"));
             RefDocBean.setREF_SUBMIT_ACTION("UPD");
             vList.addElement(RefDocBean);  //add the bean to a vector
-            vAllRefDoc.addElement(RefDocBean);
+            if (!sFor.equals("Version"))
+              vAllRefDoc.addElement(RefDocBean);
           }  //END WHILE
         }   //END IF
-        session.setAttribute("AllRefDocList", vAllRefDoc);
+        if (!sFor.equals("Version"))
+          session.setAttribute("AllRefDocList", vAllRefDoc);
       }
       m_classReq.setAttribute("RefDocList", vList);
       m_classReq.setAttribute("itemType", docType);
@@ -9685,6 +10162,7 @@ boolean isIntSearch)
       //System.err.println("Problem closing in GetACSearch-doRefDocSearch : " + ee);
       logger.fatal("ERROR - GetACSearch-doRefDocSearch for close : " + ee.toString());
     }
+    return vList;
   }  //doRefDocSearch search
 
   /**
@@ -10062,6 +10540,7 @@ boolean isIntSearch)
     try
     {
       //Create a Callable Statement object.
+      HttpSession session = (HttpSession)m_classReq.getSession();
       sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
       if (sbr_db_conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
@@ -10106,14 +10585,15 @@ boolean isIntSearch)
             if (vm_evs_cui_source == null) vm_evs_cui_source = "";
             String vm_concept_code = rs.getString("vm_concept_code");
             if (vm_concept_code == null) vm_concept_code = "";
-            String evs_origin = rs.getString("evs_origin");
-            if (evs_origin == null) evs_origin = "";
+            String db_origin = rs.getString("evs_origin");
+            if (db_origin == null) db_origin = "";
+            EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+            if (eUser == null) eUser = new EVS_UserBean();
             EVS_Bean vmConcept = new EVS_Bean();
-            vmConcept.setEVSBean("", rs.getString("evs_definition_source"), 
-                          rs.getString("vm_concept_name"), 
-                          rs.getString("vm_evs_cui_source"), "", "", 
-                          rs.getString("vm_concept_code"), "", "", 
-                          rs.getString("evs_origin"), 0, "", "", "");
+            String evs_origin = vmConcept.getVocabAttr(eUser, db_origin, "vocabDBOrigin", "vocabName");
+            vmConcept.setEVSBean("", evs_definition_source, vm_concept_name, vm_concept_name,
+                          vm_evs_cui_source, vm_concept_code, db_origin, evs_origin, 
+                          0, "", "", "", "", "", "", "");
             vmBean.setVM_CONCEPT(vmConcept);
             vList.addElement(vmBean);  //add the bean to a vector
           }  //END WHILE
@@ -10361,5 +10841,225 @@ boolean isIntSearch)
       logger.fatal("ERROR in GetACSearch-getVMResult : " + e.toString());
     }
   }
+  
+  public Hashtable getAC_Contacts(String ac_idseq, String acc_idseq)
+  {
+    Connection sbr_db_conn = null;
+    ResultSet rs = null;
+    CallableStatement CStmt = null;
+    Hashtable vList = new Hashtable();
+    try
+    {
+      HttpSession session = (HttpSession)m_classReq.getSession();
+      //get session attributes
+      Hashtable hOrg = (Hashtable)session.getAttribute("Organizations");
+      if (hOrg == null) hOrg = new Hashtable();
+      Hashtable hPer = (Hashtable)session.getAttribute("Persons");
+      if (hPer == null) hPer = new Hashtable();
+      
+      //Create a Callable Statement object.
+      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (sbr_db_conn == null)
+        m_servlet.ErrorLogin(m_classReq, m_classRes);
+      else
+      {
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_AC_CONTACT(?,?,?)}");
+        // Now tie the placeholders for out parameters.
+        CStmt.registerOutParameter(3, OracleTypes.CURSOR);
+        // Now tie the placeholders for In parameters.
+        CStmt.setString(1,ac_idseq);
+        CStmt.setString(2,acc_idseq);
+         // Now we are ready to call the stored procedure
+        boolean bExcuteOk = CStmt.execute();
+        //store the output in the resultset
+        rs = (ResultSet) CStmt.getObject(3);
+
+        String s;
+        if(rs!=null)
+        {
+          //loop through the resultSet and add them to the bean
+          while(rs.next())
+          {
+            AC_CONTACT_Bean accBean = new AC_CONTACT_Bean();
+            String accID = rs.getString("acc_idseq");
+            accBean.setAC_CONTACT_IDSEQ(accID);
+            String sOrgID = rs.getString("org_idseq");
+            accBean.setORG_IDSEQ(sOrgID);
+            String sPerID = rs.getString("per_idseq");
+            accBean.setPERSON_IDSEQ(sPerID);
+            accBean.setAC_IDSEQ(rs.getString("ac_idseq"));
+            accBean.setRANK_ORDER(rs.getString("rank_order"));
+            accBean.setCS_CSI_IDSEQ(rs.getString("cs_csi_idseq"));
+            accBean.setCS_IDSEQ(rs.getString("csi_idseq"));
+            accBean.setCONTACT_ROLE(rs.getString("contact_role"));
+            accBean.setACC_SUBMIT_ACTION("NONE");
+            //get org and per name from the list
+            if (sOrgID != null && !sOrgID.equals("") && hOrg.containsKey(sOrgID))
+              accBean.setORG_NAME((String)hOrg.get(sOrgID));
+            if (sPerID != null && !sPerID.equals("") && hPer.containsKey(sPerID))
+              accBean.setPERSON_NAME((String)hPer.get(sPerID));
+            String contName = accBean.getPERSON_NAME();
+            if (contName == null || contName.equals(""))
+              contName = accBean.getORG_NAME();  //cont name is unique to each ac
+            //get comm and addr information
+            Vector vComm = this.getContactComm(null, sOrgID, sPerID);
+            accBean.setACC_COMM_List(vComm);
+            Vector vAddr = this.getContactAddr(null, sOrgID, sPerID);
+            accBean.setACC_ADDR_List(vAddr);
+            
+         System.out.println(accID + " org " + accBean.getORG_NAME() + " per " + accBean.getPERSON_NAME() + " contName " + contName);
+            vList.put(contName, accBean);  //stroe the bean in teh vector
+          }  //END WHILE
+        }   //END IF
+      }
+    }
+    catch(Exception e)
+    {
+      logger.fatal("ERROR - GetACSearch-searchACContact for other : " + e.toString());
+    }
+    try
+    {
+      if(rs!=null) rs.close();
+      if(CStmt!=null) CStmt.close();
+      if(sbr_db_conn != null) sbr_db_conn.close();
+    }
+    catch(Exception ee)
+    {
+      logger.fatal("ERROR - GetACSearch-searchACContact for close : " + ee.toString());
+    }
+    return vList;
+  }  //end searchACContact
+  
+  public Vector getContactComm(String comm_idseq, String org_idseq, String per_idseq)
+  {
+    Connection sbr_db_conn = null;
+    ResultSet rs = null;
+    CallableStatement CStmt = null;
+    Vector vList = new Vector();
+    try
+    {
+      //Create a Callable Statement object.
+      HttpSession session = (HttpSession)m_classReq.getSession();
+      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (sbr_db_conn == null)
+        m_servlet.ErrorLogin(m_classReq, m_classRes);
+      else
+      {
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CONTACT_COMM(?,?,?,?)}");
+        // Now tie the placeholders for out parameters.
+        CStmt.registerOutParameter(4, OracleTypes.CURSOR);
+        // Now tie the placeholders for In parameters.
+        CStmt.setString(1,org_idseq);
+        CStmt.setString(2,per_idseq);
+        CStmt.setString(3,comm_idseq);
+         // Now we are ready to call the stored procedure
+        boolean bExcuteOk = CStmt.execute();
+        //store the output in the resultset
+        rs = (ResultSet) CStmt.getObject(4);
+
+        String s;
+        if(rs!=null)
+        {
+          //loop through the resultSet and add them to the bean
+          while(rs.next())
+          {
+            AC_COMM_Bean commBean = new AC_COMM_Bean();
+            commBean.setAC_COMM_IDSEQ(rs.getString("ccomm_idseq"));
+            commBean.setORG_IDSEQ(rs.getString("org_idseq"));
+            commBean.setPERSON_IDSEQ(rs.getString("per_idseq"));
+            commBean.setCTL_NAME(rs.getString("ctl_name"));
+            commBean.setRANK_ORDER(rs.getString("rank_order"));
+            commBean.setCYBER_ADDR(rs.getString("cyber_address"));
+            commBean.setCOMM_SUBMIT_ACTION("NONE");
+            vList.addElement(commBean);
+          }  //END WHILE
+        }   //END IF
+      }
+    }
+    catch(Exception e)
+    {
+      logger.fatal("ERROR - GetACSearch-getContactComm for other : " + e.toString());
+    }
+    try
+    {
+      if(rs!=null) rs.close();
+      if(CStmt!=null) CStmt.close();
+      if(sbr_db_conn != null) sbr_db_conn.close();
+    }
+    catch(Exception ee)
+    {
+      logger.fatal("ERROR - GetACSearch-getContactComm for close : " + ee.toString());
+    }
+    return vList;
+  }  //end getContactComm
+  
+  public Vector getContactAddr(String addr_idseq, String org_idseq, String per_idseq)
+  {
+    Connection sbr_db_conn = null;
+    ResultSet rs = null;
+    CallableStatement CStmt = null;
+    Vector vList = new Vector();
+    try
+    {
+      //Create a Callable Statement object.
+      HttpSession session = (HttpSession)m_classReq.getSession();
+      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (sbr_db_conn == null)
+        m_servlet.ErrorLogin(m_classReq, m_classRes);
+      else
+      {
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CONTACT_ADDR(?,?,?,?)}");
+        // Now tie the placeholders for out parameters.
+        CStmt.registerOutParameter(4, OracleTypes.CURSOR);
+        // Now tie the placeholders for In parameters.
+        CStmt.setString(1,org_idseq);
+        CStmt.setString(2,per_idseq);
+        CStmt.setString(3,addr_idseq);
+         // Now we are ready to call the stored procedure
+        boolean bExcuteOk = CStmt.execute();
+        //store the output in the resultset
+        rs = (ResultSet) CStmt.getObject(4);
+
+        String s;
+        if(rs!=null)
+        {
+          //loop through the resultSet and add them to the bean
+          while(rs.next())
+          {
+            AC_ADDR_Bean addrBean = new AC_ADDR_Bean();
+            addrBean.setAC_ADDR_IDSEQ(rs.getString("caddr_idseq"));
+            addrBean.setORG_IDSEQ(rs.getString("org_idseq"));
+            addrBean.setPERSON_IDSEQ(rs.getString("per_idseq"));
+            addrBean.setATL_NAME(rs.getString("atl_name"));
+            addrBean.setRANK_ORDER(rs.getString("rank_order"));
+            addrBean.setADDR_LINE1(rs.getString("addr_line1"));
+            addrBean.setADDR_LINE2(rs.getString("addr_line2"));
+            addrBean.setCITY(rs.getString("city"));
+            addrBean.setSTATE_PROV(rs.getString("state_prov"));
+            addrBean.setPOSTAL_CODE(rs.getString("postal_code"));
+            addrBean.setCOUNTRY(rs.getString("country"));
+            addrBean.setADDR_SUBMIT_ACTION("NONE");
+            vList.addElement(addrBean);
+          }  //END WHILE
+        }   //END IF
+      }
+    }
+    catch(Exception e)
+    {
+      logger.fatal("ERROR - GetACSearch-getContactAddr for other : " + e.toString());
+    }
+    try
+    {
+      if(rs!=null) rs.close();
+      if(CStmt!=null) CStmt.close();
+      if(sbr_db_conn != null) sbr_db_conn.close();
+    }
+    catch(Exception ee)
+    {
+      logger.fatal("ERROR - GetACSearch-getContactAddr for close : " + ee.toString());
+    }
+    return vList;
+  }  //end getContactAddr
+
 //close the class
 } 

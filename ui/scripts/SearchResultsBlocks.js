@@ -3,10 +3,12 @@
    var editID = "";
    var editName = "";
    var editNameLong = "";
-   var editLongName = "";
-   var editNameType = "";
+  // var editLongName = "";
+  // var editNameType = "";
    var editDefinition = "";
    var editDefSource = "";
+   var editLevel = "";
+   var editStatus = "";
    var sComp = "";
    var selRow = "";
    var noMessage = "";
@@ -70,7 +72,7 @@
    {
       StoreSelectedRow("true", sCKName);
       document.searchResultsForm.OCCCodeDB.value = sCCodeDB;
-      if (sCCodeDB != "caDSR" && sCCodeDB != "NCI Metathesaurus")
+      if (sCCodeDB != dsrName)  //"caDSR" && sCCodeDB != "NCI Metathesaurus")
       {
         window.status = "Submitting the page, it may take a minute, please wait....."
         document.searchResultsForm.Message.style.visibility="visible";
@@ -86,592 +88,608 @@
         alert("This database cannot be shown in a tree.");
    }
    
-    function UseSelection()
+  function useSelectionBuildBlocks()
+  {
+    var useStatus = checkValidStatus(editStatus);
+    if (useStatus != "valid") 
+      return;
+    //continue with the submission
+    if(opener.document.newDECForm != null)
     {
-      if(opener.document.newDECForm != null)
+      var source = opener.document.newDECForm.DECAction.value;
+      opener.document.newDECForm.sCompBlocks.value = sComp;
+      opener.document.newDECForm.selCompBlockRow.value = selRow;
+      opener.SubmitValidate("UseSelection");
+      window.close();
+    }
+    else if(opener.document.createVDForm != null)
+    {
+      opener.document.createVDForm.sCompBlocks.value = sComp;
+      opener.document.createVDForm.selRepRow.value = selRow;
+      opener.SubmitValidate("UseSelection");
+      window.close();
+    }
+  }
+  //stores the selected row in the hidden array and submits the form to refresh
+  function submitOpener()
+  {
+    //first check the concept status and return if not valid
+    var useStatus = checkValidStatus(editStatus);
+    if (useStatus != "valid") 
+      return;
+    //store the selrow in an array 
+    var selRowArray = new Array();        
+    var rowNo = document.searchResultsForm.hiddenSelectedRow[0].value;
+    selRowArray[0] = rowNo;
+    opener.AllocSelRowOptions(selRowArray);  //allocate option for hidden row and select it.
+    opener.SubmitValidate("UseSelection");  //submit the form
+  }
+      
+ function ShowUseSelection(vCompAction)
+ {
+    if(vCompAction == "BEDisplay") vCompAction = "searchForCreate";
+    var LongName = "";
+    var PrefName  = "";
+    if (vCompAction == "searchForCreate")
+    { 
+      var blName = editName + "\n &nbsp;&nbsp;" + sCCodeDB + "\n &nbsp;&nbsp;" + sCCode;
+      //building blocks from DEC page
+      if (opener.document.newDECForm != null && 
+          (sComp == "ObjectClass" || sComp == "PropertyClass" || sComp == "Property" || 
+           sComp == "ObjectQualifier" || sComp == "PropertyQualifier"))
+        useSelectionBuildBlocks();
+      //rep term components from VD page
+      else if (opener.document.createVDForm != null && (sComp == "RepTerm" || sComp == "RepQualifier"))
+       useSelectionBuildBlocks();
+      //other attributes oc and prop from vd page
+      else if (opener.document.createVDForm != null && (sComp == "VDObjectClass" || sComp == "VDPropertyClass"))
       {
-        var source = opener.document.newDECForm.DECAction.value;
-        opener.document.newDECForm.sCompBlocks.value = sComp;
-        opener.document.newDECForm.selCompBlockRow.value = selRow;
-        opener.SubmitValidate("UseSelection");
-        window.close();
-      }
-      else if(opener.document.createVDForm != null)
-      {
+        //call the function to submit the form
         opener.document.createVDForm.sCompBlocks.value = sComp;
-        opener.document.createVDForm.selRepRow.value = selRow;
-        opener.SubmitValidate("UseSelection");
+        submitOpener();
         window.close();
       }
-    }
-    //stores the selected row in the hidden array and submits the form to refresh
-    function submitOpener()
+      //parent concept from vd page
+      else if (sComp == "ParentConcept" && opener.document.createVDForm != null)
+        useSelectionParentConcept();
+      //opened from create or edit VD form.
+      else if ((sComp == "EVSValueMeaning" || sComp == "ParentConceptVM") && opener.document.createVDForm != null)
+        useSelectionSelectVM();
+      //opened from create vm page
+      else if (sComp == "CreateVM_EVSValueMeaning")
+        useSelectionCreateVM();          
+    } 
+  }
+
+  //allow only if released or active or none
+  function checkValidStatus(cStatus)
+  {
+    var sStatus = "valid";
+    //check the status of multiple selection
+    if (cStatus != null && cStatus == "multiple")
     {
-      //store the selrow in an array 
-      var selRowArray = new Array();        
-      var rowNo = document.searchResultsForm.hiddenSelectedRow[0].value;
-      selRowArray[0] = rowNo;
-      opener.AllocSelRowOptions(selRowArray);  //allocate option for hidden row and select it.
-      opener.SubmitValidate("UseSelection");  //submit the form
-    }
-        
-   function ShowUseSelection(vCompAction)
-   {
-      if(vCompAction == "BEDisplay") vCompAction = "searchForCreate";
-      var LongName = "";
-      var PrefName  = "";
-      if (vCompAction == "searchForCreate")
-      { 
-          var blName = editName + "\n &nbsp;&nbsp;" + sCCodeDB + "\n &nbsp;&nbsp;" + sCCode;
-          if (sComp == "ObjectClass" && opener.document.newDECForm != null)
-          {
-            UseSelection();
-          }
-          else if (sComp == "PropertyClass" || sComp == "Property")
-          {
-            UseSelection();
-          }
-          else if (sComp == "ObjectQualifier")
-          {
-            UseSelection();
-          }
-          else if (sComp == "PropertyQualifier")
-          {
-            UseSelection();
-          }
-          else if (sComp == "VDObjectClass" && opener.document.createVDForm != null)
-          {
-            //call the function to submit the form
-            opener.document.createVDForm.sCompBlocks.value = sComp;
-            submitOpener();
-            window.close();
-          }
-          else if (sComp == "VDPropertyClass" && opener.document.createVDForm != null)
-          {
-            //call the function to submit the form
-            opener.document.createVDForm.sCompBlocks.value = sComp;
-            submitOpener();
-            window.close();
-          }
- 
-    else if (sComp == "RepTerm" && opener.document.createVDForm != null)
-    { 
-		 opener.document.createVDForm.selRepRow.value = selRow;
-     UseSelection();
-    }
-    else if (sComp == "RepQualifier" && opener.document.createVDForm != null)
-    {
-     opener.document.createVDForm.selRepQRow.value = selRow;
-     UseSelection();  
-    }
-    else if (sComp == "ParentConcept" && opener.document.createVDForm != null)
-    {      
-      if (opener.document.createVDForm != null)
-      {
-        //do not allow to use the meta term if enum parent
-        var vdtype = opener.document.createVDForm.listVDType[opener.document.createVDForm.listVDType.selectedIndex].value;
-        if (vdtype == "E" && (sCCodeDB == null || sCCodeDB == "" || sCCodeDB == "NCI Metathesaurus"))
+      var dCount = document.searchResultsForm.hiddenSelectedRow.length;
+      for (i=0; i<dCount; i++)
+      {        
+        var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value; //get the row number
+        cStatus = conArray[rowNo].conStatus;
+        if (cStatus != null && cStatus != "" && cStatus != "RELEASED" && cStatus != "Active")
         {
-          alert("Concepts from the NCI Metathesaurus may not be used to reference an Enumerated Value Domain.\n" + 
-                "Please select a Concept from another EVS Vocabulary.");
-          return;
-        }
-        else
-        {          
-          //submit vd form for parent selection
-          if (opener.document.createVDForm.hiddenParentName != null)
-          {
-            opener.document.createVDForm.hiddenParentName.value = editLongName;
-            opener.document.createVDForm.hiddenParentCode.value = sCCode;
-            opener.document.createVDForm.hiddenParentDB.value = sCCodeDB;
-            //store the selrow in an array 
-            var selRowArray = new Array();
-            var rowNo = document.searchResultsForm.hiddenSelectedRow[0].value;
-            selRowArray[0] = rowNo;
-            opener.AllocSelRowOptions(selRowArray);  //allocate option for hidden row and select it.
-            opener.SubmitValidate("refresh");
-            window.close();
-          }
+          sStatus = "invalid"; 
+          break;
         }
       }
     }
-    //opened from create or edit VD form.
-    else if ((sComp == "EVSValueMeaning" || sComp == "ParentConceptVM") && opener.document.createVDForm != null)
+    //check the statu for single selection
+    else if (cStatus != null && cStatus != "" && cStatus != "RELEASED" && cStatus != "Active")      
+      sStatus = "invalid";
+    //put the alert message if not valid
+    if (sStatus != "valid")
+      alert("Concept must be Released or Active to use it in an Administered Component");
+    //return the staus  
+    return sStatus;
+  }
+
+  function useSelectionParentConcept()
+  {      
+    if (opener.document.createVDForm != null)
     {
-        var sConfirm = false;
-        var selRowArray2 = new Array();
-        var selRowArray3 = new Array();
-        var multiNames = checkDuplicateConcept();
-        if (multiNames != null && multiNames != "")
-        {
-          sConfirm = confirm("Duplicate Concept Names are selected either because they have " 
-                + "multiple definitions \nor they are contained in multiple hierachical " 
-                + "locations within their source vocabulory.\n\n" 
-                + "Click OK: Default definition - NCI source will be selected. \n"
-                + "If no NCI definition is present, the first definition associated with the Concept will be used. \n\n"
-                + "Click CANCEL to go back and manually de-select the unwanted duplicates.\n\n" 
-                + "Duplicate Concepts : \n\t" + multiNames);
-
-          if (sConfirm == true)
-          {
-            selRowArray2 = getRowNumbersOfUniqueConcepts();
-            for (var y=0; y<selRowArray2.length; y++)
-            {
-              var thisRow = selRowArray2[y];
-              if(thisRow == 0 && thisRow != "")
-              {  
-                selRowArray3[selRowArray3.length] = thisRow;
-              }
-              else if(thisRow != "")
-              {     
-                selRowArray3[selRowArray3.length] = thisRow;
-              }
-            }
-          }
-          else
-            return;
-        }         
-        //store the selrow in an array 
-        var selRowArray = new Array();        
-        var dCount = document.searchResultsForm.hiddenSelectedRow.length;
-        for (i=0; i<dCount; i++)
-        {
-          //get the row number
-          var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
-          selRowArray[selRowArray.length] = rowNo;  //fill the array with the checked row number
-          //remove the check boxes
-          var ckField = "CK"+rowNo;
-          formObj= eval("document.searchResultsForm."+ckField);
-          formObj.checked=false;
-        }
-
-        if(sConfirm == true)
-            opener.AllocSelRowOptions(selRowArray3);  //allocate option for hidden row and select it.      
-        else
-            opener.AllocSelRowOptions(selRowArray); 
-        //submit the vd form to store these in pv bean and refresh the page
-        opener.document.createVDForm.newCDEPageAction.value = "addSelectedVM";
-        opener.SubmitValidate("addSelectedVM");
-        //disable button and de-count the checked numbers
-        numRowsSelected = 0;
-        document.searchResultsForm.hiddenSelectedRow.length = 0;
-        document.searchResultsForm.editSelectedBtn.disabled=true;
-        document.searchResultsForm.btnSubConcepts.disabled=true;
-      //  opener.document.createVDForm.searchComp.value = sComp;
-     // }
-//alert("done showUseSelection");
-    }
-    if (sComp == "CreateVM_EVSValueMeaning")
-    { 
-      var dCount = document.searchResultsForm.hiddenSelectedRow.length;
-      if (dCount > 0)
+      //first check the concept status and return if not valid
+      var useStatus = checkValidStatus(editStatus);
+      if (useStatus != "valid") 
+        return;
+      //do not allow to use the meta term if enum parent
+      var vdtype = opener.document.createVDForm.listVDType[opener.document.createVDForm.listVDType.selectedIndex].value;
+      if (vdtype == "E" && (sCCodeDB == null || sCCodeDB == "" || sCCodeDB == metaName))  // "NCI Metathesaurus"))
       {
-        for (i=0; i<dCount; i++)
+        alert("Concepts from the " + metaName + " may not be used to reference an Enumerated Value Domain.\n" + 
+              "Please select a Concept from another EVS Vocabulary.");
+        return;
+      }
+      else
+      {          
+        //submit vd form for parent selection
+        if (opener.document.createVDForm.hiddenParentName != null)
         {
-          var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
-          //get the evs values from the row number
-          editNameLong = document.searchResultsForm.hiddenSearch2[rowNo].value;  //evs concept name
-          editDefinition = document.searchResultsForm.hiddenDefSource[rowNo].text;   //evs definition 
-          editDefSource = document.searchResultsForm.hiddenDefSource[rowNo].value;   //evs definition source
-          sCCodeDB = document.searchResultsForm.hiddenCCodeDB[rowNo].value;  //evs vocabulary
-          sCCode = document.searchResultsForm.hiddenCCode[rowNo].value;   //evs code
-          var sCode = sCCode + " : " + sCCodeDB;
-          opener.document.createVMForm.CreateDescription.value = editDefinition;
-          opener.document.createVMForm.selShortMeanings.value = editNameLong;
-         // opener.document.createVMForm.taComments.value = sCode;
-          opener.document.createVMForm.EVSConceptID.value = sCode;
-          opener.document.createVMForm.selShortMeanings.disabled = true;
-          if(selDefinition != null && selDefinition != "")
-            opener.document.createVMForm.CreateDescription.disabled = true;
-          else
-            opener.document.createVMForm.CreateDescription.disabled = false;
-          opener.document.createVMForm.hiddenEVSSearch.value = "Searched"; 
-          opener.document.createVMForm.hiddenSelRow.value = rowNo; 
-          //submit vm page to store data in the bean
-          opener.document.createVMForm.newCDEPageAction.value = "appendSearchVM";
-          opener.SubmitValidate("appendSearchVM");
-          //close the window
+          opener.document.createVDForm.hiddenParentName.value = editNameLong;
+          opener.document.createVDForm.hiddenParentCode.value = sCCode;
+          opener.document.createVDForm.hiddenParentDB.value = sCCodeDB;
+          //store the selrow in an array 
+          var selRowArray = new Array();
+          var rowNo = document.searchResultsForm.hiddenSelectedRow[0].value;
+          selRowArray[0] = rowNo;
+          opener.AllocSelRowOptions(selRowArray);  //allocate option for hidden row and select it.
+          opener.SubmitValidate("refresh");
           window.close();
         }
       }
     }
-  } 
-}
-
-//alerts if more than one concept with same name is selected
-function checkDuplicateConcept()
-{   
-    var selNameArray = new Array();  //store the unique checked names in an array        
-    var dupNameArray = new Array();   //store duplicate names in an array     
-    var dCount = document.searchResultsForm.hiddenSelectedRow.length;
-    var dupNames = "";
-    for (var i=0; i<dCount; i++)
-    {
-      //get the row number
-      var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
-      var rowName = document.searchResultsForm.hiddenName[rowNo].value;  //concept name 
-      var rowDefSource = document.searchResultsForm.hiddenDefSource[rowNo].value; 
-      //loop through the selected names array to find if match occurs
-      var isMatch = false;
-      if (rowName != null && rowName != "" && selNameArray.length > 0)
+  }
+  
+  function useSelectionSelectVM()
+  {
+      //first check the concept status and return if not valid
+      var useStatus = checkValidStatus("multiple");
+      if (useStatus != "valid") 
+        return;
+      var sConfirm = false;
+      var selRowArray2 = new Array();
+      var selRowArray3 = new Array();
+      var multiNames = checkDuplicateConcept();
+      if (multiNames != null && multiNames != "")
       {
-        //loop through the stored non duplicate checked names
-        for (var j=0; j<selNameArray.length; j++)
+        sConfirm = confirm("Duplicate Concept Names are selected either because they have " 
+              + "multiple definitions \nor they are contained in multiple hierachical " 
+              + "locations within their source vocabulory.\n\n" 
+              + "Click OK: Default definition - NCI source will be selected. \n"
+              + "If no NCI definition is present, the first definition associated with the Concept will be used. \n\n"
+              + "Click CANCEL to go back and manually de-select the unwanted duplicates.\n\n" 
+              + "Duplicate Concepts : \n\t" + multiNames);
+  
+        if (sConfirm == true)
         {
-          var thisName = selNameArray[j];
-         if (thisName == rowName)  //already exists as
+          selRowArray2 = getRowNumbersOfUniqueConcepts();
+          for (var y=0; y<selRowArray2.length; y++)
           {
-             var dupExists = false;
-            //loop through the duplicate names array to store only once
-            for (var k=0; k<dupNameArray.length; k++)
-            {
-              var dName = dupNameArray[k];
-              if (dName == rowName)
-                dupExists = true;
+            var thisRow = selRowArray2[y];
+            if(thisRow == 0 && thisRow != "")
+            {  
+              selRowArray3[selRowArray3.length] = thisRow;
             }
-            //add it only if not exists as duplicates
-            if (dupExists == false)
-            {
-              dupNameArray[dupNameArray.length] = rowName;
-              //cut off the list of names to be displayed if more than 30 numbers to fit it within the window
-              if (dupNameArray.length < 31)
-                dupNames = dupNames + rowName + "\n\t";  //add to name list
+            else if(thisRow != "")
+            {     
+              selRowArray3[selRowArray3.length] = thisRow;
             }
-            isMatch = true;
-            break;
-          } 
+          }
         }
-      }
-      //add only if no duplicate names selected
-      if (isMatch == false)
-        selNameArray[selNameArray.length] = rowName;
-    }
-    //let the users know if more than 30 duplicates exist
-    if (dupNameArray != null && dupNameArray.length > 30)
-      dupNames = dupNames + "\n" + (dupNameArray.length - 30) + " more duplicates exist .......\n";
-    //return the list of duplicate names
-    return dupNames;
-}
-
-
-//alerts if more than one concept with same name is selected
-function getDuplicateNameArray()
-{ 
-    var selNameArray = new Array();  //store the unique checked names in an array        
-    var dupNameArray = new Array();   //store duplicate names in an array     
-    var dCount = document.searchResultsForm.hiddenSelectedRow.length;
-    for (var i=0; i<dCount; i++)
-    {
-      //get the row number
-      var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
-      var rowName = document.searchResultsForm.hiddenName[rowNo].value;  //concept name 
-      var rowDefSource = document.searchResultsForm.hiddenDefSource[rowNo].value; 
-      var isMatch = false;
-      if (rowName != null && rowName != "" && selNameArray.length > 0)
+        else
+          return;
+      }         
+      //store the selrow in an array 
+      var selRowArray = new Array();        
+      var dCount = document.searchResultsForm.hiddenSelectedRow.length;
+      for (i=0; i<dCount; i++)
       {
-        //loop through the stored non duplicate checked names
-        for (var j=0; j<selNameArray.length; j++)
-        {
-          var thisName = selNameArray[j];
-         if (thisName == rowName)  //already exists as
-          {
-             var dupExists = false;
-            //loop through the duplicate names array to store only once
-            for (var k=0; k<dupNameArray.length; k++)
-            {
-              var dName = dupNameArray[k];
-              if (dName == rowName)
-                dupExists = true;
-            }
-            //add it only if not exists as duplicates
-            if (dupExists == false)
-            {
-              dupNameArray[dupNameArray.length] = rowName;
-            }
-            isMatch = true;
-            break;
-          } 
-        }
+        //get the row number
+        var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
+        selRowArray[selRowArray.length] = rowNo;  //fill the array with the checked row number
+        //remove the check boxes
+        var ckField = "CK"+rowNo;
+        formObj= eval("document.searchResultsForm."+ckField);
+        formObj.checked=false;
       }
-        //add only if no duplicate names selected
-      if (isMatch == false)
-        selNameArray[selNameArray.length] = rowName;
-    }
-    return dupNameArray;
-}
-
-function getRowNumbersOfUniqueConcepts()
-{
-    var multiNamesArray = getDuplicateNameArray();
-    var selNameArray = new Array();  //store the unique checked names in an array        
-    var dupNameArray = new Array();   //store duplicate names in an array 
-    var uniqueRowArray = new Array();
-    var firstOneRow = "";
-    var foundRightOne = "false";
-    var foundRightOneNCI = "false";
-    var foundRightOneNCIGLOSS = "false";
-    var foundRightOneNCI04 = "false";
-    var foundRightOneNCICB = "false";
-    var foundRightRowNoNCI = "";
-    var foundRightRowNoNCIGLOSS = "";
-    var foundRightRowNoNCI04 = "";
-    var foundRightRowNoNCICB = "";
-    var firstOneRow = "";
+  
+      if(sConfirm == true)
+          opener.AllocSelRowOptions(selRowArray3);  //allocate option for hidden row and select it.      
+      else
+          opener.AllocSelRowOptions(selRowArray); 
+      //submit the vd form to store these in pv bean and refresh the page
+      opener.document.createVDForm.newCDEPageAction.value = "addSelectedVM";
+      opener.SubmitValidate("addSelectedVM");
+      //disable button and de-count the checked numbers
+      numRowsSelected = 0;
+      document.searchResultsForm.hiddenSelectedRow.length = 0;
+      document.searchResultsForm.editSelectedBtn.disabled=true;
+      document.searchResultsForm.btnSubConcepts.disabled=true;
+    //  opener.document.createVDForm.searchComp.value = sComp;
+   // }
+  //alert("done showUseSelection");
+  }
+  
+  function useSelectionCreateVM()
+  {
     var dCount = document.searchResultsForm.hiddenSelectedRow.length;
-    var dupNames = "";
-    var rowNo;
-    var rowName;
-    var foundRightRowNo = "";
-    var lastDup = multiNamesArray.length - 1;
-    
-    // Case of No Duplicates
-    if(multiNamesArray.length == 0)
+    if (dCount > 0)
     {
-      for (var i=0; i<dCount; i++)
-      {
-        rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
-        uniqueRowArray[uniqueRowArray.length] = rowNo;
-      }
-    }
-    else if(multiNamesArray.length == 1)  // Case of One Duplicate
-    {
-      var dName = multiNamesArray[0];
-      var firstDuplicateIndexTracker = -1;
-      // Cycle through all checked rows, check for duplicates
-      for (var i=0; i<dCount; i++)
+      for (i=0; i<dCount; i++)
       {
         var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
-        var rowName = document.searchResultsForm.hiddenName[rowNo].value;  //concept name 
-        if (dName == rowName)
-        {
-          firstOneRow = rowNo;
-          firstDuplicateIndexTracker++;
-          var sDefSource = document.searchResultsForm.hiddenDefSource[rowNo].value; 
-          if(sDefSource == "NCI")
-          {
-            foundRightRowNoNCI = rowNo;
-            foundRightOneNCI = "true";
-          }
-          else if(sDefSource == "NCI-GLOSS")
-          {
-            foundRightRowNoNCIGLOSS = rowNo;
-            foundRightOneNCIGLOSS = "true";
-          }
-          else if(sDefSource == "NCI04")
-          {
-            foundRightRowNoNCI04 = rowNo;
-            foundRightOneNCI04 = "true";
-          }
-          else if(sDefSource == "NCICB")
-          {
-            foundRightRowNoNCICB = rowNo;
-            foundRightOneNCICB = "true";
-          }
-        }
-        else // if not a duplicate, add it
-          uniqueRowArray[uniqueRowArray.length] = rowNo;
+        //first check the concept status and return if not valid
+        editStatus = conArray[rowNo].conStatus;
+        var useStatus = checkValidStatus(editStatus);
+        if (useStatus != "valid") 
+          return;
+        //get the evs values from the row number
+        editNameLong = conArray[rowNo].conName;  // document.searchResultsForm.hiddenName[rowNo].value;  //evs concept name
+        editDefinition = conArray[rowNo].conDef;  // document.searchResultsForm.hiddenDefSource[rowNo].text;   //evs definition 
+        editDefSource = conArray[rowNo].conDefSrc;  // document.searchResultsForm.hiddenDefSource[rowNo].value;   //evs definition source
+        sCCodeDB = conArray[rowNo].conVocab;  // document.searchResultsForm.hiddenCCodeDB[rowNo].value;  //evs vocabulary
+        sCCode = conArray[rowNo].conID;  // document.searchResultsForm.hiddenCCode[rowNo].value;   //evs code
+        var sCode = sCCode + " : " + sCCodeDB;
+        opener.document.createVMForm.CreateDescription.value = editDefinition;
+        opener.document.createVMForm.selShortMeanings.value = editNameLong;
+       // opener.document.createVMForm.taComments.value = sCode;
+        opener.document.createVMForm.EVSConceptID.value = sCode;
+        opener.document.createVMForm.selShortMeanings.disabled = true;
+        if(selDefinition != null && selDefinition != "")
+          opener.document.createVMForm.CreateDescription.disabled = true;
+        else
+          opener.document.createVMForm.CreateDescription.disabled = false;
+        opener.document.createVMForm.hiddenEVSSearch.value = "Searched"; 
+        opener.document.createVMForm.hiddenSelRow.value = rowNo; 
+        //submit vm page to store data in the bean
+        opener.document.createVMForm.newCDEPageAction.value = "appendSearchVM";
+        opener.SubmitValidate("appendSearchVM");
+        //close the window
+        window.close();
       }
-      if(foundRightOneNCI == "true")       
-          uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI;
-      else if(foundRightOneNCIGLOSS == "true")    
-        uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCIGLOSS;
-      else if(foundRightOneNCI04 == "true")    
-        uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI04;
-      else if(foundRightOneNCICB == "true")    
-        uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCICB;
-      else // Case of No NCI type Duplicates
-      {
-        lastDuplicateFirstRowNo = firstOneRow - firstDuplicateIndexTracker;   
-        uniqueRowArray[uniqueRowArray.length] = lastDuplicateFirstRowNo;
-      } 
     }
-    else if(multiNamesArray.length > 1) // Case of more than 1 Duplicate
-    {
-    for (var k=0; k<multiNamesArray.length; k++)
-    {
-      var index = k;
-      var lastDuplicate = "false";
-      if(k == (multiNamesArray.length-1))
-        lastDuplicate = "true";
-      var lastDuplicateFirstRowNo = 0;
-      if(k > 0)// Made it all the way through the first duplicate, so now add the right one to array
+  }
+  //alerts if more than one concept with same name is selected
+  function checkDuplicateConcept()
+  {   
+      var selNameArray = new Array();  //store the unique checked names in an array        
+      var dupNameArray = new Array();   //store duplicate names in an array     
+      var dCount = document.searchResultsForm.hiddenSelectedRow.length;
+      var dupNames = "";
+      for (var i=0; i<dCount; i++)
       {
-        if(foundRightOneNCI == "true")
+        //get the row number
+        var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
+        var rowName = conArray[rowNo].conName;  // document.searchResultsForm.hiddenName[rowNo].value;  //concept name 
+        var rowDefSource = conArray[rowNo].conDefSrc;  // document.searchResultsForm.hiddenDefSource[rowNo].value; 
+        //loop through the selected names array to find if match occurs
+        var isMatch = false;
+        if (rowName != null && rowName != "" && selNameArray.length > 0)
         {
-          uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI;         
+          //loop through the stored non duplicate checked names
+          for (var j=0; j<selNameArray.length; j++)
+          {
+            var thisName = selNameArray[j];
+           if (thisName == rowName)  //already exists as
+            {
+               var dupExists = false;
+              //loop through the duplicate names array to store only once
+              for (var k=0; k<dupNameArray.length; k++)
+              {
+                var dName = dupNameArray[k];
+                if (dName == rowName)
+                  dupExists = true;
+              }
+              //add it only if not exists as duplicates
+              if (dupExists == false)
+              {
+                dupNameArray[dupNameArray.length] = rowName;
+                //cut off the list of names to be displayed if more than 30 numbers to fit it within the window
+                if (dupNameArray.length < 31)
+                  dupNames = dupNames + rowName + "\n\t";  //add to name list
+              }
+              isMatch = true;
+              break;
+            } 
+          }
         }
+        //add only if no duplicate names selected
+        if (isMatch == false)
+          selNameArray[selNameArray.length] = rowName;
+      }
+      //let the users know if more than 30 duplicates exist
+      if (dupNameArray != null && dupNameArray.length > 30)
+        dupNames = dupNames + "\n" + (dupNameArray.length - 30) + " more duplicates exist .......\n";
+      //return the list of duplicate names
+      return dupNames;
+  }
+  
+  
+  //alerts if more than one concept with same name is selected
+  function getDuplicateNameArray()
+  { 
+      var selNameArray = new Array();  //store the unique checked names in an array        
+      var dupNameArray = new Array();   //store duplicate names in an array     
+      var dCount = document.searchResultsForm.hiddenSelectedRow.length;
+      for (var i=0; i<dCount; i++)
+      {
+        //get the row number
+        var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
+        var rowName = conArray[rowNo].conName;  // document.searchResultsForm.hiddenName[rowNo].value;  //concept name 
+        var rowDefSource = conArray[rowNo].conDefSrc;  // document.searchResultsForm.hiddenDefSource[rowNo].value; 
+        var isMatch = false;
+        if (rowName != null && rowName != "" && selNameArray.length > 0)
+        {
+          //loop through the stored non duplicate checked names
+          for (var j=0; j<selNameArray.length; j++)
+          {
+            var thisName = selNameArray[j];
+           if (thisName == rowName)  //already exists as
+            {
+               var dupExists = false;
+              //loop through the duplicate names array to store only once
+              for (var k=0; k<dupNameArray.length; k++)
+              {
+                var dName = dupNameArray[k];
+                if (dName == rowName)
+                  dupExists = true;
+              }
+              //add it only if not exists as duplicates
+              if (dupExists == false)
+              {
+                dupNameArray[dupNameArray.length] = rowName;
+              }
+              isMatch = true;
+              break;
+            } 
+          }
+        }
+          //add only if no duplicate names selected
+        if (isMatch == false)
+          selNameArray[selNameArray.length] = rowName;
+      }
+      return dupNameArray;
+  }
+  
+  function getRowNumbersOfUniqueConcepts()
+  {
+      var multiNamesArray = getDuplicateNameArray();
+      var selNameArray = new Array();  //store the unique checked names in an array        
+      var dupNameArray = new Array();   //store duplicate names in an array 
+      var uniqueRowArray = new Array();
+      var firstOneRow = "";
+      var foundRightOne = "false";
+      var foundRightOneNCI = "false";
+      var foundRightOneNCIGLOSS = "false";
+      var foundRightOneNCI04 = "false";
+      var foundRightOneNCICB = "false";
+      var foundRightRowNoNCI = "";
+      var foundRightRowNoNCIGLOSS = "";
+      var foundRightRowNoNCI04 = "";
+      var foundRightRowNoNCICB = "";
+      var firstOneRow = "";
+      var dCount = document.searchResultsForm.hiddenSelectedRow.length;
+      var dupNames = "";
+      var rowNo;
+      var rowName;
+      var foundRightRowNo = "";
+      var lastDup = multiNamesArray.length - 1;
+      
+      // Case of No Duplicates
+      if(multiNamesArray.length == 0)
+      {
+        for (var i=0; i<dCount; i++)
+        {
+          rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
+          uniqueRowArray[uniqueRowArray.length] = rowNo;
+        }
+      }
+      else if(multiNamesArray.length == 1)  // Case of One Duplicate
+      {
+        var dName = multiNamesArray[0];
+        var firstDuplicateIndexTracker = -1;
+        // Cycle through all checked rows, check for duplicates
+        for (var i=0; i<dCount; i++)
+        {
+          var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
+          var rowName = conArray[rowNo].conName;  // document.searchResultsForm.hiddenName[rowNo].value;  //concept name 
+          if (dName == rowName)
+          {
+            firstOneRow = rowNo;
+            firstDuplicateIndexTracker++;
+            var sDefSource = conArray[rowNo].conDefSrc;  // document.searchResultsForm.hiddenDefSource[rowNo].value; 
+            if(sDefSource == arrDefSrc[0]) // "NCI")
+            {
+              foundRightRowNoNCI = rowNo;
+              foundRightOneNCI = "true";
+            }
+            else if(sDefSource == arrDefSrc[1]) // "NCI-GLOSS")
+            {
+              foundRightRowNoNCIGLOSS = rowNo;
+              foundRightOneNCIGLOSS = "true";
+            }
+            else if(sDefSource == arrDefSrc[2]) // "NCI04")
+            {
+              foundRightRowNoNCI04 = rowNo;
+              foundRightOneNCI04 = "true";
+            }
+            else if(sDefSource == arrDefSrc[3]) // "NCICB")
+            {
+              foundRightRowNoNCICB = rowNo;
+              foundRightOneNCICB = "true";
+            }
+          }
+          else // if not a duplicate, add it
+            uniqueRowArray[uniqueRowArray.length] = rowNo;
+        }
+        if(foundRightOneNCI == "true")       
+            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI;
         else if(foundRightOneNCIGLOSS == "true")    
           uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCIGLOSS;
         else if(foundRightOneNCI04 == "true")    
           uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI04;
         else if(foundRightOneNCICB == "true")    
           uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCICB;
-        else
+        else // Case of No NCI type Duplicates
         {
-          lastDuplicateFirstRowNo = firstOneRow - firstDuplicateIndexTracker;
+          lastDuplicateFirstRowNo = firstOneRow - firstDuplicateIndexTracker;   
           uniqueRowArray[uniqueRowArray.length] = lastDuplicateFirstRowNo;
+        } 
+      }
+      else if(multiNamesArray.length > 1) // Case of more than 1 Duplicate
+      {
+      for (var k=0; k<multiNamesArray.length; k++)
+      {
+        var index = k;
+        var lastDuplicate = "false";
+        if(k == (multiNamesArray.length-1))
+          lastDuplicate = "true";
+        var lastDuplicateFirstRowNo = 0;
+        if(k > 0)// Made it all the way through the first duplicate, so now add the right one to array
+        {
+          if(foundRightOneNCI == "true")
+          {
+            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI;         
+          }
+          else if(foundRightOneNCIGLOSS == "true")    
+            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCIGLOSS;
+          else if(foundRightOneNCI04 == "true")    
+            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI04;
+          else if(foundRightOneNCICB == "true")    
+            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCICB;
+          else
+          {
+            lastDuplicateFirstRowNo = firstOneRow - firstDuplicateIndexTracker;
+            uniqueRowArray[uniqueRowArray.length] = lastDuplicateFirstRowNo;
+          }
+          foundRightOneNCI = "false";
+          foundRightOneNCIGLOSS = "false";
+          foundRightOneNCI04 = "false";
+          foundRightOneNCICB = "false";
+          foundRightRowNoNCI = "";
+          foundRightRowNoNCIGLOSS = "";
+          foundRightRowNoNCI04 = "";
+          foundRightRowNoNCICB = "";
         }
+        var dName = multiNamesArray[k];
+        var firstDuplicateIndexTracker = -1;
         foundRightOneNCI = "false";
         foundRightOneNCIGLOSS = "false";
         foundRightOneNCI04 = "false";
         foundRightOneNCICB = "false";
+        foundRightRowNo = "";
         foundRightRowNoNCI = "";
         foundRightRowNoNCIGLOSS = "";
         foundRightRowNoNCI04 = "";
         foundRightRowNoNCICB = "";
-      }
-      var dName = multiNamesArray[k];
-      var firstDuplicateIndexTracker = -1;
-      foundRightOneNCI = "false";
-      foundRightOneNCIGLOSS = "false";
-      foundRightOneNCI04 = "false";
-      foundRightOneNCICB = "false";
-      foundRightRowNo = "";
-      foundRightRowNoNCI = "";
-      foundRightRowNoNCIGLOSS = "";
-      foundRightRowNoNCI04 = "";
-      foundRightRowNoNCICB = "";
-      for (var i=0; i<dCount; i++) // for each duplicate, cycle through all checked rows
-      {
-        var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
-        var rowName = document.searchResultsForm.hiddenName[rowNo].value;  //concept name 
-//alert("dName: " + dName + " rowName: " + rowName + " rowNo: " + rowNo + " foundRightRowNoNCI: " + foundRightRowNoNCI);
-        if (dName == rowName)
+        for (var i=0; i<dCount; i++) // for each duplicate, cycle through all checked rows
         {
-          firstOneRow = rowNo;
-          firstDuplicateIndexTracker++;
-          var sDefSource = document.searchResultsForm.hiddenDefSource[rowNo].value;        
-          if(sDefSource == "NCI")
+          var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
+          var rowName = conArray[rowNo].conName;  // document.searchResultsForm.hiddenName[rowNo].value;  //concept name 
+  //alert("dName: " + dName + " rowName: " + rowName + " rowNo: " + rowNo + " foundRightRowNoNCI: " + foundRightRowNoNCI);
+          if (dName == rowName)
           {
-            foundRightRowNoNCI = rowNo;
-            foundRightOneNCI = "true";
-          }
-          else if(sDefSource == "NCI-GLOSS")
-          {
-            foundRightRowNoNCIGLOSS = rowNo;
-            foundRightOneNCIGLOSS = "true";
-          }
-          else if(sDefSource == "NCI04")
-          {
-            foundRightRowNoNCI04 = rowNo;
-            foundRightOneNCI04 = "true";
-          }
-          else if(sDefSource == "NCICB")
-          {
-            foundRightRowNoNCICB = rowNo;
-            foundRightOneNCICB = "true";
+            firstOneRow = rowNo;
+            firstDuplicateIndexTracker++;
+            var sDefSource = conArray[rowNo].conDefSrc;  // document.searchResultsForm.hiddenDefSource[rowNo].value;        
+            if(sDefSource == arrDefSrc[0]) // "NCI")
+            {
+              foundRightRowNoNCI = rowNo;
+              foundRightOneNCI = "true";
+            }
+            else if(sDefSource == arrDefSrc[1])  // "NCI-GLOSS")
+            {
+              foundRightRowNoNCIGLOSS = rowNo;
+              foundRightOneNCIGLOSS = "true";
+            }
+            else if(sDefSource == arrDefSrc[2])  // "NCI04")
+            {
+              foundRightRowNoNCI04 = rowNo;
+              foundRightOneNCI04 = "true";
+            }
+            else if(sDefSource == arrDefSrc[3])  // "NCICB")
+            {
+              foundRightRowNoNCICB = rowNo;
+              foundRightOneNCICB = "true";
+            }
           }
         }
-      }
-    
-      if(lastDuplicate == "true")// Made it all the way through the first duplicate, so now add the right one to array
-      {
-        if(foundRightOneNCI == "true")
+      
+        if(lastDuplicate == "true")// Made it all the way through the first duplicate, so now add the right one to array
         {
-          uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI;   
+          if(foundRightOneNCI == "true")
+          {
+            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI;   
+          }
+          else if(foundRightOneNCIGLOSS == "true")
+          {
+            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCIGLOSS;       
+          }
+          else if(foundRightOneNCI04 == "true")    
+            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI04;
+          else if(foundRightOneNCICB == "true")    
+            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCICB;
+          else
+          {
+            lastDuplicateFirstRowNo = firstOneRow - firstDuplicateIndexTracker;
+            uniqueRowArray[uniqueRowArray.length] = lastDuplicateFirstRowNo;
+          }
+          foundRightRowNoNCI = "";
+          foundRightRowNoNCIGLOSS = "";
+          foundRightRowNoNCI04 = "";
+          foundRightRowNoNCICB = "";
         }
-        else if(foundRightOneNCIGLOSS == "true")
-        {
-          uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCIGLOSS;       
         }
-        else if(foundRightOneNCI04 == "true")    
-          uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI04;
-        else if(foundRightOneNCICB == "true")    
-          uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCICB;
-        else
-        {
-          lastDuplicateFirstRowNo = firstOneRow - firstDuplicateIndexTracker;
-          uniqueRowArray[uniqueRowArray.length] = lastDuplicateFirstRowNo;
-        }
-        foundRightRowNoNCI = "";
-        foundRightRowNoNCIGLOSS = "";
-        foundRightRowNoNCI04 = "";
-        foundRightRowNoNCICB = "";
-      }
-      }
-    }  
-    // Now add the non-duplicates to array
-    for (var p=0; p<dCount; p++)
-    {
-      var isDup = "false";
-      var rowNo2 = document.searchResultsForm.hiddenSelectedRow[p].value;
-      var rowName2 = document.searchResultsForm.hiddenName[rowNo2].value;  //concept name
-      for (var q=0; q<multiNamesArray.length; q++)
+      }  
+      // Now add the non-duplicates to array
+      for (var p=0; p<dCount; p++)
       {
-        var dName2 = multiNamesArray[q];
-        if (dName2 == rowName2)
-          isDup = "true"
+        var isDup = "false";
+        var rowNo2 = document.searchResultsForm.hiddenSelectedRow[p].value;
+        var rowName2 = conArray[rowNo].conName;  // document.searchResultsForm.hiddenName[rowNo2].value;  //concept name
+        for (var q=0; q<multiNamesArray.length; q++)
+        {
+          var dName2 = multiNamesArray[q];
+          if (dName2 == rowName2)
+            isDup = "true"
+        }
+        if(isDup == "false")
+        {
+          uniqueRowArray[uniqueRowArray.length] = rowNo2;
+        }
       }
-      if(isDup == "false")
-      {
-        uniqueRowArray[uniqueRowArray.length] = rowNo2;
-      }
-    }
-  return uniqueRowArray;
-}
-
-function getSubConceptsAll2(sUISearchType)
-{
+    return uniqueRowArray;
+  }
+  
+  function getSubConceptsAll2(sUISearchType)
+  {
       var sSearch = false;
       var url = "";
       var nodeCode = sCCode;
-      var nodeName = editLongName;
+      var nodeName = editNameLong;
       var vocab = sCCodeDB;
-      if(vocab == "NCI Metathesaurus")
-        alert("Only Immediate Subconcept searches are allowed for Metathesaurus.");
-      else
+      var conLevel = editLevel;
+      sSearch = confirm("Searching for all Subconcepts may take a long time. Continue?");
+      if (sSearch == true)
       {
-        sSearch = confirm("Searching for all Subconcepts may take a long time. Continue?");
-        if (sSearch == true)
-        {
-        
-          hourglass();
-          url = "../../cdecurate/NCICurationServlet?reqType=getSubConcepts&&searchType=All&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&UISearchType=" + sUISearchType;
-          document.searchResultsForm.action = url;
-          document.searchResultsForm.submit(); 
-          window.status = "Refereshing the page, it may take a minute, please wait.....";
-          document.searchResultsForm.Message.style.visibility="visible";
-        }
+      
+        hourglass();
+        window.status = "Refereshing the page, it may take a minute, please wait.....";
+        document.searchResultsForm.Message.style.visibility="visible";
+        url = "../../cdecurate/NCICurationServlet?reqType=getSubConcepts&&searchType=All&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&UISearchType=" + sUISearchType + "&&conLevel=" + conLevel;
+        document.searchResultsForm.action = url;
+        document.searchResultsForm.submit(); 
       }
    }
    
   function getSubConceptsImmediate2(sUISearchType)
-{
+  {
       var url = "";
       var nodeCode = sCCode;
-      var nodeName = editLongName;
+      var nodeName = editNameLong;
       var vocab = sCCodeDB;
       var defSource = editDefSource;
+      var conLevel = editLevel;
 //alert("nodeCode: " + nodeCode + " nodeName: " + nodeName + " vocab: " + vocab +  " defSource: " + defSource);
-      if(vocab == "NCI Metathesaurus")
-      {
-        sSearch = confirm("The hierarchy of subconcepts in the Metathesaurus may be different from that in the source Vocabulary. Continue?");
-        if (sSearch == true)
-        {
-          hourglass();
-          url = "../../cdecurate/NCICurationServlet?reqType=getSubConcepts&&searchType=Immediate&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&defSource=" + defSource + "&&UISearchType=" + sUISearchType;   
-          document.searchResultsForm.action = url;
-          document.searchResultsForm.submit(); 
-          window.status = "Refereshing the page, it may take a minute, please wait.....";
-          document.searchResultsForm.Message.style.visibility="visible";
-        }
-      }
-      else
-      {
-        hourglass();
-        url = "../../cdecurate/NCICurationServlet?reqType=getSubConcepts&&searchType=Immediate&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&defSource=" + defSource + "&&UISearchType=" + sUISearchType;   
-        document.searchResultsForm.action = url;
-        document.searchResultsForm.submit(); 
-        window.status = "Refereshing the page, it may take a minute, please wait.....";
-        document.searchResultsForm.Message.style.visibility="visible";
-      }
+      hourglass();
+      url = "../../cdecurate/NCICurationServlet?reqType=getSubConcepts&&searchType=Immediate&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&defSource=" + defSource + "&&UISearchType=" + sUISearchType + "&&conLevel=" + conLevel;   
+      document.searchResultsForm.action = url;
+      document.searchResultsForm.submit(); 
+      window.status = "Refereshing the page, it may take a minute, please wait.....";
+      document.searchResultsForm.Message.style.visibility="visible";
    }
    
-function getSuperConcepts2(sUISearchType)
-{
+  function getSuperConcepts2(sUISearchType)
+  {
       var url = "";
       var nodeCode = sCCode;
-      var nodeName = editLongName;
+      var nodeName = editNameLong;
       var vocab = sCCodeDB;
       var defSource = editDefSource;
       hourglass();
@@ -680,21 +698,21 @@ function getSuperConcepts2(sUISearchType)
       document.searchResultsForm.submit(); 
       window.status = "Refereshing the page, it may take a minute, please wait.....";
       document.searchResultsForm.Message.style.visibility="visible";
-}
+  }
 
    //trims off spaces and "_"
    function TrimEnds(editDefinition)
    {
-	if (editDefinition.length > 0)
-  {
-		if (editDefinition.charAt(0) == "_" || editDefinition.charAt(0) == " " )
-		   editDefinition = editDefinition.slice(1, editDefinition.length);
-		if (editDefinition.charAt(0) == "_" || editDefinition.charAt(0) == " " ) //do it again for second "_"
-		   editDefinition = editDefinition.slice(1, editDefinition.length);
-	  if (editDefinition.charAt(editDefinition.length -1) == "_" || editDefinition.charAt(editDefinition.length -1) == " ")
-		   editDefinition = editDefinition.slice(0, editDefinition.length - 1);
-    }
-	return editDefinition;
+      if (editDefinition.length > 0)
+      {
+        if (editDefinition.charAt(0) == "_" || editDefinition.charAt(0) == " " )
+           editDefinition = editDefinition.slice(1, editDefinition.length);
+        if (editDefinition.charAt(0) == "_" || editDefinition.charAt(0) == " " ) //do it again for second "_"
+           editDefinition = editDefinition.slice(1, editDefinition.length);
+        if (editDefinition.charAt(editDefinition.length -1) == "_" || editDefinition.charAt(editDefinition.length -1) == " ")
+           editDefinition = editDefinition.slice(0, editDefinition.length - 1);
+      }
+      return editDefinition;
    }
 
    function TrimToFourChar(name)
@@ -887,48 +905,48 @@ function createNames(acType)
     var MenuAction = opener.document.newDECForm.MenuAction.value;
     if (sComp == "ObjectClass")
     {
-      var objLN = editLongName;  //opener.document.newDECForm.selObjectClass.value;
+      var objLN = editNameLong;  //opener.document.newDECForm.selObjectClass.value;
       if(objLN == null) objLN = "";
       LongName = LongName + " " + objLN;
       if(MenuAction == "NewDECVersion" || MenuAction == "NewDECTemplate")
       {
-        var objPN = TrimToFourChar(editLongName);  //(opener.document.newDECForm.selObjectClass.value);
+        var objPN = TrimToFourChar(editNameLong);  //(opener.document.newDECForm.selObjectClass.value);
         if(objPN == null) objPN = "";
         PrefName = PrefName + "_" + objPN;
       }
     }
     else if (sComp == "PropertyClass")
     {
-      var propLN = editLongName; //opener.document.newDECForm.selPropertyClass.value;
+      var propLN = editNameLong; //opener.document.newDECForm.selPropertyClass.value;
       if(propLN == null) propLN = "";
       LongName = LongName + " " + propLN;
       if(MenuAction == "NewDECVersion" || MenuAction == "NewDECTemplate")
       {
-        var propPN = TrimToFourChar(editLongName);  //(opener.document.newDECForm.selPropertyClass.value);
+        var propPN = TrimToFourChar(editNameLong);  //(opener.document.newDECForm.selPropertyClass.value);
         if(propPN == null) propPN = "";
         PrefName = PrefName + "_" + propPN;
       }
     }
     else if (sComp == "PropertyQualifier")
     {
-      var propLN = editLongName;  //opener.document.newDECForm.selPropertyQualifier[0].value;
+      var propLN = editNameLong;  //opener.document.newDECForm.selPropertyQualifier[0].value;
       if(propLN == null) propLN = "";
       LongName = LongName + " " + propLN;
       if(MenuAction == "NewDECVersion" || MenuAction == "NewDECTemplate")
       {
-        var propPN = TrimToFourChar(editLongName);  //(opener.document.newDECForm.selPropertyQualifier[0].value);
+        var propPN = TrimToFourChar(editNameLong);  //(opener.document.newDECForm.selPropertyQualifier[0].value);
         if(propPN == null) propPN = "";
         PrefName = PrefName + "_" + propPN;
       }
     }
     else if (sComp == "ObjectQualifier")
     {
-      var objLN = editLongName;  //opener.document.newDECForm.selObjectQualifier.value;
+      var objLN = editNameLong;  //opener.document.newDECForm.selObjectQualifier.value;
       if(objLN == null) objLN = "";
       LongName = LongName + " " + objLN;
       if(MenuAction == "NewDECVersion" || MenuAction == "NewDECTemplate")
       {
-        var objPN = TrimToFourChar(editLongName);  //(opener.document.newDECForm.selObjectQualifier.value);
+        var objPN = TrimToFourChar(editNameLong);  //(opener.document.newDECForm.selObjectQualifier.value);
         if(objPN == null) objPN = "";
         PrefName = PrefName + "_" + objPN;
 //    alert("OCQ PrefName: " + PrefName);
@@ -1006,7 +1024,7 @@ function createNames(acType)
     {
       if(MenuAction == "NewDECVersion" || MenuAction == "NewDECTemplate")
       {
-        var objPN = TrimToFourChar(editLongName);  //(opener.document.newDECForm.selObjectQualifier.value);
+        var objPN = TrimToFourChar(editNameLong);  //(opener.document.newDECForm.selObjectQualifier.value);
         if(objPN == null) objPN = "";
         PrefName = PrefName + "_" + objPN;
       }
@@ -1015,7 +1033,7 @@ function createNames(acType)
     {
       if(MenuAction == "NewDECVersion" || MenuAction == "NewDECTemplate")
       {
-        var repPN = TrimToFourChar(editLongName);  //(opener.document.newDECForm.selObjectQualifier.value);
+        var repPN = TrimToFourChar(editNameLong);  //(opener.document.newDECForm.selObjectQualifier.value);
         if(repPN == null) repPN = "";
         PrefName = PrefName + "_" + repPN;
       }
@@ -1148,27 +1166,28 @@ function createNames(acType)
 		    }
 	    }
 
-      editID = document.searchResultsForm.hiddenSearch[rowNo].value;
-      editNameLong = document.searchResultsForm.hiddenSearch2[rowNo].value;  //evs concept name
-      editName = document.searchResultsForm.hiddenSearch2[rowNo].value;   //truncated concept name
+      editID = conArray[rowNo].conID;  // document.searchResultsForm.hiddenSearch[rowNo].value;
+      editNameLong = conArray[rowNo].conName;  // document.searchResultsForm.hiddenName[rowNo].value;  //evs concept name
+      editName = conArray[rowNo].conName;  //  document.searchResultsForm.hiddenName[rowNo].value;   //truncated concept name used for parent concept 
 	    if (editName.length > 30)
         editName = editName.substring(0,30);
-      editLongName = document.searchResultsForm.hiddenName[rowNo].value;  //?
-      editNameType = document.searchResultsForm.hiddenName[rowNo].text;   //?
-      editDefinition = document.searchResultsForm.hiddenDefSource[rowNo].text;   //evs definition
-      editDefSource = document.searchResultsForm.hiddenDefSource[rowNo].value; 
-      sCCodeDB = document.searchResultsForm.hiddenCCodeDB[rowNo].value;  //evs vocabulary
-      sCCode = document.searchResultsForm.hiddenCCode[rowNo].value;   //evs code
+      editLevel = conArray[rowNo].conLevel;  // document.searchResultsForm.hiddenName[rowNo].text;
+    //  editLongName = document.searchResultsForm.hiddenName[rowNo].value;  //?
+    //  editNameType = document.searchResultsForm.hiddenName[rowNo].text;   //?
+      editDefinition = conArray[rowNo].conDef;  // document.searchResultsForm.hiddenDefSource[rowNo].text;   //evs definition
+      editDefSource = conArray[rowNo].conDefSrc;  // document.searchResultsForm.hiddenDefSource[rowNo].value; 
+      sCCodeDB = conArray[rowNo].conDBOrg;  // document.searchResultsForm.hiddenCCodeDB[rowNo].value;  //evs vocabulary
+      sCCode = conArray[rowNo].conID;  // document.searchResultsForm.hiddenCCode[rowNo].value;   //evs code
+      editStatus = conArray[rowNo].conStatus;
       if(sCCode == null || sCCode == "null") sCCode = "";
       if(sCCodeDB == null || sCCodeDB == "null") sCCodeDB = "";   
       
       //disable sub concept and super concept if meta or cadsr
-      if (sCCodeDB == "caDSR" || sCCodeDB == "NCI Metathesaurus")
+      if (sCCodeDB == dsrName || sCCodeDB == metaName)    //sCCodeDB == "caDSR" || sCCodeDB == "NCI Metathesaurus")
       {
         document.searchResultsForm.btnSuperConcepts.disabled=true;
         document.searchResultsForm.btnSubConcepts.disabled=true;
-      } 
-      
+      }       
    }
 
   function SelectAll(numRecs)
@@ -1207,7 +1226,21 @@ function createNames(acType)
      // ShowSelectedRows(false);
     }
   }
-
+  //fill the array object
+  function fillConArray(conID, conName, conDef, conDefSrc, conVocab, conDBOrg, conLvl, conStatus)
+  {
+    cArray = new Array();
+    cArray.conID = conID;
+    cArray.conName = conName;
+    cArray.conDef = conDef;
+    cArray.conDefSrc = conDefSrc;
+    cArray.conVocab = conVocab;
+    cArray.conDBOrg = conDBOrg;
+    cArray.conLevel = conLvl;
+    cArray.conStatus = conStatus;
+    return cArray;
+  }
+  
    // submit the page when clicked on clear records.
    function clearRecords()
    {

@@ -44,7 +44,7 @@
     if (sContID == null) sContID = "";
 
     String sLongName = m_DE.getDE_LONG_NAME();
-    sLongName = serUtil.parsedString(sLongName);    //call the function to handle doubleQuote
+    sLongName = serUtil.parsedStringDoubleQuoteJSP(sLongName);    //call the function to handle doubleQuote
     if (sLongName == null) sLongName = "";
       
   /*  String sStatus = m_DE.getDE_ASL_NAME();
@@ -52,11 +52,11 @@
     else if (sStatus == null) sStatus = "DRAFT NEW"; */
 
     //get cs-csi attributes
-    Vector vSelCSList = m_DE.getDE_CS_NAME();
+    Vector vSelCSList = m_DE.getAC_CS_NAME();
     if (vSelCSList == null) vSelCSList = new Vector();
  //   System.out.println("cs jsp " + vSelCSList.size());
-    Vector vSelCSIDList = m_DE.getDE_CS_ID();
-    Vector vACCSIList = m_DE.getDE_AC_CSI_VECTOR();
+    Vector vSelCSIDList = m_DE.getAC_CS_ID();
+    Vector vACCSIList = m_DE.getAC_AC_CSI_VECTOR();
     Vector vACId = (Vector)session.getAttribute("vACId");
     Vector vACName = (Vector)session.getAttribute("vACName");
     //initialize the beans
@@ -104,7 +104,7 @@
         objRefDoc.type_name = "<%=refDocBean.getDOC_TYPE_NAME()%>";
         <% //parse the string for quotation character
           String acName = refDocBean.getAC_LONG_NAME();
-          acName = serUtil.parsedString(acName);%>
+          acName = serUtil.parsedStringDoubleQuoteJSP(acName);%>
         objRefDoc.ac_name = "<%=acName%>";
         objRefDoc.ac_idseq = "<%=refDocBean.getAC_IDSEQ()%>";
         objRefDoc.ac_language = "<%=refDocBean.getAC_LANGUAGE()%>";
@@ -140,7 +140,7 @@
           objAltName.type_name = "<%=altNameBean.getALT_TYPE_NAME()%>";
           <% //parse the string for quotation character
             String acName = altNameBean.getAC_LONG_NAME();
-            acName = serUtil.parsedString(acName);%>
+            acName = serUtil.parsedStringDoubleQuoteJSP(acName);%>
           objAltName.ac_name = "<%=acName%>";
           objAltName.ac_idseq = "<%=altNameBean.getAC_IDSEQ()%>";
           objAltName.ac_language = "<%=altNameBean.getAC_LANGUAGE()%>";

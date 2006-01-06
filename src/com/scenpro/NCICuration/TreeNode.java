@@ -1,3 +1,5 @@
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/TreeNode.java,v 1.3 2006-01-06 21:53:58 hegdes Exp $
+// $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
 import java.util.Vector;
@@ -84,6 +86,7 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 public class TreeNode extends TreeObject {
 
     private String name;
+    private String dispName;
     private String code;
     private boolean expanded;
     private boolean visible;
@@ -94,11 +97,12 @@ public class TreeNode extends TreeObject {
     private int level;
     private int parentNodeID;
  
-    public TreeNode( int id, String name, String code, int level) 
+    public TreeNode( int id, String name, String dispName, String code, int level) 
     {
         super(Tree.NODE);
         this.id = id;
         this.name = name;
+        this.dispName = dispName;
         this.code = code;
         this.level = level;
         expanded = false;
@@ -120,6 +124,9 @@ public class TreeNode extends TreeObject {
     }
     public String getName() {
         return name;
+    }
+    public String getDispName() {
+        return dispName;
     }
      public String getCode() {
         return code;
@@ -144,6 +151,9 @@ public class TreeNode extends TreeObject {
     }
     public void setName(String name) {
         this.name = name;
+    }
+    public void setDispName(String name ) {
+        this.dispName = name;
     }
      public void setCode(String code) {
         this.code = code;

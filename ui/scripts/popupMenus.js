@@ -96,7 +96,7 @@ function disableMenu(sSearchAC)
   }
   //disable VD (enable when search is CD, VM)
   if (sSearchAC == "DataElementConcept" || sSearchAC == "ValueDomain" 
-  || sSearchAC == "ClassSchemeItems" || sSearchAC == "ObjectClass" || sSearchAC == "Property")
+	  || sSearchAC == "ObjectClass" || sSearchAC == "Property")
   {
     disMenu = "assVD";
     divObj = eval (doc + disMenu);
@@ -105,7 +105,7 @@ function disableMenu(sSearchAC)
   }
   //disable DEC (enable when search is CD)
   if (sSearchAC == "DataElementConcept" || sSearchAC == "ValueDomain" 
-  || sSearchAC == "ClassSchemeItems" || sSearchAC == "PermissibleValue")
+	  || sSearchAC == "PermissibleValue")
   {
     disMenu = "assDEC";
     divObj = eval (doc + disMenu);

@@ -22,7 +22,7 @@
   String sInitiatedFrom = (String)session.getAttribute("initiatedFrom");
   String sLastKeyword, sSearchIn, sContextUse="", sContext="";
   String sCreatedFrom="", sCreatedTo="", sModifiedFrom="", sModifiedTo="";
-  String sCreator="", sModifier="", sRegStatus="";
+  String sCreator="", sModifier="", sRegStatus="", sDerType = "", sDataType = "";
   String selCD = "", sProtoKeyword = "", sUIFilter = "simple", sVersion="", txVersion="";
   String sSearchAC = "";
   String typeEnum="", typeNonEnum="", typeRef="";
@@ -42,6 +42,8 @@
      selCD = (String)session.getAttribute("creSelectedCD");
      sSearchIn = (String)request.getAttribute("creSearchIn");
      sRegStatus = (String)session.getAttribute("creRegStatus");
+     sDerType = (String)session.getAttribute("creDerType");
+     sDataType = (String)session.getAttribute("creDataType");
      sVersion = (String)session.getAttribute("creVersion");
      txVersion = (String)session.getAttribute("creVersionNum");
      vDocs = (Vector)session.getAttribute("creDocTyes");
@@ -77,6 +79,8 @@
      selCD = (String)session.getAttribute("serSelectedCD");
      sSearchIn = (String)session.getAttribute("serSearchIn");
      sRegStatus = (String)session.getAttribute("serRegStatus");
+     sDerType = (String)session.getAttribute("serDerType");
+     sDataType = (String)session.getAttribute("serDataType");
      sVersion = (String)session.getAttribute("serVersion");
      txVersion = (String)session.getAttribute("serVersionNum");
      vDocs = (Vector)session.getAttribute("serDocTyes");
@@ -115,10 +119,10 @@
   else  sLongAC = sSearchAC;
 
   if (sLastKeyword == null)  sLastKeyword = "";
-  sLastKeyword = util.parsedString(sLastKeyword);
+  sLastKeyword = util.parsedStringDoubleQuoteJSP(sLastKeyword);
   sLastKeyword = sLastKeyword.trim();
   if (sProtoKeyword == null) sProtoKeyword = "";
-  sProtoKeyword = util.parsedString(sProtoKeyword);
+  sProtoKeyword = util.parsedStringDoubleQuoteJSP(sProtoKeyword);
   sProtoKeyword = sProtoKeyword.trim();
   //System.out.println("check vcontext");
   //get the search result records
@@ -149,6 +153,8 @@
   Vector vStatusVD = (Vector)session.getAttribute("vStatusVD");
   Vector vStatusCD = (Vector)session.getAttribute("vStatusCD");
   Vector vRegStatus = (Vector)session.getAttribute("vRegStatus");
+  Vector vDerType = (Vector)session.getAttribute("vRepType");
+  Vector vDataType = (Vector)session.getAttribute("vDataType");
   Vector vUsers = (Vector)session.getAttribute("vUsers");
   Vector vUsersName = (Vector)session.getAttribute("vUsersName");
   Vector vDocType = (Vector)session.getAttribute("vRDocType");
@@ -292,6 +298,7 @@ function LoadKeyHandler()
               <option value="PermissibleValue" <%if(sSearchAC.equals("PermissibleValue")){%>selected<%}%>>Permissible Value</option>
               <option value="ObjectClass" <%if(sSearchAC.equals("ObjectClass")){%>selected<%}%>>Object Class</option>
               <option value="Property" <%if(sSearchAC.equals("Property")){%>selected<%}%>>Property</option>
+              <option value="ConceptClass" <%if(sSearchAC.equals("ConceptClass")){%>selected<%}%>>Concept Class</option>
             </select>
         <% } else {%>
             <select name="listSearchFor" size="1" style="width:172"
@@ -319,7 +326,8 @@ function LoadKeyHandler()
           <select name="listSearchIn" size="1" style="width:172" onChange="doSearchInChange();" 
              onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
             <!-- include names&definition only if not questions-->
-              <option value="longName" <%if(sSearchIn.equals("longName")){%>selected<%}%>>Names & Definition</option>
+              <option value="longName" <%if(sSearchIn.equals("longName")){%>selected<%}%>>
+              	<%if(sSearchAC.equals("ConceptClass")){%>Concept Name<%}else{%>Names & Definition<%}%></option>
                <!-- include document text for Data Element -->
 <%          if (sSearchAC.equals("DataElement")){%>
               <option  value="NamesAndDocText" <%if(sSearchIn.equals("NamesAndDocText")){%>selected<%}%>>Names,Definition,Doc Text</option>
@@ -332,7 +340,8 @@ function LoadKeyHandler()
                <!-- include public ID all administered componenet -->
 <%          if (sSearchAC.equals("DataElement") || sSearchAC.equals("DataElementConcept")
                 || sSearchAC.equals("ValueDomain") || sSearchAC.equals("ConceptualDomain")
-                || sSearchAC.equals("ObjectClass") || sSearchAC.equals("Property")){%>
+                || sSearchAC.equals("ObjectClass") || sSearchAC.equals("Property")
+                 || sSearchAC.equals("ConceptClass")){%>
               <option value="minID" <%if(sSearchIn.equals("minID")){%>selected<%}%>>Public ID</option>
 <% } %>
                <!-- include Historical cde_ID for Data Element -->
@@ -347,6 +356,11 @@ function LoadKeyHandler()
 <%          if (sSearchAC.equals("DataElement") || sSearchAC.equals("DataElementConcept") || sSearchAC.equals("ValueDomain") || sSearchAC.equals("ConceptualDomain")){%>
               <option value="origin" <%if(sSearchIn.equals("origin")){%>selected<%}%>>Origin</option>
 <% } %>
+               <!-- include concept filter for all acs-->
+<%          if (!sSearchAC.equals("Questions")){%>
+              <option value="concept" <%if(sSearchIn.equals("concept")){%>selected<% } %>>
+              		<%if(sSearchAC.equals("ConceptClass")){%>EVS Identifier<%}else{%>Concept Name/EVS Identifier<%}%></option>
+<% } %>
           </select>
       </td>
     </tr>  
@@ -356,7 +370,7 @@ function LoadKeyHandler()
     <tr><td height="7" colspan=2 valign="top"></tr>   
     <tr>
       <td>&nbsp;</td>
-      <td align=left style="width:170"><font size=1>Doc Text searches in Document Text of type LONG_NAME and HISTORIC SHORT CDE NAME.</font></td>
+      <td align=left style="width:170"><font size=1>Doc Text searches in Document Text of type Preferred Question Text and HISTORIC SHORT CDE NAME.</font></td>
     </tr>
 <% } %>
 
@@ -374,11 +388,11 @@ function LoadKeyHandler()
 		      onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
 <%        if (vDocType != null) 
           { 
-            //default long_name and hist name if nothing is selected
+            //default Preferred Question Text and hist name if nothing is selected
             if (vDocs == null || vDocs.size()==0)
             {
               vDocs = new Vector();
-              vDocs.addElement("LONG_NAME");
+              vDocs.addElement("Preferred Question Text");
               vDocs.addElement("HISTORIC SHORT CDE NAME");
             }
             for (int i = 0; vDocType.size()>i; i++)
@@ -562,13 +576,6 @@ function LoadKeyHandler()
           onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
           Non-Enumerated</td>
     </tr>
- <!--   <tr>
-      <td>&nbsp;</td>
-      <td  align=left>&nbsp;&nbsp;&nbsp;&nbsp;
-          <input type="checkbox" name="refEnumBox" value="R" <%if(typeRef != null && typeRef.equals("R")){%> checked <%}%>
-          onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
-          By Reference</td>
-    </tr>  -->
   <%}%>    
 <%}  //not for crf question%>          
 <!-- classification schemes filter for csi search -->
@@ -594,24 +601,6 @@ function LoadKeyHandler()
      </td>
     </tr>
   <%}%>
-  <!-- CD filter for pv, vm, dec or vd searches 
-  <% if (sSearchAC.equals("DataElementConcept")  || sSearchAC.equals("ValueDomain")) {%>
-    <tr>
-      <td>&nbsp;</td>
-      <td style="height:20"  valign=bottom><b>Conceptual Domain</b>
-         &nbsp;&nbsp;&nbsp;<a href="javascript:doCDSearch();">Search</a>
-      </td>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td>
-        <select name="searchCDName" size ="1" style="width:172" valign="top" multiple
-		      onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
-           <option value="All Domains" <%if(selCD.equals("All Domains")){%>selected<%}%>>All Domains</option>
-        </select>
-     </td>
-    </tr>
-  <%  }  %>-->
   <!-- CD filter for pv, vm, dec or vd searches drop down list-->
   <% if (sSearchAC.equals("PermissibleValue") || sSearchAC.equals("ValueMeaning") || 
             sSearchAC.equals("DataElementConcept")  || sSearchAC.equals("ValueDomain")) {%>
@@ -648,7 +637,12 @@ function LoadKeyHandler()
       <td>
         <select name="listStatusFilter" size="3" style="width:172" multiple
             onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
-  <%      if (!sSearchAC.equals("Questions"))   { %>
+            <!--store the status list as per the CONCEPT SEARCH  -->
+  <%      if (sSearchAC.equals("ConceptClass")) { 
+  %>
+             <option value="RELEASED"  <%if (vStatus != null && vStatus.contains("RELEASED")){%>selected<%}%>>RELEASED</option>
+  <%      } 
+  		  if (!sSearchAC.equals("Questions"))   { %>
              <option value="AllStatus"  <%if (vStatus == null || vStatus.size()==0 || sAssocSearch.equals("true")){%>selected<%}%>>All Statuses</option>
             <!--store the status list as per the search component  -->
   <%      }
@@ -732,9 +726,67 @@ function LoadKeyHandler()
       </td>
     </tr>
 <%    }  %>
+<!-- Registration status filter-->
+<%  if (sSearchAC.equals("ValueDomain"))   { %>
+    <tr>
+      <td>&nbsp;</td>
+      <td style="height:20"  valign=bottom><b>Value Domain Data Type</b></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>
+        <select name="listDataType" size="1" style="width:172"
+            onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
+            <option value="allData"  <%if (vDataType == null || vDataType.size()==0 
+              || sDataType == null || sDataType.equals("") || sDataType.equals("allData")){%>selected<%}%>>All Data Types</option>
+<%          if (vDataType != null) 
+            {            
+              for (int i = 0; vDataType.size()>i; i++)
+              {
+                String sData = (String)vDataType.elementAt(i);
+                if (sData != null && !sData.equals("")) {
+%>
+              <option value="<%=sData%>" <%if(sData.equals(sDataType)){%>selected<%}%>><%=sData%></option>
+<%
+            } } }
+%>
+        </select> 
+      </td>
+    </tr>
+<%    }  %>
+
 <!-- created date filter-->
 <%if ((sUIFilter.equals("advanced")) && 
-    (sSearchAC.equals("DataElement") || sSearchAC.equals("DataElementConcept") || sSearchAC.equals("ValueDomain") || sSearchAC.equals("ConceptualDomain"))) {%>
+    (sSearchAC.equals("DataElement") || sSearchAC.equals("DataElementConcept") || sSearchAC.equals("ValueDomain") || sSearchAC.equals("ConceptualDomain"))) 
+  {
+    if (sSearchAC.equals("DataElement")) {    
+%>
+    <tr>
+      <td>&nbsp;</td>
+      <td style="height:20"  valign=bottom><b>Derivation Type</b></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>
+        <select name="listDeriveType" size="1" style="width:172"
+            onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
+            <option value="allDer"  <%if (vDerType == null || vDerType.size()==0 
+              || sDerType == null || sDerType.equals("") || sDerType.equals("allDer")){%>selected<%}%>>All Derivation Types</option>
+<%          if (vDerType != null) 
+            {            
+              for (int i = 0; vDerType.size()>i; i++)
+              {
+                String sDer = (String)vDerType.elementAt(i);
+                if (sDer != null && !sDer.equals("")) {
+%>
+              <option value="<%=sDer%>" <%if(sDer.equals(sDerType)){%>selected<%}%>><%=sDer%></option>
+<%
+            } } }
+%>
+        </select> 
+      </td>
+    </tr>
+<%   } //endif data element %>
     <tr> 
       <td colspan=2>
         <table>
@@ -769,6 +821,7 @@ function LoadKeyHandler()
             <td style="height:20" colspan=4 valign=bottom><b>Creator</b></td>
           <tr>
           </tr>
+          <tr>
             <td>&nbsp;</td>
             <td style="height:20" colspan=4 valign=top>
               <select name="creator" size ="1" style="width:172" valign="top" 
@@ -849,8 +902,8 @@ function LoadKeyHandler()
     </tr>
 <%} %> 
 
-<!--display attributes 
-    <tr><td height="7" colspan=2 valign="top"></tr>   -->
+<!--display attributes -->
+    <tr><td height="7" colspan=2 valign="top"></tr>   
     <tr>
       <td class="dashed-black" colspan=2>
         <div align="left"><b><%=item++%>)&nbsp;&nbsp;Display Attributes:</b>
@@ -871,7 +924,7 @@ function LoadKeyHandler()
               String sDispName = sAttrName;
               //get the display name for some special attributes
 	           if (sAttrName.equals("Name"))
-      	        sDispName = "Preferred Name";
+      	        sDispName = "Short Name";
 %>
               <option value="<%=sAttrName%>" <% if((vSelectedAttr != null) && (vSelectedAttr.contains(sAttrName))){ %>selected<% } %>><%=sDispName%></option>
 <%

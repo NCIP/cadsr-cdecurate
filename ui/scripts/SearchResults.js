@@ -95,6 +95,31 @@
       detailWindow = window.open("jsp/DECDetailWindow.jsp", "DECDetails", "width=750,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
   }
    
+  //opens window for more concept names
+  function openConceptWindow(acName, acID, ac2ID, acType)
+  {
+      document.SearchActionForm.acID.value = acID;
+      document.SearchActionForm.ac2ID.value = ac2ID;
+      document.SearchActionForm.itemType.value = acType;  //ac type for concept search
+      document.SearchActionForm.searchComp.value = acName;  //ac name for pv
+      document.SearchActionForm.isValidSearch.value = "false";
+      if (detailWindow && !detailWindow.closed)
+          detailWindow.close();
+      var windowW = screen.width - 710;
+      detailWindow = window.open("jsp/ConceptClassDetailWindow.jsp", "ConceptClass", "width=700,height=300,top=0,left=" + windowW + ",resizable=yes,scrollbars=yes");
+  }
+
+  //opens window for more conceptual Domains
+  function openConDomainWindow(acName)
+  {
+      document.SearchActionForm.searchComp.value = acName;  //value meaning
+      document.SearchActionForm.isValidSearch.value = "false";
+      if (detailWindow && !detailWindow.closed)
+          detailWindow.close();
+      var windowW = screen.width - 710;
+      detailWindow = window.open("jsp/ConDomainDetailWindow.jsp", "ConceptualDomain", "width=700,height=300,top=0,left=" + windowW + ",resizable=yes,scrollbars=yes");
+  }
+
   function SetSortTypeJS(sortBy, menuAction)
   {
     var isSubmitOk = true;
@@ -139,6 +164,17 @@
         document.searchResultsForm.actSelected.value = "NoRowsSelected";
       else
         document.searchResultsForm.actSelected.value = "Rows";
+      document.searchResultsForm.numSelected.value = numRowsSelected;
+      document.searchResultsForm.submit();
+  }
+
+  // Add the selected items to the user's reserved CSI and create an Alert to
+  // monitor activity on the CSI.
+  function monitorCmd()
+  {
+      window.status = "Submitting list to the Sentinel Tool, please wait....."
+      document.searchResultsForm.Message.style.visibility="visible";
+      document.searchResultsForm.actSelected.value = "Monitor";
       document.searchResultsForm.numSelected.value = numRowsSelected;
       document.searchResultsForm.submit();
   }
@@ -368,7 +404,16 @@
 		   //enable the append button
 		   if (document.searchResultsForm.AppendBtn != null)
 			   document.searchResultsForm.AppendBtn.disabled=false;
-		   
+               
+           if (document.searchResultsForm.monitorBtn != null)
+               document.searchResultsForm.monitorBtn.disabled = false;
+                      
+           if (document.searchResultsForm.unmonitorBtn != null)
+               document.searchResultsForm.unmonitorBtn.disabled = false;
+              
+		   if (document.searchResultsForm.uploadBtn != null)
+               document.searchResultsForm.uploadBtn.disabled = false;
+               
 		   if (numRowsSelected == 1)
 		   {
 			   if (editAction == "searchForCreate")
@@ -526,6 +571,15 @@
       }
       else  // numRowsSelected == 0
       {
+          if (document.searchResultsForm.monitorBtn != null)
+              document.searchResultsForm.monitorBtn.disabled = true;
+              
+          if (document.searchResultsForm.unmonitorBtn != null)
+              document.searchResultsForm.unmonitorBtn.disabled = true;  
+              
+         if (document.searchResultsForm.uploadBtn != null)
+               document.searchResultsForm.uploadBtn.disabled = true;            
+           
 		  if (document.searchResultsForm.associateACBtn != null)
 			  document.searchResultsForm.associateACBtn.disabled=true;
 		  
@@ -776,7 +830,8 @@
   function getAssocDECs()
   {
 	   var SearchAC = document.searchParmsForm.listSearchFor.value;   //get the search for from dropdown list
-	   if (SearchAC == "ConceptualDomain" || SearchAC == "DataElement" || SearchAC == "ObjectClass" || SearchAC == "Property")
+	   if (SearchAC == "ConceptualDomain" || SearchAC == "DataElement" || SearchAC == "ObjectClass" 
+	   		|| SearchAC == "Property" || SearchAC == "ClassSchemeItems" || SearchAC == "ConceptClass")
 	   { 
 		   window.status = "Opening page to get associated Data Element Concepts, it may take a minute, please wait....."
 			   document.searchResultsForm.Message.style.visibility="visible";
@@ -789,7 +844,8 @@
   function getAssocVDs()
   {
 	   var SearchAC = document.searchParmsForm.listSearchFor.value;   //get the search for from dropdown list
-	   if (SearchAC == "ConceptualDomain" || SearchAC == "PermissibleValue" || SearchAC == "DataElement") 
+	   if (SearchAC == "ConceptualDomain" || SearchAC == "PermissibleValue" 
+	   		|| SearchAC == "DataElement" || SearchAC == "ClassSchemeItems" || SearchAC == "ConceptClass" ) 
 	   { 
 		   getRowAttributes();   //get the values of each row.
 		   //display message if row is from EVS
@@ -816,9 +872,9 @@
 			   detailWindow.close();
 		   
 		   //open browser in dev server if localhost or protocol, use the server from the host name
-		   serverName = serverName.toLowerCase();
-       cdeServer = serverName;   //defaults to curation tool server
-       if (serverName == "localhost")
+//		   serverName = serverName.toLowerCase();
+       var cdeServer = serverName;   //defaults to curation tool server
+/*       if (serverName == "localhost")
           cdeServer = "cdebrowser-qa.nci.nih.gov";
        else if (serverName == "protocol.scenpro.net")
           cdeServer = "cdebrowser-dev.nci.nih.gov";
@@ -829,10 +885,10 @@
        else if (serverName == "ncicb-stage.nci.nih.gov" || serverName == "cdecurate-stage.nci.nih.gov")
           cdeServer = "cdebrowser-stage.nci.nih.gov";
        else if (serverName == "ncicb.nci.nih.gov" || serverName == "cdecurate.nci.nih.gov")
-          cdeServer = "cdebrowser.nci.nih.gov";
+          cdeServer = "cdebrowser.nci.nih.gov";*/
           
 		   //open cde browser	
-			 detailWindow = window.open("http://" + cdeServer + "/CDEBrowser/search?dataElementDetails=9&p_de_idseq=" + editID + "&PageId=DataElementsGroup&queryDE=yes&FirstTimer=0", "detailComponent", "width=850,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
+			 detailWindow = window.open(cdeServer + "/CDEBrowser/search?dataElementDetails=9&p_de_idseq=" + editID + "&PageId=DataElementsGroup&queryDE=yes&FirstTimer=0", "detailComponent", "width=850,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
 	   }
 	   else
 		   alert("Unable to determine the server name of the browser.");	
@@ -860,4 +916,59 @@
       window.close();
     }
   }
-   
+  
+  //DE derivation relationship details
+  function openDerRelationDetail(deName, deID, derType)
+  {
+      document.SearchActionForm.acID.value = deID;
+      document.SearchActionForm.searchComp.value = deName;  //de Name for DDE
+      document.SearchActionForm.itemType.value = derType;  //de Name for DDE
+      document.SearchActionForm.isValidSearch.value = "false";
+      if (detailWindow && !detailWindow.closed)
+          detailWindow.close();
+      var windowW = screen.width - 760;
+      detailWindow = window.open("jsp/DerivedDEWindow.jsp", "DerivedDE", "width=750,height=620,top=0,left=" + windowW + ",resizable=yes,scrollbars=yes");
+  }
+
+  // Remove selected items from the user's reserved CSI and remove the Alert to
+  // monitor activity on the CSI.
+  function unmonitorCmd()
+  {
+      window.status = "Submitting list to the Sentinel Tool, please wait....."
+      document.searchResultsForm.Message.style.visibility="visible";
+      document.searchResultsForm.actSelected.value = "UnMonitor";
+      document.searchResultsForm.numSelected.value = numRowsSelected;
+      document.searchResultsForm.submit();
+  }  
+function uploadCmd()
+  {
+  	  getRowAttributes();   //get the values of each row.
+	   
+	  var isStatusValid = true;
+	  
+	   
+	   //Conditions... 
+	   /*
+	   var SearchAC = document.searchParmsForm.listSearchFor.value;   //get the search for from dropdown list
+	   
+	   if (SearchAC = "DataElement")
+	   {
+	    	//TODO: Add code to set a AC type attribute.
+	   }
+		*/
+	   
+	   if (isStatusValid == true)
+	   {
+			window.status = "Opening page to Reference Document Attachments, it may take a minute, please wait....."
+	       	document.searchResultsForm.Message.style.visibility="visible";
+			document.searchResultsForm.actSelected.value = "RefDocumentUpload";
+	        document.searchResultsForm.submit();
+	   }
+	   else
+	   {
+		   alert ("Message...");
+		   document.searchResultsForm.hiddenACIDStatus.length = 0;
+		   document.searchResultsForm.hiddenDesIDName.length = 0;
+	   }
+  }  
+  
