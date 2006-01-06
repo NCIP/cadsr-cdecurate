@@ -130,7 +130,156 @@ public class EVSSearch implements Serializable
     m_classRes = res;
     m_servlet = null;
   } 
-
+  
+  /**
+   * get the right definition
+   * @param vList Vector
+   * @return EVS BEan
+   */
+  private EVS_Bean getNCIDefinition(Vector vList)
+  {
+   logger.debug("get nci def " + vList.size());
+    EVS_Bean eBean = (EVS_Bean)vList.elementAt(0);
+    Vector vNCIsrc = new Vector();
+    vNCIsrc.addElement("NCI");
+    vNCIsrc.addElement("NCI-GLOSS");
+    vNCIsrc.addElement("NCI-GLOSS03");
+    vNCIsrc.addElement("NCI05");
+    vNCIsrc.addElement("NCI2005_05");
+    vNCIsrc.addElement("NCICB");
+    if (vNCIsrc == null) vNCIsrc = new Vector();
+    boolean isDefMatched = false;
+    //loop through list of nci sources to get the right order
+    for (int i = 0; i<vNCIsrc.size(); i++)
+    {
+      String srcNCI = (String)vNCIsrc.elementAt(i);
+      //loop through list of def sources for the concept
+      for (int k=0; k<vList.size(); k++)
+      {
+        EVS_Bean thisBean = (EVS_Bean)vList.elementAt(k);
+        String sSrc = thisBean.getEVS_DEF_SOURCE();
+    logger.debug(thisBean.getNCI_CC_VAL() + " nci def " + sSrc + " nci src " + srcNCI);
+        //match def source order to the bean
+        if (sSrc.equalsIgnoreCase(srcNCI))
+        {
+          isDefMatched = true;
+          eBean = (EVS_Bean)vList.elementAt(k);   //to return the def matched bean
+          break;
+        }
+      }
+      if (isDefMatched) break;  //no need to continue if found the right def source
+    }
+    //take any nci def if not found yet
+    if (!isDefMatched)
+    {
+      for (int k=0; k<vList.size(); k++)
+      {
+        EVS_Bean thisBean = (EVS_Bean)vList.elementAt(k);
+        String sSrc = thisBean.getEVS_DEF_SOURCE();
+    logger.debug(thisBean.getNCI_CC_VAL() + " nci def " + sSrc + " nci src any nci ");
+        //match def source order to the bean
+        if (sSrc.indexOf("NCI")>=0)
+        {
+          eBean = (EVS_Bean)vList.elementAt(k);   //to return the def matched bean
+          break;
+        }
+      }      
+    }
+    return eBean;  //return teh bean
+  }
+  
+  /**
+   * does the property search method for evs
+   * @param sTerm string concept id
+   * @param sProp string property to search in
+   * @param eBean evs bean
+   * @return EVS Bean
+   */
+  public EVS_Bean do_EVSPropSearch(String sTerm, String sProp, EVS_Bean eBean)
+  {
+    try
+    {
+      //do search here
+      Vector vRes = new Vector();
+      ApplicationService evsService = ApplicationService.getRemoteInstance(m_servlet.m_EVS_CONNECT);
+      EVSQuery query = new EVSQueryImpl(); 
+      query.searchDescLogicConcepts(m_servlet.m_VOCAB_NCI, sTerm, 10000, 2, sProp, 1);
+      List concepts = evsService.evsSearch(query);
+      if (concepts != null)
+      {
+  logger.debug(sTerm + " after query " + concepts.size());
+        for (int i =0; i < concepts.size(); i++)
+        {
+          DescLogicConcept oDLC = (DescLogicConcept)concepts.get(i); 
+          if (oDLC == null) oDLC = new DescLogicConcept();
+          String sConName = oDLC.getName();
+          if (sConName == null) sConName = "";
+          String sConID = oDLC.getCode();
+          if (sConID == null) sConID = "";
+          logger.debug(sConName + " con " + sConID);
+          String sDef = "No Value Exists.";
+          String sDefSrc = "";
+          Vector properties = oDLC.getPropertyCollection();
+          if (properties == null) properties = new Vector();
+          //get other properties
+          for(int k=0; k< properties.size(); k++)
+          {
+            Property property = (Property) properties.get(k);
+            if (property != null)
+            {
+            //System.out.println(" property " + property.getName() + "\t" + property.getValue() + "\t" + property.getName().indexOf("Semantic") + "\n");
+              String propName = property.getName();
+              if (propName == null) propName = "";
+              String propValue = property.getValue();
+              if (propValue == null) propValue = "";
+              if (propName.equalsIgnoreCase("Preferred_Name"))
+              {
+                sConName = propValue;
+                break; //end the loop since only one prop here
+              }
+            }
+          }
+          //get the definition from teh property
+          boolean defFound = false;
+          for(int k=0; k< properties.size(); k++)
+          {
+            Property property = (Property) properties.get(k);
+            if (property != null)
+            {
+              String propName = property.getName();
+              if (propName != null && propName.equalsIgnoreCase("DEFINITION"))
+              {
+                sDef = this.getDefinition(property.getValue());  //get def value
+                sDefSrc = this.getSource(property.getValue());  //get def source 
+                defFound = true;
+                EVS_Bean evsBean = new EVS_Bean();
+                evsBean.setEVSBean(sDef, sDefSrc, sConName, "NCI_CONCEPT_CODE", "", "", sConID, 
+                    "", "", m_servlet.m_VOCAB_NCI, 0, "", "", ""); 
+                vRes.addElement(evsBean);    //add OC bean to vector
+              }
+            }
+          }
+          //add the bean with default definition
+          if (defFound == false)
+          {
+            EVS_Bean evsBean = new EVS_Bean();
+            evsBean.setEVSBean(sDef, sDefSrc, sConName, "NCI_CONCEPT_CODE", "", "", sConID, 
+                "", "", m_servlet.m_VOCAB_NCI, 0, "", "", ""); 
+            vRes.addElement(evsBean);    //add OC bean to vector            
+          }
+        }
+        //get the right definition
+        if (vRes != null && vRes.size() > 0)
+          eBean = this.getNCIDefinition(vRes);
+      }
+      
+    }
+    catch(Exception e)
+    {
+      logger.info("Error - do_EVSPropSearch : " + e.toString());
+    }
+    return eBean;
+  }
 
  /**
    * This method searches EVS vocabularies and returns concepts, which are used
@@ -190,7 +339,7 @@ public class EVSSearch implements Serializable
     //use unparsed search string
     if (sSearchInEVS != null && !sSearchInEVS.equalsIgnoreCase("Code") && !sSearchInEVS.equalsIgnoreCase("Concept Code"))
       termStr = (String)session.getAttribute("creKeyword");
-  
+// System.out.println("doEVSSearch dtsVocab: " + dtsVocab); 
     if(dtsVocab.equals("Thesaurus/Metathesaurus") || dtsVocab.equals("") ||
     dtsVocab.equals("NCI Thesaurus") || dtsVocab.equals("NCI_Thesaurus"))
     {
@@ -650,11 +799,14 @@ public class EVSSearch implements Serializable
             aMetaThesaurusConcept = (MetaThesaurusConcept)concepts.get(i);
             prefNameConcept = (String)aMetaThesaurusConcept.getName();
             CCode = (String)aMetaThesaurusConcept.getCui();
-          /*  if(sCCode_AllSources.equals("true"))
-            {
-              if(!CCode.equals(termStr))
-                break;
-            } */
+            String subStr = "";
+            subStr = CCode.substring(0,2);
+            if(subStr.equalsIgnoreCase("C0"))
+              sAltNameType = "UMLS_CUI";
+            else if(subStr.equalsIgnoreCase("CL"))
+              sAltNameType = "NCI_META_CUI";
+  //  System.out.println("Meta subStr: " + subStr);
+   //  System.out.println("Meta sAltNameType: " + sAltNameType);
             if(sSearchAC.equals("ParentConceptVM") && sSearchType.equals("Immediate") && ilevelImmediate > 0)
                 ilevel = ilevelImmediate;
 

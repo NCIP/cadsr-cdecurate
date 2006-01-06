@@ -5044,13 +5044,33 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
       logger.fatal("ERROR in InsACService-addRemoveRefDocs for exception : " + e.toString());
     }
   } //end doAddRemoveAltNames
-  
+
+  /**
+   * takes Thesaurus term for Meta
+   * @param evsBean
+   * @return 
+   */
+  public EVS_Bean takeThesaurusConcept(EVS_Bean evsBean)
+  {
+    HttpSession session = m_classReq.getSession();
+    String sConceptName = evsBean.getLONG_NAME();
+    String sContextID = evsBean.getCONTE_IDSEQ();
+    String sConID = evsBean.getNCI_CC_VAL();
+    if (sConID != null && !sConID.equals(""))
+    {
+      String altType = "UMLS_CUI";
+      if (sConID.indexOf("CL") >= 0) altType = "NCI_META_CUI";
+      EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
+      evsBean = evs.do_EVSPropSearch(sConID, altType, evsBean);      
+    }
+    return evsBean;
+  }
   /**
    * takes the thesaurus concept if meta was selected
    * @param evsBean EVS_Bean of the selected concept
    * @return EVS_Bean
    */
-  public EVS_Bean takeThesaurusConcept(EVS_Bean evsBean)
+  public EVS_Bean takeThesaurusConcept_old(EVS_Bean evsBean)
   {
     HttpSession session = m_classReq.getSession();
     String sConceptName = evsBean.getLONG_NAME();
@@ -5089,6 +5109,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
          sDefinition = sDefinition.substring(5,15);
         if(sName.equalsIgnoreCase(sConceptName))
         {
+ //  System.out.println("do the switch sDefinition: " + sDefinition + " sConceptDefinition: " + sConceptDefinition); 
           if(sDefinition.equalsIgnoreCase(sConceptDefinition))      
             return OCBean; 
         }
@@ -5147,9 +5168,8 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
         {
           sEvsSource = evsBean.getEVS_DEF_SOURCE();
           if(sEvsSource == null) sEvsSource = "";
-          if(sEvsSource.equalsIgnoreCase("NCI-Gloss") || sEvsSource.equalsIgnoreCase("NCI04"))   
-            evsBean = takeThesaurusConcept(evsBean);
-          logger.info("after takeThes " + evsBean.getNCI_CC_VAL());     
+            evsBean = takeThesaurusConcept(evsBean);    
+          logger.info("after takeThes " + evsBean.getNCI_CC_VAL());
         }
        }
       //return the concept id if the concept alredy exists in caDSR.
