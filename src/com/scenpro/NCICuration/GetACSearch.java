@@ -1,7 +1,7 @@
 
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/GetACSearch.java,v 1.18 2006-01-06 21:53:57 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/GetACSearch.java,v 1.19 2006-01-09 18:00:23 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;     
@@ -8468,7 +8468,7 @@ System.out.println(" dtsVocab " + dtsVocab);
           vSRows = (Vector)session.getAttribute("vSelRows");
 
       String sortField = (String)req.getParameter("blockSortType"); // Block searches
-      if (sortField == null)
+      if (sortField == null || sortField.equals(""))
          sortField = (String)req.getParameter("sortType");  // Main search page
       else if (sortField == null)
          sortField = (String)session.getAttribute("blockSortType");

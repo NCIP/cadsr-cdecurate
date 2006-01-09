@@ -124,12 +124,16 @@
     <!-- select the contact type -->
   	<tr valign="bottom" height="25">
         <td align=right><font color="#FF0000">*&nbsp;</font><%=item++%>)</td>
-        <td><input type="radio" name="rType" value="Person" onClick="javascript:submitForm('changeType');">	
+        <td><input type="radio" name="rType" value="Person" 
+        	<%if(selType.equals("Person")) {%> checked <%} %>
+        	onClick="javascript:submitForm('changeType');">	
         <font color="#FF0000">Select </font>Contact Person</td>
     </tr>
   	<tr valign="bottom" height="25">
       	<td>&nbsp;</td>
-        <td><input type="radio" name="rType" value="Organize" onClick="javascript:submitForm('changeType');"> 
+        <td><input type="radio" name="rType" value="Organize" 
+        	<%if(selType.equals("Organize")) {%> checked <%} %>
+        	onClick="javascript:submitForm('changeType');"> 
         <font color="#FF0000">Select </font>Contact Organization</td>
     </tr>
   	<tr valign="bottom">
