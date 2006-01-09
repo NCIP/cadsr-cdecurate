@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/NCICurationServlet.java,v 1.27 2006-01-06 21:53:57 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/NCICurationServlet.java,v 1.28 2006-01-09 18:00:23 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
@@ -9191,7 +9191,10 @@ System.out.println("servlet done callExpandSubNode");
        System.out.println(sContAct + " contat sele " + selCont + " contains " + hConts.containsKey(selCont));
            }
            else  //new contact
+           {
              accBean = new AC_CONTACT_Bean(); 
+             session.setAttribute("selContactKey", "");
+           }
          }
          else  // if (!sPgAct.equals("openPage")) //if not opening the page store the changed data in teh bean
          {
@@ -9208,6 +9211,7 @@ System.out.println("servlet done callExpandSubNode");
            if (conRole != null && !conRole.equals(""))
              accBean.setCONTACT_ROLE(conRole);         
          }
+         //change the radio button action
          if (sPgAct.equals("changeType"))
          {
            String sType = (String)req.getParameter("rType");
