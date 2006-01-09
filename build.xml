@@ -44,7 +44,9 @@
       <pathelement location="${m_lib}/servlet.jar"/>
       <pathelement location="${m_lib}/jasper-runtime.jar"/>
       <pathelement location="${m_lib}/ant.jar"/>
-      <pathelement location="${m_lib}/classes12.jar"/>
+ <!-- <pathelement location="${m_lib}/classes12.jar"/> -->
+      <pathelement location="${m_lib}/ojdbc14.jar"/>
+      <pathelement location="${m_lib}/cadsrsentinelapi.jar"/>
       <pathelement location="${m_lib}/client.jar"/>
       <pathelement location="${m_lib}/xerces.jar"/>
       <pathelement location="${m_lib}/alteredHibernate2.jar"/>
