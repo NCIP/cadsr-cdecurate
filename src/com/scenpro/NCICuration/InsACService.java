@@ -1968,6 +1968,7 @@ public class InsACService implements Serializable
     CallableStatement CStmt = null;
     String sReturnCode = "";
     String sOCL_IDSEQ = "";
+    String sConID = "";
     try
     {
       String sOCLName = "";
@@ -1985,6 +1986,7 @@ public class InsACService implements Serializable
       for (int m=1; m<vObjectClass.size(); m++)
       {
         EVS_Bean OCBean = (EVS_Bean)vObjectClass.elementAt(m);
+        sConID = OCBean.getNCI_CC_VAL();
         if(OCBean.getCON_AC_SUBMIT_ACTION() == null) 
           OCBean.setCON_AC_SUBMIT_ACTION("");
         //if not deleted, create and append them one by one
@@ -1996,6 +1998,8 @@ public class InsACService implements Serializable
             String conIDseq = OCBean.getCON_IDSEQ();
             //create it only if doesn't exist
             if (conIDseq == null || conIDseq.equals(""))
+              conIDseq = this.setConcept("INS", sRet, OCBean);
+            else if(sConID.indexOf("CL") >= 0 || sConID.indexOf("C0") >= 0)   
               conIDseq = this.setConcept("INS", sRet, OCBean);
             if (conIDseq != null && !conIDseq.equals(""))
             {
@@ -2024,6 +2028,8 @@ public class InsACService implements Serializable
             String conIDseq = OCBean.getCON_IDSEQ();
             //create it only if doesn't exist
             if (conIDseq == null || conIDseq.equals(""))
+              conIDseq = this.setConcept("INS", sRet, OCBean);
+            else if(sConID.indexOf("CL") >= 0 || sConID.indexOf("C0") >= 0)   
               conIDseq = this.setConcept("INS", sRet, OCBean);
             if (conIDseq != null && !conIDseq.equals(""))
             {
@@ -2144,6 +2150,7 @@ public class InsACService implements Serializable
     CallableStatement CStmt = null;
     String sReturnCode = "";
     String sPROPL_IDSEQ = "";
+    String sConID = "";
     try
     {
       String sContextID = ""; // 
@@ -2159,6 +2166,7 @@ public class InsACService implements Serializable
       for (int m=1; m<vProperty.size(); m++)
       {
         EVS_Bean PCBean = (EVS_Bean)vProperty.elementAt(m);
+        sConID = PCBean.getNCI_CC_VAL();
         if(PCBean.getCON_AC_SUBMIT_ACTION() == null) 
           PCBean.setCON_AC_SUBMIT_ACTION("");
         //if not deleted, create and append them one by one
@@ -2170,6 +2178,8 @@ public class InsACService implements Serializable
             String conIDseq = PCBean.getCON_IDSEQ();
             //create it only if doesn't exist
             if (conIDseq == null || conIDseq.equals(""))
+              conIDseq = this.setConcept("INS", sRet, PCBean);
+            else if(sConID.indexOf("CL") >= 0 || sConID.indexOf("C0") >= 0)
               conIDseq = this.setConcept("INS", sRet, PCBean);
             if (conIDseq != null && !conIDseq.equals(""))
             {
@@ -2199,6 +2209,8 @@ public class InsACService implements Serializable
             String conIDseq = PCBean.getCON_IDSEQ();
             //create it only if doesn't exist
             if (conIDseq == null || conIDseq.equals(""))
+              conIDseq = this.setConcept("INS", sRet, PCBean);
+            else if(sConID.indexOf("CL") >= 0 || sConID.indexOf("C0") >= 0)
               conIDseq = this.setConcept("INS", sRet, PCBean);
             if (conIDseq != null && !conIDseq.equals(""))
             {
@@ -2316,6 +2328,7 @@ public class InsACService implements Serializable
     ResultSet rs = null;
     CallableStatement CStmt = null;
     String sReturnCode = "";
+    String sConID = "";
     try
     {
       String sREPName = "";
@@ -2334,6 +2347,7 @@ public class InsACService implements Serializable
       for (int m=1; m < vRepTerm.size(); m++)
       {
         EVS_Bean REPBean = (EVS_Bean)vRepTerm.elementAt(m);
+        sConID = REPBean.getNCI_CC_VAL();
         if(REPBean.getCON_AC_SUBMIT_ACTION() == null) 
           REPBean.setCON_AC_SUBMIT_ACTION("");
         //if not deleted, create and append them one by one
@@ -2343,8 +2357,11 @@ public class InsACService implements Serializable
           {
             String sRet = "";
             String conIDseq = REPBean.getCON_IDSEQ();
+    //System.out.println("setRepresentation Quals call setConcept conIDseq: " + conIDseq + " sConID: " + sConID);
             //create it only if doesn't exist
             if (conIDseq == null || conIDseq.equals(""))
+              conIDseq = this.setConcept("INS", sRet, REPBean);
+            else if(sConID.indexOf("CL") >= 0 || sConID.indexOf("C0") >= 0)    
               conIDseq = this.setConcept("INS", sRet, REPBean);
             if (conIDseq != null && !conIDseq.equals(""))
             {
@@ -2371,7 +2388,10 @@ public class InsACService implements Serializable
             String sRet = "";
             String conIDseq = REPBean.getCON_IDSEQ();
             //create it only if doesn't exist
+    //System.out.println("setRepresentation Primary call SetCon conIDseq: " + conIDseq  + " sConID: " + sConID);
             if (conIDseq == null || conIDseq.equals(""))
+              conIDseq = this.setConcept("INS", sRet, REPBean);
+            else if(sConID.indexOf("CL") >= 0 || sConID.indexOf("C0") >= 0)    
               conIDseq = this.setConcept("INS", sRet, REPBean);
             if (conIDseq != null && !conIDseq.equals(""))
             {
@@ -5109,7 +5129,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
          sDefinition = sDefinition.substring(5,15);
         if(sName.equalsIgnoreCase(sConceptName))
         {
- //  System.out.println("do the switch sDefinition: " + sDefinition + " sConceptDefinition: " + sConceptDefinition); 
+   System.out.println("docc the switch sDefinition: " + sDefinition + " sConceptDefinition: " + sConceptDefinition); 
           if(sDefinition.equalsIgnoreCase(sConceptDefinition))      
             return OCBean; 
         }
@@ -5153,7 +5173,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
     logger.info(m_servlet.getLogMessage(m_classReq, "setConcept", "starting set", startDate, startDate));
-
+ //System.out.println("in setConcept evsBean.getEVS_DATABASE(): " + evsBean.getEVS_DATABASE());
     Connection sbr_db_conn = null;
     ResultSet rs = null;
     CallableStatement CStmt = null;
@@ -5310,6 +5330,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
         boolean bExcuteOk = CStmt.execute();
         sCON_IDSEQ = (String)CStmt.getObject(2);
         evsBean.setCON_IDSEQ(sCON_IDSEQ);
+  System.out.println("getConcept conID: " + sCON_IDSEQ + " getConcept ccode " + evsBean.getNCI_CC_VAL());
       logger.info(sCON_IDSEQ + " getConcept code " + evsBean.getNCI_CC_VAL());     
         sReturn = (String)CStmt.getObject(1);
         if (sReturn == null || sReturn.equals(""))
