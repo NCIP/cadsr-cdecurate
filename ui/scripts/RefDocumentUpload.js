@@ -27,16 +27,10 @@
   function doUpload()
   {   
 
-	   
 	   window.status = "Uploading Reference Document Attachments, it may take a minute, please wait.....";
 	   document.RefDocumentUploadForm.newRefDocPageAction.value = "UploadFile";
 	   document.RefDocumentUploadForm.submit();
 	   
   }
   
-  function onInit()
-  {   
-
-	   alert("init");
-	   
-  }	   
+   

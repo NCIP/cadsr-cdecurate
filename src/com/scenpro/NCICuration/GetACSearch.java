@@ -1,7 +1,7 @@
 
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/GetACSearch.java,v 1.19 2006-01-09 18:00:23 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/GetACSearch.java,v 1.20 2006-01-12 16:46:55 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;     
@@ -3724,6 +3724,13 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
         session.setAttribute("sMethod", sMethod);
         session.setAttribute("sConcatChar", sConcatChar);
         session.setAttribute("sRulesAction", sRulesAction);
+        //store it in the session if bad type
+        String dbType = sRepType;
+        Vector vRepType = (Vector)session.getAttribute("vRepType");
+        if (vRepType != null && sRepType != null && !vRepType.contains(sRepType))
+          session.setAttribute("NotValidDBType", dbType);
+        else
+          session.setAttribute("NotValidDBType", "");
       }  // end of if (sbr_db_conn == null)
     }  // end of try
     catch(Exception e)
@@ -8517,6 +8524,8 @@ System.out.println(" dtsVocab " + dtsVocab);
        
           if (menuAction.equals("searchForCreate"))
               session.setAttribute("vACSearch", vSortedRows);
+          else
+            session.setAttribute("vSelRows", vSortedRows);
         } 
       }
     }
@@ -8743,7 +8752,7 @@ System.out.println(" dtsVocab " + dtsVocab);
         returnValue = curBean.getcaDSR_COMPONENT();
       else if (curField.equals("comment"))
         returnValue = curBean.getCOMMENTS();
-      else if (curField.equals("publicID"))
+      else if (curField.equals("publicID") || curField.equals("minID"))
         returnValue = curBean.getID();
       else if (curField.equals("asl") || curField.equals("Status"))
         returnValue = curBean.getASL_NAME();
@@ -8893,7 +8902,7 @@ System.out.println(" dtsVocab " + dtsVocab);
     String returnValue = "";
    try
     {
-      if (curField.equals("name"))
+      if (curField.equals("name") || curField.equals("conName"))
         returnValue = curBean.getLONG_NAME();  //getPREFERRED_NAME();
       else if (curField.equals("umls") || curField.equals("Ident"))
         returnValue = curBean.getNCI_CC_VAL();
@@ -9071,7 +9080,7 @@ System.out.println(" dtsVocab " + dtsVocab);
     String returnValue = "";
     try
     {
-      if (curField.equals("name"))
+      if (curField.equals("name") || curField.equals("conName"))
         returnValue = curBean.getLONG_NAME();  //getPREFERRED_NAME();
       else if (curField.equals("umls") || curField.equals("Ident"))
         returnValue = curBean.getNCI_CC_VAL();

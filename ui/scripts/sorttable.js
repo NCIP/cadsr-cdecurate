@@ -65,12 +65,7 @@ function ts_resortTable(lnk) {
     // Work out a type for the column
     if (table.rows.length <= 1) return;
     var itm = ts_getInnerText(table.rows[1].cells[column]);
-    //sortfn = ts_sort_caseinsensitive;
     sortfn = ts_sort_default;
-    //if (itm.match(/^\d\d[\/-]\d\d[\/-]\d\d\d\d$/)) sortfn = ts_sort_date;
-    //if (itm.match(/^\d\d[\/-]\d\d[\/-]\d\d$/)) sortfn = ts_sort_date;
-    //if (itm.match(/^[£$]/)) sortfn = ts_sort_currency;
-    //if (itm.match(/^[\d\.]+$/)) sortfn = ts_sort_numeric;
     SORT_COLUMN_INDEX = column;
     var firstRow = new Array();
     var newRows = new Array();
@@ -80,11 +75,11 @@ function ts_resortTable(lnk) {
     newRows.sort(sortfn);
 
     if (span.getAttribute("sortdir") == 'down') {
-        ARROW = '&nbsp;<span Style="font-family:Wingdings">&#218;</span>';
+        ARROW = '&nbsp;<span Style="font-family:Wingdings">&#217;</span>';
         newRows.reverse();
         span.setAttribute('sortdir','up');
     } else {
-        ARROW = '&nbsp;<span Style="font-family:Wingdings">&#217;</span>';
+        ARROW = '&nbsp;<span Style="font-family:Wingdings">&#218;</span>';
         span.setAttribute('sortdir','down');
     }
     

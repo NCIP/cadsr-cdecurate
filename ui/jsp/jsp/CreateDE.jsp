@@ -137,6 +137,8 @@
     
     // for DDE
     String sSelRepType = (String)session.getAttribute("sRepType");
+    String sNVType = (String)session.getAttribute("NotValidDBType");
+    if (sNVType == null) sNVType = "";
     String sSelConcatChar = (String)session.getAttribute("sConcatChar");
     String sSelRule = (String)session.getAttribute("sRule");
     String sSelMethod = (String)session.getAttribute("sMethod");
@@ -628,11 +630,11 @@
   	<tr valign="bottom" height="40">
       <td colspan=2>
         <table width=60% border="0">
-          <col width="2%"><col width="40%"><col width="15%"> <col width="15%"><col width="15%">
+          <col width="12%"><col width="40%"><col width="15%"> <col width="15%"><col width="15%">
 		  <tr>
 		    <td align=right><%=item++%>)</td>
 		    <td><font color="#FF0000">Select </font>Contacts</td>
-            <td align="left"><input type="button" name="btnViewCt" value="View Details" 
+            <td align="left"><input type="button" name="btnViewCt" value="Edit Item" 
             	style="width:100" onClick="javascript:editContact('view');" disabled></td>
             <td align="left"><input type="button" name="btnCreateCt" value="Create New" 
             	style="width:100" onClick="javascript:editContact('new');"></td>
@@ -897,6 +899,7 @@ This is refilled with ac id from ac-csi to use it for block edit-->
 </select>
 
  <!-- for DDE -->
+<input type="hidden" name="NotValidDBType" value="<%=sNVType%>">
 <input type="hidden" name="DECompCountHidden" value="<%=vDEComp.size()%>">
 <select name= "selDECompHidden" size ="1" style="visibility:hidden;"  multiple></select>
 <select name= "selDECompIDHidden" size ="1" style="visibility:hidden;"  multiple></select>
