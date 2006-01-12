@@ -960,11 +960,9 @@ public class InsACService implements Serializable
 
           //create concept this vm has concept attr and no condr id (new concept)
           if (sConID != null && !sConID.equals("") && (sCondr == null || sCondr.equals("")))
-          {
             sConIDseq = this.setConcept("INS", sRet, vmConcept);
- // System.out.println("setVM_EVS sConIDseq: " + sConIDseq);
- // System.out.println("setVM_EVS sShortMeaning: " + sShortMeaning);
-          }
+        //  else if(sConID.indexOf("CL") >= 0 || sConID.indexOf("C0") >= 0 && (sCondr == null || sCondr.equals("")))    
+             // sConIDseq = this.setConcept("INS", sRet, vmConcept);
           //only update the cd vm relationship since condr exists already.
           else if (sAction.equals("UPD"))
           {
@@ -1958,9 +1956,9 @@ public class InsACService implements Serializable
   public DEC_Bean setObjectClassDEC(String sAction, DEC_Bean dec, HttpServletRequest req)
   {
     //capture the duration
- //System.err.println("in setOblClassDEC");
+ System.err.println("in setOblClassDEC");
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setObjectClassDEC", "starting set", startDate, startDate));
+   // logger.info(m_servlet.getLogMessage(m_classReq, "setObjectClassDEC", "starting set", startDate, startDate));
 
     HttpSession session = m_classReq.getSession();
     Connection sbr_db_conn = null;
@@ -1987,6 +1985,7 @@ public class InsACService implements Serializable
       {
         EVS_Bean OCBean = (EVS_Bean)vObjectClass.elementAt(m);
         sConID = OCBean.getNCI_CC_VAL();
+ System.err.println("setOblClassDEC sConID: " + sConID);
         if(OCBean.getCON_AC_SUBMIT_ACTION() == null) 
           OCBean.setCON_AC_SUBMIT_ACTION("");
         //if not deleted, create and append them one by one
@@ -1996,6 +1995,7 @@ public class InsACService implements Serializable
           {
             String sRet = "";
             String conIDseq = OCBean.getCON_IDSEQ();
+  System.err.println("setOblClassDEC qual conIDseq: " + conIDseq);
             //create it only if doesn't exist
             if (conIDseq == null || conIDseq.equals(""))
               conIDseq = this.setConcept("INS", sRet, OCBean);
@@ -2016,7 +2016,8 @@ public class InsACService implements Serializable
       //Primary 
       EVS_Bean OCBean = new EVS_Bean();
       if (vObjectClass.size() > 0)
-        OCBean = (EVS_Bean)vObjectClass.elementAt(0);  
+        OCBean = (EVS_Bean)vObjectClass.elementAt(0); 
+      sConID = OCBean.getNCI_CC_VAL();
       if (OCBean != null && OCBean.getLONG_NAME() != null)
       {
           if (sContextID == null || sContextID.equals(""))
@@ -2026,6 +2027,8 @@ public class InsACService implements Serializable
           {
             String sRet = "";
             String conIDseq = OCBean.getCON_IDSEQ();
+ // System.err.println("setOblClassDEC primary conIDseq: " + conIDseq);
+  // System.err.println("setOblClassDEC primary sConID: " + sConID);
             //create it only if doesn't exist
             if (conIDseq == null || conIDseq.equals(""))
               conIDseq = this.setConcept("INS", sRet, OCBean);
@@ -2101,7 +2104,7 @@ public class InsACService implements Serializable
           }
        }
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setObjectClassDEC", "end set", startDate, new java.util.Date())); 
+     // logger.info(m_servlet.getLogMessage(m_classReq, "setObjectClassDEC", "end set", startDate, new java.util.Date())); 
     }
     catch(Exception e)
     {
@@ -2197,7 +2200,8 @@ public class InsACService implements Serializable
        //Primary 
       EVS_Bean PCBean = new EVS_Bean();
       if (vProperty.size() > 0)
-        PCBean = (EVS_Bean)vProperty.elementAt(0);  
+        PCBean = (EVS_Bean)vProperty.elementAt(0); 
+       sConID = PCBean.getNCI_CC_VAL();
       if (PCBean != null && PCBean.getLONG_NAME() != null)
       {
           if (sContextID == null || sContextID.equals(""))
@@ -2377,7 +2381,8 @@ public class InsACService implements Serializable
       }
       
        //Primary 
-      EVS_Bean REPBean = (EVS_Bean)vRepTerm.elementAt(0);  
+      EVS_Bean REPBean = (EVS_Bean)vRepTerm.elementAt(0); 
+      sConID = REPBean.getNCI_CC_VAL();
       if (REPBean != null && REPBean.getLONG_NAME() != null)
       {
           if (sContextID == null || sContextID.equals(""))
@@ -5081,6 +5086,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
       String altType = "UMLS_CUI";
       if (sConID.indexOf("CL") >= 0) altType = "NCI_META_CUI";
       EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
+ // System.out.println("takeThesaurusConcept sConID: " + sConID);
       evsBean = evs.do_EVSPropSearch(sConID, altType, evsBean);      
     }
     return evsBean;
@@ -5173,7 +5179,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
     logger.info(m_servlet.getLogMessage(m_classReq, "setConcept", "starting set", startDate, startDate));
- //System.out.println("in setConcept evsBean.getEVS_DATABASE(): " + evsBean.getEVS_DATABASE());
+// System.out.println("in setConcept evsBean.getEVS_DATABASE(): " + evsBean.getEVS_DATABASE());
     Connection sbr_db_conn = null;
     ResultSet rs = null;
     CallableStatement CStmt = null;
@@ -5194,6 +5200,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
        }
       //return the concept id if the concept alredy exists in caDSR.
       conIdseq = this.getConcept(sReturnCode, evsBean, false);
+  //System.out.println("in setConcept conIdseq: " + conIdseq);
       if (conIdseq == null || conIdseq.equals(""))
       {          
         //Create a Callable Statement object.
@@ -5330,7 +5337,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
         boolean bExcuteOk = CStmt.execute();
         sCON_IDSEQ = (String)CStmt.getObject(2);
         evsBean.setCON_IDSEQ(sCON_IDSEQ);
-  System.out.println("getConcept conID: " + sCON_IDSEQ + " getConcept ccode " + evsBean.getNCI_CC_VAL());
+  //System.out.println("getConcept conID: " + sCON_IDSEQ + " getConcept ccode " + evsBean.getNCI_CC_VAL());
       logger.info(sCON_IDSEQ + " getConcept code " + evsBean.getNCI_CC_VAL());     
         sReturn = (String)CStmt.getObject(1);
         if (sReturn == null || sReturn.equals(""))

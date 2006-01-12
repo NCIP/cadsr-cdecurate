@@ -200,6 +200,7 @@ public class EVSSearch implements Serializable
     try
     {
       //do search here
+  //System.out.println("do_EVSPropSearch sTerm: " + sTerm);
       Vector vRes = new Vector();
       ApplicationService evsService = ApplicationService.getRemoteInstance(m_servlet.m_EVS_CONNECT);
       EVSQuery query = new EVSQueryImpl(); 
@@ -234,6 +235,7 @@ public class EVSSearch implements Serializable
               if (propValue == null) propValue = "";
               if (propName.equalsIgnoreCase("Preferred_Name"))
               {
+     //System.out.println("do_EVSPropSearch PrefName sConName: " + sConName);
                 sConName = propValue;
                 break; //end the loop since only one prop here
               }
@@ -253,6 +255,7 @@ public class EVSSearch implements Serializable
                 sDefSrc = this.getSource(property.getValue());  //get def source 
                 defFound = true;
                 EVS_Bean evsBean = new EVS_Bean();
+     //System.out.println("do_EVSPropSearch sDefSrc: " + sDefSrc);
                 evsBean.setEVSBean(sDef, sDefSrc, sConName, "NCI_CONCEPT_CODE", "", "", sConID, 
                     "", "", m_servlet.m_VOCAB_NCI, 0, "", "", ""); 
                 vRes.addElement(evsBean);    //add OC bean to vector
