@@ -101,6 +101,7 @@
         <!-- copy client.jar to cdecurate/WEB-INF/lib directory -->
         <copy todir="${app_lib}" overwrite="YES">
           <fileset file="${m_lib}/client.jar"/>
+          <fileset file="${m_lib}/cadsrsentinelapi.jar"/>
         </copy>
         <!-- copy tld to cdecurate/WEB-INF/tld directory  -->
         <copy todir="${app_tld}" overwrite="YES">
