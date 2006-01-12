@@ -16,7 +16,7 @@ history.forward();
 <LINK href="FullDesignArial.css" rel="stylesheet" type="text/css">
 </head>
 
-	<body onload="onInit()">
+	<body>
 
 		<table width="100%" border="1" cellpadding="0" cellspacing="0">
 			<tr>

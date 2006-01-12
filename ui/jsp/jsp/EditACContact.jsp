@@ -295,7 +295,7 @@
 	      	<td colspan=2>
 	      		<% String selCC = selComm.getCYBER_ADDR();
 	      			if (selCC == null) selCC = "";	%>
-	        	<input type="text" name="comCyber" size="70" value="<%=selCC%>">
+	        	<input type="text" name="comCyber" size="70" maxlength=255 value="<%=selCC%>">
 	      	</td>
 		  </tr>
           <tr height="30" valign="middle">
@@ -433,70 +433,70 @@
             </td>
           </tr>
           <tr valign="bottom" height="25">
-              <td colspan="2">Create Address Line 1</td>
+              <td colspan="2">Create Address Line 1 (maximum 80 characters)</td>
           </tr>
           <tr valign="middle">
             <td colspan="2">
              <% String selA1 = selAddr.getADDR_LINE1();
 				if (selA1 == null) selA1 = ""; %>
-              <input name="txtAddr1" type="text" value="<%=selA1%>" style="width:50%">
+              <input name="txtAddr1" type="text" value="<%=selA1%>" style="width:50%"  maxlength=80>
             </td>
           </tr>
           <tr valign="bottom" height="25">
-              <td colspan="2">Create Address Line 2</td>
+              <td colspan="2">Create Address Line 2 (maximum 80 characters)</td>
           </tr>
           <tr valign="middle">
             <td colspan="2">
              <% String selA2 = selAddr.getADDR_LINE2();
 				if (selA2 == null) selA2 = ""; %>
-              <input name="txtAddr2" type="text" value="<%=selA2%>" style="width:50%">
+              <input name="txtAddr2" type="text" value="<%=selA2%>" style="width:50%"  maxlength=80>
             </td>
           </tr>
           <tr valign="bottom" height="25">
-              <td>Create City</td>
+              <td>Create City (maximum 30 characters)</td>
               <td></td>
           </tr> 
           <tr valign="middle">
             <td colspan="2">
              <% String selACT = selAddr.getCITY();
 				if (selACT == null) selACT = ""; %>
-              <input name="txtCity" type="text" value="<%=selACT%>" style="width:50%">
+              <input name="txtCity" type="text" value="<%=selACT%>" style="width:50%"  maxlength=30>
               &nbsp;&nbsp;
             </td>
           </tr>
           <tr valign="bottom" height="25">
-              <td>Create State/Province</td>
+              <td>Create State/Province (maximum 30 characters)</td>
               <td></td>
           </tr> 
           <tr valign="middle">
             <td colspan="2">
              <% String selAS = selAddr.getSTATE_PROV();
 				if (selAS == null) selAS = ""; %>
-              <input name="txtState" type="text" value="<%=selAS%>" style="width:50%">
+              <input name="txtState" type="text" value="<%=selAS%>" style="width:50%" maxlength=30>
               &nbsp;&nbsp;
             </td>
           </tr>
           <tr valign="bottom" height="25">
-              <td>Create Country</td>
+              <td>Create Country (maximum 30 characters)</td>
               <td></td>
           </tr> 
           <tr valign="middle">
             <td colspan="2">
              <% String selACN = selAddr.getCOUNTRY();
 				if (selACN == null) selACN = ""; %>
-              <input name="txtCntry" type="text" value="<%=selACN%>" style="width:50%">
+              <input name="txtCntry" type="text" value="<%=selACN%>" style="width:50%" maxlength=30>
               &nbsp;&nbsp;
             </td>
           </tr>
           <tr valign="bottom" height="25">
-              <td>Create Postal Code</td>
+              <td>Create Postal Code (maximum 10 characters)</td>
               <td></td>
           </tr> 
           <tr valign="middle">
             <td colspan="2">
              <% String selAP = selAddr.getPOSTAL_CODE();
 				if (selAP == null) selAP = ""; %>
-              <input name="txtPost" type="text" value="<%=selAP%>" style="width:30%">
+              <input name="txtPost" type="text" value="<%=selAP%>" style="width:30%" maxlength=10>
               &nbsp;&nbsp;
             </td>
           </tr>

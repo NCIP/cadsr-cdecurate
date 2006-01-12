@@ -103,10 +103,10 @@ function setup()
   <tr>
       <td><font size="4"><b><%=sLabelKeyword%></b></font></td>
   </tr>
-  <tr></tr>
+  <tr>
       <td><div align="left"><font size="2"><%=nRecs%> Records</font></div></td>
   </tr>
-  </tr>
+  <tr></tr>
  </table>
  <table width="100%" border="1" style="border-collapse: collapse" valign="top">
   <br>
@@ -123,180 +123,28 @@ function setup()
         for (int i =0; i < vSelAttr.size(); i++) 
         {
           String sAttr = (String)vSelAttr.elementAt(i);
-          if (sAttr.equals("Name")) { %>
-            <th method="get"><font size="2">Short Name</font></th>
-<%        } else if (sAttr.equals("Alias Name")) { %>
-            <th method="get"><font size="2"> Name/Alias Name</font></th>
-<%        } else if (sAttr.equals("Long Name")) { %>
-            <th method="get"><font size="2">
-<%                if(sSelAC.equals("Data Element"))   { %>                 
-              Data Element Long Name
-<%                } else if(sSelAC.equals("Data Element Concept"))   { %>                 
-              Data Element Concept Long Name
-<%                } else if(sSelAC.equals("Value Domain"))   { %>                 
-              Value Domain Long Name
-<%                } else if(sSelAC.equals("Conceptual Domain"))   { %>                 
-              Conceptual Domain Long Name
-<%                } else   { %>                 
-              Long Name
-<%                } %>                 
-              </font></th>
-<%        } else if (sAttr.equals("Public ID")) { %>
-            <th method="get"><font size="2">Public ID</font></th>
-<%        } else if (sAttr.equals("Version")) { %>
-            <th method="get"><font size="2">Version</font></th>
-<%        } else if (sAttr.equals("Workflow Status")) { %>
-            <th method="get"><font size="2">Workflow Status</font></th>
-<%        } else if (sAttr.equals("Owned By Context")) { %>
-            <th method="get"><font size="2">Owned By Context</font></th>
-<%        } else if (sAttr.equals("Used By Context")) { %> 
-            <th method="get"><font size="2">Used By Context</font></th>
-<%        } else if (sAttr.equals("Definition")) { %>
-            <th method="get"><font size="2">Definition</font></th>
-<%        } else if (sAttr.equals("Value Domain")) { %>
-            <th method="get"><font size="2">Value Domain Long Name</font></th>
-<%        } else if (sAttr.equals("Data Element Concept")) { %>
-            <th method="get"><font size="2">Data Element Concept Long Name</font></th>
-<%        } else if (sAttr.equals("Document Text")) { %>
-            <th method="get"><font size="2">Document Text</font></th>     
-<%        } else if (sAttr.equals("Question Text")) { %>
-            <th method="get"><font size="2">Question Text</font></th>
-<%        } else if (sAttr.equals("DE Long Name")) { %>
-            <th method="get"><font size="2">Data Element Long Name</font></th>
-<%        } else if (sAttr.equals("DE Public ID")) { %>
-            <th method="get"><font size="2">DE Public ID</font></th>
-<%        } else if (sAttr.equals("Highlight Indicator")) { %>
-            <th method="get"><font size="2">Highlight Indicator</font></th>
-<%        } else if (sAttr.equals("Owned By")) { %>
-            <th method="get"><font size="2">Owned By</font></th>
-<%        } else if (sAttr.equals("Used By")) { %>
-            <th method="get"><font size="2">Used By</font></th>
-<%        } else if (sAttr.equals("Protocol ID")) { %>
-            <th method="get"><font size="2">Protocol ID</font></th>
-<%        } else if (sAttr.equals("CRF Name")) { %>
-            <th method="get"><font size="2">CRF Name</font></th>
-<%        } else if (sAttr.equals("Type of Name")) { %>
-            <th method="get"><font size="2">Type of Name</font></th>
-<%        } else if (sAttr.equals("Effective Begin Date")) { %>
-            <th method="get"><font size="2">Effective Begin Date</font></th>
-<%        } else if (sAttr.equals("Effective End Date")) { %>
-            <th method="get"><font size="2">Effective End Date</font></th>
-<%        } else if (sAttr.equals("Language")) { %>
-            <th method="get"><font size="2">Language</font></th>
-<%        } else if (sAttr.equals("Comments/Change Note")) { %>
-            <th method="get"><font size="2">Comments/Change Note</font></th>
-<%        } else if (sAttr.equals("Origin")) { %>
-            <th method="get"><font size="2">Origin</font></th>
-<%        } else if (sAttr.equals("Historic Short CDE Name")) { %>
-            <th method="get"><font size="2">Historic Short CDE Name</font></th>
-<%        } else if (sAttr.equals("Conceptual Domain")) { %>
-            <th method="get"><font size="2">Conceptual Domain</font></th>
-<%        } else if (sAttr.equals("Valid Values")) { %>
-            <th method="get"><font size="2">Valid Value</font></th>
-<%        } else if (sAttr.equals("Classification Schemes")) { %>
-            <th method="get"><font size="2">Classification Schemes</font></th>
-<%        } else if (sAttr.equals("Class Scheme Items")) { %>
-            <th method="get"><font size="2">Class Scheme Items</font></th>
-<%        } else if (sAttr.equals("Unit of Measures")) { %>
-            <th method="get"><font size="2">Unit of Measures</font></th>
-<%        } else if (sAttr.equals("Data Type")) { %>
-            <th method="get"><font size="2">Data Type</font></th>
-<%        } else if (sAttr.equals("Display Format")) { %>
-            <th method="get"><font size="2">Display Format</font></th>
-<%        } else if (sAttr.equals("Maximum Length")) { %>
-            <th method="get"><font size="2">Maximum Length</font></th>
-<%        } else if (sAttr.equals("Minimum Length")) { %>
-            <th method="get"><font size="2">Minimum Length</font></th>
-<%        } else if (sAttr.equals("High Value Number")) { %>
-            <th method="get"><font size="2">High Value Number</font></th>
-<%        } else if (sAttr.equals("Low Value Number")) { %>
-            <th method="get"><font size="2">Low Value Number</font></th>
-<%        } else if (sAttr.equals("Decimal Place")) { %>
-            <th method="get"><font size="2">Decimal Place</font></th>
-<%        } else if (sAttr.equals("Type Flag")) { %>
-            <th method="get"><font size="2">Type Flag</font></th>
-<%        } else if (sAttr.equals("Value")) { %>
-            <th method="get"><font size="2">Value</font></th>
-<%        } else if (sAttr.equals("Value Meaning")) { %>
-            <th method="get"><font size="2">Value Meaning</font></th>
-<%        } else if (sAttr.equals("PV Meaning Description")) { %>
-            <th method="get"><font size="2">Permissible Value Meaning Description</font></th>
-<%        } else if (sAttr.equals("Identifier")) { %>
-            <th method="get"><font size="2">Identifier</font></th>
-<%        } else if (sAttr.equals("CSITL Name")) { %>
-            <th method="get"><font size="2">CSITL Name</font></th>
-<%        } else if (sAttr.equals("Dimensionality")) { %>
-            <th method="get"><font size="2">Dimensionality</font></th>
-<%        } else if (sAttr.equals("CSI Name")) { %>
-            <th method="get"><font size="2">CSI Name</font></th>
-<%        } else if (sAttr.equals("CSI Type")) { %>
-            <th method="get"><font size="2">CSI Type</font></th>
-<%        } else if (sAttr.equals("CSI Definition")) { %>
-            <th method="get"><font size="2">CSI Definition</font></th>
-<%        } else if (sAttr.equals("Permissible Value")) { %>
-            <th method="get"><font size="2">Permissible Value</font></th>
-<%        } else if (sAttr.equals("CS Long Name")) { %>
-            <th method="get"><font size="2">CS Long Name</font></th>
-<%        } else if (sAttr.equals("Historical CDE ID")) { %>
-            <th method="get"><font size="2">Historical CDE ID</font></th>
-<%        } else if (sAttr.equals("Registration Status")) { %>
-            <th method="get"><font size="2">Registration Status</font></th>
-<%        } else if (sAttr.equals("Date Created")) { %>
-            <th method="get"><font size="2">Date Created</font></th>
-<%        } else if (sAttr.equals("Creator")) { %>
-            <th method="get"><font size="2">Creator</font></th>
-<%        } else if (sAttr.equals("Date Modified")) { %>
-            <th method="get"><font size="2">Date Modified</font></th>
-<%        } else if (sAttr.equals("Modifier")) { %>
-            <th method="get"><font size="2">Modifier</font></th>
-<%        } else if (sAttr.equals("Registration Status")) { %>
-            <th method="get"><font size="2">Registration Status</font></th>
-<%        }   else if (sAttr.equals("Concept Name")) { %>
-            <th method="get"><font size="2">Concept Name</font></th>
-<%        }   else if (sAttr.equals("Identifier")) { %>
-            <th method="get"><font size="2">Identifier</font></th>
-<%        }   else if (sAttr.equals("Definition Source")) { %>
-            <th method="get"><font size="2">Definition Source</font></th>
-<%        } else if (sAttr.equals("Context")) { %>
-            <th method="get"><font size="2">Owned By Context</font></th>
-<%        }   else if (sAttr.equals("Database")) { %>
-            <th method="get"><font size="2">Database</font></th>
-<%        }   else if (sAttr.equals("Comment Document Text")) { %>
-            <th method="get"><font size="2">Comment Document Text</font></th>
-<%        }   else if (sAttr.equals("Data Element Source Document Text")) { %>
-            <th method="get"><font size="2">Data Element Source Document Text</font></th>
-<%        }   else if (sAttr.equals("Description Document Text")) { %>
-            <th method="get"><font size="2">Description Document Text</font></th>
-<%        }   else if (sAttr.equals("Detail Description Document Text")) { %>
-            <th method="get"><font size="2">Detail Description Document Text</font></th>
-<%        }   else if (sAttr.equals("Example Document Text")) { %>
-            <th method="get"><font size="2">Example Document Text</font></th>
-<%        }   else if (sAttr.equals("Image File Document Text")) { %>
-            <th method="get"><font size="2">Image File Document Text</font></th>
-<%        }   else if (sAttr.equals("Label Document Text")) { %>
-            <th method="get"><font size="2">Label Document Text</font></th>
-<%        }   else if (sAttr.equals("Note Document Text")) { %>
-            <th method="get"><font size="2">Note Document Text</font></th>
-<%        }   else if (sAttr.equals("Reference Document Text")) { %>
-            <th method="get"><font size="2">Reference Document Text</font></th>
-<%        }   else if (sAttr.equals("Reference Documents")) { %>
-            <th method="get"><font size="2">Reference Documents</font></th>
-<%        }   else if (sAttr.equals("Technical Guide Document Text")) { %>
-            <th method="get"><font size="2">Technical Guide Document Text</font></th>
-<%        }   else if (sAttr.equals("UML Attribute Document Text")) { %>
-            <th method="get"><font size="2">UML Attribute Document Text</font></th>
-<%        }   else if (sAttr.equals("UML Class Document Text")) { %>
-            <th method="get"><font size="2">UML Class Document Text</font></th>
-<%        }   else if (sAttr.equals("Valid Value Source Document Text")) { %>
-            <th method="get"><font size="2">Valid Value Source Document Text</font></th>
-<%        }   else if (sAttr.equals("Other Types Document Text")) { %>
-            <th method="get"><font size="2">Other Types Document Text</font></th>
-<%        }   else if (sAttr.equals("Preferred Question Text Document Text")) { %>
-            <th method="get"><font size="2">Preferred Question Text Document Text</font></th>
-<%        }   else if (sAttr.equals("Historic Short CDE Name Document Text")) { %>
-            <th method="get"><font size="2">"Historic Short CDE Name Document Text</font></th>
-<%
-	        }  }  }
+          //place heading if not null
+          if (sAttr == null || sAttr.equals("")) continue;
+          else
+          {
+            String sDisplay = sAttr;
+            if (sAttr.equalsIgnoreCase("Name")) sDisplay = "Short Name";
+            else if (sAttr.equals("Long Name")) 
+            {
+              if(sSelAC.equals("Data Element")) sDisplay = "Data Element Long Name";
+              else if(sSelAC.equals("Data Element Concept")) sDisplay = "Data Element Concept Long Name";
+              else if(sSelAC.equals("Value Domain")) sDisplay = "Value Domain Long Name";
+              else if(sSelAC.equals("Conceptual Domain")) sDisplay = "Conceptual Domain Long Name";
+            }
+            else if (sAttr.equals("Value Domain")) sDisplay = "Value Domain Long Name";
+            else if(sAttr.equals("Data Element Concept")) sDisplay = "Data Element Concept Long Name";
+            else if (sAttr.equals("DE Long Name")) sDisplay = "Data Element Long Name";
+%>
+            <th method="get"><font size="2"><%=sDisplay%></font></th>
+<%            
+	      }  
+        }  
+      }
 %>
     </tr>
 <%
@@ -355,6 +203,8 @@ function setup()
 <form name="SearchActionForm" method="post" action="">
 <input type="hidden" name="acID" value="">
 <input type="hidden" name="itemType" value="">
+<input type="hidden" name="ac2ID" value="">
+<input type="hidden" name="searchComp" value="">
 <input type="hidden" name="isValidSearch" value="false">
 </form>
 </body>

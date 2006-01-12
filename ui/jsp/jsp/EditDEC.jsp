@@ -875,11 +875,11 @@
   	<tr valign="bottom" height="40">
       <td colspan=2>
         <table width=60% border="0">
-          <col width="2%"><col width="40%"><col width="15%"> <col width="15%"><col width="15%">
+          <col width="12%"><col width="40%"><col width="15%"> <col width="15%"><col width="15%">
 		  <tr>
 		    <td align=right><%=item++%>)</td>
 		    <td><font color="#FF0000">Select </font>Contacts</td>
-            <td align="left"><input type="button" name="btnViewCt" value="View Details" 
+            <td align="left"><input type="button" name="btnViewCt" value="Edit Item" 
             	style="width:100" onClick="javascript:editContact('view');" disabled></td>
             <td align="left"><input type="button" name="btnCreateCt" value="Create New" 
             	style="width:100" onClick="javascript:editContact('new');"></td>

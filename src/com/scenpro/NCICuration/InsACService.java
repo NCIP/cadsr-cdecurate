@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/InsACService.java,v 1.22 2006-01-06 21:53:57 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/InsACService.java,v 1.23 2006-01-12 16:46:55 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
@@ -5905,8 +5905,8 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
               CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //address line 2
               CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //city
               CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //state
-              CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //country
-              CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //postal code
+              CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //postal code
+              CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //country
               CStmt.registerOutParameter(14,java.sql.Types.DATE);   //.VARCHAR);       //created by
               CStmt.registerOutParameter(15,java.sql.Types.VARCHAR);      //date created
               CStmt.registerOutParameter(16,java.sql.Types.DATE);   //.VARCHAR);      //modified by
@@ -5929,8 +5929,8 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
               CStmt.setString(9, adrBean.getADDR_LINE2());     //addr line 2
               CStmt.setString(10, adrBean.getCITY());         //city
               CStmt.setString(11, adrBean.getSTATE_PROV());   //state
-              CStmt.setString(12, adrBean.getCOUNTRY());     //country
-              CStmt.setString(13, adrBean.getPOSTAL_CODE());  //zip code
+              CStmt.setString(12, adrBean.getPOSTAL_CODE());  //zip code
+              CStmt.setString(13, adrBean.getCOUNTRY());     //country
 
                // Now we are ready to call the stored procedure
               boolean bExcuteOk = CStmt.execute();

@@ -1,12 +1,16 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/NCICurationServlet.java,v 1.28 2006-01-09 18:00:23 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/NCICurationServlet.java,v 1.29 2006-01-12 16:46:55 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
 
 //import files
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,6 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+
+import oracle.sql.BLOB;
 
 import org.apache.log4j.Logger;
 
@@ -250,7 +256,7 @@ public class NCICurationServlet extends HttpServlet
    * @return 
    * @throws java.lang.Exception
    */
-  public Connection getConnection(String stDBAppContext, String stUser, String stPassword) throws Exception 
+  public Connection getConnFromPool(String stDBAppContext, String stUser, String stPassword) throws Exception 
   {
       DataSource ds = (DataSource)hashOracleOCIConnectionPool.get(stDBAppContext);
 	  
@@ -314,7 +320,7 @@ public class NCICurationServlet extends HttpServlet
         }
         try
         {
-          SBRDb_conn = this.getConnection(sDBAppContext, username, password);
+          SBRDb_conn = this.getConnFromPool(sDBAppContext, username, password);
         }
         catch(Exception e)
         {
@@ -877,7 +883,7 @@ public class NCICurationServlet extends HttpServlet
         session.setAttribute("Username", Username);
         
         GetACService getAC = new GetACService(req, res, this);
-        getAC.getConnection(req, res);
+        getAC.verifyConnection(req, res);
         
         String ConnectedToDB = (String)session.getAttribute("ConnectedToDB");
         
@@ -5131,7 +5137,7 @@ System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for REP " + eDB
           {
             pvBean = (PV_Bean)vVDPVList.elementAt(j);
             //exist if already exists 
-            System.out.println(sValue + pvBean.getPV_VALUE() + sMean + pvBean.getPV_SHORT_MEANING());
+            logger.debug(sValue + pvBean.getPV_VALUE() + sMean + pvBean.getPV_SHORT_MEANING());
             if (pvBean.getPV_VALUE().equalsIgnoreCase(sValue) && pvBean.getPV_SHORT_MEANING().equalsIgnoreCase(sMean))
             {
               //re-adding the deleted item if exists in the vector but marked as deleted
@@ -5158,7 +5164,7 @@ System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for REP " + eDB
                   isUpdated = true;
                   updRow = j;  //need this to update the vector                
                   updatedVDPVs += sValMean;
-       System.out.println(pvBean.getPV_PV_IDSEQ() + " pv vm update " + updatedVDPVs)   ;        
+       logger.debug(pvBean.getPV_PV_IDSEQ() + " pv vm update " + updatedVDPVs)   ;        
                 }
                 else  //existed with concept
                 {
@@ -8088,6 +8094,7 @@ System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for REP " + eDB
       session.setAttribute("vDECompID", vDECompID);
       session.setAttribute("vDECompOrder", vDECompOrder);
       session.setAttribute("sRepType", "");
+      session.setAttribute("NotValidDBType", "");
       session.setAttribute("sConcatChar", "");
       session.setAttribute("sRule", "");
       session.setAttribute("sMethod", "");
@@ -11316,10 +11323,126 @@ System.out.println("servlet done callExpandSubNode");
 	          else{
 	        	GetACSearch getACSearch = new GetACSearch(req, res, this);
 	  			String sACSearch = (String)session.getAttribute("searchAC");
+	  			
+	  			// TODO: Replace with ***** getACSearch.doRefDocSearch ********
 	  			getACSearch.getSelRowToEdit(req, res, "");
 	  			if (sACSearch.equals("DataElement")|| sACSearch.equals("DataElementConcept") || sACSearch.equals("ValueDomain")){
 	  				session.setAttribute("dispACType", sACSearch);
-	  				ForwardJSP(req, res, "/RefDocumentUploadPage.jsp");
+	  				
+	  				String dispType = (String)session.getAttribute("displayType");
+	  			    String acType = (String)session.getAttribute("dispACType");
+	  			    if (dispType == null) dispType = "";
+	  			    
+
+	  			    String sACIDSEQ = ""; 
+	  			    DE_Bean m_DE = null;
+	  			    DEC_Bean m_DEC = null;
+	  			    VD_Bean m_VD = null;
+	  			    REF_DOC_Bean refBean = new REF_DOC_Bean(); 
+	  			    Connection con = null;
+	  			    
+	  			    // Get number of items
+	  			    Vector vRefDoc = (Vector)req.getAttribute("RefDocList");
+	  			    String intText = "";
+	  			    
+	  			    // has ref docs
+	  			    if (vRefDoc != null){
+
+	  			    	Vector vRefDocRows = new Vector();
+	  			    	Vector vRefDocDocs = new Vector();
+	  			    	
+	  			    	for(int i=0; i<(vRefDoc.size()); i++)
+		  			      {
+	  			    		
+	  			    		//	Get AC_IDSEQ from the m_DE bean
+	  			    		refBean = (REF_DOC_Bean)vRefDoc.elementAt(i);
+		  			    	
+			  			    // get RD_IDSEQ from REFERENCE_DOCUMENTS using AC_IDSEQ
+		  			    	String str = refBean.getREF_DOC_IDSEQ();
+		  			    	String str2 = refBean.getDOCUMENT_NAME();
+		  			    	
+		  			    	vRefDocRows.addElement(i);
+		  			    	
+
+		  			    	// SQL to get the results
+			        		con = connectDB(req, res);
+			                String select = "select NAME , blob_content from sbr.reference_blobs_view where rd_idseq = ?";
+		  			    	
+			                // make plsql call 
+			                try {
+								PreparedStatement pstmt = con.prepareStatement(select);
+								pstmt.setString(1 , str);
+								ResultSet rs = pstmt.executeQuery();
+								int j = 0;
+								String Doclist = "";
+								
+								while ( rs.next()){
+									
+									// iterate counter
+									j++;
+									
+									// Build HTML text for table
+									String fileName = rs.getString(1);
+									Doclist = Doclist + "<a href=\"http:////cadsrsentinel-dev.nci.nih.gov//AlertReports//" 
+													  + fileName 
+													  + "target=\"_blank\">"
+													  + fileName
+													  + "<a><br>";
+									/*
+									Doclist = Doclist + "<a href=\"http:////cadsrsentinel-dev.nci.nih.gov//AlertReports//" 
+									  + fileName 
+									  + "target=\"_blank\">"
+									  + fileName
+									  + "<a><br>";
+
+									// Extract file to file system
+									BLOB bRefBlob = (BLOB)rs.getBlob(2);
+									InputStream is = bRefBlob.getBinaryStream();
+									
+									try {
+										//OutputStream os = new FileOutputStream("/local/content/cadsrsentinel/reports/"+ fileName);
+										OutputStream os = new FileOutputStream("C\\Temp\\"+ fileName);
+										byte buffer[]= new byte [2000];
+										int length = 0;
+										int bytesRead;
+										while ((bytesRead = is.read(buffer))> -1){
+												os.write(buffer, length , bytesRead);
+												length += bytesRead;
+												os.close();
+										}
+																				
+									}
+									catch (FileNotFoundException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									
+									is.close();
+									*/
+																
+								} //end of while
+								vRefDocDocs.addElement(Doclist);
+								
+				  			    session.setAttribute("RefDocRows", vRefDocDocs);
+								rs.close();
+								pstmt.close();              
+								con.close();
+								
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+		  			    	
+		  			      }//end of for
+	  			    	ForwardJSP(req, res, "/RefDocumentUploadPage.jsp");
+	  			    	
+	  			    }
+	  			    else{
+	  			        //no ref docs
+	  			    	ForwardJSP(req, res, "/RefDocumentUploadPage.jsp");
+	  			    }
+
 	  			}
 	  			else 
 	  			{
@@ -11348,12 +11471,8 @@ System.out.println("servlet done callExpandSubNode");
 	          ForwardJSP(req, res, "/SearchResultsPage.jsp");
 	          
 	        } 
-			// return to search results from upload page
-			if (sAction.equals("init"))
-	        {
 
-	          
-	        } 
+
 			// upload file into the database as blob
 			if (sAction.equals("UploadFile"))
 			{
@@ -11370,29 +11489,7 @@ System.out.println("servlet done callExpandSubNode");
 		        
 	        	try
 	            {
-
-	        		
-			         
-
-	                /**
-	                 *  This is how the FormBuilder folks are loading BLOB's 
-	                 *  
-	                 * 	   sqlNewRow = "INSERT INTO reference_blobs (rd_idseq,name,mime_type,doc_size,content_type,blob_content) "
-	                 *            + "VALUES (?,?,?,?,?,EMPTY_BLOB())",
-	                 *     sqlLockRow = "SELECT blob_content FROM reference_blobs " + "WHERE name = ? FOR UPDATE",
-	                 *     sqlSetBlob = "UPDATE reference_blobs " + "SET blob_content = ? " + "WHERE name = ?";
-	                 *     
-	                 *     "SBR"."REFERENCE_BLOBS_VIEW"
-	                 *     REFERENCE_BLOBS_VIEW
-	                 *     select "RD_IDSEQ", "NAME", "MIME_TYPE", "DOC_SIZE", "DAD_CHARSET", "LAST_UPDATED", "CONTENT_TYPE", "BLOB_CONTENT", "CREATED_BY", "DATE_CREATED", "MODIFIED_BY", "DATE_MODIFIED" from "SBR"."REFERENCE_BLOBS_VIEW"
-	                 */
-	        		//con = connectDB(req, res);
-	                //String select = "INSERT INTO reference_blobs (rd_idseq,name,mime_type,doc_size,content_type,blob_content) ";
-	                //res.addHeader("","");
-	                // make plsql call 
-	                //PreparedStatement pstmt = con.prepareStatement(select);
-	                //pstmt.executeUpdate();
-	                //pstmt.close();              
+              
 	                //con.close();
 	        		
 	                msg = "File uploaded";

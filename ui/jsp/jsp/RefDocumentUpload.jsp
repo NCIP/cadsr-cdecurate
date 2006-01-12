@@ -6,10 +6,9 @@
 <%
     
     session = request.getSession();
-    
+    String filename = "Document.doc";
     String dispType = (String)session.getAttribute("displayType");
-    
-    
+
     String acType = (String)session.getAttribute("dispACType");
     if (dispType == null) dispType = "";
     
@@ -18,6 +17,7 @@
     DE_Bean m_DE = null;
     DEC_Bean m_DEC = null;
     VD_Bean m_VD = null;
+    String fileName = "";
 
 
     if (acType.equals("DataElement"))
@@ -75,6 +75,8 @@
         acName = refBean.getAC_LONG_NAME();
         if (acName == null) acName = "";
       } 
+      
+      Vector vRefDocURL = (Vector)session.getAttribute("RefDocRows");
 %>
 
 <INPUT type="button" name="btnBack" value="Back" onclick="javascript:Back();">
@@ -116,7 +118,7 @@ Admin or Curation Tools.</p>
 	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;">Reference Document Name</th>
 	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;">Reference Document Type</th>
 	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;">Reference Document Text</th>
-	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;">Referenece Document URL</th>
+	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;">Reference Document URL</th>
 	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;">Context</th>
 	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;">Links</th>
 	</tr>
@@ -124,6 +126,7 @@ Admin or Curation Tools.</p>
     for(int i=0; i<(vRefDoc.size()); i++)
     {
       refBean = (REF_DOC_Bean)vRefDoc.elementAt(i);
+      filename = (String)vRefDocURL.get(i);
       //write the AC name and the table heading for the first item
       if (i==0)
       {
@@ -142,6 +145,14 @@ Admin or Curation Tools.</p>
       if (docURL == null) docText = "";
       String docContext =  refBean.getCONTEXT_NAME();
       if (docContext == null) docText = "";
+      String docLink = "";
+      
+      if (docURL.toLowerCase().startsWith("http:") || docURL.startsWith("https:") || docURL.startsWith("file:")){
+      	docLink = "";
+      }
+      else {
+      	docLink = "http://";
+      }
 
 %> 
 	<tr>
@@ -149,17 +160,24 @@ Admin or Curation Tools.</p>
 	<td><%=docName%></td>
 	<td><%=docType%></td>
 	<td><%=docText%></td>
-	<td><a href="<%=docURL%>" target="_blank"><%=docURL%></a></td>
+	<td><a href="<%=docLink%><%=docURL%>" target="_blank"><%=docURL%></a></td>
 	<td><%=docContext%></td>
 	<td>
-	
-
+		
+<% if (filename != ""){ %>
 	<span style="font-family: Webdings; font-size: 12pt; font-weight: bold">&#114;</span>
 	&nbsp;&nbsp;
-	<a href="http://test.com/agent1.doc" target="_blank">agent1.doc</a>
-
+	<a href="http://cadsrsentinel-dev.nci.nih.gov/AlertReports/<%=filename%>" 
+	target="_blank"><%=filename%></a>
+<% }
+else {%>
+&nbsp;
+<%
+	}
+%>	
 	</td>
 	</tr>
+
 <%
 	  }
 %>

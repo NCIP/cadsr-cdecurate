@@ -731,6 +731,11 @@ function changeRepType(action)
       return;
     if(action == "change")
     {
+      //do not empty boxes if it was data problem
+      var oldDBType = document.newCDEForm.NotValidDBType.value;
+      if (oldDBType != null && oldDBType != "") 
+      	return;
+      //empty the input boxes for changed type
       document.newCDEForm.DDEMethod.value="";
       document.newCDEForm.DDEConcatChar.value="";
       document.newCDEForm.DDEMethod.text="";
@@ -840,11 +845,15 @@ function isDECompOrderValid()
   var thisIdx = document.newCDEForm.selRepType.selectedIndex;
   if(thisIdx < 1)
   {
-      alert("Please select a Representation Type");
+      //do not empty boxes if it was data problem
+      var oldDBType = document.newCDEForm.NotValidDBType.value;
+      if (oldDBType != null && oldDBType != "")
+      	alert("The existing Derivation Type " + oldDBType + " is no longer a valid type. \n Please select a new Derivation Type.");
+  	  else
+      	alert("Please select a Derivation Type");
       return "invalid";
-  }
-  
-	return "valid";	
+  } 
+  return "valid";	
 }
 
 //------------ for DDE end ----------------------------

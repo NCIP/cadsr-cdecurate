@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/GetACService.java,v 1.7 2006-01-06 21:53:57 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/GetACService.java,v 1.8 2006-01-12 16:46:55 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
@@ -103,7 +103,7 @@ public class GetACService implements Serializable
    * 
    */
   private static final long serialVersionUID = 6486668887681006373L;
-  Connection m_sbr_db_conn = null;
+  //Connection m_sbr_db_conn = null;
   NCICurationServlet m_servlet;
   UtilService m_util = new UtilService();
   HttpServletRequest m_classReq = null;
@@ -167,6 +167,7 @@ public class GetACService implements Serializable
          String sContext, boolean bNewContext, String sACType)
          throws IOException, ServletException
   {
+	  Connection m_sbr_db_conn = null;
     try
     {
       //capture the duration
@@ -174,8 +175,7 @@ public class GetACService implements Serializable
     //  logger.info(m_servlet.getLogMessage(req, "getACList", "started", startDate, startDate));
 
       HttpSession session = req.getSession();
-      if (m_sbr_db_conn == null || m_sbr_db_conn.isClosed())
-        m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
       if (m_sbr_db_conn != null)
       {
           session.setAttribute("ConnectedToDB", "Yes");
@@ -405,7 +405,7 @@ public class GetACService implements Serializable
   }  // end of getACList
 
 /**
-  * The getConnection method queries the db to test the connection and
+  * The verifyConnection method queries the db to test the connection and
   * sets the ConnectedToDB variable.
   *  
   *  ConnectedToDB = "Nothing" (default)
@@ -419,41 +419,43 @@ public class GetACService implements Serializable
   * @param sACType The type of page being called, i.e. de, dec, or vd
   *
   */
-  public void getConnection(HttpServletRequest req, HttpServletResponse res)
+  public void verifyConnection(HttpServletRequest req, HttpServletResponse res)
   {
-    try
+	  Connection m_sbr_db_conn = null;
+	  try
     {
       
     //  logger.info(m_servlet.getLogMessage(req, "getACList", "started", startDate, startDate));
 
       HttpSession session = req.getSession();
-      if (m_sbr_db_conn == null || m_sbr_db_conn.isClosed())
-        m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      	
       if (m_sbr_db_conn != null)
       {
-        session.setAttribute("ConnectedToDB", "Yes");
-        m_sbr_db_conn.close();
+    	  session.setAttribute("ConnectedToDB", "Yes");
+    	  m_sbr_db_conn.close();
       }
       else
       {
-        logger.fatal("getConnection: no db connection");
-        session.setAttribute("ConnectedToDB", "No");
+        logger.fatal("verifyConnection: no db connection");
+        session.setAttribute("ConnectedToDB", "No");    
       }
     }
     catch(Exception e)
     {
         try{if (m_sbr_db_conn != null) m_sbr_db_conn.close();}catch(Exception f){} 
-        logger.fatal("ERROR in GetACService-getConnection : " + e.toString());
+        logger.fatal("ERROR in GetACService-verifyConnection : " + e.toString());
     }
     try
     {
-        if (m_sbr_db_conn != null) m_sbr_db_conn.close();    
+        if (m_sbr_db_conn != null) m_sbr_db_conn.close();
     }
     catch(Exception ee)
     {
-        logger.fatal("ERROR in GetACService-getConnection close: " + ee.toString());
+        logger.fatal("ERROR in GetACService-verifyConnection close: " + ee.toString());
     }
-  }  // end of getConnection
+	
+  }  // end of verifyConnection
 
 
   /**
@@ -842,11 +844,11 @@ public class GetACService implements Serializable
     ResultSet rs = null;
     CallableStatement CStmt = null;
     Vector vList = new Vector();
+    Connection m_sbr_db_conn = null;
     try
     {
       //Create a Callable Statement object.
-      if (m_sbr_db_conn == null || m_sbr_db_conn.isClosed())
-        m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
       if (m_sbr_db_conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
@@ -900,7 +902,7 @@ public class GetACService implements Serializable
     {
       if(rs!=null) rs.close();
       if(CStmt!=null) CStmt.close();
-     // if(m_sbr_db_conn != null) m_sbr_db_conn.close();
+      if(m_sbr_db_conn != null) m_sbr_db_conn.close();
     }
     catch(Exception ee)
     {
@@ -1166,6 +1168,7 @@ public class GetACService implements Serializable
     ResultSet rs = null;
     Statement CStmt = null;
     String sPrivilege = "";
+    Connection m_sbr_db_conn = null;
     try
     {
       DBUser = DBUser.toUpperCase();
@@ -1183,8 +1186,7 @@ public class GetACService implements Serializable
         sql = "SELECT ADMIN_SECURITY_UTIL.HAS_ADMIN_PRIVILEGE('" + DBUser + "', '" + ACType + "', '" + ContID + "') FROM DUAL";
 
         //Create a Callable Statement object.
-        if (m_sbr_db_conn == null || m_sbr_db_conn.isClosed())
-          m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+        m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
         if (m_sbr_db_conn == null)
           m_servlet.ErrorLogin(m_classReq, m_classRes);
         else
@@ -1236,10 +1238,10 @@ public class GetACService implements Serializable
   {
     ResultSet rs = null;
     Statement CStmt = null;
+    Connection m_sbr_db_conn = null;
     try
     {
-      if (m_sbr_db_conn == null || m_sbr_db_conn.isClosed()) // try to reconnect
-        m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
       if (m_sbr_db_conn == null)  // still null, forward to ErrorLogin page
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
@@ -1282,7 +1284,7 @@ public class GetACService implements Serializable
     {
       if(rs!=null) rs.close();
       if(CStmt!=null) CStmt.close();
-      //if(m_sbr_db_conn != null)  m_sbr_db_conn.close();
+      if(m_sbr_db_conn != null)  m_sbr_db_conn.close();
     }
     catch(Exception ee)
     {
@@ -1304,10 +1306,10 @@ public class GetACService implements Serializable
   {
     ResultSet rs = null;
     Statement CStmt = null;
+    Connection m_sbr_db_conn = null;
     try
     {
-      if (m_sbr_db_conn == null || m_sbr_db_conn.isClosed()) // try to reconnect
-        m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
       if (m_sbr_db_conn == null)  // still null, forward to ErrorLogin page
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
@@ -1360,7 +1362,7 @@ public class GetACService implements Serializable
     {
       if(rs!=null) rs.close();
       if(CStmt!=null) CStmt.close();
-      //if(m_sbr_db_conn != null)  m_sbr_db_conn.close();
+      if(m_sbr_db_conn != null)  m_sbr_db_conn.close();
     }
     catch(Exception ee)
     {
@@ -1390,18 +1392,16 @@ public class GetACService implements Serializable
     ResultSet rs = null;
     CallableStatement CStmt = null;
     boolean isReConnect = false;
+    Connection m_sbr_db_conn = null;
     try
     {
       //Create a Callable Statement object.
-      if (m_sbr_db_conn == null || m_sbr_db_conn.isClosed()) // try to reconnect
-      {
-        m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-        isReConnect = true;
-      }
+      m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
       if (m_sbr_db_conn == null) // still null, forward to ErrorLogin page
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
+          isReConnect = true;
         CStmt = m_sbr_db_conn.prepareCall(sAPI);
         // Now tie the placeholders with actual parameters.
         if(iParmIdx == 1)
@@ -1517,10 +1517,10 @@ public class GetACService implements Serializable
     ResultSet rs = null;
     Statement CStmt = null;
     boolean isExist = false;
+    Connection m_sbr_db_conn = null;
     try
     {
-      if (m_sbr_db_conn == null || m_sbr_db_conn.isClosed()) // try to reconnect
-        m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
       if (m_sbr_db_conn == null)  // still null to login page
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
@@ -1570,10 +1570,10 @@ public class GetACService implements Serializable
     ResultSet rs = null;
     Statement CStmt = null;
     String sName= "";
+    Connection m_sbr_db_conn = null;
     try
     {
-      if (m_sbr_db_conn == null || m_sbr_db_conn.isClosed()) // try to reconnect
-        m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
       if (m_sbr_db_conn == null)  // still null to login page
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
@@ -1625,10 +1625,10 @@ public class GetACService implements Serializable
     ResultSet rs = null;
     Statement CStmt = null;
     String blockID = "None";
+    Connection m_sbr_db_conn = null;
     try
     {
-      if (m_sbr_db_conn == null || m_sbr_db_conn.isClosed()) // try to reconnect
-        m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
       if (m_sbr_db_conn == null)  // still null to login page
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
@@ -1874,16 +1874,16 @@ public class GetACService implements Serializable
     ResultSet rs = null;
     CallableStatement CStmt = null;
     Vector vList = new Vector();
+    Connection sbr_db_conn = null;
     try
     {
       //Create a Callable Statement object.
-      if (m_sbr_db_conn == null || m_sbr_db_conn.isClosed())
-        m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (m_sbr_db_conn == null)
+      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (sbr_db_conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = m_sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_TOOL_OPTIONS(?,?,?,?,?)}");
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_TOOL_OPTIONS(?,?,?,?,?)}");
 
         CStmt.registerOutParameter(4, OracleTypes.CURSOR);
         CStmt.registerOutParameter(5, OracleTypes.VARCHAR);
@@ -1924,7 +1924,7 @@ public class GetACService implements Serializable
     {
       if(rs!=null) rs.close();
       if(CStmt!=null) CStmt.close();
-     // if(m_sbr_db_conn != null) m_sbr_db_conn.close();
+      if(sbr_db_conn != null) sbr_db_conn.close();
     }
     catch(Exception ee)
     {
