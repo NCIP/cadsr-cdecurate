@@ -167,9 +167,8 @@ Admin or Curation Tools.</p>
 <% if (filename != ""){ %>
 	<span style="font-family: Webdings; font-size: 12pt; font-weight: bold">&#114;</span>
 	&nbsp;&nbsp;
-	<a href="http://cadsrsentinel-dev.nci.nih.gov/AlertReports/<%=filename%>" 
-	target="_blank"><%=filename%></a>
-<% }
+	<%=filename%>
+	<% }
 else {%>
 &nbsp;
 <%

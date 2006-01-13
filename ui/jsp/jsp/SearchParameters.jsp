@@ -357,7 +357,7 @@ function LoadKeyHandler()
               <option value="origin" <%if(sSearchIn.equals("origin")){%>selected<%}%>>Origin</option>
 <% } %>
                <!-- include concept filter for all acs-->
-<%          if (!sSearchAC.equals("Questions")){%>
+<%          if (!sSearchAC.equals("Questions") && !sSearchAC.equals("ConceptualDomain") && !sSearchAC.equals("ClassSchemeItems")){%>
               <option value="concept" <%if(sSearchIn.equals("concept")){%>selected<% } %>>
               		<%if(sSearchAC.equals("ConceptClass")){%>EVS Identifier<%}else{%>Concept Name/EVS Identifier<%}%></option>
 <% } %>
