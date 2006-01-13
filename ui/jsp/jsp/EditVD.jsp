@@ -1393,13 +1393,14 @@ function setup()
  <!-- contact info -->
 <%if (!sOriginAction.equals("BlockEditVD")){%>
     <tr><td height="12" valign="top"></tr>    
-  	<tr valign="bottom" height="40">
-      <td colspan=2>
-        <table width=60% border="0">
-          <col width="12%"><col width="40%"><col width="15%"> <col width="15%"><col width="15%">
+  	<tr>
+	  <td valign="top" align=right><%=item++%>)</td>
+	  <td valign="bottom"><font color="#FF0000">Select </font>Contacts
+      <br>
+        <table width=50% border="0">
+          <col width="40%"><col width="15%"> <col width="15%"><col width="15%">
 		  <tr>
-		    <td align=right><%=item++%>)</td>
-		    <td><font color="#FF0000">Select </font>Contacts</td>
+		    <td>&nbsp;</td>
             <td align="left"><input type="button" name="btnViewCt" value="Edit Item" 
             	style="width:100" onClick="javascript:editContact('view');" disabled></td>
             <td align="left"><input type="button" name="btnCreateCt" value="Create New" 
@@ -1408,7 +1409,6 @@ function setup()
             	style="width:100" onClick="javascript:editContact('remove');" disabled></td>
 		  </tr>
 		  <tr> 
-	      	<td>&nbsp;</td>
 	      	<td colspan=4 valign="top">
 	          <select name="selContact" size="4"  style="width:100%" onchange="javascript:enableContButtons();" 
 	          	onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContact'); return false">

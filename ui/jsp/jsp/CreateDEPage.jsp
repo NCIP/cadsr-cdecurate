@@ -16,7 +16,7 @@ history.forward();
     </td>
   </tr>
   <tr>
-    <td height=500 valign="top"  colspan="2" >
+    <td height=90% valign="top"  colspan="2" >
        <%@ include file="CreateDE.jsp" %>
     </td>
   </tr>

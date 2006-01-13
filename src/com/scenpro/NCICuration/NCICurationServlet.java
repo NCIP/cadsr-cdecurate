@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/NCICurationServlet.java,v 1.29 2006-01-12 16:46:55 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/NCICurationServlet.java,v 1.30 2006-01-13 14:20:05 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
@@ -11107,7 +11107,7 @@ System.out.println("servlet done callExpandSubNode");
        vCompAtt.addElement("Definition");
        vCompAtt.addElement("Name");
        vCompAtt.addElement("Origin");
-       vCompAtt.addElement("Concept Name");
+       //vCompAtt.addElement("Concept Name");
        vCompAtt.addElement("Effective Begin Date");
        vCompAtt.addElement("Effective End Date");
        vCompAtt.addElement("Creator");
@@ -11123,7 +11123,7 @@ System.out.println("servlet done callExpandSubNode");
        vCompAtt.addElement("CSI Type");
        vCompAtt.addElement("CSI Definition");
        vCompAtt.addElement("CS Long Name");
-       vCompAtt.addElement("Concept Name");
+      // vCompAtt.addElement("Concept Name");
        vCompAtt.addElement("Context");
        vCompAtt.addElement("All Attributes");
     }
@@ -11326,6 +11326,9 @@ System.out.println("servlet done callExpandSubNode");
 	  			
 	  			// TODO: Replace with ***** getACSearch.doRefDocSearch ********
 	  			getACSearch.getSelRowToEdit(req, res, "");
+	  			
+	  			
+	  			
 	  			if (sACSearch.equals("DataElement")|| sACSearch.equals("DataElementConcept") || sACSearch.equals("ValueDomain")){
 	  				session.setAttribute("dispACType", sACSearch);
 	  				
@@ -11381,34 +11384,65 @@ System.out.println("servlet done callExpandSubNode");
 									// iterate counter
 									j++;
 									
+									/*
 									// Build HTML text for table
 									String fileName = rs.getString(1);
-									Doclist = Doclist + "<a href=\"http:////cadsrsentinel-dev.nci.nih.gov//AlertReports//" 
+									Doclist = Doclist + "<a href=\"http://cadsrsentinel-dev.nci.nih.gov/AlertReports/" 
 													  + fileName 
-													  + "target=\"_blank\">"
+													  + "\" "target=\"_blank\">"
 													  + fileName
 													  + "<a><br>";
-									/*
-									Doclist = Doclist + "<a href=\"http:////cadsrsentinel-dev.nci.nih.gov//AlertReports//" 
-									  + fileName 
-									  + "target=\"_blank\">"
-									  + fileName
-									  + "<a><br>";
-
+									  */
+									// Local Test
+									String fileName = rs.getString(1);
+									Doclist = Doclist + "<a href=\"file://C:/temp/" 											
+													  + fileName 
+													  + "\" target=\"_blank\">"
+													  + fileName
+													  + "<a><br>";
+									
+									//<a href="file://C:/temp/document.txt">document.txt</a>
+									
 									// Extract file to file system
 									BLOB bRefBlob = (BLOB)rs.getBlob(2);
 									InputStream is = bRefBlob.getBinaryStream();
 									
 									try {
+										
+										String strArray[] = fileName.split("/");
+										if (strArray.length > 1){
+											fileName = strArray[1];
+										}
+										
+										// Sentinel report directory
 										//OutputStream os = new FileOutputStream("/local/content/cadsrsentinel/reports/"+ fileName);
-										OutputStream os = new FileOutputStream("C\\Temp\\"+ fileName);
+										
+										// Local Test
+										String fileHandle = "C:\\Temp\\" + fileName ;
+										OutputStream os = new FileOutputStream(fileHandle);
+										
 										byte buffer[]= new byte [2000];
 										int length = 0;
 										int bytesRead;
-										while ((bytesRead = is.read(buffer))> -1){
-												os.write(buffer, length , bytesRead);
-												length += bytesRead;
-												os.close();
+										try {
+											while ((bytesRead = is.read(buffer))> -1){
+													try {
+														os.write(buffer, length , bytesRead);
+													} catch (IOException e1) {
+														// TODO Auto-generated catch block
+														e1.printStackTrace();
+													}
+													length += bytesRead;
+													try {
+														os.close();
+													} catch (IOException e) {
+														// TODO Auto-generated catch block
+														e.printStackTrace();
+													}
+											}
+										} catch (IOException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
 										}
 																				
 									}
@@ -11417,9 +11451,13 @@ System.out.println("servlet done callExpandSubNode");
 										e.printStackTrace();
 									}
 									
-									is.close();
-									*/
-																
+									try {
+										is.close();
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+																									
 								} //end of while
 								vRefDocDocs.addElement(Doclist);
 								
