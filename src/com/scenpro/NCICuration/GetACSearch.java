@@ -1,7 +1,7 @@
 
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/GetACSearch.java,v 1.20 2006-01-12 16:46:55 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/GetACSearch.java,v 1.21 2006-01-16 21:35:36 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;     
@@ -8222,6 +8222,7 @@ System.out.println(" dtsVocab " + dtsVocab);
         //now the evs search
        // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
        //   intMetaLimit, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
+        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string
         vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         if(vAC != null)
@@ -8238,6 +8239,7 @@ System.out.println(" dtsVocab " + dtsVocab);
         //now the evs search
         //evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
         //  intMetaLimit, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
+        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
         vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         if(vAC != null)
@@ -8250,6 +8252,7 @@ System.out.println(" dtsVocab " + dtsVocab);
         if (sConteIdseq == null) sConteIdseq = "";
        // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
        // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
         vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         if(vAC != null)
@@ -8262,6 +8265,7 @@ System.out.println(" dtsVocab " + dtsVocab);
         if (sConteIdseq == null) sConteIdseq = "";
        // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
        // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
         vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, false, -1, "");
         session.setAttribute("vACSearch", vAC);
         if(vAC != null)
@@ -8289,6 +8293,7 @@ System.out.println(" dtsVocab " + dtsVocab);
 
       //  evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
       //        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
         vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         evs.get_Result(req, res, vResult, "");
@@ -8312,6 +8317,7 @@ System.out.println(" dtsVocab " + dtsVocab);
       //    sKeyword = filterName(sKeyword, "display");
        // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource, 
        //     intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
         vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         evs.get_Result(req, res, vResult, "");
@@ -8340,6 +8346,7 @@ System.out.println(" dtsVocab " + dtsVocab);
           
        // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
        //     intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
         vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         evs.get_Result(req, res, vResult, "");
@@ -8357,6 +8364,7 @@ System.out.println(" dtsVocab " + dtsVocab);
       //    sKeyword = filterName(sKeyword, "display");
         //evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
         //intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
         vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         evs.get_Result(req, res, vResult, "");
@@ -8375,6 +8383,7 @@ System.out.println(" dtsVocab " + dtsVocab);
       //    sKeyword = filterName(sKeyword, "display");
        // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
        // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
         vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         evs.get_Result(req, res, vResult, "");
@@ -8393,6 +8402,7 @@ System.out.println(" dtsVocab " + dtsVocab);
       //    sKeyword = filterName(sKeyword, "display");
         //evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
        // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
         vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
         session.setAttribute("vACSearch", vAC);
         evs.get_Result(req, res, vResult, "");
@@ -10916,7 +10926,7 @@ System.out.println(" dtsVocab " + dtsVocab);
             Vector vAddr = this.getContactAddr(null, sOrgID, sPerID);
             accBean.setACC_ADDR_List(vAddr);
             
-         System.out.println(accID + " org " + accBean.getORG_NAME() + " per " + accBean.getPERSON_NAME() + " contName " + contName);
+      //   System.out.println(accID + " org " + accBean.getORG_NAME() + " per " + accBean.getPERSON_NAME() + " contName " + contName);
             vList.put(contName, accBean);  //stroe the bean in teh vector
           }  //END WHILE
         }   //END IF
@@ -11070,5 +11080,147 @@ System.out.println(" dtsVocab " + dtsVocab);
     return vList;
   }  //end getContactAddr
 
+  /**
+   * To get checked row bean(single or multiple), called from NCICuration Servlet.
+   * loops through the vector 'vSelRows' and gets bean of the checked row of a selected component.
+   * checks the edit permission if action is not a new from template.
+   * gets many to many related components if any.
+   * calls 'getACListForEdit' to load the list for the selected context.
+   * stores resulted bean in session ('m_DE') for th selected component.
+   *
+   * @param req The HttpServletRequest object.
+   * @param res HttpServletResponse object.
+   *
+   * @return boolean false if error exists
+   */
+  public boolean getSelRowToUploadRefDoc(HttpServletRequest req, HttpServletResponse res, String sAction)
+  {
+    HttpSession session = req.getSession();
+    Vector vBEResult = new Vector();
+    //doRefDocSearch
+    try
+    {
+      //GetACService getAC = new GetACService(req, res, m_servlet);  //
+      //String sUser = (String)session.getAttribute("Username");
+      String sMenuAction = (String)session.getAttribute("MenuAction");
+      session.setAttribute("statusMessage", "");
+      session.setAttribute("AllAltNameList", new Vector());
+      session.setAttribute("AllRefDocList", new Vector());
+      String sSearchAC = (String)session.getAttribute("searchAC");   //get the selected component
+      Vector vSRows = (Vector)session.getAttribute("vSelRows");   //get the selected rows
+      Vector vCheckList = new Vector();
+      
+      if (vSRows.size()>0)
+      {
+        String sContext = "";
+        String sStatus = "";
+        String strInValid = "";
+
+      	//capture the duration
+      	java.util.Date exDate = new java.util.Date();          
+      	logger.info(m_servlet.getLogMessage(m_classReq, "getSelRowToEdit", "begin rowselect", exDate, exDate));
+      	
+        //loop through the searched DE result to get the matched checked rows
+        for(int i=0; i<(vSRows.size()); i++)
+        {
+          String ckName = ("CK" + i);
+          String rSel = (String)req.getParameter(ckName);
+          if (rSel != null)
+          {   //reset the bean with selected row for the selected component
+            session.setAttribute("ckName", ckName);
+            vCheckList.addElement(ckName);    //add the checked checkbox in the vector
+            if (sSearchAC.equals("DataElement"))
+            {
+              DE_Bean DEBean = new DE_Bean();
+              //DEBean = (DE_Bean)vSRows.elementAt(i);
+              DEBean = DEBean.cloneDE_Bean((DE_Bean)vSRows.elementAt(i),"Complete");
+            
+              //get used by attributes and continue with other actions if is valid.  No need to do this here
+              DEBean = this.getDEAttributes(DEBean, sAction, sMenuAction);  //get other DE attributes
+              // clone the bean to store it
+              DE_Bean clDEBean = new DE_Bean();
+              clDEBean = clDEBean.cloneDE_Bean(DEBean, "Complete");
+              vBEResult.addElement(clDEBean);   //store this in the vector for block edit
+              //store this bean to get its attributes and to use it to clear the changes
+              if (DEBean != null)
+                session.setAttribute("oldDEBean",  clDEBean);
+                session.setAttribute("m_DE", DEBean);  //this removed the problem
+            }
+            else if (sSearchAC.equals("DataElementConcept"))
+            {
+              DEC_Bean DECBean = new DEC_Bean();
+              DECBean = DECBean.cloneDEC_Bean((DEC_Bean)vSRows.elementAt(i));
+              String sContextID = "";
+              if (DECBean != null) sContextID = DECBean.getDEC_CONTE_IDSEQ();
+              
+              DECBean = this.getDECAttributes(DECBean, sAction, sMenuAction);  //get all other attributes of DEC
+              // clone the bean to store it
+              DEC_Bean clDECBean = new DEC_Bean();
+              clDECBean = clDECBean.cloneDEC_Bean(DECBean);
+              vBEResult.addElement(clDECBean);   //store this in the vector for block edit
+              //store this bean to get its attributes and to use it to clear the changes
+              if (DECBean != null)
+              session.setAttribute("oldDECBean",  clDECBean);
+              session.setAttribute("m_DEC", DECBean);  
+            }
+            else if (sSearchAC.equals("ValueDomain"))
+            {
+
+              VD_Bean VDBean = new VD_Bean();
+              VD_Bean VDBean2 = new VD_Bean();
+              VDBean2 = (VD_Bean)vSRows.elementAt(i);     
+              VDBean = VDBean.cloneVD_Bean((VD_Bean)vSRows.elementAt(i));            
+              if (VDBean != null) sContext = VDBean.getVD_CONTEXT_NAME();
+              if (VDBean != null) sStatus = VDBean.getVD_ASL_NAME();
+              String sContextID = "";
+              if (VDBean != null) sContextID = VDBean.getVD_CONTE_IDSEQ();
+              VDBean = this.getVDAttributes(VDBean, sAction, sMenuAction);           
+              // clone the bean to store it
+              VD_Bean clVDBean = new VD_Bean();
+              clVDBean = clVDBean.cloneVD_Bean(VDBean);          
+              vBEResult.addElement(clVDBean);   //store this in the vector for block edit
+              //store this bean to get its attributes and to use it to clear the changes
+              if (VDBean != null)
+                session.setAttribute("oldVDBean",  clVDBean);                
+              session.setAttribute("m_VD", VDBean);
+            }
+            else 
+            {
+               // No action type....
+
+            }
+          }
+        }
+        //capture the duration
+        logger.info(m_servlet.getLogMessage(m_classReq, "getSelRowToEdit", "end rowselect", exDate,  new java.util.Date()));
+        if (!strInValid.equals(""))
+        {
+            vCheckList = new Vector();
+            for(int m=0; m<(vSRows.size()); m++)  //add all checked to vChecklist
+            {
+              String ckName2 = ("CK" + m);
+              String rSel2 = (String)req.getParameter(ckName2);
+              if (rSel2 != null)
+                vCheckList.addElement(ckName2);
+            }        
+        }        
+        session.setAttribute("CheckList", vCheckList); //add the check list in the session.
+      }
+
+
+      session.setAttribute("vBEResult", vBEResult);    //store this for block edit
+      session.setAttribute("vACId", (Vector)m_classReq.getAttribute("vACId"));
+      session.setAttribute("vACName", (Vector)m_classReq.getAttribute("vACName"));
+    }
+    catch(Exception e)
+    {
+      //System.err.println("ERROR in  GetACSearch-getSelRowToEdit: " + e);
+      logger.fatal("ERROR in GetACSearch-getSelRowToEdit : " + e.toString());
+      session.setAttribute("statusMessage", "Unable to open the Create/Edit page. Please try again.");
+      return false;
+    }
+    return true;
+  } //getSelRowEdit  
+  
 //close the class
 } 

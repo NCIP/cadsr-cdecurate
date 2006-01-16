@@ -165,8 +165,6 @@ Admin or Curation Tools.</p>
 	<td>
 		
 <% if (filename != ""){ %>
-	<span style="font-family: Webdings; font-size: 12pt; font-weight: bold">&#114;</span>
-	&nbsp;&nbsp;
 	<%=filename%>
 	<% }
 else {%>

@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/EVS_Bean.java,v 1.6 2006-01-06 21:53:57 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/EVS_Bean.java,v 1.7 2006-01-16 21:35:36 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
@@ -765,7 +765,7 @@ public class EVS_Bean implements Serializable
     //return the first vocab if null
   //  if ((sRetValue == null || sRetValue.equals("")) && vVocabs != null)
   //    sRetValue = (String)vVocabs.elementAt(0);
-System.out.println(sRetValue + sFilterValue + sFilterAttr + sRetAttr);
+//System.out.println(sRetValue + sFilterValue + sFilterAttr + sRetAttr);
     if (sRetValue == null) sRetValue = "";
     return sRetValue;
   }
@@ -780,16 +780,17 @@ System.out.println(sRetValue + sFilterValue + sFilterAttr + sRetAttr);
       if (definition == null || definition.equals("")) definition = "No Value Exists.";
       definition = util.removeNewLineChar(definition);
       this.setPREFERRED_DEFINITION(definition);
-      defSource = defSource.trim();
+      if (defSource != null) 
+        defSource = defSource.trim();
       this.setEVS_DEF_SOURCE(defSource);
       conName = util.removeNewLineChar(conName);
       this.setCONCEPT_NAME(conName);
       dispName = util.removeNewLineChar(dispName);
       this.setLONG_NAME(dispName);
       this.setNCI_CC_TYPE(sMetaCodeType);
-   System.out.println(conCode.length() + " set evs bean before " + conCode + ";");
+   //System.out.println(" set evs bean before " + conCode + ";");
       conCode = util.removeNewLineChar(conCode);
-   System.out.println(conCode.length() + " set evs bean after " + conCode + ";");
+   //System.out.println(" set evs bean after " + conCode + ";");
       this.setNCI_CC_VAL(conCode);
       this.setMETA_CODE_TYPE(vocabMetaType);
       this.setMETA_CODE_VAL(vocabMetaCode);

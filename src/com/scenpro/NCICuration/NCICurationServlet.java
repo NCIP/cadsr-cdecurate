@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/NCICurationServlet.java,v 1.30 2006-01-13 14:20:05 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/NCICurationServlet.java,v 1.31 2006-01-16 21:35:36 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
@@ -3924,6 +3924,8 @@ public class NCICurationServlet extends HttpServlet
         String thisParentDB = eBean.getEVS_DATABASE();
         if(thisParentDB.equals("NCI Thesaurus")) thisParentDB = "NCI_Thesaurus";
         if (thisParentDB == null) thisParentDB = "";
+    System.out.println(sParentCC + " parent " + thisParent + " action " + sPVAction);
+    
         if (sParentCC.equals(thisParent))
         {
           String strHTML = "";
@@ -4581,7 +4583,7 @@ public class NCICurationServlet extends HttpServlet
       eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
     }
     //get its matching thesaurus concept
-System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for OC " + eDB);
+//System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for OC " + eDB);
     EVSSearch evs = new EVSSearch(req, res, this);
     eBean = evs.getThesaurusConcept(eBean);
     //add to the vector and store it in the session, reset if primary and alredy existed, add otehrwise
@@ -4645,7 +4647,7 @@ System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for OC " + eDB)
       if (eDB.equals("MetaValue")) eDB = eBean.getEVS_ORIGIN();
       eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
     }
-System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for PROP " + eDB);
+//System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for PROP " + eDB);
     EVSSearch evs = new EVSSearch(req, res, this);
     eBean = evs.getThesaurusConcept(eBean);
     //add to the vector and store it in the session, reset if primary and alredy existed, add otehrwise
@@ -4818,7 +4820,7 @@ System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for PROP " + eD
       if (eDB.equals("MetaValue")) eDB = eBean.getEVS_ORIGIN();
       eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
     }  
-System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for REP " + eDB);
+//System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for REP " + eDB);
     EVSSearch evs = new EVSSearch(req, res, this);
     eBean = evs.getThesaurusConcept(eBean);
     //add to the vector and store it in the session, reset if primary and alredy existed, add otehrwise
@@ -5115,7 +5117,7 @@ System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for REP " + eDB
           //get the nci vocab if it meta or other vocab only if not referenced
           if (sSelectedParentName == null || sSelectedParentName.equals(""))
           {
-        System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for VD vm " + eBean.getEVS_DATABASE());
+        //System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for VD vm " + eBean.getEVS_DATABASE());
             EVSSearch evs = new EVSSearch(req, res, this);
             eBean = evs.getThesaurusConcept(eBean);          
           }
@@ -8337,7 +8339,7 @@ System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for REP " + eDB
   */
   private void callExpandSubNode(String subNodeName, String dtsVocab)  throws Exception
   {
-System.out.println("servlet callExpandSubNode subNodeName: " + subNodeName);
+//System.out.println("servlet callExpandSubNode subNodeName: " + subNodeName);
     Vector vSubNodeNames = new Vector();
     String subNodeName2 = "";
     String sCCode = "";
@@ -8347,20 +8349,20 @@ System.out.println("servlet callExpandSubNode subNodeName: " + subNodeName);
         sCCode = evs.do_getEVSCode(subNodeName, dtsVocab);
     String strHTML = tree.expandNode(subNodeName, dtsVocab, "", sCCode, "", 0, "");
     vSubNodeNames = evs.getSubConceptNames(dtsVocab, subNodeName, "", "", "");
-System.out.println("servlet callExpandSubNode vSubNodeNames.size(): " + vSubNodeNames.size());
+//System.out.println("servlet callExpandSubNode vSubNodeNames.size(): " + vSubNodeNames.size());
     for(int j=0; j < vSubNodeNames.size(); j++) 
     { 
       subNodeName2 = (String)vSubNodeNames.elementAt(j);
       callExpandSubNode(subNodeName2, dtsVocab);
     }
-System.out.println("servlet done callExpandSubNode");
+//System.out.println("servlet done callExpandSubNode");
   }
   
   private void doEVSSearchActions(String reqType, HttpServletRequest req, HttpServletResponse res)
   {
     try
     {
-    System.out.println("evs search " + reqType);
+    //System.out.println("evs search " + reqType);
       EVSSearch evs = new EVSSearch(req, res, this);
       if(reqType.equals("getSuperConcepts"))
         evs.doGetSuperConcepts();
@@ -8861,7 +8863,7 @@ System.out.println("servlet done callExpandSubNode");
        session.setAttribute("creSearchAC", sSearchFor);
        session.setAttribute("dtsVocab", dtsVocab); 
        getCompAttrList(req, res, sSearchFor, "searchForCreate");      
-    System.out.println(sSearchFor + " block actions " + actType);
+    //System.out.println(sSearchFor + " block actions " + actType);
        if ((menuAction != null) && (actType != null))
        {
           if (actType.equals("Search"))
@@ -9174,7 +9176,7 @@ System.out.println("servlet done callExpandSubNode");
      if (hConts == null) hConts = new Hashtable();
      //get the page action
      String sPgAct = (String)req.getParameter("pageAction");
-  System.out.println(sPgAct + " contat edit " + hConts.size());
+  //System.out.println(sPgAct + " contat edit " + hConts.size());
      if (sPgAct != null && !sPgAct.equals(""))
      {
        try
@@ -9195,7 +9197,7 @@ System.out.println("servlet done callExpandSubNode");
                accBean = (AC_CONTACT_Bean)hConts.get(selCont);
                session.setAttribute("selContactKey", selCont);
              }
-       System.out.println(sContAct + " contat sele " + selCont + " contains " + hConts.containsKey(selCont));
+       //System.out.println(sContAct + " contat sele " + selCont + " contains " + hConts.containsKey(selCont));
            }
            else  //new contact
            {
@@ -9288,7 +9290,7 @@ System.out.println("servlet done callExpandSubNode");
            break;
          }
        }
-       System.out.println(selInd + " commAct " + sAct);
+       //System.out.println(selInd + " commAct " + sAct);
        //if editComm action set comm bean in teh request and return back
        if (sAct.equals("editComm") && selInd > -1)
        {
@@ -9384,7 +9386,7 @@ System.out.println("servlet done callExpandSubNode");
            break;
          }
        }
-       System.out.println(selInd + " addrAct " + sAct);
+       //System.out.println(selInd + " addrAct " + sAct);
       //if editAddr action set addr bean in teh request and return back
        if (sAct.equals("editAddr") && selInd > -1)
        {
@@ -11107,7 +11109,7 @@ System.out.println("servlet done callExpandSubNode");
        vCompAtt.addElement("Definition");
        vCompAtt.addElement("Name");
        vCompAtt.addElement("Origin");
-       //vCompAtt.addElement("Concept Name");
+       vCompAtt.addElement("Concept Name");
        vCompAtt.addElement("Effective Begin Date");
        vCompAtt.addElement("Effective End Date");
        vCompAtt.addElement("Creator");
@@ -11123,7 +11125,7 @@ System.out.println("servlet done callExpandSubNode");
        vCompAtt.addElement("CSI Type");
        vCompAtt.addElement("CSI Definition");
        vCompAtt.addElement("CS Long Name");
-      // vCompAtt.addElement("Concept Name");
+       vCompAtt.addElement("Concept Name");
        vCompAtt.addElement("Context");
        vCompAtt.addElement("All Attributes");
     }
@@ -11293,16 +11295,18 @@ System.out.println("servlet done callExpandSubNode");
   /**
    * The doRefDocumentUpload
    *
+   *  uploadfile
+   *
    * @param req The HttpServletRequest from the client
    * @param res The HttpServletResponse back to the client
    */
    public void doRefDocumentUpload(HttpServletRequest req,
      HttpServletResponse res, String sOrigin) 
    {
-	   
 	   String sAction;
 	   String msg = null;
 	   HttpSession session = req.getSession();
+	   RefDocAttachment refDocAt = new RefDocAttachment(req , res , this);
 	   
 	   // get action type
 	   if ((String)req.getParameter("newRefDocPageAction")!= null){
@@ -11314,180 +11318,7 @@ System.out.println("servlet done callExpandSubNode");
 	   	// Open the upload ref doc page
 		if (sOrigin.equals("Open")) 
 		{
-			// Be sure something was selected by the user.
-	          Vector vSRows = (Vector)session.getAttribute("vSelRows");
-	          if (vSRows == null || vSRows.size() == 0)
-	          {
-	              msg = "No items were selected from the Search Results.";
-	          }
-	          else{
-	        	GetACSearch getACSearch = new GetACSearch(req, res, this);
-	  			String sACSearch = (String)session.getAttribute("searchAC");
-	  			
-	  			// TODO: Replace with ***** getACSearch.doRefDocSearch ********
-	  			getACSearch.getSelRowToEdit(req, res, "");
-	  			
-	  			
-	  			
-	  			if (sACSearch.equals("DataElement")|| sACSearch.equals("DataElementConcept") || sACSearch.equals("ValueDomain")){
-	  				session.setAttribute("dispACType", sACSearch);
-	  				
-	  				String dispType = (String)session.getAttribute("displayType");
-	  			    String acType = (String)session.getAttribute("dispACType");
-	  			    if (dispType == null) dispType = "";
-	  			    
-
-	  			    String sACIDSEQ = ""; 
-	  			    DE_Bean m_DE = null;
-	  			    DEC_Bean m_DEC = null;
-	  			    VD_Bean m_VD = null;
-	  			    REF_DOC_Bean refBean = new REF_DOC_Bean(); 
-	  			    Connection con = null;
-	  			    
-	  			    // Get number of items
-	  			    Vector vRefDoc = (Vector)req.getAttribute("RefDocList");
-	  			    String intText = "";
-	  			    
-	  			    // has ref docs
-	  			    if (vRefDoc != null){
-
-	  			    	Vector vRefDocRows = new Vector();
-	  			    	Vector vRefDocDocs = new Vector();
-	  			    	
-	  			    	for(int i=0; i<(vRefDoc.size()); i++)
-		  			      {
-	  			    		
-	  			    		//	Get AC_IDSEQ from the m_DE bean
-	  			    		refBean = (REF_DOC_Bean)vRefDoc.elementAt(i);
-		  			    	
-			  			    // get RD_IDSEQ from REFERENCE_DOCUMENTS using AC_IDSEQ
-		  			    	String str = refBean.getREF_DOC_IDSEQ();
-		  			    	String str2 = refBean.getDOCUMENT_NAME();
-		  			    	
-		  			    	vRefDocRows.addElement(i);
-		  			    	
-
-		  			    	// SQL to get the results
-			        		con = connectDB(req, res);
-			                String select = "select NAME , blob_content from sbr.reference_blobs_view where rd_idseq = ?";
-		  			    	
-			                // make plsql call 
-			                try {
-								PreparedStatement pstmt = con.prepareStatement(select);
-								pstmt.setString(1 , str);
-								ResultSet rs = pstmt.executeQuery();
-								int j = 0;
-								String Doclist = "";
-								
-								while ( rs.next()){
-									
-									// iterate counter
-									j++;
-									
-									/*
-									// Build HTML text for table
-									String fileName = rs.getString(1);
-									Doclist = Doclist + "<a href=\"http://cadsrsentinel-dev.nci.nih.gov/AlertReports/" 
-													  + fileName 
-													  + "\" "target=\"_blank\">"
-													  + fileName
-													  + "<a><br>";
-									  */
-									// Local Test
-									String fileName = rs.getString(1);
-									Doclist = Doclist + "<a href=\"file://C:/temp/" 											
-													  + fileName 
-													  + "\" target=\"_blank\">"
-													  + fileName
-													  + "<a><br>";
-									
-									//<a href="file://C:/temp/document.txt">document.txt</a>
-									
-									// Extract file to file system
-									BLOB bRefBlob = (BLOB)rs.getBlob(2);
-									InputStream is = bRefBlob.getBinaryStream();
-									
-									try {
-										
-										String strArray[] = fileName.split("/");
-										if (strArray.length > 1){
-											fileName = strArray[1];
-										}
-										
-										// Sentinel report directory
-										//OutputStream os = new FileOutputStream("/local/content/cadsrsentinel/reports/"+ fileName);
-										
-										// Local Test
-										String fileHandle = "C:\\Temp\\" + fileName ;
-										OutputStream os = new FileOutputStream(fileHandle);
-										
-										byte buffer[]= new byte [2000];
-										int length = 0;
-										int bytesRead;
-										try {
-											while ((bytesRead = is.read(buffer))> -1){
-													try {
-														os.write(buffer, length , bytesRead);
-													} catch (IOException e1) {
-														// TODO Auto-generated catch block
-														e1.printStackTrace();
-													}
-													length += bytesRead;
-													try {
-														os.close();
-													} catch (IOException e) {
-														// TODO Auto-generated catch block
-														e.printStackTrace();
-													}
-											}
-										} catch (IOException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}
-																				
-									}
-									catch (FileNotFoundException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-									
-									try {
-										is.close();
-									} catch (IOException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-																									
-								} //end of while
-								vRefDocDocs.addElement(Doclist);
-								
-				  			    session.setAttribute("RefDocRows", vRefDocDocs);
-								rs.close();
-								pstmt.close();              
-								con.close();
-								
-							} catch (SQLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							
-		  			    	
-		  			      }//end of for
-	  			    	ForwardJSP(req, res, "/RefDocumentUploadPage.jsp");
-	  			    	
-	  			    }
-	  			    else{
-	  			        //no ref docs
-	  			    	ForwardJSP(req, res, "/RefDocumentUploadPage.jsp");
-	  			    }
-
-	  			}
-	  			else 
-	  			{
-	  				msg = "The selected items are not supported for the document upload feature.";
-	  			}
-	          }
-			
+			refDocAt.doOpen();
 		}
 		// Request from page to preform actions
 		else if (sOrigin.equals("Request")) 
@@ -11495,58 +11326,13 @@ System.out.println("servlet done callExpandSubNode");
 			// return to search results from upload page
 			if (sAction.equals("backToSearch"))
 	        {
-	          Vector vResult = new Vector();
-	          GetACSearch serAC = new GetACSearch(req, res, this);
-			  String sACSearch = (String)session.getAttribute("searchAC");
-	          if (sACSearch.equals("DataElement"))
-	              	serAC.getDEResult(req, res, vResult, "");
-	            else if (sACSearch.equals("DataElementConcept"))
-	            	serAC.getDECResult(req, res, vResult, "");
-	            else if (sACSearch.equals("ValueDomain"))
-	            	serAC.getVDResult(req, res, vResult, "");
-	          session.setAttribute("results", vResult);
-	          session.setAttribute("statusMessage", msg); 
-	          ForwardJSP(req, res, "/SearchResultsPage.jsp");
-	          
+				refDocAt.doBack();
 	        } 
-
 
 			// upload file into the database as blob
 			if (sAction.equals("UploadFile"))
 			{
-		          // Get session information.
-		        UserBean Userbean  = new UserBean();
-		        Userbean  = (UserBean)session.getAttribute("Userbean");
-		        if (Userbean == null)
-		        {
-		            msg = "User session information is missing.";
-		        }
-		        String user = Userbean.getUsername();
-		        user = user.toUpperCase();
-		        Connection con = null;
-		        
-	        	try
-	            {
-              
-	                //con.close();
-	        		
-	                msg = "File uploaded";
-	                ForwardJSP(req, res, "/RefDocumentUploadPage.jsp");
-	            }
-	            catch (Exception e)
-	            {
-	                msg = "An unexpected exception occurred, please notify the Help Desk. Details have been written to the log.";
-	                logger.fatal("cdecurate: doRefDocumentUpload() " + e.toString());
-	                try
-	                {
-	                    if (con != null){
-	                  	    con.close();  
-	                    }
-	                }
-	                catch (SQLException ex)
-	                {
-	                }
-	            }
+				refDocAt.doFileUpload();
 			}
 			// Catch any undefined action from page
 			else
@@ -11575,10 +11361,7 @@ System.out.println("servlet done callExpandSubNode");
 			      {
 			        this.logger.fatal("ERROR - ErrorLogin: " + e.toString());
 			      }
-
 			}
-	   
    }
-
 
 }  //end of class 
