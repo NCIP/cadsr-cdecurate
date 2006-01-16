@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/InsACService.java,v 1.23 2006-01-12 16:46:55 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/InsACService.java,v 1.24 2006-01-16 21:35:36 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
@@ -5507,7 +5507,8 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
             String sDef = (String)CStmt.getObject(6);
             if (sDef == null || sDef.equals("")) sDef = eUser.getDefDefaultValue();
             EVS_Bean vmConcept = new EVS_Bean();
-            String evsOrigin = vmConcept.getVocabAttr(eUser, dbOrigin, "vocabDBOrigin", "vocabName");            
+            String evsOrigin = vmConcept.getVocabAttr(eUser, dbOrigin, "vocabDBOrigin", "vocabName");  
+      logger.debug(evsBean.getNCI_CC_VAL() + " setevsbeanforpv " + (String)CStmt.getObject(3) + (String)CStmt.getObject(4) + (String)CStmt.getObject(7));
             evsBean.setEVSBean(sDef, (String)CStmt.getObject(9), 
                               (String)CStmt.getObject(7), (String)CStmt.getObject(7), 
                               (String)CStmt.getObject(11), (String)CStmt.getObject(3), 
@@ -5829,7 +5830,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
               if (sReturnCode != null && !sReturnCode.equals(""))  // && !sReturnCode.equals("API_OC_500"))
               {
                 String comName = comBean.getCTL_NAME() + "_" + comBean.getRANK_ORDER() + "_" + comBean.getCYBER_ADDR();
-                this.storeStatusMsg(sReturnCode + " : Unable to create contact communication - " + comName);
+                this.storeStatusMsg(sReturnCode + " : Unable to update contact communication - " + comName);
                 m_classReq.setAttribute("retcode", sReturnCode);
               }
               else
@@ -5844,7 +5845,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
           {
             logger.fatal("ERROR in InsACService-setContact_Comms for bean : " + ee.toString());
             m_classReq.setAttribute("retcode", "Exception");
-            this.storeStatusMsg("\\t Exception ee : Unable to update or remove an Communication attributes.");
+            this.storeStatusMsg("\\t Exception ee : Unable to update or remove Communication attributes.");
             continue;  //continue with other ones
           }
         }
@@ -5926,11 +5927,15 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
               CStmt.setString(6, adrBean.getATL_NAME());       //selected addr type
               CStmt.setString(7, adrBean.getRANK_ORDER());     //rank order for the addr 
               CStmt.setString(8, adrBean.getADDR_LINE1());     //addr line 1
-              CStmt.setString(9, adrBean.getADDR_LINE2());     //addr line 2
+              String A2 = adrBean.getADDR_LINE2();
+              if (A2 == null || A2.equals("")) A2 = " ";
+              CStmt.setString(9, A2);     //addr line 2
               CStmt.setString(10, adrBean.getCITY());         //city
               CStmt.setString(11, adrBean.getSTATE_PROV());   //state
               CStmt.setString(12, adrBean.getPOSTAL_CODE());  //zip code
-              CStmt.setString(13, adrBean.getCOUNTRY());     //country
+              String Ct = adrBean.getCOUNTRY();
+              if (Ct == null || Ct.equals("")) Ct = " ";
+              CStmt.setString(13, Ct);     //country
 
                // Now we are ready to call the stored procedure
               boolean bExcuteOk = CStmt.execute();
@@ -5938,7 +5943,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
               if (sReturnCode != null && !sReturnCode.equals(""))  // && !sReturnCode.equals("API_OC_500"))
               {
                 String adrName = adrBean.getATL_NAME() + "_" + adrBean.getRANK_ORDER() + "_" + adrBean.getADDR_LINE1();
-                this.storeStatusMsg(sReturnCode + " : Unable to create contact address - " + adrName);
+                this.storeStatusMsg(sReturnCode + " : Unable to update contact address - " + adrName);
                 m_classReq.setAttribute("retcode", sReturnCode);
               }
               else
@@ -5953,7 +5958,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
           {
             logger.fatal("ERROR in InsACService-setContact_Addrs for bean : " + ee.toString());
             m_classReq.setAttribute("retcode", "Exception");
-            this.storeStatusMsg("\\t Exception ee : Unable to update or remove an Address attributes.");
+            this.storeStatusMsg("\\t Exception ee : Unable to update or remove Address attributes.");
             continue;  //continue with other ones
           }
         }
@@ -5963,7 +5968,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
     {
       logger.fatal("Error - setContact_Addrs : " + e.toString());
       m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception ee : Unable to update or remove an Address attributes.");
+      this.storeStatusMsg("\\t Exception ee : Unable to update or remove Address attributes.");
     }
     try
     {
@@ -5975,7 +5980,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
     {
       logger.fatal("ERROR in InsACService-setContact_Addrs for close : " + ee.toString());
       m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception ee : Unable to update or remove an Address attributes.");
+      this.storeStatusMsg("\\t Exception ee : Unable to update or remove Address attributes.");
     }
     return vAdr;
   }
@@ -6036,7 +6041,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
           {
             String accName = accB.getORG_NAME();
             if (accName == null || accName.equals("")) accName = accB.getPERSON_NAME();
-            this.storeStatusMsg(sReturnCode + " : Unable to create contact attributes - " + accName);
+            this.storeStatusMsg(sReturnCode + " : Unable to update contact attributes - " + accName);
             m_classReq.setAttribute("retcode", sReturnCode);
           }
           else

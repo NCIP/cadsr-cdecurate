@@ -22,6 +22,8 @@ var selectedIdx;
 var list2IndexOld = 0;
 var F='';
 var checkedValueCount = 0;
+
+
 function removeAllText(thisBlock)
  {
    var formObj= eval("document.createVDForm."+thisBlock);
@@ -157,7 +159,7 @@ function removeAllText(thisBlock)
       var parCount = document.createVDForm.listParentConcept.length;
       if (pvCount >0 && parCount < 1)
       {
-        alert("Please remove existing Permissible Values before selecting parents to constain the values");
+        alert("Please remove existing Permissible Values before selecting parents to constrain the values");
         return;
       }
       else
@@ -224,6 +226,7 @@ function removeAllText(thisBlock)
       var parString = document.createVDForm.listParentConcept[sInd].text;
       var parType = document.createVDForm.listParentConcept[sInd].value;
       var vdType = document.createVDForm.listVDType[document.createVDForm.listVDType.selectedIndex].value;
+      var sAct = "removeParent";  //default to remove parent
       var strMsg = "Removing Referenced Parent \n  " + parString;
       if ((parType != null && parType == "Non_EVS") || (vdType != null && vdType == "N"))
         strMsg += ".\n\n";
@@ -233,10 +236,10 @@ function removeAllText(thisBlock)
       //check if ok continue removing       
       var remPVs = false;
       remPVs = confirm(strMsg);
-      if (remPVs == true)
-        document.createVDForm.newCDEPageAction.value = "removePVandParent";
-      else
-        return;
+      if (remPVs == false)
+      	return;
+      else if (vdType != null && vdType != "N")
+        sAct = "removePVandParent";  //remove both parent and children
         
       //store the concept information in hidden selected fields
       var sParentCode = document.createVDForm.ParentCodes.options[sInd].value;
@@ -248,7 +251,8 @@ function removeAllText(thisBlock)
       document.createVDForm.selectedParentConceptDB.value = sParentDB;  
       document.createVDForm.selectedParentConceptMetaSource.value = sParentMetaSource; 
       //submit the form to refresh.
-      SubmitValidate("removeParent");
+      document.createVDForm.newCDEPageAction.value = sAct;
+      SubmitValidate(sAct);
     }
     else
       alert("Please select a parent to remove");

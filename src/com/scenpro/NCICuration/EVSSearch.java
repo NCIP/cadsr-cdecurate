@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/EVSSearch.java,v 1.12 2006-01-06 21:53:57 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/EVSSearch.java,v 1.13 2006-01-16 21:35:36 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
@@ -1757,7 +1757,7 @@ logger.debug(termStr + " - parseDef - ");
       String semProp = vocabBean.getPropSemantic();
       String vocabType = vocabBean.getNameType();
       String sDefDefault = vocabBean.getDefDefaultValue();  // "No Value Exists.";
-    logger.debug(" before query " + namePropDisp + namePropIn + conCodeType + sMetaName + defnProp + hdSynProp + retConProp + semProp + vocabType);
+    logger.debug(termStr + " before query " + namePropDisp + namePropIn + conCodeType + sMetaName + defnProp + hdSynProp + retConProp + semProp + vocabType);
       try
       {
         //call method to do the search from EVS vocab
