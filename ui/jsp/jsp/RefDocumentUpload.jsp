@@ -1,7 +1,8 @@
 <%@ page import="com.scenpro.NCICuration.*"%>
 <%@ page import= "java.util.Vector" %>
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/RefDocumentUpload.js"></SCRIPT>
-<FORM name="RefDocumentUploadForm" method="post" action="/cdecurate/NCICurationServlet?reqType=RefDocumentUpload">
+<FORM ENCTYPE="multipart/form-data"
+ name="RefDocumentUploadForm" method="post" action="/cdecurate/NCICurationServlet?reqType=RefDocumentUpload">
 
 <%
     
@@ -54,6 +55,7 @@
 %>
 <%
       Vector vRefDoc = (Vector)request.getAttribute("RefDocList");
+      session.setAttribute("RefDocList", vRefDoc);
       String intText = "";
       if (vRefDoc == null)
         intText = "Loading .....";
@@ -123,6 +125,7 @@ Admin or Curation Tools.</p>
 	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;">Links</th>
 	</tr>
 	<%
+
     for(int i=0; i<(vRefDoc.size()); i++)
     {
       refBean = (REF_DOC_Bean)vRefDoc.elementAt(i);
@@ -131,7 +134,7 @@ Admin or Curation Tools.</p>
       if (i==0)
       {
 %>
-    	<tr>
+    <tr>
 	<td></td>
 	</tr>
 <%    } 
@@ -153,7 +156,7 @@ Admin or Curation Tools.</p>
       else {
       	docLink = "http://";
       }
-
+	
 %> 
 	<tr>
 	<td><input type="checkbox" name="ck<%=i%>"/></td>
@@ -176,6 +179,7 @@ else {%>
 	</tr>
 
 <%
+
 	  }
 %>
 </table>

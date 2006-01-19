@@ -1,7 +1,7 @@
 
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/GetACSearch.java,v 1.21 2006-01-16 21:35:36 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/GetACSearch.java,v 1.22 2006-01-19 18:15:23 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;     
@@ -8447,8 +8447,8 @@ System.out.println(" dtsVocab " + dtsVocab);
         Vector vResult = new Vector();
         getEVSSortedRows(req, res);
         evs.get_Result(req, res, vResult, "");
-        String key = (String)session.getAttribute("labelKeyword");
-        req.setAttribute("labelKeyword", key);
+       // String key = (String)req.getAttribute("labelKeyword");
+       // req.setAttribute("labelKeyword", key);
         session.setAttribute("results", vResult);
       }
     }

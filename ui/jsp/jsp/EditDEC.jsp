@@ -692,7 +692,7 @@
       <%if(sOriginAction.equals("BlockEditDEC")){%>
         <td align=right><%=item++%>)</td>
         <td height="25" valign="bottom"><font color="#FF0000">Check</font> Box to Create New Version
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://ncicb.nci.nih.gov/NCICB/core/caDSR/BusinessRules" target="_blank">Business Rules</a>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">Business Rules</a>
         </td>
       <% } else {%>
         <td align=right><font color="#C0C0C0"><%=item++%>)</font></td>
@@ -732,7 +732,7 @@
           <td valign="top"><font color="#C0C0C0">
             <input type="text" name="Version" value="<%=sVersion%>" size=5 readonly 
               onHelp = "showHelp('Help_CreateDEC.html#newDECForm_Version'); return false"></font>
-            &nbsp;&nbsp;&nbsp;<a href="http://ncicb.nci.nih.gov/NCICB/core/caDSR/BusinessRules" target="_blank">Business Rules</a>
+            &nbsp;&nbsp;&nbsp;<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">Business Rules</a>
           </td>
         <% } %>       
     </tr>

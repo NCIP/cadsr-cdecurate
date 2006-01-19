@@ -1,11 +1,12 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/NCICurationServlet.java,v 1.31 2006-01-16 21:35:36 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/NCICurationServlet.java,v 1.32 2006-01-19 18:15:23 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
 
 //import files
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
@@ -28,6 +30,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -843,15 +846,6 @@ public class NCICurationServlet extends HttpServlet
    {
     try
     {
-      /*  m_EVS_CONNECT = getServletConfig().getInitParameter("evsconnection");
-        if(m_EVS_CONNECT == null || m_EVS_CONNECT.equals(""))
-          m_EVS_CONNECT = "http://cabio.nci.nih.gov/cacore30/server/HTTPServer";  */ //default prod
-     
-   //     m_EVS_CONNECT = "http://cbiodev104.nci.nih.gov:29080/cacoreevs301/server/HTTPServer";  //dev
-    //    m_EVS_CONNECT = "http://cbioqa101.nci.nih.gov:29080/cacore30/server/HTTPServer";  //qa
-      //   m_EVS_CONNECT = "http://cabio-stage.nci.nih.gov/cacore30/server/HTTPServer";  //stage
-     //   m_EVS_CONNECT = "http://cabio.nci.nih.gov/cacore30/server/HTTPServer";  //prod
-    
         HttpSession session = req.getSession();
         m_classReq = req;
         m_classRes = res;
@@ -10720,21 +10714,27 @@ public class NCICurationServlet extends HttpServlet
        vDefaultAttr.addElement("Workflow Status");
        vDefaultAttr.addElement("Value Domain");
     }
-    else if (searchAC.equals("ObjectClass") || searchAC.equals("Property") 
-            || searchAC.equals("ConceptClass"))
+    else if (searchAC.equals("ObjectClass") || searchAC.equals("Property"))
+    {
+       vDefaultAttr.addElement("Concept Name");
+       vDefaultAttr.addElement("Public ID");
+       vDefaultAttr.addElement("Version"); 
+       vDefaultAttr.addElement("EVS Identifier");
+       vDefaultAttr.addElement("Definition");
+       vDefaultAttr.addElement("Definition Source");
+       vDefaultAttr.addElement("Context");
+       vDefaultAttr.addElement("Vocabulary");
+       vDefaultAttr.addElement("DEC's Using");
+    }
+    else if (searchAC.equals("ConceptClass"))
     {
        vDefaultAttr.addElement("Concept Name");
        vDefaultAttr.addElement("Public ID");
        vDefaultAttr.addElement("EVS Identifier");
-       if (searchAC.equals("ConceptClass"))
-         vDefaultAttr.addElement("Vocabulary");
+       vDefaultAttr.addElement("Vocabulary");
        vDefaultAttr.addElement("Definition");
        vDefaultAttr.addElement("Definition Source");
        vDefaultAttr.addElement("Context");
-       if (!searchAC.equals("ConceptClass"))
-         vDefaultAttr.addElement("Vocabulary");
-       if (searchAC.equals("ObjectClass") || searchAC.equals("Property"))
-          vDefaultAttr.addElement("DEC's Using");
     }
     else if (searchAC.equals("ClassSchemeItems"))
     {
@@ -11303,11 +11303,21 @@ public class NCICurationServlet extends HttpServlet
    public void doRefDocumentUpload(HttpServletRequest req,
      HttpServletResponse res, String sOrigin) 
    {
+
+
 	   String sAction;
 	   String msg = null;
 	   HttpSession session = req.getSession();
 	   RefDocAttachment refDocAt = new RefDocAttachment(req , res , this);
-	   
+
+	     
+	  msg = req.getContentType(); 
+	  if (msg.startsWith("multipart/form-data")){
+		  //file upload
+		  refDocAt.doFileUpload();
+	  }
+	  else{
+		  
 	   // get action type
 	   if ((String)req.getParameter("newRefDocPageAction")!= null){
 		   sAction = (String)req.getParameter("newRefDocPageAction");
@@ -11328,7 +11338,13 @@ public class NCICurationServlet extends HttpServlet
 	        {
 				refDocAt.doBack();
 	        } 
-
+			
+			// Delete ref doc attachment
+			if (sAction.equals("DeleteAttachment"))
+	        {
+				refDocAt.doDeleteAttachment();
+	        } 
+			
 			// upload file into the database as blob
 			if (sAction.equals("UploadFile"))
 			{
@@ -11362,6 +11378,7 @@ public class NCICurationServlet extends HttpServlet
 			        this.logger.fatal("ERROR - ErrorLogin: " + e.toString());
 			      }
 			}
+   }
    }
 
 }  //end of class 
