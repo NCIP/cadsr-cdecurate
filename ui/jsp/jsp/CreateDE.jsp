@@ -496,7 +496,7 @@
       <td><font color="#FF0000"> </font></td>
       <td valign="top" > <input name="Version" type="text" value="<%=sVersion%>" size="5" maxlength=5
     	  onHelp = "showHelp('Help_CreateDE.html#newCDEForm_Version'); return false">
-        &nbsp;&nbsp;&nbsp;<a href="http://ncicb.nci.nih.gov/NCICB/core/caDSR/BusinessRules" target="_blank">Business Rules</a>
+        &nbsp;&nbsp;&nbsp;<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">Business Rules</a>
       </td>
     </tr>
     <tr height="25" valign="bottom"> 

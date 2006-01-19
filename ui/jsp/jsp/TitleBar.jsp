@@ -173,7 +173,7 @@ function link_caDSR()
   if (wincaDSR && !wincaDSR.closed)
      wincaDSR.focus();
   else
-   	wincaDSR = window.open("http://ncicb.nci.nih.gov/core/caDSR", "caDSR", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+   	wincaDSR = window.open("http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr", "caDSR", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 function linkNCICB()
 {

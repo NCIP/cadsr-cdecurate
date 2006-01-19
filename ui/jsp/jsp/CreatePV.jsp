@@ -266,7 +266,7 @@ function ViewConceptInTree()
       <td colspan=2><font color="#FF0000">Enter/Select</font> Effective Begin Date</td>
     </tr>
     <tr>
-      <td &nbsp; </td>
+      <td> &nbsp; </td>
       <td valign="top"  colspan=2>
         <input type="text" name="BeginDate" size="12" maxlength=10 value="<%=sBeginDate%>"
           onHelp = "showHelp('Help_CreateVD.html#createPVForm_BeginDate'); return false">
@@ -295,7 +295,7 @@ function ViewConceptInTree()
     <tr height="25" valign="bottom">
       <td align=right>&nbsp; <%=item++%>) </td>
       <td colspan=2><font color="#FF0000"> <A HREF="javascript:SubmitValidate('validate')">
-          Validate</A></font>Permissible Value</td>
+          Validate</A></font> Permissible Value</td>
     </tr>
     <!-- leave some space -->
     <tr height="75"><td>&nbsp;</td></tr>

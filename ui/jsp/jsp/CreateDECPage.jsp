@@ -11,7 +11,7 @@ history.forward();
 <body bgcolor="#FFFFFF" text="#000000">
 <table width="100%" border="1" cellpadding="0" cellspacing="0">
   <tr>
-    <td height="95" valign="top" width="811"><%@ include file="TitleBar.jsp" %></td>
+    <td height="95" valign="top"><%@ include file="TitleBar.jsp" %></td>
   </tr>
   <tr>
     <td width="100%" valign="top"><%@ include file="CreateDEC.jsp" %></td>

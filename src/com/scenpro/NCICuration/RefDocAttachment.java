@@ -1,27 +1,28 @@
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/RefDocAttachment.java,v 1.1 2006-01-16 21:35:36 hegdes Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/RefDocAttachment.java,v 1.2 2006-01-19 18:15:23 hegdes Exp $
 //$Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
 
 //import files
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 import java.util.Vector;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
 
 import oracle.sql.BLOB;
 
@@ -115,6 +116,7 @@ public class RefDocAttachment {
 	HttpServletRequest req = null;
 	HttpServletResponse res = null;
 	NCICurationServlet m_servlet;
+	Logger logger = Logger.getLogger(RefDocAttachment.class.getName());
 
 	public RefDocAttachment(HttpServletRequest req, HttpServletResponse res, NCICurationServlet m_servlet) {
 
@@ -124,14 +126,14 @@ public class RefDocAttachment {
 		this.m_servlet = m_servlet;
 	}
 /**
- * 
+ *  Open the Ref Documents attachments page.
  */
 public void doOpen (){
 	// TODO: Cut and paste code from servlet
 	
 	GetACService getAC = new GetACService(req, res, m_servlet);
 	Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
-    vList = getAC.getToolOptionData("CURATION","REFDOC_FILECACHE","");
+    vList= getAC.getToolOptionData("CURATION","REFDOC_FILECACHE","");
     String RefDocFileCache = vList.get(0).getVALUE();
     vList = getAC.getToolOptionData("CURATION","REFDOC_FILEURL","");
     String RefDocFileUrl = vList.get(0).getVALUE();
@@ -160,8 +162,8 @@ public void doOpen (){
 		    Connection con = null;
 		    
 		    // Get number of items
+		    //Vector vRefDoc = (Vector)session.getAttribute("RefDocList");
 		    Vector vRefDoc = (Vector)req.getAttribute("RefDocList");
-
 		    
 		    // has ref docs
 		    if (vRefDoc != null){
@@ -201,7 +203,8 @@ public void doOpen (){
 							
 							// Build HTML text for table
 							String fileName = rs.getString(1);
-							Doclist = Doclist + "<span style=\"font-family: Webdings; font-size: 12pt; font-weight: bold\">&#114;</span>"
+							String fileDirectory = "";
+							Doclist = Doclist + "<a onclick=\"onDocDelete('" + fileName + "')\"><span style=\"font-family: Webdings; font-size: 12pt; font-weight: bold\">&#114;</span></a>"
 											  + "&nbsp;&nbsp;"
 											  + "<a href=\""
 											  + RefDocFileUrl 
@@ -219,10 +222,25 @@ public void doOpen (){
 								String strArray[] = fileName.split("/");
 								if (strArray.length > 1){
 									fileName = strArray[1];
+									fileDirectory = strArray[0];
+									File fileLocation = new File(RefDocFileCache + fileDirectory);
+									if (!fileLocation.isDirectory()){
+										if (!fileLocation.mkdir()) {
+											logger.fatal("Can not create directory: " + RefDocFileCache + fileDirectory);
+											fileDirectory = "";
+										}
+										else
+										{
+											fileDirectory = fileDirectory + "/";
+										}
+									}
+									else {
+										fileDirectory = fileDirectory + "/";
+									}
 								}
 								
 								// Sentinel report directory
-								OutputStream os = new FileOutputStream(RefDocFileCache + fileName);
+								OutputStream os = new FileOutputStream(RefDocFileCache + fileDirectory + fileName);
 
 								final int BUFSIZ = 4096;
 								byte inbuf[]= new byte [BUFSIZ];
@@ -283,62 +301,138 @@ public void doOpen (){
  */
 public void doFileUpload (){
 	
-	String fileName = req.getParameter("uploadfile");
-	System.out.println(fileName);
-	byte buff[] = new byte[200];
+	GetACService getAC = new GetACService(req, res, m_servlet);
+	Connection con = null;
+	REF_DOC_Bean refBean = new REF_DOC_Bean(); 
+	HttpSession session = req.getSession();
+	FileInputStream is;
+	OutputStream os;
+
+    // Get number of items
+    Vector vRefDoc = (Vector)session.getAttribute("RefDocList");
+	
+	// get option table data
+	Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
+    vList = getAC.getToolOptionData("CURATION","REFDOC_FILECACHE","");
+    String RefDocFileCache = vList.get(0).getVALUE();
+	
+	RefDocMultipartForm refDocFormdata = new RefDocMultipartForm();
+	refDocFormdata.parse(req, RefDocFileCache);
+	
+	String writeObjSQL = "INSERT INTO sbr.reference_blobs_view( " +
+    "RD_IDSEQ, " +
+    "NAME, " +
+    "MIME_TYPE, " +
+    "DOC_SIZE, " +
+    "DAD_CHARSET, " +
+    "CONTENT_TYPE, BLOB_CONTENT) " +
+    "VALUES (?, ?, ?, ?, ?, ?, empty_blob()) ";
+	
+	con = m_servlet.connectDB(req, res);
 	
 	try {
-		ServletInputStream in = req.getInputStream();
-		in.read(buff);
-		in.close();
-	} catch (IOException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}
 		
-//	try {
-//		FileInputStream is = new FileInputStream(fileName);
-//		
-//		String writeObjSQL    = "BEGIN " +
-//        "INSERT INTO sbr.reference_blobs_view(RD_IDSEQ, " +
-//        "NAME, " +
-//        "MIME_TYPE, " +
-//        "DOC_SIZE, DAD_CHARSET, " +
-//        "CONTENT_TYPE, BLOB_CONTENT) " +
-//        "VALUES (?, ?, ?, ?, 'ascii', 'BLOB', empty_blob()) " +
-//        "RETURN BLOB_CONTENT INTO ?; " +
-//        "END;";
-//		
-//		// get rd_idseq
-//		
-//		// figure mime type
-//		
-//		// set name with rand number
-//		
-//		// insert into the refblob table
-//		
-//		// get blob obj statment.getblab(5)
-//		
-//		while ( is.read() != -1){
-//
-//		} //end of while
-//		
-//		
-//	} catch (FileNotFoundException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
-//	
-//	
+		con.setAutoCommit(false);
+		Vector<String> selectedRefDocs = refDocFormdata.getSelectedRefDocs();
+		
+		int jInt = selectedRefDocs.size(); 
+		
+		for (int ndx=0; ndx < jInt; ndx++){
+			
+			try {
+				String str = selectedRefDocs.elementAt(ndx);
+				int refDocIndex = Integer.valueOf(str);
+				//refDocIndex = refDocIndex - 1;
+				
+				PreparedStatement pstmt = con.prepareStatement(writeObjSQL);
+				
+				if (vRefDoc != null){
+				refBean = (REF_DOC_Bean)vRefDoc.elementAt(refDocIndex);
+				str = refBean.getREF_DOC_IDSEQ();
+				}
+
+				//	set RD_IDSEQ
+				pstmt.setString(1, str );
+				//	set NAME
+				String dbfileName = "F" + (new Random()).nextInt() + "/" + refDocFormdata.getFileName(); 
+				pstmt.setString(2, dbfileName );
+				//	set MIME_TYPE
+				pstmt.setString(3, refDocFormdata.getMimeType() );
+				//	set DOC_SIZE
+				pstmt.setString(4, Integer.toString(refDocFormdata.getFileSize()) );
+				//	set DAD_CHARSET
+				pstmt.setString(5, refDocFormdata.getCharSet() );
+				//	set CONTENT_TYPE
+				pstmt.setString(6, refDocFormdata.getContentType() );
+				
+				
+				//	get BLOB_CONTENT
+				pstmt.execute();
+				
+				// open a file inputstream for the loacal file
+				String fileLocator = RefDocFileCache + refDocFormdata.getFileName();
+				
+				
+				is = new FileInputStream( fileLocator );
+
+				
+				//upload blob
+				String UpdateObjSQL = "select blob_content from sbr.reference_blobs_view where name = ? for update";
+				pstmt = con.prepareStatement(UpdateObjSQL);
+				
+				pstmt.setString(1, dbfileName);
+				ResultSet rs = pstmt.executeQuery();
+				rs.next();
+
+				BLOB blob = (BLOB)rs.getBlob("blob_content");
+
+				os = blob.getBinaryOutputStream();
+				// os = blob.setBinaryStream(0); //get the output stream from the Blob to insert it
+
+				//	Read the file by chuncks and insert them in the Blob. The chunk size come from the blob
+				byte[] chunk = new byte[blob.getChunkSize()];
+				System.out.println("Inserting the Blob");
+				int i=-1;
+				while((i = is.read(chunk))!=-1)
+				{
+				os.write(chunk,0,i); //Write the chunk
+				System.out.print('.'); // print progression
+				}
+
+				is.close();
+				os.close();
+				pstmt.close();
+				rs.close();
+				con.commit();
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		con.close();
+		
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 	doOpen();
 }
-
+/**
+ *  Return the the results page and display the results.
+ *
+ */
 public void doBack (){
 	Vector vResult = new Vector();
 	GetACSearch serAC = new GetACSearch(req, res, m_servlet);
 	String sACSearch = (String)session.getAttribute("searchAC");
 	if (sACSearch.equals("DataElement"))
-	    	serAC.getDEResult(req, res, vResult, "");
+	    serAC.getDEResult(req, res, vResult, "");
 	  else if (sACSearch.equals("DataElementConcept"))
 	  	serAC.getDECResult(req, res, vResult, "");
 	  else if (sACSearch.equals("ValueDomain"))
@@ -348,4 +442,30 @@ public void doBack (){
 	m_servlet.ForwardJSP(req, res, "/SearchResultsPage.jsp");
 	}
 
+
+public void doDeleteAttachment (){
+	HttpSession session = req.getSession();
+	Connection con = null;
+	String filename = (String)req.getAttribute("RefDocTargetFile");
+	
+	String filename2 = (String)session.getAttribute("RefDocTargetFile");
+	
+	System.out.println("File to be delelted: " + filename);
+	
+	String DelObjSQL = "";
+	con = m_servlet.connectDB(req, res);
+	
+	try {
+		PreparedStatement pstmt = con.prepareStatement(DelObjSQL);
+		
+		pstmt.close();
+		con.close();
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		//e.printStackTrace();
+		logger.fatal(e.toString());
+	}
+	
+	doOpen();
+	}
 } // End of Class

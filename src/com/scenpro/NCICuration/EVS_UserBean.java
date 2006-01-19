@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/EVS_UserBean.java,v 1.1 2006-01-06 21:53:58 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/EVS_UserBean.java,v 1.2 2006-01-19 18:15:23 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
@@ -735,6 +735,8 @@ public final class EVS_UserBean implements Serializable
       } 
       return vocabList;
   }
+
+  
   public void getEVSInfoFromDSR(HttpServletRequest req, HttpServletResponse res, NCICurationServlet servlet)
   {
     try
@@ -764,13 +766,12 @@ public final class EVS_UserBean implements Serializable
           System.out.println(tob.getVALUE() + " evs link cadsr for all " + eURL);
         }
       }
-      if (eURL == null || eURL.equals("")) eURL = "http://cabio.nci.nih.gov/cacore30/server/HTTPServer";
-      //for testing right now
-      eURL = "http://cabio-stage.nci.nih.gov/cacore30/server/HTTPServer";
+     // if (eURL == null || eURL.equals("")) eURL = "http://cabio.nci.nih.gov/cacore30/server/HTTPServer";
       this.setEVSConURL(eURL);
       //get vocab names from the evs and make sure they match with the cadsr.
-    //  java.util.List arrVocab = this.getEVSVocabs(eURL);
-      // if (arrVocab == null) arrVocab = new java.util.List();
+      java.util.List arrEVSVocab = this.getEVSVocabs(eURL);
+      
+     // if (arrVocab == null) arrVocab = new java.util.List();
       //make sure of the matching before store it in he bean
       this.setDSRDispName("caDSR");
       vList = getAC.getToolOptionData("CURATION", "EVS.DSRDISPLAY", "");
@@ -854,78 +855,37 @@ public final class EVS_UserBean implements Serializable
       Hashtable hvoc = new Hashtable();  
       vList = getAC.getToolOptionData("CURATION", "EVS.VOCAB.ALL.%", "");  // 
       //do the looping way right now
-      for (int i = 0; i<vocabname.size(); i++)
+      if (arrEVSVocab == null || arrEVSVocab.isEmpty())
+        logger.fatal("Unable to get vocab list from EVS - " + eURL);
+      else
       {
-        String sVocab = (String)vocabname.elementAt(i);
-        EVS_UserBean vBean = new EVS_UserBean();
-        String sDisp = sVocab;
-        if (vocabdisp != null && vocabdisp.size()> i)
-          sDisp = (String)vocabdisp.elementAt(i);
-        // vBean.setEVSConURL(eURL);
-        vBean.setVocabName(sVocab);
-        vBean.setVocabDisplay(sDisp);
-        vBean.setVocabDBOrigin(sDisp);
-        // vBean.setVocabUseParent(false);
-        vBean = this.storeVocabAttr(vBean, vList);
-        int vocabInd = i +1;
-        String toolprop = "EVS.VOCAB." + vocabInd + "%";
-    System.out.println(sVocab + toolprop);
-        Vector vocabList = getAC.getToolOptionData("CURATION", toolprop,"");
-        vBean = this.storeVocabAttr(vBean, vocabList);
-        /*   if (sVocab.equals("NCI_Thesaurus"))
-         {
-         vBean.setVocabDBOrigin("NCI Thesaurus");
-         vBean.setVocabMetaSource("NCI05");
-         vBean.setSearchInName("Synonym");
-         vBean.setSearchInConCode("Concept Code");
-         vBean.setSearchInMetaCode("Code");
-         vBean.setRetSearch("true");
-         vBean.setPropName("Synonym");
-         vBean.setPropNameDisp("Preferred_Name");
-         vBean.setIncludeMeta("NCI Metathesaurus"); 
-         this.setMetaDispName("NCI Metathesaurus");  //store it in the main bean too for easy access
-         vBean.setNameType("PropType");
-         vBean.setVocabCodeType("NCI_CONCEPT_CODE");
-         vBean.setVocabUseParent(true);
-         }
-         else if(sVocab.equals("VA_NDFRT"))
-         {
-         vBean.setVocabCodeType("VA_NDF_CODE");
-         vBean.setVocabUseParent(true);
-         vBean.setVocabMetaSource("NDFRT_2004_01");
-         vBean.setPropDefinition("MeSH_Definition");
-         }
-         else if(sVocab.equals("MGED_Ontology")) 
-         {
-         vBean.setVocabCodeType("NCI_MO_CODE");
-         vBean.setVocabUseParent(true);
-         vBean.setVocabMetaSource("");
-         }
-         else if(sVocab.equals("GO"))
-         {
-         vBean.setVocabCodeType("GO_CODE");
-         vBean.setVocabUseParent(false);
-         vBean.setVocabMetaSource("GO2004_03_02");
-         }
-         else if(sVocab.equals("LOINC"))
-         {
-         vBean.setVocabCodeType("LOINC_CODE");
-         vBean.setVocabUseParent(false);
-         vBean.setVocabMetaSource("LNC213");
-         }
-         else if(sVocab.equals("MedDRA"))
-         {
-         vBean.setVocabCodeType("MEDDRA_CODE");
-         vBean.setVocabUseParent(true);
-         vBean.setVocabMetaSource("MDR-60");
-         vBean.setNameType("PropType");  //need this if search in is property
-         vBean.setPropName("Preferred_Name");
-         vBean.setPropNameDisp("Preferred_Name");
-         } */
-        //meta snow med ct = SNOMEDCT_2004_01_31
-        //put this bean in the hash table
-        //System.out.println(sVocab + " load " + vBean.getVocabUseParent());
-        hvoc.put(sVocab, vBean);
+        for (int i = 0; i<vocabname.size(); i++)
+        {
+          String sVocab = (String)vocabname.elementAt(i);
+          //compare with evs vocab names  //put it back later with new api
+       /*   if (!arrEVSVocab.contains(sVocab))
+          {
+            logger.fatal(sVocab + " from caDSR does not contain in EVS Vocab list.");
+            continue;
+          }  */
+          EVS_UserBean vBean = new EVS_UserBean();
+          String sDisp = sVocab;
+          if (vocabdisp != null && vocabdisp.size()> i)
+            sDisp = (String)vocabdisp.elementAt(i);
+          // vBean.setEVSConURL(eURL);
+          vBean.setVocabName(sVocab);
+          vBean.setVocabDisplay(sDisp);
+          vBean.setVocabDBOrigin(sDisp);
+          // vBean.setVocabUseParent(false);
+          vBean = this.storeVocabAttr(vBean, vList);  //call method to store all attributes
+          int vocabInd = i +1;
+          String toolprop = "EVS.VOCAB." + vocabInd + "%";
+      System.out.println(sVocab + toolprop);
+          Vector vocabList = getAC.getToolOptionData("CURATION", toolprop,"");
+          vBean = this.storeVocabAttr(vBean, vocabList);  //call method to add vocab specific attributges
+          //put this bean in the hash table
+          hvoc.put(sVocab, vBean);
+        }
       }
       this.setVocab_Attr(hvoc);
       session.setAttribute("EvsUserBean", this);

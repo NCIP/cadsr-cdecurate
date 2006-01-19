@@ -16,7 +16,7 @@ history.forward();
 
     <table width="100%" border="1" cellpadding="0" cellspacing="0">
       <tr>
-        <td height="95" valign="top" width="811"><%@ include file="TitleBar.jsp" %></td>
+        <td height="95" valign="top"><%@ include file="TitleBar.jsp" %></td>
       </tr>
     </table width="100%" border="1" cellpadding="0" cellspacing="0"></td>
 
