@@ -2,7 +2,7 @@
 <%@ page import= "java.util.*" %>
 <%@ page buffer= "12kb" %>
 <%@ page session="true" %>
-<%@ page import="com.scenpro.NCICuration.*" %>
+<%@ page import="gov.nih.nci.cdecurate.*" %>
 <html>
 <head>
 <title>Search Parameters</title>

@@ -1,6 +1,6 @@
 <!-- ConDomainDetailWindow.jsp -->
 <%@ page import= "java.util.*" %>
-<%@ page import="com.scenpro.NCICuration.*" %>
+<%@ page import="gov.nih.nci.cdecurate.*" %>
 <html>
 <head>
 <title>Display Conceptual Domain Details</title>

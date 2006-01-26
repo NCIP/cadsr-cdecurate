@@ -6,7 +6,7 @@
 <link href="FullDesignArial.css" rel="stylesheet" type="text/css">
 <%@ page import="java.text.*" %>
 <%@ page import="java.util.*" %>
-<%@ page import="com.scenpro.NCICuration.*" %>
+<%@ page import="gov.nih.nci.cdecurate.*" %>
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/date-picker.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/CreateVM.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>

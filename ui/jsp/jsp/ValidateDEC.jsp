@@ -5,7 +5,7 @@
 <link href="FullDesignArial.css" rel="stylesheet" type="text/css">
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
 <%@ page import="java.util.*"%>
-<%@ page import="com.scenpro.NCICuration.*" %>
+<%@ page import="gov.nih.nci.cdecurate.*" %>
 <TITLE>
 CreateOrDisplayDEC
 </TITLE>

@@ -58,7 +58,7 @@ var sentinelWindow = null;
        if (serverName == "localhost")
           cdeServer = "biotite.scenpro.net:8080";
        else if (serverName == "protocol.scenpro.net")
-          cdeServer = "protocol.scenpro.net:8080/DSRAlert/do/logon";
+          cdeServer = "protocol.scenpro.net:8080/cadsrsentinel/do/logon";
        else if (serverName == "ncicb-dev.nci.nih.gov" || serverName == "cdecurate-dev.nci.nih.gov")
           cdeServer = "ncicb-dev.nci.nih.gov/cadsrsentinel"; 
        else if (serverName == "ncicb-qa.nci.nih.gov" || serverName == "cdecurate-qa.nci.nih.gov")
@@ -72,7 +72,7 @@ var sentinelWindow = null;
           sentinelWindow.focus();
         else
           sentinelWindow = window.open(cdeServer);
-        //  sentinelWindow = window.open("http://" + cdeServer + "/DSRAlert/DSRAlert/cdecuration", "_blank");
+        //  sentinelWindow = window.open("http://" + cdeServer + "/cadsrsentinel/do/cdecuration", "_blank");
 	   }
 	   else
 		   alert("Unable to determine the server name for the Sentinel Tool.");	

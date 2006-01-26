@@ -3,7 +3,7 @@
 <title>Edit Contact Information</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <%@ page import="java.util.*" %>
-<%@ page import="com.scenpro.NCICuration.*" %>
+<%@ page import="gov.nih.nci.cdecurate.*" %>
 <%@ page session="true" %>
 <link href="FullDesignArial.css" rel="stylesheet" type="text/css"> 
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/EditContact.js"></SCRIPT>

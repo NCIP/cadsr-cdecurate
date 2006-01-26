@@ -1,4 +1,4 @@
-<%@ page import="com.scenpro.NCICuration.*"%>
+<%@ page import="gov.nih.nci.cdecurate.*"%>
 <%@ page import= "java.util.Vector" %>
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/RefDocumentUpload.js"></SCRIPT>
 <FORM ENCTYPE="multipart/form-data"
@@ -9,6 +9,7 @@
     session = request.getSession();
     String filename = "Document.doc";
     String dispType = (String)session.getAttribute("displayType");
+    session.setAttribute("RefDocTargetFile", "");
 
     String acType = (String)session.getAttribute("dispACType");
     if (dispType == null) dispType = "";
@@ -79,6 +80,9 @@
       } 
       
       Vector vRefDocURL = (Vector)session.getAttribute("RefDocRows");
+
+  
+
 %>
 
 <INPUT type="button" name="btnBack" value="Back" onclick="javascript:Back();">
@@ -113,8 +117,9 @@ Admin or Curation Tools.</p>
 <tbody style="padding: 0.1in 0.1in 0.1in 0.1in"/>
 	<tr>
 	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;" height="30">
-	<div onclick="selectAll()">	
-	<img id="CheckGif" src="../../cdecurate/Assets/CheckBox.gif" border="0" alt="Select All"/>
+	<div>	
+	<!-- <img id="CheckGif" src="../../cdecurate/Assets/CheckBox.gif" border="0" alt="Select One"/> -->
+	
 	</div>
 	</th>
 	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;">Reference Document Name</th>
@@ -145,9 +150,9 @@ Admin or Curation Tools.</p>
       String docText =  refBean.getDOCUMENT_TEXT();
       if (docText == null) docText = "";
       String docURL =  refBean.getDOCUMENT_URL();
-      if (docURL == null) docText = "";
+      if (docURL == null) docURL = "";
       String docContext =  refBean.getCONTEXT_NAME();
-      if (docContext == null) docText = "";
+      if (docContext == null) docContext = "";
       String docLink = "";
       
       if (docURL.toLowerCase().startsWith("http:") || docURL.startsWith("https:") || docURL.startsWith("file:")){
@@ -159,27 +164,34 @@ Admin or Curation Tools.</p>
 	
 %> 
 	<tr>
-	<td><input type="checkbox" name="ck<%=i%>"/></td>
+	<td>
+<% 
+	if (refBean.getIswritable()){
+%>	
+	<input type="checkbox" name="ck<%=i%>"/>
+<%
+	  }
+else {%>
+	<input type="checkbox" name="ck<%=i%>" DISABLED/>
+<%
+	  }
+%>
+	</td>
 	<td><%=docName%></td>
 	<td><%=docType%></td>
 	<td><%=docText%></td>
 	<td><a href="<%=docLink%><%=docURL%>" target="_blank"><%=docURL%></a></td>
 	<td><%=docContext%></td>
-	<td>
-		
 <% if (filename != ""){ %>
 	<%=filename%>
 	<% }
 else {%>
-&nbsp;
+<td>&nbsp;</td>
 <%
 	}
 %>	
-	</td>
 	</tr>
-
 <%
-
 	  }
 %>
 </table>
@@ -191,6 +203,7 @@ else {%>
 
 
 <input type="hidden" name="newRefDocPageAction" value="nothing">
+<input type="hidden" name="RefDocTargetFile" value="nothing">
 <script language = "javascript">
 </script>
 </form>

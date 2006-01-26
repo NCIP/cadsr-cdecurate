@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="FullDesignVer.css" rel="stylesheet" type="text/css">
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
-<%@ page import="com.scenpro.NCICuration.*" %>
+<%@ page import="gov.nih.nci.cdecurate.*" %>
 <%@ page import= "java.util.*" %>
 <%
       Vector vRefDoc = (Vector)request.getAttribute("RefDocList");
@@ -88,6 +88,9 @@
           <th>Document Name</th>
           <th>Document Type</th>
           <th>Document Text</th>
+          <th>Document URL</th>
+          <th>Context</th>
+          <th>Language</th>
         </tr>
 <%    } 
       String docName =  refBean.getDOCUMENT_NAME();
@@ -96,12 +99,21 @@
       if (docType == null) docType = "";
       String docText =  refBean.getDOCUMENT_TEXT();
       if (docText == null) docText = "";
+      String docURL =  refBean.getDOCUMENT_URL();
+      if (docURL == null) docURL = "";
+      String sContext =  refBean.getCONTEXT_NAME();
+      if (sContext == null) sContext = "";
+      String sLang =  refBean.getAC_LANGUAGE();
+      if (sLang == null) sLang = "";
 %> 
       <tr>
           <td align=center><%=i+1%></td>
           <td align=left><%=docName%></td>
           <td align=left><%=docType%></td>
           <td align=left><%=docText%></td>
+          <td align=left><%=docURL%></td>
+          <td align=left><%=sContext%></td>
+          <td align=left><%=sLang%></td>
       </tr>
 <%
 	  }

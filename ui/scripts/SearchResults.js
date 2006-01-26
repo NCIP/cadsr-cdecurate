@@ -410,21 +410,22 @@
                       
            if (document.searchResultsForm.unmonitorBtn != null)
                document.searchResultsForm.unmonitorBtn.disabled = false;
-              
+           
 		   if (document.searchResultsForm.uploadBtn != null)
-               document.searchResultsForm.uploadBtn.disabled = false;
-               
+           	   document.searchResultsForm.uploadBtn.disabled = false;
+            
 		   if (numRowsSelected == 1)
 		   {
 			   if (editAction == "searchForCreate")
 			   {
 				   if (document.searchResultsForm.editSelectedBtn != null)
 					   document.searchResultsForm.editSelectedBtn.disabled=false;
-			   }
+               }
 			   else
 			   {
 				   if (document.searchResultsForm.showSelectedBtn != null)
 					   document.searchResultsForm.showSelectedBtn.disabled=false;
+               			
 				   if (editAction != "nothing" || sButtonPressed == "Search")
 				   {
 					   if (document.searchResultsForm.editSelectedBtn != null  && 
@@ -486,6 +487,9 @@
 			   }
 			   if (document.searchResultsForm.detailsBtn != null)
 				   document.searchResultsForm.detailsBtn.disabled=true;
+
+		   		if (document.searchResultsForm.uploadBtn != null)
+           			document.searchResultsForm.uploadBtn.disabled = true;
                
 			   if (editAction != "searchForCreate")
 			   {

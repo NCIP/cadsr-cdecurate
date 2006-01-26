@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/REF_DOC_Bean.java,v 1.2 2006-01-06 21:53:58 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/REF_DOC_Bean.java,v 1.3 2006-01-26 15:25:12 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
@@ -102,6 +102,7 @@ public class REF_DOC_Bean implements Serializable
   private String AC_LONG_NAME;
   private String AC_LANGUAGE;
   private String REF_SUBMIT_ACTION;
+  private boolean iswritable;
 
   /**
   * Constructor
@@ -327,5 +328,20 @@ public class REF_DOC_Bean implements Serializable
   {
       return this.REF_SUBMIT_ACTION;
   }
+	/**
+	 * Stores the writable state of the RD for this bean
+	 * @return
+	 */
+	public boolean getIswritable() {
+		return iswritable;
+	}
+
+	/**
+	 * Stores the writable state of the RD for this bean
+	 * @param iswritable
+	 */
+	public void setIswritable(Boolean iswritable) {
+		this.iswritable = iswritable;
+	}
   
 }  //end class

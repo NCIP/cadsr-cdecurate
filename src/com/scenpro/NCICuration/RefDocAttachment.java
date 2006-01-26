@@ -1,4 +1,4 @@
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/RefDocAttachment.java,v 1.2 2006-01-19 18:15:23 hegdes Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/RefDocAttachment.java,v 1.3 2006-01-26 15:25:12 hegdes Exp $
 //$Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
@@ -144,27 +144,30 @@ public void doOpen (){
     {
         msg = "No items were selected from the Search Results.";
     }
+    
     else{
   	GetACSearch getACSearch = new GetACSearch(req, res, m_servlet);
   	String sACSearch = (String)session.getAttribute("searchAC");
 		
 		getACSearch.getSelRowToUploadRefDoc(req, res, "");
 		
-		
 		if (sACSearch.equals("DataElement")|| sACSearch.equals("DataElementConcept") || sACSearch.equals("ValueDomain")){
 			session.setAttribute("dispACType", sACSearch);
 			
 			String dispType = (String)session.getAttribute("displayType");
 		    if (dispType == null) dispType = "";
-		    
 
 		    REF_DOC_Bean refBean = new REF_DOC_Bean(); 
 		    Connection con = null;
 		    
 		    // Get number of items
-		    //Vector vRefDoc = (Vector)session.getAttribute("RefDocList");
 		    Vector vRefDoc = (Vector)req.getAttribute("RefDocList");
 		    
+		    if (vRefDoc == null){		    	
+		    	vRefDoc = (Vector)session.getAttribute("RefDocList");
+		    	req.setAttribute("RefDocList", vRefDoc);
+		    }
+ 
 		    // has ref docs
 		    if (vRefDoc != null){
 
@@ -180,30 +183,52 @@ public void doOpen (){
 	  			    // get RD_IDSEQ from REFERENCE_DOCUMENTS using AC_IDSEQ
 			    	String str = refBean.getREF_DOC_IDSEQ();
 
-			    	
 			    	vRefDocRows.addElement(i);
+  
+					//get users contexts ids
+					String RDContextID = "";
+					String docContext =  refBean.getCONTEXT_NAME();
+					String docContextID =  refBean.getCONTE_IDSEQ();
+				    Vector vContextID = (Vector)session.getAttribute("vWriteContextDE_ID");
+				    
+				    // check vs Ref doc context ID
+					if (vContextID != null) 
+				    {
+					  refBean.setIswritable(false);
+				      for (int ndx = 0; vContextID.size()>ndx; ndx++)
+				      {
+				    	RDContextID = (String)vContextID.elementAt(ndx);
+				        if (docContextID.equals(RDContextID))
+				        {
+				        	refBean.setIswritable(true);
+				        }
+				      }
+				    }
+			    	
 			    	// SQL to get the results
 	        		con = m_servlet.connectDB(req, res);
 	                String select = "select NAME , blob_content from sbr.reference_blobs_view where rd_idseq = ?";
-	                
-			    	
+					
 	                // make plsql call 
 	                try {
 						PreparedStatement pstmt = con.prepareStatement(select);
 						pstmt.setString(1 , str);
 						ResultSet rs = pstmt.executeQuery();
 						int j = 0;
-						String Doclist = "";
+						String Doclist = "<td>";
 						
 						while ( rs.next()){
 							
 							// iterate counter
 							j++;
-							
-							
+
 							// Build HTML text for table
 							String fileName = rs.getString(1);
 							String fileDirectory = "";
+							if (docContext == null) docContext = "";	
+
+							//  if the ref doc is in a writable context add the delete X
+							if (refBean.getIswritable())	{
 							Doclist = Doclist + "<a onclick=\"onDocDelete('" + fileName + "')\"><span style=\"font-family: Webdings; font-size: 12pt; font-weight: bold\">&#114;</span></a>"
 											  + "&nbsp;&nbsp;"
 											  + "<a href=\""
@@ -212,6 +237,18 @@ public void doOpen (){
 											  + "\" target=\"_blank\">"
 											  + fileName
 											  + "<a><br>";
+							
+							// else no X
+							}
+							else{
+								Doclist = Doclist + "&nbsp;&nbsp;&nbsp;&nbsp;"
+								  + "<a href=\""
+								  + RefDocFileUrl 
+								  + fileName 
+								  + "\" target=\"_blank\">"
+								  + fileName
+								  + "<a><br>";
+							}
 							
 							// Extract file to file system
 							BLOB bRefBlob = (BLOB)rs.getBlob(2);
@@ -263,6 +300,7 @@ public void doOpen (){
 								e.printStackTrace();
 							}
 						} //end of while
+						Doclist = Doclist + "</td>";
 						
 						vRefDocDocs.addElement(Doclist);
 						
@@ -391,13 +429,11 @@ public void doFileUpload (){
 
 				//	Read the file by chuncks and insert them in the Blob. The chunk size come from the blob
 				byte[] chunk = new byte[blob.getChunkSize()];
-				System.out.println("Inserting the Blob");
 				int i=-1;
 				while((i = is.read(chunk))!=-1)
 				{
 				os.write(chunk,0,i); //Write the chunk
-				System.out.print('.'); // print progression
-				}
+								}
 
 				is.close();
 				os.close();
@@ -418,8 +454,7 @@ public void doFileUpload (){
 		con.close();
 		
 	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		logger.fatal(e.toString());
 	}
 	doOpen();
 }
@@ -440,32 +475,25 @@ public void doBack (){
 	session.setAttribute("results", vResult);
 	session.setAttribute("statusMessage", msg); 
 	m_servlet.ForwardJSP(req, res, "/SearchResultsPage.jsp");
+	 
 	}
 
 
 public void doDeleteAttachment (){
-	HttpSession session = req.getSession();
 	Connection con = null;
-	String filename = (String)req.getAttribute("RefDocTargetFile");
-	
-	String filename2 = (String)session.getAttribute("RefDocTargetFile");
-	
-	System.out.println("File to be delelted: " + filename);
-	
-	String DelObjSQL = "";
+	String fileName = (String)req.getParameter("RefDocTargetFile");
+	String DelObjSQL = "delete from sbr.REFERENCE_BLOBS_VIEW where NAME = ?";
 	con = m_servlet.connectDB(req, res);
-	
 	try {
 		PreparedStatement pstmt = con.prepareStatement(DelObjSQL);
-		
+		pstmt.setString(1, fileName);
+		pstmt.execute();
 		pstmt.close();
 		con.close();
 	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		//e.printStackTrace();
 		logger.fatal(e.toString());
+		msg = "Reference Document Attachment: Unable to delete the Attachment from the database.";
 	}
-	
 	doOpen();
 	}
 } // End of Class

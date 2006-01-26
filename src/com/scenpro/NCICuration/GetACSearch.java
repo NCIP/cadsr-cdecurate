@@ -1,7 +1,7 @@
 
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/GetACSearch.java,v 1.22 2006-01-19 18:15:23 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/GetACSearch.java,v 1.23 2006-01-26 15:25:11 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;     
@@ -11115,12 +11115,8 @@ System.out.println(" dtsVocab " + dtsVocab);
         String sContext = "";
         String sStatus = "";
         String strInValid = "";
-
-      	//capture the duration
-      	java.util.Date exDate = new java.util.Date();          
-      	logger.info(m_servlet.getLogMessage(m_classReq, "getSelRowToEdit", "begin rowselect", exDate, exDate));
       	
-        //loop through the searched DE result to get the matched checked rows
+        //loop through the searched AC result to get the matched checked rows
         for(int i=0; i<(vSRows.size()); i++)
         {
           String ckName = ("CK" + i);
@@ -11134,17 +11130,9 @@ System.out.println(" dtsVocab " + dtsVocab);
               DE_Bean DEBean = new DE_Bean();
               //DEBean = (DE_Bean)vSRows.elementAt(i);
               DEBean = DEBean.cloneDE_Bean((DE_Bean)vSRows.elementAt(i),"Complete");
-            
-              //get used by attributes and continue with other actions if is valid.  No need to do this here
-              DEBean = this.getDEAttributes(DEBean, sAction, sMenuAction);  //get other DE attributes
-              // clone the bean to store it
-              DE_Bean clDEBean = new DE_Bean();
-              clDEBean = clDEBean.cloneDE_Bean(DEBean, "Complete");
-              vBEResult.addElement(clDEBean);   //store this in the vector for block edit
-              //store this bean to get its attributes and to use it to clear the changes
-              if (DEBean != null)
-                session.setAttribute("oldDEBean",  clDEBean);
-                session.setAttribute("m_DE", DEBean);  //this removed the problem
+              Vector vRefDoc = this.doRefDocSearch(DEBean.getDE_DE_IDSEQ(), "ALL TYPES", "open");
+              req.setAttribute("RefDocList", vRefDoc);
+              session.setAttribute("m_DE", DEBean);
             }
             else if (sSearchAC.equals("DataElementConcept"))
             {
@@ -11152,16 +11140,9 @@ System.out.println(" dtsVocab " + dtsVocab);
               DECBean = DECBean.cloneDEC_Bean((DEC_Bean)vSRows.elementAt(i));
               String sContextID = "";
               if (DECBean != null) sContextID = DECBean.getDEC_CONTE_IDSEQ();
-              
-              DECBean = this.getDECAttributes(DECBean, sAction, sMenuAction);  //get all other attributes of DEC
-              // clone the bean to store it
-              DEC_Bean clDECBean = new DEC_Bean();
-              clDECBean = clDECBean.cloneDEC_Bean(DECBean);
-              vBEResult.addElement(clDECBean);   //store this in the vector for block edit
-              //store this bean to get its attributes and to use it to clear the changes
-              if (DECBean != null)
-              session.setAttribute("oldDECBean",  clDECBean);
-              session.setAttribute("m_DEC", DECBean);  
+              Vector vRefDoc = this.doRefDocSearch(DECBean.getDEC_DEC_IDSEQ(), "ALL TYPES", "open");
+              req.setAttribute("RefDocList", vRefDoc);
+              session.setAttribute("m_DEC", DECBean);
             }
             else if (sSearchAC.equals("ValueDomain"))
             {
@@ -11174,14 +11155,8 @@ System.out.println(" dtsVocab " + dtsVocab);
               if (VDBean != null) sStatus = VDBean.getVD_ASL_NAME();
               String sContextID = "";
               if (VDBean != null) sContextID = VDBean.getVD_CONTE_IDSEQ();
-              VDBean = this.getVDAttributes(VDBean, sAction, sMenuAction);           
-              // clone the bean to store it
-              VD_Bean clVDBean = new VD_Bean();
-              clVDBean = clVDBean.cloneVD_Bean(VDBean);          
-              vBEResult.addElement(clVDBean);   //store this in the vector for block edit
-              //store this bean to get its attributes and to use it to clear the changes
-              if (VDBean != null)
-                session.setAttribute("oldVDBean",  clVDBean);                
+              Vector vRefDoc = this.doRefDocSearch(VDBean.getIDSEQ(), "ALL TYPES", "open");
+              req.setAttribute("RefDocList", vRefDoc);
               session.setAttribute("m_VD", VDBean);
             }
             else 
@@ -11192,7 +11167,6 @@ System.out.println(" dtsVocab " + dtsVocab);
           }
         }
         //capture the duration
-        logger.info(m_servlet.getLogMessage(m_classReq, "getSelRowToEdit", "end rowselect", exDate,  new java.util.Date()));
         if (!strInValid.equals(""))
         {
             vCheckList = new Vector();

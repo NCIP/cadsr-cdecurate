@@ -1,6 +1,6 @@
 <!-- DECDetailWindow.jsp -->
 <%@ page import= "java.util.*" %>
-<%@ page import="com.scenpro.NCICuration.*" %>
+<%@ page import="gov.nih.nci.cdecurate.*" %>
 <html>
 <head>
 <title>Display Data Element Concept Details</title>

@@ -5,7 +5,7 @@
 <title>Edit DataElementConcept</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <%@ page import="java.util.*" %>
-<%@ page import="com.scenpro.NCICuration.*" %>
+<%@ page import="gov.nih.nci.cdecurate.*" %>
 <%@ page session="true" %>
 <script language="JavaScript" src="Assets/date-picker.js"></script>
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/AddNewListOption.js"></SCRIPT>
