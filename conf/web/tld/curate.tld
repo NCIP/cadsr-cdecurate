@@ -17,7 +17,7 @@
 
   <tag>
     <name>checkLogon</name>
-    <tagclass>com.scenpro.NCICuration.CheckLogonTag</tagclass>
+    <tagclass>gov.nih.nci.cdecurate.CheckLogonTag</tagclass>
     <bodycontent>empty</bodycontent>
     <info>
       Validate that there is a currently logged on user, by checking for
