@@ -13,7 +13,7 @@
     <property name="app_asset" location="${app_root}/Assets"/>
     <property name="app_webinf" location="${app_root}/WEB-INF"/>
     <property name="app_classes" location="${app_webinf}/classes"/>
-    <property name="app_class" location="${app_classes}/com/scenpro/NCICuration"/>
+    <property name="app_class" location="${app_classes}/gov/nih/nci/cdecurate"/>
     <property name="app_jclass" location="${app_classes}/org/apache/jsp"/>
     <property name="app_lib" location="${app_webinf}/lib"/>
     <property name="app_tld" location="${app_webinf}/tld"/>
@@ -26,7 +26,7 @@
     <property name="m_web" location="ui"/>
     <property name="app_war" location="distrib/war"/>
     <property name="m_javadoc" location="doc/javadoc"/>
-    <property name="b_class" location="build/bin/com/scenpro/NCICuration"/>
+    <property name="b_class" location="build/bin/gov/nih/nci/cdecurate"/>
     <property name="bgen_class" location="build-gen/bin/org/apache/jsp"/>
     
     
@@ -56,6 +56,9 @@
       <pathelement location="${m_lib}/cglib-full-2.0.1.jar"/>
       <pathelement location="${m_lib}/hibernate3.jar"/>
       <pathelement location="${m_lib}/commons-logging.jar"/>
+      <pathelement location="${m_lib}/spring.jar"/>
+      <pathelement location="${m_lib}/spring-richclient.jar"/>
+      <pathelement location="${m_lib}/xml-apis.jar"/> 
     </path>
 
     <!-- init target -->
@@ -102,6 +105,11 @@
         <copy todir="${app_lib}" overwrite="YES">
           <fileset file="${m_lib}/client.jar"/>
           <fileset file="${m_lib}/cadsrsentinelapi.jar"/>
+          <fileset file="${m_lib}/spring.jar"/>
+          <fileset file="${m_lib}/spring-richclient.jar"/>
+          <fileset file="${m_lib}/xml-apis.jar"/>
+          <fileset file="${m_lib}/xerces.jar"/>
+          <fileset file="${m_lib}/hibernate3.jar"/>
         </copy>
         <!-- copy tld to cdecurate/WEB-INF/tld directory  -->
         <copy todir="${app_tld}" overwrite="YES">
@@ -128,8 +136,8 @@
           <src refid="jspsrcpath"/>
           <include name="**/*.java" />
       </javac>
-      <!-- copy property file to cdecurate/WEB-INF/classes/com/scenpro/NCICuration directory  -->
-      <copy file="${m_java}/com/scenpro/NCICuration/NCICuration.properties" tofile="${app_class}/NCICuration.properties" overwrite="YES"/>
+      <!-- copy property file to cdecurate/WEB-INF/classes/gov/nih/nci/cdecurate directory  -->
+      <copy file="${m_java}/gov/nih/nci/cdecurate/NCICuration.properties" tofile="${app_class}/NCICuration.properties" overwrite="YES"/>
 
       <!-- copy compiled file to build directory  -->
       <copy todir="${b_class}" overwrite="YES">
@@ -221,7 +229,7 @@
             <doctitle><![CDATA[<h1>CDE Curation Tool</h1>]]></doctitle>
             <bottom><![CDATA[<i>Copyright &#169; 2005 ScenPro, Inc. All Rights Reserved.</i>]]></bottom>
             <tag name="todo" scope="all" description="To do:" />
-            <group title="Source Package" packages="com.scenpro.NCICuration"/>
+            <group title="Source Package" packages="gov.nih.nci.cdecurate"/>
             <link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="D:\temp"/>
             <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
         </javadoc>

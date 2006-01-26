@@ -26,7 +26,7 @@ function ts_makeSortable(table) {
     for (var i=1;i<firstRow.cells.length;i++) {
         var cell = firstRow.cells[i];
         var txt = ts_getInnerText(cell);
-        cell.innerHTML = '<div class="sortheader" style="color: #0000ff; text-decoration: underline;"  onclick="ts_resortTable(this); return false;">'+txt+'<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></div>';
+        cell.innerHTML = '<div class="sortheader" style="color: #0000ff; text-decoration: underline; cursor: pointer;"  onclick="ts_resortTable(this); return false;">'+txt+'<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></div>';
     }
 }
 

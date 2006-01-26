@@ -1,10 +1,11 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/EVS_UserBean.java,v 1.2 2006-01-19 18:15:23 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/com/scenpro/NCICuration/EVS_UserBean.java,v 1.3 2006-01-26 15:25:11 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.NCICuration;
 
+import gov.nih.nci.evs.domain.Source;
 import gov.nih.nci.evs.query.*;
 import gov.nih.nci.system.applicationservice.*;
 import java.io.Serializable;
@@ -728,6 +729,26 @@ public final class EVS_UserBean implements Serializable
       try
       {
         vocabList = evsService.evsSearch(query);
+        if (vocabList != null)
+        {
+          try
+          {
+            String sName = (String)vocabList.get(0);
+          }
+          catch(Exception e)
+          {
+            logger.fatal(" Error - get vocab names " + e.toString());
+            return null;
+            //use source object casting to get the names (for old API)
+         /*   java.util.List srcVocabList = null;
+            for (int i=0; i<vocabList.size(); i++)
+            {
+              Source srcVocab = (Source)vocabList.get(i);
+              srcVocabList.add(srcVocab.getAbbreviation());
+            }
+            return srcVocabList; */
+          }
+        }
       }
       catch(Exception ex)
       {
@@ -768,9 +789,6 @@ public final class EVS_UserBean implements Serializable
       }
      // if (eURL == null || eURL.equals("")) eURL = "http://cabio.nci.nih.gov/cacore30/server/HTTPServer";
       this.setEVSConURL(eURL);
-      //get vocab names from the evs and make sure they match with the cadsr.
-      java.util.List arrEVSVocab = this.getEVSVocabs(eURL);
-      
      // if (arrVocab == null) arrVocab = new java.util.List();
       //make sure of the matching before store it in he bean
       this.setDSRDispName("caDSR");
@@ -790,8 +808,6 @@ public final class EVS_UserBean implements Serializable
           TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(i);
           if (tob != null) vocabname.addElement(tob.getVALUE());
         }
-        if (vocabname != null && vocabname.size()>0)
-          this.setVocabNameList(vocabname);
       }
       
       //get vocab display
@@ -804,9 +820,28 @@ public final class EVS_UserBean implements Serializable
           TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(i);
           if (tob != null) vocabdisp.addElement(tob.getVALUE());
         }
-        if (vocabdisp != null && vocabdisp.size()>0)
-          this.setVocabDisplayList(vocabdisp);
       }
+      //get vocab names from the evs and make sure they match with the cadsr.
+      java.util.List arrEVSVocab = this.getEVSVocabs(eURL);
+      if (vocabname != null && arrEVSVocab != null)
+      {
+        for (int i = 0; i<vocabname.size(); i++)
+        {
+          String sVocab = (String)vocabname.elementAt(i);
+          //compare with evs vocab names  //put it back later with new api
+          if (!arrEVSVocab.contains(sVocab))
+          {
+            logger.fatal(sVocab + " from caDSR does not contain in EVS Vocab list.");
+            vocabname.removeElement(sVocab);  //put this back later
+            vocabdisp.removeElementAt(i);
+          }  
+        }  
+      }
+      //store the vocab evs name and vocab display name in the bean
+      if (vocabname != null && vocabname.size()>0)
+        this.setVocabNameList(vocabname);
+      if (vocabdisp != null && vocabdisp.size()>0)
+        this.setVocabDisplayList(vocabdisp);
       //store meta code separately
       vList = getAC.getToolOptionData("CURATION", "EVS.METACODETYPE.%", "");
       if (vList != null && vList.size()>0)
@@ -855,19 +890,11 @@ public final class EVS_UserBean implements Serializable
       Hashtable hvoc = new Hashtable();  
       vList = getAC.getToolOptionData("CURATION", "EVS.VOCAB.ALL.%", "");  // 
       //do the looping way right now
-      if (arrEVSVocab == null || arrEVSVocab.isEmpty())
-        logger.fatal("Unable to get vocab list from EVS - " + eURL);
-      else
+      if (vocabname != null)
       {
         for (int i = 0; i<vocabname.size(); i++)
         {
           String sVocab = (String)vocabname.elementAt(i);
-          //compare with evs vocab names  //put it back later with new api
-       /*   if (!arrEVSVocab.contains(sVocab))
-          {
-            logger.fatal(sVocab + " from caDSR does not contain in EVS Vocab list.");
-            continue;
-          }  */
           EVS_UserBean vBean = new EVS_UserBean();
           String sDisp = sVocab;
           if (vocabdisp != null && vocabdisp.size()> i)
