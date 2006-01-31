@@ -201,7 +201,7 @@ function keypress_handler()
 				<td  align="right"><a href="http://www.cancer.gov" target=_blank><img src="Assets/tagline_nologo.gif" border="0" alt="NCI Logo"></a></td>
 		</tr>
     <tr>
-      <td colspan="3" width="100%" align="left"> <img src="Assets/curation_banner2.gif" name="TopMap" border="0" usemap="#TopMapMap" id="TopMap">
+      <td colspan="3" width="100%" align="left"><a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr"><img src="Assets/curation_banner2.gif" border="0" alt="caDSR Logo"></a>
       </td>
     </tr>
     <tr><td>&nbsp;</td></tr>
@@ -304,10 +304,6 @@ function keypress_handler()
     <area shape="rect" coords="227,1,517,55" onClick = "linkNIH();" >
     <area shape="rect" coords="519,2,706,53" onClick = "linkDHHS();" >
     <area shape="rect" coords="710,4,993,57" onClick = "linkFirstGov();" >
-  </map>
-  <map name="TopMapMap">
-    <area shape="rect" coords="5,1,110,54" onClick = "linkNCI();" >
-    <area shape="rect" coords="120,1,267,54" onClick = "linkcaDSR();" >
   </map>
   <%
     if (!lstWinOpenReqs.contains(reqType))  //for windows that are open

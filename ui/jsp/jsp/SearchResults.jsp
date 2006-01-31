@@ -560,11 +560,11 @@
   <% }
      if ((sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")) && !sMAction.equals("searchForCreate")) { %>
   <!-- !searchForCreate -->
-      <input type="button" name="monitorBtn" value="Monitor" onClick="monitorCmd();" disabled
+      <input type="button" name="monitorBtn" value="Monitor" style="width:60" onClick="monitorCmd();" disabled
       onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_monitor'); return false">&nbsp;
-      <input type="button" name="unmonitorBtn" value="Unmonitor" onClick="unmonitorCmd();" disabled
+      <input type="button" name="unmonitorBtn" value="Unmonitor" style="width:70" onClick="unmonitorCmd();" disabled
       onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_monitor'); return false">&nbsp;
-     <input type="button" name="uploadBtn" value="Upload Document(s)" onClick="uploadCmd();" disabled
+     <input type="button" name="uploadBtn" value="Upload Document(s)" style="width:130" onClick="uploadCmd();" disabled
       onHelp = "showHelp('Help_SearchAC.html#Upload_Attachments'); return false">&nbsp;
    <% } 
    if (sSelAC.equals("Data Element") && !sMAction.equals("searchForCreate"))  // || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain") || (sSelAC.equals("Questions") && sMAction.equals("searchForCreate")))

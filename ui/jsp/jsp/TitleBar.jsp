@@ -1,3 +1,6 @@
+
+<html>
+<head>
 <% //String thisServer2 = request.getServerName(); 
    String sentinelURL = (String)session.getAttribute("SentinelURL");%>
 <script language="JavaScript">
@@ -207,12 +210,7 @@ function linkNCICB()
 	</tr>
 	
 	<tr>
-	<td colspan="2">
-  		<img src="Assets/curation_banner2.gif" name="InternalMap" border="0" usemap="#InternalMap" id="InternalMap">
-  		<map name="InternalMap" >
-	  	<area shape="rect" coords="1,1,80,50" onClick = "linkNCI();" >
-    	<area shape="rect" coords="80,1,180,50" onClick = "link_caDSR();" >
-  		</map>
+	<td colspan="2"><a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr"><img src="Assets/curation_banner2.gif" border="0" alt="caDSR Logo"></a>
 	</td>	
 	</tr>
 	

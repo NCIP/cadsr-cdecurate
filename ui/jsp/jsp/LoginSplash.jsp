@@ -160,7 +160,7 @@ session.setAttribute("ErrorMessage", "");
 <tr>
 <table width="100%" height="140" border=0>
   <tr>
-      <td width="33%" align="center"> <img src="../Assets/curation_banner2.gif" name="TopMap" border="0" usemap="#TopMapMap" id="TopMap">
+      <td width="33%" align="center"><a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr"><img src="../Assets/curation_banner2.gif" border="0" alt="caDSR Logo"></a>
       </td>
 </tr>
 <tr height="200"></tr>
@@ -255,10 +255,6 @@ session.setAttribute("ErrorMessage", "");
   <area shape="rect" coords="227,1,517,55" onClick = "linkNIH();" >
   <area shape="rect" coords="519,2,706,53" onClick = "linkDHHS();" >
   <area shape="rect" coords="710,4,993,57" onClick = "linkFirstGov();" >
-</map>
-<map name="TopMapMap">
-  <area shape="rect" coords="189,1,367,54" onClick = "linkNCI();" >
-  <area shape="rect" coords="21,1,167,54" onClick = "linkcaDSR();" >
 </map>
 <script language = "javascript">
 onLoad();
