@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/NCICurationServlet.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/NCICurationServlet.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -170,7 +170,7 @@ public class NCICurationServlet extends HttpServlet
    * @param endMsg string a message to append to
    * @param bDate Date begin date to calculate teh duration
    * @param eDate date end date to calculate teh duration
-   * @return 
+   * @return String message
    */
   public String getLogMessage(HttpServletRequest req, String sMethod, String endMsg,
      java.util.Date bDate, java.util.Date eDate)          
@@ -256,7 +256,7 @@ public class NCICurationServlet extends HttpServlet
    * @param stDBAppContext
    * @param stUser
    * @param stPassword
-   * @return 
+   * @return connection object
    * @throws java.lang.Exception
    */
   public Connection getConnFromPool(String stDBAppContext, String stUser, String stPassword) throws Exception 
@@ -3982,9 +3982,7 @@ public class NCICurationServlet extends HttpServlet
    * @param m_Bean selected EVS bean
    * @param req The HttpServletRequest from the client
    * @param res The HttpServletResponse back to the client
-   * @param pref name action either to make new name or apppend to hte old
-   *
-   * @throws Exception
+   * @param nameAction string naming action
    * 
    */
   public void splitIntoConceptsVD(String sComp, EVS_Bean m_Bean, HttpServletRequest req,
@@ -4036,16 +4034,14 @@ public class NCICurationServlet extends HttpServlet
 }
 
   
-/**
+  /**
    * splits the dec object class or property from cadsr into individual concepts
    * 
    * @param sComp name of the searched component
    * @param m_Bean selected EVS bean
    * @param req The HttpServletRequest from the client
    * @param res The HttpServletResponse back to the client
-   * @param pref name action either to make new name or apppend to hte old
-   *
-   * @throws Exception
+   * @param nameAction string naming action
    * 
    */
   public void splitIntoConcepts(String sComp, EVS_Bean m_Bean, HttpServletRequest req,
@@ -4304,7 +4300,7 @@ public class NCICurationServlet extends HttpServlet
    * @param newBean new EVS bean to append the name to
    * @param nameAct string new name or apeend name 
    * @param pageVD current vd bean
-   * @throws java.lang.Exception
+   * @return VD bean
    */
   public VD_Bean doGetVDNames(HttpServletRequest req, HttpServletResponse res, 
       EVS_Bean newBean, String nameAct, VD_Bean pageVD)
@@ -4450,8 +4446,7 @@ public class NCICurationServlet extends HttpServlet
    *
    * @param req The HttpServletRequest from the client
    * @param res The HttpServletResponse back to the client
-   *
-   * @throws Exception
+   * @param nameAction string naming action
    * 
    */
   public void doDECUseSelection(HttpServletRequest req, HttpServletResponse res, String nameAction)
@@ -4687,12 +4682,11 @@ public class NCICurationServlet extends HttpServlet
     return decBean;
   } //end addPropConcepts
 
-/**
+  /**
    *
    * @param req The HttpServletRequest from the client
    * @param res The HttpServletResponse back to the client
-   *
-   * @throws Exception
+   * @param nameAction stirng name action
    * 
    */
   public void doVDUseSelection(HttpServletRequest req, HttpServletResponse res, String nameAction)
@@ -5069,6 +5063,7 @@ public class NCICurationServlet extends HttpServlet
    *
    * @param req The HttpServletRequest from the client
    * @param res The HttpServletResponse back to the client
+   * @param sPVAction string pv action
    *
    * @throws Exception
    * 
@@ -5465,7 +5460,12 @@ public class NCICurationServlet extends HttpServlet
   *
   * @throws Exception
   */
-   public void doInsertDEfromMenuAction(HttpServletRequest req, HttpServletResponse res)
+   /**
+   * @param req
+   * @param res
+   * @throws Exception
+   */
+  public void doInsertDEfromMenuAction(HttpServletRequest req, HttpServletResponse res)
    throws Exception
    {
       HttpSession session = req.getSession();
@@ -6951,8 +6951,8 @@ public class NCICurationServlet extends HttpServlet
   *
   * @param DEBeanSR selected DE bean from search result
   * @param de DE_Bean of the changed values.
-  *
-  * @throws Exception
+  * @param req request object
+  * @param res response object
   */
    public void InsertEditsIntoDEBeanSR(DE_Bean DEBeanSR, DE_Bean de, 
       HttpServletRequest req, HttpServletResponse res)
@@ -7759,6 +7759,8 @@ public class NCICurationServlet extends HttpServlet
   *
   * @param req The HttpServletRequest from the client
   * @param res The HttpServletResponse back to the client
+  * @param sPVAction string pv action
+  * @param vdPage string opened vd page 
   *
   * @throws Exception
   */
@@ -8325,9 +8327,8 @@ public class NCICurationServlet extends HttpServlet
   
 /**
   * gets request parameters to store the selected values in the session according to what the menu action is
-  *
-  * @param req The HttpServletRequest from the client
-  * @param res The HttpServletResponse back to the client
+  * @param subNodeName 
+  * @param dtsVocab 
   *
   * @throws Exception
   */
@@ -9629,6 +9630,7 @@ public class NCICurationServlet extends HttpServlet
       // Init main variables.
       HttpSession session = req.getSession();
       String msg = null;
+      Vector vCheckList = new Vector();
       while (true)
       {
           // Be sure something was selected by the user.
@@ -9666,10 +9668,12 @@ public class NCICurationServlet extends HttpServlet
               
               try
               {
+            	  vCheckList = new Vector();
                   for (ndx = 0; ndx < vSRows.size(); ++ndx)
                   {
                       String temp;
-                      temp = req.getParameter("CK" + ndx);
+                      String ckName = ("CK" + ndx);
+                      temp = req.getParameter(ckName);
                       if (temp != null)
                       {
                           AC_Bean bean = (AC_Bean) vSRows.elementAt(ndx);
@@ -9677,10 +9681,12 @@ public class NCICurationServlet extends HttpServlet
                           stmt.setString(1, temp);
                           stmt.execute();
                           temp = stmt.getString(3);
+                          vCheckList.addElement(ckName);
                           if (temp != null)
                               csi_idseq = temp;
                       }
                   }
+                  session.setAttribute("CheckList", vCheckList); //add the check list in the session.
               }
               catch (ClassCastException e)
               {
@@ -9760,6 +9766,7 @@ public class NCICurationServlet extends HttpServlet
       // Init main variables.
       HttpSession session = req.getSession();
       String msg = null;
+      Vector vCheckList = new Vector();
       while (true)
       {
           // Be sure something was selected by the user.
@@ -9786,18 +9793,21 @@ public class NCICurationServlet extends HttpServlet
               try
               {
                   String temp;
-                  temp = req.getParameter("CK" + ndx);
+                  String ckName = ("CK" + ndx);
+                  temp = req.getParameter(ckName);
                   if (temp != null)
                   {
                       AC_Bean bean = (AC_Bean) vSRows.elementAt(ndx);
                       temp = bean.getIDSEQ();
                       list.add(temp);
+                      vCheckList.addElement(ckName);
                   }
               }
               catch (ClassCastException e)
               {
               }
           }
+          session.setAttribute("CheckList", vCheckList); //add the check list in the session.
           if (list.size() == 0)
           {
               msg = "None of the selected AC's were previously Monitored.";

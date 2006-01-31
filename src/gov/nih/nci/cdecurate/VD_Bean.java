@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/VD_Bean.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/VD_Bean.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -694,7 +694,7 @@ public class VD_Bean extends AC_Bean
    /**
   * The setVD_PV_MEANING_DESCRIPTION method sets the VD_PV_MEANING_DESCRIPTION  for this bean.
   *
-  * @param s The VD_PV_MEANING_DESCRIPTION  to set
+  * @param v The VD_PV_MEANING_DESCRIPTION  to set
   */
   public void setVD_PV_MEANING_DESCRIPTION (Vector v)
   {
@@ -704,7 +704,7 @@ public class VD_Bean extends AC_Bean
   /**
   * The setVD_PV_ORIGIN method sets the VD_PV_ORIGIN for this bean.
   *
-  * @param s The VD_PV_ORIGIN to set
+  * @param v The VD_PV_ORIGIN to set
   */
   public void setVD_PV_ORIGIN(Vector v)
   {
@@ -931,7 +931,7 @@ public class VD_Bean extends AC_Bean
   /**
    * The setAC_CS method sets the VD_CS for this bean.
    *
-   * @param s The VD_CS to set
+   * @param v The VD_CS to set
   */
   public void setAC_CS_NAME(Vector v)
   {
@@ -940,7 +940,7 @@ public class VD_Bean extends AC_Bean
   /**
    * The setAC_CS_ID method sets the VD_CS_ID for this bean.
    *
-   * @param s The VD_CS_ID to set
+   * @param v The VD_CS_ID to set
   */
   public void setAC_CS_ID(Vector v)
   {
@@ -949,7 +949,7 @@ public class VD_Bean extends AC_Bean
   /**
    * The setAC_CSI method sets the VD_CSI for this bean.
    *
-   * @param s The VD_CSI to set
+   * @param v The VD_CSI to set
   */
   public void setAC_CSI_NAME(Vector v)
   {
@@ -958,7 +958,7 @@ public class VD_Bean extends AC_Bean
   /**
    * The setAC_CSI_ID method sets the VD_CSI_ID for this bean.
    *
-   * @param s The VD_CSI_ID to set
+   * @param v The VD_CSI_ID to set
   */
   public void setAC_CSI_ID(Vector v)
   {
@@ -967,7 +967,7 @@ public class VD_Bean extends AC_Bean
   /**
    * The setAC_AC_CSI_VECTOR method sets the VD_AC_CSI_VECTOR for this bean.
    *
-   * @param s The VD_AC_CSI_VECTOR to set
+   * @param v The VD_AC_CSI_VECTOR to set
   */
   public void setAC_AC_CSI_VECTOR(Vector v)
   {
@@ -976,7 +976,7 @@ public class VD_Bean extends AC_Bean
   /**
    * The setAC_AC_CSI_ID method sets the VD_AC_CSI_ID for this bean.
    *
-   * @param s The VD_AC_CSI_ID to set
+   * @param v The VD_AC_CSI_ID to set
   */
   public void setAC_AC_CSI_ID(Vector v)
   {
@@ -985,7 +985,7 @@ public class VD_Bean extends AC_Bean
   /**
    * The setAC_CS_CSI_ID method sets the VD_CS_CSI_ID for this bean.
    *
-   * @param s The VD_CS_CSI_ID to set
+   * @param v The VD_CS_CSI_ID to set
   */
   public void setAC_CS_CSI_ID(Vector v)
   {
@@ -994,7 +994,7 @@ public class VD_Bean extends AC_Bean
   /**
    * The setAC_ALT_NAMES method sets the AC_ALT_NAMES for this bean.
    *
-   * @param s The AC_ALT_NAMES to set
+   * @param v The AC_ALT_NAMES to set
   */
   public void setAC_ALT_NAMES(Vector v)
   {
@@ -1003,7 +1003,7 @@ public class VD_Bean extends AC_Bean
   /**
    * The setAC_REF_DOCS method sets the AC_REF_DOCS for this bean.
    *
-   * @param s The AC_REF_DOCS to set
+   * @param v The AC_REF_DOCS to set
   */
   public void setAC_REF_DOCS(Vector v)
   {
@@ -1121,7 +1121,7 @@ public class VD_Bean extends AC_Bean
  /**
    * The setVD_PARENT_CODES method sets the VD_PARENT_CODES for this bean.
    *
-   * @param s The VD_PARENT_CODES to set
+   * @param v The VD_PARENT_CODES to set
   */
   public void setVD_PARENT_CODES(Vector v)
   {
@@ -1130,7 +1130,7 @@ public class VD_Bean extends AC_Bean
  /**
    * The setVD_PARENT_NAMES method sets the VD_PARENT_NAMES for this bean.
    *
-   * @param s The VD_PARENT_NAMES to set
+   * @param v The VD_PARENT_NAMES to set
   */
   public void setVD_PARENT_NAMES(Vector v)
   {
@@ -1139,7 +1139,7 @@ public class VD_Bean extends AC_Bean
  /**
    * The setVD_PARENT_META_SOURCE method sets the VD_PARENT_META_SOURCE for this bean.
    *
-   * @param s The VD_PARENT_META_SOURCE to set
+   * @param v The VD_PARENT_META_SOURCE to set
   */
   public void setVD_PARENT_META_SOURCE(Vector v)
   {
@@ -1148,7 +1148,7 @@ public class VD_Bean extends AC_Bean
  /**
    * The setVD_PARENT_DB method sets the VD_PARENT_DB for this bean.
    *
-   * @param s The VD_PARENT_DB to set
+   * @param v The VD_PARENT_DB to set
   */
   public void setVD_PARENT_DB(Vector v)
   {
@@ -1157,7 +1157,7 @@ public class VD_Bean extends AC_Bean
  /**
    * The setVD_PARENT_LIST method sets the VD_PARENT_LIST for this bean.
    *
-   * @param s The VD_PARENT_LIST to set
+   * @param v The VD_PARENT_LIST to set
   */
   public void setVD_PARENT_LIST(Vector v)
   {
@@ -1193,7 +1193,7 @@ public class VD_Bean extends AC_Bean
 /**
    * The setVD_REP_QUALIFIER_NAMES method sets the VD_REP_QUALIFIER_NAMES for this bean.
    *
-   * @param s The VD_REP_QUALIFIER_NAMES to set
+   * @param v The VD_REP_QUALIFIER_NAMES to set
   */
   public void setVD_REP_QUALIFIER_NAMES(Vector v)
   {
@@ -1202,7 +1202,7 @@ public class VD_Bean extends AC_Bean
 /**
    * The setVD_REP_QUALIFIER_CODES method sets the VD_REP_QUALIFIER_CODES for this bean.
    *
-   * @param s The VD_REP_QUALIFIER_CODES to set
+   * @param v The VD_REP_QUALIFIER_CODES to set
   */
   public void setVD_REP_QUALIFIER_CODES(Vector v)
   {
@@ -1211,7 +1211,7 @@ public class VD_Bean extends AC_Bean
   /**
    * The setVD_REP_QUALIFIER_DB method sets the VD_REP_QUALIFIER_DB for this bean.
    *
-   * @param s The VD_REP_QUALIFIER_DB to set
+   * @param v The VD_REP_QUALIFIER_DB to set
   */
   public void setVD_REP_QUALIFIER_DB(Vector v)
   {

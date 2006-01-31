@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/DEC_Bean.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/DEC_Bean.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -646,7 +646,7 @@ public class DEC_Bean extends AC_Bean {
    /**
    * The setDEC_CHECKED method sets the DEC_CHECKED for this bean.
    *
-   * @param s The DEC_CHECKED to set
+   * @param b The DEC_CHECKED to set
   */
   public void setDEC_CHECKED(boolean b)
   {
@@ -664,7 +664,7 @@ public class DEC_Bean extends AC_Bean {
   /**
    * The setAC_CS method sets the DEC_CS for this bean.
    *
-   * @param s The DEC_CS to set
+   * @param v The DEC_CS to set
   */
   public void setAC_CS_NAME(Vector v)
   {
@@ -673,7 +673,7 @@ public class DEC_Bean extends AC_Bean {
   /**
    * The setAC_CS_ID method sets the DEC_CS_ID for this bean.
    *
-   * @param s The DEC_CS_ID to set
+   * @param v The DEC_CS_ID to set
   */
   public void setAC_CS_ID(Vector v)
   {
@@ -682,7 +682,7 @@ public class DEC_Bean extends AC_Bean {
   /**
    * The setAC_CSI method sets the DEC_CSI for this bean.
    *
-   * @param s The DEC_CSI to set
+   * @param v The DEC_CSI to set
   */
   public void setAC_CSI_NAME(Vector v)
   {
@@ -691,7 +691,7 @@ public class DEC_Bean extends AC_Bean {
   /**
    * The setAC_CSI_ID method sets the DEC_CSI_ID for this bean.
    *
-   * @param s The DEC_CSI_ID to set
+   * @param v The DEC_CSI_ID to set
   */
   public void setAC_CSI_ID(Vector v)
   {
@@ -700,7 +700,7 @@ public class DEC_Bean extends AC_Bean {
   /**
    * The setAC_AC_CSI_VECTOR method sets the DEC_AC_CSI_VECTOR for this bean.
    *
-   * @param s The DEC_AC_CSI_VECTOR to set
+   * @param v The DEC_AC_CSI_VECTOR to set
   */
   public void setAC_AC_CSI_VECTOR(Vector v)
   {
@@ -709,7 +709,7 @@ public class DEC_Bean extends AC_Bean {
   /**
    * The setAC_AC_CSI_ID method sets the DEC_AC_CSI_ID for this bean.
    *
-   * @param s The DEC_AC_CSI_ID to set
+   * @param v The DEC_AC_CSI_ID to set
   */
   public void setAC_AC_CSI_ID(Vector v)
   {
@@ -718,7 +718,7 @@ public class DEC_Bean extends AC_Bean {
   /**
    * The setAC_CS_CSI_ID method sets the DEC_CS_CSI_ID for this bean.
    *
-   * @param s The DEC_CS_CSI_ID to set
+   * @param v The DEC_CS_CSI_ID to set
   */
   public void setAC_CS_CSI_ID(Vector v)
   {
@@ -727,7 +727,7 @@ public class DEC_Bean extends AC_Bean {
   /**
    * The setAC_ALT_NAMES method sets the AC_ALT_NAMES for this bean.
    *
-   * @param s The AC_ALT_NAMES to set
+   * @param v The AC_ALT_NAMES to set
   */
   public void setAC_ALT_NAMES(Vector v)
   {
@@ -736,7 +736,7 @@ public class DEC_Bean extends AC_Bean {
   /**
    * The setAC_REF_DOCS method sets the AC_REF_DOCS for this bean.
    *
-   * @param s The AC_REF_DOCS to set
+   * @param v The AC_REF_DOCS to set
   */
   public void setAC_REF_DOCS(Vector v)
   {
@@ -937,7 +937,7 @@ public class DEC_Bean extends AC_Bean {
 /**
    * The setDEC_OC_QUALIFIER_NAMES method sets the DEC_OC_QUALIFIER_NAMES for this bean.
    *
-   * @param s The DEC_OC_QUALIFIER_NAMES to set
+   * @param v The DEC_OC_QUALIFIER_NAMES to set
   */
   public void setDEC_OC_QUALIFIER_NAMES(Vector v)
   {
@@ -946,7 +946,7 @@ public class DEC_Bean extends AC_Bean {
 /**
    * The setDEC_OC_QUALIFIER_CODES method sets the DEC_OC_QUALIFIER_CODES for this bean.
    *
-   * @param s The DEC_OC_QUALIFIER_CODES to set
+   * @param v The DEC_OC_QUALIFIER_CODES to set
   */
   public void setDEC_OC_QUALIFIER_CODES(Vector v)
   {
@@ -955,7 +955,7 @@ public class DEC_Bean extends AC_Bean {
 /**
    * The setDEC_OC_QUALIFIER_DB method sets the DEC_OC_QUALIFIER_DB for this bean.
    *
-   * @param s The DEC_OC_QUALIFIER_DB to set
+   * @param v The DEC_OC_QUALIFIER_DB to set
   */
   public void setDEC_OC_QUALIFIER_DB(Vector v)
   {
@@ -964,7 +964,7 @@ public class DEC_Bean extends AC_Bean {
 /**
    * The setDEC_PROP_QUALIFIER_NAMES method sets the DEC_PROP_QUALIFIER_NAMES for this bean.
    *
-   * @param s The DEC_PROP_QUALIFIER_NAMES to set
+   * @param v The DEC_PROP_QUALIFIER_NAMES to set
   */
   public void setDEC_PROP_QUALIFIER_NAMES(Vector v)
   {
@@ -973,7 +973,7 @@ public class DEC_Bean extends AC_Bean {
 /**
    * The setDEC_PROP_QUALIFIER_CODES method sets the DEC_PROP_QUALIFIER_CODES for this bean.
    *
-   * @param s The DEC_PROP_QUALIFIER_CODES to set
+   * @param v The DEC_PROP_QUALIFIER_CODES to set
   */
   public void setDEC_PROP_QUALIFIER_CODES(Vector v)
   {
@@ -982,7 +982,7 @@ public class DEC_Bean extends AC_Bean {
   /**
    * The setDEC_PROP_QUALIFIER_DB method sets the DEC_PROP_QUALIFIER_DB for this bean.
    *
-   * @param s The DEC_PROP_QUALIFIER_DB to set
+   * @param v The DEC_PROP_QUALIFIER_DB to set
   */
   public void setDEC_PROP_QUALIFIER_DB(Vector v)
   {
@@ -1083,6 +1083,9 @@ public class DEC_Bean extends AC_Bean {
       return this.DEC_DEC_IDSEQ;
   }
   
+  /* (non-Javadoc)
+   * @see gov.nih.nci.cdecurate.AC_Bean#getIDSEQ()
+   */
   public String getIDSEQ()
   {
       return getDEC_DEC_IDSEQ();

@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/GetACService.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/GetACService.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -161,6 +161,8 @@ public class GetACService implements Serializable
   * @param sContext String context.
   * @param bNewContext Boolean indicating whether context is new.
   * @param sACType The type of page being called, i.e. de, dec, or vd
+   * @throws IOException 
+   * @throws ServletException 
   *
   */
   public void getACList(HttpServletRequest req, HttpServletResponse res,
@@ -414,9 +416,6 @@ public class GetACService implements Serializable
   *  
   * @param req The HttpServletRequest from the client
   * @param res The HttpServletResponse back to the client
-  * @param sContext String context.
-  * @param bNewContext Boolean indicating whether context is new.
-  * @param sACType The type of page being called, i.e. de, dec, or vd
   *
   */
   public void verifyConnection(HttpServletRequest req, HttpServletResponse res)
@@ -1159,8 +1158,9 @@ public class GetACService implements Serializable
   *
   * @param DBAction The db action (wrie or update0
   * @param DBUser The username
-  * @param sACType The type of page being called, i.e. de, dec, or vd
+  * @param ACType The type of page being called, i.e. de, dec, or vd
   * @param ContID  The context ID
+  * @return string yes no value for privilege
   *
   */
   public String hasPrivilege(String DBAction, String DBUser, String ACType, String ContID)
@@ -1377,7 +1377,7 @@ public class GetACService implements Serializable
   * @param vList1 A Vector of the ID's.
   * @param vList2  A second Vector of names.
   * @param vList3  A third Vector of names.
-  * @param vList3  A fourth Vector of names.
+  * @param vList4  A fourth Vector of names.
   * @param sAPI  The API to call.
   * @param setString1  Sets an API in parameter.
   * @param setString2  Sets an API in parameter.

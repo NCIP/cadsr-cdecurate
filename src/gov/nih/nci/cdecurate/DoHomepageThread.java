@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/DoHomepageThread.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/DoHomepageThread.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -87,7 +87,10 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public class DoHomepageThread extends Thread
 {
-    // Attributes
+    // 
+    /**
+     * Attributes
+     */
     NCICurationServlet m_servlet;
     HttpServletRequest m_classReq = null;
     HttpServletResponse m_classRes = null;
@@ -95,6 +98,9 @@ public class DoHomepageThread extends Thread
 
   /**
    * Constructor
+   * @param req request object
+   * @param res respose object
+   * @param CurationServlet servelt object
    */
   public DoHomepageThread(HttpServletRequest req, HttpServletResponse res,
           NCICurationServlet CurationServlet)

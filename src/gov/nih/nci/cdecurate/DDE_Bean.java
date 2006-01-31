@@ -98,6 +98,9 @@ public class DDE_Bean implements Serializable
   private String RULES_ACTION; 
   private Vector DE_COMP_List;
   
+  /**
+   * construct the bean
+   */
   public DDE_Bean()
   {
   }

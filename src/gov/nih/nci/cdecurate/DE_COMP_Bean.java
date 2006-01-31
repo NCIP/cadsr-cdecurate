@@ -95,6 +95,9 @@ public class DE_COMP_Bean implements Serializable
   private String VERSION;
   private String SUBMIT_ACTION;  
   
+  /**
+   * construct the bean
+   */
   public DE_COMP_Bean()
   {
   }

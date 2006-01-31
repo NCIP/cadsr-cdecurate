@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/UtilService.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/UtilService.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -97,6 +97,11 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 public class UtilService implements Serializable
 {
 
+
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 1L;
 
   /**
   * The setMultSelection method: ID's from sSelList are looped through and added
@@ -863,7 +868,7 @@ public class UtilService implements Serializable
    * @param endMsg
    * @param bDate
    * @param eDate
-   * @return 
+   * @return string log message
    */
   public String makeLogMessage(HttpSession session, String sMethod, String endMsg,
      java.util.Date bDate, java.util.Date eDate) 

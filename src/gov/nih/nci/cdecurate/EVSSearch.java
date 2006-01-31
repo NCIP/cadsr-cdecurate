@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/EVSSearch.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/EVSSearch.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -188,7 +188,7 @@ public class EVSSearch implements Serializable
 
   /**
    * does evs code search
-   * @param prefName string to search for
+   * @param CCode string to search for
    * @param dtsVocab string selected vocabulary name
    * @return string of evs code
    */
@@ -246,7 +246,7 @@ public class EVSSearch implements Serializable
    * @throws Exception
    * 
    */
-  public void fillOCVectors(String oc_condr_idseq, DEC_Bean m_DEC, String sMenu)
+  @SuppressWarnings("unchecked") public void fillOCVectors(String oc_condr_idseq, DEC_Bean m_DEC, String sMenu)
   throws Exception
   {            
     if (m_DEC != null)
@@ -402,7 +402,7 @@ public class EVSSearch implements Serializable
   }
 
  /**
-   * @param condr_idseq.
+   * @param condr_idseq 
    * @return sCUIString
    */
   public String getEVSIdentifierString(String condr_idseq)  // returns list of Data Element Concepts
@@ -442,6 +442,11 @@ public class EVSSearch implements Serializable
     return  sCUIString;
   }  //end getEVSIdentifierString
   
+  /**
+   * sorts the dlc objects
+   * @param vocabRoots list of vocabsroots
+   * @return sort list of vocab roots
+   */
   public List sortDLCObjects(List vocabRoots) 
   { 
     int Swap = 0;
@@ -511,7 +516,6 @@ public class EVSSearch implements Serializable
   /**
    * 
    * @param dtsVocab
-   * @param codeOrNames
    * @return vRoot vector of Root concepts
    */
    public List getRootConcepts(String dtsVocab)  //, boolean codeOrNames) 
@@ -546,6 +550,7 @@ public class EVSSearch implements Serializable
    * @param type
    * @param conceptCode the root concept.
    * @param defSource
+   * @return vector of concept objects
    *
    */
   public Vector getAllSubConceptCodes(String dtsVocab, String conceptName, String type, String conceptCode, String defSource) 
@@ -604,6 +609,7 @@ logger.debug("getAllSubConceptCodes conceptName: " + conceptName);
    * @param type
    * @param conceptCode the root concept.
    * @param defSource
+   * @return vector of concept objects
    *
    */
   public Vector getSubConceptNames(String dtsVocab, String conceptName, String type, String conceptCode, String defSource) 
@@ -734,11 +740,12 @@ logger.debug("getAllSubConceptCodes conceptName: " + conceptName);
 /**
    * This method searches EVS vocabularies and returns subconcepts, which are used
    * to construct an EVS Tree. 
-   * @param String dtsVocab the EVS Vocabulary
-   * @param String conceptName the root concept.
-   * @param String type
+   * @param dtsVocab String the EVS Vocabulary
+   * @param conceptName String the root concept.
+   * @param type String 
    * @param conceptCode the root concept.
    * @param defSource
+   * @return Vector of concept objectgs
    *
  */
 public Vector getSubConceptCodes(String dtsVocab, String conceptName, String type, String conceptCode, String defSource) 
@@ -831,10 +838,10 @@ public Vector getSubConceptCodes(String dtsVocab, String conceptName, String typ
 
 /**
    * For a referenced value domain, this method calculates how many levels down in
-   * the heirarchy a subconcept is from the parent concept.
-   * @param CCode
-   * @param dtsVocab.
-   *
+   * the heirarchy a subconcept is from the parent concept
+   * @param CCode stirng code id
+   * @param dtsVocab string of vocab name
+   * @return int level
 */
 public int getLevelDownFromParent(String CCode, String dtsVocab) 
 { 
@@ -956,7 +963,7 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
    * to the parent concept, then returns the superconcept which leads up to parent
    * to construct an EVS Tree. 
    * @param dtsVocab the EVS Vocabulary
-   * @param stringArray.
+   * @param stringArray array of string
    * @param sParent 
    * @return sCorrectSuperConceptCode
    *
@@ -1064,8 +1071,8 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
 /**
    * This method returns all subconcepts of a concept
    * @param dtsVocab the EVS Vocabulary
-   * @param stringArray
-   * @param vSub
+   * @param stringArray array of strings
+   * @param vSub vector of subs
    * @return stringArray
    *
 */
@@ -1128,8 +1135,8 @@ public String[] getAllSubConceptNames(String dtsVocab, String[] stringArray, Vec
 
  /**
 	 * Puts in and takes out "_"
-   *  @param nodeName.
-   *  @param type.
+   *  @param nodeName
+   *  @param type
 	 */
 	private final String filterName(String nodeName, String type)
   {
@@ -1193,7 +1200,7 @@ public Vector getSuperConceptNamesImmediate(String dtsVocab, String conceptName,
    * This method searches EVS vocabularies and returns superconcepts, which are used
    * to construct an EVS Tree. 
    * @param dtsVocab the EVS Vocabulary
-   * @param conceptName.
+   * @param conceptName
    * @param conceptCode
    * @param defSource
    * @return vSub
@@ -1351,7 +1358,7 @@ public String[] getAllSuperConceptNames(String dtsVocab, String[] stringArray, V
 /** 
   *  The EVS API returns def source from Thesaurus inside of xml tags <>. This methods
   *  extracts the def source from the tags
-  *  @param termStr.
+  *  @param termStr
   *  @return source
   *
 */
@@ -1383,7 +1390,7 @@ public String[] getAllSuperConceptNames(String dtsVocab, String[] stringArray, V
 /** 
   *  The EVS API returns definitions from Thesaurus inside of xml tags <>. This methods
   *  extracts the definition from the tags
-  *  @param String termStr.
+  *  @param termStr String 
   *  @return definition
   *
   */
@@ -1414,7 +1421,7 @@ logger.debug(" - parseDef - " + termStr);
  /**
    * To trim "Source => Name:" from Definition Source.
    *
-   * @param termStr.
+   * @param termStr
    *
   */
  private String trimDefSource(String termStr)
@@ -1681,9 +1688,6 @@ logger.debug(termStr + " - parseDef - ");
    * gets the selected attributes from session vector 'selectedAttr'.
    * loops through the RepBean vector 'vACSearch' and adds the selected fields to result vector.
    *
-   * @param req The HttpServletRequest object.
-   * @param res HttpServletResponse object.
-   *
    */
   public void getMetaSources()
   {
@@ -1832,7 +1836,7 @@ logger.debug(termStr + " - parseDef - ");
             if (sSearchIn.equals("subConcept") && subConType.equals("All"))
             {
               Boolean bHasChildren = new Boolean(false);
-              bHasChildren = oDLC.hasChildren();
+              bHasChildren = oDLC.getHasChildren();
               boolean bool = bHasChildren.booleanValue();
               if(bool)
               {
@@ -2016,7 +2020,7 @@ logger.debug(termStr + " - parseDef - ");
       {
   System.out.println("meta search " + termStr + sVocab + sSearchIn); 
         if (sSearchIn.equalsIgnoreCase("MetaCode")) //do meta code specific to vocabulary source
-          query.searchByLoincId(termStr,sMetaSource);
+          query.searchSourceByCode(termStr,sMetaSource);
         else if (sSearchIn.equalsIgnoreCase("ConCode")) //meta cui search
           query.searchMetaThesaurus(termStr, iMetaLimit, sMetaSource, true, false, false);
         else  //meta keyword search
@@ -2158,9 +2162,6 @@ logger.debug(termStr + " - parseDef - ");
   
   /**
   * gets request parameters to store the selected values in the session according to what the menu action is
-  *
-  * @param req The HttpServletRequest from the client
-  * @param res The HttpServletResponse back to the client
   *
   * @throws Exception
   */
@@ -2369,15 +2370,17 @@ logger.debug(termStr + " - parseDef - ");
     }
   }
   
-/**
-  *
-  * @param req The HttpServletRequest from the client
-  * @param res The HttpServletResponse back to the client
-  * @param String  actType type of filter a simple or advanced
-  * @param String  asearchype type of filter a simple or advanced
+  /**
+  * Opens teh tree to the selected concept
+  * @param actType string action type
+  * @param searchType string search tye of filter a simple or advanced
+  * @param sCCode string concept identifier
+  * @param sCCodeDB string concept database
+  * @param sCCodeName string concept name
+  * @param sNodeID string current node id
   *
   * @throws Exception
-*/
+  */
   public void doTreeOpenToConcept(String actType, String searchType, String sCCode, String sCCodeDB, String sCCodeName, String sNodeID)  throws Exception
   {
       HttpSession session = m_classReq.getSession();
@@ -2442,9 +2445,10 @@ logger.debug(termStr + " - parseDef - ");
   
   /**
   * gets request parameters to store the selected values in the session according to what the menu action is
-  *
-  * @param req The HttpServletRequest from the client
-  * @param res The HttpServletResponse back to the client
+  * @param sConceptName string concept name
+  * @param sConceptID string concept identifier
+  * @param strForward string true or false values to forward the page or not
+  * @param dtsVocab string vocab name
   *
   * @throws Exception
   */
@@ -2549,10 +2553,8 @@ logger.debug(termStr + " - parseDef - ");
 
   /**
   *
-  * @param req The HttpServletRequest from the client
-  * @param res The HttpServletResponse back to the client
-  * @param String  actType type of filter a simple or advanced
-  * @param String  asearchype type of filter a simple or advanced
+  * @param actType String  type of filter a simple or advanced
+  * @param searchType  String type of filter a simple or advanced
   *
   * @throws Exception
   */
@@ -2599,9 +2601,6 @@ logger.debug(termStr + " - parseDef - ");
     /**
   * gets request parameters to store the selected values in the session according to what the menu action is
   *
-  * @param req The HttpServletRequest from the client
-  * @param res The HttpServletResponse back to the client
-  *
   * @throws Exception
   */
   public void doTreeRefreshRequest()  throws Exception
@@ -2626,9 +2625,6 @@ logger.debug(termStr + " - parseDef - ");
   * gets request parameters to store the selected values in the session according to what the menu action is
   * forwards JSP 'SearchResultsPage.jsp' if the action is not searchForCreate.
   * if action is searchForCreate forwards OpenSearchWindow.jsp
-  *
-  * @param req The HttpServletRequest from the client
-  * @param res The HttpServletResponse back to the client
   *
   * @throws Exception
   */
@@ -2701,8 +2697,6 @@ logger.debug(termStr + " - parseDef - ");
   /**
   * gets request parameters to store the selected values in the session according to what the menu action is
   *
-  * @param req The HttpServletRequest from the client
-  * @param res The HttpServletResponse back to the client
   *
   * @throws Exception
   */

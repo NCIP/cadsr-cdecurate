@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/PV_Bean.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/PV_Bean.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -89,7 +89,11 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public class PV_Bean implements Serializable
 {
-//Attributes
+/**
+   * 
+   */
+  private static final long serialVersionUID = 1L;
+  //Attributes
   private String RETURN_CODE;
   private String PV_PV_IDSEQ;
   private String PV_VDPVS_IDSEQ;
@@ -129,7 +133,7 @@ public class PV_Bean implements Serializable
   /**
    * Constructor
   */
-  public void PV_Bean() {
+  public PV_Bean() {
   };
   
   public PV_Bean copyBean(PV_Bean fromBean)
