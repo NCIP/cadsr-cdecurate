@@ -32,7 +32,7 @@
     
     <!--Set the source path for java files and jsp files to compile-->
     <path id="srcpath">
-        <pathelement location="${m_java}"/>
+        <pathelement location="${m_java}/gov"/>
     </path>
     <path id="jspsrcpath">
         <pathelement  location="${app_classes}/jsp"/>
