@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/InsACService.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/InsACService.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -97,6 +97,10 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public class InsACService implements Serializable
 {
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 738251122350261121L;
   NCICurationServlet m_servlet = null;
   UtilService m_util = new UtilService();
   HttpServletRequest m_classReq = null;
@@ -171,11 +175,9 @@ public class InsACService implements Serializable
   * calls 'setDES' to store selected rep term, rep qualifier, and language in the database,
   *
   * @param sAction Insert or update Action.
-  * @param sVD_ID VD IDseq.
   * @param vd VD Bean.
-  * @param req  HttpServletRequest Object.
   * @param sInsertFor  for Versioning.
-  * @param oldVDID.  2.0
+  * @param oldVD VD IDseq.
   *
   * @return String return code from the stored procedure call. null if no error occurred.
   */
@@ -474,16 +476,21 @@ public class InsACService implements Serializable
             //do alternate names create
             if (sInsertFor.equalsIgnoreCase("Version"))
               this.doAltVersionUpdate(sVD_ID, oldVD.getVD_VD_IDSEQ());
-            this.doAddRemoveAltNames(sVD_ID, sContextID, "create");
+            String oneAlt = this.doAddRemoveAltNames(sVD_ID, sContextID, "create");
+            vd.setALTERNATE_NAME(oneAlt);
             //do reference docuemnts create
             if (sInsertFor.equalsIgnoreCase("Version"))
               this.doRefVersionUpdate(sVD_ID, oldVD.getVD_VD_IDSEQ());
-            this.doAddRemoveRefDocs(sVD_ID, sContextID, "create");
+            String oneRD = this.doAddRemoveRefDocs(sVD_ID, sContextID, "create");
+            vd.setREFERENCE_DOCUMENT(oneRD);
             
             //do contact updates
             Hashtable vdConts = vd.getAC_CONTACTS();
             if (vdConts != null && vdConts.size() > 0)
               vd.setAC_CONTACTS(this.addRemoveAC_Contacts(vdConts, sVD_ID, sInsertFor));
+            
+            //get one concept name for this vd
+            vd.setAC_CONCEPT_NAME(this.getOneConName("", sVD_ID));
             
             //add success message if no error
             sReturn = (String)m_classReq.getAttribute("retcode");
@@ -1193,9 +1200,9 @@ public class InsACService implements Serializable
   * Calls setCDVMS to create CD and Meaning relationship for each meaning selected in create VD.
   * calls updateCRFvalue to update the QuestContents with the VDPVS idseq for each CRF value.
   *
-  * @param sReturnCode return code from the stored procedure call. null if no error occurred.
   * @param vd VD Bean.
   * @param isNew boolean to check if creating new relationship or deleting it.
+  * @return string return code of error message
   */
   public String addRemoveVDPVS(VD_Bean vd, boolean isNew)
   {
@@ -1456,11 +1463,9 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   * If no error occurs from query execute calls 'setDES' to store selected language in the database,
   *
   * @param sAction Insert or update Action.
-  * @param sDEC_ID VD IDseq.
   * @param dec DEC Bean.
-  * @param req  HttpServletRequest Object.
   * @param sInsertFor  for Versioning.
-  * @param oldDECID.
+  * @param oldDEC string dec idseq
   *
   * @return String return code from the stored procedure call. null if no error occurred.
   */
@@ -1760,17 +1765,21 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
           //do alternate names create
           if (sInsertFor.equalsIgnoreCase("Version"))
             this.doAltVersionUpdate(sDEC_ID, oldDECID);
-          this.doAddRemoveAltNames(sDEC_ID, sContextID, "create");
+          String oneAlt = this.doAddRemoveAltNames(sDEC_ID, sContextID, "create");
+          dec.setALTERNATE_NAME(oneAlt);
           //do reference docuemnts create
           if (sInsertFor.equalsIgnoreCase("Version"))
             this.doRefVersionUpdate(sDEC_ID, oldDECID);
-          this.doAddRemoveRefDocs(sDEC_ID, sContextID, "create");
+          String oneRD = this.doAddRemoveRefDocs(sDEC_ID, sContextID, "create");
+          dec.setREFERENCE_DOCUMENT(oneRD);
           
           //do contact updates
           Hashtable decConts = dec.getAC_CONTACTS();
           if (decConts != null && decConts.size() > 0)
             dec.setAC_CONTACTS(this.addRemoveAC_Contacts(decConts, sDEC_ID, sInsertFor));
-          
+          //get one concept name for this dec
+          dec.setAC_CONCEPT_NAME(this.getOneConName(sDEC_ID, ""));
+                    
           sReturn = (String)m_classReq.getAttribute("retcode");
           if (sAction.equals("UPD") && (sReturn == null || sReturn.equals("")))
             this.storeStatusMsg("\\t Successfully updated Data Element Concept");
@@ -1880,6 +1889,10 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   * @param ac_id string ac_idseq.
   * @param vAC_CS vector of cs csi contained in the selected ac.
   * @param vRemove_ACCSI vector of selected ac-csi.
+   * @param vACID 
+   * @param acAction 
+   * @param acName 
+   * @throws Exception 
   *
   */
   public void addRemoveACCSI(String ac_id, Vector vAC_CS, Vector vRemove_ACCSI, Vector vACID, 
@@ -1937,7 +1950,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
 
 /**
   *
-  * @param sCondrString.
+  * @param sCondrString string condr idseq
   *
   * @return sCondrString
   */
@@ -1986,7 +1999,6 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   *   "{call SBREXT_Set_Row.SET_OBJECT_CLASS(?,?,?,?,?,?)}" to submit
   *
   * @param sAction Insert or update Action.
-  * @param sOCL_IDSEQ.
   * @param dec DEC Bean.
   * @param req  HttpServletRequest Object.
   *
@@ -2166,7 +2178,6 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   *   "{call SBREXT_Set_Row.SET_PROP_CONDR(?,?,?,?,?,?)}" to submit
   *
   * @param sAction Insert or update Action.
-  * @param sPROPL_IDSEQ.
   * @param dec DEC Bean.
   * @param req  HttpServletRequest Object.
   *
@@ -2340,7 +2351,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   *   "{call SBREXT_Set_Row.SET_representation(?,?,?,?,?,?)}" to submit
   *
   * @param sAction Insert or update Action.
-  * @param sREP_IDSEQ.
+  * @param sREP_IDSEQ string rep idseq
   * @param VD VD Bean.
   * @param req  HttpServletRequest Object.
   *
@@ -2806,10 +2817,9 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   * calls 'updCSCSI' to update in CSCSI relationship for edit.
   *
   * @param sAction Insert or update Action.
-  * @param sDE_ID DE IDseq.
   * @param de DE Bean.
   * @param sInsertFor  for Versioning.
-  * @param oldDEID.
+  * @param oldDE DE IDseq
   *
   * @return String return code from the stored procedure call. null if no error occurred.
   */
@@ -3016,28 +3026,6 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
 
           // insert/update row into DES (designation)
           String sReturn = "";
-   
-          // insert/upadte row into RD (REFERENCE DOCUMENTS )    //right now only for INS.
-          String sLang = "ENGLISH";
-          if ((sDocText != null) && (!sDocText.equals("")))
-          {
-              de.setDOC_TEXT_PREFERRED_QUESTION_IDSEQ(getRD_ID(sDE_ID));
-              if (sDocText.length() > 30)
-                 sDocText = sDocText.substring(0, 29);
-              if (de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ() == null || de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ().equals(""))
-                 sReturn = setRD("INS", sDocText, sDE_ID, de.getDOC_TEXT_PREFERRED_QUESTION(), "Preferred Question Text", "", sContextID, de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ(), sLang);   //?????
-              else
-                 sReturn = setRD("UPD", sDocText, sDE_ID, de.getDOC_TEXT_PREFERRED_QUESTION(), "Preferred Question Text", "", sContextID, de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ(), sLang);   //?????
-          }
-          else
-          {   //delete RD if null
-              if (de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ() != null && !de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ().equals(""))
-                 sReturn = setRD("DEL", sDocText, sDE_ID, de.getDOC_TEXT_PREFERRED_QUESTION(), "Preferred Question Text", "", "", de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ(), sLang);   //?????
-          }
-          //store returncode in request to track it all through this request
-          if (sAction.equals("UPD") && sReturn != null && !sReturn.equals(""))
-              m_classReq.setAttribute("retcode", sReturn);
-
           sReturn = "";
           //registration status insert or update if not null
           if (de.getDE_REG_STATUS() != null && !de.getDE_REG_STATUS().equals(""))
@@ -3074,16 +3062,69 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
           //do alternate names create          
           if (sInsertFor.equalsIgnoreCase("Version"))
             this.doAltVersionUpdate(sDE_ID, oldDEID);
-          this.doAddRemoveAltNames(sDE_ID, sContextID, "create");
+          String oneAlt = this.doAddRemoveAltNames(sDE_ID, sContextID, "create");
+          de.setALTERNATE_NAME(oneAlt);
           //do reference docuemnts create
           if (sInsertFor.equalsIgnoreCase("Version"))
-            this.doRefVersionUpdate(sDE_ID, oldDEID);
-          this.doAddRemoveRefDocs(sDE_ID, sContextID, "create");
+            this.doRefVersionUpdate(sDE_ID, oldDEID);          
+          // insert/upadte row into RD (REFERENCE DOCUMENTS )    //right now only for INS.
+          String sLang = "ENGLISH";
+          //get the rd idseq for new version 
+          if (sInsertFor.equalsIgnoreCase("Version"))
+            de.setDOC_TEXT_PREFERRED_QUESTION_IDSEQ(getRD_ID(sDE_ID));
+          if ((sDocText != null) && (!sDocText.equals("")))
+          {
+              if (sDocText.length() > 30)
+                 sDocText = sDocText.substring(0, 29);
+              if (de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ() == null || de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ().equals(""))
+                 sReturn = setRD("INS", sDocText, sDE_ID, de.getDOC_TEXT_PREFERRED_QUESTION(), "Preferred Question Text", "", sContextID, de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ(), sLang);   //?????
+              else
+                 sReturn = setRD("UPD", sDocText, sDE_ID, de.getDOC_TEXT_PREFERRED_QUESTION(), "Preferred Question Text", "", sContextID, de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ(), sLang);   //?????
+          }
+          else
+          {   //delete RD if null
+              if (de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ() != null && !de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ().equals(""))
+              {
+                 //sReturn = setRD("DEL", sDocText, sDE_ID, de.getDOC_TEXT_PREFERRED_QUESTION(), "Preferred Question Text", "", "", de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ(), sLang);   //?????
+                //mark it deleted to do the action with other RDs.
+                Vector vRefDocs = (Vector)session.getAttribute("AllRefDocList");
+                for (int i=0; i<vRefDocs.size(); i++)
+                {
+                  REF_DOC_Bean rBean = (REF_DOC_Bean)vRefDocs.elementAt(i);
+                  String refID = rBean.getREF_DOC_IDSEQ();
+                  if (refID != null && refID.equalsIgnoreCase(de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ()))
+                  {
+                    rBean.setREF_SUBMIT_ACTION("DEL");
+                  System.out.println(" pqt removed " + rBean.getDOCUMENT_NAME());
+                    vRefDocs.setElementAt(rBean, i);
+                    session.setAttribute("AllRefDocList", vRefDocs);
+                    break;
+                  }
+                }
+              }
+          }
+          //store returncode in request to track it all through this request
+          if (sAction.equals("UPD") && sReturn != null && !sReturn.equals(""))
+              m_classReq.setAttribute("retcode", sReturn);
+
+
+          String oneRD = this.doAddRemoveRefDocs(sDE_ID, sContextID, "create");
+          de.setREFERENCE_DOCUMENT(oneRD);
           
           //do contact updates
           Hashtable deConts = de.getAC_CONTACTS();
           if (deConts != null && deConts.size() > 0)
             de.setAC_CONTACTS(this.addRemoveAC_Contacts(deConts, sDE_ID, sInsertFor));
+
+          //get one concept name for this de
+          DEC_Bean de_dec = (DEC_Bean)de.getDE_DEC_Bean();
+          VD_Bean de_vd = (VD_Bean)de.getDE_VD_Bean();
+          String oneCon = "";
+          if (de_dec != null && de_dec.getAC_CONCEPT_NAME() != null)
+            oneCon = de_dec.getAC_CONCEPT_NAME();
+          if (de_vd != null && de_vd.getAC_CONCEPT_NAME() != null && oneCon.equals(""))
+            oneCon = de_vd.getAC_CONCEPT_NAME();
+          de.setAC_CONCEPT_NAME(oneCon);
           
           //reset return code if other attribute return is not fixed.            
           String otherRet = (String)m_classReq.getAttribute("retcode");
@@ -3127,7 +3168,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   * @param de DE_Bean.
   * @param dec DEC_Bean.
   * @param vd VD_Bean.
-  * @param String ACName administerd component.
+  * @param ACName String  administerd component.
   *
   * @return String return code from the stored procedure call. null if no error occurred.
   */
@@ -3230,11 +3271,8 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   * Calls oracle stored procedure  according to the selected AC.
   *   "{call META_CONFIG_MGMT.DE_VERSION(?,?,?,?)}" to create new version
   * update the respective bean with the new idseq if successful
-  *
-  * @param de DE_Bean.
-  * @param dec DEC_Bean.
-  * @param vd VD_Bean.
-  * @param String ACName administerd component.
+  * @param acIDseq string ac idseq
+  * @param ACType String AC type
   *
   * @return String return code from the stored procedure call. null if no error occurred.
   */
@@ -3456,10 +3494,9 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   * for DDE info and complex_de_relationship for DE Component
   * Calls oracle stored procedure: set_complex_de, set_cde_relationship
   * This method is call by doInsertDEfromMenuAction in servlet
+  * @param sP_DE_IDSEQ string de idseq new created primary DE.
+  * @param sOverRideAction string for New DE Version/Template, use INS instead of UPD
   * 
-  * @param DE_Bean, new created primary DE.
-  * @param String sOverRideAction, for New DE Version/Template, use INS instead of UPD
-  *
   * @return String return code from the stored procedure call. null if no error occurred.
   */
   public String setDDE(String sP_DE_IDSEQ, String sOverRideAction)
@@ -3622,17 +3659,19 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
     return sReturnCode;
   } //end setDEComp
 
-/**
-* Delete DE Component
-* Calls oracle stored procedure: set_cde_relationship
-* This method is call by setDEComp
-* 
-* @param DE_Bean, new created primary DE.
-*
-* @return String return code from the stored procedure call. null if no error occurred.
-*/
-public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDECompDelete, Vector vDECompDelName)
-{
+  /**
+  * Delete DE Component
+  * Calls oracle stored procedure: set_cde_relationship
+  * This method is call by setDEComp
+  * @param sbr_db_conn 
+  * @param session 
+  * @param vDECompDelete 
+  * @param vDECompDelName 
+  * 
+  *
+  */
+  public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDECompDelete, Vector vDECompDelName)
+  {
     try
     {
       CallableStatement CStmt = null;
@@ -3680,7 +3719,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
       m_classReq.setAttribute("retcode", "Exception");
       this.storeStatusMsg("\\t Exception : Unable to remove Derived Data Element Component.");
     }
-}  // end of deleteDEComp() 
+  }  // end of deleteDEComp() 
  
  /**
   * To insert a new row or update the existing one in reference documents table after the validation.
@@ -4254,8 +4293,9 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
   * Calls oracle stored procedure
   *   "{call META_CONFIG_MGMT.DE_VERSION(?,?,?)}" to submit
   *
-  * @param sNewDEID New DE idseq.
-  * @param sOldDEID OLD DE idseq.
+  * @param sNewID New DE idseq.
+  * @param sOldID OLD DE idseq.
+  * @param sACType string ac type
   */
   private void createACHistories(String sNewID, String sOldID, String sACType)
   {
@@ -4648,7 +4688,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
     }
     return Desig_ID;
   }  //end Desig_ID
-
+  
  /**
   * To insert a row in AC_Registrations table to add relationship between reg_status and DE.
   * Called from 'setDE' method.
@@ -4737,8 +4777,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
 
   /**
   * The getAC_REG method queries the db, checking whether component exists and gets idseq if exists.
-  *
-  * @param sSQL  A sql statement
+  * @param ac_id string ac idseq
   *
   * @return String idseq indicating whether component exists.
   */
@@ -4787,6 +4826,8 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
    * Classifies designated data element(s), called from servlet
    * calls addRemoveACCSI to add or remove the selected cs and csi for each element.
    * goes back to search results page
+   * @param desAction 
+   * @throws Exception 
    */
   public void doSubmitDesDE(String desAction) throws Exception
   {
@@ -4819,9 +4860,11 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
         //add remove designated context
         this.addRemoveDesignation(deID, desAction, thisDE);
         //add remove alternate names
-        this.doAddRemoveAltNames(deID, deCont, desAction);
+        String oneAlt = this.doAddRemoveAltNames(deID, deCont, desAction);
+        thisDE.setALTERNATE_NAME(oneAlt);
         //add remove reference documents
-        this.doAddRemoveRefDocs(deID, deCont, desAction);
+        String oneRD = this.doAddRemoveRefDocs(deID, deCont, desAction);
+        thisDE.setREFERENCE_DOCUMENT(oneRD);
         //insert and delete ac-csi relationship
         SetACService setAC = new SetACService(m_servlet);
         deBean = setAC.setDECSCSIfromPage(m_classReq, deBean);
@@ -4835,6 +4878,137 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
       }
   }
 
+  public String getOneAltName(String acID)
+  {
+     Connection sbr_db_conn = null;
+     ResultSet rs = null;
+     CallableStatement CStmt = null;
+     String sName = "";
+     PreparedStatement pstmt = null;
+ 
+    try
+    {
+      //Create a Callable Statement object.
+      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (sbr_db_conn == null)
+        m_servlet.ErrorLogin(m_classReq, m_classRes);
+      else
+      {
+        pstmt = sbr_db_conn.prepareStatement("Select SBREXT_CDE_CURATOR_PKG.GET_ONE_ALT_NAME(?) from DUAL");
+        pstmt.setString(1, acID);       //acid
+        rs = pstmt.executeQuery();
+        while (rs.next())
+        {
+          sName = rs.getString(1);
+        }
+        logger.debug(acID + " one altname " + sName);
+      }
+    }
+    catch(Exception e)
+    {
+      logger.fatal("ERROR in InsACService-getOneAltName for exception : " + e.toString());
+    }
+    try
+    {
+      if(rs!=null) rs.close();
+      if(CStmt!=null) CStmt.close();
+      if(sbr_db_conn != null) sbr_db_conn.close();
+    }
+    catch(Exception ee)
+    {
+      logger.fatal("ERROR in InsACService-getOneAltName for close : " + ee.toString());
+    }
+    return sName;
+  }  //end getOneAltName
+  
+  public String getOneRDName(String acID)
+  {
+     Connection sbr_db_conn = null;
+     ResultSet rs = null;
+     CallableStatement CStmt = null;
+     String sName = "";
+     PreparedStatement pstmt = null;
+ 
+    try
+    {
+      //Create a Callable Statement object.
+      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (sbr_db_conn == null)
+        m_servlet.ErrorLogin(m_classReq, m_classRes);
+      else
+      {
+        pstmt = sbr_db_conn.prepareStatement("Select SBREXT_CDE_CURATOR_PKG.GET_ONE_RD_NAME(?) from DUAL");
+        pstmt.setString(1, acID);       //acid
+        rs = pstmt.executeQuery();
+        while (rs.next())
+        {
+          sName = rs.getString(1);
+        }
+      logger.debug(acID + " one rd " + sName);
+      }
+    }
+    catch(Exception e)
+    {
+      logger.fatal("ERROR in InsACService-getOneRDName for exception : " + e.toString());
+    }
+    try
+    {
+      if(rs!=null) rs.close();
+      if(CStmt!=null) CStmt.close();
+      if(sbr_db_conn != null) sbr_db_conn.close();
+    }
+    catch(Exception ee)
+    {
+      logger.fatal("ERROR in InsACService-getOneRDName for close : " + ee.toString());
+    }
+    return sName;
+  }  //end getOneRDName
+  
+  
+  public String getOneConName(String decID, String vdID)
+  {
+     Connection sbr_db_conn = null;
+     ResultSet rs = null;
+     CallableStatement CStmt = null;
+     String sName = "";
+     PreparedStatement pstmt = null;
+ 
+    try
+    {
+      //Create a Callable Statement object.
+      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (sbr_db_conn == null)
+        m_servlet.ErrorLogin(m_classReq, m_classRes);
+      else
+      {
+        pstmt = sbr_db_conn.prepareStatement("Select SBREXT_CDE_CURATOR_PKG.GET_ONE_CON_NAME(?,?) from DUAL");
+        pstmt.setString(1, decID);       //decid
+        pstmt.setString(2, vdID);       //vdid
+        rs = pstmt.executeQuery();
+        while (rs.next())
+        {
+          sName = rs.getString(1);
+        }
+        logger.debug(decID + " : " + vdID + " one conname " + sName);
+      }
+    }
+    catch(Exception e)
+    {
+      logger.fatal("ERROR in InsACService-getOneConName for exception : " + e.toString());
+    }
+    try
+    {
+      if(rs!=null) rs.close();
+      if(CStmt!=null) CStmt.close();
+      if(sbr_db_conn != null) sbr_db_conn.close();
+    }
+    catch(Exception ee)
+    {
+      logger.fatal("ERROR in InsACService-getOneConName for close : " + ee.toString());
+    }
+    return sName;
+  }  //end getOneConName
+  
   /**
   * submits to add or remove the designation for the selected ac
   * Called from 'classifyde' method
@@ -4885,8 +5059,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
   * To get public id of an administerd component.
   * Called from 'set' methods.
   * Uses the stored Proc call SBREXT_COMMON_ROUTINES.GET_PUBLIC_ID(?)}
-  *
-  * @param ac_idseq unique id of an AC.
+  * @param dec dec bean object
   *
   * @return String public ID.
   */
@@ -5092,7 +5265,11 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
             {
               String RefID = newRef.getREF_DOC_IDSEQ();
               if (RefID != null && !RefID.equals(""))
+              {
                 thisRef.setREF_DOC_IDSEQ(RefID);
+                //call method to update blobs info to RD for newly versioned ACs.
+                
+              }
               break;
             }            
           }
@@ -5113,8 +5290,9 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
    * @param sDE unique id of an AC.
    * @param deCont owned by context id of the ac.
    */
-  public void doAddRemoveAltNames(String sDE, String deCont, String desAction)
+  public String doAddRemoveAltNames(String sDE, String deCont, String desAction)
   {
+    String oneAltName = "";
     try
     {
 //  System.out.println(sDE + " add alt names " + deCont);
@@ -5131,7 +5309,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
         //new de from owning context
         if (altAC == null || altAC.equals("") || altAC.equals("new"))
           altAC = sDE;
-    System.out.println(sDE + " add alt names AC " + altAC);
+   // System.out.println(sDE + " add alt names AC " + altAC);
        //remove it only for matching ac
         if (altAC != null && sDE.equals(altAC))
         {
@@ -5163,11 +5341,14 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
             ret = this.setDES(altSubmit, altAC, altContID, altContext, altType, altName, altLang, altID); 
         }
       }
+      //get one alt name for the AC after ins or del actions
+      oneAltName = this.getOneAltName(sDE);
     }
     catch(Exception e)
     {
       logger.fatal("ERROR in InsACService-addRemoveAltNames for exception : " + e.toString());
     }
+    return oneAltName;
   } //end doAddRemoveAltNames
 
 
@@ -5180,8 +5361,9 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
    * @param sDE unique id of an AC.
    * @param deCont owned by context id of the ac.
    */
-  public void doAddRemoveRefDocs(String sDE, String deCont, String desAction)
+  public String doAddRemoveRefDocs(String sDE, String deCont, String desAction)
   {
+    String oneRD = "";
     try
     {
       HttpSession session = m_classReq.getSession();
@@ -5226,14 +5408,26 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
           //check if creating used by in the same context as created DE
           String ret = "";
           if (!refSubmit.equals("UPD"))   //call method to create reference documents in the database
-            ret = this.setRD(refSubmit, refName, refAC, refText, refType, refURL, refContID, refID, refLang); 
+          {
+            //delete teh reference blobs before deleting the RD
+            if (refSubmit.equals("DEL"))
+            {
+              RefDocAttachment RDAclass = new RefDocAttachment(m_classReq , m_classRes , m_servlet);
+              String sMsg = RDAclass.doDeleteAllAttachments(refID);
+              if (sMsg != null && !sMsg.equals(""))
+                this.storeStatusMsg("//t" + sMsg);
+            }
+            ret = this.setRD(refSubmit, refName, refAC, refText, refType, refURL, refContID, refID, refLang);
+          }
         }
       }
+      oneRD = this.getOneRDName(sDE);  //get the one rd name for the ac
     }
     catch(Exception e)
     {
       logger.fatal("ERROR in InsACService-addRemoveRefDocs for exception : " + e.toString());
     }
+    return oneRD;
   } //end doAddRemoveAltNames
   
  /* /**
@@ -5314,7 +5508,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
   *   "{call SBREXT_Set_Row.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?)}" to submit
   *
   * @param sAction Insert or update Action.
-  * @param return code string.
+  * @param sReturnCode string oracle error code
   * @param evsBean EVS_Bean.
   *
   * @return String concept idseq from the table.
@@ -5748,6 +5942,7 @@ public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDE
           if (!conSubmit.equals("NONE"))
           {   
             acc.setAC_IDSEQ(acID);
+            acc.setACC_SUBMIT_ACTION(conSubmit);
             String sOrgID = acc.getORG_IDSEQ();
             String sPerID = acc.getPERSON_IDSEQ();
             //call method to do contact comm updates

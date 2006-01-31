@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/EVS_METACODE_Bean.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/EVS_METACODE_Bean.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -11,6 +11,10 @@ import java.io.Serializable;
  */
 public class EVS_METACODE_Bean implements Serializable
 {
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 1L;
   private String m_CODE_KEY;
   private String m_CODE_TYPE;
   private String m_CODE_FILTER;

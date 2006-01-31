@@ -1,7 +1,7 @@
 
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/GetACSearch.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/GetACSearch.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;     
@@ -788,13 +788,25 @@ public class GetACSearch implements Serializable
    
   /**
    * Adds the search component, result bean vector and result vector in a stack to use it later.
-   * 
+   * @param sSearchACStack string of ACs searched
+   * @param vACSearchStack vector of ac beans searched
+   * @param vSelRowsStack vector of ac beans of selected rows
+   * @param vSearchIDStack vector of ids of the searched ac
+   * @param vSearchNameStack vector of names of the searched ac
+   * @param vSearchUsedContextStack vector of contexts of the search result
+   * @param vResultStack vector of search result used in display
+   * @param vCompAttrStack vector of component attributes used in display
+   * @param vAttributeListStack vector of selected attirbute list
    * @param sSearchAC the name of the selected component
    * @param vAC the vector of bean from the result
    * @param vRSel the vector of selected results
    * @param vSearchID the vector of id's
    * @param vSearchName the vector of names
    * @param vResult result vector used to display.
+   * @param vSearchASLStack vector of work flow status of the result
+   * @param vSearchASL vector of selected asl
+   * @param vSearchLongNameStack vector of long name
+   * @param vSearchLongName vector of long name
    * 
    * @throws Exception
    */
@@ -1280,8 +1292,7 @@ public class GetACSearch implements Serializable
    * calls method 'getQuestionResult' for the selected component to result vector from the sorted bean.
    * final result vector is stored in the session vector "results".
    *
-   * @param userName String name of the user.
-   * @throws exception e
+   * @throws Exception e
    */
   public void getACQuestion() throws Exception
   {
@@ -1603,13 +1614,16 @@ public class GetACSearch implements Serializable
    * @param histID String Keyword for historical id search in.
    * @param permValue String Keyword for permissible value searchin.
    * @param sOrigin String keyword for origin search in.
-   * @param sProtoID String typed ID of the protocol can be wild card included
+   * @param sProtoId String typed ID of the protocol can be wild card included
    * @param crfName String keyword value of the crf name.
    * @param pvIDseq String idseq of the selected permissible value for get associated pvs.
    * @param vdIDseq String idseq of the selected value domain for get associated vds.
    * @param decIDseq String idseq of the selected data elmeent concept for get associated decs.
    * @param cdIDseq String idseq of the selected conceptual domain for get associated cds.
    * @param cscsiIDseq String idseq of the selected class scheme items for get associated csis.
+   * @param conIDseq string concept idseq to filter the search
+   * @param conName string concept name to filter
+   * @param derType string der type to filter
    * @param vList returns Vector of DEbean.
    *
    */
@@ -1852,6 +1866,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    * 
    * @param rst ResultSet 
    * @param deBean DE_Bean
+   * @param isProtoCRF boolean to show crf and protocol
    * 
    * @return DE_Bean
    * 
@@ -2093,8 +2108,11 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    * @param sProperty String Keyword for Property searchin.
    * @param sOrigin String keyword for origin search in.
    * @param dVersion double typed version number.
-   * @param cdIDseq String idseq of the selected conceptual domain for get associated cds.
+   * @param sCDid String idseq of the selected conceptual domain for get associated cds.
    * @param deIDseq String idseq of the selected data elmeent for get associated des.
+   * @param cscsiIDseq string cscsi idseq
+   * @param conIDseq string concept idseq
+   * @param conName string concept name
    * @param vList returns Vector of DEbean.
    */
   public void doDECSearch(String DEC_IDSEQ, String InString, String ContID, String ContName, 
@@ -2260,6 +2278,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    * @param ContID Selected Context IDseq.
    * @param ContName selected context name.
    * @param sVersion String yes for latest version filter or null for all version filter.
+   * @param VDType 
    * @param vdType String comma delimited 'E,N,R' for each type selected.
    * @param ASLName selected workflow status name.
    * @param sCreatedFrom String created from date filter.
@@ -2269,12 +2288,16 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    * @param sCreator String selected creator.
    * @param sModifier String selected modifier.
    * @param VD_ID typed in keyword value for public id search, is empty if SearchIN is names and definition.
-   * @param permValue String Keyword for Permissible Value search in.
+   * @param sPermValue String Keyword for Permissible Value search in.
    * @param sOrigin String keyword for origin search in.
    * @param dVersion double typed version number.
-   * @param cdIDseq String idseq of the selected conceptual domain for get associated cds.
+   * @param sCDid  String idseq of the selected conceptual domain for get associated cds.
    * @param pvIDseq String idseq of the selected permissible value for get associated pvs.
    * @param deIDseq String idseq of the selected data elmeent for get associated des.
+   * @param cscsiIDseq string cscsi idseq to filer
+   * @param conIDseq string concept idseq to filter
+   * @param conName string concept name to filter
+   * @param sData string datatype filter value
    * @param vList returns Vector of DEbean.
    */
   public void doVDSearch(String VD_IDSEQ, String InString, String ContID, String ContName, 
@@ -2585,11 +2608,10 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    *  "{call SBREXT_CDE_CURATOR_PKG.SEARCH_CSI(CSI_IDSEQ, InString, ContID, ContName, ASLName, CSI_ID, OracleTypes.CURSOR)}"
    *
    * loop through the ResultSet and add them to bean which is added to the vector to return
+   * @param InString 
    *
-   * @param ProtoWord String Keyword for Protocol.
-   * @param CRFWord String Keyword for CRF Name.
    * @param ContName selected context name.
-   * @param ASLName selected workflow status name.
+   * @param CSName string cs name to filter
    * @param vList returns Vector of DEbean.
    *
    */
@@ -2740,9 +2762,10 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    * selected attribute values from the multi select list is stored in session vector 'selectedAttr'.
    * "All Attribute" select will add all the fields of the selected component to the vector
    *
-   * @param req The HttpServletRequest object.
-   * @param res HttpServletResponse object.
    * @param sSearchAC selected Administered component.
+   * @param sAction string menu action
+   * @param sAttr string selected display attribute
+   * @return string selected display attributes
    *
    */
   public String getMultiReqValues(String sSearchAC, String sAction, String sAttr)
@@ -2957,6 +2980,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    * @param sAction String for search action .
    *
    * @return String of selectd doc types.
+   * @throws Exception 
    */
   public String getDocTypeValues(String[] sDocTypeList, String sAction) throws Exception
   {
@@ -4994,7 +5018,8 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
          DECBean.setDEC_CD_NAME(acName);
 
       //get contact informatin
-      if (!sAction.equals("BlockEdit"))
+     // if (!sAction.equals("BlockEdit"))
+      if (!sMenu.equals("NewDECTemplate") && !sAction.equals("Template"))
         DECBean.setAC_CONTACTS(this.getAC_Contacts(DECBean.getDEC_DEC_IDSEQ(), ""));        
 
       //store ac names and ids in the req attribute
@@ -5103,7 +5128,8 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
         DEBean = m_servlet.doGetDENames(m_classReq, m_classRes, "noChange", "OpenDE", DEBean);
       }
       //get contact informatin
-      if (!sAction.equals("BlockEdit") && !sAction.equals("EditDesDE"))
+      //if (!sAction.equals("BlockEdit") && !sAction.equals("EditDesDE"))
+      if (!sMenu.equals("NewDETemplate") && !sAction.equals("Template") && !sAction.equals("EditDesDE"))
         DEBean.setAC_CONTACTS(this.getAC_Contacts(DEBean.getDE_DE_IDSEQ(), ""));        
 
       //store ac names and ids in the req attribute
@@ -5224,7 +5250,8 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
         session.setAttribute("VDParentConcept", vParent);  
       }
       //get contact informatin
-      if (!sAction.equals("BlockEdit"))
+      // if (!sAction.equals("BlockEdit"))
+      if (!sMenu.equals("NewVDTemplate") && !sAction.equals("Template"))
         VDBean.setAC_CONTACTS(this.getAC_Contacts(VDBean.getVD_VD_IDSEQ(), ""));        
       
       //store ac names and ids in the req attribute
@@ -5344,6 +5371,12 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
       Vector vCS = (Vector)m_classReq.getAttribute("selCSNames");
       Vector vCSid = (Vector)m_classReq.getAttribute("selCSIDs");
       Vector vACCSI = (Vector)m_classReq.getAttribute("blockAC_CSI");
+      //get altname and ref docs from all acs stored in teh session
+      Vector vAltNames = (Vector)session.getAttribute("AllAltNameList");
+      if (vAltNames == null) vAltNames = new Vector();
+      Vector vRefDocs = (Vector)session.getAttribute("AllRefDocList");
+      if (vRefDocs == null) vRefDocs = new Vector();
+      //store teh session attributes in the bean according to the ac
       if (sSearchAC.equals("DataElementConcept"))
       {
         DEC_Bean bDECBean = new DEC_Bean();   //remove all other attributes
@@ -5353,6 +5386,10 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
         //add selected contexts to the bean
         Vector selContext = (Vector)m_classReq.getAttribute("SelectedContext");
         bDECBean.setAC_SELECTED_CONTEXT_ID(selContext);
+        //add altname and ref docs to this bean
+        bDECBean.setAC_ALT_NAMES(vAltNames);
+        bDECBean.setAC_REF_DOCS(vRefDocs);
+        //store de bean inthe session
         session.setAttribute("m_DEC", bDECBean);
         DEC_Bean clBean = new DEC_Bean();
         session.setAttribute("oldDECBean",  clBean.cloneDEC_Bean(bDECBean));
@@ -5366,6 +5403,10 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
         //add selected contexts to the bean
         Vector selContext = (Vector)m_classReq.getAttribute("SelectedContext");
         bVDBean.setAC_SELECTED_CONTEXT_ID(selContext);
+        //add altname and ref docs to this bean
+        bVDBean.setAC_ALT_NAMES(vAltNames);
+        bVDBean.setAC_REF_DOCS(vRefDocs);
+        //store de bean inthe session
         session.setAttribute("m_VD", bVDBean);
         VD_Bean clBean = new VD_Bean();
         session.setAttribute("oldVDBean",  clBean.cloneVD_Bean(bVDBean));
@@ -5379,6 +5420,10 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
         //add selected contexts to the bean
         Vector selContext = (Vector)m_classReq.getAttribute("SelectedContext");
         bDEBean.setAC_SELECTED_CONTEXT_ID(selContext);
+        //add altname and ref docs to this bean
+        bDEBean.setAC_ALT_NAMES(vAltNames);
+        bDEBean.setAC_REF_DOCS(vRefDocs);
+        //store de bean inthe session
         session.setAttribute("m_DE", bDEBean);
         DE_Bean clBean = new DE_Bean();
         session.setAttribute("oldDEBean",  clBean.cloneDE_Bean(bDEBean, "Complete"));

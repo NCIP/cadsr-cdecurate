@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/AC_ADDR_Bean.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/AC_ADDR_Bean.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -35,6 +35,9 @@ public class AC_ADDR_Bean implements Serializable
   private String ADDR_SUBMIT_ACTION;
     
 
+  /**
+   * construct the bean
+   */
   public AC_ADDR_Bean() {
   }
 

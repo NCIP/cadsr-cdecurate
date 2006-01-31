@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/EVS_Bean.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/EVS_Bean.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -90,7 +90,15 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public class EVS_Bean implements Serializable
 {
-  //init the logger
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 1L;
+
+  //
+  /**
+   * init the logger
+   */
   Logger logger = Logger.getLogger(EVS_Bean.class.getName());
 
 // attributes
@@ -701,7 +709,14 @@ public class EVS_Bean implements Serializable
       return this.CON_AC_SUBMIT_ACTION;
   }
   
-  //get the vocab attributes from teh user bean using filter attr and filter value to check and return its equivaltnt attrs
+  /**
+   * get the vocab attributes from teh user bean using filter attr and filter value to check and return its equivaltnt attrs
+   * @param eUser EVS_userbean obtained from the database at login
+   * @param sFilterValue string existing value  
+   * @param sFilterAttr string existing vocab name
+   * @param sRetAttr string returning vocab name
+   * @return value from returning vocab
+   */
   public String getVocabAttr(EVS_UserBean eUser, String sFilterValue, String sFilterAttr, String sRetAttr)
   {
     //go back if origin is emtpy
@@ -770,6 +785,25 @@ public class EVS_Bean implements Serializable
     return sRetValue;
   }
 
+  /**
+   * sets the evsbean with the data
+   * @param definition string to store concept definition
+   * @param defSource string to store concept definition source
+   * @param conName string to store concept name
+   * @param dispName string to store concept display name
+   * @param sMetaCodeType string to store concept meta code type (evs source)
+   * @param conCode string to store concept id
+   * @param dtsVocab string to store concept vocab name for evs
+   * @param dbVocab string to store concept vocab name stored in cadsr
+   * @param iLevel string to store concept level number with respect to parent
+   * @param condr_idseq string to store concept relationship idseq in cadsr
+   * @param CONTE_IDSEQ string to store concept context idseq
+   * @param sConceptSource string to store concept source
+   * @param aslName string to store concept workflow status
+   * @param semType string to store concept semantic type
+   * @param vocabMetaType string to store meta concept code type (umls cui or meta cui)
+   * @param vocabMetaCode string to store meta concept code value to filter (CL etc)
+   */
   public void setEVSBean(String definition, String defSource, String conName, String dispName, String sMetaCodeType, 
   String conCode, String dtsVocab, String dbVocab, int iLevel, String condr_idseq, String CONTE_IDSEQ, 
   String sConceptSource, String aslName, String semType, String vocabMetaType, String vocabMetaCode)

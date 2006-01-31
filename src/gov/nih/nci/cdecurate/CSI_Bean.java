@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/CSI_Bean.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/CSI_Bean.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -334,7 +334,7 @@ public class CSI_Bean extends AC_Bean {
    /**
    * The setP_CSCSI_IDSEQ method sets the P_CSCSI_IDSEQ for this bean.
    *
-   * @param b The P_CSCSI_IDSEQ to set
+   * @param s The P_CSCSI_IDSEQ to set
   */
   public void setP_CSCSI_IDSEQ(String s)
   {
@@ -400,6 +400,9 @@ public class CSI_Bean extends AC_Bean {
       return this.CSI_CSI_IDSEQ;
   }
   
+  /* (non-Javadoc)
+   * @see gov.nih.nci.cdecurate.AC_Bean#getIDSEQ()
+   */
   public String getIDSEQ()
   {
       return getCSI_CSI_IDSEQ();

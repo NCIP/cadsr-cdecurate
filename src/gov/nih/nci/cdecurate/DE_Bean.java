@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/DE_Bean.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/DE_Bean.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -222,6 +222,7 @@ public class DE_Bean extends AC_Bean
    * when copyType is 'Complete', method makes clone of the bean
    *
    * @param copyBean passin the bean whose attributes  need to be copied and returned.
+   * @param copyType copy the attributes accoding to action selected
    *
    * @return DE_Bean returns this bean after copying its attributes
    */
@@ -828,7 +829,7 @@ public class DE_Bean extends AC_Bean
   /**
    * The setAC_CS method sets the AC_CS for this bean.
    *
-   * @param s The AC_CS to set
+   * @param v The AC_CS to set
   */
   public void setAC_CS_NAME(Vector v)
   {
@@ -837,7 +838,7 @@ public class DE_Bean extends AC_Bean
   /**
    * The setAC_CS_ID method sets the AC_CS_ID for this bean.
    *
-   * @param s The AC_CS_ID to set
+   * @param v The AC_CS_ID to set
   */
   public void setAC_CS_ID(Vector v)
   {
@@ -846,7 +847,7 @@ public class DE_Bean extends AC_Bean
   /**
    * The setAC_CSI method sets the AC_CSI for this bean.
    *
-   * @param s The AC_CSI to set
+   * @param v The AC_CSI to set
   */
   public void setAC_CSI_NAME(Vector v)
   {
@@ -855,7 +856,7 @@ public class DE_Bean extends AC_Bean
   /**
    * The setAC_CSI_ID method sets the AC_CSI_ID for this bean.
    *
-   * @param s The AC_CSI_ID to set
+   * @param v The AC_CSI_ID to set
   */
   public void setAC_CSI_ID(Vector v)
   {
@@ -864,7 +865,7 @@ public class DE_Bean extends AC_Bean
   /**
    * The setAC_AC_CSI_VECTOR method sets the AC_AC_CSI_VECTOR for this bean.
    *
-   * @param s The AC_AC_CSI_VECTOR to set
+   * @param v The AC_AC_CSI_VECTOR to set
   */
   public void setAC_AC_CSI_VECTOR(Vector v)
   {
@@ -873,7 +874,7 @@ public class DE_Bean extends AC_Bean
   /**
    * The setAC_AC_CSI_ID method sets the AC_AC_CSI_ID for this bean.
    *
-   * @param s The AC_AC_CSI_ID to set
+   * @param v The AC_AC_CSI_ID to set
   */
   public void setAC_AC_CSI_ID(Vector v)
   {
@@ -882,7 +883,7 @@ public class DE_Bean extends AC_Bean
   /**
    * The setAC_CS_CSI_ID method sets the AC_CS_CSI_ID for this bean.
    *
-   * @param s The AC_CS_CSI_ID to set
+   * @param v The AC_CS_CSI_ID to set
   */
   public void setAC_CS_CSI_ID(Vector v)
   {
@@ -891,7 +892,7 @@ public class DE_Bean extends AC_Bean
   /**
    * The setAC_ALT_NAMES method sets the AC_ALT_NAMES for this bean.
    *
-   * @param s The AC_ALT_NAMES to set
+   * @param v The AC_ALT_NAMES to set
   */
   public void setAC_ALT_NAMES(Vector v)
   {
@@ -900,7 +901,7 @@ public class DE_Bean extends AC_Bean
   /**
    * The setAC_REF_DOCS method sets the AC_REF_DOCS for this bean.
    *
-   * @param s The AC_REF_DOCS to set
+   * @param v The AC_REF_DOCS to set
   */
   public void setAC_REF_DOCS(Vector v)
   {
@@ -1317,6 +1318,9 @@ public class DE_Bean extends AC_Bean
       return this.DE_DE_IDSEQ;
   }
   
+  /* (non-Javadoc)
+   * @see gov.nih.nci.cdecurate.AC_Bean#getIDSEQ()
+   */
   public String getIDSEQ()
   {
       return getDE_DE_IDSEQ();

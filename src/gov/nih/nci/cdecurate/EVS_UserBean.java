@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/EVS_UserBean.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/EVS_UserBean.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -97,6 +97,10 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public final class EVS_UserBean implements Serializable
 {
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 1L;
   // Attributes
   private String m_evsConURL;   //connection string
   private Vector m_vocabNameList;  //index name of the vocab that are not displayed
@@ -126,6 +130,9 @@ public final class EVS_UserBean implements Serializable
   private Hashtable m_metaCodeType;  //code type for meta thesaurus with filter value
   private Hashtable m_vocab_attr;   //attributes specific to vocabs
   
+  /**
+   * initialize the logger for the class
+   */
   Logger logger = Logger.getLogger(EVS_UserBean.class.getName());
   
   /**
@@ -308,7 +315,7 @@ public final class EVS_UserBean implements Serializable
   /**
    * this sets the display name for the Name option of evs searchin into the bean stored in database
    * 
-   * @param vSearchIn the display name for the Name option of evs searchin from the database
+   * @param sData the display name for the Name option of evs searchin from the database
    */
   public void setSearchInName(String sData)
   {
@@ -328,7 +335,7 @@ public final class EVS_UserBean implements Serializable
   /**
    * this sets the display name for the Concept Code option of evs searchin into the bean stored in database
    * 
-   * @param vSearchIn the display name for the Concept Code option of evs searchin from the database
+   * @param sData the display name for the Concept Code option of evs searchin from the database
    */
   public void setSearchInConCode(String sData)
   {
@@ -348,7 +355,7 @@ public final class EVS_UserBean implements Serializable
   /**
    * this sets the display name for the Meta Code option of evs searchin into the bean stored in database
    * 
-   * @param vSearchIn the display name for the Meta Code option of evs searchin from the database
+   * @param sData the display name for the Meta Code option of evs searchin from the database
    */
   public void setSearchInMetaCode(String sData)
   {
@@ -368,7 +375,7 @@ public final class EVS_UserBean implements Serializable
   /**
    * The setType method sets the Type for name search in for the vocab for this bean.
    *
-   * @param sName the sNType for name search in for the vocab
+   * @param sNType the sNType for name search in for the vocab
    */
   public void setNameType(String sNType)
   {
@@ -666,7 +673,7 @@ public final class EVS_UserBean implements Serializable
   /**
    * stores the vocab specific attributes in the hash table
    * 
-   * @param vocAttr hashtable with vocab name and user bean as objects
+   * @param metaType hashtable with vocab name and user bean as objects
    */
   public void setMetaCodeType(Hashtable metaType)
   {
@@ -758,6 +765,12 @@ public final class EVS_UserBean implements Serializable
   }
 
   
+  /**
+   * gets EVS related data from tools options table at login instead of hardcoding
+   * @param req request object
+   * @param res rsponse object
+   * @param servlet servlet object
+   */
   public void getEVSInfoFromDSR(HttpServletRequest req, HttpServletResponse res, NCICurationServlet servlet)
   {
     try

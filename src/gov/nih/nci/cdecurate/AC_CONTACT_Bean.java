@@ -33,6 +33,9 @@ public class AC_CONTACT_Bean implements Serializable
   private Vector ACC_ADDR_List;
   
 
+  /**
+   * construct the bean
+   */
   public AC_CONTACT_Bean()  {
   }
 

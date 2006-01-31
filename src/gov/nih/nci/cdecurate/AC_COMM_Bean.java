@@ -22,6 +22,9 @@ public class AC_COMM_Bean implements Serializable
   private String CYBER_ADDR;
   private String COMM_SUBMIT_ACTION;
     
+  /**
+   * construct the bean
+   */
   public AC_COMM_Bean() {
   }
 

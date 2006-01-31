@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/EVSMasterTree.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/EVSMasterTree.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -297,9 +297,9 @@ logger.debug(dtsVocab + " popTree  vocabTree == null " + rendHTML);
             DescLogicConcept oDLC = (DescLogicConcept)vRoots.get(j);
             if (oDLC != null)
             {
-              logger.debug(oDLC.getName() + " - " + oDLC.hasChildren().booleanValue());
+              logger.debug(oDLC.getName() + " - " + oDLC.getHasChildren().booleanValue());
               String sDispName = evs.getDisplayName(dtsVocab, oDLC, oDLC.getName());
-              if (oDLC.hasChildren().booleanValue())
+              if (oDLC.getHasChildren().booleanValue())
               {
                 //TreeNode tn = new TreeNode(lastNodeID++, (String)m_vRootNames.elementAt(j), (String)m_vRootCodes.elementAt(j), level);
                 TreeNode tn = new TreeNode(lastNodeID++, oDLC.getName(), sDispName, oDLC.getCode(), level);
@@ -428,7 +428,7 @@ logger.debug(dtsVocab + " popTree  vocabTree == null " + rendHTML);
 		for(int i=0; i < tree.size(); i++) 
     {
 			TreeObject treeObject = tree.getChild(i);
-			if(treeObject.getType() == tree.NODE ) 
+			if(treeObject.getType() == Tree.NODE ) 
       {
 				TreeNode node = (TreeNode)treeObject;
         if(node.isVisible())
@@ -441,7 +441,7 @@ logger.debug(dtsVocab + " popTree  vocabTree == null " + rendHTML);
           {
             for(int j=0;j<numChildren;j++)
             {
-              if(nodeTree.getChild(j).getType() == tree.NODE)
+              if(nodeTree.getChild(j).getType() == Tree.NODE)
               {
                TreeNode tn = (TreeNode)nodeTree.getChild(j);
                if(tn.isVisible())
@@ -453,7 +453,7 @@ logger.debug(dtsVocab + " popTree  vocabTree == null " + rendHTML);
                   renderSubNodes(tn, buf);
                // end level 2 yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
               }
-              else if(nodeTree.getChild(j).getType() == tree.LEAF)
+              else if(nodeTree.getChild(j).getType() == Tree.LEAF)
               {
                 TreeLeaf tl = (TreeLeaf)nodeTree.getChild(j);
                 if(tl.isVisible())
@@ -658,7 +658,7 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
 	}
   
   
-/**
+  /**
 	 * When user clicks on the node's + sign, this method checks if the node's children
    * tree already exists, if so, it sets them visible. Otherwise it retrieves them,
    * then renders html.
@@ -686,10 +686,12 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
    *  @param strRenderHTML       'Yes' to render as html, 'No' to not.
    *  @param nodeCode            The concept code of the node
    *  @param sCodeToFindInTree   Used to expand the node to a certain subconcept, then stop
+   *  @param nodeLevelToFind     next level to find
+   *  @param nodeID               node id
    *  @return rendHTML           The rendered html.
 */
   public String expandNode(String nodeName, String dtsVocab, String strRenderHTML,
-  String nodeCode, String sCodeToFindInTree, int nodeLevelToFind, String nodeID) 
+          String nodeCode, String sCodeToFindInTree, int nodeLevelToFind, String nodeID) 
   {
 //System.out.println("AAAAAAAAAAAAA Very TOP expandNode top, nodeID: " + nodeID + " nodeName: " 
 //+ nodeName + " nodeLevelToFind: " + nodeLevelToFind + " dtsVocab: " + dtsVocab + "sCodeToFindInTree: " + sCodeToFindInTree);
@@ -1076,6 +1078,7 @@ logger.debug("expandNode got baseTree == null " + m_dtsVocab);
 /**
 	 * When user clicks on the node's - sign, this method iterates the node's children
    * tree, sets them not visible, then renders as html.
+   *  @param nodeID 
    *  @param nodeName       The name of node.
    *  @param dtsVocab       The name of vocabulary.
    *  @param shouldRender   'Yes' should, 'No' not.
@@ -1308,9 +1311,10 @@ public void collapseAllNodes()
    * there are no more superconcepts(i.e. is a Root). Each concept returned is put on a stack.
    * When a root is reached, concepts are popped off the stack one by one, and expandNode is 
    * called until the beginning concept is visible.
+   *  @param stackSuperConcepts 
    *  @param sCCode       The concept code.
    *  @param sCCodeDB     The vocab.
-   *  @param sCCodeName   The name of code.
+   *  @param vStackVector 
    *  @return rendHTML    The rendered html string.
 */
   public Vector buildVectorOfSuperConceptStacks(Stack stackSuperConcepts, String sCCodeDB,
@@ -1485,7 +1489,6 @@ public void collapseAllNodes()
    *  by one expands the tree, using each conceptName from stack as a node.
    *  @param stackSuperConcepts     A stack of superconcept names.
    *  @param sCCodeDB               The dtsVocab.
-   *  @param sCCode                 The concept code
    *  @param sCodeToFindInTree      The code of the concept to find in tree.
    *  @return rendHTML              The string of html
 */
@@ -1544,6 +1547,7 @@ public void collapseAllNodes()
 /**
    * Removes the Vocab's tree from Hashtable, then recreates tree and stores it
    * @param dtsVocab   The Vocabulary name
+   * @param sRender 
    * @return rendHTML  The string of html
    */
 	public String refreshTree(String dtsVocab, String sRender) 
@@ -1595,7 +1599,7 @@ public void collapseAllNodes()
    * Relates nodename to nodeID in m_treeIDtoNameHash Hash table. Check first if nodeName
    * is already there, if so add '1' onto
    * @param nodeName   The node name
-   * @param nodeID   The node ID
+   * @param sNodeID   The node ID
    */
 public void fillTreeIDtoNameHash(String nodeName, String sNodeID) 
 {		
@@ -1637,7 +1641,8 @@ public void fillTreeIDtoNameHash(String nodeName, String sNodeID)
    * For nodes with the same concept name, gets the correct one by comparing the node's parentId 
    * with the id of the last node expanded (used in 'expandTreeToConcept')
    * @param nodeName   The node name
-   * @param nodeID   The node ID
+   * @param iLast last level
+   * @return string 
    */
 public String getCorrectNodeID(String nodeName, int iLast) 
 {	

@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/DEF_Bean.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/DEF_Bean.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -302,6 +302,9 @@ public class DEF_Bean extends AC_Bean {
       return this.DEF_DEF_IDSEQ;
   }
   
+  /* (non-Javadoc)
+   * @see gov.nih.nci.cdecurate.AC_Bean#getIDSEQ()
+   */
   public String getIDSEQ()
   {
       return getDEF_DEF_IDSEQ();

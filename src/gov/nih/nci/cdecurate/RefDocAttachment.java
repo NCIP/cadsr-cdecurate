@@ -1,4 +1,4 @@
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/RefDocAttachment.java,v 1.1 2006-01-26 15:25:12 hegdes Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/RefDocAttachment.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -256,53 +256,8 @@ public void doOpen (){
 							
 							// Extract file to file system
 							BLOB bRefBlob = (BLOB)rs.getBlob(2);
-							InputStream is = bRefBlob.getBinaryStream();
+							doBlobtoFile(bRefBlob , fileName);
 							
-							try {
-								
-								String strArray[] = fileName.split("/");
-								if (strArray.length > 1){
-									fileName = strArray[1];
-									fileDirectory = strArray[0];
-									File fileLocation = new File(RefDocFileCache + fileDirectory);
-									if (!fileLocation.isDirectory()){
-										if (!fileLocation.mkdir()) {
-											logger.fatal("Can not create directory: " + RefDocFileCache + fileDirectory);
-											fileDirectory = "";
-										}
-										else
-										{
-											fileDirectory = fileDirectory + "/";
-										}
-									}
-									else {
-										fileDirectory = fileDirectory + "/";
-									}
-								}
-								
-								// Sentinel report directory
-								OutputStream os = new FileOutputStream(RefDocFileCache + fileDirectory + fileName);
-
-								final int BUFSIZ = 4096;
-								byte inbuf[]= new byte [BUFSIZ];
-								int bytesRead;
-								
-									while ((bytesRead = is.read(inbuf, 0, BUFSIZ)) != -1){
-										os.write(inbuf, 0, bytesRead);
-									}
-								os.close();
-								os = null;
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							try {
-								is.close();
-								is = null;
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
 						} //end of while
 						Doclist = Doclist + "</td>";
 						
@@ -347,8 +302,6 @@ public void doFileUpload (){
 	Connection con = null;
 	REF_DOC_Bean refBean = new REF_DOC_Bean(); 
 	HttpSession session = req.getSession();
-	FileInputStream is;
-	OutputStream os;
 
     // Get number of items
     Vector vRefDoc = (Vector)session.getAttribute("RefDocList");
@@ -373,98 +326,60 @@ public void doFileUpload (){
 	con = m_servlet.connectDB(req, res);
 	
 	try {
-		
-		con.setAutoCommit(false);
-		Vector<String> selectedRefDocs = refDocFormdata.getSelectedRefDocs();
-		
-		int jInt = selectedRefDocs.size(); 
-		
-		for (int ndx=0; ndx < jInt; ndx++){
-			
-			try {
+
+			con.setAutoCommit(false);
+			Vector<String> selectedRefDocs = refDocFormdata
+					.getSelectedRefDocs();
+
+			int jInt = selectedRefDocs.size();
+
+			for (int ndx = 0; ndx < jInt; ndx++) {
+
 				String str = selectedRefDocs.elementAt(ndx);
 				int refDocIndex = Integer.valueOf(str);
-				//refDocIndex = refDocIndex - 1;
-				
+				// refDocIndex = refDocIndex - 1;
+
 				PreparedStatement pstmt = con.prepareStatement(writeObjSQL);
-				
-				if (vRefDoc != null){
-				refBean = (REF_DOC_Bean)vRefDoc.elementAt(refDocIndex);
-				str = refBean.getREF_DOC_IDSEQ();
+
+				if (vRefDoc != null) {
+					refBean = (REF_DOC_Bean) vRefDoc.elementAt(refDocIndex);
+					str = refBean.getREF_DOC_IDSEQ();
 				}
 
-				//	set RD_IDSEQ
-				pstmt.setString(1, str );
-				//	set NAME
-				String dbfileName = "F" + (new Random()).nextInt() + "/" + refDocFormdata.getFileName(); 
-				pstmt.setString(2, dbfileName );
-				//	set MIME_TYPE
-				pstmt.setString(3, refDocFormdata.getMimeType() );
-				//	set DOC_SIZE
-				pstmt.setString(4, Integer.toString(refDocFormdata.getFileSize()) );
-				//	set DAD_CHARSET
-				pstmt.setString(5, refDocFormdata.getCharSet() );
-				//	set CONTENT_TYPE
-				pstmt.setString(6, refDocFormdata.getContentType() );
-				
-				
-				//	get BLOB_CONTENT
+				// set RD_IDSEQ
+				pstmt.setString(1, str);
+				// set NAME
+				String dbfileName = "F" + (new Random()).nextInt() + "/"
+						+ refDocFormdata.getFileName();
+				pstmt.setString(2, dbfileName);
+				// set MIME_TYPE
+				pstmt.setString(3, refDocFormdata.getMimeType());
+				// set DOC_SIZE
+				pstmt.setString(4, Integer.toString(refDocFormdata
+						.getFileSize()));
+				// set DAD_CHARSET
+				pstmt.setString(5, refDocFormdata.getCharSet());
+				// set CONTENT_TYPE
+				pstmt.setString(6, refDocFormdata.getContentType());
+
+				// get BLOB_CONTENT
 				pstmt.execute();
-				
-				// open a file inputstream for the loacal file
-				String fileLocator = RefDocFileCache + refDocFormdata.getFileName();
-				
-				
-				is = new FileInputStream( fileLocator );
-
-				
-				//upload blob
-				String UpdateObjSQL = "select blob_content from sbr.reference_blobs_view where name = ? for update";
-				pstmt = con.prepareStatement(UpdateObjSQL);
-				
-				pstmt.setString(1, dbfileName);
-				ResultSet rs = pstmt.executeQuery();
-				rs.next();
-
-				BLOB blob = (BLOB)rs.getBlob("blob_content");
-
-				os = blob.getBinaryOutputStream();
-				// os = blob.setBinaryStream(0); //get the output stream from the Blob to insert it
-
-				//	Read the file by chuncks and insert them in the Blob. The chunk size come from the blob
-				byte[] chunk = new byte[blob.getChunkSize()];
-				int i=-1;
-				while((i = is.read(chunk))!=-1)
-				{
-				os.write(chunk,0,i); //Write the chunk
-								}
-
-				is.close();
-				os.close();
 				pstmt.close();
-				rs.close();
-				con.commit();
-			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+				// upload blob
+				doFiletoBlob(dbfileName);
+
 			}
+			con.close();
+
+		} catch (SQLException e) {
+			logger.fatal(e.toString());
 		}
-		con.close();
-		
-	} catch (SQLException e) {
-		logger.fatal(e.toString());
-	}
-	doOpen();
+		doOpen();
 }
 /**
- *  Return the the results page and display the results.
- *
+ * Return the the results page and display the results.
+ * 
  */
 public void doBack (){
 	Vector vResult = new Vector();
@@ -500,4 +415,156 @@ public void doDeleteAttachment (){
 	}
 	doOpen();
 	}
+
+  /**
+   * removes all the attachments for the selected RD called while removing RD.
+   * @param rd_idseq
+   * @return String of error message
+   */
+  public String doDeleteAllAttachments (String rd_idseq)
+  {
+    Connection con = null;
+    msg = "";
+    String DelObjSQL = "delete from sbr.REFERENCE_BLOBS_VIEW where RD_IDSEQ = ?";
+    con = m_servlet.connectDB(req, res);
+    try {
+      PreparedStatement pstmt = con.prepareStatement(DelObjSQL);
+      pstmt.setString(1, rd_idseq);
+      pstmt.execute();
+      pstmt.close();
+      con.close();
+    } catch (SQLException e) {
+      logger.fatal("Error - doDeleteAllAttachments: " + e.toString());
+      msg = "Unable to delete the all the Attachments from the database for the selected Reference Document.";
+    }
+    return msg;
+  }
+
+
+/**
+ * 
+ * @param bRefBlob - BLOB Object
+ * @param fileName - The name of the file to save the object ro
+ */
+public void doBlobtoFile (BLOB bRefBlob, String fileName){
+	GetACService getAC = new GetACService(req, res, m_servlet);
+	Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
+    vList = getAC.getToolOptionData("CURATION","REFDOC_FILECACHE","");
+    String RefDocFileCache = vList.get(0).getVALUE();
+
+	String fileName2[] = fileName.split("/");
+	String fileDirectory = "";
+	
+	// Extract file to file system
+	//BLOB bRefBlob = (BLOB)rs.getBlob(2);
+	InputStream is;
+
+		try {
+			is = bRefBlob.getBinaryStream();
+			
+			String strArray[] = fileName.split("/");
+			if (strArray.length > 1){
+				fileName = strArray[1];
+				fileDirectory = strArray[0];
+				File fileLocation = new File(RefDocFileCache + fileDirectory);
+				if (!fileLocation.isDirectory()){
+					if (!fileLocation.mkdir()) {
+						logger.fatal("Can not create directory: " + RefDocFileCache + fileDirectory);
+						fileDirectory = "";
+					}
+					else
+					{
+						fileDirectory = fileDirectory + "/";
+					}
+				}
+				else {
+					fileDirectory = fileDirectory + "/";
+				}
+			}
+			
+			// Sentinel report directory
+			OutputStream os = new FileOutputStream(RefDocFileCache + fileDirectory + fileName);
+
+			final int BUFSIZ = 4096;
+			byte inbuf[]= new byte [BUFSIZ];
+			int bytesRead;
+			
+				while ((bytesRead = is.read(inbuf, 0, BUFSIZ)) != -1){
+					os.write(inbuf, 0, bytesRead);
+				}
+			os.close();
+			os = null;
+			is.close();
+			is = null;
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+}
+
+/**
+ * 
+ * @param fileName
+ */
+public void doFiletoBlob (String fileName){
+	
+	GetACService getAC = new GetACService(req, res, m_servlet);
+	Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
+    vList = getAC.getToolOptionData("CURATION","REFDOC_FILECACHE","");
+    String RefDocFileCache = vList.get(0).getVALUE();
+    Connection con = null;
+    
+	String UpdateObjSQL = "select blob_content from sbr.reference_blobs_view where name = ? for update";
+	OutputStream os;
+	FileInputStream is;
+	
+	try {
+		con = m_servlet.connectDB(req, res);
+		PreparedStatement pstmt = con.prepareStatement(UpdateObjSQL);
+		pstmt = con.prepareStatement(UpdateObjSQL);
+		
+		String fileLocator = RefDocFileCache + fileName;
+		is = new FileInputStream( fileLocator );
+
+		
+		pstmt.setString(1, fileName);
+		ResultSet rs = pstmt.executeQuery();
+		rs.next();
+
+		BLOB blob = (BLOB)rs.getBlob("blob_content");
+
+		os = blob.getBinaryOutputStream();
+		// os = blob.setBinaryStream(0); //get the output stream from the Blob to insert it
+
+		//	Read the file by chuncks and insert them in the Blob. The chunk size come from the blob
+		byte[] chunk = new byte[blob.getChunkSize()];
+		int i=-1;
+		while((i = is.read(chunk))!=-1)
+		{
+			os.write(chunk,0,i); //Write the chunk
+		}
+
+		rs.close();
+		is.close();
+		os.close();
+		pstmt.close();
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+	
 } // End of Class
