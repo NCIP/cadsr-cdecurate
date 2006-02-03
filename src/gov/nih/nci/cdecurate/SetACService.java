@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/SetACService.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/SetACService.java,v 1.3 2006-02-03 20:25:19 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -8,6 +8,7 @@ package gov.nih.nci.cdecurate;
 import java.io.*;
 import java.math.*;
 import java.sql.*;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.servlet.*;
@@ -272,23 +273,56 @@ public class SetACService implements Serializable
       if (m_vRegStatus.contains(s))
         strInValid = this.checkDECOCExist(m_DE.getDE_DEC_IDSEQ(), req, res);
       setValPageVector(vValidate, "Registration Status", s, bNotMandatory, 50, strInValid, sOriginAction);
-
-      s = m_DE.getDE_BEGIN_DATE();
-      if (s == null) s = "";
+      
+      //add begin and end dates to the validate vector
+      String sB = m_DE.getDE_BEGIN_DATE();
+      if (sB == null) sB = "";
+      String sE = m_DE.getDE_END_DATE();
+      if (sE == null) sE = "";
+      String wfs = m_DE.getDE_ASL_NAME();
+      vValidate = this.addDatesToValidatePage(sB, sE, wfs, sDEAction, vValidate, sOriginAction);
+      
+  /*    String begValid = "";
+      if (!sB.equals(""))
+      {
+        begValid = this.validateDateFormat(sB);
+        //if validated (ret date and input dates are same), no error message
+        if (!begValid.equals("")) begValid = "Begin " + begValid;
+      }
+      //need to make sure the begin date is valid date
       if (sDEAction.equals("Edit"))
-          setValPageVector(vValidate, "Effective Begin Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+          setValPageVector(vValidate, "Effective Begin Date", sB, bNotMandatory, iNoLengthLimit, begValid, sOriginAction);
       else
-          setValPageVector(vValidate, "Effective Begin Date", s, bMandatory, iNoLengthLimit, "", sOriginAction);
+          setValPageVector(vValidate, "Effective Begin Date", sB, bMandatory, iNoLengthLimit, begValid, sOriginAction);
 
-      s = m_DE.getDE_END_DATE();
-      if (s == null) s = "";
+      String sE = m_DE.getDE_END_DATE();
+      if (sE == null) sE = "";
+      strInValid = "";
+      //there should be begin date if end date is not null
+      if (!sE.equals("") && sB.equals("")) 
+        strInValid = "If you select an End Date, you must also select a Begin Date.";
+      else if (!sE.equals(""))
+      {
+        strInValid = this.validateDateFormat(sE);
+        //if validated (ret date and input dates are same), no error message
+        if (!strInValid.equals("")) strInValid = "End " + strInValid;
+      }
+      //compare teh dates only if both begin date and end dates are valid
+      if (!sE.equals("") && !sB.equals("") && strInValid.equals("") && begValid.equals(""))
+      {
+        String notValid = this.compareDates(sB, sE);
+        if (notValid.equalsIgnoreCase("true"))
+          strInValid = "Begin Date must be before the End Date";
+        else if (!notValid.equalsIgnoreCase("false"))
+          strInValid = notValid;  // "Error occured in validating Begin and End Dates";          
+      }
       String wfs = m_DE.getDE_ASL_NAME();
       wfs = wfs.toUpperCase();
      // if (wfs.equals("RETIRED ARCHIVED") || wfs.equals("RETIRED DELETED") || wfs.equals("RETIRED PHASED OUT"))
       if (m_vRetWFS.contains(wfs))
-        setValPageVector(vValidate, "Effective End Date", s, bMandatory, iNoLengthLimit, "", sOriginAction);
+        setValPageVector(vValidate, "Effective End Date", sE, bMandatory, iNoLengthLimit, strInValid, sOriginAction);
       else
-        setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+        setValPageVector(vValidate, "Effective End Date", sE, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);  */
 
       s = m_DE.getDOC_TEXT_PREFERRED_QUESTION();
       if (s == null) s = "";
@@ -370,6 +404,132 @@ public class SetACService implements Serializable
 //System.out.println(sOriginAction + " end de page values " + sMenu);
 
   } // end of setValidatePageValues
+
+  private Vector addDatesToValidatePage(String sBegin, String sEnd, String sWFS, String editAction, 
+      Vector vValidate, String sOriginAction)
+  {
+    try
+    {
+      String begValid = "";
+      if (!sBegin.equals(""))
+      {
+        begValid = this.validateDateFormat(sBegin);
+        //if validated (ret date and input dates are same), no error message
+        if (!begValid.equals("")) begValid = "Begin " + begValid;
+      }
+      //need to make sure the begin date is valid date
+      if (editAction.equalsIgnoreCase("Edit") || editAction.equalsIgnoreCase("N/A"))
+          setValPageVector(vValidate, "Effective Begin Date", sBegin, false, -1, begValid, sOriginAction);
+      else
+          setValPageVector(vValidate, "Effective Begin Date", sBegin, true, -1, begValid, sOriginAction);
+
+      String endValid = "";
+      //there should be begin date if end date is not null
+      if (!sEnd.equals("") && sBegin.equals("")) 
+        endValid = "If you select an End Date, you must also select a Begin Date.";
+      else if (!sEnd.equals(""))
+      {
+        endValid = this.validateDateFormat(sEnd);
+        //if validated (ret date and input dates are same), no error message
+        if (!endValid.equals("")) endValid = "End " + endValid;
+      }
+      //compare teh dates only if both begin date and end dates are valid
+      if (!sEnd.equals("") && !sBegin.equals("") && endValid.equals("") && begValid.equals(""))
+      {
+        String notValid = this.compareDates(sBegin, sEnd);
+        if (notValid.equalsIgnoreCase("true"))
+          endValid = "Begin Date must be before the End Date";
+        else if (!notValid.equalsIgnoreCase("false"))
+          endValid = notValid;  // "Error occured in validating Begin and End Dates";          
+      }
+      sWFS = sWFS.toUpperCase();
+     // if (wfs.equals("RETIRED ARCHIVED") || wfs.equals("RETIRED DELETED") || wfs.equals("RETIRED PHASED OUT"))
+      if (m_vRetWFS.contains(sWFS))
+        setValPageVector(vValidate, "Effective End Date", sEnd, true, -1, endValid, sOriginAction);
+      else
+        setValPageVector(vValidate, "Effective End Date", sEnd, false, -1, endValid, sOriginAction);      
+    }
+    catch (Exception e)
+    {
+      logger.fatal("Error - addDatesToValidatePage " + e.toString());
+    }
+    return vValidate;
+  }
+
+  private Vector addEditPVDatesToValidatePage(HttpServletRequest req, String pgBDate, String pgEDate, Vector vValidate)
+  {
+    try
+    {
+      System.out.println(pgBDate + " edit validate pv " + pgEDate);
+      HttpSession session = req.getSession();
+      String bdValid = "", edValid = "";
+      //check for validity of the dates
+      String pgDateValid = "";
+      if (pgBDate != null && !pgBDate.equals(""))
+      {
+        bdValid = this.validateDateFormat(pgBDate);
+        if (!bdValid.equals("")) bdValid = "Begin " + bdValid;
+      }
+      if (pgEDate != null && !pgEDate.equals(""))
+      {
+        edValid = this.validateDateFormat(pgEDate);
+        if (!edValid.equals("")) edValid = "End " + edValid;
+      }
+      //mark the validity of the new begin or end date
+      if (!bdValid.equals("") || !edValid.equals(""))
+        pgDateValid = "error";
+
+      //if editPV (block) loop through to get the right begin date
+      Vector vVDPV = (Vector)session.getAttribute("VDPVList");
+      if (vVDPV == null) vVDPV = new Vector();
+      if (vVDPV.size()>0)
+      {
+        //loop through the pvlist to get edit pv attributes
+        for (int i=0; i<vVDPV.size(); i++)
+        {
+          String sBD = "", sED = "", acName = "";
+          PV_Bean thisPV = (PV_Bean)vVDPV.elementAt(i);
+          if (thisPV.getPV_CHECKED())
+          {
+            sBD = thisPV.getPV_BEGIN_DATE();
+            sED = thisPV.getPV_END_DATE();
+            if (pgBDate != null && !pgBDate.equals("") && pgDateValid.equals(""))
+              sBD = pgBDate;
+            if (pgEDate != null && !pgEDate.equals("") && pgDateValid.equals(""))
+              sED = pgEDate;
+        System.out.println(sBD + ":" + sED + ":" + pgDateValid);
+            //check begin date end date relationship
+            if (sED != null && !sED.equals("") && pgDateValid.equals(""))
+            {
+              if (sBD != null && !sBD.equals(""))
+              {
+                String dValid = compareDates(sBD, sED);
+                if (dValid == null) dValid = "";
+                if (dValid.equals("true"))
+                {
+                  if (!edValid.equals("")) edValid = edValid + ", ";    //add the comma for next selected ac
+                  edValid = edValid + acName;
+                }
+                else if (!dValid.equals("false"))  //dValid.equals("error"))
+                  edValid = "End date is not a valid date."; 
+              }
+            }
+          }
+        }  //end loop
+        //append text to acnames that have begin date greater than end date
+        if (pgDateValid.equals("") && !edValid.equals(""))
+          edValid = "Begin Date is not before the End Date for " + edValid;
+      }
+      setValPageVector(vValidate, "Effective Begin Date", pgBDate, false, -1, bdValid, "");
+      setValPageVector(vValidate, "Effective End Date", pgEDate, false, -1, edValid, "");
+    }
+    catch (Exception e)
+    {
+      logger.fatal("Error - addEditPVDatesToValidatePage " + e.toString());
+    }
+    return vValidate;
+  }
+  
 
  /**
   * To add DDE info to DE validate vector, called from setValidatePageValues.
@@ -595,7 +755,15 @@ public class SetACService implements Serializable
       }
       setValPageVector(vValidate, "Version", s, bMandatory, iNoLengthLimit, strInValid, sOriginAction);
 
-      s = m_DEC.getDEC_BEGIN_DATE();
+      //add begin and end dates to the validate vector
+      String sB = m_DEC.getDEC_BEGIN_DATE();
+      if (sB == null) sB = "";
+      String sE = m_DEC.getDEC_END_DATE();
+      if (sE == null) sE = "";
+      String wfs = m_DEC.getDEC_ASL_NAME();
+      vValidate = this.addDatesToValidatePage(sB, sE, wfs, sDECAction, vValidate, sOriginAction);
+      
+    /*  s = m_DEC.getDEC_BEGIN_DATE();
       if (s == null) s = "";
       if (sDECAction.equals("Edit"))  // || sOriginAction.equals("BlockEditDEC"))
          setValPageVector(vValidate, "Effective Begin Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
@@ -610,7 +778,7 @@ public class SetACService implements Serializable
       if (m_vRetWFS.contains(wfs))
         setValPageVector(vValidate, "Effective End Date", s, bMandatory, iNoLengthLimit, "", sOriginAction);
       else
-        setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+        setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);  */
 
       //add cs-csi to validate page
       String sCS = ""; 
@@ -858,7 +1026,15 @@ public class SetACService implements Serializable
       if (m_VD.getVD_TYPE_FLAG().equals("E"))
         vValidate = this.validateVDPVS(req, res, m_VD, vValidate, sOriginAction);
 
-      s = m_VD.getVD_BEGIN_DATE();
+      //add begin and end dates to the validate vector
+      String sB = m_VD.getVD_BEGIN_DATE();
+      if (sB == null) sB = "";
+      String sE = m_VD.getVD_END_DATE();
+      if (sE == null) sE = "";
+      String wfs = m_VD.getVD_ASL_NAME();
+      vValidate = this.addDatesToValidatePage(sB, sE, wfs, sVDAction, vValidate, sOriginAction);
+      
+     /* s = m_VD.getVD_BEGIN_DATE();
       if (s == null) s = "";
       if (sVDAction.equals("Edit"))  // || sOriginAction.equals("BlockEditVD"))
           setValPageVector(vValidate, "Effective Begin Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
@@ -873,7 +1049,7 @@ public class SetACService implements Serializable
       if (m_vRetWFS.contains(wfs))
         setValPageVector(vValidate, "Effective End Date", s, bMandatory, iNoLengthLimit, "", sOriginAction);
       else
-        setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+        setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction); */
 
       //get value domain other attributes
       vValidate = this.setValidateVDOtherAttr(vValidate, m_VD, sOriginAction);
@@ -1010,13 +1186,24 @@ public class SetACService implements Serializable
       if (s == null) s = "";
       setValPageVector(vValidate, "Value Origin", s, bNotMandatory, iNoLengthLimit, "", "");
 
-      s = m_PV.getPV_BEGIN_DATE();
+      //add begin and end dates to the validate vector
+      String sB = m_PV.getPV_BEGIN_DATE();
+      if (sB == null) sB = "";
+      String sE = m_PV.getPV_END_DATE();
+      if (sE == null) sE = "";
+      //validate these only if not block edit
+      if (pvAction == null || !(pvAction.equals("editPV") && s.equals("")))
+        vValidate = this.addDatesToValidatePage(sB, sE, "N/A", "N/A", vValidate, "");
+      else
+        vValidate = this.addEditPVDatesToValidatePage(req, sB, sE, vValidate);
+      
+     /* s = m_PV.getPV_BEGIN_DATE();
       if (s == null) s = "";
       setValPageVector(vValidate, "Effective Begin Date", s, bNotMandatory, iNoLengthLimit, "", "");
 
       s = m_PV.getPV_END_DATE();
       if (s == null) s = "";
-      setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", "");
+      setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", ""); */
 
       // finaly, send vector to JSP
       req.setAttribute("vValidate", vValidate);
@@ -1200,7 +1387,7 @@ public class SetACService implements Serializable
       if (sBD == null) sBD = "";
       strInValid = "";
       if (begValid != null && !begValid.equals(""))
-        strInValid = "Begin Date is null for " + begValid;
+        strInValid = begValid;  // "Begin Date is null for " + begValid;
       setValPageVector(vValidate, "Effective Begin Date", sBD, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
       //edn date
       if (sED == null) sED = "";
@@ -1210,7 +1397,7 @@ public class SetACService implements Serializable
       if (endValid != null && !endValid.equals(""))
       {
         if (!strInValid.equals("")) strInValid = "\n";
-        strInValid = "Begin Date is not before the End Date for " + endValid;
+        strInValid = endValid;
       }
       setValPageVector(vValidate, "Effective End Date", sED, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
       //document text for DE
@@ -1775,13 +1962,20 @@ public class SetACService implements Serializable
         if (s == null) s = "";
         setValPageVector(vValidate, "Conceptual Domain", s, bMandatory, iNoLengthLimit, "", "");
 
-        s = m_VM.getVM_BEGIN_DATE();
+        //add begin and end dates to the validate vector
+        String sB = m_VM.getVM_BEGIN_DATE();
+        if (sB == null) sB = "";
+        String sE = m_VM.getVM_END_DATE();
+        if (sE == null) sE = "";
+         vValidate = this.addDatesToValidatePage(sB, sE, "N/A", "N/A", vValidate, "");
+        
+       /* s = m_VM.getVM_BEGIN_DATE();
         if (s == null) s = "";
         setValPageVector(vValidate, "Effective Begin Date", s, bMandatory, iNoLengthLimit, "", "");
 
         s = m_VM.getVM_END_DATE();
         if (s == null) s = "";
-        setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", "");
+        setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", ""); */
 
         s = m_VM.getVM_DESCRIPTION();
         if (s == null) s = "";
@@ -1853,7 +2047,7 @@ public class SetACService implements Serializable
           sEndDate = de.getDE_END_DATE();
           if (sEndDate == null) sEndDate = "";
           if (!sEndDate.equals(""))
-            bDateOK = compareDates(sEndDate, sBeg);
+            bDateOK = compareDates(sBeg, sEndDate);
           if (bDateOK.equals("true"))
             strInvalid = strInvalid + "Beg Date exceeds End Date on DE " + sPrefName + ". ";
         }
@@ -1865,7 +2059,7 @@ public class SetACService implements Serializable
           sEndDate = dec.getDEC_END_DATE();
           if (sEndDate == null) sEndDate = "";
           if (!sEndDate.equals(""))
-            bDateOK = compareDates(sEndDate, sBeg);
+            bDateOK = compareDates(sBeg, sEndDate);
           if (bDateOK.equals("true"))
             strInvalid = strInvalid + "Beg Date exceeds End Date on DEC " + sPrefName + ". ";
         }
@@ -1877,7 +2071,7 @@ public class SetACService implements Serializable
           sEndDate = vd.getVD_END_DATE();
           if (sEndDate == null) sEndDate = "";
           if (!sEndDate.equals(""))
-            bDateOK = compareDates(sEndDate, sBeg);
+            bDateOK = compareDates(sBeg, sEndDate);
           if (bDateOK.equals("true"))
             strInvalid = strInvalid + "Beg Date exceeds End Date on VD " + sPrefName + ". ";
         }
@@ -1912,7 +2106,7 @@ public class SetACService implements Serializable
           sBegDate = de.getDE_BEGIN_DATE();
           if (sBegDate == null) sBegDate = "";
           if (!sBegDate.equals(""))
-            bDateOK = compareDates(sEnd, sBegDate);
+            bDateOK = compareDates(sBegDate, sEnd);
           if (bDateOK.equals("true"))
             strInvalid = strInvalid + "End Date is before Begin Date on DE " + sPrefName + ". ";
         }
@@ -1924,7 +2118,7 @@ public class SetACService implements Serializable
           sBegDate = dec.getDEC_BEGIN_DATE();
           if (sBegDate == null) sBegDate = "";
           if (!sBegDate.equals(""))
-            bDateOK = compareDates(sEnd, sBegDate);
+            bDateOK = compareDates(sBegDate, sEnd);
           if (bDateOK.equals("true"))
             strInvalid = strInvalid + "End Date is before Begin Date on DEC " + sPrefName + ". ";
         }
@@ -1936,7 +2130,7 @@ public class SetACService implements Serializable
           sBegDate = vd.getVD_BEGIN_DATE();
           if (sBegDate == null) sBegDate = "";
           if (!sBegDate.equals(""))
-            bDateOK = compareDates(sEnd, sBegDate);
+            bDateOK = compareDates(sBegDate, sEnd);
           if (bDateOK.equals("true"))
             strInvalid = strInvalid + "End Date is before Begin Date on VD " + sPrefName + ". ";
         }
@@ -1946,22 +2140,23 @@ public class SetACService implements Serializable
   }
 
   /**
-  * For Block Edit, checks whether Date1 is before Date2.
+  * For Block Edit, checks whether end Date is before begin Date.
   * called from setValidatePageValuesDE, setValidatePageValuesDEC, setValidatePageValuesVD methods.
   *
   * @return String strFail message if date2 before date1.
   */
-  public String compareDates(String sDate1, String sDate2)
+  public String compareDates(String sBegDate, String sEndDate)
   {
     String strFail = "";
-    java.util.Date date1;
-    java.util.Date date2;
-    java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("MM/dd/yyyy");
     try
     {
-      date1 = dateFormat.parse(sDate1);
-      date2 = dateFormat.parse(sDate2);
-      if (date1.before(date2))
+      java.util.Date begDate;
+      java.util.Date endDate;
+      java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("MM/dd/yyyy");
+      dateFormat.setLenient(false); 
+      begDate = dateFormat.parse(sBegDate);
+      endDate = dateFormat.parse(sEndDate);
+      if (endDate.before(begDate))
         strFail = "true";
       else
         strFail = "false";
@@ -1969,11 +2164,36 @@ public class SetACService implements Serializable
     catch (Exception e)
     {
       logger.fatal("ERROR in setacservice_compareDates  : " + e.toString());
-      return "error";
+      return "Error occured in validating Begin and End Dates";
     }
     return strFail;
   }
 
+  private String validateDateFormat(String sDate)
+  {
+    String validDate = "";
+    if (sDate != null && !sDate.equals(""))
+    {
+      try
+      {
+        java.util.Date dDate;
+        java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("MM/dd/yyyy");
+        dateFormat.setLenient(false); 
+        Calendar dCal = Calendar.getInstance();
+        dDate = dateFormat.parse(sDate);
+        dCal.setTime(dDate);
+        dCal.setLenient(false);
+        if (String.valueOf(dCal.get(Calendar.YEAR)).length() < 4)
+          validDate = "Date must be of format MM/DD/YYYY.";
+      }
+      catch (Exception e)
+      {
+        logger.fatal("ERROR in validateDateFormat  : " + e.toString());
+        validDate = "Date must be of format MM/DD/YYYY.";        
+      }
+    }
+    return validDate;
+  }
   /**
    * For Block Edit, check for various business rules.
    * 
@@ -2017,6 +2237,22 @@ public class SetACService implements Serializable
       pgEDate = pageVD.getVD_END_DATE();
       pgWFStatus = pageVD.getVD_ASL_NAME();      
     }
+    //check for validity of the dates
+    String pgDateValid = "";
+    if (pgBDate != null && !pgBDate.equals(""))
+    {
+      bdValid = this.validateDateFormat(pgBDate);
+      if (!bdValid.equals("")) bdValid = "Begin " + bdValid;
+    }
+    if (pgEDate != null && !pgEDate.equals(""))
+    {
+      edValid = this.validateDateFormat(pgEDate);
+      if (!edValid.equals("")) edValid = "End " + edValid;
+    }
+    //mark the validity of the new begin or end date
+    if (!bdValid.equals("") || !edValid.equals(""))
+      pgDateValid = "error";
+
     //loop through the selected acs and check the changed data against the existing one
     if (vBERows.size()>0)
     {
@@ -2057,37 +2293,29 @@ public class SetACService implements Serializable
         //store page attribute in the bean attr variable according to its value on page
         if (pgWFStatus != null && !pgWFStatus.equals(""))
           sWF = pgWFStatus;
-        if (pgBDate != null && !pgBDate.equals(""))
+        if (pgBDate != null && !pgBDate.equals("") && pgDateValid.equals(""))
           sBD = pgBDate;
-        if (pgEDate != null && !pgEDate.equals(""))
+        if (pgEDate != null && !pgEDate.equals("") && pgDateValid.equals(""))
           sED = pgEDate;
         //check begin date end date relationship
         if (sED != null && !sED.equals(""))
         {
-        /*  if (sBD == null || sBD.equals(""))
-          {
-            if (!bdValid.equals("")) bdValid = bdValid + ", ";    //add the comma for next selected ac
-            bdValid = bdValid + acName;           //begin date cannot be null 
-          }
-          else */
           if (sBD != null && !sBD.equals(""))
           {
-            String dValid = compareDates(sED, sBD);
+            String dValid = compareDates(sBD, sED);
             if (dValid == null) dValid = "";
             if (dValid.equals("true"))
             {
               if (!edValid.equals("")) edValid = edValid + ", ";    //add the comma for next selected ac
               edValid = edValid + acName;
             }
-            else if (dValid.equals("error"))
+            else if (!dValid.equals("false"))  //dValid.equals("error"))
               edValid = "End date is not a valid date."; 
           }
         }
         else  //end date cannot be null for some workflow status
         {
           sWF = sWF.toUpperCase();
-          //if(sWF.equalsIgnoreCase("RETIRED ARCHIVED") || sWF.equalsIgnoreCase("RETIRED DELETED")
-          //      || sWF.equalsIgnoreCase("RETIRED PHASED OUT"))
           if (m_vRetWFS.contains(sWF))
           {
             if (!wfValid.equals("")) wfValid = wfValid + ", ";    //add the comma for next selected ac
@@ -2095,6 +2323,10 @@ public class SetACService implements Serializable
           }
         }
       }   //end loop
+      //append text to acnames that have begin date greater than end date
+      if (pgDateValid.equals("") && !edValid.equals(""))
+        edValid = "Begin Date is not before the End Date for " + edValid;
+      //store teh error messages in teh request
       req.setAttribute("DECVDValid", dvValid);  
       req.setAttribute("REGValid", regValid);
       req.setAttribute("BEGValid", bdValid);
@@ -3956,8 +4188,8 @@ public class SetACService implements Serializable
       String sIdx, sID;
       String sName = "";
       //set PV_ID
-      PV_Bean oldPV = new PV_Bean();
-      oldPV = oldPV.copyBean(m_PV);
+      PV_Bean oldPV = (PV_Bean)session.getAttribute("pageOpenBean");
+      if (oldPV == null) oldPV = oldPV.copyBean(m_PV);
       
       sName = (String)req.getParameter("selValidValue");
       if(sName == null) sName = "";
@@ -4024,6 +4256,7 @@ public class SetACService implements Serializable
       {
         //make current pv as new
        // sName = m_util.parsedStringJSPDoubleQuote(sName);
+    System.out.println(sName + " modify " + sOldName);
         pv.setPV_PV_IDSEQ("EVS_" + sName);
         pv.setVP_SUBMIT_ACTION("INS");  
         pv.setPV_VDPVS_IDSEQ("");
@@ -4544,6 +4777,13 @@ public class SetACService implements Serializable
       //store it in session
     //  session.setAttribute("PVIDList", vPVIDList);
       session.setAttribute("VDPVList", vVDPVList);
+   /*   Vector oldVDPVList = new Vector();
+      for (int k =0; k<vVDPVList.size(); k++)
+      {
+        PV_Bean cBean = (PV_Bean)vVDPVList.elementAt(k);
+        oldVDPVList.addElement(cBean);
+      }
+      session.setAttribute("oldVDPVList", oldVDPVList);  *///stor eit in the session
       if (iPVChecked >1)
         session.setAttribute("m_PV", new PV_Bean());
     }

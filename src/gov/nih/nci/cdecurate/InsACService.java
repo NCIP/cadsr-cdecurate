@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/InsACService.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/InsACService.java,v 1.3 2006-02-03 20:25:19 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -3110,7 +3110,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
 
           String oneRD = this.doAddRemoveRefDocs(sDE_ID, sContextID, "create");
           de.setREFERENCE_DOCUMENT(oneRD);
-          
+         
           //do contact updates
           Hashtable deConts = de.getAC_CONTACTS();
           if (deConts != null && deConts.size() > 0)
@@ -3126,6 +3126,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
             oneCon = de_vd.getAC_CONCEPT_NAME();
           de.setAC_CONCEPT_NAME(oneCon);
           
+       System.out.println(oneAlt + " : " + oneRD + " : " + oneCon);
           //reset return code if other attribute return is not fixed.            
           String otherRet = (String)m_classReq.getAttribute("retcode");
           if (sAction.equals("UPD") && (otherRet == null || otherRet.equals("")))
@@ -3451,8 +3452,8 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
                 //store it back
                 session.setAttribute("desHashTable", desTable);
                 //refresh used by context in the search results list
-                GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
-                serAC.refreshDesData(sAC_ID, desIDSEQ, sValue, sContext, sContextID, sAction);
+               /* GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
+                serAC.refreshDesData(sAC_ID, desIDSEQ, sValue, sContext, sContextID, sAction); */
               }
            }
         }
@@ -4838,6 +4839,10 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
       Vector vACID = (Vector)session.getAttribute("vACId");
       Vector vNames = (Vector)session.getAttribute("vACName");
       DE_Bean deBean = (DE_Bean)session.getAttribute("m_DE");
+      String sContextID = (String)m_classReq.getParameter("selContext");
+      Vector vContName = (Vector)session.getAttribute("vWriteContextDE");
+      Vector vContID = (Vector)session.getAttribute("vWriteContextDE_ID");
+      String sContext = m_util.getNameByID(vContName, vContID, sContextID);
       if (vACList == null) 
       {
         vACList = new Vector();
@@ -4858,19 +4863,22 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
         String deCont = thisDE.getDE_CONTE_IDSEQ();
         
         //add remove designated context
-        this.addRemoveDesignation(deID, desAction, thisDE);
+        String desAct = this.addRemoveDesignation(deID, desAction, thisDE, sContextID, sContext);
         //add remove alternate names
         String oneAlt = this.doAddRemoveAltNames(deID, deCont, desAction);
-        thisDE.setALTERNATE_NAME(oneAlt);
         //add remove reference documents
         String oneRD = this.doAddRemoveRefDocs(deID, deCont, desAction);
-        thisDE.setREFERENCE_DOCUMENT(oneRD);
         //insert and delete ac-csi relationship
         SetACService setAC = new SetACService(m_servlet);
         deBean = setAC.setDECSCSIfromPage(m_classReq, deBean);
         Vector vAC_CS = deBean.getAC_AC_CSI_VECTOR();
         Vector vRemove_ACCSI = getAC.doCSCSI_ACSearch(deID, "");  //(Vector)session.getAttribute("vAC_CSI");
         this.addRemoveACCSI(deID, vAC_CS, vRemove_ACCSI, vACID, "designate", deName);
+        
+        //refresh used by context in the search results list
+        GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
+        serAC.refreshDesData(deID, sContext, sContextID, desAct, oneAlt, oneRD);
+        
         //display success message if no error exists for each DE
         String sReturn = (String)m_classReq.getAttribute("retcode");
         if (sReturn == null || sReturn.equals(""))
@@ -4901,7 +4909,6 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
         {
           sName = rs.getString(1);
         }
-        logger.debug(acID + " one altname " + sName);
       }
     }
     catch(Exception e)
@@ -4918,6 +4925,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
     {
       logger.fatal("ERROR in InsACService-getOneAltName for close : " + ee.toString());
     }
+    logger.debug(acID + " one altname " + sName);
     return sName;
   }  //end getOneAltName
   
@@ -4944,7 +4952,6 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
         {
           sName = rs.getString(1);
         }
-      logger.debug(acID + " one rd " + sName);
       }
     }
     catch(Exception e)
@@ -4961,6 +4968,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
     {
       logger.fatal("ERROR in InsACService-getOneRDName for close : " + ee.toString());
     }
+    logger.debug(acID + " one rd " + sName);
     return sName;
   }  //end getOneRDName
   
@@ -4989,7 +4997,6 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
         {
           sName = rs.getString(1);
         }
-        logger.debug(decID + " : " + vdID + " one conname " + sName);
       }
     }
     catch(Exception e)
@@ -5006,6 +5013,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
     {
       logger.fatal("ERROR in InsACService-getOneConName for close : " + ee.toString());
     }
+    logger.debug(decID + " : " + vdID + " one conname " + sName);
     return sName;
   }  //end getOneConName
   
@@ -5020,14 +5028,11 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   *
   * @throws Exception
   */
-  private void addRemoveDesignation(String CompID, String desAction, DE_Bean deBean) throws Exception
+  private String addRemoveDesignation(String CompID, String desAction, DE_Bean deBean, String useCont, String useContName) throws Exception
   {
       HttpSession session = m_classReq.getSession();
       //designate used by context if not exists before
-      String useCont = (String)m_classReq.getParameter("selContext");
-      Vector vContName = (Vector)session.getAttribute("vWriteContextDE");
-      Vector vContID = (Vector)session.getAttribute("vWriteContextDE_ID");
-      String useContName = m_util.getNameByID(vContName, vContID, useCont);
+      String refreshAct = "";
       Vector vUsedCont = (Vector)deBean.getDE_USEDBY_CONTEXT_ID();
       String sLang = (String)m_classReq.getParameter("dispLanguage");
       if (sLang == null || sLang.equals("")) sLang = "ENGLISH";
@@ -5036,7 +5041,11 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
         String deCont = deBean.getDE_CONTE_IDSEQ();
         //create usedby only if not in the same context as the ac is
         if (!deCont.equals(useCont))
-          this.setDES("INS", CompID, useCont, useContName, "USED_BY", useContName, sLang, "");
+        {
+          String sRet = this.setDES("INS", CompID, useCont, useContName, "USED_BY", useContName, sLang, "");
+          if (sRet == null || sRet.equals("API_DES_300"))
+            refreshAct = "INS";
+        }
         else
         {
           this.storeStatusMsg("\\t API_DES_00: Unable to designate in the same context as the owned by context.");            
@@ -5048,11 +5057,14 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
          Hashtable desTable = (Hashtable)session.getAttribute("desHashTable");
          String desID = (String)desTable.get(useContName + "," + CompID);
          //call method to delete designation if desidseq is found
-         if (desID != null && !desID.equals(""))          
-            this.setDES("DEL", CompID, useCont, useContName, "USED_BY", useContName, sLang, desID);
-            
-         
+         if (desID != null && !desID.equals(""))  
+         {
+           String sRet = this.setDES("DEL", CompID, useCont, useContName, "USED_BY", useContName, sLang, desID);
+           if (sRet == null || sRet.equals("API_DES_300"))
+             refreshAct = "DEL";
+         }
       }
+      return refreshAct;
   } 
 
   /**

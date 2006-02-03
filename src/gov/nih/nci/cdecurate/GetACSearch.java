@@ -1,7 +1,7 @@
 
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/GetACSearch.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/GetACSearch.java,v 1.3 2006-02-03 20:25:19 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;     
@@ -7464,7 +7464,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    * @param action  to recorgnize created or deleted action.
    *
    */
-  public void refreshDesData(String desCompID, String desID, String desName, String desContext, String desContextID, String action)
+  public void refreshDesData(String desCompID, String desContext, String desContextID, String action, String deAlt, String deRD)
   {
      HttpSession session = m_classReq.getSession();
      Vector vSRows = new Vector();
@@ -7485,6 +7485,9 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
            if (DEBean.getDE_DE_IDSEQ().equals(desCompID))
            {
               Vector vUsedBy = DEBean.getDE_USEDBY_CONTEXT_ID();
+              //store alt name ref doc
+              DEBean.setALTERNATE_NAME(deAlt);
+              DEBean.setREFERENCE_DOCUMENT(deRD);
               //insert the bean if created
               if (action.equals("INS"))
               {

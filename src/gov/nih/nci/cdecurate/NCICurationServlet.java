@@ -1,25 +1,21 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/NCICurationServlet.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/NCICurationServlet.java,v 1.3 2006-02-03 20:25:19 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
 
 //import files
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import gov.nih.nci.cadsr.sentinel.util.DSRAlert;
+import gov.nih.nci.cadsr.sentinel.util.DSRAlertImpl;
+
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
@@ -30,19 +26,13 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
-import oracle.sql.BLOB;
-
 import org.apache.log4j.Logger;
-
-import gov.nih.nci.cadsralertapi.DSRAlertAPI;
-import gov.nih.nci.cadsralertapi.DSRAlertAPIimpl;
 
 /**
  * The NCICurationServlet is the main servlet for communicating between the
@@ -2312,12 +2302,13 @@ public class NCICurationServlet extends HttpServlet
       else if (sAction.equals("backToVD"))
       {
         //set the checked property to false
-        Vector vVDPVList = (Vector)session.getAttribute("VDPVList");
+        Vector vVDPVList = (Vector)session.getAttribute("VDPVList");   //("oldVDPVList");
         if (vVDPVList != null)
         {
           for (int i=0; i<vVDPVList.size(); i++)
           {
             PV_Bean pv = (PV_Bean)vVDPVList.elementAt(i);
+        System.out.println(pv.getPV_BEGIN_DATE() + " back vd " + pv.getPV_END_DATE());
             pv.setPV_CHECKED(false);
             vVDPVList.setElementAt(pv, i);
           }
@@ -3549,7 +3540,6 @@ public class NCICurationServlet extends HttpServlet
             session.setAttribute("m_VD", vdBean);              
           }
         }
-  //  System.out.println(sVDid + " setvdpage " + isExist);
         //mark all the pvs as deleted to remove them while submitting.
         if (!isExist)
         {
@@ -3563,6 +3553,7 @@ public class NCICurationServlet extends HttpServlet
               pvBean.setVP_SUBMIT_ACTION("DEL");
               vVDPVs.setElementAt(pvBean, i);
             }
+         System.out.println(sVDid + " setvdpage " + isExist);
             //reset the attribute
             session.setAttribute("VDPVList", vVDPVs);
           }
@@ -3947,6 +3938,7 @@ public class NCICurationServlet extends HttpServlet
                 vVDPVList.setElementAt(pvBean, j);
               }
             }
+       System.out.println("removepvparent " + vVDPVList.size());
             session.setAttribute("VDPVList", vVDPVList);            
           }
           //mark the parent as delected and leave
@@ -5194,6 +5186,7 @@ public class NCICurationServlet extends HttpServlet
               vVDPVList.addElement(pvBean);    //store bean in vector
           }
         }
+     System.out.println(updatedVDPVs + " selMinVD " + vVDPVList.size());
         session.setAttribute("VDPVList", vVDPVList);        
         //alert if value meaning alredy exists but updated with concept info
         if (updatedVDPVs != null && !updatedVDPVs.equals(""))
@@ -6157,6 +6150,7 @@ public class NCICurationServlet extends HttpServlet
             vVDPV.addElement(m_PV);
           }
         }
+      System.out.println(sPVSubmit + " insert pv " + sOrigin);
         //update teh session attribute
         session.setAttribute("VDPVList", vVDPV);
         
@@ -9706,17 +9700,17 @@ public class NCICurationServlet extends HttpServlet
               else
               {
                   // Have the Sentinel watch the CSI.
-                  DSRAlertAPI sentinel = DSRAlertAPIimpl.factory(con);
+                  DSRAlert sentinel = DSRAlertImpl.factory(con);
                   ndx = sentinel.createAlert(user, csi_idseq);
                   switch (ndx)
                   {
-                      case DSRAlertAPI.RC_FAILED:
+                      case DSRAlert.RC_FAILED:
                           msg = "An error occurred attempting to create the Alert Definition.";
                           break;
-                      case DSRAlertAPI.RC_INCOMPATIBLE:
+                      case DSRAlert.RC_INCOMPATIBLE:
                           msg = "The Sentinel API server does not support this request.";
                           break;
-                      case DSRAlertAPI.RC_UNAUTHORIZED:
+                      case DSRAlert.RC_UNAUTHORIZED:
                           msg = "You are not authorized to create a Sentinel Alert.";
                           break;
                       default:
