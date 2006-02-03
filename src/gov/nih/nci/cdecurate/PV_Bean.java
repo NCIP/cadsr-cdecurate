@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/PV_Bean.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/PV_Bean.java,v 1.3 2006-02-03 20:25:19 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -151,7 +151,6 @@ public class PV_Bean implements Serializable
     this.setPV_VALUE_ORIGIN(fromBean.getPV_VALUE_ORIGIN());
     this.setPV_BEGIN_DATE(fromBean.getPV_BEGIN_DATE());
     this.setPV_END_DATE(fromBean.getPV_END_DATE());
-    
     //send the to bean back
     return this;
   }

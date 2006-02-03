@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/DE_Bean.java,v 1.2 2006-01-31 20:16:18 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cdecurate/DE_Bean.java,v 1.3 2006-02-03 20:25:19 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cdecurate;
@@ -293,6 +293,8 @@ public class DE_Bean extends AC_Bean
 
         this.setDOC_TEXT_PREFERRED_QUESTION(copyBean.getDOC_TEXT_PREFERRED_QUESTION());
         this.setDOC_TEXT_PREFERRED_QUESTION_IDSEQ(copyBean.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ());
+        this.setREFERENCE_DOCUMENT(copyBean.getREFERENCE_DOCUMENT());
+        this.setALTERNATE_NAME(copyBean.getALTERNATE_NAME());
       }
 
     //these would be for both copy some attributes and cloning.
@@ -343,9 +345,6 @@ public class DE_Bean extends AC_Bean
       this.setDOC_TEXT_UML_Attribute_Count(copyBean.getDOC_TEXT_UML_Attribute_Count());
       this.setDOC_TEXT_LABEL(copyBean.getDOC_TEXT_LABEL());
       this.setDOC_TEXT_LABEL_COUNT(copyBean.getDOC_TEXT_LABEL_COUNT()); */
-      this.setREFERENCE_DOCUMENT(copyBean.getREFERENCE_DOCUMENT());
-     // this.setDOC_TEXT_OTHER_REF_TYPES_COUNT(copyBean.getDOC_TEXT_OTHER_REF_TYPES_COUNT());
-      this.setALTERNATE_NAME(copyBean.getALTERNATE_NAME());
       this.setDE_DEC_Bean(copyBean.getDE_DEC_Bean());
       this.setDE_VD_Bean(copyBean.getDE_VD_Bean());
       this.setAC_ABBR_PREF_NAME(copyBean.getAC_ABBR_PREF_NAME());
