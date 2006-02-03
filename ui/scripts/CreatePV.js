@@ -48,34 +48,34 @@
 
   function SubmitValidate(origin)
   {
-		//check if the date is valid
-	   var isValid = isDateValid();
-	   if (isValid == "valid")
-	   {
+	//check if the date is valid
+	// var isValid = isDateValid();
+	// if (isValid == "valid")
+	// {
         //store the selected valid value name in the hidden field
-      if(document.createPVForm.selValidValue != null)
-      {
-        var iInd = document.createPVForm.selValidValue.selectedIndex;
-        if (iInd > -1)
-        {
-          var vvtext = document.createPVForm.selValidValue[iInd].text;
-          document.createPVForm.txValidValue.value = vvtext;
-        }
-      }
+      	if(document.createPVForm.selValidValue != null)
+      	{
+	        var iInd = document.createPVForm.selValidValue.selectedIndex;
+	        if (iInd > -1)
+	        {
+	          var vvtext = document.createPVForm.selValidValue[iInd].text;
+	          document.createPVForm.txValidValue.value = vvtext;
+	        }
+      	}
         hourglass();
         if (origin == "validate")
-	      {
-            document.createPVForm.newCDEPageAction.value = "validate";
-            window.status = "Validating data, it may take a minute, please wait.....";
-	      }
-	      else if (origin == "submit")
+      	{
+        	document.createPVForm.newCDEPageAction.value = "validate";
+        	window.status = "Validating data, it may take a minute, please wait.....";
+      	}
+      	else if (origin == "submit")
         {
             document.createPVForm.newCDEPageAction.value = "submit";
             window.status = "Submitting data, it may take a minute, please wait.....";
-	      } 
+	     } 
         document.createPVForm.Message.style.visibility="visible";
         document.createPVForm.submit();
-     }
+    // }
   }
  
  function isDateValid()

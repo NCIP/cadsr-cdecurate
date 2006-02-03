@@ -17,9 +17,12 @@ function showHelp(n){
   //n must be the name of the object and the name of the anchor in the help doc 
    var nameStr =  new String(n); 
    if (helpWindow && !helpWindow.closed)
+   {
       helpWindow.close()
-   var lW = (screen.availWidth - 660);
-   helpWindow = window.open(nameStr, "Help", "width=650,height=500,top=0,left=" + lW +",resizable=yes,scrollbars=yes")
+   }
+   helpWindow = window.open(nameStr, "Help");   
+//   var lW = (screen.availWidth - 660);
+//   helpWindow = window.open(nameStr, "Help", "width=650,height=500,top=0,left=" + lW +",resizable=yes,scrollbars=yes")
    //location.href = nameStr;
    event.cancelBubble = true;
    return false;

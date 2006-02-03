@@ -406,8 +406,8 @@ function SearchCDValue()
 		//check if the date is valid
     //check if the date is valid
     var isValid = "valid";
-    if (origin == "validate")
-      isValid = isDateValid();
+    //if (origin == "validate")
+    //  isValid = isDateValid();
     if (isValid == "valid" && origin == "validate") 
       isValid = isNameTypeValid(); 
 	if (isValid == "valid")
