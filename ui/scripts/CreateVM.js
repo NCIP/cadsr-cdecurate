@@ -46,7 +46,7 @@ var evsWindow = null;
   function SubmitValidate(origin)
   {
 		//check if the date is valid
-	   var isValid = isDateValid();
+	   var isValid = "valid";  // isDateValid();
 	   if (isValid == "valid")
 	   {
        hourglass();

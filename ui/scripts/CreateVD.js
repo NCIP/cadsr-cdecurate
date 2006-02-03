@@ -537,8 +537,8 @@ function enableContButtons()
  // alert("submitValidate origin: " + origin);
     //check if the date is valid
     var isValid = "valid";
-    if (origin == "validate")
-      isValid = isDateValid();
+   // if (origin == "validate")
+   //   isValid = isDateValid();
     if (isValid == "valid" && origin == "validate") 
       isValid = isNameTypeValid(); 
     //do the action

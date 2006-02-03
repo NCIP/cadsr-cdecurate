@@ -197,8 +197,8 @@ function SubmitValidate(origin)
 {
      var isValid = "valid";
 	   //check if the date is valid
-     if (origin == "validate")
-       isValid = isDateValid();
+    // if (origin == "validate")
+     //  isValid = isDateValid();
      if (isValid == "valid" && origin == "validate") 
        isValid = isNameTypeValid(); 
 	   //check if the DEComp order is valid

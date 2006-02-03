@@ -25,7 +25,8 @@ var sentinelWindow = null;
       if (helpWindow && !helpWindow.closed)
        	helpWindow.focus();
       else
-       	helpWindow = window.open("Help.htm", "Help", "width=750,height=620,top=0,left=0,resizable=yes,scrollbars=yes,titlebar=false");
+       	// helpWindow = window.open("Help.htm", "Help", "width=750,height=620,top=0,left=0,resizable=yes,scrollbars=yes,titlebar=false");
+       	helpWindow = window.open("Help.htm", "Help");
    }
 
     function callManageAlert()

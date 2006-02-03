@@ -25,6 +25,12 @@
      col-width="40%";
   }
 
+	table.new
+  {
+     border: 0;
+     cellspacing=0;
+     cellpadding=0;
+  }
 
   td, th
   {
@@ -102,6 +108,13 @@
      font.weight: bold;
   }
 
+	span.standOutHeading
+  {
+     color: red;
+     font.weight: bold;
+		 font-size: 20px;
+  }
+	
   span.red
   {
      color: red;
@@ -145,7 +158,18 @@
      font.weight: bold;
      height: 34;
   }
-
+	
+	td.tbl_header
+	{
+     border: solid silver 1.0pt;
+     background: #666699;
+     color: white;
+     font-family: Arial, Helvetica, sans-serif;
+     font-size: 20px;
+     font.weight: bold;
+     height: 34;
+  }
+	
   tr
   {
      padding: 0 0 0 5px;
@@ -224,4 +248,50 @@
   p.indentLevel5
   { 
      text-indent: 125px;
+  }
+	div.container {
+  border: 2px solid #aaa;
+  margin-right: 3cm;
+  margin-left: 3cm;
+  text-align: left;
+  }
+div.bodyText {
+  padding: 1cm 1cm 1cm 1cm;
+  }
+
+.centeredImage
+    {
+    text-align:center;
+    margin-top:0px;
+    margin-bottom:0px;
+  }
+img.screenShot
+    {	
+		border: 2px solid #aaa;
+		}
+  
+div.header {
+     border: solid silver 1.0pt;
+     background: #666699;
+     padding: 0in 2.15pt 0in 2.15pt;
+     color: white;
+     font-family: Arial, Helvetica, sans-serif;
+     font-size: 20px;
+     font.weight: bold;
+     height: 34;
+  }
+
+.imageText
+  {
+     color: #333399;
+     font-weight: bold;
+     vertical-align: text-top;
+     text-align: center;
+     padding: 0px 0px 20px 0px;
+  }
+
+div.NoteTest {
+      text-indent: 50px;
+			font-family: Arial, Helvetica, sans-serif;
+     	font-size: 12pt;
   }
