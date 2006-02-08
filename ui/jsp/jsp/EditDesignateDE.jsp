@@ -2,7 +2,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <%@ page import="java.util.*" %>
-<%@ page import="gov.nih.nci.cdecurate.*" %>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
 <%@ page session="true" %>
 <link href="FullDesignArial.css" rel="stylesheet" type="text/css">
 <script language="JavaScript" src="Assets/date-picker.js"></script>
@@ -203,11 +203,11 @@
           var selAC_longName = "<%=acName%>";
           var selAC_type = "<%=thisACCSI.getAC_TYPE_NAME()%>";
           //use csi bean
-          var selCS_id = "<%=thisCSI.getCSI_CS_IDSEQ()%>";   //use csi bean  "<%=thisACCSI.getCS_IDSEQ()%>";  //get cs idseq
-          var selCS_name = "<%=thisCSI.getCSI_CS_LONG_NAME()%>";    //use csi bean   "<%=thisACCSI.getCS_LONG_NAME()%>";          
-          var selCSI_id = "<%=thisCSI.getCSI_CSI_IDSEQ()%>";    //use csi bean   //"<%=thisACCSI.getCSI_IDSEQ()%>";
-          var selCSI_name = "<%=thisCSI.getCSI_NAME()%>";      //use csi bean  //"<%=thisACCSI.getCSI_NAME()%>";
-          var selCSCSI_id = "<%=thisCSI.getCSI_CSCSI_IDSEQ()%>"; //use csi bean  //"<%=thisACCSI.getCSCSI_IDSEQ()%>";
+          var selCS_id = "<%=thisCSI.getCSI_CS_IDSEQ()%>";   
+          var selCS_name = "<%=thisCSI.getCSI_CS_LONG_NAME()%>";             
+          var selCSI_id = "<%=thisCSI.getCSI_CSI_IDSEQ()%>";    
+          var selCSI_name = "<%=thisCSI.getCSI_NAME()%>";     
+          var selCSCSI_id = "<%=thisCSI.getCSI_CSCSI_IDSEQ()%>"; 
           var selCSILevel = "<%=thisCSI.getCSI_LEVEL()%>";
           var selCSILabel = "<%=thisCSI.getCSI_LABEL()%>";
           var selP_CSCSIid = "<%=thisCSI.getP_CSCSI_IDSEQ()%>";
@@ -243,21 +243,30 @@
   
   function displayStatusMessage()
   {
- <%
-    String statusMessage = (String)session.getAttribute("statusMessage");
-    Vector vStat = (Vector)session.getAttribute("vStatMsg");
-    if (vStat != null && vStat.size() > 30)
-    {%>
-      displayStatusWindow();
-    <% }
-    else if (statusMessage != null && !statusMessage.equals(""))
-    {%>
-	       alert("<%=statusMessage%>");
-    <% }
-    //reset the status message to no message
-    session.setAttribute("statusMessage", "");
-%>
-    window.status = "Edit the Designated Data Element, choose context first"
+ 	<%
+	    String statusMessage = (String)session.getAttribute("statusMessage");
+	    Vector vStat = (Vector)session.getAttribute("vStatMsg");
+	    if (vStat != null && vStat.size() > 30)
+	    {%>
+	      displayStatusWindow();
+	    <% }
+	    else if (statusMessage != null && !statusMessage.equals(""))
+	    {%>
+		       alert("<%=statusMessage%>");
+	    <% }
+	    //reset the status message to no message
+	    session.setAttribute("statusMessage", "");
+	%>
+	<%if (dispType.equals("Designation")) { %>
+		window.status = "Edit the Designated Data Element, choose context first."
+	<%} else if (dispType.equals("Alternate Names")) { %>
+		window.status = "Maintain the Alternate Names Attributes."
+	<%} else if (dispType.equals("Reference Documents")) { %>
+		window.status = "Maintain the Reference Documents Attributes."
+	<%} else { %>
+		window.status = "Maintain Attributes."
+	<%}%>
+  
   }
 
   //back button

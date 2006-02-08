@@ -8,7 +8,7 @@
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/SearchResults.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/popupMenus.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
-<%@ page import="gov.nih.nci.cdecurate.*" %>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
 <%@ page import= "java.util.*"%>
 <%
    UtilService serUtil = new UtilService();
