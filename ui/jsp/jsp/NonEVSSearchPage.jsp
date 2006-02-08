@@ -7,7 +7,7 @@
 <link href="FullDesignArial.css" rel="stylesheet" type="text/css">
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.*" %>
-<%@ page import="gov.nih.nci.cdecurate.*" %>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
 <%
   EVS_Bean eBean = (EVS_Bean)request.getAttribute("SelectedVDParent");
   if (eBean == null) eBean = new EVS_Bean();

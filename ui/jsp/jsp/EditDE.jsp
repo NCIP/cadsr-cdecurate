@@ -3,7 +3,7 @@
 <title>EditDataElement</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <%@ page import="java.util.*" %>
-<%@ page import="gov.nih.nci.cdecurate.*" %>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
 <%@ page session="true" %>
 <link href="FullDesignArial.css" rel="stylesheet" type="text/css">
 <script language="JavaScript" src="Assets/date-picker.js"></script>

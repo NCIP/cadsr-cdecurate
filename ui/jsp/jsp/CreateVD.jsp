@@ -6,7 +6,7 @@
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/AddNewListOption.js"></SCRIPT>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.*" %>
-<%@ page import="gov.nih.nci.cdecurate.*" %>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/date-picker.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/CreateVD.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/SelectCS_CSI.js"></SCRIPT>

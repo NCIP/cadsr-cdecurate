@@ -99,6 +99,8 @@ var winCancerGov = null;
 var winNIH = null;
 var winDHHS = null;
 var winFirstGov = null;
+var helpWindow = null;
+
 function linkCancerGov()
 {
   if (winCancerGov && !winCancerGov.closed)
@@ -156,7 +158,13 @@ function keypress_handler()
     }
     return;  // only interest on return kay
 }
-
+function callHelp()
+   {
+      if (helpWindow && !helpWindow.closed)
+       	helpWindow.focus();
+      else
+        	helpWindow = window.open("Help.htm", "Help");
+   }
 </script>
 </head>
 
@@ -244,7 +252,9 @@ function keypress_handler()
       <td>&nbsp;</td>
       <td align="center" valign="middle">
         <form name="LoginForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=login">
-          <table border="4" bgcolor = "#CCCCCC">
+          <table border="5" bgcolor = "#CCCCCC">
+			<tr><td>
+			<table border="0" bgcolor = "#CCCCCC">
             <tr>
               <td colspan="3" height="50" valign="middle" align="center">
                 <% if (errMessage.equals("")) { %>
@@ -255,30 +265,26 @@ function keypress_handler()
               </td>
             </tr>
             <tr>
-              <td width="120" valign="top" align="right" height="50">
-                <h4><font face="Arial, Helvetica, sans-serif" style="font-size:15px">User Name</font>&nbsp;</h4>
-              </td>
-              <td width="205" valign="top">
-                <input type="text" name="Username">
-              </td>
-            </tr>
-            <tr>
-              <td valign="top" align="right" height="50">
-                <h4><font face="Arial, Helvetica, sans-serif" style="font-size:15px">Password</font>&nbsp;</h4>
-              </td>
-              <td valign="top" width="205">
-                <input type="password" name="Password">
-              </td>
-            </tr>
+						<td colspan="2" align="right" >
+						<font face="Arial, Helvetica, sans-serif" style="font-size:15px font-weight: bold;"><b>User Name</b></font>&nbsp;<input type="text" name="Username" style="width: 4cm">
+						<br><br>
+						<font face="Arial, Helvetica, sans-serif" style="font-size:15px font-weight: bold;"><b>Password</b></font>&nbsp;<input type="password" name="Password" style="width: 4cm">
+						</td>
+						<td>&nbsp;</td>
+						</tr>
             <tr>
               <td valign="middle" align="right"  height="50">
                 <input name="Submit"  height="25" type="button" value="Login" onClick="callMessageGifLogin();">&nbsp;
               </td>                    
-              <td valign="top" width="205"> <img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+              <td valign="middle" width="205"> <img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
               </td>
-              <td width="55">&nbsp;</td>
+              <td valign="middle" width="55">
+              <input name="Help"  height="25" type="button" value="Help" onClick="callHelp();">&nbsp;
+              </td>
             </tr>
           </table>
+		</td></tr>
+		</table>
         </form>
       </td>
       <td>&nbsp;</td>

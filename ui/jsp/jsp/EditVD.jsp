@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="FullDesignArial.css" rel="stylesheet" type="text/css">
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/AddNewListOption.js"></SCRIPT>
-<%@ page import="gov.nih.nci.cdecurate.*" %>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
 <%@ page import="java.util.*" %>
 <%@ page session="true" %>
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/date-picker.js"></SCRIPT>

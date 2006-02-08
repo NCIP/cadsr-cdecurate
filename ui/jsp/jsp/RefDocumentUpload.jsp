@@ -1,4 +1,4 @@
-<%@ page import="gov.nih.nci.cdecurate.*"%>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <%@ page import= "java.util.Vector" %>
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/RefDocumentUpload.js"></SCRIPT>
 <FORM ENCTYPE="multipart/form-data"

@@ -1,7 +1,7 @@
 <!-- SearchResultsBlocks.jsp -->
 
 <%@ page import= "java.util.*" %>
-<%@ page import="gov.nih.nci.cdecurate.*" %>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
 <html>
 <head>
 <title>Search Results</title>

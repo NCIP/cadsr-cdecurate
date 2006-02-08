@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="FullDesignVer.css" rel="stylesheet" type="text/css">
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
-<%@ page import="gov.nih.nci.cdecurate.*" %>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
 <%@ page import= "java.util.*" %>
 <%
       Vector vRefDoc = (Vector)request.getAttribute("RefDocList");

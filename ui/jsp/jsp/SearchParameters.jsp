@@ -3,7 +3,7 @@
 <head>
 <title>Search Parameters</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<%@ page import="gov.nih.nci.cdecurate.*" %>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
 <link href="FullDesignArial.css" rel="stylesheet" type="text/css">
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/SearchParameters.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/date-picker.js"></SCRIPT>
