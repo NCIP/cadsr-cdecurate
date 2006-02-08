@@ -13,7 +13,7 @@
     <property name="app_asset" location="${app_root}/Assets"/>
     <property name="app_webinf" location="${app_root}/WEB-INF"/>
     <property name="app_classes" location="${app_webinf}/classes"/>
-    <property name="app_class" location="${app_classes}/gov/nih/nci/cdecurate"/>
+    <property name="app_class" location="${app_classes}/gov/nih/nci/cadsr/cdecurate/tool"/>
     <property name="app_jclass" location="${app_classes}/org/apache/jsp"/>
     <property name="app_lib" location="${app_webinf}/lib"/>
     <property name="app_tld" location="${app_webinf}/tld"/>
@@ -26,7 +26,7 @@
     <property name="m_web" location="ui"/>
     <property name="app_war" location="distrib/war"/>
     <property name="m_javadoc" location="doc/javadoc"/>
-    <property name="b_class" location="build/bin/gov/nih/nci/cdecurate"/>
+    <property name="b_class" location="build/bin/gov/nih/nci/cadsr/cdecurate/tool"/>
     <property name="bgen_class" location="build-gen/bin/org/apache/jsp"/>
     
     
@@ -136,8 +136,8 @@
           <src refid="jspsrcpath"/>
           <include name="**/*.java" />
       </javac>
-      <!-- copy property file to cdecurate/WEB-INF/classes/gov/nih/nci/cdecurate directory  -->
-      <copy file="${m_java}/gov/nih/nci/cdecurate/NCICuration.properties" tofile="${app_class}/NCICuration.properties" overwrite="YES"/>
+      <!-- copy property file to cdecurate/WEB-INF/classes/gov/nih/nci/cadsr/cdecurate/tool directory  -->
+      <copy file="${m_java}/gov/nih/nci/cadsr/cdecurate/tool/NCICuration.properties" tofile="${app_class}/NCICuration.properties" overwrite="YES"/>
 
       <!-- copy compiled file to build directory  -->
       <copy todir="${b_class}" overwrite="YES">
@@ -229,7 +229,7 @@
             <doctitle><![CDATA[<h1>CDE Curation Tool</h1>]]></doctitle>
             <bottom><![CDATA[<i>Copyright &#169; 2005 ScenPro, Inc. All Rights Reserved.</i>]]></bottom>
             <tag name="todo" scope="all" description="To do:" />
-            <group title="Source Package" packages="gov.nih.nci.cdecurate"/>
+            <group title="Source Package" packages="gov.nih.nci.cadsr.cdecurate.tool"/>
             <link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="D:\temp"/>
             <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
         </javadoc>
