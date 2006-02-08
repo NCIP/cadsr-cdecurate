@@ -1,1243 +1,124 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD><TITLE>Curation Tool Help - Data Element</TITLE>
-<META http-equiv=Content-Type content="text/html; charset=iso-8859-1"><LINK 
-href="Help.css" type=text/css rel=stylesheet>
-<SCRIPT language=JavaScript type=text/javascript>
-   var wfsWindow = null;
-   function openWindow()
-   {
-      if (wfsWindow && !wfsWindow.closed)
-         wfsWindow.focus();
-      else
-         wfsWindow = window.open("http://ncicb.nci.nih.gov/core/caDSR", "wfsWindow", "width=975,height=545,resizable=yes,scrollbars=yes")
-   }
-    </SCRIPT>
-
-<META content="MSHTML 6.00.2900.2802" name=GENERATOR></HEAD>
-<BODY>
-<H2 class=main>CDE Curation Tool<BR>User’s Guide<BR>Version 3.0 </H2><BR>
-<P class=returnLink><A href="Help.htm#TOCDE">Return to the Table of Contents</A> 
-</P>
-<DIV align=center>
-<TABLE>
-  <TBODY>
-  <TR>
-    <TD class=bullet colSpan=2>Data Elements (DE) </TD></TR>
-  <TR>
-    <TD class=mainTopic colSpan=2><A name="Search for Exact Version"></A><SPAN 
-      class=standOut>Search </SPAN>for Exact Version </TD></TR>
-  <TR>
-    <TD colSpan=2>Users now have the ability to filter their search for Data 
-      Elements by Exact Version and Conceptual Domain. The text field for 
-      entering Exact Version is located next to the 'All' and 'Latest' Version 
-      radio buttons in the Search interface. Enter the exact version number of 
-      the Data Element into the text field. Version number should be entered as 
-      a positive number, with or without a decimal. <BR><BR>Filter by a specific 
-      Conceptual Domain by selecting the desired Conceptual Domain from the 
-      drop-down list in the 'Filter By' section of the Search interface. </TD></TR>
-  <TR>
-    <TD class=mainTopic colSpan=2><A name=searchResultsForm_designateDE></A><A 
-      name=designateForm_DesignateComponentPage></A><SPAN class=standOut><A 
-      name=Designate>Designate</A></SPAN> </TD></TR>
-  <TR>
-    <TD colSpan=2>Before you go to the trouble of creating a new Data Element 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>
+      Curation Tool Help - Designate Data Element
+    </title>
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=us-ascii">
+    <link href="Help.css"
+          type="text/css"
+          rel="stylesheet">
+    <meta content="MSHTML 6.00.2900.2802"
+          name="GENERATOR">
+  </head>
+  <body>
+    <h2 class="main">
+      CDE Curation Tool<br>
+      User&rsquo;s Guide Version 3.1
+    </h2><br>
+    <p class="returnLink">
+      <a href="Help.htm">Return to the Table of Contents</a>
+    </p>
+    <div align="center">
+      <div class="container">
+        <div class="header">
+          <A name="Search for Exact Version"></A>Creating Data Elements
+        </div>
+				<div class="bodyText">	
+<!-- ****************************************************** -->				
+<!--                       Overview                         -->
+<!-- ****************************************************** -->		
+		 	<p>
+			The Curation Tool provides you with the ability to create and edit Data 
+			Element, validate the Data Element&#96;s attributes, and submit (i.e. store) 
+			the Data Element in the NCI&#96;s Cancer Data Standards Repository (caDSR) database.
+			</p>  
+			<span class="standOutHeading">
+				How to Create New or Edit Existing Data Elements 
+			</span>
+			<hr/>
+			<h4>Create New Data Elements</h4> 
+			<p>
+			Most of the primary functions of the CDE Curation Tool are accessed via 
+			the dark blue Navigation Bar at the top of each screen. To begin the 
+			Create New Data Element process, Select <span style="font-weight: bold;">Create<span style="font-family: wingdings;">&#232;</span> 
+			Data Element<span style="font-family: wingdings;">&#232;</span>New</span> from 
+			the Navigation Bar at the top of the page.
+			</p>
+			<p>
+			You may also want to create a new Data Element using an existing Data 
+			Element as a starting template or you may want to version an existing 
+			Data Element. Both of these options can be accessed via the 
+			<span style="font-weight: bold;">Create<span style="font-family: wingdings;">&#232;</span>Data Element</span> 
+			menu in the Navigation Bar.
+			</p>
+			<p>
+			To create a new Data Element from an existing Data Element select the <span style="font-weight: bold;">Create<span style="font-family: wingdings;">&#232;</span> 
+			Data Element<span style="font-family: wingdings;">&#232;</span>New Using Existing Data Element</span>
+			</p>
+			<p>
+			To create a new version of a Data Element select the <span style="font-weight: bold;">Create<span style="font-family: wingdings;">&#232;</span> 
+			Data Element<span style="font-family: wingdings;">&#232;</span>New Version</span>
+			</p>
+			<p class="centeredImage">
+          <img alt="image001 (44K)" src="Assets/Help/DE/image001.PNG" class="screenShot" height="235" width="792" />
+      </p>
+			<p class="imageText">
+          FIGURE 1<br>
+          Navigation Bar on the Search Screen <br>
+      </p>
+			<h4>Designate Data Elements</h4> 
+			<p>
+			Before you go to the trouble of creating a new Data Element 
       in your Context, you may choose to Designate an existing Data Element 
-      instead. Designating simply means that you will ‘point’ the existing Data 
+      instead. Designating simply means that you will &#145;point&#146; the existing Data 
       Element (including all of its attributes) to your Context. In other words, 
-      the designated Data Element will now be ‘Used By’ your Context. A complete 
+      the designated Data Element will now be &#145;Used By&#146; your Context. A complete 
       listing of Designation rules can be found on the <A 
       href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules/#Designations" 
       target=blank>NCI Center for Bioinformatics</A> Business Rules page. 
-      <BR><BR><SPAN class=red><B>NOTE: </B></SPAN>Only Data Elements may be 
+      <BR><BR>
+			<span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span>Only Data Elements may be 
       designated; and only those having the following workflow statuses: APPRVD 
       FOR TRIAL USE, CMTE APPROVED, CMTE SUBMTD USED, DRAFT MOD, RELEASED, OR 
-      RELEASED-NON-CMPLNT. <BR><BR><SPAN class=red><B>NOTE: </B></SPAN>If you 
+      RELEASED-NON-CMPLNT. 
+			<BR><BR>
+			<span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> If you 
       Designate a Data Element to your Context, you will have write privileges 
       for only a few attributes for that Data Element in its current version. 
       All other changes to the Data Element will be the responsibility of the 
       "owning" context. This is usually the context for which the Data Element 
-      was originally created. </TD></TR>
-  <TR>
-    <TD class=mainTopic colSpan=2><A name=searchResultsForm_designateDE></A><A 
-      name=designateForm_DesignateComponentPage></A><SPAN 
-      class=standOut>Designating</SPAN> Data Element(s) </TD></TR>
-  <TR>
-    <TD colSpan=2>Designating Data Element(s) using the CDE Curation Tool is a 
-      simple process. First, use the <A href="Help_SearchAC.html#searchForAC" 
-      target=Help_SearchAC>Search</A> feature to locate the Data Element(s) that 
-      you would like to designate. Select the desired Data Element(s) from the 
-      search results and click the b‘Designations’ action button at the top of 
-      the main search screen. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/Designate/image001.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 1<BR>Designations Button on the Main Search 
-      Screen </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><STRONG>Note:&nbsp;</STRONG>Use the Designations button one 
-      a Data Element is selected.</TD></TR>
-  <TR>
-    <TD>On the Designations screen you have the opportunity to Designate or 
-      Undesignate a Data Element to/from your Context, Create and/or Remove 
-      Altertnate Names, Create and/or Remove Reference Document attributes and 
-      Select and/or Remove Classification Schemes/ Classification Scheme Items 
-      for the selected Data Elements(s). The figures below illustrates the 
-      layout of the Designations screen. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/Designate/image002.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 2a<BR>Designations Screen Overview </TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><B>Note:</B> Action buttons specific to the Designations Screen.</P>
-      <P><STRONG>Note:</STRONG> <STRONG><SPAN 
-      class=red>Designate</SPAN></STRONG> or <STRONG><SPAN 
-      class=red>Undesignate</SPAN></STRONG> Data Elements here.</P>
-      <P><STRONG>Note: <SPAN class=red>Create</SPAN></STRONG> or <STRONG><SPAN 
-      class=red>Remove</SPAN></STRONG> Alternate Names here.</P></TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/Designate/image003.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 2b<BR>Designations Screen Overview </TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><B>Note:</B>&nbsp;<STRONG><SPAN class=red>Create</SPAN> </STRONG>or 
-      <STRONG><SPAN class=red>Remove</SPAN></STRONG> Reference Document 
-      Attributes here.</P>
-      <P><STRONG>Note: <SPAN class=red>Select</SPAN></STRONG> or <STRONG><SPAN 
-      class=red>Remove</SPAN></STRONG> Classification Schemes and Classification 
-      Scheme Items here.</P></TD></TR>
-  <TR>
-    <TD class=mainTopic colSpan=2><SPAN class=standOut>Designations</SPAN> 
-  </TD></TR>
-  <TR>
-    <TD colSpan=2>The first step for creating Designations or any other used 
-      by attributes is to select a Designation Context. This is done by 
-      selecting a value from the first drop down list. The Contexts in the drop 
-      down list vary from user to user depending on which Context(s) they have 
-      permissions.<BR><BR>If you wish to remove a Designation, select the 
-      Context you wish to remove and click the Remove Used By Attributes action 
-      button at the top of the screen. </TD></TR>
-  <TR>
-    <TD class=mainTopic colSpan=2><A name="Alternate Names"></A>Alternate Name 
-      Attributes</TD></TR>
-  <TR>
-    <TD colSpan=2>To Create an Alternate Name Attribute for the selected Data 
-      Element to be stored in your Context, select an Alternate Name Type from 
-      the drop down list and Create an Alternate Name by entering text in the 
-      field provided. Click Add Selection. Your newly created Alternate Name 
-      Attributes will be displayed in the Selected Alternate Name and Type 
-      fields.<BR><BR>To Remove an Alternate Name Attribute from your context for 
-      the selected Data Element(s), highlight the desired Alternate Name and 
-      click the Remove Item button. If the selected Alternate Name is not in 
-      your context a message will be displayed. Please note that Alternate Names 
-      must be removed individually. </TD></TR>
-  <TR>
-    <TD class=mainTopic colSpan=2><A 
-      name="Reference Document Attributes"></A>Reference Document Attributes 
-      </TD></TR>
-  <TR>
-    <TD colSpan=2>To Create Reference Document Attributes for the selected 
-      Data Element to be stored in your Context, select a Reference Document 
-      Type from the drop down list. Then enter text for the Reference Document 
-      Name and Text in the fields provided. If you wish to include a URL, simply 
-      type the desired URL into the field provided. Or you can click the Browse 
-      link to navigate to the desired URL and use the copy/paste method to 
-      select the URL. Future releases will incorporate the Upload Document 
-      function.<BR><BR>To Remove Reference Document Attributes from your context 
-      for the selected Data Element(s), highlight the desired Reference Document 
-      and click the Remove Item button. If the selected Reference Document is 
-      not in your context a message will be displayed. Please note that 
-      Reference Documents must be removed individually. </TD></TR>
-  <TR>
-    <TD class=mainTopic colSpan=2><A name="Classify ACs"></A>Classification 
-      Schemes and Classification Scheme Items (NEW Inherit Higher Level) </TD></TR>
-  <TR>
-    <TD colSpan=2>A Classification Scheme can be selected from the drop down 
-      list provided. Please note that only Classification Schemes/Items from 
-      Contexts in which you have write permissions can be selected. The 
-      associated Classification Scheme Items (CSIs) will be displayed in the box 
-      to the right in a heirarchial manner when appropriate. When desired CSIs 
-      are selected they are displayed in the boxes below. When the child is 
-      selected from the Class Scheme Items list, all its parents, up to top 
-      level, will be added in the selected list of Classification Scheme Items. 
-      User would have the option to remove unwanted parents. The hierarchial 
-      order is displayed in the "Associated Classification Scheme Items" field. 
-      When CSIs are highlighted, the Data Elements containing selected 
-      Classification Scheme Items are displayed.<BR><BR>To remove Classification 
-      Schemes and assiciated Items, highlight the desired values and click the 
-      Remove Item button. Please note that the only CS/CSIs in your Context(s) 
-      may be removed. </TD></TR></TR>
-  <TR>
-    <TD>Click the Update Used By Attributes or Remove Used By Attributes 
-      action buttons at the top of the screen to save the changes to the used by 
-      attributes for the selected Data Elements(s). Figure 3 illustrates the 
-      successful update of a Data Element. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image100.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 3<BR>Successful Update of Used By Attributes 
-      for a Data Element </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><B>Note:</B> Used-by Context Updated.</P>
-      <P><STRONG>Note:</STRONG> Success Message.</P>
-      <P><STRONG>1) </STRONG>Select OK.</P></TD></TR>
-  <TR>
-    <TD class=mainTopic colSpan=2><A name=createNewDE></A><A 
-      name="Create New"></A><SPAN class=standOut>Create </SPAN>New </TD></TR>
-  <TR>
-    <TD class=mainTopic colSpan=2><SPAN class=standOut>NOTE:</SPAN> All 
-      references to Create New actions apply to Edit actions as well. </TD></TR>
-  <TR>
-    <TD colSpan=2>The Curation Tool provides you with the ability to create a 
-      new Data Element, validate the Data Element’s attributes, and submit (i.e. 
-      store) the Data Element in the NCI’s Cancer Data Standards Repository 
-      (caDSR) database. </TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2>Create New Data Element Overview </TD></TR>
-  <TR>
-    <TD>Most of the primary functions of the CDE Curation Tool are accessed 
-      via the dark blue Navigation Bar at the top of each screen. To begin the 
-      Create New Data Element process, Select <B><SPAN class=navigation>Create 
-      <SPAN class=then>à</SPAN> Data Element <SPAN class=then>à</SPAN> 
-      New</SPAN></B> from the Navigation Bar at the top of the page.<BR><BR>You 
-      may also want to create a new Data Element using an existing Data Element 
-      as a starting template or you may want to version an existing Data 
-      Element. Both of these options can be accessed via the <B><SPAN 
-      class=navigation>Create <SPAN class=then>à</SPAN> Data Element</SPAN></B> 
-      menu in the Navigation Bar. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image001.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 4<BR>First Steps to Create a New Data Element 
-    </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><STRONG>Note: <SPAN class=red>Select</SPAN></STRONG> Create 
-      -&gt; Data Element -&gt; New from the Navigation Bar.</TD></TR>
-  <TR>
-    <TD colSpan=2><SPAN class=figureText>Figure 5</SPAN> is an annotated 
-      overview of the Create New Data Element screen. This screen follows a 
-      standard layout for selecting and creating Administered Component 
-      attributes. You will see this format for creating new administered 
-      components (like Data Element Concepts and Value Domains) throughout the 
-      Curation Tool. <B>The <SPAN class=standOut>asterisk (*)</SPAN> denotes a 
-      required field when creating an Administered Component.</B> </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image002.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR colspan="2">
-    <TD class=imageText>FIGURE 5<BR>Create New Data Element Screen </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><B>Note:</B> Action buttons related to Creating a new Data Element.</P>
-      <P><STRONG>Note: </STRONG>The asterisk (<STRONG><SPAN 
-      class=red>*</SPAN></STRONG>) denotes a required field.</P>
-      <P><STRONG>Note: <SPAN class=red>Search</SPAN></STRONG> for a Data Element 
-      Concept or <STRONG><SPAN class=red>Create</SPAN></STRONG> a new one.</P>
-      <P><STRONG>Note: <SPAN class=red>Search</SPAN></STRONG> for a Value Domain 
-      or <STRONG><SPAN class=red>Create</SPAN></STRONG> a new one.</P>
-      <P><STRONG>Note:</STRONG> Some Data Element Attributes can be 
-      <STRONG><SPAN class=red>edited</SPAN></STRONG>.</P>
-      <P><STRONG>Note:</STRONG> Some Data Element Attributes must be selected 
-      from a <STRONG><SPAN class=red>list</SPAN></STRONG>.</P>
-      <P><STRONG>Note: <SPAN class=red>Search</SPAN></STRONG> the NCI Thesaurus 
-      and Metathesaurus for Definitions.</P>
-      <P><STRONG>Note: <SPAN class=red>Scroll down</SPAN></STRONG> for more 
-      attributes.</P></TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><SPAN class=standOut>Select</SPAN> and <SPAN 
-      class=standOut>Enter</SPAN> Data Element Attributes </TD></TR>
-  <TR>
-    <TD class=subTopic2 colSpan=2><A name=newCDEForm_selContext></A><SPAN 
-      class=standOut>Select</SPAN> a Context </TD></TR>
-  <TR>
-    <TD colSpan=2>As a Curation Tool user, you have read and write permissions 
-      in at least one Context of the caDSR. You may only create new Data 
-      Elements in a Context where you have WRITE permissions. Select the desired 
-      Context from the drop down list underneath ‘1) <SPAN 
-      class=red>Select</SPAN> Context’. <SPAN class=figureText>Figure 6</SPAN> 
-      illustrates this process. </TD></TR>
-  <TR>
-    <TD colSpan=2><SPAN class=figureText>What is a Context?</SPAN> In an 
-      organization, the context [is] a specific function or business unit 
-      (ISO/IEC 11179-1:E). For example, if you are creating data elements for a 
-      bank, one context may be Account Services, and another may be Loan 
-      Services. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image003.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 6<BR>Select a Context </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><STRONG>Note: <SPAN class=red>Select</SPAN> </STRONG>Context 
-      from the drop down menu. (Note: you must have write permissions within a 
-      context to create a new data element in that context).</TD></TR>
-  <TR>
-    <TD class=subTopic2 colSpan=2><SPAN class=standOut>Name</SPAN> a Data 
-      Element </TD></TR>
-  <TR>
-    <TD colSpan=2>The ISO 11179 Standard describes a Data Element as the 
-      combination of a Data Element Concept (specifies conceptual information 
-      about the Data Element) and a Value Domain (the set of Permissible Values 
-      for a Data Element). The first step when naming your new Data Element is 
-      to select a Data Element Concept (DEC). </TD></TR>
-  <TR>
-    <TD colSpan=2><SPAN class=figureText>What is a Data Element 
-      Concept?</SPAN><BR>The ISO/IEC 11179 Standard describes a Data Element 
-      Concept as relating several data elements that record data about that 
-      concept with different representations. For example, a concept of 
-      PatientPlaceOfBirth is a Data Element Concept.<BR>A Data Element Concept 
-      is composed of an Object Class, a Property Class and Qualifiers for both. 
-    </TD></TR>
-  <TR>
-    <TD colSpan=2><SPAN class=figureText>What is an Object 
-      Class?</SPAN><BR>The ISO 11179 Standard describes an Object Class as ‘a 
-      set of ideas, abstractions, or things in the real world that can be 
-      identified with explicit boundaries and meaning and whose properties and 
-      behavior follow the same rules’. In other words, Object Classes are the 
-      ‘things about which you want to store and collect data’. General examples 
-      of Object Classes include cars, trucks, motorcycles, etc. For the example 
-      of PatientPlaceOfBirth, an Object Class is Patient. </TD></TR>
-  <TR>
-    <TD colSpan=2><SPAN class=figureText>What is a Property?</SPAN><BR>The ISO 
-      11179 Standard describes a Property as ‘a peculiarity common to all 
-      members of an object class’. In other words, properties are ‘what humans 
-      use to describe or distinguish Objects’. For the example given above, a 
-      Property is PlaceOfBirth. </TD></TR>
-  <TR>
-    <TD colSpan=2><SPAN class=figureText>What are Qualifiers?</SPAN><BR>The 
-      ISO 11179 Standard describes Qualifiers as being used to ‘differentiate 
-      between names (i.e. Object Class and Property combinations) that would 
-      otherwise be the same’. For the example of PatientPlaceOfBirth, a 
-      Qualifier of year is used to indicate a specific year. </TD></TR>
-  <TR>
-    <TD class=subTopic2 colSpan=2><A name=newCDEForm_selDEC></A><SPAN 
-      class=standOut>Select</SPAN> a Data Element Concept </TD></TR>
-  <TR>
-    <TD colSpan=2>Select a Data Element Concept for your new Data Element by 
-      clicking on the <A href="Help_SearchAC.html#searchForAC" 
-      target=Help_SearchAC>Search</A> link next to the Data Element Concept 
-      field. <SPAN class=figureText>Figure 7</SPAN> highlights the location of 
-      this link. You can also <A href="Help_CreateDEC.html#createNewDEC" 
-      target=Help_CreateDEC>Create a new Data Element Concept</A> by clicking on 
-      the Create New link. See the Create Data Element Concept section of this 
-      document for further instructions. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image004.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 7<BR>Select a Data Element Concept </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>Note: <SPAN class=red>Search</SPAN></STRONG> for an existing 
-      Data Element Concept by selecting the Search link.&nbsp; 
-      <STRONG>OR</STRONG></P>
-      <P><STRONG>Note: <SPAN class=red>Create a New</SPAN></STRONG> Data Element 
-      Concept by selecting the Create New link.</P></TD></TR>
-  <TR>
-    <TD colSpan=2><SPAN class=figureText>Figure 8</SPAN> is an overview of the 
-      Search screen for the Data Element Concepts. All search screens have 
-      similar layouts and functionality. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image101.jpg">&nbsp; </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 8<BR>Search Screen for a Data Element Concept 
-    </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><B>Note:</B> The search window will only search for Data Element 
-      Concepts.</P>
-      <P><STRONG>1) </STRONG>Select a field to search in. Includes Names and 
-      Definition, Public ID and Origin.</P>
-      <P><STRONG>2) </STRONG>Enter a search term.</P>
-      <P><STRONG>3)</STRONG> Select search filters.</P>
-      <P><STRONG>4) </STRONG>Select/Update display attributes.</P>
-      <P><STRONG>5)</STRONG> Start the search.</P></TD></TR>
-  <TR>
-    <TD colSpan=2>Once you have searched for a Data Element Concept and 
-      identified the one you would like to use, simply check the box next to 
-      that term. Then click on the ‘Use Selection’ button at the top of the 
-      search results screen. This process is described in detail in <SPAN 
-      class=figureText>Figure 9.</SPAN> </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image102.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 9<BR>Select a Data Element Concept from Search 
-      Results </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>1)</STRONG> Select the Data Element Concept you want to 
-use.</P>
-      <P><STRONG>2)</STRONG> Click the Use Selection button.&nbsp; Selecting 
-      this button will automatically close this screen and populate the DEC 
-      field on the Create Data Element window with the selected Data Element 
-      Concept.</P></TD></TR>
-  <TR>
-    <TD colSpan=2><SPAN class=figureText>Figure 10</SPAN> is an example of 
-      what the Create New Data Element screen looks like once you have selected 
-      a Data Element Concept. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image007.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 10<BR>View the Selected Data Element Concept 
-</TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><B>Note:</B> The DEC Long Name field, the DE Long Name 
-      field, the DE Short Name field, and the Definition are all 
-      automatically populated with the information from the DEC selected.</TD></TR>
-  <TR>
-    <TD class=subTopic2 colSpan=2><A name=newCDEForm_selVD></A><SPAN 
-      class=standOut>Select</SPAN> a Value Domain </TD></TR>
-  <TR>
-    <TD colSpan=2>The next step in creating your new Data Element is to select 
-      a Value Domain (VD). This process is very similar to the one you completed 
-      when selecting a Data Element Concept. <SPAN class=figureText>Figure 
-      11</SPAN> is an overview of how to <A 
-      href="Help_SearchAC.html#searchForAC" target=Help_SearchAC>Search</A> for 
-      and select a Value Domain. You can also <A 
-      href="Help_CreateVD.html#createNewVD" target=Help_CreateVD>Create a new 
-      Value Domain</A> by clicking on the Create New link. See the Create Value 
-      Domain section of this document for further instructions. </TD></TR>
-  <TR>
-    <TD colSpan=2><SPAN class=figureText>What is a Value Domain?</SPAN><BR>The 
-      ISO 11179 Standard describes a Value Domain as ‘a set of permissible 
-      values’. An example is the Value Domain of ‘Gender Category: M,F’. The 
-      permissible values for this Value Domain would be ‘M means Male’ and ‘F 
-      means Female’. A Data Element is associated with only one Value Domain, 
-      and the name of the Value Domain describes all of the data values that are 
-      included in that domain. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image103.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 11<BR>Search for and Select a Value Domain </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><B>Note:</B> Searching for Value Domains is similar to searching for 
-      Data Element Concepts.</P>
-      <P><STRONG>1)</STRONG> Select the Value Domain you want to use.</P>
-      <P><STRONG>2)</STRONG> Click the Use Selectiion button.&nbsp; The search 
-      results window will close and the Value Domain field will be automatically 
-      populated.</P></TD></TR>
-  <TR>
-    <TD class=subTopic2 colSpan=2><A name=newCDEForm_txtLongName></A><A 
-      name=newCDEForm_txtPreferredName></A><SPAN class=standOut>Verify</SPAN> 
-      Long Name and Short Name </TD></TR>
-  <TR>
-    <TD colSpan=2>The CDE Curation Tool automatically generates suggested 
-      drafts of the Long Name and Short Name. These suggestions are made up 
-      of the building blocks you selected in the previous steps. The Long Name 
-      field will contain the full names of the selected building blocks. The 
-      Short Name will be populated with the searched DEC and VD long names 
-      in all caps separated by '_'. If DEC and/or VD were newly created, the DE 
-      Short Name will be populated with the first 4 letters of the building 
-      blocks used to create the DEC and/or VD separated by the character 
-      '_'.<BR><BR>These fields are editable, allowing you to make changes to the 
-      names. <SPAN class=figureText>&nbsp;Figure 12</SPAN> illustrates the 
-      location of the draft long name and Short Name. </TD>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image009.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 12<BR>Verify the Long Name and Short Name 
-    </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><B>Note:</B> The draft DE Long Name and Short Name appear in these 
-      boxes.&nbsp; However, you may edit these fields by manually entering 
-      text.</P>
-      <P><STRONG>Note:</STRONG> A character count is displayed because there is 
-      a <STRONG>caDSR database limit</STRONG> for Long Name and Preferred 
-      Name.</P></TD></TR>
-  <TR>
-    <TD colSpan=2><SPAN class=standOut><B>NOTE:</B></SPAN> The caDSR database 
-      length limit for Long Name is 255 characters. The caDSR database length 
-      limit for Short Name is 30 characters. Context Administrators may 
-      choose to set additional length limits (not enforced by this tool) if 
-      desired. </TD></TR>
-  <TR>
-    <TD class=subTopic2 colSpan=2><A 
-      name=newCDEForm_CreateDefinition></A><SPAN class=standOut>Define</SPAN> a 
-      Data Element </TD></TR>
-  <TR>
-    <TD colSpan=2>The ISO 11179 Standard describes a Data Element definition 
-      as ‘A statement that expresses the essential nature of a Data Element and 
-      permits its differentiation from all other Data Elements’. Think of a Data 
-      Element definition as containing the essential semantic content of a Data 
-      Element (i.e. its meaning). The CDE Curation Tool provides you with three 
-      options for defining a Data Element. Each of these options is described in 
-      detail below. </TD></TR>
-  <TR>
-    <TD class=subTopic3 colSpan=2><SPAN class=standOut>Create</SPAN> a 
-      Definition </TD></TR>
-  <TR>
-    <TD colSpan=2>The tool automatically generates a draft definition composed 
-      of the definition of the selected Data Element Concept and Value Domain 
-      separated by the character "_". See <SPAN class=figureText>Figure 
-      13.</SPAN> </TD></TR>
-  <TR>
-    <TD class=subTopic4 colSpan=2><B><SPAN class=standOut>Create</SPAN> a 
-      Definition by <SPAN class=standOut>Entering</SPAN> Text</B><BR></TD></TR>
-  <TR>
-    <TD colSpan=2>You may edit the draft definition or create a definition 
-      from scratch by manually entering text in the definition text box. <SPAN 
-      class=figureText>Figure 13</SPAN> highlights the Definition text box. 
-  </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image010.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 13<BR>Create a Definition by Entering Text or 
-      Search for a Definition </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><B>Note:</B> The definition is populated with information from the 
-      selected Data Element Concept and Value Domain.&nbsp; However, the 
-      definition is editable by entering text or by using the search function 
-      below.</P>
-      <P><STRONG>1) <SPAN class=red>Edit</SPAN></STRONG> the default definition 
-      by entering text. <STRONG>OR</STRONG></P>
-      <P><STRONG>2) <SPAN class=red>Search</SPAN></STRONG> the Cancer Data 
-      Standards Repository (caDSR), the NCI Thesaurus and the Metathesaurus for 
-      additional definition information.</P></TD></TR>
-  <TR>
-    <TD class=subTopic4 colSpan=2><SPAN class=standOut>Search</SPAN> the NCI 
-      Thesaurus and Metathesaurus for a Definition </TD></TR>
-  <TR>
-    <TD colSpan=2>You may also want to access the NCI Thesaurus and 
-      Metathesaurus to <A href="Help_EVS.html#EVSSearchDef" 
-      target=Help_EVS>search for a definition</A>. <SPAN class=figureText>Figure 
-      13</SPAN> highlights the location of the NCI Thesaurus and Metathesaurus 
-      access button. </TD></TR>
-  <TR>
-    <TD class=subTopic4 colSpan=2><SPAN class=standOut>Suggest</SPAN> the 
-      Definition or Term to the Enterprise Vocabulary Services (EVS) </TD></TR>
-  <TR>
-    <TD colSpan=2>If you cannot find an appropriate concept or definition, you 
-      may <A href="Help_EVS.html#EVSSubmitSuggestion" target=Help_EVS>suggest a 
-      definition or term</A> to EVS by Clicking the "Submit Suggestion to EVS" 
-      button. </TD></TR>
-  <TR>
-  <TR>
-    <TD class=subTopic2 colSpan=2><A name=newCDEForm_Version></A><SPAN 
-      class=standOut>Select</SPAN> a Version </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image015.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 14<BR>Enter a Version </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><STRONG>Note: <SPAN class=red>Enter</SPAN></STRONG> a 
-      Version. (The default is 1.0, but is editable.)</TD></TR>
-  <TR>
-    <TD colSpan=2>The default version for a New Data Element is 1.0. However, 
-      the Version text box is editable. </TD></TR>
-  <TR>
-    <TD class=subTopic3 colSpan=2><A name=newCDEForm_Version></A>Versioning 
-      Rules Link</TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A name=newCDEForm_selStatus></A><SPAN 
-      class=standOut>Select</SPAN> a Workflow Status </TD></TR>
-  <TR>
-    <TD colSpan=2>Select a Data Element’s Workflow Status by choosing from the 
-      list of available Workflow Statuses in the drop down list. <SPAN 
-      class=figureText>Figure 15</SPAN> illustrates this operation. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image016.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 15<BR>Select the Desired Workflow Status </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><STRONG>Note: <SPAN class=red>Select</SPAN></STRONG> a 
-      Workflow Status from the drop down list. (The <STRONG>default</STRONG> Workflow Status for a New Data Element 
-      is Draft New).</TD></TR>
-  <TR>
-    <TD colSpan=2>Many workflow statuses are listed and defined on the <A 
-      href="http://ncicb.nci.nih.gov/NCICB/core/caDSR/BusinessRules" 
-      target=blank>NCI Center for Bioinformatics</A> caDSR Business Rules page. 
-    </TD></TR>
-  <TR>
-    <TD class=subTopic3 colSpan=2><A name=newCDEForm_Version></A>Business 
-      Rules Link </TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A name=newCDEForm_selRegStatus></A><SPAN 
-      class=standOut>Select</SPAN> a Registration Status </TD></TR>
-  <TR>
-    <TD colSpan=2>A Registration Status designates the position of the Data 
-      Element in its registration life-cycle. Select a Data Element’s 
-      Registration Status by choosing from the list of available Registration 
-      Statuses in the drop down list. <SPAN class=figureText>Figure 16</SPAN> 
-      illustrates this operation. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image017.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 16<BR>Select the Desired Registration Status 
-</TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><STRONG>Note: <SPAN class=red>Select</SPAN></STRONG> a 
-      Registration Status from the drop down list. (The <STRONG>default</STRONG> Registration Status for a New Data 
-      Element is blank).</TD></TR>
-  <TR>
-    <TD class=subTopic3 colSpan=2><A name=newCDEForm_Version></A>Business 
-      Rules Link</TD></TR>
-  <TR>
-    <TD class=subTopic2 colSpan=2><A name=newCDEForm_BeginDate></A><SPAN 
-      class=standOut>Enter/Select</SPAN> the Effective Begin Date </TD></TR>
-  <TR>
-    <TD colSpan=2>You may enter the Effective Begin Date in two ways. Either 
-      enter the date in the text box using the format MM/DD/YYYY or click on the 
-      calendar icon and select the date. <SPAN class=figureText>Figure 17</SPAN> 
-      illustrates the steps required for entering or selecting an Effective 
-      Begin Date for a Data Element. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image018.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 17<BR>Enter/Select the Effective Begin Date </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>1) <SPAN class=red>Enter/Select</SPAN></STRONG> the Effective 
-      Begin Date, either by clicking on the Calendar Icon (located to the right 
-      of the Begin Date text box), or by typing in the date in the format 
-      shown.</P>
-      <P><STRONG>2) <SPAN class=red>Click</SPAN></STRONG> on a date on the 
-      calendar pop-up-window to change the date that appears in the Effective 
-      Begin Date text box. (Note: The <strong>default</STRONG> Effective Begin Date for a New Data 
-      Element is the current date.)</P></TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A 
-      name=newCDEForm_CreateDocumentText></A><SPAN class=standOut>Create</SPAN> 
-      Preferred Question Text for a Data Element </TD></TR>
-  <TR>
-    <TD colSpan=2>Preferred Question Text is the actual text that will appear for the 
-      Data Element on a Form. This text is associated with the Data Element you 
-      are creating. For Example, the text that will appear on the form for our 
-      new Data Element is ‘Home address, Patient’. <SPAN class=figureText>Figure 
-      18</SPAN> highlights where this text should be entered. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image019.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 18<BR>Create Preferred Question Text </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><STRONG>Note: <SPAN class=red>Create</SPAN></STRONG> 
-      Preferred Question Text in the Preferred Question Text box.&nbsp; Preferred Question Text is what will 
-      appear on the Case Report Form (if the Data Element is intended for CRF 
-      use).</TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A name=newCDEForm_selCS></A><SPAN 
-      class=standOut>Select</SPAN> Classification Scheme/Classification Scheme 
-      Items </TD></TR>
-  <TR>
-    <TD class=subTopic2 colSpan=2>Hierarchial CSIs inherit higher level CSI 
-      </TD></TR>
-  <TR>
-    <TD colSpan=2>Classification Schemes are a way of grouping Data Elements 
-      based on common characteristics. Classifications also help add information 
-      about Data Elements that is not easily included in definitions. For 
-      example, you might want to classify Data Elements as belonging to the 
-      Classification Scheme Type of Disease. A Classification Scheme Item (CSI) 
-      is a component of content in a Classification Scheme (i.e. Liver 
-      Cancer).<BR><BR>The parent-child relationship of Classification Scheme 
-      Items is displayed in a hierarchical order using 
-      indentations.<BR><BR><SPAN class=figureText>Figure 19</SPAN> illustrates 
-      the process of selecting Classification Schemes and displaying 
-      Classification Scheme Items. <SPAN class=figureText>Figure 20</SPAN> 
-      illustrates the process of selecting Classification Scheme Items. <SPAN 
-      class=figureText>Figure 21</SPAN> illustrates the process of viewing the 
-      parent/child relationship of classification scheme items. Once selected, 
-      Classification Schemes and Classification Scheme Items can be removed by 
-      highlighting the desired item and then clicking the Remove Item button. 
-      <SPAN class=figureText>Figure 22</SPAN> illustrates this process. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image020.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 19<BR>Select Classification Scheme </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>1) <SPAN class=red>Select</SPAN></STRONG> a Classification 
-      Scheme from the drop down list.</P>
-      <P><STRONG>2)</STRONG> The Classification Scheme Items are displayed in 
-      hierarchical manner.</P></TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image104.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 20<BR>Select Classification Scheme Items </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><B>Note:</B>&nbsp;When Classification Scheme Items are 
-      selected from the list, it and all of its parents are also written to the 
-      DE and displayed in hierarchical order in the Associated Classification 
-      Schemes Items field.</TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image105.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 21<BR>Remove Selected Classification Schemes 
-      and Classification Scheme Items </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><B>Note:</B> Classification Scheme and Classification Scheme 
-      Items can be removed from the Data Element by selecting the Classification 
-      Scheme or the Classification Scheme Item and clicking the corresponding 
-      Remove Item button.</TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A name=newCDEForm_selSource></A><SPAN 
-      class=standOut>Select</SPAN> the Origin </TD></TR>
-  <TR>
-    <TD colSpan=2>The source of a Data Element is its Origin. <SPAN 
-      class=figureText>Figure 22</SPAN> demonstrates how to select a Data 
-      Element Origin. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image024.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 22<BR>Select Data Element Origin </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><STRONG>Note: <SPAN class=red>Select</SPAN></STRONG> the 
-      Data Element Origin.&nbsp; Data Element Origin is applicable if the Data 
-      Element you are creating came from another standard reference source, or 
-      as the result of a CDE Committee process.</TD></TR>
-  <TR>
-    <TD class=subTopic2 colSpan=2><A name=newCDEForm_selLanguage></A><SPAN 
-      class=standOut>Confirming</SPAN> the Language </TD></TR>
-  <TR>
-    <TD colSpan=2>The default language for Data Elements is English. <SPAN 
-      class=figureText>Figure 23</SPAN> highlights where to confirm the language 
-      for your New Data Element. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image025.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 23<BR>Confirm the Language </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><STRONG>1) <SPAN class=red>Confirm</SPAN></STRONG> the 
-      Language for your new Data Element.</TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A name=newCDEForm_EndDate></A><SPAN 
-      class=standOut>Enter/Select</SPAN> the Effective End Date </TD></TR>
-  <TR>
-    <TD colSpan=2>Enter the Effective End Date in two ways; either enter the 
-      date in the text box using the format MM/DD/YYYY or&nbsp; click on the 
-      calendar icon and select the date. <SPAN class=figureText>Figure 24</SPAN> 
-      illustrates the steps required for entering or selecting an Effective End 
-      Date for a Data Element. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image026.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 24<BR>Enter/Select the Effective End Date </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>1) <SPAN class=red>Enter/Select</SPAN></STRONG> the Effective 
-      End Date, either by clicking on the Calendar Icon (located to the right of 
-      the End Date text box), or by typing in the date in the format shown.</P>
-      <P><STRONG>2) <span class=red>Click</span></STRONG> on a date on the calendar pop-up-window to 
-      change the date that appears in the Effective End Date text box.</P></TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A name=newCDEForm_CreateComment></A><SPAN 
-      class=standOut>Creating</SPAN> a Comment/Change Note </TD></TR>
-  <TR>
-    <TD colSpan=2><SPAN class=figureText>Figure 25</SPAN> illustrates the 
-      steps required for Comment/Change Note for a Data Element. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image027.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 25<BR>Create the Comment/Change Note </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><STRONG>Note: <SPAN class=red>Create</SPAN></STRONG> a 
-      Comment/Change Note by entering text into the text box.</TD></TR><!--Insert short text about ability to VALIDATE at this POINT--><!--Insert Text about Derived Data Elements-->
-  <TR>
-    <TD class=mainTopic colSpan=2><SPAN class=standOut>Create</SPAN> Derived 
-      Components </TD></TR>
-  <TR>
-    <TD colSpan=2><SPAN class=figureText>What is a Derived Data 
-      Element?</SPAN><BR>The ISO 11179 Standard describes a Derived Data Element 
-      as the relationship among a derived administered data component, the rule 
-      controlling its derivation, and the administered data component(s) from 
-      which it is derived.<BR><BR>An example is concatenation for the formation 
-      of a telephone number from its constituent parts. In the U.S., telephone 
-      numbers are uniquely described with ten digits, and these numbers can 
-      easily be represented by a data element. However, the telephone companies 
-      (and others) need the telephone number separated into area code, exchange 
-      code, and line number, making three data elements. Concatenating the area 
-      code, exchange code, and line number (in the right way) allows the 
-      formation of a data element representing the full telephone 
-      number.<BR><BR>The derivation associated with a data element constitutes a 
-      powerful way of associating existing data elements with new ones that are 
-      needed. A Derived Data Element can be created or edited on the bottom 
-      section of the Create or Edit Data Element screens. </TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A name=newCDEForm_selRepType></A><SPAN 
-      class=standOut>Select</SPAN> a Representation Type </TD></TR>
-  <TR>
-    <TD colSpan=2>Representation Type is defined as the type of Derived Data 
-      Element that is being created. For example a Data Element that is derived 
-      by subtracting two dates&nbsp;represented by other data elements would be 
-      a Calculated Representation Type. <SPAN class=figureText>Figure 26</SPAN> 
-      illustrates the mandatory step required for selecting a Representation 
-      Type for a Derived Data Element. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image028.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 26<BR>Select a Representation Type </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><B>Note:</B>&nbsp;The asterisk (<STRONG><SPAN 
-      class=red>*</SPAN></STRONG>) indicates required fields for creating a 
-      Derived Data Element.</P>
-      <P><STRONG>Note: <SPAN class=red>Select</SPAN></STRONG> a Representation 
-      Type from the drop down list.</P></TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A name=newCDEForm_DDERule></A><SPAN 
-      class=standOut>Creating</SPAN> a Rule </TD></TR>
-  <TR>
-    <TD colSpan=2>The ISO 11179 Standard describes Derivation Rules as the 
-      logical, mathematical, and/or other operations specifying derivation. The 
-      rule may range from a simple operation such as subtraction to a very 
-      complex set of derivations. <SPAN class=figureText>Figure 27</SPAN> 
-      illustrates this mandatory process. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image029.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 27<BR>Create a Rule <BR>Create a 
-      Method<BR>Enter a Concatenation Character </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>1) <SPAN class=red>Create</SPAN></STRONG> a Derivation Rule by 
-      entering text.</P>
-      <P><STRONG>2) <SPAN class=red>Create</SPAN></STRONG> a Derivation Method 
-      by entering text.</P>
-      <P><STRONG>3) <SPAN class=red>Enter</SPAN></STRONG> a Concatenation 
-      Character.</P></TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A name=newCDEForm_DDEMethod></A><SPAN 
-      class=standOut>Creating</SPAN> Methods </TD></TR>
-  <TR>
-    <TD colSpan=2>ISO defines Derivation Rule Application (Method) as the 
-      relationship specifying the derivation rule for an administered data 
-      component derivation. A method is usually entered for a Derived Data 
-      Element that has a Representation Type of Object Class, Complex Recode or 
-      Calculated. <SPAN class=figureText>Figure 27</SPAN> illustrates this 
-      process. </TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A name=newCDEForm_DDEConcatChar></A><SPAN 
-      class=standOut>Enter</SPAN> a Concatenation Character </TD></TR>
-  <TR>
-    <TD colSpan=2>A concatenation character is simply a symbol or character 
-      that represents the concatenation of the derived data element. A 
-      concatenation character is usually entered for a Derived Data Element that 
-      has a Representation Type of Concatenation, Simple Recode, Complex Recode, 
-      or Calculated. <SPAN class=figureText>Figure 27</SPAN> illustrates this 
-      process. </TD></TR>
-  <TR>
-    <TD class=subTopic1 
-      colSpan=2><!--<a name="newCDEForm_EndDate"></a>--><SPAN 
-      class=standOut>Searching</SPAN> for or <SPAN 
-      class=standOut>Creating</SPAN> Data Element Components </TD></TR>
-  <TR>
-    <TD colSpan=2>Derived Data Elements are represented by individual data 
-      elements. The CDE Curation tool allows the user to search for existing or 
-      to create new data elements to be used as components for the Derived Data 
-      Element. <SPAN class=figureText>Figure 28</SPAN> illustrates how to <A 
-      href="Help_SearchAC.html#searchForAC" target=Help_SearchAC>Search</A> for 
-      existing data elements. Refer to the beginning of this section on 
-      instructions to <A href="Help_CreateDE.html#createNewDE" 
-      target=Help_CreateDE>Create a new Data Element.</A> </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image030.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 28<BR>Search for the Data Element Components 
-</TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>Note: <SPAN class=red>Search</SPAN> </STRONG>for a Data Element 
-      to use as a Data Element Component. <STRONG>OR</STRONG></P>
-      <P><STRONG>Note: <SPAN class=red>Create</SPAN></STRONG> a New Data 
-      Element.</P></TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A name=newCDEForm_selDEComp></A><SPAN 
-      class=standOut>Select</SPAN> Data Element Components </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image106.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 29<BR>Select the Data Element Components </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>1)</STRONG> Select the concept(s) you wish to use.</P>
-      <P><STRONG>2)</STRONG> Click the Use Selection button.</P>
-      <P><STRONG>3)</STRONG> When all desired DEs are selected, Click the Close 
-      Window button to return to the Create/Edit screen.</P></TD></TR>
-  <TR>
-    <TD class=subTopic2 colSpan=2><A name=newCDEForm_txtDECompOrder></A><A 
-      name=newCDEForm_selOrderList></A><SPAN class=standOut>Enter</SPAN> a 
-      Display Order </TD></TR>
-  <TR>
-    <TD colSpan=2>A display order can be entered to specify the order in which 
-      data element components will be displayed within the created Derived Data 
-      Element. For example the display order of components within the 
-      concatenation of a phone number is area code=1, exchange=2 and line 
-      number=3. <SPAN class=figureText>Figure 30</SPAN> illustrates this 
-      process. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image032.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 30<BR>Enter a Display Order </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><B>Note:</B> The selected Data Elements are displayed.</P>
-      <P><STRONG>1) <SPAN class=red>Enter</SPAN></STRONG> a display order by 
-      highlighting a Data Element and typing the display number in the Enter 
-      Display Order box.</P></TD></TR>
-  <TR>
-    <TD class=subTopic2 colSpan=2><A 
-      name=newCDEForm_selOrderedDEComp></A><SPAN class=standOut>Deleting</SPAN> 
-      a Selected Data Element Component </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image033.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 31<BR>Delete a Data Element Component </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><STRONG>Note: <SPAN class=red>Remove</SPAN></STRONG> a Data 
-      Element Component by highlighting the desired&nbsp;Data Element and 
-      clicking the Romove Item button.</TD></TR>
-  <TR>
-    <TD class=mainTopic colSpan=2><SPAN class=standOut>Create</SPAN> New from 
-      Existing <A name="Create New from Existing"></A></TD></TR>
-  <TR>
-    <TD colSpan=2>To create a new Data Element from an existing Data Element. 
-    </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image109.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 32a<BR>Access the Create New Data Element from 
-      existing screen </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><B>Note:</B> Select the Create -&gt; Data Element -&gt; New 
-      Using Existing Data Element.</TD></TR>
-  <TR>
-    <TD colSpan=2>Use the <A href="Help_SearchAC.html#searchForAC" 
-      target=Help_SearchAC>Search</A> feature to locate the Data Element you 
-      would like to use as a template for creating a new Data Element. Once you 
-      have selected the desired Data Element, click the 'Create New from 
-      Existing' button at the top of the screen. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image110.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 32b<BR>Select the Data Element </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>1)</STRONG> Select the Data Element you wish to use as a 
-      template.</P>
-      <P><STRONG>2)</STRONG> Click the Create New from Existing.</P></TD></TR>
-  <TR>
-    <TD colSpan=2>Existing attributes from the selected Data Element are 
-      displayed. Refer to the <A href="Help_CreateDE.html#createNewDE" 
-      target=Help_CreateDE>Create New</A> section of this document. </TD></TR>
-  <TR>
-    <TD class=mainTopic colSpan=2><SPAN class=standOut>Create</SPAN> New 
-      Version <A name="Create New Version"></A></TD></TR>
-  <TR>
-    <TD colSpan=2>To create a new version of a Data Element. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image111.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 32c<BR>Access the Create New Data Element 
-      version </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><STRONG>1) </STRONG>Select the Create -&gt; Data Element 
-      -&gt; New Version.</TD></TR>
-  <TR>
-    <TD colSpan=2>Use the <A href="Help_SearchAC.html#searchForAC" 
-      target=Help_SearchAC>Search</A> feature to locate the Data Element you 
-      would like to use to create a new version. Once you have selected the 
-      desired Data Element, click the 'Create New Version' button at the top of 
-      the screen. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image112.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 32d<BR>Select the Data Element </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><B>1)</B>&nbsp;Select the Data Element you wish to Version.</P>
-      <P><STRONG>2)</STRONG> Click the Create New Version.</P></TD></TR>
-  <TR>
-    <TD colSpan=2>Existing attributes from the selected Data Element are 
-      displayed. Refer to the <A href="Help_CreateDE.html#createNewDE" 
-      target=Help_CreateDE>Create New</A> section of this document. </TD></TR>
-  <TR>
-    <TD class=mainTopic colSpan=2><A name=Edit></A><SPAN 
-      class=standOut>Edit</SPAN> </TD></TR>
-  <TR>
-    <TD colSpan=2>You may only edit Data Elements in a Context where you have 
-      WRITE permission.<BR><BR>To begin the Edit process, <A 
-      href="Help_SearchAC.html#searchForAC" target=Help_SearchAC>Search</A> for 
-      a Data Element that you wish to edit. </TD></TR>
-  <TR>
-    <TD colSpan=2>Search for and select one Data Element in the Search Results 
-      table and press the Edit Selection button. <SPAN class=figureText>Figures 
-      33-34</SPAN> illustrate this process. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image039.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 33<BR>Search for a Data Element to Edit </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>Note: <SPAN class=red>Select</SPAN></STRONG> Data Element from 
-      the Search For drop down list. <STRONG>OR</STRONG></P>
-      <P><STRONG>Note: <SPAN class=red>Select</SPAN></STRONG> Edit -&gt; Data 
-      Element from the Navigation Bar.</P></TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image040.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 34<BR>Select a Data Element to Edit </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>1) <SPAN class=red>Select</SPAN></STRONG> the record.</P>
-      <P><STRONG>2) <SPAN class=red>Click</SPAN></STRONG>&nbsp;the Edit 
-      Selection button.</P></TD></TR>
-  <TR>
-    <TD colSpan=2><A name=newCDEForm_CDE_IDTxt></A>Clicking the Edit Selection 
-      button will take you to an Edit screen. This screen is very similar to the 
-      Create screen. Refer to the <A href="Help_CreateDE.html#createNewDE" 
-      target=Help_CreateDE>Create New</A> section of this document. <SPAN 
-      class=figureText>FIGURE 35</SPAN> illustrates the Edit Data Element 
-      screen. Existing attributes from the selected Data Element are displayed. 
-      Attributes that are not editable are grayed out. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image041.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 35<BR>Edit Data Element Screen </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><B>Note:</B> Existing attributes are displayed for the selected Data 
-      Element.&nbsp; Attributes that cannot be edited are grayed out.</P>
-      <P><STRONG>Note:</STRONG> Public ID is displayed, but not 
-  editable.</P></TD></TR>
-  <TR>
-    <TD class=mainTopic colSpan=2><SPAN class=standOut>Block Edit</SPAN> <A 
-      name="Block Edit"></A></TD></TR>
-  <TR>
-    <TD colSpan=2>You may only edit Data Elements in a Context where you have 
-      WRITE permission.<BR><BR><A href="Help_SearchAC.html#searchForAC" 
-      target=Help_SearchAC>Search</A> for and select multiple Data Elements in 
-      the Search Results table and press the Block Edit button to perform 
-      simultaneous edits on multiple Data Elements. <SPAN 
-      class=figureText>Figures 36-37</SPAN> illustrate this process. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image042.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 36<BR>Select Data Elements for Block Edit </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>1) <SPAN class=red>Select</SPAN></STRONG> the records to be 
-      edited.</P>
-      <P><STRONG>2) <SPAN class=red>Click</SPAN></STRONG> the Block Edit 
-      button.</P></TD></TR>
-  <TR>
-    <TD colSpan=2>The following attributes may be simultaneously edited for a 
-      group of Data Elements: 
-      <UL>
-        <LI>DEC Long Name </LI>
-        <LI>VD Long Name </LI>
-        <LI>Version &nbsp;&nbsp; </LI>
-        <LI>Workflow Status </LI>
-        <LI>Effective Begin Date </LI>
-        <LI>Preferred Question Text</LI>
-        <LI>Classification Scheme/Classification Scheme Items </LI>
-        <LI>Language &nbsp;&nbsp; </LI>
-        <LI>Origin </LI>
-        <LI>Effective End Date </LI>
-        <LI>Comment/Change Note &nbsp;&nbsp; </LI></UL></TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image043.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 37<BR>Block Edit of Data Elements </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><B>Note:</B> No existing data for any of the selected Data Elements 
-      (DE) will be displayed on the Block Edit page.&nbsp; Classification 
-      Schemes (CS) and Classification Scheme Items (CSI) are an exception.&nbsp; 
-      CSs and CSIs that are added will be added to all DEs involved in the edit, 
-      but CSs and CSIs that are removed will only be removed from the DEs where 
-      they currently exist.&nbsp; All changes to an attribute on this form will 
-      change the corresponding attribute in all the Data Elements involved in 
-      this edit.&nbsp; Attributes that cannot be block edited are grayed 
-    out.</P></TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A 
-      name=newCDEForm_BlockselCS></A>Classification Schemes and Classification 
-      Scheme Items </TD></TR>
-  <TR>
-    <TD colSpan=2>Classification Schemes and Classifications Scheme Items can 
-      be edited for multiple Data Elements at once.<BR><BR><SPAN 
-      class=figureText>Figures 38-40</SPAN> illustrates how to view, remove and 
-      add a Classification Scheme/Classification Scheme Item from multiple Data 
-      Elements in Block Edit. <SPAN class=figureText>Figure 41-42</SPAN> 
-      illustrates an alternative approach to identifying the Data Elements 
-      associated with a particular Classification Scheme Item.<BR><BR><B><SPAN 
-      class=standOut>NOTE:</SPAN></B> Users with write permissions to multiple 
-      contexts must select a context first from the drop down menu in step 1 
-      when block editing data elements from multiple contexts. Only 
-      Classification Schemes in the selected context will be able to be selected 
-      or updated. However, Classification Scheme and Classification Scheme Items 
-      will be shown for all contexts regardless of user's write permission. 
-  </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image044.jpg">&nbsp; </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText><SPAN class=figureText>FIGURE 38<BR>View 
-      Classification Scheme/Classification Scheme Items </SPAN></TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>1)&nbsp;<SPAN class=red>Selecting</SPAN></STRONG>&nbsp; a 
-      Classification Scheme will populate the Associated Classification Scheme 
-      Items list.</P>
-      <P><STRONG>2) <SPAN class=red>Selecting</SPAN></STRONG> a Classification 
-      Scheme Item will populate the DE's containing selected Classification 
-      Scheme Items list.</P></TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image045.jpg">&nbsp; </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 39<BR>Remove Classification 
-      Scheme/Classification Scheme Items </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><B>Note:</B> Clicking this Remove Item button will remove the selected 
-      Classification Scheme from all the Data Elements involved in this Block 
-      Edit.</P>
-      <P><STRONG>Note: </STRONG>Clicking this Remove Item button will remove the 
-      selected Classification Scheme Item from all the Data Elements involved in 
-      this Block Edit.</P></TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image046.jpg">&nbsp; </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 40<BR>Add Classification Schemes/Classification 
-      Scheme Items </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>Note: <SPAN class=red>Add</SPAN></STRONG> Classification Scheme 
-      and associated Classification Scheme Item(s) by <STRONG>1) 
-      <span class=red>Selecting</span></STRONG> a Classification Scheme from the drop down list (in 
-      this example, 'Disease Trial Type Usage Hierarchy-CTEP'), and <STRONG>2) 
-      <SPAN class=red>Selecting</SPAN></STRONG> one or more Classification 
-      Scheme Items (in this example, 'BLADDER').</P>
-      <P><STRONG>Note: </STRONG>Your selections appear here as you add 
-    them.</P></TD></TR>
-  <TR>
-    <TD colSpan=2><SPAN class=red><B>NOTE:</B></SPAN> When you are interested 
-      in removing a particular Classification Scheme Item from a block of Data 
-      Elements, an efficient approach to editing the Data Elements is to get the 
-      associated Data Elements from a Classification Scheme Item search. <SPAN 
-      class=figureText>Figures 41-42</SPAN> illustrate this approach. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image047.jpg">&nbsp; </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 41<BR>Get the Data Elements Associated with a 
-      Classification Scheme Item </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>1) <SPAN class=red>Search</SPAN></STRONG> for Class Scheme 
-      Items.</P>
-      <P><STRONG>2) <SPAN class=red>Enter</SPAN></STRONG> the Classification 
-      Scheme Item you're interested in.</P>
-      <P><STRONG>3) <SPAN class=red>Start</SPAN></STRONG> the Search.</P>
-      <P><STRONG>4) <SPAN class=red>Select</SPAN></STRONG> the Classification 
-      Scheme Item.</P>
-      <P><STRONG>5) <SPAN class=red>Get</SPAN></STRONG> the Associated Data 
-      Elements.</P></TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image048.jpg"   < td> 
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 42<BR>Initiate Block Edit </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>1) <SPAN class=red>Select</SPAN></STRONG> the records for Block 
-      Edit.</P>
-      <P><STRONG>2) <SPAN class=red>Click</SPAN></STRONG> the Block Edit 
-      button.</P>
-      <P><STRONG>Note:</STRONG> Clicking the checkmark will select/unselect all 
-      records.</P></TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A name=createCDEForm_BlockVersion></A><SPAN 
-      class=standOut>Version</SPAN> (NEW link to Business Rules) </TD></TR>
-  <TR>
-    <TD colSpan=2>To change the version for a group of Data Elements: 
+      was originally created. 
+			<BR><BR>
+			For more information about Designation, see <a href="Help_DesignateDE.html">Designating Data Elements</a>
+			</p>
+<!--    Editing Data Elements        -->	
+			<h4>Editing Data Elements </h4> 
+			<p>
+			You may edit Data Elements in a Context where you have 
+			<span style="font-weight: bold;">WRITE</span> permission. To begin the 
+			Edit process, Search for a Data Element that you wish to edit. Search for 
+			and select one Data Element in the Search Results table and press the 
+			<span style="font-weight: bold;">Edit</span> Selection button. 
+			<BR><BR>
+			For more information about searching for Data Elements, see <a href="Help_SearchAC.html">Search for Administered Components</a>
+			</p>
+<!--    Block Editing Data Elements        -->	
+			<h4>Block Editing Data Elements </h4>
+			<p>
+			You may edit selected attributes of mutliple Data Elements at once. This 
+			is called block editing and can only be done in a Context where you have 
+			<span style="font-weight: bold;">WRITE</span> permission. Search for and 
+			select multiple Data Elements in the Search Results table and press the 
+			Block <span style="font-weight: bold;">Edit</span> button to perform 
+			simultaneous edits on multiple Data Elements. 
+			<BR><BR>
+			For more information about searching for Data Elements, see <a href="Help_SearchAC.html">Search for Administered Components</a>
+			</p>
+<!--    Version        -->		
+			<h4><A name=createCDEForm_BlockVersion></A>Version </h4>
+			<p>To change the version for a group of Data Elements: </p>
       <UL>
         <LI>Check the box labeled "Check Box to Create New Version" 
         <LI>Check either the box labeled "Point Increase" or "Whole Increase" 
@@ -1247,203 +128,919 @@ use.</P>
       respectively).<BR><BR><B>Whole Increase:</B> Increases the version number 
       of each Data Element in the group to the next whole number (i.e. If your 
       group of Data Elements have versions of 4.0 and 1.5 the version would be 
-      changed to 5.0 and 2.0 respectively).<BR><BR><SPAN 
-      class=red><B>NOTE:</B></SPAN> All edits made during a block edit 
+      changed to 5.0 and 2.0 respectively).<BR><BR>
+			<span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> All edits made during a block edit 
       containing version editing will be made to the new versions of the 
       selected Data Elements. The edits will not be made to the originally 
       selected Data Elements. A list containing all versioning rules within the 
       caDSR can be found at the <A 
       href="http://ncicb.nci.nih.gov/core/caDSR/BusinessRules/#Versioning" 
       target=blank>NCI Center for Bioinformatics</A> caDSR versioning page. 
-      <BR><BR><SPAN class=figureText>Figure 43</SPAN> illustrates this process. 
-    </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image049.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 43<BR>Block Version of Data Elements </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>1) <SPAN class=red>Click</SPAN></STRONG> this box for block 
-      versioning.</P>
-      <P><STRONG>2) <SPAN class=red>Click</SPAN></STRONG> one of these 
-    boxes.</P></TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><SPAN class=standOut>Workflow</SPAN> Doc 
-      Text Image </TD></TR>
-  <TR>
-    <TD class=mainTopic colSpan=2><SPAN class=standOut>Validate/Submit</SPAN> 
-    </TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A name=ValidateDEPage></A><A 
-      name=validateDEForm_ValidationStatus></A><A 
-      name=newCDEForm_Validation></A><A name=DEValidateSingle></A><SPAN 
-      class=standOut>Validate</SPAN> a single Data Element </TD></TR>
-  <TR>
-    <TD colSpan=2>Before you can submit a new Data Element to the caDSR, it 
-      must be in the appropriate format, with the appropriate content and 
-      relationships between attributes. The CDE Curation Tool provides you with 
-      a Validation function for Creating and Editing all available Administered 
-      Components (Data Elements, Data Element Concepts, and Value Domains). 
-      <SPAN class=figureText>Figure 44</SPAN> illustrates the location of the 
-      Validation links. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image034.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 44<BR>Initiate the Validation Process </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><STRONG>Note: <SPAN class=red>Validate</SPAN></STRONG> New 
-      Data Element Information by either clicking the 'Validate' button from the 
-      action menu, or the 'Validate' hyperlinks located in the middle and bottom 
-      of the screen.</TD></TR>
-  <TR>
-    <TD colSpan=2>When you select the Validation action, the Validation screen 
-      appears. <SPAN class=figureText>Figure 45.</SPAN> is an illustration of 
-      the Data Element Validation screen. A New Data Element must be Valid 
-      before it can be submitted to the caDSR database. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image035.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 45<BR>Overview of the Validate Data Element 
-      Screen </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><B>Note:</B> Action buttons related to Validating a Data Element.</P>
-      <P><STRONG>Note: </STRONG>The Create/Edit Data Element Validation screen 
-      displays (in table format) the attribute, the value or content of that 
-      attribute, and whether or not it is <STRONG><SPAN 
-      class=red>valid</SPAN></STRONG> content.</P></TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><SPAN class=standOut>Submit</SPAN> a single 
-      Data Element </TD></TR>
-  <TR>
-    <TD colSpan=2>A New Data Element must be Valid before it can be submitted 
+      <BR><BR>
+			
+<!-- ****************************************************** -->				
+<!--    Creating or Editing Data Element Attributes         -->
+<!-- ****************************************************** -->		
+		 <span class="standOutHeading">
+				Data Element Attributes
+			</span>
+			<hr />
+			<h4>Overview</h4>
+			The Create and Edit Data Element screens follow a standard layout for 
+			selecting and creating Administered Component attributes. You will see 
+			this format for creating new or editing administered components (like Data Element 
+			Concepts and Value Domains) throughout the Curation Tool. <B>The 
+			<SPAN class=standOut>asterisk (*)</SPAN> denotes a required field when 
+			creating an Administered Component.</B> 
+			</p>
+			<p class="centeredImage">
+          <img alt="Create/Edit Screen Overview (39K)" src="Assets/Help/DE/image002.PNG" class="screenShot" height="432" width="668" />
+      </p>
+			<p class="imageText">
+          FIGURE 2<br>
+          Create/Edit Data Element Screen<br>
+      </p>
+<!--    Context        -->		
+			<h4><A name=newCDEForm_selContext></A>Select a Context </h4>
+			<p>
+			<SPAN class=figureText>What is a Context?</SPAN> In an 
+      organization, the context [is] a specific function or business unit 
+      (ISO/IEC 11179-1:E). For example, if you are creating data elements for a 
+      bank, one context may be Account Services, and another may be Loan 
+      Services. 
+			</p>
+			<div class="NoteTest">How to <b>Select</b> a context for your Data Element<br>
+					<ol>
+					<li>Select the desired Context from the drop down list (<select>
+                <option value ="1"></option>
+								<option value ="2">Test</option>
+                <option value ="3">Training</option>
+                <option value ="4">Your Context</option>
+                <option value ="5">caCORE</option>
+              </select>).</li>
+					</ol>
+			</div>
+			<br />
+			<span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> You must have write permissions within a 
+      context to create a new data element in that context.
+			</p>
+<!--    Data Element Name Overview        -->
+			<h4>Data Element Name Overview </h4>
+  		<p>
+			The ISO 11179 Standard describes a Data Element as the 
+      combination of a Data Element Concept (specifies conceptual information 
+      about the Data Element) and a Value Domain (the set of Permissible Values 
+      for a Data Element). The first step when naming your new Data Element is 
+      to select a Data Element Concept (DEC). 
+  		</p>
+			<p>
+    	<SPAN class=figureText>What is a Data Element 
+      Concept?</SPAN><BR>The ISO/IEC 11179 Standard describes a Data Element 
+      Concept as relating several data elements that record data about that 
+      concept with different representations. For example, a concept of 
+      PatientPlaceOfBirth is a Data Element Concept.<BR>A Data Element Concept 
+      is composed of an Object Class, a Property Class and Qualifiers for both. 
+      </p>
+ 			<p>
+    	<SPAN class=figureText>What is an Object 
+      Class?</SPAN><BR>The ISO 11179 Standard describes an Object Class as ‘a 
+      set of ideas, abstractions, or things in the real world that can be 
+      identified with explicit boundaries and meaning and whose properties and 
+      behavior follow the same rules’. In other words, Object Classes are the 
+      ‘things about which you want to store and collect data’. General examples 
+      of Object Classes include cars, trucks, motorcycles, etc. For the example 
+      of PatientPlaceOfBirth, an Object Class is Patient. 
+  		</p>
+    	<p>
+			<SPAN class=figureText>What is a Property?</SPAN><BR>The ISO 
+      11179 Standard describes a Property as ‘a peculiarity common to all 
+      members of an object class’. In other words, properties are ‘what humans 
+      use to describe or distinguish Objects’. For the example given above, a 
+      Property is PlaceOfBirth. 
+  		</p>
+    	<p>
+			<SPAN class=figureText>What are Qualifiers?</SPAN><BR>The 
+      ISO 11179 Standard describes Qualifiers as being used to ‘differentiate 
+      between names (i.e. Object Class and Property combinations) that would 
+      otherwise be the same’. For the example of PatientPlaceOfBirth, a 
+      Qualifier of year is used to indicate a specific year. 
+  		</p>
+<!--    Select a Data Element Concept     -->
+			<h4><A name=newCDEForm_selDEC></A>Select a Data Element Concept </h4>
+  		<p>
+			Select a Data Element Concept for your new Data Element by 
+      clicking on the <A href="Help_SearchAC.html#searchForAC">Search</A> 
+			link next to the Data Element Concept 
+      field. You can also <A href="Help_CreateDEC.html#createNewDEC">
+			Create a new Data Element Concept</A> by clicking on 
+      the Create New link. See the Create Data Element Concept section of this 
+      document for further instructions. 
+ 			</p>
+			<p class="centeredImage">
+          <img alt="select DEC (1K)" src="Assets/Help/DE/image003.PNG" class="screenShot" height="43" width="595" />
+      </p>
+			<p class="imageText">
+          FIGURE 3<br>
+          Select Data Element Concept Long Name<br>
+      </p>
+			<p>
+			<div class="NoteTest">How to <b>Search</b> for a Data Element Concept for your new Data Element<br>
+					<ol>
+					<li>select the <a href="Help_SearchAC.html">Search</a> link next to the "<span class="red">Select</span> Data Element Concept Long Name"</li>
+  				<li>Search for the desired Data Element Concept by entering search term</li>
+					<li>Click the the Use Selection button (<input type="button" value="Use Selection"  style="width: 100", "height: 30">).</li>
+					</ol>
+			<span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> For more information about searching 
+			for Data Element Concepts, see <a href="Help_SearchAC.html">Search for Administered Components</a>		
+			</div>
+			<br />			
+			<div class="NoteTest">How to <b>Create</b> a new Data Element Concept for your new Data Element<br>
+					<ol>
+					<li>select the <a href="Help_CreateDEC.html">Create New</a> link next to the "<span class="red">Select</span> Data Element Concept Long Name."</li>
+  				<li>Complete and validate the new Data Element Concept</li>
+					<li>Once you have validated the new Data Element Concept you will return to the Create/Edit Data Element screen</li>
+					</ol>
+			<span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> For more information about creating a new 
+			Data Element Concepts, see <a href="Help_CreateDEC.html">Data Element Concepts (DEC)</a>	
+			</div>		
+			</p>
+			<p>
+			Once the Data Element Concept is selected, The Data Element Concept Long Name, Data Element Long Name (* ISO 
+			Preferred Name), Data Element Short Name and the Definition are all automatically 
+			populated with the information from the DEC selected.
+			</p>
+<!--        Select a Value Domain		     -->	
+			<h4><A name=newCDEForm_selDEC></A>Select a Value Domain</h4>
+  		<p>
+			The next step in creating your new Data Element is to select 
+      a Value Domain (VD). This process is very similar to the one you completed 
+      when selecting a Data Element Concept. You can 
+			<A href="Help_SearchAC.html#searchForAC" target=Help_SearchAC>Search</A> for 
+      and select a Value Domain or you can 
+			<A href="Help_CreateVD.html#createNewVD" target=Help_CreateVD>Create a new 
+      Value Domain</A> by clicking on the Search or Create New links. See the 
+			<A href="Help_CreateVD.html#createNewVD" target=Help_CreateVD>Create Value 
+      Domain</a> section of this document for further instructions. 
+			</p>
+			<p>			
+			<SPAN class=figureText>What is a Value Domain?</SPAN><BR>The 
+      ISO 11179 Standard describes a Value Domain as &#145;a set of permissible 
+      values&#146;. An example is the Value Domain of &#145;Gender Category: M,F&#146;. The 
+      permissible values for this Value Domain would be &#145;M means Male&#146; and &#145;F 
+      means Female&#146;. A Data Element is associated with only one Value Domain, 
+      and the name of the Value Domain describes all of the data values that are 
+      included in that domain. 
+			</p>
+ 			<p class="centeredImage">
+          <img alt="Select Value Domain (1K)" src="Assets/Help/DE/image004.png" class="screenShot" height="44" width="602" />
+      </p>
+			<p class="imageText">
+          FIGURE 4<br>
+          Select Value Domain Long Name<br>
+      </p>
+ 			<p>
+			<div class="NoteTest">How to <b>Search</b> for a Value Domain for your new Data Element<br>
+					<ol>
+					<li>select the <a href="Help_SearchAC.html">Search</a> link next to the "<span class="red">Select</span> Data Value Domain Name"</li>
+  				<li>Search for the desired Value Domain by entering search term</li>
+					<li>Click the the Use Selection button (<input type="button" value="Use Selection"  style="width: 100", "height: 30">).</li>
+					</ol>
+			<span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> For more information about searching 
+			for Value Domains, see <a href="Help_SearchAC.html">Search for Administered Components</a>		
+			</div>
+			<br />			
+			<div class="NoteTest">How to <b>Create</b> a new Value Domain for your new Data Element<br>
+					<ol>
+					<li>select the <a href="Help_CreateVD.html">Create New</a> link next to the "<span class="red">Select</span> Value Domain Long Name."</li>
+  				<li>Complete and validate the new Value Domain</li>
+					<li>Once you have validated the new Value Domain you will return to the Create/Edit Data Element screen</li>
+					</ol>
+			<span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> For more information about creating a new 
+			Value Domains, see <a href="Help_CreateVD.html">Value Domain (VD)</a>	
+			</div>		
+			</p>
+<!--      Verify Long Name and Short Name     -->
+			<h4><A name=newCDEForm_txtLongName></A><A name=newCDEForm_txtPreferredName></A>Verify Long Name (* ISO Preferred Name) and Short Name </h4>
+			<p>
+			The CDE Curation Tool automatically generates suggested drafts of the 
+			Long Name and Short Name. These suggestions are made up of the building 
+			blocks you selected in the previous steps. The Long Name field will 
+			contain the full names of the selected building blocks. For the Short 
+			Name you have a couple of options. These options are System Generated, 
+			Abbreviated or User Entered. The System Generated Short Name consists of 
+			the Data Element Concepts public id and full version number and the Value 
+			Domain public id and full version number with a colon separating the two. 
+			The Abbreviated Short Name consists of the both the Data Element Concepts 
+			and Value Domain public id and the whole version number (the part before 
+			the '.') and the Data Element Long Name truncated separated by the 
+			character '_'.
+			</p>
+			<span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> The Long Name (* ISO Preferred Name) and Short Name that appear in these 
+      boxes are draft names. However, you may edit these fields by manually entering text.
+			<br><br>
+			<p class="centeredImage">
+          <img alt="long name and short name (7K)" src="Assets/Help/DE/image005.png" class="screenShot" height="149" width="696" />
+      </p>
+			<p class="imageText">
+          FIGURE 5<br>
+          Verify Long Name and Short Name<br>
+      </p>
+			<P>
+			<span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> A character count is displayed because there is 
+      a caDSR database limit for Long Name and Preferred Name (* ISO Preferred Name).</P>
+<!-- Define a Data Element  -->
+			<h4><A 
+      name=newCDEForm_CreateDefinition></A>Define a Data Element</h4>
+		 	<p>
+			The ISO 11179 Standard describes a Data Element definition 
+      as &#145;A statement that expresses the essential nature of a Data Element and 
+      permits its differentiation from all other Data Elements&#146;. Think of a Data 
+      Element definition as containing the essential semantic content of a Data 
+      Element (i.e. its meaning). The CDE Curation Tool provides you with three 
+      options for defining a Data Element. Each of these options is described in 
+      detail below. 
+			</p>
+			<p>
+			The tool automatically generates a draft definition composed 
+      of the definition of the selected Data Element Concept and Value Domain 
+      separated by the character "_". You may edit the draft definition or 
+			create a definition from scratch by manually entering text in the 
+			definition text box. 
+			</p>
+<!-- Select a Workflow Status  -->
+		 <h4><A name=newCDEForm_selStatus></A>Select a Workflow Status and Version</h4>
+		 <p>
+		 Business rules are implemented by all active Contexts of the caDSR to govern the 
+		 creation and development of Data Elements and other Administered Components.  
+		 </p>
+		 <span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> For more information about Versioning and Workflow rules see the
+		 <a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank" title="caDSR  Business Rules">caDSR  Business Rules</a>
+		 <p>
+		 <span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> By default the select the Workflow Status is DRAFT NEW. However, the 
+		 Workflow Status can be choosen from the list of available Workflow Statuses in the drop down list.<br>
+		 <span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> The default version for a New Data Element is 1.0. However, the Version text box is editable.<br>
+		 </p>
+		 <p class="centeredImage">
+          <img alt="Workflow and Version UI (2K)" src="Assets/Help/DE/image006.png" class="screenShot" height="99" width="207" />
+			</p>
+			<p class="imageText">
+          FIGURE 6<br>
+          Workflow Status and Version Number<br>
+      </p>
+			<p>
+			<div class="NoteTest">How to <b>change</b> the Workflow Status and Version Number
+					<ol>
+					<li>To change the desired Workflow Status form the &#145;<font color="#FF0000">Select </font> Workflow Status&#146; drop down box
+						<select>
+    					<option value="" selected="selected"></option>
+               <option value="APPRVD FOR TRIAL USE"  >APPRVD FOR TRIAL USE</option>
+               <option value="CMTE APPROVED"  >CMTE APPROVED</option>
+               <option value="CMTE SUBMTD"  >CMTE SUBMTD</option>
+               <option value="CMTE SUBMTD USED"  >CMTE SUBMTD USED</option>
+               <option value="DRAFT MOD"  >DRAFT MOD</option>
+               <option value="DRAFT NEW" selected >DRAFT NEW</option>
+               <option value="RELEASED"  >RELEASED</option>
+               <option value="RELEASED-NON-CMPLNT"  >RELEASED-NON-CMPLNT</option>
+               <option value="RETIRED ARCHIVED"  >RETIRED ARCHIVED</option>
+               <option value="RETIRED DELETED"  >RETIRED DELETED</option>
+               <option value="RETIRED PHASED OUT"  >RETIRED PHASED OUT</option>
+               <option value="RETIRED WITHDRAWN"  >RETIRED WITHDRAWN</option>
+            </select></li>
+  				<li>To edit the default version enter the new version number in &#145;<font color="#FF0000">Enter</font> Version&#146; text box.</li>
+			</ol>
+			</div>
+			</p>
+<!-- Select a Registration Status  -->
+		 <h4><A name=newCDEForm_selRegStatus></A>Select a Registration Status</h4>
+		 <p>
+		 A Registration Status designates the position of the Data 
+      Element in its registration life-cycle. Select a Data Element’s 
+      Registration Status by choosing from the list of available Registration 
+      Statuses in the drop down list. 
+		 </p>
+		 <p>	
+		 <span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> For more information about Registration Status rules see the
+		 <a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank" title="caDSR  Business Rules">caDSR  Business Rules</a>
+		 </p>
+		 <p class="centeredImage">
+          <img alt="Registration Status (1K)" src="Assets/Help/DE/image007.png" class="screenShot" height="52" width="520" />
+			</p>
+			<p class="imageText">
+          FIGURE 7<br>
+          Registration Status<br>
+      </p>
+			<div class="NoteTest">How to <b>select</b> the Registration Status
+					<ol>
+					<li>To select the desired Workflow Status form the &#145;<font color="#FF0000">Select </font> Registration Status&#146; drop down box
+            (<select name="selRegStatus" size="1" style="Width:200">
+            <option value="" selected></option>
+            <option value="Application" >Application</option>
+            <option value="Candidate" >Candidate</option>
+            <option value="Proposed" >Proposed</option>
+            <option value="Qualified" >Qualified</option>
+            <option value="Retired" >Retired</option>
+            <option value="Standard" >Standard</option>
+            <option value="Standardized Elsewhere" >Standardized Elsewhere</option>
+            <option value="Superceded" >Superceded</option>
+            <option value="Suspended" >Suspended</option>
+            </select>).</li>
+			</ol>
+			</div>
+			</p>
+<!-- Enter/Select the Effective Begin Date and Effective End Date --> 
+		 <h4><A name=newCDEForm_BeginDate></A>Enter/Select the Effective Begin Date</h4>
+		 <p>
+    You may enter the Effective Begin Date in two ways. Either 
+    enter the date in the text box using the format <b>MM/DD/YYYY</b> or click on the 
+    calendar icon and select the date.
+    </p>
+		<p><span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> While an Effective End Date is not required, it must be after the Effective Begin Date if entered.</p>
+		 <p class="centeredImage">
+         <img alt="image008 (2K)" src="Assets/Help/DE/image008.png" class="screenShot" height="97" width="235" />
+			</p>
+			<p class="imageText">
+          FIGURE 8<br>
+          Effective Begin Date and Effective End Date<br>
+      </p>
+      </p>
+			<div class="NoteTest">How to <b>Enter/Select</b> Effective Begin Date or Effective End Date
+					<ol>
+					<li>Enter the date in MM/DD/YYYY &#145;<font color="#FF0000">Enter/Select</font> 
+					Effective Begin Date&#146; text feild <b>or</b> </li>
+					<li> Click on the calendar icon
+					<img alt="CalendarIcon (1K)" src="Assets/Help/DE/CalendarIcon.png" height="28" width="26" /> and select the desired date.</li>
+			</ol>
+			</div>
+			</p>		
+<!-- Create Preferred Question Text for a Data Element --> 
+		 <h4><A name=newCDEForm_BeginDate></A>Create Preferred Question Text</h4>
+		 <p>
+    Preferred Question Text is the actual text that will appear for the Data 
+		Element on a Form. This text is associated with the Data Element you are 
+		creating. For Example, the text that will appear on the form for our new 
+		Data Element is &#145;Home address, Patient&#146;.
+    </p>
+		<p><span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> CreatePreferred Question Text in the Preferred Question Text box.&nbsp; Preferred Question Text is what will 
+      appear on the Case Report Form (if the Data Element is intended for CRF use).</p>
+<!-- Select Classification Scheme/Classification Scheme Items --> 
+		 <h4><A name=newCDEForm_selCS></A>Select Classification Scheme/Classification Scheme Items</h4>
+		  <p>
+    Classification Schemes are a way of grouping Data Elements 
+		based on common characteristics. Classifications also help add information 
+      about Data Elements that is not easily included in definitions. For 
+      example, you might want to classify Data Elements as belonging to the 
+      Classification Scheme Type of Disease. A Classification Scheme Item (CSI) 
+      is a component of content in a Classification Scheme (i.e. Liver 
+      Cancer).</p>
+			<p>The parent-child relationship of Classification Scheme 
+      Items is displayed in a hierarchical order using 
+      indentations.
+    </p>
+		<p><span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> When Classification Scheme Items are 
+		selected from the list, it and all of its parents are also written to the DE 
+		and displayed in hierarchical order in the Associated Classification Schemes Items field.</p>
+		 <p class="centeredImage">
+         <img alt="Select Classification Scheme/Classification Scheme Items (9K)" src="Assets/Help/DE/image009.png" class="screenShot" height="216" width="820" />
+			</p>
+			<p class="imageText">
+          FIGURE 9<br>
+          Registration Status<br>
+      </p>
+			<div class="NoteTest">How to <b>Add</b> Classification Scheme/Classification Scheme Items
+			<ol>
+					<li>Select the Classification Scheme from the drop down box (
+					<select name="selCS" size ="1" style="width:200">
+                <option value="" selected></option>
+                  <option value="BEC052E5-F163-7484-E034-0003BA12F5E7">Adult Soft Tissue New - CTEP</option>
+                  <option value="F2C441CC-5CB1-53CD-E034-0003BA3F9857">Adverse Events - CIP</option>
+                  <option value="B93D703A-E238-5E14-E034-0003BA12F5E7">C3D Domain - CCR</option>
+                  <option value="D663F68A-A13B-126C-E034-0003BA12F5E7">C3D Retired - CCR</option>
+                  <option value="DA3C1331-1940-68F5-E034-0003BA12F5E7">caDSRTraining - caCORE</option>
+                  <option value="0A906B8B-9A3B-6824-E044-0003BA0B1A09">Cancer Gene (Test Model) - caBIG</option>
+                  <option value="F37FF76C-D8BF-28C2-E034-0003BA3F9857">Catalogue of Published Forms - caBIG</option>
+                  <option value="D1D6C2B2-984A-2C7E-E034-0003BA12F5E7">CCR COMMON DATA ELEMENT COLLECTION - CCR</option>
+                  <option value="D68D0E3F-468F-057B-E034-0003BA12F5E7">CCR Implementation - CCR</option>
+                  <option value="D9377D6E-D8A6-6CFB-E034-0003BA12F5E7">Clinical Trial Management Systems - caBIG</option>
+                  <option value="F4CFF24F-4C69-0D5C-E034-0003BA3F9857">Corporate Partners - caBIG</option>
+                  <option value="99BA9DC8-A61F-4E69-E034-080020C9C0E0">CRF Disease - CTEP</option>
+                  <option value="01EA10F0-3EF4-35FC-E044-0003BA0B1A09">CRF DISEASE PHASE - CTEP</option>
+                  <option value="99BA9DC8-A620-4E69-E034-080020C9C0E0">CRF Trial Type Usage - CTEP</option>
+                  <option value="E92962A2-9978-1F46-E034-0003BA3F9857">Data Standards - caBIG</option>
+                  <option value="02637852-6553-2B0E-E044-0003BA0B1A09"><b>...</b></option>
+              </select>).
+					</li>
+					<li>Select the Classification Scheme Item from the text box.</li>
+					<li>Repeat to select as many classification Scheme/Classification Scheme Items as desired.
+			</ol>
+			</div>
+			<span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> When Classification Scheme Items are s
+			elected from the list, it and all of its parents are also written to the DE and displayed in hierarchical order in the Associated Classification Schemes Items field.
+			</p>
+			</p>
+			<div class="NoteTest">How to <b>Remove</b> Classification Scheme/Classification Scheme Items
+			<ol>
+					<li>Select the Classification Scheme or the Classification Scheme Item that you wish to remove</li>
+					<li>Click the Remove Item (<input type="button" name="" value="Remove Item" style="width: 85", "height: 9">) button.</li>
+			</ol>
+			</div>
+			</p>
+<!-- Select Contacts --> 
+<h4><A name=newCDEForm_selContacts></A>Select Contacts </h4>
+			 <p>
+			Data Element Contact is where you specify points of contact for question 
+			other caDSR users have about this Data Element. You can specify a contact 
+			person or organization along with the information about preferred contact 
+			method, address, phone numbers, and order in which contact should be used.  
+			</p>
+			<p class="centeredImage">
+         <img alt="image010 (3K)" src="Assets/Help/DE/image010.png" class="screenShot" height="107" width="525" />
+			</p>
+			<p class="imageText">
+          FIGURE 10<br>
+          Select Contacts<br>
+      </p>
+			<p class="centeredImage">
+         <img alt="reate Contact Attributes Window (24K)" src="Assets/Help/DE/image011.png" class="screenShot" height="359" width="390" />
+			</p>
+			<p class="imageText">
+          FIGURE 11<br>
+          Create Contact Attributes Window<br>
+      </p>
+			<p>			
+			<div class="NoteTest">How to <b>Add</b> Data Element Contacts
+			<ol>
+					<li>Click the Create New button (<input type="button" name="" value="Create New" style="width:100">) to open the <b>Create <span style="color: red;">Contact</span> Attributes</b> window.</li>
+					<li>Enter Contact Rank Order maximum 3 digits (0-999) to indicate order in which contact should be used</li>
+					<li>Select Contact Person or Select Contact Organization using the radio button 
+					(<input type="radio" name="rType" value="Person">).</li>
+					<li>Select Contact Person or Select Contact Organization Name from the drop down box 
+					(<select name="selOrg" size="1"  style="width:150">
+								<option value="A" selected="selected"></option>
+		          	<option value="B">NCICB</option>
+		          	<option value="c">NIH</option>
+		        </select>).</li>
+					<li>Select Contact Role from the drop down box 
+					(<select name="selOrg" size="1"  style="width:150">
+								<option value="A" selected="selected"></option>
+		          	<option value="B">Primary</option>
+		          	<option value="c">Secondary</option>
+		        </select>).</li>
+					<li>Create Contact Communication Attributes by:</li>
+							<ul>
+									<li>Selecting Communication Type from the drop down box(
+										<select name="selCommType" size="1"  style="width:150">
+                      <option value="" selected></option>
+          					  <option value="PHONE" >PHONE</option>
+          					  <option value="In Person" >In Person</option>
+          					  <option value="FEDEX" >FEDEX</option>
+          					  <option value="FAX" >FAX</option>
+          					  <option value="EMAIL" >EMAIL</option>
+          					  <option value="MAIL" >MAIL</option>
+              			</select>).
+									</li>
+									<li>Enter Call Order (0-999) to indicate order of communication attribute in the text box</li>
+									<li>Create Communication Information in the text box</li>
+							</ul>
+					<li><b>or</b> Selected Communication Attributes by checking the box (<input type="checkbox" />) next to the desired entry.</li>
+					<li>Create Contact Address Attributes by: </li>
+										 <ul>
+										 <li>Entering Address Type, Primary Order, Address, City, State and Postal Code then click Add Selection button (<input type="button" name="" value="Add Selection" style="width:100">).</li>
+										 <li><b>or</b> Selected Communication Attributes by checking the box (<input type="checkbox" />) next to the desired entry.</li>
+										 </ul>
+					<li>Click the Update Attributes button (<input type="button" name="" value="Update Attributes" style="width:150">) to </li>
+					<li>Repeat to add additional Data Element Contacts.</li>
+			</ol>
+			</div> 
+			</p>
+						<p>			
+			<div class="NoteTest">How to <b>Edit</b> Data Element Contacts
+			<ol>
+					<li>Select the the desired Contact by clicking on the contact in the <b><span style="color: #ff0000;">Select</span> Contacts</b> box.</li>
+					<li>Click the Edit Item button (<input type="button" name="" value="Edit Item" style="width:100">) to open the <b>Create <span style="color: red;">Contact</span> Attributes</b> window.</li>
+					<li>Edit the attribute you wish to change</li>
+					<li>Click the Update Attributes button (<input type="button" name="" value="Update Attributes" style="width:150">).</li>
+			</ol>
+			</div> 
+			</p>
+			<p>			
+			<div class="NoteTest">How to <b>Remove</b> Data Element Contacts
+			<ol>
+					<li>Select the the desired Contact by clicking on the contact in the <b><span style="color: #ff0000;">Select</span> Contacts</b> box.</li>
+					<li>Click the Remove Item button (<input type="button" name="" value="Remove Item" style="width:100">).</li>
+					<li>Click OK on the confirmation dialog box.</li>
+			</ol>
+			</div> 
+			</p>
+<!-- Select the Origin --> 
+<h4><A name=newCDEForm_selSource></A>Select the Origin </h4>
+			 <p>
+			Data Element Origin is applicable if the Data Element you are creating 
+			came from another standard reference source, or  as the result of a CDE 
+			Committee process.
+			</p>
+<!-- Create Change Note -->
+		 <h4><A name=newCDEForm_selSource></A>Create Change Note </h4>
+		 <p>		 
+		 Enter Change Note text into the <b><span style="color: #ff0000;">Create
+		 </span> Change Note</b> text box. A Change Note is description of any changes 
+		 to the Data Element.
+		 </p>
+<!-- ****************************************************** -->				
+<!--             Create Derived Components                  -->
+<!-- ****************************************************** -->		
+		 <span class="standOutHeading">
+				Create Derived Components
+			</span>
+			<p>
+			<SPAN class=figureText>What is a Derived Data 
+      Element?</SPAN><BR>
+			The ISO 11179 Standard describes a Derived Data Element 
+      as the relationship among a derived administered data component, the rule 
+      controlling its derivation, and the administered data component(s) from 
+      which it is derived.
+			</p>
+			<p>
+			An example is concatenation for the formation 
+      of a telephone number from its constituent parts. In the U.S., telephone 
+      numbers are uniquely described with ten digits, and these numbers can 
+      easily be represented by a data element. However, the telephone companies 
+      (and others) need the telephone number separated into area code, exchange 
+      code, and line number, making three data elements. Concatenating the area 
+      code, exchange code, and line number (in the right way) allows the 
+      formation of a data element representing the full telephone 
+      number.
+			</p>
+			<p>
+			The derivation associated with a data element constitutes a 
+      powerful way of associating existing data elements with new ones that are 
+      needed. A Derived Data Element can be created or edited on the bottom 
+      section of the Create or Edit Data Element screens. 
+			</p>
+			<p class="centeredImage">
+         <img alt="Derived Data Element Derivation Rules and Components  (16K)" src="Assets/Help/DE/image012.png" class="screenShot" height="484" width="644" />
+			</p>
+			<p class="imageText">
+          FIGURE 12<br>
+          Derived Data Element Derivation Rules and Components<br>
+      </p>
+<!-- Select a Derivation Type  -->
+		 <h4><A name=newCDEForm_selRepType></A>Select a Derivation Type </h4>
+		 <p>
+		 Representation Type is defined as the type of Derived Data 
+		 Element that is being created. For example a Data Element that is derived 
+		 by subtracting two dates represented by other data elements would be 
+		 a Calculated Representation Type. 
+		 </p>
+<!-- Creating a Rule --> 
+		 <h4><A name=newCDEForm_DDERule></A>Creating a Rule </h4>
+		 <p>
+		 The ISO 11179 Standard describes Derivation Rules as the 	logical, 
+		 mathematical, and/or other operations specifying derivation. The rule may 
+		 range from a simple operation such as subtraction to a very complex set of derivations. 
+			</p>
+<!-- Creating Methods -->
+    <h4><A name=newCDEForm_DDEMethod></A>Creating Methods</h4>
+    <p>ISO defines Derivation Rule Application (Method) as the relationship 
+		specifying the derivation rule for an administered data component derivation. 
+		A method is usually entered for a Derived Data Element that has a 
+		Representation Type of Object Class, Complex Recode or Calculated.</p>
+     
+<!-- Enter a Concatenation Character  -->
+    <h4><A name=newCDEForm_DDEConcatChar></A>Enter a Concatenation Character </h4>
+    <p>A concatenation character is simply a symbol or character that represents 
+		the concatenation of the derived data element. A concatenation character is 
+		usually entered for a Derived Data Element that has a Representation Type 
+		of Concatenation, Simple Recode, Complex Recode, or Calculated.</p>
+
+<!-- Searching for or Creating Data Element Components -->
+    <h4><A name=newCDEForm_txtDECompOrder></A><A name=newCDEForm_selOrderList>Searching for or Creating Data Element Components</h4>
+    <p>Derived Data Elements are represented by individual data elements. The CDE 
+		Curation tool allows the user to search for existing or to create new data 
+		elements to be used as components for the Derived Data Element.</p> 
+    <p>A display order can be entered to specify the order in which data element 
+		components will be displayed within the created Derived Data Element. For 
+		example the display order of components within the concatenation of a phone 
+		number is area code=1, exchange=2 and line number=3</p>
+			<p class="centeredImage">
+         <img alt="Searching for or Creating Data Element Components (7K)" src="Assets/Help/DE/image013.png" class="screenShot" height="191" width="628" />
+			</p>
+			<p class="imageText">
+          FIGURE 13<br>
+          Searching for or Creating Data Element Components<br>
+      </p>
+						<p>			
+			<div class="NoteTest">How to <b>Search</b> for existing Data Elements Component
+			<ol>
+					<li>Select the "<a href="Help_SearchAC.html">Search</a> For Data Element" link</li> 
+					<li>Search for the desired Data Element by entering search term</li>
+					<li>Click the the Use Selection button (<input type="button" value="Use Selection"  style="width: 100", "height: 30">).</li>
+			</ol>
+			<span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> For more information about searching 
+			for Data Element, see <a href="Help_SearchAC.html">Search for Administered Components</a>
+			</div> 
+			</p>
+						<p>			
+			<div class="NoteTest">How to <b>Create</b> a new Data Element Component
+			<ol>
+					<li>select the "<a href="Help_CreateDE.html">Create </a>New Data Element" link.</li>
+  				<li>Complete and validate the new Data Element</li>
+					<li>Once you have validated the new Data Element you will return to the Create/Edit Data Element screen</li>
+			</ol>
+			<span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> For more information about creating a new 
+			Data Element, see the top of this section.</a>
+			</div> 
+			</p>
+			<p>			
+			<div class="NoteTest">How to <b>Change</b> the Data Element Component Display Order
+			<ol>
+					<li>Highlight Component in <b>Selected Data Elements Components</b> drop down box (
+					<select name="selDEComp" size ="1" style="width:100" valign="top">
+  								<option selected=""></option>
+									<option>name</option>
+									<option>id</option>
+              </select>
+					).</li>
+					<li>Change the Data Element Component Display Order in the the <b><span style="color: #ff0000;">Enter</span> Display Order</b> text box.</li>
+			</ol>
+			</div> 
+			</p>
+			<p>			
+			<div class="NoteTest">How to <b>Remove</b> a Selected Data Element Component
+			<ol>
+					<li>Highlight the desired Data Element in the <b>Selected Data Elements Components</b> box.</li>
+					<li>Click the Remove Item button (<input type="button" name="" value="Remove Item" style="width:100">)</li>
+			</ol>
+			</div> 
+			</p>
+<!-- ****************************************************** -->				
+<!--                    Validate/Submit                     -->
+<!-- ****************************************************** -->		
+		 <span class="standOutHeading">
+				Validate/Submit
+			</span>
+			<p>
+			A New Data Element must be Valid before it can be submitted 
       to the caDSR database. If any attributes are invalid the Validation screen 
       will indicate in what way the attribute is invalid and the Submit button 
-      will be disabled. Invalid attributes must be <A 
-      href="Help_CreateDE.html#DEInvalidAttrs" 
-      target=Help_CreateDE>corrected</A> before the Data Element is submitted. 
-      <SPAN class=figureText>Figure 46</SPAN> illustrates how to Submit a new 
-      Data Element to the caDSR database. </TD></TR>
-  <TR>
-    <TD colSpan=2>If all the attributes are valid the Submit button will be 
-      enabled. Select the Submit button to save your changes to the caDSR. 
-</TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image037.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 46<BR>Submit a New Data Element </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>Note: <SPAN class=red>Submit</SPAN></STRONG> a New Data Element 
-      to the caDSR database by clicking the Submit button.</P>
-      <P><STRONG>Note:</STRONG> All of the attributes for this New Data Element 
-      are <STRONG><SPAN class=red>Valid</SPAN>.</STRONG></P></TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image107.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 47<BR>Successful Submission of a New Data 
-      Element </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2></TD></TR>
-  <TR>
-    <TD colSpan=2>A message will appear telling you that a New Data Element 
-      has been created. Selecting OK returns you to a blank, Create New Data 
-      Element screen. </TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A name=DEValidateBlock></A><SPAN 
-      class=standOut>Validate</SPAN> multiple Data Elements <A 
-      name=Validate/Submit></A></TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image050.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 48<BR>Validate Block Edit of Data Elements </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2><STRONG>Note: <SPAN class=red>Click</SPAN></STRONG> the 
-      Validate button.</TD></TR>
-  <TR>
-    <TD colSpan=2>In this example the Workflow Status for the block of Data 
-      Elements is being changed to DRAFT MOD. </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image051.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 49<BR>Validate Block Edit of Data Elements </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>Note: <SPAN class=red>Click</SPAN></STRONG> the Submit button 
-      to submit your changes to the caDSR database.</P>
-      <P><STRONG>Note: <SPAN class=red>Click</SPAN></STRONG> the Back button is 
-      any of the attributes are determined to be invalid.</P>
-      <P><STRONG>Note:</STRONG> If the attribute was not edited the Validation 
-      Status will be "No Change".&nbsp; Attributes that were changed will 
-      display the appropriate Validation Status.</P>
-      <P><STRONG>Note:</STRONG> For this example, the only field modified was 
-      Workflow Status.&nbsp; It was changed to "DRAFT MOD".&nbsp; Only the 
-      attributes that were changed will have a value in the Attribute Contents 
-      column.&nbsp; However, changes to Classification Scheme/Classification 
-      Scheme Items will not be shown.</P></TD></TR>
-  <TR>
-    <TD colSpan=2>Attributes that were not modified will have a Validation 
-      Status of "No Change".<BR><BR>If any attributes are invalid the Validation 
-      screen will indicate in what way the attribute is invalid and the Submit 
-      button will be disabled. Invalid attributes must be <A 
-      href="Help_CreateDE.html#DEInvalidAttrs" 
-      target=Help_CreateDE>corrected</A> before the Data Element is submitted. 
-    </TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><SPAN class=standOut>Submit</SPAN> multiple 
-      Data Elements </TD></TR>
-  <TR>
-    <TD colSpan=2>If all the attributes are valid the Submit button will be 
-      enabled. Select the Submit button to save your changes to the caDSR. 
-</TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image108.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 50<BR>Submit Block Edit of Data Elements </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><STRONG>1)</STRONG> A message appears telling you your Data Elements 
-      have been updated successfully.&nbsp; Click the OK button.</P>
-      <P><STRONG>2)</STRONG> Clicking OK returns you to search 
-results.</P></TD></TR>
-  <TR>
-    <TD class=subTopic1 colSpan=2><A name=DEInvalidAttrs></A><SPAN 
-      class=standOut>Correcting</SPAN> Invalid Attributes </TD></TR>
-  <TR>
-    <TD class=image><IMG src="Assets/Help/DE/image036.jpg"> </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD class=imageText>FIGURE 51<BR>Correct Invalid Attributes </TD>
-    <TD>&nbsp;</TD></TR>
-  <TR>
-    <TD colSpan=2>
-      <P><B>1)</B>&nbsp;If all the attributes for the DE are not valid, the 
-      Submit button will be disabled.</P>
-      <P><STRONG>2) <SPAN class=red>Click</SPAN> </STRONG>the Back button to 
-      return to the Create (or Edit) page to correct the attributes that are not 
-      valid.&nbsp; Do not use your Browser's back button.</P></TD></TR>
-  <TR>
-    <TD colSpan=2>If any attributes are invalid the Validation screen will 
-      indicate in what way the attribute is invalid. Invalid attributes can be 
-      corrected by going back to the Create/Edit screen and modifying the values 
-      of the attributes. <SPAN class=red><B>NOTE:</B></SPAN> Please use the Back 
-      button provided by the CDE Curation Tool. Using your browser's back button 
-      may cause the tool to function improperly. </TD></TR></TBODY></TABLE></DIV>
-<P class=returnLink><A href="Help.htm#TOCDE">Return to the Table of Contents</A> 
-</P></BODY></HTML>
+      will be disabled. Invalid attributes must be corrected before the Data Element is submitted.
+			</p>
+		 <p class="centeredImage" style="border: 2px solid #aaa; font-size: 2;">
+		 <br>
+		 <span style="float: left;">
+		 <input type="button" name="Submit" value="Submit" style="width: 125", "height: 30">
+        &nbsp;&nbsp;
+     <input type="button" name="btnBack" value="Back" style="width: 125", "height: 30">
+		 </span><br><br>
+		 <table width="100%" border="2" cellspacing="0" cellpadding="0"  bordercolor="#000000">
+		 <caption><h3 align="left">Validate <font color="#FF0000">Data Element </font>Attributes</h3></caption>
+		 <tr>
+     <td width="182" height="20" valign="top" bgcolor="#FFFFFF" bordercolor="#000000">
+     <div align="center"><strong><font size="2">Attribute Name</font></strong></div>
+     </td>
+     <td valign="top" width="487" bgcolor="#FFFFFF" bordercolor="#000000">
+		 <div align="center"><strong><font size="2">Attribute Contents</font></strong></div>
+     </td>
+     <td width="151" valign="top" bgcolor="#FFFFFF" bordercolor="#000000">
+     <div align="center"><strong><font size="2">Validation Status</font></strong></div>
+     </td>
+  	 </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Context</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">TEST&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Data Element Concept</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">Patient Gender&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Value Domain</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">Code&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Long Name</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">Patient Gender Code&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Short Name</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">2184775v2.31:2183036v1.0&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Short Name Type</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">System Generated&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Definition</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">the classfication of the sex or gender role of the patient._A system of numbered categories for representation of data.&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Workflow Status</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">DRAFT NEW&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Version</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">1.0&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Registration Status</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Effective Begin Date</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">02/05/2006&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Effective End Date</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Preferred Question Text</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Classification Scheme</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Classification Scheme Items</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Contacts</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">NCICB&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Data Element Origin</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Change Note</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+				</table><br></p>
+			<p class="imageText">
+          FIGURE 14<br>
+          Validate Data Element Screen<br>
+      </p>
+<!-- Validate/Submit  -->
+		 <h4>Validate/Submit</h4>
+		 <p>
+		 If all the attributes are <font color="#238E23"> Valid </font> the Submit 
+		 button will be enabled. Select the Submit button to save your changes to the caDSR. 
+		 </p>
+<!-- Correcting Invalid Attributes -->	
+		 <h4>Correcting Invalid Attributes</h4>
+		 <p>
+		 If any attributes are invalid the Validation screen will indicate in what 
+		 way the attribute is invalid. Invalid attributes can be corrected by going 
+		 back to the Create/Edit screen and modifying the values of the attributes. 
+		 </p>
+		 <p class="centeredImage" style="border: 2px solid #aaa;"><table width="100%" border="2" cellspacing="0" cellpadding="0"  bordercolor="#000000">
+		 <caption><h3 align="left">Validate <font color="#FF0000">Data Element </font>Attributes</h3></caption>
+		 <tr>
+     <td width="182" height="20" valign="top" bgcolor="#FFFFFF" bordercolor="#000000" style="font-size: 12;">
+     <div align="center"><strong><font size="2">Attribute Name</font></strong></div>
+     </td>
+     <td valign="top" width="487" bgcolor="#FFFFFF" bordercolor="#000000" style="font-size: 12;">
+		 <div align="center"><strong><font size="2">Attribute Contents</font></strong></div>
+     </td>
+     <td width="151" valign="top" bgcolor="#FFFFFF" bordercolor="#000000" style="font-size: 12;">
+     <div align="center"><strong><font size="2">Validation Status</font></strong></div>
+     </td>
+  	 </tr>
+    <tr>
+    <td valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Short Name</strong></td>
+    <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+    <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"> This field is Mandatory.&nbsp;</td>
+    </tr>
+		</table>
+		<br>
+		</p>
+		<p class="imageText">
+          FIGURE 15<br>
+          Correcting Invalid Attributes<br>
+    </p>
+		<p>
+		<span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> Please use the Back button provided by the CDE Curation Tool. Using your browser's back button may cause the tool to function improperly. 
+		</p>
+<!-- Validate multiple Data Elements -->
+    <h4>Validate multiple Data Elements</h4>
+    <p>
+		When editing multiple Data Elements the validation screen displays changes made to all Data Elements.
+		For this example, the only field modified was Workflow Status.  
+		It was changed to "RELEASED".  Only the attributes that were changed will 
+		have a value in the Attribute Contents column.  However, changes to 
+		Classification Scheme/Classification Scheme Items will not be shown. 
+		Attributes that were not modified will have a Validation Status of "No Change".
+		</p>
+		 <p class="centeredImage" style="border: 2px solid #aaa;"><table width="100%" border="2" cellspacing="0" cellpadding="0"  bordercolor="#000000">
+		 <caption><h3 align="left">Validate <font color="#FF0000">Data Element </font>Attributes</h3></caption>
+		 <tr>
+     <td width="182" height="20" valign="top" bgcolor="#FFFFFF" bordercolor="#000000" style="font-size: 12;">
+     <div align="center"><strong><font size="2">Attribute Name</font></strong></div>
+     </td>
+     <td valign="top" width="487" bgcolor="#FFFFFF" bordercolor="#000000" style="font-size: 12;">
+		 <div align="center"><strong><font size="2">Attribute Contents</font></strong></div>
+     </td>
+     <td width="151" valign="top" bgcolor="#FFFFFF" bordercolor="#000000" style="font-size: 12;">
+     <div align="center"><strong><font size="2">Validation Status</font></strong></div>
+     </td>
+  	 </tr>
+		 <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Data Element Concept</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> No Change </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Value Domain</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> No Change </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Short Name Type</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> No Change </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Workflow Status</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">RELEASED&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> Valid </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Version</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> No Change </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Registration Status</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> No Change </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000"><strong>Effective Begin Date</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> No Change </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Effective End Date</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> No Change </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Preferred Question Text</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> No Change </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Classification Scheme</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> No Change </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Classification Scheme Items</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> No Change </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Data Element Origin</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> No Change </font>&nbsp;</td>
+        </tr>
+        <tr>
+          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000" style="font-size: 12;"><strong>Change Note</strong></td>
+          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000" style="font-size: 12;">&nbsp;</td>
+          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000" style="font-size: 12;"><font color="#238E23"> No Change </font>&nbsp;</td>
+        </tr>
+		</table>
+		<br>
+		</p>
+		<p class="imageText">
+          FIGURE 16<br>
+          Validate multiple Data Elements<br>
+    </p>
+<!-- Submit multiple Data Elements -->
+</div>
+</div>
+<p class="returnLink">
+<a href="Help.htm">Return to the Table of Contents</a>
+</p>
+  </body>
+</html>
