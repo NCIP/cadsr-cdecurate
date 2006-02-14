@@ -627,7 +627,7 @@
           </tr>
           <tr valign="middle">
             <td colspan="2">
-              <input name="txtRefName" type="text" value = "" style="width:70%"   
+              <input name="txtRefName" type="text" value = "" style="width:70%" maxlength=30   
                 onkeydown="javascript:textCounter('txtRefName', 30);"
                 onkeyup="javascript:textCounter('txtRefName', 30);"
                 onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContext'); return false">
@@ -650,7 +650,7 @@
           </tr> 
           <tr valign="middle">
             <td colspan="2">
-              <input name="txtRefURL" type="text" value="" style="width:70%" 
+              <input name="txtRefURL" type="text" value="" style="width:70%" maxlength=240 
                 onkeydown="javascript:textCounter('txtRefURL', 240);"
                 onkeyup="javascript:textCounter('txtRefURL', 240);"
                 onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContext'); return false">

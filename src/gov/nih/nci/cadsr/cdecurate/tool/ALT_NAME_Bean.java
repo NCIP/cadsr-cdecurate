@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ALT_NAME_Bean.java,v 1.1 2006-02-08 19:11:13 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ALT_NAME_Bean.java,v 1.2 2006-02-14 21:53:50 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -107,7 +107,27 @@ public class ALT_NAME_Bean implements Serializable
   */
   public ALT_NAME_Bean() {
   };
-  
+
+  /**
+   * @param fromBean to copy from
+   * @return ALT_NAME_Bean
+   */
+  public ALT_NAME_Bean copyAltNames(ALT_NAME_Bean fromBean)
+  {
+    if (fromBean != null)
+    {
+      this.setAC_IDSEQ(fromBean.getAC_IDSEQ());
+      this.setAC_LANGUAGE(fromBean.getAC_LANGUAGE());
+      this.setAC_LONG_NAME(fromBean.getAC_LONG_NAME());
+      this.setALT_NAME_IDSEQ(fromBean.getALT_NAME_IDSEQ());
+      this.setALT_SUBMIT_ACTION(fromBean.getALT_SUBMIT_ACTION());
+      this.setALT_TYPE_NAME(fromBean.getALT_TYPE_NAME());
+      this.setALTERNATE_NAME(fromBean.getALTERNATE_NAME());
+      this.setCONTE_IDSEQ(fromBean.getCONTE_IDSEQ());
+      this.setCONTEXT_NAME(fromBean.getCONTEXT_NAME());
+    }   
+    return this;
+  }
   /**
   * The setRETURN_CODE method sets the RETURN_CODE for this bean.
   *

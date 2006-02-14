@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PV_Bean.java,v 1.1 2006-02-08 19:11:13 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PV_Bean.java,v 1.2 2006-02-14 21:53:50 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -136,21 +136,28 @@ public class PV_Bean implements Serializable
   public PV_Bean() {
   };
   
+  /**
+   * @param fromBean to copy from
+   * @return PV_Bean
+   */
   public PV_Bean copyBean(PV_Bean fromBean)
   {
-    this.setPV_PV_IDSEQ(fromBean.getPV_PV_IDSEQ());
-    this.setPV_VDPVS_IDSEQ(fromBean.getPV_VDPVS_IDSEQ());
-    this.setQUESTION_VALUE(fromBean.getQUESTION_VALUE());
-    this.setQUESTION_VALUE_IDSEQ(fromBean.getQUESTION_VALUE_IDSEQ());
-    this.setPV_VALUE(fromBean.getPV_VALUE());
-    this.setPV_SHORT_MEANING(fromBean.getPV_SHORT_MEANING());
-    this.setPV_MEANING_DESCRIPTION(fromBean.getPV_MEANING_DESCRIPTION());
-    EVS_Bean vmBean = fromBean.getVM_CONCEPT();
-    if (vmBean == null) vmBean = new EVS_Bean();
-    this.setVM_CONCEPT(vmBean);
-    this.setPV_VALUE_ORIGIN(fromBean.getPV_VALUE_ORIGIN());
-    this.setPV_BEGIN_DATE(fromBean.getPV_BEGIN_DATE());
-    this.setPV_END_DATE(fromBean.getPV_END_DATE());
+    if (fromBean != null)
+    {
+      this.setPV_PV_IDSEQ(fromBean.getPV_PV_IDSEQ());
+      this.setPV_VDPVS_IDSEQ(fromBean.getPV_VDPVS_IDSEQ());
+      this.setQUESTION_VALUE(fromBean.getQUESTION_VALUE());
+      this.setQUESTION_VALUE_IDSEQ(fromBean.getQUESTION_VALUE_IDSEQ());
+      this.setPV_VALUE(fromBean.getPV_VALUE());
+      this.setPV_SHORT_MEANING(fromBean.getPV_SHORT_MEANING());
+      this.setPV_MEANING_DESCRIPTION(fromBean.getPV_MEANING_DESCRIPTION());
+      EVS_Bean vmBean = fromBean.getVM_CONCEPT();
+      if (vmBean == null) vmBean = new EVS_Bean();
+      this.setVM_CONCEPT(vmBean);
+      this.setPV_VALUE_ORIGIN(fromBean.getPV_VALUE_ORIGIN());
+      this.setPV_BEGIN_DATE(fromBean.getPV_BEGIN_DATE());
+      this.setPV_END_DATE(fromBean.getPV_END_DATE());
+    }
     //send the to bean back
     return this;
   }

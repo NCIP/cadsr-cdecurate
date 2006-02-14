@@ -583,7 +583,7 @@ function closeDep()
                   <tr><td colspan="2" align="left" valign="top">Rep Term Long Name </td></tr>
                   <tr>
                     <td colspan="5" align="left">
-                      <input type="text" name="txtRepTerm" value="<%=sRepTerm%>" style="width=100%" valign="top" readonly="readonly">
+                      <input type="text" name="txtRepTerm" value="<%=sRepTerm%>" style="width=100%" maxlength=255 valign="top" readonly="readonly">
                     </td>
                   </tr>
                   <tr height="8"><td></td></tr>
@@ -658,7 +658,7 @@ function closeDep()
   <tr>
     <td>&nbsp;</td>
     <td height="24" valign="top">
-      <input name="txtLongName" type="text" size="100" value="<%=sLongName%>" onKeyUp="changeCountLN();"
+      <input name="txtLongName" type="text" size="100" maxlength=255 value="<%=sLongName%>" onKeyUp="changeCountLN();"
         onHelp = "showHelp('Help_CreateVD.html#createVDForm_txtLongName'); return false">
         &nbsp;&nbsp;
       <font color="#666666">
@@ -690,7 +690,7 @@ function closeDep()
   <tr>
    <td>&nbsp;</td>
     <td height="24" valign="top">
-      <input name="txtPreferredName" type="text" size="100" value="<%=sName%>" onKeyUp="changeCountPN();"
+      <input name="txtPreferredName" type="text" size="100" maxlength=30 value="<%=sName%>" onKeyUp="changeCountPN();"
         <%if (sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")) {%> readonly <%}%>
         onHelp = "showHelp('Help_CreateVD.html#createVDForm_txtPreferredName'); return false">
         &nbsp;&nbsp;
@@ -1021,7 +1021,7 @@ function closeDep()
                   PV_Bean pvBean = (PV_Bean)vVDPVList.elementAt(i);
                   if (pvBean == null) pvBean = new PV_Bean();
                   // display only if not deleted
-                  if (pvBean.getVP_SUBMIT_ACTION().equals("DEL"))
+                  if (pvBean.getVP_SUBMIT_ACTION() != null && pvBean.getVP_SUBMIT_ACTION().equals("DEL"))
                       continue;                   
                   String ckName = ("ck" + ckCount); 
                   ckCount += 1;
@@ -1182,8 +1182,8 @@ function closeDep()
   <tr>
   <td>&nbsp;</td>
     <td>
-      <input type="text" name="tfMinLength" value="<%=sMinLen%>"
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfMinLength'); return false" size="20" maxlength=8>
+      <input type="text" name="tfMinLength" value="<%=sMinLen%>" size="20" maxlength=8
+        onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfMinLength'); return false">
     </td>
   </tr>
   <tr height="25" valign="bottom">
@@ -1194,8 +1194,8 @@ function closeDep()
   <tr>
    <td>&nbsp;</td>
     <td>
-      <input type="text" name="tfMaxLength" value="<%=sMaxLen%>"
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfMaxLength'); return false" size="20" maxlength=8>
+      <input type="text" name="tfMaxLength" value="<%=sMaxLen%>" size="20" maxlength=8
+        onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfMaxLength'); return false">
     </td>
   </tr>      
   <tr height="25" valign="bottom">
@@ -1205,9 +1205,9 @@ function closeDep()
   <tr>
     <td>&nbsp;</td>
     <td>
-      <input type="text" name="tfLowValue" value="<%=sLowValue%>"
+      <input type="text" name="tfLowValue" value="<%=sLowValue%>" size="20" maxlength=255
           <% if (!sDataType.equalsIgnoreCase("NUMBER")) { %> disabled <% } %>
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfLowValue'); return false" size="20">
+        onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfLowValue'); return false">
     </td>
   </tr>
   <tr height="25" valign="bottom">
@@ -1218,9 +1218,9 @@ function closeDep()
   <tr>
     <td>&nbsp;</td>
     <td>
-      <input type="text" name="tfHighValue" value="<%=sHighValue%>"
+      <input type="text" name="tfHighValue" value="<%=sHighValue%>" size="20" maxlength=255
           <% if (!sDataType.equalsIgnoreCase("NUMBER")) { %> disabled <% } %>
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfHighValue'); return false" size="20">
+        onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfHighValue'); return false">
     </td>
   </tr>
     
@@ -1232,8 +1232,8 @@ function closeDep()
   <tr>
    <td>&nbsp;</td>
     <td>
-      <input type="text" name="tfDecimal" value="<%=sDecimal%>"
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfDecimal'); return false" size="20" maxlength=2>
+      <input type="text" name="tfDecimal" value="<%=sDecimal%>" size="20" maxlength=2
+        onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfDecimal'); return false">
     </td>
      
   </tr>
@@ -1385,7 +1385,7 @@ function closeDep()
   <tr>
     <td>&nbsp;</td>
     <td height="35" valign="top">
-      <textarea name="CreateChangeNote" cols="69"
+      <textarea name="CreateChangeNote" cols="69" 
         onHelp = "showHelp('Help_CreateVD.html#createVDForm_CreateComment'); return false" rows="2"><%=sChangeNote%></textarea>
     </td>
   </tr>

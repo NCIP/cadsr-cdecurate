@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_ADDR_Bean.java,v 1.1 2006-02-08 19:11:13 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_ADDR_Bean.java,v 1.2 2006-02-14 21:53:50 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -41,7 +41,29 @@ public class AC_ADDR_Bean implements Serializable
   public AC_ADDR_Bean() {
   }
 
-
+  /**
+   * @param fBean to copy from
+   * @return AC_ADDR_Bean
+   */
+  public AC_ADDR_Bean copyAddress(AC_ADDR_Bean fBean)
+  {
+    if (fBean != null)
+    {
+      this.setAC_ADDR_IDSEQ(fBean.getAC_ADDR_IDSEQ());
+      this.setADDR_LINE1(fBean.getADDR_LINE1());
+      this.setADDR_LINE2(fBean.getADDR_LINE2());
+      this.setADDR_SUBMIT_ACTION(fBean.getADDR_SUBMIT_ACTION());
+      this.setATL_NAME(fBean.getATL_NAME());
+      this.setCITY(fBean.getCITY());
+      this.setCOUNTRY(fBean.getCOUNTRY());
+      this.setORG_IDSEQ(fBean.getORG_IDSEQ());
+      this.setPERSON_IDSEQ(fBean.getPERSON_IDSEQ());
+      this.setPOSTAL_CODE(fBean.getPOSTAL_CODE());
+      this.setRANK_ORDER(fBean.getRANK_ORDER());
+      this.setSTATE_PROV(fBean.getSTATE_PROV());
+    }
+    return this;
+  }
   /**
    * @return Returns the aC_ADDR_IDSEQ.
    */

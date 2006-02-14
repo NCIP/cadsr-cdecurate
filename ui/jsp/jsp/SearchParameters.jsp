@@ -136,7 +136,7 @@
   if (vContext == null) vContext = new Vector();   
   if (sContext == null) sContext = "AllContext";
   if (sContextUse == null || sContextUse == "")  sContextUse = "BOTH";
-  if (sSearchIn.equals("CRFName")) sContextUse = "OWNED_BY";
+ // if (sSearchIn.equals("CRFName")) sContextUse = "OWNED_BY";
   if (sVersion == null || sVersion == "") sVersion = "Yes";  //"All";
   if (!sVersion.equals("Other")) txVersion = "";    
       
@@ -516,7 +516,7 @@ function LoadKeyHandler()
 					onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
           Owned By</td>
     </tr>
-   <% if (!sSearchIn.equals("CRFName")) { %>
+   <% //if (!sSearchIn.equals("CRFName")) { %>
     <tr style="height:10">
       <td>&nbsp;</td>
       <td align=left>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -531,7 +531,8 @@ function LoadKeyHandler()
 					onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
           Owned By/Used By</td>
     </tr>
-<%    } }  %>
+<%    //} 
+}  %>
 <!-- radio button version only for DE, VD, DEC, CD searches-->
 <%  if (sSearchAC.equals("DataElement") || sSearchAC.equals("DataElementConcept") || sSearchAC.equals("ValueDomain") || sSearchAC.equals("ConceptualDomain"))   { %>
     <tr>

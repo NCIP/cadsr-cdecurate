@@ -400,7 +400,7 @@
     <tr>
       <td><font color="#FF0000"> </font></td>
       <td height="24" valign="top" >
-        <input name="txtLongName" type="text" value="<%=sLongName%>" size="80" onKeyUp="changeCountLN();"
+        <input name="txtLongName" type="text" value="<%=sLongName%>" size="80" maxlength=255 onKeyUp="changeCountLN();"
           onHelp = "showHelp('Help_CreateDE.html#newCDEForm_txtLongName'); return false">
         &nbsp;&nbsp;&nbsp; <font color="#666666">
         <input name="txtLongNameCount" type="text" size="1" value="<%=sLongNameCount%>" readonly >

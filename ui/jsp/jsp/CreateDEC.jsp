@@ -519,7 +519,7 @@
       <tr>
         <td><font color="#FF0000"> </font></td>
         <td height="24" valign="top">
-	       <input name="txtLongName" type="text" size="80" value="<%=sLongName%>" onKeyUp="changeCountLN();"
+	       <input name="txtLongName" type="text" size="80" maxlength=255 value="<%=sLongName%>" onKeyUp="changeCountLN();"
             onHelp = "showHelp('Help_CreateDEC.html#newDECForm_txtLongName'); return false">
           &nbsp;&nbsp;&nbsp;
           <input name="txtLongNameCount" type="text" size="1" value="<%=sLongNameCount%>" readonly

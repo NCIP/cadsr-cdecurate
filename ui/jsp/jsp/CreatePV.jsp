@@ -186,11 +186,11 @@ function ViewConceptInTree()
       <td> &nbsp; </td>
       <td valign="bottom"  colspan=2>
        <%if (sPVAction.equals("createPV") || (sPVAction.equals("editPV") && sValue != null && !sValue.equals(""))) { %> 
-        <input type="text" name="txtPermValue" style="width:50%" value="<%=sValue%>" 
-          onHelp = "showHelp('Help_CreateVD.html#createPVForm_CreateValue'); return false" size="20">
+        <input type="text" name="txtPermValue" style="width:50%" size="20" maxlength=255 value="<%=sValue%>" 
+          onHelp = "showHelp('Help_CreateVD.html#createPVForm_CreateValue'); return false">
        <% } else { %>
-        <input type="text" name="txtPermValue" style="width:50%; color:#696969" value="<%=sValue%>" readonly
-          onHelp = "showHelp('Help_CreateVD.html#createPVForm_CreateValue'); return false" size="20">
+        <input type="text" name="txtPermValue" size="20" maxlength=255 style="width:50%; color:#696969" value="<%=sValue%>" readonly
+          onHelp = "showHelp('Help_CreateVD.html#createPVForm_CreateValue'); return false">
        <% } %>
      </td>
     </tr>

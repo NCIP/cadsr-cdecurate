@@ -1,4 +1,4 @@
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.1 2006-02-08 19:11:13 hegdes Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.2 2006-02-14 21:53:50 hardingr Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -129,7 +129,6 @@ public class RefDocAttachment {
  *  Open the Ref Documents attachments page.
  */
 public void doOpen (){
-	// TODO: Cut and paste code from servlet
 	
 	GetACService getAC = new GetACService(req, res, m_servlet);
 	Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
@@ -230,7 +229,7 @@ public void doOpen (){
 
 							//  if the ref doc is in a writable context add the delete X
 							if (refBean.getIswritable())	{
-							Doclist = Doclist + "<span onclick=\"onDocDelete('" 
+							Doclist = Doclist + "<span title=\"Delete Attachment\" onclick=\"onDocDelete('" 
 											  + fileName + "' , '" 
 											  + fileName2[1] 
 											  + "' )\"; style=\" font-family: Webdings; cursor: pointer; font-size: 12pt; font-weight: bold\">&#114;</span>"
@@ -250,7 +249,7 @@ public void doOpen (){
 								  + RefDocFileUrl 
 								  + fileName 
 								  + "\" target=\"_blank\">"
-								  + fileName
+								  + fileName2[1]
 								  + "<a><br>";
 							}
 							
@@ -367,7 +366,7 @@ public void doFileUpload (){
 				pstmt.close();
 
 				// upload blob
-				doFiletoBlob(dbfileName);
+				doFiletoBlob(con, dbfileName);
 
 			}
 			con.close();
@@ -446,7 +445,7 @@ public void doDeleteAttachment (){
  * @param bRefBlob - BLOB Object
  * @param fileName - The name of the file to save the object ro
  */
-public void doBlobtoFile (BLOB bRefBlob, String fileName){
+private void doBlobtoFile (BLOB bRefBlob, String fileName){
 	GetACService getAC = new GetACService(req, res, m_servlet);
 	Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
     vList = getAC.getToolOptionData("CURATION","REFDOC_FILECACHE","");
@@ -513,24 +512,23 @@ public void doBlobtoFile (BLOB bRefBlob, String fileName){
  * 
  * @param fileName
  */
-public void doFiletoBlob (String fileName){
+private void doFiletoBlob (Connection con, String fileName){
 	
 	GetACService getAC = new GetACService(req, res, m_servlet);
 	Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
     vList = getAC.getToolOptionData("CURATION","REFDOC_FILECACHE","");
     String RefDocFileCache = vList.get(0).getVALUE();
-    Connection con = null;
     
 	String UpdateObjSQL = "select blob_content from sbr.reference_blobs_view where name = ? for update";
 	OutputStream os;
 	FileInputStream is;
 	
 	try {
-		con = m_servlet.connectDB(req, res);
 		PreparedStatement pstmt = con.prepareStatement(UpdateObjSQL);
 		pstmt = con.prepareStatement(UpdateObjSQL);
 		
-		String fileLocator = RefDocFileCache + fileName;
+		String[] fileNameString = fileName.split("/");
+		String fileLocator = RefDocFileCache + fileNameString[1];
 		is = new FileInputStream( fileLocator );
 
 		

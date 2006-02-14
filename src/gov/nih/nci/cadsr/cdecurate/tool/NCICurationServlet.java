@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.1 2006-02-08 19:11:13 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.2 2006-02-14 21:53:50 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -930,7 +930,7 @@ public class NCICurationServlet extends HttpServlet
         logger.fatal("Servlet-doHomePage : " + e.toString());
         String msg = e.getMessage().substring(0, 12);
         if(msg.equals("Io exception"))
-          ForwardErrorJSP(req, res, "Io exception : Session terminated. Please log in again.");
+          ForwardErrorJSP(req, res, "Io Exception. Session Terminated. Please log in again.");
         else
            ForwardErrorJSP(req, res, "Incorrect Username or Password. Please re-enter.");
        }
@@ -941,83 +941,6 @@ public class NCICurationServlet extends HttpServlet
     }
   }
 
-/*   /**
-   *
-   * @param req The HttpServletRequest object.
-   * @param res HttpServletResponse object.
-   *
-   */
-/*  public void getVocabHandles(HttpServletRequest req, HttpServletResponse res)
-  {
-    try
-    {  
-      HttpSession session = req.getSession();
-      ApplicationService evsService =
-      ApplicationService.getRemoteInstance(m_EVS_CONNECT);
-      EVSQuery query = new EVSQueryImpl();
-      query.getVocabularyNames();
-      java.util.List vocabs = null;
-      String vocab = "";
-      try
-      {
-        vocabs = evsService.evsSearch(query);
-      }
-      catch(Exception ex)
-      {
-        ex.printStackTrace();
-      } 
-      if(vocabs != null && vocabs.size()>0)
-      {
-        DescLogicConcept aDescLogicConcept = new DescLogicConcept();
-        ArrayList vVocabs = null;
-        Source sVocab = null;
-        Vector vCTVocabs = new Vector();
-        for (int i = 0; i < vocabs.size(); i++)
-        {
-            sVocab = (Source)vocabs.get(i);
-            vocab = (String)sVocab.getAbbreviation();
- // System.out.println("vocab: " + vocab);
-            if(vocab.length()>4 && vocab.substring(0,5).equalsIgnoreCase("NCI_T"))
-            {
-              m_VOCAB_NCI = vocab;
-              vCTVocabs.addElement(vocab);
-            }
-            else if(vocab.length()>2 && vocab.substring(0,3).equalsIgnoreCase("Med"))
-            {
-              m_VOCAB_MED = vocab;
-              vCTVocabs.addElement(vocab);
-            }
-            else if(vocab.length()>2 && vocab.substring(0,3).equalsIgnoreCase("MGE"))
-            {
-              m_VOCAB_MGE = vocab;
-              vCTVocabs.addElement(vocab);
-            }
-            else if(vocab.length()>2 && vocab.substring(0,3).equalsIgnoreCase("LOI"))
-            {
-              m_VOCAB_LOI = vocab;
-              vCTVocabs.addElement(vocab);
-            }
-            else if(vocab.length()>2 && vocab.substring(0,2).equalsIgnoreCase("VA_"))
-            {
-              m_VOCAB_VA = vocab;
-              vCTVocabs.addElement(vocab);
-            }
-            else if(vocab.length()>1 && vocab.substring(0,2).equalsIgnoreCase("GO"))
-            {
-              m_VOCAB_GO = vocab;
-              vCTVocabs.addElement(vocab);
-            }
-        }
-        session.setAttribute("vCTVocabs", "vCTVocabs");
-      }
-      evsService = null;
-    }
-    catch(Exception e)
-    {
-      this.logger.fatal("ERROR in EVSSearch-getVocabHandles : " + e.toString());
-    } 
-  } */
- 
   /**
   * The doCreateDEActions method handles CreateDE or EditDE actions of the request.
   * Called from 'service' method where reqType is 'newDEfromForm'
@@ -2633,6 +2556,7 @@ public class NCICurationServlet extends HttpServlet
           isExist = true;
         }
       }
+      
       //add new one if not existed in teh bean already
       if (isExist == false)
       {
@@ -2898,8 +2822,8 @@ public class NCICurationServlet extends HttpServlet
       if (sAC.equals("DataElement"))
       {
         DE_Bean de = (DE_Bean)session.getAttribute("m_DE");        
-        vAltName = de.getAC_ALT_NAMES();
-        vRefDoc = de.getAC_REF_DOCS();
+        vAltName = (Vector)de.getAC_ALT_NAMES();
+        vRefDoc = (Vector)de.getAC_REF_DOCS();
       }
       if (sAC.equals("DataElementConcept"))
       {
@@ -2915,9 +2839,23 @@ public class NCICurationServlet extends HttpServlet
       }
       //store the alt name and ref doc in the session
       if (vAltName == null) vAltName = new Vector();
-      session.setAttribute("AllAltNameList", vAltName);
+      Vector<ALT_NAME_Bean> vAllAltName = new Vector<ALT_NAME_Bean>();
+      for (int i =0; i<vAltName.size(); i++) 
+      {
+        ALT_NAME_Bean thisAlt = new ALT_NAME_Bean();
+        thisAlt = thisAlt.copyAltNames((ALT_NAME_Bean)vAltName.elementAt(i));
+        vAllAltName.addElement(thisAlt);
+      }
+      session.setAttribute("AllAltNameList", vAllAltName);
       if (vRefDoc == null) vRefDoc = new Vector();
-      session.setAttribute("AllRefDocList", vRefDoc); 
+      Vector<REF_DOC_Bean> vAllRefDoc = new Vector<REF_DOC_Bean>();
+      for (int i=0; i<vRefDoc.size(); i++)
+      {
+        REF_DOC_Bean thisDoc = new REF_DOC_Bean();
+        thisDoc = thisDoc.copyRefDocs((REF_DOC_Bean)vRefDoc.elementAt(i));
+        vAllRefDoc.addElement(thisDoc);
+      }
+      session.setAttribute("AllRefDocList", vAllRefDoc); 
     }
     else
     {
@@ -2930,8 +2868,10 @@ public class NCICurationServlet extends HttpServlet
         //stroe it in the bean
         DE_Bean de = (DE_Bean)session.getAttribute("m_DE");
         m_setAC.setDEValueFromPage(req, res, de);  //capture all other page or request attributes
-        if (sType.equals("Alternate Names")) de.setAC_ALT_NAMES(vAllAltName);
-        else if(sType.equals("Reference Documents")) de.setAC_REF_DOCS(vAllRefDoc);
+        if (sType.equals("Alternate Names")) 
+          de.setAC_ALT_NAMES((Vector)vAllAltName);
+        else if(sType.equals("Reference Documents")) 
+          de.setAC_REF_DOCS((Vector)vAllRefDoc);
         //update session and forward
         session.setAttribute("m_DE", de);
         if (sACAct.equals("createAC"))
@@ -8432,7 +8372,7 @@ public class NCICurationServlet extends HttpServlet
        // set the selected display attributes so they persist through refreshes
        String selAttrs[] = req.getParameterValues("listAttrFilter");
        int selLength = selAttrs.length;
-       Vector vSelAttrs = new Vector();
+       Vector<String> vSelAttrs = new Vector<String>();
        String sID = "";
        if(selAttrs != null)
        {
@@ -8446,7 +8386,7 @@ public class NCICurationServlet extends HttpServlet
 
        String menuAction = (String)session.getAttribute("MenuAction");
        //add/remove protocol and crf from the displayable attriubtes according to the search in.
-       Vector vCompAttr = new Vector();
+       Vector<String> vCompAttr = new Vector<String>();
        if (menuAction.equals("searchForCreate"))
           vCompAttr = (Vector)session.getAttribute("creAttributeList");
        else
@@ -8454,8 +8394,8 @@ public class NCICurationServlet extends HttpServlet
           
        if (vCompAttr != null && sSearchIn.equals("CRFName"))
        {
-          if (!vCompAttr.contains("Protocol ID")) vCompAttr.insertElementAt("Protocol ID", 12);
-          if (!vCompAttr.contains("CRF Name")) vCompAttr.insertElementAt("CRF Name", 13);
+          if (!vCompAttr.contains("Protocol ID")) vCompAttr.insertElementAt("Protocol ID", 13);
+          if (!vCompAttr.contains("CRF Name")) vCompAttr.insertElementAt("CRF Name", 14);
        }
        else
        {
@@ -8499,7 +8439,7 @@ public class NCICurationServlet extends HttpServlet
 
            GetACSearch serAC = new GetACSearch(req, res, this);
            Vector vResult = serAC.refreshSearchPage(sSearchAC);
-           session.setAttribute("result", vResult);
+           session.setAttribute("results", vResult);
            session.setAttribute("creKeyword", "");
            //set the session attribute for searchAC
            ForwardJSP(req, res, "/OpenSearchWindow.jsp");
@@ -9128,13 +9068,13 @@ public class NCICurationServlet extends HttpServlet
        {
          sCont = (String)req.getParameter("selContact");
          if (sCont != null && !sCont.equals("") && hConts.containsKey(sCont))
-           accBean = (AC_CONTACT_Bean)hConts.get(sCont);
+           accBean = accBean.copyContacts((AC_CONTACT_Bean)hConts.get(sCont));
          accBean.setACC_SUBMIT_ACTION("DEL");
        }
        else
        {
          sCont = (String)session.getAttribute("selContactKey");
-         accBean = (AC_CONTACT_Bean)session.getAttribute("selACContact");
+         accBean = accBean.copyContacts((AC_CONTACT_Bean)session.getAttribute("selACContact"));
          if (accBean == null) accBean = new AC_CONTACT_Bean();       
          //new contact
          if (sCont == null || sCont.equals(""))
@@ -9196,7 +9136,7 @@ public class NCICurationServlet extends HttpServlet
              String selCont = (String)req.getParameter("selContact");
              if (selCont != null && hConts.containsKey(selCont))
              {
-               accBean = (AC_CONTACT_Bean)hConts.get(selCont);
+               accBean = accBean.copyContacts((AC_CONTACT_Bean)hConts.get(selCont));
                session.setAttribute("selContactKey", selCont);
              }
        //System.out.println(sContAct + " contat sele " + selCont + " contains " + hConts.containsKey(selCont));
@@ -9287,7 +9227,7 @@ public class NCICurationServlet extends HttpServlet
          //check if this id is selected
          if (rSel != null)
          {  
-           commB = (AC_COMM_Bean)vComm.elementAt(j);
+           commB = commB.copyComms((AC_COMM_Bean)vComm.elementAt(j));
            selInd = j;
            break;
          }
@@ -9333,7 +9273,7 @@ public class NCICurationServlet extends HttpServlet
              if (exSubmit != null && exSubmit.equals("DEL"))
              {
                wasDeleted = true;
-               commB = (AC_COMM_Bean)vComm.elementAt(k);
+               commB = commB.copyComms((AC_COMM_Bean)vComm.elementAt(k));
                if (commB.getAC_COMM_IDSEQ() == null || commB.getAC_COMM_IDSEQ().equals(exCommName))
                  commB.setCOMM_SUBMIT_ACTION("INS");
                else
@@ -9383,7 +9323,7 @@ public class NCICurationServlet extends HttpServlet
          //check if this id is selected
          if (rSel != null)
          {  
-           addrB = (AC_ADDR_Bean)vAddr.elementAt(j);
+           addrB = addrB.copyAddress((AC_ADDR_Bean)vAddr.elementAt(j));
            selInd = j;
            break;
          }
@@ -9451,7 +9391,7 @@ public class NCICurationServlet extends HttpServlet
              if (exSubmit != null && exSubmit.equals("DEL"))
              {
                wasDeleted = true;
-               addrB = (AC_ADDR_Bean)vAddr.elementAt(k);
+               addrB = addrB.copyAddress((AC_ADDR_Bean)vAddr.elementAt(k));
                if (addrB.getAC_ADDR_IDSEQ() == null || addrB.getAC_ADDR_IDSEQ().equals(exAddrName))
                  addrB.setADDR_SUBMIT_ACTION("INS");
                else
@@ -9832,7 +9772,6 @@ public class NCICurationServlet extends HttpServlet
                   con = connectDB(req, res);
                   String temp = list.elementAt(ndx); 
                   CallableStatement stmt = con.prepareCall("begin SBREXT_CDE_CURATOR_PKG.REMOVE_FROM_SENTINEL_CS('"+ temp +"','"+ user +"'); END;");
-                  //CallableStatement stmt = con.prepareCall("begin SBREXT.Scenpro_Cde_Curator_Pkg.REMOVE_FROM_SENTINEL_CS('"+ temp +"','"+ user +"'); END;");
                   stmt.execute();                
                   con.close();
                   msg = "The selected item is no longer monitored by the Alert Definition";
@@ -10983,6 +10922,9 @@ public class NCICurationServlet extends HttpServlet
        vCompAtt.addElement("Name");
        vCompAtt.addElement("Origin");
        vCompAtt.addElement("Concept Name");
+       //protocol id and crf name is not default and positioned at 13th & 14th place
+      // vCompAtt.addElement("Protocol ID");
+      // vCompAtt.addElement("CRF Name");       
        vCompAtt.addElement("Effective Begin Date");
        vCompAtt.addElement("Effective End Date");
        vCompAtt.addElement("Creator");
@@ -11208,7 +11150,7 @@ public class NCICurationServlet extends HttpServlet
   {
       try
       {
-         ForwardErrorJSP(req, res, "Session terminated. Please log in again.");
+         ForwardErrorJSP(req, res, "Session Terminated. Please log in again.");
       }
       catch (Exception e)
       {
@@ -11372,12 +11314,12 @@ public class NCICurationServlet extends HttpServlet
 			{
 			      try
 			      {
-			    	  ForwardErrorJSP(req, res, "Reference Document Attachments Upload: Unknown Request Type. \n" +
-			    	  		"Please contact help desk.");
+			    	  ForwardErrorJSP(req, res, "Unexpected Request. Session Terminated. Please login again.");
+                      logger.fatal("Reference Document Attachments Upload: Unknown Request Type.");
 			      }
 			      catch (Exception e)
 			      {
-			        this.logger.fatal("ERROR - ErrorLogin: " + e.toString());
+			          logger.fatal("ERROR - ErrorLogin: " + e.toString());
 			      }
 
 			}
@@ -11387,12 +11329,12 @@ public class NCICurationServlet extends HttpServlet
 			{
 			      try
 			      {
-			    	  ForwardErrorJSP(req, res, "Reference Document Attachments Upload: Unknown Origin Type.\n" +
-			    	  		"Please contact help desk.");
+                      ForwardErrorJSP(req, res, "Unexpected Request. Session Terminated. Please login again.");
+                      logger.fatal("Reference Document Attachments Upload: Unknown Origin Type.");
 			      }
 			      catch (Exception e)
 			      {
-			        this.logger.fatal("ERROR - ErrorLogin: " + e.toString());
+			          logger.fatal("ERROR - ErrorLogin: " + e.toString());
 			      }
 			}
    }

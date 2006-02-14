@@ -10,6 +10,7 @@
     String filename = "Document.doc";
     String dispType = (String)session.getAttribute("displayType");
     session.setAttribute("RefDocTargetFile", "");
+    String Zebra = "false";
 
     String acType = (String)session.getAttribute("dispACType");
     if (dispType == null) dispType = "";
@@ -135,14 +136,6 @@ Admin or Curation Tools.</p>
     {
       refBean = (REF_DOC_Bean)vRefDoc.elementAt(i);
       filename = (String)vRefDocURL.get(i);
-      //write the AC name and the table heading for the first item
-      if (i==0)
-      {
-%>
-    <tr>
-	<td></td>
-	</tr>
-<%    } 
       String docName =  refBean.getDOCUMENT_NAME();
       if (docName == null) docName = "";
       String docType =  refBean.getDOC_TYPE_NAME();
@@ -161,14 +154,26 @@ Admin or Curation Tools.</p>
       else {
       	docLink = "http://";
       }
-	
-%> 
-	<tr>
-	<td>
+	if (Zebra == "true"){
+      	%> 
+		<tr style="background-color: #f5f5dc">
+		<td>
+		<%;
+		Zebra = "false";
+      }
+      else {
+      	      	%> 
+		<tr>
+		<td>
+		<%;
+		Zebra = "true";
+      }
+
+	%>
 <% 
 	if (refBean.getIswritable()){
 %>	
-	<input type="checkbox" name="ck<%=i%>"/>
+	<input type="checkbox" name="ck<%=i%>" onclick="adjustCheckCount(this);" />
 <%
 	  }
 else {%>
@@ -199,7 +204,7 @@ else {%>
 </p>
 <p>File Name: <INPUT TYPE=FILE NAME="uploadfile"></p>
 <p>Please perform a virus scan on files prior to Upload. File scans are not performed by the Curation Tool.</p>
-<p><INPUT type="button" name="Uploadbtn" value="Upload" onclick="javascript:doUpload();"></p>
+<p><INPUT type="button" name="Uploadbtn" value="Upload" onclick="javascript:doUpload();" disabled></p>
 
 
 <input type="hidden" name="newRefDocPageAction" value="nothing">
