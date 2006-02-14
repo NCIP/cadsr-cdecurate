@@ -40,6 +40,50 @@ public class AC_CONTACT_Bean implements Serializable
   }
 
   /**
+   * @param fBean to copy from
+   * @return AC_CONTACT_Bean
+   */
+  public AC_CONTACT_Bean copyContacts(AC_CONTACT_Bean fBean)
+  {
+    if (fBean != null)
+    {
+      this.setAC_CONTACT_IDSEQ(fBean.getAC_CONTACT_IDSEQ());
+      this.setAC_IDSEQ(fBean.getAC_IDSEQ());
+      this.setAC_LONG_NAME(fBean.getAC_LONG_NAME());
+      //add list of address to contact bean
+      Vector vAddr = fBean.getACC_ADDR_List();
+      if (vAddr == null) vAddr = new Vector<AC_ADDR_Bean>();
+      Vector<AC_ADDR_Bean> acAddr = new Vector<AC_ADDR_Bean>();
+      for (int i =0; i<vAddr.size(); i++)
+      {
+        AC_ADDR_Bean addr = (AC_ADDR_Bean)vAddr.elementAt(i);
+        acAddr.addElement(addr);
+      }
+      this.setACC_ADDR_List(acAddr);
+      //add list of communication to contact bean
+      Vector vComm = fBean.getACC_COMM_List();
+      if (vComm == null) vComm = new Vector<AC_COMM_Bean>();
+      Vector<AC_COMM_Bean> acComm = new Vector<AC_COMM_Bean>();
+      for (int i =0; i<vComm.size(); i++)
+      {
+        AC_COMM_Bean comm = (AC_COMM_Bean)vComm.elementAt(i);
+        acComm.addElement(comm);
+      }
+      this.setACC_COMM_List(acComm);
+      //copy other attributes
+      this.setACC_SUBMIT_ACTION(fBean.getACC_SUBMIT_ACTION());
+      this.setCONTACT_ROLE(fBean.getCONTACT_ROLE());
+      this.setCS_CSI_IDSEQ(fBean.getCS_CSI_IDSEQ());
+      this.setCS_IDSEQ(fBean.getCS_IDSEQ());
+      this.setORG_IDSEQ(fBean.getORG_IDSEQ());
+      this.setORG_NAME(fBean.getORG_NAME());
+      this.setPERSON_IDSEQ(fBean.getPERSON_IDSEQ());
+      this.setPERSON_NAME(fBean.getPERSON_NAME());
+      this.setRANK_ORDER(fBean.getRANK_ORDER());
+    }    
+    return this;
+  }
+  /**
    * @return Returns the RETURN_CODE.
    */
   public String getRETURN_CODE()

@@ -29,6 +29,24 @@ public class AC_COMM_Bean implements Serializable
   }
 
   /**
+   * @param fBean to copy from
+   * @return AC_COMM_Bean
+   */
+  public AC_COMM_Bean copyComms(AC_COMM_Bean fBean)
+  {
+    if (fBean != null)
+    {
+      this.setAC_COMM_IDSEQ(fBean.getAC_COMM_IDSEQ());
+      this.setCOMM_SUBMIT_ACTION(fBean.getCOMM_SUBMIT_ACTION());
+      this.setCTL_NAME(fBean.getCTL_NAME());
+      this.setCYBER_ADDR(fBean.getCYBER_ADDR());
+      this.setORG_IDSEQ(fBean.getORG_IDSEQ());
+      this.setPERSON_IDSEQ(fBean.getPERSON_IDSEQ());
+      this.setRANK_ORDER(fBean.getRANK_ORDER());
+    }    
+    return this;
+  }
+  /**
    * @return Returns the aC_COMM_IDSEQ.
    */
   public String getAC_COMM_IDSEQ()

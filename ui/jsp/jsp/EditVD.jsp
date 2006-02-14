@@ -517,25 +517,43 @@ function setup()
                   <table border="0" width="100%" height="100%">
                    <!-- <col width="30%"><col width="18%"><col width="30%"><col width="18%"> -->
                     <col width="24%"><col width="12%"><col width="16%"><col width="20%"><col width="12%"><col width="16%">
-                    <tr height="30" valign="middle">
-                        <td colspan=6>Optional Name Components (will not be saved or displayed later)</td>
+                    <tr height="30" valign="middle">                      
+                        <td colspan=6>
+                          <%if(sOriginAction.equals("BlockEditVD")){%><font color="#C0C0C0">
+                        	Optional Name Components (will not be saved or displayed later)</font>
+                      	  <%} else {%>
+                        	Optional Name Components (will not be saved or displayed later)
+                      	  <%}%>
+                      	</td>
                     </tr>
                     <tr height="18"></tr>
                     <tr valign="top">
-                      <td align="left">Object Class</td>
-                      <td align="center"><font color="#FF0000">
-                        <a href="javascript:SearchBuildingBlocks('VDObjectClass', 'false')">Search</a></font>
-                      </td>
-                      <td align="center"><font color="#FF0000">
-                        <a href="javascript:RemoveBuildingBlocks('VDObjectClass')">Remove</a></font>
-                      </td>
-                      <td align="left">Property</td>
-                      <td align="center"><font color="#FF0000">
-                        <a href="javascript:SearchBuildingBlocks('VDPropertyClass','false')">Search</a></font>
-                      </td>
-                      <td align="center"><font color="#FF0000">
-                        <a href="javascript:RemoveBuildingBlocks('VDPropertyClass')">Remove</a></font>
-                      </td>
+                      <%if(sOriginAction.equals("BlockEditVD")){%>
+	                      <td align="left"><font color="#C0C0C0">Object Class</font></td>
+	                      <td>&nbsp;</td>
+	                      <td>&nbsp;</td>
+                      <%} else {%>
+	                      <td align="left">Object Class</td>
+	                      <td align="center"><font color="#FF0000">
+	                        <a href="javascript:SearchBuildingBlocks('VDObjectClass', 'false')">Search</a></font>
+	                      </td>
+	                      <td align="center"><font color="#FF0000">
+	                        <a href="javascript:RemoveBuildingBlocks('VDObjectClass')">Remove</a></font>
+	                      </td>
+                      <%}%>
+                      <%if(sOriginAction.equals("BlockEditVD")){%>
+	                      <td align="left"><font color="#C0C0C0">Property</font></td>
+	                      <td>&nbsp;</td>
+	                      <td>&nbsp;</td>
+                      <%} else {%>
+	                      <td align="left">Property</td>
+	                      <td align="center"><font color="#FF0000">
+	                        <a href="javascript:SearchBuildingBlocks('VDPropertyClass','false')">Search</a></font>
+	                      </td>
+	                      <td align="center"><font color="#FF0000">
+	                        <a href="javascript:RemoveBuildingBlocks('VDPropertyClass')">Remove</a></font>
+	                      </td>
+                      <%}%>
                     </tr>
                     <tr valign="top">
                       <td colspan="3">
@@ -652,7 +670,7 @@ function setup()
     <tr>
       <td>&nbsp;</td>
       <td height="24" valign="top" >
-        <input name="txtLongName" type="text" size="100" value="<%=sLongName%>" onKeyUp="changeCountLN();"
+        <input name="txtLongName" type="text" size="100" maxlength=255 value="<%=sLongName%>" onKeyUp="changeCountLN();"
         <%if(sOriginAction.equals("BlockEditVD")){%>readonly<%}%>
           onHelp = "showHelp('Help_CreateVD.html#createVDForm_txtLongName'); return false">
           &nbsp;&nbsp;
@@ -696,7 +714,7 @@ function setup()
     <tr>
       <td>&nbsp;</td>
       <td height="24" valign="top">
-         <input name="txtPreferredName" type="text" size="100" value="<%=sName%>" onKeyUp="changeCountPN();"
+         <input name="txtPreferredName" type="text" size="100" maxlength=30 value="<%=sName%>" onKeyUp="changeCountPN();"
           <%if(sOriginAction.equals("BlockEditVD") || sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")){%>readonly<%}%>
           onHelp = "showHelp('Help_CreateVD.html#createVDForm_txtPreferredName'); return false">
           &nbsp;&nbsp;
@@ -1234,8 +1252,8 @@ function setup()
     <tr>
       <td>&nbsp;</td>
     	<td >
-        <input type="text" name="tfMinLength" value="<%=sMinLen%>"
-          onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfMinLength'); return false" size="20" maxlength=8 >
+        <input type="text" name="tfMinLength" value="<%=sMinLen%>" size="20" maxlength=8 
+          onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfMinLength'); return false">
       </td>
     </tr>
     <tr height="25" valign="bottom">
@@ -1245,8 +1263,8 @@ function setup()
     <tr>
      <td>&nbsp;</td>
     	<td >
-        <input type="text" name="tfMaxLength" value="<%=sMaxLen%>"
-          onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfMaxLength'); return false" size="20" maxlength=8>
+        <input type="text" name="tfMaxLength" value="<%=sMaxLen%>" size="20" maxlength=8
+          onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfMaxLength'); return false">
       </td>
     </tr>
     <tr height="25" valign="bottom">
@@ -1256,9 +1274,9 @@ function setup()
     <tr>
      <td>&nbsp;</td>
     	<td >
-        <input type="text" name="tfLowValue" value="<%=sLowValue%>"
+        <input type="text" name="tfLowValue" value="<%=sLowValue%>" size="20" maxlength=255
           <% if (!sDataType.equalsIgnoreCase("NUMBER")) { %> disabled <% } %>
-          onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfLowValue'); return false" size="20">
+          onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfLowValue'); return false">
       </td>
     </tr>
     <tr height="25" valign="bottom">
@@ -1268,9 +1286,9 @@ function setup()
     <tr>
     <td>&nbsp;</td>
     	<td >
-        <input type="text" name="tfHighValue" value="<%=sHighValue%>" 
+        <input type="text" name="tfHighValue" value="<%=sHighValue%>" size="20" maxlength=255 
           <% if (!sDataType.equalsIgnoreCase("NUMBER")) { %> disabled <% } %>
-          onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfHighValue'); return false" size="20">
+          onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfHighValue'); return false">
       </td>
     </tr>
     <tr height="25" valign="bottom">
@@ -1280,8 +1298,8 @@ function setup()
     <tr>
       <td>&nbsp;</td>
       <td >
-        <input type="text" name="tfDecimal" value="<%=sDecimal%>"
-          onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfDecimal'); return false" size="20" maxlength=2>
+        <input type="text" name="tfDecimal" value="<%=sDecimal%>" size="20" maxlength=2
+          onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfDecimal'); return false">
       </td>
     </tr>
       <!-- Classification Scheme and items -->

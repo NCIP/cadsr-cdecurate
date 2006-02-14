@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/REF_DOC_Bean.java,v 1.1 2006-02-08 19:11:13 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/REF_DOC_Bean.java,v 1.2 2006-02-14 21:53:50 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -113,7 +113,30 @@ public class REF_DOC_Bean implements Serializable
   */
   public REF_DOC_Bean() {
   };
-  
+
+  /**
+   * @param fromBean to copy from
+   * @return REF_DOC_Bean
+   */
+  public REF_DOC_Bean copyRefDocs(REF_DOC_Bean fromBean)
+  {
+    if (fromBean != null)
+    {
+      this.setAC_IDSEQ(fromBean.getAC_IDSEQ());
+      this.setAC_LANGUAGE(fromBean.getAC_LANGUAGE());
+      this.setAC_LONG_NAME(fromBean.getAC_LONG_NAME());
+      this.setCONTE_IDSEQ(fromBean.getCONTE_IDSEQ());
+      this.setCONTEXT_NAME(fromBean.getCONTEXT_NAME());
+      this.setDOC_TYPE_NAME(fromBean.getDOC_TYPE_NAME());
+      this.setDOCUMENT_NAME(fromBean.getDOCUMENT_NAME());
+      this.setDOCUMENT_TEXT(fromBean.getDOCUMENT_TEXT());
+      this.setDOCUMENT_URL(fromBean.getDOCUMENT_URL());
+      this.setIswritable(fromBean.getIswritable());
+      this.setREF_DOC_IDSEQ(fromBean.getCONTE_IDSEQ());
+      this.setREF_SUBMIT_ACTION(fromBean.getREF_SUBMIT_ACTION());
+    }
+    return this;
+  }
   /**
   * The setRETURN_CODE method sets the RETURN_CODE for this bean.
   *
@@ -221,6 +244,13 @@ public class REF_DOC_Bean implements Serializable
   public void setREF_SUBMIT_ACTION(String s)
   {
       this.REF_SUBMIT_ACTION = s;
+  }
+  /**
+   * Stores the writable state of the RD for this bean
+   * @param iswritable
+   */
+  public void setIswritable(Boolean iswritable) {
+    this.iswritable = iswritable;
   }
 
 
@@ -340,12 +370,5 @@ public class REF_DOC_Bean implements Serializable
 		return iswritable;
 	}
 
-	/**
-	 * Stores the writable state of the RD for this bean
-	 * @param iswritable
-	 */
-	public void setIswritable(Boolean iswritable) {
-		this.iswritable = iswritable;
-	}
   
 }  //end class

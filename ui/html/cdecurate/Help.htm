@@ -1,22 +1,117 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD><TITLE>Curation Tool Help</TITLE>
-<META http-equiv=Content-Type content="text/html; charset=iso-8859-1"><LINK 
-href="Help.css" type=text/css rel=stylesheet>
-<META content="MSHTML 6.00.2900.2802" name=GENERATOR></HEAD>
-<BODY>
-<H2 class=main>CDE Curation Tool<BR>User’s Guide<BR>Version 3.1</H2><BR><BR>
-<DIV align=center>
-<TABLE>
-  <COLGROUP>
-  <COL width="10%">
-  <COL width="90%">
-  <TBODY>
-  <TR>
-    <TD class=bullet colSpan=2>Introduction</TD></TR>
-  <TR>
-    <TD colSpan=2><B>The Common Data Element (CDE) Curation Tool User's Guide 
-      will tell you how to:</B> 
-      <UL>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>
+      Curation Tool Help
+    </title>
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=us-ascii">
+    <link href="Help.css"
+          type="text/css"
+          rel="stylesheet">
+    <meta content="MSHTML 6.00.2900.2802"
+          name="GENERATOR">
+<style type="text/css">
+
+#TCO {
+float: left;
+width: 9cm;
+margin: 0;
+padding: 1em 1em 0 0;
+}
+
+#content
+{
+margin-left: 9cm;
+padding: 2em;
+border-left: solid thin 1px ;
+height: 100%;
+}
+
+ div#Banner {
+    background-image:  url(C:\Development\Help File\Assets\curation_banner2.gif);
+    background-repeat: no-repeat;
+		height:52;
+		width:100%;
+}
+
+ div#bannerText {
+ 		font-family: Arial, Helvetica, sans-serif;
+		font-size: 28px;
+    color:#660066;
+    margin: .4em 2em 0 0;
+		text-align: right;
+		
+</style>
+  </head>
+  <body>
+	 <table style="width: 100%; background-color: #FFFFFF; " border="0" valign="middle" align="center" cellspacing="0">
+    <col width="30%"><col width="40%"><col width="30%">
+		<tr style="background-color: #A90101;">
+				<td  align="left"><a href="http://www.cancer.gov" target=_blank><img src="Assets/brandtype.gif" border="0" alt="NCI Logo"></a></td>
+				<td>&nbsp;</td>
+				<td  align="right"><a href="http://www.cancer.gov" target=_blank><img src="Assets/tagline_nologo.gif" border="0" alt="NCI Logo"></a></td>
+		</tr>
+		</table>
+
+		<div id="Banner"><div id="bannerText">User&rsquo;s Guide Version 3.1</div></div>
+		<br>
+<!-- ****************************************************** -->
+<!--                Table of Contents                       -->
+<!-- ****************************************************** -->
+  <div class="header" style="text-align: left;">
+            &nbsp;&nbsp;Table of Contents
+  </div>
+	
+<div id="TCO">
+  <ol type="1" style="margin-left: 2em;">
+    <li><a href="Help_DE_ISO.html">Data Elements and the ISO/IEC</a> </li>
+    <li><a href="Help_SearchAC.html">Search for Administered Components</a> </li>
+		<li><a href="Help_DesignateDE.html">Designating Data Elements</a></li>
+    <li><a href="Help_Monitor_UnmonitorAC.html">Monitor Changes to Administered Components</a></li>
+  	<li><a href="Help_ReferenceDocuments.html">Uploading Attachment Documents to Reference Document</a></li>
+    <li><a href="Help_EVS.html">Integration with NCI EVS</a> </li>
+    <li><a href="Help_CreateDE.html">Data Elements (DE)</a> </li>
+      <ol type="I" style="margin-left: 2em; margin-bottom: .5em;">
+        <li><a href="Help_CreateDE.html#Overview">Data Elements (DE) Overview</a></li>
+        <li><a href="Help_CreateDE.html#Attributes">Creating or Editing Data Element Attributes</a></li>
+      	<li><a href="Help_CreateDE.html#Derived">Creating or Editing Data Derived Element Attributes</a></li>
+        <li><a href="Help_CreateDE.html#Validate">Validate/Submit Data Elements</a></li>
+      </ol>    
+  <li><a href="Help_CreateDEC.html">Data Element Concepts (DEC)</a></li> 
+    <ol type="I" style="margin-left: 2em; margin-bottom: .5em;">
+      <li><a href="Help_CreateDEC.html#Overview">Data Element Concept Overview</a></li>
+      <li><a href="Help_CreateDEC.html#Attributes">Creating or Editing Value Domain Attributes</a></li>
+      <li><a href="Help_CreateDEC.html#Validate">Validate/Submit Value Domains</a></li>
+    </ol>  
+  <li><a href="Help_CreateVD.html">Value Domains (VD)</a> </li>
+    <ol type="I" style="margin-left: 2em; margin-bottom: .5em;">
+      <li><a href="Help_CreateVD.html#Overview">Value Domains (VD) Overview</a></li>
+      <li><a href="Help_CreateVD.html#Attributes">Creating or Editing Value Domain Attributes</a></li>
+      <li><a href="Help_CreateVD.html#Validate">Validate/Submit Value Domains</a></li>
+    </ol>
+  <li><a href="Help_CRT.html">CRT Integration</a> </li>
+  
+  </ol>
+</div>
+
+<!-- ****************************************************** -->
+<!--                       Overview                         -->
+<!-- ****************************************************** -->
+<div id="content">
+		 <h2>The Common Data Element (CDE) Curation Tool</h2>
+		 <p>
+		 Intended for Context administrators, this tool supports the creation and 
+		 editing of Data Element Concepts, Value Domains, and Data Elements. 
+		 An account is required to use this tool, and you must have curatorial 
+		 authority for your Context. This tool's features facilitate the use of 
+		 the NCICB Enterprise Vocabulary System (EVS) to create administered component 
+		 names and definitions, helping to ensure ISO/IEC 11179 compliance and also 
+		 use of caDSR naming conventions. 
+		 </p><p>
+		 CDE Curation Tool User's Guide 
+     will tell you how to:</Br> 
+     <UL>
         <LI><SPAN class=standOut>Search</SPAN> the caDSR for Data Elements, Data 
         Element Concepts, Value Domains, Conceptual Domains, Classification 
         Scheme Items, Value/Meanings, Case Report Form (CRF) Questions, 
@@ -31,700 +126,12 @@ href="Help.css" type=text/css rel=stylesheet>
         Edit</SPAN> and <SPAN class=standOut>Block Edit </SPAN>Value Domains 
         <BR><BR>
         <LI><SPAN class=standOut><B>Create</B></SPAN> New Value/Value Meanings 
-        </LI></UL></TD></TR>
-  <TR>
-    <TD colSpan=2><SPAN class=standOut>NOTE: </SPAN>Do not use the browser's 
-      'Back' button to navigate once you have logged in. Doing so may cause the 
-      tool to function incorrectly. </TD></TR>
-  <TR>
-    <TD colSpan=2>&nbsp;</TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD class=mainTopic><B>Table of Contents</B> </TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD class=mainTopic><A name=TOCISO></A><A href="Help_DE_ISO.html">Data 
-      Elements and the ISO/IEC</A> </TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A 
-      href="Help_DE_ISO.html#Understanding Standard">Understanding the ISO/IEC 
-      11179 Standard</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A 
-      href="Help_DE_ISO.html#Data Elements Overview">Data Elements</A> 
-</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A 
-      href="Help_DE_ISO.html#Administered Components">Administered 
-      Components</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A 
-      href="Help_DE_ISO.html#Relationship Between Administered Components">Relationships 
-      Between Administered Components</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A 
-      href="Help_DE_ISO.html#Relationship Between Administered Components">caDSR 
-      Implementation of ISO/IEC 11179</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A 
-      href="Help_DE_ISO.html#Relationship Between Administered Components">caDSR 
-      and the NCI Enterprise Vocabulary Services (EVS)</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD class=mainTopic><A name=TOCSearch></A><A 
-      href="Help_SearchAC.html">Search for Administered Components</A> </TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A 
-      href="Help_SearchAC.html#Overview of the Main Search Page">Overview of the 
-      Main Search Page</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A href="Help_SearchAC.html#Use the Search Pane">Use 
-      the Search Pane</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Search Criteria</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Search Filters Multiple Contexts/Exact Version (NEW 
-      FEATURE)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A href="Help_SearchAC.html#Search Results">Search 
-      Results</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Update Display Attributes</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Before You Search - Selecting Attributes</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>After You Search - Updating Attributes</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Sort Records</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Select Records (Select/Deselect All)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Show Selected Rows</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Append Results</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Details Button</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Get Associated</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Clear Records</P></TD></TR>
-	<TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><a href="Help_ReferenceDocuments.html">Uploading 
-			Attachment Documents to Reference Document</a></P></TD></TR>
-	<TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><a href="Help_Monitor_UnmonitorAC.html">Monitor/Unmonitor</a></P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD class=mainTopic><A name=TOCEVS></A><A href="Help_EVS.html">Integration 
-      with NCI EVS</A> </TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1>Overview of EVS/DTS (New Vocabulary)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1>Search for a Definition</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1>Search for Naming Components, Tree Search/Include, 
-      Qualifier Concepts, and Primary Concepts (NEW FEATURE)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1>Search for Parent Concepts (NEW FEATURE)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1>Submit Suggestion</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD class=mainTopic><A name=TOCDesignate></A><A 
-      href="Help_DesignateDE.html">Designating Data Elements</A> </TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1>Designations</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1>Alternate Name Attributes (NEW FEATURE)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1>Reference Document Attributes (NEW 
-FEATURE)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1>Classification Schemes and Classification Scheme 
-      Items (NEW Inherit Higher Level)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1>Designating Multiple Data Elements</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD class=mainTopic><A name=TOCDE></A><A href="Help_CreateDE.html">Data 
-      Elements (DE)</A> </TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A href="Help_CreateDE.html#Designate">Designating 
-      Data Elements</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A href="Help_CreateDE.html#Create New">Create New 
-      Data Element</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Create New Data Element Overview</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Select and Enter Data Element Attributes</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select a Context</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Name a Data Element</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select a Data Element Concept</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select a Value Domain</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Verify Long Name and Short Name</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Define a Data Element</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Create a Definition</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel5>Create a Definition by Entering Text</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel5>Search the NCI Thesaurus and Metathesaurus for a 
-      Definition</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel5>Suggest the Definition or Term to EVS</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select a Workflow Status</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select a Version (includes NEW FEATURE)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select a Registration Status (includes NEW 
-      FEATURES)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Enter/Select the Effective Begin and End 
-  Dates</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Create Preferred Question Text for a Data Element</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select Classification Scheme/Classification Scheme 
-      Items (NEW FEATURES)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select the Origin</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Confirm the Language</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Enter/Select an Effective End Date</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Create a Comment/Change Note</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Validate and Submit the New Data Element</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Create Derived Data Element Components</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Select a Representation Type</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Create a Rule</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Create Methods</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Enter a Concatenation Character</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Search for or Create Data Element 
-  Components</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Select Data Element Components</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Enter a Display Order</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Delete a Selected Data Element Component</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Validate a Single Data Element</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Submit a Single Data Element</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Correct Invalid Attributes</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A 
-      href="Help_CreateDE.html#Create New from Existing">Create New Data Element 
-      from Existing</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A 
-      href="Help_CreateDE.html#Create New Version">Create New Version of Data 
-      Element</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A href="Help_CreateDE.html#Edit">Edit Data 
-      Elements</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A href="Help_CreateDE.html#Block Edit">Block Edit 
-      Data Elements</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Edit Classification Schemes and Classification 
-      Scheme Items</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A 
-      href="Help_CreateDE.html#Validate/Submit">Validate/Submit Multiple Data 
-      Elements</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Validate a Multiple Data Element</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Submit a Multiple Data Element</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD class=mainTopic><A name=TOCDEC></A><A href="Help_CreateDEC.html">Data 
-      Element Concepts (DEC)</A> </TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A href="Help_CreateDEC.html#createNewDEC">Create 
-      New Data Element Concepts</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Create New Data Element Concept Overview</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Select and Enter Data Element Concept 
-    Attributes</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select a Context</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Name a Data Element Concept (NEW FEATURES)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Search for Building Blocks (Primary and Qualifier 
-      Concepts) via Term Search</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Search for Building Blocks via Tree Search (NEW 
-      FEATURE)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Verify Long Name and Short Name</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Define a Data Element Concept</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Create a Definition</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Create a Definition by Enetering Text</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Search the NCI Thesaurus and Metathesaurus for a 
-      Definition</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Suggest the Definition or Term to EVS</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Search for a Conceptual Domain</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select a Workflow Status</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Version Data Element Concepts (includes NEW 
-      FEATURE)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Enter/Select the Effective Begin and End 
-  Dates</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select Classification Scheme/Classification Scheme 
-      Items (NEW FEATURES)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select the Origin</P></TD>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Create a Comment/Change Note</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Validate Data Element Concept Information</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Correct Invalid Attributes</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Submit a New Data Element Concept</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A href="Help_CreateDEC.html#Editing">Edit Data 
-      Element Concepts</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Edit a Single Data Element Concept</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Edit Multiple Data Elements Concepts</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Classification Schemes and Classification Scheme 
-      Items</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Versioning (includes NEW FEATURE)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Validating</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD class=mainTopic><A name=TOCVD></A><A href="Help_CreateVD.html">Value 
-      Domains (VD)</A> </TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A href="Help_CreateVD.html#Search">Search (NEW 
-      filter by CD/Exact Version)</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A href="Help_CreateVD.html#createNewVD">Create 
-      New</A> </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Create New Value Domain Screen Overview</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Select and Enter Value Domain Attributes</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select a Context</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select a Value Domain Type</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Name a Value Domain</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Search for Building Blocks</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Verify the Long Name and Short Name</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Define a Value Domain</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Create a Definition</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Search the NCI Thesaurus and Metathesaurus for a 
-      Definition</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Suggest a Definition or Term to EVS</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Search for a Conceptual Domain</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Version a Value Domains</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select a Workflow Status</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select the Data Type</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Create New Permissible Values (New Value/New Value 
-      Meaning)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Create a New Value Meaning</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Validate the Permissible Value Information</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Submit a New Permissible Value</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select Permissible Value Origin</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Enter/Select the Effective Begin Date</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select Unit of Measure (UOM)</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select the UOM Display Format</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Enter the Minimum/Maximum Length</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Enter the Low Value/High Value</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Enter the Decimal Place</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select Classification Scheme/Classification Scheme 
-      Items</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Select the Value Domain Origin</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Confirm the Language</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Enter/Select the Effective End Date</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Create a Comment/Change Note</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Validate Value Domain Attributes</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel4>Correct Invalid Attributes</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Submit a New Value Domain</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1><A href="Help_CreateVD.html#Editing">Editing</A> 
-    </P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Edit a Single Value Domain</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel2>Edit Multiple Value Domains</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Classification Schemes and Classification Scheme 
-      Items</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Version</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel3>Validate</P></TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD class=mainTopic><A name=TOCCRT></A><A href="Help_CRT.html">CRT 
-      Integration</A> </TD></TR>
-  <TR>
-    <TD>&nbsp;</TD>
-    <TD>
-      <P class=indentLevel1>Searching for Case Report Form Questions (Compliance 
-      Review Tool Integration)</P></TD></TR></TBODY></TABLE></DIV></BODY></HTML>
+        </LI>
+			</UL>
+			<span style="font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">&#105;</span> <b>Do not</b> use the browser's 'Back' button 
+			to navigate once you have logged in. Doing so may cause the tool to 
+			function incorrectly.
+			</div>
+  </body>
+</html>
+

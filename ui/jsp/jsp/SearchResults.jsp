@@ -530,95 +530,94 @@
   <tr height="20" valign="top">
 
     <td align="left" >
-  <% if (sMAction.equals("searchForCreate")) { %>
-  <!-- searchForCreate -->
-      <input type="button" name="editSelectedBtn" value="Use Selection" onClick="ShowUseSelection();" disabled style="width: 97", "height: 30">
-        &nbsp;
-  <% } else if ((sMAction.equals("Edit Selection") || sMAction.equals("nothing")) && ((sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")))) {%>
-  <!-- nothing -->
-      <input type="button" name="editSelectedBtn" value="Edit Selection" onClick="ShowEditSelection();" disabled 
-			onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_Editing'); return false" style="width: 97", "height: 30">
-        &nbsp;
-  <% } else if (!sMAction.equals("Create New from Existing") && !sMAction.equals("Create New Version") &&(sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain"))) {%>
-  <!-- Create New from Existing -->
-      <input type="button" name="editSelectedBtn" value="Edit Selection" onClick="ShowEditSelection();" disabled 
-			onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_Editing'); return false" style="width: 97", "height: 30">
-        &nbsp;  
-  <% } else if (!sMAction.equals("nothing") && !sSelAC.equals("Values/Meanings") && !sSelAC.equals("Questions") && !sSelAC.equals("Class Scheme Items") && !sSelAC.equals("Conceptual Domain")) {%>
-  <!-- other -->
-      <input type="button" name="editSelectedBtn" value="<%=sMAction%>" onClick="ShowEditSelection();" disabled style="width: 165", "height: 30">
-        &nbsp;
-  <% } else if (sMAction.equals("Complete Selected DE") && sSelAC.equals("Questions")) {%>
-  <!-- Complete Selected DE -->
-      <input type="button" name="editSelectedBtn" value="<%=sMAction%>" onClick="ShowEditSelection();" disabled 
-			onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_completeSelectedDE'); return false" style="width: 165", "height: 30">
-        &nbsp;
-  <% } else if (sButtonPressed.equals("Search") && (sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain"))) {%>
-  <!-- Search -->
-      <input type="button" name="editSelectedBtn" value="Edit Selection" onClick="ShowEditSelection();" disabled style="width: 97", "height: 30">
-        &nbsp;
-  <% }
-     if ((sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")) && !sMAction.equals("searchForCreate")) { %>
-  <!-- !searchForCreate -->
-      <input type="button" name="monitorBtn" value="Monitor" style="width:60" onClick="monitorCmd();" disabled
-      onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_monitor'); return false">&nbsp;
-      <input type="button" name="unmonitorBtn" value="Unmonitor" style="width:70" onClick="unmonitorCmd();" disabled
-      onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_monitor'); return false">&nbsp;
-     <input type="button" name="uploadBtn" value="Upload Document(s)" style="width:130" onClick="uploadCmd();" disabled
-      onHelp = "showHelp('Help_SearchAC.html#Upload_Attachments'); return false">&nbsp;
-   <% } 
-   if (sSelAC.equals("Data Element") && !sMAction.equals("searchForCreate"))  // || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain") || (sSelAC.equals("Questions") && sMAction.equals("searchForCreate")))
-   {  %>
-  <!-- designation button only for DE, DEC, VD in both the searches, exclude DDE  -->
-      <input type="button" name="designateBtn" value="Designations" onClick="designateRecord();" disabled 
-			onHelp = "showHelp('Help_DesignateDE.html#searchResultsForm_designateDE'); return false" style="width: 85", "height: 30">
-        &nbsp;
-<% } 
-     if (sSelAC.equals("Data Element") && !sMAction.equals("searchForCreate")) { %>
-  <!-- details button only for DE, exclude DDE  -->
-      <input type="button" name="detailsBtn" value="Details" onClick="GetDetails();" disabled 
-			onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_Details'); return false" style="width: 65", "height: 30">
-        &nbsp;
-  <% } 
-     if ((sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")) && !sMAction.equals("searchForCreate")) { %>
-  <!-- Append button only for DE, DEC, VD in only the main search  -->
-      <input type="button" name="AppendBtn" value="Append" onClick="setAppendAction();" disabled 
-			onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_append'); return false" style="width: 65", "height: 30">
-        &nbsp;
-  <% } 
-     if (sSelAC.equals("Value Meaning")) { %>
-  <!-- create new VM button for value meanings  -->
-      <input type="button" name="createVM" value="Create New"  onClick="javascript:createNewVM();"
-			onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_append'); return false" style="width: 97", "height: 30">
-        &nbsp;
-  <% } 
-     if (sMAction.equals("searchForCreate")) { %>
-   <!-- makes close button only if page opened from createDE or VD pages   -->
-      <input type="button" name="closeBtn" value="Close Window" onClick="javascript:closeWindow();" style="width: 97", "height: 30">
-        &nbsp;
-  <% } else { %>
-  <!-- makes showSelection, designate, clear buttons otherwise   -->
-      <input type="button" name="showSelectedBtn" value="Show Selected Rows" onClick="ShowSelectedRows(true);" disabled
-           onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_showSelectedBtn'); return false" style="width: 135", "height: 30">
-       &nbsp;
-       <% if (!sSelAC.equals("Questions")) { %>
-        <!-- button get Associated with popup menu   -->
-          <input id="assACBtn" type=button name="associateACBtn" value="Get Associated"  onmouseover="controlsubmenu(event,'divAssACMenu',null,null,null)" onmouseout="closeall()" style="width:130;" disabled
-					onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_getAssociated'); return false">
-          &nbsp;
-       <% } %>
-      <input type="button" name="clearBtn" value="Clear Records" onClick="clearRecords();"
-        <% if(nRecs.equals("No ") || nRecs.equals("0")){ %>disabled<% } %>
-           onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_clearBtn'); return false" style="width: 100", "height: 30">
-       &nbsp;
-  <% } 
-      //System.out.println("SR.jsp!!! vResultStack.size: " + vResultStack.size()); 
-      if (((vResultStack.size()>0 && sBackFromGetAssociated.equals("backFromGetAssociated") && !pushBoolean.equals("true"))
-          || vResultStack.size()>1) && !sMAction.equals("searchForCreate")) {%>
-        <input type="button" name="btnBack" value="Back" style="width: 65", "height: 30" onClick="Back();">
-          &nbsp;&nbsp;
-    <% } %>          
-      <img name="Message" src="../../cdecurate/Assets/SearchMessage.gif" width="180"
+  <%
+    String buttons[] = new String[17];
+    if (sMAction.equals("searchForCreate")) {
+        buttons[0] = "<!-- searchForCreate -->\n"
+            + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Use Selection\" onClick=\"ShowUseSelection();\" disabled style=\"width: 97\">\n&nbsp;\n";
+    } else if ((sMAction.equals("Edit Selection") || sMAction.equals("nothing")) && ((sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")))) {
+        buttons[1] = "<!-- nothing -->\n"
+            + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Edit Selection\" onClick=\"ShowEditSelection();\" disabled "
+			+ "onHelp = \"showHelp('Help_SearchAC.html#searchResultsForm_Editing'); return false\" style=\"width: 97\">\n&nbsp;\n";
+    } else if (!sMAction.equals("Create New from Existing") && !sMAction.equals("Create New Version") &&(sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain"))) {
+        buttons[2] = "<!-- Create New from Existing -->\n"
+            + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Edit Selection\" onClick=\"ShowEditSelection();\" disabled "
+			+ "onHelp = \"showHelp('Help_SearchAC.html#searchResultsForm_Editing'); return false\" style=\"width: 97\">\n&nbsp;\n";
+    } else if (!sMAction.equals("nothing") && !sSelAC.equals("Values/Meanings") && !sSelAC.equals("Questions") && !sSelAC.equals("Class Scheme Items") && !sSelAC.equals("Conceptual Domain")) {
+        buttons[3] = "<!-- other -->\n"
+            + "<input type=\"button\" name=\"editSelectedBtn\" value=\"" + sMAction + "\" onClick=\"ShowEditSelection();\" disabled style=\"width: 165\">\n&nbsp;\n";
+    } else if (sMAction.equals("Complete Selected DE") && sSelAC.equals("Questions")) {
+        buttons[4] = "<!-- Complete Selected DE -->\n"
+            + "<input type=\"button\" name=\"editSelectedBtn\" value=\"" + sMAction + "\" onClick=\"ShowEditSelection();\" disabled "
+			+ "onHelp = \"showHelp('Help_SearchAC.html#searchResultsForm_completeSelectedDE'); return false\" style=\"width: 165\">\n&nbsp;\n";
+    } else if (sButtonPressed.equals("Search") && (sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain"))) {
+        buttons[5] = "<!-- Search -->\n"
+            + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Edit Selection\" onClick=\"ShowEditSelection();\" disabled style=\"width: 97\">\n&nbsp;\n";
+    }
+    if ((sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")) && !sMAction.equals("searchForCreate")) {
+        buttons[16] = "<!-- !searchForCreate -->\n"
+            + "<br/><input type=\"button\" name=\"monitorBtn\" value=\"Monitor\" style=\"width:60\" onClick=\"monitorCmd();\" disabled "
+            + "onHelp = \"showHelp('Help_SearchAC.html#searchResultsForm_monitor'); return false\">\n&nbsp;\n"
+            + "<input type=\"button\" name=\"unmonitorBtn\" value=\"Unmonitor\" style=\"width:70\" onClick=\"unmonitorCmd();\" disabled "
+            + "onHelp = \"showHelp('Help_SearchAC.html#searchResultsForm_monitor'); return false\">\n&nbsp;\n"
+            + "<input type=\"button\" name=\"uploadBtn\" value=\"Upload Document(s)\" style=\"width:130\" onClick=\"uploadCmd();\" disabled "
+            + "onHelp = \"showHelp('Help_SearchAC.html#Upload_Attachments'); return false\">\n&nbsp;\n";
+    } 
+    if (sSelAC.equals("Data Element") && !sMAction.equals("searchForCreate"))  // || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain") || (sSelAC.equals("Questions") && sMAction.equals("searchForCreate")))
+    {
+        buttons[7] = "<!-- designation button only for DE, DEC, VD in both the searches, exclude DDE  -->\n"
+            + "<input type=\"button\" name=\"designateBtn\" value=\"Designations\" onClick=\"designateRecord();\" disabled "
+			+ "onHelp = \"showHelp('Help_DesignateDE.html#searchResultsForm_designateDE'); return false\" style=\"width: 85\">\n&nbsp;\n";
+    } 
+    if (sSelAC.equals("Data Element") && !sMAction.equals("searchForCreate")) {
+        buttons[8] = "<!-- details button only for DE, exclude DDE  -->\n"
+            + "<input type=\"button\" name=\"detailsBtn\" value=\"Details\" onClick=\"GetDetails();\" disabled "
+			+ "onHelp = \"showHelp('Help_SearchAC.html#searchResultsForm_Details'); return false\" style=\"width: 65\">\n&nbsp;\n";
+    } 
+    if ((sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")) && !sMAction.equals("searchForCreate")) {
+        buttons[9] = "<!-- Append button only for DE, DEC, VD in only the main search  -->\n"
+            + "<input type=\"button\" name=\"AppendBtn\" value=\"Append\" onClick=\"setAppendAction();\" disabled "
+			+ "onHelp = \"showHelp('Help_SearchAC.html#searchResultsForm_append'); return false\" style=\"width: 65\">\n&nbsp;\n";
+    } 
+    if (sSelAC.equals("Value Meaning")) {
+        buttons[10] = "<!-- create new VM button for value meanings  -->\n"
+            + "<input type=\"button\" name=\"createVM\" value=\"Create New\" onClick=\"javascript:createNewVM();\" "
+			+ "onHelp = \"showHelp('Help_SearchAC.html#searchResultsForm_append'); return false\" style=\"width: 97\">\n&nbsp;\n";
+    } 
+    if (sMAction.equals("searchForCreate")) {
+        buttons[11] = "<!-- makes close button only if page opened from createDE or VD pages   -->\n"
+            + "<input type=\"button\" name=\"closeBtn\" value=\"Close Window\" onClick=\"javascript:closeWindow();\" style=\"width: 97\">\n&nbsp;\n";
+    } else {
+        buttons[12] = "<!-- makes showSelection, designate, clear buttons otherwise   -->\n"
+            + "<input type=\"button\" name=\"showSelectedBtn\" value=\"Show Selected Rows\" onClick=\"ShowSelectedRows(true);\" disabled "
+            + "onHelp = \"showHelp('Help_SearchAC.html#searchResultsForm_showSelectedBtn'); return false\" style=\"width: 135\">\n&nbsp;\n";
+        if (!sSelAC.equals("Questions")) {
+            buttons[13] = "<!-- button get Associated with popup menu   -->\n"
+                + "<input id=\"assACBtn\" type=button name=\"associateACBtn\" value=\"Get Associated\"  onmouseover=\"controlsubmenu(event,'divAssACMenu',null,null,null)\" onmouseout=\"closeall()\" style=\"width:130;\" disabled "
+				+ "onHelp = \"showHelp('Help_SearchAC.html#searchResultsForm_getAssociated'); return false\">\n&nbsp;\n";
+        }
+        buttons[14] = "<input type=\"button\" name=\"clearBtn\" value=\"Clear Records\" onClick=\"clearRecords();\" ";
+        if(nRecs.equals("No ") || nRecs.equals("0"))
+        {
+            buttons[14] = buttons[14] + "disabled ";
+        }
+        buttons[14] = buttons[14]
+            + "onHelp = \"showHelp('Help_SearchAC.html#searchResultsForm_clearBtn'); return false\" style=\"width: 100\">\n&nbsp;\n";
+    } 
+    //System.out.println("SR.jsp!!! vResultStack.size: " + vResultStack.size()); 
+    if (((vResultStack.size()>0 && sBackFromGetAssociated.equals("backFromGetAssociated") && !pushBoolean.equals("true"))
+          || vResultStack.size()>1) && !sMAction.equals("searchForCreate")) {
+        buttons[15] = "<input type=\"button\" name=\"btnBack\" value=\"Back\" style=\"width: 65\" onClick=\"Back();\">\n&nbsp;&nbsp;\n";
+    }
+    for (int i = 0; i < buttons.length; ++i)
+    {
+        if (buttons[i] != null)
+        {
+            %><%=buttons[i]%><%
+        }
+    }
+    %>
+    <img name="Message" src="../../cdecurate/Assets/SearchMessage.gif" width="180"
         height="25" alt="WaitMessage" style="visibility:hidden;">
     </td>
   </tr>

@@ -1,3 +1,17 @@
+    var checkCount = 0;
+
+    function adjustCheckCount(cbobj)
+    {
+        if (cbobj.checked == true)
+            ++checkCount;
+        else
+            --checkCount;
+            
+        if (checkCount == 1)
+            document.RefDocumentUploadForm.Uploadbtn.disabled = false;
+        else
+            document.RefDocumentUploadForm.Uploadbtn.disabled = true;
+    }
 
   function Back()
   {

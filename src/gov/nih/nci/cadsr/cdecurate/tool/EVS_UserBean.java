@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.1 2006-02-08 19:11:13 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.2 2006-02-14 21:53:50 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -812,7 +812,7 @@ public final class EVS_UserBean implements Serializable
         if (tob != null) this.setDSRDispName(tob.getVALUE());      
       }
       //get vocab names
-      Vector vocabname = new Vector();
+      Vector<String> vocabname = new Vector<String>();
       vList = getAC.getToolOptionData("CURATION", "EVS.VOCAB.%.EVSNAME", "");  // 
       if (vList != null && vList.size() > 0)
       {

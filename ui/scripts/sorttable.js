@@ -65,7 +65,7 @@ function ts_resortTable(lnk) {
     // Work out a type for the column
     if (table.rows.length <= 1) return;
     var itm = ts_getInnerText(table.rows[1].cells[column]);
-    sortfn = ts_sort_default;
+    sortfn = ts_sort_caseinsensitive; // ts_sort_default;
     SORT_COLUMN_INDEX = column;
     var firstRow = new Array();
     var newRows = new Array();
@@ -85,9 +85,36 @@ function ts_resortTable(lnk) {
     
     // We appendChild rows that already exist to the tbody, so it moves them rather than creating new ones
     // don't do sortbottom rows
-    for (i=0;i<newRows.length;i++) { if (!newRows[i].className || (newRows[i].className && (newRows[i].className.indexOf('sortbottom') == -1))) table.tBodies[0].appendChild(newRows[i]);}
+    var stripe = "#f5f5dc";
+    var flip = false;
+    if ((newRows.length % 2) == 1)
+    {
+        stripe = "#ffffff";
+        flip = !flip;
+    }
+    for (i=0;i<newRows.length;i++) {
+        if (!newRows[i].className || (newRows[i].className && (newRows[i].className.indexOf('sortbottom') == -1))) {
+            table.tBodies[0].appendChild(newRows[i]);
+            table.tBodies[0].children[1].style.backgroundColor = stripe;
+            if (flip)
+                stripe = "#f5f5dc";
+            else
+                stripe = "#ffffff";
+            flip = !flip;
+        }
+    }
     // do sortbottom rows only
-    for (i=0;i<newRows.length;i++) { if (newRows[i].className && (newRows[i].className.indexOf('sortbottom') != -1)) table.tBodies[0].appendChild(newRows[i]);}
+    for (i=0;i<newRows.length;i++) {
+        if (newRows[i].className && (newRows[i].className.indexOf('sortbottom') != -1)) {
+            table.tBodies[0].appendChild(newRows[i]);
+            table.tBodies[0].children[i+1].style.backgroundColor = stripe;
+            if (flip)
+                stripe = "#f5f5dc";
+            else
+                stripe = "#ffffff";
+            flip = !flip;
+        }
+    }
     
     // Delete any other arrows there may be showing
     var allspans = document.getElementsByTagName("span");
@@ -147,10 +174,16 @@ function ts_sort_numeric(a,b) {
 }
 
 function ts_sort_caseinsensitive(a,b) {
-    aa = ts_getInnerText(a.cells[SORT_COLUMN_INDEX]).toLowerCase();
-    bb = ts_getInnerText(b.cells[SORT_COLUMN_INDEX]).toLowerCase();
-    if (aa==bb) return 0;
-    if (aa<bb) return -1;
+    aa = ts_getInnerText(a.cells[SORT_COLUMN_INDEX]);
+    if (aa == null)
+        aa = "";
+    aa = aa.toLowerCase();
+    bb = ts_getInnerText(b.cells[SORT_COLUMN_INDEX]);
+    if (bb == null)
+        bb = "";
+    bb = bb.toLowerCase();
+    if (aa == bb) return 0;
+    if (aa < bb) return -1;
     return 1;
 }
 

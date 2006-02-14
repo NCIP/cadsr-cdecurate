@@ -7,7 +7,12 @@
     <!-- set global properties for this build -->
     <property name="temp" location="tmp"/>
 
-    <!-- set global properties for compiled temp directory -->
+	<property name="jbosshome" location="${env.JBOSS_HOME}/server/default/deploy"/>
+	<property name="tomcathome" location="${env.CATALINA_HOME}/webapps"/>
+	<!--use the project's window/preference/tomcat/jvm setting to select the path -->
+	<!--	<property name="ncicvshome" location="D:/NCI_CVS/cdecurate"/>  -->
+
+	<!-- set global properties for compiled temp directory -->
     <property name="app_root" location="tmp/cdecurate"/>
     <property name="app_jsp" location="${app_root}/jsp"/>
     <property name="app_asset" location="${app_root}/Assets"/>
@@ -24,6 +29,8 @@
     <property name="m_tld" location="conf/web/tld"/>
     <property name="m_lib" location="lib"/>
     <property name="m_web" location="ui"/>
+    <property name="m_conf" location="conf"/>
+    <property name="m_doc" location="doc"/>
     <property name="app_war" location="distrib/war"/>
     <property name="m_javadoc" location="doc/javadoc"/>
     <property name="b_class" location="build/bin/gov/nih/nci/cadsr/cdecurate/tool"/>
@@ -77,8 +84,6 @@
     	<mkdir dir="${app_classes}"/>
     	<mkdir dir="${app_lib}"/>
     	<mkdir dir="${app_tld}"/>
-    	<mkdir dir="${b_class}"/>
-    	<mkdir dir="${bgen_class}"/>
     </target>
  
     <!-- copy web content to temporary build directory  -->
@@ -139,15 +144,20 @@
       <!-- copy property file to cdecurate/WEB-INF/classes/gov/nih/nci/cadsr/cdecurate/tool directory  -->
       <copy file="${m_java}/gov/nih/nci/cadsr/cdecurate/tool/NCICuration.properties" tofile="${app_class}/NCICuration.properties" overwrite="YES"/>
 
-      <!-- copy compiled file to build directory  -->
-      <copy todir="${b_class}" overwrite="YES">
-          <fileset dir="${app_class}"/>
-      </copy>
-      <copy todir="${bgen_class}" overwrite="YES">
-          <fileset dir="${app_jclass}"/>
-      </copy>
-      
     </target>
+	
+    <!-- copy compiled file to build directory  -->
+	<target name="copyCompile">
+    	<mkdir dir="${b_class}"/>
+    	<mkdir dir="${bgen_class}"/>
+	    <copy todir="${b_class}" overwrite="YES">
+	        <fileset dir="${app_class}"/>
+	    </copy>
+	    <copy todir="${bgen_class}" overwrite="YES">
+	        <fileset dir="${app_jclass}"/>
+	    </copy>
+	</target>
+	
     <!-- make download package -->
     <target name="ospack">
         <delete dir="ospackage"/>
@@ -155,9 +165,9 @@
         <copy todir="ospackage">
             <fileset file="build.xml"/>
         </copy>
-        <mkdir dir="ospackage/conf/web/tld"/>
-        <copy todir="ospackage/conf/web/tld">
-            <fileset dir="conf/web/tld" excludes="**/*CVS*"/>
+        <mkdir dir="ospackage/conf/web"/>
+        <copy todir="ospackage/conf/web">
+            <fileset dir="conf/web" excludes="**/*CVS*"/>
         </copy>
         <mkdir dir="ospackage/conf/prod"/>
         <copy todir="ospackage/conf/prod">
@@ -243,24 +253,37 @@
         </war>
     </target>
 
-    <!-- do the antcall for local environ -->
-    <target name="build-local">
-        <echo message="Building : local war file."/>
-        <copy file="conf/local/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
+    <!-- do the antcall for local environ for jboss server-->
+    <target name="build-local-jboss">
+        <echo message="Building : local war file and copied to jboss deploy."/>
+      <!--  <copy file="conf/local/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
-            <param name="conf" value="conf/local"/>
+            <param name="conf" value="conf/web"/>
             <param name="jdebug" value="on"/>
         </antcall>
+    	<copy file="${app_war}/cdecurate.war" todir="${jbosshome}" overwrite="YES"/>
+    </target>
+
+    <!-- do the antcall for local tomcat environment -->
+    <target name="build-local-tomcat">
+        <echo message="Building : local war file and copied to tomcat deploy."/>
+      <!--  <copy file="conf/local/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
+        <!-- do antcall task to deply war -->
+        <antcall target="deploy">
+            <param name="conf" value="conf/web"/>
+            <param name="jdebug" value="on"/>
+        </antcall>
+    	<copy file="${app_war}/cdecurate.war" todir="${tomcathome}" overwrite="YES"/>
     </target>
 
     <!-- do the antcall for dev environ -->
     <target name="build-dev">
         <echo message="Building : dev war file."/>
-        <copy file="conf/dev/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
+    	<!-- <copy file="conf/dev/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
-            <param name="conf" value="conf/dev"/>
+            <param name="conf" value="conf/web"/>
             <param name="jdebug" value="on"/>
         </antcall>
     </target>
@@ -268,10 +291,10 @@
     <!-- do the antcall for qa environ -->
     <target name="build-qa">
         <echo message="Building : qa war file."/>
-        <copy file="conf/qa/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
+    	<!-- <copy file="conf/qa/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
-            <param name="conf" value="conf/qa"/>
+            <param name="conf" value="conf/web"/>
             <param name="jdebug" value="on"/>
         </antcall>
     </target>
@@ -279,28 +302,113 @@
     <!-- do the antcall for stage environ -->
     <target name="build-stage">
         <echo message="Building : stage war file."/>
-        <copy file="conf/stage/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
+    	<!-- <copy file="conf/stage/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
-            <param name="conf" value="conf/stage"/>
-            <param name="jdebug" value="on"/>
+            <param name="conf" value="conf/web"/>
+            <param name="jdebug" value="off"/>
         </antcall>
+    	<!-- copy the class files for stage and prod deploys -->
+    	<antcall target="copyBuild"/>
     </target>
 
     <!-- do the antcall for prod environ -->
     <target name="build-prod">
         <echo message="Building : prod war file."/>
-        <copy file="conf/prod/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/>
+    	<!-- <copy file="conf/prod/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
-            <param name="conf" value="conf/prod"/>
+            <param name="conf" value="conf/web"/>
+            <param name="jdebug" value="off"/>
+        </antcall>
+    	<!-- copy the class files for stage and prod deploys -->
+    	<antcall target="copyBuild"/>
+    </target>
+
+	<!-- do the antcall for out source package build environ -->
+    <target name="build-deploy">
+        <echo message="Building : war file."/>
+        <!-- do antcall task to deply war -->
+        <antcall target="deploy">
+            <param name="conf" value="conf/web"/>
             <param name="jdebug" value="on"/>
         </antcall>
     </target>
-    <!-- do antcall for javadoc and ospack -->
+
+	<!-- do antcall for javadoc and ospack -->
     <target name="build-ospackage">
         <antcall target="build-javadoc"/>
         <antcall target="ospack"/>
     </target>
+
+	
+    <!-- copy the codes to nci-cvs folder from local cvs-->
+    <target name="copy-to-nci-cvs">
+        <echo message="copy changed files from local cvs to NCI-CVS directory."/>
+        <property name="nci_cvs" location="${ncicvshome}"/>  <!--main folder -->
+        <property name="nci_java" location="${nci_cvs}/src"/>  <!--java source folder -->
+        <property name="nci_ui" location="${nci_cvs}/ui"/>    <!--UI/ web contentfolder -->
+        <property name="nci_tld" location="${nci_cvs}/conf/web/tld"/>   <!--tld under conf folder -->
+        <property name="nci_lib" location="${nci_cvs}/lib"/>   <!--lib folder -->
+        <property name="nci_conf" location="${nci_cvs}/conf"/>   <!--conf folder -->
+        <property name="nci_doc" location="${nci_cvs}/doc"/>   <!--doc folder -->
+        <!-- copy scr, ui, lib, tld directory -->
+        <copy todir="${nci_java}" overwrite="YES"> 
+            <fileset dir="${m_java}" excludes="**/*CVS*"/>
+        </copy>
+        <copy todir="${nci_ui}" overwrite="YES"> 
+            <fileset dir="${m_web}" excludes="**/*CVS*"/>
+        </copy> 
+  
+        <copy todir="${nci_lib}"  overwrite="YES"> 
+         	<fileset dir="${m_lib}" excludes="**/*CVS*"/>
+        </copy> 
+    
+        <copy todir="${nci_tld}" overwrite="YES"> 
+            <fileset dir="${m_tld}" excludes="**/*CVS*"/>
+        </copy> 
+        <copy todir="${nci_conf}" overwrite="YES"> 
+            <fileset dir="${m_conf}" excludes="**/*CVS*"/>
+        </copy> 
+        <copy todir="${nci_doc}" overwrite="NO"> 
+            <fileset dir="${m_doc}" excludes="**/*CVS*"/>
+        </copy> 
+        <delete dir="${nci_ui}/WEB-INF"/>
+    </target>
+    
+    <!-- copy the codes to local cvs folder from nci cvs -->
+    <target name="copy-from-nci-cvs">
+        <echo message="copy changed files from NCI CVS to Local-CVS directory."/>
+        <property name="nci_cvs" location="${ncicvshome}"/>  <!--main folder -->
+        <property name="nci_java" location="${nci_cvs}/src"/>  <!--java source folder -->
+        <property name="nci_ui" location="${nci_cvs}/ui"/>    <!--UI/ web contentfolder -->
+        <property name="nci_tld" location="${nci_cvs}/conf/web/tld"/>   <!--tld under conf folder -->
+        <property name="nci_lib" location="${nci_cvs}/lib"/>   <!--lib folder -->
+        <property name="nci_conf" location="${nci_cvs}/conf"/>   <!--conf folder -->
+        <property name="nci_doc" location="${nci_cvs}/doc"/>   <!--doc folder -->
+        <!-- copy scr, ui directory -->
+        <copy todir="${m_java}" overwrite="YES">
+            <fileset dir="${nci_java}" excludes="**/*CVS*"/>
+        </copy>
+        <copy todir="${m_web}" overwrite="YES">
+            <fileset dir="${nci_ui}" excludes="**/*CVS*"/>
+        </copy>        
+         <copy todir="${m_tld}" overwrite="YES">
+            <fileset dir="${nci_tld}" excludes="**/*CVS*"/>
+        </copy>        
+       <copy todir="${m_lib}" overwrite="YES">
+            <fileset dir="${nci_lib}" excludes="**/*CVS*"/>
+        </copy>        
+        <copy todir="${m_tld}" overwrite="YES"> 
+            <fileset dir="${nci_tld}" excludes="**/*CVS*"/>
+        </copy> 
+        <copy todir="${m_conf}" overwrite="YES"> 
+            <fileset dir="${nci_conf}" excludes="**/*CVS*"/>
+        </copy> 
+        <copy todir="${m_doc}" overwrite="YES"> 
+            <fileset dir="${nci_doc}" excludes="**/*CVS*"/>
+        </copy> 
+    </target>
+
 
 </project>

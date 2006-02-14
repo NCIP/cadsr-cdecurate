@@ -1,3 +1,5 @@
+@media screen {
+
   body
   {
      background-color: #FFFFFF;
@@ -105,7 +107,7 @@
   span.standOut
   {
      color: red;
-     font.weight: bold;
+		 font.weight: bold;
   }
 
 	span.standOutHeading
@@ -249,12 +251,14 @@
   { 
      text-indent: 125px;
   }
-	div.container {
+
+div.container {
   border: 2px solid #aaa;
-  margin-right: 3cm;
-  margin-left: 3cm;
+  margin-right: 1.5cm;
+  margin-left: 1.5cm;
   text-align: left;
   }
+
 div.bodyText {
   padding: 1cm 1cm 1cm 1cm;
   }
@@ -273,12 +277,12 @@ img.screenShot
 div.header {
      border: solid silver 1.0pt;
      background: #666699;
-     padding: 0in 2.15pt 0in 2.15pt;
      color: white;
      font-family: Arial, Helvetica, sans-serif;
      font-size: 20px;
      font.weight: bold;
      height: 34;
+		 width: 100%;
   }
 
 .imageText
@@ -295,3 +299,177 @@ div.NoteTest {
 			font-family: Arial, Helvetica, sans-serif;
      	font-size: 12pt;
   }
+	
+ul {
+	margin-left: 5em;
+	padding-left: 1em;
+	text-indent: -1em;
+	}
+
+ol {
+	margin-left: 5em;
+	padding-left: 1em;
+	text-indent: -1em;
+	}
+}
+
+<!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+
+@media print {
+body {
+   background: white;
+   font-size: 12pt;
+	 font-color: #000000;
+   font-family: Arial, Helvetica, sans-serif;
+   }
+#menu {
+   display: none;
+   }
+#wrapper, #content {
+   width: auto;
+   margin: 0 5%;
+   padding: 0;
+   border: 0;
+   float: none !important;
+   color: black;
+   background: transparent none;
+   }
+div#content {
+   margin-left: 10%;
+   padding-top: 1em;
+   border-top: 1px solid #930;
+   }
+div#mast {
+   margin-bottom: -8px;
+   }
+div#mast img {
+   vertical-align: bottom;
+   }
+a:link, a:visited {
+   color: #520;
+   background: transparent;
+   font-weight: bold;
+   text-decoration: underline;
+   }
+#content a:link:after, #content a:visited:after {
+   content: " (" attr(href) ") ";
+   font-size: 90%;
+   }
+#content a[href^="/"]:after {
+   content: " (http://www.alistapart.com" attr(href) ") ";
+   }
+
+div.container {
+  text-align: left;
+  }
+
+div.bodyText {
+  padding: 1cm 1cm 1cm 1cm;
+  }
+
+.centeredImage
+    {
+    text-align:center;
+		white-space:nowrap;
+		width: 100%;
+    margin-top:0px;
+    margin-bottom:0px;
+  }
+img.screenShot
+    {	
+		border: 2px solid #aaa;
+		}
+  
+div.header {
+     border: solid silver 1.0pt;
+     background: #c0c0c0;
+     color: white;
+     font-family: Arial, Helvetica, sans-serif;
+     font-size: 20px;
+     font.weight: bold;
+     height: 34;
+		 width: 100%;
+  }
+
+.imageText
+  {
+     color: #808080;
+     font-weight: bold;
+     vertical-align: text-top;
+     text-align: center;
+     padding: 0px 0px 20px 0px;
+  }
+
+div.NoteTest {
+      text-indent: 50px;
+			font-family: Arial, Helvetica, sans-serif;
+     	font-size: 12pt;
+  }
+	
+ul {
+	margin-left: 5em;
+	padding-left: 1em;
+	text-indent: -1em;
+	}
+
+ol {
+	margin-left: 5em;
+	padding-left: 1em;
+	text-indent: -1em;
+	}
+	
+	a:link
+  {
+     color:blue;
+  }
+
+  a:visited
+  {
+     color:purple
+  }
+	
+  p.returnLink
+  {
+     text-align: right;
+  }
+	
+  span.figureText
+  {
+     color: #808080;
+     font.weight: bold;
+  }
+	
+	span.standOut
+  {
+     color: red;
+		 font.weight: bold;
+  }
+
+	span.standOutHeading
+  {
+     color: red;
+     font.weight: bold;
+		 font-size: 20px;
+  }
+	
+  span.red
+  {
+     color: red;
+  }
+
+  span.navigation
+  {
+     color: #333399;
+  }
+
+  span.valid
+  {
+     color: #808080;;
+  }
+
+  span.then
+  {
+     color: #808080;
+     font-family:Wingdings
+  }
+}

@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/prod/load_tool_options.sql,v 1.1 2006-02-08 19:40:21 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/prod/load_tool_options.sql,v 1.2 2006-02-14 21:53:49 hardingr Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -515,5 +515,13 @@ INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, descriptio
 VALUES ('CURATION', 'DERIVATION_TYPE', 'Simple Concept', 
 	   'Must exist in SBR.COMPLEX_REP_TYPE_LOV table');
 	   
-	   
+--Ref doc file cache for uploading blobs from the DB to the web server to create url.	   
+insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
+values ('CURATION', 'REFDOC_FILECACHE', '/local/content/cdecurate/filecache/',
+'Ref doc file cache for uploading blobs from the DB to the web server to create url.');
+
+--Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.
+insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
+values ('CURATION', 'REFDOC_FILEURL', 'http://cdecurate.nci.nih.gov/filecache/',
+'Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.');  	   
   

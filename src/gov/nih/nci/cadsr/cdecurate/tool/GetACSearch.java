@@ -1,7 +1,7 @@
 
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.1 2006-02-08 19:11:13 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.2 2006-02-14 21:53:50 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;     
@@ -380,9 +380,10 @@ public class GetACSearch implements Serializable
               sDocTypes = this.getDocTypeValues(sDocs, "MainSearch");
          
            String sDocText = sKeyword;
-           if (sDocText == null || sDocText.equals(""))
-              sDocText = "*";
-           if ((sDocText != "") && sSearchAC.equals("DataElement"))
+        //   if (sDocText == null || sDocText.equals(""))
+        //      sDocText = "*";
+        //   if ((sDocText != "") && sSearchAC.equals("DataElement"))
+           if (sSearchAC.equals("DataElement"))
            {
              doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, 
                   sRegStatus, sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, 
@@ -394,9 +395,10 @@ public class GetACSearch implements Serializable
         {
            String sDocTypes = "Preferred Question Text, HISTORIC SHORT CDE NAME";         
            String sDocText = sKeyword;
-           if (sDocText == null || sDocText.equals(""))
-              sDocText = "*";
-           if ((sDocText != "") && sSearchAC.equals("DataElement"))
+         //  if (sDocText == null || sDocText.equals(""))
+         //     sDocText = "*";
+          // if ((sDocText != "") && sSearchAC.equals("DataElement"))
+           if (sSearchAC.equals("DataElement"))
            {
              doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, 
                   sRegStatus, sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, 
@@ -407,7 +409,8 @@ public class GetACSearch implements Serializable
         else if (sSearchIn.equals("histID"))
         {
            String sHistID = sKeyword;
-           if ((sHistID != "") && sSearchAC.equals("DataElement"))
+          // if ((sHistID != "") && sSearchAC.equals("DataElement"))
+           if (sSearchAC.equals("DataElement"))
            {
              doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, 
                   sRegStatus, sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, 
@@ -418,13 +421,13 @@ public class GetACSearch implements Serializable
         else if (sSearchIn.equals("permValue"))
         {
            String permValue = sKeyword;
-           if ((permValue != "") && sSearchAC.equals("DataElement"))
+           if (sSearchAC.equals("DataElement"))
            {
              doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                   sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
                   "", "", "", "", permValue, "", "", "", "", "", "", "", "", "", "", sDerType, vAC); //get the list of Data Elements for permissible value search in
            }
-           else if ((permValue != "") && sSearchAC.equals("ValueDomain"))
+           else if (sSearchAC.equals("ValueDomain"))
            {
              doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
                   sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",  
@@ -436,25 +439,25 @@ public class GetACSearch implements Serializable
         else if (sSearchIn.equals("origin"))
         {
            String sOrigin = sKeyword;
-           if ((sOrigin != "") && sSearchAC.equals("DataElement"))
+           if (sSearchAC.equals("DataElement"))
            {
              doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                   sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
                   "", "", "", "", "", sOrigin, "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements for origin search in
            }
-           else if ((sOrigin != "") && sSearchAC.equals("DataElementConcept"))
+           else if (sSearchAC.equals("DataElementConcept"))
            {
              doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
                   sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", sOrigin, 
                   dVersion, sCDid, "", "", "", "", vAC);  //get the list of Data Element Concepts for origin search in
            }
-           else if ((sOrigin != "") && sSearchAC.equals("ValueDomain"))
+           else if (sSearchAC.equals("ValueDomain"))
            {
              doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
                   sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",  "", 
                   sOrigin, dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains for origin search in
            }
-           else if ((sOrigin != "") && sSearchAC.equals("ConceptualDomain"))
+           else if (sSearchAC.equals("ConceptualDomain"))
            {
              doCDSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
                   sModifiedFrom, sModifiedTo, sCreator, sModifier, "", sOrigin, dVersion, "", "", "", vAC);  //get the list of Conceptual Domains for origin search in
@@ -464,25 +467,25 @@ public class GetACSearch implements Serializable
         else if (sSearchIn.equals("concept"))
         {
            String sCon = sKeyword;
-           if ((sCon != "") && sSearchAC.equals("DataElement"))
+           if (sSearchAC.equals("DataElement"))
            {
              doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                   sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
                   "", "", "", "", "", "", "", "", "", "", "", "", "", "", sCon, sDerType, vAC);  //get the list of Data Elements for origin search in
            }
-           else if ((sCon != "") && sSearchAC.equals("DataElementConcept"))
+           else if (sSearchAC.equals("DataElementConcept"))
            {
              doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
                   sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", "", 
                   dVersion, sCDid, "", "", "", sCon, vAC);  //get the list of Data Element Concepts for origin search in
            }
-           else if ((sCon != "") && sSearchAC.equals("ValueDomain"))
+           else if (sSearchAC.equals("ValueDomain"))
            {
              doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
                   sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",  "", 
                   "", dVersion, sCDid, "", "", "", "", sCon, sDataType, vAC);  //get the list of Value Domains for origin search in
            }
-           else if ((sCon != "") && sSearchAC.equals("ConceptualDomain"))
+           else if (sSearchAC.equals("ConceptualDomain"))
            {
              doCDSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
                   sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", dVersion, sCon, "", "", vAC);  //get the list of Conceptual Domains for origin search in
@@ -1356,7 +1359,7 @@ public class GetACSearch implements Serializable
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SCENPRO_CDE_CURATOR_PKG.SEARCH_CRF_DE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_CRF_DE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
 
         // Now tie the placeholders for out parameters.
         CStmt.registerOutParameter(6, OracleTypes.CURSOR);
@@ -8075,9 +8078,10 @@ System.out.println(" dtsVocab " + dtsVocab);
               sDocTypes = this.getDocTypeValues(sDocs, "searchForCreate");
          
            String sDocText = sKeyword;
-           if (sDocText == null || sDocText.equals(""))
-              sDocText = "*";
-           if ((sDocText != "") && sSearchAC.equals("DataElement"))
+         //  if (sDocText == null || sDocText.equals(""))
+         //     sDocText = "*";
+         //  if ((sDocText != "") && sSearchAC.equals("DataElement"))
+           if (sSearchAC.equals("DataElement"))
            {
              doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                   sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
@@ -8089,9 +8093,10 @@ System.out.println(" dtsVocab " + dtsVocab);
         {
            String sDocTypes = "Preferred Question Text, HISTORIC SHORT CDE NAME";         
            String sDocText = sKeyword;
-           if (sDocText == null || sDocText.equals(""))
-              sDocText = "*";
-           if ((sDocText != "") && sSearchAC.equals("DataElement"))
+         //  if (sDocText == null || sDocText.equals(""))
+         //     sDocText = "*";
+         //  if ((sDocText != "") && sSearchAC.equals("DataElement"))
+           if (sSearchAC.equals("DataElement"))
            {
              doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                   sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 

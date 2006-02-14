@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.1 2006-02-08 19:11:13 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.2 2006-02-14 21:53:50 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -326,7 +326,7 @@ public class SetACService implements Serializable
 
       s = m_DE.getDOC_TEXT_PREFERRED_QUESTION();
       if (s == null) s = "";
-      setValPageVector(vValidate, "Preferred Question Text", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
+      setValPageVector(vValidate, "Preferred Question Text", s, bNotMandatory, 4000, "", sOriginAction);        
 
       //add cs-csi to validate page
       String sCS = ""; 
@@ -1525,7 +1525,7 @@ public class SetACService implements Serializable
         String sOCL = m_DEC.getDEC_OCL_NAME();
         String strOCInvalid = "";
         if(!sQ.equals("") && sP.equals(""))
-          strOCInvalid = "Cannot have Secondary Concepts without a Primary Concept.\n";
+          strOCInvalid = "Cannot have Qualifier Concepts without a Primary Concept.\n";
         if(!sQ.equals("") || !sP.equals("") && m_OC != null)
           strOCInvalid = strOCInvalid + checkConceptCodeExistsInOtherDB(vOC, insAC, null);
 //System.out.println("setValidateNameComp05");
@@ -1547,7 +1547,7 @@ public class SetACService implements Serializable
           m_DEC.setDEC_PROPL_IDSEQ("");
           
         if(!sQual.equals("") && sProp.equals(""))
-          strPropInvalid = "Cannot have Secondary Concepts without a Primary Concept.\n"; 
+          strPropInvalid = "Cannot have Qualifier Concepts without a Primary Concept.\n"; 
          if(!sQual.equals("") || !sProp.equals("") && m_PC != null)
           strPropInvalid = strPropInvalid + checkConceptCodeExistsInOtherDB(vPROP, insAC, null);
         //create object class and property only if valid
@@ -1648,7 +1648,7 @@ public class SetACService implements Serializable
         if (vQual != null && vQual.size() > 0)
           sQ = (String)vQual.elementAt(0);
         if(!sQ.equals("") && sP.equals(""))
-          strInValid = "Cannot have Secondary Concepts without a Primary Concept.\n";
+          strInValid = "Cannot have Qualifier Concepts without a Primary Concept.\n";
         if(!sQ.equals("") || !sP.equals("") && m_REP != null)
           strInValid = strInValid + checkConceptCodeExistsInOtherDB(vREP, insAC, null);
         ss = m_VD.getVD_REP_TERM();

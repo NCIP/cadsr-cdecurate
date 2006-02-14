@@ -554,7 +554,7 @@
     <tr valign="top">
       <td>&nbsp;</td>
       <td height="24" valign="top" >      
-        <input name="txtLongName" type="text" size="80" value="<%=sLongName%>" onKeyUp="changeCountLN();"
+        <input name="txtLongName" type="text" size="80" maxlength=255 value="<%=sLongName%>" onKeyUp="changeCountLN();"
           <%if(sOriginAction.equals("BlockEditDEC")){%>readonly<%}%>
             onHelp = "showHelp('Help_CreateDEC.html#newDECForm_txtLongName'); return false">
             &nbsp;&nbsp;&nbsp;
@@ -589,7 +589,7 @@
     <tr>
       <td>&nbsp;</td>
       <td valign="top">
-        <input name="txtPreferredName" type="text" size="80" value="<%=sName%>" onKeyUp="changeCountPN();"
+        <input name="txtPreferredName" type="text" size="80" maxlength=30 value="<%=sName%>" onKeyUp="changeCountPN();"
           <%if(sOriginAction.equals("BlockEditDEC") || sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")){%>readonly<%}%>
           onHelp = "showHelp('Help_CreateDEC.html#newDECForm_txtPreferredName'); return false">
           &nbsp;&nbsp;&nbsp;

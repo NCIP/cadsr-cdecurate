@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.1 2006-02-08 19:11:13 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.2 2006-02-14 21:53:50 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -151,7 +151,7 @@ public class InsACService implements Serializable
       //put nbsp for the tab at the begginning of the msg for vector.
       int iTab = sMsg.indexOf("\\t");
       if (iTab > -1)
-          sMsg = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".concat(sMsg.substring(2)); 
+          sMsg = "<ul>".concat(sMsg.substring(2)).concat("</ul>"); 
       //remove tab and newline from the msg for vector
       if (!sMsg.equalsIgnoreCase("\\n") && !sMsg.equalsIgnoreCase("\n"))
         sMsg = m_util.parsedStringMsgVectorTabs(sMsg);

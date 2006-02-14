@@ -166,6 +166,16 @@ function callHelp()
         	helpWindow = window.open("Help.htm", "Help");
    }
 </script>
+<style>
+    .WDEMAIL {
+        font-family: wingdings;
+        font-size: 24pt;
+        font-weight: bold;
+        text-decoration: none;
+        margin-right: 0.2in;
+        color: #888888
+        }
+</style>
 </head>
 
 <body>
@@ -174,7 +184,7 @@ function callHelp()
   if (errMessage == null) errMessage = "";
 //System.out.println("LoginE errMessage: " + errMessage);
  // if (errMessage == "") errMessage = "Problem with login. User name/password may be incorrect, or database connection can not be established.";
-  if (errMessage == "java.lang.NullPointerException") errMessage = "NullPointer : Session terminated. Please login again.";
+  if (errMessage == "java.lang.NullPointerException") errMessage = "Unexpected Exception. Session Terminated. Please login again.";
   session.setAttribute("ErrorMessage", "");
   String reqType = (String)request.getAttribute("LatestReqType"); 
   if(reqType == null) reqType = "";
@@ -300,17 +310,16 @@ function callHelp()
     <tr><td>&nbsp;</td></tr>
     <tr><td>&nbsp;</td></tr>
     <tr>
-      <td colspan="3" width="20%" align="center"> <img src="Assets/Shorten_Bottom_Logo.gif" border="0" usemap="#BottomMap"> 		  
+      <td colspan="3" align="center">
+          <a href="mailto:ncicb@pop.nci.nih.gov?subject=CDE%20Curation%20Tool"><span class="wdemail" title="Email NCICB Help Desk">&#42;</span></a>
+          <a target="_blank" href="http://www.cancer.gov/"><img border="0" src="Assets/footer_nci.gif" alt="National Cancer Institute Logo" title="National Cancer Institute"></a>
+          <a target="_blank" href="http://www.dhhs.gov/"><img border="0" src="Assets/footer_hhs.gif" alt="Department of Health and Human Services Logo" title="Department of Health and Human Services"></a>
+          <a target="_blank" href="http://www.nih.gov/"><img border="0" src="Assets/footer_nih.gif" alt="National Institutes of Health Logo" title="National Institutes of Health"></a>
+          <a target="_blank" href="http://www.firstgov.gov/"><img border="0" src="Assets/footer_firstgov.gif" alt="FirstGov.gov" title="FirstGov.gov"></a>
       </td>   
     </tr>
   </table>
   <!-- end of login table -->
-  <map name="BottomMap">
-    <area shape="rect" coords="63,0,225,55" onClick = "linkCancerGov();" >
-    <area shape="rect" coords="227,1,517,55" onClick = "linkNIH();" >
-    <area shape="rect" coords="519,2,706,53" onClick = "linkDHHS();" >
-    <area shape="rect" coords="710,4,993,57" onClick = "linkFirstGov();" >
-  </map>
   <%
     if (!lstWinOpenReqs.contains(reqType))  //for windows that are open
     { %> 

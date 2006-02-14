@@ -79,3 +79,22 @@
      font-size: 8pt;
   }
 
+  p.indentLevel1
+  { 
+	margin-left: 5em;
+  }
+
+  p.indentLevel2
+  { 
+	margin-left: 10em;
+  }
+
+  p.indentLevel3
+  { 
+	margin-left: 15em;
+  }
+
+  p.indentLevel4
+  { 
+	margin-left: 20em;
+  }
