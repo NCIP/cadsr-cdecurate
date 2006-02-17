@@ -1,5 +1,6 @@
-<%@ page errorPage="ErrorPage.jsp" %>
 <!-- EditNewPage.jsp -->
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
+<curate:checkLogon name="Userbean" page="/LoginE.jsp" />
 <html>
 <head>
 <title>CDE Curation: Create Designate Data Element Attributes</title>

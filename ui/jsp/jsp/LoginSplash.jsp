@@ -175,13 +175,13 @@ session.setAttribute("ErrorMessage", "");
      <% if (errMessage.equals("")) { %>
 	      <tr>
           <td width="387" height="67" valign="center" align="center">
-             <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">Please enter User Name and Password.</font></h3>
+             <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size: 14pt">Please enter User Name and Password.</font></h3>
           </td>
         </tr>
       <%} else { %>
 	      <tr>
           <td width="387" height="67" valign="center" align="center">
-              <h3 align="center"><font color="#FF0000" style="font-size:18px"><%=errMessage%></font></h3>
+              <h3 align="center"><font color="#FF0000" style="font-size: 14pt"><%=errMessage%></font></h3>
           </td>
        </tr>
     <% } %>
@@ -190,7 +190,7 @@ session.setAttribute("ErrorMessage", "");
 
     <tr>
       <td width="115" height="30" valign="top" align="center" >
-        <h4><font face="Arial, Helvetica, sans-serif" style="font-size:15px">User Name</font></h4>
+        <h4><font face="Arial, Helvetica, sans-serif" style="font-size: 12pt">User Name</font></h4>
       </td>
       <td width="231" valign="top">
         <input type="text" name="Username" value="">
@@ -199,7 +199,7 @@ session.setAttribute("ErrorMessage", "");
     </tr>
     <tr>
       <td height="30" valign="top" width="115" align="center">
-        <h4><font face="Arial, Helvetica, sans-serif" style="font-size:15px">Password</font></h4>
+        <h4><font face="Arial, Helvetica, sans-serif" style="font-size: 12pt">Password</font></h4>
       </td>
       <td valign="top" width="231">
         <input type="password" name="Password" value="">
@@ -228,7 +228,7 @@ session.setAttribute("ErrorMessage", "");
 <tr height="60">
       <td width="100"></td>
       <td width="400" height="30" valign="top" align="center" >
-        <h5><font face="Arial, Helvetica, sans-serif" style="font-size:15px">Do not use your browser's "Back" button to navigate once you have logged in. Doing so may cause the tool to function incorrectly.</font></h5>
+        <h5><font face="Arial, Helvetica, sans-serif" style="font-size: 10pt">Do not use your browser's "Back" button to navigate once you have logged in. Doing so may cause the tool to function incorrectly.</font></h5>
       </td>
 </tr>
 </table>

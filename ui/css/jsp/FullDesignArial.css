@@ -3,7 +3,7 @@
      background-color: #FFFFFF;
      font-color: #000000;
 	  font-family: Arial, Helvetica, sans-serif;
-	  font-size: 12px;
+	  font-size: 10pt;
   }
 
   table
@@ -19,7 +19,7 @@
   td, th
   {
 	  font-family: Arial, Helvetica, sans-serif;
-	  font-size: 12px;
+	  font-size: 10pt;
   }
 
   td.sidebarBGColor
@@ -52,7 +52,7 @@
   textarea
   {
      font-family: Arial, Helvetica, sans-serif;
-     font-size: 12px;
+     font-size: 10pt;
   }
 
 
@@ -62,7 +62,7 @@
   {
      background-color: #CCCCCC;
 	  font-family: Arial, Helvetica, sans-serif;
-	  font-size: 14px;
+	  font-size: 12pt;
      font-weight: bold;
   }
 
@@ -70,7 +70,7 @@
   {
      background-color: #CCCCCC;
 	  font-family: Arial, Helvetica, sans-serif;
-	  font-size: 16px;
+	  font-size: 14pt;
      font-weight: bold;
   }
 

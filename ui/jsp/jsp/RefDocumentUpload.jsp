@@ -117,18 +117,18 @@ Admin or Curation Tools.</p>
 </colgroup>
 <tbody style="padding: 0.1in 0.1in 0.1in 0.1in"/>
 	<tr>
-	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;" height="30">
+	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 10pt;" height="30">
 	<div>	
 	<!-- <img id="CheckGif" src="../../cdecurate/Assets/CheckBox.gif" border="0" alt="Select One"/> -->
 	
 	</div>
 	</th>
-	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;">Reference Document Name</th>
-	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;">Reference Document Type</th>
-	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;">Reference Document Text</th>
-	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;">Reference Document URL</th>
-	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;">Context</th>
-	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 12px;">Links</th>
+	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">Reference Document Name</th>
+	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">Reference Document Type</th>
+	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">Reference Document Text</th>
+	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">Reference Document URL</th>
+	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">Context</th>
+	<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">Links</th>
 	</tr>
 	<%
 

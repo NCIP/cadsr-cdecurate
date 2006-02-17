@@ -207,7 +207,7 @@ function openDesignateWindow(sType)
       {
         document.newDECForm.selObjRow.value = selIdx;
         if(document.newDECForm.selObjectClass[0].value != null 
-          && document.newDECForm.selObjectClass[0].value != "")
+          && (document.newDECForm.selObjectClass[0].value != "" || document.newDECForm.selObjectClass[0].text != ""))
         {
           document.newDECForm.selObjectClass[0].value = "";
           SubmitValidate("RemoveSelection");
@@ -217,7 +217,7 @@ function openDesignateWindow(sType)
       {
         document.newDECForm.selPropRow.value = selIdx;
         if(document.newDECForm.selPropertyClass[0].value != null 
-          && document.newDECForm.selPropertyClass[0].value != "")
+          && (document.newDECForm.selPropertyClass[0].value != "" || document.newDECForm.selPropertyClass[0].text != ""))
         {
           document.newDECForm.selPropertyClass[0].value = "";
           SubmitValidate("RemoveSelection");

@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.2 2006-02-14 21:53:50 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.3 2006-02-17 21:36:09 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -115,6 +115,10 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/**
+ * @author shegde
+ *
+ */
 public class NCICurationServlet extends HttpServlet
 {
   /**
@@ -275,14 +279,7 @@ public class NCICurationServlet extends HttpServlet
     static public void freeConnection(Connection con) {
         try { con.close(); } catch (Exception e) {}
     }
-    
- //   static public void destroy() {
-        // Do not destroy the connection pool since it may be in use by
-        // many other servlets.  To close the global pool, you must
-        // restart the server.
- //   }
- 
-  
+      
    /**
   * This method tries to connect to the db, returns the Connection object if
   * successful, if unsuccessful tries to reconnect, returns null if unsuccessful.
@@ -327,15 +324,11 @@ public class NCICurationServlet extends HttpServlet
       return SBRDb_conn;
   } 
 
-    // Now store the cache in the application context for all to use
-  //  this.getServletContext().setAttribute("cdecuration.connectionPool", occi); 
- // }
-
   /**
    * The service method services all requests to this servlet.
    *
-   * @param request The HttpServletRequest object that contains the request
-   * @param response The HttpServletResponse object that contains the response
+   * @param req The HttpServletRequest object that contains the request
+   * @param res The HttpServletResponse object that contains the response
    *
    */
   public void service(HttpServletRequest req, HttpServletResponse res)
@@ -628,8 +621,10 @@ public class NCICurationServlet extends HttpServlet
   * The checkUserBean method gets the session then checks whether a Userbean exits.
   * Called from 'service' method.
   *
-  * @param request The HttpServletRequest from the client
-  * @param response The HttpServletResponse back to the client
+  * @param req The HttpServletRequest from the client
+  * @param res The HttpServletResponse back to the client
+  * @param userBeanExists true or false values of the user bean
+  * @return userBeanExists
   *
   * @throws Exception
   */
@@ -662,8 +657,8 @@ public class NCICurationServlet extends HttpServlet
   * Calls 'getAC.getACList' to get the Data list from the database for the selected context.
   * Sets session Bean and forwards the create page for the selected component.
   *
-  * @param request The HttpServletRequest from the client
-  * @param response The HttpServletResponse back to the client
+  * @param req The HttpServletRequest from the client
+  * @param res The HttpServletResponse back to the client
   * @param sACType The type of page being called, i.e. de, dec, or vd
   *
   * @throws Exception
@@ -762,7 +757,6 @@ public class NCICurationServlet extends HttpServlet
       }
   }  //end of doOpenCreateNewPages
 
-
   /**
   * The getProperties method sets up some default properties and then looks
   * for the NCICuration.properties file to override the defaults.
@@ -794,7 +788,6 @@ public class NCICurationServlet extends HttpServlet
   	   }
   }  // end getProperties
 
-
   /**
    * Get Servlet information
    * @return java.lang.String
@@ -818,7 +811,6 @@ public class NCICurationServlet extends HttpServlet
   {
       ForwardJSP(req, res, "/CDEHomePage.jsp");
   }
-  
 
   /**
   * The doHomePage method gets the session, set some session attributes, then
@@ -1218,6 +1210,7 @@ public class NCICurationServlet extends HttpServlet
    * @param nameAct string new name or apeend name 
    * @param sOrigin String what changed to make this name creation
    * @param pageDE current de bean
+   * @return DE_Bean 
    * @throws java.lang.Exception
    */
   public DE_Bean doGetDENames(HttpServletRequest req, HttpServletResponse res, 
@@ -2225,25 +2218,13 @@ public class NCICurationServlet extends HttpServlet
       else if (sAction.equals("backToVD"))
       {
         //set the checked property to false
-     /*   Vector vVDPVList = (Vector)session.getAttribute("VDPVList");   
-        if (vVDPVList != null)
-        {
-          for (int i=0; i<vVDPVList.size(); i++)
-          {
-            PV_Bean pv = (PV_Bean)vVDPVList.elementAt(i);
-        System.out.println(pv.getPV_BEGIN_DATE() + " back vd new " + pv.getPV_END_DATE());
-            pv.setPV_CHECKED(false);
-            vVDPVList.setElementAt(pv, i);
-          }
-          session.setAttribute("VDPVList", vVDPVList);
-        } */
-        Vector vOldVDPVList = (Vector)session.getAttribute("oldVDPVList");   
+        Vector<PV_Bean> vOldVDPVList = (Vector)session.getAttribute("oldVDPVList");   
         if (vOldVDPVList != null)
         {
           for (int i=0; i<vOldVDPVList.size(); i++)
           {
             PV_Bean oldPV = (PV_Bean)vOldVDPVList.elementAt(i);
-            System.out.println(oldPV.getPV_BEGIN_DATE() + " back vd old " + oldPV.getPV_END_DATE());
+            //System.out.println(oldPV.getPV_BEGIN_DATE() + " back vd old " + oldPV.getPV_END_DATE());
             oldPV.setPV_CHECKED(false);
             vOldVDPVList.setElementAt(oldPV, i);
           }
@@ -2317,7 +2298,7 @@ public class NCICurationServlet extends HttpServlet
                 eDB = eBean.getVocabAttr(m_eUser, eBean.getEVS_ORIGIN(), "vocabName", "vocabDBOrigin");
                 eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
               }
-          System.out.println("before thes concept CreateVM");
+          //System.out.println("before thes concept CreateVM");
               EVSSearch evs = new EVSSearch(req, res, this);
               eBean = evs.getThesaurusConcept(eBean);
               //store the concept attributes in vm bean
@@ -2353,6 +2334,7 @@ public class NCICurationServlet extends HttpServlet
   *
   * @param req The HttpServletRequest from the client
   * @param res The HttpServletResponse back to the client
+  * @param sOrigin String origin action
   *
   * @throws Exception
   */
@@ -2380,7 +2362,7 @@ public class NCICurationServlet extends HttpServlet
         if (sAction == null) sAction = "";
         if (sAction.equals("") || sAction.equals("clearBoxes") || sAction.equals("nothing"))
         {
-          logger.debug("clearing designate de " + sAction);
+          //logger.debug("clearing designate de " + sAction);
           session.setAttribute("AllAltNameList", new Vector());
           session.setAttribute("AllRefDocList", new Vector());
           Vector vACId = (Vector)session.getAttribute("vACId");
@@ -2408,7 +2390,7 @@ public class NCICurationServlet extends HttpServlet
         //add or remove designation
         else if (sAction.equals("create") || sAction.equals("remove"))
         {
-          logger.debug("inserting data");
+          //logger.debug("inserting data");
           InsACService insAC = new InsACService(req, res, this);
           insAC.doSubmitDesDE(sAction);
           session.setAttribute("CheckList", new Vector()); //empty the check list.          
@@ -2443,7 +2425,7 @@ public class NCICurationServlet extends HttpServlet
             dispType = "Reference Documents";
           this.doMarkACBeanForAltRef(req, res, sAC, "all", "openAR");
         }
-        System.out.println(sAction + " what is it " + dispType);        
+        //System.out.println(sAction + " what is it " + dispType);        
         //store the display type attributes
         req.setAttribute("displayType", dispType);
 
@@ -2498,7 +2480,7 @@ public class NCICurationServlet extends HttpServlet
     InsACService insAC = new InsACService(m_classReq, m_classRes, this);
     String stgContMsg = "";
     //get the sessin vectors
-    Vector vAltNames = (Vector)session.getAttribute("AllAltNameList"); 
+    Vector<ALT_NAME_Bean> vAltNames = (Vector)session.getAttribute("AllAltNameList"); 
     Vector vContext = (Vector)session.getAttribute("vWriteContextDE");
     if (vContext == null) vContext = new Vector();
     //add alternate names
@@ -2511,8 +2493,8 @@ public class NCICurationServlet extends HttpServlet
       return;
     }
     //get the request vectors
-    Vector vACId = (Vector)session.getAttribute("vACId");
-    if (vACId == null) vACId = new Vector();
+    Vector<String> vACId = (Vector)session.getAttribute("vACId");
+    if (vACId == null) vACId = new Vector<String>();
     Vector vACName = (Vector)session.getAttribute("vACName");
     if (vACName == null) vACName = new Vector();
     String sContID = (String)req.getParameter("selContext");
@@ -2588,13 +2570,13 @@ public class NCICurationServlet extends HttpServlet
     InsACService insAC = new InsACService(m_classReq, m_classRes, this);
     String stgContMsg = "";
     //get the sessin vectors
-    Vector vAltNames = (Vector)session.getAttribute("AllAltNameList"); 
-    Vector vContext = (Vector)session.getAttribute("vWriteContextDE");
-    if (vContext == null) vContext = new Vector();
+    Vector<ALT_NAME_Bean> vAltNames = (Vector)session.getAttribute("AllAltNameList"); 
+    Vector<String> vContext = (Vector)session.getAttribute("vWriteContextDE");
+    if (vContext == null) vContext = new Vector<String>();
     String sContID = (String)req.getParameter("selContext");
     if (sContID != null) req.setAttribute("desContext", sContID);
     int j = -1;  //to keep track of number of items on the page
-    Vector vAltAttrs = new Vector();
+    Vector<String> vAltAttrs = new Vector<String>();
     for (int i=0; i<vAltNames.size(); i++)
     {
       ALT_NAME_Bean aBean = (ALT_NAME_Bean)vAltNames.elementAt(i);
@@ -2640,7 +2622,7 @@ public class NCICurationServlet extends HttpServlet
       }
     }
     if (stgContMsg != null && !stgContMsg.equals(""))
-      insAC.storeStatusMsg("Unable to remove the following Alternate Names, because user do not have write permission to remove " + stgContMsg);
+      insAC.storeStatusMsg("Unable to remove the following Alternate Names, because the user does not have write permission to remove " + stgContMsg);
     session.setAttribute("AllAltNameList", vAltNames);
   } //end remove alt names
   /**
@@ -2663,9 +2645,9 @@ public class NCICurationServlet extends HttpServlet
     }
     //continue with adding
     String stgContMsg = "";
-    Vector vRefDocs = (Vector)session.getAttribute("AllRefDocList");
-    Vector vACId = (Vector)session.getAttribute("vACId");
-    if (vACId == null) vACId = new Vector();
+    Vector<REF_DOC_Bean> vRefDocs = (Vector)session.getAttribute("AllRefDocList");
+    Vector<String> vACId = (Vector)session.getAttribute("vACId");
+    if (vACId == null) vACId = new Vector<String>();
     Vector vACName = (Vector)session.getAttribute("vACName");
     if (vACName == null) vACName = new Vector();
     Vector vContext = (Vector)session.getAttribute("vWriteContextDE");
@@ -2745,13 +2727,13 @@ public class NCICurationServlet extends HttpServlet
     HttpSession session = req.getSession();
     InsACService insAC = new InsACService(m_classReq, m_classRes, this);
     String stgContMsg = "";
-    Vector vRefDocs = (Vector)session.getAttribute("AllRefDocList");
+    Vector<REF_DOC_Bean> vRefDocs = (Vector)session.getAttribute("AllRefDocList");
     Vector vContext = (Vector)session.getAttribute("vWriteContextDE");
     if (vContext == null) vContext = new Vector();
     String sContID = (String)req.getParameter("selContext");
     if (sContID != null) req.setAttribute("desContext", sContID);
     int j = -1;  //to keep track of number of items on the page
-    Vector vRefAttrs = new Vector();
+    Vector<String> vRefAttrs = new Vector<String>();
     for (int i=0; i<vRefDocs.size(); i++)
     {
       REF_DOC_Bean rBean = (REF_DOC_Bean)vRefDocs.elementAt(i);
@@ -2798,7 +2780,7 @@ public class NCICurationServlet extends HttpServlet
       }
     }      
     if (stgContMsg != null && !stgContMsg.equals(""))
-      insAC.storeStatusMsg("Unable to remove the following Reference Documents, because user do not have write permission to remove " + stgContMsg);
+      insAC.storeStatusMsg("Unable to remove the following Reference Documents, because the user does not have write permission to remove " + stgContMsg);
   
     session.setAttribute("AllRefDocList", vRefDocs);
   }  //end remove ref doc
@@ -2864,7 +2846,7 @@ public class NCICurationServlet extends HttpServlet
       Vector vAllAltName = (Vector)session.getAttribute("AllAltNameList"); 
       if (sAC.equals("DataElement"))
       {
-        System.out.println("checking de bean");
+        //System.out.println("checking de bean");
         //stroe it in the bean
         DE_Bean de = (DE_Bean)session.getAttribute("m_DE");
         m_setAC.setDEValueFromPage(req, res, de);  //capture all other page or request attributes
@@ -2919,6 +2901,7 @@ public class NCICurationServlet extends HttpServlet
   *
   * @param req The HttpServletRequest from the client
   * @param res The HttpServletResponse back to the client
+  * @param sACType String ac type
   *
   * @throws Exception
   */
@@ -3302,6 +3285,7 @@ public class NCICurationServlet extends HttpServlet
 
  /**
   * @param sDefSource string def source selected
+  * @return String defintion source
   * @throws Exception
   */
  public String getSourceToken(String sDefSource)
@@ -3445,8 +3429,7 @@ public class NCICurationServlet extends HttpServlet
   * @param res The HttpServletResponse back to the client
   *
   * @throws Exception
-  */
-  
+  */ 
   public void doSetVDPage(HttpServletRequest req, HttpServletResponse res, String sOrigin)
   throws Exception
   {
@@ -3496,7 +3479,7 @@ public class NCICurationServlet extends HttpServlet
         //mark all the pvs as deleted to remove them while submitting.
         if (!isExist)
         {
-          Vector vVDPVs = (Vector)session.getAttribute("VDPVList");
+          Vector<PV_Bean> vVDPVs = (Vector)session.getAttribute("VDPVList");
           if (vVDPVs != null)
           {
             //set each bean as deleted to handle later
@@ -3506,7 +3489,7 @@ public class NCICurationServlet extends HttpServlet
               pvBean.setVP_SUBMIT_ACTION("DEL");
               vVDPVs.setElementAt(pvBean, i);
             }
-         System.out.println(sVDid + " setvdpage " + isExist);
+         //System.out.println(sVDid + " setvdpage " + isExist);
             //reset the attribute
             session.setAttribute("VDPVList", vVDPVs);
           }
@@ -3515,8 +3498,8 @@ public class NCICurationServlet extends HttpServlet
       else
       {
         //remove meta parents since it is not needed for enum types
-        Vector vParentCon = (Vector)session.getAttribute("VDParentConcept");
-        if (vParentCon == null) vParentCon = new Vector();    
+        Vector<EVS_Bean> vParentCon = (Vector)session.getAttribute("VDParentConcept");
+        if (vParentCon == null) vParentCon = new Vector<EVS_Bean>();    
         for (int i=0; i<vParentCon.size(); i++)
         {
           EVS_Bean ePar = (EVS_Bean)vParentCon.elementAt(i);
@@ -3845,8 +3828,8 @@ public class NCICurationServlet extends HttpServlet
       String sPVAction, String vdPage)  throws Exception
   {
     HttpSession session = req.getSession();   
-    Vector vParentCon = (Vector)session.getAttribute("VDParentConcept");
-    if (vParentCon == null) vParentCon = new Vector();    
+    Vector<EVS_Bean> vParentCon = (Vector)session.getAttribute("VDParentConcept");
+    if (vParentCon == null) vParentCon = new Vector<EVS_Bean>();    
     //get the selected parent info from teh request
     String sParentCC = (String)req.getParameter("selectedParentConceptCode");
     if (sParentCC != null)
@@ -3862,7 +3845,7 @@ public class NCICurationServlet extends HttpServlet
         String thisParentDB = eBean.getEVS_DATABASE();
         if(thisParentDB.equals("NCI Thesaurus")) thisParentDB = "NCI_Thesaurus";
         if (thisParentDB == null) thisParentDB = "";
-    System.out.println(sParentCC + " parent " + thisParent + " action " + sPVAction);
+    //System.out.println(sParentCC + " parent " + thisParent + " action " + sPVAction);
     
         if (sParentCC.equals(thisParent))
         {
@@ -3873,8 +3856,8 @@ public class NCICurationServlet extends HttpServlet
           
           if (sPVAction.equals("removePVandParent"))
           {
-            Vector vVDPVList = (Vector)session.getAttribute("VDPVList");
-            if (vVDPVList == null) vVDPVList = new Vector();
+            Vector<PV_Bean> vVDPVList = (Vector)session.getAttribute("VDPVList");
+            if (vVDPVList == null) vVDPVList = new Vector<PV_Bean>();
             //loop through the vector of pvs to get matched parent
             for (int j=0; j<vVDPVList.size(); j++)
             {
@@ -3891,7 +3874,7 @@ public class NCICurationServlet extends HttpServlet
                 vVDPVList.setElementAt(pvBean, j);
               }
             }
-       System.out.println("removepvparent " + vVDPVList.size());
+       //System.out.println("removepvparent " + vVDPVList.size());
             session.setAttribute("VDPVList", vVDPVList);            
           }
           //mark the parent as delected and leave
@@ -4499,13 +4482,24 @@ public class NCICurationServlet extends HttpServlet
     }
   } // end of doDECUseSelection
 
+  /**
+   * adds the selected concept to the vector of concepts for property
+   * @param req HttpServletRequest
+   * @param res HttpServletResponse
+   * @param nameAction String naming action
+   * @param decBean selected DEC_Bean
+   * @param eBean selected EVS_Bean
+   * @param ocType String property type (primary or qualifier)
+   * @return DEC_Bean
+   * @throws Exception
+   */
   private DEC_Bean addOCConcepts(HttpServletRequest req, HttpServletResponse res, 
       String nameAction, DEC_Bean decBean, EVS_Bean eBean, String ocType) throws Exception
   {
     HttpSession session = req.getSession();
     //add the concept bean to the OC vector and store it in the vector
-    Vector vObjectClass = (Vector)session.getAttribute("vObjectClass");
-    if (vObjectClass == null) vObjectClass = new Vector();
+    Vector<EVS_Bean> vObjectClass = (Vector)session.getAttribute("vObjectClass");
+    if (vObjectClass == null) vObjectClass = new Vector<EVS_Bean>();
     
     eBean.setCON_AC_SUBMIT_ACTION("INS");
     eBean.setCONTE_IDSEQ(decBean.getDEC_CONTE_IDSEQ());
@@ -4541,14 +4535,14 @@ public class NCICurationServlet extends HttpServlet
     else
     {
       //add it othe qualifiers attributes of the selected DEC
-      Vector vOCQualifierNames = decBean.getDEC_OC_QUALIFIER_NAMES();
-      if (vOCQualifierNames == null) vOCQualifierNames = new Vector();
+      Vector<String> vOCQualifierNames = decBean.getDEC_OC_QUALIFIER_NAMES();
+      if (vOCQualifierNames == null) vOCQualifierNames = new Vector<String>();
       vOCQualifierNames.addElement(eBean.getLONG_NAME());
-      Vector vOCQualifierCodes = decBean.getDEC_OC_QUALIFIER_CODES();
-      if (vOCQualifierCodes == null) vOCQualifierCodes = new Vector();
+      Vector<String> vOCQualifierCodes = decBean.getDEC_OC_QUALIFIER_CODES();
+      if (vOCQualifierCodes == null) vOCQualifierCodes = new Vector<String>();
       vOCQualifierCodes.addElement(eBean.getNCI_CC_VAL());
-      Vector vOCQualifierDB = decBean.getDEC_OC_QUALIFIER_DB();
-      if (vOCQualifierDB == null) vOCQualifierDB = new Vector();   
+      Vector<String> vOCQualifierDB = decBean.getDEC_OC_QUALIFIER_DB();
+      if (vOCQualifierDB == null) vOCQualifierDB = new Vector<String>();   
       vOCQualifierDB.addElement(eBean.getEVS_DATABASE());
       decBean.setDEC_OC_QUALIFIER_NAMES(vOCQualifierNames);
       decBean.setDEC_OC_QUALIFIER_CODES(vOCQualifierCodes);
@@ -4565,13 +4559,24 @@ public class NCICurationServlet extends HttpServlet
     return decBean;
   }  //end addOCConcepts
   
+  /**
+   * adds the selected concept to the vector of concepts for property
+   * @param req HttpServletRequest
+   * @param res HttpServletResponse
+   * @param nameAction String naming action
+   * @param decBean selected DEC_Bean
+   * @param eBean selected EVS_Bean
+   * @param propType String property type (primary or qualifier)
+   * @return DEC_Bean
+   * @throws Exception
+   */
   private DEC_Bean addPropConcepts(HttpServletRequest req, HttpServletResponse res, 
       String nameAction, DEC_Bean decBean, EVS_Bean eBean, String propType) throws Exception
   {
     HttpSession session = req.getSession();
     //add the concept bean to the OC vector and store it in the vector
-    Vector vProperty = (Vector)session.getAttribute("vProperty");
-    if (vProperty == null) vProperty = new Vector();
+    Vector<EVS_Bean> vProperty = (Vector)session.getAttribute("vProperty");
+    if (vProperty == null) vProperty = new Vector<EVS_Bean>();
     eBean.setCON_AC_SUBMIT_ACTION("INS");
     eBean.setCONTE_IDSEQ(decBean.getDEC_CONTE_IDSEQ());
     String eDB = eBean.getEVS_DATABASE();
@@ -4737,13 +4742,24 @@ public class NCICurationServlet extends HttpServlet
     }
   } // end of doVDUseSelection
 
+  /**
+   * adds the selected concept to the vector of concepts for property
+   * @param req HttpServletRequest
+   * @param res HttpServletResponse
+   * @param nameAction String naming action
+   * @param vdBean selected DEC_Bean
+   * @param eBean selected EVS_Bean
+   * @param repType String property type (primary or qualifier)
+   * @return DEC_Bean
+   * @throws Exception
+   */
   private VD_Bean addRepConcepts(HttpServletRequest req, HttpServletResponse res, 
       String nameAction, VD_Bean vdBean, EVS_Bean eBean, String repType) throws Exception
   {
     HttpSession session = req.getSession();
     //add the concept bean to the OC vector and store it in the vector
-    Vector vRepTerm = (Vector)session.getAttribute("vRepTerm");
-    if (vRepTerm == null)  vRepTerm = new Vector();
+    Vector<EVS_Bean> vRepTerm = (Vector)session.getAttribute("vRepTerm");
+    if (vRepTerm == null)  vRepTerm = new Vector<EVS_Bean>();
     eBean.setCON_AC_SUBMIT_ACTION("INS");
     eBean.setCONTE_IDSEQ(vdBean.getVD_CONTE_IDSEQ());
     String eDB = eBean.getEVS_DATABASE();
@@ -5023,8 +5039,8 @@ public class NCICurationServlet extends HttpServlet
       m_setAC.setVDValueFromPage(req, res, m_VD);
       session.setAttribute("m_VD", m_VD);
       //get the existing pvs from the session
-      Vector vVDPVList = (Vector)session.getAttribute("VDPVList");
-      if (vVDPVList == null) vVDPVList = new Vector();
+      Vector<PV_Bean> vVDPVList = (Vector)session.getAttribute("VDPVList");
+      if (vVDPVList == null) vVDPVList = new Vector<PV_Bean>();
       //get the VMs selected from EVS from the page.
       Vector vEVSList = this.getEVSSelRowVector(req, new Vector());
       if (vEVSList != null)
@@ -5073,7 +5089,7 @@ public class NCICurationServlet extends HttpServlet
           {
             pvBean = (PV_Bean)vVDPVList.elementAt(j);
             //exist if already exists 
-            logger.debug(sValue + pvBean.getPV_VALUE() + sMean + pvBean.getPV_SHORT_MEANING());
+            //logger.debug(sValue + pvBean.getPV_VALUE() + sMean + pvBean.getPV_SHORT_MEANING());
             if (pvBean.getPV_VALUE().equalsIgnoreCase(sValue) && pvBean.getPV_SHORT_MEANING().equalsIgnoreCase(sMean))
             {
               //re-adding the deleted item if exists in the vector but marked as deleted
@@ -5100,7 +5116,7 @@ public class NCICurationServlet extends HttpServlet
                   isUpdated = true;
                   updRow = j;  //need this to update the vector                
                   updatedVDPVs += sValMean;
-       logger.debug(pvBean.getPV_PV_IDSEQ() + " pv vm update " + updatedVDPVs)   ;        
+       //logger.debug(pvBean.getPV_PV_IDSEQ() + " pv vm update " + updatedVDPVs)   ;        
                 }
                 else  //existed with concept
                 {
@@ -5139,7 +5155,7 @@ public class NCICurationServlet extends HttpServlet
               vVDPVList.addElement(pvBean);    //store bean in vector
           }
         }
-     System.out.println(updatedVDPVs + " selMinVD " + vVDPVList.size());
+     //System.out.println(updatedVDPVs + " selMinVD " + vVDPVList.size());
         session.setAttribute("VDPVList", vVDPVList);        
         //alert if value meaning alredy exists but updated with concept info
         if (updatedVDPVs != null && !updatedVDPVs.equals(""))
@@ -5406,11 +5422,6 @@ public class NCICurationServlet extends HttpServlet
   *
   * @throws Exception
   */
-   /**
-   * @param req
-   * @param res
-   * @throws Exception
-   */
   public void doInsertDEfromMenuAction(HttpServletRequest req, HttpServletResponse res)
    throws Exception
    {
@@ -6048,8 +6059,8 @@ public class NCICurationServlet extends HttpServlet
           session.setAttribute("NonMatchVV", vQVList);
         }
         //loop through the pvlist to update edit pv or new pv attributes
-        Vector vVDPV = (Vector)session.getAttribute("VDPVList");
-        if (vVDPV == null) vVDPV = new Vector();
+        Vector<PV_Bean> vVDPV = (Vector)session.getAttribute("VDPVList");
+        if (vVDPV == null) vVDPV = new Vector<PV_Bean>();
         //add the bean to list if creating new one and nothing exists
         boolean isCreated = false;
         for (int i=0; i<vVDPV.size(); i++)
@@ -6103,7 +6114,7 @@ public class NCICurationServlet extends HttpServlet
             vVDPV.addElement(m_PV);
           }
         }
-      System.out.println(sPVSubmit + " insert pv " + sOrigin);
+      //System.out.println(sPVSubmit + " insert pv " + sOrigin);
         //update teh session attribute
         session.setAttribute("VDPVList", vVDPV);
         
@@ -7978,8 +7989,8 @@ public class NCICurationServlet extends HttpServlet
         // DEComp removed list
         String sDECompDeletes[] = req.getParameterValues("selDECompDeleteHidden");
         String sDECompDelNames[] = req.getParameterValues("selDECompDelNameHidden");
-        Vector vDECompDelete = new Vector();
-        Vector vDECompDelName = new Vector();
+        Vector<String> vDECompDelete = new Vector<String>();
+        Vector<String> vDECompDelName = new Vector<String>();
         if(sDECompDeletes != null)
         {
           for (int i = 0; i<sDECompDeletes.length; i++) 
@@ -8299,7 +8310,13 @@ public class NCICurationServlet extends HttpServlet
     }
 //System.out.println("servlet done callExpandSubNode");
   }
-  
+
+  /**
+   * method to call all evs actions
+   * @param reqType String evs search action
+   * @param req HttpServletRequest
+   * @param res HttpServletResponse
+   */
   private void doEVSSearchActions(String reqType, HttpServletRequest req, HttpServletResponse res)
   {
     try
@@ -9024,6 +9041,12 @@ public class NCICurationServlet extends HttpServlet
        ForwardJSP(req, res, "/DerivedDEWindow.jsp");      
     }
 
+    /**
+     * display all the concepts for the selected ac from search results page
+     * @param req HttpServletRequest
+     * @param res HttpServletResponse
+     * @throws Exception
+     */
    private void doConClassSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
    {
      GetACSearch getAC = new GetACSearch(req, res, this);
@@ -9041,6 +9064,12 @@ public class NCICurationServlet extends HttpServlet
      
    }
 
+   /**
+    * display conceptual for the selected vm from the search results.
+    * @param req HttpServletRequest
+    * @param res HttpServletResponse
+    * @throws Exception
+    */
    private void doConDomainSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
    {
      GetACSearch getAC = new GetACSearch(req, res, this);
@@ -9055,6 +9084,12 @@ public class NCICurationServlet extends HttpServlet
      
    }
 
+   /**
+    * contact action from create and edit ac pages to either remove the selected contact or store the modified contact back in the ac bean
+    * @param req HttpServletRequest
+    * @param sAct String AC contact update action from create and edit pages
+    * @return Hashtable of contact name and contact bean object
+    */
    private Hashtable doContactACUpdates(HttpServletRequest req, String sAct)
    {
      HttpSession session = req.getSession();
@@ -9110,6 +9145,12 @@ public class NCICurationServlet extends HttpServlet
      return hConts;
    }
    
+   /**
+    * Contact edit action including open, view, edit comm, edit addr and change organization etc
+    * @param req HttpServletRequest
+    * @param res HttpServletResponse
+    * @throws Exception
+    */
    private void doContactEditActions(HttpServletRequest req, HttpServletResponse res) throws Exception
    {
      HttpSession session = req.getSession();
@@ -9118,7 +9159,6 @@ public class NCICurationServlet extends HttpServlet
      if (hConts == null) hConts = new Hashtable();
      //get the page action
      String sPgAct = (String)req.getParameter("pageAction");
-  //System.out.println(sPgAct + " contat edit " + hConts.size());
      if (sPgAct != null && !sPgAct.equals(""))
      {
        try
@@ -9213,6 +9253,13 @@ public class NCICurationServlet extends HttpServlet
      ForwardJSP(req, res, "/EditACContact.jsp");
    }
    
+   /**
+    * Contact communication change actions
+    * @param req HttpServletRequest
+    * @param ACBean AC_CONTACT_Bean
+    * @param sAct String communication action
+    * @return AC_CONTACT_Bean
+    */
    private AC_CONTACT_Bean doContCommAction(HttpServletRequest req, AC_CONTACT_Bean ACBean, String sAct)
    {
      try
@@ -9309,6 +9356,13 @@ public class NCICurationServlet extends HttpServlet
      return ACBean;
    }
    
+   /**
+    * Contact address change action
+    * @param req HttpServletRequest
+    * @param ACBean AC_CONTACT_Bean
+    * @param sAct String address edit action
+    * @return AC_CONTACT_Bean
+    */
    private AC_CONTACT_Bean doContAddrAction(HttpServletRequest req, AC_CONTACT_Bean ACBean, String sAct)
    {
      try
@@ -10727,6 +10781,14 @@ public class NCICurationServlet extends HttpServlet
     }
     return vDefaultAttr;
  }
+
+  /**
+   * default attributes for evs searches
+   * @param req HttpServletRequest
+   * @param res HttpServletResponse
+   * @param dtsVocab String vocab name
+   * @throws Exception
+   */
   public void getDefaultBlockAttr(HttpServletRequest req, HttpServletResponse res, 
       String dtsVocab) throws Exception
   {
@@ -10901,7 +10963,6 @@ public class NCICurationServlet extends HttpServlet
   *
   * @throws Exception
   */
-
  public void getCompAttrList(HttpServletRequest req, HttpServletResponse res,
          String selSearch, String sMenu)  throws Exception
  {
@@ -11135,7 +11196,6 @@ public class NCICurationServlet extends HttpServlet
     }
  }  //end compattlist
 
-
   /**
   * This method forwards to an Error page.
   * Called from 'service' method where reqType is 'actionFromMenu'
@@ -11159,9 +11219,6 @@ public class NCICurationServlet extends HttpServlet
       }
   }
 
- 
- 
-
   /**
   * The destroy method closes a connection pool to db.
   */
@@ -11169,7 +11226,6 @@ public class NCICurationServlet extends HttpServlet
   {
      hashOracleOCIConnectionPool = null;
   }
-
 
   /**
   * doLogout method closes the connection and forwards to Login page
@@ -11251,14 +11307,14 @@ public class NCICurationServlet extends HttpServlet
       logger.fatal("Servlet-ForwardErrorJSP : " + e.toString() );
     }
   }
-  /**
-   * The doRefDocumentUpload
-   *
-   *  uploadfile
-   *
-   * @param req The HttpServletRequest from the client
-   * @param res The HttpServletResponse back to the client
-   */
+
+/**
+ * This is the primary method for handling requests from the Reference Document Attachments page.
+ * 
+ * @param req  The HttpServletRequest from the client
+ * @param res  The HttpServletResponse back to the client
+ * @param sOrigin  The String controling weather this is a open action or other request type action
+ */
    public void doRefDocumentUpload(HttpServletRequest req,
      HttpServletResponse res, String sOrigin) 
    {
@@ -11271,6 +11327,7 @@ public class NCICurationServlet extends HttpServlet
 
 	     
 	  msg = req.getContentType(); 
+	  //	 upload file into the database as blob
 	  if (msg.startsWith("multipart/form-data")){
 		  //file upload
 		  refDocAt.doFileUpload();
@@ -11304,11 +11361,6 @@ public class NCICurationServlet extends HttpServlet
 				refDocAt.doDeleteAttachment();
 	        } 
 			
-			// upload file into the database as blob
-			if (sAction.equals("UploadFile"))
-			{
-				refDocAt.doFileUpload();
-			}
 			// Catch any undefined action from page
 			else
 			{

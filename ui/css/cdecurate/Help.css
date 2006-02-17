@@ -5,14 +5,14 @@
      background-color: #FFFFFF;
      font-color: #000000;
      font-family: Arial, Helvetica, sans-serif;
-     font-size: 16px;
+     font-size: 10pt;
   }
 
 
   h2.main
   {
      color:#660066;
-     font-size: 22px;
+     font-size: 14pt;
      font-family: Arial Helvetica, sans-serif;
      margin: 0 0 0 .25in;
   }
@@ -37,14 +37,14 @@
   td, th
   {
      font-family: Arial, Helvetica, sans-serif;
-     font-size: 16px;
+     font-size: 10pt;
      padding: 4px 4px 2px 4px;
   }
 
   td.TitleTopic
   {
      font-family: Arial, Helvetica, sans-serif;
-     font-size: 24px;
+     font-size: 16pt;
      font-weight: bold;
      padding:  20px 4px 10px 4px;  
   }
@@ -52,7 +52,7 @@
   td.mainTopic
   {
      font-family: Arial, Helvetica, sans-serif;
-     font-size: 18px;
+     font-size: 14pt;
      font-weight: bold;
      padding:  20px 4px 10px 4px;  
   }
@@ -60,7 +60,7 @@
   td.subTopic1
   {
      font-family: Arial, Helvetica, sans-serif;
-     font-size: 18px;
+     font-size: 14pt;
      font-weight: bold;
      padding:  15px 4px 5px 16px;
   }
@@ -68,7 +68,7 @@
   td.subTopic2
   {
      font-family: Arial, Helvetica, sans-serif;
-     font-size: 18px;
+     font-size: 14pt;
      font-weight: bold;
      padding:  15px 4px 5px 28px;
   }
@@ -76,7 +76,7 @@
   td.subTopic3
   {
      font-family: Arial, Helvetica, sans-serif;
-     font-size: 18px;
+     font-size: 14pt;
      font-weight: bold;
      padding:  15px 4px 5px 40px;
   }
@@ -84,7 +84,7 @@
   td.subTopic4
   {
      font-family: Arial, Helvetica, sans-serif;
-     font-size: 18px;
+     font-size: 14pt;
      font-weight: bold;
      padding:  15px 4px 5px 52px;
   }
@@ -114,7 +114,7 @@
   {
      color: red;
      font.weight: bold;
-		 font-size: 20px;
+		 font-size: 14pt;
   }
 	
   span.red
@@ -156,7 +156,7 @@
      padding: 0in 2.15pt 0in 2.15pt;
      color: white;
      font-family: Arial, Helvetica, sans-serif;
-     font-size: 20px;
+     font-size: 16pt;
      font.weight: bold;
      height: 34;
   }
@@ -167,7 +167,7 @@
      background: #666699;
      color: white;
      font-family: Arial, Helvetica, sans-serif;
-     font-size: 20px;
+     font-size: 16pt;
      font.weight: bold;
      height: 34;
   }
@@ -190,7 +190,7 @@
   textarea
   {
      font-family: Arial, Helvetica, sans-serif;
-     font-size: 12px;
+     font-size: 10pt;
   }
 
 
@@ -200,7 +200,7 @@
   {
      background-color: #CCCCCC;
 	  font-family: Arial, Helvetica, sans-serif;
-	  font-size: 14px;
+	  font-size: 12pt;
      font-weight: bold;
   }
 
@@ -208,7 +208,7 @@
   {
      background-color: #CCCCCC;
 	  font-family: Arial, Helvetica, sans-serif;
-	  font-size: 16px;
+	  font-size: 14pt;
      font-weight: bold;
   }
 
@@ -279,7 +279,7 @@ div.header {
      background: #666699;
      color: white;
      font-family: Arial, Helvetica, sans-serif;
-     font-size: 20px;
+     font-size: 16pt;
      font.weight: bold;
      height: 34;
 		 width: 100%;
@@ -297,7 +297,7 @@ div.header {
 div.NoteTest {
       text-indent: 50px;
 			font-family: Arial, Helvetica, sans-serif;
-     	font-size: 12pt;
+     	font-size: 10pt;
   }
 	
 ul {
@@ -318,7 +318,7 @@ ol {
 @media print {
 body {
    background: white;
-   font-size: 12pt;
+   font-size: 10pt;
 	 font-color: #000000;
    font-family: Arial, Helvetica, sans-serif;
    }
@@ -385,7 +385,7 @@ div.header {
      background: #c0c0c0;
      color: white;
      font-family: Arial, Helvetica, sans-serif;
-     font-size: 20px;
+     font-size: 16pt;
      font.weight: bold;
      height: 34;
 		 width: 100%;
@@ -403,7 +403,7 @@ div.header {
 div.NoteTest {
       text-indent: 50px;
 			font-family: Arial, Helvetica, sans-serif;
-     	font-size: 12pt;
+     	font-size: 10pt;
   }
 	
 ul {
@@ -449,7 +449,7 @@ ol {
   {
      color: red;
      font.weight: bold;
-		 font-size: 20px;
+		 font-size: 14pt;
   }
 	
   span.red

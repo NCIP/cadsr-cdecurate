@@ -1,5 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*" errorPage="" %>
-<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"%>
 
 <html>
 <head>
@@ -9,7 +8,6 @@
 
 </script>
 </head>
-<curate:checkLogon name="Userbean" page="/index.htm" />
 <body >
 <div id="Layer2" style="position:absolute; width:120px; height:38px; z-index:2; left: 456px; top: 275 px; visibility: visible;"> 
   <p><font color="#FFFFFF" size="4" face="Arial, sans-serif">Version 3.1.0</font></p>

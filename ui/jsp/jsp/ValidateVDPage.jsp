@@ -1,4 +1,6 @@
-<%@ page errorPage="ErrorPage.jsp" %>
+<!-- goes to login page if error occurs -->
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
+<curate:checkLogon name="Userbean" page="/LoginE.jsp" />
 <!-- ValidateVDPage.jsp -->
 <html>
 <head>

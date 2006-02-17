@@ -792,7 +792,7 @@ function RemoveBuildingBlocks(thisBlock)
         document.createVDForm.selRepRow.value = selIdx;
       //  TrimDefinition('Object')
         if(document.createVDForm.selRepTerm[0].value != null 
-          && document.createVDForm.selRepTerm[0].value != "")
+          && (document.createVDForm.selRepTerm[0].value != "" || document.createVDForm.selRepTerm[0].text != ""))
         {
           document.createVDForm.selRepTerm[0].value = "";
           SubmitValidate("RemoveSelection");

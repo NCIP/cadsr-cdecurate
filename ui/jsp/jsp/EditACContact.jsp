@@ -1,3 +1,6 @@
+<!-- goes to secondary window error page if error occurs -->
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
+<curate:checkLogon name="Userbean" page="/jsp/ErrorPageWindow.jsp" />
 <html>
 <head>
 <title>Edit Contact Information</title>
@@ -7,7 +10,6 @@
 <%@ page session="true" %>
 <link href="FullDesignArial.css" rel="stylesheet" type="text/css"> 
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/EditContact.js"></SCRIPT>
-
 <%
     UtilService serUtil = new UtilService();
     //load the lists

@@ -904,7 +904,7 @@ fill selectedCSI options.
     if (isCon == false) 
       alert("Select a designate context from the drop down list.");
     else if (sType == null || sType == "")
-      alert("Select a type of Reference Documents from the drop down list.");
+      alert("Select a type of Reference Document from the drop down list.");
     else if (sName == null || sName == "")
       alert("Please enter a text for the Reference Document Name");
       //if less than 7 or does not have http:// at the begging
