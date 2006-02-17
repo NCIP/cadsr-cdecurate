@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.2 2006-02-14 21:53:50 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.3 2006-02-17 21:36:09 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2295,6 +2295,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
 
             // Set the In parameters (which are inherited from the PreparedStatement class)
             CStmt.setString(1,sPCCondrString);       //comma-delimited con idseqs
+        System.out.println(PCBean.getLONG_NAME() + " conIDseqs :" + sPCCondrString);
             CStmt.setString(2,sContextID);
              // Now we are ready to call the stored procedure
             boolean bExcuteOk = CStmt.execute();

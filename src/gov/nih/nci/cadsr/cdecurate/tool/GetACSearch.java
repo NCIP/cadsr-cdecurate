@@ -1,7 +1,7 @@
 
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.2 2006-02-14 21:53:50 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.3 2006-02-17 21:36:08 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;     
@@ -625,6 +625,7 @@ public class GetACSearch implements Serializable
 
   /**
    * Stores search parameter attributes in the hash table and in session attributes to access it later.
+   * @return Hashtmap
    * 
    */
    private HashMap storeSearchParamAttr()
@@ -813,7 +814,6 @@ public class GetACSearch implements Serializable
    * 
    * @throws Exception
    */
-  
    private void pushAllOntoStack(Stack sSearchACStack, Stack vACSearchStack, Stack vSelRowsStack, Stack vSearchIDStack,
    Stack vSearchNameStack, Stack vSearchUsedContextStack, Stack vResultStack, Stack vCompAttrStack, Stack vAttributeListStack,
    String sSearchAC, Vector vAC,  Vector vRSel, Vector vSearchID, Vector vSearchName, Vector vResult, Stack vSearchASLStack, 
@@ -983,7 +983,6 @@ public class GetACSearch implements Serializable
     }
    }
   }
-
    
   /**
    * To get the ac_idseq of the component when the selected searchIn is CDE_ID,
@@ -994,8 +993,6 @@ public class GetACSearch implements Serializable
    *
    * @return String ac_idseq if found. otherwise empty string.
    */
-
-   //note : need to handle exceptions here.
   private String getCDEIDSearch(String sCDEID)  // get the ac id for the selected cdeid.
   {
     Connection sbr_db_conn = null;
@@ -1055,7 +1052,6 @@ public class GetACSearch implements Serializable
    * @param actType selected action type.
    *
    */
-
   public void getACShowResult(HttpServletRequest req, HttpServletResponse res,
          String actType)
   {
@@ -2477,12 +2473,26 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    *  "{call SBREXT_CDE_CURATOR_PKG.SEARCH_CD(CD_IDSEQ, InString, ContID, ContName, ASLName, CD_ID, OracleTypes.CURSOR)}"
    *
    * loop through the ResultSet and add them to bean which is added to the vector to return
-   *
-   * @param ProtoWord String Keyword for Protocol.
-   * @param CRFWord String Keyword for CRF Name.
+   * @param CD_IDSEQ String cd_idseq to filter
+   * @param InString String search term
+   * @param ContID String context_idseq
    * @param ContName selected context name.
+   * @param sVersion String version indicator to filter
    * @param ASLName selected workflow status name.
+   * @param sCreatedFrom String from created date
+   * @param sCreatedTo String to create date
+   * @param sModifiedFrom String from modified date
+   * @param sModifiedTo String to modified date
+   * @param sCreator String creater to filter
+   * @param sModifier String modifier to filter
+   * @param CD_ID String public id of cd
+   * @param sOrigin String origin value to filter
+   * @param dVersion double value of version number to filter
+   * @param conName STring concept name or identifier to filter
+   * @param conID String con idseq to fitler
+   * @param sVM String value meaning 
    * @param vList returns Vector of DEbean.
+   * @return Vector of CD Bean
    *
    */
    public Vector doCDSearch(String CD_IDSEQ, String InString, String ContID, String ContName, 
@@ -2702,6 +2712,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    * @param req The HttpServletRequest object.
    * @param res HttpServletResponse object.
    * @param sSearchAC selected Administered component.
+   * @param sMenuAct String menuaction
    *
    */
   public void setAttributeValues(HttpServletRequest req, HttpServletResponse res,
@@ -2861,6 +2872,9 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    * @param req The HttpServletRequest object.
    * @param res HttpServletResponse object.
    * @param sSearchAC selected Administered component.
+   * @param sAction String search action
+   * @param isBlockSearch boolean to evs search
+   * @return String comma delimited statuses
    *
    */
   public String getStatusValues(HttpServletRequest req, HttpServletResponse res,
@@ -3290,7 +3304,13 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     }
   }
 
-  private Vector addMultiRecordDerDE(DE_Bean de, Vector vRes)
+  /**
+   * returns the display value with hyperlink
+   * @param de DE_Bean
+   * @param vRes Vector of the results
+   * @return Vector of the results
+   */
+  private Vector addMultiRecordDerDE(DE_Bean de, Vector<String> vRes)
   {
     String hyperText = "";
     String derRel = de.getDE_DER_RELATION();
@@ -3307,14 +3327,13 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
 
   /**
    * adds more hyperlink for concept attributes in the search results, which would open new window to get concepts of AC
-    * @param vSel vector of ac display attributes bean 
-    * @param deBean current de bean
-    * @param vRes display result vector
-    * @param disType type of attribute to make the more hyperlink
-    * @return vector of modified display result vector
-    * @throws java.lang.Exception
+   * @param cdName String conceptual domain name 
+   * @param acName String ac name
+   * @param vRes display result vector
+   * @return vector of modified display result vector
+   * @throws java.lang.Exception
    */
-   private Vector addMultiRecordConDomain(String cdName, String acName, Vector vRes) throws Exception
+   private Vector addMultiRecordConDomain(String cdName, String acName, Vector<String> vRes) throws Exception
    {
      String hyperText = "";
      if (cdName != null && !cdName.equals(""))
@@ -3332,16 +3351,18 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    }
 
    /**
-    * adds more hyperlink for concept attributes in the search results, which would open new window to get concepts of AC
-     * @param vSel vector of ac display attributes bean 
-     * @param deBean current de bean
-     * @param vRes display result vector
-     * @param disType type of attribute to make the more hyperlink
-     * @return vector of modified display result vector
-     * @throws java.lang.Exception
-    */
+   * adds more hyperlink for concept attributes in the search results, which would open new window to get concepts of AC
+   * @param conName String concept name
+   * @param acName String ac name
+   * @param acIDseq String ac idseq
+   * @param ac2IDseq String antoher ac idseq
+   * @param acType ac type
+   * @param vRes display result vector
+   * @return vector of modified display result vector
+   * @throws java.lang.Exception
+  */
     private Vector addMultiRecordConcept(String conName, String acName, 
-        String acIDseq, String ac2IDseq, String acType, Vector vRes) throws Exception
+        String acIDseq, String ac2IDseq, String acType, Vector<String> vRes) throws Exception
     {
       String hyperText = "";
       if (conName != null && !conName.equals(""))
@@ -3358,7 +3379,16 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
       return vRes;
     }
 
-     private Vector addMultiRecordAltName(String altName, String acName, String acID, Vector vRes) throws Exception
+    /**
+     * Adds details hyperlink for alt names in the search resutls of an ac
+     * @param altName String altername name
+     * @param acName STring ac name
+     * @param acID String ac_idseq
+     * @param vRes Vector of search results to display
+     * @return Vector of search results to display
+     * @throws Exception
+     */
+     private Vector addMultiRecordAltName(String altName, String acName, String acID, Vector<String> vRes) throws Exception
      {
        String hyperText = "";
        if (altName != null && !altName.equals(""))
@@ -3375,7 +3405,16 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
        return vRes;
      }
 
-     private Vector addMultiRecordRDName(String rdName, String acName, String acID, Vector vRes) throws Exception
+     /**
+      * Adds details hyperlink for ref docs in the search resutls of an ac
+      * @param rdName String ref docuement
+      * @param acName STring ac name
+      * @param acID String ac_idseq
+      * @param vRes Vector of search results to display
+      * @return Vector of search results to display
+      * @throws Exception
+      */
+     private Vector addMultiRecordRDName(String rdName, String acName, String acID, Vector<String> vRes) throws Exception
      {
        String hyperText = "";
        if (rdName != null && !rdName.equals(""))
@@ -3632,7 +3671,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    *  get_complex_de
    * This method is called by getSelRowToEdit(), by doSearchSelectionAction() or doSearchSelectionBEAction()
    * 
-   * @param P_DE_IDSEQ, in, Primary DE's idseq.
+   * @param P_DE_IDSEQ String in, Primary DE's idseq.
    *
    */
   public void getDDEInfo(String P_DE_IDSEQ)
@@ -3650,11 +3689,11 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     String sRule = "";
     String sMethod = "";
     String sConcatChar = "";
-    Vector vDEComp = new Vector();
-    Vector vDECompID = new Vector();
-    Vector vDECompOrder = new Vector();
-    Vector vDECompRelID = new Vector();
-    Vector vDECompDelete = new Vector();
+    Vector<String> vDEComp = new Vector<String>();
+    Vector<String> vDECompID = new Vector<String>();
+    Vector<String> vDECompOrder = new Vector<String>();
+    Vector<String> vDECompRelID = new Vector<String>();
+    Vector<String> vDECompDelete = new Vector<String>();
     String sRulesAction = "newRule";
 
     try
@@ -3708,7 +3747,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
             dde.setDE_ID(CStmt.getString(8));
             dde.setDE_VERSION(CStmt.getString(9));
             dde.setSUBMIT_ACTION("NONE");
-            Vector vComps = new Vector();
+            Vector<DE_COMP_Bean> vComps = new Vector<DE_COMP_Bean>();
             //set DE Comp vectors from resultset
             rs = (ResultSet) CStmt.getObject(6);
             if (rs!=null)
@@ -3780,77 +3819,6 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
   //  logger.info(m_servlet.getLogMessage(m_classReq, "getDDEInfo", "end search", exDate, new java.util.Date()));
   }  //end getDDEInfo
 
-/* /**
-   * get Complex RepType and set them to session for DDE page repType drop list
-   * 
-   * calls oracle stored procedure
-   *  get_complex_rep_type
-   * This method is called by doInitDDEInfo()
-   * 
-   * @param 
-   *
-   */
-/*  public void getComplexRepType()
-
-  {
-    Connection sbr_db_conn = null;
-    ResultSet rs = null;
-    CallableStatement CStmt = null;
-    HttpSession session = m_classReq.getSession();
-
-    String sRepType = "";
-    Vector vRepType = new Vector();
-
-    try
-    {
-      //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
-        m_servlet.ErrorLogin(m_classReq, m_classRes);
-      else
-      {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_COMPLEX_REP_TYPE(?)}");
-
-        // Now tie the placeholders for out parameters.
-        CStmt.registerOutParameter(1, OracleTypes.CURSOR);
-        // Now tie the placeholders for In parameters.
-
-         // Now we are ready to call the stored procedure
-        boolean bExcuteOk = CStmt.execute();
-
-        //assign output complex rep type from the result
-        vRepType.addElement("");  // top empty row
-        rs = (ResultSet) CStmt.getObject(1);
-        if (rs!=null)
-        {
-          //loop through the resultSet and add them to the vector
-          while(rs.next())
-          {
-            vRepType.addElement(rs.getString("crtl_name"));
-          }  //END WHILE
-        }   //END IF (rs!=null)
-        // save them to session
-        session.setAttribute("vRepType", vRepType);
-      }  // end of if (sbr_db_conn == null)
-    }  // end of try
-    catch(Exception e)
-    {
-      //System.err.println("problem in getComplexRepType: " + e);
-      logger.fatal("ERROR - getComplexRepType : " + e.toString());
-    }
-    try
-    {
-      if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
-    }
-    catch(Exception ee)
-    {
-      //System.err.println("Problem closing in getComplexRepType: " + ee);
-      logger.fatal("ERROR - getComplexRepType for close : " + ee.toString());
-    }
-  } */ //end getComplexRepType
-
   /**
    * To get final result vector of selected attributes/rows to display for Data Element Concept component,
    * called from getACKeywordResult, getACSortedResult and getACShowResult methods.
@@ -3860,10 +3828,11 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    * @param req The HttpServletRequest object.
    * @param res HttpServletResponse object.
    * @param vResult output result vector.
+   * @param refresh String refresh action true or false value
    *
    */
   public void getDECResult(HttpServletRequest req, HttpServletResponse res,
-         Vector vResult, String refresh)
+         Vector<String> vResult, String refresh)
   {
     Vector vDEC = new Vector();
     try
@@ -3912,12 +3881,12 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
       if (sKeyword == null) sKeyword = "";
       req.setAttribute("labelKeyword", "Data Element Concept - " + sKeyword);   //make the label
 
-      Vector vSearchID = new Vector();
-      Vector vSearchName = new Vector();
-      Vector vSearchLongName = new Vector();
-      Vector vSearchASL = new Vector();
-      Vector vSearchDefinition = new Vector();
-      Vector vUsedContext = new Vector();
+      Vector<String> vSearchID = new Vector<String>();
+      Vector<String> vSearchName = new Vector<String>();
+      Vector<String> vSearchLongName = new Vector<String>();
+      Vector<String> vSearchASL = new Vector<String>();
+      Vector<String> vSearchDefinition = new Vector<String>();
+      Vector<String> vUsedContext = new Vector<String>();
 
       for(int i=0; i<(vRSel.size()); i++)
       {
@@ -3983,10 +3952,11 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    * @param req The HttpServletRequest object.
    * @param res HttpServletResponse object.
    * @param vResult output result vector.
+   * @param refresh String true or false value of refresh action
    *
    */
   public void getVDResult(HttpServletRequest req, HttpServletResponse res,
-              Vector vResult, String refresh)
+              Vector<String> vResult, String refresh)
   {
     Vector vVD = new Vector();
     try
@@ -4037,12 +4007,12 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
       if (sKeyword == null) sKeyword = "";
       req.setAttribute("labelKeyword", "Value Domain - " + sKeyword);   //make the label
 
-      Vector vSearchID = new Vector();
-      Vector vSearchName = new Vector();
-      Vector vSearchLongName = new Vector();
-      Vector vSearchASL = new Vector();
-      Vector vSearchDefinition = new Vector();
-      Vector vUsedContext = new Vector();
+      Vector<String> vSearchID = new Vector<String>();
+      Vector<String> vSearchName = new Vector<String>();
+      Vector<String> vSearchLongName = new Vector<String>();
+      Vector<String> vSearchASL = new Vector<String>();
+      Vector<String> vSearchDefinition = new Vector<String>();
+      Vector<String> vUsedContext = new Vector<String>();
 
       for(int i=0; i<(vRSel.size()); i++)
       {
@@ -4130,10 +4100,11 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    * @param req The HttpServletRequest object.
    * @param res HttpServletResponse object.
    * @param vResult output result vector.
+   * @param refresh String true or false value of refresh action
    *
    */
   public void getCDResult(HttpServletRequest req, HttpServletResponse res,
-         Vector vResult, String refresh)
+         Vector<String> vResult, String refresh)
   {
 
     Vector vCD = new Vector();
@@ -4182,12 +4153,12 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
       if (sKeyword == null) sKeyword = "";
       req.setAttribute("labelKeyword", "Conceptual Domain - " + sKeyword);   //make the label
 
-      Vector vSearchID = new Vector();
-      Vector vSearchName = new Vector();
-      Vector vSearchLongName = new Vector();
-      Vector vSearchASL = new Vector();
-      Vector vSearchDefinition = new Vector();
-      Vector vUsedContext = new Vector();
+      Vector<String> vSearchID = new Vector<String>();
+      Vector<String> vSearchName = new Vector<String>();
+      Vector<String> vSearchLongName = new Vector<String>();
+      Vector<String> vSearchASL = new Vector<String>();
+      Vector<String> vSearchDefinition = new Vector<String>();
+      Vector<String> vUsedContext = new Vector<String>();
 
       for(int i=0; i<(vRSel.size()); i++)
       {
@@ -4247,11 +4218,15 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    * @param InString Keyword value.
    * @param ContName selected context name.
    * @param ASLName selected workflow status name.
+   * @param ID String public id of the ac
    * @param vList returns Vector of DEC bean.
+   * @param type String ac type
+   * @param conName String concept name to fitler
+   * @param conID String concept id to fitler
    *
 */
   public void do_caDSRSearch(String InString, String ContName, String ASLName, 
-      String ID, Vector vList, String type, String conName, String conID)  // returns list of Data Element Concepts
+      String ID, Vector<EVS_Bean> vList, String type, String conName, String conID)  // returns list of Data Element Concepts
   {
     //capture the duration
     java.util.Date exDate = new java.util.Date();          
@@ -5647,19 +5622,6 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
       session.setAttribute("oldDEBean", oldDE.cloneDE_Bean(DEBean, "Complete"));     //store the bean in the oldDEbean to use it later
       return isValid;
    }
-
-  /**
-   * To load the drop lists for the selected context in the selected component, called from getSelRowToEdit.
-   * if the selected context is same as context of the loaded list, gets lists only if doesn't exist.
-   * if different contexts, calls 'getAC.getACList' for the selected component.
-   *
-   * @param req The HttpServletRequest object.
-   * @param res HttpServletResponse object.
-   * @param sContext selected context Name.
-   * @param ACType selected component.
-   * @param getAC reference to class GetACService.
-   *
-   */
 
   /**
    * To get search result from database for permissible values Component
@@ -7779,7 +7741,10 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    
  
    /**
-    * 
+    * pv count refresh action in de search
+    * @param DEBean DE_Bean
+    * @return DE_Bean
+    * @throws Exception
     */
    public DE_Bean refreshSearchPVCount(DE_Bean DEBean) throws Exception
    {
@@ -7825,7 +7790,8 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
       }  
       return DEBean;
    }
-  /**
+
+   /**
    * To start a new search called from NCICurationServlet.
    * selected component, keyword, selected context, seletcted status parameters of request are stored in session.
    * calls method 'doDESearch' for selected component to get the result set from the database.
@@ -7838,7 +7804,6 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    * @param res HttpServletResponse object.
    *
    */
-
 public void getACSearchForCreate(HttpServletRequest req, HttpServletResponse res,
 boolean isIntSearch)
 {
@@ -8996,6 +8961,12 @@ System.out.println(" dtsVocab " + dtsVocab);
     return returnValue;
   }
 
+  /**
+   * to return dec count
+   * @param sDECCon String 
+   * @return String
+   * @throws Exception
+   */
   private String getDECCount(String sDECCon) throws Exception
   {
     String sCount = "";
@@ -9173,263 +9144,6 @@ System.out.println(" dtsVocab " + dtsVocab);
     }
     return returnValue;
   }
-
- /* /**
-   * To get the sorted vector for the selected field in the Rep component, called from getBlockSortedResult.
-   * gets the 'blockSortType' from request and 'vACSearch' vector from session.
-   * calls 'getRepFieldValue' to extract the value from the bean for the selected sortType.
-   * modified bubble sort method to sort beans in the vector using the strings compareToIgnoreCase method.
-   * adds the sorted bean to a vector 'vACSearch'.
-   *
-   * @param req The HttpServletRequest object.
-   * @param res HttpServletResponse object.
-   *
-   */
- /* public void getRepSortedRows(HttpServletRequest req, HttpServletResponse res)
-  {
-    try
-    {
-      HttpSession session = req.getSession();
-      Vector vSRows = new Vector();
-      Vector vSortedRows = new Vector();
-      boolean isSorted = false;
-      vSRows = (Vector)session.getAttribute("vACSearch");
-      String sortField = (String)req.getParameter("blockSortType");
-      if (sortField == null)
-         sortField = (String)session.getAttribute("blockSortType");
-      if (sortField != null)
-      {
-        //check if the vector has the data
-        if (vSRows.size()>0)
-        {
-          //loop through the  vector to get the bean row
-          for(int i=0; i<(vSRows.size()); i++)
-          {
-            isSorted = false;
-            EVS_Bean RepSortBean1 = (EVS_Bean)vSRows.elementAt(i);
-            String Name1 = getRepFieldValue(RepSortBean1, sortField);            //RepSortBean1.getDE_PREFERRED_NAME();
-            int tempInd = i;
-            EVS_Bean tempBean = RepSortBean1;
-            String tempName = Name1;
-            //loop through again to get the next bean in the vector
-            for(int j=i+1; j<(vSRows.size()); j++)
-            {
-              EVS_Bean RepSortBean2 = (EVS_Bean)vSRows.elementAt(j);
-              String Name2 = getRepFieldValue(RepSortBean2, sortField);         //RepSortBean2.getDE_PREFERRED_NAME();
-              //if (Name1.compareToIgnoreCase(Name2) > 0)   //make comparisions and store it in temp
-              if (ComparedValue(sortField, Name1, Name2) > 0)
-              {
-                if (tempInd == i)
-                {
-                  tempName = Name2;
-                  tempBean = RepSortBean2;
-                  tempInd = j;
-                }
-                //else if (tempName.compareToIgnoreCase(Name2) > 0)
-                else if (ComparedValue(sortField, tempName, Name2) > 0)
-                {
-                  tempName = Name2;
-                  tempBean = RepSortBean2;
-                  tempInd = j;
-                }
-              }
-            }
-            vSRows.removeElementAt(tempInd);
-            vSRows.insertElementAt(RepSortBean1, tempInd);
-            vSortedRows.addElement(tempBean);     //add the temp bean to a vector
-          }
-          for(int i=0; i<(vSortedRows.size()); i++)
-          {
-            EVS_Bean RepSortBean1 = (EVS_Bean)vSortedRows.elementAt(i);
-          }
-            session.setAttribute("vACSearch", vSortedRows);
-        }
-      }
-    }
-    catch(Exception e)
-    {
-      //System.err.println("ERROR in GetACSearch-RepsortedRows: " + e);
-      logger.fatal("ERROR in GetACSearch-RepsortedRows : " + e.toString());
-    }
-  }
-
-  /**
-   * To get the value from the bean for the selected field, called from RepsortedRows.
-   *
-   * @param curBean Rep bean.
-   * @param curField sort Type field name.
-   *
-   * @return String RepField Value if selected field is found. otherwise empty string.
-   */
- /* private String getRepFieldValue(EVS_Bean curBean, String curField)
-  {
-    String returnValue = "";
-    try
-    {
-      if (curField.equals("name"))
-        returnValue = curBean.getPREFERRED_NAME();
-      else if (curField.equals("umls") || curField.equals("Ident"))
-      {
-        String evsDB = curBean.getEVS_DATABASE();
-        String umlsCUI = curBean.getUMLS_CUI_VAL();
-       // String tempCUI = curBean.getTEMP_CUI_VAL();
-        if (evsDB.equals("NCI Thesaurus"))
-           returnValue = curBean.getNCI_CC_VAL();
-        else if (evsDB.equals("NCI Metathesaurus") && !umlsCUI.equalsIgnoreCase("No value returned."))
-           returnValue = curBean.getUMLS_CUI_VAL();
-      //  else if (evsDB.equals("NCI Metathesaurus") && tempCUI.equalsIgnoreCase("No value returned."))
-      //     returnValue = curBean.getTEMP_CUI_VAL();
-        else if (evsDB.equals("caDSR"))
-           returnValue = curBean.getID();
-        else
-           returnValue = curBean.getNCI_CC_VAL();
-      }
-      else if (curField.equals("def"))
-        returnValue = curBean.getPREFERRED_DEFINITION();
-      else if (curField.equals("source"))
-        returnValue = curBean.getEVS_CONCEPT_SOURCE();
-      else if (curField.equals("db") || curField.equals("database"))
-        returnValue = curBean.getEVS_DATABASE();
-      else if (curField.equals("context"))
-        returnValue = curBean.getCONTEXT_NAME();
-
-      if (returnValue == null)
-        returnValue = "";
-    }
-    catch(Exception e)
-    {
-      //System.err.println("ERROR in GetACSearch-getRepField: " + e);
-      logger.fatal("ERROR in GetACSearch-getRepField : " + e.toString());
-    }
-    return returnValue;
-  }
-
-  /**
-   * To get the sorted vector for the selected field in the Q component, called from getBlockSortedResult.
-   * gets the 'blockSortType' from request and 'vACSearch' vector from session.
-   * calls 'getQFieldValue' to extract the value from the bean for the selected sortType.
-   * modified bubble sort method to sort beans in the vector using the strings compareToIgnoreCase method.
-   * adds the sorted bean to a vector 'vACSearch'.
-   *
-   * @param req The HttpServletRequest object.
-   * @param res HttpServletResponse object.
-   *
-   */
- /* public void getQSortedRows(HttpServletRequest req, HttpServletResponse res)
-  {
-    try
-    {
-      HttpSession session = req.getSession();
-      Vector vSRows = new Vector();
-      Vector vSortedRows = new Vector();
-      boolean isSorted = false;
-      vSRows = (Vector)session.getAttribute("vACSearch");
-      String sortField = (String)req.getParameter("blockSortType");
-      if (sortField == null)
-         sortField = (String)session.getAttribute("blockSortType");
-      if (sortField != null)
-      {
-        //check if the vector has the data
-        if (vSRows.size()>0)
-        {
-          //loop through the  vector to get the bean row
-          for(int i=0; i<(vSRows.size()); i++)
-          {
-            isSorted = false;
-            EVS_Bean QSortBean1 = (EVS_Bean)vSRows.elementAt(i);
-            String Name1 = getQFieldValue(QSortBean1, sortField);            //QSortBean1.getDE_PREFERRED_NAME();
-            int tempInd = i;
-            EVS_Bean tempBean = QSortBean1;
-            String tempName = Name1;
-            //loop through again to get the next bean in the vector
-            for(int j=i+1; j<(vSRows.size()); j++)
-            {
-              EVS_Bean QSortBean2 = (EVS_Bean)vSRows.elementAt(j);
-              String Name2 = getQFieldValue(QSortBean2, sortField);         //QSortBean2.getDE_PREFERRED_NAME();
-              //if (Name1.compareToIgnoreCase(Name2) > 0)   //make comparisions and store it in temp
-              if (ComparedValue(sortField, Name1, Name2) > 0)
-              {
-                if (tempInd == i)
-                {
-                  tempName = Name2;
-                  tempBean = QSortBean2;
-                  tempInd = j;
-                }
-                //else if (tempName.compareToIgnoreCase(Name2) > 0)
-                else if (ComparedValue(sortField, tempName, Name2) > 0)
-                {
-                  tempName = Name2;
-                  tempBean = QSortBean2;
-                  tempInd = j;
-                }
-              }
-            }
-            vSRows.removeElementAt(tempInd);
-            vSRows.insertElementAt(QSortBean1, tempInd);
-            vSortedRows.addElement(tempBean);     //add the temp bean to a vector
-          }
-          for(int i=0; i<(vSortedRows.size()); i++)
-          {
-            EVS_Bean QSortBean1 = (EVS_Bean)vSortedRows.elementAt(i);
-          }
-            session.setAttribute("vACSearch", vSortedRows);
-        }
-      }
-    }
-    catch(Exception e)
-    {
-      //System.err.println("ERROR in GetACSearch-QsortedRows: " + e);
-      logger.fatal("ERROR in GetACSearch-QsortedRows : " + e.toString());
-    }
-  }
-
-  /**
-   * To get the value from the bean for the selected field, called from QsortedRows.
-   *
-   * @param curBean Q bean.
-   * @param curField sort Type field name.
-   *
-   * @return String QField Value if selected field is found. otherwise empty string.
-   */
-/*  private String getQFieldValue(EVS_Bean curBean, String curField)
-  {
-    String returnValue = "";
-    try
-    {
-      if (curField.equals("name"))
-        returnValue = curBean.getPREFERRED_NAME();
-      else if (curField.equals("umls") || curField.equals("Ident"))
-      {
-        String evsDB = curBean.getEVS_DATABASE();
-        String umlsCUI = curBean.getUMLS_CUI_VAL();
-      //  String tempCUI = curBean.getTEMP_CUI_VAL();
-        if (evsDB.equals("NCI Thesaurus"))
-           returnValue = curBean.getNCI_CC_VAL();
-        else if (evsDB.equals("NCI Metathesaurus") && !umlsCUI.equalsIgnoreCase("No value returned."))
-           returnValue = curBean.getUMLS_CUI_VAL();
-      //  else if (evsDB.equals("NCI Metathesaurus") && tempCUI.equalsIgnoreCase("No value returned."))
-      //     returnValue = curBean.getTEMP_CUI_VAL();
-        else
-           returnValue = curBean.getNCI_CC_VAL();
-      }
-      else if (curField.equals("def"))
-        returnValue = curBean.getDESCRIPTION();
-      else if (curField.equals("source"))
-        returnValue = curBean.getEVS_DEF_SOURCE();
-      else if (curField.equals("db") || curField.equals("database"))
-        returnValue = curBean.getEVS_DATABASE();
-      else if (curField.equals("context"))
-        returnValue = curBean.getCONTEXT_NAME();
-      if (returnValue == null)
-        returnValue = "";
-    }
-    catch(Exception e)
-    {
-      //System.err.println("ERROR in GetACSearch-getQField: " + e);
-      logger.fatal("ERROR in GetACSearch-getQField : " + e.toString());
-    }
-    return returnValue;
-  } */
 
   /**
    * To get final result vector of selected attributes/rows to display for Permissible Values component,
@@ -10914,6 +10628,12 @@ System.out.println(" dtsVocab " + dtsVocab);
     }
   }
   
+  /**
+   * calls SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_AC_CONTACT api to create contacts
+   * @param ac_idseq
+   * @param acc_idseq
+   * @return hashtable of contact beans
+   */
   public Hashtable getAC_Contacts(String ac_idseq, String acc_idseq)
   {
     Connection sbr_db_conn = null;
@@ -11002,6 +10722,13 @@ System.out.println(" dtsVocab " + dtsVocab);
     return vList;
   }  //end searchACContact
   
+  /**
+   * calls SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CONTACT_COMM api to create communication
+   * @param comm_idseq string comm idseq
+   * @param org_idseq String org idseq
+   * @param per_idseq String per idseq
+   * @return Vector of comm bean 
+   */
   public Vector getContactComm(String comm_idseq, String org_idseq, String per_idseq)
   {
     Connection sbr_db_conn = null;
@@ -11065,6 +10792,13 @@ System.out.println(" dtsVocab " + dtsVocab);
     return vList;
   }  //end getContactComm
   
+  /**
+   * calls SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CONTACT_ADDR api to create adddress
+   * @param addr_idseq String addr idseq
+   * @param org_idseq String org idseq
+   * @param per_idseq string per idseq
+   * @return vector of addr bean
+   */
   public Vector getContactAddr(String addr_idseq, String org_idseq, String per_idseq)
   {
     Connection sbr_db_conn = null;

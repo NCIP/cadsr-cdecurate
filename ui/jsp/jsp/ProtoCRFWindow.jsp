@@ -1,5 +1,7 @@
 <!-- ProtoCRFWindow.jsp -->
-<%@ page errorPage="ErrorPageWindow.jsp" %>
+<!-- goes to secondary window error page if error occurs -->
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
+<curate:checkLogon name="Userbean" page="/jsp/ErrorPageWindow.jsp" />
 <html>
 <head>
 <title>Protocols and CRFs</title>

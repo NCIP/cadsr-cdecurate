@@ -190,6 +190,7 @@ function callHelp()
   if(reqType == null) reqType = "";
 
   //these are requests used for second window open
+  //Vector<String> lstWinOpenReqs = new Vector<String>();
   Vector lstWinOpenReqs = new Vector();
   lstWinOpenReqs.addElement("searchEVS");
   lstWinOpenReqs.addElement("searchBlocks");
@@ -199,6 +200,16 @@ function callHelp()
   lstWinOpenReqs.addElement("treeCollapse");
   lstWinOpenReqs.addElement("doSortBlocks");
   lstWinOpenReqs.addElement("doSortQualifiers");
+  lstWinOpenReqs.addElement("getPermValue");
+  lstWinOpenReqs.addElement("getDDEDetails");
+  lstWinOpenReqs.addElement("nonEVSSearch");
+  lstWinOpenReqs.addElement("showDECDetail");
+  lstWinOpenReqs.addElement("showCDDetail");
+  lstWinOpenReqs.addElement("getConClassForAC");
+  lstWinOpenReqs.addElement("getAltNames");
+  lstWinOpenReqs.addElement("showBEDisplayResult");
+  lstWinOpenReqs.addElement("ACcontact");
+ // lstWinOpenReqs.addElement("");
   //handle search for create items (de, dec, vd, pv, vm searches)
   String menuAct = (String)session.getAttribute("serMenuAct");
   if (menuAct == null) menuAct = "";
@@ -224,17 +235,18 @@ function callHelp()
     </tr>
     <tr><td>&nbsp;</td></tr>
     <tr><td>&nbsp;</td></tr>
-    <%
-    //for windows that are open
+    <% 
+    System.out.println("LoginE_jsp " + reqType);
+        //for windows that are open
     if (lstWinOpenReqs.contains(reqType))  //for second windows open, display different message
-    { %> 
+    {%> 
     <tr>
       <td>&nbsp;</td>
       <td align="center" valign="middle">
         <table width="394" border="4" bgcolor="#CCCCCC">  
           <tr>
             <td width="387" valign="bottom" align="center">
-              <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">This session is no longer active.</font></h3>
+              <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size: 14pt">This session is no longer active.</font></h3>
             </td>
           </tr>     
           <tr>
@@ -244,7 +256,7 @@ function callHelp()
           </tr>  
           <tr>
             <td width="100%" align="center" valign="bottom">
-              <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">Close session and log in again.</font></h3>
+              <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size: 14pt">Close session and log in again.</font></h3>
             </td>
           </tr>  
           <tr height="40">
@@ -268,20 +280,20 @@ function callHelp()
             <tr>
               <td colspan="3" height="50" valign="middle" align="center">
                 <% if (errMessage.equals("")) { %>
-                   <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">Please enter User Name and Password.</font></h3>
+                   <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size: 14pt">Please enter User Name and Password.</font></h3>
                 <%} else { %>
-                    <h4 align="center"><font color="#FF0000" style="font-size:18px"><%=errMessage%></font></h4>
+                    <h4 align="center"><font color="#FF0000" style="font-size: 14pt"><%=errMessage%></font></h4>
                 <% } %>
               </td>
             </tr>
             <tr>
-						<td colspan="2" align="right" >
-						<font face="Arial, Helvetica, sans-serif" style="font-size:15px font-weight: bold;"><b>User Name</b></font>&nbsp;<input type="text" name="Username" style="width: 4cm">
-						<br><br>
-						<font face="Arial, Helvetica, sans-serif" style="font-size:15px font-weight: bold;"><b>Password</b></font>&nbsp;<input type="password" name="Password" style="width: 4cm">
-						</td>
-						<td>&nbsp;</td>
-						</tr>
+				<td colspan="2" align="right" >
+				<font face="Arial, Helvetica, sans-serif" style="font-size: 12pt font-weight: bold;"><b>User Name</b></font>&nbsp;<input type="text" name="Username" style="width: 4cm">
+				<br><br>
+				<font face="Arial, Helvetica, sans-serif" style="font-size: 12pt font-weight: bold;"><b>Password</b></font>&nbsp;<input type="password" name="Password" style="width: 4cm">
+				</td>
+				<td>&nbsp;</td>
+			</tr>
             <tr>
               <td valign="middle" align="right"  height="50">
                 <input name="Submit"  height="25" type="button" value="Login" onClick="callMessageGifLogin();">&nbsp;
@@ -303,7 +315,7 @@ function callHelp()
     <tr>
       <td>&nbsp;</td>
       <td valign="top" align="center" >
-        <h5><font face="Arial, Helvetica, sans-serif" style="font-size:15px">Do not use your browser's "Back" button to navigate once you have logged in. Doing so may cause the tool to function incorrectly.</font></h5>
+        <h5><font face="Arial, Helvetica, sans-serif" style="font-size: 10pt">Do not use your browser's "Back" button to navigate once you have logged in. Doing so may cause the tool to function incorrectly.</font></h5>
       </td>
       <td>&nbsp;</td>
     </tr>

@@ -1,4 +1,7 @@
 <!-- ConDomainDetailWindow.jsp -->
+<!-- goes to secondary window error page if error occurs -->
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
+<curate:checkLogon name="Userbean" page="/jsp/ErrorPageWindow.jsp" />
 <%@ page import= "java.util.*" %>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
 <html>

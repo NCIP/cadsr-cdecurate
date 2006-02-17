@@ -1,5 +1,7 @@
-<%@ page errorPage="ErrorPage.jsp" %>
 <!-- CreatePVPage.jsp -->
+<!-- goes to login page if error occurs -->
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
+<curate:checkLogon name="Userbean" page="/LoginE.jsp" />
 <html>
 <head>
 <title>CDE Curation: Create Value</title>

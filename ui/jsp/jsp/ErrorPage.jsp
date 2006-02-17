@@ -158,13 +158,13 @@ if (exceptionMessage == null) exceptionMessage = "";
      <% if (exceptionMessage.equals("")) { %>
 	      <tr>
           <td width="387" height="67" valign="center" align="center">
-             <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">Please login again.</font></h3>
+             <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size: 14pt">Please login again.</font></h3>
           </td>
         </tr>
       <%} else { %>
 	      <tr>
           <td width="100%" align="center">
-        <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">There is an error on page, User session has expired.</font></h3>
+        <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size: 14pt">There is an error on page, User session has expired.</font></h3>
       </td>
        </tr>
     <% } %>
@@ -172,12 +172,12 @@ if (exceptionMessage == null) exceptionMessage = "";
   <table width="394" border="4" bgcolor = "#CCCCCC">
     <tr>
        <td width="387" height="67" valign="center" align="center">
-              <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px"><%=exceptionMessage%></font></h3>
+              <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size: 14pt"><%=exceptionMessage%></font></h3>
         </td>
     </tr>  
     <tr>
       <td width="100%" align="center">
-        <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size:18px">Close session and log in again.</font></h3>
+        <h3 align="center"><font face="Arial, Helvetica, sans-serif" style="font-size: 14pt">Close session and log in again.</font></h3>
       </td>
     </tr>  
     <tr>

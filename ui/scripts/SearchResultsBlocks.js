@@ -240,7 +240,7 @@
       {
         sConfirm = confirm("Duplicate Concept Names are selected either because they have " 
               + "multiple definitions \nor they are contained in multiple hierachical " 
-              + "locations within their source vocabulory.\n\n" 
+              + "locations within their source vocabulary.\n\n" 
               + "Click OK: Default definition - NCI source will be selected. \n"
               + "If no NCI definition is present, the first definition associated with the Concept will be used. \n\n"
               + "Click CANCEL to go back and manually de-select the unwanted duplicates.\n\n" 

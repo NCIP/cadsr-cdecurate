@@ -1,4 +1,4 @@
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.2 2006-02-14 21:53:50 hardingr Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.3 2006-02-17 21:36:09 hardingr Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -26,17 +26,14 @@ import org.apache.log4j.Logger;
 
 import oracle.sql.BLOB;
 
-
 /**
- * The NCICurationServlet is the main servlet for communicating between the
- * client and the server.
+ * The RefDocAttachment class is the main class to handle Reference 
+ * Document Attachments page requests.<p>
  * 
  * @author Dan Grandquist
  * @version 3.1
- *
- * @param req
- * @param res
  */
+
 /*
  The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. (“ScenPro”)  
  Copyright Notice.  The software subject to this notice and license includes both
@@ -109,6 +106,7 @@ import oracle.sql.BLOB;
  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
  THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 public class RefDocAttachment {
 	//String sAction;
 	String msg = null;
@@ -143,13 +141,15 @@ public void doOpen (){
     {
         msg = "No items were selected from the Search Results.";
     }
-    
+   
+    //   Process what the user selected
     else{
   	GetACSearch getACSearch = new GetACSearch(req, res, m_servlet);
   	String sACSearch = (String)session.getAttribute("searchAC");
 		
 		getACSearch.getSelRowToUploadRefDoc(req, res, "");
 		
+		// Check to make sure it was a DE, DEC or VD
 		if (sACSearch.equals("DataElement")|| sACSearch.equals("DataElementConcept") || sACSearch.equals("ValueDomain")){
 			session.setAttribute("dispACType", sACSearch);
 			
@@ -162,17 +162,20 @@ public void doOpen (){
 		    // Get number of items
 		    Vector vRefDoc = (Vector)req.getAttribute("RefDocList");
 		    
+		    // Check for Reference Document for that AC 
+		    // Has 0 Reference Document(s)
 		    if (vRefDoc == null){		    	
 		    	vRefDoc = (Vector)session.getAttribute("RefDocList");
 		    	req.setAttribute("RefDocList", vRefDoc);
 		    }
  
-		    // has ref docs
+		    // Has Reference Document(s)
 		    if (vRefDoc != null){
 
 		    	Vector vRefDocRows = new Vector();
 		    	Vector vRefDocDocs = new Vector();
 		    	
+		    	// Loop thru each Reference Document
 		    	for(int i=0; i<(vRefDoc.size()); i++)
 			      {
 		    		
@@ -190,13 +193,17 @@ public void doOpen (){
 					String docContextID =  refBean.getCONTE_IDSEQ();
 				    Vector vContextID = (Vector)session.getAttribute("vWriteContextDE_ID");
 				    
-				    // check vs Ref doc context ID
+				    // Check to see if user has a context
 					if (vContextID != null) 
 				    {
 					  refBean.setIswritable(false);
+					  
+					  // Loop thru Reference Document contexts to see if users has context matches
 				      for (int ndx = 0; vContextID.size()>ndx; ndx++)
 				      {
 				    	RDContextID = (String)vContextID.elementAt(ndx);
+				    	
+				    	// If matches set writeable attribute to true
 				        if (docContextID.equals(RDContextID))
 				        {
 				        	refBean.setIswritable(true);
@@ -293,7 +300,9 @@ public void doOpen (){
 
 
 /**
- * 
+ * Preforms the actions nessesary to upload a file from the client 
+ * computer to the database and returns the client to the Reference 
+ * Document Attachments page.
  */
 public void doFileUpload (){
 	
@@ -325,21 +334,27 @@ public void doFileUpload (){
 	con = m_servlet.connectDB(req, res);
 	
 	try {
-
+			/*
+			 * Due to the way the blob type works you have to turn off the 
+			 * auto commit on the insert query. If you do not the commit 
+			 * happens before the blob type if fully built causing the blob
+			 * to not be writen to the db and an exception is thrown.
+			 */
 			con.setAutoCommit(false);
 			Vector<String> selectedRefDocs = refDocFormdata
 					.getSelectedRefDocs();
 
 			int jInt = selectedRefDocs.size();
-
+			
+			// Loop thru the selected row (should be only one)
 			for (int ndx = 0; ndx < jInt; ndx++) {
 
 				String str = selectedRefDocs.elementAt(ndx);
 				int refDocIndex = Integer.valueOf(str);
-				// refDocIndex = refDocIndex - 1;
 
 				PreparedStatement pstmt = con.prepareStatement(writeObjSQL);
 
+				// Get the RD_IDSEQ
 				if (vRefDoc != null) {
 					refBean = (REF_DOC_Bean) vRefDoc.elementAt(refDocIndex);
 					str = refBean.getREF_DOC_IDSEQ();
@@ -369,6 +384,8 @@ public void doFileUpload (){
 				doFiletoBlob(con, dbfileName);
 
 			}
+			// Commit and close the connection
+			con.commit();
 			con.close();
 
 		} catch (SQLException e) {
@@ -384,19 +401,28 @@ public void doBack (){
 	Vector vResult = new Vector();
 	GetACSearch serAC = new GetACSearch(req, res, m_servlet);
 	String sACSearch = (String)session.getAttribute("searchAC");
+	
+	// Get results for different AC types from the AC search bean
 	if (sACSearch.equals("DataElement"))
 	    serAC.getDEResult(req, res, vResult, "");
 	  else if (sACSearch.equals("DataElementConcept"))
 	  	serAC.getDECResult(req, res, vResult, "");
 	  else if (sACSearch.equals("ValueDomain"))
 	  	serAC.getVDResult(req, res, vResult, "");
+	
+	// Set results in the session
 	session.setAttribute("results", vResult);
 	session.setAttribute("statusMessage", msg); 
+	
+	// Forward back to search AC page
 	m_servlet.ForwardJSP(req, res, "/SearchResultsPage.jsp");
 	 
 	}
 
-
+/**
+ * Deletes a row from reference blobs view based on the unique name
+ *
+ */
 public void doDeleteAttachment (){
 	Connection con = null;
 	String fileName = (String)req.getParameter("RefDocTargetFile");
@@ -412,6 +438,7 @@ public void doDeleteAttachment (){
 		logger.fatal(e.toString());
 		msg = "Reference Document Attachment: Unable to delete the Attachment from the database.";
 	}
+	// Forward back to the open method
 	doOpen();
 	}
 
@@ -441,6 +468,7 @@ public void doDeleteAttachment (){
 
 
 /**
+ * Streams a blob from the database to the filecache on the web server
  * 
  * @param bRefBlob - BLOB Object
  * @param fileName - The name of the file to save the object ro
@@ -509,8 +537,10 @@ private void doBlobtoFile (BLOB bRefBlob, String fileName){
 }
 
 /**
+ * Streams a file from the web server filechace directory to the empty blob in the reference blobs view
  * 
- * @param fileName
+ * @param con  db conenction used to create the attachment row
+ * @param fileName  Unique name for the attachment row created
  */
 private void doFiletoBlob (Connection con, String fileName){
 	
@@ -539,8 +569,6 @@ private void doFiletoBlob (Connection con, String fileName){
 		BLOB blob = (BLOB)rs.getBlob("blob_content");
 
 		os = blob.getBinaryOutputStream();
-		// os = blob.setBinaryStream(0); //get the output stream from the Blob to insert it
-
 		//	Read the file by chuncks and insert them in the Blob. The chunk size come from the blob
 		byte[] chunk = new byte[blob.getChunkSize()];
 		int i=-1;

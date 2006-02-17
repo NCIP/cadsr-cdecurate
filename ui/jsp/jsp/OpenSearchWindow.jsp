@@ -1,6 +1,7 @@
 <!-- OpenSearchWindow.jsp -->
-<%@ page errorPage="ErrorPageWindow.jsp"%>
+<!-- goes to secondary window error page if error occurs -->
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
+<curate:checkLogon name="Userbean" page="/jsp/ErrorPageWindow.jsp" />
 <html>
 <head>
 <title>CDE Curation: Search</title>
@@ -71,8 +72,6 @@ history.forward();
 //System.out.println("done OpenSearchWindow.jsp!!");
 %>
 </head>
-<curate:checkLogon name="Userbean" page="/jsp/ErrorPageWindow.jsp" />
-
 <body>
 <table width="100%" border="2" cellpadding="0" cellspacing="0">
   <col width="21%">
