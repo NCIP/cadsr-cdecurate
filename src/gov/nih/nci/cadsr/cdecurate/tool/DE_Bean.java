@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DE_Bean.java,v 1.3 2006-02-17 21:36:08 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DE_Bean.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -153,7 +153,7 @@ public class DE_Bean extends AC_Bean
   private Vector AC_CS_ID;  //store CS_IDSEQs
   private Vector AC_CSI_NAME; //store CSI name
   private Vector AC_CSI_ID; //store CSI_IDSEQs
-  private Vector AC_AC_CSI_VECTOR;
+  private Vector<AC_CSI_Bean> AC_AC_CSI_VECTOR;
   private Vector AC_AC_CSI_ID;
   private Vector AC_CS_CSI_ID;
 
@@ -163,7 +163,7 @@ public class DE_Bean extends AC_Bean
   //concept name
   private String AC_CONCEPT_NAME;
   //contact inf
-  private Hashtable AC_CONTACTS;
+  private Hashtable<String, AC_CONTACT_Bean> AC_CONTACTS;
   //refdoc types text and count
   private String DOC_TEXT_PREFERRED_QUESTION;
   private String DOC_TEXT_PREFERRED_QUESTION_IDSEQ;
@@ -866,7 +866,7 @@ public class DE_Bean extends AC_Bean
    *
    * @param v The AC_AC_CSI_VECTOR to set
   */
-  public void setAC_AC_CSI_VECTOR(Vector v)
+  public void setAC_AC_CSI_VECTOR(Vector<AC_CSI_Bean> v)
   {
       this.AC_AC_CSI_VECTOR = v;
   }
@@ -919,7 +919,7 @@ public class DE_Bean extends AC_Bean
   /**
    * @param ac_contacts The aC_CONTACTS to set.
    */
-  public void setAC_CONTACTS(Hashtable ac_contacts)
+  public void setAC_CONTACTS(Hashtable<String, AC_CONTACT_Bean> ac_contacts)
   {
     AC_CONTACTS = ac_contacts;
   }
@@ -1819,7 +1819,7 @@ public class DE_Bean extends AC_Bean
   *
   * @return Vector The AC_AC_CSI_VECTOR
   */
-  public Vector getAC_AC_CSI_VECTOR()
+  public Vector<AC_CSI_Bean> getAC_AC_CSI_VECTOR()
   {
       return this.AC_AC_CSI_VECTOR;
   }
@@ -1872,7 +1872,7 @@ public class DE_Bean extends AC_Bean
   /**
    * @return Returns the aC_CONTACTS.
    */
-  public Hashtable getAC_CONTACTS()
+  public Hashtable<String, AC_CONTACT_Bean> getAC_CONTACTS()
   {
     return AC_CONTACTS;
   }

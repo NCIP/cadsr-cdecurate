@@ -236,7 +236,7 @@ function callHelp()
     <tr><td>&nbsp;</td></tr>
     <tr><td>&nbsp;</td></tr>
     <% 
-    System.out.println("LoginE_jsp " + reqType);
+    //System.out.println("LoginE_jsp " + reqType);
         //for windows that are open
     if (lstWinOpenReqs.contains(reqType))  //for second windows open, display different message
     {%> 

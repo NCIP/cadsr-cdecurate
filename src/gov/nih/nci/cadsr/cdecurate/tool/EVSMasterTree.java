@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.3 2006-02-17 21:36:08 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -280,12 +280,12 @@ public class EVSMasterTree
       }
       else
       {  
-logger.debug(dtsVocab + " popTree  vocabTree == null " + rendHTML);
+//logger.debug(dtsVocab + " popTree  vocabTree == null " + rendHTML);
         // Get the Root concepts, names and codes.
        // m_vRootNames = evs.getRootConcepts(dtsVocab, true);
        // m_vRootCodes = evs.getRootConcepts(dtsVocab, false);
         List vRoots = evs.getRootConcepts(dtsVocab);
-  logger.debug("popTree  done getRootConcepts");
+  //logger.debug("popTree  done getRootConcepts");
         // For each Root, get the Subconcepts. If subconcepts exist, build a Node
         // object, else build a Leaf object
         if (vRoots != null)
@@ -297,7 +297,7 @@ logger.debug(dtsVocab + " popTree  vocabTree == null " + rendHTML);
             DescLogicConcept oDLC = (DescLogicConcept)vRoots.get(j);
             if (oDLC != null)
             {
-              logger.debug(oDLC.getName() + " - " + oDLC.getHasChildren().booleanValue());
+              //logger.debug(oDLC.getName() + " - " + oDLC.getHasChildren().booleanValue());
               String sDispName = evs.getDisplayName(dtsVocab, oDLC, oDLC.getName());
               if (oDLC.getHasChildren().booleanValue())
               {
@@ -358,7 +358,7 @@ logger.debug(dtsVocab + " popTree  vocabTree == null " + rendHTML);
     catch(Exception e) 
     {
 			System.out.println("Error in populateTreeRoots: " + e.toString());
-      logger.debug("Error in populateTreeRoots: " + e.toString());
+      logger.fatal("Error in populateTreeRoots: " + e.toString());
 		}
 //logger.debug("popTree done");
   return rendHTML;	
@@ -717,13 +717,13 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
     if(sSearchAC == null) sSearchAC = "";
     Integer id = new Integer(0);
     String foundCodeInTree = "false";
-logger.debug("expandNode get lastNodeid");
+//logger.debug("expandNode get lastNodeid");
     if(sSearchAC.equals("ParentConceptVM"))
       id = (Integer)m_treesHashParent.get("lastNodeID");
     else
       id = (Integer)m_treesHash.get("lastNodeID"); // for new nodes will need the last used nodeID
     if(id == null) id = new Integer(0);
- logger.debug("expandNode got lastNodeid: " + id);  
+ //logger.debug("expandNode got lastNodeid: " + id);  
     int newNodeID = id.intValue();
     
     GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
@@ -744,7 +744,7 @@ logger.debug("expandNode get lastNodeid");
         nodeID = (String)m_treeIDtoNameHash.get(nodeName);
     }
     if(nodeID == null) nodeID = "";
-logger.debug("expandNode  nodeID: " + nodeID + " nodeName: " + nodeName);  
+//logger.debug("expandNode  nodeID: " + nodeID + " nodeName: " + nodeName);  
     // check to see if its the right nodeID 
     Tree nodeChildrenTree = new Tree(1);
     String sTreeParentID = "";
@@ -765,7 +765,7 @@ logger.debug("expandNode  nodeID: " + nodeID + " nodeName: " + nodeName);
       TreeNode exNode =  (TreeNode)m_treeNodesHash.get(nodeID);
       if(exNode != null)  
         iExName = exNode.getParentNodeID();
-logger.debug("expandNode  nodeID: " + nodeID); 
+//logger.debug("expandNode  nodeID: " + nodeID); 
       // Get the node id of the previous node expanded (which is the parent of the current node
       // if the mode is 'expandTreeToConcept' i.e. nodeLevelToFind > 0)
       Integer iNodeID = new Integer(nodeID);
@@ -776,7 +776,7 @@ logger.debug("expandNode  nodeID: " + nodeID);
     // Do this to get the correct nodeTreeChildren, not one currently cached by same name
       if(iExName != iLast && nodeLevelToFind>0)
       {
-logger.debug("expandNode6 nodeID: " + nodeID);
+//logger.debug("expandNode6 nodeID: " + nodeID);
       nodeID = getCorrectNodeID(nodeName, iLast);
       if(nodeID.equals("none"))
         nodeID = nodeIDOriginal;
@@ -785,7 +785,7 @@ logger.debug("expandNode6 nodeID: " + nodeID);
       iNodeID = new Integer(nodeID);
       iID = iNodeID.intValue();
   }
-logger.debug("expandNode33 nodeID: " + nodeID);    
+//logger.debug("expandNode33 nodeID: " + nodeID);    
     if(nodeLevelToFind>0) //only set this on expandTreeToConcept
       session.setAttribute("LastNodeIDExpanded", nodeID); 
     if(nodeChildrenTree == null)
@@ -795,7 +795,7 @@ logger.debug("expandNode33 nodeID: " + nodeID);
     TreeNode expandedNode = new TreeNode(1, "", "", "",1);
     if(m_treeNodesHash != null)
     {
-logger.debug("expandNode m_treeNodesHash != null nodeID: " + nodeID);
+//logger.debug("expandNode m_treeNodesHash != null nodeID: " + nodeID);
       if(sSearchAC.equals("ParentConceptVM"))
         expandedNode = (TreeNode)m_treeNodesHashParent.get(nodeName);
       else
@@ -816,7 +816,7 @@ logger.debug("expandNode m_treeNodesHash != null nodeID: " + nodeID);
     
     if(nodeChildrenTree != null) //will never be null because of new Tree stmt
         numChildren = nodeChildrenTree.size(); 
-logger.debug("expandNode numChildren: " + numChildren);
+//logger.debug("expandNode numChildren: " + numChildren);
     if(numChildren > 0) //children already exist, set them visible
     {
         for(int i=0;i<numChildren;i++)
@@ -1022,7 +1022,7 @@ logger.debug("expandNode numChildren: " + numChildren);
     if(nodeChildrenTree != null)
     {
       Tree baseTree = (Tree)m_treesHash.get(dtsVocab);   
- logger.debug(baseTree.getName() + " expandNode got baseTree dtsVocab: " + dtsVocab);
+ //logger.debug(baseTree.getName() + " expandNode got baseTree dtsVocab: " + dtsVocab);
 // System.out.println("expandNode got baseTree.name: " + baseTree.getName());
       if(sSearchAC.equals("ParentConceptVM"))
       {
@@ -1037,7 +1037,7 @@ logger.debug("expandNode numChildren: " + numChildren);
         m_treesHash.put("lastNodeID", nodeid);        
         if(baseTree == null)
         {
-logger.debug("expandNode got baseTree == null " + m_dtsVocab);
+//logger.debug("expandNode got baseTree == null " + m_dtsVocab);
         //  m_dtsVocab = filterName(m_dtsVocab, "display");  
           baseTree = new Tree(m_dtsVocab);
           if(baseTree == null)
@@ -1070,7 +1070,7 @@ logger.debug("expandNode got baseTree == null " + m_dtsVocab);
   catch(Exception e) 
   {
     System.out.println("ERROR expandNode: " + e.toString());
-    logger.debug("ERROR expandNode: " + e.toString());
+    logger.fatal("ERROR expandNode: " + e.toString());
   }
   return rendHTML;	
 }
@@ -1170,7 +1170,7 @@ public String collapseNode(String nodeID, String dtsVocab, String shouldRender, 
     catch(Exception e) 
     {
 			System.out.println(e.toString());
-      logger.debug(e.toString());
+      logger.fatal(e.toString());
 		}
   return rendHTML;	
 }
@@ -1302,7 +1302,7 @@ public void collapseAllNodes()
   catch(Exception e) 
   {
     System.out.println(e.toString());
-    logger.debug(e.toString());
+    logger.fatal(e.toString());
   } 
  }
   
@@ -1479,7 +1479,7 @@ public void collapseAllNodes()
     catch(Exception e) 
     {
 			System.out.println(e.toString());
-      logger.debug(e.toString());
+      logger.fatal(e.toString());
 		}
   return rendHTML;	
   }
@@ -1590,7 +1590,7 @@ public void collapseAllNodes()
     catch(Exception e) 
     {
 			System.out.println(e.toString());
-      logger.debug(e.toString());
+      logger.fatal(e.toString());
 		}
     return rendHTML;
   } 
@@ -1633,7 +1633,7 @@ public void fillTreeIDtoNameHash(String nodeName, String sNodeID)
   catch(Exception e) 
   {
 		System.out.println("Error in fillTreeIDtoNameHash: " + e.toString());
-    logger.debug("Error in fillTreeIDtoNameHash: " + e.toString());
+    logger.fatal("Error in fillTreeIDtoNameHash: " + e.toString());
 	}
 } 
 
@@ -1694,7 +1694,7 @@ public String getCorrectNodeID(String nodeName, int iLast)
   catch(Exception e) 
   {
 		System.out.println("Error in getCorrectNodeID: " + e.toString());
-    logger.debug("Error in getCorrectNodeID: " + e.toString());
+    logger.fatal("Error in getCorrectNodeID: " + e.toString());
 	}   
   return sRetNodeID;
 } 

@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/REF_DOC_Bean.java,v 1.3 2006-02-17 21:36:09 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/REF_DOC_Bean.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -132,7 +132,7 @@ public class REF_DOC_Bean implements Serializable
       this.setDOCUMENT_TEXT(fromBean.getDOCUMENT_TEXT());
       this.setDOCUMENT_URL(fromBean.getDOCUMENT_URL());
       this.setIswritable(fromBean.getIswritable());
-      this.setREF_DOC_IDSEQ(fromBean.getCONTE_IDSEQ());
+      this.setREF_DOC_IDSEQ(fromBean.getREF_DOC_IDSEQ());
       this.setREF_SUBMIT_ACTION(fromBean.getREF_SUBMIT_ACTION());
     }
     return this;

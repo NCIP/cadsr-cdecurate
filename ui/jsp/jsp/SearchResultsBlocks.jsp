@@ -13,7 +13,7 @@
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/popupMenus.js"></SCRIPT>
 <%
    //displayable result vector
-System.out.println(" search results ");
+//System.out.println(" search results ");
    UtilService serUtil = new UtilService();
    Vector results = (Vector)session.getAttribute("results");
    if (results == null) results = new Vector();

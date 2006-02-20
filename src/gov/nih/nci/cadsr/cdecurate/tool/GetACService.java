@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.3 2006-02-17 21:36:09 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -112,9 +112,12 @@ public class GetACService implements Serializable
 
   /**
    * Constructor
+   * @param req HttpServletRequest object
+   * @param res HttpServletResponse object
+   * @param CurationServlet NCICurationServlet object
   */
   public GetACService(HttpServletRequest req, HttpServletResponse res,
-          NCICurationServlet CurationServlet)
+      NCICurationServlet CurationServlet)
   {
     m_classReq = req;
     m_classRes = res;
@@ -181,7 +184,7 @@ public class GetACService implements Serializable
       if (m_sbr_db_conn != null)
       {
           session.setAttribute("ConnectedToDB", "Yes");
-          Vector v, v2, vpv, vsm, vID;
+          Vector<String> v, v2, vpv, vsm, vID;
           boolean bDE = sACType.equals("de");
           boolean bDEC = sACType.equals("dec");
           boolean bVD = sACType.equals("vd");
@@ -197,8 +200,8 @@ public class GetACService implements Serializable
           Vector vCon = (Vector)session.getAttribute("vContext");
           if(vCon == null || vCon.size() < 2)
           {
-            v = new Vector();
-            vID = new Vector();
+            v = new Vector<String>();
+            vID = new Vector<String>();
             getContextList(vID, v);    //get the context list
             session.setAttribute("vContext", v);  //set context list attribute
             session.setAttribute("vContext_ID", vID);  //set context list attribute
@@ -206,19 +209,19 @@ public class GetACService implements Serializable
           if(session.getAttribute("vWriteContextDE") == null)
           {
             String sUser = (String)session.getAttribute("Username");
-            v = new Vector();
-            vID = new Vector();
+            v = new Vector<String>();
+            vID = new Vector<String>();
             getWriteContextList(vID, v, sUser, "DATAELEMENT");    //get the context list
             session.setAttribute("vWriteContextDE", v);  //set context list attribute
             session.setAttribute("vWriteContextDE_ID", vID);  //set context list attribute
 
-            v = new Vector();
-            vID = new Vector();
+            v = new Vector<String>();
+            vID = new Vector<String>();
             getWriteContextList(vID, v, sUser, "DE_CONCEPT");    //get the context list
             session.setAttribute("vWriteContextDEC", v);  //set context list attribute
             session.setAttribute("vWriteContextDEC_ID", vID);  //set context list attribute
-            v = new Vector();
-            vID = new Vector();
+            v = new Vector<String>();
+            vID = new Vector<String>();
             getWriteContextList(vID, v, sUser, "VALUEDOMAIN");    //get the context list
             session.setAttribute("vWriteContextVD", v);  //set context list attribute
             session.setAttribute("vWriteContextVD_ID", vID);  //set context list attribute
@@ -226,76 +229,76 @@ public class GetACService implements Serializable
 
           if(session.getAttribute("vUsers") == null)
           {
-            v = new Vector();
-            vID = new Vector();
+            v = new Vector<String>();
+            vID = new Vector<String>();
             getUserList(vID, v);    //get the User list
             session.setAttribute("vUsers", vID);  //set User list attribute
             session.setAttribute("vUsersName", v);  //set User list attribute
           }
           if(session.getAttribute("vStatusALL") == null)
           {
-            v = new Vector();
+            v = new Vector<String>();
             getStatusList("", v);    //get the Workflow status list
             session.setAttribute("vStatusALL", v);  //set Workflow status list attribute
           }
 
           if(session.getAttribute("vStatusDE") == null)
           {
-            v = new Vector();
+            v = new Vector<String>();
             getStatusList("DATAELEMENT", v);    //get the DE Workflow status list
             session.setAttribute("vStatusDE", v);  //set Workflow status list attribute
           }
 
           if(session.getAttribute("vStatusDEC") == null)
           {
-            v = new Vector();
+            v = new Vector<String>();
             getStatusList("DE_CONCEPT", v);    //get the DEC Workflow status list
             session.setAttribute("vStatusDEC", v);  //set Workflow status list attribute
           }
           if(session.getAttribute("vStatusVD") == null)
           {
-            v = new Vector();
+            v = new Vector<String>();
             getStatusList("VALUEDOMAIN", v);    //get the VD Workflow status list
             session.setAttribute("vStatusVD", v);  //set Workflow status list attribute
           }
 
           if(session.getAttribute("vStatusCD") == null)
           {
-            v = new Vector();
+            v = new Vector<String>();
             getStatusList("CONCEPTUALDOMAIN", v);    //get the Workflow status list
             session.setAttribute("vStatusCD", v);  //set Workflow status list attribute
           }
 
           if(session.getAttribute("vLanguage") == null)
           {
-            v = new Vector();
+            v = new Vector<String>();
             getLanguageList(v);    //get the Language list
             session.setAttribute("vLanguage", v);  //set Language list attribute
           }
           if(session.getAttribute("vSource") == null)
           {
-             v = new Vector();
+             v = new Vector<String>();
              getSourceList(v);    //get the Source list
              session.setAttribute("vSource", v);  //set Source list attribute
           }
 
           if(session.getAttribute("vRegStatus") == null)
           {
-             v = new Vector();
+             v = new Vector<String>();
              getRegStatusList(v);    //get the Registration list
              session.setAttribute("vRegStatus", v);  //set Registration list attribute
           }
           //list of ref documents used in the search
           if(session.getAttribute("vRDocType") == null)
           {
-              v = new Vector();
+              v = new Vector<String>();
               this.getRDocTypesList(v);    //get the Reference Document List
               session.setAttribute("vRDocType", v);  //set Reference Document list attribute
           } 
           if((session.getAttribute("vCS") == null && sContext != null) || bNewContext)
           {
-              v = new Vector();
-              vID = new Vector();
+              v = new Vector<String>();
+              vID = new Vector<String>();
               getCSList(vID, v, sContext);    //get the classification scheme list
               session.setAttribute("vCS", v);  //set classification scheme list attribute
               session.setAttribute("vCS_ID", vID);  //set classification scheme list attribute
@@ -303,16 +306,16 @@ public class GetACService implements Serializable
 //these two may not needed 
           if(session.getAttribute("vCSI") == null)
           {
-            v = new Vector();
-            vID = new Vector();
+            v = new Vector<String>();
+            vID = new Vector<String>();
             //getCSItemsList(vID, v, null);    //get the classification scheme items list
             session.setAttribute("vCSI", v);  //set classification scheme items list attribute
             session.setAttribute("vCSI_ID", vID);  //set classification scheme items list attribute
           }
           if(session.getAttribute("vCSCSI_CS") == null)
           {
-            v = new Vector();
-            vID = new Vector();
+            v = new Vector<String>();
+            vID = new Vector<String>();
             //getCSCSIList(vID, v, null);    //get CS_CSI list
             session.setAttribute("vCSCSI_CS", vID);  //set CS_ID in CS_CSI list attribute
             session.setAttribute("vCSCSI_CSI", v);  //set CSI_ID in CS_CSI attribute
@@ -320,8 +323,8 @@ public class GetACService implements Serializable
 //the above two may not needed
         if((session.getAttribute("vCD") == null && sContext != null) || bNewContext)
         {
-          v = new Vector();
-          vID = new Vector();
+          v = new Vector<String>();
+          vID = new Vector<String>();
           getConceptualDomainList(vID, v, sContext);    //get the Value domain list
           session.setAttribute("vCD", v);  //set  Conceptual domain list attribute
           session.setAttribute("vCD_ID", vID);  //set  Conceptual domain list attribute
@@ -329,9 +332,9 @@ public class GetACService implements Serializable
 
         if(session.getAttribute("vDataType") == null)
         {
-          v = new Vector();
-          Vector vDesc = new Vector();
-          Vector vComm = new Vector();
+          v = new Vector<String>();
+          Vector<String> vDesc = new Vector<String>();
+          Vector<String> vComm = new Vector<String>();
           getDataTypesList(v, vDesc, vComm);    //get the Workflow status list
           //add emtpy data at the beginning
           v.insertElementAt("", 0);
@@ -344,14 +347,14 @@ public class GetACService implements Serializable
         //list of uoml list 
         if(session.getAttribute("vUOM") == null)
         {
-          v = new Vector();
+          v = new Vector<String>();
           getUOMList(v);    //get the vUOM list
           session.setAttribute("vUOM", v);  //set vUOM list attribute
         }
         //list of uoml format for vd
         if(session.getAttribute("vUOMFormat") == null)
         {
-          v = new Vector();
+          v = new Vector<String>();
           getUOMFormatList(v);    //get the vUOMFormat list
           session.setAttribute("vUOMFormat", v);  //set vUOMFormat list attribute
         }
@@ -467,7 +470,7 @@ public class GetACService implements Serializable
   * @param sContext  The context to search in.
   *
   */
-  public void getObjectClassList(Vector vIDList, Vector vList, String sContext)  // returns list of ObjectClass
+  public void getObjectClassList(Vector<String> vIDList, Vector<String> vList, String sContext)  // returns list of ObjectClass
   {
     try
     {
@@ -491,7 +494,7 @@ public class GetACService implements Serializable
   * @param sContext  The context to search in.
   *
   */
-  public void getPropertyClassList(Vector vIDList, Vector vList, String sContext)  // returns list of PropertyClass
+  public void getPropertyClassList(Vector<String> vIDList, Vector<String> vList, String sContext)  // returns list of PropertyClass
   {
     try
     {
@@ -513,7 +516,7 @@ public class GetACService implements Serializable
   * @param vList  A Vector of Qualifier names.
   *
   */
-  public void getQualifierList(Vector vList)  // returns list of PropertyClass
+  public void getQualifierList(Vector<String> vList)  // returns list of PropertyClass
   {
     try
     {
@@ -536,7 +539,7 @@ public class GetACService implements Serializable
   * @param vNameList  A Vector of full names.
   *
   */
-  public void getUserList(Vector vUANameList, Vector vNameList)  // returns list of user list
+  public void getUserList(Vector<String> vUANameList, Vector<String> vNameList)  // returns list of user list
   {
     try
     {
@@ -559,7 +562,7 @@ public class GetACService implements Serializable
   * @param vList  A Vector of Context names.
   *
   */
-  public void getContextList(Vector vIDList, Vector vList)  // returns list of Contexts
+  public void getContextList(Vector<String> vIDList, Vector<String> vList)  // returns list of Contexts
   {
     try
     {
@@ -584,7 +587,7 @@ public class GetACService implements Serializable
   * @param ActlType  
   *
   */
-  public void getWriteContextList(Vector vIDList, Vector vList, String UserName, String ActlType)  // returns list of Contexts
+  public void getWriteContextList(Vector<String> vIDList, Vector<String> vList, String UserName, String ActlType)  // returns list of Contexts
   {
     try
     {
@@ -607,7 +610,7 @@ public class GetACService implements Serializable
   * @param vList  A Vector of Rep Term names.
   *
   */
-  public void getRepTermList(Vector vList)  // returns list of Workflow Status
+  public void getRepTermList(Vector<String> vList)  // returns list of Workflow Status
   {
     try
     {
@@ -625,11 +628,12 @@ public class GetACService implements Serializable
   * The getStatusList method queries the db for a list of Statuses,
   * stored in a vector. Calls the stored procedure:
   * SBREXT_SS_API.get_status_list(?)
+  * @param ACType STring ac type
   *
   * @param vList  A Vector of Status names.
   *
   */
-  public void getStatusList(String ACType, Vector vList)  // returns list of Workflow Status
+  public void getStatusList(String ACType, Vector<String> vList)  // returns list of Workflow Status
   {
     try
     {
@@ -654,7 +658,7 @@ public class GetACService implements Serializable
   * @param sContext  The context to search in.
   *
   */
-  public void getDataElementConceptList(Vector vIDList, Vector vPrefList, Vector vList, String sContext)  // returns list of DataElementConcept
+  public void getDataElementConceptList(Vector<String> vIDList, Vector<String> vPrefList, Vector<String> vList, String sContext)  // returns list of DataElementConcept
   {
     ResultSet rs = null;
     Statement CStmt = null;
@@ -681,7 +685,7 @@ public class GetACService implements Serializable
   * @param sContext  The context to search in.
   *
   */
-  public void getValueDomainList(Vector vIDList, Vector vPrefList, Vector vList, String sContext)  // returns list of ValueDomain
+  public void getValueDomainList(Vector<String> vIDList, Vector<String> vPrefList, Vector<String> vList, String sContext)  // returns list of ValueDomain
   {
     try
     {
@@ -705,12 +709,12 @@ public class GetACService implements Serializable
   * @param sContext  The context to search in.
   *
   */
-   public void getConceptualDomainList(Vector vIDList, Vector vList, String sContext)  // returns list of ValueDomain
+   public void getConceptualDomainList(Vector<String> vIDList, Vector<String> vList, String sContext)  // returns list of ValueDomain
   {
     try
     {
-         Vector vContextList = new Vector();
-         Vector vASLlist = new Vector();
+         Vector<String> vContextList = new Vector<String>();
+         Vector<String> vASLlist = new Vector<String>();
         String sAPI = "{call SBREXT_CDE_CURATOR_PKG.get_conceptual_domain_list(?,?)}";
         getDataListStoreProcedure(vIDList, vList, vASLlist, vContextList, sAPI, "", "", 2);
         //add the context to the names
@@ -739,12 +743,12 @@ public class GetACService implements Serializable
   * @param sContext  The context to search in.
   *
   */
-  public void getCSList(Vector vIDList, Vector vList, String sContext)  // returns list of Classification Schemes
+  public void getCSList(Vector<String> vIDList, Vector<String> vList, String sContext)  // returns list of Classification Schemes
   {
     try
     {
-         Vector vContextList = new Vector();
-         Vector vASLlist = new Vector();
+         Vector<String> vContextList = new Vector<String>();
+         Vector<String> vASLlist = new Vector<String>();
         String sAPI = "{call SBREXT_CDE_CURATOR_PKG.get_class_scheme_list(?,?)}";
         getDataListStoreProcedure(vIDList, vList, vASLlist, vContextList, sAPI, "", "", 2);
         //add the context to the names
@@ -775,7 +779,7 @@ public class GetACService implements Serializable
   * @param sCSID  The ID of the Classification Scheme.
   *
   */
-  public void getCSItemsList(Vector vIDList, Vector vList, String sCSID)  // returns list of Classification Scheme Items Lists
+  public void getCSItemsList(Vector<String> vIDList, Vector<String> vList, String sCSID)  // returns list of Classification Scheme Items Lists
   {
     try
     {
@@ -842,7 +846,7 @@ public class GetACService implements Serializable
   {
     ResultSet rs = null;
     CallableStatement CStmt = null;
-    Vector vList = new Vector();
+    Vector<CSI_Bean> vList = new Vector<CSI_Bean>();
     Connection m_sbr_db_conn = null;
     try
     {
@@ -918,7 +922,7 @@ public class GetACService implements Serializable
   * @param vList  A Vector of Language names.
   *
   */
-  public void getLanguageList(Vector vList)  // returns list of Languages
+  public void getLanguageList(Vector<String> vList)  // returns list of Languages
   {
     try
     {
@@ -938,9 +942,11 @@ public class GetACService implements Serializable
   * SBREXT_CDE_CURATOR_PKG.get_datatypes_list(?)
   *
   * @param vList  A Vector of Data Types names.
+  * @param vDesc vector of description attributes
+  * @param vComment vector of comment attributes
   *
   */
-  public void getDataTypesList(Vector vList, Vector vDesc, Vector vComment)  // returns list of DataTypes
+  public void getDataTypesList(Vector<String> vList, Vector<String> vDesc, Vector<String> vComment)  // returns list of DataTypes
   {
     try
     {
@@ -960,9 +966,10 @@ public class GetACService implements Serializable
   * SBREXT_CDE_CURATOR_PKG.get_doc_types_list(?)
   *
   * @param vList  A Vector of Rerence Doc Types names.
+  * @return vector of document tyeps
   *
   */
-  public Vector getRDocTypesList(Vector vList)  // returns list of DataTypes
+  public Vector<String> getRDocTypesList(Vector<String> vList)  // returns list of DataTypes
   {
     try
     {
@@ -995,13 +1002,12 @@ public class GetACService implements Serializable
   * The getValueMeaningsList method queries the db for lists of Permissable Values,
   * and Permissable Meanings, stored in vectors. Calls the stored procedure:
   * SBREXT_CDE_CURATOR_PKG.get_valuemeaning_list(?)
-  *
-  * @param vIDList  The ID of the values.
-  * @param vValueList  A Vector of Values.
+  * @param CD_ID STring cd idseq
   * @param vMeanList  A Vector of Meanings.
+  * @param vMeanDesc vector of string for meaning description
   *
   */
-  public void getValueMeaningsList(String CD_ID, Vector vMeanList, Vector vMeanDesc)  // returns list of Permissable Values
+  public void getValueMeaningsList(String CD_ID, Vector<String> vMeanList, Vector<String> vMeanDesc)  // returns list of Permissable Values
   {
     try
     {
@@ -1025,7 +1031,7 @@ public class GetACService implements Serializable
   * @param vMeanList  A Vector of Meanings.
   *
   */
-  public void getPermissableValues(Vector vIDList, Vector vValueList, Vector vMeanList)  // returns list of Permissable Values
+  public void getPermissableValues(Vector<String> vIDList, Vector<String> vValueList, Vector<String> vMeanList)  // returns list of Permissable Values
   {
     try
     {
@@ -1047,7 +1053,7 @@ public class GetACService implements Serializable
   * @param vList  A Vector of UOM names.
   *
   */
-  public void getUOMList(Vector vList)  // returns list of UOM
+  public void getUOMList(Vector<String> vList)  // returns list of UOM
   {
     try
     {
@@ -1069,7 +1075,7 @@ public class GetACService implements Serializable
   * @param vList  A Vector of UOM Format names.
   *
   */
-  public void getUOMFormatList(Vector vList)  // returns list of DataTypes
+  public void getUOMFormatList(Vector<String> vList)  // returns list of DataTypes
   {
     try
     {
@@ -1092,7 +1098,7 @@ public class GetACService implements Serializable
   * @param vList  A Vector of Source names.
   *
   */
-  public void getSourceList(Vector vList)  // returns list of Workflow Status
+  public void getSourceList(Vector<String> vList)  // returns list of Workflow Status
   {
     try
     {
@@ -1114,7 +1120,7 @@ public class GetACService implements Serializable
   * @param vList  A Vector of Registration Status names.
   *
   */
-  public void getRegStatusList(Vector vList)  // returns list of Registration Status
+  public void getRegStatusList(Vector<String> vList)  // returns list of Registration Status
   {
     try
     {
@@ -1234,7 +1240,7 @@ public class GetACService implements Serializable
   * @param sSQL  The sql statement to execute.
   *
   */
-  public void getDataListSQL(Vector vIDList, Vector vList, String sSQL)
+  public void getDataListSQL(Vector<String> vIDList, Vector<String> vList, String sSQL)
   {
     ResultSet rs = null;
     Statement CStmt = null;
@@ -1297,12 +1303,12 @@ public class GetACService implements Serializable
   * The getDataListSQL2 returns two data lists, given a sql statement
   *
   * @param vIDList A Vector of the ID's.
-  * @param vList  A Vector of names.
+  * @param vList1  A Vector of names.
   * @param vList2  A second Vector of names.
   * @param sSQL  The sql statement to execute.
   *
   */
-  public void getDataListSQL2(Vector vIDList, Vector vList1, Vector vList2, String sSQL)  // returns list of DataElementConcept
+  public void getDataListSQL2(Vector<String> vIDList, Vector<String> vList1, Vector<String> vList2, String sSQL)  // returns list of DataElementConcept
   {
     ResultSet rs = null;
     Statement CStmt = null;
@@ -1384,7 +1390,7 @@ public class GetACService implements Serializable
   * @param iParmIdx  Parameter ID.
   *
   */
-  public void getDataListStoreProcedure(Vector vList1, Vector vList2, Vector vList3, Vector vList4, String sAPI, String setString1, String setString2, int iParmIdx)  // returns list of Workflow Status
+  public void getDataListStoreProcedure(Vector<String> vList1, Vector<String> vList2, Vector<String> vList3, Vector<String> vList4, String sAPI, String setString1, String setString2, int iParmIdx)  // returns list of Workflow Status
   {
     /*
     Remember:  Vector parameter represent the recordset's parameter numbers.
@@ -1665,14 +1671,14 @@ public class GetACService implements Serializable
   } //end doComponentExist
 
   /**
-  * Called to get all the concepts from condr_idseq.
-  * Sets in parameters, and registers output parameters and vector of evs bean.
-  * Calls oracle stored procedure
-  *   "{call SBREXT_CDE_CURATOR_PKG.GET_AC_CONCEPTS(?,?)}" to submit
-  *
-  * @param condrId condr idseq
-  * 
-  * @return Vector vector of evs bean.
+    * Called to get all the concepts from condr_idseq.
+    * Sets in parameters, and registers output parameters and vector of evs bean.
+    * Calls oracle stored procedure
+    *   "{call SBREXT_CDE_CURATOR_PKG.GET_AC_CONCEPTS(?,?)}" to submit
+   * @param condrID String condr idseq
+   * @param vd VD_Bean object
+   * @param bInvertBean boolean to invert the bean vector or not
+   * @return Vector vector of evs bean.
   */
   public Vector getAC_Concepts(String condrID, VD_Bean vd, boolean bInvertBean)
   {
@@ -1681,7 +1687,7 @@ public class GetACService implements Serializable
     CallableStatement CStmt = null;
     ResultSet rs = null;
     String sCON_IDSEQ = "";
-    Vector vList = new Vector();
+    Vector<EVS_Bean> vList = new Vector<EVS_Bean>();
     GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
     try
     {
@@ -1760,12 +1766,12 @@ public class GetACService implements Serializable
   } //end get concept
   
 /** Puts the primary concept at the top of the list, for internal use
-  * 
+  * @param vList  Vector of evs bean.  * 
   * @return vList   Vector of evs bean.
   */
-  public Vector invertBeanVector(Vector vList)
+  public Vector<EVS_Bean> invertBeanVector(Vector<EVS_Bean> vList)
   {
-    Vector newVector = new Vector();
+    Vector<EVS_Bean> newVector = new Vector<EVS_Bean>();
     EVS_Bean evsBean = (EVS_Bean)vList.elementAt(vList.size()-1);
     newVector.addElement(evsBean);
     for(int i=0;i<vList.size()-1;i++)
@@ -1776,14 +1782,17 @@ public class GetACService implements Serializable
    return newVector;
   }
 
+  /**
+   * @param session HttpSession object
+   */
   public void getAltNamesList(HttpSession session)
   {
     try
     {
-      Vector vT = new Vector();
+      Vector<String> vT = new Vector<String>();
       String sQuery = "select detl_name from designation_types_lov_view";
       getDataListSQL(null, vT, sQuery);
-      Vector vList = new Vector();
+      Vector<String> vList = new Vector<String>();
       Vector vTypes = this.getToolOptionData("CURATION", "DESIGNATION_TYPE", "");  // 
       if (vTypes != null && vTypes.size() > 0)
       {
@@ -1806,14 +1815,17 @@ public class GetACService implements Serializable
     }
   }
 
+  /**
+   * @param session HttpSession object
+   */
   public void getRefDocsList(HttpSession session)
   {
     try
     {
-       Vector vT = new Vector();
+       Vector<String> vT = new Vector<String>();
        String sQuery = "select dctl_name from document_types_lov_view";
        getDataListSQL(null, vT, sQuery);
-       Vector vList = new Vector();
+       Vector<String> vList = new Vector<String>();
        Vector vTypes = this.getToolOptionData("CURATION", "DOCUMENT_TYPE", "");  // 
        if (vTypes != null && vTypes.size() > 0)
        {
@@ -1836,17 +1848,20 @@ public class GetACService implements Serializable
     }
   }
 
+  /**
+   * @param session
+   */
   public void getDerTypesList(HttpSession session)
   {
     try
     {
-      Vector vT = new Vector();
+      Vector<String> vT = new Vector<String>();
       String sAPI = "{call SBREXT_CDE_CURATOR_PKG.GET_COMPLEX_REP_TYPE(?)}";
       getDataListStoreProcedure(vT, null, null, null, sAPI, "", "", 1);
       //store it in the session for later use
       if (vT != null) 
         session.setAttribute("allDerTypes", vT);
-      Vector vList = new Vector();
+      Vector<String> vList = new Vector<String>();
       Vector vTypes = this.getToolOptionData("CURATION", "DERIVATION_TYPE", "");  // 
       if (vTypes != null && vTypes.size() > 0)
       {
@@ -1869,11 +1884,18 @@ public class GetACService implements Serializable
     }
   }
 
-  public Vector getToolOptionData(String toolName, String sProperty, String sValue)  // returns data from tool options
+  /**
+   * to get the data from tool option table
+   * @param toolName name of the tool to filter
+   * @param sProperty name of the property to filter
+   * @param sValue name of the value to filter
+   * @return vector of TOOL_OPTION_Bean objects
+   */
+  public Vector<TOOL_OPTION_Bean> getToolOptionData(String toolName, String sProperty, String sValue)  // returns data from tool options
   {
     ResultSet rs = null;
     CallableStatement CStmt = null;
-    Vector vList = new Vector();
+    Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
     Connection sbr_db_conn = null;
     try
     {
@@ -1936,7 +1958,7 @@ public class GetACService implements Serializable
 
   private Hashtable getHashListFromAPI(String sAPI)
   {
-    Hashtable hRes = new Hashtable();
+    Hashtable<String, String> hRes = new Hashtable<String, String>();
     Connection sbr_db_conn = null;
     CallableStatement CStmt = null;
     ResultSet rs = null;
@@ -1987,6 +2009,9 @@ public class GetACService implements Serializable
     return hRes;
   } //end getHashListFromAPI
 
+  /**
+   * gets the organization list  and stores it in the session
+   */
   public void getOrganizeList()
   {
     String sAPI = "{call SBREXT_CDE_CURATOR_PKG.GET_ORGANIZATION_LIST(?)}";
@@ -1995,15 +2020,21 @@ public class GetACService implements Serializable
     session.setAttribute("Organizations", hOrg);
   }
   
+  /**
+   * gets the contact roles list  and stores in the session
+   */
   public void getContactRolesList()
   {
     String sAPI = "{call SBREXT.SBREXT_CDE_CURATOR_PKG.GET_CONTACT_ROLES_LIST(?)}";
     Hashtable hOrg = this.getHashListFromAPI(sAPI);
     HttpSession session = (HttpSession)m_classReq.getSession();
     session.setAttribute("ContactRoles", hOrg);
-  System.out.println("get contact roles " + hOrg.size());
+  //System.out.println("get contact roles " + hOrg.size());
   }
   
+  /**
+   * gets the communication list  and stores in the session
+   */
   public void getCommTypeList()
   {
     String sAPI = "{call SBREXT_CDE_CURATOR_PKG.GET_COMM_TYPE_LIST(?)}";
@@ -2012,6 +2043,9 @@ public class GetACService implements Serializable
     session.setAttribute("CommType", hOrg);
   }
   
+  /**
+   * gets the address types list  and stores in the session
+   */
   public void getAddrTypeList()
   {
     String sAPI = "{call SBREXT_CDE_CURATOR_PKG.GET_ADDR_TYPE_LIST(?)}";
@@ -2020,9 +2054,12 @@ public class GetACService implements Serializable
     session.setAttribute("AddrType", hOrg);
   }
 
+  /**
+   * gets the persons list  and stores in the session
+   */
   public void getPersonsList()
   {
-    Hashtable hPer = new Hashtable();
+    Hashtable<String, String> hPer = new Hashtable<String, String>();
     Connection sbr_db_conn = null;
     CallableStatement CStmt = null;
     ResultSet rs = null;

@@ -1,5 +1,5 @@
 <%@ page isErrorPage="true" %>
-<%System.out.println("inn ErrorPage jsp");%>
+<%//System.out.println("inn ErrorPage jsp");%>
 <html>
 <head>
 <title>CDE Curation: Login</title>
@@ -127,7 +127,7 @@ session.setAttribute("ErrorMessage", "");
 
 %>
 <% String reqType = request.getParameter("reqType");
-System.out.println("ErrorPage reqType: " + reqType);
+//System.out.println("ErrorPage reqType: " + reqType);
   if (reqType.equals("searchEVS") || reqType.equals("searchBlocks")
     || reqType.equals("searchQualifiers") || reqType.equals("getRefDocument")
     || reqType.equals("getAltNames") || reqType.equals("treeSearch") 

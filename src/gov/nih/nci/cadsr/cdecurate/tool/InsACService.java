@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.3 2006-02-17 21:36:09 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -130,7 +130,7 @@ public class InsACService implements Serializable
     try
     {
       HttpSession session = m_classReq.getSession();
-      Vector vStatMsg = (Vector)session.getAttribute("vStatMsg");
+      Vector<String> vStatMsg = (Vector)session.getAttribute("vStatMsg");
       String statusMsg = (String)session.getAttribute("statusMessage");
       if (statusMsg == null) statusMsg = "";
       //parse single  double  quotes and new line char if any
@@ -594,7 +594,7 @@ public class InsACService implements Serializable
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setPV", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setPV", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -673,7 +673,7 @@ public class InsACService implements Serializable
           }
       }
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setPV", "end set", startDate, new java.util.Date())); 
+      //logger.info(m_servlet.getLogMessage(m_classReq, "setPV", "end set", startDate, new java.util.Date())); 
     }
     catch(Exception e)
     {
@@ -859,7 +859,7 @@ public class InsACService implements Serializable
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setVM", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setVM", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -913,7 +913,7 @@ public class InsACService implements Serializable
           }
         }
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setVM", "end set", startDate, new java.util.Date()));  
+      //logger.info(m_servlet.getLogMessage(m_classReq, "setVM", "end set", startDate, new java.util.Date()));  
 
     }
     catch (Exception e)
@@ -953,7 +953,7 @@ public class InsACService implements Serializable
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setVM_EVS", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setVM_EVS", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -1033,7 +1033,7 @@ public class InsACService implements Serializable
         //get vm attributes
         String sComments = vm.getVM_COMMENTS();
         String sMeaningDescription = vm.getVM_DESCRIPTION();
-    System.out.println(sMeaningDescription + " : " + vmConcept.getPREFERRED_DEFINITION());
+    //System.out.println(sMeaningDescription + " : " + vmConcept.getPREFERRED_DEFINITION());
         String sBeginDate = m_util.getOracleDate(vm.getVM_BEGIN_DATE());
         String sEndDate = m_util.getOracleDate(vm.getVM_END_DATE());
           //Create a Callable Statement object.
@@ -1083,7 +1083,7 @@ public class InsACService implements Serializable
             }
           }
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setVM_EVS", "end set", startDate, new java.util.Date()));  
+      //logger.info(m_servlet.getLogMessage(m_classReq, "setVM_EVS", "end set", startDate, new java.util.Date()));  
     }
     catch (Exception e)
     {
@@ -1122,7 +1122,7 @@ public class InsACService implements Serializable
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setCDVMS", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setCDVMS", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -1168,7 +1168,7 @@ public class InsACService implements Serializable
           }
       }
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setCDVMS", "end set", startDate, new java.util.Date()));  
+      //logger.info(m_servlet.getLogMessage(m_classReq, "setCDVMS", "end set", startDate, new java.util.Date()));  
     }
     catch(Exception e)
     {
@@ -1213,8 +1213,8 @@ public class InsACService implements Serializable
     String sReturnCode = "";
     try
     {
-      Vector vVDPVS = (Vector)session.getAttribute("VDPVList");     //("serVDPVSID");
-      if (vVDPVS == null) vVDPVS = new Vector();
+      Vector<PV_Bean> vVDPVS = (Vector)session.getAttribute("VDPVList");     //("serVDPVSID");
+      if (vVDPVS == null) vVDPVS = new Vector<PV_Bean>();
       //insert or update vdpvs relationship
       String ret = "";
       for (int j=0; j<vVDPVS.size(); j++)
@@ -1316,7 +1316,7 @@ public class InsACService implements Serializable
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setVD_PVS", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setVD_PVS", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     CallableStatement CStmt = null;
@@ -1379,7 +1379,7 @@ public class InsACService implements Serializable
               sDate = m_util.getOracleDate(sDate);
            CStmt.setString(13, sDate);  // end date);
            CStmt.setString(14, conIDseq);
-System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
+//System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
            boolean bExcuteOk = CStmt.execute();
            retCode = CStmt.getString(1);
            //store the status message if children row exist
@@ -1408,7 +1408,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
            }
         }
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setVD_PVS", "end set", startDate, new java.util.Date()));  
+      //logger.info(m_servlet.getLogMessage(m_classReq, "setVD_PVS", "end set", startDate, new java.util.Date()));  
     }
     catch(Exception e)
     {
@@ -1433,9 +1433,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   /**
   * The UpdateCRFValue method updates the quest contents table with the vp idseq.
   * calls setQuestContent to update.
-  *
-  * @param String PVid idseq of the permissible value
-  * @param String VPid idseq of the VDPVS table
+  * @param pv PVid idseq of the permissible value
   *
   * @throws Exception
   */
@@ -1473,7 +1471,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setDEC", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setDEC", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -1695,7 +1693,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
          // Now we are ready to call the stored procedure
         boolean bExcuteOk = CStmt.execute();
         //capture the duration
-        logger.info(m_servlet.getLogMessage(m_classReq, "setDEC", "execute done", startDate, new java.util.Date()));
+        //logger.info(m_servlet.getLogMessage(m_classReq, "setDEC", "execute done", startDate, new java.util.Date()));
 
         sDEC_ID = CStmt.getString(3);
         dec.setDEC_DEC_IDSEQ(sDEC_ID);
@@ -1774,7 +1772,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
           dec.setREFERENCE_DOCUMENT(oneRD);
           
           //do contact updates
-          Hashtable decConts = dec.getAC_CONTACTS();
+          Hashtable<String, AC_CONTACT_Bean> decConts = dec.getAC_CONTACTS();
           if (decConts != null && decConts.size() > 0)
             dec.setAC_CONTACTS(this.addRemoveAC_Contacts(decConts, sDEC_ID, sInsertFor));
           //get one concept name for this dec
@@ -1787,7 +1785,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
       }
       this.storeStatusMsg("\\n");
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setDEC", "end set", startDate, new java.util.Date())); 
+      //logger.info(m_servlet.getLogMessage(m_classReq, "setDEC", "end set", startDate, new java.util.Date())); 
     }
     catch(Exception e)
     {
@@ -1895,11 +1893,11 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
    * @throws Exception 
   *
   */
-  public void addRemoveACCSI(String ac_id, Vector vAC_CS, Vector vRemove_ACCSI, Vector vACID, 
+  public void addRemoveACCSI(String ac_id, Vector<AC_CSI_Bean> vAC_CS, Vector<AC_CSI_Bean> vRemove_ACCSI, Vector vACID, 
     String acAction, String acName) throws Exception
   {
-    Vector vExistACCSI = new Vector();
-    Vector vExistCSCSI = new Vector();
+    Vector<String> vExistACCSI = new Vector<String>();
+    Vector<String> vExistCSCSI = new Vector<String>();
     if (vAC_CS != null)   //accsi list from the page for the selected cs-csi includes new or existing ones
     {
       for (int i=0; i<vAC_CS.size(); i++)
@@ -1960,7 +1958,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
      return "";
     int index = -1;
     String sComma = ",";
-    Vector vTokens = new Vector();
+    Vector<String> vTokens = new Vector<String>();
     String sCondrStringSecondary = "";
     String sNewSecondaryString = "";
     String sPrimary = "";
@@ -2009,7 +2007,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
     //capture the duration
  //System.err.println("in setOblClassDEC");
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setObjectClassDEC", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setObjectClassDEC", "starting set", startDate, startDate));
 
     HttpSession session = m_classReq.getSession();
     Connection sbr_db_conn = null;
@@ -2085,7 +2083,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
             }
           }
       }
-  System.out.println(sContextID + " oc submit ready " + sOCCondrString);
+  //System.out.println(sContextID + " oc submit ready " + sOCCondrString);
       if (sOCCondr == null) sOCCondr = "";
       if (sContextID == null) sContextID = "";
       if (!sOCCondrString.equals(""))
@@ -2147,7 +2145,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
           }
        }
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setObjectClassDEC", "end set", startDate, new java.util.Date())); 
+      //logger.info(m_servlet.getLogMessage(m_classReq, "setObjectClassDEC", "end set", startDate, new java.util.Date())); 
     }
     catch(Exception e)
     {
@@ -2187,7 +2185,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setPropertyDEC", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setPropertyDEC", "starting set", startDate, startDate));
 
     HttpSession session = req.getSession();
     Connection sbr_db_conn = null;
@@ -2295,7 +2293,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
 
             // Set the In parameters (which are inherited from the PreparedStatement class)
             CStmt.setString(1,sPCCondrString);       //comma-delimited con idseqs
-        System.out.println(PCBean.getLONG_NAME() + " conIDseqs :" + sPCCondrString);
+        //System.out.println(PCBean.getLONG_NAME() + " conIDseqs :" + sPCCondrString);
             CStmt.setString(2,sContextID);
              // Now we are ready to call the stored procedure
             boolean bExcuteOk = CStmt.execute();
@@ -2321,7 +2319,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
           }
        }
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setPropertyClassDEC", "end set", startDate, new java.util.Date()));  
+      //logger.info(m_servlet.getLogMessage(m_classReq, "setPropertyClassDEC", "end set", startDate, new java.util.Date()));  
     }
     catch(Exception e)
     {
@@ -2354,6 +2352,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   * @param sAction Insert or update Action.
   * @param sREP_IDSEQ string rep idseq
   * @param VD VD Bean.
+  * @param rep rep bean
   * @param req  HttpServletRequest Object.
   *
   * @return String return code from the stored procedure call. null if no error occurred.
@@ -2531,12 +2530,9 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   * Creates the sql queries for the selected field, to check if the value exists in the database.
   * Calls 'getAC.doComponentExist' to execute the query.
   * 
-  * @param sField selected field.
-  * @param ACType input data.
-  * @param mDE Data Element Bean.
   * @param mDEC Data Element Concept Bean.
-  * @param mVD Value Domain Bean.
-  * @param getAC reference to GetACService class.
+  * @param editAct string edit action
+  * @param setAction string set action
   *
   * @return String retValue message if exists already. Otherwise empty string.
   */
@@ -3052,9 +3048,9 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
               m_classReq.setAttribute("retcode", sReturn);
 
           //insert and delete ac-csi relationship
-          Vector vAC_CS = de.getAC_AC_CSI_VECTOR();
+          Vector<AC_CSI_Bean> vAC_CS = de.getAC_AC_CSI_VECTOR();
           GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, m_servlet);          
-          Vector vRemove_ACCSI = getAC.doCSCSI_ACSearch(sDE_ID, "");  //search for cscsi again with de idseq.
+          Vector<AC_CSI_Bean> vRemove_ACCSI = getAC.doCSCSI_ACSearch(sDE_ID, "");  //search for cscsi again with de idseq.
           Vector vACID = (Vector)session.getAttribute("vACId");
           this.addRemoveACCSI(sDE_ID, vAC_CS, vRemove_ACCSI, vACID, sInsertFor, sLongName);          
 
@@ -3088,7 +3084,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
               {
                  //sReturn = setRD("DEL", sDocText, sDE_ID, de.getDOC_TEXT_PREFERRED_QUESTION(), "Preferred Question Text", "", "", de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ(), sLang);   //?????
                 //mark it deleted to do the action with other RDs.
-                Vector vRefDocs = (Vector)session.getAttribute("AllRefDocList");
+                Vector<REF_DOC_Bean> vRefDocs = (Vector)session.getAttribute("AllRefDocList");
                 for (int i=0; i<vRefDocs.size(); i++)
                 {
                   REF_DOC_Bean rBean = (REF_DOC_Bean)vRefDocs.elementAt(i);
@@ -3096,7 +3092,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
                   if (refID != null && refID.equalsIgnoreCase(de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ()))
                   {
                     rBean.setREF_SUBMIT_ACTION("DEL");
-                  System.out.println(" pqt removed " + rBean.getDOCUMENT_NAME());
+                  //System.out.println(" pqt removed " + rBean.getDOCUMENT_NAME());
                     vRefDocs.setElementAt(rBean, i);
                     session.setAttribute("AllRefDocList", vRefDocs);
                     break;
@@ -3113,7 +3109,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
           de.setREFERENCE_DOCUMENT(oneRD);
          
           //do contact updates
-          Hashtable deConts = de.getAC_CONTACTS();
+          Hashtable<String, AC_CONTACT_Bean> deConts = de.getAC_CONTACTS();
           if (deConts != null && deConts.size() > 0)
             de.setAC_CONTACTS(this.addRemoveAC_Contacts(deConts, sDE_ID, sInsertFor));
 
@@ -3127,7 +3123,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
             oneCon = de_vd.getAC_CONCEPT_NAME();
           de.setAC_CONCEPT_NAME(oneCon);
           
-       System.out.println(oneAlt + " : " + oneRD + " : " + oneCon);
+       //System.out.println(oneAlt + " : " + oneRD + " : " + oneCon);
           //reset return code if other attribute return is not fixed.            
           String otherRet = (String)m_classReq.getAttribute("retcode");
           if (sAction.equals("UPD") && (otherRet == null || otherRet.equals("")))
@@ -3178,7 +3174,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setAC_VERSION", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setAC_VERSION", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -3243,7 +3239,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
         }
       }
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setAC_VERSION", "end set", startDate, new java.util.Date()));  
+      //logger.info(m_servlet.getLogMessage(m_classReq, "setAC_VERSION", "end set", startDate, new java.util.Date()));  
     }
     catch(Exception e)
     {
@@ -3282,7 +3278,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setOC_PROP_REP_VERSION", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setOC_PROP_REP_VERSION", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -3330,7 +3326,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
         }
       }
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setOC_PROP_REP_VERSION", "end set", startDate, new java.util.Date()));  
+      //logger.info(m_servlet.getLogMessage(m_classReq, "setOC_PROP_REP_VERSION", "end set", startDate, new java.util.Date()));  
     }
     catch(Exception e)
     {
@@ -3363,6 +3359,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   * @param sAction Insert or update Action.
   * @param sAC_ID selected component's idseq.
   * @param sContextID selected context idseq.
+  * @param sContext context name to set
   * @param desType designation type.
   * @param sValue input value.
   * @param sLAE language name.
@@ -3381,7 +3378,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setDES", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setDES", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -3468,7 +3465,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
         }
       }
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setDES", "end set", startDate, new java.util.Date()));  
+      //logger.info(m_servlet.getLogMessage(m_classReq, "setDES", "end set", startDate, new java.util.Date()));  
     }
     catch(Exception e)
     {
@@ -3735,7 +3732,10 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   * @param sDE_ID DE idseq.
   * @param sDocText value of document text.
   * @param sRDType Preferred Question Text for Doc Text and DATA_ELEMENT_SOURCE for source.
+  * @param sRDURL refercne document's url to set
+  * @param sRDCont reference document context to set
   * @param rdIDSEQ reference document's idseq for update.
+  * @param sLang Rd language to set
   *
   * @return String return code from the stored procedure call. null if no error occurred.
   */
@@ -3751,7 +3751,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setRD", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setRD", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -3801,7 +3801,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
         CStmt.setString(2,sAction);              //ACTION - INS, UPD or DEL
         CStmt.setString(4,sRDName);             //rd name - cannot be null
         CStmt.setString(5,sRDType);        //dCtl name - long name for refrence document
- logger.debug(sRDType + " set rd " + sRDName);       
+ //System.out.println(sRDType + " set rd " + sRDName + " : " + rdIDSEQ);       
         if(sAction.equals("INS"))
           CStmt.setString(6,sDE_ID);           //ac id - must be NULL FOR UPDATE
         CStmt.setString(9,sDocText);     //doc text -
@@ -3821,7 +3821,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
         }
       }
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setRD", "end set", startDate, new java.util.Date()));  
+      //logger.info(m_servlet.getLogMessage(m_classReq, "setRD", "end set", startDate, new java.util.Date()));  
     }
     catch(Exception e)
     {
@@ -3909,7 +3909,10 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   *
   * @param CSCSIID cscsi idseq from cs_csi table.
   * @param sAction Insert or update Action.
-  * @param sDE_ID DE idseq.
+  * @param sAC_ID String ac idseq
+  * @param sAC_CSI_ID String accsi idseq
+  * @param sAC_Name String ac name
+  * @param csiName String csi name
   *
   * @return String ACCSI id 
   */
@@ -3922,7 +3925,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setACCSI", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setACCSI", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -3968,7 +3971,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
         }
       } 
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setACCSI", "end set", startDate, new java.util.Date()));  
+      //logger.info(m_servlet.getLogMessage(m_classReq, "setACCSI", "end set", startDate, new java.util.Date()));  
     }
     catch(Exception e)
     {
@@ -3996,9 +3999,9 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   * Called from 'setDE' method.
   * Calls oracle stored procedure
   *   "{call SBREXT_Get_Row.SET_ACCSI(?,?,?,?,?,?,?,?,?)}" to submit
-  *
-  * @param CSCSIID cscsi idseq from cs_csi table.
+  * @param sCSCSIID  cscsi idseq from cs_csi table.
   * @param sDE_ID DE idseq.
+  * @return String accsi idseq
   *
   */
   public String getACCSI(String sCSCSIID,  String sDE_ID)
@@ -4348,7 +4351,8 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   *
   * @param sName Short Name.
   * @param sContextID .
-   @param sACType .
+  * @param sACType String type of AC.
+  * @return ac idseq 
   */
   private String getVersionAC(String sName, String sContextID, String sACType)
   {
@@ -4413,7 +4417,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setQuestContent", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setQuestContent", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -4506,7 +4510,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
         }
       }
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setQuestContent", "end set", startDate, new java.util.Date()));
+      //logger.info(m_servlet.getLogMessage(m_classReq, "setQuestContent", "end set", startDate, new java.util.Date()));
     }
     catch(Exception e)
     {
@@ -4887,6 +4891,11 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
       }
   }
 
+  /**
+   * to get one alternate name for the selected ac
+   * @param acID ac idseq
+   * @return altname from the database
+   */
   public String getOneAltName(String acID)
   {
      Connection sbr_db_conn = null;
@@ -4926,10 +4935,15 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
     {
       logger.fatal("ERROR in InsACService-getOneAltName for close : " + ee.toString());
     }
-    logger.debug(acID + " one altname " + sName);
+    //logger.debug(acID + " one altname " + sName);
     return sName;
   }  //end getOneAltName
   
+  /**
+   * to get one reference documents for the selected ac
+   * @param acID ac idseq
+   * @return ref doc from the database
+   */
   public String getOneRDName(String acID)
   {
      Connection sbr_db_conn = null;
@@ -4969,11 +4983,17 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
     {
       logger.fatal("ERROR in InsACService-getOneRDName for close : " + ee.toString());
     }
-    logger.debug(acID + " one rd " + sName);
+    //logger.debug(acID + " one rd " + sName);
     return sName;
   }  //end getOneRDName
   
   
+  /**
+   * to get one concept name for the selected ac
+   * @param decID String dec idseq
+   * @param vdID String vd idseq
+   * @return altname from the database
+   */
   public String getOneConName(String decID, String vdID)
   {
      Connection sbr_db_conn = null;
@@ -5014,7 +5034,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
     {
       logger.fatal("ERROR in InsACService-getOneConName for close : " + ee.toString());
     }
-    logger.debug(decID + " : " + vdID + " one conname " + sName);
+    //logger.debug(decID + " : " + vdID + " one conname " + sName);
     return sName;
   }  //end getOneConName
   
@@ -5026,6 +5046,9 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   * @param CompID  String component ID
   * @param desAction  String designated submit action
   * @param deBean  DE_Bean Object
+   * @param useCont String context idseq
+   * @param useContName String context name
+   * @return String return code
   *
   * @throws Exception
   */
@@ -5184,8 +5207,8 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
     HttpSession session = m_classReq.getSession();
     GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
     //first get the alt and ref for new version
-    Vector vNewAlt = new Vector();
-    Vector vOldAlt = (Vector)session.getAttribute("AllAltNameList");
+    Vector<ALT_NAME_Bean> vNewAlt = new Vector<ALT_NAME_Bean>();
+    Vector<ALT_NAME_Bean> vOldAlt = (Vector)session.getAttribute("AllAltNameList");
     //search if alt names exists before versioning
     if (vOldAlt != null && vOldAlt.size() > 0)
       vNewAlt = getAC.doAltNameSearch(newAC, "", "", "EditDesDE", "Version");
@@ -5217,7 +5240,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
             String nType = newAlt.getALT_TYPE_NAME();
             if (nType == null) nType = "";
             //replace it in the bean if found
-         System.out.println(nType + " new alts " + nName);
+         //System.out.println(nType + " new alts " + nName);
             if (nName.equals(altName) && altCont.equals(nCont) && altType.equals(nType))
             {
               String altID = newAlt.getALT_NAME_IDSEQ();
@@ -5240,8 +5263,8 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
     HttpSession session = m_classReq.getSession();
     GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
     //first get the alt and ref for new version
-    Vector vNewRef = new Vector();
-    Vector vOldRef = (Vector)session.getAttribute("AllRefDocList");
+    Vector<REF_DOC_Bean> vNewRef = new Vector<REF_DOC_Bean>();
+    Vector<REF_DOC_Bean> vOldRef = (Vector)session.getAttribute("AllRefDocList");
     //search if Ref names exists before versioning
     if (vOldRef != null && vOldRef.size() > 0)
       vNewRef = getAC.doRefDocSearch(newAC, "ALL TYPES", "Version");
@@ -5272,7 +5295,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
             if (nCont == null) nCont = "";
             String nType = newRef.getDOC_TYPE_NAME();
             if (nType == null) nType = "";
-        System.out.println(nType + " new ref " + nName);
+        //System.out.println(nType + " new ref " + nName);
            //replace it in the bean if found
             if (nName.equals(RefName) && RefCont.equals(nCont) && RefType.equals(nType))
             {
@@ -5280,8 +5303,6 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
               if (RefID != null && !RefID.equals(""))
               {
                 thisRef.setREF_DOC_IDSEQ(RefID);
-                //call method to update blobs info to RD for newly versioned ACs.
-                
               }
               break;
             }            
@@ -5302,6 +5323,8 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
    * 
    * @param sDE unique id of an AC.
    * @param deCont owned by context id of the ac.
+   * @param desAction String designation action
+   * @return return one alt name after designation
    */
   public String doAddRemoveAltNames(String sDE, String deCont, String desAction)
   {
@@ -5373,6 +5396,8 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
    * 
    * @param sDE unique id of an AC.
    * @param deCont owned by context id of the ac.
+   * @param desAction designation action
+   * @return String retun one ref doc
    */
   public String doAddRemoveRefDocs(String sDE, String deCont, String desAction)
   {
@@ -5430,6 +5455,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
               if (sMsg != null && !sMsg.equals(""))
                 this.storeStatusMsg("\\t" + sMsg);
             }
+        //System.out.println(refName + " rd idseq " + refID);
             ret = this.setRD(refSubmit, refName, refAC, refText, refType, refURL, refContID, refID, refLang);
           }
         }
@@ -5530,7 +5556,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   {
     //capture the duration
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setConcept", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setConcept", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -5597,7 +5623,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
           CStmt.setString(13, evsBean.getEVS_DEF_SOURCE());
           CStmt.setString(14, evsBean.getNCI_CC_TYPE());
            // Now we are ready to call the stored procedure
-          logger.info("setConcept " + evsBean.getNCI_CC_VAL());     
+          //logger.info("setConcept " + evsBean.getNCI_CC_VAL());     
 
           boolean bExcuteOk = CStmt.execute();
           sReturnCode = CStmt.getString(1);
@@ -5612,7 +5638,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
         }
       }
       //capture the duration
-      logger.info(m_servlet.getLogMessage(m_classReq, "setConcept", "end set", startDate, new java.util.Date()));
+      //logger.info(m_servlet.getLogMessage(m_classReq, "setConcept", "end set", startDate, new java.util.Date()));
     }
     catch(Exception e)
     {
@@ -5643,6 +5669,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   *
   * @param sReturn   return code to catpure errors if any
   * @param evsBean  EVS_Bean.
+  * @param bValidateConceptCodeUnique boolean to check if unique
   * 
   *  @return String con_idseq from the stored procedure call.
   */
@@ -5690,7 +5717,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
         boolean bExcuteOk = CStmt.execute();
         sCON_IDSEQ = (String)CStmt.getObject(2);
         evsBean.setCON_IDSEQ(sCON_IDSEQ);
-      logger.info(sCON_IDSEQ + " getConcept code " + evsBean.getNCI_CC_VAL() + evsBean.getEVS_ORIGIN());     
+      //logger.info(sCON_IDSEQ + " getConcept code " + evsBean.getNCI_CC_VAL() + evsBean.getEVS_ORIGIN());     
         sReturn = (String)CStmt.getObject(1);
         if (sReturn == null || sReturn.equals(""))
         {
@@ -5715,7 +5742,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
             if (sDef == null || sDef.equals("")) sDef = eUser.getDefDefaultValue();
             EVS_Bean vmConcept = new EVS_Bean();
             String evsOrigin = vmConcept.getVocabAttr(eUser, dbOrigin, "vocabDBOrigin", "vocabName");  
-      logger.debug(evsBean.getNCI_CC_VAL() + " setevsbeanforpv " + (String)CStmt.getObject(3) + (String)CStmt.getObject(4) + (String)CStmt.getObject(7));
+      //logger.debug(evsBean.getNCI_CC_VAL() + " setevsbeanforpv " + (String)CStmt.getObject(3) + (String)CStmt.getObject(4) + (String)CStmt.getObject(7));
             evsBean.setEVSBean(sDef, (String)CStmt.getObject(9), 
                               (String)CStmt.getObject(7), (String)CStmt.getObject(7), 
                               (String)CStmt.getObject(11), (String)CStmt.getObject(3), 
@@ -5877,7 +5904,25 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
             //do not delete if not existed in cadsr already
             if (sAction.equals("DEL") && (rdIDseq == null || rdIDseq.equals("")))
               continue;
-            if (!sAction.equals("UPD"))
+            //mark it to delete to be deleted later with all other reference documents to avoid duplicate deletion.
+            if (sAction.equals("DEL"))
+            {
+              Vector<REF_DOC_Bean> vRefDocs = (Vector)session.getAttribute("AllRefDocList");
+              for (int i=0; i<vRefDocs.size(); i++)
+              {
+                REF_DOC_Bean rBean = (REF_DOC_Bean)vRefDocs.elementAt(i);
+                String refID = rBean.getREF_DOC_IDSEQ();
+                if (refID != null && refID.equalsIgnoreCase(rdIDseq))
+                {
+                  rBean.setREF_SUBMIT_ACTION("DEL");
+                //System.out.println(" pqt removed " + rBean.getDOCUMENT_NAME());
+                  vRefDocs.setElementAt(rBean, i);
+                  session.setAttribute("AllRefDocList", vRefDocs);
+                  break;
+                }
+              }              
+            }
+            else if (!sAction.equals("UPD"))
               sRet = this.setRD(sAction, sName, sACid, sDoc, sType, sURL, sCont, rdIDseq, sLang);
           }
         }
@@ -5928,7 +5973,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   }  //non evs parent concept 
 
   //store the contact related info into the database
-  private Hashtable addRemoveAC_Contacts(Hashtable hConts, String acID, String acAct)
+  private Hashtable<String, AC_CONTACT_Bean> addRemoveAC_Contacts(Hashtable<String, AC_CONTACT_Bean> hConts, String acID, String acAct)
   {
     try
     {
@@ -5959,11 +6004,11 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
             String sOrgID = acc.getORG_IDSEQ();
             String sPerID = acc.getPERSON_IDSEQ();
             //call method to do contact comm updates
-            Vector vComms = acc.getACC_COMM_List();
+            Vector<AC_COMM_Bean> vComms = acc.getACC_COMM_List();
             if (vComms != null)
               acc.setACC_COMM_List(this.setContact_Comms(vComms, sOrgID, sPerID));
             //call method to do contact addr update
-            Vector vAddrs = acc.getACC_ADDR_List();
+            Vector<AC_ADDR_Bean> vAddrs = acc.getACC_ADDR_List();
             if (vAddrs != null)
               acc.setACC_ADDR_List(this.setContact_Addrs(vAddrs, sOrgID, sPerID));
             //call method to do contact attribute updates
@@ -5980,10 +6025,10 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
     return hConts;
   }
   
-  private Vector setContact_Comms(Vector vCom, String orgID, String perID)
+  private Vector<AC_COMM_Bean> setContact_Comms(Vector<AC_COMM_Bean> vCom, String orgID, String perID)
   {
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setContact_Comms", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setContact_Comms", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -6078,10 +6123,10 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
     return vCom;
   }
 
-  private Vector setContact_Addrs(Vector vAdr, String orgID, String perID)
+  private Vector<AC_ADDR_Bean> setContact_Addrs(Vector<AC_ADDR_Bean> vAdr, String orgID, String perID)
   {
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setContact_Addrs", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setContact_Addrs", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -6196,7 +6241,7 @@ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
   private AC_CONTACT_Bean setAC_Contact(AC_CONTACT_Bean accB)
   {
     java.util.Date startDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "setAC_Contact", "starting set", startDate, startDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "setAC_Contact", "starting set", startDate, startDate));
 
     Connection sbr_db_conn = null;
     ResultSet rs = null;
