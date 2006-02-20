@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DEC_Bean.java,v 1.3 2006-02-17 21:36:08 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DEC_Bean.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -151,7 +151,7 @@ public class DEC_Bean extends AC_Bean {
   //concept name
   private String AC_CONCEPT_NAME;
   //contact inf
-  private Hashtable AC_CONTACTS;
+  private Hashtable<String, AC_CONTACT_Bean> AC_CONTACTS;
   private String REFERENCE_DOCUMENT;
   private String ALTERNATE_NAME;
   
@@ -755,7 +755,7 @@ public class DEC_Bean extends AC_Bean {
   /**
    * @param ac_contacts The aC_CONTACTS to set.
    */
-  public void setAC_CONTACTS(Hashtable ac_contacts)
+  public void setAC_CONTACTS(Hashtable<String, AC_CONTACT_Bean> ac_contacts)
   {
     AC_CONTACTS = ac_contacts;
   }
@@ -1532,7 +1532,7 @@ public class DEC_Bean extends AC_Bean {
    /**
     * @return Returns the aC_CONTACTS.
     */
-   public Hashtable getAC_CONTACTS()
+   public Hashtable<String, AC_CONTACT_Bean> getAC_CONTACTS()
    {
      return AC_CONTACTS;
    }

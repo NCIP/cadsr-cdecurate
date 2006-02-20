@@ -51,7 +51,7 @@
    if (optConCode == null) optConCode = "";
    String optMetaCode = vocBean.getSearchInMetaCode();
    if (optMetaCode == null) optMetaCode = "";
-System.out.println("jsp " + dtsVocab + optName + optConCode + optMetaCode);
+//System.out.println("jsp " + dtsVocab + optName + optConCode + optMetaCode);
    String sRetSearch = vocBean.getRetSearch();  // (String)session.getAttribute("RetSearch");
    if (sRetSearch == null) sRetSearch = "false";
    Vector vSource = (Vector)session.getAttribute("MetaSources");
@@ -129,7 +129,7 @@ System.out.println("jsp " + dtsVocab + optName + optConCode + optMetaCode);
   boolean hasRecords = false;
   if (vSerResult != null && vSerResult.size() >0) hasRecords = true;
   String updFunction = "displayAttributes('" + hasRecords + "');";
-System.out.println("jsp " + updFunction);  
+//System.out.println("jsp " + updFunction);  
   int iItem = 1;
 %>
 

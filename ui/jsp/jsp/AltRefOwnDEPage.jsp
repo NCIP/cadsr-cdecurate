@@ -94,7 +94,7 @@
       {
         REF_DOC_Bean refDocBean = (REF_DOC_Bean)vAllRefDoc.elementAt(i);
         if (refDocBean == null) refDocBean = new REF_DOC_Bean();
-        System.out.println(i + " RefDoc : " + refDocBean.getDOCUMENT_TEXT());
+        //System.out.println(i + " RefDoc : " + refDocBean.getDOCUMENT_TEXT());
 %>
         var aIndex = <%=i%>;  //get the index
         var objRefDoc = new refDocs();
@@ -128,11 +128,11 @@
       {
         ALT_NAME_Bean altNameBean = (ALT_NAME_Bean)vAllAltName.elementAt(i);
         if (altNameBean == null) altNameBean = new ALT_NAME_Bean();
-        System.out.println(i + " alt before : " + altNameBean.getALT_TYPE_NAME());
+        //System.out.println(i + " alt before : " + altNameBean.getALT_TYPE_NAME());
         String altType = altNameBean.getALT_TYPE_NAME();
         if (altType != null && altType.equals("USED_BY"))
           continue;
-        System.out.println(i + " alt after : " + altNameBean.getALT_TYPE_NAME());          
+        //System.out.println(i + " alt after : " + altNameBean.getALT_TYPE_NAME());          
 %>
           var aIndex = <%=i%>;  //get the index
           var objAltName = new altNames();

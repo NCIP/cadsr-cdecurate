@@ -1,7 +1,7 @@
 
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.3 2006-02-17 21:36:08 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;     
@@ -153,7 +153,7 @@ public class GetACSearch implements Serializable
       HttpSession session = req.getSession();     //get the session
       //capture the duration
       java.util.Date startDate = new java.util.Date();          
-      logger.info(m_servlet.getLogMessage(req, "getACKeywordResult", "starting search", startDate, startDate));
+      //logger.info(m_servlet.getLogMessage(req, "getACKeywordResult", "starting search", startDate, startDate));
       
       Vector vAC = new Vector();
       Vector vS = new Vector();
@@ -1857,7 +1857,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
       //System.err.println("Problem closing in GetACSearch-doDESearch: " + ee);
       logger.fatal("ERROR - GetACSearch-DESearch for close : " + ee.toString());
     }
-    logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "end call", startDate, new java.util.Date()));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "end call", startDate, new java.util.Date()));
   }  //endDE search
 
   /**
@@ -2257,7 +2257,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
       logger.fatal("GetACSearch-DECSearch for close : " + ee.toString());
     }
     //capture the duration
-    logger.info(m_servlet.getLogMessage(m_classReq, "doDECSearch", "end search", exDate,  new java.util.Date()));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "doDECSearch", "end search", exDate,  new java.util.Date()));
   }  //endDEC search
   
  
@@ -2307,7 +2307,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
   {
     //capture the duration
     java.util.Date exDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "doVDSearch", "begin search", exDate, exDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "doVDSearch", "begin search", exDate, exDate));
     Connection sbr_db_conn = null;
     ResultSet rs = null;
     CallableStatement CStmt = null;
@@ -2352,7 +2352,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
         //store the output in the resultset
         rs = (ResultSet) CStmt.getObject(7);
         //capture the duration
-        logger.info(m_servlet.getLogMessage(m_classReq, "doVDSearch", "got rsObject", exDate,  new java.util.Date()));
+        //logger.info(m_servlet.getLogMessage(m_classReq, "doVDSearch", "got rsObject", exDate,  new java.util.Date()));
         String s;
         Vector vStoredIDs = new Vector();
         if(rs!=null)
@@ -2632,7 +2632,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
   {
     //capture the duration
     java.util.Date exDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "doCSISearch", "begin search", exDate, exDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "doCSISearch", "begin search", exDate, exDate));
     Connection sbr_db_conn = null;
     ResultSet rs = null;
     CallableStatement CStmt = null;
@@ -2658,7 +2658,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
         //store the output in the resultset
         rs = (ResultSet) CStmt.getObject(4);
         //capture the duration
-        logger.info(m_servlet.getLogMessage(m_classReq, "doCSISearch", "got rsObject", exDate,  new java.util.Date()));
+        //logger.info(m_servlet.getLogMessage(m_classReq, "doCSISearch", "got rsObject", exDate,  new java.util.Date()));
 
         String s;
 
@@ -2701,7 +2701,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
       logger.fatal("ERROR - GetACSearch-CSISearch for close : " + ee.toString());
     }
     //capture the duration
-    logger.info(m_servlet.getLogMessage(m_classReq, "doCSISearch", "end search", exDate,  new java.util.Date()));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "doCSISearch", "end search", exDate,  new java.util.Date()));
   }  //endCSIsearch
 
   /**
@@ -4363,7 +4363,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
   {
     //capture the duration
     java.util.Date exDate = new java.util.Date();          
-    logger.info(m_servlet.getLogMessage(m_classReq, "do_ConceptSearch", "begin search", exDate, exDate));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "do_ConceptSearch", "begin search", exDate, exDate));
     Connection sbr_db_conn = null;
     ResultSet rs = null;
     CallableStatement CStmt = null;
@@ -4457,7 +4457,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
             vList.addElement(conBean);    //add concept bean to vector 
         }  //END WHILE
       }   //END IF
-    System.out.println(decID + " id " + vdID + " con search " + vList.size());
+    //System.out.println(decID + " id " + vdID + " con search " + vList.size());
     }
     catch(Exception e)
     {
@@ -4474,7 +4474,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
       logger.fatal("GetACSearch-do_conceptSearch for close : " + ee.toString());
     }
     //capture the duration
-    logger.info(m_servlet.getLogMessage(m_classReq, "do_conceptSearch", "end search", exDate,  new java.util.Date()));
+    //logger.info(m_servlet.getLogMessage(m_classReq, "do_conceptSearch", "end search", exDate,  new java.util.Date()));
     return vList;
   }  //endconcept search
   
@@ -4738,7 +4738,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
 
       	//capture the duration
       	java.util.Date exDate = new java.util.Date();          
-      	logger.info(m_servlet.getLogMessage(m_classReq, "getSelRowToEdit", "begin rowselect", exDate, exDate));
+      	//logger.info(m_servlet.getLogMessage(m_classReq, "getSelRowToEdit", "begin rowselect", exDate, exDate));
         //loop through the searched DE result to get the matched checked rows
         for(int i=0; i<(vSRows.size()); i++)
         {
@@ -4861,7 +4861,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
           }
         }
         //capture the duration
-        logger.info(m_servlet.getLogMessage(m_classReq, "getSelRowToEdit", "end rowselect", exDate,  new java.util.Date()));
+        //logger.info(m_servlet.getLogMessage(m_classReq, "getSelRowToEdit", "end rowselect", exDate,  new java.util.Date()));
         if (!strInValid.equals(""))
         {
             vCheckList = new Vector();
@@ -5737,7 +5737,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    * @param DECBean Bean of the Data Element Concept
    *
    */
-  public Vector doCSCSI_ACSearch(String AC_IDseq, String AC_Name)  // returns bean of Data Elements
+  public Vector<AC_CSI_Bean> doCSCSI_ACSearch(String AC_IDseq, String AC_Name)  // returns bean of Data Elements
   {
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -7833,7 +7833,7 @@ boolean isIntSearch)
      String dtsVocab = req.getParameter("listContextFilterVocab");
      if (dtsVocab != null && !dtsVocab.equals("")) isBlockSearch = true;
      if(dtsVocab == null) dtsVocab = "";  // "NCI_Thesaurus";
-System.out.println(" dtsVocab " + dtsVocab);
+//System.out.println(" dtsVocab " + dtsVocab);
      session.setAttribute("dtsVocab", dtsVocab); 
 
      String sSearchInEVS = (String)req.getParameter("listSearchInEVS");
@@ -9921,6 +9921,7 @@ System.out.println(" dtsVocab " + dtsVocab);
             RefDocBean.setCONTEXT_NAME(rs.getString("context_name"));
             RefDocBean.setAC_LANGUAGE(rs.getString("rd_lae_name"));
             RefDocBean.setREF_SUBMIT_ACTION("UPD");
+       //System.out.println(RefDocBean.getDOCUMENT_NAME() + " search rd " + RefDocBean.getREF_DOC_IDSEQ());
             vList.addElement(RefDocBean);  //add the bean to a vector
             if (!sFor.equals("Version"))
               vAllRefDoc.addElement(RefDocBean);

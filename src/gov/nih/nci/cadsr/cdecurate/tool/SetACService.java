@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.3 2006-02-17 21:36:09 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -428,7 +428,7 @@ public class SetACService implements Serializable
   {
     try
     {
-      System.out.println(pgBDate + " edit validate pv " + pgEDate);
+      //System.out.println(pgBDate + " edit validate pv " + pgEDate);
       HttpSession session = req.getSession();
       String bdValid = "", edValid = "";
       //check for validity of the dates
@@ -465,7 +465,7 @@ public class SetACService implements Serializable
               sBD = pgBDate;
             if (pgEDate != null && !pgEDate.equals("") && pgDateValid.equals(""))
               sED = pgEDate;
-        System.out.println(sBD + ":" + sED + ":" + pgDateValid);
+        //System.out.println(sBD + ":" + sED + ":" + pgDateValid);
             //check begin date end date relationship
             if (sED != null && !sED.equals("") && pgDateValid.equals(""))
             {
@@ -596,7 +596,7 @@ public class SetACService implements Serializable
            GetACService getAC, EVS_Bean m_OCQ, EVS_Bean m_PCQ) 
           throws ServletException,IOException, Exception
   {
-//System.out.println("setValidatePageValuesDEC");
+////System.out.println("setValidatePageValuesDEC");
       HttpSession session = req.getSession();
       GetACSearch getACSer = new GetACSearch(req, res, m_servlet);
       String sDECAction = (String)session.getAttribute("DECAction");
@@ -2400,7 +2400,7 @@ public class SetACService implements Serializable
      //make the query 
     sSQL = "SELECT distinct DEC_ID FROM DATA_ELEMENT_CONCEPTS_VIEW DEC WHERE DEC.CONTE_IDSEQ = '" + sContID + "'" 
             + ocSQL + propSQL + editSQL;      //versSQL + editSQL;           
-  logger.debug("oc prop pair " + sSQL); 
+  //logger.debug("oc prop pair " + sSQL); 
 
     String sDECID = getAC.isUniqueInContext(sSQL);
     if (sDECID == null || sDECID.equals(""))
@@ -4773,7 +4773,7 @@ public class SetACService implements Serializable
         PV_Bean cBean = new PV_Bean();
         cBean = cBean.copyBean((PV_Bean)vVDPVList.elementAt(k));
         oldVDPVList.addElement(cBean);
-        System.out.println(cBean.getPV_BEGIN_DATE() + " what is at set " + cBean.getPV_END_DATE());
+        //System.out.println(cBean.getPV_BEGIN_DATE() + " what is at set " + cBean.getPV_END_DATE());
       }
       session.setAttribute("oldVDPVList", oldVDPVList);  //stor eit in the session
       if (iPVChecked >1)

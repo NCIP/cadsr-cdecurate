@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.3 2006-02-17 21:36:09 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -3832,6 +3832,11 @@ public class NCICurationServlet extends HttpServlet
     if (vParentCon == null) vParentCon = new Vector<EVS_Bean>();    
     //get the selected parent info from teh request
     String sParentCC = (String)req.getParameter("selectedParentConceptCode");
+    String sParentName = (String)req.getParameter("selectedParentConceptName");
+    String sParentDB = (String)req.getParameter("selectedParentConceptDB");
+    //for non evs parent compare the long names instead
+    if (sParentName != null && !sParentName.equals("") && sParentDB != null && sParentDB.equals("Non_EVS"))
+      sParentCC = sParentName;
     if (sParentCC != null)
     {
       for (int i=0; i<vParentCon.size(); i++)
@@ -3843,10 +3848,11 @@ public class NCICurationServlet extends HttpServlet
         String thisParentName = eBean.getLONG_NAME();
         if (thisParentName == null) thisParentName = "";
         String thisParentDB = eBean.getEVS_DATABASE();
-        if(thisParentDB.equals("NCI Thesaurus")) thisParentDB = "NCI_Thesaurus";
         if (thisParentDB == null) thisParentDB = "";
-    //System.out.println(sParentCC + " parent " + thisParent + " action " + sPVAction);
-    
+        //for non evs parent compare the long names instead
+        if (sParentDB != null && sParentDB.equals("Non_EVS"))
+          thisParent = thisParentName;
+         //look for the matched parent from the vector to remove
         if (sParentCC.equals(thisParent))
         {
           String strHTML = "";
@@ -3874,7 +3880,6 @@ public class NCICurationServlet extends HttpServlet
                 vVDPVList.setElementAt(pvBean, j);
               }
             }
-       //System.out.println("removepvparent " + vVDPVList.size());
             session.setAttribute("VDPVList", vVDPVList);            
           }
           //mark the parent as delected and leave

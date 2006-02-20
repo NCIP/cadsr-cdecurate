@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.3 2006-02-17 21:36:08 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -179,7 +179,7 @@ public class EVSSearch implements Serializable
         {
           aMetaThesaurusConcept = (MetaThesaurusConcept)codes2.get(i);
           CCode = (String)aMetaThesaurusConcept.getCui();
-          logger.debug(prefName + " meta ccode " + CCode);
+          //logger.debug(prefName + " meta ccode " + CCode);
         }
       }
     }
@@ -555,7 +555,7 @@ public class EVSSearch implements Serializable
    */
   public Vector getAllSubConceptCodes(String dtsVocab, String conceptName, String type, String conceptCode, String defSource) 
   {
-logger.debug("getAllSubConceptCodes conceptName: " + conceptName);
+//logger.debug("getAllSubConceptCodes conceptName: " + conceptName);
     String[] stringArray =  new String[10000];
     Vector vSub = new Vector();
     Boolean flagOne = new java.lang.Boolean(false);
@@ -968,7 +968,7 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
    * @return sCorrectSuperConceptCode
    *
   */
-  public String findThePath(String dtsVocab, String[] stringArray, String sParent) 
+ public String findThePath(String dtsVocab, String[] stringArray, String sParent) 
   {
     Boolean flagOne = new java.lang.Boolean(true);
     Boolean flagTwo = new Boolean(false);
@@ -1009,7 +1009,7 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
         }
         catch(Exception ex)
         {
-          logger.debug("ERROR findThePath: " + ex.toString());
+          logger.fatal("ERROR findThePath: " + ex.toString());
         } 
         if(supers != null && supers.size()>0)
         {
@@ -1076,8 +1076,8 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
    * @return stringArray
    *
 */
-public String[] getAllSubConceptNames(String dtsVocab, String[] stringArray, Vector vSub) 
-{ 
+ public String[] getAllSubConceptNames(String dtsVocab, String[] stringArray, Vector vSub) 
+ { 
     String[] stringArray2 = null; 
     String[] stringArray3 = new String[10000];
     Boolean flagOne = new java.lang.Boolean(false);
@@ -1134,9 +1134,10 @@ public String[] getAllSubConceptNames(String dtsVocab, String[] stringArray, Vec
 } 
 
  /**
-	 * Puts in and takes out "_"
+	 *  Puts in and takes out "_"
    *  @param nodeName
    *  @param type
+   *  @return String return fitlered 
 	 */
 	private final String filterName(String nodeName, String type)
   {
@@ -1144,7 +1145,7 @@ public String[] getAllSubConceptNames(String dtsVocab, String[] stringArray, Vec
       nodeName = nodeName.replaceAll("_"," ");
     else if(type.equals("js"))
       nodeName = nodeName.replaceAll(" ","_");
-      return nodeName;
+    return nodeName;
   }
 
 /**
@@ -1407,7 +1408,7 @@ public String parseDefinition(String termStr)
         if (iEnd > 0)
           termStr = termStr.substring(iStartDef,iEnd);        
       }
-logger.debug(" - parseDef - " + termStr);
+//logger.debug(" - parseDef - " + termStr);
   }
   catch(Exception ee)
   {
@@ -1422,10 +1423,11 @@ logger.debug(" - parseDef - " + termStr);
    * To trim "Source => Name:" from Definition Source.
    *
    * @param termStr
+   * @return String def source
    *
   */
- private String trimDefSource(String termStr)
- {
+  private String trimDefSource(String termStr)
+  {
     int length = 0;
     length = termStr.length();
     // Take off "," form end of term
@@ -1440,7 +1442,7 @@ logger.debug(" - parseDef - " + termStr);
       if(strOpeningPhrase.equals("Source => Name: "))
         termStr = termStr.substring(16, length);
     }
-logger.debug(termStr + " - parseDef - ");
+//logger.debug(termStr + " - parseDef - ");
     return termStr;
   }
  
@@ -1599,9 +1601,10 @@ logger.debug(termStr + " - parseDef - ");
   
   /**
    * gets the non evs parent from reference documents table for the vd
-   * @param sParent
-   * @param sCui
-   * @return PageVD
+   * @param sParent String parent name
+   * @param sCui String meta cui
+   * @param PageVD String page VD
+   * @return String document name 
    * @throws java.lang.Exception
    */
   public String getMetaParentSource(String sParent, String sCui, VD_Bean PageVD) throws Exception
@@ -1635,8 +1638,6 @@ logger.debug(termStr + " - parseDef - ");
     }
     return "";
   }
-  
- 
   
   /**
    * makes the comma delimited context name for used by contexts
@@ -1727,7 +1728,24 @@ logger.debug(termStr + " - parseDef - ");
     }
   }
 
-  public Vector doVocabSearch(Vector vConList, String termStr, String dtsVocab, 
+  /**
+   * various search for concept method including name, cui etc for all vocabularies
+   * stores the results in EVS bean which then stored in the vector to send back.
+   * @param vConList vector existing vector of concepts 
+   * @param termStr String search term
+   * @param dtsVocab STring vocabulary name
+   * @param sSearchIn String search in attribute
+   * @param namePropIn String property name to search in
+   * @param sSearchAC String AC name for the search
+   * @param sIncludeRet String include or exclude the retired search
+   * @param sMetaSource String meta source selected
+   * @param iMetaLimit int meta search result limit
+   * @param isMetaSearch boolean to meta search or not
+   * @param ilevel int current level of the concept
+   * @param subConType String immediate or all sub concepts to return
+   * @return VEctor of concept bean 
+   */
+  public Vector doVocabSearch(Vector<EVS_Bean> vConList, String termStr, String dtsVocab, 
     String sSearchIn, String namePropIn, String sSearchAC, String sIncludeRet, 
     String sMetaSource, int iMetaLimit, boolean isMetaSearch, int ilevel, String subConType)
   {
@@ -1737,7 +1755,7 @@ logger.debug(termStr + " - parseDef - ");
       //do not continue if empty string search.
       if (termStr == null || termStr.equals("")) return vConList;
       //check if the concept name property exists for the vocab
-      if (vConList == null) vConList = new Vector(); 
+      if (vConList == null) vConList = new Vector<EVS_Bean>(); 
       ilevel += 1;
       //get vocab specific propeties stored in the vocab bean 
       //get the vocab specific attributes
@@ -1761,7 +1779,7 @@ logger.debug(termStr + " - parseDef - ");
       String semProp = vocabBean.getPropSemantic();
       String vocabType = vocabBean.getNameType();
       String sDefDefault = vocabBean.getDefDefaultValue();  // "No Value Exists.";
-    logger.debug(termStr + " before query " + namePropDisp + namePropIn + conCodeType + sMetaName + defnProp + hdSynProp + retConProp + semProp + vocabType);
+    //logger.debug(termStr + " before query " + namePropDisp + namePropIn + conCodeType + sMetaName + defnProp + hdSynProp + retConProp + semProp + vocabType);
       try
       {
         //call method to do the search from EVS vocab
@@ -1772,7 +1790,7 @@ logger.debug(termStr + " - parseDef - ");
         //get the desc object from the list
         if (lstResults != null)
         {
-    logger.debug(sSearchIn + " after query " + lstResults.size());
+    //logger.debug(sSearchIn + " after query " + lstResults.size());
           Hashtable hType = m_eUser.getMetaCodeType();
           if (hType == null) hType = new Hashtable();
         skipConcept:
@@ -1784,7 +1802,7 @@ logger.debug(termStr + " - parseDef - ");
             if (sConName == null) sConName = "";
             String sConID = oDLC.getCode();
             if (sConID == null) sConID = "";
-      logger.debug(sConName + " con " + sConID);
+      //logger.debug(sConName + " con " + sConID);
             String sFullSyn = "", sSemantic = "", sPrefName = "", sStatus = "Active";
             String sDispName = sConName;
             String vocabMetaType = "", vocabMetaCode = "";
@@ -1820,12 +1838,12 @@ logger.debug(termStr + " - parseDef - ");
                 if (!namePropDisp.equals("") && propName.indexOf(namePropDisp) >= 0)   //"Preferred_Name" prop for concept name if not emtpy
                   sDispName = propValue;   // property.getValue();
                 String sMeta = this.getNCIMetaCodeType(propName, "byKey");
-            logger.debug(propName + " property " + sMeta + " value " + propValue);
+            //logger.debug(propName + " property " + sMeta + " value " + propValue);
                 if (sMeta != null && !sMeta.equals("")) // (hType.containsKey(propName))  //evs source type for nci- meta
                 {
                   vocabMetaType = propName;
                   vocabMetaCode = propValue;   // property.getValue();
-                logger.debug(propName + " meta code " + propValue);
+                //logger.debug(propName + " meta code " + propValue);
                 }
               }
             }
@@ -1866,6 +1884,13 @@ logger.debug(termStr + " - parseDef - ");
     return vConList;
   }
   
+  /**
+   * gets the display name of the concepts
+   * @param dtsVocab STring vocabulary name
+   * @param dlc concepts desclogicobject from the API call
+   * @param sName name of the concept
+   * @return String display name
+   */
   public String getDisplayName(String dtsVocab, DescLogicConcept dlc, String sName)
   {
     String dispName = sName;
@@ -1886,7 +1911,7 @@ logger.debug(termStr + " - parseDef - ");
       //get the value of the display property
       if (dlc == null)  //get it from evs query
       {
-  logger.debug(dtsVocab + " display name " + sName +  " dlc null - " + sPropDisp);
+  //logger.debug(dtsVocab + " display name " + sName +  " dlc null - " + sPropDisp);
         EVSQuery query = new EVSQueryImpl();
         query.getPropertyValues(dtsVocab, sName, sPropDisp);
         List lstResult = evsService.evsSearch(query);
@@ -1896,7 +1921,7 @@ logger.debug(termStr + " - parseDef - ");
       }
       else //get it from dlc object
       {//loop through prop to get the name
-  logger.debug(dtsVocab + " display name " + sName +  " dlc not null - " + sPropDisp);
+  //logger.debug(dtsVocab + " display name " + sName +  " dlc not null - " + sPropDisp);
         Vector properties = dlc.getPropertyCollection();
         if (properties == null) properties = new Vector();
         for(int k=0; k< properties.size(); k++)
@@ -1923,11 +1948,12 @@ logger.debug(termStr + " - parseDef - ");
     }
     return sName;
   }
+
   private List doConceptQuery(String termStr, String dtsVocab, String sSearchIn, 
       String vocabType, String sPropIn)
   {
     List lstResult = null;
-  logger.debug("con query " + termStr + dtsVocab + sSearchIn + sPropIn + vocabType); 
+  //logger.debug("con query " + termStr + dtsVocab + sSearchIn + sPropIn + vocabType); 
     try
     {
       //check if valid dts vocab
@@ -1957,7 +1983,7 @@ logger.debug(termStr + " - parseDef - ");
     return lstResult;
   }
   
-  private Vector storeConceptToBean(Vector vCons, Vector vProp, String dtsVocab,
+  private Vector storeConceptToBean(Vector<EVS_Bean> vCons, Vector vProp, String dtsVocab,
       String sConName, String sDispName, String conCodeType, String sConID, int ilevel, String sStatus, 
       String sSemantic, String sDefDefault, String defnProp, String sMType, String sMCode) 
   {
@@ -2007,10 +2033,11 @@ logger.debug(termStr + " - parseDef - ");
     }  
     return vCons;
   }
-  private Vector doMetaSearch(Vector vList, String termStr, String sSearchIn, String sMetaSource, 
+
+  private Vector doMetaSearch(Vector<EVS_Bean> vList, String termStr, String sSearchIn, String sMetaSource, 
       int iMetaLimit, String sVocab)
   {
-    if (vList == null) vList = new Vector();
+    if (vList == null) vList = new Vector<EVS_Bean>();
     try
     {
       if (termStr == null || termStr.equals("")) return vList;
@@ -2018,7 +2045,7 @@ logger.debug(termStr + " - parseDef - ");
       EVSQuery query = new EVSQueryImpl();
       try
       {
-  System.out.println("meta search " + termStr + sVocab + sSearchIn); 
+  //System.out.println("meta search " + termStr + sVocab + sSearchIn); 
         if (sSearchIn.equalsIgnoreCase("MetaCode")) //do meta code specific to vocabulary source
           query.searchSourceByCode(termStr,sMetaSource);
         else if (sSearchIn.equalsIgnoreCase("ConCode")) //meta cui search
@@ -2129,13 +2156,19 @@ logger.debug(termStr + " - parseDef - ");
         if (conID.toUpperCase().indexOf(sKey.toUpperCase()) >= 0)
         {
           sCodeType = sMCode;
-       logger.debug(conID + " meta code upper case " + sKey);
+       //logger.debug(conID + " meta code upper case " + sKey);
           break;
         }
       }
     }
     return sCodeType;
   }
+
+  /**
+   * to get the vocabulary name
+   * @param sMetaName
+   * @return String vocabulary name from the vector
+   */
   public String getMetaVocabName(String sMetaName)
   {
     String sVocab = "";
@@ -2156,7 +2189,7 @@ logger.debug(termStr + " - parseDef - ");
       }
     }
     if (sVocab.equals("")) sVocab = (String)vName.elementAt(0);  //get the first one
-    logger.debug(sMetaName + " svocab " + sVocab);
+    //logger.debug(sMetaName + " svocab " + sVocab);
     return sVocab;
   }
   
@@ -2223,47 +2256,6 @@ logger.debug(termStr + " - parseDef - ");
         session.setAttribute("vParResultVM", vAC);
       session.setAttribute("creRetired", sRetired);
       session.setAttribute("dtsVocab", dtsVocab);
-    
-    /*  if (sSearchAC.equals("EVSValueMeaning"))
-      {
-        this.get_Result(m_classReq, m_classRes, vResult, "DEF");
-        session.setAttribute("EVSresults", vResult);       
-      }
-      else if (sSearchAC.equals("ObjectClass"))
-      {
-        this.get_Result(m_classReq, m_classRes, vResult, "");
-        session.setAttribute("results", vResult);
-      }
-      else if (sSearchAC.equals("Property") || sSearchAC.equals("PropertyClass"))
-      {
-        this.get_Result(m_classReq, m_classRes, vResult, "");
-        session.setAttribute("results", vResult);
-      }
-      else if (sSearchAC.equals("RepTerm"))
-      {
-        this.get_Result(m_classReq, m_classRes, vResult, "");
-        session.setAttribute("results", vResult);
-      }
-      else if (sSearchAC.equals("ObjectQualifier"))
-      {
-        this.get_Result(m_classReq, m_classRes, vResult, "");
-        session.setAttribute("results", vResult);
-      }
-      else if (sSearchAC.equals("PropertyQualifier"))
-      {
-        this.get_Result(m_classReq, m_classRes, vResult, "");
-        session.setAttribute("results", vResult);
-      }
-      else if (sSearchAC.equals("RepQualifier"))
-      {
-        this.get_Result(m_classReq, m_classRes, vResult, "");
-        session.setAttribute("results", vResult);
-      } 
-      else
-      {
-        this.get_Result(m_classReq, m_classRes, vResult, "");
-        session.setAttribute("results", vResult);
-      } */
       //get the final result vector
       this.get_Result(m_classReq, m_classRes, vResult, "");
       session.setAttribute("results", vResult);
@@ -2289,6 +2281,10 @@ logger.debug(termStr + " - parseDef - ");
     }
   }
 
+  /**
+   * to show the concept in a tree
+   * @param actType String action type
+   */
   public void showConceptInTree(String actType)
   {
     try
@@ -2306,7 +2302,7 @@ logger.debug(termStr + " - parseDef - ");
       String dtsVocab = m_eBean.getVocabAttr(m_eUser, sCCodeDB, "vocabDBOrigin", "vocabName");
       if(sCCode == null || sCCode.equals(""))
         sCCode = this.do_getEVSCode(sCCodeName, dtsVocab);
-  logger.debug(sCCodeDB + " show concept " + sCCode + " dtsvocab " + dtsVocab);
+  //logger.debug(sCCodeDB + " show concept " + sCCode + " dtsvocab " + dtsVocab);
       Vector vList = new Vector();
       if(!sCCode.equals("")) // && !sComp.equals("ParentConcept"))
       {
@@ -2324,7 +2320,7 @@ logger.debug(termStr + " - parseDef - ");
       }
       else if(!sComp.equals("ParentConcept"))
       {
-      logger.debug(sComp + " do we come here for name search to open tree?" + sCCodeDB);
+      //logger.debug(sComp + " do we come here for name search to open tree?" + sCCodeDB);
         this.doCollapseAllNodes(sCCodeDB);
         this.doTreeSearch(actType, "Blocks");
         return;
@@ -2334,7 +2330,7 @@ logger.debug(termStr + " - parseDef - ");
     }
     catch(Exception e)
     {
-      logger.debug("showConceptInTree : " + e.toString());
+      //logger.debug("showConceptInTree : " + e.toString());
       logger.fatal("showConceptInTree : " + e.toString());      
     }    
   }
@@ -2365,7 +2361,7 @@ logger.debug(termStr + " - parseDef - ");
     }
     catch(Exception e)
     {
-      logger.debug("getOtherVocabDetails : " + e.toString());
+      //logger.debug("getOtherVocabDetails : " + e.toString());
       logger.fatal("getOtherVocabDetails : " + e.toString());      
     }
   }
@@ -2404,7 +2400,7 @@ logger.debug(termStr + " - parseDef - ");
           Vector vStackVector2 = new Vector();
           strHTML = tree.populateTreeRoots(sCCodeDB);
           Stack stackSuperConcepts = new Stack();
- logger.debug(sCCodeName + " what is null " + sCCodeDB);       
+ //logger.debug(sCCodeName + " what is null " + sCCodeDB);       
           Vector vSuperImmediate = this.getSuperConceptNamesImmediate(sCCodeDB, sCCodeName, sCCode, "");
           session.setAttribute("vSuperImmediate", vSuperImmediate);
           vStackVector2 = tree.buildVectorOfSuperConceptStacks(stackSuperConcepts, sCCodeDB, sCCode, vStackVector);
@@ -2464,7 +2460,7 @@ logger.debug(termStr + " - parseDef - ");
       int iLevel = -1;
       if (conLevel != null && !conLevel.equals(""))
         iLevel = Integer.parseInt(conLevel);
-    logger.debug(iLevel + " level " + conLevel);
+    //logger.debug(iLevel + " level " + conLevel);
       if (sKeywordID == null || sKeywordID.equals("")) 
         sKeywordID = sConceptID;
       if (sKeywordName == null || sKeywordName.equals("")) 
@@ -2516,7 +2512,7 @@ logger.debug(termStr + " - parseDef - ");
         session.setAttribute("creKeyword", sKeywordID);
         String sMetaSource = "";
         int intMetaLimit = 100;
-    logger.debug(sKeywordID + " voc " + dtsVocab + " ac " + sSearchAC + " uitype " + sUISearchType);
+    //logger.debug(sKeywordID + " voc " + dtsVocab + " ac " + sSearchAC + " uitype " + sUISearchType);
         if (sKeywordID != null && !sKeywordID.equals("")) 
           vAC = this.doVocabSearch(vAC, sKeywordID, dtsVocab, "ConCode", "", sSearchAC, sRetired, sMetaSource, intMetaLimit, false, iLevel, "");
          // evs.do_EVSSearch(sKeywordID, vAC, sVocab, "Concept Code",
@@ -2560,7 +2556,7 @@ logger.debug(termStr + " - parseDef - ");
   */
   public void doTreeSearch(String actType, String searchType)  throws Exception
   {
-  logger.debug(actType + " dotreeseach - why am i here " + searchType);
+  //logger.debug(actType + " dotreeseach - why am i here " + searchType);
       HttpSession session = m_classReq.getSession();
       GetACSearch getACSearch = new GetACSearch(m_classReq, m_classRes, m_servlet);
       String dtsVocab = m_classReq.getParameter("listContextFilterVocab");
@@ -2577,12 +2573,8 @@ logger.debug(termStr + " - parseDef - ");
   }
 
  /**
-  *
-  * @param req The HttpServletRequest from the client
-  * @param res The HttpServletResponse back to the client
-  * @param String  actType type of filter a simple or advanced
-  * @param String  asearchype type of filter a simple or advanced
-  *
+  * to collapse all the nodes of the tree
+  * @param dtsVocab String vocabulary name
   * @throws Exception
   */
   public void doCollapseAllNodes(String dtsVocab)  throws Exception
@@ -2702,7 +2694,6 @@ logger.debug(termStr + " - parseDef - ");
   */
   public void doGetSubConcepts()  throws Exception
   {
-//System.out.println("servlet doGetSubConceptsXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
       HttpSession session = m_classReq.getSession();
       String sConceptName = (String)m_classReq.getParameter("nodeName"); 
       String sConceptCode = (String)m_classReq.getParameter("nodeCode");
@@ -2738,10 +2729,6 @@ logger.debug(termStr + " - parseDef - ");
         sParentSource = serAC.getMetaParentSource(sParent, "None", null);
       if(!sParentSource.equals(""))
         sDefSource = sParentSource;
-     /* if((dtsVocab.length()>1 && dtsVocab.substring(0,2).equalsIgnoreCase("VA")) 
-      || (dtsVocab.length()>2 && dtsVocab.substring(0,3).equalsIgnoreCase("LOI")) 
-      || (dtsVocab.length()>2 && dtsVocab.substring(0,3).equalsIgnoreCase("Med")))
-        sParent = filterName(sParent, "display"); */
      
       if(sConceptName.equals(sParent))
         ilevelStartingConcept = 0;
@@ -2752,7 +2739,7 @@ logger.debug(termStr + " - parseDef - ");
         String slevel = (String)m_classReq.getParameter("conLevel");
         if (slevel != null && !slevel.equals(""))
           ilevelStartingConcept = Integer.parseInt(slevel);
-    logger.debug(slevel + " level " + ilevelStartingConcept);
+    //logger.debug(slevel + " level " + ilevelStartingConcept);
       }      
       ilevelImmediate = ilevelStartingConcept + 1;
       String sLevelStartingConcept = "";
@@ -2793,48 +2780,6 @@ logger.debug(termStr + " - parseDef - ");
       session.setAttribute("creRetired", sRetired);
       session.setAttribute("dtsVocab", dtsVocab);
     
-    /*  if (sSearchAC.equals("EVSValueMeaning"))
-      {
-      //  evs.get_Result(m_classReq, m_classRes, vResult, "DEF");
-        this.get_Result(m_classReq, m_classRes, vResult, "");
-        session.setAttribute("EVSresults", vResult);
-        session.setAttribute("results", vResult);
-      }
-       else if (sSearchAC.equals("ObjectClass"))
-      {
-        this.get_Result(m_classReq, m_classRes, vResult, "");
-        session.setAttribute("results", vResult);
-      }
-      else if (sSearchAC.equals("Property") || sSearchAC.equals("PropertyClass"))
-      {
-        this.get_Result(m_classReq, m_classRes, vResult, "");
-        session.setAttribute("results", vResult);
-      }
-      else if (sSearchAC.equals("RepTerm"))
-      {
-        this.get_Result(m_classReq, m_classRes, vResult, "");
-        session.setAttribute("results", vResult);
-      }
-      else if (sSearchAC.equals("ObjectQualifier"))
-      {
-        this.get_Result(m_classReq, m_classRes, vResult, "");
-        session.setAttribute("results", vResult);
-      }
-      else if (sSearchAC.equals("PropertyQualifier"))
-      {
-        this.get_Result(m_classReq, m_classRes, vResult, "");
-        session.setAttribute("results", vResult);
-      }
-      else if (sSearchAC.equals("RepQualifier"))
-      {
-        this.get_Result(m_classReq, m_classRes, vResult, "");
-        session.setAttribute("results", vResult);
-      } 
-      else
-      { 
-        this.get_Result(m_classReq, m_classRes, vResult, "");
-        session.setAttribute("results", vResult);
-      } */
       //get the final result vector
       this.get_Result(m_classReq, m_classRes, vResult, "");
       session.setAttribute("results", vResult);
@@ -2853,6 +2798,10 @@ logger.debug(termStr + " - parseDef - ");
       m_servlet.ForwardJSP(m_classReq, m_classRes, "/OpenSearchWindowBlocks.jsp");
   }
 
+  /**
+   * to open the tree to the selected concept 
+   * @param actType String action type
+   */
   public void openTreeToConcept(String actType)
   {
     try
@@ -2862,7 +2811,7 @@ logger.debug(termStr + " - parseDef - ");
       String sCCode = (String)m_classReq.getParameter("sCCode");
       String sCCodeName = (String)m_classReq.getParameter("sCCodeName"); 
       String sNodeID = (String)m_classReq.getParameter("nodeID");
-  logger.debug(sCCode + " code " + sCCodeName + " codedb " + sCCodeDB + " node " + sNodeID);
+  //logger.debug(sCCode + " code " + sCCodeName + " codedb " + sCCodeDB + " node " + sNodeID);
       String dtsVocab = m_eBean.getVocabAttr(m_eUser, sCCodeDB, "vocabDBOrigin", "vocabName");
       Vector vVocabs = m_eUser.getVocabNameList();
       if (vVocabs == null) vVocabs = new Vector();
@@ -2901,6 +2850,10 @@ logger.debug(termStr + " - parseDef - ");
     }
   }
 
+  /**
+   * to open the tree to the selected concept from the parent level 
+   * @param actType String action type
+   */
   public void openTreeToParentConcept(String actType)
   {
     try
@@ -2914,7 +2867,7 @@ logger.debug(termStr + " - parseDef - ");
       session.setAttribute("SelectedParentName", sCCodeName);
       session.setAttribute("SelectedParentCC", sCCode);
       session.setAttribute("SelectedParentDB", sCCodeDB);
-  logger.debug(sCCodeDB + " doBlocks sCCode: " + sCCode);
+  //logger.debug(sCCodeDB + " doBlocks sCCode: " + sCCode);
       sCCodeDB = m_eBean.getVocabAttr(m_eUser, sCCodeDB, "vocabDBOrigin", "vocabName");
       if(sCCode != null && !sCCode.equals(""))
       {
@@ -2967,7 +2920,7 @@ logger.debug(termStr + " - parseDef - ");
           vAC = serAC.do_ConceptSearch(searchID, "", "", "RELEASED", "", "", "", vAC);
         }
       }
-    logger.debug("callConcept Search " + searchID + " voc " + sCCodeDB + " ac " + sSearchAC + " dts " + dtsVocab);
+    //logger.debug("callConcept Search " + searchID + " voc " + sCCodeDB + " ac " + sSearchAC + " dts " + dtsVocab);
       
       //call vocab search without meta if one of the vocabs
       Vector vVocabs = m_eUser.getVocabNameList();
@@ -2980,7 +2933,7 @@ logger.debug(termStr + " - parseDef - ");
       {
         vAC = this.doMetaSearch(vAC, searchID, "ConCode", "", 10, sCCodeDB);
         String vName = this.getMetaVocabName(sCCodeDB);
-      logger.debug(sCCodeDB + " vocab " + vName);
+      //logger.debug(sCCodeDB + " vocab " + vName);
         session.setAttribute("dtsVocab", vName);
       }
       //store it in the session  
@@ -3003,7 +2956,7 @@ logger.debug(termStr + " - parseDef - ");
       HttpSession session = (HttpSession)m_classReq.getSession();  
       String strHTML = "";
       EVSMasterTree tree = new EVSMasterTree(m_classReq, dtsVocab, m_servlet);
-  logger.debug("callTreeSEarch " + sCodeName + " db " + dtsVocab + " code " + sCode);       
+  //logger.debug("callTreeSEarch " + sCodeName + " db " + dtsVocab + " code " + sCode);       
       if (actType.equals("OpenTreeToConcept"))
       {
         Vector vStackVector = new Vector();
@@ -3013,7 +2966,7 @@ logger.debug(termStr + " - parseDef - ");
         Vector vSuperImmediate = this.getSuperConceptNamesImmediate(dtsVocab, sCodeName, sCode, "");
         session.setAttribute("vSuperImmediate", vSuperImmediate);
         vStackVector2 = tree.buildVectorOfSuperConceptStacks(stackSuperConcepts, dtsVocab, sCode, vStackVector);
-    logger.debug(vStackVector.size() + " tree stack size " + vStackVector2.size() + " super " + vSuperImmediate.size());
+    //logger.debug(vStackVector.size() + " tree stack size " + vStackVector2.size() + " super " + vSuperImmediate.size());
         if(vStackVector.size()<1) // must be a root concept
         {
           Tree RootTree = (Tree)tree.m_treesHash.get(dtsVocab);
@@ -3049,6 +3002,11 @@ logger.debug(termStr + " - parseDef - ");
     }
   }
   
+  /**
+   * to get the matching thesaurus concept
+   * @param eBean EVS Bean of the concept
+   * @return return the EVS_Bean
+   */
   public EVS_Bean getThesaurusConcept(EVS_Bean eBean)
   {
     try
@@ -3060,14 +3018,14 @@ logger.debug(termStr + " - parseDef - ");
       String metaName = m_eUser.getMetaDispName();
       String nciVocab = this.getMetaVocabName(metaName);
       String dtsVocab = eBean.getVocabAttr(m_eUser, eDB, "vocabDBOrigin", "vocabName");
-      Vector vList = new Vector();
+      Vector<EVS_Bean> vList = new Vector<EVS_Bean>();
       //continue only if term is not from Thesaururs
       if (dtsVocab != null && !dtsVocab.equals(nciVocab))
       {
         if (!dtsVocab.equals("MetaValue"))
         {
           conType = eBean.getMETA_CODE_TYPE();
-      logger.debug(conType + " evs " + eBean.getMETA_CODE_VAL() + " con " + eBean.getLONG_NAME());
+      //logger.debug(conType + " evs " + eBean.getMETA_CODE_VAL() + " con " + eBean.getLONG_NAME());
           //check if can be searched by meta type properlty (UMLS or NCI_META)
           if (conType != null && !conType.equals(""))
           {
@@ -3094,7 +3052,7 @@ logger.debug(termStr + " - parseDef - ");
             if (vSource == null || vSource.equals("")) return eBean;
             //get its equivalent meta code
             conID = eBean.getNCI_CC_VAL();
-            vList = new Vector();
+            vList = new Vector<EVS_Bean>();
             vList = this.doMetaSearch(vList, conID, "MetaCode", vSource, 10, metaName);          
             if (vList == null || vList.size() < 1) return eBean;
             //get the value
@@ -3105,7 +3063,7 @@ logger.debug(termStr + " - parseDef - ");
             {
             EVS_Bean tBean = (EVS_Bean)vList.elementAt(j);
             String sConID = tBean.getNCI_CC_VAL(); 
-    logger.debug(j + " loop aftermetacode " + sConID + " name " + tBean.getLONG_NAME());
+    //logger.debug(j + " loop aftermetacode " + sConID + " name " + tBean.getLONG_NAME());
             }
           }
         }
@@ -3113,16 +3071,16 @@ logger.debug(termStr + " - parseDef - ");
           conID = eBean.getNCI_CC_VAL();  //go back to original id if not found
         
         //now get the meta concept        
-        vList = new Vector();
+        vList = new Vector<EVS_Bean>();
         conType = this.getNCIMetaCodeType(conID, "byID");
-     logger.debug(dtsVocab + " metasearch in meta " + conID + conType);
-        vList = new Vector();
+     //logger.debug(dtsVocab + " metasearch in meta " + conID + conType);
+        vList = new Vector<EVS_Bean>();
         vList = this.doVocabSearch(vList, conID, nciVocab, "Name", conType, "", 
               "Exclude", "", 10, false, -1, "");
         if (vList != null && vList.size() > 0)
           eBean = this.getNCIDefinition(vList);  // (EVS_Bean)vList.elementAt(0);        
       }
-      logger.debug(eBean.getEVS_ORIGIN() + " con name " + eBean.getLONG_NAME());
+      //logger.debug(eBean.getEVS_ORIGIN() + " con name " + eBean.getLONG_NAME());
     }    
     catch (Exception e)
     {
@@ -3133,7 +3091,7 @@ logger.debug(termStr + " - parseDef - ");
   
   private EVS_Bean getNCIDefinition(Vector vList)
   {
-   logger.debug("get nci def " + vList.size());
+   //logger.debug("get nci def " + vList.size());
     EVS_Bean eBean = (EVS_Bean)vList.elementAt(0);
     Vector vNCIsrc = m_eUser.getNCIDefSrcList();
     if (vNCIsrc == null) vNCIsrc = new Vector();
@@ -3147,7 +3105,7 @@ logger.debug(termStr + " - parseDef - ");
       {
         EVS_Bean thisBean = (EVS_Bean)vList.elementAt(k);
         String sSrc = thisBean.getEVS_DEF_SOURCE();
-    logger.debug(thisBean.getNCI_CC_VAL() + " nci def " + sSrc + " nci src " + srcNCI);
+    //logger.debug(thisBean.getNCI_CC_VAL() + " nci def " + sSrc + " nci src " + srcNCI);
         //match def source order to the bean
         if (sSrc.equalsIgnoreCase(srcNCI))
         {

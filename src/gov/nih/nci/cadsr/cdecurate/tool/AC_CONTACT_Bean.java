@@ -29,8 +29,8 @@ public class AC_CONTACT_Bean implements Serializable
   private String CS_CSI_IDSEQ;
   private String CS_IDSEQ;
   private String ACC_SUBMIT_ACTION;
-  private Vector ACC_COMM_List;
-  private Vector ACC_ADDR_List;
+  private Vector<AC_COMM_Bean> ACC_COMM_List;
+  private Vector<AC_ADDR_Bean> ACC_ADDR_List;
   
 
   /**
@@ -294,7 +294,7 @@ public class AC_CONTACT_Bean implements Serializable
   /**
    * @return Returns the aCC_ADDR_List.
    */
-  public Vector getACC_ADDR_List()
+  public Vector<AC_ADDR_Bean> getACC_ADDR_List()
   {
     return ACC_ADDR_List;
   }
@@ -302,7 +302,7 @@ public class AC_CONTACT_Bean implements Serializable
   /**
    * @param list The aCC_ADDR_List to set.
    */
-  public void setACC_ADDR_List(Vector list)
+  public void setACC_ADDR_List(Vector<AC_ADDR_Bean> list)
   {
     ACC_ADDR_List = list;
   }
@@ -310,7 +310,7 @@ public class AC_CONTACT_Bean implements Serializable
   /**
    * @return Returns the aCC_COMM_List.
    */
-  public Vector getACC_COMM_List()
+  public Vector<AC_COMM_Bean> getACC_COMM_List()
   {
     return ACC_COMM_List;
   }
@@ -318,7 +318,7 @@ public class AC_CONTACT_Bean implements Serializable
   /**
    * @param list The aCC_COMM_List to set.
    */
-  public void setACC_COMM_List(Vector list)
+  public void setACC_COMM_List(Vector<AC_COMM_Bean> list)
   {
     ACC_COMM_List = list;
   }

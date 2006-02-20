@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.3 2006-02-17 21:36:08 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -786,7 +786,7 @@ public final class EVS_UserBean implements Serializable
       {
         TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
         if (tob != null) eURL = tob.getVALUE();      
-        System.out.println(tob.getVALUE() + " evs link cadsr for curation " + eURL);
+        //System.out.println(tob.getVALUE() + " evs link cadsr for curation " + eURL);
         if (eURL == null || eURL.equals("")) vList = new Vector();  //check it again
       }
       //get it again for all tools property
@@ -797,7 +797,7 @@ public final class EVS_UserBean implements Serializable
         {
           TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
           if (tob != null) eURL = tob.getVALUE();      
-          System.out.println(tob.getVALUE() + " evs link cadsr for all " + eURL);
+          //System.out.println(tob.getVALUE() + " evs link cadsr for all " + eURL);
         }
       }
      // if (eURL == null || eURL.equals("")) eURL = "http://cabio.nci.nih.gov/cacore30/server/HTTPServer";
@@ -920,7 +920,7 @@ public final class EVS_UserBean implements Serializable
           vBean = this.storeVocabAttr(vBean, vList);  //call method to store all attributes
           int vocabInd = i +1;
           String toolprop = "EVS.VOCAB." + vocabInd + "%";
-      System.out.println(sVocab + toolprop);
+      //System.out.println(sVocab + toolprop);
           Vector vocabList = getAC.getToolOptionData("CURATION", toolprop,"");
           vBean = this.storeVocabAttr(vBean, vocabList);  //call method to add vocab specific attributges
           //put this bean in the hash table
@@ -932,7 +932,7 @@ public final class EVS_UserBean implements Serializable
     }
     catch(Exception e)
     {
-      logger.debug("Error: getEVSInfoFromDSR " + e.toString());
+      logger.fatal("Error: getEVSInfoFromDSR " + e.toString());
     }    
   }
  
@@ -1002,7 +1002,7 @@ public final class EVS_UserBean implements Serializable
     }
     catch(Exception e)
     {
-      logger.debug("Error: storeVocabAttr " + e.toString());
+      logger.fatal("Error: storeVocabAttr " + e.toString());
     }
     return vuBean;
   }

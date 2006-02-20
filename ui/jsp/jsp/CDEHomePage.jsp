@@ -48,7 +48,7 @@ Vector vACAttr2 = new Vector();
         sSearchACStack.push(sSearchAC3);
       }
     session.setAttribute("searchAC", sSearchAC3);
-System.out.println("CDEHomePage sSearchAC3: " + sSearchAC3);
+//System.out.println("CDEHomePage sSearchAC3: " + sSearchAC3);
       Stack vAttributeListStack = (Stack)session.getAttribute("vAttributeListStack");
 //System.out.println("CDE vAttributeListStack: " + vAttributeListStack);
       if (vAttributeListStack != null && vAttributeListStack.size()>0 && sSecondBackFromGetAssociated2.equals(""))
