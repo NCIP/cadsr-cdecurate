@@ -1,4 +1,8 @@
 <project name="CDE Curation Tool" default="init" basedir=".">
+    <!--
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.17 2006-02-21 18:58:24 hebell Exp $
+        $Name: not supported by cvs2svn $
+    -->
     <description>
         Build and deploy the CDE Curation Tool
     </description>
