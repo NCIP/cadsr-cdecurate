@@ -125,7 +125,7 @@
     <!--compile jsp, java files -->
     <target name="compile" depends="init,setup">
       <!--Compile Java source files-->
-      <javac destdir="${app_classes}" encoding="Cp1252">
+      <javac destdir="${app_classes}" encoding="Cp1252" debug="${jdebug}">
           <classpath refid="libpath"/>
           <src refid="srcpath"/>
           <include name="**/*.java" />
@@ -308,8 +308,6 @@
             <param name="conf" value="conf/web"/>
             <param name="jdebug" value="off"/>
         </antcall>
-    	<!-- copy the class files for stage and prod deploys -->
-    	<antcall target="copyBuild"/>
     </target>
 
     <!-- do the antcall for prod environ -->
@@ -321,8 +319,6 @@
             <param name="conf" value="conf/web"/>
             <param name="jdebug" value="off"/>
         </antcall>
-    	<!-- copy the class files for stage and prod deploys -->
-    	<antcall target="copyBuild"/>
     </target>
 
 	<!-- do the antcall for out source package build environ -->
@@ -331,7 +327,7 @@
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
             <param name="conf" value="conf/web"/>
-            <param name="jdebug" value="on"/>
+            <param name="jdebug" value="off"/>
         </antcall>
     </target>
 
