@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.5 2006-03-02 22:55:25 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -130,7 +130,6 @@ public class NCICurationServlet extends HttpServlet
   private SetACService m_setAC = new SetACService(this);
   public  HttpServletRequest m_classReq = null;
   public HttpServletResponse m_classRes = null;
-  private EVS_UserBean m_eUser = null;
   static private Hashtable hashOracleOCIConnectionPool = new Hashtable();
   public Logger logger = Logger.getLogger(NCICurationServlet.class.getName());
 
@@ -644,8 +643,8 @@ public class NCICurationServlet extends HttpServlet
     else
     {
       userBeanExists = true;
-      m_eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
-      if (m_eUser == null) m_eUser = new EVS_UserBean();          
+      EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+      if (eUser == null) eUser = new EVS_UserBean();          
     }
     return userBeanExists;
   }
@@ -680,6 +679,7 @@ public class NCICurationServlet extends HttpServlet
       session.setAttribute("VDPageAction", "nothing");
       session.setAttribute("DECPageAction", "nothing");
       session.setAttribute("sDefaultContext", context);
+      this.clearCreateSessionAttributes(req, res);  //clear some session attributes
       if(sACType.equals("de"))
       {
         DE_Bean m_DE = new DE_Bean();
@@ -893,14 +893,14 @@ public class NCICurationServlet extends HttpServlet
           //get EVS info
           try
           {
-            m_eUser = new EVS_UserBean();
-            m_eUser.getEVSInfoFromDSR(req, res, this);
+            EVS_UserBean eUser = new EVS_UserBean();
+            eUser.getEVSInfoFromDSR(req, res, this);
             EVSSearch evs = new EVSSearch(req, res, this);
             evs.getMetaSources();
             //m_EVS_CONNECT = euBean.getEVSConURL();
            // getVocabHandles(req, res);
-            DoHomepageThread thread = new DoHomepageThread(req, res, this);
-            thread.start();
+           // DoHomepageThread thread = new DoHomepageThread(req, res, this);
+           // thread.start();
           }
           catch(Exception ee)
           {
@@ -2252,10 +2252,15 @@ public class NCICurationServlet extends HttpServlet
   throws Exception
   {
       HttpSession session = req.getSession();
+      InsACService insAC = new InsACService(req, res, this);
       String sMenuAction = (String)req.getParameter("MenuAction");
       if (sMenuAction != null)
         session.setAttribute("MenuAction", sMenuAction);
       String sAction = (String)req.getParameter("newCDEPageAction");
+      //get the evs user bean
+      EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+      if (eUser == null) eUser = new EVS_UserBean();
+      
       if(sAction.equals("submit"))
           doSubmitVM(req, res);
       else if(sAction.equals("validate"))
@@ -2282,6 +2287,14 @@ public class NCICurationServlet extends HttpServlet
             if (iRow == i)
             {
               EVS_Bean eBean = (EVS_Bean)vRSel.elementAt(i);
+              //send it back if unable to obtion the concept
+              if (eBean == null || eBean.getLONG_NAME() == null || eBean.getNCI_CC_VAL() == null)
+              {
+                insAC.storeStatusMsg("Unable to obtain concept from the " + iRow + " row of the search results.\\n" + 
+                    "Please try again.");
+                break;
+              }
+
               //get the right concept id
               String sCon = eBean.getNCI_CC_VAL();
              // String sConType = eBean.getNCI_CC_TYPE();
@@ -2295,7 +2308,7 @@ public class NCICurationServlet extends HttpServlet
               String eDB = eBean.getEVS_DATABASE();
               if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
               {
-                eDB = eBean.getVocabAttr(m_eUser, eBean.getEVS_ORIGIN(), "vocabName", "vocabDBOrigin");
+                eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), "vocabName", "vocabDBOrigin");
                 eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
               }
           //System.out.println("before thes concept CreateVM");
@@ -3427,6 +3440,7 @@ public class NCICurationServlet extends HttpServlet
   *
   * @param req The HttpServletRequest from the client
   * @param res The HttpServletResponse back to the client
+  * @param sOrigin origin where it is called from
   *
   * @throws Exception
   */ 
@@ -3551,6 +3565,7 @@ public class NCICurationServlet extends HttpServlet
   public EVS_Bean getEVSSelRow(HttpServletRequest req) throws Exception
   {
     HttpSession session = req.getSession();   
+    InsACService insAC = new InsACService(req, m_classRes, this);
     //get the result vector from the session
     EVS_Bean eBean = new EVS_Bean();
     Vector vRSel = (Vector)session.getAttribute("vACSearch");
@@ -3558,7 +3573,7 @@ public class NCICurationServlet extends HttpServlet
     //get the array from teh hidden list
     String selRows[] = req.getParameterValues("hiddenSelRow");
     if (selRows == null)
-      session.setAttribute("StatusMessage", "Unable to select Concept, please try again");    
+      insAC.storeStatusMsg("Unable to select Concept, please try again");    
     else
     {
       //loop through the array of strings
@@ -3568,9 +3583,17 @@ public class NCICurationServlet extends HttpServlet
         Integer IRow = new Integer(thisRow);
         int iRow = IRow.intValue();
         if (iRow < 0 || iRow > vRSel.size())
-          session.setAttribute("StatusMessage", "Row size is either too big or too small.");
+          insAC.storeStatusMsg("Row size is either too big or too small.");
         else
+        {
           eBean = (EVS_Bean)vRSel.elementAt(iRow);
+          if (eBean == null || eBean.getLONG_NAME() == null)
+          {
+            insAC.storeStatusMsg("Unable to obtain concept from the " + iRow + " row of the search results.\\n" + 
+                "Please try again.");
+            continue;
+          }
+        }
       }      
     }   
     return eBean;
@@ -3584,16 +3607,17 @@ public class NCICurationServlet extends HttpServlet
    * @return Vector of EVS Beans
    * @throws java.lang.Exception
    */
-  public Vector getEVSSelRowVector(HttpServletRequest req, Vector vList) throws Exception
+  public Vector<EVS_Bean> getEVSSelRowVector(HttpServletRequest req, Vector<EVS_Bean> vList) throws Exception
   {
-    HttpSession session = req.getSession();   
+    HttpSession session = req.getSession(); 
+    InsACService insAC = new InsACService(req, m_classRes, this);
     //get the result vector from the session
     Vector vRSel = (Vector)session.getAttribute("vACSearch");
     if (vRSel == null) vRSel = new Vector();
     //get the array from teh hidden list
     String selRows[] = req.getParameterValues("hiddenSelRow");
     if (selRows == null)
-      session.setAttribute("StatusMessage", "Unable to select Concept, please try again");    
+      insAC.storeStatusMsg("Unable to select Concept, please try again");    
     else
     {
       //loop through the array of strings
@@ -3603,10 +3627,18 @@ public class NCICurationServlet extends HttpServlet
         Integer IRow = new Integer(thisRow);
         int iRow = IRow.intValue();
         if (iRow < 0 || iRow > vRSel.size())
-          session.setAttribute("StatusMessage", "Row size is either too big or too small.");
+          insAC.storeStatusMsg("Row size is either too big or too small.");
         else
         {
           EVS_Bean eBean = (EVS_Bean)vRSel.elementAt(iRow);
+          //send it back if unable to obtion the concept
+          if (eBean == null || eBean.getLONG_NAME() == null)
+          {
+            insAC.storeStatusMsg("Unable to obtain concept from the " + thisRow + " row of the search results.\\n" + 
+                "Please try again.");
+            continue;
+          }
+
           String eBeanDB = eBean.getEVS_DATABASE();
           //make sure it doesn't exist in the list
           boolean isExist = false;
@@ -3632,11 +3664,15 @@ public class NCICurationServlet extends HttpServlet
           if (isExist == false)
           {
             eBean.setCON_AC_SUBMIT_ACTION("INS");
+            //get the evs user bean
+            EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+            if (eUser == null) eUser = new EVS_UserBean();
+            
             //get origin for cadsr result
             String eDB = eBean.getEVS_DATABASE();
             if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
             {
-              eDB = eBean.getVocabAttr(m_eUser, eBean.getEVS_ORIGIN(), "vocabName", "vocabDBOrigin");
+              eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), "vocabName", "vocabDBOrigin");
               eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
             }
             vList.addElement(eBean);  
@@ -4416,9 +4452,18 @@ public class NCICurationServlet extends HttpServlet
       }
       else
       {
-        insAC.storeStatusMsg("Unable to get the selected row from the " + sComp + " search results.");
+        insAC.storeStatusMsg("Unable to get the selected row from the " + sComp + " search results.\\n" + 
+            "Please try again.");
         return;
       }
+      //send it back if unable to obtion the concept
+      if (blockBean == null || blockBean.getLONG_NAME() == null)
+      {
+        insAC.storeStatusMsg("Unable to obtain concept from the selected row of the " + sComp + " search results.\\n" + 
+            "Please try again.");
+        return;
+      }
+
       //do the primary search selection action
       if(sComp.equals("ObjectClass") || sComp.equals("Property") || sComp.equals("PropertyClass"))
       {
@@ -4505,13 +4550,16 @@ public class NCICurationServlet extends HttpServlet
     //add the concept bean to the OC vector and store it in the vector
     Vector<EVS_Bean> vObjectClass = (Vector)session.getAttribute("vObjectClass");
     if (vObjectClass == null) vObjectClass = new Vector<EVS_Bean>();
+    //get the evs user bean
+    EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+    if (eUser == null) eUser = new EVS_UserBean();
     
     eBean.setCON_AC_SUBMIT_ACTION("INS");
     eBean.setCONTE_IDSEQ(decBean.getDEC_CONTE_IDSEQ());
     String eDB = eBean.getEVS_DATABASE();
     if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
     {
-      eDB = eBean.getVocabAttr(m_eUser, eBean.getEVS_ORIGIN(), "vocabName", "vocabDBOrigin");
+      eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), "vocabName", "vocabDBOrigin");
       if (eDB.equals("MetaValue")) eDB = eBean.getEVS_ORIGIN();
       eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
     }
@@ -4582,12 +4630,16 @@ public class NCICurationServlet extends HttpServlet
     //add the concept bean to the OC vector and store it in the vector
     Vector<EVS_Bean> vProperty = (Vector)session.getAttribute("vProperty");
     if (vProperty == null) vProperty = new Vector<EVS_Bean>();
+    //get the evs user bean
+    EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+    if (eUser == null) eUser = new EVS_UserBean();
+    
     eBean.setCON_AC_SUBMIT_ACTION("INS");
     eBean.setCONTE_IDSEQ(decBean.getDEC_CONTE_IDSEQ());
     String eDB = eBean.getEVS_DATABASE();
     if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
     {
-      eDB = eBean.getVocabAttr(m_eUser, eBean.getEVS_ORIGIN(), "vocabName", "vocabDBOrigin");
+      eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), "vocabName", "vocabDBOrigin");
       if (eDB.equals("MetaValue")) eDB = eBean.getEVS_ORIGIN();
       eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
     }
@@ -4681,6 +4733,14 @@ public class NCICurationServlet extends HttpServlet
           insAC.storeStatusMsg("Unable to get the selected row from the Rep Term search results.");
           return;
         }
+        //send it back if unable to obtion the concept
+        if (m_REP == null || m_REP.getLONG_NAME() == null)
+        {
+          insAC.storeStatusMsg("Unable to obtain concept from the selected row of the " + sComp + " search results.\\n" + 
+              "Please try again.");
+          return;
+        }
+
         //handle the primary search
         if(sComp.equals("RepTerm"))
         {
@@ -4718,7 +4778,7 @@ public class NCICurationServlet extends HttpServlet
       else
       {
         EVS_Bean eBean = this.getEVSSelRow(req);
-        if (eBean != null)
+        if (eBean != null && eBean.getLONG_NAME() != null)
         {
           if (sComp.equals("VDObjectClass"))
           {
@@ -4765,12 +4825,16 @@ public class NCICurationServlet extends HttpServlet
     //add the concept bean to the OC vector and store it in the vector
     Vector<EVS_Bean> vRepTerm = (Vector)session.getAttribute("vRepTerm");
     if (vRepTerm == null)  vRepTerm = new Vector<EVS_Bean>();
+    //get the evs user bean
+    EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+    if (eUser == null) eUser = new EVS_UserBean();
+    
     eBean.setCON_AC_SUBMIT_ACTION("INS");
     eBean.setCONTE_IDSEQ(vdBean.getVD_CONTE_IDSEQ());
     String eDB = eBean.getEVS_DATABASE();
     if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
     {
-      eDB = eBean.getVocabAttr(m_eUser, eBean.getEVS_ORIGIN(), "vocabName", "vocabDBOrigin");
+      eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), "vocabName", "vocabDBOrigin");
       if (eDB.equals("MetaValue")) eDB = eBean.getEVS_ORIGIN();
       eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
     }  
@@ -5047,7 +5111,7 @@ public class NCICurationServlet extends HttpServlet
       Vector<PV_Bean> vVDPVList = (Vector)session.getAttribute("VDPVList");
       if (vVDPVList == null) vVDPVList = new Vector<PV_Bean>();
       //get the VMs selected from EVS from the page.
-      Vector vEVSList = this.getEVSSelRowVector(req, new Vector());
+      Vector<EVS_Bean> vEVSList = this.getEVSSelRowVector(req, new Vector<EVS_Bean>());
       if (vEVSList != null)
       {
         //get the parent concept which is same for all the selected values
@@ -7869,6 +7933,7 @@ public class NCICurationServlet extends HttpServlet
        DEC_Bean oldDEC = new DEC_Bean();
        oldDEC = oldDEC.cloneDEC_Bean(m_DEC);
        session.setAttribute("oldDECBean", oldDEC);
+       this.clearCreateSessionAttributes(req, res);  //clear some session attributes
       // session.setAttribute("oldDECBean", m_DEC);
        ForwardJSP(req, res, "/CreateDECPage.jsp");
   }
@@ -7905,6 +7970,8 @@ public class NCICurationServlet extends HttpServlet
        de.setAC_PREF_NAME_TYPE("SYS");
        session.setAttribute("m_DE", de);
        session.setAttribute("oldDEBean", new DE_Bean());
+
+       this.clearCreateSessionAttributes(req, res);  //clear some session attributes
        ForwardJSP(req, res, "/CreateDEPage.jsp");
   }
 
@@ -10906,8 +10973,9 @@ public class NCICurationServlet extends HttpServlet
   throws Exception
   {
     HttpSession session = req.getSession();
-    clearSessionAttributes(req, res);
+    this.clearSessionAttributes(req, res);
     this.clearBuildingBlockSessionAttributes(req, res);
+    this.clearCreateSessionAttributes(req, res);
     String sMAction = (String)req.getParameter("hidMenuAction");
     if (sMAction == null) sMAction = "nothing";
     session.setAttribute("DDEAction", "nothing");  //reset from "CreateNewDEFComp"
@@ -11134,7 +11202,7 @@ public class NCICurationServlet extends HttpServlet
        vCompAtt.addElement("Definition");
        vCompAtt.addElement("Name");
        vCompAtt.addElement("Origin");
-       vCompAtt.addElement("Concept Name");
+      // vCompAtt.addElement("Concept Name");
        vCompAtt.addElement("Effective Begin Date");
        vCompAtt.addElement("Effective End Date");
        vCompAtt.addElement("Creator");
@@ -11150,7 +11218,7 @@ public class NCICurationServlet extends HttpServlet
        vCompAtt.addElement("CSI Type");
        vCompAtt.addElement("CSI Definition");
        vCompAtt.addElement("CS Long Name");
-       vCompAtt.addElement("Concept Name");
+      // vCompAtt.addElement("Concept Name");
        vCompAtt.addElement("Context");
        vCompAtt.addElement("All Attributes");
     }

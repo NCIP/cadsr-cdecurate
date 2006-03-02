@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.5 2006-03-02 22:55:25 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -365,7 +365,7 @@ public class SetACService implements Serializable
 
   } // end of setValidatePageValues
 
-  private Vector addDatesToValidatePage(String sBegin, String sEnd, String sWFS, String editAction, 
+  private Vector<String> addDatesToValidatePage(String sBegin, String sEnd, String sWFS, String editAction, 
       Vector<String> vValidate, String sOriginAction)
   {
     try
@@ -424,7 +424,8 @@ public class SetACService implements Serializable
    * @param vValidate Vector of validate data
    * @return Vector of validate data
    */
-  private Vector addEditPVDatesToValidatePage(HttpServletRequest req, String pgBDate, String pgEDate, Vector<String> vValidate)
+  private Vector<String> addEditPVDatesToValidatePage(HttpServletRequest req, String pgBDate, 
+      String pgEDate, Vector<String> vValidate)
   {
     try
     {
@@ -512,7 +513,7 @@ public class SetACService implements Serializable
   * @throws ServletException  If servlet exception occured
   */
   public void addDDEToDEValidatePage(HttpServletRequest req,
-          HttpServletResponse res, Vector vValidate, String sOriginAction) throws ServletException,IOException
+          HttpServletResponse res, Vector<String> vValidate, String sOriginAction) throws ServletException,IOException
   {
       String strInValid = "valid";
       boolean bNotMandatory = false;
@@ -616,7 +617,7 @@ public class SetACService implements Serializable
           || sMenu.equalsIgnoreCase("NewDECFromMenu") || sOriginAction.indexOf("CreateNewDEC") > -1))
         isUserEnter = true;
         
-      Vector vValidate = new Vector();
+      Vector<String> vValidate = new Vector<String>();
       String s;
       boolean bMandatory = true;
       boolean bNotMandatory = false;
@@ -847,7 +848,7 @@ public class SetACService implements Serializable
 //System.out.println("setValidatePageValuesVD");
       HttpSession session = req.getSession();
       GetACSearch getACSer = new GetACSearch(req, res, m_servlet);
-      Vector vValidate = new Vector();
+      Vector<String> vValidate = new Vector<String>();
       String s;
       boolean bMandatory = true;
       boolean bNotMandatory = false;
@@ -1109,7 +1110,7 @@ public class SetACService implements Serializable
         PV_Bean m_PV, GetACService getAC) throws ServletException,IOException, Exception
   {
       HttpSession session = req.getSession();
-      Vector vValidate = new Vector();
+      Vector<String> vValidate = new Vector<String>();
       String s;
       boolean bMandatory = true;
       boolean bNotMandatory = false;
@@ -1185,7 +1186,7 @@ public class SetACService implements Serializable
    * @param sOrigin String originAction
    * @return vValidate the vector of updated validate message
    */
-  private Vector setValidatePrefNameType(String sType, boolean isUser, Vector vValidate, String sOrigin)
+  private Vector<String> setValidatePrefNameType(String sType, boolean isUser, Vector<String> vValidate, String sOrigin)
   {
     try
     {
@@ -1219,7 +1220,7 @@ public class SetACService implements Serializable
   {
 //System.out.println("in setValidateBlockEdit");
      HttpSession session = req.getSession();
-     Vector vValidate = new Vector();
+     Vector<String> vValidate = new Vector<String>();
      boolean bMandatory = true;
      boolean bNotMandatory = false;
      String strInValid = "";
@@ -1447,7 +1448,7 @@ public class SetACService implements Serializable
    * @throws java.io.IOException
    * @throws java.lang.Exception
    */
-  private Vector setValidateNameComp(Vector vValidate, String acType, HttpServletRequest req,
+  private Vector<String> setValidateNameComp(Vector<String> vValidate, String acType, HttpServletRequest req,
           HttpServletResponse res, DEC_Bean m_DEC, EVS_Bean m_OC, EVS_Bean m_PC, 
           VD_Bean m_VD, EVS_Bean m_REP) 
           throws ServletException,IOException, Exception
@@ -1633,7 +1634,7 @@ public class SetACService implements Serializable
    * @return vValidate the vector to display validate status
    * @throws java.lang.Exception
    */
-  private Vector setValidateVDOtherAttr(Vector vValidate, VD_Bean m_VD, String sOriginAction) throws Exception
+  private Vector<String> setValidateVDOtherAttr(Vector<String> vValidate, VD_Bean m_VD, String sOriginAction) throws Exception
   {
       String s = "";
       String strInValid = "";
@@ -1903,7 +1904,7 @@ public class SetACService implements Serializable
   {
       HttpSession session = req.getSession();
       InsACService insAC = new InsACService(req, res, m_servlet);
-      Vector vValidate = new Vector();
+      Vector<String> vValidate = new Vector<String>();
       String s;
       boolean bMandatory = true;
       boolean bNotMandatory = false;
@@ -3710,7 +3711,7 @@ public class SetACService implements Serializable
    * @throws javax.servlet.ServletException
    * @throws java.io.IOException
    */
- private Vector getACCSIFromPage(Vector vCSCSIs, Vector vACCSIs, Vector vCSCSIList, 
+ private Vector<AC_CSI_Bean> getACCSIFromPage(Vector vCSCSIs, Vector vACCSIs, Vector vCSCSIList, 
       Vector vACs, Vector vAC_Name) throws ServletException,IOException
  {
     Vector<AC_CSI_Bean> vACCSIList = new Vector<AC_CSI_Bean>();   //get selected CSCSI atributes of this AC
@@ -3824,7 +3825,7 @@ public class SetACService implements Serializable
         
       //store accsi bean list list in the session
       Vector vCSList = (Vector)session.getAttribute("CSCSIList");
-      Vector vList = getACCSIFromPage(vCSCSIs, vACCSIs, vCSList, vACs, vACNames);
+      Vector<AC_CSI_Bean> vList = getACCSIFromPage(vCSCSIs, vACCSIs, vCSList, vACs, vACNames);
       deBean.setAC_AC_CSI_VECTOR(vList);//req.setAttribute("vACCSIList", vACCSIList);
         
       //get associated ac-csi
@@ -4335,9 +4336,9 @@ public class SetACService implements Serializable
   /**
   * Method to check if name has changed for released element.
   *
-  * @param String oldName
-  * @param String newName
-  * @param String oldStatus
+  * @param oldName  String old name
+  * @param newName String new name
+  * @param oldStatus  String old status
   *
   * @return String strValid message if not valid. otherwise empty string.
   */
@@ -4588,17 +4589,18 @@ public class SetACService implements Serializable
    * @param m_VD VD_Bean of the selected vd.
    * @param vValidate vector of validation data
    * @param sOriginAction string page action
+   * @return vector of validate
    * 
    * @throws Exception
    */
-   private Vector validateVDPVS(HttpServletRequest req, HttpServletResponse res, 
-          VD_Bean m_VD, Vector vValidate, String sOriginAction) throws Exception
+   private Vector<String> validateVDPVS(HttpServletRequest req, HttpServletResponse res, 
+          VD_Bean m_VD, Vector<String> vValidate, String sOriginAction) throws Exception
    {
         HttpSession session = req.getSession(); 
         String strInvalid = "";
         String strVMInvalid = "";
         //get current value domains vd-pv attributes
-        Vector vVDPVS = (Vector)session.getAttribute("VDPVList");  
+        Vector<PV_Bean> vVDPVS = (Vector)session.getAttribute("VDPVList");  
         InsACService insAC = new InsACService(req, res, m_servlet);
         String vdID = m_VD.getVD_VD_IDSEQ();
         //remove vdidseq if new vd

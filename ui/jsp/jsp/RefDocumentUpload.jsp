@@ -86,7 +86,7 @@
 
 %>
 
-<INPUT type="button" name="btnBack" value="Back" onclick="javascript:Back();">
+<INPUT type="button" name="btnBack" value="Back" style="width: 125; height: 30"  onclick="javascript:Back();">
 
 
 <p style="font-size: 12pt; font-weight: bold">Reference Document Attachments for:&nbsp;
