@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.5 2006-03-02 22:55:25 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -792,7 +792,7 @@ public final class EVS_UserBean implements Serializable
       //get it again for all tools property
       if (vList == null || vList.size()<1)
       {
-        vList = getAC.getToolOptionData("ALL", "EVS.URL", "");
+        vList = getAC.getToolOptionData("EVS", "URL", "");
         if (vList != null && vList.size()>0)
         {
           TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
@@ -800,7 +800,7 @@ public final class EVS_UserBean implements Serializable
           //System.out.println(tob.getVALUE() + " evs link cadsr for all " + eURL);
         }
       }
-     // if (eURL == null || eURL.equals("")) eURL = "http://cabio.nci.nih.gov/cacore30/server/HTTPServer";
+   //   if (eURL != null) System.out.println(" evs url " + eURL);
       this.setEVSConURL(eURL);
      // if (arrVocab == null) arrVocab = new java.util.List();
       //make sure of the matching before store it in he bean

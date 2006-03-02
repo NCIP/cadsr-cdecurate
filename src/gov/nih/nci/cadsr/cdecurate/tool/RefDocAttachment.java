@@ -1,4 +1,4 @@
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.5 2006-03-02 22:55:25 hardingr Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -11,6 +11,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +20,8 @@ import java.sql.SQLException;
 import java.util.Random;
 import java.util.Vector;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -275,8 +279,10 @@ public void doOpen (){
 						con.close();
 						
 					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						StringWriter sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+						msg = "Unable to access the database.";
 					}
 					
 			    	
@@ -524,14 +530,20 @@ private void doBlobtoFile (BLOB bRefBlob, String fileName){
 			is.close();
 			is = null;
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+			msg = "Unable to save file from database.";
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+			msg = "Unable to access the database to download file data.";
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+			msg = "Problem accessing file.";
 		}
 
 }
@@ -582,15 +594,22 @@ private void doFiletoBlob (Connection con, String fileName){
 		os.close();
 		pstmt.close();
 	} catch (FileNotFoundException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		StringWriter sw = new StringWriter();
+		e.printStackTrace(new PrintWriter(sw));
+		logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+		msg = "File not found. Can not upload file to database.";
 	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		StringWriter sw = new StringWriter();
+		e.printStackTrace(new PrintWriter(sw));
+		logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+		msg = "Unable to access database for file upload.";
 	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		StringWriter sw = new StringWriter();
+		e.printStackTrace(new PrintWriter(sw));
+		logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+		msg = "Unable to access file for upload to the database.";
 	}
 }
-	
+
+
 } // End of Class

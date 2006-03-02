@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.5 2006-03-02 22:55:25 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1973,11 +1973,12 @@ public String parseDefinition(String termStr)
       }
       //call the evs to get resutls
       lstResult = evsService.evsSearch(query);
+ //  System.out.println("App service " + evsService.toString());
     }
     catch(Exception ex)
     {
-      System.out.println("conceptNameSearch lstResults: " + ex.toString());
-      logger.fatal("conceptNameSearch lstResults: " + ex.toString());
+      System.out.println(evsService.toString() + " :conceptNameSearch lstResults: " + ex.toString());
+      logger.fatal(evsService.toString() + " :conceptNameSearch lstResults: " + ex.toString());
       //ex.printStackTrace();
     }  
     return lstResult;

@@ -316,22 +316,25 @@
         sCCodeDB = conArray[rowNo].conVocab;  // document.searchResultsForm.hiddenCCodeDB[rowNo].value;  //evs vocabulary
         sCCode = conArray[rowNo].conID;  // document.searchResultsForm.hiddenCCode[rowNo].value;   //evs code
         var sCode = sCCode + " : " + sCCodeDB;
-        opener.document.createVMForm.CreateDescription.value = editDefinition;
-        opener.document.createVMForm.selShortMeanings.value = editNameLong;
-       // opener.document.createVMForm.taComments.value = sCode;
-        opener.document.createVMForm.EVSConceptID.value = sCode;
-        opener.document.createVMForm.selShortMeanings.disabled = true;
-        if(selDefinition != null && selDefinition != "")
-          opener.document.createVMForm.CreateDescription.disabled = true;
-        else
-          opener.document.createVMForm.CreateDescription.disabled = false;
-        opener.document.createVMForm.hiddenEVSSearch.value = "Searched"; 
-        opener.document.createVMForm.hiddenSelRow.value = rowNo; 
-        //submit vm page to store data in the bean
-        opener.document.createVMForm.newCDEPageAction.value = "appendSearchVM";
-        opener.SubmitValidate("appendSearchVM");
-        //close the window
-        window.close();
+        if (opener.document != null && opener.document.createVMForm != null && opener.document.createVMForm.selShortMeanings != null)
+        {
+	        opener.document.createVMForm.CreateDescription.value = editDefinition;
+	        opener.document.createVMForm.selShortMeanings.value = editNameLong;
+	       // opener.document.createVMForm.taComments.value = sCode;
+	        opener.document.createVMForm.EVSConceptID.value = sCode;
+	        opener.document.createVMForm.selShortMeanings.disabled = true;
+	        if(selDefinition != null && selDefinition != "")
+	          opener.document.createVMForm.CreateDescription.disabled = true;
+	        else
+	          opener.document.createVMForm.CreateDescription.disabled = false;
+	        opener.document.createVMForm.hiddenEVSSearch.value = "Searched"; 
+	        opener.document.createVMForm.hiddenSelRow.value = rowNo; 
+	        //submit vm page to store data in the bean
+	        opener.document.createVMForm.newCDEPageAction.value = "appendSearchVM";
+	        opener.SubmitValidate("appendSearchVM");
+	        //close the window
+	        window.close();
+        }
       }
     }
   }
@@ -1176,7 +1179,7 @@ function createNames(acType)
     //  editNameType = document.searchResultsForm.hiddenName[rowNo].text;   //?
       editDefinition = conArray[rowNo].conDef;  // document.searchResultsForm.hiddenDefSource[rowNo].text;   //evs definition
       editDefSource = conArray[rowNo].conDefSrc;  // document.searchResultsForm.hiddenDefSource[rowNo].value; 
-      sCCodeDB = conArray[rowNo].conDBOrg;  // document.searchResultsForm.hiddenCCodeDB[rowNo].value;  //evs vocabulary
+      sCCodeDB = conArray[rowNo].conVocab;   //conArray[rowNo].conDBOrg;  // document.searchResultsForm.hiddenCCodeDB[rowNo].value;  //evs vocabulary
       sCCode = conArray[rowNo].conID;  // document.searchResultsForm.hiddenCCode[rowNo].value;   //evs code
       editStatus = conArray[rowNo].conStatus;
       if(sCCode == null || sCCode == "null") sCCode = "";

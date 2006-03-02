@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/prod/load_tool_options.sql,v 1.4 2006-02-20 20:52:59 hardingr Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/prod/load_tool_options.sql,v 1.5 2006-03-02 22:55:25 hardingr Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -15,13 +15,20 @@
    or invalid appropriate error messages are displayed via the Curation Tool Login page.
 */
 
---first delete the existing data
-DELETE FROM sbrext.tool_options_view_ext WHERE tool_name = 'CURATION';
 
 --Store evs url for all tools: need to make sure it doesn't exists already before runnning.
-/*INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('ALL', 'EVS.URL', 'http://cbioapp104.nci.nih.gov:49080/cacore31/http/remoteService', 
-	   'Store evs url specific to ALL TOOLS if needed');  */
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('EVS', 'URL', 'http://cbioapp104.nci.nih.gov:49080/cacore31/http/remoteService', 
+	   'Store evs url specific to EVS'); 
+
+--Store browser url for all tools: need to make sure it doesn't exists already before runnning.
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('BROWSER', 'URL', 'http://cdebrowser.nci.nih.gov', 
+	   'Store browser url cde browser'); 
+
+
+--first delete the existing data
+DELETE FROM sbrext.tool_options_view_ext WHERE tool_name = 'CURATION';
 
 
 --Store url for curation tool if needed.

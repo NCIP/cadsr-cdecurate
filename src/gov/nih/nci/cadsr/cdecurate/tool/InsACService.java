@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.4 2006-02-20 20:52:59 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.5 2006-03-02 22:55:25 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -138,7 +138,7 @@ public class InsACService implements Serializable
         sMsg = m_util.parsedStringAlertNewLine(sMsg);
       sMsg = m_util.parsedStringDoubleQuote(sMsg);
       sMsg = m_util.parsedStringSingleQuote(sMsg);
-      if (vStatMsg == null) vStatMsg = new Vector();
+      if (vStatMsg == null) vStatMsg = new Vector<String>();
       //add message to both to string status message and vector stats message if not too big
       if (vStatMsg.size() < 35)
       {
@@ -156,7 +156,9 @@ public class InsACService implements Serializable
       if (!sMsg.equalsIgnoreCase("\\n") && !sMsg.equalsIgnoreCase("\n"))
         sMsg = m_util.parsedStringMsgVectorTabs(sMsg);
       vStatMsg.addElement(sMsg);
-      session.setAttribute("vStatMsg", vStatMsg);    
+      session.setAttribute("vStatMsg", vStatMsg);  
+      //add this message to the logger
+      logger.fatal("Log Status Message " + sMsg);
     }
     catch(Exception e)
     {
@@ -476,12 +478,12 @@ public class InsACService implements Serializable
             //do alternate names create
             if (sInsertFor.equalsIgnoreCase("Version"))
               this.doAltVersionUpdate(sVD_ID, oldVD.getVD_VD_IDSEQ());
-            String oneAlt = this.doAddRemoveAltNames(sVD_ID, sContextID, "create");
+            String oneAlt = this.doAddRemoveAltNames(sVD_ID, sContextID, sAction);   //, "create");
             vd.setALTERNATE_NAME(oneAlt);
             //do reference docuemnts create
             if (sInsertFor.equalsIgnoreCase("Version"))
               this.doRefVersionUpdate(sVD_ID, oldVD.getVD_VD_IDSEQ());
-            String oneRD = this.doAddRemoveRefDocs(sVD_ID, sContextID, "create");
+            String oneRD = this.doAddRemoveRefDocs(sVD_ID, sContextID, sAction);  // "create");
             vd.setREFERENCE_DOCUMENT(oneRD);
             
             //do contact updates
@@ -1763,12 +1765,12 @@ public class InsACService implements Serializable
           //do alternate names create
           if (sInsertFor.equalsIgnoreCase("Version"))
             this.doAltVersionUpdate(sDEC_ID, oldDECID);
-          String oneAlt = this.doAddRemoveAltNames(sDEC_ID, sContextID, "create");
+          String oneAlt = this.doAddRemoveAltNames(sDEC_ID, sContextID, sAction);   //, "create");
           dec.setALTERNATE_NAME(oneAlt);
           //do reference docuemnts create
           if (sInsertFor.equalsIgnoreCase("Version"))
             this.doRefVersionUpdate(sDEC_ID, oldDECID);
-          String oneRD = this.doAddRemoveRefDocs(sDEC_ID, sContextID, "create");
+          String oneRD = this.doAddRemoveRefDocs(sDEC_ID, sContextID, sAction);  // "create");
           dec.setREFERENCE_DOCUMENT(oneRD);
           
           //do contact updates
@@ -3059,7 +3061,7 @@ public class InsACService implements Serializable
           //do alternate names create          
           if (sInsertFor.equalsIgnoreCase("Version"))
             this.doAltVersionUpdate(sDE_ID, oldDEID);
-          String oneAlt = this.doAddRemoveAltNames(sDE_ID, sContextID, "create");
+          String oneAlt = this.doAddRemoveAltNames(sDE_ID, sContextID, sAction);   //, "create");
           de.setALTERNATE_NAME(oneAlt);
           //do reference docuemnts create
           if (sInsertFor.equalsIgnoreCase("Version"))
@@ -3105,7 +3107,7 @@ public class InsACService implements Serializable
               m_classReq.setAttribute("retcode", sReturn);
 
 
-          String oneRD = this.doAddRemoveRefDocs(sDE_ID, sContextID, "create");
+          String oneRD = this.doAddRemoveRefDocs(sDE_ID, sContextID, sAction);   //"create");
           de.setREFERENCE_DOCUMENT(oneRD);
          
           //do contact updates
@@ -5343,7 +5345,7 @@ public class InsACService implements Serializable
         if (altNameBean == null) altNameBean = new ALT_NAME_Bean();
         String altAC = altNameBean.getAC_IDSEQ();
         //new de from owning context
-        if (altAC == null || altAC.equals("") || altAC.equals("new"))
+        if (altAC == null || altAC.equals("") || altAC.equals("new") || desAction.equals("INS"))
           altAC = sDE;
    // System.out.println(sDE + " add alt names AC " + altAC);
        //remove it only for matching ac
@@ -5416,7 +5418,7 @@ public class InsACService implements Serializable
         if (refDocBean == null) refDocBean = new REF_DOC_Bean();
         String refAC = refDocBean.getAC_IDSEQ();
         //new de from owning context
-        if (refAC == null || refAC.equals("") || refAC.equals("new"))
+        if (refAC == null || refAC.equals("") || refAC.equals("new") || desAction.equals("INS"))
           refAC = sDE;
   //  System.out.println(sDE + " add refdocs AC " + refAC);
        if (refAC != null && sDE.equals(refAC))
