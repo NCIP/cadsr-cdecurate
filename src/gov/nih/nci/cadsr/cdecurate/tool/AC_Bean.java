@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_Bean.java,v 1.5 2006-03-02 22:55:25 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_Bean.java,v 1.7 2006-03-07 18:10:31 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
