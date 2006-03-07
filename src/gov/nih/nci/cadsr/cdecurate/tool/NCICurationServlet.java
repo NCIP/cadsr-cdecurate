@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.6 2006-03-02 23:17:56 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.7 2006-03-07 18:10:31 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2508,8 +2508,8 @@ public class NCICurationServlet extends HttpServlet
     //get the request vectors
     Vector<String> vACId = (Vector)session.getAttribute("vACId");
     if (vACId == null) vACId = new Vector<String>();
-    Vector vACName = (Vector)session.getAttribute("vACName");
-    if (vACName == null) vACName = new Vector();
+    Vector<String> vACName = (Vector)session.getAttribute("vACName");
+    if (vACName == null) vACName = new Vector<String>();
     String sContID = (String)req.getParameter("selContext");
     String sContext = (String)req.getParameter("contextName");
     if (sContID != null) req.setAttribute("desContext", sContID);
@@ -2518,6 +2518,7 @@ public class NCICurationServlet extends HttpServlet
     String selType = (String)req.getParameter("selAltType");
     //handle the context and ac name for new AC (DE, DEC and VD)
     if (vACId.size() < 1) vACId.addElement("new");
+    if (vACName.size() < 1) vACName.addElement("new");
     if (sContID == null || sContID.equals("")) sContID = "new";
     //continue with acitons
     for (int i =0; i<vACId.size(); i++)
@@ -2661,8 +2662,8 @@ public class NCICurationServlet extends HttpServlet
     Vector<REF_DOC_Bean> vRefDocs = (Vector)session.getAttribute("AllRefDocList");
     Vector<String> vACId = (Vector)session.getAttribute("vACId");
     if (vACId == null) vACId = new Vector<String>();
-    Vector vACName = (Vector)session.getAttribute("vACName");
-    if (vACName == null) vACName = new Vector();
+    Vector<String> vACName = (Vector)session.getAttribute("vACName");
+    if (vACName == null) vACName = new Vector<String>();
     Vector vContext = (Vector)session.getAttribute("vWriteContextDE");
     if (vContext == null) vContext = new Vector();
     //get request attributes
@@ -2676,6 +2677,7 @@ public class NCICurationServlet extends HttpServlet
     String selUrl = (String)req.getParameter("txtRefURL");
     //handle the context and ac name for new AC (DE, DEC and VD)
     if (vACId.size() < 1) vACId.addElement("new");
+    if (vACName.size() < 1) vACName.addElement("new");
     if (sContID == null || sContID.equals("")) sContID = "new";
     //do add ref doc action
     for (int i =0; i<vACId.size(); i++)
