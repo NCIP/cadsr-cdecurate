@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/dev/load_tool_options.sql,v 1.5 2006-03-02 22:55:25 hardingr Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/dev/load_tool_options.sql,v 1.8 2006-03-20 13:15:36 hardingr Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -100,7 +100,7 @@ VALUES ('CURATION', 'EVS.VOCAB.1.VOCABCODETYPE', 'NCI_CONCEPT_CODE',
 	   'Store vocab code type (alt type) for the first vocabulary');
 --Store vocab meta source for the first vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.1.METASOURCE', 'NCI2005_05', 
+VALUES ('CURATION', 'EVS.VOCAB.1.METASOURCE', 'NCI2005_10E', 
 	   'Store vocab meta source for the first vocabulary');
 --Store vocab to mark if used for parent search for the first vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -312,7 +312,7 @@ VALUES ('CURATION', 'EVS.VOCAB.7.VOCABCODETYPE', 'SNOMED_CODE',
 	   'Store vocab code type (alt type) for the SNOMED vocabulary');
 --Store vocab meta source for the SNOMED vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.7.METASOURCE', 'SNOMEDCT_2004_01',
+VALUES ('CURATION', 'EVS.VOCAB.7.METASOURCE', 'SNOMEDCT_2004_01_31',
 	   'Store vocab meta source for the SNOMED vocabulary');
 --Store vocab to mark if used for parent search for the SNOMED vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -356,11 +356,11 @@ VALUES ('CURATION', 'EVS.DEFSOURCE.1', 'NCI',
 	   'Store NCI def source to filter out the multiple definition used');
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.DEFSOURCE.2', 'NCI-GLOSS',
+VALUES ('CURATION', 'EVS.DEFSOURCE.2', 'NCI-GLOSS_0510E',
 	   'Store NCI def source to filter out the multiple definition used');
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.DEFSOURCE.3', 'NCI2005_05',
+VALUES ('CURATION', 'EVS.DEFSOURCE.3', 'NCI2005_10E',
 	   'Store NCI def source to filter out the multiple definition used');
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)

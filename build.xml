@@ -1,6 +1,6 @@
 <project name="CDE Curation Tool" default="init" basedir=".">
     <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.18 2006-03-02 22:55:25 hardingr Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.21 2006-03-20 13:15:35 hardingr Exp $
         $Name: not supported by cvs2svn $
     -->
     <description>
