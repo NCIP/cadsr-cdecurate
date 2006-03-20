@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.5 2006-03-02 22:55:25 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.8 2006-03-20 13:15:39 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -3812,6 +3812,7 @@ public class SetACService implements Serializable
             vACs.addElement(sAC);
             //get the ac name            
             String acName = deBean.getDE_LONG_NAME();
+          //  System.out.println(sID + " : " + sACCSI + " : " + sAC + " : " + vIDs.indexOf(sAC) + " : " + vNames.size());
             if (sAC != null && vNames != null && vIDs != null)
             {
               if (vIDs.indexOf(sAC) >= 0)              
