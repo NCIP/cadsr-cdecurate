@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.7 2006-03-07 18:10:31 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.8 2006-03-20 13:15:38 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2118,8 +2118,8 @@ public String parseDefinition(String termStr)
     }
     catch(Exception ex)
     {
-      System.out.println("conceptNameSearch lstResults: " + ex.toString());
-      logger.fatal("conceptNameSearch lstResults: " + ex.toString());
+      System.out.println("doMetaSearch exception : " + ex.toString());
+      logger.fatal("doMetaSearch exception : " + ex.toString());
     }
     return vList;
   }
