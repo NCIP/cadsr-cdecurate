@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/prod/update_tool_options_url.sql,v 1.1 2006-03-22 22:20:51 hardingr Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/prod/update_tool_options_url.sql,v 1.2 2006-03-23 12:48:22 hardingr Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -42,3 +42,6 @@ UPDATE sbrext.tool_options_view_ext
 SET value = 'http://cdecurate.nci.nih.gov/filecache/'
 WHERE tool_name = 'CURATION' AND property = 'REFDOC_FILEURL'; 
   
+
+--commit the updates
+commit;
