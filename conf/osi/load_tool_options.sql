@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/osi/load_tool_options.sql,v 1.5 2006-03-02 22:55:25 hardingr Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/osi/load_tool_options.sql,v 1.9 2006-03-23 17:33:52 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -18,12 +18,12 @@
 
 --Store evs url for all tools: need to make sure it doesn't exists already before runnning.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('EVS', 'URL', 'http://cbioapp104.nci.nih.gov:49080/cacore31/http/remoteService', 
+VALUES ('EVS', 'URL', 'http://cabio.nci.nih.gov/cacore31/http/remoteService', 
 	   'Store evs url specific to EVS'); 
 
 --Store browser url for all tools: need to make sure it doesn't exists already before runnning.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('BROWSER', 'URL', 'http://cdebrowser.nci.nih.gov', 
+VALUES ('BROWSER', 'URL', 'http://cdebrowser.company.com', 
 	   'Store browser url cde browser'); 
 
 
@@ -33,12 +33,12 @@ DELETE FROM sbrext.tool_options_view_ext WHERE tool_name = 'CURATION';
 
 --Store url for curation tool if needed.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'URL', 'http://cdecurate.nci.nih.gov', 
+VALUES ('CURATION', 'URL', 'http://cdecurate.company.com', 
 	   'Store evs alternate url specific to curation tool if needed');
 
 --Store evs alternate url specific to curation tool if needed.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.URL', 'http://cbioapp104.nci.nih.gov:49080/cacore31/http/remoteService', 
+VALUES ('CURATION', 'EVS.URL', 'http://cabio.nci.nih.gov/cacore31/http/remoteService', 
 	   'Store evs alternate url specific to curation tool if needed');
 
 --ALL VOCAB ATTRIBUTES
@@ -99,7 +99,7 @@ VALUES ('CURATION', 'EVS.VOCAB.1.VOCABCODETYPE', 'NCI_CONCEPT_CODE',
 	   'Store vocab code type (alt type) for the first vocabulary');
 --Store vocab meta source for the first vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.1.METASOURCE', 'NCI2005_05', 
+VALUES ('CURATION', 'EVS.VOCAB.1.METASOURCE', 'NCI2005_10E', 
 	   'Store vocab meta source for the first vocabulary');
 --Store vocab to mark if used for parent search for the first vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -311,7 +311,7 @@ VALUES ('CURATION', 'EVS.VOCAB.7.VOCABCODETYPE', 'SNOMED_CODE',
 	   'Store vocab code type (alt type) for the SNOMED vocabulary');
 --Store vocab meta source for the SNOMED vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.7.METASOURCE', 'SNOMEDCT_2004_01',
+VALUES ('CURATION', 'EVS.VOCAB.7.METASOURCE', 'SNOMEDCT_2004_01_31',
 	   'Store vocab meta source for the SNOMED vocabulary');
 --Store vocab to mark if used for parent search for the SNOMED vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -355,11 +355,11 @@ VALUES ('CURATION', 'EVS.DEFSOURCE.1', 'NCI',
 	   'Store NCI def source to filter out the multiple definition used');
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.DEFSOURCE.2', 'NCI-GLOSS',
+VALUES ('CURATION', 'EVS.DEFSOURCE.2', 'NCI-GLOSS_0510E',
 	   'Store NCI def source to filter out the multiple definition used');
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.DEFSOURCE.3', 'NCI2005_05',
+VALUES ('CURATION', 'EVS.DEFSOURCE.3', 'NCI2005_10E',
 	   'Store NCI def source to filter out the multiple definition used');
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -529,5 +529,9 @@ values ('CURATION', 'REFDOC_FILECACHE', '/local/content/cdecurate/filecache/',
 
 --Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
-values ('CURATION', 'REFDOC_FILEURL', 'http://cdecurate.nci.nih.gov/filecache/',
+values ('CURATION', 'REFDOC_FILEURL', 'http://cdecurate.company.com/filecache/',
 'Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.');  
+
+
+--commit the updates
+commit;
