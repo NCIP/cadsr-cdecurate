@@ -48,10 +48,6 @@
 
   function SubmitValidate(origin)
   {
-	//check if the date is valid
-	// var isValid = isDateValid();
-	// if (isValid == "valid")
-	// {
         //store the selected valid value name in the hidden field
       	if(document.createPVForm.selValidValue != null)
       	{
@@ -74,8 +70,12 @@
             window.status = "Submitting data, it may take a minute, please wait.....";
 	     } 
         document.createPVForm.Message.style.visibility="visible";
+	    //disable the buttons
+	    document.createPVForm.btnValidate.disabled = true;
+	    document.createPVForm.btnClear.disabled = true;
+	   	document.createPVForm.btnBack.disabled = true;
+	    //submit the form
         document.createPVForm.submit();
-    // }
   }
  
  function isDateValid()

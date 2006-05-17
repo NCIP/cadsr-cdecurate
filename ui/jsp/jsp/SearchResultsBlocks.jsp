@@ -17,7 +17,7 @@
    UtilService serUtil = new UtilService();
    Vector results = (Vector)session.getAttribute("results");
    if (results == null) results = new Vector();
-   EVS_UserBean uBean = (EVS_UserBean)session.getAttribute("EvsUserBean");
+   EVS_UserBean uBean = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute("EvsUserBean");
    if (uBean == null) uBean = new EVS_UserBean();
    Vector vrVocab = uBean.getVocabNameList();   //(Vector)session.getAttribute("dtsVocabNames");  //list of vocabulary names
    if (vrVocab == null) vrVocab = new Vector();
@@ -393,7 +393,7 @@
           EVS_Bean eBean = (EVS_Bean)vSearchRes.get(j);
           if (eBean == null) eBean = new EVS_Bean();
           String strVocab = eBean.getEVS_DATABASE();  
-          vName = eBean.getVocabAttr(uBean, strVocab, "vocabDBOrigin", "vocabName");
+          vName = eBean.getVocabAttr(uBean, strVocab, EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME);  // "vocabDBOrigin", "vocabName");
    // System.out.println(vName + " jsp vocab " + strVocab);
         }
          String ckName = ("CK" + j);

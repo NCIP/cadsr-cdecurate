@@ -47,32 +47,33 @@
       document.body.style.cursor = "default";
    }
 
-   defaultStatus = "Validate Data Element status, go back to modify it or submit to create it"
+   //defaultStatus = "Validate Data Element status, go back to modify it or submit to create it"
    function submit()
    {
-      validateVMForm.submit();
+      hourglass();
+      document.validateVMForm.Message.style.visibility="visible";
+      defaultStatus = "Submitting data, it may take a minute, please wait....."
+      document.validateVMForm.btnSubmit.disabled = true;
+      document.validateVMForm.btnBack.disabled = true;
+      document.validateVMForm.submit();
    }
 
    function EditPV()
    {
-      hourglass();
-       document.validateVMForm.ValidateVMPageAction.value = "reEditPV";
-       document.validateVMForm.submit();
+      document.validateVMForm.ValidateVMPageAction.value = "reEditPV";
+      submit();
    }
 
    function SubmitValidate()
    {
-      hourglass();
-      document.validateVMForm.Message.style.visibility="visible";
       document.validateVMForm.ValidateVMPageAction.value = "submitVM";
-      defaultStatus = "Submitting data, it may take a minute, please wait....."
-      document.validateVMForm.submit();
+	  submit();
    }
 
    function DefSuggestion()
    {
       if (evsWindow && !evsWindow.closed)
-        	evsWindow.focus();
+        evsWindow.focus();
       else
        	evsWindow = window.open("jsp/EVSSearch.jsp", "EVSWindow", "width=600,height=400,resizable=yes,scrollbars=yes");
    }
@@ -84,28 +85,23 @@
 <font color="#CCCCCC"></font>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
-    <td width="764" height="29" valign="top">
+    <td valign="top">
       <% if (isValid == true) { %>
-          <input type="button" name="Submit" value="Submit" style="width: 125", "height: 30" onClick="SubmitValidate()">
+          <input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()">
       <% } else { %>
-          <input type="button" name="Submit" value="Submit" style="width: 125", "height: 30" onClick="SubmitValidate()" disabled>
+          <input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()" disabled>
       <% } %>
         &nbsp;&nbsp;
-      <input type="button" name="btnBack" value="Back" style="width: 125", "height: 30" onClick="EditPV();">
+      <input type="button" name="btnBack" value="Back" style="width:125" onClick="EditPV();">
         &nbsp;&nbsp;
     	<img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" 						style="visibility:hidden;">
     </td>
   </tr>
-<!--  <tr  height="40">
-    <td valign="middle"><label><font size="3"><strong><font size="4">Create/Edit
-      <font color="#FF0000">Value Meaning</font> - Validate Mandatory & Optional
-      Attributes</font></strong></font></label> <font size="4"></font>
-  </tr> -->
 </table>
 <br>
 <table width="100%" border="2" cellspacing="0" cellpadding="0" bordercolor="#000000">
   <caption>
-  <h3 align="left">Validate <font color="#FF0000">Value Meaning </font> Attributes</font></h3>
+  <h3 align="left">Validate <font color="#FF0000">Value Meaning </font> Attributes</h3>
   </caption>
   <tr>
     <td width="282" height="20" valign="top" bgcolor="#FFFFFF" bordercolor="#000000">

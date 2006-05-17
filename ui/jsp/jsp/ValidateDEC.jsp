@@ -50,24 +50,24 @@ CreateOrDisplayDEC
     defaultStatus = "Validate Data Element status, go back to modify it or submit to create it"
     function submit()
     {
-        validateDECForm.submit();
+       hourglass();
+       document.validateDECForm.Message.style.visibility="visible";
+       defaultStatus = "Submitting data, it may take a minute, please wait....."
+       document.validateDECForm.btnSubmit.disabled = true;
+       document.validateDECForm.btnBack.disabled = true;
+       document.validateDECForm.submit();
     }
 
     function EditDEC()
     {
-       hourglass();
        document.validateDECForm.ValidateDECPageAction.value = "reEditDEC";
-       //window.history.back();
-       document.validateDECForm.submit();
+       submit();
     }
 
     function SubmitValidate()
     {
-       hourglass();
        document.validateDECForm.ValidateDECPageAction.value = "submitDEC";
-       document.validateDECForm.Message.style.visibility="visible";
-       defaultStatus = "Submitting data, it may take a minute, please wait....."
-       document.validateDECForm.submit();
+       submit();
     }
 
    function DefSuggestion()
@@ -89,12 +89,12 @@ CreateOrDisplayDEC
   <tr>
     <td width="1200" height="29" valign="top">
       <% if (isValid == true) { %>
-          <input type="button" name="Submit" value="Submit" style="width: 125", "height: 30" onClick="SubmitValidate()">
+          <input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()">
       <% } else { %>
-          <input type="button" name="Submit" value="Submit" style="width: 125", "height: 30" onClick="SubmitValidate()" disabled>
+          <input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()" disabled>
       <% } %>
         &nbsp;&nbsp;
-      <input type="button" name="btnBack" value="Back" style="width: 125", "height: 30" onClick="EditDEC();">
+      <input type="button" name="btnBack" value="Back" style="width:125" onClick="EditDEC();">
         &nbsp;&nbsp;
       <img name="Message" src="Assets/SubmitMessageFinal.gif" width="300" height="25" alt="WaitMessage" style="visibility:hidden;">
     </td>

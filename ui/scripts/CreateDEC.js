@@ -418,40 +418,18 @@ function SearchCDValue()
        //keep the cscsi selection list selected
        selectMultiSelectList();
        
-    /*   if (origin == "validate")
-       {
-           document.newDECForm.newCDEPageAction.value = "validate";
-           window.status = "Validating data, it may take a minute, please wait.....";
-       }
-       else if (origin == "submit")
-       {
-         document.newDECForm.newCDEPageAction.value = "submit";
-         window.status = "Submitting data, it may take a minute, please wait.....";
-       } 
-      else if (origin == "refresh")
-      {   
-        document.newDECForm.newCDEPageAction.value = "refreshCreateDEC";
-        window.status = "Validating data, it may take a minute, please wait....."; 
-      }
-      else if (origin == "UseSelection")
-      {  
-        document.newDECForm.newCDEPageAction.value = "UseSelection";
-        window.status = "Validating data, it may take a minute, please wait....."; 
-      }
-      else if (origin == "RemoveSelection")
-      {  
-        document.newDECForm.newCDEPageAction.value = "RemoveSelection";
-        window.status = "Validating data, it may take a minute, please wait....."; 
-      }  
-      else if (origin == "changeNameType")
-      {
-         document.newDECForm.newCDEPageAction.value = "changeNameType";
-         window.status = "Refreshing the page, it may take a minute, please wait.....";
-      }   */  
        if (origin == "refresh") origin = "refreshCreateDEC";
        document.newDECForm.newCDEPageAction.value = origin;
        window.status = "Submitting data, it may take a minute, please wait.....";
        document.newDECForm.Message.style.visibility="visible";
+	   //disable the buttons
+	   document.newDECForm.btnValidate.disabled = true;
+	   document.newDECForm.btnClear.disabled = true;
+	   if (document.newDECForm.btnBack != null) 
+	   		document.newDECForm.btnBack.disabled = true;
+	   document.newDECForm.btnAltName.disabled = true;
+	   document.newDECForm.btnRefDoc.disabled = true;
+	   //submit the form
        document.newDECForm.submit();
     }
   }

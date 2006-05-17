@@ -306,11 +306,8 @@
         <input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate')"
 				onHelp = "showHelp('Help_CreateDE.html#newCDEForm_Validation'); return false">
           &nbsp;&nbsp;
-    <!--no need for clear button in the block edit-->
-<%//if(!sOriginAction.equals("BlockEditDE")){%>
         <input type="button" name="btnClear" value="Clear" style="width: 125" onClick="ClearBoxes();">
           &nbsp;&nbsp;
-<%//}%>
         <input type="button" name="btnBack" value="Back" style="width: 125" onClick="Back();">
           &nbsp;&nbsp;
 <%if(sOriginAction.equals("BlockEditDE")){%>

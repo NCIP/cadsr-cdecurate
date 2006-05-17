@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DEC_Bean.java,v 1.8 2006-03-20 13:15:38 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DEC_Bean.java,v 1.9 2006-05-17 20:01:36 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -155,11 +155,11 @@ public class DEC_Bean extends AC_Bean {
   private String REFERENCE_DOCUMENT;
   private String ALTERNATE_NAME;
   
-  private Vector DEC_OC_QUALIFIER_NAMES;
+  private Vector<String> DEC_OC_QUALIFIER_NAMES;
   private Vector DEC_PROP_QUALIFIER_NAMES;
-  private Vector DEC_OC_QUALIFIER_CODES;
+  private Vector<String> DEC_OC_QUALIFIER_CODES;
   private Vector DEC_PROP_QUALIFIER_CODES;
-  private Vector DEC_OC_QUALIFIER_DB;
+  private Vector<String> DEC_OC_QUALIFIER_DB;
   private Vector DEC_PROP_QUALIFIER_DB;
    
   private String DEC_OC_CONCEPT_CODE;
@@ -939,7 +939,7 @@ public class DEC_Bean extends AC_Bean {
    *
    * @param v The DEC_OC_QUALIFIER_NAMES to set
   */
-  public void setDEC_OC_QUALIFIER_NAMES(Vector v)
+  public void setDEC_OC_QUALIFIER_NAMES(Vector<String> v)
   {
       this.DEC_OC_QUALIFIER_NAMES = v;
   }
@@ -948,7 +948,7 @@ public class DEC_Bean extends AC_Bean {
    *
    * @param v The DEC_OC_QUALIFIER_CODES to set
   */
-  public void setDEC_OC_QUALIFIER_CODES(Vector v)
+  public void setDEC_OC_QUALIFIER_CODES(Vector<String> v)
   {
       this.DEC_OC_QUALIFIER_CODES = v;
   }
@@ -957,7 +957,7 @@ public class DEC_Bean extends AC_Bean {
    *
    * @param v The DEC_OC_QUALIFIER_DB to set
   */
-  public void setDEC_OC_QUALIFIER_DB(Vector v)
+  public void setDEC_OC_QUALIFIER_DB(Vector<String> v)
   {
       this.DEC_OC_QUALIFIER_DB = v;
   }
@@ -1705,7 +1705,7 @@ public class DEC_Bean extends AC_Bean {
   *
   * @return Vector The DEC_OC_QUALIFIER_NAMES
   */
-  public Vector getDEC_OC_QUALIFIER_NAMES()
+  public Vector<String> getDEC_OC_QUALIFIER_NAMES()
   {
       return this.DEC_OC_QUALIFIER_NAMES;
   }
@@ -1714,7 +1714,7 @@ public class DEC_Bean extends AC_Bean {
   *
   * @return Vector The DEC_OC_QUALIFIER_CODES
   */
-  public Vector getDEC_OC_QUALIFIER_CODES()
+  public Vector<String> getDEC_OC_QUALIFIER_CODES()
   {
       return this.DEC_OC_QUALIFIER_CODES;
   }
@@ -1723,7 +1723,7 @@ public class DEC_Bean extends AC_Bean {
   *
   * @return Vector The DEC_OC_QUALIFIER_DB
   */
-  public Vector getDEC_OC_QUALIFIER_DB()
+  public Vector<String> getDEC_OC_QUALIFIER_DB()
   {
       return this.DEC_OC_QUALIFIER_DB;
   }

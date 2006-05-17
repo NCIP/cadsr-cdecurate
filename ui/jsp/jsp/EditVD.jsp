@@ -417,19 +417,19 @@ function setup()
   <table width="100%" border="0">
     <tr>
       <td height="26" align="left" valign="top">
-        <input type="button" name="btnValidate" value="Validate" style="width: 125", "height: 30" onClick="SubmitValidate('validate')"
+        <input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('validate')"
 				onHelp = "showHelp('Help_CreateVD.html#createVDForm_Validation'); return false">
           &nbsp;&nbsp;
     <!--no need for clear button in the block edit-->
-        <input type="button" name="btnClear" value="Clear" style="width: 125", "height: 30" onClick="ClearBoxes();">
+        <input type="button" name="btnClear" value="Clear" style="width:125" onClick="ClearBoxes();">
           &nbsp;&nbsp;
 <% if (!sOriginAction.equals("NewVDFromMenu")){%>
-        <input type="button" name="btnBack" value="Back" style="width: 125", "height: 30" onClick="Back();">
+        <input type="button" name="btnBack" value="Back" style="width:125" onClick="Back();">
           &nbsp;&nbsp;
 <% } %>
 <%if(sOriginAction.equals("BlockEditVD")){%>
         <input type="button" name="btnDetails" value="Details" 
-				onHelp = "showHelp('Help_Updates.html#createVDForm_details'); return false" style="width: 125", "height: 30" onClick="openBEDisplayWindow();">
+				onHelp = "showHelp('Help_Updates.html#createVDForm_details'); return false" style="width: 125" onClick="openBEDisplayWindow();">
           &nbsp;&nbsp;
 <%}%>
         <input type="button" name="btnAltName" value="Alternate Names" style="width:125" onClick="openDesignateWindow('Alternate Names');"

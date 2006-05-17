@@ -122,5 +122,66 @@
    		return
    	}
   }
-   
+  
+  //do not allow typing on browse input
+  function doValidateInput()
+  {
+   var formObj= eval("document.RefDocumentUploadForm.uploadfile");
+   formObj.onkeydown =
+   function (evt)
+   {
+      evt = (evt) ? evt : event;
+      var c = (evt.charCode) ? evt.charCode : ((evt.keyCode) ? evt.keyCode :
+         ((evt.which) ? evt.which : 0));
+
+      //space bar, backspace, del keys pressed : empty all the data
+      if (c == 32 || c == 8 || c == 46)
+      {
+         //empty data
+		 formObj.value = "";
+      }
+      //make sure that tab works as it is 
+      else if (c == 9 || c == 11)
+      	return true;
+      //don't do anything
+      return false;
+   };
+   formObj.onkeyup =
+   function (evt)
+   {
+      evt = (evt) ? evt : event;
+      var c = (evt.charCode) ? evt.charCode : ((evt.keyCode) ? evt.keyCode :
+         ((evt.which) ? evt.which : 0));
+      //space bar, backspace, del keys pressed : empty all the data
+      if (c == 32 || c == 8 || c == 46)
+      {
+         //empty data
+		 formObj.value = "";
+      }
+      //make sure that tab works as it is 
+      else if (c == 9 || c == 11)
+      	return true;
+      //don't do anything
+      return false;
+   };
+   formObj.onkeypress =
+   function (evt)
+   {
+      evt = (evt) ? evt : event;
+      var c = (evt.charCode) ? evt.charCode : ((evt.keyCode) ? evt.keyCode :
+         ((evt.which) ? evt.which : 0));
+
+      //space bar, backspace, del keys pressed : empty all the data
+      if (c == 32 || c == 8 || c == 46)
+      {
+         //to reset the value of valid search.
+		   formObj.value = "";
+      }
+      //make sure that tab works as it is 
+      else if (c == 9 || c == 11)
+      	return true;
+	  return false;
+   };
+  }
+  
 

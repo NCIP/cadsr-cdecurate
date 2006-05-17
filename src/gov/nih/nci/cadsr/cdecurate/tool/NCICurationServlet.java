@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.8 2006-03-20 13:15:38 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.9 2006-05-17 20:01:36 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -132,6 +132,8 @@ public class NCICurationServlet extends HttpServlet
   public HttpServletResponse m_classRes = null;
   static private Hashtable hashOracleOCIConnectionPool = new Hashtable();
   public Logger logger = Logger.getLogger(NCICurationServlet.class.getName());
+  /** declare the global variable sessionData */
+  static public Session_Data sessionData;
 
   /**
   * To initialize global variables and load the Oracle
@@ -150,7 +152,7 @@ public class NCICurationServlet extends HttpServlet
         }
         catch (Exception ee)
         {
-            logger.fatal("Servlet-init : Unable to start curation tool : " + ee.toString());           
+            logger.fatal("Servlet-init : Unable to start curation tool : " + ee.toString(), ee);           
         }  
         //call the method to make oracle connection
         this.initOracleConnect();
@@ -206,7 +208,7 @@ public class NCICurationServlet extends HttpServlet
             String stErr = "Error creating database pool[" + e.getMessage() + "].";
             e.printStackTrace();
             System.out.println(stErr);
-            logger.fatal(stErr);
+            logger.fatal(stErr, e);
             return;
         }
 
@@ -229,7 +231,7 @@ public class NCICurationServlet extends HttpServlet
         {
             System.err.println("Could not open database connection.");
             e.printStackTrace();
-            logger.fatal(e.toString());
+            logger.fatal(e.toString(), e);
         }
         finally 
         {
@@ -240,7 +242,7 @@ public class NCICurationServlet extends HttpServlet
     }
     catch (Exception e)
     {
-      logger.fatal("initOracleConnect - Some other error");
+      logger.fatal("initOracleConnect - Some other error", e);
     }
   }
 
@@ -265,7 +267,7 @@ public class NCICurationServlet extends HttpServlet
          }
          catch(SQLException e)
          {
-        	 logger.fatal("Error getting connection" + e);
+        	 logger.fatal("Error getting connection" + e.toString(), e);
          }
       }
       return(null);
@@ -313,12 +315,12 @@ public class NCICurationServlet extends HttpServlet
         }
         catch(Exception e)
         {
-          logger.fatal("Servlet error: no pool connection.");
+          logger.fatal("Servlet error: no pool connection.", e);
         }
       }
       catch (Exception e)
       {
-          logger.fatal("Servlet connectDB : "  + e.toString());
+          logger.fatal("Servlet connectDB : "  + e.toString(), e);
       }
       return SBRDb_conn;
   } 
@@ -339,6 +341,10 @@ public class NCICurationServlet extends HttpServlet
     session = req.getSession(true);
     try
     {
+      //get teh session data object from teh session
+      sessionData = (Session_Data)session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
+      if (sessionData == null) sessionData = new Session_Data();
+      
       String reqType = req.getParameter("reqType");
       //logger.info("servlet reqType!: "+ reqType);  //log the request
       req.setAttribute("LatestReqType", reqType);  
@@ -599,7 +605,7 @@ public class NCICurationServlet extends HttpServlet
     }
     catch(Exception e)
     {
-      logger.fatal("Service error : " + e.toString());
+      logger.fatal("Service error : " + e.toString(), e);
       session = req.getSession();
       String msg = e.toString();
       try
@@ -611,7 +617,7 @@ public class NCICurationServlet extends HttpServlet
       }
       catch(Exception ee)
       {
-          logger.fatal("Service forward error : " + ee.toString());
+          logger.fatal("Service forward error : " + ee.toString(), ee);
       }
     }
   }  // end of service
@@ -643,7 +649,7 @@ public class NCICurationServlet extends HttpServlet
     else
     {
       userBeanExists = true;
-      EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+      EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
       if (eUser == null) eUser = new EVS_UserBean();          
     }
     return userBeanExists;
@@ -747,7 +753,7 @@ public class NCICurationServlet extends HttpServlet
         EVS_Bean m_REPQ = new EVS_Bean();
         session.setAttribute("m_REPQ", m_REPQ);
         //empty the session attributes
-        session.setAttribute("VDPVList", new Vector());
+        session.setAttribute("VDPVList", new Vector<PV_Bean>());
         session.setAttribute("PVIDList", new Vector());     
         ForwardJSP(req, res, "/CreateVDPage.jsp");
       }
@@ -784,7 +790,7 @@ public class NCICurationServlet extends HttpServlet
 	  	catch(Exception e)
 		{
             //System.err.println("ERROR - Got exception reading properties " + e);
-            logger.fatal("Servlet-getProperties : " + e.hashCode() + " : " + e.toString());
+            logger.fatal("Servlet-getProperties : " + e.hashCode() + " : " + e.toString(), e);
   	   }
   }  // end getProperties
 
@@ -904,7 +910,7 @@ public class NCICurationServlet extends HttpServlet
           }
           catch(Exception ee)
           {
-            logger.fatal("Servlet-doHomePage-evsthread : " + ee.toString());            
+            logger.fatal("Servlet-doHomePage-evsthread : " + ee.toString(), ee);            
           }
         }
         else
@@ -919,7 +925,7 @@ public class NCICurationServlet extends HttpServlet
       try
       {
        // if error, forward to login page to re-enter username and password
-        logger.fatal("Servlet-doHomePage : " + e.toString());
+        logger.fatal("Servlet-doHomePage : " + e.toString(), e);
         String msg = e.getMessage().substring(0, 12);
         if(msg.equals("Io exception"))
           ForwardErrorJSP(req, res, "Io Exception. Session Terminated. Please log in again.");
@@ -928,7 +934,7 @@ public class NCICurationServlet extends HttpServlet
        }
       catch (Exception ee)
       {
-        logger.fatal("Servlet-doHomePage, display error page : " + ee.toString());
+        logger.fatal("Servlet-doHomePage, display error page : " + ee.toString(), ee);
       }
     }
   }
@@ -977,7 +983,7 @@ public class NCICurationServlet extends HttpServlet
         doSuggestionDE(req, res);
       else if (sPageAction.equals("updateNames"))
       {
-        DE_Bean de = this.doGetDENames(req, res, "new", "Search", null);
+        this.doGetDENames(req, res, "new", "Search", null);
         ForwardJSP(req, res, "/CreateDEPage.jsp");
       }
       else if (sPageAction.equals("changeNameType"))
@@ -1128,7 +1134,7 @@ public class NCICurationServlet extends HttpServlet
       else if (sPageAction.equals("updateNames"))
       {
         //DE_Bean de = this.doGetDENames(req, res, "append", "Search", null);
-        DE_Bean de = this.doGetDENames(req, res, "new", "Search", null);
+        this.doGetDENames(req, res, "new", "Search", null);
         ForwardJSP(req, res, "/EditDEPage.jsp");
       }
       else if (sPageAction.equals("changeNameType"))
@@ -1173,7 +1179,7 @@ public class NCICurationServlet extends HttpServlet
          else if (sMenuAction.equalsIgnoreCase("editDE") || sOriginAction.equalsIgnoreCase("BlockEditDE") || sButtonPressed.equals("Search")
                   || sOriginAction.equalsIgnoreCase("EditDE"))  // || sMenuAction.equals("EditDesDE"))
          {
-            DE_Bean DEBean = (DE_Bean)session.getAttribute("m_DE");
+            //DE_Bean DEBean = (DE_Bean)session.getAttribute("m_DE");
             Vector vResult = new Vector();
             serAC.getDEResult(req, res, vResult, "");
             session.setAttribute("results", vResult);
@@ -2258,7 +2264,7 @@ public class NCICurationServlet extends HttpServlet
         session.setAttribute("MenuAction", sMenuAction);
       String sAction = (String)req.getParameter("newCDEPageAction");
       //get the evs user bean
-      EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+      EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
       if (eUser == null) eUser = new EVS_UserBean();
       
       if(sAction.equals("submit"))
@@ -2308,7 +2314,7 @@ public class NCICurationServlet extends HttpServlet
               String eDB = eBean.getEVS_DATABASE();
               if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
               {
-                eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), "vocabName", "vocabDBOrigin");
+                eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), EVSSearch.VOCAB_NAME, EVSSearch.VOCAB_DBORIGIN);  // "vocabName", "vocabDBOrigin");
                 eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
               }
           //System.out.println("before thes concept CreateVM");
@@ -3551,7 +3557,7 @@ public class NCICurationServlet extends HttpServlet
     }
     catch(Exception e)
     {
-      logger.fatal("Error - doSetVDPage " + e.toString());
+      logger.fatal("Error - doSetVDPage " + e.toString(), e);
     }
   } // end of doValidateVD
   
@@ -3667,14 +3673,14 @@ public class NCICurationServlet extends HttpServlet
           {
             eBean.setCON_AC_SUBMIT_ACTION("INS");
             //get the evs user bean
-            EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+            EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
             if (eUser == null) eUser = new EVS_UserBean();
             
             //get origin for cadsr result
             String eDB = eBean.getEVS_DATABASE();
             if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
             {
-              eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), "vocabName", "vocabDBOrigin");
+              eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), EVSSearch.VOCAB_NAME, EVSSearch.VOCAB_DBORIGIN);  // "vocabName", "vocabDBOrigin");
               eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
             }
             vList.addElement(eBean);  
@@ -3733,7 +3739,7 @@ public class NCICurationServlet extends HttpServlet
     }
     catch (Exception e)
     {
-      this.logger.fatal("ERROR - doGetVDSystemName : " + e.toString());
+      this.logger.fatal("ERROR - doGetVDSystemName : " + e.toString(), e);
     }      
     return vd;
   }
@@ -4000,7 +4006,7 @@ public class NCICurationServlet extends HttpServlet
     }
    catch (Exception e)
    {
-      this.logger.fatal("ERROR - splitintoConceptVD : " + e.toString());
+      this.logger.fatal("ERROR - splitintoConceptVD : " + e.toString(), e);
   }
 }
 
@@ -4077,7 +4083,7 @@ public class NCICurationServlet extends HttpServlet
     }
     catch (Exception e)
     {
-      this.logger.fatal("ERROR - splitintoConcept : " + e.toString());
+      this.logger.fatal("ERROR - splitintoConcept : " + e.toString(), e);
     }
   }
 
@@ -4530,7 +4536,7 @@ public class NCICurationServlet extends HttpServlet
     }
     catch (Exception e)
     {
-      this.logger.fatal("ERROR - doDECUseSelection : " + e.toString());
+      this.logger.fatal("ERROR - doDECUseSelection : " + e.toString(), e);
     }
   } // end of doDECUseSelection
 
@@ -4553,7 +4559,7 @@ public class NCICurationServlet extends HttpServlet
     Vector<EVS_Bean> vObjectClass = (Vector)session.getAttribute("vObjectClass");
     if (vObjectClass == null) vObjectClass = new Vector<EVS_Bean>();
     //get the evs user bean
-    EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+    EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
     if (eUser == null) eUser = new EVS_UserBean();
     
     eBean.setCON_AC_SUBMIT_ACTION("INS");
@@ -4561,8 +4567,9 @@ public class NCICurationServlet extends HttpServlet
     String eDB = eBean.getEVS_DATABASE();
     if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
     {
-      eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), "vocabName", "vocabDBOrigin");
-      if (eDB.equals("MetaValue")) eDB = eBean.getEVS_ORIGIN();
+      eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), EVSSearch.VOCAB_NAME, EVSSearch.VOCAB_DBORIGIN);  // "vocabName", "vocabDBOrigin");
+      if (eDB.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
+        eDB = eBean.getEVS_ORIGIN();
       eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
     }
     //get its matching thesaurus concept
@@ -4633,7 +4640,7 @@ public class NCICurationServlet extends HttpServlet
     Vector<EVS_Bean> vProperty = (Vector)session.getAttribute("vProperty");
     if (vProperty == null) vProperty = new Vector<EVS_Bean>();
     //get the evs user bean
-    EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+    EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
     if (eUser == null) eUser = new EVS_UserBean();
     
     eBean.setCON_AC_SUBMIT_ACTION("INS");
@@ -4641,8 +4648,9 @@ public class NCICurationServlet extends HttpServlet
     String eDB = eBean.getEVS_DATABASE();
     if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
     {
-      eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), "vocabName", "vocabDBOrigin");
-      if (eDB.equals("MetaValue")) eDB = eBean.getEVS_ORIGIN();
+      eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), EVSSearch.VOCAB_NAME, EVSSearch.VOCAB_DBORIGIN);  // "vocabName", "vocabDBOrigin");
+      if (eDB.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
+        eDB = eBean.getEVS_ORIGIN();
       eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
     }
 //System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for PROP " + eDB);
@@ -4805,7 +4813,7 @@ public class NCICurationServlet extends HttpServlet
     }
     catch (Exception e)
     {
-      this.logger.fatal("ERROR - doVDUseSelection : " + e.toString());
+      this.logger.fatal("ERROR - doVDUseSelection : " + e.toString(), e);
     }
   } // end of doVDUseSelection
 
@@ -4828,7 +4836,7 @@ public class NCICurationServlet extends HttpServlet
     Vector<EVS_Bean> vRepTerm = (Vector)session.getAttribute("vRepTerm");
     if (vRepTerm == null)  vRepTerm = new Vector<EVS_Bean>();
     //get the evs user bean
-    EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+    EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
     if (eUser == null) eUser = new EVS_UserBean();
     
     eBean.setCON_AC_SUBMIT_ACTION("INS");
@@ -4836,8 +4844,9 @@ public class NCICurationServlet extends HttpServlet
     String eDB = eBean.getEVS_DATABASE();
     if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
     {
-      eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), "vocabName", "vocabDBOrigin");
-      if (eDB.equals("MetaValue")) eDB = eBean.getEVS_ORIGIN();
+      eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), EVSSearch.VOCAB_NAME, EVSSearch.VOCAB_DBORIGIN);  // "vocabName", "vocabDBOrigin");
+      if (eDB.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
+        eDB = eBean.getEVS_ORIGIN();
       eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
     }  
 //System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for REP " + eDB);
@@ -5138,7 +5147,14 @@ public class NCICurationServlet extends HttpServlet
           //get the nci vocab if it meta or other vocab only if not referenced
           if (sSelectedParentName == null || sSelectedParentName.equals(""))
           {
-        //System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for VD vm " + eBean.getEVS_DATABASE());
+            //get teh right vocab name
+            EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
+            if (eUser == null) eUser = new EVS_UserBean();
+            String eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), EVSSearch.VOCAB_NAME, EVSSearch.VOCAB_DBORIGIN);  // "vocabName", "vocabDBOrigin");
+            if (eDB.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
+              eDB = eBean.getEVS_ORIGIN();
+            eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
+            //get the thesaurus term
             EVSSearch evs = new EVSSearch(req, res, this);
             eBean = evs.getThesaurusConcept(eBean);          
           }
@@ -5154,18 +5170,19 @@ public class NCICurationServlet extends HttpServlet
 
           boolean isExist = false;
           boolean isUpdated = false;
-          int updRow = -1;
-          PV_Bean pvBean = new PV_Bean();
+          //int updRow = -1;
           for (int j=0; j<vVDPVList.size(); j++)  //check if the concept already exists.
           {
+            PV_Bean pvBean = new PV_Bean();
             pvBean = (PV_Bean)vVDPVList.elementAt(j);
-            //exist if already exists 
-            //logger.debug(sValue + pvBean.getPV_VALUE() + sMean + pvBean.getPV_SHORT_MEANING());
-            if (pvBean.getPV_VALUE().equalsIgnoreCase(sValue) && pvBean.getPV_SHORT_MEANING().equalsIgnoreCase(sMean))
+            String vdValue = pvBean.getPV_VALUE();
+            String vdMean = pvBean.getPV_SHORT_MEANING();
+            //check if value meaning was already existed
+            if (vdMean.equalsIgnoreCase(sMean))
             {
-              //re-adding the deleted item if exists in the vector but marked as deleted
-              if (pvBean.getVP_SUBMIT_ACTION() == null) pvBean.setVP_SUBMIT_ACTION("INS");
-              if (pvBean.getVP_SUBMIT_ACTION().equals("DEL"))
+              String pvSubmit = pvBean.getVP_SUBMIT_ACTION();
+              //put back the deleted pv if it has same value-vm pair 
+              if (pvSubmit != null && pvSubmit.equals("DEL") && vdValue.equalsIgnoreCase(sValue))
               {
                 //set to update if idseq is non evs and is from cadsr 
                 if (pvBean.getPV_PV_IDSEQ() != null && !pvBean.getPV_PV_IDSEQ().equals("EVS_" + sValue))
@@ -5174,56 +5191,37 @@ public class NCICurationServlet extends HttpServlet
                   pvBean.setVP_SUBMIT_ACTION("INS");   //evs term
                 //mark as deleted
                 isUpdated = true;
-                updRow = j;  //need this to update the vector                
+                //updRow = j;  //need this to update the vector 
+                this.storePVinVDPVList(vVDPVList, pvBean, eBean, parConcept, sValue, sMean, j, true);
               }
-              else  //keep track of the duplicate items and do not add to the bean
+              else if (pvSubmit != null && !pvSubmit.equals("DEL")) //was not deleted
               {
                 String sValMean = "\\tValue: " + pvBean.getPV_VALUE() + " and Meaning: " + pvBean.getPV_SHORT_MEANING() + "\\n";
                 //check if the existing pv vm has concept; update otherwise
                 EVS_Bean extCon = pvBean.getVM_CONCEPT();
                 if (extCon == null || extCon.getLONG_NAME() == null || extCon.getLONG_NAME().equals(""))
-                {
-                  pvBean.setVP_SUBMIT_ACTION("UPD");
+                {  
+                  //mark it update if no action was taken before
+                  if (pvSubmit != null && (pvSubmit.equals("") || pvSubmit.equals("NONE")))
+                    pvBean.setVP_SUBMIT_ACTION("UPD");
                   isUpdated = true;
-                  updRow = j;  //need this to update the vector                
+                 // updRow = j;  //need this to update the vector                
                   updatedVDPVs += sValMean;
-       //logger.debug(pvBean.getPV_PV_IDSEQ() + " pv vm update " + updatedVDPVs)   ;        
+                  this.storePVinVDPVList(vVDPVList, pvBean, eBean, parConcept, sValue, sMean, j, true);
+
                 }
-                else  //existed with concept
+                else if (vdValue.equalsIgnoreCase(sValue)) //pv-vm pair existed with concept
                 {
-                  notUpdateVDPVs += sValMean;
-                  isExist = true;
+                   notUpdateVDPVs += sValMean;
+                   isExist = true;
                 }
               }
-              break;
             }
           }
           //add to the bean if not exists
-          if (isExist == false)
+          if (isExist == false && !isUpdated)
           {
-            if (!isUpdated)  //do not update these if  
-            {
-              //store concept name as value and vm in the pv bean
-              pvBean = new PV_Bean();
-              pvBean.setPV_PV_IDSEQ("EVS_" + sValue);   //store id as EVS
-              pvBean.setPV_VALUE(sValue);
-              pvBean.setPV_SHORT_MEANING(sMean);
-              pvBean.setVP_SUBMIT_ACTION("INS");
-            }
-            //allow to update the definition if different description for evs selected items
-           // if (pvBean.getPV_PV_IDSEQ() == null || pvBean.getPV_PV_IDSEQ().equals("EVS_" + sValue))
-              pvBean.setPV_MEANING_DESCRIPTION(eBean.getPREFERRED_DEFINITION());
-            //these are for vd-pvs             
-            SimpleDateFormat formatter = new SimpleDateFormat ("MM/dd/yyyy");
-            if (pvBean.getVP_SUBMIT_ACTION().equals("INS"))
-              pvBean.setPV_BEGIN_DATE(formatter.format(new java.util.Date()));
-            
-            pvBean.setVM_CONCEPT(eBean);   //add evs bean to pv bean 
-            pvBean.setPARENT_CONCEPT(parConcept);
-            if (isUpdated)
-              vVDPVList.setElementAt(pvBean, updRow);   //udpate the vector
-            else
-              vVDPVList.addElement(pvBean);    //store bean in vector
+            this.storePVinVDPVList(vVDPVList, new PV_Bean(), eBean, parConcept, sValue, sMean, -1, false);
           }
         }
      //System.out.println(updatedVDPVs + " selMinVD " + vVDPVList.size());
@@ -5244,7 +5242,41 @@ public class NCICurationServlet extends HttpServlet
         }
       }
    }
-   
+
+   private Vector<PV_Bean> storePVinVDPVList(Vector<PV_Bean> vVPList, PV_Bean pBean, EVS_Bean eBean, 
+       EVS_Bean parBean, String sValue, String sMean, int updRow, boolean isUpdated)
+   {
+     try
+     {
+       if (!isUpdated)  //do not update these if  
+       {
+         //store concept name as value and vm in the pv bean
+        // pBean = new PV_Bean();
+         pBean.setPV_PV_IDSEQ("EVS_" + sValue);   //store id as EVS
+         pBean.setPV_VALUE(sValue);
+         pBean.setPV_SHORT_MEANING(sMean);
+         pBean.setVP_SUBMIT_ACTION("INS");
+       }
+       //allow to update the definition if different description for evs selected items
+       pBean.setPV_MEANING_DESCRIPTION(eBean.getPREFERRED_DEFINITION());
+       //these are for vd-pvs             
+       SimpleDateFormat formatter = new SimpleDateFormat ("MM/dd/yyyy");
+       if (pBean.getVP_SUBMIT_ACTION().equals("INS"))
+         pBean.setPV_BEGIN_DATE(formatter.format(new java.util.Date()));
+       // add evs bean to pv bean 
+       pBean.setVM_CONCEPT(eBean);   
+       pBean.setPARENT_CONCEPT(parBean);
+       if (isUpdated)
+         vVPList.setElementAt(pBean, updRow);   //udpate the vector
+       else
+         vVPList.addElement(pBean);    //store bean in vector
+     }
+     catch(Exception e)
+     {
+       logger.fatal("Error - store value and meaning in vdpv list: Value - " + sValue + " and Meaning - "+ sMean, e);       
+     }
+     return vVPList;
+   }
    /**
   * The doValidateVD method gets the values from page the user filled out,
   * validates the input, then forwards results to the Validate page
@@ -7138,7 +7170,7 @@ public class NCICurationServlet extends HttpServlet
      }
      catch(Exception e)
      {
-       logger.fatal("Error - InsertEditsIntoDEBeanSR " + e.getStackTrace());
+       logger.fatal("Error - InsertEditsIntoDEBeanSR ", e);
      }
    }
   /**
@@ -8431,8 +8463,8 @@ public class NCICurationServlet extends HttpServlet
     }
     catch(Exception ex)
     {
-      System.out.println("doEVSSearchActions : " + ex.toString());
-      logger.fatal("doEVSSearchActions : " + ex.toString());
+      //System.out.println("doEVSSearchActions : " + ex.toString());
+      logger.fatal("doEVSSearchActions : " + ex.toString(), ex);
       //this.ForwardErrorJSP(req, res, ex.getMessage());
     }
   }
@@ -8860,7 +8892,7 @@ public class NCICurationServlet extends HttpServlet
     catch (Exception e)
     {
       //System.err.println("EVS Search : " + e);
-      this.logger.fatal("ERROR - EVS Search : " + e.toString());
+      this.logger.fatal("ERROR - EVS Search : " + e.toString(), e);
     }
     ForwardJSP(req, res, "/EVSSearchPage.jsp");
    // ForwardJSP(req, res, "/OpenSearchWindow.jsp");
@@ -9210,7 +9242,7 @@ public class NCICurationServlet extends HttpServlet
      }
      catch(Exception e)
      {
-       logger.fatal("Error - doContactACUpdates : " + e.toString());
+       logger.fatal("Error - doContactACUpdates : " + e.toString(), e);
      }
      session.setAttribute("selContactKey", "");  //remove the attributes
      session.setAttribute("selACContact", null);
@@ -9321,7 +9353,7 @@ public class NCICurationServlet extends HttpServlet
        }
        catch(Exception e)
        {
-         logger.fatal("Error - doContactEditActions : " + e.toString());
+         logger.fatal("Error - doContactEditActions : " + e.toString(), e);
        }
      }     
      ForwardJSP(req, res, "/EditACContact.jsp");
@@ -9425,7 +9457,7 @@ public class NCICurationServlet extends HttpServlet
      }
      catch (Exception e)
      {
-       logger.fatal("Error - doContCommAction : " + e.toString());
+       logger.fatal("Error - doContCommAction : " + e.toString(), e);
      }
      return ACBean;
    }
@@ -9555,7 +9587,7 @@ public class NCICurationServlet extends HttpServlet
      }
      catch (Exception e)
      {
-       logger.fatal("Error - doContAddrAction : " + e.toString());
+       logger.fatal("Error - doContAddrAction : " + e.toString(), e);
      }
      return ACBean;
    }
@@ -9806,7 +9838,7 @@ public class NCICurationServlet extends HttpServlet
           catch (Exception e)
           {
               msg = "An unexpected exception occurred, please notify the Help Desk. Details have been written to the log.";
-              logger.fatal("cdecurate: doMonitor(): " + e.toString());
+              logger.fatal("cdecurate: doMonitor(): " + e.toString(), e);
               try
               {
                   if (stmt != null)
@@ -9907,7 +9939,7 @@ public class NCICurationServlet extends HttpServlet
               catch (Exception e)
               {
                   msg = "An unexpected exception occurred, please notify the Help Desk. Details have been written to the log.";
-                  logger.fatal("cdecurate: doUnmonitor(): " + e.toString());
+                  logger.fatal("cdecurate: doUnmonitor(): " + e.toString(), e);
                   try
                   {
                       if (con != null){
@@ -9929,7 +9961,6 @@ public class NCICurationServlet extends HttpServlet
       session.setAttribute("statusMessage", msg);
       ForwardJSP(req, res, "/SearchResultsPage.jsp");
   }
-
   
    /**
   * The doRefreshPVSearchPage method forwards crfValue search page with refreshed list
@@ -11280,18 +11311,27 @@ public class NCICurationServlet extends HttpServlet
   * @param res The HttpServletResponse back to the client
   *
   */
-  public void ErrorLogin(HttpServletRequest req,
-    HttpServletResponse res)
+  public void ErrorLogin(HttpServletRequest req, HttpServletResponse res)
   {
-      try
-      {
-         ForwardErrorJSP(req, res, "Session Terminated. Please log in again.");
-      }
-      catch (Exception e)
-      {
-        //System.err.println("ERROR - ErrorLogin: " + e);
-        this.logger.fatal("ERROR - ErrorLogin: " + e.toString());
-      }
+    //capture the stack in logger
+    try
+    {
+      throw new Exception("Error Login used in various methods");
+    }
+    catch (Exception e)
+    {
+      logger.fatal("Error Caught : ", e);
+    }
+    //forward to error jsp
+    try
+    {        
+       ForwardErrorJSP(req, res, "Session Terminated. Please log in again.");
+    }
+    catch (Exception e)
+    {
+      //System.err.println("ERROR - ErrorLogin: " + e);
+      this.logger.fatal("ERROR - ErrorLogin: " + e.toString(), e);
+    }
   }
 
   /**
@@ -11322,7 +11362,7 @@ public class NCICurationServlet extends HttpServlet
       }
       catch (Exception e)
       {
-        logger.fatal("ERROR - ErrorLogin: " + e.toString());        
+        logger.fatal("ERROR - ErrorLogin: " + e.toString(), e);        
       }
   }
 
@@ -11345,6 +11385,9 @@ public class NCICurationServlet extends HttpServlet
         sMsg += "\\n\\nPlease use Ctrl+C to copy the message to a text file";
         session.setAttribute("statusMessage", sMsg);
       }
+      //store the session data object in the session at the end of the request 
+      session.setAttribute(Session_Data.CURATION_SESSION_ATTR, this.sessionData);
+      
       String fullPage = "/jsp" + sJSPPage;
       ServletContext sc = this.getServletContext();
       RequestDispatcher rd = sc.getRequestDispatcher(fullPage);
@@ -11353,7 +11396,7 @@ public class NCICurationServlet extends HttpServlet
     catch(Exception e)
     {
       e.printStackTrace();
-      this.logger.fatal("Servlet-ForwardJSP : " + e.toString());
+      this.logger.fatal("Servlet-ForwardJSP : " + e.toString(), e);
     }
   }
 
@@ -11379,7 +11422,7 @@ public class NCICurationServlet extends HttpServlet
     }
     catch(Exception e)
     {
-      logger.fatal("Servlet-ForwardErrorJSP : " + e.toString() );
+      logger.fatal("Servlet-ForwardErrorJSP : " + e.toString(), e );
     }
   }
 
@@ -11426,29 +11469,28 @@ public class NCICurationServlet extends HttpServlet
 		{
 			// return to search results from upload page
 			if (sAction.equals("backToSearch"))
-	        {
+	    {
 				refDocAt.doBack();
-	        } 
+	    } 
 			
 			// Delete ref doc attachment
 			if (sAction.equals("DeleteAttachment"))
-	        {
+	    {
 				refDocAt.doDeleteAttachment();
-	        } 
+	    } 
 			
 			// Catch any undefined action from page
 			else
 			{
-			      try
-			      {
-			    	  ForwardErrorJSP(req, res, "Unexpected Request. Session Terminated. Please login again.");
-                      logger.fatal("Reference Document Attachments Upload: Unknown Request Type.");
-			      }
-			      catch (Exception e)
-			      {
-			          logger.fatal("ERROR - ErrorLogin: " + e.toString());
-			      }
-
+	      try
+	      {
+	    	  ForwardErrorJSP(req, res, "Unexpected Request. Session Terminated. Please login again.");
+          logger.fatal("Reference Document Attachments Upload: Unknown Request Type.");
+	      }
+	      catch (Exception e)
+	      {
+	        logger.fatal("ERROR - ErrorLogin: " + e.toString(), e);
+	      }
 			}
 		}
 		// catch unknown Ref type
@@ -11456,12 +11498,12 @@ public class NCICurationServlet extends HttpServlet
 			{
 			      try
 			      {
-                      ForwardErrorJSP(req, res, "Unexpected Request. Session Terminated. Please login again.");
-                      logger.fatal("Reference Document Attachments Upload: Unknown Origin Type.");
+                ForwardErrorJSP(req, res, "Unexpected Request. Session Terminated. Please login again.");
+                logger.fatal("Reference Document Attachments Upload: Unknown Origin Type.");
 			      }
 			      catch (Exception e)
 			      {
-			          logger.fatal("ERROR - ErrorLogin: " + e.toString());
+			          logger.fatal("ERROR - ErrorLogin: " + e.toString(), e);
 			      }
 			}
    }

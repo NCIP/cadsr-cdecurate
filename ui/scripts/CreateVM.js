@@ -49,28 +49,28 @@ var evsWindow = null;
 	   var isValid = "valid";  // isDateValid();
 	   if (isValid == "valid")
 	   {
-       hourglass();
-       if (origin == "validate")
-	     {
-              document.createVMForm.newCDEPageAction.value = "validate";
-              window.status = "Validating data, it may take a minute, please wait.....";
-	     }
-	     else if (origin == "submit")
+	   hourglass();
+	   if (origin == "validate")
        {
-              document.createVMForm.newCDEPageAction.value = "submit";
-              window.status = "Submitting data, it may take a minute, please wait.....";
-	     } 
+          document.createVMForm.newCDEPageAction.value = "validate";
+          window.status = "Validating data, it may take a minute, please wait.....";
+       }
+       else if (origin == "submit")
+       {
+          document.createVMForm.newCDEPageAction.value = "submit";
+          window.status = "Submitting data, it may take a minute, please wait.....";
+	   } 
 
        document.createVMForm.CreateDescription.disabled = false;
        document.createVMForm.CreateDescription.selected = true;
        document.createVMForm.selShortMeanings.disabled = false;
        document.createVMForm.selShortMeanings.selected = true;
-           //   document.createVMForm.sCCode.selected = true;
-          //    document.createVMForm.sCCodeName.selected = true;
-          //    document.createVMForm.sCCodeDB.selected = true;
-      // document.createVMForm.selConceptualDomainText.value = document.createVMForm.selConceptualDomain.options[document.createVMForm.selConceptualDomain.selectedIndex].text;
-      // document.createVMForm.selConceptualDomainText.selected = true;
        document.createVMForm.Message.style.visibility="visible";
+	   //disable the buttons
+	   document.createVMForm.btnValidate.disabled = true;
+	   document.createVMForm.btnClear.disabled = true;
+	   document.createVMForm.btnBack.disabled = true;
+	   //submit the form
        document.createVMForm.submit();
     }
   }

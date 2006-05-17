@@ -196,9 +196,6 @@ function submit()
 function SubmitValidate(origin)
 {
      var isValid = "valid";
-	   //check if the date is valid
-    // if (origin == "validate")
-     //  isValid = isDateValid();
      if (isValid == "valid" && origin == "validate") 
        isValid = isNameTypeValid(); 
 	   //check if the DEComp order is valid
@@ -211,36 +208,22 @@ function SubmitValidate(origin)
 		   document.newCDEForm.selDEC[0].selected = true;
 		   document.newCDEForm.selVD[0].selected = true;
 
-       //select multiselection lists
-       selectMultiSelectList();
-       
-       SaveDDEInfor();
-       
-       		   
-	/*	   if (origin == "validate")
-		   {
-         document.newCDEForm.newCDEPageAction.value = "validate";
-         window.status = "Validating data, it may take a minute, please wait.....";
-		   }
-		   else if (origin == "submit")
-		   {
-			   document.newCDEForm.newCDEPageAction.value = "submit";
-         window.status = "Submitting data, it may take a minute, please wait.....";
-		   }
-       else if (origin == "updateNames")
-		   {
-			   document.newCDEForm.newCDEPageAction.value = "updateNames";
-         window.status = "Refreshing the page, it may take a minute, please wait.....";
-		   }     
-       else if (origin == "changeNameType")
-		   {
-			   document.newCDEForm.newCDEPageAction.value = "changeNameType";
-         window.status = "Refreshing the page, it may take a minute, please wait.....";
-		   }     */
-
+	       //select multiselection lists
+	       selectMultiSelectList();
+	       //DDE info saved
+	       SaveDDEInfor();
+			//
            document.newCDEForm.newCDEPageAction.value = origin;
            window.status = "Validating data, it may take a minute, please wait.....";
 		   document.newCDEForm.Message.style.visibility="visible";
+		   //disable the buttons
+		   document.newCDEForm.btnValidate.disabled = true;
+		   document.newCDEForm.btnClear.disabled = true;
+		   if (document.newCDEForm.btnBack != null) 
+		   		document.newCDEForm.btnBack.disabled = true;
+		   document.newCDEForm.btnAltName.disabled = true;
+		   document.newCDEForm.btnRefDoc.disabled = true;
+		   //submit the form
 		   document.newCDEForm.submit();
 	   }
 }
