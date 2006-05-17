@@ -121,13 +121,12 @@ function displayStatusMessage()
   <col width="4%"><col width="95%">
     <tr>
       <td colspan="6" align="left" valign="top">
-        <input type="button" name="btnValidate" value="Validate" style="width: 125", "height: 30" onClick="SubmitValidate('validate');"
+        <input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate');"
 				onHelp = "showHelp('Help_CreateVD.html#createVMForm_Validation'); return false">
           &nbsp;&nbsp;
-        <!-- <input type="button" name="btnSubmit" value="Submit" style="width: 125", "height: 30" onClick="SubmitValidate('submit');">&nbsp; -->
-        <input type="button" name="btnClear" value="Clear" style="width: 125", "height: 30"  onClick="clearBoxes();">
+        <input type="button" name="btnClear" value="Clear" style="width: 125"  onClick="clearBoxes();">
           &nbsp;&nbsp;
-        <input type="button" name="btnBack" value="Back" style="width: 125", "height: 30" onClick="Back();">
+        <input type="button" name="btnBack" value="Back" style="width: 125" onClick="Back();">
           &nbsp;&nbsp;
 	     <img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
       </td>

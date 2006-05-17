@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/dev/load_tool_options.sql,v 1.8 2006-03-20 13:15:36 hardingr Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/dev/load_tool_options.sql,v 1.9 2006-05-17 20:01:35 hardingr Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -24,7 +24,7 @@ VALUES ('EVS', 'URL', 'http://cbioqa101.nci.nih.gov:49080/cacore31/http/remoteSe
 
 --Store browser url for all tools: need to make sure it doesn't exists already before runnning.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('BROWSER', 'URL', 'http://cdebrowser.nci.nih.gov', 
+VALUES ('BROWSER', 'URL', 'http://cdebrowser-dev.nci.nih.gov', 
 	   'Store browser url cde browser'); 
 
 
@@ -100,7 +100,7 @@ VALUES ('CURATION', 'EVS.VOCAB.1.VOCABCODETYPE', 'NCI_CONCEPT_CODE',
 	   'Store vocab code type (alt type) for the first vocabulary');
 --Store vocab meta source for the first vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.1.METASOURCE', 'NCI2005_10E', 
+VALUES ('CURATION', 'EVS.VOCAB.1.METASOURCE', 'NCI2005_10F', 
 	   'Store vocab meta source for the first vocabulary');
 --Store vocab to mark if used for parent search for the first vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -356,11 +356,11 @@ VALUES ('CURATION', 'EVS.DEFSOURCE.1', 'NCI',
 	   'Store NCI def source to filter out the multiple definition used');
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.DEFSOURCE.2', 'NCI-GLOSS_0510E',
+VALUES ('CURATION', 'EVS.DEFSOURCE.2', 'NCI-GLOSS_0510F',
 	   'Store NCI def source to filter out the multiple definition used');
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.DEFSOURCE.3', 'NCI2005_10E',
+VALUES ('CURATION', 'EVS.DEFSOURCE.3', 'NCI2005_10F',
 	   'Store NCI def source to filter out the multiple definition used');
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -373,6 +373,16 @@ INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, descriptio
 VALUES ('CURATION', 'EVS.DSRDISPLAY', 'caDSR',
 	   'Store the display name of the cadsr database');
 	   
+--Store NCI Thesaurus name to get the name of preferred vocabulary when getting thesarurs concept 
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EVS.PREFERREDVOCAB', 'NCI_Thesaurus',
+	   'Store NCI Thesaurus name to get the name of preferred vocabulary when getting thesarurs concept');
+	   
+--Store NCI Thesaurus source to get its source code used in replacing concept with preferred vocab (Thesaurus)
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EVS.PREFERREDVOCAB.SOURCE', 'NCI2005_10F',
+	   'Store NCI Thesaurus source to get its source code used in replacing concept with preferred vocab (Thesaurus)');
+
 	   
 
 

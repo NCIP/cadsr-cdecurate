@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/stage/load_tool_options.sql,v 1.8 2006-03-20 13:15:36 hardingr Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/stage/load_tool_options.sql,v 1.9 2006-05-17 20:01:35 hardingr Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -536,3 +536,5 @@ values ('CURATION', 'REFDOC_FILEURL', 'http://cdecurate-stage.nci.nih.gov/fileca
 'Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.');     
 	   
   
+--commit the inserts
+commit;

@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_Bean.java,v 1.8 2006-03-20 13:15:38 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_Bean.java,v 1.9 2006-05-17 20:01:36 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -133,7 +133,7 @@ public class EVS_Bean implements Serializable
   private String DISPLAY_ORDER;
   private String PRIMARY_FLAG;
   private String CON_AC_SUBMIT_ACTION;
-  
+  private String PREF_VOCAB_CODE;
  
 
   /**
@@ -425,6 +425,14 @@ public class EVS_Bean implements Serializable
   {
       this.CON_AC_SUBMIT_ACTION = b;
   }
+
+  /**
+   * @param pref_vocab_code The pREF_VOCAB_CODE to set.
+   */
+  public void setPREF_VOCAB_CODE(String pref_vocab_code)
+  {
+    PREF_VOCAB_CODE = pref_vocab_code;
+  }
  
 
 
@@ -708,16 +716,24 @@ public class EVS_Bean implements Serializable
   {
       return this.CON_AC_SUBMIT_ACTION;
   }
+
+  /**
+ * @return Returns the pREF_VOCAB_CODE.
+ */
+  public String getPREF_VOCAB_CODE()
+  {
+    return PREF_VOCAB_CODE;
+  }
   
   /**
    * get the vocab attributes from teh user bean using filter attr and filter value to check and return its equivaltnt attrs
    * @param eUser EVS_userbean obtained from the database at login
    * @param sFilterValue string existing value  
-   * @param sFilterAttr string existing vocab name
-   * @param sRetAttr string returning vocab name
+   * @param filterAttr int existing vocab name
+   * @param retAttr int returning vocab name
    * @return value from returning vocab
    */
-  public String getVocabAttr(EVS_UserBean eUser, String sFilterValue, String sFilterAttr, String sRetAttr)
+  public String getVocabAttr(EVS_UserBean eUser, String sFilterValue, int filterAttr, int retAttr)  // String sFilterAttr, String sRetAttr)
   {
     //go back if origin is emtpy
     if (sFilterValue == null || sFilterValue.equals(""))
@@ -728,7 +744,7 @@ public class EVS_Bean implements Serializable
     Vector vVocabs = eUser.getVocabNameList();
     if (vVocabs == null) vVocabs = new Vector();
     //handle teh special case to make sure vocab for api query is valid
-    if (sFilterAttr == null || sFilterAttr.equals(""))
+    if (filterAttr == EVSSearch.VOCAB_NULL)  //(sFilterAttr == null || sFilterAttr.equals(""))
     {
       //it is valid vocab name
       if (vVocabs.contains(sFilterValue))
@@ -744,7 +760,7 @@ public class EVS_Bean implements Serializable
           return sRetValue;  //found it
         }
         else
-          sFilterAttr = "vocabDBOrigin";   //filter it as dborigin
+           filterAttr = EVSSearch.VOCAB_DBORIGIN;  //sFilterAttr = "vocabDBOrigin";   //filter it as dborigin
       }
     }
     for (int i=0; i<vVocabs.size(); i++)
@@ -755,24 +771,24 @@ public class EVS_Bean implements Serializable
       //check if the vocab is meta thesaurus
       String sMeta = usrVocab.getIncludeMeta();
       if (sMeta != null && !sMeta.equals("") && sMeta.equals(sFilterValue))
-        return "MetaValue";
+        return EVSSearch.META_VALUE;  // "MetaValue";
       //get teh data from teh bean to match search
-      if (sFilterAttr.equalsIgnoreCase("vocabDisplay"))
+      if (filterAttr == EVSSearch.VOCAB_DISPLAY)  // (sFilterAttr.equalsIgnoreCase("vocabDisplay"))
         sValue = usrVocab.getVocabDisplay();
-      else if (sFilterAttr.equalsIgnoreCase("vocabDBOrigin"))
+      else if (filterAttr == EVSSearch.VOCAB_DBORIGIN)  //(sFilterAttr.equalsIgnoreCase("vocabDBOrigin"))
         sValue = usrVocab.getVocabDBOrigin();
-      else if (sFilterAttr.equalsIgnoreCase("vocabName"))
+      else if (filterAttr == EVSSearch.VOCAB_NAME)  //(sFilterAttr.equalsIgnoreCase("vocabName"))
         sValue = usrVocab.getVocabName();
       //do matching and return the value
     //  System.out.println(sFilterValue + " getvocab " + sValue);
       if (sFilterValue.equalsIgnoreCase(sValue))
       {
         //get its value from teh bean for the return attr
-        if (sRetAttr.equalsIgnoreCase("vocabDisplay"))
+        if (retAttr == EVSSearch.VOCAB_DISPLAY)  // (sRetAttr.equalsIgnoreCase("vocabDisplay"))
           sRetValue = usrVocab.getVocabDisplay();
-        else if (sRetAttr.equalsIgnoreCase("vocabDBOrigin"))
+        else if (retAttr == EVSSearch.VOCAB_DBORIGIN)  // (sRetAttr.equalsIgnoreCase("vocabDBOrigin"))
           sRetValue = usrVocab.getVocabDBOrigin();
-        else if (sRetAttr.equalsIgnoreCase("vocabName"))
+        else if (retAttr == EVSSearch.VOCAB_NAME)  // (sRetAttr.equalsIgnoreCase("vocabName"))
           sRetValue = usrVocab.getVocabName();
         break;
       }
@@ -847,61 +863,8 @@ public class EVS_Bean implements Serializable
     catch(Exception e)
     {
       System.out.println("EVS_Bean.java setEVS " + e.toString());
-      logger.fatal("EVS_Bean.java setEVS " + e.toString());
+      logger.fatal("EVS_Bean.java setEVS " + e.toString(), e);
     }
   }
    
- /* public void setEVSBean(String definition, String source, String prefName, String sAltNameType, 
-  String umlsCuiType, String tempCuiType, String CCode, String umlsCuiVal, 
-  String tempCuiVal, String dtsVocab, int iLevel, String condr_idseq, String CONTE_IDSEQ, 
-  String sConceptSource, String aslName, String semType)
-  {
-    try
-    {
-      String database = dtsVocab;
-      if (definition == null || definition.equals("")) definition = "No Value Exists.";
-      this.setPREFERRED_DEFINITION(definition);
-      if (source != null && !source.equals(""))
-        source = source.replaceFirst("<def-source>", "");
-      this.setEVS_DEF_SOURCE(source);
-      this.setPREFERRED_NAME(prefName);
-      this.setLONG_NAME(prefName);
-      this.setNCI_CC_TYPE(sAltNameType);
-      this.setUMLS_CUI_TYPE("UMLS_CUI");
-      this.setTEMP_CUI_TYPE("NCI_META_CUI");
-      this.setNCI_CC_VAL(CCode);
-      this.setUMLS_CUI_VAL(umlsCuiVal);
-     // this.setTEMP_CUI_VAL(tempCuiVal);
-      if (database != null && database.equals("NCI_Thesaurus")) database = "NCI Thesaurus";
-      else if(database != null && database.equals("MGED_Ontology")) database = "MGED";
-      this.setEVS_DATABASE(database);
-      this.setEVS_ORIGIN(database);
-      this.setDEC_USING("");
-      this.setLEVEL(iLevel);
-      this.setCONDR_IDSEQ(condr_idseq);
-      this.setCONTE_IDSEQ(CONTE_IDSEQ);
-      //store the concept id and type in one property
-      if (CCode == null || CCode.equals("") || CCode.equalsIgnoreCase("No Value Returned."))
-      {
-        if (umlsCuiVal != null && !umlsCuiVal.equals("") && !umlsCuiVal.equalsIgnoreCase("No Value Returned."))
-        {
-          this.setNCI_CC_VAL(umlsCuiVal);
-          this.setNCI_CC_TYPE("UMLS_CUI");
-        }
-        else
-        {
-          this.setNCI_CC_VAL(tempCuiVal);
-          this.setNCI_CC_TYPE("NCI_META_CUI");
-        }
-      }
-      this.setEVS_CONCEPT_SOURCE(sConceptSource);
-      this.setASL_NAME(aslName);
-      this.setEVS_SEMANTIC(semType);
-    }
-    catch(Exception e)
-    {
-      System.out.println("EVS_Bean.java setEVS " + e.toString());
-      logger.fatal("EVS_Bean.java setEVS " + e.toString());
-    }
-  } */
 }

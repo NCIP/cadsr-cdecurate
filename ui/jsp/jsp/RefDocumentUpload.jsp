@@ -92,9 +92,7 @@
 <p style="font-size: 12pt; font-weight: bold">Reference Document Attachments for:&nbsp;
 	<%=sLongName%>&nbsp;&nbsp;(&nbsp;<%=sPublic_id%>&nbsp;v<%=sVersion%>&nbsp;)
 </p>
-<p>To view an attachment, select the desired link to the right of the Reference Document.  Although everyone is 
-encouraged to scan files for viruses prior to Upload, it is not required and file scans are not performed by the 
-Admin or Curation Tools.</p>
+<p>To view an attachment, select the desired link to the right of the Reference Document.</p>
 <p>To delete an attachment, select the Delete Icon (
 <span style="font-family: Webdings; font-size: 12pt; font-weight: bold">&#114;</span>
 ) next to the desired link.</p>
@@ -200,10 +198,11 @@ else {%>
 	  }
 %>
 </table>
-<p>To attach a file, select the desired Reference Document above, enter or browse the local file, including the path, and select Upload. 
+<p>To attach a file, select the desired Reference Document above, browse the local file and select Upload. 
 </p>
-<p>File Name: <INPUT TYPE=FILE NAME="uploadfile"></p>
-<p>Please perform a virus scan on files prior to Upload. File scans are not performed by the Curation Tool.</p>
+<p>File Name: <INPUT TYPE="FILE" NAME="uploadfile" onFocus="javascript:doValidateInput();" onContextMenu="return false;"></p>
+<p>Please perform a virus scan on files prior to Upload. File scans are not performed by the Curation Tool.
+</p>
 <p><INPUT type="button" name="Uploadbtn" value="Upload" onclick="javascript:doUpload();" disabled></p>
 
 

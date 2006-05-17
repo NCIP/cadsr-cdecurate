@@ -56,24 +56,24 @@ Validate Data Element
     defaultStatus = "Validate Data Element status, go back to modify it or submit to create it"
     function submit()
     {
-        validateDEForm.submit();
-    }
-
-    function EditDE()
-    {
        hourglass();
-       document.validateDEForm.ValidateDEPageAction.value = "reEditDE";
-       //window.history.back();
-       document.validateDEForm.submit();
-    }
-
-    function SubmitValidate()
-    {
-       hourglass();
-       document.validateDEForm.ValidateDEPageAction.value = "submitDE";
        document.validateDEForm.Message.style.visibility="visible";
        defaultStatus = "Submitting data, it may take a minute, please wait....."
+       document.validateDEForm.btnSubmit.disabled = true;
+       document.validateDEForm.btnBack.disabled = true;
        document.validateDEForm.submit();
+    }
+	//go back to edit or create de page
+    function EditDE()
+    {
+       document.validateDEForm.ValidateDEPageAction.value = "reEditDE";
+       submit();
+    }
+	//submit the data to database
+    function SubmitValidate()
+    {
+       document.validateDEForm.ValidateDEPageAction.value = "submitDE";
+       submit();
     }
 
    function DefSuggestion()
@@ -95,14 +95,14 @@ Validate Data Element
   <tr>
     <td width="1200" height="29" valign="top">
       <% if (isValid == true) { %>
-          <input type="button" name="Submit" value="Submit" style="width: 125", "height: 30" onClick="SubmitValidate()">
+          <input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()">
       <% } else { %>
-          <input type="button" name="Submit" value="Submit" style="width: 125", "height: 30" onClick="SubmitValidate()" disabled>
+          <input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()" disabled>
       <% } %>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="button" name="btnBack" value="Back" style="width:125" onClick="EditDE();">
         &nbsp;&nbsp;
-      <input type="button" name="btnBack" value="Back" style="width: 125", "height: 30" onClick="EditDE();">
-        &nbsp;&nbsp;
-      <img name="Message" src="Assets/SubmitMessageFinal.gif" width="300" height="25" alt="WaitMessage" style="visibility:hidden;">
+      <img name="Message" src="Assets/SubmitMessageFinal.gif" width="400" height="25" alt="WaitMessage" style="visibility:hidden;">
     </td>
   </tr>
 </table>

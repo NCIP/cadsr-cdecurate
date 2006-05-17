@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocMultipartForm.java,v 1.8 2006-03-20 13:15:39 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocMultipartForm.java,v 1.9 2006-05-17 20:01:36 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -252,7 +252,7 @@ public class RefDocMultipartForm {
         catch (IOException e)
         {
             //TODO Of course this should happen and needs to output to the Curation Tool logger.
-        	_logger.fatal(e.toString());
+        	_logger.fatal(e.toString(), e);
         }
 	}
 

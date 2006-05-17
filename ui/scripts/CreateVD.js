@@ -537,8 +537,6 @@ function enableContButtons()
  // alert("submitValidate origin: " + origin);
     //check if the date is valid
     var isValid = "valid";
-   // if (origin == "validate")
-   //   isValid = isDateValid();
     if (isValid == "valid" && origin == "validate") 
       isValid = isNameTypeValid(); 
     //do the action
@@ -559,37 +557,19 @@ function enableContButtons()
     	//select cs-csi multi select lists
       selectMultiSelectList();
      
-   /*   if (origin == "validate")
-      {
-        document.createVDForm.newCDEPageAction.value = "validate";
-        window.status = "Validating data, it may take a minute, please wait.....";
-      }
-      else if (origin == "refresh")
-      {
-        document.createVDForm.newCDEPageAction.value = "refreshCreateVD";
-        window.status = "Validating data, it may take a minute, please wait.....";
-      }
-       else if (origin == "UseSelection")
-      {  
-        document.createVDForm.newCDEPageAction.value = "UseSelection";
-        window.status = "Validating data, it may take a minute, please wait....."; 
-      }
-      else if (origin == "RemoveSelection")
-      {  
-        document.createVDForm.newCDEPageAction.value = "RemoveSelection";
-        window.status = "Validating data, it may take a minute, please wait....."; 
-      }  
-      else if (origin == "changeNameType")
-      {
-        document.createVDForm.newCDEPageAction.value = "changeNameType";
-        window.status = "Refreshing the page, it may take a minute, please wait.....";          
-      }    */
-            
       //submit the form
       if (origin == "refresh") origin = "refreshCreateVD";
       document.createVDForm.newCDEPageAction.value = origin;
       window.status = "Validating the page, it may take a minute, please wait.....";          
       document.createVDForm.Message.style.visibility="visible";
+	   //disable the buttons
+	   document.createVDForm.btnValidate.disabled = true;
+	   document.createVDForm.btnClear.disabled = true;
+	   if (document.createVDForm.btnBack != null) 
+	   		document.createVDForm.btnBack.disabled = true;
+	   document.createVDForm.btnAltName.disabled = true;
+	   document.createVDForm.btnRefDoc.disabled = true;
+	   //submit the form
       document.createVDForm.submit();
     }
   }

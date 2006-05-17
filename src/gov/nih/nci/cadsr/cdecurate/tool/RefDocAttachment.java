@@ -1,4 +1,4 @@
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.8 2006-03-20 13:15:39 hardingr Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.9 2006-05-17 20:01:36 hardingr Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -395,7 +395,7 @@ public void doFileUpload (){
 			con.close();
 
 		} catch (SQLException e) {
-			logger.fatal(e.toString());
+			logger.fatal(e.toString(), e);
 		}
 		doOpen();
 }
@@ -441,7 +441,7 @@ public void doDeleteAttachment (){
 		pstmt.close();
 		con.close();
 	} catch (SQLException e) {
-		logger.fatal(e.toString());
+		logger.fatal(e.toString(), e);
 		msg = "Reference Document Attachment: Unable to delete the Attachment from the database.";
 	}
 	// Forward back to the open method
@@ -466,7 +466,7 @@ public void doDeleteAttachment (){
       pstmt.close();
       con.close();
     } catch (SQLException e) {
-      logger.fatal("Error - doDeleteAllAttachments: " + e.toString());
+      logger.fatal("Error - doDeleteAllAttachments: " + e.toString(), e);
       msg = "Unable to delete all the Attachments from the database for the selected Reference Document.";
     }
     return msg;

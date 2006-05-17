@@ -1,7 +1,7 @@
 
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.8 2006-03-20 13:15:38 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.9 2006-05-17 20:01:36 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;     
@@ -152,11 +152,11 @@ public class GetACSearch implements Serializable
     {
       HttpSession session = req.getSession();     //get the session
       //capture the duration
-      java.util.Date startDate = new java.util.Date();          
+      //java.util.Date startDate = new java.util.Date();          
       //logger.info(m_servlet.getLogMessage(req, "getACKeywordResult", "starting search", startDate, startDate));
       
       Vector vAC = new Vector();
-      Vector vS = new Vector();
+      //Vector vS = new Vector();
       SetACService setAC = new SetACService(m_servlet);
       session.setAttribute("sortType", "longName");
       session.setAttribute("serProtoID", "");  //empty the proto id attribute
@@ -496,6 +496,9 @@ public class GetACSearch implements Serializable
             do_caDSRSearch("", sContext, sStatus, "", vAC, "OC", sCon, "");
           else if (sSearchAC.equals("Property"))
              do_caDSRSearch("", sContext, sStatus, "", vAC, "PROP", sCon, "");
+           //search pref name if evs identifier
+          else if (sSearchAC.equals("ConceptClass"))
+            vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
         }
         //search in by names and definitions
         else
@@ -619,16 +622,16 @@ public class GetACSearch implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR - GetACSearch-getKeywordResult!! : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-getKeywordResult!! : " + e.toString(), e);
     }
   }
 
-  /**
+/*  /**
    * Stores search parameter attributes in the hash table and in session attributes to access it later.
    * @return Hashtmap
    * 
    */
-   private HashMap storeSearchParamAttr()
+/*   private HashMap storeSearchParamAttr()
    {
       HttpSession session = m_classReq.getSession();     //get the session
       Vector vAC = new Vector();
@@ -788,7 +791,7 @@ public class GetACSearch implements Serializable
       }
       return paramMap;
    } // end storeSearchParamAttr
-   
+*/   
    
   /**
    * Adds the search component, result bean vector and result vector in a stack to use it later.
@@ -889,7 +892,7 @@ public class GetACSearch implements Serializable
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-pushAllOntoStack: " + e);
-      logger.fatal("ERROR in GetACSearch-pushAllOntoStack : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-pushAllOntoStack : " + e.toString(), e);
     }
    }
 
@@ -979,12 +982,12 @@ public class GetACSearch implements Serializable
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-stackSearchComponents: " + e);
-      logger.fatal("ERROR in GetACSearch-stackSearchComponents : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-stackSearchComponents : " + e.toString(), e);
     }
    }
   }
    
-  /**
+/*  /**
    * To get the ac_idseq of the component when the selected searchIn is CDE_ID,
    * called from method getACKeywordResult
    * uses sql query "SELECT ac_idseq FROM de_cde_id_view where min_cde_id = '" + sCDEID + "'"
@@ -993,7 +996,7 @@ public class GetACSearch implements Serializable
    *
    * @return String ac_idseq if found. otherwise empty string.
    */
-  private String getCDEIDSearch(String sCDEID)  // get the ac id for the selected cdeid.
+/*  private String getCDEIDSearch(String sCDEID)  // get the ac id for the selected cdeid.
   {
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -1023,7 +1026,7 @@ public class GetACSearch implements Serializable
     catch(Exception e)
     {
       //System.err.println("error exception in GetACSearch-CDEIDSearch: " + e);
-      logger.fatal("ERROR - GetACSearch-getCDEIDSearch for others : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-getCDEIDSearch for others : " + e.toString(), e);
     }
 
     try
@@ -1035,12 +1038,13 @@ public class GetACSearch implements Serializable
     catch(Exception ee)
     {
       //System.err.println("Problem closing in GetACSearch-CDEIDSearch: " + ee);
-      logger.fatal("GetACSearch-getCDEIDSearch for closing : " + ee.toString());
+      logger.fatal("GetACSearch-getCDEIDSearch for closing : " + ee.toString(), ee);
     }
     return s;
   }  //end search cdeid
+*/
 
-  /**
+   /**
    * To get selected attributes or rows to display, called from NCICurationServlet.
    * calls method 'setAttributeValues' to get list of selected attributes at search.
    * calls method 'getRowSelected' to get list of checked rows to display.
@@ -1061,7 +1065,7 @@ public class GetACSearch implements Serializable
       HttpSession session = req.getSession();
       String sSearchAC = "";
       String menuAction = (String)session.getAttribute("MenuAction");
-      String sComponent = "";
+      //String sComponent = "";
       if (menuAction.equals("searchForCreate"))
           sSearchAC = (String)session.getAttribute("creSearchAC");
       else
@@ -1094,7 +1098,7 @@ public class GetACSearch implements Serializable
       String dtsVocab = req.getParameter("listContextFilterVocab");
       if (dtsVocab != null && !dtsVocab.equals("")) isBlockSearch = true;
       //call method to get the final result vector
-      Vector vResult = new Vector();
+      Vector<String> vResult = new Vector<String>();
         //get the final result for selected component
       if (sSearchAC.equals("DataElement"))
         getDEResult(req, res, vResult, "");
@@ -1116,8 +1120,6 @@ public class GetACSearch implements Serializable
         evs.get_Result(req, res, vResult, "");
   
 
-
-
       if(actType.equals("BEDisplayRows")) 
         session.setAttribute("resultsBEDisplay", vResult);
       else
@@ -1126,7 +1128,7 @@ public class GetACSearch implements Serializable
     catch(Exception e)
     {
       //System.err.println("ERROR -  in GetACSearch-showResult: " + e);
-      logger.fatal("ERROR - GetACSearch-showResult : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-showResult : " + e.toString(), e);
     }
   }
 
@@ -1153,7 +1155,7 @@ public class GetACSearch implements Serializable
       if (dtsVocab != null && !dtsVocab.equals("")) isBlockSearch = true; */
       
       //call method to get the final result vector
-      Vector vResult = new Vector();
+      Vector<String> vResult = new Vector<String>();
         //get the final result for selected component
       if (sSearchAC.equals("DataElement"))
         getDEResult(req, res, vResult, "");
@@ -1209,7 +1211,7 @@ public class GetACSearch implements Serializable
 
       if ((!sComponent.equals("")) && (sComponent !=null))
       {
-        Vector vResult = new Vector();
+        Vector<String> vResult = new Vector<String>();
         if (sComponent.equals("DataElement"))
         {
           getDESortedRows(req, res);        //sort the DE bean
@@ -1279,7 +1281,7 @@ public class GetACSearch implements Serializable
     catch(Exception e)
     {
       //System.err.println("ERROR - in GetACSearch-sortedResult: " + e);
-      logger.fatal("ERROR - GetACSearch-sortedResult : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-sortedResult : " + e.toString(), e);
     }
   }
 
@@ -1315,7 +1317,7 @@ public class GetACSearch implements Serializable
       session.setAttribute("results", vResult);
   }
 
-  /**
+/*  /**
    * To get Search results for CRF from database for DE called from getACKeywordResult.
    *
    * calls oracle stored procedure
@@ -1340,7 +1342,7 @@ public class GetACSearch implements Serializable
    * @param vList returns Vector of DEbean.
    *
    */
-  private void doDE_CRFSearch(String ProtoWord, String CRFWord, String ContName, String sVersion, 
+/*  private void doDE_CRFSearch(String ProtoWord, String CRFWord, String ContName, String sVersion, 
           String ASLName, String regStatus, String sCreatedFrom, String sCreatedTo, String sModifiedFrom, 
           String sModifiedTo, String sCreator, String sModifier, String derType, Vector vList)  // returns list of Data Elements
   {
@@ -1469,6 +1471,7 @@ public class GetACSearch implements Serializable
       logger.fatal("ERROR - GetACSearch-DECRFSearch for close : " + ee.toString());
     }
   }  //endDE_crf search
+*/
 
   /**
    * To get resultSet from database for Questions called from getACKeywordResult and Servlet methods.
@@ -1482,7 +1485,7 @@ public class GetACSearch implements Serializable
    * @param vList returns Vector of DEbean.
    *
    */
-  public void doQuestionSearch(String userName, Vector vList)  // returns list of Questions
+  public void doQuestionSearch(String userName, Vector<Quest_Bean> vList)  // returns list of Questions
   {
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -1515,7 +1518,7 @@ public class GetACSearch implements Serializable
            //store the output in the resultset
            rs = (ResultSet) CStmt.getObject(5);
 
-           String s;
+          // String s;
            if(rs!=null)
            {
              //loop through the resultSet and add them to the bean
@@ -1565,7 +1568,7 @@ public class GetACSearch implements Serializable
     catch(Exception e)
     {
       //System.err.println("other problem in GetACSearch-QuestionSearch: " + e);
-      logger.fatal("ERROR - GetACSearch-QuestionSearch for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-QuestionSearch for other : " + e.toString(), e);
     }
     try
     {
@@ -1576,7 +1579,7 @@ public class GetACSearch implements Serializable
     catch(Exception ee)
     {
       //System.err.println("Problem closing in GetACSearch-doQuestionSearch: " + ee);
-      logger.fatal("ERROR - GetACSearch-QuestionSearch for close : " + ee.toString());
+      logger.fatal("ERROR - GetACSearch-QuestionSearch for close : " + ee.toString(), ee);
     }
   }  //endQuestion search
 
@@ -1842,8 +1845,8 @@ public class GetACSearch implements Serializable
     }
     catch(Exception e)
     {
-System.err.println("other problem in GetACSearch-DESearch: " + e);
-      logger.fatal("ERROR - GetACSearch-DESearch for other : " + e.toString());
+//System.err.println("other problem in GetACSearch-DESearch: " + e);
+      logger.fatal("ERROR - GetACSearch-DESearch for other : " + e.toString(), e);
     }
     try
     {
@@ -1855,7 +1858,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception ee)
     {
       //System.err.println("Problem closing in GetACSearch-doDESearch: " + ee);
-      logger.fatal("ERROR - GetACSearch-DESearch for close : " + ee.toString());
+      logger.fatal("ERROR - GetACSearch-DESearch for close : " + ee.toString(), ee);
     }
     //logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "end call", startDate, new java.util.Date()));
   }  //endDE search
@@ -2243,7 +2246,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("other problem in GetACSearch-DECSearch: " + e);
-      logger.fatal("ERROR - GetACSearch-DECSearch for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-DECSearch for other : " + e.toString(), e);
     }
     try
     {
@@ -2254,7 +2257,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception ee)
     {
       //System.err.println("Problem closing in GetACSearch-doDECSearch: " + ee);
-      logger.fatal("GetACSearch-DECSearch for close : " + ee.toString());
+      logger.fatal("GetACSearch-DECSearch for close : " + ee.toString(), ee);
     }
     //capture the duration
     //logger.info(m_servlet.getLogMessage(m_classReq, "doDECSearch", "end search", exDate,  new java.util.Date()));
@@ -2447,7 +2450,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("other problem in GetACSearch-doVDSearch: " + e);
-      logger.fatal("ERROR - GetACSearch-doVDSearch for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-doVDSearch for other : " + e.toString(), e);
     }
     try
     {
@@ -2458,7 +2461,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception ee)
     {
       //System.err.println("Problem closing in GetACSearch-doVDSearch: " + ee);
-      logger.fatal("ERROR - GetACSearch-doVDSearch for close : " + ee.toString());
+      logger.fatal("ERROR - GetACSearch-doVDSearch for close : " + ee.toString(), ee);
     }
     //capture the duration
   //  logger.info(m_servlet.getLogMessage(m_classReq, "doVDSearch", "end search", exDate,  new java.util.Date()));
@@ -2596,7 +2599,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("other problem in GetACSearch-CDSearch: " + e);
-      logger.fatal("ERROR - GetACSearch-CDSearch for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-CDSearch for other : " + e.toString(), e);
     }
     try
     {
@@ -2607,7 +2610,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception ee)
     {
       //System.err.println("Problem closing in GetACSearch-doCDSearch: " + ee);
-      logger.fatal("ERROR - GetACSearch-CDSearch for close : " + ee.toString());
+      logger.fatal("ERROR - GetACSearch-CDSearch for close : " + ee.toString(), ee);
     }
     //capture the duration
  //   logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "end search", exDate,  new java.util.Date()));
@@ -2687,7 +2690,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("other problem in GetACSearch-CSISearch: " + e);
-      logger.fatal("ERROR - GetACSearch-CSISearch for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-CSISearch for other : " + e.toString(), e);
     }
     try
     {
@@ -2698,7 +2701,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception ee)
     {
       //System.err.println("Problem closing in GetACSearch-doCSISearch: " + ee);
-      logger.fatal("ERROR - GetACSearch-CSISearch for close : " + ee.toString());
+      logger.fatal("ERROR - GetACSearch-CSISearch for close : " + ee.toString(), ee);
     }
     //capture the duration
     //logger.info(m_servlet.getLogMessage(m_classReq, "doCSISearch", "end search", exDate,  new java.util.Date()));
@@ -2767,7 +2770,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-setAttribute: " + e);
-      logger.fatal("ERROR in GetACSearch-setAttribute : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-setAttribute : " + e.toString(), e);
     }
   }
 
@@ -2859,7 +2862,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getMultiReqValues: " + e);
-      logger.fatal("ERROR in GetACSearch-getMultiReqValues : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getMultiReqValues : " + e.toString(), e);
     }
     return sValues;
   }
@@ -2943,7 +2946,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getStatusValues: " + e);
-      logger.fatal("ERROR in GetACSearch-setStatusValues : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-setStatusValues : " + e.toString(), e);
     }
     return sStatus;
   }
@@ -2985,7 +2988,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     }
     catch(Exception e)
     {
-      logger.fatal("Error - selVerWFStatBlock " + e.toString());
+      logger.fatal("Error - selVerWFStatBlock " + e.toString(), e);
     }
   }
    /**
@@ -3272,7 +3275,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getDEResult: " + e);
-      logger.fatal("ERROR in GetACSearch-getDEResult : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getDEResult : " + e.toString(), e);
     }
   }
   
@@ -3300,7 +3303,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getDE_RegStatusResult: " + e);
-      logger.fatal("ERROR in GetACSearch-getDE_RegStatusResult : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getDE_RegStatusResult : " + e.toString(), e);
     }
   }
 
@@ -3379,7 +3382,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
       return vRes;
     }
 
-    /**
+  /**
      * Adds details hyperlink for alt names in the search resutls of an ac
      * @param altName String altername name
      * @param acName STring ac name
@@ -3388,7 +3391,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
      * @return Vector of search results to display
      * @throws Exception
      */
-     private Vector addMultiRecordAltName(String altName, String acName, String acID, Vector<String> vRes) throws Exception
+ private Vector addMultiRecordAltName(String altName, String acName, String acID, Vector<String> vRes) throws Exception
      {
        String hyperText = "";
        if (altName != null && !altName.equals(""))
@@ -3802,7 +3805,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("problem in getDDEInfo: " + e);
-      logger.fatal("ERROR - getDDEInfo : " + e.toString());
+      logger.fatal("ERROR - getDDEInfo : " + e.toString(), e);
     }
     try
     {
@@ -3813,7 +3816,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception ee)
     {
       //System.err.println("Problem closing in getDDEInfo: " + ee);
-      logger.fatal("ERROR - getDDEInfo for close : " + ee.toString());
+      logger.fatal("ERROR - getDDEInfo for close : " + ee.toString(), ee);
     }
     //capture the duration
   //  logger.info(m_servlet.getLogMessage(m_classReq, "getDDEInfo", "end search", exDate, new java.util.Date()));
@@ -3939,7 +3942,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getDECResult: " + e);
-      logger.fatal("ERROR in GetACSearch-getDECResult : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getDECResult : " + e.toString(), e);
     }
   }
 
@@ -4087,7 +4090,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in  GetACSearch-getVDResult: " + e);
-      logger.fatal("ERROR in GetACSearch-getVDResult : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getVDResult : " + e.toString(), e);
     }
   }
 
@@ -4205,7 +4208,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getCDResult: " + e);
-      logger.fatal("ERROR in GetACSearch-getCDResult : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getCDResult : " + e.toString(), e);
     }
   }
   
@@ -4240,10 +4243,10 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     String compType = "";
     try
     {
-      //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
-        m_servlet.ErrorLogin(m_classReq, m_classRes);
+        //Create a Callable Statement object.
+        sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+        if (sbr_db_conn == null)
+          m_servlet.ErrorLogin(m_classReq, m_classRes);
         if(type.equals("OC") || type.equals("ObjQ"))
         {
           CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_OC(?,?,?,?,?,?,?)}");
@@ -4329,7 +4332,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("other problem in GetACSearch-do_caDSRSearch: " + e);
-      logger.fatal("ERROR - GetACSearch-do_caDSRSearch for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-do_caDSRSearch for other : " + e.toString(), e);
     }
     try
     {
@@ -4340,7 +4343,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception ee)
     {
       //System.err.println("Problem closing in GetACSearch-docaDSRSearch: " + ee);
-      logger.fatal("GetACSearch-do_caDSRSearch for close : " + ee.toString());
+      logger.fatal("GetACSearch-do_caDSRSearch for close : " + ee.toString(), ee);
     }
     //capture the duration
  //   logger.info(m_servlet.getLogMessage(m_classReq, "do_caDSRSearch", "end search", exDate,  new java.util.Date()));
@@ -4358,8 +4361,8 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
    * @param vList returns Vector of DEC bean.
    *
 */
-  public Vector do_ConceptSearch(String InString, String conIdseq, String ContName, 
-      String ASLName, String conID, String decID, String vdID, Vector vList)  // returns list of Concepts
+  public Vector<EVS_Bean> do_ConceptSearch(String InString, String conIdseq, String ContName, 
+      String ASLName, String conID, String decID, String vdID, Vector<EVS_Bean> vList)  // returns list of Concepts
   {
     //capture the duration
     java.util.Date exDate = new java.util.Date();          
@@ -4368,7 +4371,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     ResultSet rs = null;
     CallableStatement CStmt = null;
     HttpSession session = (HttpSession)m_classReq.getSession();
-    EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+    EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
     String menuAction = (String)session.getAttribute("MenuAction");
     if (menuAction == null) menuAction = "";
     if (eUser == null) eUser = new EVS_UserBean();          
@@ -4418,9 +4421,10 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
           else  //make the vocab as evs origin from cadsr for main page concept class search
             conBean.setEVS_DATABASE(sVocab);
           conBean.setcaDSR_COMPONENT("Concept Class"); 
-          String selVocab = conBean.getVocabAttr(eUser, sVocab, "vocabDBOrigin", "vocabName");
+          String selVocab = conBean.getVocabAttr(eUser, sVocab, EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME);  // "vocabDBOrigin", "vocabName");
           //store evs vocab name in evs origin and leave meta out
-          if (selVocab.equals("MetaValue")) conBean.setEVS_ORIGIN(sVocab);
+          if (selVocab.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
+            conBean.setEVS_ORIGIN(sVocab);
           else conBean.setEVS_ORIGIN(selVocab);
           
           conBean.setID(rs.getString("con_ID"));//public id
@@ -4461,7 +4465,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR - GetACSearch-do_conceptSearch for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-do_conceptSearch for other : " + e.toString(), e);
     }
     try
     {
@@ -4471,7 +4475,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     }
     catch(Exception ee)
     {
-      logger.fatal("GetACSearch-do_conceptSearch for close : " + ee.toString());
+      logger.fatal("GetACSearch-do_conceptSearch for close : " + ee.toString(), ee);
     }
     //capture the duration
     //logger.info(m_servlet.getLogMessage(m_classReq, "do_conceptSearch", "end search", exDate,  new java.util.Date()));
@@ -4534,7 +4538,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-rowSelectedBEDisplay: " + e);
-      logger.fatal("ERROR in GetACSearch-rowSelectedBEDispay : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-rowSelectedBEDispay : " + e.toString(), e);
     }
   }
 
@@ -4665,7 +4669,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-rowSelected: " + e);
-      logger.fatal("ERROR in GetACSearch-rowSelected : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-rowSelected : " + e.toString(), e);
     }
   }
 
@@ -4885,7 +4889,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in  GetACSearch-getSelRowToEdit: " + e);
-      logger.fatal("ERROR in GetACSearch-getSelRowToEdit : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getSelRowToEdit : " + e.toString(), e);
       session.setAttribute("statusMessage", "Unable to open the Create/Edit page. Please try again.");
       return false;
     }
@@ -5498,7 +5502,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in  GetACSearch-checkWritePermission: " + e);
-      logger.fatal("ERROR in GetACSearch-checkWritePermission : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-checkWritePermission : " + e.toString(), e);
     }
     return sErrorMessage;
    }
@@ -5709,7 +5713,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
    //   //System.err.println("ERROR in  GetACSearch-doPVSearch: " + e);
-      logger.fatal("ERROR in GetACSearch-doPVSearch for other : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-doPVSearch for other : " + e.toString(), e);
     }
     try
     {
@@ -5720,7 +5724,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception ee)
     {
  //     //System.err.println("Problem closing in GetACSearch-doPVSearch: " + ee);
-      logger.fatal("ERROR in GetACSearch-doPVSearch for close : " + ee.toString());
+      logger.fatal("ERROR in GetACSearch-doPVSearch for close : " + ee.toString(), ee);
     }
     return VDBean;
   }  //endPV search
@@ -5816,7 +5820,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-doCSCSI_ACSearch: " + e);
-      logger.fatal("ERROR in GetACSearch-doCSCSI_ACSearch for other : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-doCSCSI_ACSearch for other : " + e.toString(), e);
     }
     try
     {
@@ -5827,7 +5831,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception ee)
     {
       //System.err.println("Problem closing in GetACSearch-doCSCSI_ACSearch: " + ee);
-      logger.fatal("ERROR in GetACSearch-doCSCSI_ACSearch for close : " + ee.toString());
+      logger.fatal("ERROR in GetACSearch-doCSCSI_ACSearch for close : " + ee.toString(), ee);
     }
     return vAC_CSI;
   }  //endCS search
@@ -5942,7 +5946,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-DEsortedRows: " + e);
-      logger.fatal("ERROR in GetACSearch-DEsortedRows : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-DEsortedRows : " + e.toString(), e);
     }
   }
 
@@ -6032,7 +6036,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-DEsortedRows: " + e);
-      logger.fatal("ERROR in GetACSearch-DEsortedRows : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-DEsortedRows : " + e.toString(), e);
     }
   }
 
@@ -6149,7 +6153,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getDEField: " + e);
-      logger.fatal("ERROR in GetACSearch-getDEField : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getDEField : " + e.toString(), e);
     }
     return returnValue;
   }
@@ -6261,7 +6265,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-DECsortedRows: " + e);
-      logger.fatal("ERROR in GetACSearch-DECsortedRows : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-DECsortedRows : " + e.toString(), e);
     }
   }
 
@@ -6333,7 +6337,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getDECField: " + e);
-      logger.fatal("ERROR in GetACSearch-getDECField : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getDECField : " + e.toString(), e);
     }
     return returnValue;
   }
@@ -6445,7 +6449,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-VDSortedRows: " + e);
-      logger.fatal("ERROR in GetACSearch-VDSortedRows : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-VDSortedRows : " + e.toString(), e);
     }
   }
 
@@ -6537,7 +6541,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getVDField: " + e);
-      logger.fatal("ERROR in GetACSearch-getVDField : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getVDField : " + e.toString(), e);
     }
     return returnValue;
   }
@@ -6653,7 +6657,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-CDsortedRows: " + e);
-      logger.fatal("ERROR in GetACSearch-CDsortedRows : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-CDsortedRows : " + e.toString(), e);
     }
   }
 
@@ -6709,7 +6713,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getCDField: " + e);
-      logger.fatal("ERROR in GetACSearch-getCDField : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getCDField : " + e.toString(), e);
     }
     return returnValue;
   }
@@ -6808,7 +6812,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getCSIResult: " + e);
-      logger.fatal("ERROR in GetACSearch-getCSIResult : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getCSIResult : " + e.toString(), e);
     }
   }
 
@@ -6842,7 +6846,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getCSIField: " + e);
-      logger.fatal("ERROR in GetACSearch-getCSIField : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getCSIField : " + e.toString(), e);
     }
     return returnValue;
   }
@@ -6958,7 +6962,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-CSIsortedRows: " + e);
-      logger.fatal("ERROR in GetACSearch-CSIsortedRows : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-CSIsortedRows : " + e.toString(), e);
     }
 }
 
@@ -7054,7 +7058,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("other problem in GetACSearch-searchPVVM: " + e);
-      logger.fatal("ERROR - GetACSearch-searchPVVM for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-searchPVVM for other : " + e.toString(), e);
     }
     try
     {
@@ -7065,7 +7069,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception ee)
     {
   //    //System.err.println("Problem closing in GetACSearch-searchPVVM: " + ee);
-      logger.fatal("ERROR - GetACSearch-searchPVVM for close : " + ee.toString());
+      logger.fatal("ERROR - GetACSearch-searchPVVM for close : " + ee.toString(), ee);
     }
   }  //endPVVM search
  
@@ -7170,7 +7174,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getPVVMResult: " + e);
-      logger.fatal("ERROR in GetACSearch-getPVVMResult : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getPVVMResult : " + e.toString(), e);
     }
   }
 
@@ -7230,7 +7234,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getPVField: " + e);
-      logger.fatal("ERROR in GetACSearch-getPVField : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getPVField : " + e.toString(), e);
     }
     return returnValue;
   }
@@ -7344,7 +7348,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-PVVMsortedRows: " + e);
-      logger.fatal("ERROR in GetACSearch-PVVMsortedRows : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-PVVMsortedRows : " + e.toString(), e);
     }
   }
 
@@ -7357,8 +7361,8 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     try
     {
       HttpSession session = m_classReq.getSession();
-      Vector vSRows = (Vector)session.getAttribute("VDPVList");
-      Vector vSortedRows = new Vector();
+      Vector<PV_Bean> vSRows = (Vector)session.getAttribute("VDPVList");
+      Vector<PV_Bean> vSortedRows = new Vector();
       boolean isSorted = false;
       if (sortField != null && !sortField.equals(""))
       {
@@ -7408,7 +7412,7 @@ System.err.println("other problem in GetACSearch-DESearch: " + e);
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-VDPVsortedRows: " + e);
-      logger.fatal("ERROR in GetACSearch-VDPVsortedRows : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-VDPVsortedRows : " + e.toString(), e);
     }
   }
 
@@ -7839,7 +7843,7 @@ boolean isIntSearch)
      String sSearchInEVS = (String)req.getParameter("listSearchInEVS");
      if (sSearchInEVS == null) sSearchInEVS = "Synonym";
      session.setAttribute("SearchInEVS", sSearchInEVS);
-   
+     //System.out.println(sSearchIn + " search in " + sSearchInEVS);   
      //filter by Retired Concepts
 	   String sRetired = (String)req.getParameter("rRetired");
      session.setAttribute("creRetired", sRetired);   //store contextUse in the session
@@ -8235,7 +8239,7 @@ boolean isIntSearch)
         //first do the concept class search
         if (sSearchIn.equals("publicID"))
           vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
-        else if (!sSearchIn.equals("Code"))
+        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
           vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
         //now the evs search
        // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
@@ -8252,7 +8256,7 @@ boolean isIntSearch)
         //first do the concept class search
         if (sSearchIn.equals("publicID"))
           vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
-        else if (!sSearchIn.equals("Code"))
+        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
           vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
         //now the evs search
         //evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
@@ -8299,7 +8303,7 @@ boolean isIntSearch)
           do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "OC", "", ""); 
           vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
         }
-        else if (!sSearchIn.equals("MetaCode"))
+        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
         {
           do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "OC", "", "");
           vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
@@ -8325,7 +8329,7 @@ boolean isIntSearch)
           do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "PROP", "", "");
           vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
         }
-        else if (!sSearchIn.equals("MetaCode"))
+        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
         {
           do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "PROP", "", "");
           vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
@@ -8349,7 +8353,7 @@ boolean isIntSearch)
           do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "REP", "", ""); 
           vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
         }
-        else if (!sSearchIn.equals("MetaCode"))
+        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
         {
           do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "REP", "", "");
           vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
@@ -8375,7 +8379,7 @@ boolean isIntSearch)
         if (sConteIdseq == null) sConteIdseq = "";
         if (sSearchIn.equals("publicID"))
           vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
-        else if (!sSearchIn.equals("MetaCode"))   //do concept search
+        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))   //do concept search
           vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
         //To search synonym you need to filter
       //  if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
@@ -8393,7 +8397,7 @@ boolean isIntSearch)
         if (sConteIdseq == null) sConteIdseq = "";
         if (sSearchIn.equals("publicID"))
           vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
-        else if (!sSearchIn.equals("MetaCode"))   //do concept search
+        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))   //do concept search
           vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
 
         //To search synonym you need to filter
@@ -8412,7 +8416,7 @@ boolean isIntSearch)
         if (sConteIdseq == null) sConteIdseq = "";
         if (sSearchIn.equals("publicID"))
           vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
-        else if (!sSearchIn.equals("MetaCode"))   //do concept search
+        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))   //do concept search
           vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
 
         //To search synonym you need to filter
@@ -8431,7 +8435,7 @@ boolean isIntSearch)
   catch(Exception e)
   {
     System.err.println("ERROR in GetACSearch-getACSearchForCreate: " + e);
-    logger.fatal("ERROR - GetACSearch-getACSearchForCreate: " + e.toString());
+    logger.fatal("ERROR - GetACSearch-getACSearchForCreate: " + e.toString(), e);
   }
 }
 
@@ -8473,7 +8477,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR - in GetACSearch-BlockSortedResult: " + e);
-      logger.fatal("ERROR - GetACSearch-BlockSortedResult : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-BlockSortedResult : " + e.toString(), e);
     }
   }
 
@@ -8560,7 +8564,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-EVSsortedRows: " + e);
-      logger.fatal("ERROR in GetACSearch-EVSsortedRows : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-EVSsortedRows : " + e.toString(), e);
     }
   }
 
@@ -8658,7 +8662,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-sortEVSStringValue: " + e);
-      logger.fatal("ERROR in GetACSearch-sortEVSStringValue : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-sortEVSStringValue : " + e.toString(), e);
     }
   }
   
@@ -8741,7 +8745,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-sortEVSIntValue: " + e);
-      logger.fatal("ERROR in GetACSearch-sortEVSIntValue : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-sortEVSIntValue : " + e.toString(), e);
     }
   }
   /**
@@ -8794,7 +8798,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getEVSField: " + e);
-      logger.fatal("ERROR in GetACSearch-getEVSField : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getEVSField : " + e.toString(), e);
     }
     return returnValue;
   }
@@ -8913,7 +8917,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-OCsortedRows: " + e);
-      logger.fatal("ERROR in GetACSearch-OCsortedRows : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-OCsortedRows : " + e.toString(), e);
     }
   }
 
@@ -8956,7 +8960,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getOCField: " + e);
-      logger.fatal("ERROR in GetACSearch-getOCField : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getOCField : " + e.toString(), e);
     }
     return returnValue;
   }
@@ -9097,7 +9101,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-PCsortedRows: " + e);
-      logger.fatal("ERROR in GetACSearch-PCsortedRows : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-PCsortedRows : " + e.toString(), e);
     }
   }
 
@@ -9140,7 +9144,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getPCField: " + e);
-      logger.fatal("ERROR in GetACSearch-getPCField : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getPCField : " + e.toString(), e);
     }
     return returnValue;
   }
@@ -9220,7 +9224,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getQuestionResult: " + e);
-      logger.fatal("ERROR in GetACSearch-getQuestionResult : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getQuestionResult : " + e.toString(), e);
     }
   }
 
@@ -9263,7 +9267,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getQuestField: " + e);
-      logger.fatal("ERROR in GetACSearch-getQuestField : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getQuestField : " + e.toString(), e);
     }
     return returnValue;
   }
@@ -9377,7 +9381,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-QuestionsortedRows: " + e);
-      logger.fatal("ERROR in GetACSearch-QuestionsortedRows : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-QuestionsortedRows : " + e.toString(), e);
     }
   }
 
@@ -9494,7 +9498,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("other problem in GetACSearch-QuestionValueSearch: " + e);
-      logger.fatal("ERROR - GetACSearch-QuestionValueSearch for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-QuestionValueSearch for other : " + e.toString(), e);
     }
     try
     {
@@ -9505,7 +9509,7 @@ boolean isIntSearch)
     catch(Exception ee)
     {
       //System.err.println("Problem closing in GetACSearch-QuestionValueSearch: " + ee);
-      logger.fatal("ERROR - GetACSearch-QuestionValueSearch for close : " + ee.toString());
+      logger.fatal("ERROR - GetACSearch-QuestionValueSearch for close : " + ee.toString(), ee);
     }
   }  //endQuestionValue search
 
@@ -9555,7 +9559,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getQuestValueResult: " + e);
-      logger.fatal("ERROR in GetACSearch-getQuestValueResult : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getQuestValueResult : " + e.toString(), e);
     }
   }
 
@@ -9584,7 +9588,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getQuestValueField: " + e);
-      logger.fatal("ERROR in GetACSearch-getQuestValueField : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getQuestValueField : " + e.toString(), e);
     }
     return returnValue;
   }
@@ -9666,7 +9670,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-QuestValuesortedRows: " + e);
-      logger.fatal("ERROR in GetACSearch-QuestValuesortedRows : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-QuestValuesortedRows : " + e.toString(), e);
     }
   }
 
@@ -9833,7 +9837,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("other problem in GetACSearch-doAltNameSearch : " + e);
-      logger.fatal("ERROR - GetACSearch-doAltNameSearch for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-doAltNameSearch for other : " + e.toString(), e);
     }
     try
     {
@@ -9844,7 +9848,7 @@ boolean isIntSearch)
     catch(Exception ee)
     {
       //System.err.println("Problem closing in GetACSearch-doAltNameSearch : " + ee);
-      logger.fatal("ERROR - GetACSearch-doAltNameSearch for close : " + ee.toString());
+      logger.fatal("ERROR - GetACSearch-doAltNameSearch for close : " + ee.toString(), ee);
     }
     return vList;
   }  //doAltNameSearch search
@@ -9936,7 +9940,7 @@ boolean isIntSearch)
     catch (Exception e)
     {
       //System.err.println("other problem in GetACSearch-doRefDocSearch : " + e);
-      logger.fatal("ERROR - GetACSearch-doRefDocSearch for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-doRefDocSearch for other : " + e.toString(), e);
     }
     try
     {
@@ -9947,7 +9951,7 @@ boolean isIntSearch)
     catch(Exception ee)
     {
       //System.err.println("Problem closing in GetACSearch-doRefDocSearch : " + ee);
-      logger.fatal("ERROR - GetACSearch-doRefDocSearch for close : " + ee.toString());
+      logger.fatal("ERROR - GetACSearch-doRefDocSearch for close : " + ee.toString(), ee);
     }
     return vList;
   }  //doRefDocSearch search
@@ -10088,7 +10092,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("other problem in GetACSearch-doPVACSearch : " + e);
-      logger.fatal("ERROR - GetACSearch-doPVACSearch for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-doPVACSearch for other : " + e.toString(), e);
     }
     try
     {
@@ -10099,7 +10103,7 @@ boolean isIntSearch)
     catch(Exception ee)
     {
       //System.err.println("Problem closing in GetACSearch-doPVACSearch : " + ee);
-      logger.fatal("ERROR - GetACSearch-doPVACSearch for close : " + ee.toString());
+      logger.fatal("ERROR - GetACSearch-doPVACSearch for close : " + ee.toString(), ee);
     }
     return pvCount;
   }  //doPVACSearch search
@@ -10146,7 +10150,7 @@ boolean isIntSearch)
     catch (Exception e)
     {
       //System.err.println("Problem closing in GetACSearch-updatePVBean : " + e);
-      logger.fatal("ERROR - GetACSearch-updatePVBean for close : " + e.toString());      
+      logger.fatal("ERROR - GetACSearch-updatePVBean for close : " + e.toString(), e);      
     }
     return newBean;
   }
@@ -10221,7 +10225,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("other problem in GetACSearch-doProtoCRFSearch : " + e);
-      logger.fatal("ERROR - GetACSearch-doProtoCRFSearch for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-doProtoCRFSearch for other : " + e.toString(), e);
     }
     try
     {
@@ -10232,7 +10236,7 @@ boolean isIntSearch)
     catch(Exception ee)
     {
       //System.err.println("Problem closing in GetACSearch-doProtoCRFSearch : " + ee);
-      logger.fatal("ERROR - GetACSearch-doProtoCRFSearch for close : " + ee.toString());
+      logger.fatal("ERROR - GetACSearch-doProtoCRFSearch for close : " + ee.toString(), ee);
     }
     return qCount;
   }  //doProtoCRFSearch search
@@ -10374,12 +10378,12 @@ boolean isIntSearch)
             if (vm_concept_code == null) vm_concept_code = "";
             String db_origin = rs.getString("evs_origin");
             if (db_origin == null) db_origin = "";
-            EVS_UserBean eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+            EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
             if (eUser == null) eUser = new EVS_UserBean();
             EVS_Bean vmConcept = new EVS_Bean();
-            String evs_origin = vmConcept.getVocabAttr(eUser, db_origin, "vocabDBOrigin", "vocabName");
+            String evs_origin = vmConcept.getVocabAttr(eUser, db_origin, EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME);  // "vocabDBOrigin", "vocabName");
             vmConcept.setEVSBean("", evs_definition_source, vm_concept_name, vm_concept_name,
-                          vm_evs_cui_source, vm_concept_code, db_origin, evs_origin, 
+                          vm_evs_cui_source, vm_concept_code, evs_origin, db_origin, 
                           0, "", "", "", "", "", "", "");
             vmBean.setVM_CONCEPT(vmConcept);
             vList.addElement(vmBean);  //add the bean to a vector
@@ -10390,7 +10394,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("other problem in GetACSearch-searchVM: " + e);
-      logger.fatal("ERROR - GetACSearch-searchVM for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-searchVM for other : " + e.toString(), e);
     }
     try
     {
@@ -10400,7 +10404,7 @@ boolean isIntSearch)
     }
     catch(Exception ee)
     {
-      logger.fatal("ERROR - GetACSearch-searchVM for close : " + ee.toString());
+      logger.fatal("ERROR - GetACSearch-searchVM for close : " + ee.toString(), ee);
     }
   }  //endVM search
 
@@ -10440,7 +10444,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getVMField: " + e);
-      logger.fatal("ERROR in GetACSearch-getVMField : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getVMField : " + e.toString(), e);
     }
     return returnValue;
   }
@@ -10554,7 +10558,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-VMsortedRows: " + e);
-      logger.fatal("ERROR in GetACSearch-VMsortedRows : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-VMsortedRows : " + e.toString(), e);
     }
   }
 
@@ -10625,7 +10629,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in GetACSearch-getVMResult: " + e);
-      logger.fatal("ERROR in GetACSearch-getVMResult : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getVMResult : " + e.toString(), e);
     }
   }
   
@@ -10708,7 +10712,7 @@ boolean isIntSearch)
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR - GetACSearch-searchACContact for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-searchACContact for other : " + e.toString(), e);
     }
     try
     {
@@ -10718,7 +10722,7 @@ boolean isIntSearch)
     }
     catch(Exception ee)
     {
-      logger.fatal("ERROR - GetACSearch-searchACContact for close : " + ee.toString());
+      logger.fatal("ERROR - GetACSearch-searchACContact for close : " + ee.toString(), ee);
     }
     return vList;
   }  //end searchACContact
@@ -10778,7 +10782,7 @@ boolean isIntSearch)
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR - GetACSearch-getContactComm for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-getContactComm for other : " + e.toString(), e);
     }
     try
     {
@@ -10788,7 +10792,7 @@ boolean isIntSearch)
     }
     catch(Exception ee)
     {
-      logger.fatal("ERROR - GetACSearch-getContactComm for close : " + ee.toString());
+      logger.fatal("ERROR - GetACSearch-getContactComm for close : " + ee.toString(), ee);
     }
     return vList;
   }  //end getContactComm
@@ -10853,7 +10857,7 @@ boolean isIntSearch)
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR - GetACSearch-getContactAddr for other : " + e.toString());
+      logger.fatal("ERROR - GetACSearch-getContactAddr for other : " + e.toString(), e);
     }
     try
     {
@@ -10863,7 +10867,7 @@ boolean isIntSearch)
     }
     catch(Exception ee)
     {
-      logger.fatal("ERROR - GetACSearch-getContactAddr for close : " + ee.toString());
+      logger.fatal("ERROR - GetACSearch-getContactAddr for close : " + ee.toString(), ee);
     }
     return vList;
   }  //end getContactAddr
@@ -10977,7 +10981,7 @@ boolean isIntSearch)
     catch(Exception e)
     {
       //System.err.println("ERROR in  GetACSearch-getSelRowToEdit: " + e);
-      logger.fatal("ERROR in GetACSearch-getSelRowToEdit : " + e.toString());
+      logger.fatal("ERROR in GetACSearch-getSelRowToEdit : " + e.toString(), e);
       session.setAttribute("statusMessage", "Unable to open the Create/Edit page. Please try again.");
       return false;
     }

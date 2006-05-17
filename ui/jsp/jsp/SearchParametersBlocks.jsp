@@ -26,7 +26,7 @@
    if (vBlockAttr == null) vBlockAttr = new Vector();
  //  Vector vDsrSearchIn = (Vector)session.getAttribute("dsrSearchIn");
  //  if(vDsrSearchIn == null) vDsrSearchIn = new Vector();
-   EVS_UserBean usrBean = (EVS_UserBean)session.getAttribute("EvsUserBean");
+   EVS_UserBean usrBean = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute("EvsUserBean");
    if (usrBean == null) usrBean = new EVS_UserBean();
    Vector vVocab = usrBean.getVocabNameList();   //(Vector)session.getAttribute("dtsVocabNames");  //list of vocabulary names
    if (vVocab == null) vVocab = new Vector();
@@ -44,7 +44,7 @@
    if (hVoc.containsKey(dtsVocab))
      vocBean = (EVS_UserBean)hVoc.get(dtsVocab);
    if (vocBean == null) 
-     vocBean = (EVS_UserBean)session.getAttribute("EvsUserBean");
+     vocBean = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute("EvsUserBean");
    String optName = vocBean.getSearchInName();
    if (optName == null) optName = "";
    String optConCode = vocBean.getSearchInConCode();
@@ -251,11 +251,13 @@ function keypress_handler()
     }
     if(document.searchParmsForm.listSearchInEVS != null && document.searchParmsForm.listSearchInEVS.value == "MetaCode")
     {
-      if(document.searchParmsForm.listContextFilterSource.value == "All Sources")
+      var sTerm = document.searchParmsForm.keyword.value;
+      if (sTerm == null) sTerm = "";
+      if(document.searchParmsForm.listContextFilterSource.value == "All Sources" || sTerm == "")
       {
         alert("This type of search will search the Metathesaurus only. \n"
         + "The search term should be a code; for example, a LOINC code. \n"
-        + "Please select a Meta Concept Source to filter by. ");
+        + "Please select a Meta Concept Source to filter by and enter a search term. ");
         return false;
       }
     }
@@ -283,11 +285,13 @@ function LoadKeyHandler()
     {
       if(document.searchParmsForm.listSearchInEVS != null && document.searchParmsForm.listSearchInEVS.value == "MetaCode")
       {
-        if(document.searchParmsForm.listContextFilterSource.value == "All Sources")
+      	var sTerm = document.searchParmsForm.keyword.value;
+      	if (sTerm == null) sTerm = "";
+        if(document.searchParmsForm.listContextFilterSource.value == "All Sources" || sTerm == "")
         {
            alert("This type of search will search the Metathesaurus only. \n"
         + "The search term should be a code; for example, a LOINC code. \n"
-        + "Please select a Meta Concept Source to filter by. ");
+        + "Please select a Meta Concept Source to filter by and enter a search term. ");
           return false;
         }
       } 

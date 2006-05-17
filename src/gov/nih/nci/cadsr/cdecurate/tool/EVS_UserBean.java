@@ -1,11 +1,11 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.8 2006-03-20 13:15:38 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.9 2006-05-17 20:01:36 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
-import gov.nih.nci.evs.domain.Source;
+//import gov.nih.nci.evs.domain.Source;
 import gov.nih.nci.evs.query.*;
 import gov.nih.nci.system.applicationservice.*;
 import java.io.Serializable;
@@ -129,6 +129,8 @@ public final class EVS_UserBean implements Serializable
   private Vector m_NCIDefSrcList;  //list of definition sources for NCI in the priority order 
   private Hashtable m_metaCodeType;  //code type for meta thesaurus with filter value
   private Hashtable m_vocab_attr;   //attributes specific to vocabs
+  private String PrefVocabSrc;   //source of the preferred vocabulary
+  private String PrefVocab;   //name of the preferred vocabulary
   
   /**
    * initialize the logger for the class
@@ -680,6 +682,39 @@ public final class EVS_UserBean implements Serializable
     m_metaCodeType = metaType;    
   }
 
+  /**
+   * @return Returns the prefVocabSrc.
+   */
+  public String getPrefVocabSrc()
+  {
+    return PrefVocabSrc;
+  }
+
+  /**
+   * @param prefVocabSrc The prefVocabSrc to set.
+   */
+  public void setPrefVocabSrc(String prefVocabSrc)
+  {
+    PrefVocabSrc = prefVocabSrc;
+  }
+
+  /**
+   * @return Returns the prefVocab.
+   */
+  public String getPrefVocab()
+  {
+    return PrefVocab;
+  }
+
+  /**
+   * @param prefVocab The prefVocab to set.
+   */
+  public void setPrefVocab(String prefVocab)
+  {
+    PrefVocab = prefVocab;
+  }
+
+
 /*  /**
    * The setvocab_attr method sets the vocab searchin, concept name property and concept Definition property specific to the vocab.
    * key is vocab_attr and values are stored as objects. if attr doesn't exist for the selected vocab, go get the  attr.
@@ -727,6 +762,7 @@ public final class EVS_UserBean implements Serializable
     //after getting this out of hashtable, check if the key exists for each vocab before 
   } */
 
+
   private java.util.List getEVSVocabs(String eURL)
   {
       ApplicationService evsService = ApplicationService.getRemoteInstance(eURL);
@@ -744,16 +780,8 @@ public final class EVS_UserBean implements Serializable
           }
           catch(Exception e)
           {
-            logger.fatal(" Error - get vocab names " + e.toString());
+            logger.fatal(" Error - get vocab names " + e.toString(), e);
             return null;
-            //use source object casting to get the names (for old API)
-         /*   java.util.List srcVocabList = null;
-            for (int i=0; i<vocabList.size(); i++)
-            {
-              Source srcVocab = (Source)vocabList.get(i);
-              srcVocabList.add(srcVocab.getAbbreviation());
-            }
-            return srcVocabList; */
           }
         }
       }
@@ -775,7 +803,7 @@ public final class EVS_UserBean implements Serializable
   {
     try
     {
-      HttpSession session = req.getSession();
+      //HttpSession session = req.getSession();
       Vector vList = new Vector();
       String eURL = "";
       //right now use the hard coded vector. later query the database
@@ -811,6 +839,25 @@ public final class EVS_UserBean implements Serializable
         TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
         if (tob != null) this.setDSRDispName(tob.getVALUE());      
       }
+      //get the source type for the preferred vocabulary
+      this.setPrefVocab("");
+      vList = getAC.getToolOptionData("CURATION", "EVS.PREFERREDVOCAB", "");
+      if (vList != null && vList.size()>0)
+      {
+        TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
+        if (tob != null) 
+          this.setPrefVocab(tob.getVALUE());      
+      }      
+      //get the source type for the preferred vocabulary
+      this.setPrefVocabSrc("");
+      vList = getAC.getToolOptionData("CURATION", "EVS.PREFERREDVOCAB.SOURCE", "");
+      if (vList != null && vList.size()>0)
+      {
+        TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
+        if (tob != null) 
+          this.setPrefVocabSrc(tob.getVALUE());      
+      }      
+      
       //get vocab names
       Vector<String> vocabname = new Vector<String>();
       vList = getAC.getToolOptionData("CURATION", "EVS.VOCAB.%.EVSNAME", "");  // 
@@ -849,7 +896,7 @@ public final class EVS_UserBean implements Serializable
             vocabdisp.removeElementAt(i);
           }  
         }  
-      }
+      } 
       //store the vocab evs name and vocab display name in the bean
       if (vocabname != null && vocabname.size()>0)
         this.setVocabNameList(vocabname);
@@ -928,11 +975,12 @@ public final class EVS_UserBean implements Serializable
         }
       }
       this.setVocab_Attr(hvoc);
-      session.setAttribute("EvsUserBean", this);
+      NCICurationServlet.sessionData.EvsUsrBean = this;    //session.setAttribute("EvsUserBean", this);
+      
     }
     catch(Exception e)
     {
-      logger.fatal("Error: getEVSInfoFromDSR " + e.toString());
+      logger.fatal("Error: getEVSInfoFromDSR " + e.toString(), e);
     }    
   }
  
@@ -1002,10 +1050,11 @@ public final class EVS_UserBean implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("Error: storeVocabAttr " + e.toString());
+      logger.fatal("Error: storeVocabAttr " + e.toString(), e);
     }
     return vuBean;
   }
+
 }
 
   

@@ -32,23 +32,24 @@
    defaultStatus = "Validate Value Item status, go back to modify it or submit to create it"
    function submit()
    {
-      validatePVForm.submit();
+      hourglass();
+      document.validatePVForm.Message.style.visibility="visible";
+      defaultStatus = "Submitting data, it may take a minute, please wait....."
+      document.validatePVForm.btnSubmit.disabled = true;
+      document.validatePVForm.btnBack.disabled = true;
+      document.validatePVForm.submit();
    }
 
    function EditPV()
    {
-      hourglass();
        document.validatePVForm.ValidatePVPageAction.value = "reEditPV";
-       document.validatePVForm.submit();
+       submit();
    }
 
    function SubmitValidate()
    {
-      hourglass();
-      document.validatePVForm.Message.style.visibility="visible";
       document.validatePVForm.ValidatePVPageAction.value = "submitPV";
-      defaultStatus = "Submitting data, it may take a minute, please wait....."
-      document.validatePVForm.submit();
+      submit();
    }
 
    function DefSuggestion()
@@ -68,14 +69,14 @@
   <tr>
     <td width="764" height="29" valign="top">
       <% if (isValid == true) { %>
-          <input type="button" name="Submit" value="Submit" style="width: 125", "height: 30" onClick="SubmitValidate()">
+          <input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()">
       <% } else { %>
-          <input type="button" name="Submit" value="Submit" style="width: 125", "height: 30" onClick="SubmitValidate()" disabled>
+          <input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()" disabled>
       <% } %>
         &nbsp;&nbsp;
-      <input type="button" name="btnBack" value="Back" style="width: 125", "height: 30" onClick="EditPV();">
+      <input type="button" name="btnBack" value="Back" style="width:125" onClick="EditPV();">
         &nbsp;&nbsp;
-    	<img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" 						style="visibility:hidden;">
+    	<img name="Message" src="Assets/WaitMessage1.gif" width="400" height="25" alt="WaitMessage" 						style="visibility:hidden;">
     </td>
   </tr>
 <!--  <tr  height="40">
@@ -87,7 +88,7 @@
 <br>
 <table width="100%" border="2" cellspacing="0" cellpadding="0" bordercolor="#000000">
   <caption>
-  <h3 align="left">Validate <font color="#FF0000">Permissible Value</font> Attributes</font></h3>
+  <h3 align="left">Validate <font color="#FF0000">Permissible Value</font> Attributes</h3>
   </caption>
   <tr>
     <td width="282" height="20" valign="top" bgcolor="#FFFFFF" bordercolor="#000000">

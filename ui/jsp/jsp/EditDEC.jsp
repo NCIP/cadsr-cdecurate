@@ -315,12 +315,8 @@
         <input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('validate');"
 				onHelp = "showHelp('Help_CreateDEC.html#newDECForm_Validation'); return false">
           &nbsp;&nbsp;
-<%--         <input type="button" value="Clear" style="width: 125", "height: 30"> --%>
-    <!--no need for clear button in the block edit-->
-<%//if(!sOriginAction.equals("BlockEditDEC")){%>
         <input type="button" name="btnClear" value="Clear" style="width:125" onClick="ClearBoxes();">
           &nbsp;&nbsp;
-<%//}%>
 <% if (!sOriginAction.equals("NewDECFromMenu") && !sOriginAction.equals("")){%>
         <input type="button" name="btnBack" value="Back" style="width:125" onClick="Back();">
           &nbsp;&nbsp;

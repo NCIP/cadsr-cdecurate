@@ -51,30 +51,30 @@
    defaultStatus = "Validate Data Element status, go back to modify it or submit to create it"
    function submit()
    {
-      validateVDForm.submit();
+      hourglass();
+      document.validateVDForm.Message.style.visibility="visible";
+      defaultStatus = "Submitting data, it may take a minute, please wait....."
+      document.validateVDForm.btnSubmit.disabled = true;
+      document.validateVDForm.btnBack.disabled = true;
+      document.validateVDForm.submit();
    }
 
    function EditVD()
    {
-      hourglass();
        document.validateVDForm.ValidateVDPageAction.value = "reEditVD";
-       //window.history.back();
-       document.validateVDForm.submit();
+       submit();
    }
 
    function SubmitValidate()
    {
-      hourglass();
-      document.validateVDForm.Message.style.visibility="visible";
-      defaultStatus = "Submitting data, it may take a minute, please wait....."
       document.validateVDForm.ValidateVDPageAction.value = "submitVD";
-      document.validateVDForm.submit();
+      submit();
    }
 
    function DefSuggestion()
    {
       if (evsWindow && !evsWindow.closed)
-        	evsWindow.focus();
+        evsWindow.focus();
       else
        	evsWindow = window.open("jsp/EVSSearch.jsp", "EVSWindow", "width=600,height=400,resizable=yes,scrollbars=yes");
    }
@@ -88,21 +88,16 @@
   <tr>
     <td width="1200" height="29" valign="top">
       <% if (isValid == true) { %>
-          <input type="button" name="Submit" value="Submit" style="width: 125", "height: 30" onClick="SubmitValidate()">
+          <input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()">
       <% } else { %>
-          <input type="button" name="Submit" value="Submit" style="width: 125", "height: 30" onClick="SubmitValidate()" disabled>
+          <input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()" disabled>
       <% } %>
         &nbsp;&nbsp;
-      <input type="button" name="btnBack" value="Back" style="width: 125", "height: 30" onClick="EditVD();">
+      <input type="button" name="btnBack" value="Back" style="width:125" onClick="EditVD();">
         &nbsp;&nbsp;
       <img name="Message" src="Assets/SubmitMessageFinal.gif" width="300" height="25" alt="WaitMessage" style="visibility:hidden;">
     </td>
   </tr>
-<!--  <tr  height="40">
-    <td valign="middle"><label><font size="3"><strong><font size="4">Create/Edit
-      <font color="#FF0000">Value Domain</font> - Validate Mandatory & Optional
-      Attributes</font></strong></font></label> <font size="4"></font>
-  </tr> -->
 </table>
 <br>
 

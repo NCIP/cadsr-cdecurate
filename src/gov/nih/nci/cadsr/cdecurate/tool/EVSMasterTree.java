@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.8 2006-03-20 13:15:38 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.9 2006-05-17 20:01:36 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -139,7 +139,7 @@ public class EVSMasterTree
     HttpSession session = req.getSession();
     if(session != null)
     { 
-      m_eUser = (EVS_UserBean)session.getAttribute("EvsUserBean");
+      m_eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
       if (m_eUser == null) m_eUser = new EVS_UserBean(); //to be safe use the default props
       
       m_treesHash = (Hashtable)session.getAttribute("treesHash");
@@ -357,8 +357,8 @@ public class EVSMasterTree
 		} 
     catch(Exception e) 
     {
-			System.out.println("Error in populateTreeRoots: " + e.toString());
-      logger.fatal("Error in populateTreeRoots: " + e.toString());
+			//System.out.println("Error in populateTreeRoots: " + e.toString());
+      logger.fatal("Error in populateTreeRoots: " + e.toString(), e);
 		}
 //logger.debug("popTree done");
   return rendHTML;	
@@ -390,7 +390,8 @@ public class EVSMasterTree
     }
     catch(Exception e) 
     {
-			System.out.println("Error in renderHTML: " + e.toString());
+			//System.out.println("Error in renderHTML: " + e.toString());
+      logger.fatal("Error in renderHTML: ", e);
 		}
 		StringBuffer buf = new StringBuffer();
     boolean moreChildren = true;
@@ -407,7 +408,7 @@ public class EVSMasterTree
   //  m_dtsVocab = filterName(m_dtsVocab, "js");
     //Build the html in a string buffer
     EVS_Bean eBean = new EVS_Bean();
-    displayName1 = eBean.getVocabAttr(m_eUser, m_dtsVocab, "vocabName", "vocabDBOrigin"); 
+    displayName1 = eBean.getVocabAttr(m_eUser, m_dtsVocab, EVSSearch.VOCAB_NAME, EVSSearch.VOCAB_DBORIGIN);  // "vocabName", "vocabDBOrigin"); 
     displayName2 = " Root Concepts";
     if(sSearchAC.equals("ParentConceptVM"))
       displayName2 =  " Parent Concept";  
@@ -1069,8 +1070,8 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
   } 
   catch(Exception e) 
   {
-    System.out.println("ERROR expandNode: " + e.toString());
-    logger.fatal("ERROR expandNode: " + e.toString());
+    //System.out.println("ERROR expandNode: " + e.toString());
+    logger.fatal("ERROR expandNode: " + e.toString(), e);
   }
   return rendHTML;	
 }
@@ -1169,8 +1170,8 @@ public String collapseNode(String nodeID, String dtsVocab, String shouldRender, 
 		} 
     catch(Exception e) 
     {
-			System.out.println(e.toString());
-      logger.fatal(e.toString());
+			//System.out.println(e.toString());
+      logger.fatal(e.toString(), e);
 		}
   return rendHTML;	
 }
@@ -1301,8 +1302,8 @@ public void collapseAllNodes()
   } 
   catch(Exception e) 
   {
-    System.out.println(e.toString());
-    logger.fatal(e.toString());
+    //System.out.println(e.toString());
+    logger.fatal(e.toString(), e);
   } 
  }
   
@@ -1478,8 +1479,8 @@ public void collapseAllNodes()
 		} 
     catch(Exception e) 
     {
-			System.out.println(e.toString());
-      logger.fatal(e.toString());
+			//System.out.println(e.toString());
+      logger.fatal(e.toString(), e);
 		}
   return rendHTML;	
   }
@@ -1589,8 +1590,8 @@ public void collapseAllNodes()
     }
     catch(Exception e) 
     {
-			System.out.println(e.toString());
-      logger.fatal(e.toString());
+			//System.out.println(e.toString());
+      logger.fatal(e.toString(), e);
 		}
     return rendHTML;
   } 
@@ -1632,8 +1633,8 @@ public void fillTreeIDtoNameHash(String nodeName, String sNodeID)
   }
   catch(Exception e) 
   {
-		System.out.println("Error in fillTreeIDtoNameHash: " + e.toString());
-    logger.fatal("Error in fillTreeIDtoNameHash: " + e.toString());
+		//System.out.println("Error in fillTreeIDtoNameHash: " + e.toString());
+    logger.fatal("Error in fillTreeIDtoNameHash: " + e.toString(), e);
 	}
 } 
 
@@ -1693,8 +1694,8 @@ public String getCorrectNodeID(String nodeName, int iLast)
   }
   catch(Exception e) 
   {
-		System.out.println("Error in getCorrectNodeID: " + e.toString());
-    logger.fatal("Error in getCorrectNodeID: " + e.toString());
+		//System.out.println("Error in getCorrectNodeID: " + e.toString());
+    logger.fatal("Error in getCorrectNodeID: " + e.toString(), e);
 	}   
   return sRetNodeID;
 } 
