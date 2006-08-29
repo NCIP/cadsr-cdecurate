@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.9 2006-05-17 20:01:36 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.10 2006-08-29 17:36:54 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -608,6 +608,8 @@ public class InsACService implements Serializable
         String sShortMeaning = pv.getPV_SHORT_MEANING();
   //System.out.println(sAction + " set vm in pv " + sShortMeaning);
         String sMeaningDescription = pv.getPV_MEANING_DESCRIPTION();
+        if (sMeaningDescription == null) sMeaningDescription = "";
+        if (sMeaningDescription.length() > 2000) sMeaningDescription = sMeaningDescription.substring(0, 2000);
         String sBeginDate = pv.getPV_BEGIN_DATE();
         if (sBeginDate == null || sBeginDate.equals(""))
         {
@@ -813,9 +815,10 @@ public class InsACService implements Serializable
     {
       EVS_Bean cadsrCon = vm.getVM_CONCEPT();
       if (cadsrCon == null) cadsrCon = new EVS_Bean();
-      String sCondr = cadsrCon.getCONDR_IDSEQ();
+     // String sCondr = cadsrCon.getCONDR_IDSEQ();
       //do the concept info check only if exists
-      if (sCondr != null && !sCondr.equals("") && evsID != null && !evsID.equals(""))
+      //if (sCondr != null && !sCondr.equals("") && evsID != null && !evsID.equals(""))
+      if (evsID != null && !evsID.equals(""))
       {
         String cadsrID = cadsrCon.getNCI_CC_VAL();
         if (cadsrID == null) cadsrID = "";
@@ -827,17 +830,21 @@ public class InsACService implements Serializable
  // System.out.println(evsID + " vm id " + cadsrID + " vm origin " + evsVocab + " vm dbOri " + cadsrVocab);
         //check if the db con and evs con are the same by checking conid and vocabs 
         String vmMean = "";
+        if (cadsrVocab.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
+          cadsrVocab = cadsrCon.getEVS_ORIGIN();
+        if (evsVocab.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
+          evsVocab = evsCon.getEVS_ORIGIN();
         if (evsID.equalsIgnoreCase(cadsrID) && evsVocab.equalsIgnoreCase(cadsrVocab))
           return vm;
         else if (evsID.equalsIgnoreCase(cadsrID))  //only ids are same (diff vocabs)
-          vmMean = sMean + ": " + evsID + ": " + evsVocab;
+          vmMean = sMean + ": " + evsID + ": " + evsVocab;  // evsVocab;
         else  //different ids 
           vmMean = sMean + ": " + evsID;
         //update vm bean and check it again
         vm.setVM_SHORT_MEANING(vmMean);  //vm with con id          
         vm.setVM_CONCEPT(evsCon);  //reset to evs con
         vm.setVM_DESCRIPTION(evsCon.getPREFERRED_DEFINITION());
-        vm.setVM_COMMENTS(evsID + ": " + evsVocab);
+        vm.setVM_COMMENTS(evsID + ": " + evsVocab);  // evsVocab);
         this.getVM(vm);  //call to check if another vm with this origin existed               
       }        
     }
@@ -5612,11 +5619,15 @@ public class InsACService implements Serializable
           CStmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //modified by
           CStmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //deleted ind
 
+          //truncate the definition to be 2000 long.
+          String sDef = evsBean.getPREFERRED_DEFINITION();
+          if (sDef == null) sDef = "";
+          if (sDef.length() > 2000) sDef = sDef.substring(0, 2000);
           // Set the In parameters (which are inherited from the PreparedStatement class)
           CStmt.setString(2, sAction);
           CStmt.setString(4, evsBean.getNCI_CC_VAL());
           CStmt.setString(5, evsBean.getLONG_NAME());
-          CStmt.setString(6, evsBean.getPREFERRED_DEFINITION());
+          CStmt.setString(6, sDef);
         //  CStmt.setString(7, evsBean.getCONTE_IDSEQ());  caBIG by default
           CStmt.setString(8, "1.0");
           CStmt.setString(9, "RELEASED");
@@ -5728,6 +5739,8 @@ public class InsACService implements Serializable
           {
             String dbOrigin = (String)CStmt.getObject(13);
             String evsOrigin = evsBean.getEVS_DATABASE(); 
+            if (evsOrigin.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
+              evsOrigin = evsBean.getEVS_ORIGIN();
             if (dbOrigin != null && evsOrigin != null && !dbOrigin.equals(evsOrigin))
             {
               sCON_IDSEQ = "Another Concept Exists in caDSR with same Concept Code "

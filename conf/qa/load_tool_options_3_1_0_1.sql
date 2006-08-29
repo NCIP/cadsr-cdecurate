@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/load_tool_options_3_1_0_1.sql,v 1.1 2006-05-17 20:01:35 hardingr Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/load_tool_options_3_1_0_1.sql,v 1.2 2006-08-29 17:36:54 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -26,4 +26,8 @@ VALUES ('CURATION', 'EVS.PREFERREDVOCAB', 'NCI_Thesaurus',
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EVS.PREFERREDVOCAB.SOURCE', 'NCI2006_01C',
 	   'Store NCI Thesaurus source to get its source code used in replacing concept with preferred vocab (Thesaurus)');
+
+--commit changes
+commit;
+
 

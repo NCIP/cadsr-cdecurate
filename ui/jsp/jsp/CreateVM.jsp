@@ -100,7 +100,12 @@ function displayStatusMessage()
     String sEVS = eBean.getNCI_CC_VAL();
     if (sEVS == null) sEVS = "";
     if (!sEVS.equals(""))
-      sEVS = sEVS + " : " + eBean.getEVS_DATABASE();
+    {
+      String evsVocab = eBean.getEVS_DATABASE();
+      if (evsVocab.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
+         evsVocab = eBean.getEVS_ORIGIN();
+      sEVS = sEVS + ": " + evsVocab;
+    }
 //System.out.println(" evs " + sEVS);
     String sComments = m_VM.getVM_COMMENTS();
     if (sComments == null) sComments = "";

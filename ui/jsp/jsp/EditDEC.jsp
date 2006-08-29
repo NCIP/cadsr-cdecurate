@@ -924,12 +924,22 @@
       <select name="selSource" size="1"
         onHelp = "showHelp('Help_CreateDEC.html#newDECForm_selSource'); return false">
         <option value=""></option>
-<%         for (int i = 0; vSource.size()>i; i++)
-        {
-          String sSor = (String)vSource.elementAt(i);
+<%         
+		   boolean isFound = false;
+		   for (int i = 0; vSource.size()>i; i++)
+           {
+              String sSor = (String)vSource.elementAt(i);
+              if(sSor.equals(sSource)) isFound = true;
 %>
-          <option value="<%=sSor%>" <%if(sSor.equals(sSource)){%>selected<%}%> ><%=sSor%></option>
-<%        }  %>
+              <option value="<%=sSor%>" <%if(sSor.equals(sSource)){%>selected<%}%> ><%=sSor%></option>
+<%         }
+		   //add the user entered if not found in the drop down list
+		   if (!isFound) 
+		   {  
+		   	  sSource = serUtil.parsedStringDoubleQuoteJSP(sSource);     //call the function to handle doubleQuote  
+%>
+           		<option value="<%=sSource%>" selected><%=sSource%></option>
+<%		   } %>
       </select>
     </td>
   </tr>

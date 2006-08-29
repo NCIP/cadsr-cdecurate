@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.9 2006-05-17 20:01:36 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.10 2006-08-29 17:36:54 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -754,6 +754,7 @@ public class NCICurationServlet extends HttpServlet
         session.setAttribute("m_REPQ", m_REPQ);
         //empty the session attributes
         session.setAttribute("VDPVList", new Vector<PV_Bean>());
+        session.setAttribute("oldVDPVList", new Vector<PV_Bean>());
         session.setAttribute("PVIDList", new Vector());     
         ForwardJSP(req, res, "/CreateVDPage.jsp");
       }
@@ -2325,7 +2326,10 @@ public class NCICurationServlet extends HttpServlet
               //get the proper vm comments
               String vmComments = sCon;
               if (!vmComments.equals("")) vmComments += ": ";
-              if (eBean.getEVS_DATABASE() != null) vmComments += eBean.getEVS_DATABASE();
+              String evsVocab = eBean.getEVS_DATABASE();
+              if (evsVocab.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
+                evsVocab = eBean.getEVS_ORIGIN();
+              if (eBean.getEVS_DATABASE() != null) vmComments += evsVocab;
               vmBean.setVM_COMMENTS(vmComments);
               session.setAttribute("EVSSearched", "searched");  //store evs or not
               break;
@@ -6174,10 +6178,22 @@ public class NCICurationServlet extends HttpServlet
           //check if newly created exists in the vd list already
           if (sPVSubmit.equals("createPV"))
           {
-            if(thisPV.getPV_VALUE().equals(sValue) && thisPV.getPV_SHORT_MEANING().equals(sMeaning))
+            if(thisPV.getPV_VALUE().equalsIgnoreCase(sValue) && thisPV.getPV_SHORT_MEANING().equalsIgnoreCase(sMeaning))
             {
-              isCreated = true;
-              insAC.storeStatusMsg("Permissible Value already exists for the Value Domain");
+              //update it if it was deleted
+              String sSubmit = thisPV.getVP_SUBMIT_ACTION();
+              if (sSubmit != null && !sSubmit.equalsIgnoreCase("DEL"))
+              {
+                isCreated = true;
+                insAC.storeStatusMsg("Permissible Value already exists for the Value Domain");
+              }
+              else if (m_PV.getVM_CONCEPT() != null) //updating concept relationship
+              {
+                sPVSubmit = "updatePV";
+                thisPV = this.updatePVAttributes(thisPV, m_PV, sPVSubmit, sValue);
+                  // update the vector
+                vVDPV.setElementAt(thisPV, i);
+              }
               break;
             }
           }
@@ -6186,19 +6202,7 @@ public class NCICurationServlet extends HttpServlet
           {
             if (thisPV.getPV_CHECKED())
             {
-              String s = m_PV.getPV_VALUE_ORIGIN();
-              if (s != null && !s.equals("")) thisPV.setPV_VALUE_ORIGIN(s);
-              s = m_PV.getPV_BEGIN_DATE();
-              if (s != null && !s.equals("")) thisPV.setPV_BEGIN_DATE(s);
-              s = m_PV.getPV_END_DATE();
-              if (s != null && !s.equals("")) thisPV.setPV_END_DATE(s);
-              if (sValue != null && !sValue.equals("")) thisPV.setPV_VALUE(sValue);
-              //update the submit action according to pv idseq
-              s = thisPV.getPV_PV_IDSEQ();
-              if (s == null || s.equals("") || (s.length()>3 && s.indexOf("EVS")>-1))
-                thisPV.setVP_SUBMIT_ACTION("INS");
-              else
-                thisPV.setVP_SUBMIT_ACTION("UPD");
+              thisPV = this.updatePVAttributes(thisPV, m_PV, sPVSubmit, sValue);
               thisPV.setPV_CHECKED(false);  //set it to false as it is done
               //update the vector
               vVDPV.setElementAt(thisPV, i);
@@ -6233,6 +6237,27 @@ public class NCICurationServlet extends HttpServlet
       }  
   } // end of doInsertPV
 
+   private PV_Bean updatePVAttributes(PV_Bean thisPV, PV_Bean pagePV, String pvSubmit, String sValue)
+   {
+     String s = pagePV.getPV_VALUE_ORIGIN();
+     if (s != null && !s.equals("")) thisPV.setPV_VALUE_ORIGIN(s);
+     s = pagePV.getPV_BEGIN_DATE();
+     if (s != null && !s.equals("")) thisPV.setPV_BEGIN_DATE(s);
+     s = pagePV.getPV_END_DATE();
+     if (s != null && !s.equals("")) thisPV.setPV_END_DATE(s);
+     if (sValue != null && !sValue.equals("")) thisPV.setPV_VALUE(sValue);
+     //update concept relation ship if updating
+     if (pvSubmit.equals("updatePV"))
+       thisPV.setVM_CONCEPT(pagePV.getVM_CONCEPT());
+     //update the submit action according to pv idseq
+     s = thisPV.getPV_PV_IDSEQ();
+     if (s == null || s.equals("") || (s.length()>3 && s.indexOf("EVS")>-1))
+       thisPV.setVP_SUBMIT_ACTION("INS");
+     else
+       thisPV.setVP_SUBMIT_ACTION("UPD");
+     return thisPV;
+   }
+   
    /**
   * The doInsertVM method retrieves the session beans m_VM and m_PV, calls the stored
   * procedures setVM and setPV to submit the new values and meanings to the database,
@@ -6266,10 +6291,10 @@ public class NCICurationServlet extends HttpServlet
       {
         insAC.storeStatusMsg("Value Meaning : " + m_VM.getVM_SHORT_MEANING());
         //if use the existing just update vm-cd continue
-        if (sAction.equals("useExistVM"))
-          insAC.setCDVMS("INS", m_VM);
-        else
-        { 
+      //  if (sAction.equals("useExistVM"))
+      //    insAC.setCDVMS("INS", m_VM);
+      //  else
+      //  { 
           //call to update vm with evs attributes 
           if (sEVSSearch != null && sEVSSearch.equals("searched"))
             ret = insAC.setVM_EVS("INS", m_VM);
@@ -6278,7 +6303,7 @@ public class NCICurationServlet extends HttpServlet
             m_VM.setVM_CONCEPT(new EVS_Bean());
             ret = insAC.setVM("INS", m_VM);
           }
-        }        
+      //  }        
         //display success message if no error exists and update pv bean
         String sReturn = (String)req.getAttribute("retcode");
         if (sReturn == null || sReturn.equals(""))
