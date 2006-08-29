@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.10 2006-08-29 17:36:54 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.11 2006-08-29 18:11:01 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -390,7 +390,7 @@ public class SetACService implements Serializable
       if (editAction.equalsIgnoreCase("Edit") || editAction.equalsIgnoreCase("N/A"))
           setValPageVector(vValidate, "Effective Begin Date", sBegin, false, -1, begValid, sOriginAction);
       else
-          setValPageVector(vValidate, "Effective Begin Date", sBegin, true, -1, begValid, sOriginAction);
+          setValPageVector(vValidate, "Effective Begin Date", sBegin, false, -1, begValid, sOriginAction);
 
       String endValid = "";
       //there should be begin date if end date is not null //change order 3.1.0.2 in Aug
