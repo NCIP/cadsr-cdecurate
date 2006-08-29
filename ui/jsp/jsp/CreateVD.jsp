@@ -1044,6 +1044,8 @@ function closeDep()
                   if (vmConcept == null) vmConcept = new EVS_Bean();
                   String evsDB = (String)vmConcept.getEVS_DATABASE();
                   if (evsDB == null) evsDB = "";
+	              if (evsDB.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
+	                evsDB = vmConcept.getEVS_ORIGIN();
                   String evsID = (String)vmConcept.getNCI_CC_VAL();
                   String sEvsId = "";
                   if (evsID != null && !evsID.equals(""))
@@ -1366,12 +1368,22 @@ function closeDep()
       <select name="selSource" size="1"
       onHelp = "showHelp('Help_CreateVD.html#createVDForm_selSource'); return false">
            <option value=""></option>
-<%           for (int i = 0; vSource.size()>i; i++)
+<%         
+		   boolean isFound = false;
+		   for (int i = 0; vSource.size()>i; i++)
            {
               String sSor = (String)vSource.elementAt(i);
+              if(sSor.equals(sSource)) isFound = true;
 %>
               <option value="<%=sSor%>" <%if(sSor.equals(sSource)){%>selected<%}%> ><%=sSor%></option>
-<%           }   %>
+<%         }
+		   //add the user entered if not found in the drop down list
+		   if (!isFound)  
+		   {  
+		   	  sSource = serUtil.parsedStringDoubleQuoteJSP(sSource);     //call the function to handle doubleQuote
+%>
+           		<option value="<%=sSource%>" selected><%=sSource%></option>
+<%		   } %>
       </select>
     <!--  &nbsp;&nbsp;<font color="#FF0000"> <a href="javascript:createOrigin();">Create New</a></font>      -->
     </td>

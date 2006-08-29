@@ -1,7 +1,7 @@
 
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.9 2006-05-17 20:01:36 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.10 2006-08-29 17:36:54 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;     
@@ -4819,7 +4819,6 @@ public class GetACSearch implements Serializable
             }
             else if (sSearchAC.equals("ValueDomain"))
             {
-
               VD_Bean VDBean = new VD_Bean();
               VD_Bean VDBean2 = new VD_Bean();
               VDBean2 = (VD_Bean)vSRows.elementAt(i);     
@@ -5029,6 +5028,8 @@ public class GetACSearch implements Serializable
       HttpSession session = m_classReq.getSession();
       //get doc text long name idseq for edit
       InsACService insAC = new InsACService(m_classReq, m_classRes, m_servlet);
+      //make name changed to false
+      DEBean.setDEC_VD_CHANGED(false);
       String desID = insAC.getRD_ID(DEBean.getDE_DE_IDSEQ());
       if (desID != null) DEBean.setDOC_TEXT_PREFERRED_QUESTION_IDSEQ(desID);
              
@@ -5138,6 +5139,8 @@ public class GetACSearch implements Serializable
   {
       HttpSession session = m_classReq.getSession();
       EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet); 
+      //make name changed to false
+      VDBean.setVDNAME_CHANGED(false);
       //get this ac cs-csi attributes
       if (!sMenu.equals("NewVDTemplate"))
       {
@@ -10088,6 +10091,17 @@ boolean isIntSearch)
       //get first pv name in the request
       m_classReq.setAttribute("pvValue", pvValue);
       session.setAttribute("VDPVList", vList);  //store the bean
+      //store copy of this bean in the session also.
+      Vector<PV_Bean> oldVDPVList = new Vector<PV_Bean>();
+      for (int k =0; k<vList.size(); k++)
+      {
+        PV_Bean cBean = new PV_Bean();
+        cBean = cBean.copyBean((PV_Bean)vList.elementAt(k));
+        oldVDPVList.addElement(cBean);
+        //System.out.println(cBean.getPV_BEGIN_DATE() + " what is at set " + cBean.getPV_END_DATE());
+      }
+      session.setAttribute("oldVDPVList", oldVDPVList);  //stor eit in the session
+      
     }
     catch(Exception e)
     {

@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.9 2006-05-17 20:01:36 hardingr Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.10 2006-08-29 17:36:54 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -393,10 +393,10 @@ public class SetACService implements Serializable
           setValPageVector(vValidate, "Effective Begin Date", sBegin, true, -1, begValid, sOriginAction);
 
       String endValid = "";
-      //there should be begin date if end date is not null
-      if (!sEnd.equals("") && sBegin.equals("")) 
+      //there should be begin date if end date is not null //change order 3.1.0.2 in Aug
+      /*if (!sEnd.equals("") && sBegin.equals("")) 
         endValid = "If you select an End Date, you must also select a Begin Date.";
-      else if (!sEnd.equals(""))
+      else*/ if (!sEnd.equals(""))
       {
         endValid = this.validateDateFormat(sEnd);
         //if validated (ret date and input dates are same), no error message
@@ -2041,6 +2041,7 @@ public class SetACService implements Serializable
 
         s = m_VM.getVM_DESCRIPTION();
         if (s == null) s = "";
+        
         setValPageVector(vValidate, "Description", s, bNotMandatory, 2000, "", "");
 
         s = m_VM.getVM_COMMENTS();
@@ -4413,6 +4414,7 @@ public class SetACService implements Serializable
       sName = (String)req.getParameter("CreateDescription");
       if(sName == null) sName = "";
       sName = m_util.removeNewLineChar(sName);   //replace newline with empty string
+      if (sName.length() > 2000) sName = sName.substring(0, 2000);
       m_PV.setPV_MEANING_DESCRIPTION(sName);
 
       //set PV_Origin
@@ -4518,6 +4520,7 @@ public class SetACService implements Serializable
       if(sName != null)
       {
         sName = m_util.removeNewLineChar(sName);
+        if (sName.length() > 2000) sName = sName.substring(0, 2000);
         m_VM.setVM_DESCRIPTION(sName);
       }
 
@@ -4925,110 +4928,102 @@ public class SetACService implements Serializable
       HttpSession session = req.getSession(); 
       //get the current pvs on the page
       String pvAction = (String)session.getAttribute("PVAction");
-      //do this right now since there no pvs on the page that are not in the bean vector already 
-      if (pvAction == null || pvAction.equals("") || pvAction.equalsIgnoreCase("createPV")
-            || pvAction.equalsIgnoreCase("addSelectedVM"))
-        return;
+      if (pvAction == null) pvAction = "";
       
       VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");
       if (vd == null) vd = new VD_Bean();
       String strInvalid = "";
-      //Vector vPagePVID = new Vector();
       Vector<PV_Bean> vVDPVList = (Vector)session.getAttribute("VDPVList");
-      Vector<String> vCheckRow = new Vector<String>();
       if (vVDPVList == null) vVDPVList = new Vector<PV_Bean>();
-      String sPV_IDs[] = req.getParameterValues("hiddenPVID");  //get pv id
-      if (sPV_IDs != null && sPV_IDs.length > 0)
+      if (!pvAction.equalsIgnoreCase("") && !pvAction.equalsIgnoreCase("createPV"))
       {
-        //do the following only if edit or remove  
-        int iPVChecked = 0;
-        for (int j=0; j<sPV_IDs.length; j++)  //loop through pvid lists
+        if (vVDPVList != null && vVDPVList.size() > 0)
         {
-          String rSel = (String)req.getParameter("ck"+j);
-          //check if this id is selected
-          if (rSel != null)
-          {                
-            String pvID = sPV_IDs[j];    //(String)vPVIDList.elementAt(j);
-            if (pvID == null) pvID = "";
-            //reset the bean with selected row for the selected component
-            for (int k=0; k<vVDPVList.size(); k++)
-            {
-              PV_Bean pvBean = (PV_Bean)vVDPVList.elementAt(k);
+          //do the following only if edit or remove  
+          int iPVChecked = 0;
+          int iPVLoop = 0;
+          //for (int j=0; j<sPV_IDs.length; j++)  //loop through pvid lists
+          for (int j=0; j<vVDPVList.size(); j++)  //loop through pvid lists
+          {
+            PV_Bean pvBean = (PV_Bean)vVDPVList.elementAt(j);
+            if (pvBean == null) pvBean = new PV_Bean();
+            //do the pv count only if not deleted
+            String pvAct = pvBean.getVP_SUBMIT_ACTION();
+            if (pvAct != null && pvAct.equals("DEL"))
+              continue;
+            //check if this id is selected
+            String rSel = (String)req.getParameter("ck"+iPVLoop);
+            //increase the pvloop count 
+            iPVLoop += 1;
+            if (rSel != null)
+            {                
               //since double quote from remove the double quote to match id from the jsp.  
-              String beanPVID = pvBean.getPV_PV_IDSEQ();
-              if (beanPVID == null) beanPVID = "";
-              beanPVID = beanPVID.replace('"', ' ');    
-      //  System.out.println(pvID + " sel pv " + pvBean.getPV_PV_IDSEQ() + " changed " + beanPVID);
-              //match hte ids to get the correct bean
-              if (beanPVID.equalsIgnoreCase(pvID))
+              String pvID = pvBean.getPV_PV_IDSEQ();
+              if (pvID == null) pvID = "";
+              pvID = pvID.replace('"', ' ');    
+              //store match pv id in the vector
+              if (pvAction.equals("removePV"))
               {
-                //store match pv id in the vector
-                if (pvAction.equals("removePV"))
+                //check if it is associated with the valid value in the form
+                String vdID = vd.getVD_VD_IDSEQ();
+                String vpID = pvBean.getPV_VDPVS_IDSEQ();
+                boolean isExists = false;
+                if (vdID != null && !vdID.equals("") && vpID != null && !vpID.equals(""))
                 {
-                  //check if it is associated with the valid value in the form
-                  String vdID = vd.getVD_VD_IDSEQ();
-                  String vpID = pvBean.getPV_VDPVS_IDSEQ();
-                  boolean isExists = false;
-                  if (vdID != null && !vdID.equals("") && vpID != null && !vpID.equals(""))
+                  isExists = this.checkPVQCExists(req, res, vdID, vpID);
+                  if (isExists)
                   {
-                    isExists = this.checkPVQCExists(req, res, vdID, vpID);
-                    if (isExists)
-                    {
-                      strInvalid = strInvalid + "Unable to remove the Permissible Value " +
-                          pvBean.getPV_VALUE() + " because it is used in a CRF.\\n";
-                      pvBean.setVP_SUBMIT_ACTION("NONE");
-                    }
-                  }
-                  if (!isExists)
-                  {
-                    pvBean.setVP_SUBMIT_ACTION("DEL");  //mark as del if removed from the page
-                    //put crf value back to non matched when deleted pv
-                    String sVV = pvBean.getQUESTION_VALUE();
-                    if (sVV != null && !sVV.equals(""))
-                    {
-                      Vector<String> vVV = (Vector)session.getAttribute("NonMatchVV");
-                      if (vVV == null) vVV = new Vector<String>();
-                      if (!vVV.contains(sVV))
-                        vVV.addElement(sVV);
-                      session.setAttribute("NonMatchVV", vVV);
-                    }
+                    strInvalid = strInvalid + "Unable to remove the Permissible Value " +
+                        pvBean.getPV_VALUE() + " because it is used in a CRF.\\n";
+                    pvBean.setVP_SUBMIT_ACTION("NONE");
                   }
                 }
-                else
-                {  //set edit/create attributes
-                  pvBean.setVP_SUBMIT_ACTION("UPD");
-                  pvBean.setPV_CHECKED(true);
-                  vCheckRow.addElement(pvID);
-                  iPVChecked += 1;
-                  if (iPVChecked == 1)
-                    session.setAttribute("m_PV", pvBean);                
-                } 
-                vVDPVList.setElementAt(pvBean, k);  //reset the attribute with the bean attributes
-                break;
+                if (!isExists)
+                {
+                  pvBean.setVP_SUBMIT_ACTION("DEL");  //mark as del if removed from the page
+                  //put crf value back to non matched when deleted pv
+                  String sVV = pvBean.getQUESTION_VALUE();
+                  if (sVV != null && !sVV.equals(""))
+                  {
+                    Vector<String> vVV = (Vector)session.getAttribute("NonMatchVV");
+                    if (vVV == null) vVV = new Vector<String>();
+                    if (!vVV.contains(sVV))
+                      vVV.addElement(sVV);
+                    session.setAttribute("NonMatchVV", vVV);
+                  }
+                }
               }
-            }
-          }  //end vdpv loop      
-        } //end pvid loop
+              else
+              {  //set edit/create attributes
+                pvBean.setVP_SUBMIT_ACTION("UPD");
+                pvBean.setPV_CHECKED(true);
+               // vCheckRow.addElement(pvID);
+                iPVChecked += 1;
+                if (iPVChecked == 1)
+                  session.setAttribute("m_PV", pvBean);                
+              } 
+              vVDPVList.setElementAt(pvBean, j);  //reset the attribute with the bean attributes
+            }  //end rsel check      
+          } //end vdpv loop
+          if (iPVChecked >1)
+            session.setAttribute("m_PV", new PV_Bean());
+        }  //end vdpv has value
+      } //end if not create pv
         //store it in session
-      //  session.setAttribute("PVIDList", vPVIDList);
-        session.setAttribute("VDPVList", vVDPVList);
-        Vector<PV_Bean> oldVDPVList = new Vector<PV_Bean>();
-        for (int k =0; k<vVDPVList.size(); k++)
-        {
-          PV_Bean cBean = new PV_Bean();
-          cBean = cBean.copyBean((PV_Bean)vVDPVList.elementAt(k));
-          oldVDPVList.addElement(cBean);
-          //System.out.println(cBean.getPV_BEGIN_DATE() + " what is at set " + cBean.getPV_END_DATE());
-        }
-        session.setAttribute("oldVDPVList", oldVDPVList);  //stor eit in the session
-        if (iPVChecked >1)
-          session.setAttribute("m_PV", new PV_Bean());
+      session.setAttribute("VDPVList", vVDPVList);
+      Vector<PV_Bean> oldVDPVList = new Vector<PV_Bean>();
+      for (int k =0; k<vVDPVList.size(); k++)
+      {
+        PV_Bean cBean = new PV_Bean();
+        cBean = cBean.copyBean((PV_Bean)vVDPVList.elementAt(k));
+        oldVDPVList.addElement(cBean);
+        //System.out.println(cBean.getPV_BEGIN_DATE() + " what is at set " + cBean.getPV_END_DATE());
       }
+      session.setAttribute("oldVDPVList", oldVDPVList);  //stor eit in the session
       if (!strInvalid.equals(""))
       {
         InsACService insAC = new InsACService(req, res, m_servlet);
         insAC.storeStatusMsg(strInvalid);
-        //session.setAttribute("statusMessage", strInvalid);
       }
     }
     catch(Exception ee)

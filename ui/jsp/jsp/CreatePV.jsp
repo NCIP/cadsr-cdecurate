@@ -78,6 +78,12 @@ function ViewConceptInTree()
     if (sEVSid == null) sEVSid = "";
     String sEVSdb = vmConcept.getEVS_DATABASE();
     if (sEVSdb == null) sEVSdb = "";
+    if (!sEVSid.equals(""))
+    {
+      if (sEVSdb.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
+         sEVSdb = vmConcept.getEVS_ORIGIN();
+      sEVSid = sEVSid + ": " + sEVSdb;
+    }
 
     String sOrigin = m_PV.getPV_VALUE_ORIGIN();
     if (sOrigin == null) sOrigin = "";
@@ -249,14 +255,22 @@ function ViewConceptInTree()
         <select name="selPVSource" size="1"
               onHelp = "showHelp('Help_CreateVD.html#createVDForm_ValueOrigin'); return false">
             <option value="" selected></option>
-<%            for (int i = 0; vSource.size()>i; i++)
-            {
+<%         
+		   boolean isFound = false;
+		   for (int i = 0; vSource.size()>i; i++)
+           {
               String sSor = (String)vSource.elementAt(i);
+              if(sSor.equals(sOrigin)) isFound = true;
 %>
-              <option value="<%=sSor%>" <%if(sSor.equals(sOrigin)){%>selected<%}%>><%=sSor%></option>
-<%
-            }
+              <option value="<%=sSor%>" <%if(sSor.equals(sOrigin)){%>selected<%}%> ><%=sSor%></option>
+<%         }
+		   //add the user entered if not found in the drop down list
+		   if (!isFound) 
+		   {  
+		   	  sOrigin = serUtil.parsedStringDoubleQuoteJSP(sOrigin);     //call the function to handle doubleQuote
 %>
+           		<option value="<%=sOrigin%>" selected><%=sOrigin%></option>
+<%		   } %>
         </select>
       </td>
     </tr> 

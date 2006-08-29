@@ -3,7 +3,7 @@
      "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
     "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
 <!-- 
-    $Header: /cvsshare/content/cvsroot/cdecurate/conf/web/web.xml,v 1.15 2006-05-17 20:01:35 hardingr Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/conf/web/web.xml,v 1.16 2006-08-29 17:36:54 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 <web-app>
