@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.10 2006-08-29 17:36:54 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.11 2006-09-12 15:47:03 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -5621,8 +5621,8 @@ public class InsACService implements Serializable
 
           //truncate the definition to be 2000 long.
           String sDef = evsBean.getPREFERRED_DEFINITION();
-          if (sDef == null) sDef = "";
-          if (sDef.length() > 2000) sDef = sDef.substring(0, 2000);
+          //if (sDef == null) sDef = "";
+          //if (sDef.length() > 2000) sDef = sDef.substring(0, 2000);
           // Set the In parameters (which are inherited from the PreparedStatement class)
           CStmt.setString(2, sAction);
           CStmt.setString(4, evsBean.getNCI_CC_VAL());
