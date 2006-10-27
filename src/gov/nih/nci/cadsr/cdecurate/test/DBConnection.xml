@@ -1,0 +1,18 @@
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<!-- $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/DBConnection.xml,v 1.1 2006-10-27 15:04:05 hegdes Exp $
+       $Name: not supported by cvs2svn $
+ -->
+
+<properties>
+    
+        <!-- Specify the caDSR database being used by the Curation Tool to be tested.-->
+        <entry key="DSurl">cbiodb2-d.nci.nih.gov:1521:CBDEV</entry>
+        <entry key="DSusername">sbrext</entry>
+        <entry key="DSpassword">jjuser</entry>
+        
+     <!--    <entry key="DSurl">cbiodb30.nci.nih.gov:1521:CBTEST</entry>
+        <entry key="DSusername">sbrext</entry>
+        <entry key="DSpassword">i1sn0w</entry>  -->
+
+</properties>
