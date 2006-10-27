@@ -1,0 +1,59 @@
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<!-- $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/TestVMCase.xml,v 1.1 2006-10-27 15:04:05 hegdes Exp $
+       $Name: not supported by cvs2svn $
+ -->
+
+<properties>
+	<property vmid="vm1">
+	<valuemeaning
+   	editvmname="LOW"
+   	editvmdesc="Lower than reference range"
+   	editvmlongname="Low"
+   	selvmname=""
+   	selvmdesc=""
+   	selvmlongname=""
+   	selvmidseq=""
+   	selvmcondr=""   	
+   	></valuemeaning> 
+		<concept id="con1" vm="LOW"
+   	conname="Low"
+   	conid="C54722"
+   	condefn="A minimum level or position or degree; less than normal in degree or intensity or amount."
+   	condefsrc="NCI-GLOSS"
+   	conorigin="NCI Thesaurus"
+   	consrc="NCI_CONCEPT_CODE"
+   	conidseq=""
+   	></concept>
+<!-- 		<concept id="con2" vm="LOW"
+   	conname="Pressure"
+   	conid="C54723"
+   	condefn="pressure."
+   	condefsrc="NCI"
+   	conorigin="NCI Thesaurus"
+   	consrc="NCI_CONCEPT_CODE"
+   	conidseq=""
+   	></concept>  -->
+  </property>
+  <property vmid="vm3"> 	 	
+	<valuemeaning
+   	editvmname="Education Level"
+   	editvmdesc="A demographic parameter indicating the number of years of schooling or the highest level of achievement at school."
+   	editvmlongname="Education Level"
+   	></valuemeaning> 
+   </property> 
+  <property vmid="vm4"> 	 	
+	<valuemeaning
+   	editvmname="Adverse Event Domain"
+   	editvmdesc="The Adverse Events dataset includes. Adverse events may be captured either as free text or a pre-specified list of terms."
+   	editvmlongname="Adverse Event Domain"
+   	selvmname="Adverse Event Domain"
+   	selvmdesc="need definiton"
+   	selvmlongname="Adverse Event Domain"
+   	selvmidseq=""
+   	selvmcondr=""
+   	></valuemeaning> 
+   </property> 
+   
+  <property vmid="vmend">Adios</property>
+</properties>
