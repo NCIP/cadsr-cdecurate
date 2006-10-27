@@ -2,7 +2,8 @@
 <html>
 <head>
 <% //String thisServer2 = request.getServerName(); 
-   String sentinelURL = (String)session.getAttribute("SentinelURL");%>
+   String sentinelURL = (String)session.getAttribute("SentinelURL");
+   String UMLBrowserURL = (String)session.getAttribute("UMLBrowserURL");%>
 <script language="JavaScript">
 <!--
 var dotCntr = -1;
@@ -49,7 +50,11 @@ var sentinelWindow = null;
   {
       callSentinelJS("<%=sentinelURL%>");
   }
-  
+    
+  function callUMLBrowser()
+  {
+      window.open("<%=UMLBrowserURL%>");
+  }
   
   function callSentinelJS(serverName)
   {

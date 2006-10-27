@@ -1,10 +1,11 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/Quest_Bean.java,v 1.10 2006-08-29 17:36:54 hegdes Exp $
+// Copyright (c) 2006 ScenPro, Inc.
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/Quest_Bean.java,v 1.11 2006-10-27 14:54:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.io.*;
-import java.util.*;
 
 /**
  * The Quest_Bean encapsulates the Quest information and is stored in the
@@ -113,6 +114,8 @@ public class Quest_Bean implements Serializable
   private String VD_LONG_NAME;
   private String VD_PREF_NAME;
   private String VD_DEFINITION;
+  private String VDid;
+  private String VDversion;
   private String CDE_ID;
   private String HIGH_LIGHT_INDICATOR;
   private String STATUS_INDICATOR;
@@ -579,6 +582,39 @@ public class Quest_Bean implements Serializable
   {
       return this.QUEST_CHECKED;
   }
+
+  /**
+   * @return Returns the vDid.
+   */
+  public String getVDid()
+  {
+    return VDid;
+  }
+
+  /**
+   * @param did The vDid to set.
+   */
+  public void setVDid(String did)
+  {
+    VDid = did;
+  }
+
+  /**
+   * @return Returns the vDversion.
+   */
+  public String getVDversion()
+  {
+    return VDversion;
+  }
+
+  /**
+   * @param dversion The vDversion to set.
+   */
+  public void setVDversion(String dversion)
+  {
+    VDversion = dversion;
+  }
+
 
 }  //end of class
  

@@ -65,6 +65,10 @@
      font-family: Arial, Helvetica, sans-serif;
      font-size: 12px;
   }
+  p
+  {
+     font-family: Arial, Helvetica, sans-serif;
+  }
 
 
   // Specific to the login pages
@@ -119,4 +123,13 @@
 	margin-left: 20em;
   }
 
+  TD.TABX 
+  { 
+  	border: 2px solid #aaaaaa; border-bottom: 2px solid black; padding: 0.05in 0.05in 0.05in 0.05in; cursor: default
+  }
+
+	TD.TABY 
+	{ 
+		border-left: 2px solid black; border-right: 2px solid black; border-top: 2px solid black; padding: 0.05in 0.05in 0.05in 0.05in; margin-right: -5px; cursor: default
+	}
 

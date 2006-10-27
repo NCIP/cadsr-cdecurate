@@ -93,6 +93,12 @@
     var useStatus = checkValidStatus(editStatus);
     if (useStatus != "valid") 
       return;
+    //store the nvp value to capture
+    var nvpRow = document.getElementById("nvp_"+selRow);
+    var nvpVal = opener.document.getElementById("nvpConcept");
+  	if (nvpRow != null && nvpVal != null)
+  	 	nvpVal.value = nvpRow.value;
+  	 	
     //continue with the submission
     if(opener.document.newDECForm != null)
     {
@@ -150,14 +156,14 @@
         window.close();
       }
       //parent concept from vd page
-      else if (sComp == "ParentConcept" && opener.document.createVDForm != null)
+      else if (sComp == "ParentConcept")  // && opener.document.createVDForm != null)
         useSelectionParentConcept();
       //opened from create or edit VD form.
-      else if ((sComp == "EVSValueMeaning" || sComp == "ParentConceptVM") && opener.document.createVDForm != null)
+      else if (sComp == "EVSValueMeaning" || sComp == "ParentConceptVM"  || sComp == "VMConcept")  // && opener.document.createVDForm != null)
         useSelectionSelectVM();
       //opened from create vm page
-      else if (sComp == "CreateVM_EVSValueMeaning")
-        useSelectionCreateVM();          
+   //   else if (sComp == "CreateVM_EVSValueMeaning")
+   //     useSelectionCreateVM();          
     } 
   }
 
@@ -165,6 +171,7 @@
   function checkValidStatus(cStatus)
   {
     var sStatus = "valid";
+   // alert("checkvalid status ");
     //check the status of multiple selection
     if (cStatus != null && cStatus == "multiple")
     {
@@ -191,15 +198,16 @@
   }
 
   function useSelectionParentConcept()
-  {      
-    if (opener.document.createVDForm != null)
+  {     
+ // alert("use parent concept"); 
+    if (opener.document != null)
     {
       //first check the concept status and return if not valid
       var useStatus = checkValidStatus(editStatus);
       if (useStatus != "valid") 
         return;
       //do not allow to use the meta term if enum parent
-      var vdtype = opener.document.createVDForm.listVDType[opener.document.createVDForm.listVDType.selectedIndex].value;
+      var vdtype = opener.document.getElementById("listVDType").value;   //createVDForm.listVDType[opener.document.createVDForm.listVDType.selectedIndex].value;
       if (vdtype == "E" && (sCCodeDB == null || sCCodeDB == "" || sCCodeDB == metaName))  // "NCI Metathesaurus"))
       {
         alert("Concepts from the " + metaName + " may not be used to reference an Enumerated Value Domain.\n" + 
@@ -209,17 +217,17 @@
       else
       {          
         //submit vd form for parent selection
-        if (opener.document.createVDForm.hiddenParentName != null)
+        if (opener.document.getElementById("hiddenParentName") != null)
         {
-          opener.document.createVDForm.hiddenParentName.value = editNameLong;
-          opener.document.createVDForm.hiddenParentCode.value = sCCode;
-          opener.document.createVDForm.hiddenParentDB.value = sCCodeDB;
+          opener.document.getElementById("hiddenParentName").value = editNameLong;
+          opener.document.getElementById("hiddenParentCode").value = sCCode;
+          opener.document.getElementById("hiddenParentDB").value = sCCodeDB;
           //store the selrow in an array 
           var selRowArray = new Array();
           var rowNo = document.searchResultsForm.hiddenSelectedRow[0].value;
           selRowArray[0] = rowNo;
           opener.AllocSelRowOptions(selRowArray);  //allocate option for hidden row and select it.
-          opener.SubmitValidate("refresh");
+          opener.SubmitValidate("selectParent");
           window.close();
         }
       }
@@ -228,6 +236,7 @@
   
   function useSelectionSelectVM()
   {
+//  alert("vm use selection");
       //first check the concept status and return if not valid
       var useStatus = checkValidStatus("multiple");
       if (useStatus != "valid") 
@@ -278,14 +287,30 @@
         formObj= eval("document.searchResultsForm."+ckField);
         formObj.checked=false;
       }
-  
-      if(sConfirm == true)
-          opener.AllocSelRowOptions(selRowArray3);  //allocate option for hidden row and select it.      
+      //make sure it is valid; get the editing pv; call function to create new row of concept for each concept; submit this page to add the bean to pv - vd - session; close window or come back to allow more selection
+      if (sComp == "VMConcept")
+      {
+      	var pvInd = opener.document.getElementById("currentPVInd").value;
+      	if (pvInd != null)
+      	{
+		    document.getElementById("editPVInd").value = pvInd;
+	  		//add teh concept info on the page
+	//  alert(editName + sCCode + sCCodeDB + " con " + conArray[0].conName + conArray[0].conID + conArray[0].conDBOrg);
+	      	document.searchResultsForm.actSelected.value = "appendConcept";
+	        document.searchResultsForm.submit(); 
+        }
+        else
+        	alert("Unable to find the edited Permissible Value from the page");
+      }
       else
-          opener.AllocSelRowOptions(selRowArray); 
-      //submit the vd form to store these in pv bean and refresh the page
-      opener.document.createVDForm.newCDEPageAction.value = "addSelectedVM";
-      opener.SubmitValidate("addSelectedVM");
+      {
+	      if(sConfirm == true)
+	          opener.AllocSelRowOptions(selRowArray3);  //allocate option for hidden row and select it.      
+	      else
+	          opener.AllocSelRowOptions(selRowArray); 
+	      //submit the vd form to store these in pv bean and refresh the page
+	      opener.SubmitValidate("addSelectedCon");
+      }
       //disable button and de-count the checked numbers
       numRowsSelected = 0;
       document.searchResultsForm.hiddenSelectedRow.length = 0;
@@ -296,7 +321,7 @@
   //alert("done showUseSelection");
   }
   
-  function useSelectionCreateVM()
+/*  function useSelectionCreateVM()
   {
     var dCount = document.searchResultsForm.hiddenSelectedRow.length;
     if (dCount > 0)
@@ -330,14 +355,14 @@
 	        opener.document.createVMForm.hiddenEVSSearch.value = "Searched"; 
 	        opener.document.createVMForm.hiddenSelRow.value = rowNo; 
 	        //submit vm page to store data in the bean
-	        opener.document.createVMForm.newCDEPageAction.value = "appendSearchVM";
+	        opener.document.createVMForm.pageAction.value = "appendSearchVM";
 	        opener.SubmitValidate("appendSearchVM");
 	        //close the window
 	        window.close();
         }
       }
     }
-  }
+  } */
   //alerts if more than one concept with same name is selected
   function checkDuplicateConcept()
   {   

@@ -1,6 +1,8 @@
-/**
- * 
- */
+// Copyright (c) 2006 ScenPro, Inc.
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_CONTACT_Bean.java,v 1.4 2006-10-27 14:54:28 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.io.Serializable;

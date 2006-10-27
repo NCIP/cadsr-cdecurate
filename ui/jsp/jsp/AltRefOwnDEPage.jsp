@@ -160,7 +160,7 @@
   function ClearBoxes()
   {
   //  alert("clear boxes");
-    document.designateDEForm.newCDEPageAction.value = "clearBoxes";
+    document.designateDEForm.pageAction.value = "clearBoxes";
     document.designateDEForm.submit();
   }
   

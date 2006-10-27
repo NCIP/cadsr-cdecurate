@@ -839,7 +839,7 @@
     
 <!--    </fieldset>-->
   </table> 
-<input type="hidden" name="newCDEPageAction" value="nothing">
+<input type="hidden" name="pageAction" value="nothing">
 <input type="hidden" name="openToTree" value="">
 <input type="hidden" name="DECAction" value="NewDEC">
 <input type="hidden" name="decIDSEQ" value="<%=sDECIDSEQ%>">
@@ -877,6 +877,7 @@
 
 <input type="hidden" name="selCompBlockRow" value=""> 
 <input type="hidden" name="sCompBlocks" value="">
+<input type="hidden" name="nvpConcept" value="">
 <!-- oc and prop change status -->
 <input type="hidden" name="nameTypeChange" value="<%=nameTypeChange%>">
 <!-- stores the selected rows to get the bean from the search results -->

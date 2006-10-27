@@ -1,11 +1,12 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UtilService.java,v 1.10 2006-08-29 17:36:54 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UtilService.java,v 1.11 2006-10-27 14:54:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.sql.*;
 import java.math.*;
@@ -96,8 +97,6 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public class UtilService implements Serializable
 {
-
-
   /**
    * 
    */
@@ -902,6 +901,152 @@ public class UtilService implements Serializable
     }
     return sMsg;
   }
-  
+
+  /**
+   * To set the valid page vector with attribute, data and message, called from setValidatePageValuesDE,
+   * setValidatePageValuesDEC, setValidatePageValuesVD, setValidatePageValuesPV, setValidatePageValuesVM methods.
+   * Attribute Name and Data added to the vector.
+   * Checks if satisfies mandatory, length limit valid and adds the appropriate messages along with earlier message to the vecotr.
+   *
+   * @param v vector to display data on the page.
+   * @param sItem Name of the attribute.
+   * @param sContent input value of the attribute.
+   * @param bMandatory true if attribute is a mandatory for submit.
+   * @param iLengLimit integer value for length limit if any for the attribute.
+   * @param strInValid invalid messages from other validation checks.
+   * @param sOriginAction String origin action
+   * @return Vector of validate
+   *
+   */
+    public static void setValPageVector(Vector<ValidateBean> vb, String sItem, String sContent, 
+        boolean bMandatory, int iLengLimit, String strInValid, String sOriginAction)
+    {
+       String sValid = "Valid";
+       String sNoChange = "No Change";
+       String sMandatory = "This field is Mandatory. \n";
+       if(sItem.equals("Effective End Date"))
+         sMandatory = "Effective End Date field is Mandatory for this workflow status. \n";
+       
+       String attCon = "";
+       String attStatus = "";
+       if(sContent == null || sContent.equals("") || sContent.length() < 1)   // content emplty
+       {
+           attCon = "";  // content           
+           if(bMandatory)
+           {
+               attStatus = sMandatory + strInValid;   //status, required field
+               
+           }
+           else if(strInValid.equals(""))
+           {
+               if (sOriginAction.equals("BlockEditDE") || sOriginAction.equals("BlockEditDEC") || sOriginAction.equals("BlockEditVD"))
+                 attStatus = sNoChange;   //status, OK, even empty, not require
+               else
+                 attStatus = sValid;
+           }
+           else
+             attStatus = strInValid;
+       }
+       else                      // have something in content
+       {
+           attCon = sContent;   // content
+           if(iLengLimit > 0)    // has length limit
+           {
+               if(sContent.length() > iLengLimit)  // not valid
+               {
+                 attStatus = sItem + " is too long. \n" + strInValid;
+               }
+               else
+               {
+                 if (strInValid.equals(""))
+                   attStatus = sValid;   //status, OK, not exceed limit
+                 else
+                   attStatus = strInValid;
+               }
+           }
+           else
+           {
+             if(strInValid.equals(""))
+               attStatus = sValid;   //status, OK, not exceed limit
+             else
+               attStatus = strInValid;
+           }
+       }
+       //fill in the bean
+       ValidateBean vdBean = new ValidateBean();
+       vdBean.setACAttribute(sItem);
+       vdBean.setAttributeContent(attCon);
+       vdBean.setAttributeStatus(attStatus);
+       vb.addElement(vdBean);
+   }
+
+    /**
+     * To get compared value to sort.
+     * empty strings are considered as strings.
+     * according to the fields, converts the string object into integer, double or dates.
+     *
+     * @param sField field name to sort.
+     * @param firstName first name to compare.
+     * @param SecondName second name to compare.
+     *
+     * @return int ComparedValue using compareto method of the object.
+     *
+     * @throws Exception
+     */
+    public int ComparedValue(String sFieldType, String firstName, String SecondName)
+            throws Exception
+    {
+        firstName = firstName.trim();
+        SecondName = SecondName.trim();
+        //this allows to put empty cells at the bottom by specify the return 
+        if (firstName.equals(""))
+           return 1;
+        else if (SecondName.equals(""))
+           return -1;
+
+        if (sFieldType.equals("Integer"))
+        {
+           Integer iName1 = new Integer(firstName);
+           Integer iName2 = new Integer(SecondName);
+           return iName1.compareTo(iName2);
+        }
+        else if (sFieldType.equals("Double"))
+        {
+           Double dName1 = new Double(firstName);
+           Double dName2 = new Double(SecondName);
+           return dName1.compareTo(dName2);
+        }
+        else if (sFieldType.equals("Date"))        
+        {
+           SimpleDateFormat dteFormat = new SimpleDateFormat("MM/dd/yyyy");
+           java.util.Date dtName1 = dteFormat.parse(firstName);
+           java.util.Date dtName2 = dteFormat.parse(SecondName);
+           return dtName1.compareTo(dtName2);
+        }
+        else
+        {
+           return firstName.compareToIgnoreCase(SecondName);
+        }
+    }
+
+    public static String getVMConcepts(PV_Bean pv)
+    {
+      String evsID = "";
+      VM_Bean vm = pv.getPV_VM();
+      Vector vmCon = vm.getVM_CONCEPT_LIST();
+      for (int cc =0; cc < vmCon.size(); cc++)
+      {
+        EVS_Bean conBean = (EVS_Bean)vmCon.elementAt(cc);
+        if (!evsID.equals("")) 
+          evsID += "; &nbsp;";
+        String conDB = conBean.getEVS_DATABASE();
+        if (conDB.equals(EVSSearch.META_VALUE)) // "MetaValue")) 
+          conDB = conBean.getEVS_ORIGIN();
+        String conID = conBean.getCONCEPT_IDENTIFIER();
+        if (conID != null && !conID.equals("")) 
+          evsID += conID + "&nbsp;&nbsp;" + conDB;        
+      }
+      return evsID;
+    }
   //close the class
 }

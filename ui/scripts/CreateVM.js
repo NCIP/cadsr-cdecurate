@@ -52,12 +52,12 @@ var evsWindow = null;
 	   hourglass();
 	   if (origin == "validate")
        {
-          document.createVMForm.newCDEPageAction.value = "validate";
+          document.createVMForm.pageAction.value = "validate";
           window.status = "Validating data, it may take a minute, please wait.....";
        }
        else if (origin == "submit")
        {
-          document.createVMForm.newCDEPageAction.value = "submit";
+          document.createVMForm.pageAction.value = "submit";
           window.status = "Submitting data, it may take a minute, please wait.....";
 	   } 
 
@@ -112,7 +112,7 @@ var evsWindow = null;
    function SubmitVM()
   {
      hourglass();
-     document.createVMForm.newCDEPageAction.value = "submit";
+     document.createVMForm.pageAction.value = "submit";
      document.createVMForm.Message.style.visibility="visible";
      window.status = "Submitting data, it may take a minute, please wait.....";
      document.createVMForm.submit();
@@ -121,7 +121,7 @@ var evsWindow = null;
   function Back()
   {
     hourglass();
-    document.createVMForm.newCDEPageAction.value  = "backToPV";
+    document.createVMForm.pageAction.value  = "backToPV";
     document.createVMForm.submit();
   }
 

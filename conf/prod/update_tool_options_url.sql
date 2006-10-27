@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/prod/update_tool_options_url.sql,v 1.4 2006-08-29 17:36:54 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/prod/update_tool_options_url.sql,v 1.5 2006-10-27 14:54:27 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -19,7 +19,7 @@
 
 --Store evs url for all tools: need to make sure it doesn't exists already before runnning.
 UPDATE sbrext.tool_options_view_ext 
-SET value = 'http://cabio.nci.nih.gov/cacore31/http/remoteService'
+SET value = 'http://cabio.nci.nih.gov/cacore32/http/remoteService'
 WHERE tool_name = 'EVS' AND property = 'URL'; 
 
 --Store browser url for all tools: need to make sure it doesn't exists already before runnning.
@@ -34,7 +34,7 @@ WHERE tool_name = 'CURATION' AND property = 'URL';
 
 --Store evs alternate url specific to curation tool if needed.
 UPDATE sbrext.tool_options_view_ext 
-SET value = 'http://cabio.nci.nih.gov/cacore31/http/remoteService'
+SET value = 'http://cabio.nci.nih.gov/cacore32/http/remoteService'
 WHERE tool_name = 'CURATION' AND property = 'EVS.URL'; 
 
 --Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.	   

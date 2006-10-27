@@ -768,7 +768,7 @@ fill selectedCSI options.
     if (dispType != "") //submit the page only if not empty
     {
       document.designateDEForm.Message.style.visibility="visible";
-      document.designateDEForm.newCDEPageAction.value = sAction;
+      document.designateDEForm.pageAction.value = sAction;
       document.designateDEForm.submit();
     }
   }

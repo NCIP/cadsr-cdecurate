@@ -96,8 +96,8 @@ function displayStatusMessage()
     EVS_Bean eBean = (EVS_Bean)m_VM.getVM_CONCEPT();
     if (eBean == null) eBean = new EVS_Bean();
   //  String sEVS = "";
-//System.out.println(eBean.getNCI_CC_VAL() + " : " + eBean.getTEMP_CUI_VAL() + " : " + eBean.getUMLS_CUI_VAL());
-    String sEVS = eBean.getNCI_CC_VAL();
+//System.out.println(eBean.getCONCEPT_IDENTIFIER() + " : " + eBean.getTEMP_CUI_VAL() + " : " + eBean.getUMLS_CUI_VAL());
+    String sEVS = eBean.getCONCEPT_IDENTIFIER();
     if (sEVS == null) sEVS = "";
     if (!sEVS.equals(""))
     {
@@ -115,13 +115,13 @@ function displayStatusMessage()
     if (vmConcept == null) vmConcept = new EVS_Bean();
     String sEVSname = vmConcept.getLONG_NAME();
     if (sEVSname == null) sEVSname = "";
-    String sEVSid = vmConcept.getNCI_CC_VAL();
+    String sEVSid = vmConcept.getCONCEPT_IDENTIFIER();
     if (sEVSid == null) sEVSid = "";
     String sEVSdb = vmConcept.getEVS_DATABASE();
     if (sEVSdb == null) sEVSdb = ""; */
 //System.out.println("vm jsp sEVSname: " + sEVSname + " sEVSid: " + sEVSid);
 %>
-<input type="hidden" name="newCDEPageAction" value="nothing">
+<input type="hidden" name="pageAction" value="nothing">
   <table width="100%" border="0">
   <col width="4%"><col width="95%">
     <tr>

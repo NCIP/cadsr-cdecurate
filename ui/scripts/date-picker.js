@@ -350,12 +350,7 @@ Calendar.prototype.cal_data = function() {
 	// Write rest of the 1st week
 	for (j=vFirstDay; j<7; j++) {
 		vCode = vCode + "<TD WIDTH='14%'" + this.write_weekend_string(j) + "><FONT SIZE='" + fontsize + "' FACE='" + fontface + "'>" + 
-			"<A HREF='#' " + 
-				"onClick=\"self.opener.document." + this.gReturnItem + ".value='" + 
-				this.format_data(vDay) + 
-				"';self.opener.document." + this.gReturnItem + ".focus();window.close();\">" + 
-				this.format_day(vDay) + 
-			"</A>" + 
+			this.getDayHREF(vDay) + 
 			"</FONT></TD>";
 		vDay=vDay + 1;
 	}
@@ -367,12 +362,7 @@ Calendar.prototype.cal_data = function() {
 
 		for (j=0; j<7; j++) {
 			vCode = vCode + "<TD WIDTH='14%'" + this.write_weekend_string(j) + "><FONT SIZE='" + fontsize + "' FACE='" + fontface + "'>" + 
-				"<A HREF='#' " + 
-					"onClick=\"self.opener.document." + this.gReturnItem + ".value='" + 
-					this.format_data(vDay) + 
-					"';self.opener.document." + this.gReturnItem + ".focus();window.close();\">" + 
-				this.format_day(vDay) + 
-				"</A>" + 
+				this.getDayHREF(vDay) + 
 				"</FONT></TD>";
 			vDay=vDay + 1;
 
@@ -879,4 +869,30 @@ function show_yearly_calendar(p_item, p_year, p_format) {
     return isValid;	
   }
 
+Calendar.prototype.getDayHREF = function(vDay)
+  {  	
+  	var hrefText = "";
+  	//href text for pv dates
+  	if (this.gReturnItem.match("PVForm") != null)
+  	{
+  		hrefText = "<A HREF='#' " + 
+				"onClick=\"self.opener.appendDate('" + 
+				this.format_data(vDay) + 
+				"');window.close();\">" + 
+				this.format_day(vDay) + 
+			"</A>";
+  	}
+  	//default text
+  	if (hrefText == "")
+  	{
+  		hrefText = "<A HREF='#' " + 
+				"onClick=\"self.opener.document." + this.gReturnItem + ".value='" + 
+				this.format_data(vDay) + 
+				"';self.opener.document." + this.gReturnItem + ".focus();window.close();\">" + 
+				this.format_day(vDay) + 
+			"</A>";
+	}
+	return hrefText;   	
+  }
 
+  

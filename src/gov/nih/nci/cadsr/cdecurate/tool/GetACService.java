@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.10 2006-08-29 17:36:54 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.11 2006-10-27 14:54:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -122,6 +122,11 @@ public class GetACService implements Serializable
     m_classReq = req;
     m_classRes = res;
     m_servlet = CurationServlet;
+  }
+  
+  public GetACService()
+  {
+      
   }
 
   /**
@@ -382,6 +387,9 @@ public class GetACService implements Serializable
         //list of organizations
         if(session.getAttribute("AddrType") == null)
           this.getAddrTypeList();
+        //list of NVP concepts
+        if(session.getAttribute("NVPConcepts") == null)
+          this.getNVPConcepts(session);
         
         m_sbr_db_conn.close();
       //  logger.info(m_servlet.getLogMessage(req, "getACList", "ended", startDate, new java.util.Date()));
@@ -1680,7 +1688,7 @@ public class GetACService implements Serializable
    * @param bInvertBean boolean to invert the bean vector or not
    * @return Vector vector of evs bean.
   */
-  public Vector getAC_Concepts(String condrID, VD_Bean vd, boolean bInvertBean)
+  public Vector<EVS_Bean> getAC_Concepts(String condrID, VD_Bean vd, boolean bInvertBean)
   {
 //System.err.println("in getAC_Concepts condrID: " + condrID);
     Connection sbr_db_conn = null;
@@ -1713,14 +1721,14 @@ public class GetACService implements Serializable
           while(rs.next())
           {
             EVS_Bean eBean = new EVS_Bean();
-            eBean.setCON_IDSEQ(rs.getString("CON_IDSEQ"));
+            eBean.setIDSEQ(rs.getString("CON_IDSEQ"));
 //  System.err.println("in getAC_Concepts CON_IDSEQ: " + rs.getString("CON_IDSEQ"));
             eBean.setDISPLAY_ORDER(rs.getString("DISPLAY_ORDER"));
             eBean.setPRIMARY_FLAG(rs.getString("primary_flag_ind"));
-            eBean.setNCI_CC_VAL(rs.getString("preferred_name"));
+            eBean.setCONCEPT_IDENTIFIER(rs.getString("preferred_name"));
             eBean.setLONG_NAME(rs.getString("long_name"));
 // System.err.println("in getAC_Concepts long name: " + rs.getString("long_name"));
-            eBean.setDESCRIPTION(rs.getString("preferred_definition"));
+          //  eBean.setDESCRIPTION(rs.getString("preferred_definition"));
             eBean.setPREFERRED_DEFINITION(rs.getString("preferred_definition"));
             eBean.setEVS_DATABASE(rs.getString("origin"));
  // System.err.println("in getAC_Concepts origin: " + rs.getString("origin"));
@@ -1728,6 +1736,7 @@ public class GetACService implements Serializable
             eBean.setNCI_CC_TYPE(rs.getString("evs_source"));
             eBean.setCONDR_IDSEQ(condrID);
             eBean.setCON_AC_SUBMIT_ACTION("NONE");
+            eBean.markNVPConcept(eBean, m_classReq.getSession());
             if(rs.getString("origin") != null && rs.getString("origin").equals("NCI Metathesaurus"))
             {
               String sParent = rs.getString("long_name");
@@ -1738,7 +1747,7 @@ public class GetACService implements Serializable
               if(sParentSource == null) sParentSource = "";
               eBean.setEVS_CONCEPT_SOURCE(sParentSource);
             }
-            if (eBean.getCON_IDSEQ() != null && !eBean.getCON_IDSEQ().equals(""))
+            if (eBean.getIDSEQ() != null && !eBean.getIDSEQ().equals(""))
               vList.addElement(eBean);
           }
         }
@@ -1884,6 +1893,62 @@ public class GetACService implements Serializable
     }
   }
 
+    public Vector<TOOL_OPTION_Bean> getToolOptionData(Connection db_, String tool_, String prop_, String value_)
+    {
+        ResultSet rs = null;
+        CallableStatement CStmt = null;
+        Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
+        try
+        {
+            CStmt = db_.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_TOOL_OPTIONS(?,?,?,?,?)}");
+
+            CStmt.registerOutParameter(4, OracleTypes.CURSOR);
+            CStmt.registerOutParameter(5, OracleTypes.VARCHAR);
+
+            CStmt.setString(1, tool_);
+            CStmt.setString(2, prop_);
+            CStmt.setString(3, value_);
+
+            // Now we are ready to call the stored procedure
+            CStmt.execute();
+
+            // store the output in the result set
+            rs = (ResultSet) CStmt.getObject(4);
+            if (rs != null)
+            {
+                // loop through the resultSet and add them to the bean
+                while (rs.next())
+                {
+                    TOOL_OPTION_Bean TO_Bean = new TOOL_OPTION_Bean();
+                    TO_Bean.setTOOL_OPTION_IDSEQ(rs.getString("TOOL_IDSEQ"));
+                    TO_Bean.setTOOL_NAME(rs.getString("TOOL_NAME"));
+                    TO_Bean.setPROPERTY(rs.getString("PROPERTY"));
+                    TO_Bean.setVALUE(rs.getString("VALUE"));
+                    TO_Bean.setLANGUAGE(rs.getString("UA_NAME"));
+                    vList.addElement(TO_Bean); // add the bean to a vector
+                } // END WHILE
+            } // END IF
+        }
+        catch (Exception e)
+        {
+            // System.err.println("other problem in GetACService-getToolOptionData: " + e);
+            logger.fatal("ERROR - GetACService-getToolOptionData for other : " + e.toString(), e);
+        }
+        try
+        {
+            if (rs != null)
+                rs.close();
+            if (CStmt != null)
+                CStmt.close();
+        }
+        catch (SQLException ee)
+        {
+            //System.err.println("Problem closing in GetACService-getToolOptionData: " + ee);
+            logger.fatal("ERROR - GetACService-getToolOptionData for close : " + ee.toString(), ee);
+        }
+        return vList;
+    }
+  
   /**
    * to get the data from tool option table
    * @param toolName name of the tool to filter
@@ -1893,67 +1958,24 @@ public class GetACService implements Serializable
    */
   public Vector<TOOL_OPTION_Bean> getToolOptionData(String toolName, String sProperty, String sValue)  // returns data from tool options
   {
-    ResultSet rs = null;
-    CallableStatement CStmt = null;
-    Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
-    Connection sbr_db_conn = null;
-    try
-    {
-      //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
-        m_servlet.ErrorLogin(m_classReq, m_classRes);
-      else
-      {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_TOOL_OPTIONS(?,?,?,?,?)}");
-
-        CStmt.registerOutParameter(4, OracleTypes.CURSOR);
-        CStmt.registerOutParameter(5, OracleTypes.VARCHAR);
-
-        CStmt.setString(1, toolName);
-        CStmt.setString(2, sProperty);
-        CStmt.setString(3, sValue);
-
-         // Now we are ready to call the stored procedure
-        boolean bExcuteOk = CStmt.execute();
-
-        //store the output in the resultset
-        rs = (ResultSet) CStmt.getObject(4);
-        String sRet = (String)CStmt.getString(5);
-        String s;
-        if(rs!=null)
+        Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
+        Connection sbr_db_conn = null;
+        sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+        if (sbr_db_conn == null)
+            m_servlet.ErrorLogin(m_classReq, m_classRes);
+        else
         {
-          //loop through the resultSet and add them to the bean
-          while(rs.next())
-          {
-            TOOL_OPTION_Bean TO_Bean = new TOOL_OPTION_Bean();
-            TO_Bean.setTOOL_OPTION_IDSEQ(rs.getString("TOOL_IDSEQ"));
-            TO_Bean.setTOOL_NAME(rs.getString("TOOL_NAME"));
-            TO_Bean.setPROPERTY(rs.getString("PROPERTY"));
-            TO_Bean.setVALUE(rs.getString("VALUE"));
-            TO_Bean.setLANGUAGE(rs.getString("UA_NAME"));   
-            vList.addElement(TO_Bean);  //add the bean to a vector
-          }  //END WHILE
-        }   //END IF
-      }
-    }
-    catch(Exception e)
-    {
-      //System.err.println("other problem in GetACService-getToolOptionData: " + e);
-      logger.fatal("ERROR - GetACService-getToolOptionData for other : " + e.toString(), e);
-    }
-    try
-    {
-      if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
-    }
-    catch(Exception ee)
-    {
-      //System.err.println("Problem closing in GetACService-getToolOptionData: " + ee);
-      logger.fatal("ERROR - GetACService-getToolOptionData for close : " + ee.toString(), ee);
-    }
-    return vList;
+            vList = getToolOptionData(sbr_db_conn, toolName, sProperty, sValue);
+            try
+            {
+                sbr_db_conn.close();
+            }
+            catch (SQLException ex)
+            {
+                logger.fatal(ex.toString());
+            }
+        }
+        return vList;
   }  //endGetACService-getToolOptionData
 
   private Hashtable getHashListFromAPI(String sAPI)
@@ -2118,4 +2140,23 @@ public class GetACService implements Serializable
     session.setAttribute("Persons", hPer);
   } //getPersonsList
 
+  public void getNVPConcepts(HttpSession session)
+  {
+    Vector<String> vList = new Vector<String>();
+    Vector vTypes = this.getToolOptionData("CURATION", "NVPCONCEPT.%", "");  // 
+    if (vTypes != null && vTypes.size() > 0)
+    {
+      for (int i=0; i<vTypes.size(); i++)
+      {
+        TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vTypes.elementAt(i);
+        if (tob != null)
+        {
+          String sValue = tob.getVALUE();
+          vList.addElement(sValue);
+        }
+      }
+    }
+    session.setAttribute("NVPConcepts", vList);    
+  }
+  
 }//close the class

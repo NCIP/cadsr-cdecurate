@@ -151,19 +151,19 @@
          }
          else if (sSelComp == "ParentConcept")
          {
-           var selIdx = opener.document.createVDForm.selContext.selectedIndex;
-           var conte_idseq = opener.document.createVDForm.selContext[selIdx].value;
-           if(conte_idseq == null) conte_idseq = "";
-           document.searchParmsForm.sConteIdseq.value = conte_idseq;
+          // var selIdx = opener.document.createVDForm.selContext.selectedIndex;
+          // var conte_idseq = opener.document.createVDForm.selContext[selIdx].value;
+          // if(conte_idseq == null) conte_idseq = "";
+          // document.searchParmsForm.sConteIdseq.value = conte_idseq;
            document.searchParmsForm.listSearchFor[0].value = "ParentConcept";
            document.searchParmsForm.listSearchFor[0].text = "Parent Concept";
          }
          else if (sSelComp == "ParentConceptVM")
          {
-           var selIdx = opener.document.createVDForm.selContext.selectedIndex;
-           var conte_idseq = opener.document.createVDForm.selContext[selIdx].value;
-           if(conte_idseq == null) conte_idseq = "";
-           document.searchParmsForm.sConteIdseq.value = conte_idseq;
+          // var selIdx = opener.document.createVDForm.selContext.selectedIndex;
+          // var conte_idseq = opener.document.createVDForm.selContext[selIdx].value;
+          // if(conte_idseq == null) conte_idseq = "";
+          // document.searchParmsForm.sConteIdseq.value = conte_idseq;
            document.searchParmsForm.listSearchFor[0].value = "ParentConceptVM";
            document.searchParmsForm.listSearchFor[0].text = "Value Meaning";
           // document.searchParmsForm.listSearchFor[0].selected = true;
@@ -243,6 +243,11 @@
           //  document.searchParmsForm.openToTree.value = opener.document.createVDForm.openToTree.value;
           // opener.document.createVDForm.openToTree.value = ""; // reset this
          }
+          else if (sSelComp == "VMConcept")
+         {
+           document.searchParmsForm.listSearchFor[0].value = "VMConcept";
+           document.searchParmsForm.listSearchFor[0].text = "Value Meaning";
+         }
       }
     }
   }
@@ -299,7 +304,7 @@
   function doSearchForCRF()
   {
     //refresh the page first time it opened
-    if (opener.document.createVDForm != null && opener.document.SearchActionForm != null && opener.document.SearchActionForm.isValidSearch.value == "false")
+    if (opener.document != null && opener.document.SearchActionForm != null && opener.document.SearchActionForm.isValidSearch.value == "false")
     {
       opener.document.SearchActionForm.isValidSearch.value = "true";
       if(opener && opener.document.SearchParmsForm != null)
@@ -329,7 +334,7 @@
             if (sSelComp == "PermissibleValue")
             {
               //seperate between crf search and other searches
-              if (opener.document.createVDForm.MenuAction != null && opener.document.createVDForm.MenuAction.value == "Questions")
+              if (opener.document.getElementById("MenuAction") != null && opener.document.getElementById("MenuAction").value == "Questions")
                 doSearchForCRF();
               else
                 openSearchPVForCreate();  //doSearchForChange(); //keep the cd selected and submit form to get initial search
@@ -348,14 +353,14 @@
           if ((sSelComp != null) && (sSelComp == "PermissibleValue")) //&& (opener.document.SearchActionForm.isValidSearch.value == "false"))
           {
             //seperate between crf search and other searches
-            if (opener.document.createVDForm.MenuAction != null && opener.document.createVDForm.MenuAction.value == "Questions")
+            if (opener.document.getElementById("MenuAction") != null && opener.document.getElementById("MenuAction").value == "Questions")
               doSearchForCRF();
             else 
               openSearchPVForCreate();   //keep the cd selected and do initial search 
               
             //var sIndex = opener.document.createVDForm.selConceptualDomain.selectedIndex;
-            var CDID = opener.document.createVDForm.selConceptualDomain[0].value;
-            var cdName =  opener.document.createVDForm.selConceptualDomain[0].text;
+            var CDID = opener.document.getElementById("selConceptualDomain")[0].value;
+            var cdName =  opener.document.getElementById("selConceptualDomain")[0].text;
             var cdContext =  opener.document.SearchActionForm.CDVDcontext.value;
             //only reset cd filter if different after the search 
             if ((opener.document.SearchActionForm.isValidSearch.value == "false") || (cdContext == "different"))
@@ -397,8 +402,8 @@
                 if (document.searchParmsForm.keyword != null)
                     document.searchParmsForm.keyword.value = "";
             }
-          } 
-        }
+          }
+       }
     }
   }
   
@@ -406,10 +411,10 @@
   function openSearchPVForCreate()
   {
       //refresh the page first time it opened
-      if (opener.document.createVDForm != null && opener.document.SearchActionForm != null && opener.document.SearchActionForm.isValidSearch.value == "false")
+      if (opener.document != null && opener.document.SearchActionForm != null && opener.document.SearchActionForm.isValidSearch.value == "false")
       {
         //get the selected conceptual domain from the vd page
-        var SelCD = opener.document.createVDForm.selConceptualDomain.options[0].value;
+        var SelCD = opener.document.getElementById("selConceptualDomain").options[0].value;
         if (SelCD != null)
           document.searchParmsForm.selCDID.value = SelCD;
 
@@ -491,7 +496,6 @@
             document.searchParmsForm.selCDID.value = SelCDid;
           opener.document.SearchActionForm.isValidSearch.value = "false";  //resubmit to get the context
         }  
-        
         doSearchForChange();  //submit the form
       }
   }

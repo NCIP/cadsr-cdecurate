@@ -1,4 +1,6 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PV_Bean.java,v 1.10 2006-08-29 17:36:54 hegdes Exp $
+// Copyright (c) 2006 ScenPro, Inc.
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PV_Bean.java,v 1.11 2006-10-27 14:54:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -117,9 +119,9 @@ public class PV_Bean implements Serializable
   private String VP_SUBMIT_ACTION;
   private EVS_Bean VM_CONCEPT;
   private EVS_Bean PARENT_CONCEPT;
-  
+  private VM_Bean PV_VM;
   private String PV_NCI_CC_TYPE;
-  private String PV_NCI_CC_VAL;
+  private String PV_CONCEPT_IDENTIFIER;
   private String PV_UMLS_CUI_VAL;
   private String PV_UMLS_CUI_TYPE;
   private String PV_TEMP_CUI_VAL;
@@ -128,6 +130,7 @@ public class PV_Bean implements Serializable
   private String PV_EVS_SOURCE;
   
   private String PV_VM_CONDR_IDSEQ;
+  private String PV_VIEW_TYPE;
 
 
   /**
@@ -151,9 +154,10 @@ public class PV_Bean implements Serializable
       this.setPV_VALUE(fromBean.getPV_VALUE());
       this.setPV_SHORT_MEANING(fromBean.getPV_SHORT_MEANING());
       this.setPV_MEANING_DESCRIPTION(fromBean.getPV_MEANING_DESCRIPTION());
-      EVS_Bean vmBean = fromBean.getVM_CONCEPT();
-      if (vmBean == null) vmBean = new EVS_Bean();
-      this.setVM_CONCEPT(vmBean);
+   //   EVS_Bean eBean = fromBean.getVM_CONCEPT();
+   //   if (eBean == null) eBean = new EVS_Bean();
+   //   this.setVM_CONCEPT(eBean);
+      this.setPV_VM(new VM_Bean().copyVMBean(fromBean.getPV_VM()));
       this.setPV_VALUE_ORIGIN(fromBean.getPV_VALUE_ORIGIN());
       this.setPV_BEGIN_DATE(fromBean.getPV_BEGIN_DATE());
       this.setPV_END_DATE(fromBean.getPV_END_DATE());
@@ -384,13 +388,13 @@ public class PV_Bean implements Serializable
       this.PV_NCI_CC_TYPE = s;
   }
   /**
-  * The setPV_NCI_CC_VAL method sets the PV_NCI_CC_VAL for this bean.
+  * The setPV_CONCEPT_IDENTIFIER method sets the PV_CONCEPT_IDENTIFIER for this bean.
   *
-  * @param s The PV_NCI_CC_VAL to set
+  * @param s The PV_CONCEPT_IDENTIFIER to set
   */
-  public void setPV_NCI_CC_VAL(String s)
+  public void setPV_CONCEPT_IDENTIFIER(String s)
   {
-      this.PV_NCI_CC_VAL = s;
+      this.PV_CONCEPT_IDENTIFIER = s;
   }
   /**
   * The setPV_UMLS_CUI_VAL method sets the PV_UMLS_CUI_VAL for this bean.
@@ -492,7 +496,7 @@ public class PV_Bean implements Serializable
   */
   public String getPV_VALUE()
   {
-      return this.PV_VALUE;
+      return (PV_VALUE == null) ? "" : this.PV_VALUE;
   }
   /**
   * The getPV_SHORT_MEANING method returns the PV_SHORT_MEANING for this bean.
@@ -519,7 +523,7 @@ public class PV_Bean implements Serializable
   */
   public String getPV_BEGIN_DATE()
   {
-      return this.PV_BEGIN_DATE;
+      return (PV_BEGIN_DATE == null) ? "" : this.PV_BEGIN_DATE;
   }
   /**
   * The getPV_MEANING_DESCRIPTION method returns the PV_MEANING_DESCRIPTION for this bean.
@@ -546,7 +550,7 @@ public class PV_Bean implements Serializable
   */
   public String getPV_VALUE_ORIGIN()
   {
-      return this.PV_VALUE_ORIGIN;
+      return (PV_VALUE_ORIGIN == null) ? "" :  this.PV_VALUE_ORIGIN;
   }
   /**
   * The getPV_LOW_VALUE_NUM method returns the PV_LOW_VALUE_NUM for this bean.
@@ -573,7 +577,7 @@ public class PV_Bean implements Serializable
   */
   public String getPV_END_DATE()
   {
-      return this.PV_END_DATE;
+      return (PV_END_DATE == null) ? "" :  this.PV_END_DATE;
   }
   /**
   * The getPV_CREATED_BY method returns the PV_CREATED_BY for this bean.
@@ -675,13 +679,13 @@ public class PV_Bean implements Serializable
       return this.PV_NCI_CC_TYPE;
   }
   /**
-  * The getPV_NCI_CC_VAL method returns the PV_NCI_CC_VAL for this bean.
+  * The getPV_CONCEPT_IDENTIFIER method returns the PV_CONCEPT_IDENTIFIER for this bean.
   *
-  * @return String The PV_NCI_CC_VAL
+  * @return String The PV_CONCEPT_IDENTIFIER
   */
-  public String getPV_NCI_CC_VAL()
+  public String getPV_CONCEPT_IDENTIFIER()
   {
-      return this.PV_NCI_CC_VAL;
+      return this.PV_CONCEPT_IDENTIFIER;
   }
   /**
   * The getPV_UMLS_CUI_VAL method returns the PV_UMLS_CUI_VAL for this bean.
@@ -746,6 +750,38 @@ public class PV_Bean implements Serializable
   public String getPV_VM_CONDR_IDSEQ()
   {
       return this.PV_VM_CONDR_IDSEQ;
+  }
+
+  /**
+   * @return Returns the pV_VM.
+   */
+  public VM_Bean getPV_VM()
+  {
+    return (PV_VM == null) ? new VM_Bean() : PV_VM;
+  }
+
+  /**
+   * @param pv_vm The pV_VM to set.
+   */
+  public void setPV_VM(VM_Bean pv_vm)
+  {
+    PV_VM = pv_vm;
+  }
+
+  /**
+   * @return Returns the pV_VIEW_TYPE.
+   */
+  public String getPV_VIEW_TYPE()
+  {
+    return (PV_VIEW_TYPE == null) ? "" : PV_VIEW_TYPE;
+  }
+
+  /**
+   * @param pv_view_type The pV_VIEW_TYPE to set.
+   */
+  public void setPV_VIEW_TYPE(String pv_view_type)
+  {
+    PV_VIEW_TYPE = pv_view_type;
   }
   
 

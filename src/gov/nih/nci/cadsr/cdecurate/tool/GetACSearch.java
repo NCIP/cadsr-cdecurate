@@ -1,7 +1,6 @@
-
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.10 2006-08-29 17:36:54 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.11 2006-10-27 14:54:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;     
@@ -491,7 +490,11 @@ public class GetACSearch implements Serializable
                   sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", dVersion, sCon, "", "", vAC);  //get the list of Conceptual Domains for origin search in
            }
            else if (sSearchAC.equals("PermissibleValue"))
-             doPVVMSearch("", sCDid, sCon, "", vAC);  //get the list of PVVM's
+           {
+             //doPVVMSearch("", sCDid, sCon, "", vAC);  //get the list of PVVM's
+             PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
+             vAC = pvser.searchPVAttributes("", sCDid, sCon, "");
+           }
           else if (sSearchAC.equals("ObjectClass"))
             do_caDSRSearch("", sContext, sStatus, "", vAC, "OC", sCon, "");
           else if (sSearchAC.equals("Property"))
@@ -523,7 +526,11 @@ public class GetACSearch implements Serializable
                 "", "", dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains for permissible value search in
           }
           else if (sSearchAC.equals("PermissibleValue"))
-             doPVVMSearch(sKeyword, sCDid, "", "", vAC);  //get the list of PVVM's
+          {
+             //doPVVMSearch(sKeyword, sCDid, "", "", vAC);  //get the list of PVVM's
+             PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
+             vAC = pvser.searchPVAttributes(sKeyword, sCDid, "", "");
+          }
           else if (sSearchAC.equals("ObjectClass"))
           {
             //sKeyword = filterName(sKeyword, "display");
@@ -1238,8 +1245,10 @@ public class GetACSearch implements Serializable
         }
         else if (sComponent.equals("ValueMeaning"))
         {
-          this.getVMSortedRows(req, res);          //sort the VMbean
-          this.getVMResult(req, res, vResult);
+          //this.getVMSortedRows(req, res);          //sort the VMbean
+          //this.getVMResult(req, res, vResult);
+          VMServlet vmSer = new VMServlet(req, res, m_servlet);
+          vmSer.readDataForSort();
         }
         else if (sComponent.equals("Questions"))
         {
@@ -1275,7 +1284,8 @@ public class GetACSearch implements Serializable
           this.getEVSSortedRows(req, res);          //sort the concept class
           evs.get_Result(req, res, vResult, "");
         }
-        session.setAttribute("results", vResult);
+        if (!sComponent.equals("ValueMeaning"))  //move this to vm object class
+          session.setAttribute("results", vResult);
       }
     }
     catch(Exception e)
@@ -4323,7 +4333,7 @@ public class GetACSearch implements Serializable
             sCUIString = evs.getEVSIdentifierString(rs.getString("condr_idseq"));
             if(sCUIString == null) sCUIString = "";
             sCUIString = m_util.removeNewLineChar(sCUIString);
-            OCBean.setNCI_CC_VAL(sCUIString);
+            OCBean.setCONCEPT_IDENTIFIER(sCUIString);
             
             vList.addElement(OCBean);    //add OC bean to vector
           }  //END WHILE
@@ -4364,22 +4374,22 @@ public class GetACSearch implements Serializable
   public Vector<EVS_Bean> do_ConceptSearch(String InString, String conIdseq, String ContName, 
       String ASLName, String conID, String decID, String vdID, Vector<EVS_Bean> vList)  // returns list of Concepts
   {
-    //capture the duration
-    java.util.Date exDate = new java.util.Date();          
-    //logger.info(m_servlet.getLogMessage(m_classReq, "do_ConceptSearch", "begin search", exDate, exDate));
     Connection sbr_db_conn = null;
     ResultSet rs = null;
     CallableStatement CStmt = null;
-    HttpSession session = (HttpSession)m_classReq.getSession();
-    EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
-    String menuAction = (String)session.getAttribute("MenuAction");
-    if (menuAction == null) menuAction = "";
-    if (eUser == null) eUser = new EVS_UserBean();          
-    boolean bVListExist = false;
-    //mark it if oc/prop/rep search was done earlier
-    if (vList != null && vList.size()>0) bVListExist = true;
     try
     {
+      //capture the duration
+      java.util.Date exDate = new java.util.Date();          
+      //logger.info(m_servlet.getLogMessage(m_classReq, "do_ConceptSearch", "begin search", exDate, exDate));
+      HttpSession session = (HttpSession)m_classReq.getSession();
+      EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
+      String menuAction = (String)session.getAttribute("MenuAction");
+      if (menuAction == null) menuAction = "";
+      if (eUser == null) eUser = new EVS_UserBean();          
+      boolean bVListExist = false;
+      //mark it if oc/prop/rep search was done earlier
+      if (vList != null && vList.size()>0) bVListExist = true;
       //Create a Callable Statement object.
       sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
       if (sbr_db_conn == null)
@@ -4435,8 +4445,10 @@ public class GetACSearch implements Serializable
           conBean.setCONTEXT_NAME(rs.getString("context"));
           conBean.setDEC_USING("");
           String sPref = m_util.removeNewLineChar(rs.getString("preferred_name"));
-          conBean.setNCI_CC_VAL(sPref);  //cui
+          conBean.setCONCEPT_IDENTIFIER(sPref);  //cui
           conBean.setNCI_CC_TYPE(rs.getString("evs_source"));
+          conBean.markNVPConcept(conBean, session);
+
           //make sure it is included only once by matching evsId and concept name only if oc/prop/rep search was done earlier.
           boolean isExist = false;
           if (bVListExist == true)
@@ -4444,13 +4456,13 @@ public class GetACSearch implements Serializable
             for (int j = 0; j < vList.size(); j++)
             {
               EVS_Bean exBean = (EVS_Bean)vList.elementAt(j);
-              String curEvsId = exBean.getNCI_CC_VAL();
+              String curEvsId = exBean.getCONCEPT_IDENTIFIER();
               String curLName = exBean.getLONG_NAME();
               //check if not null or empty
               if (curEvsId != null && !curEvsId.equals("") && curLName != null && !curLName.equals(""))
               {
                 //compare to the current one
-                String evsId = conBean.getNCI_CC_VAL();
+                String evsId = conBean.getCONCEPT_IDENTIFIER();
                 String longName = conBean.getLONG_NAME();
                 if (evsId != null && evsId.equals(curEvsId) && longName != null && longName.equals(curLName))
                   isExist = true;
@@ -4841,7 +4853,8 @@ public class GetACSearch implements Serializable
               }
               else
               {           
-                VDBean = this.getVDAttributes(VDBean, sAction, sMenuAction);           
+                VDBean = this.getVDAttributes(VDBean, sAction, sMenuAction);     
+                session.setAttribute("TabFocus", "VD");
                 // clone the bean to store it
                 VD_Bean clVDBean = new VD_Bean();
                 clVDBean = clVDBean.cloneVD_Bean(VDBean);          
@@ -5208,13 +5221,21 @@ public class GetACSearch implements Serializable
       acName = this.getCDContext(VDBean.getVD_CD_IDSEQ());
       if (acName !=null && !acName.equals(""))
          VDBean.setVD_CD_NAME(acName);
+      
+      //get pv and parent atttirbutes if not block edit
+      PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
+      if (!sAction.equalsIgnoreCase("BlockEdit"))
+        pvser.getPVAttributes(VDBean, sMenu);
+        
       //VDBean = doPVSearch(VDBean, "search");    //get the permissible values 
-      Integer pvCount = new Integer(0);
+/*      Integer pvCount = new Integer(0);
       if (!sAction.equalsIgnoreCase("BlockEdit"))
       {
         String pvAct = "Search";
-        if (sMenu.equals("NewVDTemplate")) pvAct = "NewUsing";         
-        pvCount = this.doPVACSearch(VDBean.getVD_VD_IDSEQ(), VDBean.getVD_LONG_NAME(), pvAct);
+        if (sMenu.equals("NewVDTemplate")) pvAct = "NewUsing"; 
+        PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
+        pvser.getPVAttributes(VDBean, pvAct);
+        //pvCount = this.doPVACSearch(VDBean.getVD_VD_IDSEQ(), VDBean.getVD_LONG_NAME(), pvAct);
         if (sMenu.equals("Questions"))
           this.getACQuestionValue();
       }
@@ -5232,9 +5253,10 @@ public class GetACSearch implements Serializable
         VDBean = m_servlet.doGetVDSystemName(m_classReq, VDBean, vParent);
         vParent = this.getNonEVSParent(vParent, VDBean, sMenu);
          
-        session.setAttribute("VDParentConcept", vParent);  
+        //session.setAttribute("VDParentConcept", vParent);  
+        VDBean.setReferenceConceptList(vParent);
       }
-      //get contact informatin
+*/      //get contact informatin
       // if (!sAction.equals("BlockEdit"))
       if (!sMenu.equals("NewVDTemplate") && !sAction.equals("Template"))
         VDBean.setAC_CONTACTS(this.getAC_Contacts(VDBean.getVD_VD_IDSEQ(), ""));        
@@ -5292,7 +5314,7 @@ public class GetACSearch implements Serializable
    * @return Vector
    * @throws java.lang.Exception
    */
-  public Vector getNonEVSParent(Vector vParent, VD_Bean vd, String menuAct) throws Exception
+  public Vector<EVS_Bean> getNonEVSParent(Vector<EVS_Bean> vParent, VD_Bean vd, String menuAct) throws Exception
   {
     //search the existing reference document 
     Vector vRef = this.doRefDocSearch(vd.getVD_VD_IDSEQ(), "VD REFERENCE", "open");
@@ -5314,9 +5336,9 @@ public class GetACSearch implements Serializable
               if (nBean.getEVS_DATABASE() != null && nBean.getEVS_DATABASE().equals("Non_EVS"))
               {
                 //reset rd id seq
-                if (RDBean.getDOC_TYPE_NAME().equals(nBean.getNCI_CC_VAL()) && RDBean.getDOCUMENT_NAME().equals(nBean.getLONG_NAME()))
+                if (RDBean.getDOC_TYPE_NAME().equals(nBean.getCONCEPT_IDENTIFIER()) && RDBean.getDOCUMENT_NAME().equals(nBean.getLONG_NAME()))
                 {
-                  nBean.setCON_IDSEQ(RDBean.getREF_DOC_IDSEQ());
+                  nBean.setIDSEQ(RDBean.getREF_DOC_IDSEQ());
                   vParent.setElementAt(nBean, j);
                 }
               }
@@ -5325,8 +5347,8 @@ public class GetACSearch implements Serializable
           else
           {
             EVS_Bean eBean = new EVS_Bean();
-            eBean.setCON_IDSEQ(RDBean.getREF_DOC_IDSEQ());
-            eBean.setNCI_CC_VAL(RDBean.getDOC_TYPE_NAME());
+            eBean.setIDSEQ(RDBean.getREF_DOC_IDSEQ());
+            eBean.setCONCEPT_IDENTIFIER(RDBean.getDOC_TYPE_NAME());
             eBean.setLONG_NAME(RDBean.getDOCUMENT_NAME());
             eBean.setPREFERRED_DEFINITION(RDBean.getDOCUMENT_TEXT());
             eBean.setEVS_DEF_SOURCE(RDBean.getDOCUMENT_URL());
@@ -5337,7 +5359,7 @@ public class GetACSearch implements Serializable
             if (menuAct == null || menuAct.equals("NewVDTemplate"))
             {
               eBean.setCON_AC_SUBMIT_ACTION("INS");
-              eBean.setCON_IDSEQ("");
+              eBean.setIDSEQ("");
             }
             vParent.addElement(eBean);
           }
@@ -7041,16 +7063,24 @@ public class GetACSearch implements Serializable
             
             //get vm concept attributes
             String sCondr = rs.getString("condr_idseq");
+            VM_Bean vm = new VM_Bean();
+            vm.setVM_SHORT_MEANING(PVBean.getPV_SHORT_MEANING());
+            vm.setVM_DESCRIPTION(PVBean.getPV_MEANING_DESCRIPTION());
+            vm.setVM_CONDR_IDSEQ(sCondr);
             EVS_Bean vmConcept = new EVS_Bean();
             vmConcept.setCONDR_IDSEQ(sCondr);            
             if (sCondr != null && !sCondr.equals(""))
             {
               GetACService getAC = new GetACService(m_classReq, m_classRes, m_servlet);
               Vector vConList = getAC.getAC_Concepts(sCondr, null, true);
-              if (vConList != null && vConList.size() > 0) 
+              if (vConList != null && vConList.size() > 0)
+              {
                 vmConcept = (EVS_Bean)vConList.elementAt(0);
+                vm.setVM_CONCEPT_LIST(vConList);
+              }
             }
-            PVBean.setVM_CONCEPT(vmConcept);
+         //   PVBean.setVM_CONCEPT(vmConcept);
+            PVBean.setPV_VM(vm);
             //get database attribute
             PVBean.setPV_EVS_DATABASE("caDSR");
             vList.addElement(PVBean);  //add the bean to a vector
@@ -7150,7 +7180,7 @@ public class GetACSearch implements Serializable
         evsDB = PVBean.getPV_EVS_DATABASE();
         umlsCUI = PVBean.getPV_UMLS_CUI_VAL();
         tempCUI = PVBean.getPV_TEMP_CUI_VAL();
-        ccode = PVBean.getPV_NCI_CC_VAL();
+        ccode = PVBean.getPV_CONCEPT_IDENTIFIER();
 
         if (vSelAttr.contains("Value")) vResult.addElement(PVBean.getPV_VALUE());
         if (vSelAttr.contains("Value Meaning")) vResult.addElement(PVBean.getPV_SHORT_MEANING());
@@ -7159,11 +7189,28 @@ public class GetACSearch implements Serializable
           vResult = this.addMultiRecordConDomain(PVBean.getPV_CONCEPTUAL_DOMAIN(), PVBean.getPV_SHORT_MEANING(), vResult);
         if (vSelAttr.contains("Effective Begin Date")) vResult.addElement(PVBean.getPV_BEGIN_DATE());
         if (vSelAttr.contains("Effective End Date")) vResult.addElement(PVBean.getPV_END_DATE());
-        EVS_Bean vmCon = PVBean.getVM_CONCEPT();
+/*        EVS_Bean vmCon = PVBean.getVM_CONCEPT();
         if (vmCon == null) vmCon = new EVS_Bean();
-        if (vSelAttr.contains("EVS Identifier")) vResult.addElement(vmCon.getNCI_CC_VAL());
+        if (vSelAttr.contains("EVS Identifier")) vResult.addElement(vmCon.getCONCEPT_IDENTIFIER());
         if (vSelAttr.contains("Description Source")) vResult.addElement(vmCon.getEVS_DEF_SOURCE());
         if (vSelAttr.contains("Vocabulary")) vResult.addElement(PVBean.getPV_EVS_DATABASE());
+*/      
+        VM_Bean vm = PVBean.getPV_VM();
+        Vector<EVS_Bean> vcon = vm.getVM_CONCEPT_LIST();
+        String conID = "", defsrc = "", vocab = "";
+        for (int j = 0; j<vcon.size(); j++)
+        {
+          EVS_Bean con = (EVS_Bean)vcon.elementAt(j);
+          if (!conID.equals("")) conID += ": ";
+          conID += con.getCONCEPT_IDENTIFIER();
+          if (!defsrc.equals("")) defsrc += ": ";
+          defsrc += con.getEVS_DEF_SOURCE();
+          if (!vocab.equals("")) vocab += ": ";
+          vocab += con.getEVS_DATABASE();          
+        }
+        if (vSelAttr.contains("EVS Identifier")) vResult.addElement(conID);
+        if (vSelAttr.contains("Description Source")) vResult.addElement(defsrc);
+        if (vSelAttr.contains("Vocabulary")) vResult.addElement(vocab);
       }
       session.setAttribute("SearchID", vSearchID);
       session.setAttribute("SearchName", vSearchName);
@@ -7181,6 +7228,37 @@ public class GetACSearch implements Serializable
     }
   }
 
+  private String getVMResult(Vector<String> vResult, Vector<String> vSel, PV_Bean pv, String curField)
+  {
+    VM_Bean vm = pv.getPV_VM();
+    Vector<EVS_Bean> vmCon = vm.getVM_CONCEPT_LIST();
+    String evsId = "", defSrc = "", vocab = "";
+    String fldValue = "";
+    for (int i =0; i<vmCon.size(); i++)
+    {
+      EVS_Bean eB = (EVS_Bean)vmCon.elementAt(i);
+      if (!evsId.equals("")) evsId += ", ";
+      evsId += eB.getCONCEPT_IDENTIFIER();
+      if (!defSrc.equals("")) defSrc += ", ";
+      defSrc += eB.getEVS_DEF_SOURCE();
+      if (!vocab.equals("")) vocab += ", ";
+      vocab += eB.getEVS_DATABASE();
+    }
+    if (curField.equals(""))
+    {
+      if (vSel.contains("EVS Identifier")) vResult.addElement(evsId);
+      if (vSel.contains("Description Source")) vResult.addElement(defSrc);
+      if (vSel.contains("Vocabulary")) vResult.addElement(vocab);
+    }
+    else
+    {
+      if (curField.equals("descSource"))
+        return defSrc;  //returnValue = vmCon.getEVS_DEF_SOURCE(); // curBean.getPV_EVS_SOURCE();
+      else if (curField.equals("umls") || curField.equals("Ident") || curField.equals("VMConcept"))
+        return evsId;  //returnValue = vmCon.getCONCEPT_IDENTIFIER();    //curBean.getPV_CONCEPT_IDENTIFIER();
+    }
+    return fldValue;
+  }
   /**
    * To get the value from the bean for the selected field, called from PVsortedRows.
    *
@@ -7194,8 +7272,8 @@ public class GetACSearch implements Serializable
     String returnValue = "";
     try
     {
-      EVS_Bean vmCon = curBean.getVM_CONCEPT();
-      if (vmCon == null) vmCon = new EVS_Bean();
+     // EVS_Bean vmCon = curBean.getVM_CONCEPT();
+     // if (vmCon == null) vmCon = new EVS_Bean();
       if (curField.equals("value"))
         returnValue = curBean.getPV_VALUE();
       else if (curField.equals("meaning"))
@@ -7204,10 +7282,10 @@ public class GetACSearch implements Serializable
         returnValue = curBean.getPV_MEANING_DESCRIPTION();
       else if (curField.equals("database"))
         returnValue = curBean.getPV_EVS_DATABASE();
-      else if (curField.equals("descSource"))
+ /*     else if (curField.equals("descSource"))
         returnValue = vmCon.getEVS_DEF_SOURCE(); // curBean.getPV_EVS_SOURCE();
       else if (curField.equals("umls") || curField.equals("Ident"))
-        returnValue = vmCon.getNCI_CC_VAL();    //curBean.getPV_NCI_CC_VAL();
+        returnValue = vmCon.getCONCEPT_IDENTIFIER();  */  //curBean.getPV_CONCEPT_IDENTIFIER();
       else if (curField.equals("ConDomain"))
         returnValue = curBean.getPV_CONCEPTUAL_DOMAIN();
       else if (curField.equals("BeginDate"))
@@ -7216,17 +7294,18 @@ public class GetACSearch implements Serializable
         returnValue = curBean.getPV_END_DATE();
       else if (curField.equals("ValidValue"))
         returnValue = curBean.getQUESTION_VALUE();
-      else if (curField.equals("VMConcept"))
+      else if (curField.equals("VMConcept") || curField.equals("descSource") || curField.equals("umls") || curField.equals("Ident"))
       {
-        EVS_Bean eBean = curBean.getVM_CONCEPT();
-        if (eBean != null)
-          returnValue = eBean.getNCI_CC_VAL();
+        return this.getVMResult(null, null, curBean, curField);
+        //EVS_Bean eBean = curBean.getVM_CONCEPT();
+        //if (eBean != null)
+          //returnValue = eBean.getCONCEPT_IDENTIFIER();
       }
       else if (curField.equals("ParConcept"))
       {
         EVS_Bean eBean = curBean.getPARENT_CONCEPT();
         if (eBean != null)
-          returnValue = eBean.getNCI_CC_VAL();
+          returnValue = eBean.getCONCEPT_IDENTIFIER();
       }
       else if (curField.equals("Origin"))
         returnValue = curBean.getPV_VALUE_ORIGIN();
@@ -7364,7 +7443,9 @@ public class GetACSearch implements Serializable
     try
     {
       HttpSession session = m_classReq.getSession();
-      Vector<PV_Bean> vSRows = (Vector)session.getAttribute("VDPVList");
+      //Vector<PV_Bean> vSRows = (Vector)session.getAttribute("VDPVList");
+      VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");
+      Vector<PV_Bean> vSRows = vd.getVD_PV_List();
       Vector<PV_Bean> vSortedRows = new Vector();
       boolean isSorted = false;
       if (sortField != null && !sortField.equals(""))
@@ -7408,7 +7489,9 @@ public class GetACSearch implements Serializable
             vSRows.insertElementAt(PVSortBean1, tempInd);
             vSortedRows.addElement(tempBean);     //add the temp bean to a vector
           }
-          session.setAttribute("VDPVList", vSortedRows);
+         // session.setAttribute("VDPVList", vSortedRows);
+          vd.setVD_PV_List(vSortedRows);
+          session.setAttribute("m_VD", vd);
         }
       }
     }
@@ -7740,7 +7823,8 @@ public class GetACSearch implements Serializable
        || sSearchFor.equals("ObjectClass") || sSearchFor.equals("Property")
        || sSearchFor.equals("RepTerm") || sSearchFor.equals("ParentConceptVM")
        || sSearchFor.equals("ObjectQualifier") || sSearchFor.equals("PropertyQualifier")
-       || sSearchFor.equals("RepQualifier")) && !actType.equals("doVocabChange"))
+       || sSearchFor.equals("RepQualifier") || sSearchFor.equals("VMConcept")) 
+       && !actType.equals("doVocabChange"))
           evs.get_Result(m_classReq, m_classRes, vRes, "");
      }
      return vRes;
@@ -7758,8 +7842,11 @@ public class GetACSearch implements Serializable
         //update the count of the current bean.
       HttpSession session = m_classReq.getSession();     //get the session
       boolean isNewVD = false;
-      //do the pvac search to get the names and count of the pvs for this vd 
-      Integer pvCount = this.doPVACSearch(DEBean.getDE_VD_IDSEQ(), DEBean.getDE_VD_NAME(), "Detail");
+      //do the pvac search to get the names and count of the pvs for this vd
+      VD_Bean vd = DEBean.getDE_VD_Bean();
+      Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
+      Integer pvCount = vdpvs.size();  // this.doPVACSearch(DEBean.getDE_VD_IDSEQ(), DEBean.getDE_VD_NAME(), "Detail");
+      //TODO - fix the pv count at refresh of de search results
       String pvValue = (String)m_classReq.getAttribute("pvValue");
 
       //compare the vd id from old to new if they are the same.
@@ -7811,637 +7898,661 @@ public class GetACSearch implements Serializable
    * @param res HttpServletResponse object.
    *
    */
-public void getACSearchForCreate(HttpServletRequest req, HttpServletResponse res,
-boolean isIntSearch)
-{
-  try
+  public void getACSearchForCreate(HttpServletRequest req, HttpServletResponse res, boolean isIntSearch)
   {
-    HttpSession session = req.getSession();     //get the session
-    Vector vAC = new Vector();
-    session.setAttribute("sortType", "longName");
-    SetACService setAC = new SetACService(m_servlet);
-    EVSSearch evs = new EVSSearch(req, res, m_servlet); 
-    String sSearchAC = (String)req.getParameter("listSearchFor");
-     if (sSearchAC == null)
-     {
-        sSearchAC = (String)session.getAttribute("searchAC");
-        if (sSearchAC == null)
-          logger.fatal("In GetACSearch-getKeywordResult : no Component is selected");
-     }
-     session.setAttribute("creSearchAC", sSearchAC);
-
-      //get the search in data
-     String sSearchIn = (String)req.getParameter("listSearchIn");
-     if (sSearchIn == null) sSearchIn = "longName";
-     req.setAttribute("creSearchIn", sSearchIn);  //keep the search in criteria
-     session.setAttribute("creSearchInBlocks", sSearchIn);  //keep the search in criteria
-
-     boolean isBlockSearch = false;
-     String dtsVocab = req.getParameter("listContextFilterVocab");
-     if (dtsVocab != null && !dtsVocab.equals("")) isBlockSearch = true;
-     if(dtsVocab == null) dtsVocab = "";  // "NCI_Thesaurus";
-//System.out.println(" dtsVocab " + dtsVocab);
-     session.setAttribute("dtsVocab", dtsVocab); 
-
-     String sSearchInEVS = (String)req.getParameter("listSearchInEVS");
-     if (sSearchInEVS == null) sSearchInEVS = "Synonym";
-     session.setAttribute("SearchInEVS", sSearchInEVS);
-     //System.out.println(sSearchIn + " search in " + sSearchInEVS);   
-     //filter by Retired Concepts
-	   String sRetired = (String)req.getParameter("rRetired");
-     session.setAttribute("creRetired", sRetired);   //store contextUse in the session
-	   if (sRetired == null) sRetired = "";
-     
-     String sMetaSource = (String)req.getParameter("listContextFilterSource");
-     if (sMetaSource == null) sMetaSource = "All Sources";
-     session.setAttribute("MetaSource", sMetaSource);
-     String sMetaLimit = (String)req.getParameter("listMetaLimit");
-     int intMetaLimit = 0;
-     if(sMetaLimit != null)
-     {
-      Integer iMetaLimit = new Integer(sMetaLimit);
-      intMetaLimit = iMetaLimit.intValue();
-      if(intMetaLimit < 100) intMetaLimit = 100;
-     }
-     else
-      intMetaLimit = 100;
-     
-     //do the keyword search for the selected component
-     String sKeyword = (String)req.getParameter("keyword");
-     if (sKeyword == null) sKeyword = "";
-     if (isIntSearch == true) sKeyword = "";  //make keyword empty if initial search for window open
-     session.setAttribute("creKeyword", sKeyword);   //keep the old criteria
-     UtilService util = new UtilService();
-     sKeyword = util.parsedStringSingleQuoteOracle(sKeyword);
-    // if(sSearchInEVS.equals("Code"))// search Meta by LOINC code
-   //   dtsVocab = "Metathesaurus";
-      
-     //call the method to set the attribute checked values if not the initial value
-     if (isIntSearch == false)
-        setAttributeValues(req, res, sSearchAC, "searchForCreate");
-
-     //filter by context; looks for ACs that uses multi select context and gets it from requests according to that
-     String sContext = "";
-    // if (sSearchAC.equals("RepTerm") || sSearchAC.equals("Property") || sSearchAC.equals("ObjectClass"))
-     if (isBlockSearch == true)
-     {
-       sContext = (String)req.getParameter("listContextFilter");
-       session.setAttribute("creContext", sContext);   //keep the old context criteria
-       session.setAttribute("creContextBlocks", sContext);
-       if (sContext == null || sContext.equals("AllContext")) sContext = "";       
-     }
-     else
-       sContext = this.getMultiReqValues(sSearchAC, "searchForCreate", "Context");      
-
-     //filter by contextUse
-	   String sContextUse = (String)req.getParameter("rContextUse");
-     session.setAttribute("creContextUse", sContextUse);   //store contextUse in the session
-	   if (sContextUse == null) sContextUse = "";
-          
-     //filter by version
-	   String sVersion = (String)req.getParameter("rVersion");
-     if (isIntSearch == true && sSearchAC.equals("ConceptualDomain")) sVersion = "Yes"; //"All";  //make it all
-     session.setAttribute("creVersion", sVersion);   //store version in the session
-     //get the version number if other
-     String txVersion = "";
-     if (sVersion != null && sVersion.equals("Other"))
-       txVersion = (String)req.getParameter("tVersion");
-     if (txVersion == null) txVersion = "";
-     session.setAttribute("creVersionNum", txVersion);   //store version in the session
-     double dVersion = 0;
-     //validate the version and display message if not valid
-     if (txVersion != null && !txVersion.equals(""))
-     {
-       String sValid = setAC.checkVersionDimension(txVersion);
-       if (sValid != null && !sValid.equals(""))
+    try
+    {
+      HttpSession session = req.getSession();     //get the session
+      Vector vAC = new Vector();
+      session.setAttribute("sortType", "longName");
+      SetACService setAC = new SetACService(m_servlet);
+      EVSSearch evs = new EVSSearch(req, res, m_servlet); 
+      String sSearchAC = (String)req.getParameter("listSearchFor");
+       if (sSearchAC == null)
        {
-         logger.fatal("not a good version ;" + sValid);
+          sSearchAC = (String)session.getAttribute("searchAC");
+          if (sSearchAC == null)
+            logger.fatal("In GetACSearch-getKeywordResult : no Component is selected");
+       }
+       session.setAttribute("creSearchAC", sSearchAC);
+  
+        //get the search in data
+       String sSearchIn = (String)req.getParameter("listSearchIn");
+       if (sSearchIn == null) sSearchIn = "longName";
+       req.setAttribute("creSearchIn", sSearchIn);  //keep the search in criteria
+       session.setAttribute("creSearchInBlocks", sSearchIn);  //keep the search in criteria
+  
+       boolean isBlockSearch = false;
+       String dtsVocab = req.getParameter("listContextFilterVocab");
+       if (dtsVocab != null && !dtsVocab.equals("")) isBlockSearch = true;
+       if(dtsVocab == null) dtsVocab = "";  // "NCI_Thesaurus";
+  //System.out.println(" dtsVocab " + dtsVocab);
+       session.setAttribute("dtsVocab", dtsVocab); 
+  
+       String sSearchInEVS = (String)req.getParameter("listSearchInEVS");
+       if (sSearchInEVS == null) sSearchInEVS = "Synonym";
+       session.setAttribute("SearchInEVS", sSearchInEVS);
+       //System.out.println(sSearchIn + " search in " + sSearchInEVS);   
+       //filter by Retired Concepts
+  	   String sRetired = (String)req.getParameter("rRetired");
+       session.setAttribute("creRetired", sRetired);   //store contextUse in the session
+  	   if (sRetired == null) sRetired = "";
+       
+       String sMetaSource = (String)req.getParameter("listContextFilterSource");
+       if (sMetaSource == null) sMetaSource = "All Sources";
+       session.setAttribute("MetaSource", sMetaSource);
+       String sMetaLimit = (String)req.getParameter("listMetaLimit");
+       int intMetaLimit = 0;
+       if(sMetaLimit != null)
+       {
+        Integer iMetaLimit = new Integer(sMetaLimit);
+        intMetaLimit = iMetaLimit.intValue();
+        if(intMetaLimit < 100) intMetaLimit = 100;
        }
        else
+        intMetaLimit = 100;
+       
+       //do the keyword search for the selected component
+       String sKeyword = (String)req.getParameter("keyword");
+       if (sKeyword == null) sKeyword = "";
+       if (isIntSearch == true) sKeyword = "";  //make keyword empty if initial search for window open
+       session.setAttribute("creKeyword", sKeyword);   //keep the old criteria
+       UtilService util = new UtilService();
+       sKeyword = util.parsedStringSingleQuoteOracle(sKeyword);
+      // if(sSearchInEVS.equals("Code"))// search Meta by LOINC code
+     //   dtsVocab = "Metathesaurus";
+        
+       //call the method to set the attribute checked values if not the initial value
+       if (isIntSearch == false)
+          setAttributeValues(req, res, sSearchAC, "searchForCreate");
+  
+       //filter by context; looks for ACs that uses multi select context and gets it from requests according to that
+       String sContext = "";
+      // if (sSearchAC.equals("RepTerm") || sSearchAC.equals("Property") || sSearchAC.equals("ObjectClass"))
+       if (isBlockSearch == true)
        {
-         Double DVersion = new Double(txVersion);
-         dVersion = DVersion.doubleValue();
-       }   
-     }
-     //make sVersion to empty if all or other
-     if (sVersion == null || sVersion.equals("All") || sVersion.equals("Other")) sVersion = "";
-
-      //filter by value domain type enumerated
-      String sVDType = "";
-	    String sVDTypeEnum = (String)req.getParameter("enumBox");
-      session.setAttribute("creVDTypeEnum", sVDTypeEnum);   //store VDType Enum in the session
-	    if (sVDTypeEnum != null) sVDType = "E";  
-      //filter by value domain type non enumerated
-	    String sVDTypeNonEnum = (String)req.getParameter("nonEnumBox");
-      session.setAttribute("creVDTypeNonEnum", sVDTypeNonEnum);   //store VDType Non Enum in the session
-	    if (sVDTypeNonEnum != null && !sVDTypeNonEnum.equals(""))
-      {
-          if (!sVDType.equals("")) sVDType = sVDType + ", ";
-          sVDType = sVDType + "N";        
-      }
-          
-      //filter by value domain type enumerated by reference
-	    String sVDTypeRef = (String)req.getParameter("refEnumBox");
-      session.setAttribute("creVDTypeRef", sVDTypeRef);   //store VDType Ref in the session
-	    if (sVDTypeRef != null && !sVDTypeRef.equals(""))
-      {
-          if (!sVDType.equals("")) sVDType = sVDType + ", ";
-          sVDType = sVDType + "R";        
-      }
-      sVDType = sVDType.trim();  //trim extra spaces if any
-      
-      String sCDid = ""; 
-      sCDid = (String)req.getParameter("listCDName");    //get selected cd
-      if(sCDid == null || sCDid.equals("All Domains")) sCDid = "";       
-      session.setAttribute("creSelectedCD", sCDid);
-
-     //to get a string from multiselect list
-     String sStatus = "";
-     if (isIntSearch == true && sSearchAC.equals("ConceptualDomain"))
-        session.setAttribute("creStatus", new Vector());  //make it all status for cd open
-     else
-        sStatus = getStatusValues(req, res, sSearchAC, "searchForCreate", isBlockSearch);
-	   if ((sStatus == null) || (sStatus.equals("AllStatus")))
-	       sStatus = "";
-     //store it in the session for block search
-     if (isBlockSearch && sStatus.equals("")) session.setAttribute("creStatusBlocks", "AllStatus");
-     else if (isBlockSearch) session.setAttribute("creStatusBlocks", sStatus);
-     
-     //filter by registration status
-	   String sRegStatus = (String)req.getParameter("listRegStatus");
-     session.setAttribute("creRegStatus", sRegStatus);   //store regstatus in the session
-	   if (sRegStatus == null || sRegStatus.equals("allReg")) sRegStatus = "";
-
-     //filter by derivation type
-     String sDerType = (String)req.getParameter("listDeriveType");
-     session.setAttribute("creDerType", sDerType);   //store Derivation Type in the session
-     if (sDerType == null || sDerType.equals("allDer")) sDerType = "";
-     
-     //filter by data type
-     String sDataType = (String)req.getParameter("listDataType");
-     session.setAttribute("creDataType", sDataType);   //store Data Type in the session
-     if (sDataType == null || sDataType.equals("allData")) sDataType = "";
-
-     //fitler by date created from date
-	   String sCreatedFrom = (String)req.getParameter("createdFrom");
-     if (isIntSearch == true && sSearchAC.equals("ConceptualDomain")) sCreatedFrom = "";  //make it empty
-     session.setAttribute("creCreatedFrom", sCreatedFrom);   //store date created From in the session
-	   if (sCreatedFrom == null) sCreatedFrom = "";
-
-     //fitler by date created To date
-	   String sCreatedTo = (String)req.getParameter("createdTo");
-     if (isIntSearch == true && sSearchAC.equals("ConceptualDomain")) sCreatedTo = "";  //make it empty
-     session.setAttribute("creCreatedTo", sCreatedTo);   //store date created To in the session
-	   if (sCreatedTo == null) sCreatedTo = "";
-
-     //fitler by date Modified from date
-	   String sModifiedFrom = (String)req.getParameter("modifiedFrom");
-     if (isIntSearch == true && sSearchAC.equals("ConceptualDomain")) sModifiedFrom = "";  //make it empty
-     session.setAttribute("creModifiedFrom", sModifiedFrom);   //store date Modified From in the session
-	   if (sModifiedFrom == null) sModifiedFrom = "";
-
-     //fitler by date Modified To date
-	   String sModifiedTo = (String)req.getParameter("modifiedTo");
-     if (isIntSearch == true && sSearchAC.equals("ConceptualDomain")) sModifiedTo = "";  //make it empty
-     session.setAttribute("creModifiedTo", sModifiedTo);   //store date Modified To in the session
-	   if (sModifiedTo == null) sModifiedTo = "";
-
-     //fitler by Modifier type
-	   String sModifier = (String)req.getParameter("modifier");
-     if (isIntSearch == true && sSearchAC.equals("ConceptualDomain")) sModifier = "";  //make it empty
-     session.setAttribute("creModifier", sModifier);   //store Modifier in the session
-	   if ((sModifier == null) || sModifier.equals("allUsers")) sModifier = "";
-
-     //fitler by Creator type
-	   String sCreator = (String)req.getParameter("creator");
-     if (isIntSearch == true && sSearchAC.equals("ConceptualDomain")) sCreator = "";  //make it empty
-     session.setAttribute("creCreator", sCreator);   //store Creator in the session
-	   if ((sCreator == null) || sCreator.equals("allUsers")) sCreator = "";
-     
-    // String sUISearchType = (String)session.getAttribute("UISearchType");
-     String sUISearchType = (String)req.getAttribute("UISearchType");
-     if (sUISearchType == null || sUISearchType.equals("nothing")) 
-      sUISearchType = "term";
-
-     // call the method to get the data from the database and to get the final result vector
-     Vector vResult = new Vector();
-     String sMinID = sKeyword;
-     if (sSearchAC.equals("DataElement"))
-     {
-        if (sSearchIn.equals("minID"))
+         sContext = (String)req.getParameter("listContextFilter");
+         session.setAttribute("creContext", sContext);   //keep the old context criteria
+         session.setAttribute("creContextBlocks", sContext);
+         if (sContext == null || sContext.equals("AllContext")) sContext = "";       
+       }
+       else
+         sContext = this.getMultiReqValues(sSearchAC, "searchForCreate", "Context");      
+  
+       //filter by contextUse
+  	   String sContextUse = (String)req.getParameter("rContextUse");
+       session.setAttribute("creContextUse", sContextUse);   //store contextUse in the session
+  	   if (sContextUse == null) sContextUse = "";
+            
+       //filter by version
+  	   String sVersion = (String)req.getParameter("rVersion");
+       if (isIntSearch == true && sSearchAC.equals("ConceptualDomain")) sVersion = "Yes"; //"All";  //make it all
+       session.setAttribute("creVersion", sVersion);   //store version in the session
+       //get the version number if other
+       String txVersion = "";
+       if (sVersion != null && sVersion.equals("Other"))
+         txVersion = (String)req.getParameter("tVersion");
+       if (txVersion == null) txVersion = "";
+       session.setAttribute("creVersionNum", txVersion);   //store version in the session
+       double dVersion = 0;
+       //validate the version and display message if not valid
+       if (txVersion != null && !txVersion.equals(""))
+       {
+         String sValid = setAC.checkVersionDimension(txVersion);
+         if (sValid != null && !sValid.equals(""))
+         {
+           logger.fatal("not a good version ;" + sValid);
+         }
+         else
+         {
+           Double DVersion = new Double(txVersion);
+           dVersion = DVersion.doubleValue();
+         }   
+       }
+       //make sVersion to empty if all or other
+       if (sVersion == null || sVersion.equals("All") || sVersion.equals("Other")) sVersion = "";
+  
+        //filter by value domain type enumerated
+        String sVDType = "";
+  	    String sVDTypeEnum = (String)req.getParameter("enumBox");
+        session.setAttribute("creVDTypeEnum", sVDTypeEnum);   //store VDType Enum in the session
+  	    if (sVDTypeEnum != null) sVDType = "E";  
+        //filter by value domain type non enumerated
+  	    String sVDTypeNonEnum = (String)req.getParameter("nonEnumBox");
+        session.setAttribute("creVDTypeNonEnum", sVDTypeNonEnum);   //store VDType Non Enum in the session
+  	    if (sVDTypeNonEnum != null && !sVDTypeNonEnum.equals(""))
         {
-           doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
-                sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
-                "", "", sMinID, "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements
+            if (!sVDType.equals("")) sVDType = sVDType + ", ";
+            sVDType = sVDType + "N";        
         }
-        else if (sSearchIn.equals("histID"))
+            
+        //filter by value domain type enumerated by reference
+  	    String sVDTypeRef = (String)req.getParameter("refEnumBox");
+        session.setAttribute("creVDTypeRef", sVDTypeRef);   //store VDType Ref in the session
+  	    if (sVDTypeRef != null && !sVDTypeRef.equals(""))
         {
-           String sHistID = sKeyword;
-           doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
-                sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier,
-                "", "", "", sHistID, "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements
+            if (!sVDType.equals("")) sVDType = sVDType + ", ";
+            sVDType = sVDType + "R";        
         }
-        //search in by doc text
-        else if (sSearchIn.equals("docText"))
-        {
-           String sDocs[] = req.getParameterValues("listRDType");
-           String sDocTypes = "ALL";
-           if (sDocs != null && sDocs.length > 0)
-              sDocTypes = this.getDocTypeValues(sDocs, "searchForCreate");
-         
-           String sDocText = sKeyword;
-         //  if (sDocText == null || sDocText.equals(""))
-         //     sDocText = "*";
-         //  if ((sDocText != "") && sSearchAC.equals("DataElement"))
-           if (sSearchAC.equals("DataElement"))
-           {
+        sVDType = sVDType.trim();  //trim extra spaces if any
+        
+        String sCDid = ""; 
+        sCDid = (String)req.getParameter("listCDName");    //get selected cd
+        if(sCDid == null || sCDid.equals("All Domains")) sCDid = "";       
+        session.setAttribute("creSelectedCD", sCDid);
+  
+       //to get a string from multiselect list
+       String sStatus = "";
+       if (isIntSearch == true && sSearchAC.equals("ConceptualDomain"))
+          session.setAttribute("creStatus", new Vector());  //make it all status for cd open
+       else
+          sStatus = getStatusValues(req, res, sSearchAC, "searchForCreate", isBlockSearch);
+  	   if ((sStatus == null) || (sStatus.equals("AllStatus")))
+  	       sStatus = "";
+       //store it in the session for block search
+       if (isBlockSearch && sStatus.equals("")) session.setAttribute("creStatusBlocks", "AllStatus");
+       else if (isBlockSearch) session.setAttribute("creStatusBlocks", sStatus);
+       
+       //filter by registration status
+  	   String sRegStatus = (String)req.getParameter("listRegStatus");
+       session.setAttribute("creRegStatus", sRegStatus);   //store regstatus in the session
+  	   if (sRegStatus == null || sRegStatus.equals("allReg")) sRegStatus = "";
+  
+       //filter by derivation type
+       String sDerType = (String)req.getParameter("listDeriveType");
+       session.setAttribute("creDerType", sDerType);   //store Derivation Type in the session
+       if (sDerType == null || sDerType.equals("allDer")) sDerType = "";
+       
+       //filter by data type
+       String sDataType = (String)req.getParameter("listDataType");
+       session.setAttribute("creDataType", sDataType);   //store Data Type in the session
+       if (sDataType == null || sDataType.equals("allData")) sDataType = "";
+  
+       //fitler by date created from date
+  	   String sCreatedFrom = (String)req.getParameter("createdFrom");
+       if (isIntSearch == true && sSearchAC.equals("ConceptualDomain")) sCreatedFrom = "";  //make it empty
+       session.setAttribute("creCreatedFrom", sCreatedFrom);   //store date created From in the session
+  	   if (sCreatedFrom == null) sCreatedFrom = "";
+  
+       //fitler by date created To date
+  	   String sCreatedTo = (String)req.getParameter("createdTo");
+       if (isIntSearch == true && sSearchAC.equals("ConceptualDomain")) sCreatedTo = "";  //make it empty
+       session.setAttribute("creCreatedTo", sCreatedTo);   //store date created To in the session
+  	   if (sCreatedTo == null) sCreatedTo = "";
+  
+       //fitler by date Modified from date
+  	   String sModifiedFrom = (String)req.getParameter("modifiedFrom");
+       if (isIntSearch == true && sSearchAC.equals("ConceptualDomain")) sModifiedFrom = "";  //make it empty
+       session.setAttribute("creModifiedFrom", sModifiedFrom);   //store date Modified From in the session
+  	   if (sModifiedFrom == null) sModifiedFrom = "";
+  
+       //fitler by date Modified To date
+  	   String sModifiedTo = (String)req.getParameter("modifiedTo");
+       if (isIntSearch == true && sSearchAC.equals("ConceptualDomain")) sModifiedTo = "";  //make it empty
+       session.setAttribute("creModifiedTo", sModifiedTo);   //store date Modified To in the session
+  	   if (sModifiedTo == null) sModifiedTo = "";
+  
+       //fitler by Modifier type
+  	   String sModifier = (String)req.getParameter("modifier");
+       if (isIntSearch == true && sSearchAC.equals("ConceptualDomain")) sModifier = "";  //make it empty
+       session.setAttribute("creModifier", sModifier);   //store Modifier in the session
+  	   if ((sModifier == null) || sModifier.equals("allUsers")) sModifier = "";
+  
+       //fitler by Creator type
+  	   String sCreator = (String)req.getParameter("creator");
+       if (isIntSearch == true && sSearchAC.equals("ConceptualDomain")) sCreator = "";  //make it empty
+       session.setAttribute("creCreator", sCreator);   //store Creator in the session
+  	   if ((sCreator == null) || sCreator.equals("allUsers")) sCreator = "";
+       
+      // String sUISearchType = (String)session.getAttribute("UISearchType");
+       String sUISearchType = (String)req.getAttribute("UISearchType");
+       if (sUISearchType == null || sUISearchType.equals("nothing")) 
+        sUISearchType = "term";
+  
+       // call the method to get the data from the database and to get the final result vector
+       Vector vResult = new Vector();
+       String sMinID = sKeyword;
+       if (sSearchAC.equals("DataElement"))
+       {
+          if (sSearchIn.equals("minID"))
+          {
              doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                   sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
-                  sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);   //get the list of Data Elements for docText searchin
-           }
-        }
-        //search in by names adn doc text long name and historic short cde name
-        else if (sSearchIn.equals("NamesAndDocText"))
-        {
-           String sDocTypes = "Preferred Question Text, HISTORIC SHORT CDE NAME";         
-           String sDocText = sKeyword;
-         //  if (sDocText == null || sDocText.equals(""))
-         //     sDocText = "*";
-         //  if ((sDocText != "") && sSearchAC.equals("DataElement"))
-           if (sSearchAC.equals("DataElement"))
-           {
+                  "", "", sMinID, "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements
+          }
+          else if (sSearchIn.equals("histID"))
+          {
+             String sHistID = sKeyword;
+             doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
+                  sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier,
+                  "", "", "", sHistID, "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements
+          }
+          //search in by doc text
+          else if (sSearchIn.equals("docText"))
+          {
+             String sDocs[] = req.getParameterValues("listRDType");
+             String sDocTypes = "ALL";
+             if (sDocs != null && sDocs.length > 0)
+                sDocTypes = this.getDocTypeValues(sDocs, "searchForCreate");
+           
+             String sDocText = sKeyword;
+           //  if (sDocText == null || sDocText.equals(""))
+           //     sDocText = "*";
+           //  if ((sDocText != "") && sSearchAC.equals("DataElement"))
+             if (sSearchAC.equals("DataElement"))
+             {
+               doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
+                    sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
+                    sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);   //get the list of Data Elements for docText searchin
+             }
+          }
+          //search in by names adn doc text long name and historic short cde name
+          else if (sSearchIn.equals("NamesAndDocText"))
+          {
+             String sDocTypes = "Preferred Question Text, HISTORIC SHORT CDE NAME";         
+             String sDocText = sKeyword;
+           //  if (sDocText == null || sDocText.equals(""))
+           //     sDocText = "*";
+           //  if ((sDocText != "") && sSearchAC.equals("DataElement"))
+             if (sSearchAC.equals("DataElement"))
+             {
+               doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
+                    sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
+                    sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);   //get the list of Data Elements for Names and docText searchin
+             }
+          }
+          //search in for origin
+          else if (sSearchIn.equals("origin"))
+          {
+             String sOrigin = sKeyword;
+             doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
+                  sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier,
+                  "", "", "", "", "", sOrigin, "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements
+          }
+          //search in by permissible value
+          else if (sSearchIn.equals("permValue"))
+          {
+             String permValue = sKeyword;
+             doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
+                    sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
+                    "", "", "", "", permValue, "", "", "", "", "", "", "", "", "", "", sDerType, vAC); //get the list of Data Elements for permissible value search in
+          }       
+          //search in by concept name/identifier
+          else if (sSearchIn.equals("concept"))
+          {
+             String sCon = sKeyword;
+             doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
+                    sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
+                    "", "", "", "", "", "", "", "", "", "", "", "", "", "", sCon, sDerType, vAC); //get the list of Data Elements for permissible value search in
+          }       
+          else
+          {
              doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
                   sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
-                  sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);   //get the list of Data Elements for Names and docText searchin
-           }
-        }
-        //search in for origin
-        else if (sSearchIn.equals("origin"))
-        {
-           String sOrigin = sKeyword;
-           doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
-                sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier,
-                "", "", "", "", "", sOrigin, "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements
-        }
-        //search in by permissible value
-        else if (sSearchIn.equals("permValue"))
-        {
-           String permValue = sKeyword;
-           doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
-                  sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
-                  "", "", "", "", permValue, "", "", "", "", "", "", "", "", "", "", sDerType, vAC); //get the list of Data Elements for permissible value search in
-        }       
-        //search in by concept name/identifier
-        else if (sSearchIn.equals("concept"))
-        {
-           String sCon = sKeyword;
-           doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
-                  sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
-                  "", "", "", "", "", "", "", "", "", "", "", "", "", "", sCon, sDerType, vAC); //get the list of Data Elements for permissible value search in
-        }       
-        else
-        {
-           doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus, 
-                sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, 
-                "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements
-        }
-        session.setAttribute("vACSearch", vAC);
-        getDEResult(req, res, vResult, "");
-     }
-     else if (sSearchAC.equals("DataElementConcept"))
-     {
-        if (sSearchIn.equals("minID"))
-        {
-           doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
-                sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID, "", "", "", 
-                dVersion, sCDid, "", "", "", "", vAC);  //get the list of Data Element Concepts
-        }
-        else if (sSearchIn.equals("origin"))
-        {
-           String sOrigin = sKeyword;
-           doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
-                sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", sOrigin, 
-                dVersion, sCDid, "", "", "", "", vAC);  //get the list of Data Element Concepts
-        }        
-        else if (sSearchIn.equals("concept"))
-        {
-           String sCon = sKeyword;
-           doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
-               sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", "", 
-               dVersion, sCDid, "", "", "", sCon, vAC);  //get the list of Data Element Concepts
-        }       
-        else
-        {
-           doDECSearch("", sKeyword, "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
-                sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", "", dVersion, 
-                sCDid, "", "", "", "", vAC);  //get the list of Data Element Concepts
-        }        
-
-        session.setAttribute("vACSearch", vAC);
-        getDECResult(req, res, vResult, "");
-     }
-     else if (sSearchAC.equals("ValueDomain"))
-     {
-        if (sSearchIn.equals("minID"))
-        {
-           doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
-                sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID,  
-                "", "", dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains
-        }
-        else if (sSearchIn.equals("permValue"))
-        {
-           String sPermValue = sKeyword;
-           doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
-                sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", 
-                sPermValue, "", dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains
-        }        
-        else if (sSearchIn.equals("origin"))
-        {
-           String sOrigin = sKeyword;
-           doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
-                sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",  "", 
-                sOrigin, dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains
-        }        
-        else if (sSearchIn.equals("concept"))
-        {
-           String sCon = sKeyword;
-           doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
-               sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",  "", 
-               "", dVersion, sCDid, "", "", "", "", sCon, sDataType, vAC);  //get the list of Value Domains
-        }       
-        else
-        {
-           doVDSearch("", sKeyword, "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
-                sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",  
-                "", "", dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains
-        }
-
-        session.setAttribute("vACSearch", vAC);
-        getVDResult(req, res, vResult, "");
-     }
-     else if (sSearchAC.equals("ConceptualDomain"))
-     {
-        //search only if not the first time or if the first time and not all contexts
-        if (isIntSearch == false || (isIntSearch == true && !sContext.equals("")))
-        {
-          if (sSearchIn.equals("minID"))    //public id   
+                  "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);  //get the list of Data Elements
+          }
+          session.setAttribute("vACSearch", vAC);
+          getDEResult(req, res, vResult, "");
+       }
+       else if (sSearchAC.equals("DataElementConcept"))
+       {
+          if (sSearchIn.equals("minID"))
           {
-             doCDSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
-                  sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID, "", dVersion, "", "", "", vAC);  //get the list of Conceptual Domains
+             doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
+                  sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID, "", "", "", 
+                  dVersion, sCDid, "", "", "", "", vAC);  //get the list of Data Element Concepts
           }
           else if (sSearchIn.equals("origin"))
           {
              String sOrigin = sKeyword;
-             doCDSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
-                  sModifiedFrom, sModifiedTo, sCreator, sModifier, "", sOrigin, dVersion, "", "", "", vAC);  //get the list of Conceptual Domains
+             doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
+                  sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", sOrigin, 
+                  dVersion, sCDid, "", "", "", "", vAC);  //get the list of Data Element Concepts
           }        
+          else if (sSearchIn.equals("concept"))
+          {
+             String sCon = sKeyword;
+             doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
+                 sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", "", 
+                 dVersion, sCDid, "", "", "", sCon, vAC);  //get the list of Data Element Concepts
+          }       
           else
           {
-             doCDSearch("", sKeyword, "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
-                  sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", dVersion, "", "", "", vAC);  //get the list of Conceptual Domains
-          }
+             doDECSearch("", sKeyword, "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
+                  sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", "", dVersion, 
+                  sCDid, "", "", "", "", vAC);  //get the list of Data Element Concepts
+          }        
+  
           session.setAttribute("vACSearch", vAC);
-          getCDResult(req, res, vResult, "");          
-        }        
-     }
-     else if (sSearchAC.equals("PermissibleValue"))
-     {
-         //store the CRFValue id in the session
-        String crfValueID = req.getParameter("QCValueIDseq");
-        String crfValueName = req.getParameter("QCValueName");
-       
-        if (crfValueID != null && !crfValueID.equals(""))
-        {
-           session.setAttribute("selCRFValueID", crfValueID);
-           session.setAttribute("selQCValueName", crfValueName);
-        } 
-        doPVVMSearch(sKeyword, sStatus, "", "", vAC);
-        getPVVMResult(req, res, vResult, "");
+          getDECResult(req, res, vResult, "");
+       }
+       else if (sSearchAC.equals("ValueDomain"))
+       {
+          if (sSearchIn.equals("minID"))
+          {
+             doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
+                  sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID,  
+                  "", "", dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains
+          }
+          else if (sSearchIn.equals("permValue"))
+          {
+             String sPermValue = sKeyword;
+             doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
+                  sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", 
+                  sPermValue, "", dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains
+          }        
+          else if (sSearchIn.equals("origin"))
+          {
+             String sOrigin = sKeyword;
+             doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
+                  sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",  "", 
+                  sOrigin, dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains
+          }        
+          else if (sSearchIn.equals("concept"))
+          {
+             String sCon = sKeyword;
+             doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
+                 sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",  "", 
+                 "", dVersion, sCDid, "", "", "", "", sCon, sDataType, vAC);  //get the list of Value Domains
+          }       
+          else
+          {
+             doVDSearch("", sKeyword, "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, 
+                  sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",  
+                  "", "", dVersion, sCDid, "", "", "", "", "", sDataType, vAC);  //get the list of Value Domains
+          }
+  
+          session.setAttribute("vACSearch", vAC);
+          getVDResult(req, res, vResult, "");
+       }
+       else if (sSearchAC.equals("ConceptualDomain"))
+       {
+          //search only if not the first time or if the first time and not all contexts
+          if (isIntSearch == false || (isIntSearch == true && !sContext.equals("")))
+          {
+            if (sSearchIn.equals("minID"))    //public id   
+            {
+               doCDSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
+                    sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID, "", dVersion, "", "", "", vAC);  //get the list of Conceptual Domains
+            }
+            else if (sSearchIn.equals("origin"))
+            {
+               String sOrigin = sKeyword;
+               doCDSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
+                    sModifiedFrom, sModifiedTo, sCreator, sModifier, "", sOrigin, dVersion, "", "", "", vAC);  //get the list of Conceptual Domains
+            }        
+            else
+            {
+               doCDSearch("", sKeyword, "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, 
+                    sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", dVersion, "", "", "", vAC);  //get the list of Conceptual Domains
+            }
+            session.setAttribute("vACSearch", vAC);
+            getCDResult(req, res, vResult, "");          
+          }        
+       }
+       else if (sSearchAC.equals("PermissibleValue"))
+       {
+           //store the CRFValue id in the session
+          String crfValueID = req.getParameter("QCValueIDseq");
+          String crfValueName = req.getParameter("QCValueName");
          
-        if (isIntSearch == false)
-        {
-           //evs.do_EVSSearch(sKeyword, vAC, "NCI_Thesaurus", "Synonym", "All Sources",
-          // 100, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
-          //**************why is this needed******************
-           vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
-           evs.get_Result(req, res, vResult, "DEF");
+          if (crfValueID != null && !crfValueID.equals(""))
+          {
+             session.setAttribute("selCRFValueID", crfValueID);
+             session.setAttribute("selQCValueName", crfValueName);
+          } 
+         // doPVVMSearch(sKeyword, sStatus, "", "", vAC);
+         // getPVVMResult(req, res, vResult, "");
+          PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
+          vAC = pvser.searchPVAttributes(sKeyword, sStatus, "", "");
+           
+          if (isIntSearch == false)
+          {
+             //evs.do_EVSSearch(sKeyword, vAC, "NCI_Thesaurus", "Synonym", "All Sources",
+            // 100, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
+            //**************why is this needed******************
+             vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
+             evs.get_Result(req, res, vResult, "DEF");
+          }
+  
+          session.setAttribute("vACSearch", vAC);
+          session.setAttribute("vPVVMResult", vAC);
+          getPVVMResult(req, res, vResult, "");
         }
-
-        session.setAttribute("vACSearch", vAC);
-        session.setAttribute("vPVVMResult", vAC);
-        getPVVMResult(req, res, vResult, "");
-      }
-      else if (sSearchAC.equals("ValueMeaning"))
-      {
-        this.doVMSearch(sKeyword, sCDid, vAC);
-        session.setAttribute("vACSearch", vAC);
-        this.getVMResult(req, res, vResult);
-      }
-      else if (sSearchAC.equals("EVSValueMeaning"))
-      {
-        //first do the concept class search
-        if (sSearchIn.equals("publicID"))
-          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
-        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
-          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
-        //now the evs search
-       // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-       //   intMetaLimit, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
-        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string
-        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
-        session.setAttribute("vACSearch", vAC);
-        if(vAC != null)
-          session.setAttribute("vEVSValueMeaning", vAC);
-        evs.get_Result(req, res, vResult, "");
-      }
-       else if (sSearchAC.equals("CreateVM_EVSValueMeaning"))
-      {
-        //first do the concept class search
-        if (sSearchIn.equals("publicID"))
-          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
-        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
-          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
-        //now the evs search
-        //evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-        //  intMetaLimit, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
-        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
-        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
-        session.setAttribute("vACSearch", vAC);
-        if(vAC != null)
-          session.setAttribute("vCreateVM_EVSValueMeaning", vAC);
-        evs.get_Result(req, res, vResult, "");
-      }
-       else if (sSearchAC.equals("ParentConcept"))
-      {
-        String sConteIdseq = (String)req.getParameter("sConteIdseq");
-        if (sConteIdseq == null) sConteIdseq = "";
-       // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-       // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
-        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
-        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
-        session.setAttribute("vACSearch", vAC);
-        if(vAC != null)
-          session.setAttribute("vParentConcept", vAC);
-        evs.get_Result(req, res, vResult, "");
-      }
-       else if (sSearchAC.equals("ParentConceptVM"))
-      {
-        String sConteIdseq = (String)req.getParameter("sConteIdseq");
-        if (sConteIdseq == null) sConteIdseq = "";
-       // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-       // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
-        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
-        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, false, -1, "");
-        session.setAttribute("vACSearch", vAC);
-        if(vAC != null)
-          session.setAttribute("vParentConceptVM", vAC);
-        evs.get_Result(req, res, vResult, "");
-      }
-      else if (sSearchAC.equals("ObjectClass"))
-      {
-        String sConteIdseq = (String)req.getParameter("sConteIdseq");
-        if (sConteIdseq == null) sConteIdseq = "";
-        if (sSearchIn.equals("publicID"))
+        else if (sSearchAC.equals("ValueMeaning"))
         {
-          do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "OC", "", ""); 
-          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
+         // this.doVMSearch(sKeyword, sCDid, vAC);
+         // session.setAttribute("vACSearch", vAC);
+         // this.getVMResult(req, res, vResult);
+          VMServlet vmSer = new VMServlet(req, res, m_servlet);
+          vmSer.readDataForSearch();
         }
-        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
+        else if (sSearchAC.equals("EVSValueMeaning") || sSearchAC.equals("VMConcept"))
         {
-          do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "OC", "", "");
-          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
+          //first do the concept class search
+          if (sSearchIn.equals("publicID"))
+            vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
+          else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
+            vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
+          //now the evs search
+         // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+         //   intMetaLimit, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
+          sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string
+          vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
+          //make sure that name value pair is not allowed for primary concepts
+          this.markNVPForPrimaryConcept(vAC);
+          //store it in the session
+          session.setAttribute("vACSearch", vAC);
+          //if(vAC != null)
+            //session.setAttribute("vEVSValueMeaning", vAC);
+          evs.get_Result(req, res, vResult, "");
         }
-        // To search Synonym in EVS, need to filter
-    /*    if ((dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
-        && !sSearchIn.equals("publicID"))
+         else if (sSearchAC.equals("CreateVM_EVSValueMeaning"))
+        {
+          //first do the concept class search
+          if (sSearchIn.equals("publicID"))
+            vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
+          else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
+            vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
+          //now the evs search
+          //evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+          //  intMetaLimit, sUISearchType, sRetired, "", -1); // search both Thesaurus and Metathesaurus
+          sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
+          vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
+          session.setAttribute("vACSearch", vAC);
+          if(vAC != null)
+            session.setAttribute("vCreateVM_EVSValueMeaning", vAC);
+          evs.get_Result(req, res, vResult, "");
+        }
+         else if (sSearchAC.equals("ParentConcept"))
+        {
+          String sConteIdseq = (String)req.getParameter("sConteIdseq");
+          if (sConteIdseq == null) sConteIdseq = "";
+         // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+         // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+          sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
+          vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
+          session.setAttribute("vACSearch", vAC);
+          if(vAC != null)
+            session.setAttribute("vParentConcept", vAC);
+          evs.get_Result(req, res, vResult, "");
+        }
+         else if (sSearchAC.equals("ParentConceptVM"))
+        {
+          String sConteIdseq = (String)req.getParameter("sConteIdseq");
+          if (sConteIdseq == null) sConteIdseq = "";
+         // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+         // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+          sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
+          vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, false, -1, "");
+          session.setAttribute("vACSearch", vAC);
+          if(vAC != null)
+            session.setAttribute("vParentConceptVM", vAC);
+          evs.get_Result(req, res, vResult, "");
+        }
+        else if (sSearchAC.equals("ObjectClass"))
+        {
+          String sConteIdseq = (String)req.getParameter("sConteIdseq");
+          if (sConteIdseq == null) sConteIdseq = "";
+          if (sSearchIn.equals("publicID"))
+          {
+            do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "OC", "", ""); 
+            vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
+          }
+          else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
+          {
+            do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "OC", "", "");
+            vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
+          }
+          // To search Synonym in EVS, need to filter
+      /*    if ((dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
+          && !sSearchIn.equals("publicID"))
+              sKeyword = filterName(sKeyword, "display"); */
+  
+        //  evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+        //        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+          sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
+          vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
+          session.setAttribute("vACSearch", vAC);
+          evs.get_Result(req, res, vResult, "");
+       }
+       else if (sSearchAC.equals("Property"))
+       {
+          String sConteIdseq = (String)req.getParameter("sConteIdseq");
+          if (sConteIdseq == null) sConteIdseq = "";
+          if (sSearchIn.equals("publicID"))
+          {
+            do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "PROP", "", "");
+            vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
+          }
+          else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
+          {
+            do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "PROP", "", "");
+            vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
+          }
+          //To search synonym you need to filter
+       //   if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
+        //    sKeyword = filterName(sKeyword, "display");
+         // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource, 
+         //     intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+          sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
+          vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
+          session.setAttribute("vACSearch", vAC);
+          evs.get_Result(req, res, vResult, "");
+       }
+       else if (sSearchAC.equals("RepTerm"))
+       {
+          String sConteIdseq = (String)req.getParameter("sConteIdseq");
+          if (sConteIdseq == null) sConteIdseq = "";
+          if (sSearchIn.equals("publicID"))
+          {
+            do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "REP", "", ""); 
+            vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
+          }
+          else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
+          {
+            do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "REP", "", "");
+            vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
+          }
+          // To search Synonym in EVS, need to filter
+       /*   if((dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
+          && !sSearchIn.equals("publicID"))
+              sKeyword = filterName(sKeyword, "display"); 
+          //To search synonym you need to filter
+          if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
             sKeyword = filterName(sKeyword, "display"); */
-
-      //  evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-      //        intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
-        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
-        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
-        session.setAttribute("vACSearch", vAC);
-        evs.get_Result(req, res, vResult, "");
-     }
-     else if (sSearchAC.equals("Property"))
-     {
-        String sConteIdseq = (String)req.getParameter("sConteIdseq");
-        if (sConteIdseq == null) sConteIdseq = "";
-        if (sSearchIn.equals("publicID"))
-        {
-          do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "PROP", "", "");
-          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
-        }
-        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
-        {
-          do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "PROP", "", "");
-          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
-        }
-        //To search synonym you need to filter
-     //   if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
-      //    sKeyword = filterName(sKeyword, "display");
-       // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource, 
-       //     intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
-        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
-        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
-        session.setAttribute("vACSearch", vAC);
-        evs.get_Result(req, res, vResult, "");
-     }
-     else if (sSearchAC.equals("RepTerm"))
-     {
-        String sConteIdseq = (String)req.getParameter("sConteIdseq");
-        if (sConteIdseq == null) sConteIdseq = "";
-        if (sSearchIn.equals("publicID"))
-        {
-          do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "REP", "", ""); 
-          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
-        }
-        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
-        {
-          do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "REP", "", "");
-          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
-        }
-        // To search Synonym in EVS, need to filter
-     /*   if((dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
-        && !sSearchIn.equals("publicID"))
-            sKeyword = filterName(sKeyword, "display"); 
-        //To search synonym you need to filter
-        if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
-          sKeyword = filterName(sKeyword, "display"); */
-          
-       // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-       //     intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
-        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
-        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
-        session.setAttribute("vACSearch", vAC);
-        evs.get_Result(req, res, vResult, "");
-     }
-     else if (sSearchAC.equals("ObjectQualifier"))
-     {
-        String sConteIdseq = (String)req.getParameter("sConteIdseq");
-        if (sConteIdseq == null) sConteIdseq = "";
-        if (sSearchIn.equals("publicID"))
-          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
-        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))   //do concept search
-          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
-        //To search synonym you need to filter
-      //  if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
-      //    sKeyword = filterName(sKeyword, "display");
-        //evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-        //intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
-        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
-        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
-        session.setAttribute("vACSearch", vAC);
-        evs.get_Result(req, res, vResult, "");
-     }
-     else if (sSearchAC.equals("PropertyQualifier"))
-     {
-        String sConteIdseq = (String)req.getParameter("sConteIdseq");
-        if (sConteIdseq == null) sConteIdseq = "";
-        if (sSearchIn.equals("publicID"))
-          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
-        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))   //do concept search
-          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
-
-        //To search synonym you need to filter
-      //  if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
-      //    sKeyword = filterName(sKeyword, "display");
-       // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-       // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
-        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
-        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
-        session.setAttribute("vACSearch", vAC);
-        evs.get_Result(req, res, vResult, "");
-     }
-     else if (sSearchAC.equals("RepQualifier")|| sSearchAC.equals("RepTermQualifier"))
-     {
-        String sConteIdseq = (String)req.getParameter("sConteIdseq");
-        if (sConteIdseq == null) sConteIdseq = "";
-        if (sSearchIn.equals("publicID"))
-          vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
-        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))   //do concept search
-          vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
-
-        //To search synonym you need to filter
-     //   if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
-      //    sKeyword = filterName(sKeyword, "display");
-        //evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
-       // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
-        sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
-        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
-        session.setAttribute("vACSearch", vAC);
-        evs.get_Result(req, res, vResult, "");
-     }
-     //store result vector in the attribute
-     session.setAttribute("results", vResult);
+            
+         // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+         //     intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+          sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
+          vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
+          session.setAttribute("vACSearch", vAC);
+          evs.get_Result(req, res, vResult, "");
+       }
+       else if (sSearchAC.equals("ObjectQualifier"))
+       {
+          String sConteIdseq = (String)req.getParameter("sConteIdseq");
+          if (sConteIdseq == null) sConteIdseq = "";
+          if (sSearchIn.equals("publicID"))
+            vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
+          else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))   //do concept search
+            vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
+          //To search synonym you need to filter
+        //  if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
+        //    sKeyword = filterName(sKeyword, "display");
+          //evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+          //intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+          sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
+          vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
+          session.setAttribute("vACSearch", vAC);
+          evs.get_Result(req, res, vResult, "");
+       }
+       else if (sSearchAC.equals("PropertyQualifier"))
+       {
+          String sConteIdseq = (String)req.getParameter("sConteIdseq");
+          if (sConteIdseq == null) sConteIdseq = "";
+          if (sSearchIn.equals("publicID"))
+            vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
+          else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))   //do concept search
+            vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
+  
+          //To search synonym you need to filter
+        //  if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
+        //    sKeyword = filterName(sKeyword, "display");
+         // evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+         // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+          sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
+          vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
+          session.setAttribute("vACSearch", vAC);
+          evs.get_Result(req, res, vResult, "");
+       }
+       else if (sSearchAC.equals("RepQualifier")|| sSearchAC.equals("RepTermQualifier"))
+       {
+          String sConteIdseq = (String)req.getParameter("sConteIdseq");
+          if (sConteIdseq == null) sConteIdseq = "";
+          if (sSearchIn.equals("publicID"))
+            vAC = this.do_ConceptSearch("", "", sContext, sStatus, sKeyword, "", "", vAC);
+          else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))   //do concept search
+            vAC = this.do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC);
+  
+          //To search synonym you need to filter
+       //   if(dtsVocab.equals("NCI_Thesaurus")|| dtsVocab.equals("Thesaurus/Metathesaurus"))
+        //    sKeyword = filterName(sKeyword, "display");
+          //evs.do_EVSSearch(sKeyword, vAC, dtsVocab, sSearchInEVS, sMetaSource,
+         // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1); // search both Thesaurus and Metathesaurus
+          sKeyword = (String)session.getAttribute("creKeyword");  //take unfiltered search string for evs search
+          vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource, intMetaLimit, true, -1, "");
+          session.setAttribute("vACSearch", vAC);
+          evs.get_Result(req, res, vResult, "");
+       }
+       //store result vector in the attribute
+       if (!sSearchAC.equals("ValueMeaning"))     
+           session.setAttribute("results", vResult);
+    }
+    catch(Exception e)
+    {
+      System.err.println("ERROR in GetACSearch-getACSearchForCreate: " + e);
+      logger.fatal("ERROR - GetACSearch-getACSearchForCreate: " + e.toString(), e);
+    }
   }
-  catch(Exception e)
+
+  private void markNVPForPrimaryConcept(Vector<EVS_Bean> vAC)
   {
-    System.err.println("ERROR in GetACSearch-getACSearchForCreate: " + e);
-    logger.fatal("ERROR - GetACSearch-getACSearchForCreate: " + e.toString(), e);
+      String totalCon = m_classReq.getParameter("vmConOrder");
+       if (totalCon == null || totalCon.equals("0"))
+      {
+        for (int i =0; i<vAC.size(); i++)
+        {
+          EVS_Bean ebean = (EVS_Bean)vAC.elementAt(i);
+          if (ebean.getNAME_VALUE_PAIR_IND() > 0)
+          {
+            ebean.setNAME_VALUE_PAIR_IND(-1);
+            vAC.setElementAt(ebean, i);
+          }
+        }
+      }    
   }
-}
-
+  
   /**
    * To get the sorted result vector to display for selected sort type, called from NCICurationServlet.
    * calls method 'getSortedRows' for the selected component to get sorted bean.
@@ -8767,7 +8878,7 @@ boolean isIntSearch)
       if (curField.equals("name") || curField.equals("conName"))
         returnValue = curBean.getLONG_NAME();
       else if (curField.equals("umls") || curField.equals("Ident"))
-        returnValue = curBean.getNCI_CC_VAL();
+        returnValue = curBean.getCONCEPT_IDENTIFIER();
       else if (curField.equals("def"))
         returnValue = curBean.getPREFERRED_DEFINITION();
       else if (curField.equals("source"))
@@ -8940,7 +9051,7 @@ boolean isIntSearch)
       if (curField.equals("name") || curField.equals("conName"))
         returnValue = curBean.getLONG_NAME();  //getPREFERRED_NAME();
       else if (curField.equals("umls") || curField.equals("Ident"))
-        returnValue = curBean.getNCI_CC_VAL();
+        returnValue = curBean.getCONCEPT_IDENTIFIER();
       else if (curField.equals("def"))
         returnValue = curBean.getPREFERRED_DEFINITION();
       else if (curField.equals("source"))
@@ -9124,7 +9235,7 @@ boolean isIntSearch)
       if (curField.equals("name") || curField.equals("conName"))
         returnValue = curBean.getLONG_NAME();  //getPREFERRED_NAME();
       else if (curField.equals("umls") || curField.equals("Ident"))
-        returnValue = curBean.getNCI_CC_VAL();
+        returnValue = curBean.getCONCEPT_IDENTIFIER();
       else if (curField.equals("def"))
         returnValue = curBean.getPREFERRED_DEFINITION();
       else if (curField.equals("source"))
@@ -9432,7 +9543,9 @@ boolean isIntSearch)
     try
     {
       HttpSession session = m_classReq.getSession();
-      Vector pvList = (Vector)session.getAttribute("VDPVList"); 
+      VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");
+      Vector<PV_Bean> pvList = vd.getVD_PV_List();
+     // Vector pvList = (Vector)session.getAttribute("VDPVList"); 
       Vector vvList = new Vector();
       //Create a Callable Statement object.
       sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
@@ -9493,7 +9606,12 @@ boolean isIntSearch)
             }
           }  //END WHILE
         }   //END IF
-        if (pvList != null) session.setAttribute("VDPVList", pvList);
+        if (pvList != null)
+        {
+          //session.setAttribute("VDPVList", pvList);
+          vd.setVD_PV_List(pvList);
+          session.setAttribute("m_VD", vd);
+        }
       }
       session.setAttribute("vQuestValue", vList);  //all valid values
       session.setAttribute("NonMatchVV", vvList);
@@ -9973,7 +10091,7 @@ boolean isIntSearch)
    *
    * @return Integer of PV count
    */
-  public Integer doPVACSearch(String acIdseq, String acName, String sAction)  // 
+/*  public Integer doPVACSearch(String acIdseq, String acName, String sAction)  // 
   {
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -10035,22 +10153,30 @@ boolean isIntSearch)
               //get valid value attributes
               pvBean.setQUESTION_VALUE("");
               pvBean.setQUESTION_VALUE_IDSEQ("");
-              //get vm concept attributes
-              EVS_Bean vmConcept = new EVS_Bean();
               String sCondr = rs.getString("vm_condr_idseq");
+              //get vm concept attributes
+              VM_Bean vm = new VM_Bean();
+              vm.setVM_SHORT_MEANING(pvBean.getPV_SHORT_MEANING());
+              vm.setVM_DESCRIPTION(pvBean.getPV_MEANING_DESCRIPTION());
+              vm.setVM_CONDR_IDSEQ(sCondr);
+              EVS_Bean vmConcept = new EVS_Bean();
               vmConcept.setCONDR_IDSEQ(sCondr);            
               if (sCondr != null && !sCondr.equals(""))
               {
                 GetACService getAC = new GetACService(m_classReq, m_classRes, m_servlet);
                 Vector vConList = getAC.getAC_Concepts(sCondr, null, true);
                 if (vConList != null && vConList.size() > 0) 
+                {
+                  vm.setVM_CONCEPT_LIST(vConList);
                   vmConcept = (EVS_Bean)vConList.elementAt(0);
+                }
               }
               pvBean.setVM_CONCEPT(vmConcept);
+              pvBean.setPV_VM(vm);
               //get parent concept attributes
               EVS_Bean parConcept = new EVS_Bean();
               String sCon = rs.getString("con_idseq");
-              parConcept.setCON_IDSEQ(sCon);
+              parConcept.setIDSEQ(sCon);
               if (sCon != null && !sCon.equals(""))
               {
                 InsACService insAC = new InsACService(m_classReq, m_classRes, m_servlet);
@@ -10058,6 +10184,7 @@ boolean isIntSearch)
                 sCon = insAC.getConcept(sRet, parConcept, false);
               }
               pvBean.setPARENT_CONCEPT(parConcept);
+              pvBean.setPV_VIEW_TYPE("collapse");
             }            
             //add pv idseq in the pv id vector
             vList.addElement(pvBean);  //add the bean to a vector
@@ -10121,7 +10248,7 @@ boolean isIntSearch)
     }
     return pvCount;
   }  //doPVACSearch search
-
+*/
   /**
    * ac_version method copies all other attributes from old ac to versioned ac, but some attributes are changed on the page. 
    * This method compares the existing pvs and updates its attributes and mark it to update/remove
@@ -10152,7 +10279,8 @@ boolean isIntSearch)
             newBean.setVP_SUBMIT_ACTION("UPD");
           else
             newBean.setVP_SUBMIT_ACTION(oldPV.getVP_SUBMIT_ACTION());
-          newBean.setVM_CONCEPT(oldPV.getVM_CONCEPT());
+         // newBean.setVM_CONCEPT(oldPV.getVM_CONCEPT());
+          newBean.setPV_VM(oldPV.getPV_VM());
           newBean.setPV_VM_CONDR_IDSEQ(oldPV.getPV_VM_CONDR_IDSEQ());
           newBean.setPARENT_CONCEPT(oldPV.getPARENT_CONCEPT());
           vValue.addElement(newValue);
@@ -10277,13 +10405,13 @@ boolean isIntSearch)
       return cdName; 
   }//getCDContext
 
-   /** 
+/*   *//* 
    * To get the value meanings for the selected cd.
    *
    * @param sCDid selected Administered component.
    * @param vAC search result of vlaue meanings.
    * @throws exception
-   */
+   *//*
   public void doVMListSearch(String sCDid, Vector vAC) throws Exception  
   {
       String cdName = "";
@@ -10325,7 +10453,7 @@ boolean isIntSearch)
       }
   }//do VM Search
   
-/**
+*//*
    * To get resultSet from database for Permissible Value Component called from getACKeywordResult and getCDEIDSearch methods.
    *
    * calls oracle stored procedure
@@ -10336,7 +10464,7 @@ boolean isIntSearch)
    * @param InString Keyword value, is empty if searchIn is minID.
    * @param vList returns Vector of PVbean.
    *
-  */
+  *//*
   private void doVMSearch(String InString, String cd_idseq, Vector vList)  // returns list of Data Elements
   {
     Connection sbr_db_conn = null;
@@ -10422,14 +10550,14 @@ boolean isIntSearch)
     }
   }  //endVM search
 
-  /**
+*//*  *//*
    * To get the value from the bean for the selected field, called from VMsortedRows.
    *
    * @param curBean VM bean.
    * @param curField sort Type field name.
    *
    * @return String VMField Value if selected field is found. otherwise empty string.
-   */
+   *//*
   private String getVMFieldValue(VM_Bean curBean, String curField)
   {
     String returnValue = "";
@@ -10446,7 +10574,7 @@ boolean isIntSearch)
       else if (curField.equals("ConDomain"))
         returnValue = curBean.getVM_CD_NAME();
       else if (curField.equals("umls"))
-        returnValue = curEVS.getNCI_CC_VAL();
+        returnValue = curEVS.getCONCEPT_IDENTIFIER();
       else if (curField.equals("source"))
         returnValue = curEVS.getEVS_DEF_SOURCE();
       else if (curField.equals("database"))
@@ -10463,7 +10591,7 @@ boolean isIntSearch)
     return returnValue;
   }
 
-  /**
+  *//*
    * To get the sorted vector for the selected field in the VM component, called from getACSortedResult.
    * gets the 'sortType' from request and 'vSelRows' vector from session.
    * calls 'getVMFieldValue' to extract the value from the bean for the selected sortType.
@@ -10473,7 +10601,7 @@ boolean isIntSearch)
    * @param req The HttpServletRequest object.
    * @param res HttpServletResponse object.
    *
-   */
+   *//*
   public void getVMSortedRows(HttpServletRequest req, HttpServletResponse res)
   {
     try
@@ -10576,7 +10704,7 @@ boolean isIntSearch)
     }
   }
 
-  /**
+  *//*
    * To get final result vector of selected attributes/rows to display for Permissible Values component,
    * called from getACKeywordResult, getACSortedResult and getACShowResult methods.
    * gets the selected attributes from session vector 'selectedAttr'.
@@ -10586,7 +10714,7 @@ boolean isIntSearch)
    * @param res HttpServletResponse object.
    * @param vResult output result vector.
    *
-   */
+   *//*
   public void getVMResult(HttpServletRequest req, HttpServletResponse res, Vector vResult)
   {
     Vector vVM = new Vector();
@@ -10630,7 +10758,7 @@ boolean isIntSearch)
         if (vSelAttr.contains("Value Meaning")) vResult.addElement(VMBean.getVM_SHORT_MEANING());
         if (vSelAttr.contains("Meaning Description")) vResult.addElement(VMBean.getVM_DESCRIPTION());
         if (vSelAttr.contains("Conceptual Domain")) vResult.addElement(VMBean.getVM_CD_NAME());        
-        if (vSelAttr.contains("EVS Identifier")) vResult.addElement(vmConcept.getNCI_CC_VAL());        
+        if (vSelAttr.contains("EVS Identifier")) vResult.addElement(vmConcept.getCONCEPT_IDENTIFIER());        
         if (vSelAttr.contains("Definition Source")) vResult.addElement(vmConcept.getEVS_DEF_SOURCE());        
         if (vSelAttr.contains("Vocabulary")) vResult.addElement(vmConcept.getEVS_DATABASE());        
         if (vSelAttr.contains("Comments")) vResult.addElement(VMBean.getVM_COMMENTS());
@@ -10646,7 +10774,7 @@ boolean isIntSearch)
       logger.fatal("ERROR in GetACSearch-getVMResult : " + e.toString(), e);
     }
   }
-  
+*/  
   /**
    * calls SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_AC_CONTACT api to create contacts
    * @param ac_idseq

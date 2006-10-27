@@ -10,6 +10,7 @@
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/date-picker.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/CreateVD.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/SelectCS_CSI.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" SRC="Assets/VDPVS.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
 <%
     String sOriginAction = (String)session.getAttribute("originAction");
@@ -214,12 +215,12 @@
     Vector vParentCodes = new Vector();
     Vector vParentDB = new Vector();   
     Vector vParentMetaSource = new Vector();
-    Vector vdParent = (Vector)session.getAttribute("VDParentConcept");
+    Vector vdParent = m_VD.getReferenceConceptList();  // (Vector)session.getAttribute("VDParentConcept");
     if (vdParent == null) vdParent = new Vector();    
     int vdCONs = 0;
     
     //use the pv bean to store vd-pv related attributes
-    Vector vVDPVList = (Vector)session.getAttribute("VDPVList");
+    Vector vVDPVList = m_VD.getVD_PV_List();  // (Vector)session.getAttribute("VDPVList");
     if (vVDPVList == null) vVDPVList = new Vector();
     Vector vQVList = (Vector)session.getAttribute("NonMatchVV");
     if (vQVList == null) vQVList = new Vector();
@@ -414,52 +415,12 @@ function setup()
 
 <body onLoad="setup();">
 <form name="createVDForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=editVD">
-  <table width="100%" border="0">
-    <tr>
-      <td height="26" align="left" valign="top">
-        <input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('validate')"
-				onHelp = "showHelp('Help_CreateVD.html#createVDForm_Validation'); return false">
-          &nbsp;&nbsp;
-    <!--no need for clear button in the block edit-->
-        <input type="button" name="btnClear" value="Clear" style="width:125" onClick="ClearBoxes();">
-          &nbsp;&nbsp;
-<% if (!sOriginAction.equals("NewVDFromMenu")){%>
-        <input type="button" name="btnBack" value="Back" style="width:125" onClick="Back();">
-          &nbsp;&nbsp;
-<% } %>
-<%if(sOriginAction.equals("BlockEditVD")){%>
-        <input type="button" name="btnDetails" value="Details" 
-				onHelp = "showHelp('Help_Updates.html#createVDForm_details'); return false" style="width: 125" onClick="openBEDisplayWindow();">
-          &nbsp;&nbsp;
-<%}%>
-        <input type="button" name="btnAltName" value="Alternate Names" style="width:125" onClick="openDesignateWindow('Alternate Names');"
-				onHelp = "showHelp('Help_Updates.html#newDECForm_altNames'); return false">
-          &nbsp;&nbsp;
-        <input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');"
-				onHelp = "showHelp('Help_Updates.html#newDECForm_refDocs'); return false">
-          &nbsp;&nbsp;
- 	     <img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
-      </td>
-    </tr>
-  </table>  
-    
-  <table width="100%" border=0 valign="top">
-    <col width="4%"><col width="96%">
-    <tr valign="middle"> 
-        <th colspan=2 height="40"> <div align="left"> 
-       <%if(sOriginAction.equals("BlockEditVD")){%>
-          <label><font size=4>Block Edit Existing <font color="#FF0000">Value Domains</font></font></label>
-       <% } else {%>
-          <label><font size=4>Edit Existing <font color="#FF0000">Value Domain</font></font></label>
-        <% } %>
-        </div></th>
-    </tr>
-  <%if(!sOriginAction.equals("BlockEditVD")){%>
-	  <tr height="25" valign="bottom">
-        <td align="left" colspan=2 height="11"><font color="#FF0000">&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;</font>Indicates Required Field</td>
-      </tr> 
-    <%}%>
-
+	<!-- include the vdpvstab.jsp here -->
+	<jsp:include page="VDPVSTab.jsp" flush="true" />
+	<div style="margin-left: 0in; margin-right: 0in; border-left: 2px solid black; border-bottom: 2px solid black; border-right: 2px solid black; width: 100%; padding: 0.1in 0in 0.1in 0in">
+	<table width="100%">
+		<col width="4%">
+		<col width="96%">
     <tr height="25" valign="bottom">
         <td align=right><font color="#C0C0C0"><%=item++%>)</font></td>
         <td><font color="#C0C0C0">Context</font></td>
@@ -467,8 +428,7 @@ function setup()
     <tr>
       <td>&nbsp;</td>
       <td height="26">
-        <select name="selContext" size="1"  readonly
-          onHelp = "showHelp('Help_CreateVD.html#createVDForm_selContext'); return false">
+        <select name="selContext" size="1"  readonly>
           <option value="<%=sContID%>"><font color="#C0C0C0"><%=sContext%></font></option>
         </select>
       </td>
@@ -878,302 +838,18 @@ function setup()
     </td>
   </tr>
 <%if (!sOriginAction.equals("BlockEditVD")) {%>
-    <tr height="15"><td> </td></tr>
-    <tr>
-      <td colspan="2">
-        <table width="85%" border="0" align="left" cellspacing="0" cellpadding="0">
-          <col width="3%"><col width="30%"><col width="4%"><col width="4%"><col width="32%">
-          <tr align=left> 
-            <td align=right><%if (sTypeFlag.equals("E")){%><font color="#FF0000">* </font><%}%><%=item++%>)</td>
-            <td align=left><font color="#FF0000">Create </font> 
-              <% if (sTypeFlag.equals("E")) { %>Permissible Value
-              <% } else { %>Referenced Value<% } %>
-            </td>    
-            <td colspan="2">&nbsp;</td>
-            <td><img name="Message2" src="Assets/WaitMessageSmall.gif" width="130" height="26" alt="WaitMessage" style="visibility:hidden;">
-          </tr>
-        </table>
-      </td>
-    </tr>  
-   <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;&nbsp;
-      <table width="70%" border="0">
-        <col width="50%"><col width="15%"><col width="15%"><col width="15%">
-        <tr>
-          <td>
-            <% if(sTypeFlag.equals("E")){%>Select Parent Concept to Constrain Permissible Values
-            <%}else{%>Select Non-enumerated Value Domain Reference Concept<%}%>          
-          </td>
-          <td align="left">
-              <input type="button" name="btnSelectValues" style="width:90" value="Select Values" disabled onClick="selectValues()">
-          </td>
-          <td align="center">
-            <input type="button" name="btnRemoveConcept" style="width:100%" value="Remove Parent" disabled onClick="javascript:removeParent();">
-          </td>
-          <td>&nbsp;</td>
-        </tr>  
-        <tr valign="top">
-          <td colspan=3>
-            <select name="listParentConcept" size ="4" style="width:100%" onclick="javascript:selectParent();"
-              onHelp = "showHelp('Help_CreateVD.html#createVDForm_selConceptualDomain'); return false">
-              <%if (vdParent != null) 
-              {
-                for (int i = 0; vdParent.size()>i; i++)
-                {
-                  EVS_Bean eBean = (EVS_Bean)vdParent.elementAt(i);
-                  if (eBean == null) eBean = new EVS_Bean();
-                  String parSubmit = eBean.getCON_AC_SUBMIT_ACTION();
-                  //go to next one if marked as deleted
-                  if (parSubmit != null && parSubmit.equals("DEL"))
-                    continue;
-                  //add the parent info
-                  String pCode = eBean.getNCI_CC_VAL();  //code
-                  vParentCodes.addElement(pCode);
-                  String pName = eBean.getLONG_NAME();   //name
-                  vParentNames.addElement(pName);
-                  String pDB = eBean.getEVS_DATABASE();   //db
-                  if (pDB == null) pDB = "";
-                  vParentDB.addElement(pDB);         
-                  String sMetaSource = "";
-                  if(eBean.getEVS_DATABASE() != null && eBean.getEVS_DATABASE().equals("NCI Metathesaurus"))
-                  {
-                    sMetaSource = eBean.getEVS_CONCEPT_SOURCE();   //db
-                    vParentMetaSource.addElement(sMetaSource);
-                  }
-                  else
-                  {
-                    sMetaSource = "";
-                    vParentMetaSource.addElement(sMetaSource);
-                  }
-                  if (sMetaSource.equals("")) sMetaSource = "All Sources";
-                  String sParListString = "";  //pName + "        " + pCode + "        " + pDB + " : Concept Source UMD2003";
-                  if(eBean.getEVS_DATABASE() != null && eBean.getEVS_DATABASE().equals("NCI Metathesaurus"))
-                    sParListString = pName + "        " + pCode + "        " + pDB + " : Concept Source " + sMetaSource;
-                  else
-                    sParListString = pName + "        " + pCode + "        " + pDB;
-                  
-                  if (pDB.equals("Non_EVS")) sParListString = pName + "        " + pDB;
-                  else pDB = "EVS";                  
-                  vdCONs += 1;
-
-                  //keep the last parent selected if page's last action was selecting a parent
-              %>
-                <option value="<%=pDB%>" <%if(sLastAction.equals("parSelected") && i == vdParent.size()-1){%>selected<%}%>><%=sParListString%></option> 
-              <%  }
-              } 
-              %>
-            </select> 
-          </td>
-          <td align="center">
-            <!-- do not allow to pick parent if pvs exist but no parent   -->
-            <%// if (!(vdCONs < 1 && vdPVs > 0)) { %>
-              <a href="javascript:doPVAction('createParent');">Search Parent</a>
-            <%// } %>
-          </td>
-        </tr>
-      </table>
+  <tr height="25"><td> </td></tr>
+  <tr valign="top">
+    <td align=right><font color="#FF0000">* </font><%=item++%>)</td>
+    <td><font color="#FF0000">Maintain </font> 
+      <%if (sTypeFlag.equals("E")){%>Permissible Value<%} else {%>Referenced Value<%}%>
+      <br>
+      To view or maintain Permissible Values, <a href="javascript:SubmitValidate('vdpvstab');">click here</a> 
+      &nbsp;&nbsp;&nbsp;&nbsp;
     </td>
   </tr>
-  <tr><td>&nbsp; </td></tr>
-<% if (sMenuAction.equals("Questions") && vQVList.size() > 0) { %>   <!-- when questions -->
-  <tr height="25" valign="bottom">
-    <td>&nbsp;</td>
-    <td>List of un-matched Valid Values</td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>    
-      <select name= "selValidValue" size ="3" style="width:20%" onclick="javascript:disableSelect();" 
-      onHelp = "showHelp('Help_CreateVD.html#createVDForm_selValidValue'); return false">
-<%
-        for (int i = 0; vQVList.size()>i; i++)
-        {
-          String sVV = (String)vQVList.elementAt(i);
-%>
-            <option value="<%=sVV%>"><%=sVV%></option>
-<%
-        }
-%>
-      </select> 
-    </td>
-  </tr>
-<% } %>  <!-- end question -->
-  <!---enumerated -->
-<% if (sTypeFlag.equals("E")) { %> 
-  <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;&nbsp;
-      <table width="100%" border="0">
-        <col width="12%"><col width="14%"><col width="14%"><col width="60%"><!--<col width="74%">-->
-        <tr>
-            <!-- value is Create Value when no value is selected, Edit Value(s) when one or more values selected 
-          <td align="left"><input type="button" name="btnEditPV" value="Edit Value(s)" style="width: 95" disabled onClick="javascript:doPVAction('editPV');"></td>-->
-          <td align="left"><input type="button" name="btnCreatePV" value="Create Value" style="width: 95" 
-              onClick="javascript:doPVAction('createPV');" <%if (vdCONs>0) {%> disabled <%}%> > 
-          </td>
-          <%if (vdCONs > 0) { %>
-            <td align="left"><input type="button" name="btnRemovePV" value="Remove Value(s)" style="width: 125" disabled onClick="javascript:doPVAction('removePV');"></td>
-            <td> &nbsp; </td> 
-          <% } else { %> 
-            <td align="left"><input type="button" name="btnSelectPV" value="Search Value(s)" style="width: 110" onClick="javascript:doPVAction('createPVMultiple');"></td>
-            <td align="left"><input type="button" name="btnRemovePV" value="Remove Value(s)" style="width: 125" disabled onClick="javascript:doPVAction('removePV');"></td>
-          <% } %>
-          <td align="right"><%=sPVRecs%> Records </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>
-      <table width="100%" border="1">
-        <tr>
-          <td>
-            <table width="99%" border="0">
-            <% if (vdCONs > 1 && sMenuAction.equals("Questions")) { %>
-              <col width="2%"><col width="10%"><col width="14%"><col width="17%"><col width="15%">
-              <col width="12%"><col width="8%"><col width="10%"><col width="8%"><col width="7%">
-            <% } else if (sMenuAction.equals("Questions")) { %>
-              <col width="2%"><col width="10%"><col width="15%"><col width="18%"><col width="14%">
-              <col width="14%"><col width="12%"><col width="9%"><col width="8%">
-            <% } else if (vdCONs > 1) { %>
-              <col width="2%"><col width="15%"><col width="18%"><col width="14%"><col width="14%">
-              <col width="10%"><col width="12%"><col width="9%"><col width="8%">
-            <% } else { %>
-              <col width="2%"><col width="15%"><col width="18%"><col width="24%">
-              <col width="13%"><col width="12%"><col width="9%"><col width="8%">
-            <% } %>
-              <tr height="33" valign="middle">
-                <th><%if (vdPVs >0){%>
-                    <a href="javascript:selectAllPV('fromPage');">
-                    <img id="CheckGif" src="../../cdecurate/Assets/CheckBox.gif" border="0" alt="Select All"></a>
-                  <% } %>
-                </th>
-                <% if (sMenuAction.equals("Questions")) { %><th align="center"><a href="javascript:sortPV('ValidValue');">Valid Value</a></th><% } %>
-                <th align="center"><a href="javascript:sortPV('value');">Permissible Value</a></th>
-                <th align="center"><a href="javascript:sortPV('meaning');">Value Meaning</a></th>
-                <th align="center"><a href="javascript:sortPV('MeanDesc');">Value Meaning Description</a></th>
-                <th align="center"><a href="javascript:sortPV('VMConcept');">EVS Concept Code</a></th>       
-                <% if (vdCONs >1) { %><th align="center"><a href="javascript:sortPV('ParConcept');">Parent Concept Code</a></th><% } %>
-                <th align="center"><a href="javascript:sortPV('Origin');">Value Origin</a></th>       
-                <th align="center"><a href="javascript:sortPV('BeginDate');">Begin Date</a></th>       
-                <th align="center"><a href="javascript:sortPV('EndDate');">End Date</a></th>       
-             </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td>
-<% 
-            int iDivHt = 40;
-            if (vdPVs >2) iDivHt = 180;
-            else if (vdPVs >0) iDivHt = ((90 * vdPVs) + 10);
-%>
-            <div id="Layer1" style="position:relative; z-index:1; overflow:auto; width:100%; height:<%=iDivHt%>;">
-            <table width="100%" border="1">
-            <% if (vdCONs > 1 && sMenuAction.equals("Questions")) { %>
-              <col width="2%"><col width="10%"><col width="14%"><col width="17%"><col width="15%">
-              <col width="12%"><col width="8%"><col width="10%"><col width="8%"><col width="6%">
-            <% } else if (sMenuAction.equals("Questions")) { %>
-              <col width="2%"><col width="10%"><col width="15%"><col width="18%"><col width="14%">
-              <col width="14%"><col width="12%"><col width="9%"><col width="7%">
-            <% } else if (vdCONs > 1) { %>
-              <col width="2%"><col width="15%"><col width="18%"><col width="14%"><col width="14%">
-              <col width="10%"><col width="12%"><col width="9%"><col width="7%">
-            <% } else { %>
-              <col width="1%"><col width="15%"><col width="18%"><col width="24%">
-              <col width="14%"><col width="12%"><col width="7%"><col width="7%">
-            <% } %>
-<%  
-              if (vdPVs > 0 && vVDPVList != null && vVDPVList.size()> 0)
-              {
-                int ckCount = 0;
-                for (int i=0; i<vVDPVList.size(); i++)
-                {
-                  PV_Bean pvBean = (PV_Bean)vVDPVList.elementAt(i);
-                  if (pvBean == null) pvBean = new PV_Bean();
-                  // display only if not deleted
-                  if (pvBean.getVP_SUBMIT_ACTION() != null && pvBean.getVP_SUBMIT_ACTION().equals("DEL"))
-                      continue;
-                      
-                  String ckName = ("ck" + ckCount); 
-                  ckCount += 1;
-                  boolean pvChecked = pvBean.getPV_CHECKED();
-                  String sVValue = (String)pvBean.getQUESTION_VALUE();
-                  if (sVValue == null) sVValue = "";
-                  String sPVVal = (String)pvBean.getPV_VALUE();
-                  if (sPVVal == null) sPVVal = "";
-                  String sPVid = (String)pvBean.getPV_PV_IDSEQ();
-                  if (sPVid == null || sPVid.equals("")) sPVid = "EVS_" + sPVVal;
-                  vPVIDList.addElement(sPVid);  //add the ones on the page
-                  String sPVMean = (String)pvBean.getPV_SHORT_MEANING();
-                  if (sPVMean == null) sPVMean = "";
-                  String sPVDesc = (String)pvBean.getPV_MEANING_DESCRIPTION();
-                  if (sPVDesc == null) sPVDesc = "";
-                  String sPVOrigin = (String)pvBean.getPV_VALUE_ORIGIN();
-                  if (sPVOrigin == null) sPVOrigin = "";
-                  EVS_Bean vmConcept = (EVS_Bean)pvBean.getVM_CONCEPT();
-                  if (vmConcept == null) vmConcept = new EVS_Bean();
-                  String evsDB = (String)vmConcept.getEVS_DATABASE();
-                  if (evsDB == null) evsDB = "";
-                  String evsID = (String)vmConcept.getNCI_CC_VAL();
-                  String sEvsId = "";
-                  if (evsID != null && !evsID.equals(""))
-                    sEvsId = evsID + "\n" + evsDB;
-                    
-                  String sParId = "";
-                  EVS_Bean parConcept = (EVS_Bean)pvBean.getPARENT_CONCEPT();
-                  if (parConcept == null) parConcept = new EVS_Bean();
-                  evsDB = (String)parConcept.getEVS_DATABASE();
-                  if (evsDB == null) evsDB = "";
-                  evsID = (String)parConcept.getNCI_CC_VAL();
-                  if (evsID != null && !evsID.equals(""))
-                    sParId = evsID + "\n" + evsDB;
-                  
-                  String sPVBegDate = (String)pvBean.getPV_BEGIN_DATE();
-                  if (sPVBegDate == null) sPVBegDate = "";
-                  String sPVEndDate = (String)pvBean.getPV_END_DATE();
-                  if (sPVEndDate == null) sPVEndDate = "";
-    %>
-                  <tr style="height:90;">
-                    <td align="right" valign="top"><input type="checkbox" name="<%=ckName%>" 
-                      onClick="javascript:doPVCheckAction(checked,this,'fromPage');"  size="5"></td>
-                    <% if (sMenuAction.equals("Questions")) { %><td valign="top"><%=sVValue%></td><% } %>
-                    <td valign="top"><%=sPVVal%></td>
-                    <td valign="top"><%=sPVMean%></td>
-                    <td valign="top"><%=sPVDesc%></td>
-                    <td valign="top"><%=sEvsId%></td>
-                    <% if (vdCONs >1) { %><td valign="top"><%=sParId%></td><% } %>
-                    <td valign="top"><%=sPVOrigin%></td>
-                    <td valign="top"><%=sPVBegDate%></td>
-                    <td valign="top"><%=sPVEndDate%></td>
-                  </tr>  
-    <%          }
-              } else {
-    %>
-                  <tr>
-                    <td align="right">&nbsp;</td>
-                    <% if (sMenuAction.equals("Questions")) { %><td valign="top">&nbsp;</td><% } %>
-                    <td valign="top">&nbsp;</td>
-                    <td valign="top">&nbsp;</td>
-                    <td valign="top">&nbsp;</td>
-                    <% if (vdCONs >1) { %><td valign="top">&nbsp;</td><% } %>
-                    <td valign="top">&nbsp;</td>
-                    <td valign="top">&nbsp;</td>
-                    <td valign="top">&nbsp;</td>
-                    <td valign="top">&nbsp;</td>
-                  </tr>  
-    <%          }  %>
-            </table>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-<%  }  %>    <!-- end enumerated -->
 <%  }  %>
+  <tr height="15"><td> </td></tr>
   <tr height="25" valign=bottom>
       <td align=right><%if(!sOriginAction.equals("BlockEditVD")){%><font color="#FF0000">*&nbsp;</font><%}%><%=item++%>) </td>
       <td><font color="#FF0000">Enter/Select</font> Effective Begin Date</td>
@@ -1502,11 +1178,11 @@ function setup()
         the Value Domain(s)</td>
     </tr>
   </table>
-  <table width="50">
+  <div style="display:none">
 <input type="hidden" name="vdIDSEQ" value="<%=sVDIDSEQ%>">
 <input type="hidden" name="CDE_IDTxt" value="<%=sPublicVDID%>">
 <input type="hidden" name="actSelect" value="">
-<input type="hidden" name="newCDEPageAction" value="nothing">
+<input type="hidden" name="pageAction" value="nothing">
 <!--<input type="hidden" name="hiddenPValue" value="">
 <input type="hidden" name="VMOrigin" value="ValueDomain">-->
 <input type="hidden" name="selObjectClassText" value="<%=sObjClass%>">
@@ -1547,11 +1223,8 @@ function setup()
 <input type="hidden" name="RepQualVocab" value="<%=sRepQualVocab%>">
 <input type="hidden" name="RepTerm_ID" value="<%=sRepTerm_ID%>">
 <input type="hidden" name="RepTermVocab" value="<%=sRepTermVocab%>">
-<input type="hidden" name="selectedParentConceptName" value="">
-<input type="hidden" name="selectedParentConceptCode" value="">
-<input type="hidden" name="selectedParentConceptDB" value="">
-<input type="hidden" name="selectedParentConceptMetaSource" value="">
 <input type="hidden" name="sCompBlocks" value="">
+<input type="hidden" name="nvpConcept" value="">
 
 <input type="hidden" name="RepQualCCode" value="">
 <input type="hidden" name="RepQualCCodeDB" value="">
@@ -1559,21 +1232,6 @@ function setup()
 <input type="hidden" name="RepCCodeDB" value="<%=sRepCCodeDB%>">
 <input type="hidden" name="nameTypeChange" value="<%=nameChanged%>">
 
-<input type="hidden" name="pvSortColumn" value="">
-<select size="1" name="hiddenPVID" style="visibility:hidden;width:160" multiple>
-<%if (vPVIDList != null) 
-  {
-    for (int i = 0; vPVIDList.size()>i; i++)
-    {
-      String sPV_ID = (String)vPVIDList.elementAt(i);
-      if (sPV_ID == null) sPV_ID = "";
-      //replace the double quote with the empty space
-      sPV_ID = sPV_ID.replace('"', ' ');     //serUtil.parsedStringJSPDoubleQuote(sPV_ID);
-%>
-      <option value="<%=sPV_ID%>" selected="selected"><%=sPV_ID%></option>
-<%  }
-  }   %>
-</select>
 <select name= "selCSCSIHidden" size ="1" style="visibility:hidden;"  multiple></select>
 <select name= "selACCSIHidden" size ="1" style="visibility:hidden;"  multiple></select>
 <select name= "selCSNAMEHidden" size="1" style="visibility:hidden;"  multiple></select>
@@ -1592,66 +1250,6 @@ function setup()
       <option value="<%=sAC_ID%>"><%=sACName%></option>
 <%  }
   }   %>
-</select>
-
-<!-- stores selected VMs from EVS before submitting -->
-<select name= "selVMConCode" size ="1" style="visibility:hidden;width:160"  multiple></select>
-<select name= "selVMConName" size ="1" style="visibility:hidden;width:160"  multiple></select>
-<select name= "selVMConDef" size="1" style="visibility:hidden;width:160"  multiple></select>
-<select name= "selVMConDefSource" size="1" style="visibility:hidden;width:160"  multiple></select>
-<select name= "selVMConOrigin" size="1" style="visibility:hidden;width:160"  multiple></select>
-
-<input type="hidden" name="hiddenParentName" value="">
-<input type="hidden" name="hiddenParentCode" value="">
-<input type="hidden" name="hiddenParentDB" value="">
-<input type="hidden" name="hiddenParentListString" value="">
-<select name= "ParentNames" size ="1" style="visibility:hidden;width:100;"  multiple>
-<%if (vParentNames != null) 
-  {
-    for (int i = 0; vParentNames.size()>i; i++)
-    {
-      String sParentName = (String)vParentNames.elementAt(i);
-%>
-      <option value="<%=sParentName%>"><%=sParentName%></option>
-<%  }
-  }   
-%>
-</select>
-<select name= "ParentCodes" size ="1" style="visibility:hidden;width:100;"  multiple>
-<%if (vParentCodes != null) 
-  {
-    for (int i = 0; vParentCodes.size()>i; i++)
-    {
-      String sParentCode = (String)vParentCodes.elementAt(i);
-%>
-      <option value="<%=sParentCode%>"><%=sParentCode%></option>
-<%  }
-  }   
-%>
-</select>
-<select name= "ParentMetaSource" size="1" style="visibility:hidden;width:100;"  multiple>
-<%if (vParentDB != null) 
-  {
-    for (int i = 0; vParentMetaSource.size()>i; i++)
-    {
-      String sParentMetaSource = (String)vParentMetaSource.elementAt(i);
-%>
-      <option value="<%=sParentMetaSource%>"><%=sParentMetaSource%></option>
-<%  }
-  }   
-%>
-</select>
-<select name= "ParentDB" size="1" style="visibility:hidden;width:100;"  multiple>
-<%if (vParentDB != null) 
-  {
-    for (int i = 0; vParentDB.size()>i; i++)
-    {
-      String sParentDB = (String)vParentDB.elementAt(i);
-%>
-      <option value="<%=sParentDB%>"><%=sParentDB%></option>
-<%  }
-  }   
-%>
 </select>
 <select name= "vRepQualifierCodes" size ="1" style="visibility:hidden;width:100;"  multiple>
 <%if (vRepQualifierCodes != null) 
@@ -1701,17 +1299,18 @@ function setup()
 
 <!-- stores the selected rows to get the bean from the search results -->
 <select name= "hiddenSelRow" size="1" style="visibility:hidden;width:100"  multiple></select>
-</table>
+</div>
 <script language = "javascript">
 //call function to initiate form objects
 createObject("document.createVDForm");
 displayStatusMessage();
 loadCSCSI();
-selectParent();   //do the parent select action if the parent was selected.
 ShowEVSInfo('RepQualifier');
 changeDataType();
 </script>
 </form>
+<!--  remvoed the searchactionform from here and put it on vdpvstab.jsp -->
+<div style="display:none">
 <form name="SearchActionForm" method="post" action="">
 <input type="hidden" name="searchComp" value="<%=sSearchAC%>">
 <input type="hidden" name="searchEVS" value="ValueDomain">
@@ -1719,7 +1318,10 @@ changeDataType();
 <input type="hidden" name="CDVDcontext" value="">
 <input type="hidden" name="SelContext" value="">
 <input type="hidden" name="acID" value="<%=sVDIDSEQ%>">
+<input type="hidden" name="CD_ID" value="<%=sConDomID%>">
 <input type="hidden" name="itemType" value="">
 </form>
+</div>
+
 </body>
 </html>

@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.10 2006-08-29 17:36:54 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.11 2006-10-27 14:54:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -136,11 +136,27 @@ public class EVSSearch implements Serializable
     m_servlet = CurationServlet;
     //get application service object
    // HttpSession session = (HttpSession)m_classReq.getSession();
-    m_eBean = new EVS_Bean();
     m_eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVS_USER_BEAN_ARG);   //("EvsUserBean");
-    if (m_eUser == null) m_eUser = new EVS_UserBean(); //to be safe use the default props
-    if (m_eUser.getEVSConURL() != null && !m_eUser.getEVSConURL().equals(""))
-      evsService = ApplicationService.getRemoteInstance(m_eUser.getEVSConURL());
+    initialize();
+  }
+  
+  /**
+   * Constructor
+   * 
+   * @param user_ The EVS User Bean
+   */
+  public EVSSearch(EVS_UserBean user_)
+  {
+      m_eUser = user_;
+      initialize();
+  }
+  
+  private void initialize()
+  {
+      m_eBean = new EVS_Bean();
+      if (m_eUser == null) m_eUser = new EVS_UserBean(); //to be safe use the default props
+      if (m_eUser.getEVSConURL() != null && !m_eUser.getEVSConURL().equals(""))
+        evsService = ApplicationService.getRemoteInstance(m_eUser.getEVSConURL());
   }
 
     /**
@@ -278,7 +294,7 @@ public class EVSSearch implements Serializable
           EVS_Bean m_OC = (EVS_Bean)vOCConcepts.elementAt(0);
           if (m_OC == null) m_OC = new EVS_Bean();        
           m_DEC.setDEC_OCL_NAME_PRIMARY(m_OC.getLONG_NAME());
-          m_DEC.setDEC_OC_CONCEPT_CODE(m_OC.getNCI_CC_VAL());
+          m_DEC.setDEC_OC_CONCEPT_CODE(m_OC.getCONCEPT_IDENTIFIER());
           m_DEC.setDEC_OC_EVS_CUI_ORIGEN(m_OC.getEVS_DATABASE());
           for(int i=1;i<vOCConcepts.size();i++)
           {
@@ -290,7 +306,7 @@ public class EVSSearch implements Serializable
             
             Vector<String> vOCQualifierCodes = m_DEC.getDEC_OC_QUALIFIER_CODES();
             if (vOCQualifierCodes == null) vOCQualifierCodes = new Vector<String>();
-            vOCQualifierCodes.addElement(m_OCQ.getNCI_CC_VAL());
+            vOCQualifierCodes.addElement(m_OCQ.getCONCEPT_IDENTIFIER());
             
             Vector<String> vOCQualifierDB = m_DEC.getDEC_OC_QUALIFIER_DB();
             if (vOCQualifierDB == null) vOCQualifierDB = new Vector<String>();
@@ -333,7 +349,7 @@ public class EVSSearch implements Serializable
         EVS_Bean m_PC = (EVS_Bean)vPCConcepts.elementAt(0);
         if (m_PC == null) m_PC = new EVS_Bean();
         m_DEC.setDEC_PROPL_NAME_PRIMARY(m_PC.getLONG_NAME());
-        m_DEC.setDEC_PROP_CONCEPT_CODE(m_PC.getNCI_CC_VAL());
+        m_DEC.setDEC_PROP_CONCEPT_CODE(m_PC.getCONCEPT_IDENTIFIER());
         m_DEC.setDEC_PROP_EVS_CUI_ORIGEN(m_PC.getEVS_DATABASE());
 
         // Secondary 
@@ -347,7 +363,7 @@ public class EVSSearch implements Serializable
             vPropQualifierNames.addElement(m_PCQ.getLONG_NAME());
             Vector vPropQualifierCodes = m_DEC.getDEC_PROP_QUALIFIER_CODES();
             if (vPropQualifierCodes == null) vPropQualifierCodes = new Vector();
-            vPropQualifierCodes.addElement(m_PCQ.getNCI_CC_VAL());
+            vPropQualifierCodes.addElement(m_PCQ.getCONCEPT_IDENTIFIER());
             Vector vPropQualifierDB = m_DEC.getDEC_PROP_QUALIFIER_DB();
             if (vPropQualifierDB == null) vPropQualifierDB = new Vector(); 
             vPropQualifierDB.addElement(m_PCQ.getEVS_DATABASE());
@@ -388,7 +404,7 @@ public class EVSSearch implements Serializable
         EVS_Bean m_Rep = (EVS_Bean)vRepConcepts.elementAt(0);
         if (m_Rep == null) m_Rep = new EVS_Bean();
         m_VD.setVD_REP_NAME_PRIMARY(m_Rep.getLONG_NAME());
-        m_VD.setVD_REP_CONCEPT_CODE(m_Rep.getNCI_CC_VAL());
+        m_VD.setVD_REP_CONCEPT_CODE(m_Rep.getCONCEPT_IDENTIFIER());
         m_VD.setVD_REP_EVS_CUI_ORIGEN(m_Rep.getEVS_DATABASE());
         if(!sMenu.equals("NewVDTemplate") && !sMenu.equals("NewVDVersion"))
           m_VD.setVD_REP_IDSEQ(m_Rep.getIDSEQ());    
@@ -403,7 +419,7 @@ public class EVSSearch implements Serializable
           vRepQualifierNames.addElement(m_RepQ.getLONG_NAME());
           Vector vRepQualifierCodes = m_VD.getVD_REP_QUALIFIER_CODES();
           if (vRepQualifierCodes == null) vRepQualifierCodes = new Vector();
-          vRepQualifierCodes.addElement(m_RepQ.getNCI_CC_VAL());
+          vRepQualifierCodes.addElement(m_RepQ.getCONCEPT_IDENTIFIER());
           Vector vRepQualifierDB = m_VD.getVD_REP_QUALIFIER_DB();
           if (vRepQualifierDB == null) vRepQualifierDB = new Vector(); 
           vRepQualifierDB.addElement(m_RepQ.getEVS_DATABASE());
@@ -438,7 +454,7 @@ public class EVSSearch implements Serializable
             bean = (EVS_Bean)vCon.elementAt(j);
             if(bean != null)
             {
-              sCUI = bean.getNCI_CC_VAL();
+              sCUI = bean.getCONCEPT_IDENTIFIER();
               if(sCUI == null) sCUI = "";
               if (sCUIString.equals("")) 
                 sCUIString = sCUI;
@@ -600,6 +616,54 @@ public class EVSSearch implements Serializable
               {
                 stringArray[c] = (String)subs.get(c);
 //  System.out.println("All subconcept codes: " + stringArray[c]);
+                vSub.addElement((String)subs.get(c));
+              }
+            }
+          }
+      }
+      catch(Exception ee)
+      {
+            //System.err.println("problemYY in Thesaurus syn EVSSearch-getSubConcepts: " + ee);
+            logger.fatal("ERROR - EVSSearch-getSubConcepts for Thesaurus : " + ee.toString(), ee);
+            return vSub;
+      }
+    }
+    return vSub;
+  }
+
+  /**
+   * This method searches EVS vocabularies and returns subconcepts, which are used
+   * to construct an EVS Tree. 
+   * @param dtsVocab the EVS Vocabulary
+   * @param conceptCode the root concept.
+   * @return vector of concept objects
+   *
+   */
+  public Vector getAllSubConceptCodes(String dtsVocab, String conceptCode) 
+  {
+    Vector vSub = new Vector();
+    EVSQuery query = new EVSQueryImpl();
+    List subs = null;
+    dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab, EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME);  // "", "vocabName");   //check if valid dts vocab 
+    if(!dtsVocab.equals(EVSSearch.META_VALUE))  // "MetaValue"))
+    {      
+      try
+      {
+          if(!conceptCode.equals(""))//try it with ConceptCode
+          {
+            try
+            {
+              query.getAllSubConceptCodes(dtsVocab,conceptCode);
+              subs = evsService.evsSearch(query);
+            }
+            catch(Exception ex)
+            {
+              ex.printStackTrace();
+            }  
+            if(subs != null && subs.size()>0)
+            {
+              for (int c = 0; c < subs.size(); c++)
+              {
                 vSub.addElement((String)subs.get(c));
               }
             }
@@ -1171,14 +1235,10 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
    * @param dtsVocab the EVS Vocabulary
    * @param conceptName the root concept.
    * @param conceptCode
-   * @param defSource
    * @return vSub
  */
-public Vector getSuperConceptNamesImmediate(String dtsVocab, String conceptName, String conceptCode, String defSource) 
+public Vector getSuperConceptNamesImmediate(String dtsVocab, String conceptName, String conceptCode) 
 {
-
-    String[] stringArray = new String[50];
-    String[] stringArray2 = new String[50];
     Vector vSub = new Vector();
     //check if valid dts vocab and get out if meta search
     dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab, EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME);  // "", "vocabName");
@@ -1221,18 +1281,17 @@ public Vector getSuperConceptNamesImmediate(String dtsVocab, String conceptName,
    * @param dtsVocab the EVS Vocabulary
    * @param conceptName
    * @param conceptCode
-   * @param defSource
    * @return vSub
  */
-public Vector getSuperConceptNames(String dtsVocab, String conceptName, String conceptCode, String defSource) 
+public Vector getSuperConceptNames(String dtsVocab, String conceptName, String conceptCode) 
 {
     String[] stringArray = new String[50];
-    String[] stringArray2 = new String[50];
     Vector vSub = new Vector();
       
-    Boolean flagOne = new java.lang.Boolean(false);
-    Boolean flagTwo = new Boolean(false); 
-    Boolean flagThree = new Boolean(true); 
+    String[] stringArray2;
+    Boolean flagOne = Boolean.valueOf(false);
+    Boolean flagTwo = Boolean.valueOf(false); 
+    Boolean flagThree = Boolean.valueOf(true); 
     //check if valid dts vocab and get out if meta search
     dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab, EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME);  // "", "vocabName");
     if (dtsVocab.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
@@ -1489,7 +1548,7 @@ public String parseDefinition(String termStr)
       Vector vSearchASL = new Vector();
       Vector vSelAttr = new Vector();
       if (menuAction.equals("searchForCreate") || menuAction.equals("BEDisplay"))
-          vSelAttr =(Vector)session.getAttribute("creSelectedAttr");
+          vSelAttr = (Vector)session.getAttribute("creSelectedAttr");
       else
           vSelAttr =(Vector)session.getAttribute("selectedAttr");
 
@@ -1528,7 +1587,7 @@ public String parseDefinition(String termStr)
       }
       else
         sSearchAC = (String)session.getAttribute("searchAC");
-      if (sSearchAC.equals("EVSValueMeaning") || sSearchAC.equals("ParentConceptVM") 
+      if (sSearchAC.equals("EVSValueMeaning") || sSearchAC.equals("ParentConceptVM") || sSearchAC.equals("VMConcept")
           || sSearchAC.equals("ValueMeaning") || sSearchAC.equals("CreateVM_EVSValueMeaning")) 
         sSearchAC = "Value Meaning";
       boolean isMainConcept = false;
@@ -1546,7 +1605,7 @@ public String parseDefinition(String termStr)
         OCBean = (EVS_Bean)vRSel.elementAt(i);
         evsDB = OCBean.getEVS_DATABASE();
 
-        ccode = OCBean.getNCI_CC_VAL();
+        ccode = OCBean.getCONCEPT_IDENTIFIER();
         String sLevel = "";
         int iLevel = OCBean.getLEVEL();
         Integer Int = new Integer(iLevel);
@@ -1560,7 +1619,7 @@ public String parseDefinition(String termStr)
         if (vSelAttr.contains("Concept Name") || refresh.equals("DEF")) vResult.addElement(OCBean.getLONG_NAME());
         if (vSelAttr.contains("Public ID")) vResult.addElement(OCBean.getID());
         if (vSelAttr.contains("Version")) vResult.addElement(OCBean.getVERSION());
-        if (vSelAttr.contains("EVS Identifier")) vResult.addElement(OCBean.getNCI_CC_VAL());
+        if (vSelAttr.contains("EVS Identifier")) vResult.addElement(OCBean.getCONCEPT_IDENTIFIER());
         if (isMainConcept)  //main page concept class search addd it here with evs origin
           if (vSelAttr.contains("Vocabulary") || refresh.equals("DEF")) vResult.addElement(OCBean.getEVS_DATABASE());
         if (vSelAttr.contains("Definition") || refresh.equals("DEF")) vResult.addElement(OCBean.getPREFERRED_DEFINITION());
@@ -2015,6 +2074,7 @@ public String parseDefinition(String termStr)
       //get the db origin vocab name from the vocab name
       String dbVocab = conBean.getVocabAttr(m_eUser, dtsVocab, EVSSearch.VOCAB_NAME, EVSSearch.VOCAB_DBORIGIN);  // "vocabName", "vocabDBOrigin");
   
+      HttpSession session = m_classReq.getSession();
       //do the definition separatly so that concept for each definition is displayed in new row and bean.
       boolean defExists = false;
       for(int k=0; k< vProp.size(); k++)
@@ -2032,6 +2092,7 @@ public String parseDefinition(String termStr)
             conBean = new EVS_Bean();
             conBean.setEVSBean(sDef, sDefSrc, sConName, sDispName, conCodeType, sConID, 
               dtsVocab, dbVocab, ilevel, "", "", "", sStatus, sSemantic, sMType, sMCode);
+            conBean.markNVPConcept(conBean, session);
             vCons.addElement(conBean);  //add concept bean to the vector
           }
         }
@@ -2044,6 +2105,7 @@ public String parseDefinition(String termStr)
         conBean = new EVS_Bean();
         conBean.setEVSBean(sDef, "", sConName, sDispName, conCodeType, sConID, dtsVocab, 
             dbVocab, ilevel, "", "", "", sStatus, sSemantic, sMType, sMCode);
+        conBean.markNVPConcept(conBean, session);
         vCons.addElement(conBean);
       }
     }
@@ -2302,7 +2364,7 @@ public String parseDefinition(String termStr)
       dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab, EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME);  // "vocabDBOrigin", "vocabName");
       if(sSearchAC.equals("ParentConceptVM"))
         sParentName= (String)session.getAttribute("ParentConcept");   
-      vSuperConceptNames = this.getSuperConceptNames(dtsVocab, sConceptName, sConceptCode, sDefSource);
+      vSuperConceptNames = this.getSuperConceptNames(dtsVocab, sConceptName, sConceptCode);
       for(int j=0; j < vSuperConceptNames.size(); j++) 
       { 
           sName = (String)vSuperConceptNames.elementAt(j);
@@ -2471,7 +2533,7 @@ public String parseDefinition(String termStr)
           strHTML = tree.populateTreeRoots(sCCodeDB);
           Stack stackSuperConcepts = new Stack();
  //logger.debug(sCCodeName + " what is null " + sCCodeDB);       
-          Vector vSuperImmediate = this.getSuperConceptNamesImmediate(sCCodeDB, sCCodeName, sCCode, "");
+          Vector vSuperImmediate = this.getSuperConceptNamesImmediate(sCCodeDB, sCCodeName, sCCode);
           session.setAttribute("vSuperImmediate", vSuperImmediate);
           vStackVector2 = tree.buildVectorOfSuperConceptStacks(stackSuperConcepts, sCCodeDB, sCCode, vStackVector);
           if(vStackVector.size()<1) // must be a root concept
@@ -3033,7 +3095,7 @@ public String parseDefinition(String termStr)
         Vector vStackVector2 = new Vector();
         strHTML = tree.populateTreeRoots(dtsVocab);
         Stack stackSuperConcepts = new Stack();
-        Vector vSuperImmediate = this.getSuperConceptNamesImmediate(dtsVocab, sCodeName, sCode, "");
+        Vector vSuperImmediate = this.getSuperConceptNamesImmediate(dtsVocab, sCodeName, sCode);
         session.setAttribute("vSuperImmediate", vSuperImmediate);
         vStackVector2 = tree.buildVectorOfSuperConceptStacks(stackSuperConcepts, dtsVocab, sCode, vStackVector);
     //logger.debug(vStackVector.size() + " tree stack size " + vStackVector2.size() + " super " + vSuperImmediate.size());
@@ -3082,7 +3144,7 @@ public String parseDefinition(String termStr)
     try
     {
       HttpSession session = m_classReq.getSession();
-      String conID = ""; // eBean.getNCI_CC_VAL();
+      String conID = ""; // eBean.getCONCEPT_IDENTIFIER();
       String conType = "";  // eBean.getNCI_CC_TYPE();
       String eDB = eBean.getEVS_DATABASE();
       String metaName = m_eUser.getMetaDispName();
@@ -3122,7 +3184,7 @@ public String parseDefinition(String termStr)
             String vSource = eUser.getVocabMetaSource();
             if (vSource == null || vSource.equals("")) return eBean;
             //get its equivalent meta code
-            conID = eBean.getNCI_CC_VAL();
+            conID = eBean.getCONCEPT_IDENTIFIER();
             vList = new Vector<EVS_Bean>();
             vList = this.doMetaSearch(vList, conID, "MetaCode", vSource, 10, metaName); 
             //no matching found in meta, return the original concept
@@ -3140,13 +3202,13 @@ public String parseDefinition(String termStr)
             //get the meta concept id
             if (mBean != null) 
             {
-              conID = mBean.getNCI_CC_VAL();
+              conID = mBean.getCONCEPT_IDENTIFIER();
               //get the thesaurus code from the source
             }
             for (int j=0; j<vList.size(); j++)
             {
             EVS_Bean tBean = (EVS_Bean)vList.elementAt(j);
-            String sConID = tBean.getNCI_CC_VAL(); 
+            String sConID = tBean.getCONCEPT_IDENTIFIER(); 
     //logger.debug(j + " loop aftermetacode " + sConID + " name " + tBean.getLONG_NAME());
             } */
           }
@@ -3173,7 +3235,7 @@ public String parseDefinition(String termStr)
         {
           //call method to use cui property to search
           if (conID == null || conID.equals(""))
-            conID = eBean.getNCI_CC_VAL();  //go back to original id if not found
+            conID = eBean.getCONCEPT_IDENTIFIER();  //go back to original id if not found
           //now get the meta concept        
           conType = this.getNCIMetaCodeType(conID, "byID");
        //logger.debug(dtsVocab + " metasearch in meta " + conID + conType);
@@ -3209,7 +3271,7 @@ public String parseDefinition(String termStr)
       {
         EVS_Bean thisBean = (EVS_Bean)vList.elementAt(k);
         String sSrc = thisBean.getEVS_DEF_SOURCE();
-    //logger.debug(thisBean.getNCI_CC_VAL() + " nci def " + sSrc + " nci src " + srcNCI);
+    //logger.debug(thisBean.getCONCEPT_IDENTIFIER() + " nci def " + sSrc + " nci src " + srcNCI);
         //match def source order to the bean
         if (sSrc.equalsIgnoreCase(srcNCI))
         {

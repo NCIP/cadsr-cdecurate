@@ -1,5 +1,6 @@
 <!-- SearchResultsPage.jsp -->
 <!-- goes to lgoin page if error occurs -->
+<%@ page errorPage="ErrorPage.jsp" %>
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
 <curate:checkLogon name="Userbean" page="/LoginE.jsp" />
 <html>

@@ -873,7 +873,7 @@
   </table> 
 <%}%>
 
-<input type="hidden" name="newCDEPageAction" value="nothing">
+<input type="hidden" name="pageAction" value="nothing">
 <input type="hidden" name="DEAction" value="NewDE">
 <input type="hidden" name="deIDSEQ" value="<%=sDEIDSEQ%>">
 <input type="hidden" name="decIDSEQ" value="<%=sDECLongID%>">

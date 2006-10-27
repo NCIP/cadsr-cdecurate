@@ -1,8 +1,9 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.11 2006-09-12 15:47:03 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.12 2006-10-27 14:54:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import java.io.Serializable;
 import java.util.*;
 import java.sql.*;
@@ -94,7 +95,7 @@ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
+//@SuppressWarnings("unchecked") 
 public class InsACService implements Serializable
 {
   /**
@@ -120,8 +121,8 @@ public class InsACService implements Serializable
     m_classRes = res;
     m_servlet = CurationServlet;
   }
-
- /**
+  
+/**
   * stores status message in the session
   * @param sMsg string message to append to.
   */
@@ -223,10 +224,10 @@ public class InsACService implements Serializable
         if (!sOriginAction.equals("BlockEditVD"))  //not for block edit
         {
           //remove vd_pvs relationship if vd type has changed from enum to non-enum
-          Vector<PV_Bean> vVDPVs = (Vector)session.getAttribute("VDPVList");
+          Vector<PV_Bean> vVDPVs = vd.getVD_PV_List();  //(Vector)session.getAttribute("VDPVList");
           if (!pageVDType.equals("E") && sAction.equals("UPD") && vVDPVs != null && vVDPVs.size()>0)
           {
-            sReturnCode = this.addRemoveVDPVS(vd, false);
+            sReturnCode = "";  //TODO - this.addRemoveVDPVS(vd, false);
             if (sReturnCode != null && !sReturnCode.equals(""))
               vd.setVD_TYPE_FLAG("E");
           }
@@ -413,7 +414,7 @@ public class InsACService implements Serializable
                 m_classReq.setAttribute("retcode", sReturnCode);
                 
             //create non evs parent concept in reference documents table
-              sReturn = this.setNonEVSParentConcept(vd);
+            sReturn = this.setNonEVSParentConcept(vd);
             // This writes the source of a Meta parent to Ref Docs
             // sVDParent is string of con_idseqs for parent concepts
             //if(sVDParent != null && !sVDParent.equals(""))
@@ -437,10 +438,8 @@ public class InsACService implements Serializable
               if (vd.getVD_TYPE_FLAG().equals("E") && 
                   (pageVDType == null || pageVDType.equals("") || pageVDType.equals("E")))
               {
-                  if (sAction.equals("INS"))
-                    sReturn = this.addRemoveVDPVS(vd, true);  //setVD_PVS(sReturn, vd, true);
-                  else
-                    sReturn = this.addRemoveVDPVS(vd, false);   //setVD_PVS(sReturn, vd, false);
+                PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
+                pvser.submitPV(vd);
               }             
             }
             //reset the pv counts to reset more hyperlink
@@ -448,7 +447,7 @@ public class InsACService implements Serializable
             Integer pvCount = new Integer(0);
             if (vd.getVD_TYPE_FLAG().equals("E"))
             {
-              Vector<PV_Bean> vPV = (Vector)session.getAttribute("VDPVList"); //vd.getVD_PV_NAME();
+              Vector<PV_Bean> vPV = vd.getVD_PV_List();  // (Vector)session.getAttribute("VDPVList"); //vd.getVD_PV_NAME();
               if (vPV != null && vPV.size() > 0)
               {
                 PV_Bean pvBean = (PV_Bean)vPV.elementAt(0);
@@ -478,6 +477,19 @@ public class InsACService implements Serializable
             //do alternate names create
             if (sInsertFor.equalsIgnoreCase("Version"))
               this.doAltVersionUpdate(sVD_ID, oldVD.getVD_VD_IDSEQ());
+
+            // ********************************
+            Connection conn = m_servlet.connectDB(m_classReq, m_classRes);
+            AltNamesDefsSession.save(conn, session, AltNamesDefsSession._searchVD, sVD_ID, sContextID);
+            conn.close();
+            session.removeAttribute("AllAltNameList");
+            // ********************************
+            /*
+            Vector<ALT_NAME_Bean> tBean = AltNamesDefsSession.getAltNameBeans(session, AltNamesDefsSession._searchVD, sVD_ID, sContextID);
+            if (tBean != null)
+                session.setAttribute("AllAltNameList", tBean);
+            */
+
             String oneAlt = this.doAddRemoveAltNames(sVD_ID, sContextID, sAction);   //, "create");
             vd.setALTERNATE_NAME(oneAlt);
             //do reference docuemnts create
@@ -806,7 +818,7 @@ public class InsACService implements Serializable
     EVS_Bean evsCon = vm.getVM_CONCEPT();
     if (evsCon == null) evsCon = new EVS_Bean();
     String sMean = vm.getVM_SHORT_MEANING();
-    String evsID = evsCon.getNCI_CC_VAL();
+    String evsID = evsCon.getCONCEPT_IDENTIFIER();
     if (evsID == null) evsID = "";
     m_classReq.setAttribute("selConcept", evsCon);
     vm = this.getVM(vm);  //first check if vm with the same concept name exists
@@ -820,7 +832,7 @@ public class InsACService implements Serializable
       //if (sCondr != null && !sCondr.equals("") && evsID != null && !evsID.equals(""))
       if (evsID != null && !evsID.equals(""))
       {
-        String cadsrID = cadsrCon.getNCI_CC_VAL();
+        String cadsrID = cadsrCon.getCONCEPT_IDENTIFIER();
         if (cadsrID == null) cadsrID = "";
         String cadsrVocab = cadsrCon.getEVS_DATABASE();
         if (cadsrVocab == null) cadsrVocab = "";
@@ -859,7 +871,6 @@ public class InsACService implements Serializable
   *   "{call SBREXT_Set_Row.SET_VM(?,?,?,?,?,?,?,?,?,?,?)}" to submit
   *
   * @param sAction Insert or update Action.
-  * @param sVM_ID VM IDseq.
   * @param vm VM Bean.
   *
   * @return String return code from the stored procedure call. null if no error occurred.
@@ -991,7 +1002,7 @@ public class InsACService implements Serializable
         if (vmConcept != null)
         {          
           sCondr = vmConcept.getCONDR_IDSEQ();
-          sConID = vmConcept.getNCI_CC_VAL();
+          sConID = vmConcept.getCONCEPT_IDENTIFIER();
         //System.out.println(sConID + " setVM conid/meaning" + sShortMeaning + " condr " + sCondr);     
 
           //create concept this vm has concept attr and no condr id (new concept)
@@ -1005,9 +1016,9 @@ public class InsACService implements Serializable
           else if (sAction.equals("UPD"))
           {
             //check if it is valid condr (concept-vm relationship)
-           /* String conID = vmConcept.getNCI_CC_VAL();
+           /* String conID = vmConcept.getCONCEPT_IDENTIFIER();
             String oldName = oldCon.getLONG_NAME();
-            String oldID = oldCon.getNCI_CC_VAL();
+            String oldID = oldCon.getCONCEPT_IDENTIFIER();
             //same concept but different IDs lead to different concept-vm relationship
             if (conName.equalsIgnoreCase(oldName) && !conID.equalsIgnoreCase(oldID))
             {              
@@ -1213,7 +1224,7 @@ public class InsACService implements Serializable
   * @param isNew boolean to check if creating new relationship or deleting it.
   * @return string return code of error message
   */
-  public String addRemoveVDPVS(VD_Bean vd, boolean isNew)
+/*  public String addRemoveVDPVS(VD_Bean vd, boolean isNew)
   {
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -1243,7 +1254,7 @@ public class InsACService implements Serializable
               if (evsBean != null)
               {
                 String sCondr = evsBean.getCONDR_IDSEQ();  //vm condr idseq
-                String sConID = evsBean.getNCI_CC_VAL();
+                String sConID = evsBean.getCONCEPT_IDENTIFIER();
                 //create vm if this vm has concept attr and no condr id (new vm and pv)
                 if (sConID != null && !sConID.equals("") && (sCondr == null || sCondr.equals("")))
                 {
@@ -1309,7 +1320,7 @@ public class InsACService implements Serializable
     }
     return sReturnCode;
   }  //END VD_PVS
-
+*/
  /**
   * To remove exisitng one in VD_PVS relationship table after the validation.
   * Called from 'setVD_PVS' method.
@@ -1343,7 +1354,7 @@ public class InsACService implements Serializable
         if (pCon != null)
         {
           conIDseq = pCon.getCONDR_IDSEQ();
-          String pConID = pCon.getNCI_CC_VAL();
+          String pConID = pCon.getCONCEPT_IDENTIFIER();
           if (pConID != null && !pConID.equals("") && (conIDseq == null || conIDseq.equals("")))
             conIDseq = this.setConcept("INS", retCode, pCon);
         }
@@ -1443,21 +1454,28 @@ public class InsACService implements Serializable
   * The UpdateCRFValue method updates the quest contents table with the vp idseq.
   * calls setQuestContent to update.
   * @param pv PVid idseq of the permissible value
-  *
-  * @throws Exception
   */
-  public void UpdateCRFValue(PV_Bean pv) throws Exception
+  public void UpdateCRFValue(PV_Bean pv)
   {
-      HttpSession session = m_classReq.getSession();
-      String sMenuAction = (String)session.getAttribute("MenuAction");
-      if (sMenuAction.equals("Questions") && pv.getVP_SUBMIT_ACTION().equals("INS"))
+      try
       {
-         //get the crf value vector to update
-         String sVVid = pv.getQUESTION_VALUE_IDSEQ();
-         String sVPid = pv.getPV_VDPVS_IDSEQ();
-         String ret = "";
-         if (sVPid != null && !sVPid.equals("") && sVVid != null && !sVVid.equals(""))
-            ret = setQuestContent(null, sVVid, sVPid);
+        HttpSession session = m_classReq.getSession();
+        String sMenuAction = (String)session.getAttribute("MenuAction");
+        if (sMenuAction.equals("Questions") && pv.getVP_SUBMIT_ACTION().equals("INS"))
+        {
+           //get the crf value vector to update
+           String sVVid = pv.getQUESTION_VALUE_IDSEQ();
+           String sVPid = pv.getPV_VDPVS_IDSEQ();
+           String ret = "";
+           if (sVPid != null && !sVPid.equals("") && sVVid != null && !sVVid.equals(""))
+              ret = setQuestContent(null, sVVid, sVPid);
+        }
+      }
+      catch (RuntimeException e)
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+        logger.fatal("Error - " + e);
       }
   } // end of UpdateCRFValue
 
@@ -1772,6 +1790,19 @@ public class InsACService implements Serializable
           //do alternate names create
           if (sInsertFor.equalsIgnoreCase("Version"))
             this.doAltVersionUpdate(sDEC_ID, oldDECID);
+
+          // ********************************
+          Connection conn = m_servlet.connectDB(m_classReq, m_classRes);
+          AltNamesDefsSession.save(conn, session, AltNamesDefsSession._searchDEC, sDEC_ID, sContextID);
+          conn.close();
+          session.removeAttribute("AllAltNameList");
+          // ********************************
+          /*
+          Vector<ALT_NAME_Bean> tBean = AltNamesDefsSession.getAltNameBeans(session, AltNamesDefsSession._searchDEC, sDEC_ID, sContextID);
+          if (tBean != null)
+              session.setAttribute("AllAltNameList", tBean);
+          */
+
           String oneAlt = this.doAddRemoveAltNames(sDEC_ID, sContextID, sAction);   //, "create");
           dec.setALTERNATE_NAME(oneAlt);
           //do reference docuemnts create
@@ -2049,12 +2080,16 @@ public class InsACService implements Serializable
           if (!OCBean.getCON_AC_SUBMIT_ACTION().equals("DEL"))
           {
             String sRet = "";
-            String conIDseq = OCBean.getCON_IDSEQ();
+            String conIDseq = OCBean.getIDSEQ();
             //create it only if doesn't exist
             if (conIDseq == null || conIDseq.equals(""))
               conIDseq = this.setConcept("INS", sRet, OCBean);
             if (conIDseq != null && !conIDseq.equals(""))
             {
+              //add the concept value to the conidseq
+              String nvp = OCBean.getNVP_CONCEPT_VALUE();
+              if (nvp != null && !nvp.equals(""))
+                conIDseq += ":" + nvp;
               if (sOCCondrString.equals("")) 
                 sOCCondrString = conIDseq;
               else 
@@ -2079,7 +2114,7 @@ public class InsACService implements Serializable
           if (!OCBean.getCON_AC_SUBMIT_ACTION().equals("DEL"))
           {
             String sRet = "";
-            String conIDseq = OCBean.getCON_IDSEQ();
+            String conIDseq = OCBean.getIDSEQ();
             //create it only if doesn't exist
             if (conIDseq == null || conIDseq.equals(""))
               conIDseq = this.setConcept("INS", sRet, OCBean);
@@ -2225,12 +2260,16 @@ public class InsACService implements Serializable
           if (!PCBean.getCON_AC_SUBMIT_ACTION().equals("DEL"))
           {
             String sRet = "";
-            String conIDseq = PCBean.getCON_IDSEQ();
+            String conIDseq = PCBean.getIDSEQ();
             //create it only if doesn't exist
             if (conIDseq == null || conIDseq.equals(""))
               conIDseq = this.setConcept("INS", sRet, PCBean);
             if (conIDseq != null && !conIDseq.equals(""))
             {
+              //add the concept value to the conidseq
+              String nvp = PCBean.getNVP_CONCEPT_VALUE();
+              if (nvp != null && !nvp.equals(""))
+                conIDseq += ":" + nvp;
               if (sPCCondrString.equals("")) 
                 sPCCondrString = conIDseq;
               else 
@@ -2256,7 +2295,7 @@ public class InsACService implements Serializable
           if (!PCBean.getCON_AC_SUBMIT_ACTION().equals("DEL"))
           {
             String sRet = "";
-            String conIDseq = PCBean.getCON_IDSEQ();
+            String conIDseq = PCBean.getIDSEQ();
             //create it only if doesn't exist
             if (conIDseq == null || conIDseq.equals(""))
               conIDseq = this.setConcept("INS", sRet, PCBean);
@@ -2404,7 +2443,7 @@ public class InsACService implements Serializable
           if (!REPBean.getCON_AC_SUBMIT_ACTION().equals("DEL"))
           {
             String sRet = "";
-            String conIDseq = REPBean.getCON_IDSEQ();
+            String conIDseq = REPBean.getIDSEQ();
             //create it only if doesn't exist
             if (conIDseq == null || conIDseq.equals(""))
               conIDseq = this.setConcept("INS", sRet, REPBean);
@@ -2433,7 +2472,7 @@ public class InsACService implements Serializable
           if (!REPBean.getCON_AC_SUBMIT_ACTION().equals("DEL"))
           {
             String sRet = "";
-            String conIDseq = REPBean.getCON_IDSEQ();
+            String conIDseq = REPBean.getIDSEQ();
             //create it only if doesn't exist
             if (conIDseq == null || conIDseq.equals(""))
               conIDseq = this.setConcept("INS", sRet, REPBean);
@@ -2644,7 +2683,7 @@ public class InsACService implements Serializable
       {
        String sName = VD.getVD_LONG_NAME();
        String sContextID = VD.getVD_CONTE_IDSEQ();
-       String sCCVal = cq.getNCI_CC_VAL();
+       String sCCVal = cq.getCONCEPT_IDENTIFIER();
       // if(sCCVal.equals("No value returned."))
        // sCCVal = cq.getUMLS_CUI_VAL();
       // if(sCCVal.equals("No value returned."))
@@ -2741,7 +2780,7 @@ public class InsACService implements Serializable
       {
        String sName = DEC.getDEC_LONG_NAME();
        String sContextID = DEC.getDEC_CONTE_IDSEQ();
-       String sCCVal = cq.getNCI_CC_VAL();
+       String sCCVal = cq.getCONCEPT_IDENTIFIER();
       // if(sCCVal.equals("No value returned."))
        // sCCVal = cq.getUMLS_CUI_VAL();
       // if(sCCVal.equals("No value returned."))
@@ -3068,6 +3107,19 @@ public class InsACService implements Serializable
           //do alternate names create          
           if (sInsertFor.equalsIgnoreCase("Version"))
             this.doAltVersionUpdate(sDE_ID, oldDEID);
+
+          // ********************************
+          Connection conn = m_servlet.connectDB(m_classReq, m_classRes);
+          AltNamesDefsSession.save(conn, session, AltNamesDefsSession._searchDE, sDE_ID, sContextID);
+          conn.close();
+          session.removeAttribute("AllAltNameList");
+          // ********************************
+          /*
+          Vector<ALT_NAME_Bean> tBean = AltNamesDefsSession.getAltNameBeans(session, AltNamesDefsSession._searchDE, sDE_ID, sContextID);
+          if (tBean != null)
+              session.setAttribute("AllAltNameList", tBean);
+          */
+
           String oneAlt = this.doAddRemoveAltNames(sDE_ID, sContextID, sAction);   //, "create");
           de.setALTERNATE_NAME(oneAlt);
           //do reference docuemnts create
@@ -5338,62 +5390,66 @@ public class InsACService implements Serializable
   public String doAddRemoveAltNames(String sDE, String deCont, String desAction)
   {
     String oneAltName = "";
-    try
-    {
-//  System.out.println(sDE + " add alt names " + deCont);
-      HttpSession session = m_classReq.getSession();
-      String sCont = m_classReq.getParameter("selContext");
-      if (sCont == null) sCont = "";
-      Vector vAllAltName = (Vector)session.getAttribute("AllAltNameList"); 
-      if (vAllAltName == null) vAllAltName = new Vector();
-      for (int i =0; i<vAllAltName.size(); i++)
-      {
-        ALT_NAME_Bean altNameBean = (ALT_NAME_Bean)vAllAltName.elementAt(i);
-        if (altNameBean == null) altNameBean = new ALT_NAME_Bean();
-        String altAC = altNameBean.getAC_IDSEQ();
-        //new de from owning context
-        if (altAC == null || altAC.equals("") || altAC.equals("new") || desAction.equals("INS"))
-          altAC = sDE;
-   // System.out.println(sDE + " add alt names AC " + altAC);
-       //remove it only for matching ac
-        if (altAC != null && sDE.equals(altAC))
+        try
         {
-          String altContID = altNameBean.getCONTE_IDSEQ();
-          //new context from owning context
-          if (altContID == null || altContID.equals("") || altContID.equals("new"))
-            altContID = deCont;
-         // System.out.println(deCont + " add alt names context " + altContID);
-          //mark the all its alt names to be deleted if action is to undesignate
-          if (desAction.equals("remove") && altContID != null && sCont != null && altContID.equals(sCont))
-            altNameBean.setALT_SUBMIT_ACTION("DEL");  
-          //get other attributes
-          String altID = altNameBean.getALT_NAME_IDSEQ();
-          String altType = altNameBean.getALT_TYPE_NAME();
-          String altSubmit = altNameBean.getALT_SUBMIT_ACTION();
-          String altName = altNameBean.getALTERNATE_NAME();
-          String altContext = altNameBean.getCONTEXT_NAME();
-          String altLang = altNameBean.getAC_LANGUAGE();
-          //mark the new ones ins or upd according to add or remove
-          if (altID == null || altID.equals("") || altID.equals("new")) 
-          {
-            if (desAction.equals("remove") || altSubmit.equals("DEL")) altSubmit = "UPD";  //mark new one as update so that it won't create 
-            else altSubmit = "INS";
-          }
-         // System.out.println(desAction + " add alt names submit " + altSubmit);
-        
-          String ret = "";
-          if (!altSubmit.equals("UPD"))   //call method to create alternate name in the database
-            ret = this.setDES(altSubmit, altAC, altContID, altContext, altType, altName, altLang, altID); 
+            // System.out.println(sDE + " add alt names " + deCont);
+            HttpSession session = m_classReq.getSession();
+            String sCont = m_classReq.getParameter("selContext");
+            if (sCont == null)
+                sCont = "";
+            Vector vAllAltName = (Vector) session.getAttribute("AllAltNameList");
+            if (vAllAltName == null)
+                vAllAltName = new Vector();
+            for (int i = 0; i < vAllAltName.size(); i++)
+            {
+                ALT_NAME_Bean altNameBean = (ALT_NAME_Bean) vAllAltName.elementAt(i);
+                if (altNameBean == null)
+                    altNameBean = new ALT_NAME_Bean();
+                String altAC = altNameBean.getAC_IDSEQ();
+                // new de from owning context
+                if (altAC == null || altAC.equals("") || altAC.equals("new") || desAction.equals("INS"))
+                    altAC = sDE;
+                // System.out.println(sDE + " add alt names AC " + altAC);
+                // remove it only for matching ac
+                if (altAC != null && sDE.equals(altAC))
+                {
+                    String altContID = altNameBean.getCONTE_IDSEQ();
+                    // new context from owning context
+                    if (altContID == null || altContID.equals("") || altContID.equals("new"))
+                        altContID = deCont;
+                    // System.out.println(deCont + " add alt names context " + altContID);
+                    // mark the all its alt names to be deleted if action is to undesignate
+                    if (desAction.equals("remove") && altContID != null && sCont != null && altContID.equals(sCont))
+                        altNameBean.setALT_SUBMIT_ACTION("DEL");
+                    // get other attributes
+                    String altID = altNameBean.getALT_NAME_IDSEQ();
+                    String altType = altNameBean.getALT_TYPE_NAME();
+                    String altSubmit = altNameBean.getALT_SUBMIT_ACTION();
+                    String altName = altNameBean.getALTERNATE_NAME();
+                    String altContext = altNameBean.getCONTEXT_NAME();
+                    String altLang = altNameBean.getAC_LANGUAGE();
+                    // mark the new ones ins or upd according to add or remove
+                    if (altID == null || altID.equals("") || altID.equals("new"))
+                    {
+                        if (desAction.equals("remove") || altSubmit.equals("DEL"))
+                            altSubmit = "UPD"; // mark new one as update so that it won't create
+                        else
+                            altSubmit = "INS";
+                    }
+                    // System.out.println(desAction + " add alt names submit " + altSubmit);
+                    String ret = "";
+                    if (!altSubmit.equals("UPD")) //call method to create alternate name in the database
+                        ret = this.setDES(altSubmit, altAC, altContID, altContext, altType, altName, altLang, altID);
+                }
+            }
+            //get one alt name for the AC after ins or del actions
+            oneAltName = this.getOneAltName(sDE);
         }
-      }
-      //get one alt name for the AC after ins or del actions
-      oneAltName = this.getOneAltName(sDE);
-    }
-    catch(Exception e)
-    {
-      logger.fatal("ERROR in InsACService-addRemoveAltNames for exception : " + e.toString(), e);
-    }
-    return oneAltName;
+        catch (Exception e)
+        {
+            logger.fatal("ERROR in InsACService-addRemoveAltNames for exception : " + e.toString(), e);
+        }
+        return oneAltName;
   } //end doAddRemoveAltNames
 
 
@@ -5583,7 +5639,7 @@ public class InsACService implements Serializable
           if(sEvsSource == null) sEvsSource = "";
           if(sEvsSource.equalsIgnoreCase("NCI-Gloss") || sEvsSource.equalsIgnoreCase("NCI04"))   
             evsBean = takeThesaurusConcept(evsBean);
-          logger.info("after takeThes " + evsBean.getNCI_CC_VAL());     
+          logger.info("after takeThes " + evsBean.getCONCEPT_IDENTIFIER());     
         }
        }  */
       //return the concept id if the concept alredy exists in caDSR.
@@ -5621,11 +5677,11 @@ public class InsACService implements Serializable
 
           //truncate the definition to be 2000 long.
           String sDef = evsBean.getPREFERRED_DEFINITION();
-          //if (sDef == null) sDef = "";
-          //if (sDef.length() > 2000) sDef = sDef.substring(0, 2000);
+        //  if (sDef == null) sDef = "";
+        //  if (sDef.length() > 2000) sDef = sDef.substring(0, 2000);
           // Set the In parameters (which are inherited from the PreparedStatement class)
           CStmt.setString(2, sAction);
-          CStmt.setString(4, evsBean.getNCI_CC_VAL());
+          CStmt.setString(4, evsBean.getCONCEPT_IDENTIFIER());
           CStmt.setString(5, evsBean.getLONG_NAME());
           CStmt.setString(6, sDef);
         //  CStmt.setString(7, evsBean.getCONTE_IDSEQ());  caBIG by default
@@ -5636,16 +5692,16 @@ public class InsACService implements Serializable
           CStmt.setString(13, evsBean.getEVS_DEF_SOURCE());
           CStmt.setString(14, evsBean.getNCI_CC_TYPE());
            // Now we are ready to call the stored procedure
-          //logger.info("setConcept " + evsBean.getNCI_CC_VAL());     
+          //logger.info("setConcept " + evsBean.getCONCEPT_IDENTIFIER());     
 
           boolean bExcuteOk = CStmt.execute();
           sReturnCode = CStmt.getString(1);
           conIdseq = CStmt.getString(3);
-          evsBean.setCON_IDSEQ(conIdseq);
+          evsBean.setIDSEQ(conIdseq);
           if (sReturnCode != null)
           {
             this.storeStatusMsg("\\t " + sReturnCode + " : Unable to update Concept attributes - " 
-                + evsBean.getNCI_CC_VAL() + ": " + evsBean.getLONG_NAME() + ".");
+                + evsBean.getCONCEPT_IDENTIFIER() + ": " + evsBean.getLONG_NAME() + ".");
             m_classReq.setAttribute("retcode", sReturnCode);      //store returncode in request to track it all through this request    
           }
         }
@@ -5724,13 +5780,13 @@ public class InsACService implements Serializable
         CStmt.registerOutParameter(20, java.sql.Types.VARCHAR);       //date modified
         CStmt.registerOutParameter(21, java.sql.Types.VARCHAR);       //deleted ind
 
-        CStmt.setString(2, evsBean.getCON_IDSEQ());       // con idseq
-        CStmt.setString(3, evsBean.getNCI_CC_VAL());       // concept code
+        CStmt.setString(2, evsBean.getIDSEQ());       // con idseq
+        CStmt.setString(3, evsBean.getCONCEPT_IDENTIFIER());       // concept code
          // Now we are ready to call the stored procedure
         boolean bExcuteOk = CStmt.execute();
         sCON_IDSEQ = (String)CStmt.getObject(2);
-        evsBean.setCON_IDSEQ(sCON_IDSEQ);
-      //logger.info(sCON_IDSEQ + " getConcept code " + evsBean.getNCI_CC_VAL() + evsBean.getEVS_ORIGIN());     
+        evsBean.setIDSEQ(sCON_IDSEQ);
+      //logger.info(sCON_IDSEQ + " getConcept code " + evsBean.getCONCEPT_IDENTIFIER() + evsBean.getEVS_ORIGIN());     
         sReturn = (String)CStmt.getObject(1);
         if (sReturn == null || sReturn.equals(""))
         {
@@ -5744,7 +5800,7 @@ public class InsACService implements Serializable
             if (dbOrigin != null && evsOrigin != null && !dbOrigin.equals(evsOrigin))
             {
               sCON_IDSEQ = "Another Concept Exists in caDSR with same Concept Code "
-              + evsBean.getNCI_CC_VAL() + 
+              + evsBean.getCONCEPT_IDENTIFIER() + 
               ", but in a different Vocabulary (" + dbOrigin + "). New concept therefore cannot be created. Please choose another concept.";
             }
           }
@@ -5757,12 +5813,13 @@ public class InsACService implements Serializable
             if (sDef == null || sDef.equals("")) sDef = eUser.getDefDefaultValue();
             EVS_Bean vmConcept = new EVS_Bean();
             String evsOrigin = vmConcept.getVocabAttr(eUser, dbOrigin, EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME);  // "vocabDBOrigin", "vocabName");  
-      //logger.debug(evsBean.getNCI_CC_VAL() + " setevsbeanforpv " + (String)CStmt.getObject(3) + (String)CStmt.getObject(4) + (String)CStmt.getObject(7));
+      //logger.debug(evsBean.getCONCEPT_IDENTIFIER() + " setevsbeanforpv " + (String)CStmt.getObject(3) + (String)CStmt.getObject(4) + (String)CStmt.getObject(7));
             evsBean.setEVSBean(sDef, (String)CStmt.getObject(9), 
                               (String)CStmt.getObject(7), (String)CStmt.getObject(7), 
                               (String)CStmt.getObject(11), (String)CStmt.getObject(3), 
                               evsOrigin, dbOrigin, 0, "", (String)CStmt.getObject(4), "", 
                               (String)CStmt.getObject(8), "", "", "");
+            evsBean.markNVPConcept(evsBean, session);  //store name value pair
           }
         }
       }
@@ -5782,7 +5839,7 @@ public class InsACService implements Serializable
     {
       logger.fatal("ERROR in InsACService-getConcept for close : " + ee.toString(), ee);
     }
-    return sCON_IDSEQ;
+    return sCON_IDSEQ;  //TODO check what is parent concept id
   } //end get concept
 
   /**
@@ -5794,8 +5851,8 @@ public class InsACService implements Serializable
   private String setEVSParentConcept(VD_Bean vd) throws Exception
   {
       HttpSession session = m_classReq.getSession();
-      Vector vParentCon = (Vector)session.getAttribute("VDParentConcept");
-      if (vParentCon == null) vParentCon = new Vector();
+      Vector<EVS_Bean> vParentCon = vd.getReferenceConceptList();  // (Vector)session.getAttribute("VDParentConcept");
+      if (vParentCon == null) vParentCon = new Vector<EVS_Bean>();
       String sVDParent = "", sVDCondr = "";
       for (int m=0; m<vParentCon.size(); m++)
       {
@@ -5813,12 +5870,14 @@ public class InsACService implements Serializable
             {
               String sRet = "";
               parBean.setCONTE_IDSEQ(vd.getVD_CONTE_IDSEQ());
-              String conIDseq = parBean.getCON_IDSEQ();
+              String conIDseq = parBean.getIDSEQ();
               //create it only if doesn't exist
               if (conIDseq == null || conIDseq.equals(""))
                 conIDseq = this.setConcept("INS", sRet, parBean);
               if (conIDseq != null && !conIDseq.equals(""))
               {
+                parBean.setIDSEQ(conIDseq);
+                vParentCon.setElementAt(parBean, m);
                 if (sVDParent.equals("")) sVDParent = conIDseq;
                 else sVDParent = sVDParent + "," + conIDseq;
               }
@@ -5833,6 +5892,7 @@ public class InsACService implements Serializable
           }
         }
       }
+      vd.setReferenceConceptList(vParentCon);
       if (sVDParent.equals("") && sVDCondr != null && !sVDCondr.equals(""))
         sVDParent = "removeParent";
     return sVDParent;
@@ -5848,7 +5908,7 @@ public class InsACService implements Serializable
   {
     String sCont = vd.getVD_CONTE_IDSEQ();
     String sACid = vd.getVD_VD_IDSEQ();
-    String sCuiVal = parBean.getNCI_CC_VAL();
+    String sCuiVal = parBean.getCONCEPT_IDENTIFIER();
     String rdIDseq = "";
     String sMetaSource = parBean.getEVS_CONCEPT_SOURCE();
     if(sMetaSource == null) sMetaSource = "";
@@ -5892,7 +5952,7 @@ public class InsACService implements Serializable
   private String setNonEVSParentConcept(VD_Bean vd) throws Exception
   {
       HttpSession session = m_classReq.getSession();
-      Vector vParentCon = (Vector)session.getAttribute("VDParentConcept");
+      Vector vParentCon = vd.getReferenceConceptList();  // (Vector)session.getAttribute("VDParentConcept");
       if (vParentCon == null) vParentCon = new Vector();
       String sRet = "";
       String sLang = "ENGLISH";
@@ -5911,9 +5971,9 @@ public class InsACService implements Serializable
             String sACid = vd.getVD_VD_IDSEQ();
             String sName = parBean.getLONG_NAME();
             String sDoc = parBean.getPREFERRED_DEFINITION();
-            String sType = parBean.getNCI_CC_VAL();
+            String sType = parBean.getCONCEPT_IDENTIFIER();
             String sURL = parBean.getEVS_DEF_SOURCE();
-            String rdIDseq = parBean.getCON_IDSEQ();
+            String rdIDseq = parBean.getIDSEQ();
             String sAction = parBean.getCON_AC_SUBMIT_ACTION();
             if (sAction == null || sAction.equals("")) sAction = "INS";
             //do not delete if not existed in cadsr already
@@ -5954,7 +6014,7 @@ public class InsACService implements Serializable
   private String setRDMetaConceptSource(VD_Bean vd) throws Exception
   {
       HttpSession session = m_classReq.getSession();
-      Vector vParentCon = (Vector)session.getAttribute("VDParentConcept");
+      Vector vParentCon = vd.getReferenceConceptList();  // (Vector)session.getAttribute("VDParentConcept");
       if (vParentCon == null) vParentCon = new Vector();
       String sRet = "";
       for (int m=0; m<vParentCon.size(); m++)
@@ -5970,10 +6030,10 @@ public class InsACService implements Serializable
           {
             String sCont = vd.getVD_CONTE_IDSEQ();
             String sACid = vd.getVD_VD_IDSEQ();
-            String sCuiVal = parBean.getNCI_CC_VAL();
+            String sCuiVal = parBean.getCONCEPT_IDENTIFIER();
             String sMetaSource = parBean.getEVS_CONCEPT_SOURCE();
             if(sMetaSource == null) sMetaSource = "";
-            String rdIDseq = null;  //parBean.getCON_IDSEQ();
+            String rdIDseq = null;  //parBean.getIDSEQ();
             String sAction = parBean.getCON_AC_SUBMIT_ACTION();
             if (sAction == null || sAction.equals("")) sAction = "INS";
             String sLang = "ENGLISH";

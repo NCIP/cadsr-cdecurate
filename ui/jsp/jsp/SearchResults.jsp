@@ -152,7 +152,6 @@
   sSelectAll = "true";
  else
   sSelectAll = "false";
-//System.out.println("XXX sr done");
 %>
 
 <SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
@@ -349,7 +348,7 @@
   function Back()
   {
     hourglass();
-    document.searchResultsForm.newCDEPageAction.value = "backFromGetAssociated";
+    document.searchResultsForm.pageAction.value = "backFromGetAssociated";
     <% if (sBackFromGetAssociated.equals("backFromGetAssociated"))
        {
           session.setAttribute("SecondBackFromGetAssociated", "True");
@@ -578,11 +577,6 @@
         buttons[9] = "<!-- Append button only for DE, DEC, VD in only the main search  -->\n"
             + "<input type=\"button\" name=\"AppendBtn\" value=\"Append\" onClick=\"setAppendAction();\" disabled "
 			+ "onHelp = \"showHelp('Help_SearchAC.html#searchResultsForm_append'); return false\" style=\"width: 65\">\n&nbsp;\n";
-    } 
-    if (sSelAC.equals("Value Meaning")) {
-        buttons[10] = "<!-- create new VM button for value meanings  -->\n"
-            + "<input type=\"button\" name=\"createVM\" value=\"Create New\" onClick=\"javascript:createNewVM();\" "
-			+ "onHelp = \"showHelp('Help_SearchAC.html#searchResultsForm_append'); return false\" style=\"width: 97\">\n&nbsp;\n";
     } 
     if (sMAction.equals("searchForCreate")) {
         buttons[11] = "<!-- makes close button only if page opened from createDE or VD pages   -->\n"
@@ -944,7 +938,6 @@
     if (results != null)
 	  {
       int rsize = results.size();
-//System.out.println("sr jsp results2.size(): " + results.size());
       int j = 0;
 		  for (int i = 0; i < results.size(); i+=k)
 		  {
@@ -989,7 +982,7 @@
 %>
  </table>
  <table>
-<input type="hidden" name="newCDEPageAction" value="nothing">
+<input type="hidden" name="pageAction" value="nothing">
 <input type="hidden" name="AttChecked" value="<%=(k-5)%>">
 <input type="hidden" name="searchComp" value="">
 <input type="hidden" name="numSelected" value="">

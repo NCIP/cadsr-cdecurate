@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.11 2006-08-29 18:11:01 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.12 2006-10-27 14:54:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -155,7 +155,7 @@ public class SetACService implements Serializable
           HttpServletResponse res, DE_Bean m_DE, GetACService getAC)// throws ServletException,IOException
   {
       HttpSession session = req.getSession();
-      Vector<String> vValidate = new Vector<String>();
+      Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
       try
       {
         String s;
@@ -192,23 +192,23 @@ public class SetACService implements Serializable
         if ((sUser != null) && (sID != null))
             strInValid = checkWritePermission("de", sUser, sID, getAC);
         if (strInValid.equals("")) session.setAttribute("sDefaultContext", s);
-        setValPageVector(vValidate, "Context", s, bMandatory, iNoLengthLimit, strInValid, sOriginAction);
+        UtilService.setValPageVector(vValidate, "Context", s, bMandatory, iNoLengthLimit, strInValid, sOriginAction);
   
         s = m_DE.getDE_DEC_NAME();
         if (s == null) s = "";
         //strUnique = checkUniqueInContext("Version", "DE", m_DE, null, null, getAC, sDEAction);
         strUnique = this.checkUniqueDECVDPair(m_DE, getAC, sDEAction, sMenu);
-        setValPageVector(vValidate, "Data Element Concept", s, bMandatory, iNoLengthLimit, strUnique, sOriginAction);
+        UtilService.setValPageVector(vValidate, "Data Element Concept", s, bMandatory, iNoLengthLimit, strUnique, sOriginAction);
   
         //strUnique is same as the above.
         s = m_DE.getDE_VD_NAME();
         if (s == null) s = "";
-        setValPageVector(vValidate, "Value Domain", s, bMandatory, iNoLengthLimit, strUnique, sOriginAction);
+        UtilService.setValPageVector(vValidate, "Value Domain", s, bMandatory, iNoLengthLimit, strUnique, sOriginAction);
   
         s = m_DE.getDE_LONG_NAME();
         if (s == null) s = "";
         strInValid = "";
-        setValPageVector(vValidate, "Long Name", s, bMandatory, 255, strInValid, sOriginAction);
+        UtilService.setValPageVector(vValidate, "Long Name", s, bMandatory, 255, strInValid, sOriginAction);
   
         s = m_DE.getDE_PREFERRED_NAME();
         if (s == null) s = "";
@@ -226,16 +226,16 @@ public class SetACService implements Serializable
               strInValid = strInValid + checkNameDiffForReleased(oName, s, oStatus);
            }
         }
-        setValPageVector(vValidate, "Short Name", s, bMandatory, 30, strInValid, sOriginAction);
+        UtilService.setValPageVector(vValidate, "Short Name", s, bMandatory, 30, strInValid, sOriginAction);
   
         //pref name type
         s = m_DE.getAC_PREF_NAME_TYPE();
-        vValidate = this.setValidatePrefNameType(s, isUserEnter, vValidate, sOriginAction);
+        this.setValidatePrefNameType(s, isUserEnter, vValidate, sOriginAction);
         
         s = m_DE.getDE_PREFERRED_DEFINITION();
         if (s == null) s = "";
         strInValid = "";
-        setValPageVector(vValidate, "Definition", s, bMandatory, 2000, strInValid, sOriginAction);
+        UtilService.setValPageVector(vValidate, "Definition", s, bMandatory, 2000, strInValid, sOriginAction);
   
         //workflow status
         s = m_DE.getDE_ASL_NAME();
@@ -244,7 +244,7 @@ public class SetACService implements Serializable
         //check associated DEV and VD WFS if DE is released
         if (!s.equals(""))
           strInValid = this.checkReleasedWFS(m_DE, s);
-        setValPageVector(vValidate, "Workflow Status", s, bMandatory, 20, strInValid, sOriginAction);
+        UtilService.setValPageVector(vValidate, "Workflow Status", s, bMandatory, 20, strInValid, sOriginAction);
   
         s = m_DE.getDE_VERSION();
         if (s == null) s = "";
@@ -264,7 +264,7 @@ public class SetACService implements Serializable
               strInValid = strInValid + checkUniqueInContext("Version", "DE", m_DE, null, null, getAC, sDEAction);
            }
         }
-        setValPageVector(vValidate, "Version", s, bMandatory, iNoLengthLimit, strInValid, sOriginAction);
+        UtilService.setValPageVector(vValidate, "Version", s, bMandatory, iNoLengthLimit, strInValid, sOriginAction);
         //make it empty 
         strInValid = "";
   
@@ -276,7 +276,7 @@ public class SetACService implements Serializable
        // if (s.equalsIgnoreCase("Standard") || s.equalsIgnoreCase("Candidate") || s.equalsIgnoreCase("Proposed"))
         if (m_vRegStatus.contains(s))
           strInValid = this.checkDECOCExist(m_DE.getDE_DEC_IDSEQ(), req, res);
-        setValPageVector(vValidate, "Registration Status", s, bNotMandatory, 50, strInValid, sOriginAction);
+        UtilService.setValPageVector(vValidate, "Registration Status", s, bNotMandatory, 50, strInValid, sOriginAction);
         
         //add begin and end dates to the validate vector
         String sB = m_DE.getDE_BEGIN_DATE();
@@ -284,11 +284,11 @@ public class SetACService implements Serializable
         String sE = m_DE.getDE_END_DATE();
         if (sE == null) sE = "";
         String wfs = m_DE.getDE_ASL_NAME();
-        vValidate = this.addDatesToValidatePage(sB, sE, wfs, sDEAction, vValidate, sOriginAction);
+        this.addDatesToValidatePage(sB, sE, wfs, sDEAction, vValidate, sOriginAction);
         //add question text
         s = m_DE.getDOC_TEXT_PREFERRED_QUESTION();
         if (s == null) s = "";
-        setValPageVector(vValidate, "Preferred Question Text", s, bNotMandatory, 4000, "", sOriginAction);        
+        UtilService.setValPageVector(vValidate, "Preferred Question Text", s, bNotMandatory, 4000, "", sOriginAction);        
   
         //add cs-csi to validate page
         String sCS = ""; 
@@ -316,11 +316,11 @@ public class SetACService implements Serializable
           }
         }
    
-        setValPageVector(vValidate, "Classification Scheme", sCS, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+        UtilService.setValPageVector(vValidate, "Classification Scheme", sCS, bNotMandatory, iNoLengthLimit, "", sOriginAction);
         strInValid = "";
         if (sCS.equals("")==false && (sCSI.equals("") || sCSI == null))   //it is a pair
           strInValid = "Items must be selected for the selected Classification Scheme.";
-        setValPageVector(vValidate, "Classification Scheme Items", sCSI, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
+        UtilService.setValPageVector(vValidate, "Classification Scheme Items", sCSI, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
   
         //contacts
         Hashtable hConts = m_DE.getAC_CONTACTS();
@@ -345,16 +345,16 @@ public class SetACService implements Serializable
             }
           }          
         }
-        setValPageVector(vValidate, "Contacts", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+        UtilService.setValPageVector(vValidate, "Contacts", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
         
         //origin
         s = m_DE.getDE_SOURCE();
         if (s == null) s = "";
-        setValPageVector(vValidate, "Data Element Origin", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+        UtilService.setValPageVector(vValidate, "Data Element Origin", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
   
         s = m_DE.getDE_CHANGE_NOTE();
         if (s == null) s = "";
-        setValPageVector(vValidate, "Change Note", s, bNotMandatory, 2000, "", sOriginAction);
+        UtilService.setValPageVector(vValidate, "Change Note", s, bNotMandatory, 2000, "", sOriginAction);
        
         // add DDE info to DE validate page
        // if (!sOriginAction.equals("BlockEditDE") && !sOriginAction.equals("CreateNewDEFComp"))
@@ -364,18 +364,30 @@ public class SetACService implements Serializable
       catch(Exception e)
       {
         logger.fatal("Error - Validate DE Values ", e);
-        vValidate.addElement("Error Validate DE");
-        vValidate.addElement("Error message " + e.toString());
-        vValidate.addElement("Error Occured.  Please report to the help desk");
+        ValidateBean vbean = new ValidateBean();
+        vbean.setACAttribute("Error Validate DE");
+        vbean.setAttributeContent("Error message " + e.toString());
+        vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+        vValidate.addElement(vbean);
       }
       //store it in teh request
-      req.setAttribute("vValidate", vValidate);        
+      Vector<String> vValString = this.makeStringVector(vValidate);
+      req.setAttribute("vValidate", vValString);        
 //System.out.println(sOriginAction + " end de page values " + sMenu);
 
   } // end of setValidatePageValues
 
-  private Vector<String> addDatesToValidatePage(String sBegin, String sEnd, String sWFS, String editAction, 
-      Vector<String> vValidate, String sOriginAction)
+  /**
+   * @param sBegin
+   * @param sEnd
+   * @param sWFS
+   * @param editAction
+   * @param vValidate
+   * @param sOriginAction
+   * @return validate vector
+   */
+  public void addDatesToValidatePage(String sBegin, String sEnd, String sWFS, String editAction, 
+      Vector<ValidateBean> vValidate, String sOriginAction)
   {
     try
     {
@@ -388,12 +400,12 @@ public class SetACService implements Serializable
       }
       //need to make sure the begin date is valid date
       if (editAction.equalsIgnoreCase("Edit") || editAction.equalsIgnoreCase("N/A"))
-          setValPageVector(vValidate, "Effective Begin Date", sBegin, false, -1, begValid, sOriginAction);
+          UtilService.setValPageVector(vValidate, "Effective Begin Date", sBegin, false, -1, begValid, sOriginAction);
       else
-          setValPageVector(vValidate, "Effective Begin Date", sBegin, false, -1, begValid, sOriginAction);
-
+          UtilService.setValPageVector(vValidate, "Effective Begin Date", sBegin, false, -1, begValid, sOriginAction);
+      
       String endValid = "";
-      //there should be begin date if end date is not null //change order 3.1.0.2 in Aug
+      //there should be begin date if end date is not null  (8/28 removed)
       /*if (!sEnd.equals("") && sBegin.equals("")) 
         endValid = "If you select an End Date, you must also select a Begin Date.";
       else*/ if (!sEnd.equals(""))
@@ -414,18 +426,23 @@ public class SetACService implements Serializable
       sWFS = sWFS.toUpperCase();
      // if (wfs.equals("RETIRED ARCHIVED") || wfs.equals("RETIRED DELETED") || wfs.equals("RETIRED PHASED OUT"))
       if (m_vRetWFS.contains(sWFS))
-        setValPageVector(vValidate, "Effective End Date", sEnd, true, -1, endValid, sOriginAction);
+      {
+        UtilService.setValPageVector(vValidate, "Effective End Date", sEnd, true, -1, endValid, sOriginAction);
+      }
       else
-        setValPageVector(vValidate, "Effective End Date", sEnd, false, -1, endValid, sOriginAction);      
+      {
+        UtilService.setValPageVector(vValidate, "Effective End Date", sEnd, false, -1, endValid, sOriginAction); 
+      }
     }
     catch (Exception e)
     {
       logger.fatal("Error - addDatesToValidatePage " + e.toString(), e);
-      vValidate.addElement("Error addDatesToValidatePage");
-      vValidate.addElement("Error message " + e.toString());
-      vValidate.addElement("Error Occured.  Please report to the help desk");
-    }
-    return vValidate;
+      ValidateBean vbean = new ValidateBean();
+      vbean.setACAttribute("Error addDatesToValidatePage");
+      vbean.setAttributeContent("Error message " + e.toString());
+      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vValidate.addElement(vbean);
+    }   
   }
 
   /**
@@ -436,8 +453,8 @@ public class SetACService implements Serializable
    * @param vValidate Vector of validate data
    * @return Vector of validate data
    */
-  private Vector<String> addEditPVDatesToValidatePage(HttpServletRequest req, String pgBDate, 
-      String pgEDate, Vector<String> vValidate)
+  private void addEditPVDatesToValidatePage(HttpServletRequest req, String pgBDate, 
+      String pgEDate, Vector<ValidateBean> vValidate)
   {
     try
     {
@@ -461,7 +478,8 @@ public class SetACService implements Serializable
         pgDateValid = "error";
 
       //if editPV (block) loop through to get the right begin date
-      Vector<PV_Bean> vVDPV = (Vector)session.getAttribute("VDPVList");
+      VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");
+      Vector<PV_Bean> vVDPV = vd.getVD_PV_List();  // (Vector)session.getAttribute("VDPVList");
       if (vVDPV == null) vVDPV = new Vector<PV_Bean>();
       if (vVDPV.size()>0)
       {
@@ -501,17 +519,18 @@ public class SetACService implements Serializable
         if (pgDateValid.equals("") && !edValid.equals(""))
           edValid = "Begin Date is not before the End Date for " + edValid;
       }
-      setValPageVector(vValidate, "Effective Begin Date", pgBDate, false, -1, bdValid, "");
-      setValPageVector(vValidate, "Effective End Date", pgEDate, false, -1, edValid, "");
+      UtilService.setValPageVector(vValidate, "Effective Begin Date", pgBDate, false, -1, bdValid, "");
+      UtilService.setValPageVector(vValidate, "Effective End Date", pgEDate, false, -1, edValid, "");
     }
     catch (Exception e)
     {
       logger.fatal("Error - addEditPVDatesToValidatePage " + e.toString(), e);
-      vValidate.addElement("Error addEditPVDatesToValidatePage");
-      vValidate.addElement("Error message " + e.toString());
-      vValidate.addElement("Error Occured.  Please report to the help desk");
+      ValidateBean vbean = new ValidateBean();
+      vbean.setACAttribute("Error addEditPVDatesToValidatePage");
+      vbean.setAttributeContent("Error message " + e.toString());
+      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vValidate.addElement(vbean);
     }
-    return vValidate;
   }
   
  /**
@@ -527,8 +546,8 @@ public class SetACService implements Serializable
   * @throws IOException  If an input or output exception occurred
   * @throws ServletException  If servlet exception occured
   */
-  public Vector<String> addDDEToDEValidatePage(HttpServletRequest req,
-          HttpServletResponse res, Vector<String> vValidate, String sOriginAction) //throws ServletException,IOException
+  public void addDDEToDEValidatePage(HttpServletRequest req,
+          HttpServletResponse res, Vector<ValidateBean> vValidate, String sOriginAction) //throws ServletException,IOException
   {
     try
     {
@@ -545,21 +564,21 @@ public class SetACService implements Serializable
       String sConcatChar = (String)req.getParameter("DDEConcatChar");
 
       if(sRepType == null || sRepType.length() < 1)
-          return vValidate;
+          return;
       else
-          setValPageVector(vValidate, "Derivation Type", sRepType, bMandatory, iNoLengthLimit, "", sOriginAction);
+          UtilService.setValPageVector(vValidate, "Derivation Type", sRepType, bMandatory, iNoLengthLimit, "", sOriginAction);
 
       if(sRule == null)
           sRule = "";
-      setValPageVector(vValidate, "Rule", sRule, bMandatory, iNoLengthLimit, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Rule", sRule, bMandatory, iNoLengthLimit, "", sOriginAction);
 
       if(sMethod == null)
           sMethod = "";
-      setValPageVector(vValidate, "Method", sMethod, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Method", sMethod, bNotMandatory, iNoLengthLimit, "", sOriginAction);
 
       if(sConcatChar == null)
           sConcatChar = "";
-      setValPageVector(vValidate, "Concatenate Character", sConcatChar, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Concatenate Character", sConcatChar, bNotMandatory, iNoLengthLimit, "", sOriginAction);
 
       String sDEComps[] = req.getParameterValues("selDECompHidden");
       String sDECompOrders[] = req.getParameterValues("selDECompOrderHidden");
@@ -584,18 +603,19 @@ public class SetACService implements Serializable
                sOrder = sOrder + sDECompOrder;
             }
         }
-        setValPageVector(vValidate, "Data Element Component", sName, bNotMandatory, iNoLengthLimit, "", sOriginAction);
-        setValPageVector(vValidate, "Data Element Component Order", sOrder, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+        UtilService.setValPageVector(vValidate, "Data Element Component", sName, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+        UtilService.setValPageVector(vValidate, "Data Element Component Order", sOrder, bNotMandatory, iNoLengthLimit, "", sOriginAction);
       }
     }
     catch (Exception e)
     {
       logger.fatal("Error - addDDEToDEValidatePage " + e.toString(), e);
-      vValidate.addElement("Error addDDEToDEValidatePage");
-      vValidate.addElement("Error message " + e.toString());
-      vValidate.addElement("Error Occured.  Please report to the help desk");
+      ValidateBean vbean = new ValidateBean();
+      vbean.setACAttribute("Error addDDEToDEValidatePage");
+      vbean.setAttributeContent("Error message " + e.toString());
+      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vValidate.addElement(vbean);
     }
-    return vValidate;
   }  // end of addDDEToDEValidatePage
    
  /**
@@ -623,7 +643,7 @@ public class SetACService implements Serializable
            GetACService getAC, EVS_Bean m_OCQ, EVS_Bean m_PCQ) 
           //throws ServletException,IOException, Exception
   {
-    Vector<String> vValidate = new Vector<String>();
+    Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
     try
     {
 ////System.out.println("setValidatePageValuesDEC");
@@ -660,14 +680,14 @@ public class SetACService implements Serializable
       if ((sUser != null) && (sID != null))
         strInValid = checkWritePermission("dec", sUser, sID, getAC);
       if (strInValid.equals("")) session.setAttribute("sDefaultContext", s);
-      setValPageVector(vValidate, "Context", s, bMandatory, 36, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Context", s, bMandatory, 36, strInValid, sOriginAction);
       //validate naming components
-      vValidate = this.setValidateNameComp(vValidate, "DataElementConcept", req, res, m_DEC, m_OC, m_PC, null, null);
+      this.setValidateNameComp(vValidate, "DataElementConcept", req, res, m_DEC, m_OC, m_PC, null, null);
  // System.out.println("setValidatePageValuesDEC2");
       s = m_DEC.getDEC_LONG_NAME();
       if (s == null) s = "";
       strInValid = "";
-      setValPageVector(vValidate, "Long Name", s, bMandatory, 255, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Long Name", s, bMandatory, 255, strInValid, sOriginAction);
 
       s = m_DEC.getDEC_PREFERRED_NAME();
       if (s == null) s = "";
@@ -698,20 +718,20 @@ public class SetACService implements Serializable
             strInValid = strInValid + checkNameDiffForReleased(oName, s, oStatus);
          }
       }
-      setValPageVector(vValidate, "Short Name", s, bMandatory, 30, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Short Name", s, bMandatory, 30, strInValid, sOriginAction);
       
       //pref name type
       s = m_DEC.getAC_PREF_NAME_TYPE();
-      vValidate = this.setValidatePrefNameType(s, isUserEnter, vValidate, sOriginAction);
+      this.setValidatePrefNameType(s, isUserEnter, vValidate, sOriginAction);
       
       s = m_DEC.getDEC_PREFERRED_DEFINITION();
       if (s == null) s = "";
       strInValid = "";
-        setValPageVector(vValidate, "Definition", s, bMandatory, 2000, strInValid, sOriginAction);
+        UtilService.setValPageVector(vValidate, "Definition", s, bMandatory, 2000, strInValid, sOriginAction);
       //validation for both edit and DEc
       s = m_DEC.getDEC_CD_NAME();
       if (s == null) s = "";
-      setValPageVector(vValidate, "Conceptual Domain", s, bMandatory, iNoLengthLimit, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Conceptual Domain", s, bMandatory, iNoLengthLimit, "", sOriginAction);
 
       s = m_DEC.getDEC_ASL_NAME();
       if (s == null) s = "";  
@@ -732,7 +752,7 @@ public class SetACService implements Serializable
           strInValid = checkOCPropWorkFlowStatuses(req, res, oc_id, prop_id, strInValid);
         }
       }
-      setValPageVector(vValidate, "Workflow Status", s, bMandatory, 20, strInValid, sOriginAction);   
+      UtilService.setValPageVector(vValidate, "Workflow Status", s, bMandatory, 20, strInValid, sOriginAction);   
    
       s = m_DEC.getDEC_VERSION();
       strInValid = "";
@@ -750,7 +770,7 @@ public class SetACService implements Serializable
             strInValid = strInValid + checkUniqueInContext("Version", "DEC", null, m_DEC, null, getAC, sDECAction);
          }
       }
-      setValPageVector(vValidate, "Version", s, bMandatory, iNoLengthLimit, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Version", s, bMandatory, iNoLengthLimit, strInValid, sOriginAction);
 
       //add begin and end dates to the validate vector
       String sB = m_DEC.getDEC_BEGIN_DATE();
@@ -758,14 +778,14 @@ public class SetACService implements Serializable
       String sE = m_DEC.getDEC_END_DATE();
       if (sE == null) sE = "";
       String wfs = m_DEC.getDEC_ASL_NAME();
-      vValidate = this.addDatesToValidatePage(sB, sE, wfs, sDECAction, vValidate, sOriginAction);
+      this.addDatesToValidatePage(sB, sE, wfs, sDECAction, vValidate, sOriginAction);
       
     /*  s = m_DEC.getDEC_BEGIN_DATE();
       if (s == null) s = "";
       if (sDECAction.equals("Edit"))  // || sOriginAction.equals("BlockEditDEC"))
-         setValPageVector(vValidate, "Effective Begin Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+         UtilService.setValPageVector(vValidate, "Effective Begin Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
       else
-         setValPageVector(vValidate, "Effective Begin Date", s, bMandatory, iNoLengthLimit, "", sOriginAction);
+         UtilService.setValPageVector(vValidate, "Effective Begin Date", s, bMandatory, iNoLengthLimit, "", sOriginAction);
 
       s = m_DEC.getDEC_END_DATE();
       if (s == null) s = "";
@@ -773,9 +793,9 @@ public class SetACService implements Serializable
       wfs = wfs.toUpperCase();
      // if (wfs.equals("RETIRED ARCHIVED") || wfs.equals("RETIRED DELETED") || wfs.equals("RETIRED PHASED OUT"))
       if (m_vRetWFS.contains(wfs))
-        setValPageVector(vValidate, "Effective End Date", s, bMandatory, iNoLengthLimit, "", sOriginAction);
+        UtilService.setValPageVector(vValidate, "Effective End Date", s, bMandatory, iNoLengthLimit, "", sOriginAction);
       else
-        setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);  */
+        UtilService.setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);  */
 
       //add cs-csi to validate page
       String sCS = ""; 
@@ -803,11 +823,11 @@ public class SetACService implements Serializable
         }
       }
   
-      setValPageVector(vValidate, "Classification Scheme", sCS, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Classification Scheme", sCS, bNotMandatory, iNoLengthLimit, "", sOriginAction);
       strInValid = "";
       if (sCS.equals("")==false && (sCSI.equals("") || sCSI == null))   //it is a pair
         strInValid = "Items must be selected for the selected Classification Scheme.";
-      setValPageVector(vValidate, "Classification Scheme Items", sCSI, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Classification Scheme Items", sCSI, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
   
       //contacts
       Hashtable hConts = m_DEC.getAC_CONTACTS();
@@ -832,26 +852,30 @@ public class SetACService implements Serializable
           }
         }          
       }
-      setValPageVector(vValidate, "Contacts", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Contacts", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
       
       s = m_DEC.getDEC_SOURCE();
       if (s == null) s = "";
-      setValPageVector(vValidate, "Data Element Concept Origin", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Data Element Concept Origin", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
 
       s = m_DEC.getDEC_CHANGE_NOTE();
       if (s == null) s = "";
-      setValPageVector(vValidate, "Change Note", s, bNotMandatory, 2000, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Change Note", s, bNotMandatory, 2000, "", sOriginAction);
     }
     catch (Exception e)
     {
       logger.fatal("Error - setValidatePageValuesDEC " + e.toString(), e);
-      vValidate.addElement("Error setValidatePageValuesDEC");
-      vValidate.addElement("Error message " + e.toString());
-      vValidate.addElement("Error Occured.  Please report to the help desk");
+      ValidateBean vbean = new ValidateBean();
+      vbean.setACAttribute("Error setValidatePageValuesDEC");
+      vbean.setAttributeContent("Error message " + e.toString());
+      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vValidate.addElement(vbean);
     }
         
       // finaly, send vector to JSP
-    req.setAttribute("vValidate", vValidate);
+    //store it in teh request
+    Vector<String> vValString = this.makeStringVector(vValidate);
+    req.setAttribute("vValidate", vValString);        
 // System.err.println("done validateDEC");
   }
 
@@ -881,7 +905,8 @@ public class SetACService implements Serializable
         VD_Bean m_VD, EVS_Bean m_OC, EVS_Bean m_PC, EVS_Bean m_REP, EVS_Bean m_OCQ, 
         EVS_Bean m_PCQ, EVS_Bean m_REPQ, GetACService getAC) //throws ServletException,IOException, Exception
   {
-    Vector<String> vValidate = new Vector<String>();
+    Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
+    Vector<String> vs = new Vector<String>();
     try
     {
 //System.out.println("setValidatePageValuesVD");
@@ -916,25 +941,25 @@ public class SetACService implements Serializable
       if ((sUser != null) && (sID != null))
         strInValid = checkWritePermission("vd", sUser, sID, getAC);
       if (strInValid.equals("")) session.setAttribute("sDefaultContext", s);
-        setValPageVector(vValidate, "Context", s, bMandatory, 36, strInValid, sOriginAction);
+        UtilService.setValPageVector(vValidate, "Context", s, bMandatory, 36, strInValid, sOriginAction);
 
       s = m_VD.getVD_TYPE_FLAG();
       //String q = "";
       if (s == null) s = "";
       if(s.equals("N"))
-        setValPageVector(vValidate, "Type", "Non-Enumerated", bMandatory, iNoLengthLimit, "", sOriginAction);
+        UtilService.setValPageVector(vValidate, "Type", "Non-Enumerated", bMandatory, iNoLengthLimit, "", sOriginAction);
       else if(s.equals("E"))
-        setValPageVector(vValidate, "Type", "Enumerated", bMandatory, iNoLengthLimit, "", sOriginAction);
+        UtilService.setValPageVector(vValidate, "Type", "Enumerated", bMandatory, iNoLengthLimit, "", sOriginAction);
       else
-        setValPageVector(vValidate, "Type", s, bMandatory, iNoLengthLimit, "", sOriginAction);
+        UtilService.setValPageVector(vValidate, "Type", s, bMandatory, iNoLengthLimit, "", sOriginAction);
 
       //validate hte naming component
-      vValidate = this.setValidateNameComp(vValidate, "ValueDomain", req, res, null, null, null, m_VD, m_REP);
+      this.setValidateNameComp(vValidate, "ValueDomain", req, res, null, null, null, m_VD, m_REP);
 
       s = m_VD.getVD_LONG_NAME();
       if (s == null) s = "";
       strInValid = "";
-      setValPageVector(vValidate, "Long Name", s, bMandatory, 255, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Long Name", s, bMandatory, 255, strInValid, sOriginAction);
 
       s = m_VD.getVD_PREFERRED_NAME();
       if (s == null) s = "";
@@ -952,25 +977,25 @@ public class SetACService implements Serializable
             strInValid = strInValid + checkNameDiffForReleased(oName, s, oStatus);
          }
       }
-      setValPageVector(vValidate, "Short Name", s, bMandatory, 30, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Short Name", s, bMandatory, 30, strInValid, sOriginAction);
       
       //pref name type
       s = m_VD.getAC_PREF_NAME_TYPE();
-      vValidate = this.setValidatePrefNameType(s, isUserEnter, vValidate, sOriginAction);
+      this.setValidatePrefNameType(s, isUserEnter, vValidate, sOriginAction);
       
       s = m_VD.getVD_PREFERRED_DEFINITION();
       if (s == null) s = "";
       strInValid = "";
-      setValPageVector(vValidate, "Definition", s, bMandatory, 2000, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Definition", s, bMandatory, 2000, strInValid, sOriginAction);
 
       //same for both edit and new
       s = m_VD.getVD_CD_NAME();
       if (s == null) s = "";  
-      setValPageVector(vValidate, "Conceptual Domain", s, bMandatory, iNoLengthLimit, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Conceptual Domain", s, bMandatory, iNoLengthLimit, "", sOriginAction);
   
       s = m_VD.getVD_ASL_NAME();
       if (s == null) s = "";  
-      setValPageVector(vValidate, "Workflow Status", s, bMandatory, 20, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Workflow Status", s, bMandatory, 20, "", sOriginAction);
 
       s = m_VD.getVD_VERSION();
       if (s == null) s = "";
@@ -989,49 +1014,17 @@ public class SetACService implements Serializable
             strInValid = strInValid + checkUniqueInContext("Version", "VD", null, null, m_VD, getAC, sVDAction);
           }
       }
-      setValPageVector(vValidate, "Version", s, bMandatory, iNoLengthLimit, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Version", s, bMandatory, iNoLengthLimit, strInValid, sOriginAction);
 
       s = m_VD.getVD_DATA_TYPE();
       if (s == null) s = "";
-      setValPageVector(vValidate, "Data Type", s, bMandatory, 20, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Data Type", s, bMandatory, 20, "", sOriginAction);
    
-      //get the parent concept
-      s = "";
-      strInValid = "";
-      Vector vParList = (Vector)session.getAttribute("VDParentConcept");
-      InsACService insAC = new InsACService(req, res, m_servlet);
-      if(vParList != null)
-            strInValid = checkConceptCodeExistsInOtherDB(vParList, insAC, null);
-      if (vParList != null && vParList.size()>0)
-      {
-//System.out.println("val VD vParList.size(): " + vParList.size());
-        for (int i =0; i<vParList.size(); i++)
-        {
-          EVS_Bean parBean = (EVS_Bean)vParList.elementAt(i);
-          if (!parBean.getCON_AC_SUBMIT_ACTION().equals("DEL"))
-          {
-            String parString = "";
-            if (parBean.getLONG_NAME() != null) parString = parBean.getLONG_NAME() + "   ";
-            if (parBean.getEVS_DATABASE() != null)
-            {
-              //do not add this if non evs
-              if (parBean.getNCI_CC_VAL() != null && !parBean.getEVS_DATABASE().equals("Non_EVS")) 
-                  parString += parBean.getNCI_CC_VAL() + "   ";
-              parString += parBean.getEVS_DATABASE();
-            }
-            if (!parString.equals(""))
-            {
-              if (s.equals("")) s = parString;
-              else s = s + ", " + parString;
-            }
-          }
-        }
-      }
-
-      setValPageVector(vValidate, "Parent Concept", s, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
-      //no need to put values as it does not exist.
-      if (m_VD.getVD_TYPE_FLAG().equals("E"))
-        vValidate = this.validateVDPVS(req, res, m_VD, vValidate, sOriginAction);
+      //add parent and permissible values if exist
+      m_VD.setValidateList(vValidate);
+      PVServlet pvser = new PVServlet(req, res, m_servlet);
+      pvser.addPVValidates(m_VD);  //     this.validateVDPVS(req, res, m_VD, vValidate, sOriginAction);
+      vValidate = m_VD.getValidateList();
 
       //add begin and end dates to the validate vector
       String sB = m_VD.getVD_BEGIN_DATE();
@@ -1039,27 +1032,10 @@ public class SetACService implements Serializable
       String sE = m_VD.getVD_END_DATE();
       if (sE == null) sE = "";
       String wfs = m_VD.getVD_ASL_NAME();
-      vValidate = this.addDatesToValidatePage(sB, sE, wfs, sVDAction, vValidate, sOriginAction);
+      this.addDatesToValidatePage(sB, sE, wfs, sVDAction, vValidate, sOriginAction);
       
-     /* s = m_VD.getVD_BEGIN_DATE();
-      if (s == null) s = "";
-      if (sVDAction.equals("Edit"))  // || sOriginAction.equals("BlockEditVD"))
-          setValPageVector(vValidate, "Effective Begin Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
-      else
-          setValPageVector(vValidate, "Effective Begin Date", s, bMandatory, iNoLengthLimit, "", sOriginAction);
-
-      s = m_VD.getVD_END_DATE();
-      if (s == null) s = "";
-      String wfs = m_VD.getVD_ASL_NAME();
-      wfs = wfs.toUpperCase();
-     // if (wfs.equals("RETIRED ARCHIVED") || wfs.equals("RETIRED DELETED") || wfs.equals("RETIRED PHASED OUT"))
-      if (m_vRetWFS.contains(wfs))
-        setValPageVector(vValidate, "Effective End Date", s, bMandatory, iNoLengthLimit, "", sOriginAction);
-      else
-        setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction); */
-
       //get value domain other attributes
-      vValidate = this.setValidateVDOtherAttr(vValidate, m_VD, sOriginAction);
+      this.setValidateVDOtherAttr(vValidate, m_VD, sOriginAction);
       
       //add cs-csi to validate page
       String sCS = ""; 
@@ -1086,11 +1062,11 @@ public class SetACService implements Serializable
           }
         }
       }
-      setValPageVector(vValidate, "Classification Scheme", sCS, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Classification Scheme", sCS, bNotMandatory, iNoLengthLimit, "", sOriginAction);
       strInValid = "";
       if (sCS.equals("")==false && (sCSI.equals("") || sCSI == null))   //it is a pair
         strInValid = "Items must be selected for the selected Classification Scheme.";
-      setValPageVector(vValidate, "Classification Scheme Items", sCSI, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Classification Scheme Items", sCSI, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
   
       //contacts
       Hashtable hConts = m_VD.getAC_CONTACTS();
@@ -1115,28 +1091,33 @@ public class SetACService implements Serializable
           }
         }          
       }
-      setValPageVector(vValidate, "Contacts", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Contacts", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
       
       s = m_VD.getVD_SOURCE();
       if (s == null) s = "";
-      setValPageVector(vValidate, "Value Domain Origin", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Value Domain Origin", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
 
       s = m_VD.getVD_CHANGE_NOTE();
       if (s == null) s = "";
-      setValPageVector(vValidate, "Change Note", s, bNotMandatory, 2000, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Change Note", s, bNotMandatory, 2000, "", sOriginAction);
      
     }
     catch (Exception e)
     {
       logger.fatal("Error - setValidatePageValuesVD " + e.toString(), e);
-      vValidate.addElement("Error setValidatePageValuesVD");
-      vValidate.addElement("Error message " + e.toString());
-      vValidate.addElement("Error Occured.  Please report to the help desk");
+      ValidateBean vbean = new ValidateBean();
+      vbean.setACAttribute("Error setValidatePageValuesVD");
+      vbean.setAttributeContent("Error message " + e.toString());
+      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vValidate.addElement(vbean);
     }
         
       // finaly, send vector to JSP
-      req.setAttribute("vValidate", vValidate);
+    Vector<String> vValString = this.makeStringVector(vValidate);
+    req.setAttribute("vValidate", vValString);        
+    m_VD.setValidateList(vValidate);
   }  // end of setValidatePageValuesVD
+
 
   /**
   * To check validity of the data for Permissible Values component before submission, called from NCICurationServlet.
@@ -1153,10 +1134,10 @@ public class SetACService implements Serializable
   * @throws ServletException  If servlet exception occured
    * @throws Exception 
   */
-  public void setValidatePageValuesPV(HttpServletRequest req, HttpServletResponse res, 
+/*  public void setValidatePageValuesPV(HttpServletRequest req, HttpServletResponse res, 
         PV_Bean m_PV, GetACService getAC) //throws ServletException,IOException, Exception
   {
-    Vector<String> vValidate = new Vector<String>();
+    Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
     try
     {
       HttpSession session = req.getSession();
@@ -1176,33 +1157,33 @@ public class SetACService implements Serializable
         // mandatory
         s = m_PV.getQUESTION_VALUE();
         if (s != null && !s.equals(""))
-          setValPageVector(vValidate, "Valid Value", s, bNotMandatory, iNoLengthLimit, strInValid, "");
+          UtilService.setValPageVector(vValidate, "Valid Value", s, bNotMandatory, iNoLengthLimit, strInValid, "");
           
         s = m_PV.getPV_VALUE();
         if (s == null) s = "";
-        setValPageVector(vValidate, "Value", s, bMandatory, iNoLengthLimit, strInValid, "");
+        UtilService.setValPageVector(vValidate, "Value", s, bMandatory, iNoLengthLimit, strInValid, "");
   
         s = m_PV.getPV_SHORT_MEANING();
         if (s == null) s = "";
         strInValid = "";
-        setValPageVector(vValidate, "Value Meaning", s, bMandatory, 2000, strInValid, "");
+        UtilService.setValPageVector(vValidate, "Value Meaning", s, bMandatory, 2000, strInValid, "");
   
         s = m_PV.getPV_MEANING_DESCRIPTION();
         if (s == null) s = "";
-        setValPageVector(vValidate, "Value Meaning Description", s, bNotMandatory, 2000, "", "");
+        UtilService.setValPageVector(vValidate, "Value Meaning Description", s, bNotMandatory, 2000, "", "");
   
         EVS_Bean evs = (EVS_Bean)m_PV.getVM_CONCEPT();
         if (evs == null) evs = new EVS_Bean();
-        s = evs.getNCI_CC_VAL();
+        s = evs.getCONCEPT_IDENTIFIER();
         if (s != null && !s.equals("") && evs.getEVS_DATABASE() != null) 
           s = s + " : " + evs.getEVS_DATABASE();
         if (s == null) s = "";
-        setValPageVector(vValidate, "EVS Concept Code", s, bNotMandatory, iNoLengthLimit, "", "");        
+        UtilService.setValPageVector(vValidate, "EVS Concept Code", s, bNotMandatory, iNoLengthLimit, "", "");        
       }
 
       s = m_PV.getPV_VALUE_ORIGIN();
       if (s == null) s = "";
-      setValPageVector(vValidate, "Value Origin", s, bNotMandatory, iNoLengthLimit, "", "");
+      UtilService.setValPageVector(vValidate, "Value Origin", s, bNotMandatory, iNoLengthLimit, "", "");
 
       //add begin and end dates to the validate vector
       String sB = m_PV.getPV_BEGIN_DATE();
@@ -1211,31 +1192,35 @@ public class SetACService implements Serializable
       if (sE == null) sE = "";
       //validate these only if not block edit
       if (pvAction == null || !(pvAction.equals("editPV") && s.equals("")))
-        vValidate = this.addDatesToValidatePage(sB, sE, "N/A", "N/A", vValidate, "");
+        this.addDatesToValidatePage(sB, sE, "N/A", "N/A", vValidate, "");
       else
-        vValidate = this.addEditPVDatesToValidatePage(req, sB, sE, vValidate);
+        this.addEditPVDatesToValidatePage(req, sB, sE, vValidate);
       
-     /* s = m_PV.getPV_BEGIN_DATE();
+      s = m_PV.getPV_BEGIN_DATE();
       if (s == null) s = "";
       setValPageVector(vValidate, "Effective Begin Date", s, bNotMandatory, iNoLengthLimit, "", "");
 
       s = m_PV.getPV_END_DATE();
       if (s == null) s = "";
-      setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", ""); */
+      setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", ""); 
 
     }
     catch (Exception e)
     {
       logger.fatal("Error - setValidatePageValuesPV " + e.toString(), e);
-      vValidate.addElement("Error setValidatePageValuesPV");
-      vValidate.addElement("Error message " + e.toString());
-      vValidate.addElement("Error Occured.  Please report to the help desk");
+      ValidateBean vbean = new ValidateBean();
+      vbean.setACAttribute("Error setValidatePageValuesPV");
+      vbean.setAttributeContent("Error message " + e.toString());
+      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vValidate.addElement(vbean);
     }
         
       // finaly, send vector to JSP
-      req.setAttribute("vValidate", vValidate);
+    //store it in teh request
+    Vector<String> vValString = this.makeStringVector(vValidate);
+    req.setAttribute("vValidate", vValString);        
    }  // end of setValidatePageValuesPV
-
+*/
   /**
    * add the validate message the validation vector
    * @param sType String selected pref name type
@@ -1244,7 +1229,8 @@ public class SetACService implements Serializable
    * @param sOrigin String originAction
    * @return vValidate the vector of updated validate message
    */
-  private Vector<String> setValidatePrefNameType(String sType, boolean isUser, Vector<String> vValidate, String sOrigin)
+  private void setValidatePrefNameType(String sType, boolean isUser, Vector<ValidateBean> vValidate, 
+      String sOrigin)
   {
     try
     {
@@ -1257,18 +1243,19 @@ public class SetACService implements Serializable
         if (isUser) sType = "User Entered";  //edit/version/nue pages
         else sType = "Existing Name";      //create new page
       }
-      setValPageVector(vValidate, "Short Name Type", sType, true, -1, "", sOrigin);
+      UtilService.setValPageVector(vValidate, "Short Name Type", sType, true, -1, "", sOrigin);
     }
     catch (Exception e)
     {
       logger.fatal("ERROR in setValidatePrefNameType " + e.toString(), e);
-      vValidate.addElement("Error setValidatePrefNameType");
-      vValidate.addElement("Error message " + e.toString());
-      vValidate.addElement("Error Occured.  Please report to the help desk");
+      ValidateBean vbean = new ValidateBean();
+      vbean.setACAttribute("Error setValidatePrefNameType");
+      vbean.setAttributeContent("Error message " + e.toString());
+      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vValidate.addElement(vbean);
     }
-    //return the validate vector
-    return vValidate;
   }
+  
   /**
    * makes validation for block edit
    * @param req
@@ -1279,7 +1266,7 @@ public class SetACService implements Serializable
   public void setValidateBlockEdit(HttpServletRequest req, HttpServletResponse res, 
       String sACType) //throws Exception
   {
-    Vector<String> vValidate = new Vector<String>();
+    Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
     try
     {
 //System.out.println("in setValidateBlockEdit");
@@ -1355,50 +1342,50 @@ public class SetACService implements Serializable
         //dec attribute
         s = de.getDE_DEC_NAME();
         if (s == null) s = "";
-        setValPageVector(vValidate, "Data Element Concept", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
+        UtilService.setValPageVector(vValidate, "Data Element Concept", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
         //vd attribute
         s = de.getDE_VD_NAME();
         if (s == null) s = "";
-        setValPageVector(vValidate, "Value Domain", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
+        UtilService.setValPageVector(vValidate, "Value Domain", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
         //pref name type
         s = de.getAC_PREF_NAME_TYPE();
         if (s != null && !s.equals("")) //add the value only if was selected
-          vValidate = this.setValidatePrefNameType(s, false, vValidate, sOriginAction); 
+          this.setValidatePrefNameType(s, false, vValidate, sOriginAction); 
         else
-          setValPageVector(vValidate, "Short Name Type", "", false, -1, "", sOriginAction);
+          UtilService.setValPageVector(vValidate, "Short Name Type", "", false, -1, "", sOriginAction);
      } 
      else if (sACType.equals("DataElementConcept"))
       {
         //validate naming components
-        vValidate = this.setValidateNameComp(vValidate, sACType, req, res, dec, oc, pc, null, null);
+        this.setValidateNameComp(vValidate, sACType, req, res, dec, oc, pc, null, null);
         //pref name type only if was selected
         s = dec.getAC_PREF_NAME_TYPE();
         if (s != null && !s.equals("")) //add the value only if was selected
-          vValidate = this.setValidatePrefNameType(s, false, vValidate, sOriginAction); 
+          this.setValidatePrefNameType(s, false, vValidate, sOriginAction); 
         else
-          setValPageVector(vValidate, "Short Name Type", "", false, -1, "", sOriginAction);
+          UtilService.setValPageVector(vValidate, "Short Name Type", "", false, -1, "", sOriginAction);
         //cd attribute
         s = dec.getDEC_CD_NAME();
         if (s == null) s = "";
-        setValPageVector(vValidate, "Conceptual Domain", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
+        UtilService.setValPageVector(vValidate, "Conceptual Domain", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
       }
       else if (sACType.equals("ValueDomain"))
       {
         //validate naming components
-        vValidate = this.setValidateNameComp(vValidate, sACType, req, res, null, null, null, vd, rep);
+        this.setValidateNameComp(vValidate, sACType, req, res, null, null, null, vd, rep);
         //cd attribute
         s = vd.getVD_CD_NAME();
         if (s == null) s = "";
-        setValPageVector(vValidate, "Conceptual Domain", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
+        UtilService.setValPageVector(vValidate, "Conceptual Domain", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
       }
       //workflow status
       if (sWF == null) sWF = "";
-      setValPageVector(vValidate, "Workflow Status", sWF, bNotMandatory, 20, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Workflow Status", sWF, bNotMandatory, 20, "", sOriginAction);
     
       //version
       if (sVer == null) sVer = "";
       strInValid = "";
-      setValPageVector(vValidate, "Version", sVer, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Version", sVer, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
       
         //registration status
       if (sACType.equals("DataElement"))
@@ -1406,21 +1393,21 @@ public class SetACService implements Serializable
         s = de.getDE_REG_STATUS();
         if (s == null) s = "";
         strInValid = "";
-        setValPageVector(vValidate, "Registration Status", s, bNotMandatory, 50, strInValid, sOriginAction);
+        UtilService.setValPageVector(vValidate, "Registration Status", s, bNotMandatory, 50, strInValid, sOriginAction);
       }     
       //data type attributes
       if (sACType.equals("ValueDomain"))
       {
         s = vd.getVD_DATA_TYPE();
         if (s == null) s = "";
-        setValPageVector(vValidate, "Data Type", s, bNotMandatory, 20, "", sOriginAction);        
+        UtilService.setValPageVector(vValidate, "Data Type", s, bNotMandatory, 20, "", sOriginAction);        
       }
       //begin date
       if (sBD == null) sBD = "";
       strInValid = "";
       if (begValid != null && !begValid.equals(""))
         strInValid = begValid;  // "Begin Date is null for " + begValid;
-      setValPageVector(vValidate, "Effective Begin Date", sBD, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Effective Begin Date", sBD, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
       //edn date
       if (sED == null) sED = "";
       strInValid = "";
@@ -1431,18 +1418,19 @@ public class SetACService implements Serializable
         if (!strInValid.equals("")) strInValid = "\n";
         strInValid = endValid;
       }
-      setValPageVector(vValidate, "Effective End Date", sED, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Effective End Date", sED, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
       //document text for DE
       if (sACType.equals("DataElement"))
       {
         s = de.getDOC_TEXT_PREFERRED_QUESTION();
         if (s == null) s = "";
-        setValPageVector(vValidate, "Preferred Question Text", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
+        UtilService.setValPageVector(vValidate, "Preferred Question Text", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
       }
       //other value domain attributes
       if (sACType.equals("ValueDomain"))
-        vValidate = this.setValidateVDOtherAttr(vValidate, vd, sOriginAction);    
-
+      {
+        this.setValidateVDOtherAttr(vValidate, vd, sOriginAction);    
+      }
       //add cs-csi to validate page
       String sCS = ""; 
       String sCSI = "";
@@ -1479,27 +1467,33 @@ public class SetACService implements Serializable
        //some added or removed cs-csis to/from the existing list.
       else if (vAC_CS.size() != vOriginal_ACCS.size())
         strInValid = "Valid";
-      setValPageVector(vValidate, "Classification Scheme", "", bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
-      setValPageVector(vValidate, "Classification Scheme Items", "", bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);     
+      UtilService.setValPageVector(vValidate, "Classification Scheme", "", bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Classification Scheme Items", "", bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);     
 
       //origin or source
       if (sOrigin == null) sOrigin = "";
-      setValPageVector(vValidate, "Data Element Origin", sOrigin, bNotMandatory, iNoLengthLimit, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Data Element Origin", sOrigin, bNotMandatory, iNoLengthLimit, "", sOriginAction);
 
       //comment or change note
       if (sCN == null) sCN = "";
-      setValPageVector(vValidate, "Change Note", sCN, bNotMandatory, 2000, "", sOriginAction);
+      UtilService.setValPageVector(vValidate, "Change Note", sCN, bNotMandatory, 2000, "", sOriginAction);
 
+      vd.setValidateList(vValidate);
     }
     catch (Exception e)
     {
       logger.fatal("ERROR in setValidateBlockEdit " + e.toString(), e);
-      vValidate.addElement("Error setValidateBlockEdit");
-      vValidate.addElement("Error message " + e.toString());
-      vValidate.addElement("Error Occured.  Please report to the help desk");
+      ValidateBean vbean = new ValidateBean();
+      vbean.setACAttribute("Error setValidateBlockEdit");
+      vbean.setAttributeContent("Error message " + e.toString());
+      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vValidate.addElement(vbean);
     }
     // finaly, send vector to JSP
-    req.setAttribute("vValidate", vValidate);
+    //store it in teh request
+    Vector<String> vValString = this.makeStringVector(vValidate);
+    req.setAttribute("vValidate", vValString); 
+      
     // }
   }
 
@@ -1519,7 +1513,7 @@ public class SetACService implements Serializable
    * @throws java.io.IOException
    * @throws java.lang.Exception
    */
-  private Vector<String> setValidateNameComp(Vector<String> vValidate, String acType, HttpServletRequest req,
+  private void setValidateNameComp(Vector<ValidateBean> vValidate, String acType, HttpServletRequest req,
           HttpServletResponse res, DEC_Bean m_DEC, EVS_Bean m_OC, EVS_Bean m_PC, 
           VD_Bean m_VD, EVS_Bean m_REP) 
           //throws ServletException,IOException, Exception
@@ -1666,11 +1660,11 @@ public class SetACService implements Serializable
         //check for warning of oc existance          
         if((sOCL == null || sOCL.equals("")) && !sOriginAction.equals("BlockEditDEC"))
           strOCInvalid = strOCInvalid + "Warning: a Data Element Concept should have an Object Class.\n";
-        setValPageVector(vValidate, "Object Class", sOCL, bNotMandatory, 255, strOCInvalid, sOriginAction);
+        UtilService.setValPageVector(vValidate, "Object Class", sOCL, bNotMandatory, 255, strOCInvalid, sOriginAction);
         //append it to prop invalid
         strPropInvalid  = strPropInvalid + strInValid; 
         s = m_DEC.getDEC_PROPL_NAME();
-        setValPageVector(vValidate, "Property", s, bNotMandatory, 255, strPropInvalid, sOriginAction);
+        UtilService.setValPageVector(vValidate, "Property", s, bNotMandatory, 255, strPropInvalid, sOriginAction);
       }
       else
       {
@@ -1694,17 +1688,18 @@ public class SetACService implements Serializable
         if(!sQ.equals("") || !sP.equals("") && m_REP != null)
           strInValid = strInValid + checkConceptCodeExistsInOtherDB(vREP, insAC, null);
         ss = m_VD.getVD_REP_TERM();
-        setValPageVector(vValidate, "Rep Term", ss, bNotMandatory, 255, strInValid, sOriginAction);
+        UtilService.setValPageVector(vValidate, "Rep Term", ss, bNotMandatory, 255, strInValid, sOriginAction);
       }
     }
     catch (Exception e)
     {
       logger.fatal("ERROR in setValidateNameComp " + e.toString(), e);
-      vValidate.addElement("Error setValidateNameComp");
-      vValidate.addElement("Error message " + e.toString());
-      vValidate.addElement("Error Occured.  Please report to the help desk");
+      ValidateBean vbean = new ValidateBean();
+      vbean.setACAttribute("Error setValidateNameComp");
+      vbean.setAttributeContent("Error message " + e.toString());
+      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vValidate.addElement(vbean);
     }
-    return vValidate;
   }
   
   /**
@@ -1715,7 +1710,7 @@ public class SetACService implements Serializable
    * @return vValidate the vector to display validate status
    * @throws java.lang.Exception
    */
-  private Vector<String> setValidateVDOtherAttr(Vector<String> vValidate, VD_Bean m_VD, String sOriginAction) //throws Exception
+  private void setValidateVDOtherAttr(Vector<ValidateBean> vValidate, VD_Bean m_VD, String sOriginAction) //throws Exception
   {
     try
     {
@@ -1726,49 +1721,50 @@ public class SetACService implements Serializable
       s = m_VD.getVD_UOML_NAME();
       if (s == null) s = "";
       strInValid = checkValueDomainIsTypeMeasurement();
-      setValPageVector(vValidate, "Unit Of Measure", s, bNotMandatory, 20, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Unit Of Measure", s, bNotMandatory, 20, strInValid, sOriginAction);
 
       s = m_VD.getVD_FORML_NAME();
       if (s == null) s = "";
       strInValid = checkValueDomainIsTypeMeasurement();
-      setValPageVector(vValidate, "Display Format", s, bNotMandatory, 20, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Display Format", s, bNotMandatory, 20, strInValid, sOriginAction);
 
       s = m_VD.getVD_MIN_LENGTH_NUM();
       if (s == null) s = "";
       strInValid = checkValueIsNumeric(s, "Minimum Length");
-      setValPageVector(vValidate, "Minimum Length", s, bNotMandatory, 8, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Minimum Length", s, bNotMandatory, 8, strInValid, sOriginAction);
 
       s = m_VD.getVD_MAX_LENGTH_NUM();
       if (s == null) s = "";
       strInValid = checkValueIsNumeric(s, "Maximum Length");  // + checkLessThan8Chars(s);
-      setValPageVector(vValidate, "Maximum Length", s, bNotMandatory, 8, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Maximum Length", s, bNotMandatory, 8, strInValid, sOriginAction);
       s = m_VD.getVD_LOW_VALUE_NUM();
 
       strInValid = "";
       strInValid = checkValueIsNumeric(s, "Low Value");   //+ checkValueDomainIsNumeric(s, "Low Value Number Attribute");
-      setValPageVector(vValidate, "Low Value", s, bNotMandatory, 255, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Low Value", s, bNotMandatory, 255, strInValid, sOriginAction);
 
       s = m_VD.getVD_HIGH_VALUE_NUM();
       if (s == null) s = "";
       strInValid = "";
       strInValid = checkValueIsNumeric(s, "High Value");  //+ checkValueDomainIsNumeric(s, "High Value Number Attribute");
-      setValPageVector(vValidate, "High Value", s, bNotMandatory, 255, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "High Value", s, bNotMandatory, 255, strInValid, sOriginAction);
 
       s = m_VD.getVD_DECIMAL_PLACE();
       if (s == null) s = "";
       strInValid = "";
       strInValid = checkValueIsNumeric(s, "Decimal Place");    //checkValueDomainIsNumeric(s, "Decimal Place Attribute");
-      setValPageVector(vValidate, "Decimal Place", s, bNotMandatory, 2, strInValid, sOriginAction);
+      UtilService.setValPageVector(vValidate, "Decimal Place", s, bNotMandatory, 2, strInValid, sOriginAction);
       
     }
     catch (Exception e)
     {
       logger.fatal("ERROR in setValidateVDOtherAttr " + e.toString(), e);
-      vValidate.addElement("Error setValidateVDOtherAttr");
-      vValidate.addElement("Error message " + e.toString());
-      vValidate.addElement("Error Occured.  Please report to the help desk");
+      ValidateBean vbean = new ValidateBean();
+      vbean.setACAttribute("Error setValidateVDOtherAttr");
+      vbean.setAttributeContent("Error message " + e.toString());
+      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vValidate.addElement(vbean);
     }
-    return vValidate;
   }
 
 
@@ -1993,7 +1989,7 @@ public class SetACService implements Serializable
           HttpServletResponse res, VM_Bean m_VM, GetACService getAC) 
           //throws ServletException,IOException, Exception
   {
-    Vector<String> vValidate = new Vector<String>();
+    Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
     try
     {
       //HttpSession session = req.getSession();
@@ -2018,18 +2014,18 @@ public class SetACService implements Serializable
         //check if exists in antoher db
         if(!s.equals("") && m_VM != null)
           strInValid = strInValid + checkConceptCodeExistsInOtherDB(null, insAC, m_VM);
-        setValPageVector(vValidate, "Value Meaning", s, bMandatory, 2000, strInValid, "");
+        UtilService.setValPageVector(vValidate, "Value Meaning", s, bMandatory, 2000, strInValid, "");
 
         s = m_VM.getVM_CD_NAME();
         if (s == null) s = "";
-        setValPageVector(vValidate, "Conceptual Domain", s, bMandatory, iNoLengthLimit, "", "");
+        UtilService.setValPageVector(vValidate, "Conceptual Domain", s, bMandatory, iNoLengthLimit, "", "");
 
         //add begin and end dates to the validate vector
         String sB = m_VM.getVM_BEGIN_DATE();
         if (sB == null) sB = "";
         String sE = m_VM.getVM_END_DATE();
         if (sE == null) sE = "";
-         vValidate = this.addDatesToValidatePage(sB, sE, "N/A", "N/A", vValidate, "");
+         this.addDatesToValidatePage(sB, sE, "N/A", "N/A", vValidate, "");
         
        /* s = m_VM.getVM_BEGIN_DATE();
         if (s == null) s = "";
@@ -2042,22 +2038,25 @@ public class SetACService implements Serializable
         s = m_VM.getVM_DESCRIPTION();
         if (s == null) s = "";
         
-        setValPageVector(vValidate, "Description", s, bNotMandatory, 2000, "", "");
+        UtilService.setValPageVector(vValidate, "Description", s, bNotMandatory, 2000, "", "");
 
         s = m_VM.getVM_COMMENTS();
         if (s == null) s = "";
-        setValPageVector(vValidate, "Comments", s, bNotMandatory, 2000, "", "");
+        UtilService.setValPageVector(vValidate, "Comments", s, bNotMandatory, 2000, "", "");
 
     }
     catch (Exception e)
     {
       logger.fatal("ERROR in setValidatePageValuesVM " + e.toString(), e);
-      vValidate.addElement("Error setValidatePageValuesVM");
-      vValidate.addElement("Error message " + e.toString());
-      vValidate.addElement("Error Occured.  Please report to the help desk");
+      ValidateBean vbean = new ValidateBean();
+      vbean.setACAttribute("Error setValidatePageValuesVM");
+      vbean.setAttributeContent("Error message " + e.toString());
+      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vValidate.addElement(vbean);
     }
-  // finaly, send vector to JSP
-    req.setAttribute("vValidate", vValidate);
+    // finaly, send vector to JSP
+    Vector<String> vValString = this.makeStringVector(vValidate);
+    req.setAttribute("vValidate", vValString);        
  }  // end of setValidatePageValuesVM
 
  /**
@@ -4125,6 +4124,10 @@ public class SetACService implements Serializable
         sName = m_util.removeNewLineChar(sName);   //replace newline with empty string
         m_VD.setVD_LONG_NAME(sName);
       }
+      //add the preferred type name
+      String selNameType = (String)req.getParameter("rNameConv");
+      if (selNameType != null)
+        m_VD.setVD_TYPE_NAME(selNameType);
       
        //set PREFERRED_NAME
       if(sOriginAction.equals("BlockEditVD"))
@@ -4470,10 +4473,13 @@ public class SetACService implements Serializable
         //mark the old pv as deleted and add it the vector in the end.
         oldPV.setVP_SUBMIT_ACTION("DEL");
         oldPV.setPV_CHECKED(false);
-        Vector<PV_Bean> vVDPVList = (Vector)session.getAttribute("VDPVList");
+        VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");
+        Vector<PV_Bean> vVDPVList = vd.getVD_PV_List();  // (Vector)session.getAttribute("VDPVList");
         if (vVDPVList == null) vVDPVList = new Vector<PV_Bean>();
         vVDPVList.addElement(oldPV);
-        session.setAttribute("VDPVList", vVDPVList);        
+       // session.setAttribute("VDPVList", vVDPVList);  
+        vd.setVD_PV_List(vVDPVList);
+        session.setAttribute("m_VD", vd);
       }
     }
     catch (Exception e)
@@ -4824,8 +4830,8 @@ public class SetACService implements Serializable
    * 
    * @throws Exception
    */
-   private Vector<String> validateVDPVS(HttpServletRequest req, HttpServletResponse res, 
-          VD_Bean m_VD, Vector<String> vValidate, String sOriginAction) //throws Exception
+/*   private void validateVDPVS(HttpServletRequest req, HttpServletResponse res, 
+          VD_Bean m_VD, Vector<ValidateBean> vValidate, String sOriginAction) //throws Exception
    {
      try
      {
@@ -4883,7 +4889,7 @@ public class SetACService implements Serializable
                 String sRet = "";
                 String sValid = insAC.getConcept(sRet, vmCon, true);
                 if (sValid != null && sValid.indexOf("Another") > -1)
-                  strVMInvalid += vmCon.getLONG_NAME() + " - " + vmCon.getNCI_CC_VAL() + ",\n";
+                  strVMInvalid += vmCon.getLONG_NAME() + " - " + vmCon.getCONCEPT_IDENTIFIER() + ",\n";
               }
             }
           }
@@ -4898,20 +4904,21 @@ public class SetACService implements Serializable
         if (s == null) s = "";
         if (s.equals("E"))
         {
-            setValPageVector(vValidate, "Values", sPVVal, true, -1, strInvalid, sOriginAction);
-            setValPageVector(vValidate, "Value Meanings", sPVMean, true, -1, strVMInvalid, sOriginAction);
+            UtilService.setValPageVector(vValidate, "Values", sPVVal, true, -1, strInvalid, sOriginAction);
+            UtilService.setValPageVector(vValidate, "Value Meanings", sPVMean, true, -1, strVMInvalid, sOriginAction);
         }
      }
      catch (Exception e)
      {
        logger.fatal("Error occured in validateVDPVS " + e.toString(), e);
-       vValidate.addElement("Error validateVDPVS");
-       vValidate.addElement("Error message " + e.toString());
-       vValidate.addElement("Error Occured.  Please report to the help desk");
+       ValidateBean vbean = new ValidateBean();
+       vbean.setACAttribute("Error validateVDPVS");
+       vbean.setAttributeContent("Error message " + e.toString());
+       vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+       vValidate.addElement(vbean);
      }
-     return vValidate;
    }    //end validateVDPVS
-
+*/
   /**
    * gets pv ids from the page and checks if there are any new ones or any removed ones 
    * updates the pv list vector both for id and bean and stores them in the session.
@@ -4933,7 +4940,7 @@ public class SetACService implements Serializable
       VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");
       if (vd == null) vd = new VD_Bean();
       String strInvalid = "";
-      Vector<PV_Bean> vVDPVList = (Vector)session.getAttribute("VDPVList");
+      Vector<PV_Bean> vVDPVList = vd.getVD_PV_List();  // (Vector)session.getAttribute("VDPVList");
       if (vVDPVList == null) vVDPVList = new Vector<PV_Bean>();
       if (!pvAction.equalsIgnoreCase("") && !pvAction.equalsIgnoreCase("createPV"))
       {
@@ -5010,7 +5017,9 @@ public class SetACService implements Serializable
         }  //end vdpv has value
       } //end if not create pv
         //store it in session
-      session.setAttribute("VDPVList", vVDPVList);
+     // session.setAttribute("VDPVList", vVDPVList);
+      vd.setVD_PV_List(vVDPVList);
+      session.setAttribute("m_VD", vd);
       Vector<PV_Bean> oldVDPVList = new Vector<PV_Bean>();
       for (int k =0; k<vVDPVList.size(); k++)
       {
@@ -5031,5 +5040,17 @@ public class SetACService implements Serializable
       logger.fatal("ERROR in setACService-addRemovePageVDPVs : " + ee.toString(), ee);
     }
   }  //end addremovepagevdpvs
-  
+
+  public static Vector<String> makeStringVector(Vector<ValidateBean> vValidate)
+  {
+    Vector<String> vs = new Vector<String>();
+    for (int i =0; i<vValidate.size(); i++)
+    {
+      ValidateBean vbean = (ValidateBean)vValidate.elementAt(i);
+      vs.addElement(vbean.getACAttribute());
+      vs.addElement(vbean.getAttributeContent());
+      vs.addElement(vbean.getAttributeStatus());
+    }
+    return vs;
+  }
 }   //close the class
