@@ -184,7 +184,6 @@
   function ShowUseSelection()
   {
       getRowAttributes();   //get the values of each row.
-  
       //use the selected VD in create/edit DE form
       if (sComp == "DataElementConcept" && opener.document.newCDEForm != null)
           DECShowUseSelection();
@@ -198,11 +197,11 @@
           CDShowUseSelection();
       
       //use the selected pv in create/edit vd form
-      else if (sComp == "PermissibleValue" && opener.document.createVDForm != null)
+      else if (sComp == "PermissibleValue" && opener.document != null)
           PVShowUseSelection();	
       
       //use the selected VM in create pv form
-      else if (sComp == "ValueMeaning" && opener.document.createPVForm != null)  //search for value meaning
+      else if (sComp == "ValueMeaning" && opener.document.PVForm != null)  //search for value meaning
           VMShowUseSelection();	
 
       //use the selected DE in create/edit DE form for DDE
@@ -218,7 +217,7 @@
     reSetAttribute();  //calls function to reset the attribute values
     if (opener.document.newCDEForm.acSearch != null)
       opener.document.newCDEForm.acSearch.value = "DataElementConcept";
-    submitOpener();   //calls the function submit hte opener form.
+    submitOpener("updateNames");   //calls the function submit hte opener form.
     window.close();
   }
 
@@ -230,7 +229,7 @@
 		reSetAttribute();  //calls the reset the attribute values
     if (opener.document.newCDEForm.acSearch != null)
       opener.document.newCDEForm.acSearch.value = "ValueDomain";
-    submitOpener();   //calls the function submit hte opener form.
+    submitOpener("updateNames");   //calls the function submit hte opener form.
 		window.close();
   }
 
@@ -268,13 +267,7 @@
   //do the use selection for VM search
   function VMShowUseSelection()
   {
-    if (opener.document.createPVForm != null)
-    {
-      opener.document.createPVForm.selShortMeanings.value = editLongName;
-      opener.document.createPVForm.CreateDescription.value = editDescription;
-      opener.document.createPVForm.newCDEPageAction.value = "appendSearchVM";
-      opener.document.createPVForm.submit();
-    }
+    submitOpener("appendSearchVM");
     window.close();
   }
 
@@ -301,14 +294,14 @@
   }
 
   //stores the selected row in the hidden array and submits the form to refresh
-  function submitOpener()
+  function submitOpener(sAction)
   {
     //store the selrow in an array 
     var selRowArray = new Array();        
     var rowNo = document.searchResultsForm.hiddenSelectedRow[0].value;
     selRowArray[0] = rowNo;
     opener.AllocSelRowOptions(selRowArray);  //allocate option for hidden row and select it.
-    opener.SubmitValidate("updateNames");  //submit the form
+    opener.SubmitValidate(sAction);  //submit the form
   }
   
   //trims off spaces and "_"
@@ -519,9 +512,9 @@
 				   if (document.searchParmsForm.listSearchFor.value == "PermissibleValue")
 				   {
 					   //search from create/edit pages
-					   if (opener.document.createVDForm != null)
+					   if (opener.document != null)
 					   {
-						   var vOrigin = opener.document.createVDForm.MenuAction.value;
+						   var vOrigin = opener.document.getElementById("MenuAction").value;
 						   //searching pv for questions
 						   if (vOrigin == "Questions")
 						   {
@@ -914,7 +907,7 @@
   {
     if (opener.document != null && opener.document.createPVForm != null)
     {
-      opener.document.createPVForm.newCDEPageAction.value  = "createNewVM";
+      opener.document.createPVForm.pageAction.value  = "createNewVM";
  	    opener.document.createPVForm.submit();
       //close window
       window.close();

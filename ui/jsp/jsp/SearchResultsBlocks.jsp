@@ -67,6 +67,10 @@
 
   boolean isSelAll = false;
   boolean isEVSvm = true;
+  boolean allowNVP = false;
+  if (sSelAC.contains("Qualifier") || sSelAC.equals("VMConcept"))
+  	allowNVP = true;
+  	
   //allow multiple select only for select values from vd page
   if (sSelAC.equals("EVSValueMeaning") || sSelAC.equals("ParentConceptVM"))  
     isSelAll = true;
@@ -88,7 +92,7 @@
    else if (sSelAC.equals("ReferenceList"))
      sSelAC = "Reference List";
   else if (sSelAC.equals("EVSValueMeaning") || sSelAC.equals("CreateVM_EVSValueMeaning")
-            || sSelAC.equals("PV_ValueMeaning"))
+            || sSelAC.equals("PV_ValueMeaning") || sSelAC.equals("VMConcept"))
      sSelAC = "Value Meaning";
   else if (sSelAC.equals("ParentConcept"))
      sSelAC = "Parent Concept";
@@ -103,6 +107,10 @@
   String sUISearchType2 = (String)request.getAttribute("UISearchType");
   if (sUISearchType2 == null || sUISearchType2.equals("nothing") || sUISearchType2.equals("")) 
     sUISearchType2 = "term";
+    
+  //get the concept from the request after checking if exists in thesaurus or cadsr
+  EVS_Bean selBean = (EVS_Bean)request.getAttribute("selConcept");
+  if (selBean == null) selBean = new EVS_Bean();
 %>
 
 <SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
@@ -120,22 +128,23 @@
    {
  // alert("start setUp");
  <%
-    String statusMessage = (String)session.getAttribute("statusMessage");
-    if (statusMessage == null) statusMessage = "";
-    String sSubmitAction = (String)session.getAttribute("MenuAction");
-    if (sSubmitAction == null) sSubmitAction = "nothing";
- %>
-    displayStatus("<%=statusMessage%>", "<%=sSubmitAction%>");
- <%
-    session.setAttribute("statusMessage", "");
- %>
-    window.status = "Enter the keyword to search a component"
-    //make the message visible.
-    var pageOpen = "";
-    if (document.searchParmsForm.actSelect != null)
-      pageOpen = document.searchParmsForm.actSelect.value;
-    if (pageOpen == "FirstSearch" || pageOpen == "OpenTreeToConcept" || pageOpen == "OpenTreeToParentConcept")
-      document.searchResultsForm.Message.style.visibility="visible";
+	    String statusMessage = (String)session.getAttribute("statusMessage");
+	    if (statusMessage == null) statusMessage = "";
+	    String sSubmitAction = (String)session.getAttribute("MenuAction");
+	    if (sSubmitAction == null) sSubmitAction = "nothing";
+	 %>
+	    displayStatus("<%=statusMessage%>", "<%=sSubmitAction%>");
+	 <%
+	    session.setAttribute("statusMessage", "");
+	 %>
+	    window.status = "Enter the keyword to search a component"
+	    //make the message visible.
+	    var pageOpen = "";
+	    if (document.searchParmsForm.actSelect != null)
+	      pageOpen = document.searchParmsForm.actSelect.value;
+	    if (pageOpen == "FirstSearch" || pageOpen == "OpenTreeToConcept" || pageOpen == "OpenTreeToParentConcept")
+	      document.searchResultsForm.Message.style.visibility="visible";
+    
    }
 
    function getSearchComponent()
@@ -144,7 +153,7 @@
       sComp = opener.document.SearchActionForm.searchComp.value;
       if (sComp == "ParentConceptVM")
       {
-        var sComp2 = opener.document.createVDForm.selectedParentConceptMetaSource.value;
+        var sComp2 = opener.document.getElementById("selectedParentConceptMetaSource").value;
         if (sComp2 == null) sComp2 = "";
         document.searchResultsForm.selectedParentConceptMetaSource.value = sComp2;
       }
@@ -158,12 +167,25 @@
         else if (sComp == "RepQualifier") type = "Rep Qualifier";
         else if (sComp == "EVSValueMeaning" || 
                   sComp == "CreateVM_EVSValueMeaning" || 
-                  sComp == "ParentConceptVM") type = "Value Meaning";
+                  sComp == "ParentConceptVM" || 
+                  sComp == "VMConcept") type = "Value Meaning";
         else if (sComp == "ParentConcept") type = "Parent Concept";
         
     <% } else { %>
         sComp = "<%=sSelAC%>";
     <% } %>
+    
+      //selected concept info
+      <% if (selBean.getLONG_NAME() != null && !selBean.getLONG_NAME().equals(""))
+      {
+      	String sName = selBean.getLONG_NAME();
+      	String sID = selBean.getCONCEPT_IDENTIFIER();
+      	String sDB = selBean.getEVS_DATABASE();
+      	String sDesc = selBean.getPREFERRED_DEFINITION();
+      %>
+	      	opener.appendConcept("<%=sName%>", "<%=sID%>", "<%=sDB%>", "<%=sName%>", "<%=sDesc%>");
+	      	window.close();
+      <% } %>
    }
      
   function ShowSelection()
@@ -223,7 +245,7 @@
 	%>
 	      //store con attributes in an array
 	      var aIndex = <%=i%>;  //get the index
-	      var conID = "<%=evsBean.getNCI_CC_VAL()%>";  //get evs identifier
+	      var conID = "<%=evsBean.getCONCEPT_IDENTIFIER()%>";  //get evs identifier
 	      <% //parse the string for quotation character
 	        String sData = evsBean.getLONG_NAME();
 	        sData = serUtil.parsedStringDoubleQuote(sData);%>
@@ -272,7 +294,7 @@
 <table border="0">
   <tr align="left">
     <td>
-        <input type="button" name="editSelectedBtn" value="Use Selection" onClick="ShowSelection();" disabled style="width: 100", "height: 30">
+        <input type="button" name="editSelectedBtn" value="Use Selection" onClick="ShowSelection();" disabled style="width: 100,height: 30">
         &nbsp;&nbsp;
     <!--   <input type="button" name="btnUseParent" value="Set Reference" onclick="javascript:getSubConcepts();" style="width: 95">
       &nbsp;&nbsp; -->
@@ -280,7 +302,7 @@
       &nbsp;&nbsp;
        <input type="button" name="btnSuperConcepts" value="Get Superconcepts" disabled onclick="javascript:getSuperConcepts();" style="width: 130">
       &nbsp;&nbsp;
-        <input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();" style="width: 93", "height: 30">
+        <input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();" style="width: 93,height: 30">
        &nbsp;&nbsp;
       <input type="button" name="btnSubmitToEVS" value="Suggest to EVS" onclick="javascript:NewTermSuggested();" style="width:108">
        &nbsp;&nbsp;
@@ -388,12 +410,14 @@
       int j = 0;
       for (int i = 0; i < results.size(); i+=k)
       {
+      	int nvp = 0;
         if (vSearchRes.size() > j)
         {
           EVS_Bean eBean = (EVS_Bean)vSearchRes.get(j);
           if (eBean == null) eBean = new EVS_Bean();
           String strVocab = eBean.getEVS_DATABASE();  
           vName = eBean.getVocabAttr(uBean, strVocab, EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME);  // "vocabDBOrigin", "vocabName");
+          nvp = eBean.getNAME_VALUE_PAIR_IND();
    // System.out.println(vName + " jsp vocab " + strVocab);
         }
          String ckName = ("CK" + j);
@@ -420,19 +444,35 @@
          if (hasLink == false) {
   %>
            <tr>
-            <td width="5"><input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);"></td>
-            <td width="150"><%=strResult%></td>
+            <td width="5" valign="top"><input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);"></td>
+            <td width="150" valign="top"><%=strResult%> <br>
+            	<% //add the text box for NVP under concept name
+            		if (allowNVP && nvp > 0 && vSelAttr.contains("Concept Name"))
+            		{
+            	%>
+            			<br>&nbsp;&nbsp;Enter Concept Value
+            			<br>&nbsp;&nbsp;<input type="text" name="nvp_<%=ckName%>" maxlength="10" width="80%" onkeyup="" value="">            			
+            	<% }	%>
+            </td>
   <%    }else{%>
           <tr>
-            <td width="5"><input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);"></td>
-            <td width="150"><a href="<%=showConceptInTree%>"><%=strResult%></a></td>
+            <td width="5" valign="top"><input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);"></td>
+            <td width="150" valign="top"><a href="<%=showConceptInTree%>"><%=strResult%></a> <br>
+            	<% //add the text box for NVP under concept name
+            		if (allowNVP && nvp > 0 && vSelAttr.contains("Concept Name"))
+            		{
+            	%>
+            			<br>&nbsp;&nbsp;Enter Concept Value
+            			<br>&nbsp;&nbsp;<input type="text" name="nvp_<%=ckName%>" maxlength="10" width="30" onkeyup="" value="">            			
+            	<% }	%>
+            </td>
   <%    } %>
   <%
 		   for (int m = 1; m < k; m++)
 		   {
            strResult = (String)results.get(i+m);
            if (strResult == null) strResult = "";
-%>        <td><%=strResult%></td>
+%>        <td valign="top"><%=strResult%></td>
 <%
         }
 %>
@@ -444,7 +484,7 @@
 %>
 
 </table>
-<table>
+<div style="display:none">
 <input type="hidden" name="AttChecked" value="<%=(k-5)%>">
 <input type="hidden" name="searchComp" value="">
 <input type="hidden" name="openToTree" value=""> 
@@ -461,6 +501,7 @@
 <input type="hidden" name="blockSortType" value="nothing"> 
 <input type="hidden" name="UISearchType" value="<%=sUISearchType2%>">
 <input type="hidden" name="selRowID" value="">
+<input type="hidden" name="editPVInd" value="">
 <select size="1" name="hiddenPVValue" style="visibility:hidden;"></select>
 <select size="1" name="hiddenPVMean" style="visibility:hidden;"></select>
   
@@ -475,7 +516,7 @@
 %>
 </select>
 <select size="1" name="hiddenSelectedRow" style="visibility:hidden;"> </select>
-</table>
+</div>
 <div id="divAssACMenu" style="position:absolute;z-index:1;visibility:hidden;width:185px;">
 <table id="tblAssACMenu" border="3" cellspacing="0" cellpadding="0">
 <tr><td class="menu" id="assDE"><a href="javascript:getSubConceptsAll();" onmouseover="changecolor('assDE',oncolor)" onmouseout="changecolor('assDE',offcolor);closeall()">All Subconcepts</a></td></tr>

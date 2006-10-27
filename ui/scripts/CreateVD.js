@@ -103,18 +103,6 @@ function removeAllText(thisBlock)
     }
   }
 
-  //open alternate names reference document window
-  function openDesignateWindow(sType)
-  {
-    if (altWindow && !altWindow.closed)
-      altWindow.close();
-    document.SearchActionForm.isValidSearch.value = "false";  
-    document.SearchActionForm.itemType.value = sType
- // alert(" depage " + sType);
-    //var windowW = screen.width - 410;
-    altWindow = window.open("jsp/EditDesignateDE.jsp", "designate", "width=700,height=650,top=0,left=0,resizable=yes,scrollbars=yes");
-  }
-
  function SearchBuildingBlocks(thisBlock, openToTree)
  {
     var vAction = document.createVDForm.VDAction.value;
@@ -139,7 +127,7 @@ function removeAllText(thisBlock)
     else
     {
     	document.SearchActionForm.searchComp.value = thisBlock;
-      document.createVDForm.openToTree.value = openToTree; //true
+      	document.createVDForm.openToTree.value = openToTree; //true
 	    document.SearchActionForm.isValidSearch.value = "false";
     	if (searchWindow && !searchWindow.closed)
        		searchWindow.close()
@@ -147,7 +135,7 @@ function removeAllText(thisBlock)
     }
  }
 
-
+/*
   //called when hits the link to create new value or edit or remove existing ones. 
   function doPVAction(pvAction)
   {
@@ -205,7 +193,7 @@ function removeAllText(thisBlock)
             document.createVDForm.Message2.style.visibility="visible";
             if (pvAction == "createPV" && checkedValueCount >0)
               pvAction = "editPV";
-            document.createVDForm.newCDEPageAction.value = pvAction; // "createPV";
+            document.createVDForm.pageAction.value = pvAction; // "createPV";
             //call function to submit the form
             SubmitValidate(pvAction);   //("createPV");     
           }
@@ -251,7 +239,7 @@ function removeAllText(thisBlock)
       document.createVDForm.selectedParentConceptDB.value = sParentDB;  
       document.createVDForm.selectedParentConceptMetaSource.value = sParentMetaSource; 
       //submit the form to refresh.
-      document.createVDForm.newCDEPageAction.value = sAct;
+      document.createVDForm.pageAction.value = sAct;
       SubmitValidate(sAct);
     }
     else
@@ -395,10 +383,11 @@ function removeAllText(thisBlock)
     if (document.createVDForm.hiddenPVID.length > 0)
     {
       document.createVDForm.pvSortColumn.value = fieldName;
-      document.createVDForm.newCDEPageAction.value = "sortPV";
+      document.createVDForm.pageAction.value = "sortPV";
       SubmitValidate("sortPV");
     }
   }
+*/
   //adds new option for the hidden vm select fields from new window
   function AllocVMOptions(iCount)
   {
@@ -424,24 +413,6 @@ function removeAllText(thisBlock)
     }
   } 
 
-  function SearchCDValue()
- {
-    var selIdx = document.createVDForm.selContext.selectedIndex;
-    var vAction = document.createVDForm.VDAction.value;
- //   alert(vAction);
-    if (document.createVDForm.selContext[selIdx].text == "" && vAction != "BlockEdit")
-      alert("Please select a context first");
-    else
-    {
-      document.SearchActionForm.searchComp.value = "ConceptualDomain";
-      document.SearchActionForm.SelContext.value = document.createVDForm.selContext.options[document.createVDForm.selContext.selectedIndex].text;   //get the context 
-      document.SearchActionForm.isValidSearch.value = "false";
-
-      if (searchWindow && !searchWindow.closed)
-        searchWindow.close()
-      searchWindow = window.open("jsp/OpenSearchWindow.jsp", "searchWindow", "width=775,height=700,top=0,left=0,resizable=yes,scrollbars=yes")
-    }
- }
  //add remove contacts
 function editContact(sAction)
 {
@@ -503,14 +474,14 @@ function enableContButtons()
     window.location = "ValidateVD.jsp";
   }
 
- function Skip()
+  function Skip()
   {
      this.blur();
   }
 
- function ClearBoxes()
+  function ClearBoxes()
   {
-     document.createVDForm.newCDEPageAction.value = "clearBoxes"
+     document.createVDForm.pageAction.value = "clearBoxes"
      document.createVDForm.Message.style.visibility="visible";
      window.status = "clearing data, it may take a minute, please wait....."
      document.createVDForm.submit();
@@ -532,9 +503,12 @@ function enableContButtons()
     document.createVDForm.txtPrefNameCount.value = document.createVDForm.txtPreferredName.value.length;
   }
 
+  
   function SubmitValidate(origin)
   {
  // alert("submitValidate origin: " + origin);
+ 	if (origin == "goBack")
+ 		Back();
     //check if the date is valid
     var isValid = "valid";
     if (isValid == "valid" && origin == "validate") 
@@ -559,16 +533,9 @@ function enableContButtons()
      
       //submit the form
       if (origin == "refresh") origin = "refreshCreateVD";
-      document.createVDForm.newCDEPageAction.value = origin;
+      document.createVDForm.pageAction.value = origin;
       window.status = "Validating the page, it may take a minute, please wait.....";          
       document.createVDForm.Message.style.visibility="visible";
-	   //disable the buttons
-	   document.createVDForm.btnValidate.disabled = true;
-	   document.createVDForm.btnClear.disabled = true;
-	   if (document.createVDForm.btnBack != null) 
-	   		document.createVDForm.btnBack.disabled = true;
-	   document.createVDForm.btnAltName.disabled = true;
-	   document.createVDForm.btnRefDoc.disabled = true;
 	   //submit the form
       document.createVDForm.submit();
     }
@@ -611,13 +578,6 @@ function enableContButtons()
       }
       return isValid;
   }
-  //disables the valid value selection
-  function disableSelect()
-  {
-    var sInd = document.createVDForm.selValidValue.selectedIndex;
-    if (sInd >-1)
-      document.createVDForm.selValidValue.selectedIndex = -1;
-  }
   
  function ToggleDisableList2()
  {
@@ -646,14 +606,14 @@ function enableContButtons()
           }
         }
       }
-      document.createVDForm.newCDEPageAction.value = "Enum";
+      document.createVDForm.pageAction.value = "Enum";
       document.createVDForm.listVDType[0].selected = "1";
       SubmitValidate("Enum");
     }
     //non enumerated selected
     else if (document.createVDForm.listVDType[1].selected == true)
     {
-      document.createVDForm.newCDEPageAction.value = "NonEnum";
+      document.createVDForm.pageAction.value = "NonEnum";
       document.createVDForm.listVDType[1].selected = "1";
       SubmitValidate("NonEnum");
     }
@@ -667,7 +627,7 @@ function enableContButtons()
   function Back()
   {
     hourglass();
-    document.createVDForm.newCDEPageAction.value  = "backToDE";
+    document.createVDForm.pageAction.value  = "goBack";
     document.createVDForm.submit();
   }
 

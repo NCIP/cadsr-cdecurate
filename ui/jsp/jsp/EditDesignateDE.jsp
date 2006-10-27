@@ -275,13 +275,13 @@
   function Back()
   {
 	document.designateDEForm.Message.style.visibility="visible";
-    document.designateDEForm.newCDEPageAction.value = "backToSearch";
+    document.designateDEForm.pageAction.value = "backToSearch";
     document.designateDEForm.submit();
   }
   function ClearBoxes()
   {
 	document.designateDEForm.Message.style.visibility="visible";
-    document.designateDEForm.newCDEPageAction.value = "clearBoxes";
+    document.designateDEForm.pageAction.value = "clearBoxes";
     document.designateDEForm.submit();
   }
   
@@ -295,7 +295,7 @@
       if (sType != null && sType != "")
       {
 		document.designateDEForm.Message.style.visibility = "visible";
-        document.designateDEForm.newCDEPageAction.value = "open for " + sType;  //"refreshPage";
+        document.designateDEForm.pageAction.value = "open for " + sType;  //"refreshPage";
         document.designateDEForm.submit();
       }
      // else
@@ -882,7 +882,7 @@
     </tr>
 <%}%> <!-- end cscsi for designation type -->
   </table> 
-<input type="hidden" name="newCDEPageAction" value="nothing">
+<input type="hidden" name="pageAction" value="nothing">
 <%if(sOriginAction.equals("BlockEditDE")){%>
 <input type="hidden" name="DEAction" value="BlockEdit">
 <% } else {%>

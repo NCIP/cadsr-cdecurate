@@ -65,13 +65,13 @@ function AddOption(form, list)
 	if (list.name == "selDEC" && selectedValue == "createNew")
 	{
 		document.newCDEForm.Message.style.visibility="visible";
-		document.newCDEForm.newCDEPageAction.value = "createNewDEC";
+		document.newCDEForm.pageAction.value = "createNewDEC";
 		document.newCDEForm.submit();
 	}
 	else if (list.name == "selVD" && selectedValue == "createNew")
 	{
 		document.newCDEForm.Message.style.visibility="visible";
-		document.newCDEForm.newCDEPageAction.value = "createNewVD";
+		document.newCDEForm.pageAction.value = "createNewVD";
 		document.newCDEForm.submit();
 	}
 	else
@@ -93,7 +93,7 @@ function CreateNewDECValue()
   SaveDDEInfor();
 	
 	document.newCDEForm.Message.style.visibility="visible";
-	document.newCDEForm.newCDEPageAction.value = "createNewDEC";
+	document.newCDEForm.pageAction.value = "createNewDEC";
 	document.newCDEForm.submit();
 }
 
@@ -110,7 +110,7 @@ function CreateNewVDValue()
   SaveDDEInfor();  
 	//submit the form
 	document.newCDEForm.Message.style.visibility="visible";
-	document.newCDEForm.newCDEPageAction.value = "createNewVD";
+	document.newCDEForm.pageAction.value = "createNewVD";
 	document.newCDEForm.submit();
 }
 
@@ -126,7 +126,7 @@ function EditDECValue()
 	//seelct dde info
   SaveDDEInfor();
 	
-	document.newCDEForm.newCDEPageAction.value = "EditDECfromDE";
+	document.newCDEForm.pageAction.value = "EditDECfromDE";
 	document.newCDEForm.Message.style.visibility="visible";
 	window.status = "Validating data, it may take a minute, please wait.....";
 	document.newCDEForm.submit();
@@ -144,7 +144,7 @@ function EditVDValue()
   //select dde info     		   
   SaveDDEInfor();
 	
-	document.newCDEForm.newCDEPageAction.value = "EditVDfromDE";
+	document.newCDEForm.pageAction.value = "EditVDfromDE";
 	document.newCDEForm.Message.style.visibility="visible";
 	window.status = "Validating data, it may take a minute, please wait.....";
 	document.newCDEForm.submit();
@@ -213,7 +213,7 @@ function SubmitValidate(origin)
 	       //DDE info saved
 	       SaveDDEInfor();
 			//
-           document.newCDEForm.newCDEPageAction.value = origin;
+           document.newCDEForm.pageAction.value = origin;
            window.status = "Validating data, it may take a minute, please wait.....";
 		   document.newCDEForm.Message.style.visibility="visible";
 		   //disable the buttons
@@ -260,7 +260,7 @@ function SubmitCDE()
 	hourglass();
 	document.newCDEForm.selDEC[0].selected = true;
 	document.newCDEForm.selVD[0].selected = true;
-	document.newCDEForm.newCDEPageAction.value = "submit";
+	document.newCDEForm.pageAction.value = "submit";
 	document.newCDEForm.Message.style.visibility="visible";
 	window.status = "Submitting data, it may take a minute, please wait.....";
 	document.newCDEForm.submit();
@@ -374,7 +374,8 @@ function openDesignateWindow(sType)
     document.SearchActionForm.itemType.value = sType
  // alert(" depage " + sType);
     //var windowW = screen.width - 410;
-    altWindow = window.open("jsp/EditDesignateDE.jsp", "designate", "width=700,height=650,top=0,left=0,resizable=yes,scrollbars=yes");
+//    altWindow = window.open("jsp/EditDesignateDE.jsp", "designate", "width=700,height=650,top=0,left=0,resizable=yes,scrollbars=yes");
+    altWindow = window.open("NCICurationServlet?reqType=AltNamesDefs&searchEVS=" + document.SearchActionForm.searchEVS.value, "designate", "width=900,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
 }
 
 function MM_callJS(jsStr) { //v2.0
@@ -387,9 +388,9 @@ function Back()
     if(document.newCDEForm.originActionHidden.value == "CreateNewDEFComp")   // from DE Comp back
     {
         if(document.newCDEForm.MenuAction.value == "editDE")     // to Edit DE
-            document.newCDEForm.newCDEPageAction.value  = "DECompBackToEditDE";
+            document.newCDEForm.pageAction.value  = "DECompBackToEditDE";
         else                                                     // to New DE (primary)       
-            document.newCDEForm.newCDEPageAction.value  = "DECompBackToNewDE";
+            document.newCDEForm.pageAction.value  = "DECompBackToNewDE";
     }
     else if(document.newCDEForm.MenuAction.value == "Questions" ||
             document.newCDEForm.MenuAction.value == "NewDETemplate" ||
@@ -397,10 +398,10 @@ function Back()
             document.newCDEForm.MenuAction.value == "EditDesDE" ||
             document.newCDEForm.MenuAction.value == "editDE")
     {
-        document.newCDEForm.newCDEPageAction.value  = "backToSearch";
+        document.newCDEForm.pageAction.value  = "backToSearch";
     }
     else   //safe sake
-        document.newCDEForm.newCDEPageAction.value  = "backToSearch";
+        document.newCDEForm.pageAction.value  = "backToSearch";
     
     document.newCDEForm.submit();
 }
@@ -510,7 +511,7 @@ function enableContButtons()
 
 function ClearBoxes()
 { 
-	document.newCDEForm.newCDEPageAction.value = "clearBoxes";
+	document.newCDEForm.pageAction.value = "clearBoxes";
 	document.newCDEForm.Message.style.visibility="visible";
 	window.status = "clearing data, it may take a minute, please wait.....";
 	document.newCDEForm.submit();
@@ -584,7 +585,7 @@ function CreateNewDEValue()
     SaveDDEInfor();
     
     document.newCDEForm.Message.style.visibility="visible";
-    document.newCDEForm.newCDEPageAction.value = "CreateNewDEFComp";
+    document.newCDEForm.pageAction.value = "CreateNewDEFComp";
     document.newCDEForm.submit();
 }
 

@@ -42,16 +42,16 @@
       alert("Reference Document URL Text must begin with 'http://'");
       return;
     }
-    if (opener.document != null && opener.document.createVDForm != null)
+    if (opener.document != null)
     {
-      opener.document.createVDForm.hiddenParentName.value = document.nonEVSSearchPage.txtRefName.value;
-      opener.document.createVDForm.hiddenParentCode.value = document.nonEVSSearchPage.txtRefText.value;
-      opener.document.createVDForm.hiddenParentDB.value = document.nonEVSSearchPage.txtRefURL.value;
-      opener.document.createVDForm.newCDEPageAction.value = "CreateNonEVSRef";
-      opener.document.createVDForm.Message.style.visibility="visible";
+      opener.document.getElementById("hiddenParentName").value = document.nonEVSSearchPage.txtRefName.value;
+      opener.document.getElementById("hiddenParentCode").value = document.nonEVSSearchPage.txtRefText.value;
+      opener.document.getElementById("hiddenParentDB").value = document.nonEVSSearchPage.txtRefURL.value;
+      opener.document.getElementById("pageAction").value = "CreateNonEVSRef";
+      opener.document.getElementById("Message").style.visibility="visible";
       opener.document.body.style.cursor = "wait";
       opener.SubmitValidate("CreateNonEVSRef");
-      //opener.document.createVDForm.submit();
+
       window.close();
     }
   }
@@ -76,16 +76,16 @@
   //when first opened check if it is to select or view
   function setup()
   {
-    if (opener.document != null && opener.document.SearchActionForm != null && opener.document.createVDForm != null)
+    if (opener.document != null && opener.document.SearchActionForm != null)
     {
       //resubmit to get the data if search action is false and parent is selected
-      var sInd = opener.document.createVDForm.listParentConcept.selectedIndex;
+      var sInd = opener.document.getElementById("listParentConcept").selectedIndex;
       var isFirst = opener.document.SearchActionForm.isValidSearch.value;
       if (isFirst == "false" && sInd > -1)
       {
         opener.document.SearchActionForm.isValidSearch.value = "true";
         //fill the refname to get matching parent from the list of parents.
-        document.nonEVSSearchPage.txtRefName.value = opener.document.createVDForm.selectedParentConceptName.value;
+        document.nonEVSSearchPage.txtRefName.value = opener.document.getElementById("selectedParentConceptName").value;
         hourglass();
         window.status = "Refereshing the page, it may take a minute, please wait....."
         document.nonEVSSearchPage.actSelect.value = "viewParent";

@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/prod/load_tool_options.sql,v 1.11 2006-08-29 17:36:54 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/prod/load_tool_options.sql,v 1.12 2006-10-27 14:54:27 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -18,7 +18,7 @@
 
 --Store evs url for all tools: need to make sure it doesn't exists already before runnning.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('EVS', 'URL', 'http://cbioapp104.nci.nih.gov:49080/cacore31/http/remoteService', 
+VALUES ('EVS', 'URL', 'http://cabio.nci.nih.gov/cacore32/http/remoteService', 
 	   'Store evs url specific to EVS'); 
 
 --Store browser url for all tools: need to make sure it doesn't exists already before runnning.
@@ -38,7 +38,7 @@ VALUES ('CURATION', 'URL', 'http://cdecurate.nci.nih.gov',
 
 --Store evs alternate url specific to curation tool if needed.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.URL', 'http://cbioapp104.nci.nih.gov:49080/cacore31/http/remoteService', 
+VALUES ('CURATION', 'EVS.URL', 'http://cabio.nci.nih.gov/cacore32/http/remoteService', 
 	   'Store evs alternate url specific to curation tool if needed');
 
 --ALL VOCAB ATTRIBUTES

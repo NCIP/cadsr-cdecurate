@@ -1,413 +1,421 @@
 <project name="CDE Curation Tool" default="init" basedir=".">
     <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.22 2006-05-17 20:01:35 hardingr Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.23 2006-10-27 14:54:27 hegdes Exp $
         $Name: not supported by cvs2svn $
     -->
-    <description>
-        Build and deploy the CDE Curation Tool
-    </description>
+    <description>Build and deploy the CDE Curation Tool</description>
     <!--Note: Curation tool uses java sdk 1.4.2. Please set the environment variable and class path this-->
 
     <!-- set global properties for this build -->
-    <property name="temp" location="tmp"/>
+    <property name="temp" location="tmp" />
 
-	<property name="jbosshome" location="${env.JBOSS_HOME}/server/default/deploy"/>
-	<property name="tomcathome" location="${env.CATALINA_HOME}/webapps"/>
-	<!--use the project's window/preference/tomcat/jvm setting to select the path -->
-	<!--	<property name="ncicvshome" location="D:/NCI_CVS/cdecurate"/>  -->
+    <property name="jbosshome" location="${env.JBOSS_HOME}/server/default/deploy" />
+    <property name="tomcathome" location="${env.CATALINA_HOME}/webapps" />
+    <!--use the project's window/preference/tomcat/jvm setting to select the path -->
+    <!--	<property name="ncicvshome" location="D:/NCI_CVS/cdecurate"/>  -->
 
-	<!-- set global properties for compiled temp directory -->
-    <property name="app_root" location="tmp/cdecurate"/>
-    <property name="app_jsp" location="${app_root}/jsp"/>
-    <property name="app_asset" location="${app_root}/Assets"/>
-    <property name="app_webinf" location="${app_root}/WEB-INF"/>
-    <property name="app_classes" location="${app_webinf}/classes"/>
-    <property name="app_class" location="${app_classes}/gov/nih/nci/cadsr/cdecurate/tool"/>
-    <property name="app_jclass" location="${app_classes}/org/apache/jsp"/>
-    <property name="app_lib" location="${app_webinf}/lib"/>
-    <property name="app_tld" location="${app_webinf}/tld"/>
-    
+    <!-- set global properties for compiled temp directory -->
+    <property name="app_root" location="tmp/cdecurate" />
+    <property name="app_jsp" location="${app_root}/jsp" />
+    <property name="app_asset" location="${app_root}/Assets" />
+    <property name="app_webinf" location="${app_root}/WEB-INF" />
+    <property name="app_classes" location="${app_webinf}/classes" />
+    <property name="app_class" location="${app_classes}/gov/nih/nci/cadsr/cdecurate/tool" />
+    <property name="app_jclass" location="${app_classes}/org/apache/jsp" />
+    <property name="app_lib" location="${app_webinf}/lib" />
+    <property name="app_tld" location="${app_webinf}/tld" />
+
     <!-- set global properties for source directory -->
-    <property name="m_java" location="src"/>
-    <property name="m_xml" location="conf/web"/>
-    <property name="m_tld" location="conf/web/tld"/>
-    <property name="m_lib" location="lib"/>
-    <property name="m_web" location="ui"/>
-    <property name="m_conf" location="conf"/>
-    <property name="m_doc" location="doc"/>
-    <property name="app_war" location="distrib/war"/>
-    <property name="m_javadoc" location="doc/javadoc"/>
-    <property name="b_class" location="build/bin/gov/nih/nci/cadsr/cdecurate/tool"/>
-    <property name="bgen_class" location="build-gen/bin/org/apache/jsp"/>
-    
-    
+    <property name="m_java" location="src" />
+    <property name="m_xml" location="conf/web" />
+    <property name="m_tld" location="conf/web/tld" />
+    <property name="m_lib" location="lib" />
+    <property name="m_web" location="ui" />
+    <property name="m_conf" location="conf" />
+    <property name="m_doc" location="doc" />
+    <property name="app_war" location="distrib/war" />
+    <property name="m_javadoc" location="doc/javadoc" />
+    <property name="b_class" location="build/bin/gov/nih/nci/cadsr/cdecurate/tool" />
+    <property name="bgen_class" location="build-gen/bin/org/apache/jsp" />
+
+
     <!--Set the source path for java files and jsp files to compile-->
     <path id="srcpath">
-        <pathelement location="${m_java}/gov"/>
+        <pathelement location="${m_java}/gov" />
     </path>
     <path id="jspsrcpath">
-        <pathelement  location="${app_classes}/jsp"/>
+        <pathelement location="${app_classes}/jsp" />
     </path>
 
     <!--Set the source path for lib files to compile-->
     <path id="libpath">
-      <pathelement location="${m_lib}/jasper-compiler.jar"/>
-      <pathelement location="${m_lib}/servlet.jar"/>
-      <pathelement location="${m_lib}/jasper-runtime.jar"/>
-      <pathelement location="${m_lib}/ant.jar"/>
- <!-- <pathelement location="${m_lib}/classes12.jar"/> -->
-      <pathelement location="${m_lib}/ojdbc14.jar"/>
-      <pathelement location="${m_lib}/cadsrsentinelapi.jar"/>
-      <pathelement location="${m_lib}/client.jar"/>
-      <pathelement location="${m_lib}/xerces.jar"/>
-      <pathelement location="${m_lib}/alteredHibernate2.jar"/>
-      <pathelement location="${m_lib}/log4j.jar"/>
-      <pathelement location="${m_lib}/aspectjrt.jar"/>
-      <pathelement location="${m_lib}/aspectjtools.jar"/>
-      <pathelement location="${m_lib}/cglib-full-2.0.1.jar"/>
-      <pathelement location="${m_lib}/hibernate3.jar"/>
-      <pathelement location="${m_lib}/commons-logging.jar"/>
-      <pathelement location="${m_lib}/spring.jar"/>
-      <pathelement location="${m_lib}/spring-richclient.jar"/>
-      <pathelement location="${m_lib}/xml-apis.jar"/> 
+        <pathelement location="${m_lib}/ant.jar" />
+        <pathelement location="${m_lib}/aspectjrt.jar" />
+        <pathelement location="${m_lib}/asm.jar" />
+        <pathelement location="${m_lib}/aspectjtools.jar" />
+        <pathelement location="${m_lib}/cacore32-client.jar" />
+        <pathelement location="${m_lib}/cadsrsentinelapi.jar" />
+        <pathelement location="${m_lib}/cglib-2.1.3.jar" />
+        <pathelement location="${m_lib}/commons-logging.jar" />
+        <pathelement location="${m_lib}/hibernate3.jar" />
+        <pathelement location="${m_lib}/jasper-compiler.jar" />
+        <pathelement location="${m_lib}/jasper-runtime.jar" />
+        <pathelement location="${m_lib}/log4j-1.2.13.jar" />
+        <pathelement location="${m_lib}/ojdbc14.jar" />
+        <pathelement location="${m_lib}/servlet.jar" />
+        <pathelement location="${m_lib}/spring.jar" />
+        <pathelement location="${m_lib}/spring-richclient.jar" />
+        <pathelement location="${m_lib}/xerces.jar" />
+        <pathelement location="${m_lib}/xml-apis.jar" />
+        <pathelement location="${m_lib}/test/junit.jar" />
     </path>
 
     <!-- init target -->
     <target name="init">
-        <echo message="This build script must be run with the name of the desired target: build-local, build-dev, build-qa, build-stage, build-prod."/>
+        <echo message="This build script must be run with the name of the desired target: build-local, build-dev, build-qa, build-stage, build-prod." />
     </target>
 
     <!-- make temporary build directory  -->
     <target name="clean">
-    	<delete dir="${app_root}"/>
-    	<mkdir dir="${temp}"/>
-    	<mkdir dir="${app_root}"/>
-    	<mkdir dir="${app_jsp}"/>
-    	<mkdir dir="${app_asset}"/>
-    	<mkdir dir="${app_webinf}"/>
-    	<mkdir dir="${app_classes}"/>
-    	<mkdir dir="${app_lib}"/>
-    	<mkdir dir="${app_tld}"/>
+        <delete dir="${app_root}" />
+        <mkdir dir="${temp}" />
+        <mkdir dir="${app_root}" />
+        <mkdir dir="${app_jsp}" />
+        <mkdir dir="${app_asset}" />
+        <mkdir dir="${app_webinf}" />
+        <mkdir dir="${app_classes}" />
+        <mkdir dir="${app_lib}" />
+        <mkdir dir="${app_lib}/test" />
+        <mkdir dir="${app_tld}" />
     </target>
- 
+
     <!-- copy web content to temporary build directory  -->
     <target name="setup" depends="clean">
         <!-- copy html, css, login jsp to cdecurate directory  -->
         <copy todir="${app_root}" overwrite="YES">
-            <fileset dir="${m_web}/css/cdecurate" excludes="**/*CVS*"/>
-            <fileset dir="${m_web}/jsp/cdecurate" excludes="**/*CVS*"/>
-            <fileset dir="${m_web}/html/cdecurate" excludes="**/*CVS*"/>
+            <fileset dir="${m_web}/css/cdecurate" excludes="**/*CVS*" />
+            <fileset dir="${m_web}/jsp/cdecurate" excludes="**/*CVS*" />
+            <fileset dir="${m_web}/html/cdecurate" excludes="**/*CVS*" />
         </copy>
         <!-- copy css, all jsp to cdecurate/jsp directory  -->
         <copy todir="${app_jsp}" overwrite="YES">
-            <fileset dir="${m_web}/css/jsp" excludes="**/*CVS*"/>
-            <fileset dir="${m_web}/jsp/jsp" excludes="**/*CVS*"/>
+            <fileset dir="${m_web}/css/jsp" excludes="**/*CVS*" />
+            <fileset dir="${m_web}/jsp/jsp" excludes="**/*CVS*" />
         </copy>
         <!-- copy css, html, script, images to cdecurate/Assets directory  -->
         <copy todir="${app_asset}" overwrite="YES">
-            <fileset dir="${m_web}/css/asset" excludes="**/*CVS*"/>
-            <fileset dir="${m_web}/html/asset" excludes="**/*CVS*"/>
-            <fileset dir="${m_web}/scripts" excludes="**/*CVS*"/>
-            <fileset dir="${m_web}/images" excludes="**/*CVS*"/>
+            <fileset dir="${m_web}/css/asset" excludes="**/*CVS*" />
+            <fileset dir="${m_web}/html/asset" excludes="**/*CVS*" />
+            <fileset dir="${m_web}/scripts" excludes="**/*CVS*" />
+            <fileset dir="${m_web}/images" excludes="**/*CVS*" />
         </copy>
         <!-- copy client.jar to cdecurate/WEB-INF/lib directory -->
         <copy todir="${app_lib}" overwrite="YES">
-          <fileset file="${m_lib}/client.jar"/>
-          <fileset file="${m_lib}/cadsrsentinelapi.jar"/>
-          <fileset file="${m_lib}/spring.jar"/>
-          <fileset file="${m_lib}/spring-richclient.jar"/>
-          <fileset file="${m_lib}/xml-apis.jar"/>
-          <fileset file="${m_lib}/xerces.jar"/>
-          <fileset file="${m_lib}/hibernate3.jar"/>
+            <fileset file="${m_lib}/asm.jar" />
+            <fileset file="${m_lib}/cacore32-client.jar" />
+            <fileset file="${m_lib}/cadsrsentinelapi.jar" />
+            <fileset file="${m_lib}/hibernate3.jar" />
+            <fileset file="${m_lib}/spring.jar" />
+            <fileset file="${m_lib}/spring-richclient.jar" />
+            <fileset file="${m_lib}/xml-apis.jar" />
+            <fileset file="${m_lib}/xerces.jar" />
+        </copy>
+        <copy todir="${app_lib}/test" overwrite="YES">
+            <fileset file="${m_lib}/test/junit.jar" />
         </copy>
         <!-- copy tld to cdecurate/WEB-INF/tld directory  -->
         <copy todir="${app_tld}" overwrite="YES">
-            <fileset dir="${m_tld}" excludes="**/*CVS*"/>
+            <fileset dir="${m_tld}" excludes="**/*CVS*" />
         </copy>
     </target>
 
     <!--compile jsp, java files -->
     <target name="compile" depends="init,setup">
-      <!--Compile Java source files-->
-      <javac destdir="${app_classes}" encoding="Cp1252" debug="${jdebug}">
-          <classpath refid="libpath"/>
-          <src refid="srcpath"/>
-          <include name="**/*.java" />
-      </javac>
-      <!-- compile jsp files which makes jsp.java file --> 
-      <jspc srcdir="${app_jsp}" destdir="${app_classes}" compiler="jasper41"> 
-        <classpath refid="libpath"/>
-        <include name="**/*.jsp" />
-      </jspc>
-      <!-- compile jsp.java files --> 
-      <javac destdir="${app_classes}" encoding="Cp1252">
-          <classpath refid="libpath"/>
-          <src refid="jspsrcpath"/>
-          <include name="**/*.java" />
-      </javac>
-      <!-- copy property file to cdecurate/WEB-INF/classes/gov/nih/nci/cadsr/cdecurate/tool directory  -->
-      <copy file="${m_java}/gov/nih/nci/cadsr/cdecurate/tool/NCICuration.properties" tofile="${app_class}/NCICuration.properties" overwrite="YES"/>
-
+        <!--Compile Java source files-->
+        <javac destdir="${app_classes}" encoding="Cp1252" debug="${jdebug}">
+            <classpath refid="libpath" />
+            <src refid="srcpath" />
+            <include name="**/*.java" />
+        </javac>
+        <!-- compile jsp files which makes jsp.java file -->
+        <jspc srcdir="${app_jsp}" destdir="${app_classes}" compiler="jasper41">
+            <classpath refid="libpath" />
+            <include name="**/*.jsp" />
+        </jspc>
+        <!-- compile jsp.java files -->
+        <javac destdir="${app_classes}" encoding="Cp1252">
+            <classpath refid="libpath" />
+            <src refid="jspsrcpath" />
+            <include name="**/*.java" />
+        </javac>
+        <!-- copy property file to cdecurate/WEB-INF/classes/gov/nih/nci/cadsr/cdecurate/tool directory  -->
+        <copy file="${m_java}/gov/nih/nci/cadsr/cdecurate/tool/NCICuration.properties" tofile="${app_class}/NCICuration.properties" overwrite="YES" />
+        <cvs command="status -v" output="${app_class}/cvsdeploy.txt" />
+        <jar destfile="${app_war}/cdecurate.jar">
+            <fileset dir="${app_classes}">
+                <include name="**/cdecurate/*/*.class" />
+            </fileset>
+        </jar>
+        <delete file="${app_class}/cvsdeploy.txt" />
     </target>
-	
+
     <!-- copy compiled file to build directory  -->
-	<target name="copyCompile">
-    	<mkdir dir="${b_class}"/>
-    	<mkdir dir="${bgen_class}"/>
-	    <copy todir="${b_class}" overwrite="YES">
-	        <fileset dir="${app_class}"/>
-	    </copy>
-	    <copy todir="${bgen_class}" overwrite="YES">
-	        <fileset dir="${app_jclass}"/>
-	    </copy>
-	</target>
-	
+    <target name="copyCompile">
+        <mkdir dir="${b_class}" />
+        <mkdir dir="${bgen_class}" />
+        <copy todir="${b_class}" overwrite="YES">
+            <fileset dir="${app_class}" />
+        </copy>
+        <copy todir="${bgen_class}" overwrite="YES">
+            <fileset dir="${app_jclass}" />
+        </copy>
+    </target>
+
     <!-- make download package -->
     <target name="ospack">
-        <delete dir="ospackage"/>
-        <mkdir dir="ospackage"/>
+        <delete dir="ospackage" />
+        <mkdir dir="ospackage" />
         <copy todir="ospackage">
-            <fileset file="build.xml"/>
+            <fileset file="build.xml" />
         </copy>
-        <mkdir dir="ospackage/conf/web"/>
+        <mkdir dir="ospackage/conf/web" />
         <copy todir="ospackage/conf/web">
-            <fileset dir="conf/web" excludes="**/*CVS*"/>
+            <fileset dir="conf/web" excludes="**/*CVS*" />
         </copy>
-        <mkdir dir="ospackage/conf/prod"/>
+        <mkdir dir="ospackage/conf/prod" />
         <copy todir="ospackage/conf/prod">
-            <fileset dir="conf/osi" excludes="**/*CVS*"/>
+            <fileset dir="conf/osi" excludes="**/*CVS*" />
         </copy>
-        <mkdir dir="ospackage/conf/stage"/>
+        <mkdir dir="ospackage/conf/stage" />
         <copy todir="ospackage/conf/stage">
-            <fileset dir="conf/osi" excludes="**/*CVS*"/>
+            <fileset dir="conf/osi" excludes="**/*CVS*" />
         </copy>
-        <mkdir dir="ospackage/conf/qa"/>
+        <mkdir dir="ospackage/conf/qa" />
         <copy todir="ospackage/conf/qa">
-            <fileset dir="conf/osi" excludes="**/*CVS*"/>
+            <fileset dir="conf/osi" excludes="**/*CVS*" />
         </copy>
-        <mkdir dir="ospackage/conf/dev"/>
+        <mkdir dir="ospackage/conf/dev" />
         <copy todir="ospackage/conf/dev">
-            <fileset dir="conf/osi" excludes="**/*CVS*"/>
+            <fileset dir="conf/osi" excludes="**/*CVS*" />
         </copy>
-        <mkdir dir="ospackage/distrib/war"/>
-        <mkdir dir="ospackage/doc"/>
+        <mkdir dir="ospackage/distrib/war" />
+        <mkdir dir="ospackage/doc" />
         <copy todir="ospackage/doc">
-            <fileset dir="doc" excludes="**/*CVS*"/>
+            <fileset dir="doc" excludes="**/*CVS*" />
         </copy>
-        <mkdir dir="ospackage/lib"/>
+        <mkdir dir="ospackage/lib" />
         <copy todir="ospackage/lib">
             <fileset dir="lib">
-              <include name="*.jar"/>
-              <exclude name="caBIO.jar"/>
+                <include name="*.jar" />
+                <exclude name="caBIO.jar" />
             </fileset>
         </copy>
-        <mkdir dir="ospackage/src"/>
+        <mkdir dir="ospackage/src" />
         <copy todir="ospackage/src">
-            <fileset dir="src" excludes="**/*CVS*"/>
+            <fileset dir="src" excludes="**/*CVS*" />
         </copy>
-        <mkdir dir="ospackage/ui"/>
+        <mkdir dir="ospackage/ui" />
         <copy todir="ospackage/ui">
-            <fileset dir="ui" excludes="**/*CVS*"/>
+            <fileset dir="ui" excludes="**/*CVS*" />
         </copy>
         <!--zip the file   -->
         <zip destfile="ospackage/cdecurate.zip">
-            <zipfileset dir="ospackage"/>
+            <zipfileset dir="ospackage" />
         </zip>
         <!--tar and zip it   -->
         <tar destfile="ospackage/cdecurate.tar" basedir="ospackage">
-            <exclude name="*.zip"/>
+            <exclude name="*.zip" />
         </tar>
-        <gzip zipfile="ospackage/cdecurate.tar.gz" src="ospackage/cdecurate.tar"/>        
+        <gzip zipfile="ospackage/cdecurate.tar.gz" src="ospackage/cdecurate.tar" />
     </target>
+
     <!-- make javadoc  -->
     <target name="build-javadoc">
-        <mkdir dir="${m_javadoc}"/>
-        <javadoc
-                destdir="${m_javadoc}"
-                Private="true"
-                author="true"
-                version="true"
-                use="true"
-                windowtitle="CDE Curation Tool API">
-            <classpath refid="libpath"/>
-           <!-- <classpath>
+        <mkdir dir="${m_javadoc}" />
+        <javadoc destdir="${m_javadoc}" Private="true" author="true" version="true" use="true" windowtitle="CDE Curation Tool API">
+            <classpath refid="libpath" />
+            <!-- <classpath>
                 <fileset dir="${lib}">
-                    <include name="**/*.jar" />
+                <include name="**/*.jar" />
                 </fileset>
-            </classpath>  -->
-			
-            <packageset dir="${m_java}" defaultexcludes="yes"/>
-              <!--  <include name="com/scenpro/DSRAlert/**" /> 
-            </packageset>-->
-			
-            <doctitle><![CDATA[<h1>CDE Curation Tool</h1>]]></doctitle>
-            <bottom><![CDATA[<i>Copyright &#169; 2005 ScenPro, Inc. All Rights Reserved.</i>]]></bottom>
+                </classpath>  -->
+
+            <packageset dir="${m_java}" defaultexcludes="yes" />
+            <!--  <include name="com/scenpro/DSRAlert/**" /> 
+                </packageset>-->
+
+            <doctitle>
+                <![CDATA[<h1>CDE Curation Tool</h1>]]>
+            </doctitle>
+            <bottom>
+                <![CDATA[<i>Copyright &#169; 2005 ScenPro, Inc. All Rights Reserved.</i>]]>
+            </bottom>
             <tag name="todo" scope="all" description="To do:" />
-            <group title="Source Package" packages="gov.nih.nci.cadsr.cdecurate.tool"/>
-            <link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="D:\temp"/>
-            <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
+            <group title="Source Package" packages="gov.nih.nci.cadsr.cdecurate.tool" />
+            <link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="D:\temp" />
+            <link href="http://developer.java.sun.com/developer/products/xml/docs/api/" />
         </javadoc>
     </target>
 
     <!-- deploy the war file -->
     <target name="deploy" depends="compile">
-        <delete file="${app_war}/cdecurate.war"/>
-        <delete dir="${app_classes}/jsp"/>
-        <war destfile="${app_war}/cdecurate.war" basedir="${app_root}" update="true" webxml="${m_xml}/web.xml">
-        </war>
+        <cvs command="status -v" output="${app_asset}/cvsdeploy.txt" />
+        <delete file="${app_war}/cdecurate.war" />
+        <delete dir="${app_classes}/jsp" />
+        <war destfile="${app_war}/cdecurate.war" basedir="${app_root}" update="true" webxml="${m_xml}/web.xml"></war>
     </target>
 
     <!-- do the antcall for local environ for jboss server-->
     <target name="build-local-jboss">
-        <echo message="Building : local war file and copied to jboss deploy."/>
-      <!--  <copy file="conf/local/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
+        <echo message="Building : local war file and copied to jboss deploy." />
+        <!--  <copy file="conf/local/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
-            <param name="conf" value="conf/web"/>
-            <param name="jdebug" value="on"/>
+            <param name="conf" value="conf/web" />
+            <param name="jdebug" value="on" />
         </antcall>
-    	<copy file="${app_war}/cdecurate.war" todir="${jbosshome}" overwrite="YES"/>
+        <copy file="${app_war}/cdecurate.war" todir="${jbosshome}" overwrite="YES" />
     </target>
 
     <!-- do the antcall for local tomcat environment -->
     <target name="build-local-tomcat">
-        <echo message="Building : local war file and copied to tomcat deploy."/>
-      <!--  <copy file="conf/local/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
+        <echo message="Building : local war file and copied to tomcat deploy." />
+        <!--  <copy file="conf/local/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
-            <param name="conf" value="conf/web"/>
-            <param name="jdebug" value="on"/>
+            <param name="conf" value="conf/web" />
+            <param name="jdebug" value="on" />
         </antcall>
-    	<copy file="${app_war}/cdecurate.war" todir="${tomcathome}" overwrite="YES"/>
+        <copy file="${app_war}/cdecurate.war" todir="${tomcathome}" overwrite="YES" />
     </target>
 
     <!-- do the antcall for dev environ -->
     <target name="build-dev">
-        <echo message="Building : dev war file."/>
-    	<!-- <copy file="conf/dev/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
+        <echo message="Building : dev war file." />
+        <!-- <copy file="conf/dev/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
-            <param name="conf" value="conf/web"/>
-            <param name="jdebug" value="on"/>
+            <param name="conf" value="conf/web" />
+            <param name="jdebug" value="on" />
         </antcall>
     </target>
 
     <!-- do the antcall for qa environ -->
     <target name="build-qa">
-        <echo message="Building : qa war file."/>
-    	<!-- <copy file="conf/qa/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
+        <echo message="Building : qa war file." />
+        <!-- <copy file="conf/qa/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
-            <param name="conf" value="conf/web"/>
-            <param name="jdebug" value="on"/>
+            <param name="conf" value="conf/web" />
+            <param name="jdebug" value="on" />
         </antcall>
     </target>
 
     <!-- do the antcall for stage environ -->
     <target name="build-stage">
-        <echo message="Building : stage war file."/>
-    	<!-- <copy file="conf/stage/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
+        <echo message="Building : stage war file." />
+        <!-- <copy file="conf/stage/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
-            <param name="conf" value="conf/web"/>
-            <param name="jdebug" value="off"/>
+            <param name="conf" value="conf/web" />
+            <param name="jdebug" value="off" />
         </antcall>
     </target>
 
     <!-- do the antcall for prod environ -->
     <target name="build-prod">
-        <echo message="Building : prod war file."/>
-    	<!-- <copy file="conf/prod/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
+        <echo message="Building : prod war file." />
+        <!-- <copy file="conf/prod/web.xml" tofile="${m_xml}/web.xml" overwrite="YES"/> -->
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
-            <param name="conf" value="conf/web"/>
-            <param name="jdebug" value="off"/>
+            <param name="conf" value="conf/web" />
+            <param name="jdebug" value="off" />
         </antcall>
     </target>
 
-	<!-- do the antcall for out source package build environ -->
+    <!-- do the antcall for out source package build environ -->
     <target name="build-deploy">
-        <echo message="Building : war file."/>
+        <echo message="Building : war file." />
         <!-- do antcall task to deply war -->
         <antcall target="deploy">
-            <param name="conf" value="conf/web"/>
-            <param name="jdebug" value="off"/>
+            <param name="conf" value="conf/web" />
+            <param name="jdebug" value="off" />
         </antcall>
     </target>
 
-	<!-- do antcall for javadoc and ospack -->
+    <!-- do antcall for javadoc and ospack -->
     <target name="build-ospackage">
-        <antcall target="build-javadoc"/>
-        <antcall target="ospack"/>
+        <antcall target="build-javadoc" />
+        <antcall target="ospack" />
     </target>
 
-	
+
     <!-- copy the codes to nci-cvs folder from local cvs-->
     <target name="copy-to-nci-cvs">
-        <echo message="copy changed files from local cvs to NCI-CVS directory."/>
-        <property name="nci_cvs" location="${ncicvshome}"/>  <!--main folder -->
-        <property name="nci_java" location="${nci_cvs}/src"/>  <!--java source folder -->
-        <property name="nci_ui" location="${nci_cvs}/ui"/>    <!--UI/ web contentfolder -->
-        <property name="nci_tld" location="${nci_cvs}/conf/web/tld"/>   <!--tld under conf folder -->
-        <property name="nci_lib" location="${nci_cvs}/lib"/>   <!--lib folder -->
-        <property name="nci_conf" location="${nci_cvs}/conf"/>   <!--conf folder -->
-        <property name="nci_doc" location="${nci_cvs}/doc"/>   <!--doc folder -->
+        <echo message="copy changed files from local cvs to NCI-CVS directory." />
+        <property name="nci_cvs" location="${ncicvshome}" /><!--main folder -->
+        <property name="nci_java" location="${nci_cvs}/src" /><!--java source folder -->
+        <property name="nci_ui" location="${nci_cvs}/ui" /><!--UI/ web contentfolder -->
+        <property name="nci_tld" location="${nci_cvs}/conf/web/tld" /><!--tld under conf folder -->
+        <property name="nci_lib" location="${nci_cvs}/lib" /><!--lib folder -->
+        <property name="nci_conf" location="${nci_cvs}/conf" /><!--conf folder -->
+        <property name="nci_doc" location="${nci_cvs}/doc" /><!--doc folder -->
         <!-- copy scr, ui, lib, tld directory -->
-        <copy todir="${nci_java}" overwrite="YES"> 
-            <fileset dir="${m_java}" excludes="**/*CVS*"/>
+        <copy todir="${nci_java}" overwrite="YES">
+            <fileset dir="${m_java}" excludes="**/*CVS*" />
         </copy>
-        <copy todir="${nci_ui}" overwrite="YES"> 
-            <fileset dir="${m_web}" excludes="**/*CVS*"/>
-        </copy> 
-  
-        <copy todir="${nci_lib}"  overwrite="YES"> 
-         	<fileset dir="${m_lib}" excludes="**/*CVS*"/>
-        </copy> 
-    
-        <copy todir="${nci_tld}" overwrite="YES"> 
-            <fileset dir="${m_tld}" excludes="**/*CVS*"/>
-        </copy> 
-        <copy todir="${nci_conf}" overwrite="YES"> 
-            <fileset dir="${m_conf}" excludes="**/*CVS*"/>
-        </copy> 
-        <copy todir="${nci_doc}" overwrite="NO"> 
-            <fileset dir="${m_doc}" excludes="**/*CVS*"/>
-        </copy> 
-        <delete dir="${nci_ui}/WEB-INF"/>
+        <copy todir="${nci_ui}" overwrite="YES">
+            <fileset dir="${m_web}" excludes="**/*CVS*" />
+        </copy>
+
+        <copy todir="${nci_lib}" overwrite="YES">
+            <fileset dir="${m_lib}" excludes="**/*CVS*" />
+        </copy>
+
+        <copy todir="${nci_tld}" overwrite="YES">
+            <fileset dir="${m_tld}" excludes="**/*CVS*" />
+        </copy>
+        <copy todir="${nci_conf}" overwrite="YES">
+            <fileset dir="${m_conf}" excludes="**/*CVS*" />
+        </copy>
+        <copy todir="${nci_doc}" overwrite="NO">
+            <fileset dir="${m_doc}" excludes="**/*CVS*" />
+        </copy>
+        <delete dir="${nci_ui}/WEB-INF" />
     </target>
-    
+
     <!-- copy the codes to local cvs folder from nci cvs -->
     <target name="copy-from-nci-cvs">
-        <echo message="copy changed files from NCI CVS to Local-CVS directory."/>
-        <property name="nci_cvs" location="${ncicvshome}"/>  <!--main folder -->
-        <property name="nci_java" location="${nci_cvs}/src"/>  <!--java source folder -->
-        <property name="nci_ui" location="${nci_cvs}/ui"/>    <!--UI/ web contentfolder -->
-        <property name="nci_tld" location="${nci_cvs}/conf/web/tld"/>   <!--tld under conf folder -->
-        <property name="nci_lib" location="${nci_cvs}/lib"/>   <!--lib folder -->
-        <property name="nci_conf" location="${nci_cvs}/conf"/>   <!--conf folder -->
-        <property name="nci_doc" location="${nci_cvs}/doc"/>   <!--doc folder -->
+        <echo message="copy changed files from NCI CVS to Local-CVS directory." />
+        <property name="nci_cvs" location="${ncicvshome}" /><!--main folder -->
+        <property name="nci_java" location="${nci_cvs}/src" /><!--java source folder -->
+        <property name="nci_ui" location="${nci_cvs}/ui" /><!--UI/ web contentfolder -->
+        <property name="nci_tld" location="${nci_cvs}/conf/web/tld" /><!--tld under conf folder -->
+        <property name="nci_lib" location="${nci_cvs}/lib" /><!--lib folder -->
+        <property name="nci_conf" location="${nci_cvs}/conf" /><!--conf folder -->
+        <property name="nci_doc" location="${nci_cvs}/doc" /><!--doc folder -->
         <!-- copy scr, ui directory -->
         <copy todir="${m_java}" overwrite="YES">
-            <fileset dir="${nci_java}" excludes="**/*CVS*"/>
+            <fileset dir="${nci_java}" excludes="**/*CVS*" />
         </copy>
         <copy todir="${m_web}" overwrite="YES">
-            <fileset dir="${nci_ui}" excludes="**/*CVS*"/>
-        </copy>        
-         <copy todir="${m_tld}" overwrite="YES">
-            <fileset dir="${nci_tld}" excludes="**/*CVS*"/>
-        </copy>        
-       <copy todir="${m_lib}" overwrite="YES">
-            <fileset dir="${nci_lib}" excludes="**/*CVS*"/>
-        </copy>        
-        <copy todir="${m_tld}" overwrite="YES"> 
-            <fileset dir="${nci_tld}" excludes="**/*CVS*"/>
-        </copy> 
-        <copy todir="${m_conf}" overwrite="YES"> 
-            <fileset dir="${nci_conf}" excludes="**/*CVS*"/>
-        </copy> 
-        <copy todir="${m_doc}" overwrite="YES"> 
-            <fileset dir="${nci_doc}" excludes="**/*CVS*"/>
-        </copy> 
+            <fileset dir="${nci_ui}" excludes="**/*CVS*" />
+        </copy>
+        <copy todir="${m_tld}" overwrite="YES">
+            <fileset dir="${nci_tld}" excludes="**/*CVS*" />
+        </copy>
+        <copy todir="${m_lib}" overwrite="YES">
+            <fileset dir="${nci_lib}" excludes="**/*CVS*" />
+        </copy>
+        <copy todir="${m_tld}" overwrite="YES">
+            <fileset dir="${nci_tld}" excludes="**/*CVS*" />
+        </copy>
+        <copy todir="${m_conf}" overwrite="YES">
+            <fileset dir="${nci_conf}" excludes="**/*CVS*" />
+        </copy>
+        <copy todir="${m_doc}" overwrite="YES">
+            <fileset dir="${nci_doc}" excludes="**/*CVS*" />
+        </copy>
     </target>
 
 

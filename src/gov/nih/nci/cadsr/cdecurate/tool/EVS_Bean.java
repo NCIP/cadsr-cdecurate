@@ -1,10 +1,13 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_Bean.java,v 1.10 2006-08-29 17:36:54 hegdes Exp $
+// Copyright (c) 2006 ScenPro, Inc.
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_Bean.java,v 1.11 2006-10-27 14:54:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.util.*;
 import java.io.Serializable;
+import javax.servlet.http.HttpSession;
 import org.apache.log4j.*;
 
 /**
@@ -90,12 +93,8 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public class EVS_Bean implements Serializable
 {
-  /**
-   * 
-   */
   private static final long serialVersionUID = 1L;
 
-  //
   /**
    * init the logger
    */
@@ -112,7 +111,7 @@ public class EVS_Bean implements Serializable
   private String PREFERRED_DEFINITION;
   private String ASL_NAME;
   private String NCI_CC_TYPE;
-  private String NCI_CC_VAL;
+  private String NCI_CC_VAL;  //referenced by non using jsp
   private String META_CODE_TYPE;
   private String META_CODE_VAL;
   private String TEMP_CUI_TYPE;
@@ -129,12 +128,14 @@ public class EVS_Bean implements Serializable
   private String DEC_USING;
   private int LEVEL;
   private String CONDR_IDSEQ;
-  private String CON_IDSEQ;
+ // private String CON_IDSEQ;
   private String DISPLAY_ORDER;
   private String PRIMARY_FLAG;
   private String CON_AC_SUBMIT_ACTION;
   private String PREF_VOCAB_CODE;
- 
+  private int NAME_VALUE_PAIR_IND; 
+  private String NVP_CONCEPT_VALUE;
+  private String CONCEPT_IDENTIFIER;
 
   /**
    * Constructor
@@ -142,6 +143,30 @@ public class EVS_Bean implements Serializable
   public EVS_Bean() {
   };
 
+  public EVS_Bean(EVS_Bean copyBean)
+  {
+    this.setLONG_NAME(copyBean.getLONG_NAME());
+    this.setCONDR_IDSEQ(copyBean.getCONDR_IDSEQ());
+    this.setCON_AC_SUBMIT_ACTION(copyBean.getCON_AC_SUBMIT_ACTION());
+    this.setCONCEPT_NAME(copyBean.getCONCEPT_NAME());
+    this.setCONTE_IDSEQ(copyBean.getCONTE_IDSEQ());
+    this.setDISPLAY_ORDER(copyBean.getDISPLAY_ORDER());
+    this.setPREFERRED_DEFINITION(copyBean.getPREFERRED_DEFINITION());
+    this.setEVS_CONCEPT_SOURCE(copyBean.getEVS_CONCEPT_SOURCE());
+    this.setEVS_DATABASE(copyBean.getEVS_DATABASE());
+    this.setEVS_DEF_SOURCE(copyBean.getEVS_DEF_SOURCE());
+    this.setEVS_ORIGIN(copyBean.getEVS_ORIGIN());
+    this.setEVS_SEMANTIC(copyBean.getEVS_SEMANTIC());
+    this.setID(copyBean.getID());
+    this.setIDSEQ(copyBean.getIDSEQ());
+    this.setASL_NAME(copyBean.getASL_NAME());
+    this.setLEVEL(copyBean.getLEVEL());
+    this.setDEC_USING(copyBean.getDEC_USING());
+    this.setCONCEPT_IDENTIFIER(copyBean.getCONCEPT_IDENTIFIER());
+    this.setNCI_CC_TYPE(copyBean.getNCI_CC_TYPE());
+    this.setNAME_VALUE_PAIR_IND(copyBean.getNAME_VALUE_PAIR_IND());
+    this.setNVP_CONCEPT_VALUE(copyBean.getNVP_CONCEPT_VALUE());
+  }
   /**
    * The setRETURN_CODE method sets the RETURN_CODE for this bean.
    *
@@ -197,16 +222,16 @@ public class EVS_Bean implements Serializable
       this.COMMENTS = s;
   }
 
-   /**
+/*   *//**
    * The setDESCRIPTION method sets the DESCRIPTION for this bean.
    *
    * @param s The DESCRIPTION to set
-  */
+  *//*
   public void setDESCRIPTION(String s)
   {
       this.DESCRIPTION = s;
   }
-  /**
+*/  /**
    * The setVERSION method sets the VERSION for this bean.
    *
    * @param s The VERSION to set
@@ -259,6 +284,16 @@ public class EVS_Bean implements Serializable
   public void setNCI_CC_VAL(String s)
   {
       this.NCI_CC_VAL = s;
+  }
+
+  /**
+   * The setCONCEPT_IDENTIFIER method sets the CONCEPT_IDENTIFIER for this bean.
+   *
+   * @param s The CONCEPT_IDENTIFIER to set
+  */
+  public void setCONCEPT_IDENTIFIER(String s)
+  {
+      this.CONCEPT_IDENTIFIER = s;
   }
   /**
    * The setMETA_CODE_TYPE method sets the META_CODE_TYPE for this bean.
@@ -389,16 +424,16 @@ public class EVS_Bean implements Serializable
   {
       this.CONDR_IDSEQ = b;
   }
-/**
+/*/**
    * The setCON_IDSEQ method sets the CON_IDSEQ for this bean.
    *
    * @param b The CON_IDSEQ to set
   */
-  public void setCON_IDSEQ(String b)
+/*  public void setCON_IDSEQ(String b)
   {
       this.CON_IDSEQ = b;
   }
-/**
+*//**
    * The setDISPLAY_ORDER method sets the DISPLAY_ORDER for this bean.
    *
    * @param b The DISPLAY_ORDER to set
@@ -500,16 +535,16 @@ public class EVS_Bean implements Serializable
   {
       return this.PREFERRED_DEFINITION;
   }
-  /**
+/*  *//**
   * The getDESCRIPTION method returns the DESCRIPTION for this bean.
   *
   * @return String The DESCRIPTION
-  */
+  *//*
   public String getDESCRIPTION()
   {
       return this.DESCRIPTION;
   }
-  /**
+*/  /**
   * The getASL_NAME method returns the ASL_NAME for this bean.
   *
   * @return String The ASL_NAME
@@ -537,13 +572,23 @@ public class EVS_Bean implements Serializable
       return this.NCI_CC_TYPE;
   }
   /**
-  * The getNCI_CC_VAL method returns the NCI_CC_VAL for this bean.
+   * The getNCI_CC_VAL method returns the NCI_CC_VAL for this bean.
+   *
+   * @return String The NCI_CC_VAL
+   */
+   public String getNCI_CC_VAL()
+   {
+       return this.NCI_CC_VAL;
+   }
+
+  /**
+  * The getCONCEPT_IDENTIFIER method returns the CONCEPT_IDENTIFIER for this bean.
   *
-  * @return String The NCI_CC_VAL
+  * @return String The CONCEPT_IDENTIFIER
   */
-  public String getNCI_CC_VAL()
+  public String getCONCEPT_IDENTIFIER()
   {
-      return this.NCI_CC_VAL;
+      return (CONCEPT_IDENTIFIER == null) ? "" : this.CONCEPT_IDENTIFIER;
   }
   /**
   * The getMETA_CODE_TYPE method returns the META_CODE_TYPE for this bean.
@@ -597,7 +642,7 @@ public class EVS_Bean implements Serializable
   */
   public String getEVS_DEF_SOURCE()
   {
-      return this.EVS_DEF_SOURCE;
+      return (EVS_DEF_SOURCE == null) ? "" : this.EVS_DEF_SOURCE;
   }
    /**
   * The getEVS_CONCEPT_SOURCE method returns the EVS_CONCEPT_SOURCE for this bean.
@@ -615,7 +660,7 @@ public class EVS_Bean implements Serializable
   */
   public String getEVS_DATABASE()
   {
-      return this.EVS_DATABASE;
+      return (EVS_DATABASE == null) ? "" : this.EVS_DATABASE;
   }
    /**
   * The getEVS_ORIGIN method returns the EVS_ORIGIN for this bean.
@@ -680,16 +725,16 @@ public class EVS_Bean implements Serializable
   {
       return this.CONDR_IDSEQ;
   }
-/**
+/*/**
   * The getCON_IDSEQ method returns the CON_IDSEQ for this bean.
   *
   * @return String CON_IDSEQ
   */
-  public String getCON_IDSEQ()
+/*  public String getCON_IDSEQ()
   {
       return this.CON_IDSEQ;
   }
-/**
+*//**
   * The getDISPLAY_ORDER method returns the DISPLAY_ORDER for this bean.
   *
   * @return String DISPLAY_ORDER
@@ -841,7 +886,7 @@ public class EVS_Bean implements Serializable
    //System.out.println(" set evs bean before " + conCode + ";");
       conCode = util.removeNewLineChar(conCode);
    //System.out.println(" set evs bean after " + conCode + ";");
-      this.setNCI_CC_VAL(conCode);
+      this.setCONCEPT_IDENTIFIER(conCode);
       this.setMETA_CODE_TYPE(vocabMetaType);
       this.setMETA_CODE_VAL(vocabMetaCode);
      // this.setTEMP_CUI_TYPE("NCI_META_CUI");
@@ -866,5 +911,49 @@ public class EVS_Bean implements Serializable
       logger.fatal("EVS_Bean.java setEVS " + e.toString(), e);
     }
   }
-   
+
+
+  /**
+   * @return Returns the nAME_VALUE_PAIR_IND.
+   */
+  public int getNAME_VALUE_PAIR_IND()
+  {
+    return NAME_VALUE_PAIR_IND;
+  }
+
+  /**
+   * @param name_value_pair_ind The nAME_VALUE_PAIR_IND to set.
+   */
+  public void setNAME_VALUE_PAIR_IND(int name_value_pair_ind)
+  {
+    NAME_VALUE_PAIR_IND = name_value_pair_ind;
+  }
+
+  /**
+   * @return Returns the nVP_CONCEPT_VALUE.
+   */
+  public String getNVP_CONCEPT_VALUE()
+  {
+    return (NVP_CONCEPT_VALUE == null) ? "" : NVP_CONCEPT_VALUE;
+  }
+
+  /**
+   * @param nvp_concept_value The nVP_CONCEPT_VALUE to set.
+   */
+  public void setNVP_CONCEPT_VALUE(String nvp_concept_value)
+  {
+    NVP_CONCEPT_VALUE = nvp_concept_value;
+  }
+
+  @SuppressWarnings("unchecked")
+  public void markNVPConcept(EVS_Bean curBean, HttpSession session)
+  {
+    Vector<String> vNVP = (Vector)session.getAttribute("NVPConcepts");
+    if (vNVP == null) vNVP = new Vector<String>();
+    String conID = curBean.getCONCEPT_IDENTIFIER();
+    if (conID != null && vNVP.contains(conID))
+      curBean.setNAME_VALUE_PAIR_IND(1);
+    else
+      curBean.setNAME_VALUE_PAIR_IND(0);
+  }
 }

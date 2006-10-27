@@ -1,7 +1,11 @@
-/**
- * 
- */
+// Copyright (c) 2006 ScenPro, Inc.
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/Session_Data.java,v 1.2 2006-10-27 14:54:29 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package gov.nih.nci.cadsr.cdecurate.tool;
+
+import java.util.Vector;
 
 /**
  * this keeps track of the session objects used in curation tool
@@ -20,5 +24,20 @@ public class Session_Data
   
   /** evs user bean stored in the session */
   public EVS_UserBean EvsUsrBean;
+
+  /** Alt Def result vector **/
+  public Vector<AltDefBean> AllAltDef;
   
+  /** String EVS searched **/
+  public String EVSSearched;
+
+  /** vCD vector **/
+  public Vector<String> vCD;
+
+  /** vCD_ID vector **/
+  public Vector<String> vCD_ID;
+
+  /** m_VM Bean **/
+  public VM_Bean m_VM;
+
 }

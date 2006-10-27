@@ -113,7 +113,8 @@ function openDesignateWindow(sType)
     document.SearchActionForm.itemType.value = sType
  // alert(" depage " + sType);
     //var windowW = screen.width - 410;
-    altWindow = window.open("jsp/EditDesignateDE.jsp", "designate", "width=700,height=650,top=0,left=0,resizable=yes,scrollbars=yes");
+//    altWindow = window.open("jsp/EditDesignateDE.jsp", "designate", "width=700,height=650,top=0,left=0,resizable=yes,scrollbars=yes");
+    altWindow = window.open("NCICurationServlet?reqType=AltNamesDefs&searchEVS=" + document.SearchActionForm.searchEVS.value, "designate", "width=900,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
 }
 
  function SearchBuildingBlocks(thisBlock, openToTree)
@@ -328,7 +329,7 @@ function SearchCDValue()
   function SubmitDEC()
   {
      hourglass();
-     document.newDECForm.newCDEPageAction.value = "submit"
+     document.newDECForm.pageAction.value = "submit"
      document.newDECForm.Message.style.visibility="visible";
      window.status = "submitting data, it may take a minute, please wait....."
      document.newDECForm.submit();
@@ -381,7 +382,7 @@ function SearchCDValue()
   function ClearBoxes()
   { 
      hourglass();
-     document.newDECForm.newCDEPageAction.value = "clearBoxes"
+     document.newDECForm.pageAction.value = "clearBoxes"
      document.newDECForm.Message.style.visibility="visible";
      window.status = "clearing data, it may take a minute, please wait....."
      document.newDECForm.submit();
@@ -419,7 +420,7 @@ function SearchCDValue()
        selectMultiSelectList();
        
        if (origin == "refresh") origin = "refreshCreateDEC";
-       document.newDECForm.newCDEPageAction.value = origin;
+       document.newDECForm.pageAction.value = origin;
        window.status = "Submitting data, it may take a minute, please wait.....";
        document.newDECForm.Message.style.visibility="visible";
 	   //disable the buttons
@@ -479,7 +480,7 @@ function SearchCDValue()
 function Back()
 {
     hourglass();
-    document.newDECForm.newCDEPageAction.value  = "backToDE";
+    document.newDECForm.pageAction.value  = "backToDE";
     document.newDECForm.submit();
 }
 

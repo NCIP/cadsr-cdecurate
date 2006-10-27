@@ -79,6 +79,7 @@
      sLongAC = "Rep Term";
    else if (sSearchAC.equals("EVSValueMeaning") 
           || sSearchAC.equals("CreateVM_EVSValueMeaning")
+          || sSearchAC.equals("VMConcept")
           || sSearchAC.equals("PV_ValueMeaning"))
      sLongAC = "Value Meaning";
    else if (sSearchAC.equals("ParentConcept"))
@@ -186,7 +187,7 @@
        //isSubmit = true;
     } 
     isSubmit = doOpenTreeSubmitAction();    //call the function to open the tree
-   // alert(isSubmit + " : " + document.searchParmsForm.actSelect.value + " : " + document.searchParmsForm.openToTree.value);
+ //   alert(isSubmit + " : " + document.searchParmsForm.actSelect.value + " : " + document.searchParmsForm.openToTree.value);
     if (isSearched == "false" || isSubmit == true)
       document.searchParmsForm.submit();
     //focus to the keyword if not null
@@ -198,14 +199,14 @@
   {
     var actSelect = "";
     <% if(sSearchAC.equals("ParentConceptVM")) {%>
-      if(opener.document.createVDForm != null)
+      if(opener.document != null)
       {
-        if(opener.document.createVDForm.selectedParentConceptCode.value != "")
+        if(opener.document.getElementById("selectedParentConceptCode").value != "")
         {
-          var code = opener.document.createVDForm.selectedParentConceptCode.value;
-          var name = opener.document.createVDForm.selectedParentConceptName.value
-          var db = opener.document.createVDForm.selectedParentConceptDB.value
-          actSelect = opener.document.createVDForm.actSelect.value
+          var code = opener.document.getElementById("selectedParentConceptCode").value;
+          var name = opener.document.getElementById("selectedParentConceptName").value
+          var db = opener.document.getElementById("selectedParentConceptDB").value
+          actSelect = opener.document.getElementById("actSelect").value
           document.searchParmsForm.sCCodeDB.value = db;
           document.searchParmsForm.sCCode.value = code;
           document.searchParmsForm.sCCodeName.value = name;
@@ -217,11 +218,11 @@
             if (document.searchResultsForm != null)
               document.searchResultsForm.Message.style.visibility="visible";
             document.searchParmsForm.openToTree.value = "true";
-            if(opener.document.createVDForm != null)
+            if(opener.document != null)
             {
-              opener.document.createVDForm.selectedParentConceptCode.value = "";
-              opener.document.createVDForm.selectedParentConceptName.value = ""; 
-              opener.document.createVDForm.selectedParentConceptDB.value = "";
+              opener.document.getElementById("selectedParentConceptCode").value = "";
+              opener.document.getElementById("selectedParentConceptName").value = ""; 
+              opener.document.getElementById("selectedParentConceptDB").value = "";
             }
            // document.searchParmsForm.submit();
            return true;
@@ -270,6 +271,7 @@ function keypress_handler()
     window.status = "Searching Keyword, it may take a minute, please wait....."
     document.searchResultsForm.Message.style.visibility="visible";
     document.searchParmsForm.actSelect.value = "Search";
+    markVMConceptOrder("Search");
     document.searchParmsForm.submit();
     return false;
 }
@@ -305,9 +307,28 @@ function LoadKeyHandler()
       window.status = "Searching Keyword, it may take a minute, please wait....."
       document.searchResultsForm.Message.style.visibility="visible";
       document.searchParmsForm.actSelect.value = "Search";
+      markVMConceptOrder("Search");
       document.searchParmsForm.submit();
     }
 
+	//mark if primary vm search
+	function markVMConceptOrder(actionType)
+	{
+		if (actionType == "Search" && opener.document != null)
+		{
+			var pv = opener.document.getElementById("editPVInd");
+			if (pv != null)
+			{
+				var pvId = pv.value;
+				var curTbl = opener.document.getElementById(pvId + "TBL");
+				if (curTbl != null)
+				{
+			  	var totalCon = curTbl.rows.length;
+			  	document.getElementById("vmConOrder").value = totalCon;	
+			  }
+			}
+		}
+	}
 //fuction to refresh the page for simple/advanced filter
 function searchType(type)
 {
@@ -668,6 +689,7 @@ function doMetaCodeSearch()
 <% } %>
   <tr>   <td>
   <input type="hidden" name="actSelect" value="Search" style="visibility:hidden;">
+  <input type="hidden" name="vmConOrder" value="0">
   <input type="hidden" name="sCCodeDB" value="">
   <input type="hidden" name="sCCode" value="">
   <input type="hidden" name="sCCodeName" value="">

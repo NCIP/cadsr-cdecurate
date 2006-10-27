@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.10 2006-08-29 17:36:54 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.11 2006-10-27 14:54:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1348,7 +1348,7 @@ public void collapseAllNodes()
    
         do
         {
-          vSuperConceptNamesImmediate = evs.getSuperConceptNamesImmediate(sCCodeDB, sCCodeName, sCCode, "");   
+          vSuperConceptNamesImmediate = evs.getSuperConceptNamesImmediate(sCCodeDB, sCCodeName, sCCode);   
           if(vSuperConceptNamesImmediate.size()==1)
           {
             sCCodeName = (String)vSuperConceptNamesImmediate.elementAt(0);

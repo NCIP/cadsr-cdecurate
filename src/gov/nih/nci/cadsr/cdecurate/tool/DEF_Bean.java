@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DEF_Bean.java,v 1.10 2006-08-29 17:36:54 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DEF_Bean.java,v 1.11 2006-10-27 14:54:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -101,7 +101,7 @@ public class DEF_Bean extends AC_Bean {
   private String DEF_PREFERRED_DEFINITION;
   private String DEF_ASL_NAME;
   private String DEF_NCI_CC_TYPE;
-  private String DEF_NCI_CC_VAL;
+  private String DEF_CONCEPT_IDENTIFIER;
   private String DEF_UMLS_CUI_TYPE;
   private String DEF_UMLS_CUI_VAL;
   private String DEF_TEMP_CUI_TYPE;
@@ -207,13 +207,13 @@ public class DEF_Bean extends AC_Bean {
       this.DEF_NCI_CC_TYPE = s;
   }
   /**
-   * The setNCI_CC_VAL method sets the NCI_CC_VAL for this bean.
+   * The setCONCEPT_IDENTIFIER method sets the CONCEPT_IDENTIFIER for this bean.
    *
-   * @param s The NCI_CC_VAL to set
+   * @param s The CONCEPT_IDENTIFIER to set
   */
-  public void setDEF_NCI_CC_VAL(String s)
+  public void setDEF_CONCEPT_IDENTIFIER(String s)
   {
-      this.DEF_NCI_CC_VAL = s;
+      this.DEF_CONCEPT_IDENTIFIER = s;
   }
   /**
    * The setUMLS_CUI_TYPE method sets the UMLS_CUI_TYPE for this bean.
@@ -384,13 +384,13 @@ public class DEF_Bean extends AC_Bean {
       return this.DEF_NCI_CC_TYPE;
   }
   /**
-  * The getDEF_NCI_CC_VAL method returns the DEF_NCI_CC_VAL for this bean.
+  * The getDEF_CONCEPT_IDENTIFIER method returns the DEF_CONCEPT_IDENTIFIER for this bean.
   *
-  * @return String The DEF_NCI_CC_VAL
+  * @return String The DEF_CONCEPT_IDENTIFIER
   */
-  public String getDEF_NCI_CC_VAL()
+  public String getDEF_CONCEPT_IDENTIFIER()
   {
-      return this.DEF_NCI_CC_VAL;
+      return this.DEF_CONCEPT_IDENTIFIER;
   }
   /**
   * The getDEF_UMLS_CUI_TYPE method returns the DEF_UMLS_CUI_TYPE for this bean.

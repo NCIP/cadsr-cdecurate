@@ -182,7 +182,7 @@ function setup()
 %>
  </table>
  <table>
-<input type="hidden" name="newCDEPageAction" value="nothing">
+<input type="hidden" name="pageAction" value="nothing">
 <input type="hidden" name="AttChecked" value="<%=(k-5)%>">
 <input type="hidden" name="searchComp" value="">
 <input type="hidden" name="numSelected" value="">

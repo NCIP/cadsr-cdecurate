@@ -24,9 +24,10 @@ mainMenuItem("biztech_button_b6",".gif",30,78,"javascript:callHelp();","","Help"
 mainMenuItem("biztech_button_b7",".gif",30,78,"javascript:callLogout();","","Logout",2,2,"biztech_button_plain");
 endMainMenu("",0,0);
 
-startSubmenu("biztech_button_b5","biztech_button_menu",130);
+startSubmenu("biztech_button_b5","biztech_button_menu",175);
 submenuItem("About","javascript:callAboutAlert();","","biztech_button_plain");
 submenuItem("Sentinel Tool","javascript:callSentinel();","","biztech_button_plain");
+submenuItem("UML Model Browser","javascript:callUMLBrowser();","","biztech_button_plain");
 endSubmenu("biztech_button_b5");
 
 startSubmenu("biztech_button_b3","biztech_button_menu",204);

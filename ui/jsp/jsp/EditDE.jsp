@@ -1017,7 +1017,7 @@
     </tr>
   </table> 
 <%}%>
-<input type="hidden" name="newCDEPageAction" value="nothing">
+<input type="hidden" name="pageAction" value="nothing">
 <%if(sOriginAction.equals("BlockEditDE")){%>
 <input type="hidden" name="DEAction" value="BlockEdit">
 <% } else {%>

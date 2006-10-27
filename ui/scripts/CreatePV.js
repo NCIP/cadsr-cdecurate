@@ -42,7 +42,7 @@
     //document.createPVForm.EndDate.value="";    
     //document.createPVForm.BeginDate.value="";  
     //currentDate();  
-    document.createPVForm.newCDEPageAction.value = "clearBoxes";
+    document.createPVForm.pageAction.value = "clearBoxes";
     document.createPVForm.submit();
   }
 
@@ -61,12 +61,12 @@
         hourglass();
         if (origin == "validate")
       	{
-        	document.createPVForm.newCDEPageAction.value = "validate";
+        	document.createPVForm.pageAction.value = "validate";
         	window.status = "Validating data, it may take a minute, please wait.....";
       	}
       	else if (origin == "submit")
         {
-            document.createPVForm.newCDEPageAction.value = "submit";
+            document.createPVForm.pageAction.value = "submit";
             window.status = "Submitting data, it may take a minute, please wait.....";
 	     } 
         document.createPVForm.Message.style.visibility="visible";
@@ -100,7 +100,7 @@
    function SubmitPV()
   {
      hourglass();
-     document.createPVForm.newCDEPageAction.value = "submit";
+     document.createPVForm.pageAction.value = "submit";
      document.createPVForm.Message.style.visibility="visible";
      window.status = "Submitting data, it may take a minute, please wait.....";
      document.createPVForm.submit();
@@ -108,7 +108,7 @@
 
   function createNewValue()
   {
-      document.createPVForm.newCDEPageAction.value  = "createNewVM";
+      document.createPVForm.pageAction.value  = "createNewVM";
  	    document.createPVForm.submit();
 
   /*  comment this to put the hyperlink
@@ -135,7 +135,7 @@
   function Back()
   {
     hourglass();
-    document.createPVForm.newCDEPageAction.value  = "backToVD";
+    document.createPVForm.pageAction.value  = "backToVD";
     document.createPVForm.submit();
   }
 

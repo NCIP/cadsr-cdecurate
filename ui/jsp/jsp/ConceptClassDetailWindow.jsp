@@ -93,7 +93,7 @@
       if (conName == null) conName = "";
       String conID =  EVSBean.getID();
       if (conID == null) conID = "";
-      String evsID =  EVSBean.getNCI_CC_VAL();
+      String evsID =  EVSBean.getCONCEPT_IDENTIFIER();
       if (evsID == null) evsID = "";
       String evsVocab = EVSBean.getEVS_DATABASE();
       if (evsVocab == null) evsVocab = "";

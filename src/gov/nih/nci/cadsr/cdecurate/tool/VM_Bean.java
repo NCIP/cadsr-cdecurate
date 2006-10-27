@@ -1,9 +1,10 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VM_Bean.java,v 1.10 2006-08-29 17:36:54 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VM_Bean.java,v 1.11 2006-10-27 14:54:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.io.*;
+import java.util.Vector;
 
 /**
  * The VM_Bean encapsulates the VM information and is stored in the
@@ -107,12 +108,51 @@ public class VM_Bean implements Serializable
   private String VM_CD_NAME;
   private boolean VM_CHECKED;
   private EVS_Bean VM_CONCEPT;
+  private String VM_IDSEQ;
+  private String VM_CONTE_IDSEQ;
+  private String ASL_NAME;
+  private String VM_LONG_NAME;
+  private String VM_PREF_NAME;
+  private String VM_ID;
+  private String VM_DEFINITION;
+  private String VM_ORIGIN;
+  private String VM_CHANGE_NOTE;
+  private String VM_VERSION;
+  private String VM_SUBMIT_ACTION;
+  private String VM_CONDR_IDSEQ;
+  private Vector<EVS_Bean> VM_CONCEPT_LIST;
+  private Vector<VD_Bean> VM_VD_LIST;
+  
 
   /**
   * Constructor
   */
   public VM_Bean() {
   };
+
+  public VM_Bean copyVMBean(VM_Bean cBean)
+  {
+    this.setVM_SHORT_MEANING(cBean.getVM_SHORT_MEANING());
+    this.setVM_DESCRIPTION(cBean.getVM_DESCRIPTION());
+    this.setVM_LONG_NAME(cBean.getVM_LONG_NAME());
+    this.setVM_CONCEPT_LIST(cloneVMConVector(cBean.getVM_CONCEPT_LIST()));
+    this.setVM_CONDR_IDSEQ(cBean.getVM_CONDR_IDSEQ());
+    this.setVM_IDSEQ(cBean.getVM_IDSEQ());
+    this.setVM_SUBMIT_ACTION(cBean.getVM_SUBMIT_ACTION());
+    
+    return this;
+  }
+
+  public Vector<EVS_Bean> cloneVMConVector(Vector<EVS_Bean> vmcon)
+  {
+    Vector<EVS_Bean> cloneVMCon = new Vector<EVS_Bean>();
+    for (int i =0; i<vmcon.size(); i++)
+    {
+      EVS_Bean con = new EVS_Bean((EVS_Bean)vmcon.elementAt(i));
+      cloneVMCon.addElement(con);
+    }
+    return cloneVMCon;
+  }
   
   /**
   * The setRETURN_CODE method sets the RETURN_CODE for this bean.
@@ -258,7 +298,7 @@ public class VM_Bean implements Serializable
   */
   public String getVM_SHORT_MEANING()
   {
-      return this.VM_SHORT_MEANING;
+      return (VM_SHORT_MEANING == null) ? "" : this.VM_SHORT_MEANING;
   }
   /**
   * The getVM_BEGIN_DATE method returns the VM_BEGIN_DATE for this bean.
@@ -276,7 +316,7 @@ public class VM_Bean implements Serializable
   */
   public String getVM_DESCRIPTION()
   {
-      return this.VM_DESCRIPTION;
+      return (this.VM_DESCRIPTION == null) ? "" : this.VM_DESCRIPTION.trim();
   }
   /**
   * The getVM_COMMENTS method returns the VM_COMMENTS for this bean.
@@ -339,7 +379,7 @@ public class VM_Bean implements Serializable
   */
   public String getVM_CD_IDSEQ()
   {
-      return this.VM_CD_IDSEQ;
+      return (VM_CD_IDSEQ == null) ? "" : this.VM_CD_IDSEQ;
   }
   /**
   * The getVM_CD_NAME method returns the VM_CD_NAME for this bean.
@@ -368,5 +408,229 @@ public class VM_Bean implements Serializable
   {
       return this.VM_CONCEPT;
   }
+
+  /**
+   * @return Returns the aSL_NAME.
+   */
+  public String getASL_NAME()
+  {
+    return (ASL_NAME == null) ? "": ASL_NAME;
+  }
+
+
+  /**
+   * @param asl_name The aSL_NAME to set.
+   */
+  public void setASL_NAME(String asl_name)
+  {
+    ASL_NAME = asl_name;
+  }
+
+  /**
+   * @return Returns the cONTE_IDSEQ.
+   */
+  public String getVM_CONTE_IDSEQ()
+  {
+    return VM_CONTE_IDSEQ;
+  }
+
+  /**
+   * @param conte_idseq The cONTE_IDSEQ to set.
+   */
+  public void setVM_CONTE_IDSEQ(String conte_idseq)
+  {
+    VM_CONTE_IDSEQ = conte_idseq;
+  }
+
+  /**
+   * @return Returns the vM_CHANGE_NOTE.
+   */
+  public String getVM_CHANGE_NOTE()
+  {
+    return VM_CHANGE_NOTE;
+  }
+
+  /**
+   * @param vm_change_note The vM_CHANGE_NOTE to set.
+   */
+  public void setVM_CHANGE_NOTE(String vm_change_note)
+  {
+    VM_CHANGE_NOTE = vm_change_note;
+  }
+
+/*  *//**
+   * @return Returns the vM_DEFINITION.
+   *//*
+  public String getVM_DEFINITION()
+  {
+    return VM_DEFINITION;
+  }
+
+  *//**
+   * @param vm_definition The vM_DEFINITION to set.
+   *//*
+  public void setVM_DEFINITION(String vm_definition)
+  {
+    VM_DEFINITION = vm_definition;
+  }
+*/
+  /**
+   * @return Returns the vM_ID.
+   */
+  public String getVM_ID()
+  {
+    return VM_ID;
+  }
+
+  /**
+   * @param vm_id The vM_ID to set.
+   */
+  public void setVM_ID(String vm_id)
+  {
+    VM_ID = vm_id;
+  }
+
+  /**
+   * @return Returns the vM_IDSEQ.
+   */
+  public String getVM_IDSEQ()
+  {
+    return VM_IDSEQ;
+  }
+
+  /**
+   * @param vm_idseq The vM_IDSEQ to set.
+   */
+  public void setVM_IDSEQ(String vm_idseq)
+  {
+    VM_IDSEQ = vm_idseq;
+  }
+
+  /**
+   * @return Returns the vM_LONG_NAME.
+   */
+  public String getVM_LONG_NAME()
+  {
+    return (VM_LONG_NAME == null) ? "" : VM_LONG_NAME;
+  }
+
+  /**
+   * @param vm_long_name The vM_LONG_NAME to set.
+   */
+  public void setVM_LONG_NAME(String vm_long_name)
+  {
+    VM_LONG_NAME = vm_long_name;
+  }
+
+  /**
+   * @return Returns the vM_ORIGIN.
+   */
+  public String getVM_ORIGIN()
+  {
+    return VM_ORIGIN;
+  }
+
+  /**
+   * @param vm_origin The vM_ORIGIN to set.
+   */
+  public void setVM_ORIGIN(String vm_origin)
+  {
+    VM_ORIGIN = vm_origin;
+  }
+
+  /**
+   * @return Returns the vM_PREF_NAME.
+   */
+  public String getVM_PREF_NAME()
+  {
+    return VM_PREF_NAME;
+  }
+
+  /**
+   * @param vm_pref_name The vM_PREF_NAME to set.
+   */
+  public void setVM_PREF_NAME(String vm_pref_name)
+  {
+    VM_PREF_NAME = vm_pref_name;
+  }
+
+  /**
+   * @return Returns the vM_VERSION.
+   */
+  public String getVM_VERSION()
+  {
+    return VM_VERSION;
+  }
+
+  /**
+   * @param vm_version The vM_VERSION to set.
+   */
+  public void setVM_VERSION(String vm_version)
+  {
+    VM_VERSION = vm_version;
+  }
+  /**
+   * @return Returns the vM_SUBMIT_ACTION.
+   */
+  public String getVM_SUBMIT_ACTION()
+  {
+    return (VM_SUBMIT_ACTION == null) ? "" : VM_SUBMIT_ACTION;
+  }
+  /**
+   * @param vm_submit_action The vM_SUBMIT_ACTION to set.
+   */
+  public void setVM_SUBMIT_ACTION(String vm_submit_action)
+  {
+    VM_SUBMIT_ACTION = vm_submit_action;
+  }
+
+  /**
+   * @return Returns the vM_CONDR_IDSEQ.
+   */
+  public String getVM_CONDR_IDSEQ()
+  {
+    return (VM_CONDR_IDSEQ == null) ? "" : VM_CONDR_IDSEQ;
+  }
+
+  /**
+   * @param vm_condr_idseq The vM_CONDR_IDSEQ to set.
+   */
+  public void setVM_CONDR_IDSEQ(String vm_condr_idseq)
+  {
+    VM_CONDR_IDSEQ = vm_condr_idseq;
+  }
+
+  /**
+   * @return Returns the vM_CONCEPT_LIST.
+   */
+  public Vector<EVS_Bean> getVM_CONCEPT_LIST()
+  {
+    return (VM_CONCEPT_LIST == null) ? new Vector<EVS_Bean>(): VM_CONCEPT_LIST;
+  }
+
+  /**
+   * @param vm_concept_list The vM_CONCEPT_LIST to set.
+   */
+  public void setVM_CONCEPT_LIST(Vector<EVS_Bean> vm_concept_list)
+  {
+    VM_CONCEPT_LIST = vm_concept_list;
+  }
+
+  /**
+   * @return Returns the vM_VD_LIST.
+   */
+  public Vector<VD_Bean> getVM_VD_LIST()
+  {
+    return (VM_VD_LIST == null) ? new Vector<VD_Bean>() : VM_VD_LIST;
+  }
+
+  /**
+   * @param vm_vd_list The vM_VD_LIST to set.
+   */
+  public void setVM_VD_LIST(Vector<VD_Bean> vm_vd_list)
+  {
+    VM_VD_LIST = vm_vd_list;
+  }
+
   
 }
