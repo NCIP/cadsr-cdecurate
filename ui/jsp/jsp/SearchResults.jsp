@@ -542,7 +542,7 @@
         buttons[2] = "<!-- Create New from Existing -->\n"
             + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Edit Selection\" onClick=\"ShowEditSelection();\" disabled "
 			+ "onHelp = \"showHelp('Help_SearchAC.html#searchResultsForm_Editing'); return false\" style=\"width: 97\">\n&nbsp;\n";
-    } else if (!sMAction.equals("nothing") && !sSelAC.equals("Values/Meanings") && !sSelAC.equals("Questions") && !sSelAC.equals("Class Scheme Items") && !sSelAC.equals("Conceptual Domain")) {
+    } else if (!sMAction.equals("nothing") && !sSelAC.equals("Values/Meanings") && !sSelAC.equals("Questions") && !sSelAC.equals("Class Scheme Items") && !sSelAC.equals("Conceptual Domain") && !sSelAC.equals("ConceptClass")) {
         buttons[3] = "<!-- other -->\n"
             + "<input type=\"button\" name=\"editSelectedBtn\" value=\"" + sMAction + "\" onClick=\"ShowEditSelection();\" disabled style=\"width: 165\">\n&nbsp;\n";
     } else if (sMAction.equals("Complete Selected DE") && sSelAC.equals("Questions")) {

@@ -61,8 +61,8 @@
       document.SearchActionForm.isValidSearch.value = "false";
       if (detailWindow && !detailWindow.closed)
           detailWindow.close();
-      var windowW = screen.width - 710;
-      detailWindow = window.open("jsp/PermissibleValueWindow.jsp", "PermissibleValue", "width=700,height=300,top=0,left=" + windowW + ",resizable=yes,scrollbars=yes");
+      var windowW = screen.width - 910;
+      detailWindow = window.open("jsp/PermissibleValueWindow.jsp", "PermissibleValue", "width=900,height=300,top=0,left=" + windowW + ",resizable=yes,scrollbars=yes");
   }
 
   //opens window for more permissible values

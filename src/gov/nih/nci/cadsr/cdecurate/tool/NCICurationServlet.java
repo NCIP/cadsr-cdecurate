@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.11 2006-10-27 14:54:29 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.12 2006-10-30 18:53:37 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2033,13 +2033,13 @@ public class NCICurationServlet extends HttpServlet
         String ret = vdser.clearEditsOnPage(sOriginAction, sMenuAction, "vdEdits");
         ForwardJSP(req, res, "/CreateVDPage.jsp");
       }
-      else if (sAction.equals("refreshCreateVD"))
+/*      else if (sAction.equals("refreshCreateVD"))
       {
         doSelectParentVD(req, res);
         ForwardJSP(req, res, "/CreateVDPage.jsp");
         return;
       }
-      else if (sAction.equals("UseSelection"))
+*/      else if (sAction.equals("UseSelection"))
       {
         String nameAction = "newName";
         if (sMenuAction.equals("NewVDTemplate") || sMenuAction.equals("NewVDVersion"))
@@ -2066,12 +2066,12 @@ public class NCICurationServlet extends HttpServlet
         this.doChangeVDNameType(req, res, "changeType");
         ForwardJSP(req, res, "/CreateVDPage.jsp");
       }
-      else if (sAction.equals("CreateNonEVSRef"))
+/*      else if (sAction.equals("CreateNonEVSRef"))
       {
          doNonEVSReference(req, res);
          ForwardJSP(req, res, "/CreateVDPage.jsp");
       }
-      else if (sAction.equals("addSelectedCon"))
+*/      else if (sAction.equals("addSelectedCon"))
       {
          doSelectVMConcept(req, res, sAction);
          ForwardJSP(req, res, "/CreateVDPage.jsp");
@@ -2151,18 +2151,18 @@ public class NCICurationServlet extends HttpServlet
         doValidateVD(req, res);
       else if(sAction.equals("suggestion"))
         doSuggestionDE(req, res);
-      else if (sAction.equals("refreshCreateVD"))
+/*      else if (sAction.equals("refreshCreateVD"))
       {
         doSelectParentVD(req, res);
         ForwardJSP(req, res, "/EditVDPage.jsp");
         return;
       }
-      else if (sAction.equals("CreateNonEVSRef"))
+     else if (sAction.equals("CreateNonEVSRef"))
       {
          doNonEVSReference(req, res);
          ForwardJSP(req, res, "/EditVDPage.jsp");
       }
-      else if (sAction.equals("UseSelection"))
+*/       else if (sAction.equals("UseSelection"))
       {
         String nameAction = "appendName";
         if (sOriginAction.equals("BlockEditVD"))
@@ -3465,15 +3465,14 @@ public class NCICurationServlet extends HttpServlet
       String sAction = (String)req.getParameter("pageAction");
       if(sAction == null) sAction = "";
     // do below for versioning to check whether these two have changed
-      VD_Bean m_VD = (VD_Bean)session.getAttribute("m_VD");  //new VD_Bean();
+      VD_Bean vdBean = (VD_Bean)session.getAttribute("m_VD");  //new VD_Bean();
       EVS_Bean m_OC = new EVS_Bean();
       EVS_Bean m_PC = new EVS_Bean();
       EVS_Bean m_REP = new EVS_Bean();
       EVS_Bean m_OCQ = new EVS_Bean();
       EVS_Bean m_PCQ = new EVS_Bean();
       EVS_Bean m_REPQ = new EVS_Bean();
-      m_setAC.setVDValueFromPage(req, res, m_VD);
-      session.setAttribute("m_VD", m_VD);        
+      m_setAC.setVDValueFromPage(req, res, vdBean);
       m_OC = (EVS_Bean)session.getAttribute("m_OC");
       m_PC = (EVS_Bean)session.getAttribute("m_PC");
       m_OCQ = (EVS_Bean)session.getAttribute("m_OCQ");
@@ -3484,7 +3483,7 @@ public class NCICurationServlet extends HttpServlet
       if (!sAction.equals("Enum"))
       {
         //get vdid from the bean
-        VD_Bean vdBean = (VD_Bean)session.getAttribute("m_VD");
+       // VD_Bean vdBean = (VD_Bean)session.getAttribute("m_VD");
         String sVDid = vdBean.getVD_VD_IDSEQ();
         boolean isExist = false;
         if (sOrigin.equals("Edit"))
@@ -3509,23 +3508,23 @@ public class NCICurationServlet extends HttpServlet
           if (vVDPVs != null)
           {
             //set each bean as deleted to handle later
+            Vector<PV_Bean> vRemVDPV = vdBean.getRemoved_VDPVList();
+            if (vRemVDPV == null) 
+              vRemVDPV = new Vector<PV_Bean>();
             for (int i=0; i<vVDPVs.size(); i++)
             {
               PV_Bean pvBean = (PV_Bean)vVDPVs.elementAt(i);
-              pvBean.setVP_SUBMIT_ACTION("DEL");
-              vVDPVs.setElementAt(pvBean, i);
+              vRemVDPV.addElement(pvBean);
             }
-         //System.out.println(sVDid + " setvdpage " + isExist);
-            //reset the attribute
-            //session.setAttribute("VDPVList", vVDPVs);
-            vdBean.setVD_PV_List(vVDPVs);
+            vdBean.setRemoved_VDPVList(vRemVDPV);
+            vdBean.setVD_PV_List(new Vector<PV_Bean>());
           }
         }
       }
       else
       {
         //remove meta parents since it is not needed for enum types
-        Vector<EVS_Bean> vParentCon = m_VD.getReferenceConceptList();  // (Vector)session.getAttribute("VDParentConcept");
+        Vector<EVS_Bean> vParentCon = vdBean.getReferenceConceptList();  // (Vector)session.getAttribute("VDParentConcept");
         if (vParentCon == null) vParentCon = new Vector<EVS_Bean>();    
         for (int i=0; i<vParentCon.size(); i++)
         {
@@ -3539,9 +3538,8 @@ public class NCICurationServlet extends HttpServlet
             vParentCon.setElementAt(ePar, i);
           }
         }
-        m_VD.setReferenceConceptList(vParentCon);
-        session.setAttribute("m_VD", m_VD); 
-        //session.setAttribute("VDParentConcept", vParentCon);
+        vdBean.setReferenceConceptList(vParentCon);
+        session.setAttribute("m_VD", vdBean);
         //get back pvs associated with this vd
         VD_Bean oldVD = (VD_Bean)session.getAttribute("oldVDBean");  
         if (oldVD == null) oldVD = new VD_Bean();
@@ -3553,14 +3551,15 @@ public class NCICurationServlet extends HttpServlet
             String sMenu = (String)session.getAttribute("MenuAction");
             if (sMenu.equals("NewVDTemplate")) pvAct = "NewUsing";         
             Integer pvCount = new Integer(0);
-        //  System.out.println(oldVD.getVD_VD_IDSEQ() + " setvdpagegoback " + sMenu);
+            vdBean.setVD_PV_List(oldVD.cloneVDPVVector(oldVD.getVD_PV_List()));
+            vdBean.setRemoved_VDPVList(new Vector<PV_Bean>());
             GetACSearch serAC = new GetACSearch(req, res, this);
-      //TODO-      pvCount = serAC.doPVACSearch(oldVD.getVD_VD_IDSEQ(), oldVD.getVD_LONG_NAME(), pvAct);
             if (sMenu.equals("Questions"))
               serAC.getACQuestionValue();  
           }
         }
       }
+      session.setAttribute("m_VD", vdBean); 
     }
     catch(Exception e)
     {
@@ -3757,12 +3756,12 @@ public class NCICurationServlet extends HttpServlet
     }      
     return vd;
   }
-  /**
+/*  *//**
    * called when parent is added to the page
    * @param req
    * @param res
    * @throws java.lang.Exception
-   */
+   *//*
   public void doSelectParentVD(HttpServletRequest req, HttpServletResponse res)
   {
     try
@@ -3791,7 +3790,7 @@ public class NCICurationServlet extends HttpServlet
     }
   } // end
   
-  /**
+  *//**
    * stores the non evs parent reference information in evs bean and to parent list.
    * reference document is matched like this with the evs bean adn stored in parents vector as a evs bean
    * setCONCEPT_IDENTIFIER as document type (VD REFERENCE)
@@ -3803,7 +3802,7 @@ public class NCICurationServlet extends HttpServlet
    * @param req HttpServletRequest object
    * @param res HttpServletResponse object
    * @throws java.lang.Exception
-   */
+   *//*
   public void doNonEVSReference(HttpServletRequest req, HttpServletResponse res)
   {
     try
@@ -3855,7 +3854,7 @@ public class NCICurationServlet extends HttpServlet
     }
   } // end
   
-  /**
+*/  /**
    * fills in the non evs parent attributes and sends back to create non evs parent page to view details
    * @param req HttpServletRequest object
    * @param res HttpServletResponse object
@@ -6396,7 +6395,7 @@ public class NCICurationServlet extends HttpServlet
             session.setAttribute("m_PV", m_PV);
             ForwardJSP(req, res, "/CreatePVPage.jsp");
         }
-        //go back to vm page if error occured.
+        //go back to vm page if error Occurred.
         else
         {
           session.setAttribute("m_VM", m_VM);
@@ -6719,8 +6718,8 @@ public class NCICurationServlet extends HttpServlet
                 ret = insAC.setAC_VERSION(null, null, VDBeanSR, "ValueDomain");
              if (ret == null || ret.equals(""))
              {
-             //TODO   session.setAttribute("VDPVList", new Vector());  //empty the vector to get fresh
-             //   serAC.doPVACSearch(VDBeanSR.getVD_VD_IDSEQ(), VDBeanSR.getVD_LONG_NAME(), "Edit");
+                PVServlet pvser = new PVServlet(req, res, this);
+                pvser.searchVersionPV(VDBean, 0, "", "");
                 //get the right system name for new version
                 String prefName = VDBeanSR.getVD_PREFERRED_NAME();
                 String vdID = VDBeanSR.getVD_VD_ID();
@@ -7790,6 +7789,8 @@ public class NCICurationServlet extends HttpServlet
          {
             //get pvs related to this new VD, it was created in VD_Version
          //TODO   serAC.doPVACSearch(VDBean.getVD_VD_IDSEQ(), VDBean.getVD_LONG_NAME(), "Version");
+            PVServlet pvser = new PVServlet(req, res, this);
+            pvser.searchVersionPV(VDBean, 1, "", "");
             //update non evs changes
             Vector vParent = VDBean.getReferenceConceptList();  // (Vector)session.getAttribute("VDParentConcept");
             if (vParent != null && vParent.size() > 0)
@@ -9215,7 +9216,8 @@ public class NCICurationServlet extends HttpServlet
       if (acName != null && acName.equals("ALL")) acName = "-";
       String sConteIdseq = (String)req.getParameter("sConteIdseq");
       if (sConteIdseq == null) sConteIdseq = "";
- //TODO     Integer pvCount = getAC.doPVACSearch(acID, acName, "Detail");
+      PVServlet pvser = new PVServlet(req, res, this);
+      pvser.searchVersionPV(null, 0, acID, acName);
       ForwardJSP(req, res, "/PermissibleValueWindow.jsp");      
    }
 

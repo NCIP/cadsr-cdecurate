@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/dev/load_tool_options.sql,v 1.11 2006-10-27 14:54:27 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/dev/load_tool_options.sql,v 1.12 2006-10-30 18:53:34 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -259,6 +259,10 @@ VALUES ('CURATION', 'EVS.VOCAB.5.USEPARENT', 'true',
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EVS.VOCAB.6.EVSNAME', 'MedDRA',
 	   'Store vocab name for the MedDRA vocabulary');
+--Store vocab access code for the MedDRA vocabulary.
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EVS.VOCAB.6.ACCESSREQUIRED', '10382',
+       'Store vocab access code for the MedDRA vocabulary');
 --Store vocab display name for the MedDRA vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EVS.VOCAB.6.DISPLAY', 'MedDRA',

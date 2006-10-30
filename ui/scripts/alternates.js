@@ -1,3 +1,5 @@
+// Perform a general action and remember the previous action. The previous action
+// is used in processing to return to a previous state.
 
 function doAction(aobj)
 {
@@ -5,6 +7,8 @@ function doAction(aobj)
     alternatesForm.alternatesAction.value = aobj;
     doSubmit();
 }
+
+// Directly perform a general action. The previous action is not remembered.
 
 function doActionDirect(aobj)
 {

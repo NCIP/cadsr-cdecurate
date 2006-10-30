@@ -85,30 +85,56 @@
           <th>Value</th>
           <th>Value Meaning</th>
           <th>Value Meaning Description</th>
+          <th>Value Meaning Concept</th>
+          <th>Parent Concept</th>
           <th>Value Origin</th>
-         <!-- <th>Value Begin Date</th>
+          <th>Value Begin Date</th>
           <th>Value End Date</th>
-          <th>EVS Concept Code</th> -->
         </tr>
 <%    } 
       String sValue =  pvBean.getPV_VALUE();
       if (sValue == null) sValue = "";
-      String sMeaning =  pvBean.getPV_SHORT_MEANING();
+      VM_Bean vm = pvBean.getPV_VM();
+      String sMeaning = vm.getVM_SHORT_MEANING();  
       if (sMeaning == null) sMeaning = "";
-      String sDescription =  pvBean.getPV_MEANING_DESCRIPTION();
+      String sDescription = vm.getVM_DESCRIPTION(); 
       if (sDescription == null) sDescription = "";
+      String sConcept = "";
+      Vector vmCon = vm.getVM_CONCEPT_LIST(); //cannot type cast the vector in jsp
+      for (int j=0; j<vmCon.size(); j++)
+      {
+      	EVS_Bean con = (EVS_Bean)vmCon.elementAt(j);
+      	if (con == null) con = new EVS_Bean();
+      	String conID = con.getCONCEPT_IDENTIFIER();
+      	String conDB = con.getEVS_DATABASE();
+      	if (!conID.equals(""))
+      	{
+      		if (!sConcept.equals("")) sConcept += "; ";
+      		sConcept += conID + "  " + conDB;
+      	}
+      }
+      String sParent = "";
+      EVS_Bean parConcept = (EVS_Bean)pvBean.getPARENT_CONCEPT();
+      if (parConcept == null) parConcept = new EVS_Bean();
+      String evsDB = (String) parConcept.getEVS_DATABASE();
+      String evsID = (String) parConcept.getCONCEPT_IDENTIFIER();
+      if (evsID != null && !evsID.equals("")) 
+      	sParent = evsID + "\n" + evsDB;
       String sOrigin =  pvBean.getPV_VALUE_ORIGIN();
       if (sOrigin == null) sOrigin = "";
+      String sBD = pvBean.getPV_BEGIN_DATE();
+      String sED = pvBean.getPV_END_DATE();
 %> 
       <tr>
           <td align=center><%=i+1%></td>
           <td align=left><%=sValue%></td>
           <td align=left><%=sMeaning%></td>
           <td align=left><%=sDescription%></td>
+          <td align=left><%=sConcept%></td>
+          <td align=left><%=sParent%></td>
           <td align=left><%=sOrigin%></td>
-        <!--  <td align=left></td>
-          <td align=left></td>
-          <td align=left></td> -->
+          <td align=left><%=sBD%></td> 
+          <td align=left><%=sED%></td> 
       </tr>
 <%
 	  }

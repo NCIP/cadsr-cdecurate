@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.12 2006-10-27 14:54:29 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.13 2006-10-30 18:53:37 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -149,7 +149,7 @@ public class SetACService implements Serializable
   * @param getAC reference to GetACService class.
   *
   * @throws IOException  If an input or output exception occurred
-  * @throws ServletException  If servlet exception occured
+  * @throws ServletException  If servlet exception Occurred
   */
   public void setValidatePageValuesDE(HttpServletRequest req,
           HttpServletResponse res, DE_Bean m_DE, GetACService getAC)// throws ServletException,IOException
@@ -367,7 +367,7 @@ public class SetACService implements Serializable
         ValidateBean vbean = new ValidateBean();
         vbean.setACAttribute("Error Validate DE");
         vbean.setAttributeContent("Error message " + e.toString());
-        vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+        vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
         vValidate.addElement(vbean);
       }
       //store it in teh request
@@ -421,7 +421,7 @@ public class SetACService implements Serializable
         if (notValid.equalsIgnoreCase("true"))
           endValid = "Begin Date must be before the End Date";
         else if (!notValid.equalsIgnoreCase("false"))
-          endValid = notValid;  // "Error occured in validating Begin and End Dates";          
+          endValid = notValid;  // "Error Occurred in validating Begin and End Dates";          
       }
       sWFS = sWFS.toUpperCase();
      // if (wfs.equals("RETIRED ARCHIVED") || wfs.equals("RETIRED DELETED") || wfs.equals("RETIRED PHASED OUT"))
@@ -440,7 +440,7 @@ public class SetACService implements Serializable
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error addDatesToValidatePage");
       vbean.setAttributeContent("Error message " + e.toString());
-      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
       vValidate.addElement(vbean);
     }   
   }
@@ -528,7 +528,7 @@ public class SetACService implements Serializable
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error addEditPVDatesToValidatePage");
       vbean.setAttributeContent("Error message " + e.toString());
-      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
       vValidate.addElement(vbean);
     }
   }
@@ -544,7 +544,7 @@ public class SetACService implements Serializable
   * @return Vector of validate
   *
   * @throws IOException  If an input or output exception occurred
-  * @throws ServletException  If servlet exception occured
+  * @throws ServletException  If servlet exception Occurred
   */
   public void addDDEToDEValidatePage(HttpServletRequest req,
           HttpServletResponse res, Vector<ValidateBean> vValidate, String sOriginAction) //throws ServletException,IOException
@@ -613,7 +613,7 @@ public class SetACService implements Serializable
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error addDDEToDEValidatePage");
       vbean.setAttributeContent("Error message " + e.toString());
-      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
       vValidate.addElement(vbean);
     }
   }  // end of addDDEToDEValidatePage
@@ -635,7 +635,7 @@ public class SetACService implements Serializable
  * @param m_PCQ 
   *
   * @throws IOException  If an input or output exception occurred
-  * @throws ServletException  If servlet exception occured
+  * @throws ServletException  If servlet exception Occurred
  * @throws Exception 
   */
   public void setValidatePageValuesDEC(HttpServletRequest req,
@@ -868,7 +868,7 @@ public class SetACService implements Serializable
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error setValidatePageValuesDEC");
       vbean.setAttributeContent("Error message " + e.toString());
-      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
       vValidate.addElement(vbean);
     }
         
@@ -898,7 +898,7 @@ public class SetACService implements Serializable
   * @param getAC reference to GetACService class.
   *
   * @throws IOException  If an input or output exception occurred
-  * @throws ServletException  If servlet exception occured
+  * @throws ServletException  If servlet exception Occurred
  * @throws Exception 
   */
   public void setValidatePageValuesVD(HttpServletRequest req, HttpServletResponse res, 
@@ -1108,7 +1108,7 @@ public class SetACService implements Serializable
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error setValidatePageValuesVD");
       vbean.setAttributeContent("Error message " + e.toString());
-      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
       vValidate.addElement(vbean);
     }
         
@@ -1131,7 +1131,7 @@ public class SetACService implements Serializable
   * @param getAC reference to GetACService class.
   *
   * @throws IOException  If an input or output exception occurred
-  * @throws ServletException  If servlet exception occured
+  * @throws ServletException  If servlet exception Occurred
    * @throws Exception 
   */
 /*  public void setValidatePageValuesPV(HttpServletRequest req, HttpServletResponse res, 
@@ -1211,7 +1211,7 @@ public class SetACService implements Serializable
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error setValidatePageValuesPV");
       vbean.setAttributeContent("Error message " + e.toString());
-      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
       vValidate.addElement(vbean);
     }
         
@@ -1251,7 +1251,7 @@ public class SetACService implements Serializable
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error setValidatePrefNameType");
       vbean.setAttributeContent("Error message " + e.toString());
-      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
       vValidate.addElement(vbean);
     }
   }
@@ -1461,7 +1461,7 @@ public class SetACService implements Serializable
       if (vAC_CS == null) vAC_CS = new Vector();
       if (vOriginal_ACCS == null) vOriginal_ACCS = new Vector();
       strInValid = "";
-       //no change occured
+       //no change Occurred
       if (vAC_CS.size() == vOriginal_ACCS.size())
         strInValid = "No Change";
        //some added or removed cs-csis to/from the existing list.
@@ -1486,7 +1486,7 @@ public class SetACService implements Serializable
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error setValidateBlockEdit");
       vbean.setAttributeContent("Error message " + e.toString());
-      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
       vValidate.addElement(vbean);
     }
     // finaly, send vector to JSP
@@ -1697,7 +1697,7 @@ public class SetACService implements Serializable
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error setValidateNameComp");
       vbean.setAttributeContent("Error message " + e.toString());
-      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
       vValidate.addElement(vbean);
     }
   }
@@ -1762,7 +1762,7 @@ public class SetACService implements Serializable
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error setValidateVDOtherAttr");
       vbean.setAttributeContent("Error message " + e.toString());
-      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
       vValidate.addElement(vbean);
     }
   }
@@ -1982,7 +1982,7 @@ public class SetACService implements Serializable
   * @param getAC reference to GetACService class.
   *
   * @throws IOException  If an input or output exception occurred
-  * @throws ServletException  If servlet exception occured
+  * @throws ServletException  If servlet exception Occurred
  * @throws Exception 
   */
   public void setValidatePageValuesVM(HttpServletRequest req,
@@ -2051,7 +2051,7 @@ public class SetACService implements Serializable
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error setValidatePageValuesVM");
       vbean.setAttributeContent("Error message " + e.toString());
-      vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+      vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
       vValidate.addElement(vbean);
     }
     // finaly, send vector to JSP
@@ -2090,7 +2090,7 @@ public class SetACService implements Serializable
     catch(Exception e)
     {
       logger.fatal("ERROR in checkWritePermission " + e.toString(), e);
-      sErrorMessage = "Error occured in checkWritePermission";
+      sErrorMessage = "Error Occurred in checkWritePermission";
     }
     return sErrorMessage;
   }
@@ -2160,7 +2160,7 @@ public class SetACService implements Serializable
     catch(Exception e)
     {
       logger.fatal("ERROR in validateBegDateVsEndDates " + e.toString(), e);
-      strInvalid += "Error occured in validateBegDateVsEndDates";
+      strInvalid += "Error Occurred in validateBegDateVsEndDates";
     }
     return strInvalid;
   }
@@ -2254,7 +2254,7 @@ public class SetACService implements Serializable
     catch (Exception e)
     {
       logger.fatal("ERROR in setacservice_compareDates  : " + e.toString(), e);
-      return "Error occured in validating Begin and End Dates";
+      return "Error Occurred in validating Begin and End Dates";
     }
     return strFail;
   }
@@ -2828,7 +2828,7 @@ public class SetACService implements Serializable
     catch (Exception e)
     {
       logger.fatal("SetACService_checkDECOCExist- Unable to check if OC exists " + e.toString(), e);
-      return "ERROR occured in checkDECOCExist ";
+      return "ERROR Occurred in checkDECOCExist ";
     }
     return strInvalid;
   }
@@ -2892,7 +2892,7 @@ public class SetACService implements Serializable
     catch (Exception e)
     {
       logger.fatal("SetACService_checkConceptCodeExistsInOtherDB- Unable to check if CC exists " + e.toString(), e);
-      return "ERROR occured in checkConceptCodeExistsInOtherDB ";
+      return "ERROR Occurred in checkConceptCodeExistsInOtherDB ";
     }
     return strInValid;
 
@@ -2951,7 +2951,7 @@ public class SetACService implements Serializable
     catch (Exception e)
     {
       logger.fatal("Error in SetACService_checkDEUsingDEC " + e.toString(), e);
-      return "ERROR occured in checkDEUsingDEC ";
+      return "ERROR Occurred in checkDEUsingDEC ";
     }
     return strInValid;
   }
@@ -3007,7 +3007,7 @@ public class SetACService implements Serializable
     catch (Exception e)
     {
       logger.fatal("Error- checkReleasedWFS " + e.toString(), e);
-      return "Error occured in checkReleasedWFS";
+      return "Error Occurred in checkReleasedWFS";
     }
     return sValid;
   }
@@ -3094,7 +3094,7 @@ public class SetACService implements Serializable
     catch (Exception e)
     {
       logger.fatal("Error- checkUniqueBlock " + e.toString(), e);
-      return "Error occured in checkUniqueBlock";
+      return "Error Occurred in checkUniqueBlock";
     }
   }
 
@@ -3258,7 +3258,7 @@ public class SetACService implements Serializable
      catch (Exception e)
      {
        logger.fatal("Error- checkVersionDimension " + e.toString(), e);
-       return "Error occured in checkVersionDimension";
+       return "Error Occurred in checkVersionDimension";
      }
    }
 
@@ -3301,7 +3301,7 @@ public class SetACService implements Serializable
     catch (Exception e)
     {
       logger.fatal("Error- checkValueIsNumeric " + e.toString(), e);
-      return "Error occured in checkValueIsNumeric";
+      return "Error Occurred in checkValueIsNumeric";
     }
   }
 
@@ -3967,7 +3967,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error occured in getACCSIFromPage " + e.toString(), e);
+      logger.fatal("Error Occurred in getACCSIFromPage " + e.toString(), e);
     }
     return vACCSIList;   
   }
@@ -4378,7 +4378,7 @@ public class SetACService implements Serializable
    * @param m_PV PV Bean.
    *
    * @throws IOException  If an input or output exception occurred
-   * @throws ServletException  when servlet exception occured
+   * @throws ServletException  when servlet exception Occurred
    */
   public void setPVValueFromPage(HttpServletRequest req,
           HttpServletResponse res, PV_Bean m_PV) //throws ServletException,IOException
@@ -4437,7 +4437,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error occured in setPVValueFromPage " + e.toString(), e);
+      logger.fatal("Error Occurred in setPVValueFromPage " + e.toString(), e);
     }
   } // end of setPVValueFromPage
 
@@ -4484,7 +4484,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error occured in getModifiedPV " + e.toString(), e);
+      logger.fatal("Error Occurred in getModifiedPV " + e.toString(), e);
     }
     return pv;
   }
@@ -4498,7 +4498,7 @@ public class SetACService implements Serializable
    * @param m_PV PV Bean.
    *
    * @throws IOException  If an input or output exception occurred
-   * @throws ServletException  when servlet exception occured
+   * @throws ServletException  when servlet exception Occurred
    */
   public void setVMValueFromPage(HttpServletRequest req, HttpServletResponse res,
           VM_Bean m_VM) //throws ServletException,IOException
@@ -4564,7 +4564,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error occured in setVMValueFromPage " + e.toString(), e);
+      logger.fatal("Error Occurred in setVMValueFromPage " + e.toString(), e);
     }
   } // end of setVMValueFromPage
 
@@ -4910,11 +4910,11 @@ public class SetACService implements Serializable
      }
      catch (Exception e)
      {
-       logger.fatal("Error occured in validateVDPVS " + e.toString(), e);
+       logger.fatal("Error Occurred in validateVDPVS " + e.toString(), e);
        ValidateBean vbean = new ValidateBean();
        vbean.setACAttribute("Error validateVDPVS");
        vbean.setAttributeContent("Error message " + e.toString());
-       vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+       vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
        vValidate.addElement(vbean);
      }
    }    //end validateVDPVS

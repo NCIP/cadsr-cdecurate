@@ -297,6 +297,7 @@
 	  		//add teh concept info on the page
 	//  alert(editName + sCCode + sCCodeDB + " con " + conArray[0].conName + conArray[0].conID + conArray[0].conDBOrg);
 	      	document.searchResultsForm.actSelected.value = "appendConcept";
+        	document.searchResultsForm.Message.style.visibility="visible";
 	        document.searchResultsForm.submit(); 
         }
         else
@@ -692,6 +693,7 @@
         document.searchResultsForm.Message.style.visibility="visible";
         url = "../../cdecurate/NCICurationServlet?reqType=getSubConcepts&&searchType=All&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&UISearchType=" + sUISearchType + "&&conLevel=" + conLevel;
         document.searchResultsForm.action = url;
+        document.searchResultsForm.Message.style.visibility="visible";
         document.searchResultsForm.submit(); 
       }
    }
@@ -708,9 +710,9 @@
       hourglass();
       url = "../../cdecurate/NCICurationServlet?reqType=getSubConcepts&&searchType=Immediate&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&defSource=" + defSource + "&&UISearchType=" + sUISearchType + "&&conLevel=" + conLevel;   
       document.searchResultsForm.action = url;
-      document.searchResultsForm.submit(); 
       window.status = "Refereshing the page, it may take a minute, please wait.....";
       document.searchResultsForm.Message.style.visibility="visible";
+      document.searchResultsForm.submit(); 
    }
    
   function getSuperConcepts2(sUISearchType)
@@ -723,9 +725,9 @@
       hourglass();
       url = "../../cdecurate/NCICurationServlet?reqType=getSuperConcepts&&searchType=All&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&defSource=" + defSource + "&&UISearchType=" + sUISearchType;
       document.searchResultsForm.action = url;
-      document.searchResultsForm.submit(); 
       window.status = "Refereshing the page, it may take a minute, please wait.....";
       document.searchResultsForm.Message.style.visibility="visible";
+      document.searchResultsForm.submit(); 
   }
 
    //trims off spaces and "_"
@@ -1290,7 +1292,7 @@ function createNames(acType)
           opener.document.newDECForm.CreateDefinition.value = "New EVS term suggested.";
          if (evsWindow2 && !evsWindow2.closed)
             evsWindow2.close()
-         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/servlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
+         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
       }
      else if (sComp1 == "ValueDomain")
      {
@@ -1301,13 +1303,13 @@ function createNames(acType)
           opener.document.createVDForm.CreateDefinition.value = "New EVS term suggested.";
          if (evsWindow2 && !evsWindow2.closed)
             evsWindow2.close()
-         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/servlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
+         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
       }
       else
       {
         if (evsWindow2 && !evsWindow2.closed)
           evsWindow2.close()
-        evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/servlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
+        evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
       }
   }
   
