@@ -20,17 +20,17 @@
 	//confirm the remove item			
     function confirmRM(pvNo, itmAct, itmMsg)
     {
-    	var removeOK = confirm("Click OK to continue with " + itmAct + "ing the " + itmMsg + ".");
-    	if (removeOK == false) 
-    		return;
-    	else
-    	{
-    		document.getElementById("editPVInd").value = pvNo;
-    		if (itmAct == "remov")
-    			SubmitValidate('remove');
-    		else if (itmAct == "restor")
-    		    SubmitValidate('restore');    		
-    	}
+		document.getElementById("editPVInd").value = pvNo;
+		if (itmAct == "remov")
+		{
+	    	var removeOK = confirm("Click OK to continue with " + itmAct + "ing the " + itmMsg + ".");
+	    	if (removeOK == false) 
+	    		return;
+	    	else
+				SubmitValidate('remove');
+		}
+		else if (itmAct == "restor")
+		    SubmitValidate('restore');    		
     }
     
     //disable vm search if data exist
@@ -46,6 +46,13 @@
     			vmVDiv.style.display = "block";    		
     	}
     }
+    function CancelNewPV()
+    {
+		var vmNewDiv = document.getElementById("divpvnew");
+		if (vmNewDiv != null)
+			vmNewDiv.style.display = "none";
+    }
+    
     //when Add new pv button clicked; check if mandatory values exist  
     function AddNewPV()
     {
@@ -223,16 +230,19 @@
 
     function view(pvdiv, imgdivhide, imgdivdisp, action, pvNo)
     {
-    	if (action == "save" || action == "edit")
-		{
+    //	if (action == "save" || action == "edit")
+	//	{
         	//refresh teh page if value, vm or vmd changed
         	var editedPV = getORsetEdited("none");
         	if (editedPV != null && editedPV != "")
         	{
-        	  SubmitValidate("save");
+        	  if (action == "save")
+        	  	SubmitValidate("save");
+        	  else
+        	  	alert("Please save or restore the edited Permissible Value");
         	  return;
         	}
-		} 
+	//	} 
     	//unedit all first
     //	if (action == "edit") 
     //		viewAll("uneditAll");
@@ -580,14 +590,14 @@
 	  var sInd = parObj.selectedIndex;
       if (sInd > -1)
       {
-      	//disable the create button
-      	var crepvObj = document.getElementById("btnCreatePV");
-      	if (crepvObj != null && !crepvObj.disabled)  
-      		crepvObj.disabled = true;
-      	 //disable the search evs  button
-      	var serpvObj = document.getElementById("btnSelectPV");
-      	if (serpvObj != null && !serpvObj.disabled) 
-      		serpvObj.disabled = true;
+      	//enable unavailable label by default
+      	var crepvObj = document.getElementById("divpvcreate_disable");
+      	if (crepvObj != null)  
+      		crepvObj.style.display = "block";
+      	 //disable available label by default
+      	var serpvObj = document.getElementById("divpvcreate_enable");
+      	if (serpvObj != null) 
+      		serpvObj.style.display = "none";
       		
         //handle non evs parent or non enumerated parent
         var parType = parObj[sInd].value;
@@ -602,7 +612,9 @@
           selValObj.value = "View Parent";
           //make create value enabled if non evs parent
           if (crepvObj != null)
-            crepvObj.disabled = false;        
+            crepvObj.style.display = "none";        
+      	  if (serpvObj != null) 
+      		serpvObj.style.display = "block";
         }
         else
             selValObj.value = "Select Values";
@@ -790,7 +802,7 @@
 	  		document.getElementById("currentPVInd").value = curPV;
 		  	if (secondWindow && !secondWindow.closed)
 		    	secondWindow.close()
-		  	secondWindow = window.open("jsp/ACOrigin.jsp", "SelectOrigin", "width=950,height=700,top=0,left=0,resizable=yes,scrollbars=yes")	  		
+		  	secondWindow = window.open("jsp/ACOrigin.jsp", "SelectOrigin", "width=750,height=700,top=0,left=0,resizable=yes,scrollbars=yes")	  		
 	  	}
     }
 
@@ -1088,8 +1100,8 @@
   		var pvId = document.getElementById("editPVInd").value;
   		if (pvId != null && pvId != "")
   		{
-  			if (sAct == "save")
-  			{
+  		//	if (sAct == "save")
+  		//	{
 		  		var hidElm = document.getElementById("hiddenConVM");
 		  		if (hidElm != null)
 		  		{
@@ -1107,12 +1119,12 @@
 			  			}
 			  		}		  		
 		  		}
-		  	}
-  			else
-  			{
-  				alert("Please save the edited Permissible Value");
-  				return false;
-  			}
+		//  	}
+  		//	else
+  		//	{
+  		//		alert("Please save the edited Permissible Value");
+  		//		return false;
+  		//	}
   		}
   		return true;
   	}

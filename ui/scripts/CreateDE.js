@@ -374,8 +374,10 @@ function openDesignateWindow(sType)
     document.SearchActionForm.itemType.value = sType
  // alert(" depage " + sType);
     //var windowW = screen.width - 410;
-//    altWindow = window.open("jsp/EditDesignateDE.jsp", "designate", "width=700,height=650,top=0,left=0,resizable=yes,scrollbars=yes");
-    altWindow = window.open("NCICurationServlet?reqType=AltNamesDefs&searchEVS=" + document.SearchActionForm.searchEVS.value, "designate", "width=900,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
+    if (sType == "Alternate Names")
+        altWindow = window.open("NCICurationServlet?reqType=AltNamesDefs&searchEVS=" + document.SearchActionForm.searchEVS.value, "designate", "width=900,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
+    else
+        altWindow = window.open("jsp/EditDesignateDE.jsp", "designate", "width=700,height=650,top=0,left=0,resizable=yes,scrollbars=yes");
 }
 
 function MM_callJS(jsStr) { //v2.0

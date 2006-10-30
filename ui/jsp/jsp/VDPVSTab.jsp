@@ -81,15 +81,19 @@
       </tr> 
     <%}%>
   </table>
-	<table style="width: 100%; border-collapse: collapse">
+	<table style="width: 100%; border-collapse: collapse;">
     <colgroup><col style="width: 15%" /><col style="width: 15%" /><col /></colgroup>
 		<tr>
 			<td id="vddetailstab" class="<%=vdTabFocus%>" onclick="SubmitValidate('vddetailstab');">
 				<b>Value Domain Details</b>
 			</td>
+		  <% if(!sOriginAction.equals("BlockEditVD")){%>
 			<td id="vdpvstab" class="<%=pvTabFocus%>" onclick="SubmitValidate('vdpvstab');">
 				<b>Permissible Values</b>
 			</td>
+		  <% } else {%>
+		  	<td style="border-bottom: 2px solid black" >&nbsp;</td>
+			<% } %> 
       <td style="border-bottom: 2px solid black" align="left" valign="middle">
          &nbsp;&nbsp;&nbsp;&nbsp;<font size="2"><%=vdNameDisplay%> </font>
       </td>

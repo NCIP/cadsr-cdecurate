@@ -1,6 +1,6 @@
 <project name="CDE Curation Tool" default="init" basedir=".">
     <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.23 2006-10-27 14:54:27 hegdes Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.24 2006-10-30 18:53:34 hegdes Exp $
         $Name: not supported by cvs2svn $
     -->
     <description>Build and deploy the CDE Curation Tool</description>
@@ -107,7 +107,7 @@
             <fileset dir="${m_web}/css/asset" excludes="**/*CVS*" />
             <fileset dir="${m_web}/html/asset" excludes="**/*CVS*" />
             <fileset dir="${m_web}/scripts" excludes="**/*CVS*" />
-            <fileset dir="${m_web}/images" excludes="**/*CVS*" />
+            <fileset dir="${m_web}/images" excludes="**/*CVS*,**/*.jpg" />
         </copy>
         <!-- copy client.jar to cdecurate/WEB-INF/lib directory -->
         <copy todir="${app_lib}" overwrite="YES">

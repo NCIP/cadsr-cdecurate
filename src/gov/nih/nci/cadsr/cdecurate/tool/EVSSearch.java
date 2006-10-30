@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.11 2006-10-27 14:54:29 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.12 2006-10-30 18:53:37 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1865,7 +1865,7 @@ public String parseDefinition(String termStr)
         List lstResults = null;
         //do not do vocab search if it is meta code search
         if (!sSearchIn.equals("MetaCode"))
-          lstResults = this.doConceptQuery(termStr, dtsVocab, sSearchIn, vocabType, namePropIn);
+          lstResults = this.doConceptQuery(vocabBean.getVocabAccess(), termStr, dtsVocab, sSearchIn, vocabType, namePropIn);
         //get the desc object from the list
         if (lstResults != null)
         {
@@ -2028,41 +2028,53 @@ public String parseDefinition(String termStr)
     return sName;
   }
 
-  private List doConceptQuery(String termStr, String dtsVocab, String sSearchIn, 
-      String vocabType, String sPropIn)
-  {
-    List lstResult = null;
-  //logger.debug("con query " + termStr + dtsVocab + sSearchIn + sPropIn + vocabType); 
-    try
+  private List doConceptQuery(String vocabAccess, String termStr, String dtsVocab, String sSearchIn,
+                    String vocabType, String sPropIn)
     {
-      //check if valid dts vocab
-      dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab, EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME);  // "", "vocabName");
-      if (dtsVocab.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
+        List lstResult = null;
+        // logger.debug("con query " + termStr + dtsVocab + sSearchIn + sPropIn + vocabType);
+        try
+        {
+            // check if valid dts vocab
+            dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab, EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "",
+                                                                                                            // "vocabName");
+            if (dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
+                return lstResult;
+            EVSQuery query = new EVSQueryImpl();
+            if (sSearchIn.equals("ConCode"))
+                query.getDescLogicConcept(dtsVocab, termStr, true);
+            else if (sSearchIn.equals("subConcept"))
+                query.getChildConcepts(dtsVocab, termStr, true);
+            else
+            {
+                gov.nih.nci.evs.security.SecurityToken token = null;
+                if (vocabAccess != null)
+                {
+                    token = new gov.nih.nci.evs.security.SecurityToken();
+                    token.setAccessToken(vocabAccess);
+                    query.addSecurityToken(dtsVocab, token);
+                }
+                else
+                {
+                    // remove access token?
+                }
+                if (vocabType.equals("") || vocabType.equals("NameType")) // do concept name search
+                    query.searchDescLogicConcepts(dtsVocab, termStr, 10000);
+                else if (vocabType.equals("PropType")) // do concept prop search
+                    query.searchDescLogicConcepts(dtsVocab, termStr, 10000, 2, sPropIn, 1);
+            }
+            // call the evs to get resutls
+            lstResult = evsService.evsSearch(query);
+            // System.out.println("App service " + evsService.toString());
+        }
+        catch (Exception ex)
+        {
+            // System.out.println(evsService.toString() + " :conceptNameSearch lstResults: " + ex.toString());
+            logger.fatal(evsService.toString() + " :conceptNameSearch lstResults: " + ex.toString(), ex);
+            //ex.printStackTrace();
+        }
         return lstResult;
-      EVSQuery query = new EVSQueryImpl();
-      if (sSearchIn.equals("ConCode")) 
-        query.getDescLogicConcept(dtsVocab, termStr, true);
-      else if (sSearchIn.equals("subConcept"))
-        query.getChildConcepts(dtsVocab, termStr, true);
-      else
-      {
-        if (vocabType.equals("") || vocabType.equals("NameType"))  //do concept name search
-          query.searchDescLogicConcepts(dtsVocab, termStr, 10000);
-        else if (vocabType.equals("PropType"))  //do concept prop search
-          query.searchDescLogicConcepts(dtsVocab, termStr, 10000, 2, sPropIn, 1);
-      }
-      //call the evs to get resutls
-      lstResult = evsService.evsSearch(query);
- //  System.out.println("App service " + evsService.toString());
     }
-    catch(Exception ex)
-    {
-      //System.out.println(evsService.toString() + " :conceptNameSearch lstResults: " + ex.toString());
-      logger.fatal(evsService.toString() + " :conceptNameSearch lstResults: " + ex.toString(), ex);
-      //ex.printStackTrace();
-    }  
-    return lstResult;
-  }
   
   private Vector<EVS_Bean> storeConceptToBean(Vector<EVS_Bean> vCons, Vector vProp, String dtsVocab,
       String sConName, String sDispName, String conCodeType, String sConID, int ilevel, String sStatus, 
@@ -2785,9 +2797,6 @@ public String parseDefinition(String termStr)
   * gets request parameters to store the selected values in the session according to what the menu action is
   * forwards JSP 'SearchResultsPage.jsp' if the action is not searchForCreate.
   * if action is searchForCreate forwards OpenSearchWindow.jsp
-  *
-  * @param req The HttpServletRequest from the client
-  * @param res The HttpServletResponse back to the client
   *
   * @throws Exception
   */

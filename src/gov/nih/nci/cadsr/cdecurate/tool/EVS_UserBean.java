@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.11 2006-10-27 14:54:29 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.12 2006-10-30 18:53:37 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -131,6 +131,7 @@ public final class EVS_UserBean implements Serializable
   private Hashtable m_vocab_attr;   //attributes specific to vocabs
   private String PrefVocabSrc;   //source of the preferred vocabulary
   private String PrefVocab;   //name of the preferred vocabulary
+  private String _vocabAccess;
   
   /**
    * initialize the logger for the class
@@ -564,6 +565,21 @@ public final class EVS_UserBean implements Serializable
     m_codeType = sType;    
   }
  
+  public boolean vocabIsSecure()
+  {
+      return _vocabAccess != null;
+  }
+  
+  public String getVocabAccess()
+  {
+      return _vocabAccess;
+  }
+  
+  public void setVocabAccess(String code_)
+  {
+      _vocabAccess = code_;
+  }
+  
   /**
    * The getDefDefaultValue method returns the default definition value.
    *
@@ -1004,6 +1020,8 @@ public final class EVS_UserBean implements Serializable
             vuBean.setVocabDBOrigin(sValue);  //("NCI Thesaurus");
           if (sType.indexOf("VOCABCODETYPE")>0)
             vuBean.setVocabCodeType(sValue);  //("MEDDRA_CODE");
+          if (sType.indexOf("ACCESSREQUIRED")>0)
+              vuBean.setVocabAccess(sValue);  //("MEDDRA_CODE");
           if (sType.indexOf("USEPARENT")>0)
           {
             boolean bValue = false;

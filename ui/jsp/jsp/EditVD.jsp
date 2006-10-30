@@ -844,7 +844,7 @@ function setup()
     <td><font color="#FF0000">Maintain </font> 
       <%if (sTypeFlag.equals("E")){%>Permissible Value<%} else {%>Referenced Value<%}%>
       <br>
-      To view or maintain Permissible Values, <a href="javascript:SubmitValidate('vdpvstab');">click here</a> 
+      To view or maintain Permissible Values, <a href="javascript:SubmitValidate('vdpvstab');">[click here]</a>
       &nbsp;&nbsp;&nbsp;&nbsp;
     </td>
   </tr>

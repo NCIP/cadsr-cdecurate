@@ -51,7 +51,7 @@ public class PVServlet implements Serializable
    */
   public String doEditPVActions()
   {
-      String retData = "";
+      String retData = "/PermissibleValue.jsp";
       try
       {
          HttpSession session = data.getRequest().getSession();
@@ -126,12 +126,17 @@ System.out.println(sMenuAction + " pv action " + sAction);
          }
          else if (sAction.equals("selectParent"))
          {
-           data.getCurationServlet().doSelectParentVD(data.getRequest(), data.getResponse());
+           this.selectParents();
            return "/PermissibleValue.jsp";
          }
          else if (sAction.equals("CreateNonEVSRef"))
          {
-           data.getCurationServlet().doNonEVSReference(data.getRequest(), data.getResponse());
+           this.selectNonEVSParents();
+           return "/PermissibleValue.jsp";
+         }
+         else if(sAction.equals("removePVandParent") || sAction.equals("removeParent"))
+         {
+           this.removeParents(sAction);
            return "/PermissibleValue.jsp";
          }
          else if (sAction.equals("restore"))
@@ -155,6 +160,15 @@ System.out.println(sMenuAction + " pv action " + sAction);
          {
            System.out.println("append Selected VM and refresh the page");
            return this.appendSearchVM();
+         }
+         else if (sAction.equals("sortPV"))
+         {
+           System.out.println("sort the pvs by the heading");
+           GetACSearch serAC = new GetACSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
+           String sField = (String)data.getRequest().getParameter("pvSortColumn");
+           serAC.getVDPVSortedRows(sField);          //call the method to sort pv attribute
+           data.getRequest().setAttribute("focusElement", "pv0View");
+           return "/PermissibleValue.jsp";
          }
          else
            retData = "/PermissibleValue.jsp";
@@ -442,11 +456,11 @@ System.out.println(sMenuAction + " pv action " + sAction);
       try
       {
         String pvAct = "Search";
-         if (sMenu.equals("NewVDTemplate")) pvAct = "NewUsing"; 
+         if (sMenu.equals("NewVDTemplate") || sMenu.equals("NewVDVersion")) pvAct = "NewUsing"; 
 
          String acIdseq = vd.getVD_VD_IDSEQ();
          String acName = vd.getVD_LONG_NAME();
-         Vector<PV_Bean> vdpv = PVAct.doPVACSearch(acIdseq, acName, pvAct, data);
+         Vector<PV_Bean> vdpv = PVAct.doPVACSearch(acIdseq, pvAct, data);
          vd.setVD_PV_List(vdpv);
          //pvCount = this.doPVACSearch(VDBean.getVD_VD_IDSEQ(), VDBean.getVD_LONG_NAME(), pvAct);
          GetACSearch serAC = new GetACSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
@@ -520,6 +534,17 @@ System.out.println(sMenuAction + " pv action " + sAction);
      return vdpv;
    }
 
+   public void searchVersionPV(VD_Bean vd, int iUPD, String acID, String acName)
+   {
+     if (vd != null)
+       acID = vd.getVD_VD_IDSEQ();
+     Vector<PV_Bean> verList = PVAct.doPVACSearch(acID, "", data);
+     if (iUPD == 1)
+       PVAct.doResetVersionVDPV(vd, verList);
+     data.getRequest().setAttribute("PermValueList", verList);
+     data.getRequest().setAttribute("ACName", acName);
+   }
+   
    @SuppressWarnings("unchecked")
    public String storeConceptAttributes()
    {
@@ -572,7 +597,6 @@ System.out.println(sMenuAction + " pv action " + sAction);
      session.setAttribute("results", vRes);
      return "/OpenSearchWindowBlocks.jsp";
    }
-   
    
    @SuppressWarnings("unchecked")
    public void submitPV(VD_Bean vd)
@@ -640,26 +664,34 @@ System.out.println(sMenuAction + " pv action " + sAction);
        }  //end loop
        vd.setVD_PV_List(vVDPVS);
        data.getRequest().setAttribute("retcode", data.getRetErrorCode()); 
-       //delete the record when items were added to the deleted vector
-       Vector<PV_Bean> delVDPV = vd.getRemoved_VDPVList();  // (Vector)session.getAttribute("RemovedPVList");
-       if (delVDPV != null)
-       {
-         for (int i =0; i<delVDPV.size(); i++)
-         {
-           PV_Bean pv = delVDPV.elementAt(i);
-           String idseq = pv.getPV_PV_IDSEQ();
-           if (idseq != null && !idseq.equals("") && !idseq.contains("EVS"))
-           {
-             pv.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_DEL);
-             data.setSelectPV(pv);
-             data.setVD(vd);
-             ret = PVAct.setVD_PVS(data);
-           }
-         }
-         vd.setRemoved_VDPVList(new Vector<PV_Bean>());
-       }
+       //delete teh vdpv relationship if it was deleted from teh page
+       doRemoveVDPV(vd);
    }
-
+   //remove the deleted VDs
+   public String doRemoveVDPV(VD_Bean vd)
+   {
+     String ret = "";
+     //delete the record when items were added to the deleted vector
+     Vector<PV_Bean> delVDPV = vd.getRemoved_VDPVList();  // (Vector)session.getAttribute("RemovedPVList");
+     if (delVDPV != null)
+     {
+       for (int i =0; i<delVDPV.size(); i++)
+       {
+         PV_Bean pv = delVDPV.elementAt(i);
+         String idseq = pv.getPV_PV_IDSEQ();
+         if (idseq != null && !idseq.equals("") && !idseq.contains("EVS"))
+         {
+           pv.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_DEL);
+           data.setSelectPV(pv);
+           data.setVD(vd);
+           ret = PVAct.setVD_PVS(data);
+         }
+       }
+       vd.setRemoved_VDPVList(new Vector<PV_Bean>());
+     }
+     return ret;
+   }
+   
    private String doRemovePV()
    {
      int pvInd = getSelectedPV();
@@ -668,7 +700,9 @@ System.out.println(sMenuAction + " pv action " + sAction);
        HttpSession session = data.getRequest().getSession();
        //remove the pv from the current vd list
        VD_Bean vd = data.getVD();
-       Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
+       PV_Bean selPV = data.getSelectPV();
+       PVAct.doRemovePV(vd, pvInd, selPV, 0);
+/*       Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
        vdpvs.removeElementAt(pvInd);
        vd.setVD_PV_List(vdpvs);
        //add the removed pv to the removed pv list
@@ -681,7 +715,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
          //session.setAttribute("RemovedPVList", rmList);
          vd.setRemoved_VDPVList(rmList);
        }
-       //make the one before to be in view
+*/       //make the one before to be in view
        if (pvInd > 0)
          pvInd = (pvInd - 1);
        
@@ -771,6 +805,122 @@ System.out.println(sMenuAction + " pv action " + sAction);
      data.getRequest().setAttribute("refreshPageAction", "openNewPV");
      return "/PermissibleValue.jsp";
    }
+   
+   public String removeParents(String sAction)
+   {
+      try
+      {
+        HttpSession session = data.getRequest().getSession();
+         VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");  //new VD_Bean();
+         //get the selected parent info from teh request
+         data.setVD(vd);
+         String sParentCC = (String)data.getRequest().getParameter("selectedParentConceptCode");
+         String sParentName = (String)data.getRequest().getParameter("selectedParentConceptName");
+         String sParentDB = (String)data.getRequest().getParameter("selectedParentConceptDB");
+         PVAct.doRemoveParent(sParentCC, sParentName, sParentDB, sAction, data);
+         //make vd's system preferred name
+         vd = data.getVD();
+         Vector<EVS_Bean> vParentCon = vd.getReferenceConceptList();
+         vd = data.getCurationServlet().doGetVDSystemName(data.getRequest(), vd, vParentCon);
+         session.setAttribute("m_VD", vd); 
+         //make the selected parent in hte session empty
+         session.setAttribute("SelectedParentName", "");
+         session.setAttribute("SelectedParentCC", "");
+         session.setAttribute("SelectedParentDB", "");
+         session.setAttribute("SelectedParentMetaSource", "");
+      }
+      catch (Exception e)
+      {
+        logger.fatal("ERROR - remove parents ", e);
+      }
+      //forward teh page according to vdPage 
+      return "/PermissibleValue.jsp";                 
+   }
+
+   /**
+    * called when parent is added to the page
+    * @param req
+    * @param res
+    * @throws java.lang.Exception
+    */
+   @SuppressWarnings("unchecked")
+   public String selectParents()
+   {
+     try
+     {
+       HttpSession session = data.getRequest().getSession();        
+       //store the evs bean for the parent concepts in vector and in session.    
+       VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");  //new VD_Bean();
+       data.setVD(vd);
+       //get the result vector from the session
+       Vector<EVS_Bean> vRSel = (Vector)session.getAttribute("vACSearch");
+       if (vRSel == null) vRSel = new Vector<EVS_Bean>();
+       //get the array from teh hidden list
+       String selRows[] = data.getRequest().getParameterValues("hiddenSelRow");
+       if (selRows != null)
+         PVAct.getEVSSelRowVector(vRSel, selRows, data);
+
+       //make vd's system preferred name
+       vd = data.getVD();
+       Vector<EVS_Bean> vParentCon = vd.getReferenceConceptList();
+       vd = data.getCurationServlet().doGetVDSystemName(data.getRequest(), vd, vParentCon);
+       vd.setVDNAME_CHANGED(true);
+       session.setAttribute("m_VD", vd);
+       //store the last page action in request
+       data.getRequest().setAttribute("LastAction", "parSelected");
+     }
+     catch (Exception e)
+     {
+       logger.fatal("ERROR - " + e);
+     }
+     //forward teh page according to vdPage 
+     return "/PermissibleValue.jsp";                 
+   } // end
+   
+   /**
+    * stores the non evs parent reference information in evs bean and to parent list.
+    * reference document is matched like this with the evs bean adn stored in parents vector as a evs bean
+    * setCONCEPT_IDENTIFIER as document type (VD REFERENCE)
+    * setLONG_NAME as document name
+    * setEVS_DATABASE as Non_EVS text 
+    * setPREFERRED_DEFINITION as document text
+    * setEVS_DEF_SOURCE as document url
+    * 
+    * @param req HttpServletRequest object
+    * @param res HttpServletResponse object
+    * @throws java.lang.Exception
+    */
+   public String selectNonEVSParents()
+   {
+     try
+     {
+       HttpSession session = data.getRequest().getSession();   
+       //document name  (concept long name)
+       String sParName = (String)data.getRequest().getParameter("hiddenParentName");
+       if(sParName == null) sParName = "";
+       //document text  (concept definition)
+       String sParDef = (String)data.getRequest().getParameter("hiddenParentCode");
+       if(sParDef == null) sParDef = "";
+       //document url  (concept defintion source)
+       String sParDefSource = (String)data.getRequest().getParameter("hiddenParentDB");
+       if(sParDefSource == null) sParDefSource = "";
+       
+       VD_Bean m_VD = (VD_Bean)session.getAttribute("m_VD");  //new VD_Bean();
+       data.setVD(m_VD);
+       PVAct.doNonEVSReference(sParName, sParDef, sParDefSource, data);
+
+       session.setAttribute("m_VD", data.getVD()); 
+       //store the last page action in request
+       data.getRequest().setAttribute("LastAction", "parSelected");
+     }
+     catch (RuntimeException e)
+     {
+       logger.fatal("ERROR - ", e);
+     }
+     //forward teh page according to vdPage 
+     return "/PermissibleValue.jsp";                 
+   } // end
+   
    
    
    /**

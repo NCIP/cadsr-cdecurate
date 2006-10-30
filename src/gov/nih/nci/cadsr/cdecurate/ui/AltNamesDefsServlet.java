@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.1 2006-10-27 15:04:05 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.2 2006-10-30 18:53:37 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -442,6 +442,13 @@ public class AltNamesDefsServlet
             form_._sort = _sortName;
         return doAlternates1(form_, db_);
     }
+    
+    private String doClear(AltNamesDefsForm form_, DBAccess db_) throws ToolException
+    {
+        form_._sess._alts = null;
+        
+        return doAlternates1(form_, db_);
+    }
 
     /**
      * The doDesignateDEActions method handles DesignatedDE actions of the request. Called from 'service' method where
@@ -506,6 +513,8 @@ public class AltNamesDefsServlet
                 jsp = doDelNameDef(form, db);
             else if (form._action.equals(_actionRestoreNameDef))
                 jsp = doRestoreNameDef(form, db);
+            else if (form._action.equals(_actionClear))
+                jsp = doClear(form, db);
         }
 
         conn.close();
@@ -535,6 +544,7 @@ public class AltNamesDefsServlet
     public static final String _actionAddDef = "addDef";
     public static final String _actionSaveDef = "saveDef";
     public static final String _actionCancel = "cancel";
+    public static final String _actionClear = "clear";
     public static final String _actionSort = "sort";
     public static final String _actionClassify = "classify";
     public static final String _actionRemoveAssoc = "removeAssoc";

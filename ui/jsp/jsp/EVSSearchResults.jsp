@@ -98,7 +98,7 @@
           opener.document.newDECForm.CreateDefinition.value = "New EVS term suggested.";
          if (evsWindow2 && !evsWindow2.closed)
             evsWindow2.close()
-         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/servlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
+         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
       }
      else if (sComp1 == "ValueDomain")
      {
@@ -109,28 +109,28 @@
           opener.document.createVDForm.CreateDefinition.value = "New EVS term suggested.";
          if (evsWindow2 && !evsWindow2.closed)
             evsWindow2.close()
-         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/servlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
+         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
       }
       else if (sComp1 == "DataElement")
       {
         opener.document.newCDEForm.CreateDefinition.value = "New EVS term suggested.";
          if (evsWindow2 && !evsWindow2.closed)
             evsWindow2.close()
-         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/servlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
+         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
       }
        else if (sComp1 == "PermissableValue")
       {
         opener.document.createPVForm.CreateDescription.value = "New EVS term suggested.";
          if (evsWindow2 && !evsWindow2.closed)
             evsWindow2.close()
-         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/servlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
+         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
       }
       else if (sComp1 == "ValueMeaning")
       {
         opener.document.createVMForm.CreateDescription.value = "New EVS term suggested.";
          if (evsWindow2 && !evsWindow2.closed)
             evsWindow2.close()
-         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/servlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
+         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
       }
   }
 

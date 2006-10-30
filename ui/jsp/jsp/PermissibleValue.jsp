@@ -142,14 +142,6 @@ System.out.println(pgAction + " jsp " + elmFocus);
 					<select name="selConceptualDomain" size="1" style="width:430" multiple>
 						<option value="<%=sConDomID%>"><%=sConDom%></option>
 					</select>
-					&nbsp;&nbsp;
-					<!-- TODO
-					<font color="#FF0000">
-						<a href="javascript:SearchCDValue()">
-							Search
-						</a>
-					</font>
-					-->
 				</td>
 			</tr>
 			<tr height="20"><td></td></tr>
@@ -274,29 +266,21 @@ System.out.println(pgAction + " jsp " + elmFocus);
 				</td>
 				<td align="left">
 					&nbsp;&nbsp;&nbsp;
-					<div id="divpvcreate">
-          <%
-              if (vdCONs > 0)
-              {
-          %>
+					<!-- enable the create link if parents don't exist or non evs parents selected -->					          
+          <div id="divpvcreate_disable" style="display:<% if (vdCONs > 0){%> block <%} else {%> none <%} %>">				
                   Create multiple Value Meanings from EVS Concepts <b>[unavailable]</b><br/>
                   <hr/>
                   Create a Value Meaning <b>[unavailable]</b><br/>
                   Create a Value Meaning from EVS Concepts <b>[unavailable]</b><br>
-          <%
-              }
-              else
-              {
-          %>
+          </div>
+          <div id="divpvcreate_enable" style="display:<% if (vdCONs > 0){%> none <%} else {%> block <%} %>">				
                   Create multiple Value Meanings from EVS Concepts <a href="javascript:createMultipleValues();"><b>[click here]</b></a><br/>
                   <hr/>
                   Create a Value Meaning <a href="javascript:SubmitValidate('openCreateNew');"><b>[click here]</b></a><br/>
                   Create a Value Meaning from EVS Concepts <a href="javascript:SubmitValidate('openCreateNew');"><b>[click here]</b></a><br/>
-          <%
-              }
-          %>
+          </div>
 					<br> 
-					</div>
+					
 					<%if (pgAction.equals("openNewPV")) { %>
 						<div id="divpvnew" style="border: 1px solid grey; overflow:auto">
 							<br>
@@ -307,7 +291,7 @@ System.out.println(pgAction + " jsp " + elmFocus);
 							&nbsp;&nbsp;&nbsp;
 							<input type="button" name="btnCreateNew" value="Save" style="width: 130" onclick="javascript:AddNewPV('addNewPV');">   <!--   onclick="javascript:view(divpvcreate, divpvnew, null, 'add', null);">  -->
 							&nbsp;&nbsp;&nbsp;
-							<input type="button" name="btnCancelNew" value="Cancel" style="width: 130" onclick="javascript:view(divpvcreate, divpvnew, null, 'cancel', null);">
+							<input type="button" name="btnCancelNew" value="Cancel" style="width: 130" onclick="javascript:CancelNewPV();"/>
 							<br>
 							<table width="99%" border="1" cellpadding="15" style="border-collapse: collapse;">
 								<%if (sMenuAction.equals("Questions") && vQVList.size() > 0){%>

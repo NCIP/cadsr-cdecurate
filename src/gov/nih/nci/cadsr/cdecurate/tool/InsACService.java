@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.12 2006-10-27 14:54:29 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.13 2006-10-30 18:53:37 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -224,10 +224,11 @@ public class InsACService implements Serializable
         if (!sOriginAction.equals("BlockEditVD"))  //not for block edit
         {
           //remove vd_pvs relationship if vd type has changed from enum to non-enum
-          Vector<PV_Bean> vVDPVs = vd.getVD_PV_List();  //(Vector)session.getAttribute("VDPVList");
+          Vector<PV_Bean> vVDPVs = vd.getRemoved_VDPVList();  // vd.getVD_PV_List();  //(Vector)session.getAttribute("VDPVList");
           if (!pageVDType.equals("E") && sAction.equals("UPD") && vVDPVs != null && vVDPVs.size()>0)
           {
-            sReturnCode = "";  //TODO - this.addRemoveVDPVS(vd, false);
+            PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
+            pvser.doRemoveVDPV(vd);  //TODO - this.addRemoveVDPVS(vd, false);
             if (sReturnCode != null && !sReturnCode.equals(""))
               vd.setVD_TYPE_FLAG("E");
           }

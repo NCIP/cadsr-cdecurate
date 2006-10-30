@@ -18,8 +18,27 @@
     %>
     
 		<Script Language="JavaScript">
-			function appendOrigin(src)
+			var sSource = "";
+			
+			function getSource(sSrc)
 			{
+				if (sSrc != null && sSrc != "")
+				{
+					sSource = sSrc;  //store it in the variable
+					var useSel = document.getElementById("editSelectedBtn");					//enable the use selection button
+					if (useSel != null)
+						useSel.disabled = false;
+				}
+			}
+			
+			
+			function appendOrigin()
+			{		
+				if (sSource == null || sSource == "")
+				{
+					alert("Please select the Origin");
+					return false;
+				}		
 				var success = false;
 				var curelm;
 				if (opener != null && opener.document != null)
@@ -32,24 +51,24 @@
 						{
 							if (curelm == "allOrigin")
 							{
-								opener.changeAll(curelm, src);
+								opener.changeAll(curelm, sSource);
 								success = true;
 							}
 							else
 							{
 									var curPV = opener.document.getElementById("currentPVInd");
-									opener.changeElementText(curPV, curelm, false, src, "replace");
+									opener.changeElementText(curPV, curelm, false, sSource, "replace");
 									success = true;
 									if (curPV != null && curPV.value != null)
 										opener.document.getElementById("editPVInd").value = curPV.value;
 										
-									opener.document.getElementById("currentOrg").value = src;
+									opener.document.getElementById("currentOrg").value = sSource;
 							 }
 						}
 					}
 				}
 				if (success == false)
-					alert(curelm + " Unable to append the Origin for the selected Permissible Value " + src);
+					alert(curelm + " Unable to append the Origin for the selected Permissible Value " + sSource);
 				
 				//close the window
 				window.close();
@@ -57,14 +76,20 @@
 		</SCRIPT>    
 	</head>
 
-	<body>
+	<body marginwidth='2px' marginheight="2px">
+		<p> 
+		    <input type="button" name="editSelectedBtn" value="Use Selection" onClick="javascript:appendOrigin();"" disabled style="width: 100,height: 30">
+        &nbsp;&nbsp;
+        <input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();" style="width: 93,height: 30">
+       	&nbsp;&nbsp;
+		</p>
 		<p>
 			<font size=4>Select<font color="#FF0000">	Origin</font>
 			</font>
 		</p>
 		<table border="1">
 			<tr>
-				<th>Action</th>
+				<th height="30" width="30"><img src="../../cdecurate/Assets/CheckBox.gif" border="0"></th>
 				<th>Origin Name</th>
 			</tr>
 			<%
@@ -75,9 +100,7 @@
 			%>
 			<tr>
 				<td>
-					<a href="javascript:appendOrigin('<%=src%>');">
-						<img src="../../cdecurate/Assets/select.gif" border="0" alt="Select to use">
-					</a>
+					<input name="rSRC" type="radio"  alt="Select to use" value="" onclick="javascript:getSource('<%=src%>');">
 				</td>
 				<td>
 					<%=src%>

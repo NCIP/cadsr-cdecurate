@@ -142,6 +142,8 @@
     window.status = "Refreshing the page, it may take a minute, please wait....."
     document.searchParmsForm.actSelect.value = "doVocabChange";
     document.searchParmsForm.listSearchFor[0].selected = true;     
+    if (document.searchResultsForm != null)
+      document.searchResultsForm.Message.style.visibility="visible";
     document.searchParmsForm.submit();
   }
 
@@ -189,7 +191,12 @@
     isSubmit = doOpenTreeSubmitAction();    //call the function to open the tree
  //   alert(isSubmit + " : " + document.searchParmsForm.actSelect.value + " : " + document.searchParmsForm.openToTree.value);
     if (isSearched == "false" || isSubmit == true)
+    {
+      window.status = "Submitting the page, please wait.....";
+      if (document.searchResultsForm != null)
+        document.searchResultsForm.Message.style.visibility="visible";
       document.searchParmsForm.submit();
+    }
     //focus to the keyword if not null
     if(document.searchParmsForm.keyword != null)
       document.searchParmsForm.keyword.focus();
@@ -335,6 +342,8 @@ function searchType(type)
     hourglass();
     window.status = "Refreshing the page, it may take a minute, please wait....."
     document.searchParmsForm.actSelect.value = type;
+    if (document.searchResultsForm != null)
+        document.searchResultsForm.Message.style.visibility="visible";
     document.searchParmsForm.submit();
 }
 
@@ -355,6 +364,9 @@ function doTreeAction(type, nodeCode, vocab, nodeName, nodeID, nodeLvl)
     else if(type == 'collapse')
       url = "../../cdecurate/NCICurationServlet?reqType=treeCollapse&&nodeName=" + nodeName + "&&vocab=" + vocab + "&&nodeCode=" + nodeCode + "&&nodeID=" + nodeID + "&&nodeLevel=" + nodeLvl;
     document.searchParmsForm.action = url;
+    window.status = "Submitting the page, please wait.....";
+    if (document.searchResultsForm != null)
+      document.searchResultsForm.Message.style.visibility="visible";
     document.searchParmsForm.submit();
 }
 
@@ -381,6 +393,9 @@ function doMetaCodeSearch()
   hourglass();
   window.status = "Refreshing the page, it may take a minute, please wait....."
   document.searchParmsForm.actSelect.value = "MetaCodeSearch";
+  window.status = "Submitting the page, please wait.....";
+  if (document.searchResultsForm != null)
+    document.searchResultsForm.Message.style.visibility="visible";
   document.searchParmsForm.submit();   
 }
 

@@ -1,3 +1,9 @@
+<!--
+    Copyright (c) 2006 ScenPro, Inc.
+
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/alternates2.jsp,v 1.2 2006-10-30 18:53:37 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
 
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
 <%@ page import="java.util.*" %>
@@ -78,6 +84,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         %><%=text%>
         </p>
         <p>
+            <input type="button" value="Clear" onclick="doAction('<%=AltNamesDefsServlet._actionClear%>');"/> &nbsp;
             <input type="button" value="Close" onclick="self.close();"/>
         </p>
         <%

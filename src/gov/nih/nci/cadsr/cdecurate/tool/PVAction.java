@@ -231,6 +231,8 @@ public class PVAction implements Serializable
             {
               val.setAttributeContent(sPVVal);
               val.setAttributeStatus("Valid");
+              if (sPVVal == null || sPVVal.equals("")) 
+                val.setAttributeStatus("Value is required for Enumerated Value Domain");
               matchFound = true;
               vValidate.setElementAt(val, i);
             }
@@ -238,10 +240,13 @@ public class PVAction implements Serializable
             {
               val.setAttributeContent(sPVMean);
               val.setAttributeStatus("Valid");
+              if (sPVMean == null || sPVMean.equals("")) 
+                val.setAttributeStatus("Value Meaning is required for Enumerated Value Domain");
               matchFound = true;
               vValidate.setElementAt(val, i);
             }
           }
+          //add the values and meanings row if doesn't exist already
           if (!matchFound)
           {
             UtilService.setValPageVector(vValidate, "Values", sPVVal, true, -1, "", sOrgAct);
@@ -251,11 +256,11 @@ public class PVAction implements Serializable
      }
      catch (Exception e)
      {
-       logger.fatal("Error occured in addValidateVDPVS " + e.toString(), e);
+       logger.fatal("Error Occurred in addValidateVDPVS " + e.toString(), e);
        ValidateBean vbean = new ValidateBean();
        vbean.setACAttribute("Error addValidateVDPVS");
        vbean.setAttributeContent("Error message " + e.toString());
-       vbean.setAttributeStatus("Error Occured.  Please report to the help desk");
+       vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
        vValidate.addElement(vbean);
      }
      // finaly, send vector to JSP
@@ -334,7 +339,7 @@ public class PVAction implements Serializable
    *
    * @return Integer of PV count
    */
-  public Vector<PV_Bean> doPVACSearch(String acIdseq, String acName, String sAction, PVForm data)  // 
+  public Vector<PV_Bean> doPVACSearch(String acIdseq, String sAction, PVForm data)  // 
   {
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -379,12 +384,12 @@ public class PVAction implements Serializable
             else
               pvBean.setPV_VDPVS_IDSEQ(rs.getString("vp_idseq"));
             pvBean.setPV_MEANING_DESCRIPTION(rs.getString("vm_description"));             
-            if (sAction.equals("Version"))
+/*            if (sAction.equals("Version"))
               //pvBean = this.updatePVBean(pvBean, oldVDPV);
               System.out.println("need to work on this");  //TODO- 
             else
             {
-              pvBean.setPV_VALUE_ORIGIN(rs.getString("origin"));
+*/              pvBean.setPV_VALUE_ORIGIN(rs.getString("origin"));
               String sDate = rs.getString("begin_date");
               if (sDate != null && !sDate.equals(""))
                 sDate = data.getUtil().getCurationDate(sDate);
@@ -408,7 +413,7 @@ public class PVAction implements Serializable
               this.doSetParentAttributes(sCon, pvBean, data);
               
               pvBean.setPV_VIEW_TYPE("expand");              
-            }            
+         //   }            
             //add pv idseq in the pv id vector
             vList.addElement(pvBean);  //add the bean to a vector
           }  //END WHILE
@@ -472,6 +477,59 @@ public class PVAction implements Serializable
     }
     return vList;
   }  //doPVACSearch search
+  
+  public void doResetVersionVDPV(VD_Bean vd, Vector<PV_Bean> verList)
+  {
+    Vector<PV_Bean> rmVDPV = vd.getRemoved_VDPVList();
+    Vector<PV_Bean> pgVDPV = vd.getVD_PV_List();
+    for (int i =0; i<verList.size(); i++)
+    {
+      PV_Bean pv = verList.elementAt(i);
+      String pvID = pv.getPV_PV_IDSEQ();
+      //check if it is removed from the page
+      for (int j =0; j<rmVDPV.size(); j++)
+      {
+        PV_Bean rmPV = rmVDPV.elementAt(j);
+        String rmID = rmPV.getPV_PV_IDSEQ();
+        if (rmID != null && !rmID.equals("") && rmID.equals(pvID))
+        {
+          rmPV.setPV_VDPVS_IDSEQ(pv.getPV_VDPVS_IDSEQ());
+          rmPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_DEL);
+          rmVDPV.setElementAt(rmPV, j);
+          verList.removeElementAt(i);  //remove it from the vers list
+          i -= 1;  //move back teh index
+          break;
+        }
+      }      
+    }
+    vd.setRemoved_VDPVList(rmVDPV);
+    //add the newly added ones to the list
+    for (int i=0; i<pgVDPV.size(); i++)
+    {
+      PV_Bean pv = pgVDPV.elementAt(i);
+      String value = pv.getPV_VALUE();
+      String vm = pv.getPV_VM().getVM_SHORT_MEANING();
+      //check if it exists in versioned list
+      boolean isNew = true;
+      for (int j =0; j<verList.size(); j++)
+      {
+        PV_Bean verPV = verList.elementAt(j);
+        String verVal = verPV.getPV_VALUE();
+        String verVM = verPV.getPV_VM().getVM_SHORT_MEANING();
+        if (verVal.equals(value) && verVM.equals(vm))
+        {
+          isNew = false;
+          break;
+        }
+      }
+      if (isNew)
+      {
+        pv.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_INS);
+        verList.addElement(pv);
+      }
+    }
+    vd.setVD_PV_List(verList);    
+  }
   
   private void doSetVMAttributes(PV_Bean pvBean, String sCondr, PVForm data)
   {
@@ -935,171 +993,380 @@ public class PVAction implements Serializable
       return sPV_IDSEQ;
     }
 
-    /**
-     * To remove exisitng one in VD_PVS relationship table after the validation.
-     * Called from 'setVD_PVS' method.
-     * Sets in parameters, and registers output parameter.
-     * Calls oracle stored procedure
-     *   "{call SBREXT_Set_Row.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?)}" to submit
-     *
-     * @param pvBean PV_Bean of the selected pv.
-     * @param vdBean VD_Bean of the current pv.
-     * @return String of return code 
-     */
-     public String setVD_PVS(PVForm data)
+  /**
+   * To remove exisitng one in VD_PVS relationship table after the validation.
+   * Called from 'setVD_PVS' method.
+   * Sets in parameters, and registers output parameter.
+   * Calls oracle stored procedure
+   *   "{call SBREXT_Set_Row.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?)}" to submit
+   *
+   * @param pvBean PV_Bean of the selected pv.
+   * @param vdBean VD_Bean of the current pv.
+   * @return String of return code 
+   */
+   public String setVD_PVS(PVForm data)
+   {
+     //capture the duration
+     java.util.Date startDate = new java.util.Date();          
+     //logger.info(m_servlet.getLogMessage(m_classReq, "setVD_PVS", "starting set", startDate, startDate));
+     PV_Bean pvBean = data.getSelectPV();
+     VD_Bean vdBean = data.getVD();
+     Connection sbr_db_conn = null;
+     CallableStatement CStmt = null;
+     String retCode = "";
+     try
      {
-       //capture the duration
-       java.util.Date startDate = new java.util.Date();          
-       //logger.info(m_servlet.getLogMessage(m_classReq, "setVD_PVS", "starting set", startDate, startDate));
-       PV_Bean pvBean = data.getSelectPV();
-       VD_Bean vdBean = data.getVD();
-       Connection sbr_db_conn = null;
-       CallableStatement CStmt = null;
-       String retCode = "";
-       try
-       {
-           String sAction = pvBean.getVP_SUBMIT_ACTION();
-           String vpID = pvBean.getPV_VDPVS_IDSEQ();
-           //deleting newly selected/created pv don't do anything since it doesn't exist in cadsr to remove.
-           if (sAction.equals("DEL") && (vpID == null || vpID.equals("")))
-             return retCode;
-           //TODO - create parent concept
-           String parIdseq = this.setParentConcept(pvBean, vdBean);
-           //Create a Callable Statement object.
-           sbr_db_conn = data.getDbConnection();
-           if (sbr_db_conn == null || sbr_db_conn.isClosed())
-             sbr_db_conn = PVServlet.makeDBConnection();
-           // Create a Callable Statement object.
-           if (sbr_db_conn != null)
-           {
-              CStmt = sbr_db_conn.prepareCall("{call sbrext_set_row.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-              CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-              CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //vd_PVS id
-              CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //vd id
-              CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //pvs id
-              CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //context id
-              CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //date created
-              CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //created by
-              CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //modified by
-              CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //date modified
-
-              // Set the In parameters (which are inherited from the PreparedStatement class)
-              //create a new row if vpIdseq is empty for updates           
-              if (sAction.equals("UPD") && (vpID == null || vpID.equals(""))) sAction = "INS";
-              
-              CStmt.setString(2, sAction);       //ACTION - INS, UPD  or DEL
-              CStmt.setString(3, pvBean.getPV_VDPVS_IDSEQ());    //VPid);       //vd_pvs ideq - not null
-              CStmt.setString(4, vdBean.getVD_VD_IDSEQ());  // sVDid);       //value domain id - not null
-              CStmt.setString(5, pvBean.getPV_PV_IDSEQ());  // sPVid);       //permissible value id - not null
-              CStmt.setString(6, vdBean.getVD_CONTE_IDSEQ());  // sContextID);       //context id - not null for INS, must be null for UPD
-              String pvOrigin = pvBean.getPV_VALUE_ORIGIN();
-              //believe that it is defaulted to vd's origin
-              //if (pvOrigin == null || pvOrigin.equals(""))
-              //   pvOrigin = vdBean.getVD_SOURCE();
-              CStmt.setString(11, pvOrigin);  // sOrigin);
-              String sDate = pvBean.getPV_BEGIN_DATE();
-              if (sDate != null && !sDate.equals(""))
-                 sDate = data.getUtil().getOracleDate(sDate);
-              CStmt.setString(12, sDate);  // begin date);
-              sDate = pvBean.getPV_END_DATE();
-              if (sDate != null && !sDate.equals(""))
-                 sDate = data.getUtil().getOracleDate(sDate);
-              CStmt.setString(13, sDate);  // end date);
-              CStmt.setString(14, parIdseq);
-   System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
-              boolean bExcuteOk = CStmt.execute();
-              retCode = CStmt.getString(1);
-              //store the status message if children row exist
-              if (retCode != null && !retCode.equals(""))
-              {
-                String sPValue = pvBean.getPV_VALUE();
-                String sVDName = vdBean.getVD_LONG_NAME();
-                if (sAction.equals("INS") || sAction.equals("UPD"))
-                   data.setStatusMsg("\\t " + retCode + " : Unable to update permissible value " + sPValue + ".");
-                else if (sAction.equals("DEL") && retCode.equals("API_VDPVS_006"))
-                {
-                  data.setStatusMsg("\\t This Value Domain is used by a form. " +
-                     "Create a new version of the Value Domain to remove permissible value " + sPValue + ".");
-                }
-                else 
-                  data.setStatusMsg("\\t " + retCode + " : Unable to remove permissible value " + sPValue + ".");
-                data.setRetErrorCode(retCode);  
-              }
-              else
-                pvBean.setPV_VDPVS_IDSEQ(CStmt.getString(3));
-           }
-         //capture the duration
-         //logger.info(m_servlet.getLogMessage(m_classReq, "setVD_PVS", "end set", startDate, new java.util.Date()));  
-       }
-       catch(Exception e)
-       {
-         logger.fatal("ERROR in setVD_PVS for other : " + e.toString(), e);
-         data.setRetErrorCode("Exception");
-         data.setStatusMsg("\\t Exception : Unable to update or remove PV of VD.");
-       }
-       try
-       {
-         if(CStmt!=null) CStmt.close();
-         if (data.getDbConnection() == null)
-           PVServlet.closeDBConnection(sbr_db_conn);
-       }
-       catch(Exception ee)
-       {
-         logger.fatal("ERROR in setVD_PVS for close : " + ee.toString(), ee);
-         data.setRetErrorCode("Exception");
-         data.setStatusMsg("\\t Exception : Unable to update or remove PV of VD.");
-       }
-       return retCode;
-     }  //END setVD_PVS
-
-     public void doBlockEditPV(PVForm data, String changeField, String changeData)
-     {
-       VD_Bean vd = data.getVD();
-       Vector<PV_Bean> vdpv = vd.getVD_PV_List();
-       for (int i=0; i<vdpv.size(); i++)
-       {
-         PV_Bean pv = (PV_Bean)vdpv.elementAt(i);
-         if (changeField.equals("origin"))
-           pv.setPV_VALUE_ORIGIN(changeData);
-         else if (changeField.equals("begindate"))
-           pv.setPV_BEGIN_DATE(changeData);
-         else if (changeField.equals("enddate"))
-           pv.setPV_END_DATE(changeData);
-         //change the submit action
-         pv.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_UPD);
-         vdpv.setElementAt(pv, i);
-       }
-       vd.setVD_PV_List(vdpv);
-       data.setVD(vd);
-     }
-
-     private String setParentConcept(PV_Bean pvBean, VD_Bean vd)
-     {
-       String conIDseq = "";
-       //create parent concept if exists 
-// TODO - do the parent concept realtionship later
-       EVS_Bean pCon = (EVS_Bean)pvBean.getPARENT_CONCEPT();
-       if (pCon != null)
-       {
-         conIDseq = pCon.getIDSEQ();  // pCon.getCONDR_IDSEQ();
-         String pConID = pCon.getCONCEPT_IDENTIFIER();
-         if (pConID != null && !pConID.equals("") && (conIDseq == null || conIDseq.equals("")))
+         String sAction = pvBean.getVP_SUBMIT_ACTION();
+         String vpID = pvBean.getPV_VDPVS_IDSEQ();
+         //deleting newly selected/created pv don't do anything since it doesn't exist in cadsr to remove.
+         if (sAction.equals("DEL") && (vpID == null || vpID.equals("")))
+           return retCode;
+         //TODO - create parent concept
+         String parIdseq = this.setParentConcept(pvBean, vdBean);
+         //Create a Callable Statement object.
+         sbr_db_conn = data.getDbConnection();
+         if (sbr_db_conn == null || sbr_db_conn.isClosed())
+           sbr_db_conn = PVServlet.makeDBConnection();
+         // Create a Callable Statement object.
+         if (sbr_db_conn != null)
          {
-           Vector<EVS_Bean> vPar = vd.getReferenceConceptList();
-           if (vPar != null)
+            CStmt = sbr_db_conn.prepareCall("{call sbrext_set_row.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+            CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //vd_PVS id
+            CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //vd id
+            CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //pvs id
+            CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //context id
+            CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //date created
+            CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //created by
+            CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //modified by
+            CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //date modified
+
+            // Set the In parameters (which are inherited from the PreparedStatement class)
+            //create a new row if vpIdseq is empty for updates           
+            if (sAction.equals("UPD") && (vpID == null || vpID.equals(""))) sAction = "INS";
+            
+            CStmt.setString(2, sAction);       //ACTION - INS, UPD  or DEL
+            CStmt.setString(3, pvBean.getPV_VDPVS_IDSEQ());    //VPid);       //vd_pvs ideq - not null
+            CStmt.setString(4, vdBean.getVD_VD_IDSEQ());  // sVDid);       //value domain id - not null
+            CStmt.setString(5, pvBean.getPV_PV_IDSEQ());  // sPVid);       //permissible value id - not null
+            CStmt.setString(6, vdBean.getVD_CONTE_IDSEQ());  // sContextID);       //context id - not null for INS, must be null for UPD
+            String pvOrigin = pvBean.getPV_VALUE_ORIGIN();
+            //believe that it is defaulted to vd's origin
+            //if (pvOrigin == null || pvOrigin.equals(""))
+            //   pvOrigin = vdBean.getVD_SOURCE();
+            CStmt.setString(11, pvOrigin);  // sOrigin);
+            String sDate = pvBean.getPV_BEGIN_DATE();
+            if (sDate != null && !sDate.equals(""))
+               sDate = data.getUtil().getOracleDate(sDate);
+            CStmt.setString(12, sDate);  // begin date);
+            sDate = pvBean.getPV_END_DATE();
+            if (sDate != null && !sDate.equals(""))
+               sDate = data.getUtil().getOracleDate(sDate);
+            CStmt.setString(13, sDate);  // end date);
+            CStmt.setString(14, parIdseq);
+ System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
+            boolean bExcuteOk = CStmt.execute();
+            retCode = CStmt.getString(1);
+            //store the status message if children row exist
+            if (retCode != null && !retCode.equals(""))
+            {
+              String sPValue = pvBean.getPV_VALUE();
+              String sVDName = vdBean.getVD_LONG_NAME();
+              if (sAction.equals("INS") || sAction.equals("UPD"))
+                 data.setStatusMsg("\\t " + retCode + " : Unable to update permissible value " + sPValue + ".");
+              else if (sAction.equals("DEL") && retCode.equals("API_VDPVS_006"))
+              {
+                data.setStatusMsg("\\t This Value Domain is used by a form. " +
+                   "Create a new version of the Value Domain to remove permissible value " + sPValue + ".");
+              }
+              else 
+                data.setStatusMsg("\\t " + retCode + " : Unable to remove permissible value " + sPValue + ".");
+              data.setRetErrorCode(retCode);  
+            }
+            else
+              pvBean.setPV_VDPVS_IDSEQ(CStmt.getString(3));
+         }
+       //capture the duration
+       //logger.info(m_servlet.getLogMessage(m_classReq, "setVD_PVS", "end set", startDate, new java.util.Date()));  
+     }
+     catch(Exception e)
+     {
+       logger.fatal("ERROR in setVD_PVS for other : " + e.toString(), e);
+       data.setRetErrorCode("Exception");
+       data.setStatusMsg("\\t Exception : Unable to update or remove PV of VD.");
+     }
+     try
+     {
+       if(CStmt!=null) CStmt.close();
+       if (data.getDbConnection() == null)
+         PVServlet.closeDBConnection(sbr_db_conn);
+     }
+     catch(Exception ee)
+     {
+       logger.fatal("ERROR in setVD_PVS for close : " + ee.toString(), ee);
+       data.setRetErrorCode("Exception");
+       data.setStatusMsg("\\t Exception : Unable to update or remove PV of VD.");
+     }
+     return retCode;
+   }  //END setVD_PVS
+
+   public void doBlockEditPV(PVForm data, String changeField, String changeData)
+   {
+     VD_Bean vd = data.getVD();
+     Vector<PV_Bean> vdpv = vd.getVD_PV_List();
+     for (int i=0; i<vdpv.size(); i++)
+     {
+       PV_Bean pv = (PV_Bean)vdpv.elementAt(i);
+       if (changeField.equals("origin"))
+         pv.setPV_VALUE_ORIGIN(changeData);
+       else if (changeField.equals("begindate"))
+         pv.setPV_BEGIN_DATE(changeData);
+       else if (changeField.equals("enddate"))
+         pv.setPV_END_DATE(changeData);
+       //change the submit action
+       pv.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_UPD);
+       vdpv.setElementAt(pv, i);
+     }
+     vd.setVD_PV_List(vdpv);
+     data.setVD(vd);
+   }
+
+   private String setParentConcept(PV_Bean pvBean, VD_Bean vd)
+   {
+     String conIDseq = "";
+     //create parent concept if exists 
+// TODO - do the parent concept realtionship later
+     EVS_Bean pCon = (EVS_Bean)pvBean.getPARENT_CONCEPT();
+     if (pCon != null)
+     {
+       conIDseq = pCon.getIDSEQ();  // pCon.getCONDR_IDSEQ();
+       String pConID = pCon.getCONCEPT_IDENTIFIER();
+       if (pConID != null && !pConID.equals("") && (conIDseq == null || conIDseq.equals("")))
+       {
+         Vector<EVS_Bean> vPar = vd.getReferenceConceptList();
+         if (vPar != null)
+         {
+           for (int i=0; i<vPar.size(); i++)
            {
-             for (int i=0; i<vPar.size(); i++)
+             EVS_Bean ePar = (EVS_Bean)vPar.elementAt(i);
+             if (ePar.getCONCEPT_IDENTIFIER().equals(pConID) && ePar.getIDSEQ() != null && !ePar.getIDSEQ().equals(""))
              {
-               EVS_Bean ePar = (EVS_Bean)vPar.elementAt(i);
-               if (ePar.getCONCEPT_IDENTIFIER().equals(pConID) && ePar.getIDSEQ() != null && !ePar.getIDSEQ().equals(""))
-               {
-                 conIDseq = ePar.getIDSEQ();   
-                 break;
-               }
+               conIDseq = ePar.getIDSEQ();   
+               break;
              }
            }
          }
        }
-       return conIDseq;
      }
+     return conIDseq;
+   }
+
+   public void doRemoveParent(String sParentCC, String sParentName, String sParentDB, String sPVAction, PVForm data)
+   {
+    // HttpSession session = req.getSession();   
+     VD_Bean vd = data.getVD();
+     Vector<EVS_Bean> vParentCon = vd.getReferenceConceptList();  // (Vector)session.getAttribute("VDParentConcept");
+     if (vParentCon == null) vParentCon = new Vector<EVS_Bean>();    
+     //for non evs parent compare the long names instead
+     if (sParentName != null && !sParentName.equals("") && sParentDB != null && sParentDB.equals("Non_EVS"))
+       sParentCC = sParentName;
+     if (sParentCC != null)
+     {
+       for (int i=0; i<vParentCon.size(); i++)
+       {
+         EVS_Bean eBean = (EVS_Bean)vParentCon.elementAt(i);
+         if (eBean == null) eBean = new EVS_Bean();
+         String thisParent = eBean.getCONCEPT_IDENTIFIER();
+         if (thisParent == null) thisParent = "";
+         String thisParentName = eBean.getLONG_NAME();
+         if (thisParentName == null) thisParentName = "";
+         String thisParentDB = eBean.getEVS_DATABASE();
+         if (thisParentDB == null) thisParentDB = "";
+         //for non evs parent compare the long names instead
+         if (sParentDB != null && sParentDB.equals("Non_EVS"))
+           thisParent = thisParentName;
+          //look for the matched parent from the vector to remove
+         if (sParentCC.equals(thisParent))
+         {
+          // String strHTML = "";
+          // EVSMasterTree tree = new EVSMasterTree(req, thisParentDB, this);
+          // strHTML = tree.refreshTree(thisParentName, "false");
+          // strHTML = tree.refreshTree("parentTree"+thisParentName, "false");
+           
+           if (sPVAction.equals("removePVandParent"))
+           {
+             Vector<PV_Bean> vVDPVList = vd.getVD_PV_List();  // (Vector)session.getAttribute("VDPVList");
+             if (vVDPVList == null) vVDPVList = new Vector<PV_Bean>();
+             //loop through the vector of pvs to get matched parent
+             for (int j=0; j<vVDPVList.size(); j++)
+             {
+               PV_Bean pvBean = (PV_Bean)vVDPVList.elementAt(j);
+               if (pvBean == null) pvBean = new PV_Bean();
+               EVS_Bean pvParent = (EVS_Bean)pvBean.getPARENT_CONCEPT();
+               if (pvParent == null) pvParent = new EVS_Bean();
+               String pvParCon = pvParent.getCONCEPT_IDENTIFIER();
+               //match the parent concept with the pv's parent concept
+               if (thisParent.equals(pvParCon))
+               {
+                 doRemovePV(vd, j, pvBean, -1);
+                 j -= 1;
+               }
+             }
+             vd.setVD_PV_List(vVDPVList);
+           }
+           //mark the parent as delected and leave
+           eBean.setCON_AC_SUBMIT_ACTION("DEL");
+           vParentCon.setElementAt(eBean,i);
+           break;
+         }
+       }
+     }
+     vd.setReferenceConceptList(vParentCon);
+     data.setVD(vd);
+   }
+
+   public void doRemovePV(VD_Bean vd, int pvInd, PV_Bean selPV, int iSetVDPV)
+   {
+     Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
+     vdpvs.removeElementAt(pvInd);
+   //  if (iSetVDPV == 0)
+       vd.setVD_PV_List(vdpvs);
+     //add the removed pv to the removed pv list
+     if (selPV != null)
+     {
+       selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_DEL);
+       Vector<PV_Bean> rmList = vd.getRemoved_VDPVList();  // data.getRemovedPVList();
+       rmList.addElement(selPV);
+       //session.setAttribute("RemovedPVList", rmList);
+       vd.setRemoved_VDPVList(rmList);
+     }       
+   }
+
+   /**
+    * gets the row number from the hiddenSelRow
+    * Loops through the selected row and gets the evs bean for that row from the vector of evs search results.
+    * adds it to vList vector and return the vector back
+    * @param req HttpServletRequest
+    * @param vList Existing Vector of EVS Beans
+    * @return Vector of EVS Beans
+    * @throws java.lang.Exception
+    */
+   public void getEVSSelRowVector(Vector<EVS_Bean> vRSel, String[] selRows, PVForm data) throws Exception
+   {
+     VD_Bean vd = data.getVD();
+     Vector<EVS_Bean> vList = vd.getReferenceConceptList();  // (Vector)session.getAttribute("VDParentConcept");
+     if (vList == null) vList = new Vector<EVS_Bean>();
+     
+       //loop through the array of strings
+       for (int i=0; i<selRows.length; i++)
+       {
+         String thisRow = selRows[i];
+         Integer IRow = new Integer(thisRow);
+         int iRow = IRow.intValue();
+         if (iRow < 0 || iRow > vRSel.size())
+           data.setStatusMsg("Row size is either too big or too small.");
+         else
+         {
+           EVS_Bean eBean = (EVS_Bean)vRSel.elementAt(iRow);
+           //send it back if unable to obtion the concept
+           if (eBean == null || eBean.getLONG_NAME() == null)
+           {
+             data.setStatusMsg("Unable to obtain concept from the " + thisRow + " row of the search results.\\n" + 
+                 "Please try again.");
+             continue;
+           }
+
+           String eBeanDB = eBean.getEVS_DATABASE();
+           //make sure it doesn't exist in the list
+           boolean isExist = false;
+           if (vList != null && vList.size() > 0)
+           {
+             for (int k=0; k<vList.size(); k++)
+             {
+               EVS_Bean thisBean = (EVS_Bean)vList.elementAt(k);
+               String thisBeanDB = thisBean.getEVS_DATABASE();
+               if (thisBean.getCONCEPT_IDENTIFIER().equals(eBean.getCONCEPT_IDENTIFIER()) && eBeanDB.equals(thisBeanDB))
+               {
+                 String acAct = thisBean.getCON_AC_SUBMIT_ACTION();
+                 //put it back if was deleted
+                 if (acAct != null && acAct.equals("DEL"))
+                 {
+                   thisBean.setCON_AC_SUBMIT_ACTION("INS");
+                   vList.setElementAt(thisBean, k);
+                 }
+                 isExist = true;
+               }
+             }
+           }
+           if (isExist == false)
+           {
+             eBean.setCON_AC_SUBMIT_ACTION("INS");
+             //get the evs user bean
+             EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
+             if (eUser == null) eUser = new EVS_UserBean();
+             
+             //get origin for cadsr result
+             String eDB = eBean.getEVS_DATABASE();
+             if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
+             {
+               eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), EVSSearch.VOCAB_NAME, EVSSearch.VOCAB_DBORIGIN);  // "vocabName", "vocabDBOrigin");
+               eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
+             }
+             vList.addElement(eBean);  
+           }          
+         }
+       }  
+       vd.setReferenceConceptList(vList);
+       data.setVD(vd);
+   } 
+   
+   /**
+    * stores the non evs parent reference information in evs bean and to parent list.
+    * reference document is matched like this with the evs bean adn stored in parents vector as a evs bean
+    * setCONCEPT_IDENTIFIER as document type (VD REFERENCE)
+    * setLONG_NAME as document name
+    * setEVS_DATABASE as Non_EVS text 
+    * setPREFERRED_DEFINITION as document text
+    * setEVS_DEF_SOURCE as document url
+    * 
+    * @param req HttpServletRequest object
+    * @param res HttpServletResponse object
+    * @throws java.lang.Exception
+    */
+   public void doNonEVSReference(String sParName, String sParDef, String sParDefSource, PVForm data)
+   {
+     try
+     {
+       //document type  (concept code)
+       String sParCode = "VD REFERENCE";
+       //parent type (concept database)
+       String sParDB = "Non_EVS";
+       
+       //make a string for view    
+       String sParListString = sParName + "        " + sParDB; 
+       if(sParListString == null) sParListString = "";
+       VD_Bean vd = data.getVD();
+   
+       //store the evs bean for the parent concepts in vector and in session.    
+       Vector<EVS_Bean> vParentCon = vd.getReferenceConceptList();  
+       if (vParentCon == null) vParentCon = new Vector<EVS_Bean>();
+       EVS_Bean parBean = new EVS_Bean();
+       parBean.setCONCEPT_IDENTIFIER(sParCode);  //doc type
+       parBean.setLONG_NAME(sParName);   //doc name
+       parBean.setEVS_DATABASE(sParDB);  //ref type (non evs)
+       parBean.setPREFERRED_DEFINITION(sParDef);  //doc text
+       parBean.setEVS_DEF_SOURCE(sParDefSource);  //doc url
+       parBean.setCON_AC_SUBMIT_ACTION("INS");
+       vParentCon.addElement(parBean);
+       vd.setReferenceConceptList(vParentCon);
+       data.setVD(vd);
+     }
+     catch (RuntimeException e)
+     {
+       logger.fatal("ERROR - ", e);
+     }
+   } // end
+   
+
+
 }//end of class

@@ -21,6 +21,8 @@
          hourglass();
          window.status = "Displaying selected attributes, it may take a minute, please wait....."
          document.searchParmsForm.actSelect.value = "Attribute";
+	      if (document.searchResultsForm != null)
+	        document.searchResultsForm.Message.style.visibility="visible";
          document.searchParmsForm.submit();
       }
       else
@@ -34,6 +36,8 @@
      hourglass();
      window.status = "Refereshing the page, it may take a minute, please wait....."
      document.searchParmsForm.actSelect.value = filterAction;
+     if (document.searchResultsForm != null)
+        document.searchResultsForm.Message.style.visibility="visible";
      document.searchParmsForm.submit();
    }
 
@@ -45,6 +49,8 @@
      hourglass();
      window.status = "Refereshing the page, it may take a minute, please wait....."
      document.searchParmsForm.actSelect.value = sType;
+      if (document.searchResultsForm != null)
+        document.searchResultsForm.Message.style.visibility="visible";
      document.searchParmsForm.submit();
    }
 
@@ -279,6 +285,8 @@
     hourglass();
     window.status = "Refreshing the page, it may take a minute, please wait....."
     document.searchParmsForm.actSelect.value = "searchInSelect";
+    if (document.searchResultsForm != null)
+        document.searchResultsForm.Message.style.visibility="visible";
     document.searchParmsForm.submit();
   }
   
@@ -297,6 +305,8 @@
        var selIdx = document.searchParmsForm.listSearchFor.selectedIndex;
        document.searchParmsForm.listSearchFor[selIdx].selected = true;
     }
+  	if (document.searchResultsForm != null)
+    	document.searchResultsForm.Message.style.visibility="visible";
     document.searchParmsForm.submit();
   }
  
@@ -317,6 +327,8 @@
       hourglass();
       window.status = "Refreshing the page, it may take a minute, please wait....."
       document.searchParmsForm.actSelect.value = "searchForSelectCRF";
+      if (document.searchResultsForm != null)
+        document.searchResultsForm.Message.style.visibility="visible";
       document.searchParmsForm.submit();
     }
   }
