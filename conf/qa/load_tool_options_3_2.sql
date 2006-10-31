@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/load_tool_options_3_2.sql,v 1.1 2006-10-30 18:53:37 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/load_tool_options_3_2.sql,v 1.2 2006-10-31 06:26:29 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -46,6 +46,68 @@ VALUES ('CURATION', 'NVPCONCEPT.5', 'C61586',
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'NVPCONCEPT.6', 'C61585',
 	   'Store the less than concept id for name value pair');
+
+--Store vocab name for the NCI Metathesaurus vocabulary           -------NCI Metathesaurus-----------
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EVS.VOCAB.8.EVSNAME', 'NCI Metathesaurus',
+	   'Store vocab name for the NCI Metathesaurus vocabulary');
+
+--Store vocab display name for the NCI Metathesaurus vocabulary
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EVS.VOCAB.8.DISPLAY', 'NCI Metathesaurus',
+	   'Store vocab display name for the NCI Metathesaurus vocabulary');
+
+--Store vocab to mark if used for parent search for the NCI Metathesaurus vocabulary
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EVS.VOCAB.8.USEPARENT', 'true',
+	   'Store vocab to mark if used for parent search for the NCI Metathesaurus vocabulary');
+
+--Store vocab meta name for the NCI Metathesaurus vocabulary
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EVS.VOCAB.8.INCLUDEMETA', 'NCI Metathesaurus', 
+	   'Store vocab meta name for the NCI Metathesaurus vocabulary');
+
+--Store vocab search in name for the NCI Metathesaurus vocabulary
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EVS.VOCAB.8.SEARCH_IN.NAME', 'Name', 
+	   'Store vocab search in name for the NCI Metathesaurus vocabulary');
+
+--Store vocab search in concode for the NCI Metathesaurus vocabulary
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EVS.VOCAB.8.SEARCH_IN.CONCODE', 'Concept Code', 
+	   'Store vocab search in concode for the NCI Metathesaurus vocabulary');
+
+--Store vocab search in metacode for the NCI Metathesaurus vocabulary
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EVS.VOCAB.8.SEARCH_IN.METACODE', 'Code', 
+	   'Store vocab search in metacode for the first vocabulary');
+
+--Store Tree Search filter as false for meta vocabulary
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EVS.VOCAB.8.TREESEARCH', 'false', 
+	   'Store vocab Tree Search filter as false for meta vocabulary');
+
+--Modify the following rows from thesaurus search
+
+--delete include meta search property
+DELETE sbrext.tool_options_view_ext
+WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.1.INCLUDEMETA';
+
+
+--delete SEARCH_IN.METACODE  property
+DELETE sbrext.tool_options_view_ext
+WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.1.SEARCH_IN.METACODE';
+
+--Update display name for thesaurus
+UPDATE sbrext.tool_options_view_ext
+SET value = 'NCI Thesaurus'
+WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.1.DISPLAY';
+
+
+--Store Tree Search filter for all vocabulary
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EVS.VOCAB.ALL.TREESEARCH', 'true', 
+	   'Store vocab Tree Search filter for all vocabulary');
 
 
 --commit changes

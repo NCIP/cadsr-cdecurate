@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.12 2006-10-30 18:53:37 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.13 2006-10-31 06:26:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1851,6 +1851,7 @@ public String parseDefinition(String termStr)
         namePropIn = vocabBean.getPropName();
       String conCodeType = vocabBean.getVocabCodeType();
       String sMetaName = vocabBean.getIncludeMeta();
+      String vocabDisp = vocabBean.getVocabName();
       //int ilevel = 0;  //it is zero for keyword search
       String defnProp = vocabBean.getPropDefinition(); 
       String hdSynProp = vocabBean.getPropHDSyn();
@@ -1864,7 +1865,7 @@ public String parseDefinition(String termStr)
         //call method to do the search from EVS vocab
         List lstResults = null;
         //do not do vocab search if it is meta code search
-        if (!sSearchIn.equals("MetaCode"))
+        if (!sSearchIn.equals("MetaCode") && !sMetaName.equals(vocabDisp))
           lstResults = this.doConceptQuery(vocabBean.getVocabAccess(), termStr, dtsVocab, sSearchIn, vocabType, namePropIn);
         //get the desc object from the list
         if (lstResults != null)

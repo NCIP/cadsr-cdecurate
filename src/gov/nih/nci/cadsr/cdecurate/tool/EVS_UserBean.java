@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.12 2006-10-30 18:53:37 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.13 2006-10-31 06:26:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -121,6 +121,7 @@ public final class EVS_UserBean implements Serializable
   private String m_PropRetCon;  //evs property for retired concept property
   private String m_PropSemantic;  //evs property for Symantic Type property
   private String m_retSearch;  //retired option for search filter
+  private String m_treeSearch;  //tree display option for search filter
   private String m_includeMeta;  //retired option for search filter
   private String m_codeType;   //code types specific to each vocab
   private String m_defDefaultValue;   //definition default value if value doesn't exists
@@ -524,6 +525,23 @@ public final class EVS_UserBean implements Serializable
   {
     m_retSearch = isRetSearch;
   }
+  
+  /**
+   * @return Returns the m_treeSearch.
+   */
+  public String getTreeSearch()
+  {
+    return m_treeSearch;
+  }
+
+  /**
+   * @param search The m_treeSearch to set.
+   */
+  public void setTreeSearch(String search)
+  {
+    m_treeSearch = search;
+  }
+  
 
   /**
    * The getIncludeMeta method returns the IncludeMeta vocabulary name for this bean.
@@ -532,7 +550,7 @@ public final class EVS_UserBean implements Serializable
    */
   public String getIncludeMeta()
   {
-    return m_includeMeta;
+    return (m_includeMeta == null) ? "" : m_includeMeta;
   }
 
   /**
@@ -887,7 +905,7 @@ public final class EVS_UserBean implements Serializable
       }
       
       //get vocab display
-      Vector vocabdisp = new Vector();
+      Vector<String> vocabdisp = new Vector<String>();
       vList = getAC.getToolOptionData("CURATION", "EVS.VOCAB.%.DISPLAY", "");  // 
       if (vList != null && vList.size() > 0)
       {
@@ -897,6 +915,18 @@ public final class EVS_UserBean implements Serializable
           if (tob != null) vocabdisp.addElement(tob.getVALUE());
         }
       }
+      //get include meta vocabs
+      Vector<String> metavocab = new Vector<String>();
+      vList = getAC.getToolOptionData("CURATION", "%.INCLUDEMETA", "");  // 
+      if (vList != null && vList.size() > 0)
+      {
+        for (int i=0; i<vList.size(); i++)
+        {
+          TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(i);
+          if (tob != null) metavocab.addElement(tob.getVALUE());
+        }
+      }
+      
       //get vocab names from the evs and make sure they match with the cadsr.
       java.util.List arrEVSVocab = this.getEVSVocabs(eURL);
       if (vocabname != null && arrEVSVocab != null)
@@ -904,8 +934,8 @@ public final class EVS_UserBean implements Serializable
         for (int i = 0; i<vocabname.size(); i++)
         {
           String sVocab = (String)vocabname.elementAt(i);
-          //compare with evs vocab names  //put it back later with new api
-          if (!arrEVSVocab.contains(sVocab))
+          //compare with evs vocab names  and also the vocab name that only does meta search
+          if (!arrEVSVocab.contains(sVocab) && !metavocab.contains(sVocab))
           {
             logger.fatal(sVocab + " from caDSR does not contain in EVS Vocab list.");
             vocabname.removeElement(sVocab);  //put this back later
@@ -1038,6 +1068,8 @@ public final class EVS_UserBean implements Serializable
             vuBean.setSearchInMetaCode(sValue);  //("");            
           if (sType.indexOf("RETSEARCH")>0)
             vuBean.setRetSearch(sValue);  //("false");
+          if (sType.indexOf("TREESEARCH")>0)
+            vuBean.setTreeSearch(sValue);  //("false");
             //get property values
           if (sType.indexOf("PROPERTY.DEFINITION")>0)
             vuBean.setPropDefinition(sValue);  //("DEFINITION");

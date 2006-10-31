@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.2 2006-10-30 18:53:37 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.3 2006-10-31 06:26:30 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -19,21 +19,37 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * This is the processing logic for the Alternate Names and Definitions.
+ * 
  * @author lhebel
  *
  */
 public class AltNamesDefsServlet
 {
+    /**
+     * Constructor
+     * 
+     * @param servlet_ the application servlet
+     * @param ub_ the user specific information
+     */
     public AltNamesDefsServlet(NCICurationServlet servlet_, UserBean ub_)
     {
         _servlet = servlet_;
         _ub = ub_;
     }
-    
+
+    /**
+     * Sort the "View by Name/Definition" using Name/Definition, Text and Type.
+     * 
+     * @param form_ the JSP form data
+     * @param flag_ true to sort by Name and false to sort by Type
+     */
     private void sortBy(AltNamesDefsForm form_, boolean flag_)
     {
+        // Define a convenience reference to the internal buffer.
         Alternates[] alts = form_._sess._alts;
         
+        // Determine number of Names and number of Definitions.
         int dCnt;
         int nCnt = 0;
         for (int i = 0; i < alts.length; ++i)
@@ -42,9 +58,11 @@ public class AltNamesDefsServlet
                 ++nCnt;
         }
 
+        // Create temporary buffers to separate Names and Definitions.
         Alternates[] altsName = new Alternates[nCnt];
         Alternates[] altsDef = new Alternates[alts.length - nCnt];
 
+        // Build Name and Deifnition buffer.
         nCnt = 0;
         dCnt = 0;
         for (int i = 0; i < alts.length; ++i)
@@ -61,6 +79,7 @@ public class AltNamesDefsServlet
             }
         }
 
+        // Sort the buffers by Name (true) or Type (false)
         Alternates[] tempName;
         Alternates[] tempDef;
         if (flag_)
@@ -74,12 +93,23 @@ public class AltNamesDefsServlet
             tempDef = sortByType(altsDef);
         }
         
+        // Move the sorted lists back into the primary buffer. We didn't change the number of entries
+        // in the buffer, just arranged them as specified.
         System.arraycopy(tempName, 0, alts, 0, tempName.length);
         System.arraycopy(tempDef, 0, alts, tempName.length, tempDef.length);
     }
-    
+
+    /**
+     * Sort the specified buffer by Name. Sorting Definitions by "Name" uses the
+     * text of the Definition as expected. All sorts are case insensitive.
+     * 
+     * @param alts_ the Name or Definition buffer.
+     * @return the sorted list
+     */
     private Alternates[] sortByName(Alternates[] alts_)
     {
+        // Perform a binary sort. The lists are typically very small and this algorythm
+        // can also accommodate large lists.
         Alternates[] temp = new Alternates[alts_.length];
         if (alts_.length == 0)
             return temp;
@@ -120,8 +150,16 @@ public class AltNamesDefsServlet
         return temp;
     }
     
+    /**
+     * Sort the specified buffer by Type. All sorts are case insensitive.
+     * 
+     * @param alts_ the Name or Definition buffer.
+     * @return the sorted list
+     */
     private Alternates[] sortByType(Alternates[] alts_)
     {
+        // Perform a binary sort. The lists are typically very small and this algorythm
+        // can also accommodate large lists.
         Alternates[] temp = new Alternates[alts_.length];
         if (alts_.length == 0)
             return temp;
@@ -162,15 +200,26 @@ public class AltNamesDefsServlet
         return temp;
     }
 
+    /**
+     * Setup page content for the "View by Name/Definition" page.
+     * 
+     * @param form_ the request form
+     * @param db_ the database access object
+     * @return the JSP to display to the user.
+     */
     private String doAlternates1(AltNamesDefsForm form_, DBAccess db_)
     {
         String attr = "";
         try
         {
+            // If the title has not been determined, build it.
             if (form_._sess._cacheTitle == null)
             {
+                // A single AC edit so display it's name, etc.
                 if (form_._sess._acIdseq.length == 1)
                     form_._sess._cacheTitle = db_.getACtitle(form_._sess.getSessType(), form_._sess._acIdseq[0]);
+
+                // Multiple AC edit (block edit) so keep it simple.
                 else
                     form_._sess._cacheTitle = "Block Edit";
             }
@@ -223,11 +272,19 @@ public class AltNamesDefsServlet
             form_._req.setAttribute(_errors, ex.toString());
         }
 
+        // Write the data to the page.
         form_.write1();
         form_._sess._viewJsp = _jspName;
         return _jspName;
     }
-    
+
+    /**
+     * Setup page content for the "View by CS/CSI" page.
+     * 
+     * @param form_ the request form
+     * @param db_ the database access object
+     * @return the JSP to display to the user.
+     */
     private String doAlternates2(AltNamesDefsForm form_, DBAccess db_)
     {
         String attr = "";
@@ -243,6 +300,11 @@ public class AltNamesDefsServlet
         Alternates[] alts = form_._sess._alts;
         for (int i = 0; i < alts.length; ++i)
         {
+            // This gets a little tricky. "altRoot" is the original internal buffer data, "temp" is the tree containing only this orignal buffer data with
+            // the Alternates add to each leaf, "root" is the composite page Tree. This is all necessary to ensure the Alternates appear on every
+            // leaf of the tree for which they are associated. This requires the data to be duplicated during this process. It is released once the
+            // response is sent back to the user.
+            
             Tree temp = new Tree(new TreeNode("root", null, false));
             Tree altRoot = alts[i].getCSITree();
             if (altRoot.isEmpty())
@@ -259,14 +321,21 @@ public class AltNamesDefsServlet
         
         // Format display
         attr = root.toHTML(formats);
-
         form_._attrs = attr;
 
+        // Write the data to the page.
         form_.write2();
         form_._sess._viewJsp = _jspCSI;
         return _jspCSI;
     }
-    
+
+    /**
+     * Setup page content for the "Add/Edit Name/Definition" page.
+     * 
+     * @param form_ the request form
+     * @param db_ the database access object
+     * @return the JSP to display to the user.
+     */
     private String doAlternates3(AltNamesDefsForm form_, DBAccess db_)
     {
         try
@@ -286,6 +355,7 @@ public class AltNamesDefsServlet
             if (form_._sess._cacheLangs == null)
                 form_._sess._cacheLangs = db_.getLangs();
 
+            // Write the data to the page.
             form_.write3();
         }
         catch (ToolException ex)
@@ -298,6 +368,13 @@ public class AltNamesDefsServlet
         return _jspEdit;
     }
 
+    /**
+     * From the "Add/Edit" page, add a CS/CSI to an Alternate.
+     * 
+     * @param form_ the request form
+     * @param db_ the database access object
+     * @return the JSP to display to the user.
+     */
     private String doClassify(AltNamesDefsForm form_, DBAccess db_)
     {
         try
@@ -316,6 +393,13 @@ public class AltNamesDefsServlet
         return _jspEdit;
     }
 
+    /**
+     * From the "Add/Edit" page, remove a CS/CSI from an Alternate.
+     * 
+     * @param form_ the request form
+     * @param db_ the database access object
+     * @return the JSP to display to the user.
+     */
     private String doRemoveAssoc(AltNamesDefsForm form_, DBAccess db_)
     {
         Tree root = form_._sess._editAlt.getCSITree();
@@ -332,6 +416,13 @@ public class AltNamesDefsServlet
         return doAlternates3(form_, db_);
     }
 
+    /**
+     * From the "Add/Edit" page, restore a removed  CS/CSI to an Alternate.
+     * 
+     * @param form_ the request form
+     * @param db_ the database access object
+     * @return the JSP to display to the user.
+     */
     private String doRestoreAssoc(AltNamesDefsForm form_, DBAccess db_)
     {
         Tree root = form_._sess._editAlt.getCSITree();
@@ -340,12 +431,27 @@ public class AltNamesDefsServlet
         return doAlternates3(form_, db_);
     }
     
+    /**
+     * Find the target Alternate to be edited.
+     * 
+     * @param form_ the request form
+     * @return the target Alternate
+     * @throws ToolException
+     */
     private Alternates  findTarget(AltNamesDefsForm form_) throws ToolException
     {
         int pos = findTargetPos(form_);
         return form_._sess._alts[pos];
     }
-    
+
+    /**
+     * Find the specified object position in the internal buffer
+     * 
+     * @param form_ the request form
+     * @param idseq_ the target idseq
+     * @return the array index within the internal buffer
+     * @throws ToolException
+     */
     private int findTargetPos(AltNamesDefsForm form_, String idseq_) throws ToolException
     {
         Alternates[] alts = form_._sess._alts;
@@ -362,12 +468,26 @@ public class AltNamesDefsServlet
         
         return pos;
     }
-    
+
+    /**
+     * Find the target object position in the internal buffer.
+     * 
+     * @param form_ the request form
+     * @return the array index within the internal buffer
+     * @throws ToolException
+     */
     private int findTargetPos(AltNamesDefsForm form_) throws ToolException
     {
         return findTargetPos(form_, form_._targetIdseq);
     }
 
+    /**
+     * From the "View ..." pages, edit an Alternate
+     * 
+     * @param form_ the request form
+     * @param db_ the database access object
+     * @return the JSP to display to the user.
+     */
     private String doEditNameDef(AltNamesDefsForm form_, DBAccess db_) throws ToolException
     {
         Alternates edit = findTarget(form_);
@@ -376,12 +496,21 @@ public class AltNamesDefsServlet
         return doAlternates3(form_, db_);
     }
 
+    /**
+     * From the "View ..." pages, delete an Alternate
+     * 
+     * @param form_ the request form
+     * @param db_ the database access object
+     * @return the JSP to display to the user.
+     */
     private String doDelNameDef(AltNamesDefsForm form_, DBAccess db_) throws ToolException
     {
+        // Find the target
         Alternates[] alts = form_._sess._alts;
         int pos = findTargetPos(form_);
         Alternates del = alts[pos];
         
+        // If it's new just get rid of it, nothing to do to the database.
         if (del.isNew())
         {
             Alternates[] temp = new Alternates[alts.length - 1];
@@ -390,50 +519,84 @@ public class AltNamesDefsServlet
             System.arraycopy(alts, pos, temp, pos - 1, alts.length - pos);
             form_._sess._alts = temp;
         }
+        
+        // It's in the database so mark it for deletion.
         else
             del.toBeDeleted();
-        
+
+        // Return to the same page.
         if (form_._sess._jsp.equals(_jspName))
             return doAlternates1(form_, db_);
         return doAlternates2(form_, db_);
     }
 
+    /**
+     * From the "View ..." pages, restore a deleted Alternate
+     * 
+     * @param form_ the request form
+     * @param db_ the database access object
+     * @return the JSP to display to the user.
+     */
     private String doRestoreNameDef(AltNamesDefsForm form_, DBAccess db_) throws ToolException
     {
+        // Find the target
         Alternates[] alts = form_._sess._alts;
         int pos = findTargetPos(form_);
         Alternates del = alts[pos];
         
+        // Keep it
         if (del.isDeleted())
             del.markToKeep();
         
+        // Return to the same page.
         if (form_._sess._jsp.equals(_jspName))
             return doAlternates1(form_, db_);
         return doAlternates2(form_, db_);
     }
-    
+
+    /**
+     * From the "Add/Edit ..." page, save the user entries to the intenal buffer. Can't write to the database
+     * until the AC Validate/Save is done.
+     * 
+     * @param form_ the request form
+     * @param db_ the database access object
+     * @return the JSP to display to the user.
+     */
     private String doSave(AltNamesDefsForm form_, DBAccess db_) throws ToolException
     {
+        // Be sure to grab data from the form and put it in the internal edit buffer.
         form_.save();
         Alternates alt = form_._sess._editAlt;
 
+        // Find the target
         int pos = findTargetPos(form_, alt.getAltIdseq());
         if (pos < 0)
         {
+            // This is a new one NOT an edit of an existing entry.
             pos = form_._sess._alts.length;
             Alternates[] temp = new Alternates[pos + 1];
             System.arraycopy(form_._sess._alts, 0, temp, 0, pos);
             form_._sess._alts = temp;
         }
+        // Save the edit buffer to the internal buffer.
         form_._sess._alts[pos] = alt;
 
+        // Sort it into the list
         sortBy(form_, form_._sess._cacheSort.equals(_sortName));
         
+        // Return to the page prior to the Add/Edit
         if (form_._sess._viewJsp.equals(_jspName))
             return doAlternates1(form_, db_);
         return doAlternates2(form_, db_);
     }
     
+    /**
+     * From the "View by Name/Def" page, sort the list.
+     * 
+     * @param form_ the request form
+     * @param db_ the database access object
+     * @return the JSP to display to the user.
+     */
     private String doSort(AltNamesDefsForm form_, DBAccess db_) throws ToolException
     {
         if (form_._sort.equals(_sortName))
@@ -443,6 +606,13 @@ public class AltNamesDefsServlet
         return doAlternates1(form_, db_);
     }
     
+    /**
+     * From the "View by ..." page, clear the internal buffer and revert to the database.
+     * 
+     * @param form_ the request form
+     * @param db_ the database access object
+     * @return the JSP to display to the user.
+     */
     private String doClear(AltNamesDefsForm form_, DBAccess db_) throws ToolException
     {
         form_._sess._alts = null;
@@ -464,18 +634,25 @@ public class AltNamesDefsServlet
      */
     public void doAction(HttpServletRequest req_, HttpServletResponse res_) throws Exception
     {
-        String jsp;
+        // Get the form and session data.
         AltNamesDefsForm form = new AltNamesDefsForm(req_);
+
+        // Get the database connection.
         Connection conn = _servlet.connectDB(_ub);
+        DBAccess db = new DBAccess(conn);
+
+        // Default the JSP for the response
+        String jsp;
         jsp = _jspError;
 
-        DBAccess db = new DBAccess(conn);
-            
+        // Haven't opened this page before.
         if (form._action == null)
         {
             form._sess.cleanBuffers();
             jsp = doAlternates1(form, db);
         }
+        
+        // Returning to this page so handle it.
         else
         {
             if (form._action.equals(_actionCancel))
@@ -517,8 +694,10 @@ public class AltNamesDefsServlet
                 jsp = doClear(form, db);
         }
 
+        // Close the database connection.
         conn.close();
 
+        // Set the next page and go.
         form._sess._jsp = jsp;
         _servlet.ForwardJSP(req_, res_, jsp);
     }

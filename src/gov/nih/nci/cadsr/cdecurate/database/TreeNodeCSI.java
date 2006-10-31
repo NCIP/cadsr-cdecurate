@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/TreeNodeCSI.java,v 1.2 2006-10-30 18:53:37 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/TreeNodeCSI.java,v 1.3 2006-10-31 06:26:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -10,6 +10,8 @@ import gov.nih.nci.cadsr.cdecurate.util.Tree;
 import gov.nih.nci.cadsr.cdecurate.util.TreeNode;
 
 /**
+ * The specific TreeNode for Class Scheme Items
+ * 
  * @author lhebel
  *
  */

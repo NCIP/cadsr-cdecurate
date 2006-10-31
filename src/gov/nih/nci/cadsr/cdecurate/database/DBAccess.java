@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.2 2006-10-30 18:53:37 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.3 2006-10-31 06:26:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -176,6 +176,12 @@ public class DBAccess
         alt_.addCSI(nodes, levels);
     }
     
+    /**
+     * This convenience class holds composite information.
+     * 
+     * @author lhebel
+     *
+     */
     private class ATTData
     {
         public ATTData(String aidseq_, String cidseq_)
@@ -183,10 +189,24 @@ public class DBAccess
             _aidseq = aidseq_;
             _cidseq = cidseq_;
         }
+        /**
+         * The ATT_IDSEQ, database id for the record associating the CSI with the Alternate Name/Definition
+         */
         public String _aidseq;
+        
+        /**
+         * The CS_CSI_IDSEQ
+         */
         public String _cidseq;
     }
-    
+
+    /**
+     * Get the CSI references for the Alternate specified.
+     * 
+     * @param idseq_ the Alternate Name or Definition
+     * @return the associated CSI's 
+     * @throws ToolException
+     */
     private Vector<ATTData> getAlternatesCSI1(String idseq_) throws ToolException
     {
         PreparedStatement pstmt = null;
@@ -195,7 +215,7 @@ public class DBAccess
 
         try
         {
-            // First retrieve the intersection records.
+            // A simple query and storage into a vector.
             pstmt = _conn.prepareStatement(select);
             pstmt.setString(1, idseq_);
             rs = pstmt.executeQuery();
@@ -235,7 +255,7 @@ public class DBAccess
      */
     private Vector<CSIData> getAlternatesCSI(String idseq_, Alternates alt_) throws ToolException
     {
-        // Get the IDSEQ to limit the results.
+        // Get the SQL select statement
         String select = SQLSelectCSI.getAlternatesCSISelect();
         
         PreparedStatement pstmt = null;
@@ -386,8 +406,16 @@ public class DBAccess
         }
     }
 
+    /**
+     * Get the CSI Lineage for the CSI specified
+     * 
+     * @param idseq_ the CS_CSI_IDSEQ for the desired CS
+     * @param root_ the Tree to hold the query results
+     * @throws ToolException
+     */
     public void getCSILineage(String idseq_, Tree root_) throws ToolException
     {
+        // Get the SQL select
         String select = SQLSelectCSI.getAlternatesCSISelect();
         
         PreparedStatement pstmt = null;
@@ -395,10 +423,13 @@ public class DBAccess
 
         try
         {
+            // Get the lineage (child to parent) from CSI to CS.
             pstmt = _conn.prepareStatement(select);
             pstmt.setString(SQLSelectCSI._ARGCSCSIIDSEQ, idseq_);
             rs = pstmt.executeQuery();
 
+            // Because this returns "bottom up" each entry is added at the
+            // top of the vector to change the order to "top down"
             Vector<CSIData> lineage = new Vector<CSIData>();
             String csName = null;
             String csValue = null;
@@ -426,7 +457,9 @@ public class DBAccess
             }
             lineage.add(0, new CSIData(new TreeNodeCS(csName, csValue, csDef, csVers, csConte, false), 0));
     
-            // Take the content of the Vector and turn it into arrays for use by the Tree class.
+            // Take the content of the Vector and turn it into arrays for use by the Tree class. The level
+            // is reset because the smallest value must appear first. Being a direct route child-to-parent only
+            // 1 parent exists for each child and only 1 child exists for each parent in the result set.
             TreeNode[] nodes = new TreeNode[lineage.size()];
             int[] levels = new int[nodes.length];
             for (int i = 0; i < nodes.length; ++i)
@@ -435,6 +468,8 @@ public class DBAccess
                 nodes[i] = temp._node;
                 levels[i] = i;
             }
+            
+            // Add the hierarchy to the object Tree
             root_.addHierarchy(nodes, levels);
         }
         catch (SQLException ex)
@@ -453,7 +488,15 @@ public class DBAccess
             throw new ToolException(ex);
         }
     }
-    
+
+    /**
+     * Execute the SQL query to retrieve the Alternate Names and Definitions.
+     * 
+     * @param pstmt_ the SQL select statement
+     * @param idseq_ the parent AC idseq
+     * @return the results set of all Alternate Names and Definitions associated to the specified AC
+     * @throws ToolException
+     */
     private ResultSet getAlternates(PreparedStatement pstmt_, String idseq_) throws ToolException
     {
         ResultSet rs = null;
@@ -507,7 +550,8 @@ public class DBAccess
             // sort the results and ensure the order is guaranteed.
             pstmt = _conn.prepareStatement(select);
             rs = getAlternates(pstmt, idseq_);
-            
+
+            // Read the results.
             Vector<Alternates> altList = new Vector<Alternates>();
             while (rs.next())
             {
@@ -527,6 +571,7 @@ public class DBAccess
 
             for (Alternates alt : altList)
             {
+                // Get the CSI for each Alternate.
                 Vector<CSIData> test = getAlternatesCSI(alt.getAltIdseq(), alt);
                 
                 // Take the content of the Vector and turn it into arrays for use by the Tree class.
@@ -538,6 +583,8 @@ public class DBAccess
                     nodes[i] = temp._node;
                     levels[i] = temp._level;
                 }
+                
+                // Add the hierarchy to the Alternate CSI tree.
                 root.addHierarchy(nodes, levels);
             }
         }
@@ -572,6 +619,7 @@ public class DBAccess
             throw ex;
         }
         
+        // Return the Tree (This is normally viewed on the UI from the "View by CS/CSI" tab.
         return root;
     }
     
@@ -708,6 +756,12 @@ public class DBAccess
         return title;
     }
 
+    /**
+     * Delete the Alternate Name from the database.
+     * 
+     * @param idseq_ the database id
+     * @throws ToolException
+     */
     public void deleteAltName(String idseq_) throws ToolException
     {
         String select = "delete from sbr.designations_view where ac_idseq = ?";
@@ -734,6 +788,12 @@ public class DBAccess
         }
     }
 
+    /**
+     * Delete the Alternate Definition from the database.
+     * 
+     * @param idseq_ the database id.
+     * @throws ToolException
+     */
     public void deleteAltDef(String idseq_) throws ToolException
     {
         String select = "delete from sbr.definitions_view where ac_idseq = ?";
@@ -850,6 +910,13 @@ public class DBAccess
         return root;
     }
 
+    /**
+     * Insert an Alternate Name or Definition into the database.
+     * 
+     * @param alt_ the Alternate
+     * @param sql_ the SQL insert
+     * @throws SQLException
+     */
     private void insertAlt(Alternates alt_, String sql_) throws SQLException
     {
         try
@@ -870,7 +937,13 @@ public class DBAccess
             throw ex;
         }
     }
-    
+
+    /**
+     * Insert an Alternate Name into the database
+     * 
+     * @param alt_ the Alternate object
+     * @throws SQLException
+     */
     private void insertAltName(Alternates alt_) throws SQLException
     {
         String insert = "begin insert into sbr.designations_view "
@@ -880,6 +953,12 @@ public class DBAccess
         insertAlt(alt_, insert);
     }
 
+    /**
+     * Insert an Alternate Defintion into the database
+     * 
+     * @param alt_ the Alternate object
+     * @throws SQLException
+     */
     private void insertAltDef(Alternates alt_) throws SQLException
     {
         String insert = "begin insert into sbr.definitions_view "
@@ -889,6 +968,12 @@ public class DBAccess
         insertAlt(alt_, insert);
     }
     
+    /**
+     * Insert an Alternate into the database
+     * 
+     * @param alt_ the Alternate
+     * @throws SQLException
+     */
     private void insert(Alternates alt_) throws SQLException
     {
         if (alt_.getInstance() == Alternates._INSTANCENAME)
@@ -897,6 +982,13 @@ public class DBAccess
             insertAltDef(alt_);
     }
 
+    /**
+     * Update an Alternate
+     * 
+     * @param alt_ the Alternate
+     * @param sql_ the SQL update
+     * @throws SQLException
+     */
     private void updateAlt(Alternates alt_, String sql_) throws SQLException
     {
         try
@@ -915,7 +1007,13 @@ public class DBAccess
             throw ex;
         }
     }
-    
+
+    /**
+     * Update an Alternate Name
+     * 
+     * @param alt_ the Alternate
+     * @throws SQLException
+     */
     private void updateAltName(Alternates alt_) throws SQLException
     {
         String update = "update sbr.designations_view set name = ?, detl_name = ?, lae_name = ? where desig_idseq = ?";
@@ -923,6 +1021,12 @@ public class DBAccess
         updateAlt(alt_, update);
     }
 
+    /**
+     * Update an Alternate Definition
+     * 
+     * @param alt_ the Alternate
+     * @throws SQLException
+     */
     private void updateAltDef(Alternates alt_) throws SQLException
     {
         String update = "update sbr.definitions_view set definition = ?, defl_name = ?, lae_name = ? where defin_idseq = ?";
@@ -930,6 +1034,12 @@ public class DBAccess
         updateAlt(alt_, update);
     }
 
+    /**
+     * Update an Alternate
+     * 
+     * @param alt_ the Alternate
+     * @throws SQLException
+     */
     private void update(Alternates alt_) throws SQLException
     {
         if (alt_.getInstance() == Alternates._INSTANCENAME)
@@ -937,22 +1047,31 @@ public class DBAccess
         else
             updateAltDef(alt_);
     }
-    
+
+    /**
+     * Save CSI and Alternate Name/Definition associations
+     * 
+     * @param alt_ the Alternate
+     * @throws SQLException
+     */
     private void saveCSI(Alternates alt_) throws SQLException
     {
         Vector<TreeNode> list;
-        
+
+        // Add new ones first.
         list = alt_.getCSITree().findNew();
         if (list.size() > 0)
         {
             String insert = "insert into sbrext.ac_att_cscsi_view_ext (cs_csi_idseq, att_idseq, atl_name) values (?, ?, ?)";
             
             PreparedStatement pstmt = _conn.prepareStatement(insert);
-            
+
+            // Prepare and insert the new associations
             for (TreeNode node : list)
             {
                 if (node instanceof TreeNodeCSI)
                 {
+                    // Only do if we have a CSI node.
                     String atlName = (alt_.getInstance() == Alternates._INSTANCENAME) ? "DESIGNATION" : "DEFINITION";
                     pstmt.setString(1, node.getValue());
                     pstmt.setString(2, alt_.getAltIdseq());
@@ -960,6 +1079,7 @@ public class DBAccess
                     
                     pstmt.executeUpdate();
                     
+                    // For UML_PACKAGE_NAME also associate to the UML_PACKAGE_ALIAS
                     TreeNodeCSI temp = (TreeNodeCSI) node;
                     if (temp.isPackageName())
                     {
@@ -971,9 +1091,11 @@ public class DBAccess
                 }
             }
     
+            // Done with the new ones.
             pstmt.close();
         }
 
+        // Remove ones we don't want to keep.
         list = alt_.getCSITree().findDeleted();
         if (list.size() > 0)
         {
@@ -981,6 +1103,7 @@ public class DBAccess
             
             PreparedStatement pstmt = _conn.prepareStatement(insert);
             
+            // Prepare and delete unwanted associations.
             for (TreeNode node : list)
             {
                 if (node instanceof TreeNodeCSI)
@@ -988,7 +1111,8 @@ public class DBAccess
                     pstmt.setString(1, node.getValue());
                     
                     pstmt.executeUpdate();
-                    
+
+                    // Again UML_PACKAGE_NAME is extra work.
                     TreeNodeCSI temp = (TreeNodeCSI) node;
                     if (temp.isPackageName())
                     {
@@ -1001,11 +1125,19 @@ public class DBAccess
                     }
                 }
             }
-    
+
+            // Done with deletes.
             pstmt.close();
         }
     }
 
+    /**
+     * Delete an Alternate Name/Definition
+     * 
+     * @param sql_ the SQL delete
+     * @param idseq_ the Alternate database id
+     * @throws SQLException
+     */
     private void deleteAlt(String sql_, String idseq_) throws SQLException
     {
         PreparedStatement pstmt = _conn.prepareStatement(sql_);
@@ -1016,7 +1148,13 @@ public class DBAccess
 
         pstmt.close();
     }
-    
+
+    /**
+     * Delete an Alternate Name
+     * 
+     * @param alt_ the Alternate
+     * @throws SQLException
+     */
     private void deleteAltName(Alternates alt_) throws SQLException
     {
         String delete = "delete from sbr.designations_view where desig_idseq = ?";
@@ -1024,13 +1162,25 @@ public class DBAccess
         deleteAlt(delete, alt_.getAltIdseq());
     }
 
+    /**
+     * Delete an Alternate Definition
+     * 
+     * @param alt_ the Alternate
+     * @throws SQLException
+     */
     private void deleteAltDef(Alternates alt_) throws SQLException
     {
         String delete = "delete from sbr.definitions_view where defin_idseq = ?";
         
         deleteAlt(delete, alt_.getAltIdseq());
     }
-    
+
+    /**
+     * Delete an Alternate
+     * 
+     * @param alt_ the Alternate
+     * @throws SQLException
+     */
     private void delete(Alternates alt_) throws SQLException
     {
         if (alt_.getInstance() == Alternates._INSTANCENAME)
@@ -1038,15 +1188,23 @@ public class DBAccess
         else
             deleteAltDef(alt_);
     }
-    
+
+    /**
+     * Save changes to an Alternate
+     * 
+     * @param alt_ the Alternate
+     * @throws SQLException
+     */
     public void save(Alternates alt_) throws SQLException
     {
+        // If it's deleted, don't need to do anything extra.
         if (alt_.isDeleted())
         {
             delete(alt_);
             return;
         }
 
+        // If it's new or changed be sure to record CSI changes also.
         if (alt_.isNew())
             insert(alt_);
         else if (alt_.isChanged())
@@ -1054,15 +1212,25 @@ public class DBAccess
 
         saveCSI(alt_);
     }
-    
+
+    /**
+     * Save block changes to Alternates.
+     * 
+     * @param alt_ the Alternate
+     * @param idseq_ the AC id's being block edited
+     * @param conteIdseq_ the matching Context ID's
+     * @throws SQLException
+     */
     public void save(Alternates alt_, String[] idseq_, String[] conteIdseq_) throws SQLException
     {
+        // If it's deleted, don't need to do anything extra.
         if (alt_.isDeleted())
         {
             delete(alt_);
             return;
         }
 
+        // If it's new, add to all AC's and save changes to CSI associations
         if (alt_.isNew())
         {
             for (int i = 0; i < idseq_.length; ++i)
@@ -1073,13 +1241,22 @@ public class DBAccess
                 saveCSI(alt_);
             }
         }
+        
+        // If it's an update, remember to save CSI changes
         else if (alt_.isChanged())
         {
             update(alt_);
             saveCSI(alt_);
         }
     }
-    
+
+    /**
+     * For a simple select, return results as a String list.
+     * 
+     * @param select_ the SQL select
+     * @return the result set
+     * @throws ToolException
+     */
     private String[] getList(String select_) throws ToolException
     {
         String[] list = new String[0];
@@ -1099,7 +1276,8 @@ public class DBAccess
             }
             rs.close();
             pstmt.close();
-            
+
+            // Convert to an array
             list = new String[temp.size()];
             for (int i = 0; i < list.length; ++i)
                 list[i] = temp.get(i);
@@ -1120,21 +1298,40 @@ public class DBAccess
             throw new ToolException(ex);
         }
 
+        // Return the result set
         return list;
     }
-    
+
+    /**
+     * Get the Alternate Name Types.
+     * 
+     * @return the Alternate Name Types.
+     * @throws ToolException
+     */
     public String[] getDesignationTypes() throws ToolException
     {
         String select = "select detl_name from sbr.designation_types_lov_view where detl_name not in ('USED_BY') order by upper(detl_name)";
         return getList(select);
     }
     
+    /**
+     * Get the Languages
+     * 
+     * @return the Languages
+     * @throws ToolException
+     */
     public String[] getLangs() throws ToolException
     {
         String select = "select name from sbr.languages_lov_view order by (name)";
         return getList(select);
     }
     
+    /**
+     * Get the Alternate Definition Types.
+     * 
+     * @return the Alternate Definition Types.
+     * @throws ToolException
+     */
     public String[] getDefinitionTypes() throws ToolException
     {
         String select = "select defl_name from sbrext.definition_types_lov_view_ext order by upper(defl_name)";

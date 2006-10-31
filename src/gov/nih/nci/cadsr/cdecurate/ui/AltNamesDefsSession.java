@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.2 2006-10-30 18:53:37 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.3 2006-10-31 06:26:30 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -20,12 +20,21 @@ import gov.nih.nci.cadsr.cdecurate.tool.VM_Bean;
 import gov.nih.nci.cadsr.cdecurate.util.Tree;
 
 /**
+ * This class maps and manges the session data needed for processing Alternate Names and Definitions.
+ *  
  * @author lhebel
  *
  */
 public class AltNamesDefsSession implements Serializable
 {
-
+    /**
+     * Constructor
+     * 
+     * @param acIdseq_ the AC database id of interest
+     * @param conteIdseq_ the companion Context ID
+     * @param conteName_ the companion Context Name
+     * @param sessType_ the session type, AltNamesDefsSession._searchDE, _searchDEC, _searchVD, _searchVM 
+     */
     public AltNamesDefsSession(String acIdseq_, String conteIdseq_, String conteName_, String sessType_)
     {
         cleanBuffers();
@@ -38,6 +47,14 @@ public class AltNamesDefsSession implements Serializable
         _sessType = sessType_;
     }
 
+    /**
+     * Constructor
+     * 
+     * @param acIdseq_ the AC database id list of interest
+     * @param conteIdseq_ the companion Context ID list
+     * @param conteName_ the companion Context Name list
+     * @param sessType_ the session type, AltNamesDefsSession._searchDE, _searchDEC, _searchVD, _searchVM 
+     */
     public AltNamesDefsSession(String[] acIdseq_, String[] conteIdseq_, String[] conteName_, String sessType_)
     {
         cleanBuffers();
@@ -46,12 +63,20 @@ public class AltNamesDefsSession implements Serializable
         _conteName = conteName_;
         _sessType = sessType_;
     }
-    
+
+    /**
+     * Clear the session edit buffer
+     *
+     */
     public void clearEdit()
     {
         _editAlt = new Alternates();
     }
     
+    /**
+     * Clean all session buffers
+     *
+     */
     public void cleanBuffers()
     {
         clearEdit();
@@ -62,18 +87,35 @@ public class AltNamesDefsSession implements Serializable
         _cacheLangs = null;
         _cacheSort = AltNamesDefsServlet._sortName;
     }
-    
+
+    /**
+     * Calculate a new object temporary database id
+     * 
+     * @return a session unique temporary identifier
+     */
     public String newIdseq()
     {
         --_newIdseq;
         return _newPrefix + String.valueOf(_newIdseq);
     }
-    
+
+    /**
+     * Get the session name. There are multiple sessions to allow the user to begin
+     * work on a DE and create a DEC prior to saving the new DE.
+     * 
+     * @param type_ the session type, AltNamesDefsSession._searchDE, _searchDEC, _searchVD, _searchVM
+     * @return the session name
+     */
     private static String getSessName(String type_)
     {
         return _sessName + "." + type_;
     }
 
+    /**
+     * Clean all session buffers for all session types.
+     * 
+     * @param req_ the user HTTP request object
+     */
     public static void cleanBuffers(HttpServletRequest req_)
     {
         HttpSession sess = req_.getSession();
@@ -88,6 +130,12 @@ public class AltNamesDefsSession implements Serializable
         sess.removeAttribute(name);
     }
 
+    /**
+     * Clean the session buffer for a specific session type.
+     * 
+     * @param req_ the user HTTP request object
+     * @param type_ the session type, AltNamesDefsSession._searchDE, _searchDEC, _searchVD, _searchVM
+     */
     public static void cleanBuffers(HttpServletRequest req_, String type_)
     {
         HttpSession sess = req_.getSession();
@@ -95,7 +143,14 @@ public class AltNamesDefsSession implements Serializable
         name = getSessName(type_);
         sess.removeAttribute(name);
     }
-    
+
+    /**
+     * Get the session data for this request.
+     * 
+     * @param req_ the user HTTP request object
+     * @return the session data buffer
+     * @throws Exception
+     */
     public static AltNamesDefsSession getSessionData(HttpServletRequest req_) throws Exception
     {
         AltNamesDefsSession.ACBean subject = getIdseq(req_);
@@ -151,12 +206,27 @@ public class AltNamesDefsSession implements Serializable
             }
         }
 
+        // Set the session data, in case it was a new one.
         req_.getSession().setAttribute(sessName, altSess);
         return altSess;
     }
-    
+
+    /**
+     * An internal class to determine the AC type and records of interest.
+     * 
+     * @author lhebel
+     *
+     */
     private static class ACBean
     {
+        /**
+         * Constructor
+         * 
+         * @param type_ the session type, AltNamesDefsSession._searchDE, _searchDEC, _searchVD, _searchVM 
+         * @param acIdseq_ the AC database id of interest
+         * @param conteIdseq_ the companion Context ID
+         * @param conteName_ the companion Context Name
+         */
         public ACBean(String type_, String acIdseq_, String conteIdseq_, String conteName_)
         {
             _type = type_;
@@ -168,6 +238,14 @@ public class AltNamesDefsSession implements Serializable
             _conteName[0] = conteName_;
         }
         
+        /**
+         * Constructor
+         * 
+         * @param type_ the session type, AltNamesDefsSession._searchDE, _searchDEC, _searchVD, _searchVM 
+         * @param acIdseq_ the AC database id list of interest
+         * @param conteIdseq_ the companion Context ID list
+         * @param conteName_ the companion Context Name list
+         */
         public ACBean(String type_, String[] acIdseq_, String[] conteIdseq_, String[] conteName_)
         {
             _type = type_;
@@ -181,19 +259,29 @@ public class AltNamesDefsSession implements Serializable
         public String[] _conteName;
         public String _type;
     }
-    
+
+    /**
+     * Get the AC records of interest.
+     * 
+     * @param req_ the user HTTP request
+     * @return the target data for the request
+     * @throws Exception
+     */
     private static ACBean getIdseq(HttpServletRequest req_) throws Exception
     {
-        ACBean rs = null;
-        
+        // Ok this logic has nothing to do with EVS. The current field name used by
+        // the curation tool is referenced for consistency.
         HttpSession session = req_.getSession();
         String launch = req_.getParameter(_searchEVS);
-        
+        ACBean rs = null;
+
+        // This would be a problem, the environment is not right for this request.
         if (launch == null)
         {
             throw new Exception("Unknown origination page.");
         }
         
+        // Processing a DE (single and block)
         if (launch.equals(_searchDE))
         {
             @SuppressWarnings("unchecked")
@@ -221,7 +309,8 @@ public class AltNamesDefsSession implements Serializable
                 rs = new AltNamesDefsSession.ACBean(launch, de.getDE_DE_IDSEQ(), de.getDE_CONTE_IDSEQ(), de.getDE_CONTEXT_NAME());
             }
         }
-        
+
+        // Processing a DEC (single and block)
         else if (launch.equals(_searchDEC))
         {
             @SuppressWarnings("unchecked")
@@ -250,6 +339,7 @@ public class AltNamesDefsSession implements Serializable
             }
         }
 
+        // Processing a VD (single and block)
         else if (launch.equals(_searchVD))
         {
             @SuppressWarnings("unchecked")
@@ -278,6 +368,7 @@ public class AltNamesDefsSession implements Serializable
             }
         }
 
+        // Processing a VM (single and block)
         else if (launch.equals(_searchVM))
         {
             @SuppressWarnings("unchecked")
@@ -306,12 +397,19 @@ public class AltNamesDefsSession implements Serializable
             }
         }
 
+        // Set the request data for when the page is written.
         req_.setAttribute(AltNamesDefsServlet._reqIdseq, rs._acIdseq[0]);
         req_.setAttribute(_searchEVS, launch);
 
         return rs;
     }
-    
+
+    /**
+     * Determine if the specified AC idseq is the subject of this session.
+     * 
+     * @param idseq_ the AC idseq
+     * @return true if this session focuses on the AC
+     */
     private boolean sameAC(String idseq_)
     {
         if (_acIdseq.length > 1)
@@ -326,23 +424,38 @@ public class AltNamesDefsSession implements Serializable
         
         return _acIdseq[0].equals(idseq_);
     }
-    
+
+    /**
+     * Save the session data to the database.
+     * 
+     * @param conn_ the database connection
+     * @param sess_ the HTTP session
+     * @param type_ the session type, AltNamesDefsSession._searchDE, _searchDEC, _searchVD, _searchVM
+     * @param idseq_ the subject AC, for an Edit this wouldn't change, for an Add/New this is now a valid idseq
+     * @param conteIdseq_ the companion Context idseq
+     * @throws SQLException
+     */
     public static void save(Connection conn_, HttpSession sess_, String type_, String idseq_, String conteIdseq_) throws SQLException
     {
+        // Get the session buffer.
         AltNamesDefsSession sess;
         String sessName = getSessName(type_);
         sess = (AltNamesDefsSession) sess_.getAttribute(sessName);
         if (sess == null)
             return;
-        
+
+        // Open a database connection.
         DBAccess db = new DBAccess(conn_);
         Alternates[] alts = sess._alts;
 
+        // For single edits
         if (sess._acIdseq.length == 1)
         {
+            // Verify this request applies to this AC
             if (sess._acIdseq[0] != null && sess._acIdseq[0].length() > 0 && sess._acIdseq[0].equals(idseq_) == false)
                 return;
             
+            // Save all the alternates
             for (int i = 0; i < alts.length; ++i)
             {
                 if (alts[i].getAcIdseq() == null)
@@ -352,17 +465,26 @@ public class AltNamesDefsSession implements Serializable
                 db.save(alts[i]);
             }
         }
+        
+        // For block edit
         else
         {
+            // Apply the alternate objects to the appropriate AC
             for (int i = 0; i < sess._acIdseq.length; ++i)
             {
                 db.save(alts[i], sess._acIdseq, sess._conteIdseq);
             }
         }
 
+        // Wipe the buffer, it's in the database now.
         sess_.removeAttribute(sessName);
     }
-    
+
+    /**
+     * Get the session type.
+     * 
+     * @return the session type, AltNamesDefsSession._searchDE, _searchDEC, _searchVD, _searchVM
+     */
     public String getSessType()
     {
         return _sessType;
