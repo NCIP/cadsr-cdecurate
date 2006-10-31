@@ -54,6 +54,10 @@
 //System.out.println("jsp " + dtsVocab + optName + optConCode + optMetaCode);
    String sRetSearch = vocBean.getRetSearch();  // (String)session.getAttribute("RetSearch");
    if (sRetSearch == null) sRetSearch = "false";
+   String sTreeSearch = vocBean.getTreeSearch();  //do not allow when the search is only meta
+   if (sTreeSearch == null) sTreeSearch = "true";
+   String metaInclude = vocBean.getIncludeMeta();
+   if (metaInclude == null) metaInclude = "";
    Vector vSource = (Vector)session.getAttribute("MetaSources");
    if(vSource == null) vSource = new Vector();
 
@@ -474,7 +478,7 @@ function doMetaCodeSearch()
   </tr>
   <% if(!sSearchAC.equals("ParentConcept") && !sSearchAC.equals("ParentConceptVM")){%>
    <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;caDSR</td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>caDSR</b></td>
   </tr>
   <tr>
       <td>
@@ -491,13 +495,15 @@ function doMetaCodeSearch()
   </tr>
   <% } %>
   <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EVS
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>EVS</b>
+    	<% if (sTreeSearch.equals("true")) { %>
        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
               <%if (sUISearchType.equals("term") && !sSearchAC.equals("ParentConceptVM")) {%>
                   <a href="javascript:searchType('tree');">Tree Search</a>
               <%} else if(!sSearchAC.equals("ParentConceptVM")){%> 
-                  <a href="javascript:searchType('term');">Term Search</a><%}%>        
+                  <a href="javascript:searchType('term');">Term Search</a><%}%>   
+      <% } %>     
     </td>
   </tr>
   <tr>
@@ -585,10 +591,11 @@ function doMetaCodeSearch()
     </td>
   </tr>
   <% } %>
-<%if(sRetSearch.equalsIgnoreCase("true") && !sSearchAC.equals("ParentConceptVM")) { %>
+<%if((sRetSearch.equalsIgnoreCase("true") || !metaInclude.equals("")) && !sSearchAC.equals("ParentConceptVM")) { %>
    <tr>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>EVS</b></td>
   </tr>
+<%if(sRetSearch.equalsIgnoreCase("true")) { %>
    <tr>
       <td style="height:20"  valign=bottom>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Retired Concepts</td>
     </tr>
@@ -603,6 +610,8 @@ function doMetaCodeSearch()
         
       </td>
   </tr>
+<% } %>
+<%if(!metaInclude.equals("")) { %>
   <tr>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Meta Concept Source</td>
   </tr>
@@ -630,11 +639,9 @@ function doMetaCodeSearch()
     </td>
  
     <tr>
-      <th height="22" valign="bottom">
-        <div align="left"><%=iItem++%>) Set Meta Returns Limit:</div>
-      </th>
-  </tr>
-  <tr>
+    	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set Meta Returns Limit</td>
+  	</tr>
+  	<tr>
       <td>
         <p>&nbsp;&nbsp;&nbsp;&nbsp;
           <select name="listMetaLimit" size="1" style="width: 160"
@@ -648,7 +655,7 @@ function doMetaCodeSearch()
         </p>
      </td>
   </tr>
- <%}%>
+ <%} }%>
   
 <tr height="5"></tr>
   <tr>

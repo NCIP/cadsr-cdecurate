@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/TreeNodeAlt.java,v 1.2 2006-10-30 18:53:37 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/TreeNodeAlt.java,v 1.3 2006-10-31 06:26:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -10,6 +10,8 @@ import gov.nih.nci.cadsr.cdecurate.util.Tree;
 import gov.nih.nci.cadsr.cdecurate.util.TreeNode;
 
 /**
+ * The specific TreeNode for Alternate Names and Definitions
+ * 
  * @author lhebel
  *
  */
@@ -31,6 +33,10 @@ public class TreeNodeAlt extends TreeNode
 
     public TreeNodeAlt(Alternates alt_, String idseq_)
     {
+        // Because an Alternate may appear multiple times within a hierarchy
+        // the "value" managed by the parent class, TreeNode, must concatenate
+        // the referenced CSI idseq and the Alternate idseq to keep it unique.
+
         super(alt_.getName(), idseq_ + " " + alt_.getAltIdseq(), false);
         _alt = alt_;
         _classType = AltNamesDefsServlet._classTypeCS;

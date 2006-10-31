@@ -1,14 +1,15 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/ACTypes.java,v 1.2 2006-10-30 18:53:37 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/ACTypes.java,v 1.3 2006-10-31 06:26:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
 
 /**
- * This enum maps the types in the sbr.admin_componenets_view.actl_name column. Update
- * the values to reflect all possible Administered Component types. The enums must match
- * EXACTLY the value store in the database or the ACTypes.valueOf() method will fail.
+ * This enum maps the types in the sbr.admin_componenets_view.actl_name column and other AC type
+ * references and abbreviations. Update the values to reflect all possible Administered Component
+ * types. The enums must match EXACTLY the value store in the database or the ACTypes.valueOf()
+ * method will fail.
  * 
  * @author lhebel
  *
