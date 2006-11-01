@@ -316,6 +316,7 @@ public class VMAction implements Serializable
     data.setVMBean(vm);
     if (vm.getVM_IDSEQ() == null || vm.getVM_IDSEQ().equals(""))
       this.doChangeVM(data);
+    
   }
   
   /**
@@ -345,25 +346,24 @@ public class VMAction implements Serializable
       //print the messages
       if (!dispMsgACType.equals(""))
       {
-        StringBuffer sMsg = new StringBuffer();
+/*        StringBuffer sMsg = new StringBuffer();
         //get the editing vm attributes
         sMsg.append("\n---------------\n");
-        getFlaggedMessageVM(vmBean, sMsg, "");
+        printFlagedVMs(vmBean, sMsg, "");
         sMsg.append("-----------------\n");
-        //get the message
+*/        //get the message
+        data.setStatusMsg(dispMsgACType);
         if (dispMsgACType.equals("Concept"))
         {
-          sMsg.append("One or more matching Concepts were found.  \nPlease select one from the list below and click Use Selection or Cancel. \n");
-          getFlaggedMessageCon(data.getConceptList(), sMsg, "Name, Definition");
+          //sMsg.append("One or more matching Concepts were found.  \nPlease select one from the list below and click Use Selection or Cancel. \n");
+          getFlaggedMessageCon(data, "Name, Definition");
         }
         else
         {
-          sMsg.append("One or more matching Value Meanings were found.  \nPlease select one from the list below and click Use Selection, Alt Name/Definition or Cancel. \n");
+          //sMsg.append("One or more matching Value Meanings were found.  \nPlease select one from the list below and click Use Selection, Alt Name/Definition or Cancel. \n");
           //print the list of vms or concepts
-          printFlagedVMs(data, sMsg, 'A');
+          getFlaggedMessageVM(data, 'A');
         }
-        
-        System.out.println(sMsg);
       }
     }
     catch (RuntimeException e)
@@ -457,8 +457,8 @@ public class VMAction implements Serializable
         sbr_db_conn = VMServlet.makeDBConnection();
       if (sbr_db_conn != null)
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VM(?,?,?,?,?,?,?,?,?,?,?)}");
-        //CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VM(?,?,?,?,?,?,?,?,?,?,?,?)}");
+        //CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VM(?,?,?,?,?,?,?,?,?,?,?)}");
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VM(?,?,?,?,?,?,?,?,?,?,?,?)}");
         // register the Out parameters
         CStmt.registerOutParameter(1, java.sql.Types.VARCHAR); // return code
         CStmt.registerOutParameter(3, java.sql.Types.VARCHAR); // short meaning
@@ -470,7 +470,7 @@ public class VMAction implements Serializable
         CStmt.registerOutParameter(9, java.sql.Types.VARCHAR); // date created
         CStmt.registerOutParameter(10, java.sql.Types.VARCHAR); // modified by
         CStmt.registerOutParameter(11, java.sql.Types.VARCHAR); // date modified
-       // CStmt.registerOutParameter(12, java.sql.Types.VARCHAR); // vm_idseq
+        CStmt.registerOutParameter(12, java.sql.Types.VARCHAR); // vm_idseq
         // Set the In parameters (which are inherited from the PreparedStatement class)
         CStmt.setString(2, sAction);
         CStmt.setString(3, sShortMeaning);
@@ -496,7 +496,7 @@ public class VMAction implements Serializable
           vm.setVM_COMMENTS(CStmt.getString(5));
           vm.setVM_BEGIN_DATE(CStmt.getString(6));
           vm.setVM_END_DATE(CStmt.getString(7));
-       //   vm.setVM_IDSEQ(CStmt.getString(12));
+          vm.setVM_IDSEQ(CStmt.getString(12));
         }
       }
       // capture the duration
@@ -558,8 +558,8 @@ public class VMAction implements Serializable
         sbr_db_conn = VMServlet.makeDBConnection();
       if (sbr_db_conn != null)
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VM_CONDR(?,?,?,?,?,?,?,?,?,?,?,?)}");
-      //  CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VM_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+       // CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VM_CONDR(?,?,?,?,?,?,?,?,?,?,?,?)}");
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VM_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
         // register the Out parameters
         CStmt.registerOutParameter(2, java.sql.Types.VARCHAR); // return code
         CStmt.registerOutParameter(3, java.sql.Types.VARCHAR); // short meaning
@@ -572,7 +572,7 @@ public class VMAction implements Serializable
         CStmt.registerOutParameter(10, java.sql.Types.VARCHAR); // modified by
         CStmt.registerOutParameter(11, java.sql.Types.VARCHAR); // date modified
         CStmt.registerOutParameter(12, java.sql.Types.VARCHAR); // condr idseq
-       // CStmt.registerOutParameter(13, java.sql.Types.VARCHAR); // vm idseq
+        CStmt.registerOutParameter(13, java.sql.Types.VARCHAR); // vm idseq
         // Set the In parameters (which are inherited from the PreparedStatement class)
         CStmt.setString(1, conArray);
         // set value meaning if action is to update
@@ -602,7 +602,7 @@ public class VMAction implements Serializable
           vm.setVM_BEGIN_DATE(CStmt.getString(6));
           vm.setVM_END_DATE(CStmt.getString(7));
           vm.setVM_CONDR_IDSEQ(CStmt.getString(12));
-       //   vm.setVM_IDSEQ(CStmt.getString(13));
+          vm.setVM_IDSEQ(CStmt.getString(13));
         }
       }
       // capture the duration
@@ -1148,12 +1148,14 @@ public class VMAction implements Serializable
       }
     }
     //print the message
-    System.out.println("Remove later --- " + flgVMCases + " Condition : " + this.FLAG_VM_NAME_MATCH + this.FLAG_CON_DER_MATCH + this.FLAG_VM_DEF_MATCH + " : \n");
+    System.out.println(dispAC + " Remove later --- " + flgVMCases + " Condition : " + this.FLAG_VM_NAME_MATCH + this.FLAG_CON_DER_MATCH + this.FLAG_VM_DEF_MATCH + " : \n");
     return dispAC;
   }
   
-  private void printFlagedVMs(VMForm data, StringBuffer sMsg, char vmFlag)
+  private void getFlaggedMessageVM(VMForm data, char vmFlag)
   {
+    Vector<VM_Bean> vErrMsg = data.getErrorMsgList();
+    String sMsg = "";
     switch (vmFlag)
     {
       case 'A': //print all cases
@@ -1163,12 +1165,11 @@ public class VMAction implements Serializable
         {
           for (int i=0; i<vmexist.size(); i++)
           {
-            sMsg.append("*");
             VM_Bean vm = vmexist.elementAt(i);
             if (vm == null || vm.getVM_SHORT_MEANING() == null || vm.getVM_SHORT_MEANING().equals(""))
               break;
             else
-              getFlaggedMessageVM(vm, sMsg, "Name");
+              vErrMsg.addElement(printFlagedVMs(vm, "Name"));
           }
         }
         if (vmFlag != 'A')
@@ -1177,14 +1178,13 @@ public class VMAction implements Serializable
         Vector<VM_Bean> vmcon = data.getConceptVMList();
         if (vmcon != null && vmcon.size() > 0)
         {
-          sMsg.append("*");
           for (int i=0; i<vmcon.size(); i++)
           {
             VM_Bean vm = vmcon.elementAt(i);
             if (vm == null || vm.getVM_SHORT_MEANING() == null || vm.getVM_SHORT_MEANING().equals(""))
               break;
             else
-              getFlaggedMessageVM(vm, sMsg, "Concept");
+              vErrMsg.addElement(printFlagedVMs(vm, "Concept"));
           }
         }
         if (vmFlag != 'A')
@@ -1193,58 +1193,65 @@ public class VMAction implements Serializable
         Vector<VM_Bean> vmdef = data.getDefnVMList();
         if (vmdef != null && vmdef.size() > 0)
         {
-          sMsg.append("*");
           for (int i=0; i<vmdef.size(); i++)
           {
             VM_Bean vm = vmdef.elementAt(i);
             if (vm == null || vm.getVM_SHORT_MEANING() == null || vm.getVM_SHORT_MEANING().equals(""))
               break;
             else
-              getFlaggedMessageVM(vm, sMsg, "Definition");
+              vErrMsg.addElement(printFlagedVMs(vm, "Definition"));
           }
         }
       default:
     }
+    data.setErrorMsgList(vErrMsg);
   }
 
-  private void getFlaggedMessageVM(VM_Bean aVM, StringBuffer sMsg, String vmTypeMatch)
+  private VM_Bean printFlagedVMs(VM_Bean aVM, String vmTypeMatch)
   {
-    sMsg.append("\tVM Name: " + aVM.getVM_SHORT_MEANING() + "\n");
-    sMsg.append("\tVM Description: " + aVM.getVM_DESCRIPTION() + "\n");
-    sMsg.append("\tVM Concepts: \n");
+    aVM.setVM_COMMENTS(vmTypeMatch + " matches.");
+/*    String sMsg = "";
+    sMsg += "&nbsp;&nbsp;VM Name: " + aVM.getVM_SHORT_MEANING() + "<br>";
+    sMsg += "&nbsp;&nbsp;VM Description: " + aVM.getVM_DESCRIPTION() + "<br>";
+    sMsg += "&nbsp;&nbsp;VM Concepts: <br>";
     if (aVM.getVM_CONCEPT_LIST() != null && aVM.getVM_CONCEPT_LIST().size() > 0)
     {
       for (int i=0; i<aVM.getVM_CONCEPT_LIST().size(); i++)
       {
         EVS_Bean eB = (EVS_Bean)aVM.getVM_CONCEPT_LIST().elementAt(i);
         if (eB != null)
-          sMsg.append("\t  " + eB.getLONG_NAME() + "\t" + eB.getCONCEPT_IDENTIFIER() + "\t" + eB.getPREFERRED_DEFINITION() + "\n");        
+          sMsg += "&nbsp;&nbsp;" + eB.getLONG_NAME() + "&nbsp;&nbsp;" + eB.getCONCEPT_IDENTIFIER() + "&nbsp;&nbsp;" + eB.getPREFERRED_DEFINITION() + "<br>";        
       }
     }
     if (!vmTypeMatch.equals(""))
-      sMsg.append("\tReason: " + vmTypeMatch + " matches.\n\n");
+      sMsg += "&nbsp;&nbsp;Reason: " + vmTypeMatch + " matches.&nbsp;&nbsp;";
+*/    return aVM;
   }
 
-  private void getFlaggedMessageCon(Vector<EVS_Bean> conList, StringBuffer sMsg, String typeMatch)
+  private void getFlaggedMessageCon(VMForm data, String typeMatch)
   {
+  //  Vector<String> vErrMsg = data.getErrorMsgList();
+    Vector<EVS_Bean> conList = data.getConceptList();
     if (conList != null && conList.size() > 0)
     {
       for (int i=0; i<conList.size(); i++)
       {
-        sMsg.append("*");
+        String sMsg = "";
         EVS_Bean eB = (EVS_Bean)conList.elementAt(i);
         if (eB != null)
         {
           //String sDef = eB.getDESCRIPTION();
           //if (sDef == null || sDef.equals(""))
           String sDef = eB.getPREFERRED_DEFINITION();
-          sMsg.append("\tConcept Name: " + eB.getLONG_NAME() + "\n");
-          sMsg.append("\tConcept ID: " + eB.getCONCEPT_IDENTIFIER() + "\n");
-          sMsg.append("\tConcept Definition:" + sDef + "\n");
-          sMsg.append("\tReason: " + typeMatch + " matches.\n\n");
+          sMsg += "\\tConcept Name: " + eB.getLONG_NAME() + "\\n";
+          sMsg += "\\tConcept ID: " + eB.getCONCEPT_IDENTIFIER() + "\\n";
+          sMsg += "\\tConcept Definition:" + sDef + "\\n";
+          sMsg += "\tReason: " + typeMatch + " matches.\n\n";
+         // vErrMsg.addElement(sMsg);
         }
       }
     }
+   // data.setErrorMsgList(vErrMsg);
   }
   
   private String getConceptCondr(Vector<EVS_Bean> conList, VMForm data)

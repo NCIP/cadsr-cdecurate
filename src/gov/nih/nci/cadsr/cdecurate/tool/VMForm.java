@@ -73,6 +73,7 @@ public class VMForm implements Serializable
   private Vector<VM_Bean> conceptVMList;
   private Vector<VM_Bean> defnVMList;
   private Vector<EVS_Bean> conceptList;
+  private Vector<VM_Bean> errorMsgList;
   
   //get and set attributes
   /**
@@ -647,6 +648,20 @@ public class VMForm implements Serializable
     this.conceptList = conceptList;
   }
 
+  /**
+   * @return Returns the errorMsgList.
+   */
+  public Vector<VM_Bean> getErrorMsgList()
+  {
+    return (errorMsgList == null) ? new Vector<VM_Bean>() : errorMsgList;
+  }
 
-  
+  /**
+   * @param errorMsgList The errorMsgList to set.
+   */
+  public void setErrorMsgList(Vector<VM_Bean> errorMsgList)
+  {
+    this.errorMsgList = errorMsgList;
+  }
+
 }

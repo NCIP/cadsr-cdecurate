@@ -1,5 +1,4 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-
 <html>
   <head>
     <title>Permissible Value</title>
@@ -104,7 +103,16 @@
       //for altnames and ref docs
       session.setAttribute("dispACType", "ValueDomain");
       session.setAttribute("selectVM", new VM_Bean());  //should clear when refreshed
-System.out.println(pgAction + " jsp " + elmFocus);		
+      Vector vEMsg = (Vector)session.getAttribute("VMEditMsg");
+      if (vEMsg == null) vEMsg = new Vector();
+      String sErrAC = (String)request.getAttribute("ErrMsgAC");
+      if (sErrAC == null) sErrAC = "";
+      Integer editPV = (Integer)request.getAttribute("editPVInd");
+      String sEditPV = "";
+      if (editPV != null) sEditPV = editPV.toString();
+      if (sEditPV.equals("-1")) sEditPV = "pvNew";
+      else if (!sEditPV.equals("")) sEditPV = "pv"+sEditPV;
+System.out.println(sEditPV + " jsp " + sErrAC);		
 		%>
 		<Script Language="JavaScript">
 
@@ -680,15 +688,6 @@ System.out.println(pgAction + " jsp " + elmFocus);
 						            String sPVDesc = (String)vm.getVM_DESCRIPTION();  // pvBean.getPV_MEANING_DESCRIPTION();
 						            if (sPVDesc == null) sPVDesc = "";
 						            Vector vmCon = vm.getVM_CONCEPT_LIST();
-						         //   EVS_Bean vmConcept = (EVS_Bean) pvBean.getVM_CONCEPT();
-						         //   if (vmConcept == null) vmConcept = new EVS_Bean();
-						         //   String evsDB = (String) vmConcept.getEVS_DATABASE();
-						        //    if (evsDB == null) evsDB = "";
-						         //   if (evsDB.equals(EVSSearch.META_VALUE)) // "MetaValue")) 
-						         //     evsDB = vmConcept.getEVS_ORIGIN();
-						         //   String evsID = (String) vmConcept.getCONCEPT_IDENTIFIER();
-						        //    String sEvsId = "";
-						        //    if (evsID != null && !evsID.equals("")) sEvsId = evsID + "\n" + evsDB;
 						            String sParId = "";
 						            EVS_Bean parConcept = (EVS_Bean) pvBean.getPARENT_CONCEPT();
 						            if (parConcept == null) parConcept = new EVS_Bean();
@@ -705,7 +704,7 @@ System.out.println(pgAction + " jsp " + elmFocus);
 						            String viewType = (String)pvBean.getPV_VIEW_TYPE();
 						            if (viewType.equals("")) viewType = "expand";
 						      //   System.out.println(pvCount + " jsp " + vmCon.size() + " value " + sPVVal + " viewType " + viewType);
-						            //TODO - figure out this later
+						            //TODO - figure out this later; cannot use the type cast for vectors in jsp
 						           // Vector<EVS_Bean> vmCon = vm.getVM_CONCEPT_LIST();
 						            %>
 											<tr>
@@ -813,9 +812,13 @@ System.out.println(pgAction + " jsp " + elmFocus);
 																					String conID = con.getCONCEPT_IDENTIFIER();
 																					String conVocab = con.getEVS_DATABASE();
 																					String conDesc = con.getPREFERRED_DEFINITION();
-																					String trCount = pvCount + "tr" + k;																					
-																		//			if (k == vmCon.size()-1)
-																		//				trCount = pvCount + "primary";
+																					String trCount = pvCount + "tr" + k;
+																					String conType = "";																					
+																					if (k == vmCon.size()-1)
+																						conType = "Primary";
+																					else
+																						conType = "Qualifier";
+																					
 																//		System.out.println(trCount + " jsp " + conName + conID + conVocab + conDesc);
 																			%>
 																				<tr id="<%=trCount%>">
@@ -860,6 +863,71 @@ System.out.println(pgAction + " jsp " + elmFocus);
 															</tr>
 														</table>
 													</div>
+													<% if (vEMsg.size() > 0 && sEditPV.equals(pvCount)) { %>
+														<hr>
+														<table width="100%" cellpadding="0.05in,0.05in,0.05in,0.05in" border="1">
+															<col/></col>
+															<tr>
+																<td colspan=2 valign="top">
+																	<table cellpadding="0.1in,0.1in,0.1in,0.1in" >
+																		<tr>
+																			<td>
+						              							<input type="button" name="btnUseSelect" style="width:100" value="Use Selection" disabled 
+						              								onClick="javascript:view(<%=sEditPV%>View, <%=sEditPV%>ImgSave, <%=sEditPV%>ImgEdit, 'save', '<%=sEditPV%>');">
+																			</td>
+																			<td>
+																				<input type="checkbox" name="saveAlt"/>
+																			</td>
+																			<td>
+																				Save the current Name and Description as Alternate Name and Definition <br>
+																			</td>
+																			<td>
+						              							<input type="button" name="btnCancelUS" style="width:80" value="Cancel" 
+						              								onClick="javascript:confirmRM('<%=sEditPV%>', 'restor', 'Permissible Value Attributes of <%=sEditPV%>');">
+																			</td>
+																		</tr>
+																	</table>
+																</td>
+															</tr>
+															<tr>
+																<td colspan=2>
+																		The following <%=sErrAC%>s have one or more matching attributes as 
+																		indicated in the ‘Reason’ field with each.  You may (1) select the 
+																		desired <%=sErrAC%> and then select ‘Use Selection’ button, 
+																		to use one of these existing <%=sErrAC%>s  OR (2) 
+																		select ‘Cancel’ button to continue editing the current Value Meaning. 
+																		<br>
+																</td>
+															</tr>
+														<% 
+															for (int k=0; k<vEMsg.size(); k++)
+															{ 
+																	VM_Bean vB = (VM_Bean)vEMsg.elementAt(k);
+																	Vector vBCon = vB.getVM_CONCEPT_LIST();
+																	String rVM = "erVM"+k;
+														 %>
+															<tr>
+																<td valign="top"><input name="rUse" type="radio"  alt="Select to use" value="<%=rVM%>" onclick="javascript:enableUSE();"></td>
+																<td>
+																	<dl>
+																	<dt>VM Name: <dd><%=vB.getVM_SHORT_MEANING()%>
+																	<dt>VM Description: <dd><%=vB.getVM_DESCRIPTION()%>
+																	<dt>VM Concepts: 
+																		<% if (vBCon.size() > 0) { 
+																				for (int p =0; p<vBCon.size(); p++) {
+																				EVS_Bean eB = (EVS_Bean)vBCon.elementAt(p);
+																	  %>
+																		<dd><%=eB.getLONG_NAME()%>&nbsp;&nbsp;<%=eB.getCONCEPT_IDENTIFIER()%>&nbsp;&nbsp;<%=eB.getEVS_DATABASE()%>
+																	  <% }  } else { %>
+																			None.
+																		<% } %>
+																	<dt>Reason: <dd><%=vB.getVM_COMMENTS()%>
+																	</dl>																	
+																</td>
+															</tr>
+														<% } %>
+														</table>
+												<%} %>
 												</td>
 												<%if (vdCONs > 0){%>												
 												<td valign="top">
@@ -890,7 +958,7 @@ System.out.println(pgAction + " jsp " + elmFocus);
 	</div>
 	<div style= "display:none;">
 		<input type="hidden" name="pageAction" value="nothing">
-		<input type="hidden" name="editPVInd" value="">
+		<input type="hidden" name="editPVInd" value="<%=sEditPV%>"> <!-- keep this if there was error -->
 		<input type="hidden" name="currentPVInd" value="">
 		<input type="hidden" name="currentElmID" value="">
 		<input type="hidden" name="currentPVViewType" value="">

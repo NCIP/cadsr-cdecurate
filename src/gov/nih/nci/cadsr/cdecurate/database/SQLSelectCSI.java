@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/SQLSelectCSI.java,v 1.5 2006-10-31 18:19:03 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/SQLSelectCSI.java,v 1.6 2006-11-01 20:41:41 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -13,13 +13,13 @@ package gov.nih.nci.cadsr.cdecurate.database;
  */
 public class SQLSelectCSI
 {
-    public static String getAlternatesCSISelect()
+    public static String getAlternatesCSISelect(String alias_)
     {
         return "select level, cc.cs_idseq, cs.long_name, cc.cs_csi_idseq, csi.csi_name, cs.preferred_definition, cs.version, c.name, csi.csitl_name " 
         + "from sbr.cs_csi_view cc, sbr.class_scheme_items_view csi, sbr.classification_schemes_view cs, sbr.contexts_view c " 
         + "where csi.csi_idseq = cc.csi_idseq and cs.cs_idseq(+) = cc.cs_idseq and c.conte_idseq(+) = cs.conte_idseq " 
         + "connect by prior cc.p_cs_csi_idseq = cc.cs_csi_idseq " 
-        + "start with cc.cs_csi_idseq = ? and csi.csi_idseq = cc.csi_idseq and csi.csitl_name <> 'UML_PACKAGE_ALIAS'";
+        + "start with cc.cs_csi_idseq = ? and csi.csi_idseq = cc.csi_idseq and csi.csitl_name <> '" + alias_ + "'";
     }
     
     public static final int _LEVEL = 1;

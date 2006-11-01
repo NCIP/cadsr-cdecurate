@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/Tree.java,v 1.5 2006-10-31 18:19:03 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/Tree.java,v 1.6 2006-11-01 20:41:42 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.util;
@@ -90,10 +90,19 @@ public class Tree
         _node = node_;
     }
     
+    /**
+     * Default constructor
+     *
+     */
     private Tree()
     {
     }
-    
+
+    /**
+     * Extract a lineage from a tree without altering the tree.
+     * 
+     * @return a new tree with a single parent lineage
+     */
     private Tree extract()
     {
         Tree temp = new Tree();
@@ -108,24 +117,40 @@ public class Tree
         return temp;
     }
 
+    /**
+     * Extract a lineage from a tree beginning with the node specified.
+     * 
+     * @param value_ the unique identifier of a node on the tree
+     * @return the new tree with a single parent lineage
+     */
     public Tree extract(String value_)
     {
+        // Find the node.
         Tree leaf = findValue(value_);
         if (leaf == null)
             return null;
 
+        // Provided it has a parent, pull the lineage by duplicating the branch
         if (_parent != null)
             leaf = _parent.extract();
 
+        // Find the top of the tree and return the root.
         Tree temp;
         for (temp = leaf; temp._parent != null; temp = _parent)
             ;
         
         return temp;
     }
-    
+
+    /**
+     * Duplicate a branch on the tree
+     * 
+     * @param branch_ the starting branch
+     */
     private void dupl(Tree branch_)
     {
+        // If there are children, they must be duplicated and added to
+        // this duplicate branch.
         if (_child != null)
         {
             for (Tree child = _child; child != null; child = child._sybling)
@@ -136,6 +161,12 @@ public class Tree
         }
     }
 
+    /**
+     * Duplicate this tree. No references are kept to the original, all nodes
+     * and branches are new objects.
+     * 
+     * @return the new (duplicate) tree.
+     */
     public Tree dupl()
     {
         Tree root = new Tree(new TreeNode("root", null, false));
@@ -143,23 +174,42 @@ public class Tree
         
         return root;
     }
-    
+
+    /**
+     * Add the node as a new leaf to all leaves in the tree. Of course that
+     * means the leaves become branches.
+     * 
+     * @param node_ the new node to replicate through the tree.
+     */
     public void addLeaf(TreeNode node_)
     {
+        // If this is a leaf then add the new node.
         Tree child;
         if (_child == null)
         {
+            // Always duplicate to avoid object references.
             child = addChild(node_.dupl());
+            
+            // The new child must have a unique value or the node can not
+            // be replicated to other parts of the tree.
             child._node.setValue(_node._value + " " + child._node._value);
             return;
         }
-        
+
+        // This is not a leaf so recursively keep looking for a place to add the
+        // new node.
         for (child = _child; child != null; child = child._sybling)
         {
             child.addLeaf(node_);
         }
     }
-    
+
+    /**
+     * Merge another tree into this tree. Duplicates of the branches and
+     * nodes are NOT made.
+     * 
+     * @param other_ the other tree
+     */
     public void merge(Tree other_)
     {
         for(Tree child = other_._child; child != null; child = child._sybling)
@@ -490,20 +540,33 @@ public class Tree
         
         return false;
     }
-    
+
+    /**
+     * Test the node state.
+     * 
+     * @return true if the node is marked as "new"
+     */
     public boolean isNew()
     {
         return _node.isNew();
     }
-    
+
+    /**
+     * Delete this branch of the tree.
+     *
+     */
     public void delete()
     {
+        // Can't delete the root - duh!
         if (_parent == null)
             return;
         
+        // Be sure to remove the children first.
         Tree prevSyb = null;
         for (Tree child = _parent._child; child != null; child = child._sybling)
         {
+            // The top child requires the parent be changed. Syblings require
+            // the other children be changed.
             if (child == this)
             {
                 if (prevSyb == null)
@@ -546,6 +609,12 @@ public class Tree
         branch._node.markForDelete();
     }
 
+    /**
+     * The caller wants to keep the specified node - i.e. remove
+     * any delete marks.
+     * 
+     * @param value_ the value of the node to keep
+     */
     public void markToKeep(String value_)
     {
         Tree branch = findValue(value_);
@@ -555,6 +624,11 @@ public class Tree
         branch._node.markToKeep();
     }
     
+    /**
+     * Test the state of the tree
+     * 
+     * @return true if the tree is empty - i.e. only the root exists
+     */
     public boolean isEmpty()
     {
         return (_child == null && _sybling == null && _parent == null);

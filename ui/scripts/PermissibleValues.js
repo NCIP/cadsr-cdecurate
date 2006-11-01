@@ -1141,3 +1141,10 @@
 	    secondWindow = window.open("jsp/OpenSearchWindow.jsp", "searchWindow", "width=875,height=570,top=0,left=0,resizable=yes,scrollbars=yes")
     }
     
+    function enableUSE()
+    {
+  		var usElm = document.getElementById("btnUseSelect");
+  		if (usElm != null)
+    		usElm.disabled = false;
+    }
+    

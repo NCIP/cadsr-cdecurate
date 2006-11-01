@@ -1,3 +1,8 @@
+// Copyright (c) 2006 ScenPro, Inc.
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/alternates.js,v 1.3 2006-11-01 20:41:42 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 // Perform a general action and remember the previous action. The previous action
 // is used in processing to return to a previous state.
 
@@ -16,11 +21,15 @@ function doActionDirect(aobj)
     doSubmit();
 }
 
+// Perform a Cancel during an Add/Edit
+
 function doActionCancel()
 {
     alternatesForm.alternatesAction.value = alternatesForm.prevAlternatesAction.value;
     doSubmit();
 }
+
+// Submit the form for processing
 
 function doSubmit()
 {
@@ -28,6 +37,8 @@ function doSubmit()
     eobj.innerText = "working...";
     alternatesForm.submit();
 }
+
+// Manage the selection of the CSI on the Add/Edit page
 
 function selCSI(aobj)
 {
@@ -42,14 +53,20 @@ function selCSI(aobj)
     aobj.style.backgroundColor = "#ffff00";
 }
 
+// Post process the Add/Edit page load
+
 function loaded()
 {
+    // Set focus to the Name/Definition field
     eobj = document.getElementsByName(parmNameDef);
     eobj[0].focus();
     
+    // Filter the CSI tree using the previous text
     eobj = document.getElementsByName(parmFilterText);
     filterCSI(eobj[0]);
 }
+
+// Utility function to find the root of the tree displayed as an HTML Table
 
 function findRoot(eobj)
 {
@@ -66,15 +83,25 @@ function findRoot(eobj)
     return null;
 }
 
+// Filter the CSI tree dynamically as the user types in the Filter Text
+
 function filterCSI(tobj)
 {
+    // Get the tree root
     var eobj = findRoot(document.getElementById("csiList"));
+    
+    // Make the text lower case so simplify the comparisons
     var tlow = tobj.value.toLowerCase();
+    
+    // Go through all the rows in the table (nodes in the tree)
     for (var i = 0; i < eobj.children.length; ++i)
     {
+        // If the text entered by the user appears in the row.
         var tt = eobj.children[i];
         if (tt.innerText.toLowerCase().indexOf(tlow) > -1)
         {
+            // Make the row visible as well as its ancetors and
+            // offspring
             var b;
             tt.style.display = "block";
             var level = parseInt(tt.getAttribute(nodeLevel));
@@ -101,6 +128,8 @@ function filterCSI(tobj)
             }
             i = b - 1;
         }
+        
+        // If the text doesn't appear, hide the row.
         else
         {
             tt.style.display = "none";
@@ -108,8 +137,11 @@ function filterCSI(tobj)
     }
 }
 
+// Save the Add/Edit data.
+
 function doSave()
 {
+    // Have to enter a Name/Definition
     eobj = document.getElementsByName(parmNameDef);
     if (eobj[0].value == null || eobj[0].value.length == 0)
     {
@@ -125,6 +157,7 @@ function doSave()
         return;
     }
 
+    // Have to enter a Type
     eobj = document.getElementsByName(parmType);
     if (eobj[0].selectedIndex < 1)
     {
@@ -133,6 +166,7 @@ function doSave()
         return;
     }
 
+    // Have to enter a Language
     eobj = document.getElementsByName(parmLang);
     if (eobj[0].selectedIndex < 1)
     {
@@ -141,11 +175,15 @@ function doSave()
         return;
     }
 
+    // All good do the Save
     doActionDirect(actionSaveName);
 }
 
+// Perform a Classify on a Name/Definition from the Add/Edit page.
+
 function doClassify()
 {
+    // Find the root and verify the user selected a CSI and not a CS
     var last = findRoot(document.getElementById("csiList"));
     var eobj = last.getAttribute("nodeSelection");
     if (eobj == null)
@@ -162,11 +200,14 @@ function doClassify()
             return;
         }
     }
-    
+
+    // Do the Classify
     var aobj = document.getElementsByName(parmIdseq);
     aobj[0].value = eobj.getAttribute(nodeValue);
     doActionDirect(actionClassify);
 }
+
+// Get the special application node value for the row.
 
 function getNodeValue(aobj)
 {
@@ -181,6 +222,8 @@ function getNodeValue(aobj)
     return idseq;
 }
 
+// Get the special application node name for the row.
+
 function getNodeName(aobj)
 {
     var last = aobj;
@@ -194,6 +237,8 @@ function getNodeName(aobj)
     return name;
 }
 
+// Perform a remove association on the Add/Edit page
+
 function removeAssoc(aobj)
 {
     var idseq = getNodeValue(aobj);
@@ -202,6 +247,8 @@ function removeAssoc(aobj)
     eobj[0].value = idseq;
     doActionDirect(actionRemoveAssoc);
 }
+
+// Perform a restore association to undo a previous remove
 
 function restoreAssoc(aobj)
 {
@@ -212,6 +259,8 @@ function restoreAssoc(aobj)
     doActionDirect(actionRestoreAssoc);
 }
 
+// Perform an Edit on a Name/Definition from one of the "View ..." pages
+
 function doEdit(aobj)
 {
     var idseq = getNodeValue(aobj);
@@ -221,8 +270,11 @@ function doEdit(aobj)
     doAction(actionEditNameDef);
 }
 
+// Perform a Delete on a Name/Definition from one of the "View ..." pages
+
 function doDelete(aobj)
 {
+    // Always confirm a delete even if you can undo it.
     var idseq = getNodeName(aobj);
     if (confirm("Are you sure you want to delete " + idseq + "?"))
     {
@@ -233,6 +285,8 @@ function doDelete(aobj)
 	    doAction(actionDelNameDef);
     }
 }
+
+// Perform a Restore on a Name/Definition that was previously deleted
 
 function doRestore(aobj)
 {
