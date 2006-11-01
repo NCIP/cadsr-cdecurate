@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.5 2006-10-31 18:19:03 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.6 2006-11-01 20:41:41 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -128,6 +128,58 @@ public class DBAccess
     public DBAccess(Connection conn_)
     {
         _conn = conn_;
+
+        // There is special processing around the UML_PACKAGE_NAME and UML_PACKAGE_ALIAS
+        if (_packageAlias == null || _packageName == null)
+        {
+            // Get the CSI type values from the tool options. We don't care what they are called as long as we have the
+            // right value.
+            String select = "select property, value from sbrext.tool_options_view_ext where tool_name = 'CURATION' and property like 'CSI.%' ";
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+            try
+            {
+                pstmt = _conn.prepareStatement(select);
+                rs = pstmt.executeQuery();
+                
+                // Set the static variables appropriately.
+                while (rs.next())
+                {
+                    String property = rs.getString(1);
+                    String value = rs.getString(2);
+                    if (property.equals("CSI.PACKAGE.ALIAS"))
+                        _packageAlias = value;
+                    else if (property.equals("CSI.PACKAGE.NAME"))
+                        _packageName = value;
+                }
+
+                rs.close();
+                pstmt.close();
+            }
+            catch (SQLException ex)
+            {
+                // Log the error but keep going.
+                _log.error(ex.toString());
+                
+                try
+                {
+                    if (rs != null)
+                        rs.close();
+                    if (pstmt != null)
+                        pstmt.close();
+                }
+                catch (SQLException e)
+                {
+                }
+            }
+            
+            // This only has to be done once. And either both are read or both are set blank.
+            if (_packageAlias == null || _packageName == null)
+            {
+                _packageAlias = "";
+                _packageName = "";
+            }
+        }
     }
 
     /**
@@ -256,7 +308,7 @@ public class DBAccess
     private Vector<CSIData> getAlternatesCSI(String idseq_, Alternates alt_) throws ToolException
     {
         // Get the SQL select statement
-        String select = SQLSelectCSI.getAlternatesCSISelect();
+        String select = SQLSelectCSI.getAlternatesCSISelect(_packageAlias);
         
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -416,7 +468,7 @@ public class DBAccess
     public void getCSILineage(String idseq_, Tree root_) throws ToolException
     {
         // Get the SQL select
-        String select = SQLSelectCSI.getAlternatesCSISelect();
+        String select = SQLSelectCSI.getAlternatesCSISelect(_packageAlias);
         
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -456,6 +508,9 @@ public class DBAccess
                 prevTnc = tnc;
             }
             lineage.add(0, new CSIData(new TreeNodeCS(csName, csValue, csDef, csVers, csConte, false), 0));
+            
+            rs.close();
+            pstmt.close();
     
             // Take the content of the Vector and turn it into arrays for use by the Tree class. The level
             // is reset because the smallest value must appear first. Being a direct route child-to-parent only
@@ -1338,12 +1393,34 @@ public class DBAccess
         return getList(select);
     }
     
+    /**
+     * Test if the CSI type provided is the special UML_PACKAGE_NAME
+     * 
+     * @param name_ the CSI type to test
+     * @return true if this is the UML_PACKAGE_NAME type
+     */
+    public static boolean isPackageName(String name_)
+    {
+        return _packageName.equals(name_);
+    }
+    
+    /**
+     * Test if the CSI type provided is the special UML_PACKAGE_ALIAS
+     * 
+     * @param alias_ the CSI type to test
+     * @return true if this is the UML_PACKAGE_ALIAS type
+     */
+    public static boolean isPackageAlias(String alias_)
+    {
+        return _packageAlias.equals(alias_);
+    }
+    
     private Connection _conn;
   
     public static final int _MAXNAMELEN = 255;
     public static final int _MAXDEFLEN = 2000;
     
-    private static final String _packageName = "UML_PACKAGE_NAME";
-    private static final String _packageAlias = "UML_PACKAGE_ALIAS";
+    private static String _packageName = null;
+    private static String _packageAlias = null;
     private static final Logger _log = Logger.getLogger(DBAccess.class);
 }

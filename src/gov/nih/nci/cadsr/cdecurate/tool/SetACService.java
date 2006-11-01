@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.16 2006-10-31 18:19:03 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.17 2006-11-01 20:41:42 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1478,7 +1478,7 @@ public class SetACService implements Serializable
       if (sCN == null) sCN = "";
       UtilService.setValPageVector(vValidate, "Change Note", sCN, bNotMandatory, 2000, "", sOriginAction);
 
-      vd.setValidateList(vValidate);
+    //  vd.setValidateList(vValidate);
     }
     catch (Exception e)
     {

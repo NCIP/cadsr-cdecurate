@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/dev/load_tool_options.sql,v 1.15 2006-10-31 18:19:03 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/dev/load_tool_options.sql,v 1.16 2006-11-01 20:41:24 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -41,6 +41,16 @@ VALUES ('CURATION', 'URL', 'http://cdecurate-dev.nci.nih.gov',
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EVS.URL', 'http://cabio-dev.nci.nih.gov/cacore32/http/remoteService', 
 	   'Store evs alternate url specific to curation tool if needed');
+
+--Store the CSI type for UML_PACKAGE_ALIAS
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'CSI.PACKAGE.ALIAS', 'UML_PACKAGE_ALIAS',
+        'The special CSI type for the UML Package Alias');
+
+--Store the CSI type for UML_PACKAGE_name
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'CSI.PACKAGE.NAME', 'UML_PACKAGE_NAME',
+        'The special CSI type for the UML Package Name');
 
 --ALL VOCAB ATTRIBUTES
 --Store vocab search-in Name for all vocabulary

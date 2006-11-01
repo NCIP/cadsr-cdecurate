@@ -715,8 +715,9 @@ public class PVAction implements Serializable
           vm.setVM_CONCEPT_LIST(vmCon);
           vm.setVM_IDSEQ("");
           vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
+          vm.setVM_SHORT_MEANING(eBean.getLONG_NAME());  //have some name
           data.setNewVM(vm);
-      //    makeVMNameFromConcept(vm);  //make vm names
+   //       makeVMNameFromConcept(vm);  //make vm names
       //    pv.setPV_SHORT_MEANING(vm.getVM_SHORT_MEANING());
 /*          pv.setPV_VM(vm);
           data.setSelectPV(pv);

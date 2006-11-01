@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.5 2006-10-31 18:19:03 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.6 2006-11-01 20:41:42 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -762,6 +762,7 @@ public class AltNamesDefsServlet
     public static final String _tabAddDef = "Add&nbsp;Definition";
     public static final String _tab3EditDef = "Edit&nbsp;Definition";
     
+    public static final int _classTypeDef = -1;
     public static final int _classTypeAlt = 0;
     public static final int _classTypeCS = 1;
     public static final int _classTypeCSI = 2;

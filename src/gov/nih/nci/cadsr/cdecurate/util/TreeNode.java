@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/TreeNode.java,v 1.5 2006-10-31 18:19:03 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/TreeNode.java,v 1.6 2006-11-01 20:41:42 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.util;
@@ -20,24 +20,31 @@ public class TreeNode
      */
     public TreeNode()
     {
-        _classType = 0;
+        _classType = -1;
     }
     
+    /**
+     * Copy constructor
+     * 
+     * @param old_ the old/other node
+     */
     protected TreeNode(TreeNode old_)
     {
         _name = old_._name;
         _value = old_._value;
         _new = old_._new;
         _delete = old_._delete;
+        _classType = old_._classType;
     }
-    
+
+    /**
+     * Duplicate a node.
+     * 
+     * @return the new node.
+     */
     public TreeNode dupl()
     {
-        TreeNode temp = new TreeNode();
-        temp._name = _name;
-        temp._value = _value;
-        temp._new = _new;
-        temp._delete = _delete;
+        TreeNode temp = new TreeNode(this);
         
         return temp;
     }
@@ -116,16 +123,29 @@ public class TreeNode
         _new = false;
     }
     
+    /**
+     * Mark the node to be deleted
+     *
+     */
     public void markForDelete()
     {
         _delete = true;
     }
     
+    /**
+     * Mark the node to keep - undo delete
+     *
+     */
     public void markToKeep()
     {
         _delete = false;
     }
-    
+
+    /**
+     * Test the node state
+     * 
+     * @return true if marked to be deleted
+     */
     public boolean isDeleted()
     {
         return _delete;

@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/TreeNodeCSI.java,v 1.5 2006-10-31 18:19:03 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/TreeNodeCSI.java,v 1.6 2006-11-01 20:41:41 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -38,7 +38,7 @@ public class TreeNodeCSI extends TreeNode
 
         _classType = AltNamesDefsServlet._classTypeCSI;
         _type = (type_ == null) ? "" : type_;
-        if (_type.equals("UML_PACKAGE_NAME"))
+        if (DBAccess.isPackageName(type_))
             _packageAlias = packageAlias_;
         else
             _packageAlias = null;

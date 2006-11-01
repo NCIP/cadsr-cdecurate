@@ -195,6 +195,13 @@ public class VMServlet implements Serializable
     vmact.setDataForCreate(pv, vd, data);
   //  pv.setPV_VM(vm);
     //TODO - handle status message and other session attributes as needed    
+    Vector<VM_Bean> vErrMsg = data.getErrorMsgList();
+    if (vErrMsg != null && vErrMsg.size()>0)
+    {
+      session.setAttribute("VMEditMsg", vErrMsg);
+      data.getRequest().setAttribute("ErrMsgAC", data.getStatusMsg());
+      data.getRequest().setAttribute("editPVInd", pvInd);
+    }
   }
   
   private VM_Bean resetConceptsFromPage(PV_Bean pv)
