@@ -1060,6 +1060,37 @@
   		return;
   	}
   	
+  	function enableEditVM(pvInd)
+  	{  		
+  		//get value meaning object
+  		var vm = document.getElementById(pvInd + "VMEdit");
+  		if (vm != null && vm.style.display == "none")
+  		{
+  			vm.style.display = "block";
+  			vmedit = document.getElementById(pvInd + "VMView");
+  			if (vmedit != null)
+  				vmedit.style.display = "none";
+  		}
+  		var vmTE = document.getElementById("txt" +pvInd + "Mean");  		
+  		if (vmTE != null)
+  			document.getElementById("currentVM").value = vmTE.value;
+  	//	vm.innerText = "";  // vmName;
+  		
+  		//get the vm description object
+  		var vmd = document.getElementById(pvInd + "VMDEdit");
+  		if (vmd != null && vmd.style.display == "none")
+  		{
+  			vmd.style.display = "block";
+  			vmdedit = document.getElementById(pvInd + "VMDView");
+  			if (vmdedit != null)
+  				vmdedit.style.display = "none";
+  		}
+  		var vmDE = document.getElementById("txt" +pvInd + "Def");  
+  		
+  	//	if (vmT != null)
+  	//	vmd.innerText = "";  // vmDesc;  		
+  	}
+  	
   	function deleteConcept(trId, pvId)
   	{
   		//get teh con count
@@ -1083,6 +1114,17 @@
   				isDelete = true;
   				break;
   			}
+  		}
+  		//enable text box if no concepts exist
+  		var totalCon = curTbl.rows.length;
+  		if (totalCon == 0)
+  		{
+  			//create empty row
+  			var trCur = curTbl.insertRow();
+  			var tdN = createTD("emptyRow", "\u00a0", "", "", "");
+  			trCur.appendChild(tdN);
+  			//make vm edit mode do this later
+  			//enableEditVM(pvId);
   		}  		
   	}
   	
@@ -1122,6 +1164,15 @@
 				  			hidElm[elmLen].selected = true;
 			  			}
 			  		}		  		
+		  		}
+		  		if (sAct == "save" || sAct == "edit")
+		  		{
+		  		 	var vmText = document.getElementById("currentVM").value;
+		  		 	if (vmText == null || vmText == "")
+		  		 	{
+		  		 		alert("Value Meaning is mandatory for a Permissible Value.  Please add a Value Meaning.");
+		  		 		return false;
+		  		 	}
 		  		}
 		//  	}
   		//	else

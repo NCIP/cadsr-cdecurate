@@ -149,6 +149,7 @@ public class PVForm
    */
   public void setStatusMsg(String statusMsg)
   {
+    if(statusMsg == null) statusMsg = "";
     this.statusMsg = statusMsg;
   }
 
