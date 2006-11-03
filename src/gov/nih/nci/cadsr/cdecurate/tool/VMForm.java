@@ -178,7 +178,7 @@ public class VMForm implements Serializable
    */
   public String getStatusMsg()
   {
-    return statusMsg;
+    return (statusMsg == null) ? "" : statusMsg;
   }
 
   /**
@@ -186,6 +186,7 @@ public class VMForm implements Serializable
    */
   public void setStatusMsg(String statusMsg)
   {
+    if (statusMsg == null) statusMsg = "";
     this.statusMsg = statusMsg;
   }
 
