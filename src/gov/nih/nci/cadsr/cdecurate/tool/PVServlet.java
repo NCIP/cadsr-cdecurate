@@ -205,12 +205,12 @@ System.out.println(sMenuAction + " pv action " + sAction);
       if (sAct.equals("openCreateNew")) 
       {
         savePVAttributes();  //save the edited ones before refreshing
-        data.getRequest().setAttribute("refreshPageAction", "openNewPV");
         //clean up the new bean
         PV_Bean pv = new PV_Bean();
         //inititalize date and origins
         SimpleDateFormat formatter = new SimpleDateFormat ("MM/dd/yyyy");
         pv.setPV_BEGIN_DATE(formatter.format(new java.util.Date()));
+        data.getRequest().setAttribute("refreshPageAction", "openNewPV");
         session.setAttribute("NewPV", pv);        
         data.getRequest().setAttribute("focusElement", "divpvnew");
       }
@@ -225,21 +225,38 @@ System.out.println(sMenuAction + " pv action " + sAction);
         //add pv other attribtutes 
         addPVOtherAttributes(pv, "changeOne");
         //if no concepts, read the user entered vm /desc
-        VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
-        vmser.readDataForCreate(pv, -1);
-        VM_Bean vm = vmser.data.getVMBean();
-  //TODO      pv.setPV_SHORT_MEANING(vm.getVM_SHORT_MEANING());
+        VM_Bean vm = new VM_Bean();
+        if (this.getDuplicateVMUse() != null)
+          vm = data.getNewVM();
+        else
+        {
+          VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
+          vmser.readDataForCreate(pv, -1);
+          vm = vmser.data.getVMBean();
+          data.setStatusMsg(data.getStatusMsg() + vmser.data.getStatusMsg());
+        }
         pv.setPV_VM(vm);
         pv.setPV_VIEW_TYPE("expand");
         pv.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_INS);
-        VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");
-        Vector<PV_Bean> vdpvList = vd.getVD_PV_List();  // (Vector<PV_Bean>)session.getAttribute("VDPVList");
-        if (vdpvList == null) vdpvList = new Vector<PV_Bean>();
-        vdpvList.insertElementAt(pv, 0);
-        //session.setAttribute("VDPVList", vdpvList);
-        vd.setVD_PV_List(vdpvList);
-        session.setAttribute("m_VD", vd);
-        data.getRequest().setAttribute("focusElement", "pv0View");
+        String erVM = (String)data.getRequest().getAttribute("ErrMsgAC");
+        //update it only if there was no duplicates exisitng
+        if (erVM == null || erVM.equals(""))
+        {
+          VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");
+          Vector<PV_Bean> vdpvList = vd.getVD_PV_List();  // (Vector<PV_Bean>)session.getAttribute("VDPVList");
+          if (vdpvList == null) vdpvList = new Vector<PV_Bean>();
+          vdpvList.insertElementAt(pv, 0);
+          //session.setAttribute("VDPVList", vdpvList);
+          vd.setVD_PV_List(vdpvList);
+          session.setAttribute("m_VD", vd);
+          data.getRequest().setAttribute("focusElement", "pv0View");
+        }
+        else
+        {
+          data.getRequest().setAttribute("refreshPageAction", "openNewPV");
+          session.setAttribute("NewPV", pv);        
+          data.getRequest().setAttribute("focusElement", "divpvnew");          
+        }
         //TODO - handle the error message
       }
       return "/PermissibleValue.jsp";
@@ -260,6 +277,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
         String chgName = (String)data.getRequest().getParameter("txtpv" + pvInd + "Value");  //pvName  
         if (!chgName.equals(selectPV.getPV_VALUE()))
           isNewPV = true;
+     //   data.getRequest().setAttribute("editPVValue", chgName);
         //handle vm changes
         VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
         //go back it vm was not changed
@@ -269,18 +287,23 @@ System.out.println(sMenuAction + " pv action " + sAction);
         {
           vmser.readDataForCreate(selectPV, pvInd);
           newVM = vmser.data.getVMBean();
+          data.setStatusMsg(data.getStatusMsg() + vmser.data.getStatusMsg());
         }
-     System.out.println(newVM.getVM_SHORT_MEANING() + " vm " + newVM.getVM_SUBMIT_ACTION());
+     System.out.println(isNewPV + " same pv " + chgName);
         if (newVM.getVM_SUBMIT_ACTION().equals(VMForm.CADSR_ACTION_INS))
           isNewPV = true;
+        //get the use selection of the duplicate to update the vm
+        
         //handle pv changes
-        data.setNewVM(newVM);
-        PVAct.doChangePVAttributes(chgName, pvInd, isNewPV, data);
+        if (this.getDuplicateVMUse() == null)
+          data.setNewVM(newVM);
+         // String erVM = (String)data.getRequest().getAttribute("ErrMsgAC");
+          //update it only if there was no duplicates exisitng
+         // if (erVM == null || erVM.equals(""))
+          PVAct.doChangePVAttributes(chgName, pvInd, isNewPV, data);
+
         //store it in the session
-      //  session.setAttribute("VDPVList", data.getVDPVList());
-      //  data.getVD().setRemoved_VDPVList(data.getRemovedPVList());
         session.setAttribute("m_VD", data.getVD());
-        //session.setAttribute("RemovedPVList", data.getRemovedPVList());
         data.getRequest().setAttribute("focusElement", "pv" + pvInd + "View");
         //TODO - status messae
         System.out.println("PV Status " + data.getStatusMsg());
@@ -555,7 +578,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
      //get the array from teh hidden list
      String selRows[] = data.getRequest().getParameterValues("hiddenSelectedRow");  //("hiddenSelRow");
      if (selRows == null)
-       data.setStatusMsg("Unable to select Concept, please try again");    
+       data.setStatusMsg(data.getStatusMsg() + "\\tUnable to select Concept, please try again");    
      else
      {
        System.out.println("call method to get the concepts");
@@ -599,7 +622,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
    }
    
    @SuppressWarnings("unchecked")
-   public void submitPV(VD_Bean vd)
+   public String submitPV(VD_Bean vd)
    {
      
      Vector<PV_Bean> vVDPVS = vd.getVD_PV_List();
@@ -619,6 +642,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
            vm.setVM_CD_IDSEQ(vd.getVD_CD_IDSEQ());
          VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
          String errCode = vmser.submitVM(vm);
+         data.setStatusMsg(data.getStatusMsg() + vmser.data.getStatusMsg());
          //udpate pv and vdpvs only if edited
          if (!vpAction.equals("NONE") && !vpAction.equals("DEL"))
          {
@@ -666,6 +690,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
        data.getRequest().setAttribute("retcode", data.getRetErrorCode()); 
        //delete teh vdpv relationship if it was deleted from teh page
        doRemoveVDPV(vd);
+       return data.getStatusMsg();
    }
    //remove the deleted VDs
    public String doRemoveVDPV(VD_Bean vd)
@@ -689,6 +714,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
        }
        vd.setRemoved_VDPVList(new Vector<PV_Bean>());
      }
+     ret = data.getStatusMsg();
      return ret;
    }
    
@@ -702,20 +728,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
        VD_Bean vd = data.getVD();
        PV_Bean selPV = data.getSelectPV();
        PVAct.doRemovePV(vd, pvInd, selPV, 0);
-/*       Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
-       vdpvs.removeElementAt(pvInd);
-       vd.setVD_PV_List(vdpvs);
-       //add the removed pv to the removed pv list
-       PV_Bean selPV = data.getSelectPV();
-       if (selPV != null)
-       {
-         selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_DEL);
-         Vector<PV_Bean> rmList = vd.getRemoved_VDPVList();  // data.getRemovedPVList();
-         rmList.addElement(selPV);
-         //session.setAttribute("RemovedPVList", rmList);
-         vd.setRemoved_VDPVList(rmList);
-       }
-*/       //make the one before to be in view
+      //make the one before to be in view
        if (pvInd > 0)
          pvInd = (pvInd - 1);
        
@@ -725,45 +738,64 @@ System.out.println(sMenuAction + " pv action " + sAction);
      return "/PermissibleValue.jsp";
    }
 
-   private String doRestorePV()
+   @SuppressWarnings("unchecked")
+  private String doRestorePV()
    {
+     HttpSession session = data.getRequest().getSession();
      int pvInd = getSelectedPV();
-     if (pvInd > -1)
+     Vector<VM_Bean> errVMs = (Vector<VM_Bean>)session.getAttribute("VMEditMsg");
+     if (errVMs != null && errVMs.size() > 0)
      {
-       HttpSession session = data.getRequest().getSession();
-       //remove the pv from the current vd list
-       PV_Bean selPV = data.getSelectPV();
-       if (selPV != null)
+       session.removeAttribute("VMEditMsg");  
+       if (pvInd == -1)
        {
-         //check it idseq was from cadsr
-         String idseq = selPV.getPV_PV_IDSEQ();
-         PV_Bean orgPV = new PV_Bean();
-         if (idseq != null && !idseq.equals("") && !idseq.contains("EVS"))
+         data.getRequest().setAttribute("refreshPageAction", "openNewPV");
+         data.getRequest().setAttribute("focusElement", "divpvnew");          
+       }
+       else
+       {
+         data.getRequest().setAttribute("editPVInd", pvInd);
+         data.getRequest().setAttribute("refreshPageAction", "restore");
+       }
+     }
+     else
+     {
+       if (pvInd > -1)
+       {
+         //remove the pv from the current vd list
+         PV_Bean selPV = data.getSelectPV();
+         if (selPV != null)
          {
-           VD_Bean oldvd = (VD_Bean)session.getAttribute("oldVDBean");
-           Vector<PV_Bean> vdpvs = oldvd.getVD_PV_List();
-           if (vdpvs.size() > 0)  
+           //check it idseq was from cadsr
+           String idseq = selPV.getPV_PV_IDSEQ();
+           PV_Bean orgPV = new PV_Bean();
+           if (idseq != null && !idseq.equals("") && !idseq.contains("EVS"))
            {
-             for (int i=0; i<vdpvs.size(); i++)
+             VD_Bean oldvd = (VD_Bean)session.getAttribute("oldVDBean");
+             Vector<PV_Bean> vdpvs = oldvd.getVD_PV_List();
+             if (vdpvs.size() > 0)  
              {
-               PV_Bean thisPV =  (PV_Bean)vdpvs.elementAt(i);
-               if (thisPV.getPV_PV_IDSEQ() != null && selPV.getPV_PV_IDSEQ() != null && thisPV.getPV_PV_IDSEQ().equals(selPV.getPV_PV_IDSEQ()))
+               for (int i=0; i<vdpvs.size(); i++)
                {
-                 orgPV = orgPV.copyBean(thisPV);
-                 break;
+                 PV_Bean thisPV =  (PV_Bean)vdpvs.elementAt(i);
+                 if (thisPV.getPV_PV_IDSEQ() != null && selPV.getPV_PV_IDSEQ() != null && thisPV.getPV_PV_IDSEQ().equals(selPV.getPV_PV_IDSEQ()))
+                 {
+                   orgPV = orgPV.copyBean(thisPV);
+                   break;
+                 }
                }
              }
            }
+           else
+             orgPV = orgPV.copyBean(selPV);
+  
+           VD_Bean vd = data.getVD();
+           Vector<PV_Bean> vCurVP = vd.getVD_PV_List();
+           orgPV.setPV_VIEW_TYPE("expand");
+           vCurVP.setElementAt(orgPV, pvInd);
+           vd.setVD_PV_List(vCurVP); 
+           session.setAttribute("m_VD", vd);
          }
-         else
-           orgPV = orgPV.copyBean(selPV);
-
-         VD_Bean vd = data.getVD();
-         Vector<PV_Bean> vCurVP = vd.getVD_PV_List();
-         orgPV.setPV_VIEW_TYPE("expand");
-         vCurVP.setElementAt(orgPV, pvInd);
-         vd.setVD_PV_List(vCurVP); 
-         session.setAttribute("m_VD", vd);
        }
      }
      data.getRequest().setAttribute("focusElement", "pv" + pvInd + "View");     
@@ -785,7 +817,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
      //get the array from teh hidden list
      String selRows[] = data.getRequest().getParameterValues("hiddenSelRow");  //("hiddenSelRow");
      if (selRows == null)
-       data.setStatusMsg("Unable to select value meaning, please try again");    
+       data.setStatusMsg(data.getStatusMsg() + "\\tUnable to select value meaning, please try again");    
      else
      {
        PV_Bean pv = (PV_Bean)session.getAttribute("NewPV");
@@ -921,7 +953,31 @@ System.out.println(sMenuAction + " pv action " + sAction);
      return "/PermissibleValue.jsp";                 
    } // end
    
-   
+   @SuppressWarnings("unchecked")
+   private VM_Bean getDuplicateVMUse()
+   {
+     HttpSession session = data.getRequest().getSession();
+     Vector<VM_Bean> errVMs = (Vector<VM_Bean>)session.getAttribute("VMEditMsg");
+     if (errVMs != null && errVMs.size() > 0)
+     {
+       String vmUse = data.getRequest().getParameter("rUse");
+       int vmInd = -1;
+       if (vmUse != null && !vmUse.equals(""))
+       {
+         vmUse = vmUse.substring(4);
+         if (vmUse != null && !vmUse.equals(""))
+           vmInd = new Integer(vmUse).intValue();
+       }
+       if (vmInd > -1 && errVMs.size() > vmInd)
+       {
+         VM_Bean vm = errVMs.elementAt(vmInd);
+         data.setNewVM(vm);
+         session.removeAttribute("VMEditMsg");
+         return vm;
+       }
+     }
+     return null;
+   }
    
    /**
     * connects the db and returns the connection object
@@ -943,7 +999,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
      catch (Exception e)
      {
        logger.fatal("Error : Unable to make db connection.", e);
-       data.setStatusMsg("Error : Unable to make db connection." + e.toString());
+       data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to make db connection." + e.toString());
        data.setActionStatus(PVForm.ACTION_STATUS_FAIL);
      }
      return sbr_db_conn;
@@ -962,7 +1018,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
      catch (Exception e)
      {
        logger.fatal("Error : Unable to close connection.", e);
-       data.setStatusMsg("Error : Unable to close db connection." + e.toString());
+       data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to close db connection." + e.toString());
        data.setActionStatus(PVForm.ACTION_STATUS_FAIL);
      }
    }

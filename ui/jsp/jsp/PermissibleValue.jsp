@@ -112,7 +112,9 @@
       if (editPV != null) sEditPV = editPV.toString();
       if (sEditPV.equals("-1")) sEditPV = "pvNew";
       else if (!sEditPV.equals("")) sEditPV = "pv"+sEditPV;
-System.out.println(sEditPV + " jsp " + sErrAC);		
+    //  String editValue = (String)request.getAttribute("editPVValue");
+    //  if (editValue == null) editValue = "";
+System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus " + elmFocus);		
 		%>
 		<Script Language="JavaScript">
 
@@ -297,7 +299,9 @@ System.out.println(sEditPV + " jsp " + sErrAC);
 								Create New Permissible Value
 							</b>
 							&nbsp;&nbsp;&nbsp;
-							<input type="button" name="btnCreateNew" value="Save" style="width: 130" onclick="javascript:AddNewPV('addNewPV');">   <!--   onclick="javascript:view(divpvcreate, divpvnew, null, 'add', null);">  -->
+							<input type="button" name="btnCreateNew" value="Save" style="width: 130" 
+								<% if (vEMsg.size() > 0 && sEditPV.equals("pvNew")) { %> disabled <%}%>
+								onclick="javascript:AddNewPV('addNewPV');">
 							&nbsp;&nbsp;&nbsp;
 							<input type="button" name="btnCancelNew" value="Cancel" style="width: 130" onclick="javascript:CancelNewPV();"/>
 							<br>
@@ -317,13 +321,10 @@ System.out.println(sEditPV + " jsp " + sErrAC);
 									<th align="left">
 										&nbsp;&nbsp;&nbsp;Permissible Value
 									</th>
-									<th align="left">
-										<div id="pvNewVMLblEdit" style="display: <%if (newVMCon.size() > 0) { %>none<%} else {%>block<% } %>">
-												Value Meaning<span style="padding-left: 0.3in"><a href="javascript:searchVM();">Search</a></span>
-										</div>
-										<div id="pvNewVMLblView" style="display: <%if (newVMCon.size() > 0) { %>block<%} else {%>none<% } %>">
-											Value Meaning
-										</div>
+									<th align="left">Value Meaning <div id="pvNewVMLblEdit" 
+											style="display: <%if (newVMCon.size() > 0 || vEMsg.size() > 0) { %>none<%} else {%>block<% } %>">
+												<span style="padding-left: 0.3in"><a href="javascript:searchVM();">Search</a></span>
+											</div>
 									</th>
 									<th align="left">
 											Value Origin
@@ -472,6 +473,71 @@ System.out.println(sEditPV + " jsp " + sErrAC);
 												</td>
 											</tr>
 										</table>
+										<% if (vEMsg.size() > 0 && sEditPV.equals("pvNew")) { %>
+											<hr>
+											<table width="100%" cellpadding="0.05in,0.05in,0.05in,0.05in" border="1">
+												<col/></col>
+												<tr>
+													<td colspan=2 valign="top">
+														<table cellpadding="0.1in,0.1in,0.1in,0.1in" >
+															<tr>
+																<td>
+			              							<input type="button" name="btnUseSelect" style="width:100" value="Use Selection" disabled 
+			              								onClick="javascript:AddNewPV('addNewPV');">
+																</td>
+																<td>
+																	<input type="checkbox" name="saveAlt"/>
+																</td>
+																<td>
+																	Save the current Name and Description as Alternate Name and Definition <br>
+																</td>
+																<td>
+			              							<input type="button" name="btnCancelUS" style="width:80" value="Cancel" 
+			              								onClick="javascript:confirmRM('<%=sEditPV%>', 'restor', 'Permissible Value Attributes of <%=sEditPV%>');">
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+												<tr>
+													<td colspan=2>
+															The following <%=sErrAC%>s have one or more matching attributes as 
+															indicated in the ‘Reason’ field with each.  You may (1) select the 
+															desired <%=sErrAC%> and then select ‘Use Selection’ button, 
+															to use one of these existing <%=sErrAC%>s  OR (2) 
+															select ‘Cancel’ button to continue editing the current Value Meaning. 
+															<br>
+													</td>
+												</tr>
+											<% 
+												for (int k=0; k<vEMsg.size(); k++)
+												{ 
+														VM_Bean vB = (VM_Bean)vEMsg.elementAt(k);
+														Vector vBCon = vB.getVM_CONCEPT_LIST();
+														String rVM = "erVM"+k;
+											 %>
+												<tr>
+													<td valign="top"><input name="rUse" type="radio"  alt="Select to use" value="<%=rVM%>" onclick="javascript:enableUSE();"></td>
+													<td>
+														<dl>
+														<dt>VM Name: <dd><%=vB.getVM_SHORT_MEANING()%>
+														<dt>VM Description: <dd><%=vB.getVM_DESCRIPTION()%>
+														<dt>VM Concepts: 
+															<% if (vBCon.size() > 0) { 
+																	for (int p =0; p<vBCon.size(); p++) {
+																	EVS_Bean eB = (EVS_Bean)vBCon.elementAt(p);
+														  %>
+															<dd><%=eB.getLONG_NAME()%>&nbsp;&nbsp;<%=eB.getCONCEPT_IDENTIFIER()%>&nbsp;&nbsp;<%=eB.getEVS_DATABASE()%>
+														  <% }  } else { %>
+																None.
+															<% } %>
+														<dt>Reason: <dd><%=vB.getVM_COMMENTS()%>
+														</dl>																	
+													</td>
+												</tr>
+											<% } %>
+											</table>
+									<%} %>
 									</td>
 									<td id="newOrg" valign="top">
 										<a href="javascript:selectOrigin('newOrg','pvNew');">
@@ -679,6 +745,7 @@ System.out.println(sEditPV + " jsp " + sErrAC);
 						            if (sVValue == null) sVValue = "";
 						            String sPVVal = (String) pvBean.getPV_VALUE();
 						            if (sPVVal == null) sPVVal = "";
+						         //   if (sEditPV.equals(pvCount)) sPVVal = editValue;
 						            String sPVid = (String) pvBean.getPV_PV_IDSEQ();
 						            if (sPVid == null || sPVid.equals("")) sPVid = "EVS_" + sPVVal;
 						            vPVIDList.addElement(sPVid); //add the ones on the page
@@ -1059,6 +1126,13 @@ System.out.println(sEditPV + " jsp " + sErrAC);
 <input type="hidden" name="SelCDid" value="<%=sConDomID%>">
 </form>
 </div>
-
+<script language = "javascript">
+//put the pv in edit mode after cancel the duplicate to make sure that user completes the action
+<% if (pgAction.equals("restore")) { %>
+	document.getElementById("editPVInd").value = "";
+	view(<%=sEditPV%>View, <%=sEditPV%>ImgEdit, <%=sEditPV%>ImgSave, 'edit', '<%=sEditPV%>');
+	document.getElementById("editPVInd").value = "<%=sEditPV%>";
+<% } %>
+</script>
   </body>
 </html>

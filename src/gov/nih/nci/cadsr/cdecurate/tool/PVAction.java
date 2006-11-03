@@ -76,13 +76,12 @@ public class PVAction implements Serializable
       if (data.getNewVM() != null)
       {
         newPV.setPV_VM(data.getNewVM());  //copy the changed vm
-    //TODO    newPV.setPV_SHORT_MEANING(data.getNewVM().getVM_LONG_NAME());
       }
       //check if associated with the form
       boolean isExists = this.checkPVQCExists(vd, selPV, data);
       if (isExists)
       {
-        data.setStatusMsg("Unable to change the Permissible Value " +
+        data.setStatusMsg(data.getStatusMsg() + "\\tUnable to change the Permissible Value " +
             selPV.getPV_VALUE() + " because it is used in a CRF.\\n");
         selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_NONE);
       }
@@ -99,7 +98,6 @@ public class PVAction implements Serializable
       vdpvs.insertElementAt(newPV, pvInd);  //data.getVDPVList().insertElementAt(newPV, pvInd);
     }    
     vd.setVD_PV_List(vdpvs);
-  //  vd.setRemoved_VDPVList(data.getRemovedPVList())
     data.setVD(vd);
   }
   
@@ -151,7 +149,7 @@ public class PVAction implements Serializable
     catch(Exception e)
     {
       logger.fatal("ERROR - checkPVQCExists for other : ", e);
-      data.setStatusMsg("Error : Unable to get existing pv-qc." + e.toString());
+      data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to get existing pv-qc." + e.toString());
       data.setActionStatus(ConceptForm.ACTION_STATUS_FAIL);
     }
     try
@@ -790,7 +788,7 @@ public class PVAction implements Serializable
           errMsg += "These Concept Defintions from caDSR do not match to the selected Concept : " + unMatchDef;
       }
     }
-    data.setStatusMsg(errMsg);
+    data.setStatusMsg(data.getStatusMsg() + "\\t" + errMsg);
     return eBean;
   }
 
@@ -897,7 +895,7 @@ public class PVAction implements Serializable
            pv.setPV_PV_IDSEQ(sPV_ID);
            if (sReturnCode != null && !sReturnCode.equals("API_PV_300"))
            {
-             data.setStatusMsg("\\t " + sReturnCode + " : Unable to update Permissible Value - " + sValue + ".");
+             data.setStatusMsg(data.getStatusMsg() + "\\t " + sReturnCode + " : Unable to update Permissible Value - " + sValue + ".");
              data.setRetErrorCode(sReturnCode);      //store returncode in request to track it all through this request    
              data.setPvvmErrorCode(sReturnCode);  //store it capture check for pv creation
            }
@@ -909,7 +907,7 @@ public class PVAction implements Serializable
      {
        logger.fatal("ERROR in setPV for other : " + e.toString(), e);
        data.setRetErrorCode("Exception");
-       data.setStatusMsg("\\t Exception : Unable to update Permissible Value attributes.");
+       data.setStatusMsg(data.getStatusMsg() + "\\t Exception : Unable to update Permissible Value attributes.");
      }
      try
      {
@@ -922,7 +920,7 @@ public class PVAction implements Serializable
      {
        logger.fatal("ERROR in InsACService-setPV for close : " + ee.toString(), ee);
        data.setRetErrorCode("Exception");
-       data.setStatusMsg("\\t Exception : Unable to update Permissible Value attributes.");
+       data.setStatusMsg(data.getStatusMsg() + "\\t Exception : Unable to update Permissible Value attributes.");
      }
      return sReturnCode;
    }
@@ -1074,14 +1072,14 @@ public class PVAction implements Serializable
               String sPValue = pvBean.getPV_VALUE();
               String sVDName = vdBean.getVD_LONG_NAME();
               if (sAction.equals("INS") || sAction.equals("UPD"))
-                 data.setStatusMsg("\\t " + retCode + " : Unable to update permissible value " + sPValue + ".");
+                 data.setStatusMsg(data.getStatusMsg() + "\\t " + retCode + " : Unable to update permissible value " + sPValue + ".");
               else if (sAction.equals("DEL") && retCode.equals("API_VDPVS_006"))
               {
-                data.setStatusMsg("\\t This Value Domain is used by a form. " +
+                data.setStatusMsg(data.getStatusMsg() + "\\t This Value Domain is used by a form. " +
                    "Create a new version of the Value Domain to remove permissible value " + sPValue + ".");
               }
               else 
-                data.setStatusMsg("\\t " + retCode + " : Unable to remove permissible value " + sPValue + ".");
+                data.setStatusMsg(data.getStatusMsg() + "\\t " + retCode + " : Unable to remove permissible value " + sPValue + ".");
               data.setRetErrorCode(retCode);  
             }
             else
@@ -1094,7 +1092,7 @@ public class PVAction implements Serializable
      {
        logger.fatal("ERROR in setVD_PVS for other : " + e.toString(), e);
        data.setRetErrorCode("Exception");
-       data.setStatusMsg("\\t Exception : Unable to update or remove PV of VD.");
+       data.setStatusMsg(data.getStatusMsg() + "\\t Exception : Unable to update or remove PV of VD.");
      }
      try
      {
@@ -1106,7 +1104,7 @@ public class PVAction implements Serializable
      {
        logger.fatal("ERROR in setVD_PVS for close : " + ee.toString(), ee);
        data.setRetErrorCode("Exception");
-       data.setStatusMsg("\\t Exception : Unable to update or remove PV of VD.");
+       data.setStatusMsg(data.getStatusMsg() + "\\t Exception : Unable to update or remove PV of VD.");
      }
      return retCode;
    }  //END setVD_PVS
@@ -1265,14 +1263,14 @@ public class PVAction implements Serializable
          Integer IRow = new Integer(thisRow);
          int iRow = IRow.intValue();
          if (iRow < 0 || iRow > vRSel.size())
-           data.setStatusMsg("Row size is either too big or too small.");
+           data.setStatusMsg(data.getStatusMsg() + "\\tRow size is either too big or too small.");
          else
          {
            EVS_Bean eBean = (EVS_Bean)vRSel.elementAt(iRow);
            //send it back if unable to obtion the concept
            if (eBean == null || eBean.getLONG_NAME() == null)
            {
-             data.setStatusMsg("Unable to obtain concept from the " + thisRow + " row of the search results.\\n" + 
+             data.setStatusMsg(data.getStatusMsg() + "\\tUnable to obtain concept from the " + thisRow + " row of the search results.\\n" + 
                  "Please try again.");
              continue;
            }

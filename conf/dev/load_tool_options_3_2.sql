@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/dev/load_tool_options_3_2.sql,v 1.6 2006-11-01 20:41:24 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/dev/load_tool_options_3_2.sql,v 1.7 2006-11-03 04:49:59 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -109,6 +109,12 @@ WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.1.DISPLAY';
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EVS.VOCAB.ALL.TREESEARCH', 'true', 
 	   'Store vocab Tree Search filter for all vocabulary');
+
+--Update value of derivation property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DERIVATION_TYPE.1'
+WHERE tool_name = 'CURATION' AND property = 'DERIVATION_TYPE' AND value = 'CALCULATED';
+
 
 
 --commit changes
