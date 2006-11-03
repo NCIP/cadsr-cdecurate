@@ -600,6 +600,9 @@ System.out.println("in getAC_Concepts condrID: " + condrID);
             eBean.setEVS_DATABASE(rs.getString("origin"));
             eBean.setEVS_DEF_SOURCE(rs.getString("definition_source"));
             eBean.setNCI_CC_TYPE(rs.getString("evs_source"));
+            eBean.setNVP_CONCEPT_VALUE(rs.getString("CONCEPT_VALUE"));
+            if (!eBean.getNVP_CONCEPT_VALUE().equals(""))
+              eBean.setLONG_NAME(eBean.getLONG_NAME() + "::" + eBean.getNVP_CONCEPT_VALUE());
             eBean.setCONDR_IDSEQ(condrID);
             eBean.setCON_AC_SUBMIT_ACTION("NONE");
             if(rs.getString("origin") != null && rs.getString("origin").equals("NCI Metathesaurus"))

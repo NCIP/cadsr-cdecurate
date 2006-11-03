@@ -41,9 +41,9 @@
     		var vmEDiv = document.getElementById("pvNewVMLblEdit");
     		if (vmEDiv != null && vmEDiv.style.display == "block")
     			vmEDiv.style.display = "none";
-    		var vmVDiv = document.getElementById("pvNewVMLblView");
-    		if (vmVDiv != null && vmVDiv.style.display == "none")
-    			vmVDiv.style.display = "block";    		
+    	//	var vmVDiv = document.getElementById("pvNewVMLblView");
+    	//	if (vmVDiv != null && vmVDiv.style.display == "none")
+    	//		vmVDiv.style.display = "block";    		
     	}
     }
     function CancelNewPV()
@@ -246,7 +246,7 @@
     	//unedit all first
     //	if (action == "edit") 
     //		viewAll("uneditAll");
-    	
+  // alert(editedPV + " view " + action); 	
     	if (action == "save") action = "open";	
     	viewVM = pvdiv;
     	var currDisp = viewVM.style.display;
@@ -529,6 +529,10 @@
 			focusObj.scrollIntoView();
 			
 		selectParent();   //do the parent select action if the parent was selected.
+		
+	//	var pvObj = document.getElementById("editPVInd");
+	//	if (pvObj != null && (pvObj.value != null && pvObj.value != ""))
+	//		vvmvmdDisplay(pvObj.value, "edit");
 	}
     		
 	function beforeRefresh(submitAct)

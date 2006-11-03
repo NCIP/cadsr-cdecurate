@@ -1,7 +1,7 @@
 <!--
     Copyright (c) 2006 ScenPro, Inc.
 
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/alternates3.jsp,v 1.6 2006-11-01 20:41:42 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/alternates3.jsp,v 1.7 2006-11-03 04:50:00 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -153,7 +153,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             {
                 length = (String) pageContext.getRequest().getAttribute(AltNamesDefsServlet._dbTextMax);
         %>
-                    <td style="vertical-align: top"><span class="prompt">Name:</span> (<%=length%> character max)<br/>
+                    <td style="vertical-align: top"><span class="mandatory">*</span><span class="prompt">Name:</span> (<%=length%> character max)<br/>
         <%
                 text = (String) pageContext.getRequest().getAttribute(AltNamesDefsServlet._parmNameDef);
         %>
@@ -164,7 +164,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             {
                 length = (String) pageContext.getRequest().getAttribute(AltNamesDefsServlet._dbTextMax);
         %>
-                    <td style="vertical-align: top"><span class="prompt">Definition:</span> (<%=length%> character max)<br/>
+                    <td style="vertical-align: top"><span class="mandatory">*</span><span class="prompt">Definition:</span> (<%=length%> character max)<br/>
         <%
                 text = (String) pageContext.getRequest().getAttribute(AltNamesDefsServlet._parmNameDef);
         %>
@@ -172,12 +172,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <%
             }
         %>
-                    <td style="padding-left: 0.1in; vertical-align: top"><b>Type:</b><br/><select name="<%=AltNamesDefsServlet._parmType%>">
+                    <td style="padding-left: 0.1in; vertical-align: top"><span class="mandatory">*</span><span class="prompt">Type:</span><br/><select name="<%=AltNamesDefsServlet._parmType%>">
         <%
             text = (String) pageContext.getRequest().getAttribute(AltNamesDefsServlet._parmType);
         %><%=text%>
                     </select></td>
-                    <td style="padding-left: 0.1in; vertical-align: top"><span class="prompt">Language:</span><br/><select name="<%=AltNamesDefsServlet._parmLang%>">
+                    <td style="padding-left: 0.1in; vertical-align: top"><span class="mandatory">*</span><span class="prompt">Language:</span><br/><select name="<%=AltNamesDefsServlet._parmLang%>">
         <%
             text = (String) pageContext.getRequest().getAttribute(AltNamesDefsServlet._parmLang);
         %><%=text%>

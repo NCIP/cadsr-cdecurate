@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.17 2006-11-01 20:41:42 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.18 2006-11-03 04:49:59 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -228,9 +228,11 @@ public class InsACService implements Serializable
           if (!pageVDType.equals("E") && sAction.equals("UPD") && vVDPVs != null && vVDPVs.size()>0)
           {
             PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
-            pvser.doRemoveVDPV(vd);  //TODO - this.addRemoveVDPVS(vd, false);
+            String sStat = pvser.doRemoveVDPV(vd);  //TODO - this.addRemoveVDPVS(vd, false);
             if (sReturnCode != null && !sReturnCode.equals(""))
               vd.setVD_TYPE_FLAG("E");
+            if (sStat != null && !sStat.equals("")) 
+              this.storeStatusMsg(sStat);
           }
         }
       } //end sInsert for not Update
@@ -440,7 +442,9 @@ public class InsACService implements Serializable
                   (pageVDType == null || pageVDType.equals("") || pageVDType.equals("E")))
               {
                 PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
-                pvser.submitPV(vd);
+                String sStat = pvser.submitPV(vd);
+                if (sStat != null && !sStat.equals("")) 
+                  this.storeStatusMsg(sStat);
               }             
             }
             //reset the pv counts to reset more hyperlink

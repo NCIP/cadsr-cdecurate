@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.16 2006-11-01 20:41:42 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.17 2006-11-03 04:49:59 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1734,6 +1734,9 @@ public class GetACService implements Serializable
  // System.err.println("in getAC_Concepts origin: " + rs.getString("origin"));
             eBean.setEVS_DEF_SOURCE(rs.getString("definition_source"));
             eBean.setNCI_CC_TYPE(rs.getString("evs_source"));
+            eBean.setNVP_CONCEPT_VALUE(rs.getString("CONCEPT_VALUE"));
+            if (!eBean.getNVP_CONCEPT_VALUE().equals(""))
+              eBean.setLONG_NAME(eBean.getLONG_NAME() + "::" + eBean.getNVP_CONCEPT_VALUE());
             eBean.setCONDR_IDSEQ(condrID);
             eBean.setCON_AC_SUBMIT_ACTION("NONE");
             eBean.markNVPConcept(eBean, m_classReq.getSession());
@@ -1802,7 +1805,7 @@ public class GetACService implements Serializable
       String sQuery = "select detl_name from designation_types_lov_view";
       getDataListSQL(null, vT, sQuery);
       Vector<String> vList = new Vector<String>();
-      Vector vTypes = this.getToolOptionData("CURATION", "DESIGNATION_TYPE", "");  // 
+      Vector vTypes = this.getToolOptionData("CURATION", "DESIGNATION_TYPE%", "");  // 
       if (vTypes != null && vTypes.size() > 0)
       {
         for (int i=0; i<vTypes.size(); i++)
@@ -1835,7 +1838,7 @@ public class GetACService implements Serializable
        String sQuery = "select dctl_name from document_types_lov_view";
        getDataListSQL(null, vT, sQuery);
        Vector<String> vList = new Vector<String>();
-       Vector vTypes = this.getToolOptionData("CURATION", "DOCUMENT_TYPE", "");  // 
+       Vector vTypes = this.getToolOptionData("CURATION", "DOCUMENT_TYPE%", "");  // 
        if (vTypes != null && vTypes.size() > 0)
        {
          for (int i=0; i<vTypes.size(); i++)
@@ -1871,7 +1874,7 @@ public class GetACService implements Serializable
       if (vT != null) 
         session.setAttribute("allDerTypes", vT);
       Vector<String> vList = new Vector<String>();
-      Vector vTypes = this.getToolOptionData("CURATION", "DERIVATION_TYPE", "");  // 
+      Vector vTypes = this.getToolOptionData("CURATION", "DERIVATION_TYPE%", "");  // 
       if (vTypes != null && vTypes.size() > 0)
       {
         for (int i=0; i<vTypes.size(); i++)

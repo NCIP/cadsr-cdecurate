@@ -13,6 +13,7 @@ DIV.LIST { border: 1px solid black; height: 2in; overflow: auto; cursor: default
 P.NOTE1 { font-size: 10pt; margin-left: 1.0in; font-weight: bold; color: #990000 }
 P.TITLE1 { font-size: 12pt; margin-left: 1.0in; text-indent: -1.0in }
 P.TITLE2 { font-size: 12pt; font-weight: bold; color: #0000aa; text-align: right }
+SPAN.MANDATORY { color: #ff0000; font-weight: bold; padding-right: 0.07in }
 SPAN.PROMPT { font-weight: bold }
 SPAN.REMOVE { font-weight: bold; font-family: webdings; cursor: default }
 SPAN.RESTORE { font-weight: bold; font-family: wingdings 3; cursor: default }

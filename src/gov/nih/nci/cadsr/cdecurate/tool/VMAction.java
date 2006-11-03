@@ -109,7 +109,7 @@ public class VMAction implements Serializable
     catch(Exception e)
     {
       logger.fatal("ERROR - VMAction-searchVM for other : " + e.toString(), e);
-      data.setStatusMsg("Error : Unable to search VM." + e.toString());
+      data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to search VM." + e.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
       e.printStackTrace();
     }
@@ -123,7 +123,7 @@ public class VMAction implements Serializable
     catch(Exception ee)
     {
       logger.fatal("ERROR - VMAction-searchVM for close : " + ee.toString(), ee);
-      data.setStatusMsg("Error : Unable to search VM." + ee.toString());
+      data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to search VM." + ee.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
     }
   }  //endVM search
@@ -197,7 +197,7 @@ public class VMAction implements Serializable
     {
       //System.err.println("ERROR in VMAction-getVMResult: " + e);
       logger.fatal("ERROR in VMAction-getVMResult : " + e.toString(), e);
-      data.setStatusMsg("Error : Unable to search VM." + e.toString());
+      data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to search VM." + e.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
     }
   }
@@ -276,7 +276,7 @@ public class VMAction implements Serializable
     catch(Exception e)
     {
       logger.fatal("ERROR in VMAction-VMsortedRows : ", e);
-      data.setStatusMsg("Error : Unable to search VM." + e.toString());
+      data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to search VM." + e.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
     }
   }
@@ -352,7 +352,7 @@ public class VMAction implements Serializable
         printFlagedVMs(vmBean, sMsg, "");
         sMsg.append("-----------------\n");
 */        //get the message
-        data.setStatusMsg(dispMsgACType);
+       // data.setStatusMsg(dispMsgACType);
         if (dispMsgACType.equals("Concept"))
         {
           //sMsg.append("One or more matching Concepts were found.  \nPlease select one from the list below and click Use Selection or Cancel. \n");
@@ -483,7 +483,7 @@ public class VMAction implements Serializable
         sReturnCode = CStmt.getString(1);
         if (sReturnCode != null && !sReturnCode.equals("API_VM_300"))
         {
-          data.setStatusMsg("\\t " + sReturnCode + " : Unable to update Value Meaning - "
+          data.setStatusMsg(data.getStatusMsg() + "\\t" + sReturnCode + " : Unable to update Value Meaning - "
               + sShortMeaning + ".");
           data.setRetErrorCode(sReturnCode); // store returncode in request to track it all through
           // this request
@@ -507,7 +507,7 @@ public class VMAction implements Serializable
     {
       logger.fatal("ERROR in setVM for other : " + e.toString(), e);
       data.setRetErrorCode("Exception");
-      data.setStatusMsg("\\t Exception : Unable to update VM attributes.");
+      data.setStatusMsg(data.getStatusMsg() + "\\tException : Unable to update VM attributes.");
       // m_classReq.setAttribute("retcode", "Exception");
       // this.storeStatusMsg("\\t Exception : Unable to update VM attributes.");
     }
@@ -522,7 +522,7 @@ public class VMAction implements Serializable
     {
       logger.fatal("ERROR in setVM for close : " + ee.toString(), ee);
       data.setRetErrorCode("Exception");
-      data.setStatusMsg("\\t Exception : Unable to update VM attributes.");
+      data.setStatusMsg(data.getStatusMsg() + "\\tException : Unable to update VM attributes.");
       // m_classReq.setAttribute("retcode", "Exception");
       // this.storeStatusMsg("\\t Exception : Unable to update VM attributes.");
     }
@@ -584,7 +584,7 @@ public class VMAction implements Serializable
         sReturnCode = CStmt.getString(2);
         if (sReturnCode != null)
         {
-          data.setStatusMsg("\\t " + sReturnCode + " : Unable to update Value Meaning - "
+          data.setStatusMsg(data.getStatusMsg() + "\\t" + sReturnCode + " : Unable to update Value Meaning - "
               + vm.getVM_SHORT_MEANING() + ".");
           // m_classReq.setAttribute("retcode", sReturnCode); //store returncode in request to track
           // it all through this request
@@ -613,7 +613,7 @@ public class VMAction implements Serializable
     {
       logger.fatal("ERROR in setEVS_VM for other : " + e.toString(), e);
       data.setRetErrorCode("Exception");
-      data.setStatusMsg("\\t Exception : Unable to update VM attributes.");
+      data.setStatusMsg(data.getStatusMsg() + "\\tException : Unable to update VM attributes.");
     }
     try
     {
@@ -626,7 +626,7 @@ public class VMAction implements Serializable
     {
       logger.fatal("ERROR in setEVS_VM for close : " + ee.toString(), ee);
       data.setRetErrorCode("Exception");
-      data.setStatusMsg("\\t Exception : Unable to update VM attributes.");
+      data.setStatusMsg(data.getStatusMsg() + "\\tException : Unable to update VM attributes.");
     }
     return data.getRetErrorCode();
   }
@@ -664,7 +664,7 @@ public class VMAction implements Serializable
       catch(Exception e)
       {
         logger.fatal("ERROR - getCDVMS for other : ", e);
-        data.setStatusMsg("Error : Unable to get existing cdvms." + e.toString());
+    //    data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to get existing cdvms." + e.toString());
         data.setActionStatus(ConceptForm.ACTION_STATUS_FAIL);
       }
       try
@@ -738,7 +738,7 @@ public class VMAction implements Serializable
            String sCV_ID = CStmt.getString(3);
            if (sReturnCode != null && !sReturnCode.equals("API_CDVMS_203"))
            {
-             data.setStatusMsg("\\t " + sReturnCode + " : Unable to update Conceptual Domain and Value Meaning relationship - "
+             data.setStatusMsg(data.getStatusMsg() + "\\t " + sReturnCode + " : Unable to update Conceptual Domain and Value Meaning relationship - "
                  + cdName + " and " + sShortMeaning + ".");
             // m_classReq.setAttribute("retcode", sReturnCode);      //store returncode in request to track it all through this request
              data.setRetErrorCode(sReturnCode);
@@ -752,7 +752,7 @@ public class VMAction implements Serializable
        logger.fatal("ERROR in setCDVMS for other : " + e.toString(), e);
        //m_classReq.setAttribute("retcode", "Exception");
        data.setRetErrorCode("Exception");
-       data.setStatusMsg("\\t Exception : Unable to update CD and VM relationship.");
+       data.setStatusMsg(data.getStatusMsg() + "\\tException : Unable to update CD and VM relationship.");
      }
      try
      {
@@ -766,7 +766,7 @@ public class VMAction implements Serializable
        logger.fatal("ERROR in setCDVMS for close : " + ee.toString(), ee);
        //m_classReq.setAttribute("retcode", "Exception");
        data.setRetErrorCode("Exception");
-       data.setStatusMsg("\\t Exception : Unable to update CD and VM relationship.");
+       data.setStatusMsg(data.getStatusMsg() + "\\tException : Unable to update CD and VM relationship.");
      }
      return sReturnCode;
   }
@@ -849,7 +849,7 @@ public class VMAction implements Serializable
     catch (Exception e)
     {
       logger.fatal("ERROR in getVM : " + e.toString(), e);
-      data.setStatusMsg("Error : Unable to get VM." + e.toString());
+      data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to get VM." + e.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
     }
     try
@@ -861,8 +861,8 @@ public class VMAction implements Serializable
     }
     catch (Exception ee)
     {
-      logger.fatal("ERROR in getVM for close : " + ee.toString(), ee);
-      data.setStatusMsg("Error : Unable to get VM." + ee.toString());
+      logger.fatal(data.getStatusMsg() + "\\tERROR in getVM for close : " + ee.toString(), ee);
+      data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to get VM." + ee.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
     }
     return vm;
@@ -1387,7 +1387,7 @@ public class VMAction implements Serializable
     catch(Exception e)
     {
       logger.fatal("ERROR - getVMbyCondr for other : ", e);
-      data.setStatusMsg("Error : Unable to do search vm by condr." + e.toString());
+      data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to do search vm by condr." + e.toString());
       data.setActionStatus(ConceptForm.ACTION_STATUS_FAIL);
     }
     try
@@ -1682,7 +1682,7 @@ public class VMAction implements Serializable
     {
       e.printStackTrace();
       logger.fatal("ERROR in getVM : " + e.toString(), e);
-      data.setStatusMsg("Error : Unable to get VM." + e.toString());
+      data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to get VM." + e.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
     }
     try
@@ -1695,7 +1695,7 @@ public class VMAction implements Serializable
     catch (Exception ee)
     {
       logger.fatal("ERROR in close connection : " + ee.toString(), ee);
-      data.setStatusMsg("Error : close connection." + ee.toString());
+      data.setStatusMsg(data.getStatusMsg() + "\\tError : close connection." + ee.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
     }
   }

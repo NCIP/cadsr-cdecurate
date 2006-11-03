@@ -210,7 +210,8 @@ public class VMServlet implements Serializable
     HttpSession session = req.getSession();
     //get the edited vm
     VM_Bean vm = (VM_Bean)session.getAttribute("selectVM");  // pv.getPV_VM();
-    if (vm == null) vm = pv.getPV_VM();
+    if (vm == null || vm.getVM_SHORT_MEANING() == null || vm.getVM_SHORT_MEANING().equals("")) 
+      vm = pv.getPV_VM();
     Vector vmCon = vm.getVM_CONCEPT_LIST();
     String[] sCons = req.getParameterValues("hiddenConVM");
     if (sCons != null && vmCon != null)
@@ -256,7 +257,7 @@ public class VMServlet implements Serializable
       vmName += con.getLONG_NAME();
       if (!vmDef.equals("")) vmDef += "_ ";
       vmDef += con.getPREFERRED_DEFINITION();
- //   System.out.println(i + " cname " + con.getLONG_NAME() + " cdef " + con.getPREFERRED_DEFINITION());
+    System.out.println(i + " cname " + con.getLONG_NAME() + " cdef " + con.getPREFERRED_DEFINITION());
     }
     System.out.println(vmName + " vm name " + vmDef);
     vm.setVM_LONG_NAME(vmName);
@@ -295,7 +296,7 @@ public class VMServlet implements Serializable
     catch (Exception e)
     {
       logger.fatal("Error : Unable to make db connection.", e);
-      data.setStatusMsg("Error : Unable to make db connection." + e.toString());
+      data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to make db connection." + e.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
     }
     return sbr_db_conn;
@@ -314,7 +315,7 @@ public class VMServlet implements Serializable
     catch (Exception e)
     {
       logger.fatal("Error : Unable to close connection.", e);
-      data.setStatusMsg("Error : Unable to close db connection." + e.toString());
+      data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to close db connection." + e.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
     }
   }
