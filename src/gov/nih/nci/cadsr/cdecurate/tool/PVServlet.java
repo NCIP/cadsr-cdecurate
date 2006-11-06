@@ -279,24 +279,26 @@ System.out.println(sMenuAction + " pv action " + sAction);
           isNewPV = true;
      //   data.getRequest().setAttribute("editPVValue", chgName);
         //handle vm changes
-        VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
-        //go back it vm was not changed
-        VM_Bean newVM = selectPV.getPV_VM();
-        String editVM = (String)data.getRequest().getParameter("currentVM");
-        if (editVM != null && !editVM.equals(""))
-        {
-          vmser.readDataForCreate(selectPV, pvInd);
-          newVM = vmser.data.getVMBean();
-          data.setStatusMsg(data.getStatusMsg() + vmser.data.getStatusMsg());
-        }
-     System.out.println(isNewPV + " same pv " + chgName);
-        if (newVM.getVM_SUBMIT_ACTION().equals(VMForm.CADSR_ACTION_INS))
-          isNewPV = true;
         //get the use selection of the duplicate to update the vm
         
         //handle pv changes
         if (this.getDuplicateVMUse() == null)
+        {
+          VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
+          //go back it vm was not changed
+          VM_Bean newVM = selectPV.getPV_VM();
+          String editVM = (String)data.getRequest().getParameter("currentVM");
+          if (editVM != null && !editVM.equals(""))
+          {
+            vmser.readDataForCreate(selectPV, pvInd);
+            newVM = vmser.data.getVMBean();
+            data.setStatusMsg(data.getStatusMsg() + vmser.data.getStatusMsg());
+          }
+       System.out.println(isNewPV + " same pv " + chgName);
+          if (newVM.getVM_SUBMIT_ACTION().equals(VMForm.CADSR_ACTION_INS))
+            isNewPV = true;
           data.setNewVM(newVM);
+        }
          // String erVM = (String)data.getRequest().getAttribute("ErrMsgAC");
           //update it only if there was no duplicates exisitng
          // if (erVM == null || erVM.equals(""))

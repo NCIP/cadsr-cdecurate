@@ -365,10 +365,10 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 									<td valign="top">
 										<table width="98%" border="0">
 											<col width="1px">
-											<col>
+											<col><col width="4px">
 											<tr>
 												<td>
-													&nbsp;&nbsp;&nbsp;&nbsp;
+													&nbsp;&nbsp;
 												</td>
 												<td>
 													<div id="pvNewVMView" style="display: <%if (newVMCon.size() > 0) { %>block<%} else {%>none<% } %>">
@@ -379,9 +379,14 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 															value="<%=newVM.getVM_SHORT_MEANING()%>" onkeyup="javascript:disableSearch('pvNew');">
 													</div>
 												</td>
+												<td>
+													<b>
+                            <span style="padding-left: 0.3in"><a href="javascript:openDesignateWindow('Alternate Names');">Alternate Names</a></span>
+													</b>
+												</td>
 											</tr>
 											<tr>
-												<td colspan="2">
+												<td colspan="3">
 													<br>
 													<b>
 														Description/Definition
@@ -390,9 +395,9 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 											</tr>
 											<tr>
 												<td>
-													&nbsp;&nbsp;&nbsp;&nbsp;
+													&nbsp;&nbsp;
 												</td>
-												<td align="left">
+												<td align="left" colspan="2">
 													<div id="pvNewVMDView" style="display: <%if (newVMCon.size() > 0) { %>block<%} else {%>none<% } %>">
 														<%=newVM.getVM_DESCRIPTION().trim()%>
 													</div>
@@ -402,7 +407,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 												</td>
 											</tr>
 											<tr>
-												<td colspan="2">
+												<td colspan="3">
 													<br>
 													<b>
                             Concepts<span style="padding-left: 0.3in"><a href="javascript:selectConcept('newCon','pvNew');">Search</a></span>
@@ -411,9 +416,9 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 											</tr>
 											<tr>
 												<td>
-													&nbsp;&nbsp;&nbsp;&nbsp;
+													&nbsp;&nbsp;
 												</td>
-												<td valign="top" align="left">
+												<td valign="top" align="left" colspan="2">
 													<div style="border: 1px solid grey;">
 														<table id="pvNewTBL" width="90%" border="0">
 														<% 
@@ -829,6 +834,10 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 															<input type="text" name="txt<%=pvCount%>Mean" maxlength="255" style="width: 100%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vm');" value="<%=sPVMean%>">
 														</div>
 													<% } %>
+													<div id="<%=pvCount%>VMAltEdit" style="display: none">
+															&nbsp;&nbsp;
+															<a href="javascript:openDesignateWindow('Alternate Names');">Alternate Names</a>
+													</div>
 													<br>
 													<div id="<%=pvCount%>View" style="display: <%if (viewType.equals("expand")) {%>block <% } else { %> none <% } %>">
 														<table width="100%">

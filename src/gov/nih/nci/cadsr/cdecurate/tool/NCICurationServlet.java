@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.18 2006-11-03 18:22:54 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.19 2006-11-06 03:57:19 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1985,7 +1985,10 @@ public class NCICurationServlet extends HttpServlet
       if(sAction.equals("changeContext"))
         doChangeContext(req, res, "vd");
       else if(sAction.equals("validate"))
+      {
         doValidateVD(req, res);
+        ForwardJSP(req, res, "/ValidateVDPage.jsp");
+      }
       else if(sAction.equals("submit"))
         doSubmitVD(req, res);
       else if(sAction.equals("createPV") || sAction.equals("editPV") || sAction.equals("removePV"))
@@ -2111,6 +2114,7 @@ public class NCICurationServlet extends HttpServlet
       else if (sAction.equals("vddetailstab"))
       {
         session.setAttribute("TabFocus", "VD");
+        doValidateVD(req, res);
         ForwardJSP(req, res, "/CreateVDPage.jsp");
       }
   }
@@ -2148,7 +2152,10 @@ public class NCICurationServlet extends HttpServlet
       else if(sAction.equals("validate") && sOriginAction.equals("BlockEditVD"))
         doValidateVDBlockEdit(req, res);
       else if(sAction.equals("validate"))
+      {
         doValidateVD(req, res);
+        ForwardJSP(req, res, "/ValidateVDPage.jsp");
+      }
       else if(sAction.equals("suggestion"))
         doSuggestionDE(req, res);
 /*      else if (sAction.equals("refreshCreateVD"))
@@ -2261,6 +2268,7 @@ public class NCICurationServlet extends HttpServlet
       else if (sAction.equals("vddetailstab"))
       {
         session.setAttribute("TabFocus", "VD");
+        doValidateVD(req, res);
         ForwardJSP(req, res, "/EditVDPage.jsp");
       }
    }
@@ -3438,11 +3446,11 @@ public class NCICurationServlet extends HttpServlet
       m_REPQ = (EVS_Bean)session.getAttribute("m_REPQ");
       m_setAC.setValidatePageValuesVD(req, res, m_VD, m_OC, m_PC, m_REP, m_OCQ, m_PCQ, m_REPQ, getAC);
       session.setAttribute("m_VD", m_VD);
-      if(sAction.equals("Enum") || sAction.equals("NonEnum") || sAction.equals("EnumByRef"))
+/*      if(sAction.equals("Enum") || sAction.equals("NonEnum") || sAction.equals("EnumByRef"))
         ForwardJSP(req, res, "/CreateVDPage.jsp");
-      else if (!sAction.equals("vdpvstab"))
+      else if (!sAction.equals("vdpvstab") && !sAction.equals("vddetailstab"))
        ForwardJSP(req, res, "/ValidateVDPage.jsp");
-  } // end of doValidateVD
+*/  } // end of doValidateVD
 
     /**
   * The doSetVDPage method gets the values from page the user filled out,

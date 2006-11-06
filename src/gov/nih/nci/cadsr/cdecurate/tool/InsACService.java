@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.19 2006-11-03 18:22:54 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.20 2006-11-06 03:57:19 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2346,7 +2346,7 @@ public class InsACService implements Serializable
 
             // Set the In parameters (which are inherited from the PreparedStatement class)
             CStmt.setString(1,sPCCondrString);       //comma-delimited con idseqs
-        //System.out.println(PCBean.getLONG_NAME() + " conIDseqs :" + sPCCondrString);
+        System.out.println(PCBean.getLONG_NAME() + " conIDseqs :" + sPCCondrString);
             CStmt.setString(2,sContextID);
              // Now we are ready to call the stored procedure
             boolean bExcuteOk = CStmt.execute();
