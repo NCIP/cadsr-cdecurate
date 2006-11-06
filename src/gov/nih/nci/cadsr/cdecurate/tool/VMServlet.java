@@ -199,6 +199,7 @@ public class VMServlet implements Serializable
     if (vErrMsg != null && vErrMsg.size()>0)
     {
       session.setAttribute("VMEditMsg", vErrMsg);
+    System.out.println(pvInd + " error " + data.getStatusMsg());
       data.getRequest().setAttribute("ErrMsgAC", data.getStatusMsg());
       data.getRequest().setAttribute("editPVInd", pvInd);
     }

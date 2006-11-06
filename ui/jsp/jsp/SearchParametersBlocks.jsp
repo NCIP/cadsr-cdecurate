@@ -327,7 +327,7 @@ function LoadKeyHandler()
 	{
 		if (actionType == "Search" && opener.document != null)
 		{
-			var pv = opener.document.getElementById("editPVInd");
+			var pv = opener.document.getElementById("currentPVInd");
 			if (pv != null)
 			{
 				var pvId = pv.value;
@@ -335,6 +335,9 @@ function LoadKeyHandler()
 				if (curTbl != null)
 				{
 			  	var totalCon = curTbl.rows.length;
+			  	//make sure the first row has data
+			  	if (totalCon == 1 && curTbl.rows(0).cells(1) == null)
+			  		totalCon = 0;
 			  	document.getElementById("vmConOrder").value = totalCon;	
 			  }
 			}

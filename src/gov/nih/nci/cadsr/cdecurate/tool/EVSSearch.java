@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.18 2006-11-03 18:22:52 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.19 2006-11-06 03:57:19 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -299,7 +299,8 @@ public class EVSSearch implements Serializable
           for(int i=1;i<vOCConcepts.size();i++)
           {
             EVS_Bean m_OCQ = (EVS_Bean)vOCConcepts.elementAt(i);
-            if (m_OCQ == null) m_OCQ = new EVS_Bean();        
+            if (m_OCQ == null) m_OCQ = new EVS_Bean();  
+        System.out.println(m_OCQ.getCONCEPT_IDENTIFIER() + " con Name " + m_OCQ.getLONG_NAME());
             Vector<String> vOCQualifierNames = m_DEC.getDEC_OC_QUALIFIER_NAMES();
             if (vOCQualifierNames == null) vOCQualifierNames = new Vector<String>();
             vOCQualifierNames.addElement(m_OCQ.getLONG_NAME());
@@ -358,6 +359,7 @@ public class EVSSearch implements Serializable
             EVS_Bean m_PCQ = (EVS_Bean)vPCConcepts.elementAt(i);
             if (m_PCQ == null)
               m_PCQ = new EVS_Bean();        
+    System.out.println(m_PCQ.getCONCEPT_IDENTIFIER() + " con Name " + m_PCQ.getLONG_NAME());
             Vector vPropQualifierNames = m_DEC.getDEC_PROP_QUALIFIER_NAMES();
             if (vPropQualifierNames == null) vPropQualifierNames = new Vector();
             vPropQualifierNames.addElement(m_PCQ.getLONG_NAME());
@@ -414,6 +416,7 @@ public class EVSSearch implements Serializable
         {
           EVS_Bean m_RepQ = (EVS_Bean)vRepConcepts.elementAt(i);
           if (m_Rep == null) m_Rep = new EVS_Bean();        
+ System.out.println(m_Rep.getCONCEPT_IDENTIFIER() + " con Name " + m_Rep.getLONG_NAME());
           Vector vRepQualifierNames = m_VD.getVD_REP_QUALIFIER_NAMES();
           if (vRepQualifierNames == null) vRepQualifierNames = new Vector();
           vRepQualifierNames.addElement(m_RepQ.getLONG_NAME());

@@ -352,7 +352,7 @@ public class VMAction implements Serializable
         printFlagedVMs(vmBean, sMsg, "");
         sMsg.append("-----------------\n");
 */        //get the message
-       // data.setStatusMsg(dispMsgACType);
+        data.setStatusMsg(dispMsgACType);
         if (dispMsgACType.equals("Concept"))
         {
           //sMsg.append("One or more matching Concepts were found.  \nPlease select one from the list below and click Use Selection or Cancel. \n");

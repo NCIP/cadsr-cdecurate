@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.18 2006-11-03 18:22:54 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.19 2006-11-06 03:57:19 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -752,6 +752,68 @@ public class GetACService implements Serializable
   *
   */
   public void getCSList(Vector<String> vIDList, Vector<String> vList, String sContext)  // returns list of Classification Schemes
+  {
+    Connection sbr_db_conn = null;
+    ResultSet rs = null;
+    CallableStatement CStmt = null;
+    try
+    {
+      //Create a Callable Statement object.
+      HttpSession session = (HttpSession)m_classReq.getSession();
+      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (sbr_db_conn == null)
+        m_servlet.ErrorLogin(m_classReq, m_classRes);
+      else
+      {
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.get_class_scheme_list(?,?)}");
+        // Now tie the placeholders for out parameters.
+        CStmt.registerOutParameter(2, OracleTypes.CURSOR);
+        // Now tie the placeholders for In parameters.
+        CStmt.setString(1, sContext);
+         // Now we are ready to call the stored procedure
+        boolean bExcuteOk = CStmt.execute();
+        //store the output in the resultset
+        rs = (ResultSet) CStmt.getObject(2);
+
+        String s;
+        Vector<String> vContextList = new Vector<String>();
+        Vector<String> vASLlist = new Vector<String>();
+        if(rs!=null)
+        {
+          //loop through the resultSet and add them to the bean
+          while(rs.next())
+          {
+            String csID = rs.getString("cs_idseq");
+            String csName = rs.getString("long_name");
+            String csContext = rs.getString("context_name");
+            if (csContext == null) csContext = "";
+            String csASL = rs.getString("asl_name");
+            String csVer = rs.getString("version");
+            if (csVer == null) csVer = "";
+            csName = m_util.removeNewLineChar(csName);   //remove the new line char here itself
+            vList.addElement(csName + " - " + csContext + " - v" + csVer);
+            vIDList.addElement(csID);
+          }  //END WHILE
+        }   //END IF
+      }
+    }
+    catch(Exception e)
+    {
+      logger.fatal("ERROR - GetACService getCSList for other : " + e.toString(), e);
+    }
+    try
+    {
+      if(rs!=null) rs.close();
+      if(CStmt!=null) CStmt.close();
+      if(sbr_db_conn != null) sbr_db_conn.close();
+    }
+    catch(Exception ee)
+    {
+      logger.fatal("ERROR - GetACService getCSList for close : " + ee.toString(), ee);
+    }
+  } //end Classification Scheme Lists
+
+  public void getCSListOld(Vector<String> vIDList, Vector<String> vList, String sContext)  // returns list of Classification Schemes
   {
     try
     {

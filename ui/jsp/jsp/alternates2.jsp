@@ -1,7 +1,7 @@
 <!--
     Copyright (c) 2006 ScenPro, Inc.
 
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/alternates2.jsp,v 1.8 2006-11-03 18:22:58 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/alternates2.jsp,v 1.9 2006-11-06 03:57:26 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 

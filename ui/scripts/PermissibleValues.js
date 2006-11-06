@@ -440,6 +440,7 @@
 		var divVMView = document.getElementById(pvNo + "VMView");
 		var divVMDEdit = document.getElementById(pvNo + "VMDEdit");
 		var divVMDView = document.getElementById(pvNo + "VMDView");
+		var divVMAltEdit = document.getElementById(pvNo + "VMAltEdit");		
 		var divcon = document.getElementById(pvNo + "con0");
 		if (action == "edit")
 		{
@@ -447,6 +448,8 @@
 				divValEdit.style.display = "block";
 			if (divValView != null)
 				divValView.style.display = "none";
+			if (divVMAltEdit != null)
+				divVMAltEdit.style.display = "block";
 			//change the display only if it was existed (con does not exist)
 			if (divVMEdit != null)
 			{
@@ -473,6 +476,8 @@
 				divVMDEdit.style.display = "none";
 			if (divVMDView != null)
 				divVMDView.style.display = "block";
+			if (divVMAltEdit != null)
+				divVMAltEdit.style.display = "none";
 		}
 	}
     		
@@ -1201,5 +1206,6 @@
   		var usElm = document.getElementById("btnUseSelect");
   		if (usElm != null)
     		usElm.disabled = false;
+    	document.getElementById("currentVM").value = "selected one";
     }
     
