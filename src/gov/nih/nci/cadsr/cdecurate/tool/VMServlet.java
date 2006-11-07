@@ -254,6 +254,22 @@ public class VMServlet implements Serializable
     for (int i =0; i<vmCon.size(); i++)
     {
       EVS_Bean con = vmCon.elementAt(i);
+      if (i == vmCon.size()-1)
+      {
+        if (con.getNVP_CONCEPT_VALUE() != null && !con.getNVP_CONCEPT_VALUE().equals(""))
+        {
+           String conName = con.getLONG_NAME();
+           String conExp = "::" + con.getNVP_CONCEPT_VALUE();
+           int nvpInd = conName.indexOf("::");
+           if (nvpInd > 0)
+           {             
+             conName = conName.substring(0, nvpInd);
+             con.setLONG_NAME(conName);
+             con.setNVP_CONCEPT_VALUE("");
+             vmCon.setElementAt(con, i);
+           }
+        }
+      }
       if (!vmName.equals(""))  vmName += " ";
       vmName += con.getLONG_NAME();
       if (!vmDef.equals("")) vmDef += "_ ";

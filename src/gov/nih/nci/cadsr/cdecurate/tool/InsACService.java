@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.20 2006-11-06 03:57:19 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.21 2006-11-07 16:39:05 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2132,7 +2132,6 @@ public class InsACService implements Serializable
             }
           }
       }
-  //System.out.println(sContextID + " oc submit ready " + sOCCondrString);
       if (sOCCondr == null) sOCCondr = "";
       if (sContextID == null) sContextID = "";
       if (!sOCCondrString.equals(""))
@@ -2163,6 +2162,7 @@ public class InsACService implements Serializable
             CStmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //deleted_ind
             CStmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //oc_condr_idseq
             CStmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //oc_id
+      System.out.println(OCBean.getLONG_NAME() + " oc submit ready " + sOCCondrString);
 
             // Set the In parameters (which are inherited from the PreparedStatement class)
             CStmt.setString(1,sOCCondrString); //comma-delimited con idseqs

@@ -1377,6 +1377,13 @@ public class VD_Bean extends AC_Bean
   {
     return this.VD_CONTE_IDSEQ;
   }
+  
+  @Override
+  public String getContextIDSEQ()
+  {
+      return getVD_CONTE_IDSEQ();
+  }
+
   /**
    * The getVD_VERSION method returns the VD_VERSION for this bean.
    * 
@@ -2025,6 +2032,13 @@ public class VD_Bean extends AC_Bean
   {
     return this.AC_CONCEPT_NAME;
   }
+  
+  @Override
+  public String getContextName()
+  {
+      return getVD_CONTEXT_NAME();
+  }
+
   /**
    * @return Returns the aC_CONTACTS.
    */

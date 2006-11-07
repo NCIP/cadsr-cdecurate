@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_Bean.java,v 1.19 2006-11-06 03:57:19 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_Bean.java,v 1.20 2006-11-07 16:39:05 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -29,4 +29,18 @@ public abstract class AC_Bean implements Serializable
      * @return The database IDSEQ column value.
      */
     abstract public String getIDSEQ();
+    
+    /**
+     * Return the IDSEQ of the associated Context
+     * 
+     * @return The database IDSEQ column value.
+     */
+    abstract public String getContextIDSEQ();
+    
+    /**
+     * Return the Name of the associated Context
+     * 
+     * @return The database IDSEQ column value.
+     */
+    abstract public String getContextName();
 }

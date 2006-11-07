@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.9 2006-11-06 03:57:26 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.10 2006-11-07 16:39:05 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
+import gov.nih.nci.cadsr.cdecurate.tool.AC_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.DEC_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.DE_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.VD_Bean;
@@ -153,7 +154,7 @@ public class AltNamesDefsSession implements Serializable
      */
     public static AltNamesDefsSession getSessionData(HttpServletRequest req_) throws Exception
     {
-        AltNamesDefsSession.ACBean subject = getIdseq(req_);
+        AltNamesDefsSession.ACBean subject = getAC(req_);
         String sessName = getSessName(subject._type);
         AltNamesDefsSession altSess = (AltNamesDefsSession) req_.getSession().getAttribute(sessName);
         
@@ -231,11 +232,11 @@ public class AltNamesDefsSession implements Serializable
         {
             _type = type_;
             _acIdseq = new String[1];
-            _acIdseq[0] = acIdseq_;
+            _acIdseq[0] = (acIdseq_ == null || acIdseq_.length() == 0) ? null : acIdseq_;
             _conteIdseq = new String[1];
-            _conteIdseq[0] = conteIdseq_;
+            _conteIdseq[0] = (conteIdseq_ == null || conteIdseq_.length() == 0) ? null : conteIdseq_;
             _conteName = new String[1];
-            _conteName[0] = conteName_;
+            _conteName[0] = (conteName_ == null) ? "" : conteName_;
         }
         
         /**
@@ -267,7 +268,7 @@ public class AltNamesDefsSession implements Serializable
      * @return the target data for the request
      * @throws Exception
      */
-    private static ACBean getIdseq(HttpServletRequest req_) throws Exception
+    private static ACBean getAC(HttpServletRequest req_) throws Exception
     {
         // Ok this logic has nothing to do with EVS. The current field name used by
         // the curation tool is referenced for consistency.
@@ -280,121 +281,40 @@ public class AltNamesDefsSession implements Serializable
         {
             throw new Exception("Unknown origination page.");
         }
-        
-        // Processing a DE (single and block)
-        if (launch.equals(_searchDE))
-        {
-            @SuppressWarnings("unchecked")
-            Vector<DE_Bean> deBlock = (Vector) session.getAttribute(_beanBlock);
-            if (deBlock != null && deBlock.size() > 0)
-            {
-                String[] acIdseq = new String[deBlock.size()];
-                String[] conteIdseq = new String[acIdseq.length];
-                String[] conteName = new String[acIdseq.length];
-                for (int i = 0; i < acIdseq.length; ++i)
-                {
-                    DE_Bean temp = deBlock.get(i);
-                    acIdseq[i] = temp.getDE_DE_IDSEQ();
-                    conteIdseq[i] = temp.getDE_CONTE_IDSEQ();
-                    conteName[i] = temp.getDE_CONTEXT_NAME();
-                }
-                rs = new AltNamesDefsSession.ACBean(launch, acIdseq, conteIdseq, conteName);
-            }
-            else
-            {
-                DE_Bean de = (DE_Bean)session.getAttribute(_beanDE);
-                if (de == null)
-                    throw new Exception("Missing DE session Bean.");
-                
-                rs = new AltNamesDefsSession.ACBean(launch, de.getDE_DE_IDSEQ(), de.getDE_CONTE_IDSEQ(), de.getDE_CONTEXT_NAME());
-            }
-        }
 
-        // Processing a DEC (single and block)
-        else if (launch.equals(_searchDEC))
+        @SuppressWarnings("unchecked")
+        Vector<AC_Bean> acBlock = (Vector) session.getAttribute(_beanBlock);
+        if (acBlock != null && acBlock.size() > 0)
         {
-            @SuppressWarnings("unchecked")
-            Vector<DEC_Bean> decBlock = (Vector) session.getAttribute(_beanBlock);
-            if (decBlock != null && decBlock.size() > 0)
+            String[] acIdseq = new String[acBlock.size()];
+            String[] conteIdseq = new String[acIdseq.length];
+            String[] conteName = new String[acIdseq.length];
+            for (int i = 0; i < acIdseq.length; ++i)
             {
-                String[] acIdseq = new String[decBlock.size()];
-                String[] conteIdseq = new String[acIdseq.length];
-                String[] conteName = new String[acIdseq.length];
-                for (int i = 0; i < acIdseq.length; ++i)
-                {
-                    DEC_Bean temp = decBlock.get(i);
-                    acIdseq[i] = temp.getDEC_DEC_IDSEQ();
-                    conteIdseq[i] = temp.getDEC_CONTE_IDSEQ();
-                    conteName[i] = temp.getDEC_CONTEXT_NAME();
-                }
-                rs = new AltNamesDefsSession.ACBean(launch, acIdseq, conteIdseq, conteName);
+                AC_Bean temp = acBlock.get(i);
+                acIdseq[i] = temp.getIDSEQ();
+                conteIdseq[i] = temp.getContextIDSEQ();
+                conteName[i] = temp.getContextName();
             }
-            else
-            {
-                DEC_Bean dec = (DEC_Bean)session.getAttribute(_beanDEC);
-                if (dec == null)
-                    throw new Exception("Missing DEC session Bean.");
-                
-                rs = new AltNamesDefsSession.ACBean(launch, dec.getDEC_DEC_IDSEQ(), dec.getDEC_CONTE_IDSEQ(), dec.getDEC_CONTEXT_NAME());
-            }
+            rs = new AltNamesDefsSession.ACBean(launch, acIdseq, conteIdseq, conteName);
         }
-
-        // Processing a VD (single and block)
-        else if (launch.equals(_searchVD))
+        else
         {
-            @SuppressWarnings("unchecked")
-            Vector<VD_Bean> vdBlock = (Vector) session.getAttribute(_beanBlock);
-            if (vdBlock != null && vdBlock.size() > 0)
-            {
-                String[] acIdseq = new String[vdBlock.size()];
-                String[] conteIdseq = new String[acIdseq.length];
-                String[] conteName = new String[acIdseq.length];
-                for (int i = 0; i < acIdseq.length; ++i)
-                {
-                    VD_Bean temp = vdBlock.get(i);
-                    acIdseq[i] = temp.getVD_VD_IDSEQ();
-                    conteIdseq[i] = temp.getVD_CONTE_IDSEQ();
-                    conteName[i] = temp.getVD_CONTEXT_NAME();
-                }
-                rs = new AltNamesDefsSession.ACBean(launch, acIdseq, conteIdseq, conteName);
-            }
-            else
-            {
-                VD_Bean vd = (VD_Bean)session.getAttribute(_beanVD);
-                if (vd == null)
-                    throw new Exception("Missing VD session Bean.");
-                
-                rs = new AltNamesDefsSession.ACBean(launch, vd.getVD_VD_IDSEQ(), vd.getVD_CONTE_IDSEQ(), vd.getVD_CONTEXT_NAME());
-            }
-        }
+            String beanName = null;
+            if (launch.equals(_searchDE))
+                beanName = _beanDE;
+            else if (launch.equals(_searchDEC))
+                beanName = _beanDEC;
+            else if (launch.equals(_searchVD))
+                beanName = _beanVD;
+            else if (launch.equals(_searchVM))
+                beanName = _beanVM;
 
-        // Processing a VM (single and block)
-        else if (launch.equals(_searchVM))
-        {
-            @SuppressWarnings("unchecked")
-            Vector<VM_Bean> vmBlock = (Vector) session.getAttribute(_beanBlock);
-            if (vmBlock != null && vmBlock.size() > 0)
-            {
-                String[] acIdseq = new String[vmBlock.size()];
-                String[] conteIdseq = new String[acIdseq.length];
-                String[] conteName = new String[acIdseq.length];
-                for (int i = 0; i < acIdseq.length; ++i)
-                {
-                    VM_Bean temp = vmBlock.get(i);
-                    acIdseq[i] = temp.getVM_IDSEQ();
-                    conteIdseq[i] = temp.getVM_CONTE_IDSEQ();
-                    conteName[i] = "(Need Name)"; //TODO temp.getVM_CONTEXT_NAME();
-                }
-                rs = new AltNamesDefsSession.ACBean(launch, acIdseq, conteIdseq, conteName);
-            }
-            else
-            {
-                VM_Bean vm = (VM_Bean)session.getAttribute(_beanVM);
-                if (vm == null)
-                    throw new Exception("Missing VM session Bean.");
-                
-                rs = new AltNamesDefsSession.ACBean(launch, vm.getVM_IDSEQ(), vm.getVM_CONTE_IDSEQ(), "(Need Name)"); //TODO vm.getVD_CONTEXT_NAME());
-            }
+            AC_Bean ac = (AC_Bean)session.getAttribute(beanName);
+            if (ac == null)
+                throw new Exception("Missing session Bean [" + beanName + "].");
+            
+            rs = new AltNamesDefsSession.ACBean(launch, ac.getIDSEQ(), ac.getContextIDSEQ(), ac.getContextName());
         }
 
         // Set the request data for when the page is written.

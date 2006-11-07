@@ -234,8 +234,6 @@ public class ConceptAction implements Serializable
       EVS_Bean con = (EVS_Bean)conList.elementAt(i);
       if (con == null) con = new EVS_Bean();
       String conIDseq = con.getIDSEQ();
-      if (!conArray.equals(""))  //add comma
-        conArray += ", ";
       if (conIDseq == null || conIDseq.equals(""))  //add conidseq        
       {
         if (isCreate)
@@ -247,8 +245,10 @@ public class ConceptAction implements Serializable
           return "";
       }
       conIDseq = con.getIDSEQ();
-      //get the nvp value
-      if (!con.getNVP_CONCEPT_VALUE().equals(""))
+      if (!conArray.equals(""))  //add comma
+        conArray += ",";
+      //get the nvp value if exists or not the last one (primary)
+      if (!con.getNVP_CONCEPT_VALUE().equals("") && i < conList.size()-1)
         conIDseq += ":" + con.getNVP_CONCEPT_VALUE();
       //make an array
       conArray += conIDseq; 

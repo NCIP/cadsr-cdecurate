@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.19 2006-11-06 03:57:19 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.20 2006-11-07 16:39:05 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;     
@@ -4892,9 +4892,15 @@ public class GetACSearch implements Serializable
         session.setAttribute("CheckList", vCheckList); //add the check list in the session.
       }
       if (sAction.equalsIgnoreCase("BlockEdit") || sAction.equalsIgnoreCase("EditDesDE"))
+      {
          this.getSelRowForBlockEdit(sSearchAC);  //store attributes in the session fro block edit.
 
-      session.setAttribute("vBEResult", vBEResult);    //store this for block edit
+         session.setAttribute("vBEResult", vBEResult);    //store this for block edit
+      }
+      else
+      {
+          session.removeAttribute("vBEResult");
+      }
       session.setAttribute("vACId", (Vector)m_classReq.getAttribute("vACId"));
       session.setAttribute("vACName", (Vector)m_classReq.getAttribute("vACName"));
     }

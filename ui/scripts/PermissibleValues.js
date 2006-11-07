@@ -453,7 +453,7 @@
 			//change the display only if it was existed (con does not exist)
 			if (divVMEdit != null)
 			{
-				divVMEdit.style.display = "block";
+				divVMEdit.style.display = "inline";
 				if (divVMView != null)
 					divVMView.style.display = "none";
 				if (divVMDEdit != null)
@@ -471,7 +471,7 @@
 			if (divVMEdit != null)
 				divVMEdit.style.display = "none";
 			if (divVMView != null)
-				divVMView.style.display = "block";
+				divVMView.style.display = "inline";
 			if (divVMDEdit != null)
 				divVMDEdit.style.display = "none";
 			if (divVMDView != null)
@@ -764,21 +764,6 @@
   }
 
   //adds new option for the hidden vm select fields from new window
-/*  function AllocVMOptions(iCount)
-  {
-    for (var i = 0; iCount > i; i++)
-    {
-      createVDForm.selVMConCode[i] = new Option("","");
-      createVDForm.selVMConName[i] = new Option("","");
-      createVDForm.selVMConDef[i] = new Option("","");
-      createVDForm.selVMConDefSource[i] = new Option("","");
-      createVDForm.selVMConOrigin[i] = new Option("","");
-      createVDForm.selVMParentCC[i] = new Option("","");
-      createVDForm.selVMParentName[i] = new Option("","");  
-    }
-  } 
-*/
-  //adds new option for the hidden vm select fields from new window
   function AllocSelRowOptions(rowArray)
   {
   	if (rowArray != null)
@@ -1041,7 +1026,7 @@
   		var vm = document.getElementById(pvInd + "VMView");
   		if (vm != null && vm.style.display == "none")
   		{
-  			vm.style.display = "block";
+  			vm.style.display = "inline";
   			vmedit = document.getElementById(pvInd + "VMEdit");
   			if (vmedit != null)
   				vmedit.style.display = "none";
@@ -1151,41 +1136,55 @@
   		var pvId = document.getElementById("editPVInd").value;
   		if (pvId != null && pvId != "")
   		{
-  		//	if (sAct == "save")
-  		//	{
-		  		var hidElm = document.getElementById("hiddenConVM");
-		  		if (hidElm != null)
+	  		var hidElm = document.getElementById("hiddenConVM");
+	  		if (hidElm != null)
+	  		{
+		  		var curTbl = document.getElementById(pvId + "TBL");
+		  		var totalCon = curTbl.rows.length;
+		  		for (var i=0; i<totalCon; i++)
 		  		{
-			  		var curTbl = document.getElementById(pvId + "TBL");
-			  		var totalCon = curTbl.rows.length;
-			  		for (var i=0; i<totalCon; i++)
-			  		{
-			  			var curTr = curTbl.rows(i);
-			  			if (curTr != null && curTr.cells(2) != null)
-			  			{
-			  				var oText = curTr.cells(2).innerText;
-				  			var elmLen = hidElm.length;
-				  			hidElm[elmLen] = new Option(oText, oText);
-				  			hidElm[elmLen].selected = true;
-			  			}
-			  		}		  		
-		  		}
-		  		if (sAct == "save" || sAct == "edit")
-		  		{
-		  		 	var vmText = document.getElementById("currentVM").value;
-		  		 	if (vmText == null || vmText == "")
-		  		 	{
-		  		 		alert("Value Meaning is mandatory for a Permissible Value.  Please add a Value Meaning.");
-		  		 		return false;
-		  		 	}
-		  		}
-		//  	}
-  		//	else
-  		//	{
-  		//		alert("Please save the edited Permissible Value");
-  		//		return false;
-  		//	}
+		  			var curTr = curTbl.rows(i);
+		  			if (curTr != null && curTr.cells(2) != null)
+		  			{
+		  				var oText = curTr.cells(2).innerText;
+			  			var elmLen = hidElm.length;
+			  			hidElm[elmLen] = new Option(oText, oText);
+			  			hidElm[elmLen].selected = true;
+		  			}
+		  		}		  		
+	  		}
+	  		if (sAct == "save" || sAct == "edit")
+	  		{
+	  			return checkVMText(pvId);
+	  		}
   		}
+  		return true;
+  	}
+  	
+  	function checkVMText(pvId)
+  	{
+  			//get the vm object
+  		 	var vmT = document.getElementById(pvId + "VMEdit");
+  		 	var vmText = "";
+  		 	if (vmT == null)
+  		 	{
+  		 		vmT = document.getElementById(pvId + "VMView");
+  		 		if (vmT != null)
+  		 			vmText = vmT.innerText;
+  		 	}
+  		 	else
+  		 	{
+  		 		vmInput = document.getElementById("txt" + pvId + "Mean");
+  		 		if (vmInput != null)
+  		 			vmText = vmInput.value;
+  		 	}
+  		 	//now check if vm exists
+  		 	if (vmText == null || vmText == "")
+  		 	{
+  		 		alert("Value Meaning is mandatory for a Permissible Value.  Please add a Value Meaning.");
+  		 		return false;
+  		 	}
+  	
   		return true;
   	}
   	

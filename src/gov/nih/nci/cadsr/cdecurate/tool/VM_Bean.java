@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VM_Bean.java,v 1.19 2006-11-06 03:57:26 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VM_Bean.java,v 1.20 2006-11-07 16:39:05 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -87,7 +87,7 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-public class VM_Bean implements Serializable
+public class VM_Bean extends AC_Bean
 {
 /**
    * 
@@ -433,6 +433,19 @@ public class VM_Bean implements Serializable
   {
     return VM_CONTE_IDSEQ;
   }
+  
+  @Override
+  public String getContextIDSEQ()
+  {
+      return getVM_CONTE_IDSEQ();
+  }
+  
+  @Override
+  public String getContextName()
+  {
+      //TODO get real name
+      return "(TBD context name)";
+  }
 
   /**
    * @param conte_idseq The cONTE_IDSEQ to set.
@@ -496,6 +509,12 @@ public class VM_Bean implements Serializable
   public String getVM_IDSEQ()
   {
     return VM_IDSEQ;
+  }
+  
+  @Override
+  public String getIDSEQ()
+  {
+      return getVM_IDSEQ();
   }
 
   /**
