@@ -222,6 +222,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
         String sPV = (String)data.getRequest().getParameter("pvNewValue");  //value
         if (sPV == null) sPV = "";
         pv.setPV_VALUE(sPV);
+        readValidValueData(pv);
         //add pv other attribtutes 
         addPVOtherAttributes(pv, "changeOne");
         //if no concepts, read the user entered vm /desc
@@ -313,6 +314,24 @@ System.out.println(sMenuAction + " pv action " + sAction);
       return "/PermissibleValue.jsp";
    }
 
+   private void readValidValueData(PV_Bean pv)
+   {
+     HttpSession session = data.getRequest().getSession();
+     String sVVid = (String)data.getRequest().getParameter("selValidValue");  //valid value
+     if (sVVid == null) sVVid = "";
+     pv.setQUESTION_VALUE_IDSEQ(sVVid); 
+     Vector vQuest = (Vector)session.getAttribute("vQuestValue");
+     if (vQuest == null) vQuest = new Vector();
+     for (int i =0; i<vQuest.size(); i++)
+     {
+       Quest_Value_Bean qvBean = (Quest_Value_Bean)vQuest.elementAt(i);
+       String sQValue = qvBean.getQUESTION_VALUE();
+       String sQVid = qvBean.getQUESTION_VALUE_IDSEQ();
+       if (sQVid.equals(sVVid)) //not assigned yet
+         pv.setQUESTION_VALUE(sQValue);        
+     }
+   }
+   
    private int getSelectedPV()
    {
      int pvInd = -1;

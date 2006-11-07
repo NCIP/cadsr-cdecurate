@@ -825,7 +825,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 													</div>
 												</td>
 												<td valign="top">
-													<div id="<%=pvCount%>VMView" style="display: block">
+													<div id="<%=pvCount%>VMView" style="display: inline">
 														<%=sPVMean%>
 													</div>
 													<% if (vmCon.size() < 1) { %>
@@ -834,9 +834,9 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 															<input type="text" name="txt<%=pvCount%>Mean" maxlength="255" style="width: 100%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vm');" value="<%=sPVMean%>">
 														</div>
 													<% } %>
-													<div id="<%=pvCount%>VMAltEdit" style="display: none">
+													<div id="<%=pvCount%>VMAltEdit" style="display: none; text-align:right">
 															&nbsp;&nbsp;
-															<a href="javascript:openDesignateWindow('Alternate Names');">Alternate Names</a>
+															<span style="padding-right:0.3in"><a href="javascript:openDesignateWindow('Alternate Names');">Alternate Names</a></span>
 													</div>
 													<br>
 													<div id="<%=pvCount%>View" style="display: <%if (viewType.equals("expand")) {%>block <% } else { %> none <% } %>">

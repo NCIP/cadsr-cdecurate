@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DEF_Bean.java,v 1.19 2006-11-06 03:57:19 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DEF_Bean.java,v 1.20 2006-11-07 16:39:05 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -337,6 +337,13 @@ public class DEF_Bean extends AC_Bean {
   {
       return this.DEF_CONTE_IDSEQ;
   }
+  
+  @Override
+  public String getContextIDSEQ()
+  {
+      return getDEF_CONTE_IDSEQ();
+  }
+
   /**
   * The getDEF_VERSION method returns the DEF_VERSION for this bean.
   *
@@ -374,6 +381,13 @@ public class DEF_Bean extends AC_Bean {
   {
       return this.DEF_CONTEXT_NAME;
   }
+  
+  @Override
+  public String getContextName()
+  {
+      return getDEF_CONTEXT_NAME();
+  }
+
   /**
   * The getDEF_NCI_CC_TYPE method returns the DEF_NCI_CC_TYPE for this bean.
   *

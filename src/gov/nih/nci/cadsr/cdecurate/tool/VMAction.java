@@ -311,7 +311,6 @@ public class VMAction implements Serializable
     vm.setVM_CD_NAME(vd.getVD_CD_NAME());
     vm.setVM_BEGIN_DATE(pv.getPV_BEGIN_DATE());  //vm begin date
     vm.setVM_END_DATE(pv.getPV_END_DATE());   //vm end date 
-
     //call the action change VM to validate the vm
     data.setVMBean(vm);
     if (vm.getVM_IDSEQ() == null || vm.getVM_IDSEQ().equals(""))

@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DEC_Bean.java,v 1.19 2006-11-06 03:57:19 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DEC_Bean.java,v 1.20 2006-11-07 16:39:05 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1109,6 +1109,13 @@ public class DEC_Bean extends AC_Bean {
   {
       return this.DEC_CONTE_IDSEQ;
   }
+  
+  @Override
+  public String getContextIDSEQ()
+  {
+      return getDEC_CONTE_IDSEQ();
+  }
+
   /**
   * The getDEC_VERSION method returns the DEC_VERSION for this bean.
   *
@@ -1308,6 +1315,13 @@ public class DEC_Bean extends AC_Bean {
   {
       return this.DEC_CONTEXT_NAME;
   }
+  
+  @Override
+  public String getContextName()
+  {
+      return getDEC_CONTEXT_NAME();
+  }
+
   /**
   * The getDEC_LANGUAGE method returns the DEC_LANGUAGE for this bean.
   *

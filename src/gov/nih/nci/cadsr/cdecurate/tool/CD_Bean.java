@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/CD_Bean.java,v 1.19 2006-11-06 03:57:19 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/CD_Bean.java,v 1.20 2006-11-07 16:39:05 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -393,6 +393,13 @@ public class CD_Bean extends AC_Bean {
   {
       return this.CD_CONTE_IDSEQ;
   }
+  
+  @Override
+  public String getContextIDSEQ()
+  {
+      return getCD_CONTE_IDSEQ();
+  }
+
   /**
   * The getCD_VERSION method returns the CD_VERSION for this bean.
   *
@@ -519,6 +526,13 @@ public class CD_Bean extends AC_Bean {
   {
       return this.CD_CONTEXT_NAME;
   }
+  
+  @Override
+  public String getContextName()
+  {
+      return getCD_CONTEXT_NAME();
+  }
+
   /**
   * The getCD_CD_ID method returns the CD_CD_ID for this bean.
   *

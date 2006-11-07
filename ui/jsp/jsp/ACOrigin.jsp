@@ -15,6 +15,7 @@
 		<%
 			Vector vSource = (Vector) session.getAttribute("vSource");
       if (vSource == null) vSource = new Vector();
+      UtilService util = new UtilService();
     %>
     
 		<Script Language="JavaScript">
@@ -97,10 +98,11 @@
 				{
 					String src = (String)vSource.elementAt(i);
 					if (src == null) src = "";
+					String srcId = util.parsedStringSingleQuote(src);
 			%>
 			<tr>
 				<td>
-					<input name="rSRC" type="radio"  alt="Select to use" value="" onclick="javascript:getSource('<%=src%>');">
+					<input name="rSRC" type="radio"  alt="Select to use" value="" onclick="javascript:getSource('<%=srcId%>');">
 				</td>
 				<td>
 					<%=src%>

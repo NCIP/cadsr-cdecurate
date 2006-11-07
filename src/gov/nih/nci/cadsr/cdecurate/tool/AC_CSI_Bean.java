@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_CSI_Bean.java,v 1.19 2006-11-06 03:57:19 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_CSI_Bean.java,v 1.20 2006-11-07 16:39:05 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -394,6 +394,18 @@ public class AC_CSI_Bean extends AC_Bean
   public CSI_Bean getCSI_BEAN()
   {
       return this.CSI_BEAN;
+  }
+  
+  @Override
+  public String getContextIDSEQ()
+  {
+      return null;
+  }
+  
+  @Override
+  public String getContextName()
+  {
+      return null;
   }
 
 }//end of class
