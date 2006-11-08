@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/load_tool_options_3_2.sql,v 1.9 2006-11-07 16:39:04 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/load_tool_options_3_2.sql,v 1.10 2006-11-08 05:00:10 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -109,6 +109,10 @@ INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, descriptio
 VALUES ('CURATION', 'EVS.VOCAB.ALL.TREESEARCH', 'true', 
 	   'Store vocab Tree Search filter for all vocabulary');
 
+--fix display name for snowmed
+UPDATE sbrext.tool_options_view_ext
+SET property = 'EVS.VOCAB.7.DISPLAY' 
+WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.6.DISPLAY' AND value = 'SNOMED';
 
 --commit changes
 commit;

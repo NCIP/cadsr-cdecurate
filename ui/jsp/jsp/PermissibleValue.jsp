@@ -381,7 +381,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 												</td>
 												<td>
 													<b>
-                            <span style="padding-left: 0.3in"><a href="javascript:openDesignateWindow('Alternate Names');">Alternate Names</a></span>
+                            <span style="padding-left: 0.3in"><a href="javascript:openDesignateWindowVM('Alternate Names', -1);">Alternate Names</a></span>
 													</b>
 												</td>
 											</tr>
@@ -836,7 +836,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 													<% } %>
 													<div id="<%=pvCount%>VMAltEdit" style="display: none; text-align:right">
 															&nbsp;&nbsp;
-															<span style="padding-right:0.3in"><a href="javascript:openDesignateWindow('Alternate Names');">Alternate Names</a></span>
+															<span style="padding-right:0.3in"><a href="javascript:openDesignateWindowVM('Alternate Names', <%=ckCount%>);">Alternate Names</a></span>
 													</div>
 													<br>
 													<div id="<%=pvCount%>View" style="display: <%if (viewType.equals("expand")) {%>block <% } else { %> none <% } %>">

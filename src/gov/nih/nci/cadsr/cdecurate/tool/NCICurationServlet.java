@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.20 2006-11-07 16:39:05 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.21 2006-11-08 05:00:11 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2158,18 +2158,7 @@ public class NCICurationServlet extends HttpServlet
       }
       else if(sAction.equals("suggestion"))
         doSuggestionDE(req, res);
-/*      else if (sAction.equals("refreshCreateVD"))
-      {
-        doSelectParentVD(req, res);
-        ForwardJSP(req, res, "/EditVDPage.jsp");
-        return;
-      }
-     else if (sAction.equals("CreateNonEVSRef"))
-      {
-         doNonEVSReference(req, res);
-         ForwardJSP(req, res, "/EditVDPage.jsp");
-      }
-*/       else if (sAction.equals("UseSelection"))
+      else if (sAction.equals("UseSelection"))
       {
         String nameAction = "appendName";
         if (sOriginAction.equals("BlockEditVD"))
@@ -2228,26 +2217,6 @@ public class NCICurationServlet extends HttpServlet
       }
       else if (sAction.equals("clearBoxes"))
       {
-/*         VD_Bean VDBean = (VD_Bean)session.getAttribute("oldVDBean");
-         //clear related the session attributes 
-   //      session.setAttribute("VDParentConcept", new Vector());
-   //      session.setAttribute("VDPVList", new Vector());
-         this.clearBuildingBlockSessionAttributes(req, res);
-         String sVDID = VDBean.getVD_VD_IDSEQ();
-         Vector vList = new Vector();           
-         //get VD's attributes from the database again
-         GetACSearch serAC = new GetACSearch(req, res, this);
-         if (sVDID != null && !sVDID.equals(""))
-            serAC.doVDSearch(sVDID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", "", "", vList);
-         //forward editVD page with this bean
-         if (vList.size() > 0)
-         {
-           VDBean = (VD_Bean)vList.elementAt(0);
-           VDBean = serAC.getVDAttributes(VDBean, sOriginAction, sMenuAction);
-         }
-         VD_Bean pgBean = new VD_Bean();
-         session.setAttribute("m_VD", pgBean.cloneVD_Bean(VDBean));
-*/
         VDServlet vdser = new VDServlet(req, res, this);        
         String ret = vdser.clearEditsOnPage(sOriginAction, sMenuAction, "vdEdits");
         ForwardJSP(req, res, "/EditVDPage.jsp");
@@ -6674,7 +6643,7 @@ public class NCICurationServlet extends HttpServlet
       Vector vStatMsg = new Vector();
       String sNewRep = (String)session.getAttribute("newRepTerm");
       if (sNewRep == null) sNewRep = "";
-
+System.out.println(" new rep " + sNewRep);
       Vector vBERows = (Vector)session.getAttribute("vBEResult");
       int vBESize = vBERows.size();
       Integer vBESize2 = new Integer(vBESize);
@@ -6694,6 +6663,8 @@ public class NCICurationServlet extends HttpServlet
             //gets the point or whole from the VD Bean's version attribute
           String newVersion = (String)VDBean.getVD_VERSION();
           if (newVersion == null) newVersion = "";
+          //updates the data from the page into the sr bean
+          InsertEditsIntoVDBeanSR(VDBeanSR, VDBean, req);
           //create newly selected rep term
           if (i==0 && sNewRep.equals("true"))
           {
@@ -6708,8 +6679,6 @@ public class NCICurationServlet extends HttpServlet
             
            // VDBean.setVD_REP_QUAL("");
           }
-          //updates the data from the page into the sr bean
-          InsertEditsIntoVDBeanSR(VDBeanSR, VDBean, req);
          // session.setAttribute("m_VD", VDBeanSR);         
           String oldID = oldVDBean.getVD_VD_IDSEQ();
           //udpate the status message with DE name and ID
@@ -6726,8 +6695,8 @@ public class NCICurationServlet extends HttpServlet
                 ret = insAC.setAC_VERSION(null, null, VDBeanSR, "ValueDomain");
              if (ret == null || ret.equals(""))
              {
-                PVServlet pvser = new PVServlet(req, res, this);
-                pvser.searchVersionPV(VDBean, 0, "", "");
+                //PVServlet pvser = new PVServlet(req, res, this);
+               // pvser.searchVersionPV(VDBean, 0, "", "");
                 //get the right system name for new version
                 String prefName = VDBeanSR.getVD_PREFERRED_NAME();
                 String vdID = VDBeanSR.getVD_VD_ID();
@@ -6739,9 +6708,14 @@ public class NCICurationServlet extends HttpServlet
                   prefName = prefName.replaceFirst(oldVer, newVer);
                   VDBean.setVD_PREFERRED_NAME(prefName);
                 }
+                //keep the value and value count stored
+                String pvValue = VDBeanSR.getVD_Permissible_Value();
+                Integer pvCount = VDBeanSR.getVD_Permissible_Value_Count();                
                 ret = insAC.setVD("UPD", VDBeanSR, "Version", oldVDBean);
                 if (ret == null || ret.equals(""))
                 {
+                   VDBeanSR.setVD_Permissible_Value(pvValue);
+                   VDBeanSR.setVD_Permissible_Value_Count(pvCount);
                    serAC.refreshData(req, res, null, null, VDBeanSR, null, "Version", oldID);
                    isRefreshed = true;
                    //reset the appened attributes to remove all the checking of the row

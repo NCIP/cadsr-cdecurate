@@ -1,9 +1,8 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.21 2006-11-07 16:39:05 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.22 2006-11-08 05:00:11 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
-import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import java.io.Serializable;
 import java.util.*;
 import java.sql.*;
@@ -485,7 +484,7 @@ public class InsACService implements Serializable
 
             // ********************************
             Connection conn = m_servlet.connectDB(m_classReq, m_classRes);
-            AltNamesDefsSession.save(conn, session, AltNamesDefsSession._searchVD, sVD_ID, sContextID);
+            vd.save(session, conn, sVD_ID, sContextID);
             conn.close();
             session.removeAttribute("AllAltNameList");
             // ********************************
@@ -1798,7 +1797,7 @@ public class InsACService implements Serializable
 
           // ********************************
           Connection conn = m_servlet.connectDB(m_classReq, m_classRes);
-          AltNamesDefsSession.save(conn, session, AltNamesDefsSession._searchDEC, sDEC_ID, sContextID);
+          dec.save(session, conn, sDEC_ID, sContextID);
           conn.close();
           session.removeAttribute("AllAltNameList");
           // ********************************
@@ -2454,6 +2453,10 @@ public class InsACService implements Serializable
               conIDseq = this.setConcept("INS", sRet, REPBean);
             if (conIDseq != null && !conIDseq.equals(""))
             {
+              //add the concept value to the conidseq
+              String nvp = REPBean.getNVP_CONCEPT_VALUE();
+              if (nvp != null && !nvp.equals(""))
+                conIDseq += ":" + nvp;
               if (sOCCondrString.equals("")) 
                 sOCCondrString = conIDseq;
               else 
@@ -3115,7 +3118,7 @@ public class InsACService implements Serializable
 
           // ********************************
           Connection conn = m_servlet.connectDB(m_classReq, m_classRes);
-          AltNamesDefsSession.save(conn, session, AltNamesDefsSession._searchDE, sDE_ID, sContextID);
+          de.save(session, conn, sDE_ID, sContextID);
           conn.close();
           session.removeAttribute("AllAltNameList");
           // ********************************

@@ -237,7 +237,7 @@ public class VMServlet implements Serializable
             }
           }
         }
-        vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_UPD);
+        vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
       }
       //get the name
       vm.setVM_CONCEPT_LIST(newList);

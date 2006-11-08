@@ -1,11 +1,15 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_Bean.java,v 1.20 2006-11-07 16:39:05 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_Bean.java,v 1.21 2006-11-08 05:00:10 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import java.io.Serializable;
+import java.sql.SQLException;
+import java.sql.Connection;
+import javax.servlet.http.HttpSession;
 
 /**
  * This is the root class for all the other AC type beans,
@@ -43,4 +47,30 @@ public abstract class AC_Bean implements Serializable
      * @return The database IDSEQ column value.
      */
     abstract public String getContextName();
+    
+    public AltNamesDefsSession getAlternates()
+    {
+        return _alts;
+    }
+    
+    public void setAlternates(AltNamesDefsSession alts_)
+    {
+        _alts = alts_;
+    }
+    
+    public void clearAlternates()
+    {
+        _alts.cleanBuffers();
+    }
+    
+    public void save(HttpSession session_, Connection conn_, String idseq_, String conteIdseq_) throws SQLException
+    {
+        if (_alts != null)
+        {
+            _alts.save(session_, conn_, idseq_, conteIdseq_);
+            _alts = null;
+        }
+    }
+
+    protected AltNamesDefsSession _alts;
 }

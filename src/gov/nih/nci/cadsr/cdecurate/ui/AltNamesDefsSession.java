@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.10 2006-11-07 16:39:05 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.11 2006-11-08 05:00:11 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -14,8 +14,7 @@ import javax.servlet.http.HttpSession;
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.tool.AC_Bean;
-import gov.nih.nci.cadsr.cdecurate.tool.DEC_Bean;
-import gov.nih.nci.cadsr.cdecurate.tool.DE_Bean;
+import gov.nih.nci.cadsr.cdecurate.tool.PV_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.VD_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.VM_Bean;
 import gov.nih.nci.cadsr.cdecurate.util.Tree;
@@ -40,11 +39,11 @@ public class AltNamesDefsSession implements Serializable
     {
         cleanBuffers();
         _acIdseq = new String[1];
-        _acIdseq[0] = acIdseq_;
+        _acIdseq[0] = (acIdseq_ == null || acIdseq_.length() == 0) ? null : acIdseq_;
         _conteIdseq = new String[1];
-        _conteIdseq[0] = conteIdseq_;
+        _conteIdseq[0] = (conteIdseq_ == null || conteIdseq_.length() == 0) ? null : conteIdseq_;
         _conteName = new String[1];
-        _conteName[0] = conteName_;
+        _conteName[0] = (conteName_ == null) ? "" : conteName_;
         _sessType = sessType_;
     }
 
@@ -121,13 +120,7 @@ public class AltNamesDefsSession implements Serializable
     {
         HttpSession sess = req_.getSession();
         String name;
-        name = getSessName(_searchDE);
-        sess.removeAttribute(name);
-        name = getSessName(_searchDEC);
-        sess.removeAttribute(name);
-        name = getSessName(_searchVD);
-        sess.removeAttribute(name);
-        name = getSessName(_searchVM);
+        name = getSessName(_beanBlock);
         sess.removeAttribute(name);
     }
 
@@ -146,6 +139,139 @@ public class AltNamesDefsSession implements Serializable
     }
 
     /**
+     * Get the data buffer for a block edit.
+     * 
+     * @param session_
+     * @param sessName_
+     * @param acBlock_
+     * @return the block edit alt names/defs buffer
+     * @throws Exception
+     */
+    private static AltNamesDefsSession getSessionDataBlockEdit(HttpSession session_, String sessName_, Vector<AC_Bean> acBlock_) throws Exception
+    {
+        AltNamesDefsSession altSess = null;
+
+        // Get the block edit selections.
+        String[] acIdseq = new String[acBlock_.size()];
+        String[] conteIdseq = new String[acIdseq.length];
+        String[] conteName = new String[acIdseq.length];
+        for (int i = 0; i < acIdseq.length; ++i)
+        {
+            AC_Bean temp = acBlock_.get(i);
+            acIdseq[i] = temp.getIDSEQ();
+            conteIdseq[i] = temp.getContextIDSEQ();
+            conteName[i] = temp.getContextName();
+        }
+
+        // If no block edit buffer exists, create one.
+        altSess = (AltNamesDefsSession) session_.getAttribute(sessName_);
+        if (altSess == null)
+        {
+            altSess = new AltNamesDefsSession(acIdseq, conteIdseq, conteName, _beanBlock);
+            session_.setAttribute(sessName_, altSess);
+        }
+        
+        // The existing block edit buffer must be validated to ensure we haven't changed the AC
+        // list.
+        boolean flag = false;
+        for (int i = 0; i < acIdseq.length; ++i)
+        {
+            if (acIdseq[i].equals(altSess._acIdseq[i]) == false)
+            {
+                flag = true;
+                break;
+            }
+        }
+        
+        // The buffer isn't correct for the list so create a new one.
+        if (flag)
+        {
+            altSess = new AltNamesDefsSession(acIdseq, conteIdseq, conteName, _beanBlock);
+            session_.setAttribute(sessName_, altSess);
+        }
+        
+        return altSess;
+    }
+
+    /**
+     * Get the data buffer for a VM
+     * 
+     * @param session_
+     * @param req_
+     * @return the alt name/def buffer
+     * @throws Exception
+     */
+    private static AltNamesDefsSession getSessionDataVM(HttpSession session_, HttpServletRequest req_) throws Exception
+    {
+        // We identify the VM for the VD by an index value.
+        AltNamesDefsSession altSess = null;
+        String vmID = req_.getParameter(_beanVMID);
+        if (vmID != null)
+        {
+            // Be sure we can get the VM and the class types are right.
+            AC_Bean temp = (AC_Bean)session_.getAttribute(_beanVD);
+            if (temp != null && temp instanceof VD_Bean)
+            {
+                VD_Bean vd = (VD_Bean) temp;
+                Vector<PV_Bean> pvs = vd.getVD_PV_List();
+                int vmid = Integer.parseInt(vmID);
+                VM_Bean vm = null;
+                if (pvs.size() > 0 && 0 <= vmid && vmid < pvs.size())
+                {
+                    PV_Bean pv = pvs.get(vmid);
+                    vm = pv.getPV_VM();
+                    altSess = vm.getAlternates();
+                }
+                
+                // The VM hasn't been used before so create a new buffer.
+                if (altSess == null)
+                {
+                    altSess = new AltNamesDefsSession(vm.getIDSEQ(), vm.getContextIDSEQ(), vm.getContextName(), _searchVM);
+                    vm.setAlternates(altSess);
+                }
+            }
+        }
+        
+        return altSess;
+    }
+    
+    /**
+     * Get the data buffer for AC's except a VM
+     * 
+     * @param session_
+     * @param launch_
+     * @return the alt name/def buffer
+     * @throws Exception
+     */
+    private static AltNamesDefsSession getSessionDataAC(HttpSession session_, String launch_) throws Exception
+    {
+        // Determine the bean which holds the data.
+        AltNamesDefsSession altSess = null;
+        String beanName = null;
+        if (launch_.equals(_searchDE))
+            beanName = _beanDE;
+        else if (launch_.equals(_searchDEC))
+            beanName = _beanDEC;
+        else if (launch_.equals(_searchVD))
+            beanName = _beanVD;
+
+        // Get the AC bean.
+        AC_Bean ac = (AC_Bean)session_.getAttribute(beanName);
+        if (ac == null)
+            throw new Exception("Missing session Bean [" + beanName + "].");
+
+        // If it hasn't been used before, create a new buffer.
+        altSess = ac.getAlternates();
+        if (altSess == null)
+        {
+            altSess = new AltNamesDefsSession(ac.getIDSEQ(), ac.getContextIDSEQ(), ac.getContextName(), launch_);
+            ac.setAlternates(altSess);
+        }
+        
+        return altSess;
+    }
+    
+    /**
      * Get the session data for this request.
      * 
      * @param req_ the user HTTP request object
@@ -154,127 +280,10 @@ public class AltNamesDefsSession implements Serializable
      */
     public static AltNamesDefsSession getSessionData(HttpServletRequest req_) throws Exception
     {
-        AltNamesDefsSession.ACBean subject = getAC(req_);
-        String sessName = getSessName(subject._type);
-        AltNamesDefsSession altSess = (AltNamesDefsSession) req_.getSession().getAttribute(sessName);
-        
-        // If no session exists.
-        if (altSess == null)
-        {
-            altSess = new AltNamesDefsSession(subject._acIdseq, subject._conteIdseq, subject._conteName, subject._type);
-        }
-        
-        // If the old and new sessions are singletons and the AC is different.
-        else if (altSess._acIdseq.length == 1 && subject._acIdseq.length == 1)
-        {
-            if (altSess.sameAC(subject._acIdseq[0]) == false)
-                altSess = new AltNamesDefsSession(subject._acIdseq, subject._conteIdseq, subject._conteName, subject._type);
-        }
-        
-        // If the old session is a singleton and the new session is a block edit.
-        else if (altSess._acIdseq.length == 1 && subject._acIdseq.length != 1)
-        {
-            altSess = new AltNamesDefsSession(subject._acIdseq, subject._conteIdseq, subject._conteName, subject._type);
-        }
-        
-        // If the old session is a block edit and the new session is a singleton.
-        else if (altSess._acIdseq.length != 1 && subject._acIdseq.length == 1)
-        {
-            altSess = new AltNamesDefsSession(subject._acIdseq, subject._conteIdseq, subject._conteName, subject._type);
-        }
-        
-        // If the old session has a different count than the new session.
-        else if (altSess._acIdseq.length != subject._acIdseq.length)
-        {
-            altSess = new AltNamesDefsSession(subject._acIdseq, subject._conteIdseq, subject._conteName, subject._type);
-        }
-        
-        // If the old and new are block edits and not the same list.
-        else
-        {
-            boolean flag = false;
-            for (int i = 0; i < subject._acIdseq.length; ++i)
-            {
-                if (subject._acIdseq[i].equals(altSess._acIdseq[i]) == false)
-                {
-                    flag = true;
-                    break;
-                }
-            }
-            if (flag)
-            {
-                altSess = new AltNamesDefsSession(subject._acIdseq, subject._conteIdseq, subject._conteName, subject._type);
-            }
-        }
-
-        // Set the session data, in case it was a new one.
-        req_.getSession().setAttribute(sessName, altSess);
-        return altSess;
-    }
-
-    /**
-     * An internal class to determine the AC type and records of interest.
-     * 
-     * @author lhebel
-     *
-     */
-    private static class ACBean
-    {
-        /**
-         * Constructor
-         * 
-         * @param type_ the session type, AltNamesDefsSession._searchDE, _searchDEC, _searchVD, _searchVM 
-         * @param acIdseq_ the AC database id of interest
-         * @param conteIdseq_ the companion Context ID
-         * @param conteName_ the companion Context Name
-         */
-        public ACBean(String type_, String acIdseq_, String conteIdseq_, String conteName_)
-        {
-            _type = type_;
-            _acIdseq = new String[1];
-            _acIdseq[0] = (acIdseq_ == null || acIdseq_.length() == 0) ? null : acIdseq_;
-            _conteIdseq = new String[1];
-            _conteIdseq[0] = (conteIdseq_ == null || conteIdseq_.length() == 0) ? null : conteIdseq_;
-            _conteName = new String[1];
-            _conteName[0] = (conteName_ == null) ? "" : conteName_;
-        }
-        
-        /**
-         * Constructor
-         * 
-         * @param type_ the session type, AltNamesDefsSession._searchDE, _searchDEC, _searchVD, _searchVM 
-         * @param acIdseq_ the AC database id list of interest
-         * @param conteIdseq_ the companion Context ID list
-         * @param conteName_ the companion Context Name list
-         */
-        public ACBean(String type_, String[] acIdseq_, String[] conteIdseq_, String[] conteName_)
-        {
-            _type = type_;
-            _acIdseq = acIdseq_;
-            _conteIdseq = conteIdseq_;
-            _conteName = conteName_;
-        }
-
-        public String[] _acIdseq;
-        public String[] _conteIdseq;
-        public String[] _conteName;
-        public String _type;
-    }
-
-    /**
-     * Get the AC records of interest.
-     * 
-     * @param req_ the user HTTP request
-     * @return the target data for the request
-     * @throws Exception
-     */
-    private static ACBean getAC(HttpServletRequest req_) throws Exception
-    {
         // Ok this logic has nothing to do with EVS. The current field name used by
         // the curation tool is referenced for consistency.
         HttpSession session = req_.getSession();
         String launch = req_.getParameter(_searchEVS);
-        ACBean rs = null;
 
         // This would be a problem, the environment is not right for this request.
         if (launch == null)
@@ -282,122 +291,83 @@ public class AltNamesDefsSession implements Serializable
             throw new Exception("Unknown origination page.");
         }
 
-        @SuppressWarnings("unchecked")
-        Vector<AC_Bean> acBlock = (Vector) session.getAttribute(_beanBlock);
-        if (acBlock != null && acBlock.size() > 0)
+        AltNamesDefsSession altSess = null;
+        String sessName = getSessName(_beanBlock);
+
+        while (true)
         {
-            String[] acIdseq = new String[acBlock.size()];
-            String[] conteIdseq = new String[acIdseq.length];
-            String[] conteName = new String[acIdseq.length];
-            for (int i = 0; i < acIdseq.length; ++i)
+            // For block edit we will keep a separate session attribute. WARNING this first getAttribute
+            // is for the Curation Tool block edit buffer and NOT the Alt Name/Def block edit buffer.
+            @SuppressWarnings("unchecked")
+            Vector<AC_Bean> acBlock = (Vector) session.getAttribute(_beanBlock);
+            if (acBlock != null && acBlock.size() > 0)
             {
-                AC_Bean temp = acBlock.get(i);
-                acIdseq[i] = temp.getIDSEQ();
-                conteIdseq[i] = temp.getContextIDSEQ();
-                conteName[i] = temp.getContextName();
+                altSess = getSessionDataBlockEdit(session, sessName, acBlock);
+                break;
             }
-            rs = new AltNamesDefsSession.ACBean(launch, acIdseq, conteIdseq, conteName);
-        }
-        else
-        {
-            String beanName = null;
-            if (launch.equals(_searchDE))
-                beanName = _beanDE;
-            else if (launch.equals(_searchDEC))
-                beanName = _beanDEC;
-            else if (launch.equals(_searchVD))
-                beanName = _beanVD;
-            else if (launch.equals(_searchVM))
-                beanName = _beanVM;
 
-            AC_Bean ac = (AC_Bean)session.getAttribute(beanName);
-            if (ac == null)
-                throw new Exception("Missing session Bean [" + beanName + "].");
-            
-            rs = new AltNamesDefsSession.ACBean(launch, ac.getIDSEQ(), ac.getContextIDSEQ(), ac.getContextName());
-        }
+            // Remove any old Block edit buffer.
+            session.removeAttribute(sessName);
 
-        // Set the request data for when the page is written.
-        req_.setAttribute(AltNamesDefsServlet._reqIdseq, rs._acIdseq[0]);
-        req_.setAttribute(_searchEVS, launch);
-
-        return rs;
-    }
-
-    /**
-     * Determine if the specified AC idseq is the subject of this session.
-     * 
-     * @param idseq_ the AC idseq
-     * @return true if this session focuses on the AC
-     */
-    private boolean sameAC(String idseq_)
-    {
-        if (_acIdseq.length > 1)
-        {
-            return true;
-        }
-
-        if (_acIdseq[0] == null)
-        {
-            return (idseq_ == null);
+            if (launch.equals(_searchVM))
+            {
+                altSess = getSessionDataVM(session, req_);
+                break;
+            }
+    
+            altSess = getSessionDataAC(session, launch);
+            break;
         }
         
-        return _acIdseq[0].equals(idseq_);
+        if (altSess == null)
+            throw new Exception("Unable to find or create a data buffer.");
+
+        // Set the request data for when the page is written.
+        req_.setAttribute(AltNamesDefsServlet._reqIdseq, altSess._acIdseq[0]);
+        req_.setAttribute(_searchEVS, launch);
+        
+        return altSess;
     }
 
     /**
      * Save the session data to the database.
      * 
+     * @param session_ the HTTP session
      * @param conn_ the database connection
-     * @param sess_ the HTTP session
-     * @param type_ the session type, AltNamesDefsSession._searchDE, _searchDEC, _searchVD, _searchVM
      * @param idseq_ the subject AC, for an Edit this wouldn't change, for an Add/New this is now a valid idseq
      * @param conteIdseq_ the companion Context idseq
      * @throws SQLException
      */
-    public static void save(Connection conn_, HttpSession sess_, String type_, String idseq_, String conteIdseq_) throws SQLException
+    public void save(HttpSession session_, Connection conn_, String idseq_, String conteIdseq_) throws SQLException
     {
         // Get the session buffer.
         AltNamesDefsSession sess;
-        String sessName = getSessName(type_);
-        sess = (AltNamesDefsSession) sess_.getAttribute(sessName);
-        if (sess == null)
-            return;
+        String sessName = getSessName(_beanBlock);
+        sess = (AltNamesDefsSession) session_.getAttribute(sessName);
 
         // Open a database connection.
         DBAccess db = new DBAccess(conn_);
-        Alternates[] alts = sess._alts;
-
-        // For single edits
-        if (sess._acIdseq.length == 1)
-        {
-            // Verify this request applies to this AC
-            if (sess._acIdseq[0] != null && sess._acIdseq[0].length() > 0 && sess._acIdseq[0].equals(idseq_) == false)
-                return;
-            
-            // Save all the alternates
-            for (int i = 0; i < alts.length; ++i)
-            {
-                if (alts[i].getAcIdseq() == null)
-                    alts[i].setACIdseq((sess._acIdseq[0] == null) ? idseq_ : sess._acIdseq[0]);
-                if (alts[i].getConteIdseq() == null)
-                    alts[i].setConteIdseq((sess._conteIdseq[0] == null) ? conteIdseq_ : sess._conteIdseq[0]);
-                db.save(alts[i]);
-            }
-        }
-        
-        // For block edit
-        else
+        if (sess != null)
         {
             // Apply the alternate objects to the appropriate AC
             for (int i = 0; i < sess._acIdseq.length; ++i)
             {
-                db.save(alts[i], sess._acIdseq, sess._conteIdseq);
+                db.save(_alts[i], sess._acIdseq, sess._conteIdseq);
             }
+            
+            session_.removeAttribute(sessName);
+            return;
         }
 
-        // Wipe the buffer, it's in the database now.
-        sess_.removeAttribute(sessName);
+        // Save all the alternates
+        for (int i = 0; i < _alts.length; ++i)
+        {
+            if (_alts[i].getAcIdseq() == null)
+                _alts[i].setACIdseq((sess._acIdseq[0] == null) ? idseq_ : sess._acIdseq[0]);
+            if (_alts[i].getConteIdseq() == null)
+                _alts[i].setConteIdseq((sess._conteIdseq[0] == null) ? conteIdseq_ : sess._conteIdseq[0]);
+            db.save(_alts[i]);
+        }
     }
 
     /**
@@ -413,7 +383,7 @@ public class AltNamesDefsSession implements Serializable
     private static final String _beanDE = "m_DE";
     private static final String _beanDEC = "m_DEC";
     private static final String _beanVD = "m_VD";
-    private static final String _beanVM = "m_VM";
+    private static final String _beanVMID = "vmID";
     private static final String  _beanBlock = "vBEResult";
     public static final String _searchEVS = "searchEVS";
     public static final String _searchVD = "ValueDomain";
