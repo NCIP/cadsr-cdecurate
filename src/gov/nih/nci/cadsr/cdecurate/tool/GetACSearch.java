@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.20 2006-11-07 16:39:05 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.21 2006-11-08 05:00:11 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;     
@@ -7850,11 +7850,18 @@ public class GetACSearch implements Serializable
       boolean isNewVD = false;
       //do the pvac search to get the names and count of the pvs for this vd
       VD_Bean vd = DEBean.getDE_VD_Bean();
+      if (vd == null)
+        return DEBean;
       Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
-      Integer pvCount = vdpvs.size();  // this.doPVACSearch(DEBean.getDE_VD_IDSEQ(), DEBean.getDE_VD_NAME(), "Detail");
-      //TODO - fix the pv count at refresh of de search results
-      String pvValue = (String)m_classReq.getAttribute("pvValue");
-
+      Integer pvCount = 0; //  vdpvs.size();  // this.doPVACSearch(DEBean.getDE_VD_IDSEQ(), DEBean.getDE_VD_NAME(), "Detail");
+       //get first value 
+      String pvValue = "";  // (String)m_classReq.getAttribute("pvValue");
+      if (vdpvs != null && vdpvs.size() > 0)
+      {
+        pvCount = Integer.valueOf(vdpvs.size());
+        PV_Bean pv = (PV_Bean)vdpvs.elementAt(0);
+        pvValue = pv.getPV_VALUE();
+      }
       //compare the vd id from old to new if they are the same.
       DE_Bean oldDEBean = (DE_Bean)session.getAttribute("oldDEBean");
       String oldVD = oldDEBean.getDE_VD_IDSEQ();

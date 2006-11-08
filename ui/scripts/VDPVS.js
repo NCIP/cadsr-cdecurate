@@ -62,6 +62,21 @@
   }
 
   //open alternate names reference document window
+  function openDesignateWindowVM(sType, vmID)
+  {
+    if (altWindow && !altWindow.closed)
+      altWindow.close();
+    document.SearchActionForm.isValidSearch.value = "false";  
+    document.SearchActionForm.itemType.value = sType
+ // alert(" depage " + sType);
+    //var windowW = screen.width - 410;
+    if (sType == "Alternate Names")
+        altWindow = window.open("NCICurationServlet?reqType=AltNamesDefs&searchEVS=ValueMeaning" + "&vmID=" + vmID, "designate", "width=900,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
+    else
+        altWindow = window.open("jsp/EditDesignateDE.jsp", "designate", "width=700,height=650,top=0,left=0,resizable=yes,scrollbars=yes");
+  }
+
+  //open alternate names reference document window
   function openDesignateWindow(sType)
   {
     if (altWindow && !altWindow.closed)

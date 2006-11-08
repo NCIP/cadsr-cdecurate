@@ -530,46 +530,6 @@ System.out.println(sMenuAction + " pv action " + sAction);
         logger.fatal("Error getPVattributes - " + e.toString(), e);
         e.printStackTrace();
       }
-
-
-/*       //store new ones if added on the page
-       if (sAction.equals("Version") && oldVDPV.size() != vList.size())
-       {
-         Vector vVal = (Vector)m_classReq.getAttribute("vValue");
-         for (int i=0; i<oldVDPV.size(); i++)
-         {
-           PV_Bean thisPV = (PV_Bean)oldVDPV.elementAt(i);
-           //make sure it doesn't exists already in the vector and is not deleted
-           if (!vVal.contains(thisPV.getPV_VALUE()) && !thisPV.getVP_SUBMIT_ACTION().equals("DEL"))
-           {
-             vList.addElement(thisPV);
-           }
-         }
-       }
-       //store the first element and count in the request
-       String pvValue = "";
-       if (vList != null && vList.size() > 0)
-       {
-         pvBean = (PV_Bean)vList.elementAt(0);
-         pvValue = pvBean.getPV_VALUE();
-         pvCount = new Integer(vList.size());
-       }
-       m_classReq.setAttribute("PermValueList", vList);
-       m_classReq.setAttribute("ACName", acName);
-       //get first pv name in the request
-       m_classReq.setAttribute("pvValue", pvValue);
-       session.setAttribute("VDPVList", vList);  //store the bean
-       //store copy of this bean in the session also.
-       Vector<PV_Bean> oldVDPVList = new Vector<PV_Bean>();
-       for (int k =0; k<vList.size(); k++)
-       {
-         PV_Bean cBean = new PV_Bean();
-         cBean = cBean.copyBean((PV_Bean)vList.elementAt(k));
-         oldVDPVList.addElement(cBean);
-         //System.out.println(cBean.getPV_BEGIN_DATE() + " what is at set " + cBean.getPV_END_DATE());
-       }
-       session.setAttribute("oldVDPVList", oldVDPVList);  //stor eit in the session       
-*/     
    }  //doPVACSearch search
 
    public Vector<PV_Bean> searchPVAttributes(String InString, String cd_idseq, String conName, String conID)
@@ -619,21 +579,8 @@ System.out.println(sMenuAction + " pv action " + sAction);
            data.getRequest().setAttribute("selConcept", eBean);
            VM_Bean vm = data.getNewVM();     //getSelectPV().getPV_VM();
            session.setAttribute("selectVM", vm);
-           //mark the NVP concepts 
-/*           for (int i =0; i<vRSel.size(); i++)
-           {
-             EVS_Bean sBean = (EVS_Bean)vRSel.elementAt(i);
-             sBean.markNVPConcept(sBean, session);
-             vRSel.setElementAt(sBean, i);
-           }
-           session.setAttribute("vACSearch", vRSel);
-*/         }
-/*         if (pvInd < 0)
-           session.setAttribute("NewPV", data.getSelectPV());
-         else
-           session.setAttribute("m_VD", data.getVD());
-*/       }
-       
+         }
+       }       
      }
      //EVSSearch evs = new EVSSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
      Vector<String> vRes = new Vector<String>();

@@ -46,6 +46,10 @@ public class VMAction implements Serializable
     Connection sbr_db_conn = null;
     try
     {
+      //do not continue search if no search filter
+      if (data.getSearchTerm().equals("") && data.getSearchFilterCD().equals("") && data.getSearchFilterCondr().equals("") && data.getSearchFilterDef().equals(""))
+        return;
+      
       Vector<VM_Bean> vmList = data.getVMList();
       if (vmList == null) vmList = new Vector<VM_Bean>();
       //get the connection from data if exists (used for testing)
@@ -345,12 +349,7 @@ public class VMAction implements Serializable
       //print the messages
       if (!dispMsgACType.equals(""))
       {
-/*        StringBuffer sMsg = new StringBuffer();
-        //get the editing vm attributes
-        sMsg.append("\n---------------\n");
-        printFlagedVMs(vmBean, sMsg, "");
-        sMsg.append("-----------------\n");
-*/        //get the message
+        //get the message
         data.setStatusMsg(dispMsgACType);
         if (dispMsgACType.equals("Concept"))
         {
@@ -585,9 +584,6 @@ public class VMAction implements Serializable
         {
           data.setStatusMsg(data.getStatusMsg() + "\\t" + sReturnCode + " : Unable to update Value Meaning - "
               + vm.getVM_SHORT_MEANING() + ".");
-          // m_classReq.setAttribute("retcode", sReturnCode); //store returncode in request to track
-          // it all through this request
-          // m_classReq.setAttribute("pvvmError", sReturnCode); //store it capture check for pv
           // creation
           data.setRetErrorCode(sReturnCode);
           data.setPvvmErrorCode(sReturnCode);

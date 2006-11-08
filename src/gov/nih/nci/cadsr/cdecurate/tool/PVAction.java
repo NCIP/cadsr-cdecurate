@@ -346,11 +346,6 @@ public class PVAction implements Serializable
   //  Integer pvCount = new Integer(0);
     try
     {
-      //Vector vList = new Vector();
-      //HttpSession session = m_classReq.getSession();
-      //Vector oldVDPV = (Vector)session.getAttribute("VDPVList");
-     // PV_Bean pvBean = new PV_Bean();
-      //Create a Callable Statement object.
       //Create a Callable Statement object.
       sbr_db_conn = data.getDbConnection();
       if (sbr_db_conn == null || sbr_db_conn.isClosed())
@@ -381,85 +376,42 @@ public class PVAction implements Serializable
               pvBean.setPV_VDPVS_IDSEQ("");
             else
               pvBean.setPV_VDPVS_IDSEQ(rs.getString("vp_idseq"));
+            
             pvBean.setPV_MEANING_DESCRIPTION(rs.getString("vm_description"));             
-/*            if (sAction.equals("Version"))
-              //pvBean = this.updatePVBean(pvBean, oldVDPV);
-              System.out.println("need to work on this");  //TODO- 
+            pvBean.setPV_VALUE_ORIGIN(rs.getString("origin"));
+            String sDate = rs.getString("begin_date");
+            if (sDate != null && !sDate.equals(""))
+              sDate = data.getUtil().getCurationDate(sDate);
+            pvBean.setPV_BEGIN_DATE(sDate);
+            sDate = rs.getString("end_date");
+            if (sDate != null && !sDate.equals(""))
+              sDate = data.getUtil().getCurationDate(sDate);
+            pvBean.setPV_END_DATE(sDate);
+            if (sAction.equals("NewUsing"))
+              pvBean.setVP_SUBMIT_ACTION("INS"); 
             else
-            {
-*/              pvBean.setPV_VALUE_ORIGIN(rs.getString("origin"));
-              String sDate = rs.getString("begin_date");
-              if (sDate != null && !sDate.equals(""))
-                sDate = data.getUtil().getCurationDate(sDate);
-              pvBean.setPV_BEGIN_DATE(sDate);
-              sDate = rs.getString("end_date");
-              if (sDate != null && !sDate.equals(""))
-                sDate = data.getUtil().getCurationDate(sDate);
-              pvBean.setPV_END_DATE(sDate);
-              if (sAction.equals("NewUsing"))
-                pvBean.setVP_SUBMIT_ACTION("INS"); 
-              else
-                pvBean.setVP_SUBMIT_ACTION("NONE"); 
-              //get valid value attributes
-              pvBean.setQUESTION_VALUE("");
-              pvBean.setQUESTION_VALUE_IDSEQ("");
-              //get vm concept attributes
-              String sCondr = rs.getString("vm_condr_idseq");
-              this.doSetVMAttributes(pvBean, sCondr, data);
-              //get parent concept attributes
-              String sCon = rs.getString("con_idseq");
-              this.doSetParentAttributes(sCon, pvBean, data);
-              
-              pvBean.setPV_VIEW_TYPE("expand");              
-         //   }            
+              pvBean.setVP_SUBMIT_ACTION("NONE"); 
+            //get valid value attributes
+            pvBean.setQUESTION_VALUE("");
+            pvBean.setQUESTION_VALUE_IDSEQ("");
+            //get vm concept attributes
+            String sCondr = rs.getString("vm_condr_idseq");
+            this.doSetVMAttributes(pvBean, sCondr, data);
+            //get parent concept attributes
+            String sCon = rs.getString("con_idseq");
+            this.doSetParentAttributes(sCon, pvBean, data);
+            
+            pvBean.setPV_VIEW_TYPE("expand");              
             //add pv idseq in the pv id vector
             vList.addElement(pvBean);  //add the bean to a vector
           }  //END WHILE
         }   //END IF
       }
-/*      //store new ones if added on the page
-      if (sAction.equals("Version") && oldVDPV.size() != vList.size())
-      {
-        Vector vVal = (Vector)m_classReq.getAttribute("vValue");
-        for (int i=0; i<oldVDPV.size(); i++)
-        {
-          PV_Bean thisPV = (PV_Bean)oldVDPV.elementAt(i);
-          //make sure it doesn't exists already in the vector and is not deleted
-          if (!vVal.contains(thisPV.getPV_VALUE()) && !thisPV.getVP_SUBMIT_ACTION().equals("DEL"))
-          {
-            vList.addElement(thisPV);
-          }
-        }
-      }
-      //store the first element and count in the request
-      String pvValue = "";
-      if (vList != null && vList.size() > 0)
-      {
-        pvBean = (PV_Bean)vList.elementAt(0);
-        pvValue = pvBean.getPV_VALUE();
-        pvCount = new Integer(vList.size());
-      }
-      m_classReq.setAttribute("PermValueList", vList);
-      m_classReq.setAttribute("ACName", acName);
-      //get first pv name in the request
-      m_classReq.setAttribute("pvValue", pvValue);
-      session.setAttribute("VDPVList", vList);  //store the bean
-      //store copy of this bean in the session also.
-      Vector<PV_Bean> oldVDPVList = new Vector<PV_Bean>();
-      for (int k =0; k<vList.size(); k++)
-      {
-        PV_Bean cBean = new PV_Bean();
-        cBean = cBean.copyBean((PV_Bean)vList.elementAt(k));
-        oldVDPVList.addElement(cBean);
-        //System.out.println(cBean.getPV_BEGIN_DATE() + " what is at set " + cBean.getPV_END_DATE());
-      }
-      session.setAttribute("oldVDPVList", oldVDPVList);  //stor eit in the session
-*/      
     }
     catch(Exception e)
     {
       //System.err.println("other problem in GetACSearch-doPVACSearch : " + e);
-      logger.fatal("ERROR - GetACSearch-doPVACSearch for other : " + e.toString(), e);
+      logger.fatal("ERROR - doPVACSearch for other : " + e.toString(), e);
     }
     try
     {
@@ -471,7 +423,7 @@ public class PVAction implements Serializable
     catch(Exception ee)
     {
       //System.err.println("Problem closing in GetACSearch-doPVACSearch : " + ee);
-      logger.fatal("ERROR - GetACSearch-doPVACSearch for close : " + ee.toString(), ee);
+      logger.fatal("ERROR - -doPVACSearch for close : " + ee.toString(), ee);
     }
     return vList;
   }  //doPVACSearch search

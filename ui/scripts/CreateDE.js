@@ -299,11 +299,11 @@ function SearchVDValue()
 
  function closeDep() 
   {
-    if (searchWindow && searchWindow.open && !searchWindow.closed) 
+    if (searchWindow && !searchWindow.closed)   //&& searchWindow.open 
       searchWindow.close();
-    if(altWindow && altWindow.open && ! altWindow.closed)
+    if (altWindow && !altWindow.closed)  // && altWindow.open
       altWindow.close();
-    if(statusWindow && statusWindow.open && !statusWindow.closed)
+    if (statusWindow && !statusWindow.closed)  // && statusWindow.open
       statusWindow.close();
   }
 
