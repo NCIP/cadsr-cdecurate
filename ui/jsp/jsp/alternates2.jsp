@@ -1,7 +1,7 @@
 <!--
     Copyright (c) 2006 ScenPro, Inc.
 
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/alternates2.jsp,v 1.11 2006-11-08 05:00:11 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/alternates2.jsp,v 1.12 2006-11-09 15:16:46 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -62,6 +62,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             text = (String) pageContext.getRequest().getAttribute(AltNamesDefsSession._searchEVS);
         %>
         <input type="hidden" name="<%=AltNamesDefsSession._searchEVS%>" value="<%=text%>"/>
+        <%
+            text = (String) pageContext.getRequest().getAttribute(AltNamesDefsSession._beanVMID);
+        %>
+        <input type="hidden" name="<%=AltNamesDefsSession._beanVMID%>" value="<%=text%>"/>
 
         <table><tr>
             <td>

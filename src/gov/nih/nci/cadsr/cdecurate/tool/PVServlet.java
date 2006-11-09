@@ -298,6 +298,8 @@ System.out.println(sMenuAction + " pv action " + sAction);
        System.out.println(isNewPV + " same pv " + chgName);
           if (newVM.getVM_SUBMIT_ACTION().equals(VMForm.CADSR_ACTION_INS))
             isNewPV = true;
+          if (selectPV.getVP_SUBMIT_ACTION().equals(PVForm.CADSR_ACTION_INS))
+            isNewPV = true;
           data.setNewVM(newVM);
         }
          // String erVM = (String)data.getRequest().getAttribute("ErrMsgAC");

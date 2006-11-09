@@ -20,17 +20,18 @@
 	//confirm the remove item			
     function confirmRM(pvNo, itmAct, itmMsg)
     {
-		document.getElementById("editPVInd").value = pvNo;
-		if (itmAct == "remov")
+		var confirmOK = true;
+		if (itmAct == "remove")
 		{
-	    	var removeOK = confirm("Click OK to continue with " + itmAct + "ing the " + itmMsg + ".");
-	    	if (removeOK == false) 
+	    	confirmOK = confirm("Click OK to continue with removing the " + itmMsg + ".");
+	    	if (confirmOK == false) 
 	    		return;
-	    	else
-				SubmitValidate('remove');
 		}
-		else if (itmAct == "restor")
-		    SubmitValidate('restore');    		
+		if (confirmOK)
+		{
+		   document.getElementById("editPVInd").value = pvNo;
+		   SubmitValidate(itmAct);   
+		} 		
     }
     
     //disable vm search if data exist

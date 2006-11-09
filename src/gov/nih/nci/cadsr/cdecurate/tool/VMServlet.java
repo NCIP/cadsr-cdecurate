@@ -133,7 +133,7 @@ public class VMServlet implements Serializable
   {
     HttpServletRequest req = data.getRequest();
     HttpSession session = req.getSession();
-    
+  //  boolean newPVVM = true;
     //get all attributes of the vm into this bean
     VM_Bean vm = new VM_Bean();
     VM_Bean selvm = new VM_Bean();
@@ -176,6 +176,7 @@ public class VMServlet implements Serializable
     //call the action change VM to validate the vm
     VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");  //vm cd
     data.setVMBean(vm);
+    
     VD_Bean oldvd = (VD_Bean)session.getAttribute("oldVDBean");
     Vector<PV_Bean> vdpvs = oldvd.getVD_PV_List();
     if (pvInd > -1 && vdpvs.size() > 0)  // (selvm != null)
@@ -187,6 +188,8 @@ public class VMServlet implements Serializable
           {            
             selvm = orgPV.getPV_VM();
             data.setSelectVM(selvm);
+         //   if (selvm.getVM_SHORT_MEANING().equals(vm.getVM_SHORT_MEANING()))
+         //     newPVVM = false;
             break;
           }
         }
@@ -238,6 +241,7 @@ public class VMServlet implements Serializable
           }
         }
         vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
+        pv.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_INS);  //pv changed
       }
       //get the name
       vm.setVM_CONCEPT_LIST(newList);
