@@ -298,14 +298,14 @@ function SearchVDValue()
 }
 
  function closeDep() 
-  {
+ {
     if (searchWindow && !searchWindow.closed)   //&& searchWindow.open 
       searchWindow.close();
     if (altWindow && !altWindow.closed)  // && altWindow.open
       altWindow.close();
     if (statusWindow && !statusWindow.closed)  // && statusWindow.open
       statusWindow.close();
-  }
+ }
 
 function RTrim(str)
 {

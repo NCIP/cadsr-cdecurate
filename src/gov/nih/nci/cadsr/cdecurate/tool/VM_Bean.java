@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VM_Bean.java,v 1.21 2006-11-08 05:00:11 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VM_Bean.java,v 1.22 2006-11-09 15:16:44 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -139,7 +139,7 @@ public class VM_Bean extends AC_Bean
     this.setVM_CONDR_IDSEQ(cBean.getVM_CONDR_IDSEQ());
     this.setVM_IDSEQ(cBean.getVM_IDSEQ());
     this.setVM_SUBMIT_ACTION(cBean.getVM_SUBMIT_ACTION());
-    
+    this._alts = cBean._alts;    
     return this;
   }
 
@@ -508,7 +508,7 @@ public class VM_Bean extends AC_Bean
    */
   public String getVM_IDSEQ()
   {
-    return VM_IDSEQ;
+    return (VM_IDSEQ == null) ? "" : VM_IDSEQ;
   }
   
   @Override

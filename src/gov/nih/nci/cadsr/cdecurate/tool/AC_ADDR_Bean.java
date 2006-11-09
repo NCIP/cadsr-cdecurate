@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_ADDR_Bean.java,v 1.21 2006-11-08 05:00:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_ADDR_Bean.java,v 1.22 2006-11-09 15:16:39 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.11 2006-11-08 05:00:11 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.12 2006-11-09 15:16:46 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -72,7 +72,7 @@ public class AltNamesDefsSession implements Serializable
     {
         _editAlt = new Alternates();
     }
-    
+
     /**
      * Clean all session buffers
      *
@@ -80,7 +80,7 @@ public class AltNamesDefsSession implements Serializable
     public void cleanBuffers()
     {
         clearEdit();
-        
+
         _cacheTitle = null;
         _cacheCSI = null;
         _cacheAltTypes = null;
@@ -169,8 +169,9 @@ public class AltNamesDefsSession implements Serializable
         {
             altSess = new AltNamesDefsSession(acIdseq, conteIdseq, conteName, _beanBlock);
             session_.setAttribute(sessName_, altSess);
+            return altSess;
         }
-        
+
         // The existing block edit buffer must be validated to ensure we haven't changed the AC
         // list.
         boolean flag = false;
@@ -182,14 +183,14 @@ public class AltNamesDefsSession implements Serializable
                 break;
             }
         }
-        
+
         // The buffer isn't correct for the list so create a new one.
         if (flag)
         {
             altSess = new AltNamesDefsSession(acIdseq, conteIdseq, conteName, _beanBlock);
             session_.setAttribute(sessName_, altSess);
         }
-        
+
         return altSess;
     }
 
@@ -206,35 +207,42 @@ public class AltNamesDefsSession implements Serializable
         // We identify the VM for the VD by an index value.
         AltNamesDefsSession altSess = null;
         String vmID = req_.getParameter(_beanVMID);
-        if (vmID != null)
+        if (vmID == null)
         {
-            // Be sure we can get the VM and the class types are right.
-            AC_Bean temp = (AC_Bean)session_.getAttribute(_beanVD);
-            if (temp != null && temp instanceof VD_Bean)
+            throw new Exception("Missing required request parameter \"" + _beanVMID + "\".");
+        }
+
+        // Have to keep this around.
+        req_.setAttribute(_beanVMID, vmID);
+
+        // Be sure we can get the VM and the class types are right.
+        AC_Bean temp = (AC_Bean)session_.getAttribute(_beanVD);
+        if (temp != null && temp instanceof VD_Bean)
+        {
+            VD_Bean vd = (VD_Bean) temp;
+            Vector<PV_Bean> pvs = vd.getVD_PV_List();
+            int vmid = Integer.parseInt(vmID);
+            if (pvs.size() == 0 || vmid < 0 || pvs.size() <= vmid)
             {
-                VD_Bean vd = (VD_Bean) temp;
-                Vector<PV_Bean> pvs = vd.getVD_PV_List();
-                int vmid = Integer.parseInt(vmID);
-                VM_Bean vm = null;
-                if (pvs.size() > 0 && 0 <= vmid && vmid < pvs.size())
-                {
-                    PV_Bean pv = pvs.get(vmid);
-                    vm = pv.getPV_VM();
-                    altSess = vm.getAlternates();
-                }
-                
-                // The VM hasn't been used before so create a new buffer.
-                if (altSess == null)
-                {
-                    altSess = new AltNamesDefsSession(vm.getIDSEQ(), vm.getContextIDSEQ(), vm.getContextName(), _searchVM);
-                    vm.setAlternates(altSess);
-                }
+                throw new Exception("VM_Bean can not be found.");
+            }
+
+            // Get the VM and it's data buffer.
+            PV_Bean pv = pvs.get(vmid);
+            VM_Bean vm = pv.getPV_VM();
+            altSess = vm.getAlternates();
+
+            // The VM hasn't been used before so create a new buffer.
+            if (altSess == null)
+            {
+                altSess = new AltNamesDefsSession(vm.getIDSEQ(), vm.getContextIDSEQ(), vm.getContextName(), _searchVM);
+                vm.setAlternates(altSess);
             }
         }
-        
+
         return altSess;
     }
-    
+
     /**
      * Get the data buffer for AC's except a VM
      * 
@@ -267,10 +275,10 @@ public class AltNamesDefsSession implements Serializable
             altSess = new AltNamesDefsSession(ac.getIDSEQ(), ac.getContextIDSEQ(), ac.getContextName(), launch_);
             ac.setAlternates(altSess);
         }
-        
+
         return altSess;
     }
-    
+
     /**
      * Get the session data for this request.
      * 
@@ -292,12 +300,12 @@ public class AltNamesDefsSession implements Serializable
         }
 
         AltNamesDefsSession altSess = null;
-        String sessName = getSessName(_beanBlock);
 
         while (true)
         {
             // For block edit we will keep a separate session attribute. WARNING this first getAttribute
             // is for the Curation Tool block edit buffer and NOT the Alt Name/Def block edit buffer.
+            String sessName = getSessName(_beanBlock);
             @SuppressWarnings("unchecked")
             Vector<AC_Bean> acBlock = (Vector) session.getAttribute(_beanBlock);
             if (acBlock != null && acBlock.size() > 0)
@@ -309,36 +317,51 @@ public class AltNamesDefsSession implements Serializable
             // Remove any old Block edit buffer.
             session.removeAttribute(sessName);
 
+            // Value Meanings are different than other AC's.
             if (launch.equals(_searchVM))
             {
                 altSess = getSessionDataVM(session, req_);
                 break;
             }
-    
+
+            // Get the data buffer for this AC.
             altSess = getSessionDataAC(session, launch);
             break;
         }
-        
+
         if (altSess == null)
             throw new Exception("Unable to find or create a data buffer.");
 
         // Set the request data for when the page is written.
         req_.setAttribute(AltNamesDefsServlet._reqIdseq, altSess._acIdseq[0]);
         req_.setAttribute(_searchEVS, launch);
-        
+
         return altSess;
     }
 
     /**
      * Save the session data to the database.
      * 
-     * @param session_ the HTTP session
      * @param conn_ the database connection
      * @param idseq_ the subject AC, for an Edit this wouldn't change, for an Add/New this is now a valid idseq
      * @param conteIdseq_ the companion Context idseq
      * @throws SQLException
      */
-    public void save(HttpSession session_, Connection conn_, String idseq_, String conteIdseq_) throws SQLException
+    public void save(Connection conn_, String idseq_, String conteIdseq_) throws SQLException
+    {
+        // Save all the alternates
+        DBAccess db = new DBAccess(conn_);
+        for (int i = 0; i < _alts.length; ++i)
+        {
+            if (_alts[i].getAcIdseq() == null)
+                _alts[i].setACIdseq(idseq_);
+            if (_alts[i].getConteIdseq() == null)
+                _alts[i].setConteIdseq(conteIdseq_);
+            db.save(_alts[i]);
+        }
+    }
+    
+    public static void save(HttpSession session_, Connection conn_, String idseq_, String conteIdseq_) throws SQLException
     {
         // Get the session buffer.
         AltNamesDefsSession sess;
@@ -350,23 +373,13 @@ public class AltNamesDefsSession implements Serializable
         if (sess != null)
         {
             // Apply the alternate objects to the appropriate AC
-            for (int i = 0; i < sess._acIdseq.length; ++i)
+            for (int i = 0; i < sess._alts.length; ++i)
             {
-                db.save(_alts[i], sess._acIdseq, sess._conteIdseq);
+                db.save(sess._alts[i], sess._acIdseq, sess._conteIdseq);
             }
-            
+
             session_.removeAttribute(sessName);
             return;
-        }
-
-        // Save all the alternates
-        for (int i = 0; i < _alts.length; ++i)
-        {
-            if (_alts[i].getAcIdseq() == null)
-                _alts[i].setACIdseq((sess._acIdseq[0] == null) ? idseq_ : sess._acIdseq[0]);
-            if (_alts[i].getConteIdseq() == null)
-                _alts[i].setConteIdseq((sess._conteIdseq[0] == null) ? conteIdseq_ : sess._conteIdseq[0]);
-            db.save(_alts[i]);
         }
     }
 
@@ -383,7 +396,7 @@ public class AltNamesDefsSession implements Serializable
     private static final String _beanDE = "m_DE";
     private static final String _beanDEC = "m_DEC";
     private static final String _beanVD = "m_VD";
-    private static final String _beanVMID = "vmID";
+    public static final String _beanVMID = "vmID";
     private static final String  _beanBlock = "vBEResult";
     public static final String _searchEVS = "searchEVS";
     public static final String _searchVD = "ValueDomain";
@@ -400,14 +413,14 @@ public class AltNamesDefsSession implements Serializable
     public String _jsp;
     public String _viewJsp;
     private int _newIdseq;
-    
+
     public String _cacheSort;
     public String _cacheTitle;
     public Tree _cacheCSI;
     public String[] _cacheAltTypes;
     public String[] _cacheDefTypes;
     public String[] _cacheLangs;
-    
+
     public static final String _newPrefix = "$";
 
     private static final String _sessName = AltNamesDefsSession.class.getName();

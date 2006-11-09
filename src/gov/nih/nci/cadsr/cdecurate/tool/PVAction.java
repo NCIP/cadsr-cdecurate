@@ -64,7 +64,6 @@ public class PVAction implements Serializable
       else
         selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_INS);
       selPV.setPV_VIEW_TYPE("expand");
-  //TODO    selPV.setPV_SHORT_MEANING(data.getNewVM().getVM_LONG_NAME());
       vdpvs.setElementAt(selPV, pvInd);  //data.getVDPVList().setElementAt(selPV, pvInd);
     }
     else

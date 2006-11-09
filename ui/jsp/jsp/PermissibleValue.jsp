@@ -381,7 +381,9 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 												</td>
 												<td>
 													<b>
-                            <span style="padding-left: 0.3in"><a href="javascript:openDesignateWindowVM('Alternate Names', -1);">Alternate Names</a></span>
+                                                    &nbsp;
+<!--                            <span style="padding-left: 0.3in"><a href="javascript:openDesignateWindowVM('Alternate Names', -1);">Alternate Names</a></span>
+-->
 													</b>
 												</td>
 											</tr>
@@ -498,7 +500,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 																</td>
 																<td>
 			              							<input type="button" name="btnCancelUS" style="width:80" value="Cancel" 
-			              								onClick="javascript:confirmRM('<%=sEditPV%>', 'restor', 'Permissible Value Attributes of <%=sEditPV%>');">
+			              								onClick="javascript:confirmRM('<%=sEditPV%>', 'restore', 'restore');">
 																</td>
 															</tr>
 														</table>
@@ -740,8 +742,8 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 						            PV_Bean pvBean = (PV_Bean) vVDPVList.elementAt(i);
 						            if (pvBean == null) pvBean = new PV_Bean();
 						            // display only if not deleted
-						            if (pvBean.getVP_SUBMIT_ACTION() != null && pvBean.getVP_SUBMIT_ACTION().equals("DEL"))
-						              continue;
+						        //    if (pvBean.getVP_SUBMIT_ACTION() != null && pvBean.getVP_SUBMIT_ACTION().equals("DEL"))
+						        //      continue;
 						            String ckName = ("ck" + ckCount);
 						            String pvCount = "pv" + ckCount;
 						            ckCount += 1;
@@ -802,12 +804,12 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 														</a>
 													</div>
 													<div id="<%=pvCount%>ImgDelete" style="display: inline">
-														<a href="javascript:confirmRM('<%=pvCount%>', 'remov', 'Permissible Value Attributes of <%=sPVVal%>');">
+														<a href="javascript:confirmRM('<%=pvCount%>', 'remove', 'Permissible Value Attributes of <%=sPVVal%>');">
 															<img src="Assets/delete.gif" border="0" alt="Remove">
 														</a>
 													</div>
 													<div id="<%=pvCount%>ImgRestore" style="display: none">
-														<a href="javascript:confirmRM('<%=pvCount%>', 'restor', 'Permissible Value Attributes of <%=sPVVal%>');">
+														<a href="javascript:confirmRM('<%=pvCount%>', 'restore', 'restore');">
 															<img src="Assets/restore.gif" border="0" alt="Restore">
 														</a>
 													</div>
@@ -836,7 +838,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 													<% } %>
 													<div id="<%=pvCount%>VMAltEdit" style="display: none; text-align:right">
 															&nbsp;&nbsp;
-															<span style="padding-right:0.3in"><a href="javascript:openDesignateWindowVM('Alternate Names', <%=ckCount%>);">Alternate Names</a></span>
+															<span style="padding-right:0.3in"><a href="javascript:openDesignateWindowVM('Alternate Names', <%=i%>);">Alternate Names</a></span>
 													</div>
 													<br>
 													<div id="<%=pvCount%>View" style="display: <%if (viewType.equals("expand")) {%>block <% } else { %> none <% } %>">
@@ -959,7 +961,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 																			</td>
 																			<td>
 						              							<input type="button" name="btnCancelUS" style="width:80" value="Cancel" 
-						              								onClick="javascript:confirmRM('<%=sEditPV%>', 'restor', 'Permissible Value Attributes of <%=sEditPV%>');">
+						              								onClick="javascript:confirmRM('<%=sEditPV%>', 'restore', 'restore');">
 																			</td>
 																		</tr>
 																	</table>

@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.22 2006-11-08 05:00:11 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.23 2006-11-09 15:16:39 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -444,6 +444,22 @@ public class InsACService implements Serializable
                 String sStat = pvser.submitPV(vd);
                 if (sStat != null && !sStat.equals("")) 
                   this.storeStatusMsg(sStat);
+                // ********************************
+                Vector<PV_Bean> vPV = vd.getVD_PV_List();  // (Vector)session.getAttribute("VDPVList"); //vd.getVD_PV_NAME();
+                for (int j=0; j<vPV.size(); j++)
+                {
+                  PV_Bean pv = (PV_Bean)vPV.elementAt(j);
+                  VM_Bean vm = pv.getPV_VM();
+                  if (vm != null && !vm.getVM_IDSEQ().equals(""))
+                  {
+                    System.out.println(vm.getVM_IDSEQ() + " vm alt name " + sContextID + " vd " + vd.getVD_VD_IDSEQ());
+                    Connection conn = m_servlet.connectDB(m_classReq, m_classRes);
+                    vm.save(session, conn, vm.getVM_IDSEQ(), sContextID);
+                    conn.close();
+                  }
+                }
+                session.removeAttribute("AllAltNameList");
+                // ********************************                
               }             
             }
             //reset the pv counts to reset more hyperlink
@@ -5690,7 +5706,12 @@ public class InsACService implements Serializable
           // Set the In parameters (which are inherited from the PreparedStatement class)
           CStmt.setString(2, sAction);
           CStmt.setString(4, evsBean.getCONCEPT_IDENTIFIER());
-          CStmt.setString(5, evsBean.getLONG_NAME());
+          //make sure that :: is removed from the long name 
+          String sName = evsBean.getLONG_NAME();
+          int nvpInd = sName.indexOf("::");
+          if (nvpInd > 0)
+            sName = sName.substring(0, nvpInd);      
+          CStmt.setString(5, sName);
           CStmt.setString(6, sDef);
         //  CStmt.setString(7, evsBean.getCONTE_IDSEQ());  caBIG by default
           CStmt.setString(8, "1.0");

@@ -498,7 +498,12 @@ public class ConceptAction implements Serializable
            // Set the In parameters (which are inherited from the PreparedStatement class)
            CStmt.setString(2, sAction);
            CStmt.setString(4, evsBean.getCONCEPT_IDENTIFIER());
-           CStmt.setString(5, evsBean.getLONG_NAME());
+           //make sure that :: is removed from the long name 
+           String sName = evsBean.getLONG_NAME();
+           int nvpInd = sName.indexOf("::");
+           if (nvpInd > 0)
+             sName = sName.substring(0, nvpInd);      
+           CStmt.setString(5, sName);
            CStmt.setString(6, sDef);
          //  CStmt.setString(7, evsBean.getCONTE_IDSEQ());  caBIG by default
            CStmt.setString(8, "1.0");
@@ -645,5 +650,5 @@ System.out.println("in getAC_Concepts condrID: " + condrID);
     return vList;
   } //end get concept
   
-  
+
 }
