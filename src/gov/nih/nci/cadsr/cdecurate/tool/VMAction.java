@@ -921,6 +921,7 @@ public class VMAction implements Serializable
         changeVM = true;
       
       VM_Bean existVM = new VM_Bean();
+      boolean editExisting = false;
       //create new VM with concepts
       if (selVMName.equals("") || !selVMName.equalsIgnoreCase(VMName))
       {
@@ -933,11 +934,15 @@ public class VMAction implements Serializable
         sMsg.append("editing existing vm with evs concepts \n");
         existVM = data.getSelectVM();
         this.FLAG_VM_NAME_MATCH = 'Y';
+        editExisting = true;
       }
 
       //common for both scenario      
       VM_Bean conVM = this.getExistVMbyCondr(vCon, existVM, data, sMsg);
-      //compare teh conditions
+      VM_Bean defVM = existVM;  //expect it to be same;
+      dispAC = markSubmitNonConceptVM(data, vmBean, existVM, conVM, defVM, vCon, VMName, sMsg, editExisting);
+      
+/*      //compare teh conditions
       if (this.FLAG_VM_NAME_MATCH == 'N')  // && this.FLAG_CON_DER_MATCH == 'N')
       {
         switch (this.FLAG_CON_DER_MATCH) 
@@ -980,7 +985,7 @@ public class VMAction implements Serializable
             dispAC = "Value Meaning";
         }
       }
-
+*/
     //  data.setStatusMsg(sMsg.toString());
       //print the message
       System.out.println("Remove later --- Condition : " + this.FLAG_VM_NAME_MATCH + this.FLAG_CON_DER_MATCH + " : \n");
@@ -1091,8 +1096,8 @@ public class VMAction implements Serializable
         case (VMAction.CON_DEF_NAME + VMAction.VM_DEF_NAME):   //'C' + 'E':  //con name & def match but no condr
           //no message 
           if (this.FLAG_CON_DER_MATCH == VMAction.CON_DEF_NAME)  //only this scenario to update the condr not the above case
-            existVM.setVM_CONDR_IDSEQ("condr idseq");
-        
+            existVM.setVM_CONDR_IDSEQ("condr idseq");  //TODO NEED TO FIGURE OUT WHAT TO DO HERE
+          
           existVM.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_UPD); 
         case (VMAction.CON_DEF_DER_VM_NAME + VMAction.VM_DEF_NAME): //'E' + 'E':
           //no message take exisitng=
@@ -1529,7 +1534,11 @@ public class VMAction implements Serializable
         {
           this.FLAG_VM_NAME_MATCH = 'Y';
           exVM = vmList.elementAt(i);
-          break;
+          if (vmFound > 0)
+            this.FLAG_VM_DEF_MATCH = this.VM_DEF_MULTI; // 'D';
+          else
+            this.FLAG_VM_DEF_MATCH = this.VM_DEF_OTHER;  // 'Y';
+        //  break;
         }
         else if (!sCondr.equals("")) // && vm.getVM_CONDR_IDSEQ().equals(sCondr))
         {

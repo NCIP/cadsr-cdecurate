@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/load_tool_options.sql,v 1.23 2006-11-10 05:39:34 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/load_tool_options.sql,v 1.24 2006-11-10 18:23:47 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde

@@ -1155,6 +1155,13 @@
   		var pvId = document.getElementById("editPVInd").value;
   		if (pvId != null && pvId != "")
   		{
+  			//make sure vm text exists and no duplicate pvvm
+	  		if (sAct == "save" || sAct == "edit")
+	  		{
+	  			if (checkVMText(pvId) == false)
+	  				return false;
+	  		}
+  			//add the concepts to the hidden field	
 	  		var hidElm = document.getElementById("hiddenConVM");
 	  		if (hidElm != null)
 	  		{
@@ -1171,11 +1178,6 @@
 			  			hidElm[elmLen].selected = true;
 		  			}
 		  		}		  		
-	  		}
-	  		//check if vm is valid
-	  		if (sAct == "save" || sAct == "edit")
-	  		{
-	  			return checkVMText(pvId);
 	  		}
   		}
   		return true;
@@ -1218,22 +1220,46 @@
   	
   	function checkPVVMCombDuplicate(sVal, sVM, pvId)
   	{
-  		var i = 0;
+		//make it lower case no space for matching  		
+		sVal = sVal.toLowerCase();
+  		while (sVal.indexOf(' ') > 0)
+		{
+			sVal = sVal.replace(' ', '');
+		}
+  		sVM = sVM.toLowerCase();
+  		while (sVM.indexOf(' ') > 0)
+		{
+			sVM = sVM.replace(' ', '');
+		}
+  		
   		//get the value and meaning from each row and compare it to the text of the saving pv
+  		var i = 0;
   		do
   		{
   			var pvCount = "pv" + i;
   			if (pvCount != pvId)
   			{
+  				//loop through existing ones to check for duplicate pv vm
 	  			var pvTr = document.getElementById(pvCount + "ValueView");
 	  			if (pvTr != null && pvTr.innerText != "")
 	  			{
 	  				var val = pvTr.innerText;
+			  		val = val.toLowerCase();  //make it lower case no space for matching
+			  		while (val.indexOf(' ') > 0)
+					{
+						val = val.replace(' ', '');
+					}
+	  				
 	  				var vm = "";
 	  				var vmTr = document.getElementById(pvCount + "VMView");
 		  			if (vmTr != null && vmTr.innerText != "")
-	  					vm = pvTr.innerText;
-	  				if (val.toLowerCase() == sVal.toLowerCase() && sVM.toLowerCase() == vm.toLowerCase()) 
+	  					vm = vmTr.innerText;
+			  		vm = vm.toLowerCase();   //make it lower case no space for matching
+			  		while (vm.indexOf(' ') > 0)
+					{
+						vm = vm.replace(' ', '');
+					}
+	  				if (sVal == val && sVM == vm)
 	  				{
 	  					alert("Value and Value Meaning combination must be unique in the Value Domain." +
 	  						"\n Modify either Value or Value Meaning to create new Permissible Value.");
@@ -1241,7 +1267,7 @@
 	  				}
 	  			}
 	  			else  //may be no more rows
-	  				return true;
+	  				return true;  
   			}
   			i += 1;
   		}

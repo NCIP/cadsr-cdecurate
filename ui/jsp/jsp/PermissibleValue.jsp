@@ -785,11 +785,14 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 						            if (sPVEndDate == null || sPVEndDate.equals("")) sPVEndDate = "";
 						            String viewType = (String)pvBean.getPV_VIEW_TYPE();
 						            if (viewType.equals("")) viewType = "expand";
+						            //get the pvvm combination to use it later
+						            String sPVVM = sPVVal.toLowerCase() + sPVMean.toLowerCase();
+						            sPVVM = sPVVM.replace(" ", "");  //remove spaces
 						      //   System.out.println(pvCount + " jsp " + vmCon.size() + " value " + sPVVal + " viewType " + viewType);
 						            //TODO - figure out this later; cannot use the type cast for vectors in jsp
 						           // Vector<EVS_Bean> vmCon = vm.getVM_CONCEPT_LIST();
 						            %>
-											<tr>
+											<tr id="<%=pvCount%>" pvvm="<%=sPVVM%>">
 												<td align="center" valign="top">
 													<div id="<%=pvCount%>ImgClose" style="display: <%if (viewType.equals("collapse")) {%>inline <% } else { %> none <% } %>">
 														<a href="javascript:view(<%=pvCount%>View, <%=pvCount%>ImgClose, <%=pvCount%>ImgOpen, 'view', '<%=pvCount%>');">

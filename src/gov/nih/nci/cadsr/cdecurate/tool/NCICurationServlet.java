@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.23 2006-11-10 05:43:39 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.24 2006-11-10 18:23:48 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -964,7 +964,7 @@ public class NCICurationServlet extends HttpServlet
                     
           
           Vector vList = new Vector();
-          vList = getAC.getToolOptionData("BROWSER","URL","");
+          vList = getAC.getToolOptionData("CDEBrowser","URL","");
           String aURL = "ncicb.nci.nih.gov";
           if (vList != null && vList.size()>0)
           {
