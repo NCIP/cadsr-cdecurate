@@ -831,8 +831,8 @@ function setup()
 %>
             </select>
           </td>
-          <td valign="top" height="25">Data Type Description:<br><label id="lblDTDesc" for="selDataType" style="width:95%" title=""></label></td>
-          <td valign="top" height="25">Data Type Comment:<br><label id="lblDTComment" for="selDataType" style="width:95%" title=""></label></td>
+          <td valign="top" height="25"><b>Data Type Description:</b><br><label id="lblDTDesc" for="selDataType" style="width:95%" title=""></label></td>
+          <td valign="top" height="25"><b>Data Type Comment:</b><br><label id="lblDTComment" for="selDataType" style="width:95%" title=""></label></td>
         </tr> 
       </table>
     </td>

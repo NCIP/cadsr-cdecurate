@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/Tree.java,v 1.12 2006-11-09 15:16:46 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/Tree.java,v 1.13 2006-11-10 05:45:34 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.util;
@@ -96,6 +96,21 @@ public class Tree
      */
     private Tree()
     {
+    }
+    
+    /**
+     * Mark every node in the tree as "new".
+     *
+     */
+    public void markNew()
+    {
+        if (_node != null)
+            _node.markNew();
+        
+        for (Tree child = _child; child != null; child = child._sybling)
+        {
+            child.markNew();
+        }
     }
 
     /**

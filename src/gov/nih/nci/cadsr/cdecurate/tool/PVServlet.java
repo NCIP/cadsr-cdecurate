@@ -709,7 +709,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
    }
 
    @SuppressWarnings("unchecked")
-  private String doRestorePV()
+   private String doRestorePV()
    {
      HttpSession session = data.getRequest().getSession();
      int pvInd = getSelectedPV();

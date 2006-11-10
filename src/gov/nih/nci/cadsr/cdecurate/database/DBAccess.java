@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.12 2006-11-09 15:16:39 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.13 2006-11-10 05:40:34 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -407,9 +407,10 @@ public class DBAccess
                     // Always save the data retrieved and remember this record for reference should the
                     // next record prompt the need for a CS parent record.
                     String csiType = rs.getString(SQLSelectCSI._CSITYPE);
+                    String csCsiIdseq = rs.getString(SQLSelectCSI._CSCSIIDSEQ);
                     if (acaValue == null)
-                        acaValue = rs.getString(SQLSelectCSI._CSCSIIDSEQ);
-                    TreeNodeCSI tnc = new TreeNodeCSI(rs.getString(SQLSelectCSI._CSINAME), acaValue, csiType, null, false);
+                        acaValue = csCsiIdseq;
+                    TreeNodeCSI tnc = new TreeNodeCSI(rs.getString(SQLSelectCSI._CSINAME), acaValue, csCsiIdseq, csiType, null, false);
                     list.add(0, new CSIData(tnc, level));
                     prevCSValue = csValue;
                     prevCSName = rs.getString(SQLSelectCSI._CSNAME);
@@ -501,7 +502,7 @@ public class DBAccess
                 String csiValue = rs.getString(SQLSelectCSI._CSCSIIDSEQ);
                 String csiType = rs.getString(SQLSelectCSI._CSITYPE);
                 int level = rs.getInt(SQLSelectCSI._LEVEL);
-                TreeNodeCSI tnc = new TreeNodeCSI(csiName, csiValue, csiType, null, true);
+                TreeNodeCSI tnc = new TreeNodeCSI(csiName, csiValue, csiValue, csiType, null, true);
                 lineage.add(0, new CSIData(tnc, level));
                 if (level == 2 && csiType.equals(_packageAlias))
                     prevTnc.setPackageAlias(csiValue);
@@ -748,6 +749,47 @@ public class DBAccess
         // Return the result list complete with CSI information.
         return list;
     }
+    
+    /**
+     * Delete all Alternates for the AC.
+     * 
+     * @param idseq_ the AC database id
+     * @throws SQLException
+     */
+    public void deleteAlternates(String idseq_) throws SQLException
+    {
+        String delete;
+        PreparedStatement pstmt = null;
+        
+        try
+        {
+            delete = "delete from sbr.designations_view where ac_idseq = ?";
+            pstmt = _conn.prepareStatement(delete);
+            pstmt.setString(1, idseq_);
+            pstmt.executeUpdate();
+            pstmt.close();
+            
+            delete = "delete from sbr.definitions_view where ac_idseq = ?";
+            pstmt = _conn.prepareStatement(delete);
+            pstmt.setString(1, idseq_);
+            pstmt.executeUpdate();
+            pstmt.close();
+        }
+        catch (SQLException ex)
+        {
+            if (pstmt != null)
+            {
+                try
+                {
+                    pstmt.close();
+                }
+                catch (SQLException e)
+                {
+                }
+            }
+            throw ex;
+        }
+    }
 
     /**
      * Retrieve the formatted title for the specified AC. Currently the format is
@@ -923,7 +965,7 @@ public class DBAccess
                 String csiName = rs.getString(SQLSelectCSIAll._CSINAME);
                 String csiValue = rs.getString(SQLSelectCSIAll._CSCSIIDSEQ);
                 String csiType = rs.getString(SQLSelectCSIAll._CSITYPE);
-                TreeNodeCSI tnc = new TreeNodeCSI(csiName, csiValue, csiType, (csiType.equals(_packageName)) ? prevValue : null, false);
+                TreeNodeCSI tnc = new TreeNodeCSI(csiName, csiValue, csiValue, csiType, (csiType.equals(_packageName)) ? prevValue : null, false);
                 test.add(new CSIData(tnc, level));
                 prevValue = (csiType.equals(_packageAlias)) ? csiValue : null;
             }

@@ -932,6 +932,9 @@
   		}
   		//add id to the row	
   		var trID = pvInd + "tr" + curTrCount;
+  		var txType = "Qualifier";
+  		if (curTrCount == 0)  //first one
+  			txType = "Primary";
   		trCur.setAttribute("id", trID);
   		//create first column
   		var delDivID = pvInd + "Con" + curTrCount;
@@ -943,6 +946,8 @@
   		//create conVocab column
   		var tdV = createTD("conVocab", txVocab, "", trID, pvInd);
   		//create conVocab column
+  		var tdT = createTD("conType", txType, "", trID, pvInd);
+  		//create conVocab column
   		var tdD = createTD("conDesc", txDesc, "", trID, pvInd);
   		
 		//append the cells to the row
@@ -950,6 +955,7 @@
 		trCur.appendChild(tdN);																			
 		trCur.appendChild(tdId);																			
 		trCur.appendChild(tdV);																			
+		trCur.appendChild(tdT);																			
 		trCur.appendChild(tdD);																			
  	}
   
@@ -1018,7 +1024,7 @@
   			if (appName != "") appName += " ";
   			if (nameCell != null && nameCell.innerText != null && nameCell.innerText != "")
   				appName += nameCell.innerText;
-  			var descCell = curTbl.rows(i).cells(4);
+  			var descCell = curTbl.rows(i).cells(5);
   			if (appDesc != "") appDesc += "_ ";
   			if (descCell != null && descCell.innerText != null && descCell.innerText != "")
   				appDesc += descCell.innerText;
@@ -1092,6 +1098,18 @@
   			var curTr = curTbl.rows(i);
   			if (curTr != null && curTr.getAttribute("id") == trId)
   			{
+  				var parPrim = "";
+  				var par = document.getElementById(pvId + "Par");
+  				if (par != null)
+  					parPrim = par.innerText;
+		  		//do not remove if the primary concept that is associated to a parent
+		  		if (parPrim != null && parPrim != "" && i == totalCon -1)
+		  		{
+		  			alert("The primary concept cannot be removed when the Permissible Value is referenced by a parent concept." +
+		  				"\nTo remove this concept, you must remove the Permissible Value.");
+		  			break;  			
+		  		}
+		  		
   				//change the id of the other rows
   				for (var j = i+1; j<totalCon; j++)
   				{
@@ -1154,6 +1172,7 @@
 		  			}
 		  		}		  		
 	  		}
+	  		//check if vm is valid
 	  		if (sAct == "save" || sAct == "edit")
 	  		{
 	  			return checkVMText(pvId);
@@ -1185,7 +1204,49 @@
   		 		alert("Value Meaning is mandatory for a Permissible Value.  Please add a Value Meaning.");
   		 		return false;
   		 	}
+	  		//check if pv vm comb is valid
+	  		var vText = "";
+	  		var pvT = document.getElementById("txt" + pvId + "Value");
+	  		if (pvT != null)
+	  			vText = pvT.value;
+	  		
+  			return checkPVVMCombDuplicate(vText, vmText, pvId);
+  			
+  		//finally	
+  		return true;
+  	}
   	
+  	function checkPVVMCombDuplicate(sVal, sVM, pvId)
+  	{
+  		var i = 0;
+  		//get the value and meaning from each row and compare it to the text of the saving pv
+  		do
+  		{
+  			var pvCount = "pv" + i;
+  			if (pvCount != pvId)
+  			{
+	  			var pvTr = document.getElementById(pvCount + "ValueView");
+	  			if (pvTr != null && pvTr.innerText != "")
+	  			{
+	  				var val = pvTr.innerText;
+	  				var vm = "";
+	  				var vmTr = document.getElementById(pvCount + "VMView");
+		  			if (vmTr != null && vmTr.innerText != "")
+	  					vm = pvTr.innerText;
+	  				if (val.toLowerCase() == sVal.toLowerCase() && sVM.toLowerCase() == vm.toLowerCase()) 
+	  				{
+	  					alert("Value and Value Meaning combination must be unique in the Value Domain." +
+	  						"\n Modify either Value or Value Meaning to create new Permissible Value.");
+	  					return false; 
+	  				}
+	  			}
+	  			else  //may be no more rows
+	  				return true;
+  			}
+  			i += 1;
+  		}
+  		while (i > 0)
+  		//none found
   		return true;
   	}
   	

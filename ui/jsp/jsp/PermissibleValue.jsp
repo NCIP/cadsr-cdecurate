@@ -435,6 +435,11 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 																	String newConVocab = newcon.getEVS_DATABASE();
 																	String newConDesc = newcon.getPREFERRED_DEFINITION();
 																	String trCount = "pvNewtr" + k;																					
+																	String conType = "";																					
+																	if (k == newVMCon.size()-1)
+																		conType = "Primary";
+																	else
+																		conType = "Qualifier";
 																//	if (k == newVMCon.size()-1)
 																//		trCount = "pvNewprimary";
 															%>
@@ -455,6 +460,9 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 																	</td>
 																	<td valign="top" nowrap="nowrap">
 																		<%=newConVocab%>&nbsp;&nbsp;&nbsp;&nbsp;
+																	</td>
+																	<td valign="top" nowrap="nowrap">
+																		<%=conType%>&nbsp;&nbsp;&nbsp;&nbsp;
 																	</td>
 																	<td valign="top" nowrap="nowrap" style="visibility:hidden">
 																		<div style="display:none;">
@@ -891,11 +899,14 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 																					String conVocab = con.getEVS_DATABASE();
 																					String conDesc = con.getPREFERRED_DEFINITION();
 																					String trCount = pvCount + "tr" + k;
+																					String isParPrim = "";																				
 																					String conType = "";																					
 																					if (k == vmCon.size()-1)
 																						conType = "Primary";
 																					else
 																						conType = "Qualifier";
+																					if (conType.equals("Primary"))
+																						isParPrim = sParId;
 																					
 																//		System.out.println(trCount + " jsp " + conName + conID + conVocab + conDesc);
 																			%>
@@ -914,8 +925,11 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 																					<td valign="top" nowrap="nowrap">
 																						&nbsp;&nbsp;&nbsp;&nbsp; <%=conID%>&nbsp;&nbsp;&nbsp;&nbsp;
 																					</td>
-																					<td valign="top" nowrap="nowrap">
+																					<td valign="top"> <!--  nowrap="nowrap"> -->
 																						<%=conVocab%>&nbsp;&nbsp;&nbsp;&nbsp;
+																					</td>
+																					<td valign="top" nowrap="nowrap">
+																						<%=conType%>&nbsp;&nbsp;&nbsp;&nbsp;
 																					</td>
 																					<td valign="top" nowrap="nowrap" style="visibility:hidden" width="0.1px">
 																						<div style="display:none; width:0.1px">
@@ -1008,7 +1022,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 												<%} %>
 												</td>
 												<%if (vdCONs > 0){%>												
-												<td valign="top">
+												<td id="<%=pvCount%>Par" valign="top">
 													<%=sParId%>
 												</td>
 												<% } %>

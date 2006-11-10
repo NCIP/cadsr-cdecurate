@@ -1,10 +1,11 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.22 2006-11-09 15:16:39 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.23 2006-11-10 05:43:19 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;     
 
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import java.io.Serializable;
 import java.util.*;
 import java.sql.*;
@@ -4959,7 +4960,14 @@ public class GetACSearch implements Serializable
       }
       //make the workflow status to empty if
       if (sMenu.equals("NewDECVersion"))
-        DECBean.setDEC_ASL_NAME("");        
+      {
+        DECBean.setDEC_ASL_NAME("");
+        
+        // Must preload the Alt Name/Def buffer on a new Version.
+        Connection conn = m_servlet.connectDB(session);
+        AltNamesDefsSession.loadAsNew(conn, DECBean);
+        conn.close();
+      }
 
       //get all the selected ac id and name
       Vector vACid = (Vector)m_classReq.getAttribute("vACId");
@@ -5066,7 +5074,14 @@ public class GetACSearch implements Serializable
       }
       //make the workflow status to empty if
       if (sMenu.equals("NewDEVersion"))
+      {
         DEBean.setDE_ASL_NAME("");
+        
+        // Must preload the Alt Name/Def buffer on a new Version.
+        Connection conn = m_servlet.connectDB(session);
+        AltNamesDefsSession.loadAsNew(conn, DEBean);
+        conn.close();
+      }
         
       if (!sMenu.equals("NewDETemplate") && !sAction.equals("Template"))
       {
@@ -5183,7 +5198,14 @@ public class GetACSearch implements Serializable
       }
       //make the workflow status to empty if
       if (sMenu.equals("NewVDVersion"))
-        VDBean.setVD_ASL_NAME("");        
+      {
+        VDBean.setVD_ASL_NAME("");
+        
+        // Must preload the Alt Name/Def buffer on a new Version.
+        Connection conn = m_servlet.connectDB(session);
+        AltNamesDefsSession.loadAsNew(conn, VDBean);
+        conn.close();
+      }
 
       //get all the selected ac id and name
       Vector vACid = (Vector)m_classReq.getAttribute("vACId");
