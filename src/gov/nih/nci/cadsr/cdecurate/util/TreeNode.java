@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/TreeNode.java,v 1.12 2006-11-09 15:16:46 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/TreeNode.java,v 1.13 2006-11-10 05:45:39 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.util;
@@ -48,7 +48,7 @@ public class TreeNode
         
         return temp;
     }
-
+    
     /**
      * Constructor
      * 
@@ -62,6 +62,15 @@ public class TreeNode
         _name = (name_ == null) ? "" : name_;
         _value = (value_ == null) ? "" : value_;
         _new = new_;
+    }
+    
+    /**
+     * Change the state of the node to "new".
+     *
+     */
+    public void markNew()
+    {
+        _new = true;
     }
 
     /**

@@ -1029,8 +1029,9 @@ public class PVAction implements Serializable
                 data.setStatusMsg(data.getStatusMsg() + "\\t This Value Domain is used by a form. " +
                    "Create a new version of the Value Domain to remove permissible value " + sPValue + ".");
               }
-              else 
+              else if (!sAction.equals("DEL") && !retCode.equals("API_VDPVS_005")) 
                 data.setStatusMsg(data.getStatusMsg() + "\\t " + retCode + " : Unable to remove permissible value " + sPValue + ".");
+              
               data.setRetErrorCode(retCode);  
             }
             else

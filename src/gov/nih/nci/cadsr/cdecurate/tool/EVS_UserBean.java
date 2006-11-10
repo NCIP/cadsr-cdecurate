@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.22 2006-11-09 15:16:39 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.23 2006-11-10 05:43:14 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -821,6 +821,7 @@ public final class EVS_UserBean implements Serializable
       }
       catch(Exception ex)
       {
+        logger.fatal(" Error - get vocab names ex " + ex.toString(), ex);
         ex.printStackTrace();
       } 
       return vocabList;

@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.12 2006-11-09 15:16:46 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.13 2006-11-10 05:45:19 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -14,9 +14,12 @@ import javax.servlet.http.HttpSession;
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.tool.AC_Bean;
+import gov.nih.nci.cadsr.cdecurate.tool.DEC_Bean;
+import gov.nih.nci.cadsr.cdecurate.tool.DE_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.PV_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.VD_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.VM_Bean;
+import gov.nih.nci.cadsr.cdecurate.util.ToolException;
 import gov.nih.nci.cadsr.cdecurate.util.Tree;
 
 /**
@@ -45,6 +48,7 @@ public class AltNamesDefsSession implements Serializable
         _conteName = new String[1];
         _conteName[0] = (conteName_ == null) ? "" : conteName_;
         _sessType = sessType_;
+        _dbClearNamesDefs = false;
     }
 
     /**
@@ -62,6 +66,7 @@ public class AltNamesDefsSession implements Serializable
         _conteIdseq = conteIdseq_;
         _conteName = conteName_;
         _sessType = sessType_;
+        _dbClearNamesDefs = false;
     }
 
     /**
@@ -351,6 +356,10 @@ public class AltNamesDefsSession implements Serializable
     {
         // Save all the alternates
         DBAccess db = new DBAccess(conn_);
+        
+        if (_dbClearNamesDefs)
+            db.deleteAlternates(idseq_);
+
         for (int i = 0; i < _alts.length; ++i)
         {
             if (_alts[i].getAcIdseq() == null)
@@ -380,6 +389,99 @@ public class AltNamesDefsSession implements Serializable
 
             session_.removeAttribute(sessName);
             return;
+        }
+    }
+    
+    /**
+     * Create and load a data buffer marking everything as new, i.e. "create using". This will discard any
+     * existing data buffer in the AC Bean and replace it with a new buffer. The AC IDSEQ is cleared, the
+     * Context IDSEQ is retained.
+     * 
+     * @param conn_
+     * @param ac_
+     */
+    public static void loadAsNew(Connection conn_, AC_Bean ac_) throws Exception
+    {
+        // Determine the type of buffer.
+        String launch = null;
+        if (ac_ instanceof DE_Bean)
+            launch = _searchDE;
+        else if (ac_ instanceof DEC_Bean)
+            launch = _searchDEC;
+        else if (ac_ instanceof VD_Bean)
+            launch = _searchVD;
+        else if (ac_ instanceof VM_Bean)
+            launch = _searchVM;
+
+        // Create the new data buffer
+        AltNamesDefsSession buffer = new AltNamesDefsSession(null, ac_.getContextIDSEQ(), ac_.getContextName(), launch);
+        ac_.setAlternates(buffer);
+        buffer._dbClearNamesDefs = true;
+        
+        // Load the data buffer with existing data marking everything as "new"
+        DBAccess db = new DBAccess(conn_);
+        String[] acIdseq = new String[1];
+        acIdseq[0] = ac_.getIDSEQ();
+        try
+        {
+            buffer._alts = db.getAlternates(acIdseq, true);
+            
+            // Make all the alternates "new"
+            for (int i = 0; i < buffer._alts.length; ++i)
+            {
+                buffer._alts[i].markNew(buffer.newIdseq());
+                buffer._alts[i].setACIdseq(null);
+            }
+        }
+        catch (ToolException ex)
+        {
+            throw new Exception(ex.toString());
+        }
+    }
+    
+    /**
+     * Same as loadAsNew(...) but for Block Edit
+     * 
+     * @param session_
+     * @param conn_
+     * @param ac_
+     */
+    public static void loadAsNew(HttpSession session_, Connection conn_, Vector<AC_Bean> ac_)
+    {
+        if (ac_.size() == 0)
+            return;
+
+        // Determine the type of buffer.
+        String launch = null;
+        AC_Bean temp = ac_.get(0);
+        if (temp instanceof DE_Bean)
+            launch = _searchDE;
+        else if (temp instanceof DEC_Bean)
+            launch = _searchDEC;
+        else if (temp instanceof VD_Bean)
+            launch = _searchVD;
+        else if (temp instanceof VM_Bean)
+            launch = _searchVM;
+
+        // Setup the buffer
+        String[] acIdseq = new String[ac_.size()];
+        String[] conteIdseq = new String[acIdseq.length];
+        String[] conteName = new String[acIdseq.length];
+        for (int i = 0; i < acIdseq.length; ++i)
+        {
+            acIdseq[i] = ac_.get(i).getIDSEQ();
+            conteIdseq[i] = ac_.get(i).getContextIDSEQ();
+            conteName[i] = ac_.get(i).getContextName();
+        }
+        AltNamesDefsSession alt = new AltNamesDefsSession(acIdseq, conteIdseq, conteName,  launch);
+        
+        // Save the buffer in the session - this MUST be done for all the Alt Names/Defs to appear on a single screen.
+        String sessName = getSessName(_beanBlock);
+        session_.setAttribute(sessName, alt);
+        
+        // Load the data as new
+        for (int i = 0; i < alt._acIdseq.length; ++i)
+        {
         }
     }
 
@@ -413,6 +515,7 @@ public class AltNamesDefsSession implements Serializable
     public String _jsp;
     public String _viewJsp;
     private int _newIdseq;
+    private boolean _dbClearNamesDefs;
 
     public String _cacheSort;
     public String _cacheTitle;

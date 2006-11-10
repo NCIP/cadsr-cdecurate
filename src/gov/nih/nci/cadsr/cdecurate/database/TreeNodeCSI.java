@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/TreeNodeCSI.java,v 1.12 2006-11-09 15:16:39 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/TreeNodeCSI.java,v 1.13 2006-11-10 05:41:04 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -29,13 +29,15 @@ public class TreeNodeCSI extends TreeNode
         
         _type = old_._type;
         _packageAlias = old_._packageAlias;
+        _csCsiIdseq = old_._csCsiIdseq;
         _classType = AltNamesDefsServlet._classTypeCSI;
     }
 
-    public TreeNodeCSI(String name_, String value_, String type_, String packageAlias_, boolean new_)
+    public TreeNodeCSI(String name_, String value_, String csCsiIdseq_, String type_, String packageAlias_, boolean new_)
     {
         super(name_, value_, new_);
 
+        _csCsiIdseq = csCsiIdseq_;
         _classType = AltNamesDefsServlet._classTypeCSI;
         _type = (type_ == null) ? "" : type_;
         if (DBAccess.isPackageName(type_))
@@ -44,6 +46,13 @@ public class TreeNodeCSI extends TreeNode
             _packageAlias = null;
     }
 
+    public void markNew()
+    {
+        super.markNew();
+        
+        _value = _csCsiIdseq;
+    }
+    
     public String toHTML(Tree branch_, int indent_, String format_)
     {
         String text = format_;
@@ -102,4 +111,5 @@ public class TreeNodeCSI extends TreeNode
 
     private String _type;
     private String _packageAlias;
+    private String _csCsiIdseq;
 }
