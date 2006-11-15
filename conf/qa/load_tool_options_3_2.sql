@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/load_tool_options_3_2.sql,v 1.13 2006-11-10 18:23:47 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/load_tool_options_3_2.sql,v 1.14 2006-11-15 04:58:44 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -113,6 +113,147 @@ VALUES ('CURATION', 'EVS.VOCAB.ALL.TREESEARCH', 'true',
 UPDATE sbrext.tool_options_view_ext
 SET property = 'EVS.VOCAB.7.DISPLAY' 
 WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.6.DISPLAY' AND value = 'SNOMED';
+
+--Update value of derivation property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DERIVATION_TYPE.1'
+WHERE tool_name = 'CURATION' AND property = 'DERIVATION_TYPE' AND value = 'CALCULATED';
+
+--Update value of derivation property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DERIVATION_TYPE.2'
+WHERE tool_name = 'CURATION' AND property = 'DERIVATION_TYPE' AND value = 'COMPOUND';
+
+--Update value of derivation property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DERIVATION_TYPE.3'
+WHERE tool_name = 'CURATION' AND property = 'DERIVATION_TYPE' AND value = 'CONCATENATION';
+
+--Update value of derivation property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DERIVATION_TYPE.4'
+WHERE tool_name = 'CURATION' AND property = 'DERIVATION_TYPE' AND value = 'Simple Concept';
+
+--Update value of designation type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DESIGNATION_TYPE.1'
+WHERE tool_name = 'CURATION' AND property = 'DESIGNATION_TYPE' AND value = 'ABBREVIATION';
+
+--Update value of designation type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DESIGNATION_TYPE.2'
+WHERE tool_name = 'CURATION' AND property = 'DESIGNATION_TYPE' AND value = 'C3D Name';
+
+--Update value of designation type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DESIGNATION_TYPE.3'
+WHERE tool_name = 'CURATION' AND property = 'DESIGNATION_TYPE' AND value = 'C3PR Name';
+
+--Update value of designation type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DESIGNATION_TYPE.4'
+WHERE tool_name = 'CURATION' AND property = 'DESIGNATION_TYPE' AND value = 'CONTEXT NAME';
+
+--Update value of designation type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DESIGNATION_TYPE.5'
+WHERE tool_name = 'CURATION' AND property = 'DESIGNATION_TYPE' AND value = 'CRITERION_NAME';
+
+--Update value of designation type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DESIGNATION_TYPE.6'
+WHERE tool_name = 'CURATION' AND property = 'DESIGNATION_TYPE' AND value = 'Context Short Name';
+
+--Update value of designation type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DESIGNATION_TYPE.7'
+WHERE tool_name = 'CURATION' AND property = 'DESIGNATION_TYPE' AND value = 'New Designation';
+
+--Update value of designation type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DESIGNATION_TYPE.8'
+WHERE tool_name = 'CURATION' AND property = 'DESIGNATION_TYPE' AND value = 'Prior Preferred Name';
+
+--Update value of DOCUMENT type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DOCUMENT_TYPE.1'
+WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'Alternate Question Text';
+
+--Update value of DOCUMENT type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DOCUMENT_TYPE.2'
+WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'Associations';
+
+--Update value of DOCUMENT type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DOCUMENT_TYPE.3'
+WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'COMMENT';
+
+--Update value of DOCUMENT type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DOCUMENT_TYPE.4'
+WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'DATA_ELEMENT_SOURCE';
+
+--Update value of DOCUMENT type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DOCUMENT_TYPE.5'
+WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'DESCRIPTION';
+
+--Update value of DOCUMENT type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DOCUMENT_TYPE.6'
+WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'DETAIL_DESCRIPTION';
+
+--Update value of DOCUMENT type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DOCUMENT_TYPE.7'
+WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'EXAMPLE';
+
+--Update value of DOCUMENT type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DOCUMENT_TYPE.8'
+WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'HISTORIC SHORT CDE NAME';
+
+--Update value of DOCUMENT type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DOCUMENT_TYPE.9'
+WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'IMAGE_FILE';
+
+--Update value of DOCUMENT type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DOCUMENT_TYPE.10'
+WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'LABEL';
+
+--Update value of DOCUMENT type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DOCUMENT_TYPE.11'
+WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'NOTE';
+
+--Update value of DOCUMENT type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DOCUMENT_TYPE.12'
+WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'PDF';
+
+--Update value of DOCUMENT type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DOCUMENT_TYPE.13'
+WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'REFERENCE';
+
+--Update value of DOCUMENT type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DOCUMENT_TYPE.14'
+WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'Scope Document';
+
+--Update value of DOCUMENT type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DOCUMENT_TYPE.15'
+WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'Source';
+
+--Update value of DOCUMENT type property to include order number
+UPDATE sbrext.tool_options_view_ext
+SET property = 'DOCUMENT_TYPE.16'
+WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'VALID_VALUE_SOURCE';
+
 
 --commit changes
 commit;

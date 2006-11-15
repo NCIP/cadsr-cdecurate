@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.24 2006-11-10 18:23:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.25 2006-11-15 05:00:54 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -926,7 +926,7 @@ public class GetACService implements Serializable
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = m_sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_CSCSI_LIST(?)}");
+        CStmt = m_sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.GET_CSCSI_LIST(?)}");
 
         CStmt.registerOutParameter(1, OracleTypes.CURSOR);
 

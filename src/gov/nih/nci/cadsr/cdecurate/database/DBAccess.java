@@ -1,10 +1,11 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.14 2006-11-10 18:23:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.15 2006-11-15 04:59:32 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
 
+import gov.nih.nci.cadsr.cdecurate.tool.AC_Bean;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
 import gov.nih.nci.cadsr.cdecurate.util.Tree;
 import gov.nih.nci.cadsr.cdecurate.util.TreeNode;
@@ -1337,14 +1338,85 @@ public class DBAccess
                 insert(alt_);
                 saveCSI(alt_);
             }
+            return;
         }
         
         // If it's an update, remember to save CSI changes
-        else if (alt_.isChanged())
+        if (alt_.isChanged())
         {
             update(alt_);
-            saveCSI(alt_);
         }
+
+        saveCSI(alt_);
+    }
+
+    /**
+     * Save version block changes to Alternates.
+     * 
+     * @param alt_ the Alternate
+     * @param beans_ the AC_Bean parents of the Alternates
+     * @param idseq_ the AC id's being block edited
+     * @param conteIdseq_ the matching Context ID's
+     * @throws SQLException
+     */
+    public void save(Alternates alt_, AC_Bean[] beans_, String[] idseq_, String[] conteIdseq_) throws SQLException
+    {
+        // If it's deleted there's nothing to do because this is really a massive add and delete just means
+        // don't add it. And the above loop has already deleted the Alternates that may have been copied
+        // outside this method.
+        if (alt_.isDeleted())
+        {
+            return;
+        }
+
+        // If it's new, add to all new AC's and save changes to CSI associations
+        if (alt_.isNew())
+        {
+            for (int i = 0; i < idseq_.length; ++i)
+            {
+                // If the AC was not Versioned for any reason, don't add the Alternates.
+                String newIdseq = beans_[i].getIDSEQ();
+                if (idseq_[i].equals(newIdseq))
+                    continue;
+
+                alt_.setACIdseq(newIdseq);
+                alt_.setConteIdseq(beans_[i].getContextIDSEQ());
+                insert(alt_);
+                saveCSI(alt_);
+            }
+            return;
+        }
+        
+        // Processing a single Alternate, first determine if it's Original AC has been versioned.
+        int acNdx;
+        String newIdseq = null;
+        for (acNdx = 0; acNdx < idseq_.length; ++acNdx)
+        {
+            // Find the original AC for this ALT.
+            String oldIdseq = alt_.getAcIdseq();
+            if (oldIdseq != null && idseq_[acNdx].equals(oldIdseq))
+            {
+                // Now verify the new AC is not null and is not the same as the old one.
+                newIdseq = beans_[acNdx].getIDSEQ();
+                if (newIdseq != null && newIdseq.length() > 0 && !newIdseq.equals(oldIdseq))
+                {
+                    break;
+                }
+            }
+        }
+        
+        // If we don't find a match there was an error and a new AC wasn't created for this one.
+        if (acNdx == idseq_.length)
+            return;
+
+        // If it's an update or nothing has been done it really means just add it to a single AC and not all AC's
+        alt_.setACIdseq(newIdseq);
+        alt_.setConteIdseq(beans_[acNdx].getContextIDSEQ());
+        insert(alt_);
+        alt_.getCSITree().markNew();
+        saveCSI(alt_);
+        
+        return;
     }
 
     /**

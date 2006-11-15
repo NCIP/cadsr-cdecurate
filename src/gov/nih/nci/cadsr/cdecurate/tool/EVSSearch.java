@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.24 2006-11-10 18:23:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.25 2006-11-15 05:00:52 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -3165,6 +3165,11 @@ public String parseDefinition(String termStr)
       String dtsVocab = eBean.getVocabAttr(m_eUser, eDB, EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME);  // "vocabDBOrigin", "vocabName");
       Vector<EVS_Bean> vList = new Vector<EVS_Bean>();
       EVS_Bean metaBean = new EVS_Bean();
+      //get preferred vocab name
+      String prefVocab = m_eUser.getPrefVocab();
+      if (prefVocab == null) prefVocab = "";
+      if (dtsVocab.equals(prefVocab))
+        return eBean;    //System.out.println(dtsVocab + " vocab match " + prefVocab);
       //continue only if term is not from Thesaururs
       if (dtsVocab != null && !dtsVocab.equals(nciVocab))
       {
@@ -3235,9 +3240,6 @@ public String parseDefinition(String termStr)
         //get the code from the searched metabean
         else 
           NCISrcCode = eBean.getPREF_VOCAB_CODE();
-        //get preferred vocab name
-        String prefVocab = m_eUser.getPrefVocab();
-        if (prefVocab == null) prefVocab = "";
         //call the search by concode method to get the Thes concept 
         vList = new Vector<EVS_Bean>();
         vList = this.doVocabSearch(vList, NCISrcCode, prefVocab, "ConCode", "", "", 
@@ -3253,8 +3255,10 @@ public String parseDefinition(String termStr)
           conType = this.getNCIMetaCodeType(conID, "byID");
        //logger.debug(dtsVocab + " metasearch in meta " + conID + conType);
           vList = new Vector<EVS_Bean>();
-          vList = this.doVocabSearch(vList, conID, nciVocab, "Name", conType, "", 
+          vList = this.doVocabSearch(vList, conID, prefVocab, "Name", conType, "", 
                 "Exclude", "", 10, false, -1, "");
+       //   vList = this.doVocabSearch(vList, conID, nciVocab, "Name", conType, "", 
+       //       "Exclude", "", 10, false, -1, "");
           if (vList != null && vList.size() > 0)
             eBean = this.getNCIDefinition(vList);  // (EVS_Bean)vList.elementAt(0);   
         }

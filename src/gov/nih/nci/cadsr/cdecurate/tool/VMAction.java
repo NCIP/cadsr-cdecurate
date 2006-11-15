@@ -59,7 +59,7 @@ public class VMAction implements Serializable
       // Create a Callable Statement object.
       if (sbr_db_conn != null)
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?)}");
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?)}");
         // Now tie the placeholders for out parameters.
         CStmt.registerOutParameter(5, OracleTypes.CURSOR);
         // Now tie the placeholders for In parameters.

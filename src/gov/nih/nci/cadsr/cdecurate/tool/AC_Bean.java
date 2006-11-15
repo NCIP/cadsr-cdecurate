@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_Bean.java,v 1.24 2006-11-10 18:23:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_Bean.java,v 1.25 2006-11-15 04:59:58 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -65,9 +65,6 @@ public abstract class AC_Bean implements Serializable
     
     public void save(HttpSession session_, Connection conn_, String idseq_, String conteIdseq_) throws SQLException
     {
-        // Always call the static for potential block edits
-        AltNamesDefsSession.save(session_, conn_, idseq_, conteIdseq_);
-        
         // Only call the instance if it's present
         if (_alts != null)
         {
@@ -75,6 +72,17 @@ public abstract class AC_Bean implements Serializable
             _alts = null;
         }
     }
+    
+    public boolean isNewAC()
+    {
+        return _newAC;
+    }
+    
+    public void markNewAC()
+    {
+        _newAC = true;
+    }
 
     protected AltNamesDefsSession _alts;
+    protected boolean _newAC;
 }

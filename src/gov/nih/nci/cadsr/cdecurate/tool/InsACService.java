@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.25 2006-11-10 18:23:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.26 2006-11-15 05:00:55 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -303,7 +303,7 @@ public class InsACService implements Serializable
             double dVersion = DVersion.doubleValue();
             String sDefinition = vd.getVD_PREFERRED_DEFINITION();
             String sCD_ID = vd.getVD_CD_IDSEQ();
-            Vector sPV_ID = vd.getVD_PV_ID();
+           // Vector sPV_ID = vd.getVD_PV_ID();
             String sAslName = vd.getVD_ASL_NAME();
             String sLatestVersion = vd.getVD_LATEST_VERSION_IND();
             String sDtlName = vd.getVD_DATA_TYPE();
@@ -453,9 +453,7 @@ public class InsACService implements Serializable
                   if (vm != null && !vm.getVM_IDSEQ().equals(""))
                   {
                     System.out.println(vm.getVM_IDSEQ() + " vm alt name " + sContextID + " vd " + vd.getVD_VD_IDSEQ());
-                    Connection conn = m_servlet.connectDB(m_classReq, m_classRes);
-                    vm.save(session, conn, vm.getVM_IDSEQ(), sContextID);
-                    conn.close();
+                    vm.save(session, sbr_db_conn, vm.getVM_IDSEQ(), sContextID);
                   }
                 }
                 session.removeAttribute("AllAltNameList");
@@ -499,9 +497,7 @@ public class InsACService implements Serializable
               this.doAltVersionUpdate(sVD_ID, oldVD.getVD_VD_IDSEQ());
 
             // ********************************
-            Connection conn = m_servlet.connectDB(m_classReq, m_classRes);
-            vd.save(session, conn, sVD_ID, sContextID);
-            conn.close();
+            vd.save(session, sbr_db_conn, sVD_ID, sContextID);
             session.removeAttribute("AllAltNameList");
             // ********************************
             /*
@@ -571,7 +567,7 @@ public class InsACService implements Serializable
    * @return VD_Bean updated vd bean
    * @throws java.lang.Exception
    */
-   private VD_Bean BeforeChangeVDType(VD_Bean vd, String sAction) throws Exception
+  /* private VD_Bean BeforeChangeVDType(VD_Bean vd, String sAction) throws Exception
    {
       HttpSession session = m_classReq.getSession();
       String sTypeFlag = vd.getVD_TYPE_FLAG();
@@ -608,7 +604,7 @@ public class InsACService implements Serializable
       }   
       return vd;
    }
-   
+  */ 
  /**
   * To insert a new Permissible value in the database after the validation.
   * Called from NCICurationServlet.
@@ -1812,9 +1808,7 @@ public class InsACService implements Serializable
             this.doAltVersionUpdate(sDEC_ID, oldDECID);
 
           // ********************************
-          Connection conn = m_servlet.connectDB(m_classReq, m_classRes);
-          dec.save(session, conn, sDEC_ID, sContextID);
-          conn.close();
+          dec.save(session, sbr_db_conn, sDEC_ID, sContextID);
           session.removeAttribute("AllAltNameList");
           // ********************************
           /*
@@ -3133,9 +3127,7 @@ public class InsACService implements Serializable
             this.doAltVersionUpdate(sDE_ID, oldDEID);
 
           // ********************************
-          Connection conn = m_servlet.connectDB(m_classReq, m_classRes);
-          de.save(session, conn, sDE_ID, sContextID);
-          conn.close();
+          de.save(session, sbr_db_conn, sDE_ID, sContextID);
           session.removeAttribute("AllAltNameList");
           // ********************************
           /*
