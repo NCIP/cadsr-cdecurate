@@ -122,17 +122,17 @@ function removeAllText(thisBlock)
         return;
       }
     }
-    if (document.createVDForm.selContext[selIdx].text == "" && vAction != "BlockEdit")
-	    alert("Please select a context first");
-    else
-    {
+ //   if (document.createVDForm.selContext[selIdx].text == "" && vAction != "BlockEdit")
+//	    alert("Please select a context first");
+//    else
+//    {
     	document.SearchActionForm.searchComp.value = thisBlock;
       	document.createVDForm.openToTree.value = openToTree; //true
 	    document.SearchActionForm.isValidSearch.value = "false";
     	if (searchWindow && !searchWindow.closed)
        		searchWindow.close()
     	searchWindow = window.open("jsp/OpenSearchWindowBlocks.jsp", "BlockSearch", "width=950,height=700,top=0,left=0,resizable=yes,scrollbars=yes")
-    }
+ //   }
  }
 
 /*

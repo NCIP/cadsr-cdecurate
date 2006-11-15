@@ -1,7 +1,7 @@
 <!--
     Copyright (c) 2006 ScenPro, Inc.
 
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/alternates3.jsp,v 1.14 2006-11-10 18:23:48 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/alternates3.jsp,v 1.15 2006-11-15 05:02:15 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -105,7 +105,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         %><%=text%>
         </p>
         <p>
-            <input type="button" value="Clear" onclick="doAction('<%=AltNamesDefsServlet._actionClear%>');"/> &nbsp;
+            <%
+                text = (String) pageContext.getRequest().getAttribute(AltNamesDefsSession._showClear);
+                if (text.equals("Y"))
+                    text = "";
+                else
+                    text = "disabled";
+            %>
+            <input type="button" value="Clear" onclick="doAction('<%=AltNamesDefsServlet._actionClear%>');" <%=text%>/> &nbsp;
             <input type="button" value="Close" onclick="self.close();"/>
         </p>
         <%

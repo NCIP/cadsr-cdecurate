@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.24 2006-11-10 18:23:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.25 2006-11-15 05:00:53 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;     
@@ -4773,7 +4773,9 @@ public class GetACSearch implements Serializable
               //doCSCSISearch(DEBean, sAction, req);    //related CSCSI result
               String sContextID = DEBean.getDE_CONTE_IDSEQ();
               //check the permissiion if not template and not designation   
-              if(!sMenuAction.equals("NewDETemplate") && !sMenuAction.equals("EditDesDE"))
+              if (sMenuAction.equals("NewDETemplate"))
+                  DEBean.markNewAC();
+              else if (!sMenuAction.equals("EditDesDE"))
                 strInValid = checkWritePermission("de", sUser, sContextID, getAC);
               //back to search results page if  no write permit and is one of the create item
               if (!strInValid.equals(""))   // && sMenuAction.substring(0, 5).equalsIgnoreCase("NewDE"))
@@ -4806,7 +4808,9 @@ public class GetACSearch implements Serializable
               DECBean = DECBean.cloneDEC_Bean((DEC_Bean)vSRows.elementAt(i));
               String sContextID = "";
               if (DECBean != null) sContextID = DECBean.getDEC_CONTE_IDSEQ();
-              if(!sMenuAction.equals("NewDECTemplate"))
+              if(sMenuAction.equals("NewDECTemplate"))
+                  DECBean.markNewAC();
+              else
                  strInValid = checkWritePermission("dec", sUser, sContextID, getAC);
               if (!strInValid.equals(""))
               {
@@ -4841,7 +4845,9 @@ public class GetACSearch implements Serializable
               String sContextID = "";
               if (VDBean != null) sContextID = VDBean.getVD_CONTE_IDSEQ();
   
-              if(!sMenuAction.equals("NewVDTemplate"))
+              if(sMenuAction.equals("NewVDTemplate"))
+                  VDBean.markNewAC();
+              else
                  strInValid = checkWritePermission("vd", sUser, sContextID, getAC);
               if (!strInValid.equals(""))
               {
@@ -5680,7 +5686,7 @@ public class GetACSearch implements Serializable
       return isValid;
    }
 
-  /**
+/*  *//**
    * To get search result from database for permissible values Component
    * called from getACListForEdit method, servlet 'doOpenEditVDPage'.
    *
@@ -5692,8 +5698,8 @@ public class GetACSearch implements Serializable
    *
    * @param VDBean Bean of the Value Domain
    *
-   */
-  public VD_Bean doPVSearch(VD_Bean VDBean, String sAction)  // returns list of Data Elements
+   *//*
+*//*  public VD_Bean doPVSearch(VD_Bean VDBean, String sAction)  // returns list of Data Elements
   {
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -5729,7 +5735,7 @@ public class GetACSearch implements Serializable
           //loop through to printout the outstrings
           while(rs.next())
           {
-            vPVidseq.addElement(rs.getString(1));
+            vPVidseq.addElement(rs.getString("pv_idseq"));
             vPValue.addElement(rs.getString(2));
             vShortMean.addElement(rs.getString(3));
             vVPidseq.addElement(rs.getString(4));
@@ -5737,10 +5743,10 @@ public class GetACSearch implements Serializable
             vShortMeanDesc.addElement(rs.getString(6));
             //store these attributes in pv bean to access later
             pvBean = new PV_Bean();
-            pvBean.setPV_PV_IDSEQ(rs.getString(1));
-            pvBean.setPV_VALUE(rs.getString(2));
-            pvBean.setPV_SHORT_MEANING(rs.getString(3));
-            pvBean.setPV_VDPVS_IDSEQ(rs.getString(4));
+            pvBean.setPV_PV_IDSEQ(rs.getString("pv_idseq"));
+            pvBean.setPV_VALUE(rs.getString("VALUE"));
+            pvBean.setPV_SHORT_MEANING(rs.getString("short_meaning"));
+            pvBean.setPV_VDPVS_IDSEQ(rs.getString("vp_idseq"));
             pvBean.setPV_VALUE_ORIGIN(rs.getString(5));
             pvBean.setPV_MEANING_DESCRIPTION(rs.getString(6));
             pvBean.setPV_VM_CONDR_IDSEQ(rs.getString("vm_condr_idseq"));
@@ -5781,7 +5787,7 @@ public class GetACSearch implements Serializable
     }
     return VDBean;
   }  //endPV search
-
+*/
   /**
    * To get search result from database for Classification Scheme/Items Component called from getACListForEdit method.
    *
@@ -5813,7 +5819,7 @@ public class GetACSearch implements Serializable
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_DE_CS_NAME(?,?)}");
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_DE_CS_NAME(?,?)}");
         // Now tie the placeholders with actual parameters.
         CStmt.registerOutParameter(2, OracleTypes.CURSOR);
         CStmt.setString(1, AC_IDseq);

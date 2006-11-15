@@ -1,12 +1,13 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.24 2006-11-10 18:23:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.25 2006-11-15 05:00:58 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 //import files
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
 import gov.nih.nci.cadsr.sentinel.util.DSRAlert;
 import gov.nih.nci.cadsr.sentinel.util.DSRAlertImpl;
@@ -5134,8 +5135,6 @@ public class NCICurationServlet extends HttpServlet
    * @param res The HttpServletResponse back to the client
    * @param sPVAction string pv action
    *
-   * @throws Exception
-   * 
    */
   public void doSelectVMConcept(HttpServletRequest req, HttpServletResponse res, String sPVAction) 
    {
@@ -6162,10 +6161,6 @@ public class NCICurationServlet extends HttpServlet
   * Calls 'getAC.getPermissableValues' method to reload the PV data from database to get the fresh list and
   * forwards the page 'CreateVDPage.jsp' to go back to creating new VD.
   *
-  * @param req The HttpServletRequest from the client
-  * @param res The HttpServletResponse back to the client
-  *
-  * @throws Exception
   */
 /*   public void doInsertPV(HttpServletRequest req, HttpServletResponse res)
    throws Exception
@@ -6651,7 +6646,21 @@ System.out.println(" new rep " + sNewRep);
       String sRep_IDSEQ = "";
       if (vBERows.size()>0)
       {
-        for(int i=0; i<(vBERows.size()); i++)
+          // Be sure the buffer is loaded when doing versioning.
+          String newVersion = VDBean.getVD_VERSION();
+          if (newVersion == null)
+              newVersion = "";
+          boolean newVers = (newVersion.equals("Point") || newVersion.equals("Whole")); 
+          if (newVers)
+          {
+              Connection conn = connectDB(session);
+              @SuppressWarnings("unchecked")
+              Vector<AC_Bean> tvec = vBERows;
+              AltNamesDefsSession.loadAsNew(session, conn, tvec);
+              conn.close();
+          }
+
+          for(int i=0; i<(vBERows.size()); i++)
         {
           //String sVD_ID = ""; //out
           VD_Bean VDBeanSR = new VD_Bean();
@@ -6660,9 +6669,6 @@ System.out.println(" new rep " + sNewRep);
           oldVDBean = oldVDBean.cloneVD_Bean(VDBeanSR);
           String oldName = (String)VDBeanSR.getVD_PREFERRED_NAME();
 
-            //gets the point or whole from the VD Bean's version attribute
-          String newVersion = (String)VDBean.getVD_VERSION();
-          if (newVersion == null) newVersion = "";
           //updates the data from the page into the sr bean
           InsertEditsIntoVDBeanSR(VDBeanSR, VDBean, req);
           //create newly selected rep term
@@ -6685,7 +6691,7 @@ System.out.println(" new rep " + sNewRep);
           insAC.storeStatusMsg("Value Domain Name : " + VDBeanSR.getVD_LONG_NAME());
           insAC.storeStatusMsg("Public ID : " + VDBeanSR.getVD_VD_ID());
           //insert the version
-          if (newVersion.equals("Point") || newVersion.equals("Whole"))  // block version
+          if (newVers)  // block version
           {
              //creates new version first and updates all other attributes
              String strValid = m_setAC.checkUniqueInContext("Version", "VD", null, null, VDBeanSR, getAC, "version");
@@ -6743,6 +6749,10 @@ System.out.println(" new rep " + sNewRep);
               }
            }
         }
+          
+          Connection conn = connectDB(session);
+          AltNamesDefsSession.blockSave(session, conn);
+          conn.close();
       }
 
       //to get the final result vector if not refreshed at all
@@ -7432,6 +7442,20 @@ System.out.println(" new rep " + sNewRep);
       String sProp_IDSEQ = "";
       if (vBERows.size()>0)
       {
+          // Be sure the buffer is loaded when doing versioning.
+          String newVersion = DECBean.getDEC_VERSION();
+          if (newVersion == null)
+              newVersion = "";
+          boolean newVers = (newVersion.equals("Point") || newVersion.equals("Whole")); 
+          if (newVers)
+          {
+              Connection conn = connectDB(session);
+              @SuppressWarnings("unchecked")
+              Vector<AC_Bean> tvec = vBERows;
+              AltNamesDefsSession.loadAsNew(session, conn, tvec);
+              conn.close();
+          }
+          
         for (int i=0; i<(vBERows.size()); i++)
         {
           DEC_Bean DECBeanSR = new DEC_Bean();
@@ -7439,9 +7463,6 @@ System.out.println(" new rep " + sNewRep);
           DEC_Bean oldDECBean = new DEC_Bean();
           oldDECBean = oldDECBean.cloneDEC_Bean(DECBeanSR);
           String oldName = (String)DECBeanSR.getDEC_PREFERRED_NAME();
-          //gets version from page
-          String newVersion = (String)DECBean.getDEC_VERSION();
-          if (newVersion == null) newVersion = "";
           //gets all the changed attrributes from the page
           InsertEditsIntoDECBeanSR(DECBeanSR, DECBean, req);
          // session.setAttribute("m_DEC", DECBeanSR);
@@ -7450,7 +7471,7 @@ System.out.println(" new rep " + sNewRep);
           insAC.storeStatusMsg("Data Element Concept Name : " + DECBeanSR.getDEC_LONG_NAME());
           insAC.storeStatusMsg("Public ID : " + DECBeanSR.getDEC_DEC_ID());
           //creates a new version
-          if (newVersion.equals("Point") || newVersion.equals("Whole"))  // block version
+          if (newVers)  // block version
           {
              //creates new version first and updates all other attributes
              String strValid = m_setAC.checkUniqueInContext("Version", "DEC", null, DECBeanSR, null, getAC, "version");
@@ -7491,6 +7512,10 @@ System.out.println(" new rep " + sNewRep);
             }
           }
         }
+        
+        Connection conn = connectDB(session);
+        AltNamesDefsSession.blockSave(session, conn);
+        conn.close();
       }
       //to get the final result vector if not refreshed at all
       if (!(isRefreshed))
@@ -7541,6 +7566,20 @@ System.out.println(" new rep " + sNewRep);
       req.setAttribute("vBESize", vBESize2);
       if (vBERows.size()>0)
       {
+          // Be sure the buffer is loaded when doing versioning.
+          String newVersion = DEBean.getDE_VERSION();
+          if (newVersion == null)
+              newVersion = "";
+          boolean newVers = (newVersion.equals("Point") || newVersion.equals("Whole")); 
+          if (newVers)
+          {
+              Connection conn = connectDB(session);
+              @SuppressWarnings("unchecked")
+              Vector<AC_Bean> tvec = vBERows;
+              AltNamesDefsSession.loadAsNew(session, conn, tvec);
+              conn.close();
+          }
+
         for(int i=0; i<(vBERows.size()); i++)
         {
           DE_Bean DEBeanSR = new DE_Bean();
@@ -7551,15 +7590,12 @@ System.out.println(" new rep " + sNewRep);
           DE_Bean oldDEBean = new DE_Bean();
           oldDEBean = oldDEBean.cloneDE_Bean(DEBeanSR, "Complete");
           String oldName = (String)DEBeanSR.getDE_PREFERRED_NAME();
-            //gets the version from the page
-          String newVersion = (String)DEBean.getDE_VERSION();
-          if (newVersion == null) newVersion = "";
           //gets all the data from the page
           InsertEditsIntoDEBeanSR(DEBeanSR, DEBean, req, res);
          // session.setAttribute("m_DE", DEBeanSR);
           String oldID = oldDEBean.getDE_DE_IDSEQ();
           //creates a new version
-          if (newVersion.equals("Point") || newVersion.equals("Whole"))  // block version
+          if (newVers)  // block version
           {
              String validVer = this.InsertVersionDEBeanSR(DEBeanSR, DEBean, req, res);
              if (validVer != null && validVer.equals("valid"))
@@ -7607,6 +7643,10 @@ System.out.println(" new rep " + sNewRep);
               }
           }
         }
+        
+        Connection conn = connectDB(session);
+        AltNamesDefsSession.blockSave(session, conn);
+        conn.close();
       }
       //to get the final result vector if not refreshed at all
       if (!(isRefreshed))
@@ -10913,6 +10953,8 @@ System.out.println(" new rep " + sNewRep);
       vDefaultAttr.addElement("Value Meaning");
       vDefaultAttr.addElement("Value Meaning Description");
       vDefaultAttr.addElement("Conceptual Domain");
+      vDefaultAttr.addElement("EVS Identifier");
+      vDefaultAttr.addElement("Definition Source");
       vDefaultAttr.addElement("Vocabulary");
     }
     else if (searchAC.equals("ValueMeaning"))

@@ -8,6 +8,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
@@ -352,7 +353,7 @@ public class PVAction implements Serializable
       // Create a Callable Statement object.
       if (sbr_db_conn != null)
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_PV(?,?)}");
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PV(?,?)}");
         // Now tie the placeholders for out parameters.
         CStmt.registerOutParameter(2, OracleTypes.CURSOR);
         // Now tie the placeholders for In parameters.
@@ -370,7 +371,7 @@ public class PVAction implements Serializable
             PV_Bean pvBean = new PV_Bean();
             pvBean.setPV_PV_IDSEQ(rs.getString("pv_idseq"));
             pvBean.setPV_VALUE(rs.getString("value"));
-            pvBean.setPV_SHORT_MEANING(rs.getString("short_meaning"));
+            pvBean.setPV_SHORT_MEANING(rs.getString("short_meaning"));            
             if (sAction.equals("NewUsing"))
               pvBean.setPV_VDPVS_IDSEQ("");
             else
@@ -394,12 +395,12 @@ public class PVAction implements Serializable
             pvBean.setQUESTION_VALUE("");
             pvBean.setQUESTION_VALUE_IDSEQ("");
             //get vm concept attributes
-            String sCondr = rs.getString("vm_condr_idseq");
-            this.doSetVMAttributes(pvBean, sCondr, data);
+           // String sCondr = rs.getString("vm_condr_idseq");
+            this.doSetVMAttributes(pvBean, rs, data);
             //get parent concept attributes
             String sCon = rs.getString("con_idseq");
             this.doSetParentAttributes(sCon, pvBean, data);
-            
+           
             pvBean.setPV_VIEW_TYPE("expand");              
             //add pv idseq in the pv id vector
             vList.addElement(pvBean);  //add the bean to a vector
@@ -480,28 +481,39 @@ public class PVAction implements Serializable
     vd.setVD_PV_List(verList);    
   }
   
-  private void doSetVMAttributes(PV_Bean pvBean, String sCondr, PVForm data)
+  private void doSetVMAttributes(PV_Bean pvBean, ResultSet rs, PVForm data)
   {
-    VM_Bean vm = new VM_Bean();
-    vm.setVM_SHORT_MEANING(pvBean.getPV_SHORT_MEANING());
-    vm.setVM_DESCRIPTION(pvBean.getPV_MEANING_DESCRIPTION());
-    vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_NONE);
-    vm.setVM_CONDR_IDSEQ(sCondr);
-    //get vm concepts
-    if (sCondr != null && !sCondr.equals(""))
+    try
     {
-      ConceptForm cdata = new ConceptForm();
-      if (data.getDbConnection() != null)
-        cdata.setDBConnection(data.getDbConnection()); //get the connection
-      else
-        cdata.setDBConnection(PVServlet.makeDBConnection());  //make the connection
-      ConceptAction cact = new ConceptAction();
-      Vector<EVS_Bean> conList = cact.getAC_Concepts(sCondr, cdata);
-      if (data.getDbConnection() == null)
-        PVServlet.closeDBConnection(cdata.getDBConnection());  //close the connection only if it was created here
-      vm.setVM_CONCEPT_LIST(conList);
+      VM_Bean vm = new VM_Bean();
+      vm.setVM_SHORT_MEANING(pvBean.getPV_SHORT_MEANING());
+      vm.setVM_DESCRIPTION(pvBean.getPV_MEANING_DESCRIPTION());
+      vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_NONE);
+      vm.setVM_LONG_NAME(rs.getString("LONG_NAME"));
+      vm.setVM_VERSION(rs.getString("VERSION"));
+      vm.setVM_IDSEQ(rs.getString("VM_IDSEQ"));
+      String sCondr = rs.getString("condr_idseq");
+      vm.setVM_CONDR_IDSEQ(sCondr);
+      //get vm concepts
+      if (sCondr != null && !sCondr.equals(""))
+      {
+        ConceptForm cdata = new ConceptForm();
+        if (data.getDbConnection() != null)
+          cdata.setDBConnection(data.getDbConnection()); //get the connection
+        else
+          cdata.setDBConnection(PVServlet.makeDBConnection());  //make the connection
+        ConceptAction cact = new ConceptAction();
+        Vector<EVS_Bean> conList = cact.getAC_Concepts(sCondr, cdata);
+        if (data.getDbConnection() == null)
+          PVServlet.closeDBConnection(cdata.getDBConnection());  //close the connection only if it was created here
+        vm.setVM_CONCEPT_LIST(conList);
+      }
+      pvBean.setPV_VM(vm);
     }
-    pvBean.setPV_VM(vm);
+    catch (SQLException e)
+    {
+      logger.fatal("ERROR - -doSetVMAttributes for close : " + e.toString(), e);
+    }
   }
   
   private void doSetParentAttributes(String conIDseq, PV_Bean pvBean, PVForm data)
@@ -580,8 +592,8 @@ public class PVAction implements Serializable
             PVBean.setPV_CONCEPTUAL_DOMAIN(rs.getString("cd_name"));
             
             //get vm concept attributes
-            String sCondr = rs.getString("condr_idseq");
-            this.doSetVMAttributes(PVBean, sCondr, data);
+           // String sCondr = rs.getString("condr_idseq");
+            this.doSetVMAttributes(PVBean, rs, data);
             //get database attribute
             PVBean.setPV_EVS_DATABASE("caDSR");
             vList.addElement(PVBean);  //add the bean to a vector

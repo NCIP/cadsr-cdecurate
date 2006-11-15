@@ -151,10 +151,10 @@ function openDesignateWindow(sType)
         return;
       }
     }
-    if (document.newDECForm.selContext[selIdx].text == "" && vAction != "BlockEdit")
-	    alert("Please select a context first");
-    else
-    {
+  //  if (document.newDECForm.selContext[selIdx].text == "" && vAction != "BlockEdit")
+//	    alert("Please select a context first");
+ //   else
+ //   {
       if (isNameChangeOK(vAction, thisBlock) == true)
       {
         document.SearchActionForm.searchComp.value = thisBlock;
@@ -164,16 +164,16 @@ function openDesignateWindow(sType)
            searchWindow.close();
         searchWindow = window.open("jsp/OpenSearchWindowBlocks.jsp", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes")
       }
-    }
+   // }
  }
  
  function closeDep() 
   {
-    if (searchWindow && searchWindow.open && !searchWindow.closed) 
+    if (searchWindow && !searchWindow.closed) // && searchWindow.open
       searchWindow.close();
-    if(altWindow && altWindow.open && ! altWindow.closed)
+    if(altWindow && !altWindow.closed)  // && altWindow.open
       altWindow.close();
-    if(statusWindow && statusWindow.open && !statusWindow.closed)
+    if(statusWindow && !statusWindow.closed)  // && statusWindow.open
       statusWindow.close();
   }
 

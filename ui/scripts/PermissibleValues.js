@@ -59,13 +59,23 @@
     {
     	var alertMsg = "";
     	var txtVM = "";
+    	//first if user entered
     	var vmDiv = document.getElementById("pvNewVMEdit");
     	if (vmDiv != null && vmDiv.style.display == "block")
     	{
 	    	txtVM = document.getElementById("pvNewVM").value;
-	    	if (txtVM == null || txtVM == "")
-	    		alertMsg += "Please enter the text for Value Meaning. \n";
     	}
+    	//may be using concepts
+    	if (txtVM == null || txtVM == "")
+    	{
+    		vmDiv = document.getElementById("pvNewVMView");
+    		if (vmDiv != null)
+    			txtVM = vmDiv.innerText;
+    	}
+    	if (txtVM == null || txtVM == "")
+	    	alertMsg += "Please enter the text for Value Meaning. \n";
+	    	
+    	//check user entered description
     	var vmdDiv = document.getElementById("pvNewVMDEdit");
     	if (vmdDiv != null && vmdDiv.style.display == "block")
     	{
@@ -73,28 +83,26 @@
 	    	if (txtVMD == null || txtVMD == "")
 	    		alertMsg += "Please enter the text for Value Meaning Description. \n";
     	}
+    	//get vm pv if not exists
     	var txtPV = document.getElementById("pvNewValue").value;
     	if ((txtPV == null || txtPV == "") && alertMsg == "")
     	{
-			if (txtVM == "")  //using concepts
-				txtVM = document.getElementById("pvNewVMView").innerText;
 			if (txtVM != "")
 			{
-				//var addtxt = confirm("Click OK to use the Value Meaning as Permissible Value or click Cancel to enter the text");
-				//if (!addtxt)
-					//return;
-				//else
 				document.getElementById("pvNewValue").value = txtVM;
 				txtPV = txtVM;
 			}
     	}
     	if (txtPV == null || txtPV == "")  //still empty
     		alertMsg += "Please enter the text for Permissible Value. \n";
-    		
+
     	if (alertMsg != "")
     		alert(alertMsg);
     	else
-    		SubmitValidate("addNewPV");
+    	{
+    		if (checkPVVMCombDuplicate(txtPV, txtVM, "newPV"))
+    			SubmitValidate("addNewPV");
+    	}
     }
     
     //viewall image clicked; collapse or expand each pv and its image according the expected action    
@@ -1231,7 +1239,7 @@
 		{
 			sVM = sVM.replace(' ', '');
 		}
-  		
+
   		//get the value and meaning from each row and compare it to the text of the saving pv
   		var i = 0;
   		do
@@ -1261,8 +1269,8 @@
 					}
 	  				if (sVal == val && sVM == vm)
 	  				{
-	  					alert("Value and Value Meaning combination must be unique in the Value Domain." +
-	  						"\n Modify either Value or Value Meaning to create new Permissible Value.");
+	  					alert("The Value and the Value Meaning combination must be unique in the Value Domain." +
+	  						"\n Modify either the Value or the Value Meaning to create new Permissible Value.");
 	  					return false; 
 	  				}
 	  			}

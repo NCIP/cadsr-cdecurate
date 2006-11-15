@@ -1105,17 +1105,14 @@ function createNames(acType)
       //is this non enumerated
       if (opener != null)
       { 
-      if (opener.document != null)
-      { 
-        if (opener.document.createVDForm != null)
+        if (opener.document != null)
         { 
-          if (opener.document.createVDForm.listVDType != null)
+          if (opener.document.getElementById("listVDType") != null)
           { 
-          var eInd = opener.document.createVDForm.listVDType.selectedIndex;
-          if (eInd > -1 && opener.document.createVDForm.listVDType[eInd].value == "N" && varSearchAC == "ParentConceptVM")
-            nonEnumVD = true;
+          	var vdType = opener.document.getElementById("listVDType").value;
+          	if (vdType == "N" && varSearchAC == "ParentConceptVM")
+            	nonEnumVD = true;
           }
-        }
         }
       }
     

@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/Tree.java,v 1.14 2006-11-10 18:23:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/Tree.java,v 1.15 2006-11-15 05:02:00 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.util;
@@ -104,8 +104,7 @@ public class Tree
      */
     public void markNew()
     {
-        if (_node != null)
-            _node.markNew();
+        _node.markNew();
         
         for (Tree child = _child; child != null; child = child._sybling)
         {

@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.14 2006-11-10 18:23:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.15 2006-11-15 05:01:45 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -49,6 +49,7 @@ public class AltNamesDefsSession implements Serializable
         _conteName[0] = (conteName_ == null) ? "" : conteName_;
         _sessType = sessType_;
         _dbClearNamesDefs = false;
+        _enableClear = true;
     }
 
     /**
@@ -67,6 +68,19 @@ public class AltNamesDefsSession implements Serializable
         _conteName = conteName_;
         _sessType = sessType_;
         _dbClearNamesDefs = false;
+        _enableClear = true;
+    }
+    
+    public AltNamesDefsSession(AC_Bean[] beans_, String[] acIdseq_, String[] conteIdseq_, String[] conteName_, String sessType_)
+    {
+        cleanBuffers();
+        _beans = beans_;
+        _acIdseq = acIdseq_;
+        _conteIdseq = conteIdseq_;
+        _conteName = conteName_;
+        _sessType = sessType_;
+        _dbClearNamesDefs = false;
+        _enableClear = true;
     }
 
     /**
@@ -160,19 +174,20 @@ public class AltNamesDefsSession implements Serializable
         String[] acIdseq = new String[acBlock_.size()];
         String[] conteIdseq = new String[acIdseq.length];
         String[] conteName = new String[acIdseq.length];
+        AC_Bean[] beans = new AC_Bean[acIdseq.length];
         for (int i = 0; i < acIdseq.length; ++i)
         {
-            AC_Bean temp = acBlock_.get(i);
-            acIdseq[i] = temp.getIDSEQ();
-            conteIdseq[i] = temp.getContextIDSEQ();
-            conteName[i] = temp.getContextName();
+            beans[i] = acBlock_.get(i);
+            acIdseq[i] = new String(beans[i].getIDSEQ());
+            conteIdseq[i] = new String(beans[i].getContextIDSEQ());
+            conteName[i] = new String(beans[i].getContextName());
         }
 
         // If no block edit buffer exists, create one.
         altSess = (AltNamesDefsSession) session_.getAttribute(sessName_);
         if (altSess == null)
         {
-            altSess = new AltNamesDefsSession(acIdseq, conteIdseq, conteName, _beanBlock);
+            altSess = new AltNamesDefsSession(beans, acIdseq, conteIdseq, conteName, _beanBlock);
             session_.setAttribute(sessName_, altSess);
             return altSess;
         }
@@ -192,7 +207,7 @@ public class AltNamesDefsSession implements Serializable
         // The buffer isn't correct for the list so create a new one.
         if (flag)
         {
-            altSess = new AltNamesDefsSession(acIdseq, conteIdseq, conteName, _beanBlock);
+            altSess = new AltNamesDefsSession(beans, acIdseq, conteIdseq, conteName, _beanBlock);
             session_.setAttribute(sessName_, altSess);
         }
 
@@ -279,9 +294,229 @@ public class AltNamesDefsSession implements Serializable
         {
             altSess = new AltNamesDefsSession(ac.getIDSEQ(), ac.getContextIDSEQ(), ac.getContextName(), launch_);
             ac.setAlternates(altSess);
+            
+            // If we are creating a buffer for a new AC or an AC that "wants" to be new, set the Alternates list to
+            // empty. Do NOT set the list to null as that means the database must be read to initialize it.
+            if (ac.isNewAC())
+            {
+                altSess._alts = new Alternates[0];
+                altSess._acIdseq = new String[1];
+            }
         }
 
         return altSess;
+    }
+
+    /**
+     * Load the session title.
+     * 
+     * @param db_ database access object
+     * @throws ToolException
+     */
+    public void loadTitle(DBAccess db_) throws ToolException
+    {
+        // If the title has not been determined, build it.
+        if (_cacheTitle == null)
+        {
+            // A single AC edit so display it's name, etc.
+            if (_acIdseq.length == 1)
+                _cacheTitle = db_.getACtitle(_sessType, _acIdseq[0]);
+
+            // Multiple AC edit (block edit) so keep it simple.
+            else
+                _cacheTitle = "Block Edit";
+        }
+    }
+    
+    /**
+     * Load the Alternates and sort the results.
+     * 
+     * @param db_ database access object
+     * @param sort_
+     * @throws ToolException
+     */
+    public void loadAlternates(DBAccess db_, String sort_) throws ToolException
+    {
+        boolean sortBy = (sort_ == null || sort_.equals(AltNamesDefsServlet._sortName));
+        if ( _alts == null)
+        {
+            _alts = db_.getAlternates(_acIdseq, sortBy);
+            if (_acIdseq.length > 1)
+                sortBy(_alts, sortBy);
+        }
+        else if (!sort_.equals(_cacheSort))
+        {
+            sortBy(_alts, sortBy);
+        }
+    }
+    
+    /**
+     * Sort the Alternates
+     * 
+     * @param flag_ true will sort by Name, false will sort by Type
+     */
+    public void sortBy(boolean flag_)
+    {
+        sortBy(_alts, flag_);
+    }
+
+    /**
+     * Sort the "View by Name/Definition" using Name/Definition, Text and Type.
+     * 
+     * @param alts_ the Alternates list
+     * @param flag_ true to sort by Name and false to sort by Type
+     */
+    private static void sortBy(Alternates[] alts_, boolean flag_)
+    {
+        // Determine number of Names and number of Definitions.
+        int dCnt;
+        int nCnt = 0;
+        for (int i = 0; i < alts_.length; ++i)
+        {
+            if (alts_[i].getInstance() == Alternates._INSTANCENAME)
+                ++nCnt;
+        }
+
+        // Create temporary buffers to separate Names and Definitions.
+        Alternates[] altsName = new Alternates[nCnt];
+        Alternates[] altsDef = new Alternates[alts_.length - nCnt];
+
+        // Build Name and Deifnition buffer.
+        nCnt = 0;
+        dCnt = 0;
+        for (int i = 0; i < alts_.length; ++i)
+        {
+            if (alts_[i].getInstance() == Alternates._INSTANCENAME)
+            {
+                altsName[nCnt] = alts_[i];
+                ++nCnt;
+            }
+            else
+            {
+                altsDef[dCnt] = alts_[i];
+                ++dCnt;
+            }
+        }
+
+        // Sort the buffers by Name (true) or Type (false)
+        Alternates[] tempName;
+        Alternates[] tempDef;
+        if (flag_)
+        {
+            tempName = sortByName(altsName);
+            tempDef = sortByName(altsDef);
+        }
+        else
+        {
+            tempName = sortByType(altsName);
+            tempDef = sortByType(altsDef);
+        }
+        
+        // Move the sorted lists back into the primary buffer. We didn't change the number of entries
+        // in the buffer, just arranged them as specified.
+        System.arraycopy(tempName, 0, alts_, 0, tempName.length);
+        System.arraycopy(tempDef, 0, alts_, tempName.length, tempDef.length);
+    }
+
+    /**
+     * Sort the specified buffer by Name. Sorting Definitions by "Name" uses the
+     * text of the Definition as expected. All sorts are case insensitive.
+     * 
+     * @param alts_ the Name or Definition buffer.
+     * @return the sorted list
+     */
+    private static Alternates[] sortByName(Alternates[] alts_)
+    {
+        // Perform a binary sort. The lists are typically very small and this algorythm
+        // can also accommodate large lists.
+        Alternates[] temp = new Alternates[alts_.length];
+        if (alts_.length == 0)
+            return temp;
+
+        temp[0] = alts_[0];
+
+        for (int top = 1; top < alts_.length; ++top)
+        {
+            int max = top;
+            int min = 0;
+            int pos = 0;
+            while (true)
+            {
+                pos = (max + min) / 2;
+                int compare = alts_[top].getName().compareToIgnoreCase(temp[pos].getName());
+                if (compare == 0)
+                    break;
+                else if (compare < 0)
+                {
+                    if (max == pos)
+                        break;
+                    max = pos;
+                }
+                else
+                {
+                    if (min == pos)
+                    {
+                        ++pos;
+                        break;
+                    }
+                    min = pos;
+                }
+            }
+            System.arraycopy(temp, pos, temp, pos + 1, top - pos);
+            temp[pos] = alts_[top];
+        }
+
+        return temp;
+    }
+    
+    /**
+     * Sort the specified buffer by Type. All sorts are case insensitive.
+     * 
+     * @param alts_ the Name or Definition buffer.
+     * @return the sorted list
+     */
+    private static Alternates[] sortByType(Alternates[] alts_)
+    {
+        // Perform a binary sort. The lists are typically very small and this algorythm
+        // can also accommodate large lists.
+        Alternates[] temp = new Alternates[alts_.length];
+        if (alts_.length == 0)
+            return temp;
+
+        temp[0] = alts_[0];
+
+        for (int top = 1; top < alts_.length; ++top)
+        {
+            int max = top;
+            int min = 0;
+            int pos = 0;
+            while (true)
+            {
+                pos = (max + min) / 2;
+                int compare = alts_[top].getType().compareToIgnoreCase(temp[pos].getType());
+                if (compare == 0)
+                    break;
+                else if (compare < 0)
+                {
+                    if (max == pos)
+                        break;
+                    max = pos;
+                }
+                else
+                {
+                    if (min == pos)
+                    {
+                        ++pos;
+                        break;
+                    }
+                    min = pos;
+                }
+            }
+            System.arraycopy(temp, pos, temp, pos + 1, top - pos);
+            temp[pos] = alts_[top];
+        }
+
+        return temp;
     }
 
     /**
@@ -340,6 +575,7 @@ public class AltNamesDefsSession implements Serializable
         // Set the request data for when the page is written.
         req_.setAttribute(AltNamesDefsServlet._reqIdseq, altSess._acIdseq[0]);
         req_.setAttribute(_searchEVS, launch);
+        req_.setAttribute(_showClear, (altSess._enableClear) ? "Y" : "N");
 
         return altSess;
     }
@@ -362,34 +598,61 @@ public class AltNamesDefsSession implements Serializable
 
         for (int i = 0; i < _alts.length; ++i)
         {
-            if (_alts[i].getAcIdseq() == null)
+            if (_alts[i].getAcIdseq() == null || !_alts[i].getAcIdseq().equals(idseq_))
                 _alts[i].setACIdseq(idseq_);
-            if (_alts[i].getConteIdseq() == null)
+            if (_alts[i].getConteIdseq() == null || !_alts[i].getConteIdseq().equals(conteIdseq_))
                 _alts[i].setConteIdseq(conteIdseq_);
             db.save(_alts[i]);
         }
     }
     
-    public static void save(HttpSession session_, Connection conn_, String idseq_, String conteIdseq_) throws SQLException
+    public static void blockSave(HttpSession session_, Connection conn_) throws SQLException
     {
         // Get the session buffer.
-        AltNamesDefsSession sess;
         String sessName = getSessName(_beanBlock);
-        sess = (AltNamesDefsSession) session_.getAttribute(sessName);
+        AltNamesDefsSession sess = (AltNamesDefsSession) session_.getAttribute(sessName);
+
+        // Only if we have a block edit buffer.
+        if (sess == null)
+        {
+            return;
+        }
 
         // Open a database connection.
         DBAccess db = new DBAccess(conn_);
-        if (sess != null)
+
+        // For a "normal" block edit, the changed records are written back to their original Alternate.
+        if (sess._blockVersion == false)
         {
             // Apply the alternate objects to the appropriate AC
             for (int i = 0; i < sess._alts.length; ++i)
             {
                 db.save(sess._alts[i], sess._acIdseq, sess._conteIdseq);
             }
-
-            session_.removeAttribute(sessName);
-            return;
         }
+        
+        // For a "versioned" block edit, changes are added to a single AC and new Alternates are
+        // added to everything in the list.
+        else
+        {
+            // The new AC's must be cleaned of any Alternates prior to saving the buffer.
+            for (int i = 0; i < sess._acIdseq.length; ++i)
+            {
+                String newIdseq = sess._beans[i].getIDSEQ();
+                if (!sess._acIdseq[i].equals(newIdseq))
+                {
+                    db.deleteAlternates(newIdseq);
+                }
+            }
+
+            // Process each Alternate
+            for (int i = 0; i < sess._alts.length; ++i)
+            {
+                db.save(sess._alts[i], sess._beans, sess._acIdseq, sess._conteIdseq);
+            }
+        }
+
+        session_.removeAttribute(sessName);
     }
     
     /**
@@ -417,6 +680,7 @@ public class AltNamesDefsSession implements Serializable
         AltNamesDefsSession buffer = new AltNamesDefsSession(null, ac_.getContextIDSEQ(), ac_.getContextName(), launch);
         ac_.setAlternates(buffer);
         buffer._dbClearNamesDefs = true;
+        buffer._enableClear = false;
         
         // Load the data buffer with existing data marking everything as "new"
         DBAccess db = new DBAccess(conn_);
@@ -446,43 +710,33 @@ public class AltNamesDefsSession implements Serializable
      * @param conn_
      * @param ac_
      */
-    public static void loadAsNew(HttpSession session_, Connection conn_, Vector<AC_Bean> ac_)
+    public static void loadAsNew(HttpSession session_, Connection conn_, Vector<AC_Bean> ac_) throws Exception
     {
-        if (ac_.size() == 0)
+        // Be sure there's something to do.
+        if (ac_ == null || ac_.size() == 0)
             return;
 
-        // Determine the type of buffer.
-        String launch = null;
-        AC_Bean temp = ac_.get(0);
-        if (temp instanceof DE_Bean)
-            launch = _searchDE;
-        else if (temp instanceof DEC_Bean)
-            launch = _searchDEC;
-        else if (temp instanceof VD_Bean)
-            launch = _searchVD;
-        else if (temp instanceof VM_Bean)
-            launch = _searchVM;
-
-        // Setup the buffer
-        String[] acIdseq = new String[ac_.size()];
-        String[] conteIdseq = new String[acIdseq.length];
-        String[] conteName = new String[acIdseq.length];
-        for (int i = 0; i < acIdseq.length; ++i)
-        {
-            acIdseq[i] = ac_.get(i).getIDSEQ();
-            conteIdseq[i] = ac_.get(i).getContextIDSEQ();
-            conteName[i] = ac_.get(i).getContextName();
-        }
-        AltNamesDefsSession alt = new AltNamesDefsSession(acIdseq, conteIdseq, conteName,  launch);
-        
-        // Save the buffer in the session - this MUST be done for all the Alt Names/Defs to appear on a single screen.
+        // Only create the buffer if it doesn't exist.
         String sessName = getSessName(_beanBlock);
-        session_.setAttribute(sessName, alt);
-        
-        // Load the data as new
-        for (int i = 0; i < alt._acIdseq.length; ++i)
+        AltNamesDefsSession buffer = (AltNamesDefsSession) session_.getAttribute(sessName);
+        if (buffer == null)
         {
+            buffer = getSessionDataBlockEdit(session_, sessName, ac_);
+                
+            // Load the data
+            DBAccess db = new DBAccess(conn_);
+            try
+            {
+                buffer._alts = db.getAlternates(buffer._acIdseq, true);
+            }
+            catch (ToolException ex)
+            {
+                throw new Exception(ex.toString());
+            }
         }
+
+        // This is only done for a Block Edit version.
+        buffer._blockVersion = true;
     }
 
     /**
@@ -505,7 +759,9 @@ public class AltNamesDefsSession implements Serializable
     public static final String _searchDEC = "DataElementConcept";
     public static final String _searchDE = "DataElement";
     public static final String _searchVM = "ValueMeaning";
+    public static final String _showClear = "showClear";
 
+    public AC_Bean[] _beans;
     public Alternates[] _alts;
     public String[] _acIdseq;
     public String[] _conteIdseq;
@@ -516,6 +772,8 @@ public class AltNamesDefsSession implements Serializable
     public String _viewJsp;
     private int _newIdseq;
     private boolean _dbClearNamesDefs;
+    private boolean _enableClear;
+    private boolean _blockVersion;
 
     public String _cacheSort;
     public String _cacheTitle;

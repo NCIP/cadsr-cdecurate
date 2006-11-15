@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.14 2006-11-10 18:23:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.15 2006-11-15 05:01:40 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -39,168 +39,6 @@ public class AltNamesDefsServlet
     }
 
     /**
-     * Sort the "View by Name/Definition" using Name/Definition, Text and Type.
-     * 
-     * @param form_ the JSP form data
-     * @param flag_ true to sort by Name and false to sort by Type
-     */
-    private void sortBy(AltNamesDefsForm form_, boolean flag_)
-    {
-        // Define a convenience reference to the internal buffer.
-        Alternates[] alts = form_._sess._alts;
-        
-        // Determine number of Names and number of Definitions.
-        int dCnt;
-        int nCnt = 0;
-        for (int i = 0; i < alts.length; ++i)
-        {
-            if (alts[i].getInstance() == Alternates._INSTANCENAME)
-                ++nCnt;
-        }
-
-        // Create temporary buffers to separate Names and Definitions.
-        Alternates[] altsName = new Alternates[nCnt];
-        Alternates[] altsDef = new Alternates[alts.length - nCnt];
-
-        // Build Name and Deifnition buffer.
-        nCnt = 0;
-        dCnt = 0;
-        for (int i = 0; i < alts.length; ++i)
-        {
-            if (alts[i].getInstance() == Alternates._INSTANCENAME)
-            {
-                altsName[nCnt] = alts[i];
-                ++nCnt;
-            }
-            else
-            {
-                altsDef[dCnt] = alts[i];
-                ++dCnt;
-            }
-        }
-
-        // Sort the buffers by Name (true) or Type (false)
-        Alternates[] tempName;
-        Alternates[] tempDef;
-        if (flag_)
-        {
-            tempName = sortByName(altsName);
-            tempDef = sortByName(altsDef);
-        }
-        else
-        {
-            tempName = sortByType(altsName);
-            tempDef = sortByType(altsDef);
-        }
-        
-        // Move the sorted lists back into the primary buffer. We didn't change the number of entries
-        // in the buffer, just arranged them as specified.
-        System.arraycopy(tempName, 0, alts, 0, tempName.length);
-        System.arraycopy(tempDef, 0, alts, tempName.length, tempDef.length);
-    }
-
-    /**
-     * Sort the specified buffer by Name. Sorting Definitions by "Name" uses the
-     * text of the Definition as expected. All sorts are case insensitive.
-     * 
-     * @param alts_ the Name or Definition buffer.
-     * @return the sorted list
-     */
-    private Alternates[] sortByName(Alternates[] alts_)
-    {
-        // Perform a binary sort. The lists are typically very small and this algorythm
-        // can also accommodate large lists.
-        Alternates[] temp = new Alternates[alts_.length];
-        if (alts_.length == 0)
-            return temp;
-
-        temp[0] = alts_[0];
-
-        for (int top = 1; top < alts_.length; ++top)
-        {
-            int max = top;
-            int min = 0;
-            int pos = 0;
-            while (true)
-            {
-                pos = (max + min) / 2;
-                int compare = alts_[top].getName().compareToIgnoreCase(temp[pos].getName());
-                if (compare == 0)
-                    break;
-                else if (compare < 0)
-                {
-                    if (max == pos)
-                        break;
-                    max = pos;
-                }
-                else
-                {
-                    if (min == pos)
-                    {
-                        ++pos;
-                        break;
-                    }
-                    min = pos;
-                }
-            }
-            System.arraycopy(temp, pos, temp, pos + 1, top - pos);
-            temp[pos] = alts_[top];
-        }
-
-        return temp;
-    }
-    
-    /**
-     * Sort the specified buffer by Type. All sorts are case insensitive.
-     * 
-     * @param alts_ the Name or Definition buffer.
-     * @return the sorted list
-     */
-    private Alternates[] sortByType(Alternates[] alts_)
-    {
-        // Perform a binary sort. The lists are typically very small and this algorythm
-        // can also accommodate large lists.
-        Alternates[] temp = new Alternates[alts_.length];
-        if (alts_.length == 0)
-            return temp;
-
-        temp[0] = alts_[0];
-
-        for (int top = 1; top < alts_.length; ++top)
-        {
-            int max = top;
-            int min = 0;
-            int pos = 0;
-            while (true)
-            {
-                pos = (max + min) / 2;
-                int compare = alts_[top].getType().compareToIgnoreCase(temp[pos].getType());
-                if (compare == 0)
-                    break;
-                else if (compare < 0)
-                {
-                    if (max == pos)
-                        break;
-                    max = pos;
-                }
-                else
-                {
-                    if (min == pos)
-                    {
-                        ++pos;
-                        break;
-                    }
-                    min = pos;
-                }
-            }
-            System.arraycopy(temp, pos, temp, pos + 1, top - pos);
-            temp[pos] = alts_[top];
-        }
-
-        return temp;
-    }
-
-    /**
      * Setup page content for the "View by Name/Definition" page.
      * 
      * @param form_ the request form
@@ -212,32 +50,12 @@ public class AltNamesDefsServlet
         String attr = "";
         try
         {
-            // If the title has not been determined, build it.
-            if (form_._sess._cacheTitle == null)
-            {
-                // A single AC edit so display it's name, etc.
-                if (form_._sess._acIdseq.length == 1)
-                    form_._sess._cacheTitle = db_.getACtitle(form_._sess.getSessType(), form_._sess._acIdseq[0]);
-
-                // Multiple AC edit (block edit) so keep it simple.
-                else
-                    form_._sess._cacheTitle = "Block Edit";
-            }
+            // Load the session title
+            form_._sess.loadTitle(db_);
 
             // Get the Alternate Names and Definitions for the AC but first determine the desired sort
             // order.
-            attr = form_._sort;
-            boolean sortBy = (attr == null || attr.equals(_sortName));
-            if ( form_._sess._alts == null)
-            {
-                form_._sess._alts = db_.getAlternates(form_._sess._acIdseq, sortBy);
-                if (form_._sess._acIdseq.length > 1)
-                    sortBy(form_, sortBy);
-            }
-            else if (!form_._sort.equals(form_._sess._cacheSort))
-            {
-                sortBy(form_, sortBy);
-            }
+            form_._sess.loadAlternates(db_, form_._sort);
 
             // Output each with the desired related information.
             int flag = -1;
@@ -582,7 +400,7 @@ public class AltNamesDefsServlet
         form_._sess._alts[pos] = alt;
 
         // Sort it into the list
-        sortBy(form_, form_._sess._cacheSort.equals(_sortName));
+        form_._sess.sortBy(form_._sess._cacheSort.equals(_sortName));
         
         // Return to the page prior to the Add/Edit
         if (form_._sess._viewJsp.equals(_jspName))
