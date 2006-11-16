@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.25 2006-11-15 05:00:52 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.26 2006-11-16 05:55:00 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -176,6 +176,7 @@ public class EVSSearch implements Serializable
     if (!dtsVocab.equals(EVSSearch.META_VALUE))  // "MetaValue"))
     {
       EVSQuery codequery = new EVSQueryImpl();
+      codequery = this.addSecurityToken(codequery, "", dtsVocab);
       codequery.getConceptCodeByName(dtsVocab,prefName);
       List codes = null;
       try
@@ -232,6 +233,7 @@ public class EVSSearch implements Serializable
     {
       EVSQuery query = new EVSQueryImpl();
       List concepts = null;
+      query = this.addSecurityToken(query, "", dtsVocab);
       query.getDescLogicConceptNameByCode(dtsVocab,CCode);
       try
       {
@@ -561,6 +563,7 @@ public class EVSSearch implements Serializable
       if (!dtsVocab.equals(EVSSearch.META_VALUE))  // "MetaValue"))  //not for meta
       {   
         EVSQuery query = new EVSQueryImpl();
+        query = this.addSecurityToken(query, "", dtsVocab);
         query.getRootConcepts(dtsVocab, true);  //define query
         vocabRoots = evsService.evsSearch(query); //call api
         if(vocabRoots != null && vocabRoots.size()>0)
@@ -606,6 +609,7 @@ public class EVSSearch implements Serializable
           {
             try
             {
+              query = this.addSecurityToken(query, "", dtsVocab);
               query.getAllSubConceptCodes(dtsVocab,conceptCode);
               subs = evsService.evsSearch(query);
             }
@@ -718,6 +722,7 @@ public class EVSSearch implements Serializable
             {
               try
               {
+                query = this.addSecurityToken(query, "", dtsVocab);
                 query.getSubConcepts(dtsVocab,conceptCode,flagThree,flagTwo);
                 subs = evsService.evsSearch(query);
               }
@@ -738,6 +743,7 @@ public class EVSSearch implements Serializable
             {    
               try
               {
+                query = this.addSecurityToken(query, "", dtsVocab);
                 query.getSubConcepts(dtsVocab,conceptName,flagOne,flagTwo);
                 subs = evsService.evsSearch(query);
               }
@@ -768,6 +774,7 @@ public class EVSSearch implements Serializable
           {
             try
             {
+              query = this.addSecurityToken(query, "", dtsVocab);
               query.getSubConcepts(dtsVocab,conceptCode,flagThree,flagTwo);
               subs = evsService.evsSearch(query);
             }
@@ -788,6 +795,7 @@ public class EVSSearch implements Serializable
           {
             try
             {
+              query = this.addSecurityToken(query, "", dtsVocab);
               query.getSubConcepts(dtsVocab,conceptName,flagOne,flagTwo);
               subs = evsService.evsSearch(query);
             }
@@ -853,6 +861,7 @@ public Vector getSubConceptCodes(String dtsVocab, String conceptName, String typ
             {
               try
               {
+                query = this.addSecurityToken(query, "", dtsVocab);
                 query.getSubConcepts(dtsVocab,conceptCode,flagThree,flagFour);
                 subs = evsService.evsSearch(query);
               }
@@ -872,6 +881,7 @@ public Vector getSubConceptCodes(String dtsVocab, String conceptName, String typ
               {
                 try
                 {
+                  query = this.addSecurityToken(query, "", dtsVocab);
                   query.getSubConcepts(dtsVocab,conceptName,flagOne,flagTwo);
                   subs = evsService.evsSearch(query);
                 }
@@ -968,6 +978,7 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
             if(CCode != null && !CCode.equals(""))
             {
               EVSQuery query = new EVSQueryImpl();
+              query = this.addSecurityToken(query, "", dtsVocab);
               query.getSuperConcepts(dtsVocab,CCode,flagOne,flagTwo);
               List supers = null;
               try
@@ -1084,6 +1095,7 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
       {
         EVSQuery query = new EVSQueryImpl();
 //  System.out.println("findThePath dtsVocab: " + dtsVocab + " prefName: " + prefName + " stringArray.length: " + stringArray.length);
+        query = this.addSecurityToken(query, "", dtsVocab);
         query.getSuperConcepts(dtsVocab,prefName,flagOne,flagOne);
         List supers = null;
         try
@@ -1183,6 +1195,7 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
           prefName = stringArray[j];
         try
         {
+          query = this.addSecurityToken(query, "", dtsVocab);
           query.getSubConcepts(dtsVocab,prefName,flagOne,flagTwo);
           subs = evsService.evsSearch(query);
           if(subs != null && subs.size()>0)
@@ -1252,6 +1265,7 @@ public Vector getSuperConceptNamesImmediate(String dtsVocab, String conceptName,
     Boolean flagTwo = new Boolean(false);  
     Boolean flagThree = new Boolean(true);  
     EVSQuery query = new EVSQueryImpl();
+    query = this.addSecurityToken(query, "", dtsVocab);
     if(!conceptCode.equals(""))
        query.getSuperConcepts(dtsVocab,conceptCode,flagThree,flagTwo);
     else if(!conceptName.equals(""))
@@ -1307,6 +1321,7 @@ public Vector getSuperConceptNames(String dtsVocab, String conceptName, String c
     {
       try
       {
+        query = this.addSecurityToken(query, "", dtsVocab);
         query.getSuperConcepts(dtsVocab,conceptCode,flagThree,flagTwo);
         sups = evsService.evsSearch(query);
       }
@@ -1327,6 +1342,7 @@ public Vector getSuperConceptNames(String dtsVocab, String conceptName, String c
     }
     else if(!conceptName.equals(""))
     {
+      query = this.addSecurityToken(query, "", dtsVocab);
       query.getSuperConcepts(dtsVocab,conceptName,flagOne,flagTwo);
       try
       {
@@ -1389,6 +1405,7 @@ public String[] getAllSuperConceptNames(String dtsVocab, String[] stringArray, V
           {
             if(!vSub.contains(stringArray[j]))
               vSub.addElement(stringArray[j]);
+            query = this.addSecurityToken(query, "", dtsVocab);
             query.getSuperConcepts(dtsVocab,stringArray[j],flagOne,flagTwo);
             subs = evsService.evsSearch(query);
             if(subs != null && subs.size()>0)
@@ -1996,6 +2013,7 @@ public String parseDefinition(String termStr)
       {
   //logger.debug(dtsVocab + " display name " + sName +  " dlc null - " + sPropDisp);
         EVSQuery query = new EVSQueryImpl();
+        query = this.addSecurityToken(query, "", dtsVocab);
         query.getPropertyValues(dtsVocab, sName, sPropDisp);
         List lstResult = evsService.evsSearch(query);
         if (lstResult != null && lstResult.size()>0)
@@ -2045,23 +2063,20 @@ public String parseDefinition(String termStr)
             if (dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
                 return lstResult;
             EVSQuery query = new EVSQueryImpl();
+        /*    gov.nih.nci.evs.security.SecurityToken token = null;
+            if (vocabAccess != null)
+            {
+                token = new gov.nih.nci.evs.security.SecurityToken();
+                token.setAccessToken(vocabAccess);
+                query.addSecurityToken(dtsVocab, token);
+            } */
+            query = this.addSecurityToken(query, vocabAccess, dtsVocab);
             if (sSearchIn.equals("ConCode"))
                 query.getDescLogicConcept(dtsVocab, termStr, true);
             else if (sSearchIn.equals("subConcept"))
                 query.getChildConcepts(dtsVocab, termStr, true);
             else
             {
-                gov.nih.nci.evs.security.SecurityToken token = null;
-                if (vocabAccess != null)
-                {
-                    token = new gov.nih.nci.evs.security.SecurityToken();
-                    token.setAccessToken(vocabAccess);
-                    query.addSecurityToken(dtsVocab, token);
-                }
-                else
-                {
-                    // remove access token?
-                }
                 if (vocabType.equals("") || vocabType.equals("NameType")) // do concept name search
                     query.searchDescLogicConcepts(dtsVocab, termStr, 10000);
                 else if (vocabType.equals("PropType")) // do concept prop search
@@ -3305,5 +3320,44 @@ public String parseDefinition(String termStr)
     
     return eBean;  //return teh bean
   }
-//close the class
+
+  /**
+   * adds the security token to the query for some vocabularies
+   * @param query
+   * @param vocabAccess
+   * @param vocab
+   * @return evsquery
+   */
+  public EVSQuery addSecurityToken(EVSQuery query, String vocabAccess, String vocab)
+  {
+    try
+    {
+      if (vocabAccess.equals(""))
+      {
+        Hashtable hVoc = (Hashtable)m_eUser.getVocab_Attr();
+        if (hVoc == null) hVoc = new Hashtable();
+        EVS_UserBean vocabBean = null;
+        if (hVoc.containsKey(vocab))
+          vocabBean = (EVS_UserBean)hVoc.get(vocab);
+        if (vocabBean == null) 
+          vocabBean = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVS_USER_BEAN_ARG);  //("EvsUserBean");
+        //get the securtiy access to the vocab
+        vocabAccess = vocabBean.getVocabAccess();      
+      }
+      gov.nih.nci.evs.security.SecurityToken token = null;
+      if (vocabAccess != null)
+      {
+          token = new gov.nih.nci.evs.security.SecurityToken();
+          token.setAccessToken(vocabAccess);
+          query.addSecurityToken(vocab, token);
+      }
+    }
+    catch (Exception e)
+    {
+      logger.fatal("ERROR - addSecurityToken ", e);
+    }    
+    return query;
+  }
+  
+  //close the class
 } 

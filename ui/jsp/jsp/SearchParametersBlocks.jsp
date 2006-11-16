@@ -211,8 +211,9 @@
     var actSelect = "";
     <% if(sSearchAC.equals("ParentConceptVM")) {%>
       if(opener.document != null)
-      {
-        if(opener.document.getElementById("selectedParentConceptCode").value != "")
+      {      	
+        if(opener.document.getElementById("selectedParentConceptCode") != null && 
+        			opener.document.getElementById("selectedParentConceptCode").value != "")
         {
           var code = opener.document.getElementById("selectedParentConceptCode").value;
           var name = opener.document.getElementById("selectedParentConceptName").value

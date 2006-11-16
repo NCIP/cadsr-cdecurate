@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.25 2006-11-15 05:00:53 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.26 2006-11-16 05:55:00 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;     
@@ -4436,7 +4436,8 @@ public class GetACSearch implements Serializable
           //store evs vocab name in evs origin and leave meta out
           if (selVocab.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
             conBean.setEVS_ORIGIN(sVocab);
-          else conBean.setEVS_ORIGIN(selVocab);
+          else 
+            conBean.setEVS_ORIGIN(selVocab);
           
           conBean.setID(rs.getString("con_ID"));//public id
           if (rs.getString("version").indexOf('.') >= 0)
@@ -9551,7 +9552,7 @@ public class GetACSearch implements Serializable
    * @param userName String name of the user.
    * @throws exception e
    */
-  public void getACQuestionValue() throws Exception
+  public void getACQuestionValue(VD_Bean vd) throws Exception
   {
       HttpSession session = m_classReq.getSession();
       Vector vResult = new Vector();
@@ -9561,7 +9562,7 @@ public class GetACSearch implements Serializable
       String sCRFId = QuestBean.getCRF_IDSEQ();
 
       //call to search questions and save the result in the questValue session vector
-      doQuestValueSearch(sQuestId, sCRFId, vResult);
+      doQuestValueSearch(sQuestId, sCRFId, vResult, vd);
   }
 
   /**
@@ -9576,7 +9577,7 @@ public class GetACSearch implements Serializable
    * @param vList returns Vector of DEbean.
    *
    */
-  private void doQuestValueSearch(String sQuestID, String sCRFID, Vector vList)  // returns list of Questions
+  private void doQuestValueSearch(String sQuestID, String sCRFID, Vector vList, VD_Bean vd)  // returns list of Questions
   {
     Connection sbr_db_conn = null;
     ResultSet rs = null;
@@ -9584,7 +9585,7 @@ public class GetACSearch implements Serializable
     try
     {
       HttpSession session = m_classReq.getSession();
-      VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");
+     // VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");
       Vector<PV_Bean> pvList = vd.getVD_PV_List();
      // Vector pvList = (Vector)session.getAttribute("VDPVList"); 
       Vector vvList = new Vector();
