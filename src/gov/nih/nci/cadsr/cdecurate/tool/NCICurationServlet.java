@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.25 2006-11-15 05:00:58 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.26 2006-11-16 05:55:00 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -3533,7 +3533,7 @@ public class NCICurationServlet extends HttpServlet
             vdBean.setRemoved_VDPVList(new Vector<PV_Bean>());
             GetACSearch serAC = new GetACSearch(req, res, this);
             if (sMenu.equals("Questions"))
-              serAC.getACQuestionValue();  
+              serAC.getACQuestionValue(vdBean);  
           }
         }
       }
@@ -8330,7 +8330,7 @@ System.out.println(" new rep " + sNewRep);
        if (sMenuAction.equals("Questions"))
        {
           GetACSearch serAC = new GetACSearch(req, res, this);
-          serAC.getACQuestionValue();
+          serAC.getACQuestionValue(m_VD);
           //check if enumerated or not
           Vector vCRFval = (Vector)session.getAttribute("vQuestValue");
           if (vCRFval != null && vCRFval.size() > 0)

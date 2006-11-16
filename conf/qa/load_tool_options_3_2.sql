@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/load_tool_options_3_2.sql,v 1.14 2006-11-15 04:58:44 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/load_tool_options_3_2.sql,v 1.15 2006-11-16 05:54:59 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -112,7 +112,7 @@ VALUES ('CURATION', 'EVS.VOCAB.ALL.TREESEARCH', 'true',
 --fix display name for snowmed
 UPDATE sbrext.tool_options_view_ext
 SET property = 'EVS.VOCAB.7.DISPLAY' 
-WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.6.DISPLAY' AND value = 'SNOMED';
+WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.6.DISPLAY' AND value like '%SNOMED%';
 
 --Update value of derivation property to include order number
 UPDATE sbrext.tool_options_view_ext
@@ -254,6 +254,35 @@ UPDATE sbrext.tool_options_view_ext
 SET property = 'DOCUMENT_TYPE.16'
 WHERE tool_name = 'CURATION' AND property = 'DOCUMENT_TYPE' AND value = 'VALID_VALUE_SOURCE';
 
+--change the vocabulary GO display name to expanded version
+UPDATE sbrext.tool_options_view_ext
+SET value = 'GO:Gene Ontology'
+WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.%.DISPLAY' AND value = 'GO';
+
+--change the vocabulary LOINC display name to expanded version
+UPDATE sbrext.tool_options_view_ext
+SET value = 'LOINC:Logical Observation Identifiers Numbers and Codes'
+WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.%.DISPLAY' AND value = 'LOINC';
+
+--change the vocabulary MGED display name to expanded version
+UPDATE sbrext.tool_options_view_ext
+SET value = 'MGED:Microarray Gene Expression Data'
+WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.%.DISPLAY' AND value = 'MGED';
+
+--change the vocabulary MedDRA display name to expanded version
+UPDATE sbrext.tool_options_view_ext
+SET value = 'MedDRA:Medical Dictionary for Regulatory Affairs'
+WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.%.DISPLAY' AND value = 'MedDRA';
+
+--change the vocabulary SNOMED display name to expanded version
+UPDATE sbrext.tool_options_view_ext
+SET value = 'SNOMED:Systematized Nomenclature of Medicine'
+WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.%.DISPLAY' AND value = 'SNOMED';
+
+--change the vocabulary VA_NDFRT display name to expanded version
+UPDATE sbrext.tool_options_view_ext
+SET value = 'VA NDFRT:Veterans Administration National Drug File Reference Terminology'
+WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.%.DISPLAY' AND value = 'VA_NDFRT';
 
 --commit changes
 commit;

@@ -316,7 +316,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 								<col width="9%">
 								<tr height="30" valign="middle">
 									<%if (sMenuAction.equals("Questions") && vQVList.size() > 0){%>
-									<th align="left"><a href="">Valid Value</a></th> 
+									<th align="left">Valid Value</th> 
 									<% } %>
 									<th align="left">
 										&nbsp;&nbsp;&nbsp;Permissible Value
@@ -752,7 +752,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 						            // display only if not deleted
 						        //    if (pvBean.getVP_SUBMIT_ACTION() != null && pvBean.getVP_SUBMIT_ACTION().equals("DEL"))
 						        //      continue;
-						            String ckName = ("ck" + ckCount);
+						           // String ckName = ("ck" + ckCount);
 						            String pvCount = "pv" + ckCount;
 						            ckCount += 1;
 						            boolean pvChecked = pvBean.getPV_CHECKED();
@@ -841,16 +841,16 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 													<div id="<%=pvCount%>VMView" style="display: inline">
 														<%=sPVMean%>
 													</div>
+													<div id="<%=pvCount%>VMAltView" style="display: inline; text-align:right">
+															&nbsp;&nbsp;
+															<span style="padding-right:0.3in"><a href="javascript:openDesignateWindowVM('Alternate Names', <%=i%>);">Alternate Names</a></span>
+													</div>
 													<% if (vmCon.size() < 1) { %>
 														<div id="<%=pvCount%>VMEdit" style="display: none; width:90%">
 															&nbsp;&nbsp;
 															<input type="text" name="txt<%=pvCount%>Mean" maxlength="255" style="width: 100%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vm');" value="<%=sPVMean%>">
 														</div>
 													<% } %>
-													<div id="<%=pvCount%>VMAltEdit" style="display: none; text-align:right">
-															&nbsp;&nbsp;
-															<span style="padding-right:0.3in"><a href="javascript:openDesignateWindowVM('Alternate Names', <%=i%>);">Alternate Names</a></span>
-													</div>
 													<br>
 													<div id="<%=pvCount%>View" style="display: <%if (viewType.equals("expand")) {%>block <% } else { %> none <% } %>">
 														<table width="100%">

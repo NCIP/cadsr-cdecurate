@@ -140,9 +140,6 @@ public class VMServlet implements Serializable
     if (pv != null && pv.getPV_VALUE() != null && !pv.getPV_VALUE().equals(""))
       vm = resetConceptsFromPage(pv);  //pv.getPV_VM();
 
- //   if (selvm != null)
- //     vm = vm.copyVMBean(selvm);
-    
     boolean handTypedVM = true;
     Vector<EVS_Bean> vmCon = vm.getVM_CONCEPT_LIST();
     if (vmCon != null && vmCon.size() > 0)

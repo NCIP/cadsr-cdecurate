@@ -278,10 +278,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
         String chgName = (String)data.getRequest().getParameter("txtpv" + pvInd + "Value");  //pvName  
         if (!chgName.equals(selectPV.getPV_VALUE()))
           isNewPV = true;
-     //   data.getRequest().setAttribute("editPVValue", chgName);
-        //handle vm changes
-        //get the use selection of the duplicate to update the vm
-        
+
         //handle pv changes
         if (this.getDuplicateVMUse() == null)
         {
@@ -297,15 +294,15 @@ System.out.println(sMenuAction + " pv action " + sAction);
           }
        System.out.println(isNewPV + " same pv " + chgName);
           if (newVM.getVM_SUBMIT_ACTION().equals(VMForm.CADSR_ACTION_INS))
+          {
             isNewPV = true;
+            newVM._alts = null;
+          }
           if (selectPV.getVP_SUBMIT_ACTION().equals(PVForm.CADSR_ACTION_INS))
             isNewPV = true;
           data.setNewVM(newVM);
         }
-         // String erVM = (String)data.getRequest().getAttribute("ErrMsgAC");
-          //update it only if there was no duplicates exisitng
-         // if (erVM == null || erVM.equals(""))
-          PVAct.doChangePVAttributes(chgName, pvInd, isNewPV, data);
+        PVAct.doChangePVAttributes(chgName, pvInd, isNewPV, data);
 
         //store it in the session
         session.setAttribute("m_VD", data.getVD());
@@ -511,7 +508,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
          //pvCount = this.doPVACSearch(VDBean.getVD_VD_IDSEQ(), VDBean.getVD_LONG_NAME(), pvAct);
          GetACSearch serAC = new GetACSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
          if (sMenu.equals("Questions"))
-           serAC.getACQuestionValue();
+           serAC.getACQuestionValue(vd);
    
          //get vd parent attributes
          GetACService getAC = new GetACService(data.getRequest(), data.getResponse(), data.getCurationServlet());
@@ -942,6 +939,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
        {
          VM_Bean vm = errVMs.elementAt(vmInd);
          data.setNewVM(vm);
+         vm._alts = null;
          session.removeAttribute("VMEditMsg");
          return vm;
        }

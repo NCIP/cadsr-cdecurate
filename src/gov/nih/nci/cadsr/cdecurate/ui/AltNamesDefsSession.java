@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.15 2006-11-15 05:01:45 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.16 2006-11-16 05:55:01 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -598,9 +598,9 @@ public class AltNamesDefsSession implements Serializable
 
         for (int i = 0; i < _alts.length; ++i)
         {
-            if (_alts[i].getAcIdseq() == null || !_alts[i].getAcIdseq().equals(idseq_))
+            if (_alts[i].getAcIdseq() == null)
                 _alts[i].setACIdseq(idseq_);
-            if (_alts[i].getConteIdseq() == null || !_alts[i].getConteIdseq().equals(conteIdseq_))
+            if (_alts[i].getConteIdseq() == null)
                 _alts[i].setConteIdseq(conteIdseq_);
             db.save(_alts[i]);
         }
@@ -688,6 +688,7 @@ public class AltNamesDefsSession implements Serializable
         acIdseq[0] = ac_.getIDSEQ();
         try
         {
+            buffer.loadTitle(db);
             buffer._alts = db.getAlternates(acIdseq, true);
             
             // Make all the alternates "new"

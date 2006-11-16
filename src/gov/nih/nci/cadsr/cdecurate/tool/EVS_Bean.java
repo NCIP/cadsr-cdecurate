@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_Bean.java,v 1.25 2006-11-15 05:00:52 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_Bean.java,v 1.26 2006-11-16 05:55:00 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -825,8 +825,9 @@ public class EVS_Bean implements Serializable
       else if (filterAttr == EVSSearch.VOCAB_NAME)  //(sFilterAttr.equalsIgnoreCase("vocabName"))
         sValue = usrVocab.getVocabName();
       //do matching and return the value
-    //  System.out.println(sFilterValue + " getvocab " + sValue);
-      if (sFilterValue.equalsIgnoreCase(sValue))
+      System.out.println(sFilterValue + " getvocab " + sValue);
+    //  if (sFilterValue.equalsIgnoreCase(sValue))  //check it later
+      if (sFilterValue.contains(sValue))
       {
         //get its value from teh bean for the return attr
         if (retAttr == EVSSearch.VOCAB_DISPLAY)  // (sRetAttr.equalsIgnoreCase("vocabDisplay"))
@@ -841,7 +842,7 @@ public class EVS_Bean implements Serializable
     //return the first vocab if null
   //  if ((sRetValue == null || sRetValue.equals("")) && vVocabs != null)
   //    sRetValue = (String)vVocabs.elementAt(0);
-//System.out.println(sRetValue + sFilterValue + sFilterAttr + sRetAttr);
+System.out.println(sRetValue + sFilterValue + filterAttr + retAttr);
     if (sRetValue == null) sRetValue = "";
     return sRetValue;
   }
