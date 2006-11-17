@@ -152,7 +152,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
          else if (sAction.equals("changeAll"))
          {
            System.out.println("do hte block edit pv");
-           this.addPVOtherAttributes(null, "changeAll");
+           this.addPVOtherAttributes(null, "changeAll", "");
            data.getRequest().setAttribute("focusElement", "pv0View");
            return "/PermissibleValue.jsp";
          }
@@ -222,9 +222,9 @@ System.out.println(sMenuAction + " pv action " + sAction);
         String sPV = (String)data.getRequest().getParameter("pvNewValue");  //value
         if (sPV == null) sPV = "";
         pv.setPV_VALUE(sPV);
-        readValidValueData(pv);
+        readValidValueData(pv, "pvNew");
         //add pv other attribtutes 
-        addPVOtherAttributes(pv, "changeOne");
+        addPVOtherAttributes(pv, "changeOne", "pvNew");
         //if no concepts, read the user entered vm /desc
         VM_Bean vm = new VM_Bean();
         if (this.getDuplicateVMUse() != null)
@@ -271,7 +271,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
       if (pvInd > -1)
       {
         //add pv other attribtutes 
-        addPVOtherAttributes(null, "changeOne");
+        addPVOtherAttributes(null, "changeOne", "pv" + pvInd);
         PV_Bean selectPV = data.getSelectPV();
         boolean isNewPV = false;
         //get the pv name from teh page
@@ -313,23 +313,45 @@ System.out.println(sMenuAction + " pv action " + sAction);
       return "/PermissibleValue.jsp";
    }
 
-   private void readValidValueData(PV_Bean pv)
+   @SuppressWarnings("unchecked")
+  private void readValidValueData(PV_Bean pv, String pvID)
    {
      HttpSession session = data.getRequest().getSession();
-     String sVVid = (String)data.getRequest().getParameter("selValidValue");  //valid value
-     if (sVVid == null) sVVid = "";
+     String sVVid = "";
+     if (pvID.equals("pvNew"))
+       sVVid = (String)data.getRequest().getParameter("selValidValue");  //valid value
+     else
+       sVVid = (String)data.getRequest().getParameter(pvID + "selValidValue");  //valid value       
+     if (sVVid == null) //modify if only changed
+       return;
+     //get the earlier value
+     String sOldValue = pv.getQUESTION_VALUE();
+     if (sOldValue == null) sOldValue = "";
      pv.setQUESTION_VALUE_IDSEQ(sVVid); 
-     Vector vQuest = (Vector)session.getAttribute("vQuestValue");
-     if (vQuest == null) vQuest = new Vector();
+     Vector<Quest_Value_Bean> vQuest = (Vector)session.getAttribute("vQuestValue");
+     if (vQuest == null) vQuest = new Vector<Quest_Value_Bean>();
+     Vector<String> vQVList = (Vector)session.getAttribute("NonMatchVV");
+     if (vQVList == null) vQVList = new Vector<String>();
+     String sSelValue = "";
      for (int i =0; i<vQuest.size(); i++)
      {
        Quest_Value_Bean qvBean = (Quest_Value_Bean)vQuest.elementAt(i);
        String sQValue = qvBean.getQUESTION_VALUE();
        String sQVid = qvBean.getQUESTION_VALUE_IDSEQ();
        if (sQVid.equals(sVVid)) //not assigned yet
-         pv.setQUESTION_VALUE(sQValue);        
+       {
+         pv.setQUESTION_VALUE(sQValue); 
+         if (vQVList.contains(sQValue))
+           vQVList.removeElement(sQValue);
+         sSelValue = sQValue;
+         break;
+       }
      }
+     if (!sOldValue.equals( "") && !sSelValue.equals(sOldValue) && !vQVList.contains(sOldValue))
+       vQVList.addElement(sOldValue);
+     session.setAttribute("NonMatchVV", vQVList);
    }
+   
    
    private int getSelectedPV()
    {
@@ -373,6 +395,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
      return pvInd;
    }
    
+
    private int getSelectedVM()
    {
      int pvInd = -1;
@@ -419,7 +442,8 @@ System.out.println(sMenuAction + " pv action " + sAction);
      return pvInd;
    }
 
-   private void addPVOtherAttributes(PV_Bean pv, String changeType)
+
+   private void addPVOtherAttributes(PV_Bean pv, String changeType, String pvID)
    {
      if (pv == null)
        pv = data.getSelectPV();
@@ -473,9 +497,13 @@ System.out.println(sMenuAction + " pv action " + sAction);
        else
          pv.setPV_END_DATE(chgED);
      }
+     //valid values
+     if (pv != null)
+       this.readValidValueData(pv, pvID);
      
      data.setSelectPV(pv);
    }
+   
    
    public String addPVValidates(VD_Bean vd)
    {
@@ -794,7 +822,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
        if (sPV == null) sPV = "";
        pv.setPV_VALUE(sPV);
        //add pv other attribtutes 
-       addPVOtherAttributes(pv, "changeOne");
+       addPVOtherAttributes(pv, "changeOne", "pvNew");
        //get the vm bean
        VMAction vmAct = new VMAction();
        vmAct.doAppendSelectVM(selRows, vRSel, pv);
