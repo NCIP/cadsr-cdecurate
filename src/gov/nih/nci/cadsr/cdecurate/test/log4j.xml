@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 
-<!-- $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/log4j.xml,v 1.17 2006-11-17 05:35:23 hegdes Exp $
+<!-- $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/log4j.xml,v 1.18 2006-11-17 16:40:42 hegdes Exp $
        $Name: not supported by cvs2svn $
  -->
 
