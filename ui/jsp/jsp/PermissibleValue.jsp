@@ -758,6 +758,8 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 						            boolean pvChecked = pvBean.getPV_CHECKED();
 						            String sVValue = (String) pvBean.getQUESTION_VALUE();
 						            if (sVValue == null) sVValue = "";
+						            String sVVid = (String) pvBean.getQUESTION_VALUE_IDSEQ();
+						            if (sVVid == null) sVVid = "";
 						            String sPVVal = (String) pvBean.getPV_VALUE();
 						            if (sPVVal == null) sPVVal = "";
 						         //   if (sEditPV.equals(pvCount)) sPVVal = editValue;
@@ -826,8 +828,38 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 													</div>
 												</td>
                     		<%if (sMenuAction.equals("Questions")){%>
-                    		<td valign="top"><%=sVValue%>
-                    		</td><%}%>
+                    			<td valign="top">
+														<div id="<%=pvCount%>ValidView" style="display: block">
+															<%=sVValue%>
+														</div>
+														<!--  allow to change valid value only if pv is new -->
+														<%if (sPVid.contains("EVS_")){%>
+															<div id="<%=pvCount%>ValidEdit" style="display: none">
+																&nbsp;&nbsp;
+										            <select name="<%=pvCount%>selValidValue" size=1 style="width:150" onchange="javascript:getORsetEdited('<%=pvCount%>', 'pv');">
+										              <option value="" selected></option>
+										<%            for (int j = 0; vQuest.size()>j; j++)
+										              {
+										                  Quest_Value_Bean qvBean = (Quest_Value_Bean)vQuest.elementAt(j);
+										                  String sQValue = qvBean.getQUESTION_VALUE();
+										                  String sQVid = qvBean.getQUESTION_VALUE_IDSEQ();
+										                  if (vQVList.contains(sQValue)) //not assigned yet
+										                  {
+										%>
+										                  <option value="<%=sQVid%>"><%=sQValue%></option>
+										<%
+										                  }
+										                  else if (sQVid.equals(sVVid)) { 
+										 %>
+										              			<option value="<%=sVVid%>" selected><%=sVValue%></option>
+										 <%								}
+										              }
+										%>                
+										            </select>
+															</div>
+														<%}%>
+                    			</td>
+                    		<%}%>
 												<td valign="top">
 													<div id="<%=pvCount%>ValueView" style="display: block">
 														<%=sPVVal%>

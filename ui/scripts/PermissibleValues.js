@@ -443,6 +443,8 @@
 	function vvmvmdDisplay(pvNo, action)
 	{
 		//value, vm and vmd display
+		var divVVEdit = document.getElementById(pvNo + "ValidEdit");
+		var divVVView = document.getElementById(pvNo + "ValidView");
 		var divValEdit = document.getElementById(pvNo + "ValueEdit");
 		var divValView = document.getElementById(pvNo + "ValueView");
 		var divVMEdit = document.getElementById(pvNo + "VMEdit");
@@ -470,9 +472,20 @@
 				if (divVMDView != null)
 					divVMDView.style.display = "none";
 			}
+			//change valid value to edit only if exists
+			if (divVVEdit != null)
+			{
+				divVVEdit.style.display = "block";
+				if (divVVView != null)
+					divVVView.style.display = "none";
+			}			
 		}
 		else
 		{
+			if (divVVEdit != null)
+				divVVEdit.style.display = "none";
+			if (divVVView != null)
+				divVVView.style.display = "block";
 			if (divValEdit != null)
 				divValEdit.style.display = "none";
 			if (divValView != null)
