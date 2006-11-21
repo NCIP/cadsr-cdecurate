@@ -595,7 +595,7 @@ function LoadKeyHandler()
                String sCSName = (String)vCS.elementAt(i);
                String sCS_ID = (String)vCS_ID.elementAt(i);
 %>
-               <option value="<%=sCS_ID%>" <%if(sCS_ID.equals(selCS)){%>selected<%}%>><%=sCSName%></option>
+               <option title="<%=sCSName%>" value="<%=sCS_ID%>" <%if(sCS_ID.equals(selCS)){%>selected<%}%>><%=sCSName%></option>
 <%           }     %>
         </select>
      </td>
@@ -619,7 +619,7 @@ function LoadKeyHandler()
                String sCDName = (String)vCD.elementAt(i);
                String sCD_ID = (String)vCD_ID.elementAt(i);
 %>
-               <option value="<%=sCD_ID%>" <%if(sCD_ID.equals(selCD)){%>selected<%}%>><%=sCDName%></option>
+               <option title="<%=sCDName%>" value="<%=sCD_ID%>" <%if(sCD_ID.equals(selCD)){%>selected<%}%>><%=sCDName%></option>
 <%           }     %>
         </select>
      </td>

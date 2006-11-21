@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/alternates.js,v 1.15 2006-11-17 16:40:43 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/alternates.js,v 1.16 2006-11-21 05:52:44 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 // Perform a general action and remember the previous action. The previous action

@@ -192,13 +192,13 @@
       Hashtable hContacts = m_VD.getAC_CONTACTS();
       if (hContacts == null) hContacts = new Hashtable();
       session.setAttribute("AllContacts", hContacts);
-      //these are for value/meaning search.
-      session.setAttribute("MenuAction", "searchForCreate");
-      Vector vResult = new Vector();
-      session.setAttribute("results", vResult);
-      session.setAttribute("creRecsFound", "No ");
+      //these are for value/meaning search. moved to vdpvs tab
+   //   session.setAttribute("MenuAction", "searchForCreate");
+   //   Vector vResult = new Vector();
+   //   session.setAttribute("results", vResult);
+   //   session.setAttribute("creRecsFound", "No ");
       //for altnames and ref docs
-      session.setAttribute("dispACType", "ValueDomain");
+   //   session.setAttribute("dispACType", "ValueDomain");
       //get parent attributes
       String sLastAction = (String) request.getAttribute("LastAction");
       if (sLastAction == null) sLastAction = "";

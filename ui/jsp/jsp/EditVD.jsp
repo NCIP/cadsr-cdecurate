@@ -256,17 +256,9 @@
     if (hContacts == null) hContacts = new Hashtable();
     session.setAttribute("AllContacts", hContacts);
 
-    //these are for value/meaning search.
-    session.setAttribute("MenuAction", "searchForCreate");
-    Vector vResult = new Vector();
-    session.setAttribute("results", vResult);
-    session.setAttribute("creRecsFound", "No ");
-    //for altnames and ref docs
-    session.setAttribute("dispACType", "ValueDomain");
-
     //reset the pv bean
-    PV_Bean m_PV = new PV_Bean();
-    session.setAttribute("m_PV", m_PV);
+  //  PV_Bean m_PV = new PV_Bean();
+  //  session.setAttribute("m_PV", m_PV);
 
     //cs-csi data
     Vector vSelCSList = m_VD.getAC_CS_NAME();
