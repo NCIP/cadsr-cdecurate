@@ -52,6 +52,7 @@
 		var vmNewDiv = document.getElementById("divpvnew");
 		if (vmNewDiv != null)
 			vmNewDiv.style.display = "none";
+		SubmitValidate("cancelNewPV");		
     }
     
     //when Add new pv button clicked; check if mandatory values exist  
@@ -237,25 +238,55 @@
 		}
 	}
 
+	function validatePVAction(action)
+	{
+		var editedPV = getORsetEdited("none");
+		if (editedPV != null && editedPV != "")
+		{
+		  if (action == "save")
+		  {
+		  	//check current vm has the data
+		  	var curVM = document.getElementById("currentVM");
+		  	if (curVM == null || curVM.value == null || curVM.value == "")
+		  		editedPV = getORsetEdited(editedPV, "vm");
+		  	SubmitValidate("save");
+		  }
+		  else
+		  	alert("Please save or restore the edited Permissible Value");
+		  return false;
+		}
+		return true;
+	}
+	
     function view(pvdiv, imgdivhide, imgdivdisp, action, pvNo)
     {
     //	if (action == "save" || action == "edit")
 	//	{
         	//refresh teh page if value, vm or vmd changed
-        	var editedPV = getORsetEdited("none");
+        /*	var editedPV = getORsetEdited("none");
         	if (editedPV != null && editedPV != "")
         	{
         	  if (action == "save")
+        	  {
+        	  	//check current vm has the data
+        	  	var curVM = document.getElementById("currentVM");
+        	  	if (curVM == null || curVM.value == null || curVM.value == "")
+        	  		editedPV = getORsetEdited(editedPV, "vm");
         	  	SubmitValidate("save");
+        	  }
         	  else
         	  	alert("Please save or restore the edited Permissible Value");
         	  return;
         	}
+        */
 	//	} 
     	//unedit all first
     //	if (action == "edit") 
     //		viewAll("uneditAll");
   // alert(editedPV + " view " + action); 	
+  		if (validatePVAction(action) == false)
+  			return;
+  			
     	if (action == "save") action = "open";	
     	viewVM = pvdiv;
     	var currDisp = viewVM.style.display;
@@ -1046,7 +1077,7 @@
   			if (nameCell != null && nameCell.innerText != null && nameCell.innerText != "")
   				appName += nameCell.innerText;
   			var descCell = curTbl.rows(i).cells(5);
-  			if (appDesc != "") appDesc += "_ ";
+  			if (appDesc != "") appDesc += ": ";
   			if (descCell != null && descCell.innerText != null && descCell.innerText != "")
   				appDesc += descCell.innerText;
   		}

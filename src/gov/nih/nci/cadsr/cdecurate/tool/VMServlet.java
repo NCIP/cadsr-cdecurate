@@ -165,10 +165,15 @@ public class VMServlet implements Serializable
       {
         vm.setVM_SHORT_MEANING(sVM);
         vm.setVM_LONG_NAME(sVM);
+        vm.setVM_IDSEQ("");
         vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
       }
-      if (sVMD != null && !sVMD.equals(""))
+      if (sVMD != null && !sVMD.equals("") && !vm.getVM_DESCRIPTION().equals(sVMD))
+      {
         vm.setVM_DESCRIPTION(sVMD); 
+        vm.setVM_IDSEQ("");
+        vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
+      }
     }
     //call the action change VM to validate the vm
     VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");  //vm cd
@@ -273,7 +278,7 @@ public class VMServlet implements Serializable
       }
       if (!vmName.equals(""))  vmName += " ";
       vmName += con.getLONG_NAME();
-      if (!vmDef.equals("")) vmDef += "_ ";
+      if (!vmDef.equals("")) vmDef += ": ";
       vmDef += con.getPREFERRED_DEFINITION();
     System.out.println(i + " cname " + con.getLONG_NAME() + " cdef " + con.getPREFERRED_DEFINITION());
     }

@@ -356,7 +356,7 @@ public class VMForm implements Serializable
    */
   public String getSearchFilterCD()
   {
-    return searchFilterCD;
+    return (searchFilterCD == null) ? "" : searchFilterCD;
   }
 
   /**
@@ -372,7 +372,7 @@ public class VMForm implements Serializable
    */
   public String getSearchTerm()
   {
-    return searchTerm;
+    return (searchTerm == null) ? "" : searchTerm;
   }
 
   /**

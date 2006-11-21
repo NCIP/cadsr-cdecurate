@@ -33,6 +33,16 @@
       String vdNameDisplay = "";
       if (!sLongName.equals(""))
       	vdNameDisplay = sLongName + "  [" + sVDID + "v" + sVersion + "]";
+
+	    //these are for value/meaning search.
+	    session.setAttribute("MenuAction", "searchForCreate");
+	    Vector vResult = new Vector();
+	    session.setAttribute("results", vResult);
+	    session.setAttribute("creRecsFound", "No ");
+	    //for altnames and ref docs
+	    session.setAttribute("dispACType", "ValueDomain");
+
+
     System.out.println(sOriginAction + " action " + sMenuAction);
 
 		%>

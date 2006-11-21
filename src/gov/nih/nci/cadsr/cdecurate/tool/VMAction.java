@@ -910,10 +910,12 @@ public class VMAction implements Serializable
     {
       VM_Bean vmBean = data.getVMBean();
       String VMName = vmBean.getVM_SHORT_MEANING();
+      String VMDef = vmBean.getVM_DESCRIPTION();
       Vector<EVS_Bean> vCon = vmBean.getVM_CONCEPT_LIST();
       //selected vm
       VM_Bean selVM = data.getSelectVM();
       String selVMName = selVM.getVM_SHORT_MEANING();
+      String selVMDef = selVM.getVM_DESCRIPTION();
       if (selVMName == null) selVMName = "";
       StringBuffer sMsg = new StringBuffer(); 
       boolean changeVM = false;
@@ -940,7 +942,12 @@ public class VMAction implements Serializable
       //common for both scenario      
       VM_Bean conVM = this.getExistVMbyCondr(vCon, existVM, data, sMsg);
       VM_Bean defVM = existVM;  //expect it to be same;
-      dispAC = markSubmitNonConceptVM(data, vmBean, existVM, conVM, defVM, vCon, VMName, sMsg, editExisting);
+      if (editExisting && !selVMDef.equalsIgnoreCase(VMDef))
+      {
+        this.FLAG_VM_DEF_MATCH = VMAction.VM_DEF_NOT;  //make it that it does not match
+        defVM = getExistVMbyDefn(VMDef, existVM, conVM, data, sMsg);        
+      }
+      dispAC = markSubmitVM(data, vmBean, existVM, conVM, defVM, vCon, VMName, sMsg, editExisting);
       
 /*      //compare teh conditions
       if (this.FLAG_VM_NAME_MATCH == 'N')  // && this.FLAG_CON_DER_MATCH == 'N')
@@ -1061,7 +1068,7 @@ public class VMAction implements Serializable
       VM_Bean conVM = this.getExistVMbyCondr(vCon, existVM, data, sMsg);
       VM_Bean defVM = getExistVMbyDefn(vmDef, existVM, conVM, data, sMsg);
       //call method to mark the change action
-      dispAC = markSubmitNonConceptVM(data, vmBean, existVM, conVM, defVM, vCon, VMName, sMsg, editExisting);
+      dispAC = markSubmitVM(data, vmBean, existVM, conVM, defVM, vCon, VMName, sMsg, editExisting);
       
      // System.out.println("Final Message : ");
      // System.out.println(sMsg);
@@ -1074,7 +1081,7 @@ public class VMAction implements Serializable
     return dispAC;
   }
  
-  private String markSubmitNonConceptVM(VMForm data, VM_Bean vmBean, VM_Bean existVM, VM_Bean conVM, VM_Bean defVM, 
+  private String markSubmitVM(VMForm data, VM_Bean vmBean, VM_Bean existVM, VM_Bean conVM, VM_Bean defVM, 
       Vector<EVS_Bean> vCon, String VMName, StringBuffer sMsg, boolean editExisting)
   {
     String dispAC = "";
@@ -1083,6 +1090,8 @@ public class VMAction implements Serializable
     {
       switch (flgVMCases)
       {
+        case (VMAction.CON_DEF_DER_VM_NAME + VMAction.VM_DEF_NOT):  //'E' + 'N'  //con with exist but no def match
+          //follows the next case
         case (VMAction.CON_DEF_DER_NOT + VMAction.VM_DEF_NOT):  //'N' + 'N'
           if (editExisting)  //reset the description attributes and update the vm
             existVM.setVM_DESCRIPTION(vmBean.getVM_DESCRIPTION());
@@ -1090,14 +1099,12 @@ public class VMAction implements Serializable
           {
             dispAC = "Value Meaning";
             break;
-            //sMsg.append("another vm with non matching defintion found");
-            //TODO vm window message box for newly entered vm
           }
         case (VMAction.CON_DEF_NAME + VMAction.VM_DEF_NAME):   //'C' + 'E':  //con name & def match but no condr
           //no message 
           if (this.FLAG_CON_DER_MATCH == VMAction.CON_DEF_NAME)  //only this scenario to update the condr not the above case
             existVM.setVM_CONDR_IDSEQ("condr idseq");  //TODO NEED TO FIGURE OUT WHAT TO DO HERE
-          
+          //same for all three above cases
           existVM.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_UPD); 
         case (VMAction.CON_DEF_DER_VM_NAME + VMAction.VM_DEF_NAME): //'E' + 'E':
           //no message take exisitng=
@@ -1525,7 +1532,7 @@ public class VMAction implements Serializable
         data.setConceptVMList(vmList);
       else if (!sDef.equals(""))
         data.setDefnVMList(vmList);
-      int vmFound = 0;
+   //   int vmFound = 0;
       for (int i =0; i<vmList.size(); i++)
       {
         VM_Bean vm = vmList.elementAt(i);
@@ -1534,7 +1541,7 @@ public class VMAction implements Serializable
         {
           this.FLAG_VM_NAME_MATCH = 'Y';
           exVM = vmList.elementAt(i);
-          if (vmFound > 0)
+          if (i > 0)
             this.FLAG_VM_DEF_MATCH = this.VM_DEF_MULTI; // 'D';
           else
             this.FLAG_VM_DEF_MATCH = this.VM_DEF_OTHER;  // 'Y';
@@ -1543,7 +1550,7 @@ public class VMAction implements Serializable
         else if (!sCondr.equals("")) // && vm.getVM_CONDR_IDSEQ().equals(sCondr))
         {
           exVM = vmList.elementAt(i);
-          if (vmFound > 0)
+          if (i > 0)
             this.FLAG_CON_DER_MATCH = this.CON_DEF_DER_VM_MULTI;  // 'D';
           else
             this.FLAG_CON_DER_MATCH = this.CON_DEF_DER_VM; // 'Y';
@@ -1551,7 +1558,7 @@ public class VMAction implements Serializable
         else if (!sDef.equals("")) // && vm.getVM_DESCRIPTION().equals(sDef))
         {
           exVM = vmList.elementAt(i);
-          if (vmFound > 0)
+          if (i > 0)
             this.FLAG_VM_DEF_MATCH = this.VM_DEF_MULTI; // 'D';
           else
             this.FLAG_VM_DEF_MATCH = this.VM_DEF_OTHER;  // 'Y';

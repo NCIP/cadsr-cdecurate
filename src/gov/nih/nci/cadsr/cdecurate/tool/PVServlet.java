@@ -113,6 +113,11 @@ System.out.println(sMenuAction + " pv action " + sAction);
            System.out.println("mark the pv to be saved");
            retData = savePVAttributes();
          }
+         else if (sAction.equals("cancelNewPV"))
+         {
+           System.out.println("mark the pv cancelled");
+           return this.cancelNewPVEdits();
+         }
          else if (sAction.equals("openCreateNew") || sAction.equals("addNewPV"))
          {
            System.out.println("refresh the page");
@@ -199,6 +204,24 @@ System.out.println(sMenuAction + " pv action " + sAction);
    }
    
    @SuppressWarnings("unchecked")
+   private String cancelNewPVEdits()
+   {
+     HttpSession session = (HttpSession)data.getRequest().getSession(); 
+     //put back the selected valid value if there was one
+     PV_Bean pv = (PV_Bean)session.getAttribute("NewPV");
+     if (pv != null && pv.getQUESTION_VALUE() != null && !pv.getQUESTION_VALUE().equals(""))
+     {
+       Vector<String> vQVList = (Vector)session.getAttribute("NonMatchVV");
+       if (vQVList == null) vQVList = new Vector<String>();
+       if (!vQVList.contains(pv.getQUESTION_VALUE()))
+         vQVList.addElement(pv.getQUESTION_VALUE());
+       session.setAttribute("NonMatchVV", vQVList);
+       session.removeAttribute("NewPV");
+     }
+     return "/PermissibleValue.jsp";
+   }
+
+   @SuppressWarnings("unchecked")
    private String readNewPVAttributes(String sAct)
    {
       HttpSession session = (HttpSession)data.getRequest().getSession(); 
@@ -258,7 +281,6 @@ System.out.println(sMenuAction + " pv action " + sAction);
           session.setAttribute("NewPV", pv);        
           data.getRequest().setAttribute("focusElement", "divpvnew");          
         }
-        //TODO - handle the error message
       }
       return "/PermissibleValue.jsp";
    }
@@ -300,7 +322,11 @@ System.out.println(sMenuAction + " pv action " + sAction);
           }
           if (selectPV.getVP_SUBMIT_ACTION().equals(PVForm.CADSR_ACTION_INS))
             isNewPV = true;
-          data.setNewVM(newVM);
+          
+          //update it only if there was no duplicates exisitng
+          String erVM = (String)data.getRequest().getAttribute("ErrMsgAC");
+          if (erVM == null || erVM.equals(""))
+            data.setNewVM(newVM);
         }
         PVAct.doChangePVAttributes(chgName, pvInd, isNewPV, data);
 
@@ -327,7 +353,9 @@ System.out.println(sMenuAction + " pv action " + sAction);
      //get the earlier value
      String sOldValue = pv.getQUESTION_VALUE();
      if (sOldValue == null) sOldValue = "";
-     pv.setQUESTION_VALUE_IDSEQ(sVVid); 
+     pv.setQUESTION_VALUE_IDSEQ(sVVid);
+     //set name to empty reset it once found the right one
+     pv.setQUESTION_VALUE("");
      Vector<Quest_Value_Bean> vQuest = (Vector)session.getAttribute("vQuestValue");
      if (vQuest == null) vQuest = new Vector<Quest_Value_Bean>();
      Vector<String> vQVList = (Vector)session.getAttribute("NonMatchVV");
@@ -620,10 +648,12 @@ System.out.println(sMenuAction + " pv action " + sAction);
    public String submitPV(VD_Bean vd)
    {
      
-     Vector<PV_Bean> vVDPVS = vd.getVD_PV_List();
-     if (vVDPVS == null) vVDPVS = new Vector<PV_Bean>();
+     //delete teh vdpv relationship if it was deleted from teh page
+     doRemoveVDPV(vd);
      
      //insert or update vdpvs relationship
+     Vector<PV_Bean> vVDPVS = vd.getVD_PV_List();
+     if (vVDPVS == null) vVDPVS = new Vector<PV_Bean>();
      String ret = "";
      for (int j=0; j<vVDPVS.size(); j++)
      {
@@ -683,8 +713,6 @@ System.out.println(sMenuAction + " pv action " + sAction);
        }  //end loop
        vd.setVD_PV_List(vVDPVS);
        data.getRequest().setAttribute("retcode", data.getRetErrorCode()); 
-       //delete teh vdpv relationship if it was deleted from teh page
-       doRemoveVDPV(vd);
        return data.getStatusMsg();
    }
    //remove the deleted VDs

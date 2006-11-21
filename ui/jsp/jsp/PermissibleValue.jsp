@@ -96,12 +96,13 @@
       String elmFocus = (String)request.getAttribute("focusElement");
       if (elmFocus == null) elmFocus = "";
       session.setAttribute("PVAction", "");
-      session.setAttribute("MenuAction", "searchForCreate");
-      Vector vResult = new Vector();
-      session.setAttribute("results", vResult);
-      session.setAttribute("creRecsFound", "No ");
+      //moved to vdpvs tab
+   //   session.setAttribute("MenuAction", "searchForCreate");
+   //   Vector vResult = new Vector();
+   //   session.setAttribute("results", vResult);
+  //    session.setAttribute("creRecsFound", "No ");
       //for altnames and ref docs
-      session.setAttribute("dispACType", "ValueDomain");
+   //   session.setAttribute("dispACType", "ValueDomain");
       session.setAttribute("selectVM", new VM_Bean());  //should clear when refreshed
       Vector vEMsg = (Vector)session.getAttribute("VMEditMsg");
       if (vEMsg == null) vEMsg = new Vector();
@@ -337,22 +338,26 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 									</th>
 								</tr>
 								<tr>
-									<%if (sMenuAction.equals("Questions") && vQVList.size() > 0){%>
+									<%if (sMenuAction.equals("Questions")){%>
 									<td valign="top">
 										&nbsp;&nbsp;
 				            <select name="selValidValue" size=1 style="width:150">
 				              <option value="" selected></option>
-				<%            for (int i = 0; vQuest.size()>i; i++)
+				<%            for (int j = 0; vQuest.size()>j; j++)
 				              {
-				                  Quest_Value_Bean qvBean = (Quest_Value_Bean)vQuest.elementAt(i);
+				                  Quest_Value_Bean qvBean = (Quest_Value_Bean)vQuest.elementAt(j);
 				                  String sQValue = qvBean.getQUESTION_VALUE();
 				                  String sQVid = qvBean.getQUESTION_VALUE_IDSEQ();
 				                  if (vQVList.contains(sQValue)) //not assigned yet
 				                  {
 				%>
-				                  <option value="<%=sQVid%>" <%if(sQVid.equals(newVVid)){%>selected <%}%>><%=sQValue%></option>
+				                  <option value="<%=sQVid%>"><%=sQValue%></option>
 				<%
 				                  }
+				                  else if (sQVid.equals(newVVid)) { 
+				 %>
+				              			<option value="<%=newVVid%>" selected><%=newVV%></option>
+				 <%								}
 				              }
 				%>                
 				            </select>
@@ -873,16 +878,15 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 													<div id="<%=pvCount%>VMView" style="display: inline">
 														<%=sPVMean%>
 													</div>
-													<div id="<%=pvCount%>VMAltView" style="display: inline; text-align:right">
-															&nbsp;&nbsp;
-															<span style="padding-right:0.3in"><a href="javascript:openDesignateWindowVM('Alternate Names', <%=i%>);">Alternate Names</a></span>
-													</div>
 													<% if (vmCon.size() < 1) { %>
 														<div id="<%=pvCount%>VMEdit" style="display: none; width:90%">
 															&nbsp;&nbsp;
 															<input type="text" name="txt<%=pvCount%>Mean" maxlength="255" style="width: 100%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vm');" value="<%=sPVMean%>">
 														</div>
 													<% } %>
+													<div id="<%=pvCount%>VMAltView" style="display: inline; text-align:right">															
+															<span style="padding-left:0.3in; padding-right:0.1in; text-align:right"><a href="javascript:openDesignateWindowVM('Alternate Names', <%=i%>);">Alternate Names</a></span>
+													</div>
 													<br>
 													<div id="<%=pvCount%>View" style="display: <%if (viewType.equals("expand")) {%>block <% } else { %> none <% } %>">
 														<table width="100%">

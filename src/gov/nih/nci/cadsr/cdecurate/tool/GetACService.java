@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.28 2006-11-17 16:40:42 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.29 2006-11-21 05:52:37 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -730,6 +730,8 @@ public class GetACService implements Serializable
            for (int i=0; i<vList.size(); i++)
            {
                String cdName = (String)vList.elementAt(i);
+               cdName = m_util.removeNewLineChar(cdName);
+               cdName = m_util.parsedStringDoubleQuoteJSP(cdName);
                String cdContext = (String)vContextList.elementAt(i);
                vList.setElementAt(cdName + " - " + cdContext, i);
            }
@@ -791,6 +793,7 @@ public class GetACService implements Serializable
             String csVer = rs.getString("version");
             if (csVer == null) csVer = "";
             csName = m_util.removeNewLineChar(csName);   //remove the new line char here itself
+            csName = m_util.parsedStringDoubleQuoteJSP(csName);  //make sure double quotes do not harm cs names
             vList.addElement(csName + " - " + csContext + " - v" + csVer);
             vIDList.addElement(csID);
           }  //END WHILE
@@ -863,6 +866,7 @@ public class GetACService implements Serializable
             if (csiName != null && !csiName.equals(""))
             {
               csiName = m_util.removeNewLineChar(csiName);
+              csiName = m_util.parsedStringDoubleQuoteJSP(csiName);
               vList.setElementAt(csiName, i);
             }
           }
@@ -951,10 +955,12 @@ public class GetACService implements Serializable
             CSIBean.setCSI_LABEL(rs.getString("label"));
             String csName = rs.getString("cs_name");
             csName = m_util.removeNewLineChar(csName);
+            csName = m_util.parsedStringDoubleQuote(csName);
             CSIBean.setCSI_CS_NAME(csName);
             CSIBean.setCSI_CS_LONG_NAME(csName);
             String csiName = rs.getString("csi_name");
             csiName = m_util.removeNewLineChar(csiName);
+            csiName = m_util.parsedStringDoubleQuote(csiName);
             CSIBean.setCSI_NAME(csiName);
             CSIBean.setCSI_LEVEL(rs.getString("lvl"));
 
@@ -1178,6 +1184,7 @@ public class GetACService implements Serializable
         {
           String src = (String)vList.elementAt(i);
           src = m_util.removeNewLineChar(src);
+          src = m_util.parsedStringDoubleQuote(src);
           vList.setElementAt(src, i);
         }
     }
