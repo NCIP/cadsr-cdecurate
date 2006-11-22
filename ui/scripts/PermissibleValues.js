@@ -795,7 +795,13 @@
 	  document.SearchActionForm.isValidSearch.value = "false";
 	  if (secondWindow && !secondWindow.closed)
 	    secondWindow.close()
-	  secondWindow = window.open("jsp/OpenSearchWindowBlocks.jsp", "BlockSearch", "width=950,height=700,top=0,left=0,resizable=yes,scrollbars=yes")
+      if(treeOpen == "true")
+    	  searchWindow = window.open("jsp/OpenSearchWindowBlocks.jsp", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes")
+      else
+      {
+    	  document.SearchActionForm.isValidSearch.value = "true";
+    	  searchWindow = window.open("NCICurationServlet?reqType=searchBlocks&actSelect=FirstSearch" + "&listSearchFor=" + serComp + "&listContextFilterVocab=NCI_Thesaurus", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
+      }	
   }
   
     //sort the pv attributes
@@ -961,6 +967,7 @@
   		//create new row; add id; add tds and its contents
    		var trCur;
    		var curTrCount = totalCon;
+  		var txType = "Qualifier";
   		if (totalCon < 1) 			//(isNewP)
   			trCur = curTbl.insertRow();
   		else
@@ -970,6 +977,7 @@
   			var trP = curTbl.rows(curTrCount);
   			if (trP != null && (trP.getAttribute("id") == null || trP.getAttribute("id") == ""))
   			{
+  				txType = "Primary";
   			 	trCur = curTbl.rows(curTrCount);
   			 	trCur.deleteCell(); 
   			}
@@ -984,9 +992,6 @@
   		}
   		//add id to the row	
   		var trID = pvInd + "tr" + curTrCount;
-  		var txType = "Qualifier";
-  		if (curTrCount == 0)  //first one
-  			txType = "Primary";
   		trCur.setAttribute("id", trID);
   		//create first column
   		var delDivID = pvInd + "Con" + curTrCount;
