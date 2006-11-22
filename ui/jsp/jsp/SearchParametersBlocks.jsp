@@ -15,6 +15,7 @@
    String ac = (String)session.getAttribute("parentAC");
    String sMetaCode = "No";
    Vector vStatus = new Vector();
+ // System.out.println(" variable " + (String)request.getParameter("listSearchFor"));
    String strHTML = (String)session.getAttribute("strHTML");
   if (strHTML == null) strHTML = "";
    //session attributes of the dropdown lists and filter defaults
@@ -199,6 +200,7 @@
       window.status = "Submitting the page, please wait.....";
       if (document.searchResultsForm != null)
         document.searchResultsForm.Message.style.visibility="visible";
+// alert("here before submit");
       document.searchParmsForm.submit();
     }
     //focus to the keyword if not null
@@ -247,7 +249,8 @@
       if (document.searchResultsForm != null)
         document.searchResultsForm.Message.style.visibility="visible";
       document.searchParmsForm.actSelect.value = "OpenTreeToConcept";
-    //  alert("open tree");
+      var idx = document.searchParmsForm.listContextFilterVocab.selectedIndex;
+      document.searchParmsForm.listContextFilterVocab[idx].text = document.searchParmsForm.sCCodeDB.value;
      // document.searchParmsForm.submit();
       return true;
     }    

@@ -124,11 +124,12 @@ function openDesignateWindow(sType)
  //alert("thisBlock: " + thisBlock);
     var vAction = document.newDECForm.DECAction.value;
     var selIdx = document.newDECForm.selContext.selectedIndex;
+    var vocab = "NCI_Thesaurus";  //default vocab
     if(openToTree == "true")
     { //remove this and add meta search display
       if(thisBlock == "ObjectClass" && (ObjClass.innerText == null || ObjClass.innerText == ""
         || ObjClass.innerText == "caDSR"))   //|| ObjClass.innerText == "NCI Metathesaurus" 
-      {
+      {      
         alert("Cannot open to tree for this database.");
         return;
       }
@@ -151,31 +152,33 @@ function openDesignateWindow(sType)
         return;
       }
     }
-  //  if (document.newDECForm.selContext[selIdx].text == "" && vAction != "BlockEdit")
-//	    alert("Please select a context first");
- //   else
- //   {
-      if (isNameChangeOK(vAction, thisBlock) == true)
-      {
-        document.SearchActionForm.searchComp.value = thisBlock;
-        document.newDECForm.openToTree.value = openToTree;
-        document.SearchActionForm.isValidSearch.value = "false";
-        if (searchWindow && !searchWindow.closed)
-           searchWindow.close();
-        searchWindow = window.open("jsp/OpenSearchWindowBlocks.jsp", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes")
-      }
-   // }
+    //open the window
+	if (isNameChangeOK(vAction, thisBlock) == true)
+	{
+	    document.SearchActionForm.searchComp.value = thisBlock;
+	    document.newDECForm.openToTree.value = openToTree;
+	    document.SearchActionForm.isValidSearch.value = "false";
+	    if (searchWindow && !searchWindow.closed)
+	       searchWindow.close();
+	    if(openToTree == "true")
+        	searchWindow = window.open("jsp/OpenSearchWindowBlocks.jsp", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes")
+	    else
+	    {
+	    	document.SearchActionForm.isValidSearch.value = "true";
+	    	searchWindow = window.open("NCICurationServlet?reqType=searchBlocks&actSelect=FirstSearch" + "&listSearchFor=" + thisBlock + "&listContextFilterVocab=NCI_Thesaurus", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
+	    }	
+	}
  }
  
  function closeDep() 
-  {
+ {
     if (searchWindow && !searchWindow.closed) // && searchWindow.open
       searchWindow.close();
     if(altWindow && !altWindow.closed)  // && altWindow.open
       altWindow.close();
     if(statusWindow && !statusWindow.closed)  // && statusWindow.open
       statusWindow.close();
-  }
+ }
 
  //allow only one of the comp to change for block edit
  function isNameChangeOK(vAction, thisBlock)
@@ -248,7 +251,7 @@ function openDesignateWindow(sType)
           SubmitValidate("RemoveSelection");
         }
       }     
-} 
+  } 
 
 function TrimDefinition(type)
 {
@@ -279,8 +282,8 @@ function TrimDefinition(type)
   }
 }
 
-function ShowEVSInfo(thisBlock)
-{
+	function ShowEVSInfo(thisBlock)
+	{
       var selIdx = 0;
       document.newDECForm.sCompBlocks.value = thisBlock;
       if (thisBlock == "ObjectQualifier")
@@ -313,11 +316,11 @@ function ShowEVSInfo(thisBlock)
           document.newDECForm.PCQualCCode.value = PQCode;
         }
       }  
-} 
+	} 
 
 
-function SearchCDValue()
- {
+	function SearchCDValue()
+ 	{
 		document.SearchActionForm.searchComp.value = "ConceptualDomain";
 		document.SearchActionForm.SelContext.value = document.newDECForm.selContext.options[document.newDECForm.selContext.selectedIndex].text;   //get the context 
 		document.SearchActionForm.isValidSearch.value = "false";
@@ -325,8 +328,7 @@ function SearchCDValue()
 		if (searchWindow && !searchWindow.closed)
 			searchWindow.close()
 		searchWindow = window.open("jsp/OpenSearchWindow.jsp", "searchWindow", "width=775,height=700,top=0,left=0,resizable=yes,scrollbars=yes")
-	//}
- }
+ 	}
 
   function SubmitDEC()
   {
