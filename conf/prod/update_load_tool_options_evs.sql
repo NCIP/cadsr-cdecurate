@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/prod/update_load_tool_options_evs.sql,v 1.22 2006-11-22 21:12:40 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/prod/update_load_tool_options_evs.sql,v 1.23 2006-11-27 19:01:09 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -17,7 +17,7 @@
 
 --Update vocab meta source for the NCI Thesaurus vocabulary
 UPDATE sbrext.tool_options_view_ext
-SET value = 'NCI2006_05D'
+SET value = 'NCI2006_06E'
 WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.1.METASOURCE';
 
 --Update vocab meta source for the GO vocabulary
@@ -42,7 +42,7 @@ WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.5.METASOURCE';
 	   
 --Update vocab meta source for the MedDRA vocabulary
 UPDATE sbrext.tool_options_view_ext
-SET value = 'MDR-60'
+SET value = 'MDR90'
 WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.6.METASOURCE';
 	   
 --Update vocab meta source for the SNOMED vocabulary
@@ -54,28 +54,18 @@ WHERE tool_name = 'CURATION' AND property = 'EVS.VOCAB.7.METASOURCE';
 --DEF SOURCE ATTRIBUTES
 --Update NCI def source to filter out the multiple definition used
 UPDATE sbrext.tool_options_view_ext
-SET value = 'NCI'
-WHERE tool_name = 'CURATION' AND property = 'EVS.DEFSOURCE.1';
-
---Update NCI def source to filter out the multiple definition used
-UPDATE sbrext.tool_options_view_ext
-SET value = 'NCI-GLOSS_0605D'
+SET value = 'NCI-GLOSS_0606E'
 WHERE tool_name = 'CURATION' AND property = 'EVS.DEFSOURCE.2';
  
  --Update NCI def source to filter out the multiple definition used
 UPDATE sbrext.tool_options_view_ext
-SET value = 'NCI2006_05D'
+SET value = 'NCI2006_06E'
 WHERE tool_name = 'CURATION' AND property = 'EVS.DEFSOURCE.3';
-
---Update NCI def source to filter out the multiple definition used
-UPDATE sbrext.tool_options_view_ext
-SET value = 'NCICB'
-WHERE tool_name = 'CURATION' AND property = 'EVS.DEFSOURCE.4';
 
 
 --Update NCI Thesaurus source to get its source code used in replacing concept with preferred vocab (Thesaurus)
 UPDATE sbrext.tool_options_view_ext
-SET value = 'NCI2006_05D'
+SET value = 'NCI2006_06E'
 WHERE tool_name = 'CURATION' AND property = 'EVS.PREFERREDVOCAB.SOURCE';
 
 --commit the settings
