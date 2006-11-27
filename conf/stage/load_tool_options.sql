@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/stage/load_tool_options.sql,v 1.30 2006-11-22 21:12:41 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/stage/load_tool_options.sql,v 1.31 2006-11-27 18:49:43 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -127,7 +127,7 @@ VALUES ('CURATION', 'EVS.VOCAB.1.VOCABCODETYPE', 'NCI_CONCEPT_CODE',
 
 --Store vocab meta source for the first vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.1.METASOURCE', 'NCI2005_10F', 
+VALUES ('CURATION', 'EVS.VOCAB.1.METASOURCE', 'NCI2006_06E', 
 	   'Store vocab meta source for the first vocabulary');
 
 --Store vocab to mark if used for parent search for the first vocabulary
@@ -199,7 +199,7 @@ VALUES ('CURATION', 'EVS.VOCAB.2.VOCABCODETYPE', 'GO_CODE',
 
 --Store vocab meta source for the GO vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.2.METASOURCE', 'GO2004_03_02',
+VALUES ('CURATION', 'EVS.VOCAB.2.METASOURCE', 'GO2004_12_20',
 	   'Store vocab meta source for the GO vocabulary');
 
 --Store vocab to mark if used for parent search for the GO vocabulary
@@ -269,7 +269,7 @@ VALUES ('CURATION', 'EVS.VOCAB.4.VOCABCODETYPE', 'LOINC_CODE',
 
 --Store vocab meta source for the LOINC vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.4.METASOURCE', 'LNC213',
+VALUES ('CURATION', 'EVS.VOCAB.4.METASOURCE', 'LNC215',
 	   'Store vocab meta source for the LOINC vocabulary');
 
 --Store vocab to mark if used for parent search for the LOINC vocabulary
@@ -339,7 +339,7 @@ VALUES ('CURATION', 'EVS.VOCAB.6.VOCABCODETYPE', 'MEDDRA_CODE',
 
 --Store vocab meta source for the MedDRA vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.6.METASOURCE', 'MDR-60',
+VALUES ('CURATION', 'EVS.VOCAB.6.METASOURCE', 'MDR90',
 	   'Store vocab meta source for the MedDRA vocabulary');
 
 --Store vocab to mark if used for parent search for the MedDRA vocabulary
@@ -386,7 +386,7 @@ VALUES ('CURATION', 'EVS.VOCAB.7.VOCABCODETYPE', 'SNOMED_CODE',
 
 --Store vocab meta source for the SNOMED vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.7.METASOURCE', 'SNOMEDCT_2004_01_31',
+VALUES ('CURATION', 'EVS.VOCAB.7.METASOURCE', 'SNOMEDCT_2005_07_31',
 	   'Store vocab meta source for the SNOMED vocabulary');
 
 --Store vocab to mark if used for parent search for the SNOMED vocabulary
@@ -478,12 +478,12 @@ VALUES ('CURATION', 'EVS.DEFSOURCE.1', 'NCI',
 
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.DEFSOURCE.2', 'NCI-GLOSS_0510F',
+VALUES ('CURATION', 'EVS.DEFSOURCE.2', 'NCI-GLOSS_0606E',
 	   'Store NCI def source to filter out the multiple definition used');
 
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.DEFSOURCE.3', 'NCI2005_10F',
+VALUES ('CURATION', 'EVS.DEFSOURCE.3', 'NCI2006_06E',
 	   'Store NCI def source to filter out the multiple definition used');
 
 --Store NCI def source to filter out the multiple definition used
@@ -504,7 +504,7 @@ VALUES ('CURATION', 'EVS.PREFERREDVOCAB', 'NCI_Thesaurus',
 	   
 --Store NCI Thesaurus source to get its source code used in replacing concept with preferred vocab (Thesaurus)
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.PREFERREDVOCAB.SOURCE', 'NCI2005_10F',
+VALUES ('CURATION', 'EVS.PREFERREDVOCAB.SOURCE', 'NCI2006_06E',
 	   'Store NCI Thesaurus source to get its source code used in replacing concept with preferred vocab (Thesaurus)');
 
 	   
