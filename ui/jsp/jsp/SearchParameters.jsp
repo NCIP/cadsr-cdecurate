@@ -237,6 +237,7 @@ function keypress_handler()
         return true;  // only interest on return kay
     }
 
+    //check if it is valid for search
     if(bUnAppendWarning)
     {
       var conf = confirm("You did not press the Append button so these results will not be appended.");

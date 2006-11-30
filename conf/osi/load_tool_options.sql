@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/osi/load_tool_options.sql,v 1.31 2006-11-22 21:12:40 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/osi/load_tool_options.sql,v 1.32 2006-11-30 04:05:17 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -704,6 +704,11 @@ INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, descriptio
 VALUES ('CURATION', 'NVPCONCEPT.6', 'C61585',
 	   'Store the less than concept id for name value pair');
 
+
+--Store the Ordinal Position concepts id for name value pair  
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'NVPCONCEPT.7', 'C46126',
+	   'Store the Ordinal Position concept id for name value pair');
 
 
 --commit changes

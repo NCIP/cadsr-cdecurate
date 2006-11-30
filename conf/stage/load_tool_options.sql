@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/stage/load_tool_options.sql,v 1.31 2006-11-27 18:49:43 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/stage/load_tool_options.sql,v 1.32 2006-11-30 04:05:17 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -677,29 +677,34 @@ VALUES ('CURATION', 'NVPCONCEPT.1', 'C45255',
 	   'Store the integer concept id for name value pair');
 	   
 --Store the range concepts id for name value pair  
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'NVPCONCEPT.2', 'C38013',
-	   'Store the range concept id for name value pair');
+--INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+--VALUES ('CURATION', 'NVPCONCEPT.2', 'C38013',
+--	   'Store the range concept id for name value pair');
 
 --Store the greater than concepts id for name value pair  
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'NVPCONCEPT.3', 'C61584',
-	   'Store the greater than concept id for name value pair');
+--INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+--VALUES ('CURATION', 'NVPCONCEPT.3', 'C61584',
+--	   'Store the greater than concept id for name value pair');
 
 --Store the greater than or equal concepts id for name value pair  
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'NVPCONCEPT.4', 'C61583',
-	   'Store the greater than or equal concept id for name value pair');
+--INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+--VALUES ('CURATION', 'NVPCONCEPT.4', 'C61583',
+--	   'Store the greater than or equal concept id for name value pair');
 
 --Store the less than or equal concepts id for name value pair  
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'NVPCONCEPT.5', 'C61586',
-	   'Store the less than or equal concept id for name value pair');
+--INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+--VALUES ('CURATION', 'NVPCONCEPT.5', 'C61586',
+--	   'Store the less than or equal concept id for name value pair');
 
 --Store the less than concepts id for name value pair  
+--INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+--VALUES ('CURATION', 'NVPCONCEPT.6', 'C61585',
+--	   'Store the less than concept id for name value pair');
+
+--Store the Ordinal Position concepts id for name value pair  
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'NVPCONCEPT.6', 'C61585',
-	   'Store the less than concept id for name value pair');
+VALUES ('CURATION', 'NVPCONCEPT.7', 'C46126',
+	   'Store the Ordinal Position concept id for name value pair');
 
 
 

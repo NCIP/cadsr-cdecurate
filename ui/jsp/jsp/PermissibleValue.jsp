@@ -21,7 +21,7 @@
       VD_Bean m_VD = new VD_Bean();
       m_VD = (VD_Bean) session.getAttribute("m_VD");
       if (m_VD == null) m_VD = new VD_Bean();
-      UtilService serUtil = new UtilService();
+      UtilService util = new UtilService();
       String sVDIDSEQ = m_VD.getVD_VD_IDSEQ();
       if (sVDIDSEQ == null) sVDIDSEQ = "";
       String sConDomID = m_VD.getVD_CD_IDSEQ();
@@ -256,8 +256,9 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 			        for (int i = 0; vQVList.size()>i; i++)
 			        {
 			          String sVV = (String)vQVList.elementAt(i);
+			          String sVVjsp = util.parsedStringDoubleQuoteJSP(sVV);
 			%>
-			            <option value="<%=sVV%>"><%=sVV%></option>
+			            <option value="<%=sVVjsp%>"><%=sVV%></option>
 			<%
 			        }
 			%>
@@ -279,16 +280,14 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 					&nbsp;&nbsp;&nbsp;
 					<!-- enable the create link if parents don't exist or non evs parents selected -->					          
           <div id="divpvcreate_disable" style="display:<% if (vdCONs > 0){%> block <%} else {%> none <%} %>">				
-                  Create multiple Value Meanings from EVS Concepts <b>[unavailable]</b><br/>
+                  Create list of Permissible Values from EVS Concepts <b>[unavailable]</b><br/>
                   <hr/>
-                  Create a Value Meaning <b>[unavailable]</b><br/>
-                  Create a Value Meaning from EVS Concepts <b>[unavailable]</b><br>
+                  Create a Permissible Value <b>[unavailable]</b><br/>
           </div>
           <div id="divpvcreate_enable" style="display:<% if (vdCONs > 0){%> none <%} else {%> block <%} %>">				
-                  Create multiple Value Meanings from EVS Concepts <a href="javascript:createMultipleValues();"><b>[click here]</b></a><br/>
+                  Create list of Permissible Values from EVS Concepts <a href="javascript:createMultipleValues();"><b>[click here]</b></a><br/>
                   <hr/>
-                  Create a Value Meaning <a href="javascript:SubmitValidate('openCreateNew');"><b>[click here]</b></a><br/>
-                  Create a Value Meaning from EVS Concepts <a href="javascript:SubmitValidate('openCreateNew');"><b>[click here]</b></a><br/>
+                  Create a Permissible Value <a href="javascript:SubmitValidate('openCreateNew');"><b>[click here]</b></a><br/>
           </div>
 					<br> 
 					
@@ -323,7 +322,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 										&nbsp;&nbsp;&nbsp;Permissible Value
 									</th>
 									<th align="left">Value Meaning <div id="pvNewVMLblEdit" 
-											style="display: <%if (newVMCon.size() > 0 || vEMsg.size() > 0) { %>none<%} else {%>block<% } %>">
+											style="display: <%if (newVMCon.size() > 0 || vEMsg.size() > 0) { %>none<%} else {%>inline<% } %>">
 												<span style="padding-left: 0.3in"><a href="javascript:searchVM();">Search</a></span>
 											</div>
 									</th>
@@ -363,9 +362,13 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 				            </select>
 									</td>
 									<% } %>
+									<%  
+											String newPVjsp = util.parsedStringDoubleQuoteJSP(newPV.getPV_VALUE());
+											String newVMjsp = util.parsedStringDoubleQuoteJSP(newVM.getVM_SHORT_MEANING());
+									%>
 									<td valign="top">
 										&nbsp;&nbsp;
-										<input type="text" name="pvNewValue" style="width:90%" size="20" maxlength="255" value="<%=newPV.getPV_VALUE()%>">
+										<input type="text" name="pvNewValue" style="width:90%" size="20" maxlength="255" value="<%=newPVjsp%>">
 									</td>
 									<td valign="top">
 										<table width="98%" border="0">
@@ -381,16 +384,10 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 													</div>
 													<div id="pvNewVMEdit" style="display: <%if (newVMCon.size() > 0) { %>none<%} else {%>block<% } %>">
 														<input type="text" name="pvNewVM" style="width:90%" size="20" maxlength="255" 
-															value="<%=newVM.getVM_SHORT_MEANING()%>" onkeyup="javascript:disableSearch('pvNew');">
+															value="<%=newVMjsp%>" onkeyup="javascript:disableSearch('pvNew');">
 													</div>
 												</td>
-												<td>
-													<b>
-                                                    &nbsp;
-<!--                            <span style="padding-left: 0.3in"><a href="javascript:openDesignateWindowVM('Alternate Names', -1);">Alternate Names</a></span>
--->
-													</b>
-												</td>
+												<td>&nbsp;</td>
 											</tr>
 											<tr>
 												<td colspan="3">
@@ -767,6 +764,8 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 						            if (sVVid == null) sVVid = "";
 						            String sPVVal = (String) pvBean.getPV_VALUE();
 						            if (sPVVal == null) sPVVal = "";
+						            String sPVValJsp = util.parsedStringDoubleQuoteJSP(sPVVal);
+						            String sPVValJ = util.parsedStringSingleQuote(sPVValJsp);
 						         //   if (sEditPV.equals(pvCount)) sPVVal = editValue;
 						            String sPVid = (String) pvBean.getPV_PV_IDSEQ();
 						            if (sPVid == null || sPVid.equals("")) sPVid = "EVS_" + sPVVal;
@@ -774,6 +773,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 						            VM_Bean vm = pvBean.getPV_VM();
 						            String sPVMean = (String)vm.getVM_SHORT_MEANING();  // pvBean.getPV_SHORT_MEANING();
 						            if (sPVMean == null) sPVMean = "";
+						            String sPVMeanJsp = util.parsedStringDoubleQuoteJSP(sPVMean);
 						            String sPVDesc = (String)vm.getVM_DESCRIPTION();  // pvBean.getPV_MEANING_DESCRIPTION();
 						            if (sPVDesc == null) sPVDesc = "";
 						            Vector vmCon = vm.getVM_CONCEPT_LIST();
@@ -793,13 +793,13 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 						            String viewType = (String)pvBean.getPV_VIEW_TYPE();
 						            if (viewType.equals("")) viewType = "expand";
 						            //get the pvvm combination to use it later
-						            String sPVVM = sPVVal.toLowerCase() + sPVMean.toLowerCase();
-						            sPVVM = sPVVM.replace(" ", "");  //remove spaces
+						        //    String sPVVM = sPVVal.toLowerCase() + sPVMean.toLowerCase();
+						        //    sPVVM = sPVVM.replace(" ", "");  //remove spaces
 						      //   System.out.println(pvCount + " jsp " + vmCon.size() + " value " + sPVVal + " viewType " + viewType);
 						            //TODO - figure out this later; cannot use the type cast for vectors in jsp
 						           // Vector<EVS_Bean> vmCon = vm.getVM_CONCEPT_LIST();
 						            %>
-											<tr id="<%=pvCount%>" pvvm="<%=sPVVM%>">
+											<tr id="<%=pvCount%>">
 												<td align="center" valign="top">
 													<div id="<%=pvCount%>ImgClose" style="display: <%if (viewType.equals("collapse")) {%>inline <% } else { %> none <% } %>">
 														<a href="javascript:view(<%=pvCount%>View, <%=pvCount%>ImgClose, <%=pvCount%>ImgOpen, 'view', '<%=pvCount%>');">
@@ -822,7 +822,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 														</a>
 													</div>
 													<div id="<%=pvCount%>ImgDelete" style="display: inline">
-														<a href="javascript:confirmRM('<%=pvCount%>', 'remove', 'Permissible Value Attributes of <%=sPVVal%>');">
+														<a href="javascript:confirmRM('<%=pvCount%>', 'remove', 'Permissible Value Attributes of <%=sPVValJ%>');">
 															<img src="Assets/delete.gif" border="0" alt="Remove">
 														</a>
 													</div>
@@ -871,7 +871,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 													</div>
 													<div id="<%=pvCount%>ValueEdit" style="display: none">
 														&nbsp;&nbsp;
-														<input type="text" name="txt<%=pvCount%>Value" maxlength="255" width="98%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'pv');" value="<%=sPVVal%>">
+														<input type="text" name="txt<%=pvCount%>Value" maxlength="255" width="98%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'pv');" value="<%=sPVValJsp%>">
 													</div>
 												</td>
 												<td valign="top">
@@ -881,7 +881,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 													<% if (vmCon.size() < 1) { %>
 														<div id="<%=pvCount%>VMEdit" style="display: none; width:90%">
 															&nbsp;&nbsp;
-															<input type="text" name="txt<%=pvCount%>Mean" maxlength="255" style="width: 100%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vm');" value="<%=sPVMean%>">
+															<input type="text" name="txt<%=pvCount%>Mean" maxlength="255" style="width: 100%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vm');" value="<%=sPVMeanJsp%>">
 														</div>
 													<% } %>
 													<div id="<%=pvCount%>VMAltView" style="display: inline; text-align:right">															
@@ -1118,8 +1118,9 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 		        for (int i = 0; vParentNames.size() > i; i++)
 		        {
 		          String sParentName = (String) vParentNames.elementAt(i);
+		          String sParNameJsp = util.parsedStringDoubleQuoteJSP(sParentName);
 		%>
-		      <option value="<%=sParentName%>"><%=sParentName%></option>
+		      <option value="<%=sParNameJsp%>"><%=sParentName%></option>
 		<%}
 		      }
 		      %>
