@@ -265,6 +265,15 @@ function keypress_handler()
     {
         return true;  // only interest on return kay
     }
+    //make sure tool does not submitthe search  by key press if use selection is enabled or keyword is empty.
+    if (document.searchParmsForm.keyword == null || document.searchParmsForm.keyword.value == null 
+    	|| document.searchParmsForm.keyword.value == "" || 
+    	(document.searchResultsForm.editSelectedBtn != null && !document.searchResultsForm.editSelectedBtn.disabled))
+    {
+        alert("Please use the pointer to select the desired action.");
+    		return false;
+    }
+    //check if it is valid for search
     if(document.searchParmsForm.listSearchInEVS != null && document.searchParmsForm.listSearchInEVS.value == "MetaCode")
     {
       var sTerm = document.searchParmsForm.keyword.value;

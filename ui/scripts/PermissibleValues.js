@@ -40,7 +40,7 @@
     	if (pvNo == "pvNew")
     	{
     		var vmEDiv = document.getElementById("pvNewVMLblEdit");
-    		if (vmEDiv != null && vmEDiv.style.display == "block")
+    		if (vmEDiv != null && vmEDiv.style.display == "inline")
     			vmEDiv.style.display = "none";
     	//	var vmVDiv = document.getElementById("pvNewVMLblView");
     	//	if (vmVDiv != null && vmVDiv.style.display == "none")
@@ -102,7 +102,12 @@
     	else
     	{
     		if (checkPVVMCombDuplicate(txtPV, txtVM, "newPV"))
+    		{
+    			var bSave = document.getElementById("btnCreateNew");
+    			if (bSave != null && !bSave.disabled)
+    				bSave.disabled = true;
     			SubmitValidate("addNewPV");
+    		}
     	}
     }
     

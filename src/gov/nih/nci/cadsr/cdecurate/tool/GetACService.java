@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.30 2006-11-22 21:12:44 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.31 2006-11-30 04:05:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -792,6 +792,8 @@ public class GetACService implements Serializable
             String csASL = rs.getString("asl_name");
             String csVer = rs.getString("version");
             if (csVer == null) csVer = "";
+            if (!csVer.equals("") && csVer.indexOf('.') < 0)
+              csVer += ".0";
             csName = m_util.removeNewLineChar(csName);   //remove the new line char here itself
             csName = m_util.parsedStringDoubleQuoteJSP(csName);  //make sure double quotes do not harm cs names
             vList.addElement(csName + " - " + csContext + " - v" + csVer);

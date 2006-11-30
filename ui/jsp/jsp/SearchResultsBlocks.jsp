@@ -179,12 +179,14 @@
       <% if (selBean.getLONG_NAME() != null && !selBean.getLONG_NAME().equals(""))
       {
       	String sName = selBean.getLONG_NAME();
+      	sName = serUtil.parsedStringSingleQuote(sName);
       	String sID = selBean.getCONCEPT_IDENTIFIER();
       	String sDB = selBean.getEVS_DATABASE();
       	String sDesc = selBean.getPREFERRED_DEFINITION();
+      	sDesc = serUtil.parsedStringSingleQuote(sDesc);
     System.out.println(selBean.getLONG_NAME() + " sel Con " + selBean.getCONCEPT_IDENTIFIER() + " db " + selBean.getEVS_DATABASE() + " def " + selBean.getPREFERRED_DEFINITION());
       %>
-	      	opener.appendConcept("<%=sName%>", "<%=sID%>", "<%=sDB%>", "<%=sName%>", "<%=sDesc%>");
+	      	opener.appendConcept('<%=sName%>', '<%=sID%>', '<%=sDB%>', '<%=sName%>', '<%=sDesc%>');
 	      	window.close();
       <% } %>
    }
