@@ -1025,8 +1025,10 @@ public class VMAction implements Serializable
       //check concept defn match to the value meaning
       if (VMName.equals("") && vmDef.equals(""))
         return dispAC;
-      
-      EVS_Bean con = checkConDefNameExist(VMName, vmDef, data, sMsg);
+      EVS_Bean con = new EVS_Bean();
+      //allow search only if not default defintion
+      if (!vmDef.equalsIgnoreCase(data.DEFINITION_DEFAULT_VALUE) && !vmDef.equalsIgnoreCase(data.DEFINITION_DEFAULT_VALUE + "."))
+        con = checkConDefNameExist(VMName, vmDef, data, sMsg);
       Vector<EVS_Bean> conList = data.getConceptList();
       switch (this.FLAG_CON_DER_MATCH)
       {
@@ -1093,6 +1095,8 @@ public class VMAction implements Serializable
         case (VMAction.CON_DEF_DER_VM_NAME + VMAction.VM_DEF_NOT):  //'E' + 'N'  //con with exist but no def match
           //follows the next case
         case (VMAction.CON_DEF_DER_NOT + VMAction.VM_DEF_NOT):  //'N' + 'N'
+         // if (vCon != null && vCon.size() > 0)
+         //   existVM.setVM_CONCEPT_LIST(vCon);
           if (editExisting)  //reset the description attributes and update the vm
             existVM.setVM_DESCRIPTION(vmBean.getVM_DESCRIPTION());
           else
@@ -1100,10 +1104,15 @@ public class VMAction implements Serializable
             dispAC = "Value Meaning";
             break;
           }
+        case (VMAction.CON_DEF_NAME + VMAction.VM_DEF_NOT):  //'C' + 'N'
         case (VMAction.CON_DEF_NAME + VMAction.VM_DEF_NAME):   //'C' + 'E':  //con name & def match but no condr
           //no message 
-          if (this.FLAG_CON_DER_MATCH == VMAction.CON_DEF_NAME)  //only this scenario to update the condr not the above case
-            existVM.setVM_CONDR_IDSEQ("condr idseq");  //TODO NEED TO FIGURE OUT WHAT TO DO HERE
+          if (this.FLAG_VM_DEF_MATCH != VMAction.VM_DEF_NOT || existVM.getVM_CONDR_IDSEQ().equals(""))  //update the condr only if 
+            if (vCon != null && vCon.size() > 0)
+            {
+              existVM.setVM_DESCRIPTION(vmBean.getVM_DESCRIPTION());
+              existVM.setVM_CONCEPT_LIST(vCon);
+            }
           //same for all three above cases
           existVM.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_UPD); 
         case (VMAction.CON_DEF_DER_VM_NAME + VMAction.VM_DEF_NAME): //'E' + 'E':
@@ -1295,12 +1304,12 @@ public class VMAction implements Serializable
     {
       String sCondr = this.getConceptCondr(vCon, data);
     System.out.println(sCondr + " exist vm by condr " + vCon.size() + " con flag " + this.FLAG_CON_DER_MATCH);
+
       if (!sCondr.equals(""))
       {
         //if conder is not matched assume match to name & def (because it will be created later)
         if (this.FLAG_CON_DER_MATCH == this.CON_DEF_DER_NOT)
           this.FLAG_CON_DER_MATCH = this.CON_DEF_NAME;
-
 //      matches to the matched vm
         String vmCondr = exeVM.getVM_CONDR_IDSEQ();
         if (vmCondr.equals(sCondr)) 
@@ -1310,7 +1319,7 @@ public class VMAction implements Serializable
         }
         else  //look for concept matched vm
         {
-          if (!sCondr.equals(""))
+        //  if (!sCondr.equals(""))
             conVM = this.getExistingVM("", sCondr, "", data);
           //reset the con defn match value to mark that concept defn match does not exist in vm
           if (this.FLAG_CON_DER_MATCH == this.CON_DEF_NAME)  // 'Y')    //name & def match
@@ -1354,7 +1363,10 @@ public class VMAction implements Serializable
       return conVM;
     }
     //search for defintion match vm in cadsr
-    if (!sDef.equals(""))
+    boolean isDefault = false;
+    if (sDef.equalsIgnoreCase(data.DEFINITION_DEFAULT_VALUE) || sDef.equalsIgnoreCase(data.DEFINITION_DEFAULT_VALUE + "."))
+      isDefault = true;
+    if (!sDef.equals("") && !isDefault)
       defVM = this.getExistingVM("", "", sDef, data);
     if (this.FLAG_VM_DEF_MATCH == this.VM_DEF_MULTI)  // 'D')
       sMsg.append("Value Meaning description matches to the multiple Value Meanings. \n");

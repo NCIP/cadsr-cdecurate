@@ -16,7 +16,7 @@
       String sButtonPressed = (String) session.getAttribute("LastMenuButtonPressed");
       String vdAction = (String)session.getAttribute("VDAction");
       String sSearchAC = (String) session.getAttribute("creSearchAC");
-     System.out.println(sSearchAC + " vd action " + sMenuAction);
+   //  System.out.println(sSearchAC + " vd action " + sMenuAction);
       	
       VD_Bean m_VD = new VD_Bean();
       m_VD = (VD_Bean) session.getAttribute("m_VD");
@@ -115,7 +115,7 @@
       else if (!sEditPV.equals("")) sEditPV = "pv"+sEditPV;
     //  String editValue = (String)request.getAttribute("editPVValue");
     //  if (editValue == null) editValue = "";
-System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus " + elmFocus);		
+//System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus " + elmFocus);		
 		%>
 		<Script Language="JavaScript">
 
@@ -280,7 +280,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 					&nbsp;&nbsp;&nbsp;
 					<!-- enable the create link if parents don't exist or non evs parents selected -->					          
           <div id="divpvcreate_disable" style="display:<% if (vdCONs > 0){%> block <%} else {%> none <%} %>">				
-                  Create list of Permissible Values from EVS Concepts <b>[unavailable]</b><br/>
+                  Create a list of Permissible Values from EVS Concepts <b>[unavailable]</b><br/>
                   <hr/>
                   Create a Permissible Value <b>[unavailable]</b><br/>
           </div>
@@ -771,6 +771,8 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 						            if (sPVid == null || sPVid.equals("")) sPVid = "EVS_" + sPVVal;
 						            vPVIDList.addElement(sPVid); //add the ones on the page
 						            VM_Bean vm = pvBean.getPV_VM();
+						         //   if (vEMsg.size() > 0 && sEditPV.equals(pvCount))
+						         //   	vm = (VM_Bean)request.getAttribute("ErrVM");
 						            String sPVMean = (String)vm.getVM_SHORT_MEANING();  // pvBean.getPV_SHORT_MEANING();
 						            if (sPVMean == null) sPVMean = "";
 						            String sPVMeanJsp = util.parsedStringDoubleQuoteJSP(sPVMean);

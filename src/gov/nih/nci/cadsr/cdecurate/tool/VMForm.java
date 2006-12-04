@@ -37,6 +37,7 @@ public class VMForm implements Serializable
   /** database submit action update NONE keyword */
   public static final String CADSR_ACTION_NONE = "NONE";
   
+  public static final String DEFINITION_DEFAULT_VALUE = "No Value Exists";
   //attributes
   private VM_Bean VMBean;
   private String VDidseq;

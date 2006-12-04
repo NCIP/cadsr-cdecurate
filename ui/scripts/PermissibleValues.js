@@ -8,6 +8,10 @@
 			alert("what is the object");
 		else
 		{
+			//make sure that no pv was in edit mode
+			if ((sAction == "validate" || sAction == "vddetailstab" || sAction == "vdpvstab")  && !validatePVAction(sAction))
+				return false;
+			//continue with submission	
 			actObject.value = sAction;
 			beforeRefresh(sAction);
 			if (secondWindow && !secondWindow.closed)

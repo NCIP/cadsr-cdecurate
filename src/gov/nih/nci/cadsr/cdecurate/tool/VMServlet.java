@@ -217,7 +217,7 @@ public class VMServlet implements Serializable
     //get the edited vm
     VM_Bean vm = (VM_Bean)session.getAttribute("selectVM");  // pv.getPV_VM();
     if (vm == null || vm.getVM_SHORT_MEANING() == null || vm.getVM_SHORT_MEANING().equals("")) 
-      vm = pv.getPV_VM();
+      vm = new VM_Bean().copyVMBean(pv.getPV_VM());
     Vector vmCon = vm.getVM_CONCEPT_LIST();
     String[] sCons = req.getParameterValues("hiddenConVM");
     if (sCons != null && vmCon != null)

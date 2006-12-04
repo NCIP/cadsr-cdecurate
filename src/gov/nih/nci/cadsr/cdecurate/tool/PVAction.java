@@ -84,6 +84,7 @@ public class PVAction implements Serializable
         data.setStatusMsg(data.getStatusMsg() + "\\tUnable to change the Permissible Value " +
             selPV.getPV_VALUE() + " because it is used in a CRF.\\n");
         selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_NONE);
+        vdpvs.setElementAt(selPV, pvInd);  //reset it 
       }
       else
       {
@@ -95,6 +96,7 @@ public class PVAction implements Serializable
       //insert the new one
       newPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_INS);
       newPV.setPV_VIEW_TYPE("expand");
+      newPV.setPV_VDPVS_IDSEQ("");
       vdpvs.insertElementAt(newPV, pvInd);  //data.getVDPVList().insertElementAt(newPV, pvInd);
     }    
     vd.setVD_PV_List(vdpvs);
