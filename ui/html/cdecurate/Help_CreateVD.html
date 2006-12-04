@@ -12,7 +12,7 @@
   <body>
     <h2 class="main">
       CDE Curation Tool<br>
-      User's Guide Version 3.1
+      User's Guide Version 3.2
     </h2><br>
     <p class="returnLink">
       <a href="Help.htm">Return to the Table of Contents</a>
@@ -21,8 +21,7 @@
       <div class="container">
         <div class="header">
           <a name="Search for Exact Version" id=
-          "Search for Exact Version"></a>Data Elements and the
-          ISO/IEC
+          "Search for Exact Version"></a>Value Domains (VD)
         </div>
         <div class="bodyText">
           <!-- ****************************************************** -->
@@ -31,42 +30,69 @@
           name="Overview"></a><span class="standOutHeading">Value
           Domains (VD) Overview</span>
           <hr>
-          <p>
+					<p>
+            A Value Domain (VD) is a set of Permissible Values by which a 
+						Data Element can be defined. Value Domains can be	Enumerated or 
+						Non-Enumerated. Enumerated Value Domains are specified by a list of Permissible
+						Values. Non-Enumerated Value Domains are specified by a description.
+          </p>
+					<p>
             The Curation Tool provides you with the ability to
             create and edit Value Domains, validate the Value
-            Domain's attributes, and submit (i.e. store) the
-            Value Domains in the NCI`s Cancer Data Standards
+            Domains' attributes, and submit (i.e. store) the
+            Value Domains into the NCI's Cancer Data Standards
             Repository (caDSR) database.
           </p>
-          <!-- Create New Value Domain Screen Overview  -->Like
-          other primary functions of the Curation Tool Creating
+          <!-- Create New Value Domain Screen Overview  --><!--Like
+          other primary functions of the Curation Tool, creating a
           Value Domain is accessed via the dark blue Navigation
           Bar at the top of the screen. You may also want to
           create a new Value Domain using an existing Value
           Domain as a starting template, or version an existing
-          Value Domain. Both of these options can be accessed via
+          Value Domain. All of these options can be accessed via
           the <b><span class="navigation">Create<span style=
           "FONT-FAMILY: wingdings">&#232;</span>Value
-          Domain</span></b> menu in the Navigation Bar.<br>
-          <br>
+          Domain</span></b> menu in the Navigation Bar.<br>-->
+					<p>
+						<span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span> <b>New for CDE Curation Tool Version 3.2:</b> The Create and Edit
+						Value Domain screens have two tabs, one for the details of the Value
+						Domain and another tab specifically for Permissible Values. 
+						The Value Domain Details tab houses all attributes for the VD itself.
+						The Permissible Values tab is where actions specific to Permissible Values
+						(Enumerated) and Referenced Values (Non-Enumerated) are made.
+					</p>
           <!-- Search Value Domains  --><a id="Search" name=
           "Search"></a>
           <h4>
             Search Value Domains
           </h4>
           <p>
-            Users have the ability to filter their search for
-            Value Domains by Exact Version and Conceptual Domain.
-            The text field for entering Exact Version is located
+            In addition to the standard CDE Curation Tool search filters,
+						Value Domain searches can be filtered by Version (All, Latest, and Exact), Type (Enumerated
+						or Non-Enumerated), Conceptual Domain, and Data Type (Alphanumeric,
+						Boolean, etc).
+					</p>
+					<p>
+					<b>Search Filters:</b>
+					<ul>
+            <li>  The text field for entering an Exact Version is located
             next to the 'All' and 'Latest' Version radio buttons
-            in the Search interface. Enter the exact version
-            number of the Value Domain into the text field.
-            Version number should be entered as a positive
-            number, with or without a decimal.<br>
-            <br>
-            Filter by a specific Conceptual Domain by selecting
+            in the Search interface. Version number should be entered as a positive
+            number, with or without a decimal.
+            </li>
+            <li>Filter by Value Domain Type by selecting the checkbox labeled
+						Enumerated or Non-Enumerated.
+            </li>
+						<li>Filter by a specific Conceptual Domain by selecting
             the desired Conceptual Domain from the drop-down list
             in the 'Filter By' section of the Search interface.
+						</li>
+						<li>Filter by Data Type by selecting the desired Data Type from the 
+						drop down list.
+						</li>
+          </ul>
           </p><!-- Create New  --><a id="Search" name=
           "Search"></a><a id="createNewVD" name=
           "createNewVD"></a>
@@ -74,7 +100,7 @@
             Create New Value Domain
           </h4>
           <p>
-            Most of the primary functions of the CDE Curation
+            The primary functions of the CDE Curation
             Tool are accessed via the dark blue Navigation Bar at
             the top of each screen. To begin the Create New Value
             Domain process, Select <b><span class=
@@ -85,9 +111,9 @@
             from the Navigation Bar at the top of the page.
           </p>
           <p>
-            You may also want to create a new Data Element using
-            an existing Value Domain as a starting template or
-            you may want to version an existing Value Domain.
+            You may also want to create a new Value Domain using
+            an existing Value Domain as a template or create a new
+            version of an existing Value Domain.
             Both of these options can be accessed via the
             <b><span class="navigation">Create<span style=
             "FONT-FAMILY: wingdings">&#232;</span>Value
@@ -95,17 +121,17 @@
           </p>
           <p class="centeredImage">
             <img class="screenShot" height="137" alt=
-            "image001 (12K)" src="Assets/Help/VD/image001.PNG"
+            "Navigation Bar on the Search Screen" src="Assets/Help/VD/image001.png"
             width="576">
           </p>
           <p class="imageText">
-            FIGURE 2<br>
+            FIGURE 1<br>
             Navigation Bar on the Search Screen
           </p>
           <p class="imageText">
-            <img class="screenShot" height="665" alt=
-            "image002 (46K)" src="Assets/Help/VD/image002.PNG"
-            width="852">
+            <img class="screenShot" height="630" alt=
+            "Edit/Create Value Domain" src="Assets/Help/VD/image002.png"
+            width="830">
           </p>
           <p class="imageText">
             FIGURE 2<br>
@@ -121,7 +147,9 @@
           </p>
           <p>
             Search for and select one Value Domain in the Search
-            Results table and press the Edit Selection button.
+            Results table and click the <input style="WIDTH: 110px" type=
+            "button" value="Edit Selection" name=
+            "editSelectedBtn"> button.
             Clicking the Edit Selection button will take you to
             the Edit Value Domain screen. Attributes that are not
             editable are grayed out.
@@ -134,15 +162,15 @@
             Domains at once. This is called block editing and can
             only be done in a Context where you have <b>WRITE</b>
             permission. Search for and select multiple Value
-            Domains in the Search Results table and press the
-            Block Edit button (<input style="WIDTH: 97px" type=
-            "button" value="Edit Selection" name=
-            "editSelectedBtn">) to perform simultaneous edits on
-            multiple Value Domains. .<br>
+            Domains in the Search Results table and click the
+            <input style="WIDTH: 90px" type=
+            "button" value="Block Edit" name=
+            "editSelectedBtn"> button to perform simultaneous edits on the
+            selected Value Domains.<br>
           </p>
           <p>
-            The following attributes are block editable for a
-            group of Value Domains:
+            The following attributes are editable for a
+            group (block) of Value Domains:
           </p>
           <ul>
             <li>Rep Term Concepts
@@ -177,21 +205,21 @@
             </li>
             <li>Origin
             </li>
-            <li>Comment/Change Note
+            <li>Change Note
             </li>
           </ul>
           <p>
             <span style=
             "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> No existing data for any of the selected
-            Value Domains is displayed in this edit page.
+            i</span> Existing data for any of the selected
+            Value Domains is not displayed on the block edit page.
             Classification Schemes (CS) and Classification Scheme
             Items (CSI) are an exception. CSs and CSIs that are
             added will be added to all Value Domains involved in
-            the edit, but VSs and CSIs that are removed will only
+            the block edit. CSs and CSIs that are removed will only
             be removed from the Value Domains where they
-            currently exist. All other changes to an attribute on
-            this form will change the corresponding attribute in
+            originally existed. All other changes to attributes on
+            this page will change the corresponding attribute in
             all the Value Domains involved in this edit.
             Attributes that cannot be block edited are grayed
             out.
@@ -200,39 +228,41 @@
           <!--    Creating or Editing Value Domains Attributes        -->
           <!-- ****************************************************** --><a id="Attributes"
           name="Attributes"></a><span class=
-          "standOutHeading">Create or Edit Value Domain
-          Attributes</span>
+          "standOutHeading">Value Domain Attributes</span>
           <hr>
           <!-- Select a Context  --><a id=
           "createVDForm_selContext" name=
           "createVDForm_selContext"></a>
+					<p>When creating or editing a Value Domain, you have the ability to
+					view, create or change the following attributes. <b>The 
+					<span class=standOut>asterisk (*) </span>denotes a required field when 
+					creating or editing a Value Domain. </b></p>
           <h4>
             Select a Context
           </h4>
           <p>
-            As a CDE Curation Tool user, you have read and write
+            As a CDE Curation Tool user you have read and write
             permissions in at least one Context of the caDSR. You
             may only create new Value Domains in a Context where
             you have WRITE permissions. Select the desired
-            context from the drop down list underneath ?1)
+            context from the drop down list underneath 1)
             <span class="red">Select</span> Context.
           </p>
           <p class="centeredImage">
             <img class="screenShot" height="112" alt=
-            "image003 (3K)" src="Assets/Help/VD/image003.PNG"
+            "Select a Context" src="Assets/Help/VD/image003.png"
             width="330">
           </p>
           <p class="imageText">
             FIGURE 3<br>
-            Select a Context<br>
+            Select a Context
           </p>
           <p>
             <span style=
             "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> <span class="red">Select</span> Context from
-            the drop down menu (NOTE: you must have write
-            permissions within a context to create a new Value
-            Domain in that context).
+            i</span> NOTE: you must have WRITE
+            permissions within a Context to create a new Value
+            Domain in that Context.
           </p><!-- Select a Value Domain Type  --><a id=
           "createVDForm_selVDType" name=
           "createVDForm_selVDType"></a>
@@ -244,17 +274,17 @@
             Non-Enumerated</span><br>
             <br>
             An Enumerated Domain is a Value Domain that is
-            specified by a list of all of its the permitted
-            values. An example of an Enumerated Value Domain is
+            specified by a list of Permissible
+            Values. An example of an Enumerated Value Domain is
             CountryValue:U,C,M. The Value Domain of Country Value
             is specified by a list of Permissible Values (U means
             USA, C means Canada, and M means Mexico).<br>
             <br>
-            A Non-Enumerated Domain is specified by a description
-            rather than a list of all Permissible Values. A
-            non-enumerated value domain requires a name, a
+            A Non-Enumerated Value Domain is specified by a description
+            rather than a list of Permissible Values. A
+            Non-Enumerated Value Domain requires a name, a
             definition, an identifier, and a description of
-            appropriate values. An example of a Non-enumerated
+            appropriate values. An example of a Non-Enumerated
             Value Domain (taken from ISO/IEC 11179) is
             'Probabilities-5 significant digits', with a
             description of 'all real numbers greater than 0 and
@@ -264,7 +294,7 @@
           </p>
           <p class="centeredImage">
             <img class="screenShot" height="73" alt=
-            "image004 (2K)" src="Assets/Help/VD/image004.PNG"
+            "Select a Value Domain Type" src="Assets/Help/VD/image004.png"
             width="323">
           </p>
           <p class="imageText">
@@ -278,36 +308,29 @@
             Name a Value Domain
           </h4>
           <p>
-            The ISO 11179 Standard describes a Value Domain as a
+            The ISO/IEC 11179 Standard describes a Value Domain as a
             set of values. A Data Element is associated with only
             one Value Domain and the name of the Value Domain
             describes all of the data values that are included in
-            that domain.<br>
-            <br>
-            For example a Data Element of
-            'PersonPlaceOfBirthValue' has an Enumerated Value
-            Domain of 'Country Value: U,C,M'.
+            that domain.
           </p>
           <p>
             <span class="figureText">Representation
             Term</span><br>
-            The ISO 11179 Standard describes a representation
-            class term as a mechanism by which the functional
+            The ISO/IEC 11179 Standard describes a representation
+            class term as 'a mechanism by which the functional
             and/or presentational category of an item may be
-            conveyed to the user'. The following are examples of
-            representation class terms: amount, average, count,
-            code, date, measure, name, number, quantity and rate.
-            For the same example of PersonPlaceOfBirth, a
-            Representation Term is Value.
+            conveyed to the user'. Examples of representation class terms include: 
+						amount, average, count, code, date, measure, name, number, quantity and rate.
+            For the example of PersonPlaceOfBirth, a Representation Term is Value.
           </p>
           <p>
-            The Object Class, Property, and Qualifier Concepts
-            and Primary Concept of the Representation Term are
+            The Object Class, Property, Representation Term Qualifier 
+						Concepts and Primary Concept are
             used to facilitate the naming of the Value Domain.
             Although each of these act as building blocks for the
-            Value Domain's name and definition, only the
-            Qualifier Concepts and Primary Concept (that form the
-            Rep Term Long Name) are captured as being related to
+            Value Domain's name and definition, only the Representation Term
+            Concepts are captured as being related to
             the Value Domain. The Object Class and Property will
             not be captured therefore they will not appear when
             editing the Value Domain.
@@ -316,26 +339,38 @@
             Search for Building Blocks
           </h4>
           <p>
-            Searching for Building Blocks is very similar to
+            Searching for building blocks is very similar to
             searching for any other Administered Component. The
             first step in naming a Value Domain is to search for
             and choose the optional building blocks (Object
-            Class, Property and Primary and Qualifier Concepts
-            for Representation Term) that will ultimately
+            Class, Property and Representation Term Primary and 
+						Qualifier Concepts) that will ultimately
             comprise the Value Domain Long Name. You may restrict
             your search to exclude Retired Concepts, or you may
-            include all Concepts in your search.<br>
-            <br>
+            include all Concepts in your search. This option is available on the 
+						Search screen for all building blocks.
           </p>
           <p class="centeredImage">
-            <img class="screenShot" height="213" alt=
-            "image005 (8K)" src="Assets/Help/VD/image005.PNG"
-            width="995">
+            <img class="screenShot" height="200" alt=
+            "Search for Building Blocks" src="Assets/Help/VD/image005.png"
+            width="838">
           </p>
           <p class="imageText">
             FIGURE 5<br>
             Search for Building Blocks<br>
           </p>
+					<p>
+						The first step in naming a
+            Value Domain is to search for and choose the optional
+            building blocks (Concepts for
+            Object Class and Property and Qualifier and Primary Concepts
+						for Rep Term) that will ultimately
+            comprise the Value Domain Long Name. Click the 
+						<span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Search </span> hyperlink
+						located next to the desired building block. The building block 
+						Search window will be displayed.
+					</p>
           <p>
             <span style=
             "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
@@ -347,38 +382,28 @@
             Qualifier Concepts) via Term Search
           </h4>
           <p>
-            Searching for Building Blocks using the regular Term
+            Searching for building blocks using the Term
             Search is very similar to searching for any other
-            Administered Component. The first step in naming a
-            Value Domain is to search for and choose the optional
-            building blocks (Primary and Qualifier Concepts for
-            Object Class and Property) that will ultimately
-            comprise the Value Domain Long Name.
+            Administered Component.  
           </p>
           <p class="centeredImage">
             <img class="screenShot" height="723" alt=
-            "EVS Term Search Screen (38K)" src=
-            "Assets/Help/VD/image006.PNG" width="833">
+            "EVS Term Search Screen" src=
+            "Assets/Help/VD/image006.png" width="833">
           </p>
           <p class="imageText">
             FIGURE 6<br>
             EVS Term Search Screen<br>
           </p>
-          <div class="NoteTest">
-            How to <b>Select</b> Building Blocks using the
-            regular Term Search<br>
+          <p>
+            <b>Select</b> Building Blocks using the
+            Term Search:<br>
             <ol>
-              <li>Click the Search link by the desired building
-              block to open the CDE Curation Search window
-              </li>
-              <li>The search window that appears will only Search
-              For selected building block
-              </li>
               <li>Select an EVS Vocabulary to search from the
-              drop down list ( <select style="WIDTH: 160px"
+              drop down list ( <select style="WIDTH: 180px"
                 size="1" name="dummy">
                   <option value="NCI_Thesaurus" selected>
-                    Thesaurus/Metathesaurus
+                    NCI Thesaurus
                   </option>
                   <option value="GO">
                     GO
@@ -397,6 +422,9 @@
                   </option>
                   <option value="SNOMED_CT">
                     SNOMED
+                  </option>
+									<option value="NCI_Metathesaurus">
+                    NCI Metathesaurus
                   </option>
                 </select> ).
               </li>
@@ -411,29 +439,20 @@
               </li>
               <li>Select and Update the Display Attributes.
               </li>
-              <li>Click the search button ( <input style=
-              "WIDTH: 150px" type="button" value="Start Search"
-              name="dummy"> ).
+              <li>Click the <input style=
+              "WIDTH: 120px" type="button" value="Start Search"
+              name="dummy"> button.
               </li>
-              <li>Once the Search Results are displayed select
-              the desired Building Block selecting the checkbox (
-              <input type="checkbox"> ).
+              <li>Once the Search Results are displayed, check the checkbox (
+              <input type="checkbox"> ) next to the desired term.
               </li>
-              <li>Click the Use Selection button (
-                <input style="WIDTH: 100px" type="button" value=
-                "Use Selection" name="editSelectedBtn"> ) to
-                update building block and return to the VD screen.
+              <li>Click the
+                <input style="WIDTH: 120px" type="button" value=
+                "Use Selection" name="editSelectedBtn"> button  to
+                update the building block with the selected Concept and 
+								to return to the VD screen.
               </li>
             </ol>
-          </div>
-          <p>
-            Once you have entered your search term and started
-            your search, the Search Results screen will appear to
-            the right of the search criteria. Next to each
-            concept that is returned is a check box. In order to
-            use a term that you have identified, check the box
-            next to it, then click the &#8216;Use
-            Selection&#8217; button at the top of the screen.
           </p>
           <!-- Building Blocks (Primary and Qualifier Concepts) via Tree Search -->
           <h4>
@@ -441,36 +460,37 @@
             Concepts) via Tree Search
           </h4>
           <p>
-            You may also search for Concepts in the NCI Thesaurus
-            portion of EVS using a tree-based seach. To access
-            the tree-based search click on the &#8216;Tree
-            Search&#8217; hyperlink in the &#8216;Search
-            In:&#8217; section of the search screen.
+            You can also search for Concepts in the NCI Thesaurus
+            portion of EVS using a tree-based search. To access
+            the tree-based search, click the <span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Tree
+              Search</span> hyperlink in the &#8216;<b>Search
+            In:</b>&#8217; section of the Search screen.
           </p>
           <p class="centeredImage">
-            <img class="screenShot" height="611" alt=
-            "Building Blocks Search via Tree Control (17K)" src=
-            "Assets/Help/VD/image007.PNG" width="292">
+            <img class="screenShot" height="600" alt=
+            "Building Blocks Search via Tree" src=
+            "Assets/Help/VD/image007.png" width="210">
           </p>
           <p class="imageText">
             FIGURE 7<br>
             Building Blocks Search via Tree<br>
           </p>
-          <div class="NoteTest">
-            How to <b>Search</b> Building Blocks using the Tree
-            Search<br>
+          <p>
+            <b>Search</b> Building Blocks using the Tree
+            Search:<br>
             <ol>
-              <li>Click the Search link by the desired building
-              block to open the CDE Curation Search window
+              <!--<li>Click the Search link by the desired building
+              block to open the Search window
               </li>
               <li>The search window that appears will only Search
               For selected building block
-              </li>
+              </li>-->
               <li>Select an EVS Vocabulary to search from the
-              drop down list ( <select style="WIDTH: 160px"
+              drop down list ( <select style="WIDTH: 180px"
                 size="1" name="dummy">
                   <option value="NCI_Thesaurus" selected>
-                    Thesaurus/Metathesaurus
+                    NCI Thesaurus
                   </option>
                   <option value="GO">
                     GO
@@ -490,59 +510,46 @@
                   <option value="SNOMED_CT">
                     SNOMED
                   </option>
+									<option value="NCI_Metathesaurus">
+                    NCI Metathesaurus
+                  </option>
                 </select> ).
               </li>
-              <li>Next to the EVS drop down box click on the
+              <li>Click on the
               <span style=
               "COLOR: blue; TEXT-DECORATION: underline">Tree
-              Search</span> link.
+              Search</span> link located next to the EVS drop down box.
               </li>
-              <li>Click on the plus sign to show lower level
-              Concepts.
+              <li>Click the hyperlink of a desired Concept. The Concept will be
+							displayed in the Search Results.
               </li>
-              <li>Click on the hyperlink to show the Concept and
-              its definitions in the Search Results.
-              </li>
-              <li>Select the Concept you want to use.
-              </li>
-              <li>Once the Search Results are displayed select
-              the desired Building Block selecting the checkbox (
+              <li>Select the desired term by selecting the checkbox (
               <input type="checkbox"> ).
               </li>
-              <li>Click the Use Selection button (
-                <input style="WIDTH: 100px" type="button" value=
-                "Use Selection" name="editSelectedBtn"> ) to
-                update building block and return to the VD screen.
+              <li>Click the
+                <input style="WIDTH: 110px" type="button" value=
+                "Use Selection" name="editSelectedBtn"> button to
+                update the building block with the selected Concept
+								and return to the VD screen.
               </li>
-            </ol><span style=
-            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> You may also move up and down the tree to
-            get a Concept's parents or children by using these
-            buttons.
-          </div><span style=
-          "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-          i</span> When selecting a Concept to use as an Object
-          Class, Property or Qualifier, it is important to
-          remember that the caDSR database has a 30 character
-          limit on building blocks. If you choose a Concept from
-          the NCI Thesaurus or Metathesaurus that is LONGER than
-          30 characters, the CDE Curation Tool will automatically
-          truncate that Concept to 30 characters.
-          <p>
-            Use the "Tree Search" hyperlink to access a
-            tree-style search for Concepts. When the Tree Search
-            first appears all of the NCI Thesaurus Root Concepts
+            </ol>
+          </p>
+					<p>
+            Use the <span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Tree
+              Search</span> hyperlink to access a
+            tree-style search for Concepts. The NCI Thesaurus Root Concepts
             will appear on the left side of the screen. Each Root
             Concept may have one or more Subconcepts. A Concept's
-            Subconcepts may be seen by clicking on the plus sign
+            Subconcepts may be viewed by clicking on the plus sign
             next to the Concept name. Some Subconcepts will have
             Subconcepts of their own which may be seen by
             clicking on a plus sign that appears next to the
-            Subconcept name. If no plus sign appears then the
+            Subconcept name. If a plus sign is not present, the
             Subconcept has no Subconcepts of its own.
           </p>
           <p>
-            To select a Root Concept or Subconcept, click on its
+            To select a Concept from the tree, click on the hyperlinked
             name. The Concept's details will appear in the Search
             Results window to the right. The Concept may appear
             more than once if it has multiple definitions. There
@@ -551,21 +558,32 @@
             will read &#8216;No Value Exists.&#8217;
           </p>
           <p>
-            Once Concepts appear in the Search Results area, one
-            may be selected by clicking on the check box next to
-            its Concept Name. When a Concept is selected in this
-            way several options are enabled. The Concept may be
-            used for your Data Element Concept by clicking on the
-            &#8216;Use Selection&#8217; button above the search
+						When a Concept is selected from the Search Results table,
+            several options are enabled. The Concept may be
+            used for your building block by clicking on the
+            <input style="WIDTH: 110px" type="button" value=
+            "Use Selection" name="editSelectedBtn"> button above the search
             results. A Concept's Subconcepts may be retrieved to
             the Search Results area by clicking on one of the
-            selections from the &#8216;Get Subconcepts&#8217;
+            selections from the <input style="WIDTH: 110px" type="button" value=
+            "Get Subconcepts" name="editSelectedBtn">
             button. You may get only the immediate Subconcepts or
             all Subconcepts regardless of how far down the tree
             they may be. A third option is to retrieve all of the
-            selected Concept's Superconcepts by clicking on the
-            &#8216;Get Superconcepts&#8217; button.
-          </p><!-- Verify the Long Name and Short Name  --><a id=
+            selected Concept's Superconcepts by clicking the
+           	<input style="WIDTH: 130px" type="button" value=
+            "Get Superconcepts" name="editSelectedBtn"> button.
+          </p>
+					<span style=
+          "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+          i</span> When selecting a Concept to use as an Object
+          Class, Property or Qualifier, it is important to
+          remember that the caDSR database has a 30 character
+          limit on building blocks. If you choose a Concept from
+          the NCI Thesaurus or Metathesaurus that is LONGER than
+          30 characters, the CDE Curation Tool will automatically
+          truncate that Concept to 30 characters.
+					<!-- Verify the Long Name and Short Name  --><a id=
           "createVDForm_txtLongName" name=
           "createVDForm_txtLongName"></a><a id=
           "createVDForm_txtPreferredName" name=
@@ -575,12 +593,12 @@
           </h4>
           <p>
             The CDE Curation Tool automatically generates
-            suggested drafts of the Long Name and Short Name.
-            These suggestions are made up of the building blocks
+            suggested drafts of the Value Domain Long Name and Short Name.
+            These suggestions are composed of the building blocks
             you selected in the previous step. The Long Name
-            field will contain the full names of the selected
-            building blocks (Object Class, Property, Rep Term and
-            Qualifier Concepts). The Short Name will contain the
+            field contains the full names of the selected
+            building blocks (Object Class, Property, and Rep Term). 
+						The Short Name contains the
             first four letters of the selected building blocks
             separated by the character '_'.<br>
             <br>
@@ -589,36 +607,34 @@
             the default System Generated Short Name. This name
             will be a combination of the Rep Term Public ID and
             Version, although the Short Name field will simply
-            say (Generated by the System). If you want you may
+            say (Generated by the System). You may
             select an Abbreviated Short Name. This Short Name
             type consists of the first four letters of each
             building block Concept selected, separated by the
-            character _. If the Preferred Name is longer than 30
+            character '_'. If the Short Name is longer than 30
             characters it will be truncated to 30 characters. The
             final Short Name option is Existing Name (editable).
             When you choose this option you type a Short Name into
-            the field, up to the 30 character limit. If you
-            selected no Rep Term Concepts you must use an
-            Existing Name type of Short Name.<br>
+            the field, up to the 30 character limit. If you did not 
+            select Rep Term Concepts you must use the
+            Existing Name type for Short Name.<br>
             <br>
           </p>
           <p class="centeredImage">
-            <img class="screenShot" height="145" alt=
-            "Verify Long Name and Short Name (7K)" src=
-            "Assets/Help/VD/image008.PNG" width="940">
+            <img class="screenShot" height="140" alt=
+            "Verify Long Name and Short Name" src=
+            "Assets/Help/VD/image008.png" width="838">
           </p>
           <p class="imageText">
             FIGURE 8<br>
-            Verify Long Name and Short Name<br>
+            Verify Long Name and Short Name
           </p>
-          <div class="NoteTest">
+          <p>
             <span style=
             "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
             i</span> A character count is displayed because there
             is a caDSR database limit for Long Name (* ISO
-            Preferred Name) and Short Name.
-          </div>
-          <div class="NoteTest">
+            Preferred Name) and Short Name.<br>
             <span style=
             "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
             i</span> The caDSR database length limit for Long
@@ -626,10 +642,8 @@
             limit for Short Name is 30 characters. Context
             Administrators may choose to set additional length
             limits (not enforced by this tool) if desired.
-          </div>
-          <div class="NoteTest">
-             
-          </div><!-- Define a Value Domain  --><a id=
+          </p>
+					<!-- Define a Value Domain  --><a id=
           "createVDForm_CreateDefinition" name=
           "createVDForm_CreateDefinition"></a>
           <h4>
@@ -637,10 +651,10 @@
           </h4>
           <p>
             The CDE Curation Tool automatically generates a draft
-            definition composed of the definition of the selected
+            definition composed of the definition(s) of the selected
             Object Class, Property and Representation Term
-            separated by the character "_". You may edit the
-            Definition by entering text in the definition field.
+            separated by the character '_'. You may edit the
+            definition by entering text in the definition text box.
           </p>
           <p class="subTopic3">
              
@@ -652,10 +666,10 @@
           </h4>
           <p>
             <span class="figureText">What is a Conceptual
-            Domain</span><br>
-            The ISO 11179 Standard describes Conceptual Domain as
-            a set of all possible, valid value meanings of a data
-            element concept expressed without representation.
+            Domain?</span><br>
+            The ISO/IEC 11179 Standard describes a Conceptual Domain as
+            a set of all possible, valid value meanings of a Data
+            Element Concept expressed without representation.
             Conceptual Domains are plural, object oriented,
             lacking in representation, and may be associated with
             more than one Value Domain. For the example given
@@ -666,39 +680,38 @@
             When the Search link is activated, all Conceptual
             Domains in the selected Context are displayed. The
             user has the option to change the Context on the
-            Search screen. The records will change
+            Search screen by using the drop down list. The records will change
             accordingly.<br>
             <br>
-            If no context has been selected, no results will be
+            If a Context has not been selected, results will not be
             displayed and the user will have to do at least one
             of the following actions:
           </p>
-          <p class="centeredImage">
-            <img class="ScreenShot" height="41" alt=
-            "Search for a Conceptual Domain (1K)" src=
-            "Assets/Help/VD/image009.PNG" width="729">
-          </p>
-          <p class="imageText">
-            FIGURE 9<br>
-            Search for a Conceptual Domain<br>
-          </p>
-          <div class="NoteTest">
-            How to <b>Search</b> for a Conceptual Domain<br>
-            <ol>
+          <p>
+            <b>Search</b> for a Conceptual Domain<br> by performing one of the following:
+            <ul>
               <li>Click Start Search (all Conceptual Domains for
-              all Contexts will be displayed)
+              all Contexts will be displayed).
               </li>
-              <li>Enter a Search Term and Select a Context, then
+              <li>Enter a Search Term, select a Context, and then
               click Start Search (results matching the term and
-              context will be displayed)
+              context will be displayed).
               </li>
               <li>Select a Context then click Start Search (all
               Conceptual Domains for the selected Context will be
-              displayed
+              displayed).
               </li>
-            </ol>
-          </div><br>
-          <br>
+            </ul>
+						<p class="centeredImage">
+            <img class="ScreenShot" height="41" alt=
+            "Search for a Conceptual Domain" src=
+            "Assets/Help/VD/image009.png" width="729">
+          </p>
+          <p class="imageText">
+            FIGURE 9<br>
+            Search for a Conceptual Domain
+          </p>
+          </p>
           <!-- Select a Workflow Status  --><a id=
           "createVDForm_selStatus" name=
           "createVDForm_selStatus"></a>
@@ -708,21 +721,20 @@
           <p>
             A Workflow Status is a designation of the position in
             the lifecycle of a Value Domain. Select a Value
-            Domains Workflow Status by choosing from the list of
+            Domain's Workflow Status by choosing from the list of
             available Workflow Statuses in the drop down list.
-            Many workflow statuses are listed and defined on the
+            Many Workflow Statuses are listed and defined on the
             <a href=
             "http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules/"
             target="_blank">NCI Center for Bioinformatics</a>
             Business Rules page. The Versioning Business Rules
             are also accessible from within the CDE Curation Tool
             by clicking on the Business Rules hyperlink next to
-            the Version field. This is a new feature for version
-            3.0 of the CDE Curation Tool.<br>
+            the Version field.<br>
             <br>
             Please note that a Value Domain cannot have a
             Workflow Status of Released unless its Rep Term also
-            has Workflow Statuses of Released. It should be a
+            has a Released Workflow Status. It should be a
             very rare for this to be a problem. However, if it
             does occur you must update the Rep Term Workflow
             Status using the caDSR Administration Tool as there
@@ -731,7 +743,7 @@
           </p>
           <p class="centeredImage">
             <img class="screenShot" height="99" alt=
-            "image010 (2K)" src="Assets/Help/VD/image010.png"
+            "Workflow Status and Version" src="Assets/Help/VD/image010.png"
             width="298">
           </p>
           <p class="imageText">
@@ -739,52 +751,38 @@
             Workflow Status and Version<br>
           </p><!-- Version Value Domains  --><a id=
           "createVDForm_Version" name="createVDForm_Version"></a>
-          <p>
+          <!-- <p>
             <span style=
             "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> the Version. The default is 1.0, but it is
+            i</span> The default Version is set to 1.0, but it is
             editable.
-          </p>
+          </p>-->
           <h4>
-            Version Value Domains
+            Enter a Version 
           </h4>
           <p>
-            The default version for a New Value Domain is 1.0.
-            However, the Version text box is editable. Versioning
+            The default version for a New Value Domain is 1.0, but the 
+						text box is editable. 
+						</p>
+						<p>Versioning
             Business Rules are defined on the <a href=
             "http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules/"
             target="_blank">NCI Center for Bioinformatics</a>
             Business Rules page. The Versioning Business Rules are
-            also accessible from within the CDE Curation Tool by
-            clicking on the Business Rules hyperlink next to the
-            Version field.
+            also accessible by clicking on the <span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Business Rules</span> 
+							hyperlink next to the Version text field.
           </p>
-          <p>
-            <span style=
-            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> For more information about Versioning and
-            Workflow rules see the <a title=
-            "caDSR Business Rules" href=
-            "http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules"
-            target="_blank">caDSR Business Rules</a>
-          </p><!-- Block Versioning Value Domains  --><a id=
+          <!-- Block Versioning Value Domains  --><a id=
           "createVDForm_BlockVersion" name=
           "createVDForm_BlockVersion"></a>
           <h4>
             Block Versioning Value Domains
           </h4>
-          <p class="centeredImage">
-            <img class="screenShot" height="46" alt=
-            "image011 (1K)" src="Assets/Help/VD/image011.png"
-            width="477">
-          </p>
-          <p class="imageText">
-            FIGURE 11<br>
-            Block Versioning Value Domains<br>
-          </p><!-- Version Value Domains  --><a id=
+          <!-- Version Value Domains  --><a id=
           "createVDForm_Version" name="createVDForm_Version"></a>
           <p>
-            To <b>change</b> the version for a group of Value
+            To change the version for a group (block) of Value
             Domains:
           </p>
           <ul>
@@ -794,13 +792,24 @@
             <li>Check either the box labeled "Point Increase" or
             "Whole Increase"
             </li>
-          </ul><b>Point Increase:</b> Increases the version
+          </ul>
+					<p class="centeredImage">
+            <img class="screenShot" height="46" alt=
+            "Block Versioning Value Domains" src="Assets/Help/VD/image011.png"
+            width="477">
+          </p>
+          <p class="imageText">
+            FIGURE 11<br>
+            Block Versioning Value Domains<br>
+          </p>
+					<span class="figureText">Point Increase</span><br>
+					Increases the version
           number of each Value Domain in the group by a tenth.
           (i.e. If your group of Value Domains have versions of
           4.0 and 1.23 the version would be changed to 4.1 and
-          1.3 respectively).<br>
-          <br>
-          <b>Whole Increase:</b> Increases the version number of
+          1.3 respectively).<br><br>
+					<span class="figureText">Whole Increase</span><br>
+          Increases the version number of
           each Value Domain in the group to the next whole number
           (i.e. If your group of Value Domains have versions of
           4.0 and 1.5 the version would be changed to 5.0 and 2.0
@@ -808,8 +817,7 @@
           <br>
           <span style=
           "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-          i</span> All edits made during a block edit containing
-          version editing will be made to the new versions of the
+          i</span> Versioning edits made during a block edit will be made to the new versions of the
           selected Value Domains. The edits will not be made to
           the originally selected Value Domains. A list
           containing all versioning rules within the caDSR can be
@@ -818,111 +826,631 @@
           target="_blank">NCI Center for Bioinformatics</a>
           versioning page. The Versioning Business Rules are also
           accessible from within the CDE Curation Tool by
-          clicking on the 'Business Rules' hyperlink next to the
-          Version field.<br>
+          clicking on the <span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Business Rules</span> 
+							hyperlink next to the Version field.<br>
           <br>
-          <p>
-            <span style=
-            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> A link to the caDSR Business Rules page has
-            been provided for help with block versioning rules.
-          </p><!-- Select a Data Type  --><a id=
+          <!-- Select a Data Type  --><a id=
           "createVDForm_selDataType" name=
           "createVDForm_selDataType"></a>
           <h4>
             Select a Data Type
           </h4>
           <p>
-            Simply select a Data Type from the dropdown list.
+            Select a Data Type from the dropdown list. A description and comment
+						is displayed for each Data Type when selected.
           </p>
-          <!-- Select a Parent Concept for Referenced Value Domains --><a id="createVDForm_CreatePV"
-          name="createVDForm_CreatePV"></a>
+					<!-- Enter/Select the Effective Begin and End Dates --><a id="newDECForm_BeginDate"
+          name="newDECForm_BeginDate"></a>
           <h4>
-            Select a Parent Concept for Referenced Value Domains
+            Enter/Select the Effective Begin and End Dates
           </h4>
           <p>
-            Value Domains may be referenced to EVS Concepts or
-            other vocabulary source by constraining values to an
-            EVS Parent Concept or by referencing the Value Domain
-            to a non-EVS vocabulary.<br>
-            <!-- Select Values Constrained to a Parent Concept (Enumerated Only) -->
-          </p>
-          <h4>
-            Select Values Constrained to a Parent Concept
-            (Enumerated Only)
-          </h4>
-          <p>
-            Value Domains may be referenced to EVS Concepts or
-            other vocabulary source by constraining values to an
-            EVS Parent Concept or by referencing the Value Domain
-            to a non-EVS vocabulary.<br>
+						The Effective Begin Date will default to the current date. 
+						This may be changed in two ways; enter the date in the text box using the
+            format <b>MM/DD/YYYY</b> or click the calendar icon and
+            select the desired date.<br>
             <br>
+            You may select or enter an Effective End Date
+						the same way if desired. If you have
+            selected a Workflow Status of Retired Archived,
+            Retired Deleted, or Retired Phased Out then you must
+            enter an Effective End Date. If an Effective End Date is selected
+            that is before the Effective Begin Date, an error will be returned
+						during the validation process.
           </p>
+          <!--<p>
+            You may enter the Effective Begin Date in two ways.
+            Either enter the date in the text box using the
+            format <b>MM/DD/YYYY</b> or click on the calendar
+            icon and select the date.
+          </p>-->
           <p class="centeredImage">
-            <img class="screenShot" height="267" alt=
-            "image012 (11K)" src="Assets/Help/VD/image012.png"
-            width="882">
+            <img class="screenShot" height="102" alt=
+            "Effective Begin Date and Effective End Date"
+            src="Assets/Help/VD/image018.png" width="241">
           </p>
           <p class="imageText">
             FIGURE 12<br>
-            Select Values Constrained to a Parent Concept<br>
+            Effective Begin Date and Effective End Date<br>
           </p>
-          <div class="NoteTest">
-            <p>
-              To <b>search</b> for a Parent Concept to constrain
-              Permissible Values:
-            </p>
+          <p>
+            <b>Enter/Select</b> Effective Begin Date or
+            Effective End Date:
             <ol>
-              <li>Select the Search Type of EVS or Non EVS.
+              <li>Enter the date (MM/DD/YYYY) in the &#8216;
+              <font color="#FF0000">Enter/Select</font> Effective
+              Begin Date&#8217; text field. <b>OR</b>
               </li>
-              <li>Select the EVS Vocabulary.
+              <li>Click the calendar icon <img height="28"
+                alt="CalendarIcon (1K)" src=
+                "Assets/Help/DE/CalendarIcon.png" width="26"> and
+                select the desired date.
               </li>
-              <li>Select what to Search In (Synonym, Concept
-              Code/CUI or Code.
+            </ol>
+          </p><!-- Select a Unit of Measure (UOM) --><a id=
+          "createVDForm_selUOM" name="createVDForm_selUOM"></a>
+          <h4>
+            Select a Unit of Measure (UOM) and Display Format Values
+          </h4>
+					<p>
+            <b>Enter/Select</b> Unit of Measure (UOM) and Display Format Values:
+            <ol>
+              <li>Select the desired Unit of Measure (UOM) from the
+              drop down list.
               </li>
-              <li>Enter a Search Term or Click for a Tree-Based
-              Search.
+              <li>Select the UOM Display Format from the drop
+              down list.
               </li>
-              <li>Select EVS filters. Choose to Include/Exclude
-              Retired EVS Concepts.
+              <li>Enter the Minimum and Maximum length in the appropriate text fields.
               </li>
-              <li>Select/Update Display Attributes.
+              <li>Enter the Low Value/High Value (for number data
+              type only).
               </li>
-              <li>Click Search to Start Search.
+              <li>Enter the Decimal Place.
               </li>
-              <li>The selected Concept(s) are pasted into the
-              Parent Concept field.
-              </li>
-            </ol><span style=
+            </ol>
+					</p>
+          <!-- Select a UOM Display Format-->  <a id=
+          "createVDForm_selUOMFormat" name=
+          "createVDForm_selUOMFormat"></a>
+          <!--<h4>
+            Select a UOM Display Format
+          </h4>
+          <p>
+            Select the desired UOM Display Format from the drop
+            down list. <a id="createVDForm_tfMinLength" name=
+            "createVDForm_tfMinLength"></a>Enter a Minimum /
+            Maximum Length. Enter a number for the Minimum and
+            Maximum length. <a id="createVDForm_tfLowValue" name=
+            "createVDForm_tfLowValue"></a><a id=
+            "createVDForm_tfHighValue" name=
+            "createVDForm_tfHighValue"></a>Enter a Low Value /
+            High Value (for number data type only)
+          </p>-->
+            <!-- Enter a Decimal Place  --><!--The Low Value / High
+            Value categories apply to Value Domains with number
+            data type only. -->
+            <a id="createVDForm_tfDecimal" name=
+            "createVDForm_tfDecimal"></a>
+          <!--<h4>
+            Enter a Decimal Place
+          </h4>
+          <p>
+            If the value is a number, enter the number of decimal
+            places to be collected. Enter information if
+            applicable.
+          </p>-->
+          <!-- Select Classification Schemes and Classification Scheme Items  -->
+					<!-- Block Editing Classification Schemes and Classification Scheme Items  -->
+					<a id="createVDForm_selCS"
+          name="createVDForm_selCS"></a>
+          <h4>
+            Select Classification Schemes and Classification
+            Scheme Items
+          </h4>
+          <p>
+            Classification Schemes (CS) are a way of grouping
+            Value Domains based on common characteristics.
+            Classifications also add information about Value
+            Domains that is not easily included in definitions.
+            For example, you might want to classify Value Domains
+            as belonging to the Classification Scheme Type of
+            Disease. A Classification Scheme Item (CSI) is a
+            component of content in a Classification Scheme (i.e.
+            Liver Cancer).<br>
+            <br>
+            The parent-child relationship of Classification
+            Scheme Items are displayed in a hierarchical order
+            and indicated by indentations. Child Classification
+            Scheme Items are indented farther than their parent.
+						<br>
+            
+          <p>
+						 <b>Select</b> a CS/CSI for your Value Domain:
+						<ol>
+							<li>Select a Classification Scheme from the drop down list.
+							The associated Classification Scheme Items
+            			 are displayed in hierarchical manner.
+          		</li>
+          		<li>Select Classification Scheme Items 
+									from the list of items for the selected Classification Scheme.
+									The selected Classification Scheme Items
+									are added to the Associated Classification Scheme Items list in the
+            			same hierarchical order.
+          		</li>
+						</ol>
+					</p>
+          <p>
+            <span style=
             "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> If you wish to delete a Parent Concept,
-            highlight the desired concept and click Remove
-            Parent.
-						<br />
-          </div>
-          <p class="centeredImage">
-            <img class="screenShot" height="614" alt=
-            "image012 (147K)" src="Assets/Help/VD/image013.png"
-            width="851">
+            i</span> Note that when you select a Classification Scheme
+            Item that has parents, the parent and
+            grandparent Classification Scheme Items will also be
+            selected.
+						<br>
+            <span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span> Classification Schemes and Classification
+            Scheme Items may be removed from the Value Domain by
+            highlighting a Classification Scheme or the
+            Classification Scheme Item and clicking the
+            corresponding <input style="WIDTH: 110px" type="button" value=
+            "Remove Item" name="editSelectedBtn"> button.
+          </p>
+          <h4>
+            Block Editing Classification Schemes and
+            Classification Scheme Items
+          </h4>
+          <p>
+            Classification Schemes and Classifications Scheme
+            Items can be edited for a group (block) of Value Domains: 
+						<!--The parent-child relationships of
+            Classification Scheme Items are displayed in a
+            hierarchical order and also by indentation. Child
+            Classification Scheme Items are indented farther than
+            their parent. Note that when you select a
+            Classification Scheme Item that has parents then all
+            of the parent and grandparent Classification Scheme
+            Items will also be selected.<br>-->
+						<br>
+          </p>
+          <p>
+						<ol>
+							<li>Select the desired Classification Scheme to populate the
+            			Associated Classification Scheme Items list.
+          		</li>
+          		<li>Select a Classification Scheme Item to populate the Value
+            			Domain's containing selected Classification Scheme
+            			Items list.
+          		</li>
+						</ol>
+					</p>          
+          <!--<p>
+            <span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span> Clicking this Remove Item button will remove
+            the selected Classification Scheme Item from all the
+            Value Domains involved in this Block Edit.
+          </p>
+          <p>
+            <strong>1) <span class="red">Select</span></strong> a
+            Classification Scheme from the drop down list. <span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span> Classification Schemes can only be selected
+            from the Context that is currently selected for the Block Edit.
+          </p>
+          <p>
+            <strong>2) <span class="red">Select</span></strong>
+            one or more Classification Scheme Items.
+          </p>-->
+          <p>
+            <span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span> Users with write permissions to multiple
+            Contexts must select a Context first from the drop
+            down menu when block editing Value Domains
+            from multiple Contexts. Only Classification Schemes
+            in the selected Context will be able to be selected
+            or updated. However, Classification Schemes and
+            Classification Scheme Items will be shown for all
+            contexts regardless of user's write permission.<br>
+						<span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span> Classification Schemes can only be selected
+            from the Context that is currently selected for the Block Edit.<br>
+					  <span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span> To remove a CS or CSI from all Value Domains involved in 
+						the Block Edit, select the desired CS or CSI and click the 
+						corresponding <input style="WIDTH: 110px" type="button" value=
+            "Remove Item" name="editSelectedBtn"> button.
+          </p>
+					<p>
+        		<!--
+						<span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span> Your selections appear here as you add them.
+          </p>-->
+					<h4>
+            <!-- Select Contacts  -->Create Contacts
+          </h4>
+          <p>
+            All Administered Components can be assigned a Contact. 
+						Contacts may either be an organization or a person. 
+						Contacts can be created for a Value Domain by clicking the
+						<input style="WIDTH: 100px" type="button" value=
+            "Create New" name="editSelectedBtn"> button.<br>
+          </p>
+					<p>
+						 The Create Contacts window will appear.
+					</p>
+					<p>
+						 Create a new Contact:
+						 <ol>
+              <li>Create Contact Rank Order by entering a maximum of 3
+							numbers in the text field.
+              </li>
+							<li>Select the Contact Person or Organization radio button.
+							</li>
+							<li>Select the Person Name or Organization Name from the 
+							drop down list.
+							</li>
+							<li>Select the Contact Role form the drop down list.
+							</li>
+							<li>Select Communication Type from the drop down list.
+							</li>
+							<li>Create the Call Order by entering a maximum of 3 numbers
+							into the text field.
+							</li>
+							<li>Create the Communcation Information by entering a maximum
+							of 255 characters in the text field.
+							</li>
+							<li>Click the <input style="WIDTH: 110px" type="button" value=
+            "Add Selection" name="editSelectedBtn"> button.
+							</li>
+						</ol>
+					<p><span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span>
+						 The newly created Contact information is displayed in the 
+						 'Selected Communication Attributes' table. This information can be 
+						 edited or removed by selecting the 
+						 desired Contact and clicking the <input style="WIDTH: 80px" type="button" value=
+            "Edit Item" name="editSelectedBtn"> or the <input style="WIDTH: 110px" type="button" value=
+            "Remove Item" name="editSelectedBtn"> buttons.
+					</p>
+					<p class="centeredImage">
+            <img class="screenShot" height="500" alt=
+            "Contact Attributes"
+            src="Assets/Help/VD/image019.png" width="550">
           </p>
           <p class="imageText">
             FIGURE 13<br>
-            Parent Concept Search Screen<br>
+            Contact Attributes<br>
           </p>
+					<p>
+						 Create a Contact Address for the Contact:
+						 <ol>
+              <li>Select the Address Type from the drop down list.
+              </li>
+							<li>Create Primary Order by entering a maximum of 3 numbers
+							into the text field.
+							</li>
+							<li>Create Address Line 1 and 2 information by entering text
+							in the field provided.
+							</li>
+							<li>Create the City, State, Country, and Postal Code by 
+							entering text into the appropriate text fields.
+							</li>
+							<li>Click the <input style="WIDTH: 110px" type="button" value=
+            "Add Selection" name="editSelectedBtn"> button.
+							</li>
+						</ol>
+					<p><span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span>
+						 The newly created Contact information is displayed in the 
+						 'Selected Communication Attributes' table. 
+						 This information can be edited or removed by selecting the 
+						 desired entry and clicking the <input style="WIDTH: 80px" type="button" value=
+            "Edit Item" name="editSelectedBtn"> or the <input style="WIDTH: 110px" type="button" value=
+            "Remove Item" name="editSelectedBtn"> buttons.
+					</p>
+					<p class="centeredImage">
+            <img class="screenShot" height="587" alt=
+            "Contact Address Attributes"
+            src="Assets/Help/VD/image020.png" width="758">
+          </p>
+          <p class="imageText">
+            FIGURE 14<br>
+            Contact Address Attributes<br>
+          </p>
+					
+					<p>
+						 When finished creating, editing or removing Contact attributes, click
+						 the <input style="WIDTH: 140px" type="button" value=
+             "Update Attributes" name="editSelectedBtn"> button at the top of the
+						 window. A message will be displayed stating the Contact information
+						 has been created but will not be saved until the Value Domain is submitted.
+						 Click OK on the message. You will be returned to the Value Domain screen.
+						 The Contact Name will be displayed in the 'Select Contacts' field.
+					</p>
+					<p>
+						 Contacts can be Edited or Removed by highlighting the desired Contact
+						 and clicking the <input style="WIDTH: 80px" type="button" value=
+            "Edit Item" name="editSelectedBtn"> or the <input style="WIDTH: 110px" type="button" value=
+            "Remove Item" name="editSelectedBtn"> buttons.
+						
+          <h4>
+            <!-- Select the Origin  -->Select the Origin
+          </h4>
           <p>
-            For Enumerated Value Domains you may select concepts
-            from EVS to use as constrained values to the selected
-            Parent Concept.
+            Origin is the source of a Value Domain. 
+						Select the Origin from the drop down list.
+          </p>
+          <!-- Create a Comment/Change Note  --><a id=
+          "createVDForm_CreateComment" name=
+          "createVDForm_CreateComment"></a>
+          <h4>
+            Create a Change Note
+          </h4>
+          <p>
+            A change note can be created to include any additional remarks on the
+            Value Domain.
+          </p>
+          <!-- Select a Parent Concept for Referenced Value Domains -->
+					<!-- ****************************************************** -->
+          <!--    Creating or Editing Permissible Value Attributes    -->
+          <!-- ****************************************************** --><a id="createVDForm_CreatePV"
+          name="createVDForm_CreatePV"></a></a><span class=
+          "standOutHeading">Permissible Value Attributes</span>
+					<hr>
+					<h4>
+            Overview of Permissible Values 
+          </h4>
+					<p>
+						The Permissible Values tab is new for Version 3.2 of the CDE Curation
+						Tool. This tab is where all actions related to Permissible Values
+						(Enumerated VD) or Referenced Values (Non-Enumerated VD) are performed.
+					</p>
+					<p>
+						 The Conceptual Domain (CD) selected on the Value Domain Details tab is 
+						 displayed on the PV page. If the CD needs to be changed, this can be performed
+						 on the VD Details screen.
+					</p>
+					<p class="centeredImage">
+            <img class="screenShot" height="350" alt=
+            "Permissible Values Tab"
+            src="Assets/Help/VD/image023.png" width="700">
+          </p>
+          <p class="imageText">
+            FIGURE 15<br>
+            Permissible Values Tab<br>
+          </p>
+          <h4>
+            Select a Parent Concept for EVS Referenced Value Domains (Non-Enumerated Only)
+          </h4>
+          <p>
+            Non-Enumerated Value Domains may be referenced to Concepts
+						from EVS.<br>
+            <!-- Select Values Constrained to a Parent Concept (Enumerated Only) -->
+          </p>
+					<p class="centeredImage">
+            <img class="screenShot" height="256" alt=
+            "Referenced Values"
+            src="Assets/Help/VD/image021.png" width="838">
+          </p>
+          <p class="imageText">
+            FIGURE 16<br>
+            Referenced Values<br>
+          </p>
+					<p>
+						<b>Create</b> a Referenced Value from EVS:
+						<ol>
+						<li>Click the <span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Search Parent</span> link. 
+							The Parent Concept Search Window will be displayed.
+						</li>
+						<li>Select an EVS Vocabulary from the drop down list.
+						</li>
+						<li>For <b>Term</b> Search, select the desired '<b>Search In:</b>' from the drop down
+						list, enter the Search Term, select desired Display Attributes,
+						and click the <input style="WIDTH: 100px" type="button" value=
+            "Start Search" name="editSelectedBtn"> button.
+						</li>
+						<li>For <b>Tree</b> Search, Select the <span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Tree Search</span> link
+							and continue to use the tree search as previously described for
+							searching Concepts from EVS. 
+						</li>
+						<li>Select a Concept and click the <input style="WIDTH: 110px" type="button" value=
+            "Use Selection" name="editSelectedBtn"> button.
+						</li>
+						</ol>
+					</p>
+					<p class="centeredImage">
+            <img class="screenShot" height="350" alt=
+            "Parent Concept Search Screen" src="Assets/Help/VD/image013.png"
+            width="800">
+          </p>
+          <p class="imageText">
+            FIGURE 17<br>
+            EVS Parent Concept Search Screen<br>
+          </p>
+					<p>The selected Concept is pasted in the 'Selected Non-Enumerated
+						 Value Domain Referenced Concept' field on the Permissible Values page.
+					</p>
+					<h4>
+            Select a Parent Concept for Non-EVS Referenced Value Domains (Non-Enumerated Only)
+          </h4>
+          <p>
+            Non-Enumerated Value Domains may also be referenced to Concepts
+						from vocabulary sources other than EVS.<br>
+          </p>
+					<p>
+						To Create a Referenced Value from a Non-EVS source:
+						<ol>
+							<li>Click the <span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Search Parent</span> link. 
+							The Parent Concept Search Window will be displayed.
+						</li>
+						<li>Select the Search Type of 'Non EVS' by selecting the appropriate radio button.
+						</li> 
+						<li>Enter a Reference Name.
+						</li>
+						<li>Enter a Reference Document Text.
+						</li>
+						<li>Enter a Reference URL (must begin with http://).
+						</li>
+						<li>Click the <input style="WIDTH: 120px" type="button" value=
+            "Set Reference" name="editSelectedBtn"> button.
+						</li>
+						</ol>
+					</p>
+					<p>The selected Concept is pasted in the 'Selected Non-Enumerated
+						 Value Domain Referenced Concept' field on the Permissible Values page.
+					</p>
+					<p class="centeredImage">
+            <img class="screenShot" height="300" alt=
+            "Non-EVS Referenced Value"
+            src="Assets/Help/VD/image022.png" width="780">
+          </p>
+          <p class="imageText">
+            FIGURE 18<br>
+            Non-EVS Referenced Value<br>
+          </p>
+          <!-- Select Values Constrained to a Parent Concept (Enumerated Only) -->
+					<h4>
+            Select a Parent Concept to Constrain Values from a Non-EVS Source
+            (Enumerated Only)
+          </h4>
+          <p>
+            Enumerated Value Domains may include Permissible Values constrained 
+						to a Parent Concept from a source other than EVS.
+					</p>
+					<p>
+						 Search for a Parent Concept from a Non-EVS source to constrain
+             Permissible Values:
+						<ol>
+							<li>Click the <span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Search Parent</span> link. 
+							The Parent Concept Search Window will be displayed.
+							</li>
+							<li>Select the Search Type of 'Non EVS' by selecting the appropriate radio button.
+							</li> 
+							<li>Enter a Reference Name.
+							</li>
+							<li>Enter a Reference Document Text.
+							</li>
+							<li>Enter a Reference URL (must begin with http://).
+							</li>
+							<li>Click the <input style="WIDTH: 120px" type="button" value=
+            	"Set Reference" name="editSelectedBtn"> button.
+							</li>
+						</ol>
+					</p>
+           <p>The selected Concept is pasted into the Parent Concept field.
+						</p>
+						<p>The details of the Parent Concept can be viewed by clicking the
+						<input style="WIDTH: 110px" type="button" value=
+            "View Parent" name="editSelectedBtn"> button. 
+						</p>
+						<p>
+            <span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span> If you wish to delete a Parent Concept,
+            highlight the desired concept and click <input style="WIDTH: 130px" type="button" value=
+            "Remove Parent" name="editSelectedBtn">.
+						<br />
+          </p>
+					<h4>
+            Select Values Constrained to a Parent Concept from EVS
+            (Enumerated Only)
+          </h4>
+          <p>
+            Enumerated Value Domains may be referenced to Concepts by 
+						constraining values to a Parent Concept from EVS.<br>
+            <br>
+          </p>
+          <p class="centeredImage">
+            <img class="screenShot" height="370" alt=
+            "Select Values Constrained to a Parent Concept"
+            src="Assets/Help/VD/image023.png" width="838">
+          </p>
+          <p class="imageText">
+            FIGURE 19<br>
+            Select Values Constrained to a Parent Concept<br>
+          </p>
+            <p>
+              Search for a Parent Concept from EVS to constrain
+              Permissible Values:
+						<ol>
+						<li>Click the <span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Search Parent</span> link. 
+							The Parent Concept Search Window will be displayed.
+						</li>
+						<li>Select the Search Type of 'EVS' by selecting the appropriate radio button.
+						</li>
+						<li>Select an EVS Vocabulary from the drop down list.
+						</li>
+						<li>For <b>Term</b> Search, select the desired '<b>Search In:</b>' from the drop down
+						list, enter the Search Term, select desired Display Attributes,
+						and click the <input style="WIDTH: 110px" type="button" value=
+            "Start Search" name="editSelectedBtn"> button.
+						</li>
+						<li>For <b>Tree</b> Search, Select the <span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Tree Search</span> link
+							and continue to use the tree search as previously described for
+							searching EVS. 
+						</li>
+						<li>Select a Concept and click the <input style="WIDTH: 110px" type="button" value=
+            "Use Selection" name="editSelectedBtn"> button.
+						</li>
+						</ol>
+					</p>
+					<p>The selected Concept is pasted into the Parent Concept field.
+					</p>
+					
+          <p>Once a Parent Concept is selected from EVS, you may select concepts
+            to use as constrained values. To do so:
+						<ol>
+						<li>Highlight the desired Parent Concept.
+						</li>
+						<li>Click the <input style="WIDTH: 110px" type="button" value=
+            "Create Values" name="editSelectedBtn"> button. The selected Parent 
+						Concept will be displayed in the Search Results table. 
+						</li>
+						<li>Select the checkbox next to the Parent Concept.
+						</li>
+						<li>Click the <input style="WIDTH: 120px" type="button" value=
+            "Get Subconcepts" name="editSelectedBtn"> button. NOTE: Selecting 
+						All Subconcepts will return all children and grandchildren of the 
+						concept and make take awhile.
+						</li>
+						<li>Select the checkbox next to the desired Subconcept(s). 
+						</li>
+						<li>Click the <input style="WIDTH: 110px" type="button" value=
+            "Use Selection" name="editSelectedBtn"> button. NOTE: If duplicate
+						concepts are selected, a message will appear. <b>Click OK</b> to use
+						the NCI Concept or <b>Click Cancel</b> to manually de-select 
+						unwanted duplicates.
+						</li>
+						<li>Click the <input style="WIDTH: 110px" type="button" value=
+            "Close Window" name="editSelectedBtn"> button. The selected Subconcepts
+						are pasted into the Permissible Values table.
+						</li>
+						</ol>
           </p>
           <!-- Create New Permissible Values (Enumerated Only) --><a id="createVDForm_CreatePV"
           name="createVDForm_CreatePV"></a><a id=
           "createPVForm_CreateValue" name=
           "createPVForm_CreateValue"></a>
           <h4>
-            Create New Permissible Values (Enumerated Only)
+            Create New Permissible Values (Enumerated Value Domains Only)
           </h4>
           <p>
-            The ISO 11179 Standard describes Permissible Values
+            The ISO 11179 Standard describes Permissible Values (PV)
             as the exact names, codes and text that can be stored
             in a data field in an information management system.
             For the example of PatientPlaceOfBirth, Permissible
@@ -935,23 +1463,24 @@
             the Value Domain is not referenced to a Parent
             Concept.<br>
             <br>
-            Begin creating a new Permissible Value by clicking
-            the Create New link on the Create New Value Domain
-            screen. This will open the Create New Permissible
-            Value screen.
+            Permissible Values can be created searching the caDSR for 
+						existing Value Meanings or by searching EVS for
+						concepts to use as Value Meanings. If you do not find the desired concept(s)
+						in EVS or caDSR, you also have the ability to create a new 
+						Permissible Value by entering text into the Value Meaning
+						and Description/Definition fields.
           </p>
-          <p class="centeredImage">
+          <!--<p class="centeredImage">
             <img class="screenShot" height="651" alt=
-            "image014 (92K)" src="Assets/Help/VD/image014.png"
+            "Create New Permissible Values" src="Assets/Help/VD/image014.png"
             width="765">
           </p>
           <p class="imageText">
-            FIGURE 14<br>
-            Create New Permissible Values Screen<br>
-          </p>
-          <div class="NoteTest">
-            <p>
-              To <b>create </b>a Parent Concept to constrain
+            FIGURE 20<br>
+            Create New Permissible Values<br>
+          </p>!-->
+            <!--<p>
+              <b>Create </b>a Parent Concept to constrain
               Permissible Values:
             </p>
             <ol>
@@ -970,53 +1499,80 @@
               <li>Validate the new Permissible Value.
               </li>
             </ol>
-          </div><a id="ValidateVMPage" name="ValidateVMPage"></a>
+          </p><a id="ValidateVMPage" name="ValidateVMPage"></a>-->
           <h4>
-            Select a Value Meaning (Enumerated Only)
+            Select a Value Meaning from caDSR (Enumerated VD Only)
           </h4>
           <p>
-            You may select an existing Value Meaning from the
-            caDSR.<br>
+            As stated above, you may search caDSR for an existing Value Meaning.
+						To start this process, click the <span style=
+						"COLOR: blue; TEXT-DECORATION: underline">[click here]</span> link next to 
+						Create a Permissible Value. Then, click the <span style=
+						"COLOR: blue; TEXT-DECORATION: underline">Search</span> link next to Value Meaning.<br>
             <br>
           </p>
           <p class="centeredImage">
-            <img class="screenShot" height="74" alt=
-            "image015 (2K)" src="Assets/Help/VD/image015.png"
-            width="659">
+            <img class="screenShot" height="311" alt=
+            "Select a Value Meaning" src="Assets/Help/VD/image024.png"
+            width="838">
           </p>
           <p class="imageText">
-            FIGURE 15<br>
-            Select a Value Meaning<br>
+            FIGURE 20<br>
+            Search caDSR for a Value Meaning <br>
           </p>
-          <div class="NoteTest">
-            <p>
-              To <b>select</b> an existing Value Meaning from the
-              caDSR:
+          <p>
+              <b>Select</b> an existing Value Meaning from caDSR:
             </p>
             <ol>
-              <li>Click Start Search to display existing Value
+              <li>Enter a Search term.
+							</li>
+							<li> Select a Conceptual Domain to use as a search filter or
+							keep the default to search All Domains.
+							</li>
+							<li>Click <input style="WIDTH: 110px" type="button" value=
+            "Start Search" name="editSelectedBtn"> to display existing Value
               Meanings in the selected Conceptual Domain.
-              </li>
-              <li>You may select a different Conceptual Domain
-              from the drop down menu and then Start the Search.
-              The screen will refresh with new results.
               </li>
               <li>Select a desired record.
               </li>
-              <li>Click the 'Use Selection' button. Clicking this
+              <li>Click the <input style="WIDTH: 110px" type="button" value=
+            "Use Selection" name="editSelectedBtn"> button. Clicking this
               button will close this window and populate
               the Create New Permissible Value screen with the
-              selected concept's information.
+              selected information.
               </li>
-              <li>To validate the Permissible Value, click the
-              Validate button or hyperlink on the screen.
+              <li>Enter text in the field provided for the Permissible Value name
+							or leave this field blank. If the PV name is left blank, the Value Meaning
+							name will be pasted here when the Save button is clicked.
               </li>
-              <li>If all attributes are valid, click the submit
-              button to store the Permissible Value in the caDSR
-              database.
+              <li>Click the
+							 <input style="WIDTH: 70px" type="button" value=
+           		  "Save" name="editSelectedBtn">
+              button.
               </li>
+							<li>The newly created PV will be displayed in the PV table.
+							</li>
             </ol>
-          </div>
+						<h4>
+            Select a Value Meaning from EVS (Enumerated VD Only)
+          </h4>
+          <p>
+            You may also search EVS for concepts to use as a Value Meaning.
+						To start this process, click the <span style=
+						"COLOR: blue; TEXT-DECORATION: underline">[click here]</span> link next to 
+						Create list of Permissible Values from EVS Concepts. Then, click the <span style=
+						"COLOR: blue; TEXT-DECORATION: underline">Search </span>link next to Concepts.<br>
+            <br>
+          </p>
+					<p> The Search EVS window will display. Search for concepts to use as Value
+					Meanings the same way for other EVS Searches performed in the Curation Tool.
+					Remember to select an EVS Vocabulary, enter a search term or use the tree
+					search feature. When all desired records are checked, click the
+					<input style="WIDTH: 110px" type="button" value=
+            "Use Selection" name="editSelectedBtn"> button. 
+						</p>
+						<p>The selected concepts are pasted into the Permissible Values table.
+						</p>
           <!-- Create a New Value Meaning (Enumerated Only) --><a id="createVMForm_CreateVM"
           name="createVMForm_CreateVM"></a><a id=
           "createVMForm_Validation" name=
@@ -1028,19 +1584,207 @@
             If you cannot find a desirable Value Meaning, you may
             choose to create a New Value Meaning.
           </p>
-          <p class="centeredImage">
-            <img class="ScreenShot" height="397" alt=
-            "image016 (68K)" src="Assets/Help/VD/image016.png"
-            width="642">
+          <p>
+            <b>Create</b> a New Value Meaning:
+						<ol>
+						<li>Click the <span style=
+						"COLOR: blue; TEXT-DECORATION: underline">[click here]</span> link
+						next to Create a Permissible Value.
+						</li>
+						<li>Enter text in the Permissible Value text box.
+						</li>
+						<li>Enter text in the Value Meaning text box.
+						</li>
+						<li>Enter text in the Description/Definition text box.
+						</li>
+						<li>Click the <span style=
+						"COLOR: blue; TEXT-DECORATION: underline">list</span> link to select
+						an Origin.
+						</li>
+						<li>The Begin Date is defaulted to today's date. You can change this by
+						clicking the link and selecting a new Begin Date from the calendar.
+						</li>
+						<li>Select an End Date by clicking the <span style=
+						"COLOR: blue; TEXT-DECORATION: underline">MM/DD/YYYY</span> link and
+						selecting the desired End Date from the calendar.
+						</li>
+						<li>Click the <input style="WIDTH: 70px" type="button" value=
+            "Save" name="editSelectedBtn"> button. The newly created Permissible
+						Value is pasted into the Permissible Value table.
+						</li>
+						</ol>
+          </p>
+					<p class="centeredImage">
+            <img class="ScreenShot" height="235" alt=
+            "Select a Value Meaning" src="Assets/Help/VD/image025.png"
+            width="720">
           </p>
           <p class="imageText">
-            FIGURE 16<br>
-            Select a Value Meaning<br>
+            FIGURE 21<br>
+            Create a New Value Meaning<br>
           </p>
-          <div class="NoteTest">
-            To <b>Create</b> a New Value Meaning:
-          </div>
-          <div class="NoteTest">
+					<h4>
+            Edit Permissible Values (Enumerated Only)
+          </h4>
+					<p class="centeredImage">
+            <img class="ScreenShot" height="400" alt=
+            "Permissible Values Table" src="Assets/Help/VD/image026.png"
+            width="838">
+          </p>
+					</p>
+						<p class="imageText">
+            FIGURE 22<br>
+            Permissible Values Table<br>
+          </p>
+          <p>When Permissible Values are selected for an Enumerated Value Domain,
+					several edit actions can be performed within the PV table.
+						<ul>
+							<li>The table headings can be clicked to sort each column.
+							</li>
+							<li>Value Origin, Begin Date, or End Date can be added or changed
+							for all Permissible Values by clicking the <img src="Assets/block_edit.gif"> icon.
+							</li>
+							<li>Individual Permissible Values can be removed by clicking the
+							<img src="Assets/delete.gif"> icon.
+							</li>
+							<li>Individual Permissible Values can be edited by clicking the 
+							<img src="Assets/edit.gif"> icon. Edit actions include:
+							<ul>
+									<li>Editing the Permissible Value Name.
+									</li>
+									<li>Adding a Concept by clicking the <span style=
+						"COLOR: blue; TEXT-DECORATION: underline">Concepts</span> search link.
+									</li>
+									<li>Deleting a Concept by clicking the <img src="Assets/delete.gif"> icon
+									next to the Concept.
+									</li>
+									<li>Editing the Value Meaning Name or Description/Definition
+									for manually created Value Meanings.
+									</li>
+									<li>Adding an Origin by clicking the <span style=
+						"COLOR: blue; TEXT-DECORATION: underline">List</span> link. The origin window
+						will be displayed. Select the desired Origin and click the 
+						<input style="WIDTH: 110px" type="button" value=
+            "Use Selection" name="editSelectedBtn"> button. 
+									</li>
+									<li>Changing the Begin Date by clicking the default link (set 
+									to today's date) and selecting a date from the calendar.
+									</li>
+									<li>Adding an End Date by clicking the <span style=
+						"COLOR: blue; TEXT-DECORATION: underline">MM/DD/YYYY</span> link and selecting
+										a date from the calendar.
+									</li>
+								</ul>
+							<li>Edits and Deletions are retained by clicking the <img src="Assets/save.gif">
+							icon.
+							</li>
+							<li>Original Permissible Values and Value Meanings are restored by clicking the
+							<img src="Assets/restore.gif"> icon.
+							</li>
+						</ul>
+					</p>
+					<h4>
+            Add Alternate Names, Definitions and Classifications to Value Meanings
+          </h4>
+					<p><span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span><b>New for Curation Tool v3.2:</b> Alternate Names, Definitions
+						and Classifications can be added to Value Meanings.
+					</p>
+					<p>These actions are performed by:
+						<ol>
+							<li>Click the <span style=
+						"COLOR: blue; TEXT-DECORATION: underline">Alternate Names</span> link for the 
+						desired Value Meaning. The Alternate Names and Definitions window is displayed.
+							</li><br><br>
+							<p class="centeredImage">
+            <img class="ScreenShot" height="400" alt=
+            "Value Meaning Alternate Name and Definition" src="Assets/Help/VD/image027.png"
+            width="700">
+						</p>
+						<p class="imageText">
+            FIGURE 23<br>
+            Value Meaning Alternate Name and Definition<br>
+          </p>
+          </p>
+							<li>To add an Alternate Name, click the <input style="WIDTH: 110px" type="button" value=
+            "Add Name" name="editSelectedBtn"> button.
+								 <ol>
+								 		 <li>Enter text into the Name text box.
+										 </li>
+										 <li>Select a Type from the drop down list.
+										 </li>
+										 <li>Select a Language from the drop down list.
+										 </li>
+										 <li>Select a Class Scheme Item for the list located at the bottom
+										 of the window. NOTE: A text filter is provided if needed. NOTE:
+										 Hover over text to see a tool tip for each item.
+										 </li>
+										 <li>Click the <input style="WIDTH: 80px" type="button" value=
+            "Classify" name="editSelectedBtn"> button.
+										 </li>
+										 <li>Click the <input style="WIDTH: 70px" type="button" value=
+            "Save" name="editSelectedBtn"> button. The Alternate Name 
+						with associated Classification is displayed.
+								 		 </li>
+									</ol>
+								</li>
+								<li>To add an Alternate Definition, click the <input style="WIDTH: 120px" type="button" value=
+            "Add Definition" name="editSelectedBtn"> button.
+								 <ol>
+								 		 <li>Enter text into the Definition text box.
+										 </li>
+										 <li>Select a Type from the drop down list.
+										 </li>
+										 <li>Select a Language from the drop down list.
+										 </li>
+										 <li>Select a Class Scheme Item for the list located at the bottom
+										 of the window. NOTE: A text filter is provided if needed. NOTE:
+										 Hover over text to see a tool tip for each item.
+										 </li>
+										 <li>Click the <input style="WIDTH: 80px" type="button" value=
+            "Classify" name="editSelectedBtn"> button.
+										 </li>
+										 <li>Click the <input style="WIDTH: 70px" type="button" value=
+            "Save" name="editSelectedBtn"> button. The Alternate Definition 
+						with associated Classification is displayed.
+								 		 </li>
+									</ol>
+								</li>
+							</ol>
+					<p>
+					<ul>
+					<li>Names or Definitions can be edited by clicking the <img src="Assets/edit.gif"> icon.
+					</li>
+					<li>Names or Definitions can be removed by clicking the <img src="Assets/delete.gif"> icon.
+					</li>
+					<li>You can <b>View by Name/Definition</b> or <b>View by Classifications</b> by 
+					clicking the appropriate tab.
+					</li>
+					<li>Names and Definitions can be sorted by clicking the <input style="WIDTH: 110px" type="button" value=
+            "Sort By Name" name="editSelectedBtn"> or <input style="WIDTH: 110px" type="button" value=
+            "Sort By Type" name="editSelectedBtn"> buttons.
+					</li>
+					<li>The <input style="WIDTH: 80px" type="button" value=
+            "Clear" name="editSelectedBtn"> button will restore the window with
+						the original values.
+					</li>
+					<li>The <input style="WIDTH: 80px" type="button" value=
+            "Close" name="editSelectedBtn"> button will return you to the Permissible
+						Values table.
+					</li>
+					<li>Associations between Alternate Names/Definitions and Classifications can
+					be removed by clicking the <img src="Assets/delete.gif"> icon in the edit mode.
+					</li>
+					</ul>
+					</p>
+					<p><span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span> Any additions or deletions made in the Alternate Names and Definitions
+						window will not be saved until the Value Domain is Validated and 
+						then Submitted to the caDSR.
+					</p>
+          <!--<p>
             <ol>
               <li>Create a Value Meaning by clicking this link.
               This will open a window to begin the create
@@ -1062,11 +1806,11 @@
               </li>
               <li>View Concept Code.
               </li>
-              <li>Enter comments.
+              <li>Enter Comments.
               </li>
-              <li>Click the Validate hyperlink.
+              <li>Click the Validate button or hyperlink.
               </li>
-              <li>Click the Validate button.
+              <li>Click the Submit button.
               </li>
               <li>Enter a search term or for the tree search
               </li>
@@ -1084,7 +1828,7 @@
               information on the Value Meaning screen.
               </li>
             </ol>
-          </div>
+          </p>
           <p>
             A new Value Meaning's attributes must be validated
             before it can be submitted to the caDSR. To begin the
@@ -1101,14 +1845,15 @@
           </p>
           <p>
             Once you have verified that all of your Value Meaning
-            attributes are valid, click the Submit button at the
+            attributes are valid, click the <input style="WIDTH: 110px" type="button" value=
+            "Submit" name="editSelectedBtn"> button at the
             top of the screen.
-          </p>
-          <!-- Validate the Permissible Value Information (Enumerated Only) --><a id="ValidatePVPage"
+          </p>-->
+          <!-- Validate the Permissible Value Information (Enumerated Only) --><!--<a id="ValidatePVPage"
           name="ValidatePVPage"></a><a id=
           "createPVForm_Validation" name=
-          "createPVForm_Validation"></a>
-          <h4>
+          "createPVForm_Validation"></a>-->
+          <!--<h4>
             Validate the Permissible Value Information
             (Enumerated Only)
           </h4>
@@ -1122,8 +1867,10 @@
           </p>
           <p>
             To begin the Validate Permissible Value process,
-            select either the Validate button from the menu at
-            the top of the screen, or the Validate link at the
+            select either the <input style="WIDTH: 110px" type="button" value=
+            "Validate" name="editSelectedBtn"> button from the menu at
+            the top of the screen, or the <span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Validate</span> link at the
             bottom.
           </p>
           <p class="centeredImage">
@@ -1253,303 +2000,41 @@
           </table>
 					</p>
           <p class="imageText">
-            FIGURE 17<br>
+            FIGURE 23<br>
             Validate the Permissible Value Information<br>
           </p>
-          <div class="NoteTest">
             <p>
               <span style=
               "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-              i</span> New Permissible Value Information by
-              either clicking the 'Validate' button from the
-              menu, or the 'Validate' hyperlink at the bottom of
+              i</span> Validate New Permissible Value Information by
+              either clicking the <input style="WIDTH: 110px" type="button" value=
+            "Validate" name="editSelectedBtn"> button from the
+              menu, or the <span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Validate</span> hyperlink at the bottom of
               the screen.
             </p>
             <p>
               <span style=
               "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
               i</span> If all attributes are valid, Click the
-              Submit button to store the Permissible Value in the
+              <input style="WIDTH: 110px" type="button" value=
+            	"Submit" name="editSelectedBtn"> button to store the Permissible Value in the
               caDSR database.
             </p>
-          </div>
           <p>
-            If the Value Domain and the Permissible Value are
+						 <span style=
+              "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+              i</span> If the Value Domain and the Permissible Value are
             used by a Case Report Form (CRF) the Permissible
             Value cannot be removed from the Value Domain. The
             user must create a new version of the Value Domain to
             remove this value. The tool will display a message to
             the user if this situation is encountered.
-          </p>
-          <!-- Enter/Select the Effective Begin and End Dates --><a id="newDECForm_BeginDate"
-          name="newDECForm_BeginDate"></a>
-          <h4>
-            Enter/Select the Effective Begin and End Dates
-          </h4>
-          <p>
-            The Effective Begin Date is mandatory, while the
-            Effective End Date is not. Effective Begin Date will
-            default to the current date. You may change it in two
-            ways; either enter the date in the text box using the
-            format MM/DD/YYYY or click on the calendar icon and
-            select the date.<br>
-            <br>
-            You may select or enter an Effective End Date in
-            exactly the same way if you wish. If you have
-            selected a Workflow Status of Retired Archived,
-            Retired Deleted, or Retired Phased Out then you must
-            enter an Effective End Date. Note also that the Value
-            Domain validation process will return an error if you
-            select an Effective End Date that is before the
-            Effective Begin Date.
-          </p>
-          <p>
-            You may enter the Effective Begin Date in two ways.
-            Either enter the date in the text box using the
-            format <b>MM/DD/YYYY</b> or click on the calendar
-            icon and select the date.
-          </p>
-          <p>
-            <span style=
-            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> While an Effective End Date is not required,
-            it must be after the Effective Begin Date if entered.
-          </p>
-          <p class="centeredImage">
-            <img class="screenShot" height="102" alt=
-            "Effective Begin Date and Effective End Date (2K)"
-            src="Assets/Help/VD/image018.png" width="241">
-          </p>
-          <p class="imageText">
-            FIGURE 18<br>
-            Effective Begin Date and Effective End Date<br>
-          </p>
-          <div class="NoteTest">
-            How to <b>Enter/Select</b> Effective Begin Date or
-            Effective End Date
-            <ol>
-              <li>Enter the date in MM/DD/YYYY &#8216;
-              <font color="#FF0000">Enter/Select</font> Effective
-              Begin Date&#8217; text feild <b>or</b>
-              </li>
-              <li>Click on the calendar icon <img height="28"
-                alt="CalendarIcon (1K)" src=
-                "Assets/Help/DE/CalendarIcon.png" width="26"> and
-                select the desired date.
-              </li>
-            </ol>
-          </div><!-- Select a Unit of Measure (UOM) --><a id=
-          "createVDForm_selUOM" name="createVDForm_selUOM"></a>
-          <h4>
-            Select a Unit of Measure (UOM)
-          </h4>
-          <div class="NoteTest">
-            How to <b>Enter/Select</b> Unit of Measure (UOM)
-            <ol>
-              <li>Select the desired Unit of Measure from the
-              drop down list.
-              </li>
-              <li>Select the Unit of Measure (UOM) from the drop
-              down list.
-              </li>
-              <li>Select the UOM Display Format from the drop
-              down list.
-              </li>
-              <li>Enter the Minimum and Maximum length.
-              </li>
-              <li>Enter the Low Value/High Value (for number data
-              type only).
-              </li>
-              <li>Enter the Decimal Place.
-              </li>
-            </ol>
-          </div><br>
-          <br>
-          <!-- Select a UOM Display Format  --><a id=
-          "createVDForm_selUOMFormat" name=
-          "createVDForm_selUOMFormat"></a>
-          <h4>
-            Select a UOM Display Format
-          </h4>
-          <p>
-            Select the desired UOM Display Format from the drop
-            down list. <a id="createVDForm_tfMinLength" name=
-            "createVDForm_tfMinLength"></a>Enter a Minimum /
-            Maximum Length. Enter a number for the Minimum and
-            Maximum length. <a id="createVDForm_tfLowValue" name=
-            "createVDForm_tfLowValue"></a><a id=
-            "createVDForm_tfHighValue" name=
-            "createVDForm_tfHighValue"></a>Enter a Low Value /
-            High Value (for number data type only)
-          </p>
-          <p>
-            <!-- Enter a Decimal Place  -->The Low Value / High
-            Value categories apply to Value Domains with number
-            data type only. Enter information if applicable.
-            <a id="createVDForm_tfDecimal" name=
-            "createVDForm_tfDecimal"></a>
-          </p>
-          <h4>
-            Enter a Decimal Place
-          </h4>
-          <p>
-            If the value is a number, enter the number of decimal
-            places to be collected. Enter information if
-            applicable.
-          </p>
-          <!-- Select Classification Schemes and Classification Scheme Items  --><!-- Block Editing Classification Schemes and Classification Scheme Items  --><a id="createVDForm_selCS"
-          name="createVDForm_selCS"></a>
-          <h4>
-            Select Classification Schemes and Classification
-            Scheme Items
-          </h4>
-          <p>
-            Classification Schemes (CS) are a way of grouping
-            Value Domains based on common characteristics.
-            Classifications also help add information about Value
-            Domains that is not easily included in definitions.
-            For example, you might want to classify Value Domains
-            as belonging to the Classification Scheme Type of
-            Disease. A Classification Scheme Item (CSI) is a
-            component of content in a Classification Scheme (i.e.
-            Liver Cancer).<br>
-            <br>
-            The parent-child relationship of Classification
-            Scheme Items are displayed in a hierarchical order
-            and indicated by indentations. Child Classification
-            Scheme Items are indented farther than their parent.
-            This is a new feature for version 3.0 of the CDE
-            Curation Tool.<br>
-            <br>
-            Note that when you select a Classification Scheme
-            Item that has parents then all of the parent and
-            grandparent Classification Scheme Items will also be
-            selected. This is a new feature for version 3.0 of
-            the CDE Curation Tool.<br>
-            Once selected, Classification Schemes and
-            Classification Scheme Items can be removed by
-            highlighting the desired item and then clicking the
-            RemoveItembutton.
-          </p>
-          <p>
-            <strong>1) <span class="red">Select</span></strong> a
-            Classification Scheme from the drop down list.
-          </p>
-          <p>
-            <strong>2)</strong> The Classification Scheme Items
-            are displayed in hierarchical manner.
-          </p>
-          <p>
-            <span style=
-            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> When Classification Scheme Items are
-            selected from the list of items for the selected
-            Classification Scheme, they are added to the
-            Associated Classification Scheme Items list in the
-            same hierarchical order.
-          </p>
-          <p>
-            <span style=
-            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> Classification Schemes and Classification
-            Scheme Items may be removed from the Value Domain by
-            highlighting a Classification Scheme or the
-            Classification Scheme Item and clicking on the
-            corresponding <b>Remove Item</b> button.
-          </p>
-          <h4>
-            Block Editing Classification Schemes and
-            Classification Scheme Items
-          </h4>
-          <p>
-            Classification Schemes and Classifications Scheme
-            Items can be edited for multiple Value Domains at
-            once. The parent-child relationships of
-            Classification Scheme Items are displayed in a
-            hierarchical order and also by indentation. Child
-            Classification Scheme Items are indented farther than
-            their parent. Note that when you select a
-            Classification Scheme Item that has parents then all
-            of the parent and grandparent Classification Scheme
-            Items will also be selected.<br>
-            <br>
-            <span style=
-            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> Users with write permissions to multiple
-            contexts must select a Context first from the drop
-            down menu in step 1 when block editing Value Domains
-            from multiple Contexts. Only Classification Schemes
-            in the selected Context will be able to be selected
-            or updated. However, Classification Schemes and
-            Classification Scheme Items will be shown for all
-            contexts regardless of user's write permission.
-          </p>
-          <p>
-            <strong>1) <span class="red">Select</span></strong>
-            the displayed Classification Scheme to populate the
-            Associated Classification Scheme Items list.
-          </p>
-          <p>
-            <strong>2) <span class="red">Select</span></strong> a
-            Classification Scheme Item to populate the Value
-            Domain's containing selected Classification Scheme
-            Items list.
-          </p>
-          <p>
-            <span style=
-            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> Clicking this Remove Item button will remove
-            the selected Classification Scheme from all the Value
-            Domains involved in this Block Edit.
-          </p>
-          <p>
-            <span style=
-            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> Clicking this Remove Item button will remove
-            the selected Classification Scheme Item from all the
-            Value Domains involved in this Block Edit.
-          </p>
-          <p>
-            <strong>1) <span class="red">Select</span></strong> a
-            Classification Scheme from the drop down list (in
-            this example, 'Phase-CTEP'). <span style=
-            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> Classification Schemes can only be selected
-            from the Context selected.
-          </p>
-          <p>
-            <strong>2) <span class="red">Select</span></strong>
-            one or more Classification Scheme Items (in this
-            example, 'Phase II').
-          </p>
-          <p>
-            <!-- Select the Origin  --><span style=
-            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> Your selections appear here as you add them.
-          </p>
-          <h4>
-            Select the Origin
-          </h4>
-          <p>
-            Origin is the source of a Value Domain.
-          </p>
-          <p>
-            <strong>1) <span class="red">Select</span></strong>
-            the Origin from the drop down list.
-          </p><!-- Create a Comment/Change Note  --><a id=
-          "createVDForm_CreateComment" name=
-          "createVDForm_CreateComment"></a>
-          <h4>
-            Create a Comment/Change Note
-          </h4>
-          <p>
-            When creating a Value Domain, a comment or change
-            note can be created to include any remarks on the
-            Value Domain.
-          </p>
+          </p>-->
           <!-- ****************************************************** -->
           <!--                    Validate/Submit                     -->
-          <!-- ****************************************************** --><a id="Validate"
+          <!-- ****************************************************** -->
+					<a id="Validate"
           name="Validate"></a><span class=
           "standOutHeading">Validate/Submit Value Domains</span>
           <hr>
@@ -1563,64 +2048,59 @@
           </h4>
           <p>
             Before you can submit a new Value Domain to the
-            caDSR, it must be in the appropriate format, with the
+            caDSR it must be in the appropriate format and have the
             appropriate content and relationships between
             attributes. The CDE Curation Tool provides you with a
             Validation function for Creating and Editing all
             available Administered Components (Data Elements,
             Data Element Concepts, and Value Domains).<br>
             <br>
-            To begin the validate Value Domain process, select
-            either the Validate button at the top of the screen
-            or one of the Validate hyperlinks.<br>
+            To begin the validate Value Domain process, click
+            the <input style="WIDTH: 80px" type="button" value=
+            "Validate" name="editSelectedBtn"> button at the top of the screen
+            or one of the <span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Validate</span> hyperlinks.<br>
+						The Create/Edit Value Domain Validation
+            screen displays (in table format) the attribute, the
+            value or content of that attribute, and whether or
+            not the content is valid.
             <br>
-            <span style=
+            <!--<span style=
             "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
             i</span> Validate the new Value Domain Information by
             either clicking the 'Validate' button from the menu
             or pressing on the 'Validate' hyperlink at the bottom
-            of the screen.
+            of the screen.-->
           </p>
-          <p>
+          <!--<p>
             <span style=
             "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
             i</span> Action buttons related to Validating a Value
             Domain.
-          </p>
-          <p>
-            <span style=
-            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> The Create/Edit Value Domain Validation
-            screen displays (in table format) the attribute, the
-            value or content of that attribute, and whether or
-            not it is <strong><span class=
-            "red">valid</span></strong> content.
-          </p>
+          </p>-->
           <h4>
             Correct Invalid Attributes
           </h4>
           <p>
-            If any attributes are invalid the validation screen
+            If any attributes are invalid, the validation screen
             will indicate in what way the attribute is invalid.
             Invalid attributes can be corrected by going back to
-            the create/edit screen and modifying the values of
-            the attributes. <span style=
-            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> Please use the Back button provided by the
-            CDE Curation Tool. Using your browser's back button
-            may cause the tool to function improperly.
+            the Create/Edit screen and modifying the values of
+            the attributes. <br>
           </p>
           <p>
-            <strong>1)</strong> If all the attributes for the
-            Value Domain are not valid, the Submit button will be
-            disabled.
-          </p>
-          <p>
-            <strong>2) <span class="red">Click</span></strong>
-            the Back button to return to the Create (or Edit)
-            page to correct the attributes that are not valid. Do
-            not use your browser's back button.
-          </p><!-- Submit a New Value Domain  --><a id=
+						<ol>
+            	<li>If all the attributes for the
+            	Value Domain are not valid, the Submit button will be
+            	disabled.
+          		</li>
+          		<li>Click the <input style="WIDTH: 70px" type="button" value=
+            	"Back" name="editSelectedBtn"> button to return to the Create (or Edit)
+            	page to correct the attributes that are not valid. Do
+            	not use your browser's back button.
+          		</li>
+						</ol>
+					</p><!-- Submit a New Value Domain  --><a id=
           "ValidateVDPage" name="ValidateVDPage"></a>
           <h4>
             Submit a New Value Domain
@@ -1628,23 +2108,16 @@
           <p>
             A new Value Domain's attributes must be valid before
             it can be submitted to the caDSR. If the attributes
-            of your new Value Domain are all Valid, then click on
-            the Submit button at the top left of the Create/Edit
-            Value Domain validation screen.<br>
-            <br>
-            <strong>1)</strong> If all attributes for this New
-            Value Domain are <strong><span class=
-            "red">Valid</span></strong> .
-          </p>
-          <p>
-            <strong>2) <span class="red">Submit</span></strong>
-            New Value Domain to the caDSR database by clicking
-            the Submit button. A message will appear telling you
+            of your new Value Domain are all Valid, click
+            the <input style="WIDTH: 70px" type="button" value=
+            "Submit" name="editSelectedBtn"> button at the top left of the Create/Edit
+            Value Domain Validation screen. A message will appear telling you
             that a New Value Domain has been created. Selecting
             OK returns you to a blank Create New Value Domain
-            screen.
+            screen.<br>
+            <br>
           </p>
-          <p>
+          <!--<p>
             <strong>1) <span class="red">Click</span></strong>
             the Validate button.
           </p>
@@ -1671,16 +2144,16 @@
             Data Type. It was changed to "CHARACTER". Only the
             attributes that were changed will have a value in the
             Attribute Contents column.
-          </p>
+          </p>-->
           <p>
             <span style=
             "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
-            i</span> If the attribute was not edited the
-            Validation Status will be "No Change". Attributes
+            i</span> If the attribute was not changed, the
+            Validation Status will be 'No Change'. Attributes
             that were changed will display the appropriate
             Validation Status.
           </p>
-          <p>
+          <!--<p>
             Attributes that were not modified will have a
             Validation Status of "No Change".<br>
             <br>
@@ -1702,7 +2175,7 @@
             your changes to the caDSR. A pop-up window will
             inform you of the status of the submit for each Value
             Domain in the edit.
-          </p>
+          </p>-->
           <!-- ****************************************************** -->
           <!--                     END OF FILE                        -->
           <!-- ****************************************************** -->
