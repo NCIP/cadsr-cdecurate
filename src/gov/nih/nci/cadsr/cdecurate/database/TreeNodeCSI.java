@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/TreeNodeCSI.java,v 1.21 2006-11-30 04:05:18 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/TreeNodeCSI.java,v 1.22 2006-12-04 18:45:38 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -71,7 +71,7 @@ public class TreeNodeCSI extends TreeNode
             else
             {
                 text = text.replace("{[DELFLAG]}", "");
-                text = text.replace("{[BREAK]}", "<span class=\"remove\" title=\"Remove Association\" onclick=\"removeAssoc(this);\">&#126;</span> &nbsp; ");
+                text = text.replace("{[BREAK]}", "<img src=\"Assets/delete.gif\" title=\"Remove\" onclick=\"removeAssoc(this);\" /> &nbsp; ");
             }
         }
         else

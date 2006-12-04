@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/stage/load_tool_options.sql,v 1.32 2006-11-30 04:05:17 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/stage/load_tool_options.sql,v 1.33 2006-12-04 18:45:38 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -15,17 +15,6 @@
    or invalid appropriate error messages are displayed via the Curation Tool Login page.
 */
 
-/*
---Store evs url for all tools: need to make sure it doesn't exists already before runnning.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('EVS', 'URL', 'http://cabio-stage.nci.nih.gov/cacore32/http/remoteService', 
-	   'Store evs url specific to EVS'); 
-
---Store browser url for all tools: need to make sure it doesn't exists already before runnning.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('BROWSER', 'URL', 'http://cdebrowser-stage.nci.nih.gov', 
-	   'Store browser url cde browser'); 
-*/
 
 --first delete the existing data
 DELETE FROM sbrext.tool_options_view_ext WHERE tool_name = 'CURATION';
@@ -35,12 +24,12 @@ DELETE FROM sbrext.tool_options_view_ext WHERE tool_name = 'CURATION';
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'URL', 'http://cdecurate-stage.nci.nih.gov', 
 	   'Store evs alternate url specific to curation tool if needed');
-/*
---Store evs alternate url specific to curation tool if needed.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.URL', 'http://cabio-stage.nci.nih.gov/cacore32/http/remoteService', 
-	   'Store evs alternate url specific to curation tool if needed');
-*/
+
+--Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.
+insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
+values ('CURATION', 'REFDOC_FILEURL', 'http://cdecurate-stage.nci.nih.gov/filecache/',
+'Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.');  
+
 
 --Store the CSI type for UML_PACKAGE_ALIAS
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -662,12 +651,6 @@ VALUES ('CURATION', 'DERIVATION_TYPE.4', 'Simple Concept',
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
 values ('CURATION', 'REFDOC_FILECACHE', '/local/content/cdecurate/filecache/',
 'Ref doc file cache for uploading blobs from the DB to the web server to create url.');
-
-
---Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.
-insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
-values ('CURATION', 'REFDOC_FILEURL', 'http://cdecurate-stage.nci.nih.gov/filecache/',
-'Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.');  
 
 
 	   

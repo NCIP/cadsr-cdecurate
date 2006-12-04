@@ -306,7 +306,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
         {
           VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
           //go back it vm was not changed
-          VM_Bean newVM = selectPV.getPV_VM();
+          VM_Bean newVM = new VM_Bean().copyVMBean(selectPV.getPV_VM());
           String editVM = (String)data.getRequest().getParameter("currentVM");
           if (editVM != null && !editVM.equals(""))
           {
@@ -314,7 +314,6 @@ System.out.println(sMenuAction + " pv action " + sAction);
             newVM = vmser.data.getVMBean();
             data.setStatusMsg(data.getStatusMsg() + vmser.data.getStatusMsg());
           }
-       System.out.println(isNewPV + " same pv " + chgName);
           if (newVM.getVM_SUBMIT_ACTION().equals(VMForm.CADSR_ACTION_INS))
           {
             isNewPV = true;
@@ -322,11 +321,15 @@ System.out.println(sMenuAction + " pv action " + sAction);
           }
           if (selectPV.getVP_SUBMIT_ACTION().equals(PVForm.CADSR_ACTION_INS))
             isNewPV = true;
+
+          System.out.println(isNewPV + " same pv " + chgName);
           
           //update it only if there was no duplicates exisitng
           String erVM = (String)data.getRequest().getAttribute("ErrMsgAC");
-          if (erVM == null || erVM.equals(""))
+          if (erVM == null || erVM.equals("") || isNewPV == true)
             data.setNewVM(newVM);
+       //   else
+       //     data.getRequest().setAttribute("ErrVM", newVM);
         }
         PVAct.doChangePVAttributes(chgName, pvInd, isNewPV, data);
 
@@ -457,7 +460,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
          if (vVDPVList == null) vVDPVList = new Vector<PV_Bean>();
          selectPV = (PV_Bean)vVDPVList.elementAt(pvInd);
          if (selectPV != null && selectPV.getPV_VALUE() != null && !selectPV.getPV_VALUE().equals(""))
-           selVM = selectPV.getPV_VM();
+           selVM = new VM_Bean().copyVMBean(selectPV.getPV_VM());
        }
        else
        {
