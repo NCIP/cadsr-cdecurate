@@ -663,7 +663,9 @@ public class PVAction implements Serializable
           {
             eBean.setNVP_CONCEPT_VALUE(sNVP);
             String conName = eBean.getLONG_NAME();
+            String conDef = eBean.getPREFERRED_DEFINITION();
             eBean.setLONG_NAME(conName + "::" + sNVP);
+            eBean.setPREFERRED_DEFINITION(conDef + "::" + sNVP);
           }
          // PV_Bean pv = data.getSelectPV();
           VM_Bean vm = data.getNewVM();  // pv.getPV_VM();
@@ -1207,6 +1209,27 @@ public class PVAction implements Serializable
      }       
    }
 
+   /**
+    * put back the removed pv so that it doesn't get deleted
+    * @param vd
+    * @param pvIDseq
+    */
+   public void putBackRemovedPV(VD_Bean vd, String pvIDseq)
+   {
+     Vector<PV_Bean> rmList = vd.getRemoved_VDPVList();
+     for (int i =0; i<rmList.size(); i++)
+     {
+       PV_Bean pv = (PV_Bean)rmList.elementAt(i);
+       String thisID = pv.getPV_PV_IDSEQ();
+       if (thisID != null && thisID.equals(pvIDseq))
+       {
+         rmList.removeElementAt(i);
+         break;
+       }
+     }
+     vd.setRemoved_VDPVList(rmList);
+   }
+   
    /**
     * gets the row number from the hiddenSelRow
     * Loops through the selected row and gets the evs bean for that row from the vector of evs search results.

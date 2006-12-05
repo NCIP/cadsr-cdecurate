@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.32 2006-12-04 18:45:39 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.33 2006-12-05 22:25:41 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -4475,8 +4475,9 @@ public class NCICurationServlet extends HttpServlet
           blockBean.setNVP_CONCEPT_VALUE(sNVP);
           String sName = blockBean.getLONG_NAME();
           blockBean.setLONG_NAME(sName + "::" + sNVP);
+          blockBean.setPREFERRED_DEFINITION(blockBean.getPREFERRED_DEFINITION() + "::" + sNVP);
         }
-        System.out.println(sNVP + sComp + blockBean.getLONG_NAME());
+        System.out.println(sNVP + sComp + blockBean.getLONG_NAME()+blockBean.getPREFERRED_DEFINITION());
       }
       else
       {
@@ -4764,6 +4765,7 @@ public class NCICurationServlet extends HttpServlet
             m_REP.setNVP_CONCEPT_VALUE(sNVP);
             String sName = m_REP.getLONG_NAME();
             m_REP.setLONG_NAME(sName + "::" + sNVP);
+            m_REP.setPREFERRED_DEFINITION(m_REP.getPREFERRED_DEFINITION() + "::" + sNVP);
           }
         System.out.println(sNVP + sComp + m_REP.getLONG_NAME());
         }

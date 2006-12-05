@@ -291,8 +291,9 @@ public class VD_Bean extends AC_Bean
     this.setAC_PREF_NAME_TYPE(copyBean.getAC_PREF_NAME_TYPE());
     this.setVDNAME_CHANGED(copyBean.getVDNAME_CHANGED());
     this.setValidateList(copyBean.getValidateList());
-    this.setVD_PV_List(this.cloneVDPVVector(copyBean.getVD_PV_List()));
-    this.setRemoved_VDPVList(this.cloneVDPVVector(copyBean.getRemoved_VDPVList()));
+    this.setVD_PV_List(copyBean.cloneVDPVVector(copyBean.getVD_PV_List()));
+    this.setReferenceConceptList(copyBean.getReferenceConceptList());
+    this.setRemoved_VDPVList(copyBean.cloneVDPVVector(copyBean.getRemoved_VDPVList()));
     
     return this;
   }

@@ -929,8 +929,15 @@ public class VMAction implements Serializable
       {
         sMsg.append("creating new with evs concepts \n");
         if (!VMName.equals(""))
-          existVM = getExistingVM(VMName, "", "", data);  //check if vm exists      
-      }
+          existVM = getExistingVM(VMName, "", "", data);  //check if vm exists  
+/*        //check if defintion of existing with one from page matches
+        if (this.FLAG_VM_DEF_MATCH == VMAction.VM_DEF_OTHER)
+        {
+          String exDef = existVM.getVM_DESCRIPTION();
+          if (exDef != null && exDef.equals(VMDef))
+            this.FLAG_VM_DEF_MATCH = VMAction.VM_DEF_NAME;
+        }          
+*/      }
       else if (selVMName.equalsIgnoreCase(VMName))  //may be adding concepts to existing VM matching with name
       {
         sMsg.append("editing existing vm with evs concepts \n");
@@ -942,57 +949,15 @@ public class VMAction implements Serializable
       //common for both scenario      
       VM_Bean conVM = this.getExistVMbyCondr(vCon, existVM, data, sMsg);
       VM_Bean defVM = existVM;  //expect it to be same;
+      boolean defChanged = false;
       if (editExisting && !selVMDef.equalsIgnoreCase(VMDef))
-      {
-        this.FLAG_VM_DEF_MATCH = VMAction.VM_DEF_NOT;  //make it that it does not match
-        defVM = getExistVMbyDefn(VMDef, existVM, conVM, data, sMsg);        
-      }
+        defChanged = true;
+  //    {
+  //      this.FLAG_VM_DEF_MATCH = VMAction.VM_DEF_NOT;  //make it that it does not match
+        defVM = getExistVMbyDefn(VMDef, existVM, conVM, data, sMsg, defChanged);        
+  //    }
       dispAC = markSubmitVM(data, vmBean, existVM, conVM, defVM, vCon, VMName, sMsg, editExisting);
       
-/*      //compare teh conditions
-      if (this.FLAG_VM_NAME_MATCH == 'N')  // && this.FLAG_CON_DER_MATCH == 'N')
-      {
-        switch (this.FLAG_CON_DER_MATCH) 
-        {
-          case VMAction.CON_DEF_DER_NOT:
-            vmBean.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);  //create new one
-            //sMsg.append("New Value Meaning with concepts");
-            data.setVMBean(vmBean);
-            break;
-          case VMAction.CON_DEF_DER_VM:
-            //sMsg.append("There exists another Value Meaning with the same concepts. \n");
-            dispAC = "Value Meaning";
-            data.setVMBean(conVM);
-            break;
-          default:
-            sMsg.append("new vm create problem");
-            dispAC = "Value Meaning";
-            //printFlagedVMs(data, sMsg, 'A');
-        }
-      }
-      else if (this.FLAG_VM_NAME_MATCH == 'Y')
-      {
-        switch (this.FLAG_CON_DER_MATCH) 
-        {
-          case VMAction.CON_DEF_DER_VM:
-            dispAC = "Value Meaning";
-            //sMsg.append("Value Meaning matched to the existing one in caDSR, but Concepts do not match. \n");
-          case VMAction.CON_DEF_NAME:
-            if (existVM.getVM_CONDR_IDSEQ() == null || existVM.getVM_CONDR_IDSEQ().equals(""))
-            {
-              existVM.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_UPD);  //mark to update existing with evs concpets 
-              //if (!changeVM)
-                //sMsg.append("Update the existing Value Meaning with Concepts. \n");
-            }
-          case VMAction.CON_DEF_DER_VM_NAME:
-            data.setVMBean(existVM);  //use the existing one for all three scenario's above
-            break;
-          default:
-            //sMsg.append("Edit existing value Meaning problem \n");
-            dispAC = "Value Meaning";
-        }
-      }
-*/
     //  data.setStatusMsg(sMsg.toString());
       //print the message
       System.out.println("Remove later --- Condition : " + this.FLAG_VM_NAME_MATCH + this.FLAG_CON_DER_MATCH + " : \n");
@@ -1068,7 +1033,7 @@ public class VMAction implements Serializable
       //common to both scenario
       String acs = "";
       VM_Bean conVM = this.getExistVMbyCondr(vCon, existVM, data, sMsg);
-      VM_Bean defVM = getExistVMbyDefn(vmDef, existVM, conVM, data, sMsg);
+      VM_Bean defVM = getExistVMbyDefn(vmDef, existVM, conVM, data, sMsg, true);
       //call method to mark the change action
       dispAC = markSubmitVM(data, vmBean, existVM, conVM, defVM, vCon, VMName, sMsg, editExisting);
       
@@ -1104,6 +1069,7 @@ public class VMAction implements Serializable
             dispAC = "Value Meaning";
             break;
           }
+        case (VMAction.CON_DEF_NAME + VMAction.VM_DEF_OTHER):  //'C' + 'Y'
         case (VMAction.CON_DEF_NAME + VMAction.VM_DEF_NOT):  //'C' + 'N'
         case (VMAction.CON_DEF_NAME + VMAction.VM_DEF_NAME):   //'C' + 'E':  //con name & def match but no condr
           //no message 
@@ -1304,12 +1270,12 @@ public class VMAction implements Serializable
     {
       String sCondr = this.getConceptCondr(vCon, data);
     System.out.println(sCondr + " exist vm by condr " + vCon.size() + " con flag " + this.FLAG_CON_DER_MATCH);
+      //if conder is not matched assume match to name & def (because it will be created later)
+      if (this.FLAG_CON_DER_MATCH == this.CON_DEF_DER_NOT)
+        this.FLAG_CON_DER_MATCH = this.CON_DEF_NAME;
 
       if (!sCondr.equals(""))
       {
-        //if conder is not matched assume match to name & def (because it will be created later)
-        if (this.FLAG_CON_DER_MATCH == this.CON_DEF_DER_NOT)
-          this.FLAG_CON_DER_MATCH = this.CON_DEF_NAME;
 //      matches to the matched vm
         String vmCondr = exeVM.getVM_CONDR_IDSEQ();
         if (vmCondr.equals(sCondr)) 
@@ -1345,7 +1311,7 @@ public class VMAction implements Serializable
     return conVM;
   }
   
-  private VM_Bean getExistVMbyDefn(String sDef, VM_Bean exVM, VM_Bean conVM, VMForm data, StringBuffer sMsg)
+  private VM_Bean getExistVMbyDefn(String sDef, VM_Bean exVM, VM_Bean conVM, VMForm data, StringBuffer sMsg, boolean defChange)
   {
     VM_Bean defVM = new VM_Bean();
     //first check if existing vm matches teh defn
@@ -1362,6 +1328,8 @@ public class VMAction implements Serializable
       sMsg.append("Value Meaning description matches to the Value Meaning that matches to the Concept Definition \n");
       return conVM;
     }
+    if (!defChange)  //definition not changed
+      return exVM;
     //search for defintion match vm in cadsr
     boolean isDefault = false;
     if (sDef.equalsIgnoreCase(data.DEFINITION_DEFAULT_VALUE) || sDef.equalsIgnoreCase(data.DEFINITION_DEFAULT_VALUE + "."))
@@ -1556,7 +1524,12 @@ public class VMAction implements Serializable
           if (i > 0)
             this.FLAG_VM_DEF_MATCH = this.VM_DEF_MULTI; // 'D';
           else
-            this.FLAG_VM_DEF_MATCH = this.VM_DEF_OTHER;  // 'Y';
+          {
+            if (exVM.getVM_DESCRIPTION() == null || exVM.getVM_DESCRIPTION().equals(""))
+              this.FLAG_VM_DEF_MATCH = this.VM_DEF_NOT;  //'N';
+            else
+              this.FLAG_VM_DEF_MATCH = this.VM_DEF_OTHER;  // 'Y';
+          }
         //  break;
         }
         else if (!sCondr.equals("")) // && vm.getVM_CONDR_IDSEQ().equals(sCondr))
