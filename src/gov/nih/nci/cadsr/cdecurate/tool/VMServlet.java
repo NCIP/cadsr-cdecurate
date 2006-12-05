@@ -207,6 +207,7 @@ public class VMServlet implements Serializable
     System.out.println(pvInd + " error " + data.getStatusMsg());
       data.getRequest().setAttribute("ErrMsgAC", data.getStatusMsg());
       data.getRequest().setAttribute("editPVInd", pvInd);
+      data.setVMBean(vm);
     }
   }
   
@@ -272,6 +273,9 @@ public class VMServlet implements Serializable
              conName = conName.substring(0, nvpInd);
              con.setLONG_NAME(conName);
              con.setNVP_CONCEPT_VALUE("");
+             String conDef = con.getPREFERRED_DEFINITION();
+             if (conDef.indexOf("::") > 0)
+               con.setPREFERRED_DEFINITION(conDef.substring(0, conDef.indexOf("::")));
              vmCon.setElementAt(con, i);
            }
         }

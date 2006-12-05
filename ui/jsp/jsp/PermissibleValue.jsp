@@ -83,7 +83,7 @@
       Vector newVMCon = newVM.getVM_CONCEPT_LIST();
       if (newVMCon == null) newVMCon = new Vector();
       String newPVorg = newPV.getPV_VALUE_ORIGIN();
-      if (newPVorg.equals("")) newPVorg = "List";
+      if (newPVorg.equals("")) newPVorg = "Search";
       String newPVed = newPV.getPV_END_DATE();
       if (newPVed.equals("")) newPVed = "MM/DD/YYYY";      
 	    String newVV = newPV.getQUESTION_VALUE();
@@ -115,7 +115,7 @@
       else if (!sEditPV.equals("")) sEditPV = "pv"+sEditPV;
     //  String editValue = (String)request.getAttribute("editPVValue");
     //  if (editValue == null) editValue = "";
-//System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus " + elmFocus);		
+System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus " + elmFocus);		
 		%>
 		<Script Language="JavaScript">
 
@@ -340,7 +340,7 @@
 									<%if (sMenuAction.equals("Questions")){%>
 									<td valign="top">
 										&nbsp;&nbsp;
-				            <select name="selValidValue" size=1 style="width:150">
+				            <select name="selValidValue" size=1 style="width:150" onchange="javascript:getORsetEdited('pvNew', 'pv');">
 				              <option value="" selected></option>
 				<%            for (int j = 0; vQuest.size()>j; j++)
 				              {
@@ -368,7 +368,8 @@
 									%>
 									<td valign="top">
 										&nbsp;&nbsp;
-										<input type="text" name="pvNewValue" style="width:90%" size="20" maxlength="255" value="<%=newPVjsp%>">
+										<input type="text" name="pvNewValue" style="width:90%" size="20" maxlength="255" 
+											value="<%=newPVjsp%>" onkeyup="javascript:getORsetEdited('pvNew', 'pv');">
 									</td>
 									<td valign="top">
 										<table width="98%" border="0">
@@ -384,7 +385,7 @@
 													</div>
 													<div id="pvNewVMEdit" style="display: <%if (newVMCon.size() > 0) { %>none<%} else {%>block<% } %>">
 														<input type="text" name="pvNewVM" style="width:90%" size="20" maxlength="255" 
-															value="<%=newVMjsp%>" onkeyup="javascript:disableSearch('pvNew');">
+															value="<%=newVMjsp%>" onkeyup="javascript:disableSearch('pvNew');javascript:getORsetEdited('pvNew', 'pv');">
 													</div>
 												</td>
 												<td>&nbsp;</td>
@@ -406,7 +407,7 @@
 														<%=newVM.getVM_DESCRIPTION().trim()%>
 													</div>
 													<div id="pvNewVMDEdit" style="display: <%if (newVMCon.size() > 0) { %>none<%} else {%>block<% } %>">
-														<textarea name="pvNewVMD" style="width=98%" rows="4" style="width: 100%" onkeyup="javascript:disableSearch('pvNew');"><%=newVM.getVM_DESCRIPTION().trim()%></textarea>
+														<textarea name="pvNewVMD" style="width=98%" rows="4" style="width: 100%" onkeyup="javascript:disableSearch('pvNew');javascript:getORsetEdited('pvNew', 'pv');"><%=newVM.getVM_DESCRIPTION().trim()%></textarea>
 													</div>
 												</td>
 											</tr>
@@ -502,11 +503,13 @@
 			              							<input type="button" name="btnUseSelect" style="width:100" value="Use Selection" disabled 
 			              								onClick="javascript:AddNewPV('addNewPV');">
 																</td>
-																<td>
-																	<input type="checkbox" name="saveAlt"/>
+																<td> 
+																	&nbsp;&nbsp;
+																	<!-- <input type="checkbox" name="saveAlt"/>  -->
 																</td>
 																<td>
-																	Save the current Name and Description as Alternate Name and Definition <br>
+																	&nbsp;&nbsp;
+																	<!-- Save the current Name and Description as Alternate Name and Definition <br>  -->
 																</td>
 																<td>
 			              							<input type="button" name="btnCancelUS" style="width:80" value="Cancel" 
@@ -889,7 +892,7 @@
 													<div id="<%=pvCount%>VMAltView" style="display: inline; text-align:right">															
 															<span style="padding-left:0.3in; padding-right:0.1in; text-align:right"><a href="javascript:openDesignateWindowVM('Alternate Names', <%=i%>);">Alternate Names</a></span>
 													</div>
-													<br>
+													<br><br>
 													<div id="<%=pvCount%>View" style="display: <%if (viewType.equals("expand")) {%>block <% } else { %> none <% } %>">
 														<table width="100%">
 															<tr>
@@ -980,7 +983,7 @@
 																				</tr>
 																			<% } } else { %>
 																				<tr>
-																					<td>
+																					<td height="2px">
 																						&nbsp;&nbsp;
 																					</td>
 																				</tr>
@@ -990,7 +993,7 @@
 																</td>
 															</tr>
 															<tr>
-																<td>
+																<td height="2px">
 																	&nbsp;&nbsp;
 																</td>
 															</tr>
@@ -1008,13 +1011,15 @@
 						              							<input type="button" name="btnUseSelect" style="width:100" value="Use Selection" disabled 
 						              								onClick="javascript:view(<%=sEditPV%>View, <%=sEditPV%>ImgSave, <%=sEditPV%>ImgEdit, 'save', '<%=sEditPV%>');">
 																			</td>
-																			<td>
-																				<input type="checkbox" name="saveAlt"/>
+																			<td> 
+																				&nbsp;&nbsp;
+																				<!-- <input type="checkbox" name="saveAlt"/>  -->
 																			</td>
 																			<td>
-																				Save the current Name and Description as Alternate Name and Definition <br>
+																				&nbsp;&nbsp;
+																				<!-- Save the current Name and Description as Alternate Name and Definition <br>  -->
 																			</td>
-																			<td>
+																			<td align="right">
 						              							<input type="button" name="btnCancelUS" style="width:80" value="Cancel" 
 						              								onClick="javascript:confirmRM('<%=sEditPV%>', 'restore', 'restore');">
 																			</td>
@@ -1195,9 +1200,11 @@
 </div>
 <script language = "javascript">
 //put the pv in edit mode after cancel the duplicate to make sure that user completes the action
-<% if (pgAction.equals("restore")) { %>
-	document.getElementById("editPVInd").value = "";
-	view(<%=sEditPV%>View, <%=sEditPV%>ImgEdit, <%=sEditPV%>ImgSave, 'edit', '<%=sEditPV%>');
+<% if (pgAction.equals("restore") || pgAction.equals("openNewPV")) { %>
+	<% if (!sEditPV.equals("") && !sEditPV.equals("pvNew")) { %>
+		document.getElementById("editPVInd").value = "";
+		view(<%=sEditPV%>View, <%=sEditPV%>ImgEdit, <%=sEditPV%>ImgSave, 'edit', '<%=sEditPV%>');
+	<% } %>
 	document.getElementById("editPVInd").value = "<%=sEditPV%>";
 <% } %>
 </script>

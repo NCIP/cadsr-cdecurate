@@ -1,5 +1,29 @@
 
 	var secondWindow;
+	//store values that need warning if pvs are in edit mode
+	var arrValidate = new Array();
+	arrValidate[0] = 'view';
+	arrValidate[1] = 'edit';
+	arrValidate[2] = 'view';
+	arrValidate[3] = 'createNewPV';
+	arrValidate[4] = 'removeParent';
+	arrValidate[5] = 'removePVandParent';
+	arrValidate[6] = 'sortPV';
+	arrValidate[7] = 'changeAll';
+	arrValidate[8] = 'openCreateNew';
+	arrValidate[9] = 'vdpvstab';
+	arrValidate[10] = 'vddetailstab';
+	arrValidate[11] = 'validate';
+	arrValidate[12] = 'openDesignate';
+	arrValidate[13] = 'selectValues';
+	arrValidate[14] = 'selectParent';
+	arrValidate[15] = 'remove';
+	arrValidate[16] = 'allDate';
+	arrValidate[17] = 'allOrigin';
+	arrValidate[18] = 'viewAll';
+	arrValidate[19] = 'createMultipleValues';
+	arrValidate[20] = 'createParent';
+	
 	//submit the page
 	function SubmitValidate(sAction)
 	{
@@ -9,8 +33,11 @@
 		else
 		{
 			//make sure that no pv was in edit mode
-			if ((sAction == "validate" || sAction == "vddetailstab" || sAction == "vdpvstab")  && !validatePVAction(sAction))
-				return false;
+			if (sAction != "save" && sAction != "remove")
+			{
+	  			if (!validatePVAction(sAction))
+	  				return;
+  			}
 			//continue with submission	
 			actObject.value = sAction;
 			beforeRefresh(sAction);
@@ -21,12 +48,47 @@
 				document.PVForm.submit();
 		}	
 	}
+	
+	//make sure none of the PVs are in edit mode
+	function validatePVAction(action)
+	{
+		var editedPV = getORsetEdited("none", "");
+		if (editedPV != null && editedPV != "")
+		{
+		  if (action == "save")
+		  {
+		  	//check current vm has the data
+		  	var curVM = document.getElementById("currentVM");
+		  	if (curVM == null || curVM.value == null || curVM.value == "")
+		  		editedPV = getORsetEdited(editedPV, "vm");
+		  	SubmitValidate("save");
+		  	return false;
+		  }
+		  else
+		  {
+		  	//check if the action belongs to list of actions that needs checking if pv is in edit mode
+		  	for (var i=0; i<arrValidate.length; i++)
+		  	{
+		  		if (arrValidate[i] == action)
+		  		{
+		  			alert("Please save the Permissible Value before continuing.");
+		  			return false;
+		  		}
+		  	}
+		  	return true;
+		  }
+		}
+		return true;
+	}
+	
 	//confirm the remove item			
     function confirmRM(pvNo, itmAct, itmMsg)
     {
 		var confirmOK = true;
 		if (itmAct == "remove")
 		{
+		  	if (!validatePVAction('remove'))  //check if any pv is in edit mode
+		  		return;  
 	    	confirmOK = confirm("Click OK to continue with removing the " + itmMsg + ".");
 	    	if (confirmOK == false) 
 	    		return;
@@ -118,6 +180,8 @@
     //viewall image clicked; collapse or expand each pv and its image according the expected action    
     function viewAll(changeTo)
     {
+    	if (!validatePVAction('viewAll'))
+	  		return;
     	var vmCount = 0;
     	do
     	{
@@ -247,52 +311,8 @@
 		}
 	}
 
-	function validatePVAction(action)
-	{
-		var editedPV = getORsetEdited("none");
-		if (editedPV != null && editedPV != "")
-		{
-		  if (action == "save")
-		  {
-		  	//check current vm has the data
-		  	var curVM = document.getElementById("currentVM");
-		  	if (curVM == null || curVM.value == null || curVM.value == "")
-		  		editedPV = getORsetEdited(editedPV, "vm");
-		  	SubmitValidate("save");
-		  }
-		  else
-		  	alert("Please save or restore the edited Permissible Value");
-		  return false;
-		}
-		return true;
-	}
-	
     function view(pvdiv, imgdivhide, imgdivdisp, action, pvNo)
     {
-    //	if (action == "save" || action == "edit")
-	//	{
-        	//refresh teh page if value, vm or vmd changed
-        /*	var editedPV = getORsetEdited("none");
-        	if (editedPV != null && editedPV != "")
-        	{
-        	  if (action == "save")
-        	  {
-        	  	//check current vm has the data
-        	  	var curVM = document.getElementById("currentVM");
-        	  	if (curVM == null || curVM.value == null || curVM.value == "")
-        	  		editedPV = getORsetEdited(editedPV, "vm");
-        	  	SubmitValidate("save");
-        	  }
-        	  else
-        	  	alert("Please save or restore the edited Permissible Value");
-        	  return;
-        	}
-        */
-	//	} 
-    	//unedit all first
-    //	if (action == "edit") 
-    //		viewAll("uneditAll");
-  // alert(editedPV + " view " + action); 	
   		if (validatePVAction(action) == false)
   			return;
   			
@@ -549,13 +569,13 @@
 	  	 if (action == "edit" && nodeText == "")
 	  	 {
 	  		 if (objName.match("Org") != null)
-	  			 nodeText = "List";
+	  			 nodeText = "Search";
 	  		 else if (objName.match("BD") != null || objName.match("ED") != null)
 	  			 nodeText = "MM/DD/YYYY";
   		 }
   		 else if (action == "view")
   		 {
-  			 if (objName.match("Org") != null && nodeText == "List")
+  			 if (objName.match("Org") != null && nodeText == "Search")
   				 nodeText = "";
   			 else if ((objName.match("BD") != null || objName.match("ED") != null) && nodeText == "MM/DD/YYYY")
   				 nodeText = "";
@@ -695,6 +715,9 @@
 
   function selectValues()
   {
+	  if (!validatePVAction('selectValues'))  //check if any pv is in edit mode
+	  	return;  
+	  //continue  	
   	  var parObj = document.getElementById("listParentConcept");
 	  if (parObj != null)
 	  {
@@ -722,6 +745,9 @@
   //submits the form to mark as removed
   function removeParent()
   {
+	  if (!validatePVAction('removeParent'))  //check if any pv is in edit mode
+	  	return;  
+	  //continue  	
   	  var parObj = document.getElementById("listParentConcept");
 	  if (parObj != null)
 	  {
@@ -772,6 +798,8 @@
 
   function createParent()
   {
+	  if (!validatePVAction('createParent'))  //check if any pv is in edit mode
+	  	return;  
       //do not allow to create parent if pvs exist without parents
       var pvCount = document.getElementById("PVViewTypes").length;
       var parCount = document.getElementById("listParentConcept").length;
@@ -788,6 +816,9 @@
   
   function createMultipleValues()
   {
+	  if (!validatePVAction('createMultipleValues'))  //check if any pv is in edit mode
+	  	return;  
+	  //continue  	
   	  var vdtypeObj = document.getElementById("listVDType");
       if (vdtypeObj.value == "E")
       {
@@ -850,12 +881,14 @@
 	  	//check if any item was in edit mode
 	  	if (curPV == "all")
 	  	{
-		  	var editElm = document.getElementById("editPVInd").value
+		  if (!validatePVAction('allOrigin'))  //check if any pv is in edit mode
+		  	return;  
+		  /*	var editElm = document.getElementById("editPVInd").value
 		  	if (editElm != null && editElm != "")
 		  	{
 		  		alert("One of the Permissible Values is changed. Do save the changes before block editing.");
 		  		return;
-		  	}
+		  	} */
 	  	}
 	  	var curInd = document.getElementById("currentElmID");
 	  	if (curInd != null)
@@ -874,12 +907,14 @@
 	  	//check if any item was in edit mode
 	  	if (curPV == "all")
 	  	{
-		  	var editElm = document.getElementById("editPVInd").value
+		  if (!validatePVAction('allDate'))  //check if any pv is in edit mode
+		  	return;  
+		  /*	var editElm = document.getElementById("editPVInd").value
 		  	if (editElm != null && editElm != "")
 		  	{
 		  		alert("One of the Permissible Values is changed. Do save the changes before block editing.");
 		  		return;
-		  	}
+		  	} */
 	  	}
 	  	var curInd = document.getElementById("currentElmID");
 	  	if (curInd != null)

@@ -234,7 +234,8 @@ System.out.println(sMenuAction + " pv action " + sAction);
         SimpleDateFormat formatter = new SimpleDateFormat ("MM/dd/yyyy");
         pv.setPV_BEGIN_DATE(formatter.format(new java.util.Date()));
         data.getRequest().setAttribute("refreshPageAction", "openNewPV");
-        session.setAttribute("NewPV", pv);        
+        session.setAttribute("NewPV", pv);  
+        session.setAttribute("VMEditMsg", new Vector<VM_Bean>());
         data.getRequest().setAttribute("focusElement", "divpvnew");
       }
       else if (sAct.equals("addNewPV"))
@@ -777,11 +778,13 @@ System.out.println(sMenuAction + " pv action " + sAction);
        {
          data.getRequest().setAttribute("refreshPageAction", "openNewPV");
          data.getRequest().setAttribute("focusElement", "divpvnew");          
+         data.getRequest().setAttribute("editPVInd", pvInd);
        }
        else
        {
          data.getRequest().setAttribute("editPVInd", pvInd);
          data.getRequest().setAttribute("refreshPageAction", "restore");
+         data.getRequest().setAttribute("focusElement", "pv" + pvInd + "View");     
        }
      }
      else
@@ -790,6 +793,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
        {
          //remove the pv from the current vd list
          PV_Bean selPV = data.getSelectPV();
+         VD_Bean vd = data.getVD();
          if (selPV != null)
          {
            //check it idseq was from cadsr
@@ -807,6 +811,7 @@ System.out.println(sMenuAction + " pv action " + sAction);
                  if (thisPV.getPV_PV_IDSEQ() != null && selPV.getPV_PV_IDSEQ() != null && thisPV.getPV_PV_IDSEQ().equals(selPV.getPV_PV_IDSEQ()))
                  {
                    orgPV = orgPV.copyBean(thisPV);
+                   PVAct.putBackRemovedPV(vd, thisPV.getPV_PV_IDSEQ());
                    break;
                  }
                }
@@ -815,16 +820,15 @@ System.out.println(sMenuAction + " pv action " + sAction);
            else
              orgPV = orgPV.copyBean(selPV);
   
-           VD_Bean vd = data.getVD();
            Vector<PV_Bean> vCurVP = vd.getVD_PV_List();
            orgPV.setPV_VIEW_TYPE("expand");
            vCurVP.setElementAt(orgPV, pvInd);
            vd.setVD_PV_List(vCurVP); 
            session.setAttribute("m_VD", vd);
          }
+         data.getRequest().setAttribute("focusElement", "pv" + pvInd + "View");     
        }
      }
-     data.getRequest().setAttribute("focusElement", "pv" + pvInd + "View");     
      return "/PermissibleValue.jsp";
    }
 

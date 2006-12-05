@@ -492,17 +492,20 @@ public class ConceptAction implements Serializable
            CStmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //deleted ind
 
            //truncate the definition to be 2000 long.
-           String sDef = evsBean.getPREFERRED_DEFINITION();
          //  if (sDef == null) sDef = "";
          //  if (sDef.length() > 2000) sDef = sDef.substring(0, 2000);
            // Set the In parameters (which are inherited from the PreparedStatement class)
            CStmt.setString(2, sAction);
            CStmt.setString(4, evsBean.getCONCEPT_IDENTIFIER());
-           //make sure that :: is removed from the long name 
+           //make sure that :: is removed from the long name and defintion
            String sName = evsBean.getLONG_NAME();
+           String sDef = evsBean.getPREFERRED_DEFINITION();
            int nvpInd = sName.indexOf("::");
            if (nvpInd > 0)
-             sName = sName.substring(0, nvpInd);      
+             sName = sName.substring(0, nvpInd);  
+           nvpInd = sDef.indexOf("::");
+           if (nvpInd > 0)
+             sDef = sDef.substring(0, nvpInd);  
            CStmt.setString(5, sName);
            CStmt.setString(6, sDef);
          //  CStmt.setString(7, evsBean.getCONTE_IDSEQ());  caBIG by default
@@ -607,7 +610,10 @@ System.out.println("in getAC_Concepts condrID: " + condrID);
             eBean.setNCI_CC_TYPE(rs.getString("evs_source"));
             eBean.setNVP_CONCEPT_VALUE(rs.getString("CONCEPT_VALUE"));
             if (!eBean.getNVP_CONCEPT_VALUE().equals(""))
+            {
               eBean.setLONG_NAME(eBean.getLONG_NAME() + "::" + eBean.getNVP_CONCEPT_VALUE());
+              eBean.setPREFERRED_DEFINITION(eBean.getPREFERRED_DEFINITION() + "::" + eBean.getNVP_CONCEPT_VALUE());
+            }
             eBean.setCONDR_IDSEQ(condrID);
             eBean.setCON_AC_SUBMIT_ACTION("NONE");
             if(rs.getString("origin") != null && rs.getString("origin").equals("NCI Metathesaurus"))

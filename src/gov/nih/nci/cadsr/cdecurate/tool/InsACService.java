@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.33 2006-12-04 18:45:39 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.34 2006-12-05 22:25:41 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -5702,7 +5702,10 @@ public class InsACService implements Serializable
           String sName = evsBean.getLONG_NAME();
           int nvpInd = sName.indexOf("::");
           if (nvpInd > 0)
-            sName = sName.substring(0, nvpInd);      
+            sName = sName.substring(0, nvpInd);  
+          nvpInd = sDef.indexOf("::");
+          if (nvpInd > 0)
+            sDef = sDef.substring(0, nvpInd);  
           CStmt.setString(5, sName);
           CStmt.setString(6, sDef);
         //  CStmt.setString(7, evsBean.getCONTE_IDSEQ());  caBIG by default

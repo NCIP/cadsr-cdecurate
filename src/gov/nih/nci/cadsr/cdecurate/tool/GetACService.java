@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.32 2006-12-04 18:45:39 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.33 2006-12-05 22:25:41 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1813,7 +1813,10 @@ public class GetACService implements Serializable
             eBean.setNCI_CC_TYPE(rs.getString("evs_source"));
             eBean.setNVP_CONCEPT_VALUE(rs.getString("CONCEPT_VALUE"));
             if (!eBean.getNVP_CONCEPT_VALUE().equals(""))
+            {
               eBean.setLONG_NAME(eBean.getLONG_NAME() + "::" + eBean.getNVP_CONCEPT_VALUE());
+              eBean.setPREFERRED_DEFINITION(eBean.getPREFERRED_DEFINITION() + "::" + eBean.getNVP_CONCEPT_VALUE());
+            }
             eBean.setCONDR_IDSEQ(condrID);
             eBean.setCON_AC_SUBMIT_ACTION("NONE");
             eBean.markNVPConcept(eBean, m_classReq.getSession());
