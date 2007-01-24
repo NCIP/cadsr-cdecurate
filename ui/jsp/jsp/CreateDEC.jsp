@@ -1,4 +1,8 @@
-<!-- CreateDEC.jsp -->
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CreateDEC.jsp,v 1.16 2007-01-24 06:12:17 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <%@ page session="true" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -642,7 +646,7 @@
      </tr>
       
      <tr height="25" valign="bottom">
-        <td align=right><font color="#FF0000">* &nbsp;</font><%=item++%>)</td>
+        <td align=right><%=item++%>)</td>
         <td> <font color="#FF0000">Enter/Select</font> Effective Begin Date</td>
     </tr>      
     <tr>

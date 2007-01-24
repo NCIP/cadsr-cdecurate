@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.23 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.24 2007-01-24 06:12:13 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -373,7 +373,7 @@ public class AltNamesDefsSession implements Serializable
         int nCnt = 0;
         for (int i = 0; i < alts_.length; ++i)
         {
-            if (alts_[i].getInstance() == Alternates._INSTANCENAME)
+            if (alts_[i].isName())
                 ++nCnt;
         }
 
@@ -386,7 +386,7 @@ public class AltNamesDefsSession implements Serializable
         dCnt = 0;
         for (int i = 0; i < alts_.length; ++i)
         {
-            if (alts_[i].getInstance() == Alternates._INSTANCENAME)
+            if (alts_[i].isName())
             {
                 altsName[nCnt] = alts_[i];
                 ++nCnt;
@@ -782,6 +782,7 @@ public class AltNamesDefsSession implements Serializable
     public String[] _cacheAltTypes;
     public String[] _cacheDefTypes;
     public String[] _cacheLangs;
+    public String _cacheLangDefault;
 
     public static final String _newPrefix = "$";
 

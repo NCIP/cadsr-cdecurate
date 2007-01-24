@@ -1,4 +1,7 @@
-<!-- SearchResultsBlocks.jsp -->
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/SearchResultsBlocks.jsp,v 1.16 2007-01-24 06:12:18 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
 
 <%@ page import= "java.util.*" %>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
@@ -16,8 +19,9 @@
 //System.out.println(" search results ");
    UtilService serUtil = new UtilService();
    Vector results = (Vector)session.getAttribute("results");
+   Session_Data sessionData2 = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
    if (results == null) results = new Vector();
-   EVS_UserBean uBean = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute("EvsUserBean");
+   EVS_UserBean uBean = (EVS_UserBean)sessionData2.EvsUsrBean; //(EVS_UserBean)session.getAttribute("EvsUserBean");
    if (uBean == null) uBean = new EVS_UserBean();
    Vector vrVocab = uBean.getVocabNameList();   //(Vector)session.getAttribute("dtsVocabNames");  //list of vocabulary names
    if (vrVocab == null) vrVocab = new Vector();
@@ -92,8 +96,10 @@
    else if (sSelAC.equals("ReferenceList"))
      sSelAC = "Reference List";
   else if (sSelAC.equals("EVSValueMeaning") || sSelAC.equals("CreateVM_EVSValueMeaning")
-            || sSelAC.equals("PV_ValueMeaning") || sSelAC.equals("VMConcept"))
+            || sSelAC.equals("PV_ValueMeaning")) // || sSelAC.equals("VMConcept"))
      sSelAC = "Value Meaning";
+  else if (sSelAC.equals("VMConcept"))
+     sSelAC = "Concept";
   else if (sSelAC.equals("ParentConcept"))
      sSelAC = "Parent Concept";
   else if (sSelAC.equals("ParentConceptVM"))
@@ -167,8 +173,8 @@
         else if (sComp == "RepQualifier") type = "Rep Qualifier";
         else if (sComp == "EVSValueMeaning" || 
                   sComp == "CreateVM_EVSValueMeaning" || 
-                  sComp == "ParentConceptVM" || 
-                  sComp == "VMConcept") type = "Value Meaning";
+                  sComp == "ParentConceptVM") type = "Value Meaning";  // || sComp == "VMConcept"
+        else if (sComp == "VMConcept") type = "Concept";
         else if (sComp == "ParentConcept") type = "Parent Concept";
         
     <% } else { %>

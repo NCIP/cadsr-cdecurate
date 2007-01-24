@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.33 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.34 2007-01-24 06:12:12 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -583,16 +583,25 @@ public final class EVS_UserBean implements Serializable
     m_codeType = sType;    
   }
  
+  /**
+   * @return boolean to mark web access
+   */
   public boolean vocabIsSecure()
   {
       return _vocabAccess != null;
   }
   
+  /**
+   * @return string code of we access
+   */
   public String getVocabAccess()
   {
       return _vocabAccess;
   }
   
+  /**
+   * @param code_ string code of we access
+   */
   public void setVocabAccess(String code_)
   {
       _vocabAccess = code_;
@@ -953,7 +962,7 @@ public final class EVS_UserBean implements Serializable
       vList = getAC.getToolOptionData("CURATION", "EVS.METACODETYPE.%", "");
       if (vList != null && vList.size()>0)
       {
-        Hashtable hMeta = new Hashtable();
+        Hashtable<String, EVS_METACODE_Bean> hMeta = new Hashtable<String, EVS_METACODE_Bean>();
         for (int i=0; i<vList.size(); i++)
         {
           TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(i);
@@ -983,7 +992,7 @@ public final class EVS_UserBean implements Serializable
       vList = getAC.getToolOptionData("CURATION", "EVS.DEFSOURCE.%", "");  // 
       if (vList != null && vList.size() > 0)
       {
-        Vector vDefSrc = new Vector();
+        Vector<String> vDefSrc = new Vector<String>();
         for (int i=0; i<vList.size(); i++)
         {
           TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(i);
@@ -994,7 +1003,7 @@ public final class EVS_UserBean implements Serializable
       }
       
       //get vocab attributes
-      Hashtable hvoc = new Hashtable();  
+      Hashtable<String, EVS_UserBean> hvoc = new Hashtable<String, EVS_UserBean>();  
       vList = getAC.getToolOptionData("CURATION", "EVS.VOCAB.ALL.%", "");  // 
       //do the looping way right now
       if (vocabname != null)

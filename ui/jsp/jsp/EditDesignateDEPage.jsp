@@ -1,4 +1,8 @@
-<!-- EditNewPage.jsp -->
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/EditDesignateDEPage.jsp,v 1.4 2007-01-24 06:12:18 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
 <curate:checkLogon name="Userbean" page="/LoginE.jsp" />
 <html>

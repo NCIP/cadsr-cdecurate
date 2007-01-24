@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.23 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.24 2007-01-24 06:12:11 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -509,7 +509,8 @@ public class DBAccess
                     prevTnc.setPackageAlias(csiValue);
                 prevTnc = tnc;
             }
-            lineage.add(0, new CSIData(new TreeNodeCS(csName, csValue, csDef, csVers, csConte, false), 0));
+            if (csValue != null)
+                lineage.add(0, new CSIData(new TreeNodeCS(csName, csValue, csDef, csVers, csConte, false), 0));
             
             rs.close();
             pstmt.close();
@@ -966,7 +967,7 @@ public class DBAccess
                 String csiName = rs.getString(SQLSelectCSIAll._CSINAME);
                 String csiValue = rs.getString(SQLSelectCSIAll._CSCSIIDSEQ);
                 String csiType = rs.getString(SQLSelectCSIAll._CSITYPE);
-                TreeNodeCSI tnc = new TreeNodeCSI(csiName, csiValue, csiValue, csiType, (csiType.equals(_packageName)) ? prevValue : null, false);
+                TreeNodeCSI tnc = new TreeNodeCSI(csiName, csiValue, csiValue, csiType, prevValue, false);
                 test.add(new CSIData(tnc, level));
                 prevValue = (csiType.equals(_packageAlias)) ? csiValue : null;
             }
@@ -1074,7 +1075,7 @@ public class DBAccess
      */
     private void insert(Alternates alt_) throws SQLException
     {
-        if (alt_.getInstance() == Alternates._INSTANCENAME)
+        if (alt_.isName())
             insertAltName(alt_);
         else
             insertAltDef(alt_);
@@ -1140,7 +1141,7 @@ public class DBAccess
      */
     private void update(Alternates alt_) throws SQLException
     {
-        if (alt_.getInstance() == Alternates._INSTANCENAME)
+        if (alt_.isName())
             updateAltName(alt_);
         else
             updateAltDef(alt_);
@@ -1170,7 +1171,7 @@ public class DBAccess
                 if (node instanceof TreeNodeCSI)
                 {
                     // Only do if we have a CSI node.
-                    String atlName = (alt_.getInstance() == Alternates._INSTANCENAME) ? "DESIGNATION" : "DEFINITION";
+                    String atlName = (alt_.isName()) ? "DESIGNATION" : "DEFINITION";
                     pstmt.setString(1, node.getValue());
                     pstmt.setString(2, alt_.getAltIdseq());
                     pstmt.setString(3, atlName);
@@ -1281,7 +1282,7 @@ public class DBAccess
      */
     private void delete(Alternates alt_) throws SQLException
     {
-        if (alt_.getInstance() == Alternates._INSTANCENAME)
+        if (alt_.isName())
             deleteAltName(alt_);
         else
             deleteAltDef(alt_);
@@ -1479,7 +1480,9 @@ public class DBAccess
      */
     public String[] getDesignationTypes() throws ToolException
     {
-        String select = "select detl_name from sbr.designation_types_lov_view where detl_name not in ('USED_BY') order by upper(detl_name)";
+        String select = "select detl_name from sbr.designation_types_lov_view where detl_name not in ( "
+            + "select value from sbrext.tool_options_view_ext where property like 'EXCLUDE.DESIGNATION_TYPE.%' "
+            +") order by upper(detl_name)";
         return getList(select);
     }
     
@@ -1527,6 +1530,48 @@ public class DBAccess
     public static boolean isPackageAlias(String alias_)
     {
         return _packageAlias.equals(alias_);
+    }
+    
+    /**
+     * Get the name of the CSI type for a UML Package Alias
+     * 
+     * @return the package alias type name
+     */
+    public static String getPackageAliasName()
+    {
+        return _packageAlias;
+    }
+
+    /**
+     * Get the default language for the caDSR
+     * 
+     * @return the default language
+     * @throws ToolException
+     */
+    public String getDefaultLanguage() throws ToolException
+    {
+        String select = "select value from sbrext.tool_options_view_ext where tool_name = 'caDSR' and property = 'DEFAULT.LANGUAGE'";
+        String[] results = getList(select);
+        switch (results.length)
+        {
+            case 0:
+                results = getLangs();
+                switch (results.length)
+                {
+                    case 0:
+                        return "";
+                    case 1:
+                        return results[0];
+                    default:
+                        return "";
+                }
+
+            case 1:
+                return results[0];
+
+            default:
+                return "";
+        }
     }
     
     private Connection _conn;

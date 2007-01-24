@@ -156,6 +156,7 @@
     	{
 			if (txtVM != "")
 			{
+				txtVM = txtVM.replace(/\r\n/g, " "); 
 				document.getElementById("pvNewValue").value = txtVM;
 				txtPV = txtVM;
 			}

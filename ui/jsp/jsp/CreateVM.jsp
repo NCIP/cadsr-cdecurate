@@ -1,3 +1,8 @@
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CreateVM.jsp,v 1.10 2007-01-24 06:12:17 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <%@ page import="java.util.*" %>
 <html>
 <head>
@@ -172,7 +177,7 @@ function displayStatusMessage()
     </td>
   </tr>
   <tr height="25" valign="bottom">
-      <td align=right><font color="#FF0000"> * &nbsp;</font>3) </td>
+      <td align=right>3) </td>
       <td><font color="#FF0000">Enter/Select</font> Effective Begin Date</td>
 	</tr>
     <tr>

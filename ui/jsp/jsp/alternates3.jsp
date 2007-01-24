@@ -1,7 +1,7 @@
 <!--
     Copyright (c) 2006 ScenPro, Inc.
 
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/alternates3.jsp,v 1.23 2006-12-05 22:25:42 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/alternates3.jsp,v 1.24 2007-01-24 06:12:19 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -10,6 +10,7 @@
 <%@ page import="gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.util.TreeNode"%>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.database.DBAccess"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -43,6 +44,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         var nodeLevel = "<%=TreeNode._nodeLevel%>";
         var nodeValue = "<%=TreeNode._nodeValue%>";
         var nodeName = "<%=TreeNode._nodeName%>";
+        var nodeCsiType = "<%=TreeNode._nodeCsiType%>";
         var nameFlag = <%=nameFlag%>;
         var parmType = "<%=AltNamesDefsServlet._parmType%>";
         var parmLang = "<%=AltNamesDefsServlet._parmLang%>";
@@ -52,6 +54,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         var actionRemoveAssoc = "<%=AltNamesDefsServlet._actionRemoveAssoc%>";
         var actionRestoreAssoc = "<%=AltNamesDefsServlet._actionRestoreAssoc%>";
         var parmFilterText = "<%=AltNamesDefsServlet._parmFilterText%>";
+        var parmReserved = "<%=DBAccess.getPackageAliasName()%>";
 
         history.forward();
     </script>

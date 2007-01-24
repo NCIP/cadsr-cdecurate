@@ -24,7 +24,7 @@ public class DatabaseConnection extends HttpServlet
   private static Hashtable<String, DataSource> hashOracleOCIConnectionPool = new Hashtable<String, DataSource>();
 
   /**
-   * @param config 
+   * @param serCon 
    */
   public void initOracleConnect(ServletConfig serCon)
   {

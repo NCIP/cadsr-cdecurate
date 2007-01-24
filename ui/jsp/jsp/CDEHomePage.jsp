@@ -1,3 +1,8 @@
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CDEHomePage.jsp,v 1.4 2007-01-24 06:12:17 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <%@ page errorPage="ErrorPage.jsp" %>
 <html>
 <head>
@@ -72,8 +77,8 @@ Vector vACAttr2 = new Vector();
 
 <body>
   <table width="100%" border="1" cellpadding="0" cellspacing="0">
-    <col width="20%">
-    <col width="80%">
+  <col style="width: 2.3in"/>
+  <col /> 
     <tr height="95" valign="top">
       <td colspan=2><%@ include file="TitleBar.jsp" %></td>
     </tr>

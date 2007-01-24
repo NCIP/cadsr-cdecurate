@@ -1,4 +1,8 @@
-<!-- SearchResultsPage.jsp -->
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/SearchResultsPage.jsp,v 1.4 2007-01-24 06:12:18 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <!-- goes to lgoin page if error occurs -->
 <%@ page errorPage="ErrorPage.jsp" %>
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
@@ -96,9 +100,9 @@ Vector vSelAttr4 = new Vector();
 </head>
 
 <body>
-<table border="2">
-  <col width="20%">
-  <col width="80%"> 
+<table border="2" style="width: 100%">
+  <col style="width: 2.3in"/>
+  <col /> 
   <tr valign="top">
     <td colspan=2 valign="top" height="95">
           <%@ include file="TitleBar.jsp" %>

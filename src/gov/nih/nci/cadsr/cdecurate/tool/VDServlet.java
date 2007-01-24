@@ -8,6 +8,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.log4j.Logger;
 
 /**
  * @author shegde
@@ -18,8 +19,13 @@ public class VDServlet implements Serializable
   private static HttpServletRequest m_classReq;
   private static HttpServletResponse m_classRes;
   private static NCICurationServlet m_classServlet;
+  private static final Logger logger = Logger.getLogger(VMServlet.class.getName());
   
-  /** Constructor */
+  /** Constructor 
+   * @param req HttpServletRequest object
+   * @param res HttpServletResponse object
+   * @param ser NCICurationServlet object
+   * */
   public VDServlet(HttpServletRequest req, HttpServletResponse res, NCICurationServlet ser)
   {
     m_classReq = req;
@@ -27,6 +33,14 @@ public class VDServlet implements Serializable
     m_classServlet = ser;
   }
   
+  /**method to go back from vd and pv edits
+   * @param orgAct String value for origin where vd page was opened
+   * @param menuAct String value of menu action where this use case started
+   * @param actype String what action is expected
+   * @param butPress STring last button pressed
+   * @param vdPageFrom string to check if it was PV or VD page
+   * @return String jsp to forward the page to
+   */
   public String goBackfromVD(String orgAct, String menuAct, String actype, String butPress, String vdPageFrom)
   {
     try
@@ -69,13 +83,18 @@ public class VDServlet implements Serializable
     }
     catch (Exception e)
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.fatal("ERROR - ", e);
     }
     
     return "";
   }
   
+  /** to clear the edited data from the edit and create pages 
+   * @param orgAct String value for origin where vd page was opened
+   * @param menuAct String value of menu action where this use case started
+   * @param vdPageFrom string to check if it was PV or VD page
+   * @return String jsp to forward the page to
+   */
   public String clearEditsOnPage(String orgAct, String menuAct, String vdPageFrom)
   {
     try
@@ -109,8 +128,7 @@ public class VDServlet implements Serializable
     }
     catch (Exception e)
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.fatal("ERROR - ", e);
     }
     return "/CreateVDPage.jsp";    
   }

@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.33 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.34 2007-01-24 06:12:11 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -229,7 +229,8 @@ public class EVSMasterTree
    * @param dtsVocab    The Vocabulary name.
    * @return rendHTML   The string of html which displays the Tree.
    */
-	public String populateTreeRoots(String dtsVocab) 
+	@SuppressWarnings("unchecked")
+  public String populateTreeRoots(String dtsVocab) 
   {	
 		Tree dtsTree = new Tree("dtsTree");
     HttpSession session = m_classReq.getSession();
@@ -607,7 +608,7 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
 
 	/**
 	 * Renders the specified tree leaf as HTML.
-   *  @param TreeLeaf leaf
+   *  @param leaf TreeLeaf
    *  @return buf.toString()   The stringbuffer
    */
 	private final String renderLeafHTML(TreeLeaf leaf) 
@@ -691,6 +692,7 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
    *  @param nodeID               node id
    *  @return rendHTML           The rendered html.
 */
+  @SuppressWarnings("unchecked")
   public String expandNode(String nodeName, String dtsVocab, String strRenderHTML,
           String nodeCode, String sCodeToFindInTree, int nodeLevelToFind, String nodeID) 
   {
@@ -1085,6 +1087,7 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
    *  @param shouldRender   'Yes' should, 'No' not.
    *  @return rendHTML      Html string
 */
+@SuppressWarnings({"unchecked","unchecked"})
 public String collapseNode(String nodeID, String dtsVocab, String shouldRender, String nodeName) 
 {
 //System.out.println("collapseNode top nodeID: " + nodeID + " nodeName: " + nodeName + " dtsVocab: " + dtsVocab);
@@ -1179,6 +1182,7 @@ public String collapseNode(String nodeID, String dtsVocab, String shouldRender, 
 /**
 	 * This method retrieves all open nodes from a stack, then sets them not visible
 */
+@SuppressWarnings("unchecked")
 public void collapseAllNodes() 
 {
 //System.out.println("collapseAllNodes!!!");
@@ -1318,6 +1322,7 @@ public void collapseAllNodes()
    *  @param vStackVector 
    *  @return rendHTML    The rendered html string.
 */
+  @SuppressWarnings("unchecked")
   public Vector buildVectorOfSuperConceptStacks(Stack stackSuperConcepts, String sCCodeDB,
   String sCCode, Vector vStackVector) 
   {
@@ -1418,6 +1423,7 @@ public void collapseAllNodes()
    *  @param sCCodeName   The name of code.
    *  @return rendHTML    The rendered html string.
 */
+  @SuppressWarnings("unchecked")
   public String showParentConceptTree(String sCCode, String sCCodeDB, String sCCodeName) 
   {
 // System.out.println("showParentConceptTree");
@@ -1602,6 +1608,7 @@ public void collapseAllNodes()
    * @param nodeName   The node name
    * @param sNodeID   The node ID
    */
+@SuppressWarnings("unchecked")
 public void fillTreeIDtoNameHash(String nodeName, String sNodeID) 
 {		
   try 

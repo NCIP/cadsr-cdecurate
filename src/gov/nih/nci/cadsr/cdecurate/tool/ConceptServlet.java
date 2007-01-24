@@ -20,7 +20,7 @@ public class ConceptServlet implements Serializable
 {
   private static final long serialVersionUID = 8411474971665771500L;
   private static ConceptForm data = null;
-  private static final Logger logger = Logger.getLogger(ConceptServlet.class.getName());
+  private static final Logger logger = Logger.getLogger(ConceptServlet.class);
 
   /** constructor 
    * @param req
@@ -39,7 +39,7 @@ public class ConceptServlet implements Serializable
     data.setCurationServlet(ser);
     UtilService util = new UtilService();
     data.setUtil(util);
-    data.setEvsUser((EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean);
+    data.setEvsUser((EVS_UserBean)ser.sessionData.EvsUsrBean);
     data.setACAction(sAction);
   }
 

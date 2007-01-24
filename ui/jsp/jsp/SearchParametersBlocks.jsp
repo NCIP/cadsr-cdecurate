@@ -1,3 +1,7 @@
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/SearchParametersBlocks.jsp,v 1.19 2007-01-24 06:12:18 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
 
 <%@ page import= "java.util.*" %>
 <%@ page buffer= "12kb" %>
@@ -11,10 +15,11 @@
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/SearchParameters.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
 <%
+   Session_Data sessionData = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
    String sMenuAction = (String)session.getAttribute("MenuAction");
-   String ac = (String)session.getAttribute("parentAC");
-   String sMetaCode = "No";
-   Vector vStatus = new Vector();
+  // String ac = (String)session.getAttribute("parentAC");
+  // String sMetaCode = "No";
+  // Vector vStatus = new Vector();
  // System.out.println(" variable " + (String)request.getParameter("listSearchFor"));
    String strHTML = (String)session.getAttribute("strHTML");
   if (strHTML == null) strHTML = "";
@@ -27,7 +32,7 @@
    if (vBlockAttr == null) vBlockAttr = new Vector();
  //  Vector vDsrSearchIn = (Vector)session.getAttribute("dsrSearchIn");
  //  if(vDsrSearchIn == null) vDsrSearchIn = new Vector();
-   EVS_UserBean usrBean = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute("EvsUserBean");
+   EVS_UserBean usrBean = (EVS_UserBean)sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute("EvsUserBean");
    if (usrBean == null) usrBean = new EVS_UserBean();
    Vector vVocab = usrBean.getVocabNameList();   //(Vector)session.getAttribute("dtsVocabNames");  //list of vocabulary names
    if (vVocab == null) vVocab = new Vector();
@@ -45,7 +50,7 @@
    if (hVoc.containsKey(dtsVocab))
      vocBean = (EVS_UserBean)hVoc.get(dtsVocab);
    if (vocBean == null) 
-     vocBean = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute("EvsUserBean");
+     vocBean = (EVS_UserBean)sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute("EvsUserBean");
    String optName = vocBean.getSearchInName();
    if (optName == null) optName = "";
    String optConCode = vocBean.getSearchInConCode();
@@ -84,9 +89,11 @@
      sLongAC = "Rep Term";
    else if (sSearchAC.equals("EVSValueMeaning") 
           || sSearchAC.equals("CreateVM_EVSValueMeaning")
-          || sSearchAC.equals("VMConcept")
+         // || sSearchAC.equals("VMConcept")
           || sSearchAC.equals("PV_ValueMeaning"))
      sLongAC = "Value Meaning";
+   else if (sSearchAC.equals("VMConcept"))
+     sLongAC = "Concept";
    else if (sSearchAC.equals("ParentConcept"))
      sLongAC = "Parent Concept";
    else if (sSearchAC.equals("ParentConceptVM"))
@@ -113,7 +120,7 @@
    if (sRetired == null) sRetired = "Exclude";
    String sSearchInEVS = (String)session.getAttribute("SearchInEVS");
    if (sSearchInEVS == null) sSearchInEVS = "Synonym";
-   if(sSearchInEVS.equals("MetaCode")) sMetaCode = "Yes";
+ //  if(sSearchInEVS.equals("MetaCode")) sMetaCode = "Yes";
    String sMetaSource = (String)session.getAttribute("MetaSource");
    if (sMetaSource == null) sMetaSource = "All Sources";
    String sMetaLimit = "100";
@@ -709,7 +716,7 @@ function doMetaCodeSearch()
   <tr>
     <td height="33" valign="bottom">
       <div align="center">
-        <input type="button" name="startSearchBtn" value="Start Search" onClick="doSearchBuildingBlocks();"  style="width: 150", "height: 30"
+        <input type="button" name="startSearchBtn" value="Start Search" onClick="doSearchBuildingBlocks();"  style="width: 150; height: 30"
           onHelp = "showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
       </div>
 	 </td>

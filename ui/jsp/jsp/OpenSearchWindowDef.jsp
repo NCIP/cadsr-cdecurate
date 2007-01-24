@@ -1,4 +1,8 @@
-<!-- EVSSearchPage.jsp -->
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/OpenSearchWindowDef.jsp,v 1.3 2007-01-24 06:12:18 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <%@ page errorPage="ErrorPage.jsp"%>
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
 <html> 
@@ -12,8 +16,8 @@ history.forward();
 <curate:checkLogon name="Userbean" page="/jsp/ErrorPageWindow.jsp" />
 <body>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <col width="22%">
-  <col width="78%">
+  <col style="width: 2.3in"/>
+  <col />
   <tr valign="top">
     <td>
       <%@ include file="DefSearchParameters.jsp" %>

@@ -174,6 +174,10 @@ public class ConceptAction implements Serializable
     //logger.info(m_servlet.getLogMessage(m_classReq, "do_conceptSearch", "end search", exDate,  new java.util.Date()));
   }  //endconcept search
 
+  /**gets teh existing condr idseq for the concepts from teh database
+   * @param data ConceptForm object
+   * @return String condr idseq
+   */
   public String getConDerivation(ConceptForm data)
   {
     String condr = "";
@@ -226,6 +230,13 @@ public class ConceptAction implements Serializable
     return condr;
   }
 
+  /** creates concept in the database if doesn't exist one
+   * makes array of conidseq to submit
+   * @param conList vector of evs bean object
+   * @param isCreate boolean to check if submiting or viewing
+   * @param data conceptform object
+   * @return String of concept idseq array
+   */
   public String getConArray(Vector<EVS_Bean> conList, boolean isCreate, ConceptForm data)
   {
     String conArray = "";
@@ -441,9 +452,9 @@ public class ConceptAction implements Serializable
    * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
    * Calls oracle stored procedure
    *   "{call SBREXT_Set_Row.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?)}" to submit
+   * @param data ConceptForm object
    *
    * @param sAction Insert or update Action.
-   * @param sReturnCode string oracle error code
    * @param evsBean EVS_Bean.
    *
    * @return String concept idseq from the table.
@@ -562,13 +573,12 @@ public class ConceptAction implements Serializable
     * Calls oracle stored procedure
     *   "{call SBREXT_CDE_CURATOR_PKG.GET_AC_CONCEPTS(?,?)}" to submit
    * @param condrID String condr idseq
-   * @param vd VD_Bean object
-   * @param bInvertBean boolean to invert the bean vector or not
+   * @param data ConceptForm object
    * @return Vector vector of evs bean.
   */
   public Vector<EVS_Bean> getAC_Concepts(String condrID, ConceptForm data)
   {
-System.out.println("in getAC_Concepts condrID: " + condrID);
+//System.out.println("in getAC_Concepts condrID: " + condrID);
     Connection sbr_db_conn = null;
     CallableStatement CStmt = null;
     ResultSet rs = null;

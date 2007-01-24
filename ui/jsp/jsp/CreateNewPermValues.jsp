@@ -1,3 +1,8 @@
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CreateNewPermValues.jsp,v 1.2 2007-01-24 06:12:17 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*" %>
 <html>
 <head>
@@ -36,7 +41,7 @@
     <td height="72" colspan="3" valign="top"><textarea name="CSItemMeaning" cols="30" id="CSItemMeaning"></textarea></td>
   </tr>
   <tr> 
-    <td height="21" colspan="3" valign="top">c) <font color="#FF0000">Ente</font>r 
+    <td height="21" colspan="3" valign="top">c) <font color="#FF0000">Enter</font> 
       Effective Begin Date:</td>
   </tr>
   <tr> 

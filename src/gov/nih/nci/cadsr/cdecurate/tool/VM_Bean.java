@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VM_Bean.java,v 1.33 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VM_Bean.java,v 1.34 2007-01-24 06:12:13 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -130,6 +130,10 @@ public class VM_Bean extends AC_Bean
   public VM_Bean() {
   };
 
+  /**makes the copy of the bean
+   * @param cBean VM_BEan to copy from
+   * @return VM_BEan to return back
+   */
   public VM_Bean copyVMBean(VM_Bean cBean)
   {
     this.setVM_SHORT_MEANING(cBean.getVM_SHORT_MEANING());
@@ -143,6 +147,10 @@ public class VM_Bean extends AC_Bean
     return this;
   }
 
+  /** makes copy of the vector
+   * @param vmcon Vector of EVS bean object to copy from
+   * @return VEctor of evs bean object to return back
+   */
   public Vector<EVS_Bean> cloneVMConVector(Vector<EVS_Bean> vmcon)
   {
     Vector<EVS_Bean> cloneVMCon = new Vector<EVS_Bean>();
@@ -434,12 +442,18 @@ public class VM_Bean extends AC_Bean
     return VM_CONTE_IDSEQ;
   }
   
+  /** (non-Javadoc)
+   * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextIDSEQ()
+   */
   @Override
   public String getContextIDSEQ()
   {
       return getVM_CONTE_IDSEQ();
   }
   
+  /** (non-Javadoc)
+   * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextName()
+   */
   @Override
   public String getContextName()
   {
@@ -511,6 +525,9 @@ public class VM_Bean extends AC_Bean
     return (VM_IDSEQ == null) ? "" : VM_IDSEQ;
   }
   
+  /** (non-Javadoc)
+   * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getIDSEQ()
+   */
   @Override
   public String getIDSEQ()
   {

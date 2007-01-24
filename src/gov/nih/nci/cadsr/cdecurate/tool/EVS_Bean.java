@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_Bean.java,v 1.33 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_Bean.java,v 1.34 2007-01-24 06:12:12 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -143,6 +143,9 @@ public class EVS_Bean implements Serializable
   public EVS_Bean() {
   };
 
+  /**
+   * @param copyBean evs bean object ot copy to
+   */
   public EVS_Bean(EVS_Bean copyBean)
   {
     this.setLONG_NAME(copyBean.getLONG_NAME());
@@ -946,6 +949,10 @@ System.out.println(sRetValue + sFilterValue + filterAttr + retAttr);
     NVP_CONCEPT_VALUE = nvp_concept_value;
   }
 
+  /**mark the pv if NVP concept
+   * @param curBean evs bean object
+   * @param session HttpSession object
+   */
   @SuppressWarnings("unchecked")
   public void markNVPConcept(EVS_Bean curBean, HttpSession session)
   {

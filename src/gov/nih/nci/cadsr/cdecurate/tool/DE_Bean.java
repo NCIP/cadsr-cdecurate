@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DE_Bean.java,v 1.33 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DE_Bean.java,v 1.34 2007-01-24 06:12:11 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -138,7 +138,7 @@ public class DE_Bean extends AC_Bean
   private String DE_DES_ALIAS_ID;
   private String DE_ALIAS_NAME;
   private String DE_USEDBY_CONTEXT;
-  private Vector DE_USEDBY_CONTEXT_ID;
+  private Vector<String> DE_USEDBY_CONTEXT_ID;
   private Vector DE_SELECTED_CONTEXT_ID;
   private String DE_DEC_Definition;
   private String DE_VD_Definition;
@@ -244,7 +244,7 @@ public class DE_Bean extends AC_Bean
         {
           this.setDE_ASL_NAME("DRAFT MOD");
           this.setDE_USEDBY_CONTEXT("");  //remove used by for versioned
-          this.setDE_USEDBY_CONTEXT_ID(new Vector());
+          this.setDE_USEDBY_CONTEXT_ID(new Vector<String>());
         }
           
         this.setDE_PREFERRED_NAME(copyBean.getDE_PREFERRED_NAME());
@@ -749,7 +749,7 @@ public class DE_Bean extends AC_Bean
    *
    * @param s The DE_USEDBY_CONTEXT_ID to set
    */
-  public void setDE_USEDBY_CONTEXT_ID(Vector s)
+  public void setDE_USEDBY_CONTEXT_ID(Vector<String> s)
   {
       this.DE_USEDBY_CONTEXT_ID = s;
   }
@@ -1317,7 +1317,7 @@ public class DE_Bean extends AC_Bean
       return this.DE_DE_IDSEQ;
   }
   
-  /* (non-Javadoc)
+  /** (non-Javadoc)
    * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getIDSEQ()
    */
   public String getIDSEQ()
@@ -1344,6 +1344,9 @@ public class DE_Bean extends AC_Bean
       return this.DE_CONTE_IDSEQ;
   }
   
+  /** (non-Javadoc)
+   * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextIDSEQ()
+   */
   @Override
   public String getContextIDSEQ()
   {
@@ -1531,6 +1534,9 @@ public class DE_Bean extends AC_Bean
       return this.DE_CONTEXT_NAME;
   }
   
+  /** (non-Javadoc)
+   * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextName()
+   */
   @Override
   public String getContextName()
   {
@@ -1714,7 +1720,7 @@ public class DE_Bean extends AC_Bean
   *
   * @return Vector The DE_USEDBY_CONTEXT_ID
   */
-  public Vector getDE_USEDBY_CONTEXT_ID()
+  public Vector<String> getDE_USEDBY_CONTEXT_ID()
   {
       return this.DE_USEDBY_CONTEXT_ID;
   }

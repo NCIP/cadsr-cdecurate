@@ -298,6 +298,10 @@ public class VD_Bean extends AC_Bean
     return this;
   }
 
+  /**
+   * @param vdpvs PVBEan vector to make copy from
+   * @return VEctor pvbean to return back
+   */
   public Vector<PV_Bean> cloneVDPVVector(Vector<PV_Bean> vdpvs)
   {
     Vector<PV_Bean> cloneVDPV = new Vector<PV_Bean>();
@@ -683,8 +687,7 @@ public class VD_Bean extends AC_Bean
   /**
    * The setVD_PV_ID method sets the VD_PV_ID for this bean.
    * 
-   * @param s
-   *          The VD_PV_ID to set
+   * @param v VEctor to set
    */
   public void setVD_PV_ID(Vector v)
   {
@@ -693,8 +696,7 @@ public class VD_Bean extends AC_Bean
   /**
    * The setVD_PV_NAME method sets the VD_PV_NAME for this bean.
    * 
-   * @param s
-   *          The VD_PV_NAME to set
+   * @param v VEctor to set
    */
   public void setVD_PV_NAME(Vector v)
   {
@@ -703,8 +705,7 @@ public class VD_Bean extends AC_Bean
   /**
    * The setVD_PV_MEANING method sets the VD_PV_MEANING for this bean.
    * 
-   * @param s
-   *          The VD_PV_MEANING to set
+   * @param  v VEctor to set
    */
   public void setVD_PV_MEANING(Vector v)
   {
@@ -1356,6 +1357,9 @@ public class VD_Bean extends AC_Bean
   {
     return this.VD_VD_IDSEQ;
   }
+  /** (non-Javadoc)
+   * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getIDSEQ()
+   */
   public String getIDSEQ()
   {
     return getVD_VD_IDSEQ();
@@ -1379,6 +1383,9 @@ public class VD_Bean extends AC_Bean
     return this.VD_CONTE_IDSEQ;
   }
   
+  /** (non-Javadoc)
+   * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextIDSEQ()
+   */
   @Override
   public String getContextIDSEQ()
   {
@@ -2034,6 +2041,9 @@ public class VD_Bean extends AC_Bean
     return this.AC_CONCEPT_NAME;
   }
   
+  /** (non-Javadoc)
+   * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextName()
+   */
   @Override
   public String getContextName()
   {

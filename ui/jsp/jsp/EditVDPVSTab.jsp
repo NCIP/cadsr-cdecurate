@@ -1,3 +1,7 @@
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/EditVDPVSTab.jsp,v 1.2 2007-01-24 06:12:18 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
 
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>

@@ -1,4 +1,8 @@
-<!-- EVSSearchResults.jsp -->
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/DefSearchResults.jsp,v 1.3 2007-01-24 06:12:17 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <%@ page import= "java.util.*" %>
 <html>
 <head>

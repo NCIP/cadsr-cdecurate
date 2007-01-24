@@ -1,3 +1,8 @@
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/EditVD.jsp,v 1.24 2007-01-24 06:12:18 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <html>
 <head>
 <title>Edit Value Domain</title>
@@ -843,7 +848,7 @@ function setup()
 <%  }  %>
   <tr height="15"><td> </td></tr>
   <tr height="25" valign=bottom>
-      <td align=right><%if(!sOriginAction.equals("BlockEditVD")){%><font color="#FF0000">*&nbsp;</font><%}%><%=item++%>) </td>
+      <td align=right><%=item++%>) </td>
       <td><font color="#FF0000">Enter/Select</font> Effective Begin Date</td>
   </tr>
   <tr>

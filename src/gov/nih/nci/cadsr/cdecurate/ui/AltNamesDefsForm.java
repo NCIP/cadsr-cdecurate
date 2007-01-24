@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsForm.java,v 1.23 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsForm.java,v 1.24 2007-01-24 06:12:13 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -149,7 +149,7 @@ public class AltNamesDefsForm
     public void initialize(Alternates obj_)
     {
         _sess._editAlt = obj_.dupl();
-        _mode = (obj_.getInstance() == Alternates._INSTANCENAME) ? AltNamesDefsServlet._modeName : AltNamesDefsServlet._modeDef;
+        _mode = (obj_.isName()) ? AltNamesDefsServlet._modeName : AltNamesDefsServlet._modeDef;
         _nameDef = obj_.getName();
         _type = obj_.getType();
         _lang = obj_.getLanguage();
@@ -216,11 +216,12 @@ public class AltNamesDefsForm
         _req.setAttribute(AltNamesDefsServlet._parmType, attr);
 
         // Fill up the Language dropdown.
+        String selLang = (_lang == null || _lang.length() == 0) ? _sess._cacheLangDefault : _lang;
         list = _sess._cacheLangs;
         attr = "<option value=\"\"></option>\n";
         for (int i = 0; i < list.length; ++i)
         {
-            String sel = (list[i].equals(_lang)) ? "selected" : "";
+            String sel = (list[i].equals(selLang)) ? "selected" : "";
             attr += "<option value=\"" + list[i] + "\" " + sel + ">" + list[i] + "</option>\n";
         }
         _req.setAttribute(AltNamesDefsServlet._parmLang, attr);

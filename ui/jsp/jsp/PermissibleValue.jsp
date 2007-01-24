@@ -1,10 +1,14 @@
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/PermissibleValue.jsp,v 1.17 2007-01-24 06:12:18 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <html>
   <head>
     <title>Permissible Value</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
-		<%@ page import="java.text.*" %>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
 		<SCRIPT LANGUAGE="JavaScript" SRC="Assets/date-picker.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="Assets/PermissibleValues.js"></SCRIPT>
@@ -12,9 +16,6 @@
 		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
 		<%  
       String sMenuAction = (String) session.getAttribute("MenuAction");
-      String sOriginAction = (String) session.getAttribute("originAction");
-      String sButtonPressed = (String) session.getAttribute("LastMenuButtonPressed");
-      String vdAction = (String)session.getAttribute("VDAction");
       String sSearchAC = (String) session.getAttribute("creSearchAC");
    //  System.out.println(sSearchAC + " vd action " + sMenuAction);
       	
@@ -115,10 +116,17 @@
       else if (!sEditPV.equals("")) sEditPV = "pv"+sEditPV;
     //  String editValue = (String)request.getAttribute("editPVValue");
     //  if (editValue == null) editValue = "";
-System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus " + elmFocus);		
+//System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus " + elmFocus);		
 		%>
 		<Script Language="JavaScript">
-
+            function checkNameLen(cobj, mlen)
+            {
+                if (cobj.value.length > mlen)
+                {
+                    alert("You have exceeded the maximum length of this field. Please edit and reduce the text to less than " + mlen + " characters.");
+                    cobj.focus();
+                }
+            }
 		</SCRIPT>
   </head>
   
@@ -384,8 +392,8 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 														<%=newVM.getVM_SHORT_MEANING()%>
 													</div>
 													<div id="pvNewVMEdit" style="display: <%if (newVMCon.size() > 0) { %>none<%} else {%>block<% } %>">
-														<input type="text" name="pvNewVM" style="width:90%" size="20" maxlength="255" 
-															value="<%=newVMjsp%>" onkeyup="javascript:disableSearch('pvNew');javascript:getORsetEdited('pvNew', 'pv');">
+														<textarea name="pvNewVM" style="width: 90%" rows="2"
+                                  onblur="javascript:checkNameLen(this, 255);" onkeyup="javascript:getORsetEdited('pvNew', 'pv');"><%=newVMjsp%></textarea>
 													</div>
 												</td>
 												<td>&nbsp;</td>
@@ -406,8 +414,8 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 													<div id="pvNewVMDView" style="display: <%if (newVMCon.size() > 0) { %>block<%} else {%>none<% } %>">
 														<%=newVM.getVM_DESCRIPTION().trim()%>
 													</div>
-													<div id="pvNewVMDEdit" style="display: <%if (newVMCon.size() > 0) { %>none<%} else {%>block<% } %>">
-														<textarea name="pvNewVMD" style="width=98%" rows="4" style="width: 100%" onkeyup="javascript:disableSearch('pvNew');javascript:getORsetEdited('pvNew', 'pv');"><%=newVM.getVM_DESCRIPTION().trim()%></textarea>
+													<div id="pvNewVMDEdit" style="display: <%if (newVMCon.size() > 0) { %>none<%} else {%>block<% } %>">  <!-- javascript:disableSearch('pvNew'); -->
+														<textarea name="pvNewVMD" style="width=98%" rows="4" style="width: 100%" onkeyup="javascript:getORsetEdited('pvNew', 'pv');"><%=newVM.getVM_DESCRIPTION().trim()%></textarea>
 													</div>
 												</td>
 											</tr>
@@ -712,7 +720,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 						<tr>
 							<td>
 								<div id="Layer1" style="position:relative; z-index:1; overflow:auto; height:480;">
-									<table border="1" width="98%" style="border-collapse: collapse;" cellpadding="0.1in, 0in, 0.1in, 0in">
+									<table border="1" style="border-collapse: collapse; width: 100%" cellpadding="0.1in, 0.05in, 0.1in, 0.05in">
 		            		<%if (vdCONs > 0 && sMenuAction.equals("Questions")){%>
 											<col width="7%">
 											<col width="7%">
@@ -760,7 +768,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 						           // String ckName = ("ck" + ckCount);
 						            String pvCount = "pv" + ckCount;
 						            ckCount += 1;
-						            boolean pvChecked = pvBean.getPV_CHECKED();
+						        //    boolean pvChecked = pvBean.getPV_CHECKED();
 						            String sVValue = (String) pvBean.getQUESTION_VALUE();
 						            if (sVValue == null) sVValue = "";
 						            String sVVid = (String) pvBean.getQUESTION_VALUE_IDSEQ();
@@ -886,7 +894,8 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 													<% if (vmCon.size() < 1) { %>
 														<div id="<%=pvCount%>VMEdit" style="display: none; width:90%">
 															&nbsp;&nbsp;
-															<input type="text" name="txt<%=pvCount%>Mean" maxlength="255" style="width: 100%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vm');" value="<%=sPVMeanJsp%>">
+															<textarea name="txt<%=pvCount%>Mean" style="width: 100%" rows="2"
+                                                                onblur="javascript:checkNameLen(this, 255);" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vm');"><%=sPVMeanJsp%></textarea>
 														</div>
 													<% } %>
 													<div id="<%=pvCount%>VMAltView" style="display: inline; text-align:right">															
@@ -912,7 +921,7 @@ System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus 
 																	</div>
 																	<% if (vmCon.size() < 1) { %>
 																		<div id="<%=pvCount%>VMDEdit" style="display: none">
-																			<textarea name="txt<%=pvCount%>Def" rows="3" style="width: 100%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vmd');"><%=sPVDesc%></textarea>
+																			<textarea name="txt<%=pvCount%>Def" rows="4" style="width: 100%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vmd');"><%=sPVDesc%></textarea>
 																		</div>
 																	<% } %>
 																	<br>

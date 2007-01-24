@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DEC_Bean.java,v 1.33 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DEC_Bean.java,v 1.34 2007-01-24 06:12:11 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -141,7 +141,7 @@ public class DEC_Bean extends AC_Bean {
   private Vector DEC_CS_ID;  //store CS_IDSEQs
   private Vector DEC_CSI_NAME; //store CSI name
   private Vector DEC_CSI_ID; //store CSI_IDSEQs
-  private Vector DEC_AC_CSI_VECTOR;
+  private Vector<AC_CSI_Bean> DEC_AC_CSI_VECTOR;
   private Vector DEC_AC_CSI_ID;
   private Vector DEC_CS_CSI_ID;
   
@@ -702,7 +702,7 @@ public class DEC_Bean extends AC_Bean {
    *
    * @param v The DEC_AC_CSI_VECTOR to set
   */
-  public void setAC_AC_CSI_VECTOR(Vector v)
+  public void setAC_AC_CSI_VECTOR(Vector<AC_CSI_Bean> v)
   {
       this.DEC_AC_CSI_VECTOR = v;
   }
@@ -1083,7 +1083,7 @@ public class DEC_Bean extends AC_Bean {
       return this.DEC_DEC_IDSEQ;
   }
   
-  /* (non-Javadoc)
+  /** (non-Javadoc)
    * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getIDSEQ()
    */
   public String getIDSEQ()
@@ -1110,6 +1110,9 @@ public class DEC_Bean extends AC_Bean {
       return this.DEC_CONTE_IDSEQ;
   }
   
+  /** (non-Javadoc)
+   * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextIDSEQ()
+   */
   @Override
   public String getContextIDSEQ()
   {
@@ -1316,6 +1319,9 @@ public class DEC_Bean extends AC_Bean {
       return this.DEC_CONTEXT_NAME;
   }
   
+  /** (non-Javadoc)
+   * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextName()
+   */
   @Override
   public String getContextName()
   {
@@ -1492,7 +1498,7 @@ public class DEC_Bean extends AC_Bean {
   *
   * @return Vector The DEC_AC_CSI_VECTOR
   */
-  public Vector getAC_AC_CSI_VECTOR()
+  public Vector<AC_CSI_Bean> getAC_AC_CSI_VECTOR()
   {
       return this.DEC_AC_CSI_VECTOR;
   }
