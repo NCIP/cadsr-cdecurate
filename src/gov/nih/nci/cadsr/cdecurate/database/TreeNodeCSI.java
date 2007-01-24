@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/TreeNodeCSI.java,v 1.23 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/TreeNodeCSI.java,v 1.24 2007-01-24 06:12:11 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -33,6 +33,17 @@ public class TreeNodeCSI extends TreeNode
         _classType = AltNamesDefsServlet._classTypeCSI;
     }
 
+    /**
+     * Constructor
+     * 
+     * @param name_ the CSI name
+     * @param value_ non-leaf nodes, the IDSEQ for the CS/CSI hierarchy node, so we can know the specific lineage (a CSI may be referenced multiple places
+     *      in the CSI tree); leaf nodes are the IDSEQ of the Alt/CSI hierarchy node. Must be a guaranteed unique value for all entries in the tree.
+     * @param csCsiIdseq_ the CS/CSI IDSEQ hierarchy id
+     * @param type_ the CSI type stored in the caDSR
+     * @param packageAlias_ the IDSEQ of the Parent CSI UML_PACKAGE_ALIAS when this is a UML_PACKAGE_NAME type 
+     * @param new_ true if this is a new record not stored in the caDSR, false if this data is read from the caDSR.
+     */
     public TreeNodeCSI(String name_, String value_, String csCsiIdseq_, String type_, String packageAlias_, boolean new_)
     {
         super(name_, value_, new_);

@@ -1,3 +1,8 @@
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CreateDE.jsp,v 1.18 2007-01-24 06:12:17 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <html>
 <head>
 <title>CreateNewCDE</title>
@@ -523,7 +528,7 @@
       </td>
     </tr>
     <tr height="25" valign="bottom">
-      <td align=right><font color="#FF0000">*</font><%=item++%>)</td>
+      <td align=right><%=item++%>)</td>
       <td> <font color="#FF0000">Enter/Select </font>Effective Begin Date</td>
     </tr>
     <tr> 

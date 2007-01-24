@@ -285,6 +285,11 @@ public class VMAction implements Serializable
     }
   }
 
+  /**appends the Value meaning selected from the VM search result
+   * @param selRows String array of the selected rows
+   * @param vRSel vector VM Bean of the search results
+   * @param pv PVBean object of the selected row
+   */
   public void doAppendSelectVM(String[] selRows, Vector<VM_Bean> vRSel, PV_Bean pv)
   {
     String errMsg = "";
@@ -303,8 +308,16 @@ public class VMAction implements Serializable
           pv.setPV_VM(vm);
       }
     }
+    //log the errr message
+    if (!errMsg.equals(""))
+      logger.fatal("Error msg : doAppendSelectVM " + errMsg);
   }
 
+  /** saves and marks the VM changes to store it in the database
+   * @param pv PVBean object
+   * @param vd VDBean object
+   * @param data VMForm object
+   */
   public void setDataForCreate(PV_Bean pv, VD_Bean vd, VMForm data)
   {
     VM_Bean vm = data.getVMBean();
@@ -318,8 +331,7 @@ public class VMAction implements Serializable
     //call the action change VM to validate the vm
     data.setVMBean(vm);
     if (vm.getVM_IDSEQ() == null || vm.getVM_IDSEQ().equals(""))
-      this.doChangeVM(data);
-    
+      this.doChangeVM(data);    
   }
   
   /**
@@ -370,6 +382,13 @@ public class VMAction implements Serializable
     }
   }
 
+  /**to submit the VM changes to the database. 
+   * checks if already exists in the database.
+   * gets concept id to associates, creates concept or non concept VM
+   * creates cd relationship
+   * 
+   * @param data VMForm object
+   */
   public void doSubmitVM(VMForm data)
   {
     VM_Bean vm = data.getVMBean();
@@ -410,7 +429,7 @@ public class VMAction implements Serializable
       else
         erMsg = this.setVM(data);  //update or insert non evs vm
       
-     System.out.println("vm error : " + erMsg);
+   //  System.out.println("vm error : " + erMsg);
       //exit if error occurred
       if (erMsg != null && !erMsg.equals(""))
         return;
@@ -427,8 +446,8 @@ public class VMAction implements Serializable
    * registers output parameter. Calls oracle stored procedure "{call
    * SBREXT_Set_Row.SET_VM(?,?,?,?,?,?,?,?,?,?,?)}" to submit
    * 
-   * @param data
-   *          VMForm object
+   * @param data VMForm object
+   * @return String return code
    */
   private String setVM(VMForm data)
   {
@@ -455,7 +474,6 @@ public class VMAction implements Serializable
         sbr_db_conn = VMServlet.makeDBConnection();
       if (sbr_db_conn != null)
       {
-        //CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VM(?,?,?,?,?,?,?,?,?,?,?)}");
         CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VM(?,?,?,?,?,?,?,?,?,?,?,?)}");
         // register the Out parameters
         CStmt.registerOutParameter(1, java.sql.Types.VARCHAR); // return code
@@ -484,7 +502,6 @@ public class VMAction implements Serializable
           data.setStatusMsg(data.getStatusMsg() + "\\t" + sReturnCode + " : Unable to update Value Meaning - "
               + sShortMeaning + ".");
           data.setRetErrorCode(sReturnCode); // store returncode in request to track it all through
-          // this request
         }
         else
         {
@@ -533,8 +550,9 @@ public class VMAction implements Serializable
    * registers output parameter. Calls oracle stored procedure "{call
    * SBREXT_Set_Row.SET_VM_CONDR(?,?,?,?,?,?,?,?,?,?,?)}" to submit
    * 
-   * @param data
-   *          VM Data object.
+   * @param data VM Data object.
+   * @param conArray 
+   * @return String return code
    */
   private String setVM_EVS(VMForm data, String conArray)
   {
@@ -556,7 +574,6 @@ public class VMAction implements Serializable
         sbr_db_conn = VMServlet.makeDBConnection();
       if (sbr_db_conn != null)
       {
-       // CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VM_CONDR(?,?,?,?,?,?,?,?,?,?,?,?)}");
         CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VM_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
         // register the Out parameters
         CStmt.registerOutParameter(2, java.sql.Types.VARCHAR); // return code
@@ -577,7 +594,7 @@ public class VMAction implements Serializable
         if (sAction.equals(VMForm.CADSR_ACTION_UPD))
           CStmt.setString(3, vm.getVM_SHORT_MEANING());
         // Now we are ready to call the stored procedure
-        System.out.println(sAction + " vm con array " + conArray + " query " + CStmt.toString());
+     //   System.out.println(sAction + " vm con array " + conArray + " query " + CStmt.toString());
         CStmt.execute();
         sReturnCode = CStmt.getString(2);
         if (sReturnCode != null)
@@ -626,11 +643,17 @@ public class VMAction implements Serializable
     return data.getRetErrorCode();
   }
 
+  /**
+   * checks if cd vm relationship already exists in the database
+   * @param data VMForm object
+   * @param vm VMBean object
+   * @return String cdvmidseq of the existing data
+   */
   private String getCDVMS(VMForm data, VM_Bean vm)
   {
     String sCD = vm.getVM_CD_IDSEQ();
     String vmname = vm.getVM_SHORT_MEANING();
-    System.out.println(sCD + " get cdvms " + vmname);
+   // System.out.println(sCD + " get cdvms " + vmname);
     String cdvmsID = "";
     if (!sCD.equals(""))
     {
@@ -651,7 +674,7 @@ public class VMAction implements Serializable
           while(rs.next())
           {
             cdvmsID = rs.getString(1);
-          System.out.print(" cdvms " + cdvmsID);
+        //  System.out.print(" cdvms " + cdvmsID);
             break;
           }
         }
@@ -671,7 +694,7 @@ public class VMAction implements Serializable
       }
       catch(Exception ee)
       {
-        logger.fatal("GetACSearch-do_conceptSearch for close : " + ee.toString(), ee);
+        logger.fatal("getCDVMS for close : " + ee.toString(), ee);
       }
     }
     return cdvmsID;
@@ -683,8 +706,7 @@ public class VMAction implements Serializable
    * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
    * Calls oracle stored procedure
    *   "{call SBREXT_Set_Row.SET_CDVMS(?,?,?,?,?,?,?,?,?,?,?)}" to submit
-   *
-   * @param sAction Insert or update Action.
+   * @param data VMForm object
    * @param vm VM Bean.
    *
    * @return String return code from the stored procedure call. null if no error occurred.
@@ -769,8 +791,9 @@ public class VMAction implements Serializable
   /**
    * get the VM from caDSR
    * 
-   * @param data
-   *          VMForm object
+   * @param data VMForm object
+   * @param vmName String vm name to filter
+   * @return VM_Bean object of the existing one
    */
   private VM_Bean getVM(VMForm data, String vmName)
   {
@@ -787,8 +810,7 @@ public class VMAction implements Serializable
       if (sbr_db_conn != null)
       {
         String sReturnCode = ""; // out
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_get_Row.GET_VM(?,?,?,?,?,?,?,?,?,?,?)}");
-       // CStmt = sbr_db_conn.prepareCall("{call SBREXT_get_Row.GET_VM(?,?,?,?,?,?,?,?,?,?,?,?)}");
+        CStmt = sbr_db_conn.prepareCall("{call SBREXT_get_Row.GET_VM(?,?,?,?,?,?,?,?,?,?,?,?)}");
         // register the Out parameters
         CStmt.registerOutParameter(1, java.sql.Types.VARCHAR); // return code
         CStmt.registerOutParameter(2, java.sql.Types.VARCHAR); // short meaning
@@ -801,7 +823,7 @@ public class VMAction implements Serializable
         CStmt.registerOutParameter(9, java.sql.Types.VARCHAR); // modified by
         CStmt.registerOutParameter(10, java.sql.Types.VARCHAR); // date modified
         CStmt.registerOutParameter(11, java.sql.Types.VARCHAR); // condr_idseq
-       // CStmt.registerOutParameter(12, java.sql.Types.VARCHAR); // vm_idseq
+        CStmt.registerOutParameter(12, java.sql.Types.VARCHAR); // vm_idseq
         // Set the In parameters (which are inherited from the PreparedStatement class)
         CStmt.setString(2, vmName);  //vm.getVM_SHORT_MEANING());
         // Now we are ready to call the stored procedure
@@ -836,7 +858,7 @@ public class VMAction implements Serializable
           vm.setVM_DESCRIPTION(CStmt.getString(3));
           vm.setVM_COMMENTS(CStmt.getString(4));
           vm.setVM_LONG_NAME(CStmt.getString(2));
-         // vm.setVM_IDSEQ(CStmt.getString(12));
+          vm.setVM_IDSEQ(CStmt.getString(12));
         }
         //data.setVMBean(vm);
       }
@@ -903,6 +925,11 @@ public class VMAction implements Serializable
     return returnValue;
   }
   
+  /** Checks if vm by name, concept relationship and definition exist.
+   * mark the submit action according to the business rules
+   * @param data VMForm object
+   * @return String dispAC if the existing ones found from the validation
+   */
   private String validateConceptVM(VMForm data)
   {
     String dispAC = "";
@@ -930,14 +957,7 @@ public class VMAction implements Serializable
         sMsg.append("creating new with evs concepts \n");
         if (!VMName.equals(""))
           existVM = getExistingVM(VMName, "", "", data);  //check if vm exists  
-/*        //check if defintion of existing with one from page matches
-        if (this.FLAG_VM_DEF_MATCH == VMAction.VM_DEF_OTHER)
-        {
-          String exDef = existVM.getVM_DESCRIPTION();
-          if (exDef != null && exDef.equals(VMDef))
-            this.FLAG_VM_DEF_MATCH = VMAction.VM_DEF_NAME;
-        }          
-*/      }
+      }
       else if (selVMName.equalsIgnoreCase(VMName))  //may be adding concepts to existing VM matching with name
       {
         sMsg.append("editing existing vm with evs concepts \n");
@@ -952,24 +972,26 @@ public class VMAction implements Serializable
       boolean defChanged = false;
       if (editExisting && !selVMDef.equalsIgnoreCase(VMDef))
         defChanged = true;
-  //    {
-  //      this.FLAG_VM_DEF_MATCH = VMAction.VM_DEF_NOT;  //make it that it does not match
-        defVM = getExistVMbyDefn(VMDef, existVM, conVM, data, sMsg, defChanged);        
-  //    }
+      defVM = getExistVMbyDefn(VMDef, existVM, conVM, data, sMsg, defChanged);        
+      //validate the vm
       dispAC = markSubmitVM(data, vmBean, existVM, conVM, defVM, vCon, VMName, sMsg, editExisting);
       
     //  data.setStatusMsg(sMsg.toString());
       //print the message
-      System.out.println("Remove later --- Condition : " + this.FLAG_VM_NAME_MATCH + this.FLAG_CON_DER_MATCH + " : \n");
+      //System.out.println("Remove later --- Condition : " + this.FLAG_VM_NAME_MATCH + this.FLAG_CON_DER_MATCH + " : \n");
     }
     catch (RuntimeException e)
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.fatal("ERROR - validateConceptVM ", e);
     }
     return dispAC;
   }
   
+  /** Checks if vm by name, concept defintion and vm definition exist.
+   * mark the submit action according to the business rules
+   * @param data VMForm object
+   * @return String dispAC if the existing ones found from the validation
+   */
   private String validateNonConVM(VMForm data)
   {
     String dispAC = "";
@@ -1037,17 +1059,28 @@ public class VMAction implements Serializable
       //call method to mark the change action
       dispAC = markSubmitVM(data, vmBean, existVM, conVM, defVM, vCon, VMName, sMsg, editExisting);
       
-     // System.out.println("Final Message : ");
-     // System.out.println(sMsg);
+      if (!sMsg.equals(""))
+        logger.fatal("Final Message : " + sMsg);
     }
     catch (RuntimeException e)
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.fatal("ERROR - validateNonConceptVM ", e);
     }
     return dispAC;
   }
  
+  /**validates the VM against existing ones and returns string value to display the existing ones on the page
+   * @param data VMForm object
+   * @param vmBean VMBean Value meaning from the page
+   * @param existVM VMBean  existing vm matched by name
+   * @param conVM VMBEan existing vm matched by concept relationship
+   * @param defVM VMBean existing vm matched by defintion
+   * @param vCon Vector of concepts used in value meaning
+   * @param VMName String current vm name
+   * @param sMsg String buffer to capture the message
+   * @param editExisting boolean to mark if validating existing vm
+   * @return String value to return when in-validates
+   */
   private String markSubmitVM(VMForm data, VM_Bean vmBean, VM_Bean existVM, VM_Bean conVM, VM_Bean defVM, 
       Vector<EVS_Bean> vCon, String VMName, StringBuffer sMsg, boolean editExisting)
   {
@@ -1060,8 +1093,6 @@ public class VMAction implements Serializable
         case (VMAction.CON_DEF_DER_VM_NAME + VMAction.VM_DEF_NOT):  //'E' + 'N'  //con with exist but no def match
           //follows the next case
         case (VMAction.CON_DEF_DER_NOT + VMAction.VM_DEF_NOT):  //'N' + 'N'
-         // if (vCon != null && vCon.size() > 0)
-         //   existVM.setVM_CONCEPT_LIST(vCon);
           if (editExisting)  //reset the description attributes and update the vm
             existVM.setVM_DESCRIPTION(vmBean.getVM_DESCRIPTION());
           else
@@ -1088,8 +1119,6 @@ public class VMAction implements Serializable
           break;
         default:
           dispAC = "Value Meaning";
-          //sMsg.append("multiple scenarios occurred against the existing VM. Please select the right one to continue or cancel to edit \n");
-          //printFlagedVMs(data, sMsg, 'A');
       }
     }
     else if (this.FLAG_VM_NAME_MATCH == 'N')
@@ -1097,26 +1126,21 @@ public class VMAction implements Serializable
       switch (flgVMCases)
       {
         case (VMAction.CON_DEF_DER_VM + VMAction.VM_DEF_NOT):
-          //TODO display vm window matching to concept name /definition matches
         case (VMAction.CON_DEF_DER_VM + VMAction.VM_DEF_CONCEPT):
           data.setVMBean(conVM);  //use concept matched VM (vmdef not or both vmdef and concept match to another vm)
           dispAC = "Value Meaning";
-//      TODO display vm window matching to concept name /definition matches
           break;
           
         case (VMAction.CON_DEF_DER_NOT + VMAction.VM_DEF_OTHER):
           data.setVMBean(defVM);  //use the defn vm one with msg
           dispAC = "Value Meaning";
-//      TODO display vm window matching to vm definition matches
           break;
           
         case (VMAction.CON_DEF_NAME_NOT + VMAction.VM_DEF_NOT):
           vmBean.setVM_SHORT_MEANING(VMName);  //add the concept name that has matching defn but not matching name
-//      TODO display concept window matching to concept definition 
         case (VMAction.CON_DEF_DER_VM_NAME + VMAction.VM_DEF_NOT):
           vmBean.setVM_CONCEPT_LIST(vCon);  //add concept list
           dispAC = "Concept";
-         // TODO display concept window message
         case (VMAction.CON_DEF_DER_NOT + VMAction.VM_DEF_NOT):
           vmBean.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);  //create new one; no msg
           data.setVMBean(vmBean);
@@ -1124,16 +1148,18 @@ public class VMAction implements Serializable
           
         default:
           dispAC = "Value Meaning";
-          //sMsg.append("multiple scenarios occurred against NON existing vm. Please select the right one to continue or cancel to edit \n");
-          //printFlagedVMs(data, sMsg, 'A');
-          
       }
     }
     //print the message
-    System.out.println(dispAC + " Remove later --- " + flgVMCases + " Condition : " + this.FLAG_VM_NAME_MATCH + this.FLAG_CON_DER_MATCH + this.FLAG_VM_DEF_MATCH + " : \n");
+    if (!dispAC.equals(""))
+      logger.fatal("validate flag : " + dispAC + " Remove later --- " + flgVMCases + " Condition : " + this.FLAG_VM_NAME_MATCH + this.FLAG_CON_DER_MATCH + this.FLAG_VM_DEF_MATCH + " : \n");
     return dispAC;
   }
   
+  /** adds all existing vms to vector to display it on the page
+   * @param data VMForm object
+   * @param vmFlag char to display all or vm by name filter, vm by concept filter, vm by defin filter.
+   */
   private void getFlaggedMessageVM(VMForm data, char vmFlag)
   {
     Vector<VM_Bean> vErrMsg = data.getErrorMsgList();
@@ -1236,6 +1262,11 @@ public class VMAction implements Serializable
    // data.setErrorMsgList(vErrMsg);
   }
   
+  /**gets the existing condr idseq from the database
+   * @param conList EVS Bean vector of concepts of the vm
+   * @param data VMForm object
+   * @return String condridseq
+   */
   private String getConceptCondr(Vector<EVS_Bean> conList, VMForm data)
   {
     String condr = "";
@@ -1263,13 +1294,20 @@ public class VMAction implements Serializable
     return condr;
   }
 
+  /** gets the existing value meaning fitlered by condr idseq
+   * @param vCon EVS Bean vector of concepts of the vm
+   * @param exeVM VM Bean object of the existing vm by name
+   * @param data VM form object
+   * @param sMsg StringBuffer to capture the message
+   * @return VM_Bean concept VM
+   */
   private VM_Bean getExistVMbyCondr(Vector<EVS_Bean> vCon, VM_Bean exeVM, VMForm data, StringBuffer sMsg)
   {
     VM_Bean conVM = new VM_Bean();
     if (vCon != null && vCon.size() > 0)
     {
       String sCondr = this.getConceptCondr(vCon, data);
-    System.out.println(sCondr + " exist vm by condr " + vCon.size() + " con flag " + this.FLAG_CON_DER_MATCH);
+    //System.out.println(sCondr + " exist vm by condr " + vCon.size() + " con flag " + this.FLAG_CON_DER_MATCH);
       //if conder is not matched assume match to name & def (because it will be created later)
       if (this.FLAG_CON_DER_MATCH == this.CON_DEF_DER_NOT)
         this.FLAG_CON_DER_MATCH = this.CON_DEF_NAME;
@@ -1300,17 +1338,25 @@ public class VMAction implements Serializable
           }
           else if (this.FLAG_CON_DER_MATCH == this.CON_DEF_DER_VM_MULTI)  // 'D')
             sMsg.append("Concept Derivation matches to the multiple Value Meanings. \n");
-           //TODO same as concept multi message 
+
           else if (this.FLAG_CON_DER_MATCH == this.CON_DEF_DER_VM)  // 'Y')
             sMsg.append("Concept Derivation matches to the Value Meanings. \n");
         }  
       }
     }
     //System.out.println(this.FLAG_CON_DER_MATCH + " CONder " + sMsg);
-
     return conVM;
   }
   
+  /**gets the existing value meaning fitlered by defintion
+   * @param sDef String definition from the page
+   * @param exVM VM Bean object of the existing vm by name match
+   * @param conVM VM Bean object of the existing vm by concept match
+   * @param data VM form object
+   * @param sMsg StringBuffer to capture the message
+   * @param defChange boolean value to check if it is necessary to search vm by definition filter
+   * @return VM_Bean definition matched VM
+   */
   private VM_Bean getExistVMbyDefn(String sDef, VM_Bean exVM, VM_Bean conVM, VMForm data, StringBuffer sMsg, boolean defChange)
   {
     VM_Bean defVM = new VM_Bean();
@@ -1341,63 +1387,17 @@ public class VMAction implements Serializable
     else if (this.FLAG_VM_DEF_MATCH == this.VM_DEF_OTHER)  // 'Y')
       sMsg.append("Value Meaning description matches to the Value Meanings. \n");
     
-    //System.out.println(this.FLAG_VM_DEF_MATCH + " vmDEF " + sMsg);
-    
     return defVM;
-  }
-  
-  private String getVMbyCondr(VMForm data, String condr)
-  {
-    Connection sbr_db_conn = null;
-    ResultSet rs = null;
-    Statement stmt = null;
-    String vm = "";
-    try
-    {
-      sbr_db_conn = data.getDBConnection();
-      if (sbr_db_conn == null || sbr_db_conn.isClosed())
-        sbr_db_conn = VMServlet.makeDBConnection();
-      // Create a Callable Statement object.
-      if (sbr_db_conn != null)
-      {
-        stmt = sbr_db_conn.createStatement();
-        rs = stmt.executeQuery("select short_meaning from sbr.value_meanings_view where condr_idseq = '" + condr + "'");
-        //loop through to printout the outstrings
-        while(rs.next())
-        {
-          vm = rs.getString(1);
-        //System.out.println(vm + " vm condr " + condr);
-          if (vm == null) vm = "";
-        }
-      }
-    }
-    catch(Exception e)
-    {
-      logger.fatal("ERROR - getVMbyCondr for other : ", e);
-      data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to do search vm by condr." + e.toString());
-      data.setActionStatus(ConceptForm.ACTION_STATUS_FAIL);
-    }
-    try
-    {
-      if(rs!=null) rs.close();
-      if(stmt!=null) stmt.close();
-      if (data.getDBConnection() == null)
-        VMServlet.closeDBConnection(sbr_db_conn);
-    }
-    catch(Exception ee)
-    {
-      logger.fatal("error - dovmsearch by condr for close : " + ee.toString(), ee);
-    }
-    return vm;
   }
   
   /**
    * when the changing vm does not have concept relationship, tool checks if there exists matched definition in concept class.
    * if matched by defnition and name to the vm, it would update the vm with that concept relationship.
-   * @param vmName
-   * @param vmDef
-   * @param data
-   * @return String concept name.
+   * @param vmName String vm name to filter
+   * @param vmDef String vm Defintion to filter
+   * @param data VMForm object
+   * @param sMsg StringBuffer to capture the message
+   * @return EVS_Bean existing concept bean.
    */
   private EVS_Bean checkConDefNameExist(String vmName, String vmDef, VMForm data, StringBuffer sMsg) 
   {
@@ -1448,7 +1448,6 @@ public class VMAction implements Serializable
 
   /**
    * calls method to do the concept search matched by defintion
-   * @param vmName
    * @param vmDef
    * @param data
    * @return vector of concepts
@@ -1483,11 +1482,13 @@ public class VMAction implements Serializable
     return conData.getConceptList();    
   }
 
-  private void setSubmitAction(String dispMsg, VM_Bean selBean, VMForm data, String sAct)
-  {
-    System.out.println("setSubmitAction - " + sAct + " sumbit " + dispMsg);
-  }
-
+  /**to get the vms filtered by vmname, condridseq, or definition
+   * @param vmName String vm name to filter
+   * @param sCondr String condr idseq to filter
+   * @param sDef String defintion to filter
+   * @param data VMForm object to filter
+   * @return VM_Bean object of the existing vm 
+   */
   private VM_Bean getExistingVM(String vmName, String sCondr, String sDef, VMForm data)
   {
     //System.out.println("getExistingVM - " + vmName + sCondr + sDef);
@@ -1499,13 +1500,13 @@ public class VMAction implements Serializable
     data.setSearchFilterDef(sDef);        //search by defintion
     //call method
     data.setVMList(new Vector<VM_Bean>());
-  System.out.println(vmName+sCondr+sDef+ " : VMs before - " + data.getVMList().size());
+  //System.out.println(vmName+sCondr+sDef+ " : VMs before - " + data.getVMList().size());
     searchVMValues(data);
     //set teh flag
     Vector<VM_Bean> vmList = data.getVMList();
     if (vmList != null && vmList.size() >0)
     {      
-      System.out.println(vmName+sCondr+sDef+ " : VMs after - " + data.getVMList().size());
+      //System.out.println(vmName+sCondr+sDef+ " : VMs after - " + data.getVMList().size());
       if (!vmName.equals(""))
         data.setExistVMList(vmList);
       else if (!sCondr.equals(""))
@@ -1516,7 +1517,7 @@ public class VMAction implements Serializable
       for (int i =0; i<vmList.size(); i++)
       {
         VM_Bean vm = vmList.elementAt(i);
-        System.out.println(i + " : " + vm.getVM_SHORT_MEANING() + " : " + vm.getVM_CONDR_IDSEQ() + " : " + vm.getVM_DESCRIPTION());
+       // System.out.println(i + " : " + vm.getVM_SHORT_MEANING() + " : " + vm.getVM_CONDR_IDSEQ() + " : " + vm.getVM_DESCRIPTION());
         if (!vmName.equals(""))  // && vm.getVM_SHORT_MEANING().equals(vmName))
         {
           this.FLAG_VM_NAME_MATCH = 'Y';

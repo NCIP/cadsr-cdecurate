@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/Alternates.java,v 1.23 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/Alternates.java,v 1.24 2007-01-24 06:12:11 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -62,6 +62,7 @@ public class Alternates
         _changed = old_._changed;
         _delete = old_._delete;
         _root = old_._root.dupl();
+        _title = old_._title;
     }
 
     /**
@@ -88,6 +89,10 @@ public class Alternates
     public Alternates(int instance_, String name_, String type_, String lang_, String ac_, String desig_, String conte_, String conteName_)
     {
         _instance = instance_;
+        if (isName())
+            _title = _INSTANCENAMETITLE;
+        else
+            _title = _INSTANCEDEFTITLE;
         setName(name_);
         setType(type_);
         setLanguage(lang_);
@@ -470,6 +475,16 @@ public class Alternates
     }
     
     /**
+     * Get the object title.
+     * 
+     * @return the HTML title string
+     */
+    public String getHtmlTitle()
+    {
+        return _title;
+    }
+    
+    /**
      * Set the instance indicator.
      * 
      * @param instance_ either _INSTANCENAME or _INSTANCEDEF
@@ -572,6 +587,7 @@ public class Alternates
     }
     
     private int _instance;
+    private String _title;
     private String _name;
     private String _type;
     private String _language;
@@ -616,7 +632,7 @@ public class Alternates
     public static final int _MISSINGNAME = -4;
     public static final int _INSTANCENAME = 0;
     public static final int _INSTANCEDEF = 1;
-    public static final String _INSTANCEDEFTITLE = "<tr><td colspan=\"4\"><p style=\"margin: 0.3in 0in 0in 0in\"><b>Definitions</b></p></td></tr>\n";
-    public static final String _INSTANCENAMETITLE = "<tr><td colspan=\"4\"><p style=\"margin: 0.3in 0in 0in 0in\"><b>Names</b></p></td></tr>\n";
-    public static final String _INSTANCEUNKTITLE = "<tr><td colspan=\"4\"><p style=\"margin: 0.3in 0in 0in 0in\"><b>UNKNOWN</b></p></td></tr>\n";
+    private static final String _INSTANCEDEFTITLE = "<tr><td colspan=\"4\"><p style=\"margin: 0.3in 0in 0in 0in\"><b>Definitions</b></p></td></tr>\n";
+    private static final String _INSTANCENAMETITLE = "<tr><td colspan=\"4\"><p style=\"margin: 0.3in 0in 0in 0in\"><b>Names</b></p></td></tr>\n";
+    // private static final String _INSTANCEUNKTITLE = "<tr><td colspan=\"4\"><p style=\"margin: 0.3in 0in 0in 0in\"><b>UNKNOWN</b></p></td></tr>\n";
 }

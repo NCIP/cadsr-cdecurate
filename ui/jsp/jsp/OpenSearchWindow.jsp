@@ -1,4 +1,8 @@
-<!-- OpenSearchWindow.jsp -->
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/OpenSearchWindow.jsp,v 1.4 2007-01-24 06:12:18 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <!-- goes to secondary window error page if error occurs -->
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
 <curate:checkLogon name="Userbean" page="/jsp/ErrorPageWindow.jsp" />
@@ -74,8 +78,8 @@ history.forward();
 </head>
 <body>
 <table width="100%" border="2" cellpadding="0" cellspacing="0">
-  <col width="21%">
-  <col width="79%">
+  <col style="width: 2.3in"/>
+  <col /> 
   <tr valign="top">
     <td class="sidebarBGColor">
       <%@ include file="SearchParameters.jsp" %>

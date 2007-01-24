@@ -1,20 +1,24 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.34 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.35 2007-01-24 06:12:13 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
-import java.io.*;
-//import java.math.*;
-import java.sql.*;
-//import java.sql.Date;
-//import java.text.SimpleDateFormat;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-//import oracle.jdbc.driver.*;
-import org.apache.log4j.*;
+import java.io.Serializable;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Calendar;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.apache.log4j.Logger;
 
 /**
  * This utility class is used during the validation of the create/edit action of the tool.
@@ -148,8 +152,6 @@ public class SetACService implements Serializable
   * @param m_DE DataElement Bean.
   * @param getAC reference to GetACService class.
   *
-  * @throws IOException  If an input or output exception occurred
-  * @throws ServletException  If servlet exception Occurred
   */
   public void setValidatePageValuesDE(HttpServletRequest req,
           HttpServletResponse res, DE_Bean m_DE, GetACService getAC)// throws ServletException,IOException
@@ -384,8 +386,7 @@ public class SetACService implements Serializable
    * @param editAction
    * @param vValidate
    * @param sOriginAction
-   * @return validate vector
-   */
+    */
   public void addDatesToValidatePage(String sBegin, String sEnd, String sWFS, String editAction, 
       Vector<ValidateBean> vValidate, String sOriginAction)
   {
@@ -451,9 +452,8 @@ public class SetACService implements Serializable
    * @param pgBDate String begin date
    * @param pgEDate String end date
    * @param vValidate Vector of validate data
-   * @return Vector of validate data
    */
-  private void addEditPVDatesToValidatePage(HttpServletRequest req, String pgBDate, 
+/*  private void addEditPVDatesToValidatePage(HttpServletRequest req, String pgBDate, 
       String pgEDate, Vector<ValidateBean> vValidate)
   {
     try
@@ -532,7 +532,7 @@ public class SetACService implements Serializable
       vValidate.addElement(vbean);
     }
   }
-  
+*/  
  /**
   * To add DDE info to DE validate vector, called from setValidatePageValues.
   * All data are valid because they are either pick from list or no validate rule
@@ -541,10 +541,6 @@ public class SetACService implements Serializable
   * @param res HttpServletResponse object.
   * @param vValidate Vector of validate values.
   * @param sOriginAction String of origin action.
-  * @return Vector of validate
-  *
-  * @throws IOException  If an input or output exception occurred
-  * @throws ServletException  If servlet exception Occurred
   */
   public void addDDEToDEValidatePage(HttpServletRequest req,
           HttpServletResponse res, Vector<ValidateBean> vValidate, String sOriginAction) //throws ServletException,IOException
@@ -634,9 +630,6 @@ public class SetACService implements Serializable
  * @param m_OCQ 
  * @param m_PCQ 
   *
-  * @throws IOException  If an input or output exception occurred
-  * @throws ServletException  If servlet exception Occurred
- * @throws Exception 
   */
   public void setValidatePageValuesDEC(HttpServletRequest req,
           HttpServletResponse res, DEC_Bean m_DEC, EVS_Bean m_OC, EVS_Bean m_PC, 
@@ -737,7 +730,9 @@ public class SetACService implements Serializable
       if (s == null) s = "";  
       if(s.equals("Released") || s.equals("RELEASED"))
       {
-        if (sDECAction.equals("Edit"))
+        if (sDECAction.equals("Edit") || sDECAction.equals("Create"))
+          strInValid = checkOCPropWorkFlowStatuses(req, res, m_DEC.getDEC_OCL_IDSEQ(), m_DEC.getDEC_PROPL_IDSEQ(), strInValid);
+/*        if (sDECAction.equals("Edit"))
           strInValid = checkOCPropWorkFlowStatuses(req, res, m_DEC.getDEC_OCL_IDSEQ(), m_DEC.getDEC_PROPL_IDSEQ(), strInValid);
         else if(sDECAction.equals("Create"))
         {
@@ -751,6 +746,7 @@ public class SetACService implements Serializable
             prop_id = m_PC.getIDSEQ();
           strInValid = checkOCPropWorkFlowStatuses(req, res, oc_id, prop_id, strInValid);
         }
+*/      
       }
       UtilService.setValPageVector(vValidate, "Workflow Status", s, bMandatory, 20, strInValid, sOriginAction);   
    
@@ -897,16 +893,13 @@ public class SetACService implements Serializable
  * @param m_REPQ 
   * @param getAC reference to GetACService class.
   *
-  * @throws IOException  If an input or output exception occurred
-  * @throws ServletException  If servlet exception Occurred
- * @throws Exception 
   */
   public void setValidatePageValuesVD(HttpServletRequest req, HttpServletResponse res, 
         VD_Bean m_VD, EVS_Bean m_OC, EVS_Bean m_PC, EVS_Bean m_REP, EVS_Bean m_OCQ, 
         EVS_Bean m_PCQ, EVS_Bean m_REPQ, GetACService getAC) //throws ServletException,IOException, Exception
   {
     Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
-    Vector<String> vs = new Vector<String>();
+    //Vector<String> vs = new Vector<String>();
     try
     {
 //System.out.println("setValidatePageValuesVD");
@@ -1227,7 +1220,6 @@ public class SetACService implements Serializable
    * @param isUser boolean is name type selected is user
    * @param vValidate Vector validate message vector
    * @param sOrigin String originAction
-   * @return vValidate the vector of updated validate message
    */
   private void setValidatePrefNameType(String sType, boolean isUser, Vector<ValidateBean> vValidate, 
       String sOrigin)
@@ -1261,7 +1253,6 @@ public class SetACService implements Serializable
    * @param req
    * @param res
    * @param sACType
-   * @throws java.lang.Exception
    */
   public void setValidateBlockEdit(HttpServletRequest req, HttpServletResponse res, 
       String sACType) //throws Exception
@@ -1508,10 +1499,6 @@ public class SetACService implements Serializable
    * @param m_PC PC_Bean
    * @param m_VD VD_Bean
    * @param m_REP REP_Bean
-   * @return validate vector
-   * @throws javax.servlet.ServletException
-   * @throws java.io.IOException
-   * @throws java.lang.Exception
    */
   private void setValidateNameComp(Vector<ValidateBean> vValidate, String acType, HttpServletRequest req,
           HttpServletResponse res, DEC_Bean m_DEC, EVS_Bean m_OC, EVS_Bean m_PC, 
@@ -1562,7 +1549,7 @@ public class SetACService implements Serializable
         String strOCInvalid = "";
         if(!sQ.equals("") && sP.equals(""))
           strOCInvalid = "Cannot have Qualifier Concepts without a Primary Concept.\n";
-        if(!sQ.equals("") || !sP.equals("") && m_OC != null)
+        if (!sQ.equals("") || !sP.equals("") && m_OC != null)
           strOCInvalid = strOCInvalid + checkConceptCodeExistsInOtherDB(vOC, insAC, null);
 //System.out.println("setValidateNameComp05");
         if ((sOCL == null || sOCL.equals("")) && sDECAction.equals("Edit"))  
@@ -1634,6 +1621,8 @@ public class SetACService implements Serializable
                 strOCInvalid += errCode + " : Unable to create new version of the Object Class";
               }
             }
+            if (m_OC != null)
+              m_OC.setIDSEQ(m_DEC.getDEC_OCL_IDSEQ());
           }
           //allow creating new version of property here if asl name is not released
           if (propID != null && !propID.equals(""))
@@ -1653,6 +1642,8 @@ public class SetACService implements Serializable
                 strPropInvalid += errCode + " : Unable to create new version of the Property";
               }
             }
+            if (m_PC != null)
+              m_PC.setIDSEQ(m_DEC.getDEC_PROPL_IDSEQ());        
           }
         }
         //append it to oc invalid
@@ -1665,6 +1656,7 @@ public class SetACService implements Serializable
         strPropInvalid  = strPropInvalid + strInValid; 
         s = m_DEC.getDEC_PROPL_NAME();
         UtilService.setValPageVector(vValidate, "Property", s, bNotMandatory, 255, strPropInvalid, sOriginAction);
+
       }
       else
       {
@@ -1707,8 +1699,6 @@ public class SetACService implements Serializable
    * @param vValidate
    * @param m_VD
    * @param sOriginAction
-   * @return vValidate the vector to display validate status
-   * @throws java.lang.Exception
    */
   private void setValidateVDOtherAttr(Vector<ValidateBean> vValidate, VD_Bean m_VD, String sOriginAction) //throws Exception
   {
@@ -1981,9 +1971,6 @@ public class SetACService implements Serializable
   * @param m_VM Value Meanings Bean.
   * @param getAC reference to GetACService class.
   *
-  * @throws IOException  If an input or output exception occurred
-  * @throws ServletException  If servlet exception Occurred
- * @throws Exception 
   */
   public void setValidatePageValuesVM(HttpServletRequest req,
           HttpServletResponse res, VM_Bean m_VM, GetACService getAC) 
@@ -2002,7 +1989,7 @@ public class SetACService implements Serializable
       int iNoLengthLimit = -1;
         req.setAttribute("VMExist", "false");
         //check if existnce 
-        m_VM = insAC.getExistingVM(m_VM);
+      //  m_VM = insAC.getExistingVM(m_VM);
         String  sRet = m_VM.getRETURN_CODE();
         if (sRet == null || sRet.equals(""))  //already exists
         {
@@ -2843,7 +2830,6 @@ public class SetACService implements Serializable
   * @param m_VM vm bean
   *  
   * @return String retValue message if exists already. Otherwise empty string.
- * @throws Exception 
   */
   public String checkConceptCodeExistsInOtherDB(Vector vAC, InsACService insAC, VM_Bean m_VM) //throws Exception
   {
@@ -2909,7 +2895,6 @@ public class SetACService implements Serializable
   * @param getAC reference to GetACService class.
   *
   * @return String retValue message if exists already. Otherwise empty string.
-   * @throws Exception 
   */
   public String checkDEUsingDEC(String ACType, DEC_Bean m_DEC, GetACSearch getAC) //throws Exception
   {
@@ -3847,7 +3832,7 @@ public class SetACService implements Serializable
       
       //store accsi bean list list in the session
       Vector vCSList = (Vector)session.getAttribute("CSCSIList");
-      Vector vList = getACCSIFromPage(vCSCSIs, vACCSIs, vCSList, vACs, vACNames);
+      Vector<AC_CSI_Bean> vList = getACCSIFromPage(vCSCSIs, vACCSIs, vCSList, vACs, vACNames);
       m_DEC.setAC_AC_CSI_VECTOR(vList);
       
       //get associated ac-csi
@@ -3871,8 +3856,6 @@ public class SetACService implements Serializable
    * 
    * @param sSelectionList array of string.
    * @return Vector of elements from the array.
-   * @throws ServletException, IOException
-   * @throws IOException 
    */
   private Vector getSelectionFromPage(String[] sSelectionList) //throws ServletException,IOException
   {
@@ -3904,8 +3887,6 @@ public class SetACService implements Serializable
    * @param vACs
    * @param vAC_Name
    * @return vector of accsi object
-   * @throws javax.servlet.ServletException
-   * @throws java.io.IOException
    */
  private Vector<AC_CSI_Bean> getACCSIFromPage(Vector vCSCSIs, Vector vACCSIs, Vector vCSCSIList, 
       Vector vACs, Vector vAC_Name) //throws ServletException,IOException
@@ -4377,8 +4358,6 @@ public class SetACService implements Serializable
    * @param res HttpServletResponse object.
    * @param m_PV PV Bean.
    *
-   * @throws IOException  If an input or output exception occurred
-   * @throws ServletException  when servlet exception Occurred
    */
   public void setPVValueFromPage(HttpServletRequest req,
           HttpServletResponse res, PV_Bean m_PV) //throws ServletException,IOException
@@ -4495,10 +4474,6 @@ public class SetACService implements Serializable
    * @param req The HttpServletRequest object.
    * @param res HttpServletResponse object.
    * @param m_VM VM Bean.
-   * @param m_PV PV Bean.
-   *
-   * @throws IOException  If an input or output exception occurred
-   * @throws ServletException  when servlet exception Occurred
    */
   public void setVMValueFromPage(HttpServletRequest req, HttpServletResponse res,
           VM_Bean m_VM) //throws ServletException,IOException
@@ -4766,8 +4741,6 @@ public class SetACService implements Serializable
    * @param vpIDseq string unique id for vd pvs table.
    * 
    * @return boolean true if pv is associated with the form false otherwise
-   * 
-   * @throws Exception
    */
   public boolean checkPVQCExists(HttpServletRequest req, HttpServletResponse res, 
         String vdIDseq, String vpIDseq) //throws Exception
@@ -4925,9 +4898,8 @@ public class SetACService implements Serializable
    * 
    * @param req servlet request
    * @param res servlet response
-   * 
-   * @throws Exception
    */
+  @SuppressWarnings("unchecked")
   public void addRemovePageVDPVs(HttpServletRequest req, HttpServletResponse res) //throws Exception
   {
     try
@@ -5041,6 +5013,10 @@ public class SetACService implements Serializable
     }
   }  //end addremovepagevdpvs
 
+  /**
+   * @param vValidate
+   * @return Vector of string
+   */
   public static Vector<String> makeStringVector(Vector<ValidateBean> vValidate)
   {
     Vector<String> vs = new Vector<String>();

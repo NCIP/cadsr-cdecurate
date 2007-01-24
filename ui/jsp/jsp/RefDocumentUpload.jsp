@@ -1,3 +1,8 @@
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/RefDocumentUpload.jsp,v 1.12 2007-01-24 06:12:18 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <%@ page import= "java.util.Vector" %>
 <SCRIPT LANGUAGE="JavaScript" SRC="Assets/RefDocumentUpload.js"></SCRIPT>

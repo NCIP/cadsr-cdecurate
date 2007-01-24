@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocMultipartForm.java,v 1.33 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocMultipartForm.java,v 1.34 2007-01-24 06:12:13 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -328,5 +328,5 @@ public class RefDocMultipartForm {
 	private Vector<String> _refDocs;
     private Vector<String> _parms;
     private Vector<String> _values;
-    Logger _logger = Logger.getLogger(RefDocMultipartForm.class.getName());
+    private static final Logger _logger = Logger.getLogger(RefDocMultipartForm.class);
 }

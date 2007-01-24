@@ -1,3 +1,8 @@
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/SplashScreenAbout.jsp,v 1.7 2007-01-24 06:12:18 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <%@ page contentType="text/html; charset=iso-8859-1" language="java"%>
 
 <html>

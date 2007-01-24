@@ -1,4 +1,8 @@
-<!-- EVSSearchPage.jsp -->
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/EVSSearchPage.jsp,v 1.2 2007-01-24 06:12:17 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <html> 
 <head>
 <title>CDE Curation Tool: Search Enterprise Vocabulary System</title>
@@ -10,8 +14,8 @@ history.forward();
 
 <body>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <col width="22%">
-  <col width="78%">
+  <col style="width: 2.3in"/>
+  <col /> 
   <tr valign="top">
     <td>
       <%@ include file="EVSSearchParameters.jsp" %>

@@ -1,3 +1,8 @@
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CreateVD.jsp,v 1.20 2007-01-24 06:12:17 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <html>
 <head>
 <title>Create Value Domain</title>
@@ -760,7 +765,7 @@
   </tr>  
   <tr height="15"><td> </td></tr>
   <tr height="25" valign="bottom">
-      <td align=right><font color="#FF0000" >* </font><%=item++%>)</td>
+      <td align=right><%=item++%>)</td>
       <td> <font color="#FF0000">Enter/Select</font> Effective Begin Date</td>
   </tr>
     

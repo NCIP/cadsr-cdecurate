@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/CurationTestLogger.java,v 1.23 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/CurationTestLogger.java,v 1.24 2007-01-24 06:12:11 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.test;
@@ -105,5 +105,5 @@ public class CurationTestLogger
     
     protected long _start;
     
-    private static final Logger _logger = Logger.getLogger("gov.nih.nci.cadsr.cdecurate");
+    private static final Logger _logger = Logger.getLogger(CurationTestLogger.class);
 }

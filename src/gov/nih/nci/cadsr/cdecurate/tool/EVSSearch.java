@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.33 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.34 2007-01-24 06:12:11 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -334,6 +334,7 @@ public class EVSSearch implements Serializable
    * @throws Exception
    * 
    */
+  @SuppressWarnings("unchecked")
   public void fillPropVectors(String prop_condr_idseq, DEC_Bean m_DEC, String sMenu)
   throws Exception
   { 
@@ -390,6 +391,7 @@ public class EVSSearch implements Serializable
    * @throws Exception
    * 
    */
+  @SuppressWarnings("unchecked")
   public void fillRepVectors(String rep_condr_idseq, VD_Bean m_VD, String sMenu)
   throws Exception
   { 
@@ -418,7 +420,7 @@ public class EVSSearch implements Serializable
         {
           EVS_Bean m_RepQ = (EVS_Bean)vRepConcepts.elementAt(i);
           if (m_Rep == null) m_Rep = new EVS_Bean();        
- System.out.println(m_Rep.getCONCEPT_IDENTIFIER() + " con Name " + m_Rep.getLONG_NAME());
+ //System.out.println(m_Rep.getCONCEPT_IDENTIFIER() + " con Name " + m_Rep.getLONG_NAME());
           Vector vRepQualifierNames = m_VD.getVD_REP_QUALIFIER_NAMES();
           if (vRepQualifierNames == null) vRepQualifierNames = new Vector();
           vRepQualifierNames.addElement(m_RepQ.getLONG_NAME());
@@ -482,6 +484,7 @@ public class EVSSearch implements Serializable
    * @param vocabRoots list of vocabsroots
    * @return sort list of vocab roots
    */
+  @SuppressWarnings("unchecked")
   public List sortDLCObjects(List vocabRoots) 
   { 
     int Swap = 0;
@@ -589,6 +592,7 @@ public class EVSSearch implements Serializable
    * @return vector of concept objects
    *
    */
+  @SuppressWarnings("unchecked")
   public Vector getAllSubConceptCodes(String dtsVocab, String conceptName, String type, String conceptCode, String defSource) 
   {
 //logger.debug("getAllSubConceptCodes conceptName: " + conceptName);
@@ -646,6 +650,7 @@ public class EVSSearch implements Serializable
    * @return vector of concept objects
    *
    */
+  @SuppressWarnings("unchecked")
   public Vector getAllSubConceptCodes(String dtsVocab, String conceptCode) 
   {
     Vector vSub = new Vector();
@@ -697,6 +702,7 @@ public class EVSSearch implements Serializable
    * @return vector of concept objects
    *
    */
+  @SuppressWarnings("unchecked")
   public Vector getSubConceptNames(String dtsVocab, String conceptName, String type, String conceptCode, String defSource) 
   {
     String[] stringArray =  new String[10000];
@@ -837,6 +843,7 @@ public class EVSSearch implements Serializable
    * @return Vector of concept objectgs
    *
  */
+@SuppressWarnings("unchecked")
 public Vector getSubConceptCodes(String dtsVocab, String conceptName, String type, String conceptCode, String defSource) 
 {
     String[] stringArray =  new String[10000];
@@ -1171,7 +1178,8 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
    * @return stringArray
    *
 */
- public String[] getAllSubConceptNames(String dtsVocab, String[] stringArray, Vector vSub) 
+ @SuppressWarnings("unchecked")
+public String[] getAllSubConceptNames(String dtsVocab, String[] stringArray, Vector vSub) 
  { 
     String[] stringArray2 = null; 
     String[] stringArray3 = new String[10000];
@@ -1253,6 +1261,7 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
    * @param conceptCode
    * @return vSub
  */
+@SuppressWarnings("unchecked")
 public Vector getSuperConceptNamesImmediate(String dtsVocab, String conceptName, String conceptCode) 
 {
     Vector vSub = new Vector();
@@ -1300,6 +1309,7 @@ public Vector getSuperConceptNamesImmediate(String dtsVocab, String conceptName,
    * @param conceptCode
    * @return vSub
  */
+@SuppressWarnings("unchecked")
 public Vector getSuperConceptNames(String dtsVocab, String conceptName, String conceptCode) 
 {
     String[] stringArray = new String[50];
@@ -1379,6 +1389,7 @@ public Vector getSuperConceptNames(String dtsVocab, String conceptName, String c
    * @return vSub
    *
 */
+@SuppressWarnings("unchecked")
 public String[] getAllSuperConceptNames(String dtsVocab, String[] stringArray, Vector vSub) 
 { 
     String[] stringArray2 = new String[60];
@@ -1557,6 +1568,7 @@ public String parseDefinition(String termStr)
    * @param refresh
    *
    */
+  @SuppressWarnings("unchecked")
   public void get_Result(HttpServletRequest req, HttpServletResponse res,
          Vector vResult, String refresh)
   {
@@ -1789,6 +1801,7 @@ public String parseDefinition(String termStr)
    * loops through the RepBean vector 'vACSearch' and adds the selected fields to result vector.
    *
    */
+  @SuppressWarnings("unchecked")
   public void getMetaSources()
   {
     try
@@ -2361,6 +2374,7 @@ public String parseDefinition(String termStr)
   *
   * @throws Exception
   */
+  @SuppressWarnings("unchecked")
   public void doGetSuperConcepts()  throws Exception
   {
     try
@@ -2660,7 +2674,7 @@ public String parseDefinition(String termStr)
         sSearchType = "PropQ";
        else if(sSearchAC.equals("RepQualifier"))
         sSearchType = "RepQ";
-      Vector vAC = new Vector();
+      Vector<EVS_Bean> vAC = new Vector<EVS_Bean>();
       Vector vResult = new Vector();
       GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet); 
       if (sKeywordID != null)
@@ -2874,7 +2888,7 @@ public String parseDefinition(String termStr)
      if (dtsVocab == null) dtsVocab = "";
      if (sConceptName == null || sConceptCode == null || dtsVocab == null) 
         return;
-      Vector vAC = new Vector();
+      Vector<EVS_Bean> vAC = new Vector<EVS_Bean>();
       Vector vResult = new Vector();
       String sSearchAC = (String)session.getAttribute("creSearchAC");
       if(sSearchAC == null) sSearchAC = "";
@@ -3052,7 +3066,7 @@ public String parseDefinition(String termStr)
     try
     {
       HttpSession session = (HttpSession)m_classReq.getSession();
-      Vector vAC = new Vector();
+      Vector<EVS_Bean> vAC = new Vector<EVS_Bean>();
       Vector vResult = new Vector();
       String sSearchType = "";
       m_classReq.setAttribute("UISearchType", "term");

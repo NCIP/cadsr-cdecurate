@@ -1,3 +1,8 @@
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/ErrorPage.jsp,v 1.8 2007-01-24 06:12:18 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <%@ page isErrorPage="true" %>
 <%//System.out.println("inn ErrorPage jsp");%>
 <html>
@@ -132,7 +137,10 @@ session.setAttribute("ErrorMessage", "");
     || reqType.equals("searchQualifiers") || reqType.equals("getRefDocument")
     || reqType.equals("getAltNames") || reqType.equals("treeSearch") 
     || reqType.equals("treeExpand")  || reqType.equals("treeCollapse")
-    || reqType.equals("doSortBlocks")|| reqType.equals("doSortQualifiers")) //for windows that are open
+    || reqType.equals("doSortBlocks") || reqType.equals("doSortQualifiers")
+    || reqType.equals("AltNamesDefs") || reqType.equals("ACcontact")
+    || reqType.equals("showBEDisplayResult") || reqType.equals("getConClassForAC")
+    || reqType.equals("getPermValue") || reqType.equals("doSortBlocks")) //for windows that are open
 {
 
 String exceptionMessage = exception.getMessage();

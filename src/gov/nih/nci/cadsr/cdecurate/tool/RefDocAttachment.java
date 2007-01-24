@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.33 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.34 2007-01-24 06:12:13 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -122,6 +122,11 @@ public class RefDocAttachment {
 	NCICurationServlet m_servlet;
 	Logger logger = Logger.getLogger(RefDocAttachment.class.getName());
 
+	/**
+	 * @param req
+	 * @param res
+	 * @param m_servlet
+	 */
 	public RefDocAttachment(HttpServletRequest req, HttpServletResponse res, NCICurationServlet m_servlet) {
 
 		session = req.getSession();
@@ -132,6 +137,7 @@ public class RefDocAttachment {
 /**
  *  Open the Ref Documents attachments page.
  */
+@SuppressWarnings("unchecked")
 public void doOpen (){
 	
 	GetACService getAC = new GetACService(req, res, m_servlet);
@@ -405,6 +411,7 @@ public void doFileUpload (){
  * Return the the results page and display the results.
  * 
  */
+@SuppressWarnings("unchecked")
 public void doBack (){
 	Vector vResult = new Vector();
 	GetACSearch serAC = new GetACSearch(req, res, m_servlet);

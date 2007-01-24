@@ -209,6 +209,7 @@ function callHelp()
   lstWinOpenReqs.addElement("getAltNames");
   lstWinOpenReqs.addElement("showBEDisplayResult");
   lstWinOpenReqs.addElement("ACcontact");
+  lstWinOpenReqs.addElement("AltNamesDefs");
  // lstWinOpenReqs.addElement("");
   //handle search for create items (de, dec, vd, pv, vm searches)
   String menuAct = (String)session.getAttribute("serMenuAct");

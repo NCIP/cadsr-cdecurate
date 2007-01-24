@@ -1,3 +1,8 @@
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CreateVDPage.jsp,v 1.4 2007-01-24 06:12:17 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
+
 <!-- goes to login page if error occurs -->
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
 <curate:checkLogon name="Userbean" page="/LoginE.jsp" />

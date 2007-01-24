@@ -1,3 +1,7 @@
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/TitleBar.jsp,v 1.9 2007-01-24 06:12:18 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
 
 <html>
 <head>
@@ -24,10 +28,10 @@ var sentinelWindow = null;
    function callHelp()
    {
       if (helpWindow && !helpWindow.closed)
-       	helpWindow.focus();
+           helpWindow.focus();
       else
-       	// helpWindow = window.open("Help.htm", "Help", "width=750,height=620,top=0,left=0,resizable=yes,scrollbars=yes,titlebar=false");
-       	helpWindow = window.open("Help.htm", "Help");
+           // helpWindow = window.open("Help.htm", "Help", "width=750,height=620,top=0,left=0,resizable=yes,scrollbars=yes,titlebar=false");
+           helpWindow = window.open("Help.htm", "Help");
    }
 
     function callManageAlert()
@@ -58,11 +62,11 @@ var sentinelWindow = null;
   
   function callSentinelJS(serverName)
   {
-  	   
-	   if (serverName != null && serverName != "")  
-	   {
-//		   serverName = serverName.toLowerCase();
-		   var cdeServer = serverName
+         
+       if (serverName != null && serverName != "")  
+       {
+//           serverName = serverName.toLowerCase();
+           var cdeServer = serverName
 /*       var cdeServer = serverName;   //defaults to curation tool server
        if (serverName == "localhost")
           cdeServer = "biotite.scenpro.net:8080";
@@ -76,15 +80,15 @@ var sentinelWindow = null;
           cdeServer =  "cadsrsentinel-stage.nci.nih.gov/";   //"ncicb-stage.nci.nih.gov/cadsrsentinel";
        else if (serverName == "ncicb.nci.nih.gov" || serverName == "cdecurate.nci.nih.gov")
           cdeServer = "cadsrsentinel.nci.nih.gov/"; //"ncicb-nci.nih.gov/cadsrsentinel";*/
-		    //open the window
+            //open the window
         if (sentinelWindow && !sentinelWindow.closed)
           sentinelWindow.focus();
         else
           sentinelWindow = window.open(cdeServer);
         //  sentinelWindow = window.open("http://" + cdeServer + "/cadsrsentinel/do/cdecuration", "_blank");
-	   }
-	   else
-		   alert("Unable to determine the server name for the Sentinel Tool.");	
+       }
+       else
+           alert("Unable to determine the server name for the Sentinel Tool.");    
   } 
   
    function callMessageGifDENew()
@@ -175,21 +179,21 @@ function linkNCI()
   if (winNCI && !winNCI.closed)
      winNCI.focus();
   else
-   	winNCI = window.open("http://www.nci.nih.gov", "NCI", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+       winNCI = window.open("http://www.nci.nih.gov", "NCI", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 function link_caDSR()
 {
   if (wincaDSR && !wincaDSR.closed)
      wincaDSR.focus();
   else
-   	wincaDSR = window.open("http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr", "caDSR", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+       wincaDSR = window.open("http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr", "caDSR", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 function linkNCICB()
 {
   if (winNCICB && !winNCICB.closed)
      winNCICB.focus();
   else
-   	winNCICB = window.open("http://ncicb.nci.nih.gov", "NCICB", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+       winNCICB = window.open("http://ncicb.nci.nih.gov", "NCICB", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 
 </script>
@@ -207,33 +211,24 @@ function linkNCICB()
     String Username = (String)session.getAttribute("Username");
     String Context = (String)session.getAttribute("sDefaultContext");
 %>
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" >
-	<col width="1px">
-	<col width="*">
-	<tr bgcolor="#A90101">
-		<td align="left"><a href="http://www.cancer.gov" target=_blank><img src="Assets/brandtype.gif" border="0"></a></td>
-		<td align="right"><a href="http://www.cancer.gov" target=_blank><img src="Assets/tagline_nologo.gif" border="0"></a></td>
-	</tr>
-	
-	<tr>
-	<td colspan="2"><a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr"><img src="Assets/curation_banner2.gif" border="0" alt="caDSR Logo"></a>
-	</td>	
-	</tr>
-	
-	<tr>	
-	<td colspan="2">
-	<table style="border-collapse: collapse">
-	<colgroup>
-	<col />
-	<col />
-	</colgroup><TBODY/>
-	<tr>
-	<td style="padding: 0in 1in 0in 0in">User&nbsp;Name&nbsp;:&nbsp;<%=Username%></td>
-	<td style="padding: 0in 0in 0in 0in"><script webstyle3>document.write('<scr'+'ipt src="Assets/xaramenu.js">'+'</scr'+'ipt>');document.write('<scr'+'ipt 				src="Assets/biztech_button.js">'+'</scr'+'ipt>');/*img src="Assets/biztech_button.gif" moduleid="myzara 					(project)\biztech_button_off.xws"*/</script></td>
-	</tr>	
-	</table>
-	</td>
-	</tr>	
-	</table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+        <col style="width: 1px"/>
+        <col />
+        <tr bgcolor="#A90101">
+            <td align="left"><a href="http://www.cancer.gov" target=_blank><img src="Assets/brandtype.gif" border="0"></a></td>
+            <td align="right"><a href="http://www.cancer.gov" target=_blank><img src="Assets/tagline_nologo.gif" border="0"></a></td>
+        </tr>
+        <tr>
+            <td colspan="2"><a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr"><img src="Assets/curation_banner2.gif" border="0" alt="caDSR Logo"></a></td>    
+        </tr>
+    </table>
+    <table style="border-collapse: collapse; width: 100%">
+        <col style="width: 2.3in" />
+        <col />
+        <tr>
+            <td>User&nbsp;Name&nbsp;:&nbsp;<%=Username%></td>
+            <td><script webstyle3>document.write('<scr'+'ipt src="Assets/xaramenu.js">'+'</scr'+'ipt>');document.write('<scr'+'ipt                 src="Assets/biztech_button.js">'+'</scr'+'ipt>');/*img src="Assets/biztech_button.gif" moduleid="myzara                     (project)\biztech_button_off.xws"*/</script></td>
+        </tr>    
+    </table>
 </body>
 </html>

@@ -36,7 +36,7 @@ public class VMForm implements Serializable
   public static final String CADSR_ACTION_DEL = "DEL";
   /** database submit action update NONE keyword */
   public static final String CADSR_ACTION_NONE = "NONE";
-  
+  /** default definition value used in VM if concept definition is empty  */
   public static final String DEFINITION_DEFAULT_VALUE = "No Value Exists";
   //attributes
   private VM_Bean VMBean;
@@ -394,7 +394,7 @@ public class VMForm implements Serializable
   }
 
   /**
-   * @param searchFilterCondr The searchFilterCondr to set.
+   * @param sCondr The searchFilterCondr to set.
    */
   public void setSearchFilterCondr(String sCondr)
   {

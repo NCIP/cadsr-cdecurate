@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UtilService.java,v 1.33 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UtilService.java,v 1.34 2007-01-24 06:12:13 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -110,7 +110,7 @@ public class UtilService implements Serializable
   * @param sSelList  A string array selection list.
   *
   */
-  public void setMultSelection(Vector vSource, Vector vTarget, String sSelList[])
+  public void setMultSelection(Vector<String> vSource, Vector<String> vTarget, String sSelList[])
   {
     int i = 0;
     try
@@ -143,10 +143,10 @@ public class UtilService implements Serializable
   * @param sIDs  A string array of ID's.
   *
   */
-  public void setMultSelectionByIDs(Vector vIDs,
-                                    Vector vNames,
-                                    Vector vSrcIDs,
-                                    Vector vSrcNames,
+  public void setMultSelectionByIDs(Vector<String> vIDs,
+                                    Vector<String> vNames,
+                                    Vector<String> vSrcIDs,
+                                    Vector<String> vSrcNames,
                                     String sIDs[])
   {
     // get size of sIDs
@@ -194,7 +194,8 @@ public class UtilService implements Serializable
   * vector and return it
   *
   * @param vSource A Vector of the Sources.
-  * @param vTarget  A String ID.
+  * @param sIdx string index
+  * @return String
   *
   */
   public String getName(Vector vSource, String sIdx)
@@ -220,7 +221,8 @@ public class UtilService implements Serializable
   *
   * @param vName  A Vector of names.
   * @param vID A Vector of ID's.
-  * @param sIDs  A string array of ID's.
+  * @param sID String value for ID
+  * @return String value for name
   *
   */
   public String getNameByID(Vector vName, Vector vID, String sID)
@@ -248,10 +250,10 @@ public class UtilService implements Serializable
   /**
   * The getIDByName method: pass in index as string, pick its ID from source
   * vector and return it
+  * @param vSource Vector of string value
+  * @param sIdx string value for index
   *
-  * @param vName  A Vector of names.
-  * @param vID A Vector of ID's.
-  * @param sIDs  A string array of ID's.
+  * @return String of ID
   *
   */
   public String getIDByName(Vector vSource, String sIdx)  // returns ID
@@ -437,10 +439,11 @@ public class UtilService implements Serializable
   *
   * @param v  A Vector.
   * @param s  A string.
+  * @return int 
   *
   */
   //
-  public int insertCacheVector(Vector v, String s)
+  public int insertCacheVector(Vector<String> v, String s)
   {
       String sPrev;
       String sNext;
@@ -600,10 +603,12 @@ public class UtilService implements Serializable
     {
       if (sValue != null && !sValue.equals(""))
       {
+        sValue = sValue.replaceAll("[\\r][\\n]", " ");
+        sValue = sValue.replaceAll("[\\s]", " ");
         sValue = sValue.trim();
-        sValue = sValue.replace('\n', ' ');
-        sValue = sValue.replace('\r', ' ');
-        sValue = sValue.replace('\f', ' ');
+        //sValue = sValue.replace('\n', ' ');
+        //sValue = sValue.replace('\r', ' ');
+        //sValue = sValue.replace('\f', ' ');
         return sValue;
       }
       else
@@ -723,10 +728,12 @@ public class UtilService implements Serializable
   *
   * @param vDEComp  A Vector.
   * @param vDECompID  A Vector.
+  * @param vDECompRelID 
   * @param vDECompOrder  A Vector.
+  * @return int
   *
   */
-  public int sortDEComps(Vector vDEComp, Vector vDECompID, Vector vDECompRelID, Vector vDECompOrder)
+  public int sortDEComps(Vector<String> vDEComp, Vector<String> vDECompID, Vector<String> vDECompRelID, Vector<String> vDECompOrder)
   {
           int iMinIndex = 0;
           int iMin = 1000;
@@ -907,15 +914,13 @@ public class UtilService implements Serializable
    * setValidatePageValuesDEC, setValidatePageValuesVD, setValidatePageValuesPV, setValidatePageValuesVM methods.
    * Attribute Name and Data added to the vector.
    * Checks if satisfies mandatory, length limit valid and adds the appropriate messages along with earlier message to the vecotr.
-   *
-   * @param v vector to display data on the page.
+   * @param vb validate bean vector to display data on the page.
    * @param sItem Name of the attribute.
    * @param sContent input value of the attribute.
    * @param bMandatory true if attribute is a mandatory for submit.
    * @param iLengLimit integer value for length limit if any for the attribute.
    * @param strInValid invalid messages from other validation checks.
    * @param sOriginAction String origin action
-   * @return Vector of validate
    *
    */
     public static void setValPageVector(Vector<ValidateBean> vb, String sItem, String sContent, 
@@ -984,8 +989,7 @@ public class UtilService implements Serializable
      * To get compared value to sort.
      * empty strings are considered as strings.
      * according to the fields, converts the string object into integer, double or dates.
-     *
-     * @param sField field name to sort.
+     * @param sFieldType type of field to sort
      * @param firstName first name to compare.
      * @param SecondName second name to compare.
      *
@@ -1029,6 +1033,10 @@ public class UtilService implements Serializable
         }
     }
 
+    /**
+     * @param pv PV bean object
+     * @return string evs id
+     */
     public static String getVMConcepts(PV_Bean pv)
     {
       String evsID = "";

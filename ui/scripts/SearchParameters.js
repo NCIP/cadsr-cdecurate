@@ -252,7 +252,7 @@
           else if (sSelComp == "VMConcept")
          {
            document.searchParmsForm.listSearchFor[0].value = "VMConcept";
-           document.searchParmsForm.listSearchFor[0].text = "Value Meaning";
+           document.searchParmsForm.listSearchFor[0].text = "Concept";  //"Value Meaning";
          }
       }
     }

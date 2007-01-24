@@ -31,6 +31,10 @@ public class PVAction implements Serializable
   {      
   }
 
+  /** marks the bean with view type to retain the view
+   * @param vVDPV PV Bean vector
+   * @param vwTypes String array existing view types 
+   */
   public void doResetViewTypes(Vector<PV_Bean> vVDPV, String[] vwTypes)
   {
     for (int i=0; i<vwTypes.length; i++)
@@ -39,7 +43,6 @@ public class PVAction implements Serializable
       if (sType != null && vVDPV.size() > i)
       {
         PV_Bean pv = (PV_Bean)vVDPV.elementAt(i);
- //System.out.println(sType + " reset type " + pv.getPV_VIEW_TYPE());
         if (!sType.equals("collapse") && !sType.equals("expand"))
           sType = "expand";
         pv.setPV_VIEW_TYPE(sType);
@@ -48,6 +51,12 @@ public class PVAction implements Serializable
     }
   }
   
+  /**put the modified bean into pv bean vector according to the submit action
+   * @param chgName STring pv name from page
+   * @param pvInd int index from the page
+   * @param isNew boolean value of whether pv is new or not
+   * @param data PVForm object
+   */
   public void doChangePVAttributes(String chgName, int pvInd, boolean isNew, PVForm data)
   {
     //update the existing list
@@ -106,13 +115,11 @@ public class PVAction implements Serializable
 
   /** 
    * Check if the permissible values associated with the form for the selected VD
-   * 
-   * @param vdIDseq string unique id for value domain.
-   * @param vpIDseq string unique id for vd pvs table.
+   * @param vd VD bean object
+   * @param pv PVBean object
+   * @param data PVForm data
    * 
    * @return boolean true if pv is associated with the form false otherwise
-   * 
-   * @throws Exception
    */
   private boolean checkPVQCExists(VD_Bean vd, PV_Bean pv, PVForm data) //throws Exception
   {
@@ -171,15 +178,9 @@ public class PVAction implements Serializable
   /**
    * checks if removed pvs are associated with the form 
    * send back the validation message for pv vds data.
+   * @param data PVForm Object
    * 
-   * @param req servlet request
-   * @param res servlet response
-   * @param m_VD VD_Bean of the selected vd.
-   * @param vValidate vector of validation data
-   * @param sOriginAction string page action
    * @return vector of validate
-   * 
-   * @throws Exception
    */
   public Vector<String> addValidateVDPVS(PVForm data) //throws Exception
   {
@@ -209,8 +210,6 @@ public class PVAction implements Serializable
               PV_Bean thisPV = (PV_Bean)vVDPVS.elementAt(i);
               VM_Bean thisVM = thisPV.getPV_VM();
               //check its relationship with the form if removed 
-            //  String vpID = thisPV.getPV_VDPVS_IDSEQ();
-             // if (vpID == null) vpID = "";
               if (sPVVal != null && !sPVVal.equals(""))
               {
                 sPVVal += ",\n ";
@@ -270,16 +269,19 @@ public class PVAction implements Serializable
      return vValString;
    }    //end addvalidateVDPVS
 
+  /**add teh parent concept to the validate vector
+   * @param vd VDBean object
+   * @param vValidate Validate bean object 
+   * @param sOrgAct String Origin action
+   */
   public void addValidateParentCon(VD_Bean vd, Vector<ValidateBean> vValidate, String sOrgAct)
   {
     String s = "";
     String strInValid = "";
     Vector vParList = vd.getReferenceConceptList();  //  (Vector)session.getAttribute("VDParentConcept");
-  //  if(vParList != null)
-  //        strInValid = checkConceptCodeExistsInOtherDB(vParList, insAC, null);
+
     if (vParList != null && vParList.size()>0)
     {
-//System.out.println("val VD vParList.size(): " + vParList.size());
       for (int i =0; i<vParList.size(); i++)
       {
         EVS_Bean parBean = (EVS_Bean)vParList.elementAt(i);
@@ -334,10 +336,10 @@ public class PVAction implements Serializable
    * loop through the ResultSet and add them to PV bean
    *
    * @param acIdseq String id of the selected ac.
-   * @param acName String AC name.
    * @param sAction String search action.
+   * @param data PVForm object
    *
-   * @return Integer of PV count
+   * @return Vector of PVBean
    */
   public Vector<PV_Bean> doPVACSearch(String acIdseq, String sAction, PVForm data)  // 
   {
@@ -345,7 +347,6 @@ public class PVAction implements Serializable
     ResultSet rs = null;
     CallableStatement CStmt = null;
     Vector<PV_Bean> vList = new Vector<PV_Bean>();
-  //  Integer pvCount = new Integer(0);
     try
     {
       //Create a Callable Statement object.
@@ -430,6 +431,10 @@ public class PVAction implements Serializable
     return vList;
   }  //doPVACSearch search
   
+  /** reset the version value domain with pv idseqs
+   * @param vd VD Bean object
+   * @param verList PVBEan vector of the existing in cadsr
+   */
   public void doResetVersionVDPV(VD_Bean vd, Vector<PV_Bean> verList)
   {
     Vector<PV_Bean> rmVDPV = vd.getRemoved_VDPVList();
@@ -483,6 +488,11 @@ public class PVAction implements Serializable
     vd.setVD_PV_List(verList);    
   }
   
+  /**store vm attributes from the database in pv bean 
+   * @param pvBean PVBean object
+   * @param rs ResultSet from the query
+   * @param data PVForm object
+   */
   private void doSetVMAttributes(PV_Bean pvBean, ResultSet rs, PVForm data)
   {
     try
@@ -518,6 +528,11 @@ public class PVAction implements Serializable
     }
   }
   
+  /** get concept attributes for parent concept id
+   * @param conIDseq String con idseq
+   * @param pvBean PVBean object
+   * @param data PVForm object
+   */
   private void doSetParentAttributes(String conIDseq, PV_Bean pvBean, PVForm data)
   {
     EVS_Bean parConcept = new EVS_Bean();
@@ -539,8 +554,12 @@ public class PVAction implements Serializable
    *
    * loop through the ResultSet and add them to bean which is added to the vector to return
    *
-   * @param InString Keyword value, is empty if searchIn is minID.
-   * @param vList returns Vector of PVbean.
+   * @param InString Keyword value to filter by name
+   * @param cd_idseq String cdidseq to filter by CD
+   * @param conName String to filter by concept name
+   * @param conID STring value to filter by concept id
+   * @param data PVForm object
+   * @return PV_Bean object
    *
   */
   public Vector<PV_Bean> doPVVMSearch(String InString, String cd_idseq, String conName, 
@@ -623,6 +642,14 @@ public class PVAction implements Serializable
     return vList;
   }  //endPVVM search
 
+  /**to append the concepts from the concept search results to vm bean
+   * @param selRows STring array of selected rows
+   * @param vRSel Vector of EVS bean object of the search resutls
+   * @param eUser EVS_UserBEan object
+   * @param pvInd int editing pv indicator
+   * @param data PVForm object
+   * @return EVS_Bean selected concept
+   */
   public EVS_Bean doAppendConcepts(String[] selRows, Vector<EVS_Bean> vRSel, EVS_UserBean eUser, int pvInd, PVForm data)
   {
     String errMsg = "";
@@ -676,29 +703,23 @@ public class PVAction implements Serializable
             vmCon.insertElementAt(eBean, vmCon.size() -1);
           else
             vmCon.addElement(eBean);  
-          //TODO - make VM Name here
+
           vm.setVM_CONCEPT_LIST(vmCon);
           vm.setVM_IDSEQ("");
           vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
           vm.setVM_SHORT_MEANING(eBean.getLONG_NAME());  //have some name
           data.setNewVM(vm);
-   //       makeVMNameFromConcept(vm);  //make vm names
-      //    pv.setPV_SHORT_MEANING(vm.getVM_SHORT_MEANING());
-/*          pv.setPV_VM(vm);
-          data.setSelectPV(pv);
-          if (pvInd > -1)  //update the vector only if editing existing
-          {
-            VD_Bean vd = data.getVD();
-            Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
-            vdpvs.setElementAt(pv, pvInd);
-            vd.setVD_PV_List(vdpvs);
-            data.setVD(vd);
-          }
-*/        }
+        }
       }
     return eBean;
   }
   
+  /**gets the existing caDSR concept for the selected concept
+   * @param eBean EVS_Bean object
+   * @param eUser EVS_UserBean object
+   * @param data PVForm object
+   * @return EVS_Bean object existed in caDSR
+   */
   public EVS_Bean getCaDSRConcept(EVS_Bean eBean, EVS_UserBean eUser, PVForm data)
   {
     String errMsg = "";
@@ -765,10 +786,7 @@ public class PVAction implements Serializable
    * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
    * Calls oracle stored procedure
    *   "{call SBREXT_Set_Row.SET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}" to submit
-   *
-   * @param sAction Insert or update Action.
-   * @param sPV_ID PV IDseq.
-   * @param pv PV Bean.
+   * @param data PVForm data
    *
    * @return String return code from the stored procedure call. null if no error occurred.
    */
@@ -779,8 +797,6 @@ public class PVAction implements Serializable
      //logger.info(m_servlet.getLogMessage(m_classReq, "setPV", "starting set", startDate, startDate));
      PV_Bean pv = data.getSelectPV();
      String sPVid = pv.getPV_PV_IDSEQ();        //out
-  //   if (sPVid != null || !sPVid.equals("") || !sPVid.contains("EVS"))
-  //     return "";
      
      Connection sbr_db_conn = null;
      ResultSet rs = null;
@@ -897,7 +913,7 @@ public class PVAction implements Serializable
     * Sets in parameters, and registers output parameter.
     * Calls oracle stored procedure
     *   "{call SBREXT_GET_ROW.GET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?)}" to submit
-    *
+    * @param data PVForm object
     * @param sValue   existing Value.
     * @param sMeaning  existing meaning.
     * 
@@ -965,9 +981,8 @@ public class PVAction implements Serializable
    * Sets in parameters, and registers output parameter.
    * Calls oracle stored procedure
    *   "{call SBREXT_Set_Row.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?)}" to submit
+   * @param data PVForm object
    *
-   * @param pvBean PV_Bean of the selected pv.
-   * @param vdBean VD_Bean of the current pv.
    * @return String of return code 
    */
    public String setVD_PVS(PVForm data)
@@ -1077,7 +1092,12 @@ public class PVAction implements Serializable
      return retCode;
    }  //END setVD_PVS
 
-   public void doBlockEditPV(PVForm data, String changeField, String changeData)
+   /**add the block changed data of the PV 
+   * @param data PVForm object
+   * @param changeField pv attributes that is being changed
+   * @param changeData STring value that is changed
+   */
+  public void doBlockEditPV(PVForm data, String changeField, String changeData)
    {
      VD_Bean vd = data.getVD();
      Vector<PV_Bean> vdpv = vd.getVD_PV_List();
@@ -1098,11 +1118,15 @@ public class PVAction implements Serializable
      data.setVD(vd);
    }
 
-   private String setParentConcept(PV_Bean pvBean, VD_Bean vd)
+   /**get the conidseq to assign to the pv vd relationship from teh list of concepts bean
+   * @param pvBean PVBean object
+   * @param vd VDBean object
+   * @return String conidseq
+   */
+  private String setParentConcept(PV_Bean pvBean, VD_Bean vd)
    {
      String conIDseq = "";
      //create parent concept if exists 
-// TODO - do the parent concept realtionship later
      EVS_Bean pCon = (EVS_Bean)pvBean.getPARENT_CONCEPT();
      if (pCon != null)
      {
@@ -1128,7 +1152,14 @@ public class PVAction implements Serializable
      return conIDseq;
    }
 
-   public void doRemoveParent(String sParentCC, String sParentName, String sParentDB, String sPVAction, PVForm data)
+   /**to mark removal of parent from the page
+   * @param sParentCC String parent concept ID
+   * @param sParentName STring parent concept name
+   * @param sParentDB String parent concept vocabulary
+   * @param sPVAction string pv page action
+   * @param data PVFrom object
+   */
+  public void doRemoveParent(String sParentCC, String sParentName, String sParentDB, String sPVAction, PVForm data)
    {
     // HttpSession session = req.getSession();   
      VD_Bean vd = data.getVD();
@@ -1192,7 +1223,13 @@ public class PVAction implements Serializable
      data.setVD(vd);
    }
 
-   public void doRemovePV(VD_Bean vd, int pvInd, PV_Bean selPV, int iSetVDPV)
+   /** mark removal of pv from teh page
+   * @param vd VDBEan object
+   * @param pvInd int selected pv indicator
+   * @param selPV PVBean object of the selected pv
+   * @param iSetVDPV int set vdpv indicator
+   */
+  public void doRemovePV(VD_Bean vd, int pvInd, PV_Bean selPV, int iSetVDPV)
    {
      Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
      vdpvs.removeElementAt(pvInd);
@@ -1214,7 +1251,11 @@ public class PVAction implements Serializable
     * @param vd
     * @param pvIDseq
     */
-   public void putBackRemovedPV(VD_Bean vd, String pvIDseq)
+   /**
+   * @param vd
+   * @param pvIDseq
+   */
+  public void putBackRemovedPV(VD_Bean vd, String pvIDseq)
    {
      Vector<PV_Bean> rmList = vd.getRemoved_VDPVList();
      for (int i =0; i<rmList.size(); i++)
@@ -1234,78 +1275,85 @@ public class PVAction implements Serializable
     * gets the row number from the hiddenSelRow
     * Loops through the selected row and gets the evs bean for that row from the vector of evs search results.
     * adds it to vList vector and return the vector back
-    * @param req HttpServletRequest
-    * @param vList Existing Vector of EVS Beans
-    * @return Vector of EVS Beans
+    * @param vRSel Vector of EVS Bean of search results
+    * @param selRows String array of rows selected
+    * @param data PVForm object
     * @throws java.lang.Exception
     */
    public void getEVSSelRowVector(Vector<EVS_Bean> vRSel, String[] selRows, PVForm data) throws Exception
    {
-     VD_Bean vd = data.getVD();
-     Vector<EVS_Bean> vList = vd.getReferenceConceptList();  // (Vector)session.getAttribute("VDParentConcept");
-     if (vList == null) vList = new Vector<EVS_Bean>();
-     
-       //loop through the array of strings
-       for (int i=0; i<selRows.length; i++)
-       {
-         String thisRow = selRows[i];
-         Integer IRow = new Integer(thisRow);
-         int iRow = IRow.intValue();
-         if (iRow < 0 || iRow > vRSel.size())
-           data.setStatusMsg(data.getStatusMsg() + "\\tRow size is either too big or too small.");
-         else
+     try
+     {
+      VD_Bean vd = data.getVD();
+       Vector<EVS_Bean> vList = vd.getReferenceConceptList();  // (Vector)session.getAttribute("VDParentConcept");
+       if (vList == null) vList = new Vector<EVS_Bean>();
+       
+         //loop through the array of strings
+         for (int i=0; i<selRows.length; i++)
          {
-           EVS_Bean eBean = (EVS_Bean)vRSel.elementAt(iRow);
-           //send it back if unable to obtion the concept
-           if (eBean == null || eBean.getLONG_NAME() == null)
+           String thisRow = selRows[i];
+           Integer IRow = new Integer(thisRow);
+           int iRow = IRow.intValue();
+           if (iRow < 0 || iRow > vRSel.size())
+             data.setStatusMsg(data.getStatusMsg() + "\\tRow size is either too big or too small.");
+           else
            {
-             data.setStatusMsg(data.getStatusMsg() + "\\tUnable to obtain concept from the " + thisRow + " row of the search results.\\n" + 
-                 "Please try again.");
-             continue;
-           }
-
-           String eBeanDB = eBean.getEVS_DATABASE();
-           //make sure it doesn't exist in the list
-           boolean isExist = false;
-           if (vList != null && vList.size() > 0)
-           {
-             for (int k=0; k<vList.size(); k++)
+             EVS_Bean eBean = (EVS_Bean)vRSel.elementAt(iRow);
+             //send it back if unable to obtion the concept
+             if (eBean == null || eBean.getLONG_NAME() == null)
              {
-               EVS_Bean thisBean = (EVS_Bean)vList.elementAt(k);
-               String thisBeanDB = thisBean.getEVS_DATABASE();
-               if (thisBean.getCONCEPT_IDENTIFIER().equals(eBean.getCONCEPT_IDENTIFIER()) && eBeanDB.equals(thisBeanDB))
+               data.setStatusMsg(data.getStatusMsg() + "\\tUnable to obtain concept from the " + thisRow + " row of the search results.\\n" + 
+                   "Please try again.");
+               continue;
+             }
+
+             String eBeanDB = eBean.getEVS_DATABASE();
+             //make sure it doesn't exist in the list
+             boolean isExist = false;
+             if (vList != null && vList.size() > 0)
+             {
+               for (int k=0; k<vList.size(); k++)
                {
-                 String acAct = thisBean.getCON_AC_SUBMIT_ACTION();
-                 //put it back if was deleted
-                 if (acAct != null && acAct.equals("DEL"))
+                 EVS_Bean thisBean = (EVS_Bean)vList.elementAt(k);
+                 String thisBeanDB = thisBean.getEVS_DATABASE();
+                 if (thisBean.getCONCEPT_IDENTIFIER().equals(eBean.getCONCEPT_IDENTIFIER()) && eBeanDB.equals(thisBeanDB))
                  {
-                   thisBean.setCON_AC_SUBMIT_ACTION("INS");
-                   vList.setElementAt(thisBean, k);
+                   String acAct = thisBean.getCON_AC_SUBMIT_ACTION();
+                   //put it back if was deleted
+                   if (acAct != null && acAct.equals("DEL"))
+                   {
+                     thisBean.setCON_AC_SUBMIT_ACTION("INS");
+                     vList.setElementAt(thisBean, k);
+                   }
+                   isExist = true;
                  }
-                 isExist = true;
                }
              }
-           }
-           if (isExist == false)
-           {
-             eBean.setCON_AC_SUBMIT_ACTION("INS");
-             //get the evs user bean
-             EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
-             if (eUser == null) eUser = new EVS_UserBean();
-             
-             //get origin for cadsr result
-             String eDB = eBean.getEVS_DATABASE();
-             if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
+             if (isExist == false)
              {
-               eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), EVSSearch.VOCAB_NAME, EVSSearch.VOCAB_DBORIGIN);  // "vocabName", "vocabDBOrigin");
-               eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
-             }
-             vList.addElement(eBean);  
-           }          
-         }
-       }  
-       vd.setReferenceConceptList(vList);
-       data.setVD(vd);
+               eBean.setCON_AC_SUBMIT_ACTION("INS");
+               //get the evs user bean
+               EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
+               if (eUser == null) eUser = new EVS_UserBean();
+               
+               //get origin for cadsr result
+               String eDB = eBean.getEVS_DATABASE();
+               if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
+               {
+                 eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), EVSSearch.VOCAB_NAME, EVSSearch.VOCAB_DBORIGIN);  // "vocabName", "vocabDBOrigin");
+                 eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
+               }
+               vList.addElement(eBean);  
+             }          
+           }
+         }  
+         vd.setReferenceConceptList(vList);
+         data.setVD(vd);
+     }
+     catch (Exception e)
+     {
+       logger.fatal("ERROR - ", e);
+     }
    } 
    
    /**
@@ -1316,10 +1364,10 @@ public class PVAction implements Serializable
     * setEVS_DATABASE as Non_EVS text 
     * setPREFERRED_DEFINITION as document text
     * setEVS_DEF_SOURCE as document url
-    * 
-    * @param req HttpServletRequest object
-    * @param res HttpServletResponse object
-    * @throws java.lang.Exception
+    * @param sParName String Parence concept name
+    * @param sParDef String parent concept definition
+    * @param sParDefSource  String parent concept definition source
+    * @param data PVForm object
     */
    public void doNonEVSReference(String sParName, String sParDef, String sParDefSource, PVForm data)
    {

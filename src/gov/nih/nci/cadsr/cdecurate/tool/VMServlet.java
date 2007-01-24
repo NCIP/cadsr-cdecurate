@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 public class VMServlet implements Serializable
 {
   private static final long serialVersionUID = 1L;
+  /**VM Form object*/
   public static VMForm data = null;
   private static final Logger logger = Logger.getLogger(VMServlet.class.getName());
   /**
@@ -129,6 +130,10 @@ public class VMServlet implements Serializable
     req.setAttribute("labelKeyword", data.getResultLabel());        
   }
 
+  /**read the data from edits or creates
+   * @param pv PVBean object
+   * @param pvInd int selected PV indicator
+   */
   public void readDataForCreate(PV_Bean pv, int pvInd)
   {
     HttpServletRequest req = data.getRequest();
@@ -154,7 +159,7 @@ public class VMServlet implements Serializable
         sVM = (String)req.getParameter("pvNewVM");  //vm name
         sVMD = (String)req.getParameter("pvNewVMD");  //vm desc  
         vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
-      System.out.println(sVM + " new " + sVMD);
+     // System.out.println(sVM + " new " + sVMD);
       }
       else
       {
@@ -163,6 +168,8 @@ public class VMServlet implements Serializable
       }
       if (sVM != null && !sVM.equals("") && !vm.getVM_SHORT_MEANING().equals(sVM))
       {
+        UtilService util = new UtilService();        
+        sVM = util.removeNewLineChar(sVM);
         vm.setVM_SHORT_MEANING(sVM);
         vm.setVM_LONG_NAME(sVM);
         vm.setVM_IDSEQ("");
@@ -211,6 +218,10 @@ public class VMServlet implements Serializable
     }
   }
   
+  /** resets the vm concepts from page at save action to make sure newly added or deleted ones in the order
+   * @param pv PVBean object
+   * @return VM_Bean object
+   */
   private VM_Bean resetConceptsFromPage(PV_Bean pv)
   {
     HttpServletRequest req = data.getRequest();
@@ -253,6 +264,9 @@ public class VMServlet implements Serializable
     return vm;
   }
 
+  /**Makes the name for VM from VM concepts
+   * @param vm VMBEan object
+   */
   private void makeVMNameFromConcept(VM_Bean vm)
   {
     Vector<EVS_Bean> vmCon = vm.getVM_CONCEPT_LIST();
@@ -284,14 +298,18 @@ public class VMServlet implements Serializable
       vmName += con.getLONG_NAME();
       if (!vmDef.equals("")) vmDef += ": ";
       vmDef += con.getPREFERRED_DEFINITION();
-    System.out.println(i + " cname " + con.getLONG_NAME() + " cdef " + con.getPREFERRED_DEFINITION());
+   // System.out.println(i + " cname " + con.getLONG_NAME() + " cdef " + con.getPREFERRED_DEFINITION());
     }
-    System.out.println(vmName + " vm name " + vmDef);
+   // System.out.println(vmName + " vm name " + vmDef);
     vm.setVM_LONG_NAME(vmName);
     vm.setVM_SHORT_MEANING(vmName);
     vm.setVM_DESCRIPTION(vmDef);
   }
   
+  /**method to call Submit to the database
+   * @param vm VMBEan object
+   * @return String vm error message
+   */
   public String submitVM(VM_Bean vm)
   {
     VMAction vmact = new VMAction();

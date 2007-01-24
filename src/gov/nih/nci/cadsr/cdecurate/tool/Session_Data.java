@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/Session_Data.java,v 1.24 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/Session_Data.java,v 1.25 2007-01-24 06:12:13 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -25,9 +25,6 @@ public class Session_Data
   /** evs user bean stored in the session */
   public EVS_UserBean EvsUsrBean;
 
-  /** Alt Def result vector **/
-  public Vector<AltDefBean> AllAltDef;
-  
   /** String EVS searched **/
   public String EVSSearched;
 

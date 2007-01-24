@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.23 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.24 2007-01-24 06:12:13 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -65,18 +65,7 @@ public class AltNamesDefsServlet
                 if (flag != temp.getInstance())
                 {
                     flag = temp.getInstance();
-                    switch (temp.getInstance())
-                    {
-                    case Alternates._INSTANCEDEF:
-                        attr += Alternates._INSTANCEDEFTITLE;
-                        break;
-                    case Alternates._INSTANCENAME:
-                        attr += Alternates._INSTANCENAMETITLE;
-                        break;
-                    default:
-                        attr += Alternates._INSTANCEUNKTITLE;
-                        break;
-                    }
+                    attr += temp.getHtmlTitle();
                 }
                 attr += temp.toHTML();
             }
@@ -171,7 +160,10 @@ public class AltNamesDefsServlet
                 form_._sess._cacheDefTypes = db_.getDefinitionTypes();
             
             if (form_._sess._cacheLangs == null)
+            {
                 form_._sess._cacheLangs = db_.getLangs();
+                form_._sess._cacheLangDefault = db_.getDefaultLanguage();
+            }
 
             // Write the data to the page.
             form_.write3();
@@ -585,7 +577,10 @@ public class AltNamesDefsServlet
     public static final int _classTypeCS = 1;
     public static final int _classTypeCSI = 2;
     
-    public static final String _formatHTMLcsiFull = "<tr onclick=\"selCSI(this);\" " + TreeNode._nodeLevel + "=\"{[NODELEVEL]}\" " + TreeNode._nodeValue + "=\"{[NODEVALUE]}\">\n"
+    public static final String _formatHTMLcsiFull = "<tr onclick=\"selCSI(this);\" "
+        + TreeNode._nodeLevel + "=\"{[NODELEVEL]}\" "
+        + TreeNode._nodeValue + "=\"{[NODEVALUE]}\" "
+        + TreeNode._nodeCsiType + "=\"{[TYPE]}\">\n"
         + "<td title=\"Class Scheme Item\"><div class=\"ind{[MARGIN]}\"><span style=\"{[DELFLAG]}\">{[NAME]}</span></div></td>\n"
         + "<td>&nbsp;</td><td>&nbsp;</td>\n"
         + "<td class=\"csi1\" title=\"Class Scheme Item Type\">{[TYPE]}</td>\n"

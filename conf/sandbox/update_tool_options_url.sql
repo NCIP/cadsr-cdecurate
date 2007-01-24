@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/sandbox/update_tool_options_url.sql,v 1.18 2006-12-05 22:25:40 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/sandbox/update_tool_options_url.sql,v 1.19 2007-01-24 06:12:08 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde

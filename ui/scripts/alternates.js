@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/alternates.js,v 1.20 2006-12-05 22:25:42 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/alternates.js,v 1.21 2007-01-24 06:12:20 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 // Perform a general action and remember the previous action. The previous action
@@ -199,6 +199,13 @@ function doClassify()
             alert("You have selected a Classification Scheme, please select a Class Scheme Item.");
             return;
         }
+    }
+    
+    var rsrvd = eobj.getAttribute(nodeCsiType);
+    if (rsrvd != null && rsrvd == parmReserved)
+    {
+        alert("Class Scheme Item type " + parmReserved + " is reserved, please make a different selection.");
+        return;
     }
 
     // Do the Classify

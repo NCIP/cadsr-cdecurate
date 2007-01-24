@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/dev/load_tool_options.sql,v 1.33 2006-12-05 22:25:34 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/dev/load_tool_options.sql,v 1.34 2007-01-24 06:12:07 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -15,6 +15,13 @@
    or invalid appropriate error messages are displayed via the Curation Tool Login page.
 */
 
+/* If the caDSR DEFAULT.LANGUAGE has not been loaded into the table, execute
+    the following statement. The language value must first exist in the sbr.languages_lov_view
+    table/view.
+
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('caDSR', 'DEFAULT.LANGUAGE', 'ENGLISH', 'The default language for all caDSR tools.'); 
+*/
 
 /*
 --Store evs url for all tools: need to make sure it doesn't exists already before runnning.
@@ -511,152 +518,93 @@ VALUES ('CURATION', 'EVS.PREFERREDVOCAB.SOURCE', 'NCI2005_10F',
 	   
 
 
+--Store document types used for drop down list.
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.1', 'HL7_EDCI_INSTRUMENT_MIF', 
+       'Must exist in SBR.DOCUMENT_TYPES_LOV table');
+
 --Store document types used for drop down list.         --------DOCUMENT TYPES ---------
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DOCUMENT_TYPE.1', 'REFERENCE', 
+VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.2', 'HL7_GLOBAL_DEFINITION_MIF', 
 	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DOCUMENT_TYPE.2', 'EXAMPLE', 
+VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.3', 'META_CONCEPT_SOURCE', 
 	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DOCUMENT_TYPE.3', 'COMMENT', 
+VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.4', 'Owning Document Text', 
 	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DOCUMENT_TYPE.4', 'NOTE', 
+VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.5', 'Preferred Question Text', 
 	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DOCUMENT_TYPE.5', 'DESCRIPTION', 
+VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.6', 'Service Context Property', 
 	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DOCUMENT_TYPE.6', 'IMAGE_FILE', 
+VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.7', 'Standard Question Text', 
 	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DOCUMENT_TYPE.7', 'VALID_VALUE_SOURCE', 
+VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.8', 'TECHNICAL GUIDE', 
 	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DOCUMENT_TYPE.8', 'DATA_ELEMENT_SOURCE', 
+VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.9', 'UML Attribute', 
 	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DOCUMENT_TYPE.9', 'HISTORIC SHORT CDE NAME', 
+VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.10', 'UML Class', 
 	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DOCUMENT_TYPE.10', 'DETAIL_DESCRIPTION', 
+VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.11', 'VD REFERENCE', 
 	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
---Store document types used for drop down list.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DOCUMENT_TYPE.11', 'LABEL', 
-	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
---Store document types used for drop down list.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DOCUMENT_TYPE.12', 'PDF', 
-	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
-
---Store document types used for drop down list.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DOCUMENT_TYPE.13', 'Scope Document', 
-	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
-
---Store document types used for drop down list.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DOCUMENT_TYPE.14', 'Associations', 
-	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
-
---Store document types used for drop down list.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DOCUMENT_TYPE.15', 'Alternate Question Text', 
-	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
-
---Store document types used for drop down list.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DOCUMENT_TYPE.16', 'Source', 
-	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
-
-	   
-	   
 	   
 
 --Store document types used for drop down list.  --------DESIGNATION TYPE / alt types ----------
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DESIGNATION_TYPE.1', 'CONTEXT NAME', 
+VALUES ('CURATION', 'EXCLUDE.DESIGNATION_TYPE.1', 'USED_BY', 
 	   'Must exist in SBR.DESIGNATION_TYPES_LOV table');
-
---Store document types used for drop down list.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DESIGNATION_TYPE.2', 'Context Short Name', 
-	   'Must exist in SBR.DESIGNATION_TYPES_LOV table');
-
---Store document types used for drop down list.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DESIGNATION_TYPE.3', 'CRITERION_NAME', 
-	   'Must exist in SBR.DESIGNATION_TYPES_LOV table');
-
---Store document types used for drop down list.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DESIGNATION_TYPE.4', 'ABBREVIATION', 
-	   'Must exist in SBR.DESIGNATION_TYPES_LOV table');
-
---Store document types used for drop down list.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DESIGNATION_TYPE.5', 'C3PR Name', 
-	   'Must exist in SBR.DESIGNATION_TYPES_LOV table');
-
---Store document types used for drop down list.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DESIGNATION_TYPE.6', 'C3D Name', 
-	   'Must exist in SBR.DESIGNATION_TYPES_LOV table');
-
---Store document types used for drop down list.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DESIGNATION_TYPE.7', 'New Designation', 
-	   'Must exist in SBR.DESIGNATION_TYPES_LOV table');
-
---Store document types used for drop down list.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DESIGNATION_TYPE.8', 'Prior Preferred Name', 
-	   'Must exist in SBR.DESIGNATION_TYPES_LOV table');
-
 	   
-	   
+       
+       
 
 --Store derivation types used for drop down list.           -------COMPLEX or Derivation Type -------
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DERIVATION_TYPE.1', 'CALCULATED', 
+VALUES ('CURATION', 'INCLUDE.DERIVATION_TYPE.1', 'CALCULATED', 
 	   'Must exist in SBR.COMPLEX_REP_TYPE_LOV table');
 
 --Store derivation types used for drop down list.     
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DERIVATION_TYPE.2', 'COMPOUND', 
+VALUES ('CURATION', 'INCLUDE.DERIVATION_TYPE.2', 'COMPOUND', 
 	   'Must exist in SBR.COMPLEX_REP_TYPE_LOV table');
 
 --Store derivation types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DERIVATION_TYPE.3', 'CONCATENATION', 
+VALUES ('CURATION', 'INCLUDE.DERIVATION_TYPE.3', 'CONCATENATION', 
 	   'Must exist in SBR.COMPLEX_REP_TYPE_LOV table');
 
 --Store derivation types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'DERIVATION_TYPE.4', 'Simple Concept', 
+VALUES ('CURATION', 'INCLUDE.DERIVATION_TYPE.4', 'Simple Concept', 
 	   'Must exist in SBR.COMPLEX_REP_TYPE_LOV table');
+
+
 
 	   
 --Ref doc file cache for uploading blobs from the DB to the web server to create url.	   
@@ -669,6 +617,7 @@ values ('CURATION', 'REFDOC_FILECACHE', '/local/content/cdecurate/filecache/',
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
 values ('CURATION', 'REFDOC_FILEURL', 'http://cdecurate-dev.nci.nih.gov/filecache/',
 'Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.');  
+
 
 
 	   

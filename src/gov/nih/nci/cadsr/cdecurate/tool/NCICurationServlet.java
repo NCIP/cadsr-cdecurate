@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.33 2006-12-05 22:25:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.34 2007-01-24 06:12:12 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -290,10 +290,26 @@ public class NCICurationServlet extends HttpServlet
          }
          catch(SQLException e)
          {
-        	 logger.fatal("Error getting connection" + e.toString(), e);
+           String eMsg = getDBConnectMessage(e.toString());
+        	 logger.fatal("Error getting connection" + eMsg, e);
+           m_classReq.setAttribute("ReqErrorMessage", eMsg);
          }
       }
       return(null);
+  }
+  
+  private String getDBConnectMessage(String eMsg)
+  {
+    String retMsg = "";
+    if (eMsg.contains("invalid username/password"))
+      retMsg = "caDSR connection error, please verify the user name and password.";
+    else if (eMsg.contains("maximum number of processes"))
+      retMsg = "Reached connection limits, please try again later. If this persists contact the NIH Help Desk.";
+    else if (eMsg.contains("Network Adapter") || eMsg.contains("Got minus one"))
+      retMsg = "Network connection error, please contact the NIH Help Desk.";
+    else
+      retMsg = "Encountered an unexpected and unknown connection error, please contact the NIH Help Desk.";
+    return retMsg;
   }
   
   /**
@@ -320,12 +336,20 @@ public class NCICurationServlet extends HttpServlet
        HttpSession session = req.getSession();
        return connectDB(session);
    } 
-   public Connection connectDB(HttpSession session_)
+   /**
+   * @param session_
+   * @return Connection
+   */
+  public Connection connectDB(HttpSession session_)
    {
        UserBean ub = (UserBean)session_.getAttribute("Userbean");
        return connectDB(ub);
    }
-   public Connection connectDB(UserBean ub_)
+   /**
+   * @param ub_
+   * @return Connection
+   */
+  public Connection connectDB(UserBean ub_)
    {
        Connection SBRDb_conn = null;
        try
@@ -436,6 +460,7 @@ public class NCICurationServlet extends HttpServlet
       req.setAttribute("LatestReqType", reqType);  
       if (reqType != null)
       {
+       // System.out.println("reqType " + reqType);
         //check the validity of the user login
         if(reqType.equals("login"))
         {
@@ -528,11 +553,11 @@ public class NCICurationServlet extends HttpServlet
           {
             doInsertPV(req,res);
           }
-*/           else if(reqType.equals("validateVMFromForm"))
+          else if(reqType.equals("validateVMFromForm"))
           {
             doInsertVM(req,res);
           }
-          else if(reqType.equals("searchACs"))
+*/           else if(reqType.equals("searchACs"))
           {
             doGetACSearchActions(req,res);      //req for search parameters page
           }
@@ -1281,7 +1306,7 @@ public class NCICurationServlet extends HttpServlet
                   || sOriginAction.equalsIgnoreCase("EditDE"))  // || sMenuAction.equals("EditDesDE"))
          {
             //DE_Bean DEBean = (DE_Bean)session.getAttribute("m_DE");
-            Vector vResult = new Vector();
+            Vector<String> vResult = new Vector<String>();
             serAC.getDEResult(req, res, vResult, "");
             session.setAttribute("results", vResult);
             ForwardJSP(req, res, "/SearchResultsPage.jsp");
@@ -2253,6 +2278,7 @@ public class NCICurationServlet extends HttpServlet
   *
   * @throws Exception
   */
+  @SuppressWarnings("unchecked")
   public void doCreatePVActions(HttpServletRequest req, HttpServletResponse res)
   throws Exception
   {
@@ -2450,7 +2476,8 @@ public class NCICurationServlet extends HttpServlet
       }
   }
 */
-  /**
+
+   /**
    * adds and removes alternate names and reference documents from the vectors
    * 
    * @param req
@@ -2469,12 +2496,14 @@ public class NCICurationServlet extends HttpServlet
     else if (pageAct.equals("removeRefDoc"))  //remove refernece documents
       this.doMarkRemoveRefDocs(req);    
   }
+
   /**
    * adds alternate names to the vectors
    * 
    * @param req
    * @throws java.lang.Exception
    */
+  @SuppressWarnings("unchecked")
   private void doMarkAddAltNames(HttpServletRequest req) throws Exception
   {
     HttpSession session = req.getSession();
@@ -2560,12 +2589,14 @@ public class NCICurationServlet extends HttpServlet
     }
     session.setAttribute("AllAltNameList", vAltNames);
   }
+
   /**
    * removes alternate names from the vectors
    * 
    * @param req
    * @throws java.lang.Exception
    */
+  @SuppressWarnings("unchecked")
   private void doMarkRemoveAltNames(HttpServletRequest req) throws Exception
   {
     HttpSession session = req.getSession();
@@ -2627,12 +2658,14 @@ public class NCICurationServlet extends HttpServlet
       insAC.storeStatusMsg("Unable to remove the following Alternate Names, because the user does not have write permission to remove " + stgContMsg);
     session.setAttribute("AllAltNameList", vAltNames);
   } //end remove alt names
+
   /**
    * adds reference documents to the vectors
    * 
    * @param req
    * @throws java.lang.Exception
    */
+  @SuppressWarnings("unchecked")
   private void doMarkAddRefDocs(HttpServletRequest req) throws Exception
   {
     HttpSession session = req.getSession();
@@ -2719,12 +2752,14 @@ public class NCICurationServlet extends HttpServlet
     }        
     session.setAttribute("AllRefDocList", vRefDocs);
   } //end add ref docs
+
   /**
    * removes reference documents from the vectors
    * 
    * @param req
    * @throws java.lang.Exception
    */
+  @SuppressWarnings("unchecked")
   private void doMarkRemoveRefDocs(HttpServletRequest req) throws Exception
   {
     HttpSession session = req.getSession();
@@ -2894,6 +2929,7 @@ public class NCICurationServlet extends HttpServlet
       } 
     }
   }
+
   /**
   * The doChangeContext method resets the bean then forwards to Create page
   * Called from 'doCreateDEActions', 'doCreateDECActions', 'doCreateVDActions' methods.
@@ -3188,7 +3224,7 @@ public class NCICurationServlet extends HttpServlet
   *
   * @throws Exception
   */
-  public void doSubmitVM(HttpServletRequest req, HttpServletResponse res) throws Exception
+  private void doSubmitVM(HttpServletRequest req, HttpServletResponse res) throws Exception
    {
       HttpSession session = req.getSession();
       session.setAttribute("sVMAction", "validate");
@@ -3219,11 +3255,11 @@ public class NCICurationServlet extends HttpServlet
       {
         ForwardJSP(req, res, "/ValidateVMPage.jsp");
       }
-      else
+/*      else
       {
         doInsertVM(req,res);
       }
-   } // end of doSumitVM
+*/   } // end of doSumitVM
 
   /**
   * The doValidateDE method gets the values from page the user filled out,
@@ -3589,6 +3625,7 @@ public class NCICurationServlet extends HttpServlet
     }   
     return eBean;
   }
+
   /**
    * gets the row number from the hiddenSelRow
    * Loops through the selected row and gets the evs bean for that row from the vector of evs search results.
@@ -3673,6 +3710,7 @@ public class NCICurationServlet extends HttpServlet
     }   
     return vList;
   }
+
   /**
    * makes the vd's system generated name
    * @param req HttpServletRequest object
@@ -3832,7 +3870,9 @@ public class NCICurationServlet extends HttpServlet
     }
   } // end
   
-*/  /**
+*/  
+  
+  /**
    * fills in the non evs parent attributes and sends back to create non evs parent page to view details
    * @param req HttpServletRequest object
    * @param res HttpServletResponse object
@@ -3869,6 +3909,7 @@ public class NCICurationServlet extends HttpServlet
       ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");      
     }
   }
+
   /**
    * marks the parent and/or its pvs as deleted from the session.
    * 
@@ -4431,13 +4472,15 @@ public class NCICurationServlet extends HttpServlet
     }
     return pageVD;
   }
- /**
+
+  /**
    *
    * @param req The HttpServletRequest from the client
    * @param res The HttpServletResponse back to the client
    * @param nameAction string naming action
    * 
    */
+  @SuppressWarnings("unchecked")
   public void doDECUseSelection(HttpServletRequest req, HttpServletResponse res, String nameAction)
   {    
     try
@@ -4448,10 +4491,10 @@ public class NCICurationServlet extends HttpServlet
       DEC_Bean m_DEC = (DEC_Bean)session.getAttribute("m_DEC");
       if (m_DEC == null) m_DEC = new DEC_Bean();
       m_setAC.setDECValueFromPage(req, res, m_DEC);
-      Vector vObjectClass = (Vector)session.getAttribute("vObjectClass");
-      if (vObjectClass == null) vObjectClass = new Vector();
-      Vector vProperty = (Vector)session.getAttribute("vProperty");
-      if (vProperty == null) vProperty = new Vector();
+      Vector<EVS_Bean> vObjectClass = (Vector)session.getAttribute("vObjectClass");
+      if (vObjectClass == null) vObjectClass = new Vector<EVS_Bean>();
+      Vector<EVS_Bean> vProperty = (Vector)session.getAttribute("vProperty");
+      if (vProperty == null) vProperty = new Vector<EVS_Bean>();
       
       Vector vAC = null;
       EVS_Bean blockBean = new EVS_Bean();
@@ -4572,6 +4615,7 @@ public class NCICurationServlet extends HttpServlet
    * @return DEC_Bean
    * @throws Exception
    */
+  @SuppressWarnings("unchecked")
   private DEC_Bean addOCConcepts(HttpServletRequest req, HttpServletResponse res, 
       String nameAction, DEC_Bean decBean, EVS_Bean eBean, String ocType) throws Exception
   {
@@ -4653,6 +4697,7 @@ public class NCICurationServlet extends HttpServlet
    * @return DEC_Bean
    * @throws Exception
    */
+  @SuppressWarnings("unchecked")
   private DEC_Bean addPropConcepts(HttpServletRequest req, HttpServletResponse res, 
       String nameAction, DEC_Bean decBean, EVS_Bean eBean, String propType) throws Exception
   {
@@ -4697,14 +4742,14 @@ public class NCICurationServlet extends HttpServlet
     //update qualifier vectors
     else
     {
-      Vector vPropQualifierNames = decBean.getDEC_PROP_QUALIFIER_NAMES();
-      if (vPropQualifierNames == null) vPropQualifierNames = new Vector();
+      Vector<String> vPropQualifierNames = decBean.getDEC_PROP_QUALIFIER_NAMES();
+      if (vPropQualifierNames == null) vPropQualifierNames = new Vector<String>();
       vPropQualifierNames.addElement(eBean.getLONG_NAME());
-      Vector vPropQualifierCodes = decBean.getDEC_PROP_QUALIFIER_CODES();
-      if (vPropQualifierCodes == null) vPropQualifierCodes = new Vector();
+      Vector<String> vPropQualifierCodes = decBean.getDEC_PROP_QUALIFIER_CODES();
+      if (vPropQualifierCodes == null) vPropQualifierCodes = new Vector<String>();
       vPropQualifierCodes.addElement(eBean.getCONCEPT_IDENTIFIER());
-      Vector vPropQualifierDB = decBean.getDEC_PROP_QUALIFIER_DB();
-      if (vPropQualifierDB == null) vPropQualifierDB = new Vector(); 
+      Vector<String> vPropQualifierDB = decBean.getDEC_PROP_QUALIFIER_DB();
+      if (vPropQualifierDB == null) vPropQualifierDB = new Vector<String>(); 
       vPropQualifierDB.addElement(eBean.getEVS_DATABASE());
       decBean.setDEC_PROP_QUALIFIER_NAMES(vPropQualifierNames);
       decBean.setDEC_PROP_QUALIFIER_CODES(vPropQualifierCodes);
@@ -4727,6 +4772,7 @@ public class NCICurationServlet extends HttpServlet
    * @param nameAction stirng name action
    * 
    */
+  @SuppressWarnings("unchecked")
   public void doVDUseSelection(HttpServletRequest req, HttpServletResponse res, String nameAction)
   {  
     try
@@ -4738,8 +4784,8 @@ public class NCICurationServlet extends HttpServlet
       if (m_VD == null) m_VD = new VD_Bean();
       m_setAC.setVDValueFromPage(req, res, m_VD);
 
-      Vector vRepTerm = (Vector)session.getAttribute("vRepTerm");
-      if (vRepTerm == null)  vRepTerm = new Vector();
+      Vector<EVS_Bean> vRepTerm = (Vector)session.getAttribute("vRepTerm");
+      if (vRepTerm == null)  vRepTerm = new Vector<EVS_Bean>();
 
       Vector vAC = new Vector();;
       EVS_Bean m_REP = new EVS_Bean();
@@ -4859,6 +4905,7 @@ public class NCICurationServlet extends HttpServlet
    * @return DEC_Bean
    * @throws Exception
    */
+  @SuppressWarnings("unchecked")
   private VD_Bean addRepConcepts(HttpServletRequest req, HttpServletResponse res, 
       String nameAction, VD_Bean vdBean, EVS_Bean eBean, String repType) throws Exception
   {
@@ -4903,14 +4950,14 @@ public class NCICurationServlet extends HttpServlet
     else
     {
       //add rep qualifiers to the vector
-      Vector vRepQualifierNames = vdBean.getVD_REP_QUALIFIER_NAMES();
-      if (vRepQualifierNames == null) vRepQualifierNames = new Vector();
+      Vector<String> vRepQualifierNames = vdBean.getVD_REP_QUALIFIER_NAMES();
+      if (vRepQualifierNames == null) vRepQualifierNames = new Vector<String>();
       vRepQualifierNames.addElement(eBean.getLONG_NAME());
-      Vector vRepQualifierCodes = vdBean.getVD_REP_QUALIFIER_CODES();
-      if (vRepQualifierCodes == null) vRepQualifierCodes = new Vector();
+      Vector<String> vRepQualifierCodes = vdBean.getVD_REP_QUALIFIER_CODES();
+      if (vRepQualifierCodes == null) vRepQualifierCodes = new Vector<String>();
       vRepQualifierCodes.addElement(eBean.getCONCEPT_IDENTIFIER());
-      Vector vRepQualifierDB = vdBean.getVD_REP_QUALIFIER_DB();
-      if (vRepQualifierDB == null) vRepQualifierDB = new Vector();
+      Vector<String> vRepQualifierDB = vdBean.getVD_REP_QUALIFIER_DB();
+      if (vRepQualifierDB == null) vRepQualifierDB = new Vector<String>();
       vRepQualifierDB.addElement(eBean.getEVS_DATABASE());  
       vdBean.setVD_REP_QUALIFIER_NAMES(vRepQualifierNames);
       vdBean.setVD_REP_QUALIFIER_CODES(vRepQualifierCodes);
@@ -4935,6 +4982,7 @@ public class NCICurationServlet extends HttpServlet
    * @throws Exception
    * 
    */
+  @SuppressWarnings("unchecked")
   public void doRemoveBuildingBlocks(HttpServletRequest req, HttpServletResponse res)
   throws Exception
   {            
@@ -4942,11 +4990,11 @@ public class NCICurationServlet extends HttpServlet
     String sSelRow = "";
     DEC_Bean m_DEC = (DEC_Bean)session.getAttribute("m_DEC");
     if (m_DEC == null) m_DEC = new DEC_Bean();
-    Vector vObjectClass = (Vector)session.getAttribute("vObjectClass");
-    if (vObjectClass == null) vObjectClass = new Vector();
+    Vector<EVS_Bean> vObjectClass = (Vector)session.getAttribute("vObjectClass");
+    if (vObjectClass == null) vObjectClass = new Vector<EVS_Bean>();
     int iOCSize = vObjectClass.size();
-    Vector vProperty = (Vector)session.getAttribute("vProperty");
-    if (vProperty == null) vProperty = new Vector();
+    Vector<EVS_Bean> vProperty = (Vector)session.getAttribute("vProperty");
+    if (vProperty == null) vProperty = new Vector<EVS_Bean>();
     int iPropSize = vProperty.size();
     String sComp = (String)req.getParameter("sCompBlocks");
     if(sComp == null) sComp = "";
@@ -5058,6 +5106,7 @@ public class NCICurationServlet extends HttpServlet
    * @throws Exception
    * 
    */
+  @SuppressWarnings("unchecked")
   public void doRemoveBuildingBlocksVD(HttpServletRequest req, HttpServletResponse res)
   throws Exception
   {            
@@ -5065,8 +5114,8 @@ public class NCICurationServlet extends HttpServlet
     String sSelRow = "";
     VD_Bean m_VD = (VD_Bean)session.getAttribute("m_VD");
     if (m_VD == null) m_VD = new VD_Bean();
-    Vector vRepTerm = (Vector)session.getAttribute("vRepTerm");
-    if (vRepTerm == null) vRepTerm = new Vector();
+    Vector<EVS_Bean> vRepTerm = (Vector)session.getAttribute("vRepTerm");
+    if (vRepTerm == null) vRepTerm = new Vector<EVS_Bean>();
     String sComp = (String)req.getParameter("sCompBlocks");
     if(sComp == null) sComp = "";
 
@@ -5335,6 +5384,7 @@ public class NCICurationServlet extends HttpServlet
      }
      return vVPList;
    }
+
    /**
   * The doValidateVD method gets the values from page the user filled out,
   * validates the input, then forwards results to the Validate page
@@ -5685,7 +5735,7 @@ public class NCICurationServlet extends HttpServlet
               serAC.doQuestionSearch(userName, vResult);
               session.setAttribute("vACSearch", vResult);
               session.setAttribute("vSelRows", vResult);
-              vResult = new Vector();
+              vResult = new Vector<String>();
               serAC.getQuestionResult(req, res, vResult);
               session.setAttribute("results", vResult);
               /////////////////////////////
@@ -5735,7 +5785,8 @@ public class NCICurationServlet extends HttpServlet
   *
   * @throws Exception
   */
-   public void doInsertDEComp(HttpServletRequest req, HttpServletResponse res)
+   @SuppressWarnings("unchecked")
+  public void doInsertDEComp(HttpServletRequest req, HttpServletResponse res)
    throws Exception
    {
       HttpSession session = req.getSession();
@@ -5753,10 +5804,10 @@ public class NCICurationServlet extends HttpServlet
       {
          //One DEComp for DDE is created, add it to vDEComp and back to CreateDE page or EditDE page
           //get exist vDEComp vectors from session
-          Vector vDEComp = new Vector();
-          Vector vDECompID = new Vector();
-          Vector vDECompOrder = new Vector();
-          Vector vDECompRelID = new Vector();
+          Vector<String> vDEComp = new Vector<String>();
+          Vector<String> vDECompID = new Vector<String>();
+          Vector<String> vDECompOrder = new Vector<String>();
+          Vector<String> vDECompRelID = new Vector<String>();
           vDEComp = (Vector)session.getAttribute("vDEComp");
           vDECompID = (Vector)session.getAttribute("vDECompID");
           vDECompOrder = (Vector)session.getAttribute("vDECompOrder");
@@ -6155,7 +6206,7 @@ public class NCICurationServlet extends HttpServlet
       }
    }
 
-  /**
+  /*
   * The doInsertPV method to insert or update record in the database.
   * Called from 'service' method where reqType is 'validatePVFromForm'.
   * Retrieves the session bean m_PV.
@@ -6319,7 +6370,7 @@ public class NCICurationServlet extends HttpServlet
   *
   * @throws Exception
   */
-   public void doInsertVM(HttpServletRequest req, HttpServletResponse res)
+   private void doInsertVM(HttpServletRequest req, HttpServletResponse res)
    throws Exception
    {
       HttpSession session = req.getSession();
@@ -6346,14 +6397,14 @@ public class NCICurationServlet extends HttpServlet
       //  else
       //  { 
           //call to update vm with evs attributes 
-          if (sEVSSearch != null && sEVSSearch.equals("searched"))
+/*          if (sEVSSearch != null && sEVSSearch.equals("searched"))
             ret = insAC.setVM_EVS("INS", m_VM);
           else     //user entered
           {
             m_VM.setVM_CONCEPT(new EVS_Bean());
             ret = insAC.setVM("INS", m_VM);
           }
-      //  }        
+*/      //  }        
         //display success message if no error exists and update pv bean
         String sReturn = (String)req.getAttribute("retcode");
         if (sReturn == null || sReturn.equals(""))
@@ -6760,7 +6811,7 @@ System.out.println(" new rep " + sNewRep);
       //to get the final result vector if not refreshed at all
       if (!(isRefreshed))
       {
-         Vector vResult = new Vector();
+         Vector<String> vResult = new Vector<String>();
          serAC.getVDResult(req, res, vResult, "");
          session.setAttribute("results", vResult);    //store the final result in the session
          session.setAttribute("VDPageAction", "nothing");
@@ -6997,7 +7048,7 @@ System.out.println(" new rep " + sNewRep);
       if (changeNote == null) changeNote = "";
       if (!changeNote.equals("")) DECBeanSR.setDEC_CHANGE_NOTE(changeNote);
       //get cs-csi from the page into the DECBean for block edit
-      Vector vAC_CS = dec.getAC_AC_CSI_VECTOR();
+      Vector<AC_CSI_Bean> vAC_CS = dec.getAC_AC_CSI_VECTOR();
       if (vAC_CS != null) DECBeanSR.setAC_AC_CSI_VECTOR(vAC_CS);
       
       String sOCL = dec.getDEC_OCL_NAME();
@@ -7268,7 +7319,7 @@ System.out.println(" new rep " + sNewRep);
       if (!changeNote.equals("")) DEBeanSR.setDE_CHANGE_NOTE(changeNote);
 
       //get cs-csi from the page into the DECBean for block edit
-      Vector vAC_CS = de.getAC_AC_CSI_VECTOR();
+      Vector<AC_CSI_Bean> vAC_CS = de.getAC_AC_CSI_VECTOR();
       if (vAC_CS != null) DEBeanSR.setAC_AC_CSI_VECTOR(vAC_CS);     
      }
      catch(Exception e)
@@ -7276,11 +7327,14 @@ System.out.println(" new rep " + sNewRep);
        logger.fatal("Error - InsertEditsIntoDEBeanSR ", e);
      }
    }
-  /**
+
+   /**
   * updates bean the selected DE from the changed values of block edit.
   *
   * @param DEBeanSR selected DE bean from search result
   * @param de DE_Bean of the changed values.
+   * @param req 
+   * @param res 
   *
   * @return String valid if no version error
   * @throws Exception
@@ -7316,7 +7370,6 @@ System.out.println(" new rep " + sNewRep);
       }
       return verError;
    }
-   
   
   /**
   * gets the point or whole version number from old version for block versioning.
@@ -7522,7 +7575,7 @@ System.out.println(" new rep " + sNewRep);
       //to get the final result vector if not refreshed at all
       if (!(isRefreshed))
       {
-         Vector vResult = new Vector();
+         Vector<String> vResult = new Vector<String>();
          serAC.getDECResult(req, res, vResult, "");
          session.setAttribute("results", vResult);    //store the final result in the session
          session.setAttribute("DECPageAction", "nothing");
@@ -7653,7 +7706,7 @@ System.out.println(" new rep " + sNewRep);
       //to get the final result vector if not refreshed at all
       if (!(isRefreshed))
       {
-         Vector vResult = new Vector();
+         Vector<String> vResult = new Vector<String>();
          serAC.getDEResult(req, res, vResult, "");
          session.setAttribute("results", vResult);    //store the final result in the session
          session.setAttribute("DEPageAction", "nothing");
@@ -7715,7 +7768,6 @@ System.out.println(" new rep " + sNewRep);
       }
    }
 
-
   /**
   * to create object class, property, rep term and qualifier value from EVS into cadsr.
   * Retrieves the session bean m_VD.
@@ -7767,7 +7819,13 @@ System.out.println(" new rep " + sNewRep);
           if (sREP_IDSEQ != null && !sREP_IDSEQ.equals(""))
             VDBeanSR.setVD_REP_IDSEQ(sREP_IDSEQ);
         }
-      }      
+      }
+      else
+      {
+        if (VDBeanSR.getVD_REP_CONDR_IDSEQ() != null && !VDBeanSR.getVD_REP_CONDR_IDSEQ().equals(""))
+          VDBeanSR.setVD_REP_CONDR_IDSEQ("");
+      }
+        
       session.setAttribute("newRepTerm", "");
   }
 
@@ -7816,10 +7874,10 @@ System.out.println(" new rep " + sNewRep);
             PVServlet pvser = new PVServlet(req, res, this);
             pvser.searchVersionPV(VDBean, 1, "", "");
             //update non evs changes
-            Vector vParent = VDBean.getReferenceConceptList();  // (Vector)session.getAttribute("VDParentConcept");
+            Vector<EVS_Bean> vParent = VDBean.getReferenceConceptList();  // (Vector)session.getAttribute("VDParentConcept");
             if (vParent != null && vParent.size() > 0)
               vParent = serAC.getNonEVSParent(vParent, VDBean, "versionSubmit");
-            //get the right system name for new version
+            //get the right system name for new version; cannot use teh api because parent concept is not updated yet
             String prefName = VDBean.getVD_PREFERRED_NAME();
             if (prefName == null || prefName.equalsIgnoreCase("(Generated by the System)"))
             {
@@ -7849,22 +7907,8 @@ System.out.println(" new rep " + sNewRep);
       }
       else
       {    
-         //parent appended system name as default for new vd
-         String prefName = VDBean.getVD_PREFERRED_NAME();
-         if ((prefName == null || prefName.equalsIgnoreCase("(Generated by the System)")) && VDBean.getAC_SYS_PREF_NAME() != null)
-            VDBean.setVD_PREFERRED_NAME(VDBean.getAC_SYS_PREF_NAME());
          //creates new one  
          ret = insAC.setVD("INS", VDBean, "New", oldVDBean);  //create new one
-         //get the system generated with public id.
-         if (prefName == null || prefName.equalsIgnoreCase("(Generated by the System)"))
-         {
-            Vector vParent = VDBean.getReferenceConceptList(); // (Vector)session.getAttribute("VDParentConcept");
-            VDBean = this.doGetVDSystemName(req, VDBean, vParent);
-            VDBean.setVD_PREFERRED_NAME(VDBean.getAC_SYS_PREF_NAME());
-            ret = insAC.setVD("UPD", VDBean, "Update", oldVDBean); //update the preferred name
-            if (ret != null && !ret.equals("") && sMenuAction.equals("NewVDTemplate"))
-              isUpdateSuccess = false;
-         }            
       }
 
       if ((ret == null) || ret.equals(""))
@@ -8047,6 +8091,7 @@ System.out.println(" new rep " + sNewRep);
   *
   * @param req The HttpServletRequest from the client
   * @param res The HttpServletResponse back to the client
+   * @param origin 
   *
   * @throws Exception
   */
@@ -8192,6 +8237,7 @@ System.out.println(" new rep " + sNewRep);
   *
   * @throws Exception
   */
+  @SuppressWarnings("unchecked")
   public void doUpdateDDEInfo(HttpServletRequest req, HttpServletResponse res)
    throws Exception
   {
@@ -8202,10 +8248,10 @@ System.out.println(" new rep " + sNewRep);
         String sDECompIDs[] = req.getParameterValues("selDECompIDHidden");
         String sDECompOrders[] = req.getParameterValues("selDECompOrderHidden");
         String sDECompRelIDs[] = req.getParameterValues("selDECompRelIDHidden");
-        Vector vDEComp = new Vector();
-        Vector vDECompID = new Vector();
-        Vector vDECompOrder = new Vector();
-        Vector vDECompRelID = new Vector();
+        Vector<String> vDEComp = new Vector();
+        Vector<String> vDECompID = new Vector();
+        Vector<String> vDECompOrder = new Vector();
+        Vector<String> vDECompRelID = new Vector();
         if(sDEComps != null && sDECompIDs != null)
         {
           for (int i = 0; i<sDEComps.length; i++) 
@@ -8604,6 +8650,7 @@ System.out.println(" new rep " + sNewRep);
       //this.ForwardErrorJSP(req, res, ex.getMessage());
     }
   }
+
   /**
   * To refresh the page when the search in changed from drop down list.
   * Called from 'doGetACSearchActions' method
@@ -8616,6 +8663,7 @@ System.out.println(" new rep " + sNewRep);
   *
   * @throws Exception
   */
+  @SuppressWarnings("unchecked")
   public void doRefreshPageForSearchIn(HttpServletRequest req, HttpServletResponse res)
   throws Exception
   {
@@ -8717,7 +8765,7 @@ System.out.println(" new rep " + sNewRep);
   * @throws Exception
   */
   private Vector getDefaultSearchInAttr(String sSearchAC, String sSearchIn, 
-    Vector vSelectedAttr, Vector vComp) throws Exception
+    Vector<String> vSelectedAttr, Vector<String> vComp) throws Exception
   {
       //first remove all the searchIn from the selected attribute list 
       if (vSelectedAttr.contains("Protocol ID"))
@@ -8823,10 +8871,10 @@ System.out.println(" new rep " + sNewRep);
    * 
    * @throws Exception
    */
-  public Vector resortDisplayAttributes(Vector vCompAttr, Vector vSelectAttr) throws Exception
+  public Vector<String> resortDisplayAttributes(Vector<String> vCompAttr, Vector<String> vSelectAttr) throws Exception
   {
       //resort the display attributes
-      Vector vReSort = new Vector();
+      Vector<String> vReSort = new Vector<String>();
       if (vCompAttr != null)
       {
         for (int j=0; j<vCompAttr.size(); j++)
@@ -8839,7 +8887,8 @@ System.out.println(" new rep " + sNewRep);
       }
       return vReSort;
   }
-   /**
+
+  /**
   * To refresh the page when filter hyperlink is pressed.
   * Called from 'doGetACSearchActions' method
   * gets request parameters to store the selected values in the session according to what the menu action is
@@ -8944,6 +8993,7 @@ System.out.println(" new rep " + sNewRep);
   *
   * @param req The HttpServletRequest from the client
   * @param res The HttpServletResponse back to the client
+   * @param sOrigin 
   *
   * @throws Exception
   */
@@ -8972,7 +9022,7 @@ System.out.println(" new rep " + sNewRep);
           clearSessionAttributes(req,res);
           if (sSearchAC.equals("ConceptClass"))
           {
-            Vector vStatus = new Vector();
+            Vector<String> vStatus = new Vector<String>();
             vStatus.addElement("RELEASED");
             session.setAttribute("serStatus", vStatus);
           }
@@ -9254,6 +9304,7 @@ System.out.println(" new rep " + sNewRep);
     *
     * @throws Exception
     */
+    @SuppressWarnings("unchecked")
     private void doDDEDetailsActions(HttpServletRequest req, HttpServletResponse res) throws Exception
     {
       HttpSession session = (HttpSession)req.getSession();
@@ -9298,7 +9349,7 @@ System.out.println(" new rep " + sNewRep);
      String acType = req.getParameter("acType");  //actype to search
      String acName = req.getParameter("acName");  //ac name for pv
      //call the api to return concept attributes according to ac type and ac idseq
-     Vector conList = new Vector();
+     Vector<EVS_Bean> conList = new Vector<EVS_Bean>();
      conList = getAC.do_ConceptSearch("","", "", "", "", acID, ac2ID, conList);
      req.setAttribute("ConceptClassList", conList);
      req.setAttribute("ACName", acName);
@@ -9333,11 +9384,12 @@ System.out.println(" new rep " + sNewRep);
     * @param sAct String AC contact update action from create and edit pages
     * @return Hashtable of contact name and contact bean object
     */
-   private Hashtable doContactACUpdates(HttpServletRequest req, String sAct)
+   @SuppressWarnings("unchecked")
+  private Hashtable<String, AC_CONTACT_Bean> doContactACUpdates(HttpServletRequest req, String sAct)
    {
      HttpSession session = req.getSession();
-     Hashtable hConts = (Hashtable)session.getAttribute("AllContacts");
-     if (hConts == null) hConts = new Hashtable();
+     Hashtable<String, AC_CONTACT_Bean> hConts = (Hashtable)session.getAttribute("AllContacts");
+     if (hConts == null) hConts = new Hashtable<String, AC_CONTACT_Bean>();
      try
      {
        String sCont = "";
@@ -9460,11 +9512,11 @@ System.out.println(" new rep " + sNewRep);
            if ((perID != null && !perID.equals("")) || (orgID != null && !orgID.equals("")))
            {
              GetACSearch getAC = new GetACSearch(req, res, this);
-             Vector vComm = getAC.getContactComm("", orgID, perID);
-             if (vComm == null) vComm = new Vector();
+             Vector<AC_COMM_Bean> vComm = getAC.getContactComm("", orgID, perID);
+             if (vComm == null) vComm = new Vector<AC_COMM_Bean>();
              accBean.setACC_COMM_List(vComm);
-             Vector vAddr = getAC.getContactAddr("", orgID, perID);
-             if (vAddr == null) vAddr = new Vector();
+             Vector<AC_ADDR_Bean> vAddr = getAC.getContactAddr("", orgID, perID);
+             if (vAddr == null) vAddr = new Vector<AC_ADDR_Bean>();
              accBean.setACC_ADDR_List(vAddr);
            }
          }
@@ -9507,8 +9559,8 @@ System.out.println(" new rep " + sNewRep);
    {
      try
      {
-       Vector vComm = ACBean.getACC_COMM_List();
-       if (vComm == null) vComm = new Vector();
+       Vector<AC_COMM_Bean> vComm = ACBean.getACC_COMM_List();
+       if (vComm == null) vComm = new Vector<AC_COMM_Bean>();
        AC_COMM_Bean commB = new AC_COMM_Bean();
        int selInd = -1;
        for (int j=0; j<vComm.size(); j++)  //loop through existing lists
@@ -9610,8 +9662,8 @@ System.out.println(" new rep " + sNewRep);
    {
      try
      {
-       Vector vAddr = ACBean.getACC_ADDR_List();
-       if (vAddr == null) vAddr = new Vector();
+       Vector<AC_ADDR_Bean> vAddr = ACBean.getACC_ADDR_List();
+       if (vAddr == null) vAddr = new Vector<AC_ADDR_Bean>();
        AC_ADDR_Bean addrB = new AC_ADDR_Bean();
        int selInd = -1;
        for (int j=0; j<vAddr.size(); j++)  //loop through existing lists
@@ -9760,6 +9812,7 @@ System.out.println(" new rep " + sNewRep);
   *
   * @param req The HttpServletRequest from the client
   * @param res The HttpServletResponse back to the client
+   * @param ub_ 
   *
   * @throws Exception
   */
@@ -9874,7 +9927,7 @@ System.out.println(" new rep " + sNewRep);
       // Init main variables.
       HttpSession session = req.getSession();
       String msg = null;
-      Vector vCheckList = new Vector();
+      Vector<String> vCheckList = new Vector<String>();
       while (true)
       {
           // Be sure something was selected by the user.
@@ -9912,7 +9965,7 @@ System.out.println(" new rep " + sNewRep);
               
               try
               {
-            	  vCheckList = new Vector();
+            	  vCheckList = new Vector<String>();
                   for (ndx = 0; ndx < vSRows.size(); ++ndx)
                   {
                       String temp;
@@ -10010,7 +10063,7 @@ System.out.println(" new rep " + sNewRep);
       // Init main variables.
       HttpSession session = req.getSession();
       String msg = null;
-      Vector vCheckList = new Vector();
+      Vector<String> vCheckList = new Vector<String>();
       while (true)
       {
           // Be sure something was selected by the user.
@@ -10118,7 +10171,7 @@ System.out.println(" new rep " + sNewRep);
       if (Origin.equals("CreateNew"))
       {
          session.setAttribute("statusMessage", "Value created and inserted successfully.");
-         Vector vNewPV = new Vector();
+         Vector<String> vNewPV = new Vector<String>();
          vNewPV.addElement(m_PV.getPV_PV_IDSEQ());
          vNewPV.addElement(m_PV.getPV_VALUE());
          vNewPV.addElement(m_PV.getPV_SHORT_MEANING());
@@ -10517,6 +10570,7 @@ System.out.println(" new rep " + sNewRep);
   *
   * @throws Exception
   */
+  @SuppressWarnings("unchecked")
   private void doGetAssociatedAC(HttpServletRequest req, HttpServletResponse res, String assocAC, String sSearchAC)
   throws Exception
   {
@@ -10698,6 +10752,7 @@ System.out.println(" new rep " + sNewRep);
   *
   * @param req The HttpServletRequest from the client
   * @param res The HttpServletResponse back to the client
+   * @param ACType 
   *
   * @throws Exception
   */
@@ -11213,10 +11268,12 @@ System.out.println(" new rep " + sNewRep);
   * @param req The HttpServletRequest from the client
   * @param res The HttpServletResponse back to the client
   * @param selSearch the component to search for.
+   * @param sMenu 
   *
   * @throws Exception
   */
- public void getCompAttrList(HttpServletRequest req, HttpServletResponse res,
+ @SuppressWarnings("unchecked")
+public void getCompAttrList(HttpServletRequest req, HttpServletResponse res,
          String selSearch, String sMenu)  throws Exception
  {
     HttpSession session = req.getSession();
@@ -11553,6 +11610,7 @@ System.out.println(" new rep " + sNewRep);
   * @param req The HttpServletRequest from the client
   * @param res The HttpServletResponse back to the client
   * @param errMsg  String error message
+   * @throws Exception 
   */
   public void ForwardErrorJSP(HttpServletRequest req,
     HttpServletResponse res, String errMsg) throws Exception
@@ -11561,6 +11619,9 @@ System.out.println(" new rep " + sNewRep);
     {
       HttpSession session;
       session = req.getSession(true);
+      String reqMsg = (String)req.getAttribute("ReqErrorMessage");
+      if (reqMsg != null && !reqMsg.equals(""))
+        errMsg = reqMsg;
       session.setAttribute("ErrorMessage", errMsg);
       String fullPage = "/";
       ServletContext sc = this.getServletContext();
