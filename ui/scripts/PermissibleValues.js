@@ -616,11 +616,11 @@
 		if (focusObj != null)
 			focusObj.scrollIntoView();
 			
-		selectParent();   //do the parent select action if the parent was selected.
+		//do the parent select action if the parent was selected.	
+		selectParent();   
 		
-	//	var pvObj = document.getElementById("editPVInd");
-	//	if (pvObj != null && (pvObj.value != null && pvObj.value != ""))
-	//		vvmvmdDisplay(pvObj.value, "edit");
+		//display error message for pv if exists
+		displayStatus();
 	}
     		
 	function beforeRefresh(submitAct)

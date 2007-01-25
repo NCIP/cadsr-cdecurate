@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/PermissibleValue.jsp,v 1.17 2007-01-24 06:12:18 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/PermissibleValue.jsp,v 1.18 2007-01-25 22:39:31 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -119,14 +119,29 @@
 //System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus " + elmFocus);		
 		%>
 		<Script Language="JavaScript">
-            function checkNameLen(cobj, mlen)
+        function checkNameLen(cobj, mlen)
+        {
+            if (cobj.value.length > mlen)
             {
-                if (cobj.value.length > mlen)
-                {
-                    alert("You have exceeded the maximum length of this field. Please edit and reduce the text to less than " + mlen + " characters.");
-                    cobj.focus();
-                }
+                alert("You have exceeded the maximum length of this field. Please edit and reduce the text to less than " + mlen + " characters.");
+                cobj.focus();
             }
+        }
+        
+        function displayStatus()
+        {
+         <%
+					  String statusMessage = (String)session.getAttribute("statusMessage");
+					  System.out.println("status " + statusMessage);
+					  if (statusMessage != null && !statusMessage.equals(""))
+					  {
+					%>
+					  	alert("<%=statusMessage%>");
+					<%
+						}
+					  session.setAttribute("statusMessage", "");
+					%>        
+        }
 		</SCRIPT>
   </head>
   

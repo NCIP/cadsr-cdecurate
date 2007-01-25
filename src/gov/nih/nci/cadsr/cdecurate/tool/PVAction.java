@@ -11,9 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import oracle.jdbc.driver.OracleTypes;
 import org.apache.log4j.Logger;
 
@@ -56,14 +53,26 @@ public class PVAction implements Serializable
    * @param pvInd int index from the page
    * @param isNew boolean value of whether pv is new or not
    * @param data PVForm object
+   * @return String message
    */
-  public void doChangePVAttributes(String chgName, int pvInd, boolean isNew, PVForm data)
+  public String doChangePVAttributes(String chgName, int pvInd, boolean isNew, PVForm data)
   {
-    //update the existing list
+    String sCRFmsg = "";
+    //update the existing list    
     VD_Bean vd = data.getVD();
     Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
     PV_Bean selPV = data.getSelectPV();
     String pvID = selPV.getPV_PV_IDSEQ();
+/*    if (vdpvs.size() > pvInd+1)
+    {
+      PV_Bean nextPV = vdpvs.elementAt(pvInd+1);
+      if (nextPV.getPV_PV_IDSEQ() != null && nextPV.getPV_PV_IDSEQ().equals(pvID))
+      {
+        pvID = "";
+        selPV.setPV_PV_IDSEQ("");
+      }
+    }
+*/
     if (!isNew || pvID == null || pvID.equals("") || pvID.contains("EVS"))
     {
       selPV.setPV_VALUE(chgName);
@@ -90,10 +99,13 @@ public class PVAction implements Serializable
       boolean isExists = this.checkPVQCExists(vd, selPV, data);
       if (isExists)
       {
-        data.setStatusMsg(data.getStatusMsg() + "\\tUnable to change the Permissible Value " +
-            selPV.getPV_VALUE() + " because it is used in a CRF.\\n");
+        sCRFmsg = "Unable to edit the Permissible Value (PV) (" + selPV.getPV_VALUE() + ") and/or its Value Meaning (VM) because the Permissible Value is used in a CRF." +
+                    "\\n A new PV and VM pair will be created with the edited attributes." +
+                    "\\n After successful submission of the Value Domain, to remove the original PV you may dis-associate it from the CRF.";
+        data.setStatusMsg(data.getStatusMsg() + sCRFmsg);
         selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_NONE);
         vdpvs.setElementAt(selPV, pvInd);  //reset it 
+        newPV.setPV_PV_IDSEQ("");  //clear teh idseq
       }
       else
       {
@@ -110,6 +122,7 @@ public class PVAction implements Serializable
     }    
     vd.setVD_PV_List(vdpvs);
     data.setVD(vd);
+    return sCRFmsg;
   }
   
 
@@ -362,10 +375,10 @@ public class PVAction implements Serializable
         // Now tie the placeholders for In parameters.
         CStmt.setString(1, acIdseq);
          // Now we are ready to call the stored procedure
-        boolean bExcuteOk = CStmt.execute();
+        CStmt.execute();
         //store the output in the resultset
         rs = (ResultSet) CStmt.getObject(2);
-        String s;
+      //  String s;
         if(rs!=null)
         {
           //loop through the resultSet and add them to the bean
@@ -587,7 +600,7 @@ public class PVAction implements Serializable
         CStmt.setString(4,conName);
         CStmt.setString(5,conID);
          // Now we are ready to call the stored procedure
-        boolean bExcuteOk = CStmt.execute();
+        CStmt.execute();
         //store the output in the resultset
         rs = (ResultSet) CStmt.getObject(3);
 
@@ -753,20 +766,18 @@ public class PVAction implements Serializable
           matchFound = true;
           break;
         }
-        else 
+        //all other cases continue withe the logic
+        if (!cBean.getLONG_NAME().equalsIgnoreCase(eBean.getLONG_NAME()))
         {
-          if (!cBean.getLONG_NAME().equalsIgnoreCase(eBean.getLONG_NAME()))
-          {
-            if (!unMatchName.equals("")) unMatchName += ", ";
-            unMatchName += cBean.getLONG_NAME();
-          }
-          if (!cBean.getPREFERRED_DEFINITION().equalsIgnoreCase(eBean.getPREFERRED_DEFINITION()))
-          {
-            if (!unMatchDef.equals("")) unMatchDef += ", ";
-            unMatchDef += cBean.getPREFERRED_DEFINITION();   
-          }
-          eBean = (EVS_Bean)vCon.elementAt(i);  //make this selected till exact match occurs
+          if (!unMatchName.equals("")) unMatchName += ", ";
+          unMatchName += cBean.getLONG_NAME();
         }
+        if (!cBean.getPREFERRED_DEFINITION().equalsIgnoreCase(eBean.getPREFERRED_DEFINITION()))
+        {
+          if (!unMatchDef.equals("")) unMatchDef += ", ";
+          unMatchDef += cBean.getPREFERRED_DEFINITION();   
+        }
+        eBean = (EVS_Bean)vCon.elementAt(i);  //make this selected till exact match occurs
       }
       if (!matchFound)
       {
@@ -796,7 +807,7 @@ public class PVAction implements Serializable
      //java.util.Date startDate = new java.util.Date();          
      //logger.info(m_servlet.getLogMessage(m_classReq, "setPV", "starting set", startDate, startDate));
      PV_Bean pv = data.getSelectPV();
-     String sPVid = pv.getPV_PV_IDSEQ();        //out
+   //  String sPVid = pv.getPV_PV_IDSEQ();        //out
      
      Connection sbr_db_conn = null;
      ResultSet rs = null;
@@ -872,7 +883,7 @@ public class PVAction implements Serializable
            CStmt.setString(7,sMeaningDescription);
            CStmt.setString(10,sEndDate);
             // Now we are ready to call the stored procedure
-           boolean bExcuteOk = CStmt.execute();
+           CStmt.execute();
            sReturnCode = CStmt.getString(1);
            sPV_ID = CStmt.getString(3);
            pv.setPV_PV_IDSEQ(sPV_ID);
@@ -950,7 +961,7 @@ public class PVAction implements Serializable
           CStmt.setString(3, sValue);       // Value
           CStmt.setString(4, sMeaning);       // Meaning   
            // Now we are ready to call the stored procedure
-          boolean bExcuteOk = CStmt.execute();
+          CStmt.execute();
           sPV_IDSEQ = (String) CStmt.getObject(2);
           if (sPV_IDSEQ == null)
              sPV_IDSEQ = "";
@@ -988,7 +999,7 @@ public class PVAction implements Serializable
    public String setVD_PVS(PVForm data)
    {
      //capture the duration
-     java.util.Date startDate = new java.util.Date();          
+   //  java.util.Date startDate = new java.util.Date();          
      //logger.info(m_servlet.getLogMessage(m_classReq, "setVD_PVS", "starting set", startDate, startDate));
      PV_Bean pvBean = data.getSelectPV();
      VD_Bean vdBean = data.getVD();
@@ -1045,14 +1056,14 @@ public class PVAction implements Serializable
                sDate = data.getUtil().getOracleDate(sDate);
             CStmt.setString(13, sDate);  // end date);
             CStmt.setString(14, parIdseq);
- System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
-            boolean bExcuteOk = CStmt.execute();
+ //System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
+            CStmt.execute();
             retCode = CStmt.getString(1);
             //store the status message if children row exist
             if (retCode != null && !retCode.equals(""))
             {
               String sPValue = pvBean.getPV_VALUE();
-              String sVDName = vdBean.getVD_LONG_NAME();
+             // String sVDName = vdBean.getVD_LONG_NAME();
               if (sAction.equals("INS") || sAction.equals("UPD"))
                  data.setStatusMsg(data.getStatusMsg() + "\\t " + retCode + " : Unable to update permissible value " + sPValue + ".");
               else if (sAction.equals("DEL") && retCode.equals("API_VDPVS_006"))

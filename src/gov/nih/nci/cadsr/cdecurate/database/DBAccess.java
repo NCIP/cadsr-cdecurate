@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.24 2007-01-24 06:12:11 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.25 2007-01-25 22:39:30 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -1506,7 +1506,9 @@ public class DBAccess
      */
     public String[] getDefinitionTypes() throws ToolException
     {
-        String select = "select defl_name from sbrext.definition_types_lov_view_ext order by upper(defl_name)";
+        String select = "select defl_name from sbrext.definition_types_lov_view_ext where defl_name not in ( "
+            + "select value from sbrext.tool_options_view_ext where property like 'EXCLUDE.DEFINITION_TYPE.%' "
+            + ") order by upper(defl_name)";
         return getList(select);
     }
     

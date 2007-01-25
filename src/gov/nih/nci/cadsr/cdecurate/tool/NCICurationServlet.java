@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.34 2007-01-24 06:12:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.35 2007-01-25 22:39:31 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -307,6 +307,8 @@ public class NCICurationServlet extends HttpServlet
       retMsg = "Reached connection limits, please try again later. If this persists contact the NIH Help Desk.";
     else if (eMsg.contains("Network Adapter") || eMsg.contains("Got minus one"))
       retMsg = "Network connection error, please contact the NIH Help Desk.";
+    else if (eMsg.contains("Session Terminated"))
+      retMsg = "Session has been terminated. Possible reasons could be a session timeout or an internal processing error. Please try again or contact the NIH Help Desk.";
     else
       retMsg = "Encountered an unexpected and unknown connection error, please contact the NIH Help Desk.";
     return retMsg;
@@ -704,7 +706,7 @@ public class NCICurationServlet extends HttpServlet
         }
         else if(!reqType.equals("login"))
         {
-          String errMsg = "Please login again. Your session has been terminated. Possible reasons could be a session timeout or an internal processing error.";
+          String errMsg = getDBConnectMessage("Session Terminated");  // "Please login again. Your session has been terminated. Possible reasons could be a session timeout or an internal processing error.";
           session.setAttribute("ErrorMessage", errMsg);
           //get the menu action from request
           String mnReq = (String)req.getParameter("serMenuAct");
