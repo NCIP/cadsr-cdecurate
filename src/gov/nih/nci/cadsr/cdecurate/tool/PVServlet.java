@@ -142,29 +142,29 @@ public class PVServlet implements Serializable
          }
          else if (sAction.equals("restore"))
          {
-           System.out.println("put back the old data of the selected PV and refresh the data");
+           //System.out.println("put back the old data of the selected PV and refresh the data");
            return doRestorePV();
          }
          else if (sAction.equals("remove"))
          {
-           System.out.println("mark the pv as deleted and refresh the page");
+           //System.out.println("mark the pv as deleted and refresh the page");
            return doRemovePV();
          }
          else if (sAction.equals("changeAll"))
          {
-           System.out.println("do hte block edit pv");
+           //System.out.println("do hte block edit pv");
            this.addPVOtherAttributes(null, "changeAll", "");
            data.getRequest().setAttribute("focusElement", "pv0");  //"pv0View");
            return "/PermissibleValue.jsp";
          }
          else if (sAction.equals("appendSearchVM"))
          {
-           System.out.println("append Selected VM and refresh the page");
+           //System.out.println("append Selected VM and refresh the page");
            return this.appendSearchVM();
          }
          else if (sAction.equals("sortPV"))
          {
-           System.out.println("sort the pvs by the heading");
+           //System.out.println("sort the pvs by the heading");
            GetACSearch serAC = new GetACSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
            String sField = (String)data.getRequest().getParameter("pvSortColumn");
            serAC.getVDPVSortedRows(sField);          //call the method to sort pv attribute
@@ -332,7 +332,7 @@ public class PVServlet implements Serializable
           if (selectPV.getVP_SUBMIT_ACTION().equals(PVForm.CADSR_ACTION_INS))
             isNewPV = true;
 
-          System.out.println(isNewPV + " same pv " + chgName);
+         // System.out.println(isNewPV + " same pv " + chgName);
           
           //update it only if there was no duplicates exisitng
           String erVM = (String)data.getRequest().getAttribute("ErrMsgAC");
@@ -341,13 +341,15 @@ public class PVServlet implements Serializable
        //   else
        //     data.getRequest().setAttribute("ErrVM", newVM);
         }
-        PVAct.doChangePVAttributes(chgName, pvInd, isNewPV, data);
-
+        String retMsg = PVAct.doChangePVAttributes(chgName, pvInd, isNewPV, data);
+        if (!retMsg.equals(""))
+          session.setAttribute("statusMessage", retMsg);
         //store it in the session
         session.setAttribute("m_VD", data.getVD());
         data.getRequest().setAttribute("focusElement", "pv" + pvInd);  //"pv" + pvInd + "View");
         //TODO - status messae
-        System.out.println("PV Status " + data.getStatusMsg());
+        if (!data.getStatusMsg().equals(""))
+          logger.fatal("PV Status " + data.getStatusMsg());
       }
       return "/PermissibleValue.jsp";
    }
@@ -865,6 +867,7 @@ public class PVServlet implements Serializable
            //check it idseq was from cadsr
            String idseq = selPV.getPV_PV_IDSEQ();
            PV_Bean orgPV = new PV_Bean();
+           Vector<PV_Bean> vCurVP = vd.getVD_PV_List();
            if (idseq != null && !idseq.equals("") && !idseq.contains("EVS"))
            {
              VD_Bean oldvd = (VD_Bean)session.getAttribute("oldVDBean");
@@ -876,6 +879,24 @@ public class PVServlet implements Serializable
                  PV_Bean thisPV =  (PV_Bean)vdpvs.elementAt(i);
                  if (thisPV.getPV_PV_IDSEQ() != null && selPV.getPV_PV_IDSEQ() != null && thisPV.getPV_PV_IDSEQ().equals(selPV.getPV_PV_IDSEQ()))
                  {
+                   //if newly added row
+              /*     String vpID = selPV.getPV_VDPVS_IDSEQ();                  
+                   if ((vpID == null || vpID.equals("")) && vdpvs.size() > i+1)
+                   {
+                     //check if next one is same as this
+                     String thisVPid = thisPV.getPV_VDPVS_IDSEQ();
+                     PV_Bean nextPV = (PV_Bean)vCurVP.elementAt(pvInd+1);
+                     String nextVPid = nextPV.getPV_VDPVS_IDSEQ();
+                     //remove this if matched
+                     if (thisVPid != null && nextVPid != null && nextVPid.equals(thisVPid))
+                     {
+                       vCurVP.removeElementAt(pvInd);
+                       orgPV = null;
+                       break;
+                     }
+                     
+                   }
+								*/
                    orgPV = orgPV.copyBean(thisPV);
                    PVAct.putBackRemovedPV(vd, thisPV.getPV_PV_IDSEQ());
                    break;
@@ -885,10 +906,13 @@ public class PVServlet implements Serializable
            }
            else
              orgPV = orgPV.copyBean(selPV);
-  
-           Vector<PV_Bean> vCurVP = vd.getVD_PV_List();
-           orgPV.setPV_VIEW_TYPE("expand");
-           vCurVP.setElementAt(orgPV, pvInd);
+           //reset it only if not null
+           if (orgPV != null)
+           {
+             orgPV.setPV_VIEW_TYPE("expand");
+             vCurVP.setElementAt(orgPV, pvInd);
+           }
+           //put it back in the vd
            vd.setVD_PV_List(vCurVP); 
            session.setAttribute("m_VD", vd);
          }
