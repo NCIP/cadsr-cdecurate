@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.37 2007-01-26 19:30:37 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.38 2007-01-26 20:17:43 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -6639,8 +6639,8 @@ public class GetACSearch implements Serializable
                 returnValue = curBean.getPV_SHORT_MEANING();
             else if (curField.equals("MeanDesc"))
                 returnValue = curBean.getPV_MEANING_DESCRIPTION();
-            else if (curField.equals("database"))
-                returnValue = curBean.getPV_EVS_DATABASE();
+           // else if (curField.equals("database"))
+           //     returnValue = curBean.getPV_EVS_DATABASE();
             else if (curField.equals("ConDomain"))
                 returnValue = curBean.getPV_CONCEPTUAL_DOMAIN();
             else if (curField.equals("BeginDate"))
