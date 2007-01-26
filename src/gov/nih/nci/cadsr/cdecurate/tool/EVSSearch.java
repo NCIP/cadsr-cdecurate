@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.35 2007-01-25 22:39:30 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.36 2007-01-26 17:30:12 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -289,7 +289,7 @@ public class EVSSearch implements Serializable
       Vector vOCConcepts = new Vector();
       if (oc_condr_idseq != null && !oc_condr_idseq.equals(""))
         vOCConcepts = getAC.getAC_Concepts(oc_condr_idseq, null, true);
-      if (vOCConcepts != null) 
+      if (vOCConcepts != null && vOCConcepts.size() > 0) 
       {
           session.setAttribute("vObjectClass", vOCConcepts);
         // Primary concept
@@ -347,7 +347,7 @@ public class EVSSearch implements Serializable
       if (prop_condr_idseq != null && !prop_condr_idseq.equals(""))
         vPCConcepts = getAC.getAC_Concepts(prop_condr_idseq, null, true);
       
-      if (vPCConcepts != null) 
+      if (vPCConcepts != null && vPCConcepts.size() > 0) 
       {
         session.setAttribute("vProperty", vPCConcepts);
         EVS_Bean m_PC = (EVS_Bean)vPCConcepts.elementAt(0);
@@ -404,10 +404,10 @@ public class EVSSearch implements Serializable
       if (rep_condr_idseq != null && !rep_condr_idseq.equals(""))
         vRepConcepts = getAC.getAC_Concepts(rep_condr_idseq, null, true);
         
-      if (vRepConcepts != null) 
+      if (vRepConcepts != null && vRepConcepts.size() > 0) 
       {
         session.setAttribute("vRepTerm", vRepConcepts);
-        EVS_Bean m_Rep = (EVS_Bean)vRepConcepts.elementAt(0);
+        EVS_Bean m_Rep =  (EVS_Bean)vRepConcepts.elementAt(0);
         if (m_Rep == null) m_Rep = new EVS_Bean();
         m_VD.setVD_REP_NAME_PRIMARY(m_Rep.getLONG_NAME());
         m_VD.setVD_REP_CONCEPT_CODE(m_Rep.getCONCEPT_IDENTIFIER());

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/ValidateVM.jsp,v 1.6 2007-01-25 22:39:31 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/ValidateVM.jsp,v 1.7 2007-01-26 17:30:14 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
