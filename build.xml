@@ -1,6 +1,6 @@
 <project name="CDE Curation Tool" default="init" basedir=".">
     <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.25 2006-12-15 16:34:29 hebell Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.24 2006-10-30 18:53:34 hegdes Exp $
         $Name: not supported by cvs2svn $
     -->
     <description>Build and deploy the CDE Curation Tool</description>
@@ -133,7 +133,6 @@
     <target name="compile" depends="init,setup">
         <!--Compile Java source files-->
         <javac destdir="${app_classes}" encoding="Cp1252" debug="${jdebug}">
-            <compilerarg line="-deprecation"/>
             <classpath refid="libpath" />
             <src refid="srcpath" />
             <include name="**/*.java" />
@@ -145,7 +144,6 @@
         </jspc>
         <!-- compile jsp.java files -->
         <javac destdir="${app_classes}" encoding="Cp1252">
-            <compilerarg line="-deprecation"/>
             <classpath refid="libpath" />
             <src refid="jspsrcpath" />
             <include name="**/*.java" />
@@ -257,9 +255,6 @@
             <link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="D:\temp" />
             <link href="http://developer.java.sun.com/developer/products/xml/docs/api/" />
         </javadoc>
-        <zip destfile="distrib/doc/cdecurate_doc.zip">
-            <zipfileset dir="${m_javadoc}"/>
-        </zip>
     </target>
 
     <!-- deploy the war file -->
