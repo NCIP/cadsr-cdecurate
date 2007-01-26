@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/load_tool_options.sql,v 1.35 2007-01-25 22:39:30 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/load_tool_options.sql,v 1.36 2007-01-26 05:20:40 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -137,7 +137,7 @@ VALUES ('CURATION', 'EVS.VOCAB.1.VOCABCODETYPE', 'NCI_CONCEPT_CODE',
 
 --Store vocab meta source for the first vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.1.METASOURCE', 'NCI2005_10F', 
+VALUES ('CURATION', 'EVS.VOCAB.1.METASOURCE', 'NCI2006_10D', 
 	   'Store vocab meta source for the first vocabulary');
 
 --Store vocab to mark if used for parent search for the first vocabulary
@@ -494,12 +494,12 @@ VALUES ('CURATION', 'EVS.DEFSOURCE.1', 'NCI',
 
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.DEFSOURCE.2', 'NCI-GLOSS_0510E',
+VALUES ('CURATION', 'EVS.DEFSOURCE.2', 'NCI-GLOSS_0610D',
 	   'Store NCI def source to filter out the multiple definition used');
 
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.DEFSOURCE.3', 'NCI2005_10E',
+VALUES ('CURATION', 'EVS.DEFSOURCE.3', 'NCI2006_10D',
 	   'Store NCI def source to filter out the multiple definition used');
 
 --Store NCI def source to filter out the multiple definition used
