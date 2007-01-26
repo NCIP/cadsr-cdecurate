@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.36 2007-01-26 17:30:12 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.37 2007-01-26 19:30:37 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -6610,6 +6610,8 @@ public class GetACSearch implements Serializable
                 return defSrc;
             else if (curField.equals("umls") || curField.equals("Ident") || curField.equals("VMConcept"))
                 return evsId;
+            else if (curField.equals("db") || curField.equals("database"))
+              return vocab;
         }
         return fldValue;
     }
@@ -6648,7 +6650,7 @@ public class GetACSearch implements Serializable
             else if (curField.equals("ValidValue"))
                 returnValue = curBean.getQUESTION_VALUE();
             else if (curField.equals("VMConcept") || curField.equals("descSource") || curField.equals("umls")
-                            || curField.equals("Ident"))
+                            || curField.equals("Ident") || curField.equals("database")  || curField.equals("db"))
             {
                 return getVMResult(null, null, curBean, curField);
                 // EVS_Bean eBean = curBean.getVM_CONCEPT();

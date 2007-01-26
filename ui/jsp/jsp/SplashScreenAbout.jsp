@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/SplashScreenAbout.jsp,v 1.9 2007-01-26 17:30:14 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/SplashScreenAbout.jsp,v 1.10 2007-01-26 19:30:38 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
