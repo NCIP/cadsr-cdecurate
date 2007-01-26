@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CreateDEC.jsp,v 1.17 2007-01-25 22:39:31 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CreateDEC.jsp,v 1.18 2007-01-26 17:30:13 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
