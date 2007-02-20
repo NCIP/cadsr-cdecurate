@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.39 2007-01-26 20:17:44 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.40 2007-02-20 21:23:09 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1621,6 +1621,7 @@ public class SetACService implements Serializable
                 strOCInvalid += errCode + " : Unable to create new version of the Object Class";
               }
             }
+            //TODO - comment these two lines later to fix error in the back button on dec for oc prop
             if (m_OC != null)
               m_OC.setIDSEQ(m_DEC.getDEC_OCL_IDSEQ());
           }
@@ -1642,6 +1643,7 @@ public class SetACService implements Serializable
                 strPropInvalid += errCode + " : Unable to create new version of the Property";
               }
             }
+            //TODO - comment these two lines later to fix error in the back button on dec for oc prop
             if (m_PC != null)
               m_PC.setIDSEQ(m_DEC.getDEC_PROPL_IDSEQ());        
           }
@@ -1896,6 +1898,7 @@ public class SetACService implements Serializable
       if(rs!=null) rs.close();
       if(CStmt!=null) CStmt.close();
       if(conn != null) conn.close();
+      
     }
     catch(Exception ee)
     {

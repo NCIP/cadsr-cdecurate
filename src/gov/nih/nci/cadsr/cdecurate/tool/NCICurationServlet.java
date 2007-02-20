@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.38 2007-01-26 20:17:44 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.39 2007-02-20 21:23:09 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -10124,7 +10124,8 @@ System.out.println(" new rep " + sNewRep);
                   con = connectDB(req, res);
                   String temp = list.elementAt(ndx); 
                   CallableStatement stmt = con.prepareCall("begin SBREXT_CDE_CURATOR_PKG.REMOVE_FROM_SENTINEL_CS('"+ temp +"','"+ user +"'); END;");
-                  stmt.execute();                
+                  stmt.execute(); 
+                  stmt.close();
                   con.close();
                   msg = "The selected item is no longer monitored by the Alert Definition";
               }
@@ -10134,7 +10135,7 @@ System.out.println(" new rep " + sNewRep);
                   logger.fatal("cdecurate: doUnmonitor(): " + e.toString(), e);
                   try
                   {
-                      if (con != null){
+                      if (con != null && !con.isClosed()){
                     	    con.close();  
                       }
                   }
@@ -11684,7 +11685,7 @@ public void getCompAttrList(HttpServletRequest req, HttpServletResponse res,
 	    } 
 			
 			// Delete ref doc attachment
-			if (sAction.equals("DeleteAttachment"))
+      else if (sAction.equals("DeleteAttachment"))
 	    {
 				refDocAt.doDeleteAttachment();
 	    } 
