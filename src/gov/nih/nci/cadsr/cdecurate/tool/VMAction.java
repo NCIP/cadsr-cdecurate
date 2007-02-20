@@ -869,18 +869,21 @@ public class VMAction implements Serializable
       data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to get VM." + e.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
     }
-    try
+    finally
     {
-      if (rs != null) rs.close();
-      if (CStmt != null) CStmt.close();
-      if (data.getDBConnection() == null)
-        VMServlet.closeDBConnection(sbr_db_conn);
-    }
-    catch (Exception ee)
-    {
-      logger.fatal(data.getStatusMsg() + "\\tERROR in getVM for close : " + ee.toString(), ee);
-      data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to get VM." + ee.toString());
-      data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
+      try
+      {
+        if (rs != null) rs.close();
+        if (CStmt != null) CStmt.close();
+        if (data.getDBConnection() == null)
+          VMServlet.closeDBConnection(sbr_db_conn);
+      }
+      catch (Exception ee)
+      {
+        logger.fatal(data.getStatusMsg() + "\\tERROR in getVM for close : " + ee.toString(), ee);
+        data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to get VM." + ee.toString());
+        data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
+      }
     }
     return vm;
   }
