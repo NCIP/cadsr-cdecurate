@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.40 2007-02-20 21:23:09 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.41 2007-02-21 16:38:47 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1867,8 +1867,8 @@ public class SetACService implements Serializable
             if (!sOC_WFS.equals("RELEASED"))
               strInvalid = "For DEC Work Flow Status to be 'Released', " +
               "the Object Class and Property Work Flow Statuses must be 'Released'.";
-            if(rs!=null) rs.close();
-            if(CStmt!=null) CStmt.close();
+           // if(rs!=null) rs.close();
+           // if(CStmt!=null) CStmt.close();
           }
           else if(!prop_idseq.equals(""))
           {    
