@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.39 2007-02-20 21:23:09 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.40 2007-02-26 21:48:02 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -13,24 +13,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 import java.util.Vector;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.apache.log4j.Logger;
-
 import oracle.sql.BLOB;
+import org.apache.log4j.Logger;
 
 /**
  * The RefDocAttachment class is the main class to handle Reference 
@@ -296,38 +291,38 @@ public void doOpen (){
 						logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
 						msg = "Unable to access the database.";
 					}
-          
-          try
+          finally
           {
-            if (rs != null)
-              rs.close();
-            if (pstmt != null)
-              pstmt.close();
-            if (con != null && !con.isClosed())
-              con.close();
+            try
+            {
+              if (rs != null)
+                rs.close();
+              if (pstmt != null)
+                pstmt.close();
+              if (con != null && !con.isClosed())
+                con.close();
+            }
+            catch (SQLException e)
+            {
+              logger.fatal("Error: for close connection " + e.toString(), e);
+            }
           }
-          catch (SQLException e)
-          {
-            logger.fatal("Error: for close connection " + e.toString(), e);
-          }
-					
 			    	
-			      }//end of for
-		    	m_servlet.ForwardJSP(req, res, "/RefDocumentUploadPage.jsp");
+			  }//end of for
+		    m_servlet.ForwardJSP(req, res, "/RefDocumentUploadPage.jsp");
 		    	
-		    }
-		    else{
-		        //no ref docs
-		    	m_servlet.ForwardJSP(req, res, "/RefDocumentUploadPage.jsp");
-		    }
+	    }
+	    else{
+	        //no ref docs
+	    	m_servlet.ForwardJSP(req, res, "/RefDocumentUploadPage.jsp");
+	    }
 
 		}
 		else 
 		{
 			msg = "The selected items are not supported for the document upload feature.";
 		}
-    }
-	
+  }
 }
 
 
@@ -427,17 +422,19 @@ public void doFileUpload ()
 		} catch (SQLException e) {
 			logger.fatal(e.toString(), e);
 		}
-    
-    try
+    finally
     {
-      if (pstmt != null)
-        pstmt.close();
-      if (con != null && !con.isClosed())
-        con.close();
-    }
-    catch (SQLException e)
-    {
-      logger.fatal("Error: for close connection " + e.toString(), e);
+      try
+      {
+        if (pstmt != null)
+          pstmt.close();
+        if (con != null && !con.isClosed())
+          con.close();
+      }
+      catch (SQLException e)
+      {
+        logger.fatal("Error: for close connection " + e.toString(), e);
+      }
     }
     //forward the page
     doOpen();
@@ -492,18 +489,20 @@ public void doDeleteAttachment (){
 		logger.fatal(e.toString(), e);
 		msg = "Reference Document Attachment: Unable to delete the Attachment from the database.";
 	}
-  try
+  finally
   {
-    if (pstmt != null)
-      pstmt.close();
-    if (con != null && !con.isClosed())
-      con.close();
+    try
+    {
+      if (pstmt != null)
+        pstmt.close();
+      if (con != null && !con.isClosed())
+        con.close();
+    }
+    catch (SQLException e)
+    {
+      logger.fatal("Error: for close connection " + e.toString(), e);
+    }
   }
-  catch (SQLException e)
-  {
-    logger.fatal("Error: for close connection " + e.toString(), e);
-  }
-  
 	// Forward back to the open method
 	doOpen();
   
@@ -534,39 +533,42 @@ public void doDeleteAttachment (){
       logger.fatal("Error - doDeleteAllAttachments: " + e.toString(), e);
       msg = "Unable to delete all the Attachments from the database for the selected Reference Document.";
     }
-    try
+    finally
     {
-      if (pstmt != null)
-        pstmt.close();
-      if (con != null && !con.isClosed())
-        con.close();
-    }
-    catch (SQLException e)
-    {
-      logger.fatal("Error: for close connection " + e.toString(), e);
+      try
+      {
+        if (pstmt != null)
+          pstmt.close();
+        if (con != null && !con.isClosed())
+          con.close();
+      }
+      catch (SQLException e)
+      {
+        logger.fatal("Error: for close connection " + e.toString(), e);
+      }
     }
     return msg;
   }
 
 
-/**
- * Streams a blob from the database to the filecache on the web server
- * 
- * @param bRefBlob - BLOB Object
- * @param fileName - The name of the file to save the object ro
- */
-private void doBlobtoFile (BLOB bRefBlob, String fileName){
-	GetACService getAC = new GetACService(req, res, m_servlet);
-	Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
-    vList = getAC.getToolOptionData("CURATION","REFDOC_FILECACHE","");
-    String RefDocFileCache = vList.get(0).getVALUE();
-
-	String fileName2[] = fileName.split("/");
-	String fileDirectory = "";
-	
-	// Extract file to file system
-	//BLOB bRefBlob = (BLOB)rs.getBlob(2);
-	InputStream is;
+  /**
+   * Streams a blob from the database to the filecache on the web server
+   * 
+   * @param bRefBlob - BLOB Object
+   * @param fileName - The name of the file to save the object ro
+   */
+  private void doBlobtoFile (BLOB bRefBlob, String fileName){
+  	GetACService getAC = new GetACService(req, res, m_servlet);
+  	Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
+      vList = getAC.getToolOptionData("CURATION","REFDOC_FILECACHE","");
+      String RefDocFileCache = vList.get(0).getVALUE();
+  
+  	String fileName2[] = fileName.split("/");
+  	String fileDirectory = "";
+  	
+  	// Extract file to file system
+  	//BLOB bRefBlob = (BLOB)rs.getBlob(2);
+  	InputStream is;
 
 		try {
 			is = bRefBlob.getBinaryStream();
@@ -621,8 +623,7 @@ private void doBlobtoFile (BLOB bRefBlob, String fileName){
 			logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
 			msg = "Problem accessing file.";
 		}
-
-}
+  }
 
 /**
  * Streams a file from the web server filechace directory to the empty blob in the reference blobs view
@@ -630,80 +631,82 @@ private void doBlobtoFile (BLOB bRefBlob, String fileName){
  * @param con  db conenction used to create the attachment row
  * @param fileName  Unique name for the attachment row created
  */
-private void doFiletoBlob (Connection con, String fileName){
-	
-	GetACService getAC = new GetACService(req, res, m_servlet);
-	Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
-    vList = getAC.getToolOptionData("CURATION","REFDOC_FILECACHE","");
-    String RefDocFileCache = vList.get(0).getVALUE();
-    
-	String UpdateObjSQL = "select blob_content from sbr.reference_blobs_view where name = ? for update";
-	OutputStream os;
-	FileInputStream is;
-  PreparedStatement pstmt = null;
-  ResultSet rs = null;
-	try {
-		pstmt = con.prepareStatement(UpdateObjSQL);
-		pstmt = con.prepareStatement(UpdateObjSQL);
-		
-		String[] fileNameString = fileName.split("/");
-		String fileLocator = RefDocFileCache + fileNameString[1];
-		is = new FileInputStream( fileLocator );
-
-		
-		pstmt.setString(1, fileName);
-		rs = pstmt.executeQuery();
-		rs.next();
-
-		BLOB blob = (BLOB)rs.getBlob("blob_content");
-
-		os = blob.getBinaryOutputStream();
-		//	Read the file by chuncks and insert them in the Blob. The chunk size come from the blob
-		byte[] chunk = new byte[blob.getChunkSize()];
-		int i=-1;
-		while((i = is.read(chunk))!=-1)
-		{
-			os.write(chunk,0,i); //Write the chunk
-		}
-		//close all the connections
-		rs.close();
-    rs = null;
-		is.close();
-    is = null;
-		os.close();
-    os = null;
-		pstmt.close();
-    pstmt = null;
-    
-	} catch (FileNotFoundException e) {
-		StringWriter sw = new StringWriter();
-		e.printStackTrace(new PrintWriter(sw));
-		logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
-		msg = "File not found. Can not upload file to database.";
-	} catch (SQLException e) {
-		StringWriter sw = new StringWriter();
-		e.printStackTrace(new PrintWriter(sw));
-		logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
-		msg = "Unable to access database for file upload.";
-	} catch (IOException e) {
-		StringWriter sw = new StringWriter();
-		e.printStackTrace(new PrintWriter(sw));
-		logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
-		msg = "Unable to access file for upload to the database.";
-	}
-  try
-  {
-    if (rs != null)
-      rs.close();
-    if (pstmt != null)
-      pstmt.close();
+  private void doFiletoBlob (Connection con, String fileName){
+  	
+  	GetACService getAC = new GetACService(req, res, m_servlet);
+  	Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
+      vList = getAC.getToolOptionData("CURATION","REFDOC_FILECACHE","");
+      String RefDocFileCache = vList.get(0).getVALUE();
+      
+  	String UpdateObjSQL = "select blob_content from sbr.reference_blobs_view where name = ? for update";
+  	OutputStream os;
+  	FileInputStream is;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+  	try {
+  		pstmt = con.prepareStatement(UpdateObjSQL);
+  		pstmt = con.prepareStatement(UpdateObjSQL);
+  		
+  		String[] fileNameString = fileName.split("/");
+  		String fileLocator = RefDocFileCache + fileNameString[1];
+  		is = new FileInputStream( fileLocator );
+  
+  		
+  		pstmt.setString(1, fileName);
+  		rs = pstmt.executeQuery();
+  		rs.next();
+  
+  		BLOB blob = (BLOB)rs.getBlob("blob_content");
+  
+  		os = blob.getBinaryOutputStream();
+  		//	Read the file by chuncks and insert them in the Blob. The chunk size come from the blob
+  		byte[] chunk = new byte[blob.getChunkSize()];
+  		int i=-1;
+  		while((i = is.read(chunk))!=-1)
+  		{
+  			os.write(chunk,0,i); //Write the chunk
+  		}
+  		//close all the connections
+  		rs.close();
+      rs = null;
+  		is.close();
+      is = null;
+  		os.close();
+      os = null;
+  		pstmt.close();
+      pstmt = null;
+      
+  	} catch (FileNotFoundException e) {
+  		StringWriter sw = new StringWriter();
+  		e.printStackTrace(new PrintWriter(sw));
+  		logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+  		msg = "File not found. Can not upload file to database.";
+  	} catch (SQLException e) {
+  		StringWriter sw = new StringWriter();
+  		e.printStackTrace(new PrintWriter(sw));
+  		logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+  		msg = "Unable to access database for file upload.";
+  	} catch (IOException e) {
+  		StringWriter sw = new StringWriter();
+  		e.printStackTrace(new PrintWriter(sw));
+  		logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+  		msg = "Unable to access file for upload to the database.";
+  	}
+    finally
+    {
+      try
+      {
+        if (rs != null)
+          rs.close();
+        if (pstmt != null)
+          pstmt.close();
+      }
+      catch (SQLException e)
+      {
+        logger.fatal("Error: for close connection " + e.toString(), e);
+      }
+    }
   }
-  catch (SQLException e)
-  {
-    logger.fatal("Error: for close connection " + e.toString(), e);
-  }
-
-}
 
 
 } // End of Class

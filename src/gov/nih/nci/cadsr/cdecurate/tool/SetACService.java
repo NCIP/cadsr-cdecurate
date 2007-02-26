@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.41 2007-02-21 16:38:47 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.42 2007-02-26 21:48:02 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1837,16 +1837,16 @@ public class SetACService implements Serializable
     ResultSet rs = null;
     Statement CStmt = null;
     Connection conn = null;
-    String sOC_WFS = "";
-    String sProp_WFS = "";
-    String sOCSQL = "Select asl_name from object_classes_view_ext where oc_idseq = '" + oc_idseq + "'";
-    String sPropSQL = "Select asl_name from PROPERTIES_EXT where prop_idseq = '" + prop_idseq + "'";
-    
-    if (oc_idseq == null) oc_idseq = "";
-    if (prop_idseq == null) prop_idseq = "";
-    if(!(oc_idseq.equals("") && prop_idseq.equals(""))) // at least one is in database
+    try
     {
-      try
+      String sOC_WFS = "";
+      String sProp_WFS = "";
+      String sOCSQL = "Select asl_name from object_classes_view_ext where oc_idseq = '" + oc_idseq + "'";
+      String sPropSQL = "Select asl_name from PROPERTIES_EXT where prop_idseq = '" + prop_idseq + "'";
+      
+      if (oc_idseq == null) oc_idseq = "";
+      if (prop_idseq == null) prop_idseq = "";
+      if(!(oc_idseq.equals("") && prop_idseq.equals(""))) // at least one is in database
       {
         conn = m_servlet.connectDB(req, res);
         if (conn == null)  // still null to login page
@@ -1867,6 +1867,7 @@ public class SetACService implements Serializable
             if (!sOC_WFS.equals("RELEASED"))
               strInvalid = "For DEC Work Flow Status to be 'Released', " +
               "the Object Class and Property Work Flow Statuses must be 'Released'.";
+            /** no need to close it here; doing this throws error making it not close the connection **/
            // if(rs!=null) rs.close();
            // if(CStmt!=null) CStmt.close();
           }
@@ -1887,22 +1888,24 @@ public class SetACService implements Serializable
           }
         }
       }
-      catch(Exception e)
+    }
+    catch(Exception e)
+    {
+      //System.out.println("ERROR in checkOCPropWorkFlowStatuses" + e.toString());
+      logger.fatal("ERROR in checkOCPropWorkFlowStatuses " + e.toString(), e);
+    }
+    finally
+    {
+      try
       {
-        //System.out.println("ERROR in checkOCPropWorkFlowStatuses" + e.toString());
-        logger.fatal("ERROR in checkOCPropWorkFlowStatuses " + e.toString(), e);
+        if(rs!=null) rs.close();
+        if(CStmt!=null) CStmt.close();
+        if(conn != null) conn.close();      
       }
-    }
-    try
-    {
-      if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(conn != null) conn.close();
-      
-    }
-    catch(Exception ee)
-    {
-      logger.fatal("ERROR in checkOCPropWorkFlowStatuses closing : " + ee.toString(), ee);
+      catch(Exception ee)
+      {
+        logger.fatal("ERROR in checkOCPropWorkFlowStatuses closing : " + ee.toString(), ee);
+      }
     }
     return strInvalid;
   } //end checkOCPropWorkFlowStatuses

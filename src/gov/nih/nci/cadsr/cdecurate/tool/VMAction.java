@@ -801,6 +801,7 @@ public class VMAction implements Serializable
     CallableStatement CStmt = null;
     Connection sbr_db_conn = null;
     VM_Bean vm = new VM_Bean();
+    boolean tellUser = true;
     try
     {
       // Create a Callable Statement object.
@@ -827,14 +828,11 @@ public class VMAction implements Serializable
         // Set the In parameters (which are inherited from the PreparedStatement class)
         CStmt.setString(2, vmName);  //vm.getVM_SHORT_MEANING());
         // Now we are ready to call the stored procedure
-        try
-        {
-          CStmt.execute();
-        }
-        catch (Exception ee)
-        {
-          return vm;  //no vm found error
-        }
+        //** no need to have try catch here **/
+        tellUser = false;
+        CStmt.execute();
+        tellUser = true;
+        //get the return code to check for existance  
         sReturnCode = CStmt.getString(1);
         vm.setRETURN_CODE(sReturnCode);
         // update vm bean if found
@@ -860,14 +858,16 @@ public class VMAction implements Serializable
           vm.setVM_LONG_NAME(CStmt.getString(2));
           vm.setVM_IDSEQ(CStmt.getString(12));
         }
-        //data.setVMBean(vm);
       }
     }
     catch (Exception e)
     {
       logger.fatal("ERROR in getVM : " + e.toString(), e);
-      data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to get VM." + e.toString());
-      data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
+      if (tellUser)
+      {
+        data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to get VM." + e.toString());
+        data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
+      }
     }
     finally
     {
