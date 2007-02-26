@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.39 2007-02-20 21:23:09 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.40 2007-02-26 21:48:02 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -10141,6 +10141,7 @@ System.out.println(" new rep " + sNewRep);
                   }
                   catch (SQLException ex)
                   {
+                  	logger.fatal("cdecurate: doUnmonitor() for close : " + ex.toString(), ex);
                   }
               }
           }
@@ -11695,8 +11696,8 @@ public void getCompAttrList(HttpServletRequest req, HttpServletResponse res,
 			{
 	      try
 	      {
-	    	  ForwardErrorJSP(req, res, "Unexpected Request. Session Terminated. Please login again.");
           logger.fatal("Reference Document Attachments Upload: Unknown Request Type.");
+	    	  ForwardErrorJSP(req, res, "Unexpected Request. Session Terminated. Please login again.");
 	      }
 	      catch (Exception e)
 	      {
