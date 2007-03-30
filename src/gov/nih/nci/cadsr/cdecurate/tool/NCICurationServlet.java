@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.40 2007-02-26 21:48:02 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.41 2007-03-30 16:15:24 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -269,6 +269,12 @@ public class NCICurationServlet extends HttpServlet
     }
   }
 
+  public void reInitOracleConnect()
+  {
+    logger.fatal("reInitOracleConnect - begin");
+    this.initOracleConnect();
+  }
+  
   /**
    * gets the connection object from pool 
    * @param stDBAppContext
@@ -277,25 +283,41 @@ public class NCICurationServlet extends HttpServlet
    * @return connection object
    * @throws java.lang.Exception
    */
-  public Connection getConnFromPool(String stDBAppContext, String stUser, String stPassword) throws Exception 
+  public Connection getConnFromPool(String stDBAppContext, String stUser, String stPassword) 
   {
-      DataSource ds = hashOracleOCIConnectionPool.get(stDBAppContext);
-	  
-      if (ds != null)
+	  Connection con = null;
+      try
       {
-         try
-         {
-             Connection con = ds.getConnection(stUser,stPassword);
-            return(con);
-         }
-         catch(SQLException e)
-         {
-           String eMsg = getDBConnectMessage(e.toString());
-        	 logger.fatal("Error getting connection" + eMsg, e);
-           m_classReq.setAttribute("ReqErrorMessage", eMsg);
-         }
+        DataSource ds = hashOracleOCIConnectionPool.get(stDBAppContext);
+ 
+        if (ds != null)
+        {
+           try
+           {
+               con = ds.getConnection(stUser,stPassword);
+               //re inti the oracle conn if not connected
+               if (con == null || con.isClosed())
+               {
+                 this.reInitOracleConnect();
+                 ds = hashOracleOCIConnectionPool.get(stDBAppContext);
+                 con = ds.getConnection(stUser,stPassword);
+               }
+           }
+           catch(SQLException e)
+           {
+             String eMsg = getDBConnectMessage(e.toString());
+          	 logger.fatal("Error getting connection" + eMsg, e);
+             m_classReq.setAttribute("ReqErrorMessage", eMsg);
+           }
+           if (con == null || con.isClosed()) 
+             throw new Exception("unable to get the connection from teh pool");
+        }
       }
-      return(null);
+      catch (Exception e)
+      {
+       logger.fatal("Error getting connection at method ", e);
+      }
+      return(con);
   }
   
   private String getDBConnectMessage(String eMsg)
@@ -352,34 +374,35 @@ public class NCICurationServlet extends HttpServlet
    * @return Connection
    */
   public Connection connectDB(UserBean ub_)
-   {
-       Connection SBRDb_conn = null;
-       try
-       {
-         String username  = "";
-         String password  = "";
-         String sDBAppContext = "/cdecurate";
-         if(ub_ != null)
-         {
-           username  = ub_.getUsername();
-           password  = ub_.getPassword();
-           sDBAppContext = ub_.getDBAppContext();
-         }
-         try
-         {
-           SBRDb_conn = this.getConnFromPool(sDBAppContext, username, password);
-         }
-         catch(Exception e)
-         {
-           logger.fatal("Servlet error: no pool connection.", e);
-         }
-       }
-       catch (Exception e)
-       {
-           logger.fatal("Servlet connectDB : "  + e.toString(), e);
-       }
-       return SBRDb_conn;
-   }
+  {
+      Connection SBRDb_conn = null;
+      try
+      {
+        String username  = "";
+        String password  = "";
+        String sDBAppContext = "/cdecurate";
+        //make sure user name from session is active
+        if (ub_ == null || ub_.getUsername().equals(""))
+          throw new Exception("User information is null");
+        //get user info
+        username  = ub_.getUsername();
+        password  = ub_.getPassword();
+        sDBAppContext = ub_.getDBAppContext();
+        try
+        {
+          SBRDb_conn = this.getConnFromPool(sDBAppContext, username, password);
+        }
+        catch(Exception e)
+        {
+          logger.fatal("Servlet error: no pool connection.", e);
+        }
+      }
+      catch (Exception e)
+      {
+          logger.fatal("Servlet connectDB : "  + e.toString(), e);
+      }
+      return SBRDb_conn;
+  }
 
   /**
    * @param req HttpServletRequest object
