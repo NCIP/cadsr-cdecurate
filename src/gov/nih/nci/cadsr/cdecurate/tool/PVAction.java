@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
  */
 public class PVAction implements Serializable
 {
-  private static final Logger logger = Logger.getLogger(PVServlet.class.getName());
+  private static final Logger logger = Logger.getLogger(PVAction.class.getName());
   /**
    * 
    */
@@ -150,7 +150,7 @@ public class PVAction implements Serializable
         //Create a Callable Statement object.
         sbr_db_conn = data.getDbConnection();
         if (sbr_db_conn == null || sbr_db_conn.isClosed())
-          sbr_db_conn = PVServlet.makeDBConnection();
+          sbr_db_conn = data.getCurationServlet().connectDB(); // PVServlet.makeDBConnection();
         // Create a Callable Statement object.
         if (sbr_db_conn != null)
         {
@@ -179,7 +179,7 @@ public class PVAction implements Serializable
       if(rs!=null) rs.close();
       if(pstmt!=null) pstmt.close();
       if (data.getDbConnection() == null)
-        PVServlet.closeDBConnection(sbr_db_conn);
+        data.getCurationServlet().freeConnection(sbr_db_conn);;
     }
     catch(Exception ee)
     {
@@ -365,7 +365,7 @@ public class PVAction implements Serializable
       //Create a Callable Statement object.
       sbr_db_conn = data.getDbConnection();
       if (sbr_db_conn == null || sbr_db_conn.isClosed())
-        sbr_db_conn = PVServlet.makeDBConnection();
+        sbr_db_conn = data.getCurationServlet().connectDB();
       // Create a Callable Statement object.
       if (sbr_db_conn != null)
       {
@@ -434,7 +434,7 @@ public class PVAction implements Serializable
       if(rs!=null) rs.close();
       if(CStmt!=null) CStmt.close();
       if (data.getDbConnection() == null)
-        PVServlet.closeDBConnection(sbr_db_conn);
+        data.getCurationServlet().freeConnection(sbr_db_conn);;
     }
     catch(Exception ee)
     {
@@ -526,11 +526,11 @@ public class PVAction implements Serializable
         if (data.getDbConnection() != null)
           cdata.setDBConnection(data.getDbConnection()); //get the connection
         else
-          cdata.setDBConnection(PVServlet.makeDBConnection());  //make the connection
+          cdata.setDBConnection(data.getCurationServlet().connectDB());  //make the connection
         ConceptAction cact = new ConceptAction();
         Vector<EVS_Bean> conList = cact.getAC_Concepts(sCondr, cdata);
         if (data.getDbConnection() == null)
-          PVServlet.closeDBConnection(cdata.getDBConnection());  //close the connection only if it was created here
+        	data.getCurationServlet().freeConnection(cdata.getDBConnection());  //PVServlet.closeDBConnection(cdata.getDBConnection());  //close the connection only if it was created here
         vm.setVM_CONCEPT_LIST(conList);
       }
       pvBean.setPV_VM(vm);
@@ -587,7 +587,7 @@ public class PVAction implements Serializable
       //Create a Callable Statement object.
       sbr_db_conn = data.getDbConnection();
       if (sbr_db_conn == null || sbr_db_conn.isClosed())
-        sbr_db_conn = PVServlet.makeDBConnection();
+        sbr_db_conn = data.getCurationServlet().connectDB();
       // Create a Callable Statement object.
       if (sbr_db_conn != null)
       {
@@ -645,7 +645,7 @@ public class PVAction implements Serializable
       if(rs!=null) rs.close();
       if(CStmt!=null) CStmt.close();
       if (data.getDbConnection() == null)
-        PVServlet.closeDBConnection(sbr_db_conn);
+        data.getCurationServlet().freeConnection(sbr_db_conn);;
     }
     catch(Exception ee)
     {
@@ -743,11 +743,11 @@ public class PVAction implements Serializable
     if (data.getDbConnection() != null)
       conData.setDBConnection(data.getDbConnection()); //get the connection
     else
-      conData.setDBConnection(PVServlet.makeDBConnection());  //make the connection
+      conData.setDBConnection(data.getCurationServlet().connectDB());  //make the connection
     //call hte action
     conAct.doConceptSearch(conData);
     if (data.getDbConnection() == null)
-      PVServlet.closeDBConnection(conData.getDBConnection());  //close the connection
+    	data.getCurationServlet().freeConnection(conData.getDBConnection());  //PVServlet.closeDBConnection(conData.getDBConnection());  //close the connection
     //get the bean from teh vector
     Vector vCon = conData.getConceptList();
     if (vCon != null && vCon.size() > 0)
@@ -847,7 +847,7 @@ public class PVAction implements Serializable
          //Create a Callable Statement object.
          sbr_db_conn = data.getDbConnection();
          if (sbr_db_conn == null || sbr_db_conn.isClosed())
-           sbr_db_conn = PVServlet.makeDBConnection();
+           sbr_db_conn = data.getCurationServlet().connectDB();
          // Create a Callable Statement object.
          if (sbr_db_conn != null)
          {
@@ -908,7 +908,7 @@ public class PVAction implements Serializable
        if(rs!=null) rs.close();
        if(CStmt!=null) CStmt.close();
        if (data.getDbConnection() == null)
-         PVServlet.closeDBConnection(sbr_db_conn);
+         data.getCurationServlet().freeConnection(sbr_db_conn);;
      }
      catch(Exception ee)
      {
@@ -941,7 +941,7 @@ public class PVAction implements Serializable
         //Create a Callable Statement object.
         sbr_db_conn = data.getDbConnection();
         if (sbr_db_conn == null || sbr_db_conn.isClosed())
-          sbr_db_conn = PVServlet.makeDBConnection();
+          sbr_db_conn = data.getCurationServlet().connectDB();
         // Create a Callable Statement object.
         if (sbr_db_conn != null)
         {
@@ -977,7 +977,7 @@ public class PVAction implements Serializable
         if(rs!=null) rs.close();
         if(CStmt!=null) CStmt.close();
         if (data.getDbConnection() == null)
-          PVServlet.closeDBConnection(sbr_db_conn);
+          data.getCurationServlet().freeConnection(sbr_db_conn);;
       }
       catch(Exception ee)
       {
@@ -1018,7 +1018,7 @@ public class PVAction implements Serializable
          //Create a Callable Statement object.
          sbr_db_conn = data.getDbConnection();
          if (sbr_db_conn == null || sbr_db_conn.isClosed())
-           sbr_db_conn = PVServlet.makeDBConnection();
+           sbr_db_conn = data.getCurationServlet().connectDB();
          // Create a Callable Statement object.
          if (sbr_db_conn != null)
          {
@@ -1092,7 +1092,7 @@ public class PVAction implements Serializable
      {
        if(CStmt!=null) CStmt.close();
        if (data.getDbConnection() == null)
-         PVServlet.closeDBConnection(sbr_db_conn);
+         data.getCurationServlet().freeConnection(sbr_db_conn);;
      }
      catch(Exception ee)
      {
@@ -1344,7 +1344,7 @@ public class PVAction implements Serializable
              {
                eBean.setCON_AC_SUBMIT_ACTION("INS");
                //get the evs user bean
-               EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
+               EVS_UserBean eUser = (EVS_UserBean)data.getCurationServlet().sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
                if (eUser == null) eUser = new EVS_UserBean();
                
                //get origin for cadsr result

@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.39 2007-01-26 20:17:44 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.40 2007-04-10 19:31:10 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -5839,7 +5839,7 @@ public class InsACService implements Serializable
           else
           {
             String dbOrigin = (String)CStmt.getObject(13);
-            EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
+            EVS_UserBean eUser = (EVS_UserBean)m_servlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
             if (eUser == null) eUser = new EVS_UserBean();
             String sDef = (String)CStmt.getObject(6);
             if (sDef == null || sDef.equals("")) sDef = eUser.getDefDefaultValue();

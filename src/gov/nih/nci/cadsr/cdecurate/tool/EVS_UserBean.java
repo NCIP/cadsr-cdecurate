@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.38 2007-01-26 20:17:43 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.39 2007-04-10 19:31:10 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1031,7 +1031,7 @@ public final class EVS_UserBean implements Serializable
         }
       }
       this.setVocab_Attr(hvoc);
-      NCICurationServlet.sessionData.EvsUsrBean = this;    //session.setAttribute("EvsUserBean", this);
+      servlet.sessionData.EvsUsrBean = this;    //session.setAttribute("EvsUserBean", this);
       
     }
     catch(Exception e)
