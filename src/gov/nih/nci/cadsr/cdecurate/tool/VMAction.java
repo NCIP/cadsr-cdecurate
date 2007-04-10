@@ -20,7 +20,7 @@ public class VMAction implements Serializable
 {  
   private static final long serialVersionUID = 1L;
   private static final Logger logger = Logger.getLogger(VMAction.class.getName());
-  private static UtilService util = new UtilService(); 
+  private UtilService util = new UtilService(); 
 
   
   /** constructor*/
@@ -55,7 +55,7 @@ public class VMAction implements Serializable
       //get the connection from data if exists (used for testing)
       sbr_db_conn = data.getDBConnection();
       if (sbr_db_conn == null || sbr_db_conn.isClosed())
-        sbr_db_conn = VMServlet.makeDBConnection();
+        sbr_db_conn = data.getCurationServlet().connectDB();
       // Create a Callable Statement object.
       if (sbr_db_conn != null)
       {
@@ -122,7 +122,7 @@ public class VMAction implements Serializable
       if(rs!=null) rs.close();
       if(CStmt!=null) CStmt.close();
       if (data.getDBConnection() == null)
-        VMServlet.closeDBConnection(sbr_db_conn);
+        data.getCurationServlet().freeConnection(sbr_db_conn);
     }
     catch(Exception ee)
     {
@@ -418,11 +418,11 @@ public class VMAction implements Serializable
         if (data.getDBConnection() != null)
           condata.setDBConnection(data.getDBConnection()); //get the connection
         else
-          condata.setDBConnection(VMServlet.makeDBConnection());  //make the connection
+          condata.setDBConnection(data.getCurationServlet().connectDB());  //make the connection
 
         String conArray = conAct.getConArray(vCon, true, condata);        
         if (data.getDBConnection() == null)
-          VMServlet.closeDBConnection(condata.getDBConnection());  //close the connection
+        	data.getCurationServlet().freeConnection(condata.getDBConnection());  //close the connection
         //set setvm_evs method to set th edata
         erMsg = this.setVM_EVS(data, conArray);
       }
@@ -471,7 +471,7 @@ public class VMAction implements Serializable
       //get the connection from data if exists (used for testing)
       sbr_db_conn = data.getDBConnection();
       if (sbr_db_conn == null || sbr_db_conn.isClosed())
-        sbr_db_conn = VMServlet.makeDBConnection();
+        sbr_db_conn = data.getCurationServlet().connectDB();
       if (sbr_db_conn != null)
       {
         CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VM(?,?,?,?,?,?,?,?,?,?,?,?)}");
@@ -531,7 +531,7 @@ public class VMAction implements Serializable
       if (rs != null) rs.close();
       if (CStmt != null) CStmt.close();
       if (data.getDBConnection() == null)
-        VMServlet.closeDBConnection(sbr_db_conn);
+        data.getCurationServlet().freeConnection(sbr_db_conn);
     }
     catch (Exception ee)
     {
@@ -571,7 +571,7 @@ public class VMAction implements Serializable
       //get the connection from data if exists (used for testing)
       sbr_db_conn = data.getDBConnection();
       if (sbr_db_conn == null || sbr_db_conn.isClosed())
-        sbr_db_conn = VMServlet.makeDBConnection();
+        sbr_db_conn = data.getCurationServlet().connectDB();
       if (sbr_db_conn != null)
       {
         CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VM_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
@@ -632,7 +632,7 @@ public class VMAction implements Serializable
       if (rs != null) rs.close();
       if (CStmt != null) CStmt.close();
       if (data.getDBConnection() == null)
-        VMServlet.closeDBConnection(sbr_db_conn);
+        data.getCurationServlet().freeConnection(sbr_db_conn);
     }
     catch (Exception ee)
     {
@@ -664,7 +664,7 @@ public class VMAction implements Serializable
       {
         sbr_db_conn = data.getDBConnection();
         if (sbr_db_conn == null || sbr_db_conn.isClosed())
-          sbr_db_conn = VMServlet.makeDBConnection();
+          sbr_db_conn = data.getCurationServlet().connectDB();
         // Create a Callable Statement object.
         if (sbr_db_conn != null)
         {
@@ -690,7 +690,7 @@ public class VMAction implements Serializable
         if(rs!=null) rs.close();
         if(stmt!=null) stmt.close();
         if (data.getDBConnection() == null)
-          VMServlet.closeDBConnection(sbr_db_conn);
+          data.getCurationServlet().freeConnection(sbr_db_conn);
       }
       catch(Exception ee)
       {
@@ -730,7 +730,7 @@ public class VMAction implements Serializable
          //get the connection from data if exists (used for testing)
          sbr_db_conn = data.getDBConnection();
          if (sbr_db_conn == null || sbr_db_conn.isClosed())
-           sbr_db_conn = VMServlet.makeDBConnection();
+           sbr_db_conn = data.getCurationServlet().connectDB();
          if (sbr_db_conn != null)
          {
            CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_CD_VMS(?,?,?,?,?,?,?,?,?,?)}");
@@ -776,7 +776,7 @@ public class VMAction implements Serializable
        if(rs!=null) rs.close();
        if(CStmt!=null) CStmt.close();
        if (data.getDBConnection() == null)
-         VMServlet.closeDBConnection(sbr_db_conn);
+         data.getCurationServlet().freeConnection(sbr_db_conn);
      }
      catch(Exception ee)
      {
@@ -807,7 +807,7 @@ public class VMAction implements Serializable
       // Create a Callable Statement object.
       sbr_db_conn = data.getDBConnection();
       if (sbr_db_conn == null || sbr_db_conn.isClosed())
-        sbr_db_conn = VMServlet.makeDBConnection();
+        sbr_db_conn = data.getCurationServlet().connectDB();
       if (sbr_db_conn != null)
       {
         String sReturnCode = ""; // out
@@ -876,7 +876,7 @@ public class VMAction implements Serializable
         if (rs != null) rs.close();
         if (CStmt != null) CStmt.close();
         if (data.getDBConnection() == null)
-          VMServlet.closeDBConnection(sbr_db_conn);
+          data.getCurationServlet().freeConnection(sbr_db_conn);
       }
       catch (Exception ee)
       {
@@ -1280,14 +1280,14 @@ public class VMAction implements Serializable
       
       Connection sbr_db_conn = data.getDBConnection();
       if (sbr_db_conn == null || sbr_db_conn.isClosed())
-        sbr_db_conn = VMServlet.makeDBConnection();
+        sbr_db_conn = data.getCurationServlet().connectDB();
       conData.setDBConnection(sbr_db_conn);
       //call the method n concept action
       ConceptAction conAct = new ConceptAction();
       condr = conAct.getConDerivation(conData);
       //close the conn only if not testing
       if (data.getDBConnection() == null)
-        VMServlet.closeDBConnection(sbr_db_conn);
+        data.getCurationServlet().freeConnection(sbr_db_conn);
     }
     catch (SQLException e)
     {
@@ -1468,14 +1468,14 @@ public class VMAction implements Serializable
       //get eth connection
       Connection sbr_db_conn = data.getDBConnection();
       if (sbr_db_conn == null || sbr_db_conn.isClosed())
-        sbr_db_conn = VMServlet.makeDBConnection();
+        sbr_db_conn = data.getCurationServlet().connectDB();
       conData.setDBConnection(sbr_db_conn);
       //call the method
       ConceptAction conAct = new ConceptAction();
       conAct.doConceptSearch(conData);
       //close the connection
       if (data.getDBConnection() == null)
-        VMServlet.closeDBConnection(sbr_db_conn);
+        data.getCurationServlet().freeConnection(sbr_db_conn);
     }
     catch (SQLException e)
     {
@@ -1568,7 +1568,7 @@ public class VMAction implements Serializable
     {
       sbr_db_conn = data.getDBConnection();
       if (sbr_db_conn == null || sbr_db_conn.isClosed())
-        sbr_db_conn = VMServlet.makeDBConnection();
+        sbr_db_conn = data.getCurationServlet().connectDB();
       // Create a Callable Statement object.
       if (sbr_db_conn != null)
       {
@@ -1608,7 +1608,7 @@ public class VMAction implements Serializable
       if (rs != null) rs.close();
       if (CStmt != null) CStmt.close();
       if (data.getDBConnection() == null)
-        VMServlet.closeDBConnection(sbr_db_conn);
+        data.getCurationServlet().freeConnection(sbr_db_conn);
     }
     catch (Exception ee)
     {

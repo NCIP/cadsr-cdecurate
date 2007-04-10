@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 public class ConceptServlet implements Serializable
 {
   private static final long serialVersionUID = 8411474971665771500L;
-  private static ConceptForm data = null;
+  private ConceptForm data = null;
   private static final Logger logger = Logger.getLogger(ConceptServlet.class);
 
   /** constructor 
@@ -137,7 +137,7 @@ public class ConceptServlet implements Serializable
    * connects the db and returns the connection object
    * @return Connection object
    */
-  public static Connection makeDBConnection()
+  public Connection makeDBConnection()
   {
     Connection sbr_db_conn = null;
     try
@@ -162,7 +162,7 @@ public class ConceptServlet implements Serializable
    * closes the db connection
    * @param con connection object
    */
-  public static void closeDBConnection(Connection con)
+  public void closeDBConnection(Connection con)
   {
     try
     {

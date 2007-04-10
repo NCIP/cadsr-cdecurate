@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.38 2007-01-26 20:17:43 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.39 2007-04-10 19:31:10 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -136,7 +136,7 @@ public class EVSSearch implements Serializable
     m_servlet = CurationServlet;
     //get application service object
    // HttpSession session = (HttpSession)m_classReq.getSession();
-    m_eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVS_USER_BEAN_ARG);   //("EvsUserBean");
+    m_eUser = (EVS_UserBean)m_servlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVS_USER_BEAN_ARG);   //("EvsUserBean");
     initialize();
   }
   
@@ -1877,7 +1877,7 @@ public String parseDefinition(String termStr)
       if (hVoc.containsKey(dtsVocab))
         vocabBean = (EVS_UserBean)hVoc.get(dtsVocab);
       if (vocabBean == null) 
-        vocabBean = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVS_USER_BEAN_ARG);  //("EvsUserBean");
+        vocabBean = (EVS_UserBean)m_servlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVS_USER_BEAN_ARG);  //("EvsUserBean");
       String namePropDisp = vocabBean.getPropNameDisp();
       if (namePropDisp == null) namePropDisp = "";
       if (namePropIn == null || namePropIn.equals(""))  //get the vocab specific prop to search in
@@ -3354,7 +3354,7 @@ public String parseDefinition(String termStr)
         if (hVoc.containsKey(vocab))
           vocabBean = (EVS_UserBean)hVoc.get(vocab);
         if (vocabBean == null) 
-          vocabBean = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVS_USER_BEAN_ARG);  //("EvsUserBean");
+          vocabBean = (EVS_UserBean)m_servlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVS_USER_BEAN_ARG);  //("EvsUserBean");
         //get the securtiy access to the vocab
         vocabAccess = vocabBean.getVocabAccess();      
       }

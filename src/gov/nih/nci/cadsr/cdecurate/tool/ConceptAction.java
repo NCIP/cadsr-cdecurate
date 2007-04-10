@@ -60,7 +60,7 @@ public class ConceptAction implements Serializable
       //get the connection from data if exists (used for testing)
       sbr_db_conn = data.getDBConnection();
       if (sbr_db_conn == null || sbr_db_conn.isClosed())
-        sbr_db_conn = ConceptServlet.makeDBConnection();
+        sbr_db_conn = data.getCurationServlet().connectDB();
       // Create a Callable Statement object.
       if (sbr_db_conn != null)
       {
@@ -164,7 +164,7 @@ public class ConceptAction implements Serializable
       if(rs!=null) rs.close();
       if(CStmt!=null) CStmt.close();
       if (data.getDBConnection() == null)
-        ConceptServlet.closeDBConnection(sbr_db_conn);
+    	  data.getCurationServlet().freeConnection(sbr_db_conn);
     }
     catch(Exception ee)
     {
@@ -194,7 +194,7 @@ public class ConceptAction implements Serializable
       {
         sbr_db_conn = data.getDBConnection();
         if (sbr_db_conn == null || sbr_db_conn.isClosed())
-          sbr_db_conn = ConceptServlet.makeDBConnection();
+          sbr_db_conn = data.getCurationServlet().connectDB();
         // Create a Callable Statement object.
         if (sbr_db_conn != null)
         {
@@ -220,7 +220,7 @@ public class ConceptAction implements Serializable
         if(rs!=null) rs.close();
         if(stmt!=null) stmt.close();
         if (data.getDBConnection() == null)
-          ConceptServlet.closeDBConnection(sbr_db_conn);
+          data.getCurationServlet().freeConnection(sbr_db_conn);
       }
       catch(Exception ee)
       {
@@ -475,7 +475,7 @@ public class ConceptAction implements Serializable
      {
          sbr_db_conn = data.getDBConnection();
          if (sbr_db_conn == null || sbr_db_conn.isClosed())
-           sbr_db_conn = ConceptServlet.makeDBConnection();
+           sbr_db_conn = data.getCurationServlet().connectDB(); // ConceptServlet.connectDB();
          // Create a Callable Statement object.
          if (sbr_db_conn != null)
          {
@@ -555,7 +555,7 @@ public class ConceptAction implements Serializable
        if(rs!=null) rs.close();
        if(CStmt!=null) CStmt.close();
        if (data.getDBConnection() == null)
-         ConceptServlet.closeDBConnection(sbr_db_conn);
+         data.getCurationServlet().freeConnection(sbr_db_conn);
      }
      catch(Exception ee)
      {
@@ -588,7 +588,7 @@ public class ConceptAction implements Serializable
     {
       sbr_db_conn = data.getDBConnection();
       if (sbr_db_conn == null || sbr_db_conn.isClosed())
-        sbr_db_conn = ConceptServlet.makeDBConnection();
+        sbr_db_conn = data.getCurationServlet().connectDB(); // ConceptServlet.connectDB();
       // Create a Callable Statement object.
       if (sbr_db_conn != null)
       {
@@ -657,7 +657,7 @@ public class ConceptAction implements Serializable
       if(rs!=null) rs.close();
       if(CStmt!=null) CStmt.close();
       if (data.getDBConnection() == null)
-        ConceptServlet.closeDBConnection(sbr_db_conn);
+        data.getCurationServlet().freeConnection(sbr_db_conn);
     }
     catch(Exception ee)
     {

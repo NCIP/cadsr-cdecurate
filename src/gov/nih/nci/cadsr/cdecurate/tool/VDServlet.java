@@ -16,9 +16,9 @@ import org.apache.log4j.Logger;
  */
 public class VDServlet implements Serializable
 {
-  private static HttpServletRequest m_classReq;
-  private static HttpServletResponse m_classRes;
-  private static NCICurationServlet m_classServlet;
+  private HttpServletRequest m_classReq;
+  private HttpServletResponse m_classRes;
+  private NCICurationServlet m_classServlet;
   private static final Logger logger = Logger.getLogger(VMServlet.class.getName());
   
   /** Constructor 

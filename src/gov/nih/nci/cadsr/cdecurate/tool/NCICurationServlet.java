@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.41 2007-03-30 16:15:24 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.42 2007-04-10 19:31:10 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -136,7 +136,7 @@ public class NCICurationServlet extends HttpServlet
   static private Hashtable<String, DataSource> hashOracleOCIConnectionPool = new Hashtable<String, DataSource>();
   public Logger logger = Logger.getLogger(NCICurationServlet.class.getName());
   /** declare the global variable sessionData */
-  static public Session_Data sessionData;
+  public Session_Data sessionData;
   private ServletConfig serConfig;
   /**
   * To initialize global variables and load the Oracle
@@ -343,7 +343,17 @@ public class NCICurationServlet extends HttpServlet
    public void freeConnection(Connection con) {
         try { con.close(); } catch (Exception e) {}
     }
-      
+
+   /** since connection info is stored in the session, I should be able to use connect DB with out passing information
+    * @return Connnection object
+    */
+   public Connection connectDB()
+   {
+     Connection SBRDb_conn = connectDB(sessionData.UsrBean);
+     return SBRDb_conn;
+   }
+   
+   
    /**
   * This method tries to connect to the db, returns the Connection object if
   * successful, if unsuccessful tries to reconnect, returns null if unsuccessful.
@@ -788,7 +798,7 @@ public class NCICurationServlet extends HttpServlet
     }
     else
     {
-      EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
+      EVS_UserBean eUser = (EVS_UserBean)this.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
       if (eUser == null) eUser = new EVS_UserBean();          
     }
     return userbean;
@@ -1003,6 +1013,7 @@ public class NCICurationServlet extends HttpServlet
         Userbean.setDBAppContext("/cdecurate");
         session.setAttribute("Userbean", Userbean);
         session.setAttribute("Username", Username);
+        sessionData.UsrBean = Userbean;
         
         GetACService getAC = new GetACService(req, res, this);        
         getAC.verifyConnection(req, res);
@@ -3718,7 +3729,7 @@ public class NCICurationServlet extends HttpServlet
           {
             eBean.setCON_AC_SUBMIT_ACTION("INS");
             //get the evs user bean
-            EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
+            EVS_UserBean eUser = (EVS_UserBean)this.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
             if (eUser == null) eUser = new EVS_UserBean();
             
             //get origin for cadsr result
@@ -4649,7 +4660,7 @@ public class NCICurationServlet extends HttpServlet
     Vector<EVS_Bean> vObjectClass = (Vector)session.getAttribute("vObjectClass");
     if (vObjectClass == null) vObjectClass = new Vector<EVS_Bean>();
     //get the evs user bean
-    EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
+    EVS_UserBean eUser = (EVS_UserBean)this.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
     if (eUser == null) eUser = new EVS_UserBean();
     
     eBean.setCON_AC_SUBMIT_ACTION("INS");
@@ -4731,7 +4742,7 @@ public class NCICurationServlet extends HttpServlet
     Vector<EVS_Bean> vProperty = (Vector)session.getAttribute("vProperty");
     if (vProperty == null) vProperty = new Vector<EVS_Bean>();
     //get the evs user bean
-    EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
+    EVS_UserBean eUser = (EVS_UserBean)this.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
     if (eUser == null) eUser = new EVS_UserBean();
     
     eBean.setCON_AC_SUBMIT_ACTION("INS");
@@ -4939,7 +4950,7 @@ public class NCICurationServlet extends HttpServlet
     Vector<EVS_Bean> vRepTerm = (Vector)session.getAttribute("vRepTerm");
     if (vRepTerm == null)  vRepTerm = new Vector<EVS_Bean>();
     //get the evs user bean
-    EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
+    EVS_UserBean eUser = (EVS_UserBean)this.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
     if (eUser == null) eUser = new EVS_UserBean();
     
     eBean.setCON_AC_SUBMIT_ACTION("INS");
@@ -5248,7 +5259,7 @@ public class NCICurationServlet extends HttpServlet
           for (int i=0; i<vEVSList.size(); i++)
           {
             EVS_Bean eBean = (EVS_Bean)vEVSList.elementAt(i);
-            EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
+            EVS_UserBean eUser = (EVS_UserBean)this.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
             if (eUser == null) eUser = new EVS_UserBean();
             //get the nci vocab if it meta or other vocab only if not referenced
             if (sSelectedParentName == null || sSelectedParentName.equals(""))

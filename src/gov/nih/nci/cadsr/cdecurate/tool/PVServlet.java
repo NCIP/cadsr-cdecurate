@@ -22,8 +22,8 @@ import org.apache.log4j.Logger;
 public class PVServlet implements Serializable
 {
   private static final Logger logger = Logger.getLogger(PVServlet.class.getName());
-  private static PVForm data = null;
-  private static PVAction PVAct = new PVAction();
+  private PVForm data = null;
+  private PVAction PVAct = new PVAction();
 
   /**constructor  
    * @param req HttpServletRequest Object
@@ -673,7 +673,7 @@ public class PVServlet implements Serializable
      {
        //System.out.println("call method to get the concepts");
        //get evs user bean from teh session
-       EVS_UserBean eUser = (EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean; 
+       EVS_UserBean eUser = (EVS_UserBean)data.getCurationServlet().sessionData.EvsUsrBean; 
        if (eUser == null) eUser = new EVS_UserBean();
        //get the editing VM from teh page
        int pvInd = getSelectedVM();  // getSelectedPV();
@@ -1121,7 +1121,7 @@ public class PVServlet implements Serializable
     * connects the db and returns the connection object
     * @return Connection object
     */
-   public static Connection makeDBConnection()
+   public Connection makeDBConnection()
    {
      Connection sbr_db_conn = null;
      try
@@ -1144,7 +1144,7 @@ public class PVServlet implements Serializable
     * closes the db connection
     * @param con connection object
     */
-   public static void closeDBConnection(Connection con)
+   public void closeDBConnection(Connection con)
    {
      try
      {

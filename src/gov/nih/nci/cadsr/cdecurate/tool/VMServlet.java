@@ -17,7 +17,7 @@ public class VMServlet implements Serializable
 {
   private static final long serialVersionUID = 1L;
   /**VM Form object*/
-  public static VMForm data = null;
+  public VMForm data = null;
   private static final Logger logger = Logger.getLogger(VMServlet.class.getName());
   /**
    * Constructor
@@ -41,7 +41,7 @@ public class VMServlet implements Serializable
     data.setInsAC(insAC);
     UtilService util = new UtilService();
     data.setUtil(util);
-    data.setEvsUser((EVS_UserBean)NCICurationServlet.sessionData.EvsUsrBean);
+    data.setEvsUser((EVS_UserBean)data.getCurationServlet().sessionData.EvsUsrBean);
   }
 
   /**
@@ -325,7 +325,7 @@ public class VMServlet implements Serializable
    * connects the db and returns the connection object
    * @return Connection object
    */
-  public static Connection makeDBConnection()
+  public Connection makeDBConnection()
   {
     Connection sbr_db_conn = null;
     try
@@ -350,7 +350,7 @@ public class VMServlet implements Serializable
    * closes the db connection
    * @param con connection object
    */
-  public static void closeDBConnection(Connection con)
+  public void closeDBConnection(Connection con)
   {
     try
     {
