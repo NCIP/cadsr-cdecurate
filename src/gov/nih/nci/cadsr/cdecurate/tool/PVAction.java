@@ -812,7 +812,7 @@ public class PVAction implements Serializable
      Connection sbr_db_conn = null;
      ResultSet rs = null;
      CallableStatement CStmt = null;
-     String sReturnCode = "";  //out
+     String sMsg = "";  //out
      try
      {
          String sAction = PVForm.CADSR_ACTION_INS;
@@ -841,7 +841,7 @@ public class PVAction implements Serializable
          if (sPV_ID != null && !sPV_ID.equals(""))
          {
            pv.setPV_PV_IDSEQ(sPV_ID);  //update the pvbean with the id
-           return sReturnCode;
+           return sMsg;
          }
            
          //Create a Callable Statement object.
@@ -884,12 +884,12 @@ public class PVAction implements Serializable
            CStmt.setString(10,sEndDate);
             // Now we are ready to call the stored procedure
            CStmt.execute();
-           sReturnCode = CStmt.getString(1);
+           String sReturnCode = CStmt.getString(1);
            sPV_ID = CStmt.getString(3);
            pv.setPV_PV_IDSEQ(sPV_ID);
            if (sReturnCode != null && !sReturnCode.equals("API_PV_300"))
            {
-             data.setStatusMsg(data.getStatusMsg() + "\\t " + sReturnCode + " : Unable to update Permissible Value - " + sValue + ".");
+             sMsg += "\\t " + sReturnCode + " : Unable to update Permissible Value - " + sValue + ".";
              data.setRetErrorCode(sReturnCode);      //store returncode in request to track it all through this request    
              data.setPvvmErrorCode(sReturnCode);  //store it capture check for pv creation
            }
@@ -901,22 +901,22 @@ public class PVAction implements Serializable
      {
        logger.fatal("ERROR in setPV for other : " + e.toString(), e);
        data.setRetErrorCode("Exception");
-       data.setStatusMsg(data.getStatusMsg() + "\\t Exception : Unable to update Permissible Value attributes.");
+       sMsg += "\\t Exception : Unable to update Permissible Value attributes.";
      }
      try
      {
        if(rs!=null) rs.close();
        if(CStmt!=null) CStmt.close();
        if (data.getDbConnection() == null)
-         data.getCurationServlet().freeConnection(sbr_db_conn);;
+         data.getCurationServlet().freeConnection(sbr_db_conn);  //PVServlet.closeDBConnection(sbr_db_conn);
      }
      catch(Exception ee)
      {
        logger.fatal("ERROR in InsACService-setPV for close : " + ee.toString(), ee);
        data.setRetErrorCode("Exception");
-       data.setStatusMsg(data.getStatusMsg() + "\\t Exception : Unable to update Permissible Value attributes.");
+       sMsg += "\\t Exception : Unable to update Permissible Value attributes.";
      }
-     return sReturnCode;
+     return sMsg;
    }
 
    /**
@@ -1005,14 +1005,14 @@ public class PVAction implements Serializable
      VD_Bean vdBean = data.getVD();
      Connection sbr_db_conn = null;
      CallableStatement CStmt = null;
-     String retCode = "";
+     String sMsg = "";     
      try
      {
          String sAction = pvBean.getVP_SUBMIT_ACTION();
          String vpID = pvBean.getPV_VDPVS_IDSEQ();
          //deleting newly selected/created pv don't do anything since it doesn't exist in cadsr to remove.
          if (sAction.equals("DEL") && (vpID == null || vpID.equals("")))
-           return retCode;
+           return sMsg;
          //TODO - create parent concept
          String parIdseq = this.setParentConcept(pvBean, vdBean);
          //Create a Callable Statement object.
@@ -1058,26 +1058,29 @@ public class PVAction implements Serializable
             CStmt.setString(14, parIdseq);
  //System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
             CStmt.execute();
-            retCode = CStmt.getString(1);
-            //store the status message if children row exist
-            if (retCode != null && !retCode.equals(""))
+            String retCode = CStmt.getString(1);
+            //store the status message if children row exist; no message if cannot find deleting item in the table
+            if (retCode != null && !retCode.equals("") && !retCode.equals("API_VDPVS_005"))
             {
               String sPValue = pvBean.getPV_VALUE();
              // String sVDName = vdBean.getVD_LONG_NAME();
               if (sAction.equals("INS") || sAction.equals("UPD"))
-                 data.setStatusMsg(data.getStatusMsg() + "\\t " + retCode + " : Unable to update permissible value " + sPValue + ".");
+                 sMsg += "\\t " + retCode + " : Unable to update permissible value " + sPValue + ".";
               else if (sAction.equals("DEL") && retCode.equals("API_VDPVS_006"))
               {
-                data.setStatusMsg(data.getStatusMsg() + "\\t This Value Domain is used by a form. " +
-                   "Create a new version of the Value Domain to remove permissible value " + sPValue + ".");
+                sMsg += "\\t This Value Domain is used by a form. " +
+                   "Create a new version of the Value Domain to remove permissible value " + sPValue + ".";
               }
               else if (!sAction.equals("DEL") && !retCode.equals("API_VDPVS_005")) 
-                data.setStatusMsg(data.getStatusMsg() + "\\t " + retCode + " : Unable to remove permissible value " + sPValue + ".");
+                sMsg += "\\t " + retCode + " : Unable to remove permissible value " + sPValue + ".";
               
               data.setRetErrorCode(retCode);  
             }
             else
+            {
+              retCode = "";
               pvBean.setPV_VDPVS_IDSEQ(CStmt.getString(3));
+            }
          }
        //capture the duration
        //logger.info(m_servlet.getLogMessage(m_classReq, "setVD_PVS", "end set", startDate, new java.util.Date()));  
@@ -1086,21 +1089,21 @@ public class PVAction implements Serializable
      {
        logger.fatal("ERROR in setVD_PVS for other : " + e.toString(), e);
        data.setRetErrorCode("Exception");
-       data.setStatusMsg(data.getStatusMsg() + "\\t Exception : Unable to update or remove PV of VD.");
+       sMsg += "\\t Exception : Unable to update or remove PV of VD.";
      }
      try
      {
        if(CStmt!=null) CStmt.close();
        if (data.getDbConnection() == null)
-         data.getCurationServlet().freeConnection(sbr_db_conn);;
+         data.getCurationServlet().freeConnection(sbr_db_conn);  //PVServlet.closeDBConnection(sbr_db_conn);
      }
      catch(Exception ee)
      {
        logger.fatal("ERROR in setVD_PVS for close : " + ee.toString(), ee);
        data.setRetErrorCode("Exception");
-       data.setStatusMsg(data.getStatusMsg() + "\\t Exception : Unable to update or remove PV of VD.");
+       sMsg += "\\t Exception : Unable to update or remove PV of VD.";
      }
-     return retCode;
+     return sMsg;
    }  //END setVD_PVS
 
    /**add the block changed data of the PV 

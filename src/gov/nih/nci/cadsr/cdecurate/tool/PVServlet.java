@@ -705,77 +705,77 @@ public class PVServlet implements Serializable
    * @return String status message
    */
   @SuppressWarnings("unchecked")
-   public String submitPV(VD_Bean vd)
-   {
-     
-     //delete teh vdpv relationship if it was deleted from teh page
-     doRemoveVDPV(vd);
-     
-     //insert or update vdpvs relationship
-     Vector<PV_Bean> vVDPVS = vd.getVD_PV_List();
-     if (vVDPVS == null) vVDPVS = new Vector<PV_Bean>();
-     String ret = "";
-     for (int j=0; j<vVDPVS.size(); j++)
-     {
-         PV_Bean pvBean = (PV_Bean)vVDPVS.elementAt(j);
-         //submit the pv to either insert or update if something done to this pv
-         String vpAction = pvBean.getVP_SUBMIT_ACTION();
-         if (vpAction == null) vpAction = "NONE";
-         //submit the vm if edited
-         VM_Bean vm = pvBean.getPV_VM();
-         if (vm.getVM_CD_IDSEQ() == null || vm.getVM_CD_IDSEQ().equals(""))
-           vm.setVM_CD_IDSEQ(vd.getVD_CD_IDSEQ());
-         VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
-         String errCode = vmser.submitVM(vm);
-         data.setStatusMsg(data.getStatusMsg() + vmser.data.getStatusMsg());
-         //udpate pv and vdpvs only if edited
-         if (!vpAction.equals("NONE") && !vpAction.equals("DEL"))
-         {
-             if (errCode == null || errCode.equals(""))
-             {
-//                 create new pv if not exists already.
-               String sPVid = pvBean.getPV_PV_IDSEQ();
-               String vmName = pvBean.getPV_SHORT_MEANING();
-               if (vmName == null) vmName = "";
-               //short meaning don't match from pv to vm
-               if (vpAction.equals("INS") || vmName.equals("")  || !vmName.equals(vm.getVM_SHORT_MEANING()))
-               {
-                 sPVid = "";
-                 pvBean.setPV_PV_IDSEQ(sPVid);
-                 pvBean.setPV_VDPVS_IDSEQ(sPVid);
-               }
-               pvBean.setPV_SHORT_MEANING(vm.getVM_SHORT_MEANING());  //need to update PV vm befor esubmit
-               data.setSelectPV(pvBean);
-               if (sPVid == null || sPVid.equals("") || sPVid.contains("EVS"))   
-                 ret = PVAct.setPV(data);                    
-             }
-             if (data.getRetErrorCode() == null || data.getRetErrorCode().equals(""))
-             {
-               //remove olny if it was already existed in the database 
-               data.setSelectPV(pvBean);
-               data.setVD(vd);
-               ret = PVAct.setVD_PVS(data);
-               if (ret == null || ret.equals(""))
-               {
-                   //create crf value pv relationship in QC table.
-                   pvBean = data.getSelectPV();
-                   String vpID = pvBean.getPV_VDPVS_IDSEQ();
-                   if (pvBean.getVP_SUBMIT_ACTION().equals(PVForm.CADSR_ACTION_INS) && (vpID != null  || !vpID.equals("")))
-                   {
-                      InsACService insac = new InsACService(data.getRequest(), data.getResponse(), data.getCurationServlet());
-                      insac.UpdateCRFValue(pvBean);
-                   }
-                   pvBean.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_NONE);
-                   vVDPVS.setElementAt(pvBean, j);
-               }
-             }
-         }
-       }  //end loop
-       vd.setVD_PV_List(vVDPVS);
-       data.getRequest().setAttribute("retcode", data.getRetErrorCode()); 
-       return data.getStatusMsg();
-   }
+  public String submitPV(VD_Bean vd)
+  {
+    String errMsg = "";
+    //delete teh vdpv relationship if it was deleted from teh page
+    errMsg = doRemoveVDPV(vd);
+    
+    //insert or update vdpvs relationship
+    Vector<PV_Bean> vVDPVS = vd.getVD_PV_List();
+    if (vVDPVS == null) vVDPVS = new Vector<PV_Bean>();
+    for (int j=0; j<vVDPVS.size(); j++)
+    {
+        PV_Bean pvBean = (PV_Bean)vVDPVS.elementAt(j);
+        //submit the pv to either insert or update if something done to this pv
+        String vpAction = pvBean.getVP_SUBMIT_ACTION();
+        if (vpAction == null) vpAction = "NONE";
+        //udpate pv and vdpvs only if edited      
+        if (!vpAction.equals("NONE") && !vpAction.equals("DEL"))
+        {
+            //submit the vm if edited
+            VM_Bean vm = pvBean.getPV_VM();
+            if (vm.getVM_CD_IDSEQ() == null || vm.getVM_CD_IDSEQ().equals(""))
+              vm.setVM_CD_IDSEQ(vd.getVD_CD_IDSEQ());
+            VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
+            String err = vmser.submitVM(vm);
+            //capture the message if any
+            if (err != null && !err.equals(""))
+            {
+              errMsg += "\\n" + err;
+              continue;
+            }
+            // create pv
+            err = doSubmitPV(vpAction, pvBean, vm);
+            //capture the message if any
+            if (err != null && !err.equals(""))
+            {
+              errMsg += "\\n" + err;
+              continue;
+            }
 
+            //update pv to vd 
+            data.setSelectPV(pvBean);
+            data.setVD(vd);
+            err = PVAct.setVD_PVS(data);
+            //capture the message if any
+            if (err != null && !err.equals(""))
+            {
+              errMsg += "\\n" + err;
+              continue;
+            }
+
+            //create crf value pv relationship in QC table.
+            pvBean = data.getSelectPV();
+            String vpID = pvBean.getPV_VDPVS_IDSEQ();
+            if (pvBean.getVP_SUBMIT_ACTION().equals(PVForm.CADSR_ACTION_INS) && (vpID != null  || !vpID.equals("")))
+            {
+               InsACService insac = new InsACService(data.getRequest(), data.getResponse(), data.getCurationServlet());
+               insac.UpdateCRFValue(pvBean);
+            }
+            //update teh collection
+            pvBean.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_NONE);
+            vVDPVS.setElementAt(pvBean, j);
+        }
+      }  //end loop
+      vd.setVD_PV_List(vVDPVS);
+      data.getRequest().setAttribute("retcode", data.getRetErrorCode()); 
+      //log the error message
+      if (!errMsg.equals(""))
+        logger.fatal("ERROR at submit - PV " + errMsg);
+
+      return errMsg; //data.getStatusMsg();
+  }
   
    /**To delete the removed VD PV from the database
    * @param vd VDBean object
@@ -783,26 +783,55 @@ public class PVServlet implements Serializable
    */
    public String doRemoveVDPV(VD_Bean vd)
    {
-     String ret = "";
+     String errMsg = "";
      //delete the record when items were added to the deleted vector
      Vector<PV_Bean> delVDPV = vd.getRemoved_VDPVList();  // (Vector)session.getAttribute("RemovedPVList");
      if (delVDPV != null)
      {
+       //reset the status message
        for (int i =0; i<delVDPV.size(); i++)
        {
+         data.setStatusMsg("");
          PV_Bean pv = delVDPV.elementAt(i);
          String idseq = pv.getPV_PV_IDSEQ();
+         //call the method to remove from the database
          if (idseq != null && !idseq.equals("") && !idseq.contains("EVS"))
          {
            pv.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_DEL);
            data.setSelectPV(pv);
            data.setVD(vd);
-           ret = PVAct.setVD_PVS(data);
+           String ret = PVAct.setVD_PVS(data);
+           if (ret != null && !ret.equals(""))
+             errMsg += "\\n" + ret;             
          }
        }
        vd.setRemoved_VDPVList(new Vector<PV_Bean>());
      }
-     ret = data.getStatusMsg();
+     //log the error message
+     if (!errMsg.equals(""))
+       logger.fatal("ERROR at submit - doRemoveVDPV " + errMsg);
+     return errMsg;
+   } 
+
+   private String doSubmitPV(String vpAction, PV_Bean pvBean, VM_Bean vm)
+   {
+     data.setStatusMsg("");
+     String sPVid = pvBean.getPV_PV_IDSEQ();
+     String vmName = pvBean.getPV_SHORT_MEANING();
+     if (vmName == null) vmName = "";
+     //short meaning don't match from pv to vm
+     if (vpAction.equals("INS") || vmName.equals("")  || !vmName.equals(vm.getVM_SHORT_MEANING()))
+     {
+       sPVid = "";
+       pvBean.setPV_PV_IDSEQ(sPVid);
+       pvBean.setPV_VDPVS_IDSEQ(sPVid);
+     }
+     pvBean.setPV_SHORT_MEANING(vm.getVM_SHORT_MEANING());  //need to update PV vm befor esubmit
+     data.setSelectPV(pvBean);
+     String ret = "";
+     if (sPVid == null || sPVid.equals("") || sPVid.contains("EVS"))   
+       ret = PVAct.setPV(data);      
+     
      return ret;
    }
    

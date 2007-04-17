@@ -312,11 +312,12 @@ public class VMServlet implements Serializable
    */
   public String submitVM(VM_Bean vm)
   {
+	String vmError = "";
     VMAction vmact = new VMAction();
     data.setVMBean(vm);
     if (vm.getVM_SUBMIT_ACTION() != null && !vm.getVM_SUBMIT_ACTION().equals(VMForm.CADSR_ACTION_NONE))
-      vmact.doSubmitVM(data);
-    String vmError = data.getRetErrorCode();
+    	vmError = vmact.doSubmitVM(data);
+
     data.getRequest().setAttribute("retcode", data.getRetErrorCode());      
     return vmError;
   }

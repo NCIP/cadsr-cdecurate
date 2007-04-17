@@ -240,6 +240,7 @@ public class ConceptAction implements Serializable
   public String getConArray(Vector<EVS_Bean> conList, boolean isCreate, ConceptForm data)
   {
     String conArray = "";
+    String errMsg = "";
     for (int i=0; i<conList.size(); i++)
     {
       EVS_Bean con = (EVS_Bean)conList.elementAt(i);
@@ -251,20 +252,31 @@ public class ConceptAction implements Serializable
         {
           System.out.println("create new concept");
           String sret = this.setConcept(data, con, ConceptForm.CADSR_ACTION_INS);
+          if (!sret.equals(""))
+          {
+            logger.fatal("ERROR concept create " + sret);
+            errMsg += "\\n" + sret;
+          }
         }
         else
           return "";
       }
       conIDseq = con.getIDSEQ();
-      if (!conArray.equals(""))  //add comma
-        conArray += ",";
-      //get the nvp value if exists or not the last one (primary)
-      if (!con.getNVP_CONCEPT_VALUE().equals("") && i < conList.size()-1)
-        conIDseq += ":" + con.getNVP_CONCEPT_VALUE();
-      //make an array
-      conArray += conIDseq; 
-      System.out.println(con.getLONG_NAME() + " conarray " + conArray);
+      if (!conIDseq.equals(""))
+      {
+        if (!conArray.equals(""))  //add comma
+          conArray += ",";
+        //get the nvp value if exists or not the last one (primary)
+        if (!con.getNVP_CONCEPT_VALUE().equals("") && i < conList.size()-1)
+          conIDseq += ":" + con.getNVP_CONCEPT_VALUE();
+        //make an array
+        conArray += conIDseq; 
+        //System.out.println(con.getLONG_NAME() + " conarray " + conArray);
+      }
     }
+    if (!errMsg.equals(""))
+      data.setStatusMsg(errMsg);
+
     return conArray;
   }
 
@@ -465,12 +477,10 @@ public class ConceptAction implements Serializable
      java.util.Date startDate = new java.util.Date();          
      //logger.info(m_servlet.getLogMessage(m_classReq, "setConcept", "starting set", startDate, startDate));
 
-     String sReturnCode = "";
+     String sMsg = "";
      Connection sbr_db_conn = null;
      ResultSet rs = null;
      CallableStatement CStmt = null;
-     String conIdseq = "";
-     String sEvsSource = "";
      try
      {
          sbr_db_conn = data.getDBConnection();
@@ -530,13 +540,14 @@ public class ConceptAction implements Serializable
            //logger.info("setConcept " + evsBean.getCONCEPT_IDENTIFIER());     
 
            boolean bExcuteOk = CStmt.execute();
-           sReturnCode = CStmt.getString(1);
-           conIdseq = CStmt.getString(3);
+           String sReturnCode = CStmt.getString(1);
+           String conIdseq = CStmt.getString(3);
+           if (conIdseq == null) conIdseq = "";
            evsBean.setIDSEQ(conIdseq);
            if (sReturnCode != null)
            {
-             data.setStatusMsg("\\t " + sReturnCode + " : Unable to update Concept attributes - " 
-                 + evsBean.getCONCEPT_IDENTIFIER() + ": " + evsBean.getLONG_NAME() + ".");
+             sMsg += "\\t " + sReturnCode + " : Unable to update Concept attributes - " 
+                 + evsBean.getCONCEPT_IDENTIFIER() + ": " + evsBean.getLONG_NAME() + ".";
              //m_classReq.setAttribute("retcode", sReturnCode);      //store returncode in request to track it all through this request    
            }
          }
@@ -547,24 +558,22 @@ public class ConceptAction implements Serializable
      {
        logger.fatal("ERROR in setConcept for other : " + e.toString(), e);
        //m_classReq.setAttribute("retcode", "Exception");
-       sReturnCode = "Exception";
-       data.setStatusMsg("\\t Exception : Unable to update Concept attributes.");
+       sMsg += "\\t Exception : Unable to update Concept attributes.";
      }
      try
      {
        if(rs!=null) rs.close();
        if(CStmt!=null) CStmt.close();
        if (data.getDBConnection() == null)
-         data.getCurationServlet().freeConnection(sbr_db_conn);
+         data.getCurationServlet().freeConnection(sbr_db_conn); // ConceptServlet.closeDBConnection(sbr_db_conn);
      }
      catch(Exception ee)
      {
        logger.fatal("ERROR in setConcept for close : " + ee.toString(), ee);
        //m_classReq.setAttribute("retcode", "Exception");
-       sReturnCode = "Exception";
-       data.setStatusMsg("\\t Exception : Unable to update Concept attributes.");
+       sMsg += "\\t Exception : Unable to update Concept attributes.";
      }
-     return conIdseq;
+     return sMsg;
    }  //end concept
 
    /**
