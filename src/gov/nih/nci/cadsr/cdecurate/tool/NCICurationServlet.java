@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.42 2007-04-10 19:31:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.43 2007-04-17 20:24:57 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -5224,157 +5224,161 @@ public class NCICurationServlet extends HttpServlet
    *
    */
   public void doSelectVMConcept(HttpServletRequest req, HttpServletResponse res, String sPVAction) 
-   {
-      try
-      {
-        HttpSession session = req.getSession();
-        session.setAttribute("PVAction", sPVAction);
-        VD_Bean m_VD = (VD_Bean)session.getAttribute("m_VD");  //new VD_Bean();
-        GetACService getAC = new GetACService(req, res, this);
-    //    m_setAC.setVDValueFromPage(req, res, m_VD);
-    //    session.setAttribute("m_VD", m_VD);
-        //get the existing pvs from the session
-        Vector<PV_Bean> vVDPVList = m_VD.getVD_PV_List();  // (Vector)session.getAttribute("VDPVList");
-        if (vVDPVList == null) vVDPVList = new Vector<PV_Bean>();
-        //get the VMs selected from EVS from the page.
-        Vector<EVS_Bean> vEVSList = this.getEVSSelRowVector(req, new Vector<EVS_Bean>());
-        if (vEVSList != null)
-        {
-          //get the parent concept which is same for all the selected values
-          String sSelectedParentName = (String)session.getAttribute("SelectedParentName");
-          String sSelectedParentCC = (String)session.getAttribute("SelectedParentCC");
-          String sSelectedParentDB = (String)session.getAttribute("SelectedParentDB");
-          String sSelectedParentMetaSource = (String)session.getAttribute("SelectedParentMetaSource");
-          //get the parent concept
-          EVS_Bean parConcept = new EVS_Bean();
-          if (sSelectedParentName != null && !sSelectedParentName.equals(""))
-          {
-            parConcept.setLONG_NAME(sSelectedParentName);
-            parConcept.setCONCEPT_IDENTIFIER(sSelectedParentCC);
-            parConcept.setEVS_DATABASE(sSelectedParentDB);
-            parConcept.setEVS_CONCEPT_SOURCE(sSelectedParentMetaSource);
-          }
-          String notUpdateVDPVs = "";
-          String updatedVDPVs = "";
-          for (int i=0; i<vEVSList.size(); i++)
-          {
-            EVS_Bean eBean = (EVS_Bean)vEVSList.elementAt(i);
-            EVS_UserBean eUser = (EVS_UserBean)this.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
-            if (eUser == null) eUser = new EVS_UserBean();
-            //get the nci vocab if it meta or other vocab only if not referenced
-            if (sSelectedParentName == null || sSelectedParentName.equals(""))
-            {
-              //get teh right vocab name
-              String eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), EVSSearch.VOCAB_NAME, EVSSearch.VOCAB_DBORIGIN);  // "vocabName", "vocabDBOrigin");
-              if (eDB.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
-                eDB = eBean.getEVS_ORIGIN();
-              eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
-              //get the thesaurus term
-              EVSSearch evs = new EVSSearch(req, res, this);
-              eBean = evs.getThesaurusConcept(eBean);          
-            }
-            //get cadsr data
+  {
+     try
+     {
+       HttpSession session = req.getSession();
+       session.setAttribute("PVAction", sPVAction);
+       VD_Bean m_VD = (VD_Bean)session.getAttribute("m_VD");  //new VD_Bean();
+    //   GetACService getAC = new GetACService(req, res, this);
+   //    m_setAC.setVDValueFromPage(req, res, m_VD);
+   //    session.setAttribute("m_VD", m_VD);
+       //get the existing pvs from the session
+       Vector<PV_Bean> vVDPVList = m_VD.getVD_PV_List();  // (Vector)session.getAttribute("VDPVList");
+       if (vVDPVList == null) vVDPVList = new Vector<PV_Bean>();
+       //get the VMs selected from EVS from the page.
+       Vector<EVS_Bean> vEVSList = this.getEVSSelRowVector(req, new Vector<EVS_Bean>());
+       if (vEVSList != null)
+       {
+         //get the parent concept which is same for all the selected values
+         String sSelectedParentName = (String)session.getAttribute("SelectedParentName");
+         String sSelectedParentCC = (String)session.getAttribute("SelectedParentCC");
+         String sSelectedParentDB = (String)session.getAttribute("SelectedParentDB");
+         String sSelectedParentMetaSource = (String)session.getAttribute("SelectedParentMetaSource");
+         //get the parent concept
+         EVS_Bean parConcept = new EVS_Bean();
+         if (sSelectedParentName != null && !sSelectedParentName.equals(""))
+         {
+           parConcept.setLONG_NAME(sSelectedParentName);
+           parConcept.setCONCEPT_IDENTIFIER(sSelectedParentCC);
+           parConcept.setEVS_DATABASE(sSelectedParentDB);
+           parConcept.setEVS_CONCEPT_SOURCE(sSelectedParentMetaSource);
+         }
+         String notUpdateVDPVs = "";
+        // String updatedVDPVs = "";
+         for (int i=0; i<vEVSList.size(); i++)
+         {
+           EVS_Bean eBean = (EVS_Bean)vEVSList.elementAt(i);
+           EVS_UserBean eUser = (EVS_UserBean)this.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
+           if (eUser == null) eUser = new EVS_UserBean();
+           //get the nci vocab if it meta or other vocab only if not referenced
+           if (sSelectedParentName == null || sSelectedParentName.equals(""))
+           {
+             //get teh right vocab name
+             String eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), EVSSearch.VOCAB_NAME, EVSSearch.VOCAB_DBORIGIN);  // "vocabName", "vocabDBOrigin");
+             if (eDB.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
+               eDB = eBean.getEVS_ORIGIN();
+             eBean.setEVS_DATABASE(eDB);   //eBean.getEVS_ORIGIN()); 
+             //get the thesaurus term
+             EVSSearch evs = new EVSSearch(req, res, this);
+             eBean = evs.getThesaurusConcept(eBean);          
+           }
+           //get cadsr data
             PVAction pvact = new PVAction();
             PVForm data = new PVForm();
             data.setDbConnection(this.connectDB(req, res));
             eBean = pvact.getCaDSRConcept(eBean, eUser, data);
             this.freeConnection(data.getDbConnection());
-            
-            String sValue = eBean.getLONG_NAME();
-            String sMean = eBean.getLONG_NAME();
-     System.out.println(sValue + " selectVMConcept " + sMean);
-            //add the level to the value if parent exists to update the value
-            if (sSelectedParentName != null && !sSelectedParentName.equals(""))
-            {
-              Integer iLevel = new Integer(eBean.getLEVEL());
-              sValue = sValue + " [" + iLevel.toString() + "]"; 
-            }
+           
+           String sValue = eBean.getLONG_NAME();
+           String sMean = eBean.getLONG_NAME();
+    System.out.println(sValue + " selectVMConcept " + sMean);
+           //add the level to the value if parent exists to update the value
+           if (sSelectedParentName != null && !sSelectedParentName.equals(""))
+           {
+             Integer iLevel = new Integer(eBean.getLEVEL());
+             sValue = sValue + " [" + iLevel.toString() + "]"; 
+           }
 
-            boolean isExist = false;
-            boolean isUpdated = false;
-            //int updRow = -1;
-            for (int j=0; j<vVDPVList.size(); j++)  //check if the concept already exists.
-            {
-              PV_Bean pvBean = new PV_Bean();
-              pvBean = (PV_Bean)vVDPVList.elementAt(j);
-              VM_Bean vdVM = pvBean.getPV_VM();
-              String vdValue = pvBean.getPV_VALUE(); 
-              String vdMean = "";
-              if (vdVM != null)
-                vdMean = vdVM.getVM_SHORT_MEANING();  // pvBean.getPV_SHORT_MEANING();
-              //check if value meaning was already existed
-              if (vdMean != null && vdMean.equalsIgnoreCase(sMean))
-              {
-                String pvSubmit = pvBean.getVP_SUBMIT_ACTION();
-                //put back the deleted pv if it has same value-vm pair 
-                if (pvSubmit != null && pvSubmit.equals("DEL") && vdValue.equalsIgnoreCase(sValue))
-                {
-                  //set to update if idseq is non evs and is from cadsr 
-                  if (pvBean.getPV_PV_IDSEQ() != null && !pvBean.getPV_PV_IDSEQ().equals("EVS_" + sValue))
-                    pvBean.setVP_SUBMIT_ACTION("UPD");
-                  else
-                    pvBean.setVP_SUBMIT_ACTION("INS");   //evs term
-                  //mark as deleted
-                  isUpdated = true;
-                  //updRow = j;  //need this to update the vector 
-                  this.storePVinVDPVList(vVDPVList, pvBean, eBean, parConcept, sValue, sMean, j, true);
-                }
-                else if (pvSubmit != null && !pvSubmit.equals("DEL")) //was not deleted
-                {
-                  String sValMean = "\\tValue: " + pvBean.getPV_VALUE() + " and Meaning: " + pvBean.getPV_SHORT_MEANING() + "\\n";
-                  //check if the existing pv vm has concept; update otherwise
-                  EVS_Bean extCon = new EVS_Bean(); //TODO  pvBean.getVM_CONCEPT();
-                  if (extCon == null || extCon.getLONG_NAME() == null || extCon.getLONG_NAME().equals(""))
-                  {  
-                    //mark it update if no action was taken before
-                    if (pvSubmit != null && (pvSubmit.equals("") || pvSubmit.equals("NONE")))
-                      pvBean.setVP_SUBMIT_ACTION("UPD");
-                    isUpdated = true;
-                   // updRow = j;  //need this to update the vector                
-                    updatedVDPVs += sValMean;
-                    this.storePVinVDPVList(vVDPVList, pvBean, eBean, parConcept, sValue, sMean, j, true);
-                  }
-                  else if (vdValue.equalsIgnoreCase(sValue)) //pv-vm pair existed with concept
-                  {
-                     notUpdateVDPVs += sValMean;
-                     isExist = true;
-                  }
-                }
-              }
-            }
-            //add to the bean if not exists
-            if (isExist == false && !isUpdated)
-            {
-              this.storePVinVDPVList(vVDPVList, new PV_Bean(), eBean, parConcept, sValue, sMean, -1, false);
-            }
-          }
-   System.out.println(updatedVDPVs + " selMinVD " + vVDPVList.size());
-       //   session.setAttribute("VDPVList", vVDPVList);   
-          m_VD.setVD_PV_List(vVDPVList);
-          session.setAttribute("m_VD", m_VD);
-          //alert if value meaning alredy exists but updated with concept info
-          if (updatedVDPVs != null && !updatedVDPVs.equals(""))
-          {
-            String stMsg = "The following Value and Meaning is updated with the Concept Relationship. \\n";
-            InsACService insAC = new InsACService(req, res, this);
-            insAC.storeStatusMsg(stMsg + updatedVDPVs);
-          }
-          //alert if value meaning alredy exists for pv on the page
-          if (notUpdateVDPVs != null && !notUpdateVDPVs.equals(""))
-          {
-            String stMsg = "The following Value and Meaning already exists in the Value Domain. \\n";
-            InsACService insAC = new InsACService(req, res, this);
-            insAC.storeStatusMsg(stMsg + notUpdateVDPVs);
-          }
-        }
-      }
-      catch (Exception e)
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-        logger.fatal("ERROR - ", e);
-      }
-   }
+           boolean isExist = false;
+           boolean isUpdated = false;
+           //int updRow = -1;
+           for (int j=0; j<vVDPVList.size(); j++)  //check if the concept already exists.
+           {
+             PV_Bean pvBean = new PV_Bean();
+             pvBean = (PV_Bean)vVDPVList.elementAt(j);
+             VM_Bean vdVM = pvBean.getPV_VM();
+             String vdValue = pvBean.getPV_VALUE(); 
+             String vdMean = "";
+             if (vdVM != null)
+               vdMean = vdVM.getVM_SHORT_MEANING();  // pvBean.getPV_SHORT_MEANING();
+             //check if value meaning was already existed
+             if (vdMean != null && vdMean.equalsIgnoreCase(sMean))
+             {
+               String pvSubmit = pvBean.getVP_SUBMIT_ACTION();
+               //put back the deleted pv if it has same value-vm pair 
+               if (pvSubmit != null && pvSubmit.equals("DEL") && vdValue.equalsIgnoreCase(sValue))
+               {
+                 //set to update if idseq is non evs and is from cadsr 
+                 if (pvBean.getPV_PV_IDSEQ() != null && !pvBean.getPV_PV_IDSEQ().equals("EVS_" + sValue))
+                   pvBean.setVP_SUBMIT_ACTION("UPD");
+                 else
+                   pvBean.setVP_SUBMIT_ACTION("INS");   //evs term
+                 //mark as deleted
+                 isUpdated = true;
+                 //updRow = j;  //need this to update the vector 
+                 this.storePVinVDPVList(vVDPVList, pvBean, eBean, parConcept, sValue, sMean, j, true);
+               }
+               else if (pvSubmit != null && !pvSubmit.equals("DEL")) //was not deleted
+               {
+                 String sValMean = "\\tValue: " + pvBean.getPV_VALUE() + " and Meaning: " + pvBean.getPV_SHORT_MEANING() + "\\n";
+                 notUpdateVDPVs += sValMean;
+                 isExist = true;
+
+                 //check if the existing pv vm has concept; update otherwise
+/*                  EVS_Bean extCon = new EVS_Bean(); //TODO  pvBean.getVM_CONCEPT();
+                 if (extCon == null || extCon.getLONG_NAME() == null || extCon.getLONG_NAME().equals(""))
+                 {  
+                   //mark it update if no action was taken before
+                   if (pvSubmit != null && (pvSubmit.equals("") || pvSubmit.equals("NONE")))
+                     pvBean.setVP_SUBMIT_ACTION("UPD");
+                   isUpdated = true;
+                  // updRow = j;  //need this to update the vector                
+                   updatedVDPVs += sValMean;
+                   this.storePVinVDPVList(vVDPVList, pvBean, eBean, parConcept, sValue, sMean, j, true);
+                 }
+                 else if (vdValue.equalsIgnoreCase(sValue)) //pv-vm pair existed with concept
+                 {
+                    notUpdateVDPVs += sValMean;
+                    isExist = true;
+                 }
+*/                
+               }
+             }
+           }
+           //add to the bean if not exists
+           if (isExist == false && !isUpdated)
+           {
+             this.storePVinVDPVList(vVDPVList, new PV_Bean(), eBean, parConcept, sValue, sMean, -1, false);
+           }
+         }
+ // System.out.println(updatedVDPVs + " selMinVD " + vVDPVList.size());
+      //   session.setAttribute("VDPVList", vVDPVList);   
+         m_VD.setVD_PV_List(vVDPVList);
+         session.setAttribute("m_VD", m_VD);
+         //alert if value meaning alredy exists but updated with concept info
+/*          if (updatedVDPVs != null && !updatedVDPVs.equals(""))
+         {
+           String stMsg = "The following Value and Meaning is updated with the Concept Relationship. \\n";
+           InsACService insAC = new InsACService(req, res, this);
+           insAC.storeStatusMsg(stMsg + updatedVDPVs);
+         }
+*/          //alert if value meaning alredy exists for pv on the page
+         if (notUpdateVDPVs != null && !notUpdateVDPVs.equals(""))
+         {
+           String stMsg = "The following Value and Meaning already exists in the Value Domain. \\n";
+           InsACService insAC = new InsACService(req, res, this);
+           insAC.storeStatusMsg(stMsg + notUpdateVDPVs);
+         }
+       }
+     }
+     catch (Exception e)
+     {
+       // TODO Auto-generated catch block
+       e.printStackTrace();
+       logger.fatal("ERROR - ", e);
+     }
+  }
 
    private Vector<PV_Bean> storePVinVDPVList(Vector<PV_Bean> vVPList, PV_Bean pBean, EVS_Bean eBean, 
        EVS_Bean parBean, String sValue, String sMean, int updRow, boolean isUpdated)

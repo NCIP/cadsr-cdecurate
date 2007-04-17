@@ -9,9 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Vector;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+
 import oracle.jdbc.driver.OracleTypes;
+
 import org.apache.log4j.Logger;
 /**
  * @author shegde
@@ -389,14 +389,14 @@ public class VMAction implements Serializable
    * 
    * @param data VMForm object
    */
-  public void doSubmitVM(VMForm data)
+  public String doSubmitVM(VMForm data)
   {
+    String erMsg = ""; 
     VM_Bean vm = data.getVMBean();
     Vector<EVS_Bean> vCon = vm.getVM_CONCEPT_LIST();  //get the con list first
     String sAct = vm.getVM_SUBMIT_ACTION();
     if (!sAct.equals("") && !sAct.equals(VMForm.CADSR_ACTION_NONE))
     {
-      String erMsg = ""; 
       //check if vm exists for INS action (not sure if needed or what to do later)
       VM_Bean existVM = new VM_Bean();
       if (sAct.equals(VMForm.CADSR_ACTION_INS))
@@ -405,10 +405,13 @@ public class VMAction implements Serializable
       {
         vm = vm.copyVMBean(existVM);
         if (existVM.getVM_CONCEPT_LIST() != null && existVM.getVM_CONCEPT_LIST().size() > 0)
-          return;
-        else
-          vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_UPD);  //udpate the existing with concept relationship
+          return erMsg;
+        //udpate the existing with concept relationship
+        vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_UPD);  
       }
+      
+      data.setStatusMsg("");
+      String ret = "";
       //check the condition whether changing vm with concept or not
       if (vCon != null && vCon.size()> 0)
       {
@@ -418,26 +421,36 @@ public class VMAction implements Serializable
         if (data.getDBConnection() != null)
           condata.setDBConnection(data.getDBConnection()); //get the connection
         else
-          condata.setDBConnection(data.getCurationServlet().connectDB());  //make the connection
+          condata.setDBConnection(data.getCurationServlet().connectDB()); //VMServlet.makeDBConnection());  //make the connection
 
         String conArray = conAct.getConArray(vCon, true, condata);        
         if (data.getDBConnection() == null)
-        	data.getCurationServlet().freeConnection(condata.getDBConnection());  //close the connection
+          data.getCurationServlet().freeConnection(condata.getDBConnection());  //VMServlet.closeDBConnection(condata.getDBConnection());  //close the connection
+        
+        //append the concept message
+        if (condata.getStatusMsg().equals(""))
+          erMsg += condata.getStatusMsg();
         //set setvm_evs method to set th edata
-        erMsg = this.setVM_EVS(data, conArray);
+        ret = this.setVM_EVS(data, conArray);
       }
       else
-        erMsg = this.setVM(data);  //update or insert non evs vm
+        ret = this.setVM(data);  //update or insert non evs vm
+
+      if (ret != null && !ret.equals(""))
+        erMsg += "\\n" + ret;
       
    //  System.out.println("vm error : " + erMsg);
       //exit if error occurred
-      if (erMsg != null && !erMsg.equals(""))
-        return;
-      //check if cd vms exist in cadsr for this vm and cd
-      String cdvms = this.getCDVMS(data, vm);
-      if (cdvms.equals(""))  //call setcdvms method to create new record if does not exist.
-        this.setCDVMS(data, vm);
+      if (erMsg == null || erMsg.equals(""))
+      {      //check if cd vms exist in cadsr for this vm and cd
+        String cdvms = this.getCDVMS(data, vm);
+        if (cdvms.equals(""))  //call setcdvms method to create new record if does not exist.
+          this.setCDVMS(data, vm);
+        //reset back to none after successful submission 
+        vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_NONE);
+      }
     }
+    return erMsg;
   }
   
   /**
@@ -458,7 +471,7 @@ public class VMAction implements Serializable
     ResultSet rs = null;
     CallableStatement CStmt = null;
     Connection sbr_db_conn = null;
-    String sReturnCode = ""; // out
+    String stMsg = ""; // out
     try
     {
       VM_Bean vm = data.getVMBean();
@@ -496,11 +509,11 @@ public class VMAction implements Serializable
         CStmt.setString(7, sEndDate);
         // Now we are ready to call the stored procedure
         CStmt.execute();
-        sReturnCode = CStmt.getString(1);
+        String sReturnCode = CStmt.getString(1);
         if (sReturnCode != null && !sReturnCode.equals("API_VM_300"))
         {
-          data.setStatusMsg(data.getStatusMsg() + "\\t" + sReturnCode + " : Unable to update Value Meaning - "
-              + sShortMeaning + ".");
+          stMsg += "\\t" + sReturnCode + " : Unable to update Value Meaning - "
+              + sShortMeaning + ".";
           data.setRetErrorCode(sReturnCode); // store returncode in request to track it all through
         }
         else
@@ -522,26 +535,22 @@ public class VMAction implements Serializable
     {
       logger.fatal("ERROR in setVM for other : " + e.toString(), e);
       data.setRetErrorCode("Exception");
-      data.setStatusMsg(data.getStatusMsg() + "\\tException : Unable to update VM attributes.");
-      // m_classReq.setAttribute("retcode", "Exception");
-      // this.storeStatusMsg("\\t Exception : Unable to update VM attributes.");
+      stMsg += "\\tException : Unable to update VM attributes.";
     }
     try
     {
       if (rs != null) rs.close();
       if (CStmt != null) CStmt.close();
       if (data.getDBConnection() == null)
-        data.getCurationServlet().freeConnection(sbr_db_conn);
+        data.getCurationServlet().freeConnection(sbr_db_conn);  //VMServlet.closeDBConnection(sbr_db_conn);
     }
     catch (Exception ee)
     {
       logger.fatal("ERROR in setVM for close : " + ee.toString(), ee);
       data.setRetErrorCode("Exception");
-      data.setStatusMsg(data.getStatusMsg() + "\\tException : Unable to update VM attributes.");
-      // m_classReq.setAttribute("retcode", "Exception");
-      // this.storeStatusMsg("\\t Exception : Unable to update VM attributes.");
+      stMsg += "\\tException : Unable to update VM attributes.";
     }
-    return data.getRetErrorCode();
+    return stMsg;
   }
 
   /**
@@ -562,9 +571,9 @@ public class VMAction implements Serializable
     ResultSet rs = null;
     CallableStatement CStmt = null;
     Connection sbr_db_conn = null;    
+    String stMsg = ""; // out
     try    
     {
-      String sReturnCode = ""; // out
       VM_Bean vm = data.getVMBean();
       String sAction = vm.getVM_SUBMIT_ACTION();
       if (sAction == null) sAction = VMForm.CADSR_ACTION_INS;
@@ -596,11 +605,11 @@ public class VMAction implements Serializable
         // Now we are ready to call the stored procedure
      //   System.out.println(sAction + " vm con array " + conArray + " query " + CStmt.toString());
         CStmt.execute();
-        sReturnCode = CStmt.getString(2);
+        String sReturnCode = CStmt.getString(2);
         if (sReturnCode != null)
         {
-          data.setStatusMsg(data.getStatusMsg() + "\\t" + sReturnCode + " : Unable to update Value Meaning - "
-              + vm.getVM_SHORT_MEANING() + ".");
+          stMsg = "\\t" + sReturnCode + " : Unable to update Value Meaning - "
+              + vm.getVM_SHORT_MEANING() + ".";
           // creation
           data.setRetErrorCode(sReturnCode);
           data.setPvvmErrorCode(sReturnCode);
@@ -625,22 +634,22 @@ public class VMAction implements Serializable
     {
       logger.fatal("ERROR in setEVS_VM for other : " + e.toString(), e);
       data.setRetErrorCode("Exception");
-      data.setStatusMsg(data.getStatusMsg() + "\\tException : Unable to update VM attributes.");
+      stMsg += "\\tException : Unable to update VM attributes.";
     }
     try
     {
       if (rs != null) rs.close();
       if (CStmt != null) CStmt.close();
       if (data.getDBConnection() == null)
-        data.getCurationServlet().freeConnection(sbr_db_conn);
+        data.getCurationServlet().freeConnection(sbr_db_conn);  //VMServlet.closeDBConnection(sbr_db_conn);
     }
     catch (Exception ee)
     {
       logger.fatal("ERROR in setEVS_VM for close : " + ee.toString(), ee);
       data.setRetErrorCode("Exception");
-      data.setStatusMsg(data.getStatusMsg() + "\\tException : Unable to update VM attributes.");
+      stMsg += "\\tException : Unable to update VM attributes.";
     }
-    return data.getRetErrorCode();
+    return stMsg;
   }
 
   /**
