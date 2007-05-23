@@ -1,3 +1,8 @@
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/sorttable.js,v 1.6 2007-05-23 04:39:39 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 addEvent(window, "load", sortables_init);
 
 var SORT_COLUMN_INDEX;

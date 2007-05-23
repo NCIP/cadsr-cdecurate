@@ -1,17 +1,20 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/DefSearchResults.jsp,v 1.7 2007-01-26 20:17:44 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/DefSearchResults.jsp,v 1.8 2007-05-23 04:33:19 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page import= "java.util.*" %>
+<%@ page import="java.util.*"%>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 <html>
-<head>
-<title>CDE Curation Tool: Search Enterprise Vocabulary System</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
-<SCRIPT LANGUAGE="JavaScript" SRC="../Assets/SearchResults.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
-<%
+	<head>
+		<title>
+			CDE Curation Tool: Search Enterprise Vocabulary System
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
+		<SCRIPT LANGUAGE="JavaScript" SRC="../Assets/SearchResults.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
+		<%
    Vector results = null;
    String sKeyword = "";
    String nRecs = "";
@@ -34,11 +37,12 @@
       sLabelKeyword = "";
 %>
 
-<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
+		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
    var selDefinition = null;
    var numRowsSelected = 0;
    var evsWindow2 = null;
    var checkBoxArray = new Array();
+   var evsNewUrl = "<%=ToolURL.getEVSNewTermURL(pageContext)%>";
 
   function NoDefinitionFound()
   {
@@ -102,7 +106,7 @@
           opener.document.newDECForm.CreateDefinition.value = "New EVS term suggested.";
          if (evsWindow2 && !evsWindow2.closed)
             evsWindow2.close()
-         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
+         evsWindow2 = window.open(evsNewUrl, "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
       }
      else if (sComp1 == "ValueDomain")
      {
@@ -113,28 +117,28 @@
           opener.document.createVDForm.CreateDefinition.value = "New EVS term suggested.";
          if (evsWindow2 && !evsWindow2.closed)
             evsWindow2.close()
-         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
+         evsWindow2 = window.open(evsNewUrl, "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
       }
       else if (sComp1 == "DataElement")
       {
         opener.document.newCDEForm.CreateDefinition.value = "New EVS term suggested.";
          if (evsWindow2 && !evsWindow2.closed)
             evsWindow2.close()
-         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
+         evsWindow2 = window.open(evsNewUrl, "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
       }
        else if (sComp1 == "PermissableValue")
       {
         opener.document.createPVForm.CreateDescription.value = "New EVS term suggested.";
          if (evsWindow2 && !evsWindow2.closed)
             evsWindow2.close()
-         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
+         evsWindow2 = window.open(evsNewUrl, "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
       }
       else if (sComp1 == "ValueMeaning")
       {
         opener.document.createVMForm.CreateDescription.value = "New EVS term suggested.";
          if (evsWindow2 && !evsWindow2.closed)
             evsWindow2.close()
-         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
+         evsWindow2 = window.open(evsNewUrl, "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
       }
   }
 
@@ -266,57 +270,82 @@ if (results.size() > 0)
    }
 
 </SCRIPT>
-</head>
+	</head>
 
-<body>
-<form name="EVSSearchResultsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=showResult">
-<table width="100%" border="0">
-  <tr height="40" valign="bottom">
-    <td>
-      <input type="button" name="useSelectedBtn" value="Use Selection" onClick="PasteDefinition()" disabled style="width: 92", "height: 30">
-      &nbsp;&nbsp;
-    <input type="button" name="btnSubmitToEVS" value="Submit Suggestion to EVS" onclick="javascript:NewTermSuggested();" style="width: 170", "height: 30">
-      &nbsp;&nbsp;
-    <input type="button" name="btnClose" value="Close" onclick=window.close() style="width: 50", "height: 30">
-       &nbsp;&nbsp;
-    <b><font size="2">Copy Text to Definition Field:</font></b>
-      &nbsp;&nbsp;
-    <a href="javascript:NoTermFound();">No matching term found in EVS</a>
-    </td>
-  </tr>
-  <tr valign="top">
-    <td>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      (click link to copy text)
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <a href="javascript:NoDefinitionFound();">No definition found in EVS</a>
-    </td>
-  </tr>
-   <tr valign="bottom" height="35">
-     <td><font size="3"><b>Search Results for: <%=sLabelKeyword%></b></font></td>
-  </tr>
-  <tr>
-     <td><font size="2">&nbsp;<%=nRecs%> Records Found</font></td>
-  </tr>  
-  <tr valign="top">
-    <table width="100%" border="1">
-     <th width="4%"><img src="../../cdecurate/Assets/CheckBox.gif"></th>
-     <th width="10%">Concept Name</th>
-     <th width="10%">Identifier</th>
-	  <th width="50%">Definition</th>
-	  <th width="8%">Definition Source</th>
-	  <th width="8%">Database</th>
-   </tr>
-<%
+	<body>
+		<form name="EVSSearchResultsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=showResult">
+			<table width="100%" border="0">
+				<tr height="40" valign="bottom">
+					<td>
+						<input type="button" name="useSelectedBtn" value="Use Selection" onClick="PasteDefinition()" disabled style="width: 92", "height: 30">
+						&nbsp;&nbsp;
+						<input type="button" name="btnSubmitToEVS" value="Submit Suggestion to EVS" onclick="javascript:NewTermSuggested();" style="width: 170", "height: 30">
+						&nbsp;&nbsp;
+						<input type="button" name="btnClose" value="Close" onclick=window.close() style="width: 50", "height: 30">
+						&nbsp;&nbsp;
+						<b>
+							<font size="2">
+								Copy Text to Definition Field:
+							</font>
+						</b>
+						&nbsp;&nbsp;
+						<a href="javascript:NoTermFound();">
+							No matching term found in EVS
+						</a>
+					</td>
+				</tr>
+				<tr valign="top">
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (click link to copy text)
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="javascript:NoDefinitionFound();">
+							No definition found in EVS
+						</a>
+					</td>
+				</tr>
+				<tr valign="bottom" height="35">
+					<td>
+						<font size="3">
+							<b>
+								Search Results for:
+								<%=sLabelKeyword%>
+							</b>
+						</font>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<font size="2">
+							&nbsp;
+							<%=nRecs%>
+							Records Found
+						</font>
+					</td>
+				</tr>
+				<tr valign="top">
+					<table width="100%" border="1">
+						<th width="4%">
+							<img src="../../cdecurate/Assets/CheckBox.gif">
+						</th>
+						<th width="10%">
+							Concept Name
+						</th>
+						<th width="10%">
+							Identifier
+						</th>
+						<th width="50%">
+							Definition
+						</th>
+						<th width="8%">
+							Definition Source
+						</th>
+						<th width="8%">
+							Database
+						</th>
+						</tr>
+						<%
     String strResult = "";
     int k = 5;
 
@@ -329,11 +358,14 @@ if (results.size() > 0)
            strResult = (String)results.get(i);
            if (strResult == null) strResult = "";
 %>
-        <tr>
-          <td width="5">
-          <input type="checkbox" name="<%=ckName%>" onClick="javascript:EnablePasteButton(checked,this);"</td>
-          <td width="100"><%=strResult%></td>
-<%    
+						<tr>
+							<td width="5">
+								<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnablePasteButton(checked,this);"
+							</td>
+							<td width="100">
+								<%=strResult%>
+							</td>
+							<%    
           // add other attributes
 		    for (int m = 1; m < k; m++)
 		    {
@@ -341,42 +373,47 @@ if (results.size() > 0)
             strResult = (String)results.get(i+m);
            if (strResult == null) strResult = "";
 %>
-           <td><%=strResult%></td>
-<%
+							<td>
+								<%=strResult%>
+							</td>
+							<%
           }
 %>
-       </tr>
-<%
+						</tr>
+						<%
          j++;
     }
 	 }
 %>
-        <select size="1" name="hiddenResults" style="visibility:hidden;" style="width:145">
-<%        for (int m = 0; results.size()>m; m++)
+						<select size="1" name="hiddenResults" style="visibility:hidden;" style="width:145">
+							<%        for (int m = 0; results.size()>m; m++)
           {
              String sName = (String)results.elementAt(m);
 %>
-             <option value="<%=sName%>"><%=sName%></option>
-<%
+							<option value="<%=sName%>">
+								<%=sName%>
+							</option>
+							<%
           }
 %>
-        </select>
-        <select size="1" name="hiddenName" style="visibility:hidden;" style="width:145">
-<%        for (int i = 0; i<results.size(); i+=k)
+						</select>
+						<select size="1" name="hiddenName" style="visibility:hidden;" style="width:145">
+							<%        for (int i = 0; i<results.size(); i+=k)
           {
              String sName = (String)results.elementAt(i);
 %>
-             <option value="<%=sName%>"><%=sName%></option>
-<%
+							<option value="<%=sName%>">
+								<%=sName%>
+							</option>
+							<%
           }
 %>
-        </select>
+						</select>
 
-    </table>
-   </tr>
- <input type="hidden" name="outPrint" value="Print" style="visibility:hidden;"
-  <% out.println(""+results.size());// leave this in, it slows jsp load down so no jasper error%> >
-</table>
-</form>
-</body>
+					</table>
+				</tr>
+				<input type="hidden" name="outPrint" value="Print" style="visibility:hidden;" <% out.println(""+results.size());// leave this in, it slows jsp load down so no jasper error%>>
+			</table>
+		</form>
+	</body>
 </html>

@@ -1,3 +1,8 @@
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/SearchParameters.js,v 1.8 2007-05-23 04:38:44 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
     function hourglass()
     {
       document.body.style.cursor = "wait";
@@ -252,6 +257,11 @@
           else if (sSelComp == "VMConcept")
          {
            document.searchParmsForm.listSearchFor[0].value = "VMConcept";
+           document.searchParmsForm.listSearchFor[0].text = "Concept";  //"Value Meaning";
+         }
+          else if (sSelComp == "EditVMConcept")
+         {
+           document.searchParmsForm.listSearchFor[0].value = "EditVMConcept";
            document.searchParmsForm.listSearchFor[0].text = "Concept";  //"Value Meaning";
          }
       }

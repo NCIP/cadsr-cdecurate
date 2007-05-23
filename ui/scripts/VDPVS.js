@@ -1,3 +1,8 @@
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/VDPVS.js,v 1.4 2007-05-23 04:39:09 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 
  var altWindow = "";
 
@@ -24,6 +29,12 @@
 
  function DisableButtons()
  {
+	//make the status message visible
+	window.status = "Validating data, it may take a minute, please wait.....";
+	var msgObj = document.getElementById("Message");
+	if (msgObj != null)
+	   msgObj.style.visibility="visible";
+	
     //disable the buttons
  	var valObj = document.getElementById('btnValidate');
  	if (valObj != null)

@@ -1,3 +1,8 @@
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/popupMenus.js,v 1.3 2007-05-23 04:39:34 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 /* define variables for "if n4 (Netscape 4), if IE (IE 4.x), 
 and if n6 (if Netscape 6/W3C-DOM compliant)" */
 

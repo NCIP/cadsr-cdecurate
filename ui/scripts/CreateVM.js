@@ -1,3 +1,8 @@
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/CreateVM.js,v 1.6 2007-05-23 04:38:09 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 var evsWindow = null;
 
    //  checks the status message everytime page opens and alerts the  message

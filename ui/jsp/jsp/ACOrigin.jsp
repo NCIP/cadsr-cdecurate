@@ -1,12 +1,12 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/ACOrigin.jsp,v 1.8 2007-01-26 20:17:44 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/ACOrigin.jsp,v 1.9 2007-05-23 04:31:44 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 
 <!-- goes to secondary window error page if error occurs -->
-<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <curate:checkLogon name="Userbean" page="/jsp/ErrorPageWindow.jsp" />
 <html>
 	<head>
@@ -23,7 +23,7 @@
       if (vSource == null) vSource = new Vector();
       UtilService util = new UtilService();
     %>
-    
+
 		<Script Language="JavaScript">
 			var sSource = "";
 			
@@ -80,24 +80,32 @@
 				//close the window
 				window.close();
 			}
-		</SCRIPT>    
+		</SCRIPT>
 	</head>
 
 	<body marginwidth='2px' marginheight="2px">
-		<p> 
-		    <input type="button" name="editSelectedBtn" value="Use Selection" onClick="javascript:appendOrigin();"" disabled style="width: 100,height: 30">
-        &nbsp;&nbsp;
-        <input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();" style="width: 93,height: 30">
-       	&nbsp;&nbsp;
+		<p>
+			<input type="button" name="editSelectedBtn" value="Use Selection" onClick="javascript:appendOrigin();" " disabled style="width: 100,height: 30">
+			&nbsp;&nbsp;
+			<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();" style="width: 93,height: 30">
+			&nbsp;&nbsp;
 		</p>
 		<p>
-			<font size=4>Select<font color="#FF0000">	Origin</font>
+			<font size=4>
+				Select
+				<font color="#FF0000">
+					Origin
+				</font>
 			</font>
 		</p>
 		<table border="1">
 			<tr>
-				<th height="30" width="30"><img src="../../cdecurate/Assets/CheckBox.gif" border="0"></th>
-				<th>Origin Name</th>
+				<th height="30" width="30">
+					<img src="../../cdecurate/Assets/CheckBox.gif" border="0">
+				</th>
+				<th>
+					Origin Name
+				</th>
 			</tr>
 			<%
 				for (int i=0; i<vSource.size(); i++)
@@ -108,7 +116,7 @@
 			%>
 			<tr>
 				<td>
-					<input name="rSRC" type="radio"  alt="Select to use" value="" onclick="javascript:getSource('<%=srcId%>');">
+					<input name="rSRC" type="radio" alt="Select to use" value="" onclick="javascript:getSource('<%=srcId%>');">
 				</td>
 				<td>
 					<%=src%>

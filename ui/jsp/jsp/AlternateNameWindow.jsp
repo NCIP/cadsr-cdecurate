@@ -1,20 +1,22 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/AlternateNameWindow.jsp,v 1.9 2007-01-26 20:17:44 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/AlternateNameWindow.jsp,v 1.10 2007-05-23 04:31:54 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <!-- goes to secondary window error page if error occurs -->
-<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <curate:checkLogon name="Userbean" page="/jsp/ErrorPageWindow.jsp" />
 <html>
-<head>
-<title>Alternate Names</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="FullDesignVer.css" rel="stylesheet" type="text/css">
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
-<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
-<%@ page import= "java.util.*" %>
-<%
+	<head>
+		<title>
+			Alternate Names
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link href="FullDesignVer.css" rel="stylesheet" type="text/css">
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
+		<%@ page import="java.util.*"%>
+		<%
       Vector vAltName = (Vector)request.getAttribute("AltNameList");
       String intText = "";
       if (vAltName == null)
@@ -38,7 +40,7 @@
         if (acName == null) acName = "-";
       } 
 %>
-<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
+		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
   function setup()
   {
     if ((opener.document != null) && (opener.document.SearchActionForm != null))
@@ -56,34 +58,55 @@
   }
 </SCRIPT>
 
-</head>
+	</head>
 
-<body bgcolor="#FFFFFF" onLoad="setup();">
-<form name="alternateNameForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=getAltNames">
-<br>
-  <table width="100%" border="0" >
-    <tr height="20" valign="top">
-    <!-- makes Create New  button to create new    -->
-      <td align="right">
-        <input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();" style="width: 100", "height: 30">
-        &nbsp;&nbsp;
-      </td>
-      <td> &nbsp; </td>
-    </tr>
-  </table>
-  <br>
-  <table width="100%" border="0">
-    <tr>
-<%    if (acName.equals(""))  { %>  
-        <td><font size="4"><b><%=intText%></b></font></td>
-<%    } else {    %>   
-        <td><font size="4"><b>List of Alternate Names of <%=desType%> for : </b></font><%=acName%></td>
-<%    } %>
-    </tr>
-  </table>
-  <table width="100%" border="1" style="border-collapse: collapse">
-    <col width=5%><col width=25%><col width=15%><col width=15%><col width=15%>
-<%
+	<body bgcolor="#FFFFFF" onLoad="setup();">
+		<form name="alternateNameForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=getAltNames">
+			<br>
+			<table width="100%" border="0">
+				<tr height="20" valign="top">
+					<!-- makes Create New  button to create new    -->
+					<td align="right">
+						<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();" style="width: 100", "height: 30">
+						&nbsp;&nbsp;
+					</td>
+					<td>
+						&nbsp;
+					</td>
+				</tr>
+			</table>
+			<br>
+			<table width="100%" border="0">
+				<tr>
+					<%    if (acName.equals(""))  { %>
+					<td>
+						<font size="4">
+							<b>
+								<%=intText%>
+							</b>
+						</font>
+					</td>
+					<%    } else {    %>
+					<td>
+						<font size="4">
+							<b>
+								List of Alternate Names of
+								<%=desType%>
+								for :
+							</b>
+						</font>
+						<%=acName%>
+					</td>
+					<%    } %>
+				</tr>
+			</table>
+			<table width="100%" border="1" style="border-collapse: collapse">
+				<col width=5%>
+				<col width=25%>
+				<col width=15%>
+				<col width=15%>
+				<col width=15%>
+				<%
     for(int i=0; i<(vAltName.size()); i++)
     {
       ALT_NAME_Bean AltBean = new ALT_NAME_Bean();
@@ -92,14 +115,24 @@
       if (i==0)
       {
 %>
-        <tr valign="middle">
-          <th>No.</th>
-          <th>Alternate Name</th>
-          <th>Alternate Name Type</th>
-          <th>Context</th>
-          <th>Language</th>
-        </tr>
-<%    } 
+				<tr valign="middle">
+					<th>
+						No.
+					</th>
+					<th>
+						Alternate Name
+					</th>
+					<th>
+						Alternate Name Type
+					</th>
+					<th>
+						Context
+					</th>
+					<th>
+						Language
+					</th>
+				</tr>
+				<%    } 
       String altName =  AltBean.getALTERNATE_NAME();
       if (altName == null) altName = "";
       String altType =  AltBean.getALT_TYPE_NAME();
@@ -108,21 +141,31 @@
       if (context == null) context = "";
       String sLan = AltBean.getAC_LANGUAGE();
       if (sLan == null) sLan = "";
-%> 
-      <tr>
-          <td align=center><%=i+1%></td>
-          <td align=left><%=altName%></td>
-          <td align=left><%=altType%></td>
-          <td align=left><%=context%></td>
-          <td align=left><%=sLan%></td>
-      </tr>
-<%
+%>
+				<tr>
+					<td align=center>
+						<%=i+1%>
+					</td>
+					<td align=left>
+						<%=altName%>
+					</td>
+					<td align=left>
+						<%=altType%>
+					</td>
+					<td align=left>
+						<%=context%>
+					</td>
+					<td align=left>
+						<%=sLan%>
+					</td>
+				</tr>
+				<%
 	  }
 %>
-  </table>
-<input type="hidden" name="acID" value="">
-<input type="hidden" name="itemType" value="">
-<input type="hidden" name="CD_ID" value="">
-</form>
-</body>
+			</table>
+			<input type="hidden" name="acID" value="">
+			<input type="hidden" name="itemType" value="">
+			<input type="hidden" name="CD_ID" value="">
+		</form>
+	</body>
 </html>

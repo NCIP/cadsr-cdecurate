@@ -1,4 +1,10 @@
-  body
+/* Copyright ScenPro, Inc 2007
+
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/css/cdecurate/FullDesignArial.css,v 1.4 2007-05-23 04:27:54 hegdes Exp $
+    $Name: not supported by cvs2svn $
+*/
+
+body
   {
      background-color: #FFFFFF;
      font-color: #000000;
@@ -132,4 +138,13 @@
 	{ 
 		border-left: 2px solid black; border-right: 2px solid black; border-top: 2px solid black; padding: 0.05in 0.05in 0.05in 0.05in; margin-right: -5px; cursor: default
 	}
+
+	div.ind3
+	{
+		margin-left: 0.50in;
+		margin-right: 0.5in;
+		margin-top: 0.05in;
+		margin-bottom: 0.05in;
+		padding : 3px;
+	}	
 

@@ -1,3 +1,8 @@
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/HelpFunctions.js,v 1.3 2007-05-23 04:38:24 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 //Generic javascript file to link objects to context sensitive help document
 //include <SCRIPT LANGUAGE="JavaScript" SRC="HelpFunctions.js"></SCRIPT>
 //in the head of any page using help functions

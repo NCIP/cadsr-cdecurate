@@ -1,22 +1,24 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/SearchParametersBlocks.jsp,v 1.23 2007-01-26 20:17:45 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/SearchParametersBlocks.jsp,v 1.24 2007-05-23 04:35:48 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page import= "java.util.*" %>
-<%@ page buffer= "12kb" %>
-<%@ page session="true" %>
-<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
+<%@ page import="java.util.*"%>
+<%@ page buffer="12kb"%>
+<%@ page session="true"%>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <html>
-<head>
-<title>Search Parameters</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/SearchParameters.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
-<%
+	<head>
+		<title>
+			Search Parameters
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/SearchParameters.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
+		<%
    Session_Data sessionData = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
-   String sMenuAction = (String)session.getAttribute("MenuAction");
+   String sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
   // String ac = (String)session.getAttribute("parentAC");
   // String sMetaCode = "No";
   // Vector vStatus = new Vector();
@@ -92,7 +94,7 @@
          // || sSearchAC.equals("VMConcept")
           || sSearchAC.equals("PV_ValueMeaning"))
      sLongAC = "Value Meaning";
-   else if (sSearchAC.equals("VMConcept"))
+   else if (sSearchAC.equals("VMConcept") || sSearchAC.equals("EditVMConcept") )
      sLongAC = "Concept";
    else if (sSearchAC.equals("ParentConcept"))
      sLongAC = "Parent Concept";
@@ -146,7 +148,7 @@
   int iItem = 1;
 %>
 
-<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
+		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
   //submits the page if Vocab changed.
   function doVocabChange()
   {
@@ -361,6 +363,14 @@ function LoadKeyHandler()
 			  	document.getElementById("vmConOrder").value = totalCon;	
 			  }
 			}
+			else
+			{
+				var conOrd = opener.document.getElementById("vmConOrder");
+				if (conOrd != null && conOrd.value != null && conOrd.value != "")
+				{
+					document.getElementById("vmConOrder").value = conOrd.value;
+				}
+			}
 		}
 	}
 //fuction to refresh the page for simple/advanced filter
@@ -427,42 +437,56 @@ function doMetaCodeSearch()
 }
 
 </SCRIPT>
-</head>
+	</head>
 
-<body onLoad="Setup();">
-<form name="searchParmsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=searchBlocks">
-  <table width="100%" class="sidebarBGColor"> <!-- style="position: relative; top: -22px;"> --> 
-    <tr valign="top" align="left" class="firstRow">
-      <th><%=iItem++%>) Search For:</th>
-    </tr>
-    <tr>
-      <td>&nbsp;&nbsp;&nbsp;&nbsp;
-        <select name="listSearchFor" size="1" style="width: 160"
-          onHelp = "showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-          <option value="<%=sSearchAC%>"><%=sLongAC%></option>
-        </select>
-      </td>
-  </tr>
-  <%if(sSearchAC.equals("ParentConcept")){%>
-    <tr valign="bottom" align="left" class="firstRow" height="22">
-      <th><%=iItem++%>) Search Type:</th>
-    </tr>
-    <tr>
-      <td>&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type="RADIO" value="EVS"  checked="checked" name="rRefType" onclick="javascript:changeType('EVS');">EVS
-      &nbsp;&nbsp;&nbsp;&nbsp;
-      <input type="RADIO" value="Non EVS" name="rRefType" onclick="javascript:changeType('nonEVS');">Non EVS
-      </td>
-    </tr>
-  <% } %>
-    <tr valign="bottom" align="left" class="firstRow" height="22">
-      <th><%=iItem++%>) Select EVS Vocabulary:</th>
-    </tr>
-    <tr>
-      <td>&nbsp;&nbsp;&nbsp;&nbsp;
-          <select name="listContextFilterVocab" size="1" style="width: 160" onChange="doVocabChange();"
-          onHelp = "showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-<%        if (vVocab != null)
+	<body onLoad="Setup();">
+		<form name="searchParmsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=searchBlocks">
+			<table width="100%" class="sidebarBGColor">
+				<!-- style="position: relative; top: -22px;"> -->
+				<tr valign="top" align="left" class="firstRow">
+					<th>
+						<%=iItem++%>
+						) Search For:
+					</th>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<select name="listSearchFor" size="1" style="width: 160" onHelp="showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+							<option value="<%=sSearchAC%>">
+								<%=sLongAC%>
+							</option>
+						</select>
+					</td>
+				</tr>
+				<%if(sSearchAC.equals("ParentConcept")){%>
+				<tr valign="bottom" align="left" class="firstRow" height="22">
+					<th>
+						<%=iItem++%>
+						) Search Type:
+					</th>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="RADIO" value="EVS" checked="checked" name="rRefType" onclick="javascript:changeType('EVS');">
+						EVS &nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="RADIO" value="Non EVS" name="rRefType" onclick="javascript:changeType('nonEVS');">
+						Non EVS
+					</td>
+				</tr>
+				<% } %>
+				<tr valign="bottom" align="left" class="firstRow" height="22">
+					<th>
+						<%=iItem++%>
+						) Select EVS Vocabulary:
+					</th>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<select name="listContextFilterVocab" size="1" style="width: 160" onChange="doVocabChange();" onHelp="showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+							<%        if (vVocab != null)
           {
             for (int i = 0; vVocab.size()>i; i++)
             {
@@ -482,270 +506,358 @@ function doMetaCodeSearch()
             //keep only the parent vocab in the drop down for select values from parent
               if (sSearchAC.equals("ParentConceptVM") && sVocab.equals(dtsVocab)) {
 %>
-                <option value="<%=sVocab%>" selected><%=sVocabDisp%></option>
-<%            } else if (!sSearchAC.equals("ParentConceptVM")) {  %>
-                <option value="<%=sVocab%>" <%if(sVocab.equals(dtsVocab)){%>selected<%}%>><%=sVocabDisp%></option>
-<%            }
+							<option value="<%=sVocab%>" selected>
+								<%=sVocabDisp%>
+							</option>
+							<%            } else if (!sSearchAC.equals("ParentConceptVM")) {  %>
+							<option value="<%=sVocab%>" <%if(sVocab.equals(dtsVocab)){%> selected <%}%>>
+								<%=sVocabDisp%>
+							</option>
+							<%            }
             }
          }
 %>
-        </select>
-      </td>
-  </tr>
-   <tr>
-      <th height="22" valign="bottom">
-        <div align="left"><%=iItem++%>) Search In:   
-          <!-- Place the adv/simple filter hyperlink only if it is for AC of these only -->
-        </div>
-      </th>
-  </tr>
-  <% if(!sSearchAC.equals("ParentConcept") && !sSearchAC.equals("ParentConceptVM")){%>
-   <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>caDSR</b></td>
-  </tr>
-  <tr>
-      <td>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;
-          <select name="listSearchIn" size="1" style="width: 170" onChange="populateEVSSearchIn();"
-            onHelp = "showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-            <option value="longName" <%if(sSearchIn.equals("longName")){%>selected<%}%>>Names and Definition</option>
-            <option value="publicID" <%if(sSearchIn.equals("publicID")){%>selected<%}%>>Public ID</option>
-            <option value="evsIdentifier" <%if(sSearchIn.equals("evsIdentifier")){%>selected<%}%>>EVS Identifier</option>
-            <option value="Code" <%if(sSearchIn.equals("Code")){%>selected<%}%>>None</option>
-          </select>
-        </p>
-     </td>
-  </tr>
-  <% } %>
-  <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>EVS</b>
-    	<% if (sTreeSearch.equals("true")) { %>
-       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-              <%if (sUISearchType.equals("term") && !sSearchAC.equals("ParentConceptVM")) {%>
-                  <a href="javascript:searchType('tree');">Tree Search</a>
-              <%} else if(!sSearchAC.equals("ParentConceptVM")){%> 
-                  <a href="javascript:searchType('term');">Term Search</a><%}%>   
-      <% } %>     
-    </td>
-  </tr>
-  <tr>
-      <td>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;    
-          <select name="listSearchInEVS" size="1" style="width: 170" onChange="populateCaDSRSearchIn();"
-            onHelp = "showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-  <%        if (optName != null && !optName.equals("") && !sSearchAC.equals("ParentConceptVM")) { %>
-                <option value="Name"  <%if (sSearchInEVS.equals("Name")){%>selected<%}%>><%=optName%></option>
-  <%        } if (optConCode != null && !optConCode.equals("")) { %>
-                <option value="ConCode"  <%if (sSearchInEVS.equals("ConCode")){%>selected<%}%>><%=optConCode%></option>
-  <%        } if (optMetaCode != null && !optMetaCode.equals("") && !sSearchAC.equals("ParentConceptVM")) { %>
-                <option value="MetaCode"  <%if (sSearchInEVS.equals("MetaCode")){%>selected<%}%>><%=optMetaCode%></option>
-  <%        }   %>
-          </select>        
-        </p>
-     </td>
-  </tr>
-<%if (sUISearchType.equals("term")) {%>
-  <tr>
-      <th height="22" valign="bottom">
-        <div align="left"><%=iItem++%>) Enter Search Term:</div>
-      </th>
-  </tr>
-  <tr>
-      <td>&nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="text" name="keyword" size="22" style="width: 160" value=""
-          onHelp = "showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-      </td>
-  </tr>
-  <tr>
-    <td>
-      <div align="left" title="The wildcard character, *, expands the search to find a non-exact match.">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use * as wildcard
-      </div>
-    </td>
-  </tr>
-  <tr>
-      <th height="22" valign="bottom">
-        <div align="left"><%=iItem++%>) Filter Search By:</div>
-      </th>
-  </tr>
-<% if (!sSearchAC.equals("ParentConcept") && !sSearchAC.equals("ParentConceptVM")){%> 
-   <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>caDSR</b></td>
-  </tr>
-  <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Owned By/Used By</td>
-  </tr>
-  <tr>
-    <td>
-      <p>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <select name="listContextFilter" size="1" style="width: 160"
-          onHelp = "showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-          <option value="AllContext"  <%if(sContext.equals("All Contexts")){%>selected<%}%>>All Contexts</option>
-<%
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th height="22" valign="bottom">
+						<div align="left">
+							<%=iItem++%>
+							) Search In:
+							<!-- Place the adv/simple filter hyperlink only if it is for AC of these only -->
+						</div>
+					</th>
+				</tr>
+				<% if(!sSearchAC.equals("ParentConcept") && !sSearchAC.equals("ParentConceptVM")){%>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<b>
+							caDSR
+						</b>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<select name="listSearchIn" size="1" style="width: 170" onChange="populateEVSSearchIn();" onHelp="showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								<option value="longName" <%if(sSearchIn.equals("longName")){%> selected <%}%>>
+									Names and Definition
+								</option>
+								<option value="publicID" <%if(sSearchIn.equals("publicID")){%> selected <%}%>>
+									Public ID
+								</option>
+								<option value="evsIdentifier" <%if(sSearchIn.equals("evsIdentifier")){%> selected <%}%>>
+									EVS Identifier
+								</option>
+								<option value="Code" <%if(sSearchIn.equals("Code")){%> selected <%}%>>
+									None
+								</option>
+							</select>
+						</p>
+					</td>
+				</tr>
+				<% } %>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<b>
+							EVS
+						</b>
+						<% if (sTreeSearch.equals("true")) { %>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+						<%if (sUISearchType.equals("term") && !sSearchAC.equals("ParentConceptVM")) {%>
+						<a href="javascript:searchType('tree');">
+							Tree Search
+						</a>
+						<%} else if(!sSearchAC.equals("ParentConceptVM")){%>
+						<a href="javascript:searchType('term');">
+							Term Search
+						</a>
+						<%}%>
+						<% } %>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<select name="listSearchInEVS" size="1" style="width: 170" onChange="populateCaDSRSearchIn();" onHelp="showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								<%        if (optName != null && !optName.equals("") && !sSearchAC.equals("ParentConceptVM")) { %>
+								<option value="Name" <%if (sSearchInEVS.equals("Name")){%> selected <%}%>>
+									<%=optName%>
+								</option>
+								<%        } if (optConCode != null && !optConCode.equals("")) { %>
+								<option value="ConCode" <%if (sSearchInEVS.equals("ConCode")){%> selected <%}%>>
+									<%=optConCode%>
+								</option>
+								<%        } if (optMetaCode != null && !optMetaCode.equals("") && !sSearchAC.equals("ParentConceptVM")) { %>
+								<option value="MetaCode" <%if (sSearchInEVS.equals("MetaCode")){%> selected <%}%>>
+									<%=optMetaCode%>
+								</option>
+								<%        }   %>
+							</select>
+						</p>
+					</td>
+				</tr>
+				<%if (sUISearchType.equals("term")) {%>
+				<tr>
+					<th height="22" valign="bottom">
+						<div align="left">
+							<%=iItem++%>
+							) Enter Search Term:
+						</div>
+					</th>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="text" name="keyword" size="22" style="width: 160" value="" onHelp="showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div align="left" title="The wildcard character, *, expands the search to find a non-exact match.">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use * as wildcard
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th height="22" valign="bottom">
+						<div align="left">
+							<%=iItem++%>
+							) Filter Search By:
+						</div>
+					</th>
+				</tr>
+				<% if (!sSearchAC.equals("ParentConcept") && !sSearchAC.equals("ParentConceptVM")){%>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<b>
+							caDSR
+						</b>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Owned By/Used By
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<select name="listContextFilter" size="1" style="width: 160" onHelp="showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								<option value="AllContext" <%if(sContext.equals("All Contexts")){%> selected <%}%>>
+									All Contexts
+								</option>
+								<%
           if (vContext != null)
           {
             for (int i = 0; vContext.size()>i; i++)
             {
               String sContextName = (String)vContext.elementAt(i);
 %>
-              <option value="<%=sContextName%>"  <%if(sContextName.equals(sContext)){%>selected<%}%>><%=sContextName%></option>
-<%
+								<option value="<%=sContextName%>" <%if(sContextName.equals(sContext)){%> selected <%}%>>
+									<%=sContextName%>
+								</option>
+								<%
             }
           }
 %>
-        </select>
-      </p>
-    </td>
-  </tr>
-  <tr>
-      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Workflow Status</td>
-  </tr>
-  <tr>
-    <td>
-      <p>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <select name="listStatusFilter" multiple size="2" style="width: 160"
-          onHelp = "showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-          <option value="RELEASED" <% if(sStatus.equalsIgnoreCase("RELEASED")) {%>selected<%}%>>RELEASED</option>
-          <option value="AllStatus" <% if(sStatus.equalsIgnoreCase("AllStatus")) {%>selected<%}%>>All Statuses</option>
-        </select>
-      </p>
-    </td>
-  </tr>
-  <% } %>
-<%if((sRetSearch.equalsIgnoreCase("true") || !metaInclude.equals("")) && !sSearchAC.equals("ParentConceptVM")) { %>
-   <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>EVS</b></td>
-  </tr>
-<%if(sRetSearch.equalsIgnoreCase("true")) { %>
-   <tr>
-      <td style="height:20"  valign=bottom>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Retired Concepts</td>
-    </tr>
-    <tr>
-   <td align=left >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <input type="radio" name="rRetired" value="Exclude" <%if(sRetired.equals("Exclude")){%> checked <%}%>
-              onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
-          Exclude&nbsp;
-          <input type="radio" name="rRetired" value="Include" <%if(sRetired.equals("Include")){%> checked <%}%>
-          onHelp = "showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
-          Include&nbsp;
-        
-      </td>
-  </tr>
-<% } %>
-<%if(!metaInclude.equals("")) { %>
-  <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Meta Concept Source</td>
-  </tr>
-  <tr>
-    <td>
-      <p>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <select name="listContextFilterSource" size="1" style="width: 160"
-          onHelp = "showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-          <option value="All Sources"  <%if(sMetaSource.equals("All Sources")){%>selected<%}%>>All Sources</option>
-<%
+							</select>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Workflow Status
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<select name="listStatusFilter" multiple size="2" style="width: 160" onHelp="showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								<option value="RELEASED" <% if(sStatus.equalsIgnoreCase("RELEASED")) {%> selected <%}%>>
+									RELEASED
+								</option>
+								<option value="AllStatus" <% if(sStatus.equalsIgnoreCase("AllStatus")) {%> selected <%}%>>
+									All Statuses
+								</option>
+							</select>
+						</p>
+					</td>
+				</tr>
+				<% } %>
+				<%if((sRetSearch.equalsIgnoreCase("true") || !metaInclude.equals("")) && !sSearchAC.equals("ParentConceptVM")) { %>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<b>
+							EVS
+						</b>
+					</td>
+				</tr>
+				<%if(sRetSearch.equalsIgnoreCase("true")) { %>
+				<tr>
+					<td style="height:20" valign=bottom>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Retired Concepts
+					</td>
+				</tr>
+				<tr>
+					<td align=left>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" name="rRetired" value="Exclude" <%if(sRetired.equals("Exclude")){%> checked <%}%> onHelp="showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
+						Exclude&nbsp;
+						<input type="radio" name="rRetired" value="Include" <%if(sRetired.equals("Include")){%> checked <%}%> onHelp="showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
+						Include&nbsp;
+
+					</td>
+				</tr>
+				<% } %>
+				<%if(!metaInclude.equals("")) { %>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Meta Concept Source
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<select name="listContextFilterSource" size="1" style="width: 160" onHelp="showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								<option value="All Sources" <%if(sMetaSource.equals("All Sources")){%> selected <%}%>>
+									All Sources
+								</option>
+								<%
           if (vSource != null)
           {
             for (int i = 0; vSource.size()>i; i++)
             {
               String sSourceName = (String)vSource.elementAt(i);
 %>
-              <option value="<%=sSourceName%>"  <%if(sSourceName.equals(sMetaSource)){%>selected<%}%>><%=sSourceName%></option>
-<%
+								<option value="<%=sSourceName%>" <%if(sSourceName.equals(sMetaSource)){%> selected <%}%>>
+									<%=sSourceName%>
+								</option>
+								<%
             }
          }
 %>
-        </select>
-      </p>
-    </td>
- 
-    <tr>
-    	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set Meta Returns Limit</td>
-  	</tr>
-  	<tr>
-      <td>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;
-          <select name="listMetaLimit" size="1" style="width: 160"
-            onHelp = "showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-            <option value="100" <%if(sMetaLimit.equals("100")){%>selected<%}%>>100</option>
-            <option value="250" <%if(sMetaLimit.equals("250")){%>selected<%}%>>250</option>
-            <option value="500" <%if(sMetaLimit.equals("500")){%>selected<%}%>>500</option>
-            <option value="750" <%if(sMetaLimit.equals("750")){%>selected<%}%>>750</option>
-          <!--  <option value="1000" <%if(sMetaLimit.equals("1000")){%>selected<%}%>>1000</option> -->
-          </select>
-        </p>
-     </td>
-  </tr>
- <%} }%>
-  
-<tr height="5"></tr>
-  <tr>
-    <td class="dashed-black">
-      <div align="left"><b><%=iItem++%>) Display Attributes:</b>
-        &nbsp;&nbsp;<input type="button" name="updateDisplayBtn" value="Update" onClick="<%=updFunction%>"  style="width:50"
-        onHelp = "showHelp('../Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
-      </div>
-      <br>
-      <div align="center">
-        <select name="listAttrFilter" size="5" style="width: 160" multiple
-          onHelp = "showHelp('../Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
-        <% if (vBlockAttr != null)
+							</select>
+						</p>
+					</td>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set Meta Returns Limit
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<select name="listMetaLimit" size="1" style="width: 160" onHelp="showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								<option value="100" <%if(sMetaLimit.equals("100")){%> selected <%}%>>
+									100
+								</option>
+								<option value="250" <%if(sMetaLimit.equals("250")){%> selected <%}%>>
+									250
+								</option>
+								<option value="500" <%if(sMetaLimit.equals("500")){%> selected <%}%>>
+									500
+								</option>
+								<option value="750" <%if(sMetaLimit.equals("750")){%> selected <%}%>>
+									750
+								</option>
+								<!--  <option value="1000" <%if(sMetaLimit.equals("1000")){%>selected<%}%>>1000</option> -->
+							</select>
+						</p>
+					</td>
+				</tr>
+				<%} }%>
+
+				<tr height="5"></tr>
+				<tr>
+					<td class="dashed-black">
+						<div align="left">
+							<b>
+								<%=iItem++%>
+								) Display Attributes:
+							</b>
+							&nbsp;&nbsp;
+							<input type="button" name="updateDisplayBtn" value="Update" onClick="<%=updFunction%>" style="width:50" onHelp="showHelp('../Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
+						</div>
+						<br>
+						<div align="center">
+							<select name="listAttrFilter" size="5" style="width: 160" multiple onHelp="showHelp('../Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
+								<% if (vBlockAttr != null)
           {
             for (int i = 0; i < vBlockAttr.size(); i++)
             {
               String sAttr = (String)vBlockAttr.elementAt(i);
         %>
-              <option value="<%=sAttr%>" <% if (vSelectedAttr != null && vSelectedAttr.contains(sAttr)){ %>selected<% } %>><%=sAttr%></option>
-        <%
+								<option value="<%=sAttr%>" <% if (vSelectedAttr != null && vSelectedAttr.contains(sAttr)){ %> selected <% } %>>
+									<%=sAttr%>
+								</option>
+								<%
             }
              //add all attributes if not existed
             if (!vBlockAttr.contains("All Attributes")) 
             {
 %>
-             <option value="All Attributes">All Attributes</option>
-<%
+								<option value="All Attributes">
+									All Attributes
+								</option>
+								<%
             }
           }
-%>      
-        </select>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td height="33" valign="bottom">
-      <div align="center">
-        <input type="button" name="startSearchBtn" value="Start Search" onClick="doSearchBuildingBlocks();"  style="width: 150; height: 30"
-          onHelp = "showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-      </div>
-	 </td>
-  </tr>
- <%}%>
-  <%if (sUISearchType.equals("tree")) { %> 
-   <tr>
-      <th height="22" valign="bottom">
-        <div align="left"><%=iItem++%>) Click Concept To Search:</div>
-      </th>
-  </tr>
-  <tr>
-    <td> <%=strHTML%></td>
-  </tr>
-<% } %>
-  <tr>   <td>
-  <input type="hidden" name="actSelect" value="Search" style="visibility:hidden;">
-  <input type="hidden" name="vmConOrder" value="0">
-  <input type="hidden" name="sCCodeDB" value="">
-  <input type="hidden" name="sCCode" value="">
-  <input type="hidden" name="sCCodeName" value="">
-  <input type="hidden" name="openToTree" value=""> 
-  <input type="hidden" name="sConteIdseq" value="">
-	 </td>  </tr>  
-</table>
+%>
+							</select>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td height="33" valign="bottom">
+						<div align="center">
+							<input type="button" name="startSearchBtn" value="Start Search" onClick="doSearchBuildingBlocks();" style="width: 150; height: 30" onHelp="showHelp('../Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+						</div>
+					</td>
+				</tr>
+				<%}%>
+				<%if (sUISearchType.equals("tree")) { %>
+				<tr>
+					<th height="22" valign="bottom">
+						<div align="left">
+							<%=iItem++%>
+							) Click Concept To Search:
+						</div>
+					</th>
+				</tr>
+				<tr>
+					<td>
+						<%=strHTML%>
+					</td>
+				</tr>
+				<% } %>
+				<tr>
+					<td>
+						<input type="hidden" name="actSelect" value="Search" style="visibility:hidden;">
+						<input type="hidden" name="vmConOrder" value="0">
+						<input type="hidden" name="sCCodeDB" value="">
+						<input type="hidden" name="sCCode" value="">
+						<input type="hidden" name="sCCodeName" value="">
+						<input type="hidden" name="openToTree" value="">
+						<input type="hidden" name="sConteIdseq" value="">
+					</td>
+				</tr>
+			</table>
 
-<script language = "javascript">
+			<script language="javascript">
 LoadKeyHandler();
 </script>
-</form>
-</body>
+		</form>
+	</body>
 </html>

@@ -1,23 +1,25 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CreateDE.jsp,v 1.22 2007-01-26 20:17:44 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CreateDE.jsp,v 1.23 2007-05-23 04:32:20 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <html>
-<head>
-<title>CreateNewCDE</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<%@ page import="java.util.*" %>
-<%@ page import="java.text.*" %>
-<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
-<%@ page session="true" %>
-<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
-<script language="JavaScript" src="Assets/date-picker.js"></script>
-<SCRIPT LANGUAGE="JavaScript" SRC="Assets/AddNewListOption.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" SRC="Assets/CreateDE.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" SRC="Assets/SelectCS_CSI.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
-<%
+	<head>
+		<title>
+			CreateNewCDE
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<%@ page import="java.util.*"%>
+		<%@ page import="java.text.*"%>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
+		<%@ page session="true"%>
+		<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
+		<script language="JavaScript" src="Assets/date-picker.js"></script>
+		<SCRIPT LANGUAGE="JavaScript" SRC="Assets/AddNewListOption.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="Assets/CreateDE.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="Assets/SelectCS_CSI.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
+		<%
     Vector vContext = (Vector)session.getAttribute("vWriteContextDE");
     Vector vContextID = (Vector)session.getAttribute("vWriteContextDE_ID");
     Vector vStatus = (Vector)session.getAttribute("vStatusDE");
@@ -31,7 +33,7 @@
 
     UtilService serUtil = new UtilService();
 
-    String sMenuAction = (String)session.getAttribute("MenuAction");
+    String sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
     String sOriginAction = (String)session.getAttribute("originAction");
     String sDDEAction = (String)session.getAttribute("DDEAction");
     if (sDDEAction == null) sDDEAction = "";
@@ -132,7 +134,7 @@
     if (hContacts == null) hContacts = new Hashtable();
     session.setAttribute("AllContacts", hContacts);
     //these are for DEC and VD searches.
-    session.setAttribute("MenuAction", "searchForCreate");
+    session.setAttribute(Session_Data.SESSION_MENU_ACTION, "searchForCreate");
     Vector vResult = new Vector();
     session.setAttribute("results", vResult);
     session.setAttribute("creRecsFound", "No ");
@@ -170,7 +172,7 @@
     int item = 1;
 %>
 
-<Script Language="JavaScript">
+		<Script Language="JavaScript">
  var evsWindow2 = null;
  var selectedItem = null;
  var selectedMeaning = null;
@@ -271,7 +273,7 @@
   function displayStatusMessage()
   {
  <%
-    String statusMessage = (String)session.getAttribute("statusMessage");
+    String statusMessage = (String)session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
     Vector vStat = (Vector)session.getAttribute("vStatMsg");
     if (vStat != null && vStat.size() > 30)
     {%>
@@ -282,73 +284,102 @@
 	       alert("<%=statusMessage%>");
     <% }
     //reset the status message to no message
-    session.setAttribute("statusMessage", "");
+    session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");
 %>
     window.status = "Create new Data Element, choose context first"
   }
 
 </Script>
-</head>
+	</head>
 
-<body onUnload="closeDep();">
-<form name="FormNewDEC" method="post" action="/cdecurate/NCICurationServlet?reqType=createNewDEC"></form>
-<form name="FormNewVD" method="post" action="/cdecurate/NCICurationServlet?reqType=createNewVD"></form>
-<form name="SearchActionForm" method="post" action="">
-<input type="hidden" name="searchComp" value="">
-<input type="hidden" name="searchEVS" value="DataElement">
-<input type="hidden" name="isValidSearch" value="true">
-<input type="hidden" name="acID" value="<%=sDEIDSEQ%>">
-<input type="hidden" name="itemType" value="">
-</form>
-<form name="newCDEForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=newDEfromForm">
-  <table width="100%" border="0">
-    <!--DWLayoutTable-->
-    <col width="5%"><col width="95%">
-    <tr>
-      <td align="left" valign="top" colspan=2>
-        <input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate')"
-				onHelp = "showHelp('Help_CreateDE.html#newCDEForm_Validation'); return false">&nbsp;&nbsp;
-          &nbsp;&nbsp;
-        <input type="button" name="btnClear" value="Clear" style="width: 125" onClick="ClearBoxes();">
-          &nbsp;&nbsp;
-        <% if (sMenuAction.equals("Questions") || sMenuAction.equals("NewDETemplate") || sMenuAction.equals("NewDEVersion") || sDDEAction.equals("CreateNewDEFComp")){%>
-        <input type="button" name="btnBack" value="Back" style="width: 125" onClick="Back();"> 
-          &nbsp;&nbsp;
-        <% } %>
-        <input type="button" name="btnAltName" value="Alternate Names" style="width:125" onClick="openDesignateWindow('Alternate Names');"
-				onHelp = "showHelp('Help_Updates.html#newDECForm_altNames'); return false">
-          &nbsp;&nbsp;
-        <input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');"
-				onHelp = "showHelp('Help_Updates.html#newDECForm_refDocs'); return false">
-          &nbsp;&nbsp;
-        <img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
-      </td>
-    </tr>
-  </table>
-  <table width="90%"  border=0>
-  	<col width="4%"><col width="95%">
-     <tr valign="middle"> 
-      <th colspan=2 height="40"> <div align="left"> 
-          <label><font size=4>Create New <font color="#FF0000">Data Element </font> 
-              <%if(sDDEAction.equals("CreateNewDEFComp")){%>Component 
-              <% } else if (sMenuAction.equals("NewDEVersion")) { %>Version
-              <% } else if (sMenuAction.equals("NewDETemplate")) { %>Using Existing
-              <% } %>
-          </font></label>
-        </div></th>
-    </tr>
-      <tr height="25" valign="middle">
-        <td colspan=2><font color="#FF0000">&nbsp;&nbsp;&nbsp;* &nbsp;&nbsp;</font>Indicates Required Field</td>
-      </tr>
-    <tr height="25" valign="bottom"> 
-      <td align=right><font color="#FF0000">* &nbsp;</font><%=item++%>)</td>
-      <td><font color="#FF0000">Select </font>Context</td>
-    </tr>
-    <tr>
-      <td><font color="#FF0000"> </font></td>
-      <td> <select name="selContext" size="1"
-	     onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContext'); return false" >
-<%          boolean bDataFound = false;
+	<body onUnload="closeDep();">
+		<form name="FormNewDEC" method="post" action="/cdecurate/NCICurationServlet?reqType=createNewDEC"></form>
+		<form name="FormNewVD" method="post" action="/cdecurate/NCICurationServlet?reqType=createNewVD"></form>
+		<form name="SearchActionForm" method="post" action="">
+			<input type="hidden" name="searchComp" value="">
+			<input type="hidden" name="searchEVS" value="DataElement">
+			<input type="hidden" name="isValidSearch" value="true">
+			<input type="hidden" name="acID" value="<%=sDEIDSEQ%>">
+			<input type="hidden" name="itemType" value="">
+		</form>
+		<form name="newCDEForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=newDEfromForm">
+			<table width="100%" border="0">
+				<!--DWLayoutTable-->
+				<col width="5%">
+				<col width="95%">
+				<tr>
+					<td align="left" valign="top" colspan=2>
+						<input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate')" onHelp="showHelp('Help_CreateDE.html#newCDEForm_Validation'); return false">
+						&nbsp;&nbsp; &nbsp;&nbsp;
+						<input type="button" name="btnClear" value="Clear" style="width: 125" onClick="ClearBoxes();">
+						&nbsp;&nbsp;
+						<% if (sMenuAction.equals("Questions") || sMenuAction.equals("NewDETemplate") || sMenuAction.equals("NewDEVersion") || sDDEAction.equals("CreateNewDEFComp")){%>
+						<input type="button" name="btnBack" value="Back" style="width: 125" onClick="Back();">
+						&nbsp;&nbsp;
+						<% } %>
+						<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" onClick="openDesignateWindow('Alternate Names');" onHelp="showHelp('Help_Updates.html#newDECForm_altNames'); return false">
+						&nbsp;&nbsp;
+						<input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');" onHelp="showHelp('Help_Updates.html#newDECForm_refDocs'); return false">
+						&nbsp;&nbsp;
+						<img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+					</td>
+				</tr>
+			</table>
+			<table width="90%" border=0>
+				<col width="4%">
+				<col width="95%">
+				<tr valign="middle">
+					<th colspan=2 height="40">
+						<div align="left">
+							<label>
+								<font size=4>
+									Create New
+									<font color="#FF0000">
+										Data Element
+									</font>
+									<%if(sDDEAction.equals("CreateNewDEFComp")){%>
+									Component
+									<% } else if (sMenuAction.equals("NewDEVersion")) { %>
+									Version
+									<% } else if (sMenuAction.equals("NewDETemplate")) { %>
+									Using Existing
+									<% } %>
+								</font>
+							</label>
+						</div>
+					</th>
+				</tr>
+				<tr height="25" valign="middle">
+					<td colspan=2>
+						<font color="#FF0000">
+							&nbsp;&nbsp;&nbsp;* &nbsp;&nbsp;
+						</font>
+						Indicates Required Field
+					</td>
+				</tr>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<font color="#FF0000">
+							* &nbsp;
+						</font>
+						<%=item++%>
+						)
+					</td>
+					<td>
+						<font color="#FF0000">
+							Select
+						</font>
+						Context
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<font color="#FF0000">
+						</font>
+					</td>
+					<td>
+						<select name="selContext" size="1" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selContext'); return false">
+							<%          boolean bDataFound = false;
            for (int i = 0; vContext.size()>i; i++)
            {
              String sContextName = (String)vContext.elementAt(i);
@@ -356,122 +387,228 @@
              //if(sContext.equals("")) sContext = sContextName;
              if(sContextName.equals(sContext)) bDataFound = true;
 %>
-          <option value="<%=sContextID%>" <%if(sContextName.equals(sContext)){%>selected<%}%> ><%=sContextName%></option>
-<%
+							<option value="<%=sContextID%>" <%if(sContextName.equals(sContext)){%> selected <%}%>>
+								<%=sContextName%>
+							</option>
+							<%
            }
            if(bDataFound == false) { %>
-            <option value="" selected></option>
-<%         }
+							<option value="" selected></option>
+							<%         }
 %>
-        </select> </td>
-    <tr valign="bottom" height="25">
-      <td align=right><font color="#FF0000">*  &nbsp;</font><%=item++%>)</td>
-      <td><font color="#FF0000">Select </font>Data Element Concept Long Name </td>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td>
-        <select name="selDEC" size="1" multiple style="width:430"
-          onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selDEC'); return false">
-            <option value="<%=sDECID%>" ><%=sDEC%></option>
-        </select>
-        &nbsp;&nbsp;
-        <a href="javascript:SearchDECValue()"> Search</a>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="javascript:CreateNewDECValue()"> Create New </a>
-      </td>
-    </tr>
-    <tr valign="bottom"  height="25">
-      <td align=right><font color="#FF0000">* &nbsp;</font><%=item++%>)</td>
-      <td><font color="#FF0000">Select </font>Value Domain Long Name </td>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td>
-        <select name= "selVD" size ="1" multiple style="width:430"
-          onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selVD'); return false">
-            <option value="<%=sVDID%>" ><%=sVD%></option>
-        </select>
-        &nbsp;&nbsp;
-        <a href="javascript:SearchVDValue()"> Search</a>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="javascript:CreateNewVDValue()"> Create New</a>
-      </td>
-    <tr height="25" valign="bottom" >
-      <td align=right><font color="#FF0000">* &nbsp;</font><%=item++%>)</td>
-      <td><font color="#FF0000">Verify </font>
-        <font color="#000000"> Data Element Long Name (* ISO Preferred Name)</font></td>
-    </tr>
-    <tr>
-      <td><font color="#FF0000"> </font></td>
-      <td height="24" valign="top" >
-        <input name="txtLongName" type="text" value="<%=sLongName%>" size="80" maxlength=255 onKeyUp="changeCountLN();"
-          onHelp = "showHelp('Help_CreateDE.html#newCDEForm_txtLongName'); return false">
-        &nbsp;&nbsp;&nbsp; <font color="#666666">
-        <input name="txtLongNameCount" type="text" size="1" value="<%=sLongNameCount%>" readonly >
-        <font color="#000000"> Character Count</font></font>
-        &nbsp;&nbsp;(Database Max = 255)
-      </td>
-    </tr>
-    <tr height="25" valign="bottom" >
-      <td align=right><font color="#FF0000">* &nbsp;</font><%=item++%>)</td>
-      <td><font color="#FF0000">Update </font>Data Element Short Name</td>
-    </tr>
-    <tr>
-    	<td>&nbsp;</td>
-     	<td height="24" valign="bottom">Select Short Name Naming Standard</td>
-    </tr>
-    <tr>
-    	<td>&nbsp;</td>
-     	<td height="24" valign="top">
-	      <input name="rNameConv" type="radio" value="SYS" 
-	      	onclick="javascript:SubmitValidate('changeNameType');" 
-	      	<%if (sPrefType.equals("SYS")) {%>checked <%}%>>System Generated &nbsp;&nbsp;&nbsp; 
-        <input name="rNameConv" type="radio" value="ABBR" 
-        	onclick="javascript:SubmitValidate('changeNameType');" 
-        	<%if (sPrefType.equals("ABBR")) {%>checked <%}%>>Abbreviated &nbsp;&nbsp;&nbsp; 
-        <input name="rNameConv" type="radio" value="USER" 
-        	onclick="javascript:SubmitValidate('changeNameType');" 
-        	<%if (sPrefType.equals("USER")) {%> checked <%}%>><%=lblUserType%>   <!--Existing Name (Editable)  User Maintained-->
-      </td>
-    </tr> 
-    <tr>
-      <td><font color="#FF0000"> </font></td>
-      <td height="24" valign="top">
-	     <input name="txtPreferredName" type="text" value="<%=sName%>" size="80" maxlength=30 onKeyUp="changeCountPN();"
-           <%if (sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")) {%> readonly<%}%>
-  	       onHelp = "showHelp('Help_CreateDE.html#newCDEForm_txtLongName'); return false">
-          &nbsp;&nbsp;&nbsp; <font color="#666666">
-        <input name="txtPrefNameCount" type="text" size="1"  value="<%=sNameCount%>" readonly>
-          <font color="#000000"> Character Count</font></font>
-          &nbsp;&nbsp;(Database Max = 30)
-      </td>
-    </tr>
-    <tr><td height="8" valign="top"></tr>
-    <tr height="25" valign="top">
-      <td align=right><font color="#FF0000">* &nbsp;</font><%=item++%>)</td>
-      <td><font color="#FF0000">Create/Edit</font> Definition<br>
-        (Changes to naming components will replace existing definition text.)
-      </td>
-    </tr>
-    <tr> 
-      <td><font color="#FF0000"> </font></td>
-      <td valign="top" align="left"> 
-        <textarea name="CreateDefinition"  style="width:80%" rows=6
-        onHelp = "showHelp('Help_CreateDE.html#newCDEForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
-        <!-- &nbsp;&nbsp;<a href="javascript:AccessEVS()">Search</a> -->
-      </td>
-    </tr>
-    <tr height="25" valign="bottom"> 
-      <td align=right><font color="#FF0000">* &nbsp;</font><%=item++%>)</td>
-      <td><font color="#FF0000">Select </font> Workflow Status</td>
-    </tr>
-    <tr>
-      <td><font color="#FF0000"> </font></td>
-      <td height="26" valign="top" > <select name="selStatus" size="1"
-        onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selStatus'); return false">
-        <option value="" selected="selected"></option>
-<%   for (int i = 0; vStatus.size()>i; i++)
+						</select>
+					</td>
+				<tr valign="bottom" height="25">
+					<td align=right>
+						<font color="#FF0000">
+							* &nbsp;
+						</font>
+						<%=item++%>
+						)
+					</td>
+					<td>
+						<font color="#FF0000">
+							Select
+						</font>
+						Data Element Concept Long Name
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td>
+						<select name="selDEC" size="1" multiple style="width:430" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selDEC'); return false">
+							<option value="<%=sDECID%>">
+								<%=sDEC%>
+							</option>
+						</select>
+						&nbsp;&nbsp;
+						<a href="javascript:SearchDECValue()">
+							Search
+						</a>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="javascript:CreateNewDECValue()">
+							Create New
+						</a>
+					</td>
+				</tr>
+				<tr valign="bottom" height="25">
+					<td align=right>
+						<font color="#FF0000">
+							* &nbsp;
+						</font>
+						<%=item++%>
+						)
+					</td>
+					<td>
+						<font color="#FF0000">
+							Select
+						</font>
+						Value Domain Long Name
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td>
+						<select name="selVD" size="1" multiple style="width:430" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selVD'); return false">
+							<option value="<%=sVDID%>">
+								<%=sVD%>
+							</option>
+						</select>
+						&nbsp;&nbsp;
+						<a href="javascript:SearchVDValue()">
+							Search
+						</a>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="javascript:CreateNewVDValue()">
+							Create New
+						</a>
+					</td>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<font color="#FF0000">
+							* &nbsp;
+						</font>
+						<%=item++%>
+						)
+					</td>
+					<td>
+						<font color="#FF0000">
+							Verify
+						</font>
+						<font color="#000000">
+							Data Element Long Name (* ISO Preferred Name)
+						</font>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<font color="#FF0000">
+						</font>
+					</td>
+					<td height="24" valign="top">
+						<input name="txtLongName" type="text" value="<%=sLongName%>" size="80" maxlength=255 onKeyUp="changeCountLN();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_txtLongName'); return false">
+						&nbsp;&nbsp;&nbsp;
+						<font color="#666666">
+							<input name="txtLongNameCount" type="text" size="1" value="<%=sLongNameCount%>" readonly>
+							<font color="#000000">
+								Character Count
+							</font>
+						</font>
+						&nbsp;&nbsp;(Database Max = 255)
+					</td>
+				</tr>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<font color="#FF0000">
+							* &nbsp;
+						</font>
+						<%=item++%>
+						)
+					</td>
+					<td>
+						<font color="#FF0000">
+							Update
+						</font>
+						Data Element Short Name
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td height="24" valign="bottom">
+						Select Short Name Naming Standard
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td height="24" valign="top">
+						<input name="rNameConv" type="radio" value="SYS" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("SYS")) {%> checked <%}%>>
+						System Generated &nbsp;&nbsp;&nbsp;
+						<input name="rNameConv" type="radio" value="ABBR" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("ABBR")) {%> checked <%}%>>
+						Abbreviated &nbsp;&nbsp;&nbsp;
+						<input name="rNameConv" type="radio" value="USER" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("USER")) {%> checked <%}%>>
+						<%=lblUserType%>
+						<!--Existing Name (Editable)  User Maintained-->
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<font color="#FF0000">
+						</font>
+					</td>
+					<td height="24" valign="top">
+						<input name="txtPreferredName" type="text" value="<%=sName%>" size="80" maxlength=30 onKeyUp="changeCountPN();" <%if (sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")) {%> readonly <%}%>
+							onHelp="showHelp('Help_CreateDE.html#newCDEForm_txtLongName'); return false">
+						&nbsp;&nbsp;&nbsp;
+						<font color="#666666">
+							<input name="txtPrefNameCount" type="text" size="1" value="<%=sNameCount%>" readonly>
+							<font color="#000000">
+								Character Count
+							</font>
+						</font>
+						&nbsp;&nbsp;(Database Max = 30)
+					</td>
+				</tr>
+				<tr>
+					<td height="8" valign="top">
+				</tr>
+				<tr height="25" valign="top">
+					<td align=right>
+						<font color="#FF0000">
+							* &nbsp;
+						</font>
+						<%=item++%>
+						)
+					</td>
+					<td>
+						<font color="#FF0000">
+							Create/Edit
+						</font>
+						Definition
+						<br>
+						(Changes to naming components will replace existing definition text.)
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<font color="#FF0000">
+						</font>
+					</td>
+					<td valign="top" align="left">
+						<textarea name="CreateDefinition" style="width:80%" rows=6><%=sDefinition%></textarea>
+						<!-- &nbsp;&nbsp;<a href="javascript:AccessEVS()">Search</a> -->
+					</td>
+				</tr>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<font color="#FF0000">
+							* &nbsp;
+						</font>
+						<%=item++%>)
+					</td>
+					<td>
+						<font color="#FF0000">
+							Select
+						</font>
+						Workflow Status
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<font color="#FF0000">
+						</font>
+					</td>
+					<td height="26" valign="top">
+						<select name="selStatus" size="1" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selStatus'); return false">
+							<option value="" selected="selected"></option>
+							<%   for (int i = 0; vStatus.size()>i; i++)
      {
         String sStatusName = (String)vStatus.elementAt(i);
         //add only draft new and retired phased out if creating new
@@ -480,133 +617,228 @@
            if (sStatusName.equals("DRAFT NEW") || sStatusName.equals("RETIRED PHASED OUT"))
            {
 %>
-              <option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%>selected<%}%> ><%=sStatusName%></option>
-<%         }
+							<option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%> selected <%}%>>
+								<%=sStatusName%>
+							</option>
+							<%         }
         }
         else
         {
 %>
-           <option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%>selected<%}%> ><%=sStatusName%></option>
-<%
+							<option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%> selected <%}%>>
+								<%=sStatusName%>
+							</option>
+							<%
         }
      }
 %>
-        </select> </td>
-    </tr>
-    <tr height="25" valign="bottom">
-      <td align=right><font color="#FF0000">* &nbsp;</font><%=item++%>)</td>
-      <td><font color="#FF0000">Enter</font> Version</td>
-    </tr>
-    <tr>
-      <td><font color="#FF0000"> </font></td>
-      <td valign="top" > <input name="Version" type="text" value="<%=sVersion%>" size="5" maxlength=5
-    	  onHelp = "showHelp('Help_CreateDE.html#newCDEForm_Version'); return false">
-        &nbsp;&nbsp;&nbsp;<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">Business Rules</a>
-      </td>
-    </tr>
-    <tr height="25" valign="bottom"> 
-      <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000"> Select</font> Registration Status</td>
-    </tr>
-    <tr> 
-      <td>&nbsp;</td>
-      <td height="25" valign="top"> 
-        <select name="selRegStatus" size="1" style="Width:50%"
-            onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selRegStatus'); return false">
-            <option value="" selected></option>
-<%          if (vRegStatus != null) 
+						</select>
+					</td>
+				</tr>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<font color="#FF0000">
+							* &nbsp;
+						</font>
+						<%=item++%>
+						)
+					</td>
+					<td>
+						<font color="#FF0000">
+							Enter
+						</font>
+						Version
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<font color="#FF0000">
+						</font>
+					</td>
+					<td valign="top">
+						<input name="Version" type="text" value="<%=sVersion%>" size="5" maxlength=5 onHelp="showHelp('Help_CreateDE.html#newCDEForm_Version'); return false">
+						&nbsp;&nbsp;&nbsp;
+						<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
+							Business Rules
+						</a>
+					</td>
+				</tr>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<%=item++%>
+						)
+					</td>
+					<td>
+						<font color="#FF0000">
+							Select
+						</font>
+						Registration Status
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td height="25" valign="top">
+						<select name="selRegStatus" size="1" style="Width:50%" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selRegStatus'); return false">
+							<option value="" selected></option>
+							<%          if (vRegStatus != null) 
             {            
               for (int i = 0; vRegStatus.size()>i; i++)
               {
                 String sReg = (String)vRegStatus.elementAt(i);
 %>
-              <option value="<%=sReg%>" <%if(sReg.equals(sRegStatus)){%>selected<%}%>><%=sReg%></option>
-<%
+							<option value="<%=sReg%>" <%if(sReg.equals(sRegStatus)){%> selected <%}%>>
+								<%=sReg%>
+							</option>
+							<%
             } }
 %>
-        </select>
-      </td>
-    </tr>
-    <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000">Enter/Select </font>Effective Begin Date</td>
-    </tr>
-    <tr> 
-      <td><font color="#FF0000"> </font></td>
-      <td height="25" valign="top" > <input type="text" name="BeginDate" value="<%=sBeginDate%>" size="12" maxlength=10
-          onHelp = "showHelp('Help_CreateDE.html#newCDEForm_BeginDate'); return false"> 
-        <a href="javascript:show_calendar('newCDEForm.BeginDate', null, null, 'MM/DD/YYYY');"> 
-        <img name="Calendar" src="Assets/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top", "background-color: #FF0000">
-        </a>&nbsp;&nbsp;MM/DD/YYYY </td>
-    </tr>
-    <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td><font color="#FF0000">Enter/Select</font> Effective End Date</td>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td height="25" valign="top" > 
-      <input type="text" name="EndDate" value="<%=sEndDate%>" size="12" maxlength=10
-          onHelp = "showHelp('Help_CreateDE.html#newCDEForm_EndDate'); return false" size="20">
-        <a href="javascript:show_calendar('newCDEForm.EndDate', null, null, 'MM/DD/YYYY');" >
-        <img name="Calendar" src="Assets/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top", "background-color: #FF0000">
-        </a>&nbsp;&nbsp;MM/DD/YYYY </td>
-    </tr>
-    
-    <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td><font color="#FF0000">Create</font> Preferred Question Text</td>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td height="35" valign="top">
-        <textarea name="CreateDocumentText" cols="89"
-          onHelp = "showHelp('Help_CreateDE.html#newCDEForm_CreateDocumentText'); return false" rows="2"><%=sDocText%></textarea>
-      </td>
-    </tr>
-    <tr height="30" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td><font color="#FF0000">Select </font>Classification Schemes and Classification Scheme Items</td>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td>
-        <table width=80% border="0">
-          <col width="1%"><col width="25%"><col width="10%"> <col width="25%"><col width="10%">
-          <tr>
-            <td height="30" valign="top" colspan=3>
-              <select name="selCS" size ="1" style="width:95%" valign="top" onChange="ChangeCS()"
-                onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selCS'); return false">
-                <option value="" selected></option>
-  <%            for (int i = 0; vCS.size()>i; i++)
+						</select>
+					</td>
+				</tr>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<%=item++%>
+						)
+					</td>
+					<td>
+						<font color="#FF0000">
+							Enter/Select
+						</font>
+						Effective Begin Date
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<font color="#FF0000">
+						</font>
+					</td>
+					<td height="25" valign="top">
+						<input type="text" name="BeginDate" value="<%=sBeginDate%>" size="12" maxlength=10 onHelp="showHelp('Help_CreateDE.html#newCDEForm_BeginDate'); return false">
+						<a href="javascript:show_calendar('newCDEForm.BeginDate', null, null, 'MM/DD/YYYY');">
+							<img name="Calendar" src="Assets/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top", "background-color: #FF0000">
+						</a>
+						&nbsp;&nbsp;MM/DD/YYYY
+					</td>
+				</tr>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<%=item++%>
+						)
+					</td>
+					<td>
+						<font color="#FF0000">
+							Enter/Select
+						</font>
+						Effective End Date
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td height="25" valign="top">
+						<input type="text" name="EndDate" value="<%=sEndDate%>" size="12" maxlength=10 onHelp="showHelp('Help_CreateDE.html#newCDEForm_EndDate'); return false" size="20">
+						<a href="javascript:show_calendar('newCDEForm.EndDate', null, null, 'MM/DD/YYYY');">
+							<img name="Calendar" src="Assets/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top", "background-color: #FF0000">
+						</a>
+						&nbsp;&nbsp;MM/DD/YYYY
+					</td>
+				</tr>
+
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<%=item++%>
+						)
+					</td>
+					<td>
+						<font color="#FF0000">
+							Create
+						</font>
+						Preferred Question Text
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td height="35" valign="top">
+						<textarea name="CreateDocumentText" cols="89" rows="2"><%=sDocText%></textarea>
+					</td>
+				</tr>
+				<tr height="30" valign="bottom">
+					<td align=right>
+						<%=item++%>
+						)
+					</td>
+					<td>
+						<font color="#FF0000">
+							Select
+						</font>
+						Classification Schemes and Classification Scheme Items
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td>
+						<table width=80% border="0">
+							<col width="1%">
+							<col width="25%">
+							<col width="10%">
+							<col width="25%">
+							<col width="10%">
+							<tr>
+								<td height="30" valign="top" colspan=3>
+									<select name="selCS" size="1" style="width:95%" valign="top" onChange="ChangeCS()" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selCS'); return false">
+										<option value="" selected></option>
+										<%            for (int i = 0; vCS.size()>i; i++)
                 {
                    String sCSName = (String)vCS.elementAt(i);
                    String sCS_ID = (String)vCS_ID.elementAt(i);
   %>
-                  <option value="<%=sCS_ID%>"><%=sCSName%></option>
-  <%            }  %>
-              </select> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </td>
-            <td height="30" valign="top" colspan=2>
-              <select name="selCSI" size="5" style="width:95%" onChange="selectCSI();"
-                onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selCS'); return false"> <!-- onChange="AddItemsToLists();"> -->
-              </select>
-            </td>
-          </tr>
-          <tr><td height="12" valign="top"></tr>    
-          <tr>
-            <td>&nbsp;</td>
-            <td align="left">Selected Classification Schemes</td>
-            <td align=left><input type="button" name="btnRemoveCS" value="Remove Item" style="width: 85", "height: 9" onClick="removeCSList();"></td>
-            <td align="left">Associated Classification Scheme Items</td>
-            <td align=left><input type="button" name="btnRemoveCSI" value="Remove Item" style="width: 85", "height: 9" onClick="removeCSIList();"></td>
-          </tr>
-          <tr>
-            <td>&nbsp;</td>
-            <td colspan=2>
-                <select name="selectedCS" size="5" style="width:98%" multiple onchange="addSelectCSI(false, true, '');"
-                  onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selCS'); return false">
-<%                  //store selected cs list on load 
+										<option value="<%=sCS_ID%>">
+											<%=sCSName%>
+										</option>
+										<%            }  %>
+									</select>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								</td>
+								<td height="30" valign="top" colspan=2>
+									<select name="selCSI" size="5" style="width:95%" onChange="selectCSI();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selCS'); return false">
+										<!-- onChange="AddItemsToLists();"> -->
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td height="12" valign="top">
+							</tr>
+							<tr>
+								<td>
+									&nbsp;
+								</td>
+								<td align="left">
+									Selected Classification Schemes
+								</td>
+								<td align=left>
+									<input type="button" name="btnRemoveCS" value="Remove Item" style="width: 85" , "height: 9" onClick="removeCSList();">
+								</td>
+								<td align="left">
+									Associated Classification Scheme Items
+								</td>
+								<td align=left>
+									<input type="button" name="btnRemoveCSI" value="Remove Item" style="width: 85" , "height: 9" onClick="removeCSIList();">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									&nbsp;
+								</td>
+								<td colspan=2>
+									<select name="selectedCS" size="5" style="width:98%" multiple onchange="addSelectCSI(false, true, '');" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selCS'); return false">
+										<%                  //store selected cs list on load 
                   if (vSelCSIDList != null) 
                   {
                     for (int i = 0; vSelCSIDList.size()>i; i++)
@@ -616,42 +848,59 @@
                       if (vSelCSList != null && vSelCSList.size() > i)
                          sCSName = (String)vSelCSList.elementAt(i);
 %>
-                      <option value="<%=sCS_ID%>"><%=sCSName%></option>
-<%                  }
+										<option value="<%=sCS_ID%>">
+											<%=sCSName%>
+										</option>
+										<%                  }
                   }   %>
-                </select>
-            </td>
-            <td colspan=2>
-                <select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();"
-                    onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selCS'); return false">
-                </select>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
- <!-- contact info -->
-    <tr><td height="20" valign="top"></tr>    
-  	<tr>
-	  <td valign="top" align=right><%=item++%>)</td>
-	  <td valign="bottom"><font color="#FF0000">Select </font>Contacts
-      <br>
-        <table width=50% border="0">
-          <col width="40%"><col width="15%"> <col width="15%"><col width="15%">
-		  <tr>
-		    <td>&nbsp;</td>
-            <td align="left"><input type="button" name="btnViewCt" value="Edit Item" 
-            	style="width:100" onClick="javascript:editContact('view');" disabled></td>
-            <td align="left"><input type="button" name="btnCreateCt" value="Create New" 
-            	style="width:100" onClick="javascript:editContact('new');"></td>
-            <td align="center"><input type="button" name="btnRmvCt" value="Remove Item" 
-            	style="width:100" onClick="javascript:editContact('remove');" disabled></td>
-		  </tr>
-		  <tr> 
-	      	<td colspan=4 valign="top">
-	          <select name="selContact" size="4"  style="width:100%" onchange="javascript:enableContButtons();" 
-	          	onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContact'); return false">
-<%	
+									</select>
+								</td>
+								<td colspan=2>
+									<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selCS'); return false">
+									</select>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<!-- contact info -->
+				<tr>
+					<td height="20" valign="top">
+				</tr>
+				<tr>
+					<td valign="top" align=right>
+						<%=item++%>
+						)
+					</td>
+					<td valign="bottom">
+						<font color="#FF0000">
+							Select
+						</font>
+						Contacts
+						<br>
+						<table width=50% border="0">
+							<col width="40%">
+							<col width="15%">
+							<col width="15%">
+							<col width="15%">
+							<tr>
+								<td>
+									&nbsp;
+								</td>
+								<td align="left">
+									<input type="button" name="btnViewCt" value="Edit Item" style="width:100" onClick="javascript:editContact('view');" disabled>
+								</td>
+								<td align="left">
+									<input type="button" name="btnCreateCt" value="Create New" style="width:100" onClick="javascript:editContact('new');">
+								</td>
+								<td align="center">
+									<input type="button" name="btnRmvCt" value="Remove Item" style="width:100" onClick="javascript:editContact('remove');" disabled>
+								</td>
+							</tr>
+							<tr>
+								<td colspan=4 valign="top">
+									<select name="selContact" size="4" style="width:100%" onchange="javascript:enableContButtons();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selContact'); return false">
+										<%	
 				Enumeration enum1 = hContacts.keys();
 				while (enum1.hasMoreElements())
 				{
@@ -666,240 +915,400 @@
 				  if (contName == null || contName.equals(""))
 				    contName = acCont.getPERSON_NAME(); */
 %>
-				  <option value="<%=contName%>"><%=contName%></option>
-<%				  
+										<option value="<%=contName%>">
+											<%=contName%>
+										</option>
+										<%				  
 				}
-%>	          	
-	          </select>
-	      	</td>
-		  </tr>
-		</table>
-	  </td>
-	</tr>
-<!-- origin -->
-    <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td><font color="#FF0000">Select </font>Data Element Origin</td>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td>
-        <select name="selSource" size="1"
-      		onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selSource'); return false">
-          <option value=""></option>
-<%         
+%>
+									</select>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<!-- origin -->
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<%=item++%>
+						)
+					</td>
+					<td>
+						<font color="#FF0000">
+							Select
+						</font>
+						Data Element Origin
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td>
+						<select name="selSource" size="1" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selSource'); return false">
+							<option value=""></option>
+							<%         
 		   boolean isFound = false;
 		   for (int i = 0; vSource.size()>i; i++)
            {
               String sSor = (String)vSource.elementAt(i);
               if(sSor.equals(sSource)) isFound = true;
 %>
-              <option value="<%=sSor%>" <%if(sSor.equals(sSource)){%>selected<%}%> ><%=sSor%></option>
-<%         }
+							<option value="<%=sSor%>" <%if(sSor.equals(sSource)){%> selected <%}%>>
+								<%=sSor%>
+							</option>
+							<%         }
 		   //add the user entered if not found in the drop down list
 		   if (!isFound) 
 		   {  
 		   	  sSource = serUtil.parsedStringDoubleQuoteJSP(sSource);     //call the function to handle doubleQuote
 %>
-           		<option value="<%=sSource%>" selected><%=sSource%></option>
-<%		   } %>
-        </select>
-      </td>
-    </tr>
+							<option value="<%=sSource%>" selected>
+								<%=sSource%>
+							</option>
+							<%		   } %>
+						</select>
+					</td>
+				</tr>
 
-    <tr> </tr>
-    <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td><font color="#FF0000">Create</font> Change Note</td>
-    </tr>
+				<tr>
+				</tr>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<%=item++%>
+						)
+					</td>
+					<td>
+						<font color="#FF0000">
+							Create
+						</font>
+						Change Note
+					</td>
+				</tr>
 
-    <tr>
-      <td>&nbsp;</td>
-      <td height="35" valign="top">
-        <textarea name="CreateChangeNote" cols="69"
-          onHelp = "showHelp('Help_CreateDE.html#newCDEForm_CreateComment'); return false" rows="2"><%=sChangeNote%></textarea>
-      </td>
-    </tr>
-    <tr><td height="14" valign="top"></tr>    
-    <tr height="20" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td><font color="#FF0000"> <a href="javascript:SubmitValidate('validate')">Validate</a></font>
-        the New Data Element </td>
-    </tr>
-  </table>
-  <hr>  
-<%if(!sDDEAction.equalsIgnoreCase("CreateNewDEFComp")) {%>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td height="35" valign="top">
+						<textarea name="CreateChangeNote" cols="69" rows="2"><%=sChangeNote%></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td height="14" valign="top">
+				</tr>
+				<tr height="20" valign="bottom">
+					<td align=right>
+						<%=item++%>)
+					</td>
+					<td>
+						<font color="#FF0000">
+							<a href="javascript:SubmitValidate('validate')">
+								Validate
+							</a>
+						</font>
+						the New Data Element
+					</td>
+				</tr>
+			</table>
+			<hr>
+			<%if(!sDDEAction.equalsIgnoreCase("CreateNewDEFComp")) {%>
 
-  <!--********************************************************************************************************************-->
-  <!--if not for create new from DDE or not for Block edit  -->
-  <table width="800" border="0" name="DDETable">
-  	<col width="4%"><col width="30%"><col width="15%"> <col width="30%">
-    <!--<col width="4%"> <col width="95%">-->
-    <tr>
-      <th height="40" colspan=4> 
-       <legend align=top><div align="left"> 
-          <label><font size=4>Derived Data Element Derivation Rules and Components</font></label>
-        </div> </legend></th>
-    </tr>
-    <tr> </tr>
-    <tr height="25" valign="middle">
-        <td colspan =4><font color="#FF0000">&nbsp;&nbsp;&nbsp;* &nbsp;</font>Indicates Required Fields for Derived Data Elements</td>
-    </tr>
-    <tr height="25" valign="bottom"> 
-      <td align=right><font color="#FF0000">*</font><%=item++%>)</td>
-      <td colspan=3><font color="#FF0000">Select</font> Derivation Type</td>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td height="26" valign="top" colspan=3 > 
-        <select name="selRepType" size="1" onChange="javascript:changeRepType('change')"
-          onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selRepType'); return false">
-          <option value="" selected></option>
-<%        for (int i = 0; vRepType.size()>i; i++)
+			<!--********************************************************************************************************************-->
+			<!--if not for create new from DDE or not for Block edit  -->
+			<table width="800" border="0" name="DDETable">
+				<col width="4%">
+				<col width="30%">
+				<col width="15%">
+				<col width="30%">
+				<!--<col width="4%"> <col width="95%">-->
+				<tr>
+					<th height="40" colspan=4>
+						<legend align=top>
+							<div align="left">
+								<label>
+									<font size=4>
+										Derived Data Element Derivation Rules and Components
+									</font>
+								</label>
+							</div>
+						</legend>
+					</th>
+				</tr>
+				<tr>
+				</tr>
+				<tr height="25" valign="middle">
+					<td colspan=4>
+						<font color="#FF0000">
+							&nbsp;&nbsp;&nbsp;* &nbsp;
+						</font>
+						Indicates Required Fields for Derived Data Elements
+					</td>
+				</tr>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<font color="#FF0000">
+							*
+						</font>
+						<%=item++%>
+						)
+					</td>
+					<td colspan=3>
+						<font color="#FF0000">
+							Select
+						</font>
+						Derivation Type
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td height="26" valign="top" colspan=3>
+						<select name="selRepType" size="1" onChange="javascript:changeRepType('change')" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selRepType'); return false">
+							<option value="" selected></option>
+							<%        for (int i = 0; vRepType.size()>i; i++)
           {
             String sRepType = (String)vRepType.elementAt(i);
 %>
-            <option value="<%=sRepType%>" <%if(sRepType.equals(sSelRepType)){%>selected<%}%> ><%=sRepType%></option>
-<%        } %>
-        </select> 
-      </td>
-    </tr>
-    <tr height="25" valign="bottom">
-      <td align=right><font color="#FF0000">*</font><%=item++%>)</td>
-      <td colspan=3><font color="#FF0000">Create</font> Rule</td>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td height="35" valign="top" colspan=3>
-        <textarea name="DDERule" cols="69"
-          onHelp = "showHelp('Help_CreateDE.html#newCDEForm_DDERule'); return false" rows="2"><%=sSelRule%></textarea>
-      </td>
-    </tr>
-    <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td colspan=3><font color="#FF0000">Create </font> Methods </td>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td height="35" valign="top" colspan=3>
-        <textarea name="DDEMethod" cols="69"
-          onHelp = "showHelp('Help_CreateDE.html#newCDEForm_DDEMethod'); return false" rows="2"><%=sSelMethod%></textarea>
-      </td>
-    </tr>
-    <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td colspan=3><font color="#FF0000">Enter</font> Concatenation Character </td>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td valign="top" colspan=3 > <input name="DDEConcatChar" type="text" value="<%=sSelConcatChar%>" size="5" maxlength=1
-          onHelp = "showHelp('Help_CreateDE.html#newCDEForm_DDEConcatChar'); return false"></td>
-    </tr>
-    
-  <!--<table width=70% border="0">
+							<option value="<%=sRepType%>" <%if(sRepType.equals(sSelRepType)){%> selected <%}%>>
+								<%=sRepType%>
+							</option>
+							<%        } %>
+						</select>
+					</td>
+				</tr>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<font color="#FF0000">
+							*
+						</font>
+						<%=item++%>
+						)
+					</td>
+					<td colspan=3>
+						<font color="#FF0000">
+							Create
+						</font>
+						Rule
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td height="35" valign="top" colspan=3>
+						<textarea name="DDERule" cols="69" rows="2"><%=sSelRule%></textarea>
+					</td>
+				</tr>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<%=item++%>)
+					</td>
+					<td colspan=3>
+						<font color="#FF0000">
+							Create
+						</font>
+						Methods
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td height="35" valign="top" colspan=3>
+						<textarea name="DDEMethod" cols="69" rows="2"><%=sSelMethod%></textarea>
+					</td>
+				</tr>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<%=item++%>)
+					</td>
+					<td colspan=3>
+						<font color="#FF0000">
+							Enter
+						</font>
+						Concatenation Character
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td valign="top" colspan=3>
+						<input name="DDEConcatChar" type="text" value="<%=sSelConcatChar%>" size="5" maxlength=1 onHelp="showHelp('Help_CreateDE.html#newCDEForm_DDEConcatChar'); return false">
+					</td>
+				</tr>
+
+				<!--<table width=70% border="0">
           <col width="5%"><col width="45%"><col width="18%"> <col width="30%">-->
-	<tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td><font color="#FF0000">Search/Create </font>Data Element Components </td>
-      <td align=left><a href="javascript:SearchDEValue()">Search</a> For</td>
-      <td align=left><a href="javascript:CreateNewDEValue()">Create</a> New</td>
-    </tr>
-    <tr height ="25" valign="top">
-    	<td colspan=2>
-    	<td align=left>Data Element </td>
-    	<td align=left>Data Element</td>
-    </tr>	
-    	
-    <tr><td height="14" valign="top"></tr>
-          <tr height="30" valign="top">
-            <td align=right><%=item++%>)</td>
-            <td align=left colspan=2><font color="#FF0000">Select </font>Data Element Components<br>
-              <select name="selDEComp" size ="1" style="width:95%" valign="top" onChange="javascript:showDECompOrder()"
-                onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selDEComp'); return false">
-  <%            for (int i = 0; vDEComp.size()>i; i++)
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<%=item++%>)
+					</td>
+					<td>
+						<font color="#FF0000">
+							Search/Create
+						</font>
+						Data Element Components
+					</td>
+					<td align=left>
+						<a href="javascript:SearchDEValue()">
+							Search
+						</a>
+						For
+					</td>
+					<td align=left>
+						<a href="javascript:CreateNewDEValue()">
+							Create
+						</a>
+						New
+					</td>
+				</tr>
+				<tr height="25" valign="top">
+					<td colspan=2>
+					<td align=left>
+						Data Element
+					</td>
+					<td align=left>
+						Data Element
+					</td>
+				</tr>
+
+				<tr>
+					<td height="14" valign="top">
+				</tr>
+				<tr height="30" valign="top">
+					<td align=right>
+						<%=item++%>
+						)
+					</td>
+					<td align=left colspan=2>
+						<font color="#FF0000">
+							Select
+						</font>
+						Data Element Components
+						<br>
+						<select name="selDEComp" size="1" style="width:95%" valign="top" onChange="javascript:showDECompOrder()" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selDEComp'); return false">
+							<%            for (int i = 0; vDEComp.size()>i; i++)
                 {
                      String sDEName = (String)vDEComp.elementAt(i);
                      String sDE_ID = (String)vDECompID.elementAt(i);
   %>
-                  <option value="<%=sDE_ID%>" <%if(sDE_ID.equals(sDEID)){%>selected<%}%>><%=sDEName%></option>
-  <%            }  %>
-              </select>
-            </td>
-            <td valign="bottom"><font color="#FF0000">Enter </font> Display Order<br>
-              <input name="txtDECompOrder" type="text" value="<%=sDECompOrder%>" size="20" maxlength=4 onKeyUp="changeOrder();"  
-                onHelp = "showHelp('Help_CreateDE.html#newCDEForm_txtDECompOrder'); return false">&nbsp;&nbsp;
-            </td>
-          </tr>
-          <tr><td height="14" valign="top"></tr>    
-          <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;&nbsp;&nbsp;Selected Data Elements Components</td>
-            <td align=left><input type="button" name="btnClearList1" value="Remove Item" style="width: 85", "height: 9" onClick="removeDEComp();"></td>
-            <td>Display Order</td>
-           </tr>
-          <tr>
-            <td>&nbsp;</td>
-            <td colspan=2 valign=top>&nbsp;&nbsp;&nbsp;
-              <select name= "selOrderedDEComp" size="3"  style="width: 95%"  onChange="javascript:selectOList();"
-                onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selOrderedDEComp'); return false">
-<%              for (int i = 0; vDEComp.size()>i; i++)
+							<option value="<%=sDE_ID%>" <%if(sDE_ID.equals(sDEID)){%> selected <%}%>>
+								<%=sDEName%>
+							</option>
+							<%            }  %>
+						</select>
+					</td>
+					<td valign="bottom">
+						<font color="#FF0000">
+							Enter
+						</font>
+						Display Order
+						<br>
+						<input name="txtDECompOrder" type="text" value="<%=sDECompOrder%>" size="20" maxlength=4 onKeyUp="changeOrder();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_txtDECompOrder'); return false">
+						&nbsp;&nbsp;
+					</td>
+				</tr>
+				<tr>
+					<td height="14" valign="top">
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td>
+						&nbsp;&nbsp;&nbsp;Selected Data Elements Components
+					</td>
+					<td align=left>
+						<input type="button" name="btnClearList1" value="Remove Item" style="width: 85" , "height: 9" onClick="removeDEComp();">
+					</td>
+					<td>
+						Display Order
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td colspan=2 valign=top>
+						&nbsp;&nbsp;&nbsp;
+						<select name="selOrderedDEComp" size="3" style="width: 95%" onChange="javascript:selectOList();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selOrderedDEComp'); return false">
+							<%              for (int i = 0; vDEComp.size()>i; i++)
                 {
                    String sDEName = (String)vDEComp.elementAt(i);
                    String sDE_ID = (String)vDECompID.elementAt(i);
 %>
-                  <option value="<%=sDE_ID%>" <%if(sDE_ID.equals(sDEID)){%>selected<%}%>><%=sDEName%></option>
-<%
+							<option value="<%=sDE_ID%>" <%if(sDE_ID.equals(sDEID)){%> selected <%}%>>
+								<%=sDEName%>
+							</option>
+							<%
                 }
 %>
-              </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-            <td colspan=1 valign=top>
-              <select name= "selOrderList" size ="3" style="width:120" onChange="javascript:selectODEComp();"
-                onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selOrderList'); return false" >
-<%              for (int i = 0; vDECompOrder.size()>i; i++)
+						</select>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					</td>
+					<td colspan=1 valign=top>
+						<select name="selOrderList" size="3" style="width:120" onChange="javascript:selectODEComp();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selOrderList'); return false">
+							<%              for (int i = 0; vDECompOrder.size()>i; i++)
                 {
                    String sOrderName = (String)vDECompOrder.elementAt(i);
                    String sRelationID = (String)vDECompRelID.elementAt(i);
 %>
-                  <option value="<%=sRelationID%>" <%if(sOrderName.equals(sDECompOrder)){%>selected<%}%>><%=sOrderName%></option>
-<%
+							<option value="<%=sRelationID%>" <%if(sOrderName.equals(sDECompOrder)){%> selected <%}%>>
+								<%=sOrderName%>
+							</option>
+							<%
                 }
 %>
-              </select> 
-            </td>
-          </tr>
-         <tr><td height="14" valign="top"></tr>    
-    <tr height="20" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td colspan=3><font color="#FF0000"> <a href="javascript:SubmitValidate('validate')">Validate</a></font>
-        the New Data Element </td>
-    </tr> 
-        <!--</table>-->
-    
-  </table> 
-<%}%>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td height="14" valign="top">
+				</tr>
+				<tr height="20" valign="bottom">
+					<td align=right>
+						<%=item++%>
+						)
+					</td>
+					<td colspan=3>
+						<font color="#FF0000">
+							<a href="javascript:SubmitValidate('validate')">
+								Validate
+							</a>
+						</font>
+						the New Data Element
+					</td>
+				</tr>
+				<!--</table>-->
 
-<input type="hidden" name="pageAction" value="nothing">
-<input type="hidden" name="DEAction" value="NewDE">
-<input type="hidden" name="deIDSEQ" value="<%=sDEIDSEQ%>">
-<input type="hidden" name="decIDSEQ" value="<%=sDECLongID%>">
-<input type="hidden" name="sourceIDSEQ" value="">
-<input type="hidden" name="doctextIDSEQ" value="">
-<input type="hidden" name="CDE_IDTxt" value="<%=sCDEID%>">
-<input type="hidden" name="selDECText" value="<%=sDEC%>">
-<input type="hidden" name="selVDText" value="<%=sVD%>">
-<input type="hidden" name="nameTypeChange" value="<%=decvdChanged%>">
-<input type="hidden" name="MenuAction" value="<%=sMenuAction%>">
-<!-- stores the selected rows to get the bean from the search results -->
-<select name= "hiddenSelRow" size="1" style="visibility:hidden;width:160"  multiple></select>
-<input type="hidden" name="acSearch" value="">
+			</table>
+			<%}%>
 
-<select name= "selCSCSIHidden" size ="1" style="visibility:hidden;"  multiple></select>
-<select name= "selACCSIHidden" size ="1" style="visibility:hidden;"  multiple></select>
-<select name= "selCSNAMEHidden" size="1" style="visibility:hidden;"  multiple></select>
-<!-- store the selected ACs in the hidden field to use it for cscsi 
+			<input type="hidden" name="pageAction" value="nothing">
+			<input type="hidden" name="DEAction" value="NewDE">
+			<input type="hidden" name="deIDSEQ" value="<%=sDEIDSEQ%>">
+			<input type="hidden" name="decIDSEQ" value="<%=sDECLongID%>">
+			<input type="hidden" name="sourceIDSEQ" value="">
+			<input type="hidden" name="doctextIDSEQ" value="">
+			<input type="hidden" name="CDE_IDTxt" value="<%=sCDEID%>">
+			<input type="hidden" name="selDECText" value="<%=sDEC%>">
+			<input type="hidden" name="selVDText" value="<%=sVD%>">
+			<input type="hidden" name="nameTypeChange" value="<%=decvdChanged%>">
+			<input type="hidden" name="MenuAction" value="<%=sMenuAction%>">
+			<!-- stores the selected rows to get the bean from the search results -->
+			<select name="hiddenSelRow" size="1" style="visibility:hidden;width:160" multiple></select>
+			<input type="hidden" name="acSearch" value="">
+
+			<select name="selCSCSIHidden" size="1" style="visibility:hidden;" multiple></select>
+			<select name="selACCSIHidden" size="1" style="visibility:hidden;" multiple></select>
+			<select name="selCSNAMEHidden" size="1" style="visibility:hidden;" multiple></select>
+			<!-- store the selected ACs in the hidden field to use it for cscsi 
 This is refilled with ac id from ac-csi to use it for block edit-->
-<select name= "selACHidden" size="1" style="visibility:hidden;" multiple>
-<%if (vACId != null) 
+			<select name="selACHidden" size="1" style="visibility:hidden;" multiple>
+				<%if (vACId != null) 
   {
     for (int i = 0; vACId.size()>i; i++)
     {
@@ -908,30 +1317,32 @@ This is refilled with ac id from ac-csi to use it for block edit-->
       if (vACName != null && vACName.size() > i)
          sACName = (String)vACName.elementAt(i);
 %>
-      <option value="<%=sAC_ID%>"><%=sACName%></option>
-<%  }
+				<option value="<%=sAC_ID%>">
+					<%=sACName%>
+				</option>
+				<%  }
   }   %>
-</select>
+			</select>
 
- <!-- for DDE -->
-<input type="hidden" name="NotValidDBType" value="<%=sNVType%>">
-<input type="hidden" name="DECompCountHidden" value="<%=vDEComp.size()%>">
-<select name= "selDECompHidden" size ="1" style="visibility:hidden;"  multiple></select>
-<select name= "selDECompIDHidden" size ="1" style="visibility:hidden;"  multiple></select>
-<select name= "selDECompOrderHidden" size ="1" style="visibility:hidden;"  multiple></select>
-<select name= "selDECompRelIDHidden" size ="1" style="visibility:hidden;"  multiple></select>
-<select name= "selDECompDeleteHidden" size ="1" style="visibility:hidden;"  multiple></select>
-<select name= "selDECompDelNameHidden" size ="1" style="visibility:hidden;"  multiple></select>
-<% if (sDDEAction.equals("CreateNewDEFComp")) sOriginAction = sDDEAction; %>
-<input type="hidden" name="originActionHidden" value="<%=sOriginAction%>">
+			<!-- for DDE -->
+			<input type="hidden" name="NotValidDBType" value="<%=sNVType%>">
+			<input type="hidden" name="DECompCountHidden" value="<%=vDEComp.size()%>">
+			<select name="selDECompHidden" size="1" style="visibility:hidden;" multiple></select>
+			<select name="selDECompIDHidden" size="1" style="visibility:hidden;" multiple></select>
+			<select name="selDECompOrderHidden" size="1" style="visibility:hidden;" multiple></select>
+			<select name="selDECompRelIDHidden" size="1" style="visibility:hidden;" multiple></select>
+			<select name="selDECompDeleteHidden" size="1" style="visibility:hidden;" multiple></select>
+			<select name="selDECompDelNameHidden" size="1" style="visibility:hidden;" multiple></select>
+			<% if (sDDEAction.equals("CreateNewDEFComp")) sOriginAction = sDDEAction; %>
+			<input type="hidden" name="originActionHidden" value="<%=sOriginAction%>">
 
-<script language = "javascript">
+			<script language="javascript">
 displayStatusMessage();
 loadCSCSI();
 changeCountPN();
 changeCountLN();
 //changeRepType('init');
 </script>
-</form>
-</body>
+		</form>
+	</body>
 </html>

@@ -1,18 +1,20 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/DefSearchParameters.jsp,v 1.6 2007-01-26 20:17:44 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/DefSearchParameters.jsp,v 1.7 2007-05-23 04:33:13 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page import= "java.util.*" %>
-<%@ page buffer= "12kb" %>
-<%@ page session="true" %>
+<%@ page import="java.util.*"%>
+<%@ page buffer="12kb"%>
+<%@ page session="true"%>
 <html>
-<head>
-<title>CDE Curation Tool: Search Enterprise Vocabulary System</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
-<%
+	<head>
+		<title>
+			CDE Curation Tool: Search Enterprise Vocabulary System
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
+		<%
 String sLastKeyword = "";
 sLastKeyword = (String)request.getAttribute("evsKeyword");
 if (sLastKeyword == null) sLastKeyword = "";
@@ -22,7 +24,7 @@ Vector vOCAttr = new Vector();
 vOCAttr.addElement("Concept Name");
 vOCAttr.addElement("Definition");
 %>
-<Script Language="JavaScript">
+		<Script Language="JavaScript">
   var metaWindow = null;
   var srch = null;
 
@@ -84,68 +86,88 @@ function hourglass()
 }
 
 </script>
-</head>
+	</head>
 
-<body onLoad="Setup();" onHelp = "showHelp('../../cdecurate/Help_SearchAC.html#EVSSearchParmsForm_SearchDefinition'); return false">
-<form name="EVSForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=searchACs">
-  <table width="100%" class="sidebarBGColor">
-    <col width="10px">
-    <tr valign="center" align="left" class="firstRow">
-      <th>
-        1)&nbsp;&nbsp;Enter Search Term:
-      </th>
-    </tr>
-    <tr>
-      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="text" name="tfSearchTerm" value="<%=sLastKeyword%>" onKeyUp="JavaScript:enableButtons()">
-	   </td>
-    </tr>
-    
-		<tr align="left">
-      <td height="50">
-      <div style="margin-right: 10px">
-        <b>2)&nbsp;&nbsp;Click the Start Search</b><br>  
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; button to start the search.  <br>
-            <!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; want to use. <br>-->
-        </div>
-      </td>
-    <tr align="left">
-      <td height="50">
-      <div style="margin-right: 10px">
-        <b>3)&nbsp;&nbsp;Check the row</b> which <br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; contains the definition you <br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; want to use. <br>
-        </div>
-      </td>
-    <tr align="left">
-      <td height="50">
-      <div style="margin-right: 10px">
-        <b>4)&nbsp;&nbsp;Click the Use Selection<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; button</b> to paste the selected<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; text in the Definition text<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; box.
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td><div align="center">
-      </div></td>
-    </tr>
-    <tr height="50">
-      <td  align="center">
-        <input type="button" name="btnSearch" value="Start Search" onclick="JavaScript:Search()" disabled style="width:150", "height: 30">
-	   </td>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-    </tr>
-  <input type="hidden" name="actSelect" value="SearchDef">
-   <input type="hidden" name="outPrint" value="Print" style="visibility:hidden;"
-  <% out.println(""+vOCAttr.size());// leave this in, it slows jsp load down so no jasper error%> >
-  </table>
-<script language = "javascript">
+	<body onLoad="Setup();" onHelp="showHelp('../../cdecurate/Help_SearchAC.html#EVSSearchParmsForm_SearchDefinition'); return false">
+		<form name="EVSForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=searchACs">
+			<table width="100%" class="sidebarBGColor">
+				<col width="10px">
+				<tr valign="center" align="left" class="firstRow">
+					<th>
+						1)&nbsp;&nbsp;Enter Search Term:
+					</th>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="text" name="tfSearchTerm" value="<%=sLastKeyword%>" onKeyUp="JavaScript:enableButtons()">
+					</td>
+				</tr>
+
+				<tr align="left">
+					<td height="50">
+						<div style="margin-right: 10px">
+							<b>
+								2)&nbsp;&nbsp;Click the Start Search
+							</b>
+							<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; button to start the search.
+							<br>
+							<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; want to use. <br>-->
+						</div>
+					</td>
+				<tr align="left">
+					<td height="50">
+						<div style="margin-right: 10px">
+							<b>
+								3)&nbsp;&nbsp;Check the row
+							</b>
+							which
+							<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; contains the definition you
+							<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; want to use.
+							<br>
+						</div>
+					</td>
+				<tr align="left">
+					<td height="50">
+						<div style="margin-right: 10px">
+							<b>
+								4)&nbsp;&nbsp;Click the Use Selection
+								<br>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; button
+							</b>
+							to paste the selected
+							<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; text in the Definition text
+							<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; box.
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div align="center">
+						</div>
+					</td>
+				</tr>
+				<tr height="50">
+					<td align="center">
+						<input type="button" name="btnSearch" value="Start Search" onclick="JavaScript:Search()" disabled style="width:150", "height: 30">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+				</tr>
+				<input type="hidden" name="actSelect" value="SearchDef">
+				<input type="hidden" name="outPrint" value="Print" style="visibility:hidden;" <% out.println(""+vOCAttr.size());// leave this in, it slows jsp load down so no jasper error%>>
+			</table>
+			<script language="javascript">
 LoadKeyHandler();
 </script>
-</form>
-</body>
+		</form>
+	</body>
 </html>

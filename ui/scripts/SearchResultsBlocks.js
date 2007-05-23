@@ -1,3 +1,8 @@
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/SearchResultsBlocks.js,v 1.17 2007-05-23 04:38:59 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
    var numRowsSelected = 0;
    var attributesSelected = 0;
    var editID = "";
@@ -161,6 +166,8 @@
       //opened from create or edit VD form.
       else if (sComp == "EVSValueMeaning" || sComp == "ParentConceptVM"  || sComp == "VMConcept")  // && opener.document.createVDForm != null)
         useSelectionSelectVM();
+      else if (sComp == "EditVMConcept")
+      	useSelectionEditVM();
       //opened from create vm page
    //   else if (sComp == "CreateVM_EVSValueMeaning")
    //     useSelectionCreateVM();          
@@ -261,11 +268,11 @@
           for (var y=0; y<selRowArray2.length; y++)
           {
             var thisRow = selRowArray2[y];
-            if(thisRow == 0 && thisRow != "")
+         /*   if(thisRow == 0 && thisRow != "")  //would be same as the next condition
             {  
               selRowArray3[selRowArray3.length] = thisRow;
             }
-            else if(thisRow != "")
+            else*/ if(thisRow != "")
             {     
               selRowArray3[selRowArray3.length] = thisRow;
             }
@@ -295,7 +302,6 @@
       	{
 		    document.getElementById("editPVInd").value = pvInd;
 	  		//add teh concept info on the page
-	//  alert(editName + sCCode + sCCodeDB + " con " + conArray[0].conName + conArray[0].conID + conArray[0].conDBOrg);
 	      	document.searchResultsForm.actSelected.value = "appendConcept";
         	document.searchResultsForm.Message.style.visibility="visible";
 	        document.searchResultsForm.submit(); 
@@ -317,53 +323,25 @@
       document.searchResultsForm.hiddenSelectedRow.length = 0;
       document.searchResultsForm.editSelectedBtn.disabled=true;
       document.searchResultsForm.btnSubConcepts.disabled=true;
-    //  opener.document.createVDForm.searchComp.value = sComp;
-   // }
-  //alert("done showUseSelection");
   }
   
-/*  function useSelectionCreateVM()
+  function useSelectionEditVM()
   {
-    var dCount = document.searchResultsForm.hiddenSelectedRow.length;
-    if (dCount > 0)
-    {
-      for (i=0; i<dCount; i++)
-      {
-        var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
-        //first check the concept status and return if not valid
-        editStatus = conArray[rowNo].conStatus;
-        var useStatus = checkValidStatus(editStatus);
-        if (useStatus != "valid") 
-          return;
-        //get the evs values from the row number
-        editNameLong = conArray[rowNo].conName;  // document.searchResultsForm.hiddenName[rowNo].value;  //evs concept name
-        editDefinition = conArray[rowNo].conDef;  // document.searchResultsForm.hiddenDefSource[rowNo].text;   //evs definition 
-        editDefSource = conArray[rowNo].conDefSrc;  // document.searchResultsForm.hiddenDefSource[rowNo].value;   //evs definition source
-        sCCodeDB = conArray[rowNo].conVocab;  // document.searchResultsForm.hiddenCCodeDB[rowNo].value;  //evs vocabulary
-        sCCode = conArray[rowNo].conID;  // document.searchResultsForm.hiddenCCode[rowNo].value;   //evs code
-        var sCode = sCCode + " : " + sCCodeDB;
-        if (opener.document != null && opener.document.createVMForm != null && opener.document.createVMForm.selShortMeanings != null)
-        {
-	        opener.document.createVMForm.CreateDescription.value = editDefinition;
-	        opener.document.createVMForm.selShortMeanings.value = editNameLong;
-	       // opener.document.createVMForm.taComments.value = sCode;
-	        opener.document.createVMForm.EVSConceptID.value = sCode;
-	        opener.document.createVMForm.selShortMeanings.disabled = true;
-	        if(selDefinition != null && selDefinition != "")
-	          opener.document.createVMForm.CreateDescription.disabled = true;
-	        else
-	          opener.document.createVMForm.CreateDescription.disabled = false;
-	        opener.document.createVMForm.hiddenEVSSearch.value = "Searched"; 
-	        opener.document.createVMForm.hiddenSelRow.value = rowNo; 
-	        //submit vm page to store data in the bean
-	        opener.document.createVMForm.pageAction.value = "appendSearchVM";
-	        opener.SubmitValidate("appendSearchVM");
-	        //close the window
-	        window.close();
-        }
-      }
-    }
-  } */
+	var rowNo = document.searchResultsForm.hiddenSelectedRow[0].value;
+	if (rowNo != "" && opener != null && opener.document != null)
+	{
+        var sNVP = "";
+        //get teh nvp value from teh text field
+        var ckField = "nvp_CK"+rowNo;
+		var nvpObj = document.getElementById(ckField);
+		if (nvpObj != null && nvpObj.value != null)
+			sNVP = nvpObj.value;
+		//submit the page
+		opener.appendConcept(rowNo, sNVP);
+		window.close();
+	}
+  }
+  
   //alerts if more than one concept with same name is selected
   function checkDuplicateConcept()
   {   
@@ -661,13 +639,14 @@
       {
         var isDup = "false";
         var rowNo2 = document.searchResultsForm.hiddenSelectedRow[p].value;
-        var rowName2 = conArray[rowNo].conName;  // document.searchResultsForm.hiddenName[rowNo2].value;  //concept name
+        var rowName2 = conArray[rowNo2].conName;  // document.searchResultsForm.hiddenName[rowNo2].value;  //concept name
         for (var q=0; q<multiNamesArray.length; q++)
         {
           var dName2 = multiNamesArray[q];
           if (dName2 == rowName2)
             isDup = "true"
         }
+        
         if(isDup == "false")
         {
           uniqueRowArray[uniqueRowArray.length] = rowNo2;
@@ -1289,7 +1268,7 @@ function createNames(acType)
           opener.document.newDECForm.CreateDefinition.value = "New EVS term suggested.";
          if (evsWindow2 && !evsWindow2.closed)
             evsWindow2.close()
-         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
+         evsWindow2 = window.open(evsNewUrl, "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
       }
      else if (sComp1 == "ValueDomain")
      {
@@ -1300,13 +1279,13 @@ function createNames(acType)
           opener.document.createVDForm.CreateDefinition.value = "New EVS term suggested.";
          if (evsWindow2 && !evsWindow2.closed)
             evsWindow2.close()
-         evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
+         evsWindow2 = window.open(evsNewUrl, "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
       }
       else
       {
         if (evsWindow2 && !evsWindow2.closed)
           evsWindow2.close()
-        evsWindow2 = window.open("http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet", "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
+        evsWindow2 = window.open(evsNewUrl, "EVSWindow2", "width=750,height=550,resizable=yes,scrollbars=yes")
       }
   }
   

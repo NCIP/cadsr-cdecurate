@@ -1,19 +1,22 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/DesignateComponent.jsp,v 1.6 2007-01-26 20:17:44 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/DesignateComponent.jsp,v 1.7 2007-05-23 04:33:29 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page import= "java.util.*" %>
-<%@ page session="true" %>
+<%@ page import="java.util.*"%>
+<%@ page session="true"%>
 <html>
-<head>
-<title>Designate Administered Component / Specify Alternate Name</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
-<%
+	<head>
+		<title>
+			Designate Administered Component / Specify Alternate Name
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.Session_Data"%>
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
+		<%
   String sSearchAC = "";
-  String sMenuAction = (String)session.getAttribute("MenuAction");
+  String sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
   if (sMenuAction.equals("searchForCreate"))
      sSearchAC = (String)session.getAttribute("creSearchAC");
   else
@@ -41,7 +44,7 @@
    if (sContext == null) sContext = "";
 %>
 
-<Script Language="JavaScript">
+		<Script Language="JavaScript">
    function Setup()
    {
       if ((opener.document != null) && (opener.document.searchResultsForm.hiddenDesIDName.length < 2))
@@ -189,23 +192,40 @@
 
 </script>
 
-</head>
+	</head>
 
-<body onLoad="Setup();">
+	<body onLoad="Setup();">
 
-<form name="designateForm" method="post">
-  <table width="100%" cellspacing=0 cellpadding=0 border="0">
-    <col width="2%"><col width="29%"><col width="25%"><col width="44%">
-    <tr valign="top">
-      <td colspan=4><b><font size=4>Designate Data Element(s)/Alternate Name(s)/Reference Document(s)</font></b></td>
-    </tr>
-    <tr height="50">
-      <td align="center"><font color="#FF0000">*</font></td>
-      <td><font color="#FF0000">Select </font> Used By Context</td>
-      <td colspan=2>
-        <select name="selContext" size="1"
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
-<%        boolean bDataFound = false;
+		<form name="designateForm" method="post">
+			<table width="100%" cellspacing=0 cellpadding=0 border="0">
+				<col width="2%">
+				<col width="29%">
+				<col width="25%">
+				<col width="44%">
+				<tr valign="top">
+					<td colspan=4>
+						<b>
+							<font size=4>
+								Designate Data Element(s)/Alternate Name(s)/Reference Document(s)
+							</font>
+						</b>
+					</td>
+				</tr>
+				<tr height="50">
+					<td align="center">
+						<font color="#FF0000">
+							*
+						</font>
+					</td>
+					<td>
+						<font color="#FF0000">
+							Select
+						</font>
+						Used By Context
+					</td>
+					<td colspan=2>
+						<select name="selContext" size="1" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+							<%        boolean bDataFound = false;
           for (int i = 0; vContext.size()>i; i++)
           {
              String sContextName = (String)vContext.elementAt(i);
@@ -213,151 +233,208 @@
              //if(sContext.equals("")) sContext = sContextName;
              if(sContextName.equals(sContext)) bDataFound = true;
 %>
-          <option value="<%=sContextID%>" <%if(sContextName.equals(sContext)){%> selected <%}%> ><%=sContextName%></option>
-<%
+							<option value="<%=sContextID%>" <%if(sContextName.equals(sContext)){%> selected <%}%>>
+								<%=sContextName%>
+							</option>
+							<%
           }
           if (bDataFound == false) { %>
-            <option value="" selected></option>
-<%        } %>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td align="center"></td>
-      <td>Data Element Long Name</td>
-      <td colspan=2>
-        <input name="txtDesignationName" type="text" value="" style="width:85%" readonly 
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
-      </td>
-    </tr>
-    <tr height="40" valign="middle">
-      <td align="center"></td>
-      <td><font color="#FF0000">Select </font>Type</td>
-      <td align="left">
-        <input name="rType" type="radio" value="altName"
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
-        Alternate Name  
-      </td>
-      <td align="left">
-        <input name="rType" type="radio" value="refDoc" 
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
-        Reference Documents  
-      </td>
-    </tr>
-    <tr height="35" valign="middle">
-      <td align="center"></td>
-      <td><font color="#FF0000">Select </font>Alternate Name Type</td>
-      <td colspan=2>
-        <select name="selAltType" size="1"  style="width:65%"
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
-          <option value=""></option>
-          <option value="C3DName">C3DName</option>
-        </select>
-      </td>
-    </tr>
-    <tr valign="middle">
-      <td align="center"></td>
-      <td><font color="#FF0000">Enter </font>Alternate Name</td>
-      <td colspan=2>
-        <textarea name="txtAltName"  style="width:85%" rows=2  
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
-      </td>
-    </tr>
-    <tr height="40" valign="middle">
-      <td align="center"></td>
-      <td><font color="#FF0000">Select </font>Reference Document Type</td>
-      <td colspan=2>
-        <select name="selRefType" size="1"  style="width:65%"
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
-          <option value=""></option>
-          <option value="Long_Name">LONG NAME</option>
-        </select>
-      </td>
-    </tr>
-    <tr height="40" valign="middle">
-      <td align="center"></td>
-      <td><font color="#FF0000">Enter </font>Reference Document Name</td>
-      <td colspan=2>
-        <textarea name="txtRefName"  style="width:85%" rows=2  
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
-      </td>
-    </tr>
-    <tr height="40" valign="middle">
-      <td align="center"></td>
-      <td><font color="#FF0000">Enter </font>Reference Document Text</td>
-      <td colspan=2>
-        <textarea name="txtRefText"  style="width:85%" rows=2  
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
-      </td>
-    </tr>
-    <tr height="40" valign="middle">
-      <td align="center"></td>
-      <td><font color="#FF0000">Enter </font>Reference Document URL</td>
-      <td colspan=2 width="100%">
-        <input name="txtRefURL" type="text" value="" style="width:85%" 
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
-        &nbsp;&nbsp;<a href="">Search</a>
-      </td>
-    </tr>
-   <!-- <tr><td height="7" valign="top"></tr>    -->
-    <tr height="30" valign="middle">
-      <td align="left" colspan=2>&nbsp;</td>
-      <td align="left" colspan=2><input type="button" name="btnAddAltName" value="Add Selection" style="width: 100", "height: 9" onClick="addAltName();"></td>
-    </tr>
-    <tr><td height="12" valign="top"></tr>    
-    <tr>
-      <td align="left">&nbsp;</td>
-      <td align="left">Selected Type</td>
-      <td align="left">&nbsp;Name</td>
-      <td align="center">&nbsp;&nbsp;&nbsp;&nbsp;<input  type="button" name="btnRemAltName" value="Remove Item" style="width:85,height:9" onClick="removeAltName();"></td>
-    </tr>
-    <tr>
-      <td align="left">&nbsp;</td>
-      <td align="left">
-        <select name="selNameType" size="4" multiple="multiple" style="width:100%"
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
-        </select>  
-      </td>
-      <td align="left" colspan="2">
-        <select name="selName" size="4" multiple="multiple" style="width:90%"
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
-        </select>  
-      </td>
-    </tr>
-    <tr>
-      <td align="left">&nbsp;</td>
-      <td align="left">Selected Doc Text</td>
-      <td align="left">&nbsp;URL</td>
-    </tr>
-    <tr>
-      <td align="left">&nbsp;</td>
-      <td align="left">
-        <select name="selDocText" size="4" multiple="multiple" style="width:100%"
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
-        </select>  
-      </td>
-      <td align="left" colspan="2">
-        <select name="selURL" size="4" multiple="multiple" style="width:90%"
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
-        </select>  
-      </td>
-    </tr>
-    <tr><td height="12" valign="top"></tr>    
-    <tr>
-      <td colspan=4 align="center">
-        <input type="button" name="btnDesignate" value="Create Designation" style="width:130,height:30" onClick="CreateDesignation();"
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
-          &nbsp;&nbsp;
-        <input type="button" name="btnUnDesignate" value="Remove Designation" style="width:130,height:30" onClick="RemoveDesignation();"
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
-          &nbsp;&nbsp;
-        <input type="button" name="btnClose" value="Close Window" style="width:130,height:30" onClick="window.close();"
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
-      </td>
-    </tr>
-  <!-- stores selected component ID and workflow status  -->
-  <select size="1" name="hiddenUsedBy" style="visibility:hidden;"></select>
-  </table>
-</form>
-</body>
+							<option value="" selected></option>
+							<%        } %>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="center"></td>
+					<td>
+						Data Element Long Name
+					</td>
+					<td colspan=2>
+						<input name="txtDesignationName" type="text" value="" style="width:85%" readonly onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+					</td>
+				</tr>
+				<tr height="40" valign="middle">
+					<td align="center"></td>
+					<td>
+						<font color="#FF0000">
+							Select
+						</font>
+						Type
+					</td>
+					<td align="left">
+						<input name="rType" type="radio" value="altName" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						Alternate Name
+					</td>
+					<td align="left">
+						<input name="rType" type="radio" value="refDoc" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						Reference Documents
+					</td>
+				</tr>
+				<tr height="35" valign="middle">
+					<td align="center"></td>
+					<td>
+						<font color="#FF0000">
+							Select
+						</font>
+						Alternate Name Type
+					</td>
+					<td colspan=2>
+						<select name="selAltType" size="1" style="width:65%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+							<option value=""></option>
+							<option value="C3DName">
+								C3DName
+							</option>
+						</select>
+					</td>
+				</tr>
+				<tr valign="middle">
+					<td align="center"></td>
+					<td>
+						<font color="#FF0000">
+							Enter
+						</font>
+						Alternate Name
+					</td>
+					<td colspan=2>
+						<textarea name="txtAltName" style="width:85%" rows=2 onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
+					</td>
+				</tr>
+				<tr height="40" valign="middle">
+					<td align="center"></td>
+					<td>
+						<font color="#FF0000">
+							Select
+						</font>
+						Reference Document Type
+					</td>
+					<td colspan=2>
+						<select name="selRefType" size="1" style="width:65%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+							<option value=""></option>
+							<option value="Long_Name">
+								LONG NAME
+							</option>
+						</select>
+					</td>
+				</tr>
+				<tr height="40" valign="middle">
+					<td align="center"></td>
+					<td>
+						<font color="#FF0000">
+							Enter
+						</font>
+						Reference Document Name
+					</td>
+					<td colspan=2>
+						<textarea name="txtRefName" style="width:85%" rows=2 onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
+					</td>
+				</tr>
+				<tr height="40" valign="middle">
+					<td align="center"></td>
+					<td>
+						<font color="#FF0000">
+							Enter
+						</font>
+						Reference Document Text
+					</td>
+					<td colspan=2>
+						<textarea name="txtRefText" style="width:85%" rows=2 onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
+					</td>
+				</tr>
+				<tr height="40" valign="middle">
+					<td align="center"></td>
+					<td>
+						<font color="#FF0000">
+							Enter
+						</font>
+						Reference Document URL
+					</td>
+					<td colspan=2 width="100%">
+						<input name="txtRefURL" type="text" value="" style="width:85%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						&nbsp;&nbsp;
+						<a href="">
+							Search
+						</a>
+					</td>
+				</tr>
+				<!-- <tr><td height="7" valign="top"></tr>    -->
+				<tr height="30" valign="middle">
+					<td align="left" colspan=2>
+						&nbsp;
+					</td>
+					<td align="left" colspan=2>
+						<input type="button" name="btnAddAltName" value="Add Selection" style="width: 100" , "height: 9" onClick="addAltName();">
+					</td>
+				</tr>
+				<tr>
+					<td height="12" valign="top">
+				</tr>
+				<tr>
+					<td align="left">
+						&nbsp;
+					</td>
+					<td align="left">
+						Selected Type
+					</td>
+					<td align="left">
+						&nbsp;Name
+					</td>
+					<td align="center">
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="button" name="btnRemAltName" value="Remove Item" style="width:85,height:9" onClick="removeAltName();">
+					</td>
+				</tr>
+				<tr>
+					<td align="left">
+						&nbsp;
+					</td>
+					<td align="left">
+						<select name="selNameType" size="4" multiple="multiple" style="width:100%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						</select>
+					</td>
+					<td align="left" colspan="2">
+						<select name="selName" size="4" multiple="multiple" style="width:90%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="left">
+						&nbsp;
+					</td>
+					<td align="left">
+						Selected Doc Text
+					</td>
+					<td align="left">
+						&nbsp;URL
+					</td>
+				</tr>
+				<tr>
+					<td align="left">
+						&nbsp;
+					</td>
+					<td align="left">
+						<select name="selDocText" size="4" multiple="multiple" style="width:100%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						</select>
+					</td>
+					<td align="left" colspan="2">
+						<select name="selURL" size="4" multiple="multiple" style="width:90%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td height="12" valign="top">
+				</tr>
+				<tr>
+					<td colspan=4 align="center">
+						<input type="button" name="btnDesignate" value="Create Designation" style="width:130,height:30" onClick="CreateDesignation();" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						&nbsp;&nbsp;
+						<input type="button" name="btnUnDesignate" value="Remove Designation" style="width:130,height:30" onClick="RemoveDesignation();" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						&nbsp;&nbsp;
+						<input type="button" name="btnClose" value="Close Window" style="width:130,height:30" onClick="window.close();" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+					</td>
+				</tr>
+				<!-- stores selected component ID and workflow status  -->
+				<select size="1" name="hiddenUsedBy" style="visibility:hidden;"></select>
+			</table>
+		</form>
+	</body>
 </html>
