@@ -1,9 +1,9 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VM_Bean.java,v 1.38 2007-01-26 20:17:44 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VM_Bean.java,v 1.39 2007-05-23 04:15:16 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
-import java.io.*;
+import gov.nih.nci.cadsr.cdecurate.database.ACTypes;
 import java.util.Vector;
 
 /**
@@ -95,7 +95,7 @@ public class VM_Bean extends AC_Bean
   private static final long serialVersionUID = 1L;
   //Attributes
   private String RETURN_CODE;
-  private String VM_COMMENTS;
+  private String VM_COMMENT_FLAG;
   private String VM_SHORT_MEANING;
   private String VM_BEGIN_DATE;
   private String VM_DESCRIPTION;
@@ -114,21 +114,36 @@ public class VM_Bean extends AC_Bean
   private String VM_LONG_NAME;
   private String VM_PREF_NAME;
   private String VM_ID;
-  private String VM_DEFINITION;
+  private String VM_ALT_DEFINITION;
+  private String VM_ALT_NAME;
   private String VM_ORIGIN;
   private String VM_CHANGE_NOTE;
   private String VM_VERSION;
   private String VM_SUBMIT_ACTION;
   private String VM_CONDR_IDSEQ;
   private Vector<EVS_Bean> VM_CONCEPT_LIST;
-  private Vector<VD_Bean> VM_VD_LIST;
+  private Vector<CommonACBean> VM_VD_LIST;
+  private Vector<CommonACBean> VM_DE_LIST;
+  private Vector<CommonACBean> VM_CRF_LIST;
+  private boolean VM_SHOW_RELEASED_VD = false;
+  private boolean VM_SHOW_RELEASED_DE = false;
+  private boolean VM_SHOW_RELEASED_CRF = false;
+  private String VM_SORT_COLUMN_VD;
+  private String VM_SORT_COLUMN_DE;
+  private String VM_SORT_COLUMN_CRF;
+  
+  
   
 
   /**
   * Constructor
   */
-  public VM_Bean() {
-  };
+    public VM_Bean()
+    {
+        super();
+        
+        _type = ACTypes.ValueMeaning;
+    }
 
   /**makes the copy of the bean
    * @param cBean VM_BEan to copy from
@@ -142,6 +157,12 @@ public class VM_Bean extends AC_Bean
     this.setVM_CONCEPT_LIST(cloneVMConVector(cBean.getVM_CONCEPT_LIST()));
     this.setVM_CONDR_IDSEQ(cBean.getVM_CONDR_IDSEQ());
     this.setVM_IDSEQ(cBean.getVM_IDSEQ());
+    this.setVM_ID(cBean.getVM_ID());
+    this.setVM_VERSION(cBean.getVM_VERSION());
+    this.setVM_CHANGE_NOTE(cBean.getVM_CHANGE_NOTE());
+    this.setVM_CONTE_IDSEQ(cBean.getVM_CONTE_IDSEQ());
+    this.setVM_ALT_NAME(cBean.getVM_ALT_NAME());
+    this.setASL_NAME(cBean.getASL_NAME());
     this.setVM_SUBMIT_ACTION(cBean.getVM_SUBMIT_ACTION());
     this._alts = cBean._alts;    
     return this;
@@ -199,13 +220,13 @@ public class VM_Bean extends AC_Bean
       this.VM_DESCRIPTION = s;
   }
   /**
-  * The setVM_COMMENTS method sets the VM_COMMENTS for this bean.
+  * The setVM_COMMENT_FLAG method sets the VM_COMMENT_FLAG for this bean.
   *
-  * @param s The VM_COMMENTS to set
+  * @param s The VM_COMMENT_FLAG to set
   */
-  public void setVM_COMMENTS(String s)
+  public void setVM_COMMENT_FLAG(String s)
   {
-      this.VM_COMMENTS = s;
+      this.VM_COMMENT_FLAG = s;
   }
   /**
   * The setVM_END_DATE method sets the VM_END_DATE for this bean.
@@ -327,13 +348,13 @@ public class VM_Bean extends AC_Bean
       return (this.VM_DESCRIPTION == null) ? "" : this.VM_DESCRIPTION.trim();
   }
   /**
-  * The getVM_COMMENTS method returns the VM_COMMENTS for this bean.
+  * The getVM_COMMENT_FLAG method returns the VM_COMMENT_FLAG for this bean.
   *
-  * @return String The VM_COMMENTS
+  * @return String The VM_COMMENT_FLAG
   */
-  public String getVM_COMMENTS()
+  public String getVM_COMMENT_FLAG()
   {
-      return this.VM_COMMENTS;
+      return this.VM_COMMENT_FLAG;
   }
   /**
   * The getVM_END_DATE method returns the VM_END_DATE for this bean.
@@ -425,7 +446,6 @@ public class VM_Bean extends AC_Bean
     return (ASL_NAME == null) ? "": ASL_NAME;
   }
 
-
   /**
    * @param asl_name The aSL_NAME to set.
    */
@@ -474,7 +494,7 @@ public class VM_Bean extends AC_Bean
    */
   public String getVM_CHANGE_NOTE()
   {
-    return VM_CHANGE_NOTE;
+    return (VM_CHANGE_NOTE == null) ? "" : VM_CHANGE_NOTE;
   }
 
   /**
@@ -653,19 +673,179 @@ public class VM_Bean extends AC_Bean
   }
 
   /**
+   * @return Returns the vM_ALT_DEFINITION.
+   */
+  public String getVM_ALT_DEFINITION()
+  {
+    return (VM_ALT_DEFINITION == null) ? "" : VM_ALT_DEFINITION;
+  }
+
+  /**
+   * @param vm_alt_definition The vM_ALT_DEFINITION to set.
+   */
+  public void setVM_ALT_DEFINITION(String vm_alt_definition)
+  {
+    VM_ALT_DEFINITION = vm_alt_definition;
+  }
+
+  /**
+   * @return Returns the vM_ALT_NAME.
+   */
+  public String getVM_ALT_NAME()
+  {
+    return (VM_ALT_NAME == null) ? "" : VM_ALT_NAME;
+  }
+
+  /**
+   * @param vm_alt_name The vM_ALT_NAME to set.
+   */
+  public void setVM_ALT_NAME(String vm_alt_name)
+  {
+    VM_ALT_NAME = vm_alt_name;
+  }
+
+  /**
+   * @return Returns the vM_CRF_LIST.
+   */
+  public Vector<CommonACBean> getVM_CRF_LIST()
+  {
+    return (VM_CRF_LIST == null) ? new Vector<CommonACBean>() : VM_CRF_LIST;
+  }
+
+  /**
+   * @param vm_crf_list The vM_CRF_LIST to set.
+   */
+  public void setVM_CRF_LIST(Vector<CommonACBean> vm_crf_list)
+  {
+    VM_CRF_LIST = vm_crf_list;
+  }
+
+  /**
+   * @return Returns the vM_DE_LIST.
+   */
+  public Vector<CommonACBean> getVM_DE_LIST()
+  {
+    return (VM_DE_LIST == null) ? new Vector<CommonACBean>() : VM_DE_LIST;
+  }
+
+  /**
+   * @param vm_de_list The vM_DE_LIST to set.
+   */
+  public void setVM_DE_LIST(Vector<CommonACBean> vm_de_list)
+  {
+    VM_DE_LIST = vm_de_list;
+  }
+
+  /**
    * @return Returns the vM_VD_LIST.
    */
-  public Vector<VD_Bean> getVM_VD_LIST()
+  public Vector<CommonACBean> getVM_VD_LIST()
   {
-    return (VM_VD_LIST == null) ? new Vector<VD_Bean>() : VM_VD_LIST;
+    return (VM_VD_LIST == null) ? new Vector<CommonACBean>() : VM_VD_LIST;
   }
 
   /**
    * @param vm_vd_list The vM_VD_LIST to set.
    */
-  public void setVM_VD_LIST(Vector<VD_Bean> vm_vd_list)
+  public void setVM_VD_LIST(Vector<CommonACBean> vm_vd_list)
   {
     VM_VD_LIST = vm_vd_list;
+  }
+
+  /**
+   * @return Returns the vM_SHOW_RELEASED_CRF.
+   */
+  public boolean getVM_SHOW_RELEASED_CRF()
+  {
+    return VM_SHOW_RELEASED_CRF;
+  }
+
+  /**
+   * @param vm_show_released_crf The vM_SHOW_RELEASED_CRF to set.
+   */
+  public void setVM_SHOW_RELEASED_CRF(boolean vm_show_released_crf)
+  {
+    VM_SHOW_RELEASED_CRF = vm_show_released_crf;
+  }
+
+  /**
+   * @return Returns the vM_SHOW_RELEASED_DE.
+   */
+  public boolean getVM_SHOW_RELEASED_DE()
+  {
+    return VM_SHOW_RELEASED_DE;
+  }
+
+  /**
+   * @param vm_show_released_de The vM_SHOW_RELEASED_DE to set.
+   */
+  public void setVM_SHOW_RELEASED_DE(boolean vm_show_released_de)
+  {
+    VM_SHOW_RELEASED_DE = vm_show_released_de;
+  }
+
+  /**
+   * @return Returns the vM_SHOW_RELEASED_VD.
+   */
+  public boolean getVM_SHOW_RELEASED_VD()
+  {
+    return VM_SHOW_RELEASED_VD;
+  }
+
+  /**
+   * @param vm_show_released_vd The vM_SHOW_RELEASED_VD to set.
+   */
+  public void setVM_SHOW_RELEASED_VD(boolean vm_show_released_vd)
+  {
+    VM_SHOW_RELEASED_VD = vm_show_released_vd;
+  }
+
+  /**
+   * @return Returns the vM_SORT_COLUMN_CRF.
+   */
+  public String getVM_SORT_COLUMN_CRF()
+  {
+    return (VM_SORT_COLUMN_CRF == null) ? CommonACBean.COLUMN_LONG_NAME : VM_SORT_COLUMN_CRF;
+  }
+
+  /**
+   * @param vm_sort_column_crf The vM_SORT_COLUMN_CRF to set.
+   */
+  public void setVM_SORT_COLUMN_CRF(String vm_sort_column_crf)
+  {
+    VM_SORT_COLUMN_CRF = vm_sort_column_crf;
+  }
+
+  /**
+   * @return Returns the vM_SORT_COLUMN_DE.
+   */
+  public String getVM_SORT_COLUMN_DE()
+  {
+    return (VM_SORT_COLUMN_DE == null) ? CommonACBean.COLUMN_LONG_NAME : VM_SORT_COLUMN_DE;
+  }
+
+  /**
+   * @param vm_sort_column_de The vM_SORT_COLUMN_DE to set.
+   */
+  public void setVM_SORT_COLUMN_DE(String vm_sort_column_de)
+  {
+    VM_SORT_COLUMN_DE = vm_sort_column_de;
+  }
+
+  /**
+   * @return Returns the vM_SORT_COLUMN_VD.
+   */
+  public String getVM_SORT_COLUMN_VD()
+  {
+    return (VM_SORT_COLUMN_VD == null) ? CommonACBean.COLUMN_LONG_NAME : VM_SORT_COLUMN_VD;
+  }
+
+  /**
+   * @param vm_sort_column_vd The vM_SORT_COLUMN_VD to set.
+   */
+  public void setVM_SORT_COLUMN_VD(String vm_sort_column_vd)
+  {
+    VM_SORT_COLUMN_VD = vm_sort_column_vd;
   }
 
   

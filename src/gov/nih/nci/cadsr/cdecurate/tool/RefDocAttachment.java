@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.40 2007-02-26 21:48:02 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.41 2007-05-23 04:14:11 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -459,7 +459,7 @@ public void doBack (){
 	
 	// Set results in the session
 	session.setAttribute("results", vResult);
-	session.setAttribute("statusMessage", msg); 
+	session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, msg); 
 	
 	// Forward back to search AC page
 	m_servlet.ForwardJSP(req, res, "/SearchResultsPage.jsp");

@@ -1,6 +1,8 @@
-/**
- * 
- */
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVForm.java,v 1.3 2007-05-23 04:13:41 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.sql.Connection;
@@ -26,6 +28,12 @@ public class PVForm
   public static final String CADSR_ACTION_DEL = "DEL";
   /** database submit action update NONE keyword */
   public static final String CADSR_ACTION_NONE = "NONE";
+
+  //session attributes
+  public static final String SESSION_PV_INDEX = "selectPVIndex";  
+  public static final String SESSION_SELECT_VD = "m_VD";  
+  //request attribute
+  public static final String REQUEST_FOCUS_ELEMENT = "focusElement";  
   
   //attributes
   private String statusMsg;

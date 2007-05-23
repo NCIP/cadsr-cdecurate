@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsForm.java,v 1.28 2007-01-26 20:17:44 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsForm.java,v 1.29 2007-05-23 04:16:42 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -48,6 +48,17 @@ public class AltNamesDefsForm
         else if (_nameDef.length() > DBAccess._MAXDEFLEN)
             _nameDef = _nameDef.trim().substring(0, DBAccess._MAXDEFLEN);
 
+        _contextID = _req.getParameter(AltNamesDefsServlet._parmContext);
+        if (_contextID == null || _contextID.length() == 0)
+        {
+            _contextID = _sess._editAlt.getConteIdseq();
+            _contextName = _sess._editAlt.getConteName();
+        }
+        else
+        {
+            _contextName = _sess.getContextName(_contextID);
+        }
+
         _type = _req.getParameter(AltNamesDefsServlet._parmType);
         if (_type == null || _type.length() == 0)
             _type = _sess._editAlt.getType();
@@ -68,15 +79,18 @@ public class AltNamesDefsForm
     public void clearEdit()
     {
         _sess.clearEdit();
-        _sess._editAlt.setAltIdseq(_sess.newIdseq());
-        _sess._editAlt.setInstance((_mode.equals(AltNamesDefsServlet._modeName)) ? Alternates._INSTANCENAME : Alternates._INSTANCEDEF);
-        _sess._editAlt.setConteIdseq(_sess._conteIdseq[0]);
-        _sess._editAlt.setConteName(_sess._conteName[0]);
-        _sess._editAlt.setACIdseq(_sess._acIdseq[0]);
         
         _nameDef = "";
         _type = "";
         _lang = "";
+        _contextID = _sess._conteIdseq[0];
+        _contextName = _sess._conteName[0];
+
+        _sess._editAlt.setAltIdseq(_sess.newIdseq());
+        _sess._editAlt.setInstance((_mode.equals(AltNamesDefsServlet._modeName)) ? Alternates._INSTANCENAME : Alternates._INSTANCEDEF);
+        _sess._editAlt.setConteIdseq(_contextID);
+        _sess._editAlt.setConteName(_contextName);
+        _sess._editAlt.setACIdseq(_sess._acIdseq[0]);
     }
 
     /**
@@ -153,6 +167,8 @@ public class AltNamesDefsForm
         _nameDef = obj_.getName();
         _type = obj_.getType();
         _lang = obj_.getLanguage();
+        _contextID = obj_.getConteIdseq();
+        _contextName = obj_.getConteName();
     }
 
     /**
@@ -164,6 +180,8 @@ public class AltNamesDefsForm
         _sess._editAlt.setName(_nameDef);
         _sess._editAlt.setType(_type);
         _sess._editAlt.setLanguage(_lang);
+        _sess._editAlt.setConteIdseq(_contextID);
+        _sess._editAlt.setConteName(_contextName);
     }
     
     /**
@@ -215,6 +233,17 @@ public class AltNamesDefsForm
         }
         _req.setAttribute(AltNamesDefsServlet._parmType, attr);
 
+        // This is the edit page Context dropdown
+        attr = "";
+        for (int i = 0; i < _sess._cacheContextIds.length; ++i)
+        {
+            String value = _sess._cacheContextIds[i];
+            String label = _sess._cacheContextNames[i];
+            String selected = (value.equals(_contextID)) ? "\" selected" : "\"";
+            attr += "<option value=\"" + value + selected + ">" + label + "</option>\n";
+        }
+        _req.setAttribute(AltNamesDefsServlet._parmContext, attr);
+        
         // Fill up the Language dropdown.
         String selLang = (_lang == null || _lang.length() == 0) ? _sess._cacheLangDefault : _lang;
         list = _sess._cacheLangs;
@@ -244,4 +273,6 @@ public class AltNamesDefsForm
     public String _lang;
     public String _targetIdseq;
     public String _attrs;
+    public String _contextID;
+    public String _contextName;
 }

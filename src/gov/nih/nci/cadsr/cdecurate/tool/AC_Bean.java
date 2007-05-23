@@ -1,10 +1,11 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_Bean.java,v 1.38 2007-01-26 20:17:43 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/AC_Bean.java,v 1.39 2007-05-23 04:11:20 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.database.ACTypes;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -20,11 +21,17 @@ import javax.servlet.http.HttpSession;
 
 public abstract class AC_Bean implements Serializable
 {
+
+    protected ACTypes _type;
+    protected AltNamesDefsSession _alts;
+    protected boolean _newAC;
+
     /**
      * Constructor
      */
     public AC_Bean ()
     {
+        _type = ACTypes.UNKNOWN;
     }
     
     /**
@@ -82,7 +89,14 @@ public abstract class AC_Bean implements Serializable
     {
         _newAC = true;
     }
-
-    protected AltNamesDefsSession _alts;
-    protected boolean _newAC;
+    
+    public boolean isType(ACTypes type_)
+    {
+        return (_type == type_);
+    }
+    
+    public ACTypes getType()
+    {
+        return _type;
+    }
 }

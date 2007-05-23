@@ -1,9 +1,10 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.38 2007-01-26 20:17:44 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.39 2007-05-23 04:13:16 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.util.AddOns;
 import java.io.Serializable;
 import java.util.*;
 import java.sql.*;
@@ -27,7 +28,7 @@ public class GetACService implements Serializable
      */
     private static final long serialVersionUID = 6486668887681006373L;
 
-    // Connection m_sbr_db_conn = null;
+    // Connection conn = null;
     private NCICurationServlet       m_servlet;
 
     private UtilService                     m_util           = new UtilService();
@@ -83,13 +84,13 @@ public class GetACService implements Serializable
     public void getACList(HttpServletRequest req, HttpServletResponse res, String sContext, boolean bNewContext,
                     String sACType) throws IOException, ServletException
     {
-        Connection m_sbr_db_conn = null;
+        Connection conn = null;
         try
         {
             // logger.info(m_servlet.getLogMessage(req, "getACList", "started", startDate, startDate));
             HttpSession session = req.getSession();
-            m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (m_sbr_db_conn != null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn != null)
             {
                 session.setAttribute("ConnectedToDB", "Yes");
                 Vector<String> v;
@@ -275,7 +276,10 @@ public class GetACService implements Serializable
                 // list of NVP concepts
                 if (session.getAttribute("NVPConcepts") == null)
                     this.getNVPConcepts(session);
-                m_sbr_db_conn.close();
+                // list of ASL names to filter
+                if (session.getAttribute(Session_Data.SESSION_ASL_FILTER) == null)
+                    this.getASLFilterList(session);
+                conn.close();
                 // logger.info(m_servlet.getLogMessage(req, "getACList", "ended", startDate, new java.util.Date()));
             }
             else
@@ -288,8 +292,8 @@ public class GetACService implements Serializable
         {
             try
             {
-                if (m_sbr_db_conn != null)
-                    m_sbr_db_conn.close();
+                if (conn != null)
+                    conn.close();
             }
             catch (Exception f)
             {
@@ -299,8 +303,8 @@ public class GetACService implements Serializable
         }
         try
         {
-            if (m_sbr_db_conn != null)
-                m_sbr_db_conn.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -323,16 +327,16 @@ public class GetACService implements Serializable
      */
     public void verifyConnection(HttpServletRequest req, HttpServletResponse res)
     {
-        Connection m_sbr_db_conn = null;
+        Connection conn = null;
         try
         {
             // logger.info(m_servlet.getLogMessage(req, "getACList", "started", startDate, startDate));
             HttpSession session = req.getSession();
-            m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (m_sbr_db_conn != null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn != null)
             {
                 session.setAttribute("ConnectedToDB", "Yes");
-                m_sbr_db_conn.close();
+                conn.close();
             }
             else
             {
@@ -344,8 +348,8 @@ public class GetACService implements Serializable
         {
             try
             {
-                if (m_sbr_db_conn != null)
-                    m_sbr_db_conn.close();
+                if (conn != null)
+                    conn.close();
             }
             catch (Exception f)
             {
@@ -354,8 +358,8 @@ public class GetACService implements Serializable
         }
         try
         {
-            if (m_sbr_db_conn != null)
-                m_sbr_db_conn.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -431,6 +435,7 @@ public class GetACService implements Serializable
             UserName = UserName.toUpperCase();
             String sAPI = "{call SBREXT_SS_API.get_write_context_list(?, ?, ?)}";
             getDataListStoreProcedure(vIDList, vList, null, null, sAPI, UserName, ActlType, 3);
+            AddOns.sortTandemLists(vIDList, vList);
         }
         catch (Exception e)
         {
@@ -516,26 +521,26 @@ public class GetACService implements Serializable
      */
     private void getCSList(Vector<String> vIDList, Vector<String> vList, String sContext)
     {
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         try
         {
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.get_class_scheme_list(?,?)}");
+                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.get_class_scheme_list(?,?)}");
                 // Now tie the placeholders for out parameters.
-                CStmt.registerOutParameter(2, OracleTypes.CURSOR);
+                cstmt.registerOutParameter(2, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
-                CStmt.setString(1, sContext);
+                cstmt.setString(1, sContext);
                 // Now we are ready to call the stored procedure
-                CStmt.execute();
+                cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(2);
+                rs = (ResultSet) cstmt.getObject(2);
                 if (rs != null)
                 {
                     // loop through the resultSet and add them to the bean
@@ -568,10 +573,10 @@ public class GetACService implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -591,23 +596,23 @@ public class GetACService implements Serializable
     private void getCSCSIListBean()
     {
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         Vector<CSI_Bean> vList = new Vector<CSI_Bean>();
-        Connection m_sbr_db_conn = null;
+        Connection conn = null;
         try
         {
             // Create a Callable Statement object.
-            m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (m_sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = m_sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.GET_CSCSI_LIST(?)}");
-                CStmt.registerOutParameter(1, OracleTypes.CURSOR);
+                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.GET_CSCSI_LIST(?)}");
+                cstmt.registerOutParameter(1, OracleTypes.CURSOR);
                 // Now we are ready to call the stored procedure
-                CStmt.execute();
+                cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(1);
+                rs = (ResultSet) cstmt.getObject(1);
                 if (rs != null)
                 {
                     // loop through the resultSet and add them to the bean
@@ -646,10 +651,10 @@ public class GetACService implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (m_sbr_db_conn != null)
-                m_sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -856,9 +861,9 @@ public class GetACService implements Serializable
     public String hasPrivilege(String DBAction, String DBUser, String ACType, String ContID)
     {
         ResultSet rs = null;
-        Statement CStmt = null;
+        Statement cstmt = null;
         String sPrivilege = "";
-        Connection m_sbr_db_conn = null;
+        Connection conn = null;
         try
         {
             DBUser = DBUser.toUpperCase();
@@ -876,13 +881,13 @@ public class GetACService implements Serializable
                 sql = "SELECT ADMIN_SECURITY_UTIL.HAS_ADMIN_PRIVILEGE('" + DBUser + "', '" + ACType + "', '" + ContID
                                 + "') FROM DUAL";
             // Create a Callable Statement object.
-            m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (m_sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = m_sbr_db_conn.createStatement();
-                rs = CStmt.executeQuery(sql);
+                cstmt = conn.createStatement();
+                rs = cstmt.executeQuery(sql);
                 String s;
                 // loop through to printout the outstrings
                 while (rs.next())
@@ -906,10 +911,10 @@ public class GetACService implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (m_sbr_db_conn != null)
-                m_sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -930,17 +935,17 @@ public class GetACService implements Serializable
     {
         Vector<String> vList = new Vector<String>();
         ResultSet rs = null;
-        Statement CStmt = null;
-        Connection m_sbr_db_conn = null;
+        Statement cstmt = null;
+        Connection conn = null;
         try
         {
-            m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (m_sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = m_sbr_db_conn.createStatement();
-                rs = CStmt.executeQuery(sSQL);
+                cstmt = conn.createStatement();
+                rs = cstmt.executeQuery(sSQL);
                 String sName = "";
                 // loop through to printout the outstrings
                 while (rs.next())
@@ -964,10 +969,10 @@ public class GetACService implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (m_sbr_db_conn != null)
-                m_sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -1006,43 +1011,43 @@ public class GetACService implements Serializable
          * Remember: Vector parameter represent the recordset's parameter numbers.
          */
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         boolean isReConnect = false;
-        Connection m_sbr_db_conn = null;
+        Connection conn = null;
         try
         {
             // Create a Callable Statement object.
-            m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (m_sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
                 isReConnect = true;
-                CStmt = m_sbr_db_conn.prepareCall(sAPI);
+                cstmt = conn.prepareCall(sAPI);
                 // Now tie the placeholders with actual parameters.
                 if (iParmIdx == 1)
                 {
-                    CStmt.registerOutParameter(1, OracleTypes.CURSOR);
+                    cstmt.registerOutParameter(1, OracleTypes.CURSOR);
                     // Now we are ready to call the stored procedure
-                    CStmt.execute();
-                    rs = (ResultSet) CStmt.getObject(1);
+                    cstmt.execute();
+                    rs = (ResultSet) cstmt.getObject(1);
                 }
                 else if (iParmIdx == 2)
                 {
-                    CStmt.registerOutParameter(2, OracleTypes.CURSOR);
-                    CStmt.setString(1, setString1);
+                    cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+                    cstmt.setString(1, setString1);
                     // Now we are ready to call the stored procedure
-                    CStmt.execute();
-                    rs = (ResultSet) CStmt.getObject(2);
+                    cstmt.execute();
+                    rs = (ResultSet) cstmt.getObject(2);
                 }
                 else if (iParmIdx == 3)
                 {
-                    CStmt.registerOutParameter(3, OracleTypes.CURSOR);
-                    CStmt.setString(1, setString1);
-                    CStmt.setString(2, setString2);
+                    cstmt.registerOutParameter(3, OracleTypes.CURSOR);
+                    cstmt.setString(1, setString1);
+                    cstmt.setString(2, setString2);
                     // Now we are ready to call the stored procedure
-                    CStmt.execute();
-                    rs = (ResultSet) CStmt.getObject(3);
+                    cstmt.execute();
+                    rs = (ResultSet) cstmt.getObject(3);
                 }
                 String sName = "";
                 // loop through to printout the outstrings
@@ -1114,11 +1119,11 @@ public class GetACService implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
+            if (cstmt != null)
+                cstmt.close();
             // close is if reconnected
-            if (isReConnect && m_sbr_db_conn != null)
-                m_sbr_db_conn.close();
+            if (isReConnect && conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -1138,18 +1143,18 @@ public class GetACService implements Serializable
     public boolean doComponentExist(String sSQL)
     {
         ResultSet rs = null;
-        Statement CStmt = null;
+        Statement cstmt = null;
         boolean isExist = false;
-        Connection m_sbr_db_conn = null;
+        Connection conn = null;
         try
         {
-            m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (m_sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = m_sbr_db_conn.createStatement();
-                rs = CStmt.executeQuery(sSQL);
+                cstmt = conn.createStatement();
+                rs = cstmt.executeQuery(sSQL);
                 int iCount = 0;
                 // loop through to printout the outstrings
                 while (rs.next())
@@ -1169,10 +1174,10 @@ public class GetACService implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (m_sbr_db_conn != null)
-                m_sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -1193,18 +1198,18 @@ public class GetACService implements Serializable
     public String isUniqueInContext(String sSQL)
     {
         ResultSet rs = null;
-        Statement CStmt = null;
+        Statement cstmt = null;
         String sName = "";
-        Connection m_sbr_db_conn = null;
+        Connection conn = null;
         try
         {
-            m_sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (m_sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = m_sbr_db_conn.createStatement();
-                rs = CStmt.executeQuery(sSQL);
+                cstmt = conn.createStatement();
+                rs = cstmt.executeQuery(sSQL);
                 int i = 0;
                 // loop through to printout the outstrings
                 while (rs.next())
@@ -1226,10 +1231,10 @@ public class GetACService implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (m_sbr_db_conn != null)
-                m_sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -1254,28 +1259,28 @@ public class GetACService implements Serializable
     public Vector<EVS_Bean> getAC_Concepts(String condrID, VD_Bean vd, boolean bInvertBean)
     {
         // System.err.println("in getAC_Concepts condrID: " + condrID);
-        Connection sbr_db_conn = null;
-        CallableStatement CStmt = null;
+        Connection conn = null;
+        CallableStatement cstmt = null;
         ResultSet rs = null;
         Vector<EVS_Bean> vList = new Vector<EVS_Bean>();
         GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
         try
         {
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_AC_CONCEPTS(?,?)}");
+                cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_AC_CONCEPTS(?,?)}");
                 // out parameter
-                CStmt.registerOutParameter(2, OracleTypes.CURSOR);
+                cstmt.registerOutParameter(2, OracleTypes.CURSOR);
                 // in parameter
-                CStmt.setString(1, condrID);
+                cstmt.setString(1, condrID);
                 // Now we are ready to call the stored procedure
-                CStmt.execute();
+                cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(2);
+                rs = (ResultSet) cstmt.getObject(2);
                 if (rs != null)
                 {
                     // loop through the resultSet and add them to the bean
@@ -1285,7 +1290,11 @@ public class GetACService implements Serializable
                         eBean.setIDSEQ(rs.getString("CON_IDSEQ"));
                         // System.err.println("in getAC_Concepts CON_IDSEQ: " + rs.getString("CON_IDSEQ"));
                         eBean.setDISPLAY_ORDER(rs.getString("DISPLAY_ORDER"));
-                        eBean.setPRIMARY_FLAG(rs.getString("primary_flag_ind"));
+                        String sPrim = rs.getString("primary_flag_ind");
+                        if (sPrim != null && sPrim.equals("Yes"))
+                          eBean.setPRIMARY_FLAG(ConceptForm.CONCEPT_PRIMARY);
+                        else 
+                          eBean.setPRIMARY_FLAG(ConceptForm.CONCEPT_QUALIFIER);
                         eBean.setCONCEPT_IDENTIFIER(rs.getString("preferred_name"));
                         eBean.setLONG_NAME(rs.getString("long_name"));
                         // System.err.println("in getAC_Concepts long name: " + rs.getString("long_name"));
@@ -1334,10 +1343,10 @@ public class GetACService implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -1408,6 +1417,25 @@ public class GetACService implements Serializable
 
     /**
      * @param session
+     *            HttpSession object
+     */
+    private void getASLFilterList(HttpSession session)
+    {
+        try
+        {
+            String sQuery = "SELECT asl_name FROM sbr.ac_status_lov_view WHERE asl_name IN " +
+                  "(select value from sbrext.tool_options_view_ext where property like 'INCLUDE.ASL.FILTER.%')";
+            Vector<String> vT = getDataListSQL(sQuery);
+            session.setAttribute(Session_Data.SESSION_ASL_FILTER, vT);
+        }
+        catch (Exception e)
+        {
+            logger.fatal("Error - getASLFilterList : " + e.toString(), e);
+        }
+    }
+
+    /**
+     * @param session
      */
     @SuppressWarnings("unchecked")
     private void getDerTypesList(HttpSession session)
@@ -1452,20 +1480,20 @@ public class GetACService implements Serializable
     public Vector<TOOL_OPTION_Bean> getToolOptionData(Connection db_, String tool_, String prop_, String value_)
     {
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
         try
         {
-            CStmt = db_.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_TOOL_OPTIONS(?,?,?,?,?)}");
-            CStmt.registerOutParameter(4, OracleTypes.CURSOR);
-            CStmt.registerOutParameter(5, OracleTypes.VARCHAR);
-            CStmt.setString(1, tool_);
-            CStmt.setString(2, prop_);
-            CStmt.setString(3, value_);
+            cstmt = db_.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_TOOL_OPTIONS(?,?,?,?,?)}");
+            cstmt.registerOutParameter(4, OracleTypes.CURSOR);
+            cstmt.registerOutParameter(5, OracleTypes.VARCHAR);
+            cstmt.setString(1, tool_);
+            cstmt.setString(2, prop_);
+            cstmt.setString(3, value_);
             // Now we are ready to call the stored procedure
-            CStmt.execute();
+            cstmt.execute();
             // store the output in the result set
-            rs = (ResultSet) CStmt.getObject(4);
+            rs = (ResultSet) cstmt.getObject(4);
             if (rs != null)
             {
                 // loop through the resultSet and add them to the bean
@@ -1490,8 +1518,8 @@ public class GetACService implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
+            if (cstmt != null)
+                cstmt.close();
         }
         catch (SQLException ee)
         {
@@ -1515,16 +1543,16 @@ public class GetACService implements Serializable
     public Vector<TOOL_OPTION_Bean> getToolOptionData(String toolName, String sProperty, String sValue)
     {
         Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
-        Connection sbr_db_conn = null;
-        sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-        if (sbr_db_conn == null)
+        Connection conn = null;
+        conn = m_servlet.connectDB(m_classReq, m_classRes);
+        if (conn == null)
             m_servlet.ErrorLogin(m_classReq, m_classRes);
         else
         {
-            vList = getToolOptionData(sbr_db_conn, toolName, sProperty, sValue);
+            vList = getToolOptionData(conn, toolName, sProperty, sValue);
             try
             {
-                sbr_db_conn.close();
+                conn.close();
             }
             catch (SQLException ex)
             {
@@ -1537,24 +1565,24 @@ public class GetACService implements Serializable
     private Hashtable getHashListFromAPI(String sAPI)
     {
         Hashtable<String, String> hRes = new Hashtable<String, String>();
-        Connection sbr_db_conn = null;
-        CallableStatement CStmt = null;
+        Connection conn = null;
+        CallableStatement cstmt = null;
         ResultSet rs = null;
         try
         {
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn.prepareCall(sAPI);
+                cstmt = conn.prepareCall(sAPI);
                 // out parameter
-                CStmt.registerOutParameter(1, OracleTypes.CURSOR);
+                cstmt.registerOutParameter(1, OracleTypes.CURSOR);
                 // Now we are ready to call the stored procedure
-                CStmt.execute();
+                cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(1);
+                rs = (ResultSet) cstmt.getObject(1);
                 if (rs != null)
                 {
                     // loop through the resultSet and add them to the bean
@@ -1577,10 +1605,10 @@ public class GetACService implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -1640,24 +1668,24 @@ public class GetACService implements Serializable
     private void getPersonsList()
     {
         Hashtable<String, String> hPer = new Hashtable<String, String>();
-        Connection sbr_db_conn = null;
-        CallableStatement CStmt = null;
+        Connection conn = null;
+        CallableStatement cstmt = null;
         ResultSet rs = null;
         try
         {
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_PERSONS_LIST(?)}");
+                cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_PERSONS_LIST(?)}");
                 // out parameter
-                CStmt.registerOutParameter(1, OracleTypes.CURSOR);
+                cstmt.registerOutParameter(1, OracleTypes.CURSOR);
                 // Now we are ready to call the stored procedure
-                CStmt.execute();
+                cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(1);
+                rs = (ResultSet) cstmt.getObject(1);
                 if (rs != null)
                 {
                     // loop through the resultSet and add them to the bean
@@ -1686,10 +1714,10 @@ public class GetACService implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {

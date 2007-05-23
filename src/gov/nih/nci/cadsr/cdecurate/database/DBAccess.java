@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.28 2007-01-26 20:17:43 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.29 2007-05-23 04:09:40 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -62,7 +62,7 @@ public class DBAccess
             fout.write(Alternates._HTMLprefix.getBytes());
 
             // Get the Alternate Names and Definitions for the AC.
-            Alternates[] alts = db.getAlternates(new String[] {ac}, true);
+            Alternates[] alts = db.getAlternates(new String[] {ac}, true, true);
 
             // Output each with the desired related information.
             int flag = -1;
@@ -90,7 +90,7 @@ public class DBAccess
             }
             
             Tree csi;
-            csi = db.getAlternates(ac);
+            csi = db.getAlternates(ac, true);
             title = Alternates._HTMLsuffix + "<hr/>\n" + Alternates._HTMLprefix + csi.toHTML(null);
             fout.write(title.getBytes());
             
@@ -594,7 +594,7 @@ public class DBAccess
      * @return the CSI and Alt Name/Def hierarchy.
      * @throws ToolException
      */
-    public Tree getAlternates(String idseq_) throws ToolException
+    public Tree getAlternates(String idseq_, boolean showMC_) throws ToolException
     {
         Tree root = new Tree(new TreeNode("Alternate Names & Definitions", null, false));
         String select = SQLSelectAlts.getAlternates(true);
@@ -613,15 +613,7 @@ public class DBAccess
             Vector<Alternates> altList = new Vector<Alternates>();
             while (rs.next())
             {
-                int instance = rs.getInt(SQLSelectAlts._INSTANCE);
-                String name = rs.getString(SQLSelectAlts._NAMEDEF);
-                String type =  rs.getString(SQLSelectAlts._TYPE);
-                String lang =  rs.getString(SQLSelectAlts._LANGUAGE);
-                String ac = rs.getString(SQLSelectAlts._ACIDSEQ);
-                String desig = rs.getString(SQLSelectAlts._ALTIDSEQ);
-                String conte = rs.getString(SQLSelectAlts._CONTEIDSEQ);
-                String context = rs.getString(SQLSelectAlts._CONTEXT);
-                altList.add(new Alternates(instance, name, type, lang, ac, desig, conte, context));
+                altList.add(SQLSelectAlts.copyFromRS(rs, showMC_));
             }
             
             rs.close();
@@ -691,7 +683,7 @@ public class DBAccess
      * @return the array of Alternate Names and Definitions
      * @throws  ToolException 
      */
-    public Alternates[] getAlternates(String[] idseq_, boolean sortByName_) throws ToolException
+    public Alternates[] getAlternates(String[] idseq_, boolean sortByName_, boolean showMC_) throws ToolException
     {
         Alternates[] list = new Alternates[0];
         
@@ -711,16 +703,7 @@ public class DBAccess
                 // read.
                 while (rs.next())
                 {
-                    int instance = rs.getInt(SQLSelectAlts._INSTANCE);
-                    String name = rs.getString(SQLSelectAlts._NAMEDEF);
-                    String type =  rs.getString(SQLSelectAlts._TYPE);
-                    String lang =  rs.getString(SQLSelectAlts._LANGUAGE);
-                    String ac = rs.getString(SQLSelectAlts._ACIDSEQ);
-                    String desig = rs.getString(SQLSelectAlts._ALTIDSEQ);
-                    String conte = rs.getString(SQLSelectAlts._CONTEIDSEQ);
-                    String context = rs.getString(SQLSelectAlts._CONTEXT);
-                    Alternates alt = new Alternates(instance, name, type, lang, ac, desig, conte, context);
-                    temp.add(alt);
+                    temp.add(SQLSelectAlts.copyFromRS(rs, showMC_));
                 }
                 rs.close();
             }
@@ -1289,18 +1272,82 @@ public class DBAccess
     }
 
     /**
-     * Save changes to an Alternate
+     * Insert a USED_BY Alternate Name into the database. It doesn't matter
+     * if the cause of this is an Alternate Name or Alternate Definition.
+     * 
+     * @param alt_ the Alternate object
+     * @throws SQLException
+     */
+    private void insertUsedBy(Alternates alt_) throws SQLException
+    {
+        String insert = "begin insert into sbr.designations_view "
+            + "(ac_idseq, conte_idseq, name, detl_name, lae_name) "
+            + "values (?, ?, ?, ?, ?) return desig_idseq into ?; end;";
+        
+        CallableStatement cstmt = null;
+        try
+        {
+            // Add the Designation.
+            cstmt = _conn.prepareCall(insert);
+            cstmt.setString(1, alt_.getAcIdseq());
+            cstmt.setString(2, alt_.getConteIdseq());
+            cstmt.setString(3, alt_.getConteName());
+            cstmt.setString(4, _addDesigType);
+            cstmt.setString(5, alt_.getLanguage());
+            cstmt.registerOutParameter(6, java.sql.Types.VARCHAR);
+            cstmt.executeUpdate();
+            // At this time we don't really care about the generated desig_idseq
+            // but we may in the future.
+        }
+        catch (SQLException ex)
+        {
+            // If the record already exists then great, just ignore the duplicate, otherwise
+            // it's not good.
+            if (ex.getErrorCode() != 1)
+                throw ex;
+        }
+        finally
+        {
+            // Close the statement
+            if (cstmt != null)
+                cstmt.close();
+        }
+    }
+
+    /**
+     * Save a USED_BY Alternate Name
      * 
      * @param alt_ the Alternate
      * @throws SQLException
      */
-    public void save(Alternates alt_) throws SQLException
+    public void saveUsedBy(Alternates alt_) throws SQLException
+    {
+        // If it's deleted, don't need to do anything. We can automatically add
+        // new USED_BY types but we can't delete them automatically.
+        if (alt_.isDeleted())
+        {
+            return;
+        }
+
+        // If it's new or changed it doesn't matter if it's a Name or Definition.
+        if (alt_.isNew() || alt_.isChanged())
+            insertUsedBy(alt_);
+    }
+
+    /**
+     * Save changes to an Alternate.
+     * 
+     * @param alt_ the Alternate
+     * @return true the alternate is inserted/updated, false the alternate is deleted.
+     * @throws SQLException
+     */
+    public boolean save(Alternates alt_) throws SQLException
     {
         // If it's deleted, don't need to do anything extra.
         if (alt_.isDeleted())
         {
             delete(alt_);
-            return;
+            return false;
         }
 
         // If it's new or changed be sure to record CSI changes also.
@@ -1310,6 +1357,7 @@ public class DBAccess
             update(alt_);
 
         saveCSI(alt_);
+        return true;
     }
 
     /**
@@ -1504,12 +1552,14 @@ public class DBAccess
      * @return the Alternate Definition Types.
      * @throws ToolException
      */
-    public String[] getDefinitionTypes() throws ToolException
+    public String[] getDefinitionTypes(boolean showMC_) throws ToolException
     {
         String select = "select defl_name from sbrext.definition_types_lov_view_ext where defl_name not in ( "
             + "select value from sbrext.tool_options_view_ext where property like 'EXCLUDE.DEFINITION_TYPE.%' "
-            + ") order by upper(defl_name)";
-        return getList(select);
+            + ")";
+        if (!showMC_)
+            select += " and defl_name <> '" + _manuallyCuratedDef + "'";
+        return getList(select + " order by upper(defl_name)");
     }
     
     /**
@@ -1580,6 +1630,9 @@ public class DBAccess
   
     public static final int _MAXNAMELEN = 255;
     public static final int _MAXDEFLEN = 2000;
+    
+    public static final String _addDesigType = "USED_BY";
+    public static final String _manuallyCuratedDef = "Manually-curated";
     
     private static String _packageName = null;
     private static String _packageAlias = null;

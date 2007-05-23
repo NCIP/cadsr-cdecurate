@@ -1,6 +1,8 @@
-/**
- * 
- */
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DatabaseConnection.java,v 1.3 2007-05-23 04:12:41 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package gov.nih.nci.cadsr.cdecurate.tool;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -173,19 +175,19 @@ public class DatabaseConnection extends HttpServlet
    */
    public void verifyConnection(HttpServletRequest req)
    {
-    Connection m_sbr_db_conn = null;
+    Connection conn = null;
     try
      {
        
      //  logger.info(m_servlet.getLogMessage(req, "getACList", "started", startDate, startDate));
 
        HttpSession session = req.getSession();
-       m_sbr_db_conn = this.connectDB(req);
+       conn = this.connectDB(req);
         
-       if (m_sbr_db_conn != null)
+       if (conn != null)
        {
         session.setAttribute("ConnectedToDB", "Yes");
-        m_sbr_db_conn.close();
+        conn.close();
        }
        else
        {
@@ -195,12 +197,12 @@ public class DatabaseConnection extends HttpServlet
      }
      catch(Exception e)
      {
-         try{if (m_sbr_db_conn != null) m_sbr_db_conn.close();}catch(Exception f){} 
+         try{if (conn != null) conn.close();}catch(Exception f){} 
          logger.fatal("ERROR in GetACService-verifyConnection : " + e.toString(), e);
      }
      try
      {
-         if (m_sbr_db_conn != null) m_sbr_db_conn.close();
+         if (conn != null) conn.close();
      }
      catch(Exception ee)
      {

@@ -1,12 +1,11 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/TOOL_OPTION_Bean.java,v 1.38 2007-01-26 20:17:44 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/TOOL_OPTION_Bean.java,v 1.39 2007-05-23 04:14:31 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
 
 /**
  * The TOOL_OPTION_Bean encapsulates the TOOL OPTION information and is stored in the
@@ -219,5 +218,5 @@ public class TOOL_OPTION_Bean implements Serializable
   {
       return this.LANGUAGE;
   }
-  
+
 }  //end class

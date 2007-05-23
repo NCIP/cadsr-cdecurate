@@ -1,17 +1,23 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.40 2007-04-10 19:31:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.41 2007-05-23 04:13:20 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.io.Serializable;
-import java.util.*;
-import java.sql.*;
-//import java.math.*;
-import oracle.jdbc.driver.*;
-import javax.servlet.http.*;
-import java.text.*;
-
-import org.apache.log4j.*;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
+import java.util.Vector;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import oracle.jdbc.driver.OracleTypes;
+import org.apache.log4j.Logger;
 
 /**
  * InsACService class is used in submit action of the tool for all components.
@@ -132,7 +138,7 @@ public class InsACService implements Serializable
     {
       HttpSession session = m_classReq.getSession();
       Vector<String> vStatMsg = (Vector)session.getAttribute("vStatMsg");
-      String statusMsg = (String)session.getAttribute("statusMessage");
+      String statusMsg = (String)session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
       if (statusMsg == null) statusMsg = "";
       //parse single  double  quotes and new line char if any
       if (!sMsg.equalsIgnoreCase("\\n"))
@@ -147,16 +153,18 @@ public class InsACService implements Serializable
           statusMsg = statusMsg + sMsg; 
         else
           statusMsg = statusMsg + sMsg + "\\n"; 
-        session.setAttribute("statusMessage", statusMsg);
+        session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, statusMsg);
       }
       //put nbsp for the tab at the begginning of the msg for vector.
-      int iTab = sMsg.indexOf("\\t");
-      if (iTab > -1)
+/*      int iTab = sMsg.indexOf("\\t");
+      if (iTab > -1 && iTab < 5)
           sMsg = "<ul>".concat(sMsg.substring(2)).concat("</ul>"); 
-      //remove tab and newline from the msg for vector
+*/      //remove tab and newline from the msg for vector
       if (!sMsg.equalsIgnoreCase("\\n") && !sMsg.equalsIgnoreCase("\n"))
-        sMsg = m_util.parsedStringMsgVectorTabs(sMsg);
-      vStatMsg.addElement(sMsg);
+        sMsg = m_util.parsedStringMsgVectorTabs(sMsg, vStatMsg);
+      if (!sMsg.equals(""))
+          vStatMsg.addElement(sMsg);
+   //System.out.println(sMsg + ":size:" + vStatMsg.size());
       session.setAttribute("vStatMsg", vStatMsg);  
       //add this message to the logger
       logger.fatal("Log Status Message " + sMsg);
@@ -191,9 +199,9 @@ public class InsACService implements Serializable
   //  java.util.Date startDate = new java.util.Date();          
   //  logger.info(m_servlet.getLogMessage(m_classReq, "setVD", "starting set", startDate, startDate));
 
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     HttpSession session = m_classReq.getSession();
     String sReturnCode = ""; //ou
     String sVDParent = "";
@@ -237,64 +245,64 @@ public class InsACService implements Serializable
       }
 
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-        CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-        CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //vd id
-        CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //preferred name
-        CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //context id
-        CStmt.registerOutParameter(7,java.sql.Types.DECIMAL);       //version
-        CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //preferred definition
-        CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //cd id
-        CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //asl name
-        CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //latest version ind
-        CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //dtl name
-        CStmt.registerOutParameter(13,java.sql.Types.NUMERIC);       //Max Length Number
-        CStmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //Long name
-        CStmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //Forml Name
-        CStmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //Forml Description
-        CStmt.registerOutParameter(17,java.sql.Types.VARCHAR);       //Forml Comment
-        CStmt.registerOutParameter(18,java.sql.Types.VARCHAR);       //UOML name
-        CStmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //UOML Desciption
-        CStmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //UOML comment
-        CStmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //Low value number
-        CStmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //High Value Number
-        CStmt.registerOutParameter(23,java.sql.Types.NUMERIC);       //Min Lenght Num
-        CStmt.registerOutParameter(24,java.sql.Types.NUMERIC);       //Decimal Place
-        CStmt.registerOutParameter(25,java.sql.Types.VARCHAR);       //Char set name
-        CStmt.registerOutParameter(26,java.sql.Types.VARCHAR);       //begin date
-        CStmt.registerOutParameter(27,java.sql.Types.VARCHAR);       //end date
-        CStmt.registerOutParameter(28,java.sql.Types.VARCHAR);       //change note
-        CStmt.registerOutParameter(29,java.sql.Types.VARCHAR);       //type flag
-        CStmt.registerOutParameter(30,java.sql.Types.VARCHAR);       //created by
-        CStmt.registerOutParameter(31,java.sql.Types.VARCHAR);       //date created
-        CStmt.registerOutParameter(32,java.sql.Types.VARCHAR);       //modified by
-        CStmt.registerOutParameter(33,java.sql.Types.VARCHAR);       //date modified
-        CStmt.registerOutParameter(34,java.sql.Types.VARCHAR);       //deleted ind
-        CStmt.registerOutParameter(35,java.sql.Types.VARCHAR);       //condr_idseq
+        cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_VD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+        cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+        cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //vd id
+        cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //preferred name
+        cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //context id
+        cstmt.registerOutParameter(7,java.sql.Types.DECIMAL);       //version
+        cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //preferred definition
+        cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //cd id
+        cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //asl name
+        cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //latest version ind
+        cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //dtl name
+        cstmt.registerOutParameter(13,java.sql.Types.NUMERIC);       //Max Length Number
+        cstmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //Long name
+        cstmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //Forml Name
+        cstmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //Forml Description
+        cstmt.registerOutParameter(17,java.sql.Types.VARCHAR);       //Forml Comment
+        cstmt.registerOutParameter(18,java.sql.Types.VARCHAR);       //UOML name
+        cstmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //UOML Desciption
+        cstmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //UOML comment
+        cstmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //Low value number
+        cstmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //High Value Number
+        cstmt.registerOutParameter(23,java.sql.Types.NUMERIC);       //Min Lenght Num
+        cstmt.registerOutParameter(24,java.sql.Types.NUMERIC);       //Decimal Place
+        cstmt.registerOutParameter(25,java.sql.Types.VARCHAR);       //Char set name
+        cstmt.registerOutParameter(26,java.sql.Types.VARCHAR);       //begin date
+        cstmt.registerOutParameter(27,java.sql.Types.VARCHAR);       //end date
+        cstmt.registerOutParameter(28,java.sql.Types.VARCHAR);       //change note
+        cstmt.registerOutParameter(29,java.sql.Types.VARCHAR);       //type flag
+        cstmt.registerOutParameter(30,java.sql.Types.VARCHAR);       //created by
+        cstmt.registerOutParameter(31,java.sql.Types.VARCHAR);       //date created
+        cstmt.registerOutParameter(32,java.sql.Types.VARCHAR);       //modified by
+        cstmt.registerOutParameter(33,java.sql.Types.VARCHAR);       //date modified
+        cstmt.registerOutParameter(34,java.sql.Types.VARCHAR);       //deleted ind
+        cstmt.registerOutParameter(35,java.sql.Types.VARCHAR);       //condr_idseq
 
-        CStmt.setString(2, "");   //make it empty default
-        CStmt.setString(3,sAction);       //ACTION - INS, UPD or DEL
+        cstmt.setString(2, "");   //make it empty default
+        cstmt.setString(3,sAction);       //ACTION - INS, UPD or DEL
         if ((sAction.equals("UPD")) || (sAction.equals("DEL")))
-          CStmt.setString(4,sVD_ID);       //A
+          cstmt.setString(4,sVD_ID);       //A
         //make it null for editing released elements
         if (sAction.equals("UPD") && oldASLName.equals("RELEASED") && !sInsertFor.equals("Version"))
         {
-          CStmt.setString(5,null);       //preferred name - not null for INS, must be null for UPD
-          CStmt.setString(6,null);       //context id - not null for INS, must be null for UPD
+          cstmt.setString(5,null);       //preferred name - not null for INS, must be null for UPD
+          cstmt.setString(6,null);       //context id - not null for INS, must be null for UPD
         }
         else  // INS case
         {
-          CStmt.setString(5,sName);       //preferred name - not null for INS, must be null for UPD
-          CStmt.setString(6,sContextID);       //context id - not null for INS, must be null for UPD
+          cstmt.setString(5,sName);       //preferred name - not null for INS, must be null for UPD
+          cstmt.setString(6,sContextID);       //context id - not null for INS, must be null for UPD
         }
-        CStmt.setString(36, "");       //rep term idseq, null by default
-        CStmt.setString(37, "");       //rep qualifier - null by default
-        CStmt.setString(38, "");         //origin
+        cstmt.setString(36, "");       //rep term idseq, null by default
+        cstmt.setString(37, "");       //rep qualifier - null by default
+        cstmt.setString(38, "");         //origin
         
        // String sContext = vd.getVD_CONTEXT_NAME();
         Double DVersion = new Double(vd.getVD_VERSION());
@@ -323,57 +331,57 @@ public class InsACService implements Serializable
           sVDParent = this.setEVSParentConcept(vd);   //"", sVDCondr = "";
         if (sVDParent == null) sVDParent = "";
         // Set the In parameters (which are inherited from the PreparedStatement class)
-        CStmt.setString(2,sVDParent);       //comma-delimited con idseqs
-        if (sVDParent.equals("removeParent")) CStmt.setString(2,""); //do not set vdconcepts
+        cstmt.setString(2,sVDParent);       //comma-delimited con idseqs
+        if (sVDParent.equals("removeParent")) cstmt.setString(2,""); //do not set vdconcepts
 
-        CStmt.setDouble(7,dVersion);       //version  - test says must have a value
-        CStmt.setString(8,sDefinition);       //preferred definition - not null for INS
-        CStmt.setString(9,sCD_ID);       //cd id - not null for INS
-        CStmt.setString(10,sAslName);
+        cstmt.setDouble(7,dVersion);       //version  - test says must have a value
+        cstmt.setString(8,sDefinition);       //preferred definition - not null for INS
+        cstmt.setString(9,sCD_ID);       //cd id - not null for INS
+        cstmt.setString(10,sAslName);
         if (sAction.equals("INS"))
-          CStmt.setString(11,"Yes");
-        CStmt.setString(12,sDtlName);
+          cstmt.setString(11,"Yes");
+        cstmt.setString(12,sDtlName);
         if(sMaxLength != null && sMaxLength.length() > 0)
         {
           Integer IntTmp = new Integer(sMaxLength);
-          CStmt.setInt(13,IntTmp.intValue());
+          cstmt.setInt(13,IntTmp.intValue());
         }
-        CStmt.setString(14,sLongName);       //long name  - can be null
-        CStmt.setString(15,sFormlName);
-        CStmt.setString(18,sUomlName);
-        CStmt.setString(21,sLowValue);
-        CStmt.setString(22,sHighValue);
+        cstmt.setString(14,sLongName);       //long name  - can be null
+        cstmt.setString(15,sFormlName);
+        cstmt.setString(18,sUomlName);
+        cstmt.setString(21,sLowValue);
+        cstmt.setString(22,sHighValue);
         if(sMinLength != null && sMinLength.length() > 0)
         {
           Integer IntTmp = new Integer(sMinLength);
-          CStmt.setInt(23,IntTmp.intValue());
+          cstmt.setInt(23,IntTmp.intValue());
         }
          if(sDecimalPlace != null && sDecimalPlace.length() > 0)
         {
           Integer IntTmp = new Integer(sDecimalPlace);
-          CStmt.setInt(24,IntTmp.intValue());
+          cstmt.setInt(24,IntTmp.intValue());
         }
-        CStmt.setString(26,sBeginDate);
-        CStmt.setString(27,sEndDate);
-        CStmt.setString(28,sChangeNote);
-        CStmt.setString(29, sTypeFlag);       //type flag - E by default
+        cstmt.setString(26,sBeginDate);
+        cstmt.setString(27,sEndDate);
+        cstmt.setString(28,sChangeNote);
+        cstmt.setString(29, sTypeFlag);       //type flag - E by default
         if (sOriginAction.equals("BlockEditVD") && sInsertFor.equals("Version"))
-          CStmt.setString(35, vd.getVD_PAR_CONDR_IDSEQ());   //set as the earlier one.
+          cstmt.setString(35, vd.getVD_PAR_CONDR_IDSEQ());   //set as the earlier one.
         else
         {
           if (sAction.equals("UPD") && sVDParent.equals("removeParent"))
-            CStmt.setString(35, " ");   //remove the existing parent if removing them all
+            cstmt.setString(35, " ");   //remove the existing parent if removing them all
         }
-        CStmt.setString(36, sRepTerm);       //rep term idseq, null by default
-        CStmt.setString(37, "");       //rep qualifier - null by default
-        CStmt.setString(38, sSource);         //origin
+        cstmt.setString(36, sRepTerm);       //rep term idseq, null by default
+        cstmt.setString(37, "");       //rep qualifier - null by default
+        cstmt.setString(38, sSource);         //origin
 
-        CStmt.execute();
+        cstmt.execute();
         //capture the duration
      //   logger.info(m_servlet.getLogMessage(m_classReq, "setVD", "execute ok", startDate, new java.util.Date()));
 
-        sReturnCode = CStmt.getString(1);
-        String prefName = CStmt.getString(5);
+        sReturnCode = cstmt.getString(1);
+        String prefName = cstmt.getString(5);
         if (prefName != null) vd.setVD_PREFERRED_NAME(prefName);
 
         if (sReturnCode == null || sReturnCode.equals(""))
@@ -383,8 +391,8 @@ public class InsACService implements Serializable
           vd.setVD_REP_QUALIFIER_CODES(null);
           vd.setVD_REP_QUALIFIER_DB(null);
         }
-        vd.setVD_PAR_CONDR_IDSEQ(CStmt.getString(35)); 
-        sVD_ID = CStmt.getString(4);
+        vd.setVD_PAR_CONDR_IDSEQ(cstmt.getString(35)); 
+        sVD_ID = cstmt.getString(4);
         vd.setVD_VD_IDSEQ(sVD_ID);
         String sReturn = "";
         if (sAction.equals("INS"))
@@ -421,16 +429,16 @@ public class InsACService implements Serializable
               sReturn = this.setRDMetaConceptSource(vd);
    
             //set create/modify attributes into bean
-            if (CStmt.getString(30) != null && !CStmt.getString(30).equals(""))
-               vd.setVD_CREATED_BY(getFullName(CStmt.getString(30)));
+            if (cstmt.getString(30) != null && !cstmt.getString(30).equals(""))
+               vd.setVD_CREATED_BY(getFullName(cstmt.getString(30)));
             else
                vd.setVD_CREATED_BY(oldVD.getVD_CREATED_BY());
-            if (CStmt.getString(31) != null && !CStmt.getString(31).equals(""))
-              vd.setVD_DATE_CREATED(m_util.getCurationDate(CStmt.getString(31)));
+            if (cstmt.getString(31) != null && !cstmt.getString(31).equals(""))
+              vd.setVD_DATE_CREATED(m_util.getCurationDate(cstmt.getString(31)));
             else
               vd.setVD_DATE_CREATED(oldVD.getVD_DATE_CREATED());
-            vd.setVD_MODIFIED_BY(getFullName(CStmt.getString(32)));
-            vd.setVD_DATE_MODIFIED(m_util.getCurationDate(CStmt.getString(33)));
+            vd.setVD_MODIFIED_BY(getFullName(cstmt.getString(32)));
+            vd.setVD_DATE_MODIFIED(m_util.getCurationDate(cstmt.getString(33)));
             //insert the vd pv relationships in vd_pvs table if not block edit
             if (!sOriginAction.equals("BlockEditVD"))
             {
@@ -449,8 +457,8 @@ public class InsACService implements Serializable
                   VM_Bean vm = pv.getPV_VM();
                   if (vm != null && !vm.getVM_IDSEQ().equals(""))
                   {
-                    System.out.println(vm.getVM_IDSEQ() + " vm alt name " + sContextID + " vd " + vd.getVD_VD_IDSEQ());
-                    vm.save(session, sbr_db_conn, vm.getVM_IDSEQ(), sContextID);
+                    //System.out.println(vm.getVM_IDSEQ() + " vm alt name " + sContextID + " vd " + vd.getVD_VD_IDSEQ());
+                    vm.save(session, conn, vm.getVM_IDSEQ(), sContextID);
                   }
                 }
                 session.removeAttribute("AllAltNameList");
@@ -494,7 +502,7 @@ public class InsACService implements Serializable
               this.doAltVersionUpdate(sVD_ID, oldVD.getVD_VD_IDSEQ());
 
             // ********************************
-            vd.save(session, sbr_db_conn, sVD_ID, sContextID);
+            vd.save(session, conn, sVD_ID, sContextID);
             session.removeAttribute("AllAltNameList");
             // ********************************
             /*
@@ -545,8 +553,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -558,912 +566,6 @@ public class InsACService implements Serializable
   }
 
   /**
-   * removes the pvs associated if type is changed to non enumerated
-   * @param vd page vd bean
-   * @param sAction ac action
-   * @return VD_Bean updated vd bean
-   * @throws java.lang.Exception
-   */
-  /* private VD_Bean BeforeChangeVDType(VD_Bean vd, String sAction) throws Exception
-   {
-      HttpSession session = m_classReq.getSession();
-      String sTypeFlag = vd.getVD_TYPE_FLAG();
-      String sLongName = vd.getVD_LONG_NAME();
-      //get the old pv bean vector
-      Vector vOldVDPVS = (Vector)session.getAttribute("serVDPVList");       //("serVDPVSID");
-      if (!sTypeFlag.equals("E") && sAction.equals("UPD") && vOldVDPVS != null && vOldVDPVS.size()>0)
-      {
-        PV_Bean pvBean = new PV_Bean();
-        for(int j=0; j<vOldVDPVS.size(); j++)
-        {
-          pvBean = (PV_Bean)vOldVDPVS.elementAt(j);
-          String sVPID = pvBean.getPV_VDPVS_IDSEQ();     //(String)vOldVDPVS.elementAt(j);
-          String sPValue = pvBean.getPV_VALUE();       //(String)vOldPValue.elementAt(j);
-          //remove all pvs before changing to non-enum
-          pvBean.setVP_SUBMIT_ACTION("DEL");
-          String ret = this.setVD_PVS(pvBean, vd);                //this.setVD_PVS_DEL(sVPID, sPValue, sLongName);
-          //put back to enumerated if unable to remove pvs
-          if (ret != null && !ret.equals(""))
-          {
-             sTypeFlag = "E";
-             vd.setVD_TYPE_FLAG("E");
-          }
-        }
-        String sRet = (String)m_classReq.getAttribute("retcode");
-        //get the existing pvs for the vd from the database. 
-        if (sRet != null && !sRet.equals(""))
-        {
-          this.storeStatusMsg("\\t Value Domain type is set to enumerated because permissible value still exists");
-          m_classReq.setAttribute("retcode", "");
-          GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
-          vd = serAC.doPVSearch(vd, "edit");
-        }
-      }   
-      return vd;
-   }
-  */ 
- /**
-  * To insert a new Permissible value in the database after the validation.
-  * Called from NCICurationServlet.
-  * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
-  * Calls oracle stored procedure
-  *   "{call SBREXT_Set_Row.SET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}" to submit
-  *
-  * @param sAction Insert or update Action.
-  * @param sPV_ID PV IDseq.
-  * @param pv PV Bean.
-  *
-  * @return String return code from the stored procedure call. null if no error occurred.
-  */
-  public String setPV(String sAction,
-                    String sPV_ID,        //out
-                    PV_Bean pv)
-  {
-    //capture the duration
-    //java.util.Date startDate = new java.util.Date();          
-    //logger.info(m_servlet.getLogMessage(m_classReq, "setPV", "starting set", startDate, startDate));
-
-    Connection sbr_db_conn = null;
-    ResultSet rs = null;
-    CallableStatement CStmt = null;
-    String sReturnCode = "";  //out
-    try
-    {
-        String sValue = pv.getPV_VALUE();
-        String sShortMeaning = pv.getPV_SHORT_MEANING();
-  //System.out.println(sAction + " set vm in pv " + sShortMeaning);
-        String sMeaningDescription = pv.getPV_MEANING_DESCRIPTION();
-        if (sMeaningDescription == null) sMeaningDescription = "";
-        if (sMeaningDescription.length() > 2000) sMeaningDescription = sMeaningDescription.substring(0, 2000);
-        String sBeginDate = pv.getPV_BEGIN_DATE();
-        if (sBeginDate == null || sBeginDate.equals(""))
-        {
-          SimpleDateFormat formatter = new SimpleDateFormat ("MM/dd/yyyy");
-          sBeginDate = formatter.format(new java.util.Date());
-        }
-        sBeginDate = m_util.getOracleDate(sBeginDate);
-        String sEndDate = m_util.getOracleDate(pv.getPV_END_DATE());
-
-        //check if it already exists
-        sPV_ID = this.getExistingPV(sValue, sShortMeaning);
-        if (sPV_ID != null && !sPV_ID.equals(""))
-        {
-          pv.setPV_PV_IDSEQ(sPV_ID);  //update the pvbean with the id
-          return sReturnCode;
-        }
-          
-        //Create a Callable Statement object.
-        sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-        if (sbr_db_conn == null)
-          m_servlet.ErrorLogin(m_classReq, m_classRes);
-        else
-        {
-          CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-          // register the Out parameters
-          CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-          CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //pv id
-          CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //value
-          CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //short meaning
-          CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //begin date
-          CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //meaning description
-          CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //low value num
-          CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //high value num
-          CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //end date
-          CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //created by
-          CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //date created
-          CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //modified by
-          CStmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //date modified
-
-          // Set the In parameters (which are inherited from the PreparedStatement class)
-          CStmt.setString(2,sAction);       //ACTION - INS, UPD or DEL
-          if ((sAction.equals("UPD")) || (sAction.equals("DEL")))
-          {
-            sPV_ID = pv.getPV_PV_IDSEQ();
-            CStmt.setString(3,sPV_ID);
-          }
-          else
-          {
-            CStmt.setString(4,sValue);
-            CStmt.setString(5,sShortMeaning);
-          }
-          CStmt.setString(6,sBeginDate);
-          CStmt.setString(7,sMeaningDescription);
-          CStmt.setString(10,sEndDate);
-           // Now we are ready to call the stored procedure
-          CStmt.execute();
-          sReturnCode = CStmt.getString(1);
-          sPV_ID = CStmt.getString(3);
-          pv.setPV_PV_IDSEQ(sPV_ID);
-          if (sReturnCode != null && !sReturnCode.equals("API_PV_300"))
-          {
-            this.storeStatusMsg("\\t " + sReturnCode + " : Unable to update Permissible Value - " + sValue + ".");
-            m_classReq.setAttribute("retcode", sReturnCode);      //store returncode in request to track it all through this request    
-            m_classReq.setAttribute("pvvmError", sReturnCode);  //store it capture check for pv creation
-          }
-      }
-      //capture the duration
-      //logger.info(m_servlet.getLogMessage(m_classReq, "setPV", "end set", startDate, new java.util.Date())); 
-    }
-    catch(Exception e)
-    {
-      logger.fatal("ERROR in InsACService-setPV for other : " + e.toString(), e);
-      m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception : Unable to update Permissible Value attributes.");
-    }
-    try
-    {
-      if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
-    }
-    catch(Exception ee)
-    {
-      logger.fatal("ERROR in InsACService-setPV for close : " + ee.toString(), ee);
-      m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception : Unable to update Permissible Value attributes.");
-    }
-    return sReturnCode;
-  }
-
- /**
-  * To check a Value Meaing exist in the database for this meaning.
-  * Called from setVDfromPage method.
-  * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
-  * Calls oracle stored procedure
-  *   "{call SBREXT_get_Row.GET_VM(?,?,?,?,?,?,?,?,?,?,?)}" to submit
-  *
-  * @param vm VM Bean.
-  *
-  * @return String return code from the stored procedure call. null if no error occurred.
-  */
-/*  private VM_Bean getVM(VM_Bean vm)
-  {
-    Connection sbr_db_conn = null;
-    ResultSet rs = null;
-    CallableStatement CStmt = null;
-    String sReturnCode = "";  //out
-  //  String ret2 = "";
-    try
-    {
-        //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
-          m_servlet.ErrorLogin(m_classReq, m_classRes);
-      else
-      {
-          CStmt = sbr_db_conn.prepareCall("{call SBREXT_get_Row.GET_VM(?,?,?,?,?,?,?,?,?,?,?)}");
-          // register the Out parameters
-          CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-          CStmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //short meaning
-          CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //meaning description
-          CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //comments
-          CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //begin date
-          CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //end date
-          CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //created by
-          CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //date created
-          CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //modified by
-          CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //date modified
-          CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //condr_idseq
-          // Set the In parameters (which are inherited from the PreparedStatement class)
-          CStmt.setString(2, vm.getVM_SHORT_MEANING());
-           // Now we are ready to call the stored procedure
-          boolean bExcuteOk = CStmt.execute();
-          sReturnCode = CStmt.getString(1);
-          vm.setRETURN_CODE(sReturnCode);
-//System.out.println(sReturnCode + " get vm " + vm.getVM_SHORT_MEANING());
-          //update vm bean if found
-          if (sReturnCode == null || sReturnCode.equals(""))
-          {
-            String sCondr = CStmt.getString(11);
-            if (sCondr != null && !sCondr.equals(""))
-            {
-              //get the concept attributes from the condr idseq
-              GetACService getAC = new GetACService(m_classReq, m_classRes, m_servlet);
-              Vector vCon = getAC.getAC_Concepts(sCondr, null, true);
-              //get the evs bean from teh vector and store it in vm concept
-              if (vCon != null && vCon.size() > 0)
-              {
-                //get the origin information from the cadsr one and from selected term
-                EVS_Bean vmCon = (EVS_Bean)vCon.elementAt(0);
-                if (vmCon == null) vmCon = new EVS_Bean();
-                vm.setVM_CONCEPT(vmCon);
-              }
-            }
-            //update all other attributes
-            //vm.setRETURN_CODE(sReturnCode);
-            vm.setVM_SHORT_MEANING(CStmt.getString(2));
-            vm.setVM_DESCRIPTION(CStmt.getString(3));
-            vm.setVM_COMMENTS(CStmt.getString(4));
-          }            
-      }
-    }
-    catch(Exception e)
-    {
-      logger.fatal("ERROR in InsACService-getVM for other : " + e.toString(), e);
-      sReturnCode = "000";
-    }
-    try
-    {
-      if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
-    }
-    catch(Exception ee)
-    {
-      logger.fatal("ERROR in InsACService-getVM for close : " + ee.toString(), ee);
-      sReturnCode = "000";
-    }
-    return vm;
-  }
-*/ /**
-  * To check a Value Meaing exist in the database for this meaning.
-  * Called from setVDfromPage method.
-  * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
-  * Calls oracle stored procedure
-  *   "{call SBREXT_get_Row.GET_VM(?,?,?,?,?,?,?,?,?,?,?)}" to submit
-  *
-  * @param vm VM Bean.
-  *
-  * @return String return code from the stored procedure call. null if no error occurred.
-  */
-/*  private VM_Bean getExistingVM(VM_Bean vm)
-  {
-    EVS_Bean evsCon = vm.getVM_CONCEPT();
-    if (evsCon == null) evsCon = new EVS_Bean();
-    String sMean = vm.getVM_SHORT_MEANING();
-    String evsID = evsCon.getCONCEPT_IDENTIFIER();
-    if (evsID == null) evsID = "";
-    m_classReq.setAttribute("selConcept", evsCon);
-  //  vm = this.getVM(vm);  //first check if vm with the same concept name exists
-    String sRet = vm.getRETURN_CODE();
-    if (sRet == null || sRet.equals(""))  //yes it exists already
-    {
-      EVS_Bean cadsrCon = vm.getVM_CONCEPT();
-      if (cadsrCon == null) cadsrCon = new EVS_Bean();
-     // String sCondr = cadsrCon.getCONDR_IDSEQ();
-      //do the concept info check only if exists
-      //if (sCondr != null && !sCondr.equals("") && evsID != null && !evsID.equals(""))
-      if (evsID != null && !evsID.equals(""))
-      {
-        String cadsrID = cadsrCon.getCONCEPT_IDENTIFIER();
-        if (cadsrID == null) cadsrID = "";
-        String cadsrVocab = cadsrCon.getEVS_DATABASE();
-        if (cadsrVocab == null) cadsrVocab = "";
-        String evsVocab = evsCon.getEVS_DATABASE();
-        if (evsVocab == null) evsVocab = "";
-        //if origin is same as selected, continue with the updates
- // System.out.println(evsID + " vm id " + cadsrID + " vm origin " + evsVocab + " vm dbOri " + cadsrVocab);
-        //check if the db con and evs con are the same by checking conid and vocabs 
-        String vmMean = "";
-        if (cadsrVocab.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
-          cadsrVocab = cadsrCon.getEVS_ORIGIN();
-        if (evsVocab.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
-          evsVocab = evsCon.getEVS_ORIGIN();
-        if (evsID.equalsIgnoreCase(cadsrID) && evsVocab.equalsIgnoreCase(cadsrVocab))
-          return vm;
-        else if (evsID.equalsIgnoreCase(cadsrID))  //only ids are same (diff vocabs)
-          vmMean = sMean + ": " + evsID + ": " + evsVocab;  // evsVocab;
-        else  //different ids 
-          vmMean = sMean + ": " + evsID;
-        //update vm bean and check it again
-        vm.setVM_SHORT_MEANING(vmMean);  //vm with con id          
-        vm.setVM_CONCEPT(evsCon);  //reset to evs con
-        vm.setVM_DESCRIPTION(evsCon.getPREFERRED_DEFINITION());
-        vm.setVM_COMMENTS(evsID + ": " + evsVocab);  // evsVocab);
-       // this.getVM(vm);  //call to check if another vm with this origin existed               
-      }        
-    }
-    return vm;
-  }
-*/
- /**
-  * To insert a new Value Meaing in the database after the validation.
-  * Called from NCICurationServlet.
-  * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
-  * Calls oracle stored procedure
-  *   "{call SBREXT_Set_Row.SET_VM(?,?,?,?,?,?,?,?,?,?,?)}" to submit
-  *
-  * @param sAction Insert or update Action.
-  * @param vm VM Bean.
-  *
-  * @return String return code from the stored procedure call. null if no error occurred.
-  */
-/*  private String setVM(String sAction, VM_Bean vm)
-  {
-    //capture the duration
-    java.util.Date startDate = new java.util.Date();          
-    //logger.info(m_servlet.getLogMessage(m_classReq, "setVM", "starting set", startDate, startDate));
-
-    Connection sbr_db_conn = null;
-    ResultSet rs = null;
-    CallableStatement CStmt = null;
-    String sReturnCode = "";  //out
-    String ret2 = "";
-    try
-    {
-        String sComments = vm.getVM_COMMENTS();
-        String sShortMeaning = vm.getVM_SHORT_MEANING();
-        String sMeaningDescription = vm.getVM_DESCRIPTION();
-        String sBeginDate = m_util.getOracleDate(vm.getVM_BEGIN_DATE());
-        String sEndDate = m_util.getOracleDate(vm.getVM_END_DATE());
-        //Create a Callable Statement object.
-        sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-        if (sbr_db_conn == null)
-          m_servlet.ErrorLogin(m_classReq, m_classRes);
-        else
-        {
-          CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VM(?,?,?,?,?,?,?,?,?,?,?)}");
-          // register the Out parameters
-          CStmt.registerOutParameter(1, java.sql.Types.VARCHAR);       //return code
-          CStmt.registerOutParameter(3, java.sql.Types.VARCHAR);       //short meaning
-          CStmt.registerOutParameter(4, java.sql.Types.VARCHAR);       //meaning description
-          CStmt.registerOutParameter(5, java.sql.Types.VARCHAR);       //comments
-          CStmt.registerOutParameter(6, java.sql.Types.VARCHAR);       //begin date
-          CStmt.registerOutParameter(7, java.sql.Types.VARCHAR);       //end date
-          CStmt.registerOutParameter(8, java.sql.Types.VARCHAR);       //created by
-          CStmt.registerOutParameter(9, java.sql.Types.VARCHAR);       //date created
-          CStmt.registerOutParameter(10, java.sql.Types.VARCHAR);       //modified by
-          CStmt.registerOutParameter(11, java.sql.Types.VARCHAR);       //date modified
-          // Set the In parameters (which are inherited from the PreparedStatement class)
-          CStmt.setString(2, sAction);
-          CStmt.setString(3, sShortMeaning);
-          CStmt.setString(4, sMeaningDescription);
-          CStmt.setString(5, sComments);
-          CStmt.setString(6, sBeginDate);
-          CStmt.setString(7, sEndDate);
-           // Now we are ready to call the stored procedure
-          boolean bExcuteOk = CStmt.execute();
-          sReturnCode = CStmt.getString(1);
-          if (sReturnCode != null && !sReturnCode.equals("API_VM_300"))
-          {
-            this.storeStatusMsg("\\t " + sReturnCode + " : Unable to update Value Meaning - " + sShortMeaning + ".");
-            m_classReq.setAttribute("retcode", sReturnCode);      //store returncode in request to track it all through this request    
-          }
-          else
-          {
-            //do the cdvms relationship here itself
-            sReturnCode = this.setCDVMS("INS", vm);
-          }
-        }
-      //capture the duration
-      //logger.info(m_servlet.getLogMessage(m_classReq, "setVM", "end set", startDate, new java.util.Date()));  
-
-    }
-    catch (Exception e)
-    {
-      logger.fatal("ERROR in InsACService-setVM for other : " + e.toString(), e);
-      m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception : Unable to update VM attributes.");
-    }
-    try
-    {
-      if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
-    }
-    catch (Exception ee)
-    {
-      logger.fatal("ERROR in InsACService-setVM for close : " + ee.toString(), ee);
-      m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception : Unable to update VM attributes.");
-    }
-    return sReturnCode;
-  }
-*/
- /**
-  * To insert a new Value Meaing in the database when selected a term from EVS.
-  * Called from NCICurationServlet.
-  * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
-  * Calls oracle stored procedure
-  *   "{call SBREXT_Set_Row.SET_VM_CONDR(?,?,?,?,?,?,?,?,?,?,?)}" to submit
-  *
-  * @param sAction Insert or update Action.
-  * @param vm VM Bean.
-  *
-  * @return String return code from the stored procedure call. null if no error occurred.
-  */
-/*  private String setVM_EVS(String sAction, VM_Bean vm)
-  {
-    //capture the duration
-    java.util.Date startDate = new java.util.Date();          
-    //logger.info(m_servlet.getLogMessage(m_classReq, "setVM_EVS", "starting set", startDate, startDate));
-
-    Connection sbr_db_conn = null;
-    ResultSet rs = null;
-    CallableStatement CStmt = null;
-    String sReturnCode = "";  //out
-    String ret2 = "";
-    try
-    {
-        String sConID = "", sConIDseq = "", sRet = "", sCondr = "";
-        EVS_Bean oldCon = vm.getVM_CONCEPT();
-        //check if it already exists for the evs vm and mark it as update if exists.
-        if (sAction == null || !sAction.equals("UPD"))
-        {
-          m_classReq.setAttribute("selConcept", vm.getVM_CONCEPT());
-        //  vm = this.getExistingVM(vm);
-          sRet = vm.getRETURN_CODE();
-          if (sRet == null || sRet.equals("")) 
-            sAction = "UPD";  
-          else
-            sAction = "INS";
-        }
-        //store vm attributes
-        String sShortMeaning = vm.getVM_SHORT_MEANING();
-        EVS_Bean vmConcept = (EVS_Bean)vm.getVM_CONCEPT();
-        String conName = vmConcept.getLONG_NAME();
-        if (vmConcept != null)
-        {          
-          sCondr = vmConcept.getCONDR_IDSEQ();
-          sConID = vmConcept.getCONCEPT_IDENTIFIER();
-        //System.out.println(sConID + " setVM conid/meaning" + sShortMeaning + " condr " + sCondr);     
-
-          //create concept this vm has concept attr and no condr id (new concept)
-          if (sConID != null && !sConID.equals("") && (sCondr == null || sCondr.equals("")))
-          {
-            sConIDseq = this.setConcept("INS", sRet, vmConcept);
- // System.out.println("setVM_EVS sConIDseq: " + sConIDseq);
- // System.out.println("setVM_EVS sShortMeaning: " + sShortMeaning);
-          }
-          //only update the cd vm relationship since condr exists already.
-          else if (sAction.equals("UPD"))
-          {
-            //check if it is valid condr (concept-vm relationship)
-            String conID = vmConcept.getCONCEPT_IDENTIFIER();
-            String oldName = oldCon.getLONG_NAME();
-            String oldID = oldCon.getCONCEPT_IDENTIFIER();
-            //same concept but different IDs lead to different concept-vm relationship
-            if (conName.equalsIgnoreCase(oldName) && !conID.equalsIgnoreCase(oldID))
-            {              
-              String conMsg = "\\tError: Unable to add Value Meaning " + sShortMeaning + 
-                " with Concept Code " + oldID + "\\n\\t to the Value Domain because another Concept Name " + 
-                conName + "\\n\\t with the different Concept Code " + sConID + " exists in caDSR database." +
-                "\\n\\t Please contact NCICB Applications Support at http://ncicbsupport.nci.nih.gov/sw/\\n";
-              this.storeStatusMsg(conMsg);
-              logger.fatal(conMsg);
-              m_classReq.setAttribute("retcode", "vmError");
-              m_classReq.setAttribute("pvvmError", "vmError");  //store it capture check for pv creation
-              return "vmError";
-            }  
-            //just do the cdvms relationship
-            sRet = this.setCDVMS("INS", vm);
-            return "";
-          }
-          //throw error message if valuemeaning and concept name are same 
-          if (!sShortMeaning.equalsIgnoreCase(conName))
-          {
-            String conMsg = "\\tError: Unable to add Value Meaning " + sShortMeaning + 
-              "\\n\\t to the Value Domain because another Concept Name " + conName + 
-              "\\n\\t with the same Concept Code " + sConID + " exists in caDSR database." +
-              "\\n\\t Please contact NCICB Applications Support at http://ncicbsupport.nci.nih.gov/sw/\\n";
-            this.storeStatusMsg(conMsg);
-            logger.fatal(conMsg);
-            m_classReq.setAttribute("retcode", "vmError");
-            m_classReq.setAttribute("pvvmError", "vmError");  //store it capture check for pv creation
-            return "vmError";
-          } 
-        }
-        //get vm attributes
-        String sComments = vm.getVM_COMMENTS();
-        String sMeaningDescription = vm.getVM_DESCRIPTION();
-    //System.out.println(sMeaningDescription + " : " + vmConcept.getPREFERRED_DEFINITION());
-        String sBeginDate = m_util.getOracleDate(vm.getVM_BEGIN_DATE());
-        String sEndDate = m_util.getOracleDate(vm.getVM_END_DATE());
-          //Create a Callable Statement object.
-          sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-          if (sbr_db_conn == null)
-            m_servlet.ErrorLogin(m_classReq, m_classRes);
-          else
-          {
-            CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_VM_CONDR(?,?,?,?,?,?,?,?,?,?,?,?)}");
-            // register the Out parameters
-            CStmt.registerOutParameter(2, java.sql.Types.VARCHAR);       //return code
-            CStmt.registerOutParameter(3, java.sql.Types.VARCHAR);       //short meaning
-            CStmt.registerOutParameter(4, java.sql.Types.VARCHAR);       //meaning description
-            CStmt.registerOutParameter(5, java.sql.Types.VARCHAR);       //comments
-            CStmt.registerOutParameter(6, java.sql.Types.VARCHAR);       //begin date
-            CStmt.registerOutParameter(7, java.sql.Types.VARCHAR);       //end date
-            CStmt.registerOutParameter(8, java.sql.Types.VARCHAR);       //created by
-            CStmt.registerOutParameter(9, java.sql.Types.VARCHAR);       //date created
-            CStmt.registerOutParameter(10, java.sql.Types.VARCHAR);       //modified by
-            CStmt.registerOutParameter(11, java.sql.Types.VARCHAR);       //date modified
-            CStmt.registerOutParameter(12, java.sql.Types.VARCHAR);       //condr idseq
-            // Set the In parameters (which are inherited from the PreparedStatement class)
-            CStmt.setString(1, sConIDseq);
-            //set value meaning if action is to update
-            CStmt.setString(3, sShortMeaning);
-             // Now we are ready to call the stored procedure
-            boolean bExcuteOk = CStmt.execute();
-            sReturnCode = CStmt.getString(2);
-            if (sReturnCode != null)
-            {
-              this.storeStatusMsg("\\t " + sReturnCode + " : Unable to update Value Meaning - " + sShortMeaning + ".");
-              m_classReq.setAttribute("retcode", sReturnCode);      //store returncode in request to track it all through this request    
-              m_classReq.setAttribute("pvvmError", sReturnCode);  //store it capture check for pv creation
-            }
-            else
-            {
-              //store the vm attributes created by stored procedure in the bean
-              vm.setVM_SHORT_MEANING(CStmt.getString(3));
-              vm.setVM_DESCRIPTION(CStmt.getString(4));
-              vm.setVM_COMMENTS(CStmt.getString(5));
-              vm.setVM_BEGIN_DATE(CStmt.getString(6));
-              vm.setVM_END_DATE(CStmt.getString(7));
-              vmConcept.setCONDR_IDSEQ(CStmt.getString(12));
-              vm.setVM_CONCEPT(vmConcept);
-              //do the cdvms relationship here itself
-              sReturnCode = this.setCDVMS("INS", vm);
-            }
-          }
-      //capture the duration
-      //logger.info(m_servlet.getLogMessage(m_classReq, "setVM_EVS", "end set", startDate, new java.util.Date()));  
-    }
-    catch (Exception e)
-    {
-      logger.fatal("ERROR in InsACService-setEVS_VM for other : " + e.toString(), e);
-      m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception : Unable to update VM attributes.");
-    }
-    try
-    {
-      if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
-    }
-    catch (Exception ee)
-    {
-      logger.fatal("ERROR in InsACService-setEVS_VM for close : " + ee.toString(), ee);
-      m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception : Unable to update VM attributes.");
-    }
-    return sReturnCode;
-  }
-*/
-  /**
-  * To insert a new CD VMS relationship in the database after creating VM or its relationship with VD.
-  * Called from NCICurationServlet.
-  * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
-  * Calls oracle stored procedure
-  *   "{call SBREXT_Set_Row.SET_CDVMS(?,?,?,?,?,?,?,?,?,?,?)}" to submit
-  *
-  * @param sAction Insert or update Action.
-  * @param vm VM Bean.
-  *
-  * @return String return code from the stored procedure call. null if no error occurred.
-  */
-/*  private String setCDVMS(String sAction, VM_Bean vm)
-  {
-    //capture the duration
-    java.util.Date startDate = new java.util.Date();          
-    //logger.info(m_servlet.getLogMessage(m_classReq, "setCDVMS", "starting set", startDate, startDate));
-
-    Connection sbr_db_conn = null;
-    ResultSet rs = null;
-    CallableStatement CStmt = null;
-    String sReturnCode = "";  //out
-    try
-    {
-        String sShortMeaning = vm.getVM_SHORT_MEANING();
-        String sMeaningDescription = vm.getVM_DESCRIPTION();
-        String sCD_ID = vm.getVM_CD_IDSEQ();
-        String cdName = vm.getVM_CD_NAME();
-        //Create a Callable Statement object.
-        sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-        if (sbr_db_conn == null)
-          m_servlet.ErrorLogin(m_classReq, m_classRes);
-        else
-        {
-          CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_CD_VMS(?,?,?,?,?,?,?,?,?,?)}");
-          // register the Out parameters
-          CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-          CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //out cv_idseq
-          CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //out cd_idseq
-          CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //out value meaning
-          CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //out description
-          CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //date created
-          CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //created by
-          CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //modified by
-          CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //date modified
-          // Set the In parameters (which are inherited from the PreparedStatement class)
-          CStmt.setString(2, sAction);
-          CStmt.setString(4, sCD_ID);
-          CStmt.setString(5, sShortMeaning);
-          CStmt.setString(6, sMeaningDescription);
-           // Now we are ready to call the stored procedure
-          boolean bExcuteOk = CStmt.execute();
-          sReturnCode = CStmt.getString(1);
-          String sCV_ID = CStmt.getString(3);
-          if (sReturnCode != null && !sReturnCode.equals("API_CDVMS_203"))
-          {
-            this.storeStatusMsg("\\t " + sReturnCode + " : Unable to update Conceptual Domain and Value Meaning relationship - "
-                + cdName + " and " + sShortMeaning + ".");
-            m_classReq.setAttribute("retcode", sReturnCode);      //store returncode in request to track it all through this request    
-          }
-      }
-      //capture the duration
-      //logger.info(m_servlet.getLogMessage(m_classReq, "setCDVMS", "end set", startDate, new java.util.Date()));  
-    }
-    catch(Exception e)
-    {
-      logger.fatal("ERROR in InsACService-setCDVMS for other : " + e.toString(), e);
-      m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception : Unable to update CD and VM relationship.");
-    }
-    try
-    {
-      if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
-    }
-    catch(Exception ee)
-    {
-      logger.fatal("ERROR in InsACService-setCDVMS for close : " + ee.toString(), ee);
-      m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception : Unable to update CD and VM relationship.");
-    }
-    return sReturnCode;
-  }
-*/
- /**
-  * To insert a new row/ remove exisitng one in VD_PVS relationship table after the validation.
-  * Called from 'setVD' method.
-  * Sets in parameters, and registers output parameter.
-  * Calls oracle stored procedure
-  *   "{call SBREXT_Set_Row.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?)}" to submit
-  * Calls setCDVMS to create CD and Meaning relationship for each meaning selected in create VD.
-  * calls updateCRFvalue to update the QuestContents with the VDPVS idseq for each CRF value.
-  *
-  * @param vd VD Bean.
-  * @param isNew boolean to check if creating new relationship or deleting it.
-  * @return string return code of error message
-  */
-/*  public String addRemoveVDPVS(VD_Bean vd, boolean isNew)
-  {
-    Connection sbr_db_conn = null;
-    ResultSet rs = null;
-    CallableStatement CStmt = null;
-    HttpSession session = m_classReq.getSession();
-    String sReturnCode = "";
-    try
-    {
-      Vector<PV_Bean> vVDPVS = (Vector)session.getAttribute("VDPVList");     //("serVDPVSID");
-      if (vVDPVS == null) vVDPVS = new Vector<PV_Bean>();
-      //insert or update vdpvs relationship
-      String ret = "";
-      for (int j=0; j<vVDPVS.size(); j++)
-      {
-          PV_Bean pvBean = (PV_Bean)vVDPVS.elementAt(j);
-          String sPVid = pvBean.getPV_PV_IDSEQ();
-          //submit the pv to either insert or update if something done to this pv
-          String vpAction = pvBean.getVP_SUBMIT_ACTION();
-          if (vpAction == null) vpAction = "NONE";
-          String vpID = pvBean.getPV_VDPVS_IDSEQ();
-          if (!vpAction.equals("NONE"))
-          {
-            //create vm if action is not del or update
-            if (!vpAction.equals("DEL"))
-            {
-              EVS_Bean evsBean = (EVS_Bean)pvBean.getVM_CONCEPT();
-              if (evsBean != null)
-              {
-                String sCondr = evsBean.getCONDR_IDSEQ();  //vm condr idseq
-                String sConID = evsBean.getCONCEPT_IDENTIFIER();
-                //create vm if this vm has concept attr and no condr id (new vm and pv)
-                if (sConID != null && !sConID.equals("") && (sCondr == null || sCondr.equals("")))
-                {
-                  //make vmbean from pv bean
-                  VM_Bean vm = new VM_Bean();
-                  vm.setVM_SHORT_MEANING(pvBean.getPV_SHORT_MEANING());
-                  vm.setVM_DESCRIPTION(pvBean.getPV_MEANING_DESCRIPTION());
-                  vm.setVM_CD_IDSEQ(vd.getVD_CD_IDSEQ());
-                  vm.setVM_CD_NAME(vd.getVD_CD_NAME());
-                  vm.setVM_BEGIN_DATE(pvBean.getPV_BEGIN_DATE());
-                  vm.setVM_CONCEPT(evsBean);                  
-                  ret = this.setVM_EVS("INS", vm);   //creates concepts and vm in cadsr
-                  //do not contiue with creatin pv if vm has error
-                  String vmErr = (String)m_classReq.getAttribute("pvvmError");
-                  m_classReq.setAttribute("pvvmError", "");  //empty it first
-                  if (vmErr != null && (vmErr.equals("vmError") || vmErr.indexOf("API_VM") > -1)) continue;
-                  pvBean.setPV_SHORT_MEANING(vm.getVM_SHORT_MEANING());   //reset vm to handle case sensitive vm
-                }
-              }              
-              //create new pv if not exists already.
-              if (sPVid == null || sPVid.equals("") || (sPVid.length()>3 && sPVid.indexOf("EVS")>-1))   
-                ret = this.setPV("INS", sPVid, pvBean);
-              //do not contiue with creatin vdpvs if pv has error
-              String pvErr = (String)m_classReq.getAttribute("pvvmError");
-              m_classReq.setAttribute("pvvmError", "");  //empty it first
-              if (pvErr != null && pvErr.indexOf("API_PV") > -1) continue;                  
-            }
-            //remove olny if it was already existed in the database 
-            ret = this.setVD_PVS(pvBean, vd);
-            //remove the bean from the vector if success in deletion or set it back to none.
-            if (vpAction.equals("DEL"))
-            {
-              if (ret == null || ret.equals(""))
-              {
-                //vPV.removeElement(pvBean.getPV_PV_IDSEQ());
-                vVDPVS.removeElement(pvBean);
-                j -= 1;
-              }
-              else
-              {
-                pvBean.setVP_SUBMIT_ACTION("NONE");
-                vVDPVS.setElementAt(pvBean, j);
-              }
-            }
-          }
-        }  //end loop
-        session.setAttribute("VDPVList", vVDPVS);
-        sReturnCode = (String)m_classReq.getAttribute("retcode");
-    }
-    catch(Exception e)
-    {
-      logger.fatal("ERROR in InsACService-setVD_PVS for other : " + e.toString(), e);
-    }
-    try
-    {
-      if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
-    }
-    catch(Exception ee)
-    {
-      logger.fatal("ERROR in InsACService-setVD_PVS for close : " + ee.toString(), ee);
-    }
-    return sReturnCode;
-  }  //END VD_PVS
-*/
- /**
-  * To remove exisitng one in VD_PVS relationship table after the validation.
-  * Called from 'setVD_PVS' method.
-  * Sets in parameters, and registers output parameter.
-  * Calls oracle stored procedure
-  *   "{call SBREXT_Set_Row.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?)}" to submit
-  *
-  * @param pvBean PV_Bean of the selected pv.
-  * @param vdBean VD_Bean of the current pv.
-  * @return String of return code 
-  */
-/*  private String setVD_PVS(PV_Bean pvBean, VD_Bean vdBean)
-  {
-    //capture the duration
-    java.util.Date startDate = new java.util.Date();          
-    //logger.info(m_servlet.getLogMessage(m_classReq, "setVD_PVS", "starting set", startDate, startDate));
-
-    Connection sbr_db_conn = null;
-    CallableStatement CStmt = null;
-    String retCode = "";
-    try
-    {
-        String sAction = pvBean.getVP_SUBMIT_ACTION();
-        String vpID = pvBean.getPV_VDPVS_IDSEQ();
-        //deleting newly selected/created pv don't do anything since it doesn't exist in cadsr to remove.
-        if (sAction.equals("DEL") && (vpID == null || vpID.equals("")))
-          return retCode;
-        //create parent concept if exists 
-        EVS_Bean pCon = (EVS_Bean)pvBean.getPARENT_CONCEPT();
-        String conIDseq = "";
-        if (pCon != null)
-        {
-          conIDseq = pCon.getCONDR_IDSEQ();
-          String pConID = pCon.getCONCEPT_IDENTIFIER();
-          if (pConID != null && !pConID.equals("") && (conIDseq == null || conIDseq.equals("")))
-            conIDseq = this.setConcept("INS", retCode, pCon);
-        }
-
-        //Create a Callable Statement object.
-        sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-        if (sbr_db_conn == null)
-           m_servlet.ErrorLogin(m_classReq, m_classRes);
-        else
-        {
-           CStmt = sbr_db_conn.prepareCall("{call sbrext_set_row.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-           CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-           CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //vd_PVS id
-           CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //vd id
-           CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //pvs id
-           CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //context id
-           CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //date created
-           CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //created by
-           CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //modified by
-           CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //date modified
-
-           // Set the In parameters (which are inherited from the PreparedStatement class)
-           //create a new row if vpIdseq is empty for updates           
-           if (sAction.equals("UPD") && (vpID == null || vpID.equals(""))) sAction = "INS";
-           
-           CStmt.setString(2, sAction);       //ACTION - INS, UPD  or DEL
-           CStmt.setString(3, pvBean.getPV_VDPVS_IDSEQ());    //VPid);       //vd_pvs ideq - not null
-           CStmt.setString(4, vdBean.getVD_VD_IDSEQ());  // sVDid);       //value domain id - not null
-           CStmt.setString(5, pvBean.getPV_PV_IDSEQ());  // sPVid);       //permissible value id - not null
-           CStmt.setString(6, vdBean.getVD_CONTE_IDSEQ());  // sContextID);       //context id - not null for INS, must be null for UPD
-           String pvOrigin = pvBean.getPV_VALUE_ORIGIN();
-           //believe that it is defaulted to vd's origin
-           //if (pvOrigin == null || pvOrigin.equals(""))
-           //   pvOrigin = vdBean.getVD_SOURCE();
-           CStmt.setString(11, pvOrigin);  // sOrigin);
-           String sDate = pvBean.getPV_BEGIN_DATE();
-           if (sDate != null && !sDate.equals(""))
-              sDate = m_util.getOracleDate(sDate);
-           CStmt.setString(12, sDate);  // begin date);
-           sDate = pvBean.getPV_END_DATE();
-           if (sDate != null && !sDate.equals(""))
-              sDate = m_util.getOracleDate(sDate);
-           CStmt.setString(13, sDate);  // end date);
-           CStmt.setString(14, conIDseq);
-//System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
-           boolean bExcuteOk = CStmt.execute();
-           retCode = CStmt.getString(1);
-           //store the status message if children row exist
-           if (retCode != null && !retCode.equals(""))
-           {
-             String sPValue = pvBean.getPV_VALUE();
-             String sVDName = vdBean.getVD_LONG_NAME();
-             if (sAction.equals("INS") || sAction.equals("UPD"))
-                this.storeStatusMsg("\\t " + retCode + " : Unable to update permissible value " + sPValue + ".");
-             else if (sAction.equals("DEL") && retCode.equals("API_VDPVS_006"))
-             {
-                this.storeStatusMsg("\\t This Value Domain is used by a form. " +
-                  "Create a new version of the Value Domain to remove permissible value " + sPValue + ".");
-             }
-             else 
-                this.storeStatusMsg("\\t " + retCode + " : Unable to remove permissible value " + sPValue + ".");
-             m_classReq.setAttribute("retcode", retCode);  
-           }
-           else
-           {
-               //create crf value pv relationship in QC table.
-               vpID = CStmt.getString(3);
-               pvBean.setPV_VDPVS_IDSEQ(vpID);
-               if (sAction.equals("INS") && (vpID != null  || !vpID.equals("")))
-                  UpdateCRFValue(pvBean);
-           }
-        }
-      //capture the duration
-      //logger.info(m_servlet.getLogMessage(m_classReq, "setVD_PVS", "end set", startDate, new java.util.Date()));  
-    }
-    catch(Exception e)
-    {
-      logger.fatal("ERROR in InsACService-setVD_PVS for other : " + e.toString(), e);
-      m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception : Unable to update or remove PV of VD.");
-    }
-    try
-    {
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
-    }
-    catch(Exception ee)
-    {
-      logger.fatal("ERROR in InsACService-setVD_PVS for close : " + ee.toString(), ee);
-      m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception : Unable to update or remove PV of VD.");
-    }
-    return retCode;
-  }  //END setVD_PVS
-*/
-  /**
   * The UpdateCRFValue method updates the quest contents table with the vp idseq.
   * calls setQuestContent to update.
   * @param pv PVid idseq of the permissible value
@@ -1473,7 +575,7 @@ public class InsACService implements Serializable
       try
       {
         HttpSession session = m_classReq.getSession();
-        String sMenuAction = (String)session.getAttribute("MenuAction");
+        String sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
         if (sMenuAction.equals("Questions") && pv.getVP_SUBMIT_ACTION().equals("INS"))
         {
            //get the crf value vector to update
@@ -1513,9 +615,9 @@ public class InsACService implements Serializable
     //java.util.Date startDate = new java.util.Date();          
     //logger.info(m_servlet.getLogMessage(m_classReq, "setDEC", "starting set", startDate, startDate));
 
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     HttpSession session = m_classReq.getSession();
     String sReturnCode = "";
    // String v_ac = "";
@@ -1673,77 +775,77 @@ public class InsACService implements Serializable
         sEndDate = m_util.getOracleDate(dec.getDEC_END_DATE());
 
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_DEC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-        CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-        CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //dec id    ????? vd ID
-        CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //preferred name
-        CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //context id
-        CStmt.registerOutParameter(6,java.sql.Types.DECIMAL);       //version
-        CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //preferred definition
-        CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //cd id
-        CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //asl name
-        CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //latest version ind
-        CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //long name
-        CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //OCL name
-        CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //PROPL Name
-        CStmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //PROPERTY QUALIFIER
-        CStmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //OBJ CLASS QUALIFIER
-        CStmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //begin date
-        CStmt.registerOutParameter(17,java.sql.Types.VARCHAR);       //end date
-        CStmt.registerOutParameter(18,java.sql.Types.VARCHAR);       //change note
-        CStmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //created by
-        CStmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //date created
-        CStmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //modified by
-        CStmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //date modified
-        CStmt.registerOutParameter(23,java.sql.Types.VARCHAR);       //deleted ind
-        CStmt.registerOutParameter(24,java.sql.Types.VARCHAR);       //origin
+        cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_DEC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+        cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+        cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //dec id    ????? vd ID
+        cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //preferred name
+        cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //context id
+        cstmt.registerOutParameter(6,java.sql.Types.DECIMAL);       //version
+        cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //preferred definition
+        cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //cd id
+        cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //asl name
+        cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //latest version ind
+        cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //long name
+        cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //OCL name
+        cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //PROPL Name
+        cstmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //PROPERTY QUALIFIER
+        cstmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //OBJ CLASS QUALIFIER
+        cstmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //begin date
+        cstmt.registerOutParameter(17,java.sql.Types.VARCHAR);       //end date
+        cstmt.registerOutParameter(18,java.sql.Types.VARCHAR);       //change note
+        cstmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //created by
+        cstmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //date created
+        cstmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //modified by
+        cstmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //date modified
+        cstmt.registerOutParameter(23,java.sql.Types.VARCHAR);       //deleted ind
+        cstmt.registerOutParameter(24,java.sql.Types.VARCHAR);       //origin
         // Set the In parameters (which are inherited from the PreparedStatement class)
-        CStmt.setString(2,sAction);       //ACTION - INS, UPD or DEL
+        cstmt.setString(2,sAction);       //ACTION - INS, UPD or DEL
         if ((sAction.equals("UPD")) || (sAction.equals("DEL")))
         {
           sDEC_ID = dec.getDEC_DEC_IDSEQ();
-          CStmt.setString(3,sDEC_ID);
+          cstmt.setString(3,sDEC_ID);
         }
   
         //only for editing released elements
         if (sAction.equals("UPD") && oldAslName.equals("RELEASED") && !sInsertFor.equals("Version"))
         {
-          CStmt.setString(5,null);       //context id - not null for INS, must be null for UPD
-          CStmt.setString(4,null);       //preferred name - not null for INS, must be null for UPD
+          cstmt.setString(5,null);       //context id - not null for INS, must be null for UPD
+          cstmt.setString(4,null);       //preferred name - not null for INS, must be null for UPD
         }
         else  // INS case
         {
-          CStmt.setString(5,sContextID);       //context id - not null for INS, must be null for UPD
-          CStmt.setString(4,sName);       //preferred name - not null for INS, must be null for UPD
+          cstmt.setString(5,sContextID);       //context id - not null for INS, must be null for UPD
+          cstmt.setString(4,sName);       //preferred name - not null for INS, must be null for UPD
         }
-        CStmt.setDouble(6,dVersion);       //version  - test says must have a value
-        CStmt.setString(7,sDefinition);       //preferred definition - not null for INS
-        CStmt.setString(8,sCD_ID);       //cd id - not null for INS
-        CStmt.setString(9,dec.getDEC_ASL_NAME());       //workflow status
+        cstmt.setDouble(6,dVersion);       //version  - test says must have a value
+        cstmt.setString(7,sDefinition);       //preferred definition - not null for INS
+        cstmt.setString(8,sCD_ID);       //cd id - not null for INS
+        cstmt.setString(9,dec.getDEC_ASL_NAME());       //workflow status
         if (sAction.equals("INS"))
-          CStmt.setString(10,"Yes");
-        CStmt.setString(11,sLongName);       //long name  - can be null
-        CStmt.setString(12,sOCID);       //OCL id
-        CStmt.setString(13,sPropL);       //PROPL id
-        CStmt.setString(14,null);       //OC Qualifier name
-        CStmt.setString(15,null);       //Property qualifier name
-        CStmt.setString(16,sBeginDate);       //sBeginDate - can be null
-        CStmt.setString(17,sEndDate);       //sEndDate  - can be null
-        CStmt.setString(18,sChangeNote);
-        CStmt.setString(24,sSource);
+          cstmt.setString(10,"Yes");
+        cstmt.setString(11,sLongName);       //long name  - can be null
+        cstmt.setString(12,sOCID);       //OCL id
+        cstmt.setString(13,sPropL);       //PROPL id
+        cstmt.setString(14,null);       //OC Qualifier name
+        cstmt.setString(15,null);       //Property qualifier name
+        cstmt.setString(16,sBeginDate);       //sBeginDate - can be null
+        cstmt.setString(17,sEndDate);       //sEndDate  - can be null
+        cstmt.setString(18,sChangeNote);
+        cstmt.setString(24,sSource);
          // Now we are ready to call the stored procedure
-        CStmt.execute();
+        cstmt.execute();
         //capture the duration
         //logger.info(m_servlet.getLogMessage(m_classReq, "setDEC", "execute done", startDate, new java.util.Date()));
 
-        sDEC_ID = CStmt.getString(3);
+        sDEC_ID = cstmt.getString(3);
         dec.setDEC_DEC_IDSEQ(sDEC_ID);
-        sReturnCode = CStmt.getString(1);
+        sReturnCode = cstmt.getString(1);
         //m_servlet.clearBuildingBlockSessionAttributes(m_classReq, m_classRes);
        // String sOriginAction = (String)session.getAttribute("originAction");
         if (sReturnCode == null || sReturnCode.equals(""))     //(!sOriginAction.equals("BlockEditDEC"))
@@ -1777,16 +879,16 @@ public class InsACService implements Serializable
               m_classReq.setAttribute("retcode", sReturnCode);
 
            //set create/modify attributes into bean
-           if (CStmt.getString(19) != null && !CStmt.getString(19).equals(""))
-               dec.setDEC_CREATED_BY(getFullName(CStmt.getString(19)));
+           if (cstmt.getString(19) != null && !cstmt.getString(19).equals(""))
+               dec.setDEC_CREATED_BY(getFullName(cstmt.getString(19)));
            else
                dec.setDEC_CREATED_BY(oldDEC.getDEC_CREATED_BY());
-           if (CStmt.getString(20) != null && !CStmt.getString(20).equals(""))
-              dec.setDEC_DATE_CREATED(m_util.getCurationDate(CStmt.getString(20)));
+           if (cstmt.getString(20) != null && !cstmt.getString(20).equals(""))
+              dec.setDEC_DATE_CREATED(m_util.getCurationDate(cstmt.getString(20)));
            else
               dec.setDEC_DATE_CREATED(oldDEC.getDEC_DATE_CREATED());
-           dec.setDEC_MODIFIED_BY(getFullName(CStmt.getString(21)));
-           dec.setDEC_DATE_MODIFIED(m_util.getCurationDate(CStmt.getString(22)));
+           dec.setDEC_MODIFIED_BY(getFullName(cstmt.getString(21)));
+           dec.setDEC_DATE_MODIFIED(m_util.getCurationDate(cstmt.getString(22)));
  
            // do this for new version, to check whether we need to write to AC_HISTORIES table later
            if (sInsertFor.equals("Version"))
@@ -1811,7 +913,7 @@ public class InsACService implements Serializable
             this.doAltVersionUpdate(sDEC_ID, oldDECID);
 
           // ********************************
-          dec.save(session, sbr_db_conn, sDEC_ID, sContextID);
+          dec.save(session, conn, sDEC_ID, sContextID);
           session.removeAttribute("AllAltNameList");
           // ********************************
           /*
@@ -1853,8 +955,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null)rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -2067,9 +1169,9 @@ public class InsACService implements Serializable
     //logger.info(m_servlet.getLogMessage(m_classReq, "setObjectClassDEC", "starting set", startDate, startDate));
 
     HttpSession session = m_classReq.getSession();
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String sReturnCode = "";
     String sOCL_IDSEQ = "";
     try
@@ -2148,42 +1250,42 @@ public class InsACService implements Serializable
       if (sContextID == null) sContextID = "";
       if (!sOCCondrString.equals(""))
       {
-          sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-          if (sbr_db_conn == null)
+          conn = m_servlet.connectDB(m_classReq, m_classRes);
+          if (conn == null)
             m_servlet.ErrorLogin(m_classReq, m_classRes);
           else
           {         
-            CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_OC_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-            CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //return code
-            CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       // OCL IDSEQ
-            CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       // preferred_name
-            CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //long_name
-            CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //preferred_definition
-            CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //version
-            CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //asl_name
-            CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //latest_version_ind
-            CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       // change_note
-            CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       // origin
-            CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       // definition_source
-            CStmt.registerOutParameter(14,java.sql.Types.VARCHAR);       // begin_date
-            CStmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //end_date
-            CStmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //date_created
-            CStmt.registerOutParameter(17,java.sql.Types.VARCHAR);       // created_by
-            CStmt.registerOutParameter(18,java.sql.Types.VARCHAR);       // date_modified
-            CStmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //modified_by
-            CStmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //deleted_ind
-            CStmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //oc_condr_idseq
-            CStmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //oc_id
+            cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_OC_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //return code
+            cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       // OCL IDSEQ
+            cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       // preferred_name
+            cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //long_name
+            cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //preferred_definition
+            cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //version
+            cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //asl_name
+            cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //latest_version_ind
+            cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       // change_note
+            cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       // origin
+            cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       // definition_source
+            cstmt.registerOutParameter(14,java.sql.Types.VARCHAR);       // begin_date
+            cstmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //end_date
+            cstmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //date_created
+            cstmt.registerOutParameter(17,java.sql.Types.VARCHAR);       // created_by
+            cstmt.registerOutParameter(18,java.sql.Types.VARCHAR);       // date_modified
+            cstmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //modified_by
+            cstmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //deleted_ind
+            cstmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //oc_condr_idseq
+            cstmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //oc_id
       System.out.println(OCBean.getLONG_NAME() + " oc submit ready " + sOCCondrString);
 
             // Set the In parameters (which are inherited from the PreparedStatement class)
-            CStmt.setString(1,sOCCondrString); //comma-delimited con idseqs
-            CStmt.setString(2,sContextID);
-            CStmt.execute();
-            sReturnCode = CStmt.getString(3);
-            sOCL_IDSEQ = CStmt.getString(4); 
+            cstmt.setString(1,sOCCondrString); //comma-delimited con idseqs
+            cstmt.setString(2,sContextID);
+            cstmt.execute();
+            sReturnCode = cstmt.getString(3);
+            sOCL_IDSEQ = cstmt.getString(4); 
             if(sOCL_IDSEQ == null) sOCL_IDSEQ = "";
-            String sOCL_CONDR_IDSEQ = CStmt.getString(21);
+            String sOCL_CONDR_IDSEQ = cstmt.getString(21);
             if(sOCL_CONDR_IDSEQ == null) sOCL_CONDR_IDSEQ = "";
           // session.setAttribute("newObjectClass", "");
             //store the idseq in the bean
@@ -2191,7 +1293,7 @@ public class InsACService implements Serializable
             {
               dec.setDEC_OCL_IDSEQ(sOCL_IDSEQ);
               dec.setDEC_OC_CONDR_IDSEQ(sOCL_CONDR_IDSEQ);
-              dec.setDEC_OBJ_ASL_NAME(CStmt.getString(9));
+              dec.setDEC_OBJ_ASL_NAME(cstmt.getString(9));
               req.setAttribute("OCL_IDSEQ", sOCL_IDSEQ);
             }
             if (sReturnCode != null && !sReturnCode.equals(""))  // && !sReturnCode.equals("API_OC_500"))
@@ -2217,8 +1319,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null)rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -2249,9 +1351,9 @@ public class InsACService implements Serializable
     //logger.info(m_servlet.getLogMessage(m_classReq, "setPropertyDEC", "starting set", startDate, startDate));
 
     HttpSession session = req.getSession();
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String sReturnCode = "";
     String sPROPL_IDSEQ = "";
     try
@@ -2329,49 +1431,49 @@ public class InsACService implements Serializable
       if (sContextID == null) sContextID = "";
       if (!sPCCondrString.equals(""))
       {
-          sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-          if (sbr_db_conn == null)
+          conn = m_servlet.connectDB(m_classReq, m_classRes);
+          if (conn == null)
             m_servlet.ErrorLogin(m_classReq, m_classRes);
           else
           {
-            CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_PROP_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-            CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //return code
-            CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       // PROP_IDSEQ
-            CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       // preferred_name
-            CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //long_name
-            CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //preferred_definition
-            CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //version
-            CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //asl_name
-            CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //latest_version_ind
-            CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       // change_note
-            CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       // origin
-            CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       // definition_source
-            CStmt.registerOutParameter(14,java.sql.Types.VARCHAR);       // begin_date
-            CStmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //end_date
-            CStmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //date_created
-            CStmt.registerOutParameter(17,java.sql.Types.VARCHAR);       // created_by
-            CStmt.registerOutParameter(18,java.sql.Types.VARCHAR);       // date_modified
-            CStmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //modified_by
-            CStmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //deleted_ind
-            CStmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //prop_condr_idseq
-            CStmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //prop_id
+            cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_PROP_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //return code
+            cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       // PROP_IDSEQ
+            cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       // preferred_name
+            cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //long_name
+            cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //preferred_definition
+            cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //version
+            cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //asl_name
+            cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //latest_version_ind
+            cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       // change_note
+            cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       // origin
+            cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       // definition_source
+            cstmt.registerOutParameter(14,java.sql.Types.VARCHAR);       // begin_date
+            cstmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //end_date
+            cstmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //date_created
+            cstmt.registerOutParameter(17,java.sql.Types.VARCHAR);       // created_by
+            cstmt.registerOutParameter(18,java.sql.Types.VARCHAR);       // date_modified
+            cstmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //modified_by
+            cstmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //deleted_ind
+            cstmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //prop_condr_idseq
+            cstmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //prop_id
 
             // Set the In parameters (which are inherited from the PreparedStatement class)
-            CStmt.setString(1,sPCCondrString);       //comma-delimited con idseqs
+            cstmt.setString(1,sPCCondrString);       //comma-delimited con idseqs
        // System.out.println(PCBean.getLONG_NAME() + " conIDseqs :" + sPCCondrString);
-            CStmt.setString(2,sContextID);
+            cstmt.setString(2,sContextID);
              // Now we are ready to call the stored procedure
-            CStmt.execute();
-            sReturnCode = CStmt.getString(3);
-            sPROPL_IDSEQ = CStmt.getString(4);
+            cstmt.execute();
+            sReturnCode = cstmt.getString(3);
+            sPROPL_IDSEQ = cstmt.getString(4);
             if(sPROPL_IDSEQ == null) sPROPL_IDSEQ = "";
-            String sPROPL_CONDR_IDSEQ = CStmt.getString(21);
+            String sPROPL_CONDR_IDSEQ = cstmt.getString(21);
             if (sPROPL_CONDR_IDSEQ == null) sPROPL_CONDR_IDSEQ = "";
             if (dec != null && (sReturnCode == null || sReturnCode.equals("") || sReturnCode.equals("API_PROP_500")))
             {
               dec.setDEC_PROPL_IDSEQ(sPROPL_IDSEQ);
               dec.setDEC_PROP_CONDR_IDSEQ(sPROPL_CONDR_IDSEQ);
-              dec.setDEC_PROP_ASL_NAME(CStmt.getString(9));
+              dec.setDEC_PROP_ASL_NAME(cstmt.getString(9));
               req.setAttribute("PROPL_IDSEQ", sPROPL_IDSEQ);
             }            
            // session.setAttribute("newProperty", "");
@@ -2395,8 +1497,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null)rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -2430,9 +1532,9 @@ public class InsACService implements Serializable
  //   logger.info(m_servlet.getLogMessage(m_classReq, "setRepresentation", "starting set", startDate, startDate));
 
     HttpSession session = m_classReq.getSession();
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String sReturnCode = "";
     try
     {
@@ -2514,50 +1616,50 @@ public class InsACService implements Serializable
        if (sREPName != null || !sREPName.equals(""))
        {
           //Create a Callable Statement object.
-          sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-          if (sbr_db_conn == null)
+          conn = m_servlet.connectDB(m_classReq, m_classRes);
+          if (conn == null)
             m_servlet.ErrorLogin(m_classReq, m_classRes);
           else
           {
-            CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_REP_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-            CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //return code
-            CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       // OCL IDSEQ
-            CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       // preferred_name
-            CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //long_name
-            CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //preferred_definition
-            CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //version
-            CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //asl_name
-            CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //latest_version_ind
-            CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       // change_note
-            CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       // origin
-            CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       // definition_source
-            CStmt.registerOutParameter(14,java.sql.Types.VARCHAR);       // begin_date
-            CStmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //end_date
-            CStmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //date_created
-            CStmt.registerOutParameter(17,java.sql.Types.VARCHAR);       // created_by
-            CStmt.registerOutParameter(18,java.sql.Types.VARCHAR);       // date_modified
-            CStmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //modified_by
-            CStmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //deleted_ind
-            CStmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //rep_condr_idseq
-            CStmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //rep_id
+            cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_REP_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //return code
+            cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       // OCL IDSEQ
+            cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       // preferred_name
+            cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //long_name
+            cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //preferred_definition
+            cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //version
+            cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //asl_name
+            cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //latest_version_ind
+            cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       // change_note
+            cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       // origin
+            cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       // definition_source
+            cstmt.registerOutParameter(14,java.sql.Types.VARCHAR);       // begin_date
+            cstmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //end_date
+            cstmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //date_created
+            cstmt.registerOutParameter(17,java.sql.Types.VARCHAR);       // created_by
+            cstmt.registerOutParameter(18,java.sql.Types.VARCHAR);       // date_modified
+            cstmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //modified_by
+            cstmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //deleted_ind
+            cstmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //rep_condr_idseq
+            cstmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //rep_id
 
             // Set the In parameters (which are inherited from the PreparedStatement class)
-            CStmt.setString(1,sOCCondrString); //comma-delimited con idseqs
-            CStmt.setString(2,sContextID);
-            CStmt.execute();
-            sReturnCode = CStmt.getString(3);
+            cstmt.setString(1,sOCCondrString); //comma-delimited con idseqs
+            cstmt.setString(2,sContextID);
+            cstmt.execute();
+            sReturnCode = cstmt.getString(3);
  
-            sREP_IDSEQ = CStmt.getString(4);
+            sREP_IDSEQ = cstmt.getString(4);
             if(sREP_IDSEQ == null) sREP_IDSEQ = "";
             sREP_IDSEQ = sREP_IDSEQ.trim();
-            String sREP_CONDR_IDSEQ = CStmt.getString(21);
+            String sREP_CONDR_IDSEQ = cstmt.getString(21);
             if(sREP_CONDR_IDSEQ == null) sREP_CONDR_IDSEQ = "";
             session.setAttribute("newRepTerm", "");
             if(VD != null  && (sReturnCode == null || sReturnCode.equals("") || sReturnCode.equals("API_REP_500")))
             {
               VD.setVD_REP_IDSEQ(sREP_IDSEQ);
               VD.setVD_REP_CONDR_IDSEQ(sREP_CONDR_IDSEQ);
-              VD.setVD_REP_ASL_NAME(CStmt.getString(9));
+              VD.setVD_REP_ASL_NAME(cstmt.getString(9));
               req.setAttribute("REP_IDSEQ", sREP_IDSEQ);
             }
             if (sReturnCode != null && !sReturnCode.equals("")  && !sReturnCode.equals("API_REP_500"))
@@ -2581,8 +1683,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null)rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -2607,14 +1709,14 @@ public class InsACService implements Serializable
   */
   public String checkUniqueOCPropPair(DEC_Bean mDEC, String editAct, String setAction)
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
     PreparedStatement pstmt = null; 
     String uniqueMsg = "";
     try
     {
       HttpSession session = m_classReq.getSession();
-      String menuAction = (String)session.getAttribute("MenuAction");
+      String menuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
       String sContID = mDEC.getDEC_CONTE_IDSEQ();
       String sPublicID = "";   //mDEC.getDEC_DEC_ID();
       String sOCID = mDEC.getDEC_OCL_IDSEQ();
@@ -2628,12 +1730,12 @@ public class InsACService implements Serializable
               || menuAction.equals("NewDECVersion"))
           sPublicID = mDEC.getDEC_DEC_ID();
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        pstmt = sbr_db_conn.prepareStatement("Select Sbrext_Common_Routines.get_dec_conte(?,?,?,?) from DUAL");
+        pstmt = conn.prepareStatement("Select Sbrext_Common_Routines.get_dec_conte(?,?,?,?) from DUAL");
         pstmt.setString(1, sOCID);       //oc id
         pstmt.setString(2, sPropID);       //prop id
         pstmt.setString(3, sContID);       //dec context
@@ -2646,7 +1748,7 @@ public class InsACService implements Serializable
           uniqueMsg = "Combination of Object Class, Property and Context already exists in DEC with Public ID(s): " + sReturnID;
         else  //check if it exists in other contexts
         {
-          pstmt = sbr_db_conn.prepareStatement("Select Sbrext_Common_Routines.get_dec_list(?,?,?) from DUAL");
+          pstmt = conn.prepareStatement("Select Sbrext_Common_Routines.get_dec_list(?,?,?) from DUAL");
           pstmt.setString(1, sOCID);       //oc id
           pstmt.setString(2, sPropID);       //prop id
           pstmt.setString(3, sPublicID);           // dec pubilic id
@@ -2667,7 +1769,7 @@ public class InsACService implements Serializable
     {
       if(rs!=null) rs.close();
       if(pstmt!=null) pstmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -2694,9 +1796,9 @@ public class InsACService implements Serializable
 /*  public String setVDQualifier(String sAction, String typeQual,    //out
                     VD_Bean VD, EVS_Bean cq, HttpServletRequest req)
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String sReturnCode = "";
     try
     {
@@ -2718,28 +1820,28 @@ public class InsACService implements Serializable
        if (sQName != "")
        {
           //Create a Callable Statement object.
-          sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-          if (sbr_db_conn == null)
+          conn = m_servlet.connectDB(m_classReq, m_classRes);
+          if (conn == null)
             m_servlet.ErrorLogin(m_classReq, m_classRes);
           else
           {
-            CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_QUAL(?,?,?,?,?,?,?,?,?)}");
-            CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-            CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //created by
-            CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //date created
-            CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //modified by
-            CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //date modified
+            cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_QUAL(?,?,?,?,?,?,?,?,?)}");
+            cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+            cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //created by
+            cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //date created
+            cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //modified by
+            cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //date modified
 
             // Set the In parameters (which are inherited from the PreparedStatement class)
-            CStmt.setString(2,sAction);       //ACTION - INS, UPD or DEL
-            CStmt.setString(3,sQName);       //preferred name - not null for INS
-            CStmt.setString(4,sQDescription);
-            CStmt.setString(5,sCCVal);
+            cstmt.setString(2,sAction);       //ACTION - INS, UPD or DEL
+            cstmt.setString(3,sQName);       //preferred name - not null for INS
+            cstmt.setString(4,sQDescription);
+            cstmt.setString(5,sCCVal);
 
              // Now we are ready to call the stored procedure
-            boolean bExcuteOk = CStmt.execute();
+            boolean bExcuteOk = cstmt.execute();
             HttpSession session = req.getSession();
-            sReturnCode = CStmt.getString(1);
+            sReturnCode = cstmt.getString(1);
             if (sReturnCode != null && !sReturnCode.equals(""))
             {
               if (typeQual.equalsIgnoreCase("OBJ"))
@@ -2762,8 +1864,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null)rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -2791,9 +1893,9 @@ public class InsACService implements Serializable
 /*  public String setDECQualifier(String sAction, String typeQual,    //out
                     DEC_Bean DEC, EVS_Bean cq, HttpServletRequest req)
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String sReturnCode = "";
     try
     {
@@ -2815,28 +1917,28 @@ public class InsACService implements Serializable
        if (sQName != "")
        {
           //Create a Callable Statement object.
-          sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-          if (sbr_db_conn == null)
+          conn = m_servlet.connectDB(m_classReq, m_classRes);
+          if (conn == null)
             m_servlet.ErrorLogin(m_classReq, m_classRes);
           else
           {
-            CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_QUAL(?,?,?,?,?,?,?,?,?)}");
-            CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-            CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //created by
-            CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //date created
-            CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //modified by
-            CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //date modified
+            cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_QUAL(?,?,?,?,?,?,?,?,?)}");
+            cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+            cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //created by
+            cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //date created
+            cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //modified by
+            cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //date modified
 
             // Set the In parameters (which are inherited from the PreparedStatement class)
-            CStmt.setString(2,sAction);       //ACTION - INS, UPD or DEL
-            CStmt.setString(3,sQName);       //preferred name - not null for INS
-            CStmt.setString(4,sQDescription);
-            CStmt.setString(5, sCCVal);
+            cstmt.setString(2,sAction);       //ACTION - INS, UPD or DEL
+            cstmt.setString(3,sQName);       //preferred name - not null for INS
+            cstmt.setString(4,sQDescription);
+            cstmt.setString(5, sCCVal);
 
              // Now we are ready to call the stored procedure
-            boolean bExcuteOk = CStmt.execute();
+            boolean bExcuteOk = cstmt.execute();
             HttpSession session = req.getSession();
-            sReturnCode = CStmt.getString(1);               
+            sReturnCode = cstmt.getString(1);               
             if (sReturnCode != null && !sReturnCode.equals(""))
             {
               if (typeQual.equalsIgnoreCase("OBJ"))
@@ -2857,8 +1959,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null)rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -2896,9 +1998,9 @@ public class InsACService implements Serializable
  //   java.util.Date startDate = new java.util.Date();          
   //  logger.info(m_servlet.getLogMessage(m_classReq, "setDE", "starting set", startDate, startDate));
 
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     HttpSession session = m_classReq.getSession();
     String sReturnCode = "";
     String v_ac = "";
@@ -2981,71 +2083,71 @@ public class InsACService implements Serializable
         sEndDate = m_util.getOracleDate(de.getDE_END_DATE());
 
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_DE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-        CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-        CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //de id
-        CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //preferred name
-        CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //context id
-        CStmt.registerOutParameter(6,java.sql.Types.DECIMAL);       //version
-        CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //preferred definition
-        CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //dec id
-        CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //vd id
-        CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //asl name
-        CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //latest version ind
-        CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //long name
-        CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //begin date
-        CStmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //end date
-        CStmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //change note
-        CStmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //created by
-        CStmt.registerOutParameter(17,java.sql.Types.VARCHAR);       //date created
-        CStmt.registerOutParameter(18,java.sql.Types.VARCHAR);       //modified by
-        CStmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //date modified
-        CStmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //deleted ind
-       // CStmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //origin
+        cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_DE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+        cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+        cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //de id
+        cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //preferred name
+        cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //context id
+        cstmt.registerOutParameter(6,java.sql.Types.DECIMAL);       //version
+        cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //preferred definition
+        cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //dec id
+        cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //vd id
+        cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //asl name
+        cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //latest version ind
+        cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //long name
+        cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //begin date
+        cstmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //end date
+        cstmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //change note
+        cstmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //created by
+        cstmt.registerOutParameter(17,java.sql.Types.VARCHAR);       //date created
+        cstmt.registerOutParameter(18,java.sql.Types.VARCHAR);       //modified by
+        cstmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //date modified
+        cstmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //deleted ind
+       // cstmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //origin
 
         // Set the In parameters (which are inherited from the PreparedStatement class)
-        CStmt.setString(2,sAction);       //ACTION - INS, UPD or DEL
+        cstmt.setString(2,sAction);       //ACTION - INS, UPD or DEL
         if ((sAction.equals("UPD")) || (sAction.equals("DEL")))
         {
           sDE_ID = de.getDE_DE_IDSEQ();
-          CStmt.setString(3,sDE_ID);
+          cstmt.setString(3,sDE_ID);
         }
         //make it null for editing released elements
         if (sAction.equals("UPD") && oldAslName.equals("RELEASED") && !sInsertFor.equals("Version"))
         {
-          CStmt.setString(5,null);       //context id - not null for INS, must be null for UPD
-          CStmt.setString(4,null);       //preferred name - not null for INS, must be null for UPD
+          cstmt.setString(5,null);       //context id - not null for INS, must be null for UPD
+          cstmt.setString(4,null);       //preferred name - not null for INS, must be null for UPD
         }
         else  // INS case
         {
-          CStmt.setString(5,sContextID);       //context id - not null for INS, must be null for UPD
-          CStmt.setString(4,sName);       //preferred name - not null for INS, must be null for UPD
+          cstmt.setString(5,sContextID);       //context id - not null for INS, must be null for UPD
+          cstmt.setString(4,sName);       //preferred name - not null for INS, must be null for UPD
         }
 
-        CStmt.setDouble(6,dVersion);       //version  - test says must have a value
-        CStmt.setString(7,sDefinition);       //preferred definition - not null for INS
-        CStmt.setString(8,sDEC_ID);       //dec id - not null for INS
-        CStmt.setString(9,sVD_ID);       //vd id - not null for INS
-        CStmt.setString(10,de.getDE_ASL_NAME());       //status
+        cstmt.setDouble(6,dVersion);       //version  - test says must have a value
+        cstmt.setString(7,sDefinition);       //preferred definition - not null for INS
+        cstmt.setString(8,sDEC_ID);       //dec id - not null for INS
+        cstmt.setString(9,sVD_ID);       //vd id - not null for INS
+        cstmt.setString(10,de.getDE_ASL_NAME());       //status
         if (sAction.equals("INS"))
-           CStmt.setString(11,"Yes");         //latest version indicator
-        CStmt.setString(12,sLongName);       //long name  - can be null
-        CStmt.setString(13,sBeginDate);       //sBeginDate - can be null
-        CStmt.setString(14,sEndDate);       //sEndDate  - can be null
-        CStmt.setString(15, sChangeNote);
-        CStmt.setString(21,sSource); //origin
+           cstmt.setString(11,"Yes");         //latest version indicator
+        cstmt.setString(12,sLongName);       //long name  - can be null
+        cstmt.setString(13,sBeginDate);       //sBeginDate - can be null
+        cstmt.setString(14,sEndDate);       //sEndDate  - can be null
+        cstmt.setString(15, sChangeNote);
+        cstmt.setString(21,sSource); //origin
          // Now we are ready to call the stored procedure
-        boolean bExcuteOk = CStmt.execute();
+        boolean bExcuteOk = cstmt.execute();
         //capture the duration
     //    logger.info(m_servlet.getLogMessage(m_classReq, "setDE", "end execute", startDate, new java.util.Date())); 
 
-        sDE_ID = CStmt.getString(3);
-        sReturnCode = CStmt.getString(1);
+        sDE_ID = cstmt.getString(3);
+        sReturnCode = cstmt.getString(1);
         //store ac name in the status message 
         if (sAction.equals("INS"))
           this.storeStatusMsg("Data Element Name : " + de.getDE_LONG_NAME());
@@ -3071,17 +2173,17 @@ public class InsACService implements Serializable
 
           de.setDE_DE_IDSEQ(sDE_ID);
           //set create /mofiy attributes into bean
-          if (CStmt.getString(16) != null && !CStmt.getString(16).equals(""))
-             de.setDE_CREATED_BY(getFullName(CStmt.getString(16)));
+          if (cstmt.getString(16) != null && !cstmt.getString(16).equals(""))
+             de.setDE_CREATED_BY(getFullName(cstmt.getString(16)));
           else
              de.setDE_CREATED_BY(oldDE.getDE_CREATED_BY());
-          if (CStmt.getString(17) != null && !CStmt.getString(17).equals(""))
-            de.setDE_DATE_CREATED(m_util.getCurationDate(CStmt.getString(17)));
+          if (cstmt.getString(17) != null && !cstmt.getString(17).equals(""))
+            de.setDE_DATE_CREATED(m_util.getCurationDate(cstmt.getString(17)));
           else
             de.setDE_DATE_CREATED(oldDE.getDE_DATE_CREATED());
             
-          de.setDE_MODIFIED_BY(getFullName(CStmt.getString(18)));
-          de.setDE_DATE_MODIFIED(m_util.getCurationDate(CStmt.getString(19)));
+          de.setDE_MODIFIED_BY(getFullName(cstmt.getString(18)));
+          de.setDE_DATE_MODIFIED(m_util.getCurationDate(cstmt.getString(19)));
           // insert row into DES (designation) to create CDEID for new DE or copies from old if new version
           if (sInsertFor.equals("Version"))
           {
@@ -3131,7 +2233,7 @@ public class InsACService implements Serializable
             this.doAltVersionUpdate(sDE_ID, oldDEID);
 
           // ********************************
-          de.save(session, sbr_db_conn, sDE_ID, sContextID);
+          de.save(session, conn, sDE_ID, sContextID);
           session.removeAttribute("AllAltNameList");
           // ********************************
           /*
@@ -3225,8 +2327,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -3257,15 +2359,15 @@ public class InsACService implements Serializable
     //java.util.Date startDate = new java.util.Date();          
     //logger.info(m_servlet.getLogMessage(m_classReq, "setAC_VERSION", "starting set", startDate, startDate));
 
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String sReturnCode = "None";
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
@@ -3274,36 +2376,36 @@ public class InsACService implements Serializable
         //call the methods according to the ac componenets
         if (ACName.equals("DataElement"))
         {
-           CStmt = sbr_db_conn.prepareCall("{call META_CONFIG_MGMT.DE_VERSION(?,?,?,?)}");
+           cstmt = conn.prepareCall("{call META_CONFIG_MGMT.DE_VERSION(?,?,?,?)}");
            ACID = de.getDE_DE_IDSEQ();
            sVersion = de.getDE_VERSION();
         }
         else if (ACName.equals("DataElementConcept"))
         {
-           CStmt = sbr_db_conn.prepareCall("{call META_CONFIG_MGMT.DEC_VERSION(?,?,?,?)}");
+           cstmt = conn.prepareCall("{call META_CONFIG_MGMT.DEC_VERSION(?,?,?,?)}");
            ACID = dec.getDEC_DEC_IDSEQ();
            sVersion = dec.getDEC_VERSION();
         }
         else if (ACName.equals("ValueDomain"))
         {
-           CStmt = sbr_db_conn.prepareCall("{call META_CONFIG_MGMT.VD_VERSION(?,?,?,?)}");
+           cstmt = conn.prepareCall("{call META_CONFIG_MGMT.VD_VERSION(?,?,?,?)}");
            ACID = vd.getVD_VD_IDSEQ();
            sVersion = vd.getVD_VERSION();
         }
 
         // Set the out parameters (which are inherited from the PreparedStatement class)
-        CStmt.registerOutParameter(3, java.sql.Types.VARCHAR);       //NEW ID
-        CStmt.registerOutParameter(4, java.sql.Types.VARCHAR);       //RETURN CODE
+        cstmt.registerOutParameter(3, java.sql.Types.VARCHAR);       //NEW ID
+        cstmt.registerOutParameter(4, java.sql.Types.VARCHAR);       //RETURN CODE
 
-        CStmt.setString(1, ACID);       //AC idseq
+        cstmt.setString(1, ACID);       //AC idseq
         Double DVersion = new Double(sVersion);  //convert the version to double type
         double dVersion = DVersion.doubleValue();
-        CStmt.setDouble(2, dVersion);       //version
+        cstmt.setDouble(2, dVersion);       //version
 
          // Now we are ready to call the stored procedure
-        CStmt.execute();
-        sReturnCode = CStmt.getString(4);
-        String newACID = CStmt.getString(3);
+        cstmt.execute();
+        sReturnCode = cstmt.getString(4);
+        String newACID = cstmt.getString(3);
         //trim off the extra spaces in it
         if (newACID != null && !newACID.equals(""))
            newACID = newACID.trim();
@@ -3332,8 +2434,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -3361,15 +2463,15 @@ public class InsACService implements Serializable
     //java.util.Date startDate = new java.util.Date();          
     //logger.info(m_servlet.getLogMessage(m_classReq, "setOC_PROP_REP_VERSION", "starting set", startDate, startDate));
 
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String newACID = "";
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
@@ -3378,22 +2480,22 @@ public class InsACService implements Serializable
         acIDseq = acIDseq.trim();
         //call the methods according to the ac componenets
         if (ACType.equals("ObjectClass"))
-           CStmt = sbr_db_conn.prepareCall("{call META_CONFIG_MGMT.OC_VERSION(?,?,?)}");
+           cstmt = conn.prepareCall("{call META_CONFIG_MGMT.OC_VERSION(?,?,?)}");
         else if (ACType.equals("Property"))
-           CStmt = sbr_db_conn.prepareCall("{call META_CONFIG_MGMT.PROP_VERSION(?,?,?)}");
+           cstmt = conn.prepareCall("{call META_CONFIG_MGMT.PROP_VERSION(?,?,?)}");
         else if (ACType.equals("RepTerm"))
-           CStmt = sbr_db_conn.prepareCall("{call META_CONFIG_MGMT.REP_VERSION(?,?,?)}");
+           cstmt = conn.prepareCall("{call META_CONFIG_MGMT.REP_VERSION(?,?,?)}");
 
         // Set the out parameters (which are inherited from the PreparedStatement class)
-        CStmt.registerOutParameter(2, java.sql.Types.VARCHAR);       //NEW ID
-        CStmt.registerOutParameter(3, java.sql.Types.VARCHAR);       //RETURN CODE
+        cstmt.registerOutParameter(2, java.sql.Types.VARCHAR);       //NEW ID
+        cstmt.registerOutParameter(3, java.sql.Types.VARCHAR);       //RETURN CODE
 
-        CStmt.setString(1, acIDseq);       //AC idseq
+        cstmt.setString(1, acIDseq);       //AC idseq
 
          // Now we are ready to call the stored procedure
-        CStmt.execute();
-        sReturnCode = CStmt.getString(3);
-        newACID = CStmt.getString(2);
+        cstmt.execute();
+        sReturnCode = cstmt.getString(3);
+        newACID = cstmt.getString(2);
         //trim off the extra spaces in it
         if ((sReturnCode == null || sReturnCode.equals("")) && newACID != null && !newACID.equals(""))
            newACID = newACID.trim();
@@ -3418,8 +2520,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -3462,9 +2564,9 @@ public class InsACService implements Serializable
     java.util.Date startDate = new java.util.Date();          
     //logger.info(m_servlet.getLogMessage(m_classReq, "setDES", "starting set", startDate, startDate));
 
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String sReturnCode = "";
     try
     {
@@ -3472,45 +2574,45 @@ public class InsACService implements Serializable
       if (sValue != null && !sValue.equals(""))
         sValue = m_util.removeNewLineChar(sValue);
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_DES(?,?,?,?,?,?,?,?,?,?,?,?)}");
-        CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-        CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //des desig id
-        CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //des name
-        CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //des detl name
-        CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //des ac id
-        CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //context id
-        CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //lae name
-        CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //created by
-        CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //date created
-        CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //modified by
-        CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //date modified
+        cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_DES(?,?,?,?,?,?,?,?,?,?,?,?)}");
+        cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+        cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //des desig id
+        cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //des name
+        cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //des detl name
+        cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //des ac id
+        cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //context id
+        cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //lae name
+        cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //created by
+        cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //date created
+        cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //modified by
+        cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //date modified
 
         // Set the In parameters (which are inherited from the PreparedStatement class)
         if ((sAction.equals("UPD")) || (sAction.equals("DEL")))
         {
           if ((desIDSEQ != null) && (!desIDSEQ.equals("")))
-            CStmt.setString(3,desIDSEQ);              //desig idseq if updated
+            cstmt.setString(3,desIDSEQ);              //desig idseq if updated
           else
             sAction = "INS";              //INSERT A NEW RECORD IF NOT EXISTED
         }
-        CStmt.setString(2,sAction);              //ACTION - INS, UPD or DEL
-        CStmt.setString(4, sValue);         //selected value for rep and null for cde_id
-        CStmt.setString(5,desType);        //detl name - must be string CDE_ID
-        CStmt.setString(6,sAC_ID);           //ac id - must be NULL FOR UPDATE
-        CStmt.setString(7,sContextID);     //context id - must be same as in set_DE
-        CStmt.setString(8,sLAE);            //language name - can be null
+        cstmt.setString(2,sAction);              //ACTION - INS, UPD or DEL
+        cstmt.setString(4, sValue);         //selected value for rep and null for cde_id
+        cstmt.setString(5,desType);        //detl name - must be string CDE_ID
+        cstmt.setString(6,sAC_ID);           //ac id - must be NULL FOR UPDATE
+        cstmt.setString(7,sContextID);     //context id - must be same as in set_DE
+        cstmt.setString(8,sLAE);            //language name - can be null
          // Now we are ready to call the stored procedure
-        boolean bExcuteOk = CStmt.execute();
-        sReturnCode = CStmt.getString(1);
+        boolean bExcuteOk = cstmt.execute();
+        sReturnCode = cstmt.getString(1);
         //already exists in the database
         if (sReturnCode == null || sReturnCode.equals("API_DES_300"))
         {
-           desIDSEQ = CStmt.getString(3);
+           desIDSEQ = cstmt.getString(3);
            //store the desIDseq in the hash table for designation
            if ((sAction.equals("INS") || sAction.equals("DEL")) && desType.equals("USED_BY"))
            {
@@ -3558,8 +2660,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -3586,8 +2688,8 @@ public class InsACService implements Serializable
  //   java.util.Date startDate = new java.util.Date();          
  //   logger.info(m_servlet.getLogMessage(m_classReq, "setDDE", "starting set", startDate, startDate));
 
-    Connection sbr_db_conn = null;
-    CallableStatement CStmt = null;
+    Connection conn = null;
+    CallableStatement cstmt = null;
     String sReturnCode = "";
     //boolean bExcuteOk;
     String sAction = "";
@@ -3622,10 +2724,10 @@ public class InsACService implements Serializable
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
       //set DDE info
 //  System.out.println(vDECompDelete.isEmpty() + " before complex " + sRulesAction + " action " + sOverRideAction + " type " + sDDERepType);
-      if (sbr_db_conn == null)
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
@@ -3636,7 +2738,7 @@ public class InsACService implements Serializable
             {
               sAction = "DEL";              //  action
               if(!vDECompDelete.isEmpty())
-                deleteDEComp(sbr_db_conn, session, vDECompDelete, vDECompDelName);
+                deleteDEComp(conn, session, vDECompDelete, vDECompDelName);
             }
             else
               sAction = "UPD";              //  action
@@ -3646,23 +2748,23 @@ public class InsACService implements Serializable
               
         if (sOverRideAction.length() > 0)
             sAction = sOverRideAction;
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.Set_Complex_DE(?,?,?,?,?,?,?,?,?,?,?)}");
+        cstmt = conn.prepareCall("{call SBREXT_Set_Row.Set_Complex_DE(?,?,?,?,?,?,?,?,?,?,?)}");
         // Set the In parameters 
-        CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //cdt_created_by
-        CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //cdt_date_created
-        CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //cdt_modified_by
-        CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //cdt_date_modified
-        CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //return code
+        cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //cdt_created_by
+        cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //cdt_date_created
+        cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //cdt_modified_by
+        cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //cdt_date_modified
+        cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //return code
         // Set the In parameters (which are inherited from the PreparedStatement class)
-        CStmt.setString(1,sAction);              //  action
-        CStmt.setString(2,sP_DE_IDSEQ);              //  primary DE idseq
-        CStmt.setString(3,sDDEMethod);              // method
-        CStmt.setString(4,sDDERule);              //  rule
-        CStmt.setString(5,sDDEConcatChar);              //  conca char
-        CStmt.setString(6,sDDERepType);              //  rep type
+        cstmt.setString(1,sAction);              //  action
+        cstmt.setString(2,sP_DE_IDSEQ);              //  primary DE idseq
+        cstmt.setString(3,sDDEMethod);              // method
+        cstmt.setString(4,sDDERule);              //  rule
+        cstmt.setString(5,sDDEConcatChar);              //  conca char
+        cstmt.setString(6,sDDERepType);              //  rep type
          // Now we are ready to call the stored procedure
-        CStmt.execute();
-        sReturnCode = CStmt.getString(11);
+        cstmt.execute();
+        sReturnCode = cstmt.getString(11);
         //capture the duration
       //  logger.info(m_servlet.getLogMessage(m_classReq, "setDDE", "execute complexDE", startDate, new java.util.Date()));
 
@@ -3673,22 +2775,22 @@ public class InsACService implements Serializable
        // check if any DEComp removed (only for de updates) commented by sumana 7/14/05)
  // System.out.println(vDECompDelete.isEmpty() + " before delete " + sRulesAction);
         if(!vDECompDelete.isEmpty() && sRulesAction.equals("existedRule"))
-          deleteDEComp(sbr_db_conn, session, vDECompDelete, vDECompDelName);
+          deleteDEComp(conn, session, vDECompDelete, vDECompDelName);
         // insert or update DEComp
         if(!vDEComp.isEmpty())
         {
-            CStmt.close();
-            CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.Set_CDE_Relationship(?,?,?,?,?,?,?,?,?,?)}");
+            cstmt.close();
+            cstmt = conn.prepareCall("{call SBREXT_Set_Row.Set_CDE_Relationship(?,?,?,?,?,?,?,?,?,?)}");
             // Set the In parameters 
-            CStmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //cdr_idseq
-            CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //cdr_p_de_idseq
-            CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //cdr_c_de_idseq
-            CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //cdr_display_order
-            CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //cdr_created_by
-            CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //cdr_date_created
-            CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //cdr_modified_by
-            CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //cdr_date_modified
-            CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //return code
+            cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //cdr_idseq
+            cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //cdr_p_de_idseq
+            cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //cdr_c_de_idseq
+            cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //cdr_display_order
+            cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //cdr_created_by
+            cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //cdr_date_created
+            cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //cdr_modified_by
+            cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //cdr_date_modified
+            cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //return code
             for(int i=0; i<vDEComp.size(); i++)
             {
               String sDECompName = (String)vDEComp.elementAt(i);
@@ -3701,22 +2803,22 @@ public class InsACService implements Serializable
               else
               {
                   sAction = "UPD";              //  action
-                  CStmt.setString(2,sDECompRelID);              //  Complex DE Relationship idseq
+                  cstmt.setString(2,sDECompRelID);              //  Complex DE Relationship idseq
               }
               if(sOverRideAction.length() > 0)
                   sAction = sOverRideAction;
-              CStmt.setString(1,sAction);              //  action
-              CStmt.setString(3,sP_DE_IDSEQ);              //  primary DE idseq
-              CStmt.setString(4,sDECompID);              // DE Comp ID
-              CStmt.setString(5,sDECompOrder);              //  DE Comp Order
+              cstmt.setString(1,sAction);              //  action
+              cstmt.setString(3,sP_DE_IDSEQ);              //  primary DE idseq
+              cstmt.setString(4,sDECompID);              // DE Comp ID
+              cstmt.setString(5,sDECompOrder);              //  DE Comp Order
                // Now we are ready to call the stored procedure
-              CStmt.execute();
-              sReturnCode = CStmt.getString(10);
+              cstmt.execute();
+              sReturnCode = cstmt.getString(10);
               if (sReturnCode != null && !sReturnCode.equals(""))
                 this.storeStatusMsg("\\t " + sReturnCode + " : Unable to update Derived Data Element Component " + sDECompName);              
             }  // end of for
         }  // end of if(!vDEComp.isEmpty())
-      } // end of if (sbr_db_conn == null)
+      } // end of if (conn == null)
       //capture the duration
    //   logger.info(m_servlet.getLogMessage(m_classReq, "setDDE", "end complexDE", startDate, new java.util.Date()));
     }  // end of try
@@ -3728,8 +2830,8 @@ public class InsACService implements Serializable
     }
     try
     {
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -3744,32 +2846,32 @@ public class InsACService implements Serializable
   * Delete DE Component
   * Calls oracle stored procedure: set_cde_relationship
   * This method is call by setDEComp
-  * @param sbr_db_conn 
+  * @param conn 
   * @param session 
   * @param vDECompDelete 
   * @param vDECompDelName 
   * 
   *
   */
-  public void deleteDEComp(Connection sbr_db_conn, HttpSession session, Vector vDECompDelete, Vector vDECompDelName)
+  public void deleteDEComp(Connection conn, HttpSession session, Vector vDECompDelete, Vector vDECompDelName)
   {
     try
     {
-      CallableStatement CStmt = null;
+      CallableStatement cstmt = null;
       String sReturnCode = "";
       //boolean bExcuteOk;
       // call Set_CDE_Relationship for DEComps
-      CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.Set_CDE_Relationship(?,?,?,?,?,?,?,?,?,?)}");
+      cstmt = conn.prepareCall("{call SBREXT_Set_Row.Set_CDE_Relationship(?,?,?,?,?,?,?,?,?,?)}");
       // Set the In parameters 
-      CStmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //cdr_idseq
-      CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //cdr_p_de_idseq
-      CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //cdr_c_de_idseq
-      CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //cdr_display_order
-      CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //cdr_created_by
-      CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //cdr_date_created
-      CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //cdr_modified_by
-      CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //cdr_date_modified
-      CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //return code
+      cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //cdr_idseq
+      cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //cdr_p_de_idseq
+      cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //cdr_c_de_idseq
+      cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //cdr_display_order
+      cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //cdr_created_by
+      cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //cdr_date_created
+      cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //cdr_modified_by
+      cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //cdr_date_modified
+      cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //return code
       for (int i = 0; i<vDECompDelete.size(); i++) 
       {
           String sDECompDeleteID = (String)vDECompDelete.elementAt(i);
@@ -3778,20 +2880,20 @@ public class InsACService implements Serializable
           if (sDECompDeleteID != null && !sDECompDeleteID.equals("") && !sDECompDeleteID.equalsIgnoreCase("newDEComp"))
           {
             // Set the In parameters (which are inherited from the PreparedStatement class)
-            CStmt.setString(1,"DEL");              //  action
-            CStmt.setString(2,sDECompDeleteID);              //  Complex DE Relationship idseq, key field
+            cstmt.setString(1,"DEL");              //  action
+            cstmt.setString(2,sDECompDeleteID);              //  Complex DE Relationship idseq, key field
   //    System.out.println(" dde id " + sDECompDeleteID);
-            CStmt.setString(3,"");              //  primary DE idseq
-            CStmt.setString(4,"");              // DE Comp ID
-            CStmt.setString(5,"");              //  DE Comp Order
+            cstmt.setString(3,"");              //  primary DE idseq
+            cstmt.setString(4,"");              // DE Comp ID
+            cstmt.setString(5,"");              //  DE Comp Order
              // Now we are ready to call the stored procedure
-            CStmt.execute();
-            sReturnCode = CStmt.getString(10);
+            cstmt.execute();
+            sReturnCode = cstmt.getString(10);
             if (sReturnCode !=null && !sReturnCode.equals(""))
               this.storeStatusMsg("\\t " + sReturnCode + " : Unable to remove Derived Data Element Component " + sDECompDeleteName);
           }
       }
-      CStmt.close();
+      cstmt.close();
       vDECompDelete.clear();
     }
     catch(Exception ee)
@@ -3835,9 +2937,9 @@ public class InsACService implements Serializable
    // java.util.Date startDate = new java.util.Date();          
     //logger.info(m_servlet.getLogMessage(m_classReq, "setRD", "starting set", startDate, startDate));
 
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String sReturnCode = "";
     try
     {
@@ -3850,49 +2952,49 @@ public class InsACService implements Serializable
         sRDURL = m_util.removeNewLineChar(sRDURL);
         
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_RD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-        CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-        CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //RD id
-        CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //name
-        CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //dctl name
-        CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       // ac id
-        CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //ach id
-        CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //ar id
-        CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //doc text
-        CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //org id
-        CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //url
-        CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //created by
-        CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //date created
-        CStmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //modified by
-        CStmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //date modified
-        CStmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //lae name
+        cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_RD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+        cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+        cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //RD id
+        cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //name
+        cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //dctl name
+        cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       // ac id
+        cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //ach id
+        cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //ar id
+        cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //doc text
+        cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //org id
+        cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //url
+        cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //created by
+        cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //date created
+        cstmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //modified by
+        cstmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //date modified
+        cstmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //lae name
 
         // Set the In parameters (which are inherited from the PreparedStatement class)
         if (sAction.equals("UPD") || sAction.equals("DEL"))
         {
           if ((rdIDSEQ != null) && (!rdIDSEQ.equals("")))
-            CStmt.setString(3,rdIDSEQ);              //rd idseq if updated
+            cstmt.setString(3,rdIDSEQ);              //rd idseq if updated
           else
             sAction = "INS";              //insert new one if not existed
         }
-        CStmt.setString(2,sAction);              //ACTION - INS, UPD or DEL
-        CStmt.setString(4,sRDName);             //rd name - cannot be null
-        CStmt.setString(5,sRDType);        //dCtl name - long name for refrence document
+        cstmt.setString(2,sAction);              //ACTION - INS, UPD or DEL
+        cstmt.setString(4,sRDName);             //rd name - cannot be null
+        cstmt.setString(5,sRDType);        //dCtl name - long name for refrence document
  //System.out.println(sRDType + " set rd " + sRDName + " : " + rdIDSEQ);       
         if(sAction.equals("INS"))
-          CStmt.setString(6,sDE_ID);           //ac id - must be NULL FOR UPDATE
-        CStmt.setString(9,sDocText);     //doc text -
-        CStmt.setString(11,sRDURL);     //URL -
-        CStmt.setString(16,sLang);     //URL -
-        CStmt.setString(17,sRDCont);     //context -
+          cstmt.setString(6,sDE_ID);           //ac id - must be NULL FOR UPDATE
+        cstmt.setString(9,sDocText);     //doc text -
+        cstmt.setString(11,sRDURL);     //URL -
+        cstmt.setString(16,sLang);     //URL -
+        cstmt.setString(17,sRDCont);     //context -
          // Now we are ready to call the stored procedure
-        CStmt.execute();
-        sReturnCode = CStmt.getString(1);
+        cstmt.execute();
+        sReturnCode = cstmt.getString(1);
         if (sReturnCode != null && !sReturnCode.equals("API_RD_300"))
         {
           if (sAction.equals("INS") || sAction.equals("UPD"))
@@ -3914,8 +3016,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -3940,23 +3042,23 @@ public class InsACService implements Serializable
   */
   public void getCSCSI(String csID, String csiID, String sAction, String sDE_ID)
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
    // String CS_CSI_ID;
     try
     {
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_CSCSI(?,?,?)}");
-        CStmt.setString(1,csID);   
-        CStmt.setString(2,csiID);
-        CStmt.registerOutParameter(3,OracleTypes.CURSOR);
-        CStmt.execute();
-        rs = (ResultSet) CStmt.getObject(3);
+        cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_CSCSI(?,?,?)}");
+        cstmt.setString(1,csID);   
+        cstmt.setString(2,csiID);
+        cstmt.registerOutParameter(3,OracleTypes.CURSOR);
+        cstmt.execute();
+        rs = (ResultSet) cstmt.getObject(3);
         String s;
         while(rs.next())
         {
@@ -3973,8 +3075,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4009,40 +3111,40 @@ public class InsACService implements Serializable
     //java.util.Date startDate = new java.util.Date();          
     //logger.info(m_servlet.getLogMessage(m_classReq, "setACCSI", "starting set", startDate, startDate));
 
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_ACCSI(?,?,?,?,?,?,?,?,?)}");
-        CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-       // CStmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //action - only IN parameter
-        CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //AC_CSI id
-        CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //AC id
-        CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //CS_CSI id
-        CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //date created
-        CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //created by
-        CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //modified by
-        CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //date modified
+        cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_ACCSI(?,?,?,?,?,?,?,?,?)}");
+        cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+       // cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //action - only IN parameter
+        cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //AC_CSI id
+        cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //AC id
+        cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //CS_CSI id
+        cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //date created
+        cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //created by
+        cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //modified by
+        cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //date modified
 
         // Set the In parameters (which are inherited from the PreparedStatement class)
-        CStmt.setString(2,sAction);       //ACTION - INS, UPD or DEL
-        CStmt.setString(3,sAC_CSI_ID);       //AC ID - not null
-        CStmt.setString(4,sAC_ID);       //AC ID - not null
-        CStmt.setString(5,CSCSIID);       //CS_CSI_ID - cannot be null
+        cstmt.setString(2,sAction);       //ACTION - INS, UPD or DEL
+        cstmt.setString(3,sAC_CSI_ID);       //AC ID - not null
+        cstmt.setString(4,sAC_ID);       //AC ID - not null
+        cstmt.setString(5,CSCSIID);       //CS_CSI_ID - cannot be null
 
          // Now we are ready to call the stored procedure
-        CStmt.execute();
-        String ret = CStmt.getString(1);
+        cstmt.execute();
+        String ret = cstmt.getString(1);
         //get its accsi id if already exists in the database
         if (ret != null && ret.equals("API_ACCSI_300"))
-          sAC_CSI_ID = CStmt.getString(3);
+          sAC_CSI_ID = cstmt.getString(3);
         else if (ret != null && !ret.equals(""))
         {
           if (sAction.equals("INS") || sAction.equals("UPD"))
@@ -4064,8 +3166,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4088,35 +3190,35 @@ public class InsACService implements Serializable
   */
   public String getACCSI(String sCSCSIID,  String sDE_ID)
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String sACCSI = "";
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_Get_Row.GET_AC_CSI(?,?,?,?,?,?,?,?)}");
-        CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-        CStmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //accsi out
-        CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //CS_CSI id
-        CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //AC idseq
-        CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //date created
-        CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //created by
-        CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //modified by
-        CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //date modified
+        cstmt = conn.prepareCall("{call SBREXT_Get_Row.GET_AC_CSI(?,?,?,?,?,?,?,?)}");
+        cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+        cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //accsi out
+        cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //CS_CSI id
+        cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //AC idseq
+        cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //date created
+        cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //created by
+        cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //modified by
+        cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //date modified
 
         // Set the In parameters (which are inherited from the PreparedStatement class)
-        CStmt.setString(3,sCSCSIID);       //AC ID - not null
-        CStmt.setString(4,sDE_ID);       //AC ID - not null
+        cstmt.setString(3,sCSCSIID);       //AC ID - not null
+        cstmt.setString(4,sDE_ID);       //AC ID - not null
 
          // Now we are ready to call the stored procedure
-        CStmt.execute();
-        sACCSI = CStmt.getString(2);
+        cstmt.execute();
+        sACCSI = cstmt.getString(2);
       }
     }
     catch(Exception e)
@@ -4126,8 +3228,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4151,36 +3253,36 @@ public class InsACService implements Serializable
   */
   public void setACSRC(String sAction, String sDE_ID)
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_ACSRC(?,?,?,?,?,?,?,?,?,?)}");
-        CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-       // CStmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //action - only IN parameter
-        CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //ACS id
-        CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //AC id
-        CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //SRC name
-        CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //date submitted
-        CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //created by
-        CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //date created
-        CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //date modified
-        CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //modified by
+        cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_ACSRC(?,?,?,?,?,?,?,?,?,?)}");
+        cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+       // cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //action - only IN parameter
+        cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //ACS id
+        cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //AC id
+        cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //SRC name
+        cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //date submitted
+        cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //created by
+        cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //date created
+        cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //date modified
+        cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //modified by
 
         // Set the In parameters (which are inherited from the PreparedStatement class)
-        CStmt.setString(2,sAction);       //ACTION - INS, UPD or DEL
-        CStmt.setString(4,sDE_ID);       //AC ID - not null
-        CStmt.setString(5,"AJCC");       //SRC name - cannot be null   ????
+        cstmt.setString(2,sAction);       //ACTION - INS, UPD or DEL
+        cstmt.setString(4,sDE_ID);       //AC ID - not null
+        cstmt.setString(5,"AJCC");       //SRC name - cannot be null   ????
 
          // Now we are ready to call the stored procedure
-        CStmt.execute();
+        cstmt.execute();
       }
     }
     catch(Exception e)
@@ -4192,8 +3294,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4216,28 +3318,28 @@ public class InsACService implements Serializable
   */
   public void updCSCSI(String sDE_ID, String sCS_ID, String sCSI_ID)
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.UPD_CS(?,?,?,?,?,?)}");
-        CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //error code
+        cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.UPD_CS(?,?,?,?,?,?)}");
+        cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //error code
         // Set the In parameters (which are inherited from the PreparedStatement class)
-        CStmt.setString(1, sDE_ID);       //DE idseq
-        CStmt.setString(2, sCS_ID);       //new cs ID
-        CStmt.setString(3, sCSI_ID);       //new csi id
-        CStmt.setString(4, "");       //old cs id
-        CStmt.setString(5, "");       //old csi id
+        cstmt.setString(1, sDE_ID);       //DE idseq
+        cstmt.setString(2, sCS_ID);       //new cs ID
+        cstmt.setString(3, sCSI_ID);       //new csi id
+        cstmt.setString(4, "");       //old cs id
+        cstmt.setString(5, "");       //old csi id
 
          // Now we are ready to call the stored procedure
-        CStmt.execute();
+        cstmt.execute();
       }
     }
     catch(Exception e)
@@ -4248,8 +3350,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4270,36 +3372,36 @@ public class InsACService implements Serializable
   */
   public String getExistingPV(String sValue, String sMeaning)
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
     String sPV_IDSEQ = "";
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_GET_ROW.GET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-        CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-        CStmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //PV_IDSEQ
-        CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //MEANING_DESCRIPTION
-        CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       // HIGH_VALUE_NUM
-        CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       // LOW_VALUE_NUM
-        CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       // BEGIN_DATE 
-        CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       // END_DATE 
-        CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       // CREATED_BY
-        CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       // Date Created
-        CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       // MODIFIED_BY
-        CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       // DATE_MODIFIED
+        cstmt = conn.prepareCall("{call SBREXT_GET_ROW.GET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+        cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+        cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //PV_IDSEQ
+        cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //MEANING_DESCRIPTION
+        cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       // HIGH_VALUE_NUM
+        cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       // LOW_VALUE_NUM
+        cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       // BEGIN_DATE 
+        cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       // END_DATE 
+        cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       // CREATED_BY
+        cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       // Date Created
+        cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       // MODIFIED_BY
+        cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       // DATE_MODIFIED
 
-        CStmt.setString(3, sValue);       // Value
-        CStmt.setString(4, sMeaning);       // Meaning   
+        cstmt.setString(3, sValue);       // Value
+        cstmt.setString(4, sMeaning);       // Meaning   
          // Now we are ready to call the stored procedure
-        CStmt.execute();
-        sPV_IDSEQ = (String) CStmt.getObject(2);
+        cstmt.execute();
+        sPV_IDSEQ = (String) cstmt.getObject(2);
         if (sPV_IDSEQ == null)
            sPV_IDSEQ = "";
       }
@@ -4312,8 +3414,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4335,25 +3437,25 @@ public class InsACService implements Serializable
   */
   private void copyAC_ID(String sOldACID, String sNewACID)
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call META_CONFIG_MGMT.COPYACNAMES(?,?,?)}");
+        cstmt = conn.prepareCall("{call META_CONFIG_MGMT.COPYACNAMES(?,?,?)}");
         // Set the In parameters (which are inherited from the PreparedStatement class)
-        CStmt.setString(1, sOldACID);       //DE idseq
-        CStmt.setString(2, sNewACID);       //new DE ID
-        CStmt.setString(3, "V");       //new csi id
+        cstmt.setString(1, sOldACID);       //DE idseq
+        cstmt.setString(2, sNewACID);       //new DE ID
+        cstmt.setString(3, "V");       //new csi id
 
          // Now we are ready to call the stored procedure
-        CStmt.execute();
+        cstmt.execute();
       }
     }
     catch(Exception e)
@@ -4364,8 +3466,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4386,27 +3488,27 @@ public class InsACService implements Serializable
   */
   private void createACHistories(String sNewID, String sOldID, String sACType)
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call META_CONFIG_MGMT.CREATE_AC_HISTORIES(?,?,?,?,?)}");
+        cstmt = conn.prepareCall("{call META_CONFIG_MGMT.CREATE_AC_HISTORIES(?,?,?,?,?)}");
         // Set the In parameters (which are inherited from the PreparedStatement class)
-        CStmt.setString(1, sOldID);       //DE idseq
-        CStmt.setString(2, sNewID);       //new DE ID
-        CStmt.setString(3, "VERSIONED");       // Config type
-        CStmt.setString(4, sACType);       // type of AC
-        CStmt.setString(5, "");       // table name, default null
+        cstmt.setString(1, sOldID);       //DE idseq
+        cstmt.setString(2, sNewID);       //new DE ID
+        cstmt.setString(3, "VERSIONED");       // Config type
+        cstmt.setString(4, sACType);       // type of AC
+        cstmt.setString(5, "");       // table name, default null
 
          // Now we are ready to call the stored procedure
-        CStmt.execute();
+        cstmt.execute();
       }
     }
     catch(Exception e)
@@ -4417,8 +3519,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4438,9 +3540,9 @@ public class InsACService implements Serializable
   */
   private String getVersionAC(String sName, String sContextID, String sACType)
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String sReturnID = "";
 
     PreparedStatement pstmt = null;
@@ -4448,12 +3550,12 @@ public class InsACService implements Serializable
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        pstmt = sbr_db_conn.prepareStatement("Select Sbrext_Common_Routines.get_version_ac(?,?,?) from DUAL");
+        pstmt = conn.prepareStatement("Select Sbrext_Common_Routines.get_version_ac(?,?,?) from DUAL");
         pstmt.setString(1, sName);       //DE idseq
         pstmt.setString(2, sContextID);       //new DE ID
         pstmt.setString(3, sACType);       // type of AC
@@ -4472,8 +3574,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4501,90 +3603,90 @@ public class InsACService implements Serializable
     java.util.Date startDate = new java.util.Date();          
     //logger.info(m_servlet.getLogMessage(m_classReq, "setQuestContent", "starting set", startDate, startDate));
 
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String sReturnCode = "";
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_QC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-        CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-        CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //oc  id
-        CStmt.registerOutParameter(4,java.sql.Types.DECIMAL);       //version
-        CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //Short Name
-        CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       // definiton
-        CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //context id
-        CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //asl id
-        CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       // deID
-        CStmt.registerOutParameter(14,java.sql.Types.VARCHAR);       // vp id
-        CStmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(17,java.sql.Types.VARCHAR);       //  
-        CStmt.registerOutParameter(18,java.sql.Types.VARCHAR);       //  match ind
-        CStmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(23,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(24,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(25,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(26,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(27,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(28,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(29,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(30,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(31,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(32,java.sql.Types.VARCHAR);       // 
-        CStmt.registerOutParameter(33,java.sql.Types.VARCHAR);       // submitted cde long name
-        CStmt.registerOutParameter(34,java.sql.Types.VARCHAR);       //
-        CStmt.registerOutParameter(35,java.sql.Types.VARCHAR);       //vd idseq
-        CStmt.registerOutParameter(36,java.sql.Types.VARCHAR);       //created by
-        CStmt.registerOutParameter(37,java.sql.Types.VARCHAR);       //date created
-        CStmt.registerOutParameter(38,java.sql.Types.VARCHAR);       //modified by
-        CStmt.registerOutParameter(39,java.sql.Types.VARCHAR);       //date modified
-        CStmt.registerOutParameter(40,java.sql.Types.VARCHAR);       //deleted ind
+        cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_QC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+        cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+        cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //oc  id
+        cstmt.registerOutParameter(4,java.sql.Types.DECIMAL);       //version
+        cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //Short Name
+        cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       // definiton
+        cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //context id
+        cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //asl id
+        cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       // deID
+        cstmt.registerOutParameter(14,java.sql.Types.VARCHAR);       // vp id
+        cstmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(17,java.sql.Types.VARCHAR);       //  
+        cstmt.registerOutParameter(18,java.sql.Types.VARCHAR);       //  match ind
+        cstmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(23,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(24,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(25,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(26,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(27,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(28,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(29,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(30,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(31,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(32,java.sql.Types.VARCHAR);       // 
+        cstmt.registerOutParameter(33,java.sql.Types.VARCHAR);       // submitted cde long name
+        cstmt.registerOutParameter(34,java.sql.Types.VARCHAR);       //
+        cstmt.registerOutParameter(35,java.sql.Types.VARCHAR);       //vd idseq
+        cstmt.registerOutParameter(36,java.sql.Types.VARCHAR);       //created by
+        cstmt.registerOutParameter(37,java.sql.Types.VARCHAR);       //date created
+        cstmt.registerOutParameter(38,java.sql.Types.VARCHAR);       //modified by
+        cstmt.registerOutParameter(39,java.sql.Types.VARCHAR);       //date modified
+        cstmt.registerOutParameter(40,java.sql.Types.VARCHAR);       //deleted ind
                                                                     
         // Set the In parameters (which are inherited from the PreparedStatement class)
-        CStmt.setString(2, "UPD");              //ACTION - INS, UPD or DEL
+        cstmt.setString(2, "UPD");              //ACTION - INS, UPD or DEL
         if (VPid != null && !VPid.equals(""))
         {
-           CStmt.setString(3, QCid);              //qc idseq if updated
-           CStmt.setString(14, VPid);              //VP idseq for valid values
-           CStmt.setString(8, "EXACT MATCH");              //workflow status of the valid value
-           CStmt.setString(18, "E");              //match ind of the valid value
+           cstmt.setString(3, QCid);              //qc idseq if updated
+           cstmt.setString(14, VPid);              //VP idseq for valid values
+           cstmt.setString(8, "EXACT MATCH");              //workflow status of the valid value
+           cstmt.setString(18, "E");              //match ind of the valid value
         }
         else
         {
-           CStmt.setString(3, questBean.getQC_IDSEQ());              //qc idseq if updated
-           CStmt.setString(6, questBean.getQUEST_DEFINITION());             //QUEST definition
-           CStmt.setString(13, questBean.getDE_IDSEQ());             //de_idseq
-           CStmt.setString(33, questBean.getSUBMITTED_LONG_NAME());        //submitted long cde name
-           CStmt.setString(35, questBean.getVD_IDSEQ());        //vd idseq
+           cstmt.setString(3, questBean.getQC_IDSEQ());              //qc idseq if updated
+           cstmt.setString(6, questBean.getQUEST_DEFINITION());             //QUEST definition
+           cstmt.setString(13, questBean.getDE_IDSEQ());             //de_idseq
+           cstmt.setString(33, questBean.getSUBMITTED_LONG_NAME());        //submitted long cde name
+           cstmt.setString(35, questBean.getVD_IDSEQ());        //vd idseq
         }
-        CStmt.setString(41, null);  //de long name
-        CStmt.setString(42, null);  //de long name
-        CStmt.setString(43, null);  //de long name
-        CStmt.setString(44, null);  //de long name
-        CStmt.setString(45, null);  //de long name
-        CStmt.setString(46, null);  //de long name
-        CStmt.setString(47, null);  //de long name
-        CStmt.setString(48, null); //questBean.getDE_LONG_NAME());  //de long name
-        CStmt.setString(49, null);  //questBean.getVD_LONG_NAME());  // vd long name
-        CStmt.setString(50, null);
+        cstmt.setString(41, null);  //de long name
+        cstmt.setString(42, null);  //de long name
+        cstmt.setString(43, null);  //de long name
+        cstmt.setString(44, null);  //de long name
+        cstmt.setString(45, null);  //de long name
+        cstmt.setString(46, null);  //de long name
+        cstmt.setString(47, null);  //de long name
+        cstmt.setString(48, null); //questBean.getDE_LONG_NAME());  //de long name
+        cstmt.setString(49, null);  //questBean.getVD_LONG_NAME());  // vd long name
+        cstmt.setString(50, null);
 
          // Now we are ready to call the stored procedure
-        CStmt.execute();
-        sReturnCode = CStmt.getString(1);
+        cstmt.execute();
+        sReturnCode = cstmt.getString(1);
         if (sReturnCode != null && !sReturnCode.equals(""))
         {
           this.storeStatusMsg("\\t " + sReturnCode + " : Unable to update Question attributes.");
@@ -4603,8 +3705,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4626,23 +3728,23 @@ public class InsACService implements Serializable
   */
   public String getRD_ID(String acID)
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String rd_ID = "";
     try
     {
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_COMMON_ROUTINES.GET_RD_IDSEQ(?,?,?)}");
-        CStmt.setString(1, acID);
-        CStmt.setString(2, "Preferred Question Text");
-        CStmt.registerOutParameter(3,OracleTypes.CURSOR);
-        CStmt.execute();
-        rs = (ResultSet) CStmt.getObject(3);
+        cstmt = conn.prepareCall("{call SBREXT_COMMON_ROUTINES.GET_RD_IDSEQ(?,?,?)}");
+        cstmt.setString(1, acID);
+        cstmt.setString(2, "Preferred Question Text");
+        cstmt.registerOutParameter(3,OracleTypes.CURSOR);
+        cstmt.execute();
+        rs = (ResultSet) cstmt.getObject(3);
         while(rs.next())
         {
           rd_ID = rs.getString(1);
@@ -4660,8 +3762,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4681,21 +3783,21 @@ public class InsACService implements Serializable
   */
   public String getFullName(String sName)
   {
-     Connection sbr_db_conn = null;
+     Connection conn = null;
      ResultSet rs = null;
-     CallableStatement CStmt = null;
+     CallableStatement cstmt = null;
      String sFullName = "";
      PreparedStatement pstmt = null;
  
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        pstmt = sbr_db_conn.prepareStatement("Select SBREXT_CDE_CURATOR_PKG.GET_UA_FULL_NAME(?) from DUAL");
+        pstmt = conn.prepareStatement("Select SBREXT_CDE_CURATOR_PKG.GET_UA_FULL_NAME(?) from DUAL");
         pstmt.setString(1, sName);       //short name
         rs = pstmt.executeQuery();
         while (rs.next())
@@ -4711,8 +3813,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4733,23 +3835,23 @@ public class InsACService implements Serializable
   */
   public String getDesig_ID(String acID, String DesType)
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String Desig_ID = "";
     try
     {
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_COMMON_ROUTINES.GET_DESIG_IDSEQ(?,?,?)}");
-        CStmt.setString(1, acID);
-        CStmt.setString(2, DesType);
-        CStmt.registerOutParameter(3,OracleTypes.CURSOR);
-        CStmt.execute();
-        rs = (ResultSet) CStmt.getObject(3);
+        cstmt = conn.prepareCall("{call SBREXT_COMMON_ROUTINES.GET_DESIG_IDSEQ(?,?,?)}");
+        cstmt.setString(1, acID);
+        cstmt.setString(2, DesType);
+        cstmt.registerOutParameter(3,OracleTypes.CURSOR);
+        cstmt.execute();
+        rs = (ResultSet) cstmt.getObject(3);
         while(rs.next())
         {
           Desig_ID = rs.getString(1);
@@ -4767,8 +3869,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4794,44 +3896,44 @@ public class InsACService implements Serializable
   public String setReg_Status(String sAction, String sAR_ID, String sAC_ID,
                        String regStatus)
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String ret = "";
     
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_REGISTRATION(?,?,?,?,?,?,?,?,?)}");
-       // CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //action - only IN parameter
-        CStmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //sAR_ID
-        CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //sAC_ID
-        CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //regStatus
-        CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //created by
-        CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //date created
-        CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //modified by
-        CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //date modified
-        CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //return code
+        cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_REGISTRATION(?,?,?,?,?,?,?,?,?)}");
+       // cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //action - only IN parameter
+        cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //sAR_ID
+        cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //sAC_ID
+        cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //regStatus
+        cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //created by
+        cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //date created
+        cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //modified by
+        cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //date modified
+        cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //return code
 
         // Set the In parameters (which are inherited from the PreparedStatement class)
-        CStmt.setString(1, sAction);       //ACTION - INS, UPD or DEL
-        CStmt.setString(2, sAR_ID);       //AR ID - not null if upd or del
-        CStmt.setString(3, sAC_ID);       //AC ID - not null if ins
-        CStmt.setString(4, regStatus);       //regStatus - cannot be null
+        cstmt.setString(1, sAction);       //ACTION - INS, UPD or DEL
+        cstmt.setString(2, sAR_ID);       //AR ID - not null if upd or del
+        cstmt.setString(3, sAC_ID);       //AC ID - not null if ins
+        cstmt.setString(4, regStatus);       //regStatus - cannot be null
 
          // Now we are ready to call the stored procedure
-        CStmt.execute();
+        cstmt.execute();
         //get its AR id if already exists in the database
         
-        if (CStmt.getString(9) != null)
-          ret = CStmt.getString(9);
+        if (cstmt.getString(9) != null)
+          ret = cstmt.getString(9);
         //else
-          //sAR_ID = CStmt.getString(2);
+          //sAR_ID = cstmt.getString(2);
         if (ret != null && !ret.equals(""))
         {
           if (sAction.equals("DEL"))
@@ -4851,8 +3953,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4871,19 +3973,19 @@ public class InsACService implements Serializable
   */
   public String getAC_REG(String ac_id)  // returns idseq
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    Statement CStmt = null;
+    Statement cstmt = null;
     String regID = "";
     try
     {
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.createStatement();
-        rs = CStmt.executeQuery("SELECT ar_idseq FROM sbr.ac_registrations_view WHERE  ac_idseq = '" + ac_id + "'");
+        cstmt = conn.createStatement();
+        rs = cstmt.executeQuery("SELECT ar_idseq FROM sbr.ac_registrations_view WHERE  ac_idseq = '" + ac_id + "'");
         //loop through to printout the outstrings
         while(rs.next())
         {
@@ -4899,8 +4001,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }    
     catch(Exception ee)
     {
@@ -4922,7 +4024,7 @@ public class InsACService implements Serializable
   {
       HttpSession session = m_classReq.getSession();
       GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, m_servlet); 
-      session.setAttribute("statusMessage", "");
+      session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");
       Vector vACList = (Vector)session.getAttribute("vBEResult");
       Vector<String> vACID = (Vector)session.getAttribute("vACId");
       Vector<String> vNames = (Vector)session.getAttribute("vACName");
@@ -4981,21 +4083,21 @@ public class InsACService implements Serializable
    */
   public String getOneAltName(String acID)
   {
-     Connection sbr_db_conn = null;
+     Connection conn = null;
      ResultSet rs = null;
-     CallableStatement CStmt = null;
+     CallableStatement cstmt = null;
      String sName = "";
      PreparedStatement pstmt = null;
  
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        pstmt = sbr_db_conn.prepareStatement("Select SBREXT_CDE_CURATOR_PKG.GET_ONE_ALT_NAME(?) from DUAL");
+        pstmt = conn.prepareStatement("Select SBREXT_CDE_CURATOR_PKG.GET_ONE_ALT_NAME(?) from DUAL");
         pstmt.setString(1, acID);       //acid
         rs = pstmt.executeQuery();
         while (rs.next())
@@ -5011,8 +4113,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -5029,21 +4131,21 @@ public class InsACService implements Serializable
    */
   public String getOneRDName(String acID)
   {
-     Connection sbr_db_conn = null;
+     Connection conn = null;
      ResultSet rs = null;
-     CallableStatement CStmt = null;
+     CallableStatement cstmt = null;
      String sName = "";
      PreparedStatement pstmt = null;
  
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        pstmt = sbr_db_conn.prepareStatement("Select SBREXT_CDE_CURATOR_PKG.GET_ONE_RD_NAME(?) from DUAL");
+        pstmt = conn.prepareStatement("Select SBREXT_CDE_CURATOR_PKG.GET_ONE_RD_NAME(?) from DUAL");
         pstmt.setString(1, acID);       //acid
         rs = pstmt.executeQuery();
         while (rs.next())
@@ -5059,8 +4161,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -5079,21 +4181,21 @@ public class InsACService implements Serializable
    */
   public String getOneConName(String decID, String vdID)
   {
-     Connection sbr_db_conn = null;
+     Connection conn = null;
      ResultSet rs = null;
-     CallableStatement CStmt = null;
+     CallableStatement cstmt = null;
      String sName = "";
      PreparedStatement pstmt = null;
  
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        pstmt = sbr_db_conn.prepareStatement("Select SBREXT_CDE_CURATOR_PKG.GET_ONE_CON_NAME(?,?) from DUAL");
+        pstmt = conn.prepareStatement("Select SBREXT_CDE_CURATOR_PKG.GET_ONE_CON_NAME(?,?) from DUAL");
         pstmt.setString(1, decID);       //decid
         pstmt.setString(2, vdID);       //vdid
         rs = pstmt.executeQuery();
@@ -5110,8 +4212,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -5184,9 +4286,9 @@ public class InsACService implements Serializable
   */
   public String getDECSysName(DEC_Bean dec)
   {
-     Connection sbr_db_conn = null;
+     Connection conn = null;
      ResultSet rs = null;
-     CallableStatement CStmt = null;
+     CallableStatement cstmt = null;
      String sysName = "";
  
     try
@@ -5195,12 +4297,12 @@ public class InsACService implements Serializable
       String propIDseq = dec.getDEC_PROPL_IDSEQ();
         PreparedStatement pstmt = null;
         //Create a Callable Statement object.
-        sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-        if (sbr_db_conn == null)
+        conn = m_servlet.connectDB(m_classReq, m_classRes);
+        if (conn == null)
           m_servlet.ErrorLogin(m_classReq, m_classRes);
         else
         {
-          pstmt = sbr_db_conn.prepareStatement("Select SBREXT_COMMON_ROUTINES.GENERATE_DEC_PREFERRED_NAME(?,?) from DUAL");
+          pstmt = conn.prepareStatement("Select SBREXT_COMMON_ROUTINES.GENERATE_DEC_PREFERRED_NAME(?,?) from DUAL");
           pstmt.setString(1, ocIDseq);       //oc idseq
           pstmt.setString(2, propIDseq);       //property idseq
           rs = pstmt.executeQuery();
@@ -5223,8 +4325,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -5244,21 +4346,21 @@ public class InsACService implements Serializable
   */
   public String getPublicID(String ac_idseq)
   {
-     Connection sbr_db_conn = null;
+     Connection conn = null;
      ResultSet rs = null;
-     CallableStatement CStmt = null;
+     CallableStatement cstmt = null;
      String sPublicID = "";
  
     try
     {
       PreparedStatement pstmt = null;
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        pstmt = sbr_db_conn.prepareStatement("Select SBREXT_COMMON_ROUTINES.GET_PUBLIC_ID(?) from DUAL");
+        pstmt = conn.prepareStatement("Select SBREXT_COMMON_ROUTINES.GET_PUBLIC_ID(?) from DUAL");
         pstmt.setString(1, ac_idseq);       //short name
         rs = pstmt.executeQuery();
         while (rs.next())
@@ -5275,8 +4377,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -5647,9 +4749,9 @@ public class InsACService implements Serializable
     //java.util.Date startDate = new java.util.Date();          
     //logger.info(m_servlet.getLogMessage(m_classReq, "setConcept", "starting set", startDate, startDate));
 
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String conIdseq = "";
    // String sEvsSource = "";
     try
@@ -5671,41 +4773,41 @@ public class InsACService implements Serializable
       if (conIdseq == null || conIdseq.equals(""))
       {          
         //Create a Callable Statement object.
-        sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-        if (sbr_db_conn == null)
+        conn = m_servlet.connectDB(m_classReq, m_classRes);
+        if (conn == null)
           m_servlet.ErrorLogin(m_classReq, m_classRes);
         else
         {
-          CStmt = sbr_db_conn.prepareCall("{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+          cstmt = conn.prepareCall("{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
           // register the Out parameters
-          CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-          CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //con idseq
-          CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //preferred name
-          CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //long name
-          CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //prefered definition
-          CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //context idseq
-          CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //version
-          CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //asl name
-          CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //latest version ind
-          CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //change note
-          CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //origin
-          CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //definition source
-          CStmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //evs source
-          CStmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //begin date
-          CStmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //end date
-          CStmt.registerOutParameter(17,java.sql.Types.VARCHAR);       //date created
-          CStmt.registerOutParameter(18,java.sql.Types.VARCHAR);       //created by
-          CStmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //date modified
-          CStmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //modified by
-          CStmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //deleted ind
+          cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+          cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //con idseq
+          cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //preferred name
+          cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //long name
+          cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //prefered definition
+          cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //context idseq
+          cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //version
+          cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //asl name
+          cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //latest version ind
+          cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //change note
+          cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //origin
+          cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //definition source
+          cstmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //evs source
+          cstmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //begin date
+          cstmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //end date
+          cstmt.registerOutParameter(17,java.sql.Types.VARCHAR);       //date created
+          cstmt.registerOutParameter(18,java.sql.Types.VARCHAR);       //created by
+          cstmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //date modified
+          cstmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //modified by
+          cstmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //deleted ind
 
           //truncate the definition to be 2000 long.
           String sDef = evsBean.getPREFERRED_DEFINITION();
         //  if (sDef == null) sDef = "";
         //  if (sDef.length() > 2000) sDef = sDef.substring(0, 2000);
           // Set the In parameters (which are inherited from the PreparedStatement class)
-          CStmt.setString(2, sAction);
-          CStmt.setString(4, evsBean.getCONCEPT_IDENTIFIER());
+          cstmt.setString(2, sAction);
+          cstmt.setString(4, evsBean.getCONCEPT_IDENTIFIER());
           //make sure that :: is removed from the long name 
           String sName = evsBean.getLONG_NAME();
           int nvpInd = sName.indexOf("::");
@@ -5714,21 +4816,21 @@ public class InsACService implements Serializable
           nvpInd = sDef.indexOf("::");
           if (nvpInd > 0)
             sDef = sDef.substring(0, nvpInd);  
-          CStmt.setString(5, sName);
-          CStmt.setString(6, sDef);
-        //  CStmt.setString(7, evsBean.getCONTE_IDSEQ());  caBIG by default
-          CStmt.setString(8, "1.0");
-          CStmt.setString(9, "RELEASED");
-          CStmt.setString(10, "Yes");
-          CStmt.setString(12, evsBean.getEVS_DATABASE());
-          CStmt.setString(13, evsBean.getEVS_DEF_SOURCE());
-          CStmt.setString(14, evsBean.getNCI_CC_TYPE());
+          cstmt.setString(5, sName);
+          cstmt.setString(6, sDef);
+        //  cstmt.setString(7, evsBean.getCONTE_IDSEQ());  caBIG by default
+          cstmt.setString(8, "1.0");
+          cstmt.setString(9, "RELEASED");
+          cstmt.setString(10, "Yes");
+          cstmt.setString(12, evsBean.getEVS_DATABASE());
+          cstmt.setString(13, evsBean.getEVS_DEF_SOURCE());
+          cstmt.setString(14, evsBean.getNCI_CC_TYPE());
            // Now we are ready to call the stored procedure
           //logger.info("setConcept " + evsBean.getCONCEPT_IDENTIFIER());     
 
-          CStmt.execute();
-          sReturnCode = CStmt.getString(1);
-          conIdseq = CStmt.getString(3);
+          cstmt.execute();
+          sReturnCode = cstmt.getString(1);
+          conIdseq = cstmt.getString(3);
           evsBean.setIDSEQ(conIdseq);
           if (sReturnCode != null)
           {
@@ -5750,8 +4852,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -5776,56 +4878,56 @@ public class InsACService implements Serializable
   */
   public String getConcept(String sReturn, EVS_Bean evsBean, boolean bValidateConceptCodeUnique)
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
     String sCON_IDSEQ = "";
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     try
     {
       //Create a Callable Statement object.
       HttpSession session = (HttpSession)m_classReq.getSession();
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_GET_ROW.GET_CON(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-        CStmt.registerOutParameter(1, java.sql.Types.VARCHAR);       //return code
-        CStmt.registerOutParameter(2, java.sql.Types.VARCHAR);       //con idseq
-        CStmt.registerOutParameter(3, java.sql.Types.VARCHAR);       //preferred name
-        CStmt.registerOutParameter(4, java.sql.Types.VARCHAR);       //context idseq
-        CStmt.registerOutParameter(5, java.sql.Types.VARCHAR);       //version
-        CStmt.registerOutParameter(6, java.sql.Types.VARCHAR);       //prefered definition
-        CStmt.registerOutParameter(7, java.sql.Types.VARCHAR);       //long name
-        CStmt.registerOutParameter(8, java.sql.Types.VARCHAR);       //asl name
-        CStmt.registerOutParameter(9, java.sql.Types.VARCHAR);       //definition source
-        CStmt.registerOutParameter(10, java.sql.Types.VARCHAR);       //latest version ind
-        CStmt.registerOutParameter(11, java.sql.Types.VARCHAR);       //evs source
-        CStmt.registerOutParameter(12, java.sql.Types.VARCHAR);       //CON ID
-        CStmt.registerOutParameter(13, java.sql.Types.VARCHAR);       //origin
-        CStmt.registerOutParameter(14, java.sql.Types.VARCHAR);       //begin date
-        CStmt.registerOutParameter(15, java.sql.Types.VARCHAR);       //end date
-        CStmt.registerOutParameter(16, java.sql.Types.VARCHAR);       //change note
-        CStmt.registerOutParameter(17, java.sql.Types.VARCHAR);       //created by
-        CStmt.registerOutParameter(18, java.sql.Types.VARCHAR);       //date created
-        CStmt.registerOutParameter(19, java.sql.Types.VARCHAR);       //modified by
-        CStmt.registerOutParameter(20, java.sql.Types.VARCHAR);       //date modified
-        CStmt.registerOutParameter(21, java.sql.Types.VARCHAR);       //deleted ind
+        cstmt = conn.prepareCall("{call SBREXT_GET_ROW.GET_CON(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+        cstmt.registerOutParameter(1, java.sql.Types.VARCHAR);       //return code
+        cstmt.registerOutParameter(2, java.sql.Types.VARCHAR);       //con idseq
+        cstmt.registerOutParameter(3, java.sql.Types.VARCHAR);       //preferred name
+        cstmt.registerOutParameter(4, java.sql.Types.VARCHAR);       //context idseq
+        cstmt.registerOutParameter(5, java.sql.Types.VARCHAR);       //version
+        cstmt.registerOutParameter(6, java.sql.Types.VARCHAR);       //prefered definition
+        cstmt.registerOutParameter(7, java.sql.Types.VARCHAR);       //long name
+        cstmt.registerOutParameter(8, java.sql.Types.VARCHAR);       //asl name
+        cstmt.registerOutParameter(9, java.sql.Types.VARCHAR);       //definition source
+        cstmt.registerOutParameter(10, java.sql.Types.VARCHAR);       //latest version ind
+        cstmt.registerOutParameter(11, java.sql.Types.VARCHAR);       //evs source
+        cstmt.registerOutParameter(12, java.sql.Types.VARCHAR);       //CON ID
+        cstmt.registerOutParameter(13, java.sql.Types.VARCHAR);       //origin
+        cstmt.registerOutParameter(14, java.sql.Types.VARCHAR);       //begin date
+        cstmt.registerOutParameter(15, java.sql.Types.VARCHAR);       //end date
+        cstmt.registerOutParameter(16, java.sql.Types.VARCHAR);       //change note
+        cstmt.registerOutParameter(17, java.sql.Types.VARCHAR);       //created by
+        cstmt.registerOutParameter(18, java.sql.Types.VARCHAR);       //date created
+        cstmt.registerOutParameter(19, java.sql.Types.VARCHAR);       //modified by
+        cstmt.registerOutParameter(20, java.sql.Types.VARCHAR);       //date modified
+        cstmt.registerOutParameter(21, java.sql.Types.VARCHAR);       //deleted ind
 
-        CStmt.setString(2, evsBean.getIDSEQ());       // con idseq
-        CStmt.setString(3, evsBean.getCONCEPT_IDENTIFIER());       // concept code
+        cstmt.setString(2, evsBean.getIDSEQ());       // con idseq
+        cstmt.setString(3, evsBean.getCONCEPT_IDENTIFIER());       // concept code
          // Now we are ready to call the stored procedure
-        CStmt.execute();
-        sCON_IDSEQ = (String)CStmt.getObject(2);
+        cstmt.execute();
+        sCON_IDSEQ = (String)cstmt.getObject(2);
         evsBean.setIDSEQ(sCON_IDSEQ);
       //logger.info(sCON_IDSEQ + " getConcept code " + evsBean.getCONCEPT_IDENTIFIER() + evsBean.getEVS_ORIGIN());     
-        sReturn = (String)CStmt.getObject(1);
+        sReturn = (String)cstmt.getObject(1);
         if (sReturn == null || sReturn.equals(""))
         {
           // Sometimes we use this method to validate a concept code is unique across databases
           if(bValidateConceptCodeUnique == true)
           {
-            String dbOrigin = (String)CStmt.getObject(13);
+            String dbOrigin = (String)cstmt.getObject(13);
             String evsOrigin = evsBean.getEVS_DATABASE(); 
             if (evsOrigin.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
               evsOrigin = evsBean.getEVS_ORIGIN();
@@ -5838,19 +4940,19 @@ public class InsACService implements Serializable
           }
           else
           {
-            String dbOrigin = (String)CStmt.getObject(13);
+            String dbOrigin = (String)cstmt.getObject(13);
             EVS_UserBean eUser = (EVS_UserBean)m_servlet.sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);  //("EvsUserBean");
             if (eUser == null) eUser = new EVS_UserBean();
-            String sDef = (String)CStmt.getObject(6);
+            String sDef = (String)cstmt.getObject(6);
             if (sDef == null || sDef.equals("")) sDef = eUser.getDefDefaultValue();
             EVS_Bean vmConcept = new EVS_Bean();
             String evsOrigin = vmConcept.getVocabAttr(eUser, dbOrigin, EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME);  // "vocabDBOrigin", "vocabName");  
-      //logger.debug(evsBean.getCONCEPT_IDENTIFIER() + " setevsbeanforpv " + (String)CStmt.getObject(3) + (String)CStmt.getObject(4) + (String)CStmt.getObject(7));
-            evsBean.setEVSBean(sDef, (String)CStmt.getObject(9), 
-                              (String)CStmt.getObject(7), (String)CStmt.getObject(7), 
-                              (String)CStmt.getObject(11), (String)CStmt.getObject(3), 
-                              evsOrigin, dbOrigin, 0, "", (String)CStmt.getObject(4), "", 
-                              (String)CStmt.getObject(8), "", "", "");
+      //logger.debug(evsBean.getCONCEPT_IDENTIFIER() + " setevsbeanforpv " + (String)cstmt.getObject(3) + (String)cstmt.getObject(4) + (String)cstmt.getObject(7));
+            evsBean.setEVSBean(sDef, (String)cstmt.getObject(9), 
+                              (String)cstmt.getObject(7), (String)cstmt.getObject(7), 
+                              (String)cstmt.getObject(11), (String)cstmt.getObject(3), 
+                              evsOrigin, dbOrigin, 0, "", (String)cstmt.getObject(4), "", 
+                              (String)cstmt.getObject(8), "", "", "");
             evsBean.markNVPConcept(evsBean, session);  //store name value pair
           }
         }
@@ -5864,8 +4966,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -6138,14 +5240,14 @@ public class InsACService implements Serializable
     //java.util.Date startDate = new java.util.Date();          
     //logger.info(m_servlet.getLogMessage(m_classReq, "setContact_Comms", "starting set", startDate, startDate));
 
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String sReturnCode = "";
     try
     {
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
@@ -6158,36 +5260,36 @@ public class InsACService implements Serializable
             if (comBean != null) sAction = comBean.getCOMM_SUBMIT_ACTION();
             if (!sAction.equals("NONE"))
             {
-              CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_CONTACT_COMM(?,?,?,?,?,?,?,?,?,?,?,?)}");
-              CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-              CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //comm idseq
-              CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //org idseq
-              CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //per idseq
-              CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //ctlname
-              CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //rank order
-              CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //cyber address
-              CStmt.registerOutParameter(9,java.sql.Types.DATE);   //.VARCHAR);       //created by
-              CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //date created
-              CStmt.registerOutParameter(11,java.sql.Types.DATE);   //.VARCHAR);       //modified by
-              CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //date modified
+              cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_CONTACT_COMM(?,?,?,?,?,?,?,?,?,?,?,?)}");
+              cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+              cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //comm idseq
+              cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //org idseq
+              cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //per idseq
+              cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //ctlname
+              cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //rank order
+              cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //cyber address
+              cstmt.registerOutParameter(9,java.sql.Types.DATE);   //.VARCHAR);       //created by
+              cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //date created
+              cstmt.registerOutParameter(11,java.sql.Types.DATE);   //.VARCHAR);       //modified by
+              cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //date modified
 
               // Set the In parameters (which are inherited from the PreparedStatement class)
               if ((sAction.equals("UPD")) || (sAction.equals("DEL")))
               {
                 if ((comBean.getAC_COMM_IDSEQ() != null) && (!comBean.getAC_COMM_IDSEQ().equals("")))
-                  CStmt.setString(3,comBean.getAC_COMM_IDSEQ());              //comm idseq if updated
+                  cstmt.setString(3,comBean.getAC_COMM_IDSEQ());              //comm idseq if updated
                 else
                   sAction = "INS";              //INSERT A NEW RECORD IF NOT EXISTED
               }
-              CStmt.setString(2, sAction);       //ACTION - INS, UPD or DEL
-              CStmt.setString(4, orgID);         //org idseq
-              CStmt.setString(5, perID);        //per idseq
-              CStmt.setString(6, comBean.getCTL_NAME());       //selected comm type
-              CStmt.setString(7, comBean.getRANK_ORDER());     //rank order for the comm 
-              CStmt.setString(8, comBean.getCYBER_ADDR());     //comm value
+              cstmt.setString(2, sAction);       //ACTION - INS, UPD or DEL
+              cstmt.setString(4, orgID);         //org idseq
+              cstmt.setString(5, perID);        //per idseq
+              cstmt.setString(6, comBean.getCTL_NAME());       //selected comm type
+              cstmt.setString(7, comBean.getRANK_ORDER());     //rank order for the comm 
+              cstmt.setString(8, comBean.getCYBER_ADDR());     //comm value
                // Now we are ready to call the stored procedure
-              CStmt.execute();
-              sReturnCode = CStmt.getString(1);
+              cstmt.execute();
+              sReturnCode = cstmt.getString(1);
               if (sReturnCode != null && !sReturnCode.equals(""))  // && !sReturnCode.equals("API_OC_500"))
               {
                 String comName = comBean.getCTL_NAME() + "_" + comBean.getRANK_ORDER() + "_" + comBean.getCYBER_ADDR();
@@ -6196,7 +5298,7 @@ public class InsACService implements Serializable
               }
               else
               {
-                comBean.setAC_COMM_IDSEQ(CStmt.getString(3)); 
+                comBean.setAC_COMM_IDSEQ(cstmt.getString(3)); 
                 comBean.setCOMM_SUBMIT_ACTION("NONE");
                 vCom.setElementAt(comBean, i);
               }
@@ -6219,8 +5321,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -6236,14 +5338,14 @@ public class InsACService implements Serializable
     //java.util.Date startDate = new java.util.Date();          
     //logger.info(m_servlet.getLogMessage(m_classReq, "setContact_Addrs", "starting set", startDate, startDate));
 
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String sReturnCode = "";
     try
     {
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
@@ -6256,51 +5358,51 @@ public class InsACService implements Serializable
             if (adrBean != null) sAction = adrBean.getADDR_SUBMIT_ACTION();
             if (!sAction.equals("NONE"))
             {
-              CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_CONTACT_ADDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-              CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-              CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //addr idseq
-              CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //org idseq
-              CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //per idseq
-              CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //atlname
-              CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //rank order
-              CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //address line 1
-              CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //address line 2
-              CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //city
-              CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //state
-              CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //postal code
-              CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //country
-              CStmt.registerOutParameter(14,java.sql.Types.DATE);   //.VARCHAR);       //created by
-              CStmt.registerOutParameter(15,java.sql.Types.VARCHAR);      //date created
-              CStmt.registerOutParameter(16,java.sql.Types.DATE);   //.VARCHAR);      //modified by
-              CStmt.registerOutParameter(17,java.sql.Types.VARCHAR);      //date modified
+              cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_CONTACT_ADDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+              cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+              cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //addr idseq
+              cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //org idseq
+              cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //per idseq
+              cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //atlname
+              cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //rank order
+              cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //address line 1
+              cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //address line 2
+              cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //city
+              cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //state
+              cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //postal code
+              cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //country
+              cstmt.registerOutParameter(14,java.sql.Types.DATE);   //.VARCHAR);       //created by
+              cstmt.registerOutParameter(15,java.sql.Types.VARCHAR);      //date created
+              cstmt.registerOutParameter(16,java.sql.Types.DATE);   //.VARCHAR);      //modified by
+              cstmt.registerOutParameter(17,java.sql.Types.VARCHAR);      //date modified
 
               // Set the In parameters (which are inherited from the PreparedStatement class)
               if ((sAction.equals("UPD")) || (sAction.equals("DEL")))
               {
                 if ((adrBean.getAC_ADDR_IDSEQ() != null) && (!adrBean.getAC_ADDR_IDSEQ().equals("")))
-                  CStmt.setString(3, adrBean.getAC_ADDR_IDSEQ());              //comm idseq if updated
+                  cstmt.setString(3, adrBean.getAC_ADDR_IDSEQ());              //comm idseq if updated
                 else
                   sAction = "INS";              //INSERT A NEW RECORD IF NOT EXISTED
               }
-              CStmt.setString(2, sAction);       //ACTION - INS, UPD or DEL
-              CStmt.setString(4, orgID);         //org idseq
-              CStmt.setString(5, perID);        //per idseq
-              CStmt.setString(6, adrBean.getATL_NAME());       //selected addr type
-              CStmt.setString(7, adrBean.getRANK_ORDER());     //rank order for the addr 
-              CStmt.setString(8, adrBean.getADDR_LINE1());     //addr line 1
+              cstmt.setString(2, sAction);       //ACTION - INS, UPD or DEL
+              cstmt.setString(4, orgID);         //org idseq
+              cstmt.setString(5, perID);        //per idseq
+              cstmt.setString(6, adrBean.getATL_NAME());       //selected addr type
+              cstmt.setString(7, adrBean.getRANK_ORDER());     //rank order for the addr 
+              cstmt.setString(8, adrBean.getADDR_LINE1());     //addr line 1
               String A2 = adrBean.getADDR_LINE2();
               if (A2 == null || A2.equals("")) A2 = " ";
-              CStmt.setString(9, A2);     //addr line 2
-              CStmt.setString(10, adrBean.getCITY());         //city
-              CStmt.setString(11, adrBean.getSTATE_PROV());   //state
-              CStmt.setString(12, adrBean.getPOSTAL_CODE());  //zip code
+              cstmt.setString(9, A2);     //addr line 2
+              cstmt.setString(10, adrBean.getCITY());         //city
+              cstmt.setString(11, adrBean.getSTATE_PROV());   //state
+              cstmt.setString(12, adrBean.getPOSTAL_CODE());  //zip code
               String Ct = adrBean.getCOUNTRY();
               if (Ct == null || Ct.equals("")) Ct = " ";
-              CStmt.setString(13, Ct);     //country
+              cstmt.setString(13, Ct);     //country
 
                // Now we are ready to call the stored procedure
-              CStmt.execute();
-              sReturnCode = CStmt.getString(1);
+              cstmt.execute();
+              sReturnCode = cstmt.getString(1);
               if (sReturnCode != null && !sReturnCode.equals(""))  // && !sReturnCode.equals("API_OC_500"))
               {
                 String adrName = adrBean.getATL_NAME() + "_" + adrBean.getRANK_ORDER() + "_" + adrBean.getADDR_LINE1();
@@ -6309,7 +5411,7 @@ public class InsACService implements Serializable
               }
               else
               {
-                adrBean.setAC_ADDR_IDSEQ(CStmt.getString(3)); 
+                adrBean.setAC_ADDR_IDSEQ(cstmt.getString(3)); 
                 adrBean.setADDR_SUBMIT_ACTION("NONE");
                 vAdr.setElementAt(adrBean, i);
               }
@@ -6334,8 +5436,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -6351,14 +5453,14 @@ public class InsACService implements Serializable
     //java.util.Date startDate = new java.util.Date();          
     //logger.info(m_servlet.getLogMessage(m_classReq, "setAC_Contact", "starting set", startDate, startDate));
 
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String sReturnCode = "";
     try
     {
-      sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(m_classReq, m_classRes);
+      if (conn == null)
         m_servlet.ErrorLogin(m_classReq, m_classRes);
       else
       {
@@ -6366,38 +5468,38 @@ public class InsACService implements Serializable
         if (sAction == null || sAction.equals("")) sAction = "INS";
         if (!sAction.equals("NONE"))
         {
-          CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_AC_CONTACT(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-          CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-          CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //comm idseq
-          CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //org idseq
-          CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //per idseq
-          CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //AC idseq
-          CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //rank order
-          CStmt.registerOutParameter(8,java.sql.Types.DATE);   //.VARCHAR);       //created by
-          CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //date created
-          CStmt.registerOutParameter(10,java.sql.Types.DATE);   //.VARCHAR);       //modified by
-          CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //date modified
-          CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //p_cscsi_idseq
-          CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //p_csi_idseq
-          CStmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //p_contact role
+          cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_AC_CONTACT(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+          cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+          cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //comm idseq
+          cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //org idseq
+          cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //per idseq
+          cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //AC idseq
+          cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //rank order
+          cstmt.registerOutParameter(8,java.sql.Types.DATE);   //.VARCHAR);       //created by
+          cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //date created
+          cstmt.registerOutParameter(10,java.sql.Types.DATE);   //.VARCHAR);       //modified by
+          cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //date modified
+          cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //p_cscsi_idseq
+          cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //p_csi_idseq
+          cstmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //p_contact role
 
           // Set the In parameters (which are inherited from the PreparedStatement class)
           if ((sAction.equals("UPD")) || (sAction.equals("DEL")))
           {
             if ((accB.getAC_CONTACT_IDSEQ() != null) && (!accB.getAC_CONTACT_IDSEQ().equals("")))
-              CStmt.setString(3,accB.getAC_CONTACT_IDSEQ());              //acc idseq if updated
+              cstmt.setString(3,accB.getAC_CONTACT_IDSEQ());              //acc idseq if updated
             else
               sAction = "INS";              //INSERT A NEW RECORD IF NOT EXISTED
           }
-          CStmt.setString(2, sAction);       //ACTION - INS, UPD or DEL
-          CStmt.setString(4, accB.getORG_IDSEQ());         //org idseq
-          CStmt.setString(5, accB.getPERSON_IDSEQ());        //per idseq
-          CStmt.setString(6, accB.getAC_IDSEQ());       //ac idseq
-          CStmt.setString(7, accB.getRANK_ORDER());     //rank order
-          CStmt.setString(14, accB.getCONTACT_ROLE());     //contact role 
+          cstmt.setString(2, sAction);       //ACTION - INS, UPD or DEL
+          cstmt.setString(4, accB.getORG_IDSEQ());         //org idseq
+          cstmt.setString(5, accB.getPERSON_IDSEQ());        //per idseq
+          cstmt.setString(6, accB.getAC_IDSEQ());       //ac idseq
+          cstmt.setString(7, accB.getRANK_ORDER());     //rank order
+          cstmt.setString(14, accB.getCONTACT_ROLE());     //contact role 
            // Now we are ready to call the stored procedure
-          CStmt.execute();
-          sReturnCode = CStmt.getString(1);
+          cstmt.execute();
+          sReturnCode = cstmt.getString(1);
           if (sReturnCode != null && !sReturnCode.equals(""))  // && !sReturnCode.equals("API_OC_500"))
           {
             String accName = accB.getORG_NAME();
@@ -6407,7 +5509,7 @@ public class InsACService implements Serializable
           }
           else
           {
-            accB.setAC_CONTACT_IDSEQ(CStmt.getString(3)); 
+            accB.setAC_CONTACT_IDSEQ(cstmt.getString(3)); 
             accB.setACC_SUBMIT_ACTION("NONE");
           }
         }
@@ -6422,8 +5524,8 @@ public class InsACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {

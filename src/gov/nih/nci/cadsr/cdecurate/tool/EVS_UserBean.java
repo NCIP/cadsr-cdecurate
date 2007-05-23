@@ -1,17 +1,19 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.39 2007-04-10 19:31:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.40 2007-05-23 04:13:06 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 //import gov.nih.nci.evs.domain.Source;
-import gov.nih.nci.evs.query.*;
-import gov.nih.nci.system.applicationservice.*;
+import gov.nih.nci.evs.query.EVSQuery;
+import gov.nih.nci.evs.query.EVSQueryImpl;
+import gov.nih.nci.system.applicationservice.ApplicationService;
 import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Vector;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 /**
@@ -596,7 +598,7 @@ public final class EVS_UserBean implements Serializable
    */
   public String getVocabAccess()
   {
-      return _vocabAccess;
+      return (_vocabAccess == null) ? "" :_vocabAccess;
   }
   
   /**
@@ -806,7 +808,7 @@ public final class EVS_UserBean implements Serializable
   } */
 
 
-  private java.util.List getEVSVocabs(String eURL)
+  public java.util.List getEVSVocabs(String eURL)
   {
       ApplicationService evsService = ApplicationService.getRemoteInstance(eURL);
       EVSQuery query = new EVSQueryImpl();
@@ -1040,7 +1042,7 @@ public final class EVS_UserBean implements Serializable
     }    
   }
  
-  private EVS_UserBean storeVocabAttr(EVS_UserBean vuBean, Vector vAttr)
+  public EVS_UserBean storeVocabAttr(EVS_UserBean vuBean, Vector vAttr)
   {
     try
     {

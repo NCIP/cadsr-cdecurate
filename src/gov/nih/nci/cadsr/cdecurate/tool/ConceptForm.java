@@ -1,6 +1,8 @@
-/**
- * 
- */
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptForm.java,v 1.2 2007-05-23 04:12:06 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.io.Serializable;
@@ -37,6 +39,17 @@ public class ConceptForm implements Serializable
   public static final String CADSR_ACTION_DEL = "DEL";
   /** database submit action update NONE keyword */
   public static final String CADSR_ACTION_NONE = "NONE";
+  /** constant value to get the VM name and defintion of the concepts from pv page  */
+  public static final int FOR_PV_PAGE_CONCEPT = 1;
+  /** constant value to get the VM name and defintion of the concepts from vm page */
+  public static final int FOR_VM_PAGE_CONCEPT = 2;
+  /** constant value to get the VM name of the concepts at open vm page */
+  public static final int FOR_VM_PAGE_OPEN = 3;
+  /** constant value of Primary type */
+  public static final String CONCEPT_PRIMARY = "Primary";
+  /** constant value of Qualifier type */
+  public static final String CONCEPT_QUALIFIER = "Qualifier";
+  
   //concept data
   private String statusMsg;
   private int actionStatus;

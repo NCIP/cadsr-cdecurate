@@ -1,19 +1,32 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.39 2007-04-10 19:31:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.40 2007-05-23 04:12:56 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.evs.domain.Atom;
+import gov.nih.nci.evs.domain.Definition;
+import gov.nih.nci.evs.domain.DescLogicConcept;
+import gov.nih.nci.evs.domain.MetaThesaurusConcept;
+import gov.nih.nci.evs.domain.Property;
+import gov.nih.nci.evs.domain.SemanticType;
+import gov.nih.nci.evs.domain.Source;
+import gov.nih.nci.evs.query.EVSQuery;
+import gov.nih.nci.evs.query.EVSQueryImpl;
+import gov.nih.nci.system.applicationservice.ApplicationService;
 import java.io.Serializable;
-import java.util.*;
-import javax.servlet.http.*;
-
-import gov.nih.nci.system.applicationservice.*;
-import gov.nih.nci.evs.domain.*;
-import gov.nih.nci.evs.query.*;
-
-import org.apache.log4j.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Stack;
+import java.util.StringTokenizer;
+import java.util.Vector;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.apache.log4j.Logger;
 
 /**
  * EVSSearch class is for search action of the tool for all components.
@@ -485,7 +498,7 @@ public class EVSSearch implements Serializable
    * @return sort list of vocab roots
    */
   @SuppressWarnings("unchecked")
-  public List sortDLCObjects(List vocabRoots) 
+  private List sortDLCObjects(List vocabRoots) 
   { 
     int Swap = 0;
     if(vocabRoots != null && vocabRoots.size()>0)
@@ -593,7 +606,7 @@ public class EVSSearch implements Serializable
    *
    */
   @SuppressWarnings("unchecked")
-  public Vector getAllSubConceptCodes(String dtsVocab, String conceptName, String type, String conceptCode, String defSource) 
+  private Vector getAllSubConceptCodes(String dtsVocab, String conceptName, String type, String conceptCode, String defSource) 
   {
 //logger.debug("getAllSubConceptCodes conceptName: " + conceptName);
     String[] stringArray =  new String[10000];
@@ -844,7 +857,7 @@ public class EVSSearch implements Serializable
    *
  */
 @SuppressWarnings("unchecked")
-public Vector getSubConceptCodes(String dtsVocab, String conceptName, String type, String conceptCode, String defSource) 
+private Vector getSubConceptCodes(String dtsVocab, String conceptName, String type, String conceptCode, String defSource) 
 {
     String[] stringArray =  new String[10000];
     Vector vSub = new Vector();
@@ -941,7 +954,7 @@ public Vector getSubConceptCodes(String dtsVocab, String conceptName, String typ
    * @param dtsVocab string of vocab name
    * @return int level
 */
-public int getLevelDownFromParent(String CCode, String dtsVocab) 
+private int getLevelDownFromParent(String CCode, String dtsVocab) 
 { 
  //System.out.println("do_EVSSEarch getLevelDownFromParent");
    int level = 0;
@@ -1068,7 +1081,7 @@ public int getLevelDownFromParent(String CCode, String dtsVocab)
    * @return sCorrectSuperConceptCode
    *
   */
- public String findThePath(String dtsVocab, String[] stringArray, String sParent) 
+ private String findThePath(String dtsVocab, String[] stringArray, String sParent) 
   {
     Boolean flagOne = new java.lang.Boolean(true);
   //  Boolean flagTwo = new Boolean(false);
@@ -1390,7 +1403,7 @@ public Vector getSuperConceptNames(String dtsVocab, String conceptName, String c
    *
 */
 @SuppressWarnings("unchecked")
-public String[] getAllSuperConceptNames(String dtsVocab, String[] stringArray, Vector vSub) 
+private String[] getAllSuperConceptNames(String dtsVocab, String[] stringArray, Vector vSub) 
 { 
     String[] stringArray2 = new String[60];
     String[] stringArray3 = null;
@@ -1473,7 +1486,7 @@ public String[] getAllSuperConceptNames(String dtsVocab, String[] stringArray, V
   *  @return source
   *
 */
-  public String parseDefSource(String termStr) 
+  private String parseDefSource(String termStr) 
   {
     try
     {
@@ -1505,7 +1518,7 @@ public String[] getAllSuperConceptNames(String dtsVocab, String[] stringArray, V
   *  @return definition
   *
   */
-public String parseDefinition(String termStr) 
+private String parseDefinition(String termStr) 
 {
   try
   {
@@ -1576,7 +1589,7 @@ public String parseDefinition(String termStr)
     try
     {
       HttpSession session = req.getSession();
-      String menuAction = (String)session.getAttribute("MenuAction");
+      String menuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
       Vector vSearchASL = new Vector();
       Vector vSelAttr = new Vector();
       if (menuAction.equals("searchForCreate") || menuAction.equals("BEDisplay"))
@@ -1620,7 +1633,7 @@ public String parseDefinition(String termStr)
       else
         sSearchAC = (String)session.getAttribute("searchAC");
       if (sSearchAC.equals("EVSValueMeaning") || sSearchAC.equals("ParentConceptVM") || sSearchAC.equals("VMConcept")
-          || sSearchAC.equals("ValueMeaning") || sSearchAC.equals("CreateVM_EVSValueMeaning")) 
+          || sSearchAC.equals("EditVMConcept") || sSearchAC.equals("ValueMeaning") || sSearchAC.equals("CreateVM_EVSValueMeaning")) 
         sSearchAC = "Value Meaning";
       boolean isMainConcept = false;
       if (!menuAction.equals("searchForCreate") && sSearchAC.equals("ConceptClass"))
@@ -1718,7 +1731,7 @@ public String parseDefinition(String termStr)
    * @return String document name 
    * @throws java.lang.Exception
    */
-  public String getMetaParentSource(String sParent, String sCui, VD_Bean PageVD) throws Exception
+  private String getMetaParentSource(String sParent, String sCui, VD_Bean PageVD) throws Exception
   { 
     //search the existing reference document 
     HttpSession session = m_classReq.getSession();
@@ -2345,7 +2358,7 @@ public String parseDefinition(String termStr)
    * @param sMetaName
    * @return String vocabulary name from the vector
    */
-  public String getMetaVocabName(String sMetaName)
+  private String getMetaVocabName(String sMetaName)
   {
     String sVocab = "";
     Vector vName = m_eUser.getVocabNameList();
@@ -2554,7 +2567,7 @@ public String parseDefinition(String termStr)
   *
   * @throws Exception
   */
-  public void doTreeOpenToConcept(String actType, String searchType, String sCCode, String sCCodeDB, String sCCodeName, String sNodeID)  throws Exception
+  private void doTreeOpenToConcept(String actType, String searchType, String sCCode, String sCCodeDB, String sCCodeName, String sNodeID)  throws Exception
   {
       HttpSession session = m_classReq.getSession();
       String strHTML = "";
@@ -3028,7 +3041,7 @@ public String parseDefinition(String termStr)
    * to open the tree to the selected concept from the parent level 
    * @param actType String action type
    */
-  public void openTreeToParentConcept(String actType)
+  private void openTreeToParentConcept(String actType)
   {
     try
     {
@@ -3187,6 +3200,7 @@ public String parseDefinition(String termStr)
     {
       HttpSession session = m_classReq.getSession();
       String conID = ""; // eBean.getCONCEPT_IDENTIFIER();
+      String conName = "";
       String conType = "";  // eBean.getNCI_CC_TYPE();
       String eDB = eBean.getEVS_DATABASE();
       String metaName = m_eUser.getMetaDispName();
@@ -3211,15 +3225,15 @@ public String parseDefinition(String termStr)
           {
             conType = this.getNCIMetaCodeType(conType, "byKey");
             conID = eBean.getMETA_CODE_VAL();
+            conName = eBean.getLONG_NAME();
             vList = this.doVocabSearch(vList, conID, nciVocab, "Name", conType, "", 
                 "Exclude", "", 10, false, -1, "");
             if (vList != null && vList.size() > 0)
             {
-              eBean = this.getNCIDefinition(vList);  //get the right definition
+              eBean = this.getNCIDefinition(vList, conID, conName);  //get the right definition
               return eBean;
             }
-            else
-              conID = "";
+            conID = "";
           }
           if (conID == null || conID.equals(""))
           {
@@ -3239,25 +3253,9 @@ public String parseDefinition(String termStr)
             {
               return eBean;
             }
-            else
-            {
-              metaBean = (EVS_Bean)vList.elementAt(0);
-            }
+            metaBean = (EVS_Bean)vList.elementAt(0);
             //reset the concept id to empty value
             conID = "";
-           /* EVS_Bean mBean = (EVS_Bean)vList.elementAt(0);
-            //get the meta concept id
-            if (mBean != null) 
-            {
-              conID = mBean.getCONCEPT_IDENTIFIER();
-              //get the thesaurus code from the source
-            }
-            for (int j=0; j<vList.size(); j++)
-            {
-            EVS_Bean tBean = (EVS_Bean)vList.elementAt(j);
-            String sConID = tBean.getCONCEPT_IDENTIFIER(); 
-    //logger.debug(j + " loop aftermetacode " + sConID + " name " + tBean.getLONG_NAME());
-            } */
           }
         }
         //get the thesaurus concept from nci source and code using atom property
@@ -3265,21 +3263,28 @@ public String parseDefinition(String termStr)
         vList = new Vector<EVS_Bean>();
         //get the code from matched meta bean
         if (metaBean != null && metaBean.getPREF_VOCAB_CODE() != null && !metaBean.getPREF_VOCAB_CODE().equals(""))
+        {
           NCISrcCode = metaBean.getPREF_VOCAB_CODE();
+          conName = metaBean.getCONCEPT_NAME();
+        }
         //get the code from the searched metabean
         else 
+        {
           NCISrcCode = eBean.getPREF_VOCAB_CODE();
+          conName = eBean.getCONCEPT_NAME();
+        }
         //call the search by concode method to get the Thes concept 
         vList = new Vector<EVS_Bean>();
         vList = this.doVocabSearch(vList, NCISrcCode, prefVocab, "ConCode", "", "", 
               "Exclude", "", 10, false, -1, "");
         if (vList != null && vList.size() > 0)
-          eBean = this.getNCIDefinition(vList);  // (EVS_Bean)vList.elementAt(0);        
+          eBean = this.getNCIDefinition(vList, NCISrcCode, conName);  // (EVS_Bean)vList.elementAt(0);        
         else
         {
           //call method to use cui property to search
           if (conID == null || conID.equals(""))
             conID = eBean.getCONCEPT_IDENTIFIER();  //go back to original id if not found
+          conName = eBean.getCONCEPT_NAME();
           //now get the meta concept        
           conType = this.getNCIMetaCodeType(conID, "byID");
        //logger.debug(dtsVocab + " metasearch in meta " + conID + conType);
@@ -3289,7 +3294,7 @@ public String parseDefinition(String termStr)
        //   vList = this.doVocabSearch(vList, conID, nciVocab, "Name", conType, "", 
        //       "Exclude", "", 10, false, -1, "");
           if (vList != null && vList.size() > 0)
-            eBean = this.getNCIDefinition(vList);  // (EVS_Bean)vList.elementAt(0);   
+            eBean = this.getNCIDefinition(vList, conID, conName);  // (EVS_Bean)vList.elementAt(0);   
         }
       }
       //logger.debug(eBean.getEVS_ORIGIN() + " con name " + eBean.getLONG_NAME());
@@ -3301,7 +3306,7 @@ public String parseDefinition(String termStr)
     return eBean;
   }
   
-  private EVS_Bean getNCIDefinition(Vector vList)
+  private EVS_Bean getNCIDefinition(Vector vList, String sID, String sName)
   {
    //logger.debug("get nci def " + vList.size());
     EVS_Bean eBean = (EVS_Bean)vList.elementAt(0);
@@ -3326,11 +3331,12 @@ public String parseDefinition(String termStr)
           break;
         }
       }
-      if (isDefMatched) break;  //no need to continue if found the right def source
+      if (isDefMatched) 
+          break;  //no need to continue if found the right def source
     }
     //update the status message
     InsACService insAC = new InsACService(m_classReq, m_classRes, m_servlet);
-    insAC.storeStatusMsg("The selected Concept will be replaced by the matching NCI Thesaurus Concept : " + eBean.getLONG_NAME());
+    insAC.storeStatusMsg("The selected Concept [" + sName + " : " + sID + "] will be replaced by the matching NCI Thesaurus Concept [" + eBean.getCONCEPT_NAME() + " : " + eBean.getCONCEPT_IDENTIFIER() + "]");
     
     return eBean;  //return teh bean
   }
@@ -3342,11 +3348,11 @@ public String parseDefinition(String termStr)
    * @param vocab
    * @return evsquery
    */
-  public EVSQuery addSecurityToken(EVSQuery query, String vocabAccess, String vocab)
+  private EVSQuery addSecurityToken(EVSQuery query, String vocabAccess, String vocab)
   {
     try
     {
-      if (vocabAccess.equals(""))
+      if (vocabAccess == null || vocabAccess.equals(""))
       {
         Hashtable hVoc = (Hashtable)m_eUser.getVocab_Attr();
         if (hVoc == null) hVoc = new Hashtable();
