@@ -1,20 +1,22 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/SearchResults.jsp,v 1.19 2007-01-26 20:17:45 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/SearchResults.jsp,v 1.20 2007-05-23 04:35:49 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <html>
-<head>
-<title>Search Results</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="../../cdecurate/Assets/popupMenus.css" rel="stylesheet" type="text/css">
-<link href="FullDesignVer.css" rel="stylesheet" type="text/css">
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/SearchResults.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/popupMenus.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
-<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
-<%@ page import= "java.util.*"%>
-<%
+	<head>
+		<title>
+			Search Results
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link href="../../cdecurate/Assets/popupMenus.css" rel="stylesheet" type="text/css">
+		<link href="FullDesignVer.css" rel="stylesheet" type="text/css">
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/SearchResults.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/popupMenus.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
+		<%@ page import="java.util.*"%>
+		<%
    UtilService serUtil = new UtilService();
    //capture the duration
    Date sDate = new Date();
@@ -61,7 +63,7 @@
    String sKeyword, nRecs;
    Vector vSelAttr = new Vector();
    Vector vCheckList = new Vector();
-   String sMAction = (String)session.getAttribute("MenuAction");
+   String sMAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
    String sButtonPressed = (String)session.getAttribute("LastMenuButtonPressed");
    if (sButtonPressed == null) sButtonPressed = "undefined";
    //get the session attributes according searching from Menu or create page
@@ -158,7 +160,7 @@
   sSelectAll = "false";
 %>
 
-<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
+		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
     var numRows2;
     var SelectAllOn = <%=sSelectAll%>;
     function setup()
@@ -174,10 +176,10 @@
         }
         //display status message if any 
  <%
-        String statusMessage = (String)session.getAttribute("statusMessage");
+        String statusMessage = (String)session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
         if (statusMessage == null) statusMessage = "";
         //statusMessage = "Value Domain Name : Malignant Neoplasm Neoplastic Cell\\nPublic ID : 2296135\\n\\t Successfully created New Value Domain";
-        String sSubmitAction = (String)session.getAttribute("MenuAction");
+        String sSubmitAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
         if (sSubmitAction == null) sSubmitAction = "nothing";
         Vector vStat = (Vector)session.getAttribute("vStatMsg");
         if (vStat != null && vStat.size() > 30)
@@ -191,7 +193,7 @@
             displayStatus("<%=statusMessage%>", "<%=sSubmitAction%>");
      <% }
         //reset the message attributes   
-        session.setAttribute("statusMessage", "");
+        session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");
         if (vCheckList != null && vCheckList.size() >0)
         {
             // System.out.println("vchecklist " + vCheckList.size());
@@ -525,15 +527,17 @@
 
 
 </SCRIPT>
-</head>
-<body onLoad="setup();">
-<form name="searchResultsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=showResult">
-<table width="100%" border="0" valign="top">
-  <tr><td height="7"></tr>   
-  <tr height="20" valign="top">
+	</head>
+	<body onLoad="setup();">
+		<form name="searchResultsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=showResult">
+			<table width="100%" border="0" valign="top">
+				<tr>
+					<td height="7">
+				</tr>
+				<tr height="20" valign="top">
 
-    <td align="left" >
-  <%
+					<td align="left">
+						<%
     String buttons[] = new String[17];
     if (sMAction.equals("searchForCreate")) {
         buttons[0] = "<!-- searchForCreate -->\n"
@@ -611,40 +615,67 @@
     {
         if (buttons[i] != null)
         {
-            %><%=buttons[i]%><%
+            %>
+						<%=buttons[i]%>
+						<%
         }
     }
     %>
-    <img name="Message" src="../../cdecurate/Assets/SearchMessage.gif" width="180"
-        height="25" alt="WaitMessage" style="visibility:hidden;">
-    </td>
-  </tr>
-</table>
-<table width="100%" valign="top">
-  <tr><td height="7"></tr>   
-  <tr>
-      <td><font size="4"><b>Search Results for <%=sLabelKeyword%></b></font></td>
-  </tr>
-  <tr>
-     <td><font size="2">&nbsp;<%=nRecs%> Records Found</font></td>
-  </tr>
-  <tr><td height="7"></tr>   
- </table>
- <table width="100%" border="1" valign="top">
-    <tr valign="middle">
-<%    if (sSelAC.equals("Data Element") || !sMAction.equals("searchForCreate")) {     %>
-        <th height="30"><a href="javascript:SelectAll()"><img id="CheckGif" src="../../cdecurate/Assets/CheckBox.gif" border="0" alt="Select All"
-        onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false"></a></th>
-<%    } else   { %>                 
-      <th height="30"><img src="../../cdecurate/Assets/CheckBox.gif" border="0"
-			onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false"></th>
-<%    } %>                 
-     
-      <!-- adds Review status only if questions -->
-<%  if (sSelAC.equals("Questions") && !sMAction.equals("searchForCreate")) {  %>
-       <th height="30"><a>Curation Status</a></th> <% } %>
-      <!-- add other headings -->
-<%    int k = 0;
+						<img name="Message" src="../../cdecurate/Assets/SearchMessage.gif" width="180" height="25" alt="WaitMessage" style="visibility:hidden;">
+					</td>
+				</tr>
+			</table>
+			<table width="100%" valign="top">
+				<tr>
+					<td height="7">
+				</tr>
+				<tr>
+					<td>
+						<font size="4">
+							<b>
+								Search Results for
+								<%=sLabelKeyword%>
+							</b>
+						</font>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<font size="2">
+							&nbsp;
+							<%=nRecs%>
+							Records Found
+						</font>
+					</td>
+				</tr>
+				<tr>
+					<td height="7">
+				</tr>
+			</table>
+			<table width="100%" border="1" valign="top">
+				<tr valign="middle">
+					<%    if (sSelAC.equals("Data Element") || !sMAction.equals("searchForCreate")) {     %>
+					<th height="30">
+						<a href="javascript:SelectAll()">
+							<img id="CheckGif" src="../../cdecurate/Assets/CheckBox.gif" border="0" alt="Select All" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+						</a>
+					</th>
+					<%    } else   { %>
+					<th height="30">
+						<img src="../../cdecurate/Assets/CheckBox.gif" border="0" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+					</th>
+					<%    } %>
+
+					<!-- adds Review status only if questions -->
+					<%  if (sSelAC.equals("Questions") && !sMAction.equals("searchForCreate")) {  %>
+					<th height="30">
+						<a>
+							Curation Status
+						</a>
+					</th>
+					<% } %>
+					<!-- add other headings -->
+					<%    int k = 0;
       if (vSelAttr != null)
       {
          //for review status increase the k size to 1
@@ -657,287 +688,422 @@
           String sAttr = (String)vSelAttr.elementAt(i);
 
           if (sAttr.equals("Name")) { %>
-            <th method="get"><a href="javascript:SetSortType('name')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Short Name</a>
-            </th>
-<%        } else if (sAttr.equals("Alias Name")) { %>
-            <th method="get"><a href="javascript:SetSortType('aliasName')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Name/Alias Name</a></th>
-<%        } else if (sAttr.equals("Long Name")) { %>
-            <th method="get"><a href="javascript:SetSortType('longName')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-<%                if(sSelAC.equals("Data Element"))   { %>                 
-              Data Element Long Name
-<%                } else if(sSelAC.equals("Data Element Concept"))   { %>                 
-              Data Element Concept Long Name
-<%                } else if(sSelAC.equals("Value Domain"))   { %>                 
-              Value Domain Long Name
-<%                } else if(sSelAC.equals("Conceptual Domain"))   { %>                 
-              Conceptual Domain Long Name
-<%                } else   { %>                 
-              Long Name
-<%                } %>                 
-              </a></th>
-<%        } else if (sAttr.equals("Question Text")) { %>
-            <th method="get"><a href="javascript:SetSortType('QuestText')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Question Text</a></th>
-<%        } else if (sAttr.equals("DE Long Name")) { %>
-            <th method="get"><a href="javascript:SetSortType('DELongName')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Data Element Long Name</a></th>
-<%        } else if (sAttr.equals("DE Public ID")) { %>
-            <th method="get"><a href="javascript:SetSortType('DEPublicID')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              DE Public ID</a></th>
-<%        } else if (sAttr.equals("Highlight Indicator")) { %>
-            <th method="get"><a href="javascript:SetSortType('HighLight')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Highlight Indicator</a></th>
-<%        } else if (sAttr.equals("Definition")) { %>
-            <th method="get"><a href="javascript:SetSortType('def')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Definition</a></th>
-<%        } else if (sAttr.equals("Owned By Context")) { %>
-            <th method="get"><a href="javascript:SetSortType('context')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">              
-              Owned By Context      
-              </a></th>
-<%        } else if (sAttr.equals("Context")) { %>
-            <th method="get"><a href="javascript:SetSortType('context')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Context</a></th>
-<%        } else if (sAttr.equals("Used By Context")) { %>
-            <th method="get"><a href="javascript:SetSortType('UsedContext')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Used By Context</a></th>
-<%        } else if (sAttr.equals("Value Domain")) { %>
-            <th method="get"><a href="javascript:SetSortType('vd')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Value Domain Long Name</a></th>
-<%        } else if (sAttr.equals("Data Element Concept")) { %>
-            <th method="get"><a href="javascript:SetSortType('DEC')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Data Element Concept Long Name</a></th>
-<%        } else if (sAttr.equals("Version")) { %>
-            <th method="get"><a href="javascript:SetSortType('version')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Version</a></th>
-<%        } else if (sAttr.equals("Public ID")) { %>
-            <th method="get"><a href="javascript:SetSortType('minID')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Public_ID</a></th>
-<%        } else if (sAttr.equals("Question Public ID")) { %>
-            <th method="get"><a href="javascript:SetSortType('minID')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Question Public ID</a></th>
-<%        } else if (sAttr.equals("Workflow Status")) { %>
-            <th method="get"><a href="javascript:SetSortType('Status')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Workflow Status</a></th>
-<%        } else if (sAttr.equals("Protocol ID")) { %>
-            <th method="get"><a href="javascript:SetSortType('ProtoID')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Protocol ID</a></th>
-<%        } else if (sAttr.equals("CRF Name")) { %>
-            <th method="get"><a href="javascript:SetSortType('CRFName')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              CRF Name</a></th>
-<%        } else if (sAttr.equals("Type of Name")) { %>
-            <th method="get"><a href="javascript:SetSortType('TypeName')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Type of Name</a></th>
-<%        } else if (sAttr.equals("Effective Begin Date")) { %>
-            <th method="get"><a href="javascript:SetSortType('BeginDate')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Effective Begin Date</a></th>
-<%        } else if (sAttr.equals("Effective End Date")) { %>
-            <th method="get"><a href="javascript:SetSortType('EndDate')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Effective End Date</a></th>
-<%        } else if (sAttr.equals("Language")) { %>
-            <th method="get"><a href="javascript:SetSortType('language')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Language</a></th>
-<%        } else if (sAttr.equals("Change Note")) { %>
-            <th method="get"><a href="javascript:SetSortType('Comments')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Change Note</a></th>
-<%        } else if (sAttr.equals("Origin")) { %>
-            <th method="get"><a href="javascript:SetSortType('Origin')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Origin</a></th>
-<%        } else if (sAttr.equals("Conceptual Domain")) { %>
-            <th method="get"><a href="javascript:SetSortType('ConDomain')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Conceptual Domain</a></th>
-<%        } else if (sAttr.equals("Valid Values")) { %>
-            <th method="get"><a href="javascript:SetSortType('validValue')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Valid Value</a></th>
-<%        } else if (sAttr.equals("Classification Schemes")) { %>
-            <th method="get"><a href="javascript:SetSortType('Class')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Classification Schemes</a></th>
-<%        } else if (sAttr.equals("Class Scheme Items")) { %>
-            <th method="get"><a href="javascript:SetSortType('CSI')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Class Scheme Items</a></th>
-<%        } else if (sAttr.equals("Unit of Measures")) { %>
-            <th method="get"><a href="javascript:SetSortType('UOML')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Unit of Measures</a></th>
-<%        } else if (sAttr.equals("Data Type")) { %>
-            <th method="get"><a href="javascript:SetSortType('DataType')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Data Type</a></th>
-<%        } else if (sAttr == null || sAttr.equals("Comments")) { %>
-            <th method="get"><a href="javascript:SetSortType('comment')"
-             onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-             Comments</a></th>
-<%        } else if (sAttr.equals("Display Format")) { %>
-            <th method="get"><a href="javascript:SetSortType('Format')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Display Format</a></th>
-<%        } else if (sAttr.equals("Maximum Length")) { %>
-            <th method="get"><a href="javascript:SetSortType('MaxLength')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Maximum Length</a></th>
-<%        } else if (sAttr.equals("Minimum Length")) { %>
-            <th method="get"><a href="javascript:SetSortType('MinLength')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Minimum Length</a></th>
-<%        } else if (sAttr.equals("High Value Number")) { %>
-            <th method="get"><a href="javascript:SetSortType('HighNum')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              High Value Number</a></th>
-<%        } else if (sAttr.equals("Low Value Number")) { %>
-            <th method="get"><a href="javascript:SetSortType('LowNum')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Low Value Number</a></th>
-<%        } else if (sAttr.equals("Decimal Place")) { %>
-            <th method="get"><a href="javascript:SetSortType('Decimal')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Decimal Place</a></th>
-<%        } else if (sAttr.equals("Type Flag")) { %>
-            <th method="get"><a href="javascript:SetSortType('TypeFlag')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Type Flag</a></th>
-<%        } else if (sAttr.equals("Value")) { %>
-            <th method="get"><a href="javascript:SetSortType('value')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Value</a></th>
-<%        } else if (sAttr.equals("Value Meaning")) { %>
-            <th method="get"><a href="javascript:SetSortType('meaning')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Value Meaning</a></th>
-<%        } else if (sAttr.equals("Value Meaning Description")) { %>
-            <th method="get"><a href="javascript:SetSortType('MeanDesc')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Value Meaning Description</a></th>
-<%        } else if (sAttr.equals("Meaning Description")) { %>
-            <th method="get"><a href="javascript:SetSortType('MeanDesc')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Value Meaning Description</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("caDSR Component")) { %>
-            <th method="get"><a href="javascript:SetSortType('cadsrComp')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              caDSR Component</a></th>
-<%        } else if (sAttr.equals("Vocabulary")) { %>
-            <th method="get"><a href="javascript:SetSortType('database')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Vocabulary</a></th>
-<%        } else if (sAttr.equals("Description Source")) { %>
-            <th method="get"><a href="javascript:SetSortType('descSource')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Description Source</a></th>
-<%        } else if (sAttr.equals("Identifier")) { %>
-            <th method="get"><a href="javascript:SetSortType('Ident')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Identifier</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("DEC's Using")) { %>
-            <th method="get"><a href="javascript:SetSortType('decUse')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              DEC's Using</a></th>
-<%        } else if (sAttr.equals("CSI Name")) { %>
-            <th method="get"><a href="javascript:SetSortType('CSIName')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              CSI Name</a></th>
-<%        } else if (sAttr.equals("CSI Type")) { %>
-            <th method="get"><a href="javascript:SetSortType('CSITL')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              CSI Type</a></th>
-<%        } else if (sAttr.equals("CSI Definition")) { %>
-            <th method="get"><a href="javascript:SetSortType('def')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              CSI Definition</a></th>
-<%        } else if (sAttr.equals("Permissible Value")) { %>
-            <th method="get"><a href="javascript:SetSortType('permValue')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Permissible Value</a></th>
-<%        } else if (sAttr.equals("CS Long Name")) { %>
-            <th method="get"><a href="javascript:SetSortType('CSName')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              CS Long Name</a></th>
-<%        } else if (sAttr.equals("Registration Status")) { %>
-            <th method="get"><a href="javascript:SetSortType('regStatus')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Registration Status</a></th>
-<%        } else if (sAttr.equals("Date Created")) { %>
-            <th method="get"><a href="javascript:SetSortType('creDate')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Date Created</a></th>
-<%        } else if (sAttr.equals("Creator")) { %>
-            <th method="get"><a href="javascript:SetSortType('creator')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Creator</a></th>
-<%        } else if (sAttr.equals("Date Modified")) { %>
-            <th method="get"><a href="javascript:SetSortType('modDate')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Date Modified</a></th>
-<%        } else if (sAttr.equals("Modifier")) { %>
-            <th method="get"><a href="javascript:SetSortType('modifier')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Modifier</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Concept Name")) { %>
-            <th method="get"><a href="javascript:SetSortType('conName')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Concept Name</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("EVS Identifier")) { %>
-            <th method="get"><a href="javascript:SetSortType('umls')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              EVS Identifier</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Identifier")) { %>
-            <th method="get"><a href="javascript:SetSortType('umls')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Identifier</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Definition Source")) { %>
-            <th method="get"><a href="javascript:SetSortType('source')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Definition Source</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Database")) { %>
-            <th method="get"><a href="javascript:SetSortType('db')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Database</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Alternate Names")) { %>
-            <th method="get"><a href="javascript:SetSortType('altNames')">Alternate Names</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Reference Documents")) { %>
-            <th method="get"><a href="javascript:SetSortType('refDocs')">Reference Documents</a></th>
-<%        }   else if (sAttr == null || sAttr.equals("Derivation Relationship")) { %>
-            <th method="get"><a href="javascript:SetSortType('DerRelation')"
-              onHelp = "showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Derivation Relationship</a></th>
-<%        } else if (sAttr.equals("Dimensionality")) { %>
-            <th method="get"><a href="javascript:SetSortType('dimension')"
-                 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
-              Dimensionality</a></th>
-<%
+					<th method="get">
+						<a href="javascript:SetSortType('name')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Short Name
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Alias Name")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('aliasName')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Name/Alias Name
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Long Name")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('longName')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							<%                if(sSelAC.equals("Data Element"))   { %>
+							Data Element Long Name
+							<%                } else if(sSelAC.equals("Data Element Concept"))   { %>
+							Data Element Concept Long Name
+							<%                } else if(sSelAC.equals("Value Domain"))   { %>
+							Value Domain Long Name
+							<%                } else if(sSelAC.equals("Conceptual Domain"))   { %>
+							Conceptual Domain Long Name
+							<%                } else   { %>
+							Long Name
+							<%                } %>
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Question Text")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('QuestText')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Question Text
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("DE Long Name")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('DELongName')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Data Element Long Name
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("DE Public ID")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('DEPublicID')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							DE Public ID
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Highlight Indicator")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('HighLight')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Highlight Indicator
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Definition")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('def')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Definition
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Owned By Context")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('context')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Owned By Context
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Context")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('context')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Context
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Used By Context")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('UsedContext')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Used By Context
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Value Domain")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('vd')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Value Domain Long Name
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Data Element Concept")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('DEC')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Data Element Concept Long Name
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Version")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('version')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Version
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Public ID")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('minID')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Public_ID
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Question Public ID")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('minID')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Question Public ID
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Workflow Status")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('Status')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Workflow Status
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Protocol ID")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('ProtoID')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Protocol ID
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("CRF Name")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('CRFName')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							CRF Name
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Type of Name")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('TypeName')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Type of Name
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Effective Begin Date")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('BeginDate')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Effective Begin Date
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Effective End Date")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('EndDate')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Effective End Date
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Language")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('language')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Language
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Change Note")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('Comments')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Change Note
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Origin")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('Origin')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Origin
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Conceptual Domain")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('ConDomain')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Conceptual Domain
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Valid Values")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('validValue')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Valid Value
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Classification Schemes")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('Class')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Classification Schemes
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Class Scheme Items")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('CSI')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Class Scheme Items
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Unit of Measures")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('UOML')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Unit of Measures
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Data Type")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('DataType')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Data Type
+						</a>
+					</th>
+					<%        } else if (sAttr == null || sAttr.equals("Comments")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('comment')" onHelp="showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Comments
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Display Format")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('Format')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Display Format
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Maximum Length")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('MaxLength')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Maximum Length
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Minimum Length")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('MinLength')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Minimum Length
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("High Value Number")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('HighNum')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							High Value Number
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Low Value Number")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('LowNum')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Low Value Number
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Decimal Place")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('Decimal')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Decimal Place
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Type Flag")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('TypeFlag')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Type Flag
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Value")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('value')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Value
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Value Meaning")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('meaning')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Value Meaning
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Value Meaning Description")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('MeanDesc')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Value Meaning Description
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Meaning Description")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('MeanDesc')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Value Meaning Description
+						</a>
+					</th>
+					<%        }   else if (sAttr == null || sAttr.equals("caDSR Component")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('cadsrComp')" onHelp="showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
+							caDSR Component
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Vocabulary")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('database')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Vocabulary
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Description Source")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('descSource')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Description Source
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Identifier")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('Ident')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Identifier
+						</a>
+					</th>
+					<%        }   else if (sAttr == null || sAttr.equals("DEC's Using")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('decUse')" onHelp="showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
+							DEC's Using
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("CSI Name")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('CSIName')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							CSI Name
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("CSI Type")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('CSITL')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							CSI Type
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("CSI Definition")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('def')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							CSI Definition
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Permissible Value")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('permValue')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Permissible Value
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("CS Long Name")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('CSName')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							CS Long Name
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Registration Status")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('regStatus')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Registration Status
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Date Created")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('creDate')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Date Created
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Creator")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('creator')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Creator
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Date Modified")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('modDate')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Date Modified
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Modifier")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('modifier')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Modifier
+						</a>
+					</th>
+					<%        }   else if (sAttr == null || sAttr.equals("Concept Name")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('conName')" onHelp="showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Concept Name
+						</a>
+					</th>
+					<%        }   else if (sAttr == null || sAttr.equals("EVS Identifier")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('umls')" onHelp="showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
+							EVS Identifier
+						</a>
+					</th>
+					<%        }   else if (sAttr == null || sAttr.equals("Identifier")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('umls')" onHelp="showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Identifier
+						</a>
+					</th>
+					<%        }   else if (sAttr == null || sAttr.equals("Definition Source")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('source')" onHelp="showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Definition Source
+						</a>
+					</th>
+					<%        }   else if (sAttr == null || sAttr.equals("Database")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('db')" onHelp="showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Database
+						</a>
+					</th>
+					<%        }   else if (sAttr == null || sAttr.equals("Alternate Names")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('altNames')">
+							Alternate Names
+						</a>
+					</th>
+					<%        }   else if (sAttr == null || sAttr.equals("Reference Documents")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('refDocs')">
+							Reference Documents
+						</a>
+					</th>
+					<%        }   else if (sAttr == null || sAttr.equals("Derivation Relationship")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('DerRelation')" onHelp="showHelp('../Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Derivation Relationship
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("Dimensionality")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('dimension')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+							Dimensionality
+						</a>
+					</th>
+					<%
 	        }  }  }
 %>
-    </tr>
-<%
+				</tr>
+				<%
     String strResult = "";
     if (results != null)
 	  {
@@ -949,71 +1115,76 @@
            strResult = (String)results.get(i);
            if (strResult == null) strResult = "";
 %>
-        <tr>
-          <td width="5">
-							<input type="checkbox" name="<%=ckName%>" 
-										 onClick="javascript:EnableButtons(checked,this);"
-										 <%if((vCheckList != null && vCheckList.contains(ckName))){%>checked<%}%>
-										 onHelp = "showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+				<tr>
+					<td width="5">
+						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);" <%if((vCheckList != null && vCheckList.contains(ckName))){%> checked <%}%> onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
 					</td>
-<%     if (sSelAC.equals("Questions") && !sMAction.equals("searchForCreate"))
+					<%     if (sSelAC.equals("Questions") && !sMAction.equals("searchForCreate"))
        {
           //if edit, display the status as complete, otherwise incomplete
           if (strResult.equals("Edit"))   {  %>
-             <td>Attributes Completed</td>
-<%        } else {  %>
-             <td>Incomplete</td>
-<%        }
+					<td>
+						Attributes Completed
+					</td>
+					<%        } else {  %>
+					<td>
+						Incomplete
+					</td>
+					<%        }
        } else {  %>
-          <td width="150"><%=strResult%></td>
-<%     }
+					<td width="150">
+						<%=strResult%>
+					</td>
+					<%     }
           // add other attributes
 		 for (int m = 1; m < k; m++)
 		 {
            strResult = (String)results.get(i+m);
            if (strResult == null) strResult = "";
 %>
-           <td><%=strResult%></td>
-<%
+					<td>
+						<%=strResult%>
+					</td>
+					<%
        }
 %>
-     <!-- <td><a href="javascript:openAltNameWindow('DocTextLongName','abcd')">More >></a></td> -->
-       </tr>
-<%
+					<!-- <td><a href="javascript:openAltNameWindow('DocTextLongName','abcd')">More >></a></td> -->
+				</tr>
+				<%
          j++;
     }
 	 }
 %>
- </table>
- <table>
-<input type="hidden" name="pageAction" value="nothing">
-<input type="hidden" name="AttChecked" value="<%=(k-5)%>">
-<input type="hidden" name="searchComp" value="">
-<input type="hidden" name="numSelected" value="">
-<input type="hidden" name="sortType" value="nothing">
-<input type="hidden" name="actSelected" value="Search">
-<input type="hidden" name="numAttSelected" value="">
-<input type="hidden" name="orgCompID" value="">
-<input type="hidden" name="desID" value="">
-<input type="hidden" name="desName" value="">
-<input type="hidden" name="desContext" value="">
-<input type="hidden" name="desContextID" value="">
-<input type="hidden" name="AppendAction" value="NotAppended">
-<input type="hidden" name="SelectAll" value="">
-<input type="hidden" name="isValid" value="false">
-<input type="hidden" name="serMenuAct" value="<%=sMAction%>">
-<input type="hidden" name="serRecCount" value="<%=nRecs%>">
-<input type="hidden" name="selRowID" value="">
-  <!-- stores Designation Name and ID -->
-<select size="1" name="hiddenDesIDName" style="visibility:hidden;" multiple>
-</select>
-  <!-- stores selected component ID and workflow status -->
-<select size="1" name="hiddenACIDStatus" style="visibility:hidden;" multiple>
-</select>
+			</table>
+			<table>
+				<input type="hidden" name="pageAction" value="nothing">
+				<input type="hidden" name="AttChecked" value="<%=(k-5)%>">
+				<input type="hidden" name="searchComp" value="">
+				<input type="hidden" name="numSelected" value="">
+				<input type="hidden" name="sortType" value="nothing">
+				<input type="hidden" name="actSelected" value="Search">
+				<input type="hidden" name="numAttSelected" value="">
+				<input type="hidden" name="orgCompID" value="">
+				<input type="hidden" name="desID" value="">
+				<input type="hidden" name="desName" value="">
+				<input type="hidden" name="desContext" value="">
+				<input type="hidden" name="desContextID" value="">
+				<input type="hidden" name="AppendAction" value="NotAppended">
+				<input type="hidden" name="SelectAll" value="">
+				<input type="hidden" name="isValid" value="false">
+				<input type="hidden" name="serMenuAct" value="<%=sMAction%>">
+				<input type="hidden" name="serRecCount" value="<%=nRecs%>">
+				<input type="hidden" name="selRowID" value="">
+				<!-- stores Designation Name and ID -->
+				<select size="1" name="hiddenDesIDName" style="visibility:hidden;" multiple>
+				</select>
+				<!-- stores selected component ID and workflow status -->
+				<select size="1" name="hiddenACIDStatus" style="visibility:hidden;" multiple>
+				</select>
 
-  <!-- stores results ID and Short Names -->
-<select size="1" name="hiddenSearch" style="visibility:hidden;width:50">
-<%   
+				<!-- stores results ID and Short Names -->
+				<select size="1" name="hiddenSearch" style="visibility:hidden;width:50">
+					<%   
       vSearchID = (Vector)session.getAttribute("SearchID");
       if (vSearchID == null)  vSearchID = new Vector();
       vSearchName = (Vector)session.getAttribute("SearchName");
@@ -1027,14 +1198,16 @@
         else
           sName = "";
   %>
-      <option value="<%=sID%>"><%=sName%></option>
-  <%
+					<option value="<%=sID%>">
+						<%=sName%>
+					</option>
+					<%
       }
   %>
-  </select>
-  <!-- stores results longname and Designated IDs -->
-<select size="1" name="hiddenName" style="visibility:hidden;">
-<% 
+				</select>
+				<!-- stores results longname and Designated IDs -->
+				<select size="1" name="hiddenName" style="visibility:hidden;">
+					<% 
     vSearchASL = (Vector)session.getAttribute("SearchASL");
     if (vSearchASL == null)  vSearchASL = new Vector();
     for (int i = 0; vSearchASL.size()>i; i++)
@@ -1042,26 +1215,30 @@
       String sASL = (String)vSearchASL.elementAt(i);
         if(sASL == null) sASL = "";
 %>
-    <option value="<%=sASL%>"><%=sASL%></option>
-<%
+					<option value="<%=sASL%>">
+						<%=sASL%>
+					</option>
+					<%
     }
 %>
-</select>
- <!-- stores results longname and Designated IDs -->
-<select size="1" name="hiddenName2" style="visibility:hidden;width:100;">
+				</select>
+				<!-- stores results longname and Designated IDs -->
+				<select size="1" name="hiddenName2" style="visibility:hidden;width:100;">
 
-<%    for (int i = 0; vSearchLongName.size()>i; i++)
+					<%    for (int i = 0; vSearchLongName.size()>i; i++)
       {
         String sName = (String)vSearchLongName.elementAt(i);
 %>
-      <option value="<%=sName%>"><%=sName%></option>
-<%
+					<option value="<%=sName%>">
+						<%=sName%>
+					</option>
+					<%
       }
 %>
-</select>
-<!-- store definition and context here to use it later in javascript -->
-<select size="1" name="hiddenDefSource" style="visibility:hidden;width:100">
-<%
+				</select>
+				<!-- store definition and context here to use it later in javascript -->
+				<select size="1" name="hiddenDefSource" style="visibility:hidden;width:100">
+					<%
       String sDef = "";
       for (int i = 0; vSearchDefinitionAC.size()>i; i++)
       {
@@ -1071,54 +1248,76 @@
              sUsed = (String)vSearchUsedContext.elementAt(i);
           if (sUsed == null) sUsed = "";
 %>
-      <option value="<%=sUsed%>"><%=sDef%></option>
-<%
+					<option value="<%=sUsed%>">
+						<%=sDef%>
+					</option>
+					<%
       }
 %>
-  </select>
-<select size="1" name="hiddenMeanDescription" style="visibility:hidden;width:100">
-<%
+				</select>
+				<select size="1" name="hiddenMeanDescription" style="visibility:hidden;width:100">
+					<%
       String sDesc = "";
       for (int i = 0; vSearchMeanDescription.size()>i; i++)
       {
           sDesc = (String)vSearchMeanDescription.elementAt(i);
 %>
-      <option value="<%=sDesc%>"><%=sDesc%></option>
-<%
+					<option value="<%=sDesc%>">
+						<%=sDesc%>
+					</option>
+					<%
       }
 %>
-  </select>
-<select size="1" name="hiddenPVValue" style="visibility:hidden;">
-  </select>
-<select size="1" name="hiddenPVMean" style="visibility:hidden;">
-  </select>
-<select size="1" name="hiddenPVMeanDesc" style="visibility:hidden;">
-  </select>
-<select size="1" name="hiddenSelectedRow" style="visibility:hidden;">
-  </select>
-</table>
-      <!-- div for associated AC popup menu -->
-<div id="divAssACMenu" style="position:absolute;z-index:1;visibility:hidden;width:175px;">
-<table border="3" cellspacing="0" cellpadding="0">
-<tr><td class="menu" id="assDE"><a href="javascript:getAssocDEs();" onmouseover="changecolor('assDE',oncolor)" onmouseout="changecolor('assDE',offcolor);closeall()">Data Elements</a></td></tr>
-<tr><td class="menu" id="assDEC"><a href="javascript:getAssocDECs();" onmouseover="changecolor('assDEC',oncolor)" onmouseout="changecolor('assDEC',offcolor);closeall()">Data Element Concepts</a></td></tr>
-<tr><td class="menu" id="assVD"><a href="javascript:getAssocVDs();" onmouseover="changecolor('assVD',oncolor)" onmouseout="changecolor('assVD',offcolor);closeall()">Value Domains</a></td></tr>
-</table>
-</div>
-<script language = "javascript">
+				</select>
+				<select size="1" name="hiddenPVValue" style="visibility:hidden;">
+				</select>
+				<select size="1" name="hiddenPVMean" style="visibility:hidden;">
+				</select>
+				<select size="1" name="hiddenPVMeanDesc" style="visibility:hidden;">
+				</select>
+				<select size="1" name="hiddenSelectedRow" style="visibility:hidden;">
+				</select>
+			</table>
+			<!-- div for associated AC popup menu -->
+			<div id="divAssACMenu" style="position:absolute;z-index:1;visibility:hidden;width:175px;">
+				<table border="3" cellspacing="0" cellpadding="0">
+					<tr>
+						<td class="menu" id="assDE">
+							<a href="javascript:getAssocDEs();" onmouseover="changecolor('assDE',oncolor)" onmouseout="changecolor('assDE',offcolor);closeall()">
+								Data Elements
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td class="menu" id="assDEC">
+							<a href="javascript:getAssocDECs();" onmouseover="changecolor('assDEC',oncolor)" onmouseout="changecolor('assDEC',offcolor);closeall()">
+								Data Element Concepts
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td class="menu" id="assVD">
+							<a href="javascript:getAssocVDs();" onmouseover="changecolor('assVD',oncolor)" onmouseout="changecolor('assVD',offcolor);closeall()">
+								Value Domains
+							</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<script language="javascript">
 getSearchComponent();
 </script>
-</form>
-<form name="SearchActionForm" method="post" action="">
-<input type="hidden" name="acID" value="">
-<input type="hidden" name="ac2ID" value="">
-<input type="hidden" name="itemType" value="">
-<input type="hidden" name="isValidSearch" value="false">
-<input type="hidden" name="searchComp" value="">
-<input type="hidden" name="SelContext" value="">
-</form>
-</body>
-<% 
+		</form>
+		<form name="SearchActionForm" method="post" action="">
+			<input type="hidden" name="acID" value="">
+			<input type="hidden" name="ac2ID" value="">
+			<input type="hidden" name="itemType" value="">
+			<input type="hidden" name="isValidSearch" value="false">
+			<input type="hidden" name="searchComp" value="">
+			<input type="hidden" name="SelContext" value="">
+		</form>
+	</body>
+	<% 
     //capture duration
   //  logger.info(serUtil.makeLogMessage(session, "SearchResults", "end page", sDate, new Date())); 
 %>

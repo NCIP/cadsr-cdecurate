@@ -1,20 +1,22 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CRFValueSearchWindow.jsp,v 1.8 2007-01-26 20:17:44 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CRFValueSearchWindow.jsp,v 1.9 2007-05-23 04:32:09 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page errorPage="ErrorPage.jsp" %>
-<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
+<%@ page errorPage="ErrorPage.jsp"%>
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <html>
-<head>
-<title>CDE Curation: Search</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<script>
+	<head>
+		<title>
+			CDE Curation: Search
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<script>
 history.forward();
 </script>
-<%
+		<%
 //System.out.println("in SearchResultsPage.jsp!!");
-String sMenuAction5 = (String)session.getAttribute("MenuAction");
+String sMenuAction5 = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
 String sSelAC5 = "";
 String sSearchAC5 = "";
 
@@ -53,20 +55,20 @@ String sSearchAC5 = "";
     session.setAttribute("searchAC", sSearchAC5);
     }
 %>
-</head>
-<curate:checkLogon name="Userbean" page="/index.htm" />
-<table width="100%" border="2" cellpadding="0" cellspacing="0">
-  <col style="width: 2.3in"/>
-  <col /> 
-  <tr valign="top">
-    <td bgcolor="#E2CAA2">
-      <%@ include file="SearchParameters.jsp" %>
-    </td>
-    <td>
-      <%@ include file="CRFValueResults.jsp" %>
-    </td>
-  </tr>
+	</head>
+	<curate:checkLogon name="Userbean" page="/index.htm" />
+	<table width="100%" border="2" cellpadding="0" cellspacing="0">
+		<col style="width: 2.3in" />
+		<col />
+		<tr valign="top">
+			<td bgcolor="#E2CAA2">
+				<%@ include file="SearchParameters.jsp"%>
+			</td>
+			<td>
+				<%@ include file="CRFValueResults.jsp"%>
+			</td>
+		</tr>
 
-</table>
-</body>
+	</table>
+	</body>
 </html>

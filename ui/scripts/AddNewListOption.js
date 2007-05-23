@@ -1,3 +1,8 @@
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/AddNewListOption.js,v 1.2 2007-05-23 04:37:49 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 function AddToList(form, list)
 {
    //alert("AddToList");

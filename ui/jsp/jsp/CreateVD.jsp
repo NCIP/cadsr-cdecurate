@@ -1,23 +1,25 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CreateVD.jsp,v 1.24 2007-01-26 20:17:44 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CreateVD.jsp,v 1.25 2007-05-23 04:32:43 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <html>
-<head>
-<title>Create Value Domain</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
-<SCRIPT LANGUAGE="JavaScript" SRC="Assets/AddNewListOption.js"></SCRIPT>
-<%@ page import="java.util.*" %>
-<%@ page import="java.text.*" %>
-<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
-<SCRIPT LANGUAGE="JavaScript" SRC="Assets/date-picker.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" SRC="Assets/CreateVD.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" SRC="Assets/SelectCS_CSI.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" SRC="Assets/VDPVS.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
-<%
+	<head>
+		<title>
+			Create Value Domain
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
+		<SCRIPT LANGUAGE="JavaScript" SRC="Assets/AddNewListOption.js"></SCRIPT>
+		<%@ page import="java.util.*"%>
+		<%@ page import="java.text.*"%>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
+		<SCRIPT LANGUAGE="JavaScript" SRC="Assets/date-picker.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="Assets/CreateVD.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="Assets/SelectCS_CSI.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="Assets/VDPVS.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
+		<%
 			Vector vContext = (Vector) session.getAttribute("vWriteContextVD");
       Vector vContextID = (Vector) session.getAttribute("vWriteContextVD_ID");
       Vector vStatus = (Vector) session.getAttribute("vStatusVD");
@@ -36,7 +38,7 @@
       m_VD = (VD_Bean) session.getAttribute("m_VD");
       if (m_VD == null) m_VD = new VD_Bean();
       UtilService serUtil = new UtilService();
-      String sMenuAction = (String) session.getAttribute("MenuAction");
+      String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
       String sOriginAction = (String) session.getAttribute("originAction");
       String sButtonPressed = (String) session.getAttribute("LastMenuButtonPressed");
       String sVDIDSEQ = m_VD.getVD_VD_IDSEQ();
@@ -264,7 +266,7 @@
       if (reqType == null) reqType = "";
 %>
 
-<SCRIPT LANGUAGE="JavaScript">
+		<SCRIPT LANGUAGE="JavaScript">
   var searchWindow = null;
   var evsTreeWindow = null;
   var pageOpening = "<%=sTypeFlag %>";
@@ -361,7 +363,7 @@
   function displayStatusMessage()
   {
  <%
-    String statusMessage = (String)session.getAttribute("statusMessage");
+    String statusMessage = (String)session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
     //close the opener window if there is error
     if (statusMessage != null && !statusMessage.equals(""))
     {%>
@@ -379,7 +381,7 @@
 	       alert("<%=statusMessage%>");
     <% }
     //reset the status message to no message
-    session.setAttribute("statusMessage", "");
+    session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");
 %>
   }
 
@@ -407,25 +409,38 @@
 	}
 	
 </SCRIPT>
-</head>
+	</head>
 
-<body onLoad="setup();"  onUnload="DisableButtons();">
-<form name="createVDForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=newVDfromForm">
-	<!-- include the vdpvstab.jsp here -->
-	<jsp:include page="VDPVSTab.jsp" flush="true" />
-	<div style="margin-left: 0in; margin-right: 0in; border-left: 2px solid black; border-bottom: 2px solid black; border-right: 2px solid black; width: 100%; padding: 0.1in 0in 0.1in 0in">
-	<table width="100%">
-		<col width="4%">
-		<col width="96%">
-    <tr height="25" valign="bottom">
-        <td align=right><font color="#FF0000" >* &nbsp;&nbsp;</font><%=item++%>)</td>
-        <td> <font color="#FF0000">Select </font>Context</td>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td>
-      <select name="selContext" size="1">
-			<%bDataFound = false;
+	<body onLoad="setup();">
+		<form name="createVDForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=newVDfromForm">
+			<!-- include the vdpvstab.jsp here -->
+			<jsp:include page="VDPVSTab.jsp" flush="true" />
+			<div style="margin-left: 0in; margin-right: 0in; border-left: 2px solid black; border-bottom: 2px solid black; border-right: 2px solid black; width: 100%; padding: 0.1in 0in 0.1in 0in">
+				<table width="100%">
+					<col width="4%">
+					<col width="96%">
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<font color="#FF0000">
+								* &nbsp;&nbsp;
+							</font>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Select
+							</font>
+							Context
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td>
+							<select name="selContext" size="1">
+								<%bDataFound = false;
       for (int i = 0; vContext.size() > i; i++)
       {
         String sContextName = (String) vContext.elementAt(i);
@@ -433,264 +448,463 @@
         //if(sContext.equals("")) sContext = sContextName;
         if (sContextName.equals(sContext)) bDataFound = true;
 %>
-          <option value="<%=sContextID%>" <%if(sContextName.equals(sContext)){%>selected<%}%> ><%=sContextName%></option>
-<%}
+								<option value="<%=sContextID%>" <%if(sContextName.equals(sContext)){%> selected <%}%>>
+									<%=sContextName%>
+								</option>
+								<%}
       if (bDataFound == false)
       {%>
-            <option value="" selected></option>
-<%}
+								<option value="" selected></option>
+								<%}
       %>
-       </select>
-       </td>
-    </tr>
-    <tr height="25" valign="bottom">
-        <td align=right><font color="#FF0000" >* &nbsp;&nbsp;</font><%=item++%>)</td>
-        <td> <font color="#FF0000">Select </font>Value Domain Type</td>
-      </tr> 
-    <tr>
-      <td>&nbsp;</td>
-      <td>
-          <select name="listVDType" size="1" style="width:22%" onChange="ToggleDisableList2();"
-            onHelp = "showHelp('Help_CreateVD.html#createVDForm_selVDType'); return false">
-            <option value="E" <%if(sTypeFlag.equals("E")){%>selected<%}%>>Enumerated</option>
-            <option value="N" <%if(sTypeFlag.equals("N")){%>selected<%}%>>Non-Enumerated</option>
-          </select>      
-      </td>
-    </tr>
-  <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000">Select </font>Value Domain Name Components</td>
-  </tr>
-  <tr height="6"><td>&nbsp;</td></tr>
-  <tr valign="bottom">
-    <td colspan="2">
-      <table border="0" width="100%">
-        <col width="3%"><col width="45%"><col width="55%">
-        <tr  valign="top">
-          <td>&nbsp;</td>
-          <td>
-            <table border="1" width="100%">
-              <tr  valign="top">
-                <td>
-                  <table border="0" width="100%" height="100%">
-                   <!-- <col width="30%"><col width="18%"><col width="30%"><col width="18%"> -->
-                    <col width="24%"><col width="12%"><col width="16%"><col width="20%"><col width="12%"><col width="16%">
-                    <tr height="30" valign="middle">
-                        <td colspan=6>Optional Name Components (will not be saved or displayed later)</td>
-                    </tr>
-                    <tr height="18"></tr>
-                    <tr valign="top">
-                      <td align="left">Object Class</td>
-                      <td align="center"><font color="#FF0000">
-                        <a href="javascript:SearchBuildingBlocks('VDObjectClass', 'false')">Search</a></font>
-                      </td>
-                      <td align="center"><font color="#FF0000">
-                        <a href="javascript:RemoveBuildingBlocks('VDObjectClass')">Remove</a></font>
-                      </td>
-                      <td align="left">Property</td>
-                      <td align="center"><font color="#FF0000">
-                        <a href="javascript:SearchBuildingBlocks('VDPropertyClass','false')">Search</a></font>
-                      </td>
-                      <td align="center"><font color="#FF0000">
-                        <a href="javascript:RemoveBuildingBlocks('VDPropertyClass')">Remove</a></font>
-                      </td>
-                    </tr>
-                    <tr valign="top">
-                      <td colspan="3">
-                        <select name="selObjectClass" style="width:98%" valign="top" size="1" multiple
-                          onHelp = "showHelp('Help_CreateVD.html#createVDForm_nameBlocks'); return false">
-                              <option value="<%=sObjClass%>"><%=sObjClass%></option>
-                        </select>
-                      </td>
-                      <td colspan="3">
-                         <select name="selPropertyClass" style="width:98%" valign="top" size="1" multiple
-                            onHelp = "showHelp('Help_CreateVD.html#createVDForm_nameBlocks'); return false">
-                                <option value="<%=sPropClass%>"><%=sPropClass%></option>
-                         </select>
-                      </td>
-                    </tr>
-                    <tr height="105"><td>&nbsp;</td></tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </td>
-          <!-- empty column to seperate componenets -->
-          <!-- represention block -->
-          <td>
-            <table border="1" width="100%">
-              <tr valign="top">
-                <td>
-                  <table border="0" width="99%">
-                  <col width="26%"><col width="10%"><col width="14%"><col width="26%"><col width="10%"><col width="14%">
-                  <tr height="30" valign="middle">
-                        <td colspan=4>Value Domain Attributes</td>
-                  </tr>
-                  <tr><td colspan="2" align="left" valign="top">Rep Term Long Name </td></tr>
-                  <tr>
-                    <td colspan="5" align="left">
-                      <input type="text" name="txtRepTerm" value="<%=sRepTerm%>" style="width=100%" maxlength=255 valign="top" readonly="readonly">
-                    </td>
-                  </tr>
-                  <tr height="8"><td></td></tr>
-                  <tr valign="bottom">
-                    <td align="left" valign="top">Qualifier <br> Concepts</td>
-                    <td align="right" valign="middle">
-                     <!-- <input type="button" name="btnSerSecOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('ObjectQualifier', 'false');">-->
-                    <font color="#FF0000">  <a href="javascript:SearchBuildingBlocks('RepQualifier', 'false')">Search</a></font>
-                    </td>
-                    <td align="center" valign="middle">
-                     <!-- <input type="button" name="btnRmSecOC" value="Remove" style="width:90%" onClick="javascript:removeQualifier();">-->
-                      <font color="#FF0000"><a href="javascript:RemoveBuildingBlocks('RepQualifier')">Remove</a></font>  
-                    </td>
-                    <td align="left" valign="top">Primary <br>Concept</td>
-                    <td align="right" valign="middle">
-                      <!--<input type="button" name="btnSerPriOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('ObjectClass', 'false');">-->
-                      <font color="#FF0000"><a href="javascript:SearchBuildingBlocks('RepTerm', 'false')">Search</a></font> 
-                    </td>
-                    <td align="center" valign="middle">
-                      <!--<input type="button" name="btnRmPriOC" value="Remove" style="width:90%" onClick="">-->
-                      <font color="#FF0000"><a href="javascript:RemoveBuildingBlocks('RepTerm')">Remove</a></font>  
-                    </td>
-                  </tr>
-                  <tr align="left">
-                    <td colspan="3" valign="top">
-                         <select name="selRepQualifier" size ="2" style="width=98%" valign="top" onClick="ShowEVSInfo('RepQualifier')"
-                          onHelp = "showHelp('Help_CreateVD.html#createVDForm_nameBlocks'); return false">
-                          <%if (vRepQualifierNames.size() < 1)
-      {%>  
-                            <option value=""></option>
-                          <%}
+							</select>
+						</td>
+					</tr>
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<font color="#FF0000">
+								* &nbsp;&nbsp;
+							</font>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Select
+							</font>
+							Value Domain Type
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td>
+							<select name="listVDType" size="1" style="width:22%" onChange="ToggleDisableList2();" onHelp="showHelp('Help_CreateVD.html#createVDForm_selVDType'); return false">
+								<option value="E" <%if(sTypeFlag.equals("E")){%> selected <%}%>>
+									Enumerated
+								</option>
+								<option value="N" <%if(sTypeFlag.equals("N")){%> selected <%}%>>
+									Non-Enumerated
+								</option>
+							</select>
+						</td>
+					</tr>
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Select
+							</font>
+							Value Domain Name Components
+						</td>
+					</tr>
+					<tr height="6">
+						<td>
+							&nbsp;
+						</td>
+					</tr>
+					<tr valign="bottom">
+						<td colspan="2">
+							<table border="0" width="100%">
+								<col width="3%">
+								<col width="45%">
+								<col width="55%">
+								<tr valign="top">
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										<table border="1" width="100%">
+											<tr valign="top">
+												<td>
+													<table border="0" width="100%" height="100%">
+														<!-- <col width="30%"><col width="18%"><col width="30%"><col width="18%"> -->
+														<col width="24%">
+														<col width="12%">
+														<col width="16%">
+														<col width="20%">
+														<col width="12%">
+														<col width="16%">
+														<tr height="30" valign="middle">
+															<td colspan=6>
+																Optional Name Components (will not be saved or displayed later)
+															</td>
+														</tr>
+														<tr height="18"></tr>
+														<tr valign="top">
+															<td align="left">
+																Object Class
+															</td>
+															<td align="center">
+																<font color="#FF0000">
+																	<a href="javascript:SearchBuildingBlocks('VDObjectClass', 'false')">
+																		Search
+																	</a>
+																</font>
+															</td>
+															<td align="center">
+																<font color="#FF0000">
+																	<a href="javascript:RemoveBuildingBlocks('VDObjectClass')">
+																		Remove
+																	</a>
+																</font>
+															</td>
+															<td align="left">
+																Property
+															</td>
+															<td align="center">
+																<font color="#FF0000">
+																	<a href="javascript:SearchBuildingBlocks('VDPropertyClass','false')">
+																		Search
+																	</a>
+																</font>
+															</td>
+															<td align="center">
+																<font color="#FF0000">
+																	<a href="javascript:RemoveBuildingBlocks('VDPropertyClass')">
+																		Remove
+																	</a>
+																</font>
+															</td>
+														</tr>
+														<tr valign="top">
+															<td colspan="3">
+																<select name="selObjectClass" style="width:98%" valign="top" size="1" multiple onHelp="showHelp('Help_CreateVD.html#createVDForm_nameBlocks'); return false">
+																	<option value="<%=sObjClass%>">
+																		<%=sObjClass%>
+																	</option>
+																</select>
+															</td>
+															<td colspan="3">
+																<select name="selPropertyClass" style="width:98%" valign="top" size="1" multiple onHelp="showHelp('Help_CreateVD.html#createVDForm_nameBlocks'); return false">
+																	<option value="<%=sPropClass%>">
+																		<%=sPropClass%>
+																	</option>
+																</select>
+															</td>
+														</tr>
+														<tr height="105">
+															<td>
+																&nbsp;
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<!-- empty column to seperate componenets -->
+									<!-- represention block -->
+									<td>
+										<table border="1" width="100%">
+											<tr valign="top">
+												<td>
+													<table border="0" width="99%">
+														<col width="26%">
+														<col width="10%">
+														<col width="14%">
+														<col width="26%">
+														<col width="10%">
+														<col width="14%">
+														<tr height="30" valign="middle">
+															<td colspan=4>
+																Value Domain Attributes
+															</td>
+														</tr>
+														<tr>
+															<td colspan="2" align="left" valign="top">
+																Rep Term Long Name
+															</td>
+														</tr>
+														<tr>
+															<td colspan="5" align="left">
+																<input type="text" name="txtRepTerm" value="<%=sRepTerm%>" style="width=100%" maxlength=255 valign="top" readonly="readonly">
+															</td>
+														</tr>
+														<tr height="8">
+															<td></td>
+														</tr>
+														<tr valign="bottom">
+															<td align="left" valign="top">
+																Qualifier
+																<br>
+																Concepts
+															</td>
+															<td align="right" valign="middle">
+																<!-- <input type="button" name="btnSerSecOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('ObjectQualifier', 'false');">-->
+																<font color="#FF0000">
+																	<a href="javascript:SearchBuildingBlocks('RepQualifier', 'false')">
+																		Search
+																	</a>
+																</font>
+															</td>
+															<td align="center" valign="middle">
+																<!-- <input type="button" name="btnRmSecOC" value="Remove" style="width:90%" onClick="javascript:removeQualifier();">-->
+																<font color="#FF0000">
+																	<a href="javascript:RemoveBuildingBlocks('RepQualifier')">
+																		Remove
+																	</a>
+																</font>
+															</td>
+															<td align="left" valign="top">
+																Primary
+																<br>
+																Concept
+															</td>
+															<td align="right" valign="middle">
+																<!--<input type="button" name="btnSerPriOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('ObjectClass', 'false');">-->
+																<font color="#FF0000">
+																	<a href="javascript:SearchBuildingBlocks('RepTerm', 'false')">
+																		Search
+																	</a>
+																</font>
+															</td>
+															<td align="center" valign="middle">
+																<!--<input type="button" name="btnRmPriOC" value="Remove" style="width:90%" onClick="">-->
+																<font color="#FF0000">
+																	<a href="javascript:RemoveBuildingBlocks('RepTerm')">
+																		Remove
+																	</a>
+																</font>
+															</td>
+														</tr>
+														<tr align="left">
+															<td colspan="3" valign="top">
+																<select name="selRepQualifier" size="2" style="width=98%" valign="top" onClick="ShowEVSInfo('RepQualifier')" onHelp="showHelp('Help_CreateVD.html#createVDForm_nameBlocks'); return false">
+																	<%if (vRepQualifierNames.size() < 1)
+      {%>
+																	<option value=""></option>
+																	<%}
       else
       {
         %>
-                            <%for (int i = 0; vRepQualifierNames.size() > i; i++)
+																	<%for (int i = 0; vRepQualifierNames.size() > i; i++)
         {
           String sQualName = (String) vRepQualifierNames.elementAt(i);
           %>
-                            <option value="<%=sQualName%>" <%if(i==0){%>selected<%}%>><%=sQualName%></option>
-                            <%}%>
-                          <%}
+																	<option value="<%=sQualName%>" <%if(i==0){%> selected <%}%>>
+																		<%=sQualName%>
+																	</option>
+																	<%}%>
+																	<%}
       %>
-                        </select>
-                    </td>
-                    <td colspan="3" valign="top">
-                      <select name="selRepTerm" style="width=98%" valign="top" size="1" multiple
-                        onHelp = "showHelp('Help_CreateVD.html#createVDForm_nameBlocks'); return false">
-                            <option value="<%=sRepTermPrimary%>"><%=sRepTermPrimary%></option>
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="3">&nbsp;&nbsp;<label id="RepQual" for="selRepQualifier" title=""></label></td>
-                    <td colspan="3">&nbsp;&nbsp;<label id="RepTerm" for="selRepTerm" title=""></label></td>
-                  </tr>
-                  <tr>
-                    <td colspan="3">&nbsp;&nbsp;<a href=""><label id="RepQualID" for="selRepQualifier" title="" 
-                        onclick="javascript:SearchBuildingBlocks('RepQualifier', 'true')"></label></a></td>
-                    <td colspan="3">&nbsp;&nbsp;<a href=""><label id="RepTermID" for="selRepTerm" title=""
-                        onclick="javascript:SearchBuildingBlocks('RepTerm', 'true')"></label></a></td>
-                  </tr>  
-                  <tr height="1"><td></td></tr>
-                   </table>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr height="15"></tr>
-  <tr height="25" valign="bottom">
-      <td align=right><font color="#FF0000" >* &nbsp;&nbsp;</font><%=item++%>)</td>
-      <td> <font color="#FF0000">Verify </font>Value Domain Long Name (* ISO Preferred Name)</td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td height="24" valign="top">
-      <input name="txtLongName" type="text" size="100" maxlength=255 value="<%=sLongName%>" onKeyUp="changeCountLN();"
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_txtLongName'); return false">
-        &nbsp;&nbsp;
-      <font color="#666666">
-      <input name="txtLongNameCount" type="text" size="1" value="<%=sLongNameCount%>" readonly
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_txtLongName'); return false">
-      <font color="#000000"> Character Count</font></font>
-      &nbsp;&nbsp;(Database Max = 255)
-    </td>
-  </tr>
-  <tr height="25" valign="bottom">
-    <td align=right><font color="#FF0000" >* &nbsp;&nbsp;</font><%=item++%>)</td>
-    <td> <font color="#FF0000">Update </font>Value Domain Short Name</td>
-  </tr>   
-  <tr>
-    <td>&nbsp;</td>
-    <td height="24" valign="bottom">Select Short Name Naming Standard</td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td height="24" valign="top">
-      <input name="rNameConv" type="radio" value="SYS" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("SYS")) {%> 
-        checked <%}%>>System Generated &nbsp;&nbsp;&nbsp; 
-      <input name="rNameConv" type="radio" value="ABBR" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("ABBR")) {%> 
-        checked <%}%>>Abbreviated &nbsp;&nbsp;&nbsp; 
-      <input name="rNameConv" type="radio" value="USER" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("USER")) {%> 
-        checked <%}%>><%=lblUserType%>   <!--Existing Name (Editable) User Maintained-->
-    </td>
-  </tr>
-  <tr>
-   <td>&nbsp;</td>
-    <td height="24" valign="top">
-      <input name="txtPreferredName" type="text" size="100" maxlength=30 value="<%=sName%>" onKeyUp="changeCountPN();"
-        <%if (sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")) {%> readonly <%}%>
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_txtPreferredName'); return false">
-        &nbsp;&nbsp;
-      <input name="txtPrefNameCount" type="text" size="1" value="<%=sNameCount%>" readonly
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_txtPreferredName'); return false"> Character Count
-        &nbsp;&nbsp;(Database Max = 30)
-    </td>
-  </tr>
-  <tr><td height="8" valign="top"></tr>
-  <tr height="25" valign="top">
-    <td align=right><font color="#FF0000" >* &nbsp;&nbsp;</font><%=item++%>)</td>
-    <td> <font color="#FF0000">Create/Edit</font> Definition<br>
-      (Changes to naming components will replace existing definition text.)
-    </td>
-  </tr>
-    
-  <tr>
-     <td>&nbsp;</td>
-    <td  valign="top" align="left">
-      <textarea name="CreateDefinition" style="width:80%" rows=6
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
-     <!--  &nbsp;&nbsp; <font color="#FF0000"> <a href="javascript:OpenEVSWindow()">Search</a></font>  -->
-    </td>
-  </tr>
-  <tr height="25" valign="bottom">
-      <td align=right><font color="#FF0000" >* &nbsp;&nbsp;</font><%=item++%>)</td>
-      <td> <font color="#FF0000">Select</font> Conceptual Domain</td>
-  </tr>    
-  <tr>
-    <td>&nbsp;</td>
-    <td>
-      <select name= "selConceptualDomain" size ="1" style="width:50%" multiple
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_selConceptualDomain'); return false">
-        <option value=<%=sConDomID%>><%=sConDom%></option>
-      </select>
-      &nbsp;&nbsp;<font color="#FF0000"><a href="javascript:SearchCDValue()">Search</a></font>
-    </td>
-  </tr>
-  <tr height="25" valign="bottom">
-      <td align=right><font color="#FF0000" >* &nbsp;&nbsp;</font><%=item++%>)</td>
-      <td> <font color="#FF0000">Select</font> Workflow Status</td>
-  </tr>         
-  <tr>
-    <td>&nbsp;</td>
-    <td>
-      <select name="selStatus" size="1" style="width:20%"
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_selStatus'); return false">
-        <option value="" selected="selected"></option>
-<%for (int i = 0; vStatus.size() > i; i++)
+																</select>
+															</td>
+															<td colspan="3" valign="top">
+																<select name="selRepTerm" style="width=98%" valign="top" size="1" multiple onHelp="showHelp('Help_CreateVD.html#createVDForm_nameBlocks'); return false">
+																	<option value="<%=sRepTermPrimary%>">
+																		<%=sRepTermPrimary%>
+																	</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3">
+																&nbsp;&nbsp;
+																<label id="RepQual" for="selRepQualifier" title=""></label>
+															</td>
+															<td colspan="3">
+																&nbsp;&nbsp;
+																<label id="RepTerm" for="selRepTerm" title=""></label>
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3">
+																&nbsp;&nbsp;
+																<a href="">
+																	<label id="RepQualID" for="selRepQualifier" title="" onclick="javascript:SearchBuildingBlocks('RepQualifier', 'true')"></label>
+																</a>
+															</td>
+															<td colspan="3">
+																&nbsp;&nbsp;
+																<a href="">
+																	<label id="RepTermID" for="selRepTerm" title="" onclick="javascript:SearchBuildingBlocks('RepTerm', 'true')"></label>
+																</a>
+															</td>
+														</tr>
+														<tr height="1">
+															<td></td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr height="15"></tr>
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<font color="#FF0000">
+								* &nbsp;&nbsp;
+							</font>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Verify
+							</font>
+							Value Domain Long Name (* ISO Preferred Name)
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td height="24" valign="top">
+							<input name="txtLongName" type="text" size="100" maxlength=255 value="<%=sLongName%>" onKeyUp="changeCountLN();" onHelp="showHelp('Help_CreateVD.html#createVDForm_txtLongName'); return false">
+							&nbsp;&nbsp;
+							<font color="#666666">
+								<input name="txtLongNameCount" type="text" size="1" value="<%=sLongNameCount%>" readonly onHelp="showHelp('Help_CreateVD.html#createVDForm_txtLongName'); return false">
+								<font color="#000000">
+									Character Count
+								</font>
+							</font>
+							&nbsp;&nbsp;(Database Max = 255)
+						</td>
+					</tr>
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<font color="#FF0000">
+								* &nbsp;&nbsp;
+							</font>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Update
+							</font>
+							Value Domain Short Name
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td height="24" valign="bottom">
+							Select Short Name Naming Standard
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td height="24" valign="top">
+							<input name="rNameConv" type="radio" value="SYS" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("SYS")) {%> checked <%}%>>
+							System Generated &nbsp;&nbsp;&nbsp;
+							<input name="rNameConv" type="radio" value="ABBR" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("ABBR")) {%> checked <%}%>>
+							Abbreviated &nbsp;&nbsp;&nbsp;
+							<input name="rNameConv" type="radio" value="USER" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("USER")) {%> checked <%}%>>
+							<%=lblUserType%>
+							<!--Existing Name (Editable) User Maintained-->
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td height="24" valign="top">
+							<input name="txtPreferredName" type="text" size="100" maxlength=30 value="<%=sName%>" onKeyUp="changeCountPN();" <%if (sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")) {%> readonly <%}%>
+								onHelp="showHelp('Help_CreateVD.html#createVDForm_txtPreferredName'); return false">
+							&nbsp;&nbsp;
+							<input name="txtPrefNameCount" type="text" size="1" value="<%=sNameCount%>" readonly onHelp="showHelp('Help_CreateVD.html#createVDForm_txtPreferredName'); return false">
+							Character Count &nbsp;&nbsp;(Database Max = 30)
+						</td>
+					</tr>
+					<tr>
+						<td height="8" valign="top">
+					</tr>
+					<tr height="25" valign="top">
+						<td align=right>
+							<font color="#FF0000">
+								* &nbsp;&nbsp;
+							</font>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Create/Edit
+							</font>
+							Definition
+							<br>
+							(Changes to naming components will replace existing definition text.)
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td valign="top" align="left">
+							<textarea name="CreateDefinition" style="width:80%" rows=6><%=sDefinition%></textarea>
+							<!--  &nbsp;&nbsp; <font color="#FF0000"> <a href="javascript:OpenEVSWindow()">Search</a></font>  -->
+						</td>
+					</tr>
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<font color="#FF0000">
+								* &nbsp;&nbsp;
+							</font>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Select
+							</font>
+							Conceptual Domain
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td>
+							<select name="selConceptualDomain" size="1" style="width:50%" multiple onHelp="showHelp('Help_CreateVD.html#createVDForm_selConceptualDomain'); return false">
+								<option value=<%=sConDomID%>>
+									<%=sConDom%>
+								</option>
+							</select>
+							&nbsp;&nbsp;
+							<font color="#FF0000">
+								<a href="javascript:SearchCDValue()">
+									Search
+								</a>
+							</font>
+						</td>
+					</tr>
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<font color="#FF0000">
+								* &nbsp;&nbsp;
+							</font>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Select
+							</font>
+							Workflow Status
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td>
+							<select name="selStatus" size="1" style="width:20%" onHelp="showHelp('Help_CreateVD.html#createVDForm_selStatus'); return false">
+								<option value="" selected="selected"></option>
+								<%for (int i = 0; vStatus.size() > i; i++)
       {
         String sStatusName = (String) vStatus.elementAt(i);
         //add only draft new and retired phased out if creating new
@@ -699,254 +913,438 @@
           if (sStatusName.equals("DRAFT NEW") || sStatusName.equals("RETIRED PHASED OUT"))
           {
 %>
-                   <option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%>selected<%}%> ><%=sStatusName%></option>
-<%}
+								<option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%> selected <%}%>>
+									<%=sStatusName%>
+								</option>
+								<%}
         }
         else
         {
 %>
-                <option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%>selected<%}%> ><%=sStatusName%></option>
-<%}
+								<option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%> selected <%}%>>
+									<%=sStatusName%>
+								</option>
+								<%}
       }
 %>
-      </select> </td>
-  </tr>
-  <tr height="25" valign="bottom">
-      <td align=right><font color="#FF0000" >* &nbsp;&nbsp;</font><%=item++%>)</td>
-      <td> <font color="#FF0000">Enter</font> Version</td>
-  </tr>    
-  <tr>
-   <td>&nbsp;</td>
-    <td>
-      <input type="text" name="Version" value="<%=sVersion%>" size=12 maxlength=5
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_Version'); return false">
-      &nbsp;&nbsp;&nbsp;<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">Business Rules</a>
-    </td>
-  </tr>
-  <tr height="25" valign="bottom">
-      <td align=right><font color="#FF0000">* </font><%=item++%>)</td>
-      <td> <font color="#FF0000">Select</font> Data Type</td>
-  </tr>
-  <tr height="8"><td>&nbsp;</td></tr>    
-  <tr>
-    <td>&nbsp;</td>
-    <td>
-      <table width="90%" border="1">
-        <col width="20%"><col width="35%"><col width="35%">
-        <tr>
-          <td valign="top">
-            <select name= "selDataType" size ="1" onChange="javascript:changeDataType();"  style="width:90%"
-              onHelp = "showHelp('Help_CreateVD.html#createVDForm_selDataType'); return false">
-<%for (int i = 0; vDataTypes.size() > i; i++)
+							</select>
+						</td>
+					</tr>
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<font color="#FF0000">
+								* &nbsp;&nbsp;
+							</font>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Enter
+							</font>
+							Version
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td>
+							<input type="text" name="Version" value="<%=sVersion%>" size=12 maxlength=5 onHelp="showHelp('Help_CreateVD.html#createVDForm_Version'); return false">
+							&nbsp;&nbsp;&nbsp;
+							<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
+								Business Rules
+							</a>
+						</td>
+					</tr>
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<font color="#FF0000">
+								*
+							</font>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Select
+							</font>
+							Data Type
+						</td>
+					</tr>
+					<tr height="8">
+						<td>
+							&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td>
+							<table width="90%" border="1">
+								<col width="20%">
+								<col width="35%">
+								<col width="35%">
+								<tr>
+									<td valign="top">
+										<select name="selDataType" size="1" onChange="javascript:changeDataType();" style="width:90%" onHelp="showHelp('Help_CreateVD.html#createVDForm_selDataType'); return false">
+											<%for (int i = 0; vDataTypes.size() > i; i++)
       {
         String sCD = (String) vDataTypes.elementAt(i);
 %>
-              <option value="<%=sCD%>" <%if(sCD.equalsIgnoreCase(sDataType)){%>selected<%}%> ><%=sCD%></option>
-<%}
+											<option value="<%=sCD%>" <%if(sCD.equalsIgnoreCase(sDataType)){%> selected <%}%>>
+												<%=sCD%>
+											</option>
+											<%}
 %>
-            </select>
-          </td>
-          <td valign="top" height="25"><b>Data Type Description:</b><br><label id="lblDTDesc" for="selDataType" style="width:95%" title=""></label></td>
-          <td valign="top" height="25"><b>Data Type Comment:</b><br><label id="lblDTComment" for="selDataType" style="width:95%" title=""></label></td>
-        </tr> 
-      </table>
-    </td>
-  </tr>
-  <tr height="25"><td> </td></tr>
-  <!-- pv attributes -->
-  <tr valign="top">
-    <td align=right><font color="#FF0000">* </font><%=item++%>)</td>
-    <td><font color="#FF0000">Maintain </font> 
-      <%if (sTypeFlag.equals("E")){%>Permissible Value<%} else {%>Referenced Value<%}%>
-      <br>
-      To view or maintain Permissible Values, <a href="javascript:SubmitValidate('vdpvstab');">click here</a> 
-      &nbsp;&nbsp;&nbsp;&nbsp;
-    </td>
-  </tr>  
-  <tr height="15"><td> </td></tr>
-  <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000">Enter/Select</font> Effective Begin Date</td>
-  </tr>
-    
-   <tr>
-    <td>&nbsp;</td>
-    <td valign="top" >
-      <input type="text" name="BeginDate" value="<%=sBeginDate%>" size="12" maxlength=10
-       onHelp = "showHelp('Help_CreateVD.html#createVDForm_BeginDate'); return false">
-      <a href="javascript:show_calendar('createVDForm.BeginDate', null, null, 'MM/DD/YYYY');" >
-      <img name="Calendar" src="Assets/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
-      </a>&nbsp;&nbsp;MM/DD/YYYY
-    </td>      
-  </tr>
-    
-  <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000">Enter/Select</font> Effective End Date</td>
-  </tr>
-    
-  <tr>
-    <td>&nbsp;</td>
-    <td  valign="bottom">
-      <input type="text" name="EndDate" value="<%=sEndDate%>" size="12" maxlength=10
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_EndDate'); return false">
-      <a href="javascript:show_calendar('createVDForm.EndDate', null, null, 'MM/DD/YYYY');">
-      <img name="Calendar" src="Assets/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top"></a>
-      &nbsp;&nbsp;MM/DD/YYYY</td>
-  </tr>
+										</select>
+									</td>
+									<td valign="top" height="25">
+										<b>
+											Data Type Description:
+										</b>
+										<br>
+										<label id="lblDTDesc" for="selDataType" style="width:95%" title=""></label>
+									</td>
+									<td valign="top" height="25">
+										<b>
+											Data Type Comment:
+										</b>
+										<br>
+										<label id="lblDTComment" for="selDataType" style="width:95%" title=""></label>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr height="25">
+						<td>
+						</td>
+					</tr>
+					<!-- pv attributes -->
+					<tr valign="top">
+						<td align=right>
+							<font color="#FF0000">
+								*
+							</font>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Maintain
+							</font>
+							<%if (sTypeFlag.equals("E")){%>
+							Permissible Value
+							<%} else {%>
+							Referenced Value
+							<%}%>
+							<br>
+							To view or maintain Permissible Values,
+							<a href="javascript:SubmitValidate('vdpvstab');">
+								click here
+							</a>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+						</td>
+					</tr>
+					<tr height="15">
+						<td>
+						</td>
+					</tr>
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Enter/Select
+							</font>
+							Effective Begin Date
+						</td>
+					</tr>
 
-  <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000"> Select</font> the Unit of Measure (UOM)</td>
-  </tr>    
-  <tr>
-    <td>&nbsp;</td>
-    <td>
-      <select name= "selUOM" size ="1" style="width:15%"
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_selUOM'); return false">
-        <option value=""></option>
-<%for (int i = 0; vUOM.size() > i; i++)
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td valign="top">
+							<input type="text" name="BeginDate" value="<%=sBeginDate%>" size="12" maxlength=10 onHelp="showHelp('Help_CreateVD.html#createVDForm_BeginDate'); return false">
+							<a href="javascript:show_calendar('createVDForm.BeginDate', null, null, 'MM/DD/YYYY');">
+								<img name="Calendar" src="Assets/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
+							</a>
+							&nbsp;&nbsp;MM/DD/YYYY
+						</td>
+					</tr>
+
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Enter/Select
+							</font>
+							Effective End Date
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td valign="bottom">
+							<input type="text" name="EndDate" value="<%=sEndDate%>" size="12" maxlength=10 onHelp="showHelp('Help_CreateVD.html#createVDForm_EndDate'); return false">
+							<a href="javascript:show_calendar('createVDForm.EndDate', null, null, 'MM/DD/YYYY');">
+								<img name="Calendar" src="Assets/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
+							</a>
+							&nbsp;&nbsp;MM/DD/YYYY
+						</td>
+					</tr>
+
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Select
+							</font>
+							the Unit of Measure (UOM)
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td>
+							<select name="selUOM" size="1" style="width:15%" onHelp="showHelp('Help_CreateVD.html#createVDForm_selUOM'); return false">
+								<option value=""></option>
+								<%for (int i = 0; vUOM.size() > i; i++)
       {
         String sUOM = (String) vUOM.elementAt(i);
 %>
-           <option value="<%=sUOM%>" <%if(sUOM.equals(sUOML)){%>selected<%}%>><%=sUOM%></option>
-<%}
+								<option value="<%=sUOM%>" <%if(sUOM.equals(sUOML)){%> selected <%}%>>
+									<%=sUOM%>
+								</option>
+								<%}
 %>
-      </select>
-    </td>
-  </tr>      
-  <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000"> Select</font> Display Format </td>
-  </tr>    
-  <tr>
-   <td>&nbsp;</td>
-    <td>
-      <select name= "selUOMFormat" size ="1" style="width:15%"
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_selUOMFormat'); return false">
-        <option value=""></option>
-<%for (int i = 0; vUOMFormat.size() > i; i++)
+							</select>
+						</td>
+					</tr>
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Select
+							</font>
+							Display Format
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td>
+							<select name="selUOMFormat" size="1" style="width:15%" onHelp="showHelp('Help_CreateVD.html#createVDForm_selUOMFormat'); return false">
+								<option value=""></option>
+								<%for (int i = 0; vUOMFormat.size() > i; i++)
       {
         String sUOMF = (String) vUOMFormat.elementAt(i);
 %>
-           <option value="<%=sUOMF%>" <%if(sUOMF.equals(sFORML)){%>selected<%}%>><%=sUOMF%></option>
-<%}
+								<option value="<%=sUOMF%>" <%if(sUOMF.equals(sFORML)){%> selected <%}%>>
+									<%=sUOMF%>
+								</option>
+								<%}
 %>
-      </select>
-    </td>
-  </tr>
-   <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000"> Enter</font> Minimum Length </td>
-    </tr>
-    
-  <tr>
-  <td>&nbsp;</td>
-    <td>
-      <input type="text" name="tfMinLength" value="<%=sMinLen%>" size="20" maxlength=8
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfMinLength'); return false">
-    </td>
-  </tr>
-  <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000"> Enter</font> Maximum Length </td>
-  </tr>
-    
-  <tr>
-   <td>&nbsp;</td>
-    <td>
-      <input type="text" name="tfMaxLength" value="<%=sMaxLen%>" size="20" maxlength=8
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfMaxLength'); return false">
-    </td>
-  </tr>      
-  <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000"> Enter</font> Low Value (for number data type) </td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>
-      <input type="text" name="tfLowValue" value="<%=sLowValue%>" size="20" maxlength=255
-          <% if (!sDataType.equalsIgnoreCase("NUMBER")) { %> disabled <% } %>
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfLowValue'); return false">
-    </td>
-  </tr>
-  <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000"> Enter</font> High Value (for number data type)</td>
-  </tr>
-    
-  <tr>
-    <td>&nbsp;</td>
-    <td>
-      <input type="text" name="tfHighValue" value="<%=sHighValue%>" size="20" maxlength=255
-          <% if (!sDataType.equalsIgnoreCase("NUMBER")) { %> disabled <% } %>
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfHighValue'); return false">
-    </td>
-  </tr>
-    
-  <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000"> Enter</font> Decimal Place</td>
-  </tr>
-    
-  <tr>
-   <td>&nbsp;</td>
-    <td>
-      <input type="text" name="tfDecimal" value="<%=sDecimal%>" size="20" maxlength=2
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_tfDecimal'); return false">
-    </td>
-     
-  </tr>
-    <!-- Classification Scheme and items -->
-   <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000"> Select </font>Classification Scheme 
-          and Classification Scheme Items</td>
-  </tr>
-       
-  <tr>
-    <td>&nbsp;</td>
-    <td>
-      <table width=90% border=0>
-        <col width="1%"><col width="38%"><col width="16%"> <col width="38%"><col width="16%">
-        <tr>
-          <td colspan="3" valign=top>
-            <select name="selCS" size="1" style="width:97%" onChange="ChangeCS();"
-                onHelp = "showHelp('Help_CreateVD.html#createVDForm_selCS'); return false">
-                <option value="" selected></option>
-<%for (int i = 0; vCS.size() > i; i++)
+							</select>
+						</td>
+					</tr>
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Enter
+							</font>
+							Minimum Length
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td>
+							<input type="text" name="tfMinLength" value="<%=sMinLen%>" size="20" maxlength=8 onHelp="showHelp('Help_CreateVD.html#createVDForm_tfMinLength'); return false">
+						</td>
+					</tr>
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Enter
+							</font>
+							Maximum Length
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td>
+							<input type="text" name="tfMaxLength" value="<%=sMaxLen%>" size="20" maxlength=8 onHelp="showHelp('Help_CreateVD.html#createVDForm_tfMaxLength'); return false">
+						</td>
+					</tr>
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Enter
+							</font>
+							Low Value (for number data type)
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td>
+							<input type="text" name="tfLowValue" value="<%=sLowValue%>" size="20" maxlength=255 <% if (!sDataType.equalsIgnoreCase("NUMBER")) { %> disabled <% } %> onHelp="showHelp('Help_CreateVD.html#createVDForm_tfLowValue'); return false">
+						</td>
+					</tr>
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Enter
+							</font>
+							High Value (for number data type)
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td>
+							<input type="text" name="tfHighValue" value="<%=sHighValue%>" size="20" maxlength=255 <% if (!sDataType.equalsIgnoreCase("NUMBER")) { %> disabled <% } %> onHelp="showHelp('Help_CreateVD.html#createVDForm_tfHighValue'); return false">
+						</td>
+					</tr>
+
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Enter
+							</font>
+							Decimal Place
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td>
+							<input type="text" name="tfDecimal" value="<%=sDecimal%>" size="20" maxlength=2 onHelp="showHelp('Help_CreateVD.html#createVDForm_tfDecimal'); return false">
+						</td>
+
+					</tr>
+					<!-- Classification Scheme and items -->
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Select
+							</font>
+							Classification Scheme and Classification Scheme Items
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td>
+							<table width=90% border=0>
+								<col width="1%">
+								<col width="38%">
+								<col width="16%">
+								<col width="38%">
+								<col width="16%">
+								<tr>
+									<td colspan="3" valign=top>
+										<select name="selCS" size="1" style="width:97%" onChange="ChangeCS();" onHelp="showHelp('Help_CreateVD.html#createVDForm_selCS'); return false">
+											<option value="" selected></option>
+											<%for (int i = 0; vCS.size() > i; i++)
       {
         String sCSName = (String) vCS.elementAt(i);
         String sCS_ID = (String) vCS_ID.elementAt(i);
 %>
-                  <option value="<%=sCS_ID%>"><%=sCSName%></option>
-<%}
+											<option value="<%=sCS_ID%>">
+												<%=sCSName%>
+											</option>
+											<%}
       %>
-            </select>
-          </td>
-          <td colspan="2" valign=top>
-            <select name="selCSI" size="5" style="width:100%" onChange="selectCSI();"
-                onHelp = "showHelp('Help_CreateVD.html#createVDForm_selCS'); return false">
-            </select>
-          </td>
-        </tr>
-        <tr><td height="10" valign="top"></tr>
-        <tr>
-          <td>&nbsp;</td>
-          <td>&nbsp;Selected Classification Schemes</td>
-          <td><input type="button" name="btnRemoveCS" value="Remove Item" style="width: 85" onClick="removeCSList();"></td>
-          <td>&nbsp;&nbsp;Associated Classification Scheme Items</td>
-          <td>
+										</select>
+									</td>
+									<td colspan="2" valign=top>
+										<select name="selCSI" size="5" style="width:100%" onChange="selectCSI();" onHelp="showHelp('Help_CreateVD.html#createVDForm_selCS'); return false">
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td height="10" valign="top">
+								</tr>
+								<tr>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;Selected Classification Schemes
+									</td>
+									<td>
+										<input type="button" name="btnRemoveCS" value="Remove Item" style="width: 85" onClick="removeCSList();">
+									</td>
+									<td>
+										&nbsp;&nbsp;Associated Classification Scheme Items
+									</td>
+									<td>
 										<input type="button" name="btnRemoveCSI" value="Remove Item" style="width: 85" onClick="removeCSIList();">
 									</td>
-        </tr>
-        <tr>
-          <td>&nbsp;</td>
-          <td colspan=2 valign=top>
-            <select name="selectedCS" size="5" style="width:97%" multiple onchange="addSelectCSI(false, true, '');"
-                onHelp = "showHelp('Help_CreateVD.html#createVDForm_selCS'); return false">
-<%//store selected cs list on load 
+								</tr>
+								<tr>
+									<td>
+										&nbsp;
+									</td>
+									<td colspan=2 valign=top>
+										<select name="selectedCS" size="5" style="width:97%" multiple onchange="addSelectCSI(false, true, '');" onHelp="showHelp('Help_CreateVD.html#createVDForm_selCS'); return false">
+											<%//store selected cs list on load 
       if (vSelCSIDList != null)
       {
         //       System.out.println("cs size " + vSelCSIDList.size());
@@ -958,43 +1356,60 @@
             sCSName = (String) vSelCSList.elementAt(i);
           //          System.out.println("selected " + sCSName);
           %>
-                    <option value="<%=sCS_ID%>"><%=sCSName%></option>
-<%}
+											<option value="<%=sCS_ID%>">
+												<%=sCSName%>
+											</option>
+											<%}
       }
       %>
-            </select>
-          </td>
-          <td colspan=2 valign=top>
-            <select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();"
-                onHelp = "showHelp('Help_CreateVD.html#createVDForm_selCS'); return false">
-            </select>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
- <!-- contact info -->
-    <tr><td height="12" valign="top"></tr>    
-  	<tr>
-	  <td valign="top" align=right><%=item++%>)</td>
-	  <td valign="bottom"><font color="#FF0000">Select </font>Contacts
-      <br>
-        <table width=50% border="0">
-          <col width="40%"><col width="15%"> <col width="15%"><col width="15%">
-		  <tr>
-		    <td>&nbsp;</td>
-            <td align="left"><input type="button" name="btnViewCt" value="Edit Item" 
-            	style="width:100" onClick="javascript:editContact('view');" disabled></td>
-            <td align="left"><input type="button" name="btnCreateCt" value="Create New" 
-            	style="width:100" onClick="javascript:editContact('new');"></td>
-            <td align="center"><input type="button" name="btnRmvCt" value="Remove Item" 
-            	style="width:100" onClick="javascript:editContact('remove');" disabled></td>
-		  </tr>
-		  <tr> 
-	      	<td colspan=4 valign="top">
-	          <select name="selContact" size="4"  style="width:100%" onchange="javascript:enableContButtons();" 
-	          	onHelp = "showHelp('Help_CreateDE.html#newCDEForm_selContact'); return false">
-<%		Enumeration enum1 = hContacts.keys();
+										</select>
+									</td>
+									<td colspan=2 valign=top>
+										<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('Help_CreateVD.html#createVDForm_selCS'); return false">
+										</select>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<!-- contact info -->
+					<tr>
+						<td height="12" valign="top">
+					</tr>
+					<tr>
+						<td valign="top" align=right>
+							<%=item++%>
+							)
+						</td>
+						<td valign="bottom">
+							<font color="#FF0000">
+								Select
+							</font>
+							Contacts
+							<br>
+							<table width=50% border="0">
+								<col width="40%">
+								<col width="15%">
+								<col width="15%">
+								<col width="15%">
+								<tr>
+									<td>
+										&nbsp;
+									</td>
+									<td align="left">
+										<input type="button" name="btnViewCt" value="Edit Item" style="width:100" onClick="javascript:editContact('view');" disabled>
+									</td>
+									<td align="left">
+										<input type="button" name="btnCreateCt" value="Create New" style="width:100" onClick="javascript:editContact('new');">
+									</td>
+									<td align="center">
+										<input type="button" name="btnRmvCt" value="Remove Item" style="width:100" onClick="javascript:editContact('remove');" disabled>
+									</td>
+								</tr>
+								<tr>
+									<td colspan=4 valign="top">
+										<select name="selContact" size="4" style="width:100%" onchange="javascript:enableContButtons();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selContact'); return false">
+											<%		Enumeration enum1 = hContacts.keys();
       while (enum1.hasMoreElements())
       {
         String contName = (String) enum1.nextElement();
@@ -1007,121 +1422,154 @@
          if (contName == null || contName.equals(""))
          contName = acCont.getPERSON_NAME(); */
 %>
-				  <option value="<%=contName%>"><%=contName%></option>
-<%}
-%>	          	
-	          </select>
-	      	</td>
-		  </tr>
-		</table>
-	  </td>
-	</tr>
-<!-- vd origin -->     
-  <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000"> Select </font>Value Domain Origin </td>
-  </tr>
-     
-   <tr>
-   <td>&nbsp;</td>
-    <td height="25"  valign="top">
-      <select name="selSource" size="1"
-      onHelp = "showHelp('Help_CreateVD.html#createVDForm_selSource'); return false">
-           <option value=""></option>
-<%boolean isFound = false;
+											<option value="<%=contName%>">
+												<%=contName%>
+											</option>
+											<%}
+%>
+										</select>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<!-- vd origin -->
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Select
+							</font>
+							Value Domain Origin
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td height="25" valign="top">
+							<select name="selSource" size="1" onHelp="showHelp('Help_CreateVD.html#createVDForm_selSource'); return false">
+								<option value=""></option>
+								<%boolean isFound = false;
       for (int i = 0; vSource.size() > i; i++)
       {
         String sSor = (String) vSource.elementAt(i);
         if (sSor.equals(sSource)) isFound = true;
 %>
-              <option value="<%=sSor%>" <%if(sSor.equals(sSource)){%>selected<%}%> ><%=sSor%></option>
-<%}
+								<option value="<%=sSor%>" <%if(sSor.equals(sSource)){%> selected <%}%>>
+									<%=sSor%>
+								</option>
+								<%}
       //add the user entered if not found in the drop down list
       if (!isFound)
       {
         sSource = serUtil.parsedStringDoubleQuoteJSP(sSource); //call the function to handle doubleQuote
         %>
-           		<option value="<%=sSource%>" selected><%=sSource%></option>
-<%}
+								<option value="<%=sSource%>" selected>
+									<%=sSource%>
+								</option>
+								<%}
       %>
-      </select>
-    <!--  &nbsp;&nbsp;<font color="#FF0000"> <a href="javascript:createOrigin();">Create New</a></font>      -->
-    </td>
-  </tr>
+							</select>
+							<!--  &nbsp;&nbsp;<font color="#FF0000"> <a href="javascript:createOrigin();">Create New</a></font>      -->
+						</td>
+					</tr>
 
-  <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000"> Create</font> Change Note </td>
-  </tr>
-    
-  <tr>
-    <td>&nbsp;</td>
-    <td height="35" valign="top">
-      <textarea name="CreateChangeNote" cols="69" 
-        onHelp = "showHelp('Help_CreateVD.html#createVDForm_CreateComment'); return false" rows="2"><%=sChangeNote%></textarea>
-    </td>
-  </tr>
-  <tr height="25" valign="bottom">
-      <td align=right><%=item++%>)</td>
-      <td> <font color="#FF0000"> <a href="javascript:SubmitValidate('validate')">Validate</a></font>
-      the New Value Domain</td>
-  </tr>
-</table>
-</div>
-<div style="display:none">
-<input type="hidden" name="actSelect" value="">
-<input type="hidden" name="VDAction" value="NewVD">
-<input type="hidden" name="vdIDSEQ" value="<%=sVDIDSEQ%>">
-<input type="hidden" name="CDE_IDTxt" value="<%=sPublicVDID%>">
-<input type="hidden" name="pageAction" value="nothing">
-<!--<input type="hidden" name="hiddenPValue" value="">
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								Create
+							</font>
+							Change Note
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td height="35" valign="top">
+							<textarea name="CreateChangeNote" cols="69" rows="2"><%=sChangeNote%></textarea>
+						</td>
+					</tr>
+					<tr height="25" valign="bottom">
+						<td align=right>
+							<%=item++%>
+							)
+						</td>
+						<td>
+							<font color="#FF0000">
+								<a href="javascript:SubmitValidate('validate')">
+									Validate
+								</a>
+							</font>
+							the New Value Domain
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="display:none">
+				<input type="hidden" name="actSelect" value="">
+				<input type="hidden" name="VDAction" value="NewVD">
+				<input type="hidden" name="vdIDSEQ" value="<%=sVDIDSEQ%>">
+				<input type="hidden" name="CDE_IDTxt" value="<%=sPublicVDID%>">
+				<input type="hidden" name="pageAction" value="nothing">
+				<!--<input type="hidden" name="hiddenPValue" value="">
 <input type="hidden" name="VMOrigin" value="ValueDomain"> -->
-<input type="hidden" name="selObjectClassText" value="<%=sObjClass%>">
-<input type="hidden" name="selPropertyClassText" value="<%=sPropClass%>">
-<input type="hidden" name="selObjectQualifierText" value="<%=sObjQual%>">
-<input type="hidden" name="selPropertyQualifierText" value="<%=sPropQual%>">
-<input type="hidden" name="selObjectClassLN" value="<%=sObjClass%>">
-<input type="hidden" name="selPropertyClassLN" value="<%=sPropClass%>">
-<input type="hidden" name="selObjectQualifierLN" value="<%=sObjQual%>">
-<input type="hidden" name="selPropertyQualifierLN" value="<%=sPropQual%>">
-<input type="hidden" name="selRepTermLN" value="<%=sRepTerm%>">
-<input type="hidden" name="selRepQualifierLN" value="">
-<input type="hidden" name="selRepTermText" value="<%=sRepTerm%>">
-<input type="hidden" name="selRepTermID" value="<%=sRepTermID%>">
-<input type="hidden" name="selRepQualifierText" value="">
-<input type="hidden" name="selConceptualDomainText" value="<%=sConDom%>">
-<input type="hidden" name="selContextText" value="<%=sContext%>">
-<input type="hidden" name="MenuAction" value="<%=sMenuAction%>">
-<input type="hidden" name="valueCount" value="0">
-<input type="hidden" name="selObjRow" value="<%=selObjRow%>">
-<input type="hidden" name="selPropRow" value="<%=selPropRow%>">
-<input type="hidden" name="selRepRow" value="<%=selRepRow%>">
-<input type="hidden" name="selObjQRow" value="<%=selObjQRow%>">
-<input type="hidden" name="selPropQRow" value="<%=selPropQRow%>">
-<input type="hidden" name="selRepQRow" value="<%=selRepQRow%>">
-<input type="hidden" name="PropDefinition" value="<%=sPropDefinition%>">
-<input type="hidden" name="ObjDefinition" value="<%=sObjDefinition%>">
-<input type="hidden" name="RepDefinition" value="<%=sRepDefinition%>">
-<input type="hidden" name="openToTree" value="">
-<input type="hidden" name="RepQualID" value="<%=sRepQualID%>">
-<input type="hidden" name="RepQualVocab" value="<%=sRepQualVocab%>">
-<input type="hidden" name="RepTerm_ID" value="<%=sRepTerm_ID%>">
-<input type="hidden" name="RepTermVocab" value="<%=sRepTermVocab%>">
-<input type="hidden" name="sCompBlocks" value="">
-<input type="hidden" name="nvpConcept" value="">
+				<input type="hidden" name="selObjectClassText" value="<%=sObjClass%>">
+				<input type="hidden" name="selPropertyClassText" value="<%=sPropClass%>">
+				<input type="hidden" name="selObjectQualifierText" value="<%=sObjQual%>">
+				<input type="hidden" name="selPropertyQualifierText" value="<%=sPropQual%>">
+				<input type="hidden" name="selObjectClassLN" value="<%=sObjClass%>">
+				<input type="hidden" name="selPropertyClassLN" value="<%=sPropClass%>">
+				<input type="hidden" name="selObjectQualifierLN" value="<%=sObjQual%>">
+				<input type="hidden" name="selPropertyQualifierLN" value="<%=sPropQual%>">
+				<input type="hidden" name="selRepTermLN" value="<%=sRepTerm%>">
+				<input type="hidden" name="selRepQualifierLN" value="">
+				<input type="hidden" name="selRepTermText" value="<%=sRepTerm%>">
+				<input type="hidden" name="selRepTermID" value="<%=sRepTermID%>">
+				<input type="hidden" name="selRepQualifierText" value="">
+				<input type="hidden" name="selConceptualDomainText" value="<%=sConDom%>">
+				<input type="hidden" name="selContextText" value="<%=sContext%>">
+				<input type="hidden" name="MenuAction" value="<%=sMenuAction%>">
+				<input type="hidden" name="valueCount" value="0">
+				<input type="hidden" name="selObjRow" value="<%=selObjRow%>">
+				<input type="hidden" name="selPropRow" value="<%=selPropRow%>">
+				<input type="hidden" name="selRepRow" value="<%=selRepRow%>">
+				<input type="hidden" name="selObjQRow" value="<%=selObjQRow%>">
+				<input type="hidden" name="selPropQRow" value="<%=selPropQRow%>">
+				<input type="hidden" name="selRepQRow" value="<%=selRepQRow%>">
+				<input type="hidden" name="PropDefinition" value="<%=sPropDefinition%>">
+				<input type="hidden" name="ObjDefinition" value="<%=sObjDefinition%>">
+				<input type="hidden" name="RepDefinition" value="<%=sRepDefinition%>">
+				<input type="hidden" name="openToTree" value="">
+				<input type="hidden" name="RepQualID" value="<%=sRepQualID%>">
+				<input type="hidden" name="RepQualVocab" value="<%=sRepQualVocab%>">
+				<input type="hidden" name="RepTerm_ID" value="<%=sRepTerm_ID%>">
+				<input type="hidden" name="RepTermVocab" value="<%=sRepTermVocab%>">
+				<input type="hidden" name="sCompBlocks" value="">
+				<input type="hidden" name="nvpConcept" value="">
 
-<input type="hidden" name="RepQualCCode" value="">
-<input type="hidden" name="RepQualCCodeDB" value="">
-<input type="hidden" name="RepCCode" value="<%=sRepCCode%>">
-<input type="hidden" name="RepCCodeDB" value="<%=sRepCCodeDB%>">
-<input type="hidden" name="nameTypeChange" value="<%=nameChanged%>">
+				<input type="hidden" name="RepQualCCode" value="">
+				<input type="hidden" name="RepQualCCodeDB" value="">
+				<input type="hidden" name="RepCCode" value="<%=sRepCCode%>">
+				<input type="hidden" name="RepCCodeDB" value="<%=sRepCCodeDB%>">
+				<input type="hidden" name="nameTypeChange" value="<%=nameChanged%>">
 
-<select name= "selCSCSIHidden" size ="1" style="visibility:hidden;"  multiple></select>
-<select name= "selACCSIHidden" size ="1" style="visibility:hidden;"  multiple></select>
-<select name= "selCSNAMEHidden" size="1" style="visibility:hidden;"  multiple></select>
-<!-- store the selected ACs in the hidden field to use it for cscsi -->
-<select name= "selACHidden" size="1" style="visibility:hidden;width:100;" multiple>
-<%if (vACId != null)
+				<select name="selCSCSIHidden" size="1" style="visibility:hidden;" multiple></select>
+				<select name="selACCSIHidden" size="1" style="visibility:hidden;" multiple></select>
+				<select name="selCSNAMEHidden" size="1" style="visibility:hidden;" multiple></select>
+				<!-- store the selected ACs in the hidden field to use it for cscsi -->
+				<select name="selACHidden" size="1" style="visibility:hidden;width:100;" multiple>
+					<%if (vACId != null)
       {
         for (int i = 0; vACId.size() > i; i++)
         {
@@ -1130,38 +1578,44 @@
           if (vACName != null && vACName.size() > i) sACName = (String) vACName.elementAt(i);
           //     System.out.println("selected " + sACName);
           %>
-      <option value="<%=sAC_ID%>"><%=sACName%></option>
-<%}
+					<option value="<%=sAC_ID%>">
+						<%=sACName%>
+					</option>
+					<%}
       }
       %>
-</select>
-<select name= "vRepQualifierCodes" size ="1" style="visibility:hidden;width:100;"  multiple>
-<%if (vRepQualifierCodes != null)
+				</select>
+				<select name="vRepQualifierCodes" size="1" style="visibility:hidden;width:100;" multiple>
+					<%if (vRepQualifierCodes != null)
       {
         for (int i = 0; vRepQualifierCodes.size() > i; i++)
         {
           String sRepQualifierCode = (String) vRepQualifierCodes.elementAt(i);
 %>
-      <option value="<%=sRepQualifierCode%>"><%=sRepQualifierCode%></option>
-<%}
+					<option value="<%=sRepQualifierCode%>">
+						<%=sRepQualifierCode%>
+					</option>
+					<%}
       }
       %>
-</select>
-<select name= "vRepQualifierDB" size="1" style="visibility:hidden;width:100;"  multiple>
-<%if (vRepQualifierDB != null)
+				</select>
+				<select name="vRepQualifierDB" size="1" style="visibility:hidden;width:100;" multiple>
+					<%if (vRepQualifierDB != null)
       {
         for (int i = 0; vRepQualifierDB.size() > i; i++)
         {
           String sRepQualifierDB = (String) vRepQualifierDB.elementAt(i);
 %>
-      <option value="<%=sRepQualifierDB%>"><%=sRepQualifierDB%></option>
-<%}
+					<option value="<%=sRepQualifierDB%>">
+						<%=sRepQualifierDB%>
+					</option>
+					<%}
       }
       %>
-</select>
-<!-- store datatype description to use later -->
-<select name= "datatypeDesc" size ="1" style="visibility:hidden;width:100;"  multiple>
-<%if (vDataTypes != null)
+				</select>
+				<!-- store datatype description to use later -->
+				<select name="datatypeDesc" size="1" style="visibility:hidden;width:100;" multiple>
+					<%if (vDataTypes != null)
       {
         for (int i = 0; vDataTypes.size() > i; i++)
         {
@@ -1172,17 +1626,19 @@
           if (i < vDataTypeCom.size()) sDTComm = (String) vDataTypeCom.elementAt(i);
           if (sDTComm == null) sDTComm = "";
 %>
-      <option value="<%=sDTDesc%>"><%=sDTComm%></option>
-<%}
+					<option value="<%=sDTDesc%>">
+						<%=sDTComm%>
+					</option>
+					<%}
       }
       %>
-</select>
+				</select>
 
-<!-- stores the selected rows to get the bean from the search results -->
-<select name= "hiddenSelRow" size="1" style="visibility:hidden;width:160"  multiple></select>
-<input type="hidden" name="acSearch" value="">
-</div>
-<script language = "javascript">
+				<!-- stores the selected rows to get the bean from the search results -->
+				<select name="hiddenSelRow" size="1" style="visibility:hidden;width:160" multiple></select>
+				<input type="hidden" name="acSearch" value="">
+			</div>
+			<script language="javascript">
 //call function to initiate form objects
 createObject("document.createVDForm");
 displayStatusMessage();
@@ -1192,20 +1648,20 @@ loadCSCSI();
 ShowEVSInfo('RepQualifier');
 changeDataType();
 </script>
-</form>
-<!--  remvoed the searchactionform from here and put it on vdpvstab.jsp -->
-<div style="display:none">
-<form name="SearchActionForm" method="post" action="">
-<input type="hidden" name="searchComp" value="<%=sSearchAC%>">
-<input type="hidden" name="searchEVS" value="ValueDomain">
-<input type="hidden" name="isValidSearch" value="true">
-<input type="hidden" name="CDVDcontext" value="">
-<input type="hidden" name="SelContext" value="">
-<input type="hidden" name="acID" value="<%=sVDIDSEQ%>">
-<input type="hidden" name="CD_ID" value="<%=sConDomID%>">
-<input type="hidden" name="itemType" value="">
-</form>
-</div>
+		</form>
+		<!--  remvoed the searchactionform from here and put it on vdpvstab.jsp -->
+		<div style="display:none">
+			<form name="SearchActionForm" method="post" action="">
+				<input type="hidden" name="searchComp" value="<%=sSearchAC%>">
+				<input type="hidden" name="searchEVS" value="ValueDomain">
+				<input type="hidden" name="isValidSearch" value="true">
+				<input type="hidden" name="CDVDcontext" value="">
+				<input type="hidden" name="SelContext" value="">
+				<input type="hidden" name="acID" value="<%=sVDIDSEQ%>">
+				<input type="hidden" name="CD_ID" value="<%=sConDomID%>">
+				<input type="hidden" name="itemType" value="">
+			</form>
+		</div>
 
-</body>
+	</body>
 </html>

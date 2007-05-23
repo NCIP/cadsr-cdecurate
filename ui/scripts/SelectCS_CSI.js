@@ -1,3 +1,8 @@
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/SelectCS_CSI.js,v 1.7 2007-05-23 04:39:04 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 
 //var selCSIArray = new Array();
 var prevCSCSI = "";
@@ -908,8 +913,8 @@ fill selectedCSI options.
     else if (sName == null || sName == "")
       alert("Please enter a text for the Reference Document Name");
       //if less than 7 or does not have http:// at the begging
-    else if (sURL != null && sURL != "" && (sURL.length < 7 || (sURL.length >= 7 && sURL.substring(0,7) != "http://")))
-      alert("Reference Document URL Text must begin with 'http://'");
+    else if (sURL != null && sURL != "" && (sURL.length < 8 || (sURL.substring(0,7) != "http://" && sURL.substring(0,8) != "https://")))
+      alert("Reference Document URL Text must begin with 'http:// or https://'");
     else  //ok to submit
       submitDesignate("addRefDoc");
   }

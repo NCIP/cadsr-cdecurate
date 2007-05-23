@@ -1,19 +1,22 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CreateCDAltName.jsp,v 1.6 2007-01-26 20:17:44 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CreateCDAltName.jsp,v 1.7 2007-05-23 04:32:19 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page import= "java.util.*" %>
-<%@ page session="true" %>
+<%@ page import="java.util.*"%>
+<%@ page session="true"%>
 <html>
-<head>
-<title>Designate Administered Component / Specify Alternate Name</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
-<%
+	<head>
+		<title>
+			Designate Administered Component / Specify Alternate Name
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.Session_Data"%>
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
+		<%
   String sSearchAC = "";
-  String sMenuAction = (String)session.getAttribute("MenuAction");
+  String sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
   if (sMenuAction.equals("searchForCreate"))
      sSearchAC = (String)session.getAttribute("creSearchAC");
   else
@@ -41,7 +44,7 @@
    if (sContext == null) sContext = "";
 %>
 
-<Script Language="JavaScript">
+		<Script Language="JavaScript">
    function Setup()
    {
      
@@ -173,84 +176,146 @@
 
 </script>
 
-</head>
+	</head>
 
-<body onLoad="Setup();">
+	<body onLoad="Setup();">
 
-<form name="designateForm" method="post">
-  <table width="100%" cellspacing=0 cellpadding=0 border="0">
-    <col width="2%"><col width="36%"><col width="45%"><col width="10%">
-    <tr valign="top" height="50" align="center">
-      <td colspan=4><b><font size=4>Specify Conceptual Domain Alternate Name(s)</font></b></td>
-    </tr>
-    <tr height="75">
-      <td align="center"></td>
-      <td><font color="#FF0000">Select </font> Alternate Name Type</td>
-      <td colspan=2>
-        <select name="entAltnameType" size="1"  style="width:90%"
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
-          <option value="EVS_NODE">EVS_NODE</option>
-          <option value="EVS_VOCABULARY">EVS_VOCABULARY</option>
-          <option value="caDSR_DOCUMENT">caDSR_DOCUMENT</option>
-          <option value="EXTERNAL_LIST">EXTERNAL_LIST</option>
-        </select>
-      </td>
-    </tr>
-    <tr height="75">
-      <td align="center"></td>
-      <td><font color="#FF0000">Option 1 </font> Select Node From An EVS Tree (Use Case 2a, 2b)</td>
-      <td>
-       &nbsp;&nbsp;&nbsp;
-        <a href="javascript:searchType('tree');">Tree Search</a>     
-      </td>
-    </tr>
-    <tr height="75">
-      <td align="center"></td>
-      <td><font color="#FF0000">Option 2 </font> Select Name Of EVS Vocabulary (Use Case 3a)</td>
-      <td colspan=2>
-        <select name="selEvsVocab" size="1"  style="width:90%"
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
-          <option value="C3DName">Thesaurus</option>
-          <option value="C3DName">GO</option>
-          <option value="C3DName">LOINC</option>
-          <option value="C3DName">VA NDFRT</option>
-          <option value="C3DName">UWD Visual Anatomist</option>
-          <option value="C3DName">MGED</option>
-        </select>
-      </td>
-    </tr>
-    <tr height="75" valign="top">
-      <td align="center"></td>
-      <td><font color="#FF0000">Option 3 </font> Select Name Of Non-Evs Vocabulary (Use Case 3b)</td>
-      <td valign="top" colspan=2>
-        <textarea name="txtNonEvsVocab"  style="width:90%" rows=2  
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
-      </td>
-    </tr>
-     <tr height="75" valign="top">
-      <td align="center"></td>
-      <td><font color="#FF0000">Option 4 </font> Enter Name Of caDSR Document (Use Case 3c)</td>
-      <td valign="top" colspan=2>
-        <textarea name="txtExternalList"  style="width:90%" rows=2  
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
-      </td>
-    </tr>
-    <tr height="75" valign="top">
-      <td align="center"></td>
-      <td><font color="#FF0000">Option 5 </font> Enter Name Of External List (Use Case 3d)</td>
-      <td valign="top" colspan=2>
-        <textarea name="txtExternalList"  style="width:90%" rows=2  
-          onHelp = "showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
-      </td>
-    </tr>
-    <tr><td height="12" valign="top"></tr>    
-    <tr >
-      <td align="left" colspan=2><input type="button" name="btnClose" value="Close Window" style="width: 150", "height: 9" onClick="javascript:window.close();"></td>
-      <td align="left" colspan=2><input type="button" name="btnAddAltName" value="Create Alternate Name" style="width: 150", "height: 9" onClick="addAltName();"></td>
-    </tr>
-  <!-- stores selected component ID and workflow status  -->
-  <select size="1" name="hiddenUsedBy" style="visibility:hidden;"></select>
-  </table>
-</form>
-</body>
+		<form name="designateForm" method="post">
+			<table width="100%" cellspacing=0 cellpadding=0 border="0">
+				<col width="2%">
+				<col width="36%">
+				<col width="45%">
+				<col width="10%">
+				<tr valign="top" height="50" align="center">
+					<td colspan=4>
+						<b>
+							<font size=4>
+								Specify Conceptual Domain Alternate Name(s)
+							</font>
+						</b>
+					</td>
+				</tr>
+				<tr height="75">
+					<td align="center"></td>
+					<td>
+						<font color="#FF0000">
+							Select
+						</font>
+						Alternate Name Type
+					</td>
+					<td colspan=2>
+						<select name="entAltnameType" size="1" style="width:90%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+							<option value="EVS_NODE">
+								EVS_NODE
+							</option>
+							<option value="EVS_VOCABULARY">
+								EVS_VOCABULARY
+							</option>
+							<option value="caDSR_DOCUMENT">
+								caDSR_DOCUMENT
+							</option>
+							<option value="EXTERNAL_LIST">
+								EXTERNAL_LIST
+							</option>
+						</select>
+					</td>
+				</tr>
+				<tr height="75">
+					<td align="center"></td>
+					<td>
+						<font color="#FF0000">
+							Option 1
+						</font>
+						Select Node From An EVS Tree (Use Case 2a, 2b)
+					</td>
+					<td>
+						&nbsp;&nbsp;&nbsp;
+						<a href="javascript:searchType('tree');">
+							Tree Search
+						</a>
+					</td>
+				</tr>
+				<tr height="75">
+					<td align="center"></td>
+					<td>
+						<font color="#FF0000">
+							Option 2
+						</font>
+						Select Name Of EVS Vocabulary (Use Case 3a)
+					</td>
+					<td colspan=2>
+						<select name="selEvsVocab" size="1" style="width:90%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+							<option value="C3DName">
+								Thesaurus
+							</option>
+							<option value="C3DName">
+								GO
+							</option>
+							<option value="C3DName">
+								LOINC
+							</option>
+							<option value="C3DName">
+								VA NDFRT
+							</option>
+							<option value="C3DName">
+								UWD Visual Anatomist
+							</option>
+							<option value="C3DName">
+								MGED
+							</option>
+						</select>
+					</td>
+				</tr>
+				<tr height="75" valign="top">
+					<td align="center"></td>
+					<td>
+						<font color="#FF0000">
+							Option 3
+						</font>
+						Select Name Of Non-Evs Vocabulary (Use Case 3b)
+					</td>
+					<td valign="top" colspan=2>
+						<textarea name="txtNonEvsVocab" style="width:90%" rows=2 onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
+					</td>
+				</tr>
+				<tr height="75" valign="top">
+					<td align="center"></td>
+					<td>
+						<font color="#FF0000">
+							Option 4
+						</font>
+						Enter Name Of caDSR Document (Use Case 3c)
+					</td>
+					<td valign="top" colspan=2>
+						<textarea name="txtExternalList" style="width:90%" rows=2 onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
+					</td>
+				</tr>
+				<tr height="75" valign="top">
+					<td align="center"></td>
+					<td>
+						<font color="#FF0000">
+							Option 5
+						</font>
+						Enter Name Of External List (Use Case 3d)
+					</td>
+					<td valign="top" colspan=2>
+						<textarea name="txtExternalList" style="width:90%" rows=2 onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td height="12" valign="top">
+				</tr>
+				<tr>
+					<td align="left" colspan=2>
+						<input type="button" name="btnClose" value="Close Window" style="width: 150" , "height: 9" onClick="javascript:window.close();">
+					</td>
+					<td align="left" colspan=2>
+						<input type="button" name="btnAddAltName" value="Create Alternate Name" style="width: 150" , "height: 9" onClick="addAltName();">
+					</td>
+				</tr>
+				<!-- stores selected component ID and workflow status  -->
+				<select size="1" name="hiddenUsedBy" style="visibility:hidden;"></select>
+			</table>
+		</form>
+	</body>
 </html>

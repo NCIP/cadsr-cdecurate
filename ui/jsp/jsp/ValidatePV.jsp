@@ -1,17 +1,20 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/ValidatePV.jsp,v 1.8 2007-01-26 20:17:45 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/ValidatePV.jsp,v 1.9 2007-05-23 04:36:39 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page import="java.sql.*" %>
-<%@ page import="java.util.*" %>
+<%@ page import="java.sql.*"%>
+<%@ page import="java.util.*"%>
 <html>
-<head>
-<title>ValidateVD</title>
-<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
-<%
+	<head>
+		<title>
+			ValidateVD
+		</title>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.Session_Data"%>
+		<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
+		<%
     boolean isValid = true;
     Vector vValidate = new Vector();
     vValidate = (Vector)request.getAttribute("vValidate");
@@ -21,9 +24,9 @@
       if(sStat.equals("Valid")==false)
         isValid = false;
     }
-    session.setAttribute("statusMessage", "");  //remove the status messge if any
+    session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");  //remove the status messge if any
 %>
-<script language="JavaScript">
+		<script language="JavaScript">
    var evsWindow = null;
 
    function hourglass(){
@@ -64,48 +67,72 @@
        	evsWindow = window.open("jsp/EVSSearch.jsp", "EVSWindow", "width=600,height=400,resizable=yes,scrollbars=yes");
    }
 </script>
-</head>
+	</head>
 
-<body bgcolor = "#666666">
-<form name="validatePVForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=validatePVFromForm" >
-<font color="#CCCCCC"></font>
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td width="764" height="29" valign="top">
-      <% if (isValid == true) { %>
-          <input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()">
-      <% } else { %>
-          <input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()" disabled>
-      <% } %>
-        &nbsp;&nbsp;
-      <input type="button" name="btnBack" value="Back" style="width:125" onClick="EditPV();">
-        &nbsp;&nbsp;
-    	<img name="Message" src="Assets/WaitMessage1.gif" width="400" height="25" alt="WaitMessage" 						style="visibility:hidden;">
-    </td>
-  </tr>
-<!--  <tr  height="40">
+	<body bgcolor="#666666">
+		<form name="validatePVForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=validatePVFromForm">
+			<font color="#CCCCCC"></font>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="764" height="29" valign="top">
+						<% if (isValid == true) { %>
+						<input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()">
+						<% } else { %>
+						<input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()" disabled>
+						<% } %>
+						&nbsp;&nbsp;
+						<input type="button" name="btnBack" value="Back" style="width:125" onClick="EditPV();">
+						&nbsp;&nbsp;
+						<img name="Message" src="Assets/WaitMessage1.gif" width="400" height="25" alt="WaitMessage" style="visibility:hidden;">
+					</td>
+				</tr>
+				<!--  <tr  height="40">
     <td valign="middle"><label><font size="3"><strong><font size="4">Create/Edit
       <font color="#FF0000">Permissible Value</font> - Validate Mandatory & Optional
       Attributes</font></strong></font></label> <font size="4"></font>
   </tr> -->
-</table>
-<br>
-<table width="100%" border="2" cellspacing="0" cellpadding="0" bordercolor="#000000">
-  <caption>
-  <h3 align="left">Validate <font color="#FF0000">Permissible Value</font> Attributes</h3>
-  </caption>
-  <tr>
-    <td width="282" height="20" valign="top" bgcolor="#FFFFFF" bordercolor="#000000">
-      <div align="center"><strong><font size="3">Attribute Name</font></strong></div>
-    </td>
-    <td valign="top" width="437" bgcolor="#FFFFFF" bordercolor="#000000">
-      <div align="center"><strong><font size="3">Attribute Contents</font></strong></div>
-    </td>
-    <td width="101" valign="top" bgcolor="#FFFFFF" bordercolor="#000000">
-      <div align="center"><strong><font size="3">Validation Status</font></strong></div>
-    </td>
-  </tr>
-<%
+			</table>
+			<br>
+			<table width="100%" border="2" cellspacing="0" cellpadding="0" bordercolor="#000000">
+				<caption>
+					<h3 align="left">
+						Validate
+						<font color="#FF0000">
+							Permissible Value
+						</font>
+						Attributes
+					</h3>
+				</caption>
+				<tr>
+					<td width="282" height="20" valign="top" bgcolor="#FFFFFF" bordercolor="#000000">
+						<div align="center">
+							<strong>
+								<font size="3">
+									Attribute Name
+								</font>
+							</strong>
+						</div>
+					</td>
+					<td valign="top" width="437" bgcolor="#FFFFFF" bordercolor="#000000">
+						<div align="center">
+							<strong>
+								<font size="3">
+									Attribute Contents
+								</font>
+							</strong>
+						</div>
+					</td>
+					<td width="101" valign="top" bgcolor="#FFFFFF" bordercolor="#000000">
+						<div align="center">
+							<strong>
+								<font size="3">
+									Validation Status
+								</font>
+							</strong>
+						</div>
+					</td>
+				</tr>
+				<%
     for (int i = 0; vValidate.size()>i; i = i+3)
     {
       String sItem = (String)vValidate.elementAt(i);
@@ -118,17 +145,28 @@
 
       
 %>
-        <tr>
-          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000"><strong><%=sItem%></strong></td>
-          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000"><%=sContent%>&nbsp;</td>
-          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000"><font color="<%=sFont%>"> <%=sStat%> </font>&nbsp;</td>
-        </tr>
-<%
+				<tr>
+					<td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000">
+						<strong>
+							<%=sItem%>
+						</strong>
+					</td>
+					<td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000">
+						<%=sContent%>
+						&nbsp;
+					</td>
+					<td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000">
+						<font color="<%=sFont%>">
+							<%=sStat%>
+						</font>
+						&nbsp;
+					</td>
+				</tr>
+				<%
      
     }
 %>
-</table>
-<input type="hidden" name="ValidatePVPageAction" value="nothing">
-
-</body>
+			</table>
+			<input type="hidden" name="ValidatePVPageAction" value="nothing">
+	</body>
 </html>

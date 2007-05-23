@@ -1,13 +1,15 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/LoginSplash.jsp,v 1.9 2007-01-26 20:17:45 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/LoginSplash.jsp,v 1.10 2007-05-23 04:34:44 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <html>
-<head>
-<title>CDE Curation: Login</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<script language="JavaScript" type="text/JavaScript">
+	<head>
+		<title>
+			CDE Curation: Login
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<script language="JavaScript" type="text/JavaScript">
 <!--
 function MM_reloadPage(init) {  //reloads the window if Nav4 resized
   if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
@@ -128,7 +130,7 @@ function linkFirstGov()
   if (winFirstGov && !winFirstGov.closed)
      winFirstGov.focus();
   else
-   	winFirstGov = window.open("http://www.firstgov.gov", "FirstGov", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+   	winFirstGov = window.open("http://www.usa.gov", "USA", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 
 function onLoad()
@@ -150,119 +152,143 @@ function autoLogIn()
 
 //-->
 </script>
-</head>
+	</head>
 
-<body onLoad="autoLogin();">
-<form method="post" name="LoginForm" action="">
-<%
+	<body onLoad="autoLogin();">
+		<form method="post" name="LoginForm" action="">
+			<%
 String errMessage = (String)session.getAttribute("ErrorMessage");
 if (errMessage == null) errMessage = "";
 session.setAttribute("ErrorMessage", "");
 %>
-<table width="100%" border="4" bgcolor = "#CCCCCC">
+			<table width="100%" border="4" bgcolor="#CCCCCC">
 
-<tr>
-<table width="100%" height="140" border=0>
-  <tr>
-      <td width="33%" align="center"><a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr"><img src="../Assets/curation_banner2.gif" border="0" alt="caDSR Logo"></a>
-      </td>
-</tr>
-<tr height="200"></tr>
+				<tr>
+					<table width="100%" height="140" border=0>
+						<tr>
+							<td width="33%" align="center">
+								<a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr">
+									<img src="../Assets/curation_banner2.gif" border="0" alt="caDSR Logo">
+								</a>
+							</td>
+						</tr>
+						<tr height="200"></tr>
 
-<!--beginning of login table -->
-<table>
-<tr height="60"></tr>
-<td width="40%"></td>
-    <td width=""  align="center">
-    <table width="394" border="4" bgcolor = "#CCCCCC">
+						<!--beginning of login table -->
+						<table>
+							<tr height="60"></tr>
+							<td width="40%"></td>
+							<td width="" align="center">
+								<table width="394" border="4" bgcolor="#CCCCCC">
 
-     <% if (errMessage.equals("")) { %>
-	      <tr>
-          <td width="387" height="67" valign="center" align="center">
-             <h3 align="center" valign="center"><font face="Arial, Helvetica, sans-serif" style="font-size: 14pt">Please enter User Name and Password.</font></h3>
-          </td>
-        </tr>
-      <%} else { %>
-	      <tr>
-          <td width="387" height="67" valign="center" align="center">
-              <h3 align="center"><font color="#FF0000" style="font-size: 14pt"><%=errMessage%></font></h3>
-          </td>
-       </tr>
-    <% } %>
-     </table>
-  <table width="394" border="4" bgcolor = "#CCCCCC">
+									<% if (errMessage.equals("")) { %>
+									<tr>
+										<td width="387" height="67" valign="center" align="center">
+											<h3 align="center" valign="center">
+												<font face="Arial, Helvetica, sans-serif" style="font-size: 14pt">
+													Please enter User Name and Password.
+												</font>
+											</h3>
+										</td>
+									</tr>
+									<%} else { %>
+									<tr>
+										<td width="387" height="67" valign="center" align="center">
+											<h3 align="center">
+												<font color="#FF0000" style="font-size: 14pt">
+													<%=errMessage%>
+												</font>
+											</h3>
+										</td>
+									</tr>
+									<% } %>
+								</table>
+								<table width="394" border="4" bgcolor="#CCCCCC">
 
-    <tr>
-      <td width="115" height="30" valign="top" align="center" >
-        <h4><font face="Arial, Helvetica, sans-serif" style="font-size: 12pt">User Name</font></h4>
-      </td>
-      <td width="231" valign="top">
-        <input type="text" name="Username" value="">
-      </td>
-      <td width="20"></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" width="115" align="center">
-        <h4><font face="Arial, Helvetica, sans-serif" style="font-size: 12pt">Password</font></h4>
-      </td>
-      <td valign="top" width="231">
-        <input type="password" name="Password" value="">
-      </td>
-      <td width="20"></td>
-    </tr>
+									<tr>
+										<td width="115" height="30" valign="top" align="center">
+											<h4>
+												<font face="Arial, Helvetica, sans-serif" style="font-size: 12pt">
+													User Name
+												</font>
+											</h4>
+										</td>
+										<td width="231" valign="top">
+											<input type="text" name="Username" value="">
+										</td>
+										<td width="20"></td>
+									</tr>
+									<tr>
+										<td height="30" valign="top" width="115" align="center">
+											<h4>
+												<font face="Arial, Helvetica, sans-serif" style="font-size: 12pt">
+													Password
+												</font>
+											</h4>
+										</td>
+										<td valign="top" width="231">
+											<input type="password" name="Password" value="">
+										</td>
+										<td width="20"></td>
+									</tr>
 
-      <td height="55" colspan="1" valign="top" width="115">
-        <input name="Submit" type="submit" value="Login" onClick="callMessageGifLogin()">
-      </td>
+									<td height="55" colspan="1" valign="top" width="115">
+										<input name="Submit" type="submit" value="Login" onClick="callMessageGifLogin()">
+									</td>
 
-      <td valign="top" width="231"> <img name="Message" src="../Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
-      </td>
-      <td width="20">
-	<select name="Context" style="visibility:hidden;">
-	 <option></option>
-	</select>
-      </td>
+									<td valign="top" width="231">
+										<img name="Message" src="../Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+									</td>
+									<td width="20">
+										<select name="Context" style="visibility:hidden;">
+											<option></option>
+										</select>
+									</td>
 
-    </tr>
-  </table>
-</form>
+									</tr>
+								</table>
+								</form>
 
-    </td>
-<tr height="60"></tr>
-<tr height="60">
-      <td width="100"></td>
-      <td width="400" height="30" valign="top" align="center" >
-        <h5><font face="Arial, Helvetica, sans-serif" style="font-size: 10pt">Do not use your browser's "Back" button to navigate once you have logged in. Doing so may cause the tool to function incorrectly.</font></h5>
-      </td>
-</tr>
-</table>
-  </tr>
-<tr height="100"></tr>
+							</td>
+							<tr height="60"></tr>
+							<tr height="60">
+								<td width="100"></td>
+								<td width="400" height="30" valign="top" align="center">
+									<h5>
+										<font face="Arial, Helvetica, sans-serif" style="font-size: 10pt">
+											Do not use your browser's "Back" button to navigate once you have logged in. Doing so may cause the tool to function incorrectly.
+										</font>
+									</h5>
+								</td>
+							</tr>
+						</table>
+						</tr>
+						<tr height="100"></tr>
 
-  <tr>
-    <td align="center">
-<table width="100%" border=0>
-  <tr>
-          <td width="20%" align="center"> <img src="../Assets/Shorten_Bottom_Logo.gif" border="0" usemap="#BottomMap"> 
-		  
-          </td>
-   
-  </tr>
-</table>
-    </td>
-  </tr>
-</table>
-</table>
-<!-- end of login table -->
-<map name="BottomMap">
-  <area shape="rect" coords="63,0,225,55" onClick = "linkCancerGov();" >
-  <area shape="rect" coords="227,1,517,55" onClick = "linkNIH();" >
-  <area shape="rect" coords="519,2,706,53" onClick = "linkDHHS();" >
-  <area shape="rect" coords="710,4,993,57" onClick = "linkFirstGov();" >
-</map>
-<script language = "javascript">
+						<tr>
+							<td align="center">
+								<table width="100%" border=0>
+									<tr>
+										<td width="20%" align="center">
+											<img src="../Assets/Shorten_Bottom_Logo.gif" border="0" usemap="#BottomMap">
+
+										</td>
+
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+			</table>
+			<!-- end of login table -->
+			<map name="BottomMap">
+				<area shape="rect" coords="63,0,225,55" onClick="linkCancerGov();">
+				<area shape="rect" coords="227,1,517,55" onClick="linkNIH();">
+				<area shape="rect" coords="519,2,706,53" onClick="linkDHHS();">
+				<area shape="rect" coords="710,4,993,57" onClick="linkFirstGov();">
+			</map>
+			<script language="javascript">
 onLoad();
 </script>
-
-</body>
+	</body>
 </html>

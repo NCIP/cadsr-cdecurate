@@ -1,20 +1,22 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/OpenSearchWindow.jsp,v 1.8 2007-01-26 20:17:45 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/OpenSearchWindow.jsp,v 1.9 2007-05-23 04:34:59 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <!-- goes to secondary window error page if error occurs -->
-<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <curate:checkLogon name="Userbean" page="/jsp/ErrorPageWindow.jsp" />
 <html>
-<head>
-<title>CDE Curation: Search</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<script>
+	<head>
+		<title>
+			CDE Curation: Search
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<script>
 history.forward();
 </script>
-<%
-  String sMenuAction2 = (String)session.getAttribute("MenuAction");
+		<%
+  String sMenuAction2 = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
   String sSelAC2 = "";
   String sSearchAC2 = "";
   Vector vACAttr2 = new Vector();
@@ -75,19 +77,19 @@ history.forward();
     }
 //System.out.println("done OpenSearchWindow.jsp!!");
 %>
-</head>
-<body>
-<table width="100%" border="2" cellpadding="0" cellspacing="0">
-  <col style="width: 2.3in"/>
-  <col /> 
-  <tr valign="top">
-    <td class="sidebarBGColor">
-      <%@ include file="SearchParameters.jsp" %>
-    </td>
-    <td>
-      <%@ include file="SearchResults.jsp" %>
-    </td>
-  </tr>
-</table>
-</body>
+	</head>
+	<body>
+		<table width="100%" border="2" cellpadding="0" cellspacing="0">
+			<col style="width: 2.3in" />
+			<col />
+			<tr valign="top">
+				<td class="sidebarBGColor">
+					<%@ include file="SearchParameters.jsp"%>
+				</td>
+				<td>
+					<%@ include file="SearchResults.jsp"%>
+				</td>
+			</tr>
+		</table>
+	</body>
 </html>

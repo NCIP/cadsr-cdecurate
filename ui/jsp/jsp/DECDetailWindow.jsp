@@ -1,18 +1,20 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/DECDetailWindow.jsp,v 1.9 2007-01-26 20:17:44 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/DECDetailWindow.jsp,v 1.10 2007-05-23 04:33:08 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <!-- goes to secondary window error page if error occurs -->
-<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <curate:checkLogon name="Userbean" page="/jsp/ErrorPageWindow.jsp" />
-<%@ page import= "java.util.*" %>
-<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
+<%@ page import="java.util.*"%>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <html>
-<head>
-<title>Display Data Element Concept Details</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<%
+	<head>
+		<title>
+			Display Data Element Concept Details
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<%
    Vector decResult = (Vector)request.getAttribute("lstDECResult");
    if (decResult == null) decResult = new Vector();
    String resLabel = (String)request.getAttribute("resultLabel");
@@ -26,7 +28,7 @@
   
 %>
 
-<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
+		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
   function setup()
   {
     <% if (pageAct.equals("firstOpen")) { %>    
@@ -49,38 +51,63 @@
   }
 
 </SCRIPT>
-</head>
-<body onLoad="setup();">
-<form name="DECDetailsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=showDECDetail">
-<br>
-  <table width="100%">
-    <tr>
-      <td width="80%" align="center"></td>
-      <td>
-        <input type="button" name="closeBtn" value="Close Window" onClick="window.close();" style="width: 97;height: 30">
-          &nbsp;
-      </td>
-    </tr>
-    <tr></tr>
-    <tr>
-        <td><font size="4"><b><%=resLabel%></b></font></td>
-    </tr>
-    <tr></tr>
-    <tr>
-        <td><div align="left"><%=nRecs%> Records Found</div></td>
-    </tr>
- </table>
- <table width="100%" border="1" style="border-collapse: collapse" valign="top">
-    <tr valign="middle">
-      <th>No.</th>
-      <th>Long Name</th>
-      <th>Public ID</th>
-      <th>Version</th>
-      <th>Workflow Status</th>
-      <th>Context</th>
-      <th>Definition</th>
-    </tr>
-<%
+	</head>
+	<body onLoad="setup();">
+		<form name="DECDetailsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=showDECDetail">
+			<br>
+			<table width="100%">
+				<tr>
+					<td width="80%" align="center"></td>
+					<td>
+						<input type="button" name="closeBtn" value="Close Window" onClick="window.close();" style="width: 97;height: 30">
+						&nbsp;
+					</td>
+				</tr>
+				<tr></tr>
+				<tr>
+					<td>
+						<font size="4">
+							<b>
+								<%=resLabel%>
+							</b>
+						</font>
+					</td>
+				</tr>
+				<tr></tr>
+				<tr>
+					<td>
+						<div align="left">
+							<%=nRecs%>
+							Records Found
+						</div>
+					</td>
+				</tr>
+			</table>
+			<table width="100%" border="1" style="border-collapse: collapse" valign="top">
+				<tr valign="middle">
+					<th>
+						No.
+					</th>
+					<th>
+						Long Name
+					</th>
+					<th>
+						Public ID
+					</th>
+					<th>
+						Version
+					</th>
+					<th>
+						Workflow Status
+					</th>
+					<th>
+						Context
+					</th>
+					<th>
+						Definition
+					</th>
+				</tr>
+				<%
     if (decResult != null) 
     {
 		  for (int i = 0; i < decResult.size(); i++)
@@ -101,22 +128,36 @@
         String sPN = dec.getDEC_PREFERRED_NAME();
         if (sPN == null) sPN = "";
 %>
-        <tr>
-          <td><%=i+1%></td>
-          <td><%=sLN%></td>
-          <td><%=sPId%></td>
-          <td><%=sVer%></td>
-          <td><%=sWF%></td>
-          <td><%=sCont%></td>
-          <td><%=sDef%></td>
-       </tr>
-<%
+				<tr>
+					<td>
+						<%=i+1%>
+					</td>
+					<td>
+						<%=sLN%>
+					</td>
+					<td>
+						<%=sPId%>
+					</td>
+					<td>
+						<%=sVer%>
+					</td>
+					<td>
+						<%=sWF%>
+					</td>
+					<td>
+						<%=sCont%>
+					</td>
+					<td>
+						<%=sDef%>
+					</td>
+				</tr>
+				<%
       }
     }
 %>
- </table>
-<input type="hidden" name="acID" value="">
-<input type="hidden" name="acName" value="">
-</form>
-</body>
+			</table>
+			<input type="hidden" name="acID" value="">
+			<input type="hidden" name="acName" value="">
+		</form>
+	</body>
 </html>

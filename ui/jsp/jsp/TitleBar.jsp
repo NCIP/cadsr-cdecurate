@@ -1,14 +1,14 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/TitleBar.jsp,v 1.13 2007-01-26 20:17:45 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/TitleBar.jsp,v 1.14 2007-05-23 04:36:14 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <html>
-<head>
-<% //String thisServer2 = request.getServerName(); 
+	<head>
+		<% //String thisServer2 = request.getServerName(); 
    String sentinelURL = (String)session.getAttribute("SentinelURL");
    String UMLBrowserURL = (String)session.getAttribute("UMLBrowserURL");%>
-<script language="JavaScript">
+		<script language="JavaScript">
 <!--
 var dotCntr = -1;
 var helpWindow = null;
@@ -67,25 +67,11 @@ var sentinelWindow = null;
        {
 //           serverName = serverName.toLowerCase();
            var cdeServer = serverName
-/*       var cdeServer = serverName;   //defaults to curation tool server
-       if (serverName == "localhost")
-          cdeServer = "biotite.scenpro.net:8080";
-       else if (serverName == "protocol.scenpro.net")
-          cdeServer = "protocol.scenpro.net:8080/cadsrsentinel/do/logon";
-       else if (serverName == "ncicb-dev.nci.nih.gov" || serverName == "cdecurate-dev.nci.nih.gov")
-          cdeServer = "ncicb-dev.nci.nih.gov/cadsrsentinel"; 
-       else if (serverName == "ncicb-qa.nci.nih.gov" || serverName == "cdecurate-qa.nci.nih.gov")
-          cdeServer = "ncicb-qa.nci.nih.gov/cadsrsentinel";
-       else if (serverName == "ncicb-stage.nci.nih.gov" || serverName == "cdecurate-stage.nci.nih.gov")
-          cdeServer =  "cadsrsentinel-stage.nci.nih.gov/";   //"ncicb-stage.nci.nih.gov/cadsrsentinel";
-       else if (serverName == "ncicb.nci.nih.gov" || serverName == "cdecurate.nci.nih.gov")
-          cdeServer = "cadsrsentinel.nci.nih.gov/"; //"ncicb-nci.nih.gov/cadsrsentinel";*/
             //open the window
-        if (sentinelWindow && !sentinelWindow.closed)
-          sentinelWindow.focus();
-        else
-          sentinelWindow = window.open(cdeServer);
-        //  sentinelWindow = window.open("http://" + cdeServer + "/cadsrsentinel/do/cdecuration", "_blank");
+	        if (sentinelWindow && !sentinelWindow.closed)
+	          sentinelWindow.focus();
+	        else
+	          sentinelWindow = window.open(cdeServer);
        }
        else
            alert("Unable to determine the server name for the Sentinel Tool.");    
@@ -197,38 +183,55 @@ function linkNCICB()
 }
 
 </script>
-</head>
+	</head>
 
-<body bgcolor="#FFFFFF" text="#000000">
-<form name="Form1" method="post" action="/cdecurate/NCICurationServlet?reqType=newDEFromMenu"></form>
-<form name="Form2" method="post" action="/cdecurate/NCICurationServlet?reqType=newDECFromMenu"></form>
-<form name="Form3" method="post" action="/cdecurate/NCICurationServlet?reqType=newVDFromMenu"></form>
-<form name="LogoutForm" method="post" action="/cdecurate/NCICurationServlet?reqType=logout"></form>
-<form name="Form4" method="post" action="/cdecurate/NCICurationServlet?reqType=actionFromMenu">
-<input type="hidden" name="hidMenuAction" value="nothing">
-</form>
-<%
+	<body bgcolor="#FFFFFF" text="#000000">
+		<form name="Form1" method="post" action="/cdecurate/NCICurationServlet?reqType=newDEFromMenu"></form>
+		<form name="Form2" method="post" action="/cdecurate/NCICurationServlet?reqType=newDECFromMenu"></form>
+		<form name="Form3" method="post" action="/cdecurate/NCICurationServlet?reqType=newVDFromMenu"></form>
+		<form name="LogoutForm" method="post" action="/cdecurate/NCICurationServlet?reqType=logout"></form>
+		<form name="Form4" method="post" action="/cdecurate/NCICurationServlet?reqType=actionFromMenu">
+			<input type="hidden" name="hidMenuAction" value="nothing">
+		</form>
+		<%
     String Username = (String)session.getAttribute("Username");
-    String Context = (String)session.getAttribute("sDefaultContext");
+    //String Context = (String)session.getAttribute("sDefaultContext");
 %>
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" >
-        <col style="width: 1px"/>
-        <col />
-        <tr bgcolor="#A90101">
-            <td align="left"><a href="http://www.cancer.gov" target=_blank><img src="Assets/brandtype.gif" border="0"></a></td>
-            <td align="right"><a href="http://www.cancer.gov" target=_blank><img src="Assets/tagline_nologo.gif" border="0"></a></td>
-        </tr>
-        <tr>
-            <td colspan="2"><a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr"><img src="Assets/curation_banner2.gif" border="0" alt="caDSR Logo"></a></td>    
-        </tr>
-    </table>
-    <table style="border-collapse: collapse; width: 100%">
-        <col style="width: 2.3in" />
-        <col />
-        <tr>
-            <td>User&nbsp;Name&nbsp;:&nbsp;<%=Username%></td>
-            <td><script webstyle3>document.write('<scr'+'ipt src="Assets/xaramenu.js">'+'</scr'+'ipt>');document.write('<scr'+'ipt                 src="Assets/biztech_button.js">'+'</scr'+'ipt>');/*img src="Assets/biztech_button.gif" moduleid="myzara                     (project)\biztech_button_off.xws"*/</script></td>
-        </tr>    
-    </table>
-</body>
+		<table width="100%" border="0">
+			<col style="width: 1px" />
+			<col />
+			<tr bgcolor="#A90101">
+				<td align="left">
+					<a href="http://www.cancer.gov" target=_blank>
+						<img src="Assets/brandtype.gif" border="0">
+					</a>
+				</td>
+				<td align="right">
+					<a href="http://www.cancer.gov" target=_blank>
+						<img src="Assets/tagline_nologo.gif" border="0">
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" style="padding:0 0 0 0">
+					<a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr">
+						<img src="Assets/curation_banner2.gif" border="0" alt="caDSR Logo">
+					</a>
+				</td>
+			</tr>
+		</table>
+		<table style="border-collapse: collapse; width: 100%;">
+			<col style="width: 2.3in" />
+			<col />
+			<tr>
+				<td style="padding:0.05in 0 0 0">
+					User&nbsp;Name&nbsp;:&nbsp;
+					<%=Username%>
+				</td>
+				<td style="padding:0.05in 0 0 0">
+					<script webstyle3>document.write('<scr'+'ipt src="Assets/xaramenu.js">'+'</scr'+'ipt>');document.write('<scr'+'ipt                 src="Assets/biztech_button.js">'+'</scr'+'ipt>');/*img src="Assets/biztech_button.gif" moduleid="myzara                     (project)\biztech_button_off.xws"*/</script>
+				</td>
+			</tr>
+		</table>
+	</body>
 </html>

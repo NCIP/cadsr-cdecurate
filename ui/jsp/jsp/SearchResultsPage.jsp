@@ -1,22 +1,24 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/SearchResultsPage.jsp,v 1.8 2007-01-26 20:17:45 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/SearchResultsPage.jsp,v 1.9 2007-05-23 04:36:04 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <!-- goes to lgoin page if error occurs -->
-<%@ page errorPage="ErrorPage.jsp" %>
-<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
+<%@ page errorPage="ErrorPage.jsp"%>
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <curate:checkLogon name="Userbean" page="/LoginE.jsp" />
 <html>
-<head>
-<title>CDE Curation: Search</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<script>
+	<head>
+		<title>
+			CDE Curation: Search
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<script>
 history.forward();
 </script>
-<%
+		<%
 //System.out.println("in SearchResultsPage.jsp!!");
-String sMenuAction4 = (String)session.getAttribute("MenuAction");
+String sMenuAction4 = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
 String sSelAC4 = "";
 String sSearchAC4 = "";
 Vector vACAttr4 = new Vector();
@@ -97,25 +99,25 @@ Vector vSelAttr4 = new Vector();
       }
     }
 %>
-</head>
+	</head>
 
-<body>
-<table border="2" style="width: 100%">
-  <col style="width: 2.3in"/>
-  <col /> 
-  <tr valign="top">
-    <td colspan=2 valign="top" height="95">
-          <%@ include file="TitleBar.jsp" %>
-    </td>
-  </tr>
-  <tr valign="top">
-    <td class="sidebarBGColor">
-      <%@ include file="SearchParameters.jsp" %>
-    </td>
-    <td> 
-      <%@ include file="SearchResults.jsp" %>
-    </td>
-  </tr>
-</table>
-</body>
+	<body>
+		<table border="2" style="width: 100%">
+			<col style="width: 2.3in" />
+			<col />
+			<tr valign="top">
+				<td colspan=2 valign="top" height="95">
+					<%@ include file="TitleBar.jsp"%>
+				</td>
+			</tr>
+			<tr valign="top">
+				<td class="sidebarBGColor">
+					<%@ include file="SearchParameters.jsp"%>
+				</td>
+				<td>
+					<%@ include file="SearchResults.jsp"%>
+				</td>
+			</tr>
+		</table>
+	</body>
 </html>

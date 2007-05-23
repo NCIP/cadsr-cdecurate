@@ -1,19 +1,21 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/SearchResultsBEDisplay.jsp,v 1.10 2007-01-26 20:17:45 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/SearchResultsBEDisplay.jsp,v 1.11 2007-05-23 04:35:54 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <!-- goes to secondary window error page if error occurs -->
-<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <curate:checkLogon name="Userbean" page="/jsp/ErrorPageWindow.jsp" />
-<%@ page import= "java.util.*" %>
+<%@ page import="java.util.*"%>
 <html>
-<head>
-<title>Search Results</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/SearchResults.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
-<%
+	<head>
+		<title>
+			Search Results
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/SearchResults.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
+		<%
    String sSelAC = "";
    String sKeyword, nRecs;
    String strBEDisplaySubmitted = (String)session.getAttribute("BEDisplaySubmitted");
@@ -29,7 +31,7 @@
    if(strBEDisplaySubmitted == "false")
       results = null;
   
-  // String sMAction = (String)session.getAttribute("MenuAction");
+  // String sMAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
  //  session.setAttribute("MenuAction", "searchForCreate");
    sKeyword = (String)session.getAttribute("creKeyword");
    nRecs = (String)request.getAttribute("recsFound");
@@ -63,7 +65,7 @@ System.out.println("SR BE.jsp vSelAttr.size: " + vSelAttr.size());
 System.out.println("SR BEDisplay.jsp sLabelKeyword: " + sLabelKeyword); */
 %>
 
-<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
+		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
 var numRows2;
 var SelectAllOn = "false";
 
@@ -94,34 +96,47 @@ function setup()
   }
 
 </SCRIPT>
-</head>
-<body onLoad="setup();">
-<form name="searchBEDisplayForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=showBEDisplayResult">
-<br>
-<table width="100%">
-  <tr>
-   <td width="80%" align="center"></td>
-    <td>
-      <input type="button" name="closeBtn" value="Close Window" onClick="javascript:closeWindow();" style="width: 97", "height: 30">
-        &nbsp;
-      </td>
-  </tr>
-  <tr></tr>
-  <tr>
-      <td><font size="4"><b><%=sLabelKeyword%></b></font></td>
-  </tr>
-  <tr>
-      <td><div align="left"><font size="2"><%=nRecs%> Records</font></div></td>
-  </tr>
-  <tr></tr>
- </table>
- <table width="100%" border="1" style="border-collapse: collapse" valign="top">
-  <br>
-    <tr valign="middle">
-     
-      <!-- adds Review status only if questions -->
+	</head>
+	<body onLoad="setup();">
+		<form name="searchBEDisplayForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=showBEDisplayResult">
+			<br>
+			<table width="100%">
+				<tr>
+					<td width="80%" align="center"></td>
+					<td>
+						<input type="button" name="closeBtn" value="Close Window" onClick="javascript:closeWindow();" style="width: 97", "height: 30">
+						&nbsp;
+					</td>
+				</tr>
+				<tr></tr>
+				<tr>
+					<td>
+						<font size="4">
+							<b>
+								<%=sLabelKeyword%>
+							</b>
+						</font>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div align="left">
+							<font size="2">
+								<%=nRecs%>
+								Records
+							</font>
+						</div>
+					</td>
+				</tr>
+				<tr></tr>
+			</table>
+			<table width="100%" border="1" style="border-collapse: collapse" valign="top">
+				<br>
+				<tr valign="middle">
 
-<%    int k = 0;
+					<!-- adds Review status only if questions -->
+
+					<%    int k = 0;
       if (vSelAttr != null)
       {
          //for review status increase the k size to 1
@@ -147,14 +162,18 @@ function setup()
             else if(sAttr.equals("Data Element Concept")) sDisplay = "Data Element Concept Long Name";
             else if (sAttr.equals("DE Long Name")) sDisplay = "Data Element Long Name";
 %>
-            <th method="get"><font size="2"><%=sDisplay%></font></th>
-<%            
+					<th method="get">
+						<font size="2">
+							<%=sDisplay%>
+						</font>
+					</th>
+					<%            
 	      }  
         }  
       }
 %>
-    </tr>
-<%
+				</tr>
+				<%
     String strResult = "";
     if (results != null)
 	  {
@@ -165,54 +184,62 @@ function setup()
            strResult = (String)results.get(i);
            if (strResult == null) strResult = "";
 %>
-        <tr>
-          <td width="100"><font size="2"><%=strResult%></font></td>
-<%   
+				<tr>
+					<td width="100">
+						<font size="2">
+							<%=strResult%>
+						</font>
+					</td>
+					<%   
           // add other attributes
 		 for (int m = 1; m < k; m++)
 		 {
            strResult = (String)results.get(i+m);
            if (strResult == null) strResult = "";
 %>
-           <td><font size="2"><%=strResult%></font></td>
-<%
+					<td>
+						<font size="2">
+							<%=strResult%>
+						</font>
+					</td>
+					<%
        }
 %>
-       </tr>
-<%
+				</tr>
+				<%
          j++;
     }
 	 }
 %>
- </table>
- <table>
-<input type="hidden" name="pageAction" value="nothing">
-<input type="hidden" name="AttChecked" value="<%=(k-5)%>">
-<input type="hidden" name="searchComp" value="">
-<input type="hidden" name="numSelected" value="">
-<input type="hidden" name="sortType" value="nothing">
-<input type="hidden" name="actSelected" value="Search">
-<input type="hidden" name="numAttSelected" value="">
-<input type="hidden" name="orgCompID" value="">
-<input type="hidden" name="desID" value="">
-<input type="hidden" name="desName" value="">
-<input type="hidden" name="desContext" value="">
-<input type="hidden" name="desContextID" value="">
-<input type="hidden" name="AppendAction" value="NotAppended">
-<input type="hidden" name="SelectAll" value="">
-  <!-- stores Designation Name and ID -->
-</table>
-      <!-- div for associated AC popup menu -->
-<script language = "javascript">
+			</table>
+			<table>
+				<input type="hidden" name="pageAction" value="nothing">
+				<input type="hidden" name="AttChecked" value="<%=(k-5)%>">
+				<input type="hidden" name="searchComp" value="">
+				<input type="hidden" name="numSelected" value="">
+				<input type="hidden" name="sortType" value="nothing">
+				<input type="hidden" name="actSelected" value="Search">
+				<input type="hidden" name="numAttSelected" value="">
+				<input type="hidden" name="orgCompID" value="">
+				<input type="hidden" name="desID" value="">
+				<input type="hidden" name="desName" value="">
+				<input type="hidden" name="desContext" value="">
+				<input type="hidden" name="desContextID" value="">
+				<input type="hidden" name="AppendAction" value="NotAppended">
+				<input type="hidden" name="SelectAll" value="">
+				<!-- stores Designation Name and ID -->
+			</table>
+			<!-- div for associated AC popup menu -->
+			<script language="javascript">
 //getSearchComponent();
 </script>
-</form>
-<form name="SearchActionForm" method="post" action="">
-<input type="hidden" name="acID" value="">
-<input type="hidden" name="itemType" value="">
-<input type="hidden" name="ac2ID" value="">
-<input type="hidden" name="searchComp" value="">
-<input type="hidden" name="isValidSearch" value="false">
-</form>
-</body>
+		</form>
+		<form name="SearchActionForm" method="post" action="">
+			<input type="hidden" name="acID" value="">
+			<input type="hidden" name="itemType" value="">
+			<input type="hidden" name="ac2ID" value="">
+			<input type="hidden" name="searchComp" value="">
+			<input type="hidden" name="isValidSearch" value="false">
+		</form>
+	</body>
 </html>

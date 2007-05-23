@@ -1,5 +1,11 @@
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/PermissibleValues.js,v 1.21 2007-05-23 04:38:34 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 
 	var secondWindow;
+	var statusWindow;	
 	//store values that need warning if pvs are in edit mode
 	var arrValidate = new Array();
 	arrValidate[0] = 'view';
@@ -24,6 +30,15 @@
 	arrValidate[19] = 'createMultipleValues';
 	arrValidate[20] = 'createParent';
 	
+  //  opens a window for large status messages
+    function displayStatusWindow()
+    {
+      if (statusWindow && !statusWindow.closed)
+          statusWindow.close()
+      var windowW = (screen.width/2) - 230;
+      statusWindow = window.open("jsp/OpenStatusWindow.jsp", "statusWindow", "width=475,height=545,top=0,left=" + windowW + ",resizable=yes,scrollbars=yes")      
+    }
+
 	//submit the page
 	function SubmitValidate(sAction)
 	{
@@ -42,11 +57,51 @@
 			actObject.value = sAction;
 			beforeRefresh(sAction);
 			if (secondWindow && !secondWindow.closed)
-	            secondWindow.close()
-			var isValid = storeVMConcept(sAction);
+	            secondWindow.close();
+			var isValid = true;
+			if (sAction != "openEditVM")
+				isValid = storeVMConcept(sAction);
 			if (isValid)  //submit only if valid
+			{
+				if (sAction == "save")
+					disableHyperlink(sAction);
+				DisableButtons();
 				document.PVForm.submit();
+			}
 		}	
+	}
+	
+	function reSubmitValidate(sAction)
+	{
+		var actObject = document.getElementById("pageAction");
+		if ( actObject == null)
+			alert("what is the object");
+		else
+		{
+			actObject.value = sAction;
+	    	disableHyperlink(sAction);
+			DisableButtons();
+			document.PVForm.submit(); 
+		}   	
+	}
+	
+	function disableHyperlink(action)
+	{
+	  var pvObj = document.getElementById("editPVInd");
+	  if (pvObj != null)
+	  {
+	  	var pvNo = pvObj.value;
+		var hlObj = document.getElementById(pvNo + "ImgSaveLink");
+		if (hlObj != null)
+		{
+			hlObj.href = "javascript:disabled();";
+		}
+	  }
+	}
+	
+	function disabled()
+	{
+		return;
 	}
 	
 	//make sure none of the PVs are in edit mode
@@ -89,13 +144,21 @@
 		{
 		  	if (!validatePVAction('remove'))  //check if any pv is in edit mode
 		  		return;  
-	    	confirmOK = confirm("Click OK to continue with removing the " + itmMsg + ".");
+	    	confirmOK = confirm("Click OK to remove " + itmMsg + ".");
 	    	if (confirmOK == false) 
 	    		return;
 		}
 		if (confirmOK)
 		{
-		   document.getElementById("editPVInd").value = pvNo;
+			//mark to remove all 
+		   if (itmAct == "remove" && pvNo == "All")
+		   {
+		   		itmAct += pvNo;
+		   		pvNo = "";
+		   }
+		   document.getElementById("editPVInd").value = pvNo;		   
+
+		   //submit the form
 		   SubmitValidate(itmAct);   
 		} 		
     }
@@ -176,6 +239,11 @@
     			SubmitValidate("addNewPV");
     		}
     	}
+    }
+    
+    function ContinueDuplicateVM()
+    {
+    	reSubmitValidate("continueVM");
     }
     
     //viewall image clicked; collapse or expand each pv and its image according the expected action    
@@ -397,7 +465,13 @@
 		vvmvmdDisplay(pvNo, action);
 		
 		//concept label toggle
-		changeElementText(pvNo, pvNo + "ConLbl", true, "", action);
+		//changeElementText(pvNo, pvNo + "ConLbl", true, "", action);
+		var divConLink = document.getElementById(pvNo + "ConLink");
+		if (action == "edit")
+			divConLink.style.display = "inline";
+		else
+			divConLink.style.display = "none";
+			
     	//draw a line around concepts when editing	
     	var divCon = document.getElementById(pvNo + "Con");
     	if (action == "edit")
@@ -513,6 +587,7 @@
 		var divVMDEdit = document.getElementById(pvNo + "VMDEdit");
 		var divVMDView = document.getElementById(pvNo + "VMDView");
 		var divVMAltView = document.getElementById(pvNo + "VMAltView");		
+		var divVMEditLink = document.getElementById(pvNo + "VMEditLink");
 		var divcon = document.getElementById(pvNo + "con0");
 		if (action == "edit")
 		{
@@ -522,6 +597,8 @@
 				divValView.style.display = "none";
 			if (divVMAltView != null)
 				divVMAltView.style.display = "none";
+			if (divVMEditLink != null)
+				divVMEditLink.style.display = "none";
 			//change the display only if it was existed (con does not exist)
 			if (divVMEdit != null)
 			{
@@ -561,6 +638,8 @@
 				divVMDView.style.display = "block";
 			if (divVMAltView != null)
 				divVMAltView.style.display = "inline";
+			if (divVMEditLink != null)
+				divVMEditLink.style.display = "inline";
 		}
 	}
     		
@@ -1398,3 +1477,8 @@
     	document.getElementById("currentVM").value = "selected one";
     }
     
+    function openEditVMWindow(curPV)
+    {
+    	document.getElementById("editPVInd").value = curPV;
+    	SubmitValidate('openEditVM');
+    }

@@ -1,124 +1,115 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/ValidateVM.jsp,v 1.9 2007-01-26 20:17:45 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/ValidateVM.jsp,v 1.10 2007-05-23 04:36:55 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <!-- goes to login page if error occurs -->
-<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <curate:checkLogon name="Userbean" page="/LoginE.jsp" />
-<%@ page import="java.sql.*" %>
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*"%>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <html>
-<head>
-<title>ValidateVD</title>
-<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
-<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
-<%
+	<head>
+		<title>
+			ValidateVD
+		</title>
+		<link href="jsp/FullDesignArial.css" rel="stylesheet" type="text/css">
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/Assets/HelpFunctions.js"></SCRIPT>
+		<%
+		VMForm thisForm = (VMForm)request.getAttribute(VMForm.REQUEST_FORM_DATA); 
+    String vmNameDisplay = thisForm.vmDisplayName;
+
     boolean isValid = true;
     Vector vValidate = new Vector();
-    vValidate = (Vector)request.getAttribute("vValidate");
+    vValidate = (Vector)request.getAttribute(Session_Data.REQUEST_VALIDATE);
     for (int i = 0; vValidate.size()>i; i = i+3)
     {
       String sStat = (String)vValidate.elementAt(i+2);
       if(sStat.equals("Valid")==false)
         isValid = false;
     }
-    String isVMExist = (String)request.getAttribute("VMExist");
-    session.setAttribute("statusMessage", "");  //remove the status messge if any    
+    session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");  //remove the status messge if any    
 %>
-<script language="JavaScript">
-   var evsWindow = null;
+		<script language="JavaScript">
+	 var elmPageAction = "<%=VMForm.ELM_PAGE_ACTION%>";
 
-   function displayMessage()
-   {
-     <% if (isVMExist != null && isVMExist.equals("true"))  { %>
-        var useThis = confirm("The Value Meaning already exists in the database.  Please click 'OK' to use the existing one.");
-        if (useThis == true)
-        {
-          hourglass();
-          document.validateVMForm.Message.style.visibility="visible";
-          document.validateVMForm.ValidateVMPageAction.value = "useExistVM";
-          defaultStatus = "Submitting data, it may take a minute, please wait....."
-          document.validateVMForm.submit();
-        }  
-      <% } %>
-   }
-   
    function hourglass(){
       document.body.style.cursor = "wait";
    }
-   function down_hourglass(){
-      document.body.style.cursor = "default";
-   }
 
    //defaultStatus = "Validate Data Element status, go back to modify it or submit to create it"
-   function submit()
+   function submitPage(sAction)
    {
-      hourglass();
-      document.validateVMForm.Message.style.visibility="visible";
-      defaultStatus = "Submitting data, it may take a minute, please wait....."
-      document.validateVMForm.btnSubmit.disabled = true;
-      document.validateVMForm.btnBack.disabled = true;
-      document.validateVMForm.submit();
+			var actObject = document.getElementById(elmPageAction);
+			if ( actObject != null && sAction != "")
+			{
+      	actObject.value = sAction;  // "reEditVM""submitVM";
+	      hourglass();
+	      document.validateVMForm.Message.style.visibility="visible";
+	      defaultStatus = "Submitting data, it may take a minute, please wait....."
+	      document.validateVMForm.btnSubmit.disabled = true;
+	      document.validateVMForm.btnBack.disabled = true;
+	      document.validateVMForm.submit();
+      }
    }
 
-   function EditPV()
-   {
-      document.validateVMForm.ValidateVMPageAction.value = "reEditPV";
-      submit();
-   }
-
-   function SubmitValidate()
-   {
-      document.validateVMForm.ValidateVMPageAction.value = "submitVM";
-	  submit();
-   }
-
-   function DefSuggestion()
-   {
-      if (evsWindow && !evsWindow.closed)
-        evsWindow.focus();
-      else
-       	evsWindow = window.open("jsp/EVSSearch.jsp", "EVSWindow", "width=600,height=400,resizable=yes,scrollbars=yes");
-   }
 </script>
-</head>
+	</head>
 
-<body bgcolor = "#666666" onload="displayMessage();">
-<form name="validateVMForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=validateVMFromForm" >
-<font color="#CCCCCC"></font>
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td valign="top">
-      <% if (isValid == true) { %>
-          <input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()">
-      <% } else { %>
-          <input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()" disabled>
-      <% } %>
-        &nbsp;&nbsp;
-      <input type="button" name="btnBack" value="Back" style="width:125" onClick="EditPV();">
-        &nbsp;&nbsp;
-    	<img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" 						style="visibility:hidden;">
-    </td>
-  </tr>
-</table>
-<br>
-<table width="100%" border="2" cellspacing="0" cellpadding="0" bordercolor="#000000">
-  <caption>
-  <h3 align="left">Validate <font color="#FF0000">Value Meaning </font> Attributes</h3>
-  </caption>
-  <tr>
-    <td width="282" height="20" valign="top" bgcolor="#FFFFFF" bordercolor="#000000">
-      <div align="center"><strong><font size="3">Attribute Name</font></strong></div>
-    </td>
-    <td valign="top" width="437" bgcolor="#FFFFFF" bordercolor="#000000">
-      <div align="center"><strong><font size="3">Attribute Contents</font></strong></div>
-    </td>
-    <td width="101" valign="top" bgcolor="#FFFFFF" bordercolor="#000000">
-      <div align="center"><strong><font size="3">Validation Status</font></strong></div>
-    </td>
-  </tr>
-<%
+	<body>
+		<form name="validateVMForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=<%=VMForm.ELM_FORM_REQ_VAL%>">
+			<table width="100%" border="0">
+				<tr>
+					<td valign="top">
+						<input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="submitPage('<%=VMForm.ACT_SUBMIT_VM%>');" <% if (!isValid) { %> disabled <% } %>>
+						&nbsp;&nbsp;
+						<input type="button" name="btnBack" value="Back" style="width:125" onClick="submitPage('<%=VMForm.ACT_REEDIT_VM%>');">
+						&nbsp;&nbsp;
+						<img name="Message" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+					</td>
+				</tr>
+			</table>
+			<br>
+			<table width="100%" border="2" cellspacing="0" cellpadding="0" bordercolor="#000000">
+				<caption>
+					<h3 align="left">
+						Validate
+						<font color="#FF0000">
+							Value Meaning
+						</font>
+						<%=vmNameDisplay%>
+					</h3>
+				</caption>
+				<tr>
+					<td width="282" height="20" valign="top" bgcolor="#FFFFFF" bordercolor="#000000">
+						<div align="center">
+							<strong>
+								<font size="3">
+									Attribute Name
+								</font>
+							</strong>
+						</div>
+					</td>
+					<td valign="top" width="437" bgcolor="#FFFFFF" bordercolor="#000000">
+						<div align="center">
+							<strong>
+								<font size="3">
+									Attribute Contents
+								</font>
+							</strong>
+						</div>
+					</td>
+					<td width="101" valign="top" bgcolor="#FFFFFF" bordercolor="#000000">
+						<div align="center">
+							<strong>
+								<font size="3">
+									Validation Status
+								</font>
+							</strong>
+						</div>
+					</td>
+				</tr>
+				<%
     for (int i = 0; vValidate.size()>i; i = i+3)
     {
       String sItem = (String)vValidate.elementAt(i);
@@ -131,17 +122,28 @@
 
      
 %>
-        <tr>
-          <td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000"><strong><%=sItem%></strong></td>
-          <td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000"><%=sContent%>&nbsp;</td>
-          <td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000"><font color="<%=sFont%>"> <%=sStat%> </font>&nbsp;</td>
-        </tr>
-<%
+				<tr>
+					<td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000">
+						<strong>
+							<%=sItem%>
+						</strong>
+					</td>
+					<td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000">
+						<%=sContent%>
+						&nbsp;
+					</td>
+					<td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000">
+						<font color="<%=sFont%>">
+							<%=sStat%>
+						</font>
+						&nbsp;
+					</td>
+				</tr>
+				<%
       
     }
 %>
-</table>
-<input type="hidden" name="ValidateVMPageAction" value="nothing">
-
-</body>
+			</table>
+			<input type="hidden" name="<%=VMForm.ELM_PAGE_ACTION%>" value="<%=VMForm.ACT_PAGE_DEFAULT%>">
+	</body>
 </html>

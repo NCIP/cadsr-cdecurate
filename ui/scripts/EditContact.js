@@ -1,3 +1,8 @@
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/EditContact.js,v 1.2 2007-05-23 04:38:19 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 
 var commCount = 0;
 var addrCount = 0;

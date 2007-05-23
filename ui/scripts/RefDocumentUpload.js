@@ -1,3 +1,8 @@
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/RefDocumentUpload.js,v 1.7 2007-05-23 04:38:39 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
     var checkCount = 0;
 
     function adjustCheckCount(cbobj)
@@ -108,7 +113,7 @@
   
   function onDocDelete(fileName, fileDisplayName)
   {
-   	conf = confirm("Are you sure you want to permanetly delete " + fileDisplayName + "?");
+   	conf = confirm("Are you sure you want to permanently delete " + fileDisplayName + "?");
    	if (conf == true)
    	{
 	   	document.RefDocumentUploadForm.RefDocTargetFile.value = fileName;

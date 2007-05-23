@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/RefDocumentUploadPage.jsp,v 1.7 2007-01-26 20:17:45 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/RefDocumentUploadPage.jsp,v 1.8 2007-05-23 04:35:34 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -15,10 +15,10 @@
 		<script>
 history.forward();
 </script>
-<script type="text/javascript" src="Assets/sorttable.js"></script>
+		<script type="text/javascript" src="Assets/sorttable.js"></script>
 
-<LINK href="FullDesignArial.css" rel="stylesheet" type="text/css">
-</head>
+		<LINK href="FullDesignArial.css" rel="stylesheet" type="text/css">
+	</head>
 
 	<body>
 

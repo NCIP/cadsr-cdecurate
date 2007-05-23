@@ -1,3 +1,8 @@
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/date-picker.js,v 1.4 2007-05-23 04:39:20 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 var weekend = [0,6];
 var weekendColor = "#e0e0e0";
 var fontface = "Verdana";   //"Arial, Helvetica, sans-serif";

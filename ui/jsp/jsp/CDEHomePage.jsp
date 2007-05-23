@@ -1,19 +1,21 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CDEHomePage.jsp,v 1.8 2007-01-26 20:17:44 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/CDEHomePage.jsp,v 1.9 2007-05-23 04:31:59 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page errorPage="ErrorPage.jsp" %>
+<%@ page errorPage="ErrorPage.jsp"%>
 <html>
-<head>
-<title>CDE Curation: Search</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<script>
+	<head>
+		<title>
+			CDE Curation: Search
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<script>
 history.forward();
 </script>
-<%
+		<%
 // System.out.println("in CDEHomePage.jsp!!");
-String sMenuAction3 = (String)session.getAttribute("MenuAction");
+String sMenuAction3 = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
 String sSelAC3 = "";
 String sSearchAC3 = "";
 Vector vACAttr2 = new Vector();
@@ -73,39 +75,41 @@ Vector vACAttr2 = new Vector();
     } 
   }
 %>
-</head>
+	</head>
 
-<body>
-  <table width="100%" border="1" cellpadding="0" cellspacing="0">
-  <col style="width: 2.3in"/>
-  <col /> 
-    <tr height="95" valign="top">
-      <td colspan=2><%@ include file="TitleBar.jsp" %></td>
-    </tr>
-    <tr valign="top">
-      <td bgcolor="#E2CAA2">
-        <%@ include file="SearchParameters.jsp" %>
-      </td>
-      <td>
-        <%@ include file="SearchResults.jsp" %>
-      </td>
-    </tr>
-  </table>
-<%
-    String statMsg = (String)request.getAttribute("statusMessage");
+	<body>
+		<table width="100%" border="1" cellpadding="0" cellspacing="0">
+			<col style="width: 2.3in" />
+			<col />
+			<tr height="95" valign="top">
+				<td colspan=2>
+					<%@ include file="TitleBar.jsp"%>
+				</td>
+			</tr>
+			<tr valign="top">
+				<td bgcolor="#E2CAA2">
+					<%@ include file="SearchParameters.jsp"%>
+				</td>
+				<td>
+					<%@ include file="SearchResults.jsp"%>
+				</td>
+			</tr>
+		</table>
+		<%
+    String statMsg = (String)request.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
     if(statMsg != null)
     {
 %>
-        <script language="JavaScript"> defaultStatus = "<%=statMsg%>"; </script>
-<%
+		<script language="JavaScript"> defaultStatus = "<%=statMsg%>"; </script>
+		<%
     }
     else
     {
 %>
-        <script language="JavaScript"> defaultStatus = "Welcome to Common Data Element Curation Tool"; </script>
-<%
+		<script language="JavaScript"> defaultStatus = "Welcome to Common Data Element Curation Tool"; </script>
+		<%
     }
 %>
-</body>
+	</body>
 </html>
 

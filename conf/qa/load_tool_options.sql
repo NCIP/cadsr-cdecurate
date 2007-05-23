@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/load_tool_options.sql,v 1.39 2007-01-26 20:17:43 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/load_tool_options.sql,v 1.40 2007-05-23 04:44:44 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -27,7 +27,7 @@ VALUES ('caDSR', 'DEFAULT.LANGUAGE', 'ENGLISH', 'The default language for all ca
 --Store evs url for all tools: need to make sure it doesn't exists already before runnning.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('EVS', 'URL', 'http://cabio-qa.nci.nih.gov/cacore32/http/remoteService', 
-	   'Store evs url specific to EVS'); 
+	   'Store evs url specific to the evs server'); 
 
 --Store browser url for all tools: need to make sure it doesn't exists already before runnning.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -43,7 +43,6 @@ DELETE FROM sbrext.tool_options_view_ext WHERE tool_name = 'CURATION';
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'URL', 'http://cdecurate-qa.nci.nih.gov', 
 	   'Store evs alternate url specific to curation tool if needed');
-
 /*
 --Store evs alternate url specific to curation tool if needed.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -113,7 +112,6 @@ VALUES ('CURATION', 'EVS.VOCAB.ALL.TREESEARCH', 'true',
 	   'Store vocab Tree Search filter for all vocabulary');
 
 
-
 --VOCAB SPECIFIC ATTRIBUTES        -------NCI Thesaurus ------------
 --Store vocab name for the first vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -137,7 +135,7 @@ VALUES ('CURATION', 'EVS.VOCAB.1.VOCABCODETYPE', 'NCI_CONCEPT_CODE',
 
 --Store vocab meta source for the first vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.1.METASOURCE', 'NCI2006_10D', 
+VALUES ('CURATION', 'EVS.VOCAB.1.METASOURCE', 'NCI2007_01D', 
 	   'Store vocab meta source for the first vocabulary');
 
 --Store vocab to mark if used for parent search for the first vocabulary
@@ -184,7 +182,7 @@ VALUES ('CURATION', 'EVS.VOCAB.1.PROPERTY.NAMEDISPLAY', 'Preferred_Name',
 --INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 --VALUES ('CURATION', 'EVS.VOCAB.1.INCLUDEMETA', 'NCI Metathesaurus', 
 --	   'Store vocab meta name for the first vocabulary');
-	   	   
+	   
 	   
 
 --Store vocab name for the GO vocabulary           -------GO-----------
@@ -209,7 +207,7 @@ VALUES ('CURATION', 'EVS.VOCAB.2.VOCABCODETYPE', 'GO_CODE',
 
 --Store vocab meta source for the GO vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.2.METASOURCE', 'GO2004_03_02',
+VALUES ('CURATION', 'EVS.VOCAB.2.METASOURCE', 'GO2006_01_20',
 	   'Store vocab meta source for the GO vocabulary');
 
 --Store vocab to mark if used for parent search for the GO vocabulary
@@ -217,7 +215,6 @@ INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, descriptio
 VALUES ('CURATION', 'EVS.VOCAB.2.USEPARENT', 'false',
 	   'Store vocab to mark if used for parent search for the GO vocabulary');
 
-	   
 	   
 	   
 	   
@@ -258,7 +255,6 @@ VALUES ('CURATION', 'EVS.VOCAB.3.PROPERTY.DEFINITION', 'MeSH_Definition',
 
 	   
 	   
-	   
 --Store vocab name for the LOINC vocabulary       ------------LOINC-----------
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EVS.VOCAB.4.EVSNAME', 'LOINC',
@@ -281,7 +277,7 @@ VALUES ('CURATION', 'EVS.VOCAB.4.VOCABCODETYPE', 'LOINC_CODE',
 
 --Store vocab meta source for the LOINC vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.4.METASOURCE', 'LNC213',
+VALUES ('CURATION', 'EVS.VOCAB.4.METASOURCE', 'LNC216',
 	   'Store vocab meta source for the LOINC vocabulary');
 
 --Store vocab to mark if used for parent search for the LOINC vocabulary
@@ -289,8 +285,8 @@ INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, descriptio
 VALUES ('CURATION', 'EVS.VOCAB.4.USEPARENT', 'false',
 	   'Store vocab to mark if used for parent search for the LOINC vocabulary');
 
-	
-   
+	   
+	   
 --Store vocab name for the MGED vocabulary         ----------MGED---------
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EVS.VOCAB.5.EVSNAME', 'MGED_Ontology',
@@ -324,7 +320,6 @@ VALUES ('CURATION', 'EVS.VOCAB.5.USEPARENT', 'true',
 	   
 	   
 	   
-	   
 --Store vocab name for the MedDRA vocabulary          --------MedDRA----------
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EVS.VOCAB.6.EVSNAME', 'MedDRA',
@@ -352,7 +347,7 @@ VALUES ('CURATION', 'EVS.VOCAB.6.VOCABCODETYPE', 'MEDDRA_CODE',
 
 --Store vocab meta source for the MedDRA vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.6.METASOURCE', 'MDR-60',
+VALUES ('CURATION', 'EVS.VOCAB.6.METASOURCE', 'MDR90',
 	   'Store vocab meta source for the MedDRA vocabulary');
 
 --Store vocab to mark if used for parent search for the MedDRA vocabulary
@@ -377,7 +372,6 @@ VALUES ('CURATION', 'EVS.VOCAB.6.PROPERTY.NAMEDISPLAY', 'Preferred_Name',
 
 	   
 	   
-	   
 --Store vocab name for the SNOMED vocabulary          --------SNOMED----------
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EVS.VOCAB.7.EVSNAME', 'SNOMED_CT',
@@ -400,7 +394,7 @@ VALUES ('CURATION', 'EVS.VOCAB.7.VOCABCODETYPE', 'SNOMED_CODE',
 
 --Store vocab meta source for the SNOMED vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.7.METASOURCE', 'SNOMEDCT_2004_01_31',
+VALUES ('CURATION', 'EVS.VOCAB.7.METASOURCE', 'SNOMEDCT_2006_01_31',
 	   'Store vocab meta source for the SNOMED vocabulary');
 
 --Store vocab to mark if used for parent search for the SNOMED vocabulary
@@ -423,8 +417,6 @@ INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, descriptio
 VALUES ('CURATION', 'EVS.VOCAB.7.PROPERTY.NAMEDISPLAY', 'SNOMED_PREFERRED_TERM',
 	   'Store vocab property to display name for the SNOMED vocabulary');
 
-
-	   
 
 --Store vocab name for the NCI Metathesaurus vocabulary           -------NCI Metathesaurus-----------
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -467,7 +459,7 @@ VALUES ('CURATION', 'EVS.VOCAB.8.TREESEARCH', 'false',
 	   'Store vocab Tree Search filter as false for meta vocabulary');
 
 	   
-		   
+	   
 --META ATTRIBUTES
 --Store meta code type with filter value for meta search
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -494,12 +486,12 @@ VALUES ('CURATION', 'EVS.DEFSOURCE.1', 'NCI',
 
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.DEFSOURCE.2', 'NCI-GLOSS_0610D',
+VALUES ('CURATION', 'EVS.DEFSOURCE.2', 'NCI-GLOSS_0701D',
 	   'Store NCI def source to filter out the multiple definition used');
 
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.DEFSOURCE.3', 'NCI2006_10D',
+VALUES ('CURATION', 'EVS.DEFSOURCE.3', 'NCI2007_01D',
 	   'Store NCI def source to filter out the multiple definition used');
 
 --Store NCI def source to filter out the multiple definition used
@@ -513,6 +505,16 @@ INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, descriptio
 VALUES ('CURATION', 'EVS.DSRDISPLAY', 'caDSR',
 	   'Store the display name of the cadsr database');
 	   
+--Store NCI Thesaurus name to get the name of preferred vocabulary when getting thesarurs concept 
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EVS.PREFERREDVOCAB', 'NCI_Thesaurus',
+	   'Store NCI Thesaurus name to get the name of preferred vocabulary when getting thesarurs concept');
+	   
+--Store NCI Thesaurus source to get its source code used in replacing concept with preferred vocab (Thesaurus)
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EVS.PREFERREDVOCAB.SOURCE', 'NCI2007_01D',
+	   'Store NCI Thesaurus source to get its source code used in replacing concept with preferred vocab (Thesaurus)');
+
 	   
 
 
@@ -524,64 +526,63 @@ VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.1', 'HL7_EDCI_INSTRUMENT_MIF',
 --Store document types used for drop down list.         --------DOCUMENT TYPES ---------
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.2', 'HL7_GLOBAL_DEFINITION_MIF', 
-       'Must exist in SBR.DOCUMENT_TYPES_LOV table');
+	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.3', 'META_CONCEPT_SOURCE', 
-       'Must exist in SBR.DOCUMENT_TYPES_LOV table');
+	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.4', 'Owning Document Text', 
-       'Must exist in SBR.DOCUMENT_TYPES_LOV table');
+	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.5', 'Preferred Question Text', 
-       'Must exist in SBR.DOCUMENT_TYPES_LOV table');
+	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.6', 'Service Context Property', 
-       'Must exist in SBR.DOCUMENT_TYPES_LOV table');
+	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.7', 'Standard Question Text', 
-       'Must exist in SBR.DOCUMENT_TYPES_LOV table');
+	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.8', 'TECHNICAL GUIDE', 
-       'Must exist in SBR.DOCUMENT_TYPES_LOV table');
+	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.9', 'UML Attribute', 
-       'Must exist in SBR.DOCUMENT_TYPES_LOV table');
+	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.10', 'UML Class', 
-       'Must exist in SBR.DOCUMENT_TYPES_LOV table');
+	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
 --Store document types used for drop down list.
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EXCLUDE.DOCUMENT_TYPE.11', 'VD REFERENCE', 
-       'Must exist in SBR.DOCUMENT_TYPES_LOV table');
+	   'Must exist in SBR.DOCUMENT_TYPES_LOV table');
 
-	   
-	   
+
 	   
 
 --Store document types used for drop down list.  --------DESIGNATION TYPE / alt types ----------
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'EXCLUDE.DESIGNATION_TYPE.1', 'USED_BY', 
 	   'Must exist in SBR.DESIGNATION_TYPES_LOV table');
-
 	   
-	   
+       
+       
 
 --Store derivation types used for drop down list.           -------COMPLEX or Derivation Type -------
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -604,7 +605,8 @@ VALUES ('CURATION', 'INCLUDE.DERIVATION_TYPE.4', 'Simple Concept',
 	   'Must exist in SBR.COMPLEX_REP_TYPE_LOV table');
 
 
-		   
+
+	   
 --Ref doc file cache for uploading blobs from the DB to the web server to create url.	   
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
 values ('CURATION', 'REFDOC_FILECACHE', '/local/content/cdecurate/filecache/',
@@ -614,8 +616,8 @@ values ('CURATION', 'REFDOC_FILECACHE', '/local/content/cdecurate/filecache/',
 --Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
 values ('CURATION', 'REFDOC_FILEURL', 'http://cdecurate-qa.nci.nih.gov/filecache/',
-'Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.');     
-  
+'Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.');  
+
 
 
 	   
@@ -624,37 +626,16 @@ INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, descriptio
 VALUES ('CURATION', 'NVPCONCEPT.1', 'C45255',
 	   'Store the integer concept id for name value pair');
 	   
---Store the range concepts id for name value pair  
---INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
---VALUES ('CURATION', 'NVPCONCEPT.2', 'C38013',
---	   'Store the range concept id for name value pair');
-
---Store the greater than concepts id for name value pair  
---INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
---VALUES ('CURATION', 'NVPCONCEPT.3', 'C61584',
---	   'Store the greater than concept id for name value pair');
-
---Store the greater than or equal concepts id for name value pair  
---INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
---VALUES ('CURATION', 'NVPCONCEPT.4', 'C61583',
---	   'Store the greater than or equal concept id for name value pair');
-
---Store the less than or equal concepts id for name value pair  
---INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
---VALUES ('CURATION', 'NVPCONCEPT.5', 'C61586',
---	   'Store the less than or equal concept id for name value pair');
-
---Store the less than concepts id for name value pair  
---INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
---VALUES ('CURATION', 'NVPCONCEPT.6', 'C61585',
---	   'Store the less than concept id for name value pair');
-
-
 --Store the Ordinal Position concepts id for name value pair  
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'NVPCONCEPT.7', 'C46126',
 	   'Store the Ordinal Position concept id for name value pair');
 
+
+--Store the RELEASED asl name to include in the filter  
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'INCLUDE.ASL.FILTER.1', 'RELEASED',
+	   'Store the RELEASED asl name to include in the filter');
 
 --commit changes
 commit;

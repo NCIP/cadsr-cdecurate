@@ -1,4 +1,7 @@
-
+<!-- Copyright ScenPro, Inc 2007
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/cdecurate/LoginE.jsp,v 1.15 2007-05-23 04:31:39 hegdes Exp $
+    $Name: not supported by cvs2svn $
+-->
 <html>
 <head>
 <title>CDE Curation: Login</title>
@@ -127,7 +130,7 @@ function linkFirstGov()
   if (winFirstGov && !winFirstGov.closed)
      winFirstGov.focus();
   else
-   	winFirstGov = window.open("http://www.firstgov.gov", "FirstGov", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+   	winFirstGov = window.open("http://www.usa.gov", "USA", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 
 function CloseWindow()
@@ -328,7 +331,7 @@ function callHelp()
           <a target="_blank" href="http://www.cancer.gov/"><img border="0" src="Assets/footer_nci.gif" alt="National Cancer Institute Logo" title="National Cancer Institute"></a>
           <a target="_blank" href="http://www.dhhs.gov/"><img border="0" src="Assets/footer_hhs.gif" alt="Department of Health and Human Services Logo" title="Department of Health and Human Services"></a>
           <a target="_blank" href="http://www.nih.gov/"><img border="0" src="Assets/footer_nih.gif" alt="National Institutes of Health Logo" title="National Institutes of Health"></a>
-          <a target="_blank" href="http://www.firstgov.gov/"><img border="0" src="Assets/footer_firstgov.gif" alt="FirstGov.gov" title="FirstGov.gov"></a>
+          <a target="_blank" href="http://www.usa.gov/"><img border="0" src="Assets/footer_usagov.gif" alt="USA.gov" title="USA.gov"></a>
       </td>   
     </tr>
   </table>

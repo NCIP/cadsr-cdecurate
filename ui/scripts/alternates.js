@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/alternates.js,v 1.25 2007-01-26 20:17:45 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/alternates.js,v 1.26 2007-05-23 04:39:14 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 // Perform a general action and remember the previous action. The previous action
@@ -204,7 +204,7 @@ function doClassify()
     var rsrvd = eobj.getAttribute(nodeCsiType);
     if (rsrvd != null && rsrvd == parmReserved)
     {
-        alert("Class Scheme Item type " + parmReserved + " is reserved, please make a different selection.");
+        alert("Class Scheme Item type " + parmReserved + " is reserved by the caDSR Tools and can not be chosen for Classify. Please make a different selection.");
         return;
     }
 

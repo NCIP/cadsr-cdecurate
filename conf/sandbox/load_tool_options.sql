@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/sandbox/load_tool_options.sql,v 1.24 2007-01-26 20:17:43 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/sandbox/load_tool_options.sql,v 1.25 2007-05-23 04:45:05 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -118,7 +118,7 @@ VALUES ('CURATION', 'EVS.VOCAB.1.VOCABCODETYPE', 'NCI_CONCEPT_CODE',
 	   'Store vocab code type (alt type) for the first vocabulary');
 --Store vocab meta source for the first vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.1.METASOURCE', 'NCI2005_10E', 
+VALUES ('CURATION', 'EVS.VOCAB.1.METASOURCE', 'NCI2007_01E', 
 	   'Store vocab meta source for the first vocabulary');
 --Store vocab to mark if used for parent search for the first vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -177,7 +177,7 @@ VALUES ('CURATION', 'EVS.VOCAB.2.VOCABCODETYPE', 'GO_CODE',
 	   'Store vocab code type (alt type) for the GO vocabulary');
 --Store vocab meta source for the GO vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.2.METASOURCE', 'GO2004_03_02',
+VALUES ('CURATION', 'EVS.VOCAB.2.METASOURCE', 'GO2006_01_20',
 	   'Store vocab meta source for the GO vocabulary');
 --Store vocab to mark if used for parent search for the GO vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -236,7 +236,7 @@ VALUES ('CURATION', 'EVS.VOCAB.4.VOCABCODETYPE', 'LOINC_CODE',
 	   'Store vocab code type (alt type) for the LOINC vocabulary');
 --Store vocab meta source for the LOINC vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.4.METASOURCE', 'LNC213',
+VALUES ('CURATION', 'EVS.VOCAB.4.METASOURCE', 'LNC216',
 	   'Store vocab meta source for the LOINC vocabulary');
 --Store vocab to mark if used for parent search for the LOINC vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -295,7 +295,7 @@ VALUES ('CURATION', 'EVS.VOCAB.6.VOCABCODETYPE', 'MEDDRA_CODE',
 	   'Store vocab code type (alt type) for the MedDRA vocabulary');
 --Store vocab meta source for the MedDRA vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.6.METASOURCE', 'MDR-60',
+VALUES ('CURATION', 'EVS.VOCAB.6.METASOURCE', 'MDR90',
 	   'Store vocab meta source for the MedDRA vocabulary');
 --Store vocab to mark if used for parent search for the MedDRA vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -334,7 +334,7 @@ VALUES ('CURATION', 'EVS.VOCAB.7.VOCABCODETYPE', 'SNOMED_CODE',
 	   'Store vocab code type (alt type) for the SNOMED vocabulary');
 --Store vocab meta source for the SNOMED vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.7.METASOURCE', 'SNOMEDCT_2004_01_31',
+VALUES ('CURATION', 'EVS.VOCAB.7.METASOURCE', 'SNOMEDCT_2006_01_31',
 	   'Store vocab meta source for the SNOMED vocabulary');
 --Store vocab to mark if used for parent search for the SNOMED vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -378,11 +378,11 @@ VALUES ('CURATION', 'EVS.DEFSOURCE.1', 'NCI',
 	   'Store NCI def source to filter out the multiple definition used');
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.DEFSOURCE.2', 'NCI-GLOSS_0510E',
+VALUES ('CURATION', 'EVS.DEFSOURCE.2', 'NCI-GLOSS_0701E',
 	   'Store NCI def source to filter out the multiple definition used');
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.DEFSOURCE.3', 'NCI2005_10E',
+VALUES ('CURATION', 'EVS.DEFSOURCE.3', 'NCI2007_01E',
 	   'Store NCI def source to filter out the multiple definition used');
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
@@ -395,6 +395,17 @@ INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, descriptio
 VALUES ('CURATION', 'EVS.DSRDISPLAY', 'caDSR',
 	   'Store the display name of the cadsr database');
 	   
+
+--Store NCI Thesaurus name to get the name of preferred vocabulary when getting thesarurs concept 
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EVS.PREFERREDVOCAB', 'NCI_Thesaurus',
+	   'Store NCI Thesaurus name to get the name of preferred vocabulary when getting thesarurs concept');
+	   
+--Store NCI Thesaurus source to get its source code used in replacing concept with preferred vocab (Thesaurus)
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'EVS.PREFERREDVOCAB.SOURCE', 'NCI2007_01D',
+	   'Store NCI Thesaurus source to get its source code used in replacing concept with preferred vocab (Thesaurus)');
+
 	   
 
 
@@ -498,6 +509,10 @@ insert into sbrext.tool_options_view_ext (tool_name, property, value, descriptio
 values ('CURATION', 'REFDOC_FILEURL', 'http://cdecurate-sandbox.nci.nih.gov/filecache/',
 'Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.');     
 	   
-  
+--Store the RELEASED asl name to include in the filter  
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'INCLUDE.ASL.FILTER.1', 'RELEASED',
+	   'Store the RELEASED asl name to include in the filter');
+
 --commit the inserts
 commit;

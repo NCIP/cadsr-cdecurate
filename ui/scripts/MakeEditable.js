@@ -1,3 +1,8 @@
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/MakeEditable.js,v 1.2 2007-05-23 04:38:29 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 //
 //
 //
