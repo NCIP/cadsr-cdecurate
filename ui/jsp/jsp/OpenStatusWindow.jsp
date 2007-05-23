@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/OpenStatusWindow.jsp,v 1.8 2007-05-23 04:35:14 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/OpenStatusWindow.jsp,v 1.9 2007-05-23 23:20:06 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -60,7 +60,8 @@ session.setAttribute("vStatMsg", null);
 		  for (int i = 0; i < vStatMsg.size(); i++)
 		  {
            strResult = (String)vStatMsg.get(i);
-           if (strResult == null) strResult = "";
+           if (strResult == null || strResult.equals("\\n") || strResult.equals("\n"))
+           		strResult = "";
            if (strResult.indexOf("<ul>") > -1) {
 						strResult = strResult.replaceFirst("<ul>", "");
 %>

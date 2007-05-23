@@ -20,6 +20,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+//import java.util.Collection;
+//import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
@@ -3512,6 +3514,9 @@ public class NCICurationServlet extends HttpServlet
                                         + " row of the search results.\\n" + "Please try again.");
                         continue;
                     }
+                    //TODO add duplicate checks logic here
+                    
+                    //--------
                     String eBeanDB = eBean.getEVS_DATABASE();
                     // make sure it doesn't exist in the list
                     boolean isExist = false;
@@ -3558,7 +3563,61 @@ public class NCICurationServlet extends HttpServlet
         }
         return vList;
     }
+    
+ /*   private void checkDuplicateConcepts(String rowID, EVS_Bean selBean, Vector<EVS_Bean> selList, Hashtable<String, String> selIDs, 
+                    Hashtable<String, EVS_Bean> dupBeans, Vector<EVS_Bean> wholeList)
+    {
+        String sName = selBean.getCONCEPT_NAME();
+        //check if the name is in the hashtable of selIds already
+        if (selIDs.isEmpty() || !selIDs.containsValue(sName))
+        {
+           selIDs.put(rowID, sName); 
+        }
+        else
+        {
+           //find the old one
+           String oldRow = selIDs.get(sName);
+           EVS_Bean oldBean = wholeList.elementAt(Integer.parseInt(oldRow));
+           //get preferred concept
+           
+        }
+        
+    }
+    
+    private void getPreferredDuplicate(String oldRow, String newRow, EVS_Bean oldBean, EVS_Bean selBean,
+                    Hashtable<String, EVS_Bean> dupBeans)
+    {
+        //put the old one
+        if (!dupBeans.containsKey(oldRow))
+            dupBeans.put(oldRow, oldBean);
+        //put the new one also
+        dupBeans.put(newRow, selBean);
+        
+        Vector<EVS_Bean> vDup = new Vector<EVS_Bean>();
+        vDup.addAll((Collection<? extends EVS_Bean>) dupBeans.elements());
+        
+        Vector<String> vDefSrc = sessionData.EvsUsrBean.getNCIDefSrcList();
+        
+        Enumeration enumBeans = dupBeans.elements();
+        for (Enumeration e = dupBeans.elements() ; e.hasMoreElements() ;) 
+        {
+            System.out.println(e.nextElement());
+        }
 
+        
+    }
+    
+    private void getNCIPreferConcept(Vector<EVS_Bean> dupList)
+    {
+        Vector<String> vDefSrc = sessionData.EvsUsrBean.getNCIDefSrcList();
+        //loop through the sources to find the nci one
+        for (int i=0; i<dupList.size(); i++) 
+        {
+             
+        }
+        
+    }
+*/
     /**
      * makes the vd's system generated name
      * 

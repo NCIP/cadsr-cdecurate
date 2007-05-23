@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/ValueMeaningDetail.jsp,v 1.1 2007-05-23 04:37:19 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/ValueMeaningDetail.jsp,v 1.2 2007-05-23 23:20:06 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
