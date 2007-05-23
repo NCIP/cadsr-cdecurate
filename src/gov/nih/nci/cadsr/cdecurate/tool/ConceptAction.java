@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptAction.java,v 1.9 2007-05-23 04:12:01 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptAction.java,v 1.10 2007-05-23 15:44:26 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -585,9 +585,13 @@ public class ConceptAction implements Serializable
       if (!matchFound)
       {
         if (!unMatchName.equals(""))
-          errMsg += "The selected concept's [" + eID + "] name from EVS does not match the name from caDSR.\\n\\t EVS: " + eN + "\\n\\t caDSR: " + unMatchName + "\\n";
+          errMsg += "The selected concept's [" + eID + "] name from EVS does not match the name from caDSR. " + 
+                      " The name from caDSR will be used for the selected concept.\\n" +
+                      "\\t EVS: " + eN + "\\n\\t caDSR: " + unMatchName + "\\n";
         if (!unMatchDef.equals(""))
-          errMsg += "The selected concept's [" + eID + "] definition from EVS does not match the definition from caDSR.\\n\\t EVS: " + eD + "\\n\\t caDSR: " + unMatchDef + "\\n";
+          errMsg += "The selected concept's [" + eID + "] definition from EVS does not match the definition from caDSR." + 
+                      " The name from caDSR will be used for the selected concept.\\n" +
+                      "\\t EVS: " + eD + "\\n\\t caDSR: " + unMatchDef + "\\n";
         //log the error
         if (!errMsg.equals(""))
         {
