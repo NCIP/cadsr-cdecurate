@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.42 2007-05-23 15:44:26 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.43 2007-05-23 23:16:04 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -141,30 +141,27 @@ public class InsACService implements Serializable
       String statusMsg = (String)session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
       if (statusMsg == null) statusMsg = "";
       //parse single  double  quotes and new line char if any
-      if (!sMsg.equalsIgnoreCase("\\n"))
-        sMsg = m_util.parsedStringAlertNewLine(sMsg);
-      sMsg = m_util.parsedStringDoubleQuote(sMsg);
-      sMsg = m_util.parsedStringSingleQuote(sMsg);
+      String alrtMsg = sMsg;
+      if (!alrtMsg.equalsIgnoreCase("\\n"))
+          alrtMsg = m_util.parsedStringAlertNewLine(alrtMsg);
+      alrtMsg = m_util.parsedStringDoubleQuote(alrtMsg);
+      alrtMsg = m_util.parsedStringSingleQuote(alrtMsg);
       if (vStatMsg == null) vStatMsg = new Vector<String>();
       //add message to both to string status message and vector stats message if not too big
       if (vStatMsg.size() < 35)
       {
         if (sMsg.equalsIgnoreCase("\\n"))
-          statusMsg = statusMsg + sMsg; 
+          statusMsg = statusMsg + alrtMsg; 
         else
-          statusMsg = statusMsg + sMsg + "\\n"; 
+          statusMsg = statusMsg + alrtMsg + "\\n"; 
         session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, statusMsg);
       }
-      //put nbsp for the tab at the begginning of the msg for vector.
-/*      int iTab = sMsg.indexOf("\\t");
-      if (iTab > -1 && iTab < 5)
-          sMsg = "<ul>".concat(sMsg.substring(2)).concat("</ul>"); 
-*/      //remove tab and newline from the msg for vector
+      //remove tab and newline from the msg for vector
       if (!sMsg.equalsIgnoreCase("\\n") && !sMsg.equalsIgnoreCase("\n"))
         sMsg = m_util.parsedStringMsgVectorTabs(sMsg, vStatMsg);
       if (!sMsg.equals(""))
           vStatMsg.addElement(sMsg);
-   //System.out.println(sMsg + ":size:" + vStatMsg.size());
+
       session.setAttribute("vStatMsg", vStatMsg);  
       //add this message to the logger
       logger.fatal("Log Status Message " + sMsg);
@@ -530,7 +527,7 @@ public class InsACService implements Serializable
             //add success message if no error
             sReturn = (String)m_classReq.getAttribute("retcode");
             if (sAction.equals("UPD") && (sReturn == null || sReturn.equals("")))
-              this.storeStatusMsg("\\t Successfully updated Value Domain");
+              this.storeStatusMsg("\\t Successfully updated Value Domain.");
            }
 
         else if (sReturnCode != null && !sReturnCode.equals(""))
@@ -869,7 +866,7 @@ public class InsACService implements Serializable
               String sPublicID = this.getPublicID(sDEC_ID);
               dec.setDEC_DEC_ID(sPublicID);
               this.storeStatusMsg("Public ID : " + dec.getDEC_DEC_ID());              
-              this.storeStatusMsg("\\t Successfully created New Data Element Concept");
+              this.storeStatusMsg("\\t Successfully created New Data Element Concept.");
            }
            else if (sAction.equals("UPD") && sReturnCode != null && !sReturnCode.equals(""))
               this.storeStatusMsg("\\t " + sReturnCode + " : Unable to update mandatory attributes.");
@@ -939,7 +936,7 @@ public class InsACService implements Serializable
                     
           sReturn = (String)m_classReq.getAttribute("retcode");
           if (sAction.equals("UPD") && (sReturn == null || sReturn.equals("")))
-            this.storeStatusMsg("\\t Successfully updated Data Element Concept");
+            this.storeStatusMsg("\\t Successfully updated Data Element Concept.");
         }
       }
       this.storeStatusMsg("\\n");
@@ -950,7 +947,7 @@ public class InsACService implements Serializable
     {
       logger.fatal("ERROR in InsACService-setDEC for other : " + e.toString(), e);
       m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes");
+      this.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes.");
     }
     try
     {
@@ -962,7 +959,7 @@ public class InsACService implements Serializable
     {
       logger.fatal("ERROR in InsACService-setDEC for close : " + ee.toString(), ee);
       m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes");
+      this.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes.");
     }
     return sReturnCode;
   }
@@ -2166,7 +2163,7 @@ public class InsACService implements Serializable
             String sPublicID = this.getPublicID(sDE_ID);
             de.setDE_MIN_CDE_ID(sPublicID);
             this.storeStatusMsg("Public ID : " + de.getDE_MIN_CDE_ID());              
-            this.storeStatusMsg("\\t Successfully created New Data Element");
+            this.storeStatusMsg("\\t Successfully created New Data Element.");
           }
           else if (sAction.equals("UPD") && sReturnCode != null && !sReturnCode.equals(""))
             this.storeStatusMsg("\\t " + sReturnCode + " : Unable to update mandatory attributes.");
@@ -2310,7 +2307,7 @@ public class InsACService implements Serializable
           //reset return code if other attribute return is not fixed.            
           String otherRet = (String)m_classReq.getAttribute("retcode");
           if (sAction.equals("UPD") && (otherRet == null || otherRet.equals("")))
-            this.storeStatusMsg("\\t Successfully updated Data Element attributes");
+            this.storeStatusMsg("\\t Successfully updated Data Element attributes.");
         }
       }
       this.storeStatusMsg("\\n");
@@ -2322,7 +2319,7 @@ public class InsACService implements Serializable
     {
       logger.fatal("ERROR in InsACService-setDE for other : " + e.toString(), e);
       m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception : Unable to update Data Element Attributes");
+      this.storeStatusMsg("\\t Exception : Unable to update Data Element Attributes.");
     }
     try
     {
@@ -2334,7 +2331,7 @@ public class InsACService implements Serializable
     {
       logger.fatal("ERROR in InsACService-setDE for close : " + ee.toString(), ee);
       m_classReq.setAttribute("retcode", "Exception");
-      this.storeStatusMsg("\\t Exception : Unable to update Data Element Attributes");
+      this.storeStatusMsg("\\t Exception : Unable to update Data Element Attributes.");
     }
     return sReturnCode;
   }  //end set DE
