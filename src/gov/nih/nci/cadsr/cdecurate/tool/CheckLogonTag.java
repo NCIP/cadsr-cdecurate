@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/CheckLogonTag.java,v 1.38 2007-01-26 20:17:43 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/CheckLogonTag.java,v 1.39 2007-05-23 04:12:00 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;

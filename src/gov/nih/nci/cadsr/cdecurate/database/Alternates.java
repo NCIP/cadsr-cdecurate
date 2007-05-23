@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/Alternates.java,v 1.28 2007-01-26 20:17:43 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/Alternates.java,v 1.29 2007-05-23 04:09:35 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -10,7 +10,6 @@ import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
 import gov.nih.nci.cadsr.cdecurate.util.Tree;
 import gov.nih.nci.cadsr.cdecurate.util.TreeNode;
-import java.sql.SQLException;
 
 /**
  * This class describes a single Alternate Name or Alternate Definition.
@@ -20,6 +19,64 @@ import java.sql.SQLException;
  */
 public class Alternates
 {
+    
+    private int _instance;
+    private String _title;
+    private boolean _display;
+    private String _name;
+    private String _type;
+    private String _language;
+    private String _altIdseq;
+    private String _acIdseq;
+    private String _conteIdseq;
+    private String _conteName;
+    private String _HTMLformat1;
+    private String _HTMLformat2;
+    private boolean _changed;
+    private boolean _delete;
+    private boolean _editable;
+    private Tree _root;
+
+    private static final String _defHTMLformat1 = "<tr " + TreeNode._nodeName + "=\"{[NAME]}\" " + TreeNode._nodeLevel + "=\"{[NODELEVEL]}\" " + TreeNode._nodeValue + "=\"{[NODEVALUE]}\">\n"
+        + "<td class=\"alt0\" title=\"{[NTITLE]}\">"
+            + "<table><tr>"
+            + "<td class=\"alt9\">{[EDITGLYPH]}</td>"
+            + "<td class=\"alt9\">{[DELGLYPH]}</td>"
+            + "<td><span style=\"text-decoration: {[DELFLAG]}\"><b>{[NAME]}</b></span></td>"
+            + "</tr></table></td>\n"
+        + "<td class=\"alt1\" title=\"Context\"><b>{[CONTEXT]}</b></td>\n"
+        + "<td class=\"alt1\" title=\"Alternate Type\"><b>{[TYPE]}</b></td>\n"
+        + "<td class=\"alt1\" title=\"Language\"><b>{[LANG]}</b></td>\n"
+        + "</tr>\n{[CSI]}";
+    private static final String _defHTMLformat2 = "<tr " + TreeNode._nodeName + "=\"{[NAME]}\" " + TreeNode._nodeLevel + "=\"{[NODELEVEL]}\" " + TreeNode._nodeValue + "=\"{[NODEVALUE]}\">\n"
+        + "<td class=\"ind{[MARGIN]}\" title=\"{[NTITLE]}\">"
+            + "<table><tr>"
+            + "<td class=\"alt9\">{[EDITGLYPH]}</td>"
+            + "<td class=\"alt9\">{[DELGLYPH]}</td>"
+            + "<td>{[INSTANCE]}:&nbsp;<span style=\"text-decoration: {[DELFLAG]}\">{[NAME]}</span></td>"
+            + "</tr></table></td>\n"
+        + "<td class=\"alt2\" title=\"Context\">{[CONTEXT]}</td>\n"
+        + "<td class=\"alt2\" title=\"Alternate Type\">{[TYPE]}</td>\n"
+        + "<td class=\"alt3\" title=\"Language\">{[LANG]}</td>\n"
+        + "</tr>\n";
+    
+    private static final String EDITGLYPH = "<img src=\"Assets/edit.gif\" title=\"Edit\" onclick=\"doEdit(this);\"/>";
+    private static final String DELGLYPH1 = "<span class=\"restore\" title=\"Restore\" onclick=\"doRestore(this);\"/>&#81;</span>";
+    private static final String DELGLYPH2 = "<img src=\"Assets/delete.gif\" title=\"Delete\" onclick=\"doDelete(this);\"/>";
+    
+    public static final String _HTMLprefix = "<table>\n";
+    public static final String _HTMLsuffix = "</table>\n";
+
+    public static final int _MISSINGAC = -1;
+    public static final int _MISSINGCONTE = -2;
+    public static final int _MISSINGTYPE = -3;
+    public static final int _MISSINGNAME = -4;
+    public static final int _INSTANCENAME = 0;
+    public static final int _INSTANCEDEF = 1;
+    private static final String _INSTANCEDEFTITLE = "<tr><td colspan=\"4\"><p style=\"margin: 0.3in 0in 0in 0in\"><b>Definitions</b></p></td></tr>\n";
+    private static final String _INSTANCENAMETITLE = "<tr><td colspan=\"4\"><p style=\"margin: 0.3in 0in 0in 0in\"><b>Names</b></p></td></tr>\n";
+    // private static final String _INSTANCEUNKTITLE = "<tr><td colspan=\"4\"><p style=\"margin: 0.3in 0in 0in 0in\"><b>UNKNOWN</b></p></td></tr>\n";
+
     /**
      * Local test entry.
      * 
@@ -41,6 +98,64 @@ public class Alternates
         
         return temp;
     }
+    
+    public boolean equals(Alternates other_)
+    {
+        // The Alternate must be a name to be equal - we don't do definitions/descriptions
+        if (!this.isName())
+            return false;
+        if (!other_.isName())
+            return false;
+        
+        // The primary key when present must not be the same or we are comparing
+        // to ourself.
+        if (this._altIdseq == null && other_._altIdseq != null)
+            return false;
+        
+        if (this._altIdseq != null && other_._altIdseq == null)
+            return false;
+        
+        // When comparing to ourself we will lie and say the objects aren't equal because
+        // the calling method expects that behavior.
+        if (this._altIdseq.equals(other_._altIdseq))
+            return false;
+
+        // The AC owner when present must be the same to be equal.
+        if (this._acIdseq == null && other_._acIdseq != null)
+            return false;
+        
+        if (this._acIdseq != null && other_._acIdseq == null)
+            return false;
+
+        // The Context when present must be the same to be equal.
+        if (this._conteIdseq == null && other_._conteIdseq != null)
+            return false;
+        
+        if (this._conteIdseq != null && other_._conteIdseq == null)
+            return false;
+
+        // The Alt Name Type when present must be the same to be equal.
+        if (this._type == null && other_._type != null)
+            return false;
+        
+        if (this._type != null && other_._type == null)
+            return false;
+
+        // The Alt Name Text (ie name) when present must be the same to be equal.
+        if (this._name == null && other_._name != null)
+            return false;
+        
+        if (this._name != null && other_._name == null)
+            return false;
+
+        // Now check all the required fields for equality. The name is compared case
+        // insensitive.
+        boolean aFlag = (this._acIdseq == null && other_._acIdseq == null) || this._acIdseq.equals(other_._acIdseq);
+        boolean cFlag = (this._conteIdseq == null && other_._conteIdseq == null) || this._conteIdseq.equals(other_._conteIdseq);
+        boolean tFlag = (this._type == null && other_._type == null) || this._type.equals(other_._type);
+        boolean nFlag = (this._name == null && other_._name == null) || this._name.compareToIgnoreCase(other_._name) == 0;
+        return (aFlag && cFlag && tFlag && nFlag);
+    }
 
     /**
      * A private constructor that copies values not references from another Alternates object.
@@ -61,8 +176,10 @@ public class Alternates
         _HTMLformat2 = old_._HTMLformat2;
         _changed = old_._changed;
         _delete = old_._delete;
+        _editable = old_._editable;
         _root = old_._root.dupl();
         _title = old_._title;
+        _display = old_._display;
     }
 
     /**
@@ -88,23 +205,21 @@ public class Alternates
      */
     public Alternates(int instance_, String name_, String type_, String lang_, String ac_, String desig_, String conte_, String conteName_)
     {
-        _instance = instance_;
-        if (isName())
-            _title = _INSTANCENAMETITLE;
-        else
-            _title = _INSTANCEDEFTITLE;
+        setInstance(instance_);
         setName(name_);
         setType(type_);
         setLanguage(lang_);
+        setConteIdseq(conte_);
         setConteName(conteName_);
         _acIdseq = ac_;
         _altIdseq = desig_;
-        _conteIdseq = conte_;
         _HTMLformat1 = _defHTMLformat1;
         _HTMLformat2 = _defHTMLformat2;
         _root = new Tree(new TreeNode("root", null, false));
         _changed = false;
         _delete = false;
+        _editable = true;
+        _display = true;
     }
 
     /**
@@ -117,12 +232,15 @@ public class Alternates
         _type = "";
         _language = "";
         _conteName = "";
+        _conteIdseq = "";
         _language = "ENGLISH";
         _HTMLformat1 = _defHTMLformat1;
         _HTMLformat2 = _defHTMLformat2;
         _root = new Tree(new TreeNode("root", null, false));
         _changed = false;
         _delete = false;
+        _editable = true;
+        _display = true;
     }
 
     /**
@@ -194,7 +312,11 @@ public class Alternates
      */
     public void setConteIdseq(String idseq_)
     {
+        if (_conteIdseq != null && _conteIdseq.equals(idseq_))
+            return;
+
         _conteIdseq = idseq_;
+        _changed = true;
     }
     
     /**
@@ -223,6 +345,15 @@ public class Alternates
     public void markToKeep()
     {
         _delete = false;
+    }
+    
+    /**
+     * Make this Alternate read only - user can't edit or delete it.
+     *
+     */
+    public void makeReadOnly()
+    {
+        _editable = false;
     }
 
     /**
@@ -290,7 +421,6 @@ public class Alternates
      * Check all the database id's for this Alternate.
      * 
      * @return 0 if everything is good, otherwise an error code for the problem.
-     */
     private int validateCheck()
     {
         if (_acIdseq == null)
@@ -311,12 +441,12 @@ public class Alternates
         }
         return 0;
     }
+     */
     
     /**
      * Validate the required data in this object.
      * 
      * @throws SQLException
-     */
     private void validate() throws SQLException
     {
         switch (validateCheck())
@@ -331,18 +461,7 @@ public class Alternates
             throw new SQLException(this.getClass().getName() + ": Name is null, use method setName().");
         }
     }
-
-    /**
-     * Save this object to the database.
-     * 
-     * @throws SQLException
      */
-    private void save() throws SQLException
-    {
-        validate();
-        if (isNew())
-            ;
-    }
     
     /**
      * Get the Alternate text, either the name or the definition.
@@ -492,6 +611,10 @@ public class Alternates
     public void setInstance(int instance_)
     {
         _instance = instance_;
+        if (isName())
+            _title = _INSTANCENAMETITLE;
+        else
+            _title = _INSTANCEDEFTITLE;
     }
     
     /**
@@ -504,6 +627,24 @@ public class Alternates
         _altIdseq = idseq_;
         _root.markNew();
     }
+    
+    /**
+     * Set the alternate as visible in a UI depending on the type being a manually
+     * curated definition. This effectively determines if the alternate
+     * returns anything from the toHTML methods.
+     * 
+     * @param showMC_ the show control value, true when the Alternate is visible, false when it should be hidden
+     */
+    public void display(boolean showMC_)
+    {
+        // Is this an Alternate Definition type of "manually curated"?
+        boolean typeMC = (isName()) ? false : DBAccess._manuallyCuratedDef.equals(_type);
+
+        // The show control will be "true" to display all Alt Defs, when it is "false" and the
+        // object is a manually curated definition (true == false), don't display otherwise
+        // show it.
+        _display = showMC_ || (typeMC == showMC_);
+    }
 
     /**
      * Format the Alternate for output using HTML tags.
@@ -512,6 +653,10 @@ public class Alternates
      */
     public String toHTML()
     {
+        // Don't return anything for a hidden Alternate
+        if (!_display)
+            return "";
+
         String[] formats = new String[3];
         formats[AltNamesDefsServlet._classTypeAlt] = "(not used)";
         formats[AltNamesDefsServlet._classTypeCSI] = AltNamesDefsServlet._formatHTMLcsiView;
@@ -527,15 +672,25 @@ public class Alternates
         text = text.replace("{[NODELEVEL]}", "0");
         text = text.replace("{[NODEVALUE]}",_altIdseq);
         text = text.replace("{[CLASSTYPE]}", String.valueOf(_instance));
+        if (_editable)
+        {
+            text = text.replace("{[EDITGLYPH]}", EDITGLYPH);
+        }
+        else
+        {
+            text = text.replace("{[EDITGLYPH]}", "&nbsp;");
+            text = text.replace("{[DELGLYPH]}", "&nbsp;");
+            _delete = false;
+        }
         if(_delete)
         {
             text = text.replace("{[DELFLAG]}", "line-through");
-            text = text.replace("{[DELGLYPH]}", "<span class=\"restore\" title=\"Restore\" onclick=\"doRestore(this);\"/>&#81;</span>");
+            text = text.replace("{[DELGLYPH]}", DELGLYPH1);
         }
         else
         {
             text = text.replace("{[DELFLAG]}", "none");
-            text = text.replace("{[DELGLYPH]}", "<img src=\"Assets/delete.gif\" title=\"Delete\" onclick=\"doDelete(this);\"/>");
+            text = text.replace("{[DELGLYPH]}", DELGLYPH2);
         }
         
         return text;
@@ -548,6 +703,10 @@ public class Alternates
      */
     public String toHTML2(int indent_)
     {
+        // Don't return anything for a hidden Alternate
+        if (!_display)
+            return "";
+
         String instance = (_instance == _INSTANCENAME) ? "Name" : "Definition";
         String text = _HTMLformat2;
         text = text.replace("{[NTITLE]}", (_instance == _INSTANCENAME) ? "Alternate Name" : "Alternate Definition");
@@ -560,15 +719,25 @@ public class Alternates
         text = text.replace("{[NODELEVEL]}",String.valueOf(indent_));
         text = text.replace("{[NODEVALUE]}",_altIdseq);
         text = text.replace("{[CLASSTYPE]}", String.valueOf(_instance));
+        if (_editable)
+        {
+            text = text.replace("{[EDITGLYPH]}", EDITGLYPH);
+        }
+        else
+        {
+            text = text.replace("{[EDITGLYPH]}", "&nbsp;");
+            text = text.replace("{[DELGLYPH]}", "&nbsp;");
+            _delete = false;
+        }
         if(_delete)
         {
             text = text.replace("{[DELFLAG]}", "line-through");
-            text = text.replace("{[DELGLYPH]}", "<span class=\"restore\" title=\"Restore\" onclick=\"doRestore(this);\"/>&#81;</span>");
+            text = text.replace("{[DELGLYPH]}", DELGLYPH1);
         }
         else
         {
             text = text.replace("{[DELFLAG]}", "none");
-            text = text.replace("{[DELGLYPH]}", "<img src=\"Assets/delete.gif\" title=\"Delete\" onclick=\"doDelete(this);\"/>");
+            text = text.replace("{[DELGLYPH]}", DELGLYPH2);
         }
 
         return text;
@@ -585,54 +754,4 @@ public class Alternates
     {
         _root.addHierarchy(nodes_, levels_);
     }
-    
-    private int _instance;
-    private String _title;
-    private String _name;
-    private String _type;
-    private String _language;
-    private String _altIdseq;
-    private String _acIdseq;
-    private String _conteIdseq;
-    private String _conteName;
-    private String _HTMLformat1;
-    private String _HTMLformat2;
-    private boolean _changed;
-    private boolean _delete;
-    private Tree _root;
-
-    private static final String _defHTMLformat1 = "<tr " + TreeNode._nodeName + "=\"{[NAME]}\" " + TreeNode._nodeLevel + "=\"{[NODELEVEL]}\" " + TreeNode._nodeValue + "=\"{[NODEVALUE]}\">\n"
-        + "<td class=\"alt0\" title=\"{[NTITLE]}\">"
-            + "<table><tr>"
-            + "<td class=\"alt9\"><img src=\"Assets/edit.gif\" title=\"Edit\" onclick=\"doEdit(this);\"/></td>"
-            + "<td class=\"alt9\">{[DELGLYPH]}</td>"
-            + "<td><span style=\"text-decoration: {[DELFLAG]}\"><b>{[NAME]}</b></span></td>"
-            + "</tr></table></td>\n"
-        + "<td class=\"alt1\" title=\"Context\"><b>{[CONTEXT]}</b></td>\n"
-        + "<td class=\"alt1\" title=\"Alternate Type\"><b>{[TYPE]}</b></td>\n"
-        + "<td class=\"alt1\" title=\"Language\"><b>{[LANG]}</b></td>\n"
-        + "</tr>\n{[CSI]}";
-    private static final String _defHTMLformat2 = "<tr " + TreeNode._nodeName + "=\"{[NAME]}\" " + TreeNode._nodeLevel + "=\"{[NODELEVEL]}\" " + TreeNode._nodeValue + "=\"{[NODEVALUE]}\">\n"
-        + "<td class=\"ind{[MARGIN]}\" title=\"{[NTITLE]}\">"
-            + "<table><tr>"
-            + "<td class=\"alt9\"><img src=\"Assets/edit.gif\" title=\"Edit\" onclick=\"doEdit(this);\"/></td>"
-            + "<td class=\"alt9\">{[DELGLYPH]}</td>"
-            + "<td>{[INSTANCE]}:&nbsp;<span style=\"text-decoration: {[DELFLAG]}\">{[NAME]}</span></td>"
-            + "</tr></table></td>\n"
-        + "<td class=\"alt2\" title=\"Context\">{[CONTEXT]}</td>\n"
-        + "<td class=\"alt2\" title=\"Alternate Type\">{[TYPE]}</td>\n"
-        + "<td class=\"alt3\" title=\"Language\">{[LANG]}</td>\n"
-        + "</tr>\n";
-    public static final String _HTMLprefix = "<table>\n";
-    public static final String _HTMLsuffix = "</table>\n";
-
-    public static final int _MISSINGAC = -1;
-    public static final int _MISSINGCONTE = -2;
-    public static final int _MISSINGTYPE = -3;
-    public static final int _MISSINGNAME = -4;
-    public static final int _INSTANCENAME = 0;
-    public static final int _INSTANCEDEF = 1;
-    private static final String _INSTANCEDEFTITLE = "<tr><td colspan=\"4\"><p style=\"margin: 0.3in 0in 0in 0in\"><b>Definitions</b></p></td></tr>\n";
-    private static final String _INSTANCENAMETITLE = "<tr><td colspan=\"4\"><p style=\"margin: 0.3in 0in 0in 0in\"><b>Names</b></p></td></tr>\n";
-    // private static final String _INSTANCEUNKTITLE = "<tr><td colspan=\"4\"><p style=\"margin: 0.3in 0in 0in 0in\"><b>UNKNOWN</b></p></td></tr>\n";
 }

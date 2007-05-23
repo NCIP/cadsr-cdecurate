@@ -1,6 +1,8 @@
-/**
- * 
- */
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptAction.java,v 1.9 2007-05-23 04:12:01 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.io.Serializable;
@@ -26,7 +28,7 @@ public class ConceptAction implements Serializable
   {
   }
 
-  
+//other public methods  
   /**
    * To get resultSet from database for Concept Class.
    *
@@ -38,55 +40,44 @@ public class ConceptAction implements Serializable
   */
   public void doConceptSearch(ConceptForm data)  // returns list of Concepts
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     try
     {
-      UtilService util = data.getUtil();
-      //get the data for the call
-      String InString = util.parsedStringSingleQuoteOracle(data.getSearchTerm());
-      String conIdseq = data.getConIDSEQ();
-      String ContName = this.getContextValue(data.getContextName()); 
-      String ASLName = this.getStatusValues(data.getASLNameList(), data);
-      String conID = data.getConID();
-      String decID = data.getDecIDseq();
-      String vdID = data.getVdIDseq(); 
-      String sDef = data.getSearchDefn();
       //capture the duration
       //java.util.Date exDate = new java.util.Date();          
       //logger.info(m_servlet.getLogMessage(m_classReq, "do_ConceptSearch", "begin search", exDate, exDate));
       
       //get the connection from data if exists (used for testing)
-      sbr_db_conn = data.getDBConnection();
-      if (sbr_db_conn == null || sbr_db_conn.isClosed())
-        sbr_db_conn = data.getCurationServlet().connectDB();
+      UtilService util = data.getUtil();
+      conn = data.getDBConnection();
+      if (conn == null || conn.isClosed())
+        conn = data.getCurationServlet().connectDB(); // ConceptServlet.makeDBConnection();
       // Create a Callable Statement object.
-      if (sbr_db_conn != null)
+      if (conn != null)
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?,?)}");
-        CStmt.registerOutParameter(6, OracleTypes.CURSOR);
-        CStmt.setString(1, InString);
-        CStmt.setString(2, ASLName);
-        CStmt.setString(3, ContName);
-        CStmt.setString(4, conID);
-        CStmt.setString(5, conIdseq);
-        CStmt.setString(7, decID);
-        CStmt.setString(8, vdID);
-        CStmt.setString(9, sDef);
+          //get the data for the call
+        cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?,?)}");
+        cstmt.registerOutParameter(6, OracleTypes.CURSOR);
+        cstmt.setString(1, util.parsedStringSingleQuoteOracle(data.getSearchTerm()));
+        cstmt.setString(2, getStatusValues(data.getASLNameList(), data));
+        cstmt.setString(3, getContextValue(data.getContextName()));
+        cstmt.setString(4, data.getConID());
+        cstmt.setString(5, data.getConIDSEQ());
+        cstmt.setString(7, data.getDecIDseq());
+        cstmt.setString(8, data.getVdIDseq());
+        cstmt.setString(9, data.getSearchDefn());
        // Now we are ready to call the stored procedure
-        CStmt.execute();   
+        cstmt.execute();   
         //store the output in the resultset
-        rs = (ResultSet) CStmt.getObject(6);
+        rs = (ResultSet) cstmt.getObject(6);
         //capture the duration
       //  logger.info(m_servlet.getLogMessage(m_classReq, "do_ConceptSearch", "got rsObject", exDate, new java.util.Date()));
         if(rs!=null)
         {
-          //this.storeRecordInVector(rs, data);
           EVS_UserBean eUser = data.getEvsUser();
-         // UtilService util = data.getUtil();
           String sAction = data.getACAction();
-          boolean existInd = false;
           Vector<EVS_Bean> vList = new Vector<EVS_Bean>();
           while(rs.next())
           {
@@ -94,7 +85,7 @@ public class ConceptAction implements Serializable
             String sConName = util.removeNewLineChar(rs.getString("long_name"));
             conBean.setCONCEPT_NAME(sConName);  
             conBean.setLONG_NAME(sConName);  //rs.getString("long_name"));
-            sDef = util.removeNewLineChar(rs.getString("preferred_definition"));
+            String sDef = util.removeNewLineChar(rs.getString("preferred_definition"));
             conBean.setPREFERRED_DEFINITION(sDef);
             conBean.setCONTE_IDSEQ(rs.getString("conte_idseq"));
             conBean.setASL_NAME(rs.getString("asl_name"));
@@ -113,40 +104,22 @@ public class ConceptAction implements Serializable
             else conBean.setEVS_ORIGIN(selVocab);
             
             conBean.setID(rs.getString("con_ID"));//public id
-            if (rs.getString("version").indexOf('.') >= 0)
-              conBean.setVERSION(rs.getString("version"));
+            String rsV = rs.getString("version");
+            if (rsV == null)
+                rsV = "";
+            if (rsV.indexOf('.') >= 0)
+              conBean.setVERSION(rsV);
             else
-              conBean.setVERSION(rs.getString("version") + ".0");
+              conBean.setVERSION(rsV + ".0");
             conBean.setCONTEXT_NAME(rs.getString("context"));
             conBean.setDEC_USING("");
             String sPref = util.removeNewLineChar(rs.getString("preferred_name"));
             conBean.setCONCEPT_IDENTIFIER(sPref);  //cui
-     System.out.println(sPref + rs.getString("con_idseq") + sConName + " conname " + sDef);
             conBean.setNCI_CC_TYPE(rs.getString("evs_source"));
             if (data.getRequest() != null)
               conBean.markNVPConcept(conBean, data.getRequest().getSession());
-            //make sure it is included only once by matching evsId and concept name only if oc/prop/rep search was done earlier.
-            boolean isExist = false;
-            if (existInd == true)
-            {
-              for (int j = 0; j < vList.size(); j++)
-              {
-                EVS_Bean exBean = (EVS_Bean)vList.elementAt(j);
-                String curEvsId = exBean.getCONCEPT_IDENTIFIER();
-                String curLName = exBean.getLONG_NAME();
-                //check if not null or empty
-                if (curEvsId != null && !curEvsId.equals("") && curLName != null && !curLName.equals(""))
-                {
-                  //compare to the current one
-                  String evsId = conBean.getCONCEPT_IDENTIFIER();
-                  String longName = conBean.getLONG_NAME();
-                  if (evsId != null && evsId.equals(curEvsId) && longName != null && longName.equals(curLName))
-                    isExist = true;
-                }
-              }
-            }
-            if (isExist == false)
-              vList.addElement(conBean);    //add concept bean to vector     
+            // add concept bean to vector 
+            vList.addElement(conBean);        
           }
           data.setConceptList(vList);
         }   //END IF
@@ -155,20 +128,19 @@ public class ConceptAction implements Serializable
     catch(Exception e)
     {
       logger.fatal("ERROR - doconceptSearch for other : ", e);
-      System.out.println(e);
       data.setStatusMsg("Error : Unable to do concept search." + e.toString());
       data.setActionStatus(ConceptForm.ACTION_STATUS_FAIL);
     }
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
+      if(cstmt!=null) cstmt.close();
       if (data.getDBConnection() == null)
-    	  data.getCurationServlet().freeConnection(sbr_db_conn);
+        data.getCurationServlet().freeConnection(conn);
     }
     catch(Exception ee)
     {
-      logger.fatal("GetACSearch-do_conceptSearch for close : " + ee.toString(), ee);
+      logger.fatal("ERROR -do_conceptSearch for close : " + ee.toString(), ee);
     }
     //capture the duration
     //logger.info(m_servlet.getLogMessage(m_classReq, "do_conceptSearch", "end search", exDate,  new java.util.Date()));
@@ -184,27 +156,27 @@ public class ConceptAction implements Serializable
     Vector<EVS_Bean> conList = data.getConceptList();
     //make con idseq array
     String conArray = this.getConArray(conList, false, data);
-    System.out.println(conList.size() + " get derivation " + conArray);
+   // System.out.println(conList.size() + " get derivation " + conArray);
     if (!conArray.equals(""))
     {
-      Connection sbr_db_conn = null;
+      Connection conn = null;
       ResultSet rs = null;
       Statement stmt = null;
       try
       {
-        sbr_db_conn = data.getDBConnection();
-        if (sbr_db_conn == null || sbr_db_conn.isClosed())
-          sbr_db_conn = data.getCurationServlet().connectDB();
+        conn = data.getDBConnection();
+        if (conn == null || conn.isClosed())
+          conn = data.getCurationServlet().connectDB(); // ConceptServlet.makeDBConnection();
         // Create a Callable Statement object.
-        if (sbr_db_conn != null)
+        if (conn != null)
         {
-          stmt = sbr_db_conn.createStatement();
+          stmt = conn.createStatement();
           rs = stmt.executeQuery("select SBREXT_COMMON_ROUTINES.CHECK_DERIVATION_EXISTS('" + conArray + "') from DUAL");
           //loop through to printout the outstrings
           while(rs.next())
           {
             condr = rs.getString(1);
-          System.out.println(conArray + " condr " + condr);
+          //System.out.println(conArray + " condr " + condr);
             if (condr == null) condr = "";
           }
         }
@@ -220,11 +192,11 @@ public class ConceptAction implements Serializable
         if(rs!=null) rs.close();
         if(stmt!=null) stmt.close();
         if (data.getDBConnection() == null)
-          data.getCurationServlet().freeConnection(sbr_db_conn);
+          data.getCurationServlet().freeConnection(conn); // ConceptServlet.closeDBConnection(conn);
       }
       catch(Exception ee)
       {
-        logger.fatal("GetACSearch-do_conceptSearch for close : " + ee.toString(), ee);
+        logger.fatal("ERROR -do_conceptSearch for close : " + ee.toString(), ee);
       }
     }
     return condr;
@@ -240,130 +212,398 @@ public class ConceptAction implements Serializable
   public String getConArray(Vector<EVS_Bean> conList, boolean isCreate, ConceptForm data)
   {
     String conArray = "";
-    String errMsg = "";
-    for (int i=0; i<conList.size(); i++)
+    try
     {
-      EVS_Bean con = (EVS_Bean)conList.elementAt(i);
-      if (con == null) con = new EVS_Bean();
-      String conIDseq = con.getIDSEQ();
-      if (conIDseq == null || conIDseq.equals(""))  //add conidseq        
-      {
-        if (isCreate)
+        String errMsg = "";
+        for (int i=0; i<conList.size(); i++)
         {
-          System.out.println("create new concept");
-          String sret = this.setConcept(data, con, ConceptForm.CADSR_ACTION_INS);
-          if (!sret.equals(""))
+          EVS_Bean con = (EVS_Bean)conList.elementAt(i);
+          if (con == null) con = new EVS_Bean();
+          String conIDseq = con.getIDSEQ();
+          if (conIDseq == null || conIDseq.equals(""))  //add conidseq        
           {
-            logger.fatal("ERROR concept create " + sret);
-            errMsg += "\\n" + sret;
+              //create it in the database at submit only
+            if (isCreate)
+            {
+              //System.out.println("create new concept");
+              String sret = this.setConcept(data, con, ConceptForm.CADSR_ACTION_INS);
+              if (!sret.equals(""))
+              {
+                logger.fatal("ERROR concept create " + sret);
+                errMsg += "\\n" + sret;
+              }
+            }
+            else   //at validation return empty for new concept
+              return "";
+          }
+          conIDseq = con.getIDSEQ();
+          if (!conIDseq.equals(""))
+          {
+            if (!conArray.equals(""))  //add comma
+              conArray += ",";
+            //get the nvp value if exists or not the last one (primary)
+            String nvp = con.getNVP_CONCEPT_VALUE();
+            if (!nvp.equals("") && i < conList.size()-1)
+              conIDseq += ":" + nvp;
+            //make an array
+            conArray += conIDseq; 
+            //System.out.println(con.getLONG_NAME() + " conarray " + conArray);
           }
         }
-        else
-          return "";
-      }
-      conIDseq = con.getIDSEQ();
-      if (!conIDseq.equals(""))
-      {
-        if (!conArray.equals(""))  //add comma
-          conArray += ",";
-        //get the nvp value if exists or not the last one (primary)
-        if (!con.getNVP_CONCEPT_VALUE().equals("") && i < conList.size()-1)
-          conIDseq += ":" + con.getNVP_CONCEPT_VALUE();
-        //make an array
-        conArray += conIDseq; 
-        //System.out.println(con.getLONG_NAME() + " conarray " + conArray);
-      }
+        if (!errMsg.equals(""))
+          data.setStatusMsg(errMsg);
     }
-    if (!errMsg.equals(""))
-      data.setStatusMsg(errMsg);
+    catch (Exception e)
+    {
+        logger.fatal("ERROR - getConArray : ", e);
+    }
 
     return conArray;
   }
 
-  private void storeRecordInVector(ResultSet rs, ConceptForm data)
+  /**
+   * To insert a new concept from evs to cadsr.
+   * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
+   * Calls oracle stored procedure
+   *   "{call SBREXT_Set_Row.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?)}" to submit
+   * @param data ConceptForm object
+   *
+   * @param sAction Insert or update Action.
+   * @param evsBean EVS_Bean.
+   *
+   * @return String concept idseq from the table.
+   */
+  public String setConcept(ConceptForm data, EVS_Bean evsBean, String sAction)
   {
+     //capture the duration
+     //java.util.Date startDate = new java.util.Date();          
+     //logger.info(m_servlet.getLogMessage(m_classReq, "setConcept", "starting set", startDate, startDate));
+
+     String sMsg = "";
+     Connection conn = null;
+     ResultSet rs = null;
+     CallableStatement cstmt = null;
+     //String sEvsSource = "";
+     try
+     {
+         conn = data.getDBConnection();
+         if (conn == null || conn.isClosed())
+           conn = data.getCurationServlet().connectDB(); // ConceptServlet.makeDBConnection();
+         // Create a Callable Statement object.
+         if (conn != null)
+         {
+           cstmt = conn.prepareCall("{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+           // register the Out parameters
+           cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+           cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //con idseq
+           cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //preferred name
+           cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //long name
+           cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //prefered definition
+           cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //context idseq
+           cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //version
+           cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //asl name
+           cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //latest version ind
+           cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //change note
+           cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //origin
+           cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //definition source
+           cstmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //evs source
+           cstmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //begin date
+           cstmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //end date
+           cstmt.registerOutParameter(17,java.sql.Types.VARCHAR);       //date created
+           cstmt.registerOutParameter(18,java.sql.Types.VARCHAR);       //created by
+           cstmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //date modified
+           cstmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //modified by
+           cstmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //deleted ind
+
+           //truncate the definition to be 2000 long.
+         //  if (sDef == null) sDef = "";
+         //  if (sDef.length() > 2000) sDef = sDef.substring(0, 2000);
+           // Set the In parameters (which are inherited from the PreparedStatement class)
+           cstmt.setString(2, sAction);
+           cstmt.setString(4, evsBean.getCONCEPT_IDENTIFIER());
+           //make sure that :: is removed from the long name and defintion
+           String sName = evsBean.getLONG_NAME();
+           String sDef = evsBean.getPREFERRED_DEFINITION();
+           int nvpInd = sName.indexOf("::");
+           if (nvpInd > 0)
+             sName = sName.substring(0, nvpInd);  
+           nvpInd = sDef.indexOf("::");
+           if (nvpInd > 0)
+             sDef = sDef.substring(0, nvpInd);  
+           cstmt.setString(5, sName);
+           cstmt.setString(6, sDef);
+           cstmt.setString(8, "1.0");
+           cstmt.setString(9, "RELEASED");
+           cstmt.setString(10, "Yes");
+           cstmt.setString(12, evsBean.getEVS_DATABASE());
+           cstmt.setString(13, evsBean.getEVS_DEF_SOURCE());
+           cstmt.setString(14, evsBean.getNCI_CC_TYPE());
+            // Now we are ready to call the stored procedure
+           //logger.info("setConcept " + evsBean.getCONCEPT_IDENTIFIER());     
+
+           cstmt.execute();
+           String sReturnCode = cstmt.getString(1);
+           String conIdseq = cstmt.getString(3);
+           if (conIdseq == null) conIdseq = "";
+           evsBean.setIDSEQ(conIdseq);
+           if (sReturnCode != null)
+           {
+             sMsg += "\\t " + sReturnCode + " : Unable to update Concept attributes - " 
+                 + evsBean.getCONCEPT_IDENTIFIER() + ": " + evsBean.getLONG_NAME() + ".";
+           }
+         }
+       //capture the duration
+       //logger.info(m_servlet.getLogMessage(m_classReq, "setConcept", "end set", startDate, new java.util.Date()));
+     }
+     catch(Exception e)
+     {
+       logger.fatal("ERROR in setConcept for other : " + e.toString(), e);
+       sMsg += "\\t Exception : Unable to update Concept attributes.";
+     }
+     try
+     {
+       if(rs!=null) rs.close();
+       if(cstmt!=null) cstmt.close();
+       if (data.getDBConnection() == null)
+         data.getCurationServlet().freeConnection(conn); // ConceptServlet.closeDBConnection(conn);
+     }
+     catch(Exception ee)
+     {
+       logger.fatal("ERROR in setConcept for close : " + ee.toString(), ee);
+     }
+     return sMsg;
+  }  //end concept
+
+   /**
+    * Called to get all the concepts from condr_idseq.
+    * Sets in parameters, and registers output parameters and vector of evs bean.
+    * Calls oracle stored procedure
+    *   "{call SBREXT_CDE_CURATOR_PKG.GET_AC_CONCEPTS(?,?)}" to submit
+   * @param condrID String condr idseq
+   * @param data ConceptForm object
+   * @return Vector vector of evs bean.
+  */
+  public Vector<EVS_Bean> getAC_Concepts(String condrID, ConceptForm data)
+  {
+//System.out.println("in getAC_Concepts condrID: " + condrID);
+    Connection conn = null;
+    CallableStatement cstmt = null;
+    ResultSet rs = null;
+  //  String sCON_IDSEQ = "";
+    Vector<EVS_Bean> vList = new Vector<EVS_Bean>();
+    try
+    {
+      conn = data.getDBConnection();
+      if (conn == null || conn.isClosed())
+        conn = data.getCurationServlet().connectDB(); // ConceptServlet.makeDBConnection();
+      // Create a Callable Statement object.
+      if (conn != null)
+      {
+        cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_AC_CONCEPTS(?,?)}");
+        //out parameter
+        cstmt.registerOutParameter(2, OracleTypes.CURSOR);       //return cursor
+        //in parameter
+        cstmt.setString(1, condrID);       // condr idseq
+         // Now we are ready to call the stored procedure
+        cstmt.execute();
+        //store the output in the resultset
+        rs = (ResultSet) cstmt.getObject(2);
+        //String s;
+        if(rs!=null)
+        {
+          //loop through the resultSet and add them to the bean
+          while(rs.next())
+          {
+            EVS_Bean eBean = new EVS_Bean();
+            eBean.setIDSEQ(rs.getString("CON_IDSEQ"));
+            eBean.setDISPLAY_ORDER(rs.getString("DISPLAY_ORDER"));
+            String sPrim = rs.getString("primary_flag_ind");
+            if (sPrim != null && sPrim.equals("Yes"))
+              eBean.setPRIMARY_FLAG(ConceptForm.CONCEPT_PRIMARY);
+            else 
+              eBean.setPRIMARY_FLAG(ConceptForm.CONCEPT_QUALIFIER);
+            eBean.setCONCEPT_IDENTIFIER(rs.getString("preferred_name"));
+            eBean.setLONG_NAME(rs.getString("long_name"));
+            eBean.setPREFERRED_DEFINITION(rs.getString("preferred_definition"));
+            eBean.setEVS_DATABASE(rs.getString("origin"));
+            eBean.setEVS_DEF_SOURCE(rs.getString("definition_source"));
+            eBean.setNCI_CC_TYPE(rs.getString("evs_source"));
+            String nvp = rs.getString("CONCEPT_VALUE");
+            if (nvp == null) nvp = "";
+            eBean.setNVP_CONCEPT_VALUE(nvp);
+            //append the name value pair to long name and definition of the AC that uses this concept
+            if (!nvp.equals(""))
+            {
+              eBean.setLONG_NAME(eBean.getLONG_NAME() + "::" + nvp);
+              eBean.setPREFERRED_DEFINITION(eBean.getPREFERRED_DEFINITION() + "::" + nvp);
+            }
+            eBean.setCONDR_IDSEQ(condrID);
+            eBean.setCON_AC_SUBMIT_ACTION("NONE");
+/*            String sOrg = rs.getString("origin");
+            if(sOrg != null && sOrg.equals("NCI Metathesaurus"))
+            {
+              String sParent = rs.getString("long_name");
+              //String sCui = rs.getString("preferred_name");
+              if(sParent == null) sParent = "";
+              String sParentSource = "";
+              //sParentSource = serAC.getMetaParentSource(sParent, sCui, vd);
+              if(sParentSource == null) sParentSource = "";
+              eBean.setEVS_CONCEPT_SOURCE(sParentSource);
+            }
+*/            if (data.getRequest() != null)
+              eBean.markNVPConcept(eBean, data.getRequest().getSession());
+
+            if (!eBean.getIDSEQ().equals(""))
+              vList.addElement(eBean);
+          }
+        }
+      }
+    }
+    catch(Exception e)
+    {
+      logger.fatal("ERROR in getACConcepts for exception : " + e.toString(), e);
+    }
 
     try
     {
-      EVS_UserBean eUser = data.getEvsUser();
-      UtilService util = data.getUtil();
-      String sAction = data.getACAction();
-      boolean existInd = false;
-      //mark it if oc/prop/rep search was done earlier
-      Vector<EVS_Bean> vList = data.getConceptList();
-      if (vList != null && vList.size()>0) 
-        existInd = true;
-    System.out.println(" record " + rs.toString());
-      //loop through to printout the outstrings
-      while(rs.next())
-      {
-        EVS_Bean conBean = new EVS_Bean();
-        String sConName = util.removeNewLineChar(rs.getString("long_name"));
-        conBean.setCONCEPT_NAME(sConName);  
-        conBean.setLONG_NAME(sConName);  //rs.getString("long_name"));
-        String sDef = util.removeNewLineChar(rs.getString("preferred_definition"));
-        conBean.setPREFERRED_DEFINITION(sDef);
-        conBean.setCONTE_IDSEQ(rs.getString("conte_idseq"));
-        conBean.setASL_NAME(rs.getString("asl_name"));
-        conBean.setIDSEQ(rs.getString("con_idseq")); 
-        conBean.setEVS_DEF_SOURCE(rs.getString("definition_source"));
-        String sVocab = rs.getString("origin");
-        if (sAction.equals("searchForCreate"))
-          conBean.setEVS_DATABASE("caDSR");
-        else  //make the vocab as evs origin from cadsr for main page concept class search
-          conBean.setEVS_DATABASE(sVocab);
-        conBean.setcaDSR_COMPONENT("Concept Class"); 
-  System.out.println(rs.getString("con_idseq") + sConName + " conname " + sDef);
-        String selVocab = conBean.getVocabAttr(eUser, sVocab, EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME);  // "vocabDBOrigin", "vocabName");
-        //store evs vocab name in evs origin and leave meta out
-        if (selVocab.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
-          conBean.setEVS_ORIGIN(sVocab);
-        else conBean.setEVS_ORIGIN(selVocab);
-        
-        conBean.setID(rs.getString("con_ID"));//public id
-        if (rs.getString("version").indexOf('.') >= 0)
-          conBean.setVERSION(rs.getString("version"));
-        else
-          conBean.setVERSION(rs.getString("version") + ".0");
-        conBean.setCONTEXT_NAME(rs.getString("context"));
-        conBean.setDEC_USING("");
-        String sPref = util.removeNewLineChar(rs.getString("preferred_name"));
-        conBean.setCONCEPT_IDENTIFIER(sPref);  //cui
-        conBean.setNCI_CC_TYPE(rs.getString("evs_source"));
-        if (data.getRequest() != null)
-          conBean.markNVPConcept(conBean, data.getRequest().getSession());
-        //make sure it is included only once by matching evsId and concept name only if oc/prop/rep search was done earlier.
-        boolean isExist = false;
-        if (existInd == true)
-        {
-          for (int j = 0; j < vList.size(); j++)
-          {
-            EVS_Bean exBean = (EVS_Bean)vList.elementAt(j);
-            String curEvsId = exBean.getCONCEPT_IDENTIFIER();
-            String curLName = exBean.getLONG_NAME();
-            //check if not null or empty
-            if (curEvsId != null && !curEvsId.equals("") && curLName != null && !curLName.equals(""))
-            {
-              //compare to the current one
-              String evsId = conBean.getCONCEPT_IDENTIFIER();
-              String longName = conBean.getLONG_NAME();
-              if (evsId != null && evsId.equals(curEvsId) && longName != null && longName.equals(curLName))
-                isExist = true;
-            }
-          }
-        }
-        if (isExist == false)
-          vList.addElement(conBean);    //add concept bean to vector     
-      }
-      data.setConceptList(vList);
+      if(rs!=null) rs.close();
+      if(cstmt!=null) cstmt.close();
+      if (data.getDBConnection() == null)
+        data.getCurationServlet().freeConnection(conn); // ConceptServlet.closeDBConnection(conn);
     }
-    catch (Exception e)
+    catch(Exception ee)
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.fatal("ERROR in getACConcept for close : " + ee.toString(), ee);
     }
+    return vList;
+  } //end get concept
+  
+  /**to append the concepts from the concept search results to vm bean
+   * @param selRow String selected row
+   * @param vRSel Vector of EVS bean object of the search resutls
+   * @param sNVP string user entered value
+   * @param data PVForm object
+   * @return EVS_Bean selected concept
+   */
+  public EVS_Bean getSelectedConcept(int selRow, Vector<EVS_Bean> vRSel, String sNVP, ConceptForm data)
+  {
+      EVS_Bean eBean = null;
+      try
+      {
+        String errMsg = "";
+        eBean = (EVS_Bean)vRSel.elementAt(selRow);
+        //send it back if unable to obtion the concept
+        if (eBean == null || eBean.getLONG_NAME() == null)
+        {
+          errMsg += "Unable to obtain concept from the " + selRow + " row of the search results.\\n" + 
+              "Please try again.";
+          logger.fatal("ERROR - getSelectedConcept " + errMsg);
+          data.setStatusMsg(errMsg);
+          return null;
+        }
+        //get the thesaurus concept if not //TODO- this needs fixing to not use request and response
+        String prefVocab = "";
+        EVS_UserBean eUser = data.getEvsUser();
+        if (eUser != null)
+          prefVocab = eUser.getPrefVocab();
+        if (!eBean.getEVS_ORIGIN().equals(prefVocab) && !eBean.getEVS_DATABASE().equals(prefVocab))
+        {
+          EVSSearch evs = new EVSSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
+          eBean = evs.getThesaurusConcept(eBean);            
+        }
+        //check if it exists in cadsr
+        eBean = getCaDSRConcept(eBean, eUser, data);
+        errMsg += data.getStatusMsg();
+        //get the nvp value
+        if (sNVP != null && !sNVP.equals(""))
+        {
+          eBean.setNVP_CONCEPT_VALUE(sNVP);
+          eBean.setLONG_NAME(eBean.getLONG_NAME() + "::" + sNVP);
+          eBean.setPREFERRED_DEFINITION(eBean.getPREFERRED_DEFINITION() + "::" + sNVP);
+        }
+      }
+      catch (Exception e)
+      {
+        logger.fatal("ERROR - getSelectedConcept : ", e);
+      }
+      return eBean;
   }
-  /**
+
+  /**gets the existing caDSR concept for the selected concept
+   * @param eBean EVS_Bean object
+   * @param eUser EVS_UserBean object
+   * @param data PVForm object
+   * @return EVS_Bean object existed in caDSR
+   */
+  public EVS_Bean getCaDSRConcept(EVS_Bean eBean, EVS_UserBean eUser, ConceptForm data)
+  {
+    String errMsg = "";
+    data.setSearchTerm(eBean.getCONCEPT_IDENTIFIER());
+    data.setEvsUser(eUser);
+    //call hte action
+    doConceptSearch(data);
+    //get the bean from teh vector
+    Vector vCon = data.getConceptList();
+    if (vCon != null && vCon.size() > 0)
+    {
+      if (vCon.size() > 1)
+         errMsg += "Multiple concepts with same concept ID exists.";
+      String unMatchName = "";
+      String unMatchDef = "";
+      boolean matchFound = false;
+      String eN = eBean.getLONG_NAME();
+      String eD = eBean.getPREFERRED_DEFINITION();
+      String eID = eBean.getCONCEPT_IDENTIFIER();
+      for (int i = 0; i<vCon.size(); i++)
+      {
+        EVS_Bean cBean = (EVS_Bean)vCon.elementAt(i);
+        String cN = cBean.getLONG_NAME();
+        String cD = cBean.getPREFERRED_DEFINITION();
+        if (cN.equalsIgnoreCase(eN) && cD.equalsIgnoreCase(eD))
+        {
+          eBean = (EVS_Bean)vCon.elementAt(i);
+          matchFound = true;
+          break;
+        }
+        //all other cases continue withe the logic
+        if (!cN.equalsIgnoreCase(eN))
+        {
+          if (!unMatchName.equals("")) unMatchName += ", ";
+          unMatchName += cN;
+        }
+        if (!cD.equalsIgnoreCase(eD))
+        {
+          //check if the difference is only the period
+          if ((cD.length() == eD.length() + 1 && cD.lastIndexOf('.') > 0) || (eD.length() == cD.length() + 1 && eD.lastIndexOf('.') > 0))
+              continue;
+              
+          if (!unMatchDef.equals("")) unMatchDef += ", ";
+          unMatchDef += cD;   
+        }       
+      }
+      //handle the scenario when concept is different from teh selected one
+      if (!matchFound)
+      {
+        if (!unMatchName.equals(""))
+          errMsg += "The selected concept's [" + eID + "] name from EVS does not match the name from caDSR.\\n\\t EVS: " + eN + "\\n\\t caDSR: " + unMatchName + "\\n";
+        if (!unMatchDef.equals(""))
+          errMsg += "The selected concept's [" + eID + "] definition from EVS does not match the definition from caDSR.\\n\\t EVS: " + eD + "\\n\\t caDSR: " + unMatchDef + "\\n";
+        //log the error
+        if (!errMsg.equals(""))
+        {
+            data.setStatusMsg(data.getStatusMsg() + errMsg);
+            logger.fatal("ERROR in getCaDSRConcept - " + errMsg);
+        }
+        //take the first one and move on
+        eBean = (EVS_Bean)vCon.elementAt(0);  
+      }
+    }
+    return eBean;
+  }
+
+
+//private methods
+ /**
    * To get the list of attributes selected to display, called from getACKeywordResult and getACShowResult methods.
    * selected attribute values from the multi select list is stored in session vector 'selectedAttr'.
    * "All Attribute" select will add all the fields of the selected component to the vector
@@ -371,7 +611,7 @@ public class ConceptAction implements Serializable
    * @param data Concept Form object
    * @return String of comma delimited status values
    *
-   */
+  */
   private String getStatusValues(String sStatusList[], ConceptForm data)
   {
     String sStatus = "";
@@ -381,8 +621,7 @@ public class ConceptAction implements Serializable
       boolean bAllStatus = false;
       if (sStatusList == null)
          bAllStatus = true;
-
-      if(sStatusList != null)
+      else
       {
         //loop through the string array to extract values.
         for(int i = 0; i<sStatusList.length; i++)
@@ -406,7 +645,7 @@ public class ConceptAction implements Serializable
           }
         }
       }
-      if (bAllStatus == true)
+      if (bAllStatus)
       {
         vStatusList = new Vector<String>();
         sStatus = "";
@@ -417,8 +656,7 @@ public class ConceptAction implements Serializable
     }
     catch(Exception e)
     {
-      //System.err.println("ERROR in GetACSearch-getStatusValues: " + e);
-      logger.fatal("ERROR in GetACSearch-setStatusValues : " + e.toString(), e);
+      logger.fatal("ERROR in ERROR -setStatusValues : " + e.toString(), e);
     }
     return sStatus;
   }
@@ -458,222 +696,6 @@ public class ConceptAction implements Serializable
       sContext = "";
     return sContext;
   }
-
-  /**
-   * To insert a new concept from evs to cadsr.
-   * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
-   * Calls oracle stored procedure
-   *   "{call SBREXT_Set_Row.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?)}" to submit
-   * @param data ConceptForm object
-   *
-   * @param sAction Insert or update Action.
-   * @param evsBean EVS_Bean.
-   *
-   * @return String concept idseq from the table.
-   */
-   public String setConcept(ConceptForm data, EVS_Bean evsBean, String sAction)
-   {
-     //capture the duration
-     java.util.Date startDate = new java.util.Date();          
-     //logger.info(m_servlet.getLogMessage(m_classReq, "setConcept", "starting set", startDate, startDate));
-
-     String sMsg = "";
-     Connection sbr_db_conn = null;
-     ResultSet rs = null;
-     CallableStatement CStmt = null;
-     try
-     {
-         sbr_db_conn = data.getDBConnection();
-         if (sbr_db_conn == null || sbr_db_conn.isClosed())
-           sbr_db_conn = data.getCurationServlet().connectDB(); // ConceptServlet.connectDB();
-         // Create a Callable Statement object.
-         if (sbr_db_conn != null)
-         {
-           CStmt = sbr_db_conn.prepareCall("{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-           // register the Out parameters
-           CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-           CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //con idseq
-           CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //preferred name
-           CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //long name
-           CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //prefered definition
-           CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //context idseq
-           CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //version
-           CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //asl name
-           CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //latest version ind
-           CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //change note
-           CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //origin
-           CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //definition source
-           CStmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //evs source
-           CStmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //begin date
-           CStmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //end date
-           CStmt.registerOutParameter(17,java.sql.Types.VARCHAR);       //date created
-           CStmt.registerOutParameter(18,java.sql.Types.VARCHAR);       //created by
-           CStmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //date modified
-           CStmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //modified by
-           CStmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //deleted ind
-
-           //truncate the definition to be 2000 long.
-         //  if (sDef == null) sDef = "";
-         //  if (sDef.length() > 2000) sDef = sDef.substring(0, 2000);
-           // Set the In parameters (which are inherited from the PreparedStatement class)
-           CStmt.setString(2, sAction);
-           CStmt.setString(4, evsBean.getCONCEPT_IDENTIFIER());
-           //make sure that :: is removed from the long name and defintion
-           String sName = evsBean.getLONG_NAME();
-           String sDef = evsBean.getPREFERRED_DEFINITION();
-           int nvpInd = sName.indexOf("::");
-           if (nvpInd > 0)
-             sName = sName.substring(0, nvpInd);  
-           nvpInd = sDef.indexOf("::");
-           if (nvpInd > 0)
-             sDef = sDef.substring(0, nvpInd);  
-           CStmt.setString(5, sName);
-           CStmt.setString(6, sDef);
-         //  CStmt.setString(7, evsBean.getCONTE_IDSEQ());  caBIG by default
-           CStmt.setString(8, "1.0");
-           CStmt.setString(9, "RELEASED");
-           CStmt.setString(10, "Yes");
-           CStmt.setString(12, evsBean.getEVS_DATABASE());
-           CStmt.setString(13, evsBean.getEVS_DEF_SOURCE());
-           CStmt.setString(14, evsBean.getNCI_CC_TYPE());
-            // Now we are ready to call the stored procedure
-           //logger.info("setConcept " + evsBean.getCONCEPT_IDENTIFIER());     
-
-           boolean bExcuteOk = CStmt.execute();
-           String sReturnCode = CStmt.getString(1);
-           String conIdseq = CStmt.getString(3);
-           if (conIdseq == null) conIdseq = "";
-           evsBean.setIDSEQ(conIdseq);
-           if (sReturnCode != null)
-           {
-             sMsg += "\\t " + sReturnCode + " : Unable to update Concept attributes - " 
-                 + evsBean.getCONCEPT_IDENTIFIER() + ": " + evsBean.getLONG_NAME() + ".";
-             //m_classReq.setAttribute("retcode", sReturnCode);      //store returncode in request to track it all through this request    
-           }
-         }
-       //capture the duration
-       //logger.info(m_servlet.getLogMessage(m_classReq, "setConcept", "end set", startDate, new java.util.Date()));
-     }
-     catch(Exception e)
-     {
-       logger.fatal("ERROR in setConcept for other : " + e.toString(), e);
-       //m_classReq.setAttribute("retcode", "Exception");
-       sMsg += "\\t Exception : Unable to update Concept attributes.";
-     }
-     try
-     {
-       if(rs!=null) rs.close();
-       if(CStmt!=null) CStmt.close();
-       if (data.getDBConnection() == null)
-         data.getCurationServlet().freeConnection(sbr_db_conn); // ConceptServlet.closeDBConnection(sbr_db_conn);
-     }
-     catch(Exception ee)
-     {
-       logger.fatal("ERROR in setConcept for close : " + ee.toString(), ee);
-       //m_classReq.setAttribute("retcode", "Exception");
-       sMsg += "\\t Exception : Unable to update Concept attributes.";
-     }
-     return sMsg;
-   }  //end concept
-
-   /**
-    * Called to get all the concepts from condr_idseq.
-    * Sets in parameters, and registers output parameters and vector of evs bean.
-    * Calls oracle stored procedure
-    *   "{call SBREXT_CDE_CURATOR_PKG.GET_AC_CONCEPTS(?,?)}" to submit
-   * @param condrID String condr idseq
-   * @param data ConceptForm object
-   * @return Vector vector of evs bean.
-  */
-  public Vector<EVS_Bean> getAC_Concepts(String condrID, ConceptForm data)
-  {
-//System.out.println("in getAC_Concepts condrID: " + condrID);
-    Connection sbr_db_conn = null;
-    CallableStatement CStmt = null;
-    ResultSet rs = null;
-  //  String sCON_IDSEQ = "";
-    Vector<EVS_Bean> vList = new Vector<EVS_Bean>();
-    try
-    {
-      sbr_db_conn = data.getDBConnection();
-      if (sbr_db_conn == null || sbr_db_conn.isClosed())
-        sbr_db_conn = data.getCurationServlet().connectDB(); // ConceptServlet.connectDB();
-      // Create a Callable Statement object.
-      if (sbr_db_conn != null)
-      {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_AC_CONCEPTS(?,?)}");
-        //out parameter
-        CStmt.registerOutParameter(2, OracleTypes.CURSOR);       //return cursor
-        //in parameter
-        CStmt.setString(1, condrID);       // condr idseq
-         // Now we are ready to call the stored procedure
-        boolean bExcuteOk = CStmt.execute();
-        //store the output in the resultset
-        rs = (ResultSet) CStmt.getObject(2);
-        String s;
-        if(rs!=null)
-        {
-          //loop through the resultSet and add them to the bean
-          while(rs.next())
-          {
-            EVS_Bean eBean = new EVS_Bean();
-            eBean.setIDSEQ(rs.getString("CON_IDSEQ"));
-            eBean.setDISPLAY_ORDER(rs.getString("DISPLAY_ORDER"));
-            eBean.setPRIMARY_FLAG(rs.getString("primary_flag_ind"));
-            eBean.setCONCEPT_IDENTIFIER(rs.getString("preferred_name"));
-            eBean.setLONG_NAME(rs.getString("long_name"));
-       //     eBean.setDESCRIPTION(rs.getString("preferred_definition"));
-            eBean.setPREFERRED_DEFINITION(rs.getString("preferred_definition"));
-            eBean.setEVS_DATABASE(rs.getString("origin"));
-            eBean.setEVS_DEF_SOURCE(rs.getString("definition_source"));
-            eBean.setNCI_CC_TYPE(rs.getString("evs_source"));
-            eBean.setNVP_CONCEPT_VALUE(rs.getString("CONCEPT_VALUE"));
-            if (!eBean.getNVP_CONCEPT_VALUE().equals(""))
-            {
-              eBean.setLONG_NAME(eBean.getLONG_NAME() + "::" + eBean.getNVP_CONCEPT_VALUE());
-              eBean.setPREFERRED_DEFINITION(eBean.getPREFERRED_DEFINITION() + "::" + eBean.getNVP_CONCEPT_VALUE());
-            }
-            eBean.setCONDR_IDSEQ(condrID);
-            eBean.setCON_AC_SUBMIT_ACTION("NONE");
-            if(rs.getString("origin") != null && rs.getString("origin").equals("NCI Metathesaurus"))
-            {
-              String sParent = rs.getString("long_name");
-              String sCui = rs.getString("preferred_name");
-              if(sParent == null) sParent = "";
-              String sParentSource = "";
-              //sParentSource = serAC.getMetaParentSource(sParent, sCui, vd);
-              if(sParentSource == null) sParentSource = "";
-              eBean.setEVS_CONCEPT_SOURCE(sParentSource);
-            }
-         System.out.println(eBean.getCONCEPT_IDENTIFIER() + eBean.getLONG_NAME());
-            if (data.getRequest() != null)
-              eBean.markNVPConcept(eBean, data.getRequest().getSession());
-
-            if (eBean.getIDSEQ() != null && !eBean.getIDSEQ().equals(""))
-              vList.addElement(eBean);
-          }
-        }
-      }
-    }
-    catch(Exception e)
-    {
-      logger.fatal("ERROR in getACConcepts for exception : " + e.toString(), e);
-      //System.out.println("get ac concept other " + e);
-    }
-
-    try
-    {
-      if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if (data.getDBConnection() == null)
-        data.getCurationServlet().freeConnection(sbr_db_conn);
-    }
-    catch(Exception ee)
-    {
-      logger.fatal("ERROR in getACConcept for close : " + ee.toString(), ee);
-    }
-    return vList;
-  } //end get concept
   
-
+//end of class  
 }

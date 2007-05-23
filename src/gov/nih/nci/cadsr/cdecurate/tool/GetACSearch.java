@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.38 2007-01-26 20:17:43 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.39 2007-05-23 04:13:10 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -91,6 +91,7 @@ public class GetACSearch implements Serializable
             String sKeyword = (String) req.getParameter("keyword");
             if (sKeyword != null)
             {
+                sKeyword = sKeyword.trim();
                 // call the method to set the attribute checked values
                 setAttributeValues(req, res, sSearchAC, "nothing");
                 session.setAttribute("serKeyword", sKeyword);
@@ -637,7 +638,7 @@ public class GetACSearch implements Serializable
                 session.setAttribute("vResultStack", vResultStack);
             }
             Vector vCompAttr = new Vector();
-            String sMenu = (String) session.getAttribute("MenuAction");
+            String sMenu = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             if (sMenu.equals("searchForCreate"))
                 vCompAttr = (Vector) session.getAttribute("creSelectedAttr");
             else
@@ -783,7 +784,7 @@ public class GetACSearch implements Serializable
         {
             HttpSession session = req.getSession();
             String sSearchAC = "";
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             // String sComponent = "";
             if (menuAction.equals("searchForCreate"))
                 sSearchAC = (String) session.getAttribute("creSearchAC");
@@ -865,7 +866,7 @@ public class GetACSearch implements Serializable
     {
         HttpSession session = req.getSession();
         String sSearchAC = "";
-        String menuAction = (String) session.getAttribute("MenuAction");
+        String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
         if (menuAction.equals("searchForCreate"))
             sSearchAC = (String) session.getAttribute("creSearchAC");
         else
@@ -923,7 +924,7 @@ public class GetACSearch implements Serializable
             String sSortType = (String) req.getParameter("sortType");
             if (sSortType != null)
                 session.setAttribute("sortType", sSortType);
-            String sMenuAction = (String) session.getAttribute("MenuAction");
+            String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             String sComponent = "";
             if (sMenuAction.equals("searchForCreate"))
                 sComponent = (String) session.getAttribute("creSearchAC");
@@ -1022,7 +1023,7 @@ public class GetACSearch implements Serializable
         HttpSession session = m_classReq.getSession();
         Vector vResult = new Vector();
         session.setAttribute("searchAC", "Questions");
-        session.setAttribute("MenuAction", "Questions");
+        session.setAttribute(Session_Data.SESSION_MENU_ACTION, "Questions");
         String userName = (String) session.getAttribute("Username");
         // call to search questions
         doQuestionSearch(userName, vResult);
@@ -1052,32 +1053,32 @@ public class GetACSearch implements Serializable
      */
     public void doQuestionSearch(String userName, Vector vList)
     {
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         try
         {
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_QUESTION(?,?,?,?,?)}");
+                cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_QUESTION(?,?,?,?,?)}");
                 // Now tie the placeholders for out parameters.
-                CStmt.registerOutParameter(4, java.sql.Types.VARCHAR);
-                CStmt.registerOutParameter(5, OracleTypes.CURSOR);
+                cstmt.registerOutParameter(4, java.sql.Types.VARCHAR);
+                cstmt.registerOutParameter(5, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
-                CStmt.setString(1, userName.toUpperCase());
-                CStmt.setString(2, "DRAFT NEW");
-                CStmt.setString(3, null);
+                cstmt.setString(1, userName.toUpperCase());
+                cstmt.setString(2, "DRAFT NEW");
+                cstmt.setString(3, null);
                 // Now we are ready to call the stored procedure
-                CStmt.execute();
-                String isValidCRF = (String) CStmt.getString(4);
+                cstmt.execute();
+                String isValidCRF = (String) cstmt.getString(4);
                 if ((isValidCRF != null) && (isValidCRF.equalsIgnoreCase("ASSIGNED")))
                 {
                     // store the output in the resultset
-                    rs = (ResultSet) CStmt.getObject(5);
+                    rs = (ResultSet) cstmt.getObject(5);
                     // String s;
                     if (rs != null)
                     {
@@ -1133,10 +1134,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -1230,9 +1231,9 @@ public class GetACSearch implements Serializable
                     String cscsiIDseq, String conIDseq, String conName, String derType, Vector vList)
     {
         // logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "start desearch call", startDate, startDate));
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         Hashtable desTable = new Hashtable();
         HttpSession session = m_classReq.getSession();
         try
@@ -1252,57 +1253,57 @@ public class GetACSearch implements Serializable
             if (strAppend != null && strAppend.equals("Appended"))
                 desTable = (Hashtable) session.getAttribute("desHashTable");
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_DE"
+                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_DE"
                                 + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
                 // Now tie the placeholders for out parameters.
-                CStmt.registerOutParameter(7, OracleTypes.CURSOR);
+                cstmt.registerOutParameter(7, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
-                CStmt.setString(1, DE_IDSEQ);
-                CStmt.setString(2, InString);
-                CStmt.setString(3, ContID);
-                CStmt.setString(4, ContName);
-                CStmt.setString(5, ASLName);
-                CStmt.setString(6, CDE_ID);
-                CStmt.setString(8, regStatus);
-                CStmt.setString(9, sOrigin);
-                CStmt.setString(10, sCreatedFrom);
-                CStmt.setString(11, sCreatedTo);
-                CStmt.setString(12, sModifiedFrom);
-                CStmt.setString(13, sModifiedTo);
-                CStmt.setString(14, sCreator);
-                CStmt.setString(15, sModifier);
-                CStmt.setString(16, permValue);
-                CStmt.setString(17, DocText);
-                CStmt.setString(18, histID);
-                CStmt.setString(19, sVersion);
-                CStmt.setString(20, docTypes);
-                CStmt.setString(21, ContUse);
-                CStmt.setString(22, sProtoId);
-                CStmt.setString(23, crfName);
-                CStmt.setDouble(24, dVersion);
-                CStmt.setString(25, pvIDseq);
-                CStmt.setString(26, decIDseq);
-                CStmt.setString(27, vdIDseq);
-                CStmt.setString(28, cscsiIDseq);
-                CStmt.setString(29, cdIDseq);
-                CStmt.setString(30, derType);
-                CStmt.setString(31, conName);
-                CStmt.setString(32, conIDseq);
+                cstmt.setString(1, DE_IDSEQ);
+                cstmt.setString(2, InString);
+                cstmt.setString(3, ContID);
+                cstmt.setString(4, ContName);
+                cstmt.setString(5, ASLName);
+                cstmt.setString(6, CDE_ID);
+                cstmt.setString(8, regStatus);
+                cstmt.setString(9, sOrigin);
+                cstmt.setString(10, sCreatedFrom);
+                cstmt.setString(11, sCreatedTo);
+                cstmt.setString(12, sModifiedFrom);
+                cstmt.setString(13, sModifiedTo);
+                cstmt.setString(14, sCreator);
+                cstmt.setString(15, sModifier);
+                cstmt.setString(16, permValue);
+                cstmt.setString(17, DocText);
+                cstmt.setString(18, histID);
+                cstmt.setString(19, sVersion);
+                cstmt.setString(20, docTypes);
+                cstmt.setString(21, ContUse);
+                cstmt.setString(22, sProtoId);
+                cstmt.setString(23, crfName);
+                cstmt.setDouble(24, dVersion);
+                cstmt.setString(25, pvIDseq);
+                cstmt.setString(26, decIDseq);
+                cstmt.setString(27, vdIDseq);
+                cstmt.setString(28, cscsiIDseq);
+                cstmt.setString(29, cdIDseq);
+                cstmt.setString(30, derType);
+                cstmt.setString(31, conName);
+                cstmt.setString(32, conIDseq);
                 // capture the duration
                 // logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "begin executing search", startDate,
                 // new java.util.Date()));
                 // Now we are ready to call the stored procedure
-                CStmt.execute();
+                cstmt.execute();
                 // capture the duration
                 // logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "end executing search", startDate, new
                 // java.util.Date()));
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(7);
+                rs = (ResultSet) cstmt.getObject(7);
                 // logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "got resultset object", startDate, new
                 // java.util.Date()));
                 String s;
@@ -1448,10 +1449,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
             session.setAttribute("desHashTable", desTable);
         }
         catch (Exception ee)
@@ -1577,47 +1578,47 @@ public class GetACSearch implements Serializable
                     Vector vList)
     {
         // logger.info(m_servlet.getLogMessage(m_classReq, "doDECSearch", "begin search", exDate, exDate));
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         try
         {
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn
+                cstmt = conn
                                 .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_DEC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
                 // Now tie the placeholders with actual parameters.
-                CStmt.registerOutParameter(7, OracleTypes.CURSOR);
-                CStmt.setString(1, ContID);
-                CStmt.setString(2, InString);
-                CStmt.setString(3, ContName);
-                CStmt.setString(4, ASLName);
-                CStmt.setString(5, DEC_IDSEQ);
-                CStmt.setString(6, DEC_ID);
-                CStmt.setString(8, sOrigin);
-                CStmt.setString(9, sObject);
-                CStmt.setString(10, sProperty);
-                CStmt.setString(11, sCreatedFrom);
-                CStmt.setString(12, sCreatedTo);
-                CStmt.setString(13, sModifiedFrom);
-                CStmt.setString(14, sModifiedTo);
-                CStmt.setString(15, sCreator);
-                CStmt.setString(16, sModifier);
-                CStmt.setString(17, sVersion);
-                CStmt.setDouble(18, dVersion);
-                CStmt.setString(19, sCDid);
-                CStmt.setString(20, deIDseq);
-                CStmt.setString(21, cscsiIDseq);
-                CStmt.setString(22, conName);
-                CStmt.setString(23, conIDseq);
+                cstmt.registerOutParameter(7, OracleTypes.CURSOR);
+                cstmt.setString(1, ContID);
+                cstmt.setString(2, InString);
+                cstmt.setString(3, ContName);
+                cstmt.setString(4, ASLName);
+                cstmt.setString(5, DEC_IDSEQ);
+                cstmt.setString(6, DEC_ID);
+                cstmt.setString(8, sOrigin);
+                cstmt.setString(9, sObject);
+                cstmt.setString(10, sProperty);
+                cstmt.setString(11, sCreatedFrom);
+                cstmt.setString(12, sCreatedTo);
+                cstmt.setString(13, sModifiedFrom);
+                cstmt.setString(14, sModifiedTo);
+                cstmt.setString(15, sCreator);
+                cstmt.setString(16, sModifier);
+                cstmt.setString(17, sVersion);
+                cstmt.setDouble(18, dVersion);
+                cstmt.setString(19, sCDid);
+                cstmt.setString(20, deIDseq);
+                cstmt.setString(21, cscsiIDseq);
+                cstmt.setString(22, conName);
+                cstmt.setString(23, conIDseq);
                 // Now we are ready to call the stored procedure
-                CStmt.execute();
+                cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(7);
+                rs = (ResultSet) cstmt.getObject(7);
                 // capture the duration
                 // logger.info(m_servlet.getLogMessage(m_classReq, "doDECSearch", "got object", exDate, new
                 // java.util.Date()));
@@ -1701,10 +1702,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -1783,49 +1784,49 @@ public class GetACSearch implements Serializable
                     String conIDseq, String conName, String sData, Vector vList)
     {
         // logger.info(m_servlet.getLogMessage(m_classReq, "doVDSearch", "begin search", exDate, exDate));
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         try
         {
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn
+                cstmt = conn
                                 .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
                 // Now tie the placeholders with actual parameters.
-                CStmt.registerOutParameter(7, OracleTypes.CURSOR);
-                CStmt.setString(1, ContID);
-                CStmt.setString(2, InString);
-                CStmt.setString(3, ContName);
-                CStmt.setString(4, ASLName);
-                CStmt.setString(5, VD_IDSEQ);
-                CStmt.setString(6, VD_ID);
-                CStmt.setString(8, sOrigin);
-                CStmt.setString(9, sCreatedFrom);
-                CStmt.setString(10, sCreatedTo);
-                CStmt.setString(11, sModifiedFrom);
-                CStmt.setString(12, sModifiedTo);
-                CStmt.setString(13, sCreator);
-                CStmt.setString(14, sModifier);
-                CStmt.setString(15, sPermValue);
-                CStmt.setString(16, sVersion);
-                CStmt.setString(17, VDType);
-                CStmt.setDouble(18, dVersion);
-                CStmt.setString(19, sCDid);
-                CStmt.setString(20, pvIDseq);
-                CStmt.setString(21, deIDseq);
-                CStmt.setString(22, sData);
-                CStmt.setString(23, cscsiIDseq);
-                CStmt.setString(24, conName);
-                CStmt.setString(25, conIDseq);
+                cstmt.registerOutParameter(7, OracleTypes.CURSOR);
+                cstmt.setString(1, ContID);
+                cstmt.setString(2, InString);
+                cstmt.setString(3, ContName);
+                cstmt.setString(4, ASLName);
+                cstmt.setString(5, VD_IDSEQ);
+                cstmt.setString(6, VD_ID);
+                cstmt.setString(8, sOrigin);
+                cstmt.setString(9, sCreatedFrom);
+                cstmt.setString(10, sCreatedTo);
+                cstmt.setString(11, sModifiedFrom);
+                cstmt.setString(12, sModifiedTo);
+                cstmt.setString(13, sCreator);
+                cstmt.setString(14, sModifier);
+                cstmt.setString(15, sPermValue);
+                cstmt.setString(16, sVersion);
+                cstmt.setString(17, VDType);
+                cstmt.setDouble(18, dVersion);
+                cstmt.setString(19, sCDid);
+                cstmt.setString(20, pvIDseq);
+                cstmt.setString(21, deIDseq);
+                cstmt.setString(22, sData);
+                cstmt.setString(23, cscsiIDseq);
+                cstmt.setString(24, conName);
+                cstmt.setString(25, conIDseq);
                 // Now we are ready to call the stored procedure
-                CStmt.execute();
+                cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(7);
+                rs = (ResultSet) cstmt.getObject(7);
                 // capture the duration
                 // logger.info(m_servlet.getLogMessage(m_classReq, "doVDSearch", "got rsObject", exDate, new
                 // java.util.Date()));
@@ -1926,10 +1927,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -1995,42 +1996,42 @@ public class GetACSearch implements Serializable
                     String conID, String sVM, Vector vList)
     {
         // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "begin search", exDate, exDate));
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         try
         {
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn
+                cstmt = conn
                                 .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-                CStmt.registerOutParameter(7, OracleTypes.CURSOR);
-                CStmt.setString(1, InString);
-                CStmt.setString(2, ContID);
-                CStmt.setString(3, ContName);
-                CStmt.setString(4, ASLName);
-                CStmt.setString(5, CD_IDSEQ);
-                CStmt.setString(6, CD_ID);
-                CStmt.setString(8, sCreatedFrom);
-                CStmt.setString(9, sCreatedTo);
-                CStmt.setString(10, sModifiedFrom);
-                CStmt.setString(11, sModifiedTo);
-                CStmt.setString(12, sOrigin);
-                CStmt.setString(13, sCreator);
-                CStmt.setString(14, sModifier);
-                CStmt.setString(15, sVersion);
-                CStmt.setDouble(16, dVersion);
-                CStmt.setString(17, conName);
-                CStmt.setString(18, conID);
-                CStmt.setString(19, sVM);
+                cstmt.registerOutParameter(7, OracleTypes.CURSOR);
+                cstmt.setString(1, InString);
+                cstmt.setString(2, ContID);
+                cstmt.setString(3, ContName);
+                cstmt.setString(4, ASLName);
+                cstmt.setString(5, CD_IDSEQ);
+                cstmt.setString(6, CD_ID);
+                cstmt.setString(8, sCreatedFrom);
+                cstmt.setString(9, sCreatedTo);
+                cstmt.setString(10, sModifiedFrom);
+                cstmt.setString(11, sModifiedTo);
+                cstmt.setString(12, sOrigin);
+                cstmt.setString(13, sCreator);
+                cstmt.setString(14, sModifier);
+                cstmt.setString(15, sVersion);
+                cstmt.setDouble(16, dVersion);
+                cstmt.setString(17, conName);
+                cstmt.setString(18, conID);
+                cstmt.setString(19, sVM);
                 // Now we are ready to call the stored procedure
-                CStmt.execute();
+                cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(7);
+                rs = (ResultSet) cstmt.getObject(7);
                 // capture the duration
                 // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "got rsObject", exDate, new
                 // java.util.Date()));
@@ -2089,10 +2090,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -2125,26 +2126,26 @@ public class GetACSearch implements Serializable
     private void doCSISearch(String InString, String ContName, String CSName, Vector vList)
     {
         // logger.info(m_servlet.getLogMessage(m_classReq, "doCSISearch", "begin search", exDate, exDate));
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         try
         {
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_CSI(?,?,?,?)}");
-                CStmt.registerOutParameter(4, OracleTypes.CURSOR);
-                CStmt.setString(1, InString);
-                CStmt.setString(2, CSName);
-                CStmt.setString(3, ContName);
+                cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_CSI(?,?,?,?)}");
+                cstmt.registerOutParameter(4, OracleTypes.CURSOR);
+                cstmt.setString(1, InString);
+                cstmt.setString(2, CSName);
+                cstmt.setString(3, ContName);
                 // Now we are ready to call the stored procedure
-                CStmt.execute();
+                cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(4);
+                rs = (ResultSet) cstmt.getObject(4);
                 // capture the duration
                 // logger.info(m_servlet.getLogMessage(m_classReq, "doCSISearch", "got rsObject", exDate, new
                 // java.util.Date()));
@@ -2177,10 +2178,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -2645,7 +2646,7 @@ public class GetACSearch implements Serializable
         try
         {
             HttpSession session = req.getSession();
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             String actType = (String) req.getParameter("actSelected");
             if (actType == null)
                 actType = "";
@@ -3052,9 +3053,9 @@ public class GetACSearch implements Serializable
         // capture the duration
         // java.util.Date exDate = new java.util.Date();
         // logger.info(m_servlet.getLogMessage(m_classReq, "getDDEInfo", "begin getComplexDE", exDate, exDate));
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         HttpSession session = m_classReq.getSession();
         String sRepType = "";
         String sRule = "";
@@ -3069,37 +3070,37 @@ public class GetACSearch implements Serializable
         try
         {
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn
+                cstmt = conn
                                 .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.GET_COMPLEX_DE(?,?,?,?,?,?,?,?,?)}");
                 // Now tie the placeholders for out parameters.
-                CStmt.registerOutParameter(2, java.sql.Types.VARCHAR);
-                CStmt.registerOutParameter(3, java.sql.Types.VARCHAR);
-                CStmt.registerOutParameter(4, java.sql.Types.VARCHAR);
-                CStmt.registerOutParameter(5, java.sql.Types.VARCHAR);
-                CStmt.registerOutParameter(6, OracleTypes.CURSOR);
-                CStmt.registerOutParameter(7, java.sql.Types.VARCHAR);
-                CStmt.registerOutParameter(8, java.sql.Types.VARCHAR);
-                CStmt.registerOutParameter(9, java.sql.Types.VARCHAR);
+                cstmt.registerOutParameter(2, java.sql.Types.VARCHAR);
+                cstmt.registerOutParameter(3, java.sql.Types.VARCHAR);
+                cstmt.registerOutParameter(4, java.sql.Types.VARCHAR);
+                cstmt.registerOutParameter(5, java.sql.Types.VARCHAR);
+                cstmt.registerOutParameter(6, OracleTypes.CURSOR);
+                cstmt.registerOutParameter(7, java.sql.Types.VARCHAR);
+                cstmt.registerOutParameter(8, java.sql.Types.VARCHAR);
+                cstmt.registerOutParameter(9, java.sql.Types.VARCHAR);
                 // Now tie the placeholders for In parameters.
-                CStmt.setString(1, P_DE_IDSEQ);
+                cstmt.setString(1, P_DE_IDSEQ);
                 // Now we are ready to call the stored procedure
-                CStmt.execute();
+                cstmt.execute();
                 // assign output DDE info from the result
-                sRepType = (String) CStmt.getString(5);
+                sRepType = (String) cstmt.getString(5);
                 // capture the duration
                 // logger.info(m_servlet.getLogMessage(m_classReq, "getDDEInfo", "get object", exDate, new
                 // java.util.Date()));
                 DDE_Bean dde = new DDE_Bean();
                 if (sRepType != null && sRepType.length() > 1)
                 {
-                    sMethod = (String) CStmt.getString(2);
-                    sRule = (String) CStmt.getString(3);
-                    sConcatChar = (String) CStmt.getString(4);
+                    sMethod = (String) cstmt.getString(2);
+                    sRule = (String) cstmt.getString(3);
+                    sConcatChar = (String) cstmt.getString(4);
                     if (sMethod == null)
                         sMethod = "";
                     if (sRule == null)
@@ -3114,13 +3115,13 @@ public class GetACSearch implements Serializable
                     dde.setRULE(sRule);
                     dde.setCONCAT_CHAR(sConcatChar);
                     dde.setRULES_ACTION(sRulesAction);
-                    dde.setDE_NAME(CStmt.getString(7));
-                    dde.setDE_ID(CStmt.getString(8));
-                    dde.setDE_VERSION(CStmt.getString(9));
+                    dde.setDE_NAME(cstmt.getString(7));
+                    dde.setDE_ID(cstmt.getString(8));
+                    dde.setDE_VERSION(cstmt.getString(9));
                     dde.setSUBMIT_ACTION("NONE");
                     Vector<DE_COMP_Bean> vComps = new Vector<DE_COMP_Bean>();
                     // set DE Comp vectors from resultset
-                    rs = (ResultSet) CStmt.getObject(6);
+                    rs = (ResultSet) cstmt.getObject(6);
                     if (rs != null)
                     {
                         // loop through the resultSet and add them to the vector
@@ -3178,10 +3179,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -3214,7 +3215,7 @@ public class GetACSearch implements Serializable
         try
         {
             HttpSession session = req.getSession();
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             // Vector vSearchASL2 = (Vector)session.getAttribute("SearchASL");
             Vector vSelAttr = new Vector();
             Vector vRSel = new Vector();
@@ -3360,7 +3361,7 @@ public class GetACSearch implements Serializable
         try
         {
             HttpSession session = req.getSession();
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             Vector vSelAttr = new Vector();
             Vector vRSel = new Vector();
             String actType = (String) req.getParameter("actSelected");
@@ -3540,7 +3541,7 @@ public class GetACSearch implements Serializable
         try
         {
             HttpSession session = req.getSession();
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             Vector vSearchASL2 = (Vector) session.getAttribute("SearchASL");
             Vector vSelAttr = new Vector();
             if (menuAction.equals("searchForCreate"))
@@ -3682,45 +3683,45 @@ public class GetACSearch implements Serializable
                     String type, String conName, String conID)
     {
         // logger.info(m_servlet.getLogMessage(m_classReq, "do_caDSRSearch", "begin search", exDate, exDate));
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         String sCUIString = "";
         String compType = "";
         try
         {
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             if (type.equals("OC") || type.equals("ObjQ"))
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_OC(?,?,?,?,?,?,?)}");
-                CStmt.registerOutParameter(5, OracleTypes.CURSOR);
+                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_OC(?,?,?,?,?,?,?)}");
+                cstmt.registerOutParameter(5, OracleTypes.CURSOR);
                 compType = "Object Class";
             }
             else if (type.equals("PROP") || type.equals("PropQ"))
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PROP(?,?,?,?,?,?,?)}");
-                CStmt.registerOutParameter(5, OracleTypes.CURSOR);
+                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PROP(?,?,?,?,?,?,?)}");
+                cstmt.registerOutParameter(5, OracleTypes.CURSOR);
                 compType = "Property";
             }
             else if (type.equals("REP") || type.equals("RepQ"))
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_REP(?,?,?,?,?,?,?)}");
-                CStmt.registerOutParameter(5, OracleTypes.CURSOR);
+                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_REP(?,?,?,?,?,?,?)}");
+                cstmt.registerOutParameter(5, OracleTypes.CURSOR);
                 compType = "Rep Term";
             }
-            CStmt.setString(1, InString);
-            CStmt.setString(2, ASLName);
-            CStmt.setString(3, ContName);
-            CStmt.setString(4, ID);
-            CStmt.setString(6, conName);
-            CStmt.setString(7, conID);
+            cstmt.setString(1, InString);
+            cstmt.setString(2, ASLName);
+            cstmt.setString(3, ContName);
+            cstmt.setString(4, ID);
+            cstmt.setString(6, conName);
+            cstmt.setString(7, conID);
             // Now we are ready to call the stored procedure
-            CStmt.execute();
+            cstmt.execute();
             // store the output in the resultset
-            rs = (ResultSet) CStmt.getObject(5);
+            rs = (ResultSet) cstmt.getObject(5);
             // capture the duration
             // logger.info(m_servlet.getLogMessage(m_classReq, "do_caDSRSearch", "got rsObject", exDate, new
             // java.util.Date()));
@@ -3783,10 +3784,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -3817,15 +3818,15 @@ public class GetACSearch implements Serializable
     public Vector<EVS_Bean> do_ConceptSearch(String InString, String conIdseq, String ContName, String ASLName,
                     String conID, String decID, String vdID, Vector<EVS_Bean> vList)
     {
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         try
         {
             // logger.info(m_servlet.getLogMessage(m_classReq, "do_ConceptSearch", "begin search", exDate, exDate));
             HttpSession session = (HttpSession) m_classReq.getSession();
             EVS_UserBean eUser = (EVS_UserBean) m_servlet.sessionData.EvsUsrBean;
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             if (menuAction == null)
                 menuAction = "";
             if (eUser == null)
@@ -3835,22 +3836,22 @@ public class GetACSearch implements Serializable
             if (vList != null && vList.size() > 0)
                 bVListExist = true;
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
-            CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?)}");
-            CStmt.registerOutParameter(6, OracleTypes.CURSOR);
-            CStmt.setString(1, InString);
-            CStmt.setString(2, ASLName);
-            CStmt.setString(3, ContName);
-            CStmt.setString(4, conID);
-            CStmt.setString(5, conIdseq);
-            CStmt.setString(7, decID);
-            CStmt.setString(8, vdID);
+            cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?)}");
+            cstmt.registerOutParameter(6, OracleTypes.CURSOR);
+            cstmt.setString(1, InString);
+            cstmt.setString(2, ASLName);
+            cstmt.setString(3, ContName);
+            cstmt.setString(4, conID);
+            cstmt.setString(5, conIdseq);
+            cstmt.setString(7, decID);
+            cstmt.setString(8, vdID);
             // Now we are ready to call the stored procedure
-            CStmt.execute();
+            cstmt.execute();
             // store the output in the resultset
-            rs = (ResultSet) CStmt.getObject(6);
+            rs = (ResultSet) cstmt.getObject(6);
             // capture the duration
             // logger.info(m_servlet.getLogMessage(m_classReq, "do_ConceptSearch", "got rsObject", exDate, new
             // java.util.Date()));
@@ -3930,10 +3931,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -4007,7 +4008,7 @@ public class GetACSearch implements Serializable
             Vector vSelRows = new Vector();
             Vector vSRows = new Vector();
             String rNumSel = (String) req.getParameter("numSelected");
-            String sMenu = (String) session.getAttribute("MenuAction");
+            String sMenu = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             String sSearchAC = "";
             // get the searched results according to the menu action
             if (sMenu != null && sMenu.equals("searchForCreate"))
@@ -4142,8 +4143,8 @@ public class GetACSearch implements Serializable
         {
             GetACService getAC = new GetACService(req, res, m_servlet);
             String sUser = (String) session.getAttribute("Username");
-            String sMenuAction = (String) session.getAttribute("MenuAction");
-            session.setAttribute("statusMessage", "");
+            String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
+            session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");
             session.setAttribute("AllAltNameList", new Vector());
             session.setAttribute("AllRefDocList", new Vector());
             String sSearchAC = (String) session.getAttribute("searchAC");
@@ -4175,7 +4176,7 @@ public class GetACSearch implements Serializable
                     sMenuAction = "NewVDVersion";
             }
             // reset the menu action
-            session.setAttribute("MenuAction", sMenuAction);
+            session.setAttribute(Session_Data.SESSION_MENU_ACTION, sMenuAction);
             // set variable but not the session attribute to avoid the problem with the menuaction other than Edit DE
             if (sAction.equals("EditDesDE"))
                 sMenuAction = sAction;
@@ -4214,7 +4215,7 @@ public class GetACSearch implements Serializable
                             if (!strInValid.equals(""))
                             {
                                 session
-                                                .setAttribute("statusMessage",
+                                                .setAttribute(Session_Data.SESSION_STATUS_MESSAGE,
                                                                 "User does not have authorization to Create/Edit for the selected context");
                                 Vector vResult = new Vector();
                                 getDEResult(req, res, vResult, "");
@@ -4251,7 +4252,7 @@ public class GetACSearch implements Serializable
                             if (!strInValid.equals(""))
                             {
                                 session
-                                                .setAttribute("statusMessage",
+                                                .setAttribute(Session_Data.SESSION_STATUS_MESSAGE,
                                                                 "User does not have authorization to Create/Edit for the selected context");
                                 Vector vResult = new Vector();
                                 getDECResult(req, res, vResult, "");
@@ -4292,7 +4293,7 @@ public class GetACSearch implements Serializable
                             if (!strInValid.equals(""))
                             {
                                 session
-                                                .setAttribute("statusMessage",
+                                                .setAttribute(Session_Data.SESSION_STATUS_MESSAGE,
                                                                 "User does not have authorization to Create/Edit for the selected context");
                                 Vector vResult = new Vector();
                                 getVDResult(req, res, vResult, "");
@@ -4357,7 +4358,7 @@ public class GetACSearch implements Serializable
         {
             // System.err.println("ERROR in GetACSearch-getSelRowToEdit: " + e);
             logger.fatal("ERROR in GetACSearch-getSelRowToEdit : " + e.toString(), e);
-            session.setAttribute("statusMessage", "Unable to open the Create/Edit page. Please try again.");
+            session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create/Edit page. Please try again.");
             return false;
         }
         return isValid;
@@ -4409,9 +4410,7 @@ public class GetACSearch implements Serializable
         {
             DECBean.setDEC_ASL_NAME("");
             // Must preload the Alt Name/Def buffer on a new Version.
-            Connection conn = m_servlet.connectDB(session);
-            AltNamesDefsSession.loadAsNew(conn, DECBean);
-            conn.close();
+            AltNamesDefsSession.loadAsNew(m_servlet, session, DECBean);
         }
         // get all the selected ac id and name
         Vector vACid = (Vector) m_classReq.getAttribute("vACId");
@@ -4522,9 +4521,7 @@ public class GetACSearch implements Serializable
         {
             DEBean.setDE_ASL_NAME("");
             // Must preload the Alt Name/Def buffer on a new Version.
-            Connection conn = m_servlet.connectDB(session);
-            AltNamesDefsSession.loadAsNew(conn, DEBean);
-            conn.close();
+            AltNamesDefsSession.loadAsNew(m_servlet, session, DEBean);
         }
         if (!sMenu.equals("NewDETemplate") && !sAction.equals("Template"))
         {
@@ -4646,9 +4643,7 @@ public class GetACSearch implements Serializable
         {
             VDBean.setVD_ASL_NAME("");
             // Must preload the Alt Name/Def buffer on a new Version.
-            Connection conn = m_servlet.connectDB(session);
-            AltNamesDefsSession.loadAsNew(conn, VDBean);
-            conn.close();
+            AltNamesDefsSession.loadAsNew(m_servlet, session, VDBean);
         }
         // get all the selected ac id and name
         Vector vACid = (Vector) m_classReq.getAttribute("vACId");
@@ -5031,7 +5026,7 @@ public class GetACSearch implements Serializable
                     strInValid = checkWritePermission("de", sUser, sContextID, getAC);
                     if (!strInValid.equals(""))
                     {
-                        session.setAttribute("statusMessage",
+                        session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE,
                                         "User does not have authorization to Create/Edit for the selected context");
                         Vector vResult = new Vector();
                         getQuestionResult(req, res, vResult);
@@ -5120,9 +5115,9 @@ public class GetACSearch implements Serializable
      */
     public Vector<AC_CSI_Bean> doCSCSI_ACSearch(String AC_IDseq, String AC_Name)
     {
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         HttpSession session = m_classReq.getSession();
         Vector vAC_CSI = new Vector();
         try
@@ -5132,19 +5127,19 @@ public class GetACSearch implements Serializable
             Vector vCSids = (Vector) m_classReq.getAttribute("selCSIDs");
             vAC_CSI = (Vector) m_classReq.getAttribute("blockAC_CSI");
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_DE_CS_NAME(?,?)}");
+                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_DE_CS_NAME(?,?)}");
                 // Now tie the placeholders with actual parameters.
-                CStmt.registerOutParameter(2, OracleTypes.CURSOR);
-                CStmt.setString(1, AC_IDseq);
+                cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+                cstmt.setString(1, AC_IDseq);
                 // Now we are ready to call the stored procedure
-                boolean bExcuteOk = CStmt.execute();
+                boolean bExcuteOk = cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(2);
+                rs = (ResultSet) cstmt.getObject(2);
                 if (rs != null)
                 {
                     // loop through to printout the outstrings
@@ -5205,10 +5200,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -5239,7 +5234,7 @@ public class GetACSearch implements Serializable
             Vector vSortedRows = new Vector();
             boolean isSorted = false;
             // get the selected rows
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             if (menuAction.equals("searchForCreate"))
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
@@ -5341,7 +5336,7 @@ public class GetACSearch implements Serializable
             Vector vSortedRows = new Vector();
             boolean isSorted = false;
             // get the selected rows
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             if (menuAction.equals("searchForCreate"))
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
@@ -5543,7 +5538,7 @@ public class GetACSearch implements Serializable
             Vector vSortedRows = new Vector();
             boolean isSorted = false;
             // get the selected rows
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             if (menuAction.equals("searchForCreate"))
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
@@ -5726,7 +5721,7 @@ public class GetACSearch implements Serializable
             Vector vSortedRows = new Vector();
             boolean isSorted = false;
             // get the selected rows
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             if (menuAction.equals("searchForCreate"))
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
@@ -5930,7 +5925,7 @@ public class GetACSearch implements Serializable
             Vector vSortedRows = new Vector();
             boolean isSorted = false;
             // get the selected rows
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             if (menuAction.equals("searchForCreate"))
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
@@ -6100,7 +6095,7 @@ public class GetACSearch implements Serializable
         try
         {
             HttpSession session = req.getSession();
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             Vector vSelAttr = new Vector();
             if (menuAction.equals("searchForCreate"))
                 vSelAttr = (Vector) session.getAttribute("creSelectedAttr");
@@ -6242,7 +6237,7 @@ public class GetACSearch implements Serializable
             Vector vSortedRows = new Vector();
             boolean isSorted = false;
             // get the selected rows
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             if (menuAction.equals("searchForCreate"))
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
@@ -6348,31 +6343,31 @@ public class GetACSearch implements Serializable
      *            returns Vector of PVbean.
      * 
      */
-    private void doPVVMSearch(String InString, String cd_idseq, String conName, String conID, Vector vList)
+/*    private void doPVVMSearch(String InString, String cd_idseq, String conName, String conID, Vector vList)
     {
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         try
         {
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PVVM(?,?,?,?,?)}");
+                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PVVM(?,?,?,?,?)}");
                 // Now tie the placeholders for out parameters.
-                CStmt.registerOutParameter(3, OracleTypes.CURSOR);
+                cstmt.registerOutParameter(3, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
-                CStmt.setString(1, InString);
-                CStmt.setString(2, cd_idseq);
-                CStmt.setString(4, conName);
-                CStmt.setString(5, conID);
+                cstmt.setString(1, InString);
+                cstmt.setString(2, cd_idseq);
+                cstmt.setString(4, conName);
+                cstmt.setString(5, conID);
                 // Now we are ready to call the stored procedure
-                boolean bExcuteOk = CStmt.execute();
+                boolean bExcuteOk = cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(3);
+                rs = (ResultSet) cstmt.getObject(3);
                 String s;
                 if (rs != null)
                 {
@@ -6430,17 +6425,17 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
             logger.fatal("ERROR - GetACSearch-searchPVVM for close : " + ee.toString(), ee);
         }
     }
-
+*/
     /**
      * To get final result vector of selected attributes/rows to display for Permissible Values component, called from
      * getACKeywordResult, getACSortedResult and getACShowResult methods. gets the selected attributes from session
@@ -6461,7 +6456,7 @@ public class GetACSearch implements Serializable
         {
             HttpSession session = req.getSession();
             Vector vSearchASL = new Vector();
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             Vector vSelAttr = new Vector();
             if (menuAction.equals("searchForCreate"))
                 vSelAttr = (Vector) session.getAttribute("creSelectedAttr");
@@ -6697,7 +6692,7 @@ public class GetACSearch implements Serializable
             Vector vSortedRows = new Vector();
             boolean isSorted = false;
             // get the selected rows
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             if (menuAction.equals("searchForCreate"))
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
@@ -6874,7 +6869,7 @@ public class GetACSearch implements Serializable
     {
         HttpSession session = m_classReq.getSession();
         Vector vSRows = new Vector();
-        String sMenuAction = (String) session.getAttribute("MenuAction");
+        String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
         if (sMenuAction.equals("searchForCreate"))
             vSRows = (Vector) session.getAttribute("vACSearch");
         else
@@ -7177,7 +7172,8 @@ public class GetACSearch implements Serializable
                             || sSearchFor.equals("ObjectClass") || sSearchFor.equals("Property")
                             || sSearchFor.equals("RepTerm") || sSearchFor.equals("ParentConceptVM")
                             || sSearchFor.equals("ObjectQualifier") || sSearchFor.equals("PropertyQualifier")
-                            || sSearchFor.equals("RepQualifier") || sSearchFor.equals("VMConcept"))
+                            || sSearchFor.equals("RepQualifier") || sSearchFor.equals("VMConcept")
+                            || sSearchFor.equals("EditVMConcept"))
                             && !actType.equals("doVocabChange"))
                 evs.get_Result(m_classReq, m_classRes, vRes, "");
         }
@@ -7322,6 +7318,7 @@ public class GetACSearch implements Serializable
                 sKeyword = "";
             if (isIntSearch == true)
                 sKeyword = "";
+            sKeyword = sKeyword.trim();
             session.setAttribute("creKeyword", sKeyword);
             UtilService util = new UtilService();
             sKeyword = util.parsedStringSingleQuoteOracle(sKeyword);
@@ -7687,7 +7684,7 @@ public class GetACSearch implements Serializable
                 VMServlet vmSer = new VMServlet(req, res, m_servlet);
                 vmSer.readDataForSearch();
             }
-            else if (sSearchAC.equals("EVSValueMeaning") || sSearchAC.equals("VMConcept"))
+            else if (sSearchAC.equals("EVSValueMeaning") || sSearchAC.equals("VMConcept") || sSearchAC.equals("EditVMConcept"))
             {
                 // first do the concept class search
                 if (sSearchIn.equals("publicID"))
@@ -7950,7 +7947,7 @@ public class GetACSearch implements Serializable
             Vector vSRows = new Vector();
             Vector vSortedRows = new Vector();
             boolean isSorted = false;
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             if (menuAction.equals("searchForCreate"))
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
@@ -8268,7 +8265,7 @@ public class GetACSearch implements Serializable
             Vector vSRows = new Vector();
             Vector vSortedRows = new Vector();
             boolean isSorted = false;
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             if (menuAction.equals("searchForCreate"))
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
@@ -8455,7 +8452,7 @@ public class GetACSearch implements Serializable
             Vector vSRows = new Vector();
             Vector vSortedRows = new Vector();
             boolean isSorted = false;
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             if (menuAction.equals("searchForCreate"))
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
@@ -8617,7 +8614,7 @@ public class GetACSearch implements Serializable
         try
         {
             HttpSession session = req.getSession();
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             Vector vSelAttr = new Vector();
             if (menuAction.equals("searchForCreate"))
                 vSelAttr = (Vector) session.getAttribute("creSelectedAttr");
@@ -8757,7 +8754,7 @@ public class GetACSearch implements Serializable
             Vector vSortedRows = new Vector();
             boolean isSorted = false;
             // get the selected rows
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             if (menuAction.equals("searchForCreate"))
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
@@ -8881,9 +8878,9 @@ public class GetACSearch implements Serializable
      */
     private void doQuestValueSearch(String sQuestID, String sCRFID, Vector vList, VD_Bean vd)
     {
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         try
         {
             HttpSession session = m_classReq.getSession();
@@ -8892,22 +8889,22 @@ public class GetACSearch implements Serializable
             // Vector pvList = (Vector)session.getAttribute("VDPVList");
             Vector vvList = new Vector();
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_CRFValue(?,?,?,?)}");
+                cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_CRFValue(?,?,?,?)}");
                 // Now tie the placeholders for out parameters.
-                CStmt.registerOutParameter(4, OracleTypes.CURSOR);
+                cstmt.registerOutParameter(4, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
-                CStmt.setString(1, sQuestID);
-                CStmt.setString(2, "");
-                CStmt.setString(3, "");
+                cstmt.setString(1, sQuestID);
+                cstmt.setString(2, "");
+                cstmt.setString(3, "");
                 // Now we are ready to call the stored procedure
-                boolean bExcuteOk = CStmt.execute();
+                boolean bExcuteOk = cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(4);
+                rs = (ResultSet) cstmt.getObject(4);
                 String s;
                 if (rs != null)
                 {
@@ -8964,10 +8961,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -9078,7 +9075,7 @@ public class GetACSearch implements Serializable
             Vector vSortedRows = new Vector();
             boolean isSorted = false;
             // get the selected rows
-            String menuAction = (String) session.getAttribute("MenuAction");
+            String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             vSRows = (Vector) session.getAttribute("vQuestValue");
             String sortField = (String) req.getParameter("sortType");
             if (sortField == null)
@@ -9228,32 +9225,32 @@ public class GetACSearch implements Serializable
      */
     public Vector doAltNameSearch(String acIdseq, String detlName, String CD_ID, String sOrigin, String sFor) 
     {
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         Vector vList = new Vector();
         HttpSession session = m_classReq.getSession();
         try
         {
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_ALTERNATE_NAMES(?,?,?)}");
+                cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_ALTERNATE_NAMES(?,?,?)}");
                 // Now tie the placeholders for out parameters.
-                CStmt.registerOutParameter(3, OracleTypes.CURSOR);
+                cstmt.registerOutParameter(3, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
                 if (CD_ID == null || CD_ID.equals(""))
-                    CStmt.setString(1, acIdseq);
+                    cstmt.setString(1, acIdseq);
                 else
-                    CStmt.setString(1, CD_ID);
-                CStmt.setString(2, detlName);
+                    cstmt.setString(1, CD_ID);
+                cstmt.setString(2, detlName);
                 // Now we are ready to call the stored procedure
-                boolean bExcuteOk = CStmt.execute();
+                boolean bExcuteOk = cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(3);
+                rs = (ResultSet) cstmt.getObject(3);
                 String s;
                 // get the current session list of ref doc to append to all DEs
                 Vector vAllAltName = new Vector();
@@ -9298,10 +9295,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -9327,32 +9324,32 @@ public class GetACSearch implements Serializable
      */
     public Vector doRefDocSearch(String acIdseq, String docType, String sFor)
     {
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         Vector vList = new Vector();
         HttpSession session = m_classReq.getSession();
         try
         {
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_REFERENCE_DOCUMENTS(?,?,?)}");
+                cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_REFERENCE_DOCUMENTS(?,?,?)}");
                 // Now tie the placeholders for out parameters.
-                CStmt.registerOutParameter(3, OracleTypes.CURSOR);
+                cstmt.registerOutParameter(3, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
-                CStmt.setString(1, acIdseq);
+                cstmt.setString(1, acIdseq);
                 // make it empty if all types
                 if (docType == null || docType.equals("ALL TYPES"))
                     docType = "";
-                CStmt.setString(2, docType);
+                cstmt.setString(2, docType);
                 // Now we are ready to call the stored procedure
-                boolean bExcuteOk = CStmt.execute();
+                boolean bExcuteOk = cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(3);
+                rs = (ResultSet) cstmt.getObject(3);
                 String s;
                 // get the current session list of ref doc to append to all DEs
                 Vector vAllRefDoc = new Vector();
@@ -9405,10 +9402,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -9485,9 +9482,9 @@ public class GetACSearch implements Serializable
      */
     public Integer doProtoCRFSearch(String acIdseq, String acName)
     {
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         Vector vList = new Vector();
         HttpSession session = m_classReq.getSession();
         Integer qCount = new Integer(0);
@@ -9495,20 +9492,20 @@ public class GetACSearch implements Serializable
         {
             Quest_Bean QuestBean = new Quest_Bean();
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_PROTOCOL_CRF(?,?)}");
+                cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_PROTOCOL_CRF(?,?)}");
                 // Now tie the placeholders for out parameters.
-                CStmt.registerOutParameter(2, OracleTypes.CURSOR);
+                cstmt.registerOutParameter(2, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
-                CStmt.setString(1, acIdseq);
+                cstmt.setString(1, acIdseq);
                 // Now we are ready to call the stored procedure
-                boolean bExcuteOk = CStmt.execute();
+                boolean bExcuteOk = cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(2);
+                rs = (ResultSet) cstmt.getObject(2);
                 String s;
                 if (rs != null)
                 {
@@ -9542,10 +9539,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -9587,9 +9584,9 @@ public class GetACSearch implements Serializable
      */
     private Hashtable getAC_Contacts(String ac_idseq, String acc_idseq)
     {
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         Hashtable vList = new Hashtable();
         try
         {
@@ -9602,21 +9599,21 @@ public class GetACSearch implements Serializable
             if (hPer == null)
                 hPer = new Hashtable();
             // Create a Callable Statement object.
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_AC_CONTACT(?,?,?)}");
+                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_AC_CONTACT(?,?,?)}");
                 // Now tie the placeholders for out parameters.
-                CStmt.registerOutParameter(3, OracleTypes.CURSOR);
+                cstmt.registerOutParameter(3, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
-                CStmt.setString(1, ac_idseq);
-                CStmt.setString(2, acc_idseq);
+                cstmt.setString(1, ac_idseq);
+                cstmt.setString(2, acc_idseq);
                 // Now we are ready to call the stored procedure
-                boolean bExcuteOk = CStmt.execute();
+                boolean bExcuteOk = cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(3);
+                rs = (ResultSet) cstmt.getObject(3);
                 String s;
                 if (rs != null)
                 {
@@ -9662,10 +9659,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -9687,30 +9684,30 @@ public class GetACSearch implements Serializable
      */
     public Vector getContactComm(String comm_idseq, String org_idseq, String per_idseq)
     {
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         Vector vList = new Vector();
         try
         {
             // Create a Callable Statement object.
             HttpSession session = (HttpSession) m_classReq.getSession();
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CONTACT_COMM(?,?,?,?)}");
+                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CONTACT_COMM(?,?,?,?)}");
                 // Now tie the placeholders for out parameters.
-                CStmt.registerOutParameter(4, OracleTypes.CURSOR);
+                cstmt.registerOutParameter(4, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
-                CStmt.setString(1, org_idseq);
-                CStmt.setString(2, per_idseq);
-                CStmt.setString(3, comm_idseq);
+                cstmt.setString(1, org_idseq);
+                cstmt.setString(2, per_idseq);
+                cstmt.setString(3, comm_idseq);
                 // Now we are ready to call the stored procedure
-                boolean bExcuteOk = CStmt.execute();
+                boolean bExcuteOk = cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(4);
+                rs = (ResultSet) cstmt.getObject(4);
                 String s;
                 if (rs != null)
                 {
@@ -9738,10 +9735,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -9763,30 +9760,30 @@ public class GetACSearch implements Serializable
      */
     public Vector getContactAddr(String addr_idseq, String org_idseq, String per_idseq)
     {
-        Connection sbr_db_conn = null;
+        Connection conn = null;
         ResultSet rs = null;
-        CallableStatement CStmt = null;
+        CallableStatement cstmt = null;
         Vector vList = new Vector();
         try
         {
             // Create a Callable Statement object.
             HttpSession session = (HttpSession) m_classReq.getSession();
-            sbr_db_conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (sbr_db_conn == null)
+            conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (conn == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CONTACT_ADDR(?,?,?,?)}");
+                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CONTACT_ADDR(?,?,?,?)}");
                 // Now tie the placeholders for out parameters.
-                CStmt.registerOutParameter(4, OracleTypes.CURSOR);
+                cstmt.registerOutParameter(4, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
-                CStmt.setString(1, org_idseq);
-                CStmt.setString(2, per_idseq);
-                CStmt.setString(3, addr_idseq);
+                cstmt.setString(1, org_idseq);
+                cstmt.setString(2, per_idseq);
+                cstmt.setString(3, addr_idseq);
                 // Now we are ready to call the stored procedure
-                boolean bExcuteOk = CStmt.execute();
+                boolean bExcuteOk = cstmt.execute();
                 // store the output in the resultset
-                rs = (ResultSet) CStmt.getObject(4);
+                rs = (ResultSet) cstmt.getObject(4);
                 String s;
                 if (rs != null)
                 {
@@ -9819,10 +9816,10 @@ public class GetACSearch implements Serializable
         {
             if (rs != null)
                 rs.close();
-            if (CStmt != null)
-                CStmt.close();
-            if (sbr_db_conn != null)
-                sbr_db_conn.close();
+            if (cstmt != null)
+                cstmt.close();
+            if (conn != null)
+                conn.close();
         }
         catch (Exception ee)
         {
@@ -9851,8 +9848,8 @@ public class GetACSearch implements Serializable
         // doRefDocSearch
         try
         {
-            String sMenuAction = (String) session.getAttribute("MenuAction");
-            session.setAttribute("statusMessage", "");
+            String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
+            session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");
             session.setAttribute("AllAltNameList", new Vector());
             session.setAttribute("AllRefDocList", new Vector());
             String sSearchAC = (String) session.getAttribute("searchAC");
@@ -9938,7 +9935,7 @@ public class GetACSearch implements Serializable
         {
             // System.err.println("ERROR in GetACSearch-getSelRowToEdit: " + e);
             logger.fatal("ERROR in GetACSearch-getSelRowToEdit : " + e.toString(), e);
-            session.setAttribute("statusMessage", "Unable to open the Create/Edit page. Please try again.");
+            session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create/Edit page. Please try again.");
             return false;
         }
         return true;

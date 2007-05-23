@@ -1,6 +1,8 @@
-/**
- * 
- */
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/TestConnections.java,v 1.2 2007-05-23 04:10:40 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package gov.nih.nci.cadsr.cdecurate.test;
 
 import java.io.FileInputStream;

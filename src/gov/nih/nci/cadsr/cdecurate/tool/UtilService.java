@@ -1,17 +1,14 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UtilService.java,v 1.38 2007-01-26 20:17:44 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UtilService.java,v 1.39 2007-05-23 04:15:01 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.sql.*;
-import java.math.*;
-import oracle.jdbc.driver.*;
-import javax.servlet.http.*;
+import java.util.Vector;
+import javax.servlet.http.HttpSession;
 
 /**
  * The UtilService supplies various utility methods to be used by other classes.
@@ -361,11 +358,11 @@ public class UtilService implements Serializable
   public String getCurationDate(String sDate)
   {
     if(sDate == null) sDate = "";
-    String sOraDate;
+    //String sOraDate;
     String sDay = "";
     String sMon = "";
     String sYr = "";
-    String sOraMon = "";
+    //String sOraMon = "";
     if(sDate.length() < 1)
       return sDate;
 
@@ -611,7 +608,7 @@ public class UtilService implements Serializable
         //sValue = sValue.replace('\f', ' ');
         return sValue;
       }
-      else
+      //else
         return "";
     }
     
@@ -723,6 +720,68 @@ public class UtilService implements Serializable
       }
       return sMsg;
     } 
+    /**
+     * remove tab and new line from teh vector from the string for success messages.
+     * @param sMsg string message to append
+     * @param vMsg vector of string message
+     * @return fomated string
+     */
+  public String parsedStringMsgVectorTabs(String sMsg, Vector<String> vMsg)
+  {
+    int index = 0;
+
+    if (sMsg != null && !sMsg.equals(""))
+    {
+      //do the new line character adding it to vector with indent if tab existed
+      String newMsg = "";
+      do
+      {
+       // if (index > 0)
+       //   index = sMsg.indexOf("\\n",index);
+       // else
+          index = sMsg.indexOf("\\n");
+   //   System.out.println(index + " msg newline " + sMsg);
+        if (index > -1)
+        {
+          newMsg = sMsg.substring(0, index);  //substring up to the new line
+          newMsg = newMsg.trim();
+          if (!newMsg.equals(""))
+          {
+              //put indent for the tab at the begginning of the msg for vector.
+              int iTab = newMsg.indexOf("\\t");
+              if (iTab > -1 && iTab < 5)
+                  newMsg = "<ul>".concat(newMsg.substring(2));  //.concat("</ul>"); 
+              //sMsg = sMsg.substring(0, index) + " " + sMsg.substring(index+2);
+              vMsg.addElement(newMsg);
+          }
+          sMsg = sMsg.substring(index+2).trim();  //remove earlier line; starts from 0 always
+        }
+      }
+      while (index > 0);
+      //if the message has no new line but just tabs
+      int iTab = sMsg.indexOf("\\t");
+      if (iTab > -1 && iTab < 5)
+          sMsg = "<ul>".concat(sMsg.substring(2));  //.concat("</ul>"); //one side is needed for the jsp to mark tab
+
+      //do the tab character
+      index =0;
+      do
+      {
+        if (index > 0)
+          index = sMsg.indexOf("\\t",index);
+        else
+          index = sMsg.indexOf("\\t");
+ //     System.out.println(index + " msg tab " + sMsg);
+        if (index > -1)
+        {
+          sMsg = sMsg.substring(0, index) + " " + sMsg.substring(index+2);
+          index = index + 3;
+        }
+      }
+      while (index > 0);    
+    }
+    return sMsg;
+  } 
   /**
   * sort DE Component vectors against last vector: vDECompOrder
   *
@@ -893,7 +952,7 @@ public class UtilService implements Serializable
       if (ssID == null) ssID = "";
       sMsg += "; Session-ID: " + ssID;      
       //add duration
-      java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat ("MM/dd/yyyy");
+      //java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat ("MM/dd/yyyy");
       long lDur = eDate.getTime() - bDate.getTime();
       if (lDur > 1000)
         sMsg += "; Duration: " + (lDur/1000) + " seconds";
@@ -989,7 +1048,7 @@ public class UtilService implements Serializable
      * To get compared value to sort.
      * empty strings are considered as strings.
      * according to the fields, converts the string object into integer, double or dates.
-     * @param sFieldType type of field to sort
+     * @param sField 
      * @param firstName first name to compare.
      * @param SecondName second name to compare.
      *
@@ -997,7 +1056,7 @@ public class UtilService implements Serializable
      *
      * @throws Exception
      */
-    public int ComparedValue(String sFieldType, String firstName, String SecondName)
+    public int ComparedValue(String sField, String firstName, String SecondName)
             throws Exception
     {
         firstName = firstName.trim();
@@ -1007,7 +1066,7 @@ public class UtilService implements Serializable
            return 1;
         else if (SecondName.equals(""))
            return -1;
-
+        String sFieldType = getFieldType(sField);
         if (sFieldType.equals("Integer"))
         {
            Integer iName1 = new Integer(firstName);
@@ -1033,6 +1092,15 @@ public class UtilService implements Serializable
         }
     }
 
+    private String getFieldType(String sField)
+    {
+      String stype = "";
+      if (sField.equalsIgnoreCase("Public_ID"))
+        stype = "Integer";
+      else if (sField.equalsIgnoreCase("Version"))
+        stype = "Double";
+      return stype;
+    }
     /**
      * @param pv PV bean object
      * @return string evs id

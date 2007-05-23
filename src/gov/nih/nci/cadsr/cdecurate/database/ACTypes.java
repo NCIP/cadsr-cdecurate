@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/ACTypes.java,v 1.28 2007-01-26 20:17:43 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/ACTypes.java,v 1.29 2007-05-23 04:09:30 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -33,7 +33,9 @@ public enum ACTypes
     DataElementConcept("Data Element Concept"),
     DataElement("Data Element"),
     ValueMeaning("Value Meaning"),
-    UNKNOWN("UNKNOWN");
+    ClassSchemeItem("Class Scheme Item"),
+    UNKNOWN("UNKNOWN"),
+    ValueMeaningEdit("Value Meaning");
     
     private ACTypes(String name_)
     {

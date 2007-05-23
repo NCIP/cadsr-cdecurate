@@ -1,13 +1,13 @@
-/**
- * 
- */
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMForm.java,v 1.7 2007-05-23 04:15:13 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.io.Serializable;
 import java.sql.Connection;
 import java.util.Vector;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author shegde
@@ -49,13 +49,7 @@ public class VMForm implements Serializable
   private String retErrorCode;
   private String pvvmErrorCode;
   private Vector<String> VMValidate;
-  private InsACService insAC;
-  private SetACService setAC;
-  private UtilService util;
-  private GetACService getAC;
   private NCICurationServlet curationServlet;
-  private HttpServletRequest request;
-  private HttpServletResponse response;
   private String searchTerm;
   private String searchFilterCD;
   private String searchFilterDef;
@@ -63,7 +57,7 @@ public class VMForm implements Serializable
   private Vector<VM_Bean> VMList;
   private Vector<String> ResultList;
   private Connection dbConnection;
-  private EVS_UserBean evsUser;
+ // private EVS_UserBean evsUser;
   private String MenuAction;
   private Vector<String> SelAttrList;
   private String NumRecFound;
@@ -241,102 +235,6 @@ public class VMForm implements Serializable
   }
 
   /**
-   * @return Returns the insAC.
-   */
-  public InsACService getInsAC()
-  {
-    return insAC;
-  }
-
-  /**
-   * @param insAC The insAC to set.
-   */
-  public void setInsAC(InsACService insAC)
-  {
-    this.insAC = insAC;
-  }
-
-  /**
-   * @return Returns the request.
-   */
-  public HttpServletRequest getRequest()
-  {
-    return request;
-  }
-
-  /**
-   * @param request The request to set.
-   */
-  public void setRequest(HttpServletRequest request)
-  {
-    this.request = request;
-  }
-
-  /**
-   * @return Returns the response.
-   */
-  public HttpServletResponse getResponse()
-  {
-    return response;
-  }
-
-  /**
-   * @param response The response to set.
-   */
-  public void setResponse(HttpServletResponse response)
-  {
-    this.response = response;
-  }
-
-  /**
-   * @return Returns the setAC.
-   */
-  public SetACService getSetAC()
-  {
-    return setAC;
-  }
-
-  /**
-   * @param setAC The setAC to set.
-   */
-  public void setSetAC(SetACService setAC)
-  {
-    this.setAC = setAC;
-  }
-
-  /**
-   * @return Returns the util.
-   */
-  public UtilService getUtil()
-  {
-    return util;
-  }
-
-  /**
-   * @param util The util to set.
-   */
-  public void setUtil(UtilService util)
-  {
-    this.util = util;
-  }
-
-  /**
-   * @return Returns the getAC.
-   */
-  public GetACService getGetAC()
-  {
-    return getAC;
-  }
-
-  /**
-   * @param getAC The getAC to set.
-   */
-  public void setGetAC(GetACService getAC)
-  {
-    this.getAC = getAC;
-  }
-
-  /**
    * @return Returns the curationServlet.
    */
   public NCICurationServlet getCurationServlet()
@@ -464,22 +362,6 @@ public class VMForm implements Serializable
   public void setDBConnection(Connection dbConnection)
   {
     this.dbConnection = dbConnection;
-  }
-
-  /**
-   * @return Returns the evsUser.
-   */
-  public EVS_UserBean getEvsUser()
-  {
-    return evsUser;
-  }
-
-  /**
-   * @param evsUser The evsUser to set.
-   */
-  public void setEvsUser(EVS_UserBean evsUser)
-  {
-    this.evsUser = evsUser;
   }
 
   /**
@@ -666,4 +548,95 @@ public class VMForm implements Serializable
     this.errorMsgList = errorMsgList;
   }
 
+//page values
+  public String longName = "";
+  public String longNameWidth = "";
+  public String descriptionLabel = "";
+  public String description = "";
+  public String systemDescription = "";
+  public String changeNote = "";
+  public String conceptSummary = "";
+  public String vmDisplayName = "";
+  public boolean conceptExist = false;
+  public Vector<EVS_Bean> vmConcepts = new Vector<EVS_Bean>();
+  public Vector<CommonACBean> vmDEs = new Vector<CommonACBean>();
+  public Vector<CommonACBean> vmVDs = new Vector<CommonACBean>();
+  public Vector<CommonACBean> vmCRFs = new Vector<CommonACBean>();
+  public String filteredDE = ELM_LBL_SHOW_RELEASE;
+  public String filteredVD = ELM_LBL_SHOW_RELEASE;
+  public String filteredCRF = ELM_LBL_SHOW_RELEASE;
+  public String sortedDE = "";
+  public String sortedVD = "";
+  public String sortedCRF = "";
+ 
+  
+//constants for jsp parameters
+  public static final String ELM_CHANGE_NOTE = "changeNote";
+  public static final String ELM_DEFINITION = "txtDef";
+  public static final String ELM_PAGE_ACTION = "pageAction";
+  public static final String ELM_OPEN_TO_TREE = "openToTree";
+  public static final String ELM_SEL_CON_ROW = "selectConceptRow";
+  public static final String ELM_MENU_ACTION = "MenuAction";
+  public static final String ELM_LABEL_CON = "labelCon";
+  public static final String ELM_CRF_NAME = "Form(s)/Template(s)";
+  public static final String ELM_VD_NAME = "Value Domain(s)";
+  public static final String ELM_DE_NAME = "Data Element(s)";
+  public static final String ELM_AC_TYPE = "acType";
+  public static final String ELM_FIELD_TYPE = "fieldType";
+  public static final String ELM_NVP_ORDER = "vmConOrder";
+
+  public static final String ELM_LBL_NAME = "Long Name";
+  public static final String ELM_LBL_MAN_DESC = "Manually Curated Definition/Description";
+  public static final String ELM_LBL_SYS_DESC = "System Generated Definition/Description";
+  public static final String ELM_LBL_DESC = "Definition/Description";
+  public static final String ELM_LBL_CH_NOTE = "Change Note";
+  public static final String ELM_LBL_CON_NAME = "Concept Name";
+  public static final String ELM_LBL_CON_ID = "Concept ID";
+  public static final String ELM_LBL_CON_SUM = "Concept Name Summary";
+  public static final String ELM_LBL_SHOW_RELEASE = "Show Released Only";
+  public static final String ELM_LBL_SHOW_ALL = "Show All Items";
+  
+  public static final String ELM_ACT_DETAIL_TAB = "detailtab";
+  public static final String ELM_ACT_USED_TAB = "usedtab";
+
+//constants for form req type
+  public static final String ELM_FORM_REQ_DETAIL = "vmDetail";
+  public static final String ELM_FORM_REQ_USED = "vmUse";  
+  public static final String ELM_FORM_REQ_VAL = "vmValidate";  
+  public static final String ELM_FORM_SEARCH_EVS = "ValueMeaningEdit";  
+  
+//constants for jsp actions
+  public static final String ACT_PAGE_DEFAULT = "nothing";
+  public static final String ACT_CON_APPEND = "appendConcept";
+  public static final String ACT_CON_DELETE = "deleteConcept";
+  public static final String ACT_CON_MOVEUP = "moveUpConcept";
+  public static final String ACT_CON_MOVEDOWN = "moveDownConcept";
+  public static final String ACT_BACK_PV = "backToPV";
+  public static final String ACT_CLEAR_VM = "clearBoxes";
+  public static final String ACT_VALIDATE_VM = "validate";
+  public static final String ACT_REEDIT_VM = "reEditVM";
+  public static final String ACT_SUBMIT_VM = "submitVM";
+  public static final String ACT_SORT_AC = "sortAC";  
+  public static final String ACT_FILTER_AC = "filterAC";  
+  
+//constants for session attributes
+  public static final String SESSION_SELECT_VM = "selectVM";
+  public static final String SESSION_SELECT_PV = "selectPV";
+  public static final String SESSION_VM_TAB_FOCUS = "VMTabFocus";  
+  public static final String SESSION_PV_INDEX = "selectPVIndex";  
+  public static final String SESSION_SELECT_VD = "m_VD";  
+  
+//constants for request attributes
+  public static final String REQUEST_FOCUS_ELEMENT = "VMFocusElement";  
+  public static final String REQUEST_FORM_DATA = "VMDisplayData";  
+  public static final String REQUEST_SEL_CONCEPT = "selConcept";  
+  
+//constants for jsp names
+  public static final String JSP_VM_DETAIL = "ValueMeaningDetail.jsp";     
+  public static final String JSP_PV_DETAIL = "PermissibleValue.jsp";     
+  public static final String JSP_TITLE_BAR = "TitleBar.jsp";     
+  public static final String JSP_VM_TITLE = "ValueMeaningTitle.jsp";     
+  public static final String JSP_VM_USED = "ValueMeaningUsed.jsp";     
+  public static final String JSP_VM_VALIDATE = "ValidateVMPage.jsp";     
+  
 }

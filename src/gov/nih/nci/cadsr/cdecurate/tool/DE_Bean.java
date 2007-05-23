@@ -1,10 +1,11 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DE_Bean.java,v 1.38 2007-01-26 20:17:43 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DE_Bean.java,v 1.39 2007-05-23 04:12:31 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.database.ACTypes;
 import java.util.*;
 
 /**
@@ -120,9 +121,6 @@ public class DE_Bean extends AC_Bean
   private String DE_DELETED_IND;
   private String DE_CONTEXT_NAME;
   private String DE_MIN_CDE_ID;
-/*  private String DE_HIST_CDE_ID;
-  private Integer DE_HIST_CDE_ID_COUNT;
-*/
   private String DE_LANGUAGE;
   private String DE_LANGUAGE_IDSEQ;
   private String DE_SOURCE;
@@ -167,39 +165,7 @@ public class DE_Bean extends AC_Bean
   //refdoc types text and count
   private String DOC_TEXT_PREFERRED_QUESTION;
   private String DOC_TEXT_PREFERRED_QUESTION_IDSEQ;
-  /*
-  private Integer DOC_TEXT_PREFERRED_QUESTION_COUNT;
-  private String DOC_TEXT_HISTORIC_NAME;
-  private Integer DOC_TEXT_HISTORIC_COUNT;
-  private String DOC_TEXT_REFERENCE;
-  private Integer DOC_TEXT_REFERENCE_COUNT;
-  private String DOC_TEXT_EXAMPLE;
-  private Integer DOC_TEXT_EXAMPLE_COUNT;
-  private String DOC_TEXT_COMMENT;
-  private Integer DOC_TEXT_COMMENT_COUNT;
-  private String DOC_TEXT_NOTE;
-  private Integer DOC_TEXT_NOTE_COUNT;
-  private String DOC_TEXT_DESCRIPTION;
-  private Integer DOC_TEXT_DESCRIPTION_COUNT;
-  private String DOC_TEXT_IMAGE_FILE;
-  private Integer DOC_TEXT_IMAGE_FILE_COUNT;
-  private String DOC_TEXT_VALID_VALUE_SOURCE;
-  private Integer DOC_TEXT_VALID_VALUE_SOURCE_COUNT;
-  private String DOC_TEXT_DATA_ELEMENT_SOURCE;
-  private Integer DOC_TEXT_DATA_ELEMENT_SOURCE_COUNT;
-  private String DOC_TEXT_UML_Class;
-  private Integer DOC_TEXT_UML_Class_Count;
-  private String DOC_TEXT_DETAIL_DESCRIPTION;
-  private Integer DOC_TEXT_DETAIL_DESCRIPTION_COUNT;
-  private String DOC_TEXT_TECHNICAL_GUIDE;
-  private Integer DOC_TEXT_TECHNICAL_GUIDE_COUNT;
-  private String DOC_TEXT_UML_Attribute;
-  private Integer DOC_TEXT_UML_Attribute_Count;
-  private String DOC_TEXT_LABEL;
-  private Integer DOC_TEXT_LABEL_COUNT;
-*/
   private String REFERENCE_DOCUMENT;
-//  private Integer DOC_TEXT_OTHER_REF_TYPES_COUNT;
   private String ALTERNATE_NAME;
 
   private String AC_SYS_PREF_NAME;
@@ -210,10 +176,15 @@ public class DE_Bean extends AC_Bean
   private VD_Bean DE_VD_Bean;
   
   private boolean DEC_VD_CHANGED;
+  private String DE_BROWSER_URL;
  /**
    * Constructor
   */
-  public DE_Bean() {
+    public DE_Bean()
+    {
+        super();
+        
+        _type = ACTypes.DataElement;
   }
 
   /**
@@ -310,41 +281,9 @@ public class DE_Bean extends AC_Bean
       this.setDE_DES_ALIAS_ID(copyBean.getDE_DES_ALIAS_ID());
       this.setDE_ALIAS_NAME(copyBean.getDE_ALIAS_NAME());
       this.setAC_SELECTED_CONTEXT_ID(copyBean.getAC_SELECTED_CONTEXT_ID());
-/*      this.setDE_HIST_CDE_ID(copyBean.getDE_HIST_CDE_ID());
-      this.setDE_HIST_CDE_ID_COUNT(copyBean.getDE_HIST_CDE_ID_COUNT());
-*/      
       this.setDE_Permissible_Value(copyBean.getDE_Permissible_Value());
       this.setDE_Permissible_Value_Count(copyBean.getDE_Permissible_Value_Count());
 
-    /*  this.setDOC_TEXT_PREFERRED_QUESTION_COUNT(copyBean.getDOC_TEXT_PREFERRED_QUESTION_COUNT());
-      this.setDOC_TEXT_HISTORIC_NAME(copyBean.getDOC_TEXT_HISTORIC_NAME());
-      this.setDOC_TEXT_HISTORIC_COUNT(copyBean.getDOC_TEXT_HISTORIC_COUNT());
-      this.setDOC_TEXT_REFERENCE(copyBean.getDOC_TEXT_REFERENCE());
-      this.setDOC_TEXT_REFERENCE_COUNT(copyBean.getDOC_TEXT_REFERENCE_COUNT());
-      this.setDOC_TEXT_EXAMPLE(copyBean.getDOC_TEXT_EXAMPLE());
-      this.setDOC_TEXT_EXAMPLE_COUNT(copyBean.getDOC_TEXT_EXAMPLE_COUNT());
-      this.setDOC_TEXT_COMMENT(copyBean.getDOC_TEXT_COMMENT());
-      this.setDOC_TEXT_COMMENT_COUNT(copyBean.getDOC_TEXT_COMMENT_COUNT());
-      this.setDOC_TEXT_NOTE(copyBean.getDOC_TEXT_NOTE());
-      this.setDOC_TEXT_NOTE_COUNT(copyBean.getDOC_TEXT_NOTE_COUNT());
-      this.setDOC_TEXT_DESCRIPTION(copyBean.getDOC_TEXT_DESCRIPTION());
-      this.setDOC_TEXT_DESCRIPTION_COUNT(copyBean.getDOC_TEXT_DESCRIPTION_COUNT());
-      this.setDOC_TEXT_IMAGE_FILE(copyBean.getDOC_TEXT_IMAGE_FILE());
-      this.setDOC_TEXT_IMAGE_FILE_COUNT(copyBean.getDOC_TEXT_IMAGE_FILE_COUNT());
-      this.setDOC_TEXT_VALID_VALUE_SOURCE(copyBean.getDOC_TEXT_VALID_VALUE_SOURCE());
-      this.setDOC_TEXT_VALID_VALUE_SOURCE_COUNT(copyBean.getDOC_TEXT_VALID_VALUE_SOURCE_COUNT());
-      this.setDOC_TEXT_DATA_ELEMENT_SOURCE(copyBean.getDOC_TEXT_DATA_ELEMENT_SOURCE());
-      this.setDOC_TEXT_DATA_ELEMENT_SOURCE_COUNT(copyBean.getDOC_TEXT_DATA_ELEMENT_SOURCE_COUNT());
-      this.setDOC_TEXT_UML_Class(copyBean.getDOC_TEXT_UML_Class());
-      this.setDOC_TEXT_UML_Class_Count(copyBean.getDOC_TEXT_UML_Class_Count());
-      this.setDOC_TEXT_DETAIL_DESCRIPTION(copyBean.getDOC_TEXT_DETAIL_DESCRIPTION());
-      this.setDOC_TEXT_DETAIL_DESCRIPTION_COUNT(copyBean.getDOC_TEXT_DETAIL_DESCRIPTION_COUNT());
-      this.setDOC_TEXT_TECHNICAL_GUIDE(copyBean.getDOC_TEXT_TECHNICAL_GUIDE());
-      this.setDOC_TEXT_TECHNICAL_GUIDE_COUNT(copyBean.getDOC_TEXT_TECHNICAL_GUIDE_COUNT());
-      this.setDOC_TEXT_UML_Attribute(copyBean.getDOC_TEXT_UML_Attribute());
-      this.setDOC_TEXT_UML_Attribute_Count(copyBean.getDOC_TEXT_UML_Attribute_Count());
-      this.setDOC_TEXT_LABEL(copyBean.getDOC_TEXT_LABEL());
-      this.setDOC_TEXT_LABEL_COUNT(copyBean.getDOC_TEXT_LABEL_COUNT()); */
       this.setDE_DEC_Bean(copyBean.getDE_DEC_Bean());
       this.setDE_VD_Bean(copyBean.getDE_VD_Bean());
       this.setAC_ABBR_PREF_NAME(copyBean.getAC_ABBR_PREF_NAME());
@@ -600,25 +539,7 @@ public class DE_Bean extends AC_Bean
   {
       this.DE_MIN_CDE_ID = s;
   }
-/*  *//**
-   * The setDE_HIST_CDE_ID method sets the DE_HIST_CDE_ID for this bean.
-   *
-   * @param s The DE_HIST_CDE_ID to set
-  *//*
-  public void setDE_HIST_CDE_ID(String s)
-  {
-      this.DE_HIST_CDE_ID = s;
-  }
-  *//**
-   * The setDE_HIST_CDE_ID_COUNT method sets the DE_HIST_CDE_ID_COUNT for this bean.
-   *
-   * @param i The DE_HIST_CDE_ID_COUNT to set
-  *//*
-  public void setDE_HIST_CDE_ID_COUNT(Integer i)
-  {
-      this.DE_HIST_CDE_ID_COUNT = i;
-  }
-*/  
+ 
   /**
    * The setDE_LANGUAGE method sets the DE_LANGUAGE for this bean.
    *
@@ -942,268 +863,7 @@ public class DE_Bean extends AC_Bean
   {
       this.DOC_TEXT_PREFERRED_QUESTION_IDSEQ = s;
   }
-  /**
-   * The setDOC_TEXT_PREFERRED_QUESTION_COUNT method sets the DOC_TEXT_PREFERRED_QUESTION_COUNT for this bean.
-   *
-   * @param i The DOC_TEXT_PREFERRED_QUESTION_COUNT to set
-  *//*
-  public void setDOC_TEXT_PREFERRED_QUESTION_COUNT(Integer i)
-  {
-      this.DOC_TEXT_PREFERRED_QUESTION_COUNT = i;
-  }
-  *//**
-   * The setDOC_TEXT_HISTORIC_NAME method sets the DOC_TEXT_HISTORIC_NAME for this bean.
-   *
-   * @param s The DOC_TEXT_HISTORIC_NAME to set
-  *//*
-  public void setDOC_TEXT_HISTORIC_NAME(String s)
-  {
-      this.DOC_TEXT_HISTORIC_NAME = s;
-  }
-  *//**
-   * The setDOC_TEXT_HISTORIC_COUNT method sets the DOC_TEXT_HISTORIC_COUNT for this bean.
-   *
-   * @param i The DOC_TEXT_HISTORIC_COUNT to set
-  *//*
-  public void setDOC_TEXT_HISTORIC_COUNT(Integer i)
-  {
-      this.DOC_TEXT_HISTORIC_COUNT = i;
-  }
-  *//**
-   * The setDOC_TEXT_REFERENCE method sets the DOC_TEXT_REFERENCE for this bean.
-   *
-   * @param s The DOC_TEXT_REFERENCE to set
-  *//*
-  public void setDOC_TEXT_REFERENCE(String s)
-  {
-      this.DOC_TEXT_REFERENCE = s;
-  }
-  *//**
-   * The setDOC_TEXT_REFERENCE_COUNT method sets the DOC_TEXT_REFERENCE_COUNT for this bean.
-   *
-   * @param i The DOC_TEXT_REFERENCE_COUNT to set
-  *//*
-  public void setDOC_TEXT_REFERENCE_COUNT(Integer i)
-  {
-      this.DOC_TEXT_REFERENCE_COUNT = i;
-  }
-  *//**
-   * The setDOC_TEXT_EXAMPLE method sets the DOC_TEXT_EXAMPLE for this bean.
-   *
-   * @param s The DOC_TEXT_EXAMPLE to set
-  *//*
-  public void setDOC_TEXT_EXAMPLE(String s)
-  {
-      this.DOC_TEXT_EXAMPLE = s;
-  }
-  *//**
-   * The setDOC_TEXT_EXAMPLE_COUNT method sets the DOC_TEXT_EXAMPLE_COUNT for this bean.
-   *
-   * @param i The DOC_TEXT_EXAMPLE_COUNT to set
-  *//*
-  public void setDOC_TEXT_EXAMPLE_COUNT(Integer i)
-  {
-      this.DOC_TEXT_EXAMPLE_COUNT = i;
-  }
-  *//**
-   * The setDOC_TEXT_COMMENT method sets the DOC_TEXT_COMMENT for this bean.
-   *
-   * @param s The DOC_TEXT_COMMENT to set
-  *//*
-  public void setDOC_TEXT_COMMENT(String s)
-  {
-      this.DOC_TEXT_COMMENT = s;
-  }
-  *//**
-   * The setDOC_TEXT_COMMENT_COUNT method sets the DOC_TEXT_COMMENT_COUNT for this bean.
-   *
-   * @param i The DOC_TEXT_COMMENT_COUNT to set
-  *//*
-  public void setDOC_TEXT_COMMENT_COUNT(Integer i)
-  {
-      this.DOC_TEXT_COMMENT_COUNT = i;
-  }
-  *//**
-   * The setDOC_TEXT_NOTE method sets the DOC_TEXT_NOTE for this bean.
-   *
-   * @param s The DOC_TEXT_NOTE to set
-  *//*
-  public void setDOC_TEXT_NOTE(String s)
-  {
-      this.DOC_TEXT_NOTE = s;
-  }
-  *//**
-   * The setDOC_TEXT_NOTE_COUNT method sets the DOC_TEXT_NOTE_COUNT for this bean.
-   *
-   * @param i The DOC_TEXT_NOTE_COUNT to set
-  *//*
-  public void setDOC_TEXT_NOTE_COUNT(Integer i)
-  {
-      this.DOC_TEXT_NOTE_COUNT = i;
-  }
-  *//**
-   * The setDOC_TEXT_DESCRIPTION method sets the DOC_TEXT_DESCRIPTION for this bean.
-   *
-   * @param s The DOC_TEXT_DESCRIPTION to set
-  *//*
-  public void setDOC_TEXT_DESCRIPTION(String s)
-  {
-      this.DOC_TEXT_DESCRIPTION = s;
-  }
-  *//**
-   * The setDOC_TEXT_DESCRIPTION_COUNT method sets the DOC_TEXT_DESCRIPTION_COUNT for this bean.
-   *
-   * @param i The DOC_TEXT_DESCRIPTION_COUNT to set
-  *//*
-  public void setDOC_TEXT_DESCRIPTION_COUNT(Integer i)
-  {
-      this.DOC_TEXT_DESCRIPTION_COUNT = i;
-  }
-  *//**
-   * The setDOC_TEXT_IMAGE_FILE method sets the DOC_TEXT_IMAGE_FILE for this bean.
-   *
-   * @param s The DOC_TEXT_IMAGE_FILE to set
-  *//*
-  public void setDOC_TEXT_IMAGE_FILE(String s)
-  {
-      this.DOC_TEXT_IMAGE_FILE = s;
-  }
-  *//**
-   * The setDOC_TEXT_IMAGE_FILE_COUNT method sets the DOC_TEXT_IMAGE_FILE_COUNT for this bean.
-   *
-   * @param i The DOC_TEXT_IMAGE_FILE_COUNT to set
-  *//*
-  public void setDOC_TEXT_IMAGE_FILE_COUNT(Integer i)
-  {
-      this.DOC_TEXT_IMAGE_FILE_COUNT = i;
-  }
-  *//**
-   * The setDOC_TEXT_VALID_VALUE_SOURCE method sets the DOC_TEXT_VALID_VALUE_SOURCE for this bean.
-   *
-   * @param s The DOC_TEXT_VALID_VALUE_SOURCE to set
-  *//*
-  public void setDOC_TEXT_VALID_VALUE_SOURCE(String s)
-  {
-      this.DOC_TEXT_VALID_VALUE_SOURCE = s;
-  }
-  *//**
-   * The setDOC_TEXT_VALID_VALUE_SOURCE_COUNT method sets the DOC_TEXT_VALID_VALUE_SOURCE_COUNT for this bean.
-   *
-   * @param i The DOC_TEXT_VALID_VALUE_SOURCE_COUNT to set
-  *//*
-  public void setDOC_TEXT_VALID_VALUE_SOURCE_COUNT(Integer i)
-  {
-      this.DOC_TEXT_VALID_VALUE_SOURCE_COUNT = i;
-  }
-  *//**
-   * The setDOC_TEXT_DATA_ELEMENT_SOURCE method sets the DOC_TEXT_DATA_ELEMENT_SOURCE for this bean.
-   *
-   * @param s The DOC_TEXT_DATA_ELEMENT_SOURCE to set
-  *//*
-  public void setDOC_TEXT_DATA_ELEMENT_SOURCE(String s)
-  {
-      this.DOC_TEXT_DATA_ELEMENT_SOURCE = s;
-  }
-  *//**
-   * The setDOC_TEXT_DATA_ELEMENT_SOURCE_COUNT method sets the DOC_TEXT_DATA_ELEMENT_SOURCE_COUNT for this bean.
-   *
-   * @param i The DOC_TEXT_DATA_ELEMENT_SOURCE_COUNT to set
-  *//*
-  public void setDOC_TEXT_DATA_ELEMENT_SOURCE_COUNT(Integer i)
-  {
-      this.DOC_TEXT_DATA_ELEMENT_SOURCE_COUNT = i;
-  }
-  *//**
-   * The setDOC_TEXT_UML_Class method sets the DOC_TEXT_UML_Class for this bean.
-   *
-   * @param s The DOC_TEXT_UML_Class to set
-  *//*
-  public void setDOC_TEXT_UML_Class(String s)
-  {
-      this.DOC_TEXT_UML_Class = s;
-  }
-  *//**
-   * The setDOC_TEXT_UML_Class_Count method sets the DOC_TEXT_UML_Class_Count for this bean.
-   *
-   * @param i The DOC_TEXT_UML_Class_Count to set
-  *//*
-  public void setDOC_TEXT_UML_Class_Count(Integer i)
-  {
-      this.DOC_TEXT_UML_Class_Count = i;
-  }
-  *//**
-   * The setDOC_TEXT_DETAIL_DESCRIPTION method sets the DOC_TEXT_DETAIL_DESCRIPTION for this bean.
-   *
-   * @param s The DOC_TEXT_DETAIL_DESCRIPTION to set
-  *//*
-  public void setDOC_TEXT_DETAIL_DESCRIPTION(String s)
-  {
-      this.DOC_TEXT_DETAIL_DESCRIPTION = s;
-  }
-  *//**
-   * The setDOC_TEXT_DETAIL_DESCRIPTION_COUNT method sets the DOC_TEXT_DETAIL_DESCRIPTION_COUNT for this bean.
-   *
-   * @param i The DOC_TEXT_DETAIL_DESCRIPTION_COUNT to set
-  *//*
-  public void setDOC_TEXT_DETAIL_DESCRIPTION_COUNT(Integer i)
-  {
-      this.DOC_TEXT_DETAIL_DESCRIPTION_COUNT = i;
-  }
-  *//**
-   * The setDOC_TEXT_TECHNICAL_GUIDE method sets the DOC_TEXT_TECHNICAL_GUIDE for this bean.
-   *
-   * @param s The DOC_TEXT_TECHNICAL_GUIDE to set
-  *//*
-  public void setDOC_TEXT_TECHNICAL_GUIDE(String s)
-  {
-      this.DOC_TEXT_TECHNICAL_GUIDE = s;
-  }
-  *//**
-   * The setDOC_TEXT_TECHNICAL_GUIDE_COUNT method sets the DOC_TEXT_TECHNICAL_GUIDE_COUNT for this bean.
-   *
-   * @param i The DOC_TEXT_TECHNICAL_GUIDE_COUNT to set
-  *//*
-  public void setDOC_TEXT_TECHNICAL_GUIDE_COUNT(Integer i)
-  {
-      this.DOC_TEXT_TECHNICAL_GUIDE_COUNT = i;
-  }
-  *//**
-   * The setDOC_TEXT_UML_Attribute method sets the DOC_TEXT_UML_Attribute for this bean.
-   *
-   * @param s The DOC_TEXT_UML_Attribute to set
-  *//*
-  public void setDOC_TEXT_UML_Attribute(String s)
-  {
-      this.DOC_TEXT_UML_Attribute = s;
-  }
-  *//**
-   * The setDOC_TEXT_UML_Attribute_Count method sets the DOC_TEXT_UML_Attribute_Count for this bean.
-   *
-   * @param i The DOC_TEXT_UML_Attribute_Count to set
-  *//*
-  public void setDOC_TEXT_UML_Attribute_Count(Integer i)
-  {
-      this.DOC_TEXT_UML_Attribute_Count = i;
-  }
-  *//**
-   * The setDOC_TEXT_LABEL method sets the DOC_TEXT_LABEL for this bean.
-   *
-   * @param s The DOC_TEXT_LABEL to set
-  *//*
-  public void setDOC_TEXT_LABEL(String s)
-  {
-      this.DOC_TEXT_LABEL = s;
-  }
-  *//**
-   * The setDOC_TEXT_LABEL_COUNT method sets the DOC_TEXT_LABEL_COUNT for this bean.
-   *
-   * @param i The DOC_TEXT_LABEL_COUNT to set
-  *//*
-  public void setDOC_TEXT_LABEL_COUNT(Integer i)
-  {
-      this.DOC_TEXT_LABEL_COUNT = i;
-  }
-  */
+
   /**
    * The setREFERENCE_DOCUMENT_ method sets the REFERENCE_DOCUMENT for this bean.
    *
@@ -1213,16 +873,6 @@ public class DE_Bean extends AC_Bean
   {
       this.REFERENCE_DOCUMENT = s;
   }
-/*  *//**
-   * The setDOC_TEXT_OTHER_REF_TYPES_COUNT method sets the DOC_TEXT_OTHER_REF_TYPES_COUNT for this bean.
-   *
-   * @param i The DOC_TEXT_OTHER_REF_TYPES_COUNT to set
-  *//*
-  public void setDOC_TEXT_OTHER_REF_TYPES_COUNT(Integer i)
-  {
-      this.DOC_TEXT_OTHER_REF_TYPES_COUNT = i;
-  }
-*/  
 
   /**
    * @param alternate_name The aLTERNATE_NAME to set.
@@ -1914,268 +1564,6 @@ public class DE_Bean extends AC_Bean
   {
       return this.DOC_TEXT_PREFERRED_QUESTION_IDSEQ;
   }
-  /**
-  * The getDOC_TEXT_PREFERRED_QUESTION_COUNT method returns the DOC_TEXT_PREFERRED_QUESTION_COUNT for this bean.
-  *
-  * @return Integer The DOC_TEXT_PREFERRED_QUESTION_COUNT
-  *//*
-  public Integer getDOC_TEXT_PREFERRED_QUESTION_COUNT()
-  {
-      return this.DOC_TEXT_PREFERRED_QUESTION_COUNT;
-  }
-  *//**
-  * The getDOC_TEXT_HISTORIC_NAME method returns the DOC_TEXT_HISTORIC_NAME for this bean.
-  *
-  * @return String The DOC_TEXT_HISTORIC_NAME
-  *//*
-  public String getDOC_TEXT_HISTORIC_NAME()
-  {
-      return this.DOC_TEXT_HISTORIC_NAME;
-  }
-  *//**
-  * The getDOC_TEXT_HISTORIC_COUNT method returns the DOC_TEXT_HISTORIC_COUNT for this bean.
-  *
-  * @return Integer The DOC_TEXT_HISTORIC_COUNT
-  *//*
-  public Integer getDOC_TEXT_HISTORIC_COUNT()
-  {
-      return this.DOC_TEXT_HISTORIC_COUNT;
-  }
-  *//**
-  * The getDOC_TEXT_REFERENCE method returns the DOC_TEXT_REFERENCE for this bean.
-  *
-  * @return String The DOC_TEXT_REFERENCE
-  *//*
-  public String getDOC_TEXT_REFERENCE()
-  {
-      return this.DOC_TEXT_REFERENCE;
-  }
-  *//**
-  * The getDOC_TEXT_REFERENCE_COUNT method returns the DOC_TEXT_REFERENCE_COUNT for this bean.
-  *
-  * @return Integer The DOC_TEXT_REFERENCE_COUNT
-  *//*
-  public Integer getDOC_TEXT_REFERENCE_COUNT()
-  {
-      return this.DOC_TEXT_REFERENCE_COUNT;
-  }
-  *//**
-  * The getDOC_TEXT_EXAMPLE method returns the DOC_TEXT_EXAMPLE for this bean.
-  *
-  * @return String The DOC_TEXT_EXAMPLE
-  *//*
-  public String getDOC_TEXT_EXAMPLE()
-  {
-      return this.DOC_TEXT_EXAMPLE;
-  }
-  *//**
-  * The getDOC_TEXT_EXAMPLE_COUNT method returns the DOC_TEXT_EXAMPLE_COUNT for this bean.
-  *
-  * @return Integer The DOC_TEXT_EXAMPLE_COUNT
-  *//*
-  public Integer getDOC_TEXT_EXAMPLE_COUNT()
-  {
-      return this.DOC_TEXT_EXAMPLE_COUNT;
-  }
-  *//**
-  * The getDOC_TEXT_COMMENT method returns the DOC_TEXT_COMMENT for this bean.
-  *
-  * @return String The DOC_TEXT_COMMENT
-  *//*
-  public String getDOC_TEXT_COMMENT()
-  {
-      return this.DOC_TEXT_COMMENT;
-  }
-  *//**
-  * The getDOC_TEXT_COMMENT_COUNT method returns the DOC_TEXT_COMMENT_COUNT for this bean.
-  *
-  * @return Integer The DOC_TEXT_COMMENT_COUNT
-  *//*
-  public Integer getDOC_TEXT_COMMENT_COUNT()
-  {
-      return this.DOC_TEXT_COMMENT_COUNT;
-  }
-  *//**
-  * The getDOC_TEXT_NOTE method returns the DOC_TEXT_NOTE for this bean.
-  *
-  * @return String The DOC_TEXT_NOTE
-  *//*
-  public String getDOC_TEXT_NOTE()
-  {
-      return this.DOC_TEXT_NOTE;
-  }
-  *//**
-  * The getDOC_TEXT_NOTE_COUNT method returns the DOC_TEXT_NOTE_COUNT for this bean.
-  *
-  * @return Integer The DOC_TEXT_NOTE_COUNT
-  *//*
-  public Integer getDOC_TEXT_NOTE_COUNT()
-  {
-      return this.DOC_TEXT_NOTE_COUNT;
-  }
-  *//**
-  * The getDOC_TEXT_DESCRIPTION method returns the DOC_TEXT_DESCRIPTION for this bean.
-  *
-  * @return String The DOC_TEXT_DESCRIPTION
-  *//*
-  public String getDOC_TEXT_DESCRIPTION()
-  {
-      return this.DOC_TEXT_DESCRIPTION;
-  }
-  *//**
-  * The getDOC_TEXT_DESCRIPTION_COUNT method returns the DOC_TEXT_DESCRIPTION_COUNT for this bean.
-  *
-  * @return Integer The DOC_TEXT_DESCRIPTION_COUNT
-  *//*
-  public Integer getDOC_TEXT_DESCRIPTION_COUNT()
-  {
-      return this.DOC_TEXT_DESCRIPTION_COUNT;
-  }
-  *//**
-  * The getDOC_TEXT_IMAGE_FILE method returns the DOC_TEXT_IMAGE_FILE for this bean.
-  *
-  * @return String The DOC_TEXT_IMAGE_FILE
-  *//*
-  public String getDOC_TEXT_IMAGE_FILE()
-  {
-      return this.DOC_TEXT_IMAGE_FILE;
-  }
-  *//**
-  * The getDOC_TEXT_IMAGE_FILE_COUNT method returns the DOC_TEXT_IMAGE_FILE_COUNT for this bean.
-  *
-  * @return Integer The DOC_TEXT_IMAGE_FILE_COUNT
-  *//*
-  public Integer getDOC_TEXT_IMAGE_FILE_COUNT()
-  {
-      return this.DOC_TEXT_IMAGE_FILE_COUNT;
-  }
-  *//**
-  * The getDOC_TEXT_VALID_VALUE_SOURCE method returns the DOC_TEXT_VALID_VALUE_SOURCE for this bean.
-  *
-  * @return String The DOC_TEXT_VALID_VALUE_SOURCE
-  *//*
-  public String getDOC_TEXT_VALID_VALUE_SOURCE()
-  {
-      return this.DOC_TEXT_VALID_VALUE_SOURCE;
-  }
-  *//**
-  * The getDOC_TEXT_VALID_VALUE_SOURCE_COUNT method returns the DOC_TEXT_VALID_VALUE_SOURCE_COUNT for this bean.
-  *
-  * @return Integer The DOC_TEXT_VALID_VALUE_SOURCE_COUNT
-  *//*
-  public Integer getDOC_TEXT_VALID_VALUE_SOURCE_COUNT()
-  {
-      return this.DOC_TEXT_VALID_VALUE_SOURCE_COUNT;
-  }
-  *//**
-  * The getDOC_TEXT_DATA_ELEMENT_SOURCE method returns the DOC_TEXT_DATA_ELEMENT_SOURCE for this bean.
-  *
-  * @return String The DOC_TEXT_DATA_ELEMENT_SOURCE
-  *//*
-  public String getDOC_TEXT_DATA_ELEMENT_SOURCE()
-  {
-      return this.DOC_TEXT_DATA_ELEMENT_SOURCE;
-  }
-  *//**
-  * The getDOC_TEXT_DATA_ELEMENT_SOURCE_COUNT method returns the DOC_TEXT_DATA_ELEMENT_SOURCE_COUNT for this bean.
-  *
-  * @return Integer The DOC_TEXT_DATA_ELEMENT_SOURCE_COUNT
-  *//*
-  public Integer getDOC_TEXT_DATA_ELEMENT_SOURCE_COUNT()
-  {
-      return this.DOC_TEXT_DATA_ELEMENT_SOURCE_COUNT;
-  }
-  *//**
-  * The getDOC_TEXT_UML_Class method returns the DOC_TEXT_UML_Class for this bean.
-  *
-  * @return String The DOC_TEXT_UML_Class
-  *//*
-  public String getDOC_TEXT_UML_Class()
-  {
-      return this.DOC_TEXT_UML_Class;
-  }
-  *//**
-  * The getDOC_TEXT_UML_Class_Count method returns the DOC_TEXT_UML_Class_Count for this bean.
-  *
-  * @return Integer The DOC_TEXT_UML_Class_Count
-  *//*
-  public Integer getDOC_TEXT_UML_Class_Count()
-  {
-      return this.DOC_TEXT_UML_Class_Count;
-  }
-  *//**
-  * The getDOC_TEXT_DETAIL_DESCRIPTION method returns the DOC_TEXT_DETAIL_DESCRIPTION for this bean.
-  *
-  * @return String The DOC_TEXT_DETAIL_DESCRIPTION
-  *//*
-  public String getDOC_TEXT_DETAIL_DESCRIPTION()
-  {
-      return this.DOC_TEXT_DETAIL_DESCRIPTION;
-  }
-  *//**
-  * The getDOC_TEXT_DETAIL_DESCRIPTION_COUNT method returns the DOC_TEXT_DETAIL_DESCRIPTION_COUNT for this bean.
-  *
-  * @return Integer The DOC_TEXT_DETAIL_DESCRIPTION_COUNT
-  *//*
-  public Integer getDOC_TEXT_DETAIL_DESCRIPTION_COUNT()
-  {
-      return this.DOC_TEXT_DETAIL_DESCRIPTION_COUNT;
-  }
-  *//**
-  * The getDOC_TEXT_TECHNICAL_GUIDE method returns the DOC_TEXT_TECHNICAL_GUIDE for this bean.
-  *
-  * @return String The DOC_TEXT_TECHNICAL_GUIDE
-  *//*
-  public String getDOC_TEXT_TECHNICAL_GUIDE()
-  {
-      return this.DOC_TEXT_TECHNICAL_GUIDE;
-  }
-  *//**
-  * The getDOC_TEXT_TECHNICAL_GUIDE_COUNT method returns the DOC_TEXT_TECHNICAL_GUIDE_COUNT for this bean.
-  *
-  * @return Integer The DOC_TEXT_TECHNICAL_GUIDE_COUNT
-  *//*
-  public Integer getDOC_TEXT_TECHNICAL_GUIDE_COUNT()
-  {
-      return this.DOC_TEXT_TECHNICAL_GUIDE_COUNT;
-  }
-  *//**
-  * The getDOC_TEXT_UML_Attribute method returns the DOC_TEXT_UML_Attribute for this bean.
-  *
-  * @return String The DOC_TEXT_UML_Attribute
-  *//*
-  public String getDOC_TEXT_UML_Attribute()
-  {
-      return this.DOC_TEXT_UML_Attribute;
-  }
-  *//**
-  * The getDOC_TEXT_UML_Attribute_Count method returns the DOC_TEXT_UML_Attribute_Count for this bean.
-  *
-  * @return Integer The DOC_TEXT_UML_Attribute_Count
-  *//*
-  public Integer getDOC_TEXT_UML_Attribute_Count()
-  {
-      return this.DOC_TEXT_UML_Attribute_Count;
-  }
-  *//**
-  * The getDOC_TEXT_LABEL method returns the DOC_TEXT_LABEL for this bean.
-  *
-  * @return String The DOC_TEXT_LABEL
-  *//*
-  public String getDOC_TEXT_LABEL()
-  {
-      return this.DOC_TEXT_LABEL;
-  }
-  *//**
-  * The getDOC_TEXT_LABEL_COUNT method returns the DOC_TEXT_LABEL_COUNT for this bean.
-  *
-  * @return Integer The DOC_TEXT_LABEL_COUNT
-  *//*
-  public Integer getDOC_TEXT_LABEL_COUNT()
-  {
-      return this.DOC_TEXT_LABEL_COUNT;
-  }
-  */
   
   /**
   * The getREFERENCE_DOCUMENT method returns the REFERENCE_DOCUMENT for this bean.
@@ -2186,16 +1574,6 @@ public class DE_Bean extends AC_Bean
   {
       return this.REFERENCE_DOCUMENT;
   }
-/*  *//**
-  * The getDOC_TEXT_OTHER_REF_TYPES_COUNT method returns the DOC_TEXT_OTHER_REF_TYPES_COUNT for this bean.
-  *
-  * @return Integer The DOC_TEXT_OTHER_REF_TYPES_COUNT
-  *//*
-  public Integer getDOC_TEXT_OTHER_REF_TYPES_COUNT()
-  {
-      return this.DOC_TEXT_OTHER_REF_TYPES_COUNT;
-  }
-*/
   
   /**
    * @return Returns the aLTERNATE_NAME.
@@ -2269,5 +1647,21 @@ public class DE_Bean extends AC_Bean
       return this.DEC_VD_CHANGED;
   }
 
+  /**
+   * @return Returns the dE_BROWSER_URL.
+   */
+  public String getDE_BROWSER_URL()
+  {
+    return DE_BROWSER_URL;
+  }
+
+  /**
+   * @param browser_url The dE_BROWSER_URL to set.
+   */
+  public void setDE_BROWSER_URL(String browser_url)
+  {
+    DE_BROWSER_URL = browser_url + "/CDEBrowser/search?dataElementDetails=9&p_de_idseq=" + this.getDE_DE_IDSEQ() + "&PageId=DataElementsGroup&queryDE=yes&FirstTimer=0";
+  }
+  
 //end of class
 }

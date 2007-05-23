@@ -1,6 +1,8 @@
-/**
- * 
- */
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.15 2007-05-23 04:13:36 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.io.Serializable;
@@ -8,8 +10,8 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Hashtable;
 import java.util.Vector;
 import oracle.jdbc.driver.OracleTypes;
 import org.apache.log4j.Logger;
@@ -48,113 +50,125 @@ public class PVAction implements Serializable
     }
   }
   
-  /**put the modified bean into pv bean vector according to the submit action
-   * @param chgName STring pv name from page
-   * @param pvInd int index from the page
-   * @param isNew boolean value of whether pv is new or not
+  /**
+   * stores the pv changes into the list
+   * @param chgName String changed name of the pv
+   * @param pvInd int index of the editing pv
    * @param data PVForm object
-   * @return String message
+   * @return PV_Bean modified pv bean
    */
-  public String doChangePVAttributes(String chgName, int pvInd, boolean isNew, PVForm data)
+  public PV_Bean changePVAttributes(String chgName, int pvInd, PVForm data)
   {
-    String sCRFmsg = "";
-    //update the existing list    
-    VD_Bean vd = data.getVD();
-    Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
-    PV_Bean selPV = data.getSelectPV();
-    String pvID = selPV.getPV_PV_IDSEQ();
-/*    if (vdpvs.size() > pvInd+1)
-    {
-      PV_Bean nextPV = vdpvs.elementAt(pvInd+1);
-      if (nextPV.getPV_PV_IDSEQ() != null && nextPV.getPV_PV_IDSEQ().equals(pvID))
-      {
-        pvID = "";
-        selPV.setPV_PV_IDSEQ("");
-      }
-    }
-*/
-    if (!isNew || pvID == null || pvID.equals("") || pvID.contains("EVS"))
-    {
-      selPV.setPV_VALUE(chgName);
-      if (data.getNewVM() != null)
-        selPV.setPV_VM(data.getNewVM());
-      if (!isNew)
-        selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_UPD);
-      else
-        selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_INS);
-      selPV.setPV_VIEW_TYPE("expand");
-      vdpvs.setElementAt(selPV, pvInd);  //data.getVDPVList().setElementAt(selPV, pvInd);
-    }
-    else
-    {
+      VD_Bean vd = data.getVD();
+      Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
+      PV_Bean selPV = data.getSelectPV();
       PV_Bean newPV = new PV_Bean();
       if (selPV != null)  //copy other attributes
         newPV.copyBean(selPV);
       newPV.setPV_VALUE(chgName);  //add the new name
       if (data.getNewVM() != null)
-      {
         newPV.setPV_VM(data.getNewVM());  //copy the changed vm
-      }
-      //check if associated with the form
-      boolean isExists = this.checkPVQCExists(vd, selPV, data);
-      if (isExists)
-      {
-        sCRFmsg = "Unable to edit the Permissible Value (PV) (" + selPV.getPV_VALUE() + ") and/or its Value Meaning (VM) because the Permissible Value is used in a CRF." +
-                    "\\n A new PV and VM pair will be created with the edited attributes." +
-                    "\\n After successful submission of the Value Domain, to remove the original PV you may dis-associate it from the CRF.";
-        data.setStatusMsg(data.getStatusMsg() + sCRFmsg);
-        selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_NONE);
-        vdpvs.setElementAt(selPV, pvInd);  //reset it 
-        newPV.setPV_PV_IDSEQ("");  //clear teh idseq
-      }
-      else
-      {
-        selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_DEL);
-        vdpvs.removeElementAt(pvInd);  //data.getVDPVList().removeElementAt(pvInd);
-        vd.getRemoved_VDPVList().addElement(selPV);
-      //  data.getRemovedPVList().addElement(selPV);
-      }
+
+      selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_DEL);
+      vdpvs.removeElementAt(pvInd);  
+      vd.getRemoved_VDPVList().addElement(selPV);
+
       //insert the new one
       newPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_INS);
       newPV.setPV_VIEW_TYPE("expand");
-      newPV.setPV_VDPVS_IDSEQ("");
-      vdpvs.insertElementAt(newPV, pvInd);  //data.getVDPVList().insertElementAt(newPV, pvInd);
-    }    
-    vd.setVD_PV_List(vdpvs);
-    data.setVD(vd);
-    return sCRFmsg;
+      //newPV.setPV_VDPVS_IDSEQ("");  //do not remove it here 
+      vdpvs.insertElementAt(newPV, pvInd);  
+      //put it back in vd
+      vd.setVD_PV_List(vdpvs);
+      data.setVD(vd);
+      return newPV;
   }
-  
 
+  /**
+   * validates pvs associated to the form; creates new pv if associated 
+   * @param selPV PV_Bean object
+   * @param pvInd   int editing pv index
+   * @param vd VD_Bean object that is editing
+   * @param data PVForm object
+   * @return String error message
+   */
+  public String changePVQCAttributes(PV_Bean selPV, int pvInd, VD_Bean vd, PVForm data)
+  {
+      String sCRFmsg = "";
+      try
+      {
+        //check if associated with the form
+          Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
+          boolean isExists = false;
+          String selID = selPV.getPV_VDPVS_IDSEQ();
+          if (!selID.equals(""))
+              isExists = this.checkPVQCExists("", selID, data);
+          //associated to the form
+          if (isExists)
+          {
+            PV_Bean oldPV = vd.getRemoved_VDPVList().lastElement();
+            sCRFmsg = "Unable to edit the Permissible Value (PV) (" + oldPV.getPV_VALUE() + ") and/or its Value Meaning (VM) because the Permissible Value is used in a CRF." +
+                        "\\n A new PV and VM pair will be created with the edited attributes." +
+                        "\\n After successful submission of the Value Domain, you may remove the original PV after disassociating the PV from the CRF.";
+            oldPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_UPD);
+            //check if it was reused
+            VMAction vmact = new VMAction();
+            VM_Bean vm = vmact.checkExactMatch(oldPV.getPV_VM(), selPV.getPV_VM());
+            //if pv or vm didn't change put back the old pv as it was
+            if (vm != null && oldPV.getPV_VALUE().equals(selPV.getPV_VALUE()))
+            {
+                vdpvs.setElementAt(oldPV, pvInd);
+                vd.setVD_PV_List(vdpvs);
+                vd.getRemoved_VDPVList().removeElement(oldPV);
+                return "";
+            }
+            //continue with creating new one otherwise
+            data.setStatusMsg(data.getStatusMsg() + sCRFmsg);
+            vdpvs.insertElementAt(oldPV, pvInd);  //insert it back
+            vd.getRemoved_VDPVList().removeElement(oldPV);
+            pvInd += 1;   //reset it 
+          }
+          //ready the new pv for insert
+          selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_INS);
+          selPV.setPV_PV_IDSEQ("");
+          selPV.setPV_VDPVS_IDSEQ("");
+          vdpvs.setElementAt(selPV, pvInd);  
+          vd.setVD_PV_List(vdpvs);
+      }
+      catch (RuntimeException e)
+      {
+        logger.fatal("ERROR at changePVQCAttributes: ", e);
+      }
+      
+      return sCRFmsg;
+  }
   /** 
    * Check if the permissible values associated with the form for the selected VD
-   * @param vd VD bean object
-   * @param pv PVBean object
+   * @param vdIDseq String idseq of the vd
+   * @param vpIDseq String idseq of the vd-pv
    * @param data PVForm data
    * 
    * @return boolean true if pv is associated with the form false otherwise
    */
-  private boolean checkPVQCExists(VD_Bean vd, PV_Bean pv, PVForm data) //throws Exception
+  public boolean checkPVQCExists(String vdIDseq, String vpIDseq, PVForm data) //throws Exception
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    //CallableStatement CStmt = null;
+    //CallableStatement cstmt = null;
     PreparedStatement pstmt = null;
     boolean isValid = false;
     try
     {
-      String vpIDseq = pv.getPV_VDPVS_IDSEQ();
-      String vdIDseq = vd.getVD_VD_IDSEQ();
-      if (vpIDseq != null && !vpIDseq.equals("") && vdIDseq != null && !vdIDseq.equals(""))
+      if ((vpIDseq != null && !vpIDseq.equals("")) || (vdIDseq != null && !vdIDseq.equals("")))
       {
         //Create a Callable Statement object.
-        sbr_db_conn = data.getDbConnection();
-        if (sbr_db_conn == null || sbr_db_conn.isClosed())
-          sbr_db_conn = data.getCurationServlet().connectDB(); // PVServlet.makeDBConnection();
+        conn = data.getDbConnection();
+        if (conn == null || conn.isClosed())
+          conn = data.getCurationServlet().connectDB(); // PVServlet.makeDBConnection();
         // Create a Callable Statement object.
-        if (sbr_db_conn != null)
+        if (conn != null)
         {
-          pstmt = sbr_db_conn.prepareStatement("select SBREXT_COMMON_ROUTINES.VD_PVS_QC_EXISTS(?,?) from DUAL");
+          pstmt = conn.prepareStatement("select SBREXT_COMMON_ROUTINES.VD_PVS_QC_EXISTS(?,?) from DUAL");
           // register the Out parameters
           pstmt.setString(1, vpIDseq);
           pstmt.setString(2, vdIDseq);
@@ -179,7 +193,7 @@ public class PVAction implements Serializable
       if(rs!=null) rs.close();
       if(pstmt!=null) pstmt.close();
       if (data.getDbConnection() == null)
-        data.getCurationServlet().freeConnection(sbr_db_conn);;
+        data.getCurationServlet().freeConnection(conn);  //PVServlet.closeDBConnection(conn);
     }
     catch(Exception ee)
     {
@@ -209,15 +223,18 @@ public class PVAction implements Serializable
         if (s.equals("E"))
         {
           //get current value domains vd-pv attributes
-          Vector<PV_Bean> vVDPVS = vd.getVD_PV_List();  // data.getVDPVList(); // (Vector)session.getAttribute("VDPVList");  
+          Vector<PV_Bean> vVDPVS = vd.getVD_PV_List();    
           String vdID = vd.getVD_VD_IDSEQ();
           //remove vdidseq if new vd
-          if (vdID == null || sOrgAct.equalsIgnoreCase("newVD")) vdID = "";
+          if (vdID == null || sOrgAct.equalsIgnoreCase("newVD")) 
+              vdID = "";
           //make long string of values/meanings
           String sPVVal = "";
-          String sPVMean = "";        
+          String sPVMean = "";  
+          String existVMs = "";
           if (vVDPVS != null && !vVDPVS.isEmpty())
           {
+            existVMs = readExistingVMs(vVDPVS, data);
             for (int i=0; i<vVDPVS.size(); i++)
             {
               PV_Bean thisPV = (PV_Bean)vVDPVS.elementAt(i);
@@ -254,6 +271,9 @@ public class PVAction implements Serializable
               val.setAttributeStatus("Valid");
               if (sPVMean == null || sPVMean.equals("")) 
                 val.setAttributeStatus("Value Meaning is required for Enumerated Value Domain");
+              else if (!existVMs.equals(""))  //found matching vm
+                val.setAttributeStatus("Warning: The following Value Meaning(s) exist in the database with the same name and will be reused.  Other attributes may not match exactly.  You may go back to review the existing Value Meaning(s): " + existVMs);
+                  
               matchFound = true;
               vValidate.setElementAt(val, i);
             }
@@ -356,28 +376,28 @@ public class PVAction implements Serializable
    */
   public Vector<PV_Bean> doPVACSearch(String acIdseq, String sAction, PVForm data)  // 
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     Vector<PV_Bean> vList = new Vector<PV_Bean>();
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = data.getDbConnection();
-      if (sbr_db_conn == null || sbr_db_conn.isClosed())
-        sbr_db_conn = data.getCurationServlet().connectDB();
+      conn = data.getDbConnection();
+      if (conn == null || conn.isClosed())
+        conn = data.getCurationServlet().connectDB(); // PVServlet.makeDBConnection();
       // Create a Callable Statement object.
-      if (sbr_db_conn != null)
+      if (conn != null)
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PV(?,?)}");
+        cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PV(?,?)}");
         // Now tie the placeholders for out parameters.
-        CStmt.registerOutParameter(2, OracleTypes.CURSOR);
+        cstmt.registerOutParameter(2, OracleTypes.CURSOR);
         // Now tie the placeholders for In parameters.
-        CStmt.setString(1, acIdseq);
+        cstmt.setString(1, acIdseq);
          // Now we are ready to call the stored procedure
-        CStmt.execute();
+        cstmt.execute();
         //store the output in the resultset
-        rs = (ResultSet) CStmt.getObject(2);
+        rs = (ResultSet) cstmt.getObject(2);
       //  String s;
         if(rs!=null)
         {
@@ -412,7 +432,8 @@ public class PVAction implements Serializable
             pvBean.setQUESTION_VALUE_IDSEQ("");
             //get vm concept attributes
            // String sCondr = rs.getString("vm_condr_idseq");
-            this.doSetVMAttributes(pvBean, rs, data);
+            VMAction vmact = new VMAction();
+            pvBean.setPV_VM(vmact.doSetVMAttributes(rs, conn));
             //get parent concept attributes
             String sCon = rs.getString("con_idseq");
             this.doSetParentAttributes(sCon, pvBean, data);
@@ -432,9 +453,9 @@ public class PVAction implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
+      if(cstmt!=null) cstmt.close();
       if (data.getDbConnection() == null)
-        data.getCurationServlet().freeConnection(sbr_db_conn);;
+        data.getCurationServlet().freeConnection(conn);  //PVServlet.closeDBConnection(conn);
     }
     catch(Exception ee)
     {
@@ -501,46 +522,6 @@ public class PVAction implements Serializable
     vd.setVD_PV_List(verList);    
   }
   
-  /**store vm attributes from the database in pv bean 
-   * @param pvBean PVBean object
-   * @param rs ResultSet from the query
-   * @param data PVForm object
-   */
-  private void doSetVMAttributes(PV_Bean pvBean, ResultSet rs, PVForm data)
-  {
-    try
-    {
-      VM_Bean vm = new VM_Bean();
-      vm.setVM_SHORT_MEANING(pvBean.getPV_SHORT_MEANING());
-      vm.setVM_DESCRIPTION(pvBean.getPV_MEANING_DESCRIPTION());
-      vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_NONE);
-      vm.setVM_LONG_NAME(rs.getString("LONG_NAME"));
-      vm.setVM_VERSION(rs.getString("VERSION"));
-      vm.setVM_IDSEQ(rs.getString("VM_IDSEQ"));
-      String sCondr = rs.getString("condr_idseq");
-      vm.setVM_CONDR_IDSEQ(sCondr);
-      //get vm concepts
-      if (sCondr != null && !sCondr.equals(""))
-      {
-        ConceptForm cdata = new ConceptForm();
-        if (data.getDbConnection() != null)
-          cdata.setDBConnection(data.getDbConnection()); //get the connection
-        else
-          cdata.setDBConnection(data.getCurationServlet().connectDB());  //make the connection
-        ConceptAction cact = new ConceptAction();
-        Vector<EVS_Bean> conList = cact.getAC_Concepts(sCondr, cdata);
-        if (data.getDbConnection() == null)
-        	data.getCurationServlet().freeConnection(cdata.getDBConnection());  //PVServlet.closeDBConnection(cdata.getDBConnection());  //close the connection only if it was created here
-        vm.setVM_CONCEPT_LIST(conList);
-      }
-      pvBean.setPV_VM(vm);
-    }
-    catch (SQLException e)
-    {
-      logger.fatal("ERROR - -doSetVMAttributes for close : " + e.toString(), e);
-    }
-  }
-  
   /** get concept attributes for parent concept id
    * @param conIDseq String con idseq
    * @param pvBean PVBean object
@@ -578,31 +559,31 @@ public class PVAction implements Serializable
   public Vector<PV_Bean> doPVVMSearch(String InString, String cd_idseq, String conName, 
       String conID, PVForm data)  // returns list of Data Elements
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     Vector<PV_Bean> vList = new Vector<PV_Bean>();
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = data.getDbConnection();
-      if (sbr_db_conn == null || sbr_db_conn.isClosed())
-        sbr_db_conn = data.getCurationServlet().connectDB();
+      conn = data.getDbConnection();
+      if (conn == null || conn.isClosed())
+        conn = data.getCurationServlet().connectDB(); // PVServlet.makeDBConnection();
       // Create a Callable Statement object.
-      if (sbr_db_conn != null)
+      if (conn != null)
       {
-        CStmt = sbr_db_conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PVVM(?,?,?,?,?)}");
+        cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PVVM(?,?,?,?,?)}");
         // Now tie the placeholders for out parameters.
-        CStmt.registerOutParameter(3, OracleTypes.CURSOR);
+        cstmt.registerOutParameter(3, OracleTypes.CURSOR);
         // Now tie the placeholders for In parameters.
-        CStmt.setString(1,InString);
-        CStmt.setString(2,cd_idseq);
-        CStmt.setString(4,conName);
-        CStmt.setString(5,conID);
+        cstmt.setString(1,InString);
+        cstmt.setString(2,cd_idseq);
+        cstmt.setString(4,conName);
+        cstmt.setString(5,conID);
          // Now we are ready to call the stored procedure
-        CStmt.execute();
+        cstmt.execute();
         //store the output in the resultset
-        rs = (ResultSet) CStmt.getObject(3);
+        rs = (ResultSet) cstmt.getObject(3);
 
         String s;
         if(rs!=null)
@@ -622,12 +603,15 @@ public class PVAction implements Serializable
             if (s != null)
               s = data.getUtil().getCurationDate(s);
             PVBean.setPV_END_DATE(s);
-            PVBean.setPV_MEANING_DESCRIPTION(rs.getString("vm_description"));  //from meanings table
+            String sdef = rs.getString("vm_description");
+            if (sdef == null || sdef.equals(""))
+                sdef = rs.getString("preferred_definition");
+            PVBean.setPV_MEANING_DESCRIPTION(sdef);  //from meanings table
             PVBean.setPV_CONCEPTUAL_DOMAIN(rs.getString("cd_name"));
             
             //get vm concept attributes
-           // String sCondr = rs.getString("condr_idseq");
-            this.doSetVMAttributes(PVBean, rs, data);
+            VMAction vmact = new VMAction();
+            PVBean.setPV_VM(vmact.doSetVMAttributes(rs, conn));
             //get database attribute
             PVBean.setPV_EVS_DATABASE("caDSR");
             vList.addElement(PVBean);  //add the bean to a vector
@@ -643,9 +627,9 @@ public class PVAction implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
+      if(cstmt!=null) cstmt.close();
       if (data.getDbConnection() == null)
-        data.getCurationServlet().freeConnection(sbr_db_conn);;
+        data.getCurationServlet().freeConnection(conn);  //PVServlet.closeDBConnection(conn);
     }
     catch(Exception ee)
     {
@@ -654,142 +638,6 @@ public class PVAction implements Serializable
     }
     return vList;
   }  //endPVVM search
-
-  /**to append the concepts from the concept search results to vm bean
-   * @param selRows STring array of selected rows
-   * @param vRSel Vector of EVS bean object of the search resutls
-   * @param eUser EVS_UserBEan object
-   * @param pvInd int editing pv indicator
-   * @param data PVForm object
-   * @return EVS_Bean selected concept
-   */
-  public EVS_Bean doAppendConcepts(String[] selRows, Vector<EVS_Bean> vRSel, EVS_UserBean eUser, int pvInd, PVForm data)
-  {
-    String errMsg = "";
-    EVS_Bean eBean = new EVS_Bean();
-      //loop through the array of strings
-      for (int i=0; i<selRows.length; i++)
-      {
-        String thisRow = selRows[i];
-        Integer IRow = new Integer(thisRow);
-        int iRow = IRow.intValue();
-        if (iRow < 0 || iRow > vRSel.size())
-          errMsg += "Row size is either too big or too small.";
-        else
-        {
-          eBean = (EVS_Bean)vRSel.elementAt(iRow);
-          //send it back if unable to obtion the concept
-          if (eBean == null || eBean.getLONG_NAME() == null)
-          {
-            errMsg += "Unable to obtain concept from the " + thisRow + " row of the search results.\\n" + 
-                "Please try again.";
-            continue;
-          }
-          //get the thesaurus concept if not //TODO- this needs fixing to not use request and response
-          String prefVocab = "";
-          if (eUser != null)
-            prefVocab = eUser.getPrefVocab();
-          if (!eBean.getEVS_ORIGIN().equals(prefVocab) && !eBean.getEVS_DATABASE().equals(prefVocab))
-          {
-            EVSSearch evs = new EVSSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
-            eBean = evs.getThesaurusConcept(eBean);            
-          }
-          //check if it exists in cadsr
-          eBean = getCaDSRConcept(eBean, eUser, data);
-          errMsg += data.getStatusMsg();
-          //get the nvp value
-          String sNVP = data.getRequest().getParameter("nvp_CK" + thisRow);
-          if (sNVP != null && !sNVP.equals(""))
-          {
-            eBean.setNVP_CONCEPT_VALUE(sNVP);
-            String conName = eBean.getLONG_NAME();
-            String conDef = eBean.getPREFERRED_DEFINITION();
-            eBean.setLONG_NAME(conName + "::" + sNVP);
-            eBean.setPREFERRED_DEFINITION(conDef + "::" + sNVP);
-          }
-         // PV_Bean pv = data.getSelectPV();
-          VM_Bean vm = data.getNewVM();  // pv.getPV_VM();
-          if (vm == null) vm = new VM_Bean();
-          Vector<EVS_Bean> vmCon = vm.getVM_CONCEPT_LIST();
-          if (vmCon == null) vmCon = new Vector<EVS_Bean>();
-          if (vmCon.size() > 0)
-            vmCon.insertElementAt(eBean, vmCon.size() -1);
-          else
-            vmCon.addElement(eBean);  
-
-          vm.setVM_CONCEPT_LIST(vmCon);
-          vm.setVM_IDSEQ("");
-          vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
-          vm.setVM_SHORT_MEANING(eBean.getLONG_NAME());  //have some name
-          data.setNewVM(vm);
-        }
-      }
-    return eBean;
-  }
-  
-  /**gets the existing caDSR concept for the selected concept
-   * @param eBean EVS_Bean object
-   * @param eUser EVS_UserBean object
-   * @param data PVForm object
-   * @return EVS_Bean object existed in caDSR
-   */
-  public EVS_Bean getCaDSRConcept(EVS_Bean eBean, EVS_UserBean eUser, PVForm data)
-  {
-    String errMsg = "";
-    ConceptForm conData = new ConceptForm();
-    conData.setSearchTerm(eBean.getCONCEPT_IDENTIFIER());
-    conData.setEvsUser(eUser);
-    ConceptAction conAct = new ConceptAction();
-    if (data.getDbConnection() != null)
-      conData.setDBConnection(data.getDbConnection()); //get the connection
-    else
-      conData.setDBConnection(data.getCurationServlet().connectDB());  //make the connection
-    //call hte action
-    conAct.doConceptSearch(conData);
-    if (data.getDbConnection() == null)
-    	data.getCurationServlet().freeConnection(conData.getDBConnection());  //PVServlet.closeDBConnection(conData.getDBConnection());  //close the connection
-    //get the bean from teh vector
-    Vector vCon = conData.getConceptList();
-    if (vCon != null && vCon.size() > 0)
-    {
-      if (vCon.size() > 1)
-         errMsg += "Multiple concepts with same concept ID exists.";
-      String unMatchName = "";
-      String unMatchDef = "";
-      boolean matchFound = false;
-      for (int i = 0; i<vCon.size(); i++)
-      {
-        EVS_Bean cBean = (EVS_Bean)vCon.elementAt(i);
-        if (cBean.getLONG_NAME().equalsIgnoreCase(eBean.getLONG_NAME()) && cBean.getPREFERRED_DEFINITION().equalsIgnoreCase(eBean.getPREFERRED_DEFINITION()))
-        {
-          eBean = (EVS_Bean)vCon.elementAt(i);
-          matchFound = true;
-          break;
-        }
-        //all other cases continue withe the logic
-        if (!cBean.getLONG_NAME().equalsIgnoreCase(eBean.getLONG_NAME()))
-        {
-          if (!unMatchName.equals("")) unMatchName += ", ";
-          unMatchName += cBean.getLONG_NAME();
-        }
-        if (!cBean.getPREFERRED_DEFINITION().equalsIgnoreCase(eBean.getPREFERRED_DEFINITION()))
-        {
-          if (!unMatchDef.equals("")) unMatchDef += ", ";
-          unMatchDef += cBean.getPREFERRED_DEFINITION();   
-        }
-        eBean = (EVS_Bean)vCon.elementAt(i);  //make this selected till exact match occurs
-      }
-      if (!matchFound)
-      {
-        if (!unMatchName.equals(""))
-          errMsg += "These Concept Names from caDSR do not match to the selected Concept : " + unMatchName;
-        if (!unMatchDef.equals(""))
-          errMsg += "These Concept Defintions from caDSR do not match to the selected Concept : " + unMatchDef;
-      }
-    }
-    data.setStatusMsg(data.getStatusMsg() + "\\t" + errMsg);
-    return eBean;
-  }
 
   /**
    * To insert a new Permissible value in the database after the validation.
@@ -807,11 +655,10 @@ public class PVAction implements Serializable
      //java.util.Date startDate = new java.util.Date();          
      //logger.info(m_servlet.getLogMessage(m_classReq, "setPV", "starting set", startDate, startDate));
      PV_Bean pv = data.getSelectPV();
-   //  String sPVid = pv.getPV_PV_IDSEQ();        //out
      
-     Connection sbr_db_conn = null;
+     Connection conn = null;
      ResultSet rs = null;
-     CallableStatement CStmt = null;
+     CallableStatement cstmt = null;
      String sMsg = "";  //out
      try
      {
@@ -845,47 +692,47 @@ public class PVAction implements Serializable
          }
            
          //Create a Callable Statement object.
-         sbr_db_conn = data.getDbConnection();
-         if (sbr_db_conn == null || sbr_db_conn.isClosed())
-           sbr_db_conn = data.getCurationServlet().connectDB();
+         conn = data.getDbConnection();
+         if (conn == null || conn.isClosed())
+           conn = data.getCurationServlet().connectDB(); // PVServlet.makeDBConnection();
          // Create a Callable Statement object.
-         if (sbr_db_conn != null)
+         if (conn != null)
          {
-           CStmt = sbr_db_conn.prepareCall("{call SBREXT_Set_Row.SET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+           cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
            // register the Out parameters
-           CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-           CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //pv id
-           CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //value
-           CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //short meaning
-           CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //begin date
-           CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //meaning description
-           CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //low value num
-           CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //high value num
-           CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //end date
-           CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //created by
-           CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //date created
-           CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //modified by
-           CStmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //date modified
+           cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+           cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //pv id
+           cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //value
+           cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //short meaning
+           cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //begin date
+           cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //meaning description
+           cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //low value num
+           cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //high value num
+           cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //end date
+           cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //created by
+           cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //date created
+           cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //modified by
+           cstmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //date modified
 
            // Set the In parameters (which are inherited from the PreparedStatement class)
-           CStmt.setString(2,sAction);       //ACTION - INS, UPD or DEL
+           cstmt.setString(2,sAction);       //ACTION - INS, UPD or DEL
            if ((sAction.equals("UPD")) || (sAction.equals("DEL")))
            {
              sPV_ID = pv.getPV_PV_IDSEQ();
-             CStmt.setString(3,sPV_ID);
+             cstmt.setString(3,sPV_ID);
            }
            else
            {
-             CStmt.setString(4,sValue);
-             CStmt.setString(5,sShortMeaning);
+             cstmt.setString(4,sValue);
+             cstmt.setString(5,sShortMeaning);
            }
-           CStmt.setString(6,sBeginDate);
-           CStmt.setString(7,sMeaningDescription);
-           CStmt.setString(10,sEndDate);
+           cstmt.setString(6,sBeginDate);
+           cstmt.setString(7,sMeaningDescription);
+           cstmt.setString(10,sEndDate);
             // Now we are ready to call the stored procedure
-           CStmt.execute();
-           String sReturnCode = CStmt.getString(1);
-           sPV_ID = CStmt.getString(3);
+           cstmt.execute();
+           String sReturnCode = cstmt.getString(1);
+           sPV_ID = cstmt.getString(3);
            pv.setPV_PV_IDSEQ(sPV_ID);
            if (sReturnCode != null && !sReturnCode.equals("API_PV_300"))
            {
@@ -906,15 +753,13 @@ public class PVAction implements Serializable
      try
      {
        if(rs!=null) rs.close();
-       if(CStmt!=null) CStmt.close();
+       if(cstmt!=null) cstmt.close();
        if (data.getDbConnection() == null)
-         data.getCurationServlet().freeConnection(sbr_db_conn);  //PVServlet.closeDBConnection(sbr_db_conn);
+         data.getCurationServlet().freeConnection(conn);  //PVServlet.closeDBConnection(conn);
      }
      catch(Exception ee)
      {
-       logger.fatal("ERROR in InsACService-setPV for close : " + ee.toString(), ee);
-       data.setRetErrorCode("Exception");
-       sMsg += "\\t Exception : Unable to update Permissible Value attributes.";
+       logger.fatal("ERROR in setPV for close : " + ee.toString(), ee);
      }
      return sMsg;
    }
@@ -932,37 +777,37 @@ public class PVAction implements Serializable
     */
     public String getExistingPV(PVForm data, String sValue, String sMeaning)
     {
-      Connection sbr_db_conn = null;
+      Connection conn = null;
       ResultSet rs = null;
       String sPV_IDSEQ = "";
-      CallableStatement CStmt = null;
+      CallableStatement cstmt = null;
       try
       {
         //Create a Callable Statement object.
-        sbr_db_conn = data.getDbConnection();
-        if (sbr_db_conn == null || sbr_db_conn.isClosed())
-          sbr_db_conn = data.getCurationServlet().connectDB();
+        conn = data.getDbConnection();
+        if (conn == null || conn.isClosed())
+          conn = data.getCurationServlet().connectDB(); // PVServlet.makeDBConnection();
         // Create a Callable Statement object.
-        if (sbr_db_conn != null)
+        if (conn != null)
         {
-          CStmt = sbr_db_conn.prepareCall("{call SBREXT_GET_ROW.GET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-          CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-          CStmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //PV_IDSEQ
-          CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //MEANING_DESCRIPTION
-          CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       // HIGH_VALUE_NUM
-          CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       // LOW_VALUE_NUM
-          CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       // BEGIN_DATE 
-          CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       // END_DATE 
-          CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       // CREATED_BY
-          CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       // Date Created
-          CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       // MODIFIED_BY
-          CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       // DATE_MODIFIED
+          cstmt = conn.prepareCall("{call SBREXT_GET_ROW.GET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+          cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+          cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //PV_IDSEQ
+          cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //MEANING_DESCRIPTION
+          cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       // HIGH_VALUE_NUM
+          cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       // LOW_VALUE_NUM
+          cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       // BEGIN_DATE 
+          cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       // END_DATE 
+          cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       // CREATED_BY
+          cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       // Date Created
+          cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       // MODIFIED_BY
+          cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       // DATE_MODIFIED
 
-          CStmt.setString(3, sValue);       // Value
-          CStmt.setString(4, sMeaning);       // Meaning   
+          cstmt.setString(3, sValue);       // Value
+          cstmt.setString(4, sMeaning);       // Meaning   
            // Now we are ready to call the stored procedure
-          CStmt.execute();
-          sPV_IDSEQ = (String) CStmt.getObject(2);
+          cstmt.execute();
+          sPV_IDSEQ = (String) cstmt.getObject(2);
           if (sPV_IDSEQ == null)
              sPV_IDSEQ = "";
         }
@@ -975,9 +820,9 @@ public class PVAction implements Serializable
       try
       {
         if(rs!=null) rs.close();
-        if(CStmt!=null) CStmt.close();
+        if(cstmt!=null) cstmt.close();
         if (data.getDbConnection() == null)
-          data.getCurationServlet().freeConnection(sbr_db_conn);;
+          data.getCurationServlet().freeConnection(conn);  //PVServlet.closeDBConnection(conn);
       }
       catch(Exception ee)
       {
@@ -1003,9 +848,9 @@ public class PVAction implements Serializable
      //logger.info(m_servlet.getLogMessage(m_classReq, "setVD_PVS", "starting set", startDate, startDate));
      PV_Bean pvBean = data.getSelectPV();
      VD_Bean vdBean = data.getVD();
-     Connection sbr_db_conn = null;
-     CallableStatement CStmt = null;
-     String sMsg = "";     
+     Connection conn = null;
+     CallableStatement cstmt = null;
+     String sMsg = "";
      try
      {
          String sAction = pvBean.getVP_SUBMIT_ACTION();
@@ -1016,50 +861,50 @@ public class PVAction implements Serializable
          //TODO - create parent concept
          String parIdseq = this.setParentConcept(pvBean, vdBean);
          //Create a Callable Statement object.
-         sbr_db_conn = data.getDbConnection();
-         if (sbr_db_conn == null || sbr_db_conn.isClosed())
-           sbr_db_conn = data.getCurationServlet().connectDB();
+         conn = data.getDbConnection();
+         if (conn == null || conn.isClosed())
+           conn = data.getCurationServlet().connectDB(); // PVServlet.makeDBConnection();
          // Create a Callable Statement object.
-         if (sbr_db_conn != null)
+         if (conn != null)
          {
-            CStmt = sbr_db_conn.prepareCall("{call sbrext_set_row.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-            CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-            CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //vd_PVS id
-            CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //vd id
-            CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //pvs id
-            CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //context id
-            CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //date created
-            CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //created by
-            CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //modified by
-            CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //date modified
+            cstmt = conn.prepareCall("{call sbrext_set_row.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+            cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //vd_PVS id
+            cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //vd id
+            cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //pvs id
+            cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //context id
+            cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //date created
+            cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //created by
+            cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //modified by
+            cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //date modified
 
             // Set the In parameters (which are inherited from the PreparedStatement class)
             //create a new row if vpIdseq is empty for updates           
             if (sAction.equals("UPD") && (vpID == null || vpID.equals(""))) sAction = "INS";
             
-            CStmt.setString(2, sAction);       //ACTION - INS, UPD  or DEL
-            CStmt.setString(3, pvBean.getPV_VDPVS_IDSEQ());    //VPid);       //vd_pvs ideq - not null
-            CStmt.setString(4, vdBean.getVD_VD_IDSEQ());  // sVDid);       //value domain id - not null
-            CStmt.setString(5, pvBean.getPV_PV_IDSEQ());  // sPVid);       //permissible value id - not null
-            CStmt.setString(6, vdBean.getVD_CONTE_IDSEQ());  // sContextID);       //context id - not null for INS, must be null for UPD
+            cstmt.setString(2, sAction);       //ACTION - INS, UPD  or DEL
+            cstmt.setString(3, pvBean.getPV_VDPVS_IDSEQ());    //VPid);       //vd_pvs ideq - not null
+            cstmt.setString(4, vdBean.getVD_VD_IDSEQ());  // sVDid);       //value domain id - not null
+            cstmt.setString(5, pvBean.getPV_PV_IDSEQ());  // sPVid);       //permissible value id - not null
+            cstmt.setString(6, vdBean.getVD_CONTE_IDSEQ());  // sContextID);       //context id - not null for INS, must be null for UPD
             String pvOrigin = pvBean.getPV_VALUE_ORIGIN();
             //believe that it is defaulted to vd's origin
             //if (pvOrigin == null || pvOrigin.equals(""))
             //   pvOrigin = vdBean.getVD_SOURCE();
-            CStmt.setString(11, pvOrigin);  // sOrigin);
+            cstmt.setString(11, pvOrigin);  // sOrigin);
             String sDate = pvBean.getPV_BEGIN_DATE();
             if (sDate != null && !sDate.equals(""))
                sDate = data.getUtil().getOracleDate(sDate);
-            CStmt.setString(12, sDate);  // begin date);
+            cstmt.setString(12, sDate);  // begin date);
             sDate = pvBean.getPV_END_DATE();
             if (sDate != null && !sDate.equals(""))
                sDate = data.getUtil().getOracleDate(sDate);
-            CStmt.setString(13, sDate);  // end date);
-            CStmt.setString(14, parIdseq);
- //System.out.println(sAction + " set vdpvs " + pvBean.getPV_VDPVS_IDSEQ());
-            CStmt.execute();
-            String retCode = CStmt.getString(1);
-            //store the status message if children row exist; no message if cannot find deleting item in the table
+            cstmt.setString(13, sDate);  // end date);
+            cstmt.setString(14, parIdseq);
+            //execute the qury
+            cstmt.execute();
+            String retCode = cstmt.getString(1);
+            //store the status message if children row exist; no need to display message if doesn't exist
             if (retCode != null && !retCode.equals("") && !retCode.equals("API_VDPVS_005"))
             {
               String sPValue = pvBean.getPV_VALUE();
@@ -1079,7 +924,7 @@ public class PVAction implements Serializable
             else
             {
               retCode = "";
-              pvBean.setPV_VDPVS_IDSEQ(CStmt.getString(3));
+              pvBean.setPV_VDPVS_IDSEQ(cstmt.getString(3));
             }
          }
        //capture the duration
@@ -1093,15 +938,13 @@ public class PVAction implements Serializable
      }
      try
      {
-       if(CStmt!=null) CStmt.close();
+       if(cstmt!=null) cstmt.close();
        if (data.getDbConnection() == null)
-         data.getCurationServlet().freeConnection(sbr_db_conn);  //PVServlet.closeDBConnection(sbr_db_conn);
+         data.getCurationServlet().freeConnection(conn);  //PVServlet.closeDBConnection(conn);
      }
      catch(Exception ee)
      {
        logger.fatal("ERROR in setVD_PVS for close : " + ee.toString(), ee);
-       data.setRetErrorCode("Exception");
-       sMsg += "\\t Exception : Unable to update or remove PV of VD.";
      }
      return sMsg;
    }  //END setVD_PVS
@@ -1200,11 +1043,6 @@ public class PVAction implements Serializable
           //look for the matched parent from the vector to remove
          if (sParentCC.equals(thisParent))
          {
-          // String strHTML = "";
-          // EVSMasterTree tree = new EVSMasterTree(req, thisParentDB, this);
-          // strHTML = tree.refreshTree(thisParentName, "false");
-          // strHTML = tree.refreshTree("parentTree"+thisParentName, "false");
-           
            if (sPVAction.equals("removePVandParent"))
            {
              Vector<PV_Bean> vVDPVList = vd.getVD_PV_List();  // (Vector)session.getAttribute("VDPVList");
@@ -1243,7 +1081,7 @@ public class PVAction implements Serializable
    * @param selPV PVBean object of the selected pv
    * @param iSetVDPV int set vdpv indicator
    */
-  public void doRemovePV(VD_Bean vd, int pvInd, PV_Bean selPV, int iSetVDPV)
+   public void doRemovePV(VD_Bean vd, int pvInd, PV_Bean selPV, @SuppressWarnings("unused") int iSetVDPV)
    {
      Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
      vdpvs.removeElementAt(pvInd);
@@ -1265,11 +1103,7 @@ public class PVAction implements Serializable
     * @param vd
     * @param pvIDseq
     */
-   /**
-   * @param vd
-   * @param pvIDseq
-   */
-  public void putBackRemovedPV(VD_Bean vd, String pvIDseq)
+   public void putBackRemovedPV(VD_Bean vd, String pvIDseq)
    {
      Vector<PV_Bean> rmList = vd.getRemoved_VDPVList();
      for (int i =0; i<rmList.size(); i++)
@@ -1417,6 +1251,135 @@ public class PVAction implements Serializable
      }
    } // end
    
+   /**
+    * to read the existing value meanings for the concepts selected from evs
+    * @param vdpvList vector of pv beans
+    * @param data pv form object
+    * @return String list of vm names that existed in cadsr that are not exact match
+    */
+   public String readExistingVMs(Vector<PV_Bean> vdpvList, PVForm data)
+   {
+     Connection conn = null;
+     String vNames = "";
+     try
+     {
+       //make the string array of names
+       Hashtable<String, String> vmHash = new Hashtable<String, String>();
+       for (int i=0; i<vdpvList.size(); i++)
+       {
+           PV_Bean pv = vdpvList.elementAt(i);
+           if (pv.getPV_PV_IDSEQ().contains("EVS_"))
+           {
+               String vmName = pv.getPV_VM().getVM_SHORT_MEANING();
+               vNames = setName(vmHash, vmName, vNames, i);
+           }
+       }
+       Vector<VM_Bean> vVMs = new Vector<VM_Bean>();
+       //query the database 
+       if (!vNames.equals(""))
+       {
+           //get the connection
+           VMAction vmact = new VMAction();
+           conn = data.getCurationServlet().connectDB();
+           vVMs = vmact.searchMultipleVM(conn, vNames);
+           vNames = "";
+           //set the returned vms into the pv list
+           for (int i =0; i<vVMs.size(); i++)
+           {
+               VM_Bean vm = vVMs.elementAt(i);
+               vNames = getName(vmHash, vm, vdpvList, vNames);
+           }
+       }
+       //make sure emtpy string is passed if no matched vm found
+       if (vVMs.size() < 1)
+           vNames = "";
+     }
+     catch (Exception e)
+     {
+       logger.fatal("ERROR - : " + e.toString(), e);
+     }
+     finally
+     {
+         //close connection
+         if (conn != null)
+             data.getCurationServlet().freeConnection(conn);
+     }
+     return vNames;
+   }
+   
+   /**
+    * to get the names to search for; if name alrady exists, it appends number to the name to store the pv index
+    * @param vmHash Hash table of vm names and pv index
+    * @param vmName string to search for 
+    * @param vNames list of vm names to search for 
+    * @param i pv index number
+    * @return list of vm names separated by comma
+    */
+   private String setName(Hashtable<String, String> vmHash, String vmName, String vNames, int i)
+   {
+       String multiName = vmName;
+       int multi = 0;
+       //find the next one if multiple exists
+       while (vmHash.containsKey(multiName))
+       {
+           multi += 1;
+           multiName = vmName + "." + multi;
+       }
+       String ind = String.valueOf(i);
+       //add name and index to the hashtable and to names since it doesn't exist
+       if (vmName.equals(multiName))
+       {
+           vmHash.put(vmName, ind);
+           if(!vNames.equals(""))  //add the quotes
+               vNames += "', '";
+           vNames += vmName; 
+       }
+       else 
+           vmHash.put(multiName, ind);
+       
+       return vNames;
+   }
+   
+   /**
+    * to get the name of the existing vms ; reset the pv beans with the existing vm
+    * @param vmHash hash table of vm names and pv index
+    * @param vm existing vm bean
+    * @param vdpv list of pvs existed for vd
+    * @param vNames existed vm list
+    * @return string existed vm list separated by comma
+    */
+   private String getName(Hashtable<String, String> vmHash, VM_Bean vm, Vector<PV_Bean> vdpv, String vNames)
+   {
+       String vmName = vm.getVM_SHORT_MEANING();
+       int multi = 0;
+       String multiName = vmName;
+       boolean isExact = false;
+       do
+       {
+          int i = Integer.parseInt(vmHash.get(multiName)); 
+          PV_Bean pv = vdpv.elementAt(i);
+          //get the exact match
+          VMAction vmact = new VMAction();
+          if (vmact.checkExactMatch(vdpv.elementAt(i).getPV_VM(), vm) != null)
+              isExact = true;
+          //reset the pv
+          pv.setPV_VM(vm);
+          vdpv.setElementAt(pv, i);
+          //check if another with same vm exists
+          multi += 1;
+          multiName = vmName + "." + multi;
+       } 
+       while (vmHash.containsKey(multiName));
+       //append the names to display if not the exact match
+       if (!isExact)
+       {
+           if (!vNames.equals(""))
+               vNames += ", ";
+           vNames += vmName;
+       }
+       //return chagnged names to display
+       return vNames;
+   }
 
 
 }//end of class

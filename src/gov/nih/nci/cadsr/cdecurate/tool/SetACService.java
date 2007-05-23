@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.42 2007-02-26 21:48:02 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.43 2007-05-23 04:14:26 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -170,7 +170,7 @@ public class SetACService implements Serializable
         int iNoLengthLimit = -1;
         String sDEAction = (String)session.getAttribute("DEAction");
         String sOriginAction = (String)session.getAttribute("originAction");
-        String sMenu = (String)session.getAttribute("MenuAction");
+        String sMenu = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
         String sDDEAction = (String)session.getAttribute("DDEAction");
         boolean isUserEnter = false;
   //System.out.println(sOriginAction + " validate  " + sMenu + " de " + sDEAction);
@@ -256,7 +256,7 @@ public class SetACService implements Serializable
            //strInValid = strUnique + this.checkVersionDimension(s);   //checkValueIsNumeric(s);                
            strInValid = this.checkVersionDimension(s);   //checkValueIsNumeric(s);                
            DE_Bean oldDE = (DE_Bean)session.getAttribute("oldDEBean");
-           String menuAction = (String)session.getAttribute("MenuAction");
+           String menuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
            if (oldDE != null && menuAction.equals("NewDEVersion"))
            {
               String oVer = oldDE.getDE_VERSION();
@@ -446,93 +446,6 @@ public class SetACService implements Serializable
     }   
   }
 
-  /**
-   * validates begin and end dates for PV and adds them to validate vector 
-   * @param req HttpServletRequest
-   * @param pgBDate String begin date
-   * @param pgEDate String end date
-   * @param vValidate Vector of validate data
-   */
-/*  private void addEditPVDatesToValidatePage(HttpServletRequest req, String pgBDate, 
-      String pgEDate, Vector<ValidateBean> vValidate)
-  {
-    try
-    {
-      //System.out.println(pgBDate + " edit validate pv " + pgEDate);
-      HttpSession session = req.getSession();
-      String bdValid = "", edValid = "";
-      //check for validity of the dates
-      String pgDateValid = "";
-      if (pgBDate != null && !pgBDate.equals(""))
-      {
-        bdValid = this.validateDateFormat(pgBDate);
-        if (!bdValid.equals("")) bdValid = "Begin " + bdValid;
-      }
-      if (pgEDate != null && !pgEDate.equals(""))
-      {
-        edValid = this.validateDateFormat(pgEDate);
-        if (!edValid.equals("")) edValid = "End " + edValid;
-      }
-      //mark the validity of the new begin or end date
-      if (!bdValid.equals("") || !edValid.equals(""))
-        pgDateValid = "error";
-
-      //if editPV (block) loop through to get the right begin date
-      VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");
-      Vector<PV_Bean> vVDPV = vd.getVD_PV_List();  // (Vector)session.getAttribute("VDPVList");
-      if (vVDPV == null) vVDPV = new Vector<PV_Bean>();
-      if (vVDPV.size()>0)
-      {
-        //loop through the pvlist to get edit pv attributes
-        for (int i=0; i<vVDPV.size(); i++)
-        {
-          String sBD = "", sED = "", acName = "";
-          PV_Bean thisPV = (PV_Bean)vVDPV.elementAt(i);
-          if (thisPV.getPV_CHECKED())
-          {
-            sBD = thisPV.getPV_BEGIN_DATE();
-            sED = thisPV.getPV_END_DATE();
-            if (pgBDate != null && !pgBDate.equals("") && pgDateValid.equals(""))
-              sBD = pgBDate;
-            if (pgEDate != null && !pgEDate.equals("") && pgDateValid.equals(""))
-              sED = pgEDate;
-        //System.out.println(sBD + ":" + sED + ":" + pgDateValid);
-            //check begin date end date relationship
-            if (sED != null && !sED.equals("") && pgDateValid.equals(""))
-            {
-              if (sBD != null && !sBD.equals(""))
-              {
-                String dValid = compareDates(sBD, sED);
-                if (dValid == null) dValid = "";
-                if (dValid.equals("true"))
-                {
-                  if (!edValid.equals("")) edValid = edValid + ", ";    //add the comma for next selected ac
-                  edValid = edValid + acName;
-                }
-                else if (!dValid.equals("false"))  //dValid.equals("error"))
-                  edValid = "End date is not a valid date."; 
-              }
-            }
-          }
-        }  //end loop
-        //append text to acnames that have begin date greater than end date
-        if (pgDateValid.equals("") && !edValid.equals(""))
-          edValid = "Begin Date is not before the End Date for " + edValid;
-      }
-      UtilService.setValPageVector(vValidate, "Effective Begin Date", pgBDate, false, -1, bdValid, "");
-      UtilService.setValPageVector(vValidate, "Effective End Date", pgEDate, false, -1, edValid, "");
-    }
-    catch (Exception e)
-    {
-      logger.fatal("Error - addEditPVDatesToValidatePage " + e.toString(), e);
-      ValidateBean vbean = new ValidateBean();
-      vbean.setACAttribute("Error addEditPVDatesToValidatePage");
-      vbean.setAttributeContent("Error message " + e.toString());
-      vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
-      vValidate.addElement(vbean);
-    }
-  }
-*/  
  /**
   * To add DDE info to DE validate vector, called from setValidatePageValues.
   * All data are valid because they are either pick from list or no validate rule
@@ -645,7 +558,7 @@ public class SetACService implements Serializable
       String sDECAction = (String)session.getAttribute("DECAction");
       String sUser = (String)session.getAttribute("Username");
       String sOriginAction = (String)session.getAttribute("originAction");
-      String sMenu = (String)session.getAttribute("MenuAction");
+      String sMenu = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
 //System.out.println(sOriginAction + " validate  " + sMenu + " dec " + sDECAction);
       boolean isUserEnter = false;
       //check edit or create
@@ -756,7 +669,7 @@ public class SetACService implements Serializable
       {
          strInValid = this.checkVersionDimension(s);   //checkValueIsNumeric(s);
          DEC_Bean oldDEC = (DEC_Bean)session.getAttribute("oldDECBean");
-         String menuAction = (String)session.getAttribute("MenuAction");
+         String menuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
          if (oldDEC != null && menuAction.equals("NewDECVersion"))
          {
             String oVer = oldDEC.getDEC_VERSION();
@@ -914,7 +827,7 @@ public class SetACService implements Serializable
       String sVDAction = (String)session.getAttribute("VDAction");
       String sOriginAction = (String)session.getAttribute("originAction");
       String sUser = (String)session.getAttribute("Username");
-      String sMenu = (String)session.getAttribute("MenuAction");
+      String sMenu = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
       boolean isUserEnter = false;
 
       //check edit or create
@@ -997,7 +910,7 @@ public class SetACService implements Serializable
       {
           strInValid = this.checkVersionDimension(s);   //checkValueIsNumeric(s);
           VD_Bean oldVD = (VD_Bean)session.getAttribute("oldVDBean");
-          String menuAction = (String)session.getAttribute("MenuAction");
+          String menuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
           if (oldVD != null && menuAction.equals("NewVDVersion"))
           {
               String oVer = oldVD.getVD_VERSION();
@@ -1406,7 +1319,7 @@ public class SetACService implements Serializable
         strInValid = "End Date does not exist in " + wfValid;
       if (endValid != null && !endValid.equals(""))
       {
-        if (!strInValid.equals("")) strInValid = "\n";
+        //if (!strInValid.equals("")) strInValid = "\n";
         strInValid = endValid;
       }
       UtilService.setValPageVector(vValidate, "Effective End Date", sED, bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
@@ -1585,7 +1498,7 @@ public class SetACService implements Serializable
         if (retCode != null && !retCode.equals(""))
         {
           //display error if unable to create object class.
-          String sMsg = (String)session.getAttribute("statusMessage");
+          String sMsg = (String)session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
           if (sMsg == null) sMsg = "";
           if (sOCL != null && !sOCL.equals("") && (objID == null || objID.equals("")))
             strOCInvalid = strOCInvalid + sMsg;
@@ -1622,8 +1535,8 @@ public class SetACService implements Serializable
               }
             }
             //TODO - comment these two lines later to fix error in the back button on dec for oc prop
-            if (m_OC != null)
-              m_OC.setIDSEQ(m_DEC.getDEC_OCL_IDSEQ());
+           // if (m_OC != null)
+            //  m_OC.setIDSEQ(m_DEC.getDEC_OCL_IDSEQ());
           }
           //allow creating new version of property here if asl name is not released
           if (propID != null && !propID.equals(""))
@@ -1644,8 +1557,8 @@ public class SetACService implements Serializable
               }
             }
             //TODO - comment these two lines later to fix error in the back button on dec for oc prop
-            if (m_PC != null)
-              m_PC.setIDSEQ(m_DEC.getDEC_PROPL_IDSEQ());        
+            //if (m_PC != null)
+             // m_PC.setIDSEQ(m_DEC.getDEC_PROPL_IDSEQ());        
           }
         }
         //append it to oc invalid
@@ -1760,67 +1673,6 @@ public class SetACService implements Serializable
   }
 
 
-  /**
-  * To check for existence of value meaning
-  * called from NCICurationServlet.
-  * @param req The HttpServletRequest object.
-  * @param res HttpServletResponse object
-  * @param sMeaning string meaning
-  * @param sMeaningDesc string meaning description
-  * @param sCDIDSEQ conceptual domain
-  * @return string false or true value
-  *
-  */
-  public String checkVMExists(HttpServletRequest req, HttpServletResponse res,
-                        String sMeaning, String sMeaningDesc, String sCDIDSEQ)
-  {
-      //HttpSession session = req.getSession();
-      ResultSet rs = null;
-      Statement CStmt = null;
-      Connection conn = null;
-      String retValue = "";
-
-      try
-      {
-          String retCode = "";
-          //set the bean values
-          VM_Bean vm = new VM_Bean();
-          vm.setVM_SHORT_MEANING(sMeaning);
-          vm.setVM_DESCRIPTION(sMeaningDesc);
-          vm.setVM_CD_IDSEQ(sCDIDSEQ);
-          //check if the meaning exists in the caDSR
-          retCode = "";
-          retCode = this.getVM(req, res, vm);   // this.getVM(req, res, vm);
-          if (retCode != null && !retCode.equals("")) 
-          {
-            // return no meaning exists in caDSR
-            return "false";
-          }
-          else  
-          {
-            // return meaning exists in caDSR
-            return "true";
-          }
-      }
-      catch(Exception e)
-      {
-        logger.fatal("ERROR in checkVM " + e.toString(), e);
-      }
-      try
-      {
-        if(rs!=null) rs.close();
-        if(CStmt!=null) CStmt.close();
-        if(conn != null) conn.close();
-      }
-    
-      catch(Exception ee)
-      {
-        logger.fatal("ERROR in checkPVVM closing : " + ee.toString(), ee);
-      }
-      return retValue;
-  } //end checkVM
-  
-  
 /**
   * @param req The HttpServletRequest object.
   * @param res HttpServletResponse object
@@ -1835,7 +1687,7 @@ public class SetACService implements Serializable
   {
     //HttpSession session = req.getSession();
     ResultSet rs = null;
-    Statement CStmt = null;
+    Statement cstmt = null;
     Connection conn = null;
     try
     {
@@ -1855,8 +1707,8 @@ public class SetACService implements Serializable
         {
           if(!oc_idseq.equals(""))
           {
-            CStmt = conn.createStatement();
-            rs = CStmt.executeQuery(sOCSQL);
+            cstmt = conn.createStatement();
+            rs = cstmt.executeQuery(sOCSQL);
             //loop through to printout the outstrings
             while(rs.next())
             {
@@ -1869,13 +1721,13 @@ public class SetACService implements Serializable
               "the Object Class and Property Work Flow Statuses must be 'Released'.";
             /** no need to close it here; doing this throws error making it not close the connection **/
            // if(rs!=null) rs.close();
-           // if(CStmt!=null) CStmt.close();
+           // if(cstmt!=null) cstmt.close();
           }
           else if(!prop_idseq.equals(""))
           {    
             // Now check Property WFStatus  
-            CStmt = conn.createStatement();
-            rs = CStmt.executeQuery(sPropSQL);
+            cstmt = conn.createStatement();
+            rs = cstmt.executeQuery(sPropSQL);
             while(rs.next())
             {
               sProp_WFS = rs.getString(1); 
@@ -1899,7 +1751,7 @@ public class SetACService implements Serializable
       try
       {
         if(rs!=null) rs.close();
-        if(CStmt!=null) CStmt.close();
+        if(cstmt!=null) cstmt.close();
         if(conn != null) conn.close();      
       }
       catch(Exception ee)
@@ -1926,7 +1778,7 @@ public class SetACService implements Serializable
                         String sValue, String sMeaning, String sCD)
   {
     ResultSet rs = null;
-    Statement CStmt = null;
+    Statement cstmt = null;
     Connection conn = null;
     String pvIdseq = "";
     String sSQL = "Select pv_idseq from permissible_values where value = '" + sValue + "'" +
@@ -1938,8 +1790,8 @@ public class SetACService implements Serializable
         m_servlet.ErrorLogin(req, res);
       else
       {
-        CStmt = conn.createStatement();
-        rs = CStmt.executeQuery(sSQL);
+        cstmt = conn.createStatement();
+        rs = cstmt.executeQuery(sSQL);
         //loop through to printout the outstrings
         while(rs.next())
         {
@@ -1956,7 +1808,7 @@ public class SetACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
+      if(cstmt!=null) cstmt.close();
       if(conn != null) conn.close();
     }
     catch(Exception ee)
@@ -1965,92 +1817,6 @@ public class SetACService implements Serializable
     }
     return pvIdseq;
   } //end checkPVVM
-
- /**
-  * To check validity of the data for Value Meanings component before submission, called from NCICurationServlet.
-  * Validation is done against Database restriction and ISO1179 standards.
-  * calls various methods to get validity messages and store it into the vector.
-  * Valid/Invalid Messages are stored in request Vector 'vValidate' along with the field, data.
-  *
-  * @param req The HttpServletRequest object.
-  * @param res HttpServletResponse object.
-  * @param m_VM Value Meanings Bean.
-  * @param getAC reference to GetACService class.
-  *
-  */
-  public void setValidatePageValuesVM(HttpServletRequest req,
-          HttpServletResponse res, VM_Bean m_VM, GetACService getAC) 
-          //throws ServletException,IOException, Exception
-  {
-    Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
-    try
-    {
-      //HttpSession session = req.getSession();
-      InsACService insAC = new InsACService(req, res, m_servlet);
-      String s;
-      boolean bMandatory = true;
-      boolean bNotMandatory = false;
-      String strInValid = "";
-      //int iLengthLimit = 30;
-      int iNoLengthLimit = -1;
-        req.setAttribute("VMExist", "false");
-        //check if existnce 
-      //  m_VM = insAC.getExistingVM(m_VM);
-        String  sRet = m_VM.getRETURN_CODE();
-        if (sRet == null || sRet.equals(""))  //already exists
-        {
-          strInValid = "Value Meaning exists in caDSR.";
-          req.setAttribute("VMExist", "true");
-        }
-        s = m_VM.getVM_SHORT_MEANING();
-        if (s == null) s = "";
-        //check if exists in antoher db
-        if(!s.equals("") && m_VM != null)
-          strInValid = strInValid + checkConceptCodeExistsInOtherDB(null, insAC, m_VM);
-        UtilService.setValPageVector(vValidate, "Value Meaning", s, bMandatory, 2000, strInValid, "");
-
-        s = m_VM.getVM_CD_NAME();
-        if (s == null) s = "";
-        UtilService.setValPageVector(vValidate, "Conceptual Domain", s, bMandatory, iNoLengthLimit, "", "");
-
-        //add begin and end dates to the validate vector
-        String sB = m_VM.getVM_BEGIN_DATE();
-        if (sB == null) sB = "";
-        String sE = m_VM.getVM_END_DATE();
-        if (sE == null) sE = "";
-         this.addDatesToValidatePage(sB, sE, "N/A", "N/A", vValidate, "");
-        
-       /* s = m_VM.getVM_BEGIN_DATE();
-        if (s == null) s = "";
-        setValPageVector(vValidate, "Effective Begin Date", s, bMandatory, iNoLengthLimit, "", "");
-
-        s = m_VM.getVM_END_DATE();
-        if (s == null) s = "";
-        setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", ""); */
-
-        s = m_VM.getVM_DESCRIPTION();
-        if (s == null) s = "";
-        
-        UtilService.setValPageVector(vValidate, "Description", s, bNotMandatory, 2000, "", "");
-
-        s = m_VM.getVM_COMMENTS();
-        if (s == null) s = "";
-        UtilService.setValPageVector(vValidate, "Comments", s, bNotMandatory, 2000, "", "");
-
-    }
-    catch (Exception e)
-    {
-      logger.fatal("ERROR in setValidatePageValuesVM " + e.toString(), e);
-      ValidateBean vbean = new ValidateBean();
-      vbean.setACAttribute("Error setValidatePageValuesVM");
-      vbean.setAttributeContent("Error message " + e.toString());
-      vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
-      vValidate.addElement(vbean);
-    }
-    // finaly, send vector to JSP
-    Vector<String> vValString = this.makeStringVector(vValidate);
-    req.setAttribute("vValidate", vValString);        
- }  // end of setValidatePageValuesVM
 
  /**
   * To check write permission for the user, in selected context and selected component,
@@ -2466,7 +2232,7 @@ public class SetACService implements Serializable
           else
           {
             bValidFlag = false;
-            strString = strString + "\n Name can only be alphanumeric characters. ";
+            strString = strString + "Name can only be alphanumeric characters. ";
             break;
           }
         }
@@ -2503,7 +2269,7 @@ public class SetACService implements Serializable
       HttpSession session = req.getSession();
       GetACService getAC = new GetACService(req, res, m_servlet);
       String sSQL="", editSQL="", propSQL = "", ocSQL = "";  //versSQL="", 
-      String menuAction = (String)session.getAttribute("MenuAction");
+      String menuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
       //check unique if id is not the same for update
       String sContID = mDEC.getDEC_CONTE_IDSEQ();
      // String sPublicID = mDEC.getDEC_DEC_ID();
@@ -4475,81 +4241,6 @@ public class SetACService implements Serializable
   }
 
   /**
-   * To set the values from request to Value Meanings Bean and Permissible Values Bean, called from NCICurationServlet.
-   *
-   * @param req The HttpServletRequest object.
-   * @param res HttpServletResponse object.
-   * @param m_VM VM Bean.
-   */
-  public void setVMValueFromPage(HttpServletRequest req, HttpServletResponse res,
-          VM_Bean m_VM) //throws ServletException,IOException
-  {
-    try
-    {
-      HttpSession session = req.getSession();
-      String sID;  //sIdx, 
-      String sName = "";
-
-      String sEVSSearch = (String)req.getParameter("hiddenEVSSearch");
-      session.setAttribute("EVSSearched", sEVSSearch);
-      //make the vm bean empty if not evs search
-      if (sEVSSearch == null || sEVSSearch.equals(""))
-        m_VM.setVM_CONCEPT(new EVS_Bean());
-        
-      sName = (String)req.getParameter("selShortMeanings");
-      if(sName != null)
-      {
-        sName = m_util.removeNewLineChar(sName);
-        m_VM.setVM_SHORT_MEANING(sName);
-      }
-
-      sName = (String)req.getParameter("CreateDescription");
-      if(sName != null)
-      {
-        sName = m_util.removeNewLineChar(sName);
-        if (sName.length() > 2000) sName = sName.substring(0, 2000);
-        m_VM.setVM_DESCRIPTION(sName);
-      }
-
-      // set VM Conceptual Domain
-      sID = (String)req.getParameter("selConceptualDomain");
-      if(sID != null)
-      {
-        m_VM.setVM_CD_IDSEQ(sID);
-        sName = (String)req.getParameter("selConceptualDomainText");
-        if ((sName == null) || (sName.equals("")))
-        {
-          if ((Vector)session.getAttribute("vCD") != null)
-            sName = m_util.getNameByID((Vector)session.getAttribute("vCD"), (Vector)session.getAttribute("vCD_ID"), sID);
-        }
-        if(sName != null) m_VM.setVM_CD_NAME(sName);
-      }
-
-       //set VM_BEGIN_DATE
-      sName = (String)req.getParameter("BeginDate");
-      if(sName != null)
-        m_VM.setVM_BEGIN_DATE(sName);
-
-       //set VM_COMMENTS
-      sName = (String)req.getParameter("taComments");
-      if(sName != null)
-      {
-        sName = m_util.removeNewLineChar(sName);
-        m_VM.setVM_COMMENTS(sName);
-      }
-
-      //set VM_END_DATE
-      sName = (String)req.getParameter("EndDate");
-      if(sName != null)
-        m_VM.setVM_END_DATE(sName);       
-    }
-    catch (Exception e)
-    {
-      logger.fatal("Error Occurred in setVMValueFromPage " + e.toString(), e);
-    }
-  } // end of setVMValueFromPage
-
-  /**
   * Method to check if name has changed for released element.
   *
   * @param oldName  String old name
@@ -4591,9 +4282,9 @@ public class SetACService implements Serializable
   */
   public String getPV(HttpServletRequest req, HttpServletResponse res, PV_Bean pv)  
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    CallableStatement CStmt = null;
+    CallableStatement cstmt = null;
     String sReturnCode = "";  //out
 
     try
@@ -4602,36 +4293,36 @@ public class SetACService implements Serializable
       String sShortMeaning = pv.getPV_SHORT_MEANING();
 
        //Create a Callable Statement object.
-       sbr_db_conn = m_servlet.connectDB(req, res);
-       if (sbr_db_conn == null)
+       conn = m_servlet.connectDB(req, res);
+       if (conn == null)
           m_servlet.ErrorLogin(req, res);
        else
        {
-          CStmt = sbr_db_conn.prepareCall("{call SBREXT_get_Row.GET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+          cstmt = conn.prepareCall("{call SBREXT_get_Row.GET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
           // register the Out parameters
-          CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-          CStmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //pv id
-          CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //value
-          CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //short meaning
-          CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //meaning description
-          CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       // high value num
-          CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //low value num
-          CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //  begin date
-          CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //end date
-          CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //created by
-          CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //date created
-          CStmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //modified by
-          CStmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //date modified
+          cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+          cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //pv id
+          cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //value
+          cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //short meaning
+          cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //meaning description
+          cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       // high value num
+          cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //low value num
+          cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //  begin date
+          cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //end date
+          cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //created by
+          cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //date created
+          cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //modified by
+          cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //date modified
 
           // Set the In parameters (which are inherited from the PreparedStatement class)
-          CStmt.setString(3,sValue);
-          CStmt.setString(4,sShortMeaning);
+          cstmt.setString(3,sValue);
+          cstmt.setString(4,sShortMeaning);
 
            // Now we are ready to call the stored procedure
           //boolean bExcuteOk = 
-          CStmt.execute();
-          sReturnCode = CStmt.getString(1);
-          pv.setPV_PV_IDSEQ(CStmt.getString(2));
+          cstmt.execute();
+          sReturnCode = cstmt.getString(1);
+          pv.setPV_PV_IDSEQ(cstmt.getString(2));
        }
     }
     catch(Exception e)
@@ -4642,98 +4333,13 @@ public class SetACService implements Serializable
     try
     {
       if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(cstmt!=null) cstmt.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
       //System.err.println("Problem closing: " + ee);
       logger.fatal("ERROR in setACService-getPV for close : " + ee.toString(), ee);
-    }
-    return sReturnCode;
-  }
-
- /**
-  * To check a Value Meaing exist in the database for this meaning.
-  * Called from setVDfromPage method.
-  * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
-  * Calls oracle stored procedure
-  *   "{call SBREXT_get_Row.GET_VM(?,?,?,?,?,?,?,?,?,?,?)}" to submit
-  *
-  * @param req The HttpServletRequest object.
-  * @param res HttpServletResponse object.
-  * @param vm VM Bean.
-  *
-  * @return String return code from the stored procedure call. null if no error occurred.
-  */
-  public String getVM(HttpServletRequest req, HttpServletResponse res, VM_Bean vm)
-  {
-    Connection sbr_db_conn = null;
-    ResultSet rs = null;
-    CallableStatement CStmt = null;
-    String sReturnCode = "";  //out
-    //String ret2 = "";
-    try
-    {
-        //Create a Callable Statement object.
-        sbr_db_conn = m_servlet.connectDB(req, res);
-        if (sbr_db_conn == null)
-          m_servlet.ErrorLogin(req, res);
-        else
-        {
-          CStmt = sbr_db_conn.prepareCall("{call SBREXT_get_Row.GET_VM(?,?,?,?,?,?,?,?,?,?)}");
-          // register the Out parameters
-          CStmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-          CStmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //short meaning
-          CStmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //meaning description
-          CStmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //comments
-          CStmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //begin date
-          CStmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //end date
-          CStmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //created by
-          CStmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //date created
-          CStmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //modified by
-          CStmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //date modified
-         // CStmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //condr_idseq
-          // Set the In parameters (which are inherited from the PreparedStatement class)
-          CStmt.setString(2, vm.getVM_SHORT_MEANING());
-
-           // Now we are ready to call the stored procedure
-          //boolean bExcuteOk = 
-          CStmt.execute();
-          sReturnCode = CStmt.getString(1);
-          //update vm bean if found
-          if (sReturnCode == null || sReturnCode.equals(""))
-          {
-            vm.setVM_SHORT_MEANING(CStmt.getString(2));
-            vm.setVM_DESCRIPTION(CStmt.getString(3));
-            vm.setVM_COMMENTS(CStmt.getString(4));
-            String sCondr = "";    //CStmt.getString(11);
-           // String sCondr = "EAEA6FFC-6370-24B5-E034-0003BA0B1A09";  //for test only
-            if (sCondr != null && !sCondr.equals(""))
-            {
-              //get the concept attributes from the condr idseq
-              GetACService getAC = new GetACService(req, res, m_servlet);
-              Vector vCon = getAC.getAC_Concepts(sCondr, null, true);
-              //get the evs bean from teh vector and store it in vm concept
-              if (vCon != null && vCon.size() > 0)
-                vm.setVM_CONCEPT((EVS_Bean)vCon.elementAt(0));
-            }                        
-          }
-      }
-    }
-    catch(Exception e)
-    {
-      logger.fatal("ERROR in setACService-getVM for other : " + e.toString(), e);
-    }
-    try
-    {
-      if(rs!=null) rs.close();
-      if(CStmt!=null) CStmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
-    }
-    catch(Exception ee)
-    {
-      logger.fatal("ERROR in setACService-getVM for close : " + ee.toString(), ee);
     }
     return sReturnCode;
   }
@@ -4751,20 +4357,20 @@ public class SetACService implements Serializable
   public boolean checkPVQCExists(HttpServletRequest req, HttpServletResponse res, 
         String vdIDseq, String vpIDseq) //throws Exception
   {
-    Connection sbr_db_conn = null;
+    Connection conn = null;
     ResultSet rs = null;
-    //CallableStatement CStmt = null;
+    //CallableStatement cstmt = null;
     PreparedStatement pstmt = null;
     boolean isValid = false;
     try
     {
       //Create a Callable Statement object.
-      sbr_db_conn = m_servlet.connectDB(req, res);
-      if (sbr_db_conn == null)
+      conn = m_servlet.connectDB(req, res);
+      if (conn == null)
         m_servlet.ErrorLogin(req, res);
       else
       {
-        pstmt = sbr_db_conn.prepareStatement("select SBREXT_COMMON_ROUTINES.VD_PVS_QC_EXISTS(?,?) from DUAL");
+        pstmt = conn.prepareStatement("select SBREXT_COMMON_ROUTINES.VD_PVS_QC_EXISTS(?,?) from DUAL");
         // register the Out parameters
         pstmt.setString(1, vpIDseq);
         pstmt.setString(2, vdIDseq);
@@ -4786,7 +4392,7 @@ public class SetACService implements Serializable
     {
       if(rs!=null) rs.close();
       if(pstmt!=null) pstmt.close();
-      if(sbr_db_conn != null) sbr_db_conn.close();
+      if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4796,108 +4402,6 @@ public class SetACService implements Serializable
     return isValid;
    }   //end checkPVQCExists
 
-  /**
-   * checks if removed pvs are associated with the form 
-   * send back the validation message for pv vds data.
-   * 
-   * @param req servlet request
-   * @param res servlet response
-   * @param m_VD VD_Bean of the selected vd.
-   * @param vValidate vector of validation data
-   * @param sOriginAction string page action
-   * @return vector of validate
-   * 
-   * @throws Exception
-   */
-/*   private void validateVDPVS(HttpServletRequest req, HttpServletResponse res, 
-          VD_Bean m_VD, Vector<ValidateBean> vValidate, String sOriginAction) //throws Exception
-   {
-     try
-     {
-        HttpSession session = req.getSession(); 
-        String strInvalid = "";
-        String strVMInvalid = "";
-        //get current value domains vd-pv attributes
-        Vector<PV_Bean> vVDPVS = (Vector)session.getAttribute("VDPVList");  
-        InsACService insAC = new InsACService(req, res, m_servlet);
-        String vdID = m_VD.getVD_VD_IDSEQ();
-        //remove vdidseq if new vd
-        if (vdID == null || sOriginAction.equalsIgnoreCase("newVD")) vdID = "";
-        //make long string of values/meanings
-        String sPVVal = "";
-        String sPVMean = "";        
-        if (vVDPVS != null && !vVDPVS.isEmpty())
-        {
-          boolean isChanged = false;
-          for (int i=0; i<vVDPVS.size(); i++)
-          {
-            PV_Bean thisPV = (PV_Bean)vVDPVS.elementAt(i);
-            //check its relationship with the form if removed 
-            String vpID = thisPV.getPV_VDPVS_IDSEQ();
-            if (vpID == null) vpID = "";
-            String vpSubmit = thisPV.getVP_SUBMIT_ACTION();
-        // System.out.println(thisPV.getPV_VALUE() + " vp submit " + vpSubmit + " vd id " + vdID + " vp id "+ vpID);
-            if (vpSubmit == null) vpSubmit = "NONE";
-            if (!vdID.equals("") && !vpID.equals("") && vpSubmit.equals("DEL"))
-            {
-              boolean isExists = this.checkPVQCExists(req, res, vdID, vpID);
-              if (isExists)
-              {
-                isChanged = true;
-                if (strInvalid.equals(""))
-                  strInvalid = "Unable to remove the following Permissible Values because they are used in a CRF : \n";
-                strInvalid += thisPV.getPV_VALUE() + ",\n";
-                thisPV.setVP_SUBMIT_ACTION("NONE");
-                vVDPVS.setElementAt(thisPV, i);
-              }
-            }
-            //add to validation only if not deleted
-            if (!vpSubmit.equals("DEL"))
-            {
-              if (sPVVal != null && !sPVVal.equals(""))
-              {
-                sPVVal += ",\n ";
-                sPVMean += ",\n ";
-              }
-              sPVVal += thisPV.getPV_VALUE();
-              sPVMean += thisPV.getPV_SHORT_MEANING();              
-              //check if same identifier exists in other vocab 
-              EVS_Bean vmCon = thisPV.getVM_CONCEPT();
-              if (vmCon != null && (vmCon.getCONDR_IDSEQ() == null || vmCon.getCONDR_IDSEQ().equals("")))  //not exists in caDSR already
-              {
-                String sRet = "";
-                String sValid = insAC.getConcept(sRet, vmCon, true);
-                if (sValid != null && sValid.indexOf("Another") > -1)
-                  strVMInvalid += vmCon.getLONG_NAME() + " - " + vmCon.getCONCEPT_IDENTIFIER() + ",\n";
-              }
-            }
-          }
-          if (isChanged)
-            session.setAttribute("VDPVList", vVDPVS);           
-        }
-        //append the error message with the evs term info
-        if (strVMInvalid != null && !strVMInvalid.equals(""))
-          strVMInvalid = "The following Concepts with the same Concept ID, but different Vocabulary exists in caDSR.\n" + strVMInvalid;
-          
-        String s = m_VD.getVD_TYPE_FLAG();
-        if (s == null) s = "";
-        if (s.equals("E"))
-        {
-            UtilService.setValPageVector(vValidate, "Values", sPVVal, true, -1, strInvalid, sOriginAction);
-            UtilService.setValPageVector(vValidate, "Value Meanings", sPVMean, true, -1, strVMInvalid, sOriginAction);
-        }
-     }
-     catch (Exception e)
-     {
-       logger.fatal("Error Occurred in validateVDPVS " + e.toString(), e);
-       ValidateBean vbean = new ValidateBean();
-       vbean.setACAttribute("Error validateVDPVS");
-       vbean.setAttributeContent("Error message " + e.toString());
-       vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
-       vValidate.addElement(vbean);
-     }
-   }    //end validateVDPVS
-*/
   /**
    * gets pv ids from the page and checks if there are any new ones or any removed ones 
    * updates the pv list vector both for id and bean and stores them in the session.

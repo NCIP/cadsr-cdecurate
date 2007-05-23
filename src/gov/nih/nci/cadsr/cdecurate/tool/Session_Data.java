@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/Session_Data.java,v 1.30 2007-04-10 19:31:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/Session_Data.java,v 1.31 2007-05-23 04:14:21 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -21,10 +21,10 @@ public class Session_Data
 {
   /**  argument string passed in for the session attributes used for the curation tool*/
   public static final String CURATION_SESSION_ATTR = "Curation_Session_Attribute"; 
-
+  
   /** evs user bean stored in the session */
   public UserBean UsrBean;
-  
+
   /** evs user bean stored in the session */
   public EVS_UserBean EvsUsrBean;
 
@@ -40,4 +40,9 @@ public class Session_Data
   /** m_VM Bean **/
   public VM_Bean m_VM;
 
+  public static final String SESSION_STATUS_MESSAGE = "statusMessage";
+  public static final String SESSION_MENU_ACTION = "MenuAction";
+  public static final String REQUEST_VALIDATE = "vValidate";
+  public static final String SESSION_ASL_FILTER = "ASLFilterList";
+  
 }

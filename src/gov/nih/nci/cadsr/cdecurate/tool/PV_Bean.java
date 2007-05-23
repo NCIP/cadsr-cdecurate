@@ -1,12 +1,11 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PV_Bean.java,v 1.38 2007-01-26 20:17:44 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PV_Bean.java,v 1.39 2007-05-23 04:13:51 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
 
 /**
  * The PV_Bean encapsulates the PV information and is stored in the
@@ -487,7 +486,7 @@ public class PV_Bean implements Serializable
   */
   public String getPV_VDPVS_IDSEQ()
   {
-      return this.PV_VDPVS_IDSEQ;
+      return (PV_VDPVS_IDSEQ == null) ? "" : PV_VDPVS_IDSEQ;
   }
   /**
   * The getPV_VALUE method returns the PV_VALUE for this bean.

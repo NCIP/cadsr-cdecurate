@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/Quest_Bean.java,v 1.38 2007-01-26 20:17:44 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/Quest_Bean.java,v 1.39 2007-05-23 04:13:56 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -122,6 +122,10 @@ public class Quest_Bean implements Serializable
   private String QUEST_ORIGIN;
   private String QC_ID;
   private boolean QUEST_CHECKED;
+  private String QCDL_NAME;
+  private String QTL_NAME;
+  private String QC_VERSION;
+  
   /**
    * Constructor
   */
@@ -613,6 +617,54 @@ public class Quest_Bean implements Serializable
   public void setVDversion(String dversion)
   {
     VDversion = dversion;
+  }
+
+  /**
+   * @return Returns the qCDL_NAME.
+   */
+  public String getQCDL_NAME()
+  {
+    return (QCDL_NAME == null) ? "" : QCDL_NAME;
+  }
+
+  /**
+   * @param qcdl_name The qCDL_NAME to set.
+   */
+  public void setQCDL_NAME(String qcdl_name)
+  {
+    QCDL_NAME = qcdl_name;
+  }
+
+  /**
+   * @return Returns the qTL_NAME.
+   */
+  public String getQTL_NAME()
+  {
+    return (QTL_NAME == null) ? "" : QTL_NAME;
+  }
+
+  /**
+   * @param qtl_name The qTL_NAME to set.
+   */
+  public void setQTL_NAME(String qtl_name)
+  {
+    QTL_NAME = qtl_name;
+  }
+
+  /**
+   * @return Returns the qC_VERSION.
+   */
+  public String getQC_VERSION()
+  {
+    return (QC_VERSION == null) ? "" : QC_VERSION;
+  }
+
+  /**
+   * @param qc_version The qC_VERSION to set.
+   */
+  public void setQC_VERSION(String qc_version)
+  {
+    QC_VERSION = qc_version;
   }
 
 

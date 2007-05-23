@@ -1,21 +1,23 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 
-<!-- $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/EVSTest1.xml,v 1.28 2007-01-26 20:17:43 hegdes Exp $
+<!-- $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/EVSTest1.xml,v 1.29 2007-05-23 04:10:36 hegdes Exp $
        $Name: not supported by cvs2svn $
  -->
 
 <properties>
     
         <!-- Specify the caDSR database being used by the Curation Tool to be tested.
-        -->
         <entry key="DSurl">cbiodb2-d.nci.nih.gov:1521:CBDEV</entry>
+        -->
+        <entry key="DSurl">cbiodb10.nci.nih.gov:1521:CBPROD</entry>
         <entry key="DSusername">guest</entry>
         <entry key="DSpassword">guest</entry>
 
         <!-- (optional) Specify the EVS URL for the caCORE API. If not included here it will be retrieved
             from the tool options table in the caDSR identified above.
-        -->
-        <entry key="evs.url">http://cabio-qa.nci.nih.gov/cacore31/http/remoteService</entry>
+        		<entry key="evs.url">http://cabio-lexbig.nci.nih.gov/cacore32/http/remoteService</entry>
+		-->
+        <entry key="evs.url">http://cabio.nci.nih.gov/cacore32/http/remoteService</entry>
 
         <!-- Specify the sets of test data for the Vocabularies of interest. Each set is identified in the form
             of <data type>.<set number>. The code and name in each set must match the query results
@@ -31,30 +33,37 @@
         <entry key="name.0">Blood (substance)</entry>
 
         <entry key="vocab.1">GO</entry>
+        <entry key="getAllSubConceptCodes.1">false</entry>
         <entry key="code.1">GO:0007596</entry>
         <entry key="name.1">blood coagulation</entry>
 
         <entry key="vocab.2">MGED_Ontology</entry>
+        <entry key="getAllSubConceptCodes.2">false</entry>
         <entry key="code.2">X-MO-4473</entry>
         <entry key="name.2">blood</entry>
 
         <entry key="vocab.3">MedDRA</entry>
+        <entry key="getAllSubConceptCodes.3">false</entry>
         <entry key="code.3">10005284</entry>
         <entry key="name.3">Blood ACTH [10005284]</entry>
 
         <entry key="vocab.4">VA_NDFRT</entry>
+        <entry key="getAllSubConceptCodes.4">false</entry>
         <entry key="code.4">C11820</entry>
         <entry key="name.4">BLOOD TEST</entry>
 
         <entry key="vocab.5">LOINC</entry>
+        <entry key="getAllSubConceptCodes.5">false</entry>
         <entry key="code.5">18161-0</entry>
         <entry key="name.5">BLOOD FLOW.MAX(1)</entry>
 
         <entry key="vocab.6">NCI_Thesaurus</entry>
+        <entry key="getAllSubConceptCodes.6">false</entry>
         <entry key="code.6">C27083</entry>
         <entry key="name.6">Blood_Clot</entry>
 
         <entry key="vocab.7">MetaValue</entry>
+        <entry key="getAllSubConceptCodes.7">false</entry>
         <entry key="code.7">C0005767</entry>
         <entry key="name.7">Blood</entry>
         

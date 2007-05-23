@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_Bean.java,v 1.38 2007-01-26 20:17:43 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_Bean.java,v 1.39 2007-05-23 04:13:01 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -123,7 +123,7 @@ public class EVS_Bean implements Serializable
   private String caDSR_COMPONENT;
   private String ID;
   private boolean CHECKED;
-  private String DESCRIPTION;
+  //private String DESCRIPTION;
   private String COMMENTS;
   private String DEC_USING;
   private int LEVEL;
@@ -491,7 +491,7 @@ public class EVS_Bean implements Serializable
   */
   public String getIDSEQ()
   {
-      return this.IDSEQ;
+      return (IDSEQ == null) ? "" : this.IDSEQ;
   }
   /**
   * The getCONCEPT_NAME method returns the CONCEPT_NAME for this bean.
@@ -797,19 +797,16 @@ public class EVS_Bean implements Serializable
       //it is valid vocab name
       if (vVocabs.contains(sFilterValue))
         return sFilterValue; //found it
-      else
+      //first check if filter value is from diplay vocab list
+      Vector vDisplay = eUser.getVocabDisplayList();
+      if (vDisplay != null && vDisplay.contains(sFilterValue))
       {
-        //first check if filter value is from diplay vocab list
-        Vector vDisplay = eUser.getVocabDisplayList();
-        if (vDisplay != null && vDisplay.contains(sFilterValue))
-        {
-          int iIndex = vDisplay.indexOf(sFilterValue);
-          sRetValue = (String)vVocabs.elementAt(iIndex);
-          return sRetValue;  //found it
-        }
-        else
-           filterAttr = EVSSearch.VOCAB_DBORIGIN;  //sFilterAttr = "vocabDBOrigin";   //filter it as dborigin
+        int iIndex = vDisplay.indexOf(sFilterValue);
+        sRetValue = (String)vVocabs.elementAt(iIndex);
+        return sRetValue;  //found it
       }
+      //filter it as dborigin
+      filterAttr = EVSSearch.VOCAB_DBORIGIN;  //sFilterAttr = "vocabDBOrigin";   
     }
     for (int i=0; i<vVocabs.size(); i++)
     {
@@ -828,7 +825,7 @@ public class EVS_Bean implements Serializable
       else if (filterAttr == EVSSearch.VOCAB_NAME)  //(sFilterAttr.equalsIgnoreCase("vocabName"))
         sValue = usrVocab.getVocabName();
       //do matching and return the value
-      System.out.println(sFilterValue + " getvocab " + sValue);
+     // System.out.println(sFilterValue + " getvocab " + sValue);
     //  if (sFilterValue.equalsIgnoreCase(sValue))  //check it later
       if (sFilterValue.contains(sValue))
       {
@@ -845,7 +842,7 @@ public class EVS_Bean implements Serializable
     //return the first vocab if null
   //  if ((sRetValue == null || sRetValue.equals("")) && vVocabs != null)
   //    sRetValue = (String)vVocabs.elementAt(0);
-System.out.println(sRetValue + sFilterValue + filterAttr + retAttr);
+//System.out.println(sRetValue + sFilterValue + filterAttr + retAttr);
     if (sRetValue == null) sRetValue = "";
     return sRetValue;
   }

@@ -1,6 +1,8 @@
-/**
- * 
- */
+// Copyright ScenPro, Inc 2007
+
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/TestVM.java,v 1.2 2007-05-23 04:10:45 hegdes Exp $
+// $Name: not supported by cvs2svn $
+
 package gov.nih.nci.cadsr.cdecurate.test;
 
 import java.io.FileInputStream;
@@ -194,7 +196,7 @@ public class TestVM
            
            //do the search;
            VMAction vmact = new VMAction();
-           vmact.doChangeVM(vmdata);
+           vmact.validateVMData(vmdata);  //doChangeVM(vmdata);
          }
        }       
        varCon.closeConnection();   //close the connection
@@ -266,7 +268,7 @@ public class TestVM
       vmdata.setDBConnection(conn);      
       //do the search;
       VMAction vmact = new VMAction();
-      vmact.doChangeVM(vmdata);
+      vmact.validateVMData(vmdata);  //doChangeVM(vmdata);
       varCon.closeConnection();   //close the connection
       
     }
@@ -534,7 +536,7 @@ public class TestVM
     {
       //do the search;
       VMAction vmact = new VMAction();
-      vmact.doChangeVM(vmdata);
+      vmact.validateVMData(vmdata);  //doChangeVM(vmdata);
     }
     if (readMore)
     {
