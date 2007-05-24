@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/sandbox/load_tool_options.sql,v 1.25 2007-05-23 04:45:05 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/sandbox/load_tool_options.sql,v 1.26 2007-05-24 04:45:51 hegdes Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -509,10 +509,23 @@ insert into sbrext.tool_options_view_ext (tool_name, property, value, descriptio
 values ('CURATION', 'REFDOC_FILEURL', 'http://cdecurate-sandbox.nci.nih.gov/filecache/',
 'Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.');     
 	   
+       
+--Store the integer concepts id for name value pair  
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'NVPCONCEPT.1', 'C45255',
+       'Store the integer concept id for name value pair');
+       
+
+--Store the Ordinal Position concepts id for name value pair  
+INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
+VALUES ('CURATION', 'NVPCONCEPT.7', 'C46126',
+       'Store the Ordinal Position concept id for name value pair');
+
 --Store the RELEASED asl name to include in the filter  
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'INCLUDE.ASL.FILTER.1', 'RELEASED',
 	   'Store the RELEASED asl name to include in the filter');
 
+  
 --commit the inserts
 commit;
