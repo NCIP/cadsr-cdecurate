@@ -1,0 +1,360 @@
+                          Release Notes
+    
+                           Curation Tool
+                          Version 3.2.0.3
+                            Mar 29, 2007
+
+       National Cancer Institute Center for Bioinformatics
+
+
+================================================================
+                            Contents
+================================================================
+
+
+     1.0 caCORE Introduction and History
+     2.0 caDSR
+          2.1 Release History
+          2.2 New Features and Updates
+          2.3 Bugs Fixed Since Last Release
+          2.4 Known Issues
+     3.0 Bug Reports and Support
+     4.0 Documentation
+     5.0 NCICB Web Pages
+     6.0 caCORE GForge Sites
+
+
+================================================================
+                1.0 caCORE Introduction and History
+================================================================
+
+
+    caCORE 3.2
+
+    --  22 December 2006    
+
+    caCORE 3.1
+
+    --  27 March 2006
+
+    caCORE 3.0.1.3
+
+    --  12 December 2005
+
+    caCORE 3.0.1.2
+
+    --  18 October 2005
+
+    caCORE 3.0.1.1
+
+    --  30 August 2005   
+
+    caCORE 3.0.1
+
+    --  22 July 2005
+
+    caCORE 3.0
+
+    --  31 March 2005    
+
+    caCORE 2.1
+
+    --  28 May 2004
+
+    caCORE 2.0.1
+
+    --  19 December 2003 
+
+    caCORE 2.0
+
+    --  31 October 2003
+
+    caCORE 1.2
+
+    --  13 June 2003
+
+    caCORE 1.1
+
+    --  7 February 2003
+
+    caCORE 1.0
+
+    --  29 August 2002 
+
+    caCORE consists of six main components: Cancer
+    Bioinformatics Infrastructure Objects (caBIO), Cancer Data
+    Standards Repository (caDSR), Common Security Module (CSM),
+    Common Logging Module, Enterprise Vocabulary Services
+    (EVS) and caAdapter.  Each component has both standalone
+    functionality as well as integration points with the rest
+    of caCORE.
+
+    caCORE is a product of the NCI Center for Bioinformatics
+    and its partners. Visit the caCORE web site for more
+    information:
+
+    --  http://ncicb.nci.nih.gov/core
+
+
+
+================================================================
+                           2.0 caDSR
+================================================================
+
+
+----------------------------------------------------------------
+    2.1 Release History
+----------------------------------------------------------------
+
+    caDSR 3.2.0.3
+
+    -- 29 March 2007
+
+    caDSR 3.2.0.2
+
+    -- 28 February 2007
+
+    caDSR 3.2.0.1
+
+    -- 2 February 2007
+
+    caDSR 3.2
+
+    -- 22 December 2006
+
+    caDSR 3.1
+
+    --  27 March 2006
+
+    caDSR 3.0.1.1
+
+    --  30 August 2005
+
+    caDSR 3.0.1
+
+    --  22 July 2005
+
+    caDSR 3.0
+
+    --  31 March 2005    
+
+    caDSR 2.1
+
+    --  28 May 2004
+
+    caDSR 2.0.1
+
+    --  19 December 2003 
+
+    caDSR 2.0
+
+    --  31 October 2003 
+
+    caDSR 1.2
+
+    --  13 June 2003    
+
+    caDSR 1.1
+
+    --  7 February 2003
+
+    caDSR 1.0
+
+    --  29 August 2002
+
+
+----------------------------------------------------------------
+    2.2 New Features and Updates
+----------------------------------------------------------------
+
+    +------------------------------------+
+    | CDE Curation Tool                  |
+    +------------------------------------+
+    
+    N/A
+
+
+----------------------------------------------------------------
+    2.3 Bugs Fixed Since Last Release
+----------------------------------------------------------------
+
+    +------------------------------------+
+    | CDE Curation Tool                  |
+    +------------------------------------+
+    
+    --  The Curation Tool will unexpectedly receive connection
+        errors to the caDSR database.
+
+
+----------------------------------------------------------------
+    2.4 Known Issues
+----------------------------------------------------------------
+
+    +------------------------------------+
+    |CDE Curation Tool                   |
+    +------------------------------------+
+
+    N/A
+
+
+================================================================
+                  3.0 Bug Reports and Support
+================================================================
+
+
+    Send email to ncicb@pop.nci.nih.gov to request support or
+    report a bug.  
+
+    In addition, mailing lists are used by the caCORE developer
+    and user community to exchange ideas and make announcements.
+    You can subscribe at these addresses:
+
+    caBIO users
+
+    --  http://list.nih.gov/archives/cabio_users.html
+
+    caBIO developers
+
+    --  http://list.nih.gov/archives/cabio_devel.html
+
+    caCORE SDK users
+
+    --  http://list.nih.gov/archives/cacore_sdk_users-l.html
+
+    caDSR users
+
+    --  http://list.nih.gov/archives/sbr_users.html
+
+    EVS users
+
+    --  http://list.nih.gov/archives/ncievs-l.html
+
+
+================================================================
+                         4.0 Documentation
+================================================================
+
+
+    The caCORE 3.2 Release Notes can be downloaded via the NCICB
+    Download Center at:
+
+    --  http://ncicb.nci.nih.gov/core/caCORE3.2_notes.txt
+
+    The caCORE 3.2 Technical Guide can be downloaded via FTP:
+
+    --  ftp://ftp1.nci.nih.gov/pub/cacore/
+	caCORE3.2_Tech_Guide.pdf
+
+    The caCORE SDK Programmer's Guide can be downloaded via
+    FTP:
+
+    --  http://nci.nih.gov/pub/cacore/SDK/
+	caCORE_SDK3.2_Programmers_Guide.pdf
+
+
+================================================================
+                        5.0 NCICB Web Pages
+================================================================
+
+
+    The NCI Center for Bioinformatics
+
+    --  http://ncicb.nci.nih.gov/
+
+    NCICB Application Support
+
+    --  http://ncicbsupport.nci.nih.gov/sw/
+
+    NCICB Download Center
+
+    --  http://ncicb.nci.nih.gov/download/
+
+    caAdapter
+       
+    --  http://trials.nci.nih.gov/projects/infrastructureProject/caadapter
+
+    caCORE
+
+    --  http://ncicb.nci.nih.gov/core
+
+    caBIO
+
+    --  http://ncicb.nci.nih.gov/core/caBIO
+
+    caCORE SDK
+
+    --  http://ncicb.nci.nih.gov/NCICB/infrastructure/cacoresdk
+
+    caDSR
+
+    --  http://ncicb.nci.nih.gov/core/caDSR 
+    --  http://ncicb.nci.nih.gov/xml
+
+    Common Terminology Services Interfaces
+       
+    --  http://informatics.mayo.edu/index.php?page=11
+    --  http://informatics.mayo.edu/LexGrid/index.php?page=1
+
+    CSM / CLM
+
+    --  http://ncicb.nci.nih.gov/core/CSM
+
+    EVS
+
+    --  http://ncicb.nci.nih.gov/core/EVS
+
+    HL7
+       
+    --  http://www.hl7.org/
+
+    JavaSIG
+       
+    --  http://www.hl7.org/Special/committees/java/index.cfm
+    --  http://www.hl7.org/
+        1:  Click on "Special Interest Groups"
+        2:  Click on "Java"
+
+
+================================================================
+                   6.0 caCORE GForge Sites
+================================================================
+
+
+    caBIO
+
+    --  http://gforge.nci.nih.gov/projects/cabiodb/
+
+    caCORE SDK
+
+    --  http://gforge.nci.nih.gov/projects/cacoresdk/
+
+    caDSR Admin Tool
+
+    --  http://gforge.nci.nih.gov/projects/cadsradmin/
+
+    caDSR Form Builder
+    
+    --  http://gforge.nci.nih.gov/projects/formbuilder/
+
+    caDSR Sentinel Tool
+
+    --  http://gforge.nci.nih.gov/projects/sentinel/
+
+    CDE Browser
+
+    --  http://gforge.nci.nih.gov/projects/cdebrowser/
+
+    CDE Curation Tool
+
+    --  http://gforge.nci.nih.gov/projects/cdecurate/
+
+    CSM / CLM
+
+    -- http://gforge.nci.nih.gov/projects/security/
+
+    UML Model Browser
+
+    --  http://gforge.nci.nih.gov/projects/umlmodelbrowser/
+
+
+//end
