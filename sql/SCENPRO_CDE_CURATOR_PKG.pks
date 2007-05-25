@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE scenpro_cde_curator_pkg AS
+CREATE OR REPLACE PACKAGE SCENPRO_CDE_CURATOR_PKG AS
     PROCEDURE set_de(
         p_return_code               OUT      VARCHAR2
        ,p_action                    IN       VARCHAR2
@@ -47,57 +47,6 @@ CREATE OR REPLACE PACKAGE scenpro_cde_curator_pkg AS
        ,p_new_de_idseq              OUT      VARCHAR2
        ,p_de_origin                 IN       VARCHAR2 DEFAULT NULL );   -- 31-Jul-2003, Prerna Aggarwal
 
-    /*CURSOR de_search_result IS
-      SELECT     d.preferred_name
-                 ,d.long_name
-                 ,d.preferred_definition
-                 ,d.asl_name
-                 ,d.conte_idseq
-                 ,d.begin_date
-                 ,d.end_date
-                 ,c.name
-                 ,d.dec_idseq
-                 ,nvl(dec.long_name,dec.preferred_name)    dec_name
-                 ,dec.preferred_definition dec_preferred_definition
-                 ,d.vd_idseq
-                 ,nvl(vd.long_name,vd.preferred_name) vd_name
-                 ,vd.preferred_definition   vd_preferred_definition
-                 ,d.version
-                 ,r.doc_text
-                 ,i.min_cde_id
-                 ,d.change_note
-                 ,sn.doc_text de_source_name
-                 ,des.LAE_NAME language
-                 ,d.de_idseq
-                 ,des.desig_idseq
-                 ,r.RD_IDSEQ doc_rd_idseq
-                 ,sn.RD_IDSEQ de_sn_rd_idseq
-                 ,dec.preferred_name dec_pref_name
-                 ,vd.preferred_name vd_pref_name
-                 ,hsn.doc_Text historic_short_cde_name
-                 ,u.name usedby_name
-                 ,uc.name  used_by_context
-                 ,u.desig_idseq u_desig_idseq
-       FROM       data_elements_view d
-                  ,data_element_concepts_view dec
-                  ,value_domains_View vd
-                  ,contexts c
-                  ,de_long_name_view r
-                  ,de_cde_id_view i
-                  ,de_source_name_view sn
-                  ,de_cn_language_view des
-                  ,de_short_name_view hsn
-                  ,used_by_view u
-                  ,contexts_view uc
-      WHERE       d.conte_idseq = c.conte_idseq
-      AND         d.dec_idseq = dec.dec_idseq
-      AND         d.vd_idseq  = vd.vd_idseq
-      AND         d.de_idseq = r.ac_idseq(+)
-      AND         d.de_idseq = i.ac_idseq(+)
-      AND         d.de_idseq = sn.ac_idseq(+)
-      AND         d.de_idseq = des.ac_idseq(+)
-      AND         d.de_idseq = hsn.ac_idseq(+)
-      AND         d.de_idseq = u.ac_idseq(+);*/
 
     --select * from de_view_ext;
     TYPE type_de_search IS REF CURSOR;   --RETURN de_search_result%ROWTYPE;
@@ -291,7 +240,11 @@ CREATE OR REPLACE PACKAGE scenpro_cde_curator_pkg AS
     PROCEDURE search_vm(
         p_search_string   IN       VARCHAR2 DEFAULT NULL
        ,p_cd_idseq        IN       VARCHAR2 DEFAULT NULL
-       ,p_vm_search_res   OUT      type_vm_search );
+       ,p_description     IN       VARCHAR2 DEFAULT NULL
+       ,p_condr_idseq     IN       VARCHAR2 DEFAULT NULL
+       ,p_vm_search_res   OUT      type_vm_search
+	   ,p_con_name        IN       VARCHAR2 DEFAULT NULL
+	   ,p_con_idseq       IN       VARCHAR2 DEFAULT NULL	 );
 
     CURSOR cs_name_de_search_result IS
         SELECT cs.cs_idseq
@@ -391,7 +344,7 @@ CREATE OR REPLACE PACKAGE scenpro_cde_curator_pkg AS
     TYPE type_csi_search IS REF CURSOR;
 
     PROCEDURE search_csi(
-        p_search_string   IN       VARCHAR2 DEFAULT NULL
+        p_search_string   IN       class_scheme_items_view.csi_name%TYPE DEFAULT NULL
        --,p_cs_long_name      in varchar2 default null changed on 8/4/03 on request by Scenpro Prerna Aggarwal
     ,   p_cs_idseq        IN       VARCHAR2
        ,p_conte_name      IN       VARCHAR2 DEFAULT NULL
@@ -448,7 +401,7 @@ CREATE OR REPLACE PACKAGE scenpro_cde_curator_pkg AS
               ,de_cn_language_view des
               ,used_by_view u
               ,contexts_view uc
-              ,representations_ext r
+              ,REPRESENTATIONS_EXT r
          WHERE vd.conte_idseq = c.conte_idseq
            AND vd.cd_idseq = cd.cd_idseq
            AND vd.vd_idseq = des.ac_idseq(+)
@@ -539,7 +492,7 @@ CREATE OR REPLACE PACKAGE scenpro_cde_curator_pkg AS
               ,de_cn_language_view des
               ,quest_crf_view_ext q
               ,protocols_view_ext p
-              ,representations_ext r
+              ,REPRESENTATIONS_EXT r
          WHERE vd.conte_idseq = c.conte_idseq
            AND vd.cd_idseq = cd.cd_idseq
            AND vd.vd_idseq = des.ac_idseq(+)
@@ -685,6 +638,7 @@ CREATE OR REPLACE PACKAGE scenpro_cde_curator_pkg AS
               ,NVL( cs.long_name, cs.preferred_name ) long_name
               ,cs.asl_name
               ,c.NAME context_name
+              ,cs.version
           FROM classification_schemes_view cs
               ,contexts_view c
          WHERE cs.conte_idseq = c.conte_idseq;
@@ -1093,7 +1047,7 @@ CREATE OR REPLACE PACKAGE scenpro_cde_curator_pkg AS
     -- 19-Mar-2004, W. Ver Hoef substituted DRAFT NEW with function call below
     PROCEDURE search_question(
         p_user               IN       VARCHAR2
-       ,p_asl_name           IN       VARCHAR2 DEFAULT sbrext_common_routines.get_default_asl( 'INS' )
+       ,p_asl_name           IN       VARCHAR2 DEFAULT Sbrext_Common_Routines.get_default_asl( 'INS' )
        ,   -- 'DRAFT NEW',
         p_qc_id              IN       VARCHAR2
        ,   -- 03-Jul-2003, W. Ver Hoef
@@ -1162,9 +1116,9 @@ CREATE OR REPLACE PACKAGE scenpro_cde_curator_pkg AS
        ,p_concat_char          OUT      VARCHAR2
        ,p_crtl_name            OUT      VARCHAR2
        ,p_cdt_components_cur   OUT      type_cdt_components_types
-       ,p_de_name              OUT      VARCHAR2
-       ,p_de_id                OUT      VARCHAR2
-       ,p_de_version           OUT      VARCHAR2 );
+	   ,p_de_name			   OUT      VARCHAR2
+	   ,p_de_id				   OUT      VARCHAR2
+	   ,p_de_version		   OUT      VARCHAR2 );
 
     -- 30-Mar-2004, W. Ver Hoef added procedure and type definition per SPRF_2.1_16b
     TYPE type_ref_docs IS REF CURSOR;
@@ -1201,7 +1155,7 @@ CREATE OR REPLACE PACKAGE scenpro_cde_curator_pkg AS
 
     TYPE type_con_search IS REF CURSOR;   -- RETURN oc_search_result%ROWTYPE;
 
-    PROCEDURE search_con(
+        PROCEDURE search_con(
         p_search_string    IN       VARCHAR2 DEFAULT NULL
        ,p_asl_name         IN       VARCHAR2 DEFAULT NULL
        ,p_context          IN       VARCHAR2 DEFAULT NULL
@@ -1210,6 +1164,7 @@ CREATE OR REPLACE PACKAGE scenpro_cde_curator_pkg AS
        ,p_con_search_res   OUT      type_con_search
        ,p_dec_idseq        IN       VARCHAR2 DEFAULT NULL   -- 7-DEC-2005, S. Hegde (TT1780)
        ,p_vd_idseq         IN       VARCHAR2 DEFAULT NULL   -- 7-DEC-2005, S. Hegde (TT1780)
+       ,p_definition       IN       VARCHAR2 DEFAULT NULL   -- 7-DEC-2005, S. Hegde (GF634)
                                                          );
 
     -- TT1824; 11/10/2005
@@ -1244,7 +1199,7 @@ CREATE OR REPLACE PACKAGE scenpro_cde_curator_pkg AS
 
     PRAGMA RESTRICT_REFERENCES( get_one_cd_name, WNDS, RNPS );
 
-    FUNCTION get_one_con_name(
+    FUNCTION Get_One_Con_Name(
         p_dec_idseq   IN   data_element_concepts_view.dec_idseq%TYPE
        ,p_vd_idseq    IN   value_domains_view.vd_idseq%TYPE )
         RETURN VARCHAR2;
@@ -1255,7 +1210,7 @@ CREATE OR REPLACE PACKAGE scenpro_cde_curator_pkg AS
     --  S. Alred; 12/9/2005
     TYPE type_ac_contact IS REF CURSOR;
 
-    PROCEDURE search_ac_contact(
+    PROCEDURE Search_Ac_Contact(
         p_ac_idseq            IN       ac_contacts_view.ac_idseq%TYPE
        ,p_acc_idseq           IN       ac_contacts_view.acc_idseq%TYPE
        ,p_ac_con_search_res   OUT      type_ac_contact );
@@ -1304,9 +1259,68 @@ CREATE OR REPLACE PACKAGE scenpro_cde_curator_pkg AS
     PROCEDURE get_addr_type_list( p_addr_type_res OUT type_addr_type );
 
     -- SPRF_3.1_2 (TT1716)
-    FUNCTION get_crtl_name( p_de_idseq IN data_elements_view.de_idseq%TYPE )
+    FUNCTION Get_Crtl_Name( p_de_idseq IN data_elements_view.de_idseq%TYPE )
         RETURN VARCHAR2;
 
-    PRAGMA RESTRICT_REFERENCES( get_crtl_name, WNDS, RNPS );
+    PRAGMA RESTRICT_REFERENCES( Get_Crtl_Name, WNDS, RNPS );
+
+	PROCEDURE SET_VM(
+	 P_RETURN_CODE	            OUT VARCHAR2
+	,P_ACTION                   IN OUT VARCHAR2
+	,P_CON_ARRAY				IN VARCHAR2
+	,P_VM_IDSEQ					IN OUT VARCHAR2
+	,P_PREFERRED_NAME			IN OUT VARCHAR2
+	,P_LONG_NAME				IN OUT VARCHAR2
+	,P_PREFERRED_DEFINITION		IN OUT VARCHAR2
+	,P_CONTE_IDSEQ				IN OUT VARCHAR2
+	,P_ASL_NAME					IN OUT VARCHAR2
+	,P_VERSION					IN OUT VARCHAR2
+	,P_VM_ID					IN OUT VARCHAR2
+	,P_LATEST_VERSION_IND	    IN OUT VARCHAR2
+	,P_CONDR_IDSEQ				IN OUT VARCHAR2
+	,P_DEFINITION_SOURCE		IN OUT VARCHAR2
+	,P_ORIGIN					IN OUT VARCHAR2
+	,P_CHANGE_NOTE	        	IN OUT VARCHAR2
+	,P_BEGIN_DATE	        	IN OUT VARCHAR2
+	,P_END_DATE	            	IN OUT VARCHAR2
+	,P_CREATED_BY	        	OUT	VARCHAR2
+	,P_DATE_CREATED	        	OUT	VARCHAR2
+	,P_MODIFIED_BY	        	OUT	VARCHAR2
+	,P_DATE_MODIFIED	        OUT	VARCHAR2
+	)	;
+
+	PROCEDURE GET_VM(
+	 P_RETURN_CODE	            OUT VARCHAR2
+	,P_VM_IDSEQ					IN OUT VARCHAR2
+	,P_LONG_NAME 				IN OUT VARCHAR2
+	,P_VERSION					IN OUT VARCHAR2
+	,P_VM_ID					IN OUT VARCHAR2
+	,P_PREFERRED_NAME			OUT VARCHAR2
+	,P_PREFERRED_DEFINITION		OUT VARCHAR2
+	,P_CONTE_IDSEQ				OUT VARCHAR2
+	,P_ASL_NAME					OUT VARCHAR2
+	,P_LATEST_VERSION_IND	    OUT VARCHAR2
+	,P_CONDR_IDSEQ				OUT VARCHAR2
+	,P_DEFINITION_SOURCE		OUT VARCHAR2
+	,P_ORIGIN					OUT VARCHAR2
+	,P_CHANGE_NOTE	        	OUT VARCHAR2
+	,P_BEGIN_DATE	        	OUT VARCHAR2
+	,P_END_DATE	            	OUT VARCHAR2
+	,P_CREATED_BY	        	OUT	VARCHAR2
+	,P_DATE_CREATED	        	OUT	VARCHAR2
+	,P_MODIFIED_BY	        	OUT	VARCHAR2
+	,P_DATE_MODIFIED	        OUT	VARCHAR2
+	)	;
+
+	PROCEDURE get_vm_condr(
+		   p_con_array IN VARCHAR2
+          ,p_return_code OUT VARCHAR2
+          ,p_long_name IN OUT VARCHAR2
+		  ,p_condr_idseq OUT VARCHAR2
+		  ,p_preferred_definition OUT VARCHAR2
+		  ,p_action OUT VARCHAR2
+    ) ;
+
+
 END;
 /

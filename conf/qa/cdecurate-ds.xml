@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    JBoss Server Configuration for the CDE Curation Tool, Sentinel Tool and Freestyle
+
+    $Header: /cvsshare/content/cvsroot/cdecurate/conf/qa/cdecurate-ds.xml,v 1.1 2007-05-25 15:22:45 hebell Exp $
+    $Name: not supported by cvs2svn $
+ -->
+<datasources>
+    <local-tx-datasource>
+        <jndi-name>jdbc/CDECurateDS</jndi-name>
+        <connection-url>jdbc:oracle:thin:@cbiodb30.nci.nih.gov:1521:CBTEST</connection-url>
+        <driver-class>oracle.jdbc.driver.OracleDriver</driver-class>
+        <exception-sorter-class-name>org.jboss.resource.adapter.jdbc.vendor.OracleExceptionSorter</exception-sorter-class-name>
+        <check-valid-connection-sql>select 1 from dual</check-valid-connection-sql>
+        <blocking-timeout-millis>10000</blocking-timeout-millis>
+        <idle-timeout-minutes>1</idle-timeout-minutes>
+        <max-pool-size>85</max-pool-size>
+        <min-pool-size>1</min-pool-size>
+        <application-managed-security />
+    </local-tx-datasource>
+</datasources>

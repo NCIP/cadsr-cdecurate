@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE BODY scenpro_cde_curator_pkg AS
+CREATE OR REPLACE PACKAGE BODY SCENPRO_CDE_CURATOR_PKG AS
     -- function to count CDs
     FUNCTION count_cds( p_pv_idseq IN permissible_values_view.pv_idseq%TYPE )
         RETURN NUMBER IS
@@ -26,7 +26,7 @@ CREATE OR REPLACE PACKAGE BODY scenpro_cde_curator_pkg AS
         RETURN( v_return );
     END count_cds;
 
-    --  function to return one doc text from RD
+	    --  function to return one doc text from RD
     FUNCTION get_one_rd_name( p_ac_idseq IN reference_documents_view.ac_idseq%TYPE )
         RETURN VARCHAR2 IS
         /*
@@ -38,7 +38,7 @@ CREATE OR REPLACE PACKAGE BODY scenpro_cde_curator_pkg AS
         */
         v_return   reference_documents_view.doc_text%TYPE;
     BEGIN
-        SELECT MIN( NVL( rdv.doc_text, rdv.NAME ))
+        SELECT MIN( NVL(rdv.doc_text,rdv.name) )
           INTO v_return
           FROM reference_documents_view rdv
          WHERE rdv.ac_idseq = p_ac_idseq;
@@ -56,15 +56,17 @@ CREATE OR REPLACE PACKAGE BODY scenpro_cde_curator_pkg AS
         ** S. Hegde 1/4/06
         **
         */
-        v_return   designations_view.NAME%TYPE;
+        v_return   designations_view.name%TYPE;
     BEGIN
-        SELECT MIN( dv.NAME )
+        SELECT MIN( dv.name )
           INTO v_return
           FROM designations_view dv
-         WHERE dv.ac_idseq = p_ac_idseq AND dv.detl_name <> 'USED_BY';
+         WHERE dv.ac_idseq = p_ac_idseq
+		 AND dv.detl_name <> 'USED_BY';
 
         RETURN v_return;
     END get_one_alt_name;
+
 
     --  function to return one CD name
     FUNCTION get_one_cd_name( p_short_meaning IN value_meanings_lov.short_meaning%TYPE )
@@ -91,7 +93,7 @@ CREATE OR REPLACE PACKAGE BODY scenpro_cde_curator_pkg AS
     END get_one_cd_name;
 
     -- function to return one concept name
-    FUNCTION get_one_con_name(
+    FUNCTION Get_One_Con_Name(
         p_dec_idseq   IN   data_element_concepts_view.dec_idseq%TYPE
        ,p_vd_idseq    IN   value_domains_view.vd_idseq%TYPE )
         RETURN VARCHAR2 IS
@@ -243,13 +245,13 @@ CREATE OR REPLACE PACKAGE BODY scenpro_cde_curator_pkg AS
         END IF;
 
         RETURN v_return;
-    END get_one_con_name;
+    END Get_One_Con_Name;
 
     -- Return one of: a crt0_name; a set of parent CDE's, or NULL depending on whether a CDE
     -- is a complex CDE/ a child in a complex CDE relationship/ or a regular CDE respectively
     -- SPRF_3.1_2 (TT1716)
     -- S. Alred; 12/19/2005
-    FUNCTION get_crtl_name( p_de_idseq IN data_elements_view.de_idseq%TYPE )
+    FUNCTION Get_Crtl_Name( p_de_idseq IN data_elements_view.de_idseq%TYPE )
         RETURN VARCHAR2 IS
         /*
         ** For TT1716:
@@ -297,7 +299,7 @@ CREATE OR REPLACE PACKAGE BODY scenpro_cde_curator_pkg AS
         CLOSE c_crtl_name;
 
         RETURN v_return;
-    END get_crtl_name;
+    END Get_Crtl_Name;
 
     PROCEDURE set_de(
         p_return_code               OUT      VARCHAR2
@@ -352,7 +354,7 @@ CREATE OR REPLACE PACKAGE BODY scenpro_cde_curator_pkg AS
             v_de_idseq := p_de_de_idseq;
         END IF;
 
-        sbrext_set_row.set_de( p_return_code
+        Sbrext_Set_Row.set_de( p_return_code
                               ,p_action
                               ,v_de_idseq
                               ,p_de_preferred_name
@@ -377,7 +379,7 @@ CREATE OR REPLACE PACKAGE BODY scenpro_cde_curator_pkg AS
         IF p_return_code IS NULL AND p_action = 'INS' THEN   -- 16-Jul-2003, W. Ver Hoef
             p_de_de_idseq := v_de_idseq;   -- 16-Jul-2003, W. Ver Hoef
             v_des_name := p_de_preferred_name;
-            sbrext_set_row.set_des( p_return_code
+            Sbrext_Set_Row.set_des( p_return_code
                                    ,'INS'
                                    ,v_desig_idseq
                                    ,v_des_name
@@ -442,7 +444,7 @@ CREATE OR REPLACE PACKAGE BODY scenpro_cde_curator_pkg AS
          WHERE de_idseq = p_new_de_idseq;
 
         IF p_return_code IS NULL THEN
-            sbrext_set_row.set_de( p_return_code
+            Sbrext_Set_Row.set_de( p_return_code
                                   ,'UPD'
                                   ,p_new_de_idseq
                                   ,p_de_preferred_name
@@ -476,6 +478,7 @@ CREATE OR REPLACE PACKAGE BODY scenpro_cde_curator_pkg AS
             END;
         END IF;
     END;
+
 
     PROCEDURE search_de(
         p_de_idseq                 IN       VARCHAR2
@@ -696,18 +699,21 @@ CREATE OR REPLACE PACKAGE BODY scenpro_cde_curator_pkg AS
  ,ar.registration_status
  ,d.date_created
  ,d.date_modified
- ,scenpro_cde_curator_pkg.get_ua_full_name(d.created_by)  created_by
- ,scenpro_cde_curator_pkg.get_ua_full_name(d.modified_by) modified_by
+ ,SCENPRO_CDE_CURATOR_PKG.get_ua_full_name(d.created_by)  created_by
+ ,SCENPRO_CDE_CURATOR_PKG.get_ua_full_name(d.modified_by) modified_by
  ,v2.doc_text long_name_doc_text
+ --,v1.doc_text hist_cde_doc_text
+ --,hc.hist_cde_count
+ --,hc.min_hist_cde_name
  ,vc.min_value
  ,vc.value_count
- ,scenpro_cde_curator_pkg.Get_Crtl_Name(d.de_idseq) derivation_type
+ ,SCENPRO_CDE_CURATOR_PKG.Get_Crtl_Name(d.de_idseq) derivation_type
  ,u.conte_idseq used_by_conte_idseq
- ,scenpro_cde_curator_pkg.Get_One_Con_Name(DEC.dec_idseq, vd.vd_idseq) con_name
- ,scenpro_cde_curator_pkg.get_one_alt_name(d.de_idseq) alt_name
- ,scenpro_cde_curator_pkg.get_one_rd_name(d.de_idseq) rd_name ';
+ ,SCENPRO_CDE_CURATOR_PKG.Get_One_Con_Name(DEC.dec_idseq, vd.vd_idseq) con_name
+ ,SCENPRO_CDE_CURATOR_PKG.get_one_alt_name(d.de_idseq) alt_name
+ ,SCENPRO_CDE_CURATOR_PKG.get_one_rd_name(d.de_idseq) rd_name ';
         v_from :=
-            '
+               '
 FROM
  data_elements_view d
  ,data_element_concepts_view DEC
@@ -724,21 +730,22 @@ FROM
  ,(SELECT ac_idseq, doc_text
    FROM reference_documents
    WHERE dctl_name = ''Preferred Question Text'') v2 ';
-        /* ,(SELECT ac_idseq,
-             COUNT(1)  hist_cde_count,
-             MIN(name) min_hist_cde_name
-           FROM   designations_view
-           WHERE  detl_name = ''HISTORICAL_CDE_ID''
-             AND    UPPER(name) LIKE '''
-                    || NVL( v_hist_cde_id, '%' )
-                    || '''
-           GROUP BY ac_idseq) hc '; */-- ,de_cde_id_view i       -- 30-Jun-2003, W. Ver Hoef commented
-                -- ,de_source_name_view sn -- 14-Jul-2003, W. Ver Hoef commented
-                -- ,submitters_view s ';   -- 22-Mar-2004, W. Ver Hoef commented submitters
-                -- 16-Feb-2004, W. Ver Hoef added ac_registrations
-                -- 30-mar-2004, W. Ver Hoef added ref_docs_sum_by_type_view
-                -- 31-Mar-2004, W. Ver Hoef added pseudo-table subquery on designations_view for hist cde count and min cde
-                -- 01-Apr-2004, W. Ver Hoef removed ",de_short_name_view hsn ,de_long_name_view r " per mod to SPRF_2.1_16
+/* ,(SELECT ac_idseq,
+     COUNT(1)  hist_cde_count,
+     MIN(name) min_hist_cde_name
+   FROM   designations_view
+   WHERE  detl_name = ''HISTORICAL_CDE_ID''
+     AND    UPPER(name) LIKE '''
+            || NVL( v_hist_cde_id, '%' )
+            || '''
+   GROUP BY ac_idseq) hc '; */
+        -- ,de_cde_id_view i       -- 30-Jun-2003, W. Ver Hoef commented
+        -- ,de_source_name_view sn -- 14-Jul-2003, W. Ver Hoef commented
+        -- ,submitters_view s ';   -- 22-Mar-2004, W. Ver Hoef commented submitters
+        -- 16-Feb-2004, W. Ver Hoef added ac_registrations
+        -- 30-mar-2004, W. Ver Hoef added ref_docs_sum_by_type_view
+        -- 31-Mar-2004, W. Ver Hoef added pseudo-table subquery on designations_view for hist cde count and min cde
+        -- 01-Apr-2004, W. Ver Hoef removed ",de_short_name_view hsn ,de_long_name_view r " per mod to SPRF_2.1_16
         v_where :=
             '
 d.conte_idseq = c.conte_idseq
@@ -1087,18 +1094,14 @@ d.conte_idseq = c.conte_idseq
         --                            hist_cde_count because the pseudo-table will count based on
         --                            the historical cde parameter
         IF p_historical_cde_id IS NOT NULL THEN
-            --         v_where := v_where || '
-            -- AND hc.hist_cde_count >= 1 ';
-            v_where :=
-                   v_where
-                || '
+   --         v_where := v_where || '
+   -- AND hc.hist_cde_count >= 1 ';
+              v_where := v_where||'
               AND exists (select h.ac_idseq
                       from   designations_view h
               where  h.ac_idseq  = d.de_idseq
                         and    h.detl_name = ''HISTORICAL_CDE_ID''
-              and    upper(h.name) like '''
-                || v_hist_cde_id
-                || ''')';
+              and    upper(h.name) like '''||v_hist_cde_id||''')';
         END IF;
 
         -- 10-Mar-2004, W. Ver Hoef added to apply only when param is not null
@@ -1420,8 +1423,8 @@ d.conte_idseq = c.conte_idseq
         --                            hsn.doc_text historic_short_cde_name per mod to SPRF_1.2_16
         -- 16-Apr-2004, W. Ver Hoef added used by context idseq per SPRF_2.1_30
         v_select :=
-            'SELECT DISTINCT
- d.de_idseq
+            'SELECT
+ DISTINCT d.de_idseq -- should eliminate potential for cartesian product when using p_pv_idseq
 ,d.preferred_name
 ,d.long_name
 ,d.preferred_definition
@@ -1437,20 +1440,23 @@ d.conte_idseq = c.conte_idseq
 ,NVL(vd.long_name,vd.preferred_name) vd_name
 ,vd.preferred_definition   vd_preferred_definition
 ,d.version
+--,r.doc_text
 ,d.cde_id
 ,d.change_note
 ,des.LAE_NAME LANGUAGE
 ,des.desig_idseq
+--,r.RD_IDSEQ doc_rd_idseq
 ,DEC.preferred_name dec_pref_name
 ,vd.preferred_NAME vd_pref_name
+--,hsn.doc_text historic_short_cde_name
 ,u.name usedby_name
 ,uc.name  used_by_context
 ,u.desig_idseq u_desig_idseq
 ,d.origin
 ,d.date_created
-,scenpro_cde_curator_pkg.get_ua_full_name(d.created_by)  created_by
+,SCENPRO_CDE_CURATOR_PKG.get_ua_full_name(d.created_by)  created_by
 ,d.date_modified
-,scenpro_cde_curator_pkg.get_ua_full_name(d.modified_by) modified_by
+,SCENPRO_CDE_CURATOR_PKG.get_ua_full_name(d.modified_by) modified_by
 ,ar.ar_idseq
 ,ar.registration_status
 ,v1.doc_text long_name_doc_text
@@ -1713,7 +1719,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
         -- 31-Mar-2004, W. Ver Hoef added join for hc pseudo-table for hist cde data
         -- 01-Apr-2003, W. Ver Hoef added vc join ; removed "AND d.de_idseq = hsn.ac_idseq (+)"
         v_sql :=
-            'SELECT d.preferred_name
+            'SELECT  d.preferred_name
            ,d.long_name
      ,d.preferred_definition
      ,d.asl_name
@@ -1742,8 +1748,8 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
      ,ar.registration_status  registration_status
      ,d.date_created
      ,d.date_modified
-     ,scenpro_cde_curator_pkg.get_ua_full_name(d.created_by)  created_by
-     ,scenpro_cde_curator_pkg.get_ua_full_name(d.modified_by) modified_by
+     ,SCENPRO_CDE_CURATOR_PKG.get_ua_full_name(d.created_by)  created_by
+     ,SCENPRO_CDE_CURATOR_PKG.get_ua_full_name(d.modified_by) modified_by
               ,v2.doc_text long_name_doc_text
               ,v1.doc_text hist_cde_doc_text
               ,hc.hist_cde_count
@@ -1905,7 +1911,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
 
         OPEN p_cs_search_res FOR
             SELECT   cs.cs_idseq
-                    , NVL( cs.long_name, cs.preferred_name ) || ' - ' || c.NAME long_name
+                    , NVL( cs.long_name, cs.preferred_name ) || ' - ' || c.NAME || ' - v' || cs.version long_name
                     ,   -- 16-Apr-2004, W. Ver Hoef
                      csi.csi_idseq
                     ,csi.csi_name
@@ -1914,8 +1920,8 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
                     ,cs_csi.p_cs_csi_idseq
                     ,cs_csi.label
                     ,cs_csi.display_order
-                    ,sbrext_common_routines.get_csi_level( acsi.cs_csi_idseq ) csi_level
-                    ,sbrext_common_routines.get_cs_csi_do( cs.cs_idseq, cs_csi.cs_csi_idseq ) hier_level
+                    ,Sbrext_Common_Routines.get_csi_level( acsi.cs_csi_idseq ) csi_level
+                    ,Sbrext_Common_Routines.get_cs_csi_do( cs.cs_idseq, cs_csi.cs_csi_idseq ) hier_level
                 FROM classification_schemes cs
                     ,class_scheme_items csi
                     ,cs_csi
@@ -2059,13 +2065,13 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
  ,DEC.ORIGIN
  ,DEC.date_created
  ,DEC.date_modified
- ,scenpro_cde_curator_pkg.get_ua_full_name(DEC.created_by)  created_by
- ,scenpro_cde_curator_pkg.get_ua_full_name(DEC.modified_by) modified_by
+ ,SCENPRO_CDE_CURATOR_PKG.get_ua_full_name(DEC.created_by)  created_by
+ ,SCENPRO_CDE_CURATOR_PKG.get_ua_full_name(DEC.modified_by) modified_by
  ,prop.asl_name prop_asl_name
  ,oc.asl_name oc_asl_name
- ,scenpro_cde_curator_pkg.Get_One_Con_Name(DEC.dec_idseq, NULL) con_name
- ,scenpro_cde_curator_pkg.get_one_alt_name(DEC.dec_idseq) alt_name
- ,scenpro_cde_curator_pkg.get_one_rd_name(DEC.dec_idseq) rd_name ';
+ ,SCENPRO_CDE_CURATOR_PKG.Get_One_Con_Name(DEC.dec_idseq, NULL) con_name
+ ,SCENPRO_CDE_CURATOR_PKG.get_one_alt_name(DEC.dec_idseq) alt_name
+ ,SCENPRO_CDE_CURATOR_PKG.get_one_rd_name(DEC.dec_idseq) rd_name ';
         v_from :=
             '
  FROM sbr.data_element_concepts_view  DEC
@@ -2440,9 +2446,9 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
      ,DEC.dec_id
      ,DEC.ORIGIN
      ,DEC.date_created -- 25- Mar-2004, W. Ver Hoef added created/modified cols
-     ,scenpro_cde_curator_pkg.get_ua_full_name(DEC.created_by)  created_by
+     ,SCENPRO_CDE_CURATOR_PKG.get_ua_full_name(DEC.created_by)  created_by
      ,DEC.date_modified
-     ,scenpro_cde_curator_pkg.get_ua_full_name(DEC.modified_by) modified_by ';
+     ,SCENPRO_CDE_CURATOR_PKG.get_ua_full_name(DEC.modified_by) modified_by ';
         v_from :=
             '
  FROM       data_element_concepts_view DEC
@@ -2654,17 +2660,17 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
  ,vd.origin
  ,vd.date_created
  ,vd.date_modified
- ,scenpro_cde_curator_pkg.get_ua_full_name(vd.created_by)  created_by
- ,scenpro_cde_curator_pkg.get_ua_full_name(vd.modified_by) modified_by
+ ,SCENPRO_CDE_CURATOR_PKG.get_ua_full_name(vd.created_by)  created_by
+ ,SCENPRO_CDE_CURATOR_PKG.get_ua_full_name(vd.modified_by) modified_by
  ,vc.min_value
  ,vc.value_count
  ,r.condr_idseq rep_condr_idseq
  ,vd.condr_idseq vd_condr_idseq
  ,NVL(r.long_name,r.preferred_name) rep_long_name
  ,r.asl_name rep_asl_name
- ,scenpro_cde_curator_pkg.Get_One_Con_Name(NULL, vd.vd_idseq) con_name
- ,scenpro_cde_curator_pkg.get_one_alt_name(vd.vd_idseq) alt_name
- ,scenpro_cde_curator_pkg.get_one_rd_name(vd.vd_idseq) rd_name ';
+ ,SCENPRO_CDE_CURATOR_PKG.Get_One_Con_Name(NULL, vd.vd_idseq) con_name
+ ,SCENPRO_CDE_CURATOR_PKG.get_one_alt_name(vd.vd_idseq) alt_name
+ ,SCENPRO_CDE_CURATOR_PKG.get_one_rd_name(vd.vd_idseq) rd_name ';
         -- NOTE: pseudo-table sub-query and join for vc defined below with p_permissible_value condition
         v_from :=
             '
@@ -3136,9 +3142,9 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
      ,vd.vd_id
      ,vd.origin
      ,vd.date_created  -- 25-Mar-2004, W. Ver Hoef added created/modified cols
-     ,scenpro_cde_curator_pkg.get_ua_full_name(vd.created_by)  created_by
+     ,SCENPRO_CDE_CURATOR_PKG.get_ua_full_name(vd.created_by)  created_by
      ,vd.date_modified
-     ,scenpro_cde_curator_pkg.get_ua_full_name(vd.modified_by) modified_by
+     ,SCENPRO_CDE_CURATOR_PKG.get_ua_full_name(vd.modified_by) modified_by
      ,vc.min_value
      ,vc.value_count ';   -- 31-Mar-2004, W. Ver Hoef added min_value value_count
         v_from :=
@@ -3552,6 +3558,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
                     ,NVL( cs.long_name, cs.preferred_name ) long_name
                     ,cs.asl_name
                     ,c.NAME context_name
+                    ,cs.version
                 FROM classification_schemes_view cs
                     ,contexts_view c
                WHERE cs.conte_idseq = c.conte_idseq AND UPPER( c.NAME ) = UPPER( NVL( p_context, c.NAME ))
@@ -3678,6 +3685,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
             RETURN NULL;
     END;
 
+
     PROCEDURE search_pv( p_vd_idseq IN VARCHAR2, p_pv_search_res OUT type_pv_search ) IS
     -- Date:  01-Jul-2003
     -- Modified By:  W. Ver Hoef
@@ -3702,40 +3710,43 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
                     ,pv.short_meaning
                     ,vp.vp_idseq
                     ,vp.origin
-                    ,   -- 01-Jul-2003, W. Ver Hoef added origin to query
-                     --   pv.meaning_description pv_meaning_description -- 01-Apr-2004, W. Ver Hoef added
-                     vm.description vm_description   -- 08-Apr-2004, W. Ver Hoef added to replace pv desc
+                    ,vm.description vm_description   -- 08-Apr-2004, W. Ver Hoef added to replace pv desc
                     ,vp.begin_date
                     ,vp.end_date
                     ,vp.con_idseq
-                    --,con.preferred_name concept_code
-                    --,con.long_name concept_name
-                    --,con.preferred_definition concept_definition
-                    --,con.evs_source evs_cui_source
-                    --,con.definition_source   evs_definition_source
-            ,        vm.condr_idseq vm_condr_idseq
+		 			,vm.VM_IDSEQ
+					,vm.LONG_NAME
+					,vm.PREFERRED_DEFINITION
+					,vm.VERSION
+            		,vm.condr_idseq
+					,vm.vm_id
+			 		,vm.conte_idseq
+			 		,vm.asl_name
+			 		,vm.change_note
+			 		,vm.comments
+			 		,vm.latest_version_ind
+
                 FROM value_domains_view vd
                     ,vd_pvs vp
                     ,permissible_values_view pv
-                    ,value_meanings_lov_view vm   -- 08-Apr-2004, W. Ver Hoef added
-               --,CONCEPTS_EXT con
+                    ,value_meanings_view vm   -- 08-Apr-2004, W. Ver Hoef added
             WHERE    vd.vd_idseq = vp.vd_idseq
                  AND vp.pv_idseq = pv.pv_idseq
                  AND pv.short_meaning = vm.short_meaning   -- 08-Apr-2004, W. Ver Hoef added
                  AND vd.vd_idseq = NVL( p_vd_idseq, vd.vd_idseq )
-            --AND     vp.con_idseq = con.con_idseq(+)
             ORDER BY UPPER( pv.VALUE );
     END;
 
+
     PROCEDURE search_csi(
-        p_search_string   IN       VARCHAR2
+        p_search_string   IN       class_scheme_items_view.csi_name%TYPE
        --,p_cs_long_name      in varchar2 default null changed on 8/4/03 on request by Scenpro Prerna Aggarwal
     ,   p_cs_idseq        IN       VARCHAR2
        ,p_conte_name      IN       VARCHAR2
        ,p_csi_res         OUT      type_csi_search ) IS
         -- Date:  30-Jul-2003
         -- Created By:  Prerna Aggarwal
-        v_search_string   VARCHAR2( 20 )   := ' ';
+        v_search_string   class_scheme_items_view.csi_name%TYPE  := ' ';
         v_where           VARCHAR2( 2000 );
         v_sql             VARCHAR2( 4000 );
         v_context         VARCHAR2( 2000 );
@@ -3841,7 +3852,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
         -- 16-Apr-2004, W. Ver Hoef added context name on the cs name value returned per SPRF_2.1_31
         v_cs_name   VARCHAR2( 255 );
     BEGIN
-        SELECT NVL( cs.long_name, cs.preferred_name ) || ' - ' || c.NAME
+        SELECT NVL( cs.long_name, cs.preferred_name ) || ' - ' || c.NAME || ' - v' || cs.version
           INTO v_cs_name
           FROM classification_schemes_view cs
               ,contexts_view c
@@ -3884,8 +3895,8 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
                       ,p_cs_csi_idseq
                       ,display_order
                       ,label
-                      ,scenpro_cde_curator_pkg.get_cs_name( cs_idseq ) cs_name   -- 20-Feb-2004, W. Ver Hoef
-                      ,scenpro_cde_curator_pkg.get_csi_name( csi_idseq ) csi_name   -- 20-Feb-2004, W. Ver Hoef
+                      ,SCENPRO_CDE_CURATOR_PKG.get_cs_name( cs_idseq ) cs_name   -- 20-Feb-2004, W. Ver Hoef
+                      ,SCENPRO_CDE_CURATOR_PKG.get_csi_name( csi_idseq ) csi_name   -- 20-Feb-2004, W. Ver Hoef
                       ,LEVEL lvl
                   FROM cs_csi_view
             CONNECT BY PRIOR cs_csi_idseq = p_cs_csi_idseq   -- 20-Feb-2004, W. Ver Hoef
@@ -4399,7 +4410,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
                     ,con.definition_source evs_definition_source
                     ,con.origin
                 FROM qualifier_lov_view_ext qual
-                    ,concepts_ext con
+                    ,CONCEPTS_EXT con
                WHERE UPPER( qualifier_name ) LIKE UPPER( NVL( v_search_string, qualifier_name ))
                      AND qual.con_idseq = con.con_idseq(+)
             ORDER BY UPPER( qualifier_name );
@@ -4812,7 +4823,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
                                                           ) IS
         v_search_string   VARCHAR2( 255 )  := REPLACE( p_search_string, '*', '%' );
         v_con_name        VARCHAR2( 1000 ) := UPPER( REPLACE( p_con_name, '*', '%' ));
-        v_sql             VARCHAR2( 2000 );
+        v_sql             VARCHAR2( 4000 );
         v_from            VARCHAR2( 2000 ) := ' ';
         v_where           VARCHAR2( 2000 ) := ' ';
         v_order           VARCHAR2( 2000 );
@@ -4827,20 +4838,30 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
         */
         v_sql :=
             'SELECT
- p.pv_idseq
- ,p.value
- ,p.short_meaning
- ,p.begin_date
- ,p.end_date
- ,p.meaning_description
- ,vm.description         vm_description
- ,vm.condr_idseq
- ,scenpro_cde_curator_pkg.get_one_cd_name(p.short_meaning) cd_name';
+			 p.pv_idseq
+			 ,p.value
+			 ,p.short_meaning
+			 ,p.begin_date
+			 ,p.end_date
+			 ,p.meaning_description
+			 ,vm.description         vm_description
+			 ,vm.condr_idseq
+			 ,SCENPRO_CDE_CURATOR_PKG.get_one_cd_name(p.short_meaning) cd_name
+ 			 ,vm.VM_IDSEQ
+			 ,vm.LONG_NAME
+			 ,vm.PREFERRED_DEFINITION
+			 ,vm.VERSION
+			 ,vm.vm_id
+			 ,vm.conte_idseq
+			 ,vm.asl_name
+			 ,vm.change_note
+			 ,vm.comments
+			 ,vm.latest_version_ind
+ 			 ';
         v_from := '
- FROM
- permissible_values        p
- ,value_meanings_lov_view  vm';   -- 16-Feb-2004, W. Ver Hoef added
-        v_where := 'p.short_meaning = vm.short_meaning';   -- 16-Feb-2004, W. Ver Hoef added
+   FROM    permissible_values        p
+   ,       value_meanings_view  vm';   -- 16-Feb-2004, W. Ver Hoef added
+   v_where := 'p.short_meaning = vm.short_meaning';   -- 16-Feb-2004, W. Ver Hoef added
 
         --add keyword filter  (Sumana)
         IF p_search_string IS NOT NULL THEN
@@ -4864,6 +4885,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
                    v_where
                 || '
        AND   d.cd_idseq             = c.cd_idseq (+)
+	   AND 	 d.short_meaning 		= vm.short_meaning (+)
         AND   NVL(c.cd_idseq,''1'')    = NVL('''
                 || p_cd_idseq
                 || ''',NVL(c.cd_idseq,''1''))';   -- criteria added on 8/8/03 Prerna Aggarwal
@@ -4883,22 +4905,21 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
             END IF;
 
             v_where :=
-                   '
- p.pv_idseq IN (
- SELECT pv.pv_idseq
- FROM sbr.permissible_values_view          pv
-     ,sbrext.CON_DERIVATION_RULES_VIEW_EXT CDR
-     ,sbrext.COMPONENT_CONCEPTS_VIEW_EXT   CC
-     ,sbrext.CONCEPTS_VIEW_EXT             CON
-     ,value_meanings_lov_view              vmv
- WHERE '
-                || v_con_name
-                || '
- AND CON.CON_IDSEQ = CC.CON_IDSEQ
- AND CC.CONDR_IDSEQ = CDR.CONDR_IDSEQ
- AND CDR.CONDR_IDSEQ = vmv.CONDR_IDSEQ
- AND vmv.short_meaning = pv.short_meaning
- ) AND '
+                   ' p.pv_idseq IN (
+					 SELECT pv.pv_idseq
+					 FROM sbr.permissible_values_view          pv
+					     ,sbrext.CON_DERIVATION_RULES_VIEW_EXT CDR
+					     ,sbrext.COMPONENT_CONCEPTS_VIEW_EXT   CC
+					     ,sbrext.CONCEPTS_VIEW_EXT             CON
+					     ,value_meanings_view              vmv
+					 WHERE '
+					                || v_con_name
+					                || '
+					 AND CON.CON_IDSEQ = CC.CON_IDSEQ
+					 AND CC.CONDR_IDSEQ = CDR.CONDR_IDSEQ
+					 AND CDR.CONDR_IDSEQ = vmv.CONDR_IDSEQ
+					 AND vmv.short_meaning = pv.short_meaning
+					 ) AND '
                 || v_where;
         END IF;
 
@@ -4907,40 +4928,136 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
         OPEN p_pvvm_search_res FOR v_sql;
     END;   --search pvvm
 
-    PROCEDURE search_vm( p_search_string IN VARCHAR2, p_cd_idseq IN VARCHAR2, p_vm_search_res OUT type_vm_search ) IS
+    PROCEDURE search_vm( p_search_string IN VARCHAR2
+			  			 ,p_cd_idseq IN VARCHAR2
+			  			 ,p_description IN VARCHAR2
+			  			 ,p_condr_idseq IN VARCHAR2
+						 ,p_vm_search_res OUT type_vm_search
+       					 ,p_con_name          IN       VARCHAR2 DEFAULT NULL
+       					 ,p_con_idseq         IN       VARCHAR2 DEFAULT NULL
+						)
+	IS
         v_search_string   VARCHAR2( 255 ) := REPLACE( p_search_string, '*', '%' );
+        v_con_name        VARCHAR2( 1000 ) := UPPER( REPLACE( p_con_name, '*', '%' ));
+        v_sql             VARCHAR2( 4000 );
+        v_from            VARCHAR2( 2000 );
+        v_where           VARCHAR2( 2000 );
+        v_order           VARCHAR2( 2000 );
     BEGIN
         IF p_vm_search_res%ISOPEN THEN
             CLOSE p_vm_search_res;
         END IF;
 
-        OPEN p_vm_search_res FOR
-            SELECT   vm.short_meaning
-                    ,vm.begin_date
-                    ,vm.end_date
-                    ,NVL( c.long_name, c.preferred_name ) cd_name
-                    ,c.VERSION
-                    ,   -- added on 9/04/2003
-                     vm.description vm_description
-                    ,con.preferred_name vm_concept_code
-                    ,con.long_name vm_concept_name
-                    ,con.evs_source vm_evs_cui_source
-                    ,con.definition_source evs_definition_source
-                    ,con.origin evs_origin   -- 16-Feb-2004, W. Ver Hoef added
-                FROM cd_vms d
-                    ,conceptual_domains c
-                    ,value_meanings_lov_view vm   -- 16-Feb-2004, W. Ver Hoef added
-                    ,concepts_ext con
-                    ,component_concepts_ext condr
-               WHERE d.cd_idseq = c.cd_idseq(+)
-                 AND vm.short_meaning = d.short_meaning(+)
-                 -- AND     vm.con_idseq = con.con_idseq(+)
-                 AND UPPER( vm.short_meaning ) LIKE UPPER( NVL( v_search_string, vm.short_meaning ))
-                 AND NVL( c.cd_idseq, '1' ) = NVL( p_cd_idseq, NVL( c.cd_idseq, '1' ))
-                 AND vm.condr_idseq = condr.condr_idseq(+)
-                 AND condr.con_idseq = con.con_idseq(+)
-            ORDER BY UPPER( vm.short_meaning );
-    END;
+        v_sql :=
+            'SELECT
+			  vm.VM_IDSEQ
+			 ,vm.LONG_NAME
+			 ,vm.PREFERRED_DEFINITION
+			 ,SCENPRO_CDE_CURATOR_PKG.get_one_cd_name(vm.short_meaning) cd_name
+			 ,vm.description         vm_description
+			 ,vm.begin_date
+			 ,vm.end_date
+			 ,vm.condr_idseq
+			 ,vm.short_meaning
+			 ,vm.VERSION
+			 ,vm.vm_id
+			 ,vm.conte_idseq
+			 ,vm.asl_name
+			 ,vm.change_note
+			 ,vm.comments
+			 ,vm.latest_version_ind
+			 ';
+        v_from := ' FROM value_meanings_view  vm';
+
+        --add keyword filter  (Sumana)
+        IF p_search_string IS NOT NULL THEN
+            v_where :=
+                   v_where
+                || '
+        		UPPER(vm.short_meaning) LIKE UPPER(NVL('''
+                || v_search_string
+                || ''',vm.short_meaning))';
+        END IF;
+	   -- filter by description
+
+      IF p_description IS NOT NULL THEN
+	    	IF v_where IS NOT NULL THEN
+		   	  	v_where := v_where || ' AND ';
+			END IF;
+            v_where :=
+                   v_where
+                || '
+        		UPPER(vm.description) LIKE UPPER(NVL('''
+                || p_description
+                || ''',vm.description))';
+	   END IF;
+		--filter by condr idseq
+       IF p_condr_idseq IS NOT NULL THEN
+	    	IF v_where IS NOT NULL THEN
+		   	  	v_where := v_where || ' AND ';
+			END IF;
+            v_where :=
+                   v_where ||
+				'NVL( vm.CONDR_IDSEQ, ''1'' ) = NVL('''
+                || p_condr_idseq
+                || ''', NVL( vm.CONDR_IDSEQ, ''1''))';
+		END IF;
+
+        --filter by concept name or con idseq sumana (7-dec-05)
+        IF ( p_con_name IS NOT NULL OR p_con_idseq IS NOT NULL ) THEN
+	    	IF v_where IS NOT NULL THEN
+		   	  	v_where := v_where || ' AND ';
+			END IF;
+            IF ( p_con_name IS NOT NULL ) THEN
+                v_con_name :=
+                       '(UPPER(CON.LONG_NAME) LIKE '''
+                    || v_con_name
+                    || ''' OR UPPER(CON.PREFERRED_NAME) LIKE '''
+                    || v_con_name
+                    || ''') ';
+            ELSE
+                v_con_name := 'CON.CON_idseq = ''' || p_con_idseq || ''' ';
+            END IF;
+
+            v_where := v_where ||
+                   'vm.condr_idseq IN (
+					 SELECT vmv.condr_idseq
+					 FROM sbrext.CON_DERIVATION_RULES_VIEW_EXT CDR
+					     ,sbrext.COMPONENT_CONCEPTS_VIEW_EXT   CC
+					     ,sbrext.CONCEPTS_VIEW_EXT             CON
+					     ,value_meanings_view              vmv
+					 WHERE '
+					                || v_con_name
+					                || '
+					 AND CON.CON_IDSEQ = CC.CON_IDSEQ
+					 AND CC.CONDR_IDSEQ = CDR.CONDR_IDSEQ
+					 AND CDR.CONDR_IDSEQ = vmv.CONDR_IDSEQ
+				 	 )';
+        END IF;
+
+        --add cd filter (sumana)
+        IF p_cd_idseq IS NOT NULL THEN
+            v_from := v_from || '
+          		   ,cd_vms                   d
+          		   ,conceptual_domains       c
+				   ';
+	    	IF v_where IS NOT NULL THEN
+		   	  	v_where := v_where || ' AND ';
+			END IF;
+            v_where :=
+                   v_where || '
+				 d.cd_idseq             = c.cd_idseq (+)
+	   			AND 	 d.short_meaning = vm.short_meaning (+)
+        		AND   NVL(c.cd_idseq,''1'')    = NVL('''
+                || p_cd_idseq
+                || ''',NVL(c.cd_idseq,''1''))';   -- criteria added on 8/8/03 Prerna Aggarwal
+        END IF;
+
+
+        v_sql := v_sql || v_from || ' WHERE ' || v_where || ' ORDER BY UPPER(vm.short_meaning)';   -- criteria added on 8/8/03 Prerna Aggarwal
+
+        OPEN p_vm_search_res FOR v_sql;
+    END;   --search vm
 
     PROCEDURE search_crfvalue(
         p_quest_idseq     IN       VARCHAR2
@@ -5057,7 +5174,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
 
         IF v_count = 0 THEN
             FOR v_rec IN vd LOOP
-                DELETE FROM vd_pvs_sources_ext
+                DELETE FROM VD_PVS_SOURCES_EXT
                       WHERE vp_idseq = v_rec.vp_idseq;
 
                 DELETE FROM vd_pvs_view
@@ -5076,7 +5193,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
     -- 19-Mar-2004, W. Ver Hoef substituted DRAFT NEW with function call below
     PROCEDURE search_question(
         p_user               IN       VARCHAR2
-       ,p_asl_name           IN       VARCHAR2 DEFAULT sbrext_common_routines.get_default_asl( 'INS' )
+       ,p_asl_name           IN       VARCHAR2 DEFAULT Sbrext_Common_Routines.get_default_asl( 'INS' )
        ,   -- 'DRAFT NEW',
         p_qc_id              IN       VARCHAR2
        ,p_valid_crf          OUT      VARCHAR2
@@ -5108,7 +5225,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
     BEGIN
         SELECT qc_idseq
           INTO v_crf_idseq
-          FROM crf_tool_parameter_ext
+          FROM CRF_TOOL_PARAMETER_EXT
          WHERE UPPER( ua_name ) = UPPER( p_user );
 
         v_has_update_privilege := admin_security_util.has_update_privilege( p_user, v_crf_idseq );
@@ -5268,8 +5385,8 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
  ,cd.deleted_ind
  ,cd.date_created
  ,cd.date_modified
- ,scenpro_cde_curator_pkg.get_ua_full_name(cd.created_by)  created_by
- ,scenpro_cde_curator_pkg.get_ua_full_name(cd.modified_by) modified_by';   -- 10-Mar-2004, W. Ver Hoef added get func.
+ ,SCENPRO_CDE_CURATOR_PKG.get_ua_full_name(cd.created_by)  created_by
+ ,SCENPRO_CDE_CURATOR_PKG.get_ua_full_name(cd.modified_by) modified_by';   -- 10-Mar-2004, W. Ver Hoef added get func.
         v_from := '
  FROM
     conceptual_domains_view  cd
@@ -5538,16 +5655,17 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
        ,p_concat_char          OUT      VARCHAR2
        ,p_crtl_name            OUT      VARCHAR2
        ,p_cdt_components_cur   OUT      type_cdt_components_types
-       ,p_de_name              OUT      VARCHAR2
-       ,p_de_id                OUT      VARCHAR2
-       ,p_de_version           OUT      VARCHAR2 ) IS
+	   ,p_de_name			   OUT      VARCHAR2
+	   ,p_de_id				   OUT      VARCHAR2
+	   ,p_de_version		   OUT      VARCHAR2 ) IS
+
         v_de_idseq      CHAR( 36 )       := p_de_idseq;
         v_methods       VARCHAR2( 4000 );
         v_rule          VARCHAR2( 4000 );
         v_concat_char   VARCHAR2( 1 );
         v_crtl_name     VARCHAR2( 30 );
-        v_de_name       VARCHAR2( 255 );
-        v_de_id         VARCHAR2( 30 );
+        v_de_name     	VARCHAR2( 255 );
+        v_de_id     	VARCHAR2( 30 );
         v_de_version    VARCHAR2( 30 );
     BEGIN
         IF p_cdt_components_cur%ISOPEN THEN
@@ -5559,19 +5677,20 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
               ,rule
               ,concat_char
               ,crtl_name
-              ,long_name
-              ,cde_id
-              ,VERSION
+			  ,long_name
+			  ,cde_id
+			  ,version
           INTO v_methods
               ,v_rule
               ,v_concat_char
               ,v_crtl_name
-              ,v_de_name
-              ,v_de_id
-              ,v_de_version
+			  ,v_de_name
+			  ,v_de_id
+			  ,v_de_version
           FROM complex_data_elements_view
-              ,data_elements_view
-         WHERE p_de_idseq = v_de_idseq AND de_idseq = p_de_idseq;
+		  	   ,data_elements_view
+         WHERE p_de_idseq = v_de_idseq
+		 AND   de_idseq = p_de_idseq;
 
         p_methods := v_methods;
         p_rule := v_rule;
@@ -5719,7 +5838,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
                     ,sbr.contexts_view a
                     ,quest_contents_view_ext q
                     ,quest_contents_view_ext c
-                    ,protocol_qc_ext pq
+                    ,PROTOCOL_QC_EXT pq
                WHERE ( c.qc_idseq = q.dn_crf_idseq )
                  AND ( q.qtl_name = 'QUESTION' )
                  AND ( a.conte_idseq = b.conte_idseq )
@@ -5761,13 +5880,14 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
                     ,origin
                     ,definition_source
                     ,evs_source
-                FROM component_concepts_ext com
-                    ,concepts_ext con
+					,com.CONCEPT_VALUE
+                FROM COMPONENT_CONCEPTS_EXT com
+                    ,CONCEPTS_EXT con
                WHERE com.con_idseq = con.con_idseq AND com.condr_idseq = p_condr_idseq
             ORDER BY display_order DESC;
     END;
 
-    PROCEDURE search_con(
+       PROCEDURE search_con(
         p_search_string    IN       VARCHAR2
        ,p_asl_name         IN       VARCHAR2
        ,p_context          IN       VARCHAR2
@@ -5776,8 +5896,10 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
        ,p_con_search_res   OUT      type_con_search
        ,p_dec_idseq        IN       VARCHAR2 DEFAULT NULL   -- 7-DEC-2005, S. Hegde (TT1780)
        ,p_vd_idseq         IN       VARCHAR2 DEFAULT NULL   -- 7-DEC-2005, S. Hegde (TT1780)
+	   ,p_definition	   IN		VARCHAR2 DEFAULT NULL	-- GF 634)
                                                          ) IS
         v_search_string   VARCHAR2( 255 )  := UPPER( REPLACE( p_search_string, '*', '%' ));
+        v_definition	  VARCHAR2( 2000 )  := UPPER(p_definition);
         v_sql             VARCHAR2( 6000 );
         v_where           VARCHAR2( 4000 ) := ' ';
         v_from            VARCHAR2( 2000 ) := ' ';
@@ -5831,9 +5953,10 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
                 || v_search_string
                 || ''''
                 || '
-             OR UPPER(con.preferred_definition) LIKE UPPER(NVL('''
+            /* OR UPPER(con.preferred_definition) LIKE UPPER(NVL('''
                 || v_search_string
-                || ''',con.preferred_definition)))';
+               || ''',con.preferred_definition)) */  --GF348
+			)';
         END IF;
 
         IF p_context IS NOT NULL THEN
@@ -5882,6 +6005,10 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
 
         IF ( p_con_idseq IS NOT NULL ) THEN
             v_where := v_where || ' AND con.con_idseq = ' || '''' || p_con_idseq || '''';
+        END IF;
+
+        IF ( p_definition IS NOT NULL ) THEN
+            v_where := v_where || ' AND upper(con.preferred_definition) = ' || '''' || v_definition || '''';
         END IF;
 
         IF p_dec_idseq IS NOT NULL OR p_vd_idseq IS NOT NULL THEN
@@ -6033,6 +6160,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
         -- dbms_output.put_line(SUBSTR(v_sql,1801,200));
         OPEN p_con_search_res FOR v_sql;
     END;
+
 
     -- TT1824
     PROCEDURE add_to_sentinel_cs( p_id_seq IN VARCHAR2, p_ua_name IN VARCHAR2, p_csi_idseq OUT VARCHAR2 ) IS
@@ -6316,6 +6444,8 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
         v_sql        VARCHAR2( 4000 );
         v_where      VARCHAR2( 2000 ) := '
 WHERE 1=1 ';
+        v_order_by   VARCHAR2(1000)   := '
+ORDER BY TOOL_NAME, PROPERTY';
         v_property   VARCHAR2( 255 );
     BEGIN
         -- standard wildcard substitution
@@ -6357,13 +6487,13 @@ WHERE 1=1 ';
             v_where := v_where || ' AND tov.value = ' || '''' || p_value || '''';
         END IF;
 
-        v_sql := v_sql || v_where;
+        v_sql := v_sql || v_where || v_order_by;
 
         OPEN p_toolopt_search_res FOR v_sql;
     END search_tool_options;
 
     -- SPRF_3.1_16a (TT#1001)
-    PROCEDURE search_ac_contact(
+    PROCEDURE Search_Ac_Contact(
         p_ac_idseq            IN       ac_contacts_view.ac_idseq%TYPE
        ,p_acc_idseq           IN       ac_contacts_view.acc_idseq%TYPE
        ,p_ac_con_search_res   OUT      type_ac_contact ) IS
@@ -6406,7 +6536,7 @@ WHERE 1=1 ';
         END IF;
 
         v_sql := v_sql || v_where;
-        v_sql := v_sql || '
+		v_sql := v_sql || '
 		     ORDER BY ac.rank_order, ac.contact_role, upper(cve.name)';
 
         IF p_ac_con_search_res%ISOPEN THEN
@@ -6414,7 +6544,7 @@ WHERE 1=1 ';
         END IF;
 
         OPEN p_ac_con_search_res FOR v_sql;
-    END search_ac_contact;
+    END Search_Ac_Contact;
 
     -- SPRF_3.1_16b (TT#1001)
     PROCEDURE search_contact_comm(
@@ -6462,7 +6592,7 @@ WHERE 1=1 ';
         END IF;
 
         v_sql := v_sql || v_where;
-        v_sql := v_sql || '
+    	v_SQL := v_SQL||'
 	      ORDER BY rank_order, ctl_name, cyber_address';
 
         IF p_con_com_search_res%ISOPEN THEN
@@ -6523,7 +6653,7 @@ WHERE 1=1 ';
         END IF;
 
         v_sql := v_sql || v_where;
-        v_sql := v_sql || '
+		v_sql := v_sql || '
 		   ORDER BY rank_order,atl_name,addr_line1';
 
         IF p_con_addr_search_res%ISOPEN THEN
@@ -6625,5 +6755,490 @@ WHERE 1=1 ';
 
         OPEN p_addr_type_res FOR v_sql;
     END get_addr_type_list;
+
+
+	PROCEDURE SET_VM(
+		 P_RETURN_CODE	            OUT VARCHAR2
+		,P_ACTION                   IN OUT VARCHAR2
+		,P_CON_ARRAY				IN VARCHAR2
+		,P_VM_IDSEQ					IN OUT VARCHAR2
+		,P_PREFERRED_NAME			IN OUT VARCHAR2
+		,P_LONG_NAME				IN OUT VARCHAR2
+		,P_PREFERRED_DEFINITION		IN OUT VARCHAR2
+		,P_CONTE_IDSEQ				IN OUT VARCHAR2
+		,P_ASL_NAME					IN OUT VARCHAR2
+		,P_VERSION					IN OUT VARCHAR2
+		,P_VM_ID					IN OUT VARCHAR2
+		,P_LATEST_VERSION_IND	    IN OUT VARCHAR2
+		,P_CONDR_IDSEQ				IN OUT VARCHAR2
+		,P_DEFINITION_SOURCE		IN OUT VARCHAR2
+		,P_ORIGIN					IN OUT VARCHAR2
+		,P_CHANGE_NOTE	        	IN OUT VARCHAR2
+		,P_BEGIN_DATE	        	IN OUT VARCHAR2
+		,P_END_DATE	            	IN OUT VARCHAR2
+		,P_CREATED_BY	        	OUT	VARCHAR2
+		,P_DATE_CREATED	        	OUT	VARCHAR2
+		,P_MODIFIED_BY	        	OUT	VARCHAR2
+		,P_DATE_MODIFIED	        OUT	VARCHAR2
+	)	 IS
+
+	/******************************************************************************
+	   NAME:       SET_VM
+	   PURPOSE:    Inserts or Updates a Single Row Of  Value Meanings List of Value
+	               Based on short Meaning
+
+	******************************************************************************/
+
+	  v_begin_date DATE := NULL;
+	  v_end_date DATE := NULL;
+
+	  v_vm_rec    cg$value_meanings_lov_view.cg$row_type;
+	  v_vm_ind    cg$value_meanings_lov_view.cg$ind_type;
+
+	v_Exists NUMBER;
+
+	BEGIN
+
+	P_RETURN_CODE := NULL;
+	
+	IF P_CON_ARRAY IS NOT NULL THEN
+
+  	   SBREXT.SCENPRO_CDE_CURATOR_PKG.GET_VM_CONDR ( P_CON_ARRAY, P_RETURN_CODE, P_LONG_NAME, P_CONDR_IDSEQ, P_PREFERRED_DEFINITION, P_ACTION );
+	   --return if error was found
+	   IF P_RETURN_CODE IS NOT NULL THEN
+	   	  RETURN;
+	   END IF;
+	END IF;
+
+	--unique key is the name for now
+	P_VM_IDSEQ := P_LONG_NAME;
+
+	IF P_ACTION NOT IN ('INS','UPD') THEN
+	 P_RETURN_CODE := 'API_VM_700'; -- Invalid action
+	 RETURN;
+	END IF;
+
+	IF P_ACTION = 'INS' THEN              --we are inserting a record
+	     --Check to see that all mandatory parameters are not null
+	  IF P_LONG_NAME IS NULL THEN
+	    P_RETURN_CODE := 'API_VM_101';  --Value Meaning long name cannot be null here
+		RETURN;
+	  END IF;
+	END IF;
+
+	IF P_ACTION = 'UPD'  THEN
+	  IF P_VM_IDSEQ	IS NULL THEN
+	    P_RETURN_CODE := 'API_VM_102';  --Value Meaning idseq cannot be null here
+		RETURN;
+	  END IF;
+	  IF NOT Sbrext_Common_Routines.vm_exists(P_VM_IDSEQ) THEN
+		P_RETURN_CODE := 'API_VM_005'; --VM not found
+		RETURN;
+	  END IF;
+	END IF;
+
+	--Check to see that all VARCHAR2 and  VARCHAR2 parameters have correct length
+	IF LENGTH(P_LONG_NAME) > Sbrext_Column_Lengths.L_VM_SHORT_MEANING THEN
+	  P_RETURN_CODE := 'API_VM_111';  --Length of SHORT_MEANING exceeds maximum length
+	  RETURN;
+	END IF;
+	IF LENGTH(P_PREFERRED_DEFINITION) > Sbrext_Column_Lengths.L_VM_DESCRIPTION THEN
+	  P_RETURN_CODE := 'API_VM_113';  --Length of DESCRIPTION exceeds maximum length
+	  RETURN;
+	END IF;
+	IF LENGTH(P_CHANGE_NOTE) > Sbrext_Column_Lengths.L_VM_COMMENTS THEN
+	  P_RETURN_CODE := 'API_VM_114'; --Length of COMMENTS exceeds maximum length
+	  RETURN;
+	END IF;
+
+	--check to see that charachter strings are valid
+	IF NOT Sbrext_Common_Routines.valid_char(P_LONG_NAME) THEN
+	  P_RETURN_CODE := 'API_VM_130'; -- Value Meaning Short Meaning has invalid characters
+	  RETURN;
+	END IF;
+	IF NOT Sbrext_Common_Routines.valid_char(P_PREFERRED_DEFINITION) THEN
+	  P_RETURN_CODE := 'API_VM_133'; -- Value Meaning Description has invalid characters
+	  RETURN;
+	END IF;
+	IF NOT Sbrext_Common_Routines.valid_char(P_CHANGE_NOTE) THEN
+	  P_RETURN_CODE := 'API_VM_134'; -- Value Meaning Comment has invalid characters
+	  RETURN;
+	END IF;
+	  --check to see that begin data and end date are valid dates
+
+	IF(P_BEGIN_DATE IS NOT NULL) THEN
+	  Sbrext_Common_Routines.valid_date(P_RETURN_CODE,P_BEGIN_DATE,V_BEGIN_DATE);
+	  IF P_RETURN_CODE IS NOT NULL THEN
+	    P_RETURN_CODE := 'API_VM_600'; --begin date is invalid
+	    RETURN;
+	  END IF;
+	  -- 16-Apr-2004, W. Ver Hoef - added assignment because currently valid_date doesn't
+	  --                            populate v_begin_date and later references were thus null
+	  IF v_begin_date IS NULL THEN
+	    BEGIN
+	      v_begin_date := TO_DATE(p_begin_date,'DD-MON-YYYY');
+		EXCEPTION WHEN OTHERS THEN
+		  p_return_code := 'API_VM_600';
+		  RETURN;
+		END;
+	  END IF;
+	END IF;
+
+	IF(P_END_DATE IS NOT NULL) THEN
+	  Sbrext_Common_Routines.valid_date(P_RETURN_CODE,P_END_DATE,V_END_DATE);
+	  IF P_RETURN_CODE IS NOT NULL THEN
+	   P_RETURN_CODE := 'API_VM_601'; --end date is invalid
+	   RETURN;
+	  END IF;
+	  -- 16-Apr-2004, W. Ver Hoef - added assignment because currently valid_date doesn't
+	  --                            populate v_begin_date and later references were thus null
+	  IF v_end_date IS NULL THEN
+	    BEGIN
+	      v_end_date := TO_DATE(p_end_date,'DD-MON-YYYY');
+		EXCEPTION WHEN OTHERS THEN
+		  p_return_code := 'API_VM_601';
+		  RETURN;
+		END;
+	  END IF;
+	END IF;
+
+	IF(P_BEGIN_DATE IS NOT NULL AND P_END_DATE IS NOT NULL) THEN
+	  IF(v_end_date < v_begin_date) THEN
+	     P_RETURN_CODE := 'API_VM_210'; --end date is before begin date
+	     RETURN;
+	  END IF;
+	END IF;
+
+
+	IF (P_ACTION = 'INS' ) THEN
+
+	--check to see that Short Name Does not already Exist
+	  IF Sbrext_Common_Routines.vm_exists(P_VM_IDSEQ) THEN
+		sbrext.scenpro_cde_curator_pkg.get_vm(P_RETURN_CODE, P_VM_IDSEQ, P_LONG_NAME, P_VERSION, P_VM_ID, P_PREFERRED_NAME, P_PREFERRED_DEFINITION, P_CONTE_IDSEQ,
+							P_ASL_NAME, P_LATEST_VERSION_IND, P_CONDR_IDSEQ, P_DEFINITION_SOURCE, P_ORIGIN, P_CHANGE_NOTE, P_BEGIN_DATE, P_END_DATE,
+							P_CREATED_BY, P_DATE_CREATED, P_MODIFIED_BY, P_DATE_MODIFIED);
+							
+	    P_RETURN_CODE := 'API_VM_300';   -- Value Meaning already exists
+	    RETURN;
+	  END IF;
+
+	  P_DATE_CREATED := TO_CHAR(SYSDATE);
+	  P_CREATED_BY := USER;
+	  P_DATE_MODIFIED := NULL;
+	  P_MODIFIED_BY := NULL;
+	  P_BEGIN_DATE := TO_CHAR(v_begin_date);
+	  P_END_DATE := TO_CHAR(v_end_date);
+
+	  v_vm_rec.short_meaning	:= P_LONG_NAME;
+	  v_vm_rec.description      := P_PREFERRED_DEFINITION;
+	  v_vm_rec.comments	        := P_CHANGE_NOTE;
+	  v_vm_rec.begin_date	    := P_BEGIN_DATE;
+	  v_vm_rec.end_date	        := P_END_DATE;
+	  v_vm_rec.created_by	    := P_CREATED_BY;
+	  v_vm_rec.date_created	    := P_DATE_CREATED;
+	  v_vm_rec.modified_by	    := P_MODIFIED_BY;
+	  v_vm_rec.date_modified	:= P_DATE_MODIFIED;
+	  v_vm_rec.condr_idseq		:= P_CONDR_IDSEQ;
+
+	  v_vm_ind.short_meaning	  := TRUE;
+	  v_vm_ind.description        := TRUE;
+	  v_vm_ind.comments	          := TRUE;
+	  v_vm_ind.begin_date	      := TRUE;
+	  v_vm_ind.end_date	          := TRUE;
+	  v_vm_ind.created_by	      := TRUE;
+	  v_vm_ind.date_created	      := TRUE;
+	  v_vm_ind.modified_by	      := TRUE;
+	  v_vm_ind.date_modified	  := TRUE;
+	  v_vm_ind.condr_idseq		  := TRUE;
+
+	  BEGIN
+	    cg$Value_meanings_lov_view.ins(v_vm_rec,v_vm_ind);
+		commit;
+		
+	  EXCEPTION WHEN OTHERS THEN
+	    dbms_output.put_line(SQLERRM);
+	    P_RETURN_CODE := 'API_VM_500'; --Error inserting Value Meaning
+	  END;
+
+	END IF;
+
+
+	IF (P_ACTION = 'UPD' ) THEN
+
+	  -- 16-Apr-2004, W. Ver Hoef - added v_vm_rec.short_meaning assignment which was missing
+	  v_vm_rec.short_meaning := P_LONG_NAME;
+
+	  P_DATE_MODIFIED := TO_CHAR(SYSDATE);
+	  P_MODIFIED_BY := USER;
+
+	  P_BEGIN_DATE := TO_CHAR(v_begin_date);
+	  P_END_DATE := TO_CHAR(v_end_date);
+
+	  v_vm_rec.date_modified := P_DATE_MODIFIED;
+	  v_vm_rec.modified_by := P_MODIFIED_BY;
+
+	  v_vm_ind.date_modified := TRUE;
+	  v_vm_ind.modified_by := TRUE;
+
+	  v_vm_ind.created_by := FALSE;
+	  v_vm_ind.date_created := FALSE;
+
+	  IF P_PREFERRED_DEFINITION IS NULL THEN
+	    v_vm_ind.description := FALSE;
+	  ELSE
+	    v_vm_rec.description := P_PREFERRED_DEFINITION;
+	    v_vm_ind.description := TRUE;
+	  END IF;
+
+	--  IF P_CHANGE_NOTE IS NULL THEN
+	--    v_vm_ind.comments := FALSE;
+	--  ELSE
+	    v_vm_rec.comments := P_CHANGE_NOTE;
+	    v_vm_ind.comments := TRUE;
+	--  END IF;
+
+	  IF P_BEGIN_DATE IS NULL THEN
+	    v_vm_ind.begin_date := FALSE;
+	  ELSE
+	    v_vm_rec.begin_date := P_BEGIN_DATE;
+	    v_vm_ind.begin_date := TRUE;
+	  END IF;
+
+	  IF P_END_DATE IS NULL THEN
+	    v_vm_ind.end_date := FALSE;
+	  ELSE
+	    v_vm_rec.end_date := P_END_DATE	;
+	    v_vm_ind.end_date := TRUE;
+	  END IF;
+
+	--  IF P_CONDR_IDSEQ IS NULL THEN
+	--    v_vm_ind.condr_idseq := FALSE;
+	--  ELSE
+	    v_vm_rec.condr_idseq := P_CONDR_IDSEQ;
+	   	v_vm_ind.condr_idseq := TRUE;
+	--  END IF; 
+
+	  BEGIN
+	    cg$Value_meanings_lov_view.upd(v_vm_rec,v_vm_ind);
+		commit;
+		
+	  EXCEPTION WHEN OTHERS THEN
+	    P_RETURN_CODE := 'API_VM_501'; --Error updating value meaning
+	  END;
+	END IF;
+	--return all the data
+	sbrext.scenpro_cde_curator_pkg.get_vm(P_RETURN_CODE, P_VM_IDSEQ, P_LONG_NAME, P_VERSION, P_VM_ID, P_PREFERRED_NAME, P_PREFERRED_DEFINITION, P_CONTE_IDSEQ,
+						P_ASL_NAME, P_LATEST_VERSION_IND, P_CONDR_IDSEQ, P_DEFINITION_SOURCE, P_ORIGIN, P_CHANGE_NOTE, P_BEGIN_DATE, P_END_DATE,
+						P_CREATED_BY, P_DATE_CREATED, P_MODIFIED_BY, P_DATE_MODIFIED);
+
+	EXCEPTION
+	  WHEN NO_DATA_FOUND THEN
+	    P_RETURN_CODE := 'API_VM_901';  --NULL;
+	  WHEN OTHERS THEN
+	    P_RETURN_CODE := 'API_VM_902';  --NULL;
+	END SET_VM;
+
+
+  PROCEDURE GET_VM(
+	 P_RETURN_CODE	            OUT VARCHAR2
+	,P_VM_IDSEQ					IN OUT VARCHAR2
+	,P_LONG_NAME 				IN OUT VARCHAR2
+	,P_VERSION					IN OUT VARCHAR2
+	,P_VM_ID					IN OUT VARCHAR2
+	,P_PREFERRED_NAME			OUT VARCHAR2
+	,P_PREFERRED_DEFINITION		OUT VARCHAR2
+	,P_CONTE_IDSEQ				OUT VARCHAR2
+	,P_ASL_NAME					OUT VARCHAR2
+	,P_LATEST_VERSION_IND	    OUT VARCHAR2
+	,P_CONDR_IDSEQ				OUT VARCHAR2
+	,P_DEFINITION_SOURCE		OUT VARCHAR2
+	,P_ORIGIN					OUT VARCHAR2
+	,P_CHANGE_NOTE	        	OUT VARCHAR2
+	,P_BEGIN_DATE	        	OUT VARCHAR2
+	,P_END_DATE	            	OUT VARCHAR2
+	,P_CREATED_BY	        	OUT	VARCHAR2
+	,P_DATE_CREATED	        	OUT	VARCHAR2
+	,P_MODIFIED_BY	        	OUT	VARCHAR2
+	,P_DATE_MODIFIED	        OUT	VARCHAR2
+	)	IS
+
+	vm_rec value_meanings_view%ROWTYPE;
+
+	BEGIN
+	  p_return_code := NULL;
+	  --The ID must be provided
+	  IF P_LONG_NAME IS NOT NULL THEN  --Retrieve the value_meaning_lov by key
+
+	    BEGIN
+		  SELECT *
+		  INTO vm_rec
+		  FROM value_meanings_view
+		  WHERE short_meaning = P_LONG_NAME;
+		EXCEPTION
+		  WHEN NO_DATA_FOUND THEN
+		    p_return_code := 'API_VM_005'; -- VM not found
+			RETURN;
+		  WHEN OTHERS THEN
+		    p_return_code := 'API_VM_009'; -- Other raised on select from value_meanings_lov_view
+			RETURN;
+		END;
+
+	  ELSIF P_VM_IDSEQ IS NOT NULL THEN  --Retrieve the value_meaning_lov by key
+
+	    BEGIN
+		  SELECT *
+		  INTO vm_rec
+		  FROM value_meanings_view
+		  WHERE vm_idseq = P_VM_IDSEQ;
+		EXCEPTION
+		  WHEN NO_DATA_FOUND THEN
+		    p_return_code := 'API_VM_105'; -- VM not found
+			RETURN;
+		  WHEN OTHERS THEN
+		    p_return_code := 'API_VM_109'; -- Other raised on select from value_meanings_lov_view
+			RETURN;
+		END;
+
+	  ELSIF P_VM_ID IS NOT NULL AND P_VERSION IS NOT NULL THEN  --Retrieve the value_meaning_lov by key
+
+	    BEGIN
+		  SELECT *
+		  INTO vm_rec
+		  FROM value_meanings_view
+		  WHERE vm_id = P_VM_ID
+		  AND version = P_VERSION;
+		EXCEPTION
+		  WHEN NO_DATA_FOUND THEN
+		    p_return_code := 'API_VM_205'; -- VM not found
+			RETURN;
+		  WHEN OTHERS THEN
+		    p_return_code := 'API_VM_209'; -- Other raised on select from value_meanings_lov_view
+			RETURN;
+		END;
+
+	  ELSE
+	    P_RETURN_CODE := 'API_VM_001';--PK must be provided (short meaning)
+	END IF;
+
+ 	 P_VM_IDSEQ	:= vm_rec.vm_idseq;
+	 P_PREFERRED_NAME := vm_rec.preferred_name;
+	 P_LONG_NAME := vm_rec.long_name;
+	 P_PREFERRED_DEFINITION := NVL(vm_rec.description, vm_rec.preferred_definition);
+	 P_CONTE_IDSEQ := vm_rec.conte_idseq;
+	 P_ASL_NAME := vm_rec.asl_name;
+	 P_VERSION := vm_rec.version;
+	 P_VM_ID := vm_rec.vm_id;
+	 P_LATEST_VERSION_IND := vm_rec.latest_version_ind;
+	 P_CONDR_IDSEQ := vm_rec.condr_idseq;
+	 P_DEFINITION_SOURCE := vm_rec.definition_source;
+	 P_ORIGIN := vm_rec.origin;
+	 P_CHANGE_NOTE := NVL(vm_rec.comments, vm_rec.change_note);
+	 P_BEGIN_DATE := vm_rec.begin_date;
+	 P_END_DATE := vm_rec.end_date;
+	 P_CREATED_BY := vm_rec.created_by;
+	 P_DATE_CREATED := vm_rec.date_created;
+	 P_MODIFIED_BY := vm_rec.modified_by;
+	 P_DATE_MODIFIED := vm_rec.date_modified;
+
+	EXCEPTION
+	     WHEN NO_DATA_FOUND THEN
+	       P_RETURN_CODE := 'API_VM_905';  --NULL;
+	     WHEN OTHERS THEN
+	       P_RETURN_CODE := 'API_VM_906';  -- NULL;
+
+  END GET_VM;
+
+	PROCEDURE get_vm_condr(
+			  p_con_array IN VARCHAR2
+	          ,p_return_code OUT VARCHAR2
+	          ,p_long_name IN OUT VARCHAR2
+			  ,p_condr_idseq OUT VARCHAR2
+			  ,p_preferred_definition OUT VARCHAR2
+			  ,p_action OUT VARCHAR2
+	          )  IS
+
+	    v_long_name VARCHAR2(2000);
+	    v_description VARCHAR2(4000);
+	    v_name VARCHAR2(255);
+	    v_crtl_name VARCHAR2(50);
+	    v_count number;
+
+	  CURSOR con(p_con_idseq IN VARCHAR2) IS
+	    SELECT * FROM CONCEPTS_EXT
+	    WHERE con_idseq = p_con_idseq;
+
+	  CURSOR comp_con IS
+	    SELECT * FROM COMPONENT_CONCEPTS_EXT
+	    WHERE condr_idseq = p_condr_idseq
+	    ORDER BY display_order desc;
+
+	BEGIN
+
+	   IF P_CON_ARRAY IS NULL THEN
+	   	  RETURN;
+	   END IF;
+	   
+	   p_condr_idseq := sbrext_common_routines.SET_DERIVATION_RULE(P_CON_ARRAY);
+
+	   IF NOT Sbrext_Common_Routines.CONDR_EXISTS(p_condr_idseq) THEN
+		  P_RETURN_CODE := 'API_VM_800';
+		  RETURN;
+	   END IF;
+
+	  SELECT name
+	  ,      crtl_name
+	  INTO   v_name
+	  ,      v_crtl_name
+	  FROM CON_DERIVATION_RULES_EXT
+	  WHERE condr_idseq = p_condr_idseq;
+
+	  FOR m_rec IN comp_con LOOP
+	      FOR c_rec IN con(m_rec.con_idseq) LOOP
+
+	        --add the concept_value to the long name
+	        IF m_rec.concept_value is not null then
+	          c_rec.long_name := c_rec.long_name ||'::'||m_rec.concept_value;
+	          c_rec.preferred_definition := c_rec.preferred_definition||'::'||m_rec.concept_value;
+	        END IF;
+
+	  	    IF v_long_name IS NULL THEN
+	  	       v_long_name := c_rec.long_name;
+	  	    ELSE
+	  	       v_long_name := v_long_name||' '||c_rec.long_name;
+	  	    END IF;
+
+	  	    IF v_description IS NULL THEN
+	  	        v_description := c_rec.preferred_definition;
+	  	  	ELSE
+	  	        v_description := v_description||': '||c_rec.preferred_definition;
+	  	    END IF;
+
+	       END LOOP;
+	  END LOOP;
+
+	  p_preferred_definition := SUBSTR(v_description,1,2000);
+
+	  --change name only if null
+	  if(p_long_name is null) then
+	    p_long_name := SUBSTR(v_long_name,1,255);
+	  end if;
+
+	  --reset the action
+	  select count(*) into v_count
+	  from value_meanings_view
+	  where short_meaning = p_long_name;
+
+	  if v_count = 1 then
+	    p_action := 'UPD';
+	  else
+	    p_action := 'INS';
+	  end if;
+
+	EXCEPTION WHEN OTHERS THEN
+	  p_return_code := 'Error getting con derivation rules';
+	  RETURN;
+	END get_vm_condr;
+
+
 END;
 /
