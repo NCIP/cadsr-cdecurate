@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/SearchResultsBlocks.js,v 1.18 2007-05-23 23:20:06 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/SearchResultsBlocks.js,v 1.19 2007-05-25 05:03:27 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
    var numRowsSelected = 0;
@@ -243,7 +243,6 @@
   
   function useSelectionSelectVM()
   {
-//  alert("vm use selection");
       //first check the concept status and return if not valid
       var useStatus = checkValidStatus("multiple");
       if (useStatus != "valid") 
@@ -254,16 +253,20 @@
       var multiNames = checkDuplicateConcept();
       if (multiNames != null && multiNames != "")
       {
-        sConfirm = confirm("Duplicate Concept Names are selected either because they have " 
-              + "multiple definitions \nor they are contained in multiple hierachical " 
-              + "locations within their source vocabulary.\n\n" 
-              + "Click OK: Default definition - NCI source will be selected. \n"
-              + "If no NCI definition is present, the first definition associated with the Concept will be used. \n\n"
-              + "Click CANCEL to go back and manually de-select the unwanted duplicates.\n\n" 
-              + "Duplicate Concepts : \n\t" + multiNames);
-  
+      	sConfirm = confirm("You have selected duplicate concepts. These concepts may have multiple " + 
+      			"definitions or are contained in multiple hierarchical locations within their source vocabulary.\n" + 
+      			"caDSR Business Rules prohibit using duplicate concept names for a list of Permissible Values.\n\n" + 
+				"You may Click OK to use the NCI source's default definition. If a NCI definition " + 
+				"is not present, the first definition of the selected concept will be used.\n" +
+				"Or, you may Click Cancel to go back and manually de-select the unwanted duplicates " + 
+				"from the search results.\n\n" +
+				"Duplicate Concepts : \n\t" + multiNames);
+      	  
         if (sConfirm == true)
         {
+        	//re select the rows so that order of selection doesn't matter
+    	  reselectCheckedRows();
+    	   //contineu with duplicate selection logic
           selRowArray2 = getRowNumbersOfUniqueConcepts();
           for (var y=0; y<selRowArray2.length; y++)
           {
@@ -579,7 +582,6 @@
         {
           var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
           var rowName = conArray[rowNo].conName;  // document.searchResultsForm.hiddenName[rowNo].value;  //concept name 
-  //alert("dName: " + dName + " rowName: " + rowName + " rowNo: " + rowNo + " foundRightRowNoNCI: " + foundRightRowNoNCI);
           if (dName == rowName)
           {
             firstOneRow = rowNo;
@@ -653,6 +655,32 @@
         }
       }
     return uniqueRowArray;
+  }
+  
+  //reselects the rows so that they are in the order being selected
+  function reselectCheckedRows()
+  {
+  	 var isExist = true;
+  	 var rowNo =0;
+  	 document.searchResultsForm.hiddenSelectedRow.length = 0;
+  	 while (isExist) 
+  	 {  	 
+        var ckField = "CK"+rowNo;
+        formObj= eval("document.searchResultsForm."+ckField);
+        if (formObj != null)
+        {
+        	var isChecked = formObj.checked;
+ 			if (isChecked)
+ 			{
+ 				var rSize = document.searchResultsForm.hiddenSelectedRow.length;
+        		document.searchResultsForm.hiddenSelectedRow.options[rSize] = new Option(rowNo, rowNo);
+        		document.searchResultsForm.hiddenSelectedRow[rSize].selected = true;
+        	}
+        	rowNo += 1;
+        }
+        else
+        	isExist = false;        
+  	 }
   }
   
   function getSubConceptsAll2(sUISearchType)
