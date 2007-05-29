@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/sandbox/load_tool_options.sql,v 1.26 2007-05-24 04:45:51 hegdes Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/sandbox/load_tool_options.sql,v 1.27 2007-05-29 17:15:13 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -526,6 +526,13 @@ INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, descriptio
 VALUES ('CURATION', 'INCLUDE.ASL.FILTER.1', 'RELEASED',
 	   'Store the RELEASED asl name to include in the filter');
 
+
+merge into sbrext.tool_options_view_ext s
+using (
+select 'EVS' as tool_name, 'NEWTERM.URL' as property, 'http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet' as value, 'The EVS URL to suggest a new term in a vocabulary.' as description from dual) t
+on (s.tool_name = t.tool_name and s.property = t.property)
+when matched then update set s.value = t.value, s.description = t.description
+when not matched then insert (tool_name, property, value, description) values (t.tool_name, t.property, t.value, t.description);
   
 --commit the inserts
 commit;
