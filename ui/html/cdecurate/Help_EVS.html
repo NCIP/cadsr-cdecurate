@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <!-- Copyright ScenPro, Inc 2007
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/html/cdecurate/Help_EVS.html,v 1.9 2007-05-25 05:03:25 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/html/cdecurate/Help_EVS.html,v 1.10 2007-05-29 15:38:15 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <html>
@@ -201,6 +201,19 @@
 					new Representation Term will be created in caDSR when you submit
 					your Value Domain.
 			</p>
+			<h4>Naming a Value Meaning
+		</h4>
+			<p>
+			A Value Meaning is the meaning or semantic content of a Permissible Value.
+			A Value Meaning may consist of one Primary Concept and one or more Qualifier 
+			Concepts. Each of these must be selected separately. Once selected the 
+			Concept's source database and Concept Code will be shown next to the Concept in the PV table. 
+			<br>
+			<br>
+			The Value Meaning Name will be constructed from the names of the Qualifier 
+			and Primary Concepts that have been chosen. The Name will be built left to 
+			right starting with the Qualifier Concepts and ending with the Primary Concept.
+			</p> 
 		<span class="standOutHeading">Search EVS for Concepts (Primary, Qualifier and Parent
  					Concepts) via Term Search</span>
 	<hr>
@@ -340,7 +353,7 @@
 			<p>To Suggest a New Term to EVS:
 			<ol>
 					<li>If no appropriate concept is found in EVS, Click <input style="WIDTH: 165px" type="button" value=
-            "Suggest to EVS" name="editSelectedBtn">.Clicking this button opens a
+            "Suggest to EVS" name="editSelectedBtn">. Clicking this button opens a
 						window to the Enterprise Vocabulary Services that will allow you
 						to suggest that a new term be added to EVS.
 	 				</li>
@@ -351,6 +364,58 @@
             "Cancel" name="editSelectedBtn"> to return to the EVS search screen. 
 					</li>
 			</ol>
+			</p>
+			<span class="standOutHeading">caDSR Business Rules for Concept Selection</span>
+			<hr>
+			<p>When selecting EVS Concepts for caDSR metadata (e.g. Object Class, Property, 
+			Representation Term, Permissible Value, Value Meaning, and all Qualifier and Primary), 
+			there are a few business rules to be aware of. 
+			</p>
+			<p>For all concept searches (e.g. Object Class, Property, Representation Term, Permissible Value,
+			Value Meaning, and all Qualifier and Primary), if the selected concept is from Metathesaurus
+			but also exists in the NCI Thesaurus, the Curation Tool will use the concept name
+			and definition from NCI Thesaurus. A message is displayed stating that the NCI 
+			Thesaurus concept will be used.
+			</p>
+			<p class="centeredImage"><img alt="image009" src="Assets/Help/EVS/image009.png" 
+				 class="screenShot" />
+			</p>
+			<p class="imageText">FIGURE 9<br>
+				 Metathesaurus Concept Replaced by Thesaurus Concept
+			</p>
+			<p>For all concept searches, if the selected 
+			concept name or defition already exists in the caDSR, the Curation 
+			Tool will use the caDSR name or definition regardless of the source
+			of the selected concept.
+			</p>
+			<p class="centeredImage"><img alt="image010" src="Assets/Help/EVS/image010.png" 
+				 class="screenShot" />
+			</p>
+			<p class="imageText">FIGURE 10<br>
+				 Selected Concept Replaced by caDSR
+			</p>
+			<p>When selecting multiple concepts to use for Permissible Values, there is an additional
+			rule. If duplicate concepts are selected, the Curation Tool will use the concept
+			from the NCI Thesaurus in a preferred order. Users have the ability to de-select unwanted
+			duplicate concepts to use the desired concept.
+			</p>
+			<p class="centeredImage"><img alt="image011" src="Assets/Help/EVS/image011.png" 
+				 class="screenShot" />
+			</p>
+			<p class="imageText">FIGURE 11<br>
+				 Duplicates Selected - Use NCI Thesaurus
+			</p>
+			<p>When selecting a concept to use for a Value Meaning, if the concept already exists
+			in the caDSR, a warning message will be displayed on the validation page stating
+			that the Curation Tool will use the existing Value Meaning and that one or more of 
+			the attributes may not match the selected concept. The user has the option to go back 
+			and modify their selection.
+			</p>
+			<p class="centeredImage"><img alt="image012" src="Assets/Help/EVS/image012.png" 
+				 class="screenShot"/>
+			</p>
+			<p class="imageText">FIGURE 12<br>
+				 Existing Value Meaning - Use Existing
 			</p>
 		</div>
 	</div>
