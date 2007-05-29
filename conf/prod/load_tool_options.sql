@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/prod/load_tool_options.sql,v 1.44 2007-05-29 17:15:13 hebell Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/prod/load_tool_options.sql,v 1.45 2007-05-29 19:19:38 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -15,25 +15,18 @@
    or invalid appropriate error messages are displayed via the Curation Tool Login page.
 */
 
-/* If the caDSR DEFAULT.LANGUAGE has not been loaded into the table, execute
-    the following statement. The language value must first exist in the sbr.languages_lov_view
-    table/view.
 
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('caDSR', 'DEFAULT.LANGUAGE', 'ENGLISH', 'The default language for all caDSR tools.'); 
-*/
+merge into sbrext.tool_options_view_ext s
+using (
+          select 'caDSR' as tool_name, 'DEFAULT.LANGUAGE' as property, 'ENGLISH' as value, 'The default language for all caDSR tools.' as description from dual
+union select 'BROWSER' as tool_name, 'URL' as property, 'http://cdebrowser.nci.nih.gov' as value, 'Store browser url cde browser' as description from dual
+union select 'EVS' as tool_name, 'URL' as property, 'http://cabio.nci.nih.gov/cacore32/http/remoteService' as value, 'Store evs url specific to the evs server' as description from dual
+union select 'EVS' as tool_name, 'NEWTERM.URL' as property, 'http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet' as value, 'The EVS URL to suggest a new term in a vocabulary.' as description from dual
+) t
+on (s.tool_name = t.tool_name and s.property = t.property)
+when matched then update set s.value = s.value, s.description = t.description
+when not matched then insert (tool_name, property, value, description) values (t.tool_name, t.property, t.value, t.description);
 
-/*
---Store evs url for all tools: need to make sure it doesn't exists already before runnning.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('EVS', 'URL', 'http://cabio.nci.nih.gov/cacore32/http/remoteService', 
-	   'Store evs url specific to EVS'); 
-
---Store browser url for all tools: need to make sure it doesn't exists already before runnning.
-INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('BROWSER', 'URL', 'http://cdebrowser.nci.nih.gov', 
-	   'Store browser url cde browser'); 
-*/
 
 --first delete the existing data
 DELETE FROM sbrext.tool_options_view_ext WHERE tool_name = 'CURATION';
@@ -635,14 +628,6 @@ VALUES ('CURATION', 'NVPCONCEPT.7', 'C46126',
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
 VALUES ('CURATION', 'INCLUDE.ASL.FILTER.1', 'RELEASED',
 	   'Store the RELEASED asl name to include in the filter');
-
-
-merge into sbrext.tool_options_view_ext s
-using (
-select 'EVS' as tool_name, 'NEWTERM.URL' as property, 'http://ncimeta.nci.nih.gov/MetaServlet/FormalizationFailedServlet' as value, 'The EVS URL to suggest a new term in a vocabulary.' as description from dual) t
-on (s.tool_name = t.tool_name and s.property = t.property)
-when matched then update set s.value = t.value, s.description = t.description
-when not matched then insert (tool_name, property, value, description) values (t.tool_name, t.property, t.value, t.description);
 
 
 --commit changes
