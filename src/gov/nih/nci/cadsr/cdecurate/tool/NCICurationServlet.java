@@ -5275,7 +5275,7 @@ public class NCICurationServlet extends HttpServlet
                                 // updRow = j; //need this to update the vector
                                 this.storePVinVDPVList(vVDPVList, pvBean, eBean, parConcept, sValue, sMean, j, true);
                             }
-                            else if (pvSubmit != null && !pvSubmit.equals("DEL")) // was not deleted
+                            else if (pvSubmit != null && !pvSubmit.equals("DEL") && vdValue.equalsIgnoreCase(sValue)) // was not deleted
                             {
                                 String sValMean = "\\tValue: " + pvBean.getPV_VALUE() + " and Meaning: "
                                                 + pvBean.getPV_SHORT_MEANING() + "\\n";
