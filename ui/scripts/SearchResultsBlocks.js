@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/SearchResultsBlocks.js,v 1.19 2007-05-25 05:03:27 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/SearchResultsBlocks.js,v 1.20 2007-05-30 20:06:36 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
    var numRowsSelected = 0;
@@ -254,7 +254,7 @@
       if (multiNames != null && multiNames != "")
       {
       	sConfirm = confirm("You have selected duplicate concepts. These concepts may have multiple " + 
-      			"definitions or are contained in multiple hierarchical locations within their source vocabulary.\n" + 
+      			"definitions or are contained in multiple hierarchical locations within their source vocabulary.  " + 
       			"caDSR Business Rules prohibit using duplicate concept names for a list of Permissible Values.\n\n" + 
 				"You may Click OK to use the NCI source's default definition. If a NCI definition " + 
 				"is not present, the first definition of the selected concept will be used.\n" +

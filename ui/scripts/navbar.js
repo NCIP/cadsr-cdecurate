@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/navbar.js,v 1.4 2007-05-25 05:03:27 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/navbar.js,v 1.5 2007-05-30 20:06:36 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 if(typeof(loc)=="undefined"||loc==""){var loc="";if(document.body&&document.body.innerHTML){var tt=document.body.innerHTML.toLowerCase();var last=tt.indexOf("navbar.js\"");if(last>0){var first=tt.lastIndexOf("\"",last);if(first>0&&first<last)loc=document.body.innerHTML.substr(first+1,last-first-1);}}}
