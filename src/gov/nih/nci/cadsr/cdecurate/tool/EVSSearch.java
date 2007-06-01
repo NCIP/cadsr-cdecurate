@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.44 2007-05-30 20:01:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.45 2007-06-01 22:17:44 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -3335,8 +3335,7 @@ private String parseDefinition(String termStr)
           break;  //no need to continue if found the right def source
     }
     //update the status message
-    InsACService insAC = new InsACService(m_classReq, m_classRes, m_servlet);
-    insAC.storeStatusMsg("The selected Concept [" + sName + " : " + sID + "] will be replaced by the matching NCI Thesaurus Concept [" + eBean.getCONCEPT_NAME() + " : " + eBean.getCONCEPT_IDENTIFIER() + "]");
+    m_servlet.storeStatusMsg("The selected Concept [" + sName + " : " + sID + "] will be replaced by the matching NCI Thesaurus Concept [" + eBean.getCONCEPT_NAME() + " : " + eBean.getCONCEPT_IDENTIFIER() + "]");
     
     return eBean;  //return teh bean
   }

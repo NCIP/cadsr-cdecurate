@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.47 2007-05-30 20:01:42 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.48 2007-06-01 22:17:45 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -4513,8 +4513,7 @@ public class SetACService implements Serializable
       session.setAttribute("oldVDPVList", oldVDPVList);  //stor eit in the session
       if (!strInvalid.equals(""))
       {
-        InsACService insAC = new InsACService(req, res, m_servlet);
-        insAC.storeStatusMsg(strInvalid);
+        m_servlet.storeStatusMsg(strInvalid);
       }
     }
     catch(Exception ee)

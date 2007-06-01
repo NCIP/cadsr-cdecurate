@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.22 2007-05-30 20:01:42 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.23 2007-06-01 22:17:45 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -844,12 +844,15 @@ public class VMAction implements Serializable
     */
    public VM_Bean checkExactMatch(VM_Bean existVM, VM_Bean newVM)
    {
-       String VMDef = newVM.getVM_DESCRIPTION();
        boolean match = true;
 
-       //check for exact match by defintion
+       String VMDef = newVM.getVM_DESCRIPTION();
        String nameDef = existVM.getVM_DESCRIPTION();
-       if (VMDef.equals(nameDef))
+       //match the name
+       if (!newVM.getVM_LONG_NAME().equals(existVM.getVM_LONG_NAME()))
+          match = false;
+       //check for exact match by defintion
+       else if (VMDef.equals(nameDef))
        {
            //check for exact match for the concepts
            Vector<EVS_Bean> vCon = newVM.getVM_CONCEPT_LIST();

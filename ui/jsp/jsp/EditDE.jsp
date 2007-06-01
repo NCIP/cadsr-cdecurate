@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/EditDE.jsp,v 1.27 2007-05-30 20:06:36 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/EditDE.jsp,v 1.28 2007-06-01 22:20:47 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 

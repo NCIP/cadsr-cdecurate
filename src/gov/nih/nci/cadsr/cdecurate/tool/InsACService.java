@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.45 2007-05-30 20:01:41 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.46 2007-06-01 22:17:44 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -132,39 +132,11 @@ public class InsACService implements Serializable
   * @param sMsg string message to append to.
   */
   @SuppressWarnings("unchecked")
-  public void storeStatusMsg(String sMsg)
+  private void storeStatusMsg(String sMsg)
   {
     try
     {
-      HttpSession session = m_classReq.getSession();
-      Vector<String> vStatMsg = (Vector)session.getAttribute("vStatMsg");
-      String statusMsg = (String)session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
-      if (statusMsg == null) statusMsg = "";
-      //parse single  double  quotes and new line char if any
-      String alrtMsg = sMsg;
-      if (!alrtMsg.equalsIgnoreCase("\\n"))
-          alrtMsg = m_util.parsedStringAlertNewLine(alrtMsg);
-      alrtMsg = m_util.parsedStringDoubleQuote(alrtMsg);
-      alrtMsg = m_util.parsedStringSingleQuote(alrtMsg);
-      if (vStatMsg == null) vStatMsg = new Vector<String>();
-      //add message to both to string status message and vector stats message if not too big
-      if (vStatMsg.size() < 35)
-      {
-        if (sMsg.equalsIgnoreCase("\\n"))
-          statusMsg = statusMsg + alrtMsg; 
-        else
-          statusMsg = statusMsg + alrtMsg + "\\n"; 
-        session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, statusMsg);
-      }
-      //remove tab and newline from the msg for vector
-      if (!sMsg.equalsIgnoreCase("\\n") && !sMsg.equalsIgnoreCase("\n"))
-        sMsg = m_util.parsedStringMsgVectorTabs(sMsg, vStatMsg);
-      if (!sMsg.equals(""))
-          vStatMsg.addElement(sMsg);
-
-      session.setAttribute("vStatMsg", vStatMsg);  
-      //add this message to the logger
-      logger.fatal("Log Status Message " + sMsg);
+        m_servlet.storeStatusMsg(sMsg);
     }
     catch(Exception e)
     {

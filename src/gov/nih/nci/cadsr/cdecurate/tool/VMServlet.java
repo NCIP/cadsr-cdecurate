@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.19 2007-05-30 20:01:42 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.20 2007-06-01 22:17:45 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -329,7 +329,8 @@ public class VMServlet extends GenericServlet
     //log the message and display it to the user
     if (!errMsg.equals(""))
     {
-        session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, errMsg);
+        curationServlet.storeStatusMsg(errMsg);
+        //session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, errMsg);
     }
     //store teh concept and vm attrirbutes in the request to place it on the vd page; append it regardless of the message
     EVS_Bean eBean =  (EVS_Bean)httpRequest.getAttribute(VMForm.REQUEST_SEL_CONCEPT);
@@ -541,7 +542,10 @@ public class VMServlet extends GenericServlet
     VM_Bean selectVM = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
     String errMsg = appendConceptVM(selectVM, ConceptForm.FOR_VM_PAGE_CONCEPT);
     if (!errMsg.equals(""))
-      session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, errMsg);
+    {
+        curationServlet.storeStatusMsg(errMsg);
+      //session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, errMsg);
+    }
     httpRequest.setAttribute(VMForm.REQUEST_FOCUS_ELEMENT, VMForm.ELM_LABEL_CON);
     return VMForm.JSP_VM_DETAIL;    
   }
@@ -561,7 +565,8 @@ public class VMServlet extends GenericServlet
       String smsg = vmAction.doDeleteConcept(selectVM, sRow);
       if (!smsg.equals(""))
       {
-        session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, smsg);
+        //session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, smsg);
+        curationServlet.storeStatusMsg(smsg);
         session.setAttribute(VMForm.SESSION_SELECT_VM, selectVM);
       }
     }    
@@ -584,7 +589,8 @@ public class VMServlet extends GenericServlet
       String smsg = vmAction.doMoveConcept(selectVM, sRow, sAction);
       if (!smsg.equals(""))
       {
-        session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, smsg);
+        //session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, smsg);
+        curationServlet.storeStatusMsg(smsg);
         session.setAttribute(VMForm.SESSION_SELECT_VM, selectVM);
       }
     }    
