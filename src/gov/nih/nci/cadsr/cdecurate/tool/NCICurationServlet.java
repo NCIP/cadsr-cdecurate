@@ -2433,7 +2433,7 @@ public class NCICurationServlet extends HttpServlet
         selName = selName.trim();
         if (selName.equals(""))
         {
-            insAC.storeStatusMsg("Please enter a text for the alternate name");
+            storeStatusMsg("Please enter a text for the alternate name");
             return;
         }
         // get the request vectors
@@ -2581,8 +2581,7 @@ public class NCICurationServlet extends HttpServlet
             }
         }
         if (stgContMsg != null && !stgContMsg.equals(""))
-            insAC
-                            .storeStatusMsg("Unable to remove the following Alternate Names, because the user does not have write permission to remove "
+            storeStatusMsg("Unable to remove the following Alternate Names, because the user does not have write permission to remove "
                                             + stgContMsg);
         session.setAttribute("AllAltNameList", vAltNames);
     } // end remove alt names
@@ -2604,7 +2603,7 @@ public class NCICurationServlet extends HttpServlet
         selName = selName.trim();
         if (selName.equals(""))
         {
-            insAC.storeStatusMsg("Please enter a text for the alternate name");
+            storeStatusMsg("Please enter a text for the alternate name");
             return;
         }
         // continue with adding
@@ -2761,8 +2760,7 @@ public class NCICurationServlet extends HttpServlet
             }
         }
         if (stgContMsg != null && !stgContMsg.equals(""))
-            insAC
-                            .storeStatusMsg("Unable to remove the following Reference Documents, because the user does not have write permission to remove "
+            storeStatusMsg("Unable to remove the following Reference Documents, because the user does not have write permission to remove "
                                             + stgContMsg);
         session.setAttribute("AllRefDocList", vRefDocs);
     } // end remove ref doc
@@ -3445,7 +3443,7 @@ public class NCICurationServlet extends HttpServlet
         // get the array from teh hidden list
         String selRows[] = req.getParameterValues("hiddenSelRow");
         if (selRows == null)
-            insAC.storeStatusMsg("Unable to select Concept, please try again");
+            storeStatusMsg("Unable to select Concept, please try again");
         else
         {
             // loop through the array of strings
@@ -3455,13 +3453,13 @@ public class NCICurationServlet extends HttpServlet
                 Integer IRow = new Integer(thisRow);
                 int iRow = IRow.intValue();
                 if (iRow < 0 || iRow > vRSel.size())
-                    insAC.storeStatusMsg("Row size is either too big or too small.");
+                    storeStatusMsg("Row size is either too big or too small.");
                 else
                 {
                     eBean = (EVS_Bean) vRSel.elementAt(iRow);
                     if (eBean == null || eBean.getLONG_NAME() == null)
                     {
-                        insAC.storeStatusMsg("Unable to obtain concept from the " + iRow
+                        storeStatusMsg("Unable to obtain concept from the " + iRow
                                         + " row of the search results.\\n" + "Please try again.");
                         continue;
                     }
@@ -3493,7 +3491,7 @@ public class NCICurationServlet extends HttpServlet
         // get the array from teh hidden list
         String selRows[] = req.getParameterValues("hiddenSelRow");
         if (selRows == null)
-            insAC.storeStatusMsg("Unable to select Concept, please try again");
+            storeStatusMsg("Unable to select Concept, please try again");
         else
         {
             // loop through the array of strings
@@ -3503,14 +3501,14 @@ public class NCICurationServlet extends HttpServlet
                 Integer IRow = new Integer(thisRow);
                 int iRow = IRow.intValue();
                 if (iRow < 0 || iRow > vRSel.size())
-                    insAC.storeStatusMsg("Row size is either too big or too small.");
+                    storeStatusMsg("Row size is either too big or too small.");
                 else
                 {
                     EVS_Bean eBean = (EVS_Bean) vRSel.elementAt(iRow);
                     // send it back if unable to obtion the concept
                     if (eBean == null || eBean.getLONG_NAME() == null)
                     {
-                        insAC.storeStatusMsg("Unable to obtain concept from the " + thisRow
+                        storeStatusMsg("Unable to obtain concept from the " + thisRow
                                         + " row of the search results.\\n" + "Please try again.");
                         continue;
                     }
@@ -4453,14 +4451,14 @@ public class NCICurationServlet extends HttpServlet
             }
             else
             {
-                insAC.storeStatusMsg("Unable to get the selected row from the " + sComp + " search results.\\n"
+                storeStatusMsg("Unable to get the selected row from the " + sComp + " search results.\\n"
                                 + "Please try again.");
                 return;
             }
             // send it back if unable to obtion the concept
             if (blockBean == null || blockBean.getLONG_NAME() == null)
             {
-                insAC.storeStatusMsg("Unable to obtain concept from the selected row of the " + sComp
+                storeStatusMsg("Unable to obtain concept from the selected row of the " + sComp
                                 + " search results.\\n" + "Please try again.");
                 return;
             }
@@ -4474,7 +4472,7 @@ public class NCICurationServlet extends HttpServlet
                     {
                         if (blockBean.getCONCEPT_IDENTIFIER() == null || blockBean.getCONCEPT_IDENTIFIER().equals(""))
                         {
-                            insAC.storeStatusMsg("This " + sComp
+                            storeStatusMsg("This " + sComp
                                             + " is not associated to a concept, so the data is suspect. \\n"
                                             + "Please choose another " + sComp + " .");
                         }
@@ -4777,13 +4775,13 @@ public class NCICurationServlet extends HttpServlet
                 }
                 else
                 {
-                    insAC.storeStatusMsg("Unable to get the selected row from the Rep Term search results.");
+                    storeStatusMsg("Unable to get the selected row from the Rep Term search results.");
                     return;
                 }
                 // send it back if unable to obtion the concept
                 if (m_REP == null || m_REP.getLONG_NAME() == null)
                 {
-                    insAC.storeStatusMsg("Unable to obtain concept from the selected row of the " + sComp
+                    storeStatusMsg("Unable to obtain concept from the selected row of the " + sComp
                                     + " search results.\\n" + "Please try again.");
                     return;
                 }
@@ -4797,8 +4795,7 @@ public class NCICurationServlet extends HttpServlet
                         {
                             if (m_REP.getCONCEPT_IDENTIFIER() == null || m_REP.getCONCEPT_IDENTIFIER().equals(""))
                             {
-                                insAC
-                                                .storeStatusMsg("This Rep Term is not associated to a concept, so the data is suspect. \\n"
+                                storeStatusMsg("This Rep Term is not associated to a concept, so the data is suspect. \\n"
                                                                 + "Please choose another Rep Term.");
                             }
                             else
@@ -5236,7 +5233,7 @@ public class NCICurationServlet extends HttpServlet
                     this.freeConnection(data.getDBConnection());
                     String  errMsg = data.getStatusMsg();
                     if (!errMsg.equals(""))
-                        insAC.storeStatusMsg(errMsg + "\\n");
+                        storeStatusMsg(errMsg + "\\n");
                     String sValue = eBean.getLONG_NAME();
                     String sMean = eBean.getLONG_NAME();
                     System.out.println(sValue + " selectVMConcept " + sMean);
@@ -5303,7 +5300,7 @@ public class NCICurationServlet extends HttpServlet
                 if (notUpdateVDPVs != null && !notUpdateVDPVs.equals(""))
                 {
                     String stMsg = "The following Value and Meaning already exists in the Value Domain.\\n";
-                    insAC.storeStatusMsg(stMsg + notUpdateVDPVs);
+                    storeStatusMsg(stMsg + notUpdateVDPVs);
                 }
             }
         }
@@ -5468,8 +5465,8 @@ public class NCICurationServlet extends HttpServlet
         DE_Bean DEBean = (DE_Bean) session.getAttribute("m_DE");
         DE_Bean oldDEBean = (DE_Bean) session.getAttribute("oldDEBean");
         // udpate the status message with DE name and ID
-        insAC.storeStatusMsg("Data Element Name : " + DEBean.getDE_LONG_NAME());
-        insAC.storeStatusMsg("Public ID : " + DEBean.getDE_MIN_CDE_ID());
+        storeStatusMsg("Data Element Name : " + DEBean.getDE_LONG_NAME());
+        storeStatusMsg("Public ID : " + DEBean.getDE_MIN_CDE_ID());
         // call stored procedure to update attributes
         String ret = insAC.setDE("UPD", DEBean, "Edit", oldDEBean);
         // forwards to search page if successful
@@ -5558,8 +5555,8 @@ public class NCICurationServlet extends HttpServlet
         if (sMenuAction.equals("NewDEVersion"))
         {
             // udpate the status message with DE name and ID only for version and updates
-            insAC.storeStatusMsg("Data Element Name : " + DEBean.getDE_LONG_NAME());
-            insAC.storeStatusMsg("Public ID : " + DEBean.getDE_MIN_CDE_ID());
+            storeStatusMsg("Data Element Name : " + DEBean.getDE_LONG_NAME());
+            storeStatusMsg("Public ID : " + DEBean.getDE_MIN_CDE_ID());
             // call stored procedure to version and update attributes
             ret = insAC.setAC_VERSION(DEBean, null, null, "DataElement");
             if (ret == null || ret.equals(""))
@@ -5578,7 +5575,7 @@ public class NCICurationServlet extends HttpServlet
                 }
             }
             else
-                insAC.storeStatusMsg("\\t " + ret + " - Unable to create new version successfully.");
+                storeStatusMsg("\\t " + ret + " - Unable to create new version successfully.");
         }
         else
         { // insert a new one
@@ -5637,9 +5634,9 @@ public class NCICurationServlet extends HttpServlet
                     session.setAttribute("results", vResult);
                     // ///////////////////////////
                     if (ret != null && !ret.equals(""))
-                        insAC.storeStatusMsg("\\t " + ret + " : Unable to update CRF Questions.");
+                        storeStatusMsg("\\t " + ret + " : Unable to update CRF Questions.");
                     else
-                        insAC.storeStatusMsg("\\t Successfully updated CRF Questions.");
+                        storeStatusMsg("\\t Successfully updated CRF Questions.");
                     session.setAttribute("m_Quest", questBean);
                 }
                 ForwardJSP(req, res, "/SearchResultsPage.jsp");
@@ -5826,8 +5823,8 @@ public class NCICurationServlet extends HttpServlet
         InsACService insAC = new InsACService(req, res, this);
         // doInsertDECBlocks(req, res, null); //insert any building blocks from Thesaurus first
         // udpate the status message with DEC name and ID
-        insAC.storeStatusMsg("Data Element Concept Name : " + DECBean.getDEC_LONG_NAME());
-        insAC.storeStatusMsg("Public ID : " + DECBean.getDEC_DEC_ID());
+        storeStatusMsg("Data Element Concept Name : " + DECBean.getDEC_LONG_NAME());
+        storeStatusMsg("Public ID : " + DECBean.getDEC_DEC_ID());
         // call stored procedure to update attributes
         String ret = insAC.setDEC("UPD", DECBean, "Edit", oldDECBean);
         // after succcessful update
@@ -6008,8 +6005,8 @@ public class NCICurationServlet extends HttpServlet
         if (sMenuAction.equals("NewDECVersion"))
         {
             // udpate the status message with DEC name and ID
-            insAC.storeStatusMsg("Data Element Concept Name : " + DECBean.getDEC_LONG_NAME());
-            insAC.storeStatusMsg("Public ID : " + DECBean.getDEC_DEC_ID());
+            storeStatusMsg("Data Element Concept Name : " + DECBean.getDEC_LONG_NAME());
+            storeStatusMsg("Public ID : " + DECBean.getDEC_DEC_ID());
             // creates new version first and updates all other attributes
             ret = insAC.setAC_VERSION(null, DECBean, null, "DataElementConcept");
             if (ret == null || ret.equals(""))
@@ -6036,7 +6033,7 @@ public class NCICurationServlet extends HttpServlet
                 }
             }
             else
-                insAC.storeStatusMsg("\\t " + ret + " - Unable to create new version successfully.");
+                storeStatusMsg("\\t " + ret + " - Unable to create new version successfully.");
         }
         else
         {
@@ -6193,8 +6190,8 @@ public class NCICurationServlet extends HttpServlet
         InsACService insAC = new InsACService(req, res, this);
         doInsertVDBlocks(req, res, null);
         // udpate the status message with DE name and ID
-        insAC.storeStatusMsg("Value Domain Name : " + VDBean.getVD_LONG_NAME());
-        insAC.storeStatusMsg("Public ID : " + VDBean.getVD_VD_ID());
+        storeStatusMsg("Value Domain Name : " + VDBean.getVD_LONG_NAME());
+        storeStatusMsg("Public ID : " + VDBean.getVD_VD_ID());
         // call stored procedure to update attributes
         String ret = insAC.setVD("UPD", VDBean, "Edit", oldVDBean);
         // forward to search page with refreshed list after successful update
@@ -6316,8 +6313,8 @@ public class NCICurationServlet extends HttpServlet
                 // session.setAttribute("m_VD", VDBeanSR);
                 String oldID = oldVDBean.getVD_VD_IDSEQ();
                 // udpate the status message with DE name and ID
-                insAC.storeStatusMsg("Value Domain Name : " + VDBeanSR.getVD_LONG_NAME());
-                insAC.storeStatusMsg("Public ID : " + VDBeanSR.getVD_VD_ID());
+                storeStatusMsg("Value Domain Name : " + VDBeanSR.getVD_LONG_NAME());
+                storeStatusMsg("Public ID : " + VDBeanSR.getVD_VD_ID());
                 // insert the version
                 if (newVers) // block version
                 {
@@ -6362,11 +6359,11 @@ public class NCICurationServlet extends HttpServlet
                     }
                     // alerady exists
                     else if (ret.indexOf("unique constraint") >= 0)
-                        insAC.storeStatusMsg("\\t New version " + VDBeanSR.getVD_VERSION()
+                        storeStatusMsg("\\t New version " + VDBeanSR.getVD_VERSION()
                                         + " already exists in the data base.\\n");
                     // some other problem
                     else
-                        insAC.storeStatusMsg("\\t " + ret + " : Unable to create new version "
+                        storeStatusMsg("\\t " + ret + " : Unable to create new version "
                                         + VDBeanSR.getVD_VERSION() + ".\\n");
                 }
                 else
@@ -6876,7 +6873,7 @@ public class NCICurationServlet extends HttpServlet
                     changeAC = "\\t Unable to update the Value Domain because \\n\\t";
                     newDECVD = false;
                 }
-                insAC.storeStatusMsg(changeAC
+                storeStatusMsg(changeAC
                                 + "the combination of DEC, VD and Context already exists in other Data Elements.\\n");
             }
             // do the validation for reg status
@@ -6913,7 +6910,7 @@ public class NCICurationServlet extends HttpServlet
                         changeAC = "\\t Unable to update the Data Element Concept because \\n\\t";
                         newDECVD = false;
                     }
-                    insAC.storeStatusMsg(changeAC
+                    storeStatusMsg(changeAC
                                     + "the Data Element Concept is not associated with an Object Class.\\n");
                 }
             }
@@ -6947,7 +6944,7 @@ public class NCICurationServlet extends HttpServlet
             {
                 DEBeanSR.setAC_PREF_NAME_TYPE(prefType);
                 if (oldASL.equals("RELEASED") && !(pageVer.equals("Point") || pageVer.equals("Whole")))
-                    insAC.storeStatusMsg("\\t Unable to update the Short Name because \\n"
+                    storeStatusMsg("\\t Unable to update the Short Name because \\n"
                                     + "\\t the Workflow Status of the Data Element is RELEASED.\\n");
                 else
                     DEBeanSR = this.doGetDENames(req, res, "noChange", "openDE", DEBeanSR);
@@ -6961,7 +6958,7 @@ public class NCICurationServlet extends HttpServlet
                     DEBeanSR.setDE_ASL_NAME(sASL);
                 else
                     // do not update
-                    insAC.storeStatusMsg("\\t Unable to update the Workflow Status because " + wfsValid + "\\n");
+                    storeStatusMsg("\\t Unable to update the Workflow Status because " + wfsValid + "\\n");
             }
             // other attributes
             String sDocText = de.getDOC_TEXT_PREFERRED_QUESTION();
@@ -7027,7 +7024,7 @@ public class NCICurationServlet extends HttpServlet
         String sValid = m_setAC.checkUniqueDECVDPair(DEBeanSR, getAC, "Edit", "Edit");
         if (sValid != null && !sValid.equals("")) // version only if valid dec-vd pair
         {
-            insAC.storeStatusMsg("\\t Unable to create new version because \\n"
+            storeStatusMsg("\\t Unable to create new version because \\n"
                             + "\\t the combination of DEC, VD and Context already exists in other Data Elements.\\n");
             verError = "decvdError";
         }
@@ -7039,7 +7036,7 @@ public class NCICurationServlet extends HttpServlet
                 DEBeanSR.setDE_VERSION(newVersion);
             else
             {
-                insAC.storeStatusMsg("\\t Unable to create new version because \\n"
+                storeStatusMsg("\\t Unable to create new version because \\n"
                                 + "\\t new version of the Data Element is not available.\\n");
                 verError = "verNumError";
             }
@@ -7199,8 +7196,8 @@ public class NCICurationServlet extends HttpServlet
                 // session.setAttribute("m_DEC", DECBeanSR);
                 String oldID = oldDECBean.getDEC_DEC_IDSEQ();
                 // udpate the status message with DEC name and ID
-                insAC.storeStatusMsg("Data Element Concept Name : " + DECBeanSR.getDEC_LONG_NAME());
-                insAC.storeStatusMsg("Public ID : " + DECBeanSR.getDEC_DEC_ID());
+                storeStatusMsg("Data Element Concept Name : " + DECBeanSR.getDEC_LONG_NAME());
+                storeStatusMsg("Public ID : " + DECBeanSR.getDEC_DEC_ID());
                 // creates a new version
                 if (newVers) // block version
                 {
@@ -7228,11 +7225,11 @@ public class NCICurationServlet extends HttpServlet
                     }
                     // alerady exists
                     else if (ret.indexOf("unique constraint") >= 0)
-                        insAC.storeStatusMsg("\\t The version " + DECBeanSR.getDEC_VERSION()
+                        storeStatusMsg("\\t The version " + DECBeanSR.getDEC_VERSION()
                                         + " already exists in the data base.\\n");
                     // some other problem
                     else
-                        insAC.storeStatusMsg("\\t " + ret + " : Unable to create new version "
+                        storeStatusMsg("\\t " + ret + " : Unable to create new version "
                                         + DECBeanSR.getDEC_VERSION() + ".\\n");
                 }
                 else
@@ -7311,8 +7308,8 @@ public class NCICurationServlet extends HttpServlet
                 DE_Bean DEBeanSR = new DE_Bean();
                 DEBeanSR = (DE_Bean) vBERows.elementAt(i);
                 // udpate the status message with DE name and ID
-                insAC.storeStatusMsg("Data Element Name : " + DEBeanSR.getDE_LONG_NAME());
-                insAC.storeStatusMsg("Public ID : " + DEBeanSR.getDE_MIN_CDE_ID());
+                storeStatusMsg("Data Element Name : " + DEBeanSR.getDE_LONG_NAME());
+                storeStatusMsg("Public ID : " + DEBeanSR.getDE_MIN_CDE_ID());
                 DE_Bean oldDEBean = new DE_Bean();
                 oldDEBean = oldDEBean.cloneDE_Bean(DEBeanSR, "Complete");
                 String oldName = (String) DEBeanSR.getDE_PREFERRED_NAME();
@@ -7354,11 +7351,11 @@ public class NCICurationServlet extends HttpServlet
                         }
                         // alerady exists
                         else if (ret.indexOf("unique constraint") >= 0)
-                            insAC.storeStatusMsg("\\t The new version " + DEBeanSR.getDE_VERSION()
+                            storeStatusMsg("\\t The new version " + DEBeanSR.getDE_VERSION()
                                             + " already exists in the data base.\\n");
                         // some other problem
                         else
-                            insAC.storeStatusMsg("\\t " + ret + " : Unable to create new version "
+                            storeStatusMsg("\\t " + ret + " : Unable to create new version "
                                             + DEBeanSR.getDE_VERSION() + "\\n");
                     }
                 }
@@ -7536,8 +7533,8 @@ public class NCICurationServlet extends HttpServlet
         if (sMenuAction.equals("NewVDVersion"))
         {
             // udpate the status message with DE name and ID
-            insAC.storeStatusMsg("Value Domain Name : " + VDBean.getVD_LONG_NAME());
-            insAC.storeStatusMsg("Public ID : " + VDBean.getVD_VD_ID());
+            storeStatusMsg("Value Domain Name : " + VDBean.getVD_LONG_NAME());
+            storeStatusMsg("Public ID : " + VDBean.getVD_VD_ID());
             // creates new version first
             ret = insAC.setAC_VERSION(null, null, VDBean, "ValueDomain");
             if (ret == null || ret.equals(""))
@@ -7577,7 +7574,7 @@ public class NCICurationServlet extends HttpServlet
                 }
             }
             else
-                insAC.storeStatusMsg("\\t " + ret + " - Unable to create new version successfully.");
+                storeStatusMsg("\\t " + ret + " - Unable to create new version successfully.");
         }
         else
         {
@@ -10589,6 +10586,53 @@ public class NCICurationServlet extends HttpServlet
         ForwardJSP(req, res, "/CDEHomePage.jsp");
     }
 
+    /**
+     * stores status message in the session
+     * @param sMsg string message to append to.
+     */
+     @SuppressWarnings("unchecked")
+     public void storeStatusMsg(String sMsg)
+     {
+       try
+       {
+         HttpSession session = m_classReq.getSession();
+         UtilService util = new UtilService();
+         Vector<String> vStatMsg = (Vector)session.getAttribute("vStatMsg");
+         String statusMsg = (String)session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
+         if (statusMsg == null) statusMsg = "";
+         //parse single  double  quotes and new line char if any
+         String alrtMsg = sMsg;
+         if (!alrtMsg.equalsIgnoreCase("\\n"))
+             alrtMsg = util.parsedStringAlertNewLine(alrtMsg);
+         alrtMsg = util.parsedStringDoubleQuote(alrtMsg);
+         alrtMsg = util.parsedStringSingleQuote(alrtMsg);
+         if (vStatMsg == null) vStatMsg = new Vector<String>();
+         //add message to both to string status message and vector stats message if not too big
+         if (vStatMsg.size() < 35)
+         {
+           if (sMsg.equalsIgnoreCase("\\n"))
+             statusMsg = statusMsg + alrtMsg; 
+           else
+             statusMsg = statusMsg + alrtMsg + "\\n"; 
+           session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, statusMsg);
+         }
+         //remove tab and newline from the msg for vector
+         if (!sMsg.equalsIgnoreCase("\\n") && !sMsg.equalsIgnoreCase("\n"))
+           sMsg = util.parsedStringMsgVectorTabs(sMsg, vStatMsg);
+         if (!sMsg.equals(""))
+             vStatMsg.addElement(sMsg);
+
+         session.setAttribute("vStatMsg", vStatMsg);  
+         //add this message to the logger
+         logger.fatal("Log Status Message " + sMsg);
+       }
+       catch(Exception e)
+       {
+         logger.fatal("ERROR in NCICurationServlet-storeStatusMsg for exception : " + e.toString(), e);
+         m_classReq.setAttribute("retcode", "Message Exception");
+       }
+     }
+    
     /**
      * To clear session attributes when a main Menu button/item is selected.
      * 

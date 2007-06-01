@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.22 2007-05-30 20:01:42 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.23 2007-06-01 22:17:45 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -379,7 +379,8 @@ public class PVServlet implements Serializable
       {
           String retMsg = pvAction.changePVQCAttributes(pv, pvInd, vd, data);
           if (!retMsg.equals(""))
-              session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, retMsg);
+              data.getCurationServlet().storeStatusMsg(retMsg);
+              //session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, retMsg);
       }
       else
       {
@@ -922,7 +923,8 @@ public class PVServlet implements Serializable
        {
          String sCRFmsg = "Unable to remove the Permissible Value (PV) (" + selPV.getPV_VALUE() + ") because the Permissible Value is used in a CRF." +
                      "\\n You may remove the PV after dis-associating it from the CRF.";
-         session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, sCRFmsg);
+         //session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, sCRFmsg);
+         data.getCurationServlet().storeStatusMsg(sCRFmsg);
          selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_NONE);
        }
        else
@@ -977,8 +979,8 @@ public class PVServlet implements Serializable
           "\\n You may remove the PV after dis-associating it from the CRF." + sCRFmsg;
       
       session.setAttribute(PVForm.SESSION_SELECT_VD, vd);      
-      session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, sCRFmsg);
-
+      //session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, sCRFmsg);
+      data.getCurationServlet().storeStatusMsg(sCRFmsg);
       return jsp;
     }
 

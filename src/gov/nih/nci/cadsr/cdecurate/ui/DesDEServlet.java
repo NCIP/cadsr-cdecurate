@@ -1,5 +1,5 @@
 // Copyright (c) 2006 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/DesDEServlet.java,v 1.32 2007-05-30 20:01:42 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/DesDEServlet.java,v 1.33 2007-06-01 22:17:45 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -90,7 +90,6 @@ public class DesDEServlet
     private void doMarkAddAltNames(HttpServletRequest req) throws Exception
     {
         HttpSession session = req.getSession();
-        InsACService insAC = new InsACService(_servlet.m_classReq, _servlet.m_classRes, _servlet);
         // get the sessin vectors
         Vector<ALT_NAME_Bean> vAltNames = (Vector) session.getAttribute("AllAltNameList");
         Vector vContext = (Vector) session.getAttribute("vWriteContextDE");
@@ -103,7 +102,7 @@ public class DesDEServlet
         selName = selName.trim();
         if (selName.equals(""))
         {
-            insAC.storeStatusMsg("Please enter a text for the alternate name");
+            _servlet.storeStatusMsg("Please enter a text for the alternate name");
             return;
         }
         // get the request vectors
@@ -191,14 +190,13 @@ public class DesDEServlet
     private void doMarkAddRefDocs(HttpServletRequest req) throws Exception
     {
         HttpSession session = req.getSession();
-        InsACService insAC = new InsACService(_servlet.m_classReq, _servlet.m_classRes, _servlet);
         String selName = (String) req.getParameter("txtRefName");
         if (selName == null)
             selName = "";
         selName = selName.trim();
         if (selName.equals(""))
         {
-            insAC.storeStatusMsg("Please enter a text for the alternate name");
+            _servlet.storeStatusMsg("Please enter a text for the alternate name");
             return;
         }
         // continue with adding
@@ -294,7 +292,6 @@ public class DesDEServlet
     private void doMarkRemoveAltNames(HttpServletRequest req) throws Exception
     {
         HttpSession session = req.getSession();
-        InsACService insAC = new InsACService(_servlet.m_classReq, _servlet.m_classRes, _servlet);
         String stgContMsg = "";
         // get the sessin vectors
         Vector<ALT_NAME_Bean> vAltNames = (Vector) session.getAttribute("AllAltNameList");
@@ -353,8 +350,7 @@ public class DesDEServlet
             }
         }
         if (stgContMsg != null && !stgContMsg.equals(""))
-            insAC
-                            .storeStatusMsg("Unable to remove the following Alternate Names, because the user does not have write permission to remove "
+            _servlet.storeStatusMsg("Unable to remove the following Alternate Names, because the user does not have write permission to remove "
                                             + stgContMsg);
         session.setAttribute("AllAltNameList", vAltNames);
     }
@@ -368,7 +364,6 @@ public class DesDEServlet
     private void doMarkRemoveRefDocs(HttpServletRequest req) throws Exception
     {
         HttpSession session = req.getSession();
-        InsACService insAC = new InsACService(_servlet.m_classReq, _servlet.m_classRes, _servlet);
         String stgContMsg = "";
         Vector<REF_DOC_Bean> vRefDocs = (Vector) session.getAttribute("AllRefDocList");
         Vector vContext = (Vector) session.getAttribute("vWriteContextDE");
@@ -426,8 +421,7 @@ public class DesDEServlet
             }
         }
         if (stgContMsg != null && !stgContMsg.equals(""))
-            insAC
-                            .storeStatusMsg("Unable to remove the following Reference Documents, because the user does not have write permission to remove "
+            _servlet.storeStatusMsg("Unable to remove the following Reference Documents, because the user does not have write permission to remove "
                                             + stgContMsg);
         session.setAttribute("AllRefDocList", vRefDocs);
     }

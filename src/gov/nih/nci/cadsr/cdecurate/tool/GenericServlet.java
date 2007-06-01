@@ -1,3 +1,6 @@
+// Copyright (c) 2000 ScenPro, Inc.
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GenericServlet.java,v 1.2 2007-06-01 22:17:44 hegdes Exp $
+// $Name: not supported by cvs2svn $
 /**
  * 
  */
