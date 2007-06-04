@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.33 2007-06-01 22:17:45 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.34 2007-06-04 18:09:10 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -587,7 +587,7 @@ public class AltNamesDefsServlet
                 {
                     // Have to create the object to hold the definition because we don't have one.
                     def_ = def_.trim();
-                    alt = new Alternates(Alternates._INSTANCEDEF, def_, DBAccess._manuallyCuratedDef, "", "", null, "", null);
+                    alt = new Alternates(Alternates._INSTANCEDEF, def_, DBAccess._manuallyCuratedDef, "", "", buffer.newIdseq(), "", null);
                     updated = true;
                 }
             }
