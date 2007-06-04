@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.33 2007-06-01 22:17:45 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.34 2007-06-04 18:09:10 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -674,6 +674,8 @@ public class AltNamesDefsSession implements Serializable
         if (_dbClearNamesDefs)
             db.deleteAlternates(idseq_);
 
+        if (_alts == null)
+            return;
         // Save every Alternate
         int total = _alts.length;
         for (int i = 0; i < _alts.length; ++i)
@@ -976,6 +978,9 @@ public class AltNamesDefsSession implements Serializable
      */
     private int findAltWithIdseq(String idseq_)
     {
+        if (_alts == null || _alts.length == 0)
+            return -1;
+
         int pos;
         for (pos = 0; pos < _alts.length; ++pos)
         {
@@ -1012,6 +1017,9 @@ public class AltNamesDefsSession implements Serializable
      */
     public Alternates findAltWithType(int instance_, String type_)
     {
+        if (_alts == null || _alts.length == 0)
+            return null;
+
         int pos;
         for (pos = 0; pos < _alts.length; ++pos)
         {
