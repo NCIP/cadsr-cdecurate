@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptForm.java,v 1.8 2007-06-04 18:09:09 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptForm.java,v 1.9 2007-06-12 20:26:17 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -69,7 +69,7 @@ public class ConceptForm implements Serializable
   private String MenuAction;
   private String ACAction;
   private UtilService util;
-  private NCICurationServlet curationServlet;
+  private CurationServlet curationServlet;
   private HttpServletRequest request;
   private HttpServletResponse response;
   private Vector<String> selStatusList;
@@ -180,7 +180,7 @@ public class ConceptForm implements Serializable
   /**
    * @return Returns the curationServlet.
    */
-  public NCICurationServlet getCurationServlet()
+  public CurationServlet getCurationServlet()
   {
     return curationServlet;
   }
@@ -188,7 +188,7 @@ public class ConceptForm implements Serializable
   /**
    * @param curationServlet The curationServlet to set.
    */
-  public void setCurationServlet(NCICurationServlet curationServlet)
+  public void setCurationServlet(CurationServlet curationServlet)
   {
     this.curationServlet = curationServlet;
   }

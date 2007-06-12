@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/CreateDE.js,v 1.21 2007-06-01 22:20:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/CreateDE.js,v 1.22 2007-06-12 20:27:24 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 var searchWindow = null;

@@ -1,11 +1,13 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GenericServlet.java,v 1.3 2007-06-04 18:09:09 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GenericServlet.java,v 1.4 2007-06-12 20:26:17 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 /**
  * 
  */
 package gov.nih.nci.cadsr.cdecurate.tool;
+
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +27,7 @@ public class GenericServlet
     super();
   }
   //call this from nci servlet class
-  public String run(HttpServletRequest req, HttpServletResponse res, NCICurationServlet ser)
+  public String run(HttpServletRequest req, HttpServletResponse res, CurationServlet ser)
   {
     httpRequest = req;
     httpResponse = res;
@@ -45,7 +47,7 @@ public class GenericServlet
     //keep this reset
     String sMenuAction = (String)httpRequest.getParameter(VMForm.ELM_MENU_ACTION);
     if (sMenuAction != null)
-      session.setAttribute(Session_Data.SESSION_MENU_ACTION, sMenuAction);
+      DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
     
     String sAction = (String)httpRequest.getParameter(VMForm.ELM_PAGE_ACTION);
     if (sAction == null || sAction.equals(""))
@@ -56,7 +58,7 @@ public class GenericServlet
   
   //protected variables
   protected String pageAction;
-  public NCICurationServlet curationServlet;
+  public CurationServlet curationServlet;
   public HttpServletRequest httpRequest;
   public HttpServletResponse httpResponse;
   //static variables

@@ -1,10 +1,12 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.45 2007-06-04 18:09:09 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.46 2007-06-12 20:26:17 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+
 import java.io.Serializable;
 import java.util.*;
 import java.sql.*;
@@ -25,7 +27,7 @@ public class GetACSearch implements Serializable
 {
     private static final long serialVersionUID = 1127639772054694933L;
 
-    private NCICurationServlet  m_servlet        = null;
+    private CurationServlet  m_servlet        = null;
 
     private UtilService         m_util           = new UtilService();
 
@@ -45,7 +47,7 @@ public class GetACSearch implements Serializable
      * @param CurationServlet
      *            NCICuration servlet object.
      */
-    public GetACSearch(HttpServletRequest req, HttpServletResponse res, NCICurationServlet CurationServlet)
+    public GetACSearch(HttpServletRequest req, HttpServletResponse res, CurationServlet CurationServlet)
     {
         m_classReq = req;
         m_classRes = res;
@@ -53,7 +55,7 @@ public class GetACSearch implements Serializable
     }
 
     /**
-     * To start a new search called from NCICurationServlet. selected component, keyword, selected context, seletcted
+     * To start a new search called from CurationServlet. selected component, keyword, selected context, seletcted
      * status parameters of request are stored in session. calls search method for selected component to get the result
      * set from the database. search result from the database is stored in session vector "vACSearch". calls method
      * 'setAttributeValues' to get list of selected attributes at search. calls method 'getRowSelected' to get list of
@@ -78,14 +80,14 @@ public class GetACSearch implements Serializable
             Vector vAC = new Vector();
             // Vector vS = new Vector();
             SetACService setAC = new SetACService(m_servlet);
-            session.setAttribute("sortType", "longName");
-            session.setAttribute("serProtoID", "");
+            DataManager.setAttribute(session, "sortType", "longName");
+            DataManager.setAttribute(session, "serProtoID", "");
             // get the selected Administed component for Search
             String sComponent = (String) req.getParameter("listSearchFor");
             if (sComponent != null)
-                session.setAttribute("searchAC", sComponent);
+                DataManager.setAttribute(session, "searchAC", sComponent);
             else
-                session.setAttribute("searchAC", "DataElement");
+                DataManager.setAttribute(session, "searchAC", "DataElement");
             String sSearchAC = (String) session.getAttribute("searchAC");
             // do the keyword search for the selected component
             String sKeyword = (String) req.getParameter("keyword");
@@ -94,8 +96,8 @@ public class GetACSearch implements Serializable
                 sKeyword = sKeyword.trim();
                 // call the method to set the attribute checked values
                 setAttributeValues(req, res, sSearchAC, "nothing");
-                session.setAttribute("serKeyword", sKeyword);
-                session.setAttribute("LastAppendWord", sKeyword);
+                DataManager.setAttribute(session, "serKeyword", sKeyword);
+                DataManager.setAttribute(session, "LastAppendWord", sKeyword);
                 UtilService util = new UtilService();
                 // parse the string to handle single quote
                 sKeyword = util.parsedStringSingleQuoteOracle(sKeyword);
@@ -104,19 +106,19 @@ public class GetACSearch implements Serializable
                 sContext = getMultiReqValues(sSearchAC, "MainSearch", "Context");
                 // filter by contextUse
                 String sContextUse = (String) req.getParameter("rContextUse");
-                session.setAttribute("serContextUse", sContextUse);
+                DataManager.setAttribute(session, "serContextUse", sContextUse);
                 if (sContextUse == null)
                     sContextUse = "";
                 // filter by version
                 String sVersion = (String) req.getParameter("rVersion");
-                session.setAttribute("serVersion", sVersion);
+                DataManager.setAttribute(session, "serVersion", sVersion);
                 // get the version number if other
                 String txVersion = "";
                 if (sVersion != null && sVersion.equals("Other"))
                     txVersion = (String) req.getParameter("tVersion");
                 if (txVersion == null)
                     txVersion = "";
-                session.setAttribute("serVersionNum", txVersion);
+                DataManager.setAttribute(session, "serVersionNum", txVersion);
                 double dVersion = 0;
                 // validate the version and display message if not valid
                 if (!txVersion.equals(""))
@@ -126,7 +128,7 @@ public class GetACSearch implements Serializable
                     if (sValid != null && !sValid.equals(""))
                     {
                         logger.fatal("not a good version " + sValid);
-                        session.setAttribute("serVersionNum", "0");
+                        DataManager.setAttribute(session, "serVersionNum", "0");
                     }
                     else
                     {
@@ -140,12 +142,12 @@ public class GetACSearch implements Serializable
                 // filter by value domain type enumerated
                 String sVDType = "";
                 String sVDTypeEnum = (String) req.getParameter("enumBox");
-                session.setAttribute("serVDTypeEnum", sVDTypeEnum);
+                DataManager.setAttribute(session, "serVDTypeEnum", sVDTypeEnum);
                 if (sVDTypeEnum != null)
                     sVDType = "E";
                 // filter by value domain type non enumerated
                 String sVDTypeNonEnum = (String) req.getParameter("nonEnumBox");
-                session.setAttribute("serVDTypeNonEnum", sVDTypeNonEnum);
+                DataManager.setAttribute(session, "serVDTypeNonEnum", sVDTypeNonEnum);
                 if (sVDTypeNonEnum != null && !sVDTypeNonEnum.equals(""))
                 {
                     if (!sVDType.equals(""))
@@ -154,7 +156,7 @@ public class GetACSearch implements Serializable
                 }
                 // filter by value domain type enumerated by reference
                 String sVDTypeRef = (String) req.getParameter("refEnumBox");
-                session.setAttribute("serVDTypeRef", sVDTypeRef);
+                DataManager.setAttribute(session, "serVDTypeRef", sVDTypeRef);
                 if (sVDTypeRef != null && !sVDTypeRef.equals(""))
                 {
                     if (!sVDType.equals(""))
@@ -166,10 +168,10 @@ public class GetACSearch implements Serializable
                 sSchemes = (String) req.getParameter("listCSName");
                 if (sSchemes != null && sSchemes.equalsIgnoreCase("AllSchemes"))
                     sSchemes = "";
-                session.setAttribute("selCS", sSchemes);
+                DataManager.setAttribute(session, "selCS", sSchemes);
                 String sCDid = "";
                 sCDid = (String) req.getParameter("listCDName");
-                session.setAttribute("serSelectedCD", sCDid);
+                DataManager.setAttribute(session, "serSelectedCD", sCDid);
                 if (sCDid != null && sCDid.equalsIgnoreCase("All Domains"))
                     sCDid = "";
                 // filter by workflow status
@@ -181,54 +183,54 @@ public class GetACSearch implements Serializable
                     sStatus = "";
                 // filter by registration status
                 String sRegStatus = (String) req.getParameter("listRegStatus");
-                session.setAttribute("serRegStatus", sRegStatus);
+                DataManager.setAttribute(session, "serRegStatus", sRegStatus);
                 if (sRegStatus == null || sRegStatus.equals("allReg"))
                     sRegStatus = "";
                 // filter by derivation type
                 String sDerType = (String) req.getParameter("listDeriveType");
-                session.setAttribute("serDerType", sDerType);
+                DataManager.setAttribute(session, "serDerType", sDerType);
                 if (sDerType == null || sDerType.equals("allDer"))
                     sDerType = "";
                 // filter by domain data type
                 String sDataType = (String) req.getParameter("listDataType");
-                session.setAttribute("serDataType", sDataType);
+                DataManager.setAttribute(session, "serDataType", sDataType);
                 if (sDataType == null || sDataType.equals("allData"))
                     sDataType = "";
                 // filter by date created from date
                 String sCreatedFrom = (String) req.getParameter("createdFrom");
-                session.setAttribute("serCreatedFrom", sCreatedFrom);
+                DataManager.setAttribute(session, "serCreatedFrom", sCreatedFrom);
                 if (sCreatedFrom == null)
                     sCreatedFrom = "";
                 // filter by date created To date
                 String sCreatedTo = (String) req.getParameter("createdTo");
-                session.setAttribute("serCreatedTo", sCreatedTo);
+                DataManager.setAttribute(session, "serCreatedTo", sCreatedTo);
                 if (sCreatedTo == null)
                     sCreatedTo = "";
                 // filter by date Modified from date
                 String sModifiedFrom = (String) req.getParameter("modifiedFrom");
-                session.setAttribute("serModifiedFrom", sModifiedFrom);
+                DataManager.setAttribute(session, "serModifiedFrom", sModifiedFrom);
                 if (sModifiedFrom == null)
                     sModifiedFrom = "";
                 // filter by date Modified To date
                 String sModifiedTo = (String) req.getParameter("modifiedTo");
-                session.setAttribute("serModifiedTo", sModifiedTo);
+                DataManager.setAttribute(session, "serModifiedTo", sModifiedTo);
                 if (sModifiedTo == null)
                     sModifiedTo = "";
                 // filter by Modifier type
                 String sModifier = (String) req.getParameter("modifier");
-                session.setAttribute("serModifier", sModifier);
+                DataManager.setAttribute(session, "serModifier", sModifier);
                 if ((sModifier == null) || sModifier.equals("allUsers"))
                     sModifier = "";
                 // filter by Creator type
                 String sCreator = (String) req.getParameter("creator");
-                session.setAttribute("serCreator", sCreator);
+                DataManager.setAttribute(session, "serCreator", sCreator);
                 if ((sCreator == null) || sCreator.equals("allUsers"))
                     sCreator = "";
                 // get value of search in
                 String sSearchIn = (String) req.getParameter("listSearchIn");
                 if (sSearchIn == null)
                     sSearchIn = "longName";
-                session.setAttribute("serSearchIn", sSearchIn);
+                DataManager.setAttribute(session, "serSearchIn", sSearchIn);
                 // search in by public id
                 if (sSearchIn.equals("minID"))
                 {
@@ -270,7 +272,7 @@ public class GetACSearch implements Serializable
                 {
                     // do the keyword search for the selected component
                     String sProtoID = (String) req.getParameter("protoKeyword");
-                    session.setAttribute("serProtoID", sProtoID);
+                    DataManager.setAttribute(session, "serProtoID", sProtoID);
                     sProtoID = util.parsedStringSingleQuoteOracle(sProtoID);
                     // crf name is keyword
                     String sCRFName = sKeyword;
@@ -467,16 +469,16 @@ public class GetACSearch implements Serializable
                 String AppendAction = (String) session.getAttribute("AppendAction");
                 if (AppendAction != null && AppendAction.equals("Appended"))
                 {
-                    session.setAttribute("newSearchRes", vAC);
+                    DataManager.setAttribute(session, "newSearchRes", vAC);
                     getRowSelected(req, res, true);
-                    session.setAttribute("AppendAction", "Was Appended");
+                    DataManager.setAttribute(session, "AppendAction", "Was Appended");
                 }
                 else
                 {
-                    session.setAttribute("AppendAction", "Not Appended");
-                    session.setAttribute("vSelRows", vAC);
+                    DataManager.setAttribute(session, "AppendAction", "Not Appended");
+                    DataManager.setAttribute(session, "vSelRows", vAC);
                     Vector vCheckList = new Vector();
-                    session.setAttribute("CheckList", vCheckList);
+                    DataManager.setAttribute(session, "CheckList", vCheckList);
                 }
                 // do ID's up here because it will need an existing ID stack first time into getResult
                 if (sSearchAC.equals("DataElement") || sSearchAC.equals("DataElementConcept")
@@ -486,27 +488,27 @@ public class GetACSearch implements Serializable
                                 || sSearchAC.equals("ConceptClass"))
                 {
                     Stack vSearchIDStack = new Stack();
-                    session.setAttribute("vSearchIDStack", vSearchIDStack);
+                    DataManager.setAttribute(session, "vSearchIDStack", vSearchIDStack);
                     Stack vSearchNameStack = new Stack();
-                    session.setAttribute("vSearchNameStack", vSearchNameStack);
+                    DataManager.setAttribute(session, "vSearchNameStack", vSearchNameStack);
                     Stack vSearchLongNameStack = new Stack();
-                    session.setAttribute("vSearchLongNameStack", vSearchLongNameStack);
+                    DataManager.setAttribute(session, "vSearchLongNameStack", vSearchLongNameStack);
                     Stack vSearchUsedContextStack = new Stack();
-                    session.setAttribute("vSearchUsedContextStack", vSearchUsedContextStack);
+                    DataManager.setAttribute(session, "vSearchUsedContextStack", vSearchUsedContextStack);
                     Stack sSearchACStack = new Stack();
-                    session.setAttribute("sSearchACStack", sSearchACStack);
+                    DataManager.setAttribute(session, "sSearchACStack", sSearchACStack);
                     Stack vACSearchStack = new Stack();
-                    session.setAttribute("vACSearchStack", vACSearchStack);
+                    DataManager.setAttribute(session, "vACSearchStack", vACSearchStack);
                     Stack vSearchASLStack = new Stack();
-                    session.setAttribute("vSearchASLStack", vSearchASLStack);
+                    DataManager.setAttribute(session, "vSearchASLStack", vSearchASLStack);
                     Stack vSelRowsStack = new Stack();
-                    session.setAttribute("vSelRowsStack", vSelRowsStack);
+                    DataManager.setAttribute(session, "vSelRowsStack", vSelRowsStack);
                     Stack vResultStack = new Stack();
-                    session.setAttribute("vResultStack", vResultStack);
+                    DataManager.setAttribute(session, "vResultStack", vResultStack);
                     Stack vCompAttrStack = new Stack();
-                    session.setAttribute("vCompAttrStack", vCompAttrStack);
+                    DataManager.setAttribute(session, "vCompAttrStack", vCompAttrStack);
                     Stack vAttributeListStack = new Stack();
-                    session.setAttribute("vAttributeListStack", vAttributeListStack);
+                    DataManager.setAttribute(session, "vAttributeListStack", vAttributeListStack);
                     EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
                     // call method to get the final result vector
                     Vector vResult = new Vector();
@@ -531,7 +533,7 @@ public class GetACSearch implements Serializable
                     else if (sSearchAC.equals("ConceptClass"))
                         evs.get_Result(req, res, vResult, "");
                     // store result vector in the attribute
-                    session.setAttribute("results", vResult);
+                    DataManager.setAttribute(session, "results", vResult);
                 }
             }
             // capture the duration
@@ -600,42 +602,42 @@ public class GetACSearch implements Serializable
             if (sSearchACStack != null)
             {
                 sSearchACStack.push(sSearchAC);
-                session.setAttribute("sSearchACStack", sSearchACStack);
+                DataManager.setAttribute(session, "sSearchACStack", sSearchACStack);
             }
             if (vACSearchStack != null)
             {
                 vACSearchStack.push(vAC);
-                session.setAttribute("vACSearchStack", vACSearchStack);
+                DataManager.setAttribute(session, "vACSearchStack", vACSearchStack);
             }
             if (vSearchASLStack != null)
             {
                 vSearchASLStack.push(vSearchASL);
-                session.setAttribute("vSearchASLStack", vSearchASLStack);
+                DataManager.setAttribute(session, "vSearchASLStack", vSearchASLStack);
             }
             if (vSelRowsStack != null)
             {
                 vSelRowsStack.push(vRSel);
-                session.setAttribute("vSelRowsStack", vSelRowsStack);
+                DataManager.setAttribute(session, "vSelRowsStack", vSelRowsStack);
             }
             if (vSearchIDStack != null)
             {
                 vSearchIDStack.push(vSearchID);
-                session.setAttribute("vSearchIDStack", vSearchIDStack);
+                DataManager.setAttribute(session, "vSearchIDStack", vSearchIDStack);
             }
             if (vSearchNameStack != null)
             {
                 vSearchNameStack.push(vSearchName);
-                session.setAttribute("vSearchNameStack", vSearchNameStack);
+                DataManager.setAttribute(session, "vSearchNameStack", vSearchNameStack);
             }
             if (vSearchLongNameStack != null)
             {
                 vSearchLongNameStack.push(vSearchLongName);
-                session.setAttribute("vSearchLongNameStack", vSearchLongNameStack);
+                DataManager.setAttribute(session, "vSearchLongNameStack", vSearchLongNameStack);
             }
             if (vResultStack != null)
             {
                 vResultStack.push(vResult);
-                session.setAttribute("vResultStack", vResultStack);
+                DataManager.setAttribute(session, "vResultStack", vResultStack);
             }
             Vector vCompAttr = new Vector();
             String sMenu = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
@@ -646,7 +648,7 @@ public class GetACSearch implements Serializable
             if (vCompAttrStack != null && vCompAttr != null)
             {
                 vCompAttrStack.push(vCompAttr);
-                session.setAttribute("vCompAttrStack", vCompAttrStack);
+                DataManager.setAttribute(session, "vCompAttrStack", vCompAttrStack);
             }
             Vector vACAttr = new Vector();
             if (sMenu.equals("searchForCreate"))
@@ -656,7 +658,7 @@ public class GetACSearch implements Serializable
             if (vAttributeListStack != null && vACAttr != null)
             {
                 vAttributeListStack.push(vACAttr);
-                session.setAttribute("vAttributeListStack", vAttributeListStack);
+                DataManager.setAttribute(session, "vAttributeListStack", vAttributeListStack);
             }
         }
         catch (Exception e)
@@ -765,7 +767,7 @@ public class GetACSearch implements Serializable
     }
 
     /**
-     * To get selected attributes or rows to display, called from NCICurationServlet. calls method 'setAttributeValues'
+     * To get selected attributes or rows to display, called from CurationServlet. calls method 'setAttributeValues'
      * to get list of selected attributes at search. calls method 'getRowSelected' to get list of checked rows to
      * display. calls method 'getDEResult' for selected component to get vector of selected attribute and checked rows
      * from the ACSearch vector. final result vector is stored in the session vector "results".
@@ -797,10 +799,10 @@ public class GetACSearch implements Serializable
             String sAppendAct = (String) req.getParameter("AppendAction");
             if (sAppendAct != null)
             {
-                session.setAttribute("AppendAction", sAppendAct);
+                DataManager.setAttribute(session, "AppendAction", sAppendAct);
                 // save the last word in the request attribute
-                session.setAttribute("LastAppendWord", (String) session.getAttribute("serKeyword"));
-                session.setAttribute("serKeyword", "");
+                DataManager.setAttribute(session, "LastAppendWord", (String) session.getAttribute("serKeyword"));
+                DataManager.setAttribute(session, "serKeyword", "");
             }
             // call the method to get the selected rows
             if (menuAction.equals("BEDisplay"))
@@ -841,9 +843,9 @@ public class GetACSearch implements Serializable
             else if (isBlockSearch == true)
                 evs.get_Result(req, res, vResult, "");
             if (actType.equals("BEDisplayRows"))
-                session.setAttribute("resultsBEDisplay", vResult);
+                DataManager.setAttribute(session, "resultsBEDisplay", vResult);
             else
-                session.setAttribute("results", vResult);
+                DataManager.setAttribute(session, "results", vResult);
         }
         catch (Exception e)
         {
@@ -898,13 +900,13 @@ public class GetACSearch implements Serializable
         // else if (isBlockSearch == true)
         // evs.get_Result(req, res, vResult, "");
         if (actType.equals("BEDisplayRows"))
-            session.setAttribute("resultsBEDisplay", vResult);
+            DataManager.setAttribute(session, "resultsBEDisplay", vResult);
         else
-            session.setAttribute("results", vResult);
+            DataManager.setAttribute(session, "results", vResult);
     }
 
     /**
-     * To get the sorted result vector to display for selected sort type, called from NCICurationServlet. calls method
+     * To get the sorted result vector to display for selected sort type, called from CurationServlet. calls method
      * 'getDESortedRows' for the selected component to get sorted bean. calls method 'getDEResult' for the selected
      * component to result vector from the sorted bean. final result vector is stored in the session vector "results".
      * 
@@ -923,7 +925,7 @@ public class GetACSearch implements Serializable
             // get the sort string parameter
             String sSortType = (String) req.getParameter("sortType");
             if (sSortType != null)
-                session.setAttribute("sortType", sSortType);
+                DataManager.setAttribute(session, "sortType", sSortType);
             String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             String sComponent = "";
             if (sMenuAction.equals("searchForCreate"))
@@ -998,7 +1000,7 @@ public class GetACSearch implements Serializable
                     evs.get_Result(req, res, vResult, "");
                 }
                 if (!sComponent.equals("ValueMeaning"))
-                    session.setAttribute("results", vResult);
+                    DataManager.setAttribute(session, "results", vResult);
             }
         }
         catch (Exception e)
@@ -1009,7 +1011,7 @@ public class GetACSearch implements Serializable
     }
 
     /**
-     * To get the Question result vector to display for the user, called from NCICurationServlet. calls method
+     * To get the Question result vector to display for the user, called from CurationServlet. calls method
      * 'doQuestionSearch' to search the questions. calls method 'setAttributeValues' to get the selected attributes.
      * calls method 'getQuestionSortedRows' for the selected component to get sorted bean. calls method
      * 'getQuestionResult' for the selected component to result vector from the sorted bean. final result vector is
@@ -1022,19 +1024,19 @@ public class GetACSearch implements Serializable
     {
         HttpSession session = m_classReq.getSession();
         Vector vResult = new Vector();
-        session.setAttribute("searchAC", "Questions");
-        session.setAttribute(Session_Data.SESSION_MENU_ACTION, "Questions");
+        DataManager.setAttribute(session, "searchAC", "Questions");
+        DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, "Questions");
         String userName = (String) session.getAttribute("Username");
         // call to search questions
         doQuestionSearch(userName, vResult);
-        session.setAttribute("vACSearch", vResult);
-        session.setAttribute("vSelRows", vResult);
+        DataManager.setAttribute(session, "vACSearch", vResult);
+        DataManager.setAttribute(session, "vSelRows", vResult);
         // get the selected attributes
         setAttributeValues(m_classReq, m_classRes, "Questions", "nothing");
         // get the final result
         vResult = new Vector();
         getQuestionResult(m_classReq, m_classRes, vResult);
-        session.setAttribute("results", vResult);
+        DataManager.setAttribute(session, "results", vResult);
     }
 
     /**
@@ -1453,7 +1455,7 @@ public class GetACSearch implements Serializable
                 cstmt.close();
             if (conn != null)
                 conn.close();
-            session.setAttribute("desHashTable", desTable);
+            DataManager.setAttribute(session, "desHashTable", desTable);
         }
         catch (Exception ee)
         {
@@ -2248,10 +2250,10 @@ public class GetACSearch implements Serializable
             // store the vector in session
             if (sMenuAct.equals("searchForCreate"))
             {
-                session.setAttribute("creSelectedAttr", vAttrList);
+                DataManager.setAttribute(session, "creSelectedAttr", vAttrList);
             }
             else
-                session.setAttribute("selectedAttr", vAttrList);
+                DataManager.setAttribute(session, "selectedAttr", vAttrList);
         }
         catch (Exception e)
         {
@@ -2333,18 +2335,18 @@ public class GetACSearch implements Serializable
             {
                 if (sAction.equals("searchForCreate"))
                 {
-                    session.setAttribute("creStatus", vSelectList);
+                    DataManager.setAttribute(session, "creStatus", vSelectList);
                     m_classReq.setAttribute("creStatusBlocks", vSelectList);
                 }
                 else
-                    session.setAttribute("serStatus", vSelectList);
+                    DataManager.setAttribute(session, "serStatus", vSelectList);
             }
             else
             {
                 if (sAction.equals("searchForCreate"))
-                    session.setAttribute("creMultiContext", vSelectList);
+                    DataManager.setAttribute(session, "creMultiContext", vSelectList);
                 else
-                    session.setAttribute("serMultiContext", vSelectList);
+                    DataManager.setAttribute(session, "serMultiContext", vSelectList);
             }
         }
         catch (Exception e)
@@ -2430,11 +2432,11 @@ public class GetACSearch implements Serializable
             // store it in the session to refresh the list on the page
             if (sAction.equals("searchForCreate"))
             {
-                session.setAttribute("creStatus", vStatusList);
+                DataManager.setAttribute(session, "creStatus", vStatusList);
                 req.setAttribute("creStatusBlocks", vStatusList);
             }
             else
-                session.setAttribute("serStatus", vStatusList);
+                DataManager.setAttribute(session, "serStatus", vStatusList);
         }
         catch (Exception e)
         {
@@ -2475,9 +2477,9 @@ public class GetACSearch implements Serializable
                 vSel.insertElementAt("Workflow Status", iInd);
             // store it back in teh session
             if (sAction.equals("searchForCreate"))
-                session.setAttribute("creSelectedAttr", vSel);
+                DataManager.setAttribute(session, "creSelectedAttr", vSel);
             else
-                session.setAttribute("selectedAttr", vSel);
+                DataManager.setAttribute(session, "selectedAttr", vSel);
         }
         catch (Exception e)
         {
@@ -2537,13 +2539,13 @@ public class GetACSearch implements Serializable
         Vector vSelectedAttr = new Vector();
         if (sAction.equals("searchForCreate"))
         {
-            session.setAttribute("creDocTyes", vDocTypeList);
+            DataManager.setAttribute(session, "creDocTyes", vDocTypeList);
             // add these to default display attributes
             vSelectedAttr = (Vector) session.getAttribute("creSelectedAttr");
         }
         else
         {
-            session.setAttribute("serDocTyes", vDocTypeList);
+            DataManager.setAttribute(session, "serDocTyes", vDocTypeList);
             // add these to default display attributes
             vSelectedAttr = (Vector) session.getAttribute("selectedAttr");
         }
@@ -2567,11 +2569,11 @@ public class GetACSearch implements Serializable
         // store the display attributes back in the session
         if (sAction.equals("searchForCreate"))
         {
-            session.setAttribute("creSelectedAttr", vSelectedAttr);
+            DataManager.setAttribute(session, "creSelectedAttr", vSelectedAttr);
             // m_classReq.setAttribute("creSelectedAttrBlocks", vSelectedAttr);
         }
         else
-            session.setAttribute("selectedAttr", vSelectedAttr);
+            DataManager.setAttribute(session, "selectedAttr", vSelectedAttr);
         return sDocType;
     }
 
@@ -2781,12 +2783,12 @@ public class GetACSearch implements Serializable
                 if (vSelAttr.contains("Derivation Relationship"))
                     vResult = addMultiRecordDerDE(DEBean, vResult);
             }
-            session.setAttribute("SearchID", vSearchID);
-            session.setAttribute("SearchName", vSearchName);
-            session.setAttribute("SearchLongName", vSearchLongName);
-            session.setAttribute("SearchASL", vSearchASL);
-            session.setAttribute("SearchDefinitionAC", vSearchDefinition);
-            session.setAttribute("SearchUsedContext", vUsedContext);
+            DataManager.setAttribute(session, "SearchID", vSearchID);
+            DataManager.setAttribute(session, "SearchName", vSearchName);
+            DataManager.setAttribute(session, "SearchLongName", vSearchLongName);
+            DataManager.setAttribute(session, "SearchASL", vSearchASL);
+            DataManager.setAttribute(session, "SearchDefinitionAC", vSearchDefinition);
+            DataManager.setAttribute(session, "SearchUsedContext", vUsedContext);
             // for Back button, put search results on a stack
             // if(!refresh.equals("true") && (!menuAction.equals("searchForCreate")))
             if (!menuAction.equals("searchForCreate"))
@@ -3150,24 +3152,24 @@ public class GetACSearch implements Serializable
                     }
                 }
                 // save them to session, even empty, refresh it
-                session.setAttribute("DerivedDE", dde);
-                session.setAttribute("vDEComp", vDEComp);
-                session.setAttribute("vDECompID", vDECompID);
-                session.setAttribute("vDECompOrder", vDECompOrder);
-                session.setAttribute("vDECompRelID", vDECompRelID);
-                session.setAttribute("vDECompDelete", vDECompDelete);
-                session.setAttribute("sRepType", sRepType);
-                session.setAttribute("sRule", sRule);
-                session.setAttribute("sMethod", sMethod);
-                session.setAttribute("sConcatChar", sConcatChar);
-                session.setAttribute("sRulesAction", sRulesAction);
+                DataManager.setAttribute(session, "DerivedDE", dde);
+                DataManager.setAttribute(session, "vDEComp", vDEComp);
+                DataManager.setAttribute(session, "vDECompID", vDECompID);
+                DataManager.setAttribute(session, "vDECompOrder", vDECompOrder);
+                DataManager.setAttribute(session, "vDECompRelID", vDECompRelID);
+                DataManager.setAttribute(session, "vDECompDelete", vDECompDelete);
+                DataManager.setAttribute(session, "sRepType", sRepType);
+                DataManager.setAttribute(session, "sRule", sRule);
+                DataManager.setAttribute(session, "sMethod", sMethod);
+                DataManager.setAttribute(session, "sConcatChar", sConcatChar);
+                DataManager.setAttribute(session, "sRulesAction", sRulesAction);
                 // store it in the session if bad type
                 String dbType = sRepType;
                 Vector vRepType = (Vector) session.getAttribute("vRepType");
                 if (vRepType != null && sRepType != null && !vRepType.contains(sRepType))
-                    session.setAttribute("NotValidDBType", dbType);
+                    DataManager.setAttribute(session, "NotValidDBType", dbType);
                 else
-                    session.setAttribute("NotValidDBType", "");
+                    DataManager.setAttribute(session, "NotValidDBType", "");
             }
         }
         catch (Exception e)
@@ -3322,12 +3324,12 @@ public class GetACSearch implements Serializable
                                     .getDEC_DEC_IDSEQ(), vResult);
                 // if (vSelAttr.contains("Language")) vResult.addElement(DECBean.getDEC_LANGUAGE());
             }
-            session.setAttribute("SearchID", vSearchID);
-            session.setAttribute("SearchName", vSearchName);
-            session.setAttribute("SearchLongName", vSearchLongName);
-            session.setAttribute("SearchASL", vSearchASL);
-            session.setAttribute("SearchDefinitionAC", vSearchDefinition);
-            session.setAttribute("SearchUsedContext", vUsedContext);
+            DataManager.setAttribute(session, "SearchID", vSearchID);
+            DataManager.setAttribute(session, "SearchName", vSearchName);
+            DataManager.setAttribute(session, "SearchLongName", vSearchLongName);
+            DataManager.setAttribute(session, "SearchASL", vSearchASL);
+            DataManager.setAttribute(session, "SearchDefinitionAC", vSearchDefinition);
+            DataManager.setAttribute(session, "SearchUsedContext", vUsedContext);
             // for Back button, put search results on a stack
             if (!refresh.equals("true") && (!menuAction.equals("searchForCreate")))
                 stackSearchComponents("DataElementConcept", vDEC, vRSel, vSearchID, vSearchName, vResult,
@@ -3502,12 +3504,12 @@ public class GetACSearch implements Serializable
                     vResult = addMultiRecordRDName(VDBean.getREFERENCE_DOCUMENT(), sName, VDBean.getVD_VD_IDSEQ(),
                                     vResult);
             }
-            session.setAttribute("SearchID", vSearchID);
-            session.setAttribute("SearchName", vSearchName);
-            session.setAttribute("SearchLongName", vSearchLongName);
-            session.setAttribute("SearchASL", vSearchASL);
-            session.setAttribute("SearchDefinitionAC", vSearchDefinition);
-            session.setAttribute("SearchUsedContext", vUsedContext);
+            DataManager.setAttribute(session, "SearchID", vSearchID);
+            DataManager.setAttribute(session, "SearchName", vSearchName);
+            DataManager.setAttribute(session, "SearchLongName", vSearchLongName);
+            DataManager.setAttribute(session, "SearchASL", vSearchASL);
+            DataManager.setAttribute(session, "SearchDefinitionAC", vSearchDefinition);
+            DataManager.setAttribute(session, "SearchUsedContext", vUsedContext);
             // for Back button, put search results on a stack
             if (!refresh.equals("true") && (!menuAction.equals("searchForCreate")))
                 stackSearchComponents("ValueDomain", vVD, vRSel, vSearchID, vSearchName, vResult, vSearchASL,
@@ -3637,12 +3639,12 @@ public class GetACSearch implements Serializable
                 if (vSelAttr.contains("Change Note"))
                     vResult.addElement(CDBean.getCD_CHANGE_NOTE());
             }
-            session.setAttribute("SearchID", vSearchID);
-            session.setAttribute("SearchName", vSearchName);
-            session.setAttribute("SearchLongName", vSearchLongName);
-            session.setAttribute("SearchASL", vSearchASL);
-            session.setAttribute("SearchDefinitionAC", vSearchDefinition);
-            session.setAttribute("SearchUsedContext", vUsedContext);
+            DataManager.setAttribute(session, "SearchID", vSearchID);
+            DataManager.setAttribute(session, "SearchName", vSearchName);
+            DataManager.setAttribute(session, "SearchLongName", vSearchLongName);
+            DataManager.setAttribute(session, "SearchASL", vSearchASL);
+            DataManager.setAttribute(session, "SearchDefinitionAC", vSearchDefinition);
+            DataManager.setAttribute(session, "SearchUsedContext", vUsedContext);
             // for Back button, put search results and attributes on a stack
             if (!refresh.equals("true") && (!menuAction.equals("searchForCreate")))
                 stackSearchComponents("ConceptualDomain", vCD, vRSel, vSearchID, vSearchName, vResult, vSearchASL,
@@ -3980,7 +3982,7 @@ public class GetACSearch implements Serializable
                     }
                 }
             }
-            session.setAttribute("vSelRowsBEDisplay", vSelRows);
+            DataManager.setAttribute(session, "vSelRowsBEDisplay", vSelRows);
         }
         catch (Exception e)
         {
@@ -4050,17 +4052,17 @@ public class GetACSearch implements Serializable
                 if (!actType.equals("BEDisplayRows"))
                 {
                     if (sMenu.equals("searchForCreate"))
-                        session.setAttribute("creCheckList", vCheckList);
+                        DataManager.setAttribute(session, "creCheckList", vCheckList);
                     else
-                        session.setAttribute("CheckList", vCheckList);
+                        DataManager.setAttribute(session, "CheckList", vCheckList);
                 }
             }
             else if (actType.equals("NoRowsSelected"))
             {
                 if (sMenu.equals("searchForCreate"))
-                    session.setAttribute("creCheckList", vCheckList);
+                    DataManager.setAttribute(session, "creCheckList", vCheckList);
                 else
-                    session.setAttribute("CheckList", null);
+                    DataManager.setAttribute(session, "CheckList", null);
                 vSelRows = vSRows;
             }
             else if (!sMenu.equals("searchForCreate"))
@@ -4106,13 +4108,13 @@ public class GetACSearch implements Serializable
                             }
                         }
                     }
-                    session.setAttribute("newSearchRes", new Vector());
+                    DataManager.setAttribute(session, "newSearchRes", new Vector());
                 }
             }
             if (actType != null && actType.equals("BEDisplayRows"))
-                session.setAttribute("vSelRowsBEDisplay", vSelRows);
+                DataManager.setAttribute(session, "vSelRowsBEDisplay", vSelRows);
             else if (!sMenu.equals("searchForCreate"))
-                session.setAttribute("vSelRows", vSelRows);
+                DataManager.setAttribute(session, "vSelRows", vSelRows);
         }
         catch (Exception e)
         {
@@ -4144,9 +4146,9 @@ public class GetACSearch implements Serializable
             GetACService getAC = new GetACService(req, res, m_servlet);
             String sUser = (String) session.getAttribute("Username");
             String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
-            session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");
-            session.setAttribute("AllAltNameList", new Vector());
-            session.setAttribute("AllRefDocList", new Vector());
+            DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "");
+            DataManager.setAttribute(session, "AllAltNameList", new Vector());
+            DataManager.setAttribute(session, "AllRefDocList", new Vector());
             String sSearchAC = (String) session.getAttribute("searchAC");
             Vector vSRows = (Vector) session.getAttribute("vSelRows");
             Vector vCheckList = new Vector();
@@ -4176,7 +4178,7 @@ public class GetACSearch implements Serializable
                     sMenuAction = "NewVDVersion";
             }
             // reset the menu action
-            session.setAttribute(Session_Data.SESSION_MENU_ACTION, sMenuAction);
+            DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
             // set variable but not the session attribute to avoid the problem with the menuaction other than Edit DE
             if (sAction.equals("EditDesDE"))
                 sMenuAction = sAction;
@@ -4198,7 +4200,7 @@ public class GetACSearch implements Serializable
                     if (rSel != null)
                     {
                         // reset the bean with selected row for the selected component
-                        session.setAttribute("ckName", ckName);
+                        DataManager.setAttribute(session, "ckName", ckName);
                         vCheckList.addElement(ckName);
                         if (sSearchAC.equals("DataElement"))
                         {
@@ -4214,12 +4216,11 @@ public class GetACSearch implements Serializable
                             // back to search results page if no write permit and is one of the create item
                             if (!strInValid.equals(""))
                             {
-                                session
-                                                .setAttribute(Session_Data.SESSION_STATUS_MESSAGE,
+                                DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE,
                                                                 "User does not have authorization to Create/Edit for the selected context");
                                 Vector vResult = new Vector();
                                 getDEResult(req, res, vResult, "");
-                                session.setAttribute("results", vResult);
+                                DataManager.setAttribute(session, "results", vResult);
                                 isValid = false;
                                 break;
                             }
@@ -4234,8 +4235,8 @@ public class GetACSearch implements Serializable
                                 vBEResult.addElement(clDEBean);
                                 // store this bean to get its attributes and to use it to clear the changes
                                 if (DEBean != null)
-                                    session.setAttribute("oldDEBean", clDEBean);
-                                session.setAttribute("m_DE", DEBean);
+                                    DataManager.setAttribute(session, "oldDEBean", clDEBean);
+                                DataManager.setAttribute(session, "m_DE", DEBean);
                             }
                         }
                         else if (sSearchAC.equals("DataElementConcept"))
@@ -4251,12 +4252,11 @@ public class GetACSearch implements Serializable
                                 strInValid = checkWritePermission("dec", sUser, sContextID, getAC);
                             if (!strInValid.equals(""))
                             {
-                                session
-                                                .setAttribute(Session_Data.SESSION_STATUS_MESSAGE,
+                                DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE,
                                                                 "User does not have authorization to Create/Edit for the selected context");
                                 Vector vResult = new Vector();
                                 getDECResult(req, res, vResult, "");
-                                session.setAttribute("results", vResult);
+                                DataManager.setAttribute(session, "results", vResult);
                                 isValid = false;
                                 break;
                             }
@@ -4269,8 +4269,8 @@ public class GetACSearch implements Serializable
                                 vBEResult.addElement(clDECBean);
                                 // store this bean to get its attributes and to use it to clear the changes
                                 if (DECBean != null)
-                                    session.setAttribute("oldDECBean", clDECBean);
-                                session.setAttribute("m_DEC", DECBean);
+                                    DataManager.setAttribute(session, "oldDECBean", clDECBean);
+                                DataManager.setAttribute(session, "m_DEC", DECBean);
                             }
                         }
                         else if (sSearchAC.equals("ValueDomain"))
@@ -4292,27 +4292,26 @@ public class GetACSearch implements Serializable
                                 strInValid = checkWritePermission("vd", sUser, sContextID, getAC);
                             if (!strInValid.equals(""))
                             {
-                                session
-                                                .setAttribute(Session_Data.SESSION_STATUS_MESSAGE,
+                                DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE,
                                                                 "User does not have authorization to Create/Edit for the selected context");
                                 Vector vResult = new Vector();
                                 getVDResult(req, res, vResult, "");
-                                session.setAttribute("results", vResult);
+                                DataManager.setAttribute(session, "results", vResult);
                                 isValid = false;
                                 break;
                             }
                             else
                             {
                                 VDBean = getVDAttributes(VDBean, sAction, sMenuAction);
-                                session.setAttribute("TabFocus", "VD");
+                                DataManager.setAttribute(session, "TabFocus", "VD");
                                 // clone the bean to store it
                                 VD_Bean clVDBean = new VD_Bean();
                                 clVDBean = clVDBean.cloneVD_Bean(VDBean);
                                 vBEResult.addElement(clVDBean);
                                 // store this bean to get its attributes and to use it to clear the changes
                                 if (VDBean != null)
-                                    session.setAttribute("oldVDBean", clVDBean);
-                                session.setAttribute("m_VD", VDBean);
+                                    DataManager.setAttribute(session, "oldVDBean", clVDBean);
+                                DataManager.setAttribute(session, "m_VD", VDBean);
                             }
                         }
                         else if (sSearchAC.equals("Questions"))
@@ -4320,7 +4319,7 @@ public class GetACSearch implements Serializable
                             // get the quest bean from the vector
                             Quest_Bean selQuestBean = new Quest_Bean();
                             selQuestBean = (Quest_Bean) vSRows.elementAt(i);
-                            session.setAttribute("m_Quest", selQuestBean);
+                            DataManager.setAttribute(session, "m_Quest", selQuestBean);
                             isValid = doSelectDEforQuestion(req, res, selQuestBean, getAC);
                             break;
                         }
@@ -4340,25 +4339,25 @@ public class GetACSearch implements Serializable
                             vCheckList.addElement(ckName2);
                     }
                 }
-                session.setAttribute("CheckList", vCheckList);
+                DataManager.setAttribute(session, "CheckList", vCheckList);
             }
             if (sAction.equalsIgnoreCase("BlockEdit") || sAction.equalsIgnoreCase("EditDesDE"))
             {
                 getSelRowForBlockEdit(sSearchAC);
-                session.setAttribute("vBEResult", vBEResult);
+                DataManager.setAttribute(session, "vBEResult", vBEResult);
             }
             else
             {
                 session.removeAttribute("vBEResult");
             }
-            session.setAttribute("vACId", (Vector) m_classReq.getAttribute("vACId"));
-            session.setAttribute("vACName", (Vector) m_classReq.getAttribute("vACName"));
+            DataManager.setAttribute(session, "vACId", (Vector) m_classReq.getAttribute("vACId"));
+            DataManager.setAttribute(session, "vACName", (Vector) m_classReq.getAttribute("vACName"));
         }
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getSelRowToEdit: " + e);
             logger.fatal("ERROR in GetACSearch-getSelRowToEdit : " + e.toString(), e);
-            session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create/Edit page. Please try again.");
+            DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create/Edit page. Please try again.");
             return false;
         }
         return isValid;
@@ -4431,13 +4430,13 @@ public class GetACSearch implements Serializable
             String oc_condr_idseq = DECBean.getDEC_OC_CONDR_IDSEQ();
             if (oc_condr_idseq != null)
             {
-                session.setAttribute("vObjectClass", null);
+                DataManager.setAttribute(session, "vObjectClass", null);
                 evs.fillOCVectors(oc_condr_idseq, DECBean, sMenu);
             }
             String prop_condr_idseq = DECBean.getDEC_PROP_CONDR_IDSEQ();
             if (prop_condr_idseq != null)
             {
-                session.setAttribute("vProperty", null);
+                DataManager.setAttribute(session, "vProperty", null);
                 evs.fillPropVectors(prop_condr_idseq, DECBean, sMenu);
             }
             DECBean.setAC_USER_PREF_NAME(DECBean.getDEC_PREFERRED_NAME());
@@ -4507,7 +4506,7 @@ public class GetACSearch implements Serializable
         if (!sAction.equals("BlockEdit") && !sAction.equals("EditDesDE"))
             getDDEInfo(DEBean.getDE_DE_IDSEQ());
         if (sMenu.equals("NewDETemplate") || sMenu.equals("NewDEVersion"))
-            session.setAttribute("sRulesAction", "newRule");
+            DataManager.setAttribute(session, "sRulesAction", "newRule");
         // make some attributes to default/empty if NUE
         if (sMenu.equals("NewDETemplate") || sAction.equals("Template"))
         {
@@ -4667,7 +4666,7 @@ public class GetACSearch implements Serializable
         String rep_condr_idseq = VDBean.getVD_REP_CONDR_IDSEQ();
         if (!sAction.equalsIgnoreCase("BlockEdit") && rep_condr_idseq != null)
         {
-            session.setAttribute("vRepTerm", null);
+            DataManager.setAttribute(session, "vRepTerm", null);
             evs.fillRepVectors(rep_condr_idseq, VDBean, sMenu);
             // make the abbreviated name if existing one is system name
             VDBean = m_servlet.doGetVDNames(m_classReq, m_classRes, null, "OpenVD", VDBean);
@@ -4837,9 +4836,9 @@ public class GetACSearch implements Serializable
             bDECBean.setAC_ALT_NAMES(vAltNames);
             bDECBean.setAC_REF_DOCS(vRefDocs);
             // store de bean inthe session
-            session.setAttribute("m_DEC", bDECBean);
+            DataManager.setAttribute(session, "m_DEC", bDECBean);
             DEC_Bean clBean = new DEC_Bean();
-            session.setAttribute("oldDECBean", clBean.cloneDEC_Bean(bDECBean));
+            DataManager.setAttribute(session, "oldDECBean", clBean.cloneDEC_Bean(bDECBean));
         }
         else if (sSearchAC.equals("ValueDomain"))
         {
@@ -4854,9 +4853,9 @@ public class GetACSearch implements Serializable
             bVDBean.setAC_ALT_NAMES(vAltNames);
             bVDBean.setAC_REF_DOCS(vRefDocs);
             // store de bean inthe session
-            session.setAttribute("m_VD", bVDBean);
+            DataManager.setAttribute(session, "m_VD", bVDBean);
             VD_Bean clBean = new VD_Bean();
-            session.setAttribute("oldVDBean", clBean.cloneVD_Bean(bVDBean));
+            DataManager.setAttribute(session, "oldVDBean", clBean.cloneVD_Bean(bVDBean));
         }
         else if (sSearchAC.equals("DataElement"))
         {
@@ -4871,9 +4870,9 @@ public class GetACSearch implements Serializable
             bDEBean.setAC_ALT_NAMES(vAltNames);
             bDEBean.setAC_REF_DOCS(vRefDocs);
             // store de bean inthe session
-            session.setAttribute("m_DE", bDEBean);
+            DataManager.setAttribute(session, "m_DE", bDEBean);
             DE_Bean clBean = new DE_Bean();
-            session.setAttribute("oldDEBean", clBean.cloneDE_Bean(bDEBean, "Complete"));
+            DataManager.setAttribute(session, "oldDEBean", clBean.cloneDE_Bean(bDEBean, "Complete"));
         }
     }
 
@@ -4910,10 +4909,10 @@ public class GetACSearch implements Serializable
             prefName = DEBean.getDE_PREFERRED_NAME();
             contextID = DEBean.getDE_CONTE_IDSEQ();
             aslName = DEBean.getDE_ASL_NAME();
-            session.setAttribute("OldDEContextID", contextID);
-            session.setAttribute("OldDEContext", conName);
-            session.setAttribute("OldDEPreferredName", prefName);
-            session.setAttribute("OldDEAslName", aslName);
+            DataManager.setAttribute(session, "OldDEContextID", contextID);
+            DataManager.setAttribute(session, "OldDEContext", conName);
+            DataManager.setAttribute(session, "OldDEPreferredName", prefName);
+            DataManager.setAttribute(session, "OldDEAslName", aslName);
         }
         else if (DECBean != null)
         {
@@ -4922,10 +4921,10 @@ public class GetACSearch implements Serializable
             prefName = DECBean.getDEC_PREFERRED_NAME();
             contextID = DECBean.getDEC_CONTE_IDSEQ();
             aslName = DECBean.getDEC_ASL_NAME();
-            session.setAttribute("OldDECContextID", contextID);
-            session.setAttribute("OldDECContext", conName);
-            session.setAttribute("OldDECPreferredName", prefName);
-            session.setAttribute("OldDECAslName", aslName);
+            DataManager.setAttribute(session, "OldDECContextID", contextID);
+            DataManager.setAttribute(session, "OldDECContext", conName);
+            DataManager.setAttribute(session, "OldDECPreferredName", prefName);
+            DataManager.setAttribute(session, "OldDECAslName", aslName);
         }
         else if (VDBean != null)
         {
@@ -4934,10 +4933,10 @@ public class GetACSearch implements Serializable
             prefName = VDBean.getVD_PREFERRED_NAME();
             contextID = VDBean.getVD_CONTE_IDSEQ();
             aslName = VDBean.getVD_ASL_NAME();
-            session.setAttribute("OldVDContextID", contextID);
-            session.setAttribute("OldVDContext", conName);
-            session.setAttribute("OldVDPreferredName", prefName);
-            session.setAttribute("OldVDAslName", aslName);
+            DataManager.setAttribute(session, "OldVDContextID", contextID);
+            DataManager.setAttribute(session, "OldVDContext", conName);
+            DataManager.setAttribute(session, "OldVDPreferredName", prefName);
+            DataManager.setAttribute(session, "OldVDAslName", aslName);
         }
     }
 
@@ -5026,11 +5025,11 @@ public class GetACSearch implements Serializable
                     strInValid = checkWritePermission("de", sUser, sContextID, getAC);
                     if (!strInValid.equals(""))
                     {
-                        session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE,
+                        DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE,
                                         "User does not have authorization to Create/Edit for the selected context");
                         Vector vResult = new Vector();
                         getQuestionResult(req, res, vResult);
-                        session.setAttribute("results", vResult);
+                        DataManager.setAttribute(session, "results", vResult);
                         isValid = false;
                         return isValid;
                     }
@@ -5095,11 +5094,11 @@ public class GetACSearch implements Serializable
             }
         }
         // store this in the session bean to use it later
-        session.setAttribute("m_Quest", QuestBean);
-        session.setAttribute("sDefaultContext", QuestBean.getCONTEXT_NAME());
-        session.setAttribute("m_DE", DEBean);
+        DataManager.setAttribute(session, "m_Quest", QuestBean);
+        DataManager.setAttribute(session, "sDefaultContext", QuestBean.getCONTEXT_NAME());
+        DataManager.setAttribute(session, "m_DE", DEBean);
         DE_Bean oldDE = new DE_Bean();
-        session.setAttribute("oldDEBean", oldDE.cloneDE_Bean(DEBean, "Complete"));
+        DataManager.setAttribute(session, "oldDEBean", oldDE.cloneDE_Bean(DEBean, "Complete"));
         return isValid;
     }
 
@@ -5189,7 +5188,7 @@ public class GetACSearch implements Serializable
             m_classReq.setAttribute("selCSIDs", vCSids);
             m_classReq.setAttribute("blockAC_CSI", vAC_CSI);
             // store this to keep track of the old ones if removing the existing relationship
-            session.setAttribute("vAC_CSI", vAC_CSI);
+            DataManager.setAttribute(session, "vAC_CSI", vAC_CSI);
         }
         catch (Exception e)
         {
@@ -5298,11 +5297,11 @@ public class GetACSearch implements Serializable
                         vSortedRows.addElement(tempBean);
                     }
                     if (menuAction.equals("searchForCreate"))
-                        session.setAttribute("vACSearch", vSortedRows);
+                        DataManager.setAttribute(session, "vACSearch", vSortedRows);
                     else
                     {
-                        session.setAttribute("vSelRows", vSortedRows);
-                        session.setAttribute("sortType", sortField);
+                        DataManager.setAttribute(session, "vSelRows", vSortedRows);
+                        DataManager.setAttribute(session, "sortType", sortField);
                         // get the checked beans and add the checked names to the vector to keep the checkbox checked.
                         Vector vCheckList = new Vector();
                         for (int i = 0; i < (vSortedRows.size()); i++)
@@ -5312,7 +5311,7 @@ public class GetACSearch implements Serializable
                                 vCheckList.addElement("CK" + i);
                         }
                         if (vCheckList != null)
-                            session.setAttribute("CheckList", vCheckList);
+                            DataManager.setAttribute(session, "CheckList", vCheckList);
                     }
                 }
             }
@@ -5386,11 +5385,11 @@ public class GetACSearch implements Serializable
                         }
                     }
                     if (menuAction.equals("searchForCreate"))
-                        session.setAttribute("vACSearch", vSRows);
+                        DataManager.setAttribute(session, "vACSearch", vSRows);
                     else
                     {
-                        session.setAttribute("vSelRows", vSRows);
-                        session.setAttribute("sortType", sortField);
+                        DataManager.setAttribute(session, "vSelRows", vSRows);
+                        DataManager.setAttribute(session, "sortType", sortField);
                         // get the checked beans and add the checked names to the vector to keep the checkbox checked.
                         Vector vCheckList = new Vector();
                         for (int i = 0; i < (vSRows.size()); i++)
@@ -5400,7 +5399,7 @@ public class GetACSearch implements Serializable
                                 vCheckList.addElement("CK" + i);
                         }
                         if (vCheckList != null)
-                            session.setAttribute("CheckList", vCheckList);
+                            DataManager.setAttribute(session, "CheckList", vCheckList);
                     }
                 }
             }
@@ -5600,11 +5599,11 @@ public class GetACSearch implements Serializable
                         vSortedRows.addElement(tempBean);
                     }
                     if (menuAction.equals("searchForCreate"))
-                        session.setAttribute("vACSearch", vSortedRows);
+                        DataManager.setAttribute(session, "vACSearch", vSortedRows);
                     else
                     {
-                        session.setAttribute("vSelRows", vSortedRows);
-                        session.setAttribute("sortType", sortField);
+                        DataManager.setAttribute(session, "vSelRows", vSortedRows);
+                        DataManager.setAttribute(session, "sortType", sortField);
                         // get the checked beans and add the checked names to the vector to keep the checkbox checked.
                         Vector vCheckList = new Vector();
                         for (int i = 0; i < (vSortedRows.size()); i++)
@@ -5614,7 +5613,7 @@ public class GetACSearch implements Serializable
                                 vCheckList.addElement("CK" + i);
                         }
                         if (vCheckList != null)
-                            session.setAttribute("CheckList", vCheckList);
+                            DataManager.setAttribute(session, "CheckList", vCheckList);
                     }
                 }
             }
@@ -5784,11 +5783,11 @@ public class GetACSearch implements Serializable
                         vSortedRows.addElement(tempBean);
                     }
                     if (menuAction.equals("searchForCreate"))
-                        session.setAttribute("vACSearch", vSortedRows);
+                        DataManager.setAttribute(session, "vACSearch", vSortedRows);
                     else
                     {
-                        session.setAttribute("vSelRows", vSortedRows);
-                        session.setAttribute("sortType", sortField);
+                        DataManager.setAttribute(session, "vSelRows", vSortedRows);
+                        DataManager.setAttribute(session, "sortType", sortField);
                         // get the checked beans and add the checked names to the vector to keep the checkbox checked.
                         Vector vCheckList = new Vector();
                         for (int i = 0; i < (vSortedRows.size()); i++)
@@ -5798,7 +5797,7 @@ public class GetACSearch implements Serializable
                                 vCheckList.addElement("CK" + i);
                         }
                         if (vCheckList != null)
-                            session.setAttribute("CheckList", vCheckList);
+                            DataManager.setAttribute(session, "CheckList", vCheckList);
                     }
                 }
             }
@@ -5991,11 +5990,11 @@ public class GetACSearch implements Serializable
                         CD_Bean CDSortBean1 = (CD_Bean) vSortedRows.elementAt(i);
                     }
                     if (menuAction.equals("searchForCreate"))
-                        session.setAttribute("vACSearch", vSortedRows);
+                        DataManager.setAttribute(session, "vACSearch", vSortedRows);
                     else
                     {
-                        session.setAttribute("vSelRows", vSortedRows);
-                        session.setAttribute("sortType", sortField);
+                        DataManager.setAttribute(session, "vSelRows", vSortedRows);
+                        DataManager.setAttribute(session, "sortType", sortField);
                         // get the checked beans and add the checked names to the vector to keep the checkbox checked.
                         Vector vCheckList = new Vector();
                         for (int i = 0; i < (vSortedRows.size()); i++)
@@ -6005,7 +6004,7 @@ public class GetACSearch implements Serializable
                                 vCheckList.addElement("CK" + i);
                         }
                         if (vCheckList != null)
-                            session.setAttribute("CheckList", vCheckList);
+                            DataManager.setAttribute(session, "CheckList", vCheckList);
                     }
                 }
             }
@@ -6163,11 +6162,11 @@ public class GetACSearch implements Serializable
                 if (vSelAttr.contains("Context"))
                     vResult.addElement(CSIBean.getCSI_CONTEXT_NAME());
             }
-            session.setAttribute("SearchID", vSearchID);
-            session.setAttribute("SearchName", vSearchName);
-            session.setAttribute("SearchLongName", vSearchLongName);
-            session.setAttribute("SearchDefinitionAC", vSearchDefinition);
-            session.setAttribute("SearchUsedContext", vUsedContext);
+            DataManager.setAttribute(session, "SearchID", vSearchID);
+            DataManager.setAttribute(session, "SearchName", vSearchName);
+            DataManager.setAttribute(session, "SearchLongName", vSearchLongName);
+            DataManager.setAttribute(session, "SearchDefinitionAC", vSearchDefinition);
+            DataManager.setAttribute(session, "SearchUsedContext", vUsedContext);
             // for Back button, put search results and attributes on a stack
             if (!refresh.equals("true") && (!menuAction.equals("searchForCreate")))
                 stackSearchComponents("ClassSchemeItems", vCSI, vRSel, vSearchID, vSearchName, vResult, vSearchASL,
@@ -6303,11 +6302,11 @@ public class GetACSearch implements Serializable
                         CSI_Bean CSISortBean1 = (CSI_Bean) vSortedRows.elementAt(i);
                     }
                     if (menuAction.equals("searchForCreate"))
-                        session.setAttribute("vACSearch", vSortedRows);
+                        DataManager.setAttribute(session, "vACSearch", vSortedRows);
                     else
                     {
-                        session.setAttribute("vSelRows", vSortedRows);
-                        session.setAttribute("sortType", sortField);
+                        DataManager.setAttribute(session, "vSelRows", vSortedRows);
+                        DataManager.setAttribute(session, "sortType", sortField);
                         // get the checked beans and add the checked names to the vector to keep the checkbox checked.
                         Vector vCheckList = new Vector();
                         for (int i = 0; i < (vSortedRows.size()); i++)
@@ -6317,7 +6316,7 @@ public class GetACSearch implements Serializable
                                 vCheckList.addElement("CK" + i);
                         }
                         if (vCheckList != null)
-                            session.setAttribute("CheckList", vCheckList);
+                            DataManager.setAttribute(session, "CheckList", vCheckList);
                     }
                 }
             }
@@ -6555,10 +6554,10 @@ public class GetACSearch implements Serializable
                 if (vSelAttr.contains("Vocabulary"))
                     vResult.addElement(vocab);
             }
-            session.setAttribute("SearchID", vSearchID);
-            session.setAttribute("SearchName", vSearchName);
-            session.setAttribute("SearchLongName", vSearchLongName);
-            session.setAttribute("SearchMeanDescription", vSearchMeanDescription);
+            DataManager.setAttribute(session, "SearchID", vSearchID);
+            DataManager.setAttribute(session, "SearchName", vSearchName);
+            DataManager.setAttribute(session, "SearchLongName", vSearchLongName);
+            DataManager.setAttribute(session, "SearchMeanDescription", vSearchMeanDescription);
             // for Back button, put search results and attributes on a stack
             if (!refresh.equals("true") && (!menuAction.equals("searchForCreate")))
                 stackSearchComponents("PermissibleValue", vPVVM, vRSel, vSearchID, vSearchName, vResult,
@@ -6756,11 +6755,11 @@ public class GetACSearch implements Serializable
                         vSortedRows.addElement(tempBean);
                     }
                     if (menuAction.equals("searchForCreate"))
-                        session.setAttribute("vACSearch", vSortedRows);
+                        DataManager.setAttribute(session, "vACSearch", vSortedRows);
                     else
                     {
-                        session.setAttribute("vSelRows", vSortedRows);
-                        session.setAttribute("sortType", sortField);
+                        DataManager.setAttribute(session, "vSelRows", vSortedRows);
+                        DataManager.setAttribute(session, "sortType", sortField);
                         // get the checked beans and add the checked names to the vector to keep the checkbox checked.
                         Vector vCheckList = new Vector();
                         for (int i = 0; i < (vSortedRows.size()); i++)
@@ -6770,7 +6769,7 @@ public class GetACSearch implements Serializable
                                 vCheckList.addElement("CK" + i);
                         }
                         if (vCheckList != null && vCheckList.size() > 0)
-                            session.setAttribute("CheckList", vCheckList);
+                            DataManager.setAttribute(session, "CheckList", vCheckList);
                     }
                 }
             }
@@ -6838,9 +6837,9 @@ public class GetACSearch implements Serializable
                         vSRows.insertElementAt(PVSortBean1, tempInd);
                         vSortedRows.addElement(tempBean);
                     }
-                    // session.setAttribute("VDPVList", vSortedRows);
+                    // DataManager.setAttribute(session, "VDPVList", vSortedRows);
                     vd.setVD_PV_List(vSortedRows);
-                    session.setAttribute("m_VD", vd);
+                    DataManager.setAttribute(session, "m_VD", vd);
                 }
             }
         }
@@ -6919,9 +6918,9 @@ public class GetACSearch implements Serializable
             }
             // store the bean vector in the session
             if (sMenuAction.equals("searchForCreate"))
-                session.setAttribute("vACSearch", vSRows);
+                DataManager.setAttribute(session, "vACSearch", vSRows);
             else
-                session.setAttribute("vSelRows", vSRows);
+                DataManager.setAttribute(session, "vSelRows", vSRows);
         }
     }
 
@@ -7015,11 +7014,11 @@ public class GetACSearch implements Serializable
                 if ((sAction.equals("Template")) && (m_DE != null))
                 {
                     vSRows.insertElementAt(m_DE, 0);
-                    session.setAttribute("vSelRows", vSRows);
+                    DataManager.setAttribute(session, "vSelRows", vSRows);
                     // reset the checking to thisRow
                     Vector vCheckList = new Vector();
                     vCheckList.addElement("CK0");
-                    session.setAttribute("CheckList", vCheckList);
+                    DataManager.setAttribute(session, "CheckList", vCheckList);
                     // getDESortedRows(req, res);
                 }
                 else if (!sAction.equals("Refresh"))
@@ -7042,7 +7041,7 @@ public class GetACSearch implements Serializable
                     }
                 }
                 // store it in selrows and get the final result vector
-                session.setAttribute("vSelRows", vSRows);
+                DataManager.setAttribute(session, "vSelRows", vSRows);
                 getDEResult(req, res, vResult, "");
             }
             else if (m_DEC != null)
@@ -7051,11 +7050,11 @@ public class GetACSearch implements Serializable
                 if (sAction.equals("Template"))
                 {
                     vSRows.insertElementAt(m_DEC, 0);
-                    session.setAttribute("vSelRows", vSRows);
+                    DataManager.setAttribute(session, "vSelRows", vSRows);
                     // reset the checking to thisRow
                     Vector vCheckList = new Vector();
                     vCheckList.addElement("CK0");
-                    session.setAttribute("CheckList", vCheckList);
+                    DataManager.setAttribute(session, "CheckList", vCheckList);
                     // sort the rows
                     // getDECSortedRows(req, res);
                 }
@@ -7085,7 +7084,7 @@ public class GetACSearch implements Serializable
                     }
                 }
                 // store it in selrows and get the final result vector
-                session.setAttribute("vSelRows", vSRows);
+                DataManager.setAttribute(session, "vSelRows", vSRows);
                 getDECResult(req, res, vResult, "");
             }
             else if (m_VD != null)
@@ -7094,11 +7093,11 @@ public class GetACSearch implements Serializable
                 if (sAction.equals("Template"))
                 {
                     vSRows.insertElementAt(m_VD, 0);
-                    session.setAttribute("vSelRows", vSRows);
+                    DataManager.setAttribute(session, "vSelRows", vSRows);
                     // reset the checking to thisRow
                     Vector vCheckList = new Vector();
                     vCheckList.addElement("CK0");
-                    session.setAttribute("CheckList", vCheckList);
+                    DataManager.setAttribute(session, "CheckList", vCheckList);
                     // getVDSortedRows(req, res);
                 }
                 else if (!sAction.equals("Refresh"))
@@ -7124,7 +7123,7 @@ public class GetACSearch implements Serializable
                     }
                 }
                 // store it in selrows and get the final result vector
-                session.setAttribute("vSelRows", vSRows);
+                DataManager.setAttribute(session, "vSelRows", vSRows);
                 getVDResult(req, res, vResult, "");
             }
             else if (m_Quest != null)
@@ -7141,11 +7140,11 @@ public class GetACSearch implements Serializable
                     }
                 }
                 // store it in selrows and get the final result vector
-                session.setAttribute("vSelRows", vSRows);
+                DataManager.setAttribute(session, "vSelRows", vSRows);
                 getQuestionResult(req, res, vResult);
             }
             // finally store the display data in the result session
-            session.setAttribute("results", vResult);
+            DataManager.setAttribute(session, "results", vResult);
         }
     }
 
@@ -7236,14 +7235,14 @@ public class GetACSearch implements Serializable
                         vSRows.setElementAt(thisDE, k);
                     }
                 }
-                session.setAttribute("vSelRows", vSRows);
+                DataManager.setAttribute(session, "vSelRows", vSRows);
             }
         }
         return DEBean;
     }
 
     /**
-     * To start a new search called from NCICurationServlet. selected component, keyword, selected context, seletcted
+     * To start a new search called from CurationServlet. selected component, keyword, selected context, seletcted
      * status parameters of request are stored in session. calls method 'doDESearch' for selected component to get the
      * result set from the database. search result from the database is stored in session vector "vACSearch". calls
      * method 'setAttributeValues' to get list of selected attributes at search. calls method 'getDEResult' for selected
@@ -7262,7 +7261,7 @@ public class GetACSearch implements Serializable
         {
             HttpSession session = req.getSession();
             Vector vAC = new Vector();
-            session.setAttribute("sortType", "longName");
+            DataManager.setAttribute(session, "sortType", "longName");
             SetACService setAC = new SetACService(m_servlet);
             EVSSearch evs = new EVSSearch(req, res, m_servlet);
             String sSearchAC = (String) req.getParameter("listSearchFor");
@@ -7272,13 +7271,13 @@ public class GetACSearch implements Serializable
                 if (sSearchAC == null)
                     logger.fatal("In GetACSearch-getKeywordResult : no Component is selected");
             }
-            session.setAttribute("creSearchAC", sSearchAC);
+            DataManager.setAttribute(session, "creSearchAC", sSearchAC);
             // get the search in data
             String sSearchIn = (String) req.getParameter("listSearchIn");
             if (sSearchIn == null)
                 sSearchIn = "longName";
             req.setAttribute("creSearchIn", sSearchIn);
-            session.setAttribute("creSearchInBlocks", sSearchIn);
+            DataManager.setAttribute(session, "creSearchInBlocks", sSearchIn);
             boolean isBlockSearch = false;
             String dtsVocab = req.getParameter("listContextFilterVocab");
             if (dtsVocab != null && !dtsVocab.equals(""))
@@ -7286,21 +7285,21 @@ public class GetACSearch implements Serializable
             if (dtsVocab == null)
                 dtsVocab = "";
             // System.out.println(" dtsVocab " + dtsVocab);
-            session.setAttribute("dtsVocab", dtsVocab);
+            DataManager.setAttribute(session, "dtsVocab", dtsVocab);
             String sSearchInEVS = (String) req.getParameter("listSearchInEVS");
             if (sSearchInEVS == null)
                 sSearchInEVS = "Synonym";
-            session.setAttribute("SearchInEVS", sSearchInEVS);
+            DataManager.setAttribute(session, "SearchInEVS", sSearchInEVS);
             // System.out.println(sSearchIn + " search in " + sSearchInEVS);
             // filter by Retired Concepts
             String sRetired = (String) req.getParameter("rRetired");
-            session.setAttribute("creRetired", sRetired);
+            DataManager.setAttribute(session, "creRetired", sRetired);
             if (sRetired == null)
                 sRetired = "";
             String sMetaSource = (String) req.getParameter("listContextFilterSource");
             if (sMetaSource == null)
                 sMetaSource = "All Sources";
-            session.setAttribute("MetaSource", sMetaSource);
+            DataManager.setAttribute(session, "MetaSource", sMetaSource);
             String sMetaLimit = (String) req.getParameter("listMetaLimit");
             int intMetaLimit = 0;
             if (sMetaLimit != null)
@@ -7319,7 +7318,7 @@ public class GetACSearch implements Serializable
             if (isIntSearch == true)
                 sKeyword = "";
             sKeyword = sKeyword.trim();
-            session.setAttribute("creKeyword", sKeyword);
+            DataManager.setAttribute(session, "creKeyword", sKeyword);
             UtilService util = new UtilService();
             sKeyword = util.parsedStringSingleQuoteOracle(sKeyword);
 
@@ -7333,8 +7332,8 @@ public class GetACSearch implements Serializable
             if (isBlockSearch == true)
             {
                 sContext = (String) req.getParameter("listContextFilter");
-                session.setAttribute("creContext", sContext);
-                session.setAttribute("creContextBlocks", sContext);
+                DataManager.setAttribute(session, "creContext", sContext);
+                DataManager.setAttribute(session, "creContextBlocks", sContext);
                 if (sContext == null || sContext.equals("AllContext"))
                     sContext = "";
             }
@@ -7342,21 +7341,21 @@ public class GetACSearch implements Serializable
                 sContext = getMultiReqValues(sSearchAC, "searchForCreate", "Context");
             // filter by contextUse
             String sContextUse = (String) req.getParameter("rContextUse");
-            session.setAttribute("creContextUse", sContextUse);
+            DataManager.setAttribute(session, "creContextUse", sContextUse);
             if (sContextUse == null)
                 sContextUse = "";
             // filter by version
             String sVersion = (String) req.getParameter("rVersion");
             if (isIntSearch == true && sSearchAC.equals("ConceptualDomain"))
                 sVersion = "Yes";
-            session.setAttribute("creVersion", sVersion);
+            DataManager.setAttribute(session, "creVersion", sVersion);
             // get the version number if other
             String txVersion = "";
             if (sVersion != null && sVersion.equals("Other"))
                 txVersion = (String) req.getParameter("tVersion");
             if (txVersion == null)
                 txVersion = "";
-            session.setAttribute("creVersionNum", txVersion);
+            DataManager.setAttribute(session, "creVersionNum", txVersion);
             double dVersion = 0;
             // validate the version and display message if not valid
             if (txVersion != null && !txVersion.equals(""))
@@ -7378,12 +7377,12 @@ public class GetACSearch implements Serializable
             // filter by value domain type enumerated
             String sVDType = "";
             String sVDTypeEnum = (String) req.getParameter("enumBox");
-            session.setAttribute("creVDTypeEnum", sVDTypeEnum);
+            DataManager.setAttribute(session, "creVDTypeEnum", sVDTypeEnum);
             if (sVDTypeEnum != null)
                 sVDType = "E";
             // filter by value domain type non enumerated
             String sVDTypeNonEnum = (String) req.getParameter("nonEnumBox");
-            session.setAttribute("creVDTypeNonEnum", sVDTypeNonEnum);
+            DataManager.setAttribute(session, "creVDTypeNonEnum", sVDTypeNonEnum);
             if (sVDTypeNonEnum != null && !sVDTypeNonEnum.equals(""))
             {
                 if (!sVDType.equals(""))
@@ -7392,7 +7391,7 @@ public class GetACSearch implements Serializable
             }
             // filter by value domain type enumerated by reference
             String sVDTypeRef = (String) req.getParameter("refEnumBox");
-            session.setAttribute("creVDTypeRef", sVDTypeRef);
+            DataManager.setAttribute(session, "creVDTypeRef", sVDTypeRef);
             if (sVDTypeRef != null && !sVDTypeRef.equals(""))
             {
                 if (!sVDType.equals(""))
@@ -7404,75 +7403,75 @@ public class GetACSearch implements Serializable
             sCDid = (String) req.getParameter("listCDName");
             if (sCDid == null || sCDid.equals("All Domains"))
                 sCDid = "";
-            session.setAttribute("creSelectedCD", sCDid);
+            DataManager.setAttribute(session, "creSelectedCD", sCDid);
             // to get a string from multiselect list
             String sStatus = "";
             if (isIntSearch == true && sSearchAC.equals("ConceptualDomain"))
-                session.setAttribute("creStatus", new Vector());
+                DataManager.setAttribute(session, "creStatus", new Vector());
             else
                 sStatus = getStatusValues(req, res, sSearchAC, "searchForCreate", isBlockSearch);
             if ((sStatus == null) || (sStatus.equals("AllStatus")))
                 sStatus = "";
             // store it in the session for block search
             if (isBlockSearch && sStatus.equals(""))
-                session.setAttribute("creStatusBlocks", "AllStatus");
+                DataManager.setAttribute(session, "creStatusBlocks", "AllStatus");
             else if (isBlockSearch)
-                session.setAttribute("creStatusBlocks", sStatus);
+                DataManager.setAttribute(session, "creStatusBlocks", sStatus);
             // filter by registration status
             String sRegStatus = (String) req.getParameter("listRegStatus");
-            session.setAttribute("creRegStatus", sRegStatus);
+            DataManager.setAttribute(session, "creRegStatus", sRegStatus);
             if (sRegStatus == null || sRegStatus.equals("allReg"))
                 sRegStatus = "";
             // filter by derivation type
             String sDerType = (String) req.getParameter("listDeriveType");
-            session.setAttribute("creDerType", sDerType);
+            DataManager.setAttribute(session, "creDerType", sDerType);
             if (sDerType == null || sDerType.equals("allDer"))
                 sDerType = "";
             // filter by data type
             String sDataType = (String) req.getParameter("listDataType");
-            session.setAttribute("creDataType", sDataType);
+            DataManager.setAttribute(session, "creDataType", sDataType);
             if (sDataType == null || sDataType.equals("allData"))
                 sDataType = "";
             // fitler by date created from date
             String sCreatedFrom = (String) req.getParameter("createdFrom");
             if (isIntSearch == true && sSearchAC.equals("ConceptualDomain"))
                 sCreatedFrom = "";
-            session.setAttribute("creCreatedFrom", sCreatedFrom);
+            DataManager.setAttribute(session, "creCreatedFrom", sCreatedFrom);
             if (sCreatedFrom == null)
                 sCreatedFrom = "";
             // fitler by date created To date
             String sCreatedTo = (String) req.getParameter("createdTo");
             if (isIntSearch == true && sSearchAC.equals("ConceptualDomain"))
                 sCreatedTo = "";
-            session.setAttribute("creCreatedTo", sCreatedTo);
+            DataManager.setAttribute(session, "creCreatedTo", sCreatedTo);
             if (sCreatedTo == null)
                 sCreatedTo = "";
             // fitler by date Modified from date
             String sModifiedFrom = (String) req.getParameter("modifiedFrom");
             if (isIntSearch == true && sSearchAC.equals("ConceptualDomain"))
                 sModifiedFrom = "";
-            session.setAttribute("creModifiedFrom", sModifiedFrom);
+            DataManager.setAttribute(session, "creModifiedFrom", sModifiedFrom);
             if (sModifiedFrom == null)
                 sModifiedFrom = "";
             // fitler by date Modified To date
             String sModifiedTo = (String) req.getParameter("modifiedTo");
             if (isIntSearch == true && sSearchAC.equals("ConceptualDomain"))
                 sModifiedTo = "";
-            session.setAttribute("creModifiedTo", sModifiedTo);
+            DataManager.setAttribute(session, "creModifiedTo", sModifiedTo);
             if (sModifiedTo == null)
                 sModifiedTo = "";
             // fitler by Modifier type
             String sModifier = (String) req.getParameter("modifier");
             if (isIntSearch == true && sSearchAC.equals("ConceptualDomain"))
                 sModifier = "";
-            session.setAttribute("creModifier", sModifier);
+            DataManager.setAttribute(session, "creModifier", sModifier);
             if ((sModifier == null) || sModifier.equals("allUsers"))
                 sModifier = "";
             // fitler by Creator type
             String sCreator = (String) req.getParameter("creator");
             if (isIntSearch == true && sSearchAC.equals("ConceptualDomain"))
                 sCreator = ""; 
-            session.setAttribute("creCreator", sCreator);
+            DataManager.setAttribute(session, "creCreator", sCreator);
             if ((sCreator == null) || sCreator.equals("allUsers"))
                 sCreator = "";
             String sUISearchType = (String) req.getAttribute("UISearchType");
@@ -7555,7 +7554,7 @@ public class GetACSearch implements Serializable
                                     sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "",
                                     "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
                 }
-                session.setAttribute("vACSearch", vAC);
+                DataManager.setAttribute(session, "vACSearch", vAC);
                 getDEResult(req, res, vResult, "");
             }
             else if (sSearchAC.equals("DataElementConcept"))
@@ -7586,7 +7585,7 @@ public class GetACSearch implements Serializable
                                     sModifiedTo, sCreator, sModifier, "", "", "", "", dVersion, sCDid, "", "", "", "",
                                     vAC);
                 }
-                session.setAttribute("vACSearch", vAC);
+                DataManager.setAttribute(session, "vACSearch", vAC);
                 getDECResult(req, res, vResult, "");
             }
             else if (sSearchAC.equals("ValueDomain"))
@@ -7624,7 +7623,7 @@ public class GetACSearch implements Serializable
                                     sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", dVersion, sCDid, "",
                                     "", "", "", "", sDataType, vAC);
                 }
-                session.setAttribute("vACSearch", vAC);
+                DataManager.setAttribute(session, "vACSearch", vAC);
                 getVDResult(req, res, vResult, "");
             }
             else if (sSearchAC.equals("ConceptualDomain"))
@@ -7649,7 +7648,7 @@ public class GetACSearch implements Serializable
                                         sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", dVersion, "", "", "",
                                         vAC);
                     }
-                    session.setAttribute("vACSearch", vAC);
+                    DataManager.setAttribute(session, "vACSearch", vAC);
                     getCDResult(req, res, vResult, "");
                 }
             }
@@ -7660,8 +7659,8 @@ public class GetACSearch implements Serializable
                 String crfValueName = req.getParameter("QCValueName");
                 if (crfValueID != null && !crfValueID.equals(""))
                 {
-                    session.setAttribute("selCRFValueID", crfValueID);
-                    session.setAttribute("selQCValueName", crfValueName);
+                    DataManager.setAttribute(session, "selCRFValueID", crfValueID);
+                    DataManager.setAttribute(session, "selQCValueName", crfValueName);
                 }
                 PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
                 vAC = pvser.searchPVAttributes(sKeyword, sStatus, "", "");
@@ -7672,14 +7671,14 @@ public class GetACSearch implements Serializable
                                     sMetaSource, intMetaLimit, true, -1, "");
                     evs.get_Result(req, res, vResult, "DEF");
                 }
-                session.setAttribute("vACSearch", vAC);
-                session.setAttribute("vPVVMResult", vAC);
+                DataManager.setAttribute(session, "vACSearch", vAC);
+                DataManager.setAttribute(session, "vPVVMResult", vAC);
                 getPVVMResult(req, res, vResult, "");
             }
             else if (sSearchAC.equals("ValueMeaning"))
             {
                 // doVMSearch(sKeyword, sCDid, vAC);
-                // session.setAttribute("vACSearch", vAC);
+                // DataManager.setAttribute(session, "vACSearch", vAC);
                 // getVMResult(req, res, vResult);
                 VMServlet vmSer = new VMServlet(req, res, m_servlet);
                 vmSer.readDataForSearch();
@@ -7698,7 +7697,7 @@ public class GetACSearch implements Serializable
                 // make sure that name value pair is not allowed for primary concepts
                 markNVPForPrimaryConcept(vAC);
                 // store it in the session
-                session.setAttribute("vACSearch", vAC);
+                DataManager.setAttribute(session, "vACSearch", vAC);
                 evs.get_Result(req, res, vResult, "");
             }
             else if (sSearchAC.equals("CreateVM_EVSValueMeaning"))
@@ -7712,9 +7711,9 @@ public class GetACSearch implements Serializable
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
                                 intMetaLimit, true, -1, "");
-                session.setAttribute("vACSearch", vAC);
+                DataManager.setAttribute(session, "vACSearch", vAC);
                 if (vAC != null)
-                    session.setAttribute("vCreateVM_EVSValueMeaning", vAC);
+                    DataManager.setAttribute(session, "vCreateVM_EVSValueMeaning", vAC);
                 evs.get_Result(req, res, vResult, "");
             }
             else if (sSearchAC.equals("ParentConcept"))
@@ -7725,9 +7724,9 @@ public class GetACSearch implements Serializable
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
                                 intMetaLimit, true, -1, "");
-                session.setAttribute("vACSearch", vAC);
+                DataManager.setAttribute(session, "vACSearch", vAC);
                 if (vAC != null)
-                    session.setAttribute("vParentConcept", vAC);
+                    DataManager.setAttribute(session, "vParentConcept", vAC);
                 evs.get_Result(req, res, vResult, "");
             }
             else if (sSearchAC.equals("ParentConceptVM"))
@@ -7738,9 +7737,9 @@ public class GetACSearch implements Serializable
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
                                 intMetaLimit, false, -1, "");
-                session.setAttribute("vACSearch", vAC);
+                DataManager.setAttribute(session, "vACSearch", vAC);
                 if (vAC != null)
-                    session.setAttribute("vParentConceptVM", vAC);
+                    DataManager.setAttribute(session, "vParentConceptVM", vAC);
                 evs.get_Result(req, res, vResult, "");
             }
             else if (sSearchAC.equals("ObjectClass"))
@@ -7762,7 +7761,7 @@ public class GetACSearch implements Serializable
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
                                 intMetaLimit, true, -1, "");
-                session.setAttribute("vACSearch", vAC);
+                DataManager.setAttribute(session, "vACSearch", vAC);
                 evs.get_Result(req, res, vResult, "");
             }
             else if (sSearchAC.equals("Property"))
@@ -7784,7 +7783,7 @@ public class GetACSearch implements Serializable
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
                                 intMetaLimit, true, -1, "");
-                session.setAttribute("vACSearch", vAC);
+                DataManager.setAttribute(session, "vACSearch", vAC);
                 evs.get_Result(req, res, vResult, "");
             }
             else if (sSearchAC.equals("RepTerm"))
@@ -7806,7 +7805,7 @@ public class GetACSearch implements Serializable
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
                                 intMetaLimit, true, -1, "");
-                session.setAttribute("vACSearch", vAC);
+                DataManager.setAttribute(session, "vACSearch", vAC);
                 evs.get_Result(req, res, vResult, "");
             }
             else if (sSearchAC.equals("ObjectQualifier"))
@@ -7822,7 +7821,7 @@ public class GetACSearch implements Serializable
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
                                 intMetaLimit, true, -1, "");
-                session.setAttribute("vACSearch", vAC);
+                DataManager.setAttribute(session, "vACSearch", vAC);
                 evs.get_Result(req, res, vResult, "");
             }
             else if (sSearchAC.equals("PropertyQualifier"))
@@ -7838,7 +7837,7 @@ public class GetACSearch implements Serializable
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
                                 intMetaLimit, true, -1, "");
-                session.setAttribute("vACSearch", vAC);
+                DataManager.setAttribute(session, "vACSearch", vAC);
                 evs.get_Result(req, res, vResult, "");
             }
             else if (sSearchAC.equals("RepQualifier") || sSearchAC.equals("RepTermQualifier"))
@@ -7854,12 +7853,12 @@ public class GetACSearch implements Serializable
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
                                 intMetaLimit, true, -1, "");
-                session.setAttribute("vACSearch", vAC);
+                DataManager.setAttribute(session, "vACSearch", vAC);
                 evs.get_Result(req, res, vResult, "");
             }
             // store result vector in the attribute
             if (!sSearchAC.equals("ValueMeaning"))
-                session.setAttribute("results", vResult);
+                DataManager.setAttribute(session, "results", vResult);
         }
         catch (Exception e)
         {
@@ -7886,7 +7885,7 @@ public class GetACSearch implements Serializable
     }
 
     /**
-     * To get the sorted result vector to display for selected sort type, called from NCICurationServlet. calls method
+     * To get the sorted result vector to display for selected sort type, called from CurationServlet. calls method
      * 'getSortedRows' for the selected component to get sorted bean. calls method 'getResult' for the selected
      * component to result vector from the sorted bean. final result vector is stored in the session vector "results".
      * 
@@ -7904,7 +7903,7 @@ public class GetACSearch implements Serializable
             // get the sort string parameter
             String sSortType = (String) req.getParameter("blockSortType");
             if (sSortType != null)
-                session.setAttribute("blockSortType", sSortType);
+                DataManager.setAttribute(session, "blockSortType", sSortType);
             String sComponent = "";
             sComponent = (String) session.getAttribute("creSearchAC");
             String sUISearchType = (String) req.getParameter("UISearchType");
@@ -7917,7 +7916,7 @@ public class GetACSearch implements Serializable
                 evs.get_Result(req, res, vResult, "");
                 // String key = (String)req.getAttribute("labelKeyword");
                 // req.setAttribute("labelKeyword", key);
-                session.setAttribute("results", vResult);
+                DataManager.setAttribute(session, "results", vResult);
             }
         }
         catch (Exception e)
@@ -7962,7 +7961,8 @@ public class GetACSearch implements Serializable
                 // check if the vector has the data
                 if (vSRows.size() > 0)
                 {
-                    // loop through the vector to get the bean row
+                    vSortedRows = this.sortConcepts(vSRows, sortField);
+/*                    // loop through the vector to get the bean row
                     for (int i = 0; i < (vSRows.size()); i++)
                     {
                         isSorted = false;
@@ -7997,10 +7997,10 @@ public class GetACSearch implements Serializable
                         vSRows.insertElementAt(EVSSortBean1, tempInd);
                         vSortedRows.addElement(tempBean);
                     }
-                    if (menuAction.equals("searchForCreate"))
-                        session.setAttribute("vACSearch", vSortedRows);
+*/                    if (menuAction.equals("searchForCreate"))
+                        DataManager.setAttribute(session, "vACSearch", vSortedRows);
                     else
-                        session.setAttribute("vSelRows", vSortedRows);
+                        DataManager.setAttribute(session, "vSelRows", vSortedRows);
                 }
             }
         }
@@ -8011,6 +8011,53 @@ public class GetACSearch implements Serializable
         }
     }
 
+    public Vector<EVS_Bean> sortConcepts(Vector<EVS_Bean> vSRows, String sortField)
+    {
+        Vector<EVS_Bean> vSortedRows = new Vector<EVS_Bean>();
+        try
+        {
+            // loop through the vector to get the bean row
+            for (int i = 0; i < (vSRows.size()); i++)
+            {
+                EVS_Bean EVSSortBean1 = (EVS_Bean) vSRows.elementAt(i);
+                String Name1 = getEVSFieldValue(EVSSortBean1, sortField);
+                int tempInd = i;
+                EVS_Bean tempBean = EVSSortBean1;
+                String tempName = Name1;
+                // loop through again to get the next bean in the vector
+                for (int j = i + 1; j < (vSRows.size()); j++)
+                {
+                    EVS_Bean EVSSortBean2 = (EVS_Bean) vSRows.elementAt(j);
+                    String Name2 = getEVSFieldValue(EVSSortBean2, sortField);
+                    if (ComparedValue(sortField, Name1, Name2) > 0)
+                    {
+                        if (tempInd == i)
+                        {
+                            tempName = Name2;
+                            tempBean = EVSSortBean2;
+                            tempInd = j;
+                        }
+                        // else if (tempName.compareToIgnoreCase(Name2) > 0)
+                        else if (ComparedValue(sortField, tempName, Name2) > 0)
+                        {
+                            tempName = Name2;
+                            tempBean = EVSSortBean2;
+                            tempInd = j;
+                        }
+                    }
+                }
+                vSRows.removeElementAt(tempInd);
+                vSRows.insertElementAt(EVSSortBean1, tempInd);
+                vSortedRows.addElement(tempBean);
+            }
+        }
+        catch (Exception e)
+        {
+            logger.fatal("ERROR in GetACSearch-sortConcepts : " + e.toString(), e);
+        }
+        return vSortedRows;
+    }
+    
     /**
      * 
      * @param vSRows
@@ -8082,11 +8129,11 @@ public class GetACSearch implements Serializable
                     EVS_Bean EVSSortBean1 = (EVS_Bean) vSortedRows.elementAt(i);
                 }
                 if (menuAction.equals("searchForCreate"))
-                    session.setAttribute("vACSearch", vSortedRows);
+                    DataManager.setAttribute(session, "vACSearch", vSortedRows);
                 else
                 {
-                    session.setAttribute("vSelRows", vSortedRows);
-                    session.setAttribute("sortType", sortField);
+                    DataManager.setAttribute(session, "vSelRows", vSortedRows);
+                    DataManager.setAttribute(session, "sortType", sortField);
                     // get the checked beans and add the checked names to the vector to keep the checkbox checked.
                     Vector vCheckList = new Vector();
                     for (int i = 0; i < (vSortedRows.size()); i++)
@@ -8096,7 +8143,7 @@ public class GetACSearch implements Serializable
                             vCheckList.addElement("CK" + i);
                     }
                     if (vCheckList != null)
-                        session.setAttribute("CheckList", vCheckList);
+                        DataManager.setAttribute(session, "CheckList", vCheckList);
                 }
             }
         }
@@ -8163,11 +8210,11 @@ public class GetACSearch implements Serializable
                     EVS_Bean EVSSortBean1 = (EVS_Bean) vSortedRows.elementAt(i);
                 }
                 if (menuAction.equals("searchForCreate"))
-                    session.setAttribute("vACSearch", vSortedRows);
+                    DataManager.setAttribute(session, "vACSearch", vSortedRows);
                 else
                 {
-                    session.setAttribute("vSelRows", vSortedRows);
-                    session.setAttribute("sortType", sortField);
+                    DataManager.setAttribute(session, "vSelRows", vSortedRows);
+                    DataManager.setAttribute(session, "sortType", sortField);
                     // get the checked beans and add the checked names to the vector to keep the checkbox checked.
                     Vector vCheckList = new Vector();
                     for (int i = 0; i < (vSortedRows.size()); i++)
@@ -8177,7 +8224,7 @@ public class GetACSearch implements Serializable
                             vCheckList.addElement("CK" + i);
                     }
                     if (vCheckList != null)
-                        session.setAttribute("CheckList", vCheckList);
+                        DataManager.setAttribute(session, "CheckList", vCheckList);
                 }
             }
         }
@@ -8335,11 +8382,11 @@ public class GetACSearch implements Serializable
                         EVS_Bean OCSortBean1 = (EVS_Bean) vSortedRows.elementAt(i);
                     }
                     if (menuAction.equals("searchForCreate"))
-                        session.setAttribute("vACSearch", vSortedRows);
+                        DataManager.setAttribute(session, "vACSearch", vSortedRows);
                     else
                     {
-                        session.setAttribute("vSelRows", vSortedRows);
-                        session.setAttribute("sortType", sortField);
+                        DataManager.setAttribute(session, "vSelRows", vSortedRows);
+                        DataManager.setAttribute(session, "sortType", sortField);
                         // get the checked beans and add the checked names to the vector to keep the checkbox checked.
                         Vector vCheckList = new Vector();
                         for (int i = 0; i < (vSortedRows.size()); i++)
@@ -8349,7 +8396,7 @@ public class GetACSearch implements Serializable
                                 vCheckList.addElement("CK" + i);
                         }
                         if (vCheckList != null)
-                            session.setAttribute("CheckList", vCheckList);
+                            DataManager.setAttribute(session, "CheckList", vCheckList);
                     }
                 }
             }
@@ -8522,11 +8569,11 @@ public class GetACSearch implements Serializable
                         EVS_Bean PCSortBean1 = (EVS_Bean) vSortedRows.elementAt(i);
                     }
                     if (menuAction.equals("searchForCreate"))
-                        session.setAttribute("vACSearch", vSortedRows);
+                        DataManager.setAttribute(session, "vACSearch", vSortedRows);
                     else
                     {
-                        session.setAttribute("vSelRows", vSortedRows);
-                        session.setAttribute("sortType", sortField);
+                        DataManager.setAttribute(session, "vSelRows", vSortedRows);
+                        DataManager.setAttribute(session, "sortType", sortField);
                         // get the checked beans and add the checked names to the vector to keep the checkbox checked.
                         Vector vCheckList = new Vector();
                         for (int i = 0; i < (vSortedRows.size()); i++)
@@ -8536,7 +8583,7 @@ public class GetACSearch implements Serializable
                                 vCheckList.addElement("CK" + i);
                         }
                         if (vCheckList != null)
-                            session.setAttribute("CheckList", vCheckList);
+                            DataManager.setAttribute(session, "CheckList", vCheckList);
                     }
                 }
             }
@@ -8668,17 +8715,17 @@ public class GetACSearch implements Serializable
             if (QuestBean != null)
             {
                 // make keyWordLabel label request session
-                session.setAttribute("serKeyword", QuestBean.getCRF_NAME());
-                session.setAttribute("serProtoID", QuestBean.getPROTOCOL_ID());
+                DataManager.setAttribute(session, "serKeyword", QuestBean.getCRF_NAME());
+                DataManager.setAttribute(session, "serProtoID", QuestBean.getPROTOCOL_ID());
                 String crfName = QuestBean.getCRF_NAME();
                 if (crfName == null)
                     crfName = "";
                 req.setAttribute("labelKeyword", "Draft New Questions in CRF: - " + crfName);
             }
-            session.setAttribute("SearchID", vSearchID);
-            session.setAttribute("SearchName", vSearchName);
-            session.setAttribute("SearchLongName", vSearchLongName);
-            session.setAttribute("SearchASL", vSearchASL);
+            DataManager.setAttribute(session, "SearchID", vSearchID);
+            DataManager.setAttribute(session, "SearchName", vSearchName);
+            DataManager.setAttribute(session, "SearchLongName", vSearchLongName);
+            DataManager.setAttribute(session, "SearchASL", vSearchASL);
         }
         catch (Exception e)
         {
@@ -8818,11 +8865,11 @@ public class GetACSearch implements Serializable
                         vSortedRows.addElement(tempBean);
                     }
                     if (menuAction.equals("searchForCreate"))
-                        session.setAttribute("vACSearch", vSortedRows);
+                        DataManager.setAttribute(session, "vACSearch", vSortedRows);
                     else
                     {
-                        session.setAttribute("vSelRows", vSortedRows);
-                        session.setAttribute("sortType", sortField);
+                        DataManager.setAttribute(session, "vSelRows", vSortedRows);
+                        DataManager.setAttribute(session, "sortType", sortField);
                         // get the checked beans and add the checked names to the vector to keep the checkbox checked.
                         Vector vCheckList = new Vector();
                         for (int i = 0; i < (vSortedRows.size()); i++)
@@ -8832,7 +8879,7 @@ public class GetACSearch implements Serializable
                                 vCheckList.addElement("CK" + i);
                         }
                         if (vCheckList != null && vCheckList.size() > 0)
-                            session.setAttribute("CheckList", vCheckList);
+                            DataManager.setAttribute(session, "CheckList", vCheckList);
                     }
                 }
             }
@@ -8845,7 +8892,7 @@ public class GetACSearch implements Serializable
     }
 
     /**
-     * To get the Question Value result vector to display for the user, called from NCICurationServlet. calls method
+     * To get the Question Value result vector to display for the user, called from CurationServlet. calls method
      * 'doQuestValueSearch' to search the questions. calls method 'setAttributeValues' to get the selected attributes.
      * calls method 'getQuestValueSortedRows' for the selected component to get sorted bean. calls method
      * 'getQuestValueResult' for the selected component to result vector from the sorted bean. final result vector is
@@ -8944,13 +8991,13 @@ public class GetACSearch implements Serializable
                 }
                 if (pvList != null)
                 {
-                    // session.setAttribute("VDPVList", pvList);
+                    // DataManager.setAttribute(session, "VDPVList", pvList);
                     vd.setVD_PV_List(pvList);
-                    session.setAttribute("m_VD", vd);
+                    DataManager.setAttribute(session, "m_VD", vd);
                 }
             }
-            session.setAttribute("vQuestValue", vList);
-            session.setAttribute("NonMatchVV", vvList);
+            DataManager.setAttribute(session, "vQuestValue", vList);
+            DataManager.setAttribute(session, "NonMatchVV", vvList);
         }
         catch (Exception e)
         {
@@ -8995,7 +9042,7 @@ public class GetACSearch implements Serializable
             Vector vQuestValue = (Vector) session.getAttribute("vQuestValue");
             Integer recs = new Integer(vQuestValue.size());
             String recs2 = recs.toString();
-            session.setAttribute("creKeyword", "");
+            DataManager.setAttribute(session, "creKeyword", "");
             // make keyWordLabel label request session
             Quest_Bean QuestBean = (Quest_Bean) session.getAttribute("m_Quest");
             String sQuestion = QuestBean.getQUEST_NAME();
@@ -9012,8 +9059,8 @@ public class GetACSearch implements Serializable
                 vResult.addElement(QuestValueBean.getPERMISSIBLE_VALUE());
                 vResult.addElement(QuestValueBean.getVALUE_MEANING());
             }
-            session.setAttribute("SearchID", vSearchID);
-            session.setAttribute("SearchName", vSearchName);
+            DataManager.setAttribute(session, "SearchID", vSearchID);
+            DataManager.setAttribute(session, "SearchName", vSearchName);
         }
         catch (Exception e)
         {
@@ -9124,7 +9171,7 @@ public class GetACSearch implements Serializable
                     {
                         Quest_Value_Bean QuestValueSortBean1 = (Quest_Value_Bean) vSortedRows.elementAt(i);
                     }
-                    session.setAttribute("vQuestValue", vSortedRows);
+                    DataManager.setAttribute(session, "vQuestValue", vSortedRows);
                 }
             }
         }
@@ -9158,7 +9205,7 @@ public class GetACSearch implements Serializable
             String dtsVocab = req.getParameter("listContextFilterVocab");
             if (dtsVocab == null)
                 dtsVocab = "";
-            // session.setAttribute("dtsVocab", dtsVocab);
+            // DataManager.setAttribute(session, "dtsVocab", dtsVocab);
             String sSearchInEVS = (String) req.getParameter("listSearchInEVS");
             if (sSearchInEVS == null)
                 sSearchInEVS = "Synonym";
@@ -9187,16 +9234,16 @@ public class GetACSearch implements Serializable
             String sConteIdseq = (String) req.getParameter("sConteIdseq");
             if (sConteIdseq == null)
                 sConteIdseq = "";
-            session.setAttribute("creKeyword", termStr);
+            DataManager.setAttribute(session, "creKeyword", termStr);
             // call the method to search
             EVSSearch evs = new EVSSearch(req, res, m_servlet);
             // evs.do_EVSSearch(termStr, vAC, dtsVocab, sSearchInEVS, sMetaSource,
             // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1);
             vAC = evs.doVocabSearch(vAC, termStr, dtsVocab, sSearchInEVS, "", "", sRetired, sMetaSource, intMetaLimit,
                             true, -1, "");
-            session.setAttribute("vACSearch", vAC);
+            DataManager.setAttribute(session, "vACSearch", vAC);
             evs.get_Result(req, res, vResult, "DEF");
-            session.setAttribute("EVSresults", vResult);
+            DataManager.setAttribute(session, "EVSresults", vResult);
             req.setAttribute("labelKeyword", termStr);
             Integer recs = new Integer(vAC.size());
             String recs2 = recs.toString();
@@ -9281,7 +9328,7 @@ public class GetACSearch implements Serializable
                     }
                 }
                 if (!sFor.equals("Version"))
-                    session.setAttribute("AllAltNameList", vAllAltName);
+                    DataManager.setAttribute(session, "AllAltNameList", vAllAltName);
             }
             m_classReq.setAttribute("AltNameList", vList);
             m_classReq.setAttribute("itemType", detlName);
@@ -9388,7 +9435,7 @@ public class GetACSearch implements Serializable
                     }
                 }
                 if (!sFor.equals("Version"))
-                    session.setAttribute("AllRefDocList", vAllRefDoc);
+                    DataManager.setAttribute(session, "AllRefDocList", vAllRefDoc);
             }
             m_classReq.setAttribute("RefDocList", vList);
             m_classReq.setAttribute("itemType", docType);
@@ -9849,9 +9896,9 @@ public class GetACSearch implements Serializable
         try
         {
             String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
-            session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");
-            session.setAttribute("AllAltNameList", new Vector());
-            session.setAttribute("AllRefDocList", new Vector());
+            DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "");
+            DataManager.setAttribute(session, "AllAltNameList", new Vector());
+            DataManager.setAttribute(session, "AllRefDocList", new Vector());
             String sSearchAC = (String) session.getAttribute("searchAC");
             Vector vSRows = (Vector) session.getAttribute("vSelRows");
             Vector vCheckList = new Vector();
@@ -9868,7 +9915,7 @@ public class GetACSearch implements Serializable
                     if (rSel != null)
                     {
                         // reset the bean with selected row for the selected component
-                        session.setAttribute("ckName", ckName);
+                        DataManager.setAttribute(session, "ckName", ckName);
                         vCheckList.addElement(ckName);
                         if (sSearchAC.equals("DataElement"))
                         {
@@ -9877,7 +9924,7 @@ public class GetACSearch implements Serializable
                             DEBean = DEBean.cloneDE_Bean((DE_Bean) vSRows.elementAt(i), "Complete");
                             Vector vRefDoc = doRefDocSearch(DEBean.getDE_DE_IDSEQ(), "ALL TYPES", "open");
                             req.setAttribute("RefDocList", vRefDoc);
-                            session.setAttribute("m_DE", DEBean);
+                            DataManager.setAttribute(session, "m_DE", DEBean);
                         }
                         else if (sSearchAC.equals("DataElementConcept"))
                         {
@@ -9888,7 +9935,7 @@ public class GetACSearch implements Serializable
                                 sContextID = DECBean.getDEC_CONTE_IDSEQ();
                             Vector vRefDoc = doRefDocSearch(DECBean.getDEC_DEC_IDSEQ(), "ALL TYPES", "open");
                             req.setAttribute("RefDocList", vRefDoc);
-                            session.setAttribute("m_DEC", DECBean);
+                            DataManager.setAttribute(session, "m_DEC", DECBean);
                         }
                         else if (sSearchAC.equals("ValueDomain"))
                         {
@@ -9905,7 +9952,7 @@ public class GetACSearch implements Serializable
                                 sContextID = VDBean.getVD_CONTE_IDSEQ();
                             Vector vRefDoc = doRefDocSearch(VDBean.getIDSEQ(), "ALL TYPES", "open");
                             req.setAttribute("RefDocList", vRefDoc);
-                            session.setAttribute("m_VD", VDBean);
+                            DataManager.setAttribute(session, "m_VD", VDBean);
                         }
                         else
                         {
@@ -9925,17 +9972,17 @@ public class GetACSearch implements Serializable
                             vCheckList.addElement(ckName2);
                     }
                 }
-                session.setAttribute("CheckList", vCheckList);
+                DataManager.setAttribute(session, "CheckList", vCheckList);
             }
-            session.setAttribute("vBEResult", vBEResult);
-            session.setAttribute("vACId", (Vector) m_classReq.getAttribute("vACId"));
-            session.setAttribute("vACName", (Vector) m_classReq.getAttribute("vACName"));
+            DataManager.setAttribute(session, "vBEResult", vBEResult);
+            DataManager.setAttribute(session, "vACId", (Vector) m_classReq.getAttribute("vACId"));
+            DataManager.setAttribute(session, "vACName", (Vector) m_classReq.getAttribute("vACName"));
         }
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getSelRowToEdit: " + e);
             logger.fatal("ERROR in GetACSearch-getSelRowToEdit : " + e.toString(), e);
-            session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create/Edit page. Please try again.");
+            DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create/Edit page. Please try again.");
             return false;
         }
         return true;

@@ -1,13 +1,13 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.34 2007-06-04 18:09:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.35 2007-06-12 20:26:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
 
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
-import gov.nih.nci.cadsr.cdecurate.tool.NCICurationServlet;
+import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
 import gov.nih.nci.cadsr.cdecurate.tool.UserBean;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
 import gov.nih.nci.cadsr.cdecurate.util.Tree;
@@ -27,7 +27,7 @@ public class AltNamesDefsServlet
 {
     
     private UserBean _ub;
-    private NCICurationServlet _servlet;
+    private CurationServlet _servlet;
 
     private static final String _jspName = "/alternates.jsp";
     private static final String _jspCSI = "/alternates2.jsp";
@@ -154,7 +154,7 @@ public class AltNamesDefsServlet
      * @param servlet_ the application servlet
      * @param ub_ the user specific information
      */
-    public AltNamesDefsServlet(NCICurationServlet servlet_, UserBean ub_)
+    public AltNamesDefsServlet(CurationServlet servlet_, UserBean ub_)
     {
         _servlet = servlet_;
         _ub = ub_;
@@ -255,7 +255,7 @@ public class AltNamesDefsServlet
     {
         try
         {
-            Tree root = form_._sess._editAlt.getCSITree();
+            Tree root = form_._sess.getEditCSITree();
             db_.getCSILineage(form_._targetIdseq, root);
 
             return doAlternates3(form_, db_);
@@ -278,7 +278,7 @@ public class AltNamesDefsServlet
      */
     private String doRemoveAssoc(AltNamesDefsForm form_, DBAccess db_)
     {
-        Tree root = form_._sess._editAlt.getCSITree();
+        Tree root = form_._sess.getEditCSITree();
         Tree obj = root.findValue(form_._targetIdseq);
         if (obj.isNew())
         {
@@ -301,7 +301,7 @@ public class AltNamesDefsServlet
      */
     private String doRestoreAssoc(AltNamesDefsForm form_, DBAccess db_)
     {
-        Tree root = form_._sess._editAlt.getCSITree();
+        Tree root = form_._sess.getEditCSITree();
         root.markToKeep(form_._targetIdseq);
 
         return doAlternates3(form_, db_);
@@ -376,7 +376,7 @@ public class AltNamesDefsServlet
         form_.save();
         
         // Validate the AC/Name/Context/Type combination.
-        Alternates alt = form_._sess._editAlt;
+        Alternates alt = form_._sess.getEdit();
         String msg = form_._sess.check(alt); 
         if (msg != null)
         {

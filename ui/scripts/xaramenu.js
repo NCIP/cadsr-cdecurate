@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/xaramenu.js,v 1.6 2007-06-01 22:20:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/xaramenu.js,v 1.7 2007-06-12 20:27:24 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 // ?Xara Ltd 2002

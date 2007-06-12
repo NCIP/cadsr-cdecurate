@@ -1,11 +1,13 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.47 2007-06-04 18:09:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.48 2007-06-12 20:26:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 //import files
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -114,7 +116,7 @@ public class RefDocAttachment {
 	HttpSession session = null;
 	HttpServletRequest req = null;
 	HttpServletResponse res = null;
-	NCICurationServlet m_servlet;
+	CurationServlet m_servlet;
 	Logger logger = Logger.getLogger(RefDocAttachment.class.getName());
 
 	/**
@@ -122,7 +124,7 @@ public class RefDocAttachment {
 	 * @param res
 	 * @param m_servlet
 	 */
-	public RefDocAttachment(HttpServletRequest req, HttpServletResponse res, NCICurationServlet m_servlet) {
+	public RefDocAttachment(HttpServletRequest req, HttpServletResponse res, CurationServlet m_servlet) {
 
 		session = req.getSession();
 		this.req = req;
@@ -158,7 +160,7 @@ public void doOpen (){
 		
 		// Check to make sure it was a DE, DEC or VD
 		if (sACSearch.equals("DataElement")|| sACSearch.equals("DataElementConcept") || sACSearch.equals("ValueDomain")){
-			session.setAttribute("dispACType", sACSearch);
+			DataManager.setAttribute(session, "dispACType", sACSearch);
 			
 			String dispType = (String)session.getAttribute("displayType");
 		    if (dispType == null) dispType = "";
@@ -277,7 +279,7 @@ public void doOpen (){
 						
 						vRefDocDocs.addElement(Doclist);
 						
-		  			session.setAttribute("RefDocRows", vRefDocDocs);
+		  			DataManager.setAttribute(session, "RefDocRows", vRefDocDocs);
 						rs.close();
             rs = null;
 						pstmt.close();  
@@ -458,8 +460,8 @@ public void doBack (){
 	  	serAC.getVDResult(req, res, vResult, "");
 	
 	// Set results in the session
-	session.setAttribute("results", vResult);
-	session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, msg); 
+	DataManager.setAttribute(session, "results", vResult);
+	DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, msg); 
 	
 	// Forward back to search AC page
 	m_servlet.ForwardJSP(req, res, "/SearchResultsPage.jsp");

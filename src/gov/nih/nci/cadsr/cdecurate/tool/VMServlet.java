@@ -1,10 +1,11 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.21 2007-06-04 18:09:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.22 2007-06-12 20:26:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
 import java.sql.Connection;
 import java.util.Vector;
@@ -33,9 +34,9 @@ public class VMServlet extends GenericServlet
    * @param res
    *          HttpServletResponse object
    * @param ser
-   *          NCICurationServlet pointer
+   *          CurationServlet pointer
    */
-  public VMServlet(HttpServletRequest req, HttpServletResponse res, NCICurationServlet ser)
+  public VMServlet(HttpServletRequest req, HttpServletResponse res, CurationServlet ser)
   {
     vmData = new VMForm();
     httpRequest = req;
@@ -124,14 +125,14 @@ public class VMServlet extends GenericServlet
     sCDid = (String)req.getParameter("listCDName");    //get selected cd
     if(sCDid == null || sCDid.equals("All Domains")) 
     		sCDid = "";       
-    session.setAttribute("creSelectedCD", sCDid);
+    DataManager.setAttribute(session, "creSelectedCD", sCDid);
     vmData.setSearchFilterCD(sCDid);
     
     //get the keyword for filter
     String sKeyword = (String)req.getParameter("keyword");
         if (sKeyword == null)
             sKeyword = "";
-    session.setAttribute("creKeyword", sKeyword);   //keep the old criteria
+    DataManager.setAttribute(session, "creKeyword", sKeyword);   //keep the old criteria
     UtilService util = new UtilService();
     sKeyword = util.parsedStringSingleQuoteOracle(sKeyword);
     vmData.setSearchTerm(sKeyword);
@@ -146,13 +147,13 @@ public class VMServlet extends GenericServlet
     Vector<VM_Bean> vAC = vmData.getVMList();
     if (vAC == null)
         vAC = new Vector<VM_Bean>();
-    session.setAttribute("vACSearch", vAC);
+    DataManager.setAttribute(session, "vACSearch", vAC);
 
     //call the method to get the result vector
     this.readVMResult();
     //keep these empty for now
-    session.setAttribute("SearchLongName", new Vector<String>());
-    session.setAttribute("SearchMeanDescription",  new Vector<String>());      
+    DataManager.setAttribute(session, "SearchLongName", new Vector<String>());
+    DataManager.setAttribute(session, "SearchMeanDescription",  new Vector<String>());      
     
   }
 
@@ -178,7 +179,7 @@ public class VMServlet extends GenericServlet
     
     //put the results back in the session
     Vector<VM_Bean> vAC = vmData.getVMList();
-    session.setAttribute("vACSearch", vAC);
+    DataManager.setAttribute(session, "vACSearch", vAC);
     //call the method to get the result vector
     this.readVMResult();
   }
@@ -268,7 +269,7 @@ public class VMServlet extends GenericServlet
     Vector<VM_Bean> vErrMsg = vmData.getErrorMsgList();
     if (vErrMsg != null && vErrMsg.size()>0)
     {
-      session.setAttribute("VMEditMsg", vErrMsg);
+      DataManager.setAttribute(session, "VMEditMsg", vErrMsg);
       httpRequest.setAttribute("ErrMsgAC", vmData.getStatusMsg());
       httpRequest.setAttribute("editPVInd", pvInd);
       vmData.setVMBean(vm);
@@ -330,14 +331,14 @@ public class VMServlet extends GenericServlet
     if (!errMsg.equals(""))
     {
         curationServlet.storeStatusMsg(errMsg);
-        //session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, errMsg);
+        //DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, errMsg);
     }
     //store teh concept and vm attrirbutes in the request to place it on the vd page; append it regardless of the message
     EVS_Bean eBean =  (EVS_Bean)httpRequest.getAttribute(VMForm.REQUEST_SEL_CONCEPT);
     if (eBean != null && !eBean.getLONG_NAME().equals(""))
     {
         vmAction.doAppendConcept(selVM, eBean, iFrom);
-        session.setAttribute(VMForm.SESSION_SELECT_VM, selVM);
+        DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, selVM);
     }
     return errMsg;
   }
@@ -469,7 +470,7 @@ public class VMServlet extends GenericServlet
           vm.setVM_CHANGE_NOTE(sCmt);
         }
         //update the session attribute
-        session.setAttribute(VMForm.SESSION_SELECT_VM, vm);
+        DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, vm);
       }
     }
     catch (Exception e)
@@ -490,7 +491,7 @@ public class VMServlet extends GenericServlet
         HttpSession session = httpRequest.getSession();
         int pvInd = (Integer)session.getAttribute(PVForm.SESSION_PV_INDEX);
         httpRequest.setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv" + pvInd);
-        session.setAttribute(VMForm.SESSION_SELECT_VM, new VM_Bean());
+        DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, new VM_Bean());
         //remove the attribute
         session.removeAttribute(PVForm.SESSION_PV_INDEX);
         session.removeAttribute(VMForm.SESSION_SELECT_PV);
@@ -517,7 +518,7 @@ public class VMServlet extends GenericServlet
     if (to.equals(""))
       to = (String)session.getAttribute(VMForm.SESSION_VM_TAB_FOCUS);
     else
-      session.setAttribute(VMForm.SESSION_VM_TAB_FOCUS, to);
+      DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, to);
     //set the element focus to empty
     httpRequest.setAttribute(VMForm.REQUEST_FOCUS_ELEMENT, "");
     if (to != null && to.equals(VMForm.ELM_ACT_USED_TAB))
@@ -544,7 +545,7 @@ public class VMServlet extends GenericServlet
     if (!errMsg.equals(""))
     {
         curationServlet.storeStatusMsg(errMsg);
-      //session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, errMsg);
+      //DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, errMsg);
     }
     httpRequest.setAttribute(VMForm.REQUEST_FOCUS_ELEMENT, VMForm.ELM_LABEL_CON);
     return VMForm.JSP_VM_DETAIL;    
@@ -565,9 +566,9 @@ public class VMServlet extends GenericServlet
       String smsg = vmAction.doDeleteConcept(selectVM, sRow);
       if (!smsg.equals(""))
       {
-        //session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, smsg);
+        //DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, smsg);
         curationServlet.storeStatusMsg(smsg);
-        session.setAttribute(VMForm.SESSION_SELECT_VM, selectVM);
+        DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, selectVM);
       }
     }    
     httpRequest.setAttribute(VMForm.REQUEST_FOCUS_ELEMENT, VMForm.ELM_LABEL_CON);
@@ -589,9 +590,9 @@ public class VMServlet extends GenericServlet
       String smsg = vmAction.doMoveConcept(selectVM, sRow, sAction);
       if (!smsg.equals(""))
       {
-        //session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, smsg);
+        //DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, smsg);
         curationServlet.storeStatusMsg(smsg);
-        session.setAttribute(VMForm.SESSION_SELECT_VM, selectVM);
+        DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, selectVM);
       }
     }    
     httpRequest.setAttribute(VMForm.REQUEST_FOCUS_ELEMENT, VMForm.ELM_LABEL_CON);
@@ -608,7 +609,7 @@ public class VMServlet extends GenericServlet
     PV_Bean selPV = (PV_Bean)session.getAttribute(VMForm.SESSION_SELECT_PV);
     VM_Bean selVM = vmAction.getVM(selPV, -1);  //-1 to clear
     //set the attributes
-    session.setAttribute(VMForm.SESSION_SELECT_VM, selVM);
+    DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, selVM);
     return changeTab("");  // VMForm.JSP_VM_DETAIL;    
   }
 
@@ -736,9 +737,9 @@ public class VMServlet extends GenericServlet
     VM_Bean selVM = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
     dbac.sortACs(selVM, fieldType);
     //store it in the vm
-    session.setAttribute(VMForm.SESSION_SELECT_VM, selVM);
+    DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, selVM);
     //return the jsp
-    session.setAttribute(VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_USED_TAB);
+    DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_USED_TAB);
     httpRequest.setAttribute(VMForm.REQUEST_FOCUS_ELEMENT, acType);
     return sJsp;
   }
@@ -785,7 +786,7 @@ public class VMServlet extends GenericServlet
     //call teh method for sorting
     vmAction.getVMResult(vmData);
     //store teh result back in request/session attributes
-    session.setAttribute("results", vmData.getResultList());
+    DataManager.setAttribute(session, "results", vmData.getResultList());
     req.setAttribute("creRecsFound", vmData.getNumRecFound());
     req.setAttribute("labelKeyword", vmData.getResultLabel());        
   }

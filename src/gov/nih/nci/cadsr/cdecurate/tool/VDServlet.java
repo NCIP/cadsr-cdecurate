@@ -1,9 +1,11 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VDServlet.java,v 1.10 2007-06-04 18:09:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VDServlet.java,v 1.11 2007-06-12 20:26:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
+
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import java.io.Serializable;
 import java.util.Vector;
@@ -20,15 +22,15 @@ public class VDServlet implements Serializable
 {
   private HttpServletRequest m_classReq;
   private HttpServletResponse m_classRes;
-  private NCICurationServlet m_classServlet;
+  private CurationServlet m_classServlet;
   private static final Logger logger = Logger.getLogger(VMServlet.class.getName());
   
   /** Constructor 
    * @param req HttpServletRequest object
    * @param res HttpServletResponse object
-   * @param ser NCICurationServlet object
+   * @param ser CurationServlet object
    * */
-  public VDServlet(HttpServletRequest req, HttpServletResponse res, NCICurationServlet ser)
+  public VDServlet(HttpServletRequest req, HttpServletResponse res, CurationServlet ser)
   {
     m_classReq = req;
     m_classRes = res;
@@ -123,7 +125,7 @@ public class VDServlet implements Serializable
         VDBean.setAC_PREF_NAME_TYPE("SYS");
       }
       VD_Bean pgBean = new VD_Bean();
-      session.setAttribute(PVForm.SESSION_SELECT_VD, pgBean.cloneVD_Bean(VDBean));
+      DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, pgBean.cloneVD_Bean(VDBean));
     }
     catch (Exception e)
     {

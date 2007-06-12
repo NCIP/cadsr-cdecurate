@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/biztech_button.js,v 1.7 2007-06-01 22:20:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/biztech_button.js,v 1.8 2007-06-12 20:27:24 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 if(typeof(loc)=="undefined"||loc==""){var loc="";if(document.body&&document.body.innerHTML){var tt=document.body.innerHTML.toLowerCase();var last=tt.indexOf("biztech_button.js\"");if(last>0){var first=tt.lastIndexOf("\"",last);if(first>0&&first<last)loc=document.body.innerHTML.substr(first+1,last-first-1);}}}

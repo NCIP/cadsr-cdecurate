@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMForm.java,v 1.13 2007-06-04 18:09:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMForm.java,v 1.14 2007-06-12 20:26:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -49,7 +49,7 @@ public class VMForm implements Serializable
   private String retErrorCode;
   private String pvvmErrorCode;
   private Vector<String> VMValidate;
-  private NCICurationServlet curationServlet;
+  private CurationServlet curationServlet;
   private String searchTerm;
   private String searchFilterCD;
   private String searchFilterDef;
@@ -237,7 +237,7 @@ public class VMForm implements Serializable
   /**
    * @return Returns the curationServlet.
    */
-  public NCICurationServlet getCurationServlet()
+  public CurationServlet getCurationServlet()
   {
     return curationServlet;
   }
@@ -245,7 +245,7 @@ public class VMForm implements Serializable
   /**
    * @param curationServlet The curationServlet to set.
    */
-  public void setCurationServlet(NCICurationServlet curationServlet)
+  public void setCurationServlet(CurationServlet curationServlet)
   {
     this.curationServlet = curationServlet;
   }

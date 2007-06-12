@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.46 2007-06-04 18:09:09 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.47 2007-06-12 20:26:17 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -845,7 +845,7 @@ public final class EVS_UserBean implements Serializable
    * @param res rsponse object
    * @param servlet servlet object
    */
-  public void getEVSInfoFromDSR(HttpServletRequest req, HttpServletResponse res, NCICurationServlet servlet)
+  public void getEVSInfoFromDSR(HttpServletRequest req, HttpServletResponse res, CurationServlet servlet)
   {
     try
     {

@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVForm.java,v 1.9 2007-06-04 18:09:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVForm.java,v 1.10 2007-06-12 20:26:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -38,7 +38,7 @@ public class PVForm
   //attributes
   private String statusMsg;
   private int actionStatus;
-  private NCICurationServlet curationServlet;
+  private CurationServlet curationServlet;
   private HttpServletRequest request;
   private HttpServletResponse response;
   private Connection dbConnection;
@@ -83,7 +83,7 @@ public class PVForm
   /**
    * @return Returns the curationServlet.
    */
-  public NCICurationServlet getCurationServlet()
+  public CurationServlet getCurationServlet()
   {
     return curationServlet;
   }
@@ -91,7 +91,7 @@ public class PVForm
   /**
    * @param curationServlet The curationServlet to set.
    */
-  public void setCurationServlet(NCICurationServlet curationServlet)
+  public void setCurationServlet(CurationServlet curationServlet)
   {
     this.curationServlet = curationServlet;
   }

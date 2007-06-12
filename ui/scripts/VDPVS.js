@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/VDPVS.js,v 1.8 2007-06-01 22:20:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/VDPVS.js,v 1.9 2007-06-12 20:27:24 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 

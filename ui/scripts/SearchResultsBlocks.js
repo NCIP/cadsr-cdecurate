@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/SearchResultsBlocks.js,v 1.21 2007-06-01 22:20:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/SearchResultsBlocks.js,v 1.22 2007-06-12 20:27:24 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
    var numRowsSelected = 0;
@@ -262,26 +262,7 @@
 				"from the search results.\n\n" +
 				"Duplicate Concepts : \n\t" + multiNames);
       	  
-        if (sConfirm == true)
-        {
-        	//re select the rows so that order of selection doesn't matter
-    	  reselectCheckedRows();
-    	   //contineu with duplicate selection logic
-          selRowArray2 = getRowNumbersOfUniqueConcepts();
-          for (var y=0; y<selRowArray2.length; y++)
-          {
-            var thisRow = selRowArray2[y];
-         /*   if(thisRow == 0 && thisRow != "")  //would be same as the next condition
-            {  
-              selRowArray3[selRowArray3.length] = thisRow;
-            }
-            else*/ if(thisRow != "")
-            {     
-              selRowArray3[selRowArray3.length] = thisRow;
-            }
-          }
-        }
-        else
+        if (sConfirm == false)
           return;
       }         
       //store the selrow in an array 
@@ -314,10 +295,8 @@
       }
       else
       {
-	      if(sConfirm == true)
-	          opener.AllocSelRowOptions(selRowArray3);  //allocate option for hidden row and select it.      
-	      else
-	          opener.AllocSelRowOptions(selRowArray); 
+      	  //store the rows in the array on the opener page to submit
+	      opener.AllocSelRowOptions(selRowArray); 
 	      //submit the vd form to store these in pv bean and refresh the page
 	      opener.SubmitValidate("addSelectedCon");
       }
@@ -366,7 +345,7 @@
           for (var j=0; j<selNameArray.length; j++)
           {
             var thisName = selNameArray[j];
-           if (thisName == rowName)  //already exists as
+            if (thisName == rowName)  //already exists as
             {
                var dupExists = false;
               //loop through the duplicate names array to store only once
@@ -400,289 +379,6 @@
       return dupNames;
   }
   
-  
-  //alerts if more than one concept with same name is selected
-  function getDuplicateNameArray()
-  { 
-      var selNameArray = new Array();  //store the unique checked names in an array        
-      var dupNameArray = new Array();   //store duplicate names in an array     
-      var dCount = document.searchResultsForm.hiddenSelectedRow.length;
-      for (var i=0; i<dCount; i++)
-      {
-        //get the row number
-        var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
-        var rowName = conArray[rowNo].conName;  // document.searchResultsForm.hiddenName[rowNo].value;  //concept name 
-        var rowDefSource = conArray[rowNo].conDefSrc;  // document.searchResultsForm.hiddenDefSource[rowNo].value; 
-        var isMatch = false;
-        if (rowName != null && rowName != "" && selNameArray.length > 0)
-        {
-          //loop through the stored non duplicate checked names
-          for (var j=0; j<selNameArray.length; j++)
-          {
-            var thisName = selNameArray[j];
-           if (thisName == rowName)  //already exists as
-            {
-               var dupExists = false;
-              //loop through the duplicate names array to store only once
-              for (var k=0; k<dupNameArray.length; k++)
-              {
-                var dName = dupNameArray[k];
-                if (dName == rowName)
-                  dupExists = true;
-              }
-              //add it only if not exists as duplicates
-              if (dupExists == false)
-              {
-                dupNameArray[dupNameArray.length] = rowName;
-              }
-              isMatch = true;
-              break;
-            } 
-          }
-        }
-          //add only if no duplicate names selected
-        if (isMatch == false)
-          selNameArray[selNameArray.length] = rowName;
-      }
-      return dupNameArray;
-  }
-  
-  function getRowNumbersOfUniqueConcepts()
-  {
-      var multiNamesArray = getDuplicateNameArray();
-      var selNameArray = new Array();  //store the unique checked names in an array        
-      var dupNameArray = new Array();   //store duplicate names in an array 
-      var uniqueRowArray = new Array();
-      var firstOneRow = "";
-      var foundRightOne = "false";
-      var foundRightOneNCI = "false";
-      var foundRightOneNCIGLOSS = "false";
-      var foundRightOneNCI04 = "false";
-      var foundRightOneNCICB = "false";
-      var foundRightRowNoNCI = "";
-      var foundRightRowNoNCIGLOSS = "";
-      var foundRightRowNoNCI04 = "";
-      var foundRightRowNoNCICB = "";
-      var firstOneRow = "";
-      var dCount = document.searchResultsForm.hiddenSelectedRow.length;
-      var dupNames = "";
-      var rowNo;
-      var rowName;
-      var foundRightRowNo = "";
-      var lastDup = multiNamesArray.length - 1;
-      
-      // Case of No Duplicates
-      if(multiNamesArray.length == 0)
-      {
-        for (var i=0; i<dCount; i++)
-        {
-          rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
-          uniqueRowArray[uniqueRowArray.length] = rowNo;
-        }
-      }
-      else if(multiNamesArray.length == 1)  // Case of One Duplicate
-      {
-        var dName = multiNamesArray[0];
-        var firstDuplicateIndexTracker = -1;
-        // Cycle through all checked rows, check for duplicates
-        for (var i=0; i<dCount; i++)
-        {
-          var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
-          var rowName = conArray[rowNo].conName;  // document.searchResultsForm.hiddenName[rowNo].value;  //concept name 
-          if (dName == rowName)
-          {
-            firstOneRow = rowNo;
-            firstDuplicateIndexTracker++;
-            var sDefSource = conArray[rowNo].conDefSrc;  // document.searchResultsForm.hiddenDefSource[rowNo].value; 
-            if(sDefSource == arrDefSrc[0]) // "NCI")
-            {
-              foundRightRowNoNCI = rowNo;
-              foundRightOneNCI = "true";
-            }
-            else if(sDefSource == arrDefSrc[1]) // "NCI-GLOSS")
-            {
-              foundRightRowNoNCIGLOSS = rowNo;
-              foundRightOneNCIGLOSS = "true";
-            }
-            else if(sDefSource == arrDefSrc[2]) // "NCI04")
-            {
-              foundRightRowNoNCI04 = rowNo;
-              foundRightOneNCI04 = "true";
-            }
-            else if(sDefSource == arrDefSrc[3]) // "NCICB")
-            {
-              foundRightRowNoNCICB = rowNo;
-              foundRightOneNCICB = "true";
-            }
-          }
-          else // if not a duplicate, add it
-            uniqueRowArray[uniqueRowArray.length] = rowNo;
-        }
-        if(foundRightOneNCI == "true")       
-            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI;
-        else if(foundRightOneNCIGLOSS == "true")    
-          uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCIGLOSS;
-        else if(foundRightOneNCI04 == "true")    
-          uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI04;
-        else if(foundRightOneNCICB == "true")    
-          uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCICB;
-        else // Case of No NCI type Duplicates
-        {
-          lastDuplicateFirstRowNo = firstOneRow - firstDuplicateIndexTracker;   
-          uniqueRowArray[uniqueRowArray.length] = lastDuplicateFirstRowNo;
-        } 
-      }
-      else if(multiNamesArray.length > 1) // Case of more than 1 Duplicate
-      {
-      for (var k=0; k<multiNamesArray.length; k++)
-      {
-        var index = k;
-        var lastDuplicate = "false";
-        if(k == (multiNamesArray.length-1))
-          lastDuplicate = "true";
-        var lastDuplicateFirstRowNo = 0;
-        if(k > 0)// Made it all the way through the first duplicate, so now add the right one to array
-        {
-          if(foundRightOneNCI == "true")
-          {
-            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI;         
-          }
-          else if(foundRightOneNCIGLOSS == "true")    
-            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCIGLOSS;
-          else if(foundRightOneNCI04 == "true")    
-            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI04;
-          else if(foundRightOneNCICB == "true")    
-            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCICB;
-          else
-          {
-            lastDuplicateFirstRowNo = firstOneRow - firstDuplicateIndexTracker;
-            uniqueRowArray[uniqueRowArray.length] = lastDuplicateFirstRowNo;
-          }
-          foundRightOneNCI = "false";
-          foundRightOneNCIGLOSS = "false";
-          foundRightOneNCI04 = "false";
-          foundRightOneNCICB = "false";
-          foundRightRowNoNCI = "";
-          foundRightRowNoNCIGLOSS = "";
-          foundRightRowNoNCI04 = "";
-          foundRightRowNoNCICB = "";
-        }
-        var dName = multiNamesArray[k];
-        var firstDuplicateIndexTracker = -1;
-        foundRightOneNCI = "false";
-        foundRightOneNCIGLOSS = "false";
-        foundRightOneNCI04 = "false";
-        foundRightOneNCICB = "false";
-        foundRightRowNo = "";
-        foundRightRowNoNCI = "";
-        foundRightRowNoNCIGLOSS = "";
-        foundRightRowNoNCI04 = "";
-        foundRightRowNoNCICB = "";
-        for (var i=0; i<dCount; i++) // for each duplicate, cycle through all checked rows
-        {
-          var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
-          var rowName = conArray[rowNo].conName;  // document.searchResultsForm.hiddenName[rowNo].value;  //concept name 
-          if (dName == rowName)
-          {
-            firstOneRow = rowNo;
-            firstDuplicateIndexTracker++;
-            var sDefSource = conArray[rowNo].conDefSrc;  // document.searchResultsForm.hiddenDefSource[rowNo].value;        
-            if(sDefSource == arrDefSrc[0]) // "NCI")
-            {
-              foundRightRowNoNCI = rowNo;
-              foundRightOneNCI = "true";
-            }
-            else if(sDefSource == arrDefSrc[1])  // "NCI-GLOSS")
-            {
-              foundRightRowNoNCIGLOSS = rowNo;
-              foundRightOneNCIGLOSS = "true";
-            }
-            else if(sDefSource == arrDefSrc[2])  // "NCI04")
-            {
-              foundRightRowNoNCI04 = rowNo;
-              foundRightOneNCI04 = "true";
-            }
-            else if(sDefSource == arrDefSrc[3])  // "NCICB")
-            {
-              foundRightRowNoNCICB = rowNo;
-              foundRightOneNCICB = "true";
-            }
-          }
-        }
-      
-        if(lastDuplicate == "true")// Made it all the way through the first duplicate, so now add the right one to array
-        {
-          if(foundRightOneNCI == "true")
-          {
-            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI;   
-          }
-          else if(foundRightOneNCIGLOSS == "true")
-          {
-            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCIGLOSS;       
-          }
-          else if(foundRightOneNCI04 == "true")    
-            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCI04;
-          else if(foundRightOneNCICB == "true")    
-            uniqueRowArray[uniqueRowArray.length] =  foundRightRowNoNCICB;
-          else
-          {
-            lastDuplicateFirstRowNo = firstOneRow - firstDuplicateIndexTracker;
-            uniqueRowArray[uniqueRowArray.length] = lastDuplicateFirstRowNo;
-          }
-          foundRightRowNoNCI = "";
-          foundRightRowNoNCIGLOSS = "";
-          foundRightRowNoNCI04 = "";
-          foundRightRowNoNCICB = "";
-        }
-        }
-      }  
-      // Now add the non-duplicates to array
-      for (var p=0; p<dCount; p++)
-      {
-        var isDup = "false";
-        var rowNo2 = document.searchResultsForm.hiddenSelectedRow[p].value;
-        var rowName2 = conArray[rowNo2].conName;  // document.searchResultsForm.hiddenName[rowNo2].value;  //concept name
-        for (var q=0; q<multiNamesArray.length; q++)
-        {
-          var dName2 = multiNamesArray[q];
-          if (dName2 == rowName2)
-            isDup = "true"
-        }
-        
-        if(isDup == "false")
-        {
-          uniqueRowArray[uniqueRowArray.length] = rowNo2;
-        }
-      }
-    return uniqueRowArray;
-  }
-  
-  //reselects the rows so that they are in the order being selected
-  function reselectCheckedRows()
-  {
-  	 var isExist = true;
-  	 var rowNo =0;
-  	 document.searchResultsForm.hiddenSelectedRow.length = 0;
-  	 while (isExist) 
-  	 {  	 
-        var ckField = "CK"+rowNo;
-        formObj= eval("document.searchResultsForm."+ckField);
-        if (formObj != null)
-        {
-        	var isChecked = formObj.checked;
- 			if (isChecked)
- 			{
- 				var rSize = document.searchResultsForm.hiddenSelectedRow.length;
-        		document.searchResultsForm.hiddenSelectedRow.options[rSize] = new Option(rowNo, rowNo);
-        		document.searchResultsForm.hiddenSelectedRow[rSize].selected = true;
-        	}
-        	rowNo += 1;
-        }
-        else
-        	isExist = false;        
-  	 }
-  }
-  
   function getSubConceptsAll2(sUISearchType)
   {
       var sSearch = false;
@@ -697,7 +393,7 @@
       
         hourglass();
         window.status = "Refereshing the page, it may take a minute, please wait.....";
-        document.searchResultsForm.Message.style.visibility="visible";
+        //document.searchResultsForm.Message.style.visibility="visible";
         url = "../../cdecurate/NCICurationServlet?reqType=getSubConcepts&&searchType=All&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&UISearchType=" + sUISearchType + "&&conLevel=" + conLevel;
         document.searchResultsForm.action = url;
         document.searchResultsForm.Message.style.visibility="visible";
@@ -713,7 +409,7 @@
       var vocab = sCCodeDB;
       var defSource = editDefSource;
       var conLevel = editLevel;
-//alert("nodeCode: " + nodeCode + " nodeName: " + nodeName + " vocab: " + vocab +  " defSource: " + defSource);
+
       hourglass();
       url = "../../cdecurate/NCICurationServlet?reqType=getSubConcepts&&searchType=Immediate&&nodeCode=" + nodeCode + "&&vocab=" + vocab + "&&nodeName=" + nodeName + "&&defSource=" + defSource + "&&UISearchType=" + sUISearchType + "&&conLevel=" + conLevel;   
       document.searchResultsForm.action = url;

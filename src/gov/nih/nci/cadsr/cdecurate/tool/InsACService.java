@@ -1,7 +1,9 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.47 2007-06-04 18:09:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.48 2007-06-12 20:26:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
+
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -107,7 +109,7 @@ public class InsACService implements Serializable
    * 
    */
   private static final long serialVersionUID = 738251122350261121L;
-  NCICurationServlet m_servlet = null;
+  CurationServlet m_servlet = null;
   UtilService m_util = new UtilService();
   HttpServletRequest m_classReq = null;
   HttpServletResponse m_classRes = null;
@@ -120,7 +122,7 @@ public class InsACService implements Serializable
   * @param CurationServlet NCICuration servlet object.
   */
   public InsACService(HttpServletRequest req, HttpServletResponse res,
-                       NCICurationServlet CurationServlet)
+                       CurationServlet CurationServlet)
   {
     m_classReq = req;
     m_classRes = res;
@@ -146,7 +148,7 @@ public class InsACService implements Serializable
   }
  /**
   * To insert a new value domain or update the existing one in the database after the validation.
-  * Called from NCICurationServlet.
+  * Called from CurationServlet.
   * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
   * Calls oracle stored procedure
   *   "{call SBREXT_Set_Row.SET_VD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}" to submit
@@ -477,7 +479,7 @@ public class InsACService implements Serializable
             /*
             Vector<ALT_NAME_Bean> tBean = AltNamesDefsSession.getAltNameBeans(session, AltNamesDefsSession._searchVD, sVD_ID, sContextID);
             if (tBean != null)
-                session.setAttribute("AllAltNameList", tBean);
+                DataManager.setAttribute(session, "AllAltNameList", tBean);
             */
 
             String oneAlt = this.doAddRemoveAltNames(sVD_ID, sContextID, sAction);   //, "create");
@@ -565,7 +567,7 @@ public class InsACService implements Serializable
 
  /**
   * To insert a new DEConcept or update the existing one in the database after the validation.
-  * Called from NCICurationServlet.
+  * Called from CurationServlet.
   * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
   * Calls oracle stored procedure
   *   "{call SBREXT_Set_Row.SET_DEC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}" to submit
@@ -888,7 +890,7 @@ public class InsACService implements Serializable
           /*
           Vector<ALT_NAME_Bean> tBean = AltNamesDefsSession.getAltNameBeans(session, AltNamesDefsSession._searchDEC, sDEC_ID, sContextID);
           if (tBean != null)
-              session.setAttribute("AllAltNameList", tBean);
+              DataManager.setAttribute(session, "AllAltNameList", tBean);
           */
 
           String oneAlt = this.doAddRemoveAltNames(sDEC_ID, sContextID, sAction);   //, "create");
@@ -1119,7 +1121,7 @@ public class InsACService implements Serializable
   
   /**
   * To insert a Object Class or update the existing one in the database after the validation.
-  * Called from NCICurationServlet.
+  * Called from CurationServlet.
   * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
   * Calls oracle stored procedure
   *   "{call SBREXT_Set_Row.SET_OBJECT_CLASS(?,?,?,?,?,?)}" to submit
@@ -1256,7 +1258,7 @@ public class InsACService implements Serializable
             if(sOCL_IDSEQ == null) sOCL_IDSEQ = "";
             String sOCL_CONDR_IDSEQ = cstmt.getString(21);
             if(sOCL_CONDR_IDSEQ == null) sOCL_CONDR_IDSEQ = "";
-          // session.setAttribute("newObjectClass", "");
+          // DataManager.setAttribute(session, "newObjectClass", "");
             //store the idseq in the bean
             if(dec != null && (sReturnCode == null || sReturnCode.equals("") || sReturnCode.equals("API_OC_500")))
             {
@@ -1302,7 +1304,7 @@ public class InsACService implements Serializable
 
   /**
   * To insert a Property Class or update the existing one in the database after the validation.
-  * Called from NCICurationServlet.
+  * Called from CurationServlet.
   * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
   * Calls oracle stored procedure
   *   "{call SBREXT_Set_Row.SET_PROP_CONDR(?,?,?,?,?,?)}" to submit
@@ -1445,7 +1447,7 @@ public class InsACService implements Serializable
               dec.setDEC_PROP_ASL_NAME(cstmt.getString(9));
               req.setAttribute("PROPL_IDSEQ", sPROPL_IDSEQ);
             }            
-           // session.setAttribute("newProperty", "");
+           // DataManager.setAttribute(session, "newProperty", "");
             if (sReturnCode != null && !sReturnCode.equals(""))  // && !sReturnCode.equals("API_PROP_500"))
             {
                 this.storeStatusMsg(sReturnCode + " : Unable to create Property ");
@@ -1480,7 +1482,7 @@ public class InsACService implements Serializable
   
   /**
   * To insert a Representation Term or update the existing one in the database after the validation.
-  * Called from NCICurationServlet.
+  * Called from CurationServlet.
   * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
   * Calls oracle stored procedure
   *   "{call SBREXT_Set_Row.SET_representation(?,?,?,?,?,?)}" to submit
@@ -1623,7 +1625,7 @@ public class InsACService implements Serializable
             sREP_IDSEQ = sREP_IDSEQ.trim();
             String sREP_CONDR_IDSEQ = cstmt.getString(21);
             if(sREP_CONDR_IDSEQ == null) sREP_CONDR_IDSEQ = "";
-            session.setAttribute("newRepTerm", "");
+            DataManager.setAttribute(session, "newRepTerm", "");
             if(VD != null  && (sReturnCode == null || sReturnCode.equals("") || sReturnCode.equals("API_REP_500")))
             {
               VD.setVD_REP_IDSEQ(sREP_IDSEQ);
@@ -1750,7 +1752,7 @@ public class InsACService implements Serializable
 
    /**
   * To insert a Qualifier Term or update the existing one in the database after the validation.
-  * Called from NCICurationServlet.
+  * Called from CurationServlet.
   * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
   * Calls oracle stored procedure
   *   "{call SBREXT_Set_Row.SET_QUAL(?,?,?,?,?,?,?,?,?)}" to submit
@@ -1847,7 +1849,7 @@ public class InsACService implements Serializable
 
    /**
   * To insert a Qualifier Term or update the existing one in the database after the validation.
-  * Called from NCICurationServlet.
+  * Called from CurationServlet.
   * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
   * Calls oracle stored procedure
   *   "{call SBREXT_Set_Row.SET_QUAL(?,?,?,?,?,?,?,?,?)}" to submit
@@ -1943,7 +1945,7 @@ public class InsACService implements Serializable
 
  /**
   * To insert a new Data Element or update the existing one in the database after the validation.
-  * Called from NCICurationServlet.
+  * Called from CurationServlet.
   * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
   * Calls oracle stored procedure
   *   "{call SBREXT_Set_Row.SET_DE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}" to submit
@@ -2208,7 +2210,7 @@ public class InsACService implements Serializable
           /*
           Vector<ALT_NAME_Bean> tBean = AltNamesDefsSession.getAltNameBeans(session, AltNamesDefsSession._searchDE, sDE_ID, sContextID);
           if (tBean != null)
-              session.setAttribute("AllAltNameList", tBean);
+              DataManager.setAttribute(session, "AllAltNameList", tBean);
           */
 
           String oneAlt = this.doAddRemoveAltNames(sDE_ID, sContextID, sAction);   //, "create");
@@ -2246,7 +2248,7 @@ public class InsACService implements Serializable
                     rBean.setREF_SUBMIT_ACTION("DEL");
                   //System.out.println(" pqt removed " + rBean.getDOCUMENT_NAME());
                     vRefDocs.setElementAt(rBean, i);
-                    session.setAttribute("AllRefDocList", vRefDocs);
+                    DataManager.setAttribute(session, "AllRefDocList", vRefDocs);
                     break;
                   }
                 }
@@ -2310,7 +2312,7 @@ public class InsACService implements Serializable
 
  /**
   * To insert create a new version for an Administered component.
-  * Called from NCICurationServlet.
+  * Called from CurationServlet.
   * Calls oracle stored procedure  according to the selected AC.
   *   "{call META_CONFIG_MGMT.DE_VERSION(?,?,?,?)}" to create new version
   * update the respective bean with the new idseq if successful
@@ -2417,7 +2419,7 @@ public class InsACService implements Serializable
 
  /**
   * To insert create a new version for an Administered component.
-  * Called from NCICurationServlet.
+  * Called from CurationServlet.
   * Calls oracle stored procedure  according to the selected AC.
   *   "{call META_CONFIG_MGMT.DE_VERSION(?,?,?,?)}" to create new version
   * update the respective bean with the new idseq if successful
@@ -2601,7 +2603,7 @@ public class InsACService implements Serializable
                 else if (sAction.equals("DEL") && desTable.contains(sContext + "," + sAC_ID))
                    desTable.remove(sContext + "," + sAC_ID);
                 //store it back
-                session.setAttribute("desHashTable", desTable);
+                DataManager.setAttribute(session, "desHashTable", desTable);
                 //refresh used by context in the search results list
                /* GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
                 serAC.refreshDesData(sAC_ID, desIDSEQ, sValue, sContext, sContextID, sAction); */
@@ -3993,7 +3995,7 @@ public class InsACService implements Serializable
   {
       HttpSession session = m_classReq.getSession();
       GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, m_servlet); 
-      session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");
+      DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "");
       Vector vACList = (Vector)session.getAttribute("vBEResult");
       Vector<String> vACID = (Vector)session.getAttribute("vACId");
       Vector<String> vNames = (Vector)session.getAttribute("vACName");
@@ -4409,7 +4411,7 @@ public class InsACService implements Serializable
         }
       }
       //set it back in the session
-      session.setAttribute("AllAltNameList", vOldAlt);
+      DataManager.setAttribute(session, "AllAltNameList", vOldAlt);
     }   
   }
   
@@ -4468,7 +4470,7 @@ public class InsACService implements Serializable
         }
       }
       //set it back in the session
-      session.setAttribute("AllRefDocList", vOldRef);
+      DataManager.setAttribute(session, "AllRefDocList", vOldRef);
     }   
   }
   
@@ -4654,7 +4656,7 @@ public class InsACService implements Serializable
       GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
       EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
       Vector vAC = new Vector();
-      session.setAttribute("creKeyword", sConceptName);  //store it in the session before calling
+      DataManager.setAttribute(session, "creKeyword", sConceptName);  //store it in the session before calling
       vAC = evs.doVocabSearch(vAC, sConceptName, "NCI_Thesarus", "Synonym", "", "", "Exclude", "", 100, false, -1, "");
      // evs.do_EVSSearch(sConceptName, vAC, "NCI_Thesaurus", "Synonym",
      //     "All Sources", 100, "termThesOnly", "Exclude", sContextID, -1);
@@ -5096,7 +5098,7 @@ public class InsACService implements Serializable
                   rBean.setREF_SUBMIT_ACTION("DEL");
                 //System.out.println(" pqt removed " + rBean.getDOCUMENT_NAME());
                   vRefDocs.setElementAt(rBean, i);
-                  session.setAttribute("AllRefDocList", vRefDocs);
+                  DataManager.setAttribute(session, "AllRefDocList", vRefDocs);
                   break;
                 }
               }              

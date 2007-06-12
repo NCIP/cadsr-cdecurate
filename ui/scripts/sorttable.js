@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/sorttable.js,v 1.10 2007-06-01 22:20:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/sorttable.js,v 1.11 2007-06-12 20:27:24 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 addEvent(window, "load", sortables_init);

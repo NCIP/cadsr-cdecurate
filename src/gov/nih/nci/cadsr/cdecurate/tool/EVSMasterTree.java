@@ -1,10 +1,11 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.46 2007-06-04 18:09:09 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.47 2007-06-12 20:26:17 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.evs.domain.*;
 
 import java.util.*;
@@ -120,7 +121,7 @@ public class EVSMasterTree
  // private Vector m_vRootNames = new Vector();
  // private Vector m_vRootCodes = new Vector();
   private String sSearchAC = "";
-  private NCICurationServlet m_servlet = null;
+  private CurationServlet m_servlet = null;
   private EVS_UserBean m_eUser = null;
 
   Logger logger = Logger.getLogger(EVSMasterTree.class.getName());
@@ -131,7 +132,7 @@ public class EVSMasterTree
    * @param dtsVocab  Vocabulary name.
    * @param CurationServlet  The Curation Tool servlet.
    */
-  public EVSMasterTree(HttpServletRequest req, String dtsVocab, NCICurationServlet CurationServlet)
+  public EVSMasterTree(HttpServletRequest req, String dtsVocab, CurationServlet CurationServlet)
   {
     m_servlet = CurationServlet;
     m_classReq = req;
@@ -146,61 +147,61 @@ public class EVSMasterTree
       if(m_treesHash == null)
       {
         m_treesHash = new Hashtable();
-        session.setAttribute("treesHash",m_treesHash);
+        DataManager.setAttribute(session, "treesHash",m_treesHash);
       }
       m_treesHashParent = (Hashtable)session.getAttribute("treesHashParent");
       if(m_treesHashParent == null)
       {
         m_treesHashParent = new Hashtable();
-        session.setAttribute("treesHashParent",m_treesHashParent);
+        DataManager.setAttribute(session, "treesHashParent",m_treesHashParent);
       }
       m_treeNodesHashParent = (Hashtable)session.getAttribute("treeNodesHashParent");    
       if(m_treeNodesHashParent == null)
       {
         m_treeNodesHashParent = new Hashtable();
-        session.setAttribute("treeNodesHashParent", m_treeNodesHashParent);
+        DataManager.setAttribute(session, "treeNodesHashParent", m_treeNodesHashParent);
       }
       m_treeNodesHash = (Hashtable)session.getAttribute("treeNodesHash");    
       if(m_treeNodesHash == null)
       {
         m_treeNodesHash = new Hashtable();
-        session.setAttribute("treeNodesHash", m_treeNodesHash);
+        DataManager.setAttribute(session, "treeNodesHash", m_treeNodesHash);
       }
       m_treeLeafsHashParent = (Hashtable)session.getAttribute("treeLeafsHashParent");    
       if(m_treeLeafsHashParent == null)
       {
         m_treeLeafsHashParent = new Hashtable();
-        session.setAttribute("treeLeafsHashParent", m_treeLeafsHashParent);
+        DataManager.setAttribute(session, "treeLeafsHashParent", m_treeLeafsHashParent);
       } 
       m_treeIDtoNameHash = (Hashtable)session.getAttribute("treeIDtoNameHash"); 
       if(m_treeIDtoNameHash == null)
       {
         m_treeIDtoNameHash = new Hashtable();
-        session.setAttribute("treeIDtoNameHash", m_treeIDtoNameHash);
+        DataManager.setAttribute(session, "treeIDtoNameHash", m_treeIDtoNameHash);
       }
       m_treeIDtoNameHashParent = (Hashtable)session.getAttribute("treeIDtoNameHashParent");    
       if(m_treeIDtoNameHashParent == null)
       {
         m_treeIDtoNameHashParent = new Hashtable();
-        session.setAttribute("treeIDtoNameHashParent", m_treeIDtoNameHashParent);
+        DataManager.setAttribute(session, "treeIDtoNameHashParent", m_treeIDtoNameHashParent);
       }
       m_expandedTreeNodes = (Stack)session.getAttribute("expandedTreeNodes");    
       if(m_expandedTreeNodes == null)
       {
         m_expandedTreeNodes = new Stack();
-        session.setAttribute("expandedTreeNodes", m_expandedTreeNodes);
+        DataManager.setAttribute(session, "expandedTreeNodes", m_expandedTreeNodes);
       }
       m_expandedTreeNodesParent = (Stack)session.getAttribute("expandedTreeNodesParent");    
       if(m_expandedTreeNodesParent == null)
       {
         m_expandedTreeNodesParent = new Stack();
-        session.setAttribute("expandedTreeNodesParent", m_expandedTreeNodesParent);
+        DataManager.setAttribute(session, "expandedTreeNodesParent", m_expandedTreeNodesParent);
       }
       m_expandedTreeNodesVector = (Vector)session.getAttribute("expandedTreeNodesVector");    
       if(m_expandedTreeNodesVector == null)
       {
         m_expandedTreeNodesVector = new Vector();
-        session.setAttribute("expandedTreeNodesVector", m_expandedTreeNodesVector);
+        DataManager.setAttribute(session, "expandedTreeNodesVector", m_expandedTreeNodesVector);
       }
     }
   }
@@ -350,9 +351,9 @@ public class EVSMasterTree
         } 
         if(session != null)
         {
-          session.setAttribute("treesHash", m_treesHash);
-          session.setAttribute("treeNodesHash", m_treeNodesHash);
-          session.setAttribute("treeIDtoNameHash", m_treeIDtoNameHash);
+          DataManager.setAttribute(session, "treesHash", m_treesHash);
+          DataManager.setAttribute(session, "treeNodesHash", m_treeNodesHash);
+          DataManager.setAttribute(session, "treeIDtoNameHash", m_treeIDtoNameHash);
         }
       }
 		} 
@@ -735,7 +736,7 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
 	 
     String sLastNodeIDExpanded = (String)session.getAttribute("LastNodeIDExpanded");
     if (sLastNodeIDExpanded == null) sLastNodeIDExpanded = "0";
-    session.setAttribute("LastNodeIDExpanded", null);
+    DataManager.setAttribute(session, "LastNodeIDExpanded", null);
     
   try
   {
@@ -790,7 +791,7 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
   }
 //logger.debug("expandNode33 nodeID: " + nodeID);    
     if(nodeLevelToFind>0) //only set this on expandTreeToConcept
-      session.setAttribute("LastNodeIDExpanded", nodeID); 
+      DataManager.setAttribute(session, "LastNodeIDExpanded", nodeID); 
     if(nodeChildrenTree == null)
       nodeChildrenTree = new Tree(1);  
     
@@ -1246,7 +1247,7 @@ public void collapseAllNodes()
         m_treesHash.put(nodeName, nodeChildrenTree);	// Store the tree in the static Hashtable
         if(session != null)
         {
-            session.setAttribute("expandedTreeNodes", m_expandedTreeNodes);
+            DataManager.setAttribute(session, "expandedTreeNodes", m_expandedTreeNodes);
         }
       }
     }
@@ -1299,7 +1300,7 @@ public void collapseAllNodes()
        if(session != null)
         {
           if(sSearchAC.equals("ParentConceptVM"))
-            session.setAttribute("expandedTreeNodesParent", m_expandedTreeNodesParent);
+            DataManager.setAttribute(session, "expandedTreeNodesParent", m_expandedTreeNodesParent);
         }
       }
     }
@@ -1478,8 +1479,8 @@ public void collapseAllNodes()
         HttpSession session = m_classReq.getSession();
         if(session != null)
         {
-          session.setAttribute("treesHashParent", m_treesHashParent);
-          session.setAttribute("treeNodesHashParent", m_treeNodesHashParent);
+          DataManager.setAttribute(session, "treesHashParent", m_treesHashParent);
+          DataManager.setAttribute(session, "treeNodesHashParent", m_treeNodesHashParent);
         }
       }
 		} 
@@ -1506,7 +1507,7 @@ public void collapseAllNodes()
     String sSuperConceptName = "";
     int nodeLevel = 1;
     HttpSession session = m_classReq.getSession();
-    session.setAttribute("LastNodeIDExpanded", null);
+    DataManager.setAttribute(session, "LastNodeIDExpanded", null);
     String sSearchAC = (String)session.getAttribute("creSearchAC");
     if(sSearchAC == null) sSearchAC = "";
     String sTopOfStack = "";
@@ -1577,15 +1578,15 @@ public void collapseAllNodes()
     if(session != null)
     {
 //System.out.println("refreshTree: session != null");
-        session.setAttribute("treesHash", m_treesHash);
-        session.setAttribute("treeNodesHash", m_treeNodesHash);
-        session.setAttribute("treeIDtoNameHash", m_treeIDtoNameHash);
-        session.setAttribute("expandedTreeNodes", m_expandedTreeNodes);
-        session.setAttribute("expandedTreeNodesParent", m_expandedTreeNodesParent);
-        session.setAttribute("treesHashParent", m_treesHashParent);
-        session.setAttribute("treeNodesHashParent", m_treeNodesHashParent);
-        session.setAttribute("treeLeafsHashParent", m_treeLeafsHashParent);
-        session.setAttribute("treeIDtoNameHashParent", m_treeIDtoNameHashParent);
+        DataManager.setAttribute(session, "treesHash", m_treesHash);
+        DataManager.setAttribute(session, "treeNodesHash", m_treeNodesHash);
+        DataManager.setAttribute(session, "treeIDtoNameHash", m_treeIDtoNameHash);
+        DataManager.setAttribute(session, "expandedTreeNodes", m_expandedTreeNodes);
+        DataManager.setAttribute(session, "expandedTreeNodesParent", m_expandedTreeNodesParent);
+        DataManager.setAttribute(session, "treesHashParent", m_treesHashParent);
+        DataManager.setAttribute(session, "treeNodesHashParent", m_treeNodesHashParent);
+        DataManager.setAttribute(session, "treeLeafsHashParent", m_treeLeafsHashParent);
+        DataManager.setAttribute(session, "treeIDtoNameHashParent", m_treeIDtoNameHashParent);
     }
     
 		try 

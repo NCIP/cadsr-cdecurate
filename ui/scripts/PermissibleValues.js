@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/PermissibleValues.js,v 1.25 2007-06-01 22:20:48 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/ui/scripts/PermissibleValues.js,v 1.26 2007-06-12 20:27:24 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -66,6 +66,10 @@
 				if (sAction == "save")
 					disableHyperlink(sAction);
 				DisableButtons();
+				var msgObj = document.getElementById("Message2");
+				if (msgObj != null)
+				   msgObj.style.visibility="visible";
+				
 				document.PVForm.submit();
 			}
 		}	
@@ -1369,13 +1373,10 @@
   			//get the vm object
   		 	var vmT = document.getElementById(pvId + "VMEdit");
   		 	var vmText = "";
-  		 	if (vmT == null)
-  		 	{
-  		 		vmT = document.getElementById(pvId + "VMView");
-  		 		if (vmT != null)
-  		 			vmText = vmT.innerText;
-  		 	}
-  		 	else
+  		 	vmT = document.getElementById(pvId + "VMView");
+  		 	if (vmT != null)
+  		 		vmText = vmT.innerText;
+  		 	if (vmText == "")
   		 	{
   		 		vmInput = document.getElementById("txt" + pvId + "Mean");
   		 		if (vmInput != null)
@@ -1412,7 +1413,6 @@
 		{
 			sVM = sVM.replace(' ', '');
 		}
-
   		//get the value and meaning from each row and compare it to the text of the saving pv
   		var i = 0;
   		do
