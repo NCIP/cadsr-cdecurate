@@ -1,5 +1,5 @@
 // Copyright (c) 2006 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/DesDEServlet.java,v 1.34 2007-06-04 18:09:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/DesDEServlet.java,v 1.35 2007-06-12 20:26:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -9,10 +9,12 @@ import gov.nih.nci.cadsr.cdecurate.tool.ALT_NAME_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.DE_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.GetACSearch;
 import gov.nih.nci.cadsr.cdecurate.tool.InsACService;
-import gov.nih.nci.cadsr.cdecurate.tool.NCICurationServlet;
+import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
 import gov.nih.nci.cadsr.cdecurate.tool.REF_DOC_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.SetACService;
 import gov.nih.nci.cadsr.cdecurate.tool.UserBean;
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+
 import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +27,7 @@ import org.apache.log4j.Logger;
  */
 public class DesDEServlet
 {
-    public DesDEServlet(NCICurationServlet servlet_, UserBean ub_)
+    public DesDEServlet(CurationServlet servlet_, UserBean ub_)
     {
         _servlet = servlet_;
         // Don't need to keep UserBean, signature includes argument for consistency
@@ -38,7 +40,7 @@ public class DesDEServlet
         GetACSearch getACSearch = new GetACSearch(req, res, _servlet);
         getACSearch.getSelRowToEdit(req, res, "EditDesDE");
         req.setAttribute("displayType", "Designation");
-        session.setAttribute("dispACType", "DataElement");
+        DataManager.setAttribute(session, "dispACType", "DataElement");
 
         return "/EditDesignateDEPage.jsp";
     }
@@ -46,8 +48,8 @@ public class DesDEServlet
     private void doEditNothing(HttpSession session, GetACSearch getACSearch)
     {
         // logger.debug("clearing designate de " + sAction);
-        session.setAttribute("AllAltNameList", new Vector());
-        session.setAttribute("AllRefDocList", new Vector());
+        DataManager.setAttribute(session, "AllAltNameList", new Vector());
+        DataManager.setAttribute(session, "AllRefDocList", new Vector());
         Vector vACId = (Vector) session.getAttribute("vACId");
         if (vACId == null)
             vACId = new Vector();
@@ -78,7 +80,7 @@ public class DesDEServlet
         // logger.debug("inserting data");
         InsACService insAC = new InsACService(req, res, _servlet);
         insAC.doSubmitDesDE(sAction);
-        session.setAttribute("CheckList", new Vector()); // empty the check list.
+        DataManager.setAttribute(session, "CheckList", new Vector()); // empty the check list.
     }
 
     /**
@@ -178,7 +180,7 @@ public class DesDEServlet
                 vAltNames.addElement(AltNameBean);
             }
         }
-        session.setAttribute("AllAltNameList", vAltNames);
+        DataManager.setAttribute(session, "AllAltNameList", vAltNames);
     }
 
     /**
@@ -280,7 +282,7 @@ public class DesDEServlet
                 vRefDocs.addElement(RefDocBean);
             }
         }
-        session.setAttribute("AllRefDocList", vRefDocs);
+        DataManager.setAttribute(session, "AllRefDocList", vRefDocs);
     }
 
     /**
@@ -352,7 +354,7 @@ public class DesDEServlet
         if (stgContMsg != null && !stgContMsg.equals(""))
             _servlet.storeStatusMsg("Unable to remove the following Alternate Names, because the user does not have write permission to remove "
                                             + stgContMsg);
-        session.setAttribute("AllAltNameList", vAltNames);
+        DataManager.setAttribute(session, "AllAltNameList", vAltNames);
     }
 
     /**
@@ -423,7 +425,7 @@ public class DesDEServlet
         if (stgContMsg != null && !stgContMsg.equals(""))
             _servlet.storeStatusMsg("Unable to remove the following Reference Documents, because the user does not have write permission to remove "
                                             + stgContMsg);
-        session.setAttribute("AllRefDocList", vRefDocs);
+        DataManager.setAttribute(session, "AllRefDocList", vRefDocs);
     }
 
     /**
@@ -455,7 +457,7 @@ public class DesDEServlet
             SetACService setAC = new SetACService(_servlet);
             DE_Bean deBean = (DE_Bean) session.getAttribute(_beanDE);
             deBean = setAC.setDECSCSIfromPage(_servlet.m_classReq, deBean);
-            session.setAttribute(_beanDE, deBean);
+            DataManager.setAttribute(session, _beanDE, deBean);
         }
     }
     
@@ -538,10 +540,10 @@ public class DesDEServlet
                 Vector vResult = new Vector();
                 GetACSearch serAC = new GetACSearch(req, res, _servlet);
                 serAC.getDEResult(req, res, vResult, "");
-                session.setAttribute("results", vResult);
+                DataManager.setAttribute(session, "results", vResult);
                 // reset the menu action to edit de if it was editdesde
-                session.setAttribute("AllAltNameList", new Vector());
-                session.setAttribute("AllRefDocList", new Vector());
+                DataManager.setAttribute(session, "AllAltNameList", new Vector());
+                DataManager.setAttribute(session, "AllRefDocList", new Vector());
 
                 return "/SearchResultsPage.jsp";
 
@@ -585,7 +587,7 @@ public class DesDEServlet
         _servlet.ForwardJSP(req, res, jsp);
     }
 
-    private NCICurationServlet _servlet;
+    private CurationServlet _servlet;
     private static final String _beanDE = "m_DE";
     private static final Logger logger = Logger.getLogger(DesDEServlet.class);
 }

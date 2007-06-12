@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.24 2007-06-04 18:09:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.25 2007-06-12 20:26:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -888,7 +888,7 @@ public class VMAction implements Serializable
    
   /**
    * To insert a new Value Meaing in the database when selected a term from EVS. Called from
-   * NCICurationServlet. Gets all the attribute values from the bean, sets in parameters, and
+   * CurationServlet. Gets all the attribute values from the bean, sets in parameters, and
    * registers output parameter. Calls oracle stored procedure "{call
    * SBREXT_Set_Row.SET_VM_CONDR(?,?,?,?,?,?,?,?,?,?,?)}" to submit
    * 
@@ -1009,7 +1009,7 @@ public class VMAction implements Serializable
 
   /**
    * To insert a new CD VMS relationship in the database after creating VM or its relationship with VD.
-   * Called from NCICurationServlet.
+   * Called from CurationServlet.
    * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
    * Calls oracle stored procedure
    *   "{call SBREXT_Set_Row.SET_CDVMS(?,?,?,?,?,?,?,?,?,?,?)}" to submit

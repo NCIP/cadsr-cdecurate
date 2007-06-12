@@ -1,6 +1,6 @@
 // Copyright (c) 2007 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/ToolURL.java,v 1.6 2007-06-04 18:09:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/ToolURL.java,v 1.7 2007-06-12 20:26:19 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.util;
@@ -32,7 +32,7 @@ public class ToolURL
     
     public static final void setEVSNewTermURL(HttpSession session_, String url_)
     {
-        session_.setAttribute(evsNewTermUrl, (url_ == null) ? defaultUrl : url_);
+        DataManager.setAttribute(session_, evsNewTermUrl, (url_ == null) ? defaultUrl : url_);
     }
     
     public static final String getEVSNewTermURL(PageContext context_)
@@ -42,7 +42,7 @@ public class ToolURL
     
     public static final void setBrowserUrl(HttpSession session_, String url_)
     {
-        session_.setAttribute(browserUrl, (url_ == null) ? defaultUrl : url_);
+        DataManager.setAttribute(session_, browserUrl, (url_ == null) ? defaultUrl : url_);
     }
     
     public static final String getBrowserUrl(PageContext context_)
@@ -57,7 +57,7 @@ public class ToolURL
     
     public static final void setSentinelUrl(HttpSession session_, String url_)
     {
-        session_.setAttribute(sentinelUrl, (url_ == null) ? defaultUrl : url_);
+        DataManager.setAttribute(session_, sentinelUrl, (url_ == null) ? defaultUrl : url_);
     }
     
     public static final String getSentinelUrl(PageContext context_)
@@ -67,7 +67,7 @@ public class ToolURL
     
     public static final void setUmlBrowserUrl(HttpSession session_, String url_)
     {
-        session_.setAttribute(umlBrowserUrl, (url_ == null) ? defaultUrl : url_);
+        DataManager.setAttribute(session_, umlBrowserUrl, (url_ == null) ? defaultUrl : url_);
     }
     
     public static final String getUmlBrowserUrl(PageContext context_)

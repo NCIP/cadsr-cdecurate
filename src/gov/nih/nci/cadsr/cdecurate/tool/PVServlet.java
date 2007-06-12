@@ -1,12 +1,14 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.24 2007-06-04 18:09:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.25 2007-06-12 20:26:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
@@ -28,9 +30,9 @@ public class PVServlet implements Serializable
   /**constructor  
    * @param req HttpServletRequest Object
    * @param res HttpServletResponse object
-   * @param ser NCICurationServlet object
+   * @param ser CurationServlet object
    * */
-  public PVServlet(HttpServletRequest req, HttpServletResponse res, NCICurationServlet ser)
+  public PVServlet(HttpServletRequest req, HttpServletResponse res, CurationServlet ser)
   {
     data = new PVForm();
     data.setRequest(req);
@@ -52,12 +54,12 @@ public class PVServlet implements Serializable
       try
       {
          HttpSession session = data.getRequest().getSession();
-         session.setAttribute("vStatMsg", null);  //reset the status message
+         DataManager.setAttribute(session, "vStatMsg", null);  //reset the status message
          String sAction = (String)data.getRequest().getParameter("pageAction");
          data.setPageAction(sAction);
          String sMenuAction = (String)data.getRequest().getParameter("MenuAction");
          if (sMenuAction != null)
-           session.setAttribute(Session_Data.SESSION_MENU_ACTION, sMenuAction);
+           DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
          sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
          data.setMenuAction(sMenuAction);
          String sButtonPressed = (String)session.getAttribute("LastMenuButtonPressed");
@@ -76,7 +78,7 @@ public class PVServlet implements Serializable
          //clear searched data from teh session attributes
          if (sAction.equals("vddetailstab"))
          {
-           session.setAttribute("TabFocus", "VD");
+           DataManager.setAttribute(session, "TabFocus", "VD");
            retData = "/EditVDPage.jsp";
            if (vdPageFrom.equals("create"))
              retData = "/CreateVDPage.jsp";
@@ -84,7 +86,7 @@ public class PVServlet implements Serializable
          }
          else if (sAction.equals("vdpvstab"))
          {
-           session.setAttribute("TabFocus", "PV");
+           DataManager.setAttribute(session, "TabFocus", "PV");
            return "/PermissibleValue.jsp";
          }
          else if (sAction.equals("goBack"))
@@ -211,9 +213,9 @@ public class PVServlet implements Serializable
      if (vwTypes != null)
      {
        pvAction.doResetViewTypes(vVDPV, vwTypes);
-      // session.setAttribute("VDPVList", vVDPV);
+      // DataManager.setAttribute(session, "VDPVList", vVDPV);
        vd.setVD_PV_List(vVDPV);
-       session.setAttribute(PVForm.SESSION_SELECT_VD, vd);
+       DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);
      }
    }
    
@@ -232,7 +234,7 @@ public class PVServlet implements Serializable
        if (vQVList == null) vQVList = new Vector<String>();
        if (!vQVList.contains(pv.getQUESTION_VALUE()))
          vQVList.addElement(pv.getQUESTION_VALUE());
-       session.setAttribute("NonMatchVV", vQVList);
+       DataManager.setAttribute(session, "NonMatchVV", vQVList);
        session.removeAttribute("NewPV");
      }
      return "/PermissibleValue.jsp";
@@ -255,8 +257,8 @@ public class PVServlet implements Serializable
         SimpleDateFormat formatter = new SimpleDateFormat ("MM/dd/yyyy");
         pv.setPV_BEGIN_DATE(formatter.format(new java.util.Date()));
         data.getRequest().setAttribute("refreshPageAction", "openNewPV");
-        session.setAttribute("NewPV", pv);  
-        session.setAttribute("VMEditMsg", new Vector<VM_Bean>());
+        DataManager.setAttribute(session, "NewPV", pv);  
+        DataManager.setAttribute(session, "VMEditMsg", new Vector<VM_Bean>());
         data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "divpvnew");
       }
       else if (sAct.equals("addNewPV"))
@@ -266,6 +268,7 @@ public class PVServlet implements Serializable
         //make sure all the hand typed data is captured
         String sPV = (String)data.getRequest().getParameter("pvNewValue");  //value
         if (sPV == null) sPV = "";
+        sPV = sPV.trim();
         pv.setPV_VALUE(sPV);
         readValidValueData(pv, "pvNew");
         //add pv other attribtutes 
@@ -291,7 +294,7 @@ public class PVServlet implements Serializable
         else
         {
           data.getRequest().setAttribute("refreshPageAction", "openNewPV");
-          session.setAttribute("NewPV", pv);        
+          DataManager.setAttribute(session, "NewPV", pv);        
           data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "divpvnew");          
         }
       }
@@ -313,7 +316,7 @@ public class PVServlet implements Serializable
         PV_Bean selectPV = data.getSelectPV();
         //get the pv name from teh page
         String chgName = (String)data.getRequest().getParameter("txtpv" + pvInd + "Value");  //pvName  
-
+        chgName = chgName.trim();
         //handle pv changes
         VM_Bean useVM = this.getDuplicateVMUse();
         if (useVM == null)
@@ -342,7 +345,7 @@ public class PVServlet implements Serializable
         else
         {
             //store it in the session
-            session.setAttribute(PVForm.SESSION_SELECT_VD, data.getVD());
+            DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, data.getVD());
             data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv" + pvInd);  //"pv" + pvInd + "View");
         }
         //status messae
@@ -380,7 +383,7 @@ public class PVServlet implements Serializable
           String retMsg = pvAction.changePVQCAttributes(pv, pvInd, vd, data);
           if (!retMsg.equals(""))
               data.getCurationServlet().storeStatusMsg(retMsg);
-              //session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, retMsg);
+              //DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, retMsg);
       }
       else
       {
@@ -390,7 +393,7 @@ public class PVServlet implements Serializable
           vd.setVD_PV_List(vdpvList);
           pvInd = 0;
       }
-      session.setAttribute(PVForm.SESSION_SELECT_VD, vd);
+      DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);
       data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv" + pvInd); 
       //remove the vector of duplicate vm 
       data.getRequest().getSession().removeAttribute("VMEditMsg");
@@ -438,7 +441,7 @@ public class PVServlet implements Serializable
      }
      if (!sOldValue.equals( "") && !sSelValue.equals(sOldValue) && !vQVList.contains(sOldValue))
        vQVList.addElement(sOldValue);
-     session.setAttribute("NonMatchVV", vQVList);
+     DataManager.setAttribute(session, "NonMatchVV", vQVList);
    }
    
    /** to get the selected pv on from the page
@@ -552,7 +555,7 @@ public class PVServlet implements Serializable
          VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
          data.setVD(vd);
          pvAction.doBlockEditPV(data, "origin", chgOrg);
-         session.setAttribute(PVForm.SESSION_SELECT_VD, data.getVD());
+         DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, data.getVD());
          return;
        }
        //else  
@@ -569,7 +572,7 @@ public class PVServlet implements Serializable
          VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
          data.setVD(vd);
          pvAction.doBlockEditPV(data, "begindate", chgBD);
-         session.setAttribute(PVForm.SESSION_SELECT_VD, data.getVD());
+         DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, data.getVD());
          return;
        }
       // else
@@ -586,7 +589,7 @@ public class PVServlet implements Serializable
          VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
          data.setVD(vd);
          pvAction.doBlockEditPV(data, "enddate", chgED);
-         session.setAttribute(PVForm.SESSION_SELECT_VD, data.getVD());
+         DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, data.getVD());
          return;
        }
        //else
@@ -653,7 +656,7 @@ public class PVServlet implements Serializable
          vd = data.getCurationServlet().doGetVDSystemName(data.getRequest(), vd, vParent);
          vParent = serAC.getNonEVSParent(vParent, vd, sMenu);
           
-         //session.setAttribute("VDParentConcept", vParent);  
+         //DataManager.setAttribute(session, "VDParentConcept", vParent);  
          vd.setReferenceConceptList(vParent);
       }
       catch (Exception e)
@@ -709,7 +712,7 @@ public class PVServlet implements Serializable
        {
          HttpSession session = data.getRequest().getSession();
          Vector<String> vRes = new Vector<String>();
-         session.setAttribute("results", vRes);
+         DataManager.setAttribute(session, "results", vRes);
        }
      }       
      return "/OpenSearchWindowBlocks.jsp";
@@ -878,10 +881,10 @@ public class PVServlet implements Serializable
          VMAction vmact = new VMAction();
          VM_Bean selVM = vmact.getVM(selPV, 0);       
          //set the attributes
-         session.setAttribute(VMForm.SESSION_SELECT_VM, selVM);
-         session.setAttribute(VMForm.SESSION_SELECT_PV, selPV);
-         session.setAttribute(PVForm.SESSION_PV_INDEX, pvInd);
-         session.setAttribute(VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
+         DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, selVM);
+         DataManager.setAttribute(session, VMForm.SESSION_SELECT_PV, selPV);
+         DataManager.setAttribute(session, PVForm.SESSION_PV_INDEX, pvInd);
+         DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
 
          //get vm alt names
          AltNamesDefsServlet altSer = new AltNamesDefsServlet(data.getCurationServlet(), data.getCurationServlet().sessionData.UsrBean);
@@ -923,7 +926,7 @@ public class PVServlet implements Serializable
        {
          String sCRFmsg = "Unable to remove the Permissible Value (PV) (" + selPV.getPV_VALUE() + ") because the Permissible Value is used in a CRF." +
                      "\\n You may remove the PV after dis-associating it from the CRF.";
-         //session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, sCRFmsg);
+         //DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, sCRFmsg);
          data.getCurationServlet().storeStatusMsg(sCRFmsg);
          selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_NONE);
        }
@@ -933,7 +936,7 @@ public class PVServlet implements Serializable
           //make the one before to be in view
            if (pvInd > 0)
              pvInd = (pvInd - 1);           
-           session.setAttribute(PVForm.SESSION_SELECT_VD, vd);
+           DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);
         }
      }
      data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv" + pvInd);  //"pv" + pvInd + "View");
@@ -975,12 +978,13 @@ public class PVServlet implements Serializable
         }
       }
       if (!sCRFmsg.equals(""))
+      {
           sCRFmsg = "Unable to remove the following Permissible Value(s) because it may be used in a CRF." +
           "\\n You may remove the PV after dis-associating it from the CRF." + sCRFmsg;
-      
-      session.setAttribute(PVForm.SESSION_SELECT_VD, vd);      
-      //session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, sCRFmsg);
-      data.getCurationServlet().storeStatusMsg(sCRFmsg);
+          data.getCurationServlet().storeStatusMsg(sCRFmsg);
+      }
+      DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);      
+      //DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, sCRFmsg);
       return jsp;
     }
 
@@ -1051,7 +1055,7 @@ public class PVServlet implements Serializable
            }
            //put it back in the vd
            vd.setVD_PV_List(vCurVP); 
-           session.setAttribute(PVForm.SESSION_SELECT_VD, vd);
+           DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);
          }
          data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv" + pvInd);  //"pv" + pvInd + "View");     
        }
@@ -1090,7 +1094,7 @@ public class PVServlet implements Serializable
          //get the vm bean
          VMAction vmAct = new VMAction();
          vmAct.doAppendSelectVM(selRows, vRSel, pv);
-         session.setAttribute("NewPV", pv);
+         DataManager.setAttribute(session, "NewPV", pv);
        }
        data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "divpvnew");
        data.getRequest().setAttribute("refreshPageAction", "openNewPV");
@@ -1122,12 +1126,12 @@ public class PVServlet implements Serializable
          vd = data.getVD();
          Vector<EVS_Bean> vParentCon = vd.getReferenceConceptList();
          vd = data.getCurationServlet().doGetVDSystemName(data.getRequest(), vd, vParentCon);
-         session.setAttribute(PVForm.SESSION_SELECT_VD, vd); 
+         DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd); 
          //make the selected parent in hte session empty
-         session.setAttribute("SelectedParentName", "");
-         session.setAttribute("SelectedParentCC", "");
-         session.setAttribute("SelectedParentDB", "");
-         session.setAttribute("SelectedParentMetaSource", "");
+         DataManager.setAttribute(session, "SelectedParentName", "");
+         DataManager.setAttribute(session, "SelectedParentCC", "");
+         DataManager.setAttribute(session, "SelectedParentDB", "");
+         DataManager.setAttribute(session, "SelectedParentMetaSource", "");
       }
       catch (Exception e)
       {
@@ -1163,7 +1167,7 @@ public class PVServlet implements Serializable
        Vector<EVS_Bean> vParentCon = vd.getReferenceConceptList();
        vd = data.getCurationServlet().doGetVDSystemName(data.getRequest(), vd, vParentCon);
        vd.setVDNAME_CHANGED(true);
-       session.setAttribute(PVForm.SESSION_SELECT_VD, vd);
+       DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);
        //store the last page action in request
        data.getRequest().setAttribute("LastAction", "parSelected");
      }
@@ -1205,7 +1209,7 @@ public class PVServlet implements Serializable
        data.setVD(m_VD);
        pvAction.doNonEVSReference(sParName, sParDef, sParDefSource, data);
 
-       session.setAttribute(PVForm.SESSION_SELECT_VD, data.getVD()); 
+       DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, data.getVD()); 
        //store the last page action in request
        data.getRequest().setAttribute("LastAction", "parSelected");
      }
@@ -1269,7 +1273,7 @@ public class PVServlet implements Serializable
        int pvInd = (Integer)session.getAttribute(PVForm.SESSION_PV_INDEX);
        vdpv.setElementAt(selPV, pvInd);
        vd.setVD_PV_List(vdpv);
-       session.setAttribute(PVForm.SESSION_SELECT_VD, vd);
+       DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);
        data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv" + pvInd);
    }
    

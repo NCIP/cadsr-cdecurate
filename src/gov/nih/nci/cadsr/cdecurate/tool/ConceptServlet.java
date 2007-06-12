@@ -1,9 +1,11 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptServlet.java,v 1.10 2007-06-04 18:09:09 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptServlet.java,v 1.11 2007-06-12 20:26:17 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
+
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import java.io.Serializable;
 import java.util.Vector;
@@ -29,10 +31,10 @@ public class ConceptServlet implements Serializable
    * @param res
    *          HttpServletResponse object
    * @param ser
-   *          NCICurationServlet pointer
+   *          CurationServlet pointer
    * @param sAction String to recorgnize whether it is main page search or searchForCreate
    */
-  public ConceptServlet(HttpServletRequest req, HttpServletResponse res, NCICurationServlet ser, String sAction)
+  public ConceptServlet(HttpServletRequest req, HttpServletResponse res, CurationServlet ser, String sAction)
   {
     new ConceptServlet(req, res, ser);
     data.setACAction(sAction);
@@ -43,9 +45,9 @@ public class ConceptServlet implements Serializable
    * @param res
    *          HttpServletResponse object
    * @param ser
-   *          NCICurationServlet pointer
+   *          CurationServlet pointer
    */
-  public ConceptServlet(HttpServletRequest req, HttpServletResponse res, NCICurationServlet ser)
+  public ConceptServlet(HttpServletRequest req, HttpServletResponse res, CurationServlet ser)
   {
     data = new ConceptForm();
     data.setRequest(req);
@@ -113,28 +115,28 @@ public class ConceptServlet implements Serializable
         conAct.doConceptSearch(data);
       
       //put the data back in the session
-      session.setAttribute("creSearchInBlocks", sSearchIn);  //keep the search in criteria
-      session.setAttribute("SearchInEVS", sSearchInEVS);
-      session.setAttribute("creContextBlocks", sContext);
-      session.setAttribute("creKeyword", sKeyword);   //keep the old criteria
+      DataManager.setAttribute(session, "creSearchInBlocks", sSearchIn);  //keep the search in criteria
+      DataManager.setAttribute(session, "SearchInEVS", sSearchInEVS);
+      DataManager.setAttribute(session, "creContextBlocks", sContext);
+      DataManager.setAttribute(session, "creKeyword", sKeyword);   //keep the old criteria
       Vector vStat = data.getSelStatusList();
       if (sAction.equals(ConceptForm.SEARCH_AC_ACTION))
       {
-         session.setAttribute("creStatus", vStat);
+          DataManager.setAttribute(session, "creStatus", vStat);
          req.setAttribute("creStatusBlocks", vStat);
       }
       else
-         session.setAttribute("serStatus", vStat);
+          DataManager.setAttribute(session, "serStatus", vStat);
       //get the seelcted attributes
       Vector vSel = data.getSelAttributeList();
       if (sAction.equals("searchForCreate"))
-        session.setAttribute("creSelectedAttr", vSel);
+          DataManager.setAttribute(session, "creSelectedAttr", vSel);
       else
-        session.setAttribute("selectedAttr", vSel); 
+          DataManager.setAttribute(session, "selectedAttr", vSel); 
       
       //put the results back in the session
       vAC = data.getConceptList();
-      session.setAttribute("vACSearch", vAC);
+      DataManager.setAttribute(session, "vACSearch", vAC);
     }
     catch (RuntimeException e)
     {

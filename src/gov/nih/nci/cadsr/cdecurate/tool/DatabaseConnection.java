@@ -1,9 +1,11 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DatabaseConnection.java,v 1.9 2007-06-04 18:09:09 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DatabaseConnection.java,v 1.10 2007-06-12 20:26:17 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -151,8 +153,8 @@ public class DatabaseConnection extends HttpServlet
       Userbean.setUsername(Username);
       Userbean.setPassword(Password);
       Userbean.setDBAppContext("/cdecurate");
-      session.setAttribute("Userbean", Userbean);
-      session.setAttribute("Username", Username);
+      DataManager.setAttribute(session, "Userbean", Userbean);
+      DataManager.setAttribute(session, "Username", Username);
       this.verifyConnection(req);
     }
     catch (RuntimeException e)
@@ -186,13 +188,13 @@ public class DatabaseConnection extends HttpServlet
         
        if (conn != null)
        {
-        session.setAttribute("ConnectedToDB", "Yes");
+        DataManager.setAttribute(session, "ConnectedToDB", "Yes");
         conn.close();
        }
        else
        {
          logger.fatal("verifyConnection: no db connection");
-         session.setAttribute("ConnectedToDB", "No");    
+         DataManager.setAttribute(session, "ConnectedToDB", "No");    
        }
      }
      catch(Exception e)

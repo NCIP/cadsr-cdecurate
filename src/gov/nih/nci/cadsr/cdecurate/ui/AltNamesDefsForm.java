@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsForm.java,v 1.34 2007-06-04 18:09:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsForm.java,v 1.35 2007-06-12 20:26:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -43,16 +43,17 @@ public class AltNamesDefsForm
         _targetIdseq = _req.getParameter(AltNamesDefsServlet._parmIdseq);
         
         _nameDef = _req.getParameter(AltNamesDefsServlet._parmNameDef);
+        Alternates alt = _sess.getEdit();
         if (_nameDef == null || _nameDef.length() == 0)
-            _nameDef = _sess._editAlt.getName();
+            _nameDef = alt.getName();
         else if (_nameDef.length() > DBAccess._MAXDEFLEN)
             _nameDef = _nameDef.trim().substring(0, DBAccess._MAXDEFLEN);
 
         _contextID = _req.getParameter(AltNamesDefsServlet._parmContext);
         if (_contextID == null || _contextID.length() == 0)
         {
-            _contextID = _sess._editAlt.getConteIdseq();
-            _contextName = _sess._editAlt.getConteName();
+            _contextID = alt.getConteIdseq();
+            _contextName = alt.getConteName();
         }
         else
         {
@@ -61,11 +62,11 @@ public class AltNamesDefsForm
 
         _type = _req.getParameter(AltNamesDefsServlet._parmType);
         if (_type == null || _type.length() == 0)
-            _type = _sess._editAlt.getType();
+            _type = alt.getType();
         
         _lang = _req.getParameter(AltNamesDefsServlet._parmLang);
         if (_lang == null || _lang.length() == 0)
-            _lang = _sess._editAlt.getLanguage();
+            _lang = alt.getLanguage();
 
         _sort = _req.getParameter(AltNamesDefsServlet._reqSort);
         if (_sort == null || _sort.length() == 0)
@@ -78,19 +79,13 @@ public class AltNamesDefsForm
      */
     public void clearEdit()
     {
-        _sess.clearEdit();
+        _sess.clearEdit((_mode.equals(AltNamesDefsServlet._modeName)) ? Alternates._INSTANCENAME : Alternates._INSTANCEDEF);
         
         _nameDef = "";
         _type = "";
         _lang = "";
-        _contextID = _sess._conteIdseq[0];
-        _contextName = _sess._conteName[0];
-
-        _sess._editAlt.setAltIdseq(_sess.newIdseq());
-        _sess._editAlt.setInstance((_mode.equals(AltNamesDefsServlet._modeName)) ? Alternates._INSTANCENAME : Alternates._INSTANCEDEF);
-        _sess._editAlt.setConteIdseq(_contextID);
-        _sess._editAlt.setConteName(_contextName);
-        _sess._editAlt.setACIdseq(_sess._acIdseq[0]);
+        _contextID = _sess.getDefaultConteID();
+        _contextName = _sess.getDefaultConteName();
     }
 
     /**
@@ -162,7 +157,7 @@ public class AltNamesDefsForm
      */
     public void initialize(Alternates obj_)
     {
-        _sess._editAlt = obj_.dupl();
+        _sess.editInit(obj_);
         _mode = (obj_.isName()) ? AltNamesDefsServlet._modeName : AltNamesDefsServlet._modeDef;
         _nameDef = obj_.getName();
         _type = obj_.getType();
@@ -177,11 +172,7 @@ public class AltNamesDefsForm
      */
     public void save()
     {
-        _sess._editAlt.setName(_nameDef);
-        _sess._editAlt.setType(_type);
-        _sess._editAlt.setLanguage(_lang);
-        _sess._editAlt.setConteIdseq(_contextID);
-        _sess._editAlt.setConteName(_contextName);
+        _sess.editUpdates(_nameDef, _type, _lang, _contextID, _contextName);
     }
     
     /**
@@ -259,7 +250,7 @@ public class AltNamesDefsForm
         formats[AltNamesDefsServlet._classTypeAlt] = "(not used)";
         formats[AltNamesDefsServlet._classTypeCSI] = AltNamesDefsServlet._formatHTMLcsiEdit;
         formats[AltNamesDefsServlet._classTypeCS] = AltNamesDefsServlet._formatHTMLcsEdit;
-        _req.setAttribute(AltNamesDefsServlet._reqCSIList, toHTML(_sess._editAlt.getCSITree(), formats));
+        _req.setAttribute(AltNamesDefsServlet._reqCSIList, toHTML(_sess.getEditCSITree(), formats));
     }
 
     public HttpServletRequest _req;

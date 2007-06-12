@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/PermissibleValue.jsp,v 1.26 2007-06-01 22:20:48 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/PermissibleValue.jsp,v 1.27 2007-06-12 20:27:24 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -372,6 +372,8 @@
 													[click here]
 												</b>
 											</a>
+											&nbsp;&nbsp;&nbsp;&nbsp;
+											<img name="Message2" src="Assets/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
 											<br />
 											<hr />
 											Create a Permissible Value

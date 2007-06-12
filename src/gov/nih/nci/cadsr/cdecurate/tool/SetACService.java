@@ -1,9 +1,11 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.49 2007-06-04 18:09:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.50 2007-06-12 20:26:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
+
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -107,7 +109,7 @@ public class SetACService implements Serializable
    */
   private static final long serialVersionUID = 1L;
   UtilService m_util = new UtilService();
-  NCICurationServlet m_servlet;
+  CurationServlet m_servlet;
   Logger logger = Logger.getLogger(SetACService.class.getName());
   Vector<String> m_vRetWFS = new Vector<String>();
   Vector<String> m_ReleaseWFS = new Vector<String>();
@@ -115,9 +117,9 @@ public class SetACService implements Serializable
 
  /**
   * Instantiate the class
-  * @param CurationServlet NCICurationServlet
+  * @param CurationServlet CurationServlet
   */
-  public SetACService(NCICurationServlet CurationServlet)
+  public SetACService(CurationServlet CurationServlet)
   {
     m_servlet = CurationServlet;
     //default retired work flow statuses
@@ -141,7 +143,7 @@ public class SetACService implements Serializable
   }
   
  /**
-  * To check validity of the data for Data Element component before submission, called from NCICurationServlet.
+  * To check validity of the data for Data Element component before submission, called from CurationServlet.
   * Validation is done against Database restriction and ISO1179 standards.
   * Some validations are seperated according to Edit or Create actions.
   * calls various methods to get validity messages and store it into the vector.
@@ -193,7 +195,7 @@ public class SetACService implements Serializable
   
         if ((sUser != null) && (sID != null))
             strInValid = checkWritePermission("de", sUser, sID, getAC);
-        if (strInValid.equals("")) session.setAttribute("sDefaultContext", s);
+        if (strInValid.equals("")) DataManager.setAttribute(session, "sDefaultContext", s);
         UtilService.setValPageVector(vValidate, "Context", s, bMandatory, iNoLengthLimit, strInValid, sOriginAction);
   
         s = m_DE.getDE_DEC_NAME();
@@ -528,7 +530,7 @@ public class SetACService implements Serializable
   }  // end of addDDEToDEValidatePage
    
  /**
-  * To check validity of the data for Data Element Concept component before submission, called from NCICurationServlet.
+  * To check validity of the data for Data Element Concept component before submission, called from CurationServlet.
   * Validation is done against Database restriction and ISO1179 standards.
   * Some validations are seperated according to Edit or Create actions.
   * calls various methods to get validity messages and store it into the vector.
@@ -585,7 +587,7 @@ public class SetACService implements Serializable
  // System.out.println("setValidatePageValuesDEC0");
       if ((sUser != null) && (sID != null))
         strInValid = checkWritePermission("dec", sUser, sID, getAC);
-      if (strInValid.equals("")) session.setAttribute("sDefaultContext", s);
+      if (strInValid.equals("")) DataManager.setAttribute(session, "sDefaultContext", s);
       UtilService.setValPageVector(vValidate, "Context", s, bMandatory, 36, strInValid, sOriginAction);
       //validate naming components
       this.setValidateNameComp(vValidate, "DataElementConcept", req, res, m_DEC, m_OC, m_PC, null, null);
@@ -789,7 +791,7 @@ public class SetACService implements Serializable
   }
 
  /**
-  * To check validity of the data for Value Domain component before submission, called from NCICurationServlet.
+  * To check validity of the data for Value Domain component before submission, called from CurationServlet.
   * Validation is done against Database restriction and ISO1179 standards.
   * Some validations are seperated according to Edit or Create actions.
   * calls various methods to get validity messages and store it into the vector.
@@ -846,7 +848,7 @@ public class SetACService implements Serializable
       String sID = m_VD.getVD_CONTE_IDSEQ();
       if ((sUser != null) && (sID != null))
         strInValid = checkWritePermission("vd", sUser, sID, getAC);
-      if (strInValid.equals("")) session.setAttribute("sDefaultContext", s);
+      if (strInValid.equals("")) DataManager.setAttribute(session, "sDefaultContext", s);
         UtilService.setValPageVector(vValidate, "Context", s, bMandatory, 36, strInValid, sOriginAction);
 
       s = m_VD.getVD_TYPE_FLAG();
@@ -1026,7 +1028,7 @@ public class SetACService implements Serializable
 
 
   /**
-  * To check validity of the data for Permissible Values component before submission, called from NCICurationServlet.
+  * To check validity of the data for Permissible Values component before submission, called from CurationServlet.
   * Validation is done against Database restriction and ISO1179 standards.
   * calls various methods to get validity messages and store it into the vector.
   * Valid/Invalid Messages are stored in request Vector 'vValidate' along with the field, data.
@@ -1764,7 +1766,7 @@ public class SetACService implements Serializable
 
    /**
   * To check for existence of value-meaning pair, return idseq if exist, else create new and return idseq
-  * called from NCICurationServlet.
+  * called from CurationServlet.
   *
   * @param req The HttpServletRequest object.
   * @param res HttpServletResponse object.
@@ -3164,7 +3166,7 @@ public class SetACService implements Serializable
   }
 
 /**
- * To set the values from request to Data Element Bean, called from NCICurationServlet.
+ * To set the values from request to Data Element Bean, called from CurationServlet.
  *
  * @param req The HttpServletRequest object.
  * @param res HttpServletResponse object.
@@ -3396,7 +3398,7 @@ public class SetACService implements Serializable
 
 
   /**
-   * To set the values from request to Data ElementConcept Bean, called from NCICurationServlet.
+   * To set the values from request to Data ElementConcept Bean, called from CurationServlet.
    *
    * @param req The HttpServletRequest object.
    * @param res HttpServletResponse object.
@@ -3803,7 +3805,7 @@ public class SetACService implements Serializable
   }
 
   /**
-  * To set the values from request to Value Domain Bean, called from NCICurationServlet.
+  * To set the values from request to Value Domain Bean, called from CurationServlet.
   *
   * @param req The HttpServletRequest object.
   * @param res HttpServletResponse object.
@@ -4124,7 +4126,7 @@ public class SetACService implements Serializable
   } // end of setVDValueFromPage
 
   /**
-   * To set the values from request to Permissible Value Bean, called from NCICurationServlet.
+   * To set the values from request to Permissible Value Bean, called from CurationServlet.
    *
    * @param req The HttpServletRequest object.
    * @param res HttpServletResponse object.
@@ -4228,9 +4230,9 @@ public class SetACService implements Serializable
         Vector<PV_Bean> vVDPVList = vd.getVD_PV_List();  // (Vector)session.getAttribute("VDPVList");
         if (vVDPVList == null) vVDPVList = new Vector<PV_Bean>();
         vVDPVList.addElement(oldPV);
-       // session.setAttribute("VDPVList", vVDPVList);  
+       // DataManager.setAttribute(session, "VDPVList", vVDPVList);  
         vd.setVD_PV_List(vVDPVList);
-        session.setAttribute("m_VD", vd);
+        DataManager.setAttribute(session, "m_VD", vd);
       }
     }
     catch (Exception e)
@@ -4478,7 +4480,7 @@ public class SetACService implements Serializable
                     if (vVV == null) vVV = new Vector<String>();
                     if (!vVV.contains(sVV))
                       vVV.addElement(sVV);
-                    session.setAttribute("NonMatchVV", vVV);
+                    DataManager.setAttribute(session, "NonMatchVV", vVV);
                   }
                 }
               }
@@ -4489,19 +4491,19 @@ public class SetACService implements Serializable
                // vCheckRow.addElement(pvID);
                 iPVChecked += 1;
                 if (iPVChecked == 1)
-                  session.setAttribute("m_PV", pvBean);                
+                  DataManager.setAttribute(session, "m_PV", pvBean);                
               } 
               vVDPVList.setElementAt(pvBean, j);  //reset the attribute with the bean attributes
             }  //end rsel check      
           } //end vdpv loop
           if (iPVChecked >1)
-            session.setAttribute("m_PV", new PV_Bean());
+            DataManager.setAttribute(session, "m_PV", new PV_Bean());
         }  //end vdpv has value
       } //end if not create pv
         //store it in session
-     // session.setAttribute("VDPVList", vVDPVList);
+     // DataManager.setAttribute(session, "VDPVList", vVDPVList);
       vd.setVD_PV_List(vVDPVList);
-      session.setAttribute("m_VD", vd);
+      DataManager.setAttribute(session, "m_VD", vd);
       Vector<PV_Bean> oldVDPVList = new Vector<PV_Bean>();
       for (int k =0; k<vVDPVList.size(); k++)
       {
@@ -4510,7 +4512,7 @@ public class SetACService implements Serializable
         oldVDPVList.addElement(cBean);
         //System.out.println(cBean.getPV_BEGIN_DATE() + " what is at set " + cBean.getPV_END_DATE());
       }
-      session.setAttribute("oldVDPVList", oldVDPVList);  //stor eit in the session
+      DataManager.setAttribute(session, "oldVDPVList", oldVDPVList);  //stor eit in the session
       if (!strInvalid.equals(""))
       {
         m_servlet.storeStatusMsg(strInvalid);

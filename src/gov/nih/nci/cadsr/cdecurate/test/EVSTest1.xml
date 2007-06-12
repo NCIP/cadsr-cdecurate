@@ -1,15 +1,15 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 
-<!-- $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/EVSTest1.xml,v 1.34 2007-06-04 18:09:09 hegdes Exp $
+<!-- $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/EVSTest1.xml,v 1.35 2007-06-12 20:26:17 hegdes Exp $
        $Name: not supported by cvs2svn $
  -->
 
 <properties>
     
-        <!-- Specify the caDSR database being used by the Curation Tool to be tested.
+        <!-- Specify the caDSR database being used by the Curation Tool to be tested.-->
         <entry key="DSurl">cbiodb2-d.nci.nih.gov:1521:CBDEV</entry>
-        -->
-        <entry key="DSurl">cbiodb10.nci.nih.gov:1521:CBPROD</entry>
+        
+     <!--    <entry key="DSurl">cbiodb10.nci.nih.gov:1521:CBPROD</entry> -->
         <entry key="DSusername">guest</entry>
         <entry key="DSpassword">guest</entry>
 
@@ -17,7 +17,7 @@
             from the tool options table in the caDSR identified above.
         		<entry key="evs.url">http://cabio-lexbig.nci.nih.gov/cacore32/http/remoteService</entry>
 		-->
-        <entry key="evs.url">http://cabio.nci.nih.gov/cacore32/http/remoteService</entry>
+        <entry key="evs.url">http://cabio-qa.nci.nih.gov/cacore32/http/remoteService</entry>
 
         <!-- Specify the sets of test data for the Vocabularies of interest. Each set is identified in the form
             of <data type>.<set number>. The code and name in each set must match the query results

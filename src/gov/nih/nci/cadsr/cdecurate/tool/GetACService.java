@@ -1,10 +1,12 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.45 2007-06-04 18:09:10 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.46 2007-06-12 20:26:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.util.AddOns;
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+
 import java.io.Serializable;
 import java.util.*;
 import java.sql.*;
@@ -29,7 +31,7 @@ public class GetACService implements Serializable
     private static final long serialVersionUID = 6486668887681006373L;
 
     // Connection conn = null;
-    private NCICurationServlet       m_servlet;
+    private CurationServlet       m_servlet;
 
     private UtilService                     m_util           = new UtilService();
 
@@ -47,9 +49,9 @@ public class GetACService implements Serializable
      * @param res
      *            HttpServletResponse object
      * @param CurationServlet
-     *            NCICurationServlet object
+     *            CurationServlet object
      */
-    public GetACService(HttpServletRequest req, HttpServletResponse res, NCICurationServlet CurationServlet)
+    public GetACService(HttpServletRequest req, HttpServletResponse res, CurationServlet CurationServlet)
     {
         m_classReq = req;
         m_classRes = res;
@@ -92,10 +94,10 @@ public class GetACService implements Serializable
             conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (conn != null)
             {
-                session.setAttribute("ConnectedToDB", "Yes");
+                DataManager.setAttribute(session, "ConnectedToDB", "Yes");
                 Vector<String> v;
                 Vector<String> vID;
-                session.setAttribute("ContextInList", sContext);
+                DataManager.setAttribute(session, "ContextInList", sContext);
                 // get cs-csi relationship data
                 getCSCSIListBean();
                 Vector vCon = (Vector) session.getAttribute("vContext");
@@ -104,8 +106,8 @@ public class GetACService implements Serializable
                     v = new Vector<String>();
                     vID = new Vector<String>();
                     getContextList(vID, v);
-                    session.setAttribute("vContext", v);
-                    session.setAttribute("vContext_ID", vID);
+                    DataManager.setAttribute(session, "vContext", v);
+                    DataManager.setAttribute(session, "vContext_ID", vID);
                 }
                 if (session.getAttribute("vWriteContextDE") == null)
                 {
@@ -113,104 +115,104 @@ public class GetACService implements Serializable
                     v = new Vector<String>();
                     vID = new Vector<String>();
                     getWriteContextList(vID, v, sUser, "DATAELEMENT");
-                    session.setAttribute("vWriteContextDE", v);
-                    session.setAttribute("vWriteContextDE_ID", vID);
+                    DataManager.setAttribute(session, "vWriteContextDE", v);
+                    DataManager.setAttribute(session, "vWriteContextDE_ID", vID);
                     v = new Vector<String>();
                     vID = new Vector<String>();
                     getWriteContextList(vID, v, sUser, "DE_CONCEPT");
-                    session.setAttribute("vWriteContextDEC", v);
-                    session.setAttribute("vWriteContextDEC_ID", vID);
+                    DataManager.setAttribute(session, "vWriteContextDEC", v);
+                    DataManager.setAttribute(session, "vWriteContextDEC_ID", vID);
                     v = new Vector<String>();
                     vID = new Vector<String>();
                     getWriteContextList(vID, v, sUser, "VALUEDOMAIN");
-                    session.setAttribute("vWriteContextVD", v);
-                    session.setAttribute("vWriteContextVD_ID", vID);
+                    DataManager.setAttribute(session, "vWriteContextVD", v);
+                    DataManager.setAttribute(session, "vWriteContextVD_ID", vID);
                 }
                 if (session.getAttribute("vUsers") == null)
                 {
                     v = new Vector<String>();
                     vID = new Vector<String>();
                     getUserList(vID, v);
-                    session.setAttribute("vUsers", vID);
-                    session.setAttribute("vUsersName", v);
+                    DataManager.setAttribute(session, "vUsers", vID);
+                    DataManager.setAttribute(session, "vUsersName", v);
                 }
                 if (session.getAttribute("vStatusALL") == null)
                 {
                     v = new Vector<String>();
                     getStatusList("", v);
-                    session.setAttribute("vStatusALL", v);
+                    DataManager.setAttribute(session, "vStatusALL", v);
                 }
                 if (session.getAttribute("vStatusDE") == null)
                 {
                     v = new Vector<String>();
                     getStatusList("DATAELEMENT", v);
-                    session.setAttribute("vStatusDE", v);
+                    DataManager.setAttribute(session, "vStatusDE", v);
                 }
                 if (session.getAttribute("vStatusDEC") == null)
                 {
                     v = new Vector<String>();
                     getStatusList("DE_CONCEPT", v);
-                    session.setAttribute("vStatusDEC", v);
+                    DataManager.setAttribute(session, "vStatusDEC", v);
                 }
                 if (session.getAttribute("vStatusVD") == null)
                 {
                     v = new Vector<String>();
                     getStatusList("VALUEDOMAIN", v);
-                    session.setAttribute("vStatusVD", v);
+                    DataManager.setAttribute(session, "vStatusVD", v);
                 }
                 if (session.getAttribute("vStatusCD") == null)
                 {
                     v = new Vector<String>();
                     getStatusList("CONCEPTUALDOMAIN", v);
-                    session.setAttribute("vStatusCD", v);
+                    DataManager.setAttribute(session, "vStatusCD", v);
                 }
                 if (session.getAttribute("vLanguage") == null)
                 {
                     v = new Vector<String>();
                     getLanguageList(v);
-                    session.setAttribute("vLanguage", v);
+                    DataManager.setAttribute(session, "vLanguage", v);
                 }
                 if (session.getAttribute("vSource") == null)
                 {
                     v = new Vector<String>();
                     getSourceList(v);
-                    session.setAttribute("vSource", v);
+                    DataManager.setAttribute(session, "vSource", v);
                 }
                 if (session.getAttribute("vRegStatus") == null)
                 {
                     v = new Vector<String>();
                     getRegStatusList(v);
-                    session.setAttribute("vRegStatus", v);
+                    DataManager.setAttribute(session, "vRegStatus", v);
                 }
                 // list of ref documents used in the search
                 if (session.getAttribute("vRDocType") == null)
                 {
                     v = new Vector<String>();
                     this.getRDocTypesList(v);
-                    session.setAttribute("vRDocType", v);
+                    DataManager.setAttribute(session, "vRDocType", v);
                 }
                 if ((session.getAttribute("vCS") == null && sContext != null) || bNewContext)
                 {
                     v = new Vector<String>();
                     vID = new Vector<String>();
                     getCSList(vID, v, sContext);
-                    session.setAttribute("vCS", v);
-                    session.setAttribute("vCS_ID", vID);
+                    DataManager.setAttribute(session, "vCS", v);
+                    DataManager.setAttribute(session, "vCS_ID", vID);
                 }
                 // these two may not needed
                 if (session.getAttribute("vCSI") == null)
                 {
                     v = new Vector<String>();
                     vID = new Vector<String>();
-                    session.setAttribute("vCSI", v);
-                    session.setAttribute("vCSI_ID", vID);
+                    DataManager.setAttribute(session, "vCSI", v);
+                    DataManager.setAttribute(session, "vCSI_ID", vID);
                 }
                 if (session.getAttribute("vCSCSI_CS") == null)
                 {
                     v = new Vector<String>();
                     vID = new Vector<String>();
-                    session.setAttribute("vCSCSI_CS", vID);
-                    session.setAttribute("vCSCSI_CSI", v);
+                    DataManager.setAttribute(session, "vCSCSI_CS", vID);
+                    DataManager.setAttribute(session, "vCSCSI_CSI", v);
                 }
                 // the above two may not needed
                 if ((session.getAttribute("vCD") == null && sContext != null) || bNewContext)
@@ -218,8 +220,8 @@ public class GetACService implements Serializable
                     v = new Vector<String>();
                     vID = new Vector<String>();
                     getConceptualDomainList(vID, v, sContext);
-                    session.setAttribute("vCD", v);
-                    session.setAttribute("vCD_ID", vID);
+                    DataManager.setAttribute(session, "vCD", v);
+                    DataManager.setAttribute(session, "vCD_ID", vID);
                 }
                 if (session.getAttribute("vDataType") == null)
                 {
@@ -231,23 +233,23 @@ public class GetACService implements Serializable
                     v.insertElementAt("", 0);
                     vDesc.insertElementAt("", 0);
                     vComm.insertElementAt("", 0);
-                    session.setAttribute("vDataType", v);
-                    session.setAttribute("vDataTypeDesc", vDesc);
-                    session.setAttribute("vDataTypeComment", vComm);
+                    DataManager.setAttribute(session, "vDataType", v);
+                    DataManager.setAttribute(session, "vDataTypeDesc", vDesc);
+                    DataManager.setAttribute(session, "vDataTypeComment", vComm);
                 }
                 // list of uoml list
                 if (session.getAttribute("vUOM") == null)
                 {
                     v = new Vector<String>();
                     getUOMList(v);
-                    session.setAttribute("vUOM", v);
+                    DataManager.setAttribute(session, "vUOM", v);
                 }
                 // list of uoml format for vd
                 if (session.getAttribute("vUOMFormat") == null)
                 {
                     v = new Vector<String>();
                     getUOMFormatList(v);
-                    session.setAttribute("vUOMFormat", v);
+                    DataManager.setAttribute(session, "vUOMFormat", v);
                 }
                 // list of alternate names for create
                 if (session.getAttribute("AltNameTypes") == null)
@@ -285,7 +287,7 @@ public class GetACService implements Serializable
             else
             {
                 logger.fatal("getAClist: no db connection");
-                session.setAttribute("ConnectedToDB", "No");
+                DataManager.setAttribute(session, "ConnectedToDB", "No");
             }
         }
         catch (Exception e)
@@ -335,13 +337,13 @@ public class GetACService implements Serializable
             conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (conn != null)
             {
-                session.setAttribute("ConnectedToDB", "Yes");
+                DataManager.setAttribute(session, "ConnectedToDB", "Yes");
                 conn.close();
             }
             else
             {
                 logger.fatal("verifyConnection: no db connection");
-                session.setAttribute("ConnectedToDB", "No");
+                DataManager.setAttribute(session, "ConnectedToDB", "No");
             }
         }
         catch (Exception e)
@@ -640,7 +642,7 @@ public class GetACService implements Serializable
                 }
             }
             HttpSession session = m_classReq.getSession();
-            session.setAttribute("CSCSIList", vList);
+            DataManager.setAttribute(session, "CSCSIList", vList);
         }
         catch (Exception e)
         {
@@ -1387,7 +1389,7 @@ public class GetACService implements Serializable
                             + "select value from sbrext.tool_options_view_ext where property like 'EXCLUDE.DESIGNATION_TYPE.%' "
                             + ") order by upper(detl_name)";
             Vector<String> vT = getDataListSQL(sQuery);
-            session.setAttribute("AltNameTypes", vT);
+            DataManager.setAttribute(session, "AltNameTypes", vT);
         }
         catch (Exception e)
         {
@@ -1407,7 +1409,7 @@ public class GetACService implements Serializable
                             + "select value from sbrext.tool_options_view_ext where property like 'EXCLUDE.DOCUMENT_TYPE.%' "
                             + ") order by upper(dctl_name)";
             Vector<String> vT = getDataListSQL(sQuery);
-            session.setAttribute("RefDocTypes", vT);
+            DataManager.setAttribute(session, "RefDocTypes", vT);
         }
         catch (Exception e)
         {
@@ -1426,7 +1428,7 @@ public class GetACService implements Serializable
             String sQuery = "SELECT asl_name FROM sbr.ac_status_lov_view WHERE asl_name IN " +
                   "(select value from sbrext.tool_options_view_ext where property like 'INCLUDE.ASL.FILTER.%')";
             Vector<String> vT = getDataListSQL(sQuery);
-            session.setAttribute(Session_Data.SESSION_ASL_FILTER, vT);
+            DataManager.setAttribute(session, Session_Data.SESSION_ASL_FILTER, vT);
         }
         catch (Exception e)
         {
@@ -1451,7 +1453,7 @@ public class GetACService implements Serializable
                 select = "select crtl_name from sbr.complex_rep_type_lov_view "
                     + "order by upper(crtl_name)";
                 vT = getDataListSQL(select);
-                session.setAttribute("allDerTypes", vT);
+                DataManager.setAttribute(session, "allDerTypes", vT);
             }
 
             vT = (Vector) session.getAttribute("vRepType");
@@ -1461,7 +1463,7 @@ public class GetACService implements Serializable
                     + "select value from sbrext.tool_options_view_ext where property like 'INCLUDE.DERIVATION_TYPE.%' "
                     + ") order by upper(crtl_name)";
                 vT = getDataListSQL(select);
-                session.setAttribute("vRepType", vT);
+                DataManager.setAttribute(session, "vRepType", vT);
             }
         }
         catch (Exception e)
@@ -1625,7 +1627,7 @@ public class GetACService implements Serializable
         String sAPI = "{call SBREXT_CDE_CURATOR_PKG.GET_ORGANIZATION_LIST(?)}";
         Hashtable hOrg = this.getHashListFromAPI(sAPI);
         HttpSession session = (HttpSession) m_classReq.getSession();
-        session.setAttribute("Organizations", hOrg);
+        DataManager.setAttribute(session, "Organizations", hOrg);
     }
 
     /**
@@ -1636,7 +1638,7 @@ public class GetACService implements Serializable
         String sAPI = "{call SBREXT.SBREXT_CDE_CURATOR_PKG.GET_CONTACT_ROLES_LIST(?)}";
         Hashtable hOrg = this.getHashListFromAPI(sAPI);
         HttpSession session = (HttpSession) m_classReq.getSession();
-        session.setAttribute("ContactRoles", hOrg);
+        DataManager.setAttribute(session, "ContactRoles", hOrg);
         // System.out.println("get contact roles " + hOrg.size());
     }
 
@@ -1648,7 +1650,7 @@ public class GetACService implements Serializable
         String sAPI = "{call SBREXT_CDE_CURATOR_PKG.GET_COMM_TYPE_LIST(?)}";
         Hashtable hOrg = this.getHashListFromAPI(sAPI);
         HttpSession session = (HttpSession) m_classReq.getSession();
-        session.setAttribute("CommType", hOrg);
+        DataManager.setAttribute(session, "CommType", hOrg);
     }
 
     /**
@@ -1659,7 +1661,7 @@ public class GetACService implements Serializable
         String sAPI = "{call SBREXT_CDE_CURATOR_PKG.GET_ADDR_TYPE_LIST(?)}";
         Hashtable hOrg = this.getHashListFromAPI(sAPI);
         HttpSession session = (HttpSession) m_classReq.getSession();
-        session.setAttribute("AddrType", hOrg);
+        DataManager.setAttribute(session, "AddrType", hOrg);
     }
 
     /**
@@ -1725,7 +1727,7 @@ public class GetACService implements Serializable
         }
         // store it in the session attributes
         HttpSession session = (HttpSession) m_classReq.getSession();
-        session.setAttribute("Persons", hPer);
+        DataManager.setAttribute(session, "Persons", hPer);
     }
 
     /**
@@ -1749,6 +1751,6 @@ public class GetACService implements Serializable
                 }
             }
         }
-        session.setAttribute("NVPConcepts", vList);
+        DataManager.setAttribute(session, "NVPConcepts", vList);
     }
 }

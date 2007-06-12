@@ -789,7 +789,7 @@ public final class EVS_UserBeanStub implements Serializable
      * @param servlet
      *            servlet object
      */
-    public void getEVSInfoFromDSR(HttpServletRequest req, HttpServletResponse res, NCICurationServlet servlet)
+    public void getEVSInfoFromDSR(HttpServletRequest req, HttpServletResponse res, CurationServlet servlet)
     {
         logger.debug("here");
     }
