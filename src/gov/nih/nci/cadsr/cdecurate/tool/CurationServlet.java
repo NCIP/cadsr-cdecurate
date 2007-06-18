@@ -5047,7 +5047,12 @@ public class CurationServlet
                 // DataManager.setAttribute(session, "VDPVList", vVDPVList);
                 m_VD.setVD_PV_List(vVDPVList);
                 DataManager.setAttribute(session, "m_VD", m_VD);
-                // alert if value meaning alredy exists for pv on the page
+                // alert if value meaning alredy exists but updated with concept info
+                /*
+                 * if (updatedVDPVs != null && !updatedVDPVs.equals("")) { String stMsg = "The following Value and
+                 * Meaning is updated with the Concept Relationship. \\n"; InsACService insAC = new InsACService(req,
+                 * res, this); insAC.storeStatusMsg(stMsg + updatedVDPVs); }
+                 */// alert if value meaning alredy exists for pv on the page
                 if (notUpdateVDPVs != null && !notUpdateVDPVs.equals(""))
                 {
                     String stMsg = "The following Value and Meaning already exists in the Value Domain.\\n";

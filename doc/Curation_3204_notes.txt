@@ -263,7 +263,13 @@
     |CDE Curation Tool                   |
     +------------------------------------+
 
-    N/A
+    --  In the Curation Tool when an AC is Versioned, those
+        Alternate Names, Definitions and Reference Documents
+        associated to Contexts outside the Curator’s privileges
+        are not brought forward to the new Version. The use case
+        and Business Rules are being reviewed with the caDSR
+        Curators and changes, if needed, will be scheduled.
+
 
 
 ================================================================

@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.35 2007-06-12 20:26:17 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.36 2007-06-18 18:52:52 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -909,9 +909,19 @@ public class DBAccess
      */
     public Tree getCSI() throws ToolException
     {
+        return getCSI(null);
+    }
+        
+    /**
+     * Retrieve the Class Scheme hierarchy from the caDSR qualified by specific Contexts.
+     * 
+     * @return the CSI tree for the entire caDSR
+     */
+    public Tree getCSI(String[] contexts_) throws ToolException
+    {
         // Because the CSI is a hierarchy we can not sort it in the SQL. The Tree.add() methods will ensure the
         // syblings are sorted case insensitive.
-        String select = SQLSelectCSIAll.getCSIHierarchy();
+        String select = SQLSelectCSIAll.getCSIHierarchy(contexts_);
         
         Tree root = new Tree(new TreeNode("Class Scheme Items", null, false));
         

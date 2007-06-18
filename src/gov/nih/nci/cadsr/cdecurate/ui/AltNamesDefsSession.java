@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.35 2007-06-12 20:26:18 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.36 2007-06-18 18:52:53 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -1181,7 +1181,7 @@ public class AltNamesDefsSession implements Serializable
     {
         if (_cacheCSI == null)
         {
-            _cacheCSI = db_.getCSI();
+            _cacheCSI = db_.getCSI(_cacheContextIds);
         }
         if (_cacheAltTypes == null)
             _cacheAltTypes = db_.getDesignationTypes();
