@@ -240,19 +240,19 @@
     --  Only 2 PV’s are added when creating multiple PV’s from 
         EVS search results.
 
-    --  The misspelled word is “permanently”.
+    --  A spelling correction in the Reference Document Delete
+        confirmation message.
 
-    --  Current business rules prohibit deleting a PV referenced 
-        by a CRF.
+    --  Display a message informing the user the current business
+        rules prohibit deleting a PV referenced by a CRF.
 
-    --  Current business rules require an Alternate Name be unique 
-        for the AC, Alternate Name Type and Alternate Name Context. 
-        When this uniqueness is violated a database error occurs 
-        when submitting the AC.
+    --  A message is displayed after selecting Save for an Alt
+        Names/Def informing the user the current business rules
+        require an Alternate Name be unique for the AC, Alternate
+        Name Type and Alternate Name Context.
 
-    --  A validation message appears on the Reference Document 
-        Upload page when entering any URL that does not begin 
-        with http://.
+    --  https:// was not being recognized as a valid URL prefix
+        on the Reference Document Upload page.
 
 
 ----------------------------------------------------------------
