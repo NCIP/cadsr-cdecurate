@@ -177,25 +177,26 @@
     
     --  The http://.../FormalizationFailedServlet URL is now in 
         the Tools Options within the caDSR with similar 
-        configuration data.
+        configuration data. (GF 3269)
 
-    --  Added a Delete All button for the PV list.
+    --  Added a Delete All button for the PV list. (GF 3646)
 
     --  Include the Context dropdown on the Add/Edit pages for 
-        Alternate Names/Definitions.
+        Alternate Names/Definitions. (GF 3877)
 
     --  Provide separate Edit pages for a VM using the 
         established pattern and flow of DE, DEC and VD.
+        (GF 4412)
 
     --  Extend the Reference Document name length and CSI Label 
-        to 255.
+        to 255. (GF 4715)
 
-    --  Sort the Context dropdowns alphabetically.
+    --  Sort the Context dropdowns alphabetically. (GF 6417)
 
-    --  Change “Alternate Names” to “Alt Names/Defs”
+    --  Change "Alternate Names" to "Alt Names/Defs" (GF 6740)
 
     --  Update the EVS Vocabulary references to the latest 
-        production releases.
+        production releases. (GF 6907)
 
 
 ----------------------------------------------------------------
@@ -208,51 +209,54 @@
     
     --  Concepts with long names would distort the PV list 
         display for enumerated VD’s. This is most noticeable 
-        when the browser window is not maximized.
+        when the browser window is not maximized. (GF 3341)
 
     --  Adding new qualifier Concepts to a VM were not always 
-        saved.
+        saved. (GF 3697)
 
     --  While searching for the CSI gov.nih.nci.ncia.domain, no 
         results were returned until the search term was 
-        shortened and a wildcard suffixed.
+        shortened and a wildcard suffixed. (GF 4135)
 
     --  When creating a new PV and editing an existing PV the 
         Concept search link is not consistent. The preferred 
         format appears during Create where a separate link, 
-        "Search", appears next to the Concept label.
+        "Search", appears next to the Concept label. (GF 4168)
 
     --  When creating an Alternate Name/Definition for any AC 
-        when previously none existed, the word “null” will 
-        appear under the “Sort by Type” button.
+        when previously none existed, the word “null" will 
+        appear under the “Sort by Type" button. (GF 4171)
 
-    --  Erroneous messages are displayed on the Validation page 
-        after selecting “Age” as the Object Class and Property 
-        primary concept.
+    --  When creating a DEC, selecting Validate, Back and
+        Validate again will cause erroneous messages to appear
+        on the Validate page relating to the Object Class
+        and Property. The "Back" processing did not correctly
+        maintain edit values. (GF 4174)
 
     --  The message displayed on the Add Name and Add 
         Definition pages after selecting a CSI of Type 
-        UML_PACKAGE_ALIAS is confusing.
+        UML_PACKAGE_ALIAS is confusing. (GF 4175)
 
     --  When editing a PV associated to a CRF an information 
-        message appears.
+        message appears. (GF 4190)
 
     --  Only 2 PV’s are added when creating multiple PV’s from 
-        EVS search results.
+        EVS search results. (GF 4252)
 
     --  A spelling correction in the Reference Document Delete
-        confirmation message.
+        confirmation message. (GF 4309)
 
     --  Display a message informing the user the current business
         rules prohibit deleting a PV referenced by a CRF.
+        (GF 4475)
 
     --  A message is displayed after selecting Save for an Alt
         Names/Def informing the user the current business rules
         require an Alternate Name be unique for the AC, Alternate
-        Name Type and Alternate Name Context.
+        Name Type and Alternate Name Context. (GF 4550)
 
     --  https:// was not being recognized as a valid URL prefix
-        on the Reference Document Upload page.
+        on the Reference Document Upload page. (GF 6081)
 
 
 ----------------------------------------------------------------
@@ -263,12 +267,31 @@
     |CDE Curation Tool                   |
     +------------------------------------+
 
+    --  When creating or editing a list of Permissible Values
+        based on EVS concepts, whether in a new or existing
+        Value Domain, the Curation Tool displays a message that
+        seems confusing if the Value Domain is new: "The
+        following Value and Meaning already exists in the Value
+        Domain. Value: ..." This message can appear when the
+        user has attempted to add/create semantically equivalent
+        Permissible Values.  
+
+        This occurs when concepts from different vocabularies
+        in EVS are selected as the basis for Value Meanings, but
+        are found to be semantically equivalent through
+        validation against the Metathesaurus. The caDSR
+        business rules dictate that the PV will be based on the
+        NCIt concept. The error message will be revised in a
+        future release. (GF 6958)
+
     --  In the Curation Tool when an AC is Versioned, those
         Alternate Names, Definitions and Reference Documents
         associated to Contexts outside the Curator’s privileges
         are not brought forward to the new Version. The use case
         and Business Rules are being reviewed with the caDSR
         Curators and changes, if needed, will be scheduled.
+        (GF 7075)
+ 
 
 
 
