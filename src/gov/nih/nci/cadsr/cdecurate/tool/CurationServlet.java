@@ -815,6 +815,8 @@ public class CurationServlet
             String ConnectedToDB = (String) session.getAttribute("ConnectedToDB");
             if (ConnectedToDB != null && !ConnectedToDB.equals("No"))
             {
+                Userbean.setSuperuser(getAC.getSuperUserFlag(Username));
+
                 // get initial list from cadsr
                 Vector vList = null;
                 String aURL = null;

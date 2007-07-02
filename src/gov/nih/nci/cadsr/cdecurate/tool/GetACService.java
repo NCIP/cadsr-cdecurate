@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.46 2007-06-12 20:26:18 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.47 2007-07-02 20:29:18 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1562,6 +1562,67 @@ public class GetACService implements Serializable
             }
         }
         return vList;
+    }
+    
+    /**
+     * Get the user account "DER_ADMIN_IND" flag
+     * 
+     * @return true if admin is "Yes"
+     */
+    public boolean getSuperUserFlag(String user_)
+    {
+        boolean flag = false;
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+        conn = m_servlet.connectDB(m_classReq, m_classRes);
+        if (conn == null)
+            m_servlet.ErrorLogin(m_classReq, m_classRes);
+        else
+        {
+            try
+            {
+                pstmt = conn.prepareStatement("select der_admin_ind from sbr.user_accounts_view where ua_name = '" + user_.toUpperCase() + "'");
+                rs = pstmt.executeQuery();
+                if (rs.next())
+                    flag = rs.getString(1).equals("Yes");
+            }
+            catch (SQLException ex)
+            {
+                logger.fatal(ex.toString());
+            }
+            finally
+            {
+                try
+                {
+                    if (rs != null)
+                        rs.close();
+                }
+                catch (SQLException exx)
+                {
+                    // ignore it
+                }
+                try
+                {
+                    if (pstmt != null)
+                        pstmt.close();
+                }
+                catch (SQLException exx)
+                {
+                    // ignore it
+                }
+                try
+                {
+                    if (conn != null)
+                        conn.close();
+                }
+                catch (SQLException exx)
+                {
+                    // ignore it
+                }
+            }
+        }
+        return flag;
     }
 
     private Hashtable getHashListFromAPI(String sAPI)

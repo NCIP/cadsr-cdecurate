@@ -1,11 +1,13 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/ValueMeaningTitle.jsp,v 1.6 2007-06-12 20:27:24 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/ui/jsp/jsp/ValueMeaningTitle.jsp,v 1.7 2007-07-02 20:29:18 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <%  
       //UtilService serUtil = new UtilService();
+      Session_Data sData = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
+      String disabled = (sData.UsrBean.isSuperuser()) ? "" : "disabled";
       String sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
       String detailFocus = "TABX";
       String usedFocus = "TABX";
@@ -26,7 +28,7 @@
 			var elmPageAction = "<%=VMForm.ELM_PAGE_ACTION%>";
 </script>
 <div class="ind1">
-	<input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('<%=VMForm.ACT_VALIDATE_VM%>')">
+	<input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('<%=VMForm.ACT_VALIDATE_VM%>')" <%=disabled%>>
 	&nbsp;&nbsp;
 	<input type="button" name="btnClear" value="Clear" style="width:125" onClick="ClearBoxes();">
 	&nbsp;&nbsp;
