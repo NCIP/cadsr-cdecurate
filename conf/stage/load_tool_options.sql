@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/stage/load_tool_options.sql,v 1.44 2007-05-29 19:19:38 hebell Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/stage/load_tool_options.sql,v 1.45 2007-07-18 17:38:19 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Sumana Hegde
@@ -128,7 +128,7 @@ VALUES ('CURATION', 'EVS.VOCAB.1.VOCABCODETYPE', 'NCI_CONCEPT_CODE',
 
 --Store vocab meta source for the first vocabulary
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.VOCAB.1.METASOURCE', 'NCI2007_01D', 
+VALUES ('CURATION', 'EVS.VOCAB.1.METASOURCE', 'NCI2007_02C', 
 	   'Store vocab meta source for the first vocabulary');
 
 --Store vocab to mark if used for parent search for the first vocabulary
@@ -484,7 +484,7 @@ VALUES ('CURATION', 'EVS.DEFSOURCE.2', 'NCI-GLOSS_0701D',
 
 --Store NCI def source to filter out the multiple definition used
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.DEFSOURCE.3', 'NCI2007_01D',
+VALUES ('CURATION', 'EVS.DEFSOURCE.3', 'NCI2007_02C',
 	   'Store NCI def source to filter out the multiple definition used');
 
 --Store NCI def source to filter out the multiple definition used
@@ -505,7 +505,7 @@ VALUES ('CURATION', 'EVS.PREFERREDVOCAB', 'NCI_Thesaurus',
 	   
 --Store NCI Thesaurus source to get its source code used in replacing concept with preferred vocab (Thesaurus)
 INSERT INTO sbrext.tool_options_view_ext (tool_name, property, value, description)
-VALUES ('CURATION', 'EVS.PREFERREDVOCAB.SOURCE', 'NCI2007_01D',
+VALUES ('CURATION', 'EVS.PREFERREDVOCAB.SOURCE', 'NCI2007_02C',
 	   'Store NCI Thesaurus source to get its source code used in replacing concept with preferred vocab (Thesaurus)');
 
 	   
