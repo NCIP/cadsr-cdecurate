@@ -258,6 +258,13 @@
     --  https:// was not being recognized as a valid URL prefix
         on the Reference Document Upload page. (GF 6081)
 
+    --  Session data would become confused in special situations
+        when 2 or more requests were made at the same time and
+        1 of the requests was an update to content in the caDSR.
+        This was most recently seen as the "GUEST" account
+        appearing in the Created By and Modified By fields when
+        the change was really made by a Curator. (GF 7915)
+
 
 ----------------------------------------------------------------
     2.4 Known Issues
