@@ -1,0 +1,25 @@
+/* COPYRIGHT SCENPRO, INC, 2007
+
+   $HEADER: /CVSNT/CDECURATE/CONF/PROD/UPDATE_TOOL_OPTIONS_URL.SQL,V 1.4 2006/03/08 22:51:08 SHEGDE EXP $
+   $NAME:  $
+*/
+
+--This guarantees any error will rollback the changes and exits the script so it can be trapped 
+--during a build.
+whenever sqlerror exit sql.sqlcode rollback;
+
+MERGE INTO SBREXT.TOOL_OPTIONS_VIEW_EXT S USING (
+
+--Store evs  url specific to curation tool if needed. 
+
+SELECT 'EVS' AS TOOL_NAME, 'URL' AS PROPERTY, 'http://cabio.nci.nih.gov/cacore32/http/remoteService' AS VALUE, 'Store evs alternate url specific to curation tool if needed' AS DESCRIPTION FROM DUAL
+UNION
+SELECT 'CURATION' AS TOOL_NAME, 'EVS.URL' AS PROPERTY, 'http://cabio.nci.nih.gov/cacore32/http/remoteService' AS VALUE, 'Store evs alternate url specific to curation tool if needed' AS DESCRIPTION FROM DUAL
+)T 
+ON (S.TOOL_NAME = T.TOOL_NAME AND S.PROPERTY = T.PROPERTY) 
+WHEN MATCHED THEN 
+ UPDATE SET S.DESCRIPTION = T.DESCRIPTION 
+WHEN NOT MATCHED THEN INSERT (TOOL_NAME, PROPERTY, VALUE, DESCRIPTION) VALUES (T.TOOL_NAME, T.PROPERTY, T.VALUE, T.DESCRIPTION);
+
+--commit the updates 
+COMMIT;

@@ -1,0 +1,943 @@
+
+
+
+<html>
+	<head>
+		<title>
+			CDE Curation: Value Domain
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	</head>
+
+	<body bgcolor="#FFFFFF" text="#000000">
+		<table width="100%" border="2" cellpadding="0" cellspacing="0">
+			<tr>
+				<td height="95" valign="top" width="100%">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<col width="1px">
+						<col width="*">
+						<tr bgcolor="#A90101">
+							<td align="left">
+								<a href="http://www.cancer.gov" target=_blank>
+									<img src="images/brandtype.gif" border="0">
+								</a>
+							</td>
+							<td align="right">
+								<a href="http://www.cancer.gov" target=_blank>
+									<img src="images/tagline_nologo.gif" border="0">
+								</a>
+							</td>
+						</tr>
+
+						<tr>
+							<td colspan="2">
+								<a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr">
+									<img src="images/curation_banner2.gif" border="0" alt="caDSR Logo">
+								</a>
+							</td>
+						</tr>
+
+						<tr>
+							<td colspan="2">
+								<table style="border-collapse: collapse">
+									<colgroup>
+										<col />
+										<col />
+									</colgroup>
+									<TBODY />
+										<tr>
+											<td style="padding: 0in 1in 0in 0in">
+												User&nbsp;Name&nbsp;:&nbsp;sbrext
+											</td>
+											<td style="padding: 0in 0in 0in 0in">
+												<script>document.write('<scr'+'ipt src="js/xaramenu.js">'+'</scr'+'ipt>');document.write('<scr'+'ipt 				src="js/biztech_button.js">'+'</scr'+'ipt>');/*img src="images/biztech_button.gif" moduleid="myzara 					(project)\biztech_button_off.xws"*/</script>
+											</td>
+										</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td width="100%" valign="top">
+					<table width="100%" border="0">
+						<tr>
+							<td height="26" align="left" valign="top">
+								<input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('validate')" onHelp="showHelp('Help_CreateVD.html#createVDForm_Validation'); return false">
+								&nbsp;&nbsp;
+								<!--no need for clear button in the block edit-->
+								<input type="button" name="btnClear" value="Clear" style="width:125" onClick="ClearBoxes();">
+								&nbsp;&nbsp;
+
+								<input type="button" name="btnBack" value="Back" style="width:125" onClick="Back();">
+								&nbsp;&nbsp;
+
+
+								<input type="button" name="btnAltName" value="Alternate Names" style="width:125" onClick="openDesignateWindow('Alternate Names');" onHelp="showHelp('Help_Updates.html#newDECForm_altNames'); return false">
+								&nbsp;&nbsp;
+								<input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');" onHelp="showHelp('Help_Updates.html#newDECForm_refDocs'); return false">
+								&nbsp;&nbsp;
+								<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+							</td>
+						</tr>
+					</table>
+
+					<table width="100%" border=0>
+						<col width="4%">
+						<col width="96%">
+						<tr valign="middle">
+							<th colspan=2 height="40">
+								<div align="left">
+
+									<label>
+										<font size=4>
+											Edit Existing
+											<font color="#FF0000">
+												Value Domain
+											</font>
+										</font>
+									</label>
+
+								</div>
+							</th>
+						</tr>
+
+						<tr height="25" valign="bottom">
+							<td align="left" colspan=2 height="11">
+								<font color="#FF0000">
+									&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;
+								</font>
+								Indicates Required Field
+							</td>
+						</tr>
+						<tr height="25" valign="bottom">
+							<td align=right>
+								<font color="#FF0000">
+									*&nbsp;&nbsp;&nbsp;
+								</font>
+								1)
+							</td>
+							<td>
+								<font color="#FF0000">
+									Select
+									<font color="#000000">
+										Conceptual Domain
+									</font>
+								</font>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								&nbsp;
+							</td>
+							<td>
+								<select name="selConceptualDomain" size="1" style="width:430" multiple onHelp="showHelp('Help_CreateVD.html#createVDForm_selConceptualDomain'); return false">
+									<option value="B227ED46-D8B2-4A76-E034-0003BA12F5E7">
+										Activity - caBIG
+									</option>
+								</select>
+								&nbsp;&nbsp;
+								<font color="#FF0000">
+									<a href="javascript:SearchCDValue()">
+										Search
+									</a>
+								</font>
+							</td>
+						</tr>
+						<tr height="15">
+							<td>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<table width="85%" border="0" align="left" cellspacing="0" cellpadding="0">
+									<col width="3%">
+									<col width="30%">
+									<col width="4%">
+									<col width="4%">
+									<col width="32%">
+									<tr align=left>
+										<td align=right>
+											<font color="#FF0000">
+												*
+											</font>
+											2)
+										</td>
+										<td align=left>
+											<font color="#FF0000">
+												Create
+											</font>
+											Permissible Value
+
+										</td>
+										<td colspan="2">
+											&nbsp;
+										</td>
+										<td>
+											<img name="Message2" src="images/WaitMessageSmall.gif" width="130" height="26" alt="WaitMessage" style="visibility:hidden;">
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								&nbsp;
+							</td>
+							<td>
+								&nbsp;&nbsp;
+								<table width="60%" border="0">
+									<col width="60%">
+									<col width="35%">
+									<tr>
+										<td>
+											Select Parent Concept to Constrain Permissible Values
+										</td>
+										<td align="right">
+											<a href="javascript:doPVAction('createParent');">
+												Search Parent
+											</a>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								&nbsp;
+							</td>
+							<td>
+								<table width="70%" border="1" style="border-collapse: collapse;">
+									<col width="5%">
+									<col width="93%">
+									<tr>
+										<td>
+											<a href="" title="Remove Parent">
+												X
+											</a>
+										</td>
+										<td align="left">
+											<a href="javascript:doPVAction('createParent');">
+												Educational Activity C51306 NCI Thesaurus
+											</a>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr><td>&nbsp;</td></tr>
+						<tr>
+							<td>
+								&nbsp;
+							</td>
+							<td align="left">
+								&nbsp;&nbsp;&nbsp;
+								<input type="button" name="btnSelectPV" value="Search Concept(s)" style="width: 130" onClick="javascript:doPVAction('createPVMultiple');">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								&nbsp;
+							</td>
+							<td>
+								<table width="100%" border="1">
+									<tr>
+										<td>
+											<table width="99%" border="0">
+
+												<col width="2%">
+												<col width="15%">
+												<col width="45%">
+												<col width="9%">
+												<col width="9%">
+												<col width="8%">
+												<col width="7%">
+
+												<tr valign="middle">
+													<th>
+														&nbsp;&nbsp;
+													</th>
+													<th align="center">
+														<a href="javascript:sortPV('value');">
+															Permissible Value
+														</a>
+													</th>
+													<th align="center">
+														<a href="javascript:sortPV('meaning');">
+															Value Meaning
+														</a>
+													</th>
+													<th align="center">
+														<a href="">
+															Parent Concept
+														</a>
+													</th>
+													<!-- <th align="center"><a href="">Valid Value</a></th> -->
+													<th align="center">
+														<a href="javascript:sortPV('Origin');">
+															Value Origin
+														</a>
+													</th>
+													<th align="center">
+														<a href="javascript:sortPV('BeginDate');">
+															Begin Date
+														</a>
+													</th>
+													<th align="center">
+														<a href="javascript:sortPV('EndDate');">
+															End Date
+														</a>
+													</th>
+												</tr>
+												<tr valign="middle">
+													<th>
+														<a href="" title="Remove All">
+															X
+														</a>
+													</th>
+													<th align="center">
+														<a href="">
+															Create New
+														</a>
+													</th>
+													<th align="center">
+														<a href="">
+															Edit All
+														</a>
+														(Save All)
+													</th>
+													<th align="center">
+														&nbsp;&nbsp;
+													</th>
+													<!-- <th align="center"><a href="">Assign</a></th> -->
+													<th align="center">
+														<a href="">
+															Search
+														</a>
+													</th>
+													<th align="center">
+														<a href="">
+															Select
+														</a>
+													</th>
+													<th align="center">
+														<a href="">
+															Select
+														</a>
+													</th>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td>
+
+											<div id="Layer1" style="position:relative; z-index:1; overflow:auto; width:100%; height:480;">
+												<table width="100%" border=1 style="border-collapse: collapse;">
+
+													<col width="1%">
+													<col width="15%">
+													<col width="45%">
+													<col width="10%">
+													<col width="10%">
+													<col width="7%">
+													<col width="7%">
+
+													<tr>
+														<td align="center" valign="top">
+															<a href="" title="Save Item">
+																Save
+															</a>
+														</td>
+
+														<td valign="top">
+															<input type="text" name="txtPermValue" style="width:98%" size="20" maxlength=255 value="">
+														</td>
+														<td valign="top">
+															<table>
+																<col width=2%>
+																<col width=43%>
+																<col width=45%>
+																<tr>
+																	<td>
+																		<a href="">
+																			Save
+																		</a>
+																	</td>
+																	<td>
+																		<input type="text" name="txtVM" style="width:98%" size="20" maxlength=255 value="">
+																	</td>
+																	<td>
+																		<a href="">
+																			Search caDSR
+																		</a>
+																		&nbsp;&nbsp;&nbsp;&nbsp;
+																		<a href="">
+																			Alt Name
+																		</a>
+																		&nbsp;&nbsp;&nbsp;&nbsp;
+																		<a href="">
+																			Ref Doc
+																		</a>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		&nbsp;&nbsp;
+																	</td>
+																	<td colspan=2>
+																		<b>
+																			Value Meaning Description
+																		</b>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		&nbsp;&nbsp;
+																	</td>
+																	<td colspan=2>
+																		<textarea name="txtarVMD" cols="50%"></textarea>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		&nbsp;&nbsp;
+																	</td>
+																	<td colspan=2>
+																		<b>
+																			Value Meaning Concepts
+																		</b>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		&nbsp;&nbsp;
+																	</td>
+																	<td valign="top">
+																		<div style="border: 1px solid black;">
+																			<table width=100% border=0>
+																				<col width=2%>
+																				<col width=40%>
+																				<col width=20%>
+																				<col width=20%>
+																				<tr>
+																					<th>
+																						&nbsp;&nbsp;
+																					</th>
+																					<th colspan=2 align=left>
+																						<b>
+																							Qualifier Concepts
+																						</b>
+																					</th>
+																					<th>
+																						<a href="">
+																							Search
+																						</a>
+																					</th>
+																				</tr>
+																			</table>
+																		</div>
+																	</td>
+																	<td valign="top">
+																		<div style="border: 1px solid black;">
+																			<table width=100% border=0>
+																				<col width=2%>
+																				<col width=40%>
+																				<col width=20%>
+																				<col width=20%>
+																				<tr>
+																					<th>
+																						&nbsp;&nbsp;
+																					</th>
+																					<th colspan=2 align=left>
+																						<b>
+																							Primary concepts
+																						</b>
+																					</th>
+																					<th>
+																						<a href="">
+																							Search
+																						</a>
+																					</th>
+																				</tr>
+																				<tr>
+																					<td valign="top">
+																						&nbsp;&nbsp;
+																					</td>
+																					<td valign="top">
+																						&nbsp;&nbsp;
+																					</td>
+																					<td valign="top">
+																						&nbsp;&nbsp;
+																					</td>
+																					<td valign="top">
+																						&nbsp;&nbsp;
+																					</td>
+																				</tr>
+																			</table>
+																		</div>
+																	</td>
+																</tr>
+															</table>
+														</td>
+														<td valign="top">
+															&nbsp;&nbsp;
+														</td>
+
+														<td valign="top">
+															<br>
+															<a href="">
+																Search
+															</a>
+														</td>
+														<td valign="top">
+															<br>
+															<a href="">
+																Add
+															</a>
+														</td>
+														<td valign="top">
+															<br>
+															<a href="">
+																Add
+															</a>
+														</td>
+													</tr>
+
+
+													<tr>
+														<td align="center" valign="top">
+															<a href="" title="Remove Item">
+																x
+															</a>
+														</td>
+
+														<td valign="top">
+															<input type="text" name="txtPermValue" style="width:98%" size="20" maxlength=255 value="ADT">
+														</td>
+														<td valign="top">
+															<table>
+																<col width=2%>
+																<col width=43%>
+																<col width=45%>
+																<tr>
+																	<td>
+																		<a href="">
+																			Save
+																		</a>
+																		<br>
+																		(Edit)
+																	</td>
+																	<td>
+																		<input type="text" name="txtVM" style="width:98%" size="20" maxlength=255 value="Academic Detailing Training">
+																	</td>
+																	<td>
+																		<a href="">
+																			Search caDSR
+																		</a>
+																		&nbsp;&nbsp;&nbsp;&nbsp;
+																		<a href="">
+																			Alt Name
+																		</a>
+																		&nbsp;&nbsp;&nbsp;&nbsp;
+																		<a href="">
+																			Ref Doc
+																		</a>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		&nbsp;&nbsp;
+																	</td>
+																	<td colspan=2>
+																		<b>
+																			Value Meaning Description
+																		</b>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		&nbsp;&nbsp;
+																	</td>
+																	<td colspan=2>
+																		<textarea name="txtarVMD" cols="50%">An approach to educating physicians in their offices. Academic detailing uses very short, relatively inexpensive, focused educational mechanism that can be used with physicians in the office. Ii involves short one-on-one conversation. _To teach with hands-on experience.</textarea>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		&nbsp;&nbsp;
+																	</td>
+																	<td colspan=2>
+																		<b>
+																			Value Meaning Concepts
+																		</b>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		&nbsp;&nbsp;
+																	</td>
+																	<td valign="top">
+																		<div style="border: 1px solid black;">
+																			<table width=100% border=0>
+																				<col width=2%>
+																				<col width=40%>
+																				<col width=20%>
+																				<col width=20%>
+																				<tr>
+																					<th>
+																						&nbsp;&nbsp;
+																					</th>
+																					<th colspan=2 align=left>
+																						<b>
+																							Qualifier Concepts
+																						</b>
+																					</th>
+																					<th>
+																						<a href="">
+																							Search
+																						</a>
+																					</th>
+																				</tr>
+																				<tr>
+																					<td valign="top">
+																						<a href="">
+																							x
+																						</a>
+																					</td>
+																					<td valign="top">
+																						Academic Detailing
+																					</td>
+																					<td valign="top">
+																						C20054
+																					</td>
+																					<td valign="top">
+																						NCI Thesaurus
+																					</td>
+																				</tr>
+																			</table>
+																		</div>
+																	</td>
+																	<td valign="top">
+																		<div style="border: 1px solid black;">
+																			<table width=100% border=0>
+																				<col width=2%>
+																				<col width=40%>
+																				<col width=20%>
+																				<col width=20%>
+																				<tr>
+																					<th>
+																						&nbsp;&nbsp;
+																					</th>
+																					<th colspan=2 align=left>
+																						<b>
+																							Primary concepts
+																						</b>
+																					</th>
+																					<th>
+																						<a href="">
+																							Search
+																						</a>
+																					</th>
+																				</tr>
+																				<tr>
+																					<td valign="top">
+																						<a href="">
+																							x
+																						</a>
+																					</td>
+																					<td valign="top">
+																						Training
+																					</td>
+																					<td valign="top">
+																						C17705
+																					</td>
+																					<td valign="top">
+																						NCI Thesaurus
+																					</td>
+																				</tr>
+																			</table>
+																		</div>
+																	</td>
+																</tr>
+															</table>
+														</td>
+														<td valign="top">
+															C51306 NCI Thesaurus
+														</td>
+
+														<td valign="top">
+															DCP
+															<br>
+															<a href="">
+																Change
+															</a>
+														</td>
+														<td valign="top">
+															12/31/2003
+															<br>
+															<a href="">
+																Change
+															</a>
+														</td>
+														<td valign="top">
+															<br>
+															<a href="">
+																Add
+															</a>
+														</td>
+													</tr>
+
+													<tr>
+														<td align="right" valign="top">
+															<a href="" title="Remove Item">
+																x
+															</a>
+														</td>
+
+														<td valign="top">
+															<input type="text" name="txtPermValue" style="width:98%" size="20" maxlength=255 value="DLT">
+														</td>
+														<td valign="top">
+															<table>
+																<col width=2%>
+																<col width=43%>
+																<col width=45%>
+																<tr>
+																	<td>
+																		<a href="">
+																			Save
+																		</a>
+																		<br>
+																		(Edit)
+																	</td>
+																	<td>
+																		<input type="text" name="txtVM" style="width:98%" size="20" maxlength=255 value="Human Resource Training">
+																	</td>
+																	<td>
+																		<a href="">
+																			Search caDSR
+																		</a>
+																		&nbsp;&nbsp;&nbsp;&nbsp;
+																		<a href="">
+																			Alt Name
+																		</a>
+																		&nbsp;&nbsp;&nbsp;&nbsp;
+																		<a href="">
+																			Ref Doc
+																		</a>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		&nbsp;&nbsp;
+																	</td>
+																	<td colspan=2>
+																		<b>
+																			Value Meaning Description
+																		</b>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		&nbsp;&nbsp;
+																	</td>
+																	<td colspan=2>
+																		<textarea name="txtarVMD" cols="50%">The bipedal primate mammal, Homo sapiens; belonging to man or mankind; pertaining to man or to the race of man; use of man as experimental subject or unit of analysis in research. _No Value Exists _To teach with hands-on experience.</textarea>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		&nbsp;&nbsp;
+																	</td>
+																	<td colspan=2>
+																		<b>
+																			Value Meaning Concepts
+																		</b>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		&nbsp;&nbsp;
+																	</td>
+																	<td valign="top">
+																		<div style="border: 1px solid black;">
+																			<table width=100% border=0>
+																				<col width=2%>
+																				<col width=40%>
+																				<col width=20%>
+																				<col width=20%>
+																				<tr>
+																					<th>
+																						&nbsp;&nbsp;
+																					</th>
+																					<th colspan=2 align=left>
+																						<b>
+																							Qualifier Concepts
+																						</b>
+																					</th>
+																					<th>
+																						<a href="">
+																							Search
+																						</a>
+																					</th>
+																				</tr>
+																				<tr>
+																					<td valign="top">
+																						<a href="">
+																							x
+																						</a>
+																					</td>
+																					<td valign="top">
+																						Human
+																					</td>
+																					<td valign="top">
+																						C14225
+																					</td>
+																					<td valign="top">
+																						NCI Thesaurus
+																					</td>
+																				</tr>
+																				<tr>
+																					<td valign="top">
+																						<a href="">
+																							x
+																						</a>
+																					</td>
+																					<td valign="top">
+																						Resource
+																					</td>
+																					<td valign="top">
+																						CL314175
+																					</td>
+																					<td valign="top">
+																						NCI Metathesaurus
+																					</td>
+																				</tr>
+																			</table>
+																		</div>
+																	</td>
+																	<td valign="top">
+																		<div style="border: 1px solid black;">
+																			<table width=100% border=0>
+																				<col width=2%>
+																				<col width=40%>
+																				<col width=20%>
+																				<col width=20%>
+																				<tr>
+																					<th>
+																						&nbsp;&nbsp;
+																					</th>
+																					<th colspan=2 align=left>
+																						<b>
+																							Primary concepts
+																						</b>
+																					</th>
+																					<th>
+																						<a href="">
+																							Search
+																						</a>
+																					</th>
+																				</tr>
+																				<tr>
+																					<td valign="top">
+																						<a href="">
+																							x
+																						</a>
+																					</td>
+																					<td valign="top">
+																						Training
+																					</td>
+																					<td valign="top">
+																						C17705
+																					</td>
+																					<td valign="top">
+																						NCI Thesaurus
+																					</td>
+																				</tr>
+																			</table>
+																		</div>
+																	</td>
+																</tr>
+															</table>
+														</td>
+														<td valign="top">
+															C51306 NCI Thesaurus
+														</td>
+
+														<td valign="top">
+															DCP
+															<br>
+															<a href="">
+																Change
+															</a>
+														</td>
+														<td valign="top">
+															12/31/2003
+															<br>
+															<a href="">
+																Change
+															</a>
+														</td>
+														<td valign="top">
+															<br>
+															<a href="">
+																Add
+															</a>
+														</td>
+													</tr>
+
+													<tr>
+														<td align="right" valign="top">
+															<a href="" title="Remove Item">
+																x
+															</a>
+														</td>
+														<td valign="top">
+															<input type="text" name="txtPermValue" style="width:98%" size="20" maxlength=255 value="SET">
+														</td>
+														<td valign="top">
+															<a href="">
+																Edit
+															</a>
+															&nbsp;&nbsp;
+															<input type="text" name="txtVM" style="width:75%" size="20" maxlength=255 value="Science Enrichment Training">
+														</td>
+														<td valign="top">
+															C51306 NCI Thesaurus
+														</td>
+
+														<td valign="top">
+															DCP
+															<br>
+															<a href="">
+																Change
+															</a>
+														</td>
+														<td valign="top">
+															12/31/2003
+															<br>
+															<a href="">
+																Change
+															</a>
+														</td>
+														<td valign="top">
+															<br>
+															<a href="">
+																Add
+															</a>
+														</td>
+													</tr>
+												</table>
+										</td>
+									</tr>
+									<!-- end enumerated -->
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
