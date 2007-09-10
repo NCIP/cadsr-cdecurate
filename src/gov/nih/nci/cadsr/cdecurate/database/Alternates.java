@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/Alternates.java,v 1.35 2007-06-12 20:26:17 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/Alternates.java,v 1.36 2007-09-10 17:18:20 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -60,9 +60,9 @@ public class Alternates
         + "<td class=\"alt3\" title=\"Language\">{[LANG]}</td>\n"
         + "</tr>\n";
     
-    private static final String EDITGLYPH = "<img src=\"Assets/edit.gif\" title=\"Edit\" onclick=\"doEdit(this);\"/>";
+    private static final String EDITGLYPH = "<img src=\"images/edit.gif\" title=\"Edit\" onclick=\"doEdit(this);\"/>";
     private static final String DELGLYPH1 = "<span class=\"restore\" title=\"Restore\" onclick=\"doRestore(this);\"/>&#81;</span>";
-    private static final String DELGLYPH2 = "<img src=\"Assets/delete.gif\" title=\"Delete\" onclick=\"doDelete(this);\"/>";
+    private static final String DELGLYPH2 = "<img src=\"images/delete.gif\" title=\"Delete\" onclick=\"doDelete(this);\"/>";
     
     public static final String _HTMLprefix = "<table>\n";
     public static final String _HTMLsuffix = "</table>\n";

@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.47 2007-07-02 20:29:18 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.48 2007-09-10 17:18:21 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1513,7 +1513,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("other problem in GetACService-getToolOptionData: " + e);
+            System.err.println("other problem in GetACService-getToolOptionData: " + e);
             logger.fatal("ERROR - GetACService-getToolOptionData for other : " + e.toString(), e);
         }
         try

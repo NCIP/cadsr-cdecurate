@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/EVSTest1.java,v 1.35 2007-06-12 20:26:17 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/EVSTest1.java,v 1.36 2007-09-10 17:18:20 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.test;
@@ -219,7 +219,7 @@ public class EVSTest1
             if (!temp.equals(evsURL))
                 _logger.warn("EVS URL in properties (" + evsURL + ") supersedes the URL in tool options (" + temp + ").");
         }
-//evsURL = _prop.getProperty("evs.url");
+
         // Return whatever we found.
         return evsURL;
     }
