@@ -1,0 +1,8 @@
+    <!-- ============================ -->
+    <!-- Setup the cdecurate category debug-->
+    <!-- ============================ -->
+
+    <category name="gov.nih.nci.cadsr.cdecurate" additivity="false">
+        <priority value="DEBUG" />
+        <appender-ref ref="CDECURATE_FILE" />
+    </category>
