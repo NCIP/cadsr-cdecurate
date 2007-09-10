@@ -32,10 +32,10 @@ import org.apache.log4j.Logger;
 /**
  * The CurationServlet is the main servlet for communicating between the client and the server.
  * <P>
- * 
+ *
  * @author Joe Zhou, Sumana Hegde, Tom Phillips, Jesse McKean
  * @version 3.0
- * 
+ *
  */
 /*
  * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. (“ScenPro”) Copyright Notice. The software
@@ -87,7 +87,7 @@ import org.apache.log4j.Logger;
  */
 /**
  * @author shegde
- * 
+ *
  */
 public class CurationServlet
 {
@@ -98,12 +98,12 @@ public class CurationServlet
     /** declare the global variable sessionData */
     public Session_Data        sessionData;
     private ServletContext m_servletContext;
-    
+
     /**
      * @param req HttpServletRequest object
      * @param res HttpServletResponse object
      * @param sc ServletContext object
-     * 
+     *
      */
     public CurationServlet(HttpServletRequest req, HttpServletResponse res, ServletContext sc)
     {
@@ -111,18 +111,18 @@ public class CurationServlet
         m_classRes = res;
         m_servletContext = sc;
     }
-    
+
     /**
-     * 
+     *
      */
     public CurationServlet()
     {
-        
+
     }
 
     /**
      * makes the loggin message with all the information
-     * 
+     *
      * @param req
      * @param sMethod
      *            string a function name this is called from
@@ -155,7 +155,7 @@ public class CurationServlet
 
     /**
      * display user friendly error message
-     * 
+     *
      * @param eMsg
      *            String message
      * @return String user friendly message
@@ -212,7 +212,7 @@ public class CurationServlet
 
     /**
      * free up the connection
-     * 
+     *
      * @param con
      */
     public void freeConnection(Connection con)
@@ -230,7 +230,7 @@ public class CurationServlet
 
     /**
      * since connection info is stored in the session, I should be able to use connect DB with out passing information
-     * 
+     *
      * @return Connnection object
      */
     public Connection connectDB()
@@ -242,7 +242,7 @@ public class CurationServlet
      * This method tries to connect to the db, returns the Connection object if successful, if unsuccessful tries to
      * reconnect, returns null if unsuccessful. Called from various classes needing a connection. forwards page
      * 'CDELoginPageError2.jsp'.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
@@ -300,7 +300,7 @@ public class CurationServlet
 
     /**
      * The service method services all requests to this servlet.
-     * 
+     *
      */
     public void service()
     {
@@ -611,13 +611,13 @@ public class CurationServlet
 
     /**
      * The checkUserBean method gets the session then checks whether a Userbean exits. Called from 'service' method.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
      * @return userBeanExists
-     * 
+     *
      * @throws Exception
      */
     private UserBean checkUserBean(HttpServletRequest req, @SuppressWarnings("unused") HttpServletResponse res) throws Exception
@@ -646,14 +646,14 @@ public class CurationServlet
      * Called from 'service' method where reqType is 'newDEFromMenu', 'newDECFromMenu', 'newVDFromMenu' Sets some
      * intitial session attributes. Calls 'getAC.getACList' to get the Data list from the database for the selected
      * context. Sets session Bean and forwards the create page for the selected component.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
      * @param sACType
      *            The type of page being called, i.e. de, dec, or vd
-     * 
+     *
      * @throws Exception
      */
     private void doOpenCreateNewPages(HttpServletRequest req, HttpServletResponse res, String sACType) throws Exception
@@ -752,12 +752,12 @@ public class CurationServlet
     // ////////////////////////////////////////////////////////////////////////////////////
     /**
      * The doLogin method forwards to CDEHomePage.jsp.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doLogin(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -769,12 +769,12 @@ public class CurationServlet
      * The doHomePage method gets the session, set some session attributes, then connects to the database. Called from
      * 'service' method where reqType is 'login', 'homePage' calls 'getAC.getACList' to get the Data list from the
      * database for the selected Context at login page. calls 'doOpenSearchPage' to open the home page.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client 04/15/03 Implement Realm Authentication connection
-     * 
+     *
      */
     public void doHomePage(HttpServletRequest req, HttpServletResponse res)
     {
@@ -912,12 +912,12 @@ public class CurationServlet
      * where reqType is 'newDEfromForm' Calls 'ValidateDE' if the action is Validate or submit. Calls 'doSuggestionDE'
      * if the action is open EVS Window. Calls 'doOpenCreateDECPage' if the action is create new DEC from DE Page. Calls
      * 'doOpenCreateVDPage' if the action is create new VD from VD Page.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doCreateDEActions(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -1038,12 +1038,12 @@ public class CurationServlet
      * 'EditDEfromForm' Calls 'ValidateDE' if the action is Validate or submit. Calls 'doSuggestionDE' if the action is
      * open EVS Window. Calls 'doOpenDECForEdit' if the action is Edit DEC from EditDE Page. Calls 'doOpenVDForEdit' if
      * the action is Edit VD from EditDE Page.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doEditDEActions(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -1175,7 +1175,7 @@ public class CurationServlet
      * and stores it in DE if from teh search. if from create or edit dec or vd, it refreshes DE bean with new dec or
      * vd. names of all three types will be stored in the bean for later use if type is changed, it populates name
      * according to type selected.
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @param res
@@ -1323,7 +1323,7 @@ public class CurationServlet
 
     /**
      * changes the dec name type as selected
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @param res
@@ -1366,7 +1366,7 @@ public class CurationServlet
 
     /**
      * changes the dec name type as selected
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @param res
@@ -1408,7 +1408,7 @@ public class CurationServlet
 
     /**
      * changes the dec name type as selected
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @param res
@@ -1458,12 +1458,12 @@ public class CurationServlet
      * 'm_setAC.setDEValueFromPage' to store the DE bean for later use Using the DEC idseq, calls 'SerAC.search_DEC'
      * method to gets dec attributes to populate. stores DEC bean in session and opens editDEC page. goes back to editDE
      * page if any error.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doOpenEditDECPage(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -1539,12 +1539,12 @@ public class CurationServlet
      * 'm_setAC.setDEValueFromPage' to store the DE bean for later use Using the VD idseq, calls 'SerAC.search_VD'
      * method to gets dec attributes to populate. stores VD bean in session and opens editVD page. goes back to editDE
      * page if any error.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doOpenEditVDPage(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -1622,12 +1622,12 @@ public class CurationServlet
      * The doCreateDECActions method handles CreateDEC or EditDEC actions of the request. Called from 'service' method
      * where reqType is 'newDECfromForm' Calls 'doValidateDEC' if the action is Validate or submit. Calls
      * 'doSuggestionDE' if the action is open EVS Window.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doCreateDECActions(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -1738,12 +1738,12 @@ public class CurationServlet
      * The doEditDECActions method handles EditDEC actions of the request. Called from 'service' method where reqType is
      * 'EditDEC' Calls 'ValidateDEC' if the action is Validate or submit. Calls 'doSuggestionDEC' if the action is open
      * EVS Window.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doEditDECActions(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -1845,12 +1845,12 @@ public class CurationServlet
      * The doCreateVDActions method handles CreateVD or EditVD actions of the request. Called from 'service' method
      * where reqType is 'newVDfromForm' Calls 'doValidateVD' if the action is Validate or submit. Calls 'doSuggestionDE'
      * if the action is open EVS Window.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doCreateVDActions(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -1987,12 +1987,12 @@ public class CurationServlet
      * The doEditDEActions method handles EditDE actions of the request. Called from 'service' method where reqType is
      * 'EditVD' Calls 'ValidateDE' if the action is Validate or submit. Calls 'doSuggestionDE' if the action is open EVS
      * Window.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doEditVDActions(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -2108,12 +2108,12 @@ public class CurationServlet
     /**
      * The doCreatePVActions method handles the submission of a CreatePV form Called from DON'T KNOW Calls
      * 'doValidatePV' if the action is Validate or submit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
@@ -2193,12 +2193,12 @@ public class CurationServlet
     /**
      * The doEditPVActions method handles the submission of a CreatePV form Calls 'doValidatePV' if the action is
      * Validate or submit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doEditPVActions(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -2216,12 +2216,12 @@ public class CurationServlet
     /**
      * The doEditVMActions method handles the submission of a CreatePV form Calls 'doValidateVM' if the action is
      * Validate or submit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doEditVMActions(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -2238,7 +2238,7 @@ public class CurationServlet
 
     /**
      * adds and removes alternate names and reference documents from the vectors
-     * 
+     *
      * @param req
      * @param pageAct
      * @throws java.lang.Exception
@@ -2258,7 +2258,7 @@ public class CurationServlet
 
     /**
      * adds alternate names to the vectors
-     * 
+     *
      * @param req
      * @throws java.lang.Exception
      */
@@ -2361,7 +2361,7 @@ public class CurationServlet
 
     /**
      * removes alternate names from the vectors
-     * 
+     *
      * @param req
      * @throws java.lang.Exception
      */
@@ -2435,7 +2435,7 @@ public class CurationServlet
 
     /**
      * adds reference documents to the vectors
-     * 
+     *
      * @param req
      * @throws java.lang.Exception
      */
@@ -2540,7 +2540,7 @@ public class CurationServlet
 
     /**
      * removes reference documents from the vectors
-     * 
+     *
      * @param req
      * @throws java.lang.Exception
      */
@@ -2614,7 +2614,7 @@ public class CurationServlet
 
     /**
      * stores altname and reference documetns created while maintaining ac in the ac bean
-     * 
+     *
      * @param req
      *            HttpServletRequest request object
      * @param res
@@ -2736,14 +2736,14 @@ public class CurationServlet
      * 'doCreateDECActions', 'doCreateVDActions' methods. Calls 'getAC.getACList' if the action is Validate or submit.
      * Stores empty bean and forwards the create page of the selected component. Stores selected context as default
      * session. If the create DEC and VD origin is DE, only store the new context in the bean.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
      * @param sACType
      *            String ac type
-     * 
+     *
      * @throws Exception
      */
     public void doChangeContext(HttpServletRequest req, HttpServletResponse res, String sACType) throws Exception
@@ -2796,12 +2796,12 @@ public class CurationServlet
      * 'setAC.setValidatePageValuesDE' to validate the data. Loops through the vector vValidate to check if everything
      * is valid and Calls 'doInsertDE' to insert the data. If vector contains invalid fields, forwards to validation
      * page
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doSubmitDE(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -2849,12 +2849,12 @@ public class CurationServlet
      * 'setAC.setValidatePageValuesDEC' to validate the data. Loops through the vector vValidate to check if everything
      * is valid and Calls 'doInsertDEC' to insert the data. If vector contains invalid fields, forwards to validation
      * page
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doSubmitDEC(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -2907,12 +2907,12 @@ public class CurationServlet
      * 'setAC.setValidatePageValuesVD' to validate the data. Loops through the vector vValidate to check if everything
      * is valid and Calls 'doInsertVD' to insert the data. If vector contains invalid fields, forwards to validation
      * page
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doSubmitVD(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -2967,12 +2967,12 @@ public class CurationServlet
      * to the Validate page Called from 'doCreateDEActions' method. Calls 'setAC.setDEValueFromPage' to set the data
      * from the page to the bean. Calls 'setAC.setValidatePageValuesDE' to validate the data. Stores 'm_DE' bean in
      * session. Forwards the page 'ValidateDEPage.jsp' with validation vector to display.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doValidateDE(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -2996,12 +2996,12 @@ public class CurationServlet
      * to the Validate page Called from 'doCreateDEActions' method. Calls 'setAC.setDEValueFromPage' to set the data
      * from the page to the bean. Calls 'setAC.setValidatePageValuesDE' to validate the data. Stores 'm_DE' bean in
      * session. Forwards the page 'ValidateDEPage.jsp' with validation vector to display.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doValidateDEBlockEdit(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -3047,12 +3047,12 @@ public class CurationServlet
      * 'setAC.setDECValueFromPage' to set the data from the page to the bean. Calls 'setAC.setValidatePageValuesDEC' to
      * validate the data. Stores 'm_DEC' bean in session. Forwards the page 'ValidateDECPage.jsp' with validation vector
      * to display.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doValidateDEC(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -3086,12 +3086,12 @@ public class CurationServlet
      * 'setAC.setDECValueFromPage' to set the data from the page to the bean. Calls 'setAC.setValidatePageValuesDEC' to
      * validate the data. Stores 'm_DEC' bean in session. Forwards the page 'ValidateDECPage.jsp' with validation vector
      * to display.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doValidateDECBlockEdit(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -3113,12 +3113,12 @@ public class CurationServlet
      * to the Validate page Called from 'doCreateVDActions', 'doSubmitVD' method. Calls 'setAC.setVDValueFromPage' to
      * set the data from the page to the bean. Calls 'setAC.setValidatePageValuesVD' to validate the data. Stores 'm_VD'
      * bean in session. Forwards the page 'ValidateVDPage.jsp' with validation vector to display.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doValidateVD(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -3156,14 +3156,14 @@ public class CurationServlet
      * The doSetVDPage method gets the values from page the user filled out, Calls 'setAC.setVDValueFromPage' to set the
      * data from the page to the bean. Stores 'm_VD' bean in session. Forwards the page 'CreateVDPage.jsp' with
      * validation vector to display.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
      * @param sOrigin
      *            origin where it is called from
-     * 
+     *
      * @throws Exception
      */
     public void doSetVDPage(HttpServletRequest req, HttpServletResponse res, String sOrigin) throws Exception
@@ -3272,7 +3272,7 @@ public class CurationServlet
     /**
      * gets the row number from the hiddenSelRow Loops through the selected row and gets the evs bean for that row from
      * the vector of evs search results. adds it to vList vector and return the vector back
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @return Vector of EVS Beans
@@ -3319,7 +3319,7 @@ public class CurationServlet
     /**
      * gets the row number from the hiddenSelRow Loops through the selected row and gets the evs bean for that row from
      * the vector of evs search results. adds it to vList vector and return the vector back
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @param vList
@@ -3363,7 +3363,7 @@ public class CurationServlet
                         logger.fatal(thisRow + " CurationServelt - getEVSSelRowVector:  Unable to obtain concept from the results.");
                         continue;
                     }
-                    vList.addElement(eBean);                 
+                    vList.addElement(eBean);
                 }
             }
             //add duplicate checks logic here
@@ -3373,10 +3373,10 @@ public class CurationServlet
         }
         return vList;
     }
-    
+
     /**
      * makes the vd's system generated name
-     * 
+     *
      * @param req
      *            HttpServletRequest object
      * @param vd
@@ -3444,7 +3444,7 @@ public class CurationServlet
 
     /**
      * fills in the non evs parent attributes and sends back to create non evs parent page to view details
-     * 
+     *
      * @param req
      *            HttpServletRequest object
      * @param res
@@ -3486,7 +3486,7 @@ public class CurationServlet
 
     /**
      * marks the parent and/or its pvs as deleted from the session.
-     * 
+     *
      * @param req
      * @param res
      * @param sPVAction
@@ -3588,7 +3588,7 @@ public class CurationServlet
 
     /**
      * splits the vd rep term from cadsr into individual concepts
-     * 
+     *
      * @param sComp
      *            name of the searched component
      * @param m_Bean
@@ -3599,7 +3599,7 @@ public class CurationServlet
      *            The HttpServletResponse back to the client
      * @param nameAction
      *            string naming action
-     * 
+     *
      */
     public void splitIntoConceptsVD(String sComp, EVS_Bean m_Bean, HttpServletRequest req, HttpServletResponse res,
                     String nameAction)
@@ -3654,7 +3654,7 @@ public class CurationServlet
 
     /**
      * splits the dec object class or property from cadsr into individual concepts
-     * 
+     *
      * @param sComp
      *            name of the searched component
      * @param m_Bean
@@ -3665,7 +3665,7 @@ public class CurationServlet
      *            The HttpServletResponse back to the client
      * @param nameAction
      *            string naming action
-     * 
+     *
      */
     public void splitIntoConcepts(String sComp, EVS_Bean m_Bean, HttpServletRequest req, HttpServletResponse res,
                     String nameAction)
@@ -3742,7 +3742,7 @@ public class CurationServlet
 
     /**
      * makes three types of preferred names and stores it in the bean
-     * 
+     *
      * @param req
      *            HttpServletRequest object
      * @param res
@@ -3966,7 +3966,7 @@ public class CurationServlet
     /**
      * this method is used to create preferred name for VD names of all three types will be stored in the bean for later
      * use if type is changed, it populates name according to type selected.
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @param res
@@ -4153,14 +4153,14 @@ public class CurationServlet
     }
 
     /**
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
      * @param nameAction
      *            string naming action
-     * 
+     *
      */
     @SuppressWarnings("unchecked")
     public void doDECUseSelection(HttpServletRequest req, HttpServletResponse res, String nameAction)
@@ -4293,7 +4293,7 @@ public class CurationServlet
 
     /**
      * adds the selected concept to the vector of concepts for property
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @param res
@@ -4387,7 +4387,7 @@ public class CurationServlet
 
     /**
      * adds the selected concept to the vector of concepts for property
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @param res
@@ -4477,14 +4477,14 @@ public class CurationServlet
     } // end addPropConcepts
 
     /**
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
      * @param nameAction
      *            stirng name action
-     * 
+     *
      */
     @SuppressWarnings("unchecked")
     public void doVDUseSelection(HttpServletRequest req, HttpServletResponse res, String nameAction)
@@ -4611,7 +4611,7 @@ public class CurationServlet
 
     /**
      * adds the selected concept to the vector of concepts for property
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @param res
@@ -4702,14 +4702,14 @@ public class CurationServlet
     } // end addRepConcepts
 
     /**
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
-     * 
+     *
      */
     @SuppressWarnings("unchecked")
     public void doRemoveBuildingBlocks(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -4836,14 +4836,14 @@ public class CurationServlet
     } // end of doRemoveQualifier
 
     /**
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
-     * 
+     *
      */
     @SuppressWarnings("unchecked")
     public void doRemoveBuildingBlocksVD(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -4922,14 +4922,14 @@ public class CurationServlet
 
     /**
      * to store the selected value meanings from EVS into pv bean to submit later.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
      * @param sPVAction
      *            string pv action
-     * 
+     *
      */
     public void doSelectVMConcept(HttpServletRequest req, HttpServletResponse res, String sPVAction)
     {
@@ -4966,8 +4966,8 @@ public class CurationServlet
                 for (int i = 0; i < vEVSList.size(); i++)
                 {
                     EVS_Bean eBean = (EVS_Bean) vEVSList.elementAt(i);
-                    EVS_UserBean eUser = (EVS_UserBean) this.sessionData.EvsUsrBean; // 
-                                                                                        
+                    EVS_UserBean eUser = (EVS_UserBean) this.sessionData.EvsUsrBean; //
+
                     if (eUser == null)
                         eUser = new EVS_UserBean();
                     // get the nci vocab if it meta or other vocab only if not referenced
@@ -5078,7 +5078,7 @@ public class CurationServlet
      * @param parBean EVS_Bean parent concept
      * @param sValue String value
      * @param sMean String value meaning
-     * @param updRow int single row 
+     * @param updRow int single row
      * @param isUpdated boolean value of updated or not
      * @return Vector<PV_Bean> object
      */
@@ -5127,18 +5127,18 @@ public class CurationServlet
         return vVPList;
     }
 
-    
+
     /**
      * The doValidateVD method gets the values from page the user filled out, validates the input, then forwards results
      * to the Validate page Called from 'doCreateVDActions', 'doSubmitVD' method. Calls 'setAC.setVDValueFromPage' to
      * set the data from the page to the bean. Calls 'setAC.setValidatePageValuesVD' to validate the data. Stores 'm_VD'
      * bean in session. Forwards the page 'ValidateVDPage.jsp' with validation vector to display.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doValidateVDBlockEdit(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -5161,12 +5161,12 @@ public class CurationServlet
      * from template, new version, or Edit actions, and 'CreateDEPage.jsp' for create new DE action. If ret is not null
      * stores the statusMessage as error message in session and forwards the page 'CreateDEPage.jsp' for create and
      * 'EditDEPage.jsp' for Edit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doInsertDE(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -5217,15 +5217,15 @@ public class CurationServlet
      * update record in the database and display the result. Called from 'doInsertDE' method when the aciton is editing.
      * Retrieves the session bean m_DE. calls 'insAC.setDE' to update the database. calls 'serAC.refreshData' to get the
      * refreshed search result forwards the page back to search page with refreshed list after updating.
-     * 
+     *
      * If ret is not null stores the statusMessage as error message in session and forwards the page back to
      * 'EditDEPage.jsp' for Edit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doUpdateDEAction(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -5292,15 +5292,15 @@ public class CurationServlet
      * create new DEC from Menu. Retrieves the session bean m_DE. calls 'insAC.setDE' to insert in the database. calls
      * 'serAC.refreshData' to get the refreshed search result for template/version forwards the page back to create DEC
      * page if new DE or back to search page if template or version after successful insert.
-     * 
+     *
      * If ret is not null stores the statusMessage as error message in session and forwards the page back to
      * 'createDEPage.jsp' for Edit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doInsertDEfromMenuAction(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -5440,15 +5440,15 @@ public class CurationServlet
      * creates new DE Component and back to CreateDE/EditDE. Called from 'doInsertDEfromMenuAction' method when
      * 'originAction' is 'CreateNewDEFComp'. Retrieves the session bean m_DE. calls 'insAC.setDE' to insert in the
      * database.
-     * 
+     *
      * If ret is not null stores the statusMessage as error message in session and forwards the page back to
      * 'createDEPage.jsp' for Edit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
@@ -5515,15 +5515,15 @@ public class CurationServlet
      * The doInsertDEC method to insert or update record in the database. Called from 'service' method where reqType is
      * 'validateDECFromForm'. Retrieves the session bean m_DEC. if the action is reEditDEC forwards the page back to
      * Edit or create pages.
-     * 
+     *
      * Otherwise, calls 'doUpdateDECAction' for editing the vd. calls 'doInsertDECfromDEAction' for creating the vd from
      * DE page. calls 'doInsertDECfromMenuAction' for creating the vd from menu .
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doInsertDEC(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -5576,12 +5576,12 @@ public class CurationServlet
      * sends back to EditDE page if origin is form DEpage otherwise calls 'serAC.refreshData' to get the refreshed
      * search result forwards the page back to search page with refreshed list after updating. If ret is not null stores
      * the statusMessage as error message in session and forwards the page back to 'EditDECPage.jsp' for Edit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doUpdateDECAction(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -5637,17 +5637,17 @@ public class CurationServlet
      * creates new record in the database and display the result. Called from 'doInsertDEC' method when the aciton is
      * create new DEC from DEPage. Retrieves the session bean m_DEC. calls 'insAC.setDEC' to update the database.
      * forwards the page back to create DE page after successful insert.
-     * 
+     *
      * If ret is not null stores the statusMessage as error message in session and forwards the page back to
      * 'createDECPage.jsp' for Edit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
      * @param sOrigin
      *            String value to check where this action originated.
-     * 
+     *
      * @throws Exception
      */
     public void doInsertDECfromDEAction(HttpServletRequest req, HttpServletResponse res, String sOrigin)
@@ -5689,14 +5689,14 @@ public class CurationServlet
     /**
      * to created object class, property and qualifier value from EVS into cadsr. Retrieves the session bean m_DEC.
      * calls 'insAC.setDECQualifier' to insert the database.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
      * @param DECBeanSR
      *            dec attribute bean.
-     * 
+     *
      * @return DEC_Bean return the bean with the changed attributes
      * @throws Exception
      */
@@ -5742,15 +5742,15 @@ public class CurationServlet
      * create new DEC from Menu. Retrieves the session bean m_DEC. calls 'insAC.setVD' to update the database. calls
      * 'serAC.refreshData' to get the refreshed search result for template/version forwards the page back to create DEC
      * page if new DEC or back to search page if template or version after successful insert.
-     * 
+     *
      * If ret is not null stores the statusMessage as error message in session and forwards the page back to
      * 'createDECPage.jsp' for Edit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doInsertDECfromMenuAction(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -5860,15 +5860,15 @@ public class CurationServlet
      * The doInsertVD method to insert or update record in the database. Called from 'service' method where reqType is
      * 'validateVDFromForm'. Retrieves the session bean m_VD. if the action is reEditVD forwards the page back to Edit
      * or create pages.
-     * 
+     *
      * Otherwise, calls 'doUpdateVDAction' for editing the vd. calls 'doInsertVDfromDEAction' for creating the vd from
      * DE page. calls 'doInsertVDfromMenuAction' for creating the vd from menu .
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doInsertVD(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -5933,15 +5933,15 @@ public class CurationServlet
      * Retrieves the session bean m_VD. calls 'insAC.setVD' to update the database. updates the DEbean and sends back to
      * EditDE page if origin is form DEpage otherwise calls 'serAC.refreshData' to get the refreshed search result
      * forwards the page back to search page with refreshed list after updating.
-     * 
+     *
      * If ret is not null stores the statusMessage as error message in session and forwards the page back to
      * 'EditVDPage.jsp' for Edit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doUpdateVDAction(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -6006,15 +6006,15 @@ public class CurationServlet
      * Retrieves the session bean m_VD. calls 'insAC.setVD' to update the database. updates the DEbean and sends back to
      * EditDE page if origin is form DEpage otherwise calls 'serAC.refreshData' to get the refreshed search result
      * forwards the page back to search page with refreshed list after updating.
-     * 
+     *
      * If ret is not null stores the statusMessage as error message in session and forwards the page back to
      * 'EditVDPage.jsp' for Edit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doUpdateVDActionBE(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -6156,12 +6156,12 @@ public class CurationServlet
 
     /**
      * called after setDEC or setVD to reset EVS session attributes
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void resetEVSBeans(HttpServletRequest req, @SuppressWarnings("unused") HttpServletResponse res) throws Exception
@@ -6189,14 +6189,14 @@ public class CurationServlet
 
     /**
      * updates bean the selected VD from the changed values of block edit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param VDBeanSR
      *            selected vd bean from search result
      * @param vd
      *            VD_Bean of the changed values.
-     * 
+     *
      * @throws Exception
      */
     public void InsertEditsIntoVDBeanSR(VD_Bean VDBeanSR, VD_Bean vd, @SuppressWarnings("unused") HttpServletRequest req) throws Exception
@@ -6386,14 +6386,14 @@ public class CurationServlet
 
     /**
      * updates bean the selected DEC from the changed values of block edit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param DECBeanSR
      *            selected DEC bean from search result
      * @param dec
      *            DEC_Bean of the changed values.
-     * 
+     *
      * @throws Exception
      */
     public void InsertEditsIntoDECBeanSR(DEC_Bean DECBeanSR, DEC_Bean dec, @SuppressWarnings("unused") HttpServletRequest req) throws Exception
@@ -6558,7 +6558,7 @@ public class CurationServlet
 
     /**
      * updates bean the selected DE from the changed values of block edit.
-     * 
+     *
      * @param DEBeanSR
      *            selected DE bean from search result
      * @param de
@@ -6762,14 +6762,14 @@ public class CurationServlet
 
     /**
      * updates bean the selected DE from the changed values of block edit.
-     * 
+     *
      * @param DEBeanSR
      *            selected DE bean from search result
      * @param de
      *            DE_Bean of the changed values.
      * @param req
      * @param res
-     * 
+     *
      * @return String valid if no version error
      * @throws Exception
      */
@@ -6809,12 +6809,12 @@ public class CurationServlet
 
     /**
      * gets the point or whole version number from old version for block versioning.
-     * 
+     *
      * @param version
      *            Version of the selected from the page either point or whole
      * @param lastVersion
      *            old Version number of the selected bean.
-     * 
+     *
      * @return newVersion version number that need to updated to.
      * @throws Exception
      */
@@ -6905,15 +6905,15 @@ public class CurationServlet
      * editing. Retrieves the session bean m_DEC. calls 'insAC.setDEC' to update the database. otherwise calls
      * 'serAC.refreshData' to get the refreshed search result forwards the page back to search page with refreshed list
      * after updating.
-     * 
+     *
      * If ret is not null stores the statusMessage as error message in session and forwards the page back to
      * 'EditDECPage.jsp' for Edit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doUpdateDECActionBE(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -7026,15 +7026,15 @@ public class CurationServlet
      * editing. Retrieves the session bean m_DEC. calls 'insAC.setDE' to update the database. otherwise calls
      * 'serAC.refreshData' to get the refreshed search result forwards the page back to search page with refreshed list
      * after updating.
-     * 
+     *
      * If ret is not null stores the statusMessage as error message in session and forwards the page back to
      * 'EditDEPage.jsp' for Edit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doUpdateDEActionBE(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -7151,17 +7151,17 @@ public class CurationServlet
      * creates new record in the database and display the result. Called from 'doInsertVD' method when the aciton is
      * create new VD from DEPage. Retrieves the session bean m_VD. calls 'insAC.setVD' to update the database. forwards
      * the page back to create DE page after successful insert.
-     * 
+     *
      * If ret is not null stores the statusMessage as error message in session and forwards the page back to
      * 'createVDPage.jsp' for Edit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
      * @param sOrigin
      *            string value from where vd creation action was originated.
-     * 
+     *
      * @throws Exception
      */
     public void doInsertVDfromDEAction(HttpServletRequest req, HttpServletResponse res, String sOrigin)
@@ -7202,14 +7202,14 @@ public class CurationServlet
     /**
      * to create object class, property, rep term and qualifier value from EVS into cadsr. Retrieves the session bean
      * m_VD. calls 'insAC.setDECQualifier' to insert the database.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
      * @param VDBeanSR
      *            dec attribute bean.
-     * 
+     *
      * @throws Exception
      */
     public void doInsertVDBlocks(HttpServletRequest req, HttpServletResponse res, VD_Bean VDBeanSR) throws Exception
@@ -7269,15 +7269,15 @@ public class CurationServlet
      * create new VD from Menu. Retrieves the session bean m_VD. calls 'insAC.setVD' to update the database. calls
      * 'serAC.refreshData' to get the refreshed search result for template/version forwards the page back to create VD
      * page if new VD or back to search page if template or version after successful insert.
-     * 
+     *
      * If ret is not null stores the statusMessage as error message in session and forwards the page back to
      * 'createVDPage.jsp' for Edit.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doInsertVDfromMenuAction(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -7400,12 +7400,12 @@ public class CurationServlet
 
     /**
      * The doSuggestionDE method forwards to EVSSearch jsp
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doSuggestionDE(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -7416,7 +7416,7 @@ public class CurationServlet
     /**
      * The doOpenCreatePVPage method gets the session, gets some values from the createVD page and stores in bean m_VD,
      * sets some session attributes, then forwards to CreatePV page
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
@@ -7425,7 +7425,7 @@ public class CurationServlet
      *            string pv action
      * @param vdPage
      *            string opened vd page
-     * 
+     *
      * @throws Exception
      */
     public void doOpenCreatePVPage(HttpServletRequest req, HttpServletResponse res, String sPVAction, String vdPage)
@@ -7463,12 +7463,12 @@ public class CurationServlet
     /**
      * The doJspErrorAction method is called when there is an error on a jsp page. User is forwarded to
      * SearchResultsPage
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doJspErrorAction(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -7479,12 +7479,12 @@ public class CurationServlet
     /**
      * The doSearchPV method gets the session, gets some values from the createVD page and stores in bean m_VD, sets
      * some session attributes, then forwards to CreatePV page
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doSearchPV(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -7513,13 +7513,13 @@ public class CurationServlet
     /**
      * The doOpenCreateVMPage method gets the session, gets some values from the createVD page and stores in bean m_VD,
      * sets some session attributes, then forwards to CreateVM page
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
      * @param origin
-     * 
+     *
      * @throws Exception
      */
     public void doOpenCreateVMPage(HttpServletRequest req, HttpServletResponse res, @SuppressWarnings("unused") String origin) throws Exception
@@ -7548,12 +7548,12 @@ public class CurationServlet
     /**
      * The doOpenCreateDECPage method gets the session, gets some values from the createDE page and stores in bean m_DE,
      * sets some session attributes, then forwards to CreateDEC page
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doOpenCreateDECPage(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -7580,12 +7580,12 @@ public class CurationServlet
     /**
      * The doOpenCreateDECompPage method get current primary DE bean, seve it to session as old DE Bean, then forward to
      * CreateDE page for DE Comp. It is called from doCreateDEActions and doEditDEActions
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doOpenCreateDECompPage(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -7618,12 +7618,12 @@ public class CurationServlet
     /**
      * The doOpenDEPageFromDEComp method set primary DE from old DE Bean back to current DE Bean, then forward to
      * CreateDE page or EditDE page. It is called from doCreateDEActions
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doOpenDEPageFromDEComp(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -7654,12 +7654,12 @@ public class CurationServlet
     /**
      * The doUpdateDDEInfo get DDE info from jsp page hidden fields and save them to session It is called from
      * doCreateDEActions and doEditDEActions
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
@@ -7743,12 +7743,12 @@ public class CurationServlet
 
     /**
      * The doInitDDEInfo set DDE data to session It is called from doOpenCreateNewPages and doOpenSearchPage
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doInitDDEInfo(HttpServletRequest req, @SuppressWarnings("unused") HttpServletResponse res) throws Exception
@@ -7774,12 +7774,12 @@ public class CurationServlet
     /**
      * The doOpenCreateVDPage method gets the session, gets some values from the createDE page and stores in bean m_DE,
      * sets some session attributes, then forwards to CreateVD page
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doOpenCreateVDPage(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -7830,12 +7830,12 @@ public class CurationServlet
      * 'getACSearch.getACShowResult' method when the action is a display attributes. calls 'doRefreshPageForSearchIn'
      * method when the action is searchInSelect. forwards JSP 'SearchResultsPage.jsp' if the action is not
      * searchForCreate. if action is searchForCreate forwards OpenSearchWindow.jsp
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doGetACSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -7930,7 +7930,7 @@ public class CurationServlet
      * parameters to store the selected values in the session according to what the menu action is forwards JSP
      * 'SearchResultsPage.jsp' if the action is not searchForCreate. if action is searchForCreate forwards
      * OpenSearchWindow.jsp
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
@@ -7939,7 +7939,7 @@ public class CurationServlet
      *            to distinguish between main search and search for create windows
      * @param actType
      *            type of filter a simple or advanced
-     * 
+     *
      * @throws Exception
      */
     private void doUIFilterChange(HttpServletRequest req, HttpServletResponse res, String menuAction, String actType)
@@ -7975,7 +7975,7 @@ public class CurationServlet
 
     /**
      * method to call all evs actions
-     * 
+     *
      * @param reqType
      *            String evs search action
      * @param req
@@ -8034,12 +8034,12 @@ public class CurationServlet
      * modifies the session attribute 'selectedAttr' or 'creSelectedAttr' according to what is selected. forwards JSP
      * 'SearchResultsPage.jsp' if the action is not searchForCreate. if action is searchForCreate forwards
      * OpenSearchWindow.jsp
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
@@ -8130,7 +8130,7 @@ public class CurationServlet
 
     /**
      * To add or remove search in attributes as seach in changed.
-     * 
+     *
      * @param sSearchAC
      *            String searching component
      * @param sSearchIn
@@ -8139,7 +8139,7 @@ public class CurationServlet
      *            Vector selected attribute
      * @param vComp
      *            Vector of all attributes of the selected component.
-     * 
+     *
      * @return Vector selected attribute vector
      * @throws Exception
      */
@@ -8232,14 +8232,14 @@ public class CurationServlet
     /**
      * resorts the display attributes from the component attributes after add/remove attributes of selected attribute
      * vector.
-     * 
+     *
      * @param vCompAttr
      *            list of attributes of the selected component
      * @param vSelectAttr
      *            list of selected attributes of according to the action
-     * 
+     *
      * @return return the sorted selected attributes list
-     * 
+     *
      * @throws Exception
      */
     public Vector<String> resortDisplayAttributes(Vector<String> vCompAttr, Vector<String> vSelectAttr)
@@ -8265,7 +8265,7 @@ public class CurationServlet
      * parameters to store the selected values in the session according to what the menu action is forwards JSP
      * 'SearchResultsPage.jsp' if the action is not searchForCreate. if action is searchForCreate forwards
      * OpenSearchWindow.jsp
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
@@ -8274,7 +8274,7 @@ public class CurationServlet
      *            to distinguish between main search and search for create windows
      * @param actType
      *            type of filter a simple or advanced
-     * 
+     *
      * @throws Exception
      */
     private void getSelectedAttr(HttpServletRequest req, HttpServletResponse res, String menuAction, String actType)
@@ -8365,13 +8365,13 @@ public class CurationServlet
      * modifies the session attribute 'selectedAttr' or 'creSelectedAttr' according to what is selected. forwards JSP
      * 'SearchResultsPage.jsp' if the action is not searchForCreate. if action is searchForCreate forwards
      * OpenSearchWindow.jsp
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
      * @param sOrigin
-     * 
+     *
      * @throws Exception
      */
     public void doRefreshPageOnSearchFor(HttpServletRequest req, HttpServletResponse res, String sOrigin)
@@ -8436,12 +8436,12 @@ public class CurationServlet
     /**
      * To search results by clicking on the column heading. Called from 'service' method where reqType is 'searchEVS'
      * forwards page 'EVSSearchPage.jsp'.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doSearchEVS(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -8468,12 +8468,12 @@ public class CurationServlet
      * 'getACSearch.getACShowResult' method when the action is a display attributes. forwards JSP
      * 'SearchResultsPage.jsp' if the action is not searchForCreate. if action is searchForCreate forwards
      * OpenSearchWindow.jsp
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doBlockSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -8536,12 +8536,12 @@ public class CurationServlet
      * 'getACSearch.getACShowResult' method when the action is a display attributes. forwards JSP
      * 'SearchResultsPage.jsp' if the action is not searchForCreate. if action is searchForCreate forwards
      * OpenSearchWindow.jsp
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doQualifierSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -8580,12 +8580,12 @@ public class CurationServlet
 
     /**
      * Sets a session attribute for a Building Block search. Called from 'service' method where reqType is 'newSearchBB'
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doNewSearchBB(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -8616,12 +8616,12 @@ public class CurationServlet
     /**
      * to get reference documents for the selected ac and doc type called when the reference docuemnts window opened
      * first time and calls 'getAC.getReferenceDocuments' forwards page back to reference documents
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     private void doRefDocSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -8636,12 +8636,12 @@ public class CurationServlet
     /**
      * to get alternate names for the selected ac and doc type called when the alternate names window opened first time
      * and calls 'getAC.getAlternateNames' forwards page back to alternate name window jsp
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     private void doAltNameSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -8661,12 +8661,12 @@ public class CurationServlet
     /**
      * to get Permissible Values for the selected ac called when the permissible value window opened first time and
      * calls 'getAC.doPVACSearch' forwards page back to Permissible Value window jsp
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     private void doPermValueSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -8687,12 +8687,12 @@ public class CurationServlet
     /**
      * to get Derived DE info and components called when the DerivedDEWindow opened first time and calls
      * 'getAC.getDDEInfo' forwards page back to DerivedDEWindow jsp
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
@@ -8729,7 +8729,7 @@ public class CurationServlet
 
     /**
      * display all the concepts for the selected ac from search results page
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @param res
@@ -8754,7 +8754,7 @@ public class CurationServlet
 
     /**
      * display conceptual for the selected vm from the search results.
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @param res
@@ -8782,7 +8782,7 @@ public class CurationServlet
     /**
      * contact action from create and edit ac pages to either remove the selected contact or store the modified contact
      * back in the ac bean
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @param sAct
@@ -8849,7 +8849,7 @@ public class CurationServlet
 
     /**
      * Contact edit action including open, view, edit comm, edit addr and change organization etc
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @param res
@@ -8970,7 +8970,7 @@ public class CurationServlet
 
     /**
      * Contact communication change actions
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @param ACBean
@@ -9085,7 +9085,7 @@ public class CurationServlet
 
     /**
      * Contact address change action
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @param ACBean
@@ -9239,12 +9239,12 @@ public class CurationServlet
     /**
      * to get Protocol CRF for the selected ac called when the ProtoCRF window opened first time and calls
      * 'getAC.doProtoCRFSearch' forwards page back to ProtoCRFwindow jsp
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     private void doProtoCRFSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -9267,13 +9267,13 @@ public class CurationServlet
      * the selected component. calls 'getACSearch.getACShowResult' method when the action is show only selected rows and
      * forwards JSP 'SearchResultsPage.jsp'. forwards the page 'SearchResultsPage.jsp' with empty result vector if
      * action is clear records.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
      * @param ub_
-     * 
+     *
      * @throws Exception
      */
     public void doSearchResultsAction(HttpServletRequest req, HttpServletResponse res, UserBean ub_) throws Exception
@@ -9351,7 +9351,7 @@ public class CurationServlet
 
     /**
      * Monitor the user selected items with a Sentinel Alert.
-     * 
+     *
      * @param req
      *            The session request.
      * @param res
@@ -9482,7 +9482,7 @@ public class CurationServlet
 
     /**
      * Unmonitor the user selected items with a Sentinel Alert.
-     * 
+     *
      * @param req
      *            The session request.
      * @param res
@@ -9584,7 +9584,7 @@ public class CurationServlet
     /**
      * The doRefreshPVSearchPage method forwards crfValue search page with refreshed list updates the quest value bean
      * with searched/created pv data,
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
@@ -9593,7 +9593,7 @@ public class CurationServlet
      *            PV_Bean searched/created pv data
      * @param Origin
      *            String origin of the action
-     * 
+     *
      * @throws Exception
      */
     public void doRefreshPVSearchPage(HttpServletRequest req, HttpServletResponse res, PV_Bean m_PV, String Origin)
@@ -9662,12 +9662,12 @@ public class CurationServlet
      * where actType is 'edit' calls 'getACSearch.getSelRowToEdit' method to get the row bean. if user doesn't have
      * permission to write to the selected context goes back to search page. otherwise forwards to create/edit pages for
      * the selected component.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     private void doSearchSelectionAction(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -9714,7 +9714,7 @@ public class CurationServlet
 
     /**
      * get the definition property from the setting
-     * 
+     *
      * @return the DEDefinition value
      */
     public String getPropertyDefinition()
@@ -9724,12 +9724,12 @@ public class CurationServlet
 
     /**
      * does the search selection action for the Data element search forward the page according to the action
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     private void doSerSelectActDE(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -9777,12 +9777,12 @@ public class CurationServlet
 
     /**
      * does the search selection action for the Data element concept search forward the page according to the action
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     private void doSerSelectActDEC(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -9829,12 +9829,12 @@ public class CurationServlet
 
     /**
      * does the search selection action for the Value Domain search forward the page according to the action
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     private void doSerSelectActVD(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -9884,12 +9884,12 @@ public class CurationServlet
      * where actType is 'edit' calls 'getACSearch.getSelRowToEdit' method to get the row bean. if user doesn't have
      * permission to write to the selected context goes back to search page. otherwise forwards to create/edit pages for
      * the selected component.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     private void doSearchSelectionBEAction(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -9941,12 +9941,12 @@ public class CurationServlet
 
     /**
      * to display the selected elements for block edit, opened from create/edit pages.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     private void doDisplayWindowBEAction(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -9964,12 +9964,12 @@ public class CurationServlet
 
     /**
      * to display the associated DEC for the selected oc or prop.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     private void doDECDetailDisplay(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -10003,7 +10003,7 @@ public class CurationServlet
      * 'getACSearch.getDEResult', 'getACSearch.getDECResult', or 'getACSearch.getVDResult' method to get final result
      * vector which is stored in the session. resets default attributes and other session attributes forwards to
      * SearchResultsPage to display the search results.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
@@ -10012,7 +10012,7 @@ public class CurationServlet
      *            String actType of the search result page.
      * @param sSearchAC
      *            String search type from the drop down list.
-     * 
+     *
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
@@ -10183,12 +10183,12 @@ public class CurationServlet
     /**
      * To sort the search results by clicking on the column heading. Called from 'service' method where reqType is
      * 'doSortCDE' calls 'getACSearch.getACSortedResult' method and forwards page 'SearchResultsPage.jsp'.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doSortACActions(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -10208,13 +10208,13 @@ public class CurationServlet
      * To sort the search results of the blocks by clicking on the column heading. Called from 'service' method where
      * reqType is 'doSortBlocks' calls 'getACSearch.getBlocksSortedResult' method and forwards page
      * 'OpenSearchWindowBlocks.jsp' or 'OpenSearchWindowQualifiers.jsp'
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
      * @param ACType
-     * 
+     *
      * @throws Exception
      */
     public void doSortBlockActions(HttpServletRequest req, HttpServletResponse res, @SuppressWarnings("unused") String ACType) throws Exception
@@ -10272,12 +10272,12 @@ public class CurationServlet
      * To open search page after login or click search on the menu. Called from 'service' method where reqType is
      * 'getSearchFilter' Adds default attributes to 'selectedAttr' session vector. Makes empty 'results' session vector.
      * stores 'No ' to 'recsFound' session attribute. forwards page 'CDEHomePage.jsp'.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doOpenSearchPage(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -10330,9 +10330,9 @@ public class CurationServlet
          if (vStatMsg.size() < 35)
          {
            if (sMsg.equalsIgnoreCase("\\n"))
-             statusMsg = statusMsg + alrtMsg; 
+             statusMsg = statusMsg + alrtMsg;
            else
-             statusMsg = statusMsg + alrtMsg + "\\n"; 
+             statusMsg = statusMsg + alrtMsg + "\\n";
            DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, statusMsg);
          }
          //remove tab and newline from the msg for vector
@@ -10341,7 +10341,7 @@ public class CurationServlet
          if (!sMsg.equals(""))
              vStatMsg.addElement(sMsg);
 
-         DataManager.setAttribute(session, "vStatMsg", vStatMsg);  
+         DataManager.setAttribute(session, "vStatMsg", vStatMsg);
          //add this message to the logger
          logger.fatal("Log Status Message " + sMsg);
        }
@@ -10351,10 +10351,10 @@ public class CurationServlet
         // m_classReq.setAttribute("retcode", "Message Exception");
        }
      }
-    
+
     /**
      * To clear session attributes when a main Menu button/item is selected.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
@@ -10423,7 +10423,7 @@ public class CurationServlet
 
     /**
      * To clear session attributes when a main Menu button/item is selected.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
@@ -10470,7 +10470,7 @@ public class CurationServlet
 
     /**
      * To clear session attributes when a main Menu button/item is selected.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
@@ -10505,14 +10505,14 @@ public class CurationServlet
 
     /**
      * To get the default attributes for the selected Component.
-     * 
+     *
      * @param searchAC
      *            String The selected Administered component
      * @param sSearchIn
      *            String The selected search in filter.
-     * 
+     *
      * @return Vector selected attribute Vector
-     * 
+     *
      * @throws Exception
      */
     public Vector<String> getDefaultAttr(String searchAC, String sSearchIn) throws Exception
@@ -10609,7 +10609,7 @@ public class CurationServlet
 
     /**
      * default attributes for evs searches
-     * 
+     *
      * @param req
      *            HttpServletRequest
      * @param res
@@ -10646,12 +10646,12 @@ public class CurationServlet
 
     /**
      * To get the default filter by attributes for the selected Component.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     private void getDefaultFilterAtt(HttpServletRequest req, @SuppressWarnings("unused") HttpServletResponse res) throws Exception
@@ -10719,12 +10719,12 @@ public class CurationServlet
      * 'service' method where reqType is 'actionFromMenu' Sets the attribte 'searchAC' to the selected component. Sets
      * the attribte 'MenuAction' to the selected menu action. Makes empty 'results' session vector. stores 'No ' to
      * 'recsFound' session attribute. forwards page 'SearchResultsPage.jsp'.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doMenuAction(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -10789,7 +10789,7 @@ public class CurationServlet
     /**
      * To get the list of attributes for the selected search component. Called from 'doRefreshPageOnSearchFor',
      * 'doMenuAction', 'doOpenSearchPage' methods stores the vector in the session attribute.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
@@ -10797,7 +10797,7 @@ public class CurationServlet
      * @param selSearch
      *            the component to search for.
      * @param sMenu
-     * 
+     *
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
@@ -11037,12 +11037,12 @@ public class CurationServlet
     /**
      * This method forwards to an Error page. Called from 'service' method where reqType is 'actionFromMenu' forwards
      * page 'ErrorLoginPage.jsp'.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      */
     public void ErrorLogin(HttpServletRequest req, HttpServletResponse res)
     {
@@ -11076,12 +11076,12 @@ public class CurationServlet
 
     /**
      * doLogout method closes the connection and forwards to Login page Called from Logout button on Titlebar.jsp
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doLogout(HttpServletRequest req, HttpServletResponse res) throws Exception
@@ -11100,7 +11100,7 @@ public class CurationServlet
 
     /**
      * The ForwardJSP method forwards to a jsp page.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
@@ -11136,7 +11136,7 @@ public class CurationServlet
 
     /**
      * The ForwardErrorJSP method forwards to a jsp page.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
@@ -11168,7 +11168,7 @@ public class CurationServlet
 
     /**
      * This is the primary method for handling requests from the Reference Document Attachments page.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res

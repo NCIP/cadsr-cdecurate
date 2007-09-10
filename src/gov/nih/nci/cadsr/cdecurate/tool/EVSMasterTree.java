@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.47 2007-06-12 20:26:17 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.48 2007-09-10 17:18:21 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -561,14 +561,14 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
       js = "\"javascript:doTreeAction('collapse','";
       sCollapse = js + nodeCCode + "','" + m_dtsVocab + "','" + sJSName + "','" + sNodeID + "','" + nodeLvl + jsEnd;
       buf.append("href=").append(sCollapse).append(" >");
-      buf.append( "<img src='../../cdecurate/Assets/").append(openedImage).append("' border='0'>" );
+      buf.append( "<img src='../../cdecurate/images/").append(openedImage).append("' border='0'>" );
     }
     else
     {
       js = "\"javascript:doTreeAction('expand','";
       sExpand = js + nodeCCode + "','" + m_dtsVocab + "','" + sJSName + "','" + sNodeID + "','" + nodeLvl + jsEnd;
       buf.append("href=").append(sExpand).append(" >");
-      buf.append( "<img src='../../cdecurate/Assets/").append(collapsedImage).append("' border='0'>" );
+      buf.append( "<img src='../../cdecurate/images/").append(collapsedImage).append("' border='0'>" );
     }
 		buf.append( "</a>" ); 
     buf.append( "&nbsp;");
@@ -647,7 +647,7 @@ private void renderSubNodes(TreeNode tn, StringBuffer buf)
     String jsEnd = "');\"";
     String leafLvl = String.valueOf(leaf.getLevel()-2);
     String sSearch = js + nodeCCode + "','" + m_dtsVocab + "','" + sJSName + "','" + sLeafID + "','" + leafLvl + jsEnd;
-		buf.append( "<img src='../../cdecurate/Assets/").append(leafImage).append("' border='0'>" );
+		buf.append( "<img src='../../cdecurate/images/").append(leafImage).append("' border='0'>" );
     buf.append( "&nbsp;");
     buf.append( "<a ");
     buf.append("href=").append(sSearch).append(">");

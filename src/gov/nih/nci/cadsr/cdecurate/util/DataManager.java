@@ -1,6 +1,6 @@
 // Copyright (c) 2007 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/DataManager.java,v 1.1 2007-06-12 20:29:03 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/DataManager.java,v 1.2 2007-09-10 17:18:22 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.util;
