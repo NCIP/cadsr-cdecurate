@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.26 2007-09-10 16:59:22 hebell Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.27 2007-09-11 14:49:56 hebell Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -295,6 +295,7 @@
 		<zip destfile="${artifacts.dir}/gforge/cdecurate_ospack.zip">
 			<zipfileset dir="${odi.dir}" />
 		</zip>
+        <tar destfile="${artifacts.dir}/gforge/cdecurate_ospack.tar.gz" basedir="${odi.dir}" compression="gzip" />
 		<delete dir="${odi.dir}" />
 	</target>
 
