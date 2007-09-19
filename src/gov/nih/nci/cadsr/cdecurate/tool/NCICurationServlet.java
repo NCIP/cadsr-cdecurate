@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.49 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.50 2007-09-19 22:44:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Enumeration;
 import java.util.Properties;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -86,6 +87,22 @@ public class NCICurationServlet extends HttpServlet
      */
     public void init(ServletConfig config) throws ServletException
     {
+        if (false)
+        {
+            // For development debug only.
+        Enumeration attrs = config.getServletContext().getAttributeNames();
+        while (attrs.hasMoreElements())
+        {
+            String name = (String) attrs.nextElement();
+            Object obj = config.getServletContext().getAttribute(name);
+            logger.debug(name + " = " + obj.toString());
+        }
+        }
+
+        logger.info(" ");
+        logger.info("Starting " + this.getClass().getName());
+        logger.info(" ");
+
         super.init(config);
         try
         {
@@ -232,5 +249,8 @@ public class NCICurationServlet extends HttpServlet
      */
     public void destroy()
     {
+        logger.info(" ");
+        logger.info("Stopping " + this.getClass().getName());
+        logger.info(" ");
     }
 }
