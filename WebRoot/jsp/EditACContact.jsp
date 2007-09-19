@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditACContact.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditACContact.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -94,7 +94,7 @@
 	</head>
 
 	<body onload="setup();">
-		<form name="ACContactForm" method="post" action="/cdecurate/NCICurationServlet?reqType=ACcontact">
+		<form name="ACContactForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=ACcontact">
 			<table width="100%" border=0>
 				<!--DWLayoutTable-->
 				<tr>
@@ -103,7 +103,7 @@
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="button" name="btnClose" value="Close Window" onClick="window.close();">
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<img name="Message" src="../../cdecurate/images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+						<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
 					</td>
 				</tr>
 			</table>
@@ -445,7 +445,7 @@
 													<tr valign="middle">
 														<th>
 															<%if (vDispComm.size() > 0){%>
-															<img id="altCheckGif" src="../../cdecurate/images/CheckBox.gif" border="0">
+															<img id="altCheckGif" src="images/CheckBox.gif" border="0">
 															<% } %>
 														</th>
 														<th align="center">
@@ -711,7 +711,7 @@
 													<tr valign="middle">
 														<th>
 															<%if (vDispAddr.size() > 0){%>
-															<img id="refCheckGif" src="../../cdecurate/images/CheckBox.gif" border="0">
+															<img id="refCheckGif" src="images/CheckBox.gif" border="0">
 															<% } %>
 														</th>
 														<th align="center">

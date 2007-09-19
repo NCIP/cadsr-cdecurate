@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EVSSearchResults.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EVSSearchResults.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -327,7 +327,7 @@ if (results.size() > 0)
 				<tr valign="top">
 					<table width="100%" border="1">
 						<th width="4%">
-							<img src="../../cdecurate/images/CheckBox.gif">
+							<img src="images/CheckBox.gif">
 						</th>
 						<th width="10%">
 							Concept Name

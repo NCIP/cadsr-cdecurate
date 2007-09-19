@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/DesignateComponent.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/DesignateComponent.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -224,7 +224,7 @@
 						Used By Context
 					</td>
 					<td colspan=2>
-						<select name="selContext" size="1" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						<select name="selContext" size="1" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
 							<%        boolean bDataFound = false;
           for (int i = 0; vContext.size()>i; i++)
           {
@@ -250,7 +250,7 @@
 						Data Element Long Name
 					</td>
 					<td colspan=2>
-						<input name="txtDesignationName" type="text" value="" style="width:85%" readonly onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						<input name="txtDesignationName" type="text" value="" style="width:85%" readonly onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
 					</td>
 				</tr>
 				<tr height="40" valign="middle">
@@ -262,11 +262,11 @@
 						Type
 					</td>
 					<td align="left">
-						<input name="rType" type="radio" value="altName" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						<input name="rType" type="radio" value="altName" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
 						Alternate Name
 					</td>
 					<td align="left">
-						<input name="rType" type="radio" value="refDoc" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						<input name="rType" type="radio" value="refDoc" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
 						Reference Documents
 					</td>
 				</tr>
@@ -279,7 +279,7 @@
 						Alternate Name Type
 					</td>
 					<td colspan=2>
-						<select name="selAltType" size="1" style="width:65%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						<select name="selAltType" size="1" style="width:65%" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
 							<option value=""></option>
 							<option value="C3DName">
 								C3DName
@@ -296,7 +296,7 @@
 						Alternate Name
 					</td>
 					<td colspan=2>
-						<textarea name="txtAltName" style="width:85%" rows=2 onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
+						<textarea name="txtAltName" style="width:85%" rows=2 onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
 					</td>
 				</tr>
 				<tr height="40" valign="middle">
@@ -308,7 +308,7 @@
 						Reference Document Type
 					</td>
 					<td colspan=2>
-						<select name="selRefType" size="1" style="width:65%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						<select name="selRefType" size="1" style="width:65%" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
 							<option value=""></option>
 							<option value="Long_Name">
 								LONG NAME
@@ -325,7 +325,7 @@
 						Reference Document Name
 					</td>
 					<td colspan=2>
-						<textarea name="txtRefName" style="width:85%" rows=2 onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
+						<textarea name="txtRefName" style="width:85%" rows=2 onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
 					</td>
 				</tr>
 				<tr height="40" valign="middle">
@@ -337,7 +337,7 @@
 						Reference Document Text
 					</td>
 					<td colspan=2>
-						<textarea name="txtRefText" style="width:85%" rows=2 onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
+						<textarea name="txtRefText" style="width:85%" rows=2 onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
 					</td>
 				</tr>
 				<tr height="40" valign="middle">
@@ -349,7 +349,7 @@
 						Reference Document URL
 					</td>
 					<td colspan=2 width="100%">
-						<input name="txtRefURL" type="text" value="" style="width:85%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						<input name="txtRefURL" type="text" value="" style="width:85%" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
 						&nbsp;&nbsp;
 						<a href="">
 							Search
@@ -388,11 +388,11 @@
 						&nbsp;
 					</td>
 					<td align="left">
-						<select name="selNameType" size="4" multiple="multiple" style="width:100%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						<select name="selNameType" size="4" multiple="multiple" style="width:100%" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
 						</select>
 					</td>
 					<td align="left" colspan="2">
-						<select name="selName" size="4" multiple="multiple" style="width:90%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						<select name="selName" size="4" multiple="multiple" style="width:90%" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
 						</select>
 					</td>
 				</tr>
@@ -412,11 +412,11 @@
 						&nbsp;
 					</td>
 					<td align="left">
-						<select name="selDocText" size="4" multiple="multiple" style="width:100%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						<select name="selDocText" size="4" multiple="multiple" style="width:100%" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
 						</select>
 					</td>
 					<td align="left" colspan="2">
-						<select name="selURL" size="4" multiple="multiple" style="width:90%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						<select name="selURL" size="4" multiple="multiple" style="width:90%" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
 						</select>
 					</td>
 				</tr>
@@ -425,11 +425,11 @@
 				</tr>
 				<tr>
 					<td colspan=4 align="center">
-						<input type="button" name="btnDesignate" value="Create Designation" style="width:130,height:30" onClick="CreateDesignation();" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						<input type="button" name="btnDesignate" value="Create Designation" style="width:130,height:30" onClick="CreateDesignation();" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
 						&nbsp;&nbsp;
-						<input type="button" name="btnUnDesignate" value="Remove Designation" style="width:130,height:30" onClick="RemoveDesignation();" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						<input type="button" name="btnUnDesignate" value="Remove Designation" style="width:130,height:30" onClick="RemoveDesignation();" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
 						&nbsp;&nbsp;
-						<input type="button" name="btnClose" value="Close Window" style="width:130,height:30" onClick="window.close();" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						<input type="button" name="btnClose" value="Close Window" style="width:130,height:30" onClick="window.close();" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
 					</td>
 				</tr>
 				<!-- stores selected component ID and workflow status  -->

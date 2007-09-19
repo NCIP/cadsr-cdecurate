@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ErrorPage.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ErrorPage.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -264,7 +264,7 @@ if (exceptionMessage == null) exceptionMessage = "";
 					<tr width="100%" align="center">
 						<!--beginning of login table -->
 						<table>
-							<form method="post" name="LoginForm" action="/cdecurate/NCICurationServlet?reqType=login">
+							<form method="post" name="LoginForm" action="../../cdecurate/NCICurationServlet?reqType=login">
 							<tr height="60"></tr>
 							<td width="40%"></td>
 							<td width="" align="center">

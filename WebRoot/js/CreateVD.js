@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.1 2007-09-10 16:16:47 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.2 2007-09-19 16:59:34 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 var evsWindow = null;
@@ -137,7 +137,7 @@ function removeAllText(thisBlock)
     else
     {
     	document.SearchActionForm.isValidSearch.value = "true";
-    	searchWindow = window.open("NCICurationServlet?reqType=searchBlocks&actSelect=FirstSearch" + "&listSearchFor=" + thisBlock + "&listContextFilterVocab=NCI_Thesaurus", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
+    	searchWindow = window.open("../../cdecurate/NCICurationServlet?reqType=searchBlocks&actSelect=FirstSearch" + "&listSearchFor=" + thisBlock + "&listContextFilterVocab=NCI_Thesaurus", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
     }	
  }
 

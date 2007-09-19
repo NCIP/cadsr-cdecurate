@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc 2007
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/LoginE.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/LoginE.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <html>
@@ -277,7 +277,7 @@ function callHelp()
     <tr>
       <td>&nbsp;</td>
       <td align="center" valign="middle">
-        <form name="LoginForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=login">
+        <form name="LoginForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=login">
           <table border="5" bgcolor = "#CCCCCC">
 			<tr><td>
 			<table border="0" bgcolor = "#CCCCCC">

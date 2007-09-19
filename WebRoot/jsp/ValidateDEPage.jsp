@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateDEPage.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateDEPage.jsp,v 1.2 2007-09-19 16:59:35 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -19,7 +19,7 @@ history.forward();
 		<%@ page import="java.util.*"%>
 	</head>
 
-	<body onHelp="showHelp('Help_CreateDE.html#ValidateDEPage'); return false">
+	<body onHelp="showHelp('html/Help_CreateDE.html#ValidateDEPage'); return false">
 		<table width="100%" border="1" cellpadding="0" cellspacing="0">
 			<tr>
 				<td height="81" colspan="2" valign="top">

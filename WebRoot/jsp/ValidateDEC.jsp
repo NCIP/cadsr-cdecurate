@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateDEC.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateDEC.jsp,v 1.2 2007-09-19 16:59:35 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -86,7 +86,7 @@
 	</HEAD>
 	<body bgcolor="#666666">
 
-		<form name="validateDECForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=validateDECFromForm">
+		<form name="validateDECForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=validateDECFromForm">
 
 			<font color="#CCCCCC"></font>
 

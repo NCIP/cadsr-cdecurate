@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.2 2007-09-19 16:59:35 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -63,7 +63,7 @@
 			</tr>
 			<tr>
 				<td>
-					<form name="VMDetail" method="POST" action="/cdecurate/NCICurationServlet?reqType=<%=VMForm.ELM_FORM_REQ_DETAIL%>">
+					<form name="VMDetail" method="POST" action="../../cdecurate/NCICurationServlet?reqType=<%=VMForm.ELM_FORM_REQ_DETAIL%>">
 						<jsp:include page="<%=VMForm.JSP_VM_TITLE%>" flush="true" />
 						<div class="tabbody" style="width: 100%">
 							<div class="ind2">
@@ -156,16 +156,16 @@
 										<tr <% if (i%2 == 0) { %> class="rowColor" <% } %>>
 											<td>
 												<a href="javascript:deleteConcept('<%=i%>', '<%=cBean.getLONG_NAME()%>');" title="Remove Item">
-													<img src="images/delete_white.gif" border="0" alt="Remove Item">
+													<img src="../../images/delete_white.gif" border="0" alt="Remove Item">
 												</a>
 												<% if (i != 0) { %>
 												<a href="javascript:moveConcept('<%=i%>', '<%=VMForm.ACT_CON_MOVEUP%>');" title="Move Up">
-													<img src="images/upArrow.gif" border="0" alt="Move Up">
+													<img src="../../images/upArrow.gif" border="0" alt="Move Up">
 												</a>
 												<% } %>
 												<% if (i != vmCon.size()-1) { %>
 												<a href="javascript:moveConcept('<%=i%>', '<%=VMForm.ACT_CON_MOVEDOWN%>');" title="Move Down">
-													<img src="images/downArrow.gif" border="0" alt="Move Down">
+													<img src="../../images/downArrow.gif" border="0" alt="Move Down">
 												</a>
 												<% } %>
 											</td>

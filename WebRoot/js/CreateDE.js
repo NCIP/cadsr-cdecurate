@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDE.js,v 1.1 2007-09-10 16:16:47 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDE.js,v 1.2 2007-09-19 16:59:34 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 var searchWindow = null;
@@ -380,7 +380,7 @@ function openDesignateWindow(sType)
  // alert(" depage " + sType);
     //var windowW = screen.width - 410;
     if (sType == "Alternate Names")
-        altWindow = window.open("NCICurationServlet?reqType=AltNamesDefs&searchEVS=" + document.SearchActionForm.searchEVS.value, "designate", "width=900,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
+        altWindow = window.open("../../cdecurate/NCICurationServlet?reqType=AltNamesDefs&searchEVS=" + document.SearchActionForm.searchEVS.value, "designate", "width=900,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
     else
         altWindow = window.open("jsp/EditDesignateDE.jsp", "designate", "width=700,height=650,top=0,left=0,resizable=yes,scrollbars=yes");
 }

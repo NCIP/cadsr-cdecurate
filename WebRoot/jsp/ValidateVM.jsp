@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateVM.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateVM.jsp,v 1.2 2007-09-19 16:59:35 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -57,7 +57,7 @@
 	</head>
 
 	<body>
-		<form name="validateVMForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=<%=VMForm.ELM_FORM_REQ_VAL%>">
+		<form name="validateVMForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=<%=VMForm.ELM_FORM_REQ_VAL%>">
 			<table width="100%" border="0">
 				<tr>
 					<td valign="top">

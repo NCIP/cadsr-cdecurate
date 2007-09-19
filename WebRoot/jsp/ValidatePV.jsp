@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidatePV.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidatePV.jsp,v 1.2 2007-09-19 16:59:35 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -70,7 +70,7 @@
 	</head>
 
 	<body bgcolor="#666666">
-		<form name="validatePVForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=validatePVFromForm">
+		<form name="validatePVForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=validatePVFromForm">
 			<font color="#CCCCCC"></font>
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 				<tr>

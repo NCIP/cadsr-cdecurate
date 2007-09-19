@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CRFValueResults.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CRFValueResults.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -140,7 +140,7 @@
         &nbsp;&nbsp;     -->
 						<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();" style="width: 100", "height: 30">
 						&nbsp;&nbsp;
-						<img name="Message" src="../../cdecurate/images/SearchMessage.gif" width="180" height="25" alt="WaitMessage" style="visibility:hidden;" valign="bottom">
+						<img name="Message" src="images/SearchMessage.gif" width="180" height="25" alt="WaitMessage" style="visibility:hidden;" valign="bottom">
 					</td>
 				</tr>
 			</table>
@@ -168,23 +168,23 @@
 			<table width="100%" border="1">
 				<tr valign="middle">
 					<th height="30">
-						<img src="../../cdecurate/images/CheckBox.gif">
+						<img src="images/CheckBox.gif">
 					</th>
 					<th method="get">
-						<a href="NCICurationServlet?reqType=doSortCDE&sortType=CRFValue" onClick=SetSortType( "CRFValue");
-              onHelp="showHelp('Help.htm#searchResultsForm_sort'); return false">
+						<a href="../../cdecurate/NCICurationServlet?reqType=doSortCDE&sortType=CRFValue" onClick=SetSortType( "CRFValue");
+              onHelp="showHelp('html/Help.htm#searchResultsForm_sort'); return false">
 							Values from CRF Question
 						</a>
 					</th>
 					<th method="get">
-						<a href="NCICurationServlet?reqType=doSortCDE&sortType=value" onClick=javascript:SetSortType( "value")
-              onHelp="showHelp('Help.htm#searchResultsForm_sort'); return false">
+						<a href="../../cdecurate/NCICurationServlet?reqType=doSortCDE&sortType=value" onClick=javascript:SetSortType( "value")
+              onHelp="showHelp('html/Help.htm#searchResultsForm_sort'); return false">
 							Value Items
 						</a>
 					</th>
 					<th method="get">
-						<a href="NCICurationServlet?reqType=doSortCDE&sortType=meaning" onClick=javascript:SetSortType( "meaning")
-              onHelp="showHelp('Help.htm#searchResultsForm_sort'); return false">
+						<a href="../../cdecurate/NCICurationServlet?reqType=doSortCDE&sortType=meaning" onClick=javascript:SetSortType( "meaning")
+              onHelp="showHelp('html/Help.htm#searchResultsForm_sort'); return false">
 							Value Meanings
 						</a>
 					</th>

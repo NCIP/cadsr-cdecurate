@@ -1,12 +1,12 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/RefDocumentUpload.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/RefDocumentUpload.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <%@ page import="java.util.Vector"%>
 <SCRIPT LANGUAGE="JavaScript" SRC="js/RefDocumentUpload.js"></SCRIPT>
-<FORM ENCTYPE="multipart/form-data" name="RefDocumentUploadForm" method="post" action="/cdecurate/NCICurationServlet?reqType=RefDocumentUpload">
+<FORM ENCTYPE="multipart/form-data" name="RefDocumentUploadForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=RefDocumentUpload">
 
 	<%
     
@@ -130,7 +130,7 @@
 			<tr>
 				<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 10pt;" height="30">
 					<div>
-						<!-- <img id="CheckGif" src="../../cdecurate/images/CheckBox.gif" border="0" alt="Select One"/> -->
+						<!-- <img id="CheckGif" src="images/CheckBox.gif" border="0" alt="Select One"/> -->
 
 					</div>
 				</th>

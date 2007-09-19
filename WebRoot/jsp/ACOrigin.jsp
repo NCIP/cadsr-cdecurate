@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ACOrigin.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ACOrigin.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -101,7 +101,7 @@
 		<table border="1">
 			<tr>
 				<th height="30" width="30">
-					<img src="../../cdecurate/images/CheckBox.gif" border="0">
+					<img src="../images/CheckBox.gif" border="0">
 				</th>
 				<th>
 					Origin Name
