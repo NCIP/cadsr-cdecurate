@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVMSearchPage.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVMSearchPage.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -15,7 +15,7 @@ history.forward();
 </script>
 	</head>
 
-	<body onHelp="showHelp('Help_CreateVD.html#createVMPage'); return false">
+	<body onHelp="showHelp('html/Help_CreateVD.html#createVMPage'); return false">
 		<table width="100%" border="1" cellpadding="0" cellspacing="0">
 			<tr>
 				<td width="100%" valign="top">

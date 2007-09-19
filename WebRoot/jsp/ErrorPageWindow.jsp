@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ErrorPageWindow.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ErrorPageWindow.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -62,16 +62,16 @@ function dotcycle()
 	}
 	if (dotCntr == 0)
 	{
-		document.LoginForm.Message.src ="../images/WaitMessage1.gif";
+		document.LoginForm.Message.src ="images/WaitMessage1.gif";
 		
 	}
 	else if (dotCntr == 1)
 	{
-		document.LoginForm.Message.src ="../images/WaitMessage2.gif";
+		document.LoginForm.Message.src ="images/WaitMessage2.gif";
 	}
 	else if (dotCntr == 2)
 	{
-		document.LoginForm.Message.src ="../images/WaitMessage3.gif";
+		document.LoginForm.Message.src ="images/WaitMessage3.gif";
 	}
 	else if (dotCntr == 3)
 	{

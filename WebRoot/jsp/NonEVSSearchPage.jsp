@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/NonEVSSearchPage.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/NonEVSSearchPage.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -151,7 +151,7 @@
 									&nbsp;
 								</td>
 								<td align=left>
-									<select name="listSearchFor" size="1" style="width:172" onHelp="showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
+									<select name="listSearchFor" size="1" style="width:172" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
 										<option value="ParentConcept" selected>
 											Parent Concept
 										</option>

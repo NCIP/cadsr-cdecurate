@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidatePVPage.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidatePVPage.jsp,v 1.2 2007-09-19 16:59:35 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -17,7 +17,7 @@ history.forward();
 </script>
 	</head>
 
-	<body onHelp="showHelp('Help_CreateVD.html#ValidatePVPage'); return false">
+	<body onHelp="showHelp('html/Help_CreateVD.html#ValidatePVPage'); return false">
 		<table width="100%" height="100%" border="2" cellpadding="0" cellspacing="0">
 			<tr height="140" width="100%" valign="top">
 				<td colspan=2>

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EVSSearchParameters.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EVSSearchParameters.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -88,7 +88,7 @@ function hourglass()
 </script>
 	</head>
 
-	<body onLoad="Setup();" onHelp="showHelp('../../cdecurate/Help_SearchAC.html#EVSSearchParmsForm_SearchDefinition'); return false">
+	<body onLoad="Setup();" onHelp="showHelp('html/Help_SearchAC.html#EVSSearchParmsForm_SearchDefinition'); return false">
 		<form name="EVSForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=searchACs">
 			<table width="100%" class="sidebarBGColor">
 				<col width="10px">

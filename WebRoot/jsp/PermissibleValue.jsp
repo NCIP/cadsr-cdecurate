@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -157,7 +157,7 @@
 			</tr>
 			<tr>
 				<td width="100%" valign="top">
-					<form name="PVForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=pvEdits">
+					<form name="PVForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=pvEdits">
 						<jsp:include page="VDPVSTab.jsp" flush="true" />
 						<div style="margin-left: 0in; margin-right: 0in; border-left: 2px solid black; border-bottom: 2px solid black; border-right: 2px solid black; width: 100%; padding: 0.1in 0in 0.1in 0in">
 							<table border="0" width="100%">

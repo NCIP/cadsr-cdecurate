@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/LoginSplash.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/LoginSplash.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -82,20 +82,20 @@ function dotcycle()
 	}
 	if (dotCntr == 0)
 	{
-		document.LoginForm.Message.src ="../images/WaitMessage1.gif";
+		document.LoginForm.Message.src ="images/WaitMessage1.gif";
 		
 	}
 	else if (dotCntr == 1)
 	{
-		document.LoginForm.Message.src ="../images/WaitMessage2.gif";
+		document.LoginForm.Message.src ="images/WaitMessage2.gif";
 	}
 	else if (dotCntr == 2)
 	{
-		document.LoginForm.Message.src ="../images/WaitMessage3.gif";
+		document.LoginForm.Message.src ="images/WaitMessage3.gif";
 	}
 	else if (dotCntr == 3)
 	{
-		document.LoginForm.Message.src ="../images/WaitMessage4.gif";
+		document.LoginForm.Message.src ="images/WaitMessage4.gif";
 	}
 
 	setTimeout("dotcycle()", 700)
@@ -237,7 +237,7 @@ session.setAttribute("ErrorMessage", "");
 									</td>
 
 									<td valign="top" width="231">
-										<img name="Message" src="../images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+										<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
 									</td>
 									<td width="20">
 										<select name="Context" style="visibility:hidden;">

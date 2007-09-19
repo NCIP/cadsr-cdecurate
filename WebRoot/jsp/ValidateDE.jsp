@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateDE.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateDE.jsp,v 1.2 2007-09-19 16:59:35 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -93,7 +93,7 @@
 	</HEAD>
 	<body bgcolor="#666666">
 
-		<form name="validateDEForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=validateDEFromForm">
+		<form name="validateDEForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=validateDEFromForm">
 
 			<font color="#CCCCCC"></font>
 
@@ -149,7 +149,7 @@
 				<% } } %>
 				<tr>
 					<td width="182" height="20" valign="top" bgcolor="#FFFFFF" bordercolor="#000000">
-						<div align="center" onHelp="showHelp('Help.htm#validateDEForm_AttributeName'); return false">
+						<div align="center" onHelp="showHelp('html/Help.htm#validateDEForm_AttributeName'); return false">
 							<strong>
 								<font size="3">
 									Attribute Name
@@ -160,7 +160,7 @@
 					<td valign="top" width="487" bgcolor="#FFFFFF" bordercolor="#000000">
 						<div align="center">
 							<strong>
-								<font size="3" "showHelp('Help.htm#validateDEForm_AttributeContents'); returnfalse">
+								<font size="3" "showHelp('html/Help.htm#validateDEForm_AttributeContents'); returnfalse">
 									Attribute Contents
 								</font>
 							</strong>
@@ -169,7 +169,7 @@
 					<td width="151" valign="top" bgcolor="#FFFFFF" bordercolor="#000000">
 						<div align="center">
 							<strong>
-								<font size="3" "showHelp('Help.htm#validateDEForm_ValidationStatus'); returnfalse">
+								<font size="3" "showHelp('html/Help.htm#validateDEForm_ValidationStatus'); returnfalse">
 									Validation Status
 								</font>
 							</strong>

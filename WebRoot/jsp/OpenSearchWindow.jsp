@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/OpenSearchWindow.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/OpenSearchWindow.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -12,6 +12,7 @@
 			CDE Curation: Search
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 		<script>
 history.forward();
 </script>

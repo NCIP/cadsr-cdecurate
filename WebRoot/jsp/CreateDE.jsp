@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDE.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDE.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -293,8 +293,8 @@
 	</head>
 
 	<body onUnload="closeDep();">
-		<form name="FormNewDEC" method="post" action="/cdecurate/NCICurationServlet?reqType=createNewDEC"></form>
-		<form name="FormNewVD" method="post" action="/cdecurate/NCICurationServlet?reqType=createNewVD"></form>
+		<form name="FormNewDEC" method="post" action="../../cdecurate/NCICurationServlet?reqType=createNewDEC"></form>
+		<form name="FormNewVD" method="post" action="../../cdecurate/NCICurationServlet?reqType=createNewVD"></form>
 		<form name="SearchActionForm" method="post" action="">
 			<input type="hidden" name="searchComp" value="">
 			<input type="hidden" name="searchEVS" value="DataElement">
@@ -302,14 +302,14 @@
 			<input type="hidden" name="acID" value="<%=sDEIDSEQ%>">
 			<input type="hidden" name="itemType" value="">
 		</form>
-		<form name="newCDEForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=newDEfromForm">
+		<form name="newCDEForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=newDEfromForm">
 			<table width="100%" border="0">
 				<!--DWLayoutTable-->
 				<col width="5%">
 				<col width="95%">
 				<tr>
 					<td align="left" valign="top" colspan=2>
-						<input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate')" onHelp="showHelp('Help_CreateDE.html#newCDEForm_Validation'); return false">
+						<input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate')" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Validation'); return false">
 						&nbsp;&nbsp; &nbsp;&nbsp;
 						<input type="button" name="btnClear" value="Clear" style="width: 125" onClick="ClearBoxes();">
 						&nbsp;&nbsp;
@@ -317,9 +317,9 @@
 						<input type="button" name="btnBack" value="Back" style="width: 125" onClick="Back();">
 						&nbsp;&nbsp;
 						<% } %>
-						<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" onClick="openDesignateWindow('Alternate Names');" onHelp="showHelp('Help_Updates.html#newDECForm_altNames'); return false">
+						<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" onClick="openDesignateWindow('Alternate Names');" onHelp="showHelp('html/Help_Updates.html#newDECForm_altNames'); return false">
 						&nbsp;&nbsp;
-						<input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');" onHelp="showHelp('Help_Updates.html#newDECForm_refDocs'); return false">
+						<input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');" onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs'); return false">
 						&nbsp;&nbsp;
 						<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
 					</td>
@@ -378,7 +378,7 @@
 						</font>
 					</td>
 					<td>
-						<select name="selContext" size="1" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selContext'); return false">
+						<select name="selContext" size="1" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext'); return false">
 							<%          boolean bDataFound = false;
            for (int i = 0; vContext.size()>i; i++)
            {
@@ -418,7 +418,7 @@
 						&nbsp;
 					</td>
 					<td>
-						<select name="selDEC" size="1" multiple style="width:430" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selDEC'); return false">
+						<select name="selDEC" size="1" multiple style="width:430" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selDEC'); return false">
 							<option value="<%=sDECID%>">
 								<%=sDEC%>
 							</option>
@@ -453,7 +453,7 @@
 						&nbsp;
 					</td>
 					<td>
-						<select name="selVD" size="1" multiple style="width:430" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selVD'); return false">
+						<select name="selVD" size="1" multiple style="width:430" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selVD'); return false">
 							<option value="<%=sVDID%>">
 								<%=sVD%>
 							</option>
@@ -490,7 +490,7 @@
 						</font>
 					</td>
 					<td height="24" valign="top">
-						<input name="txtLongName" type="text" value="<%=sLongName%>" size="80" maxlength=255 onKeyUp="changeCountLN();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_txtLongName'); return false">
+						<input name="txtLongName" type="text" value="<%=sLongName%>" size="80" maxlength=255 onKeyUp="changeCountLN();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_txtLongName'); return false">
 						&nbsp;&nbsp;&nbsp;
 						<font color="#666666">
 							<input name="txtLongNameCount" type="text" size="1" value="<%=sLongNameCount%>" readonly>
@@ -545,7 +545,7 @@
 					</td>
 					<td height="24" valign="top">
 						<input name="txtPreferredName" type="text" value="<%=sName%>" size="80" maxlength=30 onKeyUp="changeCountPN();" <%if (sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")) {%> readonly <%}%>
-							onHelp="showHelp('Help_CreateDE.html#newCDEForm_txtLongName'); return false">
+							onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_txtLongName'); return false">
 						&nbsp;&nbsp;&nbsp;
 						<font color="#666666">
 							<input name="txtPrefNameCount" type="text" size="1" value="<%=sNameCount%>" readonly>
@@ -606,7 +606,7 @@
 						</font>
 					</td>
 					<td height="26" valign="top">
-						<select name="selStatus" size="1" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selStatus'); return false">
+						<select name="selStatus" size="1" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selStatus'); return false">
 							<option value="" selected="selected"></option>
 							<%   for (int i = 0; vStatus.size()>i; i++)
      {
@@ -656,7 +656,7 @@
 						</font>
 					</td>
 					<td valign="top">
-						<input name="Version" type="text" value="<%=sVersion%>" size="5" maxlength=5 onHelp="showHelp('Help_CreateDE.html#newCDEForm_Version'); return false">
+						<input name="Version" type="text" value="<%=sVersion%>" size="5" maxlength=5 onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Version'); return false">
 						&nbsp;&nbsp;&nbsp;
 						<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
 							Business Rules
@@ -680,7 +680,7 @@
 						&nbsp;
 					</td>
 					<td height="25" valign="top">
-						<select name="selRegStatus" size="1" style="Width:50%" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selRegStatus'); return false">
+						<select name="selRegStatus" size="1" style="Width:50%" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selRegStatus'); return false">
 							<option value="" selected></option>
 							<%          if (vRegStatus != null) 
             {            
@@ -715,7 +715,7 @@
 						</font>
 					</td>
 					<td height="25" valign="top">
-						<input type="text" name="BeginDate" value="<%=sBeginDate%>" size="12" maxlength=10 onHelp="showHelp('Help_CreateDE.html#newCDEForm_BeginDate'); return false">
+						<input type="text" name="BeginDate" value="<%=sBeginDate%>" size="12" maxlength=10 onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_BeginDate'); return false">
 						<a href="javascript:show_calendar('newCDEForm.BeginDate', null, null, 'MM/DD/YYYY');">
 							<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top", "background-color: #FF0000">
 						</a>
@@ -739,7 +739,7 @@
 						&nbsp;
 					</td>
 					<td height="25" valign="top">
-						<input type="text" name="EndDate" value="<%=sEndDate%>" size="12" maxlength=10 onHelp="showHelp('Help_CreateDE.html#newCDEForm_EndDate'); return false" size="20">
+						<input type="text" name="EndDate" value="<%=sEndDate%>" size="12" maxlength=10 onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_EndDate'); return false" size="20">
 						<a href="javascript:show_calendar('newCDEForm.EndDate', null, null, 'MM/DD/YYYY');">
 							<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top", "background-color: #FF0000">
 						</a>
@@ -792,7 +792,7 @@
 							<col width="10%">
 							<tr>
 								<td height="30" valign="top" colspan=3>
-									<select name="selCS" size="1" style="width:95%" valign="top" onChange="ChangeCS()" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selCS'); return false">
+									<select name="selCS" size="1" style="width:95%" valign="top" onChange="ChangeCS()" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selCS'); return false">
 										<option value="" selected></option>
 										<%            for (int i = 0; vCS.size()>i; i++)
                 {
@@ -807,7 +807,7 @@
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								</td>
 								<td height="30" valign="top" colspan=2>
-									<select name="selCSI" size="5" style="width:95%" onChange="selectCSI();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selCS'); return false">
+									<select name="selCSI" size="5" style="width:95%" onChange="selectCSI();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selCS'); return false">
 										<!-- onChange="AddItemsToLists();"> -->
 									</select>
 								</td>
@@ -837,7 +837,7 @@
 									&nbsp;
 								</td>
 								<td colspan=2>
-									<select name="selectedCS" size="5" style="width:98%" multiple onchange="addSelectCSI(false, true, '');" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selCS'); return false">
+									<select name="selectedCS" size="5" style="width:98%" multiple onchange="addSelectCSI(false, true, '');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selCS'); return false">
 										<%                  //store selected cs list on load 
                   if (vSelCSIDList != null) 
                   {
@@ -856,7 +856,7 @@
 									</select>
 								</td>
 								<td colspan=2>
-									<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selCS'); return false">
+									<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selCS'); return false">
 									</select>
 								</td>
 							</tr>
@@ -899,7 +899,7 @@
 							</tr>
 							<tr>
 								<td colspan=4 valign="top">
-									<select name="selContact" size="4" style="width:100%" onchange="javascript:enableContButtons();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selContact'); return false">
+									<select name="selContact" size="4" style="width:100%" onchange="javascript:enableContButtons();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContact'); return false">
 										<%	
 				Enumeration enum1 = hContacts.keys();
 				while (enum1.hasMoreElements())
@@ -945,7 +945,7 @@
 						&nbsp;
 					</td>
 					<td>
-						<select name="selSource" size="1" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selSource'); return false">
+						<select name="selSource" size="1" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selSource'); return false">
 							<option value=""></option>
 							<%         
 		   boolean isFound = false;
@@ -1065,7 +1065,7 @@
 						&nbsp;
 					</td>
 					<td height="26" valign="top" colspan=3>
-						<select name="selRepType" size="1" onChange="javascript:changeRepType('change')" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selRepType'); return false">
+						<select name="selRepType" size="1" onChange="javascript:changeRepType('change')" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selRepType'); return false">
 							<option value="" selected></option>
 							<%        for (int i = 0; vRepType.size()>i; i++)
           {
@@ -1136,7 +1136,7 @@
 						&nbsp;
 					</td>
 					<td valign="top" colspan=3>
-						<input name="DDEConcatChar" type="text" value="<%=sSelConcatChar%>" size="5" maxlength=1 onHelp="showHelp('Help_CreateDE.html#newCDEForm_DDEConcatChar'); return false">
+						<input name="DDEConcatChar" type="text" value="<%=sSelConcatChar%>" size="5" maxlength=1 onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_DDEConcatChar'); return false">
 					</td>
 				</tr>
 
@@ -1189,7 +1189,7 @@
 						</font>
 						Data Element Components
 						<br>
-						<select name="selDEComp" size="1" style="width:95%" valign="top" onChange="javascript:showDECompOrder()" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selDEComp'); return false">
+						<select name="selDEComp" size="1" style="width:95%" valign="top" onChange="javascript:showDECompOrder()" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selDEComp'); return false">
 							<%            for (int i = 0; vDEComp.size()>i; i++)
                 {
                      String sDEName = (String)vDEComp.elementAt(i);
@@ -1207,7 +1207,7 @@
 						</font>
 						Display Order
 						<br>
-						<input name="txtDECompOrder" type="text" value="<%=sDECompOrder%>" size="20" maxlength=4 onKeyUp="changeOrder();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_txtDECompOrder'); return false">
+						<input name="txtDECompOrder" type="text" value="<%=sDECompOrder%>" size="20" maxlength=4 onKeyUp="changeOrder();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_txtDECompOrder'); return false">
 						&nbsp;&nbsp;
 					</td>
 				</tr>
@@ -1234,7 +1234,7 @@
 					</td>
 					<td colspan=2 valign=top>
 						&nbsp;&nbsp;&nbsp;
-						<select name="selOrderedDEComp" size="3" style="width: 95%" onChange="javascript:selectOList();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selOrderedDEComp'); return false">
+						<select name="selOrderedDEComp" size="3" style="width: 95%" onChange="javascript:selectOList();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selOrderedDEComp'); return false">
 							<%              for (int i = 0; vDEComp.size()>i; i++)
                 {
                    String sDEName = (String)vDEComp.elementAt(i);
@@ -1250,7 +1250,7 @@
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					</td>
 					<td colspan=1 valign=top>
-						<select name="selOrderList" size="3" style="width:120" onChange="javascript:selectODEComp();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selOrderList'); return false">
+						<select name="selOrderList" size="3" style="width:120" onChange="javascript:selectODEComp();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selOrderList'); return false">
 							<%              for (int i = 0; vDECompOrder.size()>i; i++)
                 {
                    String sOrderName = (String)vDECompOrder.elementAt(i);

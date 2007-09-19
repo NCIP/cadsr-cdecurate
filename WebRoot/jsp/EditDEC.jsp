@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -314,11 +314,11 @@
 			<input type="hidden" name="acID" value="<%=sDECIDSEQ%>">
 			<input type="hidden" name="itemType" value="">
 		</form>
-		<form name=newDECForm method="POST" action="/cdecurate/NCICurationServlet?reqType=editDEC">
+		<form name=newDECForm method="POST" action="../../cdecurate/NCICurationServlet?reqType=editDEC">
 			<table border="0">
 				<tr>
 					<td height="26" align="left" valign="top">
-						<input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('validate');" onHelp="showHelp('Help_CreateDEC.html#newDECForm_Validation'); return false">
+						<input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('validate');" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_Validation'); return false">
 						&nbsp;&nbsp;
 						<input type="button" name="btnClear" value="Clear" style="width:125" onClick="ClearBoxes();">
 						&nbsp;&nbsp;
@@ -327,12 +327,12 @@
 						&nbsp;&nbsp;
 						<% } %>
 						<%if(sOriginAction.equals("BlockEditDEC")){%>
-						<input type="button" name="btnDetails" value="Details" style="width:125" onClick="openBEDisplayWindow();" onHelp="showHelp('Help_Updates.html#newDECForm_details'); return false">
+						<input type="button" name="btnDetails" value="Details" style="width:125" onClick="openBEDisplayWindow();" onHelp="showHelp('html/Help_Updates.html#newDECForm_details'); return false">
 						&nbsp;&nbsp;
 						<%}%>
-						<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" onClick="openDesignateWindow('Alternate Names');" onHelp="showHelp('Help_Updates.html#newDECForm_altNames'); return false">
+						<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" onClick="openDesignateWindow('Alternate Names');" onHelp="showHelp('html/Help_Updates.html#newDECForm_altNames'); return false">
 						&nbsp;&nbsp;
-						<input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');" onHelp="showHelp('Help_Updates.html#newDECForm_refDocs'); return false">
+						<input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');" onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs'); return false">
 						&nbsp;&nbsp;
 						<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
 					</td>
@@ -388,7 +388,7 @@
 						&nbsp;
 					</td>
 					<td valign="top">
-						<select name="selContext" size="1" readonly onHelp="showHelp('Help_CreateDEC.html#newDECForm_selContext'); return false">
+						<select name="selContext" size="1" readonly onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selContext'); return false">
 							<option value="<%=sContID%>">
 								<font color="#C0C0C0">
 									<%=sContext%>
@@ -505,7 +505,7 @@
 										</tr>
 										<tr align="left">
 											<td colspan="3" valign="top">
-												<select name="selObjectQualifier" size="2" style="width=98%" valign="top" onClick="ShowEVSInfo('ObjectQualifier')" onHelp="showHelp('Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
+												<select name="selObjectQualifier" size="2" style="width=98%" valign="top" onClick="ShowEVSInfo('ObjectQualifier')" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<%if (vOCQualifierNames.size()<1) {%>
 													<option value=""></option>
 													<% } else { %>
@@ -521,7 +521,7 @@
 												</select>
 											</td>
 											<td colspan="3" valign="top">
-												<select name="selObjectClass" style="width=98%" valign="top" size="1" multiple onHelp="showHelp('Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
+												<select name="selObjectClass" style="width=98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<option value="<%=sObjClassPrimary%>">
 														<%=sObjClassPrimary%>
 													</option>
@@ -642,7 +642,7 @@
 
 										<tr align="left">
 											<td colspan="3" valign="top">
-												<select name="selPropertyQualifier" size="2" style="width=98%" valign="top" onClick="ShowEVSInfo('PropertyQualifier')" onHelp="showHelp('Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
+												<select name="selPropertyQualifier" size="2" style="width=98%" valign="top" onClick="ShowEVSInfo('PropertyQualifier')" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<%if (vPropQualifierNames.size()<1) {%>
 													<option value=""></option>
 													<% } else { %>
@@ -658,7 +658,7 @@
 												</select>
 											</td>
 											<td colspan="3" valign="top">
-												<select name="selPropertyClass" style="width=98%" valign="top" size="1" multiple onHelp="showHelp('Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
+												<select name="selPropertyClass" style="width=98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<option value="<%=sPropClassPrimary%>">
 														<%=sPropClassPrimary%>
 													</option>
@@ -733,9 +733,9 @@
 						&nbsp;
 					</td>
 					<td height="24" valign="top">
-						<input name="txtLongName" type="text" size="80" maxlength=255 value="<%=sLongName%>" onKeyUp="changeCountLN();" <%if(sOriginAction.equals("BlockEditDEC")){%> readonly <%}%> onHelp="showHelp('Help_CreateDEC.html#newDECForm_txtLongName'); return false">
+						<input name="txtLongName" type="text" size="80" maxlength=255 value="<%=sLongName%>" onKeyUp="changeCountLN();" <%if(sOriginAction.equals("BlockEditDEC")){%> readonly <%}%> onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_txtLongName'); return false">
 						&nbsp;&nbsp;&nbsp;
-						<input name="txtLongNameCount" type="text" size="1" readonly onHelp="showHelp('Help_CreateDEC.html#newDECForm_txtLongName'); return false">
+						<input name="txtLongNameCount" type="text" size="1" readonly onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_txtLongName'); return false">
 						<%if(sOriginAction.equals("BlockEditDEC")){%>
 						<font color="#C0C0C0">
 							Character Count &nbsp;&nbsp;(Database Max = 255)
@@ -794,9 +794,9 @@
 					</td>
 					<td valign="top">
 						<input name="txtPreferredName" type="text" size="80" maxlength=30 value="<%=sName%>" onKeyUp="changeCountPN();" <%if(sOriginAction.equals("BlockEditDEC") || sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")){%> readonly
-							<%}%> onHelp="showHelp('Help_CreateDEC.html#newDECForm_txtPreferredName'); return false">
+							<%}%> onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_txtPreferredName'); return false">
 						&nbsp;&nbsp;&nbsp;
-						<input name="txtPrefNameCount" type="text" size="1" value="<%=sNameCount%>" readonly onHelp="showHelp('Help_CreateDEC.html#newDECForm_txtPreferredName'); return false">
+						<input name="txtPrefNameCount" type="text" size="1" value="<%=sNameCount%>" readonly onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_txtPreferredName'); return false">
 						<% if(sOriginAction.equals("BlockEditDEC")){%>
 						<font color="#C0C0C0">
 							Character Count &nbsp;&nbsp;(Database Max = 30)
@@ -828,7 +828,7 @@
 					</td>
 					<td>
 						<font color="#C0C0C0">
-							<input type="text" name="CDE_IDTxt" value="<%=sPublicDECID%>" size="20" readonly onHelp="showHelp('Help_CreateDEC.html#newDECForm_EditDEC'); return false">
+							<input type="text" name="CDE_IDTxt" value="<%=sPublicDECID%>" size="20" readonly onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_EditDEC'); return false">
 						</font>
 					</td>
 				</tr>
@@ -871,10 +871,10 @@
 					</td>
 					<td valign="top" align="left">
 						<%if(sOriginAction.equals("BlockEditDEC")){%>
-						<textarea name="CreateDefinition" style="width:80%" rows=6 readonly onHelp="showHelp('Help_CreateDEC.html#newDECForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
+						<textarea name="CreateDefinition" style="width:80%" rows=6 readonly onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
 						<!-- &nbsp;&nbsp; <font color="#C0C0C0">Search</a></font> -->
 						<% } else { %>
-						<textarea name="CreateDefinition" style="width:80%" rows=6 onHelp="showHelp('Help_CreateDEC.html#newDECForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
+						<textarea name="CreateDefinition" style="width:80%" rows=6 onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
 						<!--  &nbsp;&nbsp; <font color="#FF0000"><a href="javascript:OpenEVSWindow()">Search</a></font> -->
 						<% }%>
 					</td>
@@ -901,7 +901,7 @@
 						&nbsp;
 					</td>
 					<td>
-						<select name="selConceptualDomain" size="1" style="width:430" multiple onHelp="showHelp('Help_CreateDEC.html#newDECForm_selConceptualDomain'); return false">
+						<select name="selConceptualDomain" size="1" style="width:430" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selConceptualDomain'); return false">
 							<option value=<%=sConDomID%>>
 								<%=sConDom%>
 							</option>
@@ -936,7 +936,7 @@
 						&nbsp;
 					</td>
 					<td valign="top">
-						<select name="selStatus" size="1" onHelp="showHelp('Help_CreateDEC.html#newDECForm_selStatus'); return false">
+						<select name="selStatus" size="1" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selStatus'); return false">
 							<option value="" selected="selected"></option>
 							<%          for (int i = 0; vStatus.size()>i; i++)
           {
@@ -1010,18 +1010,18 @@
 								<td valign="top">
 									&nbsp;&nbsp;
 									<input type="checkbox" name="VersionCheck" onClick="javascript:EnableChecks(checked,this);" value="ON" <% if(sVersion.equals("Whole") || sVersion.equals("Point")) { %> checked <% } %>
-										onHelp="showHelp('Help_CreateDEC.html#newDECForm_BlockVersion'); return false">
+										onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_BlockVersion'); return false">
 								</td>
 								<!--Point check is checked only if the sVersion is Point and disabled otherwise  -->
 								<td>
 									<input type="checkbox" name="PointCheck" onClick="javascript:EnableChecks(checked,this);" value="ON" <%if(sVersion.equals("Point")){%> checked <%} else {%> disabled <%}%>
-										onHelp="showHelp('Help_CreateDEC.html#newDECForm_BlockVersion'); return false">
+										onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_BlockVersion'); return false">
 									&nbsp;Point Increase
 								</td>
 								<!--Whole check is checked only if the sVersion is Whole and disabled otherwise  -->
 								<td>
 									<input type="checkbox" name="WholeCheck" onClick="javascript:EnableChecks(checked,this)" value="ON" <%if(sVersion.equals("Whole")){%> checked <%} else {%> disabled <%}%>
-										onHelp="showHelp('Help_CreateDEC.html#newDECForm_BlockVersion'); return false">
+										onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_BlockVersion'); return false">
 									&nbsp;Whole Increase
 								</td>
 							</tr>
@@ -1030,7 +1030,7 @@
 					<% } else { %>
 					<td valign="top">
 						<font color="#C0C0C0">
-							<input type="text" name="Version" value="<%=sVersion%>" size=5 readonly onHelp="showHelp('Help_CreateDEC.html#newDECForm_Version'); return false">
+							<input type="text" name="Version" value="<%=sVersion%>" size=5 readonly onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_Version'); return false">
 						</font>
 						&nbsp;&nbsp;&nbsp;
 						<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
@@ -1056,7 +1056,7 @@
 						&nbsp;
 					</td>
 					<td valign="top">
-						<input type="text" name="BeginDate" value="<%=sBeginDate%>" size=12 maxlength=10 onHelp="showHelp('Help_CreateDEC.html#newDECForm_BeginDate'); return false">
+						<input type="text" name="BeginDate" value="<%=sBeginDate%>" size=12 maxlength=10 onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_BeginDate'); return false">
 						<font color="#0099FF" size="3"></font>
 						<a href="javascript:show_calendar('newDECForm.BeginDate', null, null, 'MM/DD/YYYY');">
 							<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
@@ -1081,7 +1081,7 @@
 						&nbsp;
 					</td>
 					<td height="25" valign="top">
-						<input type="text" name="EndDate" value="<%=sEndDate%>" size=12 maxlength=10 onHelp="showHelp('Help_CreateDEC.html#newDECForm_EndDate'); return false">
+						<input type="text" name="EndDate" value="<%=sEndDate%>" size=12 maxlength=10 onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_EndDate'); return false">
 						<font color="#0099FF" size="3"></font>
 						<a href="javascript:show_calendar('newDECForm.EndDate', null, null, 'MM/DD/YYYY');">
 							<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
@@ -1116,10 +1116,10 @@
 							<tr>
 								<td colspan=3 valign=top>
 									<%if (sOriginAction.equals("BlockEditDEC")){%>
-									<select name="selCS" size="1" style="width:95%" onChange="ChangeCS();" onHelp="showHelp('Help_CreateDEC.html#newDECForm_BlockselCS'); return false">
+									<select name="selCS" size="1" style="width:95%" onChange="ChangeCS();" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_BlockselCS'); return false">
 										<option value="" selected></option>
 										<% } else { %>
-										<select name="selCS" size="1" style="width:95%" onChange="ChangeCS();" onHelp="showHelp('Help_CreateDEC.html#newDECForm_selCS'); return false">
+										<select name="selCS" size="1" style="width:95%" onChange="ChangeCS();" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selCS'); return false">
 											<option value="" selected></option>
 											<% } %>
 
@@ -1136,9 +1136,9 @@
 								</td>
 								<td colspan=2 valign=top>
 									<%if (sOriginAction.equals("BlockEditDEC")){%>
-									<select name="selCSI" size="5" style="width:100%" onChange="selectCSI();" onClick="selectCSI();" onHelp="showHelp('Help_CreateDEC.html#newDECForm_BlockselCS'); return false">
+									<select name="selCSI" size="5" style="width:100%" onChange="selectCSI();" onClick="selectCSI();" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_BlockselCS'); return false">
 										<% } else { %>
-										<select name="selCSI" size="5" style="width:100%" onChange="selectCSI();" onHelp="showHelp('Help_CreateDEC.html#newDECForm_selCS'); return false">
+										<select name="selCSI" size="5" style="width:100%" onChange="selectCSI();" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selCS'); return false">
 											<% } %>
 										</select>
 								</td>
@@ -1169,9 +1169,9 @@
 								</td>
 								<td colspan=2 valign=top>
 									<%if (sOriginAction.equals("BlockEditDEC")){%>
-									<select name="selectedCS" size="5" style="width:98%" multiple onchange="addSelectCSI(false, true, '');" onHelp="showHelp('Help_CreateDEC.html#newDECForm_BlockselCS'); return false">
+									<select name="selectedCS" size="5" style="width:98%" multiple onchange="addSelectCSI(false, true, '');" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_BlockselCS'); return false">
 										<% } else { %>
-										<select name="selectedCS" size="5" style="width:98%" multiple onchange="addSelectCSI(false, true, '');" onHelp="showHelp('Help_CreateDEC.html#newDECForm_selCS'); return false">
+										<select name="selectedCS" size="5" style="width:98%" multiple onchange="addSelectCSI(false, true, '');" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selCS'); return false">
 											<% } %>
 											<%                  //store selected cs list on load 
                 if (vSelCSIDList != null) 
@@ -1194,9 +1194,9 @@
 								</td>
 								<td colspan=2 valign=top>
 									<%if (sOriginAction.equals("BlockEditDEC")){%>
-									<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('Help_CreateDEC.html#newDECForm_BlockselCS'); return false">
+									<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_BlockselCS'); return false">
 										<% } else { %>
-										<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('Help_CreateDEC.html#newDECForm_selCS'); return false">
+										<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selCS'); return false">
 											<% } %>
 										</select>
 								</td>
@@ -1218,7 +1218,7 @@
 									&nbsp;
 								</td>
 								<td colspan=2 valign=top>
-									<select name="selCSIACList" size="3" style="width:100%" onHelp="showHelp('Help_CreateDEC.html#newDECForm_BlockselCS'); return false">
+									<select name="selCSIACList" size="3" style="width:100%" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_BlockselCS'); return false">
 									</select>
 								</td>
 							</tr>
@@ -1263,7 +1263,7 @@
 							</tr>
 							<tr>
 								<td colspan=4 valign="top">
-									<select name="selContact" size="4" style="width:100%" onchange="javascript:enableContButtons();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selContact'); return false">
+									<select name="selContact" size="4" style="width:100%" onchange="javascript:enableContButtons();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContact'); return false">
 										<%	
 				Enumeration enum1 = hContacts.keys();
 				while (enum1.hasMoreElements())
@@ -1310,7 +1310,7 @@
 						&nbsp;
 					</td>
 					<td>
-						<select name="selSource" size="1" onHelp="showHelp('Help_CreateDEC.html#newDECForm_selSource'); return false">
+						<select name="selSource" size="1" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selSource'); return false">
 							<option value=""></option>
 							<%         
 		   boolean isFound = false;
@@ -1352,7 +1352,7 @@
 						&nbsp;
 					</td>
 					<td height="35" valign="top">
-						<textarea name="CreateChangeNote" cols="69" rows=2 onHelp="showHelp('Help_CreateDEC.html#newDECForm_CreateComment'); return false"><%=sChangeNote%></textarea>
+						<textarea name="CreateChangeNote" cols="69" rows=2 onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_CreateComment'); return false"><%=sChangeNote%></textarea>
 					</td>
 
 				</tr>

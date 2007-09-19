@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -10,7 +10,7 @@
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
-		<SCRIPT LANGUAGE="JavaScript" SRC="images/AddNewListOption.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="../../images/AddNewListOption.js"></SCRIPT>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 		<%@ page import="java.util.*"%>
 		<%@ page session="true"%>
@@ -413,7 +413,7 @@ function setup()
 	</head>
 
 	<body onLoad="setup();">
-		<form name="createVDForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=editVD">
+		<form name="createVDForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=editVD">
 			<!-- include the vdpvstab.jsp here -->
 			<jsp:include page="VDPVSTab.jsp" flush="true" />
 			<div style="margin-left: 0in; margin-right: 0in; border-left: 2px solid black; border-bottom: 2px solid black; border-right: 2px solid black; width: 100%; padding: 0.1in 0in 0.1in 0in">
@@ -485,10 +485,10 @@ function setup()
 						</td>
 						<td>
 							<%if(sOriginAction.equals("BlockEditVD")){%>
-							<select name="listVDType" size="1" style="width: 150" onChange="ToggleDisableList2();" disabled onHelp="showHelp('Help_CreateVD.html#createVDForm_selVDType'); return false">
+							<select name="listVDType" size="1" style="width: 150" onChange="ToggleDisableList2();" disabled onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selVDType'); return false">
 							</select>
 							<% } else { %>
-							<select name="listVDType" size="1" style="width: 150" onChange="ToggleDisableList2();" onHelp="showHelp('Help_CreateVD.html#createVDForm_selVDType'); return false">
+							<select name="listVDType" size="1" style="width: 150" onChange="ToggleDisableList2();" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selVDType'); return false">
 								<option value="E" <%if(sTypeFlag.equals("E")){%> selected <%}%>>
 									Enumerated
 								</option>
@@ -616,14 +616,14 @@ function setup()
 														</tr>
 														<tr valign="top">
 															<td colspan="3">
-																<select name="selObjectClass" style="width:98%" valign="top" size="1" multiple onHelp="showHelp('Help_CreateVD.html#createVDForm_nameBlocks'); return false">
+																<select name="selObjectClass" style="width:98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateVD.html#createVDForm_nameBlocks'); return false">
 																	<option value="<%=sObjClass%>">
 																		<%=sObjClass%>
 																	</option>
 																</select>
 															</td>
 															<td colspan="3">
-																<select name="selPropertyClass" style="width:98%" valign="top" size="1" multiple onHelp="showHelp('Help_CreateVD.html#createVDForm_nameBlocks'); return false">
+																<select name="selPropertyClass" style="width:98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateVD.html#createVDForm_nameBlocks'); return false">
 																	<option value="<%=sPropClass%>">
 																		<%=sPropClass%>
 																	</option>
@@ -717,7 +717,7 @@ function setup()
 														</tr>
 														<tr align="left">
 															<td colspan="3" valign="top">
-																<select name="selRepQualifier" size="2" style="width=98%" valign="top" onClick="ShowEVSInfo('RepQualifier')" onHelp="showHelp('Help_CreateVD.html#createVDForm_nameBlocks'); return false">
+																<select name="selRepQualifier" size="2" style="width=98%" valign="top" onClick="ShowEVSInfo('RepQualifier')" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_nameBlocks'); return false">
 																	<%if (vRepQualifierNames.size()<1) {%>
 																	<option value=""></option>
 																	<% } else { %>
@@ -734,7 +734,7 @@ function setup()
 															</td>
 															<td colspan="3" valign="top">
 
-																<select name="selRepTerm" style="width=98%" valign="top" size="1" multiple onHelp="showHelp('Help_CreateVD.html#createVDForm_nameBlocks'); return false">
+																<select name="selRepTerm" style="width=98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateVD.html#createVDForm_nameBlocks'); return false">
 																	<option value="<%=sRepTermPrimary%>">
 																		<%=sRepTermPrimary%>
 																	</option>
@@ -813,9 +813,9 @@ function setup()
 						</td>
 						<td height="24" valign="top">
 							<input name="txtLongName" type="text" size="100" maxlength=255 value="<%=sLongName%>" onKeyUp="changeCountLN();" <%if(sOriginAction.equals("BlockEditVD")){%> readonly <%}%>
-								onHelp="showHelp('Help_CreateVD.html#createVDForm_txtLongName'); return false">
+								onHelp="showHelp('html/Help_CreateVD.html#createVDForm_txtLongName'); return false">
 							&nbsp;&nbsp;
-							<input name="txtLongNameCount" type="text" value="<%=sLongNameCount%>" size="1" readonly onHelp="showHelp('Help_CreateVD.html#createVDForm_txtLongName'); return false">
+							<input name="txtLongNameCount" type="text" value="<%=sLongNameCount%>" size="1" readonly onHelp="showHelp('html/Help_CreateVD.html#createVDForm_txtLongName'); return false">
 							<%if(sOriginAction.equals("BlockEditVD")){%>
 							<font color="#C0C0C0">
 								Character Count &nbsp;&nbsp;(Database Max = 255)
@@ -889,9 +889,9 @@ function setup()
 						</td>
 						<td height="24" valign="top">
 							<input name="txtPreferredName" type="text" size="100" maxlength=30 value="<%=sName%>" onKeyUp="changeCountPN();" <%if(sOriginAction.equals("BlockEditVD") || sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")){%> readonly
-								<%}%> onHelp="showHelp('Help_CreateVD.html#createVDForm_txtPreferredName'); return false">
+								<%}%> onHelp="showHelp('html/Help_CreateVD.html#createVDForm_txtPreferredName'); return false">
 							&nbsp;&nbsp;
-							<input name="txtPrefNameCount" type="text" value="<%=sNameCount%>" size="1" readonly onHelp="showHelp('Help_CreateVD.html#createVDForm_txtPreferredName'); return false">
+							<input name="txtPrefNameCount" type="text" value="<%=sNameCount%>" size="1" readonly onHelp="showHelp('html/Help_CreateVD.html#createVDForm_txtPreferredName'); return false">
 							<%if(sOriginAction.equals("BlockEditVD")){%>
 							<font color="#C0C0C0">
 								Character Count &nbsp;&nbsp;(Database Max = 30)
@@ -923,7 +923,7 @@ function setup()
 						</td>
 						<td>
 							<font color="#C0C0C0">
-								<input type="text" name="CDE_IDTxt" value="<%=sPublicVDID%>" size="20" readonly onHelp="showHelp('Help_CreateVD.html#createVDForm_CDE_IDTxt'); return false">
+								<input type="text" name="CDE_IDTxt" value="<%=sPublicVDID%>" size="20" readonly onHelp="showHelp('html/Help_CreateVD.html#createVDForm_CDE_IDTxt'); return false">
 							</font>
 						</td>
 					</tr>
@@ -965,10 +965,10 @@ function setup()
 						</td>
 						<td valign="top" align="left">
 							<%if(sOriginAction.equals("BlockEditVD")){%>
-							<textarea name="CreateDefinition" style="width:80%" rows=6 readonly onHelp="showHelp('Help_CreateVD.html#createVDForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
+							<textarea name="CreateDefinition" style="width:80%" rows=6 readonly onHelp="showHelp('html/Help_CreateVD.html#createVDForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
 							<!--  &nbsp;&nbsp; <font color="#C0C0C0">Search</a></font> -->
 							<% } else {%>
-							<textarea name="CreateDefinition" style="width:80%" rows=6 onHelp="showHelp('Help_CreateVD.html#createVDForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
+							<textarea name="CreateDefinition" style="width:80%" rows=6 onHelp="showHelp('html/Help_CreateVD.html#createVDForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
 							<!-- &nbsp;&nbsp; <font color="#FF0000"> <a href="javascript:OpenEVSWindow()">Search</a></font> -->
 							<% } %>
 						</td>
@@ -997,7 +997,7 @@ function setup()
 							&nbsp;
 						</td>
 						<td>
-							<select name="selConceptualDomain" size="1" style="width:430" multiple onHelp="showHelp('Help_CreateVD.html#createVDForm_selConceptualDomain'); return false">
+							<select name="selConceptualDomain" size="1" style="width:430" multiple onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selConceptualDomain'); return false">
 								<option value="<%=sConDomID%>">
 									<%=sConDom%>
 								</option>
@@ -1033,7 +1033,7 @@ function setup()
 							&nbsp;
 						</td>
 						<td>
-							<select name="selStatus" size="1" onHelp="showHelp('Help_CreateVD.html#createVDForm_selStatus'); return false">
+							<select name="selStatus" size="1" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selStatus'); return false">
 								<option value="" selected="selected"></option>
 								<%
           for (int i = 0; vStatus.size()>i; i++)
@@ -1093,18 +1093,18 @@ function setup()
 									<td valign="top">
 										&nbsp;&nbsp;
 										<input type="checkbox" name="VersionCheck" onClick="javascript:EnableChecks(checked,this);" value="ON" <% if(sVersion.equals("Whole") || sVersion.equals("Point")) { %> checked <% } %>
-											onHelp="showHelp('Help_CreateVD.html#createVDForm_BlockVersion'); return false">
+											onHelp="showHelp('html/Help_CreateVD.html#createVDForm_BlockVersion'); return false">
 									</td>
 									<!--Point check is checked only if the sVersion is Point and disabled otherwise  -->
 									<td>
 										<input type="checkbox" name="PointCheck" onClick="javascript:EnableChecks(checked,this);" value="ON" <%if(sVersion.equals("Point")){%> checked <%} else {%> disabled <%}%>
-											onHelp="showHelp('Help_CreateVD.html#createVDForm_BlockVersion'); return false">
+											onHelp="showHelp('html/Help_CreateVD.html#createVDForm_BlockVersion'); return false">
 										&nbsp;Point Increase
 									</td>
 									<!--Whole check is checked only if the sVersion is Whole and disabled otherwise  -->
 									<td>
 										<input type="checkbox" name="WholeCheck" onClick="javascript:EnableChecks(checked,this)" value="ON" <%if(sVersion.equals("Whole")){%> checked <%} else {%> disabled <%}%>
-											onHelp="showHelp('Help_CreateVD.html#createVDForm_BlockVersion'); return false">
+											onHelp="showHelp('html/Help_CreateVD.html#createVDForm_BlockVersion'); return false">
 										&nbsp;Whole Increase
 									</td>
 								</tr>
@@ -1113,7 +1113,7 @@ function setup()
 						<% } else { %>
 						<td valign="top">
 							<font color="#C0C0C0">
-								<input type="text" name="Version" value="<%=sVersion%>" size=5 readonly onHelp="showHelp('Help_CreateVD.html#createVDForm_Version'); return false">
+								<input type="text" name="Version" value="<%=sVersion%>" size=5 readonly onHelp="showHelp('html/Help_CreateVD.html#createVDForm_Version'); return false">
 							</font>
 							&nbsp;&nbsp;&nbsp;
 							<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
@@ -1155,7 +1155,7 @@ function setup()
 								<col width="35%">
 								<tr>
 									<td valign="top">
-										<select name="selDataType" size="1" onChange="javascript:changeDataType();" style="width:90%" onHelp="showHelp('Help_CreateVD.html#createVDForm_selDataType'); return false">
+										<select name="selDataType" size="1" onChange="javascript:changeDataType();" style="width:90%" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selDataType'); return false">
 											<%
               for (int i = 0; vDataTypes.size()>i; i++)
               {
@@ -1239,7 +1239,7 @@ function setup()
 							&nbsp;
 						</td>
 						<td valign="top">
-							<input type="text" name="BeginDate" value="<%=sBeginDate%>" size="12" maxlength=10 onHelp="showHelp('Help_CreateVD.html#createVDForm_BeginDate'); return false">
+							<input type="text" name="BeginDate" value="<%=sBeginDate%>" size="12" maxlength=10 onHelp="showHelp('html/Help_CreateVD.html#createVDForm_BeginDate'); return false">
 							<a href="javascript:show_calendar('createVDForm.BeginDate', null, null, 'MM/DD/YYYY');">
 								<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
 							</a>
@@ -1264,7 +1264,7 @@ function setup()
 							&nbsp;
 						</td>
 						<td>
-							<input type="text" name="EndDate" value="<%=sEndDate%>" size="12" maxlength=10 onHelp="showHelp('Help_CreateVD.html#createVDForm_EndDate'); return false">
+							<input type="text" name="EndDate" value="<%=sEndDate%>" size="12" maxlength=10 onHelp="showHelp('html/Help_CreateVD.html#createVDForm_EndDate'); return false">
 							<a href="javascript:show_calendar('createVDForm.EndDate', null, null, 'MM/DD/YYYY');">
 								<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
 							</a>
@@ -1288,7 +1288,7 @@ function setup()
 							&nbsp;
 						</td>
 						<td>
-							<select name="selUOM" size="1" onHelp="showHelp('Help_CreateVD.html#createVDForm_selUOM'); return false">
+							<select name="selUOM" size="1" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selUOM'); return false">
 								<option value="" selected></option>
 								<%
           for (int i = 0; vUOM.size()>i; i++)
@@ -1321,7 +1321,7 @@ function setup()
 							&nbsp;
 						</td>
 						<td>
-							<select name="selUOMFormat" size="1" onHelp="showHelp('Help_CreateVD.html#createVDForm_selUOMFormat'); return false">
+							<select name="selUOMFormat" size="1" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selUOMFormat'); return false">
 								<option value="" selected></option>
 								<%        for (int i = 0; vUOMFormat.size()>i; i++)
           {
@@ -1353,7 +1353,7 @@ function setup()
 							&nbsp;
 						</td>
 						<td>
-							<input type="text" name="tfMinLength" value="<%=sMinLen%>" size="20" maxlength=8 onHelp="showHelp('Help_CreateVD.html#createVDForm_tfMinLength'); return false">
+							<input type="text" name="tfMinLength" value="<%=sMinLen%>" size="20" maxlength=8 onHelp="showHelp('html/Help_CreateVD.html#createVDForm_tfMinLength'); return false">
 						</td>
 					</tr>
 					<tr height="25" valign="bottom">
@@ -1373,7 +1373,7 @@ function setup()
 							&nbsp;
 						</td>
 						<td>
-							<input type="text" name="tfMaxLength" value="<%=sMaxLen%>" size="20" maxlength=8 onHelp="showHelp('Help_CreateVD.html#createVDForm_tfMaxLength'); return false">
+							<input type="text" name="tfMaxLength" value="<%=sMaxLen%>" size="20" maxlength=8 onHelp="showHelp('html/Help_CreateVD.html#createVDForm_tfMaxLength'); return false">
 						</td>
 					</tr>
 					<tr height="25" valign="bottom">
@@ -1393,7 +1393,7 @@ function setup()
 							&nbsp;
 						</td>
 						<td>
-							<input type="text" name="tfLowValue" value="<%=sLowValue%>" size="20" maxlength=255 <% if (!sDataType.equalsIgnoreCase("NUMBER")) { %> disabled <% } %> onHelp="showHelp('Help_CreateVD.html#createVDForm_tfLowValue'); return false">
+							<input type="text" name="tfLowValue" value="<%=sLowValue%>" size="20" maxlength=255 <% if (!sDataType.equalsIgnoreCase("NUMBER")) { %> disabled <% } %> onHelp="showHelp('html/Help_CreateVD.html#createVDForm_tfLowValue'); return false">
 						</td>
 					</tr>
 					<tr height="25" valign="bottom">
@@ -1413,7 +1413,7 @@ function setup()
 							&nbsp;
 						</td>
 						<td>
-							<input type="text" name="tfHighValue" value="<%=sHighValue%>" size="20" maxlength=255 <% if (!sDataType.equalsIgnoreCase("NUMBER")) { %> disabled <% } %> onHelp="showHelp('Help_CreateVD.html#createVDForm_tfHighValue'); return false">
+							<input type="text" name="tfHighValue" value="<%=sHighValue%>" size="20" maxlength=255 <% if (!sDataType.equalsIgnoreCase("NUMBER")) { %> disabled <% } %> onHelp="showHelp('html/Help_CreateVD.html#createVDForm_tfHighValue'); return false">
 						</td>
 					</tr>
 					<tr height="25" valign="bottom">
@@ -1433,7 +1433,7 @@ function setup()
 							&nbsp;
 						</td>
 						<td>
-							<input type="text" name="tfDecimal" value="<%=sDecimal%>" size="20" maxlength=2 onHelp="showHelp('Help_CreateVD.html#createVDForm_tfDecimal'); return false">
+							<input type="text" name="tfDecimal" value="<%=sDecimal%>" size="20" maxlength=2 onHelp="showHelp('html/Help_CreateVD.html#createVDForm_tfDecimal'); return false">
 						</td>
 					</tr>
 					<!-- Classification Scheme and items -->
@@ -1464,9 +1464,9 @@ function setup()
 								<tr>
 									<td colspan=3 valign=top>
 										<%if (sOriginAction.equals("BlockEditVD")){%>
-										<select name="selCS" size="1" style="width:97%" onChange="ChangeCS();" onHelp="showHelp('Help_CreateVD.html#createVDForm_BlockselCS'); return false">
+										<select name="selCS" size="1" style="width:97%" onChange="ChangeCS();" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_BlockselCS'); return false">
 											<% } else { %>
-											<select name="selCS" size="1" style="width:97%" onChange="ChangeCS();" onHelp="showHelp('Help_CreateVD.html#createVDForm_selCS'); return false">
+											<select name="selCS" size="1" style="width:97%" onChange="ChangeCS();" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selCS'); return false">
 												<% } %>
 												<option value="" selected></option>
 												<% for (int i = 0; vCS.size()>i; i++)
@@ -1482,9 +1482,9 @@ function setup()
 									</td>
 									<td colspan=2 valign=top>
 										<%if (sOriginAction.equals("BlockEditVD")){%>
-										<select name="selCSI" size="5" style="width:100%" onChange="selectCSI();" onClick="selectCSI();" onHelp="showHelp('Help_CreateVD.html#createVDForm_BlockselCS'); return false">
+										<select name="selCSI" size="5" style="width:100%" onChange="selectCSI();" onClick="selectCSI();" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_BlockselCS'); return false">
 											<% } else { %>
-											<select name="selCSI" size="5" style="width:100%" onChange="selectCSI();" onHelp="showHelp('Help_CreateVD.html#createVDForm_selCS'); return false">
+											<select name="selCSI" size="5" style="width:100%" onChange="selectCSI();" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selCS'); return false">
 												<% } %>
 											</select>
 									</td>
@@ -1515,9 +1515,9 @@ function setup()
 									</td>
 									<td colspan=2 valign=top>
 										<%if (sOriginAction.equals("BlockEditVD")){%>
-										<select name="selectedCS" size="5" style="width:97%" multiple onchange="addSelectCSI(false, true, '');" onHelp="showHelp('Help_CreateVD.html#createVDForm_BlockselCS'); return false">
+										<select name="selectedCS" size="5" style="width:97%" multiple onchange="addSelectCSI(false, true, '');" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_BlockselCS'); return false">
 											<% } else { %>
-											<select name="selectedCS" size="5" style="width:97%" multiple onchange="addSelectCSI(false, true, '');" onHelp="showHelp('Help_CreateVD.html#createVDForm_selCS'); return false">
+											<select name="selectedCS" size="5" style="width:97%" multiple onchange="addSelectCSI(false, true, '');" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selCS'); return false">
 												<% } %>
 												<%                  //store selected cs list on load 
                   if (vSelCSIDList != null) 
@@ -1540,9 +1540,9 @@ function setup()
 									</td>
 									<td colspan=2 valign=top>
 										<%if (sOriginAction.equals("BlockEditVD")){%>
-										<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('Help_CreateVD.html#createVDForm_BlockselCS'); return false">
+										<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_BlockselCS'); return false">
 											<% } else { %>
-											<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('Help_CreateVD.html#createVDForm_selCS'); return false">
+											<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selCS'); return false">
 												<% } %>
 											</select>
 									</td>
@@ -1564,7 +1564,7 @@ function setup()
 										&nbsp;
 									</td>
 									<td colspan=2 valign=top>
-										<select name="selCSIACList" size="3" style="width:100%" onHelp="showHelp('Help_CreateVD.html#createVDForm_BlockselCS'); return false">
+										<select name="selCSIACList" size="3" style="width:100%" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_BlockselCS'); return false">
 										</select>
 									</td>
 								</tr>
@@ -1612,7 +1612,7 @@ function setup()
 								</tr>
 								<tr>
 									<td colspan=4 valign="top">
-										<select name="selContact" size="4" style="width:100%" onchange="javascript:enableContButtons();" onHelp="showHelp('Help_CreateDE.html#newCDEForm_selContact'); return false">
+										<select name="selContact" size="4" style="width:100%" onchange="javascript:enableContButtons();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContact'); return false">
 											<%	
 				Enumeration enum1 = hContacts.keys();
 				while (enum1.hasMoreElements())
@@ -1659,7 +1659,7 @@ function setup()
 							&nbsp;
 						</td>
 						<td>
-							<select name="selSource" size="1" onHelp="showHelp('Help_CreateVD.html#createVDForm_selSource'); return false">
+							<select name="selSource" size="1" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selSource'); return false">
 								<option value=""></option>
 								<%         
 		   boolean isFound = false;
@@ -1701,7 +1701,7 @@ function setup()
 							&nbsp;
 						</td>
 						<td>
-							<textarea name="CreateChangeNote" cols="69" onHelp="showHelp('Help_CreateVD.html#createVDForm_CreateComment'); return false" rows=2><%=sChangeNote%></textarea>
+							<textarea name="CreateChangeNote" cols="69" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_CreateComment'); return false" rows=2><%=sChangeNote%></textarea>
 						</td>
 					</tr>
 					<tr height="25" valign="bottom">

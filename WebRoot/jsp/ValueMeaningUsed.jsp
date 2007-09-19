@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningUsed.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningUsed.jsp,v 1.2 2007-09-19 16:59:35 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -79,7 +79,7 @@
 			</tr>
 			<tr>
 				<td>
-					<form name="VMUse" method="POST" action="/cdecurate/NCICurationServlet?reqType=<%=VMForm.ELM_FORM_REQ_USED%>">
+					<form name="VMUse" method="POST" action="../../cdecurate/NCICurationServlet?reqType=<%=VMForm.ELM_FORM_REQ_USED%>">
 						<jsp:include page="<%=VMForm.JSP_VM_TITLE%>" flush="true" />
 						<div class="tabbody" style="width: 99%">
 							<div class="ind2">
@@ -225,7 +225,7 @@
 							<% } %>
 							<hr id="<%=VMForm.ELM_VD_NAME%>">
 							<div align="right">
-								 <a href="javascript:setFocusTo('startTop');"><img src="images/returntotop.gif" border="0" alt="Return to Top"> Return to Top</a>
+								 <a href="javascript:setFocusTo('startTop');"><img src="../../images/returntotop.gif" border="0" alt="Return to Top"> Return to Top</a>
 							</div>
 							
 							<!--Value Domain-->
@@ -322,7 +322,7 @@
 							<% } %>
 							<hr id="<%=VMForm.ELM_DE_NAME%>">
 							<div align="right">
-								 <a href="javascript:setFocusTo('startTop');"><img src="images/returntotop.gif" border="0" alt="Return to Top"> Return to Top</a>
+								 <a href="javascript:setFocusTo('startTop');"><img src="../../images/returntotop.gif" border="0" alt="Return to Top"> Return to Top</a>
 							</div>
 							<div class="ind2" style="display:inline;"> <!--  width:49%;">  -->
 								<b>
@@ -419,7 +419,7 @@
 							<% } %>
 							<hr>
 							<div align="right">
-								 <a href="javascript:setFocusTo('startTop');"><img src="images/returntotop.gif" border="0" alt="Return to Top"> Return to Top</a>
+								 <a href="javascript:setFocusTo('startTop');"><img src="../../images/returntotop.gif" border="0" alt="Return to Top"> Return to Top</a>
 							</div>
 						</div>
 						<div style="display:none">

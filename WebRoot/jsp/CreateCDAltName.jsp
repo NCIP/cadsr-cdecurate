@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateCDAltName.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateCDAltName.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -204,7 +204,7 @@
 						Alternate Name Type
 					</td>
 					<td colspan=2>
-						<select name="entAltnameType" size="1" style="width:90%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						<select name="entAltnameType" size="1" style="width:90%" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
 							<option value="EVS_NODE">
 								EVS_NODE
 							</option>
@@ -244,7 +244,7 @@
 						Select Name Of EVS Vocabulary (Use Case 3a)
 					</td>
 					<td colspan=2>
-						<select name="selEvsVocab" size="1" style="width:90%" onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
+						<select name="selEvsVocab" size="1" style="width:90%" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false">
 							<option value="C3DName">
 								Thesaurus
 							</option>
@@ -275,7 +275,7 @@
 						Select Name Of Non-Evs Vocabulary (Use Case 3b)
 					</td>
 					<td valign="top" colspan=2>
-						<textarea name="txtNonEvsVocab" style="width:90%" rows=2 onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
+						<textarea name="txtNonEvsVocab" style="width:90%" rows=2 onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
 					</td>
 				</tr>
 				<tr height="75" valign="top">
@@ -287,7 +287,7 @@
 						Enter Name Of caDSR Document (Use Case 3c)
 					</td>
 					<td valign="top" colspan=2>
-						<textarea name="txtExternalList" style="width:90%" rows=2 onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
+						<textarea name="txtExternalList" style="width:90%" rows=2 onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
 					</td>
 				</tr>
 				<tr height="75" valign="top">
@@ -299,7 +299,7 @@
 						Enter Name Of External List (Use Case 3d)
 					</td>
 					<td valign="top" colspan=2>
-						<textarea name="txtExternalList" style="width:90%" rows=2 onHelp="showHelp('../Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
+						<textarea name="txtExternalList" style="width:90%" rows=2 onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage'); return false"></textarea>
 					</td>
 				</tr>
 				<tr>

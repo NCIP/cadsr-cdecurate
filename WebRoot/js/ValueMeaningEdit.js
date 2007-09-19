@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.1 2007-09-10 16:16:48 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.2 2007-09-19 16:59:34 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 	var secondWindow;
@@ -32,7 +32,7 @@
 	    document.SearchActionForm.isValidSearch.value = "false";
 	    if (secondWindow && !secondWindow.closed)
 	       secondWindow.close();
-	  	secondWindow = window.open("NCICurationServlet?reqType=searchBlocks&actSelect=FirstSearch" + "&listSearchFor=" + searchComp + "&listContextFilterVocab=NCI_Thesaurus", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
+	  	secondWindow = window.open("../../cdecurate/NCICurationServlet?reqType=searchBlocks&actSelect=FirstSearch" + "&listSearchFor=" + searchComp + "&listContextFilterVocab=NCI_Thesaurus", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
 	}
 	
 	function deleteConcept(iRow, conName)
@@ -136,7 +136,7 @@
       		secondWindow.close();
     	document.SearchActionForm.isValidSearch.value = "false";  
     	document.SearchActionForm.itemType.value = sType;
-        secondWindow = window.open("NCICurationServlet?reqType=AltNamesDefs&searchEVS=" + document.SearchActionForm.searchEVS.value, "designate", "width=900,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
+        secondWindow = window.open("../../cdecurate/NCICurationServlet?reqType=AltNamesDefs&searchEVS=" + document.SearchActionForm.searchEVS.value, "designate", "width=900,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
   	}
   	
   	//open cde browser tool
