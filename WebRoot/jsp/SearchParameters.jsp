@@ -1,18 +1,13 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.4 2007-09-26 14:25:36 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.5 2007-09-26 16:52:15 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
-<%
-String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
 <html>
 	<head>
 		<title>
 			Search Parameters
 		</title>
-			 <base href="<%=basePath%>">
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+			<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 		<link href="css/FullDesignArial2.css" rel="stylesheet" type="text/css">
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/SearchParameters.js"></SCRIPT>
