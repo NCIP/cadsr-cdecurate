@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.3 2007-09-26 14:24:59 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 <%
@@ -14,7 +14,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			 <base href="<%=basePath%>">
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
-		<link href="css/FullDesignArial2.css" rel="stylesheet" type="text/css">
+		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/SearchParameters.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/date-picker.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
