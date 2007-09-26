@@ -1,14 +1,19 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/OpenSearchWindow.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/OpenSearchWindow.jsp,v 1.3 2007-09-26 16:52:15 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <!-- goes to secondary window error page if error occurs -->
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <curate:checkLogon name="Userbean" page="/ErrorPageWindow.jsp" />
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
 <html>
 	<head>
-		<title>
+	  <BASE href="<%=basePath%>">
+	  <title>
 			CDE Curation: Search
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
