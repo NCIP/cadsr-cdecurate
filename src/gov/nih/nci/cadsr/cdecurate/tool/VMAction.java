@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.26 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.27 2007-11-28 19:44:47 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -44,7 +44,7 @@ public class VMAction implements Serializable
   {
     ResultSet rs = null;
     CallableStatement cstmt = null;
-    Connection conn = null;
+    //Connection conn = null;
     try
     {
       //do not continue search if no search filter
@@ -54,17 +54,17 @@ public class VMAction implements Serializable
       Vector<VM_Bean> vmList = data.getVMList();
       if (vmList == null) vmList = new Vector<VM_Bean>();
       //get the connection from data if exists (used for testing)
-      conn = data.getDBConnection();
-      if (conn == null || conn.isClosed())
-        conn = data.getCurationServlet().connectDB(); //VMServlet.makeDBConnection();
+     // conn = data.getDBConnection();
+      //if (conn == null || conn.isClosed())
+        //conn = data.getCurationServlet().connectDB(); //VMServlet.makeDBConnection();
       // Create a Callable Statement object.
-      if (conn != null)
+      if (data.getCurationServlet().getConn() != null)
       {
-        cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?)}");
+        cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?)}");
         // Now tie the placeholders for out parameters.
         cstmt.registerOutParameter(5, OracleTypes.CURSOR);
         // Now tie the placeholders for In parameters.
-        cstmt.setString(1, data.getSearchTerm());  //name 
+        cstmt.setString(1, data.getSearchTerm());  //name
         cstmt.setString(2, data.getSearchFilterCD());
         cstmt.setString(3, data.getSearchFilterDef());
         cstmt.setString(4, data.getSearchFilterCondr());
@@ -79,10 +79,10 @@ public class VMAction implements Serializable
           //loop through the resultSet and add them to the bean
           while(rs.next())
           {
-            VM_Bean vmBean = doSetVMAttributes(rs, conn);
+            VM_Bean vmBean = doSetVMAttributes(rs, data.getCurationServlet().getConn());
             vmBean.setVM_BEGIN_DATE(rs.getString("begin_date"));
             vmBean.setVM_END_DATE(rs.getString("end_date"));
-            vmBean.setVM_CD_NAME(rs.getString("cd_name"));            
+            vmBean.setVM_CD_NAME(rs.getString("cd_name"));
             vmList.addElement(vmBean);  //add the bean to a vector
           }  //END WHILE
         }   //END IF
@@ -100,8 +100,8 @@ public class VMAction implements Serializable
     {
       if(rs!=null) rs.close();
       if(cstmt!=null) cstmt.close();
-      if (data.getDBConnection() == null)
-        data.getCurationServlet().freeConnection(conn);  //VMServlet.closeDBConnection(conn);
+     // if (data.getDBConnection() == null)
+      //  data.getCurationServlet().freeConnection(conn);  //VMServlet.closeDBConnection(conn);
     }
     catch(Exception ee)
     {
@@ -162,10 +162,10 @@ public class VMAction implements Serializable
         if (vmConcept == null) vmConcept = new EVS_Bean();
         if (vSelAttr.contains("Value Meaning")) vResult.addElement(VMBean.getVM_SHORT_MEANING());
         if (vSelAttr.contains("Meaning Description")) vResult.addElement(VMBean.getVM_DESCRIPTION());
-        if (vSelAttr.contains("Conceptual Domain")) vResult.addElement(VMBean.getVM_CD_NAME());        
-        if (vSelAttr.contains("EVS Identifier")) vResult.addElement(conID);  //vmConcept.getCONCEPT_IDENTIFIER());        
-        if (vSelAttr.contains("Definition Source")) vResult.addElement(defsrc);  //vmConcept.getEVS_DEF_SOURCE());        
-        if (vSelAttr.contains("Vocabulary")) vResult.addElement(vocab);  //vmConcept.getEVS_DATABASE());        
+        if (vSelAttr.contains("Conceptual Domain")) vResult.addElement(VMBean.getVM_CD_NAME());
+        if (vSelAttr.contains("EVS Identifier")) vResult.addElement(conID);  //vmConcept.getCONCEPT_IDENTIFIER());
+        if (vSelAttr.contains("Definition Source")) vResult.addElement(defsrc);  //vmConcept.getEVS_DEF_SOURCE());
+        if (vSelAttr.contains("Vocabulary")) vResult.addElement(vocab);  //vmConcept.getEVS_DATABASE());
         if (vSelAttr.contains("Comments")) vResult.addElement(VMBean.getVM_CHANGE_NOTE());
         if (vSelAttr.contains("Effective Begin Date")) vResult.addElement(VMBean.getVM_BEGIN_DATE());
         if (vSelAttr.contains("Effective End Date")) vResult.addElement(VMBean.getVM_END_DATE());
@@ -209,7 +209,7 @@ public class VMAction implements Serializable
           for(int i=0; i<(vSRows.size()); i++)
           {
             VM_Bean VMSortBean1 = (VM_Bean)vSRows.elementAt(i);
-            String Name1 = getVMFieldValue(VMSortBean1, sortField);            
+            String Name1 = getVMFieldValue(VMSortBean1, sortField);
             int tempInd = i;
             VM_Bean tempBean = VMSortBean1;
             String tempName = Name1;
@@ -217,7 +217,7 @@ public class VMAction implements Serializable
             for(int j=i+1; j<(vSRows.size()); j++)
             {
               VM_Bean VMSortBean2 = (VM_Bean)vSRows.elementAt(j);
-              String Name2 = getVMFieldValue(VMSortBean2, sortField);         
+              String Name2 = getVMFieldValue(VMSortBean2, sortField);
               try
               { 
                // UtilService util = data.getUtil();
@@ -337,15 +337,16 @@ public class VMAction implements Serializable
         //set concept (get concept will be done at the time of selection itself
         ConceptAction conAct = new ConceptAction();
         ConceptForm condata = new ConceptForm();
-        if (data.getDBConnection() != null)
-          condata.setDBConnection(data.getDBConnection()); //get the connection
+        condata.setCurationServlet(data.getCurationServlet());
+        if (data.getCurationServlet().getConn() != null)
+          condata.setDBConnection(data.getCurationServlet().getConn()); //get the connection
         else
-          condata.setDBConnection(data.getCurationServlet().connectDB()); //VMServlet.makeDBConnection());  //make the connection
-
-        String conArray = conAct.getConArray(vCon, true, condata);        
-        if (data.getDBConnection() == null)
-          data.getCurationServlet().freeConnection(condata.getDBConnection());  //VMServlet.closeDBConnection(condata.getDBConnection());  //close the connection
+          condata.setDBConnection(data.getCurationServlet().getConn()); //VMServlet.makeDBConnection());  //make the connection
         
+          String conArray = conAct.getConArray(vCon, true, condata);
+        //if (data.getDBConnection() == null)
+          //data.getCurationServlet().freeConnection(condata.getDBConnection());  //VMServlet.closeDBConnection(condata.getDBConnection());  //close the connection
+
         //append the concept message
         if (!condata.getStatusMsg().equals(""))
           erMsg += condata.getStatusMsg();
@@ -469,8 +470,8 @@ public class VMAction implements Serializable
         vm.setVM_CONCEPT_LIST(newList);
         pv.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_UPD);  //PVForm.CADSR_ACTION_INS);  //pv changed
       }
-      //get the name   
-      this.makeVMNameFromConcept(vm, ConceptForm.FOR_PV_PAGE_CONCEPT);          
+      //get the name
+      this.makeVMNameFromConcept(vm, ConceptForm.FOR_PV_PAGE_CONCEPT);
   }
   
   /**
@@ -505,7 +506,7 @@ public class VMAction implements Serializable
             vm.setVM_LONG_NAME(eBean.getLONG_NAME());  //have same name for now
             break;
         case ConceptForm.FOR_VM_PAGE_CONCEPT:
-            makeVMNameFromConcept(vm, ConceptForm.FOR_VM_PAGE_CONCEPT);      
+            makeVMNameFromConcept(vm, ConceptForm.FOR_VM_PAGE_CONCEPT);
             break;
     }
   }
@@ -788,7 +789,7 @@ public class VMAction implements Serializable
        String VMName = vmBean.getVM_SHORT_MEANING();
        //check for vm name match
        getExistingVM(VMName, "", "", data);  //check if vm exists
-       Vector<VM_Bean> nameList = data.getExistVMList();      
+       Vector<VM_Bean> nameList = data.getExistVMList();
        //if the returned one has the same idseq as as the one in hand; ignore it
       // boolean editexisting = false;
        if (nameList.size() == 1)
@@ -903,7 +904,7 @@ public class VMAction implements Serializable
     // logger.info(m_servlet.getLogMessage(m_classReq, "setVM_EVS", "starting set", startDate,startDate));
     ResultSet rs = null;
     CallableStatement cstmt = null;
-    Connection conn = null;    
+    //Connection conn = null;
     String stMsg = ""; // out
     try    
     {
@@ -911,50 +912,55 @@ public class VMAction implements Serializable
       String sAction = vm.getVM_SUBMIT_ACTION();
       if (sAction == null) sAction = VMForm.CADSR_ACTION_INS;
       //get the connection from data if exists (used for testing)
-      conn = data.getDBConnection();
-      if (conn == null || conn.isClosed())
-        conn = data.getCurationServlet().connectDB(); //VMServlet.makeDBConnection();
-      if (conn != null)
+     // conn = data.getDBConnection();
+     // if (conn == null || conn.isClosed())
+       // conn = data.getCurationServlet().connectDB(); //VMServlet.makeDBConnection();
+      if (data.getCurationServlet().getConn() != null)
       {
-        cstmt = conn.prepareCall("{call SBREXT.SBREXT_SET_ROW.SET_VM(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+        //cstmt = conn.prepareCall("{call SBREXT.SBREXT_SET_ROW.SET_VM(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+        cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT_SET_ROW.SET_VM(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
         // register the Out parameters
-        cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); // return code
-        cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // action
-        cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // vm_idseq
-        cstmt.registerOutParameter(5, java.sql.Types.VARCHAR); // preferred name
-        cstmt.registerOutParameter(6, java.sql.Types.VARCHAR); // long name
-        cstmt.registerOutParameter(7, java.sql.Types.VARCHAR); // preferred definition
-        cstmt.registerOutParameter(8, java.sql.Types.VARCHAR); // context idseq
-        cstmt.registerOutParameter(9, java.sql.Types.VARCHAR); // asl name
-        cstmt.registerOutParameter(10, java.sql.Types.VARCHAR); // version
-        cstmt.registerOutParameter(11, java.sql.Types.VARCHAR); // vm_id
-        cstmt.registerOutParameter(12, java.sql.Types.VARCHAR); // latest version ind
-        cstmt.registerOutParameter(13, java.sql.Types.VARCHAR); // condr idseq
-        cstmt.registerOutParameter(14, java.sql.Types.VARCHAR); // definition source
-        cstmt.registerOutParameter(15, java.sql.Types.VARCHAR); // origin
-        cstmt.registerOutParameter(16, java.sql.Types.VARCHAR); // change note
-        cstmt.registerOutParameter(17, java.sql.Types.VARCHAR); // begin date
-        cstmt.registerOutParameter(18, java.sql.Types.VARCHAR); // end date
-        cstmt.registerOutParameter(19, java.sql.Types.VARCHAR); // created by
-        cstmt.registerOutParameter(20, java.sql.Types.VARCHAR); // date created
-        cstmt.registerOutParameter(21, java.sql.Types.VARCHAR); // modified by
-        cstmt.registerOutParameter(22, java.sql.Types.VARCHAR); // date modified
+        //cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); // ua_name
+        cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // return code
+        cstmt.registerOutParameter(3, java.sql.Types.VARCHAR); // action
+        cstmt.registerOutParameter(5, java.sql.Types.VARCHAR); // vm_idseq
+        cstmt.registerOutParameter(6, java.sql.Types.VARCHAR); // preferred name
+        cstmt.registerOutParameter(7, java.sql.Types.VARCHAR); // long name
+        cstmt.registerOutParameter(8, java.sql.Types.VARCHAR); // preferred definition
+        cstmt.registerOutParameter(9, java.sql.Types.VARCHAR); // context idseq
+        cstmt.registerOutParameter(10, java.sql.Types.VARCHAR); // asl name
+        cstmt.registerOutParameter(11, java.sql.Types.VARCHAR); // version
+        cstmt.registerOutParameter(12, java.sql.Types.VARCHAR); // vm_id
+        cstmt.registerOutParameter(13, java.sql.Types.VARCHAR); // latest version ind
+        cstmt.registerOutParameter(14, java.sql.Types.VARCHAR); // condr idseq
+        cstmt.registerOutParameter(15, java.sql.Types.VARCHAR); // definition source
+        cstmt.registerOutParameter(16, java.sql.Types.VARCHAR); // origin
+        cstmt.registerOutParameter(17, java.sql.Types.VARCHAR); // change note
+        cstmt.registerOutParameter(18, java.sql.Types.VARCHAR); // begin date
+        cstmt.registerOutParameter(19, java.sql.Types.VARCHAR); // end date
+        cstmt.registerOutParameter(20, java.sql.Types.VARCHAR); // created by
+        cstmt.registerOutParameter(21, java.sql.Types.VARCHAR); // date created
+        cstmt.registerOutParameter(22, java.sql.Types.VARCHAR); // modified by
+        cstmt.registerOutParameter(23, java.sql.Types.VARCHAR); // date modified
 
+		//Get the username from the session.
+        String userName = data.getCurationServlet().sessionData.UsrBean.getUsername();
         // Set the In parameters (which are inherited from the PreparedStatement class)
-        cstmt.setString(2, sAction);
-        cstmt.setString(3, conArray);
+        cstmt.setString(1, userName);
+        cstmt.setString(3, sAction);
+        cstmt.setString(4, conArray);
         // set value meaning if action is to update
         if (sAction.equals(VMForm.CADSR_ACTION_UPD) || conArray == null)
-          cstmt.setString(6, vm.getVM_SHORT_MEANING());
+          cstmt.setString(7, vm.getVM_SHORT_MEANING());
         //definition and change note
-        cstmt.setString(7, vm.getVM_DESCRIPTION());
-        cstmt.setString(16, vm.getVM_CHANGE_NOTE());
+        cstmt.setString(8, vm.getVM_DESCRIPTION());
+        cstmt.setString(17, vm.getVM_CHANGE_NOTE());
         //remove the concepts
         if (vm.getVM_CONDR_IDSEQ().equals(" "))
-            cstmt.setString(13, null);
+            cstmt.setString(14, null);
         // Now we are ready to call the stored procedure
         cstmt.execute();
-        String sRet = cstmt.getString(1);
+        String sRet = cstmt.getString(2);
         if (sRet != null && !sRet.equals("") && !sRet.equals("API_VM_300"))
         {
           stMsg = "\\t" + sRet + " : Unable to update the Value Meaning - "
@@ -966,18 +972,18 @@ public class VMAction implements Serializable
         else
         {
           // store the vm attributes created by stored procedure in the bean
-          vm.setVM_SHORT_MEANING(cstmt.getString(6));
-          vm.setVM_LONG_NAME(cstmt.getString(6));
-          vm.setVM_DESCRIPTION(cstmt.getString(7));
-          vm.setVM_CHANGE_NOTE(cstmt.getString(16));
-          vm.setVM_BEGIN_DATE(cstmt.getString(17));
-          vm.setVM_END_DATE(cstmt.getString(18));
-          vm.setVM_CONDR_IDSEQ(cstmt.getString(13));
-          vm.setVM_IDSEQ(cstmt.getString(4));
-          vm.setVM_CONTE_IDSEQ(cstmt.getString(8));
-          vm.setASL_NAME(cstmt.getString(9));
-          vm.setVM_VERSION(cstmt.getString(10));
-          vm.setVM_ID(cstmt.getString(11));
+          vm.setVM_SHORT_MEANING(cstmt.getString(7));
+          vm.setVM_LONG_NAME(cstmt.getString(7));
+          vm.setVM_DESCRIPTION(cstmt.getString(8));
+          vm.setVM_CHANGE_NOTE(cstmt.getString(17));
+          vm.setVM_BEGIN_DATE(cstmt.getString(18));
+          vm.setVM_END_DATE(cstmt.getString(19));
+          vm.setVM_CONDR_IDSEQ(cstmt.getString(14));
+          vm.setVM_IDSEQ(cstmt.getString(5));
+          vm.setVM_CONTE_IDSEQ(cstmt.getString(9));
+          vm.setASL_NAME(cstmt.getString(10));
+          vm.setVM_VERSION(cstmt.getString(11));
+          vm.setVM_ID(cstmt.getString(12));
         //  System.out.println(cstmt.getString(11) + " condr " + cstmt.getString(13) + " change " + cstmt.getString(16));
         }
       }
@@ -995,8 +1001,8 @@ public class VMAction implements Serializable
     {
       if (rs != null) rs.close();
       if (cstmt != null) cstmt.close();
-      if (data.getDBConnection() == null)
-        data.getCurationServlet().freeConnection(conn);  //VMServlet.closeDBConnection(conn);
+     // if (data.getDBConnection() == null)
+       // data.getCurationServlet().freeConnection(conn);  //VMServlet.closeDBConnection(conn);
     }
     catch (Exception ee)
     {
@@ -1021,24 +1027,26 @@ public class VMAction implements Serializable
   private String setCDVMS(VMForm data, VM_Bean vm)
   {
      //capture the duration
-     //java.util.Date startDate = new java.util.Date();          
+     //java.util.Date startDate = new java.util.Date();
      //logger.info(m_servlet.getLogMessage(m_classReq, "setCDVMS", "starting set", startDate, startDate));
-  
-     Connection conn = null;
+
+     //Connection conn = null;
      ResultSet rs = null;
      CallableStatement cstmt = null;
      String sReturnCode = "";  //out
      try
      {
          //get the connection from data if exists (used for testing)
-         conn = data.getDBConnection();
-         if (conn == null || conn.isClosed())
-           conn = data.getCurationServlet().connectDB(); //VMServlet.makeDBConnection();
-         if (conn != null)
+         //conn = data.getDBConnection();
+         //if (conn == null || conn.isClosed())
+           //conn = data.getCurationServlet().connectDB(); //VMServlet.makeDBConnection();
+         if (data.getCurationServlet().getConn() != null)
          {
-           cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_CD_VMS(?,?,?,?,?,?,?,?,?,?)}");
+           //cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_CD_VMS(?,?,?,?,?,?,?,?,?,?,?)}");
+           cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT_SET_ROW.SET_CD_VMS(?,?,?,?,?,?,?,?,?,?,?)}");
            // register the Out parameters
-           cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
+           //cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); // ua_name
+           cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //return code
            cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //out cv_idseq
            cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //out cd_idseq
            cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //out value meaning
@@ -1047,14 +1055,20 @@ public class VMAction implements Serializable
            cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //created by
            cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //modified by
            cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //date modified
+
+
            // Set the In parameters (which are inherited from the PreparedStatement class)
-           cstmt.setString(2, VMForm.CADSR_ACTION_INS);
+        //Get the username from the session.
+        String userName = data.getCurationServlet().sessionData.UsrBean.getUsername();
+        // Set the In parameters (which are inherited from the PreparedStatement class)
+           cstmt.setString(1, userName);
+           cstmt.setString(3, VMForm.CADSR_ACTION_INS);
            cstmt.setString(4, vm.getVM_CD_IDSEQ());
            cstmt.setString(5, vm.getVM_SHORT_MEANING());
            cstmt.setString(6, vm.getVM_DESCRIPTION());
             // Now we are ready to call the stored procedure
            cstmt.execute();
-           sReturnCode = cstmt.getString(1);
+           sReturnCode = cstmt.getString(2);
            //String sCV_ID = CStmt.getString(3);
            if (sReturnCode != null && !sReturnCode.equals("") && !sReturnCode.equals("API_CDVMS_203"))
            {
@@ -1065,7 +1079,7 @@ public class VMAction implements Serializable
            }
        }
        //capture the duration
-       //logger.info(m_servlet.getLogMessage(m_classReq, "setCDVMS", "end set", startDate, new java.util.Date()));  
+       //logger.info(m_servlet.getLogMessage(m_classReq, "setCDVMS", "end set", startDate, new java.util.Date()));
      }
      catch(Exception e)
      {
@@ -1078,8 +1092,8 @@ public class VMAction implements Serializable
      {
        if(rs!=null) rs.close();
        if(cstmt!=null) cstmt.close();
-       if (data.getDBConnection() == null)
-         data.getCurationServlet().freeConnection(conn);  //VMServlet.closeDBConnection(conn);
+       //if (data.getDBConnection() == null)
+         //data.getCurationServlet().freeConnection(conn);  //VMServlet.closeDBConnection(conn);
      }
      catch(Exception ee)
      {
@@ -1087,7 +1101,7 @@ public class VMAction implements Serializable
      }
      return sReturnCode;
   }
-  
+
   /**
    * To get the value from the bean for the selected field, called from VMsortedRows.
    *
@@ -1100,7 +1114,7 @@ public class VMAction implements Serializable
   {
     String returnValue = "";
     try
-    {      
+    {
       EVS_Bean curEVS = curBean.getVM_CONCEPT();
       if (curEVS == null) curEVS = new EVS_Bean();
       if (curField.equals("meaning"))
@@ -1117,7 +1131,7 @@ public class VMAction implements Serializable
         returnValue = curEVS.getEVS_DEF_SOURCE();
       else if (curField.equals("database"))
         returnValue = curEVS.getEVS_DATABASE();
-        
+
       if (returnValue == null)
         returnValue = "";
     }
@@ -1227,31 +1241,32 @@ public class VMAction implements Serializable
   private String getConceptCondr(Vector<EVS_Bean> conList, VMForm data)
   {
     String condr = "";
-    Connection conn = null;
-    try
-    {
+    //Connection conn = null;
+    //try
+    //{
       ConceptForm conData = new ConceptForm();
       conData.setConceptList(conList);
-      
-      conn = data.getDBConnection();
-      if (conn == null || conn.isClosed())
-        conn = data.getCurationServlet().connectDB(); //VMServlet.makeDBConnection();
-      conData.setDBConnection(conn);
+
+     // conn = data.getDBConnection();
+     // if (conn == null || conn.isClosed())
+       // conn = data.getCurationServlet().connectDB(); //VMServlet.makeDBConnection();
+      conData.setDBConnection(data.getCurationServlet().getConn());
+      conData.setCurationServlet(data.getCurationServlet());
       //call the method n concept action
       ConceptAction conAct = new ConceptAction();
       condr = conAct.getConDerivation(conData);
-    }
-    catch (SQLException e)
-    {
-      logger.fatal("VM concept search connection problem ", e);
+    //}
+    //catch (SQLException e)
+    //{
+      //logger.fatal("VM concept search connection problem ", e);
       //e.printStackTrace();
-    }
-    finally
-    {
+    //}
+    //finally
+    //{
         //close the conn only if not testing
-        if (data.getDBConnection() == null)
-          data.getCurationServlet().freeConnection(conn);  //VMServlet.closeDBConnection(conn);        
-    }
+        //if (data.getDBConnection() == null)
+          //data.getCurationServlet().freeConnection(conn);  //VMServlet.closeDBConnection(conn);
+    //}
     return condr;
   }
 
@@ -1274,7 +1289,7 @@ public class VMAction implements Serializable
     //set teh flag
     Vector<VM_Bean> vmList = data.getVMList();
     if (vmList != null && vmList.size() >0)
-    {      
+    {
       //System.out.println(vmName+sCondr+sDef+ " : VMs after - " + data.getVMList().size());
       if (!vmName.equals(""))
         data.setExistVMList(vmList);

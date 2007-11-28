@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.37 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.38 2007-11-28 19:44:08 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -836,10 +836,10 @@ public class AltNamesDefsSession implements Serializable
 
     public static void blockSave(CurationServlet serv_, HttpSession session_) throws SQLException
     {
-        Connection conn = null;
+        //Connection conn = null;
         try
         {
-            conn = serv_.connectDB(session_);
+            //conn = serv_.connectDB(session_);
 
             // Get the session buffer.
             String sessName = getSessName(_beanBlock);
@@ -852,7 +852,7 @@ public class AltNamesDefsSession implements Serializable
             }
 
             // Open a database connection.
-            DBAccess db = new DBAccess(conn);
+            DBAccess db = new DBAccess(serv_.getConn());
 
             // For a "normal" block edit, the changed records are written back to their original Alternate.
             if (sess._blockVersion == false)
@@ -904,8 +904,8 @@ public class AltNamesDefsSession implements Serializable
         }
         finally
         {
-            if (conn != null)
-                conn.close();
+           // if (conn != null)
+             //   conn.close();
         }
     }
 
@@ -920,11 +920,11 @@ public class AltNamesDefsSession implements Serializable
      */
     public static void loadAsNew(CurationServlet serv_, HttpSession session_, AC_Bean ac_) throws Exception
     {
-        Connection conn = null;
+        //Connection conn = null;
         try
         {
-            conn = serv_.connectDB(session_);
-            AltNamesDefsSession.loadAsNew(conn, ac_);
+            //conn = serv_.connectDB(session_);
+            AltNamesDefsSession.loadAsNew(serv_.getConn(), ac_);
         }
         catch (Exception ex)
         {
@@ -932,8 +932,8 @@ public class AltNamesDefsSession implements Serializable
         }
         finally
         {
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
     }
 
@@ -1000,11 +1000,11 @@ public class AltNamesDefsSession implements Serializable
         if (ac_ == null || ac_.size() == 0)
             return;
         AltNamesDefsSession buffer = null;
-        Connection conn = null;
+        //Connection conn = null;
         try
         {
             // Only create the buffer if it doesn't exist.
-            conn = serv_.connectDB(session_);
+         //   conn = serv_.connectDB(session_);
             String sessName = getSessName(_beanBlock);
             buffer = (AltNamesDefsSession) session_.getAttribute(sessName);
             if (buffer == null)
@@ -1012,7 +1012,7 @@ public class AltNamesDefsSession implements Serializable
                 buffer = getSessionDataBlockEdit(session_, sessName, ac_);
 
                 // Load the data
-                DBAccess db = new DBAccess(conn);
+                DBAccess db = new DBAccess(serv_.getConn());
                 try
                 {
                     buffer._alts = db.getAlternates(buffer._acIdseq, true, buffer._showMC);
@@ -1029,8 +1029,8 @@ public class AltNamesDefsSession implements Serializable
         }
         finally
         {
-            if (conn != null)
-                conn.close();
+          //  if (conn != null)
+            //    conn.close();
         }
 
         // This is only done for a Block Edit version.

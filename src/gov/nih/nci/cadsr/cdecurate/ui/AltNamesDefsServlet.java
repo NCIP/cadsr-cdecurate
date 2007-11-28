@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.36 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.37 2007-11-28 19:44:07 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -441,12 +441,12 @@ public class AltNamesDefsServlet
         AltNamesDefsForm form = new AltNamesDefsForm(req_);
 
         String jsp = null;
-        Connection conn = null; 
+        //Connection conn = null; 
         try
         {
             // Get the database connection.
-            conn = _servlet.connectDB(_ub);
-            DBAccess db = new DBAccess(conn);
+           // conn = _servlet.connectDB(_ub);
+            DBAccess db = new DBAccess(_servlet.getConn());
     
             // Default the JSP for the response
             jsp = _jspError;
@@ -509,8 +509,8 @@ public class AltNamesDefsServlet
         finally
         {
             // Close the database connection.
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
 
         // Set the next page and go.
@@ -528,13 +528,13 @@ public class AltNamesDefsServlet
     public Alternates getManualDefinition(HttpServletRequest req_, String launch_)
     {
         // Need a database connection
-        Connection conn = null;
+        //Connection conn = null;
         // Find the manually curated one.
         Alternates alt = null;
         try
         {
-            conn = _servlet.connectDB(_ub);
-            DBAccess db = new DBAccess(conn);
+           // conn = _servlet.connectDB(_ub);
+            DBAccess db = new DBAccess(_servlet.getConn());
             
             // Get the session buffer for the AC
             AltNamesDefsSession buffer = AltNamesDefsSession.getAlternates(req_, launch_);
@@ -557,8 +557,8 @@ public class AltNamesDefsServlet
         //close the connection
         finally
         {
-            if (conn != null)
-                _servlet.freeConnection(conn);
+            //if (conn != null)
+              //  _servlet.freeConnection(conn);
         }
         return alt;
     }

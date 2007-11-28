@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.23 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.24 2007-11-28 19:44:47 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -287,7 +287,7 @@ public class VMServlet extends GenericServlet
   public String submitVM(VM_Bean vm)
   {
     String vmError = "";
-    Connection conn = null;
+    //Connection conn = null;
     try
     {
       vmData.setVMBean(vm);
@@ -299,8 +299,8 @@ public class VMServlet extends GenericServlet
       if (vm != null && !vm.getVM_IDSEQ().equals(""))
       {
         //System.out.println(vm.getVM_IDSEQ() + " vm alt name " + vm.getVM_LONG_NAME());
-        conn = vmData.getCurationServlet().connectDB();
-        vm.save(httpRequest.getSession(), conn, vm.getVM_IDSEQ(), vm.getVM_CONTE_IDSEQ());
+        //conn = vmData.getCurationServlet().getConn();
+        vm.save(httpRequest.getSession(), vmData.getCurationServlet().getConn(), vm.getVM_IDSEQ(), vm.getVM_CONTE_IDSEQ());
       }      
     
     }
@@ -310,8 +310,8 @@ public class VMServlet extends GenericServlet
     }
     finally
     {
-      if (conn != null)
-        vmData.getCurationServlet().freeConnection(conn);
+     // if (conn != null)
+       // vmData.getCurationServlet().freeConnection(conn);
     }
     return vmError;
   }
@@ -689,26 +689,26 @@ public class VMServlet extends GenericServlet
    */
   private void readUsedComponent(CommonACAction dbac, VM_Bean vm, boolean isStatFilter, String orderBy)
   {
-    Connection conn = null;
-    try
-    {
+    //Connection conn = null;
+    //try
+    //{
       //get the connection
-      conn = vmData.getCurationServlet().connectDB();
+      //conn = vmData.getCurationServlet().connectDB();
       //query the database
-      Vector<CommonACBean> vAC = dbac.getAssociated(conn, vm.getVM_SHORT_MEANING(), isStatFilter, orderBy);
+      Vector<CommonACBean> vAC = dbac.getAssociated(vmData.getCurationServlet().getConn(), vm.getVM_SHORT_MEANING(), isStatFilter, orderBy);
       //set data to vm
       dbac.setUsedAttributes(vm, vAC, isStatFilter, null);
-    }
-    catch (Exception e)
-    {
-      logger.fatal("ERROR - : " + e.toString(), e);
-    }
-    finally
-    {
+   // }
+   // catch (Exception e)
+   // {
+    //  logger.fatal("ERROR - : " + e.toString(), e);
+   // }
+    //finally
+    //{
         //close connection
-        if (conn != null)
-            vmData.getCurationServlet().freeConnection(conn);
-    }
+       // if (conn != null)
+       //     vmData.getCurationServlet().freeConnection(conn);
+   // }
   }
   
   /**

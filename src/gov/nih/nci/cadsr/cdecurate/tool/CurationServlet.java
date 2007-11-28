@@ -6,19 +6,21 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 // import files
-import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
 import gov.nih.nci.cadsr.sentinel.util.DSRAlert;
 import gov.nih.nci.cadsr.sentinel.util.DSRAlertImpl;
+
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.Vector;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.RequestDispatcher;
@@ -27,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -94,11 +97,13 @@ public class CurationServlet
     private SetACService       m_setAC          = new SetACService(this);
     public HttpServletRequest  m_classReq       = null;
     public HttpServletResponse m_classRes       = null;
+    private ServletContext m_servletContext;
+    private Connection m_conn=null;
+
     public static final Logger  logger  = Logger.getLogger(CurationServlet.class.getName());
     /** declare the global variable sessionData */
     public Session_Data        sessionData;
-    private ServletContext m_servletContext;
-
+    
     /**
      * @param req HttpServletRequest object
      * @param res HttpServletResponse object
@@ -110,6 +115,7 @@ public class CurationServlet
         m_classReq = req;
         m_classRes = res;
         m_servletContext = sc;
+        //m_conn=conn;
     }
 
     /**
@@ -297,6 +303,20 @@ public class CurationServlet
         }
         return SBRDb_conn;
     }
+    
+    /**
+     * Performs the login 
+     */
+    private void login(HttpServletRequest req, HttpServletResponse res,HttpSession session)
+    {
+    	String username = req.getParameter("Username");
+        String password = req.getParameter("Password");
+        UserBean userbean = new UserBean();
+        userbean.setUsername(username);
+        userbean.setPassword(password);
+        m_conn= this.connectDB(userbean);
+        DataManager.setAttribute(session, "Userbean", userbean);
+    }   
 
     /**
      * The service method services all requests to this servlet.
@@ -309,11 +329,13 @@ public class CurationServlet
        // m_classReq = req;
         session = m_classReq.getSession(true);
         try
-        {
-            // get teh session data object from teh session
+        {    
+        	// get the session data object from the session
             sessionData = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
             if (sessionData == null)
-                sessionData = new Session_Data();
+                     	sessionData = new Session_Data();
+            else
+            	m_conn = connectDB((UserBean)session.getAttribute("Userbean"));
             String reqType = m_classReq.getParameter("reqType");
             // logger.info("servlet reqType!: "+ reqType); //log the request
             m_classReq.setAttribute("LatestReqType", reqType);
@@ -327,6 +349,7 @@ public class CurationServlet
                     {
                         DataManager.clearSessionAttributes(session);
                         sessionData = new Session_Data();
+                        login(m_classReq,m_classRes,session);
                         doHomePage(m_classReq, m_classRes);
                         break;
                     }
@@ -589,6 +612,7 @@ public class CurationServlet
                 this.logger.fatal("Service: no DB Connection");
                 ErrorLogin(m_classReq, m_classRes);
             }
+            freeConnection(m_conn);
         }
         catch (Exception e)
         {
@@ -605,6 +629,14 @@ public class CurationServlet
             catch (Exception ee)
             {
                 logger.fatal("Service forward error : " + ee.toString(), ee);
+            }
+            finally{
+            	try {
+					m_conn.close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					 logger.fatal("Error in finaaly block while closing connection : " + e1.toString(), e1);
+				}
             }
         }
     } // end of service
@@ -800,22 +832,22 @@ public class CurationServlet
             DataManager.setAttribute(session, "ConceptLevel", "0");
             DataManager.setAttribute(session, "sDefaultStatus", "DRAFT NEW");
             DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "");
-            String Username = req.getParameter("Username");
-            String Password = req.getParameter("Password");
-            UserBean Userbean = new UserBean();
-            Userbean.setUsername(Username);
-            Userbean.setPassword(Password);
-            Userbean.setDBAppContext("/cdecurate");
-            DataManager.setAttribute(session, "Userbean", Userbean);
-            DataManager.setAttribute(session, "Username", Username);
-            sessionData.UsrBean = Userbean;
+            //String Username = req.getParameter("Username");
+            //String Password = req.getParameter("Password");
+            UserBean userbean= (UserBean) session.getAttribute("Userbean");
+            //Userbean.setUsername(Username);
+            //Userbean.setPassword(Password);
+            userbean.setDBAppContext("/cdecurate");
+            DataManager.setAttribute(session, "Userbean", userbean);
+            DataManager.setAttribute(session, "Username", userbean.getUsername());
+            sessionData.UsrBean = userbean;
             GetACService getAC = new GetACService(req, res, this);
             getAC.verifyConnection(req, res);
             // dbcon.verifyConnection(req);
             String ConnectedToDB = (String) session.getAttribute("ConnectedToDB");
             if (ConnectedToDB != null && !ConnectedToDB.equals("No"))
             {
-                Userbean.setSuperuser(getAC.getSuperUserFlag(Username));
+            	userbean.setSuperuser(getAC.getSuperUserFlag(userbean.getUsername()));
 
                 // get initial list from cadsr
                 Vector vList = null;
@@ -4986,9 +5018,11 @@ public class CurationServlet
                     // get cadsr data
                     ConceptAction conact = new ConceptAction();
                     ConceptForm data = new ConceptForm();
-                    data.setDBConnection(this.connectDB(req, res));
+                    //data.setDBConnection(this.connectDB(req, res));
+                    data.setDBConnection(m_conn);
+                    data.setCurationServlet(this);
                     eBean = conact.getCaDSRConcept(eBean, eUser, data);
-                    this.freeConnection(data.getDBConnection());
+                    //this.freeConnection(data.getDBConnection());
                     String  errMsg = data.getStatusMsg();
                     if (!errMsg.equals(""))
                         storeStatusMsg(errMsg + "\\n");
@@ -9381,17 +9415,17 @@ public class CurationServlet
                 break;
             }
             CallableStatement stmt = null;
-            Connection con = null;
+            //Connection con = null;
             try
             {
                 // Get the selected items and associate each with the appropriate CSI
                 String user = Userbean.getUsername();
                 user = user.toUpperCase();
-                con = connectDB(req, res);
+                //con = connectDB(req, res);
                 // Add the selected items to the CSI
                 String csi_idseq = null;
                 int ndx = 0;
-                stmt = con.prepareCall("begin SBREXT_CDE_CURATOR_PKG.ADD_TO_SENTINEL_CS(?,?,?); end;");
+                stmt = m_conn.prepareCall("begin SBREXT_CDE_CURATOR_PKG.ADD_TO_SENTINEL_CS(?,?,?); end;");
                 stmt.registerOutParameter(3, java.sql.Types.VARCHAR);
                 stmt.setString(2, user);
                 try
@@ -9433,7 +9467,7 @@ public class CurationServlet
                 else
                 {
                     // Have the Sentinel watch the CSI.
-                    DSRAlert sentinel = DSRAlertImpl.factory(con);
+                    DSRAlert sentinel = DSRAlertImpl.factory(m_conn);
                     ndx = sentinel.createAlert(user, csi_idseq);
                     switch (ndx)
                     {
@@ -9454,7 +9488,7 @@ public class CurationServlet
                         break;
                     }
                 }
-                con.close();
+                //con.close();
             }
             catch (Exception e)
             {
@@ -9464,8 +9498,8 @@ public class CurationServlet
                 {
                     if (stmt != null)
                         stmt.close();
-                    if (con != null)
-                        con.close();
+                   // if (con != null)
+                    //    con.close();
                 }
                 catch (SQLException ex)
                 {
@@ -9541,35 +9575,35 @@ public class CurationServlet
             // Update the database - remove the CSI association to the AC's.
             String user = Userbean.getUsername();
             user = user.toUpperCase();
-            Connection con = null;
+           // Connection con = null;
             for (int ndx = 0; ndx < list.size(); ++ndx)
             {
                 try
                 {
-                    con = connectDB(req, res);
+                    //con = connectDB(req, res);
                     String temp = list.elementAt(ndx);
-                    CallableStatement stmt = con.prepareCall("begin SBREXT_CDE_CURATOR_PKG.REMOVE_FROM_SENTINEL_CS('"
+                    CallableStatement stmt = m_conn.prepareCall("begin SBREXT_CDE_CURATOR_PKG.REMOVE_FROM_SENTINEL_CS('"
                                     + temp + "','" + user + "'); END;");
                     stmt.execute();
                     stmt.close();
-                    con.close();
+                   // con.close();
                     msg = "The selected item is no longer monitored by the Alert Definition";
                 }
                 catch (Exception e)
                 {
                     msg = "An unexpected exception occurred, please notify the Help Desk. Details have been written to the log.";
                     logger.fatal("cdecurate: doUnmonitor(): " + e.toString(), e);
-                    try
+                    /*try
                     {
-                        if (con != null && !con.isClosed())
-                        {
-                            con.close();
-                        }
+                        //if (con != null && !con.isClosed())
+                        //{
+                        //    con.close();
+                        //}
                     }
                     catch (SQLException ex)
                     {
                         logger.fatal("cdecurate: doUnmonitor() for close : " + ex.toString(), ex);
-                    }
+                    }*/
                 }
             }
             break;
@@ -11123,9 +11157,11 @@ public class CurationServlet
             // store the session data object in the session at the end of the request
             DataManager.setAttribute(session, Session_Data.CURATION_SESSION_ATTR, this.sessionData);
             String fullPage = "/jsp" + sJSPPage;
-         //   ServletContext sc = this.getServletContext();
+          
+         // ServletContext sc = this.getServletContext();
             RequestDispatcher rd = m_servletContext.getRequestDispatcher(fullPage);
             rd.forward(req, res);
+            return;
         }
         catch (Exception e)
         {
@@ -11247,4 +11283,18 @@ public class CurationServlet
             }
         }
     }
+
+	/**
+	 * @return the m_conn
+	 */
+	public Connection getConn() {
+		return this.m_conn;
+	}
+
+	/**
+	 * @param m_conn the m_conn to set
+	 */
+	public void setConn(Connection conn) {
+		this.m_conn = conn;
+	}
 } // end of class

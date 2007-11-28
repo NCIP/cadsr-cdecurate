@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.49 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.50 2007-11-28 19:44:47 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -166,7 +166,7 @@ public void doOpen (){
 		    if (dispType == null) dispType = "";
 
 		    REF_DOC_Bean refBean = new REF_DOC_Bean(); 
-		    Connection con = null;
+		    //Connection con = null;
 		    
 		    // Get number of items
 		    Vector vRefDoc = (Vector)req.getAttribute("RefDocList");
@@ -221,13 +221,13 @@ public void doOpen (){
 				    }
 			    	
 			    	// SQL to get the results
-	        		con = m_servlet.connectDB(req, res);
+	        		//con = m_servlet.connectDB(req, res);
 	                String select = "select NAME , blob_content from sbr.reference_blobs_view where rd_idseq = ?";
             PreparedStatement pstmt = null;
             ResultSet rs = null;
 	                // make plsql call 
 	     try {
-						pstmt = con.prepareStatement(select);
+						pstmt = m_servlet.getConn().prepareStatement(select);
 						pstmt.setString(1 , str);
 						rs = pstmt.executeQuery();
 						int j = 0;
@@ -284,8 +284,8 @@ public void doOpen (){
             rs = null;
 						pstmt.close();  
             pstmt = null;
-						con.close();
-            con = null;
+					//	con.close();
+            //con = null;
 						
 					} catch (SQLException e) {
 						StringWriter sw = new StringWriter();
@@ -301,8 +301,8 @@ public void doOpen (){
                 rs.close();
               if (pstmt != null)
                 pstmt.close();
-              if (con != null && !con.isClosed())
-                con.close();
+             // if (con != null && !con.isClosed())
+               // con.close();
             }
             catch (SQLException e)
             {
@@ -337,7 +337,7 @@ public void doFileUpload ()
 {
 	
 	GetACService getAC = new GetACService(req, res, m_servlet);
-	Connection con = null;
+	//Connection con = null;
   PreparedStatement pstmt = null;
 	REF_DOC_Bean refBean = new REF_DOC_Bean(); 
 	HttpSession session = req.getSession();
@@ -362,7 +362,7 @@ public void doFileUpload ()
     "CONTENT_TYPE, BLOB_CONTENT) " +
     "VALUES (?, ?, ?, ?, ?, ?, empty_blob()) ";
 	
-	con = m_servlet.connectDB(req, res);
+	//con = m_servlet.connectDB(req, res);
 	
 	try {
 			/*
@@ -371,7 +371,7 @@ public void doFileUpload ()
 			 * happens before the blob type if fully built causing the blob
 			 * to not be writen to the db and an exception is thrown.
 			 */
-			con.setAutoCommit(false);
+		   m_servlet.getConn().setAutoCommit(false);
 			Vector<String> selectedRefDocs = refDocFormdata
 					.getSelectedRefDocs();
 
@@ -383,7 +383,7 @@ public void doFileUpload ()
 				String str = selectedRefDocs.elementAt(ndx);
 				int refDocIndex = Integer.valueOf(str);
 
-				pstmt = con.prepareStatement(writeObjSQL);
+				pstmt = m_servlet.getConn().prepareStatement(writeObjSQL);
 
 				// Get the RD_IDSEQ
 				if (vRefDoc != null) {
@@ -413,13 +413,13 @@ public void doFileUpload ()
         pstmt = null;
 
 				// upload blob
-				doFiletoBlob(con, dbfileName);
+				doFiletoBlob(m_servlet.getConn(), dbfileName);
 
 			}
 			// Commit and close the connection
-			con.commit();
-			con.close();
-      con = null;
+			m_servlet.getConn().commit();
+			//con.close();
+     // con = null;
 
 		} catch (SQLException e) {
 			logger.fatal(e.toString(), e);
@@ -430,8 +430,8 @@ public void doFileUpload ()
       {
         if (pstmt != null)
           pstmt.close();
-        if (con != null && !con.isClosed())
-          con.close();
+        //if (con != null && !con.isClosed())
+          //con.close();
       }
       catch (SQLException e)
       {
@@ -473,20 +473,20 @@ public void doBack (){
  *
  */
 public void doDeleteAttachment (){
-	Connection con = null;
+	//Connection con = null;
   PreparedStatement pstmt = null;
 	String fileName = (String)req.getParameter("RefDocTargetFile");
 	String DelObjSQL = "delete from sbr.REFERENCE_BLOBS_VIEW where NAME = ?";
-	con = m_servlet.connectDB(req, res);
+	//con = m_servlet.connectDB(req, res);
 	try {
-		pstmt = con.prepareStatement(DelObjSQL);
+		pstmt = m_servlet.getConn().prepareStatement(DelObjSQL);
 		pstmt.setString(1, fileName);
 		pstmt.execute();
     //close the connections
 		pstmt.close();
     pstmt = null;
-		con.close();
-    con = null;
+		//con.close();
+    //con = null;
 	} catch (SQLException e) {
 		logger.fatal(e.toString(), e);
 		msg = "Reference Document Attachment: Unable to delete the Attachment from the database.";
@@ -497,8 +497,8 @@ public void doDeleteAttachment (){
     {
       if (pstmt != null)
         pstmt.close();
-      if (con != null && !con.isClosed())
-        con.close();
+      //if (con != null && !con.isClosed())
+        //con.close();
     }
     catch (SQLException e)
     {
@@ -517,20 +517,20 @@ public void doDeleteAttachment (){
    */
   public String doDeleteAllAttachments (String rd_idseq)
   {
-    Connection con = null;
+    //Connection con = null;
     PreparedStatement pstmt = null;
     msg = "";
     String DelObjSQL = "delete from sbr.REFERENCE_BLOBS_VIEW where RD_IDSEQ = ?";
-    con = m_servlet.connectDB(req, res);
+    //con = m_servlet.connectDB(req, res);
     try {
-      pstmt = con.prepareStatement(DelObjSQL);
+      pstmt = m_servlet.getConn().prepareStatement(DelObjSQL);
       pstmt.setString(1, rd_idseq);
       pstmt.execute();
       //close teh connections
       pstmt.close();
       pstmt = null;
-      con.close();
-      con = null;
+      //con.close();
+      //con = null;
     } catch (SQLException e) {
       logger.fatal("Error - doDeleteAllAttachments: " + e.toString(), e);
       msg = "Unable to delete all the Attachments from the database for the selected Reference Document.";
@@ -541,8 +541,8 @@ public void doDeleteAttachment (){
       {
         if (pstmt != null)
           pstmt.close();
-        if (con != null && !con.isClosed())
-          con.close();
+       // if (con != null && !con.isClosed())
+         // con.close();
       }
       catch (SQLException e)
       {

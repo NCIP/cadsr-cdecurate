@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.48 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.49 2007-11-28 19:44:47 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -86,13 +86,16 @@ public class GetACService implements Serializable
     public void getACList(HttpServletRequest req, HttpServletResponse res, String sContext, boolean bNewContext,
                     String sACType) throws IOException, ServletException
     {
-        Connection conn = null;
+       // Connection conn = null;
         try
         {
             // logger.info(m_servlet.getLogMessage(req, "getACList", "started", startDate, startDate));
             HttpSession session = req.getSession();
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn != null)
+            
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+              
+              
+            if (m_servlet.getConn() != null)
             {
                 DataManager.setAttribute(session, "ConnectedToDB", "Yes");
                 Vector<String> v;
@@ -281,7 +284,7 @@ public class GetACService implements Serializable
                 // list of ASL names to filter
                 if (session.getAttribute(Session_Data.SESSION_ASL_FILTER) == null)
                     this.getASLFilterList(session);
-                conn.close();
+                //conn.close();
                 // logger.info(m_servlet.getLogMessage(req, "getACList", "ended", startDate, new java.util.Date()));
             }
             else
@@ -292,18 +295,18 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            try
+            /*try
             {
                 if (conn != null)
                     conn.close();
             }
             catch (Exception f)
             {
-            }
+            }*/
             // System.err.println("ERROR in GetACService-getACList: " + e);
             logger.fatal("ERROR in GetACService-getACList : " + e.toString(), e);
         }
-        try
+        /*try
         {
             if (conn != null)
                 conn.close();
@@ -312,7 +315,7 @@ public class GetACService implements Serializable
         {
             // System.err.println("ERROR in GetACService-getACList close: " + ee);
             logger.fatal("ERROR in GetACService-getACList close: " + ee.toString(), ee);
-        }
+        }*/
     }
 
     /**
@@ -329,16 +332,16 @@ public class GetACService implements Serializable
      */
     public void verifyConnection(HttpServletRequest req, HttpServletResponse res)
     {
-        Connection conn = null;
+        //Connection conn = null;
         try
         {
             // logger.info(m_servlet.getLogMessage(req, "getACList", "started", startDate, startDate));
             HttpSession session = req.getSession();
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn != null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() != null)
             {
                 DataManager.setAttribute(session, "ConnectedToDB", "Yes");
-                conn.close();
+                //conn.close();
             }
             else
             {
@@ -348,17 +351,17 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            try
+            /*try
             {
                 if (conn != null)
                     conn.close();
             }
             catch (Exception f)
             {
-            }
+            }*/
             logger.fatal("ERROR in GetACService-verifyConnection : " + e.toString(), e);
         }
-        try
+        /*try
         {
             if (conn != null)
                 conn.close();
@@ -367,7 +370,7 @@ public class GetACService implements Serializable
         {
             logger.fatal("ERROR in GetACService-verifyConnection close: " + ee.toString(), ee);
         }
-    }
+*/    }
 
     /**
      * The getUserList method gets list of users in the database and Names, which are stored in vectors. Calls the
@@ -523,18 +526,18 @@ public class GetACService implements Serializable
      */
     private void getCSList(Vector<String> vIDList, Vector<String> vList, String sContext)
     {
-        Connection conn = null;
+        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         try
         {
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.get_class_scheme_list(?,?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.get_class_scheme_list(?,?)}");
                 // Now tie the placeholders for out parameters.
                 cstmt.registerOutParameter(2, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
@@ -577,8 +580,8 @@ public class GetACService implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+           // if (conn != null)
+             //   conn.close();
         }
         catch (Exception ee)
         {
@@ -600,16 +603,16 @@ public class GetACService implements Serializable
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Vector<CSI_Bean> vList = new Vector<CSI_Bean>();
-        Connection conn = null;
+        //Connection conn = null;
         try
         {
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.GET_CSCSI_LIST(?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.GET_CSCSI_LIST(?)}");
                 cstmt.registerOutParameter(1, OracleTypes.CURSOR);
                 // Now we are ready to call the stored procedure
                 cstmt.execute();
@@ -655,8 +658,8 @@ public class GetACService implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+             //   conn.close();
         }
         catch (Exception ee)
         {
@@ -865,7 +868,7 @@ public class GetACService implements Serializable
         ResultSet rs = null;
         Statement cstmt = null;
         String sPrivilege = "";
-        Connection conn = null;
+        //Connection conn = null;
         try
         {
             DBUser = DBUser.toUpperCase();
@@ -883,12 +886,12 @@ public class GetACService implements Serializable
                 sql = "SELECT ADMIN_SECURITY_UTIL.HAS_ADMIN_PRIVILEGE('" + DBUser + "', '" + ACType + "', '" + ContID
                                 + "') FROM DUAL";
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.createStatement();
+                cstmt = m_servlet.getConn().createStatement();
                 rs = cstmt.executeQuery(sql);
                 String s;
                 // loop through to printout the outstrings
@@ -915,8 +918,8 @@ public class GetACService implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
         catch (Exception ee)
         {
@@ -938,15 +941,15 @@ public class GetACService implements Serializable
         Vector<String> vList = new Vector<String>();
         ResultSet rs = null;
         Statement cstmt = null;
-        Connection conn = null;
+        //Connection conn = null;
         try
         {
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.createStatement();
+                cstmt = m_servlet.getConn().createStatement();
                 rs = cstmt.executeQuery(sSQL);
                 String sName = "";
                 // loop through to printout the outstrings
@@ -973,8 +976,8 @@ public class GetACService implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+             //   conn.close();
         }
         catch (Exception ee)
         {
@@ -1015,17 +1018,17 @@ public class GetACService implements Serializable
         ResultSet rs = null;
         CallableStatement cstmt = null;
         boolean isReConnect = false;
-        Connection conn = null;
+        //Connection conn = null;
         try
         {
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
                 isReConnect = true;
-                cstmt = conn.prepareCall(sAPI);
+                cstmt = m_servlet.getConn().prepareCall(sAPI);
                 // Now tie the placeholders with actual parameters.
                 if (iParmIdx == 1)
                 {
@@ -1124,8 +1127,8 @@ public class GetACService implements Serializable
             if (cstmt != null)
                 cstmt.close();
             // close is if reconnected
-            if (isReConnect && conn != null)
-                conn.close();
+           // if (isReConnect && conn != null)
+             //   conn.close();
         }
         catch (Exception ee)
         {
@@ -1147,15 +1150,15 @@ public class GetACService implements Serializable
         ResultSet rs = null;
         Statement cstmt = null;
         boolean isExist = false;
-        Connection conn = null;
+        //Connection conn = null;
         try
         {
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.createStatement();
+                cstmt = m_servlet.getConn().createStatement();
                 rs = cstmt.executeQuery(sSQL);
                 int iCount = 0;
                 // loop through to printout the outstrings
@@ -1178,8 +1181,8 @@ public class GetACService implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
         catch (Exception ee)
         {
@@ -1202,15 +1205,15 @@ public class GetACService implements Serializable
         ResultSet rs = null;
         Statement cstmt = null;
         String sName = "";
-        Connection conn = null;
+       // Connection conn = null;
         try
         {
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+         //   conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.createStatement();
+                cstmt = m_servlet.getConn().createStatement();
                 rs = cstmt.executeQuery(sSQL);
                 int i = 0;
                 // loop through to printout the outstrings
@@ -1235,8 +1238,8 @@ public class GetACService implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+           // if (conn != null)
+             //   conn.close();
         }
         catch (Exception ee)
         {
@@ -1261,7 +1264,7 @@ public class GetACService implements Serializable
     public Vector<EVS_Bean> getAC_Concepts(String condrID, VD_Bean vd, boolean bInvertBean)
     {
         // System.err.println("in getAC_Concepts condrID: " + condrID);
-        Connection conn = null;
+        //Connection conn = null;
         CallableStatement cstmt = null;
         ResultSet rs = null;
         Vector<EVS_Bean> vList = new Vector<EVS_Bean>();
@@ -1269,12 +1272,12 @@ public class GetACService implements Serializable
         try
         {
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_AC_CONCEPTS(?,?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_AC_CONCEPTS(?,?)}");
                 // out parameter
                 cstmt.registerOutParameter(2, OracleTypes.CURSOR);
                 // in parameter
@@ -1347,8 +1350,8 @@ public class GetACService implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+           // if (conn != null)
+            //    conn.close();
         }
         catch (Exception ee)
         {
@@ -1545,21 +1548,21 @@ public class GetACService implements Serializable
     public Vector<TOOL_OPTION_Bean> getToolOptionData(String toolName, String sProperty, String sValue)
     {
         Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
-        Connection conn = null;
-        conn = m_servlet.connectDB(m_classReq, m_classRes);
-        if (conn == null)
+        //Connection conn = null;
+        //conn = m_servlet.connectDB(m_classReq, m_classRes);
+        if (m_servlet.getConn() == null)
             m_servlet.ErrorLogin(m_classReq, m_classRes);
         else
         {
-            vList = getToolOptionData(conn, toolName, sProperty, sValue);
-            try
+            vList = getToolOptionData(m_servlet.getConn(), toolName, sProperty, sValue);
+            /*try
             {
                 conn.close();
             }
             catch (SQLException ex)
             {
                 logger.fatal(ex.toString());
-            }
+            }*/
         }
         return vList;
     }
@@ -1572,17 +1575,17 @@ public class GetACService implements Serializable
     public boolean getSuperUserFlag(String user_)
     {
         boolean flag = false;
-        Connection conn = null;
+        //Connection conn = null;
         ResultSet rs = null;
         PreparedStatement pstmt = null;
-        conn = m_servlet.connectDB(m_classReq, m_classRes);
-        if (conn == null)
+        //conn = m_servlet.connectDB(m_classReq, m_classRes);
+        if (m_servlet.getConn() == null)
             m_servlet.ErrorLogin(m_classReq, m_classRes);
         else
         {
             try
             {
-                pstmt = conn.prepareStatement("select der_admin_ind from sbr.user_accounts_view where ua_name = '" + user_.toUpperCase() + "'");
+                pstmt = m_servlet.getConn().prepareStatement("select der_admin_ind from sbr.user_accounts_view where ua_name = '" + user_.toUpperCase() + "'");
                 rs = pstmt.executeQuery();
                 if (rs.next())
                     flag = rs.getString(1).equals("Yes");
@@ -1611,7 +1614,7 @@ public class GetACService implements Serializable
                 {
                     // ignore it
                 }
-                try
+               /* try
                 {
                     if (conn != null)
                         conn.close();
@@ -1619,7 +1622,7 @@ public class GetACService implements Serializable
                 catch (SQLException exx)
                 {
                     // ignore it
-                }
+                }*/
             }
         }
         return flag;
@@ -1628,18 +1631,18 @@ public class GetACService implements Serializable
     private Hashtable getHashListFromAPI(String sAPI)
     {
         Hashtable<String, String> hRes = new Hashtable<String, String>();
-        Connection conn = null;
+        //Connection conn = null;
         CallableStatement cstmt = null;
         ResultSet rs = null;
         try
         {
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.prepareCall(sAPI);
+                cstmt = m_servlet.getConn().prepareCall(sAPI);
                 // out parameter
                 cstmt.registerOutParameter(1, OracleTypes.CURSOR);
                 // Now we are ready to call the stored procedure
@@ -1670,8 +1673,8 @@ public class GetACService implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
         catch (Exception ee)
         {
@@ -1731,18 +1734,18 @@ public class GetACService implements Serializable
     private void getPersonsList()
     {
         Hashtable<String, String> hPer = new Hashtable<String, String>();
-        Connection conn = null;
+        //Connection conn = null;
         CallableStatement cstmt = null;
         ResultSet rs = null;
         try
         {
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_PERSONS_LIST(?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_PERSONS_LIST(?)}");
                 // out parameter
                 cstmt.registerOutParameter(1, OracleTypes.CURSOR);
                 // Now we are ready to call the stored procedure
@@ -1779,8 +1782,8 @@ public class GetACService implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
         catch (Exception ee)
         {
