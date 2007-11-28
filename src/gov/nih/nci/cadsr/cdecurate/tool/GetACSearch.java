@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.47 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.48 2007-11-28 19:44:47 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1055,18 +1055,18 @@ public class GetACSearch implements Serializable
      */
     public void doQuestionSearch(String userName, Vector vList)
     {
-        Connection conn = null;
+        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         try
         {
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_QUESTION(?,?,?,?,?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_QUESTION(?,?,?,?,?)}");
                 // Now tie the placeholders for out parameters.
                 cstmt.registerOutParameter(4, java.sql.Types.VARCHAR);
                 cstmt.registerOutParameter(5, OracleTypes.CURSOR);
@@ -1138,8 +1138,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
         catch (Exception ee)
         {
@@ -1233,7 +1233,7 @@ public class GetACSearch implements Serializable
                     String cscsiIDseq, String conIDseq, String conName, String derType, Vector vList)
     {
         // logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "start desearch call", startDate, startDate));
-        Connection conn = null;
+        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Hashtable desTable = new Hashtable();
@@ -1255,12 +1255,12 @@ public class GetACSearch implements Serializable
             if (strAppend != null && strAppend.equals("Appended"))
                 desTable = (Hashtable) session.getAttribute("desHashTable");
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_DE"
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_DE"
                                 + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
                 // Now tie the placeholders for out parameters.
                 cstmt.registerOutParameter(7, OracleTypes.CURSOR);
@@ -1453,8 +1453,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+           // if (conn != null)
+             //   conn.close();
             DataManager.setAttribute(session, "desHashTable", desTable);
         }
         catch (Exception ee)
@@ -1580,18 +1580,18 @@ public class GetACSearch implements Serializable
                     Vector vList)
     {
         // logger.info(m_servlet.getLogMessage(m_classReq, "doDECSearch", "begin search", exDate, exDate));
-        Connection conn = null;
+        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         try
         {
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn
+                cstmt = m_servlet.getConn()
                                 .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_DEC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
                 // Now tie the placeholders with actual parameters.
                 cstmt.registerOutParameter(7, OracleTypes.CURSOR);
@@ -1706,8 +1706,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
         catch (Exception ee)
         {
@@ -1786,18 +1786,18 @@ public class GetACSearch implements Serializable
                     String conIDseq, String conName, String sData, Vector vList)
     {
         // logger.info(m_servlet.getLogMessage(m_classReq, "doVDSearch", "begin search", exDate, exDate));
-        Connection conn = null;
+      //  Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         try
         {
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn
+                cstmt = m_servlet.getConn()
                                 .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
                 // Now tie the placeholders with actual parameters.
                 cstmt.registerOutParameter(7, OracleTypes.CURSOR);
@@ -1931,8 +1931,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+           // if (conn != null)
+             //   conn.close();
         }
         catch (Exception ee)
         {
@@ -1998,18 +1998,18 @@ public class GetACSearch implements Serializable
                     String conID, String sVM, Vector vList)
     {
         // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "begin search", exDate, exDate));
-        Connection conn = null;
+        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         try
         {
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+           // conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn
+                cstmt = m_servlet.getConn()
                                 .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
                 cstmt.registerOutParameter(7, OracleTypes.CURSOR);
                 cstmt.setString(1, InString);
@@ -2094,8 +2094,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
         catch (Exception ee)
         {
@@ -2128,18 +2128,18 @@ public class GetACSearch implements Serializable
     private void doCSISearch(String InString, String ContName, String CSName, Vector vList)
     {
         // logger.info(m_servlet.getLogMessage(m_classReq, "doCSISearch", "begin search", exDate, exDate));
-        Connection conn = null;
+        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         try
         {
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_CSI(?,?,?,?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_CSI(?,?,?,?)}");
                 cstmt.registerOutParameter(4, OracleTypes.CURSOR);
                 cstmt.setString(1, InString);
                 cstmt.setString(2, CSName);
@@ -2182,8 +2182,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
         catch (Exception ee)
         {
@@ -3055,7 +3055,7 @@ public class GetACSearch implements Serializable
         // capture the duration
         // java.util.Date exDate = new java.util.Date();
         // logger.info(m_servlet.getLogMessage(m_classReq, "getDDEInfo", "begin getComplexDE", exDate, exDate));
-        Connection conn = null;
+        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         HttpSession session = m_classReq.getSession();
@@ -3072,12 +3072,12 @@ public class GetACSearch implements Serializable
         try
         {
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+           // conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn
+                cstmt = m_servlet.getConn()
                                 .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.GET_COMPLEX_DE(?,?,?,?,?,?,?,?,?)}");
                 // Now tie the placeholders for out parameters.
                 cstmt.registerOutParameter(2, java.sql.Types.VARCHAR);
@@ -3183,8 +3183,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
         catch (Exception ee)
         {
@@ -3685,7 +3685,7 @@ public class GetACSearch implements Serializable
                     String type, String conName, String conID)
     {
         // logger.info(m_servlet.getLogMessage(m_classReq, "do_caDSRSearch", "begin search", exDate, exDate));
-        Connection conn = null;
+        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         String sCUIString = "";
@@ -3693,24 +3693,24 @@ public class GetACSearch implements Serializable
         try
         {
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+           // conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             if (type.equals("OC") || type.equals("ObjQ"))
             {
-                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_OC(?,?,?,?,?,?,?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_OC(?,?,?,?,?,?,?)}");
                 cstmt.registerOutParameter(5, OracleTypes.CURSOR);
                 compType = "Object Class";
             }
             else if (type.equals("PROP") || type.equals("PropQ"))
             {
-                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PROP(?,?,?,?,?,?,?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PROP(?,?,?,?,?,?,?)}");
                 cstmt.registerOutParameter(5, OracleTypes.CURSOR);
                 compType = "Property";
             }
             else if (type.equals("REP") || type.equals("RepQ"))
             {
-                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_REP(?,?,?,?,?,?,?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_REP(?,?,?,?,?,?,?)}");
                 cstmt.registerOutParameter(5, OracleTypes.CURSOR);
                 compType = "Rep Term";
             }
@@ -3788,8 +3788,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
         catch (Exception ee)
         {
@@ -3820,7 +3820,7 @@ public class GetACSearch implements Serializable
     public Vector<EVS_Bean> do_ConceptSearch(String InString, String conIdseq, String ContName, String ASLName,
                     String conID, String decID, String vdID, Vector<EVS_Bean> vList)
     {
-        Connection conn = null;
+       // Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         try
@@ -3838,10 +3838,10 @@ public class GetACSearch implements Serializable
             if (vList != null && vList.size() > 0)
                 bVListExist = true;
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
-            cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?)}");
+            cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?)}");
             cstmt.registerOutParameter(6, OracleTypes.CURSOR);
             cstmt.setString(1, InString);
             cstmt.setString(2, ASLName);
@@ -3935,8 +3935,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+           // if (conn != null)
+             //   conn.close();
         }
         catch (Exception ee)
         {
@@ -5114,7 +5114,7 @@ public class GetACSearch implements Serializable
      */
     public Vector<AC_CSI_Bean> doCSCSI_ACSearch(String AC_IDseq, String AC_Name)
     {
-        Connection conn = null;
+        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         HttpSession session = m_classReq.getSession();
@@ -5126,12 +5126,12 @@ public class GetACSearch implements Serializable
             Vector vCSids = (Vector) m_classReq.getAttribute("selCSIDs");
             vAC_CSI = (Vector) m_classReq.getAttribute("blockAC_CSI");
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+           // conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_DE_CS_NAME(?,?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_DE_CS_NAME(?,?)}");
                 // Now tie the placeholders with actual parameters.
                 cstmt.registerOutParameter(2, OracleTypes.CURSOR);
                 cstmt.setString(1, AC_IDseq);
@@ -5201,8 +5201,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
         catch (Exception ee)
         {
@@ -8925,7 +8925,7 @@ public class GetACSearch implements Serializable
      */
     private void doQuestValueSearch(String sQuestID, String sCRFID, Vector vList, VD_Bean vd)
     {
-        Connection conn = null;
+        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         try
@@ -8936,12 +8936,12 @@ public class GetACSearch implements Serializable
             // Vector pvList = (Vector)session.getAttribute("VDPVList");
             Vector vvList = new Vector();
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_CRFValue(?,?,?,?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_CRFValue(?,?,?,?)}");
                 // Now tie the placeholders for out parameters.
                 cstmt.registerOutParameter(4, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
@@ -9010,8 +9010,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
         catch (Exception ee)
         {
@@ -9272,7 +9272,7 @@ public class GetACSearch implements Serializable
      */
     public Vector doAltNameSearch(String acIdseq, String detlName, String CD_ID, String sOrigin, String sFor) 
     {
-        Connection conn = null;
+        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Vector vList = new Vector();
@@ -9280,12 +9280,12 @@ public class GetACSearch implements Serializable
         try
         {
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_ALTERNATE_NAMES(?,?,?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_ALTERNATE_NAMES(?,?,?)}");
                 // Now tie the placeholders for out parameters.
                 cstmt.registerOutParameter(3, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
@@ -9344,8 +9344,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+           //if (conn != null)
+             //   conn.close();
         }
         catch (Exception ee)
         {
@@ -9371,7 +9371,7 @@ public class GetACSearch implements Serializable
      */
     public Vector doRefDocSearch(String acIdseq, String docType, String sFor)
     {
-        Connection conn = null;
+       // Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Vector vList = new Vector();
@@ -9379,12 +9379,12 @@ public class GetACSearch implements Serializable
         try
         {
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_REFERENCE_DOCUMENTS(?,?,?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_REFERENCE_DOCUMENTS(?,?,?)}");
                 // Now tie the placeholders for out parameters.
                 cstmt.registerOutParameter(3, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
@@ -9451,8 +9451,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+             //   conn.close();
         }
         catch (Exception ee)
         {
@@ -9529,7 +9529,7 @@ public class GetACSearch implements Serializable
      */
     public Integer doProtoCRFSearch(String acIdseq, String acName)
     {
-        Connection conn = null;
+        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Vector vList = new Vector();
@@ -9539,12 +9539,12 @@ public class GetACSearch implements Serializable
         {
             Quest_Bean QuestBean = new Quest_Bean();
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_PROTOCOL_CRF(?,?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_PROTOCOL_CRF(?,?)}");
                 // Now tie the placeholders for out parameters.
                 cstmt.registerOutParameter(2, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
@@ -9588,8 +9588,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
         catch (Exception ee)
         {
@@ -9631,7 +9631,7 @@ public class GetACSearch implements Serializable
      */
     private Hashtable getAC_Contacts(String ac_idseq, String acc_idseq)
     {
-        Connection conn = null;
+        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Hashtable vList = new Hashtable();
@@ -9646,12 +9646,12 @@ public class GetACSearch implements Serializable
             if (hPer == null)
                 hPer = new Hashtable();
             // Create a Callable Statement object.
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+           // conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_AC_CONTACT(?,?,?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_AC_CONTACT(?,?,?)}");
                 // Now tie the placeholders for out parameters.
                 cstmt.registerOutParameter(3, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
@@ -9708,8 +9708,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
         catch (Exception ee)
         {
@@ -9731,7 +9731,7 @@ public class GetACSearch implements Serializable
      */
     public Vector getContactComm(String comm_idseq, String org_idseq, String per_idseq)
     {
-        Connection conn = null;
+       // Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Vector vList = new Vector();
@@ -9739,12 +9739,12 @@ public class GetACSearch implements Serializable
         {
             // Create a Callable Statement object.
             HttpSession session = (HttpSession) m_classReq.getSession();
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CONTACT_COMM(?,?,?,?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CONTACT_COMM(?,?,?,?)}");
                 // Now tie the placeholders for out parameters.
                 cstmt.registerOutParameter(4, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
@@ -9784,8 +9784,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+              //  conn.close();
         }
         catch (Exception ee)
         {
@@ -9807,7 +9807,7 @@ public class GetACSearch implements Serializable
      */
     public Vector getContactAddr(String addr_idseq, String org_idseq, String per_idseq)
     {
-        Connection conn = null;
+        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Vector vList = new Vector();
@@ -9815,12 +9815,12 @@ public class GetACSearch implements Serializable
         {
             // Create a Callable Statement object.
             HttpSession session = (HttpSession) m_classReq.getSession();
-            conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (conn == null)
+            //conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CONTACT_ADDR(?,?,?,?)}");
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CONTACT_ADDR(?,?,?,?)}");
                 // Now tie the placeholders for out parameters.
                 cstmt.registerOutParameter(4, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
@@ -9865,8 +9865,8 @@ public class GetACSearch implements Serializable
                 rs.close();
             if (cstmt != null)
                 cstmt.close();
-            if (conn != null)
-                conn.close();
+            //if (conn != null)
+             //   conn.close();
         }
         catch (Exception ee)
         {

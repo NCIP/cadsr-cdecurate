@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.51 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.52 2007-11-28 19:44:46 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1690,7 +1690,7 @@ public class SetACService implements Serializable
     //HttpSession session = req.getSession();
     ResultSet rs = null;
     Statement cstmt = null;
-    Connection conn = null;
+    //Connection conn = null;
     try
     {
       String sOC_WFS = "";
@@ -1702,14 +1702,14 @@ public class SetACService implements Serializable
       if (prop_idseq == null) prop_idseq = "";
       if(!(oc_idseq.equals("") && prop_idseq.equals(""))) // at least one is in database
       {
-        conn = m_servlet.connectDB(req, res);
-        if (conn == null)  // still null to login page
+        //conn = m_servlet.connectDB(req, res);
+        if (m_servlet.getConn() == null)  // still null to login page
           m_servlet.ErrorLogin(req, res);
         else
         {
           if(!oc_idseq.equals(""))
           {
-            cstmt = conn.createStatement();
+            cstmt = m_servlet.getConn().createStatement();
             rs = cstmt.executeQuery(sOCSQL);
             //loop through to printout the outstrings
             while(rs.next())
@@ -1728,7 +1728,7 @@ public class SetACService implements Serializable
           else if(!prop_idseq.equals(""))
           {    
             // Now check Property WFStatus  
-            cstmt = conn.createStatement();
+            cstmt = m_servlet.getConn().createStatement();
             rs = cstmt.executeQuery(sPropSQL);
             while(rs.next())
             {
@@ -1754,7 +1754,7 @@ public class SetACService implements Serializable
       {
         if(rs!=null) rs.close();
         if(cstmt!=null) cstmt.close();
-        if(conn != null) conn.close();      
+        //if(conn != null) conn.close();      
       }
       catch(Exception ee)
       {
@@ -1781,18 +1781,18 @@ public class SetACService implements Serializable
   {
     ResultSet rs = null;
     Statement cstmt = null;
-    Connection conn = null;
+    //Connection conn = null;
     String pvIdseq = "";
     String sSQL = "Select pv_idseq from permissible_values where value = '" + sValue + "'" +
            " and short_meaning = '" + sMeaning + "'";
     try
     {
-      conn = m_servlet.connectDB(req, res);
-      if (conn == null)  // still null to login page
+      //conn = m_servlet.connectDB(req, res);
+      if (m_servlet.getConn() == null)  // still null to login page
         m_servlet.ErrorLogin(req, res);
       else
       {
-        cstmt = conn.createStatement();
+        cstmt = m_servlet.getConn().createStatement();
         rs = cstmt.executeQuery(sSQL);
         //loop through to printout the outstrings
         while(rs.next())
@@ -1811,7 +1811,7 @@ public class SetACService implements Serializable
     {
       if(rs!=null) rs.close();
       if(cstmt!=null) cstmt.close();
-      if(conn != null) conn.close();
+      //if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4284,7 +4284,7 @@ public class SetACService implements Serializable
   */
   public String getPV(HttpServletRequest req, HttpServletResponse res, PV_Bean pv)  
   {
-    Connection conn = null;
+    //Connection conn = null;
     ResultSet rs = null;
     CallableStatement cstmt = null;
     String sReturnCode = "";  //out
@@ -4295,12 +4295,12 @@ public class SetACService implements Serializable
       String sShortMeaning = pv.getPV_SHORT_MEANING();
 
        //Create a Callable Statement object.
-       conn = m_servlet.connectDB(req, res);
-       if (conn == null)
+      // conn = m_servlet.connectDB(req, res);
+       if (m_servlet.getConn() == null)
           m_servlet.ErrorLogin(req, res);
        else
        {
-          cstmt = conn.prepareCall("{call SBREXT_get_Row.GET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+          cstmt = m_servlet.getConn().prepareCall("{call SBREXT_get_Row.GET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
           // register the Out parameters
           cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
           cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //pv id
@@ -4336,7 +4336,7 @@ public class SetACService implements Serializable
     {
       if(rs!=null) rs.close();
       if(cstmt!=null) cstmt.close();
-      if(conn != null) conn.close();
+      //if(conn != null) conn.close();
     }
     catch(Exception ee)
     {
@@ -4359,7 +4359,7 @@ public class SetACService implements Serializable
   public boolean checkPVQCExists(HttpServletRequest req, HttpServletResponse res, 
         String vdIDseq, String vpIDseq) //throws Exception
   {
-    Connection conn = null;
+    //Connection conn = null;
     ResultSet rs = null;
     //CallableStatement cstmt = null;
     PreparedStatement pstmt = null;
@@ -4367,12 +4367,12 @@ public class SetACService implements Serializable
     try
     {
       //Create a Callable Statement object.
-      conn = m_servlet.connectDB(req, res);
-      if (conn == null)
+     // conn = m_servlet.connectDB(req, res);
+      if (m_servlet.getConn() == null)
         m_servlet.ErrorLogin(req, res);
       else
       {
-        pstmt = conn.prepareStatement("select SBREXT_COMMON_ROUTINES.VD_PVS_QC_EXISTS(?,?) from DUAL");
+        pstmt = m_servlet.getConn().prepareStatement("select SBREXT_COMMON_ROUTINES.VD_PVS_QC_EXISTS(?,?) from DUAL");
         // register the Out parameters
         pstmt.setString(1, vpIDseq);
         pstmt.setString(2, vdIDseq);
@@ -4394,7 +4394,7 @@ public class SetACService implements Serializable
     {
       if(rs!=null) rs.close();
       if(pstmt!=null) pstmt.close();
-      if(conn != null) conn.close();
+      //if(conn != null) conn.close();
     }
     catch(Exception ee)
     {

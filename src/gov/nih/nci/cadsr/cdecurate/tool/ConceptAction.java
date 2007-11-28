@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptAction.java,v 1.17 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptAction.java,v 1.18 2007-11-28 19:44:47 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -51,14 +51,15 @@ public class ConceptAction implements Serializable
       
       //get the connection from data if exists (used for testing)
       UtilService util = data.getUtil();
-      conn = data.getDBConnection();
-      if (conn == null || conn.isClosed())
-        conn = data.getCurationServlet().connectDB(); // ConceptServlet.makeDBConnection();
+      //conn = data.getDBConnection();
+      //if (conn == null || conn.isClosed())
+        //conn = data.getCurationServlet().connectDB(); // ConceptServlet.makeDBConnection();
       // Create a Callable Statement object.
-      if (conn != null)
+      if (data.getCurationServlet().getConn() != null)
+    	  
       {
           //get the data for the call
-        cstmt = conn.prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?,?)}");
+        cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?,?)}");
         cstmt.registerOutParameter(6, OracleTypes.CURSOR);
         cstmt.setString(1, util.parsedStringSingleQuoteOracle(data.getSearchTerm()));
         cstmt.setString(2, getStatusValues(data.getASLNameList(), data));
@@ -135,8 +136,8 @@ public class ConceptAction implements Serializable
     {
       if(rs!=null) rs.close();
       if(cstmt!=null) cstmt.close();
-      if (data.getDBConnection() == null)
-        data.getCurationServlet().freeConnection(conn);
+     // if (data.getDBConnection() == null)
+       // data.getCurationServlet().freeConnection(conn);
     }
     catch(Exception ee)
     {
@@ -159,18 +160,18 @@ public class ConceptAction implements Serializable
    // System.out.println(conList.size() + " get derivation " + conArray);
     if (!conArray.equals(""))
     {
-      Connection conn = null;
+      //Connection conn = null;
       ResultSet rs = null;
       Statement stmt = null;
       try
       {
-        conn = data.getDBConnection();
+       /* conn = data.getDBConnection();
         if (conn == null || conn.isClosed())
-          conn = data.getCurationServlet().connectDB(); // ConceptServlet.makeDBConnection();
+          conn = data.getCurationServlet().connectDB(); */// ConceptServlet.makeDBConnection();
         // Create a Callable Statement object.
-        if (conn != null)
+        if (data.getCurationServlet().getConn() != null)
         {
-          stmt = conn.createStatement();
+          stmt = data.getCurationServlet().getConn().createStatement();
           rs = stmt.executeQuery("select SBREXT_COMMON_ROUTINES.CHECK_DERIVATION_EXISTS('" + conArray + "') from DUAL");
           //loop through to printout the outstrings
           while(rs.next())
@@ -191,8 +192,8 @@ public class ConceptAction implements Serializable
       {
         if(rs!=null) rs.close();
         if(stmt!=null) stmt.close();
-        if (data.getDBConnection() == null)
-          data.getCurationServlet().freeConnection(conn); // ConceptServlet.closeDBConnection(conn);
+        //if (data.getDBConnection() == null)
+          //data.getCurationServlet().freeConnection(conn); // ConceptServlet.closeDBConnection(conn);
       }
       catch(Exception ee)
       {
@@ -280,47 +281,54 @@ public class ConceptAction implements Serializable
      //logger.info(m_servlet.getLogMessage(m_classReq, "setConcept", "starting set", startDate, startDate));
 
      String sMsg = "";
-     Connection conn = null;
+     //Connection conn = null;
      ResultSet rs = null;
      CallableStatement cstmt = null;
      //String sEvsSource = "";
+     //Get the username from the session.
+     String userName = (String)data.getCurationServlet().sessionData.UsrBean.getUsername();
      try
      {
-         conn = data.getDBConnection();
+         /*conn = data.getDBConnection();
          if (conn == null || conn.isClosed())
-           conn = data.getCurationServlet().connectDB(); // ConceptServlet.makeDBConnection();
+           conn = data.getCurationServlet().connectDB();*/ // ConceptServlet.makeDBConnection();
          // Create a Callable Statement object.
-         if (conn != null)
+         if (data.getCurationServlet().getConn() != null)
          {
-           cstmt = conn.prepareCall("{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+           //cstmt = conn.prepareCall("{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+           cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
            // register the Out parameters
-           cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //return code
-           cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //con idseq
-           cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //preferred name
-           cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //long name
-           cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //prefered definition
-           cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //context idseq
-           cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //version
-           cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //asl name
-           cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //latest version ind
-           cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //change note
-           cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //origin
-           cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //definition source
-           cstmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //evs source
-           cstmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //begin date
-           cstmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //end date
-           cstmt.registerOutParameter(17,java.sql.Types.VARCHAR);       //date created
-           cstmt.registerOutParameter(18,java.sql.Types.VARCHAR);       //created by
-           cstmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //date modified
-           cstmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //modified by
-           cstmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //deleted ind
+           //cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //ua_name
+           cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //return code
+           cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //con idseq
+           cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //preferred name
+           cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //long name
+           cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //prefered definition
+           cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //context idseq
+           cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //version
+           cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //asl name
+           cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //latest version ind
+           cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //change note
+           cstmt.registerOutParameter(13,java.sql.Types.VARCHAR);       //origin
+           cstmt.registerOutParameter(14,java.sql.Types.VARCHAR);       //definition source
+           cstmt.registerOutParameter(15,java.sql.Types.VARCHAR);       //evs source
+           cstmt.registerOutParameter(16,java.sql.Types.VARCHAR);       //begin date
+           cstmt.registerOutParameter(17,java.sql.Types.VARCHAR);       //end date
+           cstmt.registerOutParameter(18,java.sql.Types.VARCHAR);       //date created
+           cstmt.registerOutParameter(19,java.sql.Types.VARCHAR);       //created by
+           cstmt.registerOutParameter(20,java.sql.Types.VARCHAR);       //date modified
+           cstmt.registerOutParameter(21,java.sql.Types.VARCHAR);       //modified by
+           cstmt.registerOutParameter(22,java.sql.Types.VARCHAR);       //deleted ind
 
+           
+           //set the userid
+            cstmt.setString(1, userName);
            //truncate the definition to be 2000 long.
          //  if (sDef == null) sDef = "";
          //  if (sDef.length() > 2000) sDef = sDef.substring(0, 2000);
            // Set the In parameters (which are inherited from the PreparedStatement class)
-           cstmt.setString(2, sAction);
-           cstmt.setString(4, evsBean.getCONCEPT_IDENTIFIER());
+           cstmt.setString(3, sAction);
+           cstmt.setString(5, evsBean.getCONCEPT_IDENTIFIER());
            //make sure that :: is removed from the long name and defintion
            String sName = evsBean.getLONG_NAME();
            String sDef = evsBean.getPREFERRED_DEFINITION();
@@ -330,20 +338,20 @@ public class ConceptAction implements Serializable
            nvpInd = sDef.indexOf("::");
            if (nvpInd > 0)
              sDef = sDef.substring(0, nvpInd);  
-           cstmt.setString(5, sName);
-           cstmt.setString(6, sDef);
-           cstmt.setString(8, "1.0");
-           cstmt.setString(9, "RELEASED");
-           cstmt.setString(10, "Yes");
-           cstmt.setString(12, evsBean.getEVS_DATABASE());
-           cstmt.setString(13, evsBean.getEVS_DEF_SOURCE());
-           cstmt.setString(14, evsBean.getNCI_CC_TYPE());
+           cstmt.setString(6, sName);
+           cstmt.setString(7, sDef);
+           cstmt.setString(9, "1.0");
+           cstmt.setString(10, "RELEASED");
+           cstmt.setString(11, "Yes");
+           cstmt.setString(13, evsBean.getEVS_DATABASE());
+           cstmt.setString(14, evsBean.getEVS_DEF_SOURCE());
+           cstmt.setString(15, evsBean.getNCI_CC_TYPE());
             // Now we are ready to call the stored procedure
            //logger.info("setConcept " + evsBean.getCONCEPT_IDENTIFIER());     
 
            cstmt.execute();
-           String sReturnCode = cstmt.getString(1);
-           String conIdseq = cstmt.getString(3);
+           String sReturnCode = cstmt.getString(2);
+           String conIdseq = cstmt.getString(4);
            if (conIdseq == null) conIdseq = "";
            evsBean.setIDSEQ(conIdseq);
            if (sReturnCode != null)
@@ -364,8 +372,8 @@ public class ConceptAction implements Serializable
      {
        if(rs!=null) rs.close();
        if(cstmt!=null) cstmt.close();
-       if (data.getDBConnection() == null)
-         data.getCurationServlet().freeConnection(conn); // ConceptServlet.closeDBConnection(conn);
+       //if (data.getDBConnection() == null)
+         //data.getCurationServlet().freeConnection(conn); // ConceptServlet.closeDBConnection(conn);
      }
      catch(Exception ee)
      {
@@ -386,20 +394,20 @@ public class ConceptAction implements Serializable
   public Vector<EVS_Bean> getAC_Concepts(String condrID, ConceptForm data)
   {
 //System.out.println("in getAC_Concepts condrID: " + condrID);
-    Connection conn = null;
+    //Connection conn = null;
     CallableStatement cstmt = null;
     ResultSet rs = null;
   //  String sCON_IDSEQ = "";
     Vector<EVS_Bean> vList = new Vector<EVS_Bean>();
     try
     {
-      conn = data.getDBConnection();
+      /*conn = data.getDBConnection();
       if (conn == null || conn.isClosed())
-        conn = data.getCurationServlet().connectDB(); // ConceptServlet.makeDBConnection();
+        conn = data.getCurationServlet().connectDB(); */// ConceptServlet.makeDBConnection();
       // Create a Callable Statement object.
-      if (conn != null)
+      if (data.getDBConnection() != null)
       {
-        cstmt = conn.prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_AC_CONCEPTS(?,?)}");
+        cstmt =data.getDBConnection().prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_AC_CONCEPTS(?,?)}");
         //out parameter
         cstmt.registerOutParameter(2, OracleTypes.CURSOR);       //return cursor
         //in parameter
@@ -468,8 +476,8 @@ public class ConceptAction implements Serializable
     {
       if(rs!=null) rs.close();
       if(cstmt!=null) cstmt.close();
-      if (data.getDBConnection() == null)
-        data.getCurationServlet().freeConnection(conn); // ConceptServlet.closeDBConnection(conn);
+    //  if (data.getDBConnection() == null)
+      //  data.getCurationServlet().freeConnection(conn); // ConceptServlet.closeDBConnection(conn);
     }
     catch(Exception ee)
     {

@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.50 2007-09-19 22:44:30 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.51 2007-11-28 19:44:47 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -10,14 +10,17 @@ import gov.nih.nci.cadsr.cdecurate.util.ClockTime;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Enumeration;
 import java.util.Properties;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -74,7 +77,7 @@ public class NCICurationServlet extends HttpServlet
     public static Properties m_settings;
 
     public static String _dataSourceName = null;
-
+    
     public static final Logger logger = Logger.getLogger(NCICurationServlet.class.getName());
 
     /**
@@ -118,6 +121,8 @@ public class NCICurationServlet extends HttpServlet
         // call the method to make oracle connection **database connection class requires lot of changes everywhere;
         // leave it right now */
         this.initOracleConnect();
+        
+        
     }
 
     /**
