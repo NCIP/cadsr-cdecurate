@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.27 2007-11-28 19:44:47 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.28 2007-11-30 19:57:43 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1047,14 +1047,14 @@ public class VMAction implements Serializable
            // register the Out parameters
            //cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); // ua_name
            cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //return code
-           cstmt.registerOutParameter(3,java.sql.Types.VARCHAR);       //out cv_idseq
-           cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //out cd_idseq
-           cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //out value meaning
-           cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //out description
-           cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //date created
-           cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //created by
-           cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //modified by
-           cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //date modified
+           cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //out cv_idseq
+           cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //out cd_idseq
+           cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //out value meaning
+           cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //out description
+           cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //date created
+           cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //created by
+           cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //modified by
+           cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //date modified
 
 
            // Set the In parameters (which are inherited from the PreparedStatement class)
@@ -1063,9 +1063,9 @@ public class VMAction implements Serializable
         // Set the In parameters (which are inherited from the PreparedStatement class)
            cstmt.setString(1, userName);
            cstmt.setString(3, VMForm.CADSR_ACTION_INS);
-           cstmt.setString(4, vm.getVM_CD_IDSEQ());
-           cstmt.setString(5, vm.getVM_SHORT_MEANING());
-           cstmt.setString(6, vm.getVM_DESCRIPTION());
+           cstmt.setString(5, vm.getVM_CD_IDSEQ());
+           cstmt.setString(6, vm.getVM_SHORT_MEANING());
+           cstmt.setString(7, vm.getVM_DESCRIPTION());
             // Now we are ready to call the stored procedure
            cstmt.execute();
            sReturnCode = cstmt.getString(2);
