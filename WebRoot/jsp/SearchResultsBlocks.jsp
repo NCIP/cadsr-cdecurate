@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.2 2007-09-19 16:59:35 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.3 2007-11-30 19:58:13 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -325,7 +325,9 @@
 			</table>
 			<br>
 			<table width="100%" valign="top">
-				<% if(sSelAC.equals("Parent Concept")){%>
+				<% 
+				Boolean temp =(Boolean)session.getAttribute("ApprovedRepTerm");
+				if(sSelAC.equals("Parent Concept")){%>
 				<tr>
 					<td>
 						<font size="4">
@@ -336,7 +338,20 @@
 						</font>
 					</td>
 				</tr>
-				<% } else { %>
+				<% }else if(sSelAC.equals("Rep Term") && temp.booleanValue()){%>
+				<tr>
+					<td>
+						<font size="4">
+							<b>
+								The Approved list of 
+								<%=sLabelKeyword%>
+							</b>
+						</font>
+					</td>
+				</tr>
+				<% } else { 				
+				if(!(sSelAC.equals("Rep Term") && temp.booleanValue()))
+				%>
 				<tr>
 					<td>
 						<font size="4">
