@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptServlet.java,v 1.12 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptServlet.java,v 1.13 2007-11-30 19:57:01 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -203,5 +203,17 @@ public class ConceptServlet implements Serializable
     }
     return errMsg;
   }
+/**
+ * @return the data
+ */
+public ConceptForm getData() {
+	return data;
+}
+/**
+ * @param data the data to set
+ */
+public void setData(ConceptForm data) {
+	this.data = data;
+}
   
 }
