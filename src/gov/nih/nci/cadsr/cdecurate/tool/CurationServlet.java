@@ -16,7 +16,9 @@ import gov.nih.nci.cadsr.sentinel.util.DSRAlertImpl;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -8513,12 +8515,13 @@ public class CurationServlet
     public void doBlockSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
     {
         HttpSession session = req.getSession();
+        Boolean approvedRep = new Boolean(false);
         String actType = (String) req.getParameter("actSelect");
         if (actType == null)
             actType = "";
         String sSearchFor = (String) req.getParameter("listSearchFor");
         String dtsVocab = req.getParameter("listContextFilterVocab");
-       // String sSearchInEVS = "";
+        // String sSearchInEVS = "";
        // String sUISearchType = "";
         String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
         String sMetaSource = req.getParameter("listContextFilterSource");
@@ -8533,17 +8536,25 @@ public class CurationServlet
         {
             if (actType.equals("Search"))
             {
-                getACSearch.getACSearchForCreate(req, res, false);
+            	session.setAttribute("ApprovedRepTerm", approvedRep);
+            	getACSearch.getACSearchForCreate(req, res, false);
                 ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
             }
             else if (actType.equals("Attribute"))
             {
-                getACSearch.getACShowResult(req, res, "Attribute");
+            	getACSearch.getACShowResult(req, res, "Attribute");
                 ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
             }
             else if (actType.equals("FirstSearch"))
             {
                 this.getDefaultBlockAttr(req, res, "NCI_Thesaurus"); // "Thesaurus/Metathesaurus");
+                //to display the pre-populated table with the list of approved Rep Terms.
+                if(sSearchFor.equals("RepTerm"))
+                {
+                 approvedRep=true;	
+                 session.setAttribute("ApprovedRepTerm", approvedRep);	
+                 getApprovedRepTerm();
+                }
                 ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
             }
             else if (actType.equals("OpenTreeToConcept") || actType.equals("OpenTreeToParentConcept")
@@ -11296,5 +11307,43 @@ public class CurationServlet
 	 */
 	public void setConn(Connection conn) {
 		this.m_conn = conn;
+	}
+	
+	private void getApprovedRepTerm()
+	{
+		 Vector vResult = new Vector();
+		 String valueString=new String();
+		 HttpSession session = m_classReq.getSession(true);
+		 ConceptServlet conSer = new ConceptServlet(m_classReq, m_classRes, this);
+		 ConceptAction conact = new ConceptAction();
+		 try {
+			Statement stm = m_conn.createStatement();
+			ResultSet rs = stm.executeQuery("SELECT value from TOOL_OPTIONS_VIEW_EXT where PROPERTY like '%REPTERM.PRICON%'");
+			while(rs.next())
+			{
+				valueString+="'"+rs.getString(1)+"',";
+			}
+			String valu = valueString.substring(0,valueString.length()-1);
+			rs.close();
+			stm.close();
+			String sql = "SELECT con.*,cont.name as Context FROM CONCEPTS_VIEW_EXT con,CONTEXTS_VIEW cont WHERE con.CONTE_IDSEQ=cont.CONTE_IDSEQ and PREFERRED_NAME IN ("+valu+")";
+			//System.out.println(sql);
+			Statement stm1 = m_conn.createStatement();
+			ResultSet rs1 = stm1.executeQuery(sql);
+			if(rs1!=null)
+			{
+				conact.getApprovedRepTermConcepts(rs1,conSer.getData());
+				DataManager.setAttribute(session , "vACSearch", conSer.getData().getConceptList());
+			}
+			rs1.close();
+			stm1.close();			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
+		 evs.get_Result(m_classReq, m_classRes, vResult, "");
+		 DataManager.setAttribute(m_classReq.getSession(), "results", vResult);
+		 	
 	}
 } // end of class
