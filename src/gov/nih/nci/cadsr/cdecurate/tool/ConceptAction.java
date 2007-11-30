@@ -1,14 +1,17 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptAction.java,v 1.18 2007-11-28 19:44:47 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptAction.java,v 1.19 2007-11-30 19:56:05 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
+
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Vector;
 import oracle.jdbc.OracleTypes;
@@ -708,6 +711,67 @@ public class ConceptAction implements Serializable
       sContext = "";
     return sContext;
   }
+  
+  /**
+ * @param rs
+ * @param data
+ */
+public void getApprovedRepTermConcepts(ResultSet rs,ConceptForm data)
+  {
+	  Vector<EVS_Bean> vList = new Vector<EVS_Bean>();   
+	  UtilService util = data.getUtil();  
+	  try {
+		if(rs!=null)
+		  {
+		    EVS_UserBean eUser = data.getEvsUser();
+		    while(rs.next())
+		    {
+		      EVS_Bean conBean = new EVS_Bean();
+		      String sConName = util.removeNewLineChar(rs.getString("long_name"));
+		      conBean.setCONCEPT_NAME(sConName);  
+		      conBean.setLONG_NAME(sConName);  //rs.getString("long_name"));
+		      String sDef = util.removeNewLineChar(rs.getString("preferred_definition"));
+		      conBean.setPREFERRED_DEFINITION(sDef);
+		      conBean.setCONTE_IDSEQ(rs.getString("conte_idseq"));
+		      conBean.setASL_NAME(rs.getString("asl_name"));
+		      conBean.setIDSEQ(rs.getString("con_idseq")); 
+		      conBean.setEVS_DEF_SOURCE(rs.getString("definition_source"));
+		      String sVocab = rs.getString("origin");
+		      conBean.setEVS_DATABASE("caDSR");
+		      conBean.setcaDSR_COMPONENT("Concept Class"); 
+		      String selVocab = conBean.getVocabAttr(eUser, sVocab, EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME);  // "vocabDBOrigin", "vocabName");
+		      //store evs vocab name in evs origin and leave meta out
+		      if (selVocab.equals(EVSSearch.META_VALUE))  // "MetaValue")) 
+		        conBean.setEVS_ORIGIN(sVocab);
+		      else conBean.setEVS_ORIGIN(selVocab);
+		      
+		      conBean.setID(rs.getString("con_ID"));//public id
+		      String rsV = rs.getString("version");
+		      if (rsV == null)
+		          rsV = "";
+		      if (rsV.indexOf('.') >= 0)
+		        conBean.setVERSION(rsV);
+		      else
+		        conBean.setVERSION(rsV + ".0");
+		      conBean.setCONTEXT_NAME(rs.getString("context"));
+		      conBean.setDEC_USING("");
+		      String sPref = util.removeNewLineChar(rs.getString("preferred_name"));
+		      conBean.setCONCEPT_IDENTIFIER(sPref);  //cui
+		      conBean.setNCI_CC_TYPE(rs.getString("evs_source"));
+		      if (data.getRequest() != null)
+		       conBean.markNVPConcept(conBean, data.getRequest().getSession()); 
+		      // add concept bean to vector 
+		      vList.addElement(conBean);        
+		    }
+		 }
+		
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	data.setConceptList(vList);
+   // return vList;
+  }	  
   
 //end of class  
 }
