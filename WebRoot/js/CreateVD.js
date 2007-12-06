@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.2 2007-09-19 16:59:34 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.3 2007-12-06 22:51:53 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 var evsWindow = null;
@@ -271,8 +271,8 @@ function enableContButtons()
     {
       hourglass();
      // document.createVDForm.listVDType.selected = true;
-      document.createVDForm.selObjectClass.selected = true;
-      document.createVDForm.selPropertyClass.selected = true;
+    //  document.createVDForm.selObjectClass.selected = true;
+     // document.createVDForm.selPropertyClass.selected = true;
    //   document.createVDForm.selObjectQualifier.selected = true;
    //   document.createVDForm.selPropertyQualifier.selected = true;
       document.createVDForm.selRepQualifier.selected = true;
@@ -505,16 +505,16 @@ function RemoveBuildingBlocks(thisBlock)
       }
       else if (thisBlock == "VDObjectClass")
       {
-        document.createVDForm.selObjectClass.value = selIdx;
+       // document.createVDForm.selObjectClass.value = selIdx;
       //  TrimDefinition('Object')
-        document.createVDForm.selObjectClass[0].value = "";
+       // document.createVDForm.selObjectClass[0].value = "";
         SubmitValidate("RemoveSelection");
       }
       else if (thisBlock == "VDPropertyClass")
       {
-        document.createVDForm.selPropertyClass.value = selIdx;
+        //document.createVDForm.selPropertyClass.value = selIdx;
       //  TrimDefinition('Object')
-        document.createVDForm.selPropertyClass[0].value = "";
+        //document.createVDForm.selPropertyClass[0].value = "";
         SubmitValidate("RemoveSelection");
       }
 } 
