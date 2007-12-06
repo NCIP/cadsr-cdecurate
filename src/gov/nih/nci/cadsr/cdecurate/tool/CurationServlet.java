@@ -11326,7 +11326,7 @@ public class CurationServlet
 			String valu = valueString.substring(0,valueString.length()-1);
 			rs.close();
 			stm.close();
-			String sql = "SELECT con.*,cont.name as Context FROM CONCEPTS_VIEW_EXT con,CONTEXTS_VIEW cont WHERE con.CONTE_IDSEQ=cont.CONTE_IDSEQ and PREFERRED_NAME IN ("+valu+")";
+			String sql = "SELECT con.*,cont.name as Context FROM CONCEPTS_VIEW_EXT con,CONTEXTS_VIEW cont WHERE con.CONTE_IDSEQ=cont.CONTE_IDSEQ and PREFERRED_NAME IN ("+valu+") ORDER BY con.long_name ASC";
 			//System.out.println(sql);
 			Statement stm1 = m_conn.createStatement();
 			ResultSet rs1 = stm1.executeQuery(sql);
