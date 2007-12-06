@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.3 2007-12-06 23:22:55 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -511,134 +511,14 @@ function setup()
 							Value Domain Name Components
 						</td>
 					</tr>
-					<tr height="6">
-						<td>
-							&nbsp;
-						</td>
-					</tr>
 					<tr valign="bottom">
 						<td colspan="2">
-							<table border="0" width="100%">
+							<table border="0" width="75%">
 								<col width="3%">
-								<col width="45%">
 								<col width="55%">
 								<tr valign="top">
 									<td>
 										&nbsp;
-									</td>
-									<td>
-										<table border="1" width="100%">
-											<tr valign="top">
-												<td>
-													<table border="0" width="100%" height="100%">
-														<!-- <col width="30%"><col width="18%"><col width="30%"><col width="18%"> -->
-														<col width="24%">
-														<col width="12%">
-														<col width="16%">
-														<col width="20%">
-														<col width="12%">
-														<col width="16%">
-														<tr height="30" valign="middle">
-															<td colspan=6>
-																<%if(sOriginAction.equals("BlockEditVD")){%>
-																<font color="#C0C0C0">
-																	Optional Name Components (will not be saved or displayed later)
-																</font>
-																<%} else {%>
-																Optional Name Components (will not be saved or displayed later)
-																<%}%>
-															</td>
-														</tr>
-														<tr height="18"></tr>
-														<tr valign="top">
-															<%if(sOriginAction.equals("BlockEditVD")){%>
-															<td align="left">
-																<font color="#C0C0C0">
-																	Object Class
-																</font>
-															</td>
-															<td>
-																&nbsp;
-															</td>
-															<td>
-																&nbsp;
-															</td>
-															<%} else {%>
-															<td align="left">
-																Object Class
-															</td>
-															<td align="center">
-																<font color="#FF0000">
-																	<a href="javascript:SearchBuildingBlocks('VDObjectClass', 'false')">
-																		Search
-																	</a>
-																</font>
-															</td>
-															<td align="center">
-																<font color="#FF0000">
-																	<a href="javascript:RemoveBuildingBlocks('VDObjectClass')">
-																		Remove
-																	</a>
-																</font>
-															</td>
-															<%}%>
-															<%if(sOriginAction.equals("BlockEditVD")){%>
-															<td align="left">
-																<font color="#C0C0C0">
-																	Property
-																</font>
-															</td>
-															<td>
-																&nbsp;
-															</td>
-															<td>
-																&nbsp;
-															</td>
-															<%} else {%>
-															<td align="left">
-																Property
-															</td>
-															<td align="center">
-																<font color="#FF0000">
-																	<a href="javascript:SearchBuildingBlocks('VDPropertyClass','false')">
-																		Search
-																	</a>
-																</font>
-															</td>
-															<td align="center">
-																<font color="#FF0000">
-																	<a href="javascript:RemoveBuildingBlocks('VDPropertyClass')">
-																		Remove
-																	</a>
-																</font>
-															</td>
-															<%}%>
-														</tr>
-														<tr valign="top">
-															<td colspan="3">
-																<select name="selObjectClass" style="width:98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateVD.html#createVDForm_nameBlocks'); return false">
-																	<option value="<%=sObjClass%>">
-																		<%=sObjClass%>
-																	</option>
-																</select>
-															</td>
-															<td colspan="3">
-																<select name="selPropertyClass" style="width:98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateVD.html#createVDForm_nameBlocks'); return false">
-																	<option value="<%=sPropClass%>">
-																		<%=sPropClass%>
-																	</option>
-																</select>
-															</td>
-														</tr>
-														<tr height="105">
-															<td>
-																&nbsp;
-															</td>
-														</tr>
-													</table>
-												</td>
-											</tr>
-										</table>
 									</td>
 									<!-- empty column to seperate componenets -->
 									<!-- represention block -->
@@ -1139,11 +1019,6 @@ function setup()
 							Data Type
 						</td>
 					</tr>
-					<tr height="8">
-						<td>
-							&nbsp;
-						</td>
-					</tr>
 					<tr>
 						<td>
 							&nbsp;
@@ -1188,7 +1063,7 @@ function setup()
 						</td>
 					</tr>
 					<%if (!sOriginAction.equals("BlockEditVD")) {%>
-					<tr height="25">
+					<tr height="10">
 						<td>
 						</td>
 					</tr>
