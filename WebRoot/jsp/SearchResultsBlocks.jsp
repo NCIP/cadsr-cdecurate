@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.3 2007-11-30 19:58:13 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.4 2007-12-06 14:53:25 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -131,6 +131,7 @@
  var metaName = "";
  var dsrName = "";
  var arrDefSrc = new Array();
+ var isSel = false;
    var evsNewUrl = "<%=ToolURL.getEVSNewTermURL(pageContext)%>";
 
 
@@ -223,7 +224,25 @@
         window.close();
       EnableCheckButtons(checked, currentField, "<%=sMAction%>")
    }
-
+   
+   function EnableButtonWithTxt(checked, currentField)
+   {
+       EnableCheckButtons(checked, currentField, "<%=sMAction%>")
+       document.searchParmsForm.keyword.value="";
+       if(checked==true && isSel==false){
+         <% 
+          String temp1 = (String)session.getAttribute("creSearchAC");
+          Boolean temp2 =(Boolean)session.getAttribute("ApprovedRepTerm");
+          if(temp1.equals("RepTerm")&& temp2.booleanValue())
+        {
+        %>
+        var rowindex = currentField.name.substring(2, currentField.name.length);
+        document.searchParmsForm.keyword.value="* "+conArray[rowindex].conName;
+        <%}
+        %>
+        }
+   }
+    
   function getSubConceptsAll()
   {
      if (opener.document == null)
@@ -343,8 +362,7 @@
 					<td>
 						<font size="4">
 							<b>
-								The Approved list of 
-								<%=sLabelKeyword%>
+								Preferred List of Rep Term Primary Concepts
 							</b>
 						</font>
 					</td>
@@ -524,7 +542,7 @@
   %>
 				<tr>
 					<td width="5" valign="top">
-						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);">
+						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtonWithTxt(checked,this);">
 					</td>
 					<td width="150" valign="top">
 						<%=strResult%>
