@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResultsBlocks.js,v 1.1 2007-09-10 16:16:48 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResultsBlocks.js,v 1.2 2007-12-06 14:53:06 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
    var numRowsSelected = 0;
@@ -824,6 +824,7 @@ function createNames(acType)
       {
          if (numRowsSelected == 1)
          {
+              isSel=false; 
               document.searchResultsForm.btnSuperConcepts.disabled=false;
               document.searchResultsForm.btnSubConcepts.disabled=false;
               //do not enble if non enumerated vd
@@ -851,6 +852,7 @@ function createNames(acType)
                }
                else
                {
+                   isSel=true;
                    formObj= eval("document.searchResultsForm."+currentField.name);
                    formObj.checked=false;
                    --numRowsSelected;
