@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.37 2007-09-10 17:18:20 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.38 2007-12-11 23:30:24 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -490,6 +490,8 @@ public class DBAccess
             String csDef = null;
             String csVers = null;
             String csConte = null;
+            String csIdVer = null;
+            int csId;
             TreeNodeCSI prevTnc = null;
             while (rs.next())
             {
@@ -498,7 +500,8 @@ public class DBAccess
                 csDef = rs.getString(SQLSelectCSI._CSDEFIN);
                 csVers = rs.getString(SQLSelectCSI._CSVERS);
                 csConte = rs.getString(SQLSelectCSI._CSCONTE);
-
+                csId=rs.getInt(SQLSelectCSI._CSID);
+                csIdVer = csId +"v"+csVers;
                 String csiName = rs.getString(SQLSelectCSI._CSINAME);
                 String csiValue = rs.getString(SQLSelectCSI._CSCSIIDSEQ);
                 String csiType = rs.getString(SQLSelectCSI._CSITYPE);
@@ -510,7 +513,7 @@ public class DBAccess
                 prevTnc = tnc;
             }
             if (csValue != null)
-                lineage.add(0, new CSIData(new TreeNodeCS(csName, csValue, csDef, csVers, csConte, false), 0));
+                lineage.add(0, new CSIData(new TreeNodeCS(csName, csValue, csDef, csIdVer, csConte, false), 0));
             
             rs.close();
             pstmt.close();
@@ -950,7 +953,9 @@ public class DBAccess
                         String csDefin = rs.getString(SQLSelectCSIAll._CSDEFIN);
                         String csVers = rs.getString(SQLSelectCSIAll._CSVERS);
                         String csConte = rs.getString(SQLSelectCSIAll._CSCONTE);
-                        TreeNodeCS tnc = new TreeNodeCS(csName, csIdseq, csDefin, csVers, csConte, false);
+                        int csId = rs.getInt(SQLSelectCSIAll._CSID);
+                        String csIdVer = csId+"v"+csVers;
+                        TreeNodeCS tnc = new TreeNodeCS(csName, csIdseq, csDefin, csIdVer, csConte, false);
                         test.add(new CSIData(tnc, level - 1));
                         lastCS = csIdseq;
                     }
