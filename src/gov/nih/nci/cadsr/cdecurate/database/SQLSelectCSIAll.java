@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/SQLSelectCSIAll.java,v 1.37 2007-09-10 17:18:20 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/SQLSelectCSIAll.java,v 1.38 2007-12-11 23:31:36 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -26,7 +26,7 @@ public class SQLSelectCSIAll
         }
 
         return
-            "select level, cc.cs_idseq, cs.long_name, cc.cs_csi_idseq, csi.csi_name, cs.preferred_definition, cs.version, c.name, csi.csitl_name "
+            "select level, cc.cs_idseq, cs.long_name, cc.cs_csi_idseq, csi.csi_name, cs.preferred_definition, cs.version, c.name, csi.csitl_name, cs.cs_id "
             + "from sbr.cs_csi_view cc, sbr.class_scheme_items_view csi, sbr.classification_schemes_view cs, sbr.contexts_view c "
             + "where csi.csi_idseq = cc.csi_idseq and cs.cs_idseq(+) = cc.cs_idseq and c.conte_idseq(+) = cs.conte_idseq " + inClause
             + "connect by prior cc.cs_csi_idseq = cc.p_cs_csi_idseq "
@@ -42,4 +42,5 @@ public class SQLSelectCSIAll
     public static final int _CSVERS = 7;
     public static final int _CSCONTE = 8;
     public static final int _CSITYPE = 9;
+    public static final int _CSID = 10;
 }
