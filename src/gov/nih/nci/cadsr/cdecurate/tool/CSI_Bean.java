@@ -1,5 +1,5 @@
 // Copyright (c) 2005 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/CSI_Bean.java,v 1.47 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/CSI_Bean.java,v 1.48 2007-12-11 23:32:07 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -119,8 +119,40 @@ public class CSI_Bean extends AC_Bean
     private String            CSI_LABEL;
 
     private String            CSI_LEVEL;
+    
+    private String 			 CSI_CS_VERSION;
+    
+    private String 			 CSI_CS_PUBLICID;
 
     /**
+	 * @return the cSI_CS_VERSION
+	 */
+	public String getCSI_CS_VERSION() {
+		return CSI_CS_VERSION;
+	}
+
+	/**
+	 * @param csi_cs_version the cSI_CS_VERSION to set
+	 */
+	public void setCSI_CS_VERSION(String csi_cs_version) {
+		CSI_CS_VERSION = csi_cs_version;
+	}
+
+	/**
+	 * @return the cSI_CS_PUBLICID
+	 */
+	public String getCSI_CS_PUBLICID() {
+		return CSI_CS_PUBLICID;
+	}
+
+	/**
+	 * @param csi_cs_publicid the cSI_CS_PUBLICID to set
+	 */
+	public void setCSI_CS_PUBLICID(String csi_cs_publicid) {
+		CSI_CS_PUBLICID = csi_cs_publicid;
+	}
+
+	/**
      * Constructor
      */
     public CSI_Bean()
@@ -729,4 +761,5 @@ public class CSI_Bean extends AC_Bean
     {
         return this.CSI_LEVEL;
     }
+    
 }
