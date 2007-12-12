@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVD.jsp,v 1.3 2007-12-06 22:52:43 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVD.jsp,v 1.4 2007-12-12 21:34:50 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -499,7 +499,7 @@
 							<font color="#FF0000">
 								Select
 							</font>
-							Value Domain Name Components
+							Value Domain Representation
 						</td>
 					</tr>
 					<tr valign="bottom">
