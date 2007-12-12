@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.37 2007-11-28 19:44:07 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.38 2007-12-12 17:05:31 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -115,28 +115,28 @@ public class AltNamesDefsServlet
     public static final String _formatHTMLcsFull = "<tr onclick=\"selCSI(this);\" " + TreeNode._nodeLevel + "=\"{[NODELEVEL]}\" " + TreeNode._nodeValue + "=\"{[NODEVALUE]}\">\n"
         + "<td class=\"cs0\" title=\"Classification Scheme\"><div class=\"ind{[MARGIN]}\">{[NAME]}</div></td>\n"
         + "<td class=\"cs1\" title=\"Context\">{[CONTEXT]}</td>\n"
-        + "<td class=\"cs1\" title=\"Version\">{[VERSION]}</td>\n"
+        + "<td class=\"cs1\" title=\"Public Id & Version\">{[VERSION]}</td>\n"
         + "<td class=\"cs2\" title=\"Definition\">{[DEFIN]}</td>\n"
         + "</tr>\n";
 
     public static final String _formatHTMLcsEdit = "<tr " + TreeNode._nodeLevel + "=\"{[NODELEVEL]}\" " + TreeNode._nodeValue + "=\"{[NODEVALUE]}\">\n"
         + "<td class=\"cs0\" title=\"Classification Scheme\"><div class=\"ind{[MARGIN]}\">{[NAME]}</div></td>\n"
         + "<td class=\"cs1\" title=\"Context\">{[CONTEXT]}</td>\n"
-        + "<td class=\"cs1\" title=\"Version\">{[VERSION]}</td>\n"
+        + "<td class=\"cs1\" title=\"Public Id & Version\">{[VERSION]}</td>\n"
         + "<td class=\"cs2\" title=\"Definition\">{[DEFIN]}</td>\n"
         + "</tr>\n";
 
     public static final String _formatHTMLcsView = "<tr " + TreeNode._nodeLevel + "=\"{[NODELEVEL]}\" " + TreeNode._nodeValue + "=\"{[NODEVALUE]}\">\n"
         + "<td class=\"cs0\" title=\"Classification Scheme\"><div class=\"ind{[MARGIN]}\">{[NAME]}</div></td>\n"
         + "<td class=\"cs1\" title=\"Context\">{[CONTEXT]}</td>\n"
-        + "<td class=\"cs1\" title=\"Version\">{[VERSION]}</td>\n"
+        + "<td class=\"cs1\" title=\"Public Id & Version\">{[VERSION]}</td>\n"
         + "<td class=\"cs2\" title=\"Definition\">{[DEFIN]}</td>\n"
         + "</tr>\n";
 
     public static final String _formatHTMLcsView2 = "<tr " + TreeNode._nodeLevel + "=\"{[NODELEVEL]}\" " + TreeNode._nodeValue + "=\"{[NODEVALUE]}\">\n"
         + "<td class=\"cs0\" title=\"Classification Scheme\"><div class=\"ind{[MARGIN]}\"><b>{[NAME]}</b></div></td>\n"
         + "<td class=\"cs1\" title=\"Context\"><b>{[CONTEXT]}</b></td>\n"
-        + "<td class=\"cs1\" title=\"Version\"><b>{[VERSION]}</b></td>\n"
+        + "<td class=\"cs1\" title=\"Public Id & Version\"><b>{[VERSION]}</b></td>\n"
         + "<td class=\"cs2\" title=\"Definition\"><b>{[DEFIN]}</b></td>\n"
         + "</tr>\n";
 
