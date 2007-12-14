@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.28 2007-12-14 21:18:28 hebell Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.29 2007-12-14 21:32:52 hebell Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -123,9 +123,11 @@
 			<compilerarg line="-Xlint:unchecked" />
 			<classpath refid="libpath" />
 		</javac>
+     <!--   
         <copy todir="${classes.dir}">
             <fileset dir="sdkconf" includes="**/*.*" />
         </copy>   
+        -->
 	</target>
 
 	<target name="-assemble" depends="-compile,-prop-check" description="Assembles the deployment parts into the artifacts folders.">
