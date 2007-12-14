@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.27 2007-09-11 14:49:56 hebell Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.28 2007-12-14 21:18:28 hebell Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -82,6 +82,7 @@
 	<property name="prop.dir" location="${classes.dir}/gov/nih/nci/cadsr/cdecurate" />
 	<property name="src.dir" location="${basedir}/src" />
 	<property name="lib.dir" location="${basedir}/lib" />
+    <property name="scpPath.dir" location="${SCP.PATH}/cdecurate" />
 	<condition property="check.test">
 		<equals arg1="${TEST}" arg2="true" trim="true" />
 	</condition>
@@ -96,12 +97,8 @@
 	<filter token="WEBLOG.DIR" value="${WEBLOG.DIR}" />
 
 	<path id="libpath">
-		<fileset dir="${lib.dir}">
-			<include name="**/*.jar" />
-		</fileset>
-		<fileset dir="${wlib.dir}">
-			<include name="**/*.jar" />
-		</fileset>
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+		<fileset dir="${wlib.dir}" includes="**/*.jar" />
 	</path>
 
 	<target name="clean" depends="-prop-check" description="Deletes all project build artifacts and temporary files.">
@@ -126,6 +123,9 @@
 			<compilerarg line="-Xlint:unchecked" />
 			<classpath refid="libpath" />
 		</javac>
+        <copy todir="${classes.dir}">
+            <fileset dir="sdkconf" includes="**/*.*" />
+        </copy>   
 	</target>
 
 	<target name="-assemble" depends="-compile,-prop-check" description="Assembles the deployment parts into the artifacts folders.">
@@ -382,21 +382,23 @@
 	</target>
 
 	<target name="-deploy-binaries-remote" depends="-prop-check" if="remote.deploy" description="Deploys the executable product binaries to a remote machine.">
-		<echo>Deploying binaries to remote file system "${SCP.USER}@${SCP.HOST}:${SCP.PATH}"</echo>
+        <echo>mkdir ${scpPath.dir}</echo>
+        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="mkdir ${scpPath.dir}" />
 
-		<scp todir="${SCP.USER}@${SCP.HOST}:${SCP.PATH}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true">
+        <echo>Deploying binaries to remote file system "${SCP.USER}@${SCP.HOST}:${scpPath.dir}"</echo>
+		<scp todir="${SCP.USER}@${SCP.HOST}:${scpPath.dir}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true">
 			<fileset dir="${artifacts.dir}" includes="**/*" />
 		</scp>
 
-		<!--<echo>cp ${SCP.PATH}/bin/* ${TOOL.BIN.DIR}/.</echo>
-		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${SCP.PATH}/bin/* ${TOOL.BIN.DIR}/." />
+		<!--<echo>cp ${scpPath.dir}/bin/* ${TOOL.BIN.DIR}/.</echo>
+		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${scpPath.dir}/bin/* ${TOOL.BIN.DIR}/." />
 		<echo>chmod +rx ${TOOL.BIN.DIR}/autorun.sh</echo>
 		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="chmod +rx ${TOOL.BIN.DIR}/autorun.sh" />
  -->
-		<echo>cp ${SCP.PATH}/jboss/*-ds.xml ${JBOSS.DEPLOY.DIR}/.</echo>
-		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${SCP.PATH}/jboss/*-ds.xml ${JBOSS.DEPLOY.DIR}/." />
-		<echo>cp ${SCP.PATH}/jboss/cdecurate-log4j-*.xml ${JBOSS.CONF.DIR}/log4j/.</echo>
-		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${SCP.PATH}/jboss/cdecurate-log4j-*.xml ${JBOSS.CONF.DIR}/log4j/." />
+		<echo>cp ${scpPath.dir}/jboss/*-ds.xml ${JBOSS.DEPLOY.DIR}/.</echo>
+		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${scpPath.dir}/jboss/*-ds.xml ${JBOSS.DEPLOY.DIR}/." />
+		<echo>cp ${scpPath.dir}/jboss/cdecurate-log4j-*.xml ${JBOSS.CONF.DIR}/log4j/.</echo>
+		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${scpPath.dir}/jboss/cdecurate-log4j-*.xml ${JBOSS.CONF.DIR}/log4j/." />
 		<echo>cat ${JBOSS.CONF.DIR}/log4j/log4j-header.xml ${JBOSS.CONF.DIR}/log4j/*-log4j-appender.xml ${JBOSS.CONF.DIR}/log4j/*-log4j-category.xml ${JBOSS.CONF.DIR}/log4j/log4j-footer.xml &gt; ${JBOSS.CONF.DIR}/log4j/log4j.xml</echo>
 		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cat ${JBOSS.CONF.DIR}/log4j/log4j-header.xml ${JBOSS.CONF.DIR}/log4j/*-log4j-appender.xml ${JBOSS.CONF.DIR}/log4j/*-log4j-category.xml ${JBOSS.CONF.DIR}/log4j/log4j-footer.xml > ${JBOSS.CONF.DIR}/log4j/log4j.xml" />
 		<echo>mv ${JBOSS.CONF.DIR}/log4j/log4j.xml ${JBOSS.CONF.DIR}/log4j.xml</echo>
@@ -404,8 +406,8 @@
 
 		<sleep seconds="15" />
 
-		<echo>cp ${SCP.PATH}/jboss/cdecurate.war ${JBOSS.DEPLOY.DIR}/cdecurate.waz</echo>
-		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${SCP.PATH}/jboss/cdecurate.war ${JBOSS.DEPLOY.DIR}/cdecurate.waz" />
+		<echo>cp ${scpPath.dir}/jboss/cdecurate.war ${JBOSS.DEPLOY.DIR}/cdecurate.waz</echo>
+		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${scpPath.dir}/jboss/cdecurate.war ${JBOSS.DEPLOY.DIR}/cdecurate.waz" />
 		<echo>mv ${JBOSS.DEPLOY.DIR}/cdecurate.waz ${JBOSS.DEPLOY.DIR}/cdecurate.war</echo>
 		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="mv ${JBOSS.DEPLOY.DIR}/cdecurate.waz ${JBOSS.DEPLOY.DIR}/cdecurate.war" />
 
