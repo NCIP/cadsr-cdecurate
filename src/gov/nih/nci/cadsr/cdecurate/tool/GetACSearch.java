@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.48 2007-11-28 19:44:47 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.49 2007-12-16 22:03:16 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2166,6 +2166,8 @@ public class GetACSearch implements Serializable
                         CSIBean.setCSI_CSITL_NAME(rs.getString(7));
                         CSIBean.setCSI_DEFINITION(rs.getString(8));
                         CSIBean.setCSI_CSCSI_IDSEQ(rs.getString(9));
+                        //CSIBean.setCSI_CS_PUBLICID(rs.getString(10));
+                        //CSIBean.setCSI_CS_VERSION(rs.getString(11));
                         vList.addElement(CSIBean);
                     }
                 }
@@ -7789,8 +7791,16 @@ public class GetACSearch implements Serializable
             else if (sSearchAC.equals("RepTerm"))
             {
                 String sConteIdseq = (String) req.getParameter("sConteIdseq");
+                String nonEVSSearchInd = (String)req.getParameter("nonEVSRepTermSearch");
+                System.out.println(nonEVSSearchInd);
                 if (sConteIdseq == null)
                     sConteIdseq = "";
+                if(nonEVSSearchInd!= null && nonEVSSearchInd.equals("true"))
+                {
+                	do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "REP", "", "");
+                	session.setAttribute("nonEVSSearchRepTerm", "false");
+                }
+                else{
                 if (sSearchIn.equals("publicID"))
                 {
                     do_caDSRSearch("", sContext, sStatus, sKeyword, vAC, "REP", "", "");
@@ -7805,6 +7815,7 @@ public class GetACSearch implements Serializable
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
                                 intMetaLimit, true, -1, "");
+                }
                 DataManager.setAttribute(session, "vACSearch", vAC);
                 evs.get_Result(req, res, vResult, "");
             }
