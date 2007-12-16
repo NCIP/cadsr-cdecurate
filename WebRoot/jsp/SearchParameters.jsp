@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.5 2007-09-26 16:52:15 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.6 2007-12-16 22:04:49 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 <html>
@@ -203,7 +203,20 @@ System.out.println("search parameters else jsp sSearchAC: " + sSearchAC);
   //submits the page to start the search  
   function doSearchDE()
   {
-   <%  if (!sMenuAction.equals("searchForCreate") && sAppendAction.equals("Was Appended")) { %>
+       var sTerm = document.searchParmsForm.keyword.value;
+       var confirmation =false;
+       if(sTerm==null || sTerm == "")
+        {
+         confirmation =  confirm("The Search Term is empty and will cause all caDSR content to be retrieved.\n"
+         +"This is a slow, lengthy search. Are you sure you wish to proceed?");
+        }
+       else
+       {
+         confirmation=true;
+       }   
+     if(confirmation == true)
+     {     
+    <%  if (!sMenuAction.equals("searchForCreate") && sAppendAction.equals("Was Appended")) { %>
      var conf = confirm("You did not press the Append button so these results will not be appended.");
       if (conf == true)
       {
@@ -227,6 +240,7 @@ System.out.println("search parameters else jsp sSearchAC: " + sSearchAC);
         document.searchParmsForm.actSelect.value = "Search";
         document.searchParmsForm.submit();
       <% }%>
+     } 
   }
 
 //  From a search page:  a search can be initiated two ways:

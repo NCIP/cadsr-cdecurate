@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.4 2007-12-06 14:53:25 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.5 2007-12-16 22:04:49 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -20,6 +20,7 @@
 		<%
    //displayable result vector
 //System.out.println(" search results ");
+
    UtilService serUtil = new UtilService();
    Vector results = (Vector)session.getAttribute("results");
    Session_Data sessionData2 = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
@@ -75,6 +76,7 @@
   boolean isSelAll = false;
   boolean isEVSvm = true;
   boolean allowNVP = false;
+    
   if (sSelAC.contains("Qualifier") || sSelAC.equals("VMConcept") || sSelAC.equals("EditVMConcept"))
   	allowNVP = true;
  // System.out.println(sSelAC + " allow nvp " + allowNVP);	
@@ -132,9 +134,8 @@
  var dsrName = "";
  var arrDefSrc = new Array();
  var isSel = false;
-   var evsNewUrl = "<%=ToolURL.getEVSNewTermURL(pageContext)%>";
-
-
+ var evsNewUrl = "<%=ToolURL.getEVSNewTermURL(pageContext)%>";
+ var nonEVSRepTermSearch = "false";
    function setup()
    {
  // alert("start setUp");
@@ -225,23 +226,38 @@
       EnableCheckButtons(checked, currentField, "<%=sMAction%>")
    }
    
-   function EnableButtonWithTxt(checked, currentField)
-   {
-       EnableCheckButtons(checked, currentField, "<%=sMAction%>")
-       document.searchParmsForm.keyword.value="";
-       if(checked==true && isSel==false){
+   function EnableButtonWithTxt(currentField)
+   { 
+        document.searchParmsForm.keyword.value="";
          <% 
           String temp1 = (String)session.getAttribute("creSearchAC");
           Boolean temp2 =(Boolean)session.getAttribute("ApprovedRepTerm");
           if(temp1.equals("RepTerm")&& temp2.booleanValue())
         {
         %>
-        var rowindex = currentField.name.substring(2, currentField.name.length);
-        document.searchParmsForm.keyword.value="* "+conArray[rowindex].conName;
+        var rowindex = currentField.substring(2, currentField.length);
+        document.searchParmsForm.keyword.value="* "+ conArray[rowindex].conName;
         <%}
         %>
-        }
+      
    }
+   function EnableButtonWithTxt1(currentField,id)
+   {
+       document.searchParmsForm.keyword.value="";
+        <% 
+          String temp3 = (String)session.getAttribute("creSearchAC");
+          Boolean temp4 =(Boolean)session.getAttribute("ApprovedRepTerm");
+          if(temp3.equals("RepTerm")&& temp4.booleanValue())
+        {  	        	
+        %>
+	    var rowindex = currentField.substring(2, currentField.length);
+        document.searchParmsForm.keyword.value=conArray[rowindex].conName;
+        nonEVSRepTermSearch ="true";
+        document.searchParmsForm.nonEVSRepTermSearch.value = nonEVSRepTermSearch;
+        <%}
+        %>        
+        doSearchBuildingBlocks();
+       }
     
   function getSubConceptsAll()
   {
@@ -407,8 +423,15 @@
 						<img src="images/CheckBox.gif" border="0">
 					</th>
 					<%    } %>
+					<% if(sSelAC.equals("Rep Term") && temp.booleanValue()){ %>
+					<th height="30" width="30">
+						<img src="images/CheckBox.gif" border="0">
+					</th>
+					<th height="30" width="30">
+						<img src="images/CheckBox.gif" border="0">
+					</th>
 					<!-- add other headings -->
-					<%
+					<% }
       int k = 0;
       if (vSelAttr != null)
       {
@@ -541,8 +564,16 @@
          if (hasLink == false) {
   %>
 				<tr>
+				<% if(sSelAC.equals("Rep Term") && temp.booleanValue()){ %>
 					<td width="5" valign="top">
-						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtonWithTxt(checked,this);">
+						 <img src="images/copy.gif" border="0" alt="Search for Selected Rep Term" onClick="javascript:EnableButtonWithTxt('<%=ckName%>');">
+					</td>
+					<td width="5" valign="top">
+						<img src="images/search_light.gif" border="0" alt="Search for Rep Term" onClick="javascript:EnableButtonWithTxt1('<%=ckName%>');">
+					</td>
+					<%} %>
+					<td width="5" valign="top">
+						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);">
 					</td>
 					<td width="150" valign="top">
 						<%=strResult%>
