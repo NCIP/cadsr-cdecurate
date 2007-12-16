@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.3 2007-12-16 22:04:49 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -108,7 +108,7 @@
 
    //get the session attributes
    //cadsr search selected attributes
-   String sLastKeyword = (String)request.getAttribute("creKeyword");
+   String sLastKeyword = (String)session.getAttribute("creKeyword");
    if (sLastKeyword == null) sLastKeyword = "";
    sLastKeyword = sLastKeyword.trim();
    String sContext = (String)session.getAttribute("creContextBlocks");
@@ -117,6 +117,11 @@
    if (sSearchIn == null) sSearchIn = "longName";
    String sStatus = (String)session.getAttribute("creStatusBlocks");
    if (sStatus == null || sStatus.equals("")) sStatus = "RELEASED";
+   //rep term default context
+   String repTermDefaultContext = (String)session.getAttribute("defaultRepTermContext");
+   //System.out.println("REP TERM DEFAULT CONTEXT"+ repTermDefaultContext);
+   if(sSearchAC.equals("RepTerm") && repTermDefaultContext!=null && !repTermDefaultContext.equals(""))
+    sContext = repTermDefaultContext;
    //evs search selected attributes
    String sRetired = (String)session.getAttribute("creRetired");
    if (sRetired == null) sRetired = "Exclude";
@@ -202,6 +207,11 @@
        //document.searchParmsForm.submit();
        //isSubmit = true;
     } 
+    else if(isSearched != null && isSearched == "true" )
+    {     
+      document.searchParmsForm.keyword.value=sLastKeyword;
+      
+    }
     isSubmit = doOpenTreeSubmitAction();    //call the function to open the tree
  //   alert(isSubmit + " : " + document.searchParmsForm.actSelect.value + " : " + document.searchParmsForm.openToTree.value);
     if (isSearched == "false" || isSubmit == true)
@@ -318,30 +328,43 @@ function LoadKeyHandler()
  //submits the page to start the search  
     function doSearchBuildingBlocks()
     {
-      if(document.searchParmsForm.listSearchInEVS != null && document.searchParmsForm.listSearchInEVS.value == "MetaCode")
-      {
-      	var sTerm = document.searchParmsForm.keyword.value;
-      	if (sTerm == null) sTerm = "";
-        if(document.searchParmsForm.listContextFilterSource.value == "All Sources" || sTerm == "")
+       var sTerm = document.searchParmsForm.keyword.value;
+       var confirmation =false;
+       if(sTerm==null || sTerm == "")
+       {
+          confirmation =  confirm("The Search Term is empty and will cause all caDSR content to be retrieved.\n"
+                                 + "This is a slow, lengthy search. Are you sure you wish to proceed?");
+        } 
+        else
         {
-           alert("This type of search will search the Metathesaurus only. \n"
-        + "The search term should be a code; for example, a LOINC code. \n"
-        + "Please select a Meta Concept Source to filter by and enter a search term. ");
-          return false;
-        }
-      } 
-      for (i=0; i<document.searchParmsForm.listAttrFilter.length; i++)
+         confirmation=true;
+        } 
+      if (confirmation == true)
       {
-        document.searchParmsForm.listAttrFilter.options[i].selected = true;
-      }
-      if (opener && opener.document != null && opener.document.SearchActionForm != null)
+      	if(document.searchParmsForm.listSearchInEVS != null && document.searchParmsForm.listSearchInEVS.value == "MetaCode")
+      	{
+      		if (sTerm == null) sTerm = "";
+        	if(document.searchParmsForm.listContextFilterSource.value == "All Sources" || sTerm == "")
+        	{
+           		alert("This type of search will search the Metathesaurus only. \n"
+        		+ "The search term should be a code; for example, a LOINC code. \n"
+        		+ "Please select a Meta Concept Source to filter by and enter a search term. ");
+          		return false;
+        	}
+      	} 
+      	for (i=0; i<document.searchParmsForm.listAttrFilter.length; i++)
+      	{
+        	document.searchParmsForm.listAttrFilter.options[i].selected = true;
+      	}
+      	if (opener && opener.document != null && opener.document.SearchActionForm != null)
 			opener.document.SearchActionForm.isValidSearch.value = "true";
 	    hourglass(); 
-      window.status = "Searching Keyword, it may take a minute, please wait....."
-      document.searchResultsForm.Message.style.visibility="visible";
-      document.searchParmsForm.actSelect.value = "Search";
-      markVMConceptOrder("Search");
-      document.searchParmsForm.submit();
+      	window.status = "Searching Keyword, it may take a minute, please wait....."
+      	document.searchResultsForm.Message.style.visibility="visible";
+      	document.searchParmsForm.actSelect.value = "Search";
+      	markVMConceptOrder("Search");
+      	document.searchParmsForm.submit();
+      }	
     }
 
 	//mark if primary vm search
@@ -614,7 +637,7 @@ function doMetaCodeSearch()
 				<tr>
 					<td>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="text" name="keyword" size="22" style="width: 160" value="" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+						<input type="text" name="keyword" size="22" style="width: 160" value="<%=sLastKeyword%>" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
 					</td>
 				</tr>
 				<tr>
@@ -660,11 +683,16 @@ function doMetaCodeSearch()
             for (int i = 0; vContext.size()>i; i++)
             {
               String sContextName = (String)vContext.elementAt(i);
-%>
-								<option value="<%=sContextName%>" <%if(sContextName.equals(sContext)){%> selected <%}%>>
-									<%=sContextName%>
-								</option>
-								<%
+              //System.out.println(sContextName); 
+               %>
+					<option value="<%=sContextName%>" 
+					<% if(sContextName.equals(sContext)){%>
+					  selected 
+					 <%}%>
+					>
+					<%=sContextName%>
+					</option>
+			   <%
             }
           }
 %>
@@ -851,6 +879,7 @@ function doMetaCodeSearch()
 						<input type="hidden" name="sCCodeName" value="">
 						<input type="hidden" name="openToTree" value="">
 						<input type="hidden" name="sConteIdseq" value="">
+						<input type="hidden" name="nonEVSRepTermSearch" value="">
 					</td>
 				</tr>
 			</table>
