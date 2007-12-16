@@ -8520,6 +8520,7 @@ public class CurationServlet
         if (actType == null)
             actType = "";
         String sSearchFor = (String) req.getParameter("listSearchFor");
+        String sKeyword = (String) req.getParameter("keyword");
         String dtsVocab = req.getParameter("listContextFilterVocab");
         // String sSearchInEVS = "";
        // String sUISearchType = "";
@@ -8530,12 +8531,14 @@ public class CurationServlet
         GetACSearch getACSearch = new GetACSearch(req, res, this);
         DataManager.setAttribute(session, "creSearchAC", sSearchFor);
         DataManager.setAttribute(session, "dtsVocab", dtsVocab);
+        DataManager.setAttribute(session, "creKeyword", sKeyword);
         getCompAttrList(req, res, sSearchFor, "searchForCreate");
         // System.out.println(sSearchFor + " block actions " + actType);
         if ((menuAction != null) && (actType != null))
         {
             if (actType.equals("Search"))
             {
+            	               
             	session.setAttribute("ApprovedRepTerm", approvedRep);
             	getACSearch.getACSearchForCreate(req, res, false);
                 ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
@@ -8548,12 +8551,27 @@ public class CurationServlet
             else if (actType.equals("FirstSearch"))
             {
                 this.getDefaultBlockAttr(req, res, "NCI_Thesaurus"); // "Thesaurus/Metathesaurus");
+                
                 //to display the pre-populated table with the list of approved Rep Terms.
                 if(sSearchFor.equals("RepTerm"))
                 {
+                System.out.println(req.getParameter("nonEVSRepTermSearch"));	
+                 this.getRepTermDefaultContext();	
                  approvedRep=true;	
-                 session.setAttribute("ApprovedRepTerm", approvedRep);	
+                 session.setAttribute("ApprovedRepTerm", approvedRep);
+              // get default attributes
+                 Vector vSel = (Vector) session.getAttribute("creSelectedAttr");
+                 Vector vSelClone = (Vector) vSel.clone();
+                 vSelClone.remove("Public ID");
+                 vSelClone.remove("EVS Identifier");
+                 vSelClone.remove("Workflow Status");
+                 vSelClone.remove("Semantic Type");
+                 vSelClone.remove("Context");
+                 vSelClone.remove("Vocabulary");
+                 vSelClone.remove("caDSR Component");
+                 DataManager.setAttribute(session, "creSelectedAttr", vSelClone);
                  getApprovedRepTerm();
+                 
                 }
                 ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
             }
@@ -8569,7 +8587,7 @@ public class CurationServlet
                 ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
             }
             else if (actType.equals("nonEVS"))
-                ForwardJSP(req, res, "/NonEVSSearchPage.jsp");
+                ForwardJSP(req, res, "/NonEVSSearchPage.jsp");            
         }
         else
             ForwardJSP(req, res, "/ErrorPage.jsp");
@@ -10464,6 +10482,7 @@ public class CurationServlet
         DataManager.setAttribute(session, "ParentConceptCode", null);
         // DataManager.setAttribute(session, "OpenTreeToConcept", "");
         DataManager.setAttribute(session, "TabFocus", "VD");
+        
     }
 
     /**
@@ -10511,7 +10530,7 @@ public class CurationServlet
         DataManager.setAttribute(session, "EVSresults", null);
         DataManager.setAttribute(session, "ParentMetaSource", null);
         DataManager.setAttribute(session, "ParentConceptCode", null);
-    }
+       }
 
     /**
      * To clear session attributes when a main Menu button/item is selected.
@@ -10623,6 +10642,8 @@ public class CurationServlet
             vDefaultAttr.addElement("CSI Type");
             vDefaultAttr.addElement("CSI Definition");
             vDefaultAttr.addElement("CS Long Name");
+            //vDefaultAttr.addElement("CS Public ID");
+            //vDefaultAttr.addElement("CS Version");
             vDefaultAttr.addElement("Context");
         }
         else
@@ -11028,6 +11049,8 @@ public class CurationServlet
             vCompAtt.addElement("CSI Type");
             vCompAtt.addElement("CSI Definition");
             vCompAtt.addElement("CS Long Name");
+            //vCompAtt.addElement("CS Public ID");
+            //vCompAtt.addElement("CS Version");
             // vCompAtt.addElement("Concept Name");
             vCompAtt.addElement("Context");
             vCompAtt.addElement("All Attributes");
@@ -11346,4 +11369,27 @@ public class CurationServlet
 		 DataManager.setAttribute(m_classReq.getSession(), "results", vResult);
 		 	
 	}
+	/**
+	 * Gets the default Rep term Context
+	 */
+	private void getRepTermDefaultContext()
+    {
+		String defaultContext=null;
+		HttpSession session = m_classReq.getSession(true);
+        try
+        {
+            String sQuery = "select value from sbrext.tool_options_view_ext where property like 'REPTERM.DEFAULT.CONTEXT'";
+            Statement stm = m_conn.createStatement();
+			ResultSet rs = stm.executeQuery(sQuery);
+			while(rs.next())
+			{
+				defaultContext= rs.getString(1);
+			}
+            session.setAttribute("defaultRepTermContext", defaultContext);
+        }
+        catch (Exception e)
+        {
+            logger.fatal("Error - getRepTermDefaultContext : " + e.toString(), e);
+        }
+    }
 } // end of class
