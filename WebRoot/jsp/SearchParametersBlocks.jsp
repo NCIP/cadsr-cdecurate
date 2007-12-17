@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.4 2007-12-17 17:43:23 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.5 2007-12-17 18:09:18 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -207,11 +207,6 @@
        //document.searchParmsForm.submit();
        //isSubmit = true;
     } 
-    else if(isSearched != null && isSearched == "true" )
-    {     
-      document.searchParmsForm.keyword.value=sLastKeyword;
-      
-    }
     isSubmit = doOpenTreeSubmitAction();    //call the function to open the tree
  //   alert(isSubmit + " : " + document.searchParmsForm.actSelect.value + " : " + document.searchParmsForm.openToTree.value);
     if (isSearched == "false" || isSubmit == true)
