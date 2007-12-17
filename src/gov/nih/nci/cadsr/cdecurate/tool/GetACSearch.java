@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.49 2007-12-16 22:03:16 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.50 2007-12-17 17:42:43 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -7797,7 +7797,7 @@ public class GetACSearch implements Serializable
                     sConteIdseq = "";
                 if(nonEVSSearchInd!= null && nonEVSSearchInd.equals("true"))
                 {
-                	do_caDSRSearch(sKeyword, sContext, sStatus, "", vAC, "REP", "", "");
+                	do_nonEVSRepTermSearch(sKeyword, sContext, sStatus, "", vAC, "REP", "", "");
                 	session.setAttribute("nonEVSSearchRepTerm", "false");
                 }
                 else{
@@ -9998,4 +9998,83 @@ public class GetACSearch implements Serializable
         }
         return true;
     }
+    
+    public void do_nonEVSRepTermSearch(String InString, String ContName, String ASLName, String ID, Vector<EVS_Bean> vList,
+            String type, String conName, String conID)
+    {
+    	// logger.info(m_servlet.getLogMessage(m_classReq, "do_caDSRSearch", "begin search", exDate, exDate));
+        //Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+        String sCUIString = "";
+        String compType = "";
+        conID = m_classReq.getParameter("conid");
+        try
+        {
+            // Create a Callable Statement object.
+           // conn = m_servlet.connectDB(m_classReq, m_classRes);
+            if (m_servlet.getConn() == null)
+                m_servlet.ErrorLogin(m_classReq, m_classRes);
+           
+             String query = "select rep.preferred_name,rep.long_name,rep.preferred_definition,rep.conte_idseq,rep.asl_name,rep.rep_idseq,rep.version,rep.begin_date,rep.end_date,rep.change_note,rep.origin,rep.definition_source,rep.rep_id,rep.condr_idseq,c.name as CONTEXT from sbrext.representations_view_ext rep, contexts_view c where rep.CONTE_IDSEQ=c.CONTE_IDSEQ and rep.condr_idseq in (select condr_idseq from sbrext.component_concepts_view_ext where con_idseq in (select con_idseq from sbrext.concepts_view_ext where preferred_name = ?)and display_order = 0)";
+             pstmt = m_servlet.getConn().prepareStatement(query);
+             pstmt.setString(1, conID);
+			// Now we are ready to call the stored procedure
+             rs = pstmt.executeQuery();
+
+            if (rs != null)
+            {
+                // loop through to printout the outstrings
+                while (rs.next())
+                {
+                    EVS_Bean OCBean = new EVS_Bean();
+                    String sName = m_util.removeNewLineChar(rs.getString(1));
+                    OCBean.setCONCEPT_NAME(sName);
+                    String slName = m_util.removeNewLineChar(rs.getString(2));
+                    OCBean.setLONG_NAME(slName);
+                    String sDef = m_util.removeNewLineChar(rs.getString(3));
+                    OCBean.setPREFERRED_DEFINITION(sDef);
+                    OCBean.setCONTE_IDSEQ(rs.getString(4));
+                    OCBean.setASL_NAME(rs.getString(5));
+                    OCBean.setIDSEQ(rs.getString(6));
+                    // add the decimal number
+                    if (rs.getString("version").indexOf('.') >= 0)
+                        OCBean.setVERSION(rs.getString("version"));
+                    else
+                        OCBean.setVERSION(rs.getString("version") + ".0");
+                    OCBean.setEVS_DEF_SOURCE(rs.getString(12));
+                    OCBean.setCONDR_IDSEQ(rs.getString("condr_idseq"));
+                    OCBean.setEVS_DATABASE("caDSR");
+                    OCBean.setcaDSR_COMPONENT(compType);
+                    OCBean.setEVS_CONCEPT_SOURCE("origin");
+                    OCBean.setID(rs.getString(13));
+                    OCBean.setCONTEXT_NAME(rs.getString(15));
+                    // get concatenated string of concept codes for EVS Identifier
+                    EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
+                    sCUIString = evs.getEVSIdentifierString(rs.getString("condr_idseq"));
+                    if (sCUIString == null)
+                        sCUIString = "";
+                    sCUIString = m_util.removeNewLineChar(sCUIString);
+                    OCBean.setCONCEPT_IDENTIFIER(sCUIString);
+                    vList.addElement(OCBean);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+          logger.fatal("ERROR - GetACSearch-do_caDSRSearch for other : " + e.toString(), e);
+        }
+        try
+        {
+            if (rs != null)
+                rs.close();
+            if (pstmt != null)
+                pstmt.close();
+         }
+        catch (Exception ee)
+        {
+           logger.fatal("GetACSearch-do_caDSRSearch for close : " + ee.toString(), ee);
+        }
+    }
+    
 }
