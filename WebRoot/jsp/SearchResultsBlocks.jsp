@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.5 2007-12-16 22:04:49 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.6 2007-12-17 17:44:06 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -254,6 +254,7 @@
         document.searchParmsForm.keyword.value=conArray[rowindex].conName;
         nonEVSRepTermSearch ="true";
         document.searchParmsForm.nonEVSRepTermSearch.value = nonEVSRepTermSearch;
+        document.searchParmsForm.conid.value = conArray[rowindex].conID;
         <%}
         %>        
         doSearchBuildingBlocks();
