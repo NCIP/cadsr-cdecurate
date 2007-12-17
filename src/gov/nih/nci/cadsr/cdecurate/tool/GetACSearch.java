@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.50 2007-12-17 17:42:43 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.51 2007-12-17 19:42:26 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2160,14 +2160,15 @@ public class GetACSearch implements Serializable
                         CSIBean.setCSI_CS_IDSEQ(rs.getString(1));
                         CSIBean.setCSI_CS_NAME(rs.getString(2));
                         CSIBean.setCSI_CS_LONG_NAME(rs.getString(3));
-                        CSIBean.setCSI_CONTEXT_NAME(rs.getString(4));
-                        CSIBean.setCSI_CSI_IDSEQ(rs.getString(5));
-                        CSIBean.setCSI_NAME(rs.getString(6));
-                        CSIBean.setCSI_CSITL_NAME(rs.getString(7));
-                        CSIBean.setCSI_DEFINITION(rs.getString(8));
-                        CSIBean.setCSI_CSCSI_IDSEQ(rs.getString(9));
-                        //CSIBean.setCSI_CS_PUBLICID(rs.getString(10));
-                        //CSIBean.setCSI_CS_VERSION(rs.getString(11));
+                        CSIBean.setCSI_CS_PUBLICID(rs.getString(5));
+                        CSIBean.setCSI_CS_VERSION(rs.getString(4));
+                        CSIBean.setCSI_CONTEXT_NAME(rs.getString(6));
+                        CSIBean.setCSI_CSI_IDSEQ(rs.getString(7));
+                        CSIBean.setCSI_NAME(rs.getString(8));
+                        CSIBean.setCSI_CSITL_NAME(rs.getString(9));
+                        CSIBean.setCSI_DEFINITION(rs.getString(10));
+                        CSIBean.setCSI_CSCSI_IDSEQ(rs.getString(11));
+                       
                         vList.addElement(CSIBean);
                     }
                 }
@@ -6158,6 +6159,10 @@ public class GetACSearch implements Serializable
                     vResult.addElement(CSIBean.getCSI_DEFINITION());
                 if (vSelAttr.contains("CS Long Name"))
                     vResult.addElement(CSIBean.getCSI_CS_LONG_NAME());
+                if (vSelAttr.contains("CS Public ID"))
+                    vResult.addElement(CSIBean.getCSI_CS_PUBLICID());
+                if (vSelAttr.contains("CS Version"))
+                    vResult.addElement(CSIBean.getCSI_CS_VERSION());
                 // if (vSelAttr.contains("Concept Name"))
                 // vResult = addMultiRecordConcept("", CSIBean.getCSI_NAME(), CSIBean.getCSI_NAME(),
                 // "ClassSchemeItem", vResult);
