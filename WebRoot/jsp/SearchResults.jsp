@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.3 2007-12-17 19:42:44 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -1013,6 +1013,20 @@
 					<th method="get">
 						<a href="javascript:SetSortType('CSName')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
 							CS Long Name
+						</a>
+					</th>
+					<%       
+				    } else if (sAttr.equals("CS Public ID")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('CSName')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
+							CS Public ID
+						</a>
+					</th>
+					<%       
+				       } else if (sAttr.equals("CS Version")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('CSName')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
+							CS Version
 						</a>
 					</th>
 					<%        } else if (sAttr.equals("Registration Status")) { %>

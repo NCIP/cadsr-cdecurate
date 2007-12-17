@@ -10642,10 +10642,16 @@ public class CurationServlet
             vDefaultAttr.addElement("CSI Type");
             vDefaultAttr.addElement("CSI Definition");
             vDefaultAttr.addElement("CS Long Name");
-            //vDefaultAttr.addElement("CS Public ID");
-            //vDefaultAttr.addElement("CS Version");
+            vDefaultAttr.addElement("CS Public ID");
+            vDefaultAttr.addElement("CS Version");
             vDefaultAttr.addElement("Context");
         }
+       /* else if (searchAC.equals("RepTerm"))
+        {
+            vDefaultAttr.addElement("Concept Name");
+            vDefaultAttr.addElement("Definition");
+            vDefaultAttr.addElement("Definition Source");
+        }*/
         else
         {
             vDefaultAttr.addElement("Long Name");
@@ -11049,8 +11055,8 @@ public class CurationServlet
             vCompAtt.addElement("CSI Type");
             vCompAtt.addElement("CSI Definition");
             vCompAtt.addElement("CS Long Name");
-            //vCompAtt.addElement("CS Public ID");
-            //vCompAtt.addElement("CS Version");
+            vCompAtt.addElement("CS Public ID");
+            vCompAtt.addElement("CS Version");
             // vCompAtt.addElement("Concept Name");
             vCompAtt.addElement("Context");
             vCompAtt.addElement("All Attributes");
