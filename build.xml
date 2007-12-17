@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.29 2007-12-14 21:32:52 hebell Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.30 2007-12-17 15:33:17 hebell Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -385,7 +385,7 @@
 
 	<target name="-deploy-binaries-remote" depends="-prop-check" if="remote.deploy" description="Deploys the executable product binaries to a remote machine.">
         <echo>mkdir ${scpPath.dir}</echo>
-        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="mkdir ${scpPath.dir}" />
+        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" failonerror="false" command="mkdir -p ${scpPath.dir}" />
 
         <echo>Deploying binaries to remote file system "${SCP.USER}@${SCP.HOST}:${scpPath.dir}"</echo>
 		<scp todir="${SCP.USER}@${SCP.HOST}:${scpPath.dir}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true">
