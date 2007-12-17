@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.3 2007-12-16 22:04:49 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.4 2007-12-17 17:43:23 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -880,6 +880,7 @@ function doMetaCodeSearch()
 						<input type="hidden" name="openToTree" value="">
 						<input type="hidden" name="sConteIdseq" value="">
 						<input type="hidden" name="nonEVSRepTermSearch" value="">
+						<input type="hidden" name="conid" value="">
 					</td>
 				</tr>
 			</table>
