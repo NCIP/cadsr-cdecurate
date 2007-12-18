@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.6 2007-12-17 17:44:06 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.7 2007-12-18 15:32:58 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -565,17 +565,17 @@
          if (hasLink == false) {
   %>
 				<tr>
-				<% if(sSelAC.equals("Rep Term") && temp.booleanValue()){ %>
-					<td width="5" valign="top">
-						 <img src="images/copy.gif" border="0" alt="Search for Selected Rep Term" onClick="javascript:EnableButtonWithTxt('<%=ckName%>');">
+				 	<td width="5" valign="top">
+						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);">
 					</td>
+					<% if(sSelAC.equals("Rep Term") && temp.booleanValue()){ %>
 					<td width="5" valign="top">
 						<img src="images/search_light.gif" border="0" alt="Search for Rep Term" onClick="javascript:EnableButtonWithTxt1('<%=ckName%>');">
 					</td>
-					<%} %>
 					<td width="5" valign="top">
-						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);">
+						 <img src="images/copy.gif" border="0" alt="Search for Selected Rep Term" onClick="javascript:EnableButtonWithTxt('<%=ckName%>');">
 					</td>
+					<%} %>
 					<td width="150" valign="top">
 						<%=strResult%>
 						<br>
