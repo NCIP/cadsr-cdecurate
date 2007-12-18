@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.6 2007-12-18 15:32:23 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.7 2007-12-18 19:49:29 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -319,13 +319,24 @@ function LoadKeyHandler()
     document.onkeypress = null;
     document.onkeypress = keypress_handler;
 }
-
+  // check to see if input is whitespace only or empty
+function isEmpty(val)
+{
+if (val.match(/^\s+$/) || val == "")
+{
+return true;
+}
+else
+{
+return false;
+} 
+}
  //submits the page to start the search  
     function doSearchBuildingBlocks()
     {
        var sTerm = document.searchParmsForm.keyword.value;
        var confirmation =false;
-       if(sTerm==null || sTerm == "")
+       if(sTerm==null || isEmpty(sTerm))
        {
           confirmation =  confirm("The Search Term is empty and will cause all caDSR content to be retrieved.\n"
                                  + "This is a slow, lengthy search. Are you sure you wish to proceed?");

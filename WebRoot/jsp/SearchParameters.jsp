@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.6 2007-12-16 22:04:49 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.7 2007-12-18 19:49:29 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 <html>
@@ -199,13 +199,24 @@ System.out.println("search parameters else jsp sSearchAC: " + sSearchAC);
       openSearchForCreateAct("<%=sSearchAC%>");   //call the function in JS
   <%}%>  
   }
-
+  // check to see if input is whitespace only or empty
+function isEmpty(val)
+{
+if (val.match(/^\s+$/) || val == "")
+{
+return true;
+}
+else
+{
+return false;
+} 
+}
   //submits the page to start the search  
   function doSearchDE()
   {
        var sTerm = document.searchParmsForm.keyword.value;
        var confirmation =false;
-       if(sTerm==null || sTerm == "")
+       if(sTerm==null || isEmpty(sTerm))
         {
          confirmation =  confirm("The Search Term is empty and will cause all caDSR content to be retrieved.\n"
          +"This is a slow, lengthy search. Are you sure you wish to proceed?");
