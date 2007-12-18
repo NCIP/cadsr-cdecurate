@@ -8578,11 +8578,13 @@ public class CurationServlet
             else if (actType.equals("OpenTreeToConcept") || actType.equals("OpenTreeToParentConcept")
                             || actType.equals("term") || actType.equals("tree"))
             {
-                this.doEVSSearchActions(actType, req, res);
+            	session.setAttribute("ApprovedRepTerm", approvedRep);
+            	this.doEVSSearchActions(actType, req, res);
             }
             else if (actType.equals("doVocabChange"))
             {
-                this.getDefaultBlockAttr(req, res, dtsVocab);
+            	session.setAttribute("ApprovedRepTerm", approvedRep);
+            	this.getDefaultBlockAttr(req, res, dtsVocab);
                 req.setAttribute("UISearchType", "term");
                 ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
             }
