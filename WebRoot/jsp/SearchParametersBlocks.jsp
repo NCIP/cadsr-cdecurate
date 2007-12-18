@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.5 2007-12-17 18:09:18 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.6 2007-12-18 15:32:23 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -347,10 +347,10 @@ function LoadKeyHandler()
           		return false;
         	}
       	} 
-      	for (i=0; i<document.searchParmsForm.listAttrFilter.length; i++)
-      	{
-        	document.searchParmsForm.listAttrFilter.options[i].selected = true;
-      	}
+      	//for (i=0; i<document.searchParmsForm.listAttrFilter.length; i++)
+      	//{
+        	//document.searchParmsForm.listAttrFilter.options[i].selected = true;
+      	//}
       	if (opener && opener.document != null && opener.document.SearchActionForm != null)
 			opener.document.SearchActionForm.isValidSearch.value = "true";
 	    hourglass(); 
