@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.30 2007-12-17 15:33:17 hebell Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.31 2007-12-18 16:18:22 hebell Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -34,7 +34,7 @@
         TIER = ${TIER}
     	TIER.UPPER = ${TIER.UPPER}
         TIER.NAME = ${TIER.NAME}
-        TOOL.BIN.DIR = ${TOOL.BIN.DIR}
+        TOOL.ROOT.DIR = ${TOOL.ROOT.DIR}
         WEBLOG.DIR = ${WEBLOG.DIR}
             	
        </echo>
@@ -52,7 +52,7 @@
 			<isset property="JBOSS.SERVER.DIR" />
 			<isset property="JBOSS.CONF.DIR" />
 			<isset property="JBOSS.DEPLOY.DIR" />
-			<isset property="TOOL.BIN.DIR" />
+			<isset property="TOOL.ROOT.DIR" />
 			<isset property="TEST" />
 			<isset property="WEBLOG.DIR" />
 			<isset property="SCP.USER" />
@@ -331,8 +331,8 @@
 
 	<target name="-deploy-auto-local" if="unix.os" unless="remote.deploy" depends="-deploy-binaries-local" description="Sets the file permissions after the binaries are deployed.">
 		<echo>Automated local deployment ...</echo>
-		<!--	<chmod file="${TOOL.BIN.DIR}/autorun.sh" perm="ugo+rx" />
-		<delete file="${TOOL.BIN.DIR}/autorun.cmd" />-->
+		<!--	<chmod file="${TOOL.ROOT.DIR}/autorun.sh" perm="ugo+rx" />
+		<delete file="${TOOL.ROOT.DIR}/autorun.cmd" />-->
 	</target>
 
 	<target name="-deploy-auto-remote" if="remote.deploy" depends="-deploy-binaries-remote" description="Sets the file permissions after the binaries are deployed.">
@@ -349,7 +349,7 @@
 
 	<target name="-deploy-binaries-local" depends="-prop-check" unless="remote.deploy" description="Deploys the executable product binaries.">
 		<echo>Deploying binaries to local file system ...</echo>
-		<!--<copy todir="${TOOL.BIN.DIR}">
+		<!--<copy todir="${TOOL.ROOT.DIR}">
 			<fileset dir="bin" />
 		</copy>-->
 		<copy todir="${JBOSS.DEPLOY.DIR}">
@@ -392,10 +392,10 @@
 			<fileset dir="${artifacts.dir}" includes="**/*" />
 		</scp>
 
-		<!--<echo>cp ${scpPath.dir}/bin/* ${TOOL.BIN.DIR}/.</echo>
-		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${scpPath.dir}/bin/* ${TOOL.BIN.DIR}/." />
-		<echo>chmod +rx ${TOOL.BIN.DIR}/autorun.sh</echo>
-		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="chmod +rx ${TOOL.BIN.DIR}/autorun.sh" />
+		<!--<echo>cp ${scpPath.dir}/bin/* ${TOOL.ROOT.DIR}/.</echo>
+		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${scpPath.dir}/bin/* ${TOOL.ROOT.DIR}/." />
+		<echo>chmod +rx ${TOOL.ROOT.DIR}/autorun.sh</echo>
+		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="chmod +rx ${TOOL.ROOT.DIR}/autorun.sh" />
  -->
 		<echo>cp ${scpPath.dir}/jboss/*-ds.xml ${JBOSS.DEPLOY.DIR}/.</echo>
 		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${scpPath.dir}/jboss/*-ds.xml ${JBOSS.DEPLOY.DIR}/." />
