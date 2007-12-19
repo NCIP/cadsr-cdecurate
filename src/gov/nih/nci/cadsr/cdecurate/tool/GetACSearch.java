@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.52 2007-12-18 15:31:02 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.53 2007-12-19 21:56:23 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -10014,6 +10014,7 @@ public class GetACSearch implements Serializable
         String sCUIString = "";
         String compType = "";
         conID = m_classReq.getParameter("conid");
+        if (ASLName.equals("")) ASLName=new String("%"); 
         try
         {
             // Create a Callable Statement object.
@@ -10021,9 +10022,10 @@ public class GetACSearch implements Serializable
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
            
-             String query = "select rep.preferred_name,rep.long_name,rep.preferred_definition,rep.conte_idseq,rep.asl_name,rep.rep_idseq,rep.version,rep.begin_date,rep.end_date,rep.change_note,rep.origin,rep.definition_source,rep.rep_id,rep.condr_idseq,c.name as CONTEXT from sbrext.representations_view_ext rep, contexts_view c where rep.CONTE_IDSEQ=c.CONTE_IDSEQ and rep.condr_idseq in (select condr_idseq from sbrext.component_concepts_view_ext where con_idseq in (select con_idseq from sbrext.concepts_view_ext where preferred_name = ?)and display_order = 0) ORDER BY rep.long_name ASC";
+             String query = "select rep.preferred_name,rep.long_name,rep.preferred_definition,rep.conte_idseq,rep.asl_name,rep.rep_idseq,rep.version,rep.begin_date,rep.end_date,rep.change_note,rep.origin,rep.definition_source,rep.rep_id,rep.condr_idseq,c.name as CONTEXT from sbrext.representations_view_ext rep, contexts_view c where rep.CONTE_IDSEQ=c.CONTE_IDSEQ and rep.condr_idseq in (select condr_idseq from sbrext.component_concepts_view_ext where con_idseq in (select con_idseq from sbrext.concepts_view_ext where preferred_name = ? and rep.asl_name like ?)and display_order = 0) ORDER BY rep.long_name ASC";
              pstmt = m_servlet.getConn().prepareStatement(query);
              pstmt.setString(1, conID);
+             pstmt.setString(2, ASLName);
 			// Now we are ready to call the stored procedure
              rs = pstmt.executeQuery();
 
