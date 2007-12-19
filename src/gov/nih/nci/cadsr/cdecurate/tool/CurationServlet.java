@@ -11340,42 +11340,54 @@ public class CurationServlet
 		this.m_conn = conn;
 	}
 	
-	private void getApprovedRepTerm()
-	{
-		 Vector vResult = new Vector();
-		 String valueString=new String();
-		 HttpSession session = m_classReq.getSession(true);
-		 ConceptServlet conSer = new ConceptServlet(m_classReq, m_classRes, this);
-		 ConceptAction conact = new ConceptAction();
-		 try {
+	/**
+	 * Get the approved list of Rep Terms for display
+	 */
+	private void getApprovedRepTerm() {
+		Vector vResult = new Vector();
+		String valueString = new String();
+		HttpSession session = m_classReq.getSession(true);
+		ConceptServlet conSer = new ConceptServlet(m_classReq, m_classRes, this);
+		ConceptAction conact = new ConceptAction();
+		try {
 			Statement stm = m_conn.createStatement();
-			ResultSet rs = stm.executeQuery("SELECT value from TOOL_OPTIONS_VIEW_EXT where PROPERTY like '%REPTERM.PRICON%'");
-			while(rs.next())
-			{
-				valueString+="'"+rs.getString(1)+"',";
+			// ResultSet rs = stm.executeQuery("SELECT value from
+			// TOOL_OPTIONS_VIEW_EXT where PROPERTY like '%REPTERM.PRICON%'");
+			ResultSet rs = stm
+					.executeQuery("SELECT rep.Preferred_name FROM (SELECT xx.rep_idseq, COUNT(*) AS cnt FROM sbrext.representations_view_ext xx, sbrext.component_concepts_view_ext cc WHERE xx.asl_name = 'RELEASED' AND cc.condr_idseq = xx.condr_idseq GROUP BY xx.rep_idseq ORDER BY cnt ASC) hits, sbrext.representations_view_ext rep, sbr.ac_registrations_view reg WHERE hits.cnt = 1 AND rep.rep_idseq = hits.rep_idseq AND reg.ac_idseq = rep.rep_idseq AND reg.registration_status = 'Standard'");
+			if (rs.next()) {
+				do {
+					valueString += "'" + rs.getString(1) + "',";
+				} while (rs.next());
+				String valu = valueString
+						.substring(0, valueString.length() - 1);
+				rs.close();
+				stm.close();
+				String sql = "SELECT con.*,cont.name as Context FROM CONCEPTS_VIEW_EXT con,CONTEXTS_VIEW cont WHERE con.CONTE_IDSEQ=cont.CONTE_IDSEQ and PREFERRED_NAME IN ("
+						+ valu + ") ORDER BY con.long_name ASC";
+				// System.out.println(sql);
+				Statement stm1 = m_conn.createStatement();
+				ResultSet rs1 = stm1.executeQuery(sql);
+				if (rs1 != null) {
+					conact.getApprovedRepTermConcepts(rs1, conSer.getData());
+					DataManager.setAttribute(session, "vACSearch", conSer
+							.getData().getConceptList());
+				}
+				rs1.close();
+				stm1.close();
+			} else {
+				Boolean approvedRep = new Boolean(false);
+				session.setAttribute("ApprovedRepTerm", approvedRep);
 			}
-			String valu = valueString.substring(0,valueString.length()-1);
-			rs.close();
-			stm.close();
-			String sql = "SELECT con.*,cont.name as Context FROM CONCEPTS_VIEW_EXT con,CONTEXTS_VIEW cont WHERE con.CONTE_IDSEQ=cont.CONTE_IDSEQ and PREFERRED_NAME IN ("+valu+") ORDER BY con.long_name ASC";
-			//System.out.println(sql);
-			Statement stm1 = m_conn.createStatement();
-			ResultSet rs1 = stm1.executeQuery(sql);
-			if(rs1!=null)
-			{
-				conact.getApprovedRepTermConcepts(rs1,conSer.getData());
-				DataManager.setAttribute(session , "vACSearch", conSer.getData().getConceptList());
-			}
-			rs1.close();
-			stm1.close();			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		 EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
-		 evs.get_Result(m_classReq, m_classRes, vResult, "");
-		 DataManager.setAttribute(m_classReq.getSession(), "results", vResult);
-		 	
+		EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
+		evs.get_Result(m_classReq, m_classRes, vResult, "");
+		DataManager.setAttribute(m_classReq.getSession(), "results", vResult);
+
 	}
 	/**
 	 * Gets the default Rep term Context
