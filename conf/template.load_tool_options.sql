@@ -1,7 +1,7 @@
 /* COPYRIGHT SCENPRO, INC, 2005
 
-   $HEADER: /CVSNT/CDECURATE/CONF/SANDBOX/LOAD_TOOL_OPTIONS.SQL,V 1.10 2007/07/18 17:34:32 LHEBEL EXP $
-   $NAME:  $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.7 2008-01-22 16:26:51 hebell Exp $
+   $Name: not supported by cvs2svn $
 
    AUTHOR: ANUPAMA CHICKERUR
 
