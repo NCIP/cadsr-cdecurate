@@ -1,7 +1,8 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.7 2007-12-18 19:49:29 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.8 2008-01-23 22:45:57 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
+
 <html>
 	<head>
 		<title>
@@ -187,7 +188,7 @@ System.out.println("search parameters else jsp sSearchAC: " + sSearchAC);
 		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
 
   var bUnAppendWarning = false;
-
+  
   function populateAttr()
   {
   <%if (!sSearchAC.equals("Questions")) {%>
@@ -211,6 +212,7 @@ else
 return false;
 } 
 }
+
   //submits the page to start the search  
   function doSearchDE()
   {

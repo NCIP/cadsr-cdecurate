@@ -1,7 +1,7 @@
 /* COPYRIGHT SCENPRO, INC, 2007
 
-   $HEADER: /CVSNT/CDECURATE/CONF/PROD/UPDATE_TOOL_OPTIONS_URL.SQL,V 1.4 2006/03/08 22:51:08 SHEGDE EXP $
-   $NAME:  $
+   $Header: /cvsshare/content/cvsroot/cdecurate/db-sql/update_evs_url.sql,v 1.2 2008-01-23 22:48:38 hebell Exp $
+   $Name: not supported by cvs2svn $
 */
 
 --This guarantees any error will rollback the changes and exits the script so it can be trapped 

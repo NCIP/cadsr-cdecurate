@@ -1,12 +1,13 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.51 2007-11-28 19:44:47 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.52 2008-01-23 22:51:48 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 // import files
 import gov.nih.nci.cadsr.cdecurate.util.ClockTime;
+
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -124,6 +125,7 @@ public class NCICurationServlet extends HttpServlet
         
         
     }
+    
 
     /**
      * initilize the oracle connect
@@ -197,15 +199,15 @@ public class NCICurationServlet extends HttpServlet
     {
         ClockTime clock = new ClockTime();
         try
-        {
-            CurationServlet curser = new CurationServlet(req, res, this.getServletContext());
-            curser.service();
+        { 
+           CurationServlet curser = new CurationServlet(req, res, this.getServletContext());
+           curser.service();
+           
         }
         catch (Exception e)
         {
             logger.fatal("Service error : " + e.toString(), e);
         }
-
         logger.debug("service response time " + clock.toStringLifeTime());
     }
 
@@ -257,5 +259,7 @@ public class NCICurationServlet extends HttpServlet
         logger.info(" ");
         logger.info("Stopping " + this.getClass().getName());
         logger.info(" ");
-    }
+        
+     }
+    
 }
