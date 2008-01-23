@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.7 2007-12-18 19:49:29 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.8 2008-01-23 23:06:59 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -9,152 +9,192 @@
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <html>
 	<head>
-		<title>
-			Search Parameters
-		</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Search Parameters</title>
+		<meta http-equiv="Content-Type"
+			content="text/html; charset=iso-8859-1">
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/SearchParameters.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 		<%
-   Session_Data sessionData = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
-   String sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
-  // String ac = (String)session.getAttribute("parentAC");
-  // String sMetaCode = "No";
-  // Vector vStatus = new Vector();
- // System.out.println(" variable " + (String)request.getParameter("listSearchFor"));
-   String strHTML = (String)session.getAttribute("strHTML");
-  if (strHTML == null) strHTML = "";
-   //session attributes of the dropdown lists and filter defaults
-   Vector vContext = (Vector)session.getAttribute("vContext");
-   if (vContext == null) vContext = new Vector();
-   Vector vStatusAll = (Vector)session.getAttribute("vStatusALL");
-   if (vStatusAll == null) vStatusAll = new Vector();
-   Vector vBlockAttr = (Vector)session.getAttribute("creAttributeList");
-   if (vBlockAttr == null) vBlockAttr = new Vector();
- //  Vector vDsrSearchIn = (Vector)session.getAttribute("dsrSearchIn");
- //  if(vDsrSearchIn == null) vDsrSearchIn = new Vector();
-   EVS_UserBean usrBean = (EVS_UserBean)sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute("EvsUserBean");
-   if (usrBean == null) usrBean = new EVS_UserBean();
-   Vector vVocab = usrBean.getVocabNameList();   //(Vector)session.getAttribute("dtsVocabNames");  //list of vocabulary names
-   if (vVocab == null) vVocab = new Vector();
-   Vector vVocabDisplay = usrBean.getVocabDisplayList();  // (Vector)session.getAttribute("dtsVocabDisplay");  //list of vocabulary display names
-   if (vVocabDisplay == null) vVocabDisplay = new Vector();
-  
-   String dtsVocab = (String)session.getAttribute("dtsVocab");  //selected vocab
-   if (dtsVocab == null && vVocab != null && vVocab.size() > 0)  //take first one in the list if not selected
-      dtsVocab = (String)vVocab.elementAt(0);
-   else if (dtsVocab == null) dtsVocab = "";  //"Thesaurus/Metathesaurus";  //hard code it only if doesn't exist.
-   //get the vocab specific attributes
-   Hashtable hVoc = (Hashtable)usrBean.getVocab_Attr();
-   if (hVoc == null) hVoc = new Hashtable();
-   EVS_UserBean vocBean = null;
-   if (hVoc.containsKey(dtsVocab))
-     vocBean = (EVS_UserBean)hVoc.get(dtsVocab);
-   if (vocBean == null) 
-     vocBean = (EVS_UserBean)sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute("EvsUserBean");
-   String optName = vocBean.getSearchInName();
-   if (optName == null) optName = "";
-   String optConCode = vocBean.getSearchInConCode();
-   if (optConCode == null) optConCode = "";
-   String optMetaCode = vocBean.getSearchInMetaCode();
-   if (optMetaCode == null) optMetaCode = "";
-//System.out.println("jsp " + dtsVocab + optName + optConCode + optMetaCode);
-   String sRetSearch = vocBean.getRetSearch();  // (String)session.getAttribute("RetSearch");
-   if (sRetSearch == null) sRetSearch = "false";
-   String sTreeSearch = vocBean.getTreeSearch();  //do not allow when the search is only meta
-   if (sTreeSearch == null) sTreeSearch = "true";
-   String metaInclude = vocBean.getIncludeMeta();
-   if (metaInclude == null) metaInclude = "";
-   Vector vSource = (Vector)session.getAttribute("MetaSources");
-   if(vSource == null) vSource = new Vector();
+					Session_Data sessionData = (Session_Data) session
+					.getAttribute(Session_Data.CURATION_SESSION_ATTR);
+			String sMenuAction = (String) session
+					.getAttribute(Session_Data.SESSION_MENU_ACTION);
+			// String ac = (String)session.getAttribute("parentAC");
+			// String sMetaCode = "No";
+			// Vector vStatus = new Vector();
+			// System.out.println(" variable " + (String)request.getParameter("listSearchFor"));
+			String strHTML = (String) session.getAttribute("strHTML");
+			if (strHTML == null)
+				strHTML = "";
+			//session attributes of the dropdown lists and filter defaults
+			Vector vContext = (Vector) session.getAttribute("vContext");
+			if (vContext == null)
+				vContext = new Vector();
+			Vector vStatusAll = (Vector) session.getAttribute("vStatusALL");
+			if (vStatusAll == null)
+				vStatusAll = new Vector();
+			Vector vBlockAttr = (Vector) session
+					.getAttribute("creAttributeList");
+			if (vBlockAttr == null)
+				vBlockAttr = new Vector();
+			//  Vector vDsrSearchIn = (Vector)session.getAttribute("dsrSearchIn");
+			//  if(vDsrSearchIn == null) vDsrSearchIn = new Vector();
+			EVS_UserBean usrBean = (EVS_UserBean) sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute("EvsUserBean");
+			if (usrBean == null)
+				usrBean = new EVS_UserBean();
+			Vector vVocab = usrBean.getVocabNameList(); //(Vector)session.getAttribute("dtsVocabNames");  //list of vocabulary names
+			if (vVocab == null)
+				vVocab = new Vector();
+			Vector vVocabDisplay = usrBean.getVocabDisplayList(); // (Vector)session.getAttribute("dtsVocabDisplay");  //list of vocabulary display names
+			if (vVocabDisplay == null)
+				vVocabDisplay = new Vector();
 
-   //get the selected search for session attributes
-   String sSearchAC = (String)session.getAttribute("creSearchAC");
-   if (sSearchAC == null) sSearchAC = "ObjectClass";
- 
-   //display names for the components
-   if (sSearchAC.equals("PropertyClass") || sSearchAC.equals("VDPropertyClass")) 
-      sSearchAC = "Property";
-   String sLongAC = "";
-   if (sSearchAC.equals("ObjectClass") || sSearchAC.equals("VDObjectClass"))
-     sLongAC = "Object Class";
-   else if (sSearchAC.equals("Property") || sSearchAC.equals("VDProperty"))
-     sLongAC = "Property";
-   else if (sSearchAC.equals("ObjectQualifier"))
-     sLongAC = "Object Qualifier";
-   else if (sSearchAC.equals("PropertyQualifier"))
-     sLongAC = "Property Qualifier";
-   else if (sSearchAC.equals("RepQualifier"))
-     sLongAC = "Rep Qualifier";
-   else if (sSearchAC.equals("RepTerm"))
-     sLongAC = "Rep Term";
-   else if (sSearchAC.equals("EVSValueMeaning") 
-          || sSearchAC.equals("CreateVM_EVSValueMeaning")
-         // || sSearchAC.equals("VMConcept")
-          || sSearchAC.equals("PV_ValueMeaning"))
-     sLongAC = "Value Meaning";
-   else if (sSearchAC.equals("VMConcept") || sSearchAC.equals("EditVMConcept") )
-     sLongAC = "Concept";
-   else if (sSearchAC.equals("ParentConcept"))
-     sLongAC = "Parent Concept";
-   else if (sSearchAC.equals("ParentConceptVM"))
-   {
-     sLongAC = "Value Meaning";
-     String vdType = (String)session.getAttribute("pageVDType");
-     if (vdType != null && vdType.equals("N"))
-       sLongAC = "Parent Concept";
-   }
+			String dtsVocab = (String) session.getAttribute("dtsVocab"); //selected vocab
+			if (dtsVocab == null && vVocab != null && vVocab.size() > 0) //take first one in the list if not selected
+				dtsVocab = (String) vVocab.elementAt(0);
+			else if (dtsVocab == null)
+				dtsVocab = ""; //"Thesaurus/Metathesaurus";  //hard code it only if doesn't exist.
+			//get the vocab specific attributes
+			Hashtable hVoc = (Hashtable) usrBean.getVocab_Attr();
+			if (hVoc == null)
+				hVoc = new Hashtable();
+			EVS_UserBean vocBean = null;
+			if (hVoc.containsKey(dtsVocab))
+				vocBean = (EVS_UserBean) hVoc.get(dtsVocab);
+			if (vocBean == null)
+				vocBean = (EVS_UserBean) sessionData.EvsUsrBean; //(EVS_UserBean)session.getAttribute("EvsUserBean");
+			String optName = vocBean.getSearchInName();
+			if (optName == null)
+				optName = "";
+			String optConCode = vocBean.getSearchInConCode();
+			if (optConCode == null)
+				optConCode = "";
+			String optMetaCode = vocBean.getSearchInMetaCode();
+			if (optMetaCode == null)
+				optMetaCode = "";
+			//System.out.println("jsp " + dtsVocab + optName + optConCode + optMetaCode);
+			String sRetSearch = vocBean.getRetSearch(); // (String)session.getAttribute("RetSearch");
+			if (sRetSearch == null)
+				sRetSearch = "false";
+			String sTreeSearch = vocBean.getTreeSearch(); //do not allow when the search is only meta
+			if (sTreeSearch == null)
+				sTreeSearch = "true";
+			String metaInclude = vocBean.getIncludeMeta();
+			if (metaInclude == null)
+				metaInclude = "";
+			Vector vSource = (Vector) session.getAttribute("MetaSources");
+			if (vSource == null)
+				vSource = new Vector();
 
-   //get the session attributes
-   //cadsr search selected attributes
-   String sLastKeyword = (String)session.getAttribute("creKeyword");
-   if (sLastKeyword == null) sLastKeyword = "";
-   sLastKeyword = sLastKeyword.trim();
-   String sContext = (String)session.getAttribute("creContextBlocks");
-   if (sContext == null) sContext = "All Contexts";
-   String sSearchIn = (String)session.getAttribute("creSearchInBlocks");
-   if (sSearchIn == null) sSearchIn = "longName";
-   String sStatus = (String)session.getAttribute("creStatusBlocks");
-   if (sStatus == null || sStatus.equals("")) sStatus = "RELEASED";
-   //rep term default context
-   String repTermDefaultContext = (String)session.getAttribute("defaultRepTermContext");
-   //System.out.println("REP TERM DEFAULT CONTEXT"+ repTermDefaultContext);
-   if(sSearchAC.equals("RepTerm") && repTermDefaultContext!=null && !repTermDefaultContext.equals(""))
-    sContext = repTermDefaultContext;
-   //evs search selected attributes
-   String sRetired = (String)session.getAttribute("creRetired");
-   if (sRetired == null) sRetired = "Exclude";
-   String sSearchInEVS = (String)session.getAttribute("SearchInEVS");
-   if (sSearchInEVS == null) sSearchInEVS = "Synonym";
- //  if(sSearchInEVS.equals("MetaCode")) sMetaCode = "Yes";
-   String sMetaSource = (String)session.getAttribute("MetaSource");
-   if (sMetaSource == null) sMetaSource = "All Sources";
-   String sMetaLimit = "100";
- //  String sVersion = (String)session.getAttribute("sVersion");
- //  if (sVersion == null) sVersion = "";
-   String sUISearchType = (String)request.getAttribute("UISearchType");
-   if (sUISearchType == null || sUISearchType.equals("nothing") || sUISearchType.equals(""))  //? || dtsVocab.equals("NCI Metathesaurus")) 
-    sUISearchType = "term";
-   String sOpenTreeToConcept = (String)request.getAttribute("OpenTreeToConcept");
-   if (sOpenTreeToConcept == null || sOpenTreeToConcept.equals("")) sOpenTreeToConcept = "false";
-   Vector vSelectedAttr = (Vector)session.getAttribute("creSelectedAttr");
-   if ( vSelectedAttr == null) vSelectedAttr = new Vector();
+			//get the selected search for session attributes
+			String sSearchAC = (String) session.getAttribute("creSearchAC");
+			if (sSearchAC == null)
+				sSearchAC = "ObjectClass";
 
-  //get the seleected displayable attributes
-//  Vector vSelDispAttr = (Vector)session.getAttribute("creSelectedAttr");
-//  if (vSelDispAttr == null) vSelDispAttr = new Vector();
-  //get the search result records
-  Vector vSerResult = (Vector)session.getAttribute("results");
-  boolean hasRecords = false;
-  if (vSerResult != null && vSerResult.size() >0) hasRecords = true;
-  String updFunction = "displayAttributes('" + hasRecords + "');";
-//System.out.println("jsp " + updFunction);  
-  int iItem = 1;
-%>
+			//display names for the components
+			if (sSearchAC.equals("PropertyClass")
+					|| sSearchAC.equals("VDPropertyClass"))
+				sSearchAC = "Property";
+			String sLongAC = "";
+			if (sSearchAC.equals("ObjectClass")
+					|| sSearchAC.equals("VDObjectClass"))
+				sLongAC = "Object Class";
+			else if (sSearchAC.equals("Property")
+					|| sSearchAC.equals("VDProperty"))
+				sLongAC = "Property";
+			else if (sSearchAC.equals("ObjectQualifier"))
+				sLongAC = "Object Qualifier";
+			else if (sSearchAC.equals("PropertyQualifier"))
+				sLongAC = "Property Qualifier";
+			else if (sSearchAC.equals("RepQualifier"))
+				sLongAC = "Rep Qualifier";
+			else if (sSearchAC.equals("RepTerm"))
+				sLongAC = "Rep Term";
+			else if (sSearchAC.equals("EVSValueMeaning")
+					|| sSearchAC.equals("CreateVM_EVSValueMeaning")
+					// || sSearchAC.equals("VMConcept")
+					|| sSearchAC.equals("PV_ValueMeaning"))
+				sLongAC = "Value Meaning";
+			else if (sSearchAC.equals("VMConcept")
+					|| sSearchAC.equals("EditVMConcept"))
+				sLongAC = "Concept";
+			else if (sSearchAC.equals("ParentConcept"))
+				sLongAC = "Parent Concept";
+			else if (sSearchAC.equals("ParentConceptVM")) {
+				sLongAC = "Value Meaning";
+				String vdType = (String) session.getAttribute("pageVDType");
+				if (vdType != null && vdType.equals("N"))
+					sLongAC = "Parent Concept";
+			}
+
+			//get the session attributes
+			//cadsr search selected attributes
+			String sLastKeyword = (String) session.getAttribute("creKeyword");
+			if (sLastKeyword == null)
+				sLastKeyword = "";
+			sLastKeyword = sLastKeyword.trim();
+			String sContext = (String) session.getAttribute("creContextBlocks");
+			if (sContext == null)
+				sContext = "All Contexts";
+			String sSearchIn = (String) session
+					.getAttribute("creSearchInBlocks");
+			if (sSearchIn == null)
+				sSearchIn = "longName";
+			String sStatus = (String) session.getAttribute("creStatusBlocks");
+			if (sStatus == null || sStatus.equals(""))
+				sStatus = "RELEASED";
+			//rep term default context
+			String repTermDefaultContext = (String) session
+					.getAttribute("defaultRepTermContext");
+			//System.out.println("REP TERM DEFAULT CONTEXT"+ repTermDefaultContext);
+			if (sSearchAC.equals("RepTerm") && repTermDefaultContext != null
+					&& !repTermDefaultContext.equals(""))
+				sContext = repTermDefaultContext;
+			//evs search selected attributes
+			String sRetired = (String) session.getAttribute("creRetired");
+			if (sRetired == null)
+				sRetired = "Exclude";
+			String sSearchInEVS = (String) session.getAttribute("SearchInEVS");
+			if (sSearchInEVS == null)
+				sSearchInEVS = "Synonym";
+			//  if(sSearchInEVS.equals("MetaCode")) sMetaCode = "Yes";
+			String sMetaSource = (String) session.getAttribute("MetaSource");
+			if (sMetaSource == null)
+				sMetaSource = "All Sources";
+			String sMetaLimit = "100";
+			//  String sVersion = (String)session.getAttribute("sVersion");
+			//  if (sVersion == null) sVersion = "";
+			String sUISearchType = (String) request
+					.getAttribute("UISearchType");
+			if (sUISearchType == null || sUISearchType.equals("nothing")
+					|| sUISearchType.equals("")) //? || dtsVocab.equals("NCI Metathesaurus")) 
+				sUISearchType = "term";
+			String sOpenTreeToConcept = (String) request
+					.getAttribute("OpenTreeToConcept");
+			if (sOpenTreeToConcept == null || sOpenTreeToConcept.equals(""))
+				sOpenTreeToConcept = "false";
+			Vector vSelectedAttr = (Vector) session
+					.getAttribute("creSelectedAttr");
+			if (vSelectedAttr == null)
+				vSelectedAttr = new Vector();
+
+			//get the seleected displayable attributes
+			//  Vector vSelDispAttr = (Vector)session.getAttribute("creSelectedAttr");
+			//  if (vSelDispAttr == null) vSelDispAttr = new Vector();
+			//get the search result records
+			Vector vSerResult = (Vector) session.getAttribute("results");
+			boolean hasRecords = false;
+			if (vSerResult != null && vSerResult.size() > 0)
+				hasRecords = true;
+			String updFunction = "displayAttributes('" + hasRecords + "');";
+			//System.out.println("jsp " + updFunction);  
+			int iItem = 1;
+		%>
 
 		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
   //submits the page if Vocab changed.
+  
   function doVocabChange()
   {
     hourglass();
@@ -319,7 +359,7 @@ function LoadKeyHandler()
     document.onkeypress = null;
     document.onkeypress = keypress_handler;
 }
-  // check to see if input is whitespace only or empty
+// check to see if input is whitespace only or empty
 function isEmpty(val)
 {
 if (val.match(/^\s+$/) || val == "")
@@ -331,6 +371,7 @@ else
 return false;
 } 
 }
+
  //submits the page to start the search  
     function doSearchBuildingBlocks()
     {
@@ -469,7 +510,8 @@ function doMetaCodeSearch()
 	</head>
 
 	<body onLoad="Setup();">
-		<form name="searchParmsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=searchBlocks">
+		<form name="searchParmsForm" method="post"
+			action="../../cdecurate/NCICurationServlet?reqType=searchBlocks">
 			<table width="100%" class="sidebarBGColor">
 				<!-- style="position: relative; top: -22px;"> -->
 				<tr valign="top" align="left" class="firstRow">
@@ -481,14 +523,17 @@ function doMetaCodeSearch()
 				<tr>
 					<td>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<select name="listSearchFor" size="1" style="width: 160" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+						<select name="listSearchFor" size="1" style="width: 160"
+							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
 							<option value="<%=sSearchAC%>">
 								<%=sLongAC%>
 							</option>
 						</select>
 					</td>
 				</tr>
-				<%if(sSearchAC.equals("ParentConcept")){%>
+				<%
+				if (sSearchAC.equals("ParentConcept")) {
+				%>
 				<tr valign="bottom" align="left" class="firstRow" height="22">
 					<th>
 						<%=iItem++%>
@@ -498,13 +543,17 @@ function doMetaCodeSearch()
 				<tr>
 					<td>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="RADIO" value="EVS" checked="checked" name="rRefType" onclick="javascript:changeType('EVS');">
+						<input type="RADIO" value="EVS" checked="checked" name="rRefType"
+							onclick="javascript:changeType('EVS');">
 						EVS &nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="RADIO" value="Non EVS" name="rRefType" onclick="javascript:changeType('nonEVS');">
+						<input type="RADIO" value="Non EVS" name="rRefType"
+							onclick="javascript:changeType('nonEVS');">
 						Non EVS
 					</td>
 				</tr>
-				<% } %>
+				<%
+				}
+				%>
 				<tr valign="bottom" align="left" class="firstRow" height="22">
 					<th>
 						<%=iItem++%>
@@ -514,38 +563,45 @@ function doMetaCodeSearch()
 				<tr>
 					<td>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<select name="listContextFilterVocab" size="1" style="width: 160" onChange="doVocabChange();" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-							<%        if (vVocab != null)
-          {
-            for (int i = 0; vVocab.size()>i; i++)
-            {
-              String sVocab = (String)vVocab.elementAt(i);
-              //do not add to the list if parent concept
-              boolean isParSearch = usrBean.getVocabUseParent();
-              EVS_UserBean vBean = (EVS_UserBean)hVoc.get(sVocab);
-              if (vBean != null) isParSearch = vBean.getVocabUseParent();
-       //   System.out.println(sVocab + isParSearch + " parent " + sSearchAC + (sSearchAC.equals("ParentConcept") && !isParSearch));
-              if(sSearchAC.equals("ParentConcept") && !isParSearch)
-                continue;
-              //get its vocab display  
-              String sVocabDisp = sVocab;
-              if (vVocabDisplay != null && vVocabDisplay.size()>i)
-                  sVocabDisp = (String)vVocabDisplay.elementAt(i);
-           // System.out.println(sVocab + " jsp vocab " + sVocabDisp);
-            //keep only the parent vocab in the drop down for select values from parent
-              if (sSearchAC.equals("ParentConceptVM") && sVocab.equals(dtsVocab)) {
-%>
+						<select name="listContextFilterVocab" size="1" style="width: 160"
+							onChange="doVocabChange();"
+							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+							<%
+									if (vVocab != null) {
+									for (int i = 0; vVocab.size() > i; i++) {
+										String sVocab = (String) vVocab.elementAt(i);
+										//do not add to the list if parent concept
+										boolean isParSearch = usrBean.getVocabUseParent();
+										EVS_UserBean vBean = (EVS_UserBean) hVoc.get(sVocab);
+										if (vBean != null)
+									isParSearch = vBean.getVocabUseParent();
+										//   System.out.println(sVocab + isParSearch + " parent " + sSearchAC + (sSearchAC.equals("ParentConcept") && !isParSearch));
+										if (sSearchAC.equals("ParentConcept") && !isParSearch)
+									continue;
+										//get its vocab display  
+										String sVocabDisp = sVocab;
+										if (vVocabDisplay != null && vVocabDisplay.size() > i)
+									sVocabDisp = (String) vVocabDisplay.elementAt(i);
+										// System.out.println(sVocab + " jsp vocab " + sVocabDisp);
+										//keep only the parent vocab in the drop down for select values from parent
+										if (sSearchAC.equals("ParentConceptVM")
+										&& sVocab.equals(dtsVocab)) {
+							%>
 							<option value="<%=sVocab%>" selected>
 								<%=sVocabDisp%>
 							</option>
-							<%            } else if (!sSearchAC.equals("ParentConceptVM")) {  %>
-							<option value="<%=sVocab%>" <%if(sVocab.equals(dtsVocab)){%> selected <%}%>>
+							<%
+							} else if (!sSearchAC.equals("ParentConceptVM")) {
+							%>
+							<option value="<%=sVocab%>" <%if(sVocab.equals(dtsVocab)){%>
+								selected <%}%>>
 								<%=sVocabDisp%>
 							</option>
-							<%            }
-            }
-         }
-%>
+							<%
+									}
+									}
+								}
+							%>
 						</select>
 					</td>
 				</tr>
@@ -558,80 +614,114 @@ function doMetaCodeSearch()
 						</div>
 					</th>
 				</tr>
-				<% if(!sSearchAC.equals("ParentConcept") && !sSearchAC.equals("ParentConceptVM")){%>
+				<%
+							if (!sSearchAC.equals("ParentConcept")
+							&& !sSearchAC.equals("ParentConceptVM")) {
+				%>
 				<tr>
 					<td>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<b>
-							caDSR
-						</b>
+						<b> caDSR </b>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<p>
 							&nbsp;&nbsp;&nbsp;&nbsp;
-							<select name="listSearchIn" size="1" style="width: 170" onChange="populateEVSSearchIn();" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-								<option value="longName" <%if(sSearchIn.equals("longName")){%> selected <%}%>>
+							<select name="listSearchIn" size="1" style="width: 170"
+								onChange="populateEVSSearchIn();"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								<option value="longName" <%if(sSearchIn.equals("longName")){%>
+									selected <%}%>>
 									Names and Definition
 								</option>
-								<option value="publicID" <%if(sSearchIn.equals("publicID")){%> selected <%}%>>
+								<option value="publicID" <%if(sSearchIn.equals("publicID")){%>
+									selected <%}%>>
 									Public ID
 								</option>
-								<option value="evsIdentifier" <%if(sSearchIn.equals("evsIdentifier")){%> selected <%}%>>
+								<option value="evsIdentifier"
+									<%if(sSearchIn.equals("evsIdentifier")){%> selected <%}%>>
 									EVS Identifier
 								</option>
-								<option value="Code" <%if(sSearchIn.equals("Code")){%> selected <%}%>>
+								<option value="Code" <%if(sSearchIn.equals("Code")){%> selected
+									<%}%>>
 									None
 								</option>
 							</select>
 						</p>
 					</td>
 				</tr>
-				<% } %>
+				<%
+				}
+				%>
 				<tr>
 					<td>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<b>
-							EVS
-						</b>
-						<% if (sTreeSearch.equals("true")) { %>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-						<%if (sUISearchType.equals("term") && !sSearchAC.equals("ParentConceptVM")) {%>
-						<a href="javascript:searchType('tree');">
-							Tree Search
-						</a>
-						<%} else if(!sSearchAC.equals("ParentConceptVM")){%>
-						<a href="javascript:searchType('term');">
-							Term Search
-						</a>
-						<%}%>
-						<% } %>
+						<b> EVS </b>
+						<%
+						if (sTreeSearch.equals("true")) {
+						%>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+						<%
+								if (sUISearchType.equals("term")
+								&& !sSearchAC.equals("ParentConceptVM")) {
+						%>
+						<a href="javascript:searchType('tree');"> Tree Search </a>
+						<%
+						} else if (!sSearchAC.equals("ParentConceptVM")) {
+						%>
+						<a href="javascript:searchType('term');"> Term Search </a>
+						<%
+						}
+						%>
+						<%
+						}
+						%>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<p>
 							&nbsp;&nbsp;&nbsp;&nbsp;
-							<select name="listSearchInEVS" size="1" style="width: 170" onChange="populateCaDSRSearchIn();" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-								<%        if (optName != null && !optName.equals("") && !sSearchAC.equals("ParentConceptVM")) { %>
-								<option value="Name" <%if (sSearchInEVS.equals("Name")){%> selected <%}%>>
+							<select name="listSearchInEVS" size="1" style="width: 170"
+								onChange="populateCaDSRSearchIn();"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								<%
+											if (optName != null && !optName.equals("")
+											&& !sSearchAC.equals("ParentConceptVM")) {
+								%>
+								<option value="Name" <%if (sSearchInEVS.equals("Name")){%>
+									selected <%}%>>
 									<%=optName%>
 								</option>
-								<%        } if (optConCode != null && !optConCode.equals("")) { %>
-								<option value="ConCode" <%if (sSearchInEVS.equals("ConCode")){%> selected <%}%>>
+								<%
+									}
+									if (optConCode != null && !optConCode.equals("")) {
+								%>
+								<option value="ConCode" <%if (sSearchInEVS.equals("ConCode")){%>
+									selected <%}%>>
 									<%=optConCode%>
 								</option>
-								<%        } if (optMetaCode != null && !optMetaCode.equals("") && !sSearchAC.equals("ParentConceptVM")) { %>
-								<option value="MetaCode" <%if (sSearchInEVS.equals("MetaCode")){%> selected <%}%>>
+								<%
+									}
+									if (optMetaCode != null && !optMetaCode.equals("")
+											&& !sSearchAC.equals("ParentConceptVM")) {
+								%>
+								<option value="MetaCode"
+									<%if (sSearchInEVS.equals("MetaCode")){%> selected <%}%>>
 									<%=optMetaCode%>
 								</option>
-								<%        }   %>
+								<%
+								}
+								%>
 							</select>
 						</p>
 					</td>
 				</tr>
-				<%if (sUISearchType.equals("term")) {%>
+				<%
+				if (sUISearchType.equals("term")) {
+				%>
 				<tr>
 					<th height="22" valign="bottom">
 						<div align="left">
@@ -643,12 +733,15 @@ function doMetaCodeSearch()
 				<tr>
 					<td>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="text" name="keyword" size="22" style="width: 160" value="<%=sLastKeyword%>" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+						<input type="text" name="keyword" size="22" style="width: 160"
+							value="<%=sLastKeyword%>"
+							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<div align="left" title="The wildcard character, *, expands the search to find a non-exact match.">
+						<div align="left"
+							title="The wildcard character, *, expands the search to find a non-exact match.">
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use * as wildcard
 						</div>
 					</td>
@@ -661,13 +754,14 @@ function doMetaCodeSearch()
 						</div>
 					</th>
 				</tr>
-				<% if (!sSearchAC.equals("ParentConcept") && !sSearchAC.equals("ParentConceptVM")){%>
+				<%
+						if (!sSearchAC.equals("ParentConcept")
+						&& !sSearchAC.equals("ParentConceptVM")) {
+				%>
 				<tr>
 					<td>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<b>
-							caDSR
-						</b>
+						<b> caDSR </b>
 					</td>
 				</tr>
 				<tr>
@@ -679,29 +773,27 @@ function doMetaCodeSearch()
 					<td>
 						<p>
 							&nbsp;&nbsp;&nbsp;&nbsp;
-							<select name="listContextFilter" size="1" style="width: 160" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-								<option value="AllContext" <%if(sContext.equals("All Contexts")){%> selected <%}%>>
+							<select name="listContextFilter" size="1" style="width: 160"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								<option value="AllContext"
+									<%if(sContext.equals("All Contexts")){%> selected <%}%>>
 									All Contexts
 								</option>
 								<%
-          if (vContext != null)
-          {
-            for (int i = 0; vContext.size()>i; i++)
-            {
-              String sContextName = (String)vContext.elementAt(i);
-              //System.out.println(sContextName); 
-               %>
-					<option value="<%=sContextName%>" 
-					<% if(sContextName.equals(sContext)){%>
-					  selected 
-					 <%}%>
-					>
-					<%=sContextName%>
-					</option>
-			   <%
-            }
-          }
-%>
+										if (vContext != null) {
+										for (int i = 0; vContext.size() > i; i++) {
+											String sContextName = (String) vContext
+											.elementAt(i);
+											//System.out.println(sContextName);
+								%>
+								<option value="<%=sContextName%>"
+									<% if(sContextName.equals(sContext)){%> selected <%}%>>
+									<%=sContextName%>
+								</option>
+								<%
+											}
+											}
+								%>
 							</select>
 						</p>
 					</td>
@@ -715,45 +807,63 @@ function doMetaCodeSearch()
 					<td>
 						<p>
 							&nbsp;&nbsp;&nbsp;&nbsp;
-							<select name="listStatusFilter" multiple size="2" style="width: 160" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-								<option value="RELEASED" <% if(sStatus.equalsIgnoreCase("RELEASED")) {%> selected <%}%>>
+							<select name="listStatusFilter" multiple size="2"
+								style="width: 160"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								<option value="RELEASED"
+									<% if(sStatus.equalsIgnoreCase("RELEASED")) {%> selected <%}%>>
 									RELEASED
 								</option>
-								<option value="AllStatus" <% if(sStatus.equalsIgnoreCase("AllStatus")) {%> selected <%}%>>
+								<option value="AllStatus"
+									<% if(sStatus.equalsIgnoreCase("AllStatus")) {%> selected <%}%>>
 									All Statuses
 								</option>
 							</select>
 						</p>
 					</td>
 				</tr>
-				<% } %>
-				<%if((sRetSearch.equalsIgnoreCase("true") || !metaInclude.equals("")) && !sSearchAC.equals("ParentConceptVM")) { %>
+				<%
+				}
+				%>
+				<%
+						if ((sRetSearch.equalsIgnoreCase("true") || !metaInclude
+						.equals(""))
+						&& !sSearchAC.equals("ParentConceptVM")) {
+				%>
 				<tr>
 					<td>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<b>
-							EVS
-						</b>
+						<b> EVS </b>
 					</td>
 				</tr>
-				<%if(sRetSearch.equalsIgnoreCase("true")) { %>
+				<%
+				if (sRetSearch.equalsIgnoreCase("true")) {
+				%>
 				<tr>
-					<td style="height:20" valign=bottom>
+					<td style="height: 20" valign=bottom>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Retired Concepts
 					</td>
 				</tr>
 				<tr>
 					<td align=left>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="radio" name="rRetired" value="Exclude" <%if(sRetired.equals("Exclude")){%> checked <%}%> onHelp="showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
+						<input type="radio" name="rRetired" value="Exclude"
+							<%if(sRetired.equals("Exclude")){%> checked <%}%>
+							onHelp="showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
 						Exclude&nbsp;
-						<input type="radio" name="rRetired" value="Include" <%if(sRetired.equals("Include")){%> checked <%}%> onHelp="showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
+						<input type="radio" name="rRetired" value="Include"
+							<%if(sRetired.equals("Include")){%> checked <%}%>
+							onHelp="showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
 						Include&nbsp;
 
 					</td>
 				</tr>
-				<% } %>
-				<%if(!metaInclude.equals("")) { %>
+				<%
+				}
+				%>
+				<%
+				if (!metaInclude.equals("")) {
+				%>
 				<tr>
 					<td>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Meta Concept Source
@@ -763,24 +873,27 @@ function doMetaCodeSearch()
 					<td>
 						<p>
 							&nbsp;&nbsp;&nbsp;&nbsp;
-							<select name="listContextFilterSource" size="1" style="width: 160" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-								<option value="All Sources" <%if(sMetaSource.equals("All Sources")){%> selected <%}%>>
+							<select name="listContextFilterSource" size="1"
+								style="width: 160"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								<option value="All Sources"
+									<%if(sMetaSource.equals("All Sources")){%> selected <%}%>>
 									All Sources
 								</option>
 								<%
-          if (vSource != null)
-          {
-            for (int i = 0; vSource.size()>i; i++)
-            {
-              String sSourceName = (String)vSource.elementAt(i);
-%>
-								<option value="<%=sSourceName%>" <%if(sSourceName.equals(sMetaSource)){%> selected <%}%>>
+											if (vSource != null) {
+											for (int i = 0; vSource.size() > i; i++) {
+												String sSourceName = (String) vSource
+												.elementAt(i);
+								%>
+								<option value="<%=sSourceName%>"
+									<%if(sSourceName.equals(sMetaSource)){%> selected <%}%>>
 									<%=sSourceName%>
 								</option>
 								<%
-            }
-         }
-%>
+										}
+										}
+								%>
 							</select>
 						</p>
 					</td>
@@ -793,17 +906,22 @@ function doMetaCodeSearch()
 					<td>
 						<p>
 							&nbsp;&nbsp;&nbsp;&nbsp;
-							<select name="listMetaLimit" size="1" style="width: 160" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-								<option value="100" <%if(sMetaLimit.equals("100")){%> selected <%}%>>
+							<select name="listMetaLimit" size="1" style="width: 160"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								<option value="100" <%if(sMetaLimit.equals("100")){%> selected
+									<%}%>>
 									100
 								</option>
-								<option value="250" <%if(sMetaLimit.equals("250")){%> selected <%}%>>
+								<option value="250" <%if(sMetaLimit.equals("250")){%> selected
+									<%}%>>
 									250
 								</option>
-								<option value="500" <%if(sMetaLimit.equals("500")){%> selected <%}%>>
+								<option value="500" <%if(sMetaLimit.equals("500")){%> selected
+									<%}%>>
 									500
 								</option>
-								<option value="750" <%if(sMetaLimit.equals("750")){%> selected <%}%>>
+								<option value="750" <%if(sMetaLimit.equals("750")){%> selected
+									<%}%>>
 									750
 								</option>
 								<!--  <option value="1000" <%if(sMetaLimit.equals("1000")){%>selected<%}%>>1000</option> -->
@@ -811,44 +929,47 @@ function doMetaCodeSearch()
 						</p>
 					</td>
 				</tr>
-				<%} }%>
+				<%
+						}
+						}
+				%>
 
 				<tr height="5"></tr>
 				<tr>
 					<td class="dashed-black">
 						<div align="left">
-							<b>
-								<%=iItem++%>
-								) Display Attributes:
-							</b>
-							&nbsp;&nbsp;
-							<input type="button" name="updateDisplayBtn" value="Update" onClick="<%=updFunction%>" style="width:50" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
+							<b> <%=iItem++%> ) Display Attributes: </b> &nbsp;&nbsp;
+							<input type="button" name="updateDisplayBtn" value="Update"
+								onClick="<%=updFunction%>" style="width: 50"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
 						</div>
 						<br>
 						<div align="center">
-							<select name="listAttrFilter" size="5" style="width: 160" multiple onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
-								<% if (vBlockAttr != null)
-          {
-            for (int i = 0; i < vBlockAttr.size(); i++)
-            {
-              String sAttr = (String)vBlockAttr.elementAt(i);
-        %>
-								<option value="<%=sAttr%>" <% if (vSelectedAttr != null && vSelectedAttr.contains(sAttr)){ %> selected <% } %>>
+							<select name="listAttrFilter" size="5" style="width: 160"
+								multiple
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
+								<%
+											if (vBlockAttr != null) {
+											for (int i = 0; i < vBlockAttr.size(); i++) {
+										String sAttr = (String) vBlockAttr.elementAt(i);
+								%>
+								<option value="<%=sAttr%>"
+									<% if (vSelectedAttr != null && vSelectedAttr.contains(sAttr)){ %>
+									selected <% } %>>
 									<%=sAttr%>
 								</option>
 								<%
-            }
-             //add all attributes if not existed
-            if (!vBlockAttr.contains("All Attributes")) 
-            {
-%>
+											}
+											//add all attributes if not existed
+											if (!vBlockAttr.contains("All Attributes")) {
+								%>
 								<option value="All Attributes">
 									All Attributes
 								</option>
 								<%
-            }
-          }
-%>
+										}
+										}
+								%>
 							</select>
 						</div>
 					</td>
@@ -856,12 +977,19 @@ function doMetaCodeSearch()
 				<tr>
 					<td height="33" valign="bottom">
 						<div align="center">
-							<input type="button" name="startSearchBtn" value="Start Search" onClick="doSearchBuildingBlocks();" style="width: 150; height: 30" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+							<input type="button" name="startSearchBtn" value="Start Search"
+								onClick="doSearchBuildingBlocks();"
+								style="width: 150; height: 30"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
 						</div>
 					</td>
 				</tr>
-				<%}%>
-				<%if (sUISearchType.equals("tree")) { %>
+				<%
+				}
+				%>
+				<%
+				if (sUISearchType.equals("tree")) {
+				%>
 				<tr>
 					<th height="22" valign="bottom">
 						<div align="left">
@@ -875,10 +1003,13 @@ function doMetaCodeSearch()
 						<%=strHTML%>
 					</td>
 				</tr>
-				<% } %>
+				<%
+				}
+				%>
 				<tr>
 					<td>
-						<input type="hidden" name="actSelect" value="Search" style="visibility:hidden;">
+						<input type="hidden" name="actSelect" value="Search"
+							style="visibility: hidden;">
 						<input type="hidden" name="vmConOrder" value="0">
 						<input type="hidden" name="sCCodeDB" value="">
 						<input type="hidden" name="sCCode" value="">

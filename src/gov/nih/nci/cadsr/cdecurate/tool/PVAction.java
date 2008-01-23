@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.24 2007-11-28 19:44:47 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.25 2008-01-23 23:05:15 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -22,25 +22,21 @@ import org.apache.log4j.Logger;
 
 /**
  * @author shegde
- * 
+ *
  */
 public class PVAction implements Serializable {
 	private static final Logger logger = Logger.getLogger(PVAction.class
 			.getName());
 
 	/**
-	 * 
+	 *
 	 */
 	public PVAction() {
 	}
 
-	/**
-	 * marks the bean with view type to retain the view
-	 * 
-	 * @param vVDPV
-	 *            PV Bean vector
-	 * @param vwTypes
-	 *            String array existing view types
+	/** marks the bean with view type to retain the view
+	 * @param vVDPV PV Bean vector
+	 * @param vwTypes String array existing view types
 	 */
 	public void doResetViewTypes(Vector<PV_Bean> vVDPV, String[] vwTypes) {
 		for (int i = 0; i < vwTypes.length; i++) {
@@ -57,13 +53,9 @@ public class PVAction implements Serializable {
 
 	/**
 	 * stores the pv changes into the list
-	 * 
-	 * @param chgName
-	 *            String changed name of the pv
-	 * @param pvInd
-	 *            int index of the editing pv
-	 * @param data
-	 *            PVForm object
+	 * @param chgName String changed name of the pv
+	 * @param pvInd int index of the editing pv
+	 * @param data PVForm object
 	 * @return PV_Bean modified pv bean
 	 */
 	public PV_Bean changePVAttributes(String chgName, int pvInd, PVForm data) {
@@ -71,22 +63,22 @@ public class PVAction implements Serializable {
 		Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
 		PV_Bean selPV = data.getSelectPV();
 		PV_Bean newPV = new PV_Bean();
-		if (selPV != null) // copy other attributes
+		if (selPV != null) //copy other attributes
 			newPV.copyBean(selPV);
-		newPV.setPV_VALUE(chgName); // add the new name
+		newPV.setPV_VALUE(chgName); //add the new name
 		if (data.getNewVM() != null)
-			newPV.setPV_VM(data.getNewVM()); // copy the changed vm
+			newPV.setPV_VM(data.getNewVM()); //copy the changed vm
 
 		selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_DEL);
 		vdpvs.removeElementAt(pvInd);
 		vd.getRemoved_VDPVList().addElement(selPV);
 
-		// insert the new one
+		//insert the new one
 		newPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_INS);
 		newPV.setPV_VIEW_TYPE("expand");
-		// newPV.setPV_VDPVS_IDSEQ(""); //do not remove it here
+		//newPV.setPV_VDPVS_IDSEQ("");  //do not remove it here
 		vdpvs.insertElementAt(newPV, pvInd);
-		// put it back in vd
+		//put it back in vd
 		vd.setVD_PV_List(vdpvs);
 		data.setVD(vd);
 		return newPV;
@@ -94,28 +86,23 @@ public class PVAction implements Serializable {
 
 	/**
 	 * validates pvs associated to the form; creates new pv if associated
-	 * 
-	 * @param selPV
-	 *            PV_Bean object
-	 * @param pvInd
-	 *            int editing pv index
-	 * @param vd
-	 *            VD_Bean object that is editing
-	 * @param data
-	 *            PVForm object
+	 * @param selPV PV_Bean object
+	 * @param pvInd   int editing pv index
+	 * @param vd VD_Bean object that is editing
+	 * @param data PVForm object
 	 * @return String error message
 	 */
 	public String changePVQCAttributes(PV_Bean selPV, int pvInd, VD_Bean vd,
 			PVForm data) {
 		String sCRFmsg = "";
 		try {
-			// check if associated with the form
+			//check if associated with the form
 			Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
 			boolean isExists = false;
 			String selID = selPV.getPV_VDPVS_IDSEQ();
 			if (!selID.equals(""))
 				isExists = this.checkPVQCExists("", selID, data);
-			// associated to the form
+			//associated to the form
 			if (isExists) {
 				PV_Bean oldPV = vd.getRemoved_VDPVList().lastElement();
 				sCRFmsg = "Unable to edit the Permissible Value (PV) ("
@@ -124,11 +111,11 @@ public class PVAction implements Serializable {
 						+ "\\n A new PV and VM pair will be created with the edited attributes."
 						+ "\\n After successful submission of the Value Domain, you may remove the original PV after disassociating the PV from the CRF.";
 				oldPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_UPD);
-				// check if it was reused
+				//check if it was reused
 				VMAction vmact = new VMAction();
 				VM_Bean vm = vmact.checkExactMatch(oldPV.getPV_VM(), selPV
 						.getPV_VM());
-				// if pv or vm didn't change put back the old pv as it was
+				//if pv or vm didn't change put back the old pv as it was
 				if (vm != null
 						&& oldPV.getPV_VALUE().equals(selPV.getPV_VALUE())) {
 					vdpvs.setElementAt(oldPV, pvInd);
@@ -136,13 +123,13 @@ public class PVAction implements Serializable {
 					vd.getRemoved_VDPVList().removeElement(oldPV);
 					return "";
 				}
-				// continue with creating new one otherwise
+				//continue with creating new one otherwise
 				data.setStatusMsg(data.getStatusMsg() + sCRFmsg);
-				vdpvs.insertElementAt(oldPV, pvInd); // insert it back
+				vdpvs.insertElementAt(oldPV, pvInd); //insert it back
 				vd.getRemoved_VDPVList().removeElement(oldPV);
-				pvInd += 1; // reset it
+				pvInd += 1; //reset it
 			}
-			// ready the new pv for insert
+			//ready the new pv for insert
 			selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_INS);
 			selPV.setPV_PV_IDSEQ("");
 			selPV.setPV_VDPVS_IDSEQ("");
@@ -156,24 +143,18 @@ public class PVAction implements Serializable {
 	}
 
 	/**
-	 * Check if the permissible values associated with the form for the selected
-	 * VD
-	 * 
-	 * @param vdIDseq
-	 *            String idseq of the vd
-	 * @param vpIDseq
-	 *            String idseq of the vd-pv
-	 * @param data
-	 *            PVForm data
-	 * 
+	 * Check if the permissible values associated with the form for the selected VD
+	 * @param vdIDseq String idseq of the vd
+	 * @param vpIDseq String idseq of the vd-pv
+	 * @param data PVForm data
+	 *
 	 * @return boolean true if pv is associated with the form false otherwise
 	 */
-	public boolean checkPVQCExists(String vdIDseq, String vpIDseq, PVForm data) // throws
-	// Exception
+	public boolean checkPVQCExists(String vdIDseq, String vpIDseq, PVForm data) //throws Exception
 	{
 		//Connection conn = null;
 		ResultSet rs = null;
-		// CallableStatement cstmt = null;
+		//CallableStatement cstmt = null;
 		PreparedStatement pstmt = null;
 		boolean isValid = false;
 		try {
@@ -224,33 +205,31 @@ public class PVAction implements Serializable {
 	} //end checkPVQCExists
 
 	/**
-	 * checks if removed pvs are associated with the form send back the
-	 * validation message for pv vds data.
-	 * 
-	 * @param data
-	 *            PVForm Object
-	 * 
+	 * checks if removed pvs are associated with the form
+	 * send back the validation message for pv vds data.
+	 * @param data PVForm Object
+	 *
 	 * @return vector of validate
 	 */
-	public Vector<String> addValidateVDPVS(PVForm data) // throws Exception
+	public Vector<String> addValidateVDPVS(PVForm data) //throws Exception
 	{
 		VD_Bean vd = data.getVD();
 		Vector<ValidateBean> vValidate = vd.getValidateList();
 		try {
 			String sOrgAct = data.getOriginAction();
 			this.addValidateParentCon(vd, vValidate, sOrgAct);
-			// do this only if enumerated value domain
+			//do this only if enumerated value domain
 			String s = vd.getVD_TYPE_FLAG();
 			if (s == null)
 				s = "";
 			if (s.equals("E")) {
-				// get current value domains vd-pv attributes
+				//get current value domains vd-pv attributes
 				Vector<PV_Bean> vVDPVS = vd.getVD_PV_List();
 				String vdID = vd.getVD_VD_IDSEQ();
-				// remove vdidseq if new vd
+				//remove vdidseq if new vd
 				if (vdID == null || sOrgAct.equalsIgnoreCase("newVD"))
 					vdID = "";
-				// make long string of values/meanings
+				//make long string of values/meanings
 				String sPVVal = "";
 				String sPVMean = "";
 				String existVMs = "";
@@ -259,7 +238,7 @@ public class PVAction implements Serializable {
 					for (int i = 0; i < vVDPVS.size(); i++) {
 						PV_Bean thisPV = (PV_Bean) vVDPVS.elementAt(i);
 						VM_Bean thisVM = thisPV.getPV_VM();
-						// check its relationship with the form if removed
+						//check its relationship with the form if removed
 						if (sPVVal != null && !sPVVal.equals("")) {
 							sPVVal += ",\n ";
 							sPVMean += ",\n ";
@@ -271,7 +250,7 @@ public class PVAction implements Serializable {
 							sPVMean += thisVM.getVM_SHORT_MEANING(); // thisPV.getPV_SHORT_MEANING();
 					}
 				}
-				// get the values element from the vector to update it
+				//get the values element from the vector to update it
 				boolean matchFound = false;
 				for (int i = 0; i < vValidate.size(); i++) {
 					ValidateBean val = (ValidateBean) vValidate.elementAt(i);
@@ -291,7 +270,7 @@ public class PVAction implements Serializable {
 						if (sPVMean == null || sPVMean.equals(""))
 							val
 									.setAttributeStatus("Value Meaning is required for Enumerated Value Domain");
-						else if (!existVMs.equals("")) // found matching vm
+						else if (!existVMs.equals("")) //found matching vm
 							val
 									.setAttributeStatus("Warning: The following Value Meaning(s) exist in the database with the same name and will be reused.  Other attributes may not match exactly.  You may go back to review the existing Value Meaning(s): "
 											+ existVMs);
@@ -300,7 +279,7 @@ public class PVAction implements Serializable {
 						vValidate.setElementAt(val, i);
 					}
 				}
-				// add the values and meanings row if doesn't exist already
+				//add the values and meanings row if doesn't exist already
 				if (!matchFound) {
 					UtilService.setValPageVector(vValidate, "Values", sPVVal,
 							true, -1, "", sOrgAct);
@@ -323,23 +302,18 @@ public class PVAction implements Serializable {
 		data.setVD(vd);
 		Vector<String> vValString = SetACService.makeStringVector(vValidate);
 		return vValString;
-	} // end addvalidateVDPVS
+	} //end addvalidateVDPVS
 
-	/**
-	 * add teh parent concept to the validate vector
-	 * 
-	 * @param vd
-	 *            VDBean object
-	 * @param vValidate
-	 *            Validate bean object
-	 * @param sOrgAct
-	 *            String Origin action
+	/**add teh parent concept to the validate vector
+	 * @param vd VDBean object
+	 * @param vValidate Validate bean object
+	 * @param sOrgAct String Origin action
 	 */
 	public void addValidateParentCon(VD_Bean vd,
 			Vector<ValidateBean> vValidate, String sOrgAct) {
 		String s = "";
 		String strInValid = "";
-		Vector vParList = vd.getReferenceConceptList(); // (Vector)session.getAttribute("VDParentConcept");
+		Vector vParList = vd.getReferenceConceptList(); //  (Vector)session.getAttribute("VDParentConcept");
 
 		if (vParList != null && vParList.size() > 0) {
 			for (int i = 0; i < vParList.size(); i++) {
@@ -349,7 +323,7 @@ public class PVAction implements Serializable {
 					if (parBean.getLONG_NAME() != null)
 						parString = parBean.getLONG_NAME() + "   ";
 					if (parBean.getEVS_DATABASE() != null) {
-						// do not add this if non evs
+						//do not add this if non evs
 						if (parBean.getCONCEPT_IDENTIFIER() != null
 								&& !parBean.getEVS_DATABASE().equals("Non_EVS"))
 							parString += parBean.getCONCEPT_IDENTIFIER()
@@ -365,7 +339,7 @@ public class PVAction implements Serializable {
 				}
 			}
 		}
-		// get the values element from the vector to update it
+		//get the values element from the vector to update it
 		boolean matchFound = false;
 		for (int i = 0; i < vValidate.size(); i++) {
 			ValidateBean val = (ValidateBean) vValidate.elementAt(i);
@@ -388,24 +362,21 @@ public class PVAction implements Serializable {
 	}
 
 	/**
-	 * To get the Permissible Values for the selected AC from the database.
-	 * 
-	 * calls oracle stored procedure "{call
-	 * SBREXT_CDE_CURATOR_PKG.SEARCH_PV(AC_IDSEQ, OracleTypes.CURSOR)}"
-	 * 
+	 * To get the Permissible Values for the selected AC  from the database.
+	 *
+	 * calls oracle stored procedure
+	 *  "{call SBREXT_CDE_CURATOR_PKG.SEARCH_PV(AC_IDSEQ, OracleTypes.CURSOR)}"
+	 *
 	 * loop through the ResultSet and add them to PV bean
-	 * 
-	 * @param acIdseq
-	 *            String id of the selected ac.
-	 * @param sAction
-	 *            String search action.
-	 * @param data
-	 *            PVForm object
-	 * 
+	 *
+	 * @param acIdseq String id of the selected ac.
+	 * @param sAction String search action.
+	 * @param data PVForm object
+	 *
 	 * @return Vector of PVBean
 	 */
 	public Vector<PV_Bean> doPVACSearch(String acIdseq, String sAction,
-			PVForm data) // 
+			PVForm data) //
 	{
 		//Connection conn = null;
 		ResultSet rs = null;
@@ -426,11 +397,11 @@ public class PVAction implements Serializable {
 				cstmt.setString(1, acIdseq);
 				// Now we are ready to call the stored procedure
 				cstmt.execute();
-				// store the output in the resultset
+				//store the output in the resultset
 				rs = (ResultSet) cstmt.getObject(2);
-				// String s;
+				//  String s;
 				if (rs != null) {
-					// loop through the resultSet and add them to the bean
+					//loop through the resultSet and add them to the bean
 					while (rs.next()) {
 						PV_Bean pvBean = new PV_Bean();
 						pvBean.setPV_PV_IDSEQ(rs.getString("pv_idseq"));
@@ -460,7 +431,7 @@ public class PVAction implements Serializable {
 						//get valid value attributes
 						pvBean.setQUESTION_VALUE("");
 						pvBean.setQUESTION_VALUE_IDSEQ("");
-						// get vm concept attributes
+						//get vm concept attributes
 						// String sCondr = rs.getString("vm_condr_idseq");
 						VMAction vmact = new VMAction();
 						pvBean.setPV_VM(vmact.doSetVMAttributes(rs, data
@@ -470,14 +441,13 @@ public class PVAction implements Serializable {
 						this.doSetParentAttributes(sCon, pvBean, data);
 
 						pvBean.setPV_VIEW_TYPE("expand");
-						// add pv idseq in the pv id vector
-						vList.addElement(pvBean); // add the bean to a vector
-					} // END WHILE
-				} // END IF
+						//add pv idseq in the pv id vector
+						vList.addElement(pvBean); //add the bean to a vector
+					} //END WHILE
+				} //END IF
 			}
 		} catch (Exception e) {
-			// System.err.println("other problem in GetACSearch-doPVACSearch : "
-			// + e);
+			//System.err.println("other problem in GetACSearch-doPVACSearch : " + e);
 			logger.fatal("ERROR - doPVACSearch for other : " + e.toString(), e);
 		}
 		try {
@@ -493,15 +463,11 @@ public class PVAction implements Serializable {
 					ee);
 		}
 		return vList;
-	} // doPVACSearch search
+	} //doPVACSearch search
 
-	/**
-	 * reset the version value domain with pv idseqs
-	 * 
-	 * @param vd
-	 *            VD Bean object
-	 * @param verList
-	 *            PVBEan vector of the existing in cadsr
+	/** reset the version value domain with pv idseqs
+	 * @param vd VD Bean object
+	 * @param verList PVBEan vector of the existing in cadsr
 	 */
 	public void doResetVersionVDPV(VD_Bean vd, Vector<PV_Bean> verList) {
 		Vector<PV_Bean> rmVDPV = vd.getRemoved_VDPVList();
@@ -509,7 +475,7 @@ public class PVAction implements Serializable {
 		for (int i = 0; i < verList.size(); i++) {
 			PV_Bean pv = verList.elementAt(i);
 			String pvID = pv.getPV_PV_IDSEQ();
-			// check if it is removed from the page
+			//check if it is removed from the page
 			for (int j = 0; j < rmVDPV.size(); j++) {
 				PV_Bean rmPV = rmVDPV.elementAt(j);
 				String rmID = rmPV.getPV_PV_IDSEQ();
@@ -517,19 +483,19 @@ public class PVAction implements Serializable {
 					rmPV.setPV_VDPVS_IDSEQ(pv.getPV_VDPVS_IDSEQ());
 					rmPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_DEL);
 					rmVDPV.setElementAt(rmPV, j);
-					verList.removeElementAt(i); // remove it from the vers list
-					i -= 1; // move back teh index
+					verList.removeElementAt(i); //remove it from the vers list
+					i -= 1; //move back teh index
 					break;
 				}
 			}
 		}
 		vd.setRemoved_VDPVList(rmVDPV);
-		// add the newly added ones to the list
+		//add the newly added ones to the list
 		for (int i = 0; i < pgVDPV.size(); i++) {
 			PV_Bean pv = pgVDPV.elementAt(i);
 			String value = pv.getPV_VALUE();
 			String vm = pv.getPV_VM().getVM_SHORT_MEANING();
-			// check if it exists in versioned list
+			//check if it exists in versioned list
 			boolean isNew = true;
 			for (int j = 0; j < verList.size(); j++) {
 				PV_Bean verPV = verList.elementAt(j);
@@ -548,15 +514,10 @@ public class PVAction implements Serializable {
 		vd.setVD_PV_List(verList);
 	}
 
-	/**
-	 * get concept attributes for parent concept id
-	 * 
-	 * @param conIDseq
-	 *            String con idseq
-	 * @param pvBean
-	 *            PVBean object
-	 * @param data
-	 *            PVForm object
+	/** get concept attributes for parent concept id
+	 * @param conIDseq String con idseq
+	 * @param pvBean PVBean object
+	 * @param data PVForm object
 	 */
 	private void doSetParentAttributes(String conIDseq, PV_Bean pvBean,
 			PVForm data) {
@@ -572,31 +533,23 @@ public class PVAction implements Serializable {
 	}
 
 	/**
-	 * To get resultSet from database for Permissible Value Component called
-	 * from getACKeywordResult and getCDEIDSearch methods.
-	 * 
-	 * calls oracle stored procedure "{call
-	 * SBREXT_CDE_CURATOR_PKG.SEARCH_PVVM(InString, OracleTypes.CURSOR)}"
-	 * 
-	 * loop through the ResultSet and add them to bean which is added to the
-	 * vector to return
-	 * 
-	 * @param InString
-	 *            Keyword value to filter by name
-	 * @param cd_idseq
-	 *            String cdidseq to filter by CD
-	 * @param conName
-	 *            String to filter by concept name
-	 * @param conID
-	 *            STring value to filter by concept id
-	 * @param data
-	 *            PVForm object
+	 * To get resultSet from database for Permissible Value Component called from getACKeywordResult and getCDEIDSearch methods.
+	 *
+	 * calls oracle stored procedure
+	 *  "{call SBREXT_CDE_CURATOR_PKG.SEARCH_PVVM(InString, OracleTypes.CURSOR)}"
+	 *
+	 * loop through the ResultSet and add them to bean which is added to the vector to return
+	 *
+	 * @param InString Keyword value to filter by name
+	 * @param cd_idseq String cdidseq to filter by CD
+	 * @param conName String to filter by concept name
+	 * @param conID STring value to filter by concept id
+	 * @param data PVForm object
 	 * @return PV_Bean object
-	 * 
+	 *
 	 */
 	public Vector<PV_Bean> doPVVMSearch(String InString, String cd_idseq,
-			String conName, String conID, PVForm data) // returns list of Data
-	// Elements
+			String conName, String conID, PVForm data) // returns list of Data Elements
 	{
 		//Connection conn = null;
 		ResultSet rs = null;
@@ -623,12 +576,12 @@ public class PVAction implements Serializable {
 				cstmt.setString(5, conID);
 				// Now we are ready to call the stored procedure
 				cstmt.execute();
-				// store the output in the resultset
+				//store the output in the resultset
 				rs = (ResultSet) cstmt.getObject(3);
 
 				String s;
 				if (rs != null) {
-					// loop through the resultSet and add them to the bean
+					//loop through the resultSet and add them to the bean
 					while (rs.next()) {
 						PV_Bean PVBean = new PV_Bean();
 						PVBean.setPV_PV_IDSEQ(rs.getString("pv_idseq"));
@@ -646,23 +599,21 @@ public class PVAction implements Serializable {
 						String sdef = rs.getString("vm_description");
 						if (sdef == null || sdef.equals(""))
 							sdef = rs.getString("preferred_definition");
-						PVBean.setPV_MEANING_DESCRIPTION(sdef); // from meanings
-						// table
+						PVBean.setPV_MEANING_DESCRIPTION(sdef); //from meanings table
 						PVBean.setPV_CONCEPTUAL_DOMAIN(rs.getString("cd_name"));
 
-						// get vm concept attributes
+						//get vm concept attributes
 						VMAction vmact = new VMAction();
 						PVBean.setPV_VM(vmact.doSetVMAttributes(rs, data
 								.getCurationServlet().getConn()));
 						//get database attribute
 						PVBean.setPV_EVS_DATABASE("caDSR");
-						vList.addElement(PVBean); // add the bean to a vector
-					} // END WHILE
-				} // END IF
+						vList.addElement(PVBean); //add the bean to a vector
+					} //END WHILE
+				} //END IF
 			}
 		} catch (Exception e) {
-			// System.err.println("other problem in GetACSearch-searchPVVM: " +
-			// e);
+			//System.err.println("other problem in GetACSearch-searchPVVM: " + e);
 			logger.fatal("ERROR - GetACSearch-searchPVVM for other : "
 					+ e.toString(), e);
 		}
@@ -674,32 +625,27 @@ public class PVAction implements Serializable {
 			//if (data.getDbConnection() == null)
 			//data.getCurationServlet().freeConnection(conn);  //PVServlet.closeDBConnection(conn);
 		} catch (Exception ee) {
-			// //System.err.println("Problem closing in GetACSearch-searchPVVM:
-			// " + ee);
+			//    //System.err.println("Problem closing in GetACSearch-searchPVVM: " + ee);
 			logger.fatal("ERROR - GetACSearch-searchPVVM for close : "
 					+ ee.toString(), ee);
 		}
 		return vList;
-	} // endPVVM search
+	} //endPVVM search
 
 	/**
 	 * To insert a new Permissible value in the database after the validation.
-	 * Called from CurationServlet. Gets all the attribute values from the bean,
-	 * sets in parameters, and registers output parameter. Calls oracle stored
-	 * procedure "{call SBREXT_Set_Row.SET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}" to
-	 * submit
-	 * 
-	 * @param data
-	 *            PVForm data
-	 * 
-	 * @return String return code from the stored procedure call. null if no
-	 *         error occurred.
+	 * Called from CurationServlet.
+	 * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
+	 * Calls oracle stored procedure
+	 *   "{call SBREXT_Set_Row.SET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}" to submit
+	 * @param data PVForm data
+	 *
+	 * @return String return code from the stored procedure call. null if no error occurred.
 	 */
 	public String setPV(PVForm data) {
-		// capture the duration
-		// java.util.Date startDate = new java.util.Date();
-		// logger.info(m_servlet.getLogMessage(m_classReq, "setPV", "starting
-		// set", startDate, startDate));
+		//capture the duration
+		//java.util.Date startDate = new java.util.Date();
+		//logger.info(m_servlet.getLogMessage(m_classReq, "setPV", "starting set", startDate, startDate));
 		PV_Bean pv = data.getSelectPV();
 
 		//Connection conn = null;
@@ -707,7 +653,7 @@ public class PVAction implements Serializable {
 		HttpSession session = data.getRequest().getSession();
 
 		CallableStatement cstmt = null;
-		String sMsg = ""; // out
+		String sMsg = ""; //out
 		try {
 			String sAction = PVForm.CADSR_ACTION_INS;
 			String sValue = pv.getPV_VALUE();
@@ -716,14 +662,13 @@ public class PVAction implements Serializable {
 			if (vm != null && vm.getVM_SHORT_MEANING() != null
 					&& !vm.getVM_SHORT_MEANING().equals(""))
 				sShortMeaning = vm.getVM_SHORT_MEANING();
-			// System.out.println(sAction + " set vm in pv " + sShortMeaning);
+			//System.out.println(sAction + " set vm in pv " + sShortMeaning);
 			String sMeaningDescription = pv.getPV_MEANING_DESCRIPTION();
 			if (vm != null && vm.getVM_DESCRIPTION() != null
 					&& !vm.getVM_DESCRIPTION().equals(""))
 				sMeaningDescription = vm.getVM_DESCRIPTION();
 			// if (sMeaningDescription == null) sMeaningDescription = "";
-			// if (sMeaningDescription.length() > 2000) sMeaningDescription =
-			// sMeaningDescription.substring(0, 2000);
+			//  if (sMeaningDescription.length() > 2000) sMeaningDescription = sMeaningDescription.substring(0, 2000);
 			String sBeginDate = pv.getPV_BEGIN_DATE();
 			if (sBeginDate == null || sBeginDate.equals("")) {
 				SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -732,10 +677,10 @@ public class PVAction implements Serializable {
 			sBeginDate = data.getUtil().getOracleDate(sBeginDate);
 			String sEndDate = data.getUtil().getOracleDate(pv.getPV_END_DATE());
 
-			// check if it already exists
+			//check if it already exists
 			String sPV_ID = this.getExistingPV(data, sValue, sShortMeaning);
 			if (sPV_ID != null && !sPV_ID.equals("")) {
-				pv.setPV_PV_IDSEQ(sPV_ID); // update the pvbean with the id
+				pv.setPV_PV_IDSEQ(sPV_ID); //update the pvbean with the id
 				return sMsg;
 			}
 
@@ -795,9 +740,8 @@ public class PVAction implements Serializable {
 					data.setPvvmErrorCode(sReturnCode); //store it capture check for pv creation
 				}
 			}
-			// capture the duration
-			// logger.info(m_servlet.getLogMessage(m_classReq, "setPV", "end
-			// set", startDate, new java.util.Date()));
+			//capture the duration
+			//logger.info(m_servlet.getLogMessage(m_classReq, "setPV", "end set", startDate, new java.util.Date()));
 		} catch (Exception e) {
 			logger.fatal("ERROR in setPV for other : " + e.toString(), e);
 			data.setRetErrorCode("Exception");
@@ -817,18 +761,15 @@ public class PVAction implements Serializable {
 	}
 
 	/**
-	 * Called from 'setPV' method for insert of PV. Sets in parameters, and
-	 * registers output parameter. Calls oracle stored procedure "{call
-	 * SBREXT_GET_ROW.GET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?)}" to submit
-	 * 
-	 * @param data
-	 *            PVForm object
-	 * @param sValue
-	 *            existing Value.
-	 * @param sMeaning
-	 *            existing meaning.
-	 * 
-	 * @return String existing pv_idseq from the stored procedure call.
+	 * Called from 'setPV' method for insert of PV.
+	 * Sets in parameters, and registers output parameter.
+	 * Calls oracle stored procedure
+	 *   "{call SBREXT_GET_ROW.GET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?)}" to submit
+	 * @param data PVForm object
+	 * @param sValue   existing Value.
+	 * @param sMeaning  existing meaning.
+	 *
+	 *  @return String existing pv_idseq from the stored procedure call.
 	 */
 	public String getExistingPV(PVForm data, String sValue, String sMeaning) {
 		//Connection conn = null;
@@ -888,13 +829,12 @@ public class PVAction implements Serializable {
 
 	/**
 	 * To remove exisitng one in VD_PVS relationship table after the validation.
-	 * Called from 'setVD_PVS' method. Sets in parameters, and registers output
-	 * parameter. Calls oracle stored procedure "{call
-	 * SBREXT_Set_Row.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?)}" to submit
-	 * 
-	 * @param data
-	 *            PVForm object
-	 * 
+	 * Called from 'setVD_PVS' method.
+	 * Sets in parameters, and registers output parameter.
+	 * Calls oracle stored procedure
+	 *   "{call SBREXT_Set_Row.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?)}" to submit
+	 * @param data PVForm object
+	 *
 	 * @return String of return code
 	 */
 	public String setVD_PVS(PVForm data) {
@@ -1279,28 +1219,27 @@ public class PVAction implements Serializable {
 	public void doNonEVSReference(String sParName, String sParDef,
 			String sParDefSource, PVForm data) {
 		try {
-			// document type (concept code)
+			//document type  (concept code)
 			String sParCode = "VD REFERENCE";
-			// parent type (concept database)
+			//parent type (concept database)
 			String sParDB = "Non_EVS";
 
-			// make a string for view
+			//make a string for view
 			String sParListString = sParName + "        " + sParDB;
 			if (sParListString == null)
 				sParListString = "";
 			VD_Bean vd = data.getVD();
 
-			// store the evs bean for the parent concepts in vector and in
-			// session.
+			//store the evs bean for the parent concepts in vector and in session.
 			Vector<EVS_Bean> vParentCon = vd.getReferenceConceptList();
 			if (vParentCon == null)
 				vParentCon = new Vector<EVS_Bean>();
 			EVS_Bean parBean = new EVS_Bean();
-			parBean.setCONCEPT_IDENTIFIER(sParCode); // doc type
-			parBean.setLONG_NAME(sParName); // doc name
-			parBean.setEVS_DATABASE(sParDB); // ref type (non evs)
-			parBean.setPREFERRED_DEFINITION(sParDef); // doc text
-			parBean.setEVS_DEF_SOURCE(sParDefSource); // doc url
+			parBean.setCONCEPT_IDENTIFIER(sParCode); //doc type
+			parBean.setLONG_NAME(sParName); //doc name
+			parBean.setEVS_DATABASE(sParDB); //ref type (non evs)
+			parBean.setPREFERRED_DEFINITION(sParDef); //doc text
+			parBean.setEVS_DEF_SOURCE(sParDefSource); //doc url
 			parBean.setCON_AC_SUBMIT_ACTION("INS");
 			vParentCon.addElement(parBean);
 			vd.setReferenceConceptList(vParentCon);
@@ -1312,13 +1251,9 @@ public class PVAction implements Serializable {
 
 	/**
 	 * to read the existing value meanings for the concepts selected from evs
-	 * 
-	 * @param vdpvList
-	 *            vector of pv beans
-	 * @param data
-	 *            pv form object
-	 * @return String list of vm names that existed in cadsr that are not exact
-	 *         match
+	 * @param vdpvList vector of pv beans
+	 * @param data pv form object
+	 * @return String list of vm names that existed in cadsr that are not exact match
 	 */
 	public String readExistingVMs(Vector<PV_Bean> vdpvList, PVForm data) {
 		//Connection conn = null;
