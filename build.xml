@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.32 2007-12-18 17:03:04 chickerura Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.33 2008-01-23 21:53:48 hebell Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -8,7 +8,7 @@
         Build and deploy the CDE Curation Tool
     </description>
 	<!-- set global properties for this build  -->
-	<property name="PROP.FILE" location="DEV.build.properties" />
+	<property name="PROP.FILE" location="template.build.properties" />
 	<property file="${PROP.FILE}" />
 	<echo>
         PROP.FILE = ${PROP.FILE}
