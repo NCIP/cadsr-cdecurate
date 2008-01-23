@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/OpenSearchWindowBlocks.jsp,v 1.2 2007-11-01 21:14:50 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/OpenSearchWindowBlocks.jsp,v 1.3 2008-01-23 22:40:49 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -12,7 +12,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 %>
 <html>
 	<head>
-	<BASE href="<%=basePath%>">
+	 <BASE href="<%=basePath%>">
 		<title>
 			CDE Curation: Search
 		</title>
