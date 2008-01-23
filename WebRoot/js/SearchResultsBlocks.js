@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResultsBlocks.js,v 1.2 2007-12-06 14:53:06 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResultsBlocks.js,v 1.3 2008-01-23 22:13:36 hebell Exp $
 // $Name: not supported by cvs2svn $
 
    var numRowsSelected = 0;
