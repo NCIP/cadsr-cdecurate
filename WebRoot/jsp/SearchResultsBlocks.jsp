@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.8 2008-01-23 22:47:22 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.9 2008-01-28 20:07:11 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -570,10 +570,10 @@
 					</td>
 					<% if(sSelAC.equals("Rep Term") && temp.booleanValue()){ %>
 					<td width="5" valign="top">
-						<img src="images/search_light.gif" border="0" alt="Search for Rep Term" onClick="javascript:EnableButtonWithTxt1('<%=ckName%>');">
+						<img src="images/search_light.gif" border="0" alt="Perform a Rep Term search using the primary concept." onClick="javascript:EnableButtonWithTxt1('<%=ckName%>');">
 					</td>
 					<td width="5" valign="top">
-						 <img src="images/copy.gif" border="0" alt="Search for Selected Rep Term" onClick="javascript:EnableButtonWithTxt('<%=ckName%>');">
+						 <img src="images/copy.gif" border="0" alt="Perform a wildcard search using the selected term." onClick="javascript:EnableButtonWithTxt('<%=ckName%>');">
 					</td>
 					<%} %>
 					<td width="150" valign="top">
