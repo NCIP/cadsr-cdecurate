@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.10 2008-01-29 22:07:01 chickerura Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.11 2008-01-30 20:03:09 chickerura Exp $
    $Name: not supported by cvs2svn $
 
    Author: Anupama Chickerur
@@ -96,6 +96,8 @@ WHEN MATCHED THEN
       UPDATE SET S.VALUE = S.VALUE, S.DESCRIPTION = T.DESCRIPTION
 WHEN NOT MATCHED THEN INSERT (TOOL_NAME, PROPERTY, VALUE, DESCRIPTION) VALUES (T.TOOL_NAME, T.PROPERTY, T.VALUE, T.DESCRIPTION);
 
+DELETE FROM SBREXT.TOOL_OPTIONS_VIEW_EXT WHERE PROPERTY = 'EVS.VOCAB.1.SEARCH_IN.METACODE';
+DELETE FROM SBREXT.TOOL_OPTIONS_VIEW_EXT WHERE PROPERTY = 'EVS.VOCAB.1.INCLUDEMETA';
 /*
    -------GO-----------
 --Store vocab name for the GO vocabulary           -------GO-----------
