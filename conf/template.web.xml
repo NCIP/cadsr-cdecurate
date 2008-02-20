@@ -3,7 +3,7 @@
      "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
     "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
 <!-- 
-    $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.web.xml,v 1.1 2007-09-10 14:45:22 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.web.xml,v 1.2 2008-02-20 19:30:23 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 <web-app>
@@ -19,6 +19,10 @@
 	<init-param>
       <param-name>jbossDataSource</param-name>
       <param-value>jdbc/CDECurateDS</param-value>
+    </init-param>
+    <init-param>
+      <param-name>jbossAuthenticate</param-name>
+      <param-value>jdbc/caDSR</param-value>
     </init-param>
     <init-param>
       <param-name>username</param-name>
