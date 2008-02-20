@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVM.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVM.jsp,v 1.3 2008-02-20 19:35:24 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -94,10 +94,11 @@ function displayStatusMessage()
     if (sConDomID == null) sConDomID = "";
     String sConDom = m_VD.getVD_CD_NAME();
     if (sConDom == null) sConDom = "";
-
-    String sDescription = m_VM.getVM_DESCRIPTION();
+    //String sDescription = m_VM.getVM_DESCRIPTION();
+    String sDescription = m_VM.getVM_PREFERRED_DEFINITION();
     if (sDescription == null) sDescription = ""; 
-    String sShortMeanings = m_VM.getVM_SHORT_MEANING();
+  //  String sShortMeanings = m_VM.getVM_SHORT_MEANING();
+    String sShortMeanings = m_VM.getVM_LONG_NAME();
     if (sShortMeanings == null) sShortMeanings = "";
 //System.out.println("before vmconcept");
     EVS_Bean eBean = (EVS_Bean)m_VM.getVM_CONCEPT();

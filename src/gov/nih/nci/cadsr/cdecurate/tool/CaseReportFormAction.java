@@ -35,10 +35,14 @@ public class CaseReportFormAction extends CommonACAction
         String sSelect = "SELECT crf.qc_idseq idseq " + ", crf.long_name long_name " + ", crf.qc_id ac_id"
                         + ", crf.version " + ", crf.asl_name workflow " + ", c.name context " + ", crf.qtl_name "
                         + ", crf.qcdl_name " + ", p.long_name proto_name " + ", p.protocol_id ";
-        String sFrom = " FROM (SELECT qc.dn_crf_idseq AS ID FROM quest_contents_view_ext qc, sbr.vd_pvs_view vp,"
+        /*String sFrom = " FROM (SELECT qc.dn_crf_idseq AS ID FROM quest_contents_view_ext qc, sbr.vd_pvs_view vp,"
                         + " sbr.permissible_values_view pv WHERE vp.pv_idseq = pv.pv_idseq AND qc.vp_idseq = vp.vp_idseq"
                         + " AND pv.short_meaning = '" + vmID + "' GROUP BY qc.dn_crf_idseq) quest, "
-                        + " sbrext.quest_contents_view_ext crf, sbrext.protocols_view_ext p, sbr.contexts_view c";
+                        + " sbrext.quest_contents_view_ext crf, sbrext.protocols_view_ext p, sbr.contexts_view c";*/
+        String sFrom = " FROM (SELECT qc.dn_crf_idseq AS ID FROM quest_contents_view_ext qc, sbr.vd_pvs_view vp,"
+            + " sbr.permissible_values_view pv WHERE vp.pv_idseq = pv.pv_idseq AND qc.vp_idseq = vp.vp_idseq"
+            + " AND pv.vm_idseq = '" + vmID + "' GROUP BY qc.dn_crf_idseq) quest, "
+            + " sbrext.quest_contents_view_ext crf, sbrext.protocols_view_ext p, sbr.contexts_view c";
         String sWhere = " WHERE crf.qc_idseq = quest.ID AND crf.proto_idseq = p.proto_idseq(+) AND crf.conte_idseq = c.conte_idseq";
         /*
          * String sFrom = " FROM sbrext.quest_contents_view_ext crf, sbrext.protocols_view_ext p, sbr.contexts_view c ";

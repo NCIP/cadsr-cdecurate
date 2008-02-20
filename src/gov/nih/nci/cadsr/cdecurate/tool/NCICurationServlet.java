@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.52 2008-01-23 22:51:48 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.53 2008-02-20 19:35:06 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -78,6 +78,9 @@ public class NCICurationServlet extends HttpServlet
     public static Properties m_settings;
 
     public static String _dataSourceName = null;
+    public static String _authenticateDSName = null;
+    public static String _userName = null;
+    public static String _password = null;
     
     public static final Logger logger = Logger.getLogger(NCICurationServlet.class.getName());
 
@@ -136,8 +139,9 @@ public class NCICurationServlet extends HttpServlet
         {
             logger.info("initOracleConnect - accessing data source pool");
             _dataSourceName = "java:/" + getServletConfig().getInitParameter("jbossDataSource");
-            String stUser = getServletConfig().getInitParameter("username");
-            String stPswd = getServletConfig().getInitParameter("password");
+            _authenticateDSName="java:/" + getServletConfig().getInitParameter("jbossAuthenticate");
+            _userName= getServletConfig().getInitParameter("username");
+           _password = getServletConfig().getInitParameter("password");
 
             // Test connnection
             Connection con = null;
@@ -146,7 +150,7 @@ public class NCICurationServlet extends HttpServlet
             CurationServlet curser = new CurationServlet();
             try
             {
-                con = curser.getConnFromDS(stUser, stPswd);
+                con = curser.getConnFromDS();
                 stmt = con.createStatement();
                 rset = stmt.executeQuery("Select sysdate from dual");
                 if (rset.next())

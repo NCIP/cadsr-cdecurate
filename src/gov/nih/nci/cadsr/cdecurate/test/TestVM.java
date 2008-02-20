@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/TestVM.java,v 1.9 2007-09-10 17:18:20 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/TestVM.java,v 1.10 2008-02-20 19:34:14 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.test;
@@ -133,10 +133,10 @@ public class TestVM
              break;
            
            if (curvmname != null)
-             vm.setVM_SHORT_MEANING(curvmname);
+             vm.setVM_LONG_NAME(curvmname);
            String curvmdesc = VMprop.getProperty("current.vmdesc." + i);
            if (curvmdesc != null)
-             vm.setVM_DESCRIPTION(curvmdesc);
+             vm.setVM_PREFERRED_DEFINITION(curvmdesc);
            String curvmln = VMprop.getProperty("current.vmlongname." + i);
            if (curvmln != null)
              vm.setVM_LONG_NAME(curvmln);
@@ -174,7 +174,7 @@ public class TestVM
              selvm.setVM_LONG_NAME(selvmname);
              String selvmdesc = VMprop.getProperty("selected.vmdesc." + i);
              if (selvmdesc != null)
-               selvm.setVM_DESCRIPTION(selvmdesc);
+               selvm.setVM_PREFERRED_DEFINITION(selvmdesc);
              String selvmln = VMprop.getProperty("selected.vmlongname." + i);
              if (selvmln != null)
                selvm.setVM_LONG_NAME(selvmln);
@@ -192,7 +192,7 @@ public class TestVM
     
            //add the beans to data object
            vmdata.setVMBean(vm);
-           logger.info(i + " Validating VM for " + vm.getVM_SHORT_MEANING() + " : desc : " + vm.getVM_DESCRIPTION() + " conlist " + vm.getVM_CONCEPT_LIST().size());
+           logger.info(i + " Validating VM for " + vm.getVM_LONG_NAME() + " : desc : " + vm.getVM_PREFERRED_DEFINITION() + " conlist " + vm.getVM_CONCEPT_LIST().size());
            
            //do the search;
            VMAction vmact = new VMAction();
@@ -224,7 +224,7 @@ public class TestVM
      // vm.setVM_SHORT_MEANING("Adverse Event Domain");
     //  vm.setVM_SHORT_MEANING("Adverse Event Capture");
      //   vm.setVM_SHORT_MEANING("Low");
-        vm.setVM_SHORT_MEANING("Hypersensitivity");
+        vm.setVM_LONG_NAME("Hypersensitivity");
         
 
      // vm.setVM_DESCRIPTION("need definiton");
@@ -238,7 +238,7 @@ public class TestVM
      //  vm.setVM_DESCRIPTION("Metastatic");
      //  vm.setVM_DESCRIPTION("Research aimed at discovery of novel nanoscale and nanostructured materials and at a comprehensive understanding of the properties of nanomaterials (ranging across length scales, and including interface interactions). Also, R&D leading to the ability to design and synthesize, in a controlled manner, nanostructured materials with targeted properties.");
      //   vm.setVM_DESCRIPTION("Lower than reference range");
-        vm.setVM_DESCRIPTION("Hypersensitivity");
+        vm.setVM_PREFERRED_DEFINITION("Hypersensitivity");
 
        //get concepts for vm
        Vector<EVS_Bean> conList = new Vector<EVS_Bean>();
@@ -259,10 +259,10 @@ public class TestVM
        vmdata.setVMBean(vm);
        
       VM_Bean selvm = new VM_Bean();
-      selvm.setVM_SHORT_MEANING("Hypersensitivity");  //("Adverse Event Domain");
-      selvm.setVM_DESCRIPTION("Hypersensitivity");   //("need definiton");
+      selvm.setVM_LONG_NAME("Hypersensitivity");  //("Adverse Event Domain");
+      selvm.setVM_PREFERRED_DEFINITION("Hypersensitivity");   //("need definiton");
       vmdata.setSelectVM(selvm);
-      logger.info("Validating VM for " + vm.getVM_SHORT_MEANING() + " : desc : " + vm.getVM_DESCRIPTION());
+      logger.info("Validating VM for " + vm.getVM_LONG_NAME() + " : desc : " + vm.getVM_PREFERRED_DEFINITION());
       //open teh cadsr connection
       Connection conn = varCon.openConnection();      
       vmdata.setDBConnection(conn);      
@@ -464,7 +464,7 @@ public class TestVM
    // vm.setVM_SHORT_MEANING("Adverse Event Domain");
   //  vm.setVM_SHORT_MEANING("Adverse Event Capture");
    //   vm.setVM_SHORT_MEANING("Low");
-      vm.setVM_SHORT_MEANING("Hypersensitivity");
+      vm.setVM_LONG_NAME("Hypersensitivity");
       
 
    // vm.setVM_DESCRIPTION("need definiton");
@@ -478,7 +478,7 @@ public class TestVM
    //  vm.setVM_DESCRIPTION("Metastatic");
    //  vm.setVM_DESCRIPTION("Research aimed at discovery of novel nanoscale and nanostructured materials and at a comprehensive understanding of the properties of nanomaterials (ranging across length scales, and including interface interactions). Also, R&D leading to the ability to design and synthesize, in a controlled manner, nanostructured materials with targeted properties.");
    //   vm.setVM_DESCRIPTION("Lower than reference range");
-      vm.setVM_DESCRIPTION("Hypersensitivity");
+      vm.setVM_PREFERRED_DEFINITION("Hypersensitivity");
 
      //get concepts for vm
      Vector<EVS_Bean> conList = new Vector<EVS_Bean>();
@@ -499,8 +499,8 @@ public class TestVM
     // vmdata.setVMBean(vm);
      
     VM_Bean selvm = new VM_Bean();
-    selvm.setVM_SHORT_MEANING("Hypersensitivity");  //("Adverse Event Domain");
-    selvm.setVM_DESCRIPTION("Hypersensitivity");   //("need definiton");
+    selvm.setVM_LONG_NAME("Hypersensitivity");  //("Adverse Event Domain");
+    selvm.setVM_PREFERRED_DEFINITION("Hypersensitivity");   //("need definiton");
   //  vmdata.setSelectVM(selvm);
     
   }
@@ -532,7 +532,7 @@ public class TestVM
     VM_Bean vm = vmdata.getVMBean(); 
     VM_Bean selvm = vmdata.getSelectVM();
     //validate the old vm first before reading the next vm data
-    if (vm != null && !vm.getVM_SHORT_MEANING().equals(""))
+    if (vm != null && !vm.getVM_LONG_NAME().equals(""))
     {
       //do the search;
       VMAction vmact = new VMAction();
@@ -552,17 +552,19 @@ public class TestVM
         if (attName != null && !attName.equals(""))
         {
           if (attName.equals("editvmname"))
-            vm.setVM_SHORT_MEANING(attValue);
+           // vm.setVM_SHORT_MEANING(attValue);
+        	  vm.setVM_LONG_NAME(attValue);
           else if (attName.equals("editvmlongname"))
             vm.setVM_LONG_NAME(attValue);
           else if (attName.equals("editvmdesc"))
-            vm.setVM_DESCRIPTION(attValue);
+            vm.setVM_PREFERRED_DEFINITION(attValue);
           else if (attName.equals("selvmname"))
-            selvm.setVM_SHORT_MEANING(attValue);
-          else if (attName.equals("selvmlongname"))
+            //selvm.setVM_SHORT_MEANING(attValue);
+        	  selvm.setVM_LONG_NAME(attValue);
+        	  else if (attName.equals("selvmlongname"))
             selvm.setVM_LONG_NAME(attValue);
           else if (attName.equals("selvmdesc"))
-            selvm.setVM_DESCRIPTION(attValue);
+            selvm.setVM_PREFERRED_DEFINITION(attValue);
           else if (attName.equals("selvmidseq"))
             selvm.setVM_IDSEQ(attValue);
           else if (attName.equals("selvmcondr"))

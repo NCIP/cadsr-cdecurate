@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.3 2008-02-20 19:35:24 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -476,7 +476,8 @@
 													<% } %>
 													<%  
 											String newPVjsp = util.parsedStringDoubleQuoteJSP(newPV.getPV_VALUE());
-											String newVMjsp = util.parsedStringDoubleQuoteJSP(newVM.getVM_SHORT_MEANING());
+											//String newVMjsp = util.parsedStringDoubleQuoteJSP(newVM.getVM_SHORT_MEANING());
+											String newVMjsp = util.parsedStringDoubleQuoteJSP(newVM.getVM_LONG_NAME());
 									%>
 													<td valign="top">
 														&nbsp;&nbsp;
@@ -493,7 +494,7 @@
 																</td>
 																<td>
 																	<div id="pvNewVMView" style="display: <%if (newVMCon.size() > 0) { %>block<%} else {%>none<% } %>">
-																		<%=newVM.getVM_SHORT_MEANING()%>
+																		<%=newVM.getVM_LONG_NAME()%>
 																	</div>
 																	<div id="pvNewVMEdit" style="display: <%if (newVMCon.size() > 0) { %>none<%} else {%>block<% } %>">
 																		<textarea name="pvNewVM" style="width: 90%" rows="2" onblur="javascript:checkNameLen(this, 255);" onkeyup="javascript:getORsetEdited('pvNew', 'pv');"><%=newVMjsp%></textarea>
@@ -517,12 +518,11 @@
 																</td>
 																<td align="left" colspan="2">
 																	<div id="pvNewVMDView" style="display: <%if (newVMCon.size() > 0) { %>block<%} else {%>none<% } %>">
-																		<%=newVM.getVM_DESCRIPTION().trim()%>
+																		<%=newVM.getVM_PREFERRED_DEFINITION().trim()%>
 																	</div>
 																	<div id="pvNewVMDEdit" style="display: <%if (newVMCon.size() > 0) { %>none<%} else {%>block<% } %>">
 																		<!-- javascript:disableSearch('pvNew'); -->
-																		<textarea name="pvNewVMD" style="width=98%" rows="4" style="width: 100%" onkeyup="javascript:getORsetEdited('pvNew', 'pv');"><%=newVM.getVM_DESCRIPTION().trim()%></textarea>
-																	</div>
+																		 <textarea name="pvNewVMD" style="width=98%" rows="4" style="width: 100%" onkeyup="javascript:getORsetEdited('pvNew', 'pv');"><%=newVM.getVM_PREFERRED_DEFINITION().trim()%></textarea>																</div>
 																</td>
 															</tr>
 															<tr>
@@ -672,12 +672,12 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 																		<dt>
 																			VM Name:
 																		<dd>
-																			<%=vB.getVM_SHORT_MEANING()%>
+																			<%=vB.getVM_LONG_NAME()%>
 																		<dt>
 																			VM Description:
 																		<dd>
-																			<%=vB.getVM_DESCRIPTION()%>
-																		<dt>
+																		 <%=vB.getVM_PREFERRED_DEFINITION()%>
+																			<dt>
 																			VM Concepts:
 																			<% if (vBCon.size() > 0) { 
 																	for (int p =0; p<vBCon.size(); p++) {
@@ -947,10 +947,12 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 						            VM_Bean vm = pvBean.getPV_VM();
 						         //   if (vEMsg.size() > 0 && sEditPV.equals(pvCount))
 						         //   	vm = (VM_Bean)request.getAttribute("ErrVM");
-						            String sPVMean = (String)vm.getVM_SHORT_MEANING();  // pvBean.getPV_SHORT_MEANING();
+						            //String sPVMean = (String)vm.getVM_SHORT_MEANING();  // pvBean.getPV_SHORT_MEANING();
+						            String sPVMean = (String)vm.getVM_LONG_NAME();  // pvBean.getPV_SHORT_MEANING();
 						            if (sPVMean == null) sPVMean = "";
 						            String sPVMeanJsp = util.parsedStringDoubleQuoteJSP(sPVMean);
-						            String sPVDesc = (String)vm.getVM_DESCRIPTION();  // pvBean.getPV_MEANING_DESCRIPTION();
+						            //String sPVDesc = (String)vm.getVM_DESCRIPTION();  // pvBean.getPV_MEANING_DESCRIPTION();
+						              String sPVDesc = (String)vm.getVM_PREFERRED_DEFINITION();  // pvBean.getPV_MEANING_DESCRIPTION();
 						            if (sPVDesc == null) sPVDesc = "";
 						            Vector vmCon = vm.getVM_CONCEPT_LIST();
 						            String submit = vm.getVM_SUBMIT_ACTION();
@@ -1261,11 +1263,11 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 																					<dt>
 																						VM Name:
 																					<dd>
-																						<%=vB.getVM_SHORT_MEANING()%>
+																					<%=vB.getVM_LONG_NAME()%>
 																					<dt>
 																						VM Description:
 																					<dd>
-																						<%=vB.getVM_DESCRIPTION()%>
+																						<%=vB.getVM_PREFERRED_DEFINITION()%>
 																					<dt>
 																						VM Concepts:
 																						<% if (vBCon.size() > 0) { 

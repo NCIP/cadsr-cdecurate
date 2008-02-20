@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.24 2007-11-28 19:44:47 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.25 2008-02-20 19:35:06 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -222,21 +222,24 @@ public class VMServlet extends GenericServlet
         sVMD = (String)req.getParameter("txtpv" + pvInd + "Def");  //vm desc        
       }      
       //first capture description attributes
-      if (sVMD != null && !sVMD.equals("") && !vm.getVM_DESCRIPTION().equals(sVMD))
+     // if (sVMD != null && !sVMD.equals("") && !vm.getVM_DESCRIPTION().equals(sVMD))
+      if (sVMD != null && !sVMD.equals("") && !vm.getVM_PREFERRED_DEFINITION().equals(sVMD))
       {
         sVMD = sVMD.trim();//trim out the extra spaces
-        vm.setVM_DESCRIPTION(sVMD); 
+       // vm.setVM_DESCRIPTION(sVMD);
+        vm.setVM_PREFERRED_DEFINITION(sVMD);
         //do not make it new if defintion is different
        // vm.setVM_IDSEQ("");
         vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_UPD);
       }
       //now capture name attribute
-      if (sVM != null && !sVM.equals("") && !vm.getVM_SHORT_MEANING().equals(sVM))
+     // if (sVM != null && !sVM.equals("") && !vm.getVM_SHORT_MEANING().equals(sVM))
+      if (sVM != null && !sVM.equals("") && !vm.getVM_LONG_NAME().equals(sVM))
       {
         UtilService util = new UtilService();        
         sVM = sVM.trim();//trim out the extra spaces
         sVM = util.removeNewLineChar(sVM);
-        vm.setVM_SHORT_MEANING(sVM);
+       //vm.setVM_SHORT_MEANING(sVM);
         vm.setVM_LONG_NAME(sVM);
         vm.setVM_IDSEQ("");
         vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
@@ -370,7 +373,8 @@ public class VMServlet extends GenericServlet
     {
       retForm.descriptionLabel = VMForm.ELM_LBL_MAN_DESC;
       retForm.description = vm.getVM_ALT_DEFINITION();
-      retForm.systemDescription = vm.getVM_DESCRIPTION();      
+      //retForm.systemDescription = vm.getVM_DESCRIPTION();
+      retForm.systemDescription = vm.getVM_PREFERRED_DEFINITION();
       //add concepts
       retForm.conceptExist = true;
       retForm.conceptSummary = vm.getVM_ALT_NAME();  
@@ -378,7 +382,8 @@ public class VMServlet extends GenericServlet
       vmAction.resetPrimaryFlag(retForm.vmConcepts);
     }
     else
-      retForm.description = vm.getVM_DESCRIPTION();      
+      //retForm.description = vm.getVM_DESCRIPTION();
+    	retForm.description = vm.getVM_PREFERRED_DEFINITION();
     //add change note
     retForm.changeNote = vm.getVM_CHANGE_NOTE(); 
 
@@ -457,7 +462,8 @@ public class VMServlet extends GenericServlet
           if (vm.getVM_CONCEPT_LIST().size() > 0)
             vm.setVM_ALT_DEFINITION(sDef);
           else
-            vm.setVM_DESCRIPTION(sDef);
+            //vm.setVM_DESCRIPTION(sDef);
+        	  vm.setVM_PREFERRED_DEFINITION(sDef);
         }
         //check if user entered comment exists
         String sCmt = (String)httpRequest.getParameter(VMForm.ELM_CHANGE_NOTE);
@@ -695,7 +701,8 @@ public class VMServlet extends GenericServlet
       //get the connection
       //conn = vmData.getCurationServlet().connectDB();
       //query the database
-      Vector<CommonACBean> vAC = dbac.getAssociated(vmData.getCurationServlet().getConn(), vm.getVM_SHORT_MEANING(), isStatFilter, orderBy);
+      //Vector<CommonACBean> vAC = dbac.getAssociated(vmData.getCurationServlet().getConn(), vm.getVM_SHORT_MEANING(), isStatFilter, orderBy);
+	  Vector<CommonACBean> vAC = dbac.getAssociated(vmData.getCurationServlet().getConn(), vm.getVM_IDSEQ(), isStatFilter, orderBy);
       //set data to vm
       dbac.setUsedAttributes(vm, vAC, isStatFilter, null);
    // }
@@ -801,7 +808,8 @@ public class VMServlet extends GenericServlet
     HttpSession session = req.getSession();
     //use the session vm by default; if null or empty, use pv-vm  //TODO- check if this is right???
     VM_Bean vm = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);  // pv.getPV_VM();
-    if (vm == null || vm.getVM_SHORT_MEANING() == null || vm.getVM_SHORT_MEANING().equals("")) 
+//    if (vm == null || vm.getVM_SHORT_MEANING() == null || vm.getVM_SHORT_MEANING().equals(""))
+    if (vm == null || vm.getVM_LONG_NAME() == null || vm.getVM_LONG_NAME().equals("")) 
       vm = new VM_Bean().copyVMBean(pv.getPV_VM());
     Vector vmCon = vm.getVM_CONCEPT_LIST();
     String[] sCons = req.getParameterValues("hiddenConVM");

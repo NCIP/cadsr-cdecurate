@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValueWindow.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValueWindow.jsp,v 1.2 2008-02-20 19:35:24 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -139,9 +139,11 @@
       String sValue =  pvBean.getPV_VALUE();
       if (sValue == null) sValue = "";
       VM_Bean vm = pvBean.getPV_VM();
-      String sMeaning = vm.getVM_SHORT_MEANING();  
+     // String sMeaning = vm.getVM_SHORT_MEANING();
+      String sMeaning = vm.getVM_LONG_NAME();  
       if (sMeaning == null) sMeaning = "";
-      String sDescription = vm.getVM_DESCRIPTION(); 
+      //String sDescription = vm.getVM_DESCRIPTION();
+      String sDescription = vm.getVM_PREFERRED_DEFINITION(); 
       if (sDescription == null) sDescription = "";
       String sConcept = "";
       Vector vmCon = vm.getVM_CONCEPT_LIST(); //cannot type cast the vector in jsp

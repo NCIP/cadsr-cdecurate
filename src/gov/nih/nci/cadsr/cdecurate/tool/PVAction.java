@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.25 2008-01-23 23:05:15 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.26 2008-02-20 19:35:06 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -244,11 +244,14 @@ public class PVAction implements Serializable {
 							sPVMean += ",\n ";
 						}
 						sPVVal += thisPV.getPV_VALUE();
-						if (thisVM != null
-								&& thisVM.getVM_SHORT_MEANING() != null
-								&& !thisVM.getVM_SHORT_MEANING().equals(""))
-							sPVMean += thisVM.getVM_SHORT_MEANING(); // thisPV.getPV_SHORT_MEANING();
-					}
+						/*&& thisVM.getVM_SHORT_MEANING() != null
+						&& !thisVM.getVM_SHORT_MEANING().equals(""))
+					sPVMean += thisVM.getVM_SHORT_MEANING(); // thisPV.getPV_SHORT_MEANING();
+					
+*/					if (thisVM != null && thisVM.getVM_LONG_NAME() != null
+								&& !thisVM.getVM_LONG_NAME().equals(""))
+							sPVMean += thisVM.getVM_LONG_NAME(); // thisPV.getPV_SHORT_MEANING();
+						}
 				}
 				//get the values element from the vector to update it
 				boolean matchFound = false;
@@ -412,9 +415,11 @@ public class PVAction implements Serializable {
 							pvBean.setPV_VDPVS_IDSEQ("");
 						else
 							pvBean.setPV_VDPVS_IDSEQ(rs.getString("vp_idseq"));
-
+/*
 						pvBean.setPV_MEANING_DESCRIPTION(rs
-								.getString("vm_description"));
+								.getString("vm_description"));*/
+						pvBean.setPV_MEANING_DESCRIPTION(rs
+								.getString("vm.PREFERRED_DEFINITION"));
 						pvBean.setPV_VALUE_ORIGIN(rs.getString("origin"));
 						String sDate = rs.getString("begin_date");
 						if (sDate != null && !sDate.equals(""))
@@ -494,13 +499,15 @@ public class PVAction implements Serializable {
 		for (int i = 0; i < pgVDPV.size(); i++) {
 			PV_Bean pv = pgVDPV.elementAt(i);
 			String value = pv.getPV_VALUE();
-			String vm = pv.getPV_VM().getVM_SHORT_MEANING();
+			//String vm = pv.getPV_VM().getVM_SHORT_MEANING();
+			String vm = pv.getPV_VM().getVM_LONG_NAME();
 			//check if it exists in versioned list
 			boolean isNew = true;
 			for (int j = 0; j < verList.size(); j++) {
 				PV_Bean verPV = verList.elementAt(j);
 				String verVal = verPV.getPV_VALUE();
-				String verVM = verPV.getPV_VM().getVM_SHORT_MEANING();
+				//String verVM = verPV.getPV_VM().getVM_SHORT_MEANING();
+				String verVM = verPV.getPV_VM().getVM_LONG_NAME();
 				if (verVal.equals(value) && verVM.equals(vm)) {
 					isNew = false;
 					break;
@@ -596,7 +603,8 @@ public class PVAction implements Serializable {
 						if (s != null)
 							s = data.getUtil().getCurationDate(s);
 						PVBean.setPV_END_DATE(s);
-						String sdef = rs.getString("vm_description");
+						//String sdef = rs.getString("vm_description");
+						String sdef = rs.getString("vm.PREFERRED_DEFINITION");
 						if (sdef == null || sdef.equals(""))
 							sdef = rs.getString("preferred_definition");
 						PVBean.setPV_MEANING_DESCRIPTION(sdef); //from meanings table
@@ -659,14 +667,22 @@ public class PVAction implements Serializable {
 			String sValue = pv.getPV_VALUE();
 			VM_Bean vm = pv.getPV_VM();
 			String sShortMeaning = pv.getPV_SHORT_MEANING();
-			if (vm != null && vm.getVM_SHORT_MEANING() != null
+/*			if (vm != null && vm.getVM_SHORT_MEANING() != null
 					&& !vm.getVM_SHORT_MEANING().equals(""))
 				sShortMeaning = vm.getVM_SHORT_MEANING();
+*/			
+			if (vm != null && vm.getVM_LONG_NAME()!= null
+					&& !vm.getVM_LONG_NAME().equals(""))
+				sShortMeaning = vm.getVM_LONG_NAME();
 			//System.out.println(sAction + " set vm in pv " + sShortMeaning);
 			String sMeaningDescription = pv.getPV_MEANING_DESCRIPTION();
-			if (vm != null && vm.getVM_DESCRIPTION() != null
+			/*if (vm != null && vm.getVM_DESCRIPTION() != null
 					&& !vm.getVM_DESCRIPTION().equals(""))
 				sMeaningDescription = vm.getVM_DESCRIPTION();
+		*/
+			if (vm != null && vm.getVM_PREFERRED_DEFINITION() != null
+					&& !vm.getVM_PREFERRED_DEFINITION().equals(""))
+				sMeaningDescription = vm.getVM_PREFERRED_DEFINITION();
 			// if (sMeaningDescription == null) sMeaningDescription = "";
 			//  if (sMeaningDescription.length() > 2000) sMeaningDescription = sMeaningDescription.substring(0, 2000);
 			String sBeginDate = pv.getPV_BEGIN_DATE();
@@ -1264,7 +1280,8 @@ public class PVAction implements Serializable {
 			for (int i = 0; i < vdpvList.size(); i++) {
 				PV_Bean pv = vdpvList.elementAt(i);
 				if (pv.getPV_PV_IDSEQ().contains("EVS_")) {
-					String vmName = pv.getPV_VM().getVM_SHORT_MEANING();
+					//String vmName = pv.getPV_VM().getVM_SHORT_MEANING();
+					String vmName = pv.getPV_VM().getVM_LONG_NAME();
 					vNames = setName(vmHash, vmName, vNames, i);
 				}
 			}
@@ -1336,7 +1353,8 @@ public class PVAction implements Serializable {
 	 */
 	private String getName(Hashtable<String, String> vmHash, VM_Bean vm,
 			Vector<PV_Bean> vdpv, String vNames) {
-		String vmName = vm.getVM_SHORT_MEANING();
+		//String vmName = vm.getVM_SHORT_MEANING();
+		String vmName = vm.getVM_LONG_NAME();
 		int multi = 0;
 		String multiName = vmName;
 		boolean isExact = false;

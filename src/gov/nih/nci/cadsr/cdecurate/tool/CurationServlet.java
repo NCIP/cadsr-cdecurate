@@ -183,16 +183,34 @@ public class CurationServlet
             retMsg = "Encountered an unexpected and unknown connection error, please contact the NIH Help Desk.";
         return retMsg;
     }
+    
 
-    public Connection getConnFromDS(String user_, String pswd_)
+    /**
+     * Start in the /conf/template.cdecurate-oracle-ds.xml file. Notice the <jndi-name>. 
+     * This name is used by JBoss to create and identify the connection pool. 
+     * We copied this name to the /conf/template.web.xml file in the <param-value> element. 
+     * The <param-name> for this initialization value appears in the code 
+     * NCICurationServlet.initOracleConnect() method. 
+     * The datasource pool name is then saved in a class variable “_dataSourceName”.     * 
+     * The variable is used by the CurationServlet.getConnFromDS() method which 
+     * is used by the CurationServlet.connectDB() method.
+     * @param user_
+     * @param pswd_
+     * @return
+     */
+    public Connection getConnFromDS()
     {
         // Use tool database pool.
         Context envContext = null;
         DataSource ds = null;
+        String user_;
+        String pswd_;
         try
         {
             envContext = new InitialContext();
             ds = (DataSource) envContext.lookup(NCICurationServlet._dataSourceName);
+            user_ = NCICurationServlet._userName;
+            pswd_ = NCICurationServlet._password;
         }
         catch (Exception e)
         {
@@ -240,11 +258,11 @@ public class CurationServlet
      * since connection info is stored in the session, I should be able to use connect DB with out passing information
      *
      * @return Connnection object
-     */
+     *//*
     public Connection connectDB()
     {
         return connectDB(sessionData.UsrBean);
-    }
+    }*/
 
     /**
      * This method tries to connect to the db, returns the Connection object if successful, if unsuccessful tries to
@@ -257,42 +275,44 @@ public class CurationServlet
      *            The HttpServletResponse back to the client
      * @return Connection SBRDb_conn 04/15/03 JZ Implement Realm Authen connction
      */
-    public Connection connectDB(HttpServletRequest req, @SuppressWarnings("unused") HttpServletResponse res)
+   /* public Connection connectDB(HttpServletRequest req, @SuppressWarnings("unused") HttpServletResponse res)
     {
         HttpSession session = req.getSession();
         return connectDB(session);
     }
-
+*/
     /**
      * @param session_
      * @return Connection
      */
-    public Connection connectDB(HttpSession session_)
+   /* public Connection connectDB(HttpSession session_)
     {
         UserBean ub = (UserBean) session_.getAttribute("Userbean");
         return connectDB(ub);
-    }
+    }*/
 
     /**
      * @param ub_
      * @return Connection
      */
-    public Connection connectDB(UserBean ub_)
+    //public Connection connectDB(UserBean ub_)
+    public Connection connectDB()
     {
         Connection SBRDb_conn = null;
         try
         {
-            String username = "";
+           /* String username = "";
             String password = "";
             // make sure user name from session is active
             if (ub_ == null || ub_.getUsername().equals(""))
                 throw new Exception("User information is null");
             // get user info
             username = ub_.getUsername();
-            password = ub_.getPassword();
+            password = ub_.getPassword();*/
             try
             {
-                SBRDb_conn = this.getConnFromDS(username, password);
+                //SBRDb_conn = this.getConnFromDS(username, password);
+            	 SBRDb_conn = this.getConnFromDS();
             }
             catch (Exception e)
             {
@@ -305,9 +325,12 @@ public class CurationServlet
         }
         return SBRDb_conn;
     }
-    
+  
     /**
      * Performs the login 
+     * @param req
+     * @param res
+     * @param session
      */
     private void login(HttpServletRequest req, HttpServletResponse res,HttpSession session)
     {
@@ -316,10 +339,58 @@ public class CurationServlet
         UserBean userbean = new UserBean();
         userbean.setUsername(username);
         userbean.setPassword(password);
-        m_conn= this.connectDB(userbean);
-        DataManager.setAttribute(session, "Userbean", userbean);
+        boolean validUser= this.authenticate(userbean);
+        if(validUser)
+        	{
+        	 userbean.setPassword("");
+        	 DataManager.setAttribute(session, "Userbean", userbean);
+        	 m_conn = connectDB();
+        	}
     }   
-
+    
+    /**
+     * Authenticates the user login credentials with the jboss authentication 
+     * data source.
+     * @param user
+     * @return
+     */
+    private boolean authenticate(UserBean user) 
+    {
+    	 // Use tool database pool.
+        Context envContext = null;
+        DataSource ds = null;
+        boolean validUser =false;
+        try
+        {
+            envContext = new InitialContext();
+            ds = (DataSource) envContext.lookup(NCICurationServlet._authenticateDSName);
+        }
+        catch (Exception e)
+        {
+            String stErr = "Error creating database pool[" + e.getMessage() + "].";
+            e.printStackTrace();
+            System.out.println(stErr);
+            logger.fatal(stErr, e);
+            return false;
+        }
+        // Test connnection
+        Connection con = null;
+        try
+        {
+            con = ds.getConnection(user.getUsername(), user.getPassword());
+            if(con!=null)
+            	validUser = true;
+        }
+        catch (Exception e)
+        {
+            System.err.println("Could not open database connection.");
+            e.printStackTrace();
+            logger.fatal(e.toString(), e);
+            return false;
+        }
+        return validUser;
+    }
+    
     /**
      * The service method services all requests to this servlet.
      *
@@ -337,7 +408,8 @@ public class CurationServlet
             if (sessionData == null)
                      	sessionData = new Session_Data();
             else
-            	m_conn = connectDB((UserBean)session.getAttribute("Userbean"));
+            	//m_conn = connectDB((UserBean)session.getAttribute("Userbean"));
+            	  m_conn = connectDB();
             String reqType = m_classReq.getParameter("reqType");
             // logger.info("servlet reqType!: "+ reqType); //log the request
             m_classReq.setAttribute("LatestReqType", reqType);
@@ -2182,9 +2254,11 @@ public class CurationServlet
             {
                 VM_Bean vmBean = (VM_Bean) vRSel.elementAt(i);
                 // store the vm attributes in pv attribute
-                if (vmBean.getVM_SHORT_MEANING().equals(selVM))
+                /*if (vmBean.getVM_SHORT_MEANING().equals(selVM))*/
+                if (vmBean.getVM_LONG_NAME().equals(selVM))
                 {
-                    pvBean.setPV_MEANING_DESCRIPTION(vmBean.getVM_DESCRIPTION());
+                   // pvBean.setPV_MEANING_DESCRIPTION(vmBean.getVM_DESCRIPTION());
+                	pvBean.setPV_MEANING_DESCRIPTION(vmBean.getVM_PREFERRED_DEFINITION());
                     // pvBean.setVM_CONCEPT(vmBean.getVM_CONCEPT());
                     pvBean.setPV_VM(vmBean);
                     break;
@@ -5048,7 +5122,7 @@ public class CurationServlet
                         String vdValue = pvBean.getPV_VALUE();
                         String vdMean = "";
                         if (vdVM != null)
-                            vdMean = vdVM.getVM_SHORT_MEANING(); // pvBean.getPV_SHORT_MEANING();
+                            vdMean = vdVM.getVM_LONG_NAME();//vdVM.getVM_SHORT_MEANING(); // pvBean.getPV_SHORT_MEANING();
                         // check if value meaning was already existed
                         if (vdMean != null && vdMean.equalsIgnoreCase(sMean))
                         {
@@ -5140,8 +5214,10 @@ public class CurationServlet
                 pBean.setPV_BEGIN_DATE(formatter.format(new java.util.Date()));
             // add evs bean to pv bean
             VM_Bean vm = new VM_Bean();
-            vm.setVM_SHORT_MEANING(pBean.getPV_SHORT_MEANING());
-            vm.setVM_DESCRIPTION(pBean.getPV_MEANING_DESCRIPTION());
+         //   vm.setVM_SHORT_MEANING(pBean.getPV_SHORT_MEANING());
+            vm.setVM_LONG_NAME(pBean.getPV_SHORT_MEANING());
+           // vm.setVM_DESCRIPTION(pBean.getPV_MEANING_DESCRIPTION());
+            vm.setVM_PREFERRED_DEFINITION(pBean.getPV_MEANING_DESCRIPTION());
             vm.setVM_CONDR_IDSEQ(eBean.getCONDR_IDSEQ());
             Vector<EVS_Bean> vmCon = new Vector<EVS_Bean>();
             vmCon.addElement(eBean);

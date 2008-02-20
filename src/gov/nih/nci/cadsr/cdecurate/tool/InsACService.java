@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.51 2008-01-23 22:50:36 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.52 2008-02-20 19:35:06 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2462,13 +2462,19 @@ public class InsACService implements Serializable {
 				cstmt.setString(22, sSource); // origin
 				// Now we are ready to call the stored procedure
 				logger.debug(cstmt.toString());
+				boolean bExcuteOk =false;
 				try {
-					boolean bExcuteOk = cstmt.execute();
+				    bExcuteOk = cstmt.execute();
 				} catch (SQLException se) {
 					logger.fatal(
 							"SQL ERROR in InsACService-setDE for execute : "
 									+ se.toString(), se);
+				}catch (Exception e) {
+					logger.fatal(
+							"ERROR in InsACService-setDE for execute : "
+									+ e.toString(), e);
 				}
+				logger.info("bExecuteOk" + bExcuteOk);
 				// capture the duration
 				// logger.info(m_servlet.getLogMessage(m_classReq, "setDE", "end
 				// execute", startDate, new java.util.Date()));

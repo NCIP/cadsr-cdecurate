@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PV_Bean.java,v 1.47 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PV_Bean.java,v 1.48 2008-02-20 19:35:06 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -127,7 +127,7 @@ public class PV_Bean implements Serializable
   private String PV_TEMP_CUI_TYPE;
   private String PV_EVS_DATABASE;
   private String PV_EVS_SOURCE;
-  
+  private String PV_VM_IDSEQ;
   private String PV_VM_CONDR_IDSEQ;
   private String PV_VIEW_TYPE;
 
@@ -147,6 +147,7 @@ public class PV_Bean implements Serializable
     if (fromBean != null)
     {
       this.setPV_PV_IDSEQ(fromBean.getPV_PV_IDSEQ());
+      this.setPV_VM_IDSEQ(fromBean.getPV_VM_IDSEQ());
       this.setPV_VDPVS_IDSEQ(fromBean.getPV_VDPVS_IDSEQ());
       this.setQUESTION_VALUE(fromBean.getQUESTION_VALUE());
       this.setQUESTION_VALUE_IDSEQ(fromBean.getQUESTION_VALUE_IDSEQ());
@@ -782,6 +783,20 @@ public class PV_Bean implements Serializable
   {
     PV_VIEW_TYPE = pv_view_type;
   }
+
+/**
+ * @return the pV_VM_IDSEQ
+ */
+public String getPV_VM_IDSEQ() {
+	return PV_VM_IDSEQ;
+}
+
+/**
+ * @param pv_vm_idseq the pV_VM_IDSEQ to set
+ */
+public void setPV_VM_IDSEQ(String pv_vm_idseq) {
+	PV_VM_IDSEQ = pv_vm_idseq;
+}
   
 
 } //end of class

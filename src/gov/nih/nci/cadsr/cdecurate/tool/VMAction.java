@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.29 2008-01-23 22:53:02 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.30 2008-02-20 19:35:06 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -160,8 +160,10 @@ public class VMAction implements Serializable
         //they have to be in the order of attribute multi select list
         EVS_Bean vmConcept = VMBean.getVM_CONCEPT();
         if (vmConcept == null) vmConcept = new EVS_Bean();
-        if (vSelAttr.contains("Value Meaning")) vResult.addElement(VMBean.getVM_SHORT_MEANING());
-        if (vSelAttr.contains("Meaning Description")) vResult.addElement(VMBean.getVM_DESCRIPTION());
+       // if (vSelAttr.contains("Value Meaning")) vResult.addElement(VMBean.getVM_SHORT_MEANING());
+       // if (vSelAttr.contains("Meaning Description")) vResult.addElement(VMBean.getVM_DESCRIPTION());
+        if (vSelAttr.contains("Value Meaning")) vResult.addElement(VMBean.getVM_LONG_NAME());
+        if (vSelAttr.contains("Meaning Description")) vResult.addElement(VMBean.getVM_PREFERRED_DEFINITION());
         if (vSelAttr.contains("Conceptual Domain")) vResult.addElement(VMBean.getVM_CD_NAME());
         if (vSelAttr.contains("EVS Identifier")) vResult.addElement(conID);  //vmConcept.getCONCEPT_IDENTIFIER());
         if (vSelAttr.contains("Definition Source")) vResult.addElement(defsrc);  //vmConcept.getEVS_DEF_SOURCE());
@@ -279,7 +281,8 @@ public class VMAction implements Serializable
       else
       {
         VM_Bean vm = (VM_Bean)vRSel.elementAt(iRow);
-        if (vm != null && vm.getVM_SHORT_MEANING() != null)
+       // if (vm != null && vm.getVM_SHORT_MEANING() != null)
+        if (vm != null && vm.getVM_LONG_NAME() != null)
           pv.setPV_VM(vm);
       }
     }
@@ -417,22 +420,27 @@ public class VMAction implements Serializable
     switch (iFrom)
     {
         case ConceptForm.FOR_PV_PAGE_CONCEPT:
-            vm.setVM_DESCRIPTION(vmDef);
-            String curName = vm.getVM_SHORT_MEANING();
+            //vm.setVM_DESCRIPTION(vmDef);
+        	vm.setVM_PREFERRED_DEFINITION(vmDef);
+        	//String curName = vm.getVM_SHORT_MEANING();
+        	String curName = vm.getVM_LONG_NAME();
             if (!curName.equalsIgnoreCase(vmName))
             {
                 vm.setVM_LONG_NAME(vmName);
-                vm.setVM_SHORT_MEANING(vmName);
+               //vm.setVM_SHORT_MEANING(vmName);
+                vm.setVM_LONG_NAME(vmName);
                 vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
             }
             break;
         case ConceptForm.FOR_VM_PAGE_CONCEPT:
             //add the vm definition to manual defintion if it is empty
             if (vm.getVM_ALT_DEFINITION().equals(""))
-              vm.setVM_ALT_DEFINITION(vm.getVM_DESCRIPTION());
+             // vm.setVM_ALT_DEFINITION(vm.getVM_DESCRIPTION());
+            	 vm.setVM_ALT_DEFINITION(vm.getVM_PREFERRED_DEFINITION());	
             //add name and description
             vm.setVM_ALT_NAME(vmName);
-            vm.setVM_DESCRIPTION(vmDef);
+          //  vm.setVM_DESCRIPTION(vmDef);
+            vm.setVM_PREFERRED_DEFINITION(vmDef);
             break;
         case ConceptForm.FOR_VM_PAGE_OPEN:
             vm.setVM_ALT_NAME(vmName);
@@ -502,7 +510,7 @@ public class VMAction implements Serializable
 
             //vm.setVM_IDSEQ("");
             vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_UPD);  //VMForm.CADSR_ACTION_INS);
-            vm.setVM_SHORT_MEANING(eBean.getLONG_NAME());  //have same name for now
+            //vm.setVM_SHORT_MEANING(eBean.getLONG_NAME());  //have same name for now
             vm.setVM_LONG_NAME(eBean.getLONG_NAME());  //have same name for now
             break;
         case ConceptForm.FOR_VM_PAGE_CONCEPT:
@@ -529,7 +537,8 @@ public class VMAction implements Serializable
         vm.setVM_CONCEPT_LIST(new Vector<EVS_Bean>());
         //put alt name back to vm definition
         if (!vm.getVM_ALT_DEFINITION().trim().equals(""))
-          vm.setVM_DESCRIPTION(vm.getVM_ALT_DEFINITION());
+          //vm.setVM_DESCRIPTION(vm.getVM_ALT_DEFINITION());
+        	vm.setVM_PREFERRED_DEFINITION(vm.getVM_ALT_DEFINITION());
         vm.setVM_ALT_NAME("");
         vm.setVM_CONDR_IDSEQ(" ");
       }
@@ -612,7 +621,8 @@ public class VMAction implements Serializable
     VM_Bean selVM = new VM_Bean().copyVMBean(pv.getPV_VM());
     //make sure vm's long exists;
     if (selVM.getVM_LONG_NAME() == null || selVM.getVM_LONG_NAME().equals(""))
-      selVM.setVM_LONG_NAME(selVM.getVM_SHORT_MEANING());
+    //  selVM.setVM_LONG_NAME(selVM.getVM_SHORT_MEANING());
+    	selVM.setVM_LONG_NAME(selVM.getVM_LONG_NAME());
     Vector<EVS_Bean> vmCon = selVM.getVM_CONCEPT_LIST();
     if (vmCon != null && vmCon.size() > 0)
       makeVMNameFromConcept(selVM, ConceptForm.FOR_VM_PAGE_OPEN);
@@ -644,7 +654,8 @@ public class VMAction implements Serializable
          if (s == null) s = "";
          UtilService.setValPageVector(vValidate, VMForm.ELM_LBL_NAME, s, true, 255, strInValid, "");
 
-         s = vm.getVM_DESCRIPTION();
+         //s = vm.getVM_DESCRIPTION();
+         s = vm.getVM_PREFERRED_DEFINITION();
          if (s == null) s = "";
          Vector<EVS_Bean> vmCon = vm.getVM_CONCEPT_LIST();
          if (vmCon.size() > 0)
@@ -740,11 +751,13 @@ public class VMAction implements Serializable
      VM_Bean vm = new VM_Bean();
      try
      {
-       vm.setVM_SHORT_MEANING(rs.getString("short_meaning"));
-       String vmD = rs.getString("vm_description");
-       if (vmD == null || vmD.equals(""))
-           vmD = rs.getString("PREFERRED_DEFINITION");
-       vm.setVM_DESCRIPTION(vmD);
+      // vm.setVM_SHORT_MEANING(rs.getString("short_meaning"));
+       //String vmD = rs.getString("vm_description");
+    	/* String vmD = rs.getString("vm_definition_source");
+       if (vmD == null || vmD.equals(""))*/
+         String  vmD = rs.getString("PREFERRED_DEFINITION");
+       //vm.setVM_DESCRIPTION(vmD);
+       vm.setVM_PREFERRED_DEFINITION(vmD);
        vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_NONE);
        vm.setVM_LONG_NAME(rs.getString("LONG_NAME"));
        vm.setVM_IDSEQ(rs.getString("VM_IDSEQ"));
@@ -786,7 +799,8 @@ public class VMAction implements Serializable
    public VM_Bean validateVMData(VMForm data)
    {
        VM_Bean vmBean = data.getVMBean();
-       String VMName = vmBean.getVM_SHORT_MEANING();
+       //String VMName = vmBean.getVM_SHORT_MEANING();
+         String VMName = vmBean.getVM_LONG_NAME();
        //check for vm name match
        getExistingVM(VMName, "", "", data);  //check if vm exists
        Vector<VM_Bean> nameList = data.getExistVMList();
@@ -808,7 +822,8 @@ public class VMAction implements Serializable
        else
            data.setExistVMList(new Vector<VM_Bean>());  //make it empty because found the existing
 
-       String VMDef = vmBean.getVM_DESCRIPTION();
+       //String VMDef = vmBean.getVM_DESCRIPTION();
+       String VMDef = vmBean.getVM_PREFERRED_DEFINITION();
        Vector<EVS_Bean> vCon = vmBean.getVM_CONCEPT_LIST();
        //check if default definition; added when no definition exist; ignore it if found
        if (!checkDefaultDefinition(VMDef, vCon))
@@ -847,8 +862,10 @@ public class VMAction implements Serializable
    {
        boolean match = true;
 
-       String VMDef = newVM.getVM_DESCRIPTION();
-       String nameDef = existVM.getVM_DESCRIPTION();
+  /*     String VMDef = newVM.getVM_DESCRIPTION();
+       String nameDef = existVM.getVM_DESCRIPTION();*/
+       String VMDef = newVM.getVM_PREFERRED_DEFINITION();
+       String nameDef = existVM.getVM_PREFERRED_DEFINITION();
        //match the name
        if (!newVM.getVM_LONG_NAME().equals(existVM.getVM_LONG_NAME()))
           match = false;
@@ -951,9 +968,11 @@ public class VMAction implements Serializable
         cstmt.setString(4, conArray);
         // set value meaning if action is to update
         if (sAction.equals(VMForm.CADSR_ACTION_UPD) || conArray == null)
-          cstmt.setString(7, vm.getVM_SHORT_MEANING());
+          //cstmt.setString(7, vm.getVM_SHORT_MEANING());
+        cstmt.setString(7, vm.getVM_LONG_NAME());
         //definition and change note
-        cstmt.setString(8, vm.getVM_DESCRIPTION());
+        //cstmt.setString(8, vm.getVM_DESCRIPTION());
+        cstmt.setString(8, vm.getVM_PREFERRED_DEFINITION());
         cstmt.setString(17, vm.getVM_CHANGE_NOTE());
         //remove the concepts
         if (vm.getVM_CONDR_IDSEQ().equals(" "))
@@ -964,7 +983,8 @@ public class VMAction implements Serializable
         if (sRet != null && !sRet.equals("") && !sRet.equals("API_VM_300"))
         {
           stMsg = "\\t" + sRet + " : Unable to update the Value Meaning - "
-              + vm.getVM_SHORT_MEANING() + ".";
+          + vm.getVM_LONG_NAME() + ".";
+          //    + vm.getVM_SHORT_MEANING() + ".";
           // creation
           data.setRetErrorCode(sRet);
           data.setPvvmErrorCode(sRet);
@@ -972,9 +992,10 @@ public class VMAction implements Serializable
         else
         {
           // store the vm attributes created by stored procedure in the bean
-          vm.setVM_SHORT_MEANING(cstmt.getString(7));
+          //vm.setVM_SHORT_MEANING(cstmt.getString(7));	
           vm.setVM_LONG_NAME(cstmt.getString(7));
-          vm.setVM_DESCRIPTION(cstmt.getString(8));
+          //vm.setVM_DESCRIPTION(cstmt.getString(8));
+          vm.setVM_PREFERRED_DEFINITION(cstmt.getString(8));
           vm.setVM_CHANGE_NOTE(cstmt.getString(17));
           vm.setVM_BEGIN_DATE(cstmt.getString(18));
           vm.setVM_END_DATE(cstmt.getString(19));
@@ -1064,8 +1085,10 @@ public class VMAction implements Serializable
            cstmt.setString(1, userName);
            cstmt.setString(3, VMForm.CADSR_ACTION_INS);
            cstmt.setString(5, vm.getVM_CD_IDSEQ());
-           cstmt.setString(6, vm.getVM_SHORT_MEANING());
-           cstmt.setString(7, vm.getVM_DESCRIPTION());
+           //cstmt.setString(6, vm.getVM_SHORT_MEANING());
+           cstmt.setString(6, vm.getVM_LONG_NAME());
+          // cstmt.setString(7, vm.getVM_DESCRIPTION());
+           cstmt.setString(7, vm.getVM_PREFERRED_DEFINITION());
             // Now we are ready to call the stored procedure
            cstmt.execute();
            sReturnCode = cstmt.getString(2);
@@ -1073,7 +1096,8 @@ public class VMAction implements Serializable
            if (sReturnCode != null && !sReturnCode.equals("") && !sReturnCode.equals("API_CDVMS_203"))
            {
              data.setStatusMsg(data.getStatusMsg() + "\\t " + sReturnCode + " : Unable to update Conceptual Domain and Value Meaning relationship - "
-                 + vm.getVM_CD_NAME() + " and " + vm.getVM_SHORT_MEANING() + ".");
+               //  + vm.getVM_CD_NAME() + " and " + vm.getVM_SHORT_MEANING() + ".");
+            		  + vm.getVM_CD_NAME() + " and " + vm.getVM_LONG_NAME()+ ".");
              logger.fatal(data.getStatusMsg());
              //data.setRetErrorCode(sReturnCode);
            }
@@ -1118,9 +1142,11 @@ public class VMAction implements Serializable
       EVS_Bean curEVS = curBean.getVM_CONCEPT();
       if (curEVS == null) curEVS = new EVS_Bean();
       if (curField.equals("meaning"))
-        returnValue = curBean.getVM_SHORT_MEANING();
+       // returnValue = curBean.getVM_SHORT_MEANING();
+    	  returnValue = curBean.getVM_LONG_NAME();
       else if (curField.equals("MeanDesc"))
-        returnValue = curBean.getVM_DESCRIPTION();
+       // returnValue = curBean.getVM_DESCRIPTION();
+    	  returnValue = curBean.getVM_PREFERRED_DEFINITION();
       else if (curField.equals("comment"))
         returnValue = curBean.getVM_CHANGE_NOTE();
       else if (curField.equals("ConDomain"))
@@ -1161,7 +1187,8 @@ public class VMAction implements Serializable
           for (int i=0; i<vmexist.size(); i++)
           {
             VM_Bean vm = vmexist.elementAt(i);
-            if (vm == null || vm.getVM_SHORT_MEANING() == null || vm.getVM_SHORT_MEANING().equals(""))
+          //  if (vm == null || vm.getVM_SHORT_MEANING() == null || vm.getVM_SHORT_MEANING().equals(""))
+            if (vm == null || vm.getVM_LONG_NAME() == null || vm.getVM_LONG_NAME().equals(""))
               break;
             //mark the message
             vm.setVM_COMMENT_FLAG("Name matches.");
@@ -1177,7 +1204,8 @@ public class VMAction implements Serializable
           for (int i=0; i<vmcon.size(); i++)
           {
             VM_Bean vm = vmcon.elementAt(i);
-            if (vm == null || vm.getVM_SHORT_MEANING() == null || vm.getVM_SHORT_MEANING().equals(""))
+           // if (vm == null || vm.getVM_SHORT_MEANING() == null || vm.getVM_SHORT_MEANING().equals(""))
+            if (vm == null || vm.getVM_LONG_NAME() == null || vm.getVM_LONG_NAME().equals(""))
               break;
             //mark the message
             if (!existsInList(vm, vErrMsg))
@@ -1196,7 +1224,8 @@ public class VMAction implements Serializable
           for (int i=0; i<vmdef.size(); i++)
           {
             VM_Bean vm = vmdef.elementAt(i);
-            if (vm == null || vm.getVM_SHORT_MEANING() == null || vm.getVM_SHORT_MEANING().equals(""))
+            //if (vm == null || vm.getVM_SHORT_MEANING() == null || vm.getVM_SHORT_MEANING().equals(""))
+            if (vm == null || vm.getVM_LONG_NAME() == null || vm.getVM_LONG_NAME().equals(""))
               break;
             //mark the message
             if (!existsInList(vm, vErrMsg))
@@ -1361,12 +1390,18 @@ public class VMAction implements Serializable
    */
   private String makeSelectQuery(String sInput)
   {
-      String sSQL = "SELECT vm.VM_IDSEQ, vm.LONG_NAME, vm.PREFERRED_DEFINITION, vm.description vm_description" +
+      /*String sSQL = "SELECT vm.VM_IDSEQ, vm.LONG_NAME, vm.PREFERRED_DEFINITION, vm.description vm_description" +
              ", vm.begin_date, vm.end_date, vm.condr_idseq, vm.short_meaning, vm.VERSION,vm.vm_id, vm.conte_idseq" +
              ", vm.asl_name, vm.change_note, vm.comments, vm.latest_version_ind" +
              " FROM sbr.value_meanings_view  vm" +
              " WHERE vm.short_meaning IN ('" + sInput + "')" +
-             " ORDER BY short_meaning";
+             " ORDER BY short_meaning";*/
+	  String sSQL = "SELECT vm.VM_IDSEQ, vm.LONG_NAME, vm.PREFERRED_DEFINITION" +
+      ", vm.begin_date, vm.end_date, vm.condr_idseq, vm.VERSION,vm.vm_id, vm.conte_idseq" +
+      ", vm.asl_name, vm.change_note, vm.comments, vm.latest_version_ind" +
+      " FROM sbr.value_meanings_view  vm" +
+      " WHERE vm.long_name IN ('" + sInput + "')" +
+      " ORDER BY long_name";
       return sSQL;
   }
 

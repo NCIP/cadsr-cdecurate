@@ -47,9 +47,12 @@ public class DataElementAction extends CommonACAction
                         + ", de.version " + ", de.cde_id ac_id " + ", de.preferred_definition definition";
         String sFrom = " FROM sbr.data_elements_view de, sbr.contexts_view c, sbr.value_domains_view vd"
                         + ", sbr.vd_pvs_view vp, sbr.permissible_values_view pv ";
-        String sWhere = " WHERE de.conte_idseq = c.conte_idseq AND de.vd_idseq = vd.vd_idseq "
+        /*String sWhere = " WHERE de.conte_idseq = c.conte_idseq AND de.vd_idseq = vd.vd_idseq "
                         + " AND vd.vd_idseq = vp.vd_idseq AND vp.pv_idseq = pv.pv_idseq " + " AND pv.short_meaning = '"
-                        + vmID + "'";
+                        + vmID + "'";*/
+        String sWhere = " WHERE de.conte_idseq = c.conte_idseq AND de.vd_idseq = vd.vd_idseq "
+            + " AND vd.vd_idseq = vp.vd_idseq AND vp.pv_idseq = pv.pv_idseq " + " AND pv.vm_idseq = '"
+            + vmID + "'";
         if (isStatusFilter)
             sWhere += " AND de.asl_name IN (" + formatArray(getStatusList()) + ")";
         if (sOrder.equals(""))
