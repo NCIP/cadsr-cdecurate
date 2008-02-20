@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.26 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.27 2008-02-20 19:35:06 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -511,7 +511,8 @@ public class PVServlet implements Serializable
     // System.out.println(selPVInd + " edited PV " + pvInd);
      HttpSession session = data.getRequest().getSession();
      VM_Bean selVM = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
-     if (selVM == null || selVM.getVM_SHORT_MEANING().equals(""))
+     //if (selVM == null || selVM.getVM_SHORT_MEANING().equals(""))
+     if (selVM == null || selVM.getVM_LONG_NAME().equals(""))
      {
        PV_Bean selectPV = new PV_Bean();
        if (pvInd > -1)
@@ -848,13 +849,15 @@ public class PVServlet implements Serializable
      String vmName = pvBean.getPV_SHORT_MEANING();
      if (vmName == null) vmName = "";
      //short meaning don't match from pv to vm
-     if (vpAction.equals("INS") || vmName.equals("")  || !vmName.equals(vm.getVM_SHORT_MEANING()))
+     //  if (vpAction.equals("INS") || vmName.equals("")  || !vmName.equals(vm.getVM_SHORT_MEANING()))
+     if (vpAction.equals("INS") || vmName.equals("")  || !vmName.equals(vm.getVM_LONG_NAME()))
      {
        sPVid = "";
        pvBean.setPV_PV_IDSEQ(sPVid);
        pvBean.setPV_VDPVS_IDSEQ(sPVid);
      }
-     pvBean.setPV_SHORT_MEANING(vm.getVM_SHORT_MEANING());  //need to update PV vm befor esubmit
+    // pvBean.setPV_SHORT_MEANING(vm.getVM_SHORT_MEANING());  //need to update PV vm befor esubmit
+     pvBean.setPV_SHORT_MEANING(vm.getVM_LONG_NAME());  //need to update PV vm befor esubmit
      data.setSelectPV(pvBean);
      String ret = "";
      if (sPVid == null || sPVid.equals("") || sPVid.contains("EVS"))   

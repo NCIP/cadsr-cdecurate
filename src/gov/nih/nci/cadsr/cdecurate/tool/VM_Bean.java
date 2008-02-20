@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VM_Bean.java,v 1.47 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VM_Bean.java,v 1.48 2008-02-20 19:35:06 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -96,9 +96,9 @@ public class VM_Bean extends AC_Bean
   //Attributes
   private String RETURN_CODE;
   private String VM_COMMENT_FLAG;
-  private String VM_SHORT_MEANING;
+ // private String VM_SHORT_MEANING;
   private String VM_BEGIN_DATE;
-  private String VM_DESCRIPTION;
+ // private String VM_DESCRIPTION;
   private String VM_END_DATE;
   private String VM_CREATED_BY;
   private String VM_DATE_CREATED;
@@ -113,8 +113,10 @@ public class VM_Bean extends AC_Bean
   private String ASL_NAME;
   private String VM_LONG_NAME;
   private String VM_PREF_NAME;
+  private String VM_PREFERRED_DEFINITION;
   private String VM_ID;
   private String VM_ALT_DEFINITION;
+  private String VM_DEFINITION_SOURCE;
   private String VM_ALT_NAME;
   private String VM_ORIGIN;
   private String VM_CHANGE_NOTE;
@@ -151,8 +153,10 @@ public class VM_Bean extends AC_Bean
    */
   public VM_Bean copyVMBean(VM_Bean cBean)
   {
-    this.setVM_SHORT_MEANING(cBean.getVM_SHORT_MEANING());
-    this.setVM_DESCRIPTION(cBean.getVM_DESCRIPTION());
+    //this.setVM_SHORT_MEANING(cBean.getVM_SHORT_MEANING());
+    //this.setVM_DESCRIPTION(cBean.getVM_DESCRIPTION());
+    this.setVM_PREFERRED_DEFINITION(cBean.getVM_PREFERRED_DEFINITION());
+    this.setVM_DEFINITION_SOURCE(cBean.getVM_DEFINITION_SOURCE());
     this.setVM_LONG_NAME(cBean.getVM_LONG_NAME());
     this.setVM_CONCEPT_LIST(cloneVMConVector(cBean.getVM_CONCEPT_LIST()));
     this.setVM_CONDR_IDSEQ(cBean.getVM_CONDR_IDSEQ());
@@ -197,10 +201,10 @@ public class VM_Bean extends AC_Bean
   *
   * @param s The VM_SHORT_MEANING to set
   */
-  public void setVM_SHORT_MEANING(String s)
+  /*public void setVM_SHORT_MEANING(String s)
   {
       this.VM_SHORT_MEANING = s;
-  }
+  }*/
   /**
   * The setVM_BEGIN_DATE method sets the VM_BEGIN_DATE for this bean.
   *
@@ -215,10 +219,10 @@ public class VM_Bean extends AC_Bean
   *
   * @param s The VM_DESCRIPTION to set
   */
-  public void setVM_DESCRIPTION(String s)
+/*  public void setVM_DESCRIPTION(String s)
   {
       this.VM_DESCRIPTION = s;
-  }
+  }*/
   /**
   * The setVM_COMMENT_FLAG method sets the VM_COMMENT_FLAG for this bean.
   *
@@ -325,10 +329,10 @@ public class VM_Bean extends AC_Bean
   *
   * @return String The VM_SHORT_MEANING
   */
-  public String getVM_SHORT_MEANING()
+  /*public String getVM_SHORT_MEANING()
   {
       return (VM_SHORT_MEANING == null) ? "" : this.VM_SHORT_MEANING;
-  }
+  }*/
   /**
   * The getVM_BEGIN_DATE method returns the VM_BEGIN_DATE for this bean.
   *
@@ -343,10 +347,10 @@ public class VM_Bean extends AC_Bean
   *
   * @return String The VM_DESCRIPTION
   */
-  public String getVM_DESCRIPTION()
+ /* public String getVM_DESCRIPTION()
   {
       return (this.VM_DESCRIPTION == null) ? "" : this.VM_DESCRIPTION.trim();
-  }
+  }*/
   /**
   * The getVM_COMMENT_FLAG method returns the VM_COMMENT_FLAG for this bean.
   *
@@ -847,6 +851,34 @@ public class VM_Bean extends AC_Bean
   {
     VM_SORT_COLUMN_VD = vm_sort_column_vd;
   }
+
+/**
+ * @return the vM_DEFINITION_SOURCE
+ */
+public String getVM_DEFINITION_SOURCE() {
+	return VM_DEFINITION_SOURCE;
+}
+
+/**
+ * @param vm_definition_source the vM_DEFINITION_SOURCE to set
+ */
+public void setVM_DEFINITION_SOURCE(String vm_definition_source) {
+	VM_DEFINITION_SOURCE = vm_definition_source;
+}
+
+/**
+ * @return the vM_PREFERRED_DEFINITION
+ */
+public String getVM_PREFERRED_DEFINITION() {
+return (this.VM_PREFERRED_DEFINITION == null) ? "" : this.VM_PREFERRED_DEFINITION.trim();
+}
+
+/**
+ * @param vm_preferred_definition the vM_PREFERRED_DEFINITION to set
+ */
+public void setVM_PREFERRED_DEFINITION(String vm_preferred_definition) {
+	VM_PREFERRED_DEFINITION = vm_preferred_definition;
+}
 
   
 }
