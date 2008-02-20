@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.34 2008-01-31 22:35:35 hebell Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.35 2008-02-20 19:33:43 chickerura Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -152,6 +152,9 @@
 		</copy>
 		<copy tofile="${artifacts.dir}/jboss/cdecurate-oracle-ds.xml" filtering="true">
 			<fileset file="conf/template.cdecurate-oracle-ds.xml" />
+		</copy>
+		<copy tofile="${artifacts.dir}/jboss/cadsr-oracle-ds.xml" filtering="true">
+		 <fileset file="conf/template.cadsr-oracle-ds.xml" />
 		</copy>
 		<copy tofile="${artifacts.dir}/jboss/cdecurate-log4j-appender.xml" filtering="true">
 			<fileset file="conf/template.cdecurate-log4j-appender.xml" />
