@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.26 2008-02-20 19:35:06 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.27 2008-02-27 19:19:51 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -419,7 +419,7 @@ public class PVAction implements Serializable {
 						pvBean.setPV_MEANING_DESCRIPTION(rs
 								.getString("vm_description"));*/
 						pvBean.setPV_MEANING_DESCRIPTION(rs
-								.getString("vm.PREFERRED_DEFINITION"));
+								.getString("PREFERRED_DEFINITION"));
 						pvBean.setPV_VALUE_ORIGIN(rs.getString("origin"));
 						String sDate = rs.getString("begin_date");
 						if (sDate != null && !sDate.equals(""))
@@ -604,7 +604,7 @@ public class PVAction implements Serializable {
 							s = data.getUtil().getCurationDate(s);
 						PVBean.setPV_END_DATE(s);
 						//String sdef = rs.getString("vm_description");
-						String sdef = rs.getString("vm.PREFERRED_DEFINITION");
+						String sdef = rs.getString("PREFERRED_DEFINITION");
 						if (sdef == null || sdef.equals(""))
 							sdef = rs.getString("preferred_definition");
 						PVBean.setPV_MEANING_DESCRIPTION(sdef); //from meanings table
