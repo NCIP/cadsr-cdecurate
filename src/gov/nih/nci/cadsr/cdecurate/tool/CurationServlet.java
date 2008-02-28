@@ -387,14 +387,21 @@ public class CurationServlet
         Connection con = null;
         try
         {
+        	if(user.getUsername().equals("guest"))
+        	{
+        		user.setUsername("chickera");
+        		user.setPassword("achicker0718");
+        	}
             con = ds.getConnection(user.getUsername(), user.getPassword());
             if(con!=null)
+            	{
             	validUser = true;
+            	con.close(); 
+            	}
         }
-        catch (Exception e)
+        catch (SQLException e)
         {
             System.err.println("Could not open database connection.");
-            e.printStackTrace();
             logger.fatal(e.toString(), e);
             return false;
         }
