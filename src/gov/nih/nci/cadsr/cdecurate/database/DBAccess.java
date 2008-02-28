@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.38 2007-12-11 23:30:24 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.39 2008-02-28 17:36:34 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -36,7 +36,8 @@ public class DBAccess
      */
     public static void main(String[] args)
     {
-        // Check the arguments.
+    	 _log.info("Main in DBAcess Called");
+       /* // Check the arguments.
         if (args.length != 1)
         {
             System.err.println("Missing database connection URL.");
@@ -100,8 +101,8 @@ public class DBAccess
             fout.write(title.getBytes());
 
             // Close the database connection.
-            conn.close();
-        }
+            conn.close();*/
+       /* }
         catch (SQLException ex)
         {
             ex.printStackTrace();
@@ -117,7 +118,7 @@ public class DBAccess
         catch (IOException ex)
         {
             ex.printStackTrace();
-        }
+        }*/
     }
 
     /**
