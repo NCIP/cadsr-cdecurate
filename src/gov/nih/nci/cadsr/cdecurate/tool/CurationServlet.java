@@ -387,12 +387,7 @@ public class CurationServlet
         Connection con = null;
         try
         {
-        	if(user.getUsername().equals("guest"))
-        	{
-        		user.setUsername("chickera");
-        		user.setPassword("achicker0718");
-        	}
-            con = ds.getConnection(user.getUsername(), user.getPassword());
+        	con = ds.getConnection(user.getUsername(), user.getPassword());
             if(con!=null)
             	{
             	validUser = true;
