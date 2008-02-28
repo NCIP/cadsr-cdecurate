@@ -339,13 +339,23 @@ public class CurationServlet
         UserBean userbean = new UserBean();
         userbean.setUsername(username);
         userbean.setPassword(password);
-        boolean validUser= this.authenticate(userbean);
-        if(validUser)
-        	{
-        	 userbean.setPassword("");
-        	 DataManager.setAttribute(session, "Userbean", userbean);
-        	 m_conn = connectDB();
-        	}
+        try {
+			boolean validUser= this.authenticate(userbean);
+			if(validUser)
+				{
+				 userbean.setPassword("");
+				 DataManager.setAttribute(session, "Userbean", userbean);
+				 m_conn = connectDB();
+				}
+			else{
+				 logger.error("Invalid User--->"+username);
+				 logger.error("Redirecting the user to Login Page");
+				 ForwardErrorJSP(req, res, "Incorrect Username or Password. Please re-enter.");
+			}
+		} catch (Exception e) {
+			logger.error("Error Logging in"+ e);
+		}
+        	
     }   
     
     /**
