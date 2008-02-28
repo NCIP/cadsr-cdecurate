@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/Tree.java,v 1.36 2007-09-10 17:18:22 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/Tree.java,v 1.37 2008-02-28 17:37:24 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.util;
@@ -28,9 +28,10 @@ public class Tree
      * 
      * @param args [0] the database URL
      */
-    static public void main(String[] args)
+  static public void main(String[] args)
     {
-        // Verify arguments.
+	  System.out.println("Main in Tree Called");
+     /*  // Verify arguments.
         if (args.length != 1)
         {
             System.err.println("Database URL argument missing.");
@@ -77,7 +78,7 @@ public class Tree
         catch (ToolException e)
         {
             e.printStackTrace();
-        }
+        }*/
     }
     
     /**
