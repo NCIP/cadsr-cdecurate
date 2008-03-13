@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UtilService.java,v 1.47 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UtilService.java,v 1.48 2008-03-13 18:00:42 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1024,6 +1024,8 @@ public class UtilService implements Serializable
                {
                  if (strInValid.equals(""))
                    attStatus = sValid;   //status, OK, not exceed limit
+                 else if (strInValid.startsWith("Warning"))
+                	 attStatus = sValid +" " +strInValid; //Ok, but warning
                  else
                    attStatus = strInValid;
                }
@@ -1035,7 +1037,7 @@ public class UtilService implements Serializable
              else
                attStatus = strInValid;
            }
-       }
+          }
        //fill in the bean
        ValidateBean vdBean = new ValidateBean();
        vdBean.setACAttribute(sItem);
