@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VDServlet.java,v 1.12 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VDServlet.java,v 1.13 2008-03-13 18:00:56 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -111,7 +111,7 @@ public class VDServlet implements Serializable
       //get VD's attributes from the database again
       GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_classServlet);
       if (sVDID != null && !sVDID.equals(""))
-         serAC.doVDSearch(sVDID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", "", "", vList);
+         serAC.doVDSearch(sVDID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", "", "", "",vList);
       //forward editVD page with this bean
       if (vList.size() > 0)
       {
