@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.3 2008-02-20 19:35:24 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.4 2008-03-13 18:07:56 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -7,7 +7,7 @@
 <html>
 	<head>
 		<title>
-			Permissible Value
+			Value Meaning
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
@@ -21,6 +21,10 @@
 			VMForm thisForm = (VMForm)request.getAttribute(VMForm.REQUEST_FORM_DATA); 
 			boolean conExist = thisForm.conceptExist;
 			Vector vmCon = thisForm.vmConcepts;
+			Vector cdResult = (Vector)request.getAttribute("ConDomainList");
+			 Vector vStatus = (Vector)session.getAttribute("vStatusVM");
+			 Vector vRegStatus = (Vector)session.getAttribute("vRegStatus");
+			 session.setAttribute("prevVMVersion",thisForm.getVMBean().getVM_VERSION());
 		%>
 
 		<Script Language="JavaScript">
@@ -71,9 +75,50 @@
 									<%=VMForm.ELM_LBL_NAME%>
 								</b>
 							</div>
-							<div class="readonlybox" style="word-wrap:break-word; width:90%; padding-right:1cm;">
-								<%=thisForm.longName%>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="<%=VMForm.ELM_LBL_NAME%>" value="<%=thisForm.longName%>"/>
+							<div class="ind2">
+								<b>
+									Public ID
+								</b>
 							</div>
+							<div class="readonlybox" style="width: 40%;">
+								<%=thisForm.getVMBean().getVM_ID()%>
+							</div>
+							<br>
+							<% String sVersion = thisForm.getVMBean().getVM_VERSION();
+							    System.out.println("version"+sVersion);
+    							if (sVersion == null) sVersion = "1.0"; %>
+							<div class="ind2">
+								<b>
+									Enter Version
+								</b>
+							</div>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="Version" type="text" value="<%=sVersion%>" size="5" maxlength=5>
+							&nbsp;&nbsp;&nbsp;
+							<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
+							Business Rules
+						</a><br>
+						<div class="ind2">
+								<b>
+									WorkFlow Status
+								</b>
+							</div>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select name="selStatus" size="1">
+							<option value="" selected="selected"></option>
+							<% if(vStatus!=null){  
+							   for (int i = 0; vStatus.size()>i; i++)
+     							{
+        						String sStatusName = (String)vStatus.elementAt(i); 
+        						String sStatus = thisForm.getVMBean().getASL_NAME();
+    							if (sStatus == null) sStatus = "";  
+    							%>
+								<option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%> selected <%}%>>
+								<%=sStatusName%>
+								</option>
+								<%
+        }}
+     %>
+							</select>
 							<div class="ind2">
 								<b>
 									<%=thisForm.descriptionLabel%>
@@ -191,6 +236,88 @@
 													</b>
 													<br>
 													<%=cBean.getPREFERRED_DEFINITION()%>
+												</div>
+											</td>
+										</tr>
+										<% } %>
+									</tbody>
+								</table>
+							</div>
+							<% } %>
+							<br>
+							<hr>
+							<div id="<%=VMForm.ELM_LABEL_CONDOMAIN%>" class="ind2" style="display:inline">
+								<b>
+									Conceptual Domain(s)
+								</b>
+							</div>
+							<% if (cdResult != null) 
+   										 {%>
+								<div class="table">
+								<b>
+									<%=VMForm.ELM_LBL_CONDOMAIN_SUM%>
+									:
+								</b>
+								<%=thisForm.conceptSummary%>
+							</div>
+							<div class="table">
+								<table width="95%" border="0">
+									<colgroup>
+										<col width="40%">
+										<col width="10%">
+										<col width="20%">
+										<col width="10%">
+										<col width="10%">
+									</colgroup>
+									<tbody>
+										<tr style="padding-bottom:0.05in">
+											<th>
+												<%=VMForm.ELM_LBL_CONDOMAIN_NAME%>
+											</th>
+											<th>
+												<%=VMForm.ELM_LBL_CONDOMAIN_ID%>
+											</th>
+											<th>
+												Version
+											</th>
+											<th>
+												Workflow Status
+											</th>
+											<th>
+												Context
+											</th>
+										</tr>
+										<% 
+										  for (int i = 0; i < cdResult.size(); i++)
+										  {
+       										 CD_Bean cd = (CD_Bean)cdResult.elementAt(i);
+								%>
+										<tr <% if (i%2 == 0) { %> class="rowColor" <% } %>>
+											<td>
+												<%=cd.getCD_LONG_NAME()%>
+											</td>
+											<td>
+												<%= cd.getCD_CD_ID()%>
+											</td>
+											<td>
+												<%=cd.getCD_VERSION()%>
+											</td>
+											<td>
+												<%=cd.getCD_ASL_NAME()%>
+											</td>
+											<td>
+												<%=cd.getCD_CONTEXT_NAME()%>
+											</td>
+										</tr>
+										<tr <% if (i%2 == 0) { %> class="rowColor" <% } %>>
+											<td></td>
+											<td colspan="5">
+												<div class="ind3">
+													<b>
+														Definition:
+													</b>
+													<br>
+													<%=cd.getCD_PREFERRED_DEFINITION()%>
 												</div>
 											</td>
 										</tr>

@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMForm.java,v 1.15 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMForm.java,v 1.16 2008-03-13 18:02:11 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -50,10 +50,12 @@ public class VMForm implements Serializable
   private String pvvmErrorCode;
   private Vector<String> VMValidate;
   private CurationServlet curationServlet;
-  private String searchTerm;
-  private String searchFilterCD;
-  private String searchFilterDef;
-  private String searchFilterCondr;
+  private String searchTerm=new String("");
+  private String searchFilterCD=new String("");
+  private String searchFilterDef=new String("");
+  private String searchFilterCondr=new String("");
+  private String searchFilterID=new String("");
+  private String searchFilterConName=new String("");
   private Vector<VM_Bean> VMList;
   private Vector<String> ResultList;
   private Connection dbConnection;
@@ -578,6 +580,7 @@ public class VMForm implements Serializable
   public static final String ELM_SEL_CON_ROW = "selectConceptRow";
   public static final String ELM_MENU_ACTION = "MenuAction";
   public static final String ELM_LABEL_CON = "labelCon";
+  public static final String ELM_LABEL_CONDOMAIN = "labelConDomain";
   public static final String ELM_CRF_NAME = "Form(s)/Template(s)";
   public static final String ELM_VD_NAME = "Value Domain(s)";
   public static final String ELM_DE_NAME = "Data Element(s)";
@@ -591,8 +594,11 @@ public class VMForm implements Serializable
   public static final String ELM_LBL_DESC = "Definition/Description";
   public static final String ELM_LBL_CH_NOTE = "Change Note";
   public static final String ELM_LBL_CON_NAME = "Concept Name";
+  public static final String ELM_LBL_CONDOMAIN_NAME = "Conceptual Domain Name";
   public static final String ELM_LBL_CON_ID = "Concept ID";
+  public static final String ELM_LBL_CONDOMAIN_ID = "Public ID";
   public static final String ELM_LBL_CON_SUM = "Concept Name Summary";
+  public static final String ELM_LBL_CONDOMAIN_SUM = "Conceptual Domains for Value Meaning";
   public static final String ELM_LBL_SHOW_RELEASE = "Show Released Only";
   public static final String ELM_LBL_SHOW_ALL = "Show All Items";
   
@@ -618,13 +624,14 @@ public class VMForm implements Serializable
   public static final String ACT_SUBMIT_VM = "submitVM";
   public static final String ACT_SORT_AC = "sortAC";  
   public static final String ACT_FILTER_AC = "filterAC";  
-  
+  public static final String ACT_BACK_SEARCH = "backToSearch";
 //constants for session attributes
   public static final String SESSION_SELECT_VM = "selectVM";
   public static final String SESSION_SELECT_PV = "selectPV";
   public static final String SESSION_VM_TAB_FOCUS = "VMTabFocus";  
   public static final String SESSION_PV_INDEX = "selectPVIndex";  
   public static final String SESSION_SELECT_VD = "m_VD";  
+  public static final String SESSION_RET_PAGE="retPage";
   
 //constants for request attributes
   public static final String REQUEST_FOCUS_ELEMENT = "VMFocusElement";  
@@ -638,5 +645,34 @@ public class VMForm implements Serializable
   public static final String JSP_VM_TITLE = "ValueMeaningTitle.jsp";     
   public static final String JSP_VM_USED = "ValueMeaningUsed.jsp";     
   public static final String JSP_VM_VALIDATE = "ValidateVMPage.jsp";     
+  public static final String BACK_TO_SEARCH = "SearchResultsPage.jsp";
+
+/**
+ * @return the searchFilterID
+ */
+public String getSearchFilterID() {
+	return searchFilterID;
+}
+
+/**
+ * @param searchFilterID the searchFilterID to set
+ */
+public void setSearchFilterID(String searchFilterID) {
+	this.searchFilterID = searchFilterID;
+}
+
+/**
+ * @return the searchFilterConName
+ */
+public String getSearchFilterConName() {
+	return searchFilterConName;
+}
+
+/**
+ * @param searchFilterConName the searchFilterConName to set
+ */
+public void setSearchFilterConName(String searchFilterConName) {
+	this.searchFilterConName = searchFilterConName;
+}  
   
 }

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.3 2007-12-17 19:42:44 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.4 2008-03-13 18:07:30 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -79,9 +79,9 @@
    else
    {
        sKeyword = (String)session.getAttribute("serKeyword");
-       nRecs = (String)request.getAttribute("recsFound");
        sSelAC = (String)session.getAttribute("searchAC");  //done now in CDEHomePage
-       vSelAttr = (Vector)session.getAttribute("selectedAttr");
+       	nRecs = (String)request.getAttribute("recsFound");
+         vSelAttr = (Vector)session.getAttribute("selectedAttr");
        vCheckList = (Vector)session.getAttribute("CheckList");
    }
    // if sLabelKeyword has word "associated" then a getAssociated search was just done
@@ -154,10 +154,13 @@
  String pushBoolean = "false";
  String sSelectAll = "false";
 // System.out.println(sSelectAll + " checksize " + vCheckList.size());
+if(!sSelAC.equals("ValueMeaning"))
+{
  if(vCheckList != null && vCheckList.size()>0)
   sSelectAll = "true";
  else
   sSelectAll = "false";
+ } 
 %>
 
 		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
@@ -542,7 +545,7 @@
     if (sMAction.equals("searchForCreate")) {
         buttons[0] = "<!-- searchForCreate -->\n"
             + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Use Selection\" onClick=\"ShowUseSelection();\" disabled style=\"width: 97\">\n&nbsp;\n";
-    } else if ((sMAction.equals("Edit Selection") || sMAction.equals("nothing")) && ((sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")))) {
+    } else if (((sMAction.equals("Edit Selection")) || (sMAction.equals("nothing"))) && ((sSelAC.equals("Value Meaning"))||(sSelAC.equals("Data Element")) || (sSelAC.equals("Data Element Concept")) || (sSelAC.equals("Value Domain")))){
         buttons[1] = "<!-- nothing -->\n"
             + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Edit Selection\" onClick=\"ShowEditSelection();\" disabled "
 			+ "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_Editing'); return false\" style=\"width: 97\">\n&nbsp;\n";
@@ -550,14 +553,14 @@
         buttons[2] = "<!-- Create New from Existing -->\n"
             + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Edit Selection\" onClick=\"ShowEditSelection();\" disabled "
 			+ "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_Editing'); return false\" style=\"width: 97\">\n&nbsp;\n";
-    } else if (!sMAction.equals("nothing") && !sSelAC.equals("Values/Meanings") && !sSelAC.equals("Questions") && !sSelAC.equals("Class Scheme Items") && !sSelAC.equals("Conceptual Domain") && !sSelAC.equals("ConceptClass")) {
+    } else if (!sMAction.equals("nothing") && !sSelAC.equals("Questions") && !sSelAC.equals("Class Scheme Items") && !sSelAC.equals("Conceptual Domain") && !sSelAC.equals("ConceptClass")) {
         buttons[3] = "<!-- other -->\n"
             + "<input type=\"button\" name=\"editSelectedBtn\" value=\"" + sMAction + "\" onClick=\"ShowEditSelection();\" disabled style=\"width: 165\">\n&nbsp;\n";
     } else if (sMAction.equals("Complete Selected DE") && sSelAC.equals("Questions")) {
         buttons[4] = "<!-- Complete Selected DE -->\n"
             + "<input type=\"button\" name=\"editSelectedBtn\" value=\"" + sMAction + "\" onClick=\"ShowEditSelection();\" disabled "
 			+ "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_completeSelectedDE'); return false\" style=\"width: 165\">\n&nbsp;\n";
-    } else if (sButtonPressed.equals("Search") && (sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain"))) {
+    } else if (sButtonPressed.equals("Search") && (sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")||sSelAC.equals("Value Meaning"))) {
         buttons[5] = "<!-- Search -->\n"
             + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Edit Selection\" onClick=\"ShowEditSelection();\" disabled style=\"width: 97\">\n&nbsp;\n";
     }
@@ -589,7 +592,7 @@
     if (sMAction.equals("searchForCreate")) {
         buttons[11] = "<!-- makes close button only if page opened from createDE or VD pages   -->\n"
             + "<input type=\"button\" name=\"closeBtn\" value=\"Close Window\" onClick=\"javascript:closeWindow();\" style=\"width: 97\">\n&nbsp;\n";
-    } else {
+    } else{
         buttons[12] = "<!-- makes showSelection, designate, clear buttons otherwise   -->\n"
             + "<input type=\"button\" name=\"showSelectedBtn\" value=\"Show Selected Rows\" onClick=\"ShowSelectedRows(true);\" disabled "
             + "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_showSelectedBtn'); return false\" style=\"width: 135\">\n&nbsp;\n";
@@ -1302,6 +1305,7 @@
 							</a>
 						</td>
 					</tr>
+					<%if (!sSelAC.equals("Value Meaning")){ %>
 					<tr>
 						<td class="menu" id="assDEC">
 							<a href="javascript:getAssocDECs();" onmouseover="changecolor('assDEC',oncolor)" onmouseout="changecolor('assDEC',offcolor);closeall()">
@@ -1309,6 +1313,7 @@
 							</a>
 						</td>
 					</tr>
+					<%} %>
 					<tr>
 						<td class="menu" id="assVD">
 							<a href="javascript:getAssocVDs();" onmouseover="changecolor('assVD',oncolor)" onmouseout="changecolor('assVD',offcolor);closeall()">
