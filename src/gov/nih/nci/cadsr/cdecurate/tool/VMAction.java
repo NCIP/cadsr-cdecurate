@@ -1,9 +1,14 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.30 2008-02-20 19:35:06 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.31 2008-03-13 18:01:35 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
+import gov.nih.nci.cadsr.cdecurate.database.Alternates;
+import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.cdecurate.util.ToolException;
+
 import java.io.Serializable;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -11,7 +16,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+
+import javax.servlet.http.HttpServletRequest;
+
 import oracle.jdbc.driver.OracleTypes;
+
 import org.apache.log4j.Logger;
 /**
  * @author shegde
@@ -48,7 +57,7 @@ public class VMAction implements Serializable
     try
     {
       //do not continue search if no search filter
-      if (data.getSearchTerm().equals("") && data.getSearchFilterCD().equals("") && data.getSearchFilterCondr().equals("") && data.getSearchFilterDef().equals(""))
+      if (data.getSearchTerm().equals("") && data.getSearchFilterConName().equals("") && data.getSearchFilterID().equals("") && data.getSearchFilterCD().equals("") && data.getSearchFilterCondr().equals("") && data.getSearchFilterDef().equals(""))
         return;
 
       Vector<VM_Bean> vmList = data.getVMList();
@@ -60,7 +69,8 @@ public class VMAction implements Serializable
       // Create a Callable Statement object.
       if (data.getCurationServlet().getConn() != null)
       {
-        cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?)}");
+      //  cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?,?,?)}");
+    	  cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?,?,?,?)}");
         // Now tie the placeholders for out parameters.
         cstmt.registerOutParameter(5, OracleTypes.CURSOR);
         // Now tie the placeholders for In parameters.
@@ -68,7 +78,9 @@ public class VMAction implements Serializable
         cstmt.setString(2, data.getSearchFilterCD());
         cstmt.setString(3, data.getSearchFilterDef());
         cstmt.setString(4, data.getSearchFilterCondr());
-
+        cstmt.setString(6, data.getSearchFilterConName());
+        cstmt.setString(7, data.getSearchFilterCondr());
+        cstmt.setString(8, data.getSearchFilterID());
          // Now we are ready to call the stored procedure
         cstmt.execute();
         // store the output in the resultset
@@ -117,10 +129,12 @@ public class VMAction implements Serializable
    * @param data VMForm object
    *
    */
-  public void getVMResult(VMForm data)
+  public void getVMResult(VMForm data,HttpServletRequest httpReq,Vector<String> vResult, GetACSearch getac)
   {
     try
     {
+    	String menuAction = (String) httpReq.getSession().getAttribute(Session_Data.SESSION_MENU_ACTION);	
+      Vector vVM = (Vector) httpReq.getSession().getAttribute("vACSearch");
       //get number of records
       Vector vRSel = data.getVMList();  // (Vector)session.getAttribute("vACSearch");
       if (vRSel == null) vRSel = new Vector();
@@ -130,8 +144,8 @@ public class VMAction implements Serializable
       String sRecs = "";
       if(iRecs != null)
         sRecs = iRecs.toString();
-      data.setNumRecFound(sRecs);  //req.setAttribute("creRecsFound", recs2);
-
+      data.setNumRecFound(sRecs);  
+            
       //make keyWordLabel label request session
       String sKeyword = "";
       sKeyword = data.getSearchTerm();  // (String)session.getAttribute("creKeyword");
@@ -140,13 +154,25 @@ public class VMAction implements Serializable
 
       //loop through the bean collection to add it to the result vector
       Vector<String> vSelAttr = data.getSelAttrList();  //(Vector)session.getAttribute("creSelectedAttr");
-      Vector<String> vResult = new Vector<String>();
+     // Vector<String> vResult = new Vector<String>();
+      
+      Vector<String> vSearchID = new Vector<String>();
+      Vector<String> vSearchName = new Vector<String>();
+      Vector<String> vSearchLongName = new Vector<String>();
+      Vector<String> vSearchASL = new Vector<String>();
+      Vector<String> vSearchDefinition = new Vector<String>();
+      Vector<String> vUsedContext = new Vector<String>();
       for (int i=0; i<(vRSel.size()); i++)
       {
         VM_Bean VMBean = new VM_Bean();
         VMBean = (VM_Bean)vRSel.elementAt(i);
         Vector<EVS_Bean> vcon = VMBean.getVM_CONCEPT_LIST();
         String conID = "", defsrc = "", vocab = "";
+        vSearchID.addElement(VMBean.getVM_IDSEQ());
+        vSearchName.addElement(VMBean.getVM_LONG_NAME());
+        vSearchLongName.addElement(VMBean.getVM_LONG_NAME());
+        vSearchDefinition.addElement(VMBean.getVM_PREFERRED_DEFINITION());
+        vUsedContext.addElement(VMBean.getContextName());
         for (int j = 0; j<vcon.size(); j++)
         {
           EVS_Bean con = (EVS_Bean)vcon.elementAt(j);
@@ -162,18 +188,32 @@ public class VMAction implements Serializable
         if (vmConcept == null) vmConcept = new EVS_Bean();
        // if (vSelAttr.contains("Value Meaning")) vResult.addElement(VMBean.getVM_SHORT_MEANING());
        // if (vSelAttr.contains("Meaning Description")) vResult.addElement(VMBean.getVM_DESCRIPTION());
-        if (vSelAttr.contains("Value Meaning")) vResult.addElement(VMBean.getVM_LONG_NAME());
-        if (vSelAttr.contains("Meaning Description")) vResult.addElement(VMBean.getVM_PREFERRED_DEFINITION());
-        if (vSelAttr.contains("Conceptual Domain")) vResult.addElement(VMBean.getVM_CD_NAME());
+        if (vSelAttr.contains("Long Name")) vResult.addElement(VMBean.getVM_LONG_NAME());
+        if (vSelAttr.contains("Public ID")) vResult.addElement( VMBean.getVM_ID()); 
+        if (vSelAttr.contains("Version"))  vResult.addElement(VMBean.getVM_VERSION()); 
         if (vSelAttr.contains("EVS Identifier")) vResult.addElement(conID);  //vmConcept.getCONCEPT_IDENTIFIER());
+        if (vSelAttr.contains("Workflow Status"))  vResult.addElement(VMBean.getASL_NAME()); 
+        // if (vSelAttr.contains("Conceptual Domain")) vResult.addElement(VMBean.getVM_CD_NAME());
+        if (vSelAttr.contains("Conceptual Domain")) 
+        	vResult =addMultiRecordConDomain(VMBean.getVM_CD_NAME(), VMBean.getVM_LONG_NAME(), vResult);
+        if (vSelAttr.contains("Definition")) vResult.addElement(VMBean.getVM_PREFERRED_DEFINITION());
         if (vSelAttr.contains("Definition Source")) vResult.addElement(defsrc);  //vmConcept.getEVS_DEF_SOURCE());
         if (vSelAttr.contains("Vocabulary")) vResult.addElement(vocab);  //vmConcept.getEVS_DATABASE());
         if (vSelAttr.contains("Comments")) vResult.addElement(VMBean.getVM_CHANGE_NOTE());
         if (vSelAttr.contains("Effective Begin Date")) vResult.addElement(VMBean.getVM_BEGIN_DATE());
         if (vSelAttr.contains("Effective End Date")) vResult.addElement(VMBean.getVM_END_DATE());
       }
+      DataManager.setAttribute(httpReq.getSession(), "SearchID", vSearchID);
+      DataManager.setAttribute(httpReq.getSession(), "SearchName", vSearchName);
+      DataManager.setAttribute(httpReq.getSession(), "SearchLongName", vSearchLongName);
+      DataManager.setAttribute(httpReq.getSession(), "SearchASL", vSearchASL);
+      DataManager.setAttribute(httpReq.getSession(), "SearchDefinitionAC", vSearchDefinition);
+      DataManager.setAttribute(httpReq.getSession(), "SearchUsedContext", vUsedContext);
       data.setResultList(vResult);
-    }
+      if (!menuAction.equals("searchForCreate"))
+    	  getac.stackSearchComponents("ValueMeaning", vVM, vRSel, vSearchID, vSearchName, vResult, vSearchASL,
+                          vSearchLongName);
+     }
     catch(Exception e)
     {
       //System.err.println("ERROR in VMAction-getVMResult: " + e);
@@ -182,7 +222,102 @@ public class VMAction implements Serializable
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
     }
   }
+  /**
+   * To get final result vector of selected attributes/rows to display for Permissible Values component,
+   * called from getACKeywordResult, getACSortedResult and getACShowResult methods.
+   * gets the selected attributes from session vector 'selectedAttr'.
+   * loops through the VMBean vector 'vACSearch' and adds the selected fields to result vector.
+   * @param data VMForm object
+   *
+   */
+  public void getVMResult(VMForm data,HttpServletRequest httpReq)
+  {
+    try
+    {
+      //get number of records
+      Vector vRSel = data.getVMList();  // (Vector)session.getAttribute("vACSearch");
+      if (vRSel == null) vRSel = new Vector();
+      Integer iRecs = new Integer(0);
+      if(vRSel.size()>0)
+        iRecs = new Integer(vRSel.size());
+      String sRecs = "";
+      if(iRecs != null)
+        sRecs = iRecs.toString();
+      data.setNumRecFound(sRecs);  
+            
+      //make keyWordLabel label request session
+      String sKeyword = "";
+      sKeyword = data.getSearchTerm();  // (String)session.getAttribute("creKeyword");
+      if (sKeyword == null) sKeyword = "";
+      data.setResultLabel("Value Meaning : " + sKeyword);  //req.setAttribute("labelKeyword", "Value Meaning : " + sKeyword);   //make the label
 
+      //loop through the bean collection to add it to the result vector
+      Vector<String> vSelAttr = data.getSelAttrList();  //(Vector)session.getAttribute("creSelectedAttr");
+      Vector<String> vResult = new Vector<String>();
+      
+      Vector<String> vSearchID = new Vector<String>();
+      Vector<String> vSearchName = new Vector<String>();
+      Vector<String> vSearchLongName = new Vector<String>();
+      Vector<String> vSearchASL = new Vector<String>();
+      Vector<String> vSearchDefinition = new Vector<String>();
+      Vector<String> vUsedContext = new Vector<String>();
+      for (int i=0; i<(vRSel.size()); i++)
+      {
+        VM_Bean VMBean = new VM_Bean();
+        VMBean = (VM_Bean)vRSel.elementAt(i);
+        Vector<EVS_Bean> vcon = VMBean.getVM_CONCEPT_LIST();
+        String conID = "", defsrc = "", vocab = "";
+        vSearchID.addElement(VMBean.getVM_IDSEQ());
+        vSearchName.addElement(VMBean.getVM_LONG_NAME());
+        vSearchLongName.addElement(VMBean.getVM_LONG_NAME());
+        vSearchDefinition.addElement(VMBean.getVM_PREFERRED_DEFINITION());
+        vUsedContext.addElement(VMBean.getContextName());
+        for (int j = 0; j<vcon.size(); j++)
+        {
+          EVS_Bean con = (EVS_Bean)vcon.elementAt(j);
+          if (!conID.equals("")) conID += ": ";
+          conID += con.getCONCEPT_IDENTIFIER();
+          if (!defsrc.equals("")) defsrc += ": ";
+          defsrc += con.getEVS_DEF_SOURCE();
+          if (!vocab.equals("")) vocab += ": ";
+          vocab += con.getEVS_DATABASE();
+        }
+        //they have to be in the order of attribute multi select list
+        EVS_Bean vmConcept = VMBean.getVM_CONCEPT();
+        if (vmConcept == null) vmConcept = new EVS_Bean();
+       // if (vSelAttr.contains("Value Meaning")) vResult.addElement(VMBean.getVM_SHORT_MEANING());
+       // if (vSelAttr.contains("Meaning Description")) vResult.addElement(VMBean.getVM_DESCRIPTION());
+        if (vSelAttr.contains("Long Name")) vResult.addElement(VMBean.getVM_LONG_NAME());
+        if (vSelAttr.contains("Public ID")) vResult.addElement( VMBean.getVM_ID()); 
+        if (vSelAttr.contains("Version"))  vResult.addElement(VMBean.getVM_VERSION()); 
+        if (vSelAttr.contains("EVS Identifier")) vResult.addElement(conID);  //vmConcept.getCONCEPT_IDENTIFIER());
+        if (vSelAttr.contains("Workflow Status"))  vResult.addElement(VMBean.getASL_NAME()); 
+        // if (vSelAttr.contains("Conceptual Domain")) vResult.addElement(VMBean.getVM_CD_NAME());
+        if (vSelAttr.contains("Conceptual Domain")) 
+        	vResult =addMultiRecordConDomain(VMBean.getVM_CD_NAME(), VMBean.getVM_LONG_NAME(), vResult);
+        if (vSelAttr.contains("Definition")) vResult.addElement(VMBean.getVM_PREFERRED_DEFINITION());
+        if (vSelAttr.contains("Definition Source")) vResult.addElement(defsrc);  //vmConcept.getEVS_DEF_SOURCE());
+        if (vSelAttr.contains("Vocabulary")) vResult.addElement(vocab);  //vmConcept.getEVS_DATABASE());
+        if (vSelAttr.contains("Comments")) vResult.addElement(VMBean.getVM_CHANGE_NOTE());
+        if (vSelAttr.contains("Effective Begin Date")) vResult.addElement(VMBean.getVM_BEGIN_DATE());
+        if (vSelAttr.contains("Effective End Date")) vResult.addElement(VMBean.getVM_END_DATE());
+      }
+      DataManager.setAttribute(httpReq.getSession(), "SearchID", vSearchID);
+      DataManager.setAttribute(httpReq.getSession(), "SearchName", vSearchName);
+      DataManager.setAttribute(httpReq.getSession(), "SearchLongName", vSearchLongName);
+      DataManager.setAttribute(httpReq.getSession(), "SearchASL", vSearchASL);
+      DataManager.setAttribute(httpReq.getSession(), "SearchDefinitionAC", vSearchDefinition);
+      DataManager.setAttribute(httpReq.getSession(), "SearchUsedContext", vUsedContext);
+      data.setResultList(vResult);
+      }
+    catch(Exception e)
+    {
+      //System.err.println("ERROR in VMAction-getVMResult: " + e);
+      logger.fatal("ERROR in VMAction-getVMResult : " + e.toString(), e);
+      data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to search VM." + e.toString());
+      data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
+    }
+  }
   /**
    * To get the sorted vector for the selected field in the VM component, called from getACSortedResult.
    * gets the 'sortType' from request and 'vSelRows' vector from session.
@@ -632,6 +767,32 @@ public class VMAction implements Serializable
 
     return selVM;
   }
+  
+  /**
+ * @param selVM
+ * @return
+ */
+public String checkVMNameExists(VM_Bean selVM,VMForm data)
+  {
+	  	String message="";
+	    VMForm vmForm = new VMForm();
+	    vmForm.setCurationServlet(data.getCurationServlet());
+	    vmForm.setVMBean(selVM);
+	    vmForm.setSearchTerm(selVM.getVM_LONG_NAME());
+	    this.searchVMValues(vmForm);
+	    if(vmForm.getVMList().size()>0)
+	    {
+	    	for(int i=0;i<vmForm.getVMList().size();i++)
+	    	{
+	    		VM_Bean vm =(VM_Bean)vmForm.getVMList().get(i);
+	    		if(vm.getIDSEQ()!=selVM.getIDSEQ()){
+	    			message = "Warning: There exists a VM with the same name";
+	    		}
+	    	}
+	    }
+	    return message;
+	    
+  }
 
   /**
    * To check validity of the data for Value Meanings component before submission.
@@ -643,17 +804,20 @@ public class VMAction implements Serializable
    * @return ValidateBean
    *
    */
-   public Vector<ValidateBean> doValidateVM(VM_Bean vm)
+   public Vector<ValidateBean> doValidateVM(VM_Bean vm,VMForm data)
    {
      Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
+       
      try
      {
-         String s;
+    	 String message = checkVMNameExists(vm,data);
+    	 String s;
          String strInValid = "";
          s = vm.getVM_LONG_NAME();
          if (s == null) s = "";
          UtilService.setValPageVector(vValidate, VMForm.ELM_LBL_NAME, s, true, 255, strInValid, "");
-
+         if(s!=null && !message.equals(""))
+           UtilService.setValPageVector(vValidate, VMForm.ELM_LBL_NAME, s, false, 255, strInValid + message, "");	 
          //s = vm.getVM_DESCRIPTION();
          s = vm.getVM_PREFERRED_DEFINITION();
          if (s == null) s = "";
@@ -691,6 +855,7 @@ public class VMAction implements Serializable
            }
          }
          UtilService.setValPageVector(vValidate, VMForm.ELM_LBL_CON_NAME + " : " + VMForm.ELM_LBL_CON_ID, s, false, -1, "", "");
+        
      }
      catch (Exception e)
      {
@@ -780,11 +945,19 @@ public class VMAction implements Serializable
          ConceptAction cact = new ConceptAction();
          Vector<EVS_Bean> conList = cact.getAC_Concepts(sCondr, cdata);
          vm.setVM_CONCEPT_LIST(conList);
+         DBAccess db =new DBAccess(conn);
+         String idSeq = rs.getString("VM_IDSEQ");
+         Alternates[] altList = db.getAlternates(new String[] {idSeq}, true, true);
+         vm.setVM_ALT_LIST(altList);
        }
      }
      catch (SQLException e)
      {
        logger.fatal("ERROR - -doSetVMAttributes for close : " + e.toString(), e);
+     }
+     catch (ToolException e1)
+     {
+       logger.fatal("ERROR - -doSetVMAttributes for close : " + e1.toString(), e1);
      }
      return vm;
    }
@@ -967,12 +1140,14 @@ public class VMAction implements Serializable
         cstmt.setString(3, sAction);
         cstmt.setString(4, conArray);
         // set value meaning if action is to update
-        if (sAction.equals(VMForm.CADSR_ACTION_UPD) || conArray == null)
+        //if (sAction.equals(VMForm.CADSR_ACTION_UPD) || conArray == null)
           //cstmt.setString(7, vm.getVM_SHORT_MEANING());
         cstmt.setString(7, vm.getVM_LONG_NAME());
         //definition and change note
         //cstmt.setString(8, vm.getVM_DESCRIPTION());
         cstmt.setString(8, vm.getVM_PREFERRED_DEFINITION());
+        cstmt.setString(10, vm.getASL_NAME());
+        cstmt.setString(11, vm.getVM_VERSION());
         cstmt.setString(17, vm.getVM_CHANGE_NOTE());
         //remove the concepts
         if (vm.getVM_CONDR_IDSEQ().equals(" "))
@@ -1451,6 +1626,35 @@ public class VMAction implements Serializable
           }
       }
       return vVMs;
+  }
+  /**
+   * adds more hyperlink for concept attributes in the search results, which would open new window to get concepts of
+   * AC
+   * 
+   * @param cdName
+   *            String conceptual domain name
+   * @param acName
+   *            String ac name
+   * @param vRes
+   *            display result vector
+   * @return vector of modified display result vector
+   * @throws java.lang.Exception
+   */
+  public Vector addMultiRecordConDomain(String cdName, String acName, Vector<String> vRes) throws Exception
+  {
+      String hyperText = "";
+      if (cdName != null && !cdName.equals(""))
+      {
+          UtilService util = new UtilService();
+          acName = util.parsedStringSingleQuote(acName);
+          acName = util.parsedStringDoubleQuoteJSP(acName);
+          hyperText = "<a href=" + "\"" + "javascript:openConDomainWindow('" + acName + "')" + "\""
+                          + "><br><b>More_>></b></a>";
+          vRes.addElement(cdName + "  " + hyperText);
+      }
+      else
+          vRes.addElement("");
+      return vRes;
   }
 
 }//end of the class

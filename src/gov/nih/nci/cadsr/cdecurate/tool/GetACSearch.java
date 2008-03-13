@@ -1,19 +1,31 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.54 2008-01-23 22:50:01 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.55 2008-03-13 17:59:06 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.database.Alternates;
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import java.io.Serializable;
-import java.util.*;
-import java.sql.*;
-import oracle.jdbc.driver.*;
-import javax.servlet.http.*;
-import java.text.*;
-import org.apache.log4j.*;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Hashtable;
+import java.util.Stack;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import oracle.jdbc.driver.OracleTypes;
+
+import org.apache.log4j.Logger;
 
 /**
  * GetACSearch class is for search action of the tool for all components.
@@ -241,7 +253,7 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",
-                                        "", sMinID, "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
+                                        "", sMinID, "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
                     }
                     else if (sSearchAC.equals("DataElementConcept"))
                     {
@@ -253,12 +265,17 @@ public class GetACSearch implements Serializable
                     {
                         doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
                                         sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID, "", "", dVersion,
-                                        sCDid, "", "", "", "", "", sDataType, vAC);
+                                        sCDid, "", "", "", "", "", "", sDataType, vAC);
                     }
                     else if (sSearchAC.equals("ConceptualDomain"))
                     {
                         doCDSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sModifiedFrom,
                                         sModifiedTo, sCreator, sModifier, sMinID, "", dVersion, "", "", "", vAC);
+                    }
+                    else if (sSearchAC.equals("ValueMeaning"))
+                    {
+                        VMServlet vmSer = new VMServlet(req, res, m_servlet);
+                        vmSer.readDataForSearch();
                     }
                     else if (sSearchAC.equals("ObjectClass"))
                         do_caDSRSearch("", sContext, sStatus, sMinID, vAC, "OC", "", "");
@@ -281,7 +298,7 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",
-                                        "", "", "", "", "", sProtoID, sCRFName, "", "", "", "", "", "", "", sDerType,
+                                        "", "", "", "", "", sProtoID, sCRFName, "", "", "", "", "", "", "", "", sDerType,
                                         vAC);
                     }
                     // doDE_CRFSearch(sProtoID, sKeyword, sContext, sVersion, sStatus, sRegStatus,
@@ -302,7 +319,7 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier,
-                                        sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "",
+                                        sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "", "",
                                         sDerType, vAC);
                     }
                 }
@@ -318,7 +335,7 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier,
-                                        sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "",
+                                        sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "", "",
                                         sDerType, vAC);
                     }
                 }
@@ -331,7 +348,7 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",
-                                        "", "", sHistID, "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
+                                        "", "", sHistID, "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
                     }
                 }
                 // search in by permissible value
@@ -342,13 +359,13 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",
-                                        "", "", "", permValue, "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
+                                        "", "", "", permValue, "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
                     }
                     else if (sSearchAC.equals("ValueDomain"))
                     {
                         doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
                                         sModifiedFrom, sModifiedTo, sCreator, sModifier, "", permValue, "", dVersion,
-                                        sCDid, "", "", "", "", "", sDataType, vAC);
+                                        sCDid, "", "", "", "", "", "", sDataType, vAC);
                     }
                 }
                 // search in by origin
@@ -359,7 +376,7 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",
-                                        "", "", "", "", sOrigin, "", "", "", "", "", "", "", "", "", sDerType, vAC);
+                                        "", "", "", "", sOrigin, "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
                     }
                     else if (sSearchAC.equals("DataElementConcept"))
                     {
@@ -371,7 +388,7 @@ public class GetACSearch implements Serializable
                     {
                         doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
                                         sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", sOrigin, dVersion,
-                                        sCDid, "", "", "", "", "", sDataType, vAC);
+                                        sCDid, "", "", "", "", "", "", sDataType, vAC);
                     }
                     else if (sSearchAC.equals("ConceptualDomain"))
                     {
@@ -387,7 +404,7 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",
-                                        "", "", "", "", "", "", "", "", "", "", "", "", "", sCon, sDerType, vAC);
+                                        "", "", "", "", "", "", "", "", "", "", "", "", "", "", sCon, sDerType, vAC);
                     }
                     else if (sSearchAC.equals("DataElementConcept"))
                     {
@@ -399,7 +416,7 @@ public class GetACSearch implements Serializable
                     {
                         doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
                                         sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", dVersion, sCDid,
-                                        "", "", "", "", sCon, sDataType, vAC);
+                                        "", "", "", "", "", sCon, sDataType, vAC);
                     }
                     else if (sSearchAC.equals("ConceptualDomain"))
                     {
@@ -410,6 +427,11 @@ public class GetACSearch implements Serializable
                     {
                         PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
                         vAC = pvser.searchPVAttributes("", sCDid, sCon, "");
+                    }
+                    else if (sSearchAC.equals("ValueMeaning"))
+                    {
+                        VMServlet vmSer = new VMServlet(req, res, m_servlet);
+                        vmSer.readDataForSearch();
                     }
                     else if (sSearchAC.equals("ObjectClass"))
                         do_caDSRSearch("", sContext, sStatus, "", vAC, "OC", sCon, "");
@@ -427,7 +449,7 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",
-                                        "", "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
+                                        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
                     }
                     else if (sSearchAC.equals("DataElementConcept"))
                     {
@@ -439,7 +461,7 @@ public class GetACSearch implements Serializable
                     {
                         doVDSearch("", sKeyword, "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
                                         sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", dVersion, sCDid,
-                                        "", "", "", "", "", sDataType, vAC);
+                                        "", "", "", "", "", "", sDataType, vAC);
                     }
                     else if (sSearchAC.equals("PermissibleValue"))
                     {
@@ -459,6 +481,12 @@ public class GetACSearch implements Serializable
                         doCDSearch("", sKeyword, "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo,
                                         sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", dVersion, "", "", "",
                                         vAC);
+                    }
+                    else if (sSearchAC.equals("ValueMeaning"))
+                    {
+                        VMServlet vmSer = new VMServlet(req, res, m_servlet);
+                        vmSer.readDataForSearch();
+                        vAC = (Vector)session.getAttribute("vACSearch");
                     }
                     else if (sSearchAC.equals("ClassSchemeItems"))
                         doCSISearch(sKeyword, sContext, sSchemes, vAC);
@@ -511,7 +539,7 @@ public class GetACSearch implements Serializable
                     DataManager.setAttribute(session, "vAttributeListStack", vAttributeListStack);
                     EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
                     // call method to get the final result vector
-                    Vector vResult = new Vector();
+                    Vector vResult = new Vector();                             	
                     if (sSearchAC.equals("DataElement"))
                         getDEResult(req, res, vResult, "");
                     else if (sSearchAC.equals("DataElementConcept"))
@@ -698,7 +726,7 @@ public class GetACSearch implements Serializable
                         || sSearchAC.equals("ValueDomain") || sSearchAC.equals("ConceptualDomain")
                         || sSearchAC.equals("ObjectClass") || sSearchAC.equals("Property")
                         || sSearchAC.equals("ConceptClass") || sSearchAC.equals("ClassSchemeItems")
-                        || sSearchAC.equals("PermissibleValue"))
+                        || sSearchAC.equals("PermissibleValue")|| sSearchAC.equals("ValueMeaning"))
         {
             try
             {
@@ -787,6 +815,8 @@ public class GetACSearch implements Serializable
             HttpSession session = req.getSession();
             String sSearchAC = "";
             String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
+            // do the keyword search for the selected component
+            String sKeyword = (String) req.getParameter("keyword");
             // String sComponent = "";
             if (menuAction.equals("searchForCreate"))
                 sSearchAC = (String) session.getAttribute("creSearchAC");
@@ -837,6 +867,22 @@ public class GetACSearch implements Serializable
                 getCDResult(req, res, vResult, "");
             else if (sSearchAC.equals("ClassSchemeItems"))
                 getCSIResult(req, res, vResult, "");
+            else if (sSearchAC.equals("ValueMeaning"))
+            {
+            	 VMServlet vmSer = new VMServlet(req, res, m_servlet);
+            	 VMForm vmform = vmSer.getVmData();
+            	 vmform.setVMList((Vector)session.getAttribute("vSelRows"));
+            	 vmform.setSearchTerm(sKeyword);
+            	 if ((actType.equals("Attribute")&& !menuAction.equals("searchForCreate"))||(actType.equals("")&& !menuAction.equals("searchForCreate")))
+            	    	//store the attributes to display in the vmData
+            		 vmform.setSelAttrList((Vector)session.getAttribute("selectedAttr"));
+            	    else
+            	    	//store the attributes to display in the vmData
+            	    	vmform.setSelAttrList((Vector)session.getAttribute("creSelectedAttr"));
+            	 DataManager.setAttribute(session, "serKeyword", sKeyword);
+            	 VMAction vmaction = new VMAction();
+            	 vmaction.getVMResult(vmform,req,vResult,this);
+            }
             else if (sSearchAC.equals("ObjectClass") || sSearchAC.equals("Property")
                             || sSearchAC.equals("ConceptClass"))
                 evs.get_Result(req, res, vResult, "");
@@ -1229,7 +1275,7 @@ public class GetACSearch implements Serializable
                     String sVersion, double dVersion, String ASLName, String regStatus, String sCreatedFrom,
                     String sCreatedTo, String sModifiedFrom, String sModifiedTo, String sCreator, String sModifier,
                     String DocText, String docTypes, String CDE_ID, String histID, String permValue, String sOrigin,
-                    String sProtoId, String crfName, String pvIDseq, String vdIDseq, String decIDseq, String cdIDseq,
+                    String sProtoId, String crfName, String pvIDseq, String vdIDseq, String vmIDSeq, String decIDseq, String cdIDseq,
                     String cscsiIDseq, String conIDseq, String conName, String derType, Vector vList)
     {
         // logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "start desearch call", startDate, startDate));
@@ -1261,7 +1307,7 @@ public class GetACSearch implements Serializable
             else
             {
                 cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_DE"
-                                + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+                                + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
                 // Now tie the placeholders for out parameters.
                 cstmt.registerOutParameter(7, OracleTypes.CURSOR);
                 // Now tie the placeholders for In parameters.
@@ -1296,8 +1342,9 @@ public class GetACSearch implements Serializable
                 cstmt.setString(30, derType);
                 cstmt.setString(31, conName);
                 cstmt.setString(32, conIDseq);
+                cstmt.setString(33, vmIDSeq);
                 // capture the duration
-                // logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "begin executing search", startDate,
+                 logger.info(cstmt.toString());
                 // new java.util.Date()));
                 // Now we are ready to call the stored procedure
                 cstmt.execute();
@@ -1783,7 +1830,7 @@ public class GetACSearch implements Serializable
                     String VDType, String ASLName, String sCreatedFrom, String sCreatedTo, String sModifiedFrom,
                     String sModifiedTo, String sCreator, String sModifier, String VD_ID, String sPermValue,
                     String sOrigin, double dVersion, String sCDid, String pvIDseq, String deIDseq, String cscsiIDseq,
-                    String conIDseq, String conName, String sData, Vector vList)
+                    String conIDseq, String vmIDseq, String conName, String sData, Vector vList)
     {
         // logger.info(m_servlet.getLogMessage(m_classReq, "doVDSearch", "begin search", exDate, exDate));
       //  Connection conn = null;
@@ -1798,7 +1845,7 @@ public class GetACSearch implements Serializable
             else
             {
                 cstmt = m_servlet.getConn()
-                                .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+                                .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
                 // Now tie the placeholders with actual parameters.
                 cstmt.registerOutParameter(7, OracleTypes.CURSOR);
                 cstmt.setString(1, ContID);
@@ -1825,6 +1872,7 @@ public class GetACSearch implements Serializable
                 cstmt.setString(23, cscsiIDseq);
                 cstmt.setString(24, conName);
                 cstmt.setString(25, conIDseq);
+                cstmt.setString(26, vmIDseq);
                 // Now we are ready to call the stored procedure
                 cstmt.execute();
                 // store the output in the resultset
@@ -2257,7 +2305,8 @@ public class GetACSearch implements Serializable
             }
             else
                 DataManager.setAttribute(session, "selectedAttr", vAttrList);
-        }
+            
+            }
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-setAttribute: " + e);
@@ -2391,6 +2440,7 @@ public class GetACSearch implements Serializable
             Vector vStatusDE = (Vector) session.getAttribute("vStatusDE");
             Vector vStatusDEC = (Vector) session.getAttribute("vStatusDEC");
             Vector vStatusVD = (Vector) session.getAttribute("vStatusVD");
+            Vector vStatusVM = (Vector) session.getAttribute("vStatusVM");
             Vector vStatusCD = (Vector) session.getAttribute("vStatusCD");
             String sStatusList[] = req.getParameterValues("listStatusFilter");
             boolean bAllStatus = false;
@@ -2842,7 +2892,7 @@ public class GetACSearch implements Serializable
      * @return vector of modified display result vector
      * @throws java.lang.Exception
      */
-    private Vector addMultiRecordConDomain(String cdName, String acName, Vector<String> vRes) throws Exception
+    public Vector addMultiRecordConDomain(String cdName, String acName, Vector<String> vRes) throws Exception
     {
         String hyperText = "";
         if (cdName != null && !cdName.equals(""))
@@ -2851,7 +2901,7 @@ public class GetACSearch implements Serializable
             acName = util.parsedStringSingleQuote(acName);
             acName = util.parsedStringDoubleQuoteJSP(acName);
             hyperText = "<a href=" + "\"" + "javascript:openConDomainWindow('" + acName + "')" + "\""
-                            + "><br><b>Details_>></b></a>";
+                            + "><br><b>More_>></b></a>";
             vRes.addElement(cdName + "  " + hyperText);
         }
         else
@@ -4154,6 +4204,12 @@ public class GetACSearch implements Serializable
             DataManager.setAttribute(session, "AllRefDocList", new Vector());
             String sSearchAC = (String) session.getAttribute("searchAC");
             Vector vSRows = (Vector) session.getAttribute("vSelRows");
+            if(sSearchAC.equals("ValueMeaning"))
+            {	
+            Vector vRSel = (Vector) session.getAttribute("vACSearch");
+            vSRows=vRSel;
+            session.setAttribute("vSelRows", vRSel);
+            }
             Vector vCheckList = new Vector();
             // handle problem with menu item when get associated.
             if (sSearchAC.equals("DataElement"))
@@ -4316,7 +4372,36 @@ public class GetACSearch implements Serializable
                                     DataManager.setAttribute(session, "oldVDBean", clVDBean);
                                 DataManager.setAttribute(session, "m_VD", VDBean);
                             }
+                        }else if (sSearchAC.equals("ValueMeaning"))
+                        {
+                            VM_Bean VMBean = new VM_Bean();
+                            VMBean = (VM_Bean) vSRows.elementAt(i);
+                            DataManager.setAttribute(session, "results", vSRows);
+                            DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, VMBean);
+                            DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
+                            DataManager.setAttribute(session, VMForm.SESSION_RET_PAGE, VMForm.BACK_TO_SEARCH);
+                            AltNamesDefsServlet altSer = new AltNamesDefsServlet( m_servlet,  m_servlet.sessionData.UsrBean);
+                            Alternates alt = altSer.getManualDefinition( m_classReq, VMForm.ELM_FORM_SEARCH_EVS);
+                            if (alt != null && !alt.getName().equals(""))
+                            VMBean.setVM_ALT_DEFINITION(alt.getName());
+                           
+                           /* String sVM = VMBean.getVM_LONG_NAME(); // ac name for pv
+                            // call the api to return concept attributes according to ac type and ac idseq
+                            Vector cdList = new Vector();
+                            cdList = this.doCDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", sVM, cdList); // get
+                                                                                                                                     // the
+                                                                                                                                        // list
+                                                                                                                                        // of
+                                                                                                                                        // Conceptual
+                                                                                                                                        // Domains
+                            req.setAttribute("ConDomainList", cdList);
+                            req.setAttribute("VMName", sVM);*/
+                            //write the jsp
+                            VMServlet vmser = new VMServlet( m_classReq,  m_classRes,  m_servlet);
+                            vmser.writeDetailJsp();
+                          
                         }
+                        
                         else if (sSearchAC.equals("Questions"))
                         {
                             // get the quest bean from the vector
@@ -4580,7 +4665,7 @@ public class GetACSearch implements Serializable
             String sVDid = DEBean.getDE_VD_IDSEQ();
             Vector vVDList = new Vector();
             doVDSearch(sVDid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "",
-                            "", "", vVDList);
+                            "", "", "", vVDList);
             if (vVDList != null && vVDList.size() > 0)
                 DEBean.setDE_VD_Bean((VD_Bean) vVDList.elementAt(0));
             // store teh current one as user preferred
@@ -5004,7 +5089,7 @@ public class GetACSearch implements Serializable
         if (sDEID != null && !sDEID.equals(""))
         {
             Vector vList = new Vector();
-            doDESearch(sDEID, "", "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+            doDESearch(sDEID, "", "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
                             "", "", "", "", "", "", "", "", vList);
             if (vList != null && vList.size() > 0)
                 DEBean = (DE_Bean) vList.elementAt(0);
@@ -5080,7 +5165,7 @@ public class GetACSearch implements Serializable
                 String sVDid = DEBean.getDE_VD_IDSEQ();
                 Vector vVDList = new Vector();
                 doVDSearch(sVDid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "",
-                                "", "", "", vVDList);
+                                "", "", "", "", vVDList);
                 if (vVDList != null && vVDList.size() > 0)
                     DEBean.setDE_VD_Bean((VD_Bean) vVDList.elementAt(0));
                 // get system and abbr name to use it later
@@ -7493,14 +7578,14 @@ public class GetACSearch implements Serializable
                 {
                     doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                     sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "",
-                                    sMinID, "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
+                                    sMinID, "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
                 }
                 else if (sSearchIn.equals("histID"))
                 {
                     String sHistID = sKeyword;
                     doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                     sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "",
-                                    "", sHistID, "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
+                                    "", sHistID, "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
                 }
                 // search in by doc text
                 else if (sSearchIn.equals("docText"))
@@ -7514,7 +7599,7 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier,
-                                        sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "",
+                                        sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "", "",
                                         sDerType, vAC);
                     }
                 }
@@ -7527,7 +7612,7 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier,
-                                        sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "",
+                                        sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "", "",
                                         sDerType, vAC);
                     }
                 }
@@ -7537,7 +7622,7 @@ public class GetACSearch implements Serializable
                     String sOrigin = sKeyword;
                     doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                     sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "",
-                                    "", "", "", sOrigin, "", "", "", "", "", "", "", "", "", sDerType, vAC);
+                                    "", "", "", sOrigin, "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
                 }
                 // search in by permissible value
                 else if (sSearchIn.equals("permValue"))
@@ -7545,7 +7630,7 @@ public class GetACSearch implements Serializable
                     String permValue = sKeyword;
                     doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                     sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "",
-                                    "", "", permValue, "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
+                                    "", "", permValue, "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
                 }
                 // search in by concept name/identifier
                 else if (sSearchIn.equals("concept"))
@@ -7553,13 +7638,13 @@ public class GetACSearch implements Serializable
                     String sCon = sKeyword;
                     doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                     sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "",
-                                    "", "", "", "", "", "", "", "", "", "", "", "", sCon, sDerType, vAC);
+                                    "", "", "", "", "", "", "", "", "", "", "", "", "", sCon, sDerType, vAC);
                 }
                 else
                 {
                     doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                     sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "",
-                                    "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
+                                    "", "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC);
                 }
                 DataManager.setAttribute(session, "vACSearch", vAC);
                 getDEResult(req, res, vResult, "");
@@ -7601,34 +7686,34 @@ public class GetACSearch implements Serializable
                 {
                     doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
                                     sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID, "", "", dVersion, sCDid,
-                                    "", "", "", "", "", sDataType, vAC);
+                                    "", "", "", "", "", "", sDataType, vAC);
                 }
                 else if (sSearchIn.equals("permValue"))
                 {
                     String sPermValue = sKeyword;
                     doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
                                     sModifiedFrom, sModifiedTo, sCreator, sModifier, "", sPermValue, "", dVersion,
-                                    sCDid, "", "", "", "", "", sDataType, vAC);
+                                    sCDid, "", "", "", "", "", "", sDataType, vAC);
                 }
                 else if (sSearchIn.equals("origin"))
                 {
                     String sOrigin = sKeyword;
                     doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
                                     sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", sOrigin, dVersion, sCDid,
-                                    "", "", "", "", "", sDataType, vAC);
+                                    "", "", "", "", "", "", sDataType, vAC);
                 }
                 else if (sSearchIn.equals("concept"))
                 {
                     String sCon = sKeyword;
                     doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
                                     sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", dVersion, sCDid, "",
-                                    "", "", "", sCon, sDataType, vAC);
+                                    "", "", "", "", sCon, sDataType, vAC);
                 }
                 else
                 {
                     doVDSearch("", sKeyword, "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
                                     sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", dVersion, sCDid, "",
-                                    "", "", "", "", sDataType, vAC);
+                                    "", "", "", "", "", sDataType, vAC);
                 }
                 DataManager.setAttribute(session, "vACSearch", vAC);
                 getVDResult(req, res, vResult, "");

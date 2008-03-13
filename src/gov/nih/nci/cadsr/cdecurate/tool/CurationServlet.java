@@ -1108,7 +1108,7 @@ public class CurationServlet
             if (sDEID != null && !sDEID.equals(""))
             {
                 serAC.doDESearch(sDEID, "", "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                                "", "", "", "", "", "", "", "", "", "", vList);
+                                "", "", "", "", "", "", "", "", "", "", "", vList);
             }
             if (vList.size() > 0) // get all attributes
             {
@@ -1234,7 +1234,7 @@ public class CurationServlet
             GetACSearch serAC = new GetACSearch(req, res, this);
             if (sDEID != null && !sDEID.equals(""))
                 serAC.doDESearch(sDEID, "", "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                                "", "", "", "", "", "", "", "", "", "", vList);
+                                "", "", "", "", "", "", "", "", "", "", "", vList);
             if (vList.size() > 0) // get all attributes
             {
                 DEBean = (DE_Bean) vList.elementAt(0);
@@ -1684,7 +1684,7 @@ public class CurationServlet
         {
             Vector vList = new Vector();
             GetACSearch serAC = new GetACSearch(req, res, this);
-            serAC.doVDSearch(sVDID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "",
+            serAC.doVDSearch(sVDID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", "",
                             "", "", vList);
             // forward editVD page with this bean
             if (vList.size() > 0)
@@ -2251,8 +2251,8 @@ public class CurationServlet
          */if (sAction.equals("createNewVM"))
             this.doOpenCreateVMPage(req, res, "vm");
         // store vm attributes in pv bean
-        else if (sAction.equals("appendSearchVM"))
-        {
+         	else if (sAction.equals("appendSearchVM"))
+         	{
             PV_Bean pvBean = (PV_Bean) session.getAttribute("m_PV");
             if (pvBean == null)
                 pvBean = new PV_Bean();
@@ -8914,7 +8914,7 @@ public class CurationServlet
      *            HttpServletResponse
      * @throws Exception
      */
-    private void doConDomainSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
+    public void doConDomainSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
     {
         GetACSearch getAC = new GetACSearch(req, res, this);
         String sVM = req.getParameter("acName"); // ac name for pv
@@ -9844,6 +9844,8 @@ public class CurationServlet
                 this.doSerSelectActDEC(req, res);
             else if (sSearchAC.equals("ValueDomain"))
                 this.doSerSelectActVD(req, res);
+            else if (sSearchAC.equals("ValueMeaning"))
+                this.doSerSelectActVM(req, res);
             else if (sSearchAC.equals("Questions"))
             {
                 // DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "");
@@ -10031,7 +10033,57 @@ public class CurationServlet
             ForwardJSP(req, res, "/SearchResultsPage.jsp");
         }
     }
-
+    /**
+     * does the search selection action for the Value Meaning search forward the page according to the action
+     *
+     * @param req
+     *            The HttpServletRequest from the client
+     * @param res
+     *            The HttpServletResponse back to the client
+     *
+     * @throws Exception
+     */
+    private void doSerSelectActVM(HttpServletRequest req, HttpServletResponse res) throws Exception
+    {
+        HttpSession session = req.getSession();
+        String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION); // get the selected menu
+                                                                                                // action
+        String sButtonPressed = (String) session.getAttribute("LastMenuButtonPressed");
+        // make sure the menu action is for DE, set it otherwise
+        if (sMenuAction.equalsIgnoreCase("NewDETemplate") || (sMenuAction.equalsIgnoreCase("NewDECTemplate")))
+            sMenuAction = "NewVMTemplate";
+        else if (sMenuAction.equalsIgnoreCase("NewDEVersion") || (sMenuAction.equalsIgnoreCase("NewDECVersion")))
+            sMenuAction = "NewVMVersion";
+        else if (sMenuAction.equalsIgnoreCase("editDE") || (sMenuAction.equalsIgnoreCase("editDEC")))
+            sMenuAction = "editVM";
+        // set the menuaction session attribute
+        DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
+        // forward to create VM page if template or version
+        if ((sMenuAction.equals("NewVMTemplate")) || (sMenuAction.equals("NewVMVersion")))
+        {
+            DataManager.setAttribute(session, "VMPageAction", "validate");
+            ForwardJSP(req, res, "/CreateVMPage.jsp");
+            DataManager.setAttribute(session, "originAction", "NewVM");
+        }
+        // forward to edit VM page if editing
+        else if (sMenuAction.equals("editVM") || sMenuAction.equals("nothing"))
+        {
+        	DataManager.setAttribute(session, "originAction", "EditVM");
+            ForwardJSP(req, res, "/ValueMeaningDetail.jsp");
+        }
+        else if (sButtonPressed.equals("Search"))
+        {
+            DataManager.setAttribute(session, "originAction", "EditVM");
+            ForwardJSP(req, res, "/ValueMeaningDetail.jsp");
+        }
+        else
+        {
+            DataManager.setAttribute(session, "originAction", "EditVM");
+            DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create or Edit page.\\n"
+                            + "Please try again.");
+            ForwardJSP(req, res, "/SearchResultsPage.jsp");
+        }
+    }
     /**
      * gets the selected row from the search result to forward the data. Called from 'doSearchResultsAction' method
      * where actType is 'edit' calls 'getACSearch.getSelRowToEdit' method to get the row bean. if user doesn't have
@@ -10179,7 +10231,7 @@ public class CurationServlet
         // get the long / names of the selected ac
         Vector vNames = new Vector();
         if (sSearchAC.equals("DataElementConcept") || sSearchAC.equals("ValueDomain")
-                        || sSearchAC.equals("ConceptualDomain") || sSearchAC.equals("DataElement"))
+                        || sSearchAC.equals("ConceptualDomain") || sSearchAC.equals("DataElement")|| sSearchAC.equals("ValueMeaning"))
         {
             vNames = (Vector) session.getAttribute("SearchLongName");
         }
@@ -10213,6 +10265,7 @@ public class CurationServlet
             String newSearch = "";
            // String retCode = "";
             String pvID = "", cdID = "", deID = "", decID = "", vdID = "", cscsiID = "", ocID = "", propID = "", conID = "";
+            String vmID="";
             // get the search results from the database.
             if (assocAC.equals("AssocDEs"))
             {
@@ -10230,11 +10283,13 @@ public class CurationServlet
                     cscsiID = sID;
                 else if (sSearchAC.equals("ConceptClass"))
                     conID = sID;
+                else if (sSearchAC.equals("ValueMeaning"))
+                	vmID = sID;
                 // do the search only if id is not null
                 Vector vRes = new Vector();
                 if (sID != null && !sID.equals(""))
-                    getACSearch.doDESearch("", "", "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "",
-                                    "", "", "", "", pvID, vdID, decID, cdID, cscsiID, conID, "", "", vRes);
+                	getACSearch.doDESearch("", "", "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "",
+                                    "", "", "", "", pvID, vdID,vmID,decID, cdID, cscsiID, conID, "", "", vRes);
                 DataManager.setAttribute(session, "vSelRows", vRes);
                 // do attributes after the search so no "two simultaneous request" errors
                 vSelVector = this.getDefaultAttr("DataElement", sSearchIn);
@@ -10287,9 +10342,11 @@ public class CurationServlet
                     cscsiID = sID;
                 else if (sSearchAC.equals("ConceptClass"))
                     conID = sID;
+                else if (sSearchAC.equals("ValueMeaning"))
+                	vmID = sID;
                 Vector vRes = new Vector();
                 getACSearch.doVDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, cdID, pvID,
-                                deID, cscsiID, conID, "", "", vRes);
+                                deID, cscsiID, conID,vmID, "", "", vRes);
                 DataManager.setAttribute(session, "vSelRows", vRes);
                 // do attributes after the search so no "two simultaneous request" errors
                 vSelVector = this.getDefaultAttr("ValueDomain", sSearchIn);
@@ -10570,6 +10627,7 @@ public class CurationServlet
         DataManager.setAttribute(session, "DEEditAction", null);
         DataManager.setAttribute(session, "DECEditAction", null);
         DataManager.setAttribute(session, "ParentConceptCode", null);
+        DataManager.setAttribute(session, "VMForm.SESSION_RET_PAGE", null);
         // DataManager.setAttribute(session, "OpenTreeToConcept", "");
         DataManager.setAttribute(session, "TabFocus", "VD");
         
@@ -10655,6 +10713,7 @@ public class CurationServlet
         DataManager.setAttribute(session, "TabFocus", "VD");
         // clear vm attribute
         DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, new VM_Bean());
+        
     }
 
     /**
@@ -10689,12 +10748,14 @@ public class CurationServlet
         }
         else if (searchAC.equals("ValueMeaning"))
         {
-            vDefaultAttr.addElement("Value Meaning");
-            vDefaultAttr.addElement("Meaning Description");
-            vDefaultAttr.addElement("Conceptual Domain");
+            vDefaultAttr.addElement("Long Name");
+            vDefaultAttr.addElement("Public ID");
+            vDefaultAttr.addElement("Version");
             vDefaultAttr.addElement("EVS Identifier");
-            vDefaultAttr.addElement("Definition Source");
-            vDefaultAttr.addElement("Vocabulary");
+            vDefaultAttr.addElement("Workflow Status");
+            vDefaultAttr.addElement("Conceptual Domain");
+            vDefaultAttr.addElement("Definition");
+            
         }
         else if (searchAC.equals("Questions"))
         {
@@ -11073,12 +11134,14 @@ public class CurationServlet
         }
         else if (selSearch.equals("ValueMeaning"))
         {
-            vCompAtt.addElement("Value Meaning");
-            vCompAtt.addElement("Meaning Description");
-            vCompAtt.addElement("Conceptual Domain");
-            vCompAtt.addElement("EVS Identifier");
-            vCompAtt.addElement("Definition Source");
-            vCompAtt.addElement("Vocabulary");
+        	vCompAtt.addElement("Long Name");
+        	vCompAtt.addElement("Public ID");
+        	vCompAtt.addElement("Version");
+        	vCompAtt.addElement("EVS Identifier");
+        	vCompAtt.addElement("Workflow Status");
+        	vCompAtt.addElement("Conceptual Domain");
+        	vCompAtt.addElement("Definition");
+            vCompAtt.addElement("All Attributes");
             DataManager.setAttribute(session, "creSelectedAttr", vCompAtt);
         }
         else if (selSearch.equals("ParentConcept") || selSearch.equals("PV_ValueMeaning"))
