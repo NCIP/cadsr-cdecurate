@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.4 2008-03-13 18:07:56 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.5 2008-03-13 21:01:14 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -25,6 +25,7 @@
 			 Vector vStatus = (Vector)session.getAttribute("vStatusVM");
 			 Vector vRegStatus = (Vector)session.getAttribute("vRegStatus");
 			 session.setAttribute("prevVMVersion",thisForm.getVMBean().getVM_VERSION());
+			 String sVM = (String)request.getAttribute("VMName");
 		%>
 
 		<Script Language="JavaScript">
@@ -258,7 +259,7 @@
 									<%=VMForm.ELM_LBL_CONDOMAIN_SUM%>
 									:
 								</b>
-								<%=thisForm.conceptSummary%>
+								<%=sVM%>
 							</div>
 							<div class="table">
 								<table width="95%" border="0">
@@ -271,6 +272,7 @@
 									</colgroup>
 									<tbody>
 										<tr style="padding-bottom:0.05in">
+										<tr valign="middle">
 											<th>
 												<%=VMForm.ELM_LBL_CONDOMAIN_NAME%>
 											</th>
