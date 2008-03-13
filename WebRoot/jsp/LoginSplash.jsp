@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/LoginSplash.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/LoginSplash.jsp,v 1.3 2008-03-13 20:35:06 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -231,7 +231,7 @@ session.setAttribute("ErrorMessage", "");
 										</td>
 										<td width="20"></td>
 									</tr>
-
+									<tr>
 									<td height="55" colspan="1" valign="top" width="115">
 										<input name="Submit" type="submit" value="Login" onClick="callMessageGifLogin()">
 									</td>
@@ -244,11 +244,9 @@ session.setAttribute("ErrorMessage", "");
 											<option></option>
 										</select>
 									</td>
-
-									</tr>
+								 </tr>
 								</table>
 								</form>
-
 							</td>
 							<tr height="60"></tr>
 							<tr height="60">
@@ -262,8 +260,7 @@ session.setAttribute("ErrorMessage", "");
 								</td>
 							</tr>
 						</table>
-						</tr>
-						<tr height="100"></tr>
+					<tr height="100"></tr>
 
 						<tr>
 							<td align="center">
