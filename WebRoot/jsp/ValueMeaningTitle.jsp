@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.2 2008-03-13 18:08:18 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -12,14 +12,20 @@
       String detailFocus = "TABX";
       String usedFocus = "TABX";
       String sTabFocus = (String)session.getAttribute(VMForm.SESSION_VM_TAB_FOCUS);
+      
       if (sTabFocus == null || sTabFocus.equals(""))
       	sTabFocus = VMForm.ELM_ACT_DETAIL_TAB;
       if (sTabFocus.equals(VMForm.ELM_ACT_DETAIL_TAB))
       	detailFocus = "TABY";
       else
       	usedFocus = "TABY";
-      	
-			VMForm dispForm = (VMForm)request.getAttribute(VMForm.REQUEST_FORM_DATA); 
+      String retPage = (String) session.getAttribute(VMForm.SESSION_RET_PAGE);	
+      if(retPage.equals("backToPV"))
+       retPage = VMForm.ACT_BACK_PV;
+      else
+       retPage = VMForm.ACT_BACK_SEARCH;
+     System.out.println("retPAge"+retPage);
+	 VMForm dispForm = (VMForm)request.getAttribute(VMForm.REQUEST_FORM_DATA); 
       String vmNameDisplay = dispForm.vmDisplayName;
       
 		%>
@@ -32,7 +38,7 @@
 	&nbsp;&nbsp;
 	<input type="button" name="btnClear" value="Clear" style="width:125" onClick="ClearBoxes();">
 	&nbsp;&nbsp;
-	<input type="button" name="btnBack" value="Back" style="width:125" onClick="SubmitValidate('<%=VMForm.ACT_BACK_PV%>');">
+	<input type="button" name="btnBack" value="Back" style="width:125" onClick="SubmitValidate('<%=retPage%>');">
 	&nbsp;&nbsp;
 	<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:150" onClick="openDesignateWindow('Alternate Names');">
 	&nbsp;&nbsp;
