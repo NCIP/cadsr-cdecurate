@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateVM.jsp,v 1.2 2007-09-19 16:59:35 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateVM.jsp,v 1.3 2008-03-13 18:07:44 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -25,7 +25,7 @@
     for (int i = 0; vValidate.size()>i; i = i+3)
     {
       String sStat = (String)vValidate.elementAt(i+2);
-      if(sStat.equals("Valid")==false)
+      if(sStat.startsWith("Valid")==false)
         isValid = false;
     }
     session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");  //remove the status messge if any    
