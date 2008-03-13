@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/TestVM.java,v 1.10 2008-02-20 19:34:14 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/TestVM.java,v 1.11 2008-03-13 17:57:59 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.test;
@@ -280,7 +280,7 @@ public class TestVM
     
   }
   
-  private void doSearchVMValues(VMForm vmdata)
+  /*private void doSearchVMValues(VMForm vmdata)
   {
     try
     {
@@ -341,7 +341,7 @@ public class TestVM
       e.printStackTrace();
       logger.fatal("search vm ");
     }
-  }
+  }*/
 
   private void getConceptDerivation()
   {
