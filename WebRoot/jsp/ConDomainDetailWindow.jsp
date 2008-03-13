@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ConDomainDetailWindow.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ConDomainDetailWindow.jsp,v 1.2 2008-03-13 18:04:53 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -14,6 +14,7 @@
 			Display Conceptual Domain Details
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<%
    Vector cdResult = (Vector)request.getAttribute("ConDomainList");
 	String intText = "";
@@ -80,31 +81,39 @@
 					</td>
 				</tr>
 			</table>
-			<table width="100%" border="1" style="border-collapse: collapse" valign="top">
-				<tr valign="middle">
-					<th>
-						No.
-					</th>
-					<th>
-						Long Name
-					</th>
-					<th>
-						Public ID
-					</th>
-					<th>
-						Version
-					</th>
-					<th>
-						Workflow Status
-					</th>
-					<th>
-						Context
-					</th>
-					<th>
-						Definition
-					</th>
-				</tr>
-				<%
+			<div class="table" style="border-style: double;">
+				<table width="95%" border="0">
+					<colgroup>
+						<col width="10%">
+						<col width="40%">
+						<col width="10%">
+						<col width="20%">
+						<col width="10%">
+						<col width="10%">
+					</colgroup>
+					<tbody>
+						<tr style="padding-bottom: 0.05in">
+						<tr valign="middle">
+							<th>
+								No.
+							</th>
+							<th>
+								Long Name
+							</th>
+							<th>
+								Public ID
+							</th>
+							<th>
+								Version
+							</th>
+							<th>
+								Workflow Status
+							</th>
+							<th>
+								Context
+							</th>
+						</tr>
+						<%
     if (cdResult != null) 
     {
 		  for (int i = 0; i < cdResult.size(); i++)
@@ -125,36 +134,45 @@
         String sPN = cd.getCD_PREFERRED_NAME();
         if (sPN == null) sPN = "";
 %>
-				<tr>
-					<td>
-						<%=i+1%>
-					</td>
-					<td>
-						<%=sLN%>
-					</td>
-					<td>
-						<%=sPId%>
-					</td>
-					<td>
-						<%=sVer%>
-					</td>
-					<td>
-						<%=sWF%>
-					</td>
-					<td>
-						<%=sCont%>
-					</td>
-					<td>
-						<%=sDef%>
-					</td>
-				</tr>
-				<%
+						<tr <% if (i%2 == 0) { %> class="rowColor" <% } %>>
+							<td>
+								<%=i+1%>
+							</td>
+							<td>
+								<%=sLN%>
+							</td>
+							<td>
+								<%=sPId%>
+							</td>
+							<td>
+								<%=sVer%>
+							</td>
+							<td>
+								<%=sWF%>
+							</td>
+							<td>
+								<%=sCont%>
+							</td>
+						</tr>
+						<tr <% if (i%2 == 0) { %> class="rowColor" <% } %>>
+							<td></td>
+							<td colspan="6">
+								<div class="ind3">
+									<b> Definition: </b>
+									<br>
+									<%=sDef%>
+								</div>
+							</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+			<%
       }
-    }
-%>
-			</table>
-			<input type="hidden" name="acID" value="">
-			<input type="hidden" name="acName" value="">
-		</form>
+ %>
+<input type="hidden" name="acID" value="">
+<input type="hidden" name="acName" value="">
+</form>
 	</body>
 </html>
