@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.1 2007-09-10 16:16:48 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.2 2008-03-13 18:04:00 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -332,7 +332,7 @@
   
   // for edit/template/version/Question submits the page with action selected as Edit
   function ShowEditSelection()
-  {
+  {   
 	   getRowAttributes();   //get the values of each row.
 	   var bOkOpen = true;
 	   var selSearchAC = document.searchParmsForm.listSearchFor.options[document.searchParmsForm.listSearchFor.selectedIndex].value;
@@ -352,7 +352,7 @@
          document.searchResultsForm.actSelected.value = "Edit";
          document.searchResultsForm.numSelected.value = numRowsSelected;
          document.searchResultsForm.submit();
-	   }
+   	   }
 	   else if (document.searchResultsForm.editSelectedBtn.value=="Block Edit")
 	   { 
   		   window.status = "Opening the page, it may take a minute, please wait....."
@@ -385,7 +385,7 @@
   */
 
   function EnableCheckButtons(checked, currentField, editAction, sButtonPressed, sSelAC)
-  {
+  {      
 	   if (checked)
 		   ++numRowsSelected;
 	   else
@@ -438,11 +438,11 @@
 						   document.searchResultsForm.editSelectedBtn.disabled=false;
 					   }
 				   }
-				   else if (editAction == "nothing" && sSelAC == "Data Element" || sSelAC == "Data Element Concept" || sSelAC == "Value Domain")
+				   else if (editAction == "nothing" && sSelAC == "Data Element" || sSelAC == "Data Element Concept" || sSelAC == "Value Domain" || sSelAC == "Value Meaning")
 				   {
 					   document.searchResultsForm.editSelectedBtn.disabled=false;
 				   }
-				   if (editAction == "nothing" && sSelAC == "Data Element" || sSelAC == "Data Element Concept" || sSelAC == "Value Domain" || sSelAC == "Conceptual Domain")
+				   if (editAction == "nothing" && sSelAC == "Data Element" || sSelAC == "Data Element Concept" || sSelAC == "Value Domain" || sSelAC == "Conceptual Domain" || sSelAC == "Value Meaning")
 				   {
 					   document.searchResultsForm.associateACBtn.value="Get Associated";
 					   document.searchResultsForm.associateACBtn.disabled=false;
@@ -479,6 +479,7 @@
 		   }
 		   else    // numRowsSelected > 1
 		   {
+		      
 			   if (document.searchResultsForm.associateACBtn != null)
 			   {
 				   document.searchResultsForm.associateACBtn.disabled=true;
@@ -491,6 +492,7 @@
                
 			   if (editAction != "searchForCreate")
 			   {
+			      
 				   document.searchResultsForm.showSelectedBtn.disabled=false;
 				   if (checked)
 					   StoreSelectedRow("true", rowNo, editAction);
@@ -498,19 +500,34 @@
 					   StoreSelectedRow("false", rowNo, editAction);
 				   
 				   if (editAction != "nothing" || sButtonPressed == "Search" || sButtonPressed == "Edit")
-				   {
+				   { 
 					   if (document.searchResultsForm.editSelectedBtn != null)
 					   {
 						   //enable the edit button if action is regular search or edit otherwise disable
 						   if (editAction != "Complete Selected DE" && editAction != "Create New Version" && editAction != "Create New from Existing")
 						   {
+							 
 							   document.searchResultsForm.editSelectedBtn.value="Block Edit";
 							   document.searchResultsForm.editSelectedBtn.disabled=false;
-						   }
-						   else
+							}
+						   else{
+						  
 							   document.searchResultsForm.editSelectedBtn.disabled=true;
+							   }
 					   }
 				   }
+				   if(sSelAC == "Value Meaning")
+				    {
+				    formObj= eval("document.searchResultsForm."+currentField.name);
+                   	formObj.checked=false;
+                   	--numRowsSelected;
+				      alert("Please check only one box at a time");
+				       document.searchResultsForm.editSelectedBtn.disabled=false;
+					   document.searchResultsForm.editSelectedBtn.value="Edit Selection";
+					    document.searchResultsForm.associateACBtn.value="Get Associated";
+					    document.searchResultsForm.associateACBtn.disabled=false;
+				    }
+				   
 			   }
 			   else   // editAction == "searchForCreate"
 			   {
@@ -640,9 +657,11 @@
   //gets the other attributes for the checked row from the hidden select boxes
   function getRowAttributes()
   {
+  
 	   document.searchResultsForm.hiddenACIDStatus.length = 0;
 	   document.searchResultsForm.hiddenDesIDName.length = 0;
 	   var rowCount = document.searchResultsForm.hiddenSelectedRow.length;
+	   
 	   for (i=0; i<rowCount; i++)
 	   {
 		   var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
@@ -847,7 +866,7 @@
   {
 	   var SearchAC = document.searchParmsForm.listSearchFor.value;   //get the search for from dropdown list
 	   if (SearchAC == "ConceptualDomain" || SearchAC == "PermissibleValue" 
-	   		|| SearchAC == "DataElement" || SearchAC == "ClassSchemeItems" || SearchAC == "ConceptClass" ) 
+	   		|| SearchAC == "DataElement" || SearchAC == "ClassSchemeItems" || SearchAC == "ConceptClass" || SearchAC == "ValueMeaning" ) 
 	   { 
 		   getRowAttributes();   //get the values of each row.
 		   //display message if row is from EVS
