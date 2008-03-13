@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EVSSearchResults.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EVSSearchResults.jsp,v 1.3 2008-03-13 18:06:11 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -360,7 +360,7 @@ if (results.size() > 0)
 %>
 						<tr>
 							<td width="5">
-								<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnablePasteButton(checked,this);"
+								<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnablePasteButton(checked,this);"/>
 							</td>
 							<td width="100">
 								<%=strResult%>
