@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.49 2007-11-28 19:44:47 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.50 2008-03-13 17:59:47 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -162,6 +162,12 @@ public class GetACService implements Serializable
                     v = new Vector<String>();
                     getStatusList("VALUEDOMAIN", v);
                     DataManager.setAttribute(session, "vStatusVD", v);
+                }
+                if (session.getAttribute("vStatusVM") == null)
+                {
+                    v = new Vector<String>();
+                    getStatusList("VALUEDOMAIN", v);
+                    DataManager.setAttribute(session, "vStatusVM", v);
                 }
                 if (session.getAttribute("vStatusCD") == null)
                 {
