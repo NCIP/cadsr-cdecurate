@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.8 2008-01-23 22:45:57 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.9 2008-03-13 18:07:13 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -80,7 +80,9 @@ System.out.println("search parameters else jsp sSearchAC: " + sSearchAC);
      sContextUse = (String)session.getAttribute("serContextUse");
      vStatus = (Vector)session.getAttribute("serStatus");
      vSelectedAttr = (Vector)session.getAttribute("selectedAttr");
+     System.out.println("Selected Attributes size: " + vSelectedAttr.size());
      vACAttr = (Vector)session.getAttribute("serAttributeList");
+     System.out.println("vACAttr: " + vACAttr.size());
      selCD = (String)session.getAttribute("serSelectedCD");
      sSearchIn = (String)session.getAttribute("serSearchIn");
      sRegStatus = (String)session.getAttribute("serRegStatus");
@@ -156,6 +158,7 @@ System.out.println("search parameters else jsp sSearchAC: " + sSearchAC);
   Vector vStatusDE = (Vector)session.getAttribute("vStatusDE");
   Vector vStatusDEC = (Vector)session.getAttribute("vStatusDEC");
   Vector vStatusVD = (Vector)session.getAttribute("vStatusVD");
+  Vector vStatusVM = (Vector)session.getAttribute("vStatusVM");
   Vector vStatusCD = (Vector)session.getAttribute("vStatusCD");
   Vector vRegStatus = (Vector)session.getAttribute("vRegStatus");
   Vector vDerType = (Vector)session.getAttribute("vRepType");
@@ -350,6 +353,9 @@ function LoadKeyHandler()
 							<option value="PermissibleValue" <%if(sSearchAC.equals("PermissibleValue")){%> selected <%}%>>
 								Permissible Value
 							</option>
+							<option value="ValueMeaning" <%if(sSearchAC.equals("ValueMeaning")){%> selected <%}%>>
+								Value Meaning
+							</option>
 							<option value="ObjectClass" <%if(sSearchAC.equals("ObjectClass")){%> selected <%}%>>
 								Object Class
 							</option>
@@ -372,8 +378,7 @@ function LoadKeyHandler()
 
 				<!--not for crf questions    -->
 				<%  if (!sSearchAC.equals("Questions")){
-        if (!sSearchAC.equals("ValueMeaning")) {
-%>
+        %>
 				<tr>
 					<td height="7" colspan=2 valign="top">
 				</tr>
@@ -421,7 +426,7 @@ function LoadKeyHandler()
 							<%          if (sSearchAC.equals("DataElement") || sSearchAC.equals("DataElementConcept")
                 || sSearchAC.equals("ValueDomain") || sSearchAC.equals("ConceptualDomain")
                 || sSearchAC.equals("ObjectClass") || sSearchAC.equals("Property")
-                 || sSearchAC.equals("ConceptClass")){%>
+                 || sSearchAC.equals("ConceptClass")||sSearchAC.equals("ValueMeaning") ){%>
 							<option value="minID" <%if(sSearchIn.equals("minID")){%> selected <%}%>>
 								Public ID
 							</option>
@@ -519,7 +524,6 @@ function LoadKeyHandler()
 						</select>
 					</td>
 				</tr>
-				<% } %>
 				<% } %>
 				<!-- end not equal value meaning -->
 
@@ -725,7 +729,7 @@ function LoadKeyHandler()
 				<%    //} 
 }  %>
 				<!-- radio button version only for DE, VD, DEC, CD searches-->
-				<%  if (sSearchAC.equals("DataElement") || sSearchAC.equals("DataElementConcept") || sSearchAC.equals("ValueDomain") || sSearchAC.equals("ConceptualDomain"))   { %>
+				<%  if (sSearchAC.equals("DataElement")|| sSearchAC.equals("ValueMeaning") || sSearchAC.equals("DataElementConcept") || sSearchAC.equals("ValueDomain") || sSearchAC.equals("ConceptualDomain"))   { %>
 				<tr>
 					<td>
 						&nbsp;
@@ -853,8 +857,8 @@ function LoadKeyHandler()
 				</tr>
 				<%  }  %>
 				<!-- workflow status filter for all ACs except csi, pv, vm -->
-				<%   if (!sSearchAC.equals("ClassSchemeItems") && !sSearchAC.equals("PermissibleValue") 
-          && !sSearchAC.equals("ValueMeaning"))  { %>
+				<%   if (!sSearchAC.equals("ClassSchemeItems") && !sSearchAC.equals("PermissibleValue")) 
+            { %>
 				<tr>
 					<td>
 						&nbsp;
@@ -872,7 +876,7 @@ function LoadKeyHandler()
 					<td>
 						<select name="listStatusFilter" size="3" style="width:172" multiple onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
 							<!--store the status list as per the CONCEPT SEARCH  -->
-							<%      if (sSearchAC.equals("ConceptClass")) { 
+							<%      if (sSearchAC.equals("ConceptClass")|| sSearchAC.equals("ValueMeaning")) { 
   %>
 							<option value="RELEASED" <%if (vStatus != null && vStatus.contains("RELEASED")){%> selected <%}%>>
 								RELEASED
@@ -921,7 +925,18 @@ function LoadKeyHandler()
 							<%
             }
           }
-
+ 		else if (vStatusVM != null && sSearchAC.equals("ValueMeaning"))
+          {
+            for (int i = 0; vStatusVM.size()>i; i++)
+            {
+              String sStatusName = (String)vStatusVM.elementAt(i);
+%>
+							<option value="<%=sStatusName%>" <%if((vStatus != null) && (vStatus.contains(sStatusName))){%> selected <%}%>>
+								<%=sStatusName%>
+							</option>
+							<%
+            }
+          }
           else if (vStatusCD != null && sSearchAC.equals("ConceptualDomain"))
           {
             for (int i = 0; vStatusCD.size()>i; i++)
@@ -948,7 +963,7 @@ function LoadKeyHandler()
 				</tr>
 				<%  }  %>
 				<!-- Registration status filter-->
-				<%  if (sSearchAC.equals("DataElement"))   { %>
+				<%  if (sSearchAC.equals("DataElement")|| sSearchAC.equals("ValueMeaning"))   { %>
 				<tr>
 					<td>
 						&nbsp;
@@ -1278,11 +1293,9 @@ function LoadKeyHandler()
 								<%=item++%>
 								)&nbsp;&nbsp;Display Attributes:
 							</b>
-							<%  if (!sSearchAC.equals("ValueMeaning"))   { %>
 							&nbsp;
 							<input type="button" name="updateDisplayBtn" value="Update" onClick="<%=updFunction%>" style="width:50" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
-							<%} %>
-						</div>
+							</div>
 						<br>
 						<div align="right" valign="bottom">
 							<select name="listAttrFilter" size="4" style="width:175" multiple valign="bottom" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
@@ -1302,7 +1315,7 @@ function LoadKeyHandler()
 								<%
             }
              //add all attributes if not existed
-            if (!sSearchAC.equals("ValueMeaning") && !vACAttr.contains("All Attributes")) {
+            if (!vACAttr.contains("All Attributes")) {
 %>
 								<option value="All Attributes">
 									All Attributes

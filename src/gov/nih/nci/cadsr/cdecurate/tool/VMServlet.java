@@ -1,17 +1,23 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.25 2008-02-20 19:35:06 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.26 2008-03-13 18:02:20 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
-import java.sql.Connection;
+
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
 import java.util.Vector;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import oracle.jdbc.driver.OracleTypes;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -25,6 +31,7 @@ public class VMServlet extends GenericServlet
   /**VM Form object*/
   public VMForm vmData = null;
   private VMAction vmAction = new VMAction();
+  private UtilService         m_util           = new UtilService();
 
   /**
    * Constructor
@@ -55,15 +62,31 @@ public class VMServlet extends GenericServlet
     try
     {
       super.execute();
-      vmData = new VMForm();
-      vmData.setCurationServlet(curationServlet);
-      
-      //call the method to capture user entered data
-      captureUserEntered(pageAction);
+           vmData = new VMForm();
+    	   vmData.setCurationServlet(curationServlet);
+    	   vmData.setSearchTerm("");
+    	   if(pageAction.equals(VMForm.ACT_BACK_SEARCH))
+    	   {
+    		   String searchIn =(String)httpRequest.getSession().getAttribute("serSearchIn");
+    		   if((searchIn!=null ||  !searchIn.equals(""))&& searchIn.equals("minID"))
+    			   vmData.setSearchFilterID((String)httpRequest.getSession().getAttribute("creKeyword"));
+    		   else if((searchIn!=null ||  !searchIn.equals(""))&& searchIn.equals("concept"))
+    			   vmData.setSearchFilterConName((String)httpRequest.getSession().getAttribute("creKeyword"));
+    		   else
+    			   vmData.setSearchTerm((String)httpRequest.getSession().getAttribute("creKeyword"));
+    	   }
+    	   //if(((String)httpRequest.getSession().getAttribute(VMForm.SESSION_RET_PAGE)).equals(VMForm.JSP_PV_DETAIL))
+    	   if (pageAction.equals(VMForm.ACT_VALIDATE_VM)||((String)httpRequest.getSession().getAttribute(VMForm.SESSION_RET_PAGE)).equals(VMForm.JSP_PV_DETAIL))
+    	    {
+    		   //call the method to capture user entered data
+    		   captureUserEntered(pageAction);
+    	    }   
       
       //to go back to PV
       if (pageAction.equals(VMForm.ACT_BACK_PV))
         retData = goBackToPV();
+      if(pageAction.equals(VMForm.ACT_BACK_SEARCH))
+    	  retData = goBackToSearch();
       //to switch between the tabs
       else if (pageAction.equals(VMForm.ELM_ACT_USED_TAB) || pageAction.equals(VMForm.ELM_ACT_DETAIL_TAB))
         retData = changeTab(pageAction);
@@ -126,23 +149,60 @@ public class VMServlet extends GenericServlet
     if(sCDid == null || sCDid.equals("All Domains")) 
     		sCDid = "";       
     DataManager.setAttribute(session, "creSelectedCD", sCDid);
+    //initialize the default values
     vmData.setSearchFilterCD(sCDid);
+    if(vmData.getSearchFilterConName()==null || vmData.getSearchFilterConName().equals(""))
+	{
+    	vmData.setSearchFilterConName("");
+	}
+    if(vmData.getSearchFilterCondr()==null || vmData.getSearchFilterCondr().equals(""))
+	{
+    	vmData.setSearchFilterCondr("");
+	}
     
     //get the keyword for filter
+    String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
     String sKeyword = (String)req.getParameter("keyword");
-        if (sKeyword == null)
+      if (sKeyword == null)
             sKeyword = "";
-    DataManager.setAttribute(session, "creKeyword", sKeyword);   //keep the old criteria
+      if (sKeyword.equals("") && !menuAction.equals("searchForCreate"))
+          sKeyword = (String) session.getAttribute("LastAppendWord");
+   
+      DataManager.setAttribute(session, "creKeyword", sKeyword);   //keep the old criteria
+    
+    //get the searchIn
+    String sSearchIn = (String) req.getParameter("listSearchIn");
+    if (sSearchIn == null)
+    	sSearchIn = "";
+    if (sSearchIn.equals("minID"))
+    	{
+    	 vmData.setSearchFilterID(sKeyword);
+    	}
+    if (sSearchIn.equals("concept"))
+    	vmData.setSearchFilterConName(sKeyword);
     UtilService util = new UtilService();
     sKeyword = util.parsedStringSingleQuoteOracle(sKeyword);
-    vmData.setSearchTerm(sKeyword);
-    
-    //store the attributes to display in the vmData
-    vmData.setSelAttrList((Vector)session.getAttribute("creSelectedAttr"));
+    if(!sSearchIn.equals("minID") && !sSearchIn.equals("concept"))
+    {	
+    	if(vmData.getSearchTerm()==null || vmData.getSearchTerm().equals(""))
+    	{
+    	 vmData.setSearchTerm(sKeyword);
+    	//vmData.setSearchFilterDef(sKeyword);
+    	}
+    }
+    String actType = (String) req.getParameter("actSelect");
+    //String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
+    if(actType==null)actType="";
+    if ((actType.equals("Attribute")&& !menuAction.equals("searchForCreate"))||(actType.equals("")&& !menuAction.equals("searchForCreate")))
+    	//store the attributes to display in the vmData
+        vmData.setSelAttrList((Vector)session.getAttribute("selectedAttr"));
+    else
+    	//store the attributes to display in the vmData
+    	vmData.setSelAttrList((Vector)session.getAttribute("creSelectedAttr"));
     
     //call the action to do the search
     vmAction.searchVMValues(vmData);
-    
+
     //put the results back in the session
     Vector<VM_Bean> vAC = vmData.getVMList();
     if (vAC == null)
@@ -152,8 +212,8 @@ public class VMServlet extends GenericServlet
     //call the method to get the result vector
     this.readVMResult();
     //keep these empty for now
-    DataManager.setAttribute(session, "SearchLongName", new Vector<String>());
-    DataManager.setAttribute(session, "SearchMeanDescription",  new Vector<String>());      
+    //DataManager.setAttribute(session, "SearchLongName", new Vector<String>());
+    //DataManager.setAttribute(session, "SearchMeanDescription",  new Vector<String>());      
     
   }
 
@@ -367,6 +427,18 @@ public class VMServlet extends GenericServlet
     //add the width name to the hash table
     retForm.longNameWidth = nWidth;
     retForm.longName =  vm.getVM_LONG_NAME();
+    //get the conceptual domains
+    String sVM = vm.getVM_LONG_NAME(); // ac name for pv
+    // call the api to return concept attributes according to ac type and ac idseq
+    Vector cdList = new Vector();
+    cdList = this.doCDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", sVM, cdList); // get
+                                                                                                             // the
+                                                                                                                // list
+                                                                                                                // of
+                                                                                                                // Conceptual
+                                                                                                                // Domains
+    httpRequest.setAttribute("ConDomainList", cdList);
+    httpRequest.setAttribute("VMName", sVM);
     //add definition
     retForm.descriptionLabel = VMForm.ELM_LBL_DESC;
     if (vmCon.size() > 0)
@@ -386,6 +458,7 @@ public class VMServlet extends GenericServlet
     	retForm.description = vm.getVM_PREFERRED_DEFINITION();
     //add change note
     retForm.changeNote = vm.getVM_CHANGE_NOTE(); 
+    retForm.setVMBean(vm);
 
     httpRequest.setAttribute(VMForm.REQUEST_FORM_DATA, retForm);
   }
@@ -420,6 +493,7 @@ public class VMServlet extends GenericServlet
     retForm.sortedCRF = vm.getVM_SORT_COLUMN_CRF();
     retForm.sortedDE = vm.getVM_SORT_COLUMN_DE();
     retForm.sortedVD = vm.getVM_SORT_COLUMN_VD();
+    retForm.setVMBean(vm);
     //store the form
     httpRequest.setAttribute(VMForm.REQUEST_FORM_DATA, retForm);
   }
@@ -449,10 +523,12 @@ public class VMServlet extends GenericServlet
   {
     try
     {
-      if (!sAction.equals(VMForm.ACT_BACK_PV) && !sAction.equals(VMForm.ACT_SUBMIT_VM))
+      if (!sAction.equals(VMForm.ACT_BACK_PV) && !sAction.equals(VMForm.ACT_SUBMIT_VM) && !sAction.equals(VMForm.ACT_BACK_SEARCH))
       {
         HttpSession session = httpRequest.getSession();
         VM_Bean vm = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
+      //check if user entered alt def exists
+        String sLongName = (String)httpRequest.getParameter(VMForm.ELM_LBL_NAME);
         //check if user entered alt def exists
         String sDef = (String)httpRequest.getParameter(VMForm.ELM_DEFINITION);
         if (sDef != null)
@@ -474,6 +550,29 @@ public class VMServlet extends GenericServlet
           if (!sCmt.equals(" "))  //remove the xtra space if any
               sCmt = sCmt.trim();
           vm.setVM_CHANGE_NOTE(sCmt);
+        }
+        if(sLongName!=null)
+        {
+        	if (!sLongName.equals(""))  //this helps to keeps to create default alt defintion only when going from user defined vm to concept vm
+        		vm.setVM_LONG_NAME(sLongName);
+        }
+        //Check if user entered new version
+        String sVersion = (String)httpRequest.getParameter("Version");
+        if (sVersion != null)
+        { 
+          if (sVersion.equals(""))
+        	  sVersion = " ";
+          if (!sVersion.equals(" "))  //remove the xtra space if any
+        	  sVersion = sVersion.trim();
+          if(!sVersion.equals((String)httpRequest.getSession().getAttribute("prevVMVersion")))
+        	  vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
+          vm.setVM_VERSION(sVersion);
+        }
+        //Check if user selected new workflow
+        String sWorkflow = (String)httpRequest.getParameter("selStatus");
+        if (sWorkflow != null)
+        { 
+          vm.setASL_NAME(sWorkflow);
         }
         //update the session attribute
         DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, vm);
@@ -509,6 +608,17 @@ public class VMServlet extends GenericServlet
     }
     return VMForm.JSP_PV_DETAIL;
   }
+  
+  /**
+   * Returns back to Search Page
+   * @return String
+   */
+private String goBackToSearch()
+  {
+    	
+	  this.readDataForSearch();
+      return VMForm.BACK_TO_SEARCH;
+}
 
   /**
    * switchs back forth on the tab
@@ -612,11 +722,20 @@ public class VMServlet extends GenericServlet
   private String clearEditVM()
   {
     HttpSession session = httpRequest.getSession();
-    PV_Bean selPV = (PV_Bean)session.getAttribute(VMForm.SESSION_SELECT_PV);
-    VM_Bean selVM = vmAction.getVM(selPV, -1);  //-1 to clear
-    //set the attributes
-    DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, selVM);
-    return changeTab("");  // VMForm.JSP_VM_DETAIL;    
+    String ret_page =(String)session.getAttribute(VMForm.SESSION_RET_PAGE);
+    if(ret_page.equals(VMForm.JSP_PV_DETAIL))
+    {
+    	PV_Bean selPV = (PV_Bean)session.getAttribute(VMForm.SESSION_SELECT_PV);
+       VM_Bean selVM = vmAction.getVM(selPV, -1);  //-1 to clear
+       //set the attributes
+       DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, selVM);
+       return changeTab("");  // VMForm.JSP_VM_DETAIL;
+    }else
+    {
+    	VM_Bean selVM = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM); 
+    	DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, selVM);
+    	return changeTab("");
+    }
   }
 
   /**
@@ -625,10 +744,11 @@ public class VMServlet extends GenericServlet
    */
   private String validateEditVM()
   {
-    HttpSession session = httpRequest.getSession();
+	  
+	HttpSession session = httpRequest.getSession();
     VM_Bean selVM = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
-    Vector<ValidateBean> vVal = vmAction.doValidateVM(selVM);
     //set the attributes
+    Vector<ValidateBean> vVal = vmAction.doValidateVM(selVM,vmData);
     SetACService setAC = new SetACService(curationServlet);
     Vector<String> vValString = setAC.makeStringVector(vVal);
     httpRequest.setAttribute(Session_Data.REQUEST_VALIDATE, vValString);        
@@ -664,9 +784,15 @@ public class VMServlet extends GenericServlet
       selVM.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_NONE);  
     
     //reset the vd bean
+    if(((String)httpRequest.getSession().getAttribute(VMForm.SESSION_RET_PAGE)).equals(VMForm.JSP_PV_DETAIL))
+    {	
     PVServlet pvser = new PVServlet(httpRequest, httpResponse, curationServlet);
     pvser.putBackVMEdits(selVM);
     return goBackToPV();
+    }
+    else{
+    	return goBackToSearch();
+    }
   }
 
   /**
@@ -791,11 +917,12 @@ public class VMServlet extends GenericServlet
     HttpSession session = req.getSession();
     
     //call teh method for sorting
-    vmAction.getVMResult(vmData);
+    vmAction.getVMResult(vmData,req);
     //store teh result back in request/session attributes
     DataManager.setAttribute(session, "results", vmData.getResultList());
     req.setAttribute("creRecsFound", vmData.getNumRecFound());
-    req.setAttribute("labelKeyword", vmData.getResultLabel());        
+    req.setAttribute("labelKeyword", vmData.getResultLabel());  
+    req.setAttribute("recsFound", vmData.getNumRecFound());
   }
 
   /** resets the vm concepts from page at save action to make sure newly added or deleted ones in the order
@@ -819,5 +946,182 @@ public class VMServlet extends GenericServlet
     }
     return vm;
   }
+
+/**
+ * @return the vmData
+ */
+public VMForm getVmData() {
+	return vmData;
+}
+
+/**
+ * @param vmData the vmData to set
+ */
+public void setVmData(VMForm vmData) {
+	this.vmData = vmData;
+}
+/**
+ * To get Search results for Conceptual Domain from database called from getACKeywordResult.
+ * 
+ * calls oracle stored procedure "{call SBREXT_CDE_CURATOR_PKG.SEARCH_CD(CD_IDSEQ, InString, ContID, ContName,
+ * ASLName, CD_ID, OracleTypes.CURSOR)}"
+ * 
+ * loop through the ResultSet and add them to bean which is added to the vector to return
+ * 
+ * @param CD_IDSEQ
+ *            String cd_idseq to filter
+ * @param InString
+ *            String search term
+ * @param ContID
+ *            String context_idseq
+ * @param ContName
+ *            selected context name.
+ * @param sVersion
+ *            String version indicator to filter
+ * @param ASLName
+ *            selected workflow status name.
+ * @param sCreatedFrom
+ *            String from created date
+ * @param sCreatedTo
+ *            String to create date
+ * @param sModifiedFrom
+ *            String from modified date
+ * @param sModifiedTo
+ *            String to modified date
+ * @param sCreator
+ *            String creater to filter
+ * @param sModifier
+ *            String modifier to filter
+ * @param CD_ID
+ *            String public id of cd
+ * @param sOrigin
+ *            String origin value to filter
+ * @param dVersion
+ *            double value of version number to filter
+ * @param conName
+ *            STring concept name or identifier to filter
+ * @param conID
+ *            String con idseq to fitler
+ * @param sVM
+ *            String value meaning
+ * @param vList
+ *            returns Vector of DEbean.
+ * @return Vector of CD Bean
+ * 
+ */
+public Vector doCDSearch(String CD_IDSEQ, String InString, String ContID, String ContName, String sVersion,
+                String ASLName, String sCreatedFrom, String sCreatedTo, String sModifiedFrom, String sModifiedTo,
+                String sCreator, String sModifier, String CD_ID, String sOrigin, double dVersion, String conName,
+                String conID, String sVM, Vector vList)
+{
+    // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "begin search", exDate, exDate));
+    //Connection conn = null;
+    ResultSet rs = null;
+    CallableStatement cstmt = null;
+    try
+    {
+        // Create a Callable Statement object.
+       // conn = m_servlet.connectDB(m_classReq, m_classRes);
+        if (curationServlet.getConn() == null)
+        	curationServlet.ErrorLogin(httpRequest, httpResponse);
+        else
+        {
+            cstmt = curationServlet.getConn()
+                            .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            cstmt.registerOutParameter(7, OracleTypes.CURSOR);
+            cstmt.setString(1, InString);
+            cstmt.setString(2, ContID);
+            cstmt.setString(3, ContName);
+            cstmt.setString(4, ASLName);
+            cstmt.setString(5, CD_IDSEQ);
+            cstmt.setString(6, CD_ID);
+            cstmt.setString(8, sCreatedFrom);
+            cstmt.setString(9, sCreatedTo);
+            cstmt.setString(10, sModifiedFrom);
+            cstmt.setString(11, sModifiedTo);
+            cstmt.setString(12, sOrigin);
+            cstmt.setString(13, sCreator);
+            cstmt.setString(14, sModifier);
+            cstmt.setString(15, sVersion);
+            cstmt.setDouble(16, dVersion);
+            cstmt.setString(17, conName);
+            cstmt.setString(18, conID);
+            cstmt.setString(19, sVM);
+            // Now we are ready to call the stored procedure
+            cstmt.execute();
+            // store the output in the resultset
+            rs = (ResultSet) cstmt.getObject(7);
+            // capture the duration
+            // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "got rsObject", exDate, new
+            // java.util.Date()));
+            String s;
+            if (rs != null)
+            {
+                // loop through the resultSet and add them to the bean
+                while (rs.next())
+                {
+                    CD_Bean CDBean = new CD_Bean();
+                    CDBean.setCD_PREFERRED_NAME(rs.getString("preferred_name"));
+                    CDBean.setCD_LONG_NAME(rs.getString("long_name"));
+                    CDBean.setCD_PREFERRED_DEFINITION(rs.getString("preferred_definition"));
+                    CDBean.setCD_ASL_NAME(rs.getString("asl_name"));
+                    CDBean.setCD_CONTE_IDSEQ(rs.getString("conte_idseq"));
+                    s = rs.getString("begin_date");
+                    if (s != null)
+                        s = m_util.getCurationDate(s);
+                    CDBean.setCD_BEGIN_DATE(s);
+                    s = rs.getString("end_date");
+                    if (s != null)
+                        s = m_util.getCurationDate(s);
+                    CDBean.setCD_END_DATE(s);
+                    // add the decimal number
+                    if (rs.getString("version").indexOf('.') >= 0)
+                        CDBean.setCD_VERSION(rs.getString("version"));
+                    else
+                        CDBean.setCD_VERSION(rs.getString("version") + ".0");
+                    CDBean.setCD_CD_IDSEQ(rs.getString("cd_idseq"));
+                    CDBean.setCD_CHANGE_NOTE(rs.getString("change_note"));
+                    CDBean.setCD_CONTEXT_NAME(rs.getString("context"));
+                    CDBean.setCD_CD_ID(rs.getString("cd_id"));
+                    CDBean.setCD_SOURCE(rs.getString("ORIGIN"));
+                    CDBean.setCD_DIMENSIONALITY(rs.getString("dimensionality"));
+                    s = rs.getString("date_created");
+                    if (s != null)
+                        s = m_util.getCurationDate(s);
+                    CDBean.setCD_DATE_CREATED(s);
+                    s = rs.getString("date_modified");
+                    if (s != null)
+                        s = m_util.getCurationDate(s);
+                    CDBean.setCD_DATE_MODIFIED(s);
+                    CDBean.setCD_CREATED_BY(rs.getString("created_by"));
+                    CDBean.setCD_MODIFIED_BY(rs.getString("modified_by"));
+                    vList.addElement(CDBean);
+                }
+            }
+        }
+    }
+    catch (Exception e)
+    {
+        // System.err.println("other problem in GetACSearch-CDSearch: " + e);
+        logger.fatal("ERROR - VMServlet-CDSearch for other : " + e.toString(), e);
+    }
+    try
+    {
+        if (rs != null)
+            rs.close();
+        if (cstmt != null)
+            cstmt.close();
+        //if (conn != null)
+          //  conn.close();
+    }
+    catch (Exception ee)
+    {
+        // System.err.println("Problem closing in GetACSearch-doCDSearch: " + ee);
+        logger.fatal("ERROR - GetACSearch-CDSearch for close : " + ee.toString(), ee);
+    }
+    // capture the duration
+    // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "end search", exDate, new java.util.Date()));
+    return vList;
+}
 
 }
