@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.52 2007-11-28 19:44:46 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.53 2008-03-13 18:00:06 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2681,7 +2681,7 @@ public class SetACService implements Serializable
         Vector vRes = new Vector();
         String sID = m_DEC.getDEC_DEC_IDSEQ();
         if (sID != null && !sID.equals(""))
-          getAC.doDESearch("", "", "","","","", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", sID, "", "", "", "", "", vRes);
+          getAC.doDESearch("", "", "","","","", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", sID, "", "", "", "", "", "", vRes);
         if (vRes != null && vRes.size()>0)
         {
           String sRegStatus = "", sDEName = "";
