@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateNewPermValues.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateNewPermValues.jsp,v 1.2 2008-03-13 18:05:14 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -116,9 +116,9 @@
 								<textarea name="SummaryPV" cols="30" rows="10" id="SummaryPV"></textarea>
 							</td>
 						</tr>
-						</td>
-						</tr>
 					</table>
+					</td>
+				</tr>
 		</table>
 	</body>
 </html>
