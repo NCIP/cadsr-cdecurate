@@ -1,9 +1,10 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.3 2008-02-20 19:35:24 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.4 2008-03-13 18:06:52 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.database.Alternates" %>
 <html>
 	<head>
 		<title>
@@ -104,6 +105,16 @@
       Vector vEMsg = (Vector)session.getAttribute("VMEditMsg");
       if (vEMsg == null) vEMsg = new Vector();
       String sErrAC = (String)request.getAttribute("ErrMsgAC");
+      boolean conceptMatch=false;
+      for (int k=0; k<vEMsg.size(); k++)
+	  { 
+		VM_Bean vBean = (VM_Bean)vEMsg.elementAt(k);
+		if (vBean.getVM_COMMENT_FLAG().equals("Concept matches."))
+		{
+		  conceptMatch = true;
+		  break;
+		}
+	  }	
       if (sErrAC == null) sErrAC = "";
       String vmMatch = (String)request.getAttribute("vmNameMatch");
       if (vmMatch == null) vmMatch = "false";
@@ -489,6 +500,13 @@
 															<col>
 															<col width="4px">
 															<tr>
+																<td colspan="3">
+																	<b>
+																		VM Long Name
+																	</b>
+																</td>
+															</tr>
+															<tr>
 																<td>
 																	&nbsp;&nbsp;
 																</td>
@@ -630,8 +648,8 @@
 																				<!-- <input type="checkbox" name="saveAlt"/>  -->
 																			</td>
 																			<td>
-																				<input type="button" name="btnContinue" style="width:90" value="Continue" <% if (vmMatch.equals("true")) { %>disabled <% } %>
-																					onClick="javascript:ContinueDuplicateVM('continueVM');">
+																				<input type="button" name="btnContinue" style="width:90" value="Create" 
+																					onClick="javascript:ContinueDuplicateVM('continueVM');" <% if (conceptMatch) { %>disabled <% } %>>
 																			</td>
 																			<td>
 																				&nbsp;&nbsp;
@@ -647,11 +665,11 @@
 															<tr>
 																<td colspan=2>
 																	<% if (vmMatch.equals("true")) { %>
-The Value Meaning matches the name of an existing Value Meaning. You may either select one of the existing Value Meanings from the list below and click Use Selection OR click Cancel to change the Value Meaning.
+																		The Value Meaning matches the name of an existing Value Meaning. You may either select one of the existing Value Meanings from the list below and click Use Selection OR click Cancel to change the Value Meaning.
 																	<% } else { %>
 																		The Value Meaning you are creating matches the definition or concepts of an existing Value Meaning.
 																		You may select an existing Value Meaning and click 'Use Selection', 
-																		'Cancel' to edit the Value Meaning, or 'Continue' to create a new Value Meaning with the same definition or concepts.
+																		'Cancel' to edit the Value Meaning, or 'Create' to create a new Value Meaning.
 																	<% } %>
 																	<br>
 																</td>
@@ -661,7 +679,9 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 															{ 
 																	VM_Bean vB = (VM_Bean)vEMsg.elementAt(k);
 																	Vector vBCon = vB.getVM_CONCEPT_LIST();
+																	Alternates[] alternate = vB.getVM_ALT_LIST();
 																	String rVM = "erVM"+k;
+																	String idVer =vB.getVM_ID()+"v"+ vB.getVM_VERSION();
 														 %>
 															<tr>
 																<td valign="top">
@@ -670,9 +690,13 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 																<td>
 																	<dl>
 																		<dt>
-																			VM Name:
+																			VM Long Name:
 																		<dd>
 																			<%=vB.getVM_LONG_NAME()%>
+																		<dt>
+																			Public Id & Version:
+																		<dd>
+																			<%=idVer%>
 																		<dt>
 																			VM Description:
 																		<dd>
@@ -690,6 +714,17 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 																			&nbsp;&nbsp;
 																			<%=eB.getEVS_DATABASE()%>
 																			<% }  } else { %>
+																			None.
+																			<% } %>
+																		<dt>
+																			Alt Names:
+																			<% if (alternate.length > 0){  
+																	for (int j=0;j<alternate.length;j++){
+           															  %>
+																		<dd>
+																		    <%if(alternate[j].getInstance()==Alternates._INSTANCENAME){ %>
+																		    
+																		    <%=alternate[j].getName()%> <%}}} else {%>	
 																			None.
 																			<% } %>
 																		<dt>
@@ -1091,6 +1126,27 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 																	<br>
 																	<div id="<%=pvCount%>View" style="display: <%if (viewType.equals("expand")) {%>block <% } else { %> none <% } %>">
 																		<table width="100%">
+																		<tr>
+																				<td colspan="2">
+																					<b>
+																						Public Id & Version
+																					</b>
+																				</td>
+																			</tr>
+																			<tr>
+																				<td>
+																					&nbsp;&nbsp;&nbsp;&nbsp;
+																				</td>
+																				<td>
+																				<% if (submit != null && submit.equals("INS")) { %>
+																				  [System Assigned after Creation]
+																			<% } else { %>
+																					<%= vm.getVM_ID()+"v"+ vm.getVM_VERSION()%>
+																				
+																			<% } %>
+																				<br><br>
+																				</td>
+																			</tr>
 																			<tr>
 																				<td colspan="2">
 																					<b>
@@ -1261,9 +1317,15 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 																			<td>
 																				<dl>
 																					<dt>
-																						VM Name:
+																						VM Long Name:
 																					<dd>
 																					<%=vB.getVM_LONG_NAME()%>
+																					<dt>
+																						Public Id & Version:
+																					<dd>
+																					
+																					<%=vB.getVM_ID()+"v"+ vB.getVM_VERSION()%>
+																					
 																					<dt>
 																						VM Description:
 																					<dd>
