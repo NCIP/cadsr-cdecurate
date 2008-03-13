@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.27 2008-02-20 19:35:06 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.28 2008-03-13 20:34:43 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -888,7 +888,7 @@ public class PVServlet implements Serializable
          DataManager.setAttribute(session, VMForm.SESSION_SELECT_PV, selPV);
          DataManager.setAttribute(session, PVForm.SESSION_PV_INDEX, pvInd);
          DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
-
+         DataManager.setAttribute(session, VMForm.SESSION_RET_PAGE, VMForm.ACT_BACK_PV);
          //get vm alt names
          AltNamesDefsServlet altSer = new AltNamesDefsServlet(data.getCurationServlet(), data.getCurationServlet().sessionData.UsrBean);
          Alternates alt = altSer.getManualDefinition(data.getRequest(), VMForm.ELM_FORM_SEARCH_EVS);
