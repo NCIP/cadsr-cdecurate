@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVM.js,v 1.1 2007-09-10 16:16:47 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVM.js,v 1.2 2008-03-13 18:03:05 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 var evsWindow = null;
@@ -126,7 +126,7 @@ var evsWindow = null;
   function Back()
   {
     hourglass();
-    document.createVMForm.pageAction.value  = "backToPV";
+   // document.createVMForm.pageAction.value  = "backToPV";
     document.createVMForm.submit();
   }
 
