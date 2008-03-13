@@ -1,9 +1,11 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VM_Bean.java,v 1.48 2008-02-20 19:35:06 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VM_Bean.java,v 1.49 2008-03-13 18:01:22 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.ACTypes;
+import gov.nih.nci.cadsr.cdecurate.database.Alternates;
+
 import java.util.Vector;
 
 /**
@@ -124,6 +126,7 @@ public class VM_Bean extends AC_Bean
   private String VM_SUBMIT_ACTION;
   private String VM_CONDR_IDSEQ;
   private Vector<EVS_Bean> VM_CONCEPT_LIST;
+  private Alternates[] VM_ALT_LIST;
   private Vector<CommonACBean> VM_VD_LIST;
   private Vector<CommonACBean> VM_DE_LIST;
   private Vector<CommonACBean> VM_CRF_LIST;
@@ -878,6 +881,20 @@ return (this.VM_PREFERRED_DEFINITION == null) ? "" : this.VM_PREFERRED_DEFINITIO
  */
 public void setVM_PREFERRED_DEFINITION(String vm_preferred_definition) {
 	VM_PREFERRED_DEFINITION = vm_preferred_definition;
+}
+
+/**
+ * @return the vM_ALT_LIST
+ */
+public Alternates[] getVM_ALT_LIST() {
+	return VM_ALT_LIST;
+}
+
+/**
+ * @param vm_alt_list the vM_ALT_LIST to set
+ */
+public void setVM_ALT_LIST(Alternates[] vm_alt_list) {
+	VM_ALT_LIST = vm_alt_list;
 }
 
   
