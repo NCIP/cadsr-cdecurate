@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.5 2008-03-13 21:01:14 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.6 2008-03-14 16:55:28 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -94,7 +94,7 @@
 									Enter Version
 								</b>
 							</div>
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="Version" type="text" value="<%=sVersion%>" size="5" maxlength=5>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="Version" type="text" value="<%=sVersion%>" size="5" maxlength=5 disabled>
 							&nbsp;&nbsp;&nbsp;
 							<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
 							Business Rules
