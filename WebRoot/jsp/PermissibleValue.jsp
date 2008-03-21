@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.5 2008-03-14 19:02:25 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.6 2008-03-21 17:16:36 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -1096,8 +1096,7 @@
 																</td>
 																<td valign="top">
 																	<div id="<%=pvCount%>VMView" style="display: inline">
-																	<b>VM Long Name:</b><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=sPVMean%>
-																	</div>
+																	<b>VM Long Name:</b>
 																	<% if (vmCon.size() < 1) { %>
 																	<div id="<%=pvCount%>VMEdit" style="display: none; width:90%">
 																		&nbsp;&nbsp;
@@ -1121,6 +1120,9 @@
 																				</a>
 																			<% } %>
 																		</span>
+																		<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=sPVMean%>
+																	</div>
+																	
 																	</div>
 																	<br>
 																	<br>
