@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.7 2008-03-21 18:20:56 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.8 2008-03-21 19:36:23 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -665,7 +665,7 @@
 															<tr>
 																<td colspan=2>
 																	<% if (vmMatch.equals("true")) { %>
-																		The Value Meaning matches the name of an existing Value Meaning. You may either select one of the existing Value Meanings from the list below and click Use Selection OR click Cancel to change the Value Meaning.
+																		The Value Meaning matches the name of another Value Meaning. Please (1) select from the list below and press the Use Selection button, (2) press the Create button to create a new Value Meaning as it appears above or (3) press Cancel to change the Value Meaning properties above then press Save again
 																	<% } else { %>
 																		The Value Meaning you are creating matches the definition or concepts of an existing Value Meaning.
 																		You may select an existing Value Meaning and click 'Use Selection', 
