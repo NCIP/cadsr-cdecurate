@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.8 2008-03-21 17:42:28 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.9 2008-03-21 18:30:16 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -264,7 +264,8 @@
 							<div class="table">
 								<table width="95%" border="0">
 									<colgroup>
-										<col width="40%">
+									   <col width="2%">
+										<col width="38%">
 										<col width="10%">
 										<col width="20%">
 										<col width="10%">
