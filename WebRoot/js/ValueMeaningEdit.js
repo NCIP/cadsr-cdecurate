@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.2 2007-09-19 16:59:34 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.3 2008-03-24 23:56:31 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 	var secondWindow;
@@ -25,14 +25,14 @@
 			document.VMUse.submit();		
 	}
 	
-	function searchConcepts()
+	function searchConcepts(vocab)
 	{
 		var searchComp = "EditVMConcept";
 	    document.SearchActionForm.searchComp.value = searchComp;
 	    document.SearchActionForm.isValidSearch.value = "false";
 	    if (secondWindow && !secondWindow.closed)
 	       secondWindow.close();
-	  	secondWindow = window.open("../../cdecurate/NCICurationServlet?reqType=searchBlocks&actSelect=FirstSearch" + "&listSearchFor=" + searchComp + "&listContextFilterVocab=NCI_Thesaurus", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
+	  	secondWindow = window.open("../../cdecurate/NCICurationServlet?reqType=searchBlocks&actSelect=FirstSearch" + "&listSearchFor=" + searchComp + "&listContextFilterVocab=" +  vocab  + ", BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
 	}
 	
 	function deleteConcept(iRow, conName)

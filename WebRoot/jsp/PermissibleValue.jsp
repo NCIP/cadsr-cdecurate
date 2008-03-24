@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.10 2008-03-24 15:05:40 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.11 2008-03-24 23:57:21 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -20,6 +20,7 @@
 		<%  
       String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
       String sSearchAC = (String) session.getAttribute("creSearchAC");
+      String vocab= (String)session.getAttribute("preferredVocab");
    //  System.out.println(sSearchAC + " vd action " + sMenuAction);
       	
       VD_Bean m_VD = new VD_Bean();
@@ -238,7 +239,7 @@
 													<%}%>
 												</td>
 												<td align="left">
-													<input type="button" name="btnSelectValues" style="width:90" value="Select Values" disabled onClick="javascript:selectValues()">
+													<input type="button" name="btnSelectValues" style="width:90" value="Select Values" disabled onClick="javascript:selectValues(<%=vocab%>)">
 												</td>
 												<td align="center">
 													<input type="button" name="btnRemoveConcept" style="width:100%" value="Remove Parent" disabled onClick="javascript:removeParent();">
@@ -1108,19 +1109,13 @@
 																			<% } %>
 																		</span>
 																	</div>
+																	<br>
+																	<div id="<%=pvCount%>" style="display: inline; text-align:right">
+																		&nbsp;&nbsp;<%=sPVMean%>
+																	</div>
 																	</div>
 																	<div id="<%=pvCount%>View" style="display: <%if (viewType.equals("expand")) {%>block <% } else { %> none <% } %>">
 																		<table width="100%">
-																		<tr>
-																				<td>
-																					&nbsp;&nbsp;
-																				</td>
-																				<td>
-																				<%=sPVMean%>
-																				<br>
-																				<br>
-																			</td>
-																		</tr>
 																		<tr>
 																				<td colspan="2">
 																					<b>
