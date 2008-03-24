@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.32 2008-03-24 14:41:54 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.33 2008-03-24 23:53:27 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -461,10 +461,21 @@ public class VMAction implements Serializable
   public String doSubmitVM(VMForm data)
   {
     String erMsg = "";
+    String returnCode=null;
     VM_Bean vm = data.getVMBean();
     String sAct = vm.getVM_SUBMIT_ACTION();
     if (!sAct.equals("") && !sAct.equals(VMForm.CADSR_ACTION_NONE))
     {
+    	
+    	if(vm.isNewAC())
+    	{
+    		returnCode = this.setNewVersionVM(data);
+    		if(returnCode==null)
+    		{
+    		  vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_UPD);	
+    		}
+    	}
+      	
       //check if vm exists for INS action (not sure if needed or what to do later)
       data.setStatusMsg("");
       String ret = "";
@@ -917,10 +928,10 @@ public String checkVMNameExists(VM_Bean selVM,VMForm data)
      try
      {
       // vm.setVM_SHORT_MEANING(rs.getString("short_meaning"));
-      // String vmD = rs.getString("vm_description");
-    	// String vmD = rs.getString("vm_definition_source");
-       //if (vmD == null || vmD.equals(""))
-          String vmD = rs.getString("PREFERRED_DEFINITION");
+       //String vmD = rs.getString("vm_description");
+    	/* String vmD = rs.getString("vm_definition_source");
+       if (vmD == null || vmD.equals(""))*/
+         String  vmD = rs.getString("PREFERRED_DEFINITION");
        //vm.setVM_DESCRIPTION(vmD);
        vm.setVM_PREFERRED_DEFINITION(vmD);
        vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_NONE);
@@ -1074,7 +1085,63 @@ public String checkVMNameExists(VM_Bean selVM,VMForm data)
        return null;
    }
 
+ /**
+  * To create a new version of the VM call the stored procedure
+  * sbr.meta_Config_mgmt.VM_VERSION (p_Idseq Admin_components_view.ac_idseq%TYPE
+  *                                                     ,p_version IN Admin_components_view.version%TYPE
+  *                                                     ,p_new_vm_idseq     OUT admin_components_View.ac_idseq%TYPE
+  *                                                     ,  P_RETURN_CODE OUT    VARCHAR2)
+  * @param data VM Data object.
+  * @return sReturnCode String return code from the stored procedure call. null if no
+	 *         error occurred.
+ */
+private String setNewVersionVM(VMForm data)
+ {
+	 String sReturnCode="None";
+	 ResultSet rs = null;
+	 CallableStatement cstmt = null;
+	 try
+	    {
+	      VM_Bean vm = data.getVMBean();
+	      if (data.getCurationServlet().getConn() != null)
+	      {
+	    	  cstmt = data.getCurationServlet().getConn().prepareCall("{call sbr.meta_Config_mgmt.VM_VERSION(?,?,?,?)}");
+	    	  
+	          // Set the out parameters (which are inherited from the
+				// PreparedStatement class)
+				cstmt.registerOutParameter(3, java.sql.Types.VARCHAR); // NEW
+				// ID
+				cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // RETURN
+				// CODE
 
+				cstmt.setString(1, vm.getVM_IDSEQ()); // AC idseq
+				Double DVersion = new Double(vm.getVM_VERSION()); // convert the version
+				// to double type
+				double dVersion = DVersion.doubleValue();
+				cstmt.setDouble(2,dVersion);
+
+				// Now we are ready to call the stored procedure
+				cstmt.execute();
+				sReturnCode = cstmt.getString(4);
+				String newACID = cstmt.getString(3);
+				// trim off the extra spaces in it
+				if (newACID != null && !newACID.equals(""))
+					newACID = newACID.trim();
+				// update the bean if return code is null and new de id is not
+				// null
+				if (sReturnCode == null && newACID != null) {
+					// update the bean 
+					vm.setVM_IDSEQ(newACID);
+			
+				}
+	      }
+	    }catch (Exception e)
+	          {
+	            logger.fatal("ERROR in creating new VM Version: " + e.toString(), e);
+	           }      
+	 return sReturnCode;
+ }
+   
 // private methods
 
   /**
@@ -1139,6 +1206,7 @@ public String checkVMNameExists(VM_Bean selVM,VMForm data)
         cstmt.setString(1, userName);
         cstmt.setString(3, sAction);
         cstmt.setString(4, conArray);
+        cstmt.setString(5, vm.getVM_IDSEQ());
         // set value meaning if action is to update
         //if (sAction.equals(VMForm.CADSR_ACTION_UPD) || conArray == null)
           //cstmt.setString(7, vm.getVM_SHORT_MEANING());

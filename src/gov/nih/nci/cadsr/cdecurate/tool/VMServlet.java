@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.28 2008-03-24 16:38:25 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.29 2008-03-24 23:53:27 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -69,14 +69,9 @@ public class VMServlet extends GenericServlet
     	   {
     		   String searchIn =(String)httpRequest.getSession().getAttribute("serSearchIn");
     		   if((searchIn!=null ||  !searchIn.equals(""))&& searchIn.equals("minID"))
-    		   {
     			   vmData.setSearchFilterID((String)httpRequest.getSession().getAttribute("creKeyword"));
-    			 
-    		   }
     		   else if((searchIn!=null ||  !searchIn.equals(""))&& searchIn.equals("concept"))
-    			   {
-    			    vmData.setSearchFilterConName((String)httpRequest.getSession().getAttribute("creKeyword"));
-    			   }
+    			   vmData.setSearchFilterConName((String)httpRequest.getSession().getAttribute("creKeyword"));
     		   else
     			   vmData.setSearchTerm((String)httpRequest.getSession().getAttribute("creKeyword"));
     	   }
@@ -574,7 +569,9 @@ public class VMServlet extends GenericServlet
           if (!sVersion.equals(" "))  //remove the xtra space if any
         	  sVersion = sVersion.trim();
           if(!sVersion.equals((String)httpRequest.getSession().getAttribute("prevVMVersion")))
-        	  vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
+          { vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
+          	vm.markNewAC();
+        }
           vm.setVM_VERSION(sVersion);
         }
         //Check if user selected new workflow
