@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.9 2008-03-21 18:30:16 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.10 2008-03-24 23:57:21 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -18,7 +18,8 @@
 			//get the focus element
 		  String elmFocus = (String)request.getAttribute(VMForm.REQUEST_FOCUS_ELEMENT);
 		  if (elmFocus == null) elmFocus = "";
-			VMForm thisForm = (VMForm)request.getAttribute(VMForm.REQUEST_FORM_DATA); 
+			VMForm thisForm = (VMForm)request.getAttribute(VMForm.REQUEST_FORM_DATA);
+			//Session_Data sData = (Session_Data)thisForm.getCurationServlet().sessionData; 
 			boolean conExist = thisForm.conceptExist;
 			Vector vmCon = thisForm.vmConcepts;
 			Vector cdResult = (Vector)request.getAttribute("ConDomainList");
@@ -26,6 +27,7 @@
 			 Vector vRegStatus = (Vector)session.getAttribute("vRegStatus");
 			 session.setAttribute("prevVMVersion",thisForm.getVMBean().getVM_VERSION());
 			 String sVM = (String)request.getAttribute("VMName");
+			 String vocab = (String)session.getAttribute("preferredVocab");
 		%>
 
 		<Script Language="JavaScript">
@@ -153,7 +155,7 @@
 								</b>
 							</div>
 							<div class="ind3" style="display:inline">
-								<a title="Search" href="javascript:searchConcepts();">
+								<a title="Search" href="javascript:searchConcepts(<%=vocab%>);">
 									Search
 								</a>
 							</div>

@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.2 2007-09-19 16:59:34 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.3 2008-03-24 23:56:31 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -797,7 +797,7 @@
 	}  	
   }
 
-  function selectValues()
+  function selectValues(vocab)
   {
 	  if (!validatePVAction('selectValues'))  //check if any pv is in edit mode
 	  	return;  
@@ -820,7 +820,7 @@
 	      else
 	      {
 	        document.getElementById("actSelect").value = "OpenTreeToParentConcept";
-			openConceptSearchWindow("ParentConceptVM", "true");
+			openConceptSearchWindow("ParentConceptVM", "true",vocab);
 	      }
       }
       
@@ -912,7 +912,7 @@
           alert("Type must be 'Enumerated' to create/edit/remove Permissible Values.");
   }
   
-  function openConceptSearchWindow(serComp, treeOpen)
+  function openConceptSearchWindow(serComp, treeOpen,vocab)
   {
 	  document.SearchActionForm.searchComp.value = serComp;
 	  document.getElementById("openToTree").value = treeOpen;
@@ -924,7 +924,7 @@
       else
       {
     	  document.SearchActionForm.isValidSearch.value = "true";
-    	  searchWindow = window.open("../../cdecurate/NCICurationServlet?reqType=searchBlocks&actSelect=FirstSearch" + "&listSearchFor=" + serComp + "&listContextFilterVocab=NCI_Thesaurus", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
+    	  searchWindow = window.open("../../cdecurate/NCICurationServlet?reqType=searchBlocks&actSelect=FirstSearch" + "&listSearchFor=" + serComp + "&listContextFilterVocab=" + vocab +  ", BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
       }	
   }
   
