@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.26 2008-03-13 18:02:20 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.27 2008-03-24 14:41:54 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -69,9 +69,14 @@ public class VMServlet extends GenericServlet
     	   {
     		   String searchIn =(String)httpRequest.getSession().getAttribute("serSearchIn");
     		   if((searchIn!=null ||  !searchIn.equals(""))&& searchIn.equals("minID"))
+    		   {
     			   vmData.setSearchFilterID((String)httpRequest.getSession().getAttribute("creKeyword"));
+    			 
+    		   }
     		   else if((searchIn!=null ||  !searchIn.equals(""))&& searchIn.equals("concept"))
-    			   vmData.setSearchFilterConName((String)httpRequest.getSession().getAttribute("creKeyword"));
+    			   {
+    			    vmData.setSearchFilterConName((String)httpRequest.getSession().getAttribute("creKeyword"));
+    			   }
     		   else
     			   vmData.setSearchTerm((String)httpRequest.getSession().getAttribute("creKeyword"));
     	   }
@@ -171,7 +176,11 @@ public class VMServlet extends GenericServlet
       DataManager.setAttribute(session, "creKeyword", sKeyword);   //keep the old criteria
     
     //get the searchIn
-    String sSearchIn = (String) req.getParameter("listSearchIn");
+    String sSearchIn =null;
+    if(pageAction!=null && pageAction.equals(VMForm.ACT_BACK_SEARCH))
+	    sSearchIn =(String)httpRequest.getSession().getAttribute("serSearchIn");
+    else
+       sSearchIn = (String) req.getParameter("listSearchIn");
     if (sSearchIn == null)
     	sSearchIn = "";
     if (sSearchIn.equals("minID"))
@@ -429,9 +438,9 @@ public class VMServlet extends GenericServlet
     retForm.longName =  vm.getVM_LONG_NAME();
     //get the conceptual domains
     String sVM = vm.getVM_LONG_NAME(); // ac name for pv
-    // call the api to return concept attributes according to ac type and ac idseq
+ // call the api to return concept attributes according to ac type and ac idseq
     Vector cdList = new Vector();
-    cdList = this.doCDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", sVM, cdList); // get
+    cdList = vmAction.doCDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", sVM, cdList,vmData); // get
                                                                                                              // the
                                                                                                                 // list
                                                                                                                 // of
@@ -960,168 +969,4 @@ public VMForm getVmData() {
 public void setVmData(VMForm vmData) {
 	this.vmData = vmData;
 }
-/**
- * To get Search results for Conceptual Domain from database called from getACKeywordResult.
- * 
- * calls oracle stored procedure "{call SBREXT_CDE_CURATOR_PKG.SEARCH_CD(CD_IDSEQ, InString, ContID, ContName,
- * ASLName, CD_ID, OracleTypes.CURSOR)}"
- * 
- * loop through the ResultSet and add them to bean which is added to the vector to return
- * 
- * @param CD_IDSEQ
- *            String cd_idseq to filter
- * @param InString
- *            String search term
- * @param ContID
- *            String context_idseq
- * @param ContName
- *            selected context name.
- * @param sVersion
- *            String version indicator to filter
- * @param ASLName
- *            selected workflow status name.
- * @param sCreatedFrom
- *            String from created date
- * @param sCreatedTo
- *            String to create date
- * @param sModifiedFrom
- *            String from modified date
- * @param sModifiedTo
- *            String to modified date
- * @param sCreator
- *            String creater to filter
- * @param sModifier
- *            String modifier to filter
- * @param CD_ID
- *            String public id of cd
- * @param sOrigin
- *            String origin value to filter
- * @param dVersion
- *            double value of version number to filter
- * @param conName
- *            STring concept name or identifier to filter
- * @param conID
- *            String con idseq to fitler
- * @param sVM
- *            String value meaning
- * @param vList
- *            returns Vector of DEbean.
- * @return Vector of CD Bean
- * 
- */
-public Vector doCDSearch(String CD_IDSEQ, String InString, String ContID, String ContName, String sVersion,
-                String ASLName, String sCreatedFrom, String sCreatedTo, String sModifiedFrom, String sModifiedTo,
-                String sCreator, String sModifier, String CD_ID, String sOrigin, double dVersion, String conName,
-                String conID, String sVM, Vector vList)
-{
-    // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "begin search", exDate, exDate));
-    //Connection conn = null;
-    ResultSet rs = null;
-    CallableStatement cstmt = null;
-    try
-    {
-        // Create a Callable Statement object.
-       // conn = m_servlet.connectDB(m_classReq, m_classRes);
-        if (curationServlet.getConn() == null)
-        	curationServlet.ErrorLogin(httpRequest, httpResponse);
-        else
-        {
-            cstmt = curationServlet.getConn()
-                            .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-            cstmt.registerOutParameter(7, OracleTypes.CURSOR);
-            cstmt.setString(1, InString);
-            cstmt.setString(2, ContID);
-            cstmt.setString(3, ContName);
-            cstmt.setString(4, ASLName);
-            cstmt.setString(5, CD_IDSEQ);
-            cstmt.setString(6, CD_ID);
-            cstmt.setString(8, sCreatedFrom);
-            cstmt.setString(9, sCreatedTo);
-            cstmt.setString(10, sModifiedFrom);
-            cstmt.setString(11, sModifiedTo);
-            cstmt.setString(12, sOrigin);
-            cstmt.setString(13, sCreator);
-            cstmt.setString(14, sModifier);
-            cstmt.setString(15, sVersion);
-            cstmt.setDouble(16, dVersion);
-            cstmt.setString(17, conName);
-            cstmt.setString(18, conID);
-            cstmt.setString(19, sVM);
-            // Now we are ready to call the stored procedure
-            cstmt.execute();
-            // store the output in the resultset
-            rs = (ResultSet) cstmt.getObject(7);
-            // capture the duration
-            // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "got rsObject", exDate, new
-            // java.util.Date()));
-            String s;
-            if (rs != null)
-            {
-                // loop through the resultSet and add them to the bean
-                while (rs.next())
-                {
-                    CD_Bean CDBean = new CD_Bean();
-                    CDBean.setCD_PREFERRED_NAME(rs.getString("preferred_name"));
-                    CDBean.setCD_LONG_NAME(rs.getString("long_name"));
-                    CDBean.setCD_PREFERRED_DEFINITION(rs.getString("preferred_definition"));
-                    CDBean.setCD_ASL_NAME(rs.getString("asl_name"));
-                    CDBean.setCD_CONTE_IDSEQ(rs.getString("conte_idseq"));
-                    s = rs.getString("begin_date");
-                    if (s != null)
-                        s = m_util.getCurationDate(s);
-                    CDBean.setCD_BEGIN_DATE(s);
-                    s = rs.getString("end_date");
-                    if (s != null)
-                        s = m_util.getCurationDate(s);
-                    CDBean.setCD_END_DATE(s);
-                    // add the decimal number
-                    if (rs.getString("version").indexOf('.') >= 0)
-                        CDBean.setCD_VERSION(rs.getString("version"));
-                    else
-                        CDBean.setCD_VERSION(rs.getString("version") + ".0");
-                    CDBean.setCD_CD_IDSEQ(rs.getString("cd_idseq"));
-                    CDBean.setCD_CHANGE_NOTE(rs.getString("change_note"));
-                    CDBean.setCD_CONTEXT_NAME(rs.getString("context"));
-                    CDBean.setCD_CD_ID(rs.getString("cd_id"));
-                    CDBean.setCD_SOURCE(rs.getString("ORIGIN"));
-                    CDBean.setCD_DIMENSIONALITY(rs.getString("dimensionality"));
-                    s = rs.getString("date_created");
-                    if (s != null)
-                        s = m_util.getCurationDate(s);
-                    CDBean.setCD_DATE_CREATED(s);
-                    s = rs.getString("date_modified");
-                    if (s != null)
-                        s = m_util.getCurationDate(s);
-                    CDBean.setCD_DATE_MODIFIED(s);
-                    CDBean.setCD_CREATED_BY(rs.getString("created_by"));
-                    CDBean.setCD_MODIFIED_BY(rs.getString("modified_by"));
-                    vList.addElement(CDBean);
-                }
-            }
-        }
-    }
-    catch (Exception e)
-    {
-        // System.err.println("other problem in GetACSearch-CDSearch: " + e);
-        logger.fatal("ERROR - VMServlet-CDSearch for other : " + e.toString(), e);
-    }
-    try
-    {
-        if (rs != null)
-            rs.close();
-        if (cstmt != null)
-            cstmt.close();
-        //if (conn != null)
-          //  conn.close();
-    }
-    catch (Exception ee)
-    {
-        // System.err.println("Problem closing in GetACSearch-doCDSearch: " + ee);
-        logger.fatal("ERROR - GetACSearch-CDSearch for close : " + ee.toString(), ee);
-    }
-    // capture the duration
-    // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "end search", exDate, new java.util.Date()));
-    return vList;
-}
-
 }

@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.31 2008-03-13 18:01:35 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.32 2008-03-24 14:41:54 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -191,11 +191,11 @@ public class VMAction implements Serializable
         if (vSelAttr.contains("Long Name")) vResult.addElement(VMBean.getVM_LONG_NAME());
         if (vSelAttr.contains("Public ID")) vResult.addElement( VMBean.getVM_ID()); 
         if (vSelAttr.contains("Version"))  vResult.addElement(VMBean.getVM_VERSION()); 
+        if (vSelAttr.contains("Workflow Status"))  vResult.addElement(VMBean.getASL_NAME());
         if (vSelAttr.contains("EVS Identifier")) vResult.addElement(conID);  //vmConcept.getCONCEPT_IDENTIFIER());
-        if (vSelAttr.contains("Workflow Status"))  vResult.addElement(VMBean.getASL_NAME()); 
         // if (vSelAttr.contains("Conceptual Domain")) vResult.addElement(VMBean.getVM_CD_NAME());
         if (vSelAttr.contains("Conceptual Domain")) 
-        	vResult =addMultiRecordConDomain(VMBean.getVM_CD_NAME(), VMBean.getVM_LONG_NAME(), vResult);
+        	vResult =addMultiRecordConDomain(VMBean.getVM_CD_NAME(), VMBean.getVM_LONG_NAME(), vResult,httpReq,data);
         if (vSelAttr.contains("Definition")) vResult.addElement(VMBean.getVM_PREFERRED_DEFINITION());
         if (vSelAttr.contains("Definition Source")) vResult.addElement(defsrc);  //vmConcept.getEVS_DEF_SOURCE());
         if (vSelAttr.contains("Vocabulary")) vResult.addElement(vocab);  //vmConcept.getEVS_DATABASE());
@@ -290,11 +290,11 @@ public class VMAction implements Serializable
         if (vSelAttr.contains("Long Name")) vResult.addElement(VMBean.getVM_LONG_NAME());
         if (vSelAttr.contains("Public ID")) vResult.addElement( VMBean.getVM_ID()); 
         if (vSelAttr.contains("Version"))  vResult.addElement(VMBean.getVM_VERSION()); 
+        if (vSelAttr.contains("Workflow Status"))  vResult.addElement(VMBean.getASL_NAME());
         if (vSelAttr.contains("EVS Identifier")) vResult.addElement(conID);  //vmConcept.getCONCEPT_IDENTIFIER());
-        if (vSelAttr.contains("Workflow Status"))  vResult.addElement(VMBean.getASL_NAME()); 
         // if (vSelAttr.contains("Conceptual Domain")) vResult.addElement(VMBean.getVM_CD_NAME());
         if (vSelAttr.contains("Conceptual Domain")) 
-        	vResult =addMultiRecordConDomain(VMBean.getVM_CD_NAME(), VMBean.getVM_LONG_NAME(), vResult);
+        	vResult =addMultiRecordConDomain(VMBean.getVM_CD_NAME(), VMBean.getVM_LONG_NAME(), vResult,httpReq,data);
         if (vSelAttr.contains("Definition")) vResult.addElement(VMBean.getVM_PREFERRED_DEFINITION());
         if (vSelAttr.contains("Definition Source")) vResult.addElement(defsrc);  //vmConcept.getEVS_DEF_SOURCE());
         if (vSelAttr.contains("Vocabulary")) vResult.addElement(vocab);  //vmConcept.getEVS_DATABASE());
@@ -917,10 +917,10 @@ public String checkVMNameExists(VM_Bean selVM,VMForm data)
      try
      {
       // vm.setVM_SHORT_MEANING(rs.getString("short_meaning"));
-       //String vmD = rs.getString("vm_description");
-    	/* String vmD = rs.getString("vm_definition_source");
-       if (vmD == null || vmD.equals(""))*/
-         String  vmD = rs.getString("PREFERRED_DEFINITION");
+      // String vmD = rs.getString("vm_description");
+    	// String vmD = rs.getString("vm_definition_source");
+       //if (vmD == null || vmD.equals(""))
+          String vmD = rs.getString("PREFERRED_DEFINITION");
        //vm.setVM_DESCRIPTION(vmD);
        vm.setVM_PREFERRED_DEFINITION(vmD);
        vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_NONE);
@@ -933,7 +933,7 @@ public String checkVMNameExists(VM_Bean selVM,VMForm data)
          sChg = rs.getString("change_note");
        vm.setVM_CHANGE_NOTE(sChg);
        vm.setASL_NAME(rs.getString("asl_name"));
-
+       //vm.setVM_DEFINITION_SOURCE(rs.getString("vm_definition_source")); 
        this.getVMVersion(rs, vm);
        String sCondr = rs.getString("condr_idseq");
        vm.setVM_CONDR_IDSEQ(sCondr);
@@ -1640,21 +1640,201 @@ public String checkVMNameExists(VM_Bean selVM,VMForm data)
    * @return vector of modified display result vector
    * @throws java.lang.Exception
    */
-  public Vector addMultiRecordConDomain(String cdName, String acName, Vector<String> vRes) throws Exception
+  public Vector addMultiRecordConDomain(String cdName, String acName, Vector<String> vRes,HttpServletRequest httpRequest,VMForm data) throws Exception
   {
       String hyperText = "";
       if (cdName != null && !cdName.equals(""))
       {
+    	// call the api to return concept attributes according to ac type and ac idseq
+    	    Vector cdList = new Vector();
+    	    cdList = this.doCDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", acName, cdList, data); // get
+    	                                                                                                             // the
+    	                                                                                                                // list
+    	                                                                                                                // of
+    	                                                                                                                // Conceptual
+    	                                                                                                                // Domains
+    	    httpRequest.setAttribute("ConDomainList", cdList);
+    	    httpRequest.setAttribute("VMName", acName);
           UtilService util = new UtilService();
           acName = util.parsedStringSingleQuote(acName);
           acName = util.parsedStringDoubleQuoteJSP(acName);
+          String strdetails = "";
+          if(cdList != null && cdList.size()>0)
+          {
+        	  CD_Bean cd = (CD_Bean)cdList.elementAt(0); 
+        	  strdetails = cd.getCD_LONG_NAME();
+        	  if(cdList.size() > 1)
+        		  strdetails+="...";
+          }	  
           hyperText = "<a href=" + "\"" + "javascript:openConDomainWindow('" + acName + "')" + "\""
                           + "><br><b>More_>></b></a>";
-          vRes.addElement(cdName + "  " + hyperText);
+           vRes.addElement(strdetails + "  " + hyperText);
       }
       else
           vRes.addElement("");
       return vRes;
+  }
+
+  /**
+   * To get Search results for Conceptual Domain from database called from getACKeywordResult.
+   * 
+   * calls oracle stored procedure "{call SBREXT_CDE_CURATOR_PKG.SEARCH_CD(CD_IDSEQ, InString, ContID, ContName,
+   * ASLName, CD_ID, OracleTypes.CURSOR)}"
+   * 
+   * loop through the ResultSet and add them to bean which is added to the vector to return
+   * 
+   * @param CD_IDSEQ
+   *            String cd_idseq to filter
+   * @param InString
+   *            String search term
+   * @param ContID
+   *            String context_idseq
+   * @param ContName
+   *            selected context name.
+   * @param sVersion
+   *            String version indicator to filter
+   * @param ASLName
+   *            selected workflow status name.
+   * @param sCreatedFrom
+   *            String from created date
+   * @param sCreatedTo
+   *            String to create date
+   * @param sModifiedFrom
+   *            String from modified date
+   * @param sModifiedTo
+   *            String to modified date
+   * @param sCreator
+   *            String creater to filter
+   * @param sModifier
+   *            String modifier to filter
+   * @param CD_ID
+   *            String public id of cd
+   * @param sOrigin
+   *            String origin value to filter
+   * @param dVersion
+   *            double value of version number to filter
+   * @param conName
+   *            STring concept name or identifier to filter
+   * @param conID
+   *            String con idseq to fitler
+   * @param sVM
+   *            String value meaning
+   * @param vList
+   *            returns Vector of DEbean.
+   * @return Vector of CD Bean
+   * 
+   */
+  public Vector doCDSearch(String CD_IDSEQ, String InString, String ContID, String ContName, String sVersion,
+                  String ASLName, String sCreatedFrom, String sCreatedTo, String sModifiedFrom, String sModifiedTo,
+                  String sCreator, String sModifier, String CD_ID, String sOrigin, double dVersion, String conName,
+                  String conID, String sVM, Vector vList,VMForm data)
+  {
+      // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "begin search", exDate, exDate));
+      //Connection conn = null;
+      ResultSet rs = null;
+      CallableStatement cstmt = null;
+      try
+      {
+          // Create a Callable Statement object.
+         // conn = m_servlet.connectDB(m_classReq, m_classRes);
+          if (data.getCurationServlet().getConn() != null)
+          {
+              cstmt = data.getCurationServlet().getConn()
+                              .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+              cstmt.registerOutParameter(7, OracleTypes.CURSOR);
+              cstmt.setString(1, InString);
+              cstmt.setString(2, ContID);
+              cstmt.setString(3, ContName);
+              cstmt.setString(4, ASLName);
+              cstmt.setString(5, CD_IDSEQ);
+              cstmt.setString(6, CD_ID);
+              cstmt.setString(8, sCreatedFrom);
+              cstmt.setString(9, sCreatedTo);
+              cstmt.setString(10, sModifiedFrom);
+              cstmt.setString(11, sModifiedTo);
+              cstmt.setString(12, sOrigin);
+              cstmt.setString(13, sCreator);
+              cstmt.setString(14, sModifier);
+              cstmt.setString(15, sVersion);
+              cstmt.setDouble(16, dVersion);
+              cstmt.setString(17, conName);
+              cstmt.setString(18, conID);
+              cstmt.setString(19, sVM);
+              // Now we are ready to call the stored procedure
+              cstmt.execute();
+              // store the output in the resultset
+              rs = (ResultSet) cstmt.getObject(7);
+              // capture the duration
+              // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "got rsObject", exDate, new
+              // java.util.Date()));
+              String s;
+              if (rs != null)
+              {
+                  // loop through the resultSet and add them to the bean
+                  while (rs.next())
+                  {
+                      CD_Bean CDBean = new CD_Bean();
+                      CDBean.setCD_PREFERRED_NAME(rs.getString("preferred_name"));
+                      CDBean.setCD_LONG_NAME(rs.getString("long_name"));
+                      CDBean.setCD_PREFERRED_DEFINITION(rs.getString("preferred_definition"));
+                      CDBean.setCD_ASL_NAME(rs.getString("asl_name"));
+                      CDBean.setCD_CONTE_IDSEQ(rs.getString("conte_idseq"));
+                      s = rs.getString("begin_date");
+                      if (s != null)
+                          s = util.getCurationDate(s);
+                      CDBean.setCD_BEGIN_DATE(s);
+                      s = rs.getString("end_date");
+                      if (s != null)
+                          s = util.getCurationDate(s);
+                      CDBean.setCD_END_DATE(s);
+                      // add the decimal number
+                      if (rs.getString("version").indexOf('.') >= 0)
+                          CDBean.setCD_VERSION(rs.getString("version"));
+                      else
+                          CDBean.setCD_VERSION(rs.getString("version") + ".0");
+                      CDBean.setCD_CD_IDSEQ(rs.getString("cd_idseq"));
+                      CDBean.setCD_CHANGE_NOTE(rs.getString("change_note"));
+                      CDBean.setCD_CONTEXT_NAME(rs.getString("context"));
+                      CDBean.setCD_CD_ID(rs.getString("cd_id"));
+                      CDBean.setCD_SOURCE(rs.getString("ORIGIN"));
+                      CDBean.setCD_DIMENSIONALITY(rs.getString("dimensionality"));
+                      s = rs.getString("date_created");
+                      if (s != null)
+                          s = util.getCurationDate(s);
+                      CDBean.setCD_DATE_CREATED(s);
+                      s = rs.getString("date_modified");
+                      if (s != null)
+                          s = util.getCurationDate(s);
+                      CDBean.setCD_DATE_MODIFIED(s);
+                      CDBean.setCD_CREATED_BY(rs.getString("created_by"));
+                      CDBean.setCD_MODIFIED_BY(rs.getString("modified_by"));
+                      vList.addElement(CDBean);
+                  }
+              }
+          }
+      }
+      catch (Exception e)
+      {
+          // System.err.println("other problem in GetACSearch-CDSearch: " + e);
+          logger.fatal("ERROR - VMAction-CDSearch for other : " + e.toString(), e);
+      }
+      try
+      {
+          if (rs != null)
+              rs.close();
+          if (cstmt != null)
+              cstmt.close();
+          //if (conn != null)
+            //  conn.close();
+      }
+      catch (Exception ee)
+      {
+          // System.err.println("Problem closing in GetACSearch-doCDSearch: " + ee);
+          logger.fatal("ERROR - VMAction-CDSearch for close : " + ee.toString(), ee);
+      }
+      // capture the duration
+      // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "end search", exDate, new java.util.Date()));
+      return vList;
   }
 
 }//end of the class
