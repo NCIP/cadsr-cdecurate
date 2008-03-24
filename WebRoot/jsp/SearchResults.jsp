@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.4 2008-03-13 18:07:30 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.5 2008-03-24 15:16:10 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -940,13 +940,25 @@ if(!sSelAC.equals("ValueMeaning"))
 							Value
 						</a>
 					</th>
-					<%        } else if (sAttr.equals("Value Meaning")) { %>
+					<%        } else if (sAttr.equals("Value Meaning Long Name")) { %>
 					<th method="get">
 						<a href="javascript:SetSortType('meaning')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
-							Value Meaning
+							Value Meaning Long Name
 						</a>
 					</th>
-					<%        } else if (sAttr.equals("Value Meaning Description")) { %>
+					<%        } else if (sAttr.equals("VM Public ID")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('meaning')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
+							VM Public ID
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("VM Version")) { %>
+					<th method="get">
+						<a href="javascript:SetSortType('meaning')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
+							VM Version
+						</a>
+					</th>
+					<%        } else if (sAttr.equals("VM Description")) { %>
 					<th method="get">
 						<a href="javascript:SetSortType('MeanDesc')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
 							Value Meaning Description
