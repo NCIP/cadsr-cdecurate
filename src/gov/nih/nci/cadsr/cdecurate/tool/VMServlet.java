@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.27 2008-03-24 14:41:54 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.28 2008-03-24 16:38:25 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -299,7 +299,7 @@ public class VMServlet extends GenericServlet
         vm.setVM_PREFERRED_DEFINITION(sVMD);
         //do not make it new if defintion is different
        // vm.setVM_IDSEQ("");
-        vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_UPD);
+       // vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_UPD);
       }
       //now capture name attribute
      // if (sVM != null && !sVM.equals("") && !vm.getVM_SHORT_MEANING().equals(sVM))
@@ -311,7 +311,7 @@ public class VMServlet extends GenericServlet
        //vm.setVM_SHORT_MEANING(sVM);
         vm.setVM_LONG_NAME(sVM);
         vm.setVM_IDSEQ("");
-        vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
+        //vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
       }
     }
     //call the action change VM to validate the vm
