@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.48 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.49 2008-03-24 23:53:08 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -8,12 +8,16 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 //import gov.nih.nci.evs.domain.Source;
 import gov.nih.nci.evs.query.EVSQuery;
 import gov.nih.nci.evs.query.EVSQueryImpl;
-import gov.nih.nci.system.applicationservice.ApplicationService;
+import gov.nih.nci.system.applicationservice.EVSApplicationService;
+import gov.nih.nci.system.client.ApplicationServiceProvider;
+
 import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Vector;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -810,12 +814,15 @@ public final class EVS_UserBean implements Serializable
 
   public java.util.List getEVSVocabs(String eURL)
   {
-      ApplicationService evsService = ApplicationService.getRemoteInstance(eURL);
+      //ApplicationService evsService = ApplicationService.getRemoteInstance(eURL);
+	  java.util.List vocabList = null;
+	  try
+      {
+	  EVSApplicationService evsService = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(eURL);
       EVSQuery query = new EVSQueryImpl();
       query.getVocabularyNames();
-      java.util.List vocabList = null;
-      try
-      {
+     
+      
         vocabList = evsService.evsSearch(query);
         if (vocabList != null)
         {
@@ -1023,8 +1030,15 @@ public final class EVS_UserBean implements Serializable
           vBean.setVocabDBOrigin(sDisp);
           // vBean.setVocabUseParent(false);
           vBean = this.storeVocabAttr(vBean, vList);  //call method to store all attributes
-          int vocabInd = i +1;
-          String toolprop = "EVS.VOCAB." + vocabInd + "%";
+          /*
+          
+          
+          int vocabInd=0;
+          if(sVocab.equals("Zebrafish"))
+        	 vocabInd = 9;
+          else
+        	  vocabInd=i+1;*/
+        String toolprop = getAC.getVocabInd(sVocab)+"%"; //"EVS.VOCAB." + vocabInd + "%";
       //System.out.println(sVocab + toolprop);
           Vector vocabList = getAC.getToolOptionData("CURATION", toolprop,"");
           vBean = this.storeVocabAttr(vBean, vocabList);  //call method to add vocab specific attributges
@@ -1041,7 +1055,8 @@ public final class EVS_UserBean implements Serializable
       logger.fatal("Error: getEVSInfoFromDSR " + e.toString(), e);
     }    
   }
- 
+  
+   
   public EVS_UserBean storeVocabAttr(EVS_UserBean vuBean, Vector vAttr)
   {
     try
