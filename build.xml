@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.35 2008-02-20 19:33:43 chickerura Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.36 2008-03-24 23:55:00 chickerura Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -126,6 +126,14 @@
 			<compilerarg line="-Xlint:unchecked" />
 			<classpath refid="libpath" />
 		</javac>
+		<copy todir="${classes.dir}">
+		            <fileset dir="conf">
+		            	<include name="application-*.*" />
+		            	<include name="gov.*.*" />
+		            	<include name="mapping.*" />
+		            	<include name="*-mapping.*" />
+		            </fileset>	
+		        </copy>
      <!--   
         <copy todir="${classes.dir}">
             <fileset dir="sdkconf" includes="**/*.*" />
