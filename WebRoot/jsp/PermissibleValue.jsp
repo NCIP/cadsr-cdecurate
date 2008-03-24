@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.9 2008-03-24 14:43:04 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.10 2008-03-24 15:05:40 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -1107,14 +1107,20 @@
 																				</a>
 																			<% } %>
 																		</span>
-																		<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=sPVMean%>
 																	</div>
-																	
 																	</div>
-																	<br>
-																	<br>
 																	<div id="<%=pvCount%>View" style="display: <%if (viewType.equals("expand")) {%>block <% } else { %> none <% } %>">
 																		<table width="100%">
+																		<tr>
+																				<td>
+																					&nbsp;&nbsp;
+																				</td>
+																				<td>
+																				<%=sPVMean%>
+																				<br>
+																				<br>
+																			</td>
+																		</tr>
 																		<tr>
 																				<td colspan="2">
 																					<b>
