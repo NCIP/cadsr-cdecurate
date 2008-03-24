@@ -8638,8 +8638,10 @@ public class CurationServlet
             }
             else if (actType.equals("FirstSearch"))
             {
-                this.getDefaultBlockAttr(req, res, "NCI_Thesaurus"); // "Thesaurus/Metathesaurus");
-                
+                //this.getDefaultBlockAttr(req, res, "NCI Thesaurus"); // "Thesaurus/Metathesaurus");
+            	EVS_UserBean eUser = (EVS_UserBean) this.sessionData.EvsUsrBean;
+                this.getDefaultBlockAttr(req, res, eUser.getPrefVocab()); // "Thesaurus/Metathesaurus");
+                session.setAttribute("preferredVocab", eUser.getPrefVocab());
                 //to display the pre-populated table with the list of approved Rep Terms.
                 if(sSearchFor.equals("RepTerm"))
                 {
