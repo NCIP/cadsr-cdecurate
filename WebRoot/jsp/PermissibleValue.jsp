@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.8 2008-03-21 19:36:23 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.9 2008-03-24 14:43:04 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -703,7 +703,7 @@
 																		 <%=vB.getVM_PREFERRED_DEFINITION()%>
 																			<dt>
 																			VM Concepts:
-																			<% if (vBCon.size() > 0) { 
+																			<% if (vBCon != null && vBCon.size() > 0) { 
 																	for (int p =0; p<vBCon.size(); p++) {
 																	EVS_Bean eB = (EVS_Bean)vBCon.elementAt(p);
 														  %>
@@ -714,6 +714,7 @@
 																			&nbsp;&nbsp;
 																			<%=eB.getEVS_DATABASE()%>
 																			<% }  } else { %>
+																		<dd>	
 																			None.
 																			<% } %>
 																		<dt>
@@ -724,7 +725,8 @@
 																		<dd>
 																		    <%if(alternate[j].getInstance()==Alternates._INSTANCENAME){ %>
 																		    
-																		    <%=alternate[j].getName()%> <%}}} else {%>	
+																		    <%=alternate[j].getName()%> <%}}} else {%>
+																		    <dd>	
 																			None.
 																			<% } %>
 																		<dt>
@@ -744,14 +746,10 @@
 														</a>
 													</td>
 													<td id="newBD" valign="top">
-														<a href="javascript:selectDate('newBD','pvNew');javascript:show_calendar('PVForm', null, null, 'MM/DD/YYYY');">
-															<%=newPV.getPV_BEGIN_DATE()%>
-														</a>
+														<a href="javascript:selectDate('newBD','pvNew');javascript:show_calendar('PVForm', null, null, 'MM/DD/YYYY');"><%=newPV.getPV_BEGIN_DATE()%></a>
 													</td>
 													<td id="newED" valign="top">
-														<a href="javascript:selectDate('newED','pvNew');javascript:show_calendar('PVForm', null, null, 'MM/DD/YYYY');">
-															<%=newPVed%>
-														</a>
+														<a href="javascript:selectDate('newED','pvNew');javascript:show_calendar('PVForm', null, null, 'MM/DD/YYYY');"><%=newPVed%></a>
 													</td>
 												</tr>
 											</table>
@@ -1016,34 +1014,22 @@
 															<tr id="<%=pvCount%>">
 																<td align="center" valign="top">
 																	<div id="<%=pvCount%>ImgClose" style="display: <%if (viewType.equals("collapse")) {%>inline <% } else { %> none <% } %>">
-																		<a href="javascript:view(<%=pvCount%>View, <%=pvCount%>ImgClose, <%=pvCount%>ImgOpen, 'view', '<%=pvCount%>');">
-																			<img src="images/folderClosed.gif" border="0" alt="Expand">
-																		</a>
+																		<a href="javascript:view(<%=pvCount%>View, <%=pvCount%>ImgClose, <%=pvCount%>ImgOpen, 'view', '<%=pvCount%>');"><img src="images/folderClosed.gif" border="0" alt="Expand"></a>
 																	</div>
 																	<div id="<%=pvCount%>ImgOpen" style="display: <%if (viewType.equals("expand")) {%>inline <% } else { %> none <% } %>"">
-																		<a href="javascript:view(<%=pvCount%>View, <%=pvCount%>ImgOpen, <%=pvCount%>ImgClose, 'view', '<%=pvCount%>');">
-																			<img src="images/folderOpen.gif" border="0" alt="Collapse">
-																		</a>
+																		<a href="javascript:view(<%=pvCount%>View, <%=pvCount%>ImgOpen, <%=pvCount%>ImgClose, 'view', '<%=pvCount%>');"><img src="images/folderOpen.gif" border="0" alt="Collapse"></a>
 																	</div>
 																	<div id="<%=pvCount%>ImgEdit" style="display: inline">
-																		<a href="javascript:view(<%=pvCount%>View, <%=pvCount%>ImgEdit, <%=pvCount%>ImgSave, 'edit', '<%=pvCount%>');">
-																			<img src="images/edit.gif" border="0" alt="Edit">
-																		</a>
+																		<a href="javascript:view(<%=pvCount%>View, <%=pvCount%>ImgEdit, <%=pvCount%>ImgSave, 'edit', '<%=pvCount%>');"><img src="images/edit.gif" border="0" alt="Edit"></a>
 																	</div>
 																	<div id="<%=pvCount%>ImgSave" style="display: none">
-																		<a id="<%=pvCount%>ImgSaveLink" href="javascript:view(<%=pvCount%>View, <%=pvCount%>ImgSave, <%=pvCount%>ImgEdit, 'save', '<%=pvCount%>');">
-																			<img src="images/save.gif" border="0" alt="Save">
-																		</a>
+																		<a id="<%=pvCount%>ImgSaveLink" href="javascript:view(<%=pvCount%>View, <%=pvCount%>ImgSave, <%=pvCount%>ImgEdit, 'save', '<%=pvCount%>');"><img src="images/save.gif" border="0" alt="Save"></a>
 																	</div>
 																	<div id="<%=pvCount%>ImgDelete" style="display: inline">
-																		<a href="javascript:confirmRM('<%=pvCount%>', 'remove', 'the Permissible Value : <%=sPVValJ%>');">
-																			<img src="images/delete.gif" border="0" alt="Remove">
-																		</a>
+																	 <a href="javascript:confirmRM('<%=pvCount%>', 'remove', 'the Permissible Value : <%=sPVValJ%>');"><img src="images/delete.gif" border="0" alt="Remove"></a>
 																	</div>
 																	<div id="<%=pvCount%>ImgRestore" style="display: none">
-																		<a href="javascript:confirmRM('<%=pvCount%>', 'restore', 'restore');">
-																			<img src="images/restore.gif" border="0" alt="Restore">
-																		</a>
+																		<a href="javascript:confirmRM('<%=pvCount%>', 'restore', 'restore');"><img src="images/restore.gif" border="0" alt="Restore"></a>
 																	</div>
 																</td>
 																<%if (sMenuAction.equals("Questions")){%>
@@ -1112,7 +1098,8 @@
 																	</div>
 																	<div id="<%=pvCount%>VMEditLink" style="display: inline; text-align:right">
 																		<span style="padding-left:0.3in; padding-right:0.1in; text-align:right">
-																			<% if (submit != null && submit.equals("INS")) { %>
+																			<% System.out.println("Submit"+submit); 
+																			 if (submit != null && submit.equals("INS")) { %>
 																				  [Edit VM]
 																			<% } else { %>
 																				<a href="javascript:openEditVMWindow('<%=pvCount%>');">
@@ -1120,7 +1107,7 @@
 																				</a>
 																			<% } %>
 																		</span>
-																		<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=sPVMean%>
+																		<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=sPVMean%>
 																	</div>
 																	
 																	</div>
@@ -1137,7 +1124,7 @@
 																			</tr>
 																			<tr>
 																				<td>
-																					&nbsp;&nbsp;&nbsp;&nbsp;
+																					&nbsp;&nbsp;
 																				</td>
 																				<td>
 																				<% if (submit != null && submit.equals("INS")) { %>
@@ -1158,7 +1145,7 @@
 																			</tr>
 																			<tr>
 																				<td>
-																					&nbsp;&nbsp;&nbsp;&nbsp;
+																					&nbsp;&nbsp;
 																				</td>
 																				<td>
 																					<div id="<%=pvCount%>VMDView" style="display: block">
@@ -1184,7 +1171,7 @@
 																			</tr>
 																			<tr>
 																				<td>
-																					&nbsp;&nbsp;&nbsp;&nbsp;
+																					&nbsp;&nbsp;
 																				</td>
 																				<td valign="top">
 																					<div id="<%=pvCount%>Con" style="display:block; border:1px;">
@@ -1309,6 +1296,11 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 															for (int k=0; k<vEMsg.size(); k++)
 															{ 
 																	VM_Bean vB = (VM_Bean)vEMsg.elementAt(k);
+																	String vmIdandVer ="";
+																	if(vB.getVM_ID()==null || vB.getVM_VERSION()==null)
+																	  vmIdandVer ="[System generated at Creation]";
+																	else
+																	 vmIdandVer=vB.getVM_ID()+"v"+ vB.getVM_VERSION();
 																	Vector vBCon = vB.getVM_CONCEPT_LIST();
 																	String rVM = "erVM"+k;
 														 %>
@@ -1326,9 +1318,9 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 																						Public Id & Version:
 																					<dd>
 																					
-																					<%=vB.getVM_ID()+"v"+ vB.getVM_VERSION()%>
+																					<%=vmIdandVer%>
 																					
-																					<dt>
+																				<dt>
 																						VM Description:
 																					<dd>
 																						<%=vB.getVM_PREFERRED_DEFINITION()%>
