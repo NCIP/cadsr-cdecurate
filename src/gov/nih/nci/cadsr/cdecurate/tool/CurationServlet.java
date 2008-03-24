@@ -10739,8 +10739,10 @@ public class CurationServlet
         if (searchAC.equals("PermissibleValue"))
         {
             vDefaultAttr.addElement("Value");
-            vDefaultAttr.addElement("Value Meaning");
-            vDefaultAttr.addElement("Value Meaning Description");
+            vDefaultAttr.addElement("Value Meaning Long Name");
+            vDefaultAttr.addElement("VM Public ID");
+            vDefaultAttr.addElement("VM Version");
+            vDefaultAttr.addElement("VM Description");
             vDefaultAttr.addElement("Conceptual Domain");
             vDefaultAttr.addElement("EVS Identifier");
             vDefaultAttr.addElement("Definition Source");
@@ -10751,8 +10753,8 @@ public class CurationServlet
             vDefaultAttr.addElement("Long Name");
             vDefaultAttr.addElement("Public ID");
             vDefaultAttr.addElement("Version");
-            vDefaultAttr.addElement("EVS Identifier");
             vDefaultAttr.addElement("Workflow Status");
+            vDefaultAttr.addElement("EVS Identifier");
             vDefaultAttr.addElement("Conceptual Domain");
             vDefaultAttr.addElement("Definition");
             
@@ -11122,11 +11124,13 @@ public class CurationServlet
         else if (selSearch.equals("PermissibleValue"))
         {
             vCompAtt.addElement("Value");
-            vCompAtt.addElement("Value Meaning");
-            vCompAtt.addElement("Value Meaning Description");
-            vCompAtt.addElement("Conceptual Domain");
             vCompAtt.addElement("Effective Begin Date");
             vCompAtt.addElement("Effective End Date");
+            vCompAtt.addElement("Value Meaning Long Name");
+            vCompAtt.addElement("VM Public ID");
+            vCompAtt.addElement("VM Version");
+            vCompAtt.addElement("VM Description");
+            vCompAtt.addElement("Conceptual Domain");
             vCompAtt.addElement("EVS Identifier");
             vCompAtt.addElement("Description Source");
             vCompAtt.addElement("Vocabulary");
@@ -11137,8 +11141,8 @@ public class CurationServlet
         	vCompAtt.addElement("Long Name");
         	vCompAtt.addElement("Public ID");
         	vCompAtt.addElement("Version");
-        	vCompAtt.addElement("EVS Identifier");
         	vCompAtt.addElement("Workflow Status");
+        	vCompAtt.addElement("EVS Identifier");
         	vCompAtt.addElement("Conceptual Domain");
         	vCompAtt.addElement("Definition");
             vCompAtt.addElement("All Attributes");
