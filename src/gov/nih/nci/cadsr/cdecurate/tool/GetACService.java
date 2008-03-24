@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.50 2008-03-13 17:59:47 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.51 2008-03-24 23:53:08 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1572,6 +1572,52 @@ public class GetACService implements Serializable
         }
         return vList;
     }
+    
+    
+    
+    /**
+     * Get the Vocabulary Indicator
+     * @param vocabName
+     * @return
+     */
+    public String getVocabInd(String vocabName)
+    {
+  	 String vocabInd=null;
+  	 String vocab=null;
+  	 ResultSet rs = null;
+  	 PreparedStatement stm =null;
+  	 try{
+  	 if (m_servlet.getConn() == null)
+        m_servlet.ErrorLogin(m_classReq, m_classRes);
+  	 else
+    {
+  		String sql = "select property from tool_options_ext where value like ? and property like 'EVS.VOCAB.%.EVSNAME' "; 
+  		stm = m_servlet.getConn().prepareStatement(sql);
+  		stm.setString(1, vocabName);
+  		rs = stm.executeQuery();
+  		while(rs.next())
+  		{
+  			vocab = rs.getString(1);
+  		}
+  	 } 
+  	 }catch (SQLException e)
+  	 {
+  		 logger.error("SQL Exception", e);
+  	 }finally{
+  		 try{
+  		 rs.close();
+  		 stm.close();
+  		 }catch(SQLException se)
+  		 {
+  			 logger.error("Error while closing resultset or statement",se);
+  		 }
+  	 }
+  	 
+  	 
+  	 int ind = vocab.lastIndexOf(".");
+  	 vocabInd = vocab.substring(0, ind);
+  	 return vocabInd;
+   }
     
     /**
      * Get the user account "DER_ADMIN_IND" flag

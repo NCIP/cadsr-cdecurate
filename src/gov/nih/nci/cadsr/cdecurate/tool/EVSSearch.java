@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.49 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.50 2008-03-24 23:53:08 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -15,7 +15,9 @@ import gov.nih.nci.evs.domain.SemanticType;
 import gov.nih.nci.evs.domain.Source;
 import gov.nih.nci.evs.query.EVSQuery;
 import gov.nih.nci.evs.query.EVSQueryImpl;
-import gov.nih.nci.system.applicationservice.ApplicationService;
+import gov.nih.nci.system.applicationservice.EVSApplicationService;
+import gov.nih.nci.system.client.ApplicationServiceProvider;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -24,9 +26,11 @@ import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -131,7 +135,8 @@ public class EVSSearch implements Serializable
   HttpServletRequest m_classReq = null;
   HttpServletResponse m_classRes = null;
   UtilService m_util = new UtilService();
-  ApplicationService evsService = null;
+  //ApplicationService evsService = null;
+  EVSApplicationService evsService = null;
   EVS_UserBean m_eUser = null;
   EVS_Bean m_eBean = null;
   Logger logger = Logger.getLogger(EVSSearch.class.getName());
@@ -167,10 +172,17 @@ public class EVSSearch implements Serializable
   
   private void initialize()
   {
+	  try{
       m_eBean = new EVS_Bean();
       if (m_eUser == null) m_eUser = new EVS_UserBean(); //to be safe use the default props
       if (m_eUser.getEVSConURL() != null && !m_eUser.getEVSConURL().equals(""))
-        evsService = ApplicationService.getRemoteInstance(m_eUser.getEVSConURL());
+        evsService = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(m_eUser.getEVSConURL());
+	  }catch(Exception e)
+	  {
+		  logger.error("EVS Service not obtained from the URL");
+	  }
+        
+        //ApplicationService.getRemoteInstance(m_eUser.getEVSConURL());
   }
 
     /**
@@ -1707,7 +1719,8 @@ private String parseDefinition(String termStr)
       else if (sSearchAC.equals("ConceptClass"))
         sSearchAC = "Concept Class";
         
-      if(evsDB.equals("NCI_Thesaurus") || evsDB.equals("Thesaurus/Metathesaurus"))
+      //if(evsDB.equals("NCI_Thesaurus") || evsDB.equals("Thesaurus/Metathesaurus"))
+      if(evsDB.equals(m_eUser.getPrefVocab()) || evsDB.equals("Thesaurus/Metathesaurus"))
         sKeyword = filterName(sKeyword, "display");
       if (!sSearchAC.equals("ParentConcept"))
         req.setAttribute("labelKeyword", sSearchAC + " - " + sKeyword);   //make the label
@@ -2111,6 +2124,7 @@ private String parseDefinition(String termStr)
             }
             // call the evs to get resutls
             lstResult = evsService.evsSearch(query);
+            
             // System.out.println("App service " + evsService.toString());
         }
         catch (Exception ex)
@@ -2189,8 +2203,9 @@ private String parseDefinition(String termStr)
       {
   //System.out.println("meta search " + termStr + sVocab + sSearchIn); 
         if (sSearchIn.equalsIgnoreCase("MetaCode")) //do meta code specific to vocabulary source
-          query.searchSourceByCode(termStr,sMetaSource);
-        else if (sSearchIn.equalsIgnoreCase("ConCode")) //meta cui search
+         // query.searchSourceByCode(termStr,sMetaSource);
+        	 query.searchSourceByAtomCode(termStr,sMetaSource);
+         else if (sSearchIn.equalsIgnoreCase("ConCode")) //meta cui search
           query.searchMetaThesaurus(termStr, iMetaLimit, sMetaSource, true, false, false);
         else  //meta keyword search
           query.searchMetaThesaurus(termStr, iMetaLimit, sMetaSource, false, false, false);
@@ -2226,7 +2241,7 @@ private String parseDefinition(String termStr)
         //    boolean defExists = false;            
             String sDefSource = "", sDefinition = m_eUser.getDefDefaultValue();
             //add sepeate record for each definition
-            ArrayList arrDef = metaCon.getDefinitionCollection();
+            ArrayList<Definition> arrDef = metaCon.getDefinitionCollection();
             if (arrDef != null && arrDef.size() > 0)
             {
               for(int k=0; k<arrDef.size(); k++)
@@ -2330,28 +2345,36 @@ private String parseDefinition(String termStr)
    * to get the NCI thesaurus code from the atom collection
    * @param mtcCon MetaThesaurusConcept object
    * @return sCode
+   * // for(int k=0; k<atomTypes.size(); k++)
+   *  //Atom atomType = (Atom) atomTypes.get(k);
+          //System.out.println("\t" + atomType.getCode() + " meta atom " + atomType.getName() + " lui " + atomType.getLui() + " origin " + atomType.getOrigin());
    */
   private String getPrefMetaCode(MetaThesaurusConcept mtcCon) 
   {
     String sCode = "";
-    ArrayList atomTypes = mtcCon.getAtomCollection();
-    if (atomTypes != null)
-    {
-      String prefSrc = m_eUser.getPrefVocabSrc();
-      if (prefSrc == null) prefSrc = "";
-      for(int k=0; k<atomTypes.size(); k++)
-      {                  
-          Atom atomType = (Atom) atomTypes.get(k);
-          //System.out.println("\t" + atomType.getCode() + " meta atom " + atomType.getName() + " lui " + atomType.getLui() + " origin " + atomType.getOrigin());
-          String sConSrc = atomType.getOrigin();
-          if (sConSrc != null && !sConSrc.equals(""))
-          {
-            if (sConSrc.contains(prefSrc))
-              sCode = atomType.getCode();
-            if (sCode == null) sCode = "";
-          }
-      }   
-    }
+    String prefSrc="";
+    try {
+		ArrayList<Atom> atomTypes = mtcCon.getAtomCollection();
+		if (atomTypes != null)
+		{
+		  prefSrc = m_eUser.getPrefVocabSrc();
+		  if (prefSrc != null)
+		  {
+		    for(Atom atomType: atomTypes)
+		    {                  
+		      String sConSrc = atomType.getOrigin();
+		      if (sConSrc != null && !sConSrc.equals(""))
+		      {
+		        if (sConSrc.contains(prefSrc))
+		          sCode = atomType.getCode();
+		        if (sCode == null) sCode = "";
+		      }
+		    }
+		  }
+		}
+	} catch (RuntimeException e) {
+		logger.error("Class cast exception",e);
+	}
     return sCode;
   }
   /**
@@ -2828,7 +2851,8 @@ private String parseDefinition(String termStr)
       String nodeCode = m_classReq.getParameter("nodeCode");
       String nodeID = m_classReq.getParameter("nodeID");
       String vocab = m_classReq.getParameter("vocab");
-      if(vocab == null) vocab = "NCI_Thesaurus";
+     // if(vocab == null) vocab = "NCI_Thesaurus";
+      if(vocab == null) vocab = m_eUser.getPrefVocab();
       DataManager.setAttribute(session, "dtsVocab", vocab);     
       if(nodeCode.equals("") && !nodeName.equals(""))
         nodeCode = this.do_getEVSCode(nodeName, vocab);   
@@ -2862,7 +2886,8 @@ private String parseDefinition(String termStr)
       String nodeName = m_classReq.getParameter("nodeName");
       String vocab = m_classReq.getParameter("vocab");
       String nodeID = m_classReq.getParameter("nodeID");
-      if(vocab == null) vocab = "NCI_Thesaurus";
+      //if(vocab == null) vocab = "NCI_Thesaurus";
+      if(vocab == null) vocab = m_eUser.getPrefVocab();
       DataManager.setAttribute(session, "dtsVocab", vocab);  
       EVSMasterTree tree = new EVSMasterTree(m_classReq, vocab, m_servlet);
     //  if(vocab.equals("VA_NDFRT") || vocab.equals("MedDRA"))
