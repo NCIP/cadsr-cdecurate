@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.55 2008-03-13 17:59:06 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.56 2008-03-24 14:40:50 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2897,12 +2897,30 @@ public class GetACSearch implements Serializable
         String hyperText = "";
         if (cdName != null && !cdName.equals(""))
         {
+        	// call the api to return concept attributes according to ac type and ac idseq
+            Vector cdList = new Vector();
+            cdList = this.doCDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", acName, cdList); // get
+                                                                                                                        // the
+                                                                                                                        // list
+                                                                                                                        // of
+                                                                                                                        // Conceptual
+                                                                                                                        // Domains
+            m_classReq.setAttribute("ConDomainList", cdList);
+            m_classReq.setAttribute("VMName", acName);
+            String strdetails = "";
+            if(cdList != null && cdList.size()>0)
+            {
+          	  CD_Bean cd = (CD_Bean)cdList.elementAt(0); 
+          	  strdetails = cd.getCD_LONG_NAME();
+          	  if(cdList.size() > 1)
+          		  strdetails+="...";
+            }	  
             UtilService util = new UtilService();
             acName = util.parsedStringSingleQuote(acName);
             acName = util.parsedStringDoubleQuoteJSP(acName);
             hyperText = "<a href=" + "\"" + "javascript:openConDomainWindow('" + acName + "')" + "\""
                             + "><br><b>More_>></b></a>";
-            vRes.addElement(cdName + "  " + hyperText);
+            vRes.addElement(strdetails + "  " + hyperText);
         }
         else
             vRes.addElement("");
@@ -3093,6 +3111,21 @@ public class GetACSearch implements Serializable
         return vRes;
     }
 
+    
+    private Vector addEditVMLink(String vmName, String pvCount, Vector<String> vRes) throws Exception
+    {
+    	String hyperText = "";
+        if (vmName != null && !vmName.equals(""))
+        {
+            UtilService util = new UtilService();
+            hyperText = "<a href=" + "\"" + "javascript:openEditVMWindow('" + pvCount + "')" + "\"" + "><br><b>Edit_VM_>></b></a>";
+            vRes.addElement(vmName + "  " + hyperText);
+        }
+        else
+            vRes.addElement("");
+        return vRes;
+    }
+    
     /**
      * get DDE info, including RepType, rule, method, Conca_Char and all DE Components and set them to session
      * 
@@ -6592,6 +6625,7 @@ public class GetACSearch implements Serializable
             String umlsCUI = "";
             String tempCUI = "";
             String ccode = "";
+            int ckCount=0;
             for (int i = 0; i < (vRSel.size()); i++)
             {
                 PV_Bean PVBean = new PV_Bean();
@@ -6604,19 +6638,28 @@ public class GetACSearch implements Serializable
                 umlsCUI = PVBean.getPV_UMLS_CUI_VAL();
                 tempCUI = PVBean.getPV_TEMP_CUI_VAL();
                 ccode = PVBean.getPV_CONCEPT_IDENTIFIER();
+                String pvCount = "pv" + ckCount;
+	            ckCount += 1;
                 if (vSelAttr.contains("Value"))
                     vResult.addElement(PVBean.getPV_VALUE());
-                if (vSelAttr.contains("Value Meaning"))
-                    vResult.addElement(PVBean.getPV_SHORT_MEANING());
-                if (vSelAttr.contains("Value Meaning Description"))
-                    vResult.addElement(PVBean.getPV_MEANING_DESCRIPTION());
-                if (vSelAttr.contains("Conceptual Domain"))
-                    vResult = addMultiRecordConDomain(PVBean.getPV_CONCEPTUAL_DOMAIN(), PVBean
-                                    .getPV_SHORT_MEANING(), vResult);
                 if (vSelAttr.contains("Effective Begin Date"))
                     vResult.addElement(PVBean.getPV_BEGIN_DATE());
                 if (vSelAttr.contains("Effective End Date"))
                     vResult.addElement(PVBean.getPV_END_DATE());
+                if (vSelAttr.contains("Value Meaning Long Name"))
+                    //vResult.addElement(PVBean.getPV_SHORT_MEANING());
+                	  vResult = addEditVMLink(PVBean
+                              .getPV_SHORT_MEANING(),pvCount,vResult);
+                if (vSelAttr.contains("VM Public ID"))
+                    vResult.addElement(PVBean.getPV_VM().getVM_ID());
+                if (vSelAttr.contains("VM Version"))
+                    vResult.addElement(PVBean.getPV_VM().getVM_VERSION());
+                if (vSelAttr.contains("VM Description"))
+                    vResult.addElement(PVBean.getPV_MEANING_DESCRIPTION());
+                if (vSelAttr.contains("Conceptual Domain"))
+                    vResult = addMultiRecordConDomain(PVBean.getPV_CONCEPTUAL_DOMAIN(), PVBean
+                                    .getPV_SHORT_MEANING(), vResult);
+                
                 /*
                  * EVS_Bean vmCon = PVBean.getVM_CONCEPT(); if (vmCon == null) vmCon = new EVS_Bean(); if
                  * (vSelAttr.contains("EVS Identifier")) vResult.addElement(vmCon.getCONCEPT_IDENTIFIER()); if
