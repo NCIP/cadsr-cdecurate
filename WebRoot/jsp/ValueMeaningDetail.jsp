@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.11 2008-03-25 17:41:09 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.12 2008-03-25 20:36:57 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -78,13 +78,13 @@
 									<%=VMForm.ELM_LBL_NAME%>
 								</b>
 							</div>
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="<%=VMForm.ELM_LBL_NAME%>" value="<%=thisForm.longName%>"/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" style="width:40%" name="<%=VMForm.ELM_LBL_NAME%>" value="<%=thisForm.longName%>"/>
 							<div class="ind2">
 								<b>
 									Public ID
 								</b>
 							</div>
-							<div class="readonlybox" style="width: 40%;">
+							<div class="readonlybox" style="width: 10%;">
 								<%=thisForm.getVMBean().getVM_ID()%>
 							</div>
 							<br>
