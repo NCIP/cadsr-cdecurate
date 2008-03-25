@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.12 2008-03-25 17:40:52 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.13 2008-03-25 20:36:36 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -1128,7 +1128,7 @@
 																				</td>
 																				<td>
 																				<% if (submit != null && submit.equals("INS")) { %>
-																				  [System Assigned after Creation]
+																				  [System Assigned after Value Domain Submission]
 																			<% } else { %>
 																					<%= vm.getVM_ID()+"v"+ vm.getVM_VERSION()%>
 																				
@@ -1298,7 +1298,7 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 																	VM_Bean vB = (VM_Bean)vEMsg.elementAt(k);
 																	String vmIdandVer ="";
 																	if(vB.getVM_ID()==null || vB.getVM_VERSION()==null)
-																	  vmIdandVer ="[System generated at Creation]";
+																	  vmIdandVer ="[System Assigned after Value Domain Submission]";
 																	else
 																	 vmIdandVer=vB.getVM_ID()+"v"+ vB.getVM_VERSION();
 																	Vector vBCon = vB.getVM_CONCEPT_LIST();
