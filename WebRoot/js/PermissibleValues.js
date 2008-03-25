@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.3 2008-03-24 23:56:31 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.4 2008-03-25 17:40:29 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -799,6 +799,7 @@
 
   function selectValues(vocab)
   {
+     
 	  if (!validatePVAction('selectValues'))  //check if any pv is in edit mode
 	  	return;  
 	  //continue  	
@@ -880,7 +881,7 @@
 	  document.getElementById("selectedParentConceptMetaSource").value = sParentMetaSource;
   }
 
-  function createParent()
+  function createParent(vocab)
   {
 	  if (!validatePVAction('createParent'))  //check if any pv is in edit mode
 	  	return;  
@@ -894,11 +895,11 @@
       }
       else
       {
-      	openConceptSearchWindow("ParentConcept", "term");
+      	openConceptSearchWindow("ParentConcept", "term",vocab);
       }
   }
   
-  function createMultipleValues()
+  function createMultipleValues(vocab)
   {
 	  if (!validatePVAction('createMultipleValues'))  //check if any pv is in edit mode
 	  	return;  
@@ -906,13 +907,13 @@
   	  var vdtypeObj = document.getElementById("listVDType");
       if (vdtypeObj.value == "E")
       {
-          openConceptSearchWindow("EVSValueMeaning", "term");
+          openConceptSearchWindow("EVSValueMeaning", "term", vocab);
       }
       else
           alert("Type must be 'Enumerated' to create/edit/remove Permissible Values.");
   }
   
-  function openConceptSearchWindow(serComp, treeOpen,vocab)
+  function openConceptSearchWindow(serComp, treeOpen, vocab)
   {
 	  document.SearchActionForm.searchComp.value = serComp;
 	  document.getElementById("openToTree").value = treeOpen;
@@ -923,8 +924,9 @@
     	  searchWindow = window.open("jsp/OpenSearchWindowBlocks.jsp", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes")
       else
       {
-    	  document.SearchActionForm.isValidSearch.value = "true";
-    	  searchWindow = window.open("../../cdecurate/NCICurationServlet?reqType=searchBlocks&actSelect=FirstSearch" + "&listSearchFor=" + serComp + "&listContextFilterVocab=" + vocab +  ", BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
+          document.SearchActionForm.isValidSearch.value = "true";
+    	  var url = "../../cdecurate/NCICurationServlet?reqType=searchBlocks&actSelect=FirstSearch" + "&listSearchFor=" + serComp + "&listContextFilterVocab=" + vocab;
+    	  searchWindow = window.open(url ,  "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
       }	
   }
   
@@ -1060,14 +1062,14 @@
     
 
 	//to add concepts to the vm, store the editing element and pv number in the hidden field
-  function selectConcept(curElm, curPV)
+  function selectConcept(curElm, curPV,vocab)
   {
   	var curInd = document.getElementById("currentElmID");
   	if (curInd != null)
   	{
   		curInd.value = curElm;
   		document.getElementById("currentPVInd").value = curPV;
-        openConceptSearchWindow("VMConcept", "term");
+        openConceptSearchWindow("VMConcept", "term",vocab);
   	}
   }
   

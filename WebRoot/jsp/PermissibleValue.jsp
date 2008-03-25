@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.11 2008-03-24 23:57:21 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.12 2008-03-25 17:40:52 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -21,7 +21,7 @@
       String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
       String sSearchAC = (String) session.getAttribute("creSearchAC");
       String vocab= (String)session.getAttribute("preferredVocab");
-   //  System.out.println(sSearchAC + " vd action " + sMenuAction);
+      System.out.println("preferred vocab"+ vocab);
       	
       VD_Bean m_VD = new VD_Bean();
       m_VD = (VD_Bean) session.getAttribute("m_VD");
@@ -239,7 +239,7 @@
 													<%}%>
 												</td>
 												<td align="left">
-													<input type="button" name="btnSelectValues" style="width:90" value="Select Values" disabled onClick="javascript:selectValues(<%=vocab%>)">
+													<input type="button" name="btnSelectValues" style="width:90" value="Select Values" disabled onClick="javascript:selectValues('<%=vocab%>');">
 												</td>
 												<td align="center">
 													<input type="button" name="btnRemoveConcept" style="width:100%" value="Remove Parent" disabled onClick="javascript:removeParent();">
@@ -304,7 +304,7 @@
 												<td align="center">
 													<!-- do not allow to pick parent if pvs exist but no parent   -->
 													<% //if (!(vdCONs < 1 && vdPVs > 0)) { %>
-													<a href="javascript:createParent();">
+													<a href="javascript:createParent('<%=vocab%>');">
 														Search Parent
 													</a>
 													<% //} %>
@@ -379,7 +379,7 @@
 										</div>
 										<div id="divpvcreate_enable" style="display:<% if (vdCONs > 0){%> none <%} else {%> block <%} %>">
 											Create list of Permissible Values from EVS Concepts
-											<a href="javascript:createMultipleValues();">
+											<a href="javascript:createMultipleValues('<%=vocab%>');">
 												<b>
 													[click here]
 												</b>
@@ -550,7 +550,7 @@
 																	<b>
 																		Concepts
 																		<span style="padding-left: 0.3in">
-																			<a href="javascript:selectConcept('newCon','pvNew');">
+																			<a href="javascript:selectConcept('newCon','pvNew','<%=vocab%>');">
 																				Search
 																			</a>
 																		</span>
@@ -1099,8 +1099,7 @@
 																	</div>
 																	<div id="<%=pvCount%>VMEditLink" style="display: inline; text-align:right">
 																		<span style="padding-left:0.3in; padding-right:0.1in; text-align:right">
-																			<% System.out.println("Submit"+submit); 
-																			 if (submit != null && submit.equals("INS")) { %>
+																			<% if (submit != null && submit.equals("INS")) { %>
 																				  [Edit VM]
 																			<% } else { %>
 																				<a href="javascript:openEditVMWindow('<%=pvCount%>');">

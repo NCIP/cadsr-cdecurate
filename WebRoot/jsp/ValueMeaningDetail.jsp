@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.10 2008-03-24 23:57:21 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.11 2008-03-25 17:41:09 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -155,7 +155,7 @@
 								</b>
 							</div>
 							<div class="ind3" style="display:inline">
-								<a title="Search" href="javascript:searchConcepts(<%=vocab%>);">
+								<a title="Search" href="javascript:searchConcepts('<%=vocab%>');">
 									Search
 								</a>
 							</div>
