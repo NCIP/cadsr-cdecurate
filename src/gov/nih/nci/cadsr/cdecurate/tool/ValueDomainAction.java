@@ -37,12 +37,13 @@ public class ValueDomainAction extends CommonACAction
         String sFrom = " FROM sbr.contexts_view c, sbr.value_domains_view vd"
                         + ", sbr.vd_pvs_view vp, sbr.permissible_values_view pv  ";
         String sWhere = " WHERE vd.conte_idseq = c.conte_idseq AND vd.vd_idseq = vp.vd_idseq "
-                        + " AND vp.pv_idseq = pv.pv_idseq AND pv.short_meaning = '" + vmID + "'";
+                        + " AND vp.pv_idseq = pv.pv_idseq AND pv.vm_idseq = '" + vmID + "'";
         if (isStatusFilter)
             sWhere += " AND vd.asl_name IN (" + formatArray(getStatusList()) + ")";
         if (sOrder.equals(""))
             sOrder = "long_name";
         String sSQL = sSelect + sFrom + sWhere + " ORDER BY upper(" + sOrder + ")";
+        System.out.println(sSQL);
         return sSQL;
     }
 
