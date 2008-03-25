@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.3 2008-03-24 23:56:31 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.4 2008-03-25 17:40:35 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 	var secondWindow;
@@ -32,7 +32,8 @@
 	    document.SearchActionForm.isValidSearch.value = "false";
 	    if (secondWindow && !secondWindow.closed)
 	       secondWindow.close();
-	  	secondWindow = window.open("../../cdecurate/NCICurationServlet?reqType=searchBlocks&actSelect=FirstSearch" + "&listSearchFor=" + searchComp + "&listContextFilterVocab=" +  vocab  + ", BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
+	      var url = "../../cdecurate/NCICurationServlet?reqType=searchBlocks&actSelect=FirstSearch" + "&listSearchFor=" + searchComp + "&listContextFilterVocab=" +  vocab;
+	      secondWindow = window.open(url, "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
 	}
 	
 	function deleteConcept(iRow, conName)
