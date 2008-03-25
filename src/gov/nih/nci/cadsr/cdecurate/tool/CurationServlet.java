@@ -988,6 +988,7 @@ public class CurationServlet
                     eUser.getEVSInfoFromDSR(req, res, this);
                     EVSSearch evs = new EVSSearch(req, res, this);
                     evs.getMetaSources();
+                    session.setAttribute("preferredVocab", eUser.getPrefVocab());
                     // m_EVS_CONNECT = euBean.getEVSConURL();
                     // getVocabHandles(req, res);
                     // DoHomepageThread thread = new DoHomepageThread(req, res, this);
@@ -8641,7 +8642,6 @@ public class CurationServlet
                 //this.getDefaultBlockAttr(req, res, "NCI Thesaurus"); // "Thesaurus/Metathesaurus");
             	EVS_UserBean eUser = (EVS_UserBean) this.sessionData.EvsUsrBean;
                 this.getDefaultBlockAttr(req, res, eUser.getPrefVocab()); // "Thesaurus/Metathesaurus");
-                session.setAttribute("preferredVocab", eUser.getPrefVocab());
                 //to display the pre-populated table with the list of approved Rep Terms.
                 if(sSearchFor.equals("RepTerm"))
                 {
