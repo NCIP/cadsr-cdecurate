@@ -1,13 +1,13 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.4 2008-03-25 17:40:35 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.5 2008-03-26 22:01:53 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 	var secondWindow;
 	
 	//submit the page
 	function SubmitValidate(sAction)
-	{
+	{   
 		var actObject = document.getElementById(elmPageAction);
 		if ( actObject == null || sAction == "")
 		{
@@ -25,6 +25,30 @@
 			document.VMUse.submit();		
 	}
 	
+   function formValidator(oldVer,oldLN,oldWS,oldCN)
+  {
+	//alert("I am in form validator");
+  	var newVer = document.getElementById('version').value;
+  	var newLN = document.getElementById('name').value;
+ 	var newWS = document.getElementById('ws').value;
+ 	var newCN = document.getElementById('cn').value;
+ 	//alert(newVer + newLN + newWS + newCN);
+	if(newVer!= oldVer || newLN!=oldLN || newWS!==oldWS)
+	{
+ 	 	if(newCN ==null || newCN =="" || newCN == oldCN)
+  		{
+  	 	 alert("Please enter the change note to indicate changes to the VM");
+  	 	 document.getElementById('cn').value = oldCN; 
+  	 	 return false;
+  	 	}
+  	 	else
+  	 	 { 
+  	 	   SubmitValidate('validate');
+  	 	 }  
+	}
+	return true;
+ }
+ 
 	function searchConcepts(vocab)
 	{
 		var searchComp = "EditVMConcept";
