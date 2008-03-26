@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMForm.java,v 1.16 2008-03-13 18:02:11 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMForm.java,v 1.17 2008-03-26 22:01:09 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -574,6 +574,7 @@ public class VMForm implements Serializable
   
 //constants for jsp parameters
   public static final String ELM_CHANGE_NOTE = "changeNote";
+  public static final String ELM_LONG_NAME = "longName";
   public static final String ELM_DEFINITION = "txtDef";
   public static final String ELM_PAGE_ACTION = "pageAction";
   public static final String ELM_OPEN_TO_TREE = "openToTree";
