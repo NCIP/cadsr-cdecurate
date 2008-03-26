@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.13 2008-03-25 20:36:36 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.14 2008-03-26 14:26:33 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -1110,7 +1110,9 @@
 																	</div>
 																	<br>
 																	<div id="<%=pvCount%>" style="display: inline; text-align:right">
-																		&nbsp;&nbsp;<%=sPVMean%>
+																		&nbsp;&nbsp;&nbsp;&nbsp;<%=sPVMean%>
+																	<br>
+																	<br>	
 																	</div>
 																	</div>
 																	<div id="<%=pvCount%>View" style="display: <%if (viewType.equals("expand")) {%>block <% } else { %> none <% } %>">
@@ -1320,7 +1322,7 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 																					
 																					<%=vmIdandVer%>
 																					
-																				<dt>
+																				   <dt>
 																						VM Description:
 																					<dd>
 																						<%=vB.getVM_PREFERRED_DEFINITION()%>
