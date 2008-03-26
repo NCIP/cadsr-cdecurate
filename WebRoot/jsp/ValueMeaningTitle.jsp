@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.2 2008-03-13 18:08:18 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.3 2008-03-26 22:03:36 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -27,14 +27,17 @@
      System.out.println("retPAge"+retPage);
 	 VMForm dispForm = (VMForm)request.getAttribute(VMForm.REQUEST_FORM_DATA); 
       String vmNameDisplay = dispForm.vmDisplayName;
-      
+        String oldVer = (String)session.getAttribute("prevVMVersion");
+   			String oldLN = (String)session.getAttribute("prevVMLN");
+   			String oldWS = (String)session.getAttribute("prevVMWS");
+   			String oldCN = (String)session.getAttribute("prevVMCN");
 		%>
-<script Language="JavaScript">
+   <script Language="JavaScript">
 			var actionClear = "<%=VMForm.ACT_CLEAR_VM%>";
 			var elmPageAction = "<%=VMForm.ELM_PAGE_ACTION%>";
-</script>
+ </script>
 <div class="ind1">
-	<input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('<%=VMForm.ACT_VALIDATE_VM%>')" <%=disabled%>>
+	<input type="button" name="btnValidate" value="Validate" style="width:125" onClick="return formValidator('<%=oldVer%>','<%=oldLN%>','<%=oldWS%>','<%=oldCN%>');" <%=disabled%>>
 	&nbsp;&nbsp;
 	<input type="button" name="btnClear" value="Clear" style="width:125" onClick="ClearBoxes();">
 	&nbsp;&nbsp;
