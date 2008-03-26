@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.12 2008-03-25 20:36:57 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.13 2008-03-26 22:02:24 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -26,16 +26,19 @@
 			 Vector vStatus = (Vector)session.getAttribute("vStatusVM");
 			 Vector vRegStatus = (Vector)session.getAttribute("vRegStatus");
 			 session.setAttribute("prevVMVersion",thisForm.getVMBean().getVM_VERSION());
+			 session.setAttribute("prevVMLN",thisForm.getVMBean().getVM_LONG_NAME());
+			 session.setAttribute("prevVMWS",thisForm.getVMBean().getASL_NAME());
+			 session.setAttribute("prevVMCN",thisForm.changeNote);
 			 String sVM = (String)request.getAttribute("VMName");
 			 String vocab = (String)session.getAttribute("preferredVocab");
-		%>
+	%>
 
 		<Script Language="JavaScript">
 		var actionDelete = "<%=VMForm.ACT_CON_DELETE%>";
 		var actionAppend = "<%=VMForm.ACT_CON_APPEND%>";
 		var elmSelectRow = "<%=VMForm.ELM_SEL_CON_ROW%>";
 		var elmNVP = "<%=VMForm.ELM_NVP_ORDER%>";
-		
+       		
     function checkNameLen(cobj, mlen)
     {
         if (cobj.value.length > mlen)
@@ -44,7 +47,7 @@
             cobj.focus();
         }
     }
-    
+        
     function displayStatus()
     {
      <%
@@ -59,7 +62,7 @@
 			  session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");
 			%>        
     }
-	</SCRIPT>
+</SCRIPT>
 	</head>
 	<body onload="javascript:setFocusTo('<%=elmFocus%>');displayStatus();">
 		<table width="99%" border=1>
@@ -78,7 +81,7 @@
 									<%=VMForm.ELM_LBL_NAME%>
 								</b>
 							</div>
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" style="width:40%" name="<%=VMForm.ELM_LBL_NAME%>" value="<%=thisForm.longName%>"/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" style="width:40%" id ="name" name="<%=VMForm.ELM_LONG_NAME%>" value="<%=thisForm.getVMBean().getVM_LONG_NAME()%>"/>
 							<div class="ind2">
 								<b>
 									Public ID
@@ -96,7 +99,7 @@
 									Enter Version
 								</b>
 							</div>
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="Version" type="text" value="<%=sVersion%>" size="5" maxlength=5>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="Version" id="version" type="text" value="<%=sVersion%>" size="5" maxlength=5>
 							&nbsp;&nbsp;&nbsp;
 							<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
 							Business Rules
@@ -106,7 +109,7 @@
 									WorkFlow Status
 								</b>
 							</div>
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select name="selStatus" size="1">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select name="selStatus" id="ws" size="1">
 							<option value="" selected="selected"></option>
 							<% if(vStatus!=null){  
 							   for (int i = 0; vStatus.size()>i; i++)
@@ -128,7 +131,7 @@
 								</b>
 							</div>
 							<div class="ind3">
-								<textarea name="<%=VMForm.ELM_DEFINITION%>" rows="4" style="width:95%"><%=thisForm.description%></textarea>
+								<textarea name="<%=VMForm.ELM_DEFINITION%>" id="def" rows="4" style="width:95%"><%=thisForm.description%></textarea>
 							</div>
 							<%if (conExist) { %>
 							<div class="ind2">
@@ -146,7 +149,7 @@
 								</b>
 							</div>
 							<div class="ind3">
-								<textarea name="<%=VMForm.ELM_CHANGE_NOTE%>" rows="3" style="width:80%"><%=thisForm.changeNote%></textarea>
+								<textarea name="<%=VMForm.ELM_CHANGE_NOTE%>" id= "cn" rows="3" style="width:80%"><%=thisForm.changeNote%></textarea>
 							</div>
 							<hr>
 							<div id="<%=VMForm.ELM_LABEL_CON%>" class="ind2" style="display:inline">
