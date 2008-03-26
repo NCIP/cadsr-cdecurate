@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.29 2008-03-24 23:53:27 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.30 2008-03-26 22:01:21 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -532,7 +532,7 @@ public class VMServlet extends GenericServlet
         HttpSession session = httpRequest.getSession();
         VM_Bean vm = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
       //check if user entered alt def exists
-        String sLongName = (String)httpRequest.getParameter(VMForm.ELM_LBL_NAME);
+        String sLongName = (String)httpRequest.getParameter(VMForm.ELM_LONG_NAME);
         //check if user entered alt def exists
         String sDef = (String)httpRequest.getParameter(VMForm.ELM_DEFINITION);
         if (sDef != null)
