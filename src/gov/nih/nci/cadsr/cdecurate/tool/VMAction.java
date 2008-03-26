@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.33 2008-03-24 23:53:27 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.34 2008-03-26 14:25:11 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -989,15 +989,17 @@ public String checkVMNameExists(VM_Bean selVM,VMForm data)
        getExistingVM(VMName, "", "", data);  //check if vm exists
        Vector<VM_Bean> nameList = data.getExistVMList();
        //if the returned one has the same idseq as as the one in hand; ignore it
-      // boolean editexisting = false;
-       if (nameList.size() == 1)
+      // boolean editexisting = false; if (nameList.size() == 1)
+       if (nameList.size() > 0)
        {
-           VM_Bean existVM = checkExactMatch(nameList.elementAt(0), vmBean);
+    	   for(int k=0; k<nameList.size();k++){
+           VM_Bean existVM = checkExactMatch(nameList.elementAt(k), vmBean);
            if (existVM != null)
            {
                data.setVMBean(existVM);
                return existVM;   //return the exact match name- definition- concept
            }
+    	   }
        }
 
        //add the name matched one to the vector of nameMatchVMs; mark this one as (name) match
