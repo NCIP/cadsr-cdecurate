@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.2 2008-03-13 18:04:00 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.3 2008-03-27 05:09:21 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -494,40 +494,44 @@
 			   {
 			      
 				   document.searchResultsForm.showSelectedBtn.disabled=false;
+				  
 				   if (checked)
 					   StoreSelectedRow("true", rowNo, editAction);
 				   else
 					   StoreSelectedRow("false", rowNo, editAction);
+					   
+				  if(sSelAC == "Value Meaning")
+				   {
+			 		   
+				           alert("Please check only one box at a time");
+					   UnCheckAllCheckBoxes();
+				           formObj= eval("document.searchResultsForm."+currentField.name);
+				           formObj.checked=true;
+                   			   --numRowsSelected;
+                   			   document.searchResultsForm.associateACBtn.disabled=false;
+                   			   document.searchResultsForm.editSelectedBtn.disabled=false;
+                   			   
+                   		   }		   
 				   
 				   if (editAction != "nothing" || sButtonPressed == "Search" || sButtonPressed == "Edit")
 				   { 
 					   if (document.searchResultsForm.editSelectedBtn != null)
 					   {
 						   //enable the edit button if action is regular search or edit otherwise disable
-						   if (editAction != "Complete Selected DE" && editAction != "Create New Version" && editAction != "Create New from Existing")
+						   if (editAction != "Complete Selected DE" && editAction != "Create New Version" && editAction != "Create New from Existing" && sSelAC != "Value Meaning")
 						   {
 							 
 							   document.searchResultsForm.editSelectedBtn.value="Block Edit";
 							   document.searchResultsForm.editSelectedBtn.disabled=false;
 							}
-						   else{
+						   else if (sSelAC != "Value Meaning")
+						         {
 						  
 							   document.searchResultsForm.editSelectedBtn.disabled=true;
 							   }
 					   }
 				   }
-				   if(sSelAC == "Value Meaning")
-				    {
-				    formObj= eval("document.searchResultsForm."+currentField.name);
-                   	formObj.checked=false;
-                   	--numRowsSelected;
-				      alert("Please check only one box at a time");
-				       document.searchResultsForm.editSelectedBtn.disabled=false;
-					   document.searchResultsForm.editSelectedBtn.value="Edit Selection";
-					    document.searchResultsForm.associateACBtn.value="Get Associated";
-					    document.searchResultsForm.associateACBtn.disabled=false;
-				    }
-				   
+				   				   
 			   }
 			   else   // editAction == "searchForCreate"
 			   {
@@ -572,8 +576,8 @@
 				   else  // editAction == "searchForCreate", document.searchParmsForm.listSearchFor.value != "PermissibleValue"
 				   {
 				   /* formObj= eval("document.searchResultsForm."+currentField.name);
-                   formObj.checked=false;
-                   --numRowsSelected;
+                   			formObj.checked=false;
+                  			 --numRowsSelected;
 					   alert("Please check only one box at a time");*/
 					   //allow to check more than one but disable the button if more selected
 					   if (document.searchResultsForm.editSelectedBtn != null)
@@ -628,6 +632,18 @@
 	  }
   }  // end of EnableCheckButtons
    
+  function UnCheckAllCheckBoxes() 
+  {
+  	var dCount =0;
+if(document.searchResultsForm.hiddenSelectedRow != null)
+        dCount = document.searchResultsForm.hiddenSelectedRow.length;  	
+		for (k=0; k<dCount; k++)
+		   {
+		   	   var selRow = document.searchResultsForm.hiddenSelectedRow[k].text;	
+			   formObj= eval("document.searchResultsForm."+selRow);
+        		  formObj.checked=false;
+		   }  
+  }
   // stored the selected row values for permissible values on SearchForCreate action
   function StoreSelectedRow(addRow, rowNo, editAction)
   {
