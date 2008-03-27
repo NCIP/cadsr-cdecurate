@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UserBean.java,v 1.47 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UserBean.java,v 1.48 2008-03-27 16:53:30 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -144,7 +144,7 @@ public final class UserBean implements Serializable
    */
   public void setUsername(String username)
   {
-    m_username = username;
+    m_username = username.toUpperCase();
   }
 
   /**
