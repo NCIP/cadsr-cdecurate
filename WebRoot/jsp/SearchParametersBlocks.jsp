@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.8 2008-01-23 23:06:59 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.9 2008-03-27 17:03:54 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -372,22 +372,33 @@ return false;
 } 
 }
 
+function testIsValidObject(objToTest) {
+		if (null == objToTest) {
+			return false;
+		}
+		if ("undefined" == typeof(objToTest) ) {
+			return false;
+		}
+		return true;
+
+	}
  //submits the page to start the search  
     function doSearchBuildingBlocks()
     {
-       var sTerm = document.searchParmsForm.keyword.value;
+       
        var confirmation =false;
-       if(sTerm==null || isEmpty(sTerm))
+       if(testIsValidObject(document.searchParmsForm.keyword) && (document.searchParmsForm.keyword.value==null || isEmpty(document.searchParmsForm.keyword.value)))
        {
           confirmation =  confirm("The Search Term is empty and will cause all caDSR content to be retrieved.\n"
                                  + "This is a slow, lengthy search. Are you sure you wish to proceed?");
         } 
-        else
+       else
         {
          confirmation=true;
         } 
       if (confirmation == true)
       {
+        var sTerm = document.searchParmsForm.keyword.value;
       	if(document.searchParmsForm.listSearchInEVS != null && document.searchParmsForm.listSearchInEVS.value == "MetaCode")
       	{
       		if (sTerm == null) sTerm = "";
