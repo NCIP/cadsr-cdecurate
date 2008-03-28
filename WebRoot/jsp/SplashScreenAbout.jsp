@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SplashScreenAbout.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SplashScreenAbout.jsp,v 1.4 2008-03-28 16:35:03 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -19,7 +19,7 @@
 		<div id="Layer2" style="position:absolute; width:120px; height:38px; z-index:2; left: 456px; top: 275 px; visibility: visible;">
 			<p>
 				<font color="#FFFFFF" size="4" face="Arial, sans-serif">
-					Version 3.2.0.4
+					Version 3.2.0.6
 				</font>
 			</p>
 		</div>
