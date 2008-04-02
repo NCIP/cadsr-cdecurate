@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.10 2008-03-27 17:03:54 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.11 2008-04-02 16:06:17 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -267,11 +267,9 @@ function testIsValidObject(objToTest) {
 
 	}
 
-
-  //submits the page to start the search  
-  function doSearchDE()
-  {
-       var confirmation =false;
+function getConfirmation()
+{
+	var confirmation =false;
         if(testIsValidObject(document.searchParmsForm.keyword)&&(document.searchParmsForm.keyword.value==null || isEmpty(document.searchParmsForm.keyword.value)))
         {
          confirmation =  confirm("The Search Term is empty and will cause all caDSR content to be retrieved.\n"
@@ -280,8 +278,15 @@ function testIsValidObject(objToTest) {
        else
        {
          confirmation=true;
-       }   
-     if(confirmation == true)
+       }  
+       return confirmation; 
+}
+
+  //submits the page to start the search  
+  function doSearchDE()
+  {
+      var confirmation = getConfirmation(); 
+     if(confirmation)
      {     
      <%  if (!sMenuAction.equals("searchForCreate") && sAppendAction.equals("Was Appended")) { %>
      var conf = confirm("You did not press the Append button so these results will not be appended.");
@@ -322,25 +327,28 @@ function keypress_handler()
     {
         return true;  // only interest on return kay
     }
-
-    //check if it is valid for search
-    if(bUnAppendWarning)
+    var confirmation = getConfirmation();
+    if(confirmation)
     {
-      var conf = confirm("You did not press the Append button so these results will not be appended.");
-      if (conf == false)
+    	//check if it is valid for search
+    	if(bUnAppendWarning)
+    	{
+     	 var conf = confirm("You did not press the Append button so these results will not be appended.");
+     	 if (conf == false)
               return false;     //user canceled, may append again, do nothing
-    }
-    // all other case go to servlet to search
-    <% if (sMenuAction.equals("searchForCreate")) { %>
-        if (opener && opener.document != null && opener.document.SearchActionForm != null)
-          opener.document.SearchActionForm.isValidSearch.value = "true";
-    <% } %>
-    hourglass();
-    window.status = "Searching Keyword, it may take a minute, please wait....."
-    document.searchResultsForm.Message.style.visibility="visible";
-    document.searchParmsForm.actSelect.value = "Search";
-    document.searchParmsForm.submit();
-    return false;
+    	}
+   		 // all other case go to servlet to search
+    	<% if (sMenuAction.equals("searchForCreate")) { %>
+       		 if (opener && opener.document != null && opener.document.SearchActionForm != null)
+         	 opener.document.SearchActionForm.isValidSearch.value = "true";
+  		  <% } %>
+   		 hourglass();
+    	window.status = "Searching Keyword, it may take a minute, please wait....."
+    	document.searchResultsForm.Message.style.visibility="visible";
+    	document.searchParmsForm.actSelect.value = "Search";
+    	document.searchParmsForm.submit();
+    	return false;
+    }	
 }
 
 function LoadKeyHandler()
