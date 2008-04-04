@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningUsed.jsp,v 1.3 2008-02-20 19:35:24 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningUsed.jsp,v 1.4 2008-04-04 16:14:14 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -101,19 +101,19 @@
 							<div class="ind2">
 								All associated items are displayed by default. Click the "Show Released Only" button to display items with a Workflow Status of RELEASED only.
 							</div>
-							<hr id="<%=VMForm.ELM_CRF_NAME%>">							
+							<hr id="<%=VMForm.ELM_CRF_NAME%>" width="100%">
+							<br>
 							<!--Forms/Templates-->
-							<div class="ind2" style="display:inline;">  <!--  width:49%;"> -->
+							<div class="ind2" style="display:inline; width: 4in">  <!--  width:49%;"> -->
 								<b>
 									<%=VMForm.ELM_CRF_NAME%>:
 								</b>
 								<%=vCRF.size()%> Found 
 							</div>
-							<% if (vCRF.size() > 0 || crfFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> 
-								<div class="ind2" style="display:inline;">  <!--  text-align:right; width:49%;"> -->
-									<input style="width: 160px" onclick="javascript:showReleased('<%=VMForm.ELM_CRF_NAME%>', '<%=crfFilter%>');" type="button" value="<%=crfFilter%>" name="btnshowRELCRF">
-								</div>
-							<% } %>
+							<div class="ind2" style="display:inline;">  <!--  text-align:right; width:49%;"> -->
+									<input style="width: 160px" onclick="javascript:showReleased('<%=VMForm.ELM_CRF_NAME%>', '<%=crfFilter%>');" type="button" value="<%=crfFilter%>" name="btnshowRELCRF" <% if (vCRF.size() > 0 || crfFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> enabled <% } else { %> disabled<%}%>>
+							</div>
+							
 							<% if (vCRF.size() > 0) { %> 
 								<div class="table">
 									<table width="100%" border="0">
@@ -223,23 +223,23 @@
 									</table>
 								</div>
 							<% } %>
-							<hr id="<%=VMForm.ELM_VD_NAME%>">
+							<br clear="all">
+							<hr id="<%=VMForm.ELM_VD_NAME%>" width="100%">
 							<div align="right">
 								 <a href="javascript:setFocusTo('startTop');"><img src="images/returntotop.gif" border="0" alt="Return to Top"> Return to Top</a>
 							</div>
-							
+							<br>
 							<!--Value Domain-->
-							<div class="ind2" style="display:inline;">  <!--  width:49%;"> -->
+							<div class="ind2" style="display:inline; width: 4in">  <!--  width:49%;"> -->
 								<b>
 									<%=VMForm.ELM_VD_NAME%>:
 								</b>
 								<%=vVD.size()%> Found 
 							</div>
-							<% if (vVD.size() > 0 || vdFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> 
+							
 								<div class="ind2" style="display:inline;">  <!--  width:49%; text-align:right;">  -->
-									<input style="width: 160px" onclick="javascript:showReleased('<%=VMForm.ELM_VD_NAME%>', '<%=vdFilter%>');" type="button" value="<%=vdFilter%>" name="btnshowRELVD">
+									<input style="width: 160px" onclick="javascript:showReleased('<%=VMForm.ELM_VD_NAME%>', '<%=vdFilter%>');" type="button" value="<%=vdFilter%>" name="btnshowRELVD" <% if (vVD.size() > 0 || vdFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> enabled <%}else { %>disabled<%}%>>
 								</div>
-							<% } %>
 							<% if (vVD.size() > 0) { %> 
 								<div class="table">
 									<table width="100%" border="0">
@@ -320,21 +320,22 @@
 									</table>
 								</div>
 							<% } %>
-							<hr id="<%=VMForm.ELM_DE_NAME%>">
+							<br clear="all">
+							<hr id="<%=VMForm.ELM_DE_NAME%>" width="100%">
 							<div align="right">
 								 <a href="javascript:setFocusTo('startTop');"><img src="images/returntotop.gif" border="0" alt="Return to Top"> Return to Top</a>
 							</div>
-							<div class="ind2" style="display:inline;"> <!--  width:49%;">  -->
+							<br>
+							<div class="ind2" style="display:inline;  width: 4in"> <!--  width:49%;">  -->
 								<b>
 									<%=VMForm.ELM_DE_NAME%>:
 								</b>
 								<%=vDE.size()%> Found 
 							</div>
-							<% if (vDE.size() > 0 || deFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %>
+							
 								<div class="ind2" style="display:inline;">  <!-- text-align:right; width:49%;"> -->
-									<input style="width: 160px" onclick="javascript:showReleased('<%=VMForm.ELM_DE_NAME%>', '<%=deFilter%>');" type="button" value="<%=deFilter%>" name="btnshowRELDE">
+									<input style="width: 160px" onclick="javascript:showReleased('<%=VMForm.ELM_DE_NAME%>', '<%=deFilter%>');" type="button" value="<%=deFilter%>" name="btnshowRELDE" <% if (vDE.size() > 0 || deFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> enabled <%}else { %> disabled<%}%>>
 								</div>
-							<% } %>
 							<% if (vDE.size() > 0) { %> 
 								<div class="table">
 									<table width="100%" border="0">
@@ -417,7 +418,7 @@
 									</table>
 								</div>
 							<% } %>
-							<hr>
+							<hr width="100%">
 							<div align="right">
 								 <a href="javascript:setFocusTo('startTop');"><img src="images/returntotop.gif" border="0" alt="Return to Top"> Return to Top</a>
 							</div>

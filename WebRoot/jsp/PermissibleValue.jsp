@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.14 2008-03-26 14:26:33 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.15 2008-04-04 16:14:14 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -675,6 +675,10 @@
 																	<br>
 																</td>
 															</tr>
+															</table>
+															<div style="height:350px;width:100%;overflow:auto">
+															<table width="100%" cellpadding="0.05in,0.05in,0.05in,0.05in" border="0">
+														
 															<% 
 															for (int k=0; k<vEMsg.size(); k++)
 															{ 
@@ -685,6 +689,7 @@
 																	String idVer =vB.getVM_ID()+"v"+ vB.getVM_VERSION();
 														 %>
 															<tr>
+															  	
 																<td valign="top">
 																	<input name="rUse" type="radio" alt="Select to use" value="<%=rVM%>" onclick="javascript:enableUSE();">
 																</td>
@@ -738,7 +743,7 @@
 																</td>
 															</tr>
 															<% } %>
-														</table>
+														</table></div>
 														<%} %>
 													</td>
 													<td id="newOrg" valign="top">
@@ -1082,8 +1087,9 @@
 																	</div>
 																</td>
 																<td valign="top">
-																	<div id="<%=pvCount%>VMView" style="display: inline">
+																	<div style="display:inline">
 																	<b>VM Long Name:</b>
+																	</div>
 																	<% if (vmCon.size() < 1) { %>
 																	<div id="<%=pvCount%>VMEdit" style="display: none; width:90%">
 																		&nbsp;&nbsp;
@@ -1109,11 +1115,10 @@
 																		</span>
 																	</div>
 																	<br>
-																	<div id="<%=pvCount%>" style="display: inline; text-align:right">
+																	<div id="<%=pvCount%>VMView" style="display: <%if (viewType.equals("expand")) {%>block <% } else { %> none <% } %>">
 																		&nbsp;&nbsp;&nbsp;&nbsp;<%=sPVMean%>
 																	<br>
 																	<br>	
-																	</div>
 																	</div>
 																	<div id="<%=pvCount%>View" style="display: <%if (viewType.equals("expand")) {%>block <% } else { %> none <% } %>">
 																		<table width="100%">
@@ -1293,8 +1298,10 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 																				<% } %>
 																				<br>
 																			</td>
-																		</tr>
-																		<% 
+																		</tr></table>
+																	<div style="height:350px;width:100%;overflow:auto">
+																	<table width="100%" cellpadding="0.05in,0.05in,0.05in,0.05in" border="0">
+																	<% 
 															for (int k=0; k<vEMsg.size(); k++)
 															{ 
 																	VM_Bean vB = (VM_Bean)vEMsg.elementAt(k);
@@ -1349,7 +1356,7 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 																			</td>
 																		</tr>
 																		<% } %>
-																	</table>
+																	</table></div>
 																	<%} %>
 																</td>
 																<%if (vdCONs > 0){%>
@@ -1499,7 +1506,7 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 				<input type="hidden" name="SelCDid" value="<%=sConDomID%>">
 			</form>
 		</div>
-		<script language="javascript">
+<script language="javascript">
 //put the pv in edit mode after cancel the duplicate to make sure that user completes the action
 <% if (pgAction.equals("restore") || pgAction.equals("openNewPV")) { %>
 	<% if (!sEditPV.equals("") && !sEditPV.equals("pvNew")) { %>

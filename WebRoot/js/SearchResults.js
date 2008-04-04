@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.3 2008-03-27 05:09:21 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.4 2008-04-04 16:14:14 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -500,19 +500,6 @@
 				   else
 					   StoreSelectedRow("false", rowNo, editAction);
 					   
-				  if(sSelAC == "Value Meaning")
-				   {
-			 		   
-				           alert("Please check only one box at a time");
-					   UnCheckAllCheckBoxes();
-				           formObj= eval("document.searchResultsForm."+currentField.name);
-				           formObj.checked=true;
-                   			   --numRowsSelected;
-                   			   document.searchResultsForm.associateACBtn.disabled=false;
-                   			   document.searchResultsForm.editSelectedBtn.disabled=false;
-                   			   
-                   		   }		   
-				   
 				   if (editAction != "nothing" || sButtonPressed == "Search" || sButtonPressed == "Edit")
 				   { 
 					   if (document.searchResultsForm.editSelectedBtn != null)
@@ -524,11 +511,22 @@
 							   document.searchResultsForm.editSelectedBtn.value="Block Edit";
 							   document.searchResultsForm.editSelectedBtn.disabled=false;
 							}
-						   else if (sSelAC != "Value Meaning")
-						         {
-						  
-							   document.searchResultsForm.editSelectedBtn.disabled=true;
-							   }
+							//if(sSelAC == "Value Meaning")
+				   			//{
+			 		   
+				           	//	alert("Please check only one box at a time");
+					   	   	//	UnCheckAllCheckBoxes();
+				           	//	formObj= eval("document.searchResultsForm."+currentField.name);
+				           	//	formObj.checked=true;
+                   			 //  	--numRowsSelected;
+                   			//   	document.searchResultsForm.associateACBtn.disabled=false;
+                   			//   	document.searchResultsForm.editSelectedBtn.disabled=false;
+                   			   
+                   		  // 	}	
+						    else 
+						     {
+						  	   document.searchResultsForm.editSelectedBtn.disabled=true;
+							 }
 					   }
 				   }
 				   				   
@@ -1007,5 +1005,15 @@ function uploadCmd()
 		   document.searchResultsForm.hiddenACIDStatus.length = 0;
 		   document.searchResultsForm.hiddenDesIDName.length = 0;
 	   }
+	   
+	   
   }  
+   function openEditVMWindow(curPV)
+    {
+    	document.getElementById("editPVInd").value = curPV;
+    	document.searchResultsForm.actSelected.value = "pvEdits";
+    	document.getElementById("pageAction").value = "openEditVM";
+    	StoreSelectedRow("true",curPV,"ValueMeaning");
+    	document.searchResultsForm.submit();
+    }
   

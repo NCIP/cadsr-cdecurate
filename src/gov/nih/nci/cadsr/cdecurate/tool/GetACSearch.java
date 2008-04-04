@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.56 2008-03-24 14:40:50 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.57 2008-04-04 16:14:14 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -96,13 +96,21 @@ public class GetACSearch implements Serializable
             DataManager.setAttribute(session, "serProtoID", "");
             // get the selected Administed component for Search
             String sComponent = (String) req.getParameter("listSearchFor");
+            String sSearchAC = (String) session.getAttribute("searchAC");
+            
             if (sComponent != null)
                 DataManager.setAttribute(session, "searchAC", sComponent);
-            else
-                DataManager.setAttribute(session, "searchAC", "DataElement");
-            String sSearchAC = (String) session.getAttribute("searchAC");
+            else {
+            	if (sSearchAC == null)
+               	 	DataManager.setAttribute(session, "searchAC", "DataElement");
+            	else
+                     DataManager.setAttribute(session, "searchAC", sSearchAC);
+                 }	
+            sSearchAC = (String) session.getAttribute("searchAC");
             // do the keyword search for the selected component
             String sKeyword = (String) req.getParameter("keyword");
+            if(sKeyword == null && sSearchAC.equals("PermissibleValue"))
+            	sKeyword = (String)session.getAttribute("serKeyword");
             if (sKeyword != null)
             {
                 sKeyword = sKeyword.trim();
@@ -3112,6 +3120,13 @@ public class GetACSearch implements Serializable
     }
 
     
+    /**
+     * @param vmName
+     * @param pvCount
+     * @param vRes
+     * @return
+     * @throws Exception
+     */
     private Vector addEditVMLink(String vmName, String pvCount, Vector<String> vRes) throws Exception
     {
     	String hyperText = "";
@@ -4237,12 +4252,12 @@ public class GetACSearch implements Serializable
             DataManager.setAttribute(session, "AllRefDocList", new Vector());
             String sSearchAC = (String) session.getAttribute("searchAC");
             Vector vSRows = (Vector) session.getAttribute("vSelRows");
-            if(sSearchAC.equals("ValueMeaning"))
+            /*if(sSearchAC.equals("ValueMeaning"))
             {	
             Vector vRSel = (Vector) session.getAttribute("vACSearch");
             vSRows=vRSel;
             session.setAttribute("vSelRows", vRSel);
-            }
+            }*/
             Vector vCheckList = new Vector();
             // handle problem with menu item when get associated.
             if (sSearchAC.equals("DataElement"))
@@ -6573,7 +6588,7 @@ public class GetACSearch implements Serializable
      *            output result vector.
      * 
      */
-    private void getPVVMResult(HttpServletRequest req, HttpServletResponse res, Vector vResult, String refresh)
+    public void getPVVMResult(HttpServletRequest req, HttpServletResponse res, Vector vResult, String refresh)
     {
         Vector vPVVM = new Vector();
         try
@@ -6639,6 +6654,7 @@ public class GetACSearch implements Serializable
                 tempCUI = PVBean.getPV_TEMP_CUI_VAL();
                 ccode = PVBean.getPV_CONCEPT_IDENTIFIER();
                 String pvCount = "pv" + ckCount;
+                String chkCount = "CK" + ckCount;
 	            ckCount += 1;
                 if (vSelAttr.contains("Value"))
                     vResult.addElement(PVBean.getPV_VALUE());
@@ -6649,7 +6665,7 @@ public class GetACSearch implements Serializable
                 if (vSelAttr.contains("Value Meaning Long Name"))
                     //vResult.addElement(PVBean.getPV_SHORT_MEANING());
                 	  vResult = addEditVMLink(PVBean
-                              .getPV_SHORT_MEANING(),pvCount,vResult);
+                              .getPV_SHORT_MEANING(),chkCount,vResult);
                 if (vSelAttr.contains("VM Public ID"))
                     vResult.addElement(PVBean.getPV_VM().getVM_ID());
                 if (vSelAttr.contains("VM Version"))
