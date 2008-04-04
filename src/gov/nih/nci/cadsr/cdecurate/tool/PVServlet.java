@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.28 2008-03-13 20:34:43 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.29 2008-04-04 16:14:14 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -68,6 +68,7 @@ public class PVServlet implements Serializable
          data.setOriginAction(sOriginAction);
         // String sSubAction = (String)data.getRequest().getParameter("VDAction");
          String sSubAction = (String)session.getAttribute("VDAction");  
+         if (sSubAction == null)sSubAction ="";
          data.setVDAction(sSubAction);
          String vdPageFrom = "create";
          if (!sSubAction.equals("NewVD")) 
@@ -906,7 +907,39 @@ public class PVServlet implements Serializable
      }
      return jsp;     
    }
-      
+   
+   /**
+    * initilize the data before opening the VM edit page
+    * @return String jsp name
+    */
+   public String openVMPageEdit(VM_Bean selVM, PV_Bean selPV)
+   {
+     String jsp = VMForm.JSP_PV_DETAIL; 
+     try
+     {
+         HttpSession session = data.getRequest().getSession();
+             
+         //set the attributes
+         DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, selVM);
+         DataManager.setAttribute(session, VMForm.SESSION_SELECT_PV, selPV);
+         DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
+         DataManager.setAttribute(session, VMForm.SESSION_RET_PAGE, VMForm.ACT_BACK_SEARCH);
+         //get vm alt names
+         AltNamesDefsServlet altSer = new AltNamesDefsServlet(data.getCurationServlet(), data.getCurationServlet().sessionData.UsrBean);
+         Alternates alt = altSer.getManualDefinition(data.getRequest(), VMForm.ELM_FORM_SEARCH_EVS);
+         if (alt != null && !alt.getName().equals(""))
+           selVM.setVM_ALT_DEFINITION(alt.getName());
+         //write the jsp
+         VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
+         vmser.writeDetailJsp();
+         jsp = VMForm.JSP_VM_DETAIL;     
+       }
+     catch (Exception e)
+     {
+      logger.fatal("ERROR -load vm ", e);
+     }
+     return jsp;     
+   } 
    /**To mark PV to be removed from the page 
    * @return String JSP name to forward to
    */

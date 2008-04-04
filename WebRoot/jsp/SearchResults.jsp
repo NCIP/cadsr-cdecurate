@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.5 2008-03-24 15:16:10 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.6 2008-04-04 16:14:14 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -1346,7 +1346,9 @@ getSearchComponent();
 			<input type="hidden" name="isValidSearch" value="false">
 			<input type="hidden" name="searchComp" value="">
 			<input type="hidden" name="SelContext" value="">
-		</form>
+			<input type="hidden" name="editPVInd" value="">
+			<input type="hidden" name="pageAction" value="nothing">
+			</form>
 	</body>
 	<% 
     //capture duration

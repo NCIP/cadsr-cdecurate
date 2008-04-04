@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.30 2008-03-26 22:01:21 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.31 2008-04-04 16:14:14 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -8,15 +8,11 @@ import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
 
-import java.sql.CallableStatement;
-import java.sql.ResultSet;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
 
@@ -621,8 +617,23 @@ public class VMServlet extends GenericServlet
    */
 private String goBackToSearch()
   {
-    	
-	  this.readDataForSearch();
+	String sSearchAC = (String) httpRequest.getSession().getAttribute("searchAC");
+	HttpSession session = httpRequest.getSession();
+	if(sSearchAC.equals("ValueMeaning"))
+	{ 
+		Vector<VM_Bean> result =(Vector<VM_Bean>)session.getAttribute("vSelRows");
+		Vector vSelAttr =(Vector<VM_Bean>)session.getAttribute("creSelectedAttr");
+		vmData.setVMList(result);
+		vmData.setSelAttrList(vSelAttr);
+		this.readVMResult();
+	}else
+	{
+		
+		GetACSearch getAc =new GetACSearch(httpRequest,  httpResponse, curationServlet);
+		Vector vResult =new Vector();
+		getAc.getPVVMResult(httpRequest,  httpResponse,vResult,"true");
+		DataManager.setAttribute(session, "results", vResult);
+	}
       return VMForm.BACK_TO_SEARCH;
 }
 

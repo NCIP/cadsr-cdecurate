@@ -2312,6 +2312,23 @@ public class CurationServlet
     }
 
     /**
+     * @param req
+     * @param res
+     * @throws Exception
+     */
+    public void doOpenEditVM(HttpServletRequest req, HttpServletResponse res, VM_Bean vm, PV_Bean pv) throws Exception
+    {
+        PVServlet pvSer = new PVServlet(req, res, this);
+        String pageFor = pvSer.openVMPageEdit(vm,pv);
+        if (pageFor != null && !pageFor.equals(""))
+        {
+            if (pageFor.charAt(0) != '/')
+                pageFor = "/" + pageFor;
+            ForwardJSP(req, res, pageFor);
+        }
+    }
+    
+    /**
      * The doEditPVActions method handles the submission of a CreatePV form Calls 'doValidatePV' if the action is
      * Validate or submit.
      *
@@ -9438,6 +9455,7 @@ public class CurationServlet
         String sSearchAC = (String) session.getAttribute("searchAC"); // get the selected component
         String sAction = (String) req.getParameter("pageAction");
         DataManager.setAttribute(session, "originAction", "");
+        GetACSearch getACSearch = new GetACSearch(req, res, this);
         String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
         // get the sort string parameter
         @SuppressWarnings("unused") String sSortType = "";
@@ -9458,7 +9476,19 @@ public class CurationServlet
         // open Ref Document Upload page
         else if (actType.equals("RefDocumentUpload"))
             this.doRefDocumentUpload(req, res, "Open");
-        // store empty result vector in the attribute
+        else if (actType.equals("pvEdits")) // fromForm
+        {
+        	 Integer curInd = new Integer((String) req.getParameter("hiddenSelectedRow"));
+             if (curInd != null)
+             { int thisInd = curInd.intValue(); 
+               Vector results =(Vector)session.getAttribute("vSelRows");
+               session.setAttribute("creKeyword", session.getAttribute("serKeyword"));
+               PV_Bean pv = (PV_Bean)results.get(thisInd);
+               VM_Bean vm = pv.getPV_VM();
+               this.doOpenEditVM(req, res,vm,pv);
+             }  
+        }     
+         // store empty result vector in the attribute
         else if (actType.equals("clearRecords"))
         {
             Vector vResult = new Vector();
@@ -9495,8 +9525,7 @@ public class CurationServlet
             doUnmonitor(req, res);
         else
         { // show selected rows only.
-            GetACSearch getACSearch = new GetACSearch(req, res, this);
-            getACSearch.getACShowResult(req, res, actType);
+             getACSearch.getACShowResult(req, res, actType);
             if (menuAction.equals("searchForCreate"))
                 ForwardJSP(req, res, "/OpenSearchWindow.jsp");
             else
@@ -9504,7 +9533,7 @@ public class CurationServlet
         }
     }
 
-    /**
+      /**
      * Monitor the user selected items with a Sentinel Alert.
      *
      * @param req

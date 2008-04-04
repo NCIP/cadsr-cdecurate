@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.13 2008-03-26 22:02:24 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.14 2008-04-04 16:14:14 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -154,8 +154,8 @@
 							<hr>
 							<div id="<%=VMForm.ELM_LABEL_CON%>" class="ind2" style="display:inline">
 								<b>
-									Concepts
-								</b>
+									Concept(s): 
+								</b> <%=vmCon.size()%> Found
 							</div>
 							<div class="ind3" style="display:inline">
 								<a title="Search" href="javascript:searchConcepts('<%=vocab%>');">
@@ -254,12 +254,12 @@
 							<hr>
 							<div id="<%=VMForm.ELM_LABEL_CONDOMAIN%>" class="ind2" style="display:inline">
 								<b>
-									Conceptual Domain(s)
-								</b>
+									Conceptual Domain(s) 
+								</b> <% if (cdResult != null) 
+   										 {%> : <%=cdResult.size()%> Found
 							</div>
-							<% if (cdResult != null) 
-   										 {%>
-								<div class="table">
+							<br>
+							<div class="table">
 								<b>
 									<%=VMForm.ELM_LBL_CONDOMAIN_SUM%>
 									:
