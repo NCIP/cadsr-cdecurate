@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.15 2008-04-04 16:14:14 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.16 2008-04-10 19:37:08 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -686,7 +686,11 @@
 																	Vector vBCon = vB.getVM_CONCEPT_LIST();
 																	Alternates[] alternate = vB.getVM_ALT_LIST();
 																	String rVM = "erVM"+k;
-																	String idVer =vB.getVM_ID()+"v"+ vB.getVM_VERSION();
+																	String idVer ="[System Assigned after Value Domain Submission]";
+																	if(vB.getVM_ID()!=null && vB.getVM_VERSION()!=null) 
+																	 idVer =vB.getVM_ID()+"v"+ vB.getVM_VERSION();
+																	
+																	 
 														 %>
 															<tr>
 															  	
@@ -1134,7 +1138,8 @@
 																					&nbsp;&nbsp;
 																				</td>
 																				<td>
-																				<% if (submit != null && submit.equals("INS")) { %>
+																				<%System.out.println("Submit" +submit); 
+																				 if (submit != null && submit.equals("INS")) { %>
 																				  [System Assigned after Value Domain Submission]
 																			<% } else { %>
 																					<%= vm.getVM_ID()+"v"+ vm.getVM_VERSION()%>
@@ -1273,7 +1278,7 @@
 																							<!-- <input type="checkbox" name="saveAlt"/>  -->
 																						</td>
 																						<td>
-																							<input type="button" name="btnContinue" style="width:100" value="Continue" <% if (vmMatch.equals("true")) { %>disabled <% } %>
+																							<input type="button" name="btnContinue" style="width:100" value="Create" <% if (conceptMatch) { %>disabled <% } %>
 																								onClick="javascript:ContinueDuplicateVM('continueVM');">
 																						</td>
 																						<td>
