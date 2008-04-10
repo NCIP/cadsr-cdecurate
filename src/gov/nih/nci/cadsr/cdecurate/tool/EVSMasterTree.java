@@ -1,15 +1,23 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.49 2007-09-19 16:59:36 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.50 2008-04-10 19:37:49 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
-import gov.nih.nci.evs.domain.*;
+import gov.nih.nci.evs.domain.DescLogicConcept;
 
-import java.util.*;
-import javax.servlet.http.*;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Stack;
+import java.util.Vector;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 
 
@@ -286,8 +294,8 @@ public class EVSMasterTree
         // Get the Root concepts, names and codes.
        // m_vRootNames = evs.getRootConcepts(dtsVocab, true);
        // m_vRootCodes = evs.getRootConcepts(dtsVocab, false);
-        List vRoots = evs.getRootConcepts(dtsVocab);
-  //logger.debug("popTree  done getRootConcepts");
+    	   List vRoots = evs.getRootConcepts(dtsVocab);
+       //logger.debug("popTree  done getRootConcepts");
         // For each Root, get the Subconcepts. If subconcepts exist, build a Node
         // object, else build a Leaf object
         if (vRoots != null)
@@ -357,7 +365,7 @@ public class EVSMasterTree
         }
       }
 		} 
-    catch(Exception e) 
+		catch(Exception e) 
     {
 			//System.out.println("Error in populateTreeRoots: " + e.toString());
       logger.fatal("Error in populateTreeRoots: " + e.toString(), e);
