@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.29 2008-04-04 16:14:14 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.30 2008-04-10 19:38:08 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -366,6 +366,9 @@ public class PVServlet implements Serializable
       int pvInd = getSelectedPV();      
       //make it as ins vm and update/edit pv
       PV_Bean pv = data.getSelectPV();
+      VM_Bean vm = pv.getPV_VM();
+      vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
+      pv.setPV_VM(vm);
       updateVDPV(pv, pvInd);
       return "/PermissibleValue.jsp";
   }
