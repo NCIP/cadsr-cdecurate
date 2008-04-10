@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.34 2008-03-26 14:25:11 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.35 2008-04-10 19:38:53 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -650,13 +650,12 @@ public class VMAction implements Serializable
     }
     vm.setVM_CONCEPT_LIST(vmCon);
     //reset it only if pv edit
+    //vm.setVM_IDSEQ("");
+    // vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_UPD);  //VMForm.CADSR_ACTION_INS);
+     //vm.setVM_SHORT_MEANING(eBean.getLONG_NAME());  //have same name for now
     switch (iFrom)
     {
         case ConceptForm.FOR_PV_PAGE_CONCEPT:
-
-            //vm.setVM_IDSEQ("");
-            vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_UPD);  //VMForm.CADSR_ACTION_INS);
-            //vm.setVM_SHORT_MEANING(eBean.getLONG_NAME());  //have same name for now
             vm.setVM_LONG_NAME(eBean.getLONG_NAME());  //have same name for now
             break;
         case ConceptForm.FOR_VM_PAGE_CONCEPT:
