@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.52 2008-02-20 19:35:06 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.53 2008-04-14 01:42:36 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -4232,6 +4232,8 @@ public class InsACService implements Serializable {
 				rs.close();
 			if (cstmt != null)
 				cstmt.close();
+			if (pstmt != null)
+				pstmt.close();
 			// if (conn != null)
 			// conn.close();
 		} catch (Exception ee) {
@@ -4509,6 +4511,8 @@ public class InsACService implements Serializable {
 				rs.close();
 			if (cstmt != null)
 				cstmt.close();
+			if (pstmt != null)
+				pstmt.close();
 			// if (conn != null)
 			// conn.close();
 		} catch (Exception ee) {
@@ -4844,6 +4848,8 @@ public class InsACService implements Serializable {
 				rs.close();
 			if (cstmt != null)
 				cstmt.close();
+			if (pstmt != null)
+				pstmt.close();
 			// if (conn != null)
 			// conn.close();
 		} catch (Exception ee) {
@@ -4893,6 +4899,8 @@ public class InsACService implements Serializable {
 				rs.close();
 			if (cstmt != null)
 				cstmt.close();
+			if (pstmt != null)
+				pstmt.close();
 			// if (conn != null)
 			// conn.close();
 		} catch (Exception ee) {
@@ -4945,6 +4953,8 @@ public class InsACService implements Serializable {
 				rs.close();
 			if (cstmt != null)
 				cstmt.close();
+			if (pstmt != null)
+				pstmt.close();
 			// if (conn != null)
 			// conn.close();
 		} catch (Exception ee) {
@@ -5027,12 +5037,13 @@ public class InsACService implements Serializable {
 		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
+		PreparedStatement pstmt = null;
 		String sysName = "";
 
 		try {
 			String ocIDseq = dec.getDEC_OCL_IDSEQ();
 			String propIDseq = dec.getDEC_PROPL_IDSEQ();
-			PreparedStatement pstmt = null;
+			
 			// Create a Callable Statement object.
 			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
@@ -5066,6 +5077,8 @@ public class InsACService implements Serializable {
 				rs.close();
 			if (cstmt != null)
 				cstmt.close();
+			if (pstmt != null)
+				pstmt.close();
 			// if (conn != null)
 			// conn.close();
 		} catch (Exception ee) {
@@ -5088,10 +5101,11 @@ public class InsACService implements Serializable {
 		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
+		PreparedStatement pstmt = null;
 		String sPublicID = "";
 
 		try {
-			PreparedStatement pstmt = null;
+			
 			// Create a Callable Statement object.
 			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
@@ -5117,6 +5131,8 @@ public class InsACService implements Serializable {
 				rs.close();
 			if (cstmt != null)
 				cstmt.close();
+			if (pstmt != null)
+				pstmt.close();
 			// if (conn != null)
 			// conn.close();
 		} catch (Exception ee) {
