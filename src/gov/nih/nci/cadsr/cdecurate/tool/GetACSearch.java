@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.57 2008-04-04 16:14:14 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.58 2008-04-14 15:58:05 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2219,7 +2219,7 @@ public class GetACSearch implements Serializable
                         CSIBean.setCSI_CS_PUBLICID(rs.getString(5));
                         CSIBean.setCSI_CS_VERSION(rs.getString(4));
                         CSIBean.setCSI_CONTEXT_NAME(rs.getString(6));
-                        CSIBean.setCSI_CSI_IDSEQ(rs.getString(7));
+                        //CSIBean.setCSI_CSI_IDSEQ(rs.getString(7));
                         CSIBean.setCSI_NAME(rs.getString(8));
                         CSIBean.setCSI_CSITL_NAME(rs.getString(9));
                         CSIBean.setCSI_DEFINITION(rs.getString(10));
