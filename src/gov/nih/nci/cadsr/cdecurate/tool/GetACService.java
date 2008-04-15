@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.51 2008-03-24 23:53:08 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.52 2008-04-15 18:37:14 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -559,6 +559,7 @@ public class GetACService implements Serializable
                     {
                         String csID = rs.getString("cs_idseq");
                         String csName = rs.getString("long_name");
+                        String cspublicId = rs.getString("public_id");
                         String csContext = rs.getString("context_name");
                         if (csContext == null)
                             csContext = "";
@@ -570,7 +571,7 @@ public class GetACService implements Serializable
                         csName = m_util.removeNewLineChar(csName);
                         csName = m_util.parsedStringDoubleQuoteJSP(csName);
                                                                             // names
-                        vList.addElement(csName + " - " + csContext + " - v" + csVer);
+                        vList.addElement(csName + " - " + csContext + "-          " +cspublicId +" v " + csVer);
                         vIDList.addElement(csID);
                     }
                 }
