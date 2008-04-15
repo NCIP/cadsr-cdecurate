@@ -2677,4 +2677,10 @@ public class VD_Bean extends AC_Bean
     {
         this.removed_VDPVList = removed_VDPVList;
     }
+    
+    public String getDisplayName()
+    {
+    	String displayName = this.VD_LONG_NAME + "   "+ this.VD_VD_ID+ " v " + this.VD_VERSION;
+    	return displayName;
+    }
 }

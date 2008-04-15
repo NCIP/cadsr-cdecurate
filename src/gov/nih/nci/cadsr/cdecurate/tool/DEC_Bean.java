@@ -1,5 +1,5 @@
 // Copyright (c) 2005 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DEC_Bean.java,v 1.47 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DEC_Bean.java,v 1.48 2008-04-15 15:18:20 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2106,5 +2106,15 @@ public class DEC_Bean extends AC_Bean
     public String getAC_PREF_NAME_TYPE()
     {
         return this.AC_PREF_NAME_TYPE;
+    }
+    
+    /**
+     * The getDisplayName method returns the displayName for this bean.
+     * @return displayName
+     */
+    public String getDisplayName()
+    {
+    	String displayName = this.DEC_LONG_NAME + "   "+ this.DEC_DEC_ID+ " v " + this.DEC_VERSION;
+    	return displayName;
     }
 }
