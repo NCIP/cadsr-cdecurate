@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.58 2008-04-14 15:58:05 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.59 2008-04-17 03:57:59 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -284,6 +284,7 @@ public class GetACSearch implements Serializable
                     {
                         VMServlet vmSer = new VMServlet(req, res, m_servlet);
                         vmSer.readDataForSearch();
+                        vAC = (Vector)session.getAttribute("vACSearch");
                     }
                     else if (sSearchAC.equals("ObjectClass"))
                         do_caDSRSearch("", sContext, sStatus, sMinID, vAC, "OC", "", "");
@@ -440,6 +441,7 @@ public class GetACSearch implements Serializable
                     {
                         VMServlet vmSer = new VMServlet(req, res, m_servlet);
                         vmSer.readDataForSearch();
+                        vAC = (Vector)session.getAttribute("vACSearch");
                     }
                     else if (sSearchAC.equals("ObjectClass"))
                         do_caDSRSearch("", sContext, sStatus, "", vAC, "OC", sCon, "");
