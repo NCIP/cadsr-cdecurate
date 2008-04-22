@@ -621,33 +621,27 @@ public class CurationServlet
                         }
                         else if (reqType.equals("treeSearch"))
                         {
-                            // doTreeSearchRequest(m_classReq, m_classRes, "", "", "", "");
                             this.doEVSSearchActions(reqType, m_classReq, m_classRes);
                         }
                         else if (reqType.equals("treeRefresh"))
                         {
-                            // doTreeRefreshRequest(m_classReq, m_classRes);
                             this.doEVSSearchActions(reqType, m_classReq, m_classRes);
                         }
                         else if (reqType.equals("treeExpand"))
                         {
-                            // doTreeExpandRequest(m_classReq, m_classRes);
                             this.doEVSSearchActions(reqType, m_classReq, m_classRes);
                         }
                         else if (reqType.equals("treeCollapse"))
                         {
-                            // doTreeCollapseRequest(m_classReq, m_classRes);
-                            this.doEVSSearchActions(reqType, m_classReq, m_classRes);
+                           this.doEVSSearchActions(reqType, m_classReq, m_classRes);
                         }
                         else if (reqType.equals("getSubConcepts"))
                         {
-                            // doGetSubConcepts(m_classReq, m_classRes);
-                            this.doEVSSearchActions(reqType, m_classReq, m_classRes);
+                           this.doEVSSearchActions(reqType, m_classReq, m_classRes);
                         }
                         else if (reqType.equals("getSuperConcepts"))
                         {
                             this.doEVSSearchActions(reqType, m_classReq, m_classRes);
-                            // doGetSuperConcepts(m_classReq, m_classRes);
                         }
                         else if (reqType.equals("designateDE"))
                         {
