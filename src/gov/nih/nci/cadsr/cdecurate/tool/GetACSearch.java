@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.59 2008-04-17 03:57:59 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.60 2008-04-27 18:48:16 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -4344,7 +4344,10 @@ public class GetACSearch implements Serializable
                                 vBEResult.addElement(clDEBean);
                                 // store this bean to get its attributes and to use it to clear the changes
                                 if (DEBean != null)
-                                    DataManager.setAttribute(session, "oldDEBean", clDEBean);
+                                   	DataManager.setAttribute(session, "oldDEBean", clDEBean);
+                                //set the begin and end dates to empty values so the user can enter new values.
+                                DEBean.setDE_BEGIN_DATE("");
+                                DEBean.setDE_END_DATE("");
                                 DataManager.setAttribute(session, "m_DE", DEBean);
                             }
                         }
@@ -4379,6 +4382,9 @@ public class GetACSearch implements Serializable
                                 // store this bean to get its attributes and to use it to clear the changes
                                 if (DECBean != null)
                                     DataManager.setAttribute(session, "oldDECBean", clDECBean);
+                                //set the begin and end dates to empty values so the user can enter new values.
+                                DECBean.setDEC_BEGIN_DATE("");
+                                DECBean.setDEC_END_DATE("");
                                 DataManager.setAttribute(session, "m_DEC", DECBean);
                             }
                         }
@@ -4420,6 +4426,9 @@ public class GetACSearch implements Serializable
                                 // store this bean to get its attributes and to use it to clear the changes
                                 if (VDBean != null)
                                     DataManager.setAttribute(session, "oldVDBean", clVDBean);
+                              //set the begin and end dates to empty values so the user can enter new values.
+                                VDBean.setVD_BEGIN_DATE("");
+                                VDBean.setVD_END_DATE("");
                                 DataManager.setAttribute(session, "m_VD", VDBean);
                             }
                         }else if (sSearchAC.equals("ValueMeaning"))
