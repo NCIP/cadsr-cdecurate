@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVD.jsp,v 1.5 2008-01-23 22:14:09 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVD.jsp,v 1.6 2008-04-28 21:22:37 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -492,6 +492,9 @@
 					</tr>
 					<tr height="25" valign="bottom">
 						<td align=right>
+						<font color="#FF0000">
+								* &nbsp;&nbsp;
+							</font>
 							<%=item++%>
 							)
 						</td>
