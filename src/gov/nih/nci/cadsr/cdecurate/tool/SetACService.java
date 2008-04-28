@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.53 2008-03-13 18:00:06 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.54 2008-04-28 21:23:02 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -844,6 +844,11 @@ public class SetACService implements Serializable
         isUserEnter = true;
 
       // mandatory for both EDit + editSQL); and Create
+      s = m_VD.getVD_REP_TERM();
+      if (s == null) s = "";
+      strInValid = "";
+      UtilService.setValPageVector(vValidate, "Rep Term", s, bMandatory, 225, strInValid, sOriginAction);
+      
       s = m_VD.getVD_CONTEXT_NAME();
       String sID = m_VD.getVD_CONTE_IDSEQ();
       if ((sUser != null) && (sID != null))
