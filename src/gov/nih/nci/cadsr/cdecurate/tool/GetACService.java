@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.52 2008-04-15 18:37:14 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.53 2008-04-30 14:51:59 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1377,12 +1377,15 @@ public class GetACService implements Serializable
     private Vector<EVS_Bean> invertBeanVector(Vector<EVS_Bean> vList)
     {
         Vector<EVS_Bean> newVector = new Vector<EVS_Bean>();
-        EVS_Bean evsBean = (EVS_Bean) vList.elementAt(vList.size() - 1);
-        newVector.addElement(evsBean);
-        for (int i = 0; i < vList.size() - 1; i++)
+        if(vList.size()>0)
         {
+         EVS_Bean evsBean = (EVS_Bean) vList.elementAt(vList.size() - 1);
+         newVector.addElement(evsBean);
+         for (int i = 0; i < vList.size() - 1; i++)
+         {
             evsBean = (EVS_Bean) vList.elementAt(i);
             newVector.addElement(evsBean);
+         }
         }
         return newVector;
     }
