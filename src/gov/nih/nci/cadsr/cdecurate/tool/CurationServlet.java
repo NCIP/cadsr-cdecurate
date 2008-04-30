@@ -1973,6 +1973,7 @@ public class CurationServlet
         if (sMenuAction != null)
             DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
         String sAction = (String) req.getParameter("pageAction");
+        if (sAction ==null ) sAction ="";
         DataManager.setAttribute(session, "VDPageAction", sAction); // store the page action in attribute
         String sSubAction = (String) req.getParameter("VDAction");
         DataManager.setAttribute(session, "VDAction", sSubAction);
@@ -2115,6 +2116,7 @@ public class CurationServlet
         if (sMenuAction != null)
             DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
         String sAction = (String) req.getParameter("pageAction");
+        if (sAction ==null ) sAction ="";
         DataManager.setAttribute(session, "VDPageAction", sAction); // store the page action in attribute
         String sSubAction = (String) req.getParameter("VDAction");
         DataManager.setAttribute(session, "VDAction", sSubAction);
@@ -6422,6 +6424,19 @@ public class CurationServlet
         Vector vAC_CS = vd.getAC_AC_CSI_VECTOR();
         if (vAC_CS != null)
             VDBeanSR.setAC_AC_CSI_VECTOR(vAC_CS);
+        //get the Ref docs from the page into the DEBean for block edit
+        Vector<REF_DOC_Bean> vAC_REF_DOCS = vd.getAC_REF_DOCS();
+        if(vAC_REF_DOCS!=null){
+        	Vector<REF_DOC_Bean> temp_REF_DOCS = new Vector<REF_DOC_Bean>();
+        for(REF_DOC_Bean refBean:vAC_REF_DOCS )
+        {
+        	if(refBean.getAC_IDSEQ() == VDBeanSR.getVD_VD_IDSEQ())
+        	{
+        		temp_REF_DOCS.add(refBean);
+        	}
+        }
+        VDBeanSR.setAC_REF_DOCS(temp_REF_DOCS);
+        }
         String sRepTerm = vd.getVD_REP_TERM();
         if (sRepTerm == null)
             sRepTerm = "";
@@ -6574,6 +6589,19 @@ public class CurationServlet
         Vector<AC_CSI_Bean> vAC_CS = dec.getAC_AC_CSI_VECTOR();
         if (vAC_CS != null)
             DECBeanSR.setAC_AC_CSI_VECTOR(vAC_CS);
+        //get the Ref docs from the page into the DEBean for block edit
+        Vector<REF_DOC_Bean> vAC_REF_DOCS = dec.getAC_REF_DOCS();
+        if(vAC_REF_DOCS!=null){
+        	Vector<REF_DOC_Bean> temp_REF_DOCS = new Vector<REF_DOC_Bean>();
+        for(REF_DOC_Bean refBean:vAC_REF_DOCS )
+        {
+        	if(refBean.getAC_IDSEQ() == DECBeanSR.getDEC_DEC_IDSEQ())
+        	{
+        		temp_REF_DOCS.add(refBean);
+        	}
+        }
+        DECBeanSR.setAC_REF_DOCS(temp_REF_DOCS);
+        }
         String sOCL = dec.getDEC_OCL_NAME();
         if (sOCL == null)
             sOCL = "";
@@ -6889,6 +6917,19 @@ public class CurationServlet
             Vector<AC_CSI_Bean> vAC_CS = de.getAC_AC_CSI_VECTOR();
             if (vAC_CS != null)
                 DEBeanSR.setAC_AC_CSI_VECTOR(vAC_CS);
+            //get the Ref docs from the page into the DEBean for block edit
+            Vector<REF_DOC_Bean> vAC_REF_DOCS = de.getAC_REF_DOCS();
+            if(vAC_REF_DOCS!=null){
+            	Vector<REF_DOC_Bean> temp_REF_DOCS = new Vector<REF_DOC_Bean>();
+            for(REF_DOC_Bean refBean:vAC_REF_DOCS )
+            {
+            	if(refBean.getAC_IDSEQ() == DEBeanSR.getDE_DE_IDSEQ())
+            	{
+            		temp_REF_DOCS.add(refBean);
+            	}
+            }
+            DEBeanSR.setAC_REF_DOCS(temp_REF_DOCS);
+            }
         }
         catch (Exception e)
         {
