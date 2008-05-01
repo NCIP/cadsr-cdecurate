@@ -1,6 +1,6 @@
 //Copyright (c) 2000 ScenPro, Inc.
 
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.51 2008-04-22 17:57:35 chickerura Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.52 2008-05-01 19:51:57 chickerura Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1788,7 +1788,9 @@ public class EVSSearch implements Serializable {
 	 */
 	public String getDisplayName(String dtsVocab, DescLogicConcept dlc,
 			String sName) {
+		sName = this.do_getConceptName(sName,dtsVocab);
 		String dispName = sName;
+		
 		try {
 			Vector vVocabs = (Vector) m_eUser.getVocabNameList();
 			if (vVocabs == null)
@@ -1808,13 +1810,14 @@ public class EVSSearch implements Serializable {
 			//get the value of the display property
 			if (dlc == null) //get it from evs query
 			{
-				EVSQuery query = new EVSQueryImpl();
+				/*EVSQuery query = new EVSQueryImpl();
 				query = this.addSecurityToken(query, "", dtsVocab);
-				query.getPropertyValues(dtsVocab, sName, sPropDisp);
+				//getPropertyValues(String vocabularyName,String conceptCode, String propertyName)
+				 query.getPropertyValues(dtsVocab, sName, sPropDisp);
 				List lstResult = evsService.evsSearch(query);
 				if (lstResult != null && lstResult.size() > 0)
 					return (String) lstResult.get(0);
-				else
+				else*/
 					return sName;
 			} else //get it from dlc object
 			{//loop through prop to get the name
@@ -1938,7 +1941,7 @@ public class EVSSearch implements Serializable {
 					}
 				}
 			}
-			//add concept to the bean if not done by defintion loop already
+			//add concept to the bean if not done by definition loop already
 			if (!defExists) {
 				//add the properties to the bean
 				String sDef = sDefDefault;
@@ -1984,7 +1987,7 @@ public class EVSSearch implements Serializable {
 						//meta keyword search
 						query.searchMetaThesaurus(termStr, iMetaLimit, sMetaSource,
 								false, false, false);
-
+						
 					//do the search
 					metaResults = evsService.evsSearch(query);
 				} catch (Exception ex) {

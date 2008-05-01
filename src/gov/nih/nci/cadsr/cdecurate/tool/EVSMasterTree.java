@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.51 2008-04-22 17:57:43 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.52 2008-05-01 19:51:57 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -205,18 +205,15 @@ public class EVSMasterTree {
 			if (vocabTree != null) {
 				rendHTML = renderHTML(vocabTree);
 			} else {
-				//logger.debug(dtsVocab + " popTree  vocabTree == null " + rendHTML);
 				 List vRoots = evs.getRootConcepts(dtsVocab);
-				//logger.debug("popTree  done getRootConcepts");
 				// For each Root, get the Subconcepts. If subconcepts exist, build a Node
 				// object, else build a Leaf object
 				if (vRoots != null) {
 					for (int j = 0; j < vRoots.size(); j++) {
 						DescLogicConcept oDLC = (DescLogicConcept) vRoots.get(j);
 						if (oDLC != null) {
-							//logger.debug(oDLC.getName() + " - " + oDLC.getHasChildren().booleanValue());
 							String sDispName = evs.getDisplayName(dtsVocab,
-									oDLC, oDLC.getName());
+									oDLC, oDLC.getCode());
 							if (oDLC.getHasChildren().booleanValue()) {
 								TreeNode tn = new TreeNode(lastNodeID++, oDLC
 										.getName(), sDispName, oDLC.getCode(),
@@ -615,14 +612,12 @@ public class EVSMasterTree {
 			sSearchAC = "";
 		Integer id = new Integer(0);
 		String foundCodeInTree = "false";
-		//logger.debug("expandNode get lastNodeid");
 		if (sSearchAC.equals("ParentConceptVM"))
 			id = (Integer) m_treesHashParent.get("lastNodeID");
 		else
 			id = (Integer) m_treesHash.get("lastNodeID"); // for new nodes will need the last used nodeID
 		if (id == null)
 			id = new Integer(0);
-		//logger.debug("expandNode got lastNodeid: " + id);  
 		int newNodeID = id.intValue();
 
 		GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
@@ -644,7 +639,6 @@ public class EVSMasterTree {
 			}
 			if (nodeID == null)
 				nodeID = "";
-			//logger.debug("expandNode  nodeID: " + nodeID + " nodeName: " + nodeName);  
 			// check to see if its the right nodeID 
 			Tree nodeChildrenTree = new Tree(1);
 			String sTreeParentID = "";
@@ -663,7 +657,6 @@ public class EVSMasterTree {
 				TreeNode exNode = (TreeNode) m_treeNodesHash.get(nodeID);
 				if (exNode != null)
 					iExName = exNode.getParentNodeID();
-				//logger.debug("expandNode  nodeID: " + nodeID); 
 				// Get the node id of the previous node expanded (which is the parent of the current node
 				// if the mode is 'expandTreeToConcept' i.e. nodeLevelToFind > 0)
 				Integer iNodeID = new Integer(nodeID);
@@ -673,7 +666,6 @@ public class EVSMasterTree {
 				String nodeIDOriginal = nodeID;
 				// Do this to get the correct nodeTreeChildren, not one currently cached by same name
 				if (iExName != iLast && nodeLevelToFind > 0) {
-					//logger.debug("expandNode6 nodeID: " + nodeID);
 					nodeID = getCorrectNodeID(nodeName, iLast);
 					if (nodeID.equals("none"))
 						nodeID = nodeIDOriginal;
@@ -682,7 +674,6 @@ public class EVSMasterTree {
 				iNodeID = new Integer(nodeID);
 				iID = iNodeID.intValue();
 			}
-			//logger.debug("expandNode33 nodeID: " + nodeID);    
 			if (nodeLevelToFind > 0) //only set this on expandTreeToConcept
 				DataManager.setAttribute(session, "LastNodeIDExpanded", nodeID);
 			if (nodeChildrenTree == null)
@@ -691,7 +682,6 @@ public class EVSMasterTree {
 			// Get a node object for the expanded node
 			TreeNode expandedNode = new TreeNode(1, "", "", "", 1);
 			if (m_treeNodesHash != null) {
-				//logger.debug("expandNode m_treeNodesHash != null nodeID: " + nodeID);
 				if (sSearchAC.equals("ParentConceptVM"))
 					expandedNode = (TreeNode) m_treeNodesHashParent
 							.get(nodeName);
@@ -712,7 +702,6 @@ public class EVSMasterTree {
 
 			if (nodeChildrenTree != null) //will never be null because of new Tree stmt
 				numChildren = nodeChildrenTree.size();
-			//logger.debug("expandNode numChildren: " + numChildren);
 			if (numChildren > 0) //children already exist, set them visible
 			{
 				for (int i = 0; i < numChildren; i++) {
@@ -770,12 +759,12 @@ public class EVSMasterTree {
 				if (vSubNames != null && vSubNames.size() > 0
 						&& vSubNames.size() < 20) {
 					for (int j = 0; j < vSubNames.size(); j++) {
-						subNodeName = (String) vSubNames.elementAt(j);
-						subNodeCode = evs.do_getEVSCode(subNodeName, dtsVocab);
+						subNodeName = evs.do_getConceptName((String) vSubNames.elementAt(j),dtsVocab);
+						subNodeCode = evs.do_getEVSCode((String) vSubNames.elementAt(j), dtsVocab);
 						vSubConcepts2 = evs.getSubConceptNames(dtsVocab,
 								subNodeName, "", subNodeCode, "");
 						String subDispName = evs.getDisplayName(dtsVocab, null,
-								subNodeName);
+								subNodeCode);
 						if (vSubConcepts2.size() > 0) {
 							TreeNode tn = new TreeNode(newNodeID++,
 									subNodeName, subDispName, subNodeCode,
@@ -823,10 +812,10 @@ public class EVSMasterTree {
 						&& nodeName.equals("OrphanConcepts")) //MGED OrphanConcepts should all be leafs
 				{
 					for (int n = 0; n < vSubNames.size(); n++) {
-						subNodeName = (String) vSubNames.elementAt(n);
-						subNodeCode = evs.do_getEVSCode(subNodeName, dtsVocab);
+						subNodeName = evs.do_getConceptName((String) vSubNames.elementAt(n),dtsVocab);
+						subNodeCode = evs.do_getEVSCode((String) vSubNames.elementAt(n), dtsVocab);
 						String subDispName = evs.getDisplayName(dtsVocab, null,
-								subNodeName);
+								subNodeCode);
 						TreeLeaf tl = new TreeLeaf(lastNodeID++, subNodeName,
 								subDispName, subNodeCode, nodeLevel + 1);
 						tl.setLevel(nodeLevel + 1);
@@ -842,8 +831,10 @@ public class EVSMasterTree {
 					}
 				} else if (vSubNames != null && vSubNames.size() > 19) {
 					for (int j = 0; j < vSubNames.size(); j++) {
-						subNodeName = (String) vSubNames.elementAt(j);
-						subNodeCode = ""; //serAC.do_getEVSCode(subNodeName, dtsVocab);   
+						subNodeName = evs.do_getConceptName((String) vSubNames.elementAt(j),dtsVocab);
+						subNodeCode = (String) vSubNames.elementAt(j); //serAC.do_getEVSCode(subNodeName, dtsVocab);   
+						//String subDispName = evs.getDisplayName(dtsVocab, null,
+						//		subNodeCode);
 						String subDispName = evs.getDisplayName(dtsVocab, null,
 								subNodeName);
 						TreeNode tn = new TreeNode(newNodeID++, subNodeName,
@@ -858,7 +849,7 @@ public class EVSMasterTree {
 							subNodeCode = tn.getCode();
 							if (subNodeCode == null || subNodeCode.equals("")
 									&& foundCodeInTree.equals("false"))
-								subNodeCode = evs.do_getEVSCode(tn.getName(),
+								subNodeCode = evs.do_getEVSCode(subNodeCode,
 										dtsVocab);
 							if (subNodeCode != null)
 								tn.setCode(subNodeCode);
@@ -885,7 +876,7 @@ public class EVSMasterTree {
 				} else // no subConcepts, vSubNames.size()==0
 				{
 					String dispName = evs.getDisplayName(dtsVocab, null,
-							nodeName);
+							nodeCode);
 					TreeLeaf tl = new TreeLeaf(lastNodeID++, nodeName,
 							dispName, nodeCode, nodeLevel + 1);
 					nodeChildrenTree.addChild(tl);
@@ -894,7 +885,7 @@ public class EVSMasterTree {
 						subNodeCode = tl.getCode();
 						if (subNodeCode == null || subNodeCode.equals("")
 								&& foundCodeInTree.equals("false"))
-							subNodeCode = evs.do_getEVSCode(tl.getName(),
+							subNodeCode = evs.do_getEVSCode(subNodeCode,
 									dtsVocab);
 						if (subNodeCode != null)
 							tl.setCode(subNodeCode);
@@ -961,7 +952,6 @@ public class EVSMasterTree {
 	@SuppressWarnings( { "unchecked", "unchecked" })
 	public String collapseNode(String nodeID, String dtsVocab,
 			String shouldRender, String nodeName) {
-		//System.out.println("collapseNode top nodeID: " + nodeID + " nodeName: " + nodeName + " dtsVocab: " + dtsVocab);
 		HttpSession session = m_classReq.getSession();
 		String rendHTML = "";
 		String sSearchAC = (String) session.getAttribute("creSearchAC");
@@ -1169,7 +1159,6 @@ public class EVSMasterTree {
 				}
 			}
 		} catch (Exception e) {
-			//System.out.println(e.toString());
 			logger.fatal(e.toString(), e);
 		}
 	}
@@ -1278,7 +1267,7 @@ public class EVSMasterTree {
 				vSubConceptNames = evs.getSubConceptNames(sCCodeDB, sCCodeName,
 						"", sCCode, "");
 				String dispName = evs
-						.getDisplayName(sCCodeDB, null, sCCodeName);
+						.getDisplayName(sCCodeDB, null, sCCode);
 				if (vSubConceptNames.size() > 0) {
 					TreeNode tn = new TreeNode(lastNodeID++, sCCodeName,
 							dispName, sCCode, level);
