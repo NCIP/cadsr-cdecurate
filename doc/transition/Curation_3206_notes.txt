@@ -1,8 +1,8 @@
                            Release Notes
     
                            Curation Tool
-                          Version 3.2.0.5
-                         January 23, 2008
+                          Version 3.2.0.6
+                         March 28, 2008
 
        National Cancer Institute Center for Bioinformatics
 
@@ -106,6 +106,10 @@
     2.1 Release History
 ----------------------------------------------------------------
 
+    caDSR 3.2.0.6
+
+    -- 28 March 2008
+
     caDSR 3.2.0.5
 
     -- 23 January 2008
@@ -179,18 +183,7 @@
     | CDE Curation Tool                  |
     +------------------------------------+
     
-    --  Restrict the select of the Representation Term Primary
-        Concept to only approved concepts. (GF 7569)
-
-    --  Refactor the Curation Tool project to conform to the new
-        automated deployment and project configuration
-        guidelines. (GF 8460)
-
-    --  Remove the Object Class and Property selection from the
-        Value Domain page. It appears correctly on the Data
-        Element Concept page. (GF 10950)
-
-    --  Added Zebrafish to the EVS vocabulary list (GF 11850)
+    --  N/A
 
 
 ----------------------------------------------------------------
@@ -201,21 +194,16 @@
     | CDE Curation Tool                  |
     +------------------------------------+
     
-    --  The Search Term on the Search Parent window changed to
-        blank after performing the search. (GF 4576)
-
-    --  Sometimes changes in the Curation Tool configuration
-        values in the tool options require a restart of the
-        JBoss container. (GF 9443)
-
-    --  After Login the first page display could take 12-30
-        seconds. (GF 9444)
-
-    --  The Classification Public ID was not included on the
-        page. (GF 9658)
-
-    --  The Classification Public ID was not included on the
-        page. (GF 9666)
+   --  The Created By and Modified By does not display in the   
+       Search Results list when selected when the user logs   
+       into the Curation Tool with a user id that is not all   
+       uppercase characters. (GF 13262)   
+    
+       NOTE: A script has been run to correct content created   
+       with 3.2.0.5. This may cause changes to be reported in   
+       Sentinel Alert Reports where the Created By   
+       Old and New Value is the same. We apologize for the   
+       extra report output.
 
 
 ----------------------------------------------------------------
@@ -250,10 +238,8 @@
         and Business Rules are being reviewed with the caDSR
         Curators and changes, if needed, will be scheduled.
         (GF 7075)
- 
-
-
-
+ 	
+    
 ================================================================
                   3.0 Bug Reports and Support
 ================================================================
