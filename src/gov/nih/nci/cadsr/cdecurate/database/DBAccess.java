@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.40 2008-03-13 17:57:37 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.41 2008-05-02 15:10:17 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -129,6 +129,8 @@ public class DBAccess
     public DBAccess(Connection conn_)
     {
         _conn = conn_;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
         // There is special processing around the UML_PACKAGE_NAME and UML_PACKAGE_ALIAS
         if (_packageAlias == null || _packageName == null)
@@ -136,9 +138,7 @@ public class DBAccess
             // Get the CSI type values from the tool options. We don't care what they are called as long as we have the
             // right value.
             String select = "select property, value from sbrext.tool_options_view_ext where tool_name = 'CURATION' and property like 'CSI.%' ";
-            PreparedStatement pstmt = null;
-            ResultSet rs = null;
-            try
+             try
             {
                 pstmt = _conn.prepareStatement(select);
                 rs = pstmt.executeQuery();
@@ -160,9 +160,10 @@ public class DBAccess
             catch (SQLException ex)
             {
                 // Log the error but keep going.
-                _log.error(ex.toString());
-                
-                try
+                _log.error(ex.toString());                
+            }
+            finally{
+            	try
                 {
                     if (rs != null)
                         rs.close();
@@ -171,9 +172,10 @@ public class DBAccess
                 }
                 catch (SQLException e)
                 {
+                	_log.error(e.toString());        
                 }
             }
-            
+                        
             // This only has to be done once. And either both are read or both are set blank.
             if (_packageAlias == null || _packageName == null)
             {
@@ -409,9 +411,11 @@ public class DBAccess
                     // next record prompt the need for a CS parent record.
                     String csiType = rs.getString(SQLSelectCSI._CSITYPE);
                     String csCsiIdseq = rs.getString(SQLSelectCSI._CSCSIIDSEQ);
+                    String csiId = rs.getString(SQLSelectCSI._CSIID);
+                    String csiVersion =rs.getString(SQLSelectCSI._CSIVERSION);
                     if (acaValue == null)
                         acaValue = csCsiIdseq;
-                    TreeNodeCSI tnc = new TreeNodeCSI(rs.getString(SQLSelectCSI._CSINAME), acaValue, csCsiIdseq, csiType, null, false);
+                    TreeNodeCSI tnc = new TreeNodeCSI(rs.getString(SQLSelectCSI._CSINAME), acaValue, csCsiIdseq, csiType, null, false,csiVersion,csiId);
                     list.add(0, new CSIData(tnc, level));
                     prevCSValue = csValue;
                     prevCSName = rs.getString(SQLSelectCSI._CSNAME);
@@ -505,8 +509,10 @@ public class DBAccess
                 String csiName = rs.getString(SQLSelectCSI._CSINAME);
                 String csiValue = rs.getString(SQLSelectCSI._CSCSIIDSEQ);
                 String csiType = rs.getString(SQLSelectCSI._CSITYPE);
+                String csiVersion = rs.getString(SQLSelectCSI._CSIVERSION);
+                String csiId = rs.getString(SQLSelectCSI._CSIID);
                 int level = rs.getInt(SQLSelectCSI._LEVEL);
-                TreeNodeCSI tnc = new TreeNodeCSI(csiName, csiValue, csiValue, csiType, null, true);
+                TreeNodeCSI tnc = new TreeNodeCSI(csiName, csiValue, csiValue, csiType, null, true,csiVersion,csiId);
                 lineage.add(0, new CSIData(tnc, level));
                 if (level == 2 && csiType.equals(_packageAlias))
                     prevTnc.setPackageAlias(csiValue);
@@ -965,7 +971,9 @@ public class DBAccess
                 String csiName = rs.getString(SQLSelectCSIAll._CSINAME);
                 String csiValue = rs.getString(SQLSelectCSIAll._CSCSIIDSEQ);
                 String csiType = rs.getString(SQLSelectCSIAll._CSITYPE);
-                TreeNodeCSI tnc = new TreeNodeCSI(csiName, csiValue, csiValue, csiType, prevValue, false);
+                String csiId = rs.getString(SQLSelectCSIAll._CSIID);
+                String csiVersion = rs.getString(SQLSelectCSIAll._CSIVERSION);
+                TreeNodeCSI tnc = new TreeNodeCSI(csiName, csiValue, csiValue, csiType, prevValue, false,csiVersion,csiId);
                 test.add(new CSIData(tnc, level));
                 prevValue = (csiType.equals(_packageAlias)) ? csiValue : null;
             }
