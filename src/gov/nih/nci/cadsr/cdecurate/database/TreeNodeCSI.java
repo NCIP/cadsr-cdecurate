@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/TreeNodeCSI.java,v 1.37 2007-09-26 16:51:35 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/TreeNodeCSI.java,v 1.38 2008-05-02 15:10:17 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -28,6 +28,7 @@ public class TreeNodeCSI extends TreeNode
         super(old_);
         
         _type = old_._type;
+        _version = old_._version;
         _packageAlias = old_._packageAlias;
         _csCsiIdseq = old_._csCsiIdseq;
         _classType = AltNamesDefsServlet._classTypeCSI;
@@ -44,13 +45,20 @@ public class TreeNodeCSI extends TreeNode
      * @param packageAlias_ the IDSEQ of the Parent CSI UML_PACKAGE_ALIAS when this is a UML_PACKAGE_NAME type 
      * @param new_ true if this is a new record not stored in the caDSR, false if this data is read from the caDSR.
      */
-    public TreeNodeCSI(String name_, String value_, String csCsiIdseq_, String type_, String packageAlias_, boolean new_)
+    public TreeNodeCSI(String name_, String value_, String csCsiIdseq_, String type_, String packageAlias_, boolean new_,String vers_,String id)
     {
         super(name_, value_, new_);
-
+        _csiId =id;
         _csCsiIdseq = csCsiIdseq_;
         _classType = AltNamesDefsServlet._classTypeCSI;
         _type = (type_ == null) ? "" : type_;
+        if (vers_ == null)
+            _version = "";
+        else if (vers_.indexOf('.') > 0)
+            _version = vers_;
+        else
+            _version = vers_ + ".0";
+        
         if (DBAccess.isPackageName(type_))
             _packageAlias = packageAlias_;
         else
@@ -68,6 +76,7 @@ public class TreeNodeCSI extends TreeNode
     {
         String text = format_;
         text = text.replace("{[NAME]}", _name.trim());
+        text = text.replace("{[VERSION]}", _csiId + "v" +_version);
         text = text.replace("{[TYPE]}", _type);
         text = text.replace("{[MARGIN]}",String.valueOf(indent_));
         text = text.replace("{[NODELEVEL]}",String.valueOf(indent_));
@@ -122,5 +131,7 @@ public class TreeNodeCSI extends TreeNode
 
     private String _type;
     private String _packageAlias;
+    private String _version;
     private String _csCsiIdseq;
+    private String _csiId;
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.39 2008-01-23 22:55:54 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.40 2008-05-02 15:10:25 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -96,19 +96,22 @@ public class AltNamesDefsServlet
         + TreeNode._nodeValue + "=\"{[NODEVALUE]}\" "
         + TreeNode._nodeCsiType + "=\"{[TYPE]}\">\n"
         + "<td title=\"Class Scheme Item\"><div class=\"ind{[MARGIN]}\"><span style=\"{[DELFLAG]}\">{[NAME]}</span></div></td>\n"
-        + "<td>&nbsp;</td><td>&nbsp;</td>\n"
+        + "<td>&nbsp;</td>\n"
+        + "<td class=\"csi1\" title=\"Public Id & Version\">{[VERSION]}</td>\n"
         + "<td class=\"csi1\" title=\"Class Scheme Item Type\">{[TYPE]}</td>\n"
         + "</tr>\n";
     
     public static final String _formatHTMLcsiEdit = "<tr " + TreeNode._nodeLevel + "=\"{[NODELEVEL]}\" " + TreeNode._nodeValue + "=\"{[NODEVALUE]}\">\n"
         + "<td title=\"Class Scheme Item\"><div class=\"ind{[MARGIN]}\">{[BREAK]}<span style=\"{[DELFLAG]}\">{[NAME]}</span></div></td>\n"
-        + "<td>&nbsp;</td><td>&nbsp;</td>\n"
+        + "<td>&nbsp;</td>\n"
+        + "<td class=\"csi1\" title=\"Public Id & Version\">{[VERSION]}</td>\n"
         + "<td class=\"csi1\" title=\"Class Scheme Item Type\">{[TYPE]}</td>\n"
         + "</tr>\n";
     
     public static final String _formatHTMLcsiView = "<tr " + TreeNode._nodeLevel + "=\"{[NODELEVEL]}\" " + TreeNode._nodeValue + "=\"{[NODEVALUE]}\">\n"
         + "<td title=\"Class Scheme Item\"><div class=\"ind{[MARGIN]}\"><span style=\"{[DELFLAG]}\">{[NAME]}</span></div></td>\n"
-        + "<td>&nbsp;</td><td>&nbsp;</td>\n"
+        + "<td>&nbsp;</td>\n"
+        + "<td class=\"csi1\" title=\"Public Id & Version\">{[VERSION]}</td>\n"
         + "<td class=\"csi1\" title=\"Class Scheme Item Type\">{[TYPE]}</td>\n"
         + "</tr>\n";
 
