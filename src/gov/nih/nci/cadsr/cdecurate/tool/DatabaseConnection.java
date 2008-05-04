@@ -1,9 +1,10 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DatabaseConnection.java,v 1.11 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DatabaseConnection.java,v 1.12 2008-05-04 19:32:20 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import java.sql.Connection;
@@ -11,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Hashtable;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.ServletConfig;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+
 import org.apache.log4j.Logger;
 /**
  * @author shegde
@@ -50,8 +53,6 @@ public class DatabaseConnection extends HttpServlet
       catch (Exception e)
       {
         String stErr = "Error creating database pool[" + e.getMessage() + "].";
-        e.printStackTrace();
-        System.out.println(stErr);
         logger.fatal(stErr, e);
         return;
       }
@@ -70,22 +71,11 @@ public class DatabaseConnection extends HttpServlet
       }
       catch (Exception e)
       {
-        System.err.println("Could not open database connection.");
-        e.printStackTrace();
         logger.fatal("Could not open database connection." + e.toString(), e);
-      }
-      finally
-      {
-        try
-        {
-          rset.close();
-          stmt.close();
-        }
-        catch (Exception e)
-        {
-          logger.fatal("rset and stmtClose", e);
-        };
-        freeConnection(con);
+      }finally{
+    	  SQLHelper.closeResultSet(rset);
+          SQLHelper.closeStatement(stmt);      
+          freeConnection(con);
       }
     }
     catch (Exception e)
@@ -129,8 +119,9 @@ public class DatabaseConnection extends HttpServlet
   {
     try
     {
-      con.close();
-    }
+     if(con!=null || !con.isClosed())
+       con.close();
+     }
     catch (Exception e)
     {
       System.err.println("Could not close database connection.");
@@ -189,7 +180,7 @@ public class DatabaseConnection extends HttpServlet
        if (conn != null)
        {
         DataManager.setAttribute(session, "ConnectedToDB", "Yes");
-        conn.close();
+        freeConnection(conn);
        }
        else
        {
@@ -199,19 +190,11 @@ public class DatabaseConnection extends HttpServlet
      }
      catch(Exception e)
      {
-         try{if (conn != null) conn.close();}catch(Exception f){} 
          logger.fatal("ERROR in GetACService-verifyConnection : " + e.toString(), e);
+     }finally{
+         freeConnection(conn);
      }
-     try
-     {
-         if (conn != null) conn.close();
-     }
-     catch(Exception ee)
-     {
-         logger.fatal("ERROR in GetACService-verifyConnection close: " + ee.toString(), ee);
-     }
-  
-   }  // end of verifyConnection
+    }  // end of verifyConnection
 
    /**
    * This method tries to connect to the db, returns the Connection object if successful, if

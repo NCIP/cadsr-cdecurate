@@ -1,15 +1,15 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.54 2008-04-28 21:23:02 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.55 2008-05-04 19:32:20 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -17,9 +17,11 @@ import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -1692,10 +1694,8 @@ public class SetACService implements Serializable
   public String checkOCPropWorkFlowStatuses(HttpServletRequest req,
           HttpServletResponse res, String oc_idseq, String prop_idseq, String strInvalid)
   {
-    //HttpSession session = req.getSession();
     ResultSet rs = null;
     Statement cstmt = null;
-    //Connection conn = null;
     try
     {
       String sOC_WFS = "";
@@ -1707,7 +1707,6 @@ public class SetACService implements Serializable
       if (prop_idseq == null) prop_idseq = "";
       if(!(oc_idseq.equals("") && prop_idseq.equals(""))) // at least one is in database
       {
-        //conn = m_servlet.connectDB(req, res);
         if (m_servlet.getConn() == null)  // still null to login page
           m_servlet.ErrorLogin(req, res);
         else
@@ -1726,9 +1725,6 @@ public class SetACService implements Serializable
             if (!sOC_WFS.equals("RELEASED"))
               strInvalid = "For DEC Work Flow Status to be 'Released', " +
               "the Object Class and Property Work Flow Statuses must be 'Released'.";
-            /** no need to close it here; doing this throws error making it not close the connection **/
-           // if(rs!=null) rs.close();
-           // if(cstmt!=null) cstmt.close();
           }
           else if(!prop_idseq.equals(""))
           {    
@@ -1750,21 +1746,10 @@ public class SetACService implements Serializable
     }
     catch(Exception e)
     {
-      //System.out.println("ERROR in checkOCPropWorkFlowStatuses" + e.toString());
       logger.fatal("ERROR in checkOCPropWorkFlowStatuses " + e.toString(), e);
-    }
-    finally
-    {
-      try
-      {
-        if(rs!=null) rs.close();
-        if(cstmt!=null) cstmt.close();
-        //if(conn != null) conn.close();      
-      }
-      catch(Exception ee)
-      {
-        logger.fatal("ERROR in checkOCPropWorkFlowStatuses closing : " + ee.toString(), ee);
-      }
+    } finally {
+      SQLHelper.closeResultSet(rs);
+      SQLHelper.closeStatement(cstmt);
     }
     return strInvalid;
   } //end checkOCPropWorkFlowStatuses
@@ -1786,14 +1771,12 @@ public class SetACService implements Serializable
   {
     ResultSet rs = null;
     Statement cstmt = null;
-    //Connection conn = null;
     String pvIdseq = "";
     String sSQL = "Select pv_idseq from permissible_values where value = '" + sValue + "'" +
            " and short_meaning = '" + sMeaning + "'";
     try
     {
-      //conn = m_servlet.connectDB(req, res);
-      if (m_servlet.getConn() == null)  // still null to login page
+     if (m_servlet.getConn() == null)  // still null to login page
         m_servlet.ErrorLogin(req, res);
       else
       {
@@ -1811,17 +1794,10 @@ public class SetACService implements Serializable
     catch(Exception e)
     {
       logger.fatal("ERROR in checkPVVM " + e.toString(), e);
-    }
-    try
-    {
-      if(rs!=null) rs.close();
-      if(cstmt!=null) cstmt.close();
-      //if(conn != null) conn.close();
-    }
-    catch(Exception ee)
-    {
-      logger.fatal("ERROR in checkPVVM closing : " + ee.toString(), ee);
-    }
+    }finally {
+        SQLHelper.closeResultSet(rs);
+        SQLHelper.closeStatement(cstmt);
+      }
     return pvIdseq;
   } //end checkPVVM
 
@@ -2342,8 +2318,7 @@ public class SetACService implements Serializable
   { 
     try
     {
-      //boolean bValidFlag = false;
-      String sSQL="", editSQL="";  //, versSQL="";
+       String sSQL="", editSQL="";  //, versSQL="";
   
       //check unique if id is not the same for update
       String sPublicID = mDE.getDE_MIN_CDE_ID();
@@ -2652,8 +2627,7 @@ public class SetACService implements Serializable
             }
         }
       }
-//System.out.println("done checkConceptCodeExistsInOtherDB");
-    }
+   }
     catch (Exception e)
     {
       logger.fatal("SetACService_checkConceptCodeExistsInOtherDB- Unable to check if CC exists " + e.toString(), e);
@@ -2680,7 +2654,6 @@ public class SetACService implements Serializable
     String strInValid = "";
     try
     {
-     // Vector vList = new Vector();
       if (ACType != null && ACType.equals("ObjectClass"))
       {
         Vector vRes = new Vector();
@@ -3185,9 +3158,7 @@ public class SetACService implements Serializable
     HttpSession session = req.getSession();
     String sOriginAction = (String)session.getAttribute("originAction");
     if (sOriginAction == null) sOriginAction.equals("");
-    //String sMenu = (String)session.getAttribute("MenuAction");
-//System.out.println(sOriginAction + " end de page values " + sMenu);
-      
+    
     //get the selected contexts from the DE bean
     DE_Bean selDE = (DE_Bean)session.getAttribute("m_DE");      
     //keep the seach de attributes if menu action is editdesde
@@ -3413,7 +3384,6 @@ public class SetACService implements Serializable
   {
     try
     {
-// System.err.println("in setDECVals");
       HttpSession session = req.getSession();
       String sOriginAction = (String)session.getAttribute("originAction");
       if (sOriginAction == null) sOriginAction.equals("");
@@ -3437,7 +3407,6 @@ public class SetACService implements Serializable
         sID = "";
       else
         sID = (String)req.getParameter("selContext");
-//System.err.println("in setDECVals1");
       if ((sID != null) || (!sID.equals("")))
       {
         sName = m_util.getNameByID((Vector)session.getAttribute("vContext"), (Vector)session.getAttribute("vContext_ID"), sID);
@@ -3453,7 +3422,6 @@ public class SetACService implements Serializable
       if(s != null)
         m_DEC.setDEC_PROPL_NAME(s);
         
-// System.err.println("in setDECVals2");
       sName = "";
       if(sOriginAction.equals("BlockEditDEC"))
         sName = "";
@@ -3621,7 +3589,6 @@ public class SetACService implements Serializable
       //get associated cs-id
       sIDs = req.getParameterValues("selectedCS");
       m_DEC.setAC_CS_ID(this.getSelectionFromPage(sIDs));    
-//System.err.println("done setDECVals");
     }
     catch (Exception e)
     {
@@ -3831,26 +3798,6 @@ public class SetACService implements Serializable
       m_VD.setAC_SELECTED_CONTEXT_ID(selVD.getAC_SELECTED_CONTEXT_ID());   
       String sName = "";
       String sID;  //sIdx, 
-/*      String sObjRow = "";
-      String sObjRowCK = "";
-      String sPropRowCK = "";
-      String sObjQRowCK = "";
-      String sPropQRowCK = "";
-      String sRepRowCK = "";
-      String sRepQRowCK = "";
-      String sPropRow = "";
-      String sObjQRow = "";
-      String sPropQRow = "";
-      String sRepRow = "";
-      String sRepQRow = "";
-
-      Integer intObjRow;
-      int intObjRow2;
-      Integer intPropRow;
-      int intPropRow2;
-      Integer intRepRow;
-      int intRepRow2;
-*/
       sID = (String)req.getParameter("vdIDSEQ");
       if(sID != null)
         m_VD.setVD_VD_IDSEQ(sID);
@@ -4289,7 +4236,6 @@ public class SetACService implements Serializable
   */
   public String getPV(HttpServletRequest req, HttpServletResponse res, PV_Bean pv)  
   {
-    //Connection conn = null;
     ResultSet rs = null;
     CallableStatement cstmt = null;
     String sReturnCode = "";  //out
@@ -4299,8 +4245,6 @@ public class SetACService implements Serializable
       String sValue = pv.getPV_VALUE();
       String sShortMeaning = pv.getPV_SHORT_MEANING();
 
-       //Create a Callable Statement object.
-      // conn = m_servlet.connectDB(req, res);
        if (m_servlet.getConn() == null)
           m_servlet.ErrorLogin(req, res);
        else
@@ -4334,20 +4278,11 @@ public class SetACService implements Serializable
     }
     catch(Exception e)
     {
-      //System.err.println("ERROR in setACService-getPV: " + e);
       logger.fatal("ERROR in setACService-getPV for other : " + e.toString(), e);
-    }
-    try
-    {
-      if(rs!=null) rs.close();
-      if(cstmt!=null) cstmt.close();
-      //if(conn != null) conn.close();
-    }
-    catch(Exception ee)
-    {
-      //System.err.println("Problem closing: " + ee);
-      logger.fatal("ERROR in setACService-getPV for close : " + ee.toString(), ee);
-    }
+    }finally {
+        SQLHelper.closeResultSet(rs);
+        SQLHelper.closeStatement(cstmt);
+      }
     return sReturnCode;
   }
 
@@ -4364,15 +4299,11 @@ public class SetACService implements Serializable
   public boolean checkPVQCExists(HttpServletRequest req, HttpServletResponse res, 
         String vdIDseq, String vpIDseq) //throws Exception
   {
-    //Connection conn = null;
     ResultSet rs = null;
-    //CallableStatement cstmt = null;
     PreparedStatement pstmt = null;
     boolean isValid = false;
     try
     {
-      //Create a Callable Statement object.
-     // conn = m_servlet.connectDB(req, res);
       if (m_servlet.getConn() == null)
         m_servlet.ErrorLogin(req, res);
       else
@@ -4392,20 +4323,11 @@ public class SetACService implements Serializable
     }
     catch(Exception e)
     {
-      //System.err.println("ERROR in setACService-checkPVQCExists for other : " + e);
       logger.fatal("ERROR in setACService-checkPVQCExists for other : " + e.toString(), e);
-    }
-    try
-    {
-      if(rs!=null) rs.close();
-      if(pstmt!=null) pstmt.close();
-      //if(conn != null) conn.close();
-    }
-    catch(Exception ee)
-    {
-      //System.err.println("ERROR in setACService-checkPVQCExists for close : " + ee);
-      logger.fatal("ERROR in setACService-checkPVQCExists for close : " + ee.toString(), ee);
-    }
+    }finally {
+        SQLHelper.closeResultSet(rs);
+        SQLHelper.closePreparedStatement(pstmt);
+      }
     return isValid;
    }   //end checkPVQCExists
 

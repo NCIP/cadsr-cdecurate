@@ -1,10 +1,11 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptAction.java,v 1.19 2007-11-30 19:56:05 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptAction.java,v 1.20 2008-05-04 19:32:21 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import java.io.Serializable;
@@ -43,20 +44,13 @@ public class ConceptAction implements Serializable
   */
   public void doConceptSearch(ConceptForm data)  // returns list of Concepts
   {
-    Connection conn = null;
+    
     ResultSet rs = null;
     CallableStatement cstmt = null;
     try
     {
-      //capture the duration
-      //java.util.Date exDate = new java.util.Date();          
-      //logger.info(m_servlet.getLogMessage(m_classReq, "do_ConceptSearch", "begin search", exDate, exDate));
-      
       //get the connection from data if exists (used for testing)
       UtilService util = data.getUtil();
-      //conn = data.getDBConnection();
-      //if (conn == null || conn.isClosed())
-        //conn = data.getCurationServlet().connectDB(); // ConceptServlet.makeDBConnection();
       // Create a Callable Statement object.
       if (data.getCurationServlet().getConn() != null)
     	  
@@ -134,20 +128,10 @@ public class ConceptAction implements Serializable
       logger.fatal("ERROR - doconceptSearch for other : ", e);
       data.setStatusMsg("Error : Unable to do concept search." + e.toString());
       data.setActionStatus(ConceptForm.ACTION_STATUS_FAIL);
-    }
-    try
-    {
-      if(rs!=null) rs.close();
-      if(cstmt!=null) cstmt.close();
-     // if (data.getDBConnection() == null)
-       // data.getCurationServlet().freeConnection(conn);
-    }
-    catch(Exception ee)
-    {
-      logger.fatal("ERROR -do_conceptSearch for close : " + ee.toString(), ee);
-    }
-    //capture the duration
-    //logger.info(m_servlet.getLogMessage(m_classReq, "do_conceptSearch", "end search", exDate,  new java.util.Date()));
+    }finally{
+    	SQLHelper.closeResultSet(rs);
+        SQLHelper.closeCallableStatement(cstmt);
+    }    
   }  //endconcept search
 
   /**gets teh existing condr idseq for the concepts from teh database
@@ -160,18 +144,13 @@ public class ConceptAction implements Serializable
     Vector<EVS_Bean> conList = data.getConceptList();
     //make con idseq array
     String conArray = this.getConArray(conList, false, data);
-   // System.out.println(conList.size() + " get derivation " + conArray);
     if (!conArray.equals(""))
     {
-      //Connection conn = null;
       ResultSet rs = null;
       Statement stmt = null;
       try
       {
-       /* conn = data.getDBConnection();
-        if (conn == null || conn.isClosed())
-          conn = data.getCurationServlet().connectDB(); */// ConceptServlet.makeDBConnection();
-        // Create a Callable Statement object.
+       // Create a Callable Statement object.
         if (data.getCurationServlet().getConn() != null)
         {
           stmt = data.getCurationServlet().getConn().createStatement();
@@ -180,7 +159,6 @@ public class ConceptAction implements Serializable
           while(rs.next())
           {
             condr = rs.getString(1);
-          //System.out.println(conArray + " condr " + condr);
             if (condr == null) condr = "";
           }
         }
@@ -190,19 +168,11 @@ public class ConceptAction implements Serializable
         logger.fatal("ERROR - doconceptSearch for other : ", e);
         data.setStatusMsg("Error : Unable to do concept search." + e.toString());
         data.setActionStatus(ConceptForm.ACTION_STATUS_FAIL);
-      }
-      try
-      {
-        if(rs!=null) rs.close();
-        if(stmt!=null) stmt.close();
-        //if (data.getDBConnection() == null)
-          //data.getCurationServlet().freeConnection(conn); // ConceptServlet.closeDBConnection(conn);
-      }
-      catch(Exception ee)
-      {
-        logger.fatal("ERROR -do_conceptSearch for close : " + ee.toString(), ee);
-      }
+      }finally{
+      	SQLHelper.closeResultSet(rs);
+        SQLHelper.closeStatement(stmt);
     }
+     }
     return condr;
   }
 
@@ -279,29 +249,19 @@ public class ConceptAction implements Serializable
    */
   public String setConcept(ConceptForm data, EVS_Bean evsBean, String sAction)
   {
-     //capture the duration
-     //java.util.Date startDate = new java.util.Date();          
-     //logger.info(m_servlet.getLogMessage(m_classReq, "setConcept", "starting set", startDate, startDate));
-
      String sMsg = "";
-     //Connection conn = null;
      ResultSet rs = null;
      CallableStatement cstmt = null;
-     //String sEvsSource = "";
      //Get the username from the session.
      String userName = (String)data.getCurationServlet().sessionData.UsrBean.getUsername();
      try
      {
-         /*conn = data.getDBConnection();
-         if (conn == null || conn.isClosed())
-           conn = data.getCurationServlet().connectDB();*/ // ConceptServlet.makeDBConnection();
          // Create a Callable Statement object.
          if (data.getCurationServlet().getConn() != null)
          {
            //cstmt = conn.prepareCall("{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
            cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
            // register the Out parameters
-           //cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //ua_name
            cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //return code
            cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //con idseq
            cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //preferred name
@@ -327,8 +287,8 @@ public class ConceptAction implements Serializable
            //set the userid
             cstmt.setString(1, userName);
            //truncate the definition to be 2000 long.
-         //  if (sDef == null) sDef = "";
-         //  if (sDef.length() > 2000) sDef = sDef.substring(0, 2000);
+           //  if (sDef == null) sDef = "";
+           //  if (sDef.length() > 2000) sDef = sDef.substring(0, 2000);
            // Set the In parameters (which are inherited from the PreparedStatement class)
            cstmt.setString(3, sAction);
            cstmt.setString(5, evsBean.getCONCEPT_IDENTIFIER());
@@ -350,8 +310,6 @@ public class ConceptAction implements Serializable
            cstmt.setString(14, evsBean.getEVS_DEF_SOURCE());
            cstmt.setString(15, evsBean.getNCI_CC_TYPE());
             // Now we are ready to call the stored procedure
-           //logger.info("setConcept " + evsBean.getCONCEPT_IDENTIFIER());     
-
            cstmt.execute();
            String sReturnCode = cstmt.getString(2);
            String conIdseq = cstmt.getString(4);
@@ -363,26 +321,16 @@ public class ConceptAction implements Serializable
                  + evsBean.getCONCEPT_IDENTIFIER() + ": " + evsBean.getLONG_NAME() + ".";
            }
          }
-       //capture the duration
-       //logger.info(m_servlet.getLogMessage(m_classReq, "setConcept", "end set", startDate, new java.util.Date()));
      }
      catch(Exception e)
      {
        logger.fatal("ERROR in setConcept for other : " + e.toString(), e);
        sMsg += "\\t Exception : Unable to update Concept attributes.";
-     }
-     try
-     {
-       if(rs!=null) rs.close();
-       if(cstmt!=null) cstmt.close();
-       //if (data.getDBConnection() == null)
-         //data.getCurationServlet().freeConnection(conn); // ConceptServlet.closeDBConnection(conn);
-     }
-     catch(Exception ee)
-     {
-       logger.fatal("ERROR in setConcept for close : " + ee.toString(), ee);
-     }
-     return sMsg;
+     }finally{
+         	SQLHelper.closeResultSet(rs);
+             SQLHelper.closeCallableStatement(cstmt);
+         }
+      return sMsg;
   }  //end concept
 
    /**
@@ -396,17 +344,11 @@ public class ConceptAction implements Serializable
   */
   public Vector<EVS_Bean> getAC_Concepts(String condrID, ConceptForm data)
   {
-//System.out.println("in getAC_Concepts condrID: " + condrID);
-    //Connection conn = null;
     CallableStatement cstmt = null;
     ResultSet rs = null;
-  //  String sCON_IDSEQ = "";
     Vector<EVS_Bean> vList = new Vector<EVS_Bean>();
     try
     {
-      /*conn = data.getDBConnection();
-      if (conn == null || conn.isClosed())
-        conn = data.getCurationServlet().connectDB(); */// ConceptServlet.makeDBConnection();
       // Create a Callable Statement object.
       if (data.getDBConnection() != null)
       {
@@ -473,18 +415,9 @@ public class ConceptAction implements Serializable
     catch(Exception e)
     {
       logger.fatal("ERROR in getACConcepts for exception : " + e.toString(), e);
-    }
-
-    try
-    {
-      if(rs!=null) rs.close();
-      if(cstmt!=null) cstmt.close();
-    //  if (data.getDBConnection() == null)
-      //  data.getCurationServlet().freeConnection(conn); // ConceptServlet.closeDBConnection(conn);
-    }
-    catch(Exception ee)
-    {
-      logger.fatal("ERROR in getACConcept for close : " + ee.toString(), ee);
+    }finally{
+    	SQLHelper.closeResultSet(rs);
+        SQLHelper.closeCallableStatement(cstmt);
     }
     return vList;
   } //end get concept

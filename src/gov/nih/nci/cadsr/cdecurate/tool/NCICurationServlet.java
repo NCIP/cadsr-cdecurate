@@ -1,11 +1,12 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.53 2008-02-20 19:35:06 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.54 2008-05-04 19:32:20 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 // import files
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ClockTime;
 
 import java.io.InputStream;
@@ -164,25 +165,10 @@ public class NCICurationServlet extends HttpServlet
                 e.printStackTrace();
                 logger.fatal(e.toString(), e);
             }
-            finally
-            {
-                try
-                {
-                    rset.close();
-                }
-                catch (Exception e)
-                {
-                }
-                ;
-                try
-                {
-                    stmt.close();
-                }
-                catch (Exception e)
-                {
-                }
-                ;
-                curser.freeConnection(con);
+            finally{
+    			SQLHelper.closeResultSet(rset);
+    			SQLHelper.closeStatement(stmt);
+    			SQLHelper.closeConnection(con);
             }
         }
         catch (Exception e)

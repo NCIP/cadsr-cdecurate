@@ -1,11 +1,12 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.35 2008-04-10 19:38:53 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.36 2008-05-04 19:32:21 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
 
@@ -53,7 +54,6 @@ public class VMAction implements Serializable
   {
     ResultSet rs = null;
     CallableStatement cstmt = null;
-    //Connection conn = null;
     try
     {
       //do not continue search if no search filter
@@ -62,11 +62,6 @@ public class VMAction implements Serializable
 
       Vector<VM_Bean> vmList = data.getVMList();
       if (vmList == null) vmList = new Vector<VM_Bean>();
-      //get the connection from data if exists (used for testing)
-     // conn = data.getDBConnection();
-      //if (conn == null || conn.isClosed())
-        //conn = data.getCurationServlet().connectDB(); //VMServlet.makeDBConnection();
-      // Create a Callable Statement object.
       if (data.getCurationServlet().getConn() != null)
       {
       //  cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?,?,?)}");
@@ -106,19 +101,10 @@ public class VMAction implements Serializable
       logger.fatal("ERROR - VMAction-searchVM for other : " + e.toString(), e);
       data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to search VM." + e.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
-      e.printStackTrace();
-    }
-    try
-    {
-      if(rs!=null) rs.close();
-      if(cstmt!=null) cstmt.close();
-     // if (data.getDBConnection() == null)
-      //  data.getCurationServlet().freeConnection(conn);  //VMServlet.closeDBConnection(conn);
-    }
-    catch(Exception ee)
-    {
-      logger.fatal("ERROR - VMAction-searchVM for close : " + ee.toString(), ee);
-    }
+   }finally {
+	      SQLHelper.closeResultSet(rs);
+	      SQLHelper.closeCallableStatement(cstmt);
+	    }
   }  //endVM search
 
   /**
@@ -216,7 +202,6 @@ public class VMAction implements Serializable
      }
     catch(Exception e)
     {
-      //System.err.println("ERROR in VMAction-getVMResult: " + e);
       logger.fatal("ERROR in VMAction-getVMResult : " + e.toString(), e);
       data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to search VM." + e.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
@@ -312,7 +297,6 @@ public class VMAction implements Serializable
       }
     catch(Exception e)
     {
-      //System.err.println("ERROR in VMAction-getVMResult: " + e);
       logger.fatal("ERROR in VMAction-getVMResult : " + e.toString(), e);
       data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to search VM." + e.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
@@ -493,9 +477,6 @@ public class VMAction implements Serializable
           condata.setDBConnection(data.getCurationServlet().getConn()); //VMServlet.makeDBConnection());  //make the connection
         
           String conArray = conAct.getConArray(vCon, true, condata);
-        //if (data.getDBConnection() == null)
-          //data.getCurationServlet().freeConnection(condata.getDBConnection());  //VMServlet.closeDBConnection(condata.getDBConnection());  //close the connection
-
         //append the concept message
         if (!condata.getStatusMsg().equals(""))
           erMsg += condata.getStatusMsg();
@@ -1099,7 +1080,6 @@ public String checkVMNameExists(VM_Bean selVM,VMForm data)
 private String setNewVersionVM(VMForm data)
  {
 	 String sReturnCode="None";
-	 ResultSet rs = null;
 	 CallableStatement cstmt = null;
 	 try
 	    {
@@ -1136,10 +1116,11 @@ private String setNewVersionVM(VMForm data)
 			
 				}
 	      }
-	    }catch (Exception e)
-	          {
+	    }catch (Exception e){
 	            logger.fatal("ERROR in creating new VM Version: " + e.toString(), e);
-	           }      
+	    }finally {
+	        SQLHelper.closeCallableStatement(cstmt);
+	      }
 	 return sReturnCode;
  }
    
@@ -1157,28 +1138,19 @@ private String setNewVersionVM(VMForm data)
    */
   private String setVM(VMForm data, String conArray)
   {
-    // capture the duration
-    // java.util.Date startDate = new java.util.Date();
-    // logger.info(m_servlet.getLogMessage(m_classReq, "setVM_EVS", "starting set", startDate,startDate));
     ResultSet rs = null;
     CallableStatement cstmt = null;
-    //Connection conn = null;
     String stMsg = ""; // out
     try
     {
       VM_Bean vm = data.getVMBean();
       String sAction = vm.getVM_SUBMIT_ACTION();
       if (sAction == null) sAction = VMForm.CADSR_ACTION_INS;
-      //get the connection from data if exists (used for testing)
-     // conn = data.getDBConnection();
-     // if (conn == null || conn.isClosed())
-       // conn = data.getCurationServlet().connectDB(); //VMServlet.makeDBConnection();
       if (data.getCurationServlet().getConn() != null)
       {
         //cstmt = conn.prepareCall("{call SBREXT.SBREXT_SET_ROW.SET_VM(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
         cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT_SET_ROW.SET_VM(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
         // register the Out parameters
-        //cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); // ua_name
         cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // return code
         cstmt.registerOutParameter(3, java.sql.Types.VARCHAR); // action
         cstmt.registerOutParameter(5, java.sql.Types.VARCHAR); // vm_idseq
@@ -1249,30 +1221,18 @@ private String setNewVersionVM(VMForm data)
           vm.setASL_NAME(cstmt.getString(10));
           vm.setVM_VERSION(cstmt.getString(11));
           vm.setVM_ID(cstmt.getString(12));
-        //  System.out.println(cstmt.getString(11) + " condr " + cstmt.getString(13) + " change " + cstmt.getString(16));
-        }
+         }
       }
-      // capture the duration
-      // logger.info(m_servlet.getLogMessage(m_classReq, "setVM_EVS", "end set", startDate, new
-      // java.util.Date()));
-    }
+     }
     catch (Exception e)
     {
       logger.fatal("ERROR in setVM for other : " + e.toString(), e);
       data.setRetErrorCode("Exception");
       stMsg += "\\tException : Unable to update VM attributes.";
-    }
-    try
-    {
-      if (rs != null) rs.close();
-      if (cstmt != null) cstmt.close();
-     // if (data.getDBConnection() == null)
-       // data.getCurationServlet().freeConnection(conn);  //VMServlet.closeDBConnection(conn);
-    }
-    catch (Exception ee)
-    {
-      logger.fatal("ERROR in setVM for close : " + ee.toString(), ee);
-      data.setRetErrorCode("Exception");
+    }finally {
+        SQLHelper.closeResultSet(rs);
+        SQLHelper.closeCallableStatement(cstmt);
+        data.setRetErrorCode("Exception");
       stMsg += "\\tException : Unable to close the connection at set_VM.";
     }
     return stMsg;
@@ -1291,26 +1251,15 @@ private String setNewVersionVM(VMForm data)
    */
   private String setCDVMS(VMForm data, VM_Bean vm)
   {
-     //capture the duration
-     //java.util.Date startDate = new java.util.Date();
-     //logger.info(m_servlet.getLogMessage(m_classReq, "setCDVMS", "starting set", startDate, startDate));
-
-     //Connection conn = null;
-     ResultSet rs = null;
      CallableStatement cstmt = null;
      String sReturnCode = "";  //out
      try
      {
-         //get the connection from data if exists (used for testing)
-         //conn = data.getDBConnection();
-         //if (conn == null || conn.isClosed())
-           //conn = data.getCurationServlet().connectDB(); //VMServlet.makeDBConnection();
-         if (data.getCurationServlet().getConn() != null)
+        if (data.getCurationServlet().getConn() != null)
          {
            //cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_CD_VMS(?,?,?,?,?,?,?,?,?,?,?)}");
            cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT_SET_ROW.SET_CD_VMS(?,?,?,?,?,?,?,?,?,?,?)}");
            // register the Out parameters
-           //cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); // ua_name
            cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //return code
            cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //out cv_idseq
            cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //out cd_idseq
@@ -1322,7 +1271,7 @@ private String setNewVersionVM(VMForm data)
            cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //date modified
 
 
-           // Set the In parameters (which are inherited from the PreparedStatement class)
+        // Set the In parameters (which are inherited from the PreparedStatement class)
         //Get the username from the session.
         String userName = data.getCurationServlet().sessionData.UsrBean.getUsername();
         // Set the In parameters (which are inherited from the PreparedStatement class)
@@ -1346,26 +1295,14 @@ private String setNewVersionVM(VMForm data)
              //data.setRetErrorCode(sReturnCode);
            }
        }
-       //capture the duration
-       //logger.info(m_servlet.getLogMessage(m_classReq, "setCDVMS", "end set", startDate, new java.util.Date()));
      }
      catch(Exception e)
      {
        logger.fatal("ERROR in setCDVMS for other : " + e.toString(), e);
-       //m_classReq.setAttribute("retcode", "Exception");
        data.setRetErrorCode("Exception");
        data.setStatusMsg(data.getStatusMsg() + "\\tException : Unable to update CD and VM relationship.");
-     }
-     try
-     {
-       if(rs!=null) rs.close();
-       if(cstmt!=null) cstmt.close();
-       //if (data.getDBConnection() == null)
-         //data.getCurationServlet().freeConnection(conn);  //VMServlet.closeDBConnection(conn);
-     }
-     catch(Exception ee)
-     {
-       logger.fatal("ERROR in setCDVMS for close : " + ee.toString(), ee);
+     }finally{
+    	  SQLHelper.closeCallableStatement(cstmt);
      }
      return sReturnCode;
   }
@@ -1420,7 +1357,6 @@ private String setNewVersionVM(VMForm data)
   {
     Vector<VM_Bean> vErrMsg = data.getErrorMsgList();
     data.setStatusMsg("Value Meaning");
-    //String sMsg = "";
     switch (vmFlag)
     {
       case 'A': //print all cases
@@ -1514,32 +1450,13 @@ private String setNewVersionVM(VMForm data)
   private String getConceptCondr(Vector<EVS_Bean> conList, VMForm data)
   {
     String condr = "";
-    //Connection conn = null;
-    //try
-    //{
-      ConceptForm conData = new ConceptForm();
-      conData.setConceptList(conList);
-
-     // conn = data.getDBConnection();
-     // if (conn == null || conn.isClosed())
-       // conn = data.getCurationServlet().connectDB(); //VMServlet.makeDBConnection();
+     ConceptForm conData = new ConceptForm();
+     conData.setConceptList(conList);
       conData.setDBConnection(data.getCurationServlet().getConn());
       conData.setCurationServlet(data.getCurationServlet());
       //call the method n concept action
       ConceptAction conAct = new ConceptAction();
       condr = conAct.getConDerivation(conData);
-    //}
-    //catch (SQLException e)
-    //{
-      //logger.fatal("VM concept search connection problem ", e);
-      //e.printStackTrace();
-    //}
-    //finally
-    //{
-        //close the conn only if not testing
-        //if (data.getDBConnection() == null)
-          //data.getCurationServlet().freeConnection(conn);  //VMServlet.closeDBConnection(conn);
-    //}
     return condr;
   }
 
@@ -1557,13 +1474,11 @@ private String setNewVersionVM(VMForm data)
     data.setSearchFilterDef(sDef);        //search by defintion
     //call method
     data.setVMList(new Vector<VM_Bean>());
-  //System.out.println(vmName+sCondr+sDef+ " : VMs before - " + data.getVMList().size());
-    searchVMValues(data);
+     searchVMValues(data);
     //set teh flag
     Vector<VM_Bean> vmList = data.getVMList();
     if (vmList != null && vmList.size() >0)
     {
-      //System.out.println(vmName+sCondr+sDef+ " : VMs after - " + data.getVMList().size());
       if (!vmName.equals(""))
         data.setExistVMList(vmList);
       else if (!sCondr.equals(""))
@@ -1679,21 +1594,10 @@ private String setNewVersionVM(VMForm data)
       catch (Exception e)
       {
           logger.fatal("ERROR - : " + e.toString(), e);
-      }
-      finally
-      {
-          try
-          {
-              if (rs != null)
-                  rs.close();
-              if (pstmt != null)
-                  pstmt.close();
-          }
-          catch (Exception ee)
-          {
-              logger.fatal("ERROR for close : " + ee.toString(), ee);
-          }
-      }
+      } finally{
+          SQLHelper.closeResultSet(rs);
+    	  SQLHelper.closePreparedStatement(pstmt);
+         }
       return vVMs;
   }
   /**
@@ -1798,15 +1702,11 @@ private String setNewVersionVM(VMForm data)
                   String sCreator, String sModifier, String CD_ID, String sOrigin, double dVersion, String conName,
                   String conID, String sVM, Vector vList,VMForm data)
   {
-      // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "begin search", exDate, exDate));
-      //Connection conn = null;
       ResultSet rs = null;
       CallableStatement cstmt = null;
       try
       {
-          // Create a Callable Statement object.
-         // conn = m_servlet.connectDB(m_classReq, m_classRes);
-          if (data.getCurationServlet().getConn() != null)
+         if (data.getCurationServlet().getConn() != null)
           {
               cstmt = data.getCurationServlet().getConn()
                               .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
@@ -1833,9 +1733,6 @@ private String setNewVersionVM(VMForm data)
               cstmt.execute();
               // store the output in the resultset
               rs = (ResultSet) cstmt.getObject(7);
-              // capture the duration
-              // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "got rsObject", exDate, new
-              // java.util.Date()));
               String s;
               if (rs != null)
               {
@@ -1884,25 +1781,11 @@ private String setNewVersionVM(VMForm data)
       }
       catch (Exception e)
       {
-          // System.err.println("other problem in GetACSearch-CDSearch: " + e);
-          logger.fatal("ERROR - VMAction-CDSearch for other : " + e.toString(), e);
+         logger.fatal("ERROR - VMAction-CDSearch for other : " + e.toString(), e);
+      }finally{
+    	  SQLHelper.closeResultSet(rs);
+    	  SQLHelper.closeCallableStatement(cstmt);
       }
-      try
-      {
-          if (rs != null)
-              rs.close();
-          if (cstmt != null)
-              cstmt.close();
-          //if (conn != null)
-            //  conn.close();
-      }
-      catch (Exception ee)
-      {
-          // System.err.println("Problem closing in GetACSearch-doCDSearch: " + ee);
-          logger.fatal("ERROR - VMAction-CDSearch for close : " + ee.toString(), ee);
-      }
-      // capture the duration
-      // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "end search", exDate, new java.util.Date()));
       return vList;
   }
 

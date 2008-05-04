@@ -1,9 +1,10 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.53 2008-04-30 14:51:59 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.54 2008-05-04 19:32:21 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.AddOns;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
@@ -86,15 +87,9 @@ public class GetACService implements Serializable
     public void getACList(HttpServletRequest req, HttpServletResponse res, String sContext, boolean bNewContext,
                     String sACType) throws IOException, ServletException
     {
-       // Connection conn = null;
         try
         {
-            // logger.info(m_servlet.getLogMessage(req, "getACList", "started", startDate, startDate));
             HttpSession session = req.getSession();
-            
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
-              
-              
             if (m_servlet.getConn() != null)
             {
                 DataManager.setAttribute(session, "ConnectedToDB", "Yes");
@@ -290,9 +285,8 @@ public class GetACService implements Serializable
                 // list of ASL names to filter
                 if (session.getAttribute(Session_Data.SESSION_ASL_FILTER) == null)
                     this.getASLFilterList(session);
-                //conn.close();
-                // logger.info(m_servlet.getLogMessage(req, "getACList", "ended", startDate, new java.util.Date()));
-            }
+                 this.getDefaultSearchCounts(session);
+              }
             else
             {
                 logger.fatal("getAClist: no db connection");
@@ -301,27 +295,8 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            /*try
-            {
-                if (conn != null)
-                    conn.close();
-            }
-            catch (Exception f)
-            {
-            }*/
-            // System.err.println("ERROR in GetACService-getACList: " + e);
             logger.fatal("ERROR in GetACService-getACList : " + e.toString(), e);
         }
-        /*try
-        {
-            if (conn != null)
-                conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("ERROR in GetACService-getACList close: " + ee);
-            logger.fatal("ERROR in GetACService-getACList close: " + ee.toString(), ee);
-        }*/
     }
 
     /**
@@ -338,16 +313,12 @@ public class GetACService implements Serializable
      */
     public void verifyConnection(HttpServletRequest req, HttpServletResponse res)
     {
-        //Connection conn = null;
         try
         {
-            // logger.info(m_servlet.getLogMessage(req, "getACList", "started", startDate, startDate));
             HttpSession session = req.getSession();
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() != null)
             {
                 DataManager.setAttribute(session, "ConnectedToDB", "Yes");
-                //conn.close();
             }
             else
             {
@@ -357,26 +328,9 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            /*try
-            {
-                if (conn != null)
-                    conn.close();
-            }
-            catch (Exception f)
-            {
-            }*/
-            logger.fatal("ERROR in GetACService-verifyConnection : " + e.toString(), e);
+        	logger.fatal("ERROR in GetACService-verifyConnection : " + e.toString(), e);
         }
-        /*try
-        {
-            if (conn != null)
-                conn.close();
-        }
-        catch (Exception ee)
-        {
-            logger.fatal("ERROR in GetACService-verifyConnection close: " + ee.toString(), ee);
-        }
-*/    }
+    }
 
     /**
      * The getUserList method gets list of users in the database and Names, which are stored in vectors. Calls the
@@ -397,8 +351,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("Problem getUserList: " + e);
-            logger.fatal("ERROR in GetACService-getUserList : " + e.toString(), e);
+           logger.fatal("ERROR in GetACService-getUserList : " + e.toString(), e);
         }
     }
 
@@ -421,8 +374,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("Problem getContextList: " + e);
-            logger.fatal("ERROR in GetACService-getContextList : " + e.toString(), e);
+           logger.fatal("ERROR in GetACService-getContextList : " + e.toString(), e);
         }
     }
 
@@ -450,8 +402,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("Problem getContextList: " + e);
-            logger.fatal("ERROR in GetACService-getWriteContextList : " + e.toString(), e);
+           logger.fatal("ERROR in GetACService-getWriteContextList : " + e.toString(), e);
         }
     }
 
@@ -475,8 +426,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("Problem getStatusList: " + e);
-            logger.fatal("ERROR in GetACService-getStatusList : " + e.toString(), e);
+           logger.fatal("ERROR in GetACService-getStatusList : " + e.toString(), e);
         }
     }
 
@@ -513,7 +463,6 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("Problem getConceptualDomainList: " + e);
             logger.fatal("ERROR in GetACService-getConceptualDomainList : " + e.toString(), e);
         }
     }
@@ -532,13 +481,10 @@ public class GetACService implements Serializable
      */
     private void getCSList(Vector<String> vIDList, Vector<String> vList, String sContext)
     {
-        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         try
         {
-            // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -580,19 +526,9 @@ public class GetACService implements Serializable
         catch (Exception e)
         {
             logger.fatal("ERROR - GetACService getCSList for other : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-           // if (conn != null)
-             //   conn.close();
-        }
-        catch (Exception ee)
-        {
-            logger.fatal("ERROR - GetACService getCSList for close : " + ee.toString(), ee);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
     }
 
@@ -610,11 +546,8 @@ public class GetACService implements Serializable
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Vector<CSI_Bean> vList = new Vector<CSI_Bean>();
-        //Connection conn = null;
         try
         {
-            // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -656,22 +589,10 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("other problem in GetACService-getCSCSIList: " + e);
-            logger.fatal("ERROR - GetACService-getCSCSIListBean for other : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-             //   conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing in GetACService-getCSCSIList: " + ee);
-            logger.fatal("ERROR - GetACService-getCSCSIListBean for close : " + ee.toString(), ee);
+          logger.fatal("ERROR - GetACService-getCSCSIListBean for other : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
     }
 
@@ -692,8 +613,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("Problem getLanguageList: " + e);
-            logger.fatal("ERROR in GetACService-getLanguageList : " + e.toString(), e);
+           logger.fatal("ERROR in GetACService-getLanguageList : " + e.toString(), e);
         }
     }
 
@@ -718,7 +638,6 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("Problem getDataTypesList: " + e);
             logger.fatal("ERROR in GetACService-getDataTypesList : " + e.toString(), e);
         }
     }
@@ -800,7 +719,6 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("Problem getFormatList: " + e);
             logger.fatal("ERROR in GetACService-getFormatList : " + e.toString(), e);
         }
     }
@@ -851,8 +769,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("Problem getRegStatusList: " + e);
-            logger.fatal("ERROR in GetACService-getRegStatusList : " + e.toString(), e);
+             logger.fatal("ERROR in GetACService-getRegStatusList : " + e.toString(), e);
         }
     }
 
@@ -875,7 +792,6 @@ public class GetACService implements Serializable
         ResultSet rs = null;
         Statement cstmt = null;
         String sPrivilege = "";
-        //Connection conn = null;
         try
         {
             DBUser = DBUser.toUpperCase();
@@ -892,8 +808,6 @@ public class GetACService implements Serializable
             else
                 sql = "SELECT ADMIN_SECURITY_UTIL.HAS_ADMIN_PRIVILEGE('" + DBUser + "', '" + ACType + "', '" + ContID
                                 + "') FROM DUAL";
-            // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -916,22 +830,10 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("ERROR in GetACService- hasPrivilege: " + e);
             logger.fatal("ERROR in GetACService-hasPrivilege for other : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-              //  conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing: " + ee);
-            logger.fatal("ERROR in GetACService-hasPrivilege for close : " + ee.toString(), ee);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeStatement(cstmt);
         }
         return sPrivilege;
     }
@@ -948,10 +850,8 @@ public class GetACService implements Serializable
         Vector<String> vList = new Vector<String>();
         ResultSet rs = null;
         Statement cstmt = null;
-        //Connection conn = null;
         try
         {
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -974,24 +874,11 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("Error getDataListSQL: " + e);
-            logger.fatal("ERROR in GetACService-getDataListSQL for other : " + e.toString(), e);
+           logger.fatal("ERROR in GetACService-getDataListSQL for other : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeStatement(cstmt);
         }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-             //   conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing: " + ee);
-            logger.fatal("ERROR in GetACService-getDataListSQL for close : " + ee.toString(), ee);
-        }
-        
         return vList;
     }
 
@@ -1025,11 +912,8 @@ public class GetACService implements Serializable
         ResultSet rs = null;
         CallableStatement cstmt = null;
         boolean isReConnect = false;
-        //Connection conn = null;
         try
         {
-            // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -1124,23 +1008,10 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("ERROR in GetACService-getDataListStoreProcedure : " + e);
-            logger.fatal("ERROR in GetACService-getDataListStoreProcedure for other : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            // close is if reconnected
-           // if (isReConnect && conn != null)
-             //   conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing: " + ee);
-            logger.fatal("ERROR in GetACService-getDataListStoreProcedure for close : " + ee.toString(), ee);
+           logger.fatal("ERROR in GetACService-getDataListStoreProcedure for other : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
     }
 
@@ -1157,11 +1028,9 @@ public class GetACService implements Serializable
         ResultSet rs = null;
         Statement cstmt = null;
         boolean isExist = false;
-        //Connection conn = null;
         try
         {
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (m_servlet.getConn() == null)
+             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
@@ -1179,22 +1048,10 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("ERROR in doComponentExist: " + e);
-            logger.fatal("ERROR in doComponentExist : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-              //  conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing in doComponentExist: " + ee);
-            logger.fatal("ERROR in doComponentExist closing : " + ee.toString(), ee);
+           logger.fatal("ERROR in doComponentExist : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeStatement(cstmt);
         }
         return isExist;
     }
@@ -1212,10 +1069,8 @@ public class GetACService implements Serializable
         ResultSet rs = null;
         Statement cstmt = null;
         String sName = "";
-       // Connection conn = null;
         try
         {
-         //   conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -1236,22 +1091,10 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("ERROR in isUniqueInContext: " + e);
-            logger.fatal("ERROR in isUniqueInContext : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-           // if (conn != null)
-             //   conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing in isUniqueInContext: " + ee);
-            logger.fatal("ERROR in isUniqueInContext closing : " + ee.toString(), ee);
+           logger.fatal("ERROR in isUniqueInContext : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeStatement(cstmt);
         }
         return sName;
     }
@@ -1270,16 +1113,12 @@ public class GetACService implements Serializable
      */
     public Vector<EVS_Bean> getAC_Concepts(String condrID, VD_Bean vd, boolean bInvertBean)
     {
-        // System.err.println("in getAC_Concepts condrID: " + condrID);
-        //Connection conn = null;
         CallableStatement cstmt = null;
         ResultSet rs = null;
         Vector<EVS_Bean> vList = new Vector<EVS_Bean>();
         GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
         try
         {
-            // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -1300,7 +1139,6 @@ public class GetACService implements Serializable
                     {
                         EVS_Bean eBean = new EVS_Bean();
                         eBean.setIDSEQ(rs.getString("CON_IDSEQ"));
-                        // System.err.println("in getAC_Concepts CON_IDSEQ: " + rs.getString("CON_IDSEQ"));
                         eBean.setDISPLAY_ORDER(rs.getString("DISPLAY_ORDER"));
                         String sPrim = rs.getString("primary_flag_ind");
                         if (sPrim != null && sPrim.equals("Yes"))
@@ -1309,11 +1147,9 @@ public class GetACService implements Serializable
                           eBean.setPRIMARY_FLAG(ConceptForm.CONCEPT_QUALIFIER);
                         eBean.setCONCEPT_IDENTIFIER(rs.getString("preferred_name"));
                         eBean.setLONG_NAME(rs.getString("long_name"));
-                        // System.err.println("in getAC_Concepts long name: " + rs.getString("long_name"));
                         // eBean.setDESCRIPTION(rs.getString("preferred_definition"));
                         eBean.setPREFERRED_DEFINITION(rs.getString("preferred_definition"));
                         eBean.setEVS_DATABASE(rs.getString("origin"));
-                        // System.err.println("in getAC_Concepts origin: " + rs.getString("origin"));
                         eBean.setEVS_DEF_SOURCE(rs.getString("definition_source"));
                         eBean.setNCI_CC_TYPE(rs.getString("evs_source"));
                         eBean.setNVP_CONCEPT_VALUE(rs.getString("CONCEPT_VALUE"));
@@ -1349,20 +1185,9 @@ public class GetACService implements Serializable
         catch (Exception e)
         {
             logger.fatal("ERROR in GetACService- getACConcepts for exception : " + e.toString(), e);
-            // System.out.println("get ac concept other " + e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-           // if (conn != null)
-            //    conn.close();
-        }
-        catch (Exception ee)
-        {
-            logger.fatal("ERROR in GetACService-getConcept for close : " + ee.toString(), ee);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
         return vList;
     }
@@ -1526,20 +1351,10 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            System.err.println("other problem in GetACService-getToolOptionData: " + e);
-            logger.fatal("ERROR - GetACService-getToolOptionData for other : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-        }
-        catch (SQLException ee)
-        {
-            // System.err.println("Problem closing in GetACService-getToolOptionData: " + ee);
-            logger.fatal("ERROR - GetACService-getToolOptionData for close : " + ee.toString(), ee);
+           logger.fatal("ERROR - GetACService-getToolOptionData for other : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
         return vList;
     }
@@ -1558,21 +1373,11 @@ public class GetACService implements Serializable
     public Vector<TOOL_OPTION_Bean> getToolOptionData(String toolName, String sProperty, String sValue)
     {
         Vector<TOOL_OPTION_Bean> vList = new Vector<TOOL_OPTION_Bean>();
-        //Connection conn = null;
-        //conn = m_servlet.connectDB(m_classReq, m_classRes);
         if (m_servlet.getConn() == null)
             m_servlet.ErrorLogin(m_classReq, m_classRes);
         else
         {
             vList = getToolOptionData(m_servlet.getConn(), toolName, sProperty, sValue);
-            /*try
-            {
-                conn.close();
-            }
-            catch (SQLException ex)
-            {
-                logger.fatal(ex.toString());
-            }*/
         }
         return vList;
     }
@@ -1608,16 +1413,9 @@ public class GetACService implements Serializable
   	 {
   		 logger.error("SQL Exception", e);
   	 }finally{
-  		 try{
-  		 rs.close();
-  		 stm.close();
-  		 }catch(SQLException se)
-  		 {
-  			 logger.error("Error while closing resultset or statement",se);
-  		 }
-  	 }
-  	 
-  	 
+     	SQLHelper.closeResultSet(rs);
+        SQLHelper.closePreparedStatement(stm);
+    }
   	 int ind = vocab.lastIndexOf(".");
   	 vocabInd = vocab.substring(0, ind);
   	 return vocabInd;
@@ -1631,10 +1429,8 @@ public class GetACService implements Serializable
     public boolean getSuperUserFlag(String user_)
     {
         boolean flag = false;
-        //Connection conn = null;
         ResultSet rs = null;
         PreparedStatement pstmt = null;
-        //conn = m_servlet.connectDB(m_classReq, m_classRes);
         if (m_servlet.getConn() == null)
             m_servlet.ErrorLogin(m_classReq, m_classRes);
         else
@@ -1648,52 +1444,26 @@ public class GetACService implements Serializable
             }
             catch (SQLException ex)
             {
-                logger.fatal(ex.toString());
-            }
-            finally
-            {
-                try
-                {
-                    if (rs != null)
-                        rs.close();
-                }
-                catch (SQLException exx)
-                {
-                    // ignore it
-                }
-                try
-                {
-                    if (pstmt != null)
-                        pstmt.close();
-                }
-                catch (SQLException exx)
-                {
-                    // ignore it
-                }
-               /* try
-                {
-                    if (conn != null)
-                        conn.close();
-                }
-                catch (SQLException exx)
-                {
-                    // ignore it
-                }*/
+            	logger.fatal(ex.toString());
+            }finally{
+            	SQLHelper.closeResultSet(rs);
+                SQLHelper.closePreparedStatement(pstmt);
             }
         }
         return flag;
     }
 
+    /**
+     * @param sAPI
+     * @return
+     */
     private Hashtable getHashListFromAPI(String sAPI)
     {
         Hashtable<String, String> hRes = new Hashtable<String, String>();
-        //Connection conn = null;
         CallableStatement cstmt = null;
         ResultSet rs = null;
         try
         {
-            // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -1722,19 +1492,9 @@ public class GetACService implements Serializable
         catch (Exception e)
         {
             logger.fatal("ERROR in GetACService- getHashListFromAPI for exception : " + sAPI + " : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-              //  conn.close();
-        }
-        catch (Exception ee)
-        {
-            logger.fatal("ERROR in GetACService-getHashListFromAPI for close : " + ee.toString(), ee);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
         return hRes;
     }
@@ -1759,8 +1519,7 @@ public class GetACService implements Serializable
         Hashtable hOrg = this.getHashListFromAPI(sAPI);
         HttpSession session = (HttpSession) m_classReq.getSession();
         DataManager.setAttribute(session, "ContactRoles", hOrg);
-        // System.out.println("get contact roles " + hOrg.size());
-    }
+     }
 
     /**
      * gets the communication list and stores in the session
@@ -1790,13 +1549,10 @@ public class GetACService implements Serializable
     private void getPersonsList()
     {
         Hashtable<String, String> hPer = new Hashtable<String, String>();
-        //Connection conn = null;
         CallableStatement cstmt = null;
         ResultSet rs = null;
         try
         {
-            // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -1831,19 +1587,9 @@ public class GetACService implements Serializable
         catch (Exception e)
         {
             logger.fatal("ERROR in GetACService- getPersonsList for exception : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-              //  conn.close();
-        }
-        catch (Exception ee)
-        {
-            logger.fatal("ERROR in GetACService-getPersonsList for close : " + ee.toString(), ee);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
         // store it in the session attributes
         HttpSession session = (HttpSession) m_classReq.getSession();
@@ -1872,5 +1618,139 @@ public class GetACService implements Serializable
             }
         }
         DataManager.setAttribute(session, "NVPConcepts", vList);
+    }
+    
+    /**
+     *  Gets the default Search counts for all the elements in the Search drop down list.
+     */
+    public void getDefaultSearchCounts(HttpSession session)
+    {
+      Statement stmt=null;
+      ResultSet rs =null;
+    	try{
+    		//get DE count
+    		String sqlDECount = "select count(*) from sbr.data_elements_view";
+    		stmt =m_servlet.getConn().createStatement();
+    		rs = stmt.executeQuery(sqlDECount);
+    		while(rs.next())
+    		{
+    			int deCount = rs.getInt(1);
+    			DataManager.setAttribute(session, "DECount", deCount);
+    		}
+    		SQLHelper.closeResultSet(rs);
+    		SQLHelper.closeStatement(stmt);
+    		//get DEC count
+    		String sqlDECCount = "select count(*) from sbr.data_element_Concepts_view";
+    		stmt =m_servlet.getConn().createStatement();
+    		rs = stmt.executeQuery(sqlDECCount);
+    		while(rs.next())
+    		{
+    			int decCount = rs.getInt(1);
+    			DataManager.setAttribute(session, "DECCount", decCount);
+    		}
+    		SQLHelper.closeResultSet(rs);
+    		SQLHelper.closeStatement(stmt);
+    		//get VD count
+    		String sqlVDCount = "select count(*) from sbr.value_domains_view";
+    		stmt =m_servlet.getConn().createStatement();
+    		rs = stmt.executeQuery(sqlVDCount);
+    		while(rs.next())
+    		{
+    			int vdCount = rs.getInt(1);
+    			DataManager.setAttribute(session, "VDCount", vdCount);
+    		}
+    		SQLHelper.closeResultSet(rs);
+    		SQLHelper.closeStatement(stmt);
+    		
+    		//get VM count
+    		String sqlVMCount = "select count(*) from sbr.value_meanings_view";
+    		stmt =m_servlet.getConn().createStatement();
+    		rs = stmt.executeQuery(sqlVMCount);
+    		while(rs.next())
+    		{
+    			int vmCount = rs.getInt(1);
+    			DataManager.setAttribute(session, "VMCount", vmCount);
+    		}
+    		SQLHelper.closeResultSet(rs);
+    		SQLHelper.closeStatement(stmt);
+    		
+    		//get CD count
+    		String sqlCDCount = "select count(*) from sbr.conceptual_domains_view";
+    		stmt =m_servlet.getConn().createStatement();
+    		rs = stmt.executeQuery(sqlCDCount);
+    		while(rs.next())
+    		{
+    			int cdCount = rs.getInt(1);
+    			DataManager.setAttribute(session, "CDCount", cdCount);
+    		}
+    		SQLHelper.closeResultSet(rs);
+    		SQLHelper.closeStatement(stmt);
+    		
+    		//get CRFQuestions count
+    		String sqlCRFQCount = "select count(*) from sbr.crf_view_ext";
+    		stmt =m_servlet.getConn().createStatement();
+    		rs = stmt.executeQuery(sqlCRFQCount);
+    		while(rs.next())
+    		{
+    			int crfCount = rs.getInt(1);
+    			DataManager.setAttribute(session, "CRFCount", crfCount);
+    		}
+    		SQLHelper.closeResultSet(rs);
+    		SQLHelper.closeStatement(stmt);
+    		
+    		//get PV count
+    		String sqlPVCount = "select count(*) from sbr.permissible_values_view";
+    		stmt =m_servlet.getConn().createStatement();
+    		rs = stmt.executeQuery(sqlPVCount);
+    		while(rs.next())
+    		{
+    			int pvCount = rs.getInt(1);
+    			DataManager.setAttribute(session, "PVCount", pvCount);
+    		}
+    		SQLHelper.closeResultSet(rs);
+    		SQLHelper.closeStatement(stmt);
+    		
+    		//get OC count
+    		String sqlOCCount = "select count(*) from sbr.object_classes_view_ext";
+    		stmt =m_servlet.getConn().createStatement();
+    		rs = stmt.executeQuery(sqlOCCount);
+    		while(rs.next())
+    		{
+    			int ocCount = rs.getInt(1);
+    			DataManager.setAttribute(session, "OCCount", ocCount);
+    		}
+    		SQLHelper.closeResultSet(rs);
+    		SQLHelper.closeStatement(stmt);
+    		
+    		//get Property count
+    		String sqlPropertyCount = "select count(*) from sbr.properties_lov_view";
+    		stmt =m_servlet.getConn().createStatement();
+    		rs = stmt.executeQuery(sqlPropertyCount);
+    		while(rs.next())
+    		{
+    			int propCount = rs.getInt(1);
+    			DataManager.setAttribute(session, "PropCount", propCount);
+    		}
+    		SQLHelper.closeResultSet(rs);
+    		SQLHelper.closeStatement(stmt);
+    		
+    		//get Concept Class count
+    		String sqlCCCount = "select count(*) from sbr.concepts_view_ext";
+    		stmt =m_servlet.getConn().createStatement();
+    		rs = stmt.executeQuery(sqlCCCount);
+    		while(rs.next())
+    		{
+    			int ccCount = rs.getInt(1);
+    			DataManager.setAttribute(session, "CCCount", ccCount);
+    		}
+    		SQLHelper.closeResultSet(rs);
+    		SQLHelper.closeStatement(stmt);
+        		
+    	}catch(SQLException se){
+    		logger.error("SQL Exception while retreiving counts",se);
+    	}finally{
+    		SQLHelper.closeResultSet(rs);
+    		SQLHelper.closeStatement(stmt);
+    	}
     }
 }

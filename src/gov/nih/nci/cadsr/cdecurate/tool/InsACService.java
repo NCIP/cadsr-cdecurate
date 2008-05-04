@@ -1,8 +1,9 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.53 2008-04-14 01:42:36 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.54 2008-05-04 19:32:21 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import java.io.Serializable;
@@ -187,12 +188,6 @@ public class InsACService implements Serializable {
 	@SuppressWarnings("unchecked")
 	public String setVD(String sAction, VD_Bean vd, String sInsertFor,
 			VD_Bean oldVD) {
-		// capture the duration
-		// java.util.Date startDate = new java.util.Date();
-		// logger.info(m_servlet.getLogMessage(m_classReq, "setVD", "starting
-		// set", startDate, startDate));
-
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		HttpSession session = m_classReq.getSession();
@@ -250,8 +245,6 @@ public class InsACService implements Serializable {
 				}
 			}
 
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -658,18 +651,10 @@ public class InsACService implements Serializable {
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update Value Domain attributes.");
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setVD for close : "
-					+ ee.toString(), ee);
-			m_classReq.setAttribute("retcode", "Exception");
+		}finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
+        	m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update Value Domain attributes.");
 		}
@@ -728,12 +713,6 @@ public class InsACService implements Serializable {
 	 */
 	public String setDEC(String sAction, DEC_Bean dec, String sInsertFor,
 			DEC_Bean oldDEC) {
-		// capture the duration
-		// java.util.Date startDate = new java.util.Date();
-		// logger.info(m_servlet.getLogMessage(m_classReq, "setDEC", "starting
-		// set", startDate, startDate));
-
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		HttpSession session = m_classReq.getSession();
@@ -927,8 +906,6 @@ public class InsACService implements Serializable {
 			else
 				sEndDate = m_util.getOracleDate(dec.getDEC_END_DATE());
 
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -1174,19 +1151,12 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes.");
 		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setDEC for close : "
-					+ ee.toString(), ee);
-			m_classReq.setAttribute("retcode", "Exception");
+		finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
+            m_classReq.setAttribute("retcode", "Exception");
 			this
-					.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes.");
+				.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes.");
 		}
 		return sReturnCode;
 	}
@@ -1413,14 +1383,7 @@ public class InsACService implements Serializable {
 	 */
 	public DEC_Bean setObjectClassDEC(String sAction, DEC_Bean dec,
 			HttpServletRequest req) {
-		// capture the duration
-		// System.err.println("in setOblClassDEC");
-		// java.util.Date startDate = new java.util.Date();
-		// logger.info(m_servlet.getLogMessage(m_classReq, "setObjectClassDEC",
-		// "starting set", startDate, startDate));
-
 		HttpSession session = m_classReq.getSession();
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		String sReturnCode = "";
@@ -1496,7 +1459,6 @@ public class InsACService implements Serializable {
 			if (sContextID == null)
 				sContextID = "";
 			if (!sOCCondrString.equals("")) {
-				// conn = m_servlet.connectDB(m_classReq, m_classRes);
 				if (m_servlet.getConn() == null)
 					m_servlet.ErrorLogin(m_classReq, m_classRes);
 				else {
@@ -1572,28 +1534,16 @@ public class InsACService implements Serializable {
 					}
 				}
 			}
-			// capture the duration
-			// logger.info(m_servlet.getLogMessage(m_classReq,
-			// "setObjectClassDEC", "end set", startDate, new
-			// java.util.Date()));
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-setObjectClassDEC for other : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("Exception Error : Unable to create Object Class.");
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setObjectClassDEC for close : "
-					+ ee.toString(), ee);
-			m_classReq.setAttribute("retcode", "Exception");
+		}finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
+        	m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("Exception Error : Unable to create Object Class.");
 		}
@@ -1741,8 +1691,6 @@ public class InsACService implements Serializable {
 					cstmt.setString(1, userName); // set ua_name
 					cstmt.setString(2, sPCCondrString); // comma-delimited con
 					// idseqs
-					// System.out.println(PCBean.getLONG_NAME() + " conIDseqs :"
-					// + sPCCondrString);
 					cstmt.setString(3, sContextID);
 					// Now we are ready to call the stored procedure
 					cstmt.execute();
@@ -1772,29 +1720,16 @@ public class InsACService implements Serializable {
 					}
 				}
 			}
-			// capture the duration
-			// logger.info(m_servlet.getLogMessage(m_classReq,
-			// "setPropertyClassDEC", "end set", startDate, new
-			// java.util.Date()));
 		} catch (Exception e) {
 			logger.fatal(
 					"ERROR in InsACService-setPropertyClassDEC for other : "
 							+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this.storeStatusMsg("Exception Error : Unable to create Property.");
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal(
-					"ERROR in InsACService-setPropertyClassDEC for close : "
-							+ ee.toString(), ee);
-			m_classReq.setAttribute("retcode", "Exception");
+		}finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
+        	m_classReq.setAttribute("retcode", "Exception");
 			this.storeStatusMsg("Exception Error : Unable to create Property.");
 		}
 		return dec;
@@ -1823,13 +1758,7 @@ public class InsACService implements Serializable {
 	 */
 	public String setRepresentation(String sAction, String sREP_IDSEQ, // out
 			VD_Bean VD, EVS_Bean rep, HttpServletRequest req) {
-		// capture the duration
-		// java.util.Date startDate = new java.util.Date();
-		// logger.info(m_servlet.getLogMessage(m_classReq, "setRepresentation",
-		// "starting set", startDate, startDate));
-
 		HttpSession session = m_classReq.getSession();
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		String sReturnCode = "";
@@ -1905,8 +1834,6 @@ public class InsACService implements Serializable {
 			// if (!sContextID.equals("") && !sOCCondrString.equals(""))
 			if (!sOCCondrString.equals("")) {
 				if (sREPName != null || !sREPName.equals("")) {
-					// Create a Callable Statement object.
-					// conn = m_servlet.connectDB(m_classReq, m_classRes);
 					if (m_servlet.getConn() == null)
 						m_servlet.ErrorLogin(m_classReq, m_classRes);
 					else {
@@ -1978,30 +1905,18 @@ public class InsACService implements Serializable {
 					}
 				}
 			}
-			// capture the duration
-			// logger.info(m_servlet.getLogMessage(m_classReq,
-			// "setRepresentation", "end set", startDate, new
-			// java.util.Date()));
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-setRepresentation for other : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update or remove Representation Term.");
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setRepresentation for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
-					.storeStatusMsg("\\t Exception : Unable to update or remove Representation Term.");
+			.storeStatusMsg("\\t Exception : Unable to update or remove Representation Term.");
 		}
 		return sReturnCode;
 	}
@@ -2025,7 +1940,6 @@ public class InsACService implements Serializable {
 	 */
 	public String checkUniqueOCPropPair(DEC_Bean mDEC, String editAct,
 			String setAction) {
-		// Connection conn = null;
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
 		String uniqueMsg = "";
@@ -2048,8 +1962,6 @@ public class InsACService implements Serializable {
 					|| setAction.equalsIgnoreCase("editDECfromDE")
 					|| menuAction.equals("NewDECVersion"))
 				sPublicID = mDEC.getDEC_DEC_ID();
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -2090,19 +2002,10 @@ public class InsACService implements Serializable {
 			logger.fatal(
 					"ERROR in InsACService-checkUniqueOCPropPair for exception : "
 							+ e.toString(), e);
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (pstmt != null)
-				pstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal(
-					"ERROR in InsACService-checkUniqueOCPropPair for close : "
-							+ ee.toString(), ee);
-		}
+		}finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closePreparedStatement(pstmt);
+        }
 		return uniqueMsg;
 	}
 
@@ -2260,12 +2163,6 @@ public class InsACService implements Serializable {
 	@SuppressWarnings("unchecked")
 	public String setDE(String sAction, DE_Bean de, String sInsertFor,
 			DE_Bean oldDE) {
-		// capture the duration
-		// java.util.Date startDate = new java.util.Date();
-		// logger.info(m_servlet.getLogMessage(m_classReq, "setDE", "starting
-		// set", startDate, startDate));
-
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		HttpSession session = m_classReq.getSession();
@@ -2368,8 +2265,6 @@ public class InsACService implements Serializable {
 			else
 				sEndDate = m_util.getOracleDate(de.getDE_END_DATE());
 
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -2475,9 +2370,6 @@ public class InsACService implements Serializable {
 									+ e.toString(), e);
 				}
 				logger.info("bExecuteOk" + bExcuteOk);
-				// capture the duration
-				// logger.info(m_servlet.getLogMessage(m_classReq, "setDE", "end
-				// execute", startDate, new java.util.Date()));
 				sDE_ID = cstmt.getString(4);
 				sReturnCode = cstmt.getString(2);
 				// store ac name in the status message
@@ -2698,9 +2590,6 @@ public class InsACService implements Serializable {
 						oneCon = de_vd.getAC_CONCEPT_NAME();
 					de.setAC_CONCEPT_NAME(oneCon);
 
-					// System.out.println(oneAlt + " : " + oneRD + " : " +
-					// oneCon);
-					// reset return code if other attribute return is not fixed.
 					String otherRet = (String) m_classReq
 							.getAttribute("retcode");
 					if (sAction.equals("UPD")
@@ -2710,28 +2599,17 @@ public class InsACService implements Serializable {
 				}
 			}
 			this.storeStatusMsg("\\n");
-			// capture the duration
-			// logger.info(m_servlet.getLogMessage(m_classReq, "setDE", "end
-			// set", startDate, new java.util.Date()));
-
+		
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-setDE for other : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update Data Element Attributes.");
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setDE for close : "
-					+ ee.toString(), ee);
-			m_classReq.setAttribute("retcode", "Exception");
+		}finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
+        	m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update Data Element Attributes.");
 		}
@@ -2758,18 +2636,10 @@ public class InsACService implements Serializable {
 	 */
 	public String setAC_VERSION(DE_Bean de, DEC_Bean dec, VD_Bean vd,
 			String ACName) {
-		// capture the duration
-		// java.util.Date startDate = new java.util.Date();
-		// logger.info(m_servlet.getLogMessage(m_classReq, "setAC_VERSION",
-		// "starting set", startDate, startDate));
-
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		String sReturnCode = "None";
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -2825,28 +2695,16 @@ public class InsACService implements Serializable {
 						vd.setVD_VD_IDSEQ(newACID);
 				}
 			}
-			// capture the duration
-			// logger.info(m_servlet.getLogMessage(m_classReq, "setAC_VERSION",
-			// "end set", startDate, new java.util.Date()));
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-AC_version for exception : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to version an Administered Component.");
-		}
-
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-AC_version for close : "
-					+ ee.toString(), ee);
-			m_classReq.setAttribute("retcode", "Exception");
+		}finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
+        	m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to version an Administered Component.");
 		}
@@ -2868,18 +2726,10 @@ public class InsACService implements Serializable {
 	 *         error occurred.
 	 */
 	public String setOC_PROP_REP_VERSION(String acIDseq, String ACType) {
-		// capture the duration
-		// java.util.Date startDate = new java.util.Date();
-		// logger.info(m_servlet.getLogMessage(m_classReq,
-		// "setOC_PROP_REP_VERSION", "starting set", startDate, startDate));
-
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		String newACID = "";
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -2924,10 +2774,6 @@ public class InsACService implements Serializable {
 					this.storeStatusMsg("\\t : " + stmsg);
 				}
 			}
-			// capture the duration
-			// logger.info(m_servlet.getLogMessage(m_classReq,
-			// "setOC_PROP_REP_VERSION", "end set", startDate, new
-			// java.util.Date()));
 		} catch (Exception e) {
 			logger.fatal(
 					"ERROR in InsACService-setOC_PROP_REP_VERSION for exception : "
@@ -2935,19 +2781,10 @@ public class InsACService implements Serializable {
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to version an Administered Component.");
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal(
-					"ERROR in InsACService-setOC_PROP_REP_VERSION for close : "
-							+ ee.toString(), ee);
-			m_classReq.setAttribute("retcode", "Exception");
+		}finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
+        	m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to version an Administered Component.");
 		}
@@ -2990,7 +2827,6 @@ public class InsACService implements Serializable {
 		// logger.info(m_servlet.getLogMessage(m_classReq, "setDES", "starting
 		// set", startDate, startDate));
 
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		HttpSession session = m_classReq.getSession();
@@ -2999,8 +2835,6 @@ public class InsACService implements Serializable {
 			// remove the new line character before submitting
 			if (sValue != null && !sValue.equals(""))
 				sValue = m_util.removeNewLineChar(sValue);
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -3126,27 +2960,16 @@ public class InsACService implements Serializable {
 					// request
 				}
 			}
-			// capture the duration
-			// logger.info(m_servlet.getLogMessage(m_classReq, "setDES", "end
-			// set", startDate, new java.util.Date()));
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-setDES for exception : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception e : Unable to update or remove an Alternate Name.");
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setDES for close : "
-					+ ee.toString(), ee);
-			m_classReq.setAttribute("retcode", "Exception");
+		}finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
+        	m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception ee : Unable to update or remove an Alternate Name.");
 		}
@@ -3169,12 +2992,6 @@ public class InsACService implements Serializable {
 	 *         error occurred.
 	 */
 	public String setDDE(String sP_DE_IDSEQ, String sOverRideAction) {
-		// capture the duration
-		// java.util.Date startDate = new java.util.Date();
-		// logger.info(m_servlet.getLogMessage(m_classReq, "setDDE", "starting
-		// set", startDate, startDate));
-
-		// Connection conn = null;
 		CallableStatement cstmt = null;
 		String sReturnCode = "";
 		// boolean bExcuteOk;
@@ -3209,12 +3026,6 @@ public class InsACService implements Serializable {
 		vDECompDelName = (Vector) session.getAttribute("vDECompDelName");
 		// put them into DB tables
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
-			// set DDE info
-			// System.out.println(vDECompDelete.isEmpty() + " before complex " +
-			// sRulesAction + " action " + sOverRideAction + " type " +
-			// sDDERepType);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -3265,10 +3076,6 @@ public class InsACService implements Serializable {
 				// Now we are ready to call the stored procedure
 				cstmt.execute();
 				sReturnCode = cstmt.getString(12);
-				// capture the duration
-				// logger.info(m_servlet.getLogMessage(m_classReq, "setDDE",
-				// "execute complexDE", startDate, new java.util.Date()));
-
 				// add error message to list
 				if (sReturnCode != null && !sReturnCode.equals(""))
 					this
@@ -3286,7 +3093,7 @@ public class InsACService implements Serializable {
 							vDECompDelName);
 				// insert or update DEComp
 				if (!vDEComp.isEmpty()) {
-					cstmt.close();
+					SQLHelper.closeCallableStatement(cstmt);
 					// cstmt = conn.prepareCall("{call
 					// SBREXT_Set_Row.Set_CDE_Relationship(?,?,?,?,?,?,?,?,?,?,?)}");
 					cstmt = m_servlet
@@ -3294,8 +3101,6 @@ public class InsACService implements Serializable {
 							.prepareCall(
 									"{call SBREXT_SET_ROW.SET_CDE_Relationship(?,?,?,?,?,?,?,?,?,?,?)}");
 					// Set the In parameters
-					// cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); //
-					// ua_name
 					cstmt.registerOutParameter(3, java.sql.Types.VARCHAR); // cdr_idseq
 					cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // cdr_p_de_idseq
 					cstmt.registerOutParameter(5, java.sql.Types.VARCHAR); // cdr_c_de_idseq
@@ -3345,9 +3150,6 @@ public class InsACService implements Serializable {
 					} // end of for
 				} // end of if(!vDEComp.isEmpty())
 			} // end of if (conn == null)
-			// capture the duration
-			// logger.info(m_servlet.getLogMessage(m_classReq, "setDDE", "end
-			// complexDE", startDate, new java.util.Date()));
 		} // end of try
 		catch (Exception e) {
 			logger.fatal("ERROR in InsACService-setDEComp for exception : "
@@ -3355,16 +3157,9 @@ public class InsACService implements Serializable {
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update or remove Derived Data Elements");
-		}
-		try {
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setDEComp for close : "
-					+ ee.toString(), ee);
-			m_classReq.setAttribute("retcode", "Exception");
+		}finally{
+            SQLHelper.closeCallableStatement(cstmt);
+        	m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update or remove Derived Data Elements");
 		}
@@ -3384,17 +3179,15 @@ public class InsACService implements Serializable {
 	 */
 	public void deleteDEComp(Connection conn, HttpSession session,
 			Vector vDECompDelete, Vector vDECompDelName) {
+		CallableStatement cstmt = null;
 		try {
-			CallableStatement cstmt = null;
 			String sReturnCode = "";
-			// boolean bExcuteOk;
 			// call Set_CDE_Relationship for DEComps
 			// cstmt = conn.prepareCall("{call
 			// SBREXT_Set_Row.Set_CDE_Relationship(?,?,?,?,?,?,?,?,?,?,?)}");
 			cstmt = conn
 					.prepareCall("{call SBREXT_SET_ROW.SET_CDE_Relationship(?,?,?,?,?,?,?,?,?,?,?)}");
 			// Set the In parameters
-			// cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); // ua_name
 			cstmt.registerOutParameter(3, java.sql.Types.VARCHAR); // cdr_idseq
 			cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // cdr_p_de_idseq
 			cstmt.registerOutParameter(5, java.sql.Types.VARCHAR); // cdr_c_de_idseq
@@ -3437,15 +3230,16 @@ public class InsACService implements Serializable {
 										+ sDECompDeleteName);
 				}
 			}
-			cstmt.close();
-			vDECompDelete.clear();
+		vDECompDelete.clear();
 		} catch (Exception ee) {
 			logger.fatal("ERROR in InsACService-deleteDEComp : "
 					+ ee.toString(), ee);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to remove Derived Data Element Component.");
-		}
+		}finally{
+          SQLHelper.closeCallableStatement(cstmt);
+        }
 	} // end of deleteDEComp()
 
 	/**
@@ -3481,12 +3275,6 @@ public class InsACService implements Serializable {
 	public String setRD(String sAction, String sRDName, String sDE_ID,
 			String sDocText, String sRDType, String sRDURL, String sRDCont,
 			String rdIDSEQ, String sLang) {
-		// capture the duration
-		// java.util.Date startDate = new java.util.Date();
-		// logger.info(m_servlet.getLogMessage(m_classReq, "setRD", "starting
-		// set", startDate, startDate));
-
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		HttpSession session = m_classReq.getSession();
@@ -3500,8 +3288,6 @@ public class InsACService implements Serializable {
 			if (sRDURL != null && !sRDURL.equals(""))
 				sRDURL = m_util.removeNewLineChar(sRDURL);
 
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -3511,8 +3297,6 @@ public class InsACService implements Serializable {
 						.getConn()
 						.prepareCall(
 								"{call SBREXT_SET_ROW.SET_RD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-				// cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); //
-				// ua_name
 				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // return
 				// code
 				cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // RD id
@@ -3554,8 +3338,6 @@ public class InsACService implements Serializable {
 				cstmt.setString(5, sRDName); // rd name - cannot be null
 				cstmt.setString(6, sRDType); // dCtl name - long name for
 				// refrence document
-				// System.out.println(sRDType + " set rd " + sRDName + " : " +
-				// rdIDSEQ);
 				if (sAction.equals("INS"))
 					cstmt.setString(7, sDE_ID); // ac id - must be NULL FOR
 				// UPDATE
@@ -3588,29 +3370,17 @@ public class InsACService implements Serializable {
 					// request
 				}
 			}
-			// capture the duration
-			// logger.info(m_servlet.getLogMessage(m_classReq, "setRD", "end
-			// set", startDate, new java.util.Date()));
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-setRD for exception : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
-					.storeStatusMsg("\\t Exception : Unable to update or remove Reference Documents");
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setRD for close : "
-					+ ee.toString(), ee);
+			.storeStatusMsg("\\t Exception : Unable to update or remove Reference Documents");
+		}finally{
+			SQLHelper.closeCallableStatement(cstmt);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
-					.storeStatusMsg("\\t Exception : Unable to update or remove Reference Documents");
+				.storeStatusMsg("\\t Exception : Unable to update or remove Reference Documents");
 		}
 		return sReturnCode;
 	} // end set RD
@@ -3634,12 +3404,9 @@ public class InsACService implements Serializable {
 	 */
 	public void getCSCSI(String csID, String csiID, String sAction,
 			String sDE_ID) {
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
-		// String CS_CSI_ID;
 		try {
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -3660,17 +3427,9 @@ public class InsACService implements Serializable {
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-getCSCSI for exception : "
 					+ e.toString(), e);
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-getCSCSI for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 		}
 	} // end cscsi
 
@@ -3697,19 +3456,11 @@ public class InsACService implements Serializable {
 	 */
 	public String setACCSI(String CSCSIID, String sAction, String sAC_ID,
 			String sAC_CSI_ID, String sAC_Name, String csiName) {
-		// capture the duration
-		// java.util.Date startDate = new java.util.Date();
-		// logger.info(m_servlet.getLogMessage(m_classReq, "setACCSI", "starting
-		// set", startDate, startDate));
-
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		HttpSession session = m_classReq.getSession();
 
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -3719,12 +3470,8 @@ public class InsACService implements Serializable {
 						.getConn()
 						.prepareCall(
 								"{call SBREXT_SET_ROW.SET_ACCSI(?,?,?,?,?,?,?,?,?,?)}");
-				// cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); //
-				// ua_name
 				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // return
 				// code
-				// cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);
-				// //action - only IN parameter
 				cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // AC_CSI
 				// id
 				cstmt.registerOutParameter(5, java.sql.Types.VARCHAR); // AC id
@@ -3770,26 +3517,15 @@ public class InsACService implements Serializable {
 					// request
 				}
 			}
-			// capture the duration
-			// logger.info(m_servlet.getLogMessage(m_classReq, "setACCSI", "end
-			// set", startDate, new java.util.Date()));
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-setACCSI for exception : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update or remove AC_CSI relationship.");
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setACCSI for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update or remove AC_CSI relationship.");
@@ -3810,13 +3546,10 @@ public class InsACService implements Serializable {
 	 * 
 	 */
 	public String getACCSI(String sCSCSIID, String sDE_ID) {
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		String sACCSI = "";
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -3851,17 +3584,9 @@ public class InsACService implements Serializable {
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-setACCSI for exception : "
 					+ e.toString(), e);
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setACCSI for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sACCSI;
 	}
@@ -3880,13 +3605,10 @@ public class InsACService implements Serializable {
 	 * 
 	 */
 	public void setACSRC(String sAction, String sDE_ID) {
-		Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		HttpSession session = m_classReq.getSession();
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -3896,12 +3618,7 @@ public class InsACService implements Serializable {
 						.getConn()
 						.prepareCall(
 								"{call SBREXT_SET_ROW.SET_ACSRC(?,?,?,?,?,?,?,?,?,?,?)}");
-				// cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); //
-				// ua_name
 				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // return
-				// code
-				// cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);
-				// //action - only IN parameter
 				cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // ACS
 				// id
 				cstmt.registerOutParameter(5, java.sql.Types.VARCHAR); // AC id
@@ -3936,17 +3653,9 @@ public class InsACService implements Serializable {
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update or remove Origin.");
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setACSRC for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update or remove Origin.");
@@ -3967,12 +3676,9 @@ public class InsACService implements Serializable {
 	 *            classification scheme items idseq.
 	 */
 	public void updCSCSI(String sDE_ID, String sCS_ID, String sCSI_ID) {
-		Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -3994,18 +3700,9 @@ public class InsACService implements Serializable {
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-updCSCSI for exception : "
 					+ e.toString(), e);
-		}
-
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-updCSCSI for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 		}
 	} // end of setACSRC
 
@@ -4021,14 +3718,11 @@ public class InsACService implements Serializable {
 	 * 
 	 * @return String existing pv_idseq from the stored procedure call.
 	 */
-	public String getExistingPV(String sValue, String sMeaning) {
-		// Connection conn = null;
-		ResultSet rs = null;
+	public String getExistingPV(String sValue, String sMeaning)
+	{
 		String sPV_IDSEQ = "";
 		CallableStatement cstmt = null;
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -4062,18 +3756,8 @@ public class InsACService implements Serializable {
 			logger.fatal(
 					"ERROR in InsACService- getExistingPV for exception : "
 							+ e.toString(), e);
-		}
-
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-getExistingPV for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sPV_IDSEQ;
 	}
@@ -4090,12 +3774,8 @@ public class InsACService implements Serializable {
 	 *            NEW DE idseq.
 	 */
 	private void copyAC_ID(String sOldACID, String sNewACID) {
-		Connection conn = null;
-		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -4113,20 +3793,9 @@ public class InsACService implements Serializable {
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-copyACID for exception : "
 					+ e.toString(), e);
-		}
-
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-copyACID for close : "
-					+ ee.toString(), ee);
-		}
-	}
+		}finally{
+			SQLHelper.closeCallableStatement(cstmt);
+		}	}
 
 	/**
 	 * To update history table, connecting last version to this version. Called
@@ -4142,12 +3811,8 @@ public class InsACService implements Serializable {
 	 *            string ac type
 	 */
 	private void createACHistories(String sNewID, String sOldID, String sACType) {
-		// Connection conn = null;
-		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -4170,19 +3835,9 @@ public class InsACService implements Serializable {
 			logger.fatal(
 					"ERROR in InsACService-createACHistory for exception : "
 							+ e.toString(), e);
-		}
-
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-createACHistory for close : "
-					+ ee.toString(), ee);
-		}
+		}finally{
+			SQLHelper.closeCallableStatement(cstmt);
+		}	
 	}
 
 	/**
@@ -4197,16 +3852,11 @@ public class InsACService implements Serializable {
 	 * @return ac idseq
 	 */
 	private String getVersionAC(String sName, String sContextID, String sACType) {
-		// Connection conn = null;
 		ResultSet rs = null;
-		CallableStatement cstmt = null;
 		String sReturnID = "";
-
 		PreparedStatement pstmt = null;
 
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -4226,19 +3876,9 @@ public class InsACService implements Serializable {
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-getversionac for exception : "
 					+ e.toString(), e);
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			if (pstmt != null)
-				pstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-getVersionAC for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closePreparedStatement(pstmt);
 		}
 		return sReturnID;
 	}
@@ -4266,17 +3906,11 @@ public class InsACService implements Serializable {
 	public String setQuestContent(Quest_Bean questBean, String QCid, String VPid) {
 		// capture the duration
 		java.util.Date startDate = new java.util.Date();
-		// logger.info(m_servlet.getLogMessage(m_classReq, "setQuestContent",
-		// "starting set", startDate, startDate));
-
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		HttpSession session = m_classReq.getSession();
 		String sReturnCode = "";
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -4286,8 +3920,6 @@ public class InsACService implements Serializable {
 						.getConn()
 						.prepareCall(
 								"{call SBREXT_SET_ROW.SET_QC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-				// cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); //
-				// ua_name
 				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // return
 				// code
 				cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // oc id
@@ -4389,9 +4021,6 @@ public class InsACService implements Serializable {
 					m_classReq.setAttribute("retcode", sReturnCode);
 				}
 			}
-			// capture the duration
-			// logger.info(m_servlet.getLogMessage(m_classReq,
-			// "setQuestContent", "end set", startDate, new java.util.Date()));
 		} catch (Exception e) {
 			logger.fatal(
 					"ERROR in InsACService-setQuestContent for exception : "
@@ -4399,17 +4028,9 @@ public class InsACService implements Serializable {
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update Question attributes.");
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setquestContent for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update Question attributes.");
@@ -4428,12 +4049,10 @@ public class InsACService implements Serializable {
 	 * @return String RD_ID.
 	 */
 	public String getRD_ID(String acID) {
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		String rd_ID = "";
 		try {
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -4455,17 +4074,9 @@ public class InsACService implements Serializable {
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-getRD_ID for exception : "
 					+ e.toString(), e);
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-getRD_ID for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 		}
 		return rd_ID;
 	} // end RD_ID
@@ -4480,15 +4091,11 @@ public class InsACService implements Serializable {
 	 * @return String sFullName.
 	 */
 	public String getFullName(String sName) {
-		// Connection conn = null;
 		ResultSet rs = null;
-		CallableStatement cstmt = null;
 		String sFullName = "";
 		PreparedStatement pstmt = null;
 
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -4505,19 +4112,9 @@ public class InsACService implements Serializable {
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-getFullName for exception : "
 					+ e.toString(), e);
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			if (pstmt != null)
-				pstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-getFullName for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closePreparedStatement(pstmt);
 		}
 		return sFullName;
 	} // end getFullName
@@ -4535,12 +4132,10 @@ public class InsACService implements Serializable {
 	 * @return String Desig_ID.
 	 */
 	public String getDesig_ID(String acID, String DesType) {
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		String Desig_ID = "";
 		try {
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -4562,17 +4157,9 @@ public class InsACService implements Serializable {
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-getDesig_ID for exception : "
 					+ e.toString(), e);
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-getDesig_ID for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 		}
 		return Desig_ID;
 	} // end Desig_ID
@@ -4596,15 +4183,11 @@ public class InsACService implements Serializable {
 	 */
 	public String setReg_Status(String sAction, String sAR_ID, String sAC_ID,
 			String regStatus) {
-		// Connection conn = null;
-		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		HttpSession session = m_classReq.getSession();
 		String ret = "";
 
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -4614,10 +4197,6 @@ public class InsACService implements Serializable {
 						.getConn()
 						.prepareCall(
 								"{call SBREXT_Set_Row.SET_REGISTRATION(?,?,?,?,?,?,?,?,?,?)}");
-				// cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);
-				// //action - only IN parameter
-				// cstmt.registerOutParameter(1, java.sql.Types.VARCHAR);
-				// //ua_name
 				cstmt.registerOutParameter(3, java.sql.Types.VARCHAR); // sAR_ID
 				cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // sAC_ID
 				cstmt.registerOutParameter(5, java.sql.Types.VARCHAR); // regStatus
@@ -4673,17 +4252,8 @@ public class InsACService implements Serializable {
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update or remove Registration Status.");
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setReg_Status for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeCallableStatement(cstmt);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update or remove Registration Status.");
@@ -4702,12 +4272,10 @@ public class InsACService implements Serializable {
 	 */
 	public String getAC_REG(String ac_id) // returns idseq
 	{
-		// Connection conn = null;
 		ResultSet rs = null;
 		Statement cstmt = null;
 		String regID = "";
 		try {
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -4721,19 +4289,10 @@ public class InsACService implements Serializable {
 				}// end of while
 			}
 		} catch (Exception e) {
-			// System.err.println("ERROR in getAC_REG: " + e);
 			logger.fatal("ERROR in getAC_REG : " + e.toString(), e);
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			// System.err.println("Problem closing in getAC_REG: " + ee);
-			logger.fatal("ERROR in getAC_REG closing : " + ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeStatement(cstmt);
 		}
 		return regID;
 	} // end getAC_REG
@@ -4817,15 +4376,11 @@ public class InsACService implements Serializable {
 	 * @return altname from the database
 	 */
 	public String getOneAltName(String acID) {
-		// Connection conn = null;
 		ResultSet rs = null;
-		CallableStatement cstmt = null;
 		String sName = "";
 		PreparedStatement pstmt = null;
 
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -4842,21 +4397,10 @@ public class InsACService implements Serializable {
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-getOneAltName for exception : "
 					+ e.toString(), e);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closePreparedStatement(pstmt);
 		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			if (pstmt != null)
-				pstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-getOneAltName for close : "
-					+ ee.toString(), ee);
-		}
-		// logger.debug(acID + " one altname " + sName);
 		return sName;
 	} // end getOneAltName
 
@@ -4868,15 +4412,11 @@ public class InsACService implements Serializable {
 	 * @return ref doc from the database
 	 */
 	public String getOneRDName(String acID) {
-		// Connection conn = null;
 		ResultSet rs = null;
-		CallableStatement cstmt = null;
 		String sName = "";
 		PreparedStatement pstmt = null;
 
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -4893,21 +4433,10 @@ public class InsACService implements Serializable {
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-getOneRDName for exception : "
 					+ e.toString(), e);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closePreparedStatement(pstmt);
 		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			if (pstmt != null)
-				pstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-getOneRDName for close : "
-					+ ee.toString(), ee);
-		}
-		// logger.debug(acID + " one rd " + sName);
 		return sName;
 	} // end getOneRDName
 
@@ -4921,15 +4450,11 @@ public class InsACService implements Serializable {
 	 * @return altname from the database
 	 */
 	public String getOneConName(String decID, String vdID) {
-		// Connection conn = null;
 		ResultSet rs = null;
-		CallableStatement cstmt = null;
 		String sName = "";
 		PreparedStatement pstmt = null;
 
 		try {
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -4947,22 +4472,10 @@ public class InsACService implements Serializable {
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-getOneConName for exception : "
 					+ e.toString(), e);
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			if (pstmt != null)
-				pstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-getOneConName for close : "
-					+ ee.toString(), ee);
-		}
-		// logger.debug(decID + " : " + vdID + " one conname " + sName);
-		return sName;
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closePreparedStatement(pstmt);
+		}return sName;
 	} // end getOneConName
 
 	/**
@@ -5034,18 +4547,13 @@ public class InsACService implements Serializable {
 	 * @return String public ID.
 	 */
 	public String getDECSysName(DEC_Bean dec) {
-		// Connection conn = null;
 		ResultSet rs = null;
-		CallableStatement cstmt = null;
 		PreparedStatement pstmt = null;
 		String sysName = "";
 
 		try {
 			String ocIDseq = dec.getDEC_OCL_IDSEQ();
 			String propIDseq = dec.getDEC_PROPL_IDSEQ();
-			
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -5071,19 +4579,9 @@ public class InsACService implements Serializable {
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-getPublicID for exception : "
 					+ e.toString(), e);
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			if (pstmt != null)
-				pstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-getPublicID for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closePreparedStatement(pstmt);
 		}
 		return sysName;
 	} // end getDEC system name
@@ -5098,17 +4596,12 @@ public class InsACService implements Serializable {
 	 * @return String public ID.
 	 */
 	public String getPublicID(String ac_idseq) {
-		// Connection conn = null;
 		ResultSet rs = null;
-		CallableStatement cstmt = null;
 		PreparedStatement pstmt = null;
 		String sPublicID = "";
 
 		try {
-			
-			// Create a Callable Statement object.
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
-			if (m_servlet.getConn() == null)
+		  if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
 				pstmt = m_servlet
@@ -5125,19 +4618,9 @@ public class InsACService implements Serializable {
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-getPublicID for exception : "
 					+ e.toString(), e);
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			if (pstmt != null)
-				pstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-getPublicID for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closePreparedStatement(pstmt);
 		}
 		return sPublicID;
 	} // end getPublicID
@@ -5205,6 +4688,10 @@ public class InsACService implements Serializable {
 		}
 	}
 
+	/**
+	 * @param newAC
+	 * @param oldAC
+	 */
 	@SuppressWarnings( { "unchecked", "unchecked" })
 	private void doRefVersionUpdate(String newAC, String oldAC) {
 		HttpSession session = m_classReq.getSession();
@@ -5285,7 +4772,6 @@ public class InsACService implements Serializable {
 			String desAction) {
 		String oneAltName = "";
 		try {
-			// System.out.println(sDE + " add alt names " + deCont);
 			HttpSession session = m_classReq.getSession();
 			String sCont = m_classReq.getParameter("selContext");
 			if (sCont == null)
@@ -5312,10 +4798,6 @@ public class InsACService implements Serializable {
 					if (altContID == null || altContID.equals("")
 							|| altContID.equals("new"))
 						altContID = deCont;
-					// System.out.println(deCont + " add alt names context " +
-					// altContID);
-					// mark the all its alt names to be deleted if action is to
-					// undesignate
 					if (desAction.equals("remove") && altContID != null
 							&& sCont != null && altContID.equals(sCont))
 						altNameBean.setALT_SUBMIT_ACTION("DEL");
@@ -5336,8 +4818,6 @@ public class InsACService implements Serializable {
 						else
 							altSubmit = "INS";
 					}
-					// System.out.println(desAction + " add alt names submit " +
-					// altSubmit);
 					String ret = "";
 					if (!altSubmit.equals("UPD")) // call method to create
 						// alternate name in the
@@ -5390,7 +4870,6 @@ public class InsACService implements Serializable {
 				if (refAC == null || refAC.equals("") || refAC.equals("new")
 						|| desAction.equals("INS"))
 					refAC = sDE;
-				// System.out.println(sDE + " add refdocs AC " + refAC);
 				if (refAC != null && sDE.equals(refAC)) {
 					// mark the all its alt names to be deleted if action is to
 					// undesignate
@@ -5421,8 +4900,6 @@ public class InsACService implements Serializable {
 						else
 							refSubmit = "INS";
 					}
-					// System.out.println(desAction + " add refdocs submit " +
-					// refSubmit);
 					// check if creating used by in the same context as created
 					// DE
 					String ret = "";
@@ -5525,17 +5002,10 @@ public class InsACService implements Serializable {
 	 */
 	public String setConcept(String sAction, String sReturnCode,
 			EVS_Bean evsBean) {
-		// capture the duration
-		// java.util.Date startDate = new java.util.Date();
-		// logger.info(m_servlet.getLogMessage(m_classReq, "setConcept",
-		// "starting set", startDate, startDate));
-
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		HttpSession session = m_classReq.getSession();
 		String conIdseq = "";
-		// String sEvsSource = "";
 		try {
 			// If the concept is from Metathesaurus, try to take it from
 			// Thesaurus
@@ -5551,8 +5021,6 @@ public class InsACService implements Serializable {
 			// return the concept id if the concept alredy exists in caDSR.
 			conIdseq = this.getConcept(sReturnCode, evsBean, false);
 			if (conIdseq == null || conIdseq.equals("")) {
-				// Create a Callable Statement object.
-				// conn = m_servlet.connectDB(m_classReq, m_classRes);
 				if (m_servlet.getConn() == null)
 					m_servlet.ErrorLogin(m_classReq, m_classRes);
 				else {
@@ -5563,8 +5031,6 @@ public class InsACService implements Serializable {
 							.prepareCall(
 									"{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
 					// register the Out parameters
-					// cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); //
-					// ua_name
 					cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // return
 					// code
 					cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // con
@@ -5661,26 +5127,15 @@ public class InsACService implements Serializable {
 					}
 				}
 			}
-			// capture the duration
-			// logger.info(m_servlet.getLogMessage(m_classReq, "setConcept",
-			// "end set", startDate, new java.util.Date()));
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService-setConcept for other : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update Concept attributes.");
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setConcept for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception : Unable to update Concept attributes.");
@@ -5705,14 +5160,11 @@ public class InsACService implements Serializable {
 	 */
 	public String getConcept(String sReturn, EVS_Bean evsBean,
 			boolean bValidateConceptCodeUnique) {
-		// Connection conn = null;
 		ResultSet rs = null;
 		String sCON_IDSEQ = "";
 		CallableStatement cstmt = null;
 		try {
-			// Create a Callable Statement object.
 			HttpSession session = (HttpSession) m_classReq.getSession();
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -5769,8 +5221,6 @@ public class InsACService implements Serializable {
 				cstmt.execute();
 				sCON_IDSEQ = (String) cstmt.getObject(2);
 				evsBean.setIDSEQ(sCON_IDSEQ);
-				// logger.info(sCON_IDSEQ + " getConcept code " +
-				// evsBean.getCONCEPT_IDENTIFIER() + evsBean.getEVS_ORIGIN());
 				sReturn = (String) cstmt.getObject(1);
 				if (sReturn == null || sReturn.equals("")) {
 					// Sometimes we use this method to validate a concept code
@@ -5801,11 +5251,6 @@ public class InsACService implements Serializable {
 						String evsOrigin = vmConcept.getVocabAttr(eUser,
 								dbOrigin, EVSSearch.VOCAB_DBORIGIN,
 								EVSSearch.VOCAB_NAME); // "vocabDBOrigin",
-						// "vocabName");
-						// logger.debug(evsBean.getCONCEPT_IDENTIFIER() + "
-						// setevsbeanforpv " + (String)cstmt.getObject(3) +
-						// (String)cstmt.getObject(4) +
-						// (String)cstmt.getObject(7));
 						evsBean.setEVSBean(sDef, (String) cstmt.getObject(9),
 								(String) cstmt.getObject(7), (String) cstmt
 										.getObject(7), (String) cstmt
@@ -5823,20 +5268,10 @@ public class InsACService implements Serializable {
 		} catch (Exception e) {
 			logger.fatal("ERROR in InsACService- getConcept for exception : "
 					+ e.toString(), e);
-		}
-
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-getConcept for close : "
-					+ ee.toString(), ee);
-		}
-		return sCON_IDSEQ; // TODO check what is parent concept id
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
+		}		return sCON_IDSEQ; // TODO check what is parent concept id
 	} // end get concept
 
 	/**
@@ -5848,7 +5283,6 @@ public class InsACService implements Serializable {
 	 * @throws java.lang.Exception
 	 */
 	private String setEVSParentConcept(VD_Bean vd) throws Exception {
-		// HttpSession session = m_classReq.getSession();
 		Vector<EVS_Bean> vParentCon = vd.getReferenceConceptList(); // (Vector)session.getAttribute("VDParentConcept");
 		if (vParentCon == null)
 			vParentCon = new Vector<EVS_Bean>();
@@ -5914,9 +5348,6 @@ public class InsACService implements Serializable {
 		if (sMetaSource == null)
 			sMetaSource = "";
 		String sRDMetaCUI = "";
-		// String sUMLS_CUI = "";
-
-		// sUMLS_CUI = new Concept().getConceptCodeByName(sParent);
 		GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
 		Vector vRef = getAC.doRefDocSearch(vd.getVD_VD_IDSEQ(),
 				"META_CONCEPT_SOURCE", "open");
@@ -5994,8 +5425,6 @@ public class InsACService implements Serializable {
 							if (refID != null
 									&& refID.equalsIgnoreCase(rdIDseq)) {
 								rBean.setREF_SUBMIT_ACTION("DEL");
-								// System.out.println(" pqt removed " +
-								// rBean.getDOCUMENT_NAME());
 								vRefDocs.setElementAt(rBean, i);
 								DataManager.setAttribute(session,
 										"AllRefDocList", vRefDocs);
@@ -6113,18 +5542,12 @@ public class InsACService implements Serializable {
 
 	private Vector<AC_COMM_Bean> setContact_Comms(Vector<AC_COMM_Bean> vCom,
 			String orgID, String perID) {
-		// java.util.Date startDate = new java.util.Date();
-		// logger.info(m_servlet.getLogMessage(m_classReq, "setContact_Comms",
-		// "starting set", startDate, startDate));
-
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		HttpSession session = m_classReq.getSession();
 		String sReturnCode = "";
 		try {
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
-			if (m_servlet.getConn() == null)
+		if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
 				for (int i = 0; i < vCom.size(); i++) {
@@ -6140,8 +5563,6 @@ public class InsACService implements Serializable {
 									.getConn()
 									.prepareCall(
 											"{call SBREXT_SET_ROW.SET_CONTACT_COMM(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-							// cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);
-							// // ua_name
 							cstmt.registerOutParameter(2,
 									java.sql.Types.VARCHAR); // return code
 							cstmt.registerOutParameter(4,
@@ -6234,16 +5655,9 @@ public class InsACService implements Serializable {
 		} catch (Exception e) {
 			logger.fatal("Error - setContact_Comms : " + e.toString(), e);
 		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setContact_Comms for close : "
-					+ ee.toString(), ee);
+		finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception ee : Unable to update or remove communication attributes.");
@@ -6253,17 +5667,11 @@ public class InsACService implements Serializable {
 
 	private Vector<AC_ADDR_Bean> setContact_Addrs(Vector<AC_ADDR_Bean> vAdr,
 			String orgID, String perID) {
-		// java.util.Date startDate = new java.util.Date();
-		// logger.info(m_servlet.getLogMessage(m_classReq, "setContact_Addrs",
-		// "starting set", startDate, startDate));
-
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		HttpSession session = m_classReq.getSession();
 		String sReturnCode = "";
 		try {
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -6280,8 +5688,6 @@ public class InsACService implements Serializable {
 									.getConn()
 									.prepareCall(
 											"{call SBREXT_SET_ROW.SET_CONTACT_ADDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-							// cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);
-							// //ua_name
 							cstmt.registerOutParameter(2,
 									java.sql.Types.VARCHAR); // return code
 							cstmt.registerOutParameter(4,
@@ -6402,17 +5808,9 @@ public class InsACService implements Serializable {
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception ee : Unable to update or remove Address attributes.");
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (conn != null)
-			// conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setContact_Addrs for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception ee : Unable to update or remove Address attributes.");
@@ -6421,18 +5819,12 @@ public class InsACService implements Serializable {
 	}
 
 	private AC_CONTACT_Bean setAC_Contact(AC_CONTACT_Bean accB) {
-		// java.util.Date startDate = new java.util.Date();
-		// logger.info(m_servlet.getLogMessage(m_classReq, "setAC_Contact",
-		// "starting set", startDate, startDate));
-
-		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		HttpSession session = m_classReq.getSession();
 		String sReturnCode = "";
 		try {
-			// conn = m_servlet.connectDB(m_classReq, m_classRes);
-			if (m_servlet.getConn() == null)
+		 if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
 				String sAction = accB.getACC_SUBMIT_ACTION();
@@ -6445,8 +5837,6 @@ public class InsACService implements Serializable {
 							.getConn()
 							.prepareCall(
 									"{call SBREXT_SET_ROW.SET_AC_CONTACT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-					// cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); //
-					// ua_name
 					cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // return
 					// code
 					cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // comm
@@ -6521,17 +5911,9 @@ public class InsACService implements Serializable {
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception ee : Unable to update or remove contact attributes.");
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			//if (conn != null)
-			//conn.close();
-		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-setAC_Contact for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception ee : Unable to update or remove contact attributes.");
