@@ -6,6 +6,7 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 // import files
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
@@ -117,7 +118,7 @@ public class CurationServlet
         m_classReq = req;
         m_classRes = res;
         m_servletContext = sc;
-        //m_conn=conn;
+        
     }
 
     /**
@@ -236,83 +237,18 @@ public class CurationServlet
         return con;
     }
 
-    /**
-     * free up the connection
-     *
-     * @param con
-     */
-    public void freeConnection(Connection con)
-    {
-        try
-        {
-            if (con != null && !con.isClosed())
-                con.close();
-        }
-        catch (Exception e)
-        {
-            logger.fatal("Error close connection ", e);
-        }
-    }
-
-    /**
-     * since connection info is stored in the session, I should be able to use connect DB with out passing information
-     *
-     * @return Connnection object
-     *//*
-    public Connection connectDB()
-    {
-        return connectDB(sessionData.UsrBean);
-    }*/
-
-    /**
-     * This method tries to connect to the db, returns the Connection object if successful, if unsuccessful tries to
-     * reconnect, returns null if unsuccessful. Called from various classes needing a connection. forwards page
-     * 'CDELoginPageError2.jsp'.
-     *
-     * @param req
-     *            The HttpServletRequest from the client
-     * @param res
-     *            The HttpServletResponse back to the client
-     * @return Connection SBRDb_conn 04/15/03 JZ Implement Realm Authen connction
-     */
-   /* public Connection connectDB(HttpServletRequest req, @SuppressWarnings("unused") HttpServletResponse res)
-    {
-        HttpSession session = req.getSession();
-        return connectDB(session);
-    }
-*/
-    /**
-     * @param session_
-     * @return Connection
-     */
-   /* public Connection connectDB(HttpSession session_)
-    {
-        UserBean ub = (UserBean) session_.getAttribute("Userbean");
-        return connectDB(ub);
-    }*/
-
-    /**
+     /**
      * @param ub_
      * @return Connection
      */
-    //public Connection connectDB(UserBean ub_)
     public Connection connectDB()
     {
         Connection SBRDb_conn = null;
         try
         {
-           /* String username = "";
-            String password = "";
-            // make sure user name from session is active
-            if (ub_ == null || ub_.getUsername().equals(""))
-                throw new Exception("User information is null");
-            // get user info
-            username = ub_.getUsername();
-            password = ub_.getPassword();*/
             try
             {
-                //SBRDb_conn = this.getConnFromDS(username, password);
-            	 SBRDb_conn = this.getConnFromDS();
+              	 SBRDb_conn = this.getConnFromDS();
             }
             catch (Exception e)
             {
@@ -378,8 +314,6 @@ public class CurationServlet
         catch (Exception e)
         {
             String stErr = "Error creating database pool[" + e.getMessage() + "].";
-            e.printStackTrace();
-            System.out.println(stErr);
             logger.fatal(stErr, e);
             return false;
         }
@@ -391,14 +325,14 @@ public class CurationServlet
             if(con!=null)
             	{
             	validUser = true;
-            	con.close(); 
             	}
         }
         catch (SQLException e)
         {
-            System.err.println("Could not open database connection.");
-            logger.fatal(e.toString(), e);
+           logger.fatal(e.toString(), e);
             return false;
+        }finally{
+        	SQLHelper.closeConnection(con);
         }
         return validUser;
     }
@@ -411,7 +345,6 @@ public class CurationServlet
     {
         UserBean ub = null;
         HttpSession session;
-       // m_classReq = req;
         session = m_classReq.getSession(true);
         try
         {    
@@ -420,17 +353,14 @@ public class CurationServlet
             if (sessionData == null)
                      	sessionData = new Session_Data();
             else
-            	//m_conn = connectDB((UserBean)session.getAttribute("Userbean"));
-            	  m_conn = connectDB();
+        	m_conn = connectDB();
             String reqType = m_classReq.getParameter("reqType");
-            // logger.info("servlet reqType!: "+ reqType); //log the request
             m_classReq.setAttribute("LatestReqType", reqType);
             if (reqType != null)
             {
                 while (true)
                 {
-                    // System.out.println("reqType " + reqType);
-                    // check the validity of the user login
+                   // check the validity of the user login
                     if (reqType.equals("login"))
                     {
                         DataManager.clearSessionAttributes(session);
@@ -448,9 +378,6 @@ public class CurationServlet
                     ub = checkUserBean(m_classReq, m_classRes);
                     if (ub != null)
                     {
-                        // java.util.Date startDate = new java.util.Date();
-                        // logger.info(this.getLogMessage(m_classReq, "service", "started Request " + reqType, startDate,
-                        // startDate));
                         if (reqType.equals("homePage"))
                         {
                             doHomePage(m_classReq, m_classRes);
@@ -663,9 +590,6 @@ public class CurationServlet
                         {
                             this.doContactEditActions(m_classReq, m_classRes);
                         }
-                        // log message
-                        // java.util.Date endDate = new java.util.Date();
-                        // logger.info(this.getLogMessage(m_classReq, "service", "ended Request " + reqType, startDate, endDate));
                         break;
                     }
                     if (!reqType.equals("login"))
@@ -692,7 +616,7 @@ public class CurationServlet
                 this.logger.fatal("Service: no DB Connection");
                 ErrorLogin(m_classReq, m_classRes);
             }
-            freeConnection(m_conn);
+            SQLHelper.closeConnection(m_conn);
         }
         catch (Exception e)
         {
@@ -711,13 +635,9 @@ public class CurationServlet
                 logger.fatal("Service forward error : " + ee.toString(), ee);
             }
             finally{
-            	try {
-					m_conn.close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					 logger.fatal("Error in finaaly block while closing connection : " + e1.toString(), e1);
-				}
-            }
+            	 SQLHelper.closeConnection(m_conn);
+         		 logger.fatal("Error in finaaly block while closing connection");
+		          }
         }
     } // end of service
 
@@ -9600,14 +9520,12 @@ public class CurationServlet
                 break;
             }
             CallableStatement stmt = null;
-            //Connection con = null;
             try
             {
                 // Get the selected items and associate each with the appropriate CSI
                 String user = Userbean.getUsername();
                 user = user.toUpperCase();
-                //con = connectDB(req, res);
-                // Add the selected items to the CSI
+               // Add the selected items to the CSI
                 String csi_idseq = null;
                 int ndx = 0;
                 stmt = m_conn.prepareCall("begin SBREXT_CDE_CURATOR_PKG.ADD_TO_SENTINEL_CS(?,?,?); end;");
@@ -9640,7 +9558,6 @@ public class CurationServlet
                     // This happens when the selected element does not extend the AC_Bean abstract class.
                     csi_idseq = "";
                 }
-                stmt.close();
                 if (csi_idseq == null)
                 {
                     msg = "None of the selected items can be added to your Reserved CSI.";
@@ -9673,23 +9590,15 @@ public class CurationServlet
                         break;
                     }
                 }
-                //con.close();
-            }
+           }
             catch (Exception e)
             {
                 msg = "An unexpected exception occurred, please notify the Help Desk. Details have been written to the log.";
                 logger.fatal("cdecurate: doMonitor(): " + e.toString(), e);
-                try
-                {
-                    if (stmt != null)
-                        stmt.close();
-                   // if (con != null)
-                    //    con.close();
-                }
-                catch (SQLException ex)
-                {
-                }
             }
+            finally{
+            	SQLHelper.closeCallableStatement(stmt);
+              }
             break;
         }
         // Send the message back to the user.
@@ -9760,35 +9669,24 @@ public class CurationServlet
             // Update the database - remove the CSI association to the AC's.
             String user = Userbean.getUsername();
             user = user.toUpperCase();
-           // Connection con = null;
+            CallableStatement stmt=null;
             for (int ndx = 0; ndx < list.size(); ++ndx)
             {
                 try
                 {
-                    //con = connectDB(req, res);
                     String temp = list.elementAt(ndx);
-                    CallableStatement stmt = m_conn.prepareCall("begin SBREXT_CDE_CURATOR_PKG.REMOVE_FROM_SENTINEL_CS('"
+                    stmt = m_conn.prepareCall("begin SBREXT_CDE_CURATOR_PKG.REMOVE_FROM_SENTINEL_CS('"
                                     + temp + "','" + user + "'); END;");
                     stmt.execute();
-                    stmt.close();
-                   // con.close();
+                    SQLHelper.closeCallableStatement(stmt);
                     msg = "The selected item is no longer monitored by the Alert Definition";
                 }
                 catch (Exception e)
                 {
                     msg = "An unexpected exception occurred, please notify the Help Desk. Details have been written to the log.";
                     logger.fatal("cdecurate: doUnmonitor(): " + e.toString(), e);
-                    /*try
-                    {
-                        //if (con != null && !con.isClosed())
-                        //{
-                        //    con.close();
-                        //}
-                    }
-                    catch (SQLException ex)
-                    {
-                        logger.fatal("cdecurate: doUnmonitor() for close : " + ex.toString(), ex);
-                    }*/
+                }finally{
+                	SQLHelper.closeCallableStatement(stmt);
                 }
             }
             break;
@@ -11551,7 +11449,8 @@ public class CurationServlet
 	 * @return the m_conn
 	 */
 	public Connection getConn() {
-		return this.m_conn;
+		 return this.m_conn;
+			 	
 	}
 
 	/**
@@ -11570,11 +11469,13 @@ public class CurationServlet
 		HttpSession session = m_classReq.getSession(true);
 		ConceptServlet conSer = new ConceptServlet(m_classReq, m_classRes, this);
 		ConceptAction conact = new ConceptAction();
+		ResultSet rs =null;
+		Statement stm=null;
+		ResultSet rs1 =null;
+		Statement stm1=null;
 		try {
-			Statement stm = m_conn.createStatement();
-			// ResultSet rs = stm.executeQuery("SELECT value from
-			// TOOL_OPTIONS_VIEW_EXT where PROPERTY like '%REPTERM.PRICON%'");
-			ResultSet rs = stm
+			 stm = m_conn.createStatement();
+			rs = stm
 					.executeQuery("SELECT rep.Preferred_name FROM (SELECT xx.rep_idseq, COUNT(*) AS cnt FROM sbrext.representations_view_ext xx, sbrext.component_concepts_view_ext cc WHERE xx.asl_name = 'RELEASED' AND cc.condr_idseq = xx.condr_idseq GROUP BY xx.rep_idseq ORDER BY cnt ASC) hits, sbrext.representations_view_ext rep, sbr.ac_registrations_view reg WHERE hits.cnt = 1 AND rep.rep_idseq = hits.rep_idseq AND reg.ac_idseq = rep.rep_idseq AND reg.registration_status = 'Standard'");
 			if (rs.next()) {
 				do {
@@ -11582,33 +11483,32 @@ public class CurationServlet
 				} while (rs.next());
 				String valu = valueString
 						.substring(0, valueString.length() - 1);
-				rs.close();
-				stm.close();
 				String sql = "SELECT con.*,cont.name as Context FROM CONCEPTS_VIEW_EXT con,CONTEXTS_VIEW cont WHERE con.CONTE_IDSEQ=cont.CONTE_IDSEQ and PREFERRED_NAME IN ("
 						+ valu + ") ORDER BY con.long_name ASC";
-				// System.out.println(sql);
-				Statement stm1 = m_conn.createStatement();
-				ResultSet rs1 = stm1.executeQuery(sql);
+			   stm1 = m_conn.createStatement();
+			   rs1 = stm1.executeQuery(sql);
 				if (rs1 != null) {
 					conact.getApprovedRepTermConcepts(rs1, conSer.getData());
 					DataManager.setAttribute(session, "vACSearch", conSer
 							.getData().getConceptList());
 				}
-				rs1.close();
-				stm1.close();
 			} else {
 				Boolean approvedRep = new Boolean(false);
 				session.setAttribute("ApprovedRepTerm", approvedRep);
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error getting the Approved Rep Terms",e);
+		}
+		finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeResultSet(rs1);
+			SQLHelper.closeStatement(stm);
+			SQLHelper.closeStatement(stm1);
 		}
 		EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
 		evs.get_Result(m_classReq, m_classRes, vResult, "");
 		DataManager.setAttribute(m_classReq.getSession(), "results", vResult);
-
 	}
 	/**
 	 * Gets the default Rep term Context
@@ -11616,12 +11516,14 @@ public class CurationServlet
 	private void getRepTermDefaultContext()
     {
 		String defaultContext=null;
+		Statement stm =null;
+		ResultSet rs =null;
 		HttpSession session = m_classReq.getSession(true);
         try
         {
             String sQuery = "select value from sbrext.tool_options_view_ext where property like 'REPTERM.DEFAULT.CONTEXT'";
-            Statement stm = m_conn.createStatement();
-			ResultSet rs = stm.executeQuery(sQuery);
+            stm = m_conn.createStatement();
+			rs = stm.executeQuery(sQuery);
 			while(rs.next())
 			{
 				defaultContext= rs.getString(1);
@@ -11631,6 +11533,10 @@ public class CurationServlet
         catch (Exception e)
         {
             logger.fatal("Error - getRepTermDefaultContext : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+        	SQLHelper.closeStatement(stm);
         }
     }
+	
 } // end of class

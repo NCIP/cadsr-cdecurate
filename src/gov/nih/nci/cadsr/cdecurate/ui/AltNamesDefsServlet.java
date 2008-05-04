@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.40 2008-05-02 15:10:25 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsServlet.java,v 1.41 2008-05-04 19:32:58 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -444,12 +444,10 @@ public class AltNamesDefsServlet
         AltNamesDefsForm form = new AltNamesDefsForm(req_);
 
         String jsp = null;
-        //Connection conn = null; 
         try
         {
             // Get the database connection.
-           // conn = _servlet.connectDB(_ub);
-            DBAccess db = new DBAccess(_servlet.getConn());
+           DBAccess db = new DBAccess(_servlet.getConn());
     
             // Default the JSP for the response
             jsp = _jspError;
@@ -508,14 +506,6 @@ public class AltNamesDefsServlet
             _logger.error(ex.toString());
             throw ex;
         }
-
-        finally
-        {
-            // Close the database connection.
-            //if (conn != null)
-              //  conn.close();
-        }
-
         // Set the next page and go.
         form._sess._jsp = jsp;
         _servlet.ForwardJSP(req_, res_, jsp);
@@ -530,13 +520,10 @@ public class AltNamesDefsServlet
      */
     public Alternates getManualDefinition(HttpServletRequest req_, String launch_)
     {
-        // Need a database connection
-        //Connection conn = null;
         // Find the manually curated one.
         Alternates alt = null;
         try
         {
-           // conn = _servlet.connectDB(_ub);
             DBAccess db = new DBAccess(_servlet.getConn());
             
             // Get the session buffer for the AC
@@ -555,13 +542,6 @@ public class AltNamesDefsServlet
         catch (Exception e)
         {
             _logger.error(e.toString(), e);
-        }
-
-        //close the connection
-        finally
-        {
-            //if (conn != null)
-              //  _servlet.freeConnection(conn);
         }
         return alt;
     }

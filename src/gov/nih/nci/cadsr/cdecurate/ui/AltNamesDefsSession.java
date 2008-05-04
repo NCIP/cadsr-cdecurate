@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.38 2007-11-28 19:44:08 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/AltNamesDefsSession.java,v 1.39 2008-05-04 19:32:58 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -836,11 +836,8 @@ public class AltNamesDefsSession implements Serializable
 
     public static void blockSave(CurationServlet serv_, HttpSession session_) throws SQLException
     {
-        //Connection conn = null;
         try
         {
-            //conn = serv_.connectDB(session_);
-
             // Get the session buffer.
             String sessName = getSessName(_beanBlock);
             AltNamesDefsSession sess = (AltNamesDefsSession) session_.getAttribute(sessName);
@@ -902,11 +899,6 @@ public class AltNamesDefsSession implements Serializable
         {
             throw ex;
         }
-        finally
-        {
-           // if (conn != null)
-             //   conn.close();
-        }
     }
 
     /**
@@ -920,22 +912,15 @@ public class AltNamesDefsSession implements Serializable
      */
     public static void loadAsNew(CurationServlet serv_, HttpSession session_, AC_Bean ac_) throws Exception
     {
-        //Connection conn = null;
         try
         {
-            //conn = serv_.connectDB(session_);
-            AltNamesDefsSession.loadAsNew(serv_.getConn(), ac_);
+           AltNamesDefsSession.loadAsNew(serv_.getConn(), ac_);
         }
         catch (Exception ex)
         {
             throw ex;
         }
-        finally
-        {
-            //if (conn != null)
-              //  conn.close();
-        }
-    }
+     }
 
     /**
      * Create and load a data buffer marking everything as new, i.e. "create using". This will discard any existing data buffer in the AC Bean and replace it
@@ -1000,11 +985,9 @@ public class AltNamesDefsSession implements Serializable
         if (ac_ == null || ac_.size() == 0)
             return;
         AltNamesDefsSession buffer = null;
-        //Connection conn = null;
         try
         {
             // Only create the buffer if it doesn't exist.
-         //   conn = serv_.connectDB(session_);
             String sessName = getSessName(_beanBlock);
             buffer = (AltNamesDefsSession) session_.getAttribute(sessName);
             if (buffer == null)
@@ -1027,12 +1010,6 @@ public class AltNamesDefsSession implements Serializable
         {
             throw ex;
         }
-        finally
-        {
-          //  if (conn != null)
-            //    conn.close();
-        }
-
         // This is only done for a Block Edit version.
         buffer._blockVersion = true;
     }

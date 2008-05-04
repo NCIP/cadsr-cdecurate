@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.41 2008-05-02 15:10:17 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.42 2008-05-04 19:31:18 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -154,26 +154,15 @@ public class DBAccess
                         _packageName = value;
                 }
 
-                rs.close();
-                pstmt.close();
-            }
+           }
             catch (SQLException ex)
             {
                 // Log the error but keep going.
                 _log.error(ex.toString());                
             }
             finally{
-            	try
-                {
-                    if (rs != null)
-                        rs.close();
-                    if (pstmt != null)
-                        pstmt.close();
-                }
-                catch (SQLException e)
-                {
-                	_log.error(e.toString());        
-                }
+            	SQLHelper.closeResultSet(rs);
+            	SQLHelper.closePreparedStatement(pstmt);
             }
                         
             // This only has to be done once. And either both are read or both are set blank.
@@ -279,25 +268,16 @@ public class DBAccess
             {
                 adata.add(new ATTData(rs.getString(1), rs.getString(2)));
             }
-            rs.close();
-            pstmt.close();
-            
-            return adata;
+           return adata;
         }
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
-            try
-            {
-                if (rs != null)
-                    rs.close();
-                if (pstmt != null)
-                    pstmt.close();
-            }
-            catch (SQLException e)
-            {
-            }
             throw new ToolException(ex);
+        }
+        finally{
+        	SQLHelper.closeResultSet(rs);
+        	SQLHelper.closePreparedStatement(pstmt);
         }
     }
 
@@ -439,28 +419,17 @@ public class DBAccess
                     // Flag to start processing CS records.
                     extra = true;
                 }
-                rs.close();
-            }
-            
-            // Clean up the database connection.
-            pstmt.close();
-            
-            return list;
+           }
+          return list;
         }
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
-            try
-            {
-                if (rs != null)
-                    rs.close();
-                if (pstmt != null)
-                    pstmt.close();
-            }
-            catch (SQLException e)
-            {
-            }
             throw new ToolException(ex);
+        }
+        finally{
+        	SQLHelper.closeResultSet(rs);
+        	SQLHelper.closePreparedStatement(pstmt);
         }
     }
 
@@ -521,10 +490,7 @@ public class DBAccess
             if (csValue != null)
                 lineage.add(0, new CSIData(new TreeNodeCS(csName, csValue, csDef, csIdVer, csConte, false), 0));
             
-            rs.close();
-            pstmt.close();
-    
-            // Take the content of the Vector and turn it into arrays for use by the Tree class. The level
+             // Take the content of the Vector and turn it into arrays for use by the Tree class. The level
             // is reset because the smallest value must appear first. Being a direct route child-to-parent only
             // 1 parent exists for each child and only 1 child exists for each parent in the result set.
             TreeNode[] nodes = new TreeNode[lineage.size()];
@@ -542,17 +508,10 @@ public class DBAccess
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
-            try
-            {
-                if (rs != null)
-                    rs.close();
-                if (pstmt != null)
-                    pstmt.close();
-            }
-            catch (SQLException e)
-            {
-            }
             throw new ToolException(ex);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+        	SQLHelper.closePreparedStatement(pstmt);
         }
     }
 
@@ -579,16 +538,10 @@ public class DBAccess
         }
         catch (SQLException ex)
         {
-            try
-            {
-                if (rs != null)
-                    rs.close();
-                pstmt_.close();
-            }
-            catch (SQLException e)
-            {
-            }
             throw new ToolException(ex);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+        	SQLHelper.closePreparedStatement(pstmt_);
         }
         
         return rs;
@@ -609,8 +562,6 @@ public class DBAccess
         String select = SQLSelectAlts.getAlternates(true);
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        PreparedStatement pstmt2 = null;
-        ResultSet rs2 = null;
         try
         {
             // It is important for the data to match the values expected in the logic. This also provides a means to
@@ -625,9 +576,6 @@ public class DBAccess
                 altList.add(SQLSelectAlts.copyFromRS(rs, showMC_));
             }
             
-            rs.close();
-            pstmt.close();
-
             for (Alternates alt : altList)
             {
                 // Get the CSI for each Alternate.
@@ -642,42 +590,23 @@ public class DBAccess
                     nodes[i] = temp._node;
                     levels[i] = temp._level;
                 }
-                
-                // Add the hierarchy to the Alternate CSI tree.
+               // Add the hierarchy to the Alternate CSI tree.
                 root.addHierarchy(nodes, levels);
             }
         }
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
-            try
-            {
-                if (rs2 != null)
-                    rs2.close();
-                if (pstmt2 != null)
-                    pstmt2.close();
-            }
-            catch (SQLException e)
-            {
-            }
             throw new ToolException(ex);
         }
         catch (ToolException ex)
         {
             _log.error("SQL: " + select, ex);
-            try
-            {
-                if (rs2 != null)
-                    rs2.close();
-                if (pstmt2 != null)
-                    pstmt2.close();
-            }
-            catch (SQLException e)
-            {
-            }
             throw ex;
-        }
-        
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+        	SQLHelper.closePreparedStatement(pstmt);
+        }        
         // Return the Tree (This is normally viewed on the UI from the "View by CS/CSI" tab.
         return root;
     }
@@ -695,18 +624,18 @@ public class DBAccess
     public Alternates[] getAlternates(String[] idseq_, boolean sortByName_, boolean showMC_) throws ToolException
     {
         Alternates[] list = new Alternates[0];
-        
+        PreparedStatement pstmt = null;
+        ResultSet rs =null;
         String select = SQLSelectAlts.getAlternates(sortByName_);
         try
         {
             // It is important for the data to match the values expected in the logic. This also provides a means to
             // sort the results and ensure the order is guaranteed.
-            PreparedStatement pstmt = _conn.prepareStatement(select);
-            
+            pstmt = _conn.prepareStatement(select);
             Vector<Alternates> temp = new Vector<Alternates>();
             for (int i = 0; i < idseq_.length; ++i)
             {
-                ResultSet rs = getAlternates(pstmt, idseq_[i]);
+                rs = getAlternates(pstmt, idseq_[i]);
                 
                 // Because the ORDER BY clause ensures the order, we only need to copy the data as it's
                 // read.
@@ -714,13 +643,9 @@ public class DBAccess
                 {
                     temp.add(SQLSelectAlts.copyFromRS(rs, showMC_));
                 }
-                rs.close();
+                SQLHelper.closeResultSet(rs);
             }
-            
-            // Clean up
-            pstmt.close();
-            
-            // Convert the result Vector to an array and get the CSI hierarchy for each Alternate Name
+             // Convert the result Vector to an array and get the CSI hierarchy for each Alternate Name
             // or Definition.
             list = new Alternates[temp.size()];
             for (int i = 0; i < list.length; ++i)
@@ -738,6 +663,9 @@ public class DBAccess
         {
             _log.error("SQL: " + select, ex);
             throw ex;
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+        	SQLHelper.closePreparedStatement(pstmt);
         }
 
         // Return the result list complete with CSI information.
@@ -761,27 +689,18 @@ public class DBAccess
             pstmt = _conn.prepareStatement(delete);
             pstmt.setString(1, idseq_);
             pstmt.executeUpdate();
-            pstmt.close();
+        	SQLHelper.closePreparedStatement(pstmt);
             
             delete = "delete from sbr.definitions_view where ac_idseq = ?";
             pstmt = _conn.prepareStatement(delete);
             pstmt.setString(1, idseq_);
             pstmt.executeUpdate();
-            pstmt.close();
-        }
+         }
         catch (SQLException ex)
         {
-            if (pstmt != null)
-            {
-                try
-                {
-                    pstmt.close();
-                }
-                catch (SQLException e)
-                {
-                }
-            }
             throw ex;
+        }finally{
+           	SQLHelper.closePreparedStatement(pstmt);
         }
     }
 
@@ -824,25 +743,15 @@ public class DBAccess
                     vers += ".0";
                 title = acType.getName() + ": <b>" + name + "</b><br/> [" + pid + "v" + vers + "]";
             }
-            rs.close();
-            pstmt.close();
-        }
+          }
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
-            try
-            {
-                if (rs != null)
-                    rs.close();
-                if (pstmt != null)
-                    pstmt.close();
-            }
-            catch (SQLException e)
-            {
-            }
-            throw new ToolException(ex);
+             throw new ToolException(ex);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+        	SQLHelper.closePreparedStatement(pstmt);
         }
-
         // Return a formatted result or null if the AC was not found.
         return title;
     }
@@ -862,20 +771,13 @@ public class DBAccess
             pstmt = _conn.prepareStatement(select);
             pstmt.setString(1, idseq_);
             pstmt.executeUpdate();
-            pstmt.close();
         }
         catch (SQLException ex)
         {
-            _log.error("SQL: " + select, ex);
-            try
-            {
-                if (pstmt != null)
-                    pstmt.close();
-            }
-            catch (SQLException e)
-            {
-            }
-            throw new ToolException(ex);
+           _log.error("SQL: " + select, ex);
+           throw new ToolException(ex);
+        }finally{
+           	SQLHelper.closePreparedStatement(pstmt);
         }
     }
 
@@ -894,20 +796,13 @@ public class DBAccess
             pstmt = _conn.prepareStatement(select);
             pstmt.setString(1, idseq_);
             pstmt.executeUpdate();
-            pstmt.close();
         }
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
-            try
-            {
-                if (pstmt != null)
-                    pstmt.close();
-            }
-            catch (SQLException e)
-            {
-            }
             throw new ToolException(ex);
+        }finally{
+          	SQLHelper.closePreparedStatement(pstmt);
         }
     }
     
@@ -978,10 +873,6 @@ public class DBAccess
                 prevValue = (csiType.equals(_packageAlias)) ? csiValue : null;
             }
             
-            // Clean up
-            rs.close();
-            stmt.close();
-
             // Convert to arrays to add to the Tree
             TreeNode[] nodes = new TreeNode[test.size()];
             int[] levels = new int[nodes.length];
@@ -997,20 +888,12 @@ public class DBAccess
         }
         catch (SQLException ex)
         {
-            _log.error("SQL: " + select);
-            try
-            {
-                if (rs != null)
-                    rs.close();
-                if (stmt != null)
-                    stmt.close();
-            }
-            catch (SQLException e)
-            {
-            }
+        	_log.error("SQL: " + select);
             throw new ToolException(ex);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+        	SQLHelper.closeStatement(stmt);
         }
-
         // Return the Tree root.
         return root;
     }
@@ -1024,9 +907,10 @@ public class DBAccess
      */
     private void insertAlt(Alternates alt_, String sql_) throws SQLException
     {
+    	CallableStatement cstmt =null;
         try
         {
-            CallableStatement cstmt = _conn.prepareCall(sql_);
+            cstmt = _conn.prepareCall(sql_);
             cstmt.setString(1, alt_.getAcIdseq());
             cstmt.setString(2, alt_.getConteIdseq());
             cstmt.setString(3, alt_.getName());
@@ -1035,12 +919,14 @@ public class DBAccess
             cstmt.registerOutParameter(6, java.sql.Types.VARCHAR);
             cstmt.executeUpdate();
             alt_.setAltIdseq(cstmt.getString(6));
-            cstmt.close();
-        }
+         }
         catch (SQLException ex)
         {
             throw ex;
+        }finally{
+        	SQLHelper.closeCallableStatement(cstmt);
         }
+        
     }
 
     /**
@@ -1096,21 +982,24 @@ public class DBAccess
      */
     private void updateAlt(Alternates alt_, String sql_) throws SQLException
     {
+    	PreparedStatement pstmt = null;
         try
         {
-            PreparedStatement pstmt = _conn.prepareStatement(sql_);
+            pstmt = _conn.prepareStatement(sql_);
             pstmt.setString(1, alt_.getName());
             pstmt.setString(2, alt_.getType());
             pstmt.setString(3, alt_.getLanguage());
             pstmt.setString(4, alt_.getAltIdseq());
             pstmt.executeUpdate();
             
-            pstmt.close();
         }
         catch (SQLException ex)
         {
             throw ex;
+        }finally{
+        	SQLHelper.closePreparedStatement(pstmt);
         }
+        
     }
 
     /**
@@ -1162,14 +1051,16 @@ public class DBAccess
     private void saveCSI(Alternates alt_) throws SQLException
     {
         Vector<TreeNode> list;
-
+        PreparedStatement pstmt=null;
+        PreparedStatement stmt=null;
+      try{
         // Add new ones first.
         list = alt_.getCSITree().findNew();
         if (list.size() > 0)
         {
             String insert = "insert into sbrext.ac_att_cscsi_view_ext (cs_csi_idseq, att_idseq, atl_name) values (?, ?, ?)";
             
-            PreparedStatement pstmt = _conn.prepareStatement(insert);
+             pstmt = _conn.prepareStatement(insert);
 
             // Prepare and insert the new associations
             for (TreeNode node : list)
@@ -1197,7 +1088,7 @@ public class DBAccess
             }
     
             // Done with the new ones.
-            pstmt.close();
+            SQLHelper.closePreparedStatement(pstmt);
         }
 
         // Remove ones we don't want to keep.
@@ -1206,7 +1097,7 @@ public class DBAccess
         {
             String insert = "delete from sbrext.ac_att_cscsi_view_ext where aca_idseq = ?";
             
-            PreparedStatement pstmt = _conn.prepareStatement(insert);
+             pstmt = _conn.prepareStatement(insert);
             
             // Prepare and delete unwanted associations.
             for (TreeNode node : list)
@@ -1221,19 +1112,22 @@ public class DBAccess
                     TreeNodeCSI temp = (TreeNodeCSI) node;
                     if (temp.isPackageName())
                     {
-                        PreparedStatement stmt = _conn.prepareStatement("delete from sbrext.ac_att_cscsi_view_ext where cs_csi_idseq = ? and att_idseq = ? and atl_name = ?");
+                        stmt = _conn.prepareStatement("delete from sbrext.ac_att_cscsi_view_ext where cs_csi_idseq = ? and att_idseq = ? and atl_name = ?");
                         stmt.setString(1, temp.getPackageAlias());
                         stmt.setString(2, alt_.getAltIdseq());
                         stmt.setString(3, "DESIGNATION");
                         stmt.executeUpdate();
-                        stmt.close();
+                        SQLHelper.closePreparedStatement(stmt);
                     }
                 }
             }
 
-            // Done with deletes.
-            pstmt.close();
-        }
+         }
+    }
+   finally{
+    	SQLHelper.closePreparedStatement(pstmt);
+    	SQLHelper.closePreparedStatement(stmt);
+    }
     }
 
     /**
@@ -1245,14 +1139,16 @@ public class DBAccess
      */
     private void deleteAlt(String sql_, String idseq_) throws SQLException
     {
-        PreparedStatement pstmt = _conn.prepareStatement(sql_);
-        
+    	PreparedStatement pstmt =null;
+     try{
+    	pstmt = _conn.prepareStatement(sql_);
         pstmt.setString(1, idseq_);
-                
         pstmt.executeUpdate();
-
-        pstmt.close();
-    }
+      }
+      finally{
+        	SQLHelper.closePreparedStatement(pstmt);
+            }
+     }
 
     /**
      * Delete an Alternate Name
@@ -1329,12 +1225,9 @@ public class DBAccess
             if (ex.getErrorCode() != 1)
                 throw ex;
         }
-        finally
-        {
-            // Close the statement
-            if (cstmt != null)
-                cstmt.close();
-        }
+        finally{
+        	SQLHelper.closeCallableStatement(cstmt);
+            }
     }
 
     /**
@@ -1515,9 +1408,6 @@ public class DBAccess
             {
                 temp.add(rs.getString(1));
             }
-            rs.close();
-            pstmt.close();
-
             // Convert to an array
             list = new String[temp.size()];
             for (int i = 0; i < list.length; ++i)
@@ -1526,19 +1416,11 @@ public class DBAccess
         catch (SQLException ex)
         {
             _log.error("SQL: " + select_, ex);
-            try
-            {
-                if (rs != null)
-                    rs.close();
-                if (pstmt != null)
-                    pstmt.close();
-            }
-            catch (SQLException e)
-            {
-            }
             throw new ToolException(ex);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+        	SQLHelper.closePreparedStatement(pstmt);
         }
-
         // Return the result set
         return list;
     }

@@ -4,12 +4,16 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+
 import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -64,20 +68,9 @@ public abstract class CommonACAction
         catch (Exception e)
         {
             logger.fatal("ERROR - : " + e.toString(), e);
-        }
-        finally
-        {
-            try
-            {
-                if (rs != null)
-                    rs.close();
-                if (pstmt != null)
-                    pstmt.close();
-            }
-            catch (Exception ee)
-            {
-                logger.fatal("ERROR for close : " + ee.toString(), ee);
-            }
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closePreparedStatement(pstmt);
         }
         return vACs;
     }

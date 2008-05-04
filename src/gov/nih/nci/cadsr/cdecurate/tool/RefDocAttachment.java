@@ -1,11 +1,12 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.50 2007-11-28 19:44:47 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.51 2008-05-04 19:32:21 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 //import files
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import java.io.File;
@@ -166,8 +167,7 @@ public void doOpen (){
 		    if (dispType == null) dispType = "";
 
 		    REF_DOC_Bean refBean = new REF_DOC_Bean(); 
-		    //Connection con = null;
-		    
+		    	    
 		    // Get number of items
 		    Vector vRefDoc = (Vector)req.getAttribute("RefDocList");
 		    
@@ -220,12 +220,11 @@ public void doOpen (){
 				      }
 				    }
 			    	
-			    	// SQL to get the results
-	        		//con = m_servlet.connectDB(req, res);
-	                String select = "select NAME , blob_content from sbr.reference_blobs_view where rd_idseq = ?";
+			// SQL to get the results
+	        String select = "select NAME , blob_content from sbr.reference_blobs_view where rd_idseq = ?";
             PreparedStatement pstmt = null;
             ResultSet rs = null;
-	                // make plsql call 
+	        // make plsql call 
 	     try {
 						pstmt = m_servlet.getConn().prepareStatement(select);
 						pstmt.setString(1 , str);
@@ -280,36 +279,17 @@ public void doOpen (){
 						vRefDocDocs.addElement(Doclist);
 						
 		  			DataManager.setAttribute(session, "RefDocRows", vRefDocDocs);
-						rs.close();
-            rs = null;
-						pstmt.close();  
-            pstmt = null;
-					//	con.close();
-            //con = null;
-						
 					} catch (SQLException e) {
 						StringWriter sw = new StringWriter();
 						e.printStackTrace(new PrintWriter(sw));
 						logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
 						msg = "Unable to access the database.";
 					}
-          finally
-          {
-            try
-            {
-              if (rs != null)
-                rs.close();
-              if (pstmt != null)
-                pstmt.close();
-             // if (con != null && !con.isClosed())
-               // con.close();
-            }
-            catch (SQLException e)
-            {
-              logger.fatal("Error: for close connection " + e.toString(), e);
-            }
-          }
-			    	
+					finally{
+						SQLHelper.closeResultSet(rs);
+						SQLHelper.closePreparedStatement(pstmt);
+					
+					}			    	
 			  }//end of for
 		    m_servlet.ForwardJSP(req, res, "/RefDocumentUploadPage.jsp");
 		    	
@@ -337,8 +317,7 @@ public void doFileUpload ()
 {
 	
 	GetACService getAC = new GetACService(req, res, m_servlet);
-	//Connection con = null;
-  PreparedStatement pstmt = null;
+	PreparedStatement pstmt = null;
 	REF_DOC_Bean refBean = new REF_DOC_Bean(); 
 	HttpSession session = req.getSession();
 
@@ -361,8 +340,6 @@ public void doFileUpload ()
     "DAD_CHARSET, " +
     "CONTENT_TYPE, BLOB_CONTENT) " +
     "VALUES (?, ?, ?, ?, ?, ?, empty_blob()) ";
-	
-	//con = m_servlet.connectDB(req, res);
 	
 	try {
 			/*
@@ -409,8 +386,8 @@ public void doFileUpload ()
 
 				// get BLOB_CONTENT
 				pstmt.execute();
-				pstmt.close();
-        pstmt = null;
+				SQLHelper.closePreparedStatement(pstmt);
+                pstmt = null;
 
 				// upload blob
 				doFiletoBlob(m_servlet.getConn(), dbfileName);
@@ -418,25 +395,11 @@ public void doFileUpload ()
 			}
 			// Commit and close the connection
 			m_servlet.getConn().commit();
-			//con.close();
-     // con = null;
-
 		} catch (SQLException e) {
 			logger.fatal(e.toString(), e);
-		}
-    finally
-    {
-      try
-      {
-        if (pstmt != null)
-          pstmt.close();
-        //if (con != null && !con.isClosed())
-          //con.close();
-      }
-      catch (SQLException e)
-      {
-        logger.fatal("Error: for close connection " + e.toString(), e);
-      }
+		}finally{
+			SQLHelper.closePreparedStatement(pstmt);
+		
     }
     //forward the page
     doOpen();
@@ -473,39 +436,20 @@ public void doBack (){
  *
  */
 public void doDeleteAttachment (){
-	//Connection con = null;
-  PreparedStatement pstmt = null;
+    PreparedStatement pstmt = null;
 	String fileName = (String)req.getParameter("RefDocTargetFile");
 	String DelObjSQL = "delete from sbr.REFERENCE_BLOBS_VIEW where NAME = ?";
-	//con = m_servlet.connectDB(req, res);
 	try {
 		pstmt = m_servlet.getConn().prepareStatement(DelObjSQL);
 		pstmt.setString(1, fileName);
 		pstmt.execute();
-    //close the connections
-		pstmt.close();
-    pstmt = null;
-		//con.close();
-    //con = null;
-	} catch (SQLException e) {
+    } catch (SQLException e) {
 		logger.fatal(e.toString(), e);
 		msg = "Reference Document Attachment: Unable to delete the Attachment from the database.";
-	}
-  finally
-  {
-    try
-    {
-      if (pstmt != null)
-        pstmt.close();
-      //if (con != null && !con.isClosed())
-        //con.close();
+	}finally{
+	  SQLHelper.closePreparedStatement(pstmt);
     }
-    catch (SQLException e)
-    {
-      logger.fatal("Error: for close connection " + e.toString(), e);
-    }
-  }
-	// Forward back to the open method
+  // Forward back to the open method
 	doOpen();
   
 }
@@ -517,37 +461,18 @@ public void doDeleteAttachment (){
    */
   public String doDeleteAllAttachments (String rd_idseq)
   {
-    //Connection con = null;
     PreparedStatement pstmt = null;
     msg = "";
     String DelObjSQL = "delete from sbr.REFERENCE_BLOBS_VIEW where RD_IDSEQ = ?";
-    //con = m_servlet.connectDB(req, res);
-    try {
+     try {
       pstmt = m_servlet.getConn().prepareStatement(DelObjSQL);
       pstmt.setString(1, rd_idseq);
       pstmt.execute();
-      //close teh connections
-      pstmt.close();
-      pstmt = null;
-      //con.close();
-      //con = null;
     } catch (SQLException e) {
       logger.fatal("Error - doDeleteAllAttachments: " + e.toString(), e);
       msg = "Unable to delete all the Attachments from the database for the selected Reference Document.";
-    }
-    finally
-    {
-      try
-      {
-        if (pstmt != null)
-          pstmt.close();
-       // if (con != null && !con.isClosed())
-         // con.close();
-      }
-      catch (SQLException e)
-      {
-        logger.fatal("Error: for close connection " + e.toString(), e);
-      }
+    }finally{
+	  SQLHelper.closePreparedStatement(pstmt);
     }
     return msg;
   }
@@ -668,17 +593,11 @@ public void doDeleteAttachment (){
   		{
   			os.write(chunk,0,i); //Write the chunk
   		}
-  		//close all the connections
-  		rs.close();
-      rs = null;
-  		is.close();
+  	  is.close();
       is = null;
-  		os.close();
+  	  os.close();
       os = null;
-  		pstmt.close();
-      pstmt = null;
-      
-  	} catch (FileNotFoundException e) {
+  } catch (FileNotFoundException e) {
   		StringWriter sw = new StringWriter();
   		e.printStackTrace(new PrintWriter(sw));
   		logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
@@ -693,20 +612,9 @@ public void doDeleteAttachment (){
   		e.printStackTrace(new PrintWriter(sw));
   		logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
   		msg = "Unable to access file for upload to the database.";
-  	}
-    finally
-    {
-      try
-      {
-        if (rs != null)
-          rs.close();
-        if (pstmt != null)
-          pstmt.close();
-      }
-      catch (SQLException e)
-      {
-        logger.fatal("Error: for close connection " + e.toString(), e);
-      }
+  	}finally{
+  	  SQLHelper.closeResultSet(rs);	
+	  SQLHelper.closePreparedStatement(pstmt);
     }
   }
 

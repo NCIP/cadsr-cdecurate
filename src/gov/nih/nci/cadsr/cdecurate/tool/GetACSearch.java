@@ -1,10 +1,11 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.61 2008-04-30 14:51:59 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.62 2008-05-04 19:32:21 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
@@ -1111,14 +1112,12 @@ public class GetACSearch implements Serializable
      */
     public void doQuestionSearch(String userName, Vector vList)
     {
-        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         try
         {
             // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (m_servlet.getConn() == null)
+           if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
@@ -1185,22 +1184,10 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("other problem in GetACSearch-QuestionSearch: " + e);
             logger.fatal("ERROR - GetACSearch-QuestionSearch for other : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-              //  conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing in GetACSearch-doQuestionSearch: " + ee);
-            logger.fatal("ERROR - GetACSearch-QuestionSearch for close : " + ee.toString(), ee);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
     }
 
@@ -1288,8 +1275,6 @@ public class GetACSearch implements Serializable
                     String sProtoId, String crfName, String pvIDseq, String vdIDseq, String vmIDSeq, String decIDseq, String cdIDseq,
                     String cscsiIDseq, String conIDseq, String conName, String derType, Vector vList)
     {
-        // logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "start desearch call", startDate, startDate));
-        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Hashtable desTable = new Hashtable();
@@ -1311,7 +1296,6 @@ public class GetACSearch implements Serializable
             if (strAppend != null && strAppend.equals("Appended"))
                 desTable = (Hashtable) session.getAttribute("desHashTable");
             // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -1501,25 +1485,16 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("other problem in GetACSearch-DESearch: " + e);
-            logger.fatal("ERROR - GetACSearch-DESearch for other : " + e.toString(), e);
+          logger.fatal("ERROR - GetACSearch-DESearch for other : " + e.toString(), e);
         }
         try
         {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-           // if (conn != null)
-             //   conn.close();
-            DataManager.setAttribute(session, "desHashTable", desTable);
+           DataManager.setAttribute(session, "desHashTable", desTable);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing in GetACSearch-doDESearch: " + ee);
-            logger.fatal("ERROR - GetACSearch-DESearch for close : " + ee.toString(), ee);
-        }
-        // logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "end call", startDate, new java.util.Date()));
+        
     }
 
     /**
@@ -1636,14 +1611,10 @@ public class GetACSearch implements Serializable
                     double dVersion, String sCDid, String deIDseq, String cscsiIDseq, String conIDseq, String conName,
                     Vector vList)
     {
-        // logger.info(m_servlet.getLogMessage(m_classReq, "doDECSearch", "begin search", exDate, exDate));
-        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         try
         {
-            // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -1678,9 +1649,6 @@ public class GetACSearch implements Serializable
                 cstmt.execute();
                 // store the output in the resultset
                 rs = (ResultSet) cstmt.getObject(7);
-                // capture the duration
-                // logger.info(m_servlet.getLogMessage(m_classReq, "doDECSearch", "got object", exDate, new
-                // java.util.Date()));
                 String s;
                 String oc_condr_idseq = "";
                 String prop_condr_idseq = "";
@@ -1754,25 +1722,11 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("other problem in GetACSearch-DECSearch: " + e);
-            logger.fatal("ERROR - GetACSearch-DECSearch for other : " + e.toString(), e);
+          logger.fatal("ERROR - GetACSearch-DECSearch for other : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-              //  conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing in GetACSearch-doDECSearch: " + ee);
-            logger.fatal("GetACSearch-DECSearch for close : " + ee.toString(), ee);
-        }
-        // capture the duration
-        // logger.info(m_servlet.getLogMessage(m_classReq, "doDECSearch", "end search", exDate, new java.util.Date()));
     }
 
     /**
@@ -1842,14 +1796,10 @@ public class GetACSearch implements Serializable
                     String sOrigin, double dVersion, String sCDid, String pvIDseq, String deIDseq, String cscsiIDseq,
                     String conIDseq, String vmIDseq, String conName, String sData, Vector vList)
     {
-        // logger.info(m_servlet.getLogMessage(m_classReq, "doVDSearch", "begin search", exDate, exDate));
-      //  Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         try
         {
-            // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -1887,9 +1837,6 @@ public class GetACSearch implements Serializable
                 cstmt.execute();
                 // store the output in the resultset
                 rs = (ResultSet) cstmt.getObject(7);
-                // capture the duration
-                // logger.info(m_servlet.getLogMessage(m_classReq, "doVDSearch", "got rsObject", exDate, new
-                // java.util.Date()));
                 String s;
                 if (rs != null)
                 {
@@ -1980,25 +1927,11 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("other problem in GetACSearch-doVDSearch: " + e);
-            logger.fatal("ERROR - GetACSearch-doVDSearch for other : " + e.toString(), e);
+          logger.fatal("ERROR - GetACSearch-doVDSearch for other : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-           // if (conn != null)
-             //   conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing in GetACSearch-doVDSearch: " + ee);
-            logger.fatal("ERROR - GetACSearch-doVDSearch for close : " + ee.toString(), ee);
-        }
-        // capture the duration
-        // logger.info(m_servlet.getLogMessage(m_classReq, "doVDSearch", "end search", exDate, new java.util.Date()));
     }
 
     /**
@@ -2055,14 +1988,10 @@ public class GetACSearch implements Serializable
                     String sCreator, String sModifier, String CD_ID, String sOrigin, double dVersion, String conName,
                     String conID, String sVM, Vector vList)
     {
-        // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "begin search", exDate, exDate));
-        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         try
         {
-            // Create a Callable Statement object.
-           // conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -2092,9 +2021,6 @@ public class GetACSearch implements Serializable
                 cstmt.execute();
                 // store the output in the resultset
                 rs = (ResultSet) cstmt.getObject(7);
-                // capture the duration
-                // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "got rsObject", exDate, new
-                // java.util.Date()));
                 String s;
                 if (rs != null)
                 {
@@ -2143,25 +2069,11 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("other problem in GetACSearch-CDSearch: " + e);
-            logger.fatal("ERROR - GetACSearch-CDSearch for other : " + e.toString(), e);
+           logger.fatal("ERROR - GetACSearch-CDSearch for other : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-              //  conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing in GetACSearch-doCDSearch: " + ee);
-            logger.fatal("ERROR - GetACSearch-CDSearch for close : " + ee.toString(), ee);
-        }
-        // capture the duration
-        // logger.info(m_servlet.getLogMessage(m_classReq, "doCDSearch", "end search", exDate, new java.util.Date()));
         return vList;
     }
 
@@ -2185,14 +2097,10 @@ public class GetACSearch implements Serializable
      */
     private void doCSISearch(String InString, String ContName, String CSName, Vector vList)
     {
-        // logger.info(m_servlet.getLogMessage(m_classReq, "doCSISearch", "begin search", exDate, exDate));
-        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         try
         {
-            // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -2206,9 +2114,6 @@ public class GetACSearch implements Serializable
                 cstmt.execute();
                 // store the output in the resultset
                 rs = (ResultSet) cstmt.getObject(4);
-                // capture the duration
-                // logger.info(m_servlet.getLogMessage(m_classReq, "doCSISearch", "got rsObject", exDate, new
-                // java.util.Date()));
                 if (rs != null)
                 {
                     // loop through the resultSet and add them to the bean
@@ -2234,25 +2139,11 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("other problem in GetACSearch-CSISearch: " + e);
-            logger.fatal("ERROR - GetACSearch-CSISearch for other : " + e.toString(), e);
+           logger.fatal("ERROR - GetACSearch-CSISearch for other : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-              //  conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing in GetACSearch-doCSISearch: " + ee);
-            logger.fatal("ERROR - GetACSearch-CSISearch for close : " + ee.toString(), ee);
-        }
-        // capture the duration
-        // logger.info(m_servlet.getLogMessage(m_classReq, "doCSISearch", "end search", exDate, new java.util.Date()));
     }
 
     /**
@@ -3155,10 +3046,6 @@ public class GetACSearch implements Serializable
      */
     public void getDDEInfo(String P_DE_IDSEQ)
     {
-        // capture the duration
-        // java.util.Date exDate = new java.util.Date();
-        // logger.info(m_servlet.getLogMessage(m_classReq, "getDDEInfo", "begin getComplexDE", exDate, exDate));
-        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         HttpSession session = m_classReq.getSession();
@@ -3174,8 +3061,6 @@ public class GetACSearch implements Serializable
         String sRulesAction = "newRule";
         try
         {
-            // Create a Callable Statement object.
-           // conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -3197,9 +3082,6 @@ public class GetACSearch implements Serializable
                 cstmt.execute();
                 // assign output DDE info from the result
                 sRepType = (String) cstmt.getString(5);
-                // capture the duration
-                // logger.info(m_servlet.getLogMessage(m_classReq, "getDDEInfo", "get object", exDate, new
-                // java.util.Date()));
                 DDE_Bean dde = new DDE_Bean();
                 if (sRepType != null && sRepType.length() > 1)
                 {
@@ -3277,25 +3159,11 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("problem in getDDEInfo: " + e);
             logger.fatal("ERROR - getDDEInfo : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-              //  conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing in getDDEInfo: " + ee);
-            logger.fatal("ERROR - getDDEInfo for close : " + ee.toString(), ee);
-        }
-        // capture the duration
-        // logger.info(m_servlet.getLogMessage(m_classReq, "getDDEInfo", "end search", exDate, new java.util.Date()));
     }
 
     /**
@@ -3787,8 +3655,6 @@ public class GetACSearch implements Serializable
     public void do_caDSRSearch(String InString, String ContName, String ASLName, String ID, Vector<EVS_Bean> vList,
                     String type, String conName, String conID)
     {
-        // logger.info(m_servlet.getLogMessage(m_classReq, "do_caDSRSearch", "begin search", exDate, exDate));
-        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         String sCUIString = "";
@@ -3827,9 +3693,6 @@ public class GetACSearch implements Serializable
             cstmt.execute();
             // store the output in the resultset
             rs = (ResultSet) cstmt.getObject(5);
-            // capture the duration
-            // logger.info(m_servlet.getLogMessage(m_classReq, "do_caDSRSearch", "got rsObject", exDate, new
-            // java.util.Date()));
             if (rs != null)
             {
                 // loop through to printout the outstrings
@@ -3882,26 +3745,11 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("other problem in GetACSearch-do_caDSRSearch: " + e);
-            logger.fatal("ERROR - GetACSearch-do_caDSRSearch for other : " + e.toString(), e);
+           logger.fatal("ERROR - GetACSearch-do_caDSRSearch for other : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-              //  conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing in GetACSearch-docaDSRSearch: " + ee);
-            logger.fatal("GetACSearch-do_caDSRSearch for close : " + ee.toString(), ee);
-        }
-        // capture the duration
-        // logger.info(m_servlet.getLogMessage(m_classReq, "do_caDSRSearch", "end search", exDate, new
-        // java.util.Date()));
     }
 
     /**
@@ -3928,7 +3776,6 @@ public class GetACSearch implements Serializable
         CallableStatement cstmt = null;
         try
         {
-            // logger.info(m_servlet.getLogMessage(m_classReq, "do_ConceptSearch", "begin search", exDate, exDate));
             HttpSession session = (HttpSession) m_classReq.getSession();
             EVS_UserBean eUser = (EVS_UserBean) m_servlet.sessionData.EvsUsrBean;
             String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
@@ -3940,8 +3787,6 @@ public class GetACSearch implements Serializable
             // mark it if oc/prop/rep search was done earlier
             if (vList != null && vList.size() > 0)
                 bVListExist = true;
-            // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?)}");
@@ -3957,9 +3802,6 @@ public class GetACSearch implements Serializable
             cstmt.execute();
             // store the output in the resultset
             rs = (ResultSet) cstmt.getObject(6);
-            // capture the duration
-            // logger.info(m_servlet.getLogMessage(m_classReq, "do_ConceptSearch", "got rsObject", exDate, new
-            // java.util.Date()));
             if (rs != null)
             {
                 // loop through to printout the outstrings
@@ -4026,28 +3868,14 @@ public class GetACSearch implements Serializable
                         vList.addElement(conBean);
                 }
             }
-            // System.out.println(decID + " id " + vdID + " con search " + vList.size());
-        }
+          }
         catch (Exception e)
         {
             logger.fatal("ERROR - GetACSearch-do_conceptSearch for other : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-           // if (conn != null)
-             //   conn.close();
-        }
-        catch (Exception ee)
-        {
-            logger.fatal("GetACSearch-do_conceptSearch for close : " + ee.toString(), ee);
-        }
-        // capture the duration
-        // logger.info(m_servlet.getLogMessage(m_classReq, "do_conceptSearch", "end search", exDate, new
-        // java.util.Date()));
         return vList;
     }
 
@@ -5267,7 +5095,6 @@ public class GetACSearch implements Serializable
      */
     public Vector<AC_CSI_Bean> doCSCSI_ACSearch(String AC_IDseq, String AC_Name)
     {
-        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         HttpSession session = m_classReq.getSession();
@@ -5278,8 +5105,6 @@ public class GetACSearch implements Serializable
             Vector vCSNames = (Vector) m_classReq.getAttribute("selCSNames");
             Vector vCSids = (Vector) m_classReq.getAttribute("selCSIDs");
             vAC_CSI = (Vector) m_classReq.getAttribute("blockAC_CSI");
-            // Create a Callable Statement object.
-           // conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -5345,22 +5170,10 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("ERROR in GetACSearch-doCSCSI_ACSearch: " + e);
-            logger.fatal("ERROR in GetACSearch-doCSCSI_ACSearch for other : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-              //  conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing in GetACSearch-doCSCSI_ACSearch: " + ee);
-            logger.fatal("ERROR in GetACSearch-doCSCSI_ACSearch for close : " + ee.toString(), ee);
+           logger.fatal("ERROR in GetACSearch-doCSCSI_ACSearch for other : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
         return vAC_CSI;
     }
@@ -6480,8 +6293,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("ERROR in GetACSearch-CSIsortedRows: " + e);
-            logger.fatal("ERROR in GetACSearch-CSIsortedRows : " + e.toString(), e);
+          logger.fatal("ERROR in GetACSearch-CSIsortedRows : " + e.toString(), e);
         }
     }
 
@@ -9102,7 +8914,6 @@ public class GetACSearch implements Serializable
      */
     private void doQuestValueSearch(String sQuestID, String sCRFID, Vector vList, VD_Bean vd)
     {
-        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         try
@@ -9112,8 +8923,6 @@ public class GetACSearch implements Serializable
             Vector<PV_Bean> pvList = vd.getVD_PV_List();
             // Vector pvList = (Vector)session.getAttribute("VDPVList");
             Vector vvList = new Vector();
-            // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -9178,22 +8987,10 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("other problem in GetACSearch-QuestionValueSearch: " + e);
-            logger.fatal("ERROR - GetACSearch-QuestionValueSearch for other : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-              //  conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing in GetACSearch-QuestionValueSearch: " + ee);
-            logger.fatal("ERROR - GetACSearch-QuestionValueSearch for close : " + ee.toString(), ee);
+           logger.fatal("ERROR - GetACSearch-QuestionValueSearch for other : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
     }
 
@@ -9449,15 +9246,12 @@ public class GetACSearch implements Serializable
      */
     public Vector doAltNameSearch(String acIdseq, String detlName, String CD_ID, String sOrigin, String sFor) 
     {
-        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Vector vList = new Vector();
         HttpSession session = m_classReq.getSession();
         try
         {
-            // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -9512,22 +9306,10 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("other problem in GetACSearch-doAltNameSearch : " + e);
-            logger.fatal("ERROR - GetACSearch-doAltNameSearch for other : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-           //if (conn != null)
-             //   conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing in GetACSearch-doAltNameSearch : " + ee);
-            logger.fatal("ERROR - GetACSearch-doAltNameSearch for close : " + ee.toString(), ee);
+          logger.fatal("ERROR - GetACSearch-doAltNameSearch for other : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
         return vList;
     }
@@ -9548,15 +9330,12 @@ public class GetACSearch implements Serializable
      */
     public Vector doRefDocSearch(String acIdseq, String docType, String sFor)
     {
-       // Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Vector vList = new Vector();
         HttpSession session = m_classReq.getSession();
         try
         {
-            // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -9604,7 +9383,6 @@ public class GetACSearch implements Serializable
                         RefDocBean.setCONTEXT_NAME(rs.getString("context_name"));
                         RefDocBean.setAC_LANGUAGE(rs.getString("rd_lae_name"));
                         RefDocBean.setREF_SUBMIT_ACTION("UPD");
-                        // System.out.println(RefDocBean.getDOCUMENT_NAME() + " search rd " +
                         // RefDocBean.getREF_DOC_IDSEQ());
                         vList.addElement(RefDocBean);
                         if (!sFor.equals("Version"))
@@ -9619,22 +9397,10 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("other problem in GetACSearch-doRefDocSearch : " + e);
             logger.fatal("ERROR - GetACSearch-doRefDocSearch for other : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-             //   conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing in GetACSearch-doRefDocSearch : " + ee);
-            logger.fatal("ERROR - GetACSearch-doRefDocSearch for close : " + ee.toString(), ee);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
         return vList;
     }
@@ -9684,8 +9450,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("Problem closing in GetACSearch-updatePVBean : " + e);
-            logger.fatal("ERROR - GetACSearch-updatePVBean for close : " + e.toString(), e);
+           logger.fatal("ERROR - GetACSearch-updatePVBean: " + e.toString(), e);
         }
         return newBean;
     }
@@ -9706,7 +9471,6 @@ public class GetACSearch implements Serializable
      */
     public Integer doProtoCRFSearch(String acIdseq, String acName)
     {
-        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Vector vList = new Vector();
@@ -9715,9 +9479,7 @@ public class GetACSearch implements Serializable
         try
         {
             Quest_Bean QuestBean = new Quest_Bean();
-            // Create a Callable Statement object.
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (m_servlet.getConn() == null)
+           if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
@@ -9756,22 +9518,10 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("other problem in GetACSearch-doProtoCRFSearch : " + e);
-            logger.fatal("ERROR - GetACSearch-doProtoCRFSearch for other : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-              //  conn.close();
-        }
-        catch (Exception ee)
-        {
-            // System.err.println("Problem closing in GetACSearch-doProtoCRFSearch : " + ee);
-            logger.fatal("ERROR - GetACSearch-doProtoCRFSearch for close : " + ee.toString(), ee);
+           logger.fatal("ERROR - GetACSearch-doProtoCRFSearch for other : " + e.toString(), e);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
         return qCount;
     }
@@ -9808,7 +9558,6 @@ public class GetACSearch implements Serializable
      */
     private Hashtable getAC_Contacts(String ac_idseq, String acc_idseq)
     {
-        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Hashtable vList = new Hashtable();
@@ -9822,8 +9571,6 @@ public class GetACSearch implements Serializable
             Hashtable hPer = (Hashtable) session.getAttribute("Persons");
             if (hPer == null)
                 hPer = new Hashtable();
-            // Create a Callable Statement object.
-           // conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
@@ -9878,19 +9625,9 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             logger.fatal("ERROR - GetACSearch-searchACContact for other : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-              //  conn.close();
-        }
-        catch (Exception ee)
-        {
-            logger.fatal("ERROR - GetACSearch-searchACContact for close : " + ee.toString(), ee);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
         return vList;
     }
@@ -9908,16 +9645,13 @@ public class GetACSearch implements Serializable
      */
     public Vector getContactComm(String comm_idseq, String org_idseq, String per_idseq)
     {
-       // Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Vector vList = new Vector();
         try
         {
-            // Create a Callable Statement object.
-            HttpSession session = (HttpSession) m_classReq.getSession();
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (m_servlet.getConn() == null)
+           HttpSession session = (HttpSession) m_classReq.getSession();
+           if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
@@ -9954,21 +9688,10 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             logger.fatal("ERROR - GetACSearch-getContactComm for other : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-              //  conn.close();
-        }
-        catch (Exception ee)
-        {
-            logger.fatal("ERROR - GetACSearch-getContactComm for close : " + ee.toString(), ee);
-        }
-        return vList;
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
+        }   return vList;
     }
 
     /**
@@ -9984,16 +9707,13 @@ public class GetACSearch implements Serializable
      */
     public Vector getContactAddr(String addr_idseq, String org_idseq, String per_idseq)
     {
-        //Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Vector vList = new Vector();
         try
         {
-            // Create a Callable Statement object.
-            HttpSession session = (HttpSession) m_classReq.getSession();
-            //conn = m_servlet.connectDB(m_classReq, m_classRes);
-            if (m_servlet.getConn() == null)
+             HttpSession session = (HttpSession) m_classReq.getSession();
+           if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
@@ -10035,19 +9755,9 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             logger.fatal("ERROR - GetACSearch-getContactAddr for other : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (cstmt != null)
-                cstmt.close();
-            //if (conn != null)
-             //   conn.close();
-        }
-        catch (Exception ee)
-        {
-            logger.fatal("ERROR - GetACSearch-getContactAddr for close : " + ee.toString(), ee);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closeCallableStatement(cstmt);
         }
         return vList;
     }
@@ -10168,9 +9878,7 @@ public class GetACSearch implements Serializable
     public void do_nonEVSRepTermSearch(String InString, String ContName, String ASLName, String ID, Vector<EVS_Bean> vList,
             String type, String conName, String conID)
     {
-    	// logger.info(m_servlet.getLogMessage(m_classReq, "do_caDSRSearch", "begin search", exDate, exDate));
-        //Connection conn = null;
-        ResultSet rs = null;
+    	ResultSet rs = null;
         PreparedStatement pstmt = null;
         String sCUIString = "";
         String compType = "";
@@ -10178,8 +9886,6 @@ public class GetACSearch implements Serializable
         if (ASLName.equals("")) ASLName=new String("%"); 
         try
         {
-            // Create a Callable Statement object.
-           // conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
            
@@ -10231,17 +9937,9 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
           logger.fatal("ERROR - GetACSearch-do_caDSRSearch for other : " + e.toString(), e);
-        }
-        try
-        {
-            if (rs != null)
-                rs.close();
-            if (pstmt != null)
-                pstmt.close();
-         }
-        catch (Exception ee)
-        {
-           logger.fatal("GetACSearch-do_caDSRSearch for close : " + ee.toString(), ee);
+        }finally{
+        	SQLHelper.closeResultSet(rs);
+            SQLHelper.closePreparedStatement(pstmt);
         }
     }
     

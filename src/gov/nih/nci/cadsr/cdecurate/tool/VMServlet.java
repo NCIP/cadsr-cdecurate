@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.31 2008-04-04 16:14:14 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.32 2008-05-04 19:32:21 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -838,28 +838,10 @@ private String goBackToSearch()
    */
   private void readUsedComponent(CommonACAction dbac, VM_Bean vm, boolean isStatFilter, String orderBy)
   {
-    //Connection conn = null;
-    //try
-    //{
-      //get the connection
-      //conn = vmData.getCurationServlet().connectDB();
-      //query the database
-      //Vector<CommonACBean> vAC = dbac.getAssociated(vmData.getCurationServlet().getConn(), vm.getVM_SHORT_MEANING(), isStatFilter, orderBy);
-	  Vector<CommonACBean> vAC = dbac.getAssociated(vmData.getCurationServlet().getConn(), vm.getVM_IDSEQ(), isStatFilter, orderBy);
+      Vector<CommonACBean> vAC = dbac.getAssociated(vmData.getCurationServlet().getConn(), vm.getVM_IDSEQ(), isStatFilter, orderBy);
       //set data to vm
       dbac.setUsedAttributes(vm, vAC, isStatFilter, null);
-   // }
-   // catch (Exception e)
-   // {
-    //  logger.fatal("ERROR - : " + e.toString(), e);
-   // }
-    //finally
-    //{
-        //close connection
-       // if (conn != null)
-       //     vmData.getCurationServlet().freeConnection(conn);
-   // }
-  }
+   }
   
   /**
    * submits the vm changes to database 

@@ -43,7 +43,6 @@ public class ValueDomainAction extends CommonACAction
         if (sOrder.equals(""))
             sOrder = "long_name";
         String sSQL = sSelect + sFrom + sWhere + " ORDER BY upper(" + sOrder + ")";
-        System.out.println(sSQL);
         return sSQL;
     }
 

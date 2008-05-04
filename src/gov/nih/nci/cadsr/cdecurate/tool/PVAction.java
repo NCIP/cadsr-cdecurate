@@ -1,9 +1,11 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.27 2008-02-27 19:19:51 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.28 2008-05-04 19:32:21 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
+
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -152,19 +154,12 @@ public class PVAction implements Serializable {
 	 */
 	public boolean checkPVQCExists(String vdIDseq, String vpIDseq, PVForm data) //throws Exception
 	{
-		//Connection conn = null;
 		ResultSet rs = null;
-		//CallableStatement cstmt = null;
 		PreparedStatement pstmt = null;
 		boolean isValid = false;
 		try {
 			if ((vpIDseq != null && !vpIDseq.equals(""))
 					|| (vdIDseq != null && !vdIDseq.equals(""))) {
-				//Create a Callable Statement object.
-				/*conn = data.getDbConnection();
-				if (conn == null || conn.isClosed())
-				  conn = data.getCurationServlet().connectDB(); */// PVServlet.makeDBConnection();
-				// Create a Callable Statement object.
 				if (data.getCurationServlet().getConn() != null) {
 					pstmt = data
 							.getCurationServlet()
@@ -189,17 +184,9 @@ public class PVAction implements Serializable {
 							+ "\\tError : Unable to get existing pv-qc."
 							+ e.toString());
 			data.setActionStatus(ConceptForm.ACTION_STATUS_FAIL);
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (pstmt != null)
-				pstmt.close();
-			// if (data.getDbConnection() == null)
-			// data.getCurationServlet().freeConnection(conn);  //PVServlet.closeDBConnection(conn);
-		} catch (Exception ee) {
-			logger.fatal(
-					"ERROR - checkPVQCExists for close : " + ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closePreparedStatement(pstmt);
 		}
 		return isValid;
 	} //end checkPVQCExists
@@ -381,16 +368,10 @@ public class PVAction implements Serializable {
 	public Vector<PV_Bean> doPVACSearch(String acIdseq, String sAction,
 			PVForm data) //
 	{
-		//Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		Vector<PV_Bean> vList = new Vector<PV_Bean>();
 		try {
-			//Create a Callable Statement object.
-			/*conn = data.getDbConnection();
-			if (conn == null || conn.isClosed())
-			  conn = data.getCurationServlet().connectDB();*/// PVServlet.makeDBConnection();
-			// Create a Callable Statement object.
 			if (data.getCurationServlet().getConn() != null) {
 				cstmt = data.getCurationServlet().getConn().prepareCall(
 						"{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PV(?,?)}");
@@ -452,20 +433,11 @@ public class PVAction implements Serializable {
 				} //END IF
 			}
 		} catch (Exception e) {
-			//System.err.println("other problem in GetACSearch-doPVACSearch : " + e);
 			logger.fatal("ERROR - doPVACSearch for other : " + e.toString(), e);
 		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (data.getDbConnection() == null)
-			// data.getCurationServlet().freeConnection(conn);  //PVServlet.closeDBConnection(conn);
-		} catch (Exception ee) {
-			//System.err.println("Problem closing in GetACSearch-doPVACSearch : " + ee);
-			logger.fatal("ERROR - -doPVACSearch for close : " + ee.toString(),
-					ee);
+		finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 		}
 		return vList;
 	} //doPVACSearch search
@@ -558,16 +530,10 @@ public class PVAction implements Serializable {
 	public Vector<PV_Bean> doPVVMSearch(String InString, String cd_idseq,
 			String conName, String conID, PVForm data) // returns list of Data Elements
 	{
-		//Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		Vector<PV_Bean> vList = new Vector<PV_Bean>();
 		try {
-			//Create a Callable Statement object.
-			/*conn = data.getDbConnection();
-			if (conn == null || conn.isClosed())
-			  conn = data.getCurationServlet().connectDB(); */// PVServlet.makeDBConnection();
-			// Create a Callable Statement object.
 			if (data.getCurationServlet().getConn() != null) {
 				cstmt = data
 						.getCurationServlet()
@@ -621,21 +587,11 @@ public class PVAction implements Serializable {
 				} //END IF
 			}
 		} catch (Exception e) {
-			//System.err.println("other problem in GetACSearch-searchPVVM: " + e);
 			logger.fatal("ERROR - GetACSearch-searchPVVM for other : "
 					+ e.toString(), e);
-		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			//if (data.getDbConnection() == null)
-			//data.getCurationServlet().freeConnection(conn);  //PVServlet.closeDBConnection(conn);
-		} catch (Exception ee) {
-			//    //System.err.println("Problem closing in GetACSearch-searchPVVM: " + ee);
-			logger.fatal("ERROR - GetACSearch-searchPVVM for close : "
-					+ ee.toString(), ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 		}
 		return vList;
 	} //endPVVM search
@@ -651,15 +607,9 @@ public class PVAction implements Serializable {
 	 * @return String return code from the stored procedure call. null if no error occurred.
 	 */
 	public String setPV(PVForm data) {
-		//capture the duration
-		//java.util.Date startDate = new java.util.Date();
-		//logger.info(m_servlet.getLogMessage(m_classReq, "setPV", "starting set", startDate, startDate));
 		PV_Bean pv = data.getSelectPV();
-
-		//Connection conn = null;
 		ResultSet rs = null;
 		HttpSession session = data.getRequest().getSession();
-
 		CallableStatement cstmt = null;
 		String sMsg = ""; //out
 		try {
@@ -667,19 +617,10 @@ public class PVAction implements Serializable {
 			String sValue = pv.getPV_VALUE();
 			VM_Bean vm = pv.getPV_VM();
 			String sShortMeaning = pv.getPV_SHORT_MEANING();
-/*			if (vm != null && vm.getVM_SHORT_MEANING() != null
-					&& !vm.getVM_SHORT_MEANING().equals(""))
-				sShortMeaning = vm.getVM_SHORT_MEANING();
-*/			
 			if (vm != null && vm.getVM_LONG_NAME()!= null
 					&& !vm.getVM_LONG_NAME().equals(""))
 				sShortMeaning = vm.getVM_LONG_NAME();
-			//System.out.println(sAction + " set vm in pv " + sShortMeaning);
 			String sMeaningDescription = pv.getPV_MEANING_DESCRIPTION();
-			/*if (vm != null && vm.getVM_DESCRIPTION() != null
-					&& !vm.getVM_DESCRIPTION().equals(""))
-				sMeaningDescription = vm.getVM_DESCRIPTION();
-		*/
 			if (vm != null && vm.getVM_PREFERRED_DEFINITION() != null
 					&& !vm.getVM_PREFERRED_DEFINITION().equals(""))
 				sMeaningDescription = vm.getVM_PREFERRED_DEFINITION();
@@ -700,12 +641,7 @@ public class PVAction implements Serializable {
 				return sMsg;
 			}
 
-			//Create a Callable Statement object.
-			/*conn = data.getDbConnection();
-			if (conn == null || conn.isClosed())
-			  conn = data.getCurationServlet().connectDB();*/// PVServlet.makeDBConnection();
-			// Create a Callable Statement object.
-			if (data.getCurationServlet().getConn() != null) {
+		if (data.getCurationServlet().getConn() != null) {
 				//cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
 				cstmt = data
 						.getCurationServlet()
@@ -713,7 +649,6 @@ public class PVAction implements Serializable {
 						.prepareCall(
 								"{call SBREXT_SET_ROW.SET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
 				// register the Out parameters
-				// cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //ua_name
 				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); //return code
 				cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); //pv id
 				cstmt.registerOutParameter(5, java.sql.Types.VARCHAR); //value
@@ -756,22 +691,14 @@ public class PVAction implements Serializable {
 					data.setPvvmErrorCode(sReturnCode); //store it capture check for pv creation
 				}
 			}
-			//capture the duration
-			//logger.info(m_servlet.getLogMessage(m_classReq, "setPV", "end set", startDate, new java.util.Date()));
 		} catch (Exception e) {
 			logger.fatal("ERROR in setPV for other : " + e.toString(), e);
 			data.setRetErrorCode("Exception");
 			sMsg += "\\t Exception : Unable to update Permissible Value attributes.";
 		}
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			//if (data.getDbConnection() == null)
-			//data.getCurationServlet().freeConnection(conn);  //PVServlet.closeDBConnection(conn);
-		} catch (Exception ee) {
-			logger.fatal("ERROR in setPV for close : " + ee.toString(), ee);
+		finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sMsg;
 	}
@@ -788,16 +715,10 @@ public class PVAction implements Serializable {
 	 *  @return String existing pv_idseq from the stored procedure call.
 	 */
 	public String getExistingPV(PVForm data, String sValue, String sMeaning) {
-		//Connection conn = null;
 		ResultSet rs = null;
 		String sPV_IDSEQ = "";
 		CallableStatement cstmt = null;
 		try {
-			//Create a Callable Statement object.
-			/*conn = data.getDbConnection();
-			if (conn == null || conn.isClosed())
-			  conn = data.getCurationServlet().connectDB();*/// PVServlet.makeDBConnection();
-			// Create a Callable Statement object.
 			if (data.getCurationServlet().getConn() != null) {
 				cstmt = data
 						.getCurationServlet()
@@ -827,18 +748,9 @@ public class PVAction implements Serializable {
 		} catch (Exception e) {
 			logger.fatal("ERROR in getExistingPV for exception : "
 					+ e.toString(), e);
-		}
-
-		try {
-			if (rs != null)
-				rs.close();
-			if (cstmt != null)
-				cstmt.close();
-			// if (data.getDbConnection() == null)
-			// data.getCurationServlet().freeConnection(conn);  //PVServlet.closeDBConnection(conn);
-		} catch (Exception ee) {
-			logger.fatal("ERROR in getExistingPV for close : " + ee.toString(),
-					ee);
+		}finally{
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sPV_IDSEQ;
 	}
@@ -854,12 +766,8 @@ public class PVAction implements Serializable {
 	 * @return String of return code
 	 */
 	public String setVD_PVS(PVForm data) {
-		//capture the duration
-		//  java.util.Date startDate = new java.util.Date();
-		//logger.info(m_servlet.getLogMessage(m_classReq, "setVD_PVS", "starting set", startDate, startDate));
 		PV_Bean pvBean = data.getSelectPV();
 		VD_Bean vdBean = data.getVD();
-		// Connection conn = null;
 		HttpSession session = data.getRequest().getSession();
 		CallableStatement cstmt = null;
 		String sMsg = "";
@@ -869,13 +777,8 @@ public class PVAction implements Serializable {
 			//deleting newly selected/created pv don't do anything since it doesn't exist in cadsr to remove.
 			if (sAction.equals("DEL") && (vpID == null || vpID.equals("")))
 				return sMsg;
-			//TODO - create parent concept
+			// create parent concept
 			String parIdseq = this.setParentConcept(pvBean, vdBean);
-			//Create a Callable Statement object.
-			/*conn = data.getDbConnection();
-			if (conn == null || conn.isClosed())
-			  conn = data.getCurationServlet().connectDB();*/// PVServlet.makeDBConnection();
-			// Create a Callable Statement object.
 			if (data.getCurationServlet().getConn() != null) {
 				// cstmt = conn.prepareCall("{call sbrext_set_row.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
 				cstmt = data
@@ -883,7 +786,6 @@ public class PVAction implements Serializable {
 						.getConn()
 						.prepareCall(
 								"{call SBREXT_SET_ROW.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-				// cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);       //ua_name
 				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); //return code
 				cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); //vd_PVS id
 				cstmt.registerOutParameter(5, java.sql.Types.VARCHAR); //vd id
@@ -950,20 +852,13 @@ public class PVAction implements Serializable {
 					pvBean.setPV_VDPVS_IDSEQ(cstmt.getString(4));
 				}
 			}
-			//capture the duration
-			//logger.info(m_servlet.getLogMessage(m_classReq, "setVD_PVS", "end set", startDate, new java.util.Date()));
+			
 		} catch (Exception e) {
 			logger.fatal("ERROR in setVD_PVS for other : " + e.toString(), e);
 			data.setRetErrorCode("Exception");
 			sMsg += "\\t Exception : Unable to update or remove PV of VD.";
-		}
-		try {
-			if (cstmt != null)
-				cstmt.close();
-			// if (data.getDbConnection() == null)
-			// data.getCurationServlet().freeConnection(conn);  //PVServlet.closeDBConnection(conn);
-		} catch (Exception ee) {
-			logger.fatal("ERROR in setVD_PVS for close : " + ee.toString(), ee);
+		}finally{
+		  SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sMsg;
 	} //END setVD_PVS
@@ -1031,9 +926,8 @@ public class PVAction implements Serializable {
 	 * @param data PVFrom object
 	 */
 	public void doRemoveParent(String sParentCC, String sParentName,
-			String sParentDB, String sPVAction, PVForm data) {
-		// HttpSession session = req.getSession();
-		VD_Bean vd = data.getVD();
+	String sParentDB, String sPVAction, PVForm data) {
+	VD_Bean vd = data.getVD();
 		Vector<EVS_Bean> vParentCon = vd.getReferenceConceptList(); // (Vector)session.getAttribute("VDParentConcept");
 		if (vParentCon == null)
 			vParentCon = new Vector<EVS_Bean>();
@@ -1272,7 +1166,6 @@ public class PVAction implements Serializable {
 	 * @return String list of vm names that existed in cadsr that are not exact match
 	 */
 	public String readExistingVMs(Vector<PV_Bean> vdpvList, PVForm data) {
-		//Connection conn = null;
 		String vNames = "";
 		try {
 			//make the string array of names
@@ -1290,7 +1183,6 @@ public class PVAction implements Serializable {
 			if (!vNames.equals("")) {
 				//get the connection
 				VMAction vmact = new VMAction();
-				// conn = data.getCurationServlet().connectDB();
 				vVMs = vmact.searchMultipleVM(data.getCurationServlet()
 						.getConn(), vNames);
 				vNames = "";
@@ -1305,10 +1197,6 @@ public class PVAction implements Serializable {
 				vNames = "";
 		} catch (Exception e) {
 			logger.fatal("ERROR - : " + e.toString(), e);
-		} finally {
-			//close connection
-			// if (conn != null)
-			//   data.getCurationServlet().freeConnection(conn);
 		}
 		return vNames;
 	}
@@ -1353,7 +1241,6 @@ public class PVAction implements Serializable {
 	 */
 	private String getName(Hashtable<String, String> vmHash, VM_Bean vm,
 			Vector<PV_Bean> vdpv, String vNames) {
-		//String vmName = vm.getVM_SHORT_MEANING();
 		String vmName = vm.getVM_LONG_NAME();
 		int multi = 0;
 		String multiName = vmName;
