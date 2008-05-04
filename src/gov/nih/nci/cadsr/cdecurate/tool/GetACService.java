@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.54 2008-05-04 19:32:21 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.55 2008-05-04 19:48:34 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -285,7 +285,7 @@ public class GetACService implements Serializable
                 // list of ASL names to filter
                 if (session.getAttribute(Session_Data.SESSION_ASL_FILTER) == null)
                     this.getASLFilterList(session);
-                 this.getDefaultSearchCounts(session);
+                // this.getDefaultSearchCounts(session);
               }
             else
             {
@@ -1623,7 +1623,7 @@ public class GetACService implements Serializable
     /**
      *  Gets the default Search counts for all the elements in the Search drop down list.
      */
-    public void getDefaultSearchCounts(HttpSession session)
+   /* public void getDefaultSearchCounts(HttpSession session)
     {
       Statement stmt=null;
       ResultSet rs =null;
@@ -1752,5 +1752,5 @@ public class GetACService implements Serializable
     		SQLHelper.closeResultSet(rs);
     		SQLHelper.closeStatement(stmt);
     	}
-    }
+    }*/
 }
