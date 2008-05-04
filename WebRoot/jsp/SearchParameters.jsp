@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.11 2008-04-02 16:06:17 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.12 2008-05-04 19:34:21 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -255,6 +255,66 @@ else
 return false;
 } 
 }
+//check if the user is performing a default search or he/she has selected any search criteria
+function checkIfDefaultSearch()
+{
+ var validObj = testIsValidObject(document.searchParmsForm.keyword)  
+  if(validObj)
+  var cond1 = (document.searchParmsForm.keyword.value==null || isEmpty(document.searchParmsForm.keyword.value));
+   validObj = testIsValidObject(document.searchParmsForm.listMultiContextFilter)
+  if(validObj) 
+  	cond1 = cond1 &&  document.searchParmsForm.listMultiContextFilter.value == "AllContext";
+   validObj = testIsValidObject(document.searchParmsForm.listCDName)
+  if(validObj) 
+    cond1 = cond1 && document.searchParmsForm.listCDName.value == "All Domains"; 	
+   validObj = testIsValidObject(document.searchParmsForm.listStatusFilter)
+  if(validObj) 
+   { 
+    if(document.searchParmsForm.listSearchFor.value=="ConceptClass")
+   	cond1 = cond1 && document.searchParmsForm.listStatusFilter.value == "RELEASED";
+   	else
+   	cond1 = cond1 && document.searchParmsForm.listStatusFilter.value == "AllStatus";
+   }	
+  validObj = testIsValidObject(document.searchParmsForm.listRegStatus)
+  if(validObj) 
+  cond1 = cond1 && document.searchParmsForm.listRegStatus.value == "allReg";				      
+  	
+ validObj = testIsValidObject(document.searchParmsForm.listDeriveType)
+ if(validObj) 
+ cond1 = cond1 && document.searchParmsForm.listDeriveType.value=="allDer";
+  	
+  validObj = testIsValidObject(document.searchParmsForm.createdFrom)	
+ if(validObj) 
+ cond1 = cond1 && document.searchParmsForm.createdFrom.value == " "; 		        
+  	
+ validObj = testIsValidObject(document.searchParmsForm.createdTo)	
+ if(validObj) 
+  cond1 = cond1 && document.searchParmsForm.createdTo.value == " "; 
+  	
+ validObj = testIsValidObject( document.searchParmsForm.creator)	
+if(validObj) 
+ cond1 = cond1 && document.searchParmsForm.creator.value == "allUsers"; 
+  	
+ validObj = testIsValidObject( document.searchParmsForm.modifiedFrom)	
+if(validObj) 
+ cond1 = cond1 && document.searchParmsForm.modifiedFrom.value == " " ;
+  	
+ validObj = testIsValidObject( document.searchParmsForm.modifiedTo)	
+if(validObj) 
+ cond1 = cond1 && document.searchParmsForm.modifiedTo.value == " " ;
+  	
+ validObj = testIsValidObject(document.searchParmsForm.modifier)	
+if(validObj) 
+ cond1 = cond1 && document.searchParmsForm.modifier.value == "allUsers"; 		
+  	
+ if(cond1)	
+  {
+     return true;
+  }
+  else{
+    return false;
+   }
+}
 
 function testIsValidObject(objToTest) {
 		if (null == objToTest) {
@@ -267,26 +327,30 @@ function testIsValidObject(objToTest) {
 
 	}
 
-function getConfirmation()
-{
-	var confirmation =false;
-        if(testIsValidObject(document.searchParmsForm.keyword)&&(document.searchParmsForm.keyword.value==null || isEmpty(document.searchParmsForm.keyword.value)))
-        {
-         confirmation =  confirm("The Search Term is empty and will cause all caDSR content to be retrieved.\n"
-         +"This is a slow, lengthy search. Are you sure you wish to proceed?");
-        }
-       else
-       {
-         confirmation=true;
-       }  
-       return confirmation; 
-}
+ function searchAll()
+ {
+        
+        var ac = document.searchParmsForm.listSearchFor.value;
+   		
+	 var checkDefaultSearch = checkIfDefaultSearch();
+	if(checkDefaultSearch)
+    	{
+    		confirmation =  confirm("The Search will cause all caDSR content for "+ ac +" to be retrieved.\n"
+        				 +"This is a slow, lengthy search. Are you sure you wish to proceed?");
+    		return confirmation;
+    	}
+    	else 
+    	{
+    	  return true;
+    	}
+         
+ }
 
   //submits the page to start the search  
   function doSearchDE()
   {
-      var confirmation = getConfirmation(); 
-     if(confirmation)
+   	
+     if(searchAll())
      {     
      <%  if (!sMenuAction.equals("searchForCreate") && sAppendAction.equals("Was Appended")) { %>
      var conf = confirm("You did not press the Append button so these results will not be appended.");
@@ -327,8 +391,8 @@ function keypress_handler()
     {
         return true;  // only interest on return kay
     }
-    var confirmation = getConfirmation();
-    if(confirmation)
+    
+    if(searchAll())
     {
     	//check if it is valid for search
     	if(bUnAppendWarning)
