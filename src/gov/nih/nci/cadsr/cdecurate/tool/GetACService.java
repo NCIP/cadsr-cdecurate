@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.55 2008-05-04 19:48:34 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.56 2008-05-05 18:33:18 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -285,7 +285,7 @@ public class GetACService implements Serializable
                 // list of ASL names to filter
                 if (session.getAttribute(Session_Data.SESSION_ASL_FILTER) == null)
                     this.getASLFilterList(session);
-                // this.getDefaultSearchCounts(session);
+                this.getDefaultSearchCounts(session);
               }
             else
             {
@@ -1623,7 +1623,7 @@ public class GetACService implements Serializable
     /**
      *  Gets the default Search counts for all the elements in the Search drop down list.
      */
-   /* public void getDefaultSearchCounts(HttpSession session)
+    public void getDefaultSearchCounts(HttpSession session)
     {
       Statement stmt=null;
       ResultSet rs =null;
@@ -1686,18 +1686,6 @@ public class GetACService implements Serializable
     		SQLHelper.closeResultSet(rs);
     		SQLHelper.closeStatement(stmt);
     		
-    		//get CRFQuestions count
-    		String sqlCRFQCount = "select count(*) from sbr.crf_view_ext";
-    		stmt =m_servlet.getConn().createStatement();
-    		rs = stmt.executeQuery(sqlCRFQCount);
-    		while(rs.next())
-    		{
-    			int crfCount = rs.getInt(1);
-    			DataManager.setAttribute(session, "CRFCount", crfCount);
-    		}
-    		SQLHelper.closeResultSet(rs);
-    		SQLHelper.closeStatement(stmt);
-    		
     		//get PV count
     		String sqlPVCount = "select count(*) from sbr.permissible_values_view";
     		stmt =m_servlet.getConn().createStatement();
@@ -1711,7 +1699,7 @@ public class GetACService implements Serializable
     		SQLHelper.closeStatement(stmt);
     		
     		//get OC count
-    		String sqlOCCount = "select count(*) from sbr.object_classes_view_ext";
+    		String sqlOCCount = "select count(*) from sbrext.object_classes_view_ext";
     		stmt =m_servlet.getConn().createStatement();
     		rs = stmt.executeQuery(sqlOCCount);
     		while(rs.next())
@@ -1723,7 +1711,7 @@ public class GetACService implements Serializable
     		SQLHelper.closeStatement(stmt);
     		
     		//get Property count
-    		String sqlPropertyCount = "select count(*) from sbr.properties_lov_view";
+    		String sqlPropertyCount = "select count(*) from sbrext.properties_view_ext";
     		stmt =m_servlet.getConn().createStatement();
     		rs = stmt.executeQuery(sqlPropertyCount);
     		while(rs.next())
@@ -1735,7 +1723,7 @@ public class GetACService implements Serializable
     		SQLHelper.closeStatement(stmt);
     		
     		//get Concept Class count
-    		String sqlCCCount = "select count(*) from sbr.concepts_view_ext";
+    		String sqlCCCount = "select count(*) from sbrext.concepts_view_ext";
     		stmt =m_servlet.getConn().createStatement();
     		rs = stmt.executeQuery(sqlCCCount);
     		while(rs.next())
@@ -1752,5 +1740,5 @@ public class GetACService implements Serializable
     		SQLHelper.closeResultSet(rs);
     		SQLHelper.closeStatement(stmt);
     	}
-    }*/
+    }
 }
