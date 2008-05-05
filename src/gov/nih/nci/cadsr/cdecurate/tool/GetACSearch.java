@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.62 2008-05-04 19:32:21 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.63 2008-05-05 18:33:44 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -9691,7 +9691,8 @@ public class GetACSearch implements Serializable
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
-        }   return vList;
+        }  
+        return vList;
     }
 
     /**

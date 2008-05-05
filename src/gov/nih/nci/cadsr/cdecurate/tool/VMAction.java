@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.36 2008-05-04 19:32:21 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.37 2008-05-05 18:33:58 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1232,9 +1232,7 @@ private String setNewVersionVM(VMForm data)
     }finally {
         SQLHelper.closeResultSet(rs);
         SQLHelper.closeCallableStatement(cstmt);
-        data.setRetErrorCode("Exception");
-      stMsg += "\\tException : Unable to close the connection at set_VM.";
-    }
+       }
     return stMsg;
   }
 
