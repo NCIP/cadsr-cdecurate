@@ -636,8 +636,7 @@ public class CurationServlet
             }
             finally{
             	 SQLHelper.closeConnection(m_conn);
-         		 logger.fatal("Error in finaaly block while closing connection");
-		          }
+         		  }
         }
     } // end of service
 
