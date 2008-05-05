@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.42 2008-05-04 19:31:18 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.43 2008-05-05 18:31:20 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -539,11 +539,7 @@ public class DBAccess
         catch (SQLException ex)
         {
             throw new ToolException(ex);
-        }finally{
-        	SQLHelper.closeResultSet(rs);
-        	SQLHelper.closePreparedStatement(pstmt_);
-        }
-        
+        }        
         return rs;
     }
     
