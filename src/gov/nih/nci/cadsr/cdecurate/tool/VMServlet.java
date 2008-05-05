@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.32 2008-05-04 19:32:21 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.33 2008-05-05 18:34:14 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -350,7 +350,6 @@ public class VMServlet extends GenericServlet
   public String submitVM(VM_Bean vm)
   {
     String vmError = "";
-    //Connection conn = null;
     try
     {
       vmData.setVMBean(vm);
@@ -361,8 +360,6 @@ public class VMServlet extends GenericServlet
       //save the alt names  //TODO - Larry - sumbit the alt name edits
       if (vm != null && !vm.getVM_IDSEQ().equals(""))
       {
-        //System.out.println(vm.getVM_IDSEQ() + " vm alt name " + vm.getVM_LONG_NAME());
-        //conn = vmData.getCurationServlet().getConn();
         vm.save(httpRequest.getSession(), vmData.getCurationServlet().getConn(), vm.getVM_IDSEQ(), vm.getVM_CONTE_IDSEQ());
       }      
     
@@ -373,8 +370,6 @@ public class VMServlet extends GenericServlet
     }
     finally
     {
-     // if (conn != null)
-       // vmData.getCurationServlet().freeConnection(conn);
     }
     return vmError;
   }
