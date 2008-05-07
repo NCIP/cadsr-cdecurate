@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.63 2008-05-05 18:33:44 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.64 2008-05-07 16:50:00 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -9601,7 +9601,7 @@ public class GetACSearch implements Serializable
                         accBean.setAC_IDSEQ(rs.getString("ac_idseq"));
                         accBean.setRANK_ORDER(rs.getString("rank_order"));
                         accBean.setCS_CSI_IDSEQ(rs.getString("cs_csi_idseq"));
-                        accBean.setCS_IDSEQ(rs.getString("csi_idseq"));
+                        accBean.setCS_IDSEQ(rs.getString("ac_idseq"));//--rs.getString("csi_idseq")removed the column uses ac_idseq
                         accBean.setCONTACT_ROLE(rs.getString("contact_role"));
                         accBean.setACC_SUBMIT_ACTION("NONE");
                         // get org and per name from the list
