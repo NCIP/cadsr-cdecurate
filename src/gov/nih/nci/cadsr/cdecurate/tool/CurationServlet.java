@@ -10592,16 +10592,7 @@ public class CurationServlet
         DataManager.setAttribute(session, "ParentConceptCode", null);
         DataManager.setAttribute(session, "VMForm.SESSION_RET_PAGE", null);
         // DataManager.setAttribute(session, "OpenTreeToConcept", "");
-        DataManager.setAttribute(session, "UnqualifiedsearchCSI", null);
-        DataManager.setAttribute(session, "UnqualifiedsearchCC", null);
-        DataManager.setAttribute(session, "UnqualifiedsearchProp", null);
-        DataManager.setAttribute(session, "UnqualifiedsearchOC", null);
-        DataManager.setAttribute(session, "UnqualifiedsearchPV", null);
-        DataManager.setAttribute(session, "UnqualifiedsearchCD", null);
-        DataManager.setAttribute(session, "UnqualifiedsearchVM", null);
-        DataManager.setAttribute(session, "UnqualifiedsearchVD", null);
-        DataManager.setAttribute(session, "UnqualifiedsearchDEC", null);
-        DataManager.setAttribute(session, "UnqualifiedsearchDE", null);
+        
 
     }
 
