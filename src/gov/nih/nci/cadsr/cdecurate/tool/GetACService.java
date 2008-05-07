@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.56 2008-05-05 18:33:18 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.57 2008-05-07 14:31:39 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1627,7 +1627,17 @@ public class GetACService implements Serializable
     {
       Statement stmt=null;
       ResultSet rs =null;
+      int defaultCount=0;
     	try{
+    		//get the default count from tool_options_view
+    		String sqlDefaultCount = "select value from sbrext.tool_options_view_ext where property like 'DEFAULT.SEARCH.COUNT'"; 
+    		stmt =m_servlet.getConn().createStatement();
+    		rs = stmt.executeQuery(sqlDefaultCount);
+    		while(rs.next())
+    		{
+    			defaultCount = rs.getInt(1);
+    			DataManager.setAttribute(session, "defaultCount", defaultCount);
+    		}
     		//get DE count
     		String sqlDECount = "select count(*) from sbr.data_elements_view";
     		stmt =m_servlet.getConn().createStatement();
@@ -1635,7 +1645,10 @@ public class GetACService implements Serializable
     		while(rs.next())
     		{
     			int deCount = rs.getInt(1);
-    			DataManager.setAttribute(session, "DECount", deCount);
+    			if(deCount > defaultCount)
+    			 DataManager.setAttribute(session, "UnqualifiedsearchDE", "N");
+    			else
+    				DataManager.setAttribute(session, "UnqualifiedsearchDE", "Y");	
     		}
     		SQLHelper.closeResultSet(rs);
     		SQLHelper.closeStatement(stmt);
@@ -1646,7 +1659,11 @@ public class GetACService implements Serializable
     		while(rs.next())
     		{
     			int decCount = rs.getInt(1);
-    			DataManager.setAttribute(session, "DECCount", decCount);
+    			if(decCount > defaultCount)
+       			 DataManager.setAttribute(session, "UnqualifiedsearchDEC", "N");
+       			else
+       			 DataManager.setAttribute(session, "UnqualifiedsearchDEC", "Y");	
+    		
     		}
     		SQLHelper.closeResultSet(rs);
     		SQLHelper.closeStatement(stmt);
@@ -1657,7 +1674,10 @@ public class GetACService implements Serializable
     		while(rs.next())
     		{
     			int vdCount = rs.getInt(1);
-    			DataManager.setAttribute(session, "VDCount", vdCount);
+    			if(vdCount > defaultCount)
+          			 DataManager.setAttribute(session, "UnqualifiedsearchVD", "N");
+          			else
+          			 DataManager.setAttribute(session, "UnqualifiedsearchVD", "Y");
     		}
     		SQLHelper.closeResultSet(rs);
     		SQLHelper.closeStatement(stmt);
@@ -1669,7 +1689,10 @@ public class GetACService implements Serializable
     		while(rs.next())
     		{
     			int vmCount = rs.getInt(1);
-    			DataManager.setAttribute(session, "VMCount", vmCount);
+    			if(vmCount > defaultCount)
+         			 DataManager.setAttribute(session, "UnqualifiedsearchVM", "N");
+         			else
+         			 DataManager.setAttribute(session, "UnqualifiedsearchVM", "Y");
     		}
     		SQLHelper.closeResultSet(rs);
     		SQLHelper.closeStatement(stmt);
@@ -1681,7 +1704,10 @@ public class GetACService implements Serializable
     		while(rs.next())
     		{
     			int cdCount = rs.getInt(1);
-    			DataManager.setAttribute(session, "CDCount", cdCount);
+    			if(cdCount > defaultCount)
+         			 DataManager.setAttribute(session, "UnqualifiedsearchCD", "N");
+         			else
+         			 DataManager.setAttribute(session, "UnqualifiedsearchCD", "Y");
     		}
     		SQLHelper.closeResultSet(rs);
     		SQLHelper.closeStatement(stmt);
@@ -1693,7 +1719,10 @@ public class GetACService implements Serializable
     		while(rs.next())
     		{
     			int pvCount = rs.getInt(1);
-    			DataManager.setAttribute(session, "PVCount", pvCount);
+    			if(pvCount > defaultCount)
+         			 DataManager.setAttribute(session, "UnqualifiedsearchPV", "N");
+         			else
+         			 DataManager.setAttribute(session, "UnqualifiedsearchPV", "Y");
     		}
     		SQLHelper.closeResultSet(rs);
     		SQLHelper.closeStatement(stmt);
@@ -1705,7 +1734,10 @@ public class GetACService implements Serializable
     		while(rs.next())
     		{
     			int ocCount = rs.getInt(1);
-    			DataManager.setAttribute(session, "OCCount", ocCount);
+    			if(ocCount > defaultCount)
+         			 DataManager.setAttribute(session, "UnqualifiedsearchOC", "N");
+         			else
+         			 DataManager.setAttribute(session, "UnqualifiedsearchOC", "Y");
     		}
     		SQLHelper.closeResultSet(rs);
     		SQLHelper.closeStatement(stmt);
@@ -1717,7 +1749,10 @@ public class GetACService implements Serializable
     		while(rs.next())
     		{
     			int propCount = rs.getInt(1);
-    			DataManager.setAttribute(session, "PropCount", propCount);
+    			if(propCount > defaultCount)
+         			 DataManager.setAttribute(session, "UnqualifiedsearchProp", "N");
+         			else
+         			 DataManager.setAttribute(session, "UnqualifiedsearchProp", "Y");
     		}
     		SQLHelper.closeResultSet(rs);
     		SQLHelper.closeStatement(stmt);
@@ -1729,11 +1764,29 @@ public class GetACService implements Serializable
     		while(rs.next())
     		{
     			int ccCount = rs.getInt(1);
-    			DataManager.setAttribute(session, "CCCount", ccCount);
+    			if(ccCount > defaultCount)
+         			 DataManager.setAttribute(session, "UnqualifiedsearchCC", "N");
+         			else
+         			 DataManager.setAttribute(session, "UnqualifiedsearchCC", "Y");
     		}
     		SQLHelper.closeResultSet(rs);
     		SQLHelper.closeStatement(stmt);
-        		
+
+    		//get CSI count
+    		String sqlCSICount = "select count(*) from sbr.cs_items_view";
+    		stmt =m_servlet.getConn().createStatement();
+    		rs = stmt.executeQuery(sqlCSICount);
+    		while(rs.next())
+    		{
+    			int csiCount = rs.getInt(1);
+    			if(csiCount > defaultCount)
+         			 DataManager.setAttribute(session, "UnqualifiedsearchCSI", "N");
+         			else
+         			 DataManager.setAttribute(session, "UnqualifiedsearchCSI", "Y");
+    		}
+    		SQLHelper.closeResultSet(rs);
+    		SQLHelper.closeStatement(stmt);
+    			
     	}catch(SQLException se){
     		logger.error("SQL Exception while retreiving counts",se);
     	}finally{
