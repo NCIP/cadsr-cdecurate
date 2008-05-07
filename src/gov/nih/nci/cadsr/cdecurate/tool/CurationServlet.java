@@ -106,7 +106,7 @@ public class CurationServlet
     public static final Logger  logger  = Logger.getLogger(CurationServlet.class.getName());
     /** declare the global variable sessionData */
     public Session_Data        sessionData;
-    
+
     /**
      * @param req HttpServletRequest object
      * @param res HttpServletResponse object
@@ -118,7 +118,7 @@ public class CurationServlet
         m_classReq = req;
         m_classRes = res;
         m_servletContext = sc;
-        
+
     }
 
     /**
@@ -184,16 +184,16 @@ public class CurationServlet
             retMsg = "Encountered an unexpected and unknown connection error, please contact the NIH Help Desk.";
         return retMsg;
     }
-    
+
 
     /**
-     * Start in the /conf/template.cdecurate-oracle-ds.xml file. Notice the <jndi-name>. 
-     * This name is used by JBoss to create and identify the connection pool. 
-     * We copied this name to the /conf/template.web.xml file in the <param-value> element. 
-     * The <param-name> for this initialization value appears in the code 
-     * NCICurationServlet.initOracleConnect() method. 
-     * The datasource pool name is then saved in a class variable “_dataSourceName”.     * 
-     * The variable is used by the CurationServlet.getConnFromDS() method which 
+     * Start in the /conf/template.cdecurate-oracle-ds.xml file. Notice the <jndi-name>.
+     * This name is used by JBoss to create and identify the connection pool.
+     * We copied this name to the /conf/template.web.xml file in the <param-value> element.
+     * The <param-name> for this initialization value appears in the code
+     * NCICurationServlet.initOracleConnect() method.
+     * The datasource pool name is then saved in a class variable “_dataSourceName”.     *
+     * The variable is used by the CurationServlet.getConnFromDS() method which
      * is used by the CurationServlet.connectDB() method.
      * @param user_
      * @param pswd_
@@ -261,9 +261,9 @@ public class CurationServlet
         }
         return SBRDb_conn;
     }
-  
+
     /**
-     * Performs the login 
+     * Performs the login
      * @param req
      * @param res
      * @param session
@@ -291,16 +291,16 @@ public class CurationServlet
 		} catch (Exception e) {
 			logger.error("Error Logging in"+ e);
 		}
-        	
-    }   
-    
+
+    }
+
     /**
-     * Authenticates the user login credentials with the jboss authentication 
+     * Authenticates the user login credentials with the jboss authentication
      * data source.
      * @param user
      * @return
      */
-    private boolean authenticate(UserBean user) 
+    private boolean authenticate(UserBean user)
     {
     	 // Use tool database pool.
         Context envContext = null;
@@ -336,7 +336,7 @@ public class CurationServlet
         }
         return validUser;
     }
-    
+
     /**
      * The service method services all requests to this servlet.
      *
@@ -347,7 +347,7 @@ public class CurationServlet
         HttpSession session;
         session = m_classReq.getSession(true);
         try
-        {    
+        {
         	// get the session data object from the session
             sessionData = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
             if (sessionData == null)
@@ -634,10 +634,10 @@ public class CurationServlet
             {
                 logger.fatal("Service forward error : " + ee.toString(), ee);
             }
-            finally{
+
+        }finally{
             	 SQLHelper.closeConnection(m_conn);
          		  }
-        }
     } // end of service
 
     /**
@@ -2242,7 +2242,7 @@ public class CurationServlet
             ForwardJSP(req, res, pageFor);
         }
     }
-    
+
     /**
      * The doEditPVActions method handles the submission of a CreatePV form Calls 'doValidatePV' if the action is
      * Validate or submit.
@@ -8598,7 +8598,7 @@ public class CurationServlet
         {
             if (actType.equals("Search"))
             {
-            	               
+
             	session.setAttribute("ApprovedRepTerm", approvedRep);
             	getACSearch.getACSearchForCreate(req, res, false);
                 ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
@@ -8616,9 +8616,9 @@ public class CurationServlet
                 //to display the pre-populated table with the list of approved Rep Terms.
                 if(sSearchFor.equals("RepTerm"))
                 {
-                System.out.println(req.getParameter("nonEVSRepTermSearch"));	
-                 this.getRepTermDefaultContext();	
-                 approvedRep=true;	
+                System.out.println(req.getParameter("nonEVSRepTermSearch"));
+                 this.getRepTermDefaultContext();
+                 approvedRep=true;
                  session.setAttribute("ApprovedRepTerm", approvedRep);
               // get default attributes
                  Vector vSel = (Vector) session.getAttribute("creSelectedAttr");
@@ -8632,7 +8632,7 @@ public class CurationServlet
                  vSelClone.remove("caDSR Component");
                  DataManager.setAttribute(session, "creSelectedAttr", vSelClone);
                  getApprovedRepTerm();
-                 
+
                 }
                 ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
             }
@@ -8650,7 +8650,7 @@ public class CurationServlet
                 ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
             }
             else if (actType.equals("nonEVS"))
-                ForwardJSP(req, res, "/NonEVSSearchPage.jsp");            
+                ForwardJSP(req, res, "/NonEVSSearchPage.jsp");
         }
         else
             ForwardJSP(req, res, "/ErrorPage.jsp");
@@ -9434,14 +9434,14 @@ public class CurationServlet
         {
         	 Integer curInd = new Integer((String) req.getParameter("hiddenSelectedRow"));
              if (curInd != null)
-             { int thisInd = curInd.intValue(); 
+             { int thisInd = curInd.intValue();
                Vector results =(Vector)session.getAttribute("vSelRows");
                session.setAttribute("creKeyword", session.getAttribute("serKeyword"));
                PV_Bean pv = (PV_Bean)results.get(thisInd);
                VM_Bean vm = pv.getPV_VM();
                this.doOpenEditVM(req, res,vm,pv);
-             }  
-        }     
+             }
+        }
          // store empty result vector in the attribute
         else if (actType.equals("clearRecords"))
         {
@@ -10592,8 +10592,17 @@ public class CurationServlet
         DataManager.setAttribute(session, "ParentConceptCode", null);
         DataManager.setAttribute(session, "VMForm.SESSION_RET_PAGE", null);
         // DataManager.setAttribute(session, "OpenTreeToConcept", "");
-        DataManager.setAttribute(session, "TabFocus", "VD");
-        
+        DataManager.setAttribute(session, "UnqualifiedsearchCSI", null);
+        DataManager.setAttribute(session, "UnqualifiedsearchCC", null);
+        DataManager.setAttribute(session, "UnqualifiedsearchProp", null);
+        DataManager.setAttribute(session, "UnqualifiedsearchOC", null);
+        DataManager.setAttribute(session, "UnqualifiedsearchPV", null);
+        DataManager.setAttribute(session, "UnqualifiedsearchCD", null);
+        DataManager.setAttribute(session, "UnqualifiedsearchVM", null);
+        DataManager.setAttribute(session, "UnqualifiedsearchVD", null);
+        DataManager.setAttribute(session, "UnqualifiedsearchDEC", null);
+        DataManager.setAttribute(session, "UnqualifiedsearchDE", null);
+
     }
 
     /**
@@ -10676,7 +10685,7 @@ public class CurationServlet
         DataManager.setAttribute(session, "TabFocus", "VD");
         // clear vm attribute
         DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, new VM_Bean());
-        
+
     }
 
     /**
@@ -10720,7 +10729,7 @@ public class CurationServlet
             vDefaultAttr.addElement("EVS Identifier");
             vDefaultAttr.addElement("Conceptual Domain");
             vDefaultAttr.addElement("Definition");
-            
+
         }
         else if (searchAC.equals("Questions"))
         {
@@ -11317,7 +11326,7 @@ public class CurationServlet
             // store the session data object in the session at the end of the request
             DataManager.setAttribute(session, Session_Data.CURATION_SESSION_ATTR, this.sessionData);
             String fullPage = "/jsp" + sJSPPage;
-          
+
          // ServletContext sc = this.getServletContext();
             RequestDispatcher rd = m_servletContext.getRequestDispatcher(fullPage);
             rd.forward(req, res);
@@ -11449,7 +11458,7 @@ public class CurationServlet
 	 */
 	public Connection getConn() {
 		 return this.m_conn;
-			 	
+
 	}
 
 	/**
@@ -11458,7 +11467,7 @@ public class CurationServlet
 	public void setConn(Connection conn) {
 		this.m_conn = conn;
 	}
-	
+
 	/**
 	 * Get the approved list of Rep Terms for display
 	 */
@@ -11537,5 +11546,5 @@ public class CurationServlet
         	SQLHelper.closeStatement(stm);
         }
     }
-	
+
 } // end of class
