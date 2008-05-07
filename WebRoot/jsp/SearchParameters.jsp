@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.12 2008-05-04 19:34:21 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.13 2008-05-07 16:51:03 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -226,6 +226,17 @@
 				sVersion = "All";
 				selCD = "All Domains";
 			}
+			String temp = (String)session.getAttribute("UnqualifiedsearchDE");
+	     	String temp1 = (String)session.getAttribute("UnqualifiedsearchDEC"); 
+	     	String temp2 = (String)session.getAttribute("UnqualifiedsearchCSI"); 
+	     	String temp3 = (String)session.getAttribute("UnqualifiedsearchCD"); 
+	     	String temp4 = (String)session.getAttribute("UnqualifiedsearchVD"); 
+	     	String temp5 = (String)session.getAttribute("UnqualifiedsearchPV"); 
+	     	String temp6 = (String)session.getAttribute("UnqualifiedsearchVM");
+	     	String temp7 = (String)session.getAttribute("UnqualifiedsearchOC"); 
+	     	String temp8 = (String)session.getAttribute("UnqualifiedsearchCC");
+	     	String temp9 = (String)session.getAttribute("UnqualifiedsearchProp"); 
+	     	System.out.println(temp + " " + temp1+ " " + temp2 + " "+ temp3 +" ");
 		%>
 
 		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
@@ -316,6 +327,75 @@ if(validObj)
    }
 }
 
+function unQualifiedSearch(ac)
+{
+ var flag = true;
+ if(ac=="DataElement")
+ {
+  <% if(temp.equals("N")){%>
+        flag =false;
+      <%}%>
+  }
+  if(ac=="DataElementConcept"){
+  <%if(temp1.equals("N")){%>
+        flag =false;
+      <%}%>
+      
+  }
+  if(ac=="ClassSchemeItems"){
+    <% if(temp2.equals("N")){%>
+          flag =false;
+        <%}%>
+        
+    }
+  if(ac=="ConceptualDomain"){
+    <% if(temp3.equals("N")){%>
+          flag =false;
+        <%}%>
+        
+    }
+  if(ac=="ValueDomain"){
+    <% if(temp4.equals("N")){%>
+          flag =false;
+        <%}%>
+        
+    }
+  if(ac=="PermissibleValue"){
+    <% if(temp5.equals("N")){%>
+          flag =false;
+        <%}%>
+        
+    }
+  
+  if(ac=="ValueMeaning"){
+    <% if(temp6.equals("N")){%>
+          flag =false;
+        <%}%>
+        
+    }
+  if(ac=="ObjectClass"){
+      <% if(temp7.equals("N")){%>
+            flag =false;
+          <%}%>
+          
+    }
+ if(ac=="ConceptClass"){
+      <% if(temp8.equals("N")){%>
+            flag =false;
+          <%}%>
+          
+    }
+    if(ac=="Property"){
+      <% if(temp9.equals("N")){%>
+            flag =false;
+          <%}%>
+          
+    }
+    return flag;
+}
+
+
+
 function testIsValidObject(objToTest) {
 		if (null == objToTest) {
 			return false;
@@ -326,14 +406,14 @@ function testIsValidObject(objToTest) {
 		return true;
 
 	}
-
+	
  function searchAll()
  {
         
         var ac = document.searchParmsForm.listSearchFor.value;
-   		
-	 var checkDefaultSearch = checkIfDefaultSearch();
-	if(checkDefaultSearch)
+        var unQualifiedSearchflag = unQualifiedSearch(ac);
+        var checkDefaultSearch = checkIfDefaultSearch();
+   	    if(checkDefaultSearch && !unQualifiedSearchflag)
     	{
     		confirmation =  confirm("The Search will cause all caDSR content for "+ ac +" to be retrieved.\n"
         				 +"This is a slow, lengthy search. Are you sure you wish to proceed?");
