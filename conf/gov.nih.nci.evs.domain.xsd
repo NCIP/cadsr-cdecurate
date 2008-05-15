@@ -210,7 +210,7 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="inverseRoleCollection" minOccurs="0" maxOccurs="1">
+      <xs:element name="roleCollection" minOccurs="0" maxOccurs="1">
         <xs:complexType>
           <xs:sequence>
             <xs:element ref="Role" minOccurs="0" maxOccurs="unbounded" />
