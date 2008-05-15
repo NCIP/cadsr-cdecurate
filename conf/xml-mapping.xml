@@ -2,63 +2,6 @@
 <!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Object Mapping DTD Version 1.0//EN" "http://www.castor.org/mapping.dtd">
 
 <mapping>
-  <class name="gov.nih.nci.evs.domain.Qualifier">
-    <map-to xml="Qualifier" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
-    <field name="name" type="string">
-      <bind-xml name="name" node="attribute" />
-    </field>
-    <field name="value" type="string">
-      <bind-xml name="value" node="attribute" />
-    </field>
-  </class>
-  <class name="gov.nih.nci.evs.domain.Atom">
-    <map-to xml="Atom" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
-    <field name="code" type="string">
-      <bind-xml name="code" node="attribute" />
-    </field>
-    <field name="lui" type="string">
-      <bind-xml name="lui" node="attribute" />
-    </field>
-    <field name="name" type="string">
-      <bind-xml name="name" node="attribute" />
-    </field>
-    <field name="origin" type="string">
-      <bind-xml name="origin" node="attribute" />
-    </field>
-  </class>
-  <class name="gov.nih.nci.evs.domain.Source">
-    <map-to xml="Source" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
-    <field name="abbreviation" type="string">
-      <bind-xml name="abbreviation" node="attribute" />
-    </field>
-    <field name="code" type="string">
-      <bind-xml name="code" node="attribute" />
-    </field>
-    <field name="description" type="string">
-      <bind-xml name="description" node="attribute" />
-    </field>
-  </class>
-  <class name="gov.nih.nci.evs.domain.Definition">
-    <map-to xml="Definition" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
-    <field name="definition" type="string">
-      <bind-xml name="definition" node="attribute" />
-    </field>
-  </class>
-  <class name="gov.nih.nci.evs.domain.TreeNode">
-    <map-to xml="TreeNode" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
-    <field name="isA" type="boolean">
-      <bind-xml name="isA" node="attribute" />
-    </field>
-    <field name="links" type="java.util.Set">
-      <bind-xml name="links" node="attribute" />
-    </field>
-    <field name="name" type="string">
-      <bind-xml name="name" node="attribute" />
-    </field>
-    <field name="traverseDown" type="boolean">
-      <bind-xml name="traverseDown" node="attribute" />
-    </field>
-  </class>
   <class name="gov.nih.nci.evs.domain.MetaThesaurusConcept">
     <map-to xml="MetaThesaurusConcept" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
     <field name="cui" type="string">
@@ -95,37 +38,25 @@
       <bind-xml name="userName" node="attribute" />
     </field>
   </class>
-  <class name="gov.nih.nci.evs.domain.SemanticType">
-    <map-to xml="SemanticType" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
-    <field name="id" type="string">
-      <bind-xml name="id" node="attribute" />
-    </field>
+  <class name="gov.nih.nci.evs.domain.Role">
+    <map-to xml="Role" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
     <field name="name" type="string">
       <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="value" type="string">
+      <bind-xml name="value" node="attribute" />
     </field>
   </class>
-  <class name="gov.nih.nci.evs.domain.AttributeSetDescriptor">
-    <map-to xml="AttributeSetDescriptor" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
+  <class name="gov.nih.nci.evs.domain.Property">
+    <map-to xml="Property" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
     <field name="name" type="string">
       <bind-xml name="name" node="attribute" />
     </field>
-    <field name="WITH_ALL_ATTRIBUTES" type="int">
-      <bind-xml name="WITH_ALL_ATTRIBUTES" node="attribute" />
+    <field name="value" type="string">
+      <bind-xml name="value" node="attribute" />
     </field>
-    <field name="WITH_ALL_PROPERTIES" type="int">
-      <bind-xml name="WITH_ALL_PROPERTIES" node="attribute" />
-    </field>
-    <field name="WITH_ALL_ROLES" type="int">
-      <bind-xml name="WITH_ALL_ROLES" node="attribute" />
-    </field>
-    <field name="WITH_NO_ATTRIBUTES" type="int">
-      <bind-xml name="WITH_NO_ATTRIBUTES" node="attribute" />
-    </field>
-    <field name="roleCollection" type="gov.nih.nci.evs.domain.Role" collection="collection" handler="gov.nih.nci.system.client.util.xml.CastorCollectionFieldHandler">
-      <bind-xml name="Role" type="gov.nih.nci.evs.domain.Role" location="roleCollection" node="element" />
-    </field>
-    <field name="propertyCollection" type="gov.nih.nci.evs.domain.Property" collection="collection" handler="gov.nih.nci.system.client.util.xml.CastorCollectionFieldHandler">
-      <bind-xml name="Property" type="gov.nih.nci.evs.domain.Property" location="propertyCollection" node="element" />
+    <field name="qualifierCollection" type="gov.nih.nci.evs.domain.Qualifier" collection="collection" handler="gov.nih.nci.system.client.util.xml.CastorCollectionFieldHandler">
+      <bind-xml name="Qualifier" type="gov.nih.nci.evs.domain.Qualifier" location="qualifierCollection" node="element" />
     </field>
   </class>
   <class name="gov.nih.nci.evs.domain.DescLogicConcept">
@@ -154,8 +85,8 @@
     <field name="associationCollection" type="gov.nih.nci.evs.domain.Association" collection="collection" handler="gov.nih.nci.system.client.util.xml.CastorCollectionFieldHandler">
       <bind-xml name="Association" type="gov.nih.nci.evs.domain.Association" location="associationCollection" node="element" />
     </field>
-    <field name="inverseRoleCollection" type="gov.nih.nci.evs.domain.Role" collection="collection" handler="gov.nih.nci.system.client.util.xml.CastorCollectionFieldHandler">
-      <bind-xml name="Role" type="gov.nih.nci.evs.domain.Role" location="inverseRoleCollection" node="element" />
+    <field name="roleCollection" type="gov.nih.nci.evs.domain.Role" collection="collection" handler="gov.nih.nci.system.client.util.xml.CastorCollectionFieldHandler">
+      <bind-xml name="Role" type="gov.nih.nci.evs.domain.Role" location="roleCollection" node="element" />
     </field>
     <field name="propertyCollection" type="gov.nih.nci.evs.domain.Property" collection="collection" handler="gov.nih.nci.system.client.util.xml.CastorCollectionFieldHandler">
       <bind-xml name="Property" type="gov.nih.nci.evs.domain.Property" location="propertyCollection" node="element" />
@@ -170,31 +101,34 @@
       <bind-xml name="editDate" node="attribute" />
     </field>
   </class>
-  <class name="gov.nih.nci.evs.domain.Silo">
-    <map-to xml="Silo" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
-    <field name="id" type="int">
-      <bind-xml name="id" node="attribute" />
-    </field>
+  <class name="gov.nih.nci.evs.domain.AttributeSetDescriptor">
+    <map-to xml="AttributeSetDescriptor" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
     <field name="name" type="string">
       <bind-xml name="name" node="attribute" />
     </field>
+    <field name="WITH_ALL_ATTRIBUTES" type="int">
+      <bind-xml name="WITH_ALL_ATTRIBUTES" node="attribute" />
+    </field>
+    <field name="WITH_ALL_PROPERTIES" type="int">
+      <bind-xml name="WITH_ALL_PROPERTIES" node="attribute" />
+    </field>
+    <field name="WITH_ALL_ROLES" type="int">
+      <bind-xml name="WITH_ALL_ROLES" node="attribute" />
+    </field>
+    <field name="WITH_NO_ATTRIBUTES" type="int">
+      <bind-xml name="WITH_NO_ATTRIBUTES" node="attribute" />
+    </field>
+    <field name="roleCollection" type="gov.nih.nci.evs.domain.Role" collection="collection" handler="gov.nih.nci.system.client.util.xml.CastorCollectionFieldHandler">
+      <bind-xml name="Role" type="gov.nih.nci.evs.domain.Role" location="roleCollection" node="element" />
+    </field>
+    <field name="propertyCollection" type="gov.nih.nci.evs.domain.Property" collection="collection" handler="gov.nih.nci.system.client.util.xml.CastorCollectionFieldHandler">
+      <bind-xml name="Property" type="gov.nih.nci.evs.domain.Property" location="propertyCollection" node="element" />
+    </field>
   </class>
-  <class name="gov.nih.nci.evs.domain.Role">
-    <map-to xml="Role" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
-    <field name="name" type="string">
-      <bind-xml name="name" node="attribute" />
-    </field>
-    <field name="value" type="string">
-      <bind-xml name="value" node="attribute" />
-    </field>
-  </class>
-  <class name="gov.nih.nci.evs.domain.HistoryRecord">
-    <map-to xml="HistoryRecord" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
-    <field name="descLogicConceptCode" type="string">
-      <bind-xml name="descLogicConceptCode" node="attribute" />
-    </field>
-    <field name="historyCollection" type="gov.nih.nci.evs.domain.History" collection="collection" handler="gov.nih.nci.system.client.util.xml.CastorCollectionFieldHandler">
-      <bind-xml name="History" type="gov.nih.nci.evs.domain.History" location="historyCollection" node="element" />
+  <class name="gov.nih.nci.evs.domain.Definition">
+    <map-to xml="Definition" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
+    <field name="definition" type="string">
+      <bind-xml name="definition" node="attribute" />
     </field>
   </class>
   <class name="gov.nih.nci.evs.domain.Association">
@@ -209,31 +143,40 @@
       <bind-xml name="Qualifier" type="gov.nih.nci.evs.domain.Qualifier" location="qualifierCollection" node="element" />
     </field>
   </class>
-  <class name="gov.nih.nci.evs.domain.History">
-    <map-to xml="History" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
-    <field name="editAction" type="string">
-      <bind-xml name="editAction" node="attribute" />
+  <class name="gov.nih.nci.evs.domain.Source">
+    <map-to xml="Source" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
+    <field name="abbreviation" type="string">
+      <bind-xml name="abbreviation" node="attribute" />
     </field>
-    <field name="editActionDate" type="date">
-      <bind-xml name="editActionDate" node="attribute" />
+    <field name="code" type="string">
+      <bind-xml name="code" node="attribute" />
     </field>
-    <field name="namespaceId" type="int">
-      <bind-xml name="namespaceId" node="attribute" />
-    </field>
-    <field name="referenceCode" type="string">
-      <bind-xml name="referenceCode" node="attribute" />
+    <field name="description" type="string">
+      <bind-xml name="description" node="attribute" />
     </field>
   </class>
-  <class name="gov.nih.nci.evs.domain.Property">
-    <map-to xml="Property" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
+  <class name="gov.nih.nci.evs.domain.Atom">
+    <map-to xml="Atom" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
+    <field name="code" type="string">
+      <bind-xml name="code" node="attribute" />
+    </field>
+    <field name="lui" type="string">
+      <bind-xml name="lui" node="attribute" />
+    </field>
     <field name="name" type="string">
       <bind-xml name="name" node="attribute" />
     </field>
-    <field name="value" type="string">
-      <bind-xml name="value" node="attribute" />
+    <field name="origin" type="string">
+      <bind-xml name="origin" node="attribute" />
     </field>
-    <field name="qualifierCollection" type="gov.nih.nci.evs.domain.Qualifier" collection="collection" handler="gov.nih.nci.system.client.util.xml.CastorCollectionFieldHandler">
-      <bind-xml name="Qualifier" type="gov.nih.nci.evs.domain.Qualifier" location="qualifierCollection" node="element" />
+  </class>
+  <class name="gov.nih.nci.evs.domain.SemanticType">
+    <map-to xml="SemanticType" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
+    <field name="id" type="string">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
     </field>
   </class>
   <class name="gov.nih.nci.evs.domain.EdgeProperties">
@@ -251,6 +194,45 @@
       <bind-xml name="traverseDown" node="attribute" />
     </field>
   </class>
+  <class name="gov.nih.nci.evs.domain.History">
+    <map-to xml="History" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
+    <field name="editAction" type="string">
+      <bind-xml name="editAction" node="attribute" />
+    </field>
+    <field name="editActionDate" type="date">
+      <bind-xml name="editActionDate" node="attribute" />
+    </field>
+    <field name="namespaceId" type="int">
+      <bind-xml name="namespaceId" node="attribute" />
+    </field>
+    <field name="referenceCode" type="string">
+      <bind-xml name="referenceCode" node="attribute" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.evs.domain.TreeNode">
+    <map-to xml="TreeNode" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
+    <field name="isA" type="boolean">
+      <bind-xml name="isA" node="attribute" />
+    </field>
+    <field name="links" type="java.util.Set">
+      <bind-xml name="links" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="traverseDown" type="boolean">
+      <bind-xml name="traverseDown" node="attribute" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.evs.domain.Qualifier">
+    <map-to xml="Qualifier" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+    <field name="value" type="string">
+      <bind-xml name="value" node="attribute" />
+    </field>
+  </class>
   <class name="gov.nih.nci.evs.domain.Vocabulary">
     <map-to xml="Vocabulary" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
     <field name="description" type="string">
@@ -264,6 +246,24 @@
     </field>
     <field name="siloCollection" type="gov.nih.nci.evs.domain.Silo" collection="collection" handler="gov.nih.nci.system.client.util.xml.CastorCollectionFieldHandler">
       <bind-xml name="Silo" type="gov.nih.nci.evs.domain.Silo" location="siloCollection" node="element" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.evs.domain.Silo">
+    <map-to xml="Silo" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
+    <field name="id" type="int">
+      <bind-xml name="id" node="attribute" />
+    </field>
+    <field name="name" type="string">
+      <bind-xml name="name" node="attribute" />
+    </field>
+  </class>
+  <class name="gov.nih.nci.evs.domain.HistoryRecord">
+    <map-to xml="HistoryRecord" ns-uri="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" />
+    <field name="descLogicConceptCode" type="string">
+      <bind-xml name="descLogicConceptCode" node="attribute" />
+    </field>
+    <field name="historyCollection" type="gov.nih.nci.evs.domain.History" collection="collection" handler="gov.nih.nci.system.client.util.xml.CastorCollectionFieldHandler">
+      <bind-xml name="History" type="gov.nih.nci.evs.domain.History" location="historyCollection" node="element" />
     </field>
   </class>
 </mapping>

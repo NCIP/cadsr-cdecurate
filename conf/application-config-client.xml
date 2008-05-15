@@ -6,13 +6,13 @@
 			<map>
 				<entry key="APPLICATION_SERVICE_BEAN" value="applicationService"/>
 				<entry key="AUTHENTICATION_SERVICE_BEAN" value-ref="authenticationProvider"/>
-				<entry key="APPLICATION_SERVICE_URL"  value="http://evsapi.nci.nih.gov/evsapi41/http/applicationService"/>
+				<entry key="APPLICATION_SERVICE_URL"  value="http://evsapi-dev.nci.nih.gov:19080/evsapi40/http/applicationService"/>
 				<entry key="APPLICATION_SERVICE_CONFIG"  value-ref="applicationServiceConfig"/>
 			</map>
 		</constructor-arg>
 	</bean>
 	
-	<bean id="interceptor" class="gov.nih.nci.system.client.proxy.ApplicationServiceProxy" singleton="true">
+	<bean id="interceptor" class="gov.nih.nci.system.client.proxy.EVSApplicationServiceProxy" singleton="true">
 		<property name="proxyFactory">
 			<bean class="gov.nih.nci.system.client.proxy.EVSProxyHelperImpl"/>
 		</property>
@@ -21,7 +21,7 @@
 	<bean id="applicationService" class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="target">
 			<bean class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-				<property name="serviceUrl" value="http://localhost:8080/evsapi41/http/applicationService"/>
+				<property name="serviceUrl" value="http://evsapi-dev.nci.nih.gov:19080/evsapi40/http/applicationService"/>
 				<property name="serviceInterface" value="gov.nih.nci.system.applicationservice.EVSApplicationService"/>
 				<property name="httpInvokerRequestExecutor">
 					<bean class="org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor"/>
@@ -35,7 +35,7 @@
 	<bean id="authenticationProvider" class="org.acegisecurity.providers.rcp.RemoteAuthenticationProvider">
 		<property name="remoteAuthenticationManager">
 			<bean class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-			    <property name="serviceUrl" value="http://localhost:8080/evsapi41/http/remoteAuthenticationManager"/>
+			    <property name="serviceUrl" value="http://evsapi-dev.nci.nih.gov:19080/evsapi40/http/remoteAuthenticationManager"/>
 			    <property name="serviceInterface" value="org.acegisecurity.providers.rcp.RemoteAuthenticationManager"/>
 			</bean>
 		</property>
@@ -45,7 +45,7 @@
 	<bean id="applicationServiceConfig" class="java.lang.String">
 		<constructor-arg>
 			<value>
-				&lt;bean id=&quot;interceptor&quot; class=&quot;gov.nih.nci.system.client.proxy.ApplicationServiceProxy&quot;&gt;
+				&lt;bean id=&quot;interceptor&quot; class=&quot;gov.nih.nci.system.client.proxy.EVSApplicationServiceProxy&quot;&gt;
 					&lt;property name=&quot;proxyFactory&quot;&gt;
 						&lt;bean class=&quot;gov.nih.nci.system.client.proxy.EVSProxyHelperImpl&quot;/&gt;
 					&lt;/property&gt;
