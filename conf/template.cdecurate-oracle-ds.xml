@@ -2,7 +2,7 @@
 <!--
     JBoss Server Configuration for the CDE Curation Tool, Sentinel Tool and Freestyle
 
-    $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.cdecurate-oracle-ds.xml,v 1.2 2008-02-20 19:30:01 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.cdecurate-oracle-ds.xml,v 1.3 2008-05-16 20:28:22 chickerura Exp $
     $Name: not supported by cvs2svn $
  -->
 <datasources>
@@ -13,7 +13,7 @@
         <exception-sorter-class-name>org.jboss.resource.adapter.jdbc.vendor.OracleExceptionSorter</exception-sorter-class-name>
         <check-valid-connection-sql>select 1 from dual</check-valid-connection-sql>
         <blocking-timeout-millis>10000</blocking-timeout-millis>
-        <idle-timeout-minutes>2</idle-timeout-minutes>
+        <idle-timeout-minutes>6</idle-timeout-minutes>
         <max-pool-size>85</max-pool-size>
         <min-pool-size>1</min-pool-size>
         <user-name>@CADSR.DS.USER@</user-name> 
