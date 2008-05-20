@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.49 2008-03-24 23:53:08 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.50 2008-05-20 14:25:56 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -844,7 +844,6 @@ public final class EVS_UserBean implements Serializable
       } 
       return vocabList;
   }
-
   
   /**
    * gets EVS related data from tools options table at login instead of hardcoding
@@ -878,7 +877,6 @@ public final class EVS_UserBean implements Serializable
         {
           TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
           if (tob != null) eURL = tob.getVALUE();      
-          //System.out.println(tob.getVALUE() + " evs link cadsr for all " + eURL);
         }
       }
    //   if (eURL != null) System.out.println(" evs url " + eURL);
