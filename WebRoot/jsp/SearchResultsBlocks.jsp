@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.9 2008-01-28 20:07:11 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.10 2008-05-20 14:26:36 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -573,7 +573,7 @@
 						<img src="images/search_light.gif" border="0" alt="Perform a Rep Term search using the primary concept." onClick="javascript:EnableButtonWithTxt1('<%=ckName%>');">
 					</td>
 					<td width="5" valign="top">
-						 <img src="images/copy.gif" border="0" alt="Perform a wildcard search using the selected term." onClick="javascript:EnableButtonWithTxt('<%=ckName%>');">
+						 <img src="images/copy.gif" border="0" alt="Paste the concept name into Search Term field for wildcard search." onClick="javascript:EnableButtonWithTxt('<%=ckName%>');">
 					</td>
 					<%} %>
 					<td width="150" valign="top">
