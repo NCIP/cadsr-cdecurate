@@ -1,6 +1,6 @@
 //Copyright (c) 2000 ScenPro, Inc.
 
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.52 2008-05-01 19:51:57 chickerura Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.53 2008-05-22 15:26:28 chickerura Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -740,8 +740,8 @@ public class EVSSearch implements Serializable {
 					try {
 						if (conceptCode != null && !conceptCode.equals("")) {
 							try {
-								query = this.addSecurityToken(query, "",
-										dtsVocab);
+								/*query = this.addSecurityToken(query, "",
+										dtsVocab);*/
 								query.getSubConcepts(dtsVocab, conceptCode);
 								subs = evsService.evsSearch(query);
 							} catch (Exception ex) {
