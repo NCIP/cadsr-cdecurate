@@ -6,3 +6,4 @@ deployment-artifacts
 DEV.build.properties
 .myumldata
 .settings
+dev.properties
