@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.16 2008-04-10 19:37:08 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.17 2008-05-29 19:16:50 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -1109,7 +1109,7 @@
 																	</div>
 																	<div id="<%=pvCount%>VMEditLink" style="display: inline; text-align:right">
 																		<span style="padding-left:0.3in; padding-right:0.1in; text-align:right">
-																			<% if (submit != null && submit.equals("INS")) { %>
+																			<% if (submit != null && (submit.length()==0 || submit.equals("INS"))) { %>
 																				  [Edit VM]
 																			<% } else { %>
 																				<a href="javascript:openEditVMWindow('<%=pvCount%>');">
@@ -1139,7 +1139,7 @@
 																				</td>
 																				<td>
 																				<%System.out.println("Submit" +submit); 
-																				 if (submit != null && submit.equals("INS")) { %>
+																				 if (submit != null &&(submit.length()==0 || submit.equals("INS"))) { %>
 																				  [System Assigned after Value Domain Submission]
 																			<% } else { %>
 																					<%= vm.getVM_ID()+"v"+ vm.getVM_VERSION()%>
