@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.55 2008-05-05 18:32:42 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.56 2008-05-29 19:19:45 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2261,8 +2261,6 @@ public class InsACService implements Serializable {
 						.getConn()
 						.prepareCall(
 								"{call SBREXT.SBREXT_SET_ROW.SET_DE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-				// cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); //
-				// ua_name
 				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // return
 				// code
 				cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // de id
