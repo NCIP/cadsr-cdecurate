@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.50 2008-05-20 14:25:56 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.51 2008-05-29 19:19:07 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -818,7 +818,7 @@ public final class EVS_UserBean implements Serializable
 	  java.util.List vocabList = null;
 	  try
       {
-	  EVSApplicationService evsService = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(eURL);
+	  EVSApplicationService evsService = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(eURL,"EvsServiceInfo");
       EVSQuery query = new EVSQueryImpl();
       query.getVocabularyNames();
      
