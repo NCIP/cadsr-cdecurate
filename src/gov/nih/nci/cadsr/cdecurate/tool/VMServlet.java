@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.33 2008-05-05 18:34:14 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.34 2008-05-29 19:19:45 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -135,7 +135,7 @@ public class VMServlet extends GenericServlet
    * start the search
    */
   @SuppressWarnings("unchecked")
-  public void readDataForSearch()
+  public void readDataForSearch(GetACSearch getac)
   {
     HttpServletRequest req = httpRequest;
     HttpSession session = req.getSession();
@@ -210,7 +210,7 @@ public class VMServlet extends GenericServlet
     DataManager.setAttribute(session, "vACSearch", vAC);
 
     //call the method to get the result vector
-    this.readVMResult();
+    this.readVMResult(getac);
     //keep these empty for now
     //DataManager.setAttribute(session, "SearchLongName", new Vector<String>());
     //DataManager.setAttribute(session, "SearchMeanDescription",  new Vector<String>());      
@@ -899,6 +899,26 @@ private String goBackToSearch()
 
     httpRequest.setAttribute(VMForm.REQUEST_FOCUS_ELEMENT, acType);
     return sJsp;
+  }
+  
+  
+  
+  /**
+   * gets teh result vector and stores attributes in the request/session object
+   *
+   */
+  private void readVMResult(GetACSearch getac)
+  {
+    HttpServletRequest req = httpRequest;
+    HttpSession session = req.getSession();
+    
+    //call teh method for sorting
+    vmAction.getVMResult(vmData,req,getac);
+    //store teh result back in request/session attributes
+    DataManager.setAttribute(session, "results", vmData.getResultList());
+    req.setAttribute("creRecsFound", vmData.getNumRecFound());
+    req.setAttribute("labelKeyword", vmData.getResultLabel());  
+    req.setAttribute("recsFound", vmData.getNumRecFound());
   }
   
   /**

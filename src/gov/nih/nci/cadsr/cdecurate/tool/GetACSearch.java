@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.64 2008-05-07 16:50:00 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.65 2008-05-29 19:19:45 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -284,7 +284,7 @@ public class GetACSearch implements Serializable
                     else if (sSearchAC.equals("ValueMeaning"))
                     {
                         VMServlet vmSer = new VMServlet(req, res, m_servlet);
-                        vmSer.readDataForSearch();
+                        vmSer.readDataForSearch(this);
                         vAC = (Vector)session.getAttribute("vACSearch");
                     }
                     else if (sSearchAC.equals("ObjectClass"))
@@ -441,7 +441,7 @@ public class GetACSearch implements Serializable
                     else if (sSearchAC.equals("ValueMeaning"))
                     {
                         VMServlet vmSer = new VMServlet(req, res, m_servlet);
-                        vmSer.readDataForSearch();
+                        vmSer.readDataForSearch(this);
                         vAC = (Vector)session.getAttribute("vACSearch");
                     }
                     else if (sSearchAC.equals("ObjectClass"))
@@ -495,8 +495,9 @@ public class GetACSearch implements Serializable
                     }
                     else if (sSearchAC.equals("ValueMeaning"))
                     {
-                        VMServlet vmSer = new VMServlet(req, res, m_servlet);
-                        vmSer.readDataForSearch();
+                    	initializeStack(session);
+                    	VMServlet vmSer = new VMServlet(req, res, m_servlet);
+                        vmSer.readDataForSearch(this);
                         vAC = (Vector)session.getAttribute("vACSearch");
                     }
                     else if (sSearchAC.equals("ClassSchemeItems"))
@@ -526,28 +527,7 @@ public class GetACSearch implements Serializable
                                 || sSearchAC.equals("ClassSchemeItems") || sSearchAC.equals("PermissibleValue")
                                 || sSearchAC.equals("ConceptClass"))
                 {
-                    Stack vSearchIDStack = new Stack();
-                    DataManager.setAttribute(session, "vSearchIDStack", vSearchIDStack);
-                    Stack vSearchNameStack = new Stack();
-                    DataManager.setAttribute(session, "vSearchNameStack", vSearchNameStack);
-                    Stack vSearchLongNameStack = new Stack();
-                    DataManager.setAttribute(session, "vSearchLongNameStack", vSearchLongNameStack);
-                    Stack vSearchUsedContextStack = new Stack();
-                    DataManager.setAttribute(session, "vSearchUsedContextStack", vSearchUsedContextStack);
-                    Stack sSearchACStack = new Stack();
-                    DataManager.setAttribute(session, "sSearchACStack", sSearchACStack);
-                    Stack vACSearchStack = new Stack();
-                    DataManager.setAttribute(session, "vACSearchStack", vACSearchStack);
-                    Stack vSearchASLStack = new Stack();
-                    DataManager.setAttribute(session, "vSearchASLStack", vSearchASLStack);
-                    Stack vSelRowsStack = new Stack();
-                    DataManager.setAttribute(session, "vSelRowsStack", vSelRowsStack);
-                    Stack vResultStack = new Stack();
-                    DataManager.setAttribute(session, "vResultStack", vResultStack);
-                    Stack vCompAttrStack = new Stack();
-                    DataManager.setAttribute(session, "vCompAttrStack", vCompAttrStack);
-                    Stack vAttributeListStack = new Stack();
-                    DataManager.setAttribute(session, "vAttributeListStack", vAttributeListStack);
+                   initializeStack(session);
                     EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
                     // call method to get the final result vector
                     Vector vResult = new Vector();                             	
@@ -585,6 +565,35 @@ public class GetACSearch implements Serializable
         }
     }
 
+    /**
+     * Initializes the Stack 
+     * @param session
+     */
+    private void initializeStack(HttpSession session)
+    {
+    	 Stack vSearchIDStack = new Stack();
+         DataManager.setAttribute(session, "vSearchIDStack", vSearchIDStack);
+         Stack vSearchNameStack = new Stack();
+         DataManager.setAttribute(session, "vSearchNameStack", vSearchNameStack);
+         Stack vSearchLongNameStack = new Stack();
+         DataManager.setAttribute(session, "vSearchLongNameStack", vSearchLongNameStack);
+         Stack vSearchUsedContextStack = new Stack();
+         DataManager.setAttribute(session, "vSearchUsedContextStack", vSearchUsedContextStack);
+         Stack sSearchACStack = new Stack();
+         DataManager.setAttribute(session, "sSearchACStack", sSearchACStack);
+         Stack vACSearchStack = new Stack();
+         DataManager.setAttribute(session, "vACSearchStack", vACSearchStack);
+         Stack vSearchASLStack = new Stack();
+         DataManager.setAttribute(session, "vSearchASLStack", vSearchASLStack);
+         Stack vSelRowsStack = new Stack();
+         DataManager.setAttribute(session, "vSelRowsStack", vSelRowsStack);
+         Stack vResultStack = new Stack();
+         DataManager.setAttribute(session, "vResultStack", vResultStack);
+         Stack vCompAttrStack = new Stack();
+         DataManager.setAttribute(session, "vCompAttrStack", vCompAttrStack);
+         Stack vAttributeListStack = new Stack();
+         DataManager.setAttribute(session, "vAttributeListStack", vAttributeListStack);
+    }
     /**
      * Adds the search component, result bean vector and result vector in a stack to use it later.
      * 
@@ -7661,7 +7670,7 @@ public class GetACSearch implements Serializable
                 // DataManager.setAttribute(session, "vACSearch", vAC);
                 // getVMResult(req, res, vResult);
                 VMServlet vmSer = new VMServlet(req, res, m_servlet);
-                vmSer.readDataForSearch();
+                vmSer.readDataForSearch(this);
             }
             else if (sSearchAC.equals("EVSValueMeaning") || sSearchAC.equals("VMConcept") || sSearchAC.equals("EditVMConcept"))
             {
