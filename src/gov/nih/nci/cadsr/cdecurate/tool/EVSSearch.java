@@ -1,6 +1,6 @@
 //Copyright (c) 2000 ScenPro, Inc.
 
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.54 2008-05-22 17:22:15 chickerura Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.55 2008-05-29 19:19:07 chickerura Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -101,8 +101,8 @@ public class EVSSearch implements Serializable {
 				m_eUser = new EVS_UserBean(); //to be safe use the default props
 			if (m_eUser.getEVSConURL() != null
 					&& !m_eUser.getEVSConURL().equals(""))
-				evsService = (EVSApplicationService) ApplicationServiceProvider
-				.getApplicationServiceFromUrl(m_eUser.getEVSConURL());
+				evsService = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(m_eUser.getEVSConURL(), "EvsServiceInfo");
+				
 		} catch (Exception e) {
 			logger.error("EVS Service not obtained from the URL");
 		}
@@ -168,7 +168,7 @@ public class EVSSearch implements Serializable {
 		{
 			EVSQuery query = new EVSQueryImpl();
 			List concepts = null;
-			//query = this.addSecurityToken(query, "", dtsVocab);
+			query = this.addSecurityToken(query, "", dtsVocab);
 			query.getDescLogicConceptNameByCode(dtsVocab, CCode);
 			try {
 				concepts = evsService.evsSearch(query);
@@ -536,7 +536,7 @@ public class EVSSearch implements Serializable {
 				if (!conceptCode.equals(""))//try it with ConceptCode
 				{
 					try {
-						//query = this.addSecurityToken(query, "", dtsVocab);
+						query = this.addSecurityToken(query, "", dtsVocab);
 						query.getAllSubConceptCodes(dtsVocab, conceptCode);
 						subs = evsService.evsSearch(query);
 					} catch (Exception ex) {
@@ -631,9 +631,8 @@ public class EVSSearch implements Serializable {
 						if (!conceptCode.equals("")) //try it with ConceptCode
 						{
 							try {
-								/*query = this.addSecurityToken(query, "",
+								query = this.addSecurityToken(query, "",
 										dtsVocab);
-								*/
 								query.getSubConcepts(dtsVocab, conceptCode);
 								subs = evsService.evsSearch(query);
 							} catch (Exception ex) {
@@ -648,9 +647,9 @@ public class EVSSearch implements Serializable {
 						} else if (conceptName != null
 								&& !conceptName.equals("")) {
 							try {
-								/*query = this.addSecurityToken(query, "",
+								query = this.addSecurityToken(query, "",
 										dtsVocab);
-								*/query.getSubConcepts(dtsVocab, conceptName);
+								query.getSubConcepts(dtsVocab, conceptName);
 								subs = evsService.evsSearch(query);
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -672,7 +671,7 @@ public class EVSSearch implements Serializable {
 					if (!conceptCode.equals(""))//try it with ConceptCode
 					{
 						try {
-							//query = this.addSecurityToken(query, "", dtsVocab);
+							query = this.addSecurityToken(query, "", dtsVocab);
 							query.getSubConcepts(dtsVocab, conceptCode);
 							subs = evsService.evsSearch(query);
 						} catch (Exception ex) {
@@ -686,7 +685,7 @@ public class EVSSearch implements Serializable {
 						}
 					} else if (conceptName != null && !conceptName.equals("")) {
 						try {
-							//query = this.addSecurityToken(query, "", dtsVocab);
+							query = this.addSecurityToken(query, "", dtsVocab);
 							query.getSubConcepts(dtsVocab, conceptName);
 							subs = evsService.evsSearch(query);
 						} catch (Exception ex) {
@@ -741,9 +740,9 @@ public class EVSSearch implements Serializable {
 					try {
 						if (conceptCode != null && !conceptCode.equals("")) {
 							try {
-								/*query = this.addSecurityToken(query, "",
+								query = this.addSecurityToken(query, "",
 										dtsVocab);
-								*/query.getSubConcepts(dtsVocab, conceptCode);
+								query.getSubConcepts(dtsVocab, conceptCode);
 								subs = evsService.evsSearch(query);
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -756,9 +755,9 @@ public class EVSSearch implements Serializable {
 							} else if (!conceptName.equals("")) //try it with ConceptName
 							{
 								try {
-									/*query = this.addSecurityToken(query, "",
+									query = this.addSecurityToken(query, "",
 											dtsVocab);
-									*/query.getSubConcepts(dtsVocab, conceptName);
+									query.getSubConcepts(dtsVocab, conceptName);
 									subs = evsService.evsSearch(query);
 								} catch (Exception ex) {
 									ex.printStackTrace();
@@ -1019,7 +1018,7 @@ public class EVSSearch implements Serializable {
 					if (stringArray[j] != null) {
 						prefName = stringArray[j];
 						try {
-							//query = this.addSecurityToken(query, "", dtsVocab);
+							query = this.addSecurityToken(query, "", dtsVocab);
 							query.getSubConcepts(dtsVocab, prefName);
 							subs = evsService.evsSearch(query);
 							if (subs != null && subs.size() > 0) {
@@ -1084,7 +1083,7 @@ public class EVSSearch implements Serializable {
 			return vSub;
 
 		EVSQuery query = new EVSQueryImpl();
-		//query = this.addSecurityToken(query, "", dtsVocab);
+		query = this.addSecurityToken(query, "", dtsVocab);
 		if (!conceptCode.equals(""))
 			query.getSuperConcepts(dtsVocab, conceptCode);
 		else if (!conceptName.equals(""))
@@ -1133,7 +1132,7 @@ public class EVSSearch implements Serializable {
 		if (!conceptCode.equals(""))//try it with ConceptCode
 		{
 			try {
-				//query = this.addSecurityToken(query, "", dtsVocab);
+				query = this.addSecurityToken(query, "", dtsVocab);
 				query.getSuperConcepts(dtsVocab, conceptCode);
 				sups = evsService.evsSearch(query);
 			} catch (Exception ex) {
@@ -1150,7 +1149,7 @@ public class EVSSearch implements Serializable {
 						vSub);
 			}
 		} else if (!conceptName.equals("")) {
-			//query = this.addSecurityToken(query, "", dtsVocab);
+			query = this.addSecurityToken(query, "", dtsVocab);
 			query.getSuperConcepts(dtsVocab, conceptName);
 			try {
 				sups = evsService.evsSearch(query);
@@ -1204,7 +1203,7 @@ public class EVSSearch implements Serializable {
 					if (stringArray[j] != null) {
 						if (!vSub.contains(stringArray[j]))
 							vSub.addElement(stringArray[j]);
-						//query = this.addSecurityToken(query, "", dtsVocab);
+						query = this.addSecurityToken(query, "", dtsVocab);
 						query.getSuperConcepts(dtsVocab, stringArray[j]);
 						subs = evsService.evsSearch(query);
 						if (subs != null && subs.size() > 0) {
@@ -1870,7 +1869,7 @@ public class EVSSearch implements Serializable {
 			if (dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
 				return lstResult;
 			EVSQuery query = new EVSQueryImpl();
-			//query = this.addSecurityToken(query, vocabAccess, dtsVocab);
+			query = this.addSecurityToken(query, vocabAccess, dtsVocab);
 			if (sSearchIn.equals("ConCode"))
 				query.getDescLogicConcept(dtsVocab, termStr);
 			else if (sSearchIn.equals("subConcept"))
