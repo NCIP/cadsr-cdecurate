@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.6 2008-04-04 16:14:14 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.7 2008-05-29 19:16:50 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -609,7 +609,7 @@ if(!sSelAC.equals("ValueMeaning"))
         buttons[14] = buttons[14]
             + "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_clearBtn'); return false\" style=\"width: 100\">\n&nbsp;\n";
     } 
-    //System.out.println("SR.jsp!!! vResultStack.size: " + vResultStack.size()); 
+    //System.out.println("SR.jsp!!! vResultStack.size: " + vResultStack.size()+""+sBackFromGetAssociated.equals("backFromGetAssociated")+""+sMAction); 
     if (((vResultStack.size()>0 && sBackFromGetAssociated.equals("backFromGetAssociated") && !pushBoolean.equals("true"))
           || vResultStack.size()>1) && !sMAction.equals("searchForCreate")) {
         buttons[15] = "<input type=\"button\" name=\"btnBack\" value=\"Back\" style=\"width: 65\" onClick=\"Back();\">\n&nbsp;&nbsp;\n";

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.13 2008-05-07 16:51:03 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.14 2008-05-29 19:16:50 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -226,17 +226,21 @@
 				sVersion = "All";
 				selCD = "All Domains";
 			}
-			String temp = (String)session.getAttribute("UnqualifiedsearchDE");
-	     	String temp1 = (String)session.getAttribute("UnqualifiedsearchDEC"); 
-	     	String temp2 = (String)session.getAttribute("UnqualifiedsearchCSI"); 
-	     	String temp3 = (String)session.getAttribute("UnqualifiedsearchCD"); 
-	     	String temp4 = (String)session.getAttribute("UnqualifiedsearchVD"); 
-	     	String temp5 = (String)session.getAttribute("UnqualifiedsearchPV"); 
-	     	String temp6 = (String)session.getAttribute("UnqualifiedsearchVM");
-	     	String temp7 = (String)session.getAttribute("UnqualifiedsearchOC"); 
-	     	String temp8 = (String)session.getAttribute("UnqualifiedsearchCC");
-	     	String temp9 = (String)session.getAttribute("UnqualifiedsearchProp"); 
-	     	System.out.println(temp + " " + temp1+ " " + temp2 + " "+ temp3 +" ");
+			String temp = (String) session.getAttribute("UnqualifiedsearchDE");
+			String temp1 = (String) session
+					.getAttribute("UnqualifiedsearchDEC");
+			String temp2 = (String) session
+					.getAttribute("UnqualifiedsearchCSI");
+			String temp3 = (String) session.getAttribute("UnqualifiedsearchCD");
+			String temp4 = (String) session.getAttribute("UnqualifiedsearchVD");
+			String temp5 = (String) session.getAttribute("UnqualifiedsearchPV");
+			String temp6 = (String) session.getAttribute("UnqualifiedsearchVM");
+			String temp7 = (String) session.getAttribute("UnqualifiedsearchOC");
+			String temp8 = (String) session.getAttribute("UnqualifiedsearchCC");
+			String temp9 = (String) session
+					.getAttribute("UnqualifiedsearchProp");
+			System.out.println(temp + " " + temp1 + " " + temp2 + " " + temp3
+					+ " ");
 		%>
 
 		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
@@ -316,8 +320,12 @@ if(validObj)
   	
  validObj = testIsValidObject(document.searchParmsForm.modifier)	
 if(validObj) 
- cond1 = cond1 && document.searchParmsForm.modifier.value == "allUsers"; 		
-  	
+ cond1 = cond1 && document.searchParmsForm.modifier.value == "allUsers"; 
+ 		
+ validObj = testIsValidObject(document.searchParmsForm.listCSName)	
+if(validObj) 
+  cond1 = cond1 && document.searchParmsForm.listCSName.value == "AllSchemes";
+    	
  if(cond1)	
   {
      return true;
@@ -481,7 +489,7 @@ function keypress_handler()
      	 if (conf == false)
               return false;     //user canceled, may append again, do nothing
     	}
-   		 // all other case go to servlet to search
+      		 // all other case go to servlet to search
     	<% if (sMenuAction.equals("searchForCreate")) { %>
        		 if (opener && opener.document != null && opener.document.SearchActionForm != null)
          	 opener.document.SearchActionForm.isValidSearch.value = "true";
@@ -492,7 +500,11 @@ function keypress_handler()
     	document.searchParmsForm.actSelect.value = "Search";
     	document.searchParmsForm.submit();
     	return false;
-    }	
+    }
+    else
+    {
+      return true;
+    }
 }
 
 function LoadKeyHandler()
