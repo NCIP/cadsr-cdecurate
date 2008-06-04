@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.38 2008-05-29 19:19:45 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.39 2008-06-04 19:05:33 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1342,10 +1342,9 @@ private String setNewVersionVM(VMForm data)
    * Called from CurationServlet.
    * Gets all the attribute values from the bean, sets in parameters, and registers output parameter.
    * Calls oracle stored procedure
-   *   "{call SBREXT_Set_Row.SET_CDVMS(?,?,?,?,?,?,?,?,?,?,?)}" to submit
+   *   "{call SBREXT_Set_Row.SET_CD_VMS(?,?,?,?,?,?,?,?,?,?,?)}" to submit
    * @param data VMForm object
    * @param vm VM Bean.
-   *
    * @return String return code from the stored procedure call. null if no error occurred.
    */
   private String setCDVMS(VMForm data, VM_Bean vm)
@@ -1357,17 +1356,18 @@ private String setNewVersionVM(VMForm data)
         if (data.getCurationServlet().getConn() != null)
          {
            //cstmt = conn.prepareCall("{call SBREXT_Set_Row.SET_CD_VMS(?,?,?,?,?,?,?,?,?,?,?)}");
-           cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT_SET_ROW.SET_CD_VMS(?,?,?,?,?,?,?,?,?,?,?)}");
+           cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT_SET_ROW.SET_CD_VMS(?,?,?,?,?,?,?,?,?,?,?,?)}");
            // register the Out parameters
            cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //return code
            cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //out cv_idseq
            cstmt.registerOutParameter(5,java.sql.Types.VARCHAR);       //out cd_idseq
            cstmt.registerOutParameter(6,java.sql.Types.VARCHAR);       //out value meaning
            cstmt.registerOutParameter(7,java.sql.Types.VARCHAR);       //out description
-           cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //date created
-           cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //created by
-           cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //modified by
-           cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //date modified
+           cstmt.registerOutParameter(8,java.sql.Types.VARCHAR);       //out VM_IDSEQ
+           cstmt.registerOutParameter(9,java.sql.Types.VARCHAR);       //date created
+           cstmt.registerOutParameter(10,java.sql.Types.VARCHAR);       //created by
+           cstmt.registerOutParameter(11,java.sql.Types.VARCHAR);       //modified by
+           cstmt.registerOutParameter(12,java.sql.Types.VARCHAR);       //date modified
 
 
         // Set the In parameters (which are inherited from the PreparedStatement class)
@@ -1381,6 +1381,7 @@ private String setNewVersionVM(VMForm data)
            cstmt.setString(6, vm.getVM_LONG_NAME());
           // cstmt.setString(7, vm.getVM_DESCRIPTION());
            cstmt.setString(7, vm.getVM_PREFERRED_DEFINITION());
+           cstmt.setString(8, vm.getVM_IDSEQ());
             // Now we are ready to call the stored procedure
            cstmt.execute();
            sReturnCode = cstmt.getString(2);
