@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.28 2008-05-04 19:32:21 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.29 2008-06-04 19:04:47 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -635,7 +635,7 @@ public class PVAction implements Serializable {
 			String sEndDate = data.getUtil().getOracleDate(pv.getPV_END_DATE());
 
 			//check if it already exists
-			String sPV_ID = this.getExistingPV(data, sValue, sShortMeaning);
+			String sPV_ID = this.getExistingPV(data, sValue, sShortMeaning,vm.getVM_IDSEQ());
 			if (sPV_ID != null && !sPV_ID.equals("")) {
 				pv.setPV_PV_IDSEQ(sPV_ID); //update the pvbean with the id
 				return sMsg;
@@ -647,7 +647,7 @@ public class PVAction implements Serializable {
 						.getCurationServlet()
 						.getConn()
 						.prepareCall(
-								"{call SBREXT_SET_ROW.SET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+								"{call SBREXT_SET_ROW.SET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
 				// register the Out parameters
 				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); //return code
 				cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); //pv id
@@ -658,10 +658,11 @@ public class PVAction implements Serializable {
 				cstmt.registerOutParameter(9, java.sql.Types.VARCHAR); //low value num
 				cstmt.registerOutParameter(10, java.sql.Types.VARCHAR); //high value num
 				cstmt.registerOutParameter(11, java.sql.Types.VARCHAR); //end date
-				cstmt.registerOutParameter(12, java.sql.Types.VARCHAR); //created by
-				cstmt.registerOutParameter(13, java.sql.Types.VARCHAR); //date created
-				cstmt.registerOutParameter(14, java.sql.Types.VARCHAR); //modified by
-				cstmt.registerOutParameter(15, java.sql.Types.VARCHAR); //date modified
+				//cstmt.registerOutParameter(12, java.sql.Types.VARCHAR); //pv_vm_idseq
+				cstmt.registerOutParameter(13, java.sql.Types.VARCHAR); //created by
+				cstmt.registerOutParameter(14, java.sql.Types.VARCHAR); //date created
+				cstmt.registerOutParameter(15, java.sql.Types.VARCHAR); //modified by
+				cstmt.registerOutParameter(16, java.sql.Types.VARCHAR); //date modified
 
 				// Set the In parameters (which are inherited from the PreparedStatement class)
 				//			Get the username from the session.
@@ -678,6 +679,7 @@ public class PVAction implements Serializable {
 				cstmt.setString(7, sBeginDate);
 				cstmt.setString(8, sMeaningDescription);
 				cstmt.setString(11, sEndDate);
+				cstmt.setString(12, vm.getVM_IDSEQ());
 				// Now we are ready to call the stored procedure
 				cstmt.execute();
 				String sReturnCode = cstmt.getString(2);
@@ -714,7 +716,7 @@ public class PVAction implements Serializable {
 	 *
 	 *  @return String existing pv_idseq from the stored procedure call.
 	 */
-	public String getExistingPV(PVForm data, String sValue, String sMeaning) {
+	public String getExistingPV(PVForm data, String sValue, String sMeaning,String vmidseq) {
 		ResultSet rs = null;
 		String sPV_IDSEQ = "";
 		CallableStatement cstmt = null;
@@ -738,7 +740,8 @@ public class PVAction implements Serializable {
 				cstmt.registerOutParameter(13, java.sql.Types.VARCHAR); // DATE_MODIFIED
 
 				cstmt.setString(3, sValue); // Value
-				cstmt.setString(4, sMeaning); // Meaning
+				cstmt.setString(4, vmidseq); // vm idseq
+				cstmt.setString(5, sMeaning); // Meaning
 				// Now we are ready to call the stored procedure
 				cstmt.execute();
 				sPV_IDSEQ = (String) cstmt.getObject(2);
