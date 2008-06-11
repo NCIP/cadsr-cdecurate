@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.52 2008-05-01 19:51:57 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.53 2008-06-11 22:44:21 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1314,6 +1314,7 @@ public class EVSMasterTree {
 			String sCCodeDB, String sCodeToFindInTree) {
 		String rendHTML = "";
 		String sSuperConceptName = "";
+		String sSuperConceptCode = "";
 		int nodeLevel = 1;
 		HttpSession session = m_classReq.getSession();
 		DataManager.setAttribute(session, "LastNodeIDExpanded", null);
@@ -1325,11 +1326,12 @@ public class EVSMasterTree {
 		String nodeCode = "";
 		EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
 		while (stackSuperConcepts.size() > 0) {
-			sSuperConceptName = (String) stackSuperConcepts.pop();
+			sSuperConceptCode = (String) stackSuperConcepts.pop();
+			sSuperConceptName = evs.do_getConceptName(sSuperConceptCode,sCCodeDB);
 			if (nodeLevel == 1)
-				sTopOfStack = sSuperConceptName;
-			 if (sSuperConceptName != null && !sSuperConceptName.equals("")) {
-				nodeCode = evs.do_getEVSCode(sSuperConceptName, sCCodeDB);
+				sTopOfStack = sSuperConceptCode;
+			 if (sSuperConceptCode != null && !sSuperConceptCode.equals("")) {
+				nodeCode = evs.do_getEVSCode(sSuperConceptCode, sCCodeDB);
 				if (stackSuperConcepts.size() > 0) {
 					rendHTML = this.expandNode(sSuperConceptName, sCCodeDB,
 							"No", nodeCode, sCodeToFindInTree, nodeLevel, "");
