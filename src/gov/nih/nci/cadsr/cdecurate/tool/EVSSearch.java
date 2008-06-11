@@ -1,6 +1,6 @@
 //Copyright (c) 2000 ScenPro, Inc.
 
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.55 2008-05-29 19:19:07 chickerura Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.56 2008-06-11 22:44:21 chickerura Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -150,7 +150,7 @@ public class EVSSearch implements Serializable {
 		}
 		return CCode;
 	}
-
+	
 	/**
 	 * does evs code search
 	 * @param CCode string to search for
@@ -1860,6 +1860,8 @@ public class EVSSearch implements Serializable {
 	private List doConceptQuery(String vocabAccess, String termStr,
 			String dtsVocab, String sSearchIn, String vocabType, String sPropIn) {
 		List lstResult = null;
+		List lstResult1 = null;
+		List lstResult2= new ArrayList();
 
 		try {
 			// check if valid dts vocab
@@ -1873,7 +1875,8 @@ public class EVSSearch implements Serializable {
 			if (sSearchIn.equals("ConCode"))
 				query.getDescLogicConcept(dtsVocab, termStr);
 			else if (sSearchIn.equals("subConcept"))
-				query.getChildConcepts(dtsVocab, termStr);
+				//query.getChildConcepts(dtsVocab, termStr);
+				query.getSubConcepts(dtsVocab, termStr);
 			else {
 				if (vocabType.equals("") || vocabType.equals("NameType")) // do concept name search
 					query.searchDescLogicConcepts(dtsVocab, termStr, 10000);
@@ -1883,6 +1886,19 @@ public class EVSSearch implements Serializable {
 			}
 			// call the evs to get resutls
 			lstResult = evsService.evsSearch(query);
+			if(sSearchIn.equals("subConcept"))
+			{
+				EVSQuery query1 = new EVSQueryImpl();
+				query1= this.addSecurityToken(query1, vocabAccess, dtsVocab);
+				for(int i=0;i<lstResult.size();i++)
+				{
+					query1.getDescLogicConcept(dtsVocab,(String)lstResult.get(i));
+					lstResult1 = evsService.evsSearch(query1);
+					lstResult2.add(lstResult1.get(0));
+				}
+				 if(lstResult1!=null)
+					 lstResult = lstResult2;
+			}
 		} catch (Exception ex) {
 			logger.fatal(evsService.toString()
 					+ " :conceptNameSearch lstResults: " + ex.toString(), ex);
