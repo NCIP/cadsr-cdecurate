@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.14 2008-06-12 17:30:19 chickerura Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.15 2008-06-17 13:34:34 chickerura Exp $
    $Name: not supported by cvs2svn $
 
    Author: Anupama Chickerur
@@ -14,7 +14,10 @@
    OR INVALID APPROPRIATE ERROR MESSAGES ARE DISPLAYED VIA THE CURATION TOOL LOGIN PAGE.
 */
 
-
+/*
+--Will be handled by respective tools.
+*/
+/* 
 MERGE INTO SBREXT.TOOL_OPTIONS_VIEW_EXT S
 USING (
 SELECT 'caDSR' AS TOOL_NAME, 'DEFAULT.LANGUAGE' AS PROPERTY, 'ENGLISH' AS VALUE, 'The default language for all caDSR tools.' AS DESCRIPTION FROM DUAL
@@ -25,7 +28,7 @@ UNION SELECT 'EVS' AS TOOL_NAME, 'NEWTERM.URL' AS PROPERTY, 'http://ncimeta.nci.
 ON (S.TOOL_NAME = T.TOOL_NAME AND S.PROPERTY = T.PROPERTY)
 WHEN MATCHED THEN UPDATE SET S.VALUE = S.VALUE, S.DESCRIPTION = T.DESCRIPTION
 WHEN NOT MATCHED THEN INSERT (TOOL_NAME, PROPERTY, VALUE, DESCRIPTION) VALUES (T.TOOL_NAME, T.PROPERTY, T.VALUE, T.DESCRIPTION);
-
+*/
 
 /* AS WE ARE USING MERGE, WE NEED NOT DELETE AND START FROM SCRATCH.
 --first delete the existing data
