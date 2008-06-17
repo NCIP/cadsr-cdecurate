@@ -130,7 +130,7 @@ public class CurationServlet
     }
 
     /**
-     * makes the loggin message with all the information
+     * makes the login message with all the information
      *
      * @param req
      * @param sMethod
@@ -268,31 +268,34 @@ public class CurationServlet
      * @param res
      * @param session
      */
-    private void login(HttpServletRequest req, HttpServletResponse res,HttpSession session)
+    private void login(HttpServletRequest req, HttpServletResponse res,HttpSession session)throws Exception
     {
     	String username = req.getParameter("Username");
         String password = req.getParameter("Password");
         UserBean userbean = new UserBean();
         userbean.setUsername(username);
         userbean.setPassword(password);
-        try {
-			boolean validUser= this.authenticate(userbean);
-			if(validUser)
-				{
-				 userbean.setPassword("");
-				 DataManager.setAttribute(session, "Userbean", userbean);
-				 m_conn = connectDB();
-				}
-			else{
-				 logger.error("Invalid User--->"+username);
-				 logger.error("Redirecting the user to Login Page");
-				 ForwardErrorJSP(req, res, "Incorrect Username or Password. Please re-enter.");
-			}
-		} catch (Exception e) {
-			logger.error("Error Logging in"+ e);
-		}
-
-    }
+        //try {
+			//boolean validUser= this.authenticate(userbean);
+        	CaDsrUserCredentials uc = new CaDsrUserCredentials();
+        	 try
+        	 {
+        	      uc.validateCredentials(NCICurationServlet._userName, NCICurationServlet._password, username, password);
+        	      userbean.setPassword("");
+ 				  DataManager.setAttribute(session, "Userbean", userbean);
+ 				  m_conn = connectDB();
+ 				  doHomePage(m_classReq, m_classRes);
+        	  }
+        	  catch (Exception ex)
+        	  {
+        		  userbean=null;
+        		  logger.error("Failed credential validation, code is " + uc.getCheckCode());
+        	      logger.error("Invalid User--->"+username);
+ 				  logger.error("Redirecting the user to Login Page");
+ 				  ForwardErrorJSP(req, res, "Incorrect Username or Password. Please re-enter.");
+				
+        	  }      	  
+     }
 
     /**
      * Authenticates the user login credentials with the jboss authentication
@@ -365,9 +368,8 @@ public class CurationServlet
                     {
                         DataManager.clearSessionAttributes(session);
                         sessionData = new Session_Data();
-                        login(m_classReq,m_classRes,session);
-                        doHomePage(m_classReq, m_classRes);
-                        break;
+                         login(m_classReq,m_classRes,session);
+                         break;
                     }
                     if ("heartbeat".equals(reqType))
                     {
@@ -11325,7 +11327,7 @@ public class CurationServlet
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+           // e.printStackTrace();
             this.logger.fatal("Servlet-ForwardJSP : " + e.toString(), e);
         }
     }
