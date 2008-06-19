@@ -270,7 +270,7 @@ public class CurationServlet
      */
     private void login(HttpServletRequest req, HttpServletResponse res,HttpSession session)throws Exception
     {
-    	String username = req.getParameter("Username");
+    	String username = req.getParameter("Username").toUpperCase();
         String password = req.getParameter("Password");
         UserBean userbean = new UserBean();
         userbean.setUsername(username);
@@ -290,8 +290,7 @@ public class CurationServlet
         	  {
         		  userbean=null;
         		  logger.error("Failed credential validation, code is " + uc.getCheckCode());
-        	      logger.error("Invalid User--->"+username);
- 				  logger.error("Redirecting the user to Login Page");
+        	      logger.error("Redirecting the user to Login Page");
  				  ForwardErrorJSP(req, res, "Incorrect Username or Password. Please re-enter.");
 				
         	  }      	  
