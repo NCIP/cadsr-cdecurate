@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBEDisplay.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBEDisplay.jsp,v 1.2 2008-06-20 17:05:50 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -7,6 +7,7 @@
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <curate:checkLogon name="Userbean" page="/ErrorPageWindow.jsp" />
 <%@ page import="java.util.*"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <html>
 	<head>
 		<title>
@@ -85,7 +86,7 @@ function setup()
     <% // if (sMAction.equals("searchForCreate")) {%>
         sComp = opener.document.SearchActionForm.searchComp.value;
     <%// } else {%>
-        sComp = "<%=sSelAC%>";
+        sComp = "<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>";
     <%// }%>
 
    } */
@@ -113,7 +114,7 @@ function setup()
 					<td>
 						<font size="4">
 							<b>
-								<%=sLabelKeyword%>
+								<%=StringEscapeUtils.escapeHtml(sLabelKeyword)%>
 							</b>
 						</font>
 					</td>
