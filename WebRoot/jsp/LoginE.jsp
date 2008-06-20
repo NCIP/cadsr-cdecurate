@@ -1,11 +1,13 @@
 <!-- Copyright ScenPro, Inc 2007
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/LoginE.jsp,v 1.3 2008-02-28 16:16:45 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/LoginE.jsp,v 1.4 2008-06-20 17:03:22 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 <html>
 <head>
 <title>CDE Curation: Login</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+
 <%@ page import="java.util.*" %>
 <script language="JavaScript" type="text/JavaScript">
 <!--
@@ -344,6 +346,9 @@ function callHelp()
       </script>
   <% } %>
 </body>
+<head>
+<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+</head>
 </html>
 
 
