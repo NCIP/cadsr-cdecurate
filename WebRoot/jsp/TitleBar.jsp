@@ -1,11 +1,12 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.2 2007-09-19 16:59:35 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.3 2008-06-20 17:08:56 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <html>
 	<head>
-		<% //String thisServer2 = request.getServerName(); 
+	<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+	<% //String thisServer2 = request.getServerName(); 
    String sentinelURL = (String)session.getAttribute("SentinelURL");
    String UMLBrowserURL = (String)session.getAttribute("UMLBrowserURL");%>
 		<script language="JavaScript">
@@ -101,7 +102,7 @@ var sentinelWindow = null;
 
    function callMessageGifDECTemplate()
    {
-     document.Form4.hidMenuAction.value = "NewDECTemplate";
+     document.Form4.hidMenuAction.value ="NewDECTemplate";
      document.Form4.submit();
    }
 
@@ -191,12 +192,15 @@ function linkNCICB()
 		<form name="Form3" method="post" action="../../cdecurate/NCICurationServlet?reqType=newVDFromMenu"></form>
 		<form name="LogoutForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=logout"></form>
 		<form name="Form4" method="post" action="../../cdecurate/NCICurationServlet?reqType=actionFromMenu">
-			<input type="hidden" name="hidMenuAction" value="nothing">
+		<%
+		 String strNothing ="nothing";
+		 %>
+			<input type="hidden" name="hidMenuAction" value=<%=StringEscapeUtils.escapeHtml(strNothing)%>>
 		</form>
 		<%
-    String Username = (String)session.getAttribute("Username");
-    //String Context = (String)session.getAttribute("sDefaultContext");
-%>
+          String Username = (String)session.getAttribute("Username");
+  		  //String Context = (String)session.getAttribute("sDefaultContext");
+		%>
 		<table width="100%" border="0">
 			<col style="width: 1px" />
 			<col />
@@ -226,7 +230,7 @@ function linkNCICB()
 			<tr>
 				<td style="padding:0.05in 0 0 0">
 					User&nbsp;Name&nbsp;:&nbsp;
-					<%=Username%>
+					<%=StringEscapeUtils.escapeHtml(Username)%>
 				</td>
 				<td style="padding:0.05in 0 0 0">
 					<script webstyle3>document.write('<scr'+'ipt src="js/xaramenu.js">'+'</scr'+'ipt>');document.write('<scr'+'ipt src="js/biztech_button.js">'+'</scr'+'ipt>');/*img src="images/biztech_button.gif" moduleid="myzara                     (project)\biztech_button_off.xws"*/</script>

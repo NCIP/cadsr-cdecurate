@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.7 2008-05-29 19:16:50 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.8 2008-06-20 17:05:34 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -16,6 +16,7 @@
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 		<%@ page import="java.util.*"%>
+		<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 		<%
 		
    UtilService serUtil = new UtilService();
@@ -373,7 +374,7 @@ if(!sSelAC.equals("ValueMeaning"))
           if (opener && opener.document != null && opener.document.SearchActionForm != null)
             sComp = opener.document.SearchActionForm.searchComp.value;
     <% } else { %>
-          sComp = "<%=sSelAC%>";
+          sComp = "<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>";
     <% }%>
 
        //call the function to fill the newly created pv in opener document
@@ -383,7 +384,7 @@ if(!sSelAC.equals("ValueMeaning"))
    //opens edit/create page if not the regular search, or uses the selection for search From create.
    function ShowSelection()
    {
-       ShowUseSelection("<%=sMAction%>");
+       ShowUseSelection("<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
    }
 
    //no use!!!!!
@@ -398,7 +399,7 @@ if(!sSelAC.equals("ValueMeaning"))
    //gets some attribute for the selelcted row and enables/disables the button
    function EnableButtons(checked, currentField)
    {
-      EnableCheckButtons(checked, currentField, "<%=sMAction%>", "<%=sButtonPressed%>", "<%=sSelAC%>")
+      EnableCheckButtons(checked, currentField, "<%=StringEscapeUtils.escapeJavaScript(sMAction)%>", "<%=StringEscapeUtils.escapeHtml(sButtonPressed)%>", "<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>")
    }
 
    //check if the user has permission to delete in the context called from designate record
@@ -485,7 +486,7 @@ if(!sSelAC.equals("ValueMeaning"))
   //sorts by heading.  called from column heading Hyperlink click event
   function SetSortType(sortBy)
   {
-      SetSortTypeJS(sortBy, "<%=sMAction%>");
+      SetSortTypeJS(sortBy, "<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
   }
   
   function SelectAll()
@@ -637,7 +638,7 @@ if(!sSelAC.equals("ValueMeaning"))
 						<font size="4">
 							<b>
 								Search Results for
-								<%=sLabelKeyword%>
+								<%=StringEscapeUtils.escapeHtml(sLabelKeyword)%>
 							</b>
 						</font>
 					</td>
@@ -1201,7 +1202,7 @@ if(!sSelAC.equals("ValueMeaning"))
 				<input type="hidden" name="AppendAction" value="NotAppended">
 				<input type="hidden" name="SelectAll" value="">
 				<input type="hidden" name="isValid" value="false">
-				<input type="hidden" name="serMenuAct" value="<%=sMAction%>">
+				<input type="hidden" name="serMenuAct" value="<%=StringEscapeUtils.escapeHtml(sMAction)%>">
 				<input type="hidden" name="serRecCount" value="<%=nRecs%>">
 				<input type="hidden" name="selRowID" value="">
 				<!-- stores Designation Name and ID -->

@@ -1,7 +1,8 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.14 2008-05-29 19:16:50 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.15 2008-06-20 17:05:01 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
+
 
 <html>
 	<head>
@@ -15,6 +16,7 @@
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 		<%@ page import="java.util.*"%>
 		<%@ page session="true"%>
+		<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 		<%
 			UtilService util = new UtilService();
 			Vector vSelectedAttr = new Vector();
@@ -255,7 +257,7 @@
   <%}%>
    //call function to get component to search for if search from create page
   <%if (sMenuAction.equals("searchForCreate")) {%>       
-      openSearchForCreateAct("<%=sSearchAC%>");   //call the function in JS
+      openSearchForCreateAct("<%=StringEscapeUtils.escapeJavaScript(sSearchAC)%>");   //call the function in JS
   <%}%>  
   }
   // check to see if input is whitespace only or empty
@@ -605,8 +607,8 @@ function LoadKeyHandler()
 						%>
 						<select name="listSearchFor" size="1" style="width: 172"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
-							<option value="<%=sSearchAC%>" selected>
-								<%=sLongAC%>
+							<option value="<%=StringEscapeUtils.escapeHtml(sSearchAC)%>" selected>
+								<%=StringEscapeUtils.escapeHtml(sLongAC)%>
 							</option>
 						</select>
 						<%
@@ -1759,10 +1761,10 @@ function LoadKeyHandler()
 											if (sAttrName.equals("Name"))
 										sDispName = "Short Name";
 								%>
-								<option value="<%=sAttrName%>"
+								<option value="<%=StringEscapeUtils.escapeHtml(sAttrName)%>"
 									<% if((vSelectedAttr != null) && (vSelectedAttr.contains(sAttrName))){ %>
 									selected <% } %>>
-									<%=sDispName%>
+									<%=StringEscapeUtils.escapeHtml(sDispName)%>
 								</option>
 								<%
 										}
@@ -1797,8 +1799,8 @@ function LoadKeyHandler()
 						for (int i = 0; vSelectedAttr.size() > i; i++) {
 						String sName = (String) vSelectedAttr.elementAt(i);
 				%>
-				<option value="<%=sName%>">
-					<%=sName%>
+				<option value="<%=StringEscapeUtils.escapeHtml(sName)%>">
+					<%=StringEscapeUtils.escapeHtml(sName)%>
 				</option>
 				<%
 				}
@@ -1809,7 +1811,7 @@ function LoadKeyHandler()
 			<input type="hidden" name="QCValueName" value="">
 			<input type="hidden" name="CDVDContext" value="same">
 			<input type="hidden" name="selCDID" value="">
-			<input type="hidden" name="serMenuAct" value="<%=sMenuAction%>">
+			<input type="hidden" name="serMenuAct" value="<%=StringEscapeUtils.escapeHtml(sMenuAction)%>">
 
 			<input type="hidden" name="outPrint" value="Print"
 				style="visibility: hidden;"

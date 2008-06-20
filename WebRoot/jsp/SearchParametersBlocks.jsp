@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.9 2008-03-27 17:03:54 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.10 2008-06-20 17:05:20 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -7,6 +7,8 @@
 <%@ page buffer="12kb"%>
 <%@ page session="true"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+
 <html>
 	<head>
 		<title>Search Parameters</title>
@@ -536,8 +538,8 @@ function doMetaCodeSearch()
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<select name="listSearchFor" size="1" style="width: 160"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
-							<option value="<%=sSearchAC%>">
-								<%=sLongAC%>
+							<option value="<%=StringEscapeUtils.escapeHtml(sSearchAC)%>">
+								<%=StringEscapeUtils.escapeHtml(sLongAC)%>
 							</option>
 						</select>
 					</td>
@@ -964,10 +966,10 @@ function doMetaCodeSearch()
 											for (int i = 0; i < vBlockAttr.size(); i++) {
 										String sAttr = (String) vBlockAttr.elementAt(i);
 								%>
-								<option value="<%=sAttr%>"
+								<option value="<%=StringEscapeUtils.escapeHtml(sAttr)%>"
 									<% if (vSelectedAttr != null && vSelectedAttr.contains(sAttr)){ %>
 									selected <% } %>>
-									<%=sAttr%>
+									<%=StringEscapeUtils.escapeHtml(sAttr)%>
 								</option>
 								<%
 											}

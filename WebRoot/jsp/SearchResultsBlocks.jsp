@@ -1,11 +1,12 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.11 2008-05-29 19:16:50 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.12 2008-06-20 17:06:09 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <%@ page import="java.util.*"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <html>
 	<head>
 		<title>
@@ -145,7 +146,7 @@
 	    String sSubmitAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
 	    if (sSubmitAction == null) sSubmitAction = "nothing";
 	 %>
-	    displayStatus("<%=statusMessage%>", "<%=sSubmitAction%>");
+	    displayStatus("<%=statusMessage%>", "<%=StringEscapeUtils.escapeJavaScript(sSubmitAction)%>");
 	 <%
 	    session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");
 	 %>
@@ -184,7 +185,7 @@
         else if (sComp == "ParentConcept") type = "Parent Concept";
         
     <% } else { %>
-        sComp = "<%=sSelAC%>";
+        sComp = "<%=StringEscapeUtils.escapeHtml(sSelAC)%>";
     <% } %>
     
       //selected concept info
@@ -207,7 +208,7 @@
   {
      if (opener.document == null)
         window.close();
-      ShowUseSelection("<%=sMAction%>");
+      ShowUseSelection("<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
   }
 
    function reSetAttribute()
@@ -223,7 +224,7 @@
    {
       if (opener.document == null)
         window.close();
-      EnableCheckButtons(checked, currentField, "<%=sMAction%>")
+      EnableCheckButtons(checked, currentField, "<%=StringEscapeUtils.escapeJavaScript(sMAction)%>")
    }
    
    function EnableButtonWithTxt(currentField)
@@ -264,21 +265,21 @@
   {
      if (opener.document == null)
           window.close();
-     getSubConceptsAll2("<%=sUISearchType2%>")  
+     getSubConceptsAll2("<%=StringEscapeUtils.escapeJavaScript(sUISearchType2)%>")  
   }
      
   function getSubConceptsImmediate()
   {
      if (opener.document == null)
           window.close();
-    getSubConceptsImmediate2("<%=sUISearchType2%>")
+    getSubConceptsImmediate2("<%=StringEscapeUtils.escapeJavaScript(sUISearchType2)%>")
   }
      
   function getSuperConcepts()
   {
      if (opener.document == null)
           window.close();
-     getSuperConcepts2("<%=sUISearchType2%>")  
+     getSuperConcepts2("<%=StringEscapeUtils.escapeJavaScript(sUISearchType2)%>")  
   }
 
   //stores the search resuls in the array
