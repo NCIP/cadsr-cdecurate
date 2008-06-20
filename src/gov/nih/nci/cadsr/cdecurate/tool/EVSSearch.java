@@ -1,6 +1,6 @@
 //Copyright (c) 2000 ScenPro, Inc.
 
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.56 2008-06-11 22:44:21 chickerura Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.57 2008-06-20 14:10:34 chickerura Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -11,6 +11,7 @@ import gov.nih.nci.evs.domain.Definition;
 import gov.nih.nci.evs.domain.DescLogicConcept;
 import gov.nih.nci.evs.domain.MetaThesaurusConcept;
 import gov.nih.nci.evs.domain.Property;
+import gov.nih.nci.evs.domain.Qualifier;
 import gov.nih.nci.evs.domain.SemanticType;
 import gov.nih.nci.evs.domain.Source;
 import gov.nih.nci.evs.query.EVSQuery;
@@ -1272,6 +1273,35 @@ public class EVSSearch implements Serializable {
 		}
 		return termStr;
 	}
+	/** 
+	 *  The EVS API returns def source from Thesaurus inside of xml tags <>. This methods
+	 *  extracts the def source from the tags
+	 *  @param termStr
+	 *  @return source
+	 *
+	 */
+	private String parseDefSource(Property prop) {
+		String termStr="";
+		try {
+			if (prop == null)
+				return termStr;
+			if (prop.getQualifierCollection()!=null)
+			{
+				for(Qualifier qual:prop.getQualifierCollection()){
+					if(qual.getName().equals("Source"))
+						{
+						termStr= qual.getValue();
+						break;
+						}
+					   
+				}
+			}
+		} catch (Exception ee) {
+			logger.fatal("ERROR - EVSSearch-parseDefSource for Thesaurus : "
+					+ ee.toString(), ee);
+		}	
+		return termStr;
+	}
 
 	/** 
 	 *  The EVS API returns definitions from Thesaurus inside of xml tags <>. This methods
@@ -1944,8 +1974,7 @@ public class EVSSearch implements Serializable {
 					if (property.getName().indexOf(defnProp) >= 0) //"DEFINITION"
 					{
 						sDef = this.parseDefinition(property.getValue()); //get def value
-						String sDefSrc = this.parseDefSource(property
-								.getValue()); //get def source
+						String sDefSrc = this.parseDefSource(property); //get def source
 						defExists = true;
 						//add the properties to the bean
 						conBean = new EVS_Bean();
