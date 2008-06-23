@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.3 2008-06-20 17:08:56 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.4 2008-06-23 16:46:43 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -8,8 +8,10 @@
 	<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 	<% //String thisServer2 = request.getServerName(); 
    String sentinelURL = (String)session.getAttribute("SentinelURL");
-   String UMLBrowserURL = (String)session.getAttribute("UMLBrowserURL");%>
-		<script language="JavaScript">
+   String UMLBrowserURL = (String)session.getAttribute("UMLBrowserURL");
+   String strNothing ="nothing";
+ %>
+<script language="JavaScript">
 <!--
 var dotCntr = -1;
 var helpWindow = null;
@@ -192,10 +194,7 @@ function linkNCICB()
 		<form name="Form3" method="post" action="../../cdecurate/NCICurationServlet?reqType=newVDFromMenu"></form>
 		<form name="LogoutForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=logout"></form>
 		<form name="Form4" method="post" action="../../cdecurate/NCICurationServlet?reqType=actionFromMenu">
-		<%
-		 String strNothing ="nothing";
-		 %>
-			<input type="hidden" name="hidMenuAction" value=<%=StringEscapeUtils.escapeHtml(strNothing)%>>
+		<input type="hidden" name="hidMenuAction" value="<%=StringEscapeUtils.escapeHtml(strNothing)%>">
 		</form>
 		<%
           String Username = (String)session.getAttribute("Username");
