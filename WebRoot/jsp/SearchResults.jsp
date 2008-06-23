@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.9 2008-06-23 16:10:33 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.10 2008-06-23 20:42:54 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -1202,7 +1202,7 @@ if(!sSelAC.equals("ValueMeaning"))
 				<input type="hidden" name="AppendAction" value="NotAppended">
 				<input type="hidden" name="SelectAll" value="">
 				<input type="hidden" name="isValid" value="false">
-				<input type="hidden" name="serMenuAct" value="<%=StringEscapeUtils.escapeHtml(sMAction)%>">
+				<input type="hidden" name="serMenuAct" value="<%=StringEscapeUtils.escapeHtml(sMAction)%>"/>
 				<input type="hidden" name="serRecCount" value="<%=nRecs%>">
 				<input type="hidden" name="selRowID" value="">
 				<!-- stores Designation Name and ID -->
