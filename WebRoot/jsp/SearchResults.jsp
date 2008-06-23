@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.8 2008-06-20 17:05:34 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.9 2008-06-23 16:10:33 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -194,7 +194,7 @@ if(!sSelAC.equals("ValueMeaning"))
         { 
             session.setAttribute("vStatMsg", new Vector());
         %>
-            displayStatus("<%=statusMessage%>", "<%=sSubmitAction%>");
+            displayStatus("<%=statusMessage%>", "<%=StringEscapeUtils.escapeJavaScript(sSubmitAction)%>");
      <% }
         //reset the message attributes   
         session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");
@@ -399,7 +399,7 @@ if(!sSelAC.equals("ValueMeaning"))
    //gets some attribute for the selelcted row and enables/disables the button
    function EnableButtons(checked, currentField)
    {
-      EnableCheckButtons(checked, currentField, "<%=StringEscapeUtils.escapeJavaScript(sMAction)%>", "<%=StringEscapeUtils.escapeHtml(sButtonPressed)%>", "<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>")
+      EnableCheckButtons(checked, currentField, "<%=StringEscapeUtils.escapeJavaScript(sMAction)%>", "<%=StringEscapeUtils.escapeJavaScript(sButtonPressed)%>", "<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>")
    }
 
    //check if the user has permission to delete in the context called from designate record
