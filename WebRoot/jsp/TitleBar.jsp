@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.4 2008-06-23 16:46:43 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.5 2008-06-23 17:03:55 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -194,7 +194,7 @@ function linkNCICB()
 		<form name="Form3" method="post" action="../../cdecurate/NCICurationServlet?reqType=newVDFromMenu"></form>
 		<form name="LogoutForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=logout"></form>
 		<form name="Form4" method="post" action="../../cdecurate/NCICurationServlet?reqType=actionFromMenu">
-		<input type="hidden" name="hidMenuAction" value="<%=StringEscapeUtils.escapeHtml(strNothing)%>">
+		<input type="hidden" name="hidMenuAction" value="<%=StringEscapeUtils.escapeHtml(strNothing)%>"/>
 		</form>
 		<%
           String Username = (String)session.getAttribute("Username");
