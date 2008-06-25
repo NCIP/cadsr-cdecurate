@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.15 2008-06-17 13:34:34 chickerura Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.16 2008-06-25 16:54:18 chickerura Exp $
    $Name: not supported by cvs2svn $
 
    Author: Anupama Chickerur
@@ -156,7 +156,6 @@ WHEN MATCHED THEN
       UPDATE SET S.VALUE = S.VALUE, S.DESCRIPTION = T.DESCRIPTION
 WHEN NOT MATCHED THEN INSERT (TOOL_NAME, PROPERTY, VALUE, DESCRIPTION) VALUES (T.TOOL_NAME, T.PROPERTY, T.VALUE, T.DESCRIPTION);
 
-DELETE FROM SBREXT.TOOL_OPTIONS_VIEW_EXT WHERE TOOL_NAME=UPPER('curation') AND PROPERTY LIKE 'EVS.VOCAB.3.PROPERTY.DEFINITION';
 
 /*
   ------------LOINC-----------
