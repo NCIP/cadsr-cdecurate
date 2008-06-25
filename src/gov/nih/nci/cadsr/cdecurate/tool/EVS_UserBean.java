@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.51 2008-05-29 19:19:07 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.52 2008-06-25 15:14:41 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -860,19 +860,19 @@ public final class EVS_UserBean implements Serializable
       String eURL = "";
       //right now use the hard coded vector. later query the database
       GetACService getAC = new GetACService(req, res, servlet);
-      //get the curation specific url to test
-      vList = getAC.getToolOptionData("CURATION", "EVS.URL", "");
+      /*//get the curation specific url to test
+      vList = getAC.getToolOptionData("EVSAPI", "URL", "");
       if (vList != null && vList.size()>0)
       {
         TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
         if (tob != null) eURL = tob.getVALUE();      
         //System.out.println(tob.getVALUE() + " evs link cadsr for curation " + eURL);
         if (eURL == null || eURL.equals("")) vList = new Vector();  //check it again
-      }
+      }*/
       //get it again for all tools property
       if (vList == null || vList.size()<1)
       {
-        vList = getAC.getToolOptionData("EVS", "URL", "");
+        vList = getAC.getToolOptionData("EVSAPI", "URL", "");
         if (vList != null && vList.size()>0)
         {
           TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
