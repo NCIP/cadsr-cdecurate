@@ -1,6 +1,6 @@
 //Copyright (c) 2000 ScenPro, Inc.
 
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.57 2008-06-20 14:10:34 chickerura Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.58 2008-06-25 15:30:08 chickerura Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1273,12 +1273,12 @@ public class EVSSearch implements Serializable {
 		}
 		return termStr;
 	}
-	/** 
-	 *  The EVS API returns def source from Thesaurus inside of xml tags <>. This methods
-	 *  extracts the def source from the tags
-	 *  @param termStr
-	 *  @return source
-	 *
+	
+	/**
+	 * The EVS API returns def source from the Qualifier Collection. This method
+	 * extracts the def source from the collection
+	 * @param prop
+	 * @return source
 	 */
 	private String parseDefSource(Property prop) {
 		String termStr="";
@@ -1329,7 +1329,7 @@ public class EVSSearch implements Serializable {
 		}
 		return termStr;
 	}
-
+	
 	/**
 	 * To trim "Source => Name:" from Definition Source.
 	 *
