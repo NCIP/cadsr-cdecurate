@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.16 2008-06-25 16:54:18 chickerura Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.17 2008-06-26 15:47:46 chickerura Exp $
    $Name: not supported by cvs2svn $
 
    Author: Anupama Chickerur
@@ -238,6 +238,7 @@ UNION SELECT'CURATION' AS TOOL_NAME, 'EVS.VOCAB.6.USEPARENT' AS PROPERTY, 'true'
 UNION SELECT 'CURATION' AS TOOL_NAME, 'EVS.VOCAB.6.SEARCHTYPE' AS PROPERTY, 'PropType' AS VALUE, 'Store vocab Search type of the name for the MedDRA vocabulary'AS DESCRIPTION FROM DUAL
 UNION SELECT 'CURATION' AS TOOL_NAME, 'EVS.VOCAB.6.PROPERTY.NAMESEARCH' AS PROPERTY, 'Preferred_Name' AS VALUE, 'Store vocab property to search name for the MedDRA vocabulary'AS DESCRIPTION FROM DUAL
 UNION SELECT 'CURATION'AS TOOL_NAME, 'EVS.VOCAB.6.PROPERTY.NAMEDISPLAY' AS PROPERTY, 'Preferred_Name' AS VALUE, 'Store vocab property to display name for the MedDRA vocabulary'AS DESCRIPTION FROM DUAL
+UNION SELECT 'CURATION' AS TOOL_NAME, 'EVS.VOCAB.6.PROPERTY.DEFINITION' AS PROPERTY, 'definition' AS VALUE,'Store vocab Definition evs property to filter the search for MedDRA vocabulary' AS DESCRIPTION FROM DUAL
 )T
 ON(S.TOOL_NAME = T.TOOL_NAME AND S.PROPERTY = T.PROPERTY)
 WHEN MATCHED THEN 
