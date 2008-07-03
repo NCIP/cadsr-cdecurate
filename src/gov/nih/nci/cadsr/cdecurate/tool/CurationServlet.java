@@ -892,9 +892,24 @@ public class CurationServlet
                         aURL = tob.getVALUE();
                 }
                 ToolURL.setUmlBrowserUrl(session, aURL);
+                
+                vList = new Vector();
+                vList = getAC.getToolOptionData("CURATION", "HELP.HOME", "");
+                aURL = null;
+                if (vList != null && vList.size() > 0)
+                {
+                    TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+                    if (tob != null)
+                        aURL = tob.getVALUE();
+                }
+                ToolURL.setCurationToolHelpURL(session, aURL);
+                session.setAttribute("curationToolHelpURL", aURL);
+                
                 getAC.getACList(req, res, "", true, "ALL");
                 doOpenSearchPage(req, res);
                 getCompAttrList(req, res, "DataElement", "searchForCreate");
+                   
+                
                 // get EVS info
                 try
                 {
@@ -938,6 +953,26 @@ public class CurationServlet
                 logger.fatal("Servlet-doHomePage, display error page : " + ee.toString(), ee);
             }
         }
+    }
+    
+    /**
+     * Gets the Help URL from Tool options table. 
+     * @param req
+     * @param res
+     */
+    public String getHelpURL(Connection con)
+    {
+    	 GetACService getAC = new GetACService(); 
+    	Vector vList = new Vector();
+        vList = getAC.getToolOptionData(con,"CURATION", "HELP.HOME", "");
+        String aURL = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+                aURL = tob.getVALUE();
+        }
+       return aURL;
     }
 
     /**
