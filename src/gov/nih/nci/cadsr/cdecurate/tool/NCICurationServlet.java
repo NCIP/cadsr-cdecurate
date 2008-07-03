@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.54 2008-05-04 19:32:20 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.55 2008-07-03 21:17:01 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -12,7 +12,6 @@ import gov.nih.nci.cadsr.cdecurate.util.ClockTime;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -22,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import gov.nih.nci.cadsr.cdecurate.util.HelpURL;
 
 import org.apache.log4j.Logger;
 
@@ -148,6 +148,7 @@ public class NCICurationServlet extends HttpServlet
             Connection con = null;
             Statement stmt = null;
             ResultSet rset = null;
+            boolean connected =false;
             CurationServlet curser = new CurationServlet();
             try
             {
@@ -155,9 +156,17 @@ public class NCICurationServlet extends HttpServlet
                 stmt = con.createStatement();
                 rset = stmt.executeQuery("Select sysdate from dual");
                 if (rset.next())
-                    rset.getString(1);
+                    {
+                	 rset.getString(1);
+                	 connected =true;
+                    }
                 else
                     throw (new Exception("DBPool connection test failed."));
+                 if(connected)
+                 {
+                	 String helpURL = curser.getHelpURL(con);
+                	 HelpURL.setCurationToolHelpURL(helpURL);
+                 }
             }
             catch (Exception e)
             {
