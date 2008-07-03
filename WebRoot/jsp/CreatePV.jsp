@@ -6,6 +6,9 @@
 <link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 <%@ page import="java.text.*" %>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
+
 <SCRIPT LANGUAGE="JavaScript" SRC="js/date-picker.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="js/CreatePV.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
@@ -120,7 +123,7 @@ function ViewConceptInTree()
     <tr>
       <td colspan="6" align="left" valign="top">
         <input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate');"
-				onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_Validation'); return false">
+				onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_Validation',helpUrl); return false">
           &nbsp;&nbsp;
         <input type="button" name="btnClear" value="Clear" style="width: 125" onClick="clearBoxes();">
           &nbsp;&nbsp;
@@ -152,7 +155,7 @@ function ViewConceptInTree()
           <td> &nbsp; </td>
           <td valign="bottom"  colspan=2>
             <select name="selValidValue" size=1 style="width:150"
-              onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_CreateValue'); return false">
+              onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_CreateValue',helpUrl); return false">
               <option value="" selected></option>
 <%            if (sVV.equals(""))
               {
@@ -193,10 +196,10 @@ function ViewConceptInTree()
       <td valign="bottom"  colspan=2>
        <%if (sPVAction.equals("createPV") || (sPVAction.equals("editPV") && sValue != null && !sValue.equals(""))) { %> 
         <input type="text" name="txtPermValue" style="width:50%" size="20" maxlength=255 value="<%=sValue%>" 
-          onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_CreateValue'); return false">
+          onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_CreateValue',helpUrl); return false">
        <% } else { %>
         <input type="text" name="txtPermValue" size="20" maxlength=255 style="width:50%; color:#696969" value="<%=sValue%>" readonly
-          onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_CreateValue'); return false">
+          onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_CreateValue',helpUrl); return false">
        <% } %>
      </td>
     </tr>
@@ -213,7 +216,7 @@ function ViewConceptInTree()
       <td> &nbsp; </td>
       <td  align="left">
         <textarea name="selShortMeanings" cols="100%" style="color:#696969" readonly
-          onHelp = "showHelp('html/Help_CreateVD.html#createVMForm_CreateVM'); return false" rows="2"><%=sVMMeaning%></textarea>
+          onHelp = "showHelp('html/Help_CreateVD.html#createVMForm_CreateVM',helpUrl); return false" rows="2"><%=sVMMeaning%></textarea>
       </td>
       <td align="left">
       <%if (!sPVAction.equals("editPV")) { %>
@@ -229,7 +232,7 @@ function ViewConceptInTree()
       <td>&nbsp;</td>
 	    <td  valign="top" align="left"  colspan=2> 
         <textarea name="CreateDescription" rows="4" style="color:#696969; width:80%" readonly
-            onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_CreateValue'); return false"><%=sDescription%></textarea>
+            onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_CreateValue',helpUrl); return false"><%=sDescription%></textarea>
       </td>
 	  </tr>
     <tr height="25" valign="bottom">
@@ -240,7 +243,7 @@ function ViewConceptInTree()
       <td>&nbsp;</td>
 	    <td valign="top" align="left" colspan=2> 
         <input type="text" name="EVSConceptID" size="25"  value="<%=sEVSid%>" style="color:#696969" readonly
-            onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_CreateValue'); return false">
+            onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_CreateValue',helpUrl); return false">
         &nbsp;&nbsp;&nbsp;
       </td>
 	  </tr>
@@ -253,7 +256,7 @@ function ViewConceptInTree()
       <td>&nbsp;</td>
       <td height="24"  valign="top" colspan="2">
         <select name="selPVSource" size="1"
-              onHelp = "showHelp('html/Help_CreateVD.html#createVDForm_ValueOrigin'); return false">
+              onHelp = "showHelp('html/Help_CreateVD.html#createVDForm_ValueOrigin',helpUrl); return false">
             <option value="" selected></option>
 <%         
 		   boolean isFound = false;
@@ -283,7 +286,7 @@ function ViewConceptInTree()
       <td> &nbsp; </td>
       <td valign="top"  colspan=2>
         <input type="text" name="BeginDate" size="12" maxlength=10 value="<%=sBeginDate%>"
-          onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_BeginDate'); return false">
+          onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_BeginDate',helpUrl); return false">
         <a href="javascript:show_calendar('createPVForm.BeginDate', null, null, 'MM/DD/YYYY');">
         <img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
         </a>
@@ -299,7 +302,7 @@ function ViewConceptInTree()
       <td> &nbsp; </td>
       <td valign="top"  colspan=2>
         <input type="text" name="EndDate" size="12" maxlength=10 value="<%=sEndDate%>"
-          onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_EndDate'); return false">
+          onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_EndDate',helpUrl); return false">
         <a href="javascript:show_calendar('createPVForm.EndDate', null, null, 'MM/DD/YYYY');">
         <img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
         </a>

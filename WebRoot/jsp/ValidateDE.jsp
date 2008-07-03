@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateDE.jsp,v 1.2 2007-09-19 16:59:35 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateDE.jsp,v 1.3 2008-07-03 21:38:43 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -10,6 +10,8 @@
 		<META NAME="GENERATOR" CONTENT="Microsoft FrontPage 5.0">
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.Session_Data"%>
+		<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 		<TITLE>
 			Validate Data Element
@@ -51,6 +53,7 @@
 
 		<script language="JavaScript">
    var evsWindow = null;
+ var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
 
     function hourglass(){
       document.body.style.cursor = "wait";
@@ -96,8 +99,8 @@
 		<form name="validateDEForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=validateDEFromForm">
 
 			<font color="#CCCCCC"></font>
-
-			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+			<br>
+			<table width="100%" border="1" cellpadding="0" cellspacing="0">
 				<tr>
 					<td width="1200" height="29" valign="top">
 						<% if (isValid == true) { %>
@@ -108,12 +111,18 @@
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="button" name="btnBack" value="Back" style="width:125" onClick="EditDE();">
 						&nbsp;&nbsp;
-						<img name="Message" src="images/SubmitMessageFinal.gif" width="400" height="25" alt="WaitMessage" style="visibility:hidden;">
+						<img name="Message" src="images/SubmitMessageFinal.gif" width="200" height="25" alt="WaitMessage" style="visibility:hidden;">
 					</td>
 				</tr>
 			</table>
 			<br>
-
+			<table border="0" cellpadding="0" cellspacing="0" align="right">
+				<tr>
+					<td valign="top" align="right"><img src="images/check.png" alt="Valid, Informational message."></td>
+					<td  valign="top" align="right"><img src="images/warning.png" alt="Valid, Warning message."></td>
+					<td valign="top" align="right"><img src="images/cross.png" alt="Not valid, error message,can not Submit changes."></td>	
+				</tr>
+			</table>		
 			<table width="100%" border="2" cellspacing="0" cellpadding="0" bordercolor="#000000">
 				<% if (sMenuAction.equals("EditDesDE")){%>
 				<caption>
@@ -148,8 +157,9 @@
 				</caption>
 				<% } } %>
 				<tr>
+				<td width="45"></td>
 					<td width="182" height="20" valign="top" bgcolor="#FFFFFF" bordercolor="#000000">
-						<div align="center" onHelp="showHelp('html/Help.htm#validateDEForm_AttributeName'); return false">
+						<div align="center" onHelp="showHelp('html/Help.htm#validateDEForm_AttributeName',helpUrl); return false">
 							<strong>
 								<font size="3">
 									Attribute Name
@@ -160,7 +170,7 @@
 					<td valign="top" width="487" bgcolor="#FFFFFF" bordercolor="#000000">
 						<div align="center">
 							<strong>
-								<font size="3" "showHelp('html/Help.htm#validateDEForm_AttributeContents'); returnfalse">
+								<font size="3" "showHelp('html/Help.htm#validateDEForm_AttributeContents',helpUrl); returnfalse">
 									Attribute Contents
 								</font>
 							</strong>
@@ -169,7 +179,7 @@
 					<td width="151" valign="top" bgcolor="#FFFFFF" bordercolor="#000000">
 						<div align="center">
 							<strong>
-								<font size="3" "showHelp('html/Help.htm#validateDEForm_ValidationStatus'); returnfalse">
+								<font size="3" "showHelp('html/Help.htm#validateDEForm_ValidationStatus',helpUrl); returnfalse">
 									Validation Status
 								</font>
 							</strong>
@@ -192,16 +202,25 @@
 
 %>
 				<tr>
+				<td height="20" valign="top" width="45">
+				 <%if (sStat.equals("Valid")|| sStat.equals("No Change")){%>
+				 <img src="images/check.png">
+				 <%}else if(sStat.startsWith("Valid Warning") || sStat.startsWith("Warning")){%>
+				 <img src="images/warning.png">
+				 <%}else{%>
+				 <img src="images/cross.png">
+				 <% }%>
+				</td>
 					<td height="20" valign="top" bgcolor="#FFFFFF" width="182" bordercolor="#000000">
 						<strong>
 							<%=sItem%>
 						</strong>
 					</td>
-					<td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000">
+					<td valign="top" bgcolor="#FFFFFF" width="250" bordercolor="#000000">
 						<%=sContent%>
 						&nbsp;
 					</td>
-					<td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000">
+					<td valign="top" bgcolor="#FFFFFF" width="400" bordercolor="#000000">
 						<font color="<%=sFont%>">
 							<%=sStat%>
 						</font>

@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/datalov/Attributes.java,v 1.15 2008-07-03 21:16:08 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/datalov/Attributes.java,v 1.16 2008-07-03 21:46:17 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.datalov;
@@ -110,7 +110,7 @@ public enum Attributes
     	
         return "<th method=\"get\"><a href=\"javascript:SetSortType('"
             + _sortType
-            + "')\" onHelp = \"showHelp(HelpURL.getCurationToolHelpURL()); return false\">"
+            + "')\" onHelp = \"showHelp('../Help_SearchAC.html#searchResultsForm_sort',HelpURL.getCurationToolHelpURL()); return false\">"
             + _colName
             + "</a></th>";
     }

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ErrorPageWindow.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ErrorPageWindow.jsp,v 1.3 2008-07-03 21:34:03 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -10,8 +10,10 @@
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<%@ page import="java.util.*"%>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 		<script language="JavaScript" type="text/JavaScript">
 <!--
+ var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
 function MM_reloadPage(init) {  //reloads the window if Nav4 resized
   if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
     document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
@@ -125,7 +127,7 @@ function callHelp()
       if (helpWindow && !helpWindow.closed)
        	helpWindow.focus();
       else
-        	helpWindow = window.open("Help.htm", "Help");
+        	helpWindow = window.open(helpUrl, "Help");
    }
 </script>
 		<style>

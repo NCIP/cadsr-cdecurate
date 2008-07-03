@@ -1,11 +1,14 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/DefSearchParameters.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/DefSearchParameters.jsp,v 1.3 2008-07-03 21:28:37 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <%@ page import="java.util.*"%>
 <%@ page buffer="12kb"%>
 <%@ page session="true"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
+
 <html>
 	<head>
 		<title>
@@ -27,6 +30,8 @@ vOCAttr.addElement("Definition");
 		<Script Language="JavaScript">
   var metaWindow = null;
   var srch = null;
+   var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
+  
 
 
   function Setup()
@@ -88,7 +93,7 @@ function hourglass()
 </script>
 	</head>
 
-	<body onLoad="Setup();" onHelp="showHelp('html/Help_SearchAC.html#EVSSearchParmsForm_SearchDefinition'); return false">
+	<body onLoad="Setup();" onHelp="showHelp('html/Help_SearchAC.html#EVSSearchParmsForm_SearchDefinition',helpUrl); return false">
 		<form name="EVSForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=searchACs">
 			<table width="100%" class="sidebarBGColor">
 				<col width="10px">

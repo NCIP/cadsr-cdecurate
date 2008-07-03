@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.10 2008-06-20 17:05:20 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.11 2008-07-03 21:36:54 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -8,6 +8,7 @@
 <%@ page session="true"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 
 <html>
 	<head>
@@ -196,6 +197,7 @@
 
 		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
   //submits the page if Vocab changed.
+   var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
   
   function doVocabChange()
   {
@@ -537,7 +539,7 @@ function doMetaCodeSearch()
 					<td>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<select name="listSearchFor" size="1" style="width: 160"
-							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
 							<option value="<%=StringEscapeUtils.escapeHtml(sSearchAC)%>">
 								<%=StringEscapeUtils.escapeHtml(sLongAC)%>
 							</option>
@@ -578,7 +580,7 @@ function doMetaCodeSearch()
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<select name="listContextFilterVocab" size="1" style="width: 160"
 							onChange="doVocabChange();"
-							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
 							<%
 									if (vVocab != null) {
 									for (int i = 0; vVocab.size() > i; i++) {
@@ -643,7 +645,7 @@ function doMetaCodeSearch()
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<select name="listSearchIn" size="1" style="width: 170"
 								onChange="populateEVSSearchIn();"
-								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
 								<option value="longName" <%if(sSearchIn.equals("longName")){%>
 									selected <%}%>>
 									Names and Definition
@@ -699,7 +701,7 @@ function doMetaCodeSearch()
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<select name="listSearchInEVS" size="1" style="width: 170"
 								onChange="populateCaDSRSearchIn();"
-								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
 								<%
 											if (optName != null && !optName.equals("")
 											&& !sSearchAC.equals("ParentConceptVM")) {
@@ -748,7 +750,7 @@ function doMetaCodeSearch()
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="text" name="keyword" size="22" style="width: 160"
 							value="<%=sLastKeyword%>"
-							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
 					</td>
 				</tr>
 				<tr>
@@ -787,7 +789,7 @@ function doMetaCodeSearch()
 						<p>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<select name="listContextFilter" size="1" style="width: 160"
-								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
 								<option value="AllContext"
 									<%if(sContext.equals("All Contexts")){%> selected <%}%>>
 									All Contexts
@@ -822,7 +824,7 @@ function doMetaCodeSearch()
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<select name="listStatusFilter" multiple size="2"
 								style="width: 160"
-								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
 								<option value="RELEASED"
 									<% if(sStatus.equalsIgnoreCase("RELEASED")) {%> selected <%}%>>
 									RELEASED
@@ -862,11 +864,11 @@ function doMetaCodeSearch()
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="radio" name="rRetired" value="Exclude"
 							<%if(sRetired.equals("Exclude")){%> checked <%}%>
-							onHelp="showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
+							onHelp="showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 						Exclude&nbsp;
 						<input type="radio" name="rRetired" value="Include"
 							<%if(sRetired.equals("Include")){%> checked <%}%>
-							onHelp="showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
+							onHelp="showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 						Include&nbsp;
 
 					</td>
@@ -888,7 +890,7 @@ function doMetaCodeSearch()
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<select name="listContextFilterSource" size="1"
 								style="width: 160"
-								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
 								<option value="All Sources"
 									<%if(sMetaSource.equals("All Sources")){%> selected <%}%>>
 									All Sources
@@ -920,7 +922,7 @@ function doMetaCodeSearch()
 						<p>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<select name="listMetaLimit" size="1" style="width: 160"
-								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
 								<option value="100" <%if(sMetaLimit.equals("100")){%> selected
 									<%}%>>
 									100
@@ -954,13 +956,13 @@ function doMetaCodeSearch()
 							<b> <%=iItem++%> ) Display Attributes: </b> &nbsp;&nbsp;
 							<input type="button" name="updateDisplayBtn" value="Update"
 								onClick="<%=updFunction%>" style="width: 50"
-								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
 						</div>
 						<br>
 						<div align="center">
 							<select name="listAttrFilter" size="5" style="width: 160"
 								multiple
-								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes'); return false">
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
 								<%
 											if (vBlockAttr != null) {
 											for (int i = 0; i < vBlockAttr.size(); i++) {
@@ -993,7 +995,7 @@ function doMetaCodeSearch()
 							<input type="button" name="startSearchBtn" value="Start Search"
 								onClick="doSearchBuildingBlocks();"
 								style="width: 150; height: 30"
-								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks'); return false">
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
 						</div>
 					</td>
 				</tr>

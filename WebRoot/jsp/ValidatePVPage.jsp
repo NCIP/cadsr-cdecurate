@@ -1,10 +1,11 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidatePVPage.jsp,v 1.2 2007-09-19 16:59:35 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidatePVPage.jsp,v 1.3 2008-07-03 21:40:58 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <!-- goes to login page if error occurs -->
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 <curate:checkLogon name="Userbean" page="/LoginE.jsp" />
 <html>
 	<head>
@@ -14,10 +15,12 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<script>
 history.forward();
+ var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
+
 </script>
 	</head>
 
-	<body onHelp="showHelp('html/Help_CreateVD.html#ValidatePVPage'); return false">
+	<body onHelp="showHelp('html/Help_CreateVD.html#ValidatePVPage',helpUrl); return false">
 		<table width="100%" height="100%" border="2" cellpadding="0" cellspacing="0">
 			<tr height="140" width="100%" valign="top">
 				<td colspan=2>

@@ -1,10 +1,12 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/AltRefOwnDEPage.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/AltRefOwnDEPage.jsp,v 1.3 2008-07-03 21:23:15 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <!-- goes to secondary window error page if error occurs -->
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
+
 <curate:checkLogon name="Userbean" page="/ErrorPageWindow.jsp" />
 <html>
 	<head>
@@ -14,6 +16,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<%@ page import="java.util.*"%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
+		<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 		<%@ page session="true"%>
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<script language="JavaScript" src="js/date-picker.js"></script>
@@ -91,7 +94,7 @@
   var selRefDocArray = new Array();  //for selected reference doc list
   var selAltNameArray = new Array();  //for selected alternate name list
   var browseWindow = null;
- 
+ var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
   //store reference documents in the array
   function loadRefDocArray()
   {
@@ -185,7 +188,7 @@
 				<!--DWLayoutTable-->
 				<tr>
 					<td align="left" valign="top" colspan=2>
-						<input type="button" name="btnUpdate" value="Update Attributes" style="width:170" onClick="javascript:submitAltRefDE();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Validation'); return false">
+						<input type="button" name="btnUpdate" value="Update Attributes" style="width:170" onClick="javascript:submitAltRefDE();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Validation',helpUrl); return false">
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="button" name="btnClear" value="Clear" onClick="ClearBoxes();">
 						&nbsp;&nbsp;&nbsp;&nbsp;
@@ -241,7 +244,7 @@
 							</tr>
 							<tr valign="middle">
 								<td colspan="3">
-									<select name="selAltType" size="1" style="width:80%" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext'); return false">
+									<select name="selAltType" size="1" style="width:80%" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext',helpUrl); return false">
 										<option value="" selected></option>
 										<%if (vAltTypes != null) 
                   {
@@ -269,7 +272,7 @@
 							</tr>
 							<tr valign="middle">
 								<td colspan="3">
-									<textarea name="txtAltName" style="width:80%" rows=2 onkeydown="javascript:textCounter('txtAltName', 255);" onkeyup="javascript:textCounter('txtAltName', 255);" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext'); return false"></textarea>
+									<textarea name="txtAltName" style="width:80%" rows=2 onkeydown="javascript:textCounter('txtAltName', 255);" onkeyup="javascript:textCounter('txtAltName', 255);" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext',helpUrl); return false"></textarea>
 								</td>
 							</tr>
 							<tr height="30" valign="middle">
@@ -297,11 +300,11 @@
 							</tr>
 							<tr>
 								<td align="left">
-									<select name="selAltNameType" size="4" style="width:99%" onclick="javascript:selectedAltList('altType');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext'); return false">
+									<select name="selAltNameType" size="4" style="width:99%" onclick="javascript:selectedAltList('altType');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext',helpUrl); return false">
 									</select>
 								</td>
 								<td align="left" colspan="2">
-									<select name="selAltNameText" size="4" style="width:100%" onclick="javascript:selectedAltList('altText');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext'); return false">
+									<select name="selAltNameText" size="4" style="width:100%" onclick="javascript:selectedAltList('altText');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext',helpUrl); return false">
 									</select>
 								</td>
 							</tr>
@@ -337,7 +340,7 @@
 							</tr>
 							<tr valign="middle">
 								<td colspan="3">
-									<select name="selRefType" size="1" style="width:75%" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext'); return false">
+									<select name="selRefType" size="1" style="width:75%" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext',helpUrl); return false">
 										<option value="" selected="selected"></option>
 										<%if (vRefTypes != null) 
                   {
@@ -361,7 +364,7 @@
 							</tr>
 							<tr valign="middle">
 								<td colspan="3">
-									<textarea name="txtRefName" style="width:90%" rows=2 onkeydown="javascript:textCounter('txtRefName', 30);" onkeyup="javascript:textCounter('txtRefName', 30);" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext'); return false"></textarea>
+									<textarea name="txtRefName" style="width:90%" rows=2 onkeydown="javascript:textCounter('txtRefName', 30);" onkeyup="javascript:textCounter('txtRefName', 30);" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext',helpUrl); return false"></textarea>
 								</td>
 							</tr>
 							<tr valign="bottom" height="25">
@@ -371,7 +374,7 @@
 							</tr>
 							<tr valign="middle">
 								<td colspan="3">
-									<textarea name="txtRefText" style="width:90%" rows=2 onkeydown="javascript:textCounter('txtRefText', 4000);" onkeyup="javascript:textCounter('txtRefText', 4000);" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext'); return false"></textarea>
+									<textarea name="txtRefText" style="width:90%" rows=2 onkeydown="javascript:textCounter('txtRefText', 4000);" onkeyup="javascript:textCounter('txtRefText', 4000);" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext',helpUrl); return false"></textarea>
 								</td>
 							</tr>
 							<tr valign="bottom" height="25">
@@ -386,7 +389,7 @@
 							</tr>
 							<tr valign="middle">
 								<td colspan="3">
-									<input name="txtRefURL" type="text" value="" style="width:90%" onkeydown="javascript:textCounter('txtRefURL', 240);" onkeyup="javascript:textCounter('txtRefURL', 240);" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext'); return false">
+									<input name="txtRefURL" type="text" value="" style="width:90%" onkeydown="javascript:textCounter('txtRefURL', 240);" onkeyup="javascript:textCounter('txtRefURL', 240);" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext',helpUrl); return false">
 									&nbsp;&nbsp;
 									<a href="javascript:openBrowse();">
 										Browse
@@ -414,11 +417,11 @@
 							</tr>
 							<tr>
 								<td align="left">
-									<select name="selRefDocType" size="4" style="width:100%" onclick="javascript:selectedRefList('refType');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext'); return false">
+									<select name="selRefDocType" size="4" style="width:100%" onclick="javascript:selectedRefList('refType');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext',helpUrl); return false">
 									</select>
 								</td>
 								<td align="left" colspan="2">
-									<select name="selRefDocName" size="4" style="width:95%" onclick="javascript:selectedRefList('refName');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext'); return false">
+									<select name="selRefDocName" size="4" style="width:95%" onclick="javascript:selectedRefList('refName');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext',helpUrl); return false">
 									</select>
 								</td>
 							</tr>
@@ -432,11 +435,11 @@
 							</tr>
 							<tr>
 								<td align="left">
-									<select name="selRefDocText" size="4" style="width:100%" onclick="javascript:selectedRefList('refText');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext'); return false">
+									<select name="selRefDocText" size="4" style="width:100%" onclick="javascript:selectedRefList('refText');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext',helpUrl); return false">
 									</select>
 								</td>
 								<td align="left" colspan="2">
-									<select name="selRefDocURL" size="4" style="width:95%" onclick="javascript:selectedRefList('refURL');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext'); return false">
+									<select name="selRefDocURL" size="4" style="width:95%" onclick="javascript:selectedRefList('refURL');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext',helpUrl); return false">
 									</select>
 								</td>
 							</tr>

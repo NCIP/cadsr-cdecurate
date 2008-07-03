@@ -1,4 +1,6 @@
 <%@ page errorPage="ErrorPage.jsp" %>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
+
 <!-- CreatePVPage.jsp -->
 <html>
 <head>
@@ -6,11 +8,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <script>
 history.forward();
+var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
+
 </script>
 </head>
 
 <body
-  onHelp = "showHelp('html/Help_CreateVD.html#createPVPage'); return false">
+  onHelp = "showHelp('html/Help_CreateVD.html#createPVPage',helpUrl); return false">
 <table width="100%" border="1" cellpadding="0" cellspacing="0">
   <tr>
     <td width="100%" valign="top"><%@ include file="CreatePV.jsp" %></td>
