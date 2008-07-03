@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/NonEVSSearchPage.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/NonEVSSearchPage.jsp,v 1.3 2008-07-03 21:35:35 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -16,6 +16,8 @@
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<%@ page import="java.util.*"%>
 		<%@ page import="java.text.*"%>
+		<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 		<%
   EVS_Bean eBean = (EVS_Bean)request.getAttribute("SelectedVDParent");
@@ -30,6 +32,8 @@
 %>
 		<script>
   var browseWindow = null;
+   var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
+  
   function hourglass()
   {
     document.body.style.cursor = "wait";
@@ -95,7 +99,7 @@
         document.nonEVSSearchPage.txtRefName.value = opener.document.getElementById("selectedParentConceptName").value;
         hourglass();
         window.status = "Refereshing the page, it may take a minute, please wait....."
-        document.nonEVSSearchPage.actSelect.value = "viewParent";
+        document.nonEVSSearchPage.actSelect.value ="viewParent";
         document.nonEVSSearchPage.submit();        
       }
     }
@@ -151,7 +155,7 @@
 									&nbsp;
 								</td>
 								<td align=left>
-									<select name="listSearchFor" size="1" style="width:172" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters'); return false">
+									<select name="listSearchFor" size="1" style="width:172" onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 										<option value="ParentConcept" selected>
 											Parent Concept
 										</option>

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CRFValueResults.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CRFValueResults.jsp,v 1.3 2008-07-03 21:28:03 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -11,6 +11,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 		<%@ page import="java.util.*"%>
+		<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
+		
 		<link href="css/FullDesignVer.css" rel="stylesheet" type="text/css">
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 		<%
@@ -35,6 +38,8 @@
 
 		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
    var numRowsSelected = 0;
+    var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
+   
    function setup()
    {
  <%
@@ -172,19 +177,19 @@
 					</th>
 					<th method="get">
 						<a href="../../cdecurate/NCICurationServlet?reqType=doSortCDE&sortType=CRFValue" onClick=SetSortType( "CRFValue");
-              onHelp="showHelp('html/Help.htm#searchResultsForm_sort'); return false">
+              onHelp="showHelp('html/Help.htm#searchResultsForm_sort',helpUrl); return false">
 							Values from CRF Question
 						</a>
 					</th>
 					<th method="get">
 						<a href="../../cdecurate/NCICurationServlet?reqType=doSortCDE&sortType=value" onClick=javascript:SetSortType( "value")
-              onHelp="showHelp('html/Help.htm#searchResultsForm_sort'); return false">
+              onHelp="showHelp('html/Help.htm#searchResultsForm_sort',helpUrl); return false">
 							Value Items
 						</a>
 					</th>
 					<th method="get">
 						<a href="../../cdecurate/NCICurationServlet?reqType=doSortCDE&sortType=meaning" onClick=javascript:SetSortType( "meaning")
-              onHelp="showHelp('html/Help.htm#searchResultsForm_sort'); return false">
+              onHelp="showHelp('html/Help.htm#searchResultsForm_sort',helpUrl); return false">
 							Value Meanings
 						</a>
 					</th>

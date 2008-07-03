@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.12 2008-06-20 17:06:09 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.13 2008-07-03 21:37:45 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -7,6 +7,7 @@
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 <html>
 	<head>
 		<title>
@@ -126,6 +127,8 @@
 %>
 
 		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
+		 var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
+		
  var evsWindow2 = null;
  var selDefinition = null;
  var numRowsSelected = 0;
@@ -443,79 +446,79 @@
           String sAttr = (String)vSelAttr.elementAt(i);
           if (sAttr == null || sAttr.equals("Concept Name")) { %>
 					<th method="get">
-						<a href="javascript:SetSortType('name')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
+						<a href="javascript:SetSortType('name')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							Concept Name
 						</a>
 					</th>
 					<%        }   else if (sAttr == null || sAttr.equals("EVS Identifier")) { %>
 					<th method="get">
-						<a href="javascript:SetSortType('umls')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
+						<a href="javascript:SetSortType('umls')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							EVS Identifier
 						</a>
 					</th>
 					<%        }   else if (sAttr == null || sAttr.equals("Public ID")) { %>
 					<th method="get">
-						<a href="javascript:SetSortType('publicID')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
+						<a href="javascript:SetSortType('publicID')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							Public_ID
 						</a>
 					</th>
 					<%        }   else if (sAttr == null || sAttr.equals("Version")) { %>
 					<th method="get">
-						<a href="javascript:SetSortType('version')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
+						<a href="javascript:SetSortType('version')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							Version
 						</a>
 					</th>
 					<%        }   else if (sAttr == null || sAttr.equals("Definition")) { %>
 					<th method="get">
-						<a href="javascript:SetSortType('def')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
+						<a href="javascript:SetSortType('def')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							Definition
 						</a>
 					</th>
 					<%        }   else if (sAttr == null || sAttr.equals("Definition Source")) { %>
 					<th method="get">
-						<a href="javascript:SetSortType('source')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
+						<a href="javascript:SetSortType('source')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							Definition Source
 						</a>
 					</th>
 					<%        } else if (sAttr == null || sAttr.equals("Workflow Status")) { %>
 					<th method="get">
-						<a href="javascript:SetSortType('asl')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
+						<a href="javascript:SetSortType('asl')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							Workflow Status
 						</a>
 					</th>
 					<%        } else if (sAttr == null || sAttr.equals("Context")) { %>
 					<th method="get">
-						<a href="javascript:SetSortType('context')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
+						<a href="javascript:SetSortType('context')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							Context
 						</a>
 					</th>
 					<%        } else if (sAttr == null || sAttr.equals("Semantic Type")) { %>
 					<th method="get">
-						<a href="javascript:SetSortType('semantic')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
+						<a href="javascript:SetSortType('semantic')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							Semantic Type
 						</a>
 					</th>
 					<%        }   else if (sAttr == null || sAttr.equals("Vocabulary")) { %>
 					<th method="get">
-						<a href="javascript:SetSortType('db')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
+						<a href="javascript:SetSortType('db')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							Vocabulary
 						</a>
 					</th>
 					<%        }   else if (sAttr == null || sAttr.equals("caDSR Component")) { %>
 					<th method="get">
-						<a href="javascript:SetSortType('cadsrComp')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
+						<a href="javascript:SetSortType('cadsrComp')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							caDSR Component
 						</a>
 					</th>
 					<%        }   else if (sAttr == null || sAttr.equals("DEC's Using")) { %>
 					<th method="get">
-						<a href="javascript:SetSortType('decUse')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort'); return false">
+						<a href="javascript:SetSortType('decUse')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							DEC's Using
 						</a>
 					</th>
 					<%        } else if (sAttr.equals("Level")) { %>
 					<th method="get">
-						<a href="javascript:SetSortType('Level')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort'); return false">
+						<a href="javascript:SetSortType('Level')" onHelp="showHelp('Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							Level
 						</a>
 					</th>

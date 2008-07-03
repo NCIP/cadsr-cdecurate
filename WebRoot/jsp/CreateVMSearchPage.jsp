@@ -1,9 +1,11 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVMSearchPage.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVMSearchPage.jsp,v 1.3 2008-07-03 21:27:37 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <%@ page errorPage="ErrorPage.jsp"%>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
+
 <html>
 	<head>
 		<title>
@@ -12,10 +14,12 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<script>
 history.forward();
+ var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
+
 </script>
 	</head>
 
-	<body onHelp="showHelp('html/Help_CreateVD.html#createVMPage'); return false">
+	<body onHelp="showHelp('html/Help_CreateVD.html#createVMPage',helpUrl); return false">
 		<table width="100%" border="1" cellpadding="0" cellspacing="0">
 			<tr>
 				<td width="100%" valign="top">

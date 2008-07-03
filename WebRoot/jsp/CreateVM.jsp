@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVM.jsp,v 1.3 2008-02-20 19:35:24 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVM.jsp,v 1.4 2008-07-03 21:27:15 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -13,12 +13,15 @@
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<%@ page import="java.text.*"%>
 		<%@ page import="java.util.*"%>
+		<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/date-picker.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/CreateVM.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 		<%
     String sVMBack = (String)session.getAttribute("VMBack");
+    
     //System.out.println("CreateVM sVMBack: " + sVMBack);
     if(sVMBack == null) sVMBack = "";
     session.setAttribute("VMBack", "");
@@ -32,6 +35,7 @@
     session.setAttribute("creSearchAC", "CreateVM_EVSValueMeaning");
 %>
 		<Script Language="JavaScript">
+   var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
   
   function AccessEVS()
   {
@@ -135,7 +139,7 @@ function displayStatusMessage()
 				<col width="95%">
 				<tr>
 					<td colspan="6" align="left" valign="top">
-						<input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate');" onHelp="showHelp('html/Help_CreateVD.html#createVMForm_Validation'); return false">
+						<input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate');" onHelp="showHelp('html/Help_CreateVD.html#createVMForm_Validation',helpUrl); return false">
 						&nbsp;&nbsp;
 						<input type="button" name="btnClear" value="Clear" style="width: 125" onClick="clearBoxes();">
 						&nbsp;&nbsp;
@@ -183,7 +187,7 @@ function displayStatusMessage()
 						&nbsp;
 					</td>
 					<td>
-						<select name="selConceptualDomain" size="1" onHelp="showHelp('html/Help_CreateVD.html#createVMForm_CreateVM'); return false">
+						<select name="selConceptualDomain" size="1" onHelp="showHelp('html/Help_CreateVD.html#createVMForm_CreateVM',helpUrl); return false">
 							<option value="<%=sConDomID%>" selected>
 								<%=sConDom%>
 							</option>
@@ -240,7 +244,7 @@ function displayStatusMessage()
 						&nbsp;
 					</td>
 					<td valign="top">
-						<input type="text" name="BeginDate" size="12" maxlength=10 value="<%=sBeginDate%>" onHelp="showHelp('html/Help_CreateVD.html#createVMForm_BeginDate'); return false">
+						<input type="text" name="BeginDate" size="12" maxlength=10 value="<%=sBeginDate%>" onHelp="showHelp('html/Help_CreateVD.html#createVMForm_BeginDate',helpUrl); return false">
 						<a href="javascript:show_calendar('createVMForm.BeginDate', null, null, 'MM/DD/YYYY');">
 							<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
 						</a>
@@ -265,7 +269,7 @@ function displayStatusMessage()
 						&nbsp;
 					</td>
 					<td valign="top">
-						<input type="text" name="EndDate" size="12" maxlength=10 value="<%=sEndDate%>" onHelp="showHelp('html/Help_CreateVD.html#createVMForm_EndDate'); return false">
+						<input type="text" name="EndDate" size="12" maxlength=10 value="<%=sEndDate%>" onHelp="showHelp('html/Help_CreateVD.html#createVMForm_EndDate',helpUrl); return false">
 						<a href="javascript:show_calendar('createVMForm.EndDate', null, null, 'MM/DD/YYYY');">
 							<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
 						</a>
@@ -293,7 +297,7 @@ function displayStatusMessage()
 						&nbsp;
 					</td>
 					<td valign="top" align="left">
-						<textarea name="CreateDescription" style="width:80%" rows=4 <%if(sEVS != null && !sEVS.equals("")) {%> disabled <% } %> onHelp="showHelp('html/Help_CreateVD.html#createVMForm_CreateVM'); return false"><%=sDescription%></textarea>
+						<textarea name="CreateDescription" style="width:80%" rows=4 <%if(sEVS != null && !sEVS.equals("")) {%> disabled <% } %> onHelp="showHelp('html/Help_CreateVD.html#createVMForm_CreateVM',helpUrl); return false"><%=sDescription%></textarea>
 						&nbsp;&nbsp;
 						<font color="#FF0000">
 							<a href="javascript:ClearMeaning()">
@@ -318,7 +322,7 @@ function displayStatusMessage()
 						&nbsp;
 					</td>
 					<td valign="top" align="left" colspan=2>
-						<input type="text" name="EVSConceptID" size="60" value="<%=sEVS%>" style="color:#696969" readonly onHelp="showHelp('html/Help_CreateVD.html#createPVForm_CreateValue'); return false">
+						<input type="text" name="EVSConceptID" size="60" value="<%=sEVS%>" style="color:#696969" readonly onHelp="showHelp('html/Help_CreateVD.html#createPVForm_CreateValue',helpUrl); return false">
 					</td>
 				</tr>
 
@@ -340,7 +344,7 @@ function displayStatusMessage()
 						&nbsp;
 					</td>
 					<td valign="top" align="left">
-						<textarea name="taComments" cols="70" onHelp="showHelp('html/Help_CreateVD.html#createVMForm_CreateVM'); return false" rows="2"><%=sComments%></textarea>
+						<textarea name="taComments" cols="70" onHelp="showHelp('html/Help_CreateVD.html#createVMForm_CreateVM',helpUrl); return false" rows="2"><%=sComments%></textarea>
 					</td>
 				</tr>
 				<tr height="25" valign="bottom">

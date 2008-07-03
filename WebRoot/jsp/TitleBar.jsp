@@ -1,11 +1,12 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.5 2008-06-23 17:03:55 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.6 2008-07-03 21:38:15 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <html>
 	<head>
 	<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+	<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 	<% //String thisServer2 = request.getServerName(); 
    String sentinelURL = (String)session.getAttribute("SentinelURL");
    String UMLBrowserURL = (String)session.getAttribute("UMLBrowserURL");
@@ -13,6 +14,7 @@
  %>
 <script language="JavaScript">
 <!--
+var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
 var dotCntr = -1;
 var helpWindow = null;
 var aboutWindow = null;
@@ -34,7 +36,7 @@ var sentinelWindow = null;
            helpWindow.focus();
       else
            // helpWindow = window.open("html/Help.htm", "Help", "width=750,height=620,top=0,left=0,resizable=yes,scrollbars=yes,titlebar=false");
-           helpWindow = window.open("html/Help.htm", "Help");
+           helpWindow = window.open(helpUrl, "Help");
    }
 
     function callManageAlert()

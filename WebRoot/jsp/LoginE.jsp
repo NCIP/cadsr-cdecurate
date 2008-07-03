@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc 2007
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/LoginE.jsp,v 1.4 2008-06-20 17:03:22 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/LoginE.jsp,v 1.5 2008-07-03 21:35:12 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 <html>
@@ -9,9 +9,11 @@
 <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
 
 <%@ page import="java.util.*" %>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.util.HelpURL"%>
 <script language="JavaScript" type="text/JavaScript">
 <!--
-function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+ var helpUrl = "<%=HelpURL.getCurationToolHelpURL(pageContext)%>";
+ function MM_reloadPage(init) {  //reloads the window if Nav4 resized
   if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
     document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
   else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
@@ -168,7 +170,7 @@ function callHelp()
       if (helpWindow && !helpWindow.closed)
        	helpWindow.focus();
       else
-        	helpWindow = window.open("html/Help.htm", "Help");
+        	helpWindow = window.open(helpUrl, "Help");
    }
 </script>
 <style>

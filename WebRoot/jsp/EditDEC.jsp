@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.3 2008-07-03 21:31:21 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -12,6 +12,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<%@ page import="java.util.*"%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
+		<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 		<%@ page session="true"%>
 		<script language="JavaScript" src="js/date-picker.js"></script>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/AddNewListOption.js"></SCRIPT>
@@ -184,6 +186,8 @@
 
 
 		<Script Language="JavaScript">
+		 var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
+		
   //get all the cs_csi from the bean to array.
   var csiArray = new Array();  
   var selCSIArray = new Array();  //for selected csi list
@@ -318,7 +322,7 @@
 			<table border="0">
 				<tr>
 					<td height="26" align="left" valign="top">
-						<input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('validate');" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_Validation'); return false">
+						<input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('validate');" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_Validation',helpUrl); return false">
 						&nbsp;&nbsp;
 						<input type="button" name="btnClear" value="Clear" style="width:125" onClick="ClearBoxes();">
 						&nbsp;&nbsp;
@@ -327,12 +331,12 @@
 						&nbsp;&nbsp;
 						<% } %>
 						<%if(sOriginAction.equals("BlockEditDEC")){%>
-						<input type="button" name="btnDetails" value="Details" style="width:125" onClick="openBEDisplayWindow();" onHelp="showHelp('html/Help_Updates.html#newDECForm_details'); return false">
+						<input type="button" name="btnDetails" value="Details" style="width:125" onClick="openBEDisplayWindow();" onHelp="showHelp('html/Help_Updates.html#newDECForm_details',helpUrl); return false">
 						&nbsp;&nbsp;
 						<%}%>
-						<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" onClick="openDesignateWindow('Alternate Names');" onHelp="showHelp('html/Help_Updates.html#newDECForm_altNames'); return false">
+						<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" onClick="openDesignateWindow('Alternate Names');" onHelp="showHelp('html/Help_Updates.html#newDECForm_altNames',helpUrl); return false">
 						&nbsp;&nbsp;
-						<input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');" onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs'); return false">
+						<input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');" onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return false">
 						&nbsp;&nbsp;
 						<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
 					</td>
@@ -1310,7 +1314,7 @@
 						&nbsp;
 					</td>
 					<td>
-						<select name="selSource" size="1" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selSource'); return false">
+						<select name="selSource" size="1" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selSource',helpUrl); return false">
 							<option value=""></option>
 							<%         
 		   boolean isFound = false;
@@ -1352,7 +1356,7 @@
 						&nbsp;
 					</td>
 					<td height="35" valign="top">
-						<textarea name="CreateChangeNote" cols="69" rows=2 onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_CreateComment'); return false"><%=sChangeNote%></textarea>
+						<textarea name="CreateChangeNote" cols="69" rows=2 onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_CreateComment',helpUrl); return false"><%=sChangeNote%></textarea>
 					</td>
 
 				</tr>
