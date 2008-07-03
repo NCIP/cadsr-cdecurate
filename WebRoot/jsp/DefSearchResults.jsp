@@ -1,10 +1,11 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/DefSearchResults.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/DefSearchResults.jsp,v 1.3 2008-07-03 21:29:59 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <%@ page import="java.util.*"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <html>
 	<head>
 		<title>
@@ -326,6 +327,7 @@ if (results.size() > 0)
 				</tr>
 				<tr valign="top">
 					<table width="100%" border="1">
+					<tr>
 						<th width="4%">
 							<img src="images/CheckBox.gif">
 						</th>
@@ -344,7 +346,7 @@ if (results.size() > 0)
 						<th width="8%">
 							Database
 						</th>
-						</tr>
+			</tr>
 						<%
     String strResult = "";
     int k = 5;
@@ -360,7 +362,7 @@ if (results.size() > 0)
 %>
 						<tr>
 							<td width="5">
-								<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnablePasteButton(checked,this);"
+								<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnablePasteButton(checked,this);"/>
 							</td>
 							<td width="100">
 								<%=strResult%>
