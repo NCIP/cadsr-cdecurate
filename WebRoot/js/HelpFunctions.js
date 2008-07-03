@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/HelpFunctions.js,v 1.1 2007-09-10 16:16:47 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/HelpFunctions.js,v 1.2 2008-07-03 21:21:49 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 //Generic javascript file to link objects to context sensitive help document
@@ -16,11 +16,11 @@
 
 //this redirects IE help to this function.  This is left here if we use it in the future.
 var helpWindow = null;
-function showHelp(n){
+function showHelp(n,m){
    //can use the this pointer to pass names of objects except select boxes
    //select boxes must pass name string i.e. "SearchSelectbox"
   //n must be the name of the object and the name of the anchor in the help doc 
-   var nameStr =  new String(n); 
+   var nameStr =  new String(m); 
    if (helpWindow && !helpWindow.closed)
    {
       helpWindow.close()
