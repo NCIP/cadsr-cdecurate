@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.36 2008-03-24 23:55:00 chickerura Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.37 2008-07-09 18:17:16 chickerura Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -433,7 +433,7 @@
 		<echo>Deploying caDSR database changes ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/load_tool_options.sql
                 </echo>
 		<exec dir="." executable="${SQL.EXE}" failonerror="true">
-			<arg line="${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/load_tool_options.sql" />
+			<arg line="-L ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/load_tool_options.sql" />
 		</exec>
 	</target>
 
