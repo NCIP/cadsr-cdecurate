@@ -1,10 +1,9 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SplashScreenAbout.jsp,v 1.5 2008-04-15 15:36:09 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SplashScreenAbout.jsp,v 1.6 2008-07-15 19:08:39 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page contentType="text/html; charset=iso-8859-1" language="java"%>
-
+<%@ page %>
 <html>
 	<head>
 		<title>
@@ -15,30 +14,23 @@
 
 </script>
 	</head>
-	<body>
-		<div id="Layer2" style="position:absolute; width:120px; height:38px; z-index:2; left: 456px; top: 275 px; visibility: visible;">
-			<p>
-				<font color="#FFFFFF" size="4" face="Arial, sans-serif">
-					Version 4.0.0.0
-				</font>
-			</p>
-		</div>
-		<div id="Layer5" style="position:absolute; width:100px; height:38px; z-index:2; left: 458px; top: 305 px; visibility: visible;">
-			<p>
-				<font color="#FFFFFF" size="2" face="Arial, sans-serif"></font>
-			</p>
-		</div>
-		<div id="Layer3" style="position:absolute; width:317px; height:19px; z-index:3; left: 493px; top: 520px; visibility: visible;">
-			<font color="#FFFFFF" size="2" face="Arial, sans-serif">
-				<strong>
-					Recommended Screen Resolution: 1024x by 768v
-				</strong>
-			</font>
-		</div>
-		<div id="Layer1" style="position:absolute; width:100px; height:100px; z-index:1; left: 20px; top: 20px; visibility: visible;">
-			<font color="#000000">
-				<img src="../../cdecurate/images/Splashlarge.gif" width="824" height="568">
-			</font>
-		</div>
-	</body>
+
+<body>
+    <div align="center">
+        <table cellspacing="0" cellpadding="0"
+            style="width: 722px; height: 490px; background-repeat: no-repeat; background-image: url('../../cdecurate/images/Splashlarge.gif')">
+            <tr>
+                <td style="width: 330px">&nbsp;</td>
+                <td valign="top" align="center"><br/><font color="#ffffff" size="4" face="Arial, sans-serif">Version 4.0.0.0</font></td>
+            </tr>
+            <tr>
+                <td style="width: 330px">&nbsp;</td>
+
+                <td valign="bottom" align="center"><font color="#660066" size="2" face="Arial, sans-serif">Recommended Minimum Screen Resolution: 1024 x 768</font><br/>&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+</body>
 </html>
+
+
