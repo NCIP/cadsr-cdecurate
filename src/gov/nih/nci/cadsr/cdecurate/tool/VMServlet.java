@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.34 2008-05-29 19:19:45 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.35 2008-07-22 15:07:02 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -88,10 +88,16 @@ public class VMServlet extends GenericServlet
         retData = changeTab(pageAction);
       //to append the concept after the search
       else if (pageAction.equals(VMForm.ACT_CON_APPEND))
+      {  
+    	captureUserEntered(pageAction);  
         retData = appendConceptEditVM();
+      }  
       //to delete one concept or all concepts
       else if (pageAction.equals(VMForm.ACT_CON_DELETE))
-        retData = deleteConceptEditVM();
+        {
+    	  captureUserEntered(pageAction);
+    	  retData = deleteConceptEditVM();
+        }
       //to move the concept up or down 
       else if (pageAction.equals(VMForm.ACT_CON_MOVEUP) || pageAction.equals(VMForm.ACT_CON_MOVEDOWN))
         retData = moveConceptEditVM(pageAction);
@@ -617,7 +623,7 @@ private String goBackToSearch()
 	if(sSearchAC.equals("ValueMeaning"))
 	{ 
 		Vector<VM_Bean> result =(Vector<VM_Bean>)session.getAttribute("vSelRows");
-		Vector vSelAttr =(Vector<VM_Bean>)session.getAttribute("creSelectedAttr");
+		Vector vSelAttr =(Vector<VM_Bean>)session.getAttribute("selectedAttr");
 		vmData.setVMList(result);
 		vmData.setSelAttrList(vSelAttr);
 		this.readVMResult();
