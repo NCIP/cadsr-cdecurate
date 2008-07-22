@@ -1,9 +1,10 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.3 2008-03-26 22:03:36 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.4 2008-07-22 15:10:53 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%  
       //UtilService serUtil = new UtilService();
       Session_Data sData = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
@@ -37,7 +38,7 @@
 			var elmPageAction = "<%=VMForm.ELM_PAGE_ACTION%>";
  </script>
 <div class="ind1">
-	<input type="button" name="btnValidate" value="Validate" style="width:125" onClick="return formValidator('<%=oldVer%>','<%=oldLN%>','<%=oldWS%>','<%=oldCN%>');" <%=disabled%>>
+	<input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('<%=VMForm.ACT_VALIDATE_VM%>')" <%=disabled%>>
 	&nbsp;&nbsp;
 	<input type="button" name="btnClear" value="Clear" style="width:125" onClick="ClearBoxes();">
 	&nbsp;&nbsp;
