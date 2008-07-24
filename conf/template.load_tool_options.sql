@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.19 2008-07-16 17:32:47 chickerura Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.20 2008-07-24 19:04:14 chickerura Exp $
    $Name: not supported by cvs2svn $
 
    Author: Anupama Chickerur
@@ -459,7 +459,7 @@ WHEN NOT MATCHED THEN INSERT (TOOL_NAME, PROPERTY, VALUE, DESCRIPTION) VALUES (T
       
 MERGE INTO SBREXT.TOOL_OPTIONS_VIEW_EXT S
 USING (
-SELECT 'CURATION' AS TOOL_NAME, 'REFDOC_FILEURL' AS PROPERTY, 'http://cdecurate@TIER@.nci.nih.gov/filecache/' AS VALUE, 'Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.'AS DESCRIPTION FROM DUAL  
+SELECT 'CURATION' AS TOOL_NAME, 'REFDOC_FILEURL' AS PROPERTY, 'https://cdecurate@TIER@.nci.nih.gov/filecache/' AS VALUE, 'Ref doc file url. This is the prefix url for building the file anchor tag for files uploaded to the file cache.'AS DESCRIPTION FROM DUAL  
 )T
 ON(S.TOOL_NAME = T.TOOL_NAME AND S.PROPERTY = T.PROPERTY)
 WHEN MATCHED THEN 
