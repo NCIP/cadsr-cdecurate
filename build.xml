@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.37 2008-07-09 18:17:16 chickerura Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.38 2008-07-24 19:05:47 chickerura Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -405,7 +405,11 @@
 		<scp todir="${SCP.USER}@${SCP.HOST}:${scpPath.dir}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true">
 			<fileset dir="${artifacts.dir}" includes="**/*" />
 		</scp>
-
+		<echo>mkdir ${TOOL.ROOT.DIR}/filecache</echo>
+				<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="mkdir ${TOOL.ROOT.DIR}/filecache" />
+				<echo>chmod +rw ${TOOL.ROOT.DIR}/filecache</echo>
+				<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="chmod +rw ${TOOL.ROOT.DIR}/filecache" />
+		
 		<!--<echo>cp ${scpPath.dir}/bin/* ${TOOL.ROOT.DIR}/.</echo>
 		<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${scpPath.dir}/bin/* ${TOOL.ROOT.DIR}/." />
 		<echo>chmod +rx ${TOOL.ROOT.DIR}/autorun.sh</echo>
