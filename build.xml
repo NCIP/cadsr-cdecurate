@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.39 2008-07-24 19:17:38 chickerura Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.40 2008-07-24 19:31:07 chickerura Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -406,7 +406,7 @@
 			<fileset dir="${artifacts.dir}" includes="**/*" />
 		</scp>
 		<echo>mkdir ${TOOL.ROOT.DIR}filecache</echo>
-				<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="mkdir ${TOOL.ROOT.DIR}filecache" />
+				<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="mkdir -p ${TOOL.ROOT.DIR}filecache" />
 				<echo>chmod +rw ${TOOL.ROOT.DIR}filecache</echo>
 				<sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="chmod +rw ${TOOL.ROOT.DIR}filecache" />
 		
