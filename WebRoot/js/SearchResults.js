@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.4 2008-04-04 16:14:14 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.5 2008-07-30 16:32:15 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -923,7 +923,7 @@ if(document.searchResultsForm.hiddenSelectedRow != null)
           cdeServer = "cdebrowser.nci.nih.gov";*/
           
 		   //open cde browser	
-			 detailWindow = window.open(cdeServer + "/CDEBrowser/search?dataElementDetails=9&p_de_idseq=" + editID + "&PageId=DataElementsGroup&queryDE=yes&FirstTimer=0", "detailComponent", "width=850,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
+			 detailWindow = window.open(cdeServer + "search?dataElementDetails=9&p_de_idseq=" + editID + "&PageId=DataElementsGroup&queryDE=yes&FirstTimer=0", "detailComponent", "width=850,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
 	   }
 	   else
 		   alert("Unable to determine the server name of the browser.");	
