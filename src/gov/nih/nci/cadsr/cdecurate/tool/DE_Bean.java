@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DE_Bean.java,v 1.48 2008-04-15 15:18:20 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DE_Bean.java,v 1.49 2008-07-30 16:21:04 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1660,7 +1660,7 @@ public class DE_Bean extends AC_Bean
    */
   public void setDE_BROWSER_URL(String browser_url)
   {
-    DE_BROWSER_URL = browser_url + "/CDEBrowser/search?dataElementDetails=9&p_de_idseq=" + this.getDE_DE_IDSEQ() + "&PageId=DataElementsGroup&queryDE=yes&FirstTimer=0";
+    DE_BROWSER_URL = browser_url + "search?dataElementDetails=9&p_de_idseq=" + this.getDE_DE_IDSEQ() + "&PageId=DataElementsGroup&queryDE=yes&FirstTimer=0";
   }
   
   /**

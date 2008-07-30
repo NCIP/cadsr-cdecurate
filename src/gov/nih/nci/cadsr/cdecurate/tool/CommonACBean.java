@@ -44,7 +44,7 @@ public class CommonACBean
    */
   public void setBrowserURL(String browserURL)
   {
-    this.browserURL = browserURL + "/CDEBrowser/search?dataElementDetails=9&p_de_idseq=" + this.getIdseq() + "&PageId=DataElementsGroup&queryDE=yes&FirstTimer=0";
+    this.browserURL = browserURL + "search?dataElementDetails=9&p_de_idseq=" + this.getIdseq() + "&PageId=DataElementsGroup&queryDE=yes&FirstTimer=0";
   }
   /**
    * @return Returns the category.
