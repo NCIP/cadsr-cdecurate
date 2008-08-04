@@ -10552,7 +10552,7 @@ public class CurationServlet
 
          DataManager.setAttribute(session, "vStatMsg", vStatMsg);
          //add this message to the logger
-         logger.fatal("Log Status Message " + sMsg);
+         logger.info("Log Status Message " + sMsg);
        }
        catch(Exception e)
        {

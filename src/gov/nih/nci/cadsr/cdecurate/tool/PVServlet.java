@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.30 2008-04-10 19:38:08 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.31 2008-08-04 19:49:06 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -351,7 +351,7 @@ public class PVServlet implements Serializable
         }
         //status messae
         if (!data.getStatusMsg().equals(""))
-          logger.fatal("PV Status " + data.getStatusMsg());
+          logger.info("PV Status " + data.getStatusMsg());
       }
       return "/PermissibleValue.jsp";
    }
