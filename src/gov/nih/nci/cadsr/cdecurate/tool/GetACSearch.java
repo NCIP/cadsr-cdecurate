@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.65 2008-05-29 19:19:45 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.66 2008-08-04 21:44:42 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -4281,7 +4281,7 @@ public class GetACSearch implements Serializable
                             DataManager.setAttribute(session, "results", vSRows);
                             DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, VMBean);
                             DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
-                            DataManager.setAttribute(session, VMForm.SESSION_RET_PAGE, VMForm.BACK_TO_SEARCH);
+                            DataManager.setAttribute(session, VMForm.SESSION_RET_PAGE, VMForm.ACT_BACK_SEARCH);
                             AltNamesDefsServlet altSer = new AltNamesDefsServlet( m_servlet,  m_servlet.sessionData.UsrBean);
                             Alternates alt = altSer.getManualDefinition( m_classReq, VMForm.ELM_FORM_SEARCH_EVS);
                             if (alt != null && !alt.getName().equals(""))

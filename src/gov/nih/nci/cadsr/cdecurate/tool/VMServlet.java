@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.35 2008-07-22 15:07:02 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.36 2008-08-04 21:45:06 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -802,7 +802,7 @@ private String goBackToSearch()
       selVM.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_NONE);  
     
     //reset the vd bean
-    if(((String)httpRequest.getSession().getAttribute(VMForm.SESSION_RET_PAGE)).equals(VMForm.JSP_PV_DETAIL))
+    if(((String)httpRequest.getSession().getAttribute(VMForm.SESSION_RET_PAGE)).equals(VMForm.ACT_BACK_PV))
     {	
     PVServlet pvser = new PVServlet(httpRequest, httpResponse, curationServlet);
     pvser.putBackVMEdits(selVM);
