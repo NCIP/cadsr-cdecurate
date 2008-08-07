@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.57 2008-05-07 14:31:39 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.58 2008-08-07 14:29:44 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -803,10 +803,10 @@ public class GetACService implements Serializable
                 ACType = "VALUEDOMAIN";
             String sql;
             if (DBAction.equals("Create") == true)
-                sql = "SELECT ADMIN_SECURITY_UTIL.HAS_CREATE_PRIVILEGE('" + DBUser + "', '" + ACType + "', '" + ContID
+                sql = "SELECT CADSR_SECURITY_UTIL.HAS_CREATE_PRIVILEGE('" + DBUser + "', '" + ACType + "', '" + ContID
                                 + "') FROM DUAL";
             else
-                sql = "SELECT ADMIN_SECURITY_UTIL.HAS_ADMIN_PRIVILEGE('" + DBUser + "', '" + ACType + "', '" + ContID
+                sql = "SELECT CADSR_SECURITY_UTIL.has_context_admin('" + DBUser + "', '" + ACType + "', '" + ContID
                                 + "') FROM DUAL";
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
