@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.39 2008-06-04 19:05:33 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.40 2008-08-07 14:30:45 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1020,9 +1020,9 @@ public String checkVMNameExists(VM_Bean selVM,VMForm data)
        vm.setVM_IDSEQ(rs.getString("VM_IDSEQ"));
        vm.setVM_ID(rs.getString("VM_ID"));
        vm.setVM_CONTE_IDSEQ(rs.getString("conte_idseq"));
-       String sChg = rs.getString("comments");
-       if (sChg == null || sChg.equals(""))
-         sChg = rs.getString("change_note");
+      // String sChg = rs.getString("comments");
+       //if (sChg == null || sChg.equals(""))
+       String sChg = rs.getString("change_note");
        vm.setVM_CHANGE_NOTE(sChg);
        vm.setASL_NAME(rs.getString("asl_name"));
        //vm.setVM_DEFINITION_SOURCE(rs.getString("vm_definition_source")); 
