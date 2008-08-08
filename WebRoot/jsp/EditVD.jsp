@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.6 2008-07-03 21:32:03 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.7 2008-08-08 15:44:30 chickerura Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -505,6 +505,9 @@ function setup()
 					</tr>
 					<tr height="25" valign="bottom">
 						<td align=right>
+						<font color="#FF0000">
+								* &nbsp;&nbsp;
+							</font>
 							<%=item++%>
 							)
 						</td>
@@ -512,7 +515,7 @@ function setup()
 							<font color="#FF0000">
 								Select
 							</font>
-							Value Domain Name Components
+							Value Domain Representation
 						</td>
 					</tr>
 					<tr valign="bottom">
