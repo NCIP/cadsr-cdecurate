@@ -1,18 +1,21 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.56 2008-05-29 19:19:45 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.57 2008-10-16 21:32:20 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.persist.de.DeComp;
+import gov.nih.nci.cadsr.persist.de.DeErrorCodes;
+import gov.nih.nci.cadsr.persist.de.DeVO;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
@@ -25,6 +28,7 @@ import javax.servlet.http.HttpSession;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
+
 
 /**
  * InsACService class is used in submit action of the tool for all components.
@@ -2254,156 +2258,79 @@ public class InsACService implements Serializable {
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
-				// cstmt = conn.prepareCall("{call
-				// SBREXT_Set_Row.SET_DE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-
-				cstmt = m_servlet
-						.getConn()
-						.prepareCall(
-								"{call SBREXT.SBREXT_SET_ROW.SET_DE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // return
-				// code
-				cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // de id
-				cstmt.registerOutParameter(5, java.sql.Types.VARCHAR); // preferred
-				// name
-				cstmt.registerOutParameter(6, java.sql.Types.VARCHAR); // context
-				// id
-				cstmt.registerOutParameter(7, java.sql.Types.DECIMAL); // version
-				cstmt.registerOutParameter(8, java.sql.Types.VARCHAR); // preferred
-				// definition
-				cstmt.registerOutParameter(9, java.sql.Types.VARCHAR); // dec
-				// id
-				cstmt.registerOutParameter(10, java.sql.Types.VARCHAR); // vd id
-				cstmt.registerOutParameter(11, java.sql.Types.VARCHAR); // asl
-				// name
-				cstmt.registerOutParameter(12, java.sql.Types.VARCHAR); // latest
-				// version
-				// ind
-				cstmt.registerOutParameter(13, java.sql.Types.VARCHAR); // long
-				// name
-				cstmt.registerOutParameter(14, java.sql.Types.VARCHAR); // begin
-				// date
-				cstmt.registerOutParameter(15, java.sql.Types.VARCHAR); // end
-				// date
-				cstmt.registerOutParameter(16, java.sql.Types.VARCHAR); // change
-				// note
-				cstmt.registerOutParameter(17, java.sql.Types.VARCHAR); // created
-				// by
-				cstmt.registerOutParameter(18, java.sql.Types.VARCHAR); // date
-				// created
-				cstmt.registerOutParameter(19, java.sql.Types.VARCHAR); // modified
-				// by
-				cstmt.registerOutParameter(20, java.sql.Types.VARCHAR); // date
-				// modified
-				cstmt.registerOutParameter(21, java.sql.Types.VARCHAR); // deleted
-				// ind
-				// cstmt.registerOutParameter(21,java.sql.Types.VARCHAR);
-				// //origin
-
-				// Set the In parameters (which are inherited from the
-				// PreparedStatement class)
 				// Get the username from the session.
 				String userName = (String) session.getAttribute("Username");
-				cstmt.setString(1, userName); // set ua_name
-				cstmt.setString(3, sAction); // ACTION - INS, UPD or DEL
+				DeVO deVO = new DeVO();
+				if ((sAction.equals("UPD")) || (sAction.equals("DEL"))) {
+					deVO.setModified_by(userName);
+				} else if (sAction.equals("INS")) {
+					deVO.setCreated_by(userName);
+				}
 				if ((sAction.equals("UPD")) || (sAction.equals("DEL"))) {
 					sDE_ID = de.getDE_DE_IDSEQ();
-					cstmt.setString(4, sDE_ID);
+					deVO.setDe_IDSEQ(sDE_ID);
 				}
 				// make it null for editing released elements
-				if (sAction.equals("UPD") && oldAslName.equals("RELEASED")
-						&& !sInsertFor.equals("Version")) {
-					cstmt.setString(6, null); // context id - not null for
-					// INS, must be null for UPD
-					cstmt.setString(5, null); // preferred name - not null for
-					// INS, must be null for UPD
+				if (sAction.equals("UPD") && oldAslName.equals("RELEASED") && !sInsertFor.equals("Version")) {
+					deVO.setConte_IDSEQ(null); // context id-not null for INS, must be null for UPD
+					deVO.setPrefferred_name(null); // preferred name-not null for INS, must be null for UPD
 				} else // INS case
 				{
-					cstmt.setString(6, sContextID); // context id - not null for
-					// INS, must be null for UPD
-					cstmt.setString(5, sName); // preferred name - not null for
-					// INS, must be null for UPD
+					deVO.setConte_IDSEQ(sContextID);// context id-not null for INS, must be null for UPD
+					deVO.setPrefferred_name(sName); // preferred name-not null for INS, must be null for UPD
 				}
-
-				cstmt.setDouble(7, dVersion); // version - test says must have
-				// a value
-				cstmt.setString(8, sDefinition); // preferred definition -
-				// not null for INS
-				cstmt.setString(9, sDEC_ID); // dec id - not null for INS
-				cstmt.setString(10, sVD_ID); // vd id - not null for INS
-				cstmt.setString(11, de.getDE_ASL_NAME()); // status
+				deVO.setVersion(dVersion); // version-test says must have a value
+				deVO.setPrefferred_def(sDefinition); // preferred definition-not null for INS
+				deVO.setDec_IDSEQ(sDEC_ID); // dec id-not null for INS
+				deVO.setVd_IDSEQ(sVD_ID); // vd id-not null for INS
+				deVO.setAsl_name(de.getDE_ASL_NAME()); // status
 				if (sAction.equals("INS"))
-					cstmt.setString(12, "Yes"); // latest version indicator
-				cstmt.setString(13, sLongName); // long name - can be null
-				cstmt.setString(14, sBeginDate); // sBeginDate - can be null
-				cstmt.setString(15, sEndDate); // sEndDate - can be null
-				cstmt.setString(16, sChangeNote);
-				cstmt.setString(22, sSource); // origin
-				// Now we are ready to call the stored procedure
-				logger.debug(cstmt.toString());
-				boolean bExcuteOk =false;
-				try {
-				    bExcuteOk = cstmt.execute();
-				} catch (SQLException se) {
-					logger.fatal(
-							"SQL ERROR in InsACService-setDE for execute : "
-									+ se.toString(), se);
-				}catch (Exception e) {
-					logger.fatal(
-							"ERROR in InsACService-setDE for execute : "
-									+ e.toString(), e);
+					deVO.setLastest_version_ind("Yes"); // latest version indicator
+				deVO.setLong_name(sLongName); // long name-can be null
+				deVO.setBegin_date(m_util.getSQLTimestamp(de.getDE_BEGIN_DATE())); // sBeginDate-can be null
+				deVO.setEnd_date(m_util.getSQLTimestamp(de.getDE_END_DATE())); // sEndDate-can be null
+				deVO.setChange_note(sChangeNote);
+				deVO.setOrigin(sSource); // origin
+				DeComp deComp = new DeComp();
+				ArrayList errorList = deComp.setDe(deVO, sAction, m_servlet.getConn());
+				if (errorList != null && errorList.size() > 0) {
+					DeErrorCodes deErrorCode = (DeErrorCodes) errorList.get(0);
+					sReturnCode = deErrorCode.getErrorMessage();
+				} else {
+					sReturnCode = null;
 				}
-				logger.info("bExecuteOk" + bExcuteOk);
-				sDE_ID = cstmt.getString(4);
-				sReturnCode = cstmt.getString(2);
+				sDE_ID = deVO.getDe_IDSEQ();
 				// store ac name in the status message
 				if (sAction.equals("INS"))
-					this.storeStatusMsg("Data Element Name : "
-							+ de.getDE_LONG_NAME());
-				// continue with other attributes if success or not success and
-				// update
+					this.storeStatusMsg("Data Element Name : " + de.getDE_LONG_NAME());
 				if (sReturnCode != null && sAction.equals("INS"))
-					this
-							.storeStatusMsg("\\t "
-									+ sReturnCode
-									+ " : Unable to create new Data Element Successfully.");
-				else if ((sReturnCode == null || (sReturnCode != null && sAction
-						.equals("UPD")))
-						&& !sDE_ID.equals("")) {
-					// store returncode in request to track it all through this
-					// request
+					this.storeStatusMsg("\\t " + sReturnCode	+ " : Unable to create new Data Element Successfully.");
+				else if ((sReturnCode == null)|| (sReturnCode != null && sAction.equals("UPD")) && !sDE_ID.equals("")) {
+					// store returncode in request to track it all through this request
 					if (sReturnCode != null && !sReturnCode.equals(""))
 						m_classReq.setAttribute("retcode", sReturnCode);
 					// store the status message in the session
 					if (sAction.equals("INS")) {
 						String sPublicID = this.getPublicID(sDE_ID);
 						de.setDE_MIN_CDE_ID(sPublicID);
-						this.storeStatusMsg("Public ID : "
-								+ de.getDE_MIN_CDE_ID());
-						this
-								.storeStatusMsg("\\t Successfully created New Data Element.");
-					} else if (sAction.equals("UPD") && sReturnCode != null
-							&& !sReturnCode.equals(""))
-						this.storeStatusMsg("\\t " + sReturnCode
-								+ " : Unable to update mandatory attributes.");
-
+						this.storeStatusMsg("Public ID : " + de.getDE_MIN_CDE_ID());
+						this.storeStatusMsg("\\t Successfully created New Data Element.");
+					} else if (sAction.equals("UPD") && sReturnCode != null	&& !sReturnCode.equals(""))
+						this.storeStatusMsg("\\t " + sReturnCode + " : Unable to update mandatory attributes.");
 					de.setDE_DE_IDSEQ(sDE_ID);
 					// set create /mofiy attributes into bean
-					if (cstmt.getString(17) != null
-							&& !cstmt.getString(17).equals(""))
-						de.setDE_CREATED_BY(getFullName(cstmt.getString(17)));
+					if (deVO.getCreated_by() != null && !deVO.getCreated_by().equals(""))
+						de.setDE_CREATED_BY(getFullName(deVO.getCreated_by()));
 					else
 						de.setDE_CREATED_BY(oldDE.getDE_CREATED_BY());
-					if (cstmt.getString(18) != null
-							&& !cstmt.getString(18).equals(""))
-						de.setDE_DATE_CREATED(m_util.getCurationDate(cstmt
-								.getString(18)));
+					if (deVO.getDate_created() != null	&& !deVO.getDate_created().equals(""))
+						de.setDE_DATE_CREATED(m_util.getCurationDateFromSQLTimestamp(deVO.getDate_created()));
 					else
 						de.setDE_DATE_CREATED(oldDE.getDE_DATE_CREATED());
 
-					de.setDE_MODIFIED_BY(getFullName(cstmt.getString(19)));
-					de.setDE_DATE_MODIFIED(m_util.getCurationDate(cstmt
-							.getString(20)));
+					de.setDE_MODIFIED_BY(getFullName(deVO.getModified_by()));
+					de.setDE_DATE_MODIFIED(m_util.getCurationDateFromSQLTimestamp(deVO.getDate_created()));
+			
 					// insert row into DES (designation) to create CDEID for new
 					// DE or copies from old if new version
 					if (sInsertFor.equals("Version")) {
@@ -2432,8 +2359,7 @@ public class InsACService implements Serializable {
 									.getDE_REG_STATUS_IDSEQ(), sDE_ID, de
 									.getDE_REG_STATUS());
 						if (sReturn != null && !sReturn.equals(""))
-							this
-									.storeStatusMsg("\\t "
+							this.storeStatusMsg("\\t "
 											+ sReturn
 											+ " : Unable to update Registration Status.");
 					} else {
