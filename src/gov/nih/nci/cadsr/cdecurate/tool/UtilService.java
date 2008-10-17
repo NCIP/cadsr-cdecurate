@@ -1,11 +1,13 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UtilService.java,v 1.48 2008-03-13 18:00:42 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UtilService.java,v 1.49 2008-10-17 14:11:17 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.io.Serializable;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
 import javax.servlet.http.HttpSession;
@@ -1126,6 +1128,48 @@ public class UtilService implements Serializable
       }
       return evsID;
     }
+    
+   /**
+	 * The getSQLTimestamp method: returns date in java.sql.Timestamp format (yyyy-MM-dd  hh:mm:ss)
+	 * 
+	 * @param curationDate
+	 * @return A sqlTimestamp is returned. 
+	 */
+	public Timestamp getSQLTimestamp(String curationDate) {
+		Timestamp sqlTimestamp = null;
+		try {
+			if (curationDate != null && curationDate.length()>0) {
+				SimpleDateFormat theinput = new SimpleDateFormat("MM/dd/yyyy");
+				sqlTimestamp = new Timestamp(theinput.parse(curationDate).getTime());
+			}
+
+		} catch (Exception e) {
+			System.out.println("Error in getSQLTimestamp: " + e);
+			return null;
+		}
+
+		return sqlTimestamp;
+	}
+
+	/**
+	 * The getCurationDateFromSQLTimestamp method: returns date in MM/dd/yyyy format
+	 * 
+	 * @param sqlTimestamp
+	 * @return A string date is returned, in Curation format.
+	 */
+	public String getCurationDateFromSQLTimestamp(Timestamp sqlTimestamp) {
+		String curationDate = null;
+		try {
+			if (sqlTimestamp != null) {
+				SimpleDateFormat output = new SimpleDateFormat("MM/dd/yyyy");
+				curationDate = output.format(sqlTimestamp);
+			}
+		} catch (Exception e) {
+			System.out.println("Error in getCurationDateFromSQLTimestamp: " + e);
+			return null;
+		}
+		return curationDate;
+	}
 
     //close the class
 }
