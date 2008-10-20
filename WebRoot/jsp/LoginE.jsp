@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc 2007
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/LoginE.jsp,v 1.5 2008-07-03 21:35:12 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/LoginE.jsp,v 1.6 2008-10-20 13:30:26 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 <html>
@@ -201,8 +201,7 @@ function callHelp()
   Vector lstWinOpenReqs = new Vector();
   lstWinOpenReqs.addElement("searchEVS");
   lstWinOpenReqs.addElement("searchBlocks");
-  lstWinOpenReqs.addElement("searchQualifiers");
-  lstWinOpenReqs.addElement("getRefDocument");
+   lstWinOpenReqs.addElement("getRefDocument");
   lstWinOpenReqs.addElement("treeExpand");
   lstWinOpenReqs.addElement("treeCollapse");
   lstWinOpenReqs.addElement("doSortBlocks");
@@ -282,6 +281,7 @@ function callHelp()
       <td>&nbsp;</td>
       <td align="center" valign="middle">
         <form name="LoginForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=login">
+        	<input type="hidden" name="previousReqType" value="/SearchResultsPage.jsp">
           <table border="5" bgcolor = "#CCCCCC">
 			<tr><td>
 			<table border="0" bgcolor = "#CCCCCC">

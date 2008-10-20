@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.31 2008-08-04 19:49:06 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.32 2008-10-20 13:30:53 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -92,7 +92,7 @@ public class PVServlet implements Serializable
          }
          else if (sAction.equals("goBack"))
          {
-           VDServlet vdser = new VDServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
+           ValueDomainServlet vdser = (ValueDomainServlet) data.getCurationServlet().getACServlet("ValueDomain");
            return vdser.goBackfromVD(sOriginAction, sMenuAction, "", sButtonPressed, vdPageFrom);             
          }
          else if (sAction.equals("validate"))
@@ -103,7 +103,7 @@ public class PVServlet implements Serializable
          else if (sAction.equals("clearBoxes"))
          {
            //System.out.println("clear edits");
-           VDServlet vdser = new VDServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());        
+           ValueDomainServlet vdser = (ValueDomainServlet) data.getCurationServlet().getACServlet("ValueDomain");        
            vdser.clearEditsOnPage(sOriginAction, sMenuAction);  //, "pvEdits");
            return "/PermissibleValue.jsp";
          }
@@ -658,7 +658,7 @@ public class PVServlet implements Serializable
          //get the system name and for new template make the vd_id null
          if (sMenu.equals("NewVDTemplate")) 
              vd.setVD_VD_ID("");
-         vd = data.getCurationServlet().doGetVDSystemName(data.getRequest(), vd, vParent);
+         vd = (VD_Bean) data.getCurationServlet().getSystemName(vd, vParent);
          vParent = serAC.getNonEVSParent(vParent, vd, sMenu);
           
          //DataManager.setAttribute(session, "VDParentConcept", vParent);  
@@ -1164,7 +1164,7 @@ public class PVServlet implements Serializable
          //make vd's system preferred name
          vd = data.getVD();
          Vector<EVS_Bean> vParentCon = vd.getReferenceConceptList();
-         vd = data.getCurationServlet().doGetVDSystemName(data.getRequest(), vd, vParentCon);
+         vd = (VD_Bean) data.getCurationServlet().getSystemName(vd, vParentCon);
          DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd); 
          //make the selected parent in hte session empty
          DataManager.setAttribute(session, "SelectedParentName", "");
@@ -1203,8 +1203,8 @@ public class PVServlet implements Serializable
 
        //make vd's system preferred name
        vd = data.getVD();
-       Vector<EVS_Bean> vParentCon = vd.getReferenceConceptList();
-       vd = data.getCurationServlet().doGetVDSystemName(data.getRequest(), vd, vParentCon);
+       Vector<EVS_Bean> vParentCon = vd.getReferenceConceptList();  
+       vd = (VD_Bean) data.getCurationServlet().getSystemName(vd, vParentCon);
        vd.setVDNAME_CHANGED(true);
        DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);
        //store the last page action in request

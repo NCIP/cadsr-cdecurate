@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.6 2008-07-03 21:38:15 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.7 2008-10-20 13:30:26 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -230,8 +230,12 @@ function linkNCICB()
 			<col />
 			<tr>
 				<td style="padding:0.05in 0 0 0">
+					<%if (Username != null) { %>
 					User&nbsp;Name&nbsp;:&nbsp;
 					<%=StringEscapeUtils.escapeHtml(Username)%>
+					<%} else { %>
+					<a href="<%=request.getContextPath() %>/jsp/LoginE.jsp">Login</a>
+					<%} %>
 				</td>
 				<td style="padding:0.05in 0 0 0">
 					<script webstyle3>document.write('<scr'+'ipt src="js/xaramenu.js">'+'</scr'+'ipt>');document.write('<scr'+'ipt src="js/biztech_button.js">'+'</scr'+'ipt>');/*img src="images/biztech_button.gif" moduleid="myzara                     (project)\biztech_button_off.xws"*/</script>

@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.58 2008-08-07 14:29:44 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.59 2008-10-20 13:30:52 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -107,7 +107,8 @@ public class GetACService implements Serializable
                     DataManager.setAttribute(session, "vContext", v);
                     DataManager.setAttribute(session, "vContext_ID", vID);
                 }
-                if (session.getAttribute("vWriteContextDE") == null)
+//Later***                
+/*                if (session.getAttribute("vWriteContextDE") == null)
                 {
                     String sUser = (String) session.getAttribute("Username");
                     v = new Vector<String>();
@@ -126,7 +127,7 @@ public class GetACService implements Serializable
                     DataManager.setAttribute(session, "vWriteContextVD", v);
                     DataManager.setAttribute(session, "vWriteContextVD_ID", vID);
                 }
-                if (session.getAttribute("vUsers") == null)
+*/                if (session.getAttribute("vUsers") == null)
                 {
                     v = new Vector<String>();
                     vID = new Vector<String>();
@@ -299,6 +300,31 @@ public class GetACService implements Serializable
         }
     }
 
+    public void getWriteContextList()
+    {
+    	HttpSession session = m_classReq.getSession();
+    	Vector<String> v;
+    	Vector<String> vID;
+        if (session.getAttribute("vWriteContextDE") == null)
+        {
+            String sUser = (String) session.getAttribute("Username");
+            v = new Vector<String>();
+            vID = new Vector<String>();
+            getWriteContextList(vID, v, sUser, "DATAELEMENT");
+            DataManager.setAttribute(session, "vWriteContextDE", v);
+            DataManager.setAttribute(session, "vWriteContextDE_ID", vID);
+            v = new Vector<String>();
+            vID = new Vector<String>();
+            getWriteContextList(vID, v, sUser, "DE_CONCEPT");
+            DataManager.setAttribute(session, "vWriteContextDEC", v);
+            DataManager.setAttribute(session, "vWriteContextDEC_ID", vID);
+            v = new Vector<String>();
+            vID = new Vector<String>();
+            getWriteContextList(vID, v, sUser, "VALUEDOMAIN");
+            DataManager.setAttribute(session, "vWriteContextVD", v);
+            DataManager.setAttribute(session, "vWriteContextVD_ID", vID);
+        }     	
+    }
     /**
      * The verifyConnection method queries the db to test the connection and sets the ConnectedToDB variable.
      * 

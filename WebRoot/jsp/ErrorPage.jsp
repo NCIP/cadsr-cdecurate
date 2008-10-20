@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ErrorPage.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ErrorPage.jsp,v 1.3 2008-10-20 13:30:26 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -136,7 +136,7 @@ session.setAttribute("ErrorMessage", "");
 		<% String reqType = request.getParameter("reqType");
 //System.out.println("ErrorPage reqType: " + reqType);
   if (reqType.equals("searchEVS") || reqType.equals("searchBlocks")
-    || reqType.equals("searchQualifiers") || reqType.equals("getRefDocument")
+ 	|| reqType.equals("getRefDocument")
     || reqType.equals("getAltNames") || reqType.equals("treeSearch") 
     || reqType.equals("treeExpand")  || reqType.equals("treeCollapse")
     || reqType.equals("doSortBlocks") || reqType.equals("doSortQualifiers")
@@ -214,7 +214,6 @@ if (exceptionMessage == null) exceptionMessage = "";
 											<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();" style="width: 93","height: 30">
 										</td>
 									</tr>
-									</tr>
 								</table>
 							</td>
 							<tr height="200"></tr>
@@ -262,9 +261,10 @@ if (exceptionMessage == null) exceptionMessage = "";
 					</tr>
 					<tr height="200"></tr>
 					<tr width="100%" align="center">
+						<td>
 						<!--beginning of login table -->
+						<form method="post" name="LoginForm" action="../../cdecurate/NCICurationServlet?reqType=login">
 						<table>
-							<form method="post" name="LoginForm" action="../../cdecurate/NCICurationServlet?reqType=login">
 							<tr height="60"></tr>
 							<td width="40%"></td>
 							<td width="" align="center">
@@ -307,7 +307,7 @@ if (exceptionMessage == null) exceptionMessage = "";
 										</td>
 										<td width="20"></td>
 									</tr>
-
+								 <tr>
 									<td height="55" colspan="1" valign="top" width="115">
 										<input name="Submit" type="submit" value="Login" onClick="callMessageGifLogin()">
 									</td>
@@ -322,12 +322,11 @@ if (exceptionMessage == null) exceptionMessage = "";
 
 									</tr>
 								</table>
-								</form>
-
 							</td>
 							<tr height="60"></tr>
-
 						</table>
+						</form>
+						</td>
 					</tr>
 					<tr height="100"></tr>
 
