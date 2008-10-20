@@ -1,12 +1,11 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsPage.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsPage.jsp,v 1.2 2008-10-20 13:30:25 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <!-- goes to lgoin page if error occurs -->
 <%@ page errorPage="ErrorPage.jsp"%>
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
-<curate:checkLogon name="Userbean" page="/LoginE.jsp" />
 <html>
 	<head>
 		<title>

@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.57 2008-10-16 21:32:20 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.58 2008-10-20 13:30:52 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1204,9 +1204,9 @@ public class InsACService implements Serializable {
 				if (dec.getDEC_PROP_CONDR_IDSEQ() != null
 						&& !dec.getDEC_PROP_CONDR_IDSEQ().equals(""))
 					evs.fillPropVectors(dec.getDEC_PROP_CONDR_IDSEQ(), dec,
-							sAction);
-				dec = m_servlet.doGetDECNames(m_classReq, m_classRes, null,
-						"SubmitDEC", dec);
+							sAction);	
+				EVS_Bean nullEVS = null; 
+ 				dec = (DEC_Bean) m_servlet.getACNames(nullEVS, "SubmitDEC", dec);
 				dec.setDEC_PREFERRED_NAME(dec.getAC_ABBR_PREF_NAME());
 			}
 		}
@@ -1999,6 +1999,58 @@ public class InsACService implements Serializable {
 		return uniqueMsg;
 	}
 
+	   /**
+	    * to created object class, property and qualifier value from EVS into cadsr. Retrieves the session bean m_DEC.
+	    * calls 'insAC.setDECQualifier' to insert the database.
+	    *
+	    * @param m_classReq
+	    *            The HttpServletRequest from the client
+	    * @param m_classRes
+	    *            The HttpServletResponse back to the client
+	    * @param DECBeanSR
+	    *            dec attribute bean.
+	    *
+	    * @return DEC_Bean return the bean with the changed attributes
+	    * @throws Exception
+	    */
+	   public DEC_Bean doInsertDECBlocks(DEC_Bean DECBeanSR)
+	                   throws Exception
+	   {
+	       // logger.debug("doInsertDECBlocks");
+	       HttpSession session = m_classReq.getSession();
+	       //InsACService insAC = new InsACService(m_classReq, m_classRes, this);
+	       String sNewOC = (String) session.getAttribute("newObjectClass");
+	       String sNewProp = (String) session.getAttribute("newProperty");
+	       if (sNewOC == null)
+	           sNewOC = "";
+	       if (sNewProp == null)
+	           sNewProp = "";
+	       if (DECBeanSR == null)
+	           DECBeanSR = (DEC_Bean) session.getAttribute("m_DEC");
+	       String sRemoveOCBlock = (String) session.getAttribute("RemoveOCBlock");
+	       String sRemovePropBlock = (String) session.getAttribute("RemovePropBlock");
+	       if (sRemoveOCBlock == null)
+	           sRemoveOCBlock = "";
+	       if (sRemovePropBlock == null)
+	           sRemovePropBlock = "";
+	       /*
+	        * if (sNewOC.equals("true")) DECBeanSR = insAC.setObjectClassDEC("INS", DECBeanSR, m_classReq); else
+	        * if(sRemoveOCBlock.equals("true"))
+	        */
+	       String sOC = DECBeanSR.getDEC_OCL_NAME();
+	       if (sOC != null && !sOC.equals(""))
+	           DECBeanSR = setObjectClassDEC("INS", DECBeanSR, m_classReq);
+	       /*
+	        * if (sNewProp.equals("true")) DECBeanSR = insAC.setPropertyDEC("INS", DECBeanSR, m_classReq); else
+	        * if(sRemovePropBlock.equals("true"))
+	        */
+	       String sProp = DECBeanSR.getDEC_PROPL_NAME();
+	       if (sProp != null && !sProp.equals(""))
+	           DECBeanSR = setPropertyDEC("INS", DECBeanSR, m_classReq);
+	       return DECBeanSR;
+	   }
+
+	
 	/**
 	 * To insert a Qualifier Term or update the existing one in the database
 	 * after the validation. Called from CurationServlet. Gets all the attribute

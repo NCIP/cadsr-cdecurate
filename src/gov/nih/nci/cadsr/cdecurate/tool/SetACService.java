@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.55 2008-05-04 19:32:20 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.56 2008-10-20 13:30:53 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1497,7 +1497,7 @@ public class SetACService implements Serializable
           strPropInvalid = strPropInvalid + checkConceptCodeExistsInOtherDB(vPROP, insAC, null);
         //create object class and property only if valid
         if ((strOCInvalid == null || strOCInvalid.equals("")) && (strPropInvalid == null || strPropInvalid.equals("")))
-            m_DEC = m_servlet.doInsertDECBlocks(req, res, m_DEC);        
+            m_DEC = insAC.doInsertDECBlocks(m_DEC);        
         //check oc prop combination already exists in the database         
         String objID = m_DEC.getDEC_OCL_IDSEQ();
         String propID = m_DEC.getDEC_PROPL_IDSEQ();

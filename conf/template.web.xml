@@ -3,7 +3,7 @@
      "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
     "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
 <!-- 
-    $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.web.xml,v 1.2 2008-02-20 19:30:23 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.web.xml,v 1.3 2008-10-20 13:30:37 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 <web-app>
@@ -50,7 +50,7 @@
   </session-config>
 
   <welcome-file-list>
-    <welcome-file>/jsp/LoginE.jsp</welcome-file>
+    <welcome-file>/jsp/index.jsp</welcome-file>
   </welcome-file-list>
 
   <!-- Application Tag Library Descriptor -->
@@ -62,8 +62,8 @@
   <login-config>
     <auth-method>FORM</auth-method>
     <form-login-config>
-    <form-login-page>LoginE.jsp</form-login-page>
-    <form-error-page>LoginE.jsp</form-error-page>
+    <form-login-page>/jsp/LoginE.jsp</form-login-page>
+    <form-error-page>/jsp/LoginE.jsp</form-error-page>
     </form-login-config>
   </login-config>
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.55 2008-07-03 21:17:01 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.56 2008-10-20 13:30:52 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -21,6 +21,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import gov.nih.nci.cadsr.cdecurate.util.HelpURL;
 
 import org.apache.log4j.Logger;
@@ -199,13 +201,41 @@ public class NCICurationServlet extends HttpServlet
         ClockTime clock = new ClockTime();
         try
         { 
-           CurationServlet curser = new CurationServlet(req, res, this.getServletContext());
-           curser.service();
-           
+        	String reqType = req.getParameter("reqType"); 
+        	HttpSession session = req.getSession();
+        	//add the forwarding to request to session (to go after login)
+        	String forwardReq = (String)session.getAttribute("forwardReq");
+        	if (forwardReq == null || !forwardReq.equals("login"))
+        		session.setAttribute("forwardReq", reqType);
+        	ACRequestTypes acrt = null;
+        	CurationServlet curObj = null;        	
+        	try {
+        		acrt = ACRequestTypes.valueOf(reqType);
+				if (acrt != null)   
+				{
+				   String className = acrt.getClassName();
+				   curObj = (CurationServlet) Class.forName(className).newInstance();
+				   curObj.init(req, res, this.getServletContext());
+				   curObj.get_m_conn();
+				   curObj.execute(acrt);
+				}
+			} catch (RuntimeException e) {
+				logger.info(e.toString(), e);
+			}
+	        finally
+	        {
+	        	if (curObj != null)
+					curObj.destroy();	        		
+	        }
+			if (acrt == null)
+			{
+				CurationServlet curser = new CurationServlet(req, res, this.getServletContext());
+				curser.service();
+			}
         }
         catch (Exception e)
         {
-            logger.fatal("Service error : " + e.toString(), e);
+            logger.error("Service error : " + e.toString(), e);
         }
         logger.debug("service response time " + clock.toStringLifeTime());
     }

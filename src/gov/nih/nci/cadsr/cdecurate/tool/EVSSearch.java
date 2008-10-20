@@ -1,6 +1,6 @@
 //Copyright (c) 2000 ScenPro, Inc.
 
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.58 2008-06-25 15:30:08 chickerura Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.59 2008-10-20 13:30:53 hegdes Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2739,7 +2739,7 @@ public class EVSSearch implements Serializable {
 		.setAttribute(session, "ConceptLevel", sLevelStartingConcept);
 		if (dtsVocab.equals("MetaValue")) {
 			sDefSource = (String) session.getAttribute("ParentMetaSource");
-			sDefSource = m_servlet.getSourceToken(sDefSource);
+			sDefSource = getSourceToken(sDefSource);
 			if (sDefSource == null)
 				sDefSource = "";
 		}
@@ -2777,6 +2777,28 @@ public class EVSSearch implements Serializable {
 		"/OpenSearchWindowBlocks.jsp");
 	}
 
+    /**
+     * @param sDefSource
+     *            string def source selected
+     * @return String defintion source
+     * @throws Exception
+     */
+    private String getSourceToken(String sDefSource) throws Exception
+    {
+        int index = -1;
+        int length = 0;
+        if (sDefSource != null)
+            length = sDefSource.length();
+        String pointStr = ": Concept Source ";
+        index = sDefSource.indexOf(pointStr);
+        if (index == -1)
+            index = 0;
+        if (index > 0 && length > 18)
+            sDefSource = sDefSource.substring((index + 17), sDefSource.length());
+        return sDefSource;
+    }
+
+	
 	/**
 	 * to open the tree to the selected concept 
 	 * @param actType String action type
