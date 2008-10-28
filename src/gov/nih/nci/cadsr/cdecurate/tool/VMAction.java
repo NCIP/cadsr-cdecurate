@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.40 2008-08-07 14:30:45 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.41 2008-10-28 18:55:46 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1187,7 +1187,7 @@ private String setNewVersionVM(VMForm data)
 	      VM_Bean vm = data.getVMBean();
 	      if (data.getCurationServlet().getConn() != null)
 	      {
-	    	  cstmt = data.getCurationServlet().getConn().prepareCall("{call sbr.meta_Config_mgmt.VM_VERSION(?,?,?,?)}");
+	    	  cstmt = data.getCurationServlet().getConn().prepareCall("{call sbr.meta_Config_mgmt.VM_VERSION(?,?,?,?,?)}");
 	    	  
 	          // Set the out parameters (which are inherited from the
 				// PreparedStatement class)
@@ -1202,6 +1202,10 @@ private String setNewVersionVM(VMForm data)
 				double dVersion = DVersion.doubleValue();
 				cstmt.setDouble(2,dVersion);
 
+				// Get the username from the session.
+				String userName = data.getCurationServlet().sessionData.UsrBean.getUsername();
+				cstmt.setString(5, userName); // username
+				
 				// Now we are ready to call the stored procedure
 				cstmt.execute();
 				sReturnCode = cstmt.getString(4);
