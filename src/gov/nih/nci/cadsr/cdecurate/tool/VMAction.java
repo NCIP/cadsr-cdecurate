@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.40 2008-08-07 14:30:45 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.42 2008-11-06 21:52:37 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -57,15 +57,15 @@ public class VMAction implements Serializable
     try
     {
       //do not continue search if no search filter
-      if (data.getSearchTerm().equals("") && data.getSearchFilterConName().equals("") && data.getSearchFilterID().equals("") && data.getSearchFilterCD().equals("") && data.getSearchFilterCondr().equals("") && data.getSearchFilterDef().equals(""))
+     /* if (data.getSearchFilterConName().equals("") && data.getSearchFilterID().equals("") && data.getSearchFilterCD().equals("") && data.getSearchFilterCondr().equals("") && data.getSearchFilterDef().equals(""))
         return;
-
+*/
       Vector<VM_Bean> vmList = data.getVMList();
       if (vmList == null) vmList = new Vector<VM_Bean>();
       if (data.getCurationServlet().getConn() != null)
       {
       //  cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?,?,?)}");
-    	  cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?,?,?,?)}");
+    	  cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?,?,?,?,?,?)}");
         // Now tie the placeholders for out parameters.
         cstmt.registerOutParameter(5, OracleTypes.CURSOR);
         // Now tie the placeholders for In parameters.
@@ -76,6 +76,8 @@ public class VMAction implements Serializable
         cstmt.setString(6, data.getSearchFilterConName());
         cstmt.setString(7, data.getSearchFilterCondr());
         cstmt.setString(8, data.getSearchFilterID());
+        cstmt.setString(9, data.getVersionInd());
+        cstmt.setDouble(10, data.getVersionNumber());
          // Now we are ready to call the stored procedure
         cstmt.execute();
         // store the output in the resultset
@@ -1187,7 +1189,7 @@ private String setNewVersionVM(VMForm data)
 	      VM_Bean vm = data.getVMBean();
 	      if (data.getCurationServlet().getConn() != null)
 	      {
-	    	  cstmt = data.getCurationServlet().getConn().prepareCall("{call sbr.meta_Config_mgmt.VM_VERSION(?,?,?,?)}");
+	    	  cstmt = data.getCurationServlet().getConn().prepareCall("{call sbr.meta_Config_mgmt.VM_VERSION(?,?,?,?,?)}");
 	    	  
 	          // Set the out parameters (which are inherited from the
 				// PreparedStatement class)
@@ -1202,6 +1204,10 @@ private String setNewVersionVM(VMForm data)
 				double dVersion = DVersion.doubleValue();
 				cstmt.setDouble(2,dVersion);
 
+				// Get the username from the session.
+				String userName = data.getCurationServlet().sessionData.UsrBean.getUsername();
+				cstmt.setString(5, userName); // username
+				
 				// Now we are ready to call the stored procedure
 				cstmt.execute();
 				sReturnCode = cstmt.getString(4);
