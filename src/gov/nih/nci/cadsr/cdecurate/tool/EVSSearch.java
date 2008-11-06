@@ -1,6 +1,6 @@
 //Copyright (c) 2000 ScenPro, Inc.
 
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.59 2008-10-20 13:30:53 hegdes Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.60 2008-11-06 21:49:00 chickerura Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -632,8 +632,7 @@ public class EVSSearch implements Serializable {
 						if (!conceptCode.equals("")) //try it with ConceptCode
 						{
 							try {
-								query = this.addSecurityToken(query, "",
-										dtsVocab);
+								query = this.addSecurityToken(query, "",dtsVocab);
 								query.getSubConcepts(dtsVocab, conceptCode);
 								subs = evsService.evsSearch(query);
 							} catch (Exception ex) {
@@ -712,7 +711,7 @@ public class EVSSearch implements Serializable {
 		}
 		return vSub;
 	}
-
+	
 	/**
 	 * This method searches EVS vocabularies and returns subconcepts, which are used
 	 * to construct an EVS Tree. 
@@ -2739,7 +2738,7 @@ public class EVSSearch implements Serializable {
 		.setAttribute(session, "ConceptLevel", sLevelStartingConcept);
 		if (dtsVocab.equals("MetaValue")) {
 			sDefSource = (String) session.getAttribute("ParentMetaSource");
-			sDefSource = getSourceToken(sDefSource);
+			sDefSource = m_servlet.getSourceToken(sDefSource);
 			if (sDefSource == null)
 				sDefSource = "";
 		}
@@ -2777,28 +2776,6 @@ public class EVSSearch implements Serializable {
 		"/OpenSearchWindowBlocks.jsp");
 	}
 
-    /**
-     * @param sDefSource
-     *            string def source selected
-     * @return String defintion source
-     * @throws Exception
-     */
-    private String getSourceToken(String sDefSource) throws Exception
-    {
-        int index = -1;
-        int length = 0;
-        if (sDefSource != null)
-            length = sDefSource.length();
-        String pointStr = ": Concept Source ";
-        index = sDefSource.indexOf(pointStr);
-        if (index == -1)
-            index = 0;
-        if (index > 0 && length > 18)
-            sDefSource = sDefSource.substring((index + 17), sDefSource.length());
-        return sDefSource;
-    }
-
-	
 	/**
 	 * to open the tree to the selected concept 
 	 * @param actType String action type
@@ -3256,7 +3233,7 @@ public class EVSSearch implements Serializable {
 				vocabAccess = vocabBean.getVocabAccess();
 			}
 			gov.nih.nci.evs.security.SecurityToken token = null;
-			if (vocabAccess != null) {
+			if (vocabAccess != null && vocabAccess.length()>0) {
 				token = new gov.nih.nci.evs.security.SecurityToken();
 				token.setAccessToken(vocabAccess);
 				query.addSecurityToken(vocab, token);
