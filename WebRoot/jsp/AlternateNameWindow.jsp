@@ -1,7 +1,11 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/AlternateNameWindow.jsp,v 1.2 2008-10-20 13:30:26 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/AlternateNameWindow.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
+
+<!-- goes to secondary window error page if error occurs -->
+<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
+<curate:checkLogon name="Userbean" page="/ErrorPageWindow.jsp" />
 <html>
 	<head>
 		<title>
