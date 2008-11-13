@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMForm.java,v 1.19 2008-11-06 23:28:30 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMForm.java,v 1.20 2008-11-13 21:50:20 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -71,20 +71,20 @@ public class VMForm implements Serializable
   private Vector<VM_Bean> defnVMList;
   private Vector<EVS_Bean> conceptList;
   private Vector<VM_Bean> errorMsgList;
-  private Double versionNumber;
+  private double versionNumber;
   private String versionInd;
   
   /**
  * @return the versionNumber
  */
-public Double getVersionNumber() {
+public double getVersionNumber() {
 	return versionNumber;
 }
 
 /**
  * @param versionNumber the versionNumber to set
  */
-public void setVersionNumber(Double versionNumber) {
+public void setVersionNumber(double versionNumber) {
 	this.versionNumber = versionNumber;
 }
 
