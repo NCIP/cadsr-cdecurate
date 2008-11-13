@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.43 2008-11-06 23:28:30 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.44 2008-11-13 21:50:20 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -535,6 +535,7 @@ public class VMAction implements Serializable
     VM_Bean exVM = validateVMData(data);
     if (exVM == null)
         vm.setVM_IDSEQ("");
+    	vm.setVM_SUBMIT_ACTION(data.CADSR_ACTION_INS);
   }
 
   /**to submit the VM changes to the database.
