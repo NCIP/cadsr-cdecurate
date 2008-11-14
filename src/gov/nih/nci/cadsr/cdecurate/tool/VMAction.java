@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.45 2008-11-14 16:31:51 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.46 2008-11-14 17:31:19 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -64,16 +64,21 @@ public class VMAction implements Serializable
       if (vmList == null) vmList = new Vector<VM_Bean>();
       if (data.getCurationServlet().getConn() != null)
       {
+    	  //parse the string.
+    	  String sDef = util.parsedStringSingleQuoteOracle(data.getSearchFilterDef());
+    	  String sTerm = util.parsedStringSingleQuoteOracle(data.getSearchTerm());
+    	  String sCon = util.parsedStringSingleQuoteOracle(data.getSearchFilterConName());
+    	  
       //  cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?,?,?)}");
     	  cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?,?,?,?,?,?)}");
         // Now tie the placeholders for out parameters.
         cstmt.registerOutParameter(5, OracleTypes.CURSOR);
         // Now tie the placeholders for In parameters.
-        cstmt.setString(1, data.getSearchTerm());  //name
+        cstmt.setString(1, sTerm);  //name
         cstmt.setString(2, data.getSearchFilterCD());
-        cstmt.setString(3, data.getSearchFilterDef());
+        cstmt.setString(3, sDef);
         cstmt.setString(4, data.getSearchFilterCondr());
-        cstmt.setString(6, data.getSearchFilterConName());
+        cstmt.setString(6, sCon);
         cstmt.setString(7, data.getSearchFilterCondr());
         cstmt.setString(8, data.getSearchFilterID());
         cstmt.setString(9, data.getVersionInd());
@@ -533,9 +538,10 @@ public class VMAction implements Serializable
   //  if (vm.getVM_IDSEQ() == null || vm.getVM_IDSEQ().equals(""))
    //   this.doChangeVM(data);
     VM_Bean exVM = validateVMData(data);
-    if (exVM == null)
+    if (exVM == null){
         vm.setVM_IDSEQ("");
     	vm.setVM_SUBMIT_ACTION(data.CADSR_ACTION_INS);
+    }	
   }
 
   /**to submit the VM changes to the database.
