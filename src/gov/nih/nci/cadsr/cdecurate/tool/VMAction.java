@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.44 2008-11-13 21:50:20 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.45 2008-11-14 16:31:51 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1835,7 +1835,7 @@ private String setNewVersionVM(VMForm data)
               cstmt.setDouble(16, dVersion);
               cstmt.setString(17, conName);
               cstmt.setString(18, conID);
-              cstmt.setString(19, sVM);
+              cstmt.setString(19, util.parsedStringSingleQuoteOracle(sVM));
               // Now we are ready to call the stored procedure
               cstmt.execute();
               // store the output in the resultset
