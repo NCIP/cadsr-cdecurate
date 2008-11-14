@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.38 2008-11-06 23:28:30 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.39 2008-11-14 16:31:51 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -187,7 +187,7 @@ public class VMServlet extends GenericServlet
     if (sSearchIn.equals("concept"))
     	vmData.setSearchFilterConName(sKeyword);
     UtilService util = new UtilService();
-    sKeyword = util.parsedStringSingleQuoteOracle(sKeyword);
+   // sKeyword = util.parsedStringSingleQuoteOracle(sKeyword);
     if(!sSearchIn.equals("minID") && !sSearchIn.equals("concept"))
     {	
     	if(vmData.getSearchTerm()==null || vmData.getSearchTerm().equals(""))
