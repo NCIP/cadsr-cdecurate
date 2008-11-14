@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.68 2008-11-14 16:39:24 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.69 2008-11-14 16:57:00 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -4432,7 +4432,8 @@ public class GetACSearch implements Serializable
             DECBean.setAC_USER_PREF_NAME(DECBean.getDEC_PREFERRED_NAME());
             DECBean.setAC_PREF_NAME_TYPE("");
             // get the oc and prop information
-            DECBean = m_servlet.doGetDECNames(m_classReq, m_classRes, null, "OpenDEC", DECBean);
+            EVS_Bean nullEVS = null; 
+            DECBean = (DEC_Bean) m_servlet.getACNames(nullEVS, "OpenDEC", DECBean);
             // get dec system name
             InsACService insAC = new InsACService(m_classReq, m_classRes, m_servlet);
             String sysName = insAC.getDECSysName(DECBean);
@@ -4572,7 +4573,7 @@ public class GetACSearch implements Serializable
                 DEBean.setDE_VD_Bean((VD_Bean) vVDList.elementAt(0));
             // store teh current one as user preferred
             // get system and abbr name to use it later
-            DEBean = m_servlet.doGetDENames(m_classReq, m_classRes, "noChange", "OpenDE", DEBean);
+	        DEBean = (DE_Bean) m_servlet.getACNames("noChange", "OpenDE", DEBean);
         }
         // get contact informatin
         // if (!sAction.equals("BlockEdit") && !sAction.equals("EditDesDE"))
@@ -4659,7 +4660,8 @@ public class GetACSearch implements Serializable
             DataManager.setAttribute(session, "vRepTerm", null);
             evs.fillRepVectors(rep_condr_idseq, VDBean, sMenu);
             // make the abbreviated name if existing one is system name
-            VDBean = m_servlet.doGetVDNames(m_classReq, m_classRes, null, "OpenVD", VDBean);
+            EVS_Bean nullEVS = null; 
+            VDBean = (VD_Bean) m_servlet.getACNames(nullEVS, "OpenVD", VDBean);
         }
         // get contexts selected so far
         Vector selContext = (Vector) m_classReq.getAttribute("SelectedContext");
@@ -5071,7 +5073,7 @@ public class GetACSearch implements Serializable
                 if (vVDList != null && vVDList.size() > 0)
                     DEBean.setDE_VD_Bean((VD_Bean) vVDList.elementAt(0));
                 // get system and abbr name to use it later
-                DEBean = m_servlet.doGetDENames(m_classReq, m_classRes, "noChange", "OpenDE", DEBean);
+                DEBean = (DE_Bean) m_servlet.getACNames("noChange", "OpenDE", DEBean);
                 DEBean.setAC_USER_PREF_NAME(DEBean.getDE_PREFERRED_NAME());
                 DEBean.setDE_ASL_NAME("DRAFT NEW");
             }
