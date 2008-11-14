@@ -1,6 +1,6 @@
 //Copyright (c) 2000 ScenPro, Inc.
 
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.58 2008-06-25 15:30:08 chickerura Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.60 2008-11-06 21:49:00 chickerura Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -632,8 +632,7 @@ public class EVSSearch implements Serializable {
 						if (!conceptCode.equals("")) //try it with ConceptCode
 						{
 							try {
-								query = this.addSecurityToken(query, "",
-										dtsVocab);
+								query = this.addSecurityToken(query, "",dtsVocab);
 								query.getSubConcepts(dtsVocab, conceptCode);
 								subs = evsService.evsSearch(query);
 							} catch (Exception ex) {
@@ -712,7 +711,7 @@ public class EVSSearch implements Serializable {
 		}
 		return vSub;
 	}
-
+	
 	/**
 	 * This method searches EVS vocabularies and returns subconcepts, which are used
 	 * to construct an EVS Tree. 
@@ -3234,7 +3233,7 @@ public class EVSSearch implements Serializable {
 				vocabAccess = vocabBean.getVocabAccess();
 			}
 			gov.nih.nci.evs.security.SecurityToken token = null;
-			if (vocabAccess != null) {
+			if (vocabAccess != null && vocabAccess.length()>0) {
 				token = new gov.nih.nci.evs.security.SecurityToken();
 				token.setAccessToken(vocabAccess);
 				query.addSecurityToken(vocab, token);

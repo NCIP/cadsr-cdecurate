@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.36 2008-08-04 21:45:06 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.39 2008-11-14 16:31:51 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -187,7 +187,7 @@ public class VMServlet extends GenericServlet
     if (sSearchIn.equals("concept"))
     	vmData.setSearchFilterConName(sKeyword);
     UtilService util = new UtilService();
-    sKeyword = util.parsedStringSingleQuoteOracle(sKeyword);
+   // sKeyword = util.parsedStringSingleQuoteOracle(sKeyword);
     if(!sSearchIn.equals("minID") && !sSearchIn.equals("concept"))
     {	
     	if(vmData.getSearchTerm()==null || vmData.getSearchTerm().equals(""))
@@ -205,7 +205,8 @@ public class VMServlet extends GenericServlet
     else
     	//store the attributes to display in the vmData
     	vmData.setSelAttrList((Vector)session.getAttribute("creSelectedAttr"));
-    
+    //set the version indicator
+     setVersionValues(vmData,req,session);
     //call the action to do the search
     vmAction.searchVMValues(vmData);
 
@@ -222,10 +223,50 @@ public class VMServlet extends GenericServlet
     //DataManager.setAttribute(session, "SearchMeanDescription",  new Vector<String>());      
     
   }
+  
+  
+ /**
+ * @param vmData
+ */
+private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession session)
+{
+	SetACService setAC = new SetACService(vmData.getCurationServlet());
+	// filter by version
+	String sVersion = (String) req.getParameter("rVersion");
+	DataManager.setAttribute(session, "serVersion", sVersion);
+	// get the version number if other
+	String txVersion = "";
+	if (sVersion != null && sVersion.equals("Other"))
+		txVersion = (String) req.getParameter("tVersion");
+	if (txVersion == null)
+		txVersion = "";
+	DataManager.setAttribute(session, "serVersionNum", txVersion);
+	double dVersion = 0;
+	// validate the version and display message if not valid
+	if (!txVersion.equals("")) {
+		// String sValid = setAC.checkVersionDimension(txVersion);
+		String sValid = setAC.checkValueIsNumeric(txVersion, "Version");
+		if (sValid != null && !sValid.equals("")) {
+			logger.fatal("not a good version " + sValid);
+			DataManager.setAttribute(session, "serVersionNum", "0");
+		} else {
+			Double DVersion = new Double(txVersion);
+			dVersion = DVersion.doubleValue();
+		}
+	}
+	// make sVersion to empty if all or other
+	if (sVersion == null || sVersion.equals("All")
+			|| sVersion.equals("Other"))
+		sVersion = "";
+	
+	vmData.setVersionInd(sVersion);
+	vmData.setVersionNumber(dVersion);
+
+}
 
   /**
-   * do vm sorting
-   */
+	 * do vm sorting
+	 */
   @SuppressWarnings("unchecked")
   public void readDataForSort()
   {
@@ -920,7 +961,7 @@ private String goBackToSearch()
     
     //call teh method for sorting
     vmAction.getVMResult(vmData,req,getac);
-    //store teh result back in request/session attributes
+    //store the result back in request/session attributes
     DataManager.setAttribute(session, "results", vmData.getResultList());
     req.setAttribute("creRecsFound", vmData.getNumRecFound());
     req.setAttribute("labelKeyword", vmData.getResultLabel());  
