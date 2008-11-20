@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.5 2008-07-30 16:32:15 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.6 2008-11-20 18:00:01 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -22,6 +22,8 @@
   var temp = "";
   var ccode = "";
   var umls = "";
+  var count = 0;
+  var checkCnt = 0;
 
   //  checks the status message everytime page opens and alerts the  message
   function displayStatus(vStatusMessage, vSubmitAction)
@@ -168,7 +170,7 @@
       if(SelectAll == false)
         document.searchResultsForm.actSelected.value = "NoRowsSelected";
       else
-        document.searchResultsForm.actSelected.value = "Rows";
+      document.searchResultsForm.actSelected.value = "Rows";
       document.searchResultsForm.numSelected.value = numRowsSelected;
       document.searchResultsForm.submit();
   }
@@ -335,32 +337,20 @@
   {   
 	   getRowAttributes();   //get the values of each row.
 	   var bOkOpen = true;
-	   var selSearchAC = document.searchParmsForm.listSearchFor.options[document.searchParmsForm.listSearchFor.selectedIndex].value;
-	   if (selSearchAC == "Questions")
-	   {
-		   if (editID != null && editID == "Edit")
-           bOkOpen = confirm("You are about to edit a Data Element for which all attributes are complete.  \n" + 
-           "Do you wish to proceed?")
-			 else if (editID != null && editID == "Template")
-           bOkOpen = confirm("The Value Domain selected for this question is different from the Value Domain associated with the selected Data Element. " + 
-           "You must confirm and validate the attributes for this Data Element and submit the DE to the database.")
-	   }
-	   if (bOkOpen == true && document.searchResultsForm.editSelectedBtn.value != "Block Edit")
-	   {
+	   if (bOkOpen == true && document.searchResultsForm.numOfRowsSelected.value == "1"){
          window.status = "Opening the page, it may take a minute, please wait....."
 			   document.searchResultsForm.Message.style.visibility="visible";
          document.searchResultsForm.actSelected.value = "Edit";
          document.searchResultsForm.numSelected.value = numRowsSelected;
          document.searchResultsForm.submit();
    	   }
-	   else if (document.searchResultsForm.editSelectedBtn.value=="Block Edit")
-	   { 
-  		   window.status = "Opening the page, it may take a minute, please wait....."
-			   document.searchResultsForm.Message.style.visibility="visible";
-         document.searchResultsForm.actSelected.value = "BlockEdit";
-         document.searchResultsForm.numSelected.value = numRowsSelected;
-         document.searchResultsForm.submit();
-	   }
+	   else if (document.searchResultsForm.numOfRowsSelected.value == ">1"){ 
+  	    window.status = "Opening the page, it may take a minute, please wait....."
+		    document.searchResultsForm.Message.style.visibility="visible";
+        document.searchResultsForm.actSelected.value = "BlockEdit";
+        document.searchResultsForm.numSelected.value = numRowsSelected;
+        document.searchResultsForm.submit();
+	 }
   }
 
   // Block edit multiple rows of DE's, DEC's, or VD's
@@ -375,265 +365,14 @@
        document.searchResultsForm.submit();
   }
 
-  /* This function enables/disables the "Edit Selection" and
-  "Show Selected Rows Only" buttons based on checked items in the list.
-  Edit Selection:  enabled when one checked and disabled otherwise, except 
-  when the component is permissible value for searchforCreate
-  Show Selected Rows Only:  enabled when one or more items are checked 
-  designate record : enabled when not search for create and only one item checked.
-  details: enabled when one DE or DEC or VD is checked
-  */
-
-  function EnableCheckButtons(checked, currentField, editAction, sButtonPressed, sSelAC)
-  {      
-	   if (checked)
-		   ++numRowsSelected;
-	   else
-		   --numRowsSelected;
-	   
-	   //if called directly from the checkbox click takes the name value, otherwise it is a string value
-	   if (currentField.name == null)
-		   var rowNo = currentField;
-	   else
-		   var rowNo = currentField.name;
-	   
-	   if (numRowsSelected > 0)
-	   {
-		   //enable the append button
-		   if (document.searchResultsForm.AppendBtn != null)
-			   document.searchResultsForm.AppendBtn.disabled=false;
-               
-           if (document.searchResultsForm.monitorBtn != null)
-               document.searchResultsForm.monitorBtn.disabled = false;
-                      
-           if (document.searchResultsForm.unmonitorBtn != null)
-               document.searchResultsForm.unmonitorBtn.disabled = false;
-           
-		   if (document.searchResultsForm.uploadBtn != null)
-           	   document.searchResultsForm.uploadBtn.disabled = false;
-            
-		   if (numRowsSelected == 1)
-		   {
-			   if (editAction == "searchForCreate")
-			   {
-				   if (document.searchResultsForm.editSelectedBtn != null)
-					   document.searchResultsForm.editSelectedBtn.disabled=false;
-               }
-			   else
-			   {
-				   if (document.searchResultsForm.showSelectedBtn != null)
-					   document.searchResultsForm.showSelectedBtn.disabled=false;
-               			
-				   if (editAction != "nothing" || sButtonPressed == "Search")
-				   {
-					   if (document.searchResultsForm.editSelectedBtn != null  && 
-						   editAction != "Complete Selected DE" && editAction != "Create New Version" && editAction != "Create New from Existing")
-					   {
-						   document.searchResultsForm.editSelectedBtn.disabled=false;
-						   document.searchResultsForm.editSelectedBtn.value="Edit Selection";
-					   }
-					   if (document.searchResultsForm.editSelectedBtn != null  && 
-						   editAction == "Complete Selected DE" || editAction == "Create New Version" || editAction == "Create New from Existing")
-					   {
-						   document.searchResultsForm.editSelectedBtn.disabled=false;
-					   }
-				   }
-				   else if (editAction == "nothing" && sSelAC == "Data Element" || sSelAC == "Data Element Concept" || sSelAC == "Value Domain" || sSelAC == "Value Meaning")
-				   {
-					   document.searchResultsForm.editSelectedBtn.disabled=false;
-				   }
-				   if (editAction == "nothing" && sSelAC == "Data Element" || sSelAC == "Data Element Concept" || sSelAC == "Value Domain" || sSelAC == "Conceptual Domain" || sSelAC == "Value Meaning")
-				   {
-					   document.searchResultsForm.associateACBtn.value="Get Associated";
-					   document.searchResultsForm.associateACBtn.disabled=false;
-				   }
-			   }
-			   //both seachforcreate and regular the searches
-			   if (checked)
-				   StoreSelectedRow("true", rowNo, editAction);
-			   else
-				   StoreSelectedRow("false", rowNo, editAction);
-			   
-			   //disable the details button if not data element   
-			   if (document.searchResultsForm.detailsBtn != null)
-			   {
-				   if (document.searchParmsForm.listSearchFor.value == "DataElement")
-					   document.searchResultsForm.detailsBtn.disabled=false;
-				   else
-					   document.searchResultsForm.detailsBtn.disabled=true;
-			   }
-			   
-			   //enable designate button and change the label to undesignate if already designated
-			   if (document.searchParmsForm.listSearchFor.value != "PermissibleValue")
-			   {
-				   if (document.searchResultsForm.designateBtn != null)
-					   document.searchResultsForm.designateBtn.disabled=false;
-			   }
-			   
-			   //enable associate button if not questions
-			   if (document.searchParmsForm.listSearchFor.value != "Questions")
-			   {
-				   if (document.searchResultsForm.associateACBtn != null)
-					   document.searchResultsForm.associateACBtn.disabled=false;
-			   }
-		   }
-		   else    // numRowsSelected > 1
-		   {
-		      
-			   if (document.searchResultsForm.associateACBtn != null)
-			   {
-				   document.searchResultsForm.associateACBtn.disabled=true;
-			   }
-			   if (document.searchResultsForm.detailsBtn != null)
-				   document.searchResultsForm.detailsBtn.disabled=true;
-
-		   		if (document.searchResultsForm.uploadBtn != null)
-           			document.searchResultsForm.uploadBtn.disabled = true;
-               
-			   if (editAction != "searchForCreate")
-			   {
-			      
-				   document.searchResultsForm.showSelectedBtn.disabled=false;
-				  
-				   if (checked)
-					   StoreSelectedRow("true", rowNo, editAction);
-				   else
-					   StoreSelectedRow("false", rowNo, editAction);
-					   
-				   if (editAction != "nothing" || sButtonPressed == "Search" || sButtonPressed == "Edit")
-				   { 
-					   if (document.searchResultsForm.editSelectedBtn != null)
-					   {
-						   //enable the edit button if action is regular search or edit otherwise disable
-						   if (editAction != "Complete Selected DE" && editAction != "Create New Version" && editAction != "Create New from Existing" && sSelAC != "Value Meaning")
-						   {
-							 
-							   document.searchResultsForm.editSelectedBtn.value="Block Edit";
-							   document.searchResultsForm.editSelectedBtn.disabled=false;
-							}
-							//if(sSelAC == "Value Meaning")
-				   			//{
-			 		   
-				           	//	alert("Please check only one box at a time");
-					   	   	//	UnCheckAllCheckBoxes();
-				           	//	formObj= eval("document.searchResultsForm."+currentField.name);
-				           	//	formObj.checked=true;
-                   			 //  	--numRowsSelected;
-                   			//   	document.searchResultsForm.associateACBtn.disabled=false;
-                   			//   	document.searchResultsForm.editSelectedBtn.disabled=false;
-                   			   
-                   		  // 	}	
-						    else 
-						     {
-						  	   document.searchResultsForm.editSelectedBtn.disabled=true;
-							 }
-					   }
-				   }
-				   				   
-			   }
-			   else   // editAction == "searchForCreate"
-			   {
-				   if (document.searchParmsForm.listSearchFor.value == "PermissibleValue")
-				   {
-					   //search from create/edit pages
-					   if (opener.document != null)
-					   {
-						   var vOrigin = opener.document.getElementById("MenuAction").value;
-						   //searching pv for questions
-						   if (vOrigin == "Questions")
-						   {
-							   formObj= eval("document.searchResultsForm."+currentField.name);
-							   formObj.checked=false;
-							   --numRowsSelected;
-							   alert("Please select only one value at a time");
-						   }
-						   else    // vOrigin != "Questions"
-						   {
-							   if (checked)
-								   StoreSelectedRow("true", rowNo, editAction);
-							   else
-								   StoreSelectedRow("false", rowNo, editAction);
-						   }
-					   }
-					   //search from the regular search pages
-					   else
-					   {
-						   if (checked)
-							   StoreSelectedRow("true", rowNo, editAction);
-						   else
-							   StoreSelectedRow("false", rowNo, editAction);
-					   }
-				   }
-				   else if ( sSelAC == "Data Element")  // from CreateDE for DDE
-				   {
-							   if (checked)
-								   StoreSelectedRow("true", rowNo, editAction);
-							   else
-								   StoreSelectedRow("false", rowNo, editAction);
-				   }
-				   else  // editAction == "searchForCreate", document.searchParmsForm.listSearchFor.value != "PermissibleValue"
-				   {
-				   /* formObj= eval("document.searchResultsForm."+currentField.name);
-                   			formObj.checked=false;
-                  			 --numRowsSelected;
-					   alert("Please check only one box at a time");*/
-					   //allow to check more than one but disable the button if more selected
-					   if (document.searchResultsForm.editSelectedBtn != null)
-						   document.searchResultsForm.editSelectedBtn.disabled=true;
-					   if (checked)
-						   StoreSelectedRow("true", rowNo, editAction);
-					   else
-						   StoreSelectedRow("false", rowNo, editAction);
-				   }
-			   }
-			   if (document.searchResultsForm.designateBtn != null)
-				   document.searchResultsForm.designateBtn.disabled=false;
-		   }
-      }
-      else  // numRowsSelected == 0
-      {
-          if (document.searchResultsForm.monitorBtn != null)
-              document.searchResultsForm.monitorBtn.disabled = true;
-              
-          if (document.searchResultsForm.unmonitorBtn != null)
-              document.searchResultsForm.unmonitorBtn.disabled = true;  
-              
-         if (document.searchResultsForm.uploadBtn != null)
-               document.searchResultsForm.uploadBtn.disabled = true;            
-           
-		  if (document.searchResultsForm.associateACBtn != null)
-			  document.searchResultsForm.associateACBtn.disabled=true;
-		  
-		  // disable the Details button if no row is selected
-		  if (document.searchResultsForm.detailsBtn != null)
-			  document.searchResultsForm.detailsBtn.disabled=true;
-		  
-		  //keep the show selection button disabled if no row is checked
-          if (editAction != "searchForCreate")
-			  if (document.searchResultsForm.showSelectedBtn != null)
-				  document.searchResultsForm.showSelectedBtn.disabled=true;
-			  
-			  //disable edit button (use selection/edit/template/version)
-			  if (document.searchResultsForm.editSelectedBtn != null)
-				  document.searchResultsForm.editSelectedBtn.disabled=true;
-			  
-			  if (!checked)
-				  StoreSelectedRow("false", rowNo, editAction);
-			  
-			  //disable designate button
-			  if (document.searchResultsForm.designateBtn != null)
-				  document.searchResultsForm.designateBtn.disabled=true;
-			  
-			  //disable the append button
-			  if (document.searchResultsForm.AppendBtn != null)
-				  document.searchResultsForm.AppendBtn.disabled=true;
-	  }
-  }  // end of EnableCheckButtons
+ 
    
   function UnCheckAllCheckBoxes() 
   {
   	var dCount =0;
-if(document.searchResultsForm.hiddenSelectedRow != null)
+  	alert("in function UnCheckAllCheckBoxes");
+  	alert("length----->" + document.searchResultsForm.hiddenSelectedRow.length);
+  	if(document.searchResultsForm.hiddenSelectedRow != null)
         dCount = document.searchResultsForm.hiddenSelectedRow.length;  	
 		for (k=0; k<dCount; k++)
 		   {
@@ -675,7 +414,6 @@ if(document.searchResultsForm.hiddenSelectedRow != null)
 	   document.searchResultsForm.hiddenACIDStatus.length = 0;
 	   document.searchResultsForm.hiddenDesIDName.length = 0;
 	   var rowCount = document.searchResultsForm.hiddenSelectedRow.length;
-	   
 	   for (i=0; i<rowCount; i++)
 	   {
 		   var rowNo = document.searchResultsForm.hiddenSelectedRow[i].value;
@@ -798,6 +536,7 @@ if(document.searchResultsForm.hiddenSelectedRow != null)
 	   for (k=0; k<dCount; k++)
 	   {
 		   var ACStatus = document.searchResultsForm.hiddenACIDStatus[k].text;
+		   alert("here is the status--->" + ACStatus);
 		   if (!(ACStatus == "RELEASED" || ACStatus == "APPRVD FOR TRIAL USE" || ACStatus == "CMTE SUBMTD USED" || 
 			   ACStatus == "DRAFT MOD" || ACStatus == "CMTE APPROVED" || ACStatus == "RELEASED-NON-CMPLNT"))
 		   {
@@ -805,6 +544,7 @@ if(document.searchResultsForm.hiddenSelectedRow != null)
 				   isStatusValid = false;
 		   }
 	   }
+	   alert("check if status is valid----->" + isStatusValid);
 	   if (isStatusValid == true)
 	   {
 		   if (desWindow && !desWindow.closed)
@@ -1016,4 +756,221 @@ function uploadCmd()
     	StoreSelectedRow("true",curPV,"ValueMeaning");
     	document.searchResultsForm.submit();
     }
+    
+    function count(checked)
+    {
+    if (checked)
+		   ++count;
+	   else
+		   --count;
+	document.searchResultsForm.menuDefs.objMenu.selCnt.value = count;
+		   
+   }
+  // This function will display the alert message to the user if he/she is not logged in 
+  // or will call the appropriate function if he/she is already logged in
+   function  performActionJS(user, type){
+    if (user == "null"){
+       alert("Please Login to use this feature.");
+    }else{
+        if (type == "uploadDoc"){
+          uploadCmd();
+        }
+        if (type == "monitor"){
+          monitorCmd();
+        }
+        if (type == "unmonitor"){
+           unmonitorCmd();
+        }
+        if (type == "designate"){
+           designateRecord();
+        }
+        if (type == "append"){
+           setAppendAction();
+        }
+        if (type == "edit"){
+           ShowEditSelection();
+        }
+        if (type == "blockEdit"){
+           ShowEditSelection();
+        }
+     }    
+  
+  }
+// This function will display the alert message to the user if he/she is not logged in 
+// or will call the appropriate function if he/she is already logged in
+function createNewJS(user, selAC, type){
+    if (user == "null"){
+       alert("Please Login to use this feature.");
+    }else{
+        createNewAC(selAC,type);
+    }    
+}
+   
+//submits the page to display 'Create New Using Existing' window or 'Creat New Version' window
+function createNewAC(selAC, type){
+         getRowAttributes(); 
+         var bOkOpen = true;
+	   if (bOkOpen == true && document.searchResultsForm.numOfRowsSelected.value == "1"){
+         window.status = "Opening the page, it may take a minute, please wait....."
+			   document.searchResultsForm.Message.style.visibility="visible";
+         document.searchResultsForm.actSelected.value = "Edit";
+         document.searchResultsForm.numSelected.value = numRowsSelected;
+         
+         if (type == "newUsingExisting"){
+             document.searchResultsForm.hidaction.value = "newUsingExisting";
+             if (selAC == "Data Element"){
+               document.searchResultsForm.hidMenuAction.value = "NewDETemplate";
+             }
+             if (selAC == "Data Element Concept"){
+               document.searchResultsForm.hidMenuAction.value = "NewDECTemplate";
+             }
+             if (selAC ==  "Value Domain"){
+               document.searchResultsForm.hidMenuAction.value = "NewVDTemplate";
+             }
+         }else if (type == "newVersion"){
+             document.searchResultsForm.hidaction.value = "newVersion";
+             if (selAC == "Data Element"){
+               document.searchResultsForm.hidMenuAction.value = "NewDEVersion";
+             }
+             if (selAC == "Data Element Concept"){
+               document.searchResultsForm.hidMenuAction.value = "NewDECVersion";
+             }
+             if (selAC ==  "Value Domain"){
+               document.searchResultsForm.hidMenuAction.value = "NewVDVersion";
+             }
+         }
+        document.searchResultsForm.submit();
+       }  
+   }
+   
+  
+ //This function calculates the number of checkboxes checked
+function checkClickJS(cb,selAC,rowsChecked)  {
+                if (rowsChecked > 0){
+                   checkCnt = rowsChecked;
+                }
+                if (cb.checked == true) {
+                    ++checkCnt;
+                }  else   {
+                    --checkCnt;
+                }
+                var msg = document.getElementById("selCnt");
+                msg.innerText = checkCnt;
+                msg.textContent = checkCnt;
+                enableDisableButtonsJS(selAC, checkCnt);
+   
+}
+  //This function enables or disables the menu items depending on the num of items checked          
+function enableDisableButtonsJS(sSelAC, checkCount){
+           
+           if (checkCount > 1)  {
+                
+                   document.searchResultsForm.numOfRowsSelected.value = ">1";
+                   if ( (sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain") ){
+                      var doc = document.getElementById("uploadDoc");
+                      var newUE = document.getElementById("newUE");
+                      var newVersion = document.getElementById("newVersion");
+                      doc.disabled=true; 
+                      newUE.disabled=true; 
+                      newVersion.disabled=true; 
+                   }
+                   if ( (sSelAC == "Value Domain")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Meaning")||(sSelAC == "Values/Meanings")
+                         ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass") ){
+                      var aDe = document.getElementById("associatedDE");
+                      var menuADe = document.getElementById("menuAssociatedDE");
+                      aDe.disabled=true;
+                      menuADe.disabled=true; 
+                   }
+                  if ( (sSelAC == "Data Element")||(sSelAC == "ObjectClass")||(sSelAC == "Property")
+                         ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass")){
+                      var aDec = document.getElementById("associatedDEC");
+                      var menuADec = document.getElementById("menuAssociatedDEC");
+                      aDec.disabled=true;
+                      menuADec.disabled=true;
+                   }
+                   if( (sSelAC == "Data Element") || (sSelAC == "ObjectClass")||(sSelAC == "Property")
+                         ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass")){
+                       var aVd = document.getElementById("associatedVD"); 
+                       var menuAVd = document.getElementById("menuAssociatedVD");
+                       aVd.disabled=true;
+                       menuAVd.disabled=true;
+                   }
+                   if (sSelAC == "Data Element"){
+                       var details = document.getElementById("details");
+                       var sMenudetails = document.getElementById("searchMenuDetails");
+                       details.disabled=true;
+                       sMenudetails.disabled=true;
+                   }
+                   if ((sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain")||(sSelAC == "Value Meaning")){
+                       var edit = document.getElementById("edit");
+                       var sMenuedit = document.getElementById("searchMenuEdit");
+                       var eMenuedit = document.getElementById("editMenuEdit");
+                       edit.disabled=true;
+                       sMenuedit.disabled=true;
+                       eMenuedit.disabled=true;
+                     }
+                }else{
+                  document.searchResultsForm.numOfRowsSelected.value = "1";
+                if ( (sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain") ){
+                      var doc = document.getElementById("uploadDoc");
+                      var newUE = document.getElementById("newUE");
+                      var newVersion = document.getElementById("newVersion");
+                      doc.disabled=false; 
+                      newUE.disabled=false; 
+                      newVersion.disabled=false; 
+                   }
+                  if ( (sSelAC == "Value Domain")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Meaning")||(sSelAC == "Values/Meanings")
+                         ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass") ){
+                      var aDe = document.getElementById("associatedDE");
+                      var menuADe = document.getElementById("menuAssociatedDE");
+                      aDe.disabled=false;
+                      menuADe.disabled=false; 
+                   }
+                   if ( (sSelAC == "Data Element")||(sSelAC == "ObjectClass")||(sSelAC == "Property")
+                         ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass")){
+                      var aDec = document.getElementById("associatedDEC");
+                      var menuADec = document.getElementById("menuAssociatedDEC");
+                      aDec.disabled=false; 
+                      menuADec.disabled=false; 
+                   }
+                   if( (sSelAC == "Data Element") || (sSelAC == "ObjectClass")||(sSelAC == "Property")
+                         ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass")){
+                       var aVd = document.getElementById("associatedVD");
+                       var menuAVd = document.getElementById("menuAssociatedVD"); 
+                       aVd.disabled=false;
+                       menuAVd.disabled=false;
+                   }
+                   if (sSelAC == "Data Element"){
+                       var details = document.getElementById("details");
+                       var sMenudetails = document.getElementById("searchMenuDetails");
+                       details.disabled=false;
+                       sMenudetails.disabled=false;
+                   }
+                   if ((sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain")||(sSelAC == "Value Meaning")){
+                       var edit = document.getElementById("edit");
+                       var sMenuedit = document.getElementById("searchMenuEdit");
+                       var eMenuedit = document.getElementById("editMenuEdit");
+                       edit.disabled=false;
+                       sMenuedit.disabled=false;
+                       eMenuedit.disabled=false;
+                    }
+                }
+                
+                if( (checkCount == 1) || (checkCount == 0)){
+                   if ( (sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain") ){
+                       var blockEdit = document.getElementById("blockEdit");
+                       var sMenublockEdit = document.getElementById("searchMenuBlockEdit");
+                       var eMenublockEdit = document.getElementById("editMenuBlockEdit");
+                       edit.disabled=false;
+                       sMenublockEdit.disabled=false;
+                       eMenublockEdit.disabled=false;
+                   } 
+                }
+                
+         
+}      
+           
+   
+ 
+   
   
