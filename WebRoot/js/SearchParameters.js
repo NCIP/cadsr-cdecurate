@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchParameters.js,v 1.1 2007-09-10 16:16:47 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchParameters.js,v 1.2 2008-11-20 17:59:46 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
     function hourglass()
@@ -587,3 +587,93 @@
     //anotherSearchWindow.document.searchParmsForm.listSearchFor.value = "ConceptualDomain";
     //anotherSearchWindow.document.searchParmsForm.listSearchFor.text = "Conceptual Domain";    
   }
+  
+  // check to see if input is whitespace only or empty
+function isEmpty(val)
+{
+if (val.match(/^\s+$/) || val == "")
+{
+return true;
+}
+else
+{
+return false;
+} 
+}
+
+function testIsValidObject(objToTest) {
+		if (null == objToTest) {
+			return false;
+		}
+		if ("undefined" == typeof(objToTest) ) {
+			return false;
+		}
+		return true;
+
+	}
+
+//check if the user is performing a default search or he/she has selected any search criteria
+function checkIfDefaultSearch()
+{
+ var validObj = testIsValidObject(document.searchParmsForm.keyword)  
+  if(validObj)
+  var cond1 = (document.searchParmsForm.keyword.value==null || isEmpty(document.searchParmsForm.keyword.value));
+   validObj = testIsValidObject(document.searchParmsForm.listMultiContextFilter)
+  if(validObj) 
+  	cond1 = cond1 &&  document.searchParmsForm.listMultiContextFilter.value == "AllContext";
+   validObj = testIsValidObject(document.searchParmsForm.listCDName)
+  if(validObj) 
+    cond1 = cond1 && document.searchParmsForm.listCDName.value == "All Domains"; 	
+   validObj = testIsValidObject(document.searchParmsForm.listStatusFilter)
+  if(validObj) 
+   { 
+    if(document.searchParmsForm.listSearchFor.value=="ConceptClass")
+   	cond1 = cond1 && document.searchParmsForm.listStatusFilter.value == "RELEASED";
+   	else
+   	cond1 = cond1 && document.searchParmsForm.listStatusFilter.value == "AllStatus";
+   }	
+  validObj = testIsValidObject(document.searchParmsForm.listRegStatus)
+  if(validObj) 
+  cond1 = cond1 && document.searchParmsForm.listRegStatus.value == "allReg";				      
+  	
+ validObj = testIsValidObject(document.searchParmsForm.listDeriveType)
+ if(validObj) 
+ cond1 = cond1 && document.searchParmsForm.listDeriveType.value=="allDer";
+  	
+  validObj = testIsValidObject(document.searchParmsForm.createdFrom)	
+ if(validObj) 
+ cond1 = cond1 && document.searchParmsForm.createdFrom.value == " "; 		        
+  	
+ validObj = testIsValidObject(document.searchParmsForm.createdTo)	
+ if(validObj) 
+  cond1 = cond1 && document.searchParmsForm.createdTo.value == " "; 
+  	
+ validObj = testIsValidObject( document.searchParmsForm.creator)	
+if(validObj) 
+ cond1 = cond1 && document.searchParmsForm.creator.value == "allUsers"; 
+  	
+ validObj = testIsValidObject( document.searchParmsForm.modifiedFrom)	
+if(validObj) 
+ cond1 = cond1 && document.searchParmsForm.modifiedFrom.value == " " ;
+  	
+ validObj = testIsValidObject( document.searchParmsForm.modifiedTo)	
+if(validObj) 
+ cond1 = cond1 && document.searchParmsForm.modifiedTo.value == " " ;
+  	
+ validObj = testIsValidObject(document.searchParmsForm.modifier)	
+if(validObj) 
+ cond1 = cond1 && document.searchParmsForm.modifier.value == "allUsers"; 
+ 		
+ validObj = testIsValidObject(document.searchParmsForm.listCSName)	
+if(validObj) 
+  cond1 = cond1 && document.searchParmsForm.listCSName.value == "AllSchemes";
+    	
+ if(cond1)	
+  {
+     return true;
+  }
+  else{
+    return false;
+   }
+}
+
