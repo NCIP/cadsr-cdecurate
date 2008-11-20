@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.6 2008-11-20 18:00:01 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.7 2008-11-20 18:31:40 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -536,7 +536,6 @@
 	   for (k=0; k<dCount; k++)
 	   {
 		   var ACStatus = document.searchResultsForm.hiddenACIDStatus[k].text;
-		   alert("here is the status--->" + ACStatus);
 		   if (!(ACStatus == "RELEASED" || ACStatus == "APPRVD FOR TRIAL USE" || ACStatus == "CMTE SUBMTD USED" || 
 			   ACStatus == "DRAFT MOD" || ACStatus == "CMTE APPROVED" || ACStatus == "RELEASED-NON-CMPLNT"))
 		   {
@@ -544,7 +543,6 @@
 				   isStatusValid = false;
 		   }
 	   }
-	   alert("check if status is valid----->" + isStatusValid);
 	   if (isStatusValid == true)
 	   {
 		   if (desWindow && !desWindow.closed)
