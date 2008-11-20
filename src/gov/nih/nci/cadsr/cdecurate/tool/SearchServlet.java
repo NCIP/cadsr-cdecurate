@@ -82,6 +82,7 @@ public class SearchServlet extends CurationServlet {
             DataManager.setAttribute(session, "OpenTreeToConcept", "false");
             DataManager.setAttribute(session, "strHTML", "");
             DataManager.setAttribute(session, "creSearchAC", "");
+            DataManager.setAttribute(session, "searchAC", "DataElement");
             DataManager.setAttribute(session, "ParentConcept", "");
             DataManager.setAttribute(session, "SelectedParentName", "");
             DataManager.setAttribute(session, "SelectedParentCC", "");
@@ -432,7 +433,11 @@ public class SearchServlet extends CurationServlet {
      */
     private void doSearchResultsAction() throws Exception
     {
-        HttpSession session = m_classReq.getSession();
+    	String hidaction = (String)m_classReq.getParameter("hidaction");
+        if (hidaction.equals("newUsingExisting") || hidaction.equals("newVersion")){
+        	doMenuAction();
+        }
+    	HttpSession session = m_classReq.getSession();
         String actType = (String) m_classReq.getParameter("actSelected");
         String sSearchAC = (String) session.getAttribute("searchAC"); // get the selected component
         String sAction = (String) m_classReq.getParameter("pageAction");
@@ -694,7 +699,7 @@ public class SearchServlet extends CurationServlet {
         clearSessionAttributes(m_classReq, m_classRes);
         // call the method to get attribute list for the selected AC
         getCompAttrList(searchAC, "nothing");
-        ForwardJSP(m_classReq, m_classRes, "/CDEHomePage.jsp");
+        ForwardJSP(m_classReq, m_classRes, "/SearchResultsPage.jsp");
     }
 
     /**
@@ -1063,7 +1068,10 @@ public class SearchServlet extends CurationServlet {
         String sID = "";
         String sName = "";
         // convert the string to integer and to int.
-        Integer curInd = new Integer((String) m_classReq.getParameter("hiddenSelectedRow"));
+        Integer curInd = null;
+        if(m_classReq.getParameter("hiddenSelectedRow")!=null) {
+        	curInd = new Integer((String) m_classReq.getParameter("hiddenSelectedRow"));
+        }
         if (curInd != null)
             thisInd = curInd.intValue();
         if (vIDs != null && !vIDs.equals("") && vIDs.size() > 0 && (thisInd < vIDs.size()))
@@ -1882,9 +1890,9 @@ public class SearchServlet extends CurationServlet {
     private void doMenuAction() throws Exception
     {
         HttpSession session = m_classReq.getSession();
-        this.clearSessionAttributes(m_classReq, m_classRes);
-        this.clearBuildingBlockSessionAttributes(m_classReq, m_classRes);
-        this.clearCreateSessionAttributes(m_classReq, m_classRes);
+       // this.clearSessionAttributes(m_classReq, m_classRes);
+       // this.clearBuildingBlockSessionAttributes(m_classReq, m_classRes);
+       // this.clearCreateSessionAttributes(m_classReq, m_classRes);
         String sMAction = (String) m_classReq.getParameter("hidMenuAction");
         if (sMAction == null)
             sMAction = "nothing";
@@ -1928,14 +1936,14 @@ public class SearchServlet extends CurationServlet {
         DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "");
         DataManager.setAttribute(session, "vStatMsg", new Vector());
         // set it to longname be default
-        String sSearchIn = "longName";
-        Vector vSelVector = new Vector();
+       // String sSearchIn = "longName";
+        //Vector vSelVector = new Vector();
         // call the method to get default attributes
-        vSelVector = getDefaultAttr(searchAC, sSearchIn);
-        DataManager.setAttribute(session, "selectedAttr", vSelVector);
-        this.getDefaultFilterAtt(); // default filter by attributes
-        this.getCompAttrList(searchAC, sMAction); // call the method to get attribute list for the selected AC
-        ForwardJSP(m_classReq, m_classRes, "/SearchResultsPage.jsp");
+        //vSelVector = getDefaultAttr(searchAC, sSearchIn);
+        //DataManager.setAttribute(session, "selectedAttr", vSelVector);
+        //this.getDefaultFilterAtt(); // default filter by attributes
+        //this.getCompAttrList(searchAC, sMAction); // call the method to get attribute list for the selected AC
+        //ForwardJSP(m_classReq, m_classRes, "/SearchResultsPage.jsp");
     }
 
 	
