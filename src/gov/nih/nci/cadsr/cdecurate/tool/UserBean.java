@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UserBean.java,v 1.48 2008-03-27 16:53:30 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UserBean.java,v 1.49 2008-11-20 17:21:04 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -97,6 +97,7 @@ public final class UserBean implements Serializable
   // Attributes
   private String m_Password;
   private String m_username;
+  private String m_userFullName;
   private String m_DBAppContext;
   private boolean m_superuser;
 
@@ -186,6 +187,20 @@ public final class UserBean implements Serializable
   {
     m_superuser = isSuperuser;
   }
+
+/**
+ * @return the m_userFullName
+ */
+public String getUserFullName() {
+	return m_userFullName;
+}
+
+/**
+ * @param fullName the m_userFullName to set
+ */
+public void setUserFullName(String fullName) {
+	m_userFullName = fullName;
+}
 }
 
   
