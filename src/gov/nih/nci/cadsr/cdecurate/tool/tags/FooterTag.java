@@ -8,7 +8,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 public class FooterTag extends TagSupport {
 
-	/**
+	/**This JSP tag library class generates footer
 	 * 
 	 */
 	private static final long serialVersionUID = 2566181324552741768L;

@@ -7,12 +7,20 @@ import gov.nih.nci.cadsr.cdecurate.tool.Session_Data;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.tagext.TagSupport;
 
+/**
+ * This JSP tag library class has methods for generating different html tags
+ * @author hveerla
+ *
+ */
 public class MenuTag extends TagSupport {
 	String MenuAction = "";
 	String selACType = "";
 	Vector vCheckList = new Vector();
 	String sSelectAll = "false";
 	
+	/**
+	 * This method gets the session attributes
+	 */
 	public void getSessionAttributes(){
 		HttpSession session = pageContext.getSession();
 		if (session!=null){
@@ -34,22 +42,41 @@ public class MenuTag extends TagSupport {
 				sSelectAll = "false";
 		}
 	}
+	/*
+	 * This method will generate the dt tag
+	 * @param id - name - identifier to the associated element
+	 * @param jsMethod - java script function to be called    
+	 * @param value - actual text to display on the page
+	 * @return  returns the String which contains dt tag
+	 */
 	public String generateDT(String id, String jsMethod, String value){
 		String tag ="<dt id = \"" + id + "\" onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\"  onclick=\"" + jsMethod + ";\">" + value ;
 		return tag;
 	}
+	/*
+	 * This method will generate the dt tag
+	 * @param value - actual text to display on the page
+	 * @return  returns the String which contains dt tag
+	 */
 	public String generateDT(String value){
 		String tag ="<dt onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\">" + value;;
 		return tag;
 	}
+	/*
+	 * This method will generate the dt tag. It makes the text disabled
+	 * @param value - actual text to display on the page
+	 * @return  returns the String which contains dt tag
+	 */
 	public String generateDTDisabled(String value){
 		String tag ="<dt menuEnable=\"false\" onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\">" + value;
 		return tag;
 	}
+	//This method generates the separator
 	public String separator(){
 		String tag ="</dl><div class=\"hrWrap\" align=\"center\"><hr class=\"xyz\"/></div><dl class=\"menu\">";
 		return tag;
 	}
+	//This method generates image
 	public String generateImage(){
 		String tag = "<img src=\"http://cdecurate.nci.nih.gov/cdecurate/images/CheckBox.gif\" border=\"0\">";
 		return tag;
