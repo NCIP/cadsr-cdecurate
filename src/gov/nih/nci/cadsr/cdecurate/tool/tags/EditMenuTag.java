@@ -5,6 +5,11 @@ import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
+/**
+ * This JSP tag library class is for Edit Menu
+ * @author hveerla
+ *
+ */
 public class EditMenuTag extends MenuTag {
 
 	public int doEndTag() throws JspException {

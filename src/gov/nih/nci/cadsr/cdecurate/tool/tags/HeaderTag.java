@@ -13,7 +13,9 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
-/**
+/**This JSP tag library class generates header
+ * This class has one attribute 'displayUser'. It stores boolean value
+ * If it is true, then displays the name of the user logged in
  * @author hveerla
  *
  */
@@ -22,7 +24,7 @@ public class HeaderTag extends TagSupport {
 	private static final long serialVersionUID = 9018725599101422999L;
 	boolean displayUser = false;
 	/**
-	 * @return the displayUser
+	 * @return the displayUser 
 	 */
 	public boolean isDisplayUser() {
 		return displayUser;
@@ -35,12 +37,10 @@ public class HeaderTag extends TagSupport {
 		this.displayUser = displayUser;
 	}
 
-
 	public int doEndTag() throws JspException {
 
 		HttpSession session = pageContext.getSession();
-		HttpServletRequest request = (HttpServletRequest) pageContext
-				.getRequest();
+		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		JspWriter NCIHeader = this.pageContext.getOut();
 		UserBean userBean = null;
 		if (session != null) {
