@@ -202,3 +202,27 @@ function menuObjPos(obj) {
 	rX = oX;
 	rY = oY;
 }
+ //submits the form to display 'Create New DE' window
+ function callDENew(user){
+  if (user == "null"){
+       alert("Please Login to use this feature.");
+  }else{     
+     document.newDEForm.submit();
+  }   
+ }
+ //submits the form to display 'Create New DEC' window
+ function callDECNew(user){
+  if (user == "null"){
+       alert("Please Login to use this feature.");
+  }else{  
+     document.newDECForm.submit();
+  }
+ }
+//submits the form to display 'create New VD window'
+ function callVDNew(user){
+  if (user == "null"){
+       alert("Please Login to use this feature.");
+  }else{  
+     document.newVDForm.submit();
+  }
+ }  
