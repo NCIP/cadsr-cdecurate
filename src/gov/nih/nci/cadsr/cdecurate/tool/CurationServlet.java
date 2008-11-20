@@ -10,6 +10,8 @@ import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.persist.exception.DBException;
+import gov.nih.nci.cadsr.persist.user.User_Accounts_Mgr;
 import gov.nih.nci.cadsr.sentinel.util.DSRAlert;
 import gov.nih.nci.cadsr.sentinel.util.DSRAlertImpl;
 
@@ -281,11 +283,13 @@ public class CurationServlet
         String password = req.getParameter("Password");
     	CaDsrUserCredentials uc = new CaDsrUserCredentials();
 	    UserBean userbean = new UserBean();
-    	 try
+	    User_Accounts_Mgr userAccountMgr = new User_Accounts_Mgr();
+	    try
     	 {
     	    userbean.setUsername(username);
     	    userbean.setPassword(password);
-    	    uc.validateCredentials(NCICurationServlet._userName, NCICurationServlet._password, username, password);
+     		uc.validateCredentials(NCICurationServlet._userName, NCICurationServlet._password, username, password);
+     		userbean.setUserFullName(userAccountMgr.getUserFullName(username, m_conn));
     	    userbean.setPassword("");
             userbean.setDBAppContext("/cdecurate");
           	DataManager.setAttribute(session, "Userbean", userbean);
@@ -294,6 +298,9 @@ public class CurationServlet
             GetACService getAC = new GetACService(m_classReq, m_classRes, this);
             getAC.getWriteContextList();
     	  }
+	      catch(DBException e){
+	    	 logger.error("Unable to get User FullName" + e);
+	      }
     	  catch (Exception ex)
     	  {
     		  userbean=null;
