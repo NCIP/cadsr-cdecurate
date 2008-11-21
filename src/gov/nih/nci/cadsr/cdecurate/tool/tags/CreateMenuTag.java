@@ -22,9 +22,6 @@ public class CreateMenuTag extends MenuTag {
 		   userName = (String) session.getAttribute("Username");
 		}
 		try {
-			createMenu.println("<form name=\"newDEForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newDEFromMenu\"></form>"
-		                       + "<form name=\"newDECForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newDECFromMenu\"></form>"
-		                       + "<form name=\"newVDForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newVDFromMenu\"></form>");
 			createMenu.println("<div class=\"popMenu\">"
 					            +"<b>Data Element</b>"
 					            +"<dl class=\"menu2\">"
@@ -44,6 +41,9 @@ public class CreateMenuTag extends MenuTag {
 					            +generateDT("New Using Existing")
 					            +generateDT("New Version")
 					            +"</dl></div>");
+			createMenu.println("<form name=\"newDEForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newDEFromMenu\"></form>"
+                    + "<form name=\"newDECForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newDECFromMenu\"></form>"
+                    + "<form name=\"newVDForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newVDFromMenu\"></form>");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
