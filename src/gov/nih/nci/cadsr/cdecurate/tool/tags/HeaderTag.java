@@ -55,11 +55,11 @@ public class HeaderTag extends TagSupport {
 							+ "<col width=\"1px\" />  <col />"
 							+ "<tr bgcolor=\"#A90101\"> "
 							+ "<td align=\"left\"> "
-							+ "<a href=\"http://www.cancer.gov\" target=_blank><img src=\"http://cdecurate.nci.nih.gov/cdecurate/images/brandtype.gif\"  border=\"0\"/></a> </td>"
+							+ "<a href=\"http://www.cancer.gov\" target=_blank><img src=\"" + request.getContextPath() +"/images/brandtype.gif\"  border=\"0\"/></a> </td>"
 							+ "<td align=\"right\">"
-							+ "<a href=\"http://www.cancer.gov\" target=_blank><img src=\"http://cdecurate.nci.nih.gov/cdecurate/images/tagline_nologo.gif\" border=\"0\"/></a> </td>"
+							+ "<a href=\"http://www.cancer.gov\" target=_blank><img src=\""+ request.getContextPath() +"/images/tagline_nologo.gif\" border=\"0\"/></a> </td>"
 							+ "</tr> <tr> <td> "
-							+ "<a href=\"http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr\" target=\"_blank\"><img src=\"http://cdecurate.nci.nih.gov/cdecurate/images/curation_banner2.gif\" border=\"0\" alt=\"caDSR Logo\"/></a></td> "
+							+ "<a href=\"http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr\" target=\"_blank\"><img src=\""+ request.getContextPath() +"/images/curation_banner2.gif\" border=\"0\" alt=\"caDSR Logo\"/></a></td> "
 							+ "");
 			if (displayUser) {
     			NCIHeader.println("<td align=\"right\"> ");
