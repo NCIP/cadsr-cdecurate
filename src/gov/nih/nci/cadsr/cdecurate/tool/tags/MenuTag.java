@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import gov.nih.nci.cadsr.cdecurate.tool.Session_Data;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -50,7 +51,7 @@ public class MenuTag extends TagSupport {
 	 * @return  returns the String which contains dt tag
 	 */
 	public String generateDT(String id, String jsMethod, String value){
-		String tag ="<dt id = \"" + id + "\" onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\"  onclick=\"" + jsMethod + ";\">" + value ;
+		String tag ="<dt id = \"" + id + "\" onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\"  onclick=\"javascript:" + jsMethod + ";\">" + value ;
 		return tag;
 	}
 	/*
@@ -78,7 +79,11 @@ public class MenuTag extends TagSupport {
 	}
 	//This method generates image
 	public String generateImage(){
-		String tag = "<img src=\"http://cdecurate.nci.nih.gov/cdecurate/images/CheckBox.gif\" border=\"0\">";
+		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+		String tag = "";
+		if (request != null){
+		 tag = "<img src=\""+ request.getContextPath() +"/images/CheckBox.gif\" border=\"0\">";
+		} 
 		return tag;
 		
 	}
