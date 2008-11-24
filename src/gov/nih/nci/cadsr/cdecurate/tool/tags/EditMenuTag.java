@@ -19,31 +19,31 @@ public class EditMenuTag extends MenuTag {
 			try {
 				editMenu.println("<dl class=\"menu\">");
 				if ((selACType).equals("DataElement")) {
-					editMenu.println(generateDT("editMenuEdit","javascript:BlockEdit()","Edit")
-							         + generateDT("editMenuBlockEdit","javascript:BlockEdit()","Block Edit")
-							         + generateDT("","javascript:designateRecord()","Designate")
+					editMenu.println(generateDT("editMenuEdit","performAction('edit')","Edit")
+							         + generateDT("editMenuBlockEdit","performAction('blockEdit')","Block Edit")
+							         + generateDT("","performAction('designate')","Designate")
 							         + generateDT("Data Element")
 							         + generateDT("Data Element Concept")
 							         + generateDT("Value Domain"));
 				}
 				if ((selACType).equals("DataElementConcept")) {
-					editMenu.println(generateDT("editMenuEdit","javascript:BlockEdit()","Edit")
-					                 + generateDT("editMenuBlockEdit","javascript:BlockEdit()","Block Edit")
+					editMenu.println(generateDT("editMenuEdit","performAction('edit')","Edit")
+					                 + generateDT("editMenuBlockEdit","performAction('blockEdit')","Block Edit")
 					                 + generateDTDisabled("Designate")
 					                 + generateDT("Data Element")
 					                 + generateDT("Data Element Concept")
 					                 + generateDT("Value Domain"));
 				}
 				if ((selACType).equals("ValueDomain")) {
-					editMenu.println(generateDT("editMenuEdit","javascript:BlockEdit()","Edit")
-					                 + generateDT("editMenuBlockEdit","javascript:BlockEdit()","Block Edit")
+					editMenu.println(generateDT("editMenuEdit","performAction('edit')","Edit")
+					                 + generateDT("editMenuBlockEdit","performAction('blockEdit')","Block Edit")
 					                 + generateDTDisabled("Designate")
 					                 + generateDT("Data Element")
 					                 + generateDT("Data Element Concept")
 					                 + generateDT("Value Domain"));
 				}
 				if ((selACType).equals("ValueMeaning")) {
-					editMenu.println(generateDT("editMenuEdit","javascript:BlockEdit()","Edit")
+					editMenu.println(generateDT("editMenuEdit","performAction('edit')","Edit")
 					                 + generateDTDisabled("Block Edit")
 					                 + generateDTDisabled("Designate")
 					                 + generateDT("Data Element")

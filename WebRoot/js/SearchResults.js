@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.7 2008-11-20 18:31:40 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.8 2008-11-24 19:10:48 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -24,7 +24,9 @@
   var umls = "";
   var count = 0;
   var checkCnt = 0;
-
+  var menuTextColor = "#000000";
+  var menuDisabledColor = "#777777";
+ 
   //  checks the status message everytime page opens and alerts the  message
   function displayStatus(vStatusMessage, vSubmitAction)
   {
@@ -421,7 +423,7 @@
 		   if (document.searchResultsForm.hiddenSearch != null && document.searchResultsForm.hiddenSearch.length > rowNo)
 		   {
 			   editID = document.searchResultsForm.hiddenSearch[rowNo].value;
-			   editName = document.searchResultsForm.hiddenSearch[rowNo].text;
+		       editName = document.searchResultsForm.hiddenSearch[rowNo].text;
 		   }
 		   if (document.searchResultsForm.hiddenName != null && document.searchResultsForm.hiddenName.length > rowNo)
 		   {
@@ -855,11 +857,11 @@ function checkClickJS(cb,selAC,rowsChecked)  {
                 var msg = document.getElementById("selCnt");
                 msg.innerText = checkCnt;
                 msg.textContent = checkCnt;
-                enableDisableButtonsJS(selAC, checkCnt);
+                enableDisableMenuItemsJS(selAC, checkCnt);
    
 }
   //This function enables or disables the menu items depending on the num of items checked          
-function enableDisableButtonsJS(sSelAC, checkCount){
+function enableDisableMenuItemsJS(sSelAC, checkCount){
            
            if (checkCount > 1)  {
                 
@@ -868,105 +870,155 @@ function enableDisableButtonsJS(sSelAC, checkCount){
                       var doc = document.getElementById("uploadDoc");
                       var newUE = document.getElementById("newUE");
                       var newVersion = document.getElementById("newVersion");
-                      doc.disabled=true; 
-                      newUE.disabled=true; 
-                      newVersion.disabled=true; 
+                      disable(doc);
+                      disable(newUE); 
+                      disable(newVersion); 
                    }
                    if ( (sSelAC == "Value Domain")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Meaning")||(sSelAC == "Values/Meanings")
                          ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass") ){
                       var aDe = document.getElementById("associatedDE");
                       var menuADe = document.getElementById("menuAssociatedDE");
-                      aDe.disabled=true;
-                      menuADe.disabled=true; 
+                      disable(aDe);
+                      disable(menuADe); 
                    }
                   if ( (sSelAC == "Data Element")||(sSelAC == "ObjectClass")||(sSelAC == "Property")
                          ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass")){
                       var aDec = document.getElementById("associatedDEC");
                       var menuADec = document.getElementById("menuAssociatedDEC");
-                      aDec.disabled=true;
-                      menuADec.disabled=true;
+                      disable(aDec);
+                      disable(menuADec);
                    }
                    if( (sSelAC == "Data Element") || (sSelAC == "ObjectClass")||(sSelAC == "Property")
                          ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass")){
                        var aVd = document.getElementById("associatedVD"); 
                        var menuAVd = document.getElementById("menuAssociatedVD");
-                       aVd.disabled=true;
-                       menuAVd.disabled=true;
+                       disable(aVd);
+                       disable(menuAVd);
                    }
                    if (sSelAC == "Data Element"){
                        var details = document.getElementById("details");
                        var sMenudetails = document.getElementById("searchMenuDetails");
-                       details.disabled=true;
-                       sMenudetails.disabled=true;
+                       disable(details);
+                       disable(sMenudetails);
                    }
                    if ((sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain")||(sSelAC == "Value Meaning")){
                        var edit = document.getElementById("edit");
                        var sMenuedit = document.getElementById("searchMenuEdit");
                        var eMenuedit = document.getElementById("editMenuEdit");
-                       edit.disabled=true;
-                       sMenuedit.disabled=true;
-                       eMenuedit.disabled=true;
+                       disable(edit);
+                       disable(sMenuedit);
+                       disable(eMenuedit);
                      }
                 }else{
                   document.searchResultsForm.numOfRowsSelected.value = "1";
-                if ( (sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain") ){
+                 if ( (sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain") ){
                       var doc = document.getElementById("uploadDoc");
                       var newUE = document.getElementById("newUE");
                       var newVersion = document.getElementById("newVersion");
-                      doc.disabled=false; 
-                      newUE.disabled=false; 
-                      newVersion.disabled=false; 
+                      enableUploadDoc(doc);
+                      enableNewUsingExisting(newUE);
+                      enableNewVersion(newVersion);
                    }
                   if ( (sSelAC == "Value Domain")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Meaning")||(sSelAC == "Values/Meanings")
                          ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass") ){
                       var aDe = document.getElementById("associatedDE");
                       var menuADe = document.getElementById("menuAssociatedDE");
-                      aDe.disabled=false;
-                      menuADe.disabled=false; 
-                   }
+                      enableGetAssDE(aDe);
+                      enableGetAssDE(menuADe);
+                    }
                    if ( (sSelAC == "Data Element")||(sSelAC == "ObjectClass")||(sSelAC == "Property")
                          ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass")){
                       var aDec = document.getElementById("associatedDEC");
                       var menuADec = document.getElementById("menuAssociatedDEC");
-                      aDec.disabled=false; 
-                      menuADec.disabled=false; 
+                      enableGetAssDEC(aDec);
+                      enableGetAssDEC(menuADec);
                    }
                    if( (sSelAC == "Data Element") || (sSelAC == "ObjectClass")||(sSelAC == "Property")
                          ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass")){
                        var aVd = document.getElementById("associatedVD");
                        var menuAVd = document.getElementById("menuAssociatedVD"); 
-                       aVd.disabled=false;
-                       menuAVd.disabled=false;
+                       enableGetAssVD(aVd);
+                       enableGetAssVD(menuAVd);
                    }
                    if (sSelAC == "Data Element"){
                        var details = document.getElementById("details");
                        var sMenudetails = document.getElementById("searchMenuDetails");
-                       details.disabled=false;
-                       sMenudetails.disabled=false;
+                       enableViewDetails(details);
+                       enableViewDetails(sMenudetails);
                    }
                    if ((sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain")||(sSelAC == "Value Meaning")){
                        var edit = document.getElementById("edit");
                        var sMenuedit = document.getElementById("searchMenuEdit");
                        var eMenuedit = document.getElementById("editMenuEdit");
-                       edit.disabled=false;
-                       sMenuedit.disabled=false;
-                       eMenuedit.disabled=false;
+                       enableEdit(edit);
+                       enableEdit(sMenuedit);
+                       enableEdit(eMenuedit);
                     }
                 }
-                
-                if( (checkCount == 1) || (checkCount == 0)){
+                 if( (checkCount == 1) || (checkCount == 0)){
                    if ( (sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain") ){
                        var blockEdit = document.getElementById("blockEdit");
                        var sMenublockEdit = document.getElementById("searchMenuBlockEdit");
                        var eMenublockEdit = document.getElementById("editMenuBlockEdit");
-                       edit.disabled=false;
-                       sMenublockEdit.disabled=false;
-                       eMenublockEdit.disabled=false;
-                   } 
+                       enableBlockEdit(blockEdit);
+                       enableBlockEdit(sMenublockEdit);
+                       enableBlockEdit(eMenublockEdit);
+                    } 
                 }
                 
          
 }      
+ //This function disables menu item
+ function disable(element){
+   element.style.color = menuDisabledColor;
+   element.onclick = "";
+ }
+ //This function enables the menu item 'Edit'
+ function enableEdit(element){
+   element.style.color = menuTextColor;
+   element.onclick = function () {performAction('edit')};
+  }
+ //This function enables the menu item 'Block Edit'
+ function enableBlockEdit(element){
+   element.style.color = menuTextColor;
+   element.onclick = function () {performAction('blockEdit')};
+  }
+ //This function enables the menu item 'View Details'
+ function enableViewDetails(element){
+   element.style.color = menuTextColor;
+   element.onclick = function () {GetDetails()};
+  }
+  //This function enables the menu item 'Get Associated DE'
+  function enableGetAssDE(element){
+   element.style.color = menuTextColor;
+   element.onclick = function () {getAssocDEs()};
+  }
+  //This function enables the menu item 'Get Associated DEC'
+  function enableGetAssDEC(element){
+   element.style.color = menuTextColor;
+   element.onclick = function () {getAssocDECs()};
+  }
+  //This function enables the menu item 'Get Associated VD'
+  function enableGetAssVD(element){
+   element.style.color = menuTextColor;
+   element.onclick = function () {getAssocVDs()};
+  }
+  //This function enables the menu item 'Upload Document'
+  function enableUploadDoc(element){
+   element.style.color = menuTextColor;
+   element.onclick = function () {performAction('uploadDoc')};
+  }
+  //This function enables the menu item 'New Using Existing'
+  function enableNewUsingExisting(element){
+   element.style.color = menuTextColor;
+   element.onclick = function () {createNew('newUsingExisting')};
+  }
+  //This function enables the menu item 'New Version'
+  function enableNewVersion(element){
+   element.style.color = menuTextColor;
+   element.onclick = function () {createNew('newVersion')};
+  }
+      
            
    
  
