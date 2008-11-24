@@ -887,9 +887,9 @@ function performAction(type){
 function createNew(type){
   createNewJS('<%=StringEscapeUtils.escapeJavaScript(userName)%>','<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', type);
 }
-function enableDisableButtons(){
+function enableDisableMenuItems(){
   var numRowsChecked = <%=rowsChecked%>;
-  enableDisableButtonsJS('<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>',numRowsChecked);
+  enableDisableMenuItemsJS('<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>',numRowsChecked);
 }
 
 </SCRIPT>

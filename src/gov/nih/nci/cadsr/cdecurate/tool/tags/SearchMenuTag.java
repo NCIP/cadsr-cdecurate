@@ -19,46 +19,46 @@ public class SearchMenuTag extends MenuTag {
 			getSessionAttributes();
 			searchMenu.println("<dl class=\"menu\">");
 			if ((selACType).equals("DataElement")) {
-				searchMenu.println(generateDT("searchMenuEdit","javascript:ShowEditSelection()","Edit")
-				                   + generateDT("searchMenuBlockEdit","javascript:ShowEditSelection()","Block Edit")
-				                   + generateDT("searchMenuDetails","javascript:javascript:GetDetails()","View Details")
+				searchMenu.println(generateDT("searchMenuEdit","performAction('edit')","Edit")
+				                   + generateDT("searchMenuBlockEdit","performAction('blockEdit')","Block Edit")
+				                   + generateDT("searchMenuDetails","GetDetails()","View Details")
 				                   + generateDTDisabled("Get Associated DE")
-				                   + generateDT("menuAssociatedDEC","javascript:getAssocDECs()","Get Associated DEC")
-				                   + generateDT("menuAssociatedVD","javascript:getAssocVDs()","Get Associated VD")
-				                   + generateDT("","javascript:monitorCmd()","Monitor")
-				                   + generateDT("","javascript:unmonitorCmd()","Unmonitor")
+				                   + generateDT("menuAssociatedDEC","getAssocDECs()","Get Associated DEC")
+				                   + generateDT("menuAssociatedVD","getAssocVDs()","Get Associated VD")
+				                   + generateDT("","performAction('monitor')","Monitor")
+				                   + generateDT("","performAction('unmonitor')","Unmonitor")
 				                   + separator()
-				                   + generateDT("","javascript:setAppendAction()","Append"));
+				                   + generateDT("","performAction('append')","Append"));
 			}
 			if ((selACType).equals("DataElementConcept")) {
-				searchMenu.println(generateDT("searchMenuEdit","javascript:ShowEditSelection()","Edit")
-		                           + generateDT("searchMenuBlockEdit","javascript:ShowEditSelection()","Block Edit")
+				searchMenu.println(generateDT("searchMenuEdit","performAction('edit')","Edit")
+		                           + generateDT("searchMenuBlockEdit","performAction('blockEdit')","Block Edit")
 		                           + generateDTDisabled("View Details")
-		                           + generateDT("menuAssociatedDE","javascript:getAssocDEs()","Get Associated DE")
+		                           + generateDT("menuAssociatedDE","getAssocDEs()","Get Associated DE")
 		                           + generateDTDisabled("Get Associated DEC")
 		                           + generateDTDisabled("Get Associated VD")
-		                           + generateDT("","javascript:monitorCmd()","Monitor")
-		                           + generateDT("","javascript:unmonitorCmd()","Unmonitor")
+		                           + generateDT("","performAction('monitor')","Monitor")
+		                           + generateDT("","performAction('unmonitor')","Unmonitor")
 		                           + separator()
-		                           + generateDT("","javascript:setAppendAction()","Append"));
+		                           + generateDT("","performAction('append')","Append"));
 			}
 			if ((selACType).equals("ValueDomain")) {
-				searchMenu.println(generateDT("searchMenuEdit","javascript:ShowEditSelection()","Edit")
-		                           + generateDT("searchMenuBlockEdit","javascript:ShowEditSelection()","Block Edit")
+				searchMenu.println(generateDT("searchMenuEdit","performAction('edit')","Edit")
+		                           + generateDT("searchMenuBlockEdit","performAction('blockEdit')","Block Edit")
 		                           + generateDTDisabled("View Details")
-		                           + generateDT("menuAssociatedDE","javascript:getAssocDEs()","Get Associated DE")
+		                           + generateDT("menuAssociatedDE","getAssocDEs()","Get Associated DE")
 		                           + generateDTDisabled("Get Associated DEC")
 		                           + generateDTDisabled("Get Associated VD")
-		                           + generateDT("","javascript:monitorCmd()","Monitor")
-		                           + generateDT("","javascript:unmonitorCmd()","Unmonitor")
+		                           + generateDT("","performAction('monitor')","Monitor")
+		                           + generateDT("","performAction('unmonitor')","Unmonitor")
 		                           + separator()
-		                           + generateDT("","javascript:setAppendAction()","Append"));
+		                           + generateDT("","performAction('append')","Append"));
 			}
 			if ((selACType).equals("ValueMeaning")) {
-				searchMenu.println(generateDT("searchMenuEdit","javascript:ShowEditSelection()","Edit")
+				searchMenu.println(generateDT("searchMenuEdit","performAction('edit')","Edit")
 		                           + generateDTDisabled("Block Edit")
 		                           + generateDTDisabled("View Details")
-		                           + generateDT("menuAssociatedDE","javascript:getAssocDEs()","Get Associated DE")
+		                           + generateDT("menuAssociatedDE","getAssocDEs()","Get Associated DE")
 		                           + generateDTDisabled("Get Associated DEC")
 		                           + generateDTDisabled("Get Associated VD")
 		                           + generateDTDisabled("Monitor")
@@ -70,9 +70,9 @@ public class SearchMenuTag extends MenuTag {
 				searchMenu.println(generateDTDisabled("Edit")
 		                           + generateDTDisabled("Block Edit")
 		                           + generateDTDisabled("View Details")
-		                           + generateDT("menuAssociatedDE","javascript:getAssocDEs()","Get Associated DE")
-		                           + generateDT("menuAssociatedDEC","javascript:getAssocDECs()","Get Associated DEC")
-				                   + generateDT("menuAssociatedVD","javascript:getAssocVDs()","Get Associated VD")
+		                           + generateDT("menuAssociatedDE","getAssocDEs()","Get Associated DE")
+		                           + generateDT("menuAssociatedDEC","getAssocDECs()","Get Associated DEC")
+				                   + generateDT("menuAssociatedVD","getAssocVDs()","Get Associated VD")
 		                           + generateDTDisabled("Monitor")
 		                           + generateDTDisabled("Unmonitor")
 		                           + separator()
@@ -82,9 +82,9 @@ public class SearchMenuTag extends MenuTag {
 				searchMenu.println(generateDTDisabled("Edit")
 		                           + generateDTDisabled("Block Edit")
 		                           + generateDTDisabled("View Details")
-		                           + generateDT("menuAssociatedDE","javascript:getAssocDEs()","Get Associated DE")
+		                           + generateDT("menuAssociatedDE","getAssocDEs()","Get Associated DE")
 		                           + generateDTDisabled("Get Associated DEC")
-				                   + generateDT("menuAssociatedVD","javascript:getAssocVDs()","Get Associated VD")
+				                   + generateDT("menuAssociatedVD","getAssocVDs()","Get Associated VD")
 		                           + generateDTDisabled("Monitor")
 		                           + generateDTDisabled("Unmonitor")
 		                           + separator()
@@ -94,9 +94,9 @@ public class SearchMenuTag extends MenuTag {
 				searchMenu.println(generateDTDisabled("Edit")
 		                           + generateDTDisabled("Block Edit")
 		                           + generateDTDisabled("View Details")
-		                           + generateDT("menuAssociatedDE","javascript:getAssocDEs()","Get Associated DE")
-		                           + generateDT("menuAssociatedDEC","javascript:getAssocDECs()","Get Associated DEC")
-				                   + generateDT("menuAssociatedVD","javascript:getAssocVDs()","Get Associated VD")
+		                           + generateDT("menuAssociatedDE","getAssocDEs()","Get Associated DE")
+		                           + generateDT("menuAssociatedDEC","getAssocDECs()","Get Associated DEC")
+				                   + generateDT("menuAssociatedVD","getAssocVDs()","Get Associated VD")
 		                           + generateDTDisabled("Monitor")
 		                           + generateDTDisabled("Unmonitor")
 		                           + separator()
@@ -106,9 +106,9 @@ public class SearchMenuTag extends MenuTag {
 				searchMenu.println(generateDTDisabled("Edit")
 		                           + generateDTDisabled("Block Edit")
 		                           + generateDTDisabled("View Details")
-		                           + generateDT("menuAssociatedDE","javascript:getAssocDEs()","Get Associated DE")
-		                           + generateDT("menuAssociatedDEC","javascript:getAssocDECs()","Get Associated DEC")
-				                   + generateDT("menuAssociatedVD","javascript:getAssocVDs()","Get Associated VD")
+		                           + generateDT("menuAssociatedDE","getAssocDEs()","Get Associated DE")
+		                           + generateDT("menuAssociatedDEC","getAssocDECs()","Get Associated DEC")
+				                   + generateDT("menuAssociatedVD","getAssocVDs()","Get Associated VD")
 		                           + generateDTDisabled("Monitor")
 		                           + generateDTDisabled("Unmonitor")
 		                           + separator()
@@ -119,7 +119,7 @@ public class SearchMenuTag extends MenuTag {
 		                           + generateDTDisabled("Block Edit")
 		                           + generateDTDisabled("View Details")
 		                           + generateDTDisabled("Get Associated DE")
-		                           + generateDT("menuAssociatedDEC","javascript:getAssocDECs()","Get Associated DEC")
+		                           + generateDT("menuAssociatedDEC","getAssocDECs()","Get Associated DEC")
 				                   + generateDTDisabled("Get Associated VD")
 		                           + generateDTDisabled("Monitor")
 		                           + generateDTDisabled("Unmonitor")
@@ -131,15 +131,15 @@ public class SearchMenuTag extends MenuTag {
 		                           + generateDTDisabled("Block Edit")
 		                           + generateDTDisabled("View Details")
 		                           + generateDTDisabled("Get Associated DE")
-		                           + generateDT("menuAssociatedDEC","javascript:getAssocDECs()","Get Associated DEC")
+		                           + generateDT("menuAssociatedDEC","getAssocDECs()","Get Associated DEC")
 				                   + generateDTDisabled("Get Associated VD")
 		                           + generateDTDisabled("Monitor")
 		                           + generateDTDisabled("Unmonitor")
 		                           + separator()
 		                           + generateDTDisabled("Append"));
 			}
-			searchMenu.println(generateDT("","javascript:ShowSelectedRows(true)","Show Selected Rows")
-					           + generateDT("","javascript:clearRecords()","Clear Results"));
+			searchMenu.println(generateDT("","ShowSelectedRows(true)","Show Selected Rows")
+					           + generateDT("","clearRecords()","Clear Results"));
 			searchMenu.println("</d1>");
 			
 		} catch (IOException e) {

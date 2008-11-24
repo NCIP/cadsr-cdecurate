@@ -86,9 +86,9 @@ function menuItemFocus(mitem) {
 	var miEnable = mitem.getAttribute("menuEnable");
 	if (miEnable == null || miEnable != "false") {
 		mitem.style.backgroundColor = menuFocusColor;
-		mitem.style.color = menuTextColor;
+		//mitem.style.color = menuTextColor;
 	} else {
-		mitem.disabled = true;
+		//mitem.style.color = menuDisabledColor;
 	}
 	mitem.style.cursor = "default";
 }
@@ -96,7 +96,7 @@ function menuItemNormal(mitem) {
 	mitem.style.backgroundColor = menuBackgroundColor;
 	var miEnable = mitem.getAttribute("menuEnable");
 	if (miEnable == null || miEnable != "false") {
-		mitem.style.color = menuTextColor;
+		//mitem.style.color = menuTextColor;
 	}
 }
 function menuRootOver(obj, evnt) {

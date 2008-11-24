@@ -25,19 +25,19 @@ public class CreateMenuTag extends MenuTag {
 			createMenu.println("<div class=\"popMenu\">"
 					            +"<b>Data Element</b>"
 					            +"<dl class=\"menu2\">"
-					            +generateDT("","javascript:callDENew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","New")
+					            +generateDT("","callDENew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","New")
 					            +generateDT("New Using Existing")
 					            +generateDT("New Version")
 					            +"</dl>"
 					            +"<b>Data Element Concept</b>"
 					            +"<dl class=\"menu2\">"
-					            +generateDT("","javascript:callDECNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","New")
+					            +generateDT("","callDECNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","New")
 					            +generateDT("New Using Existing")
 					            +generateDT("New Version")
 					            +"</dl>"
 					            +"<b>Value Domain</b>"
 					            +"<dl class=\"menu2\">"
-					            +generateDT("","javascript:callVDNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","New")
+					            +generateDT("","callVDNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","New")
 					            +generateDT("New Using Existing")
 					            +generateDT("New Version")
 					            +"</dl></div>");
