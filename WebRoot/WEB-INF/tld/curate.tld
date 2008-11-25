@@ -94,6 +94,11 @@
    <tagclass>gov.nih.nci.cadsr.cdecurate.tool.tags.SearchMenuTag</tagclass>
    <bodycontent>empty</bodycontent>
  </tag>
+ <tag>
+   <name>menuBar</name>
+   <tagclass>gov.nih.nci.cadsr.cdecurate.tool.tags.MenuBarTag</tagclass>
+   <bodycontent>empty</bodycontent>
+ </tag>
 
 
 </taglib>
