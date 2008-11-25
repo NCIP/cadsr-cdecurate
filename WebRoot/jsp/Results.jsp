@@ -3,7 +3,7 @@
 <%@ page import="java.util.*"%>
 <%@ page session="true"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
-
+<%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <%
 	UtilService util = new UtilService();
 	Vector vSelectedAttr = new Vector();
@@ -897,59 +897,7 @@ function enableDisableMenuItems(){
  <!-- Main Area -->
         <div class="xyz">
             <table style="border-collapse: collapse; width: 100%" border="0" cellspacing="0" cellpadding="0">
-                <col style="width: 2in"/>
-                <col />
-                <tr>
-                    <td class="menuItemBlank" align="left">&nbsp;</td>
-         <td>
-            <table class="footerBanner1" cellspacing="0" cellpadding="0">
-                            <col style="width: 1px"/>
-                            <col style="width: 1px"/>
-                            <col style="width: 1px"/>
-                            <col style="width: 1px"/>
-                            <col />
-                            <col style="width: 1px"/>
-                            <tr>
-                                <td class="menuItemNormal"
-                                    onmouseover="menuRootOver(this, event);"
-                                    onmouseout="menuRootOut(this, event);"
-                                    onclick="menuShow(this, event);"
-                                    menuID="searchMenu">
-                                        Search
-                                </td>
-                                <td class="menuItemNormal"
-                                    onmouseover="menuRootOver(this, event);"
-                                    onmouseout="menuRootOut(this, event);"
-                                    onclick="menuShow(this, event);"
-                                    menuID="createMenu">
-                                        Create
-                                </td>
-                                <td class="menuItemNormal"
-                                    onmouseover="menuRootOver(this, event);"
-                                    onmouseout="menuRootOut(this, event);"
-                                    onclick="menuShow(this, event);"
-                                    menuID="editMenu">
-                                        Edit
-                                </td>
-                                <td class="menuItemNormal"
-                                    onmouseover="menuRootOver(this, event);"
-                                    onmouseout="menuRootOut(this, event);"
-                                    onclick="menuShow(this, event);"
-                                    menuID="linksMenu">
-                                        Links
-                                </td>
-                                <td class="menuItemNormal">&nbsp;</td>
-                                <td class="menuItemNormal"
-                                    onmouseover="menuRootOver(this, event);"
-                                    onmouseout="menuRootOut(this, event);"
-                                    onclick="window.open('https://cdecurate-stage2.nci.nih.gov/help/', '_blank');">
-                                        Help
-                                </td>
-                            </tr>
-                 </table>
-         </td>      
-                </tr>
-               
+               <curate:menuBar/>
  <tr>
 <td valign="top" align="left" style="background-color: #dadaef; border-right: 2px solid #ffffff">
 <form name="searchParmsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=searchACs">
