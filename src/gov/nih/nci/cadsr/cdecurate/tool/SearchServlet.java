@@ -113,61 +113,7 @@ public class SearchServlet extends CurationServlet {
             	userbean.setSuperuser(getAC.getSuperUserFlag(userbean.getUsername()));
 
                 // get initial list from cadsr
-                Vector vList = null;
-                String aURL = null;
-                vList = new Vector();
-                vList = getAC.getToolOptionData("EVS", "NEWTERM.URL", "");
-                aURL = null;
-                if (vList != null && vList.size() > 0)
-                {
-                    TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
-                    if (tob != null)
-                        aURL = tob.getVALUE();
-                }
-                ToolURL.setEVSNewTermURL(session, aURL);
-                vList = new Vector();
-                vList = getAC.getToolOptionData("CDEBrowser", "URL", "");
-                aURL = null;
-                if (vList != null && vList.size() > 0)
-                {
-                    TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
-                    if (tob != null)
-                        aURL = tob.getVALUE();
-                }
-                ToolURL.setBrowserUrl(session, aURL);
-                vList = new Vector();
-                vList = getAC.getToolOptionData("SENTINEL", "URL", "");
-                aURL = null;
-                if (vList != null && vList.size() > 0)
-                {
-                    TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
-                    if (tob != null)
-                        aURL = tob.getVALUE();
-                }
-                ToolURL.setSentinelUrl(session, aURL);
-                vList = new Vector();
-                vList = getAC.getToolOptionData("UMLBrowser", "URL", "");
-                aURL = null;
-                if (vList != null && vList.size() > 0)
-                {
-                    TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
-                    if (tob != null)
-                        aURL = tob.getVALUE();
-                }
-                ToolURL.setUmlBrowserUrl(session, aURL);
-                
-                vList = new Vector();
-                vList = getAC.getToolOptionData("CURATION", "HELP.HOME", "");
-                aURL = null;
-                if (vList != null && vList.size() > 0)
-                {
-                    TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
-                    if (tob != null)
-                        aURL = tob.getVALUE();
-                }
-                ToolURL.setCurationToolHelpURL(session, aURL);
-                session.setAttribute("curationToolHelpURL", aURL);
-                
+            	getInitialListFromCadsr(getAC);
                 getAC.getACList(m_classReq, m_classRes, "", true, "ALL");
                 doOpenSearchPage();
                 getCompAttrList("DataElement", "searchForCreate");
@@ -1945,6 +1891,182 @@ public class SearchServlet extends CurationServlet {
         //this.getCompAttrList(searchAC, sMAction); // call the method to get attribute list for the selected AC
         //ForwardJSP(m_classReq, m_classRes, "/SearchResultsPage.jsp");
     }
-
-	
+    
+    public void getInitialListFromCadsr(GetACService getAC){
+    	HttpSession session = m_classReq.getSession();
+    	// get initial list from cadsr
+        Vector vList = null;
+        String aURL = null;
+        String dName = null;
+        vList = new Vector();
+        vList = getAC.getToolOptionData("EVS", "NEWTERM.URL", "");
+        aURL = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+                aURL = tob.getVALUE();
+        }
+        ToolURL.setEVSNewTermURL(session, aURL);
+        vList = new Vector();
+        vList = getAC.getToolOptionData("CDEBrowser", "URL", "");
+        aURL = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+                aURL = tob.getVALUE();
+        }
+        ToolURL.setBrowserUrl(session, aURL);
+        vList = new Vector();
+        vList = getAC.getToolOptionData("CDEBrowser", "DISPLAY.NAME", "");
+        dName = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+            	dName = tob.getVALUE();
+        }
+        if (dName != null){
+           ToolURL.setBrowserDispalyName(session, dName);
+        }else{
+           ToolURL.setBrowserDispalyName(session, "CDE Browser");
+        }
+        
+        vList = new Vector();
+        vList = getAC.getToolOptionData("SENTINEL", "URL", "");
+        aURL = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+                aURL = tob.getVALUE();
+        }
+        ToolURL.setSentinelUrl(session, aURL);
+        vList = new Vector();
+        vList = getAC.getToolOptionData("SENTINEL", "DISPLAY.NAME", "");
+        dName = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+            	dName = tob.getVALUE();
+        }
+        if (dName != null){
+          ToolURL.setSentinelDispalyName(session, dName);
+        }else{
+          ToolURL.setSentinelDispalyName(session, "caDSR Sentinel Tool");
+        }
+        vList = new Vector();
+        vList = getAC.getToolOptionData("UMLBrowser", "URL", "");
+        aURL = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+                aURL = tob.getVALUE();
+        }
+        ToolURL.setUmlBrowserUrl(session, aURL);
+        vList = new Vector();
+        vList = getAC.getToolOptionData("UMLBrowser", "DISPLAY.NAME", "");
+        dName = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+            	dName = tob.getVALUE();
+        }
+        if (dName != null){
+          ToolURL.setUmlBrowserDispalyName(session, dName);
+        }else{
+        	ToolURL.setUmlBrowserDispalyName(session, "UML Model Browser");
+        }
+       
+        vList = new Vector();
+        vList = getAC.getToolOptionData("FREESTYLE", "URL", "");
+        aURL = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+                aURL = tob.getVALUE();
+        }
+        ToolURL.setFreeStyleUrl(session, aURL);
+        vList = new Vector();
+        vList = getAC.getToolOptionData("FREESTYLE", "DISPLAY.NAME", "");
+        dName = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+            	dName = tob.getVALUE();
+        }
+        if (dName!= null){
+          ToolURL.setFreeStyleDispalyName(session, dName);
+        }else{
+        	ToolURL.setFreeStyleDispalyName(session, "caDSR Freestyle");
+        }
+        vList = new Vector();
+        vList = getAC.getToolOptionData("AdminTool", "URL", "");
+        aURL = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+                aURL = tob.getVALUE();
+        }
+        ToolURL.setAdminToolUrl(session, aURL);
+        vList = new Vector();
+        vList = getAC.getToolOptionData("AdminTool", "DISPLAY.NAME", "");
+        dName = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+            	dName = tob.getVALUE();
+        }
+        if (dName != null){
+           ToolURL.setAdminToolDispalyName(session, dName);
+        }else{
+           ToolURL.setAdminToolDispalyName(session, "Admin Tool");
+        }
+        
+        vList = new Vector();
+        vList = getAC.getToolOptionData("CADSRAPI", "URL", "");
+        aURL = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+                aURL = tob.getVALUE();
+        }
+        ToolURL.setCadsrAPIUrl(session, aURL);
+        vList = new Vector();
+        vList = getAC.getToolOptionData("CADSRAPI", "DISPLAY.NAME", "");
+        dName = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+            	dName = tob.getVALUE();
+        }
+        if(dName != null){
+           ToolURL.setCadsrAPIDispalyName(session, dName);
+        }else{
+           ToolURL.setCadsrAPIDispalyName(session, "caDSR API Home");
+        }
+        
+        vList = new Vector();
+        vList = getAC.getToolOptionData("CURATION", "HELP.HOME", "");
+        aURL = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+                aURL = tob.getVALUE();
+        }
+        ToolURL.setCurationToolHelpURL(session, aURL);
+        session.setAttribute("curationToolHelpURL", aURL);
+            
+    }
 }
