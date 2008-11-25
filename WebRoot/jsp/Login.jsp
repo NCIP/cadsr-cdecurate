@@ -1,5 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<%@page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
+<% String helpUrl = ToolURL.getCurationToolHelpURL(pageContext);%>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -28,7 +30,7 @@
                                 <td class="menuItemNormal"
                                     onmouseover="menuRootOver(this, event);"
                                     onmouseout="menuRootOut(this, event);"
-                                    onclick="window.open('https://cdecurate-stage2.nci.nih.gov/help/', '_blank');">
+                                    onclick="window.open('<%=helpUrl%>', '_blank');">
                                         Help
                                 </td>
                             </tr>
