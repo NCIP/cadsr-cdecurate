@@ -12,7 +12,6 @@
 	Vector vDocs = new Vector();
 	Vector vACAttr = new Vector();
 	String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
-	//System.out.println("inside search param " + sMenuAction);
 	String sInitiatedFrom = (String) session.getAttribute("initiatedFrom");
 	String sLastKeyword, sSearchIn, sContextUse = "", sContext = "";
 	String sCreatedFrom = "", sCreatedTo = "", sModifiedFrom = "", sModifiedTo = "";
@@ -56,7 +55,6 @@
 		}
 	} else //gets the session attributes for all other searches
 	{
-		//  System.out.println("inside if ");
 		sSearchAC = (String) session.getAttribute("searchAC"); //done now in CDEHomePage
 		System.out.println("search parameters else jsp sSearchAC: "	+ sSearchAC);
 		sLastKeyword = (String) session.getAttribute("serKeyword");
@@ -101,8 +99,7 @@
 	//gets the searchin attribute, defaults to longName if none
 	if (sSearchIn == null)
 		sSearchIn = "longName";
-	// System.out.println("after get session");
-
+	
 	//expands the searchAC for displaying in the dropdown list.
 	String sLongAC = "";
 	if (sSearchAC.equals("DataElement"))
@@ -130,7 +127,6 @@
 		sProtoKeyword = "";
 	sProtoKeyword = util.parsedStringDoubleQuoteJSP(sProtoKeyword);
 	sProtoKeyword = sProtoKeyword.trim();
-	//System.out.println("check vcontext");
 	//get the search result records
 	String sBack = (String) session.getAttribute("backFromGetAssociated");
 	if (sBack == null)
@@ -165,7 +161,6 @@
 		sModifiedTo = "";
 	if (sModifier == null)
 		sModifier = "allUsers";
-	// System.out.println("get vcontext");
 	Vector vContextAC = (Vector) session.getAttribute("vContext");
 	Vector vStatusDE = (Vector) session.getAttribute("vStatusDE");
 	Vector vStatusDEC = (Vector) session.getAttribute("vStatusDEC");
@@ -263,9 +258,7 @@
 	//empty the alternate name and ref doc results from the session
 	session.setAttribute("AllAltNameList", new Vector());
 	session.setAttribute("AllRefDocList", new Vector());
-	//added 11/01/08
-	String disableMenu = "style=\"color:#777777\"";
-
+	
 	String sKeyword, nRecs;
 	Vector vSelAttr = new Vector();
 	Vector vCheckList = new Vector();
@@ -340,7 +333,6 @@
 	if (sSelAC.equals("ObjectClass") || sSelAC.equals("Property"))
 		sMAction = "nothing";
 
-	//System.out.println("XXX sr jsp sSelAC: " + sSelAC + " sMAction: " + sMAction);
 	Vector vNewPV = (Vector) request.getAttribute("newPVData");
 	if (vNewPV == null)
 		vNewPV = new Vector();
@@ -363,7 +355,6 @@
 	if (sSecondBackFromGetAssociated == null)
 		sSecondBackFromGetAssociated = "";
 	session.setAttribute("SecondBackFromGetAssociated", "");
-	// System.out.println("sr sBackFromGetAssociated: " + sBackFromGetAssociated); 
 	// Use this in setup below
 	Stack sSearchACStack = (Stack) session
 			.getAttribute("sSearchACStack");
@@ -373,7 +364,6 @@
 
 	String pushBoolean = "false";
 	String sSelectAll = "false";
-	// System.out.println(sSelectAll + " checksize " + vCheckList.size());
 	if (!sSelAC.equals("ValueMeaning")) {
 		if (vCheckList != null && vCheckList.size() > 0)
 			sSelectAll = "true";
@@ -500,10 +490,10 @@ function doSearchDE(){
 //    Pressing the enter key
 //  This piece of code ensures that the WaitMessage is
 //  displayed when the enter key is pressed.
-function keypress_handler(){
-    var keycode = window.event.keyCode;
+function keypress_handler(evt){
+    var keycode = (window.event)?event.keyCode:evt.which;
     if(keycode != 13){
-        return true;  // only interest on return kay
+        return true;  // only interest on return key
     }
     if(searchAll()){
     	//check if it is valid for search
@@ -582,7 +572,6 @@ function LoadKeyHandler(){
       //    if(vSearchIDStack.size()==0) 
       //    {
                 vSearchIDStack.push(vIDs);
-//System.out.println("sr jsp after push vSearchIDStack.size: " + vSearchIDStack.size());
        //   }
                 session.setAttribute("vSearchIDStack", vSearchIDStack);
                 session.setAttribute("SearchID", vIDs);
@@ -707,9 +696,8 @@ function LoadKeyHandler(){
             }
         } 
         %>
-    //comment hveerla  }
-
-  function checkClick(cb){
+  
+   function checkClick(cb){
    var numRowsChecked = <%=rowsChecked%>;
    if((numRowsChecked > 0) && (document.searchResultsForm.count.value == "1")){
        checkClickJS(cb,'<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>',numRowsChecked);
@@ -748,15 +736,6 @@ function LoadKeyHandler(){
    function ShowSelection()
    {
        ShowUseSelection("<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
-   }
-
-   //no use!!!!!
-   function reSetAttribute()
-   {
-<%     Vector vDECResult = new Vector();
-       session.setAttribute("results", vDECResult);
-       session.setAttribute("creRecsFound", "No ");
-%>
    }
 
    //check if the user has permission to delete in the context called from designate record
