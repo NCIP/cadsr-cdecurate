@@ -4027,7 +4027,8 @@ public class CurationServlet
             if (reqMsg != null && !reqMsg.equals(""))
                 errMsg = reqMsg;
             DataManager.setAttribute(session, "ErrorMessage", errMsg);
-            String fullPage = "/";
+            //HemaTest
+            String fullPage = "/jsp/ErrorPage.jsp";
             //ServletContext sc = this.getServletContext();
             RequestDispatcher rd = m_servletContext.getRequestDispatcher(fullPage);
             rd.forward(req, res);
