@@ -4023,12 +4023,13 @@ public class CurationServlet
         {
             HttpSession session;
             session = req.getSession(true);
+            String fullPage = "/";
             String reqMsg = (String) req.getAttribute("ReqErrorMessage");
             if (reqMsg != null && !reqMsg.equals(""))
                 errMsg = reqMsg;
             DataManager.setAttribute(session, "ErrorMessage", errMsg);
-            //HemaTest
-            String fullPage = "/jsp/ErrorPage.jsp";
+            if (!(errMsg).equals("Logged out."))
+               fullPage = "/jsp/ErrorPage.jsp";
             //ServletContext sc = this.getServletContext();
             RequestDispatcher rd = m_servletContext.getRequestDispatcher(fullPage);
             rd.forward(req, res);
