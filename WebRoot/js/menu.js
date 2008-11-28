@@ -70,13 +70,14 @@ function menuShow(obj, evnt) {
 	var left = 0;
 	if (evnt.offsetX == undefined || evnt.offsetY == undefined) {
 		menuObjPos(srcElementHold);
-		top = rY;
+	    top = rY;
 		left = rX;
 		menuObjPos(menu.parentNode);
 		top = top - rY + offsetY;
 		left = left - rX + offsetX;
 	} else {
-		top = document.body.parentElement.scrollTop + evnt.clientY - evnt.offsetY + offsetY;
+		var scrollTop = document.documentElement.scrollTop > document.body.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop; 
+		top = scrollTop + evnt.clientY - evnt.offsetY + offsetY;
 		left = document.body.parentElement.scrollLeft + evnt.clientX - evnt.offsetX + offsetX;
 	}
 	menu.style.top = top + "px";
@@ -183,7 +184,8 @@ function menuObjPos(obj) {
 	var tagBody = document.getElementsByTagName("body")[0];
 	var oX = obj.offsetLeft;
 	var oY = obj.offsetTop;
-    // finds the absolute position of the object
+	
+	// finds the absolute position of the object
 	while (obj.parentNode) {
 		if (obj.parentNode.tagName != "TR") { 
             // Table Cells are relative to the Table not the Row. Adding the
