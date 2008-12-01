@@ -1,11 +1,17 @@
 package gov.nih.nci.cadsr.cdecurate.tool.tags;
 
+
+import gov.nih.nci.cadsr.cdecurate.util.CurationToolProperties;
+
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
+
+import org.jboss.Version;
+
 
 public class FooterTag extends TagSupport {
 
@@ -14,14 +20,15 @@ public class FooterTag extends TagSupport {
 	 */
 	private static final long serialVersionUID = 2566181324552741768L;
 
-	public int doEndTag() throws JspException {
+	public int doEndTag() throws JspException{
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		JspWriter NCIFooter = this.pageContext.getOut();
+		String jbossVersion = Version.getInstance().getMajor() + "." + Version.getInstance().getMinor() + "." + Version.getInstance().getRevision();
 		try {
 			NCIFooter.println("<div class=\"xyz\">"
 							+ "<table class=\"footerBanner1\" cellspacing=\"0\" cellpadding=\"0\">"
 							+ "<col /><col /><col />"
-							+ "<tr><td class=\"footerItem\" align=\"left\"><span CLASS=\"footerItemVer\">4.0.0.0</span></td>"
+							+ "<tr><td class=\"footerItem\" align=\"left\"><span CLASS=\"footerItemVer\">"+CurationToolProperties.getFactory().getProperty("curationtool.version")+"&nbsp;("+jbossVersion+"/"+System.getProperty("java.version")+")</span></td>"
 							+ "<td class=\"footerItem\" align=\"center\"><span CLASS=\"footerItemSep\">|</span><span CLASS=\"footerItemNormal\"  onmouseover=\"this.className = 'footerItemFocus';\" "
 							+ " onmouseout=\"this.className = 'footerItemNormal';\" "
 							+ "onclick=\"window.open('http://ncicb.nci.nih.gov/NCICB/about/contact_us', '_blank');\">"
@@ -53,13 +60,13 @@ public class FooterTag extends TagSupport {
 							+ "  HELP"
 							+ "</span><span CLASS=\"footerItemSep\">|</span>"
 							+ "</td>"
-							+ "<td class=\"footerItem\" align=\"right\"><span CLASS=\"footerItemVer\">4.0.0.0</span></td>"
+							+ "<td class=\"footerItem\" align=\"right\"><span CLASS=\"footerItemVer\">"+CurationToolProperties.getFactory().getProperty("curationtool.version")+"&nbsp;("+jbossVersion+"/"+System.getProperty("java.version")+")</span></td>"
 							+ "</tr>"
 							+ "</table>"
 							+"<div class=\"footerBanner2\">"
 			                +"<a href=\"http://www.cancer.gov/\""
-			                 +"target=\"_blank\"><img src=\""+ request.getContextPath() +"/images/footer_nci.gif\"  width=\"63\" height=\"31\" alt=\"National Cancer Institute\"  border=\"0\"/></a>"
-			                 +"<a href=\"http://www.dhhs.gov/\"  target=\"_blank\"><img src=\""+ request.getContextPath() +"/images/footer_hhs.gif\"  width=\"39\" height=\"31\" alt=\"Department of Health and Human Services\"  border=\"0\"/></a>"
+			                +"target=\"_blank\"><img src=\""+ request.getContextPath() +"/images/footer_nci.gif\"  width=\"63\" height=\"31\" alt=\"National Cancer Institute\"  border=\"0\"/></a>"
+			                +"<a href=\"http://www.dhhs.gov/\"  target=\"_blank\"><img src=\""+ request.getContextPath() +"/images/footer_hhs.gif\"  width=\"39\" height=\"31\" alt=\"Department of Health and Human Services\"  border=\"0\"/></a>"
 			                +"<a href=\"http://www.nih.gov/\" target=\"_blank\"><img src=\""+ request.getContextPath() +"/images/footer_nih.gif\"   width=\"46\" height=\"31\" alt=\"National Institutes of Health\"  border=\"0\"/></a>"
 			                +"<a href=\"http://www.firstgov.gov/\"  target=\"_blank\"><img  src=\""+ request.getContextPath() +"/images/footer_firstgov.gif\" width=\"91\" height=\"31\" alt=\"FirstGov.gov\" border=\"0\"/></a>"
 			                +"</div></div>");
