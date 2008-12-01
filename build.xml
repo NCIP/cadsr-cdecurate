@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.40 2008-07-24 19:31:07 chickerura Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.41 2008-12-01 19:21:16 chickerura Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -102,6 +102,10 @@
 	<path id="libpath">
 		<fileset dir="${lib.dir}" includes="**/*.jar" />
 		<fileset dir="${wlib.dir}" includes="**/*.jar" />
+		 <fileset dir="${JBOSS.HOME.DIR}/lib">
+	            <include name="jboss-system.jar" />
+        </fileset>
+
 	</path>
 
 	<target name="clean" depends="-prop-check" description="Deletes all project build artifacts and temporary files.">
