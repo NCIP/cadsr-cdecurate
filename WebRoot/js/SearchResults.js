@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.8 2008-11-24 19:10:48 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.9 2008-12-01 19:34:37 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -842,7 +842,28 @@ function createNewAC(selAC, type){
         document.searchResultsForm.submit();
        }  
    }
-   
+  // stored the selected row values for permissible values on SearchForCreate action
+  function StoreRow(addRow, rowNo){
+	   selRow = rowNo;
+	   rowNo = rowNo.substring(2, rowNo.length);
+     var dCount = 0;
+     if(document.searchResultsForm.hiddenSelectedRow != null)
+        dCount = document.searchResultsForm.hiddenSelectedRow.length;
+     if (addRow == "true")
+		   searchResultsForm.hiddenSelectedRow.options[dCount] = new Option(selRow,rowNo); //store the row number in the hidden vector
+	   //remove the row if not selected anymore
+	   else
+	   {
+		   for (k=0; k<dCount; k++)
+		   {
+			   if (document.searchResultsForm.hiddenSelectedRow[k].value == rowNo)
+			   {
+				   searchResultsForm.hiddenSelectedRow.options[k] = null;
+				   break;
+			   }
+		   }
+	   }
+   } 
   
  //This function calculates the number of checkboxes checked
 function checkClickJS(cb,selAC,rowsChecked)  {
@@ -857,6 +878,16 @@ function checkClickJS(cb,selAC,rowsChecked)  {
                 var msg = document.getElementById("selCnt");
                 msg.innerText = checkCnt;
                 msg.textContent = checkCnt;
+                //if called directly from the checkbox click takes the name value, otherwise it is a string value
+	            if (cb.name == null)
+		            var rowNo = cb;
+	            else
+		            var rowNo = cb.name;
+                if (cb.checked == true){
+					StoreRow("true", rowNo);
+			     }else{
+			        StoreRow("false", rowNo);
+			     }   
                 enableDisableMenuItemsJS(selAC, checkCnt);
    
 }
@@ -901,15 +932,7 @@ function enableDisableMenuItemsJS(sSelAC, checkCount){
                        disable(details);
                        disable(sMenudetails);
                    }
-                   if ((sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain")||(sSelAC == "Value Meaning")){
-                       var edit = document.getElementById("edit");
-                       var sMenuedit = document.getElementById("searchMenuEdit");
-                       var eMenuedit = document.getElementById("editMenuEdit");
-                       disable(edit);
-                       disable(sMenuedit);
-                       disable(eMenuedit);
-                     }
-                }else{
+                 }else{
                   document.searchResultsForm.numOfRowsSelected.value = "1";
                  if ( (sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain") ){
                       var doc = document.getElementById("uploadDoc");
@@ -946,15 +969,7 @@ function enableDisableMenuItemsJS(sSelAC, checkCount){
                        enableViewDetails(details);
                        enableViewDetails(sMenudetails);
                    }
-                   if ((sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain")||(sSelAC == "Value Meaning")){
-                       var edit = document.getElementById("edit");
-                       var sMenuedit = document.getElementById("searchMenuEdit");
-                       var eMenuedit = document.getElementById("editMenuEdit");
-                       enableEdit(edit);
-                       enableEdit(sMenuedit);
-                       enableEdit(eMenuedit);
-                    }
-                }
+                 }
                  if( (checkCount == 1) || (checkCount == 0)){
                    if ( (sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain") ){
                        var blockEdit = document.getElementById("blockEdit");
@@ -968,16 +983,11 @@ function enableDisableMenuItemsJS(sSelAC, checkCount){
                 
          
 }      
- //This function disables menu item
+ //This function disables the menu item
  function disable(element){
    element.style.color = menuDisabledColor;
    element.onclick = "";
  }
- //This function enables the menu item 'Edit'
- function enableEdit(element){
-   element.style.color = menuTextColor;
-   element.onclick = function () {performAction('edit')};
-  }
  //This function enables the menu item 'Block Edit'
  function enableBlockEdit(element){
    element.style.color = menuTextColor;
@@ -1018,6 +1028,10 @@ function enableDisableMenuItemsJS(sSelAC, checkCount){
    element.style.color = menuTextColor;
    element.onclick = function () {createNew('newVersion')};
   }
+   
+		  
+			
+     
       
            
    
