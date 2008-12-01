@@ -878,7 +878,7 @@ function enableDisableMenuItems(){
             <table style="border-collapse: collapse; width: 100%" border="0" cellspacing="0" cellpadding="0">
                <curate:menuBar/>
  <tr>
-<td valign="top" align="left" style="background-color: #dadaef; border-right: 2px solid #ffffff">
+<td valign="top" align="left" style="background-color: #c9c9c9; border-right: 2px solid #ffffff">
 <form name="searchParmsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=searchACs">
 			
 			
