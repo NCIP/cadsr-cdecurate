@@ -35,6 +35,7 @@ public class ObjMenuTag extends MenuTag {
 			if ((selACType).equals("DataElement")) {
 					objMenu.println(displayEdit()
 									  + displayBlockEdit()
+									  + displayView()
 									  + displayDesignate()
 									  + displayViewDetiails()
 									  + displayGetAssociatedDEC()
@@ -49,6 +50,7 @@ public class ObjMenuTag extends MenuTag {
 				if ((selACType).equals("DataElementConcept")) {
 					objMenu.println(displayEdit()
 									  + displayBlockEdit()
+									  + displayView()
 									  + displayGetAssociatedDE()
 									  + displayUploadDoc()
 									  + displayMonitor()
@@ -60,6 +62,7 @@ public class ObjMenuTag extends MenuTag {
 				if ((selACType).equals("ValueDomain")) {
 					objMenu.println(displayEdit()
 									  + displayBlockEdit()
+									  + displayView()
 									  + displayGetAssociatedDE()
 									  + displayUploadDoc()
 									  + displayMonitor()
@@ -84,6 +87,7 @@ public class ObjMenuTag extends MenuTag {
 				}          
 				if ((selACType).equals("ValueMeaning")) {
 					objMenu.println(generateTR("edit","","performAction('edit')","","","Edit")
+							          + displayView()
 							          + displayGetAssociatedDE()
 							          + displayGetAssociatedVD());
 				}
@@ -129,6 +133,10 @@ public class ObjMenuTag extends MenuTag {
 	}
 	public String displayBlockEdit(){
 		String tag = generateTR("blockEdit","new","","block_edit","performAction('blockEdit')","Block Edit");
+		return tag;	
+	}
+	public String displayView(){
+		String tag = generateTR("view","new","","new","","View");
 		return tag;	
 	}
 	public String displayDesignate(){
