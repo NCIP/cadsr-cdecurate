@@ -29,6 +29,8 @@ function menuHide() {
 }
 function menuShow(obj, evnt) {
 	var menuID = obj.getAttribute("menuID");
+	var ckId = obj.getAttribute("ckId");
+	document.searchResultsForm.selectedCkId.value = ckId;
 	if (menuID == null) {
 		return;
 	}
@@ -39,6 +41,7 @@ function menuShow(obj, evnt) {
 			return;
 		}
 		srcElementHold = evnt.currentTarget;
+		
 	} else {
 		if (menuSrcElement == evnt.srcElement) {
 			menuHide();
@@ -87,6 +90,16 @@ function menuItemFocus(mitem) {
 	var miEnable = mitem.getAttribute("menuEnable");
 	if (miEnable == null || miEnable != "false") {
 		mitem.style.backgroundColor = menuFocusColor;
+		//mitem.style.color = menuTextColor;
+	} else {
+		//mitem.style.color = menuDisabledColor;
+	}
+	mitem.style.cursor = "default";
+}
+function menuItemFocusRed(mitem) {
+	var miEnable = mitem.getAttribute("menuEnable");
+	if (miEnable == null || miEnable != "false") {
+		mitem.style.backgroundColor = menuDisabledColor;
 		//mitem.style.color = menuTextColor;
 	} else {
 		//mitem.style.color = menuDisabledColor;
