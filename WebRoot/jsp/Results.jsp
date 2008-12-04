@@ -863,6 +863,10 @@ function LoadKeyHandler(){
 function performAction(type){
    performActionJS('<%=StringEscapeUtils.escapeJavaScript(userName)%>', type);
 }
+function performUncheckedCkBoxAction(type){
+   document.searchResultsForm.unCheckedCkId.value = document.searchResultsForm.selectedCkId.value;
+   performActionJS('<%=StringEscapeUtils.escapeJavaScript(userName)%>', type);
+}
 function createNew(type){
   createNewJS('<%=StringEscapeUtils.escapeJavaScript(userName)%>','<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', type);
 }
@@ -2092,7 +2096,10 @@ function enableDisableMenuItems(){
 		   <input type="hidden" name="count" value="1">
 		   <input type="hidden" name="hidaction" value="nothing">
            <input type="hidden" name="hidMenuAction" value="nothing">
-			<table style="width: 100%; border-collapse: collapse">
+           <input type="hidden" name="selectedCkId" value="">
+           <input type="hidden" name="unCheckedCkId" value="">
+           
+           <table style="width: 100%; border-collapse: collapse">
 								<tr>
 					<td>
 						<font size="4">
@@ -2618,7 +2625,7 @@ function enableDisableMenuItems(){
 						<input type="checkbox" onClick="javascript:checkClick(this);" name="<%=ckName%>" <%if((vCheckList != null && vCheckList.contains(ckName))){%> checked <%}%> onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 					</td>
 					<td class="rsCell">
-					 <img onclick="menuShow(this, event);" menuID="objMenu" src="images/actionicon.gif" border="0"/>
+					 <img onclick="menuShow(this, event);" menuID="objMenu" ckId="<%=ckName%>" src="images/actionicon.gif" border="0"/>
 					 </td>
 					<%     if (sSelAC.equals("Questions") && !sMAction.equals("searchForCreate"))
        {

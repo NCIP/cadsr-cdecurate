@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.9 2008-12-01 19:34:37 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.10 2008-12-04 19:46:30 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -888,7 +888,7 @@ function checkClickJS(cb,selAC,rowsChecked)  {
 			     }else{
 			        StoreRow("false", rowNo);
 			     }   
-                enableDisableMenuItemsJS(selAC, checkCnt);
+               // enableDisableMenuItemsJS(selAC, checkCnt);
    
 }
   //This function enables or disables the menu items depending on the num of items checked          
