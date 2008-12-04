@@ -429,6 +429,10 @@ public class CurationServlet
                     ub = checkUserBean(m_classReq, m_classRes);
                     if (ub != null)
                     {
+                    	 if (reqType.equals("newCCFromMenu")) // fromForm
+                         {
+                             doCreateCCActions(m_classReq, m_classRes);
+                         }
                         if (reqType.equals("newPV")) // fromForm
                         {
                             doCreatePVActions(m_classReq, m_classRes);
@@ -940,7 +944,16 @@ public class CurationServlet
         }
        return aURL;
     }
-
+    
+    /**
+     * @param req
+     * @param res
+     * @throws Exception
+     */
+    private void doCreateCCActions(HttpServletRequest req, HttpServletResponse res) throws Exception
+    {
+    	 ForwardJSP(req, res, "/CreateConceptClass.jsp");
+    }
     /**
      * The doCreatePVActions method handles the submission of a CreatePV form Called from DON'T KNOW Calls
      * 'doValidatePV' if the action is Validate or submit.
