@@ -119,7 +119,7 @@ public class ObjMenuTag extends MenuTag {
 		String tag ="<tr>"
 			        +"<td class=\"rsCell\" onmouseover=\"menuItemFocusRed(this);\" onmouseout=\"menuItemNormal(this);\" onclick=\"javascript:" + jsMethodSingle + ";\"><img src=\""+ request.getContextPath() +"/images/"+imageSingle+".gif\" border=\"0\"></td>"
 			        +"<td class=\"rsCell\" onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\">"+ value +"</td>" 
-			        +"<td class=\"rsCell\" onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\" onclick=\"javascript:" + jsMethodMultiple + ";\"><img src=\""+ request.getContextPath() +"/images/"+imageMultiple+".gif\" border=\"0\"></td>" 
+			        +"<td id=\""+id+"\"class=\"rsCell\" onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\" onclick=\"javascript:" + jsMethodMultiple + ";\"><img src=\""+ request.getContextPath() +"/images/"+imageMultiple+".gif\" border=\"0\"></td>" 
 			        +"</tr>"; 
 		return tag;
 	}
