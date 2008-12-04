@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.11 2008-12-04 20:51:38 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.12 2008-12-04 21:34:41 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -888,7 +888,7 @@ function checkClickJS(cb,selAC,rowsChecked)  {
 			     }else{
 			        StoreRow("false", rowNo);
 			     }   
-                enableDisableMenuItemsJS(selAC, checkCnt);
+                //enableDisableMenuItemsJS(selAC, checkCnt);
    
 }
   //This function enables or disables the menu items depending on the num of items checked          
@@ -932,6 +932,10 @@ function enableDisableMenuItemsJS(sSelAC, checkCount){
                        disable(details);
                        disable(sMenudetails);
                    }
+                    if ((sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain")||(sSelAC == "Value Meaning")){
+                       var view = document.getElementById("view");
+                       disable(view);
+                   }
                  }else{
                   document.searchResultsForm.numOfRowsSelected.value = "1";
                  if ( (sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain") ){
@@ -969,6 +973,10 @@ function enableDisableMenuItemsJS(sSelAC, checkCount){
                        enableViewDetails(details);
                        enableViewDetails(sMenudetails);
                    }
+                   if ((sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain")||(sSelAC == "Value Meaning")){
+                       var view = document.getElementById("view");
+                       enableView(view);
+                   }
                  }
                  if( (checkCount == 1) || (checkCount == 0)){
                    if ( (sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain") ){
@@ -992,6 +1000,11 @@ function enableDisableMenuItemsJS(sSelAC, checkCount){
  function enableBlockEdit(element){
    element.style.color = menuTextColor;
    element.onclick = function () {performAction('blockEdit')};
+  }
+  //This function enables the menu item 'View'
+ function enableView(element){
+   element.style.color = menuTextColor;
+   element.onclick = function () {};
   }
  //This function enables the menu item 'View Details'
  function enableViewDetails(element){
