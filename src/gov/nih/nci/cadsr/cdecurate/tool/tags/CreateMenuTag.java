@@ -40,10 +40,15 @@ public class CreateMenuTag extends MenuTag {
 					            +generateDT("","callVDNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","New")
 					            +generateDT("New Using Existing")
 					            +generateDT("New Version")
+					            +"</dl>" +
+					            "<b>Concept Class</b>"
+					            +"<dl class=\"menu2\">"
+					            +generateDT("","callCCNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","New")
 					            +"</dl></div>");
 			createMenu.println("<form name=\"newDEForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newDEFromMenu\"></form>"
                     + "<form name=\"newDECForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newDECFromMenu\"></form>"
-                    + "<form name=\"newVDForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newVDFromMenu\"></form>");
+                    + "<form name=\"newVDForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newVDFromMenu\"></form>"
+                    + "<form name=\"newCCForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newCCFromMenu\"></form>");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
