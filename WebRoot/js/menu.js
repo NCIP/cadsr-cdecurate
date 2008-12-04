@@ -228,3 +228,12 @@ function menuObjPos(obj) {
      document.newVDForm.submit();
   }
  }  
+ 
+ //submits the form to display 'create New Concept Class window'
+ function callCCNew(user){
+  if (user == "null"){
+       alert("Please Login to use this feature.");
+  }else{  
+     document.newCCForm.submit();
+  }
+ } 
