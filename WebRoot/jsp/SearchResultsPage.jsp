@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsPage.jsp,v 1.5 2008-12-04 19:48:33 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsPage.jsp,v 1.6 2008-12-04 20:51:49 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -20,7 +20,7 @@
         </script>
 </head>
 <curate:sessionAttributes/>
-	<body onload="loaded('menuDefs');" onclick="menuHide();" onkeyup="if (event.keyCode == 27) menuHide();">
+	<body onload="loaded('menuDefs'); enableDisableMenuItems();" onclick="menuHide();" onkeyup="if (event.keyCode == 27) menuHide();">
 		<curate:header displayUser = "true"/>
 		<jsp:include  page = "menuDefs.jsp" />
 		<jsp:include  page = "Results.jsp" />
