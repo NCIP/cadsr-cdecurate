@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.12 2008-12-04 21:34:41 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.13 2008-12-05 22:17:07 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -584,6 +584,7 @@
   // submit the page to get the associated DEs.
   function getAssocDEs()
   {
+	   document.searchResultsForm.unCheckedRowId.value = document.searchResultsForm.selectedRowId.value;
 	   var SearchAC = document.searchParmsForm.listSearchFor.value;   //get the search for from dropdown list
 	   if (SearchAC != "DataElement")
 	   { 
@@ -604,6 +605,7 @@
   // submit the page to get the associated DECs.
   function getAssocDECs()
   {
+	   document.searchResultsForm.unCheckedRowId.value = document.searchResultsForm.selectedRowId.value;
 	   var SearchAC = document.searchParmsForm.listSearchFor.value;   //get the search for from dropdown list
 	   if (SearchAC == "ConceptualDomain" || SearchAC == "DataElement" || SearchAC == "ObjectClass" 
 	   		|| SearchAC == "Property" || SearchAC == "ClassSchemeItems" || SearchAC == "ConceptClass")
@@ -618,6 +620,7 @@
   // submit the page to get the associated VDs.
   function getAssocVDs()
   {
+	   document.searchResultsForm.unCheckedRowId.value = document.searchResultsForm.selectedRowId.value;
 	   var SearchAC = document.searchParmsForm.listSearchFor.value;   //get the search for from dropdown list
 	   if (SearchAC == "ConceptualDomain" || SearchAC == "PermissibleValue" 
 	   		|| SearchAC == "DataElement" || SearchAC == "ClassSchemeItems" || SearchAC == "ConceptClass" || SearchAC == "ValueMeaning" ) 
@@ -639,14 +642,14 @@
   //using the id of the checked row and with the host name open the browser window.
   function GetDetailsJS(serverName)
   {
+	   editID = document.searchResultsForm.hiddenSearch[document.searchResultsForm.selectedRowId.value].value;
 	   if (serverName != null && serverName != "")
 	   {
-		   getRowAttributes();   //get the values of each row.
-		   
+		  	   
 		   if (detailWindow && !detailWindow.closed)
 			   detailWindow.close();
 		   
-		   //open browser in dev server if localhost or protocol, use the server from the host name
+		   //open browser in dev server if localhost or protocol, use the server from the hgeost name
 //		   serverName = serverName.toLowerCase();
        var cdeServer = serverName;   //defaults to curation tool server
 /*       if (serverName == "localhost")
@@ -883,7 +886,7 @@ function checkClickJS(cb,selAC,rowsChecked)  {
 		            var rowNo = cb;
 	            else
 		            var rowNo = cb.name;
-                if (cb.checked == true){
+		         if (cb.checked == true){
 					StoreRow("true", rowNo);
 			     }else{
 			        StoreRow("false", rowNo);

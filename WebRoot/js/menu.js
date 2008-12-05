@@ -29,8 +29,8 @@ function menuHide() {
 }
 function menuShow(obj, evnt) {
 	var menuID = obj.getAttribute("menuID");
-	var ckId = obj.getAttribute("ckId");
-	document.searchResultsForm.selectedCkId.value = ckId;
+	var rowId = obj.getAttribute("rowId");
+	document.searchResultsForm.selectedRowId.value = rowId;
 	if (menuID == null) {
 		return;
 	}

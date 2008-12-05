@@ -1015,8 +1015,8 @@ public class SearchServlet extends CurationServlet {
         String sName = "";
         // convert the string to integer and to int.
         Integer curInd = null;
-        if(m_classReq.getParameter("hiddenSelectedRow")!=null) {
-        	curInd = new Integer((String) m_classReq.getParameter("hiddenSelectedRow"));
+        if(m_classReq.getParameter("unCheckedRowId")!=null){
+        	curInd = new Integer((String) m_classReq.getParameter("unCheckedRowId"));
         }
         if (curInd != null)
             thisInd = curInd.intValue();
