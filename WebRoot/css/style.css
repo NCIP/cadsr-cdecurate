@@ -27,7 +27,9 @@ td.rsCell {
 	border: 1px solid #e0e0e0;
 	padding: 4px 4px 4px 4px
 }
-
+td.cell{
+	border: 1px solid #806D7E;
+}
 th.rsCell {
 	border: 1px solid #e0e0e0;
 	padding: 4px 4px 4px 4px
