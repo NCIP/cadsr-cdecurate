@@ -1284,7 +1284,7 @@ function enableDisableMenuItems(){
                  <tr>
                    <td>
                        <div style="padding-left: 20px">    
-                        <select name="listMultiContextFilter" size="3" style="width: 172"
+                        <select name="listMultiContextFilter" size="5" style="width: 172"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="AllContext"
@@ -1530,7 +1530,7 @@ function enableDisableMenuItems(){
                  </tr>    
                  <tr>
 					<td><div style="padding-left: 20px">
-						<select name="listStatusFilter" size="3" style="width: 172"
+						<select name="listStatusFilter" size="5" style="width: 172"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<!--store the status list as per the CONCEPT SEARCH  -->
@@ -2008,7 +2008,7 @@ function enableDisableMenuItems(){
                <tr>
                 <td>
                    <div style="padding-left: 20px">
-                      <select name="listAttrFilter" size="4" style="width: 175"
+                      <select name="listAttrFilter" size="5" style="width: 175"
 								multiple valign="bottom"
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
 								<%
