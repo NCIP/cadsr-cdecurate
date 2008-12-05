@@ -155,43 +155,43 @@ public class ObjMenuTag extends MenuTag {
 		return tag;	
 	}
 	public String displayDesignate(){
-		String tag = generateTR("","designate","","designate","performAction('designate')","Designate");
+		String tag = generateTR("","designate","performUncheckedCkBoxAction('designate')","designate","performAction('designate')","Designate");
 		return tag;	
 	}
 	public String displayViewDetiails(){
-		String tag = generateTR("details","new","","","GetDetails()","View Details");
+		String tag = generateTR("details","new","GetDetails()","","","View Details");
 		return tag;	
 	}
 	public String displayGetAssociatedDE(){
-		String tag = generateTR("associatedDE","getAssociated","","","getAssocDEs()","Get Associated DE");
+		String tag = generateTR("associatedDE","getAssociated","getAssocDEs()","","","Get Associated DE");
 		return tag;	
 	}
 	public String displayGetAssociatedDEC(){
-		String tag = generateTR("associatedDEC","getAssociated","","","getAssocDECs()","Get Associated DEC");
+		String tag = generateTR("associatedDEC","getAssociated","getAssocDECs()","","","Get Associated DEC");
 		return tag;	
 	}
 	public String displayGetAssociatedVD(){
-		String tag = generateTR("associatedVD","getAssociated","","","getAssociated","Get Associated VD");
+		String tag = generateTR("associatedVD","getAssociated","getAssocVDs()","","","Get Associated VD");
 		return tag;	
 	}
 	public String displayUploadDoc(){
-		String tag = generateTR("uploadDoc","uploadDoc","","","performAction('uploadDoc')","Upload Document(s)");
+		String tag = generateTR("uploadDoc","uploadDoc","performUncheckedCkBoxAction('uploadDoc')","","","Upload Document(s)");
 		return tag;	
 	}
 	public String displayMonitor(){
-		String tag = generateTR("","monitor","","monitor","performAction('monitor')","Monitor");
+		String tag = generateTR("","monitor","performUncheckedCkBoxAction('monitor')","monitor","performAction('monitor')","Monitor");
 		return tag;	
 	}
 	public String displayUnMonitor(){
-		String tag = generateTR("","unmonitor","","unmonitor","performAction('unmonitor')","Unmonitor");
+		String tag = generateTR("","unmonitor","performUncheckedCkBoxAction('unmonitor')","unmonitor","performAction('unmonitor')","Unmonitor");
 		return tag;	
 	}
 	public String displayNewUsingExisting(){
-		String tag = generateTR("newUE","new","","","createNew('newUsingExisting')","New Using Existing");
+		String tag = generateTR("newUE","new","createNew('newUsingExisting')","","","New Using Existing");
 		return tag;	
 	}
 	public String displayNewVersion(){
-		String tag = generateTR("newVersion","new","","","createNew('newVersion')","New Version");
+		String tag = generateTR("newVersion","new","createNew('newVersion')","","","New Version");
 		return tag;	
 	}
 	public String displayAppend(){

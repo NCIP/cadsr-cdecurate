@@ -815,9 +815,8 @@ function LoadKeyHandler(){
   }
   
   //get detail button and calls the function in the js passing server name from the request.
-  function GetDetails()
-  {
-      GetDetailsJS("<%=browserURL%>");
+  function GetDetails(){
+     GetDetailsJS("<%=browserURL%>");
   }
   //sorts by heading.  called from column heading Hyperlink click event
   function SetSortType(sortBy)
@@ -864,10 +863,11 @@ function performAction(type){
    performActionJS('<%=StringEscapeUtils.escapeJavaScript(userName)%>', type);
 }
 function performUncheckedCkBoxAction(type){
-   document.searchResultsForm.unCheckedCkId.value = document.searchResultsForm.selectedCkId.value;
+   document.searchResultsForm.unCheckedRowId.value = document.searchResultsForm.selectedRowId.value;
    performActionJS('<%=StringEscapeUtils.escapeJavaScript(userName)%>', type);
 }
 function createNew(type){
+  document.searchResultsForm.unCheckedRowId.value = document.searchResultsForm.selectedRowId.value;
   createNewJS('<%=StringEscapeUtils.escapeJavaScript(userName)%>','<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', type);
 }
 function enableDisableMenuItems(){
@@ -2096,8 +2096,8 @@ function enableDisableMenuItems(){
 		   <input type="hidden" name="count" value="1">
 		   <input type="hidden" name="hidaction" value="nothing">
            <input type="hidden" name="hidMenuAction" value="nothing">
-           <input type="hidden" name="selectedCkId" value="">
-           <input type="hidden" name="unCheckedCkId" value="">
+           <input type="hidden" name="selectedRowId" value="">
+           <input type="hidden" name="unCheckedRowId" value="">
            
            <table style="width: 100%; border-collapse: collapse">
 								<tr>
@@ -2625,7 +2625,7 @@ function enableDisableMenuItems(){
 						<input type="checkbox" onClick="javascript:checkClick(this);" name="<%=ckName%>" <%if((vCheckList != null && vCheckList.contains(ckName))){%> checked <%}%> onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 					</td>
 					<td class="rsCell">
-					 <img onclick="menuShow(this, event);" menuID="objMenu" ckId="<%=ckName%>" src="images/actionicon.gif" border="0"/>
+					 <img onclick="menuShow(this, event);" menuID="objMenu" rowId="<%=j%>" src="images/actionicon.gif" border="0"/>
 					 </td>
 					<%     if (sSelAC.equals("Questions") && !sMAction.equals("searchForCreate"))
        {
