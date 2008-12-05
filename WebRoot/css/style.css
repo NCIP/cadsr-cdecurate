@@ -29,6 +29,7 @@ td.rsCell {
 }
 td.cell{
 	border: 1px solid #806D7E;
+	padding: 4px 4px 4px 4px;
 }
 th.rsCell {
 	border: 1px solid #e0e0e0;
