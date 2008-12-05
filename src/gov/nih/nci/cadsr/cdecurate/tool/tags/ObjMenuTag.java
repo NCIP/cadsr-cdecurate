@@ -28,9 +28,9 @@ public class ObjMenuTag extends MenuTag {
 		JspWriter objMenu = this.pageContext.getOut();
 		if (selACType != null) {
 			try {
-				objMenu.println("<table bgcolor=\"#d8d8df\">");
+				objMenu.println("<table style = \"border-collapse: collapse; bgcolor: #d8d8df\">");
 				objMenu.println("<tr><td colspan=\"3\"><p style=\"margin: 0px 0px 5px 0px; color: red\"><span id=\"selCnt\">" + rowsChecked + "</span> Record(s) Selected</p></td></tr>");
-				objMenu.println("<tr style = \"background-color:#4876FF\"><td class=\"cell\"><input type=\"checkbox\" disabled></td><td class=\"cell\"><b>Action</b></td><td class=\"cell\"><input type=\"checkbox\" checked disabled></td></tr>");
+				objMenu.println("<tr style = \"background-color:#4876FF\"><td class=\"cell\"><input type=\"checkbox\" disabled></td><td class=\"cell\"><b><font color = \"#FFFFFF\">Action</b></td><td class=\"cell\"><input type=\"checkbox\" checked disabled></td></tr>");
                 
 			if ((selACType).equals("DataElement")) {
 					objMenu.println(displayEdit()
