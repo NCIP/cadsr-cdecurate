@@ -28,13 +28,12 @@ public class ObjMenuTag extends MenuTag {
 		JspWriter objMenu = this.pageContext.getOut();
 		if (selACType != null) {
 			try {
-				objMenu.println("<table bgcolor=\"#d8d8df\" rules=\"all\">");
+				objMenu.println("<table bgcolor=\"#d8d8df\">");
 				objMenu.println("<tr><td colspan=\"3\"><p style=\"margin: 0px 0px 5px 0px; color: red\"><span id=\"selCnt\">" + rowsChecked + "</span> Record(s) Selected</p></td></tr>");
-				objMenu.println("<tr><td class=\"rsCell\"><input type=\"checkbox\" disabled></td><td class=\"rsCell\"><b>Action</b></td><td class=\"rsCell\"><input type=\"checkbox\" checked disabled></td></tr>");
+				objMenu.println("<tr style = \"background-color:#4876FF\"><td class=\"cell\"><input type=\"checkbox\" disabled></td><td class=\"cell\"><b>Action</b></td><td class=\"cell\"><input type=\"checkbox\" checked disabled></td></tr>");
                 
 			if ((selACType).equals("DataElement")) {
 					objMenu.println(displayEdit()
-									  + displayBlockEdit()
 									  + displayView()
 									  + displayDesignate()
 									  + displayViewDetiails()
@@ -49,7 +48,6 @@ public class ObjMenuTag extends MenuTag {
 				}
 				if ((selACType).equals("DataElementConcept")) {
 					objMenu.println(displayEdit()
-									  + displayBlockEdit()
 									  + displayView()
 									  + displayGetAssociatedDE()
 									  + displayUploadDoc()
@@ -61,7 +59,6 @@ public class ObjMenuTag extends MenuTag {
 				}
 				if ((selACType).equals("ValueDomain")) {
 					objMenu.println(displayEdit()
-									  + displayBlockEdit()
 									  + displayView()
 									  + displayGetAssociatedDE()
 									  + displayUploadDoc()
@@ -103,12 +100,12 @@ public class ObjMenuTag extends MenuTag {
 					objMenu.println(displayGetAssociatedDEC());
 				}
 				
-				objMenu.println(generateTR("","new","ShowSelectedRows(true)","new","ShowSelectedRows(true)","Show Selected Rows"));
+				objMenu.println(generateTR("","","","new","ShowSelectedRows(true)","Show Selected Rows"));
 						         
 				if (sSelectAll.equals("true")){
-					objMenu.println(generateTR("","new","SelectAllCheckBox()","new","SelectAllCheckBox()","Clear All"));
+					objMenu.println(generateTR("","","","new","SelectAllCheckBox()","Clear All"));
                  }else{
-                	 objMenu.println(generateTR("","new","SelectAllCheckBox()","new","SelectAllCheckBox()","Select All"));  
+                	 objMenu.println(generateTR("","","","new","SelectAllCheckBox()","Select All"));  
                  }
 				objMenu.println("</table></div>");
 
@@ -120,23 +117,41 @@ public class ObjMenuTag extends MenuTag {
 	}
 	public String generateTR(String id, String imageSingle, String jsMethodSingle, String imageMultiple, String jsMethodMultiple, String value){
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+		String image_single = null;
+		String image_multiple = null;
+		String tdTag1 = null;
+		String tdTag2 = null;
+		if (imageSingle != null && !(imageSingle == "" ))
+		  image_single = "<img src=\""+ request.getContextPath() +"/images/"+imageSingle+".gif\" border=\"0\">";
+		else
+			image_single = "---";
+		if (imageMultiple != null && !(imageMultiple == "" ))
+			image_multiple = "<img src=\""+ request.getContextPath() +"/images/"+imageMultiple+".gif\" border=\"0\">";
+		else
+			image_multiple = "---";
+		if (image_single == "---"){
+			tdTag1 = "<td class=\"cell\" align = \"center\">"+image_single+"</td>";
+		}else{
+			tdTag1 = "<td class=\"cell\" align = \"center\" onmouseover=\"menuItemFocusRed(this);\" onmouseout=\"menuItemNormal(this);\" onclick=\"javascript:" + jsMethodSingle + ";\">"+image_single+"</td>";
+		}
+        if (image_multiple == "---"){
+        	tdTag2 = "<td class=\"cell\" align = \"center\">"+image_multiple+"</td>" ;
+		}else{
+			tdTag2 = "<td class=\"cell\" align = \"center\" onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\" onclick=\"javascript:" + jsMethodMultiple + ";\">"+image_multiple+"</td>";
+		}
 		String tag ="<tr>"
-			        +"<td class=\"rsCell\" onmouseover=\"menuItemFocusRed(this);\" onmouseout=\"menuItemNormal(this);\" onclick=\"javascript:" + jsMethodSingle + ";\"><img src=\""+ request.getContextPath() +"/images/"+imageSingle+".gif\" border=\"0\"></td>"
-			        +"<td class=\"rsCell\" onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\">"+ value +"</td>" 
-			        +"<td id=\""+id+"\"class=\"rsCell\" onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\" onclick=\"javascript:" + jsMethodMultiple + ";\"><img src=\""+ request.getContextPath() +"/images/"+imageMultiple+".gif\" border=\"0\"></td>" 
+			        + tdTag1
+			        +"<td class=\"cell\" align = \"left\">"+ value +"</td>" 
+			        + tdTag2
 			        +"</tr>"; 
 		return tag;
 	}
 	public String displayEdit(){
-		String tag = generateTR("edit","edit","performUncheckedCkBoxAction('edit')","edit","performAction('edit')","Edit");
-		return tag;	
-	}
-	public String displayBlockEdit(){
-		String tag = generateTR("blockEdit","new","","block_edit","performAction('blockEdit')","Block Edit");
+		String tag = generateTR("edit","edit","performUncheckedCkBoxAction('edit')","block_edit","performAction('blockEdit')","Edit");
 		return tag;	
 	}
 	public String displayView(){
-		String tag = generateTR("view","new","","new","","View");
+		String tag = generateTR("view","new","","","","View");
 		return tag;	
 	}
 	public String displayDesignate(){
@@ -144,23 +159,23 @@ public class ObjMenuTag extends MenuTag {
 		return tag;	
 	}
 	public String displayViewDetiails(){
-		String tag = generateTR("details","new","","new","GetDetails()","View Details");
+		String tag = generateTR("details","new","","","GetDetails()","View Details");
 		return tag;	
 	}
 	public String displayGetAssociatedDE(){
-		String tag = generateTR("associatedDE","getAssociated","","getAssociated","getAssocDEs()","Get Associated DE");
+		String tag = generateTR("associatedDE","getAssociated","","","getAssocDEs()","Get Associated DE");
 		return tag;	
 	}
 	public String displayGetAssociatedDEC(){
-		String tag = generateTR("associatedDEC","getAssociated","","getAssociated","getAssocDECs()","Get Associated DEC");
+		String tag = generateTR("associatedDEC","getAssociated","","","getAssocDECs()","Get Associated DEC");
 		return tag;	
 	}
 	public String displayGetAssociatedVD(){
-		String tag = generateTR("associatedVD","getAssociated","","getAssociated","getAssociated","Get Associated VD");
+		String tag = generateTR("associatedVD","getAssociated","","","getAssociated","Get Associated VD");
 		return tag;	
 	}
 	public String displayUploadDoc(){
-		String tag = generateTR("uploadDoc","uploadDoc","","uploadDoc","performAction('uploadDoc')","Upload Document(s)");
+		String tag = generateTR("uploadDoc","uploadDoc","","","performAction('uploadDoc')","Upload Document(s)");
 		return tag;	
 	}
 	public String displayMonitor(){
@@ -172,15 +187,15 @@ public class ObjMenuTag extends MenuTag {
 		return tag;	
 	}
 	public String displayNewUsingExisting(){
-		String tag = generateTR("newUE","new","","new","createNew('newUsingExisting')","New Using Existing");
+		String tag = generateTR("newUE","new","","","createNew('newUsingExisting')","New Using Existing");
 		return tag;	
 	}
 	public String displayNewVersion(){
-		String tag = generateTR("newVersion","new","","new","createNew('newVersion')","New Version");
+		String tag = generateTR("newVersion","new","","","createNew('newVersion')","New Version");
 		return tag;	
 	}
 	public String displayAppend(){
-		String tag = generateTR("","new","","new","performAction('append')","Append");
+		String tag = generateTR("","","","new","performAction('append')","Append");
 		return tag;	
 	}
 }
