@@ -130,12 +130,12 @@ public class ObjMenuTag extends MenuTag {
 		else
 			image_multiple = "---";
 		if (image_single == "---"){
-			tdTag1 = "<td class=\"cell\" align = \"center\">"+image_single+"</td>";
+			tdTag1 = "<td class=\"cell\" align = \"center\" style = \"cursor:default\">"+image_single+"</td>";
 		}else{
 			tdTag1 = "<td class=\"cell\" align = \"center\" onmouseover=\"menuItemFocusRed(this);\" onmouseout=\"menuItemNormal(this);\" onclick=\"javascript:" + jsMethodSingle + ";\">"+image_single+"</td>";
 		}
         if (image_multiple == "---"){
-        	tdTag2 = "<td class=\"cell\" align = \"center\">"+image_multiple+"</td>" ;
+        	tdTag2 = "<td class=\"cell\" align = \"center\" style = \"cursor:default\">"+image_multiple+"</td>" ;
 		}else{
 			tdTag2 = "<td class=\"cell\" align = \"center\" onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\" onclick=\"javascript:" + jsMethodMultiple + ";\">"+image_multiple+"</td>";
 		}
