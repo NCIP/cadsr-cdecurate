@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.69 2008-11-14 16:57:00 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.70 2008-12-08 22:40:56 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -9801,26 +9801,27 @@ public class GetACSearch implements Serializable
             String sSearchAC = (String) session.getAttribute("searchAC");
             Vector vSRows = (Vector) session.getAttribute("vSelRows");
             Vector vCheckList = new Vector();
-            if (vSRows.size() > 0)
+            int selectedRowID = 0;
+            String unCheckedRowId = (String) m_classReq.getParameter("unCheckedRowId");
+            if (unCheckedRowId != null && !(unCheckedRowId == "")){
+                selectedRowID = new Integer(unCheckedRowId);
+           }
+            if (selectedRowID>=0)
             {
                 String sContext = "";
                 String sStatus = "";
                 String strInValid = "";
-                // loop through the searched AC result to get the matched checked rows
-                for (int i = 0; i < (vSRows.size()); i++)
-                {
-                    String ckName = ("CK" + i);
-                    String rSel = (String) req.getParameter(ckName);
-                    if (rSel != null)
-                    {
+                
+                    String ckName = ("CK" + selectedRowID);
+                    
                         // reset the bean with selected row for the selected component
                         DataManager.setAttribute(session, "ckName", ckName);
-                        vCheckList.addElement(ckName);
+                       // vCheckList.addElement(ckName);
                         if (sSearchAC.equals("DataElement"))
                         {
                             DE_Bean DEBean = new DE_Bean();
                             // DEBean = (DE_Bean)vSRows.elementAt(i);
-                            DEBean = DEBean.cloneDE_Bean((DE_Bean) vSRows.elementAt(i), "Complete");
+                            DEBean = DEBean.cloneDE_Bean((DE_Bean) vSRows.elementAt(selectedRowID), "Complete");
                             Vector vRefDoc = doRefDocSearch(DEBean.getDE_DE_IDSEQ(), "ALL TYPES", "open");
                             req.setAttribute("RefDocList", vRefDoc);
                             DataManager.setAttribute(session, "m_DE", DEBean);
@@ -9828,7 +9829,7 @@ public class GetACSearch implements Serializable
                         else if (sSearchAC.equals("DataElementConcept"))
                         {
                             DEC_Bean DECBean = new DEC_Bean();
-                            DECBean = DECBean.cloneDEC_Bean((DEC_Bean) vSRows.elementAt(i));
+                            DECBean = DECBean.cloneDEC_Bean((DEC_Bean) vSRows.elementAt(selectedRowID));
                             String sContextID = "";
                             if (DECBean != null)
                                 sContextID = DECBean.getDEC_CONTE_IDSEQ();
@@ -9840,8 +9841,8 @@ public class GetACSearch implements Serializable
                         {
                             VD_Bean VDBean = new VD_Bean();
                             VD_Bean VDBean2 = new VD_Bean();
-                            VDBean2 = (VD_Bean) vSRows.elementAt(i);
-                            VDBean = VDBean.cloneVD_Bean((VD_Bean) vSRows.elementAt(i));
+                            VDBean2 = (VD_Bean) vSRows.elementAt(selectedRowID);
+                            VDBean = VDBean.cloneVD_Bean((VD_Bean) vSRows.elementAt(selectedRowID));
                             if (VDBean != null)
                                 sContext = VDBean.getVD_CONTEXT_NAME();
                             if (VDBean != null)
@@ -9857,11 +9858,9 @@ public class GetACSearch implements Serializable
                         {
                             // No action type....
                         }
-                    }
-                }
+                    
                 // capture the duration
-                if (!strInValid.equals(""))
-                {
+                
                     vCheckList = new Vector();
                     for (int m = 0; m < (vSRows.size()); m++)
                     {
@@ -9870,7 +9869,7 @@ public class GetACSearch implements Serializable
                         if (rSel2 != null)
                             vCheckList.addElement(ckName2);
                     }
-                }
+                
                 DataManager.setAttribute(session, "CheckList", vCheckList);
             }
             DataManager.setAttribute(session, "vBEResult", vBEResult);
