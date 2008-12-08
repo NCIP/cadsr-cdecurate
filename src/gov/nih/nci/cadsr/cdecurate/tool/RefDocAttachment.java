@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.51 2008-05-04 19:32:21 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.52 2008-12-08 22:46:03 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -144,17 +144,8 @@ public void doOpen (){
     String RefDocFileCache = vList.get(0).getVALUE();
     vList = getAC.getToolOptionData("CURATION","REFDOC_FILEURL","");
     String RefDocFileUrl = vList.get(0).getVALUE();
-	
-	//	 Be sure something was selected by the user.
-    Vector vSRows = (Vector)session.getAttribute("vSelRows");
-    if (vSRows == null || vSRows.size() == 0)
-    {
-        msg = "No items were selected from the Search Results.";
-    }
-   
-    //   Process what the user selected
-    else{
-  	GetACSearch getACSearch = new GetACSearch(req, res, m_servlet);
+	Vector vSRows = (Vector)session.getAttribute("vSelRows");
+   	GetACSearch getACSearch = new GetACSearch(req, res, m_servlet);
   	String sACSearch = (String)session.getAttribute("searchAC");
 		
 		getACSearch.getSelRowToUploadRefDoc(req, res, "");
@@ -304,7 +295,7 @@ public void doOpen (){
 		{
 			msg = "The selected items are not supported for the document upload feature.";
 		}
-  }
+  
 }
 
 
