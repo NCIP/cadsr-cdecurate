@@ -59,7 +59,25 @@ public class SearchServlet extends CurationServlet {
 			case actionFromMenu:
 				doMenuAction();
 				break;			
-		}
+			case getRefDocument:
+                doRefDocSearchActions();
+                break;
+			case getAltNames:
+                doAltNameSearchActions();
+                break;
+			case getPermValue:
+               doPermValueSearchActions();
+               break;
+			case getProtoCRF:
+               doProtoCRFSearchActions();
+               break;
+			case getConClassForAC:
+               doConClassSearchActions();
+               break;
+			case showCDDetail:
+               doConDomainSearchActions();
+               break;
+ 		}
 	}
 	
     /**
@@ -2069,4 +2087,147 @@ public class SearchServlet extends CurationServlet {
         session.setAttribute("curationToolHelpURL", aURL);
             
     }
+    
+    /**
+     * to get reference documents for the selected ac and doc type called when the reference docuemnts window opened
+     * first time and calls 'getAC.getReferenceDocuments' forwards page back to reference documents
+     *
+     * @param req
+     *            The HttpServletRequest from the client
+     * @param res
+     *            The HttpServletResponse back to the client
+     *
+     * @throws Exception
+     */
+    private void doRefDocSearchActions() throws Exception
+    {
+        GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, this);
+        String acID = m_classReq.getParameter("acID");
+        String itemType = m_classReq.getParameter("itemType");
+        @SuppressWarnings("unused") Vector vRef = getAC.doRefDocSearch(acID, itemType, "open");
+        ForwardJSP(m_classReq, m_classRes, "/ReferenceDocumentWindow.jsp");
+    }
+
+    /**
+     * to get alternate names for the selected ac and doc type called when the alternate names window opened first time
+     * and calls 'getAC.getAlternateNames' forwards page back to alternate name window jsp
+     *
+     * @param req
+     *            The HttpServletRequest from the client
+     * @param res
+     *            The HttpServletResponse back to the client
+     *
+     * @throws Exception
+     */
+    private void doAltNameSearchActions() throws Exception
+    {
+        GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, this);
+        String acID = m_classReq.getParameter("acID");
+        String CD_ID = m_classReq.getParameter("CD_ID");
+        if (CD_ID == null)
+            CD_ID = "";
+        String itemType = m_classReq.getParameter("itemType");
+        if (itemType != null && itemType.equals("ALL"))
+            itemType = "";
+        @SuppressWarnings("unused") Vector vAlt = getAC.doAltNameSearch(acID, itemType, CD_ID, "other", "open");
+        ForwardJSP(m_classReq, m_classRes, "/AlternateNameWindow.jsp");
+    }
+
+    /**
+     * to get Permissible Values for the selected ac called when the permissible value window opened first time and
+     * calls 'getAC.doPVACSearch' forwards page back to Permissible Value window jsp
+     *
+     * @param req
+     *            The HttpServletRequest from the client
+     * @param res
+     *            The HttpServletResponse back to the client
+     *
+     * @throws Exception
+     */
+    private void doPermValueSearchActions() throws Exception
+    {
+      //  GetACSearch getAC = new GetACSearch(req, res, this);
+        String acID = m_classReq.getParameter("acID");
+        String acName = m_classReq.getParameter("itemType"); // ac name for pv
+        if (acName != null && acName.equals("ALL"))
+            acName = "-";
+        String sConteIdseq = (String) m_classReq.getParameter("sConteIdseq");
+        if (sConteIdseq == null)
+            sConteIdseq = "";
+    	ValueDomainServlet vdServ = (ValueDomainServlet) this.getACServlet("ValueDomain");
+        PVServlet pvser = new PVServlet(m_classReq, m_classRes, vdServ);
+        pvser.searchVersionPV(null, 0, acID, acName);
+        ForwardJSP(m_classReq, m_classRes, "/PermissibleValueWindow.jsp");
+    }
+
+    /**
+     * display all the concepts for the selected ac from search results page
+     *
+     * @param req
+     *            HttpServletRequest
+     * @param res
+     *            HttpServletResponse
+     * @throws Exception
+     */
+    private void doConClassSearchActions() throws Exception
+    {
+        GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, this);
+        String acID = m_classReq.getParameter("acID"); // dec id
+        String ac2ID = m_classReq.getParameter("ac2ID"); // vd id
+        //String acType = req.getParameter("acType"); // actype to search
+        String acName = m_classReq.getParameter("acName"); // ac name for pv
+        // call the api to return concept attributes according to ac type and ac idseq
+        Vector<EVS_Bean> conList = new Vector<EVS_Bean>();
+        conList = getAC.do_ConceptSearch("", "", "", "", "", acID, ac2ID, conList);
+        m_classReq.setAttribute("ConceptClassList", conList);
+        m_classReq.setAttribute("ACName", acName);
+        // store them in request parameter to display and forward the page
+        ForwardJSP(m_classReq, m_classRes, "/ConceptClassDetailWindow.jsp");
+    }
+
+    /**
+     * display conceptual for the selected vm from the search results.
+     *
+     * @param req
+     *            HttpServletRequest
+     * @param res
+     *            HttpServletResponse
+     * @throws Exception
+     */
+    private void doConDomainSearchActions() throws Exception
+    {
+        GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, this);
+        String sVM = m_classReq.getParameter("acName"); // ac name for pv
+        // call the api to return concept attributes according to ac type and ac idseq
+        Vector cdList = new Vector();
+        cdList = getAC.doCDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", sVM, cdList); 
+        m_classReq.setAttribute("ConDomainList", cdList);
+        m_classReq.setAttribute("VMName", sVM);
+        // store them in request parameter to display and forward the page
+        ForwardJSP(m_classReq, m_classRes, "/ConDomainDetailWindow.jsp");
+    }
+
+    /**
+     * to get Protocol CRF for the selected ac called when the ProtoCRF window opened first time and calls
+     * 'getAC.doProtoCRFSearch' forwards page back to ProtoCRFwindow jsp
+     *
+     * @param req
+     *            The HttpServletRequest from the client
+     * @param res
+     *            The HttpServletResponse back to the client
+     *
+     * @throws Exception
+     */
+    private void doProtoCRFSearchActions() throws Exception
+    {
+        GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, this);
+        String acID = m_classReq.getParameter("acID");
+        String acName = m_classReq.getParameter("itemType"); // ac name for proto crf
+        if (acName != null && acName.equals("ALL"))
+            acName = "-";
+        @SuppressWarnings("unused") Integer pvCount = getAC.doProtoCRFSearch(acID, acName);
+        ForwardJSP(m_classReq, m_classRes, "/ProtoCRFWindow.jsp");
+    }
+
+    
 }

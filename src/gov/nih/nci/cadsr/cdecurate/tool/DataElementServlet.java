@@ -47,6 +47,9 @@ public class DataElementServlet extends CurationServlet{
 			case getDDEDetails:
 				doDDEDetailsActions();
 				break;
+			case viewDATAELEMENT:
+				doOpenViewPage();
+				break;
 		}
 	}	
 		
@@ -1642,6 +1645,30 @@ public class DataElementServlet extends CurationServlet{
         ForwardJSP(m_classReq, m_classRes, "/DerivedDEWindow.jsp");
     }
 
-
+    public void doOpenViewPage() throws Exception
+    {
+    	System.out.println("I am here open view page");
+    	HttpSession session = m_classReq.getSession();
+    	String acID = (String) m_classReq.getAttribute("acIdseq");
+    	if (acID.equals(""))
+    		acID = m_classReq.getParameter("idseq");
+        Vector<DE_Bean> vList = new Vector<DE_Bean>();
+        // get DE's attributes from the database again
+        GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
+        if (acID != null && !acID.equals(""))
+        {
+            serAC.doDESearch(acID, "", "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+                            "", "", "", "", "", "", "", "", "", "", "", vList);
+        }
+        if (vList.size() > 0) // get all attributes
+        {
+        	DE_Bean DEBean = (DE_Bean) vList.elementAt(0);
+            DEBean = serAC.getDEAttributes(DEBean, "openView", "viewDE");
+            serAC.getDDEInfo(DEBean.getDE_DE_IDSEQ()); // clear dde
+            DataManager.setAttribute(session, "m_DE", DEBean);
+           	m_classReq.setAttribute("IncludeViewPage", "EditDE.jsp") ;
+       }
+     	//ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
+    }
 	
 }

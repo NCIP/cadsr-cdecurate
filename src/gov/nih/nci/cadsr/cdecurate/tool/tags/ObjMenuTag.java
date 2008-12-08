@@ -151,7 +151,7 @@ public class ObjMenuTag extends MenuTag {
 		return tag;	
 	}
 	public String displayView(){
-		String tag = generateTR("view","new","","","","View");
+		String tag = generateTR("view","new","viewAC()","","","View");
 		return tag;	
 	}
 	public String displayDesignate(){

@@ -98,7 +98,7 @@ public class Admin_Components_Mgr extends DBManager {
 	 * @throws DBException
 	 */
 	public ArrayList<String> getActlName(String acIDSEQ, long public_ID, double version, Connection conn) throws DBException{
-		ArrayList list = new ArrayList();
+		ArrayList<String> list = new ArrayList<String>();
 		PreparedStatement statement = null;
 		ResultSet rs = null;
 		try {

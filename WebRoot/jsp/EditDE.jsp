@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.3 2008-07-03 21:30:47 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.4 2008-12-08 19:30:39 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -11,7 +11,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<%@ page import="java.util.*"%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
-		<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 		<%@ page session="true"%>
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
@@ -21,165 +20,209 @@
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/SelectCS_CSI.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 		<%
-    UtilService serUtil = new UtilService();
-    //load the lists
-    Vector vContext = (Vector)session.getAttribute("vWriteContextDE");
-    Vector vContextID = (Vector)session.getAttribute("vWriteContextDE_ID");
-    Vector vStatus = (Vector)session.getAttribute("vStatusDE");
-    Vector vRegStatus = (Vector)session.getAttribute("vRegStatus");
-    Vector vCS = (Vector)session.getAttribute("vCS");
-    Vector vCS_ID = (Vector)session.getAttribute("vCS_ID");
-    Vector vLanguage = (Vector)session.getAttribute("vLanguage");
-    Vector vSource = (Vector)session.getAttribute("vSource");
+			UtilService serUtil = new UtilService();
 
-    Vector results = (Vector)session.getAttribute("results");
-    String sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
-    if(sMenuAction.equals("nothing"))
-    {
-      sMenuAction = "editDE";
-      session.setAttribute(Session_Data.SESSION_MENU_ACTION, "editDE");
-    }
-      
-    String sOriginAction = (String)session.getAttribute("originAction");
-    if (sOriginAction == null) sOriginAction = "";
-    String sDDEAction = (String)session.getAttribute("DDEAction");
+			//for view only page
+			String bodyPage = (String) request.getAttribute("IncludeViewPage");
+			boolean isView = false;
+			if (bodyPage != null && !bodyPage.equals(""))
+				isView = true;
 
-    DE_Bean m_DE = (DE_Bean)session.getAttribute("m_DE");
-    if (m_DE == null) m_DE = new DE_Bean();
-   // session.setAttribute("DEEditAction", "");
-    String sDEIDSEQ = m_DE.getDE_DE_IDSEQ();
-    if (sDEIDSEQ == null) sDEIDSEQ = "";
+			//load the lists
+			Vector vContext = (Vector) session.getAttribute("vWriteContextDE");
+			Vector vStatus = (Vector) session.getAttribute("vStatusDE");
+			Vector vRegStatus = (Vector) session.getAttribute("vRegStatus");
+			Vector vCS = (Vector) session.getAttribute("vCS");
+			Vector vCS_ID = (Vector) session.getAttribute("vCS_ID");
+			Vector vSource = (Vector) session.getAttribute("vSource");
 
-    String sContext = m_DE.getDE_CONTEXT_NAME();
-    if (sOriginAction.equals("BlockEditDE")) sContext = "";
-    if (sContext == null) sContext = "";
-    String sContID = m_DE.getDE_CONTE_IDSEQ();
-    if (sContID == null) sContID = "";
+			Vector results = (Vector) session.getAttribute("results");
+			String sMenuAction = (String) session
+					.getAttribute(Session_Data.SESSION_MENU_ACTION);
+			if (!isView) {
+				if (sMenuAction.equals("nothing")) {
+					sMenuAction = "editDE";
+					session.setAttribute(Session_Data.SESSION_MENU_ACTION, "editDE");
+				}
+			}
 
-    //get the used by contexts
-    Vector vSelectedContext = m_DE.getAC_SELECTED_CONTEXT_ID();
-    
-    String sLongName = m_DE.getDE_LONG_NAME();
-    sLongName = serUtil.parsedStringDoubleQuoteJSP(sLongName);    //call the function to handle doubleQuote
-    if (sLongName == null || sOriginAction.equals("BlockEditDE")) sLongName = "";
-    int sLongNameCount = sLongName.length();
-    String sName = m_DE.getDE_PREFERRED_NAME();
-    if (sName != null) sName = serUtil.parsedStringDoubleQuoteJSP(sName);    //call the function to handle doubleQuote
-    if (sName == null || sOriginAction.equals("BlockEditDE")) sName = "";
-    int sNameCount = sName.length();
-    String sPrefType = m_DE.getAC_PREF_NAME_TYPE();
-    if (sPrefType == null) sPrefType = ""; 
-    String lblUserType = "Existing Name (Editable)";  //make string for user defined label
-    String sUserEnt = m_DE.getAC_USER_PREF_NAME();
-    if(sOriginAction.equals("BlockEditDE")) lblUserType = "Existing Name (Not Editable)";
-    else if (sUserEnt == null || sUserEnt.equals("")) lblUserType = "User Entered";
+			String sOriginAction = (String) session
+					.getAttribute("originAction");
+			if (sOriginAction == null)
+				sOriginAction = "";
+			String sDDEAction = (String) session.getAttribute("DDEAction");
 
-    String sDefinition = m_DE.getDE_PREFERRED_DEFINITION();
-    if (sDefinition == null) sDefinition = "";
-    if(sOriginAction.equals("BlockEditDE")) sDefinition = "";
-    
-    //get dec attributes
-    DEC_Bean dec = m_DE.getDE_DEC_Bean();
-    if (dec == null) dec = new DEC_Bean();    
-    String sDECID = dec.getDEC_DEC_IDSEQ();    //m_DE.getDE_DEC_IDSEQ();
-    if ((sDECID == null) || (sDECID.equals("nothing"))) sDECID = "";
-    String sDEC = dec.getDEC_LONG_NAME();   //m_DE.getDE_DEC_NAME();
-    if (sDEC == null) sDEC = "";
-    sDEC = serUtil.parsedStringDoubleQuoteJSP(sDEC);     //call the function to handle doubleQuote
-    VD_Bean vd = m_DE.getDE_VD_Bean();
-    if (vd == null) vd = new VD_Bean();
-    String sVDID = vd.getVD_VD_IDSEQ();  // m_DE.getDE_VD_IDSEQ();
-    if ((sVDID == null) || (sVDID.equals("nothing"))) sVDID = "";
-    String sVD = vd.getVD_LONG_NAME();  // m_DE.getDE_VD_NAME();
-    sVD = serUtil.parsedStringDoubleQuoteJSP(sVD);    //call the function to handle doubleQuote
-    if (sVD == null) sVD = "";
- 
-    boolean decvdChanged = m_DE.getDEC_VD_CHANGED();
-//System.out.println("jsap " + decvdChanged);
-    String sVersion = m_DE.getDE_VERSION();
-    if (sVersion == null) 
-      sVersion = "1.0";
-      
-    String sStatus = m_DE.getDE_ASL_NAME();
-    if (sStatus == null && sOriginAction.equals("BlockEditDE")) sStatus = "";
-    else if (sStatus == null) sStatus = "DRAFT NEW";
-    String sRegStatus = m_DE.getDE_REG_STATUS();
-    if (sRegStatus == null) sRegStatus = "";
-    String sRegStatusIDSEQ = m_DE.getDE_REG_STATUS_IDSEQ();
-    if (sRegStatusIDSEQ == null) sRegStatusIDSEQ = "";
-    
-    String sCDEID = m_DE.getDE_MIN_CDE_ID();
-    if (sCDEID == null) sCDEID = "";
-    if(sOriginAction.equals("BlockEditDE")) sCDEID = "";
-    String sBeginDate = m_DE.getDE_BEGIN_DATE();
-    if (sBeginDate == null) sBeginDate = "";
-    String sDocText = m_DE.getDOC_TEXT_PREFERRED_QUESTION();
-    if (sDocText == null) sDocText = "";
-    String sDocTextIDSEQ = m_DE.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ();
-    if (sDocTextIDSEQ == null) sDocTextIDSEQ = "";
-    String sSourceIDSEQ = m_DE.getDE_SOURCE_IDSEQ();
-    if (sSourceIDSEQ == null) sSourceIDSEQ = "";
-    String sSource = m_DE.getDE_SOURCE();
-    if (sSource == null) sSource = "";
-    String sChangeNote = m_DE.getDE_CHANGE_NOTE();
-    if (sChangeNote == null) sChangeNote = "";
+			DE_Bean m_DE = (DE_Bean) session.getAttribute("m_DE");
+			if (m_DE == null)
+				m_DE = new DE_Bean();
+			// session.setAttribute("DEEditAction", "");
+			String sDEIDSEQ = m_DE.getDE_DE_IDSEQ();
+			if (sDEIDSEQ == null)
+				sDEIDSEQ = "";
 
-    //get cs-csi attributes
-    Vector vSelCSList = m_DE.getAC_CS_NAME();
-    if (vSelCSList == null) vSelCSList = new Vector();
-    Vector vSelCSIDList = m_DE.getAC_CS_ID();
-    Vector vACCSIList = m_DE.getAC_AC_CSI_VECTOR();
-    Vector vACId = (Vector)session.getAttribute("vACId");
-    Vector vACName = (Vector)session.getAttribute("vACName");
-    //initialize the beans
-    CSI_Bean thisCSI = new CSI_Bean();
-    AC_CSI_Bean thisACCSI = new AC_CSI_Bean();
+			String sContext = m_DE.getDE_CONTEXT_NAME();
+			if (sOriginAction.equals("BlockEditDE"))
+				sContext = "";
+			if (sContext == null)
+				sContext = "";
+			String sContID = m_DE.getDE_CONTE_IDSEQ();
+			if (sContID == null)
+				sContID = "";
 
-    String sEndDate = m_DE.getDE_END_DATE();
-    if (sEndDate == null) sEndDate = "";
-    //get the contact hashtable for the de
-    Hashtable hContacts = m_DE.getAC_CONTACTS();
-    if (hContacts == null) hContacts = new Hashtable();
-    session.setAttribute("AllContacts", hContacts);
+			String sLongName = m_DE.getDE_LONG_NAME();
+			sLongName = serUtil.parsedStringDoubleQuoteJSP(sLongName); //call the function to handle doubleQuote
+			if (sLongName == null || sOriginAction.equals("BlockEditDE"))
+				sLongName = "";
+			int sLongNameCount = sLongName.length();
+			String sName = m_DE.getDE_PREFERRED_NAME();
+			if (sName != null)
+				sName = serUtil.parsedStringDoubleQuoteJSP(sName); //call the function to handle doubleQuote
+			if (sName == null || sOriginAction.equals("BlockEditDE"))
+				sName = "";
+			int sNameCount = sName.length();
+			String sPrefType = m_DE.getAC_PREF_NAME_TYPE();
+			if (sPrefType == null)
+				sPrefType = "";
+			String lblUserType = "Existing Name (Editable)"; //make string for user defined label
+			String sUserEnt = m_DE.getAC_USER_PREF_NAME();
+			if (sOriginAction.equals("BlockEditDE"))
+				lblUserType = "Existing Name (Not Editable)";
+			else if (sUserEnt == null || sUserEnt.equals(""))
+				lblUserType = "User Entered";
 
-    //these are for DEC and VD searches.
-    session.setAttribute(Session_Data.SESSION_MENU_ACTION, "searchForCreate");
-    Vector vResult = new Vector();
-    session.setAttribute("results", vResult);
-    session.setAttribute("creRecsFound", "No ");
-    session.setAttribute("creKeyword", "");
+			String sDefinition = m_DE.getDE_PREFERRED_DEFINITION();
+			if (sDefinition == null)
+				sDefinition = "";
+			if (sOriginAction.equals("BlockEditDE"))
+				sDefinition = "";
 
-    //for altnames and ref docs
-    session.setAttribute("dispACType", "DataElement");
-    // for DDE
-    String sSelRepType = (String)session.getAttribute("sRepType");
-    String sNVType = (String)session.getAttribute("NotValidDBType");
-    if (sNVType == null) sNVType = "";
-    String sSelConcatChar = (String)session.getAttribute("sConcatChar");
-    String sSelRule = (String)session.getAttribute("sRule");
-    String sSelMethod = (String)session.getAttribute("sMethod");
-    Vector vRepType = new Vector();
-    Vector vDEComp = new Vector();
-    Vector vDECompID = new Vector();
-    Vector vDECompOrder = new Vector();
-    Vector vDECompRelID = new Vector();
-    if(sDDEAction != "CreateNewDEFComp")
-    {
-        vRepType = (Vector)session.getAttribute("vRepType");
-        vDEComp = (Vector)session.getAttribute("vDEComp");
-        vDECompID = (Vector)session.getAttribute("vDECompID");
-        vDECompOrder = (Vector)session.getAttribute("vDECompOrder");
-        vDECompRelID = (Vector)session.getAttribute("vDECompRelID");
-    }
+			//get dec attributes
+			DEC_Bean dec = m_DE.getDE_DEC_Bean();
+			if (dec == null)
+				dec = new DEC_Bean();
+			String sDECID = dec.getDEC_DEC_IDSEQ(); //m_DE.getDE_DEC_IDSEQ();
+			if ((sDECID == null) || (sDECID.equals("nothing")))
+				sDECID = "";
+			String sDEC = dec.getDEC_LONG_NAME(); //m_DE.getDE_DEC_NAME();
+			if (sDEC == null)
+				sDEC = "";
+			sDEC = serUtil.parsedStringDoubleQuoteJSP(sDEC); //call the function to handle doubleQuote
+			VD_Bean vd = m_DE.getDE_VD_Bean();
+			if (vd == null)
+				vd = new VD_Bean();
+			String sVDID = vd.getVD_VD_IDSEQ(); // m_DE.getDE_VD_IDSEQ();
+			if ((sVDID == null) || (sVDID.equals("nothing")))
+				sVDID = "";
+			String sVD = vd.getVD_LONG_NAME(); // m_DE.getDE_VD_NAME();
+			sVD = serUtil.parsedStringDoubleQuoteJSP(sVD); //call the function to handle doubleQuote
+			if (sVD == null)
+				sVD = "";
 
-    String sDEID = "";
-    String sDECompOrder = "";
-    if(vDECompOrder.size() > 0)
-        sDECompOrder = (String)vDECompOrder.elementAt(0);
+			boolean decvdChanged = m_DE.getDEC_VD_CHANGED();
+			//System.out.println("jsap " + decvdChanged);
+			String sVersion = m_DE.getDE_VERSION();
+			if (sVersion == null)
+				sVersion = "1.0";
 
-    int item = 1;
-        
-%>
+			String sStatus = m_DE.getDE_ASL_NAME();
+			if (sStatus == null && sOriginAction.equals("BlockEditDE"))
+				sStatus = "";
+			else if (sStatus == null)
+				sStatus = "DRAFT NEW";
+			String sRegStatus = m_DE.getDE_REG_STATUS();
+			if (sRegStatus == null)
+				sRegStatus = "";
+			String sRegStatusIDSEQ = m_DE.getDE_REG_STATUS_IDSEQ();
+			if (sRegStatusIDSEQ == null)
+				sRegStatusIDSEQ = "";
+
+			String sCDEID = m_DE.getDE_MIN_CDE_ID();
+			if (sCDEID == null)
+				sCDEID = "";
+			if (sOriginAction.equals("BlockEditDE"))
+				sCDEID = "";
+			String sBeginDate = m_DE.getDE_BEGIN_DATE();
+			if (sBeginDate == null)
+				sBeginDate = "";
+			String sDocText = m_DE.getDOC_TEXT_PREFERRED_QUESTION();
+			if (sDocText == null)
+				sDocText = "";
+			String sDocTextIDSEQ = m_DE.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ();
+			if (sDocTextIDSEQ == null)
+				sDocTextIDSEQ = "";
+			String sSourceIDSEQ = m_DE.getDE_SOURCE_IDSEQ();
+			if (sSourceIDSEQ == null)
+				sSourceIDSEQ = "";
+			String sSource = m_DE.getDE_SOURCE();
+			if (sSource == null)
+				sSource = "";
+			String sChangeNote = m_DE.getDE_CHANGE_NOTE();
+			if (sChangeNote == null)
+				sChangeNote = "";
+
+			//get cs-csi attributes
+			Vector vSelCSList = m_DE.getAC_CS_NAME();
+			if (vSelCSList == null)
+				vSelCSList = new Vector();
+			Vector vSelCSIDList = m_DE.getAC_CS_ID();
+			Vector vACCSIList = m_DE.getAC_AC_CSI_VECTOR();
+			Vector vACId = (Vector) session.getAttribute("vACId");
+			Vector vACName = (Vector) session.getAttribute("vACName");
+			//initialize the beans
+			CSI_Bean thisCSI = new CSI_Bean();
+			AC_CSI_Bean thisACCSI = new AC_CSI_Bean();
+
+			String sEndDate = m_DE.getDE_END_DATE();
+			if (sEndDate == null)
+				sEndDate = "";
+			//get the contact hashtable for the de
+			Hashtable hContacts = m_DE.getAC_CONTACTS();
+			if (hContacts == null)
+				hContacts = new Hashtable();
+			if (!isView) {
+			session.setAttribute("AllContacts", hContacts);
+
+			//these are for DEC and VD searches.
+			session.setAttribute(Session_Data.SESSION_MENU_ACTION,
+					"searchForCreate");
+			Vector vResult = new Vector();
+			session.setAttribute("results", vResult);
+			session.setAttribute("creRecsFound", "No ");
+			session.setAttribute("creKeyword", "");
+
+			//for altnames and ref docs
+			session.setAttribute("dispACType", "DataElement");
+			}
+			// for DDE
+			String sSelRepType = (String) session.getAttribute("sRepType");
+			if (sSelRepType == null) sSelRepType = "";
+			String sNVType = (String) session.getAttribute("NotValidDBType");
+			if (sNVType == null)
+				sNVType = "";
+			String sSelConcatChar = (String) session
+					.getAttribute("sConcatChar");
+			String sSelRule = (String) session.getAttribute("sRule");
+			String sSelMethod = (String) session.getAttribute("sMethod");
+			Vector vRepType = new Vector();
+			Vector vDEComp = new Vector();
+			Vector vDECompID = new Vector();
+			Vector vDECompOrder = new Vector();
+			Vector vDECompRelID = new Vector();
+			if (sDDEAction != "CreateNewDEFComp") {
+				vRepType = (Vector) session.getAttribute("vRepType");
+				vDEComp = (Vector) session.getAttribute("vDEComp");
+				vDECompID = (Vector) session.getAttribute("vDECompID");
+				vDECompOrder = (Vector) session.getAttribute("vDECompOrder");
+				vDECompRelID = (Vector) session.getAttribute("vDECompRelID");
+			}
+
+			String sDEID = "";
+			String sDECompOrder = "";
+			if (vDECompOrder.size() > 0)
+				sDECompOrder = (String) vDECompOrder.elementAt(0);
+
+			int item = 1;
+		%>
 
 		<Script Language="JavaScript">
  var evsWindow2 = null;
@@ -314,20 +357,41 @@
 				<!--DWLayoutTable-->
 				<tr>
 					<td align="left" valign="top" colspan=2>
+						<%	if (!isView) { %>
 						<input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate')" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Validation',helpUrl); return false">
 						&nbsp;&nbsp;
 						<input type="button" name="btnClear" value="Clear" style="width: 125" onClick="ClearBoxes();">
 						&nbsp;&nbsp;
 						<input type="button" name="btnBack" value="Back" style="width: 125" onClick="Back();">
 						&nbsp;&nbsp;
-						<%if(sOriginAction.equals("BlockEditDE")){%>
+						<%
+							if (sOriginAction.equals("BlockEditDE")) {
+						%>
 						<input type="button" name="btnDetails" value="Details" style="width: 125" onClick="openBEDisplayWindow();" onHelp="showHelp('html/Help_Updates.html#newCDEForm_details',helpUrl); return false">
 						&nbsp;&nbsp;
-						<%}%>
-						<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" onClick="openDesignateWindow('Alternate Names');" onHelp="showHelp('html/Help_Updates.html#newDECForm_altNames',helpUrl); return false">
+						<%
+							} }
+						%>
+						<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" 
+							<% if (isView) { %>
+								onClick="openAltNameViewWindow();"
+							<% } else { %>
+								onClick="openDesignateWindow('Alternate Names');" 
+							<% } %>
+							onHelp="showHelp('html/Help_Updates.html#newDECForm_altNames',helpUrl); return false">
 						&nbsp;&nbsp;
-						<input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');" onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return false">
+						<input type="button" name="btnRefDoc" value="Reference Documents" style="width:160" 
+							<% if (isView) { %>
+								onClick="openRefDocViewWindow();"
+							<% } else { %>
+								onClick="openDesignateWindow('Reference Documents');" 
+							<% } %>
+							onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return false">
 						&nbsp;&nbsp;
+						<%	if (isView) {	%>
+							<input type="button" name="btnClose" value="Close" style="width: 125" onClick="window.close();">
+							&nbsp;&nbsp;
+						<% } %>
 						<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
 					</td>
 				</tr>
@@ -338,30 +402,35 @@
 				<tr valign="middle">
 					<th colspan=2 height="40">
 						<div align="left">
-							<% if (sOriginAction.equals("BlockEditDE")){%>
 							<label>
 								<font size=4>
+								<%
+									if (sOriginAction.equals("BlockEditDE")) {
+								%>
 									Block Edit Existing
+								<%
+									} else if (isView) {
+								%>
+									View Existing
+								<%
+									} else {
+								%>
+									Edit Existing
+								<%
+									}
+								%>
 									<font color="#FF0000">
 										Data Elements
 									</font>
 								</font>
 							</label>
-							<% } else {%>
-							<label>
-								<font size=4>
-									Edit Existing
-									<font color="#FF0000">
-										Data Element
-									</font>
-								</font>
-							</label>
-							<% } %>
 						</div>
 					</th>
 				</tr>
 
-				<% if (!sOriginAction.equals("BlockEditDE")){%>
+				<%
+					if (!sOriginAction.equals("BlockEditDE")) {
+				%>
 				<tr valign="bottom" height="25">
 					<td align="left" colspan=2 height="11">
 						<font color="#FF0000">
@@ -370,8 +439,11 @@
 						Indicates Required Field
 					</td>
 				</tr>
-				<%}%>
+				<%
+					}
+				%>
 
+		<%	if (sOriginAction.equals("BlockEditDE")) {	%>
 				<tr height="25" valign="bottom">
 					<td align=right>
 						<font color="#C0C0C0">
@@ -399,9 +471,39 @@
 						</select>
 					</td>
 				</tr>
+	  <% } else { %>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<font color="#FF0000">
+							*
+							&nbsp;&nbsp;
+						</font>
+						<%=item++%>
+						)
+					</td>
+					<td colspan=4>
+							Context
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td height="26">
+						<select name="selContext" size="1" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext',helpUrl); return false">
+							<option value="<%=sContID%>">
+									<%=sContext%>
+							</option>
+						</select>
+					</td>
+				</tr>
+	 <%	}	%>
 				<tr valign="bottom" height="25">
 					<!-- add the hyperlink do not allow update if alredy vd selected in the block edit-->
-					<% if (sOriginAction.equals("BlockEditDE") && sVDID != null && !sVDID.equals("")){%>
+					<%
+						if (sOriginAction.equals("BlockEditDE") && sVDID != null
+								&& !sVDID.equals("")) {
+					%>
 					<td align=right>
 						<font color="#C0C0C0">
 							<%=item++%>
@@ -413,24 +515,34 @@
 							Select Data Element Concept Long Name
 						</font>
 					</td>
-					<%} else {%>
+					<%
+						} else {
+					%>
 					<td align=right>
 						<font color="#FF0000">
-							<% if(!sOriginAction.equals("BlockEditDE")){%>
+							<%
+								if (!sOriginAction.equals("BlockEditDE")) {
+							%>
 							*
-							<%}%>
+							<%
+								}
+							%>
 							&nbsp;&nbsp;
 						</font>
 						<%=item++%>
 						)
 					</td>
 					<td>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Select
 						</font>
+					<% } %>
 						Data Element Concept Long Name
 					</td>
-					<%}%>
+					<%
+						}
+					%>
 				</tr>
 
 				<tr>
@@ -444,14 +556,23 @@
 							</option>
 						</select>
 						<!-- add the hyperlink do not allow search if alredy vd selected in the block edit-->
-						<% if(!(sOriginAction.equals("BlockEditDE") && sVDID != null && !sVDID.equals(""))){%>
+						<!--  no lins for view only page -->
+						<%
+							if (!isView) {
+							if (!(sOriginAction.equals("BlockEditDE") && sVDID != null && !sVDID
+										.equals(""))) {
+						%>
 						&nbsp;&nbsp;
 						<a href="javascript:SearchDECValue();">
 							Search
 						</a>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<%}%>
-						<%if(!sOriginAction.equals("BlockEditDE")){%>
+						<%
+							}
+						%>
+						<%
+							if (!sOriginAction.equals("BlockEditDE")) {
+						%>
 						<a href="javascript:EditDECValue();">
 							Edit DEC
 						</a>
@@ -459,12 +580,15 @@
 						<a href="javascript:CreateNewDECValue();">
 							Create New DEC
 						</a>
-						<% }%>
+						<%	}	}  %>
 					</td>
 				</tr>
 				<tr valign="bottom" height="25">
 					<!-- add the hyperlink do not allow update if alredy dec selected in the block edit-->
-					<% if(sOriginAction.equals("BlockEditDE") && sDECID != null && !sDECID.equals("")){%>
+					<%
+						if (sOriginAction.equals("BlockEditDE") && sDECID != null
+								&& !sDECID.equals("")) {
+					%>
 					<td align=right>
 						<font color="#C0C0C0">
 							<%=item++%>
@@ -476,24 +600,34 @@
 							Select Value Domain Long Name
 						</font>
 					</td>
-					<%} else {%>
+					<%
+						} else {
+					%>
 					<td align=right>
 						<font color="#FF0000">
-							<% if(!sOriginAction.equals("BlockEditDE")){%>
+							<%
+								if (!sOriginAction.equals("BlockEditDE")) {
+							%>
 							*
-							<%}%>
+							<%
+								}
+							%>
 							&nbsp;&nbsp;
 						</font>
 						<%=item++%>
 						)
 					</td>
 					<td>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Select
 						</font>
+						<% } %>
 						Value Domain Long Name
 					</td>
-					<%}%>
+					<%
+						}
+					%>
 				</tr>
 				<tr>
 					<td>
@@ -506,14 +640,23 @@
 							</option>
 						</select>
 						<!-- add the hyperlink do not allow search if alredy dec selected in the block edit-->
-						<% if(!(sOriginAction.equals("BlockEditDE") && sDECID != null && !sDECID.equals(""))){%>
+						<!--  no lins for view only page -->
+						<%
+							if (!isView) {
+							if (!(sOriginAction.equals("BlockEditDE") && sDECID != null && !sDECID
+										.equals(""))) {
+						%>
 						&nbsp;&nbsp;
 						<a href="javascript:SearchVDValue()">
 							Search
 						</a>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<%}%>
-						<%if(!sOriginAction.equals("BlockEditDE")){%>
+						<%
+							}
+						%>
+						<%
+							if (!sOriginAction.equals("BlockEditDE")) {
+						%>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<a href="javascript:EditVDValue()">
 							Edit VD
@@ -522,11 +665,13 @@
 						<a href="javascript:CreateNewVDValue()">
 							Create New VD
 						</a>
-						<%}%>
+						<%	}	} %>
 					</td>
 				</tr>
 				<tr valign="bottom" height="25">
-					<%if(sOriginAction.equals("BlockEditDE")){%>
+					<%
+						if (sOriginAction.equals("BlockEditDE")) {
+					%>
 					<td align=right>
 						<font color="#C0C0C0">
 							<%=item++%>
@@ -538,7 +683,9 @@
 							Verify Data Element Long Name (* ISO Preferred Name)
 						</font>
 					</td>
-					<% } else {%>
+					<%
+						} else {
+					%>
 					<td align=right>
 						<font color="#FF0000">
 							*&nbsp;&nbsp;
@@ -547,35 +694,45 @@
 						)
 					</td>
 					<td>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Verify
 						</font>
+						<% } %>
 						Data Element Long Name (* ISO Preferred Name)
 					</td>
-					<% } %>
+					<%
+						}
+					%>
 				</tr>
 				<tr>
 					<td>
-						<font color="#FF0000">
-						</font>
 					</td>
 					<td height="24" valign="top">
-						<input name="txtLongName" type="text" size="80" maxlength=255 value="<%=sLongName%>" onKeyUp="changeCountLN();" <%if(sOriginAction.equals("BlockEditDE")){%> readonly <%}%> onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_txtLongName',helpUrl); return false">
+						<input name="txtLongName" type="text" size="80" maxlength=255 value="<%=sLongName%>" onKeyUp="changeCountLN();" <%if(sOriginAction.equals("BlockEditDE") || isView){%> readonly <%}%> onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_txtLongName',helpUrl); return false">
 						&nbsp;&nbsp;&nbsp;
 						<input name="txtLongNameCount" type="text" size="1" value="<%=sLongNameCount%>" readonly onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_txtLongName',helpUrl); return false">
-						<%if(sOriginAction.equals("BlockEditDE")){%>
+						<%
+							if (sOriginAction.equals("BlockEditDE")) {
+						%>
 						<font color="#C0C0C0">
 							Character Count &nbsp;&nbsp;(Database Max = 255)
 						</font>
-						<% } else {%>
+						<%
+							} else {
+						%>
 						<font color="#000000">
 							Character Count &nbsp;&nbsp;(Database Max = 255)
 						</font>
-						<% } %>
+						<%
+							}
+						%>
 					</td>
 				</tr>
 				<tr valign="bottom" height="25">
-					<%if(sOriginAction.equals("BlockEditDE")){%>
+					<%
+						if (sOriginAction.equals("BlockEditDE")) {
+					%>
 					<td align=right>
 						<font color="#C0C0C0">
 							<%=item++%>
@@ -587,7 +744,9 @@
 							Update Data Element Short Name
 						</font>
 					</td>
-					<% } else {%>
+					<%
+						} else {
+					%>
 					<td align=right>
 						<font color="#FF0000">
 							*&nbsp;&nbsp;
@@ -596,15 +755,22 @@
 						)
 					</td>
 					<td>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Update
 						</font>
+						<% } %>
 						<font color="#000000">
 							Data Element Short Name
 						</font>
 					</td>
-					<% } %>
+					<%
+						}
+					%>
 				</tr>
+				<%
+					if (!isView) {
+				%>
 				<tr>
 					<td>
 						&nbsp;
@@ -627,48 +793,73 @@
 						<!--Existing Name (Editable)  User Maintained-->
 					</td>
 				</tr>
+				<%
+					}
+				%>
 				<tr>
 					<td>
 						&nbsp;
 					</td>
 					<td height="24" valign="top">
-						<input name="txtPreferredName" type="text" size="80" maxlength=30 value="<%=sName%>" onKeyUp="changeCountPN();" <% if (sOriginAction.equals("BlockEditDE") || sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")){ %> readonly
+						<input name="txtPreferredName" type="text" size="80" maxlength=30 value="<%=sName%>" onKeyUp="changeCountPN();" 
+							<% if (sOriginAction.equals("BlockEditDE") || sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR") || isView){ %> readonly
 							<%}%> onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_txtPreferredName',helpUrl); return false">
 						&nbsp;&nbsp;&nbsp;
 						<input name="txtPrefNameCount" type="text" size="1" value="<%=sNameCount%>" readonly onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_txtPreferredName',helpUrl); return false">
-						<%if(sOriginAction.equals("BlockEditDE")){%>
+						<%
+							if (sOriginAction.equals("BlockEditDE")) {
+						%>
 						<font color="#C0C0C0">
 							Character Count &nbsp;&nbsp;(Database Max = 30)
 						</font>
-						<% } else {%>
+						<%
+							} else {
+						%>
 						<font color="#000000">
 							Character Count &nbsp;&nbsp;(Database Max = 30)
 						</font>
-						<% } %>
+						<%
+							}
+						%>
 					</td>
 				</tr>
 
 				<tr height="25" valign="bottom">
+					<%
+						if (sOriginAction.equals("BlockEditDE")) {
+					%>
 					<td align=right>
 						<font color="#C0C0C0">
 							<%=item++%>
 							)
 						</font>
 					</td>
-					<td colspan=4>
+					<td>
 						<font color="#C0C0C0">
-							Public ID
+							Update Data Element Short Name
 						</font>
 					</td>
+					<%
+						} else {
+					%>
+					<td align=right>
+						<font color="#FF0000">
+							*&nbsp;&nbsp;
+						</font>
+							<%=item++%>
+							)
+					</td>
+					<td>
+							Public ID
+					</td>
+					<% } %>
 				</tr>
 				<tr>
 					<td align=right>
 						&nbsp;
 					</td>
 					<td colspan=4>
-						<font color="#C0C0C0">
 							<input type="text" name="CDE_IDTxt" value="<%=sCDEID%>" size="20" readonly onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_CDE_IDTxt',helpUrl); return false">
-						</font>
 					</td>
 				</tr>
 
@@ -676,7 +867,9 @@
 					<td height="8" valign="top">
 				</tr>
 				<tr height="25" valign="top">
-					<%if(sOriginAction.equals("BlockEditDE")){%>
+					<%
+						if (sOriginAction.equals("BlockEditDE")) {
+					%>
 					<td align=right>
 						<font color="#C0C0C0">
 							<%=item++%>
@@ -688,7 +881,9 @@
 							Create/Edit Definition
 						</font>
 					</td>
-					<% } else {%>
+					<%
+						} else {
+					%>
 					<td align=right>
 						<font color="#FF0000">
 							*&nbsp;&nbsp;
@@ -697,44 +892,58 @@
 						)
 					</td>
 					<td>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Create/Edit
 						</font>
 						Definition
 						<br>
 						(Changes to naming components will replace existing definition text.)
+						<% } else { %>
+							Definition
+						<% } %>
 					</td>
-					<% } %>
+					<%
+						}
+					%>
 				</tr>
 				<tr>
 					<td>
 						&nbsp;
 					</td>
 					<td valign="top" align="left">
-						<%if(sOriginAction.equals("BlockEditDE")){%>
+						<%
+							if (sOriginAction.equals("BlockEditDE") || isView) {
+						%>
 						<textarea name="CreateDefinition" style="width:80%" rows=6 readonly onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_CreateDefinition',helpUrl); return false"><%=sDefinition%></textarea>
-						<!--  &nbsp;&nbsp;<font color="#C0C0C0">Search</a></font>  -->
-						<% } else {%>
+						<%
+							} else {
+						%>
 						<textarea name="CreateDefinition" style="width:80%" rows=6 onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_CreateDefinition',helpUrl); return false"><%=sDefinition%></textarea>
-						<!--   &nbsp;&nbsp;<a href="javascript:AccessEVS()">Search</a></font> -->
 						<% } %>
 					</td>
 				</tr>
 
 				<tr valign="bottom" height="25">
 					<td align=right>
-						<%if(!sOriginAction.equals("BlockEditDE")){%>
+						<%
+							if (!sOriginAction.equals("BlockEditDE")) {
+						%>
 						<font color="#FF0000">
 							*&nbsp;&nbsp;
 						</font>
-						<%}%>
+						<%
+							}
+						%>
 						<%=item++%>
 						)
 					</td>
 					<td>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Select
 						</font>
+					<% } %>
 						Workflow Status
 					</td>
 				</tr>
@@ -744,37 +953,39 @@
 					</td>
 					<td height="26" valign="top">
 						<select name="selStatus" size="1" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selStatus',helpUrl); return false">
+						<%	if (!isView) {	%>
 							<option value="" selected="selected"></option>
-							<%          for (int i = 0; vStatus.size()>i; i++)
-          {
-             String sStatusName = (String)vStatus.elementAt(i);
-             //add only draft new and retired phased out if creating new
-             if (sMenuAction.equals("Questions"))
-             {
-                if (sStatusName.equals("DRAFT NEW") || sStatusName.equals("RETIRED PHASED OUT") && !sOriginAction.equals("BlockEditDEC"))
-                {
-%>
-							<option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%> selected <%}%>>
-								<%=sStatusName%>
-							</option>
-							<%              }
-             }
-             else
-             {
-%>
+							<%
+								for (int i = 0; vStatus.size() > i; i++) {
+									String sStatusName = (String) vStatus.elementAt(i);
+									//add only draft new and retired phased out if creating new
+									if (sMenuAction.equals("Questions")) {
+										if (sStatusName.equals("DRAFT NEW")
+												|| sStatusName.equals("RETIRED PHASED OUT")
+												&& !sOriginAction.equals("BlockEditDEC")) {
+							%>
 							<option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%> selected <%}%>>
 								<%=sStatusName%>
 							</option>
 							<%
-             }
-          }
-%>
+								}
+									} else {
+							%>
+							<option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%> selected <%}%>>
+								<%=sStatusName%>
+							</option>
+							<%	}	}	%>
+						<%	}  else { 	%>
+							<option value="<%=sStatus%>"><%=sStatus%></option>	
+						<% } %>					
 						</select>
 					</td>
 				</tr>
 
 				<tr height="25" valign="bottom">
-					<% if (sOriginAction.equals("BlockEditDE")){%>
+					<%
+						if (sOriginAction.equals("BlockEditDE")) {
+					%>
 					<td align=right>
 						<%=item++%>
 						)
@@ -785,25 +996,30 @@
 							Business Rules
 						</a>
 					</td>
-					<% } else {%>
+					<%
+						} else {
+					%>
 					<td align=right>
-						<font color="#C0C0C0">
+						<font color="#FF0000">
+							*&nbsp;&nbsp;
+						</font>
 							<%=item++%>
 							)
-						</font>
 					</td>
 					<td colspan=4>
-						<font color="#C0C0C0">
 							Version
-						</font>
 					</td>
-					<% } %>
+					<%
+						}
+					%>
 				</tr>
 				<tr>
 					<td>
 						&nbsp;
 					</td>
-					<%if(sOriginAction.equals("BlockEditDE")){ %>
+					<%
+						if (sOriginAction.equals("BlockEditDE")) {
+					%>
 					<td>
 						<table width="60%">
 							<col width="20%">
@@ -831,17 +1047,19 @@
 							</tr>
 						</table>
 					</td>
-					<% } else { %>
+					<%
+						} else {
+					%>
 					<td valign="top" colspan=4>
-						<font color="#C0C0C0">
 							<input type="text" name="Version" value="<%=sVersion%>" size=5 readonly onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Version',helpUrl); return false">
-						</font>
 						&nbsp;&nbsp;&nbsp;
 						<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
 							Business Rules
 						</a>
 					</td>
-					<% } %>
+					<%
+						}
+					%>
 				</tr>
 				<tr height="25" valign="bottom">
 					<td align=right>
@@ -849,9 +1067,11 @@
 						)
 					</td>
 					<td>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Select
 						</font>
+						<% } %>
 						Registration Status
 					</td>
 				</tr>
@@ -860,24 +1080,20 @@
 						&nbsp;
 					</td>
 					<td height="25" valign="top">
-						<select name="selRegStatus" size="1" style="Width:50%" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selRegStatus',helpUrl); return false">
+						<select name="selRegStatus" size="1" style="Width: 50%"
+							onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selRegStatus',helpUrl); return false">
+						<%	if (!isView) {	%>
 							<option value="" selected></option>
-							<%          if (vRegStatus != null) 
-            {            
-              for (int i = 0; vRegStatus.size()>i; i++)
-              {
-                String sReg = (String)vRegStatus.elementAt(i);
-                boolean isOK = true;
-             //   if(sOriginAction.equals("BlockEditDE") && (sReg.equalsIgnoreCase("Candidate") || sReg.equalsIgnoreCase("Standard")))
-             //     isOK = false;
-                if (isOK) {
-%>
-							<option value="<%=sReg%>" <%if(sReg.equals(sRegStatus)){%> selected <%}%>>
-								<%=sReg%>
-							</option>
-							<%
-            } } }
-%>
+							<%	if (vRegStatus != null) {
+										for (int i = 0; vRegStatus.size() > i; i++) {
+											String sReg = (String) vRegStatus.elementAt(i);
+											boolean isOK = true;
+											if (isOK) {	%>
+											<option value="<%=sReg%>" <%if(sReg.equals(sRegStatus)){%>selected <%}%>><%=sReg%></option>
+										<%	}	}	} %>
+						<%	}  else { 	%>
+							<option value="<%=sRegStatus%>"><%=sRegStatus%></option>	
+						<% } %>
 						</select>
 					</td>
 				</tr>
@@ -887,9 +1103,11 @@
 						)
 					</td>
 					<td>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Enter/Select
 						</font>
+						<% } %>
 						Effective Begin Date
 					</td>
 				</tr>
@@ -898,10 +1116,12 @@
 						&nbsp;
 					</td>
 					<td height="25" valign="top">
-						<input type="text" name="BeginDate" value="<%=sBeginDate%>" size="12" maxlength=10 onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_BeginDate',helpUrl); return false">
+						<input type="text" name="BeginDate" value="<%=sBeginDate%>" size="12" maxlength=10 <% if (isView) { %>readonly<%} %> onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_BeginDate',helpUrl); return false">
+						<% if (!isView) { %>
 						<a href="javascript:show_calendar('newCDEForm.BeginDate', null, null, 'MM/DD/YYYY');">
 							<img name="Calendar" src="images/calendarbutton.gif" width="20" height="20" alt="Calendar" style="vertical-align: top; background-color: #FF0000">
 						</a>
+						<% } %>
 						&nbsp;&nbsp;MM/DD/YYYY
 					</td>
 				</tr>
@@ -912,9 +1132,11 @@
 						)
 					</td>
 					<td>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Enter/Select
 						</font>
+						<% } %>
 						Effective End Date
 					</td>
 				</tr>
@@ -923,10 +1145,12 @@
 						&nbsp;
 					</td>
 					<td height="25" valign="top">
-						<input type="text" name="EndDate" value="<%=sEndDate%>" size="12" maxlength=10 onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_EndDate',helpUrl); return false">
+						<input type="text" name="EndDate" value="<%=sEndDate%>" size="12" maxlength=10 <% if (isView) { %>readonly<%} %> onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_EndDate',helpUrl); return false">
+						<% if (!isView) { %>
 						<a href="javascript:show_calendar('newCDEForm.EndDate', null, null, 'MM/DD/YYYY');">
-							<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top", "background-color: #FF0000">
+							<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top; background-color: #FF0000">
 						</a>
+						<% }  %>
 						&nbsp;&nbsp;MM/DD/YYYY
 					</td>
 				</tr>
@@ -936,9 +1160,11 @@
 						)
 					</td>
 					<td>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Create
 						</font>
+						<% } %>
 						Preferred Question Text
 					</td>
 				</tr>
@@ -947,7 +1173,7 @@
 						&nbsp;
 					</td>
 					<td valign="top">
-						<textarea name="CreateDocumentText" cols="89" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_CreateDocumentText',helpUrl); return false" rows=2><%=sDocText%></textarea>
+						<textarea name="CreateDocumentText" cols="89" <% if (isView) { %>readonly<%} %> onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_CreateDocumentText',helpUrl); return false" rows=2><%=sDocText%></textarea>
 					</td>
 				</tr>
 				<!-- Classification Scheme and items -->
@@ -957,9 +1183,11 @@
 						)
 					</td>
 					<td>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Select
 						</font>
+						<% } %>
 						Classification Scheme and Classification Scheme Items
 					</td>
 				</tr>
@@ -974,35 +1202,51 @@
 							<col width="15%">
 							<col width="30%">
 							<col width="15%">
+							<%	if (!isView) {	%>
 							<tr>
 								<td height="30" valign="top" colspan=3>
-									<%if (sOriginAction.equals("BlockEditDE")){%>
+									<%
+										if (sOriginAction.equals("BlockEditDE")) {
+									%>
 									<select name="selCS" size="1" style="width:95%" onChange="ChangeCS();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_BlockselCS',helpUrl); return false">
-										<% } else { %>
+										<%
+											} else {
+										%>
 										<select name="selCS" size="1" style="width:95%" onChange="ChangeCS();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selCS',helpUrl); return false">
-											<% } %>
+											<%
+												}
+											%>
 											<option value="" selected></option>
-											<%                  for (int i = 0; vCS.size()>i; i++)
-                  {
-                    String sCSName = (String)vCS.elementAt(i);
-                    String sCS_ID = (String)vCS_ID.elementAt(i);
-%>
+											<%
+												for (int i = 0; vCS.size() > i; i++) {
+													String sCSName = (String) vCS.elementAt(i);
+													String sCS_ID = (String) vCS_ID.elementAt(i);
+											%>
 											<option value="<%=sCS_ID%>">
 												<%=sCSName%>
 											</option>
-											<%                  }     %>
+											<%
+												}
+											%>
 										</select>
 										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 								</td>
 								<td height="30" valign="top" colspan=2>
-									<%if (sOriginAction.equals("BlockEditDE")){%>
+									<%
+										if (sOriginAction.equals("BlockEditDE")) {
+									%>
 									<select name="selCSI" size="5" style="width:100%" onChange="selectCSI();" onClick="selectCSI();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_BlockselCS',helpUrl); return false">
-										<% } else { %>
+										<%
+											} else {
+										%>
 										<select name="selCSI" size="5" style="width:100%" onChange="selectCSI();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selCS',helpUrl); return false">
-											<% } %>
+											<%
+												}
+											%>
 										</select>
 								</td>
 							</tr>
+							<% } %>
 							<tr>
 								<td height="12" valign="top">
 							</tr>
@@ -1014,13 +1258,17 @@
 									Selected Classification Schemes
 								</td>
 								<td align="left">
+								<%	if (!isView) {	%>
 									<input type="button" name="btnRemoveCS" value="Remove Item" style="width: 85" onClick="removeCSList();">
+								<% } %>								
 								</td>
 								<td align="left">
 									Associated Classification Scheme Items
 								</td>
 								<td align="left">
+								<%	if (!isView) {	%>
 									<input type="button" name="btnRemoveCSI" value="Remove Item" style="width: 85" onClick="removeCSIList();">
+								<% } %>
 								</td>
 							</tr>
 							<tr>
@@ -1028,40 +1276,36 @@
 									&nbsp;
 								</td>
 								<td colspan=2>
-									<%if (sOriginAction.equals("BlockEditDE")){%>
-									<select name="selectedCS" size="5" style="width:98%" multiple onchange="addSelectCSI(false, true, '');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_BlockselCS',helpUrl); return false">
-										<% } else { %>
 										<select name="selectedCS" size="5" style="width:98%" multiple onchange="addSelectCSI(false, true, '');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selCS',helpUrl); return false">
-											<% } %>
-											<%                  //store selected cs list on load 
-                if (vSelCSIDList != null) 
-                {
-            //      System.out.println("cs size " + vSelCSIDList.size());
-                  for (int i = 0; vSelCSIDList.size()>i; i++)
-                  {
-                    String sCS_ID = (String)vSelCSIDList.elementAt(i);
-                    String sCSName = "";
-                    if (vSelCSList != null && vSelCSList.size() > i)
-                       sCSName = (String)vSelCSList.elementAt(i);
-       //             System.out.println("selected " + sCSName);
-%>
+											<%
+												//store selected cs list on load 
+												if (vSelCSIDList != null) {
+													//      System.out.println("cs size " + vSelCSIDList.size());
+													for (int i = 0; vSelCSIDList.size() > i; i++) {
+														String sCS_ID = (String) vSelCSIDList.elementAt(i);
+														String sCSName = "";
+														if (vSelCSList != null && vSelCSList.size() > i)
+															sCSName = (String) vSelCSList.elementAt(i);
+														//             System.out.println("selected " + sCSName);
+											%>
 											<option value="<%=sCS_ID%>">
 												<%=sCSName%>
 											</option>
-											<%                  }
-                }   %>
+											<%
+												}
+												}
+											%>
 										</select>
 								</td>
 								<td colspan=2>
-									<%if (sOriginAction.equals("BlockEditDE")){%>
-									<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_BlockselCS',helpUrl); return false">
-										<% } else { %>
-										<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selCS',helpUrl); return false">
-											<% } %>
+										<select name="selectedCSI" size="5" style="width:100%" multiple <% if (!isView) { %>onchange="addSelectedAC();" <% } %>
+											onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selCS',helpUrl); return false">
 										</select>
 								</td>
 							</tr>
-							<%if (sOriginAction.equals("BlockEditDE")){%>
+							<%
+								if (sOriginAction.equals("BlockEditDE")) {
+							%>
 							<tr>
 								<td height="12" valign="top">
 							</tr>
@@ -1082,12 +1326,16 @@
 									</select>
 								</td>
 							</tr>
-							<%}%>
+							<%
+								}
+							%>
 						</table>
 					</td>
 				</tr>
 				<!-- contact info -->
-				<%if (!sOriginAction.equals("BlockEditDE")){%>
+				<%
+					if (!sOriginAction.equals("BlockEditDE")) {
+				%>
 				<tr>
 					<td height="12" valign="top">
 				</tr>
@@ -1097,13 +1345,15 @@
 						)
 					</td>
 					<td valign="bottom">
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Select
 						</font>
+						<% } %>
 						Contacts
 						<br>
-						<table width=50% border="0">
-							<col width="40%">
+						<table width=40% border="0">
+							<col width="50%">
 							<col width="15%">
 							<col width="15%">
 							<col width="15%">
@@ -1112,46 +1362,51 @@
 									&nbsp;
 								</td>
 								<td align="left">
-									<input type="button" name="btnViewCt" value="Edit Item" style="width:100" onClick="javascript:editContact('view');" disabled>
+									<input type="button" name="btnViewCt" value="<%	if (!isView) {	%>Edit Item <%	}  else { %>View Item<% } %>" style="width:100" onClick="javascript:editContact('view');" disabled>
 								</td>
+								<% if (!isView) { %>
 								<td align="left">
 									<input type="button" name="btnCreateCt" value="Create New" style="width:100" onClick="javascript:editContact('new');">
 								</td>
 								<td align="center">
 									<input type="button" name="btnRmvCt" value="Remove Item" style="width:100" onClick="javascript:editContact('remove');" disabled>
 								</td>
+								<%} %>
 							</tr>
 							<tr>
 								<td colspan=4 valign="top">
 									<select name="selContact" size="4" style="width:100%" onchange="javascript:enableContButtons();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContact',helpUrl); return false">
-										<%	
-				Enumeration enum1 = hContacts.keys();
-				while (enum1.hasMoreElements())
-				{
-				  String contName = (String)enum1.nextElement();
-				  AC_CONTACT_Bean acCont = (AC_CONTACT_Bean)hContacts.get(contName);				  
-				  if (acCont == null) acCont = new AC_CONTACT_Bean();
-				  String ctSubmit = acCont.getACC_SUBMIT_ACTION();
-				  if (ctSubmit != null && ctSubmit.equals("DEL"))
-				    continue;
-				  /*  String accID = acCont.getAC_CONTACT_IDSEQ();
-				  String contName = acCont.getORG_NAME();
-				  if (contName == null || contName.equals(""))
-				    contName = acCont.getPERSON_NAME(); */
-%>
+										<%
+											Enumeration enum1 = hContacts.keys();
+												while (enum1.hasMoreElements()) {
+													String contName = (String) enum1.nextElement();
+													AC_CONTACT_Bean acCont = (AC_CONTACT_Bean) hContacts
+															.get(contName);
+													if (acCont == null)
+														acCont = new AC_CONTACT_Bean();
+													String ctSubmit = acCont.getACC_SUBMIT_ACTION();
+													if (ctSubmit != null && ctSubmit.equals("DEL"))
+														continue;
+													/*  String accID = acCont.getAC_CONTACT_IDSEQ();
+													String contName = acCont.getORG_NAME();
+													if (contName == null || contName.equals(""))
+													  contName = acCont.getPERSON_NAME(); */
+										%>
 										<option value="<%=contName%>">
 											<%=contName%>
 										</option>
-										<%				  
-				}
-%>
+										<%
+											}
+										%>
 									</select>
 								</td>
 							</tr>
 						</table>
 					</td>
 				</tr>
-				<%}%>
+				<%
+					}
+				%>
 				<!-- origin -->
 				<tr valign="bottom" height="25">
 					<td align=right>
@@ -1159,9 +1414,11 @@
 						)
 					</td>
 					<td>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Select
 						</font>
+						<% } %>
 						Data Element Origin
 					</td>
 				</tr>
@@ -1170,28 +1427,32 @@
 						&nbsp;
 					</td>
 					<td>
-						<select name="selSource" size="1" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selSource',helpUrl); return false">
+						<select name="selSource" size="1" style="width:70%" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selSource',helpUrl); return false">
+						<%		
+							boolean isFound = false;							
+							if (!isView) {	%>
 							<option value=""></option>
-							<%         
-		   boolean isFound = false;
-		   for (int i = 0; vSource.size()>i; i++)
-           {
-              String sSor = (String)vSource.elementAt(i);
-              if(sSor.equals(sSource)) isFound = true;
-%>
+							<%
+								for (int i = 0; vSource.size() > i; i++) {
+									String sSor = (String) vSource.elementAt(i);
+									if (sSor.equals(sSource))
+										isFound = true;
+							%>
 							<option value="<%=sSor%>" <%if(sSor.equals(sSource)){%> selected <%}%>>
 								<%=sSor%>
 							</option>
-							<%         }
-		   //add the user entered if not found in the drop down list
-		   if (!isFound) 
-		   {  
-		   	  sSource = serUtil.parsedStringDoubleQuoteJSP(sSource);     //call the function to handle doubleQuote
-%>
+							<%
+								} }
+								//add the user entered if not found in the drop down list
+								if (!isFound || isView) {
+									sSource = serUtil.parsedStringDoubleQuoteJSP(sSource); //call the function to handle doubleQuote
+							%>
 							<option value="<%=sSource%>" selected>
 								<%=sSource%>
 							</option>
-							<%		   } %>
+							<%
+								}
+							%>
 						</select>
 					</td>
 				</tr>
@@ -1201,9 +1462,11 @@
 						)
 					</td>
 					<td>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Create
 						</font>
+						<% } %>
 						Change Note
 					</td>
 				</tr>
@@ -1213,10 +1476,11 @@
 						&nbsp;
 					</td>
 					<td valign="top">
-						<textarea name="CreateChangeNote" cols="69" rows=2 onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_CreateComment',helpUrl); return false"><%=sChangeNote%></textarea>
+						<textarea name="CreateChangeNote" cols="90%" rows=2 <% if (isView) { %>readonly<%} %> 
+						onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_CreateComment',helpUrl); return false"><%=sChangeNote%></textarea>
 					</td>
 				</tr>
-
+			<%	if (!isView) {	%>
 				<tr valign="bottom" height="25">
 					<td align=right>
 						<%=item++%>
@@ -1231,11 +1495,14 @@
 						the Data Element(s)
 					</td>
 				</tr>
+			<% } %>
 			</table>
-			<%if(!sOriginAction.equalsIgnoreCase("BlockEditDE")) {%>
+			<%
+				if (!sOriginAction.equalsIgnoreCase("BlockEditDE")) {
+			%>
 			<hr>
 			<!-- if not for create new from DDE or not for Block edit -->
-			<table width="800" border=0 name="DDETable">
+			<table width="95%" border=0 name="DDETable">
 				<col width=4%>
 				<col width=45%>
 				<col width=18%>
@@ -1243,15 +1510,11 @@
 				<!--<col width="4%"> <col width="95%">-->
 				<tr>
 					<th height="40" colspan=4>
-						<legend align=top>
-							<div align="left">
 								<label>
 									<font size=4>
 										Derived Data Element Derivation Rules and Components
 									</font>
 								</label>
-							</div>
-						</legend>
 					</th>
 				</tr>
 				<tr height="25" valign="bottom">
@@ -1271,9 +1534,11 @@
 						)
 					</td>
 					<td colspan=3>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Select
 						</font>
+						<% } %>
 						Derivation Type
 					</td>
 				</tr>
@@ -1283,15 +1548,20 @@
 					</td>
 					<td height="26" valign="top" colspan=3>
 						<select name="selRepType" size="1" onChange="javascript:changeRepType('change')" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selRepType',helpUrl); return false">
+							<% if (!isView) { %>
 							<option value="" selected></option>
-							<%        for (int i = 0; vRepType.size()>i; i++)
-          {
-            String sRepType = (String)vRepType.elementAt(i);
-%>
+							<%
+								for (int i = 0; vRepType.size() > i; i++) {
+										String sRepType = (String) vRepType.elementAt(i);
+							%>
 							<option value="<%=sRepType%>" <%if(sRepType.equals(sSelRepType)){%> selected <%}%>>
 								<%=sRepType%>
 							</option>
-							<%        } %>
+							<%
+								} } else { 
+							%>
+							<option value="<%=sSelRepType%>" selected><%=sSelRepType%></option>
+							<%} %>						
 						</select>
 					</td>
 				</tr>
@@ -1304,9 +1574,11 @@
 						)
 					</td>
 					<td colspan=3>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Create
 						</font>
+						<% } %>
 						Rule
 					</td>
 				</tr>
@@ -1315,7 +1587,7 @@
 						&nbsp;
 					</td>
 					<td height="35" valign="top" colspan=3>
-						<textarea name="DDERule" cols="69" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_DDERule',helpUrl); return false" rows=2><%=sSelRule%></textarea>
+						<textarea name="DDERule" cols="69" <% if (isView) { %>readonly<%} %>  onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_DDERule',helpUrl); return false" rows=2><%=sSelRule%></textarea>
 					</td>
 				</tr>
 				<tr height="25" valign="bottom">
@@ -1324,9 +1596,11 @@
 						)
 					</td>
 					<td colspan=3>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Create
 						</font>
+						<% } %>
 						Methods
 					</td>
 				</tr>
@@ -1335,7 +1609,7 @@
 						&nbsp;
 					</td>
 					<td height="35" valign="top" colspan=3>
-						<textarea name="DDEMethod" cols="69" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_DDEMethod',helpUrl); return false" rows=2><%=sSelMethod%></textarea>
+						<textarea name="DDEMethod" cols="69" <% if (isView) { %>readonly<%} %> onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_DDEMethod',helpUrl); return false" rows=2><%=sSelMethod%></textarea>
 					</td>
 				</tr>
 				<tr height="25" valign="bottom">
@@ -1344,9 +1618,11 @@
 						)
 					</td>
 					<td colspan=3>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Enter
 						</font>
+						<% } %>
 						Concatenation Character
 					</td>
 				</tr>
@@ -1355,9 +1631,11 @@
 						&nbsp;
 					</td>
 					<td valign="top" colspan=3>
-						<input name="DDEConcatChar" type="text" value="<%=sSelConcatChar%>" size="5" maxlength=1 onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_DDEConcatChar',helpUrl); return false">
+						<input name="DDEConcatChar" type="text" value="<%=sSelConcatChar%>" size="5" maxlength=1 <% if (isView) { %>readonly<%} %> 
+							onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_DDEConcatChar',helpUrl); return false">
 					</td>
 				</tr>
+				<% if (!isView) { %>				
 				<tr height="25" valign="bottom">
 					<td align=right>
 						<%=item++%>
@@ -1394,10 +1672,6 @@
 				<tr>
 					<td height="14" valign="top">
 				</tr>
-				<!--<tr>
-      <td colspan=2 align=left>-->
-				<!--<table width=70% border=0>
-          <col width=5%><col width=45%><col width=18%><col width=30%>-->
 				<tr height="30" valign="top">
 					<td align=right>
 						<%=item++%>
@@ -1410,15 +1684,17 @@
 						Data Element Components
 						<br>
 						<select name="selDEComp" size="1" style="width:95%" valign="top" onChange="javascript:showDECompOrder()" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selDEComp',helpUrl); return false">
-							<%            for (int i = 0; vDEComp.size()>i; i++)
-                {
-                     String sDEName = (String)vDEComp.elementAt(i);
-                     String sDE_ID = (String)vDECompID.elementAt(i);
-  %>
+							<%
+								for (int i = 0; vDEComp.size() > i; i++) {
+										String sDEName = (String) vDEComp.elementAt(i);
+										String sDE_ID = (String) vDECompID.elementAt(i);
+							%>
 							<option value="<%=sDE_ID%>" <%if(sDE_ID.equals(sDEID)){%> selected <%}%>>
 								<%=sDEName%>
 							</option>
-							<%            }  %>
+							<%
+								}
+							%>
 						</select>
 					</td>
 					<td valign="bottom">
@@ -1431,16 +1707,20 @@
 						&nbsp;&nbsp;
 					</td>
 				</tr>
+				<%} %>						
 				<tr>
 					<td height="14" valign="top">
 				</tr>
 				<tr>
-					<td></td>
+					<td align=right><% if (isView) { %><%=item++%>
+						)<%} %></td>
 					<td>
 						&nbsp;&nbsp;&nbsp;Selected Data Elements Components
 					</td>
 					<td align=left>
-						<input type="button" name="btnClearList1" value="Remove Item" style="width: 85" , "height: 9" onClick="removeDEComp();">
+						<% if (!isView) { %>
+						<input type="button" name="btnClearList1" value="Remove Item" onClick="removeDEComp();" width="85" height="9">
+						<%} %>
 					</td>
 					<td>
 						Display Order
@@ -1451,42 +1731,40 @@
 					<td colspan=2 valign=top>
 						&nbsp;&nbsp;
 						<select name="selOrderedDEComp" size="3" style="width: 95%" onChange="javascript:selectOList();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selOrderedDEComp',helpUrl); return false">
-							<%              for (int i = 0; vDEComp.size()>i; i++)
-                {
-                   String sDEName = (String)vDEComp.elementAt(i);
-                   String sDE_ID = (String)vDECompID.elementAt(i);
-%>
+							<%
+								for (int i = 0; vDEComp.size() > i; i++) {
+										String sDEName = (String) vDEComp.elementAt(i);
+										String sDE_ID = (String) vDECompID.elementAt(i);
+							%>
 							<option value="<%=sDE_ID%>" <%if(sDE_ID.equals(sDEID)){%> selected <%}%>>
 								<%=sDEName%>
 							</option>
 							<%
-                }
-%>
+								}
+							%>
 						</select>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					</td>
 					<td colspan=1 valign="top">
 						<select name="selOrderList" size="3" style="width:130" onChange="javascript:selectODEComp();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selOrderList',helpUrl); return false">
-							<%              for (int i = 0; vDECompOrder.size()>i; i++)
-                {
-                   String sOrderName = (String)vDECompOrder.elementAt(i);
-                   String sRelationID = (String)vDECompRelID.elementAt(i);
-%>
+							<%
+								for (int i = 0; vDECompOrder.size() > i; i++) {
+										String sOrderName = (String) vDECompOrder.elementAt(i);
+										String sRelationID = (String) vDECompRelID.elementAt(i);
+							%>
 							<option value="<%=sRelationID%>" <%if(sOrderName.equals(sDECompOrder)){%> selected <%}%>>
 								<%=sOrderName%>
 							</option>
 							<%
-                }
-%>
+								}
+							%>
 						</select>
 					</td>
 				</tr>
-				<!--</table>
-      </td>
-    </tr>-->
 				<tr>
 					<td height="14" valign="top">
 				</tr>
+				<% if (!isView) { %>
 				<tr height="20" valign="bottom">
 					<td align=right>
 						<%=item++%>
@@ -1501,14 +1779,23 @@
 						the Data Element
 					</td>
 				</tr>
+				<%} %>
 			</table>
-			<%}%>
+			<%
+				}
+			%>
 			<input type="hidden" name="pageAction" value="nothing">
-			<%if(sOriginAction.equals("BlockEditDE")){%>
+			<%
+				if (sOriginAction.equals("BlockEditDE")) {
+			%>
 			<input type="hidden" name="DEAction" value="BlockEdit">
-			<% } else {%>
+			<%
+				} else {
+			%>
 			<input type="hidden" name="DEAction" value="EditDE">
-			<% } %>
+			<%
+				}
+			%>
 			<input type="hidden" name="deIDSEQ" value="<%=sDEIDSEQ%>">
 			<!-- source, language, doctext ids from des/rd tables  -->
 			<input type="hidden" name="sourceIDSEQ" value="<%=sSourceIDSEQ%>">
@@ -1528,21 +1815,22 @@
 			<!-- store the selected ACs in the hidden field to use it for cscsi 
 This is refilled with ac id from ac-csi to use it for block edit-->
 			<select name="selACHidden" size="1" style="visibility:hidden;" multiple>
-				<%if (vACId != null) 
-  {
-    for (int i = 0; vACId.size()>i; i++)
-    {
-      String sAC_ID = (String)vACId.elementAt(i);
-      String sACName = "";
-      if (vACName != null && vACName.size() > i)
-         sACName = (String)vACName.elementAt(i);
-  //    System.out.println("selected " + sACName);
-%>
+				<%
+					if (vACId != null) {
+						for (int i = 0; vACId.size() > i; i++) {
+							String sAC_ID = (String) vACId.elementAt(i);
+							String sACName = "";
+							if (vACName != null && vACName.size() > i)
+								sACName = (String) vACName.elementAt(i);
+							//    System.out.println("selected " + sACName);
+				%>
 				<option value="<%=sAC_ID%>" selected>
 					<%=sACName%>
 				</option>
-				<%  }
-  }   %>
+				<%
+					}
+					}
+				%>
 			</select>
 
 			<!-- for DDE -->
@@ -1554,7 +1842,10 @@ This is refilled with ac id from ac-csi to use it for block edit-->
 			<select name="selDECompRelIDHidden" size="1" style="visibility:hidden;" multiple></select>
 			<select name="selDECompDeleteHidden" size="1" style="visibility:hidden;" multiple></select>
 			<select name="selDECompDelNameHidden" size="1" style="visibility:hidden;" multiple></select>
-			<% if (sDDEAction.equals("CreateNewDEFComp")) sOriginAction = sDDEAction; %>
+			<%
+				if (sDDEAction.equals("CreateNewDEFComp"))
+					sOriginAction = sDDEAction;
+			%>
 			<input type="hidden" name="originActionHidden" value="<%=sOriginAction%>">
 
 			<script language="javascript">

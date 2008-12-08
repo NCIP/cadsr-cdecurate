@@ -875,6 +875,12 @@ function enableDisableMenuItems(){
   enableDisableMenuItemsJS('<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>',numRowsChecked);
 }
 
+ function viewAC()
+ {
+ 		getRowAttributes();   //get the values of each row.
+ 		var viewWindow = window.open("../../cdecurate/NCICurationServlet?reqType=view&idseq=" +editID, "ViewAC", "width=1000,height=1500,top=0,left=0,resizable=yes,scrollbars=yes");
+ }
+
 </SCRIPT>
 
  <!-- Main Area -->
@@ -1190,7 +1196,8 @@ function enableDisableMenuItems(){
 						 <input type="text" name="protoKeyword" size="24"
 							value="<%=sProtoKeyword%>"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-					   </td></div> 
+					   </div> 
+					   </td>
 					 </tr>
 					 
 					  <tr>
@@ -2045,10 +2052,8 @@ function enableDisableMenuItems(){
                   <td>
                        <div align="center" class="scItem">
                             <input type="button" name="startSearchBtn" value="Start Search"
-								onClick="doSearchDE();" style="width: 150"
-								, "height: 30"
+								onClick="doSearchDE();" width= 150 height= 30
             onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-                        </div>
                         </div>
                 </td></tr>
             </table> 
