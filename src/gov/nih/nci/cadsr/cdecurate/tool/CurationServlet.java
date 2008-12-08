@@ -10,6 +10,7 @@ import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.persist.ac.Admin_Components_Mgr;
 import gov.nih.nci.cadsr.persist.exception.DBException;
 import gov.nih.nci.cadsr.persist.user.User_Accounts_Mgr;
 import gov.nih.nci.cadsr.sentinel.util.DSRAlert;
@@ -19,6 +20,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -433,7 +435,7 @@ public class CurationServlet
                          {
                              doCreateCCActions(m_classReq, m_classRes);
                          }
-                        if (reqType.equals("newPV")) // fromForm
+                        else if (reqType.equals("newPV")) // fromForm
                         {
                             doCreatePVActions(m_classReq, m_classRes);
                         }
@@ -466,7 +468,7 @@ public class CurationServlet
 //                        {
 //                            doQualifierSearchActions(m_classReq, m_classRes);
 //                        }
-                        // get more records of Doc Text
+/*                        // get more records of Doc Text
                         else if (reqType.equals("getRefDocument"))
                         {
                             this.doRefDocSearchActions(m_classReq, m_classRes);
@@ -496,7 +498,7 @@ public class CurationServlet
                         {
                             this.doConDomainSearchActions(m_classReq, m_classRes);
                         }
-                        else if (reqType.equals("treeSearch"))
+*/                        else if (reqType.equals("treeSearch"))
                         {
                             this.doEVSSearchActions(reqType, m_classReq, m_classRes);
                         }
@@ -753,7 +755,7 @@ public class CurationServlet
                         {
                             doQualifierSearchActions(m_classReq, m_classRes);
                         }
- */                       // get more records of Doc Text
+                       // get more records of Doc Text
                         else if (reqType.equals("getRefDocument"))
                         {
                             this.doRefDocSearchActions(m_classReq, m_classRes);
@@ -783,6 +785,7 @@ public class CurationServlet
                         {
                             this.doConDomainSearchActions(m_classReq, m_classRes);
                         }
+ */                        
                         else if (reqType.equals("treeSearch"))
                         {
                             this.doEVSSearchActions(reqType, m_classReq, m_classRes);
@@ -2492,130 +2495,6 @@ public class CurationServlet
     }
 */
     /**
-     * to get reference documents for the selected ac and doc type called when the reference docuemnts window opened
-     * first time and calls 'getAC.getReferenceDocuments' forwards page back to reference documents
-     *
-     * @param req
-     *            The HttpServletRequest from the client
-     * @param res
-     *            The HttpServletResponse back to the client
-     *
-     * @throws Exception
-     */
-    private void doRefDocSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
-    {
-        GetACSearch getAC = new GetACSearch(req, res, this);
-        String acID = req.getParameter("acID");
-        String itemType = req.getParameter("itemType");
-        @SuppressWarnings("unused") Vector vRef = getAC.doRefDocSearch(acID, itemType, "open");
-        ForwardJSP(req, res, "/ReferenceDocumentWindow.jsp");
-    }
-
-    /**
-     * to get alternate names for the selected ac and doc type called when the alternate names window opened first time
-     * and calls 'getAC.getAlternateNames' forwards page back to alternate name window jsp
-     *
-     * @param req
-     *            The HttpServletRequest from the client
-     * @param res
-     *            The HttpServletResponse back to the client
-     *
-     * @throws Exception
-     */
-    private void doAltNameSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
-    {
-        GetACSearch getAC = new GetACSearch(req, res, this);
-        String acID = req.getParameter("acID");
-        String CD_ID = req.getParameter("CD_ID");
-        if (CD_ID == null)
-            CD_ID = "";
-        String itemType = req.getParameter("itemType");
-        if (itemType != null && itemType.equals("ALL"))
-            itemType = "";
-        @SuppressWarnings("unused") Vector vAlt = getAC.doAltNameSearch(acID, itemType, CD_ID, "other", "open");
-        ForwardJSP(req, res, "/AlternateNameWindow.jsp");
-    }
-
-    /**
-     * to get Permissible Values for the selected ac called when the permissible value window opened first time and
-     * calls 'getAC.doPVACSearch' forwards page back to Permissible Value window jsp
-     *
-     * @param req
-     *            The HttpServletRequest from the client
-     * @param res
-     *            The HttpServletResponse back to the client
-     *
-     * @throws Exception
-     */
-    private void doPermValueSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
-    {
-      //  GetACSearch getAC = new GetACSearch(req, res, this);
-        String acID = req.getParameter("acID");
-        String acName = req.getParameter("itemType"); // ac name for pv
-        if (acName != null && acName.equals("ALL"))
-            acName = "-";
-        String sConteIdseq = (String) req.getParameter("sConteIdseq");
-        if (sConteIdseq == null)
-            sConteIdseq = "";
-    	ValueDomainServlet vdServ = (ValueDomainServlet) this.getACServlet("ValueDomain");
-        PVServlet pvser = new PVServlet(req, res, vdServ);
-        pvser.searchVersionPV(null, 0, acID, acName);
-        ForwardJSP(req, res, "/PermissibleValueWindow.jsp");
-    }
-
-    /**
-     * display all the concepts for the selected ac from search results page
-     *
-     * @param req
-     *            HttpServletRequest
-     * @param res
-     *            HttpServletResponse
-     * @throws Exception
-     */
-    private void doConClassSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
-    {
-        GetACSearch getAC = new GetACSearch(req, res, this);
-        String acID = req.getParameter("acID"); // dec id
-        String ac2ID = req.getParameter("ac2ID"); // vd id
-        //String acType = req.getParameter("acType"); // actype to search
-        String acName = req.getParameter("acName"); // ac name for pv
-        // call the api to return concept attributes according to ac type and ac idseq
-        Vector<EVS_Bean> conList = new Vector<EVS_Bean>();
-        conList = getAC.do_ConceptSearch("", "", "", "", "", acID, ac2ID, conList);
-        req.setAttribute("ConceptClassList", conList);
-        req.setAttribute("ACName", acName);
-        // store them in request parameter to display and forward the page
-        ForwardJSP(req, res, "/ConceptClassDetailWindow.jsp");
-    }
-
-    /**
-     * display conceptual for the selected vm from the search results.
-     *
-     * @param req
-     *            HttpServletRequest
-     * @param res
-     *            HttpServletResponse
-     * @throws Exception
-     */
-    private void doConDomainSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
-    {
-        GetACSearch getAC = new GetACSearch(req, res, this);
-        String sVM = req.getParameter("acName"); // ac name for pv
-        // call the api to return concept attributes according to ac type and ac idseq
-        Vector cdList = new Vector();
-        cdList = getAC.doCDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", sVM, cdList); // get
-                                                                                                                    // the
-                                                                                                                    // list
-                                                                                                                    // of
-                                                                                                                    // Conceptual
-                                                                                                                    // Domains
-        req.setAttribute("ConDomainList", cdList);
-        req.setAttribute("VMName", sVM);
-        // store them in request parameter to display and forward the page
-        ForwardJSP(req, res, "/ConDomainDetailWindow.jsp");
-    }
-
-    /**
      * contact action from create and edit ac pages to either remove the selected contact or store the modified contact
      * back in the ac bean
      *
@@ -3070,28 +2949,6 @@ public class CurationServlet
             logger.fatal("Error - doContAddrAction : " + e.toString(), e);
         }
         return ACBean;
-    }
-
-    /**
-     * to get Protocol CRF for the selected ac called when the ProtoCRF window opened first time and calls
-     * 'getAC.doProtoCRFSearch' forwards page back to ProtoCRFwindow jsp
-     *
-     * @param req
-     *            The HttpServletRequest from the client
-     * @param res
-     *            The HttpServletResponse back to the client
-     *
-     * @throws Exception
-     */
-    private void doProtoCRFSearchActions(HttpServletRequest req, HttpServletResponse res) throws Exception
-    {
-        GetACSearch getAC = new GetACSearch(req, res, this);
-        String acID = req.getParameter("acID");
-        String acName = req.getParameter("itemType"); // ac name for proto crf
-        if (acName != null && acName.equals("ALL"))
-            acName = "-";
-        @SuppressWarnings("unused") Integer pvCount = getAC.doProtoCRFSearch(acID, acName);
-        ForwardJSP(req, res, "/ProtoCRFWindow.jsp");
     }
 
       /**
@@ -4150,8 +4007,56 @@ public class CurationServlet
 		this.m_conn = conn;
 	}
 
-	public void execute(ACRequestTypes reqType) throws Exception {
-		System.out.println("curation servlet");		
+    public void doOpenViewPage() throws Exception
+    {
+    	System.out.println("I am here open view page");
+    	//read the parameters idseq, public id and version from the request
+		String acIDSEQ = m_classReq.getParameter("idseq");
+		String sValue = m_classReq.getParameter("id");
+		long publicID =  0; 
+		if (sValue != null)
+			publicID = Long.parseLong(sValue); 
+		sValue = m_classReq.getParameter("version");
+		double version = 0;
+		if (sValue != null)
+			version = Double.parseDouble(sValue);
+		
+    	//query the ac table to get the actl name
+		String errMsg = "";
+		Admin_Components_Mgr acMgr = new Admin_Components_Mgr();
+		ArrayList<String> ac = null;
+		try {
+			ac = acMgr.getActlName(acIDSEQ, publicID, version, m_conn);
+		} catch (DBException e) {
+			logger.error("ac query", e);
+			errMsg = e.getMessage();
+		}
+		
+		//get the details for the selected AC
+		if (ac != null) {
+			String actlReq = "view"+ac.get(0);  //"DATAELEMENT";  //DE_CONCEPT ;  VALUEDOMAIN  ;  VALUEMEANING
+			acIDSEQ = ac.get(1);
+			if (acIDSEQ != null || !acIDSEQ.equals("")) {
+				m_classReq.setAttribute("acIdseq", acIDSEQ);
+				CurationServlet servObj = getACServlet(actlReq);
+				servObj.execute(getACType(actlReq));
+			} else {
+				errMsg = "Unable to determine the administered components used to view the data";
+				logger.error(errMsg);
+			}			
+		}
+		m_classReq.setAttribute("errMsg", errMsg);
+     	ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
+    }
+	
+	
+	public void execute(ACRequestTypes reqType) throws Exception {		
+		System.out.println("curation servlet");	
+		switch (reqType){
+			case view:
+				doOpenViewPage(); 
+				break;
+		}
 	}
 	
 	public AC_Bean getACNames(EVS_Bean newBean, String nameAct, AC_Bean pageAC) {
@@ -4168,11 +4073,16 @@ public class CurationServlet
 		return ac;
 	}
 
+	public ACRequestTypes getACType(String ac) {
+		ACRequestTypes acrt = ACRequestTypes.valueOf(ac);
+		return acrt;
+	}
+	
 	public CurationServlet getACServlet(String ac)
 	{
 		CurationServlet servObj = this;
     	try {
-    		ACRequestTypes acrt = ACRequestTypes.valueOf(ac);
+    		ACRequestTypes acrt = getACType(ac);
 			if (acrt != null)   
 			{
 			   String className = acrt.getClassName();

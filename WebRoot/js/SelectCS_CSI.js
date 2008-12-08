@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SelectCS_CSI.js,v 1.1 2007-09-10 16:16:48 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SelectCS_CSI.js,v 1.2 2008-12-08 19:30:39 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -395,7 +395,8 @@ fill selectedCSI options.
           }
         }
       } 
-      
+      //do the next items only if select works (not view mode)
+      if (obj_selCS != null) {
       //add the CSI to the selectedCSI list and selCSIArray only if not from the selectedCS change event.
       if (isFromEvent == false)
       {
@@ -407,6 +408,7 @@ fill selectedCSI options.
             addNewCSI(isExists, selCSCSI_id, selCS_id);
       }
       sortSelectedCSI();   //call the function to rearrange selected csi
+      }
    }
 
   //add the CSI to the selectedCSI list and selCSIArray only if not from the selectedCS change event.
@@ -888,7 +890,6 @@ fill selectedCSI options.
   //sort the alternate name columns
   function sortRef(sfield)
   {
-    alert("sorting ref " + sfield);
     document.designateDEForm.sortColumn.value = sfield;
     submitDesignate("sortRef");
   }
