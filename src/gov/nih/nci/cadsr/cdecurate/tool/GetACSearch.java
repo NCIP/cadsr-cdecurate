@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.70 2008-12-08 22:40:56 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.71 2008-12-09 20:15:29 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -4129,7 +4129,25 @@ public class GetACSearch implements Serializable
             if (sAction.equals("EditDesDE"))
                 sMenuAction = sAction;
             // reset cs/csi vectors prior to each block edit
-            if (vSRows.size() > 0)
+           
+            Vector selectedRows = new Vector();
+            String unCheckedRowId = (String) m_classReq.getParameter("unCheckedRowId");
+            if (unCheckedRowId != null && !(unCheckedRowId == "")){
+                int selectedRowID = new Integer(unCheckedRowId);
+                selectedRows.add(vSRows.elementAt(selectedRowID));
+            }else if(vSRows.size() > 0){
+            	for (int i = 0; i < (vSRows.size()); i++){
+            		String ckName = ("CK" + i);
+                    String rSel = (String) req.getParameter(ckName);
+                    if (rSel != null){
+                    	DataManager.setAttribute(session, "ckName", ckName);
+                        vCheckList.addElement(ckName);
+                        selectedRows.add(vSRows.elementAt(i));
+                    }
+            	}
+            }
+
+            if (selectedRows.size() > 0)
             {
                 String sContext = "";
                 String sStatus = "";
@@ -4139,20 +4157,13 @@ public class GetACSearch implements Serializable
                 // logger.info(m_servlet.getLogMessage(m_classReq, "getSelRowToEdit", "begin rowselect", exDate,
                 // exDate));
                 // loop through the searched DE result to get the matched checked rows
-                for (int i = 0; i < (vSRows.size()); i++)
+                for (int i = 0; i < (selectedRows.size()); i++)
                 {
-                    String ckName = ("CK" + i);
-                    String rSel = (String) req.getParameter(ckName);
-                    if (rSel != null)
-                    {
-                        // reset the bean with selected row for the selected component
-                        DataManager.setAttribute(session, "ckName", ckName);
-                        vCheckList.addElement(ckName);
                         if (sSearchAC.equals("DataElement"))
                         {
                             DE_Bean DEBean = new DE_Bean();
-                            // DEBean = (DE_Bean)vSRows.elementAt(i);
-                            DEBean = DEBean.cloneDE_Bean((DE_Bean) vSRows.elementAt(i), "Complete");
+                            // DEBean = (DE_Bean)selectedRows.elementAt(i);
+                            DEBean = DEBean.cloneDE_Bean((DE_Bean) selectedRows.elementAt(i), "Complete");
                             String sContextID = DEBean.getDE_CONTE_IDSEQ();
                             // check the permissiion if not template and not designation
                             if (sMenuAction.equals("NewDETemplate"))
@@ -4193,7 +4204,7 @@ public class GetACSearch implements Serializable
                         else if (sSearchAC.equals("DataElementConcept"))
                         {
                             DEC_Bean DECBean = new DEC_Bean();
-                            DECBean = DECBean.cloneDEC_Bean((DEC_Bean) vSRows.elementAt(i));
+                            DECBean = DECBean.cloneDEC_Bean((DEC_Bean) selectedRows.elementAt(i));
                             String sContextID = "";
                             if (DECBean != null)
                                 sContextID = DECBean.getDEC_CONTE_IDSEQ();
@@ -4233,8 +4244,8 @@ public class GetACSearch implements Serializable
                         {
                             VD_Bean VDBean = new VD_Bean();
                             VD_Bean VDBean2 = new VD_Bean();
-                            VDBean2 = (VD_Bean) vSRows.elementAt(i);
-                            VDBean = VDBean.cloneVD_Bean((VD_Bean) vSRows.elementAt(i));
+                            VDBean2 = (VD_Bean) selectedRows.elementAt(i);
+                            VDBean = VDBean.cloneVD_Bean((VD_Bean) selectedRows.elementAt(i));
                             if (VDBean != null)
                                 sContext = VDBean.getVD_CONTEXT_NAME();
                             if (VDBean != null)
@@ -4277,7 +4288,7 @@ public class GetACSearch implements Serializable
                         }else if (sSearchAC.equals("ValueMeaning"))
                         {
                             VM_Bean VMBean = new VM_Bean();
-                            VMBean = (VM_Bean) vSRows.elementAt(i);
+                            VMBean = (VM_Bean) selectedRows.elementAt(i);
                             DataManager.setAttribute(session, "results", vSRows);
                             DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, VMBean);
                             DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
@@ -4291,11 +4302,7 @@ public class GetACSearch implements Serializable
                             // call the api to return concept attributes according to ac type and ac idseq
                             Vector cdList = new Vector();
                             cdList = this.doCDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", sVM, cdList); // get
-                                                                                                                                     // the
-                                                                                                                                        // list
-                                                                                                                                        // of
-                                                                                                                                        // Conceptual
-                                                                                                                                        // Domains
+                                                                                                                             // Domains
                             req.setAttribute("ConDomainList", cdList);
                             req.setAttribute("VMName", sVM);*/
                             //write the jsp
@@ -4308,18 +4315,16 @@ public class GetACSearch implements Serializable
                         {
                             // get the quest bean from the vector
                             Quest_Bean selQuestBean = new Quest_Bean();
-                            selQuestBean = (Quest_Bean) vSRows.elementAt(i);
+                            selQuestBean = (Quest_Bean) selectedRows.elementAt(i);
                             DataManager.setAttribute(session, "m_Quest", selQuestBean);
                             isValid = doSelectDEforQuestion(req, res, selQuestBean, getAC);
                             break;
                         }
-                    }
+                    
                 }
                 // capture the duration
                 // logger.info(m_servlet.getLogMessage(m_classReq, "getSelRowToEdit", "end rowselect", exDate, new
                 // java.util.Date()));
-                if (!strInValid.equals(""))
-                {
                     vCheckList = new Vector();
                     for (int m = 0; m < (vSRows.size()); m++)
                     {
@@ -4328,7 +4333,7 @@ public class GetACSearch implements Serializable
                         if (rSel2 != null)
                             vCheckList.addElement(ckName2);
                     }
-                }
+                
                 DataManager.setAttribute(session, "CheckList", vCheckList);
             }
             if (sAction.equalsIgnoreCase("BlockEdit") || sAction.equalsIgnoreCase("EditDesDE"))
