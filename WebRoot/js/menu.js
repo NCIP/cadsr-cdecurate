@@ -96,16 +96,6 @@ function menuItemFocus(mitem) {
 	}
 	mitem.style.cursor = "default";
 }
-function menuItemFocusRed(mitem) {
-	var miEnable = mitem.getAttribute("menuEnable");
-	if (miEnable == null || miEnable != "false") {
-		mitem.style.backgroundColor = "#FF0000";
-		//mitem.style.color = menuTextColor;
-	} else {
-		//mitem.style.color = menuDisabledColor;
-	}
-	mitem.style.cursor = "default";
-}
 function menuItemNormal(mitem) {
 	mitem.style.backgroundColor = menuBackgroundColor;
 	var miEnable = mitem.getAttribute("menuEnable");
