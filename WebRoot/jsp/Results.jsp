@@ -269,7 +269,7 @@
 	//get the session attributes according searching from Menu or create page
 	if (sMAction.equals("searchForCreate")) {
 		sKeyword = (String) session.getAttribute("creKeyword");
-		nRecs = (String) request.getAttribute("creRecsFound");
+		nRecs = (String) session.getAttribute("creRecsFound");
 		sSelAC = (String) session.getAttribute("creSearchAC"); //done now in CDEHomePage
 		vSelAttr = (Vector) session.getAttribute("creSelectedAttr");
 		vCheckList = (Vector) session.getAttribute("creCheckList");
@@ -277,7 +277,7 @@
 	} else {
 		sKeyword = (String) session.getAttribute("serKeyword");
 		sSelAC = (String) session.getAttribute("searchAC"); //done now in CDEHomePage
-		nRecs = (String) request.getAttribute("recsFound");
+		nRecs = (String) session.getAttribute("recsFound");
 		vSelAttr = (Vector) session.getAttribute("selectedAttr");
 		vCheckList = (Vector) session.getAttribute("CheckList");
 	}

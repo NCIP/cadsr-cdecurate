@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.11 2008-07-03 21:37:20 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.12 2008-12-09 21:47:03 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -72,7 +72,7 @@
    if (sMAction.equals("searchForCreate"))
    {
        sKeyword = (String)session.getAttribute("creKeyword");
-       nRecs = (String)request.getAttribute("creRecsFound");
+       nRecs = (String)session.getAttribute("creRecsFound");
        sSelAC = (String)session.getAttribute("creSearchAC"); //done now in CDEHomePage
        vSelAttr = (Vector)session.getAttribute("creSelectedAttr");
        vCheckList = (Vector)session.getAttribute("creCheckList");

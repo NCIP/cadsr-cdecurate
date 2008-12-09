@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.39 2008-11-14 16:31:51 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.40 2008-12-09 21:46:05 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -963,9 +963,9 @@ private String goBackToSearch()
     vmAction.getVMResult(vmData,req,getac);
     //store the result back in request/session attributes
     DataManager.setAttribute(session, "results", vmData.getResultList());
-    req.setAttribute("creRecsFound", vmData.getNumRecFound());
+    session.setAttribute("creRecsFound", vmData.getNumRecFound());
     req.setAttribute("labelKeyword", vmData.getResultLabel());  
-    req.setAttribute("recsFound", vmData.getNumRecFound());
+    session.setAttribute("recsFound", vmData.getNumRecFound());
   }
   
   /**
@@ -981,9 +981,9 @@ private String goBackToSearch()
     vmAction.getVMResult(vmData,req);
     //store teh result back in request/session attributes
     DataManager.setAttribute(session, "results", vmData.getResultList());
-    req.setAttribute("creRecsFound", vmData.getNumRecFound());
+    session.setAttribute("creRecsFound", vmData.getNumRecFound());
     req.setAttribute("labelKeyword", vmData.getResultLabel());  
-    req.setAttribute("recsFound", vmData.getNumRecFound());
+    session.setAttribute("recsFound", vmData.getNumRecFound());
   }
 
   /** resets the vm concepts from page at save action to make sure newly added or deleted ones in the order
