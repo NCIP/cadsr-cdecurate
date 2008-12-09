@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.13 2008-12-05 22:17:07 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.14 2008-12-09 20:16:23 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -336,39 +336,23 @@
   
   // for edit/template/version/Question submits the page with action selected as Edit
   function ShowEditSelection()
-  {   
-	   getRowAttributes();   //get the values of each row.
-	   var bOkOpen = true;
-	   if (bOkOpen == true && document.searchResultsForm.numOfRowsSelected.value == "1"){
-         window.status = "Opening the page, it may take a minute, please wait....."
-			   document.searchResultsForm.Message.style.visibility="visible";
-         document.searchResultsForm.actSelected.value = "Edit";
-         document.searchResultsForm.numSelected.value = numRowsSelected;
-         document.searchResultsForm.submit();
-   	   }
-	   else if (document.searchResultsForm.numOfRowsSelected.value == ">1"){ 
-  	    window.status = "Opening the page, it may take a minute, please wait....."
-		    document.searchResultsForm.Message.style.visibility="visible";
-        document.searchResultsForm.actSelected.value = "BlockEdit";
-        document.searchResultsForm.numSelected.value = numRowsSelected;
-        document.searchResultsForm.submit();
-	 }
+  { 
+     window.status = "Opening the page, it may take a minute, please wait....."
+	 document.searchResultsForm.Message.style.visibility="visible";
+     document.searchResultsForm.actSelected.value = "Edit";
+     document.searchResultsForm.submit();
   }
 
   // Block edit multiple rows of DE's, DEC's, or VD's
   function BlockEdit()
   {
        getRowAttributes();   //get the values of each row.
-       
        window.status = "Opening the page, it may take a minute, please wait....."
        document.searchResultsForm.Message.style.visibility="visible";
        document.searchResultsForm.actSelected.value = "BlockEdit";
        document.searchResultsForm.numSelected.value = numRowsSelected;
        document.searchResultsForm.submit();
   }
-
- 
-   
   function UnCheckAllCheckBoxes() 
   {
   	var dCount =0;
@@ -794,7 +778,7 @@ function uploadCmd()
            ShowEditSelection();
         }
         if (type == "blockEdit"){
-           ShowEditSelection();
+           BlockEdit();
         }
      }    
   
@@ -811,14 +795,11 @@ function createNewJS(user, selAC, type){
    
 //submits the page to display 'Create New Using Existing' window or 'Creat New Version' window
 function createNewAC(selAC, type){
-         getRowAttributes(); 
-         var bOkOpen = true;
-	   if (bOkOpen == true && document.searchResultsForm.numOfRowsSelected.value == "1"){
+         
          window.status = "Opening the page, it may take a minute, please wait....."
-			   document.searchResultsForm.Message.style.visibility="visible";
+		 document.searchResultsForm.Message.style.visibility="visible";
          document.searchResultsForm.actSelected.value = "Edit";
          document.searchResultsForm.numSelected.value = numRowsSelected;
-         
          if (type == "newUsingExisting"){
              document.searchResultsForm.hidaction.value = "newUsingExisting";
              if (selAC == "Data Element"){
@@ -843,8 +824,7 @@ function createNewAC(selAC, type){
              }
          }
         document.searchResultsForm.submit();
-       }  
-   }
+  }
   // stored the selected row values for permissible values on SearchForCreate action
   function StoreRow(addRow, rowNo){
 	   selRow = rowNo;
@@ -890,8 +870,8 @@ function checkClickJS(cb,selAC,rowsChecked)  {
 					StoreRow("true", rowNo);
 			     }else{
 			        StoreRow("false", rowNo);
-			     }   
-                //enableDisableMenuItemsJS(selAC, checkCnt);
+			     } 
+			     //enableDisableMenuItemsJS(selAC, checkCnt);
    
 }
   //This function enables or disables the menu items depending on the num of items checked          
@@ -899,7 +879,7 @@ function enableDisableMenuItemsJS(sSelAC, checkCount){
            
            if (checkCount > 1)  {
                 
-                   document.searchResultsForm.numOfRowsSelected.value = ">1";
+                   //document.searchResultsForm.numOfRowsSelected.value = ">1";
                    if ( (sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain") ){
                       var doc = document.getElementById("uploadDoc");
                       var newUE = document.getElementById("newUE");
@@ -940,7 +920,7 @@ function enableDisableMenuItemsJS(sSelAC, checkCount){
                        disable(view);
                    }
                  }else{
-                  document.searchResultsForm.numOfRowsSelected.value = "1";
+                  //document.searchResultsForm.numOfRowsSelected.value = "1";
                  if ( (sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain") ){
                       var doc = document.getElementById("uploadDoc");
                       var newUE = document.getElementById("newUE");

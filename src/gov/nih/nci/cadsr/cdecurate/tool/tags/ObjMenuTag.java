@@ -83,7 +83,7 @@ public class ObjMenuTag extends MenuTag {
 							          + displayGetAssociatedVD());
 				}          
 				if ((selACType).equals("ValueMeaning")) {
-					objMenu.println(generateTR("edit","","performAction('edit')","","","Edit")
+					objMenu.println(generateTR("edit","edit","performUncheckedCkBoxAction('edit')","","","Edit")
 							          + displayView()
 							          + displayGetAssociatedDE()
 							          + displayGetAssociatedVD());
@@ -103,7 +103,7 @@ public class ObjMenuTag extends MenuTag {
 				objMenu.println(generateTR("","","","new","ShowSelectedRows(true)","Show Selected Rows"));
 						         
 				if (sSelectAll.equals("true")){
-					objMenu.println(generateTR("","","","new","SelectAllCheckBox()","Clear All"));
+					objMenu.println(generateTR("","","","new","SelectAllCheckBox()","Unselect All"));
                  }else{
                 	 objMenu.println(generateTR("","","","new","SelectAllCheckBox()","Select All"));  
                  }
@@ -132,7 +132,7 @@ public class ObjMenuTag extends MenuTag {
 		if (image_single == "---"){
 			tdTag1 = "<td class=\"cell\" align = \"center\" style = \"cursor:default\">"+image_single+"</td>";
 		}else{
-			tdTag1 = "<td class=\"cell\" align = \"center\" onmouseover=\"menuItemFocusRed(this);\" onmouseout=\"menuItemNormal(this);\" onclick=\"javascript:" + jsMethodSingle + ";\">"+image_single+"</td>";
+			tdTag1 = "<td class=\"cell\" align = \"center\" onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\" onclick=\"javascript:" + jsMethodSingle + ";\">"+image_single+"</td>";
 		}
         if (image_multiple == "---"){
         	tdTag2 = "<td class=\"cell\" align = \"center\" style = \"cursor:default\">"+image_multiple+"</td>" ;

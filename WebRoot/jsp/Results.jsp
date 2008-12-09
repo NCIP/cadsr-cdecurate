@@ -875,9 +875,8 @@ function enableDisableMenuItems(){
   enableDisableMenuItemsJS('<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>',numRowsChecked);
 }
 
- function viewAC()
- {
- 		getRowAttributes();   //get the values of each row.
+ function viewAC(){
+ 		editID = document.searchResultsForm.hiddenSearch[document.searchResultsForm.selectedRowId.value].value;
  		var viewWindow = window.open("../../cdecurate/NCICurationServlet?reqType=view&idseq=" +editID, "ViewAC", "width=1000,height=1500,top=0,left=0,resizable=yes,scrollbars=yes");
  }
 
@@ -2097,7 +2096,6 @@ function enableDisableMenuItems(){
 
 
 <form name="searchResultsForm"  method="post" action=" ../../cdecurate/NCICurationServlet?reqType=showResult">
-		   <input type="hidden" name="numOfRowsSelected" value="1">
 		   <input type="hidden" name="count" value="1">
 		   <input type="hidden" name="hidaction" value="nothing">
            <input type="hidden" name="hidMenuAction" value="nothing">
