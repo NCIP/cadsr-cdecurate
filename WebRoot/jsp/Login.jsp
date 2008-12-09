@@ -42,10 +42,11 @@
                     <td colspan="2" align="center">
                        <form name="LoginForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=login">
         	            <input type="hidden" name="previousReqType" value="/SearchResultsPage.jsp">
+        	            <input type="hidden" name="cancelLogin" value="No">
                         <table style="border-collapse: collapse"><col align="right"/><col />
                             <tr><td style="padding: 0.2in 0.1in 0.1in 0.1in"><b>User&nbsp;Name</b></td><td style="padding: 0.2in 0.1in 0.1in 0.1in"><input type="text" name="Username" value="" size="25"/></td></tr>
                             <tr><td style="padding: 0.1in 0.1in 0.1in 0.1in"><b>Password</b></td><td style="padding: 0.1in 0.1in 0.1in 0.1in"><input type="password" name="Password" value="" size="25"/></td></tr>
-                            <tr><td style="padding: 0.1in 0.1in 0.2in 0.1in" align="left">&nbsp;</td><td style="padding: 0.1in 0.1in 0.2in 0.1in" align="right"><input type="Submit" value="Login" name="login" onclick="callMessageGifLogin();"/> <input type="button" value="Cancel" name="cancel" onclick="javascript:CloseWindow();"/></td></tr>
+                            <tr><td style="padding: 0.1in 0.1in 0.2in 0.1in" align="left">&nbsp;</td><td style="padding: 0.1in 0.1in 0.2in 0.1in" align="right"><input type="Submit" value="Login" name="login" onclick="javascript:callMessageGifLogin();"/> <input type="button" value="Cancel" name="cancel" onclick="javascript:CloseWindow();"/></td></tr>
                         </table>
                       </form>
                     </td>

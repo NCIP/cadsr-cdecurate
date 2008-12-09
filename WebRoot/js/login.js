@@ -7,7 +7,9 @@ function callMessageGifLogin() {
 	document.LoginForm.submit();
 }
 function CloseWindow() {
-	window.close();
+    document.LoginForm.cancelLogin.value="Yes"; 
+    window.status = "Loading data, it may take a minute, please wait.....";
+    document.LoginForm.submit();
 }
 
 

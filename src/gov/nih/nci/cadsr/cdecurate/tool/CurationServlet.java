@@ -416,7 +416,10 @@ public class CurationServlet
                     {
                         //DataManager.clearSessionAttributes(session);
                        // sessionData = new Session_Data();
-                         login(m_classReq,m_classRes,session);
+                    	 String cancelLogin = (String)m_classReq.getParameter("cancelLogin");
+                    	 if (cancelLogin.equals("No")){
+                           login(m_classReq,m_classRes,session);
+                    	 }  
                          String prevReq = m_classReq.getParameter("previousReqType");
                          if (prevReq == null) prevReq = "/SearchResultsPage.jsp";
                          ForwardJSP(m_classReq, m_classRes, prevReq);
