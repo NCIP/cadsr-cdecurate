@@ -43,7 +43,7 @@
                         </table>
                     </td>
                 </tr>
-                <tr></tr><tr></tr><tr></tr><tr></tr>
+                <br/>
 				<tr>
 					<td colspan="2" align="center">
 						<%if (errMessage.equals("")) {%>
