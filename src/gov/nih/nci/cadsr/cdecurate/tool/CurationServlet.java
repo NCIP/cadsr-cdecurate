@@ -2969,11 +2969,10 @@ public class CurationServlet
         {
             // Be sure something was selected by the user.
             Vector vSRows = (Vector) session.getAttribute("vSelRows");
-            if (vSRows == null || vSRows.size() == 0)
-            {
+            /*if (vSRows == null || vSRows.size() == 0){
                 msg = "No items were selected from the Search Results.";
                 break;
-            }
+            }*/
             // Get session information.
             UserBean Userbean = new UserBean();
             Userbean = (UserBean) session.getAttribute("Userbean");
@@ -2997,13 +2996,26 @@ public class CurationServlet
                 try
                 {
                     vCheckList = new Vector<String>();
-                    for (ndx = 0; ndx < vSRows.size(); ++ndx)
-                    {
-                        String temp;
-                        String ckName = ("CK" + ndx);
-                        temp = req.getParameter(ckName);
-                        if (temp != null)
-                        {
+                    String unCheckedRowId = (String) m_classReq.getParameter("unCheckedRowId");
+                    if (unCheckedRowId != null && !(unCheckedRowId == "")){
+                        int selectedRowID = new Integer(unCheckedRowId);
+                        AC_Bean bean = (AC_Bean) vSRows.elementAt(selectedRowID);
+                        stmt.setString(1, bean.getIDSEQ());
+                        stmt.execute();
+                        if (stmt.getString(3) != null)
+                            csi_idseq = stmt.getString(3);
+                        for (int m = 0; m < (vSRows.size()); m++){
+                            String ckName2 = ("CK" + m);
+                            String rSel2 = (String) req.getParameter(ckName2);
+                            if (rSel2 != null)
+                                vCheckList.addElement(ckName2);
+                        }
+                     }else if(vSRows.size() > 0){ 
+                      for (ndx = 0; ndx < vSRows.size(); ++ndx){
+                         String temp;
+                         String ckName = ("CK" + ndx);
+                         temp = req.getParameter(ckName);
+                         if (temp != null){
                             AC_Bean bean = (AC_Bean) vSRows.elementAt(ndx);
                             temp = bean.getIDSEQ();
                             stmt.setString(1, temp);
@@ -3012,8 +3024,10 @@ public class CurationServlet
                             vCheckList.addElement(ckName);
                             if (temp != null)
                                 csi_idseq = temp;
-                        }
-                    }
+                         }
+                       }
+                    } 
+                   
                     DataManager.setAttribute(session, "CheckList", vCheckList); // add the check list in the session.
                 }
                 catch (ClassCastException e)
@@ -3089,25 +3103,34 @@ public class CurationServlet
         {
             // Be sure something was selected by the user.
             Vector vSRows = (Vector) session.getAttribute("vSelRows");
-            if (vSRows == null || vSRows.size() == 0)
-            {
+           /* if (vSRows == null || vSRows.size() == 0){
                 msg = "No items were selected from the Search Results.";
                 break;
-            }
+            }*/
             // Get session information.
             UserBean Userbean = new UserBean();
             Userbean = (UserBean) session.getAttribute("Userbean");
-            if (Userbean == null)
-            {
+            if (Userbean == null){
                 msg = "User session information is missing.";
                 break;
             }
             // Get list of selected AC's.
             Vector<String> list = new Vector<String>();
-            for (int ndx = 0; ndx < vSRows.size(); ++ndx)
-            {
-                try
+            String unCheckedRowId = (String) m_classReq.getParameter("unCheckedRowId");
+            if (unCheckedRowId != null && !(unCheckedRowId == "")){
+                int selectedRowID = new Integer(unCheckedRowId);
+                AC_Bean bean = (AC_Bean) vSRows.elementAt(selectedRowID);
+                list.add(bean.getIDSEQ());
+                for (int m = 0; m < (vSRows.size()); m++)
                 {
+                    String ckName2 = ("CK" + m);
+                    String rSel2 = (String) req.getParameter(ckName2);
+                    if (rSel2 != null)
+                        vCheckList.addElement(ckName2);
+                }
+            }else if(vSRows.size() > 0){ 
+               for (int ndx = 0; ndx < vSRows.size(); ++ndx){
+                 try{
                     String temp;
                     String ckName = ("CK" + ndx);
                     temp = req.getParameter(ckName);
@@ -3118,11 +3141,11 @@ public class CurationServlet
                         list.add(temp);
                         vCheckList.addElement(ckName);
                     }
+                }catch (ClassCastException e){
                 }
-                catch (ClassCastException e)
-                {
-                }
+              }
             }
+            
             DataManager.setAttribute(session, "CheckList", vCheckList); // add the check list in the session.
             if (list.size() == 0)
             {
