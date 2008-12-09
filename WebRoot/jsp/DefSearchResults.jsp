@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/DefSearchResults.jsp,v 1.3 2008-07-03 21:29:59 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/DefSearchResults.jsp,v 1.4 2008-12-09 21:47:03 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -29,7 +29,7 @@
     sKeyword = "";
    session.setAttribute("creKeyword", null);
 
-   nRecs = (String)request.getAttribute("creRecsFound");
+   nRecs = (String)session.getAttribute("creRecsFound");
     if (nRecs == null)
       nRecs = "No ";
 

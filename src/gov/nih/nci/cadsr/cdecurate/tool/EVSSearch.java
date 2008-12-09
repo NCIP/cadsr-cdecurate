@@ -1,6 +1,6 @@
 //Copyright (c) 2000 ScenPro, Inc.
 
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.61 2008-11-06 23:28:30 hegdes Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.62 2008-12-09 21:44:18 veerlah Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1399,10 +1399,10 @@ public class EVSSearch implements Serializable {
 			String sKeyword = "";
 			if (menuAction.equals("searchForCreate")
 					|| menuAction.equals("BEDisplay")) {
-				req.setAttribute("creRecsFound", recs2);
+				session.setAttribute("creRecsFound", recs2);
 				sKeyword = (String) session.getAttribute("creKeyword");
 			} else {
-				req.setAttribute("recsFound", recs2);
+				session.setAttribute("recsFound", recs2);
 				sKeyword = (String) session.getAttribute("serKeyword");
 			}
 			if (sKeyword == null)
@@ -2292,7 +2292,7 @@ public class EVSSearch implements Serializable {
 			m_classReq.setAttribute("labelKeyword", sConceptName);
 			Integer recs = new Integer(vAC.size());
 			String recs2 = recs.toString();
-			m_classReq.setAttribute("creRecsFound", recs2);
+			session.setAttribute("creRecsFound", recs2);
 			DataManager.setAttribute(session, "vACSearch", vAC);
 			if (sSearchAC.equals("ParentConceptVM"))
 				sUISearchType = "tree";
@@ -2536,7 +2536,7 @@ public class EVSSearch implements Serializable {
 			String recs2 = recs.toString();
 			sKeywordID = "";
 			sKeywordName = "";
-			m_classReq.setAttribute("creRecsFound", recs2);
+			session.setAttribute("creRecsFound", recs2);
 		}
 
 		m_classReq.setAttribute("UISearchType", "tree");
@@ -2767,7 +2767,7 @@ public class EVSSearch implements Serializable {
 		m_classReq.setAttribute("labelKeyword", sConceptName);
 		Integer recs = new Integer(vAC.size());
 		String recs2 = recs.toString();
-		m_classReq.setAttribute("creRecsFound", recs2);
+		session.setAttribute("creRecsFound", recs2);
 		DataManager.setAttribute(session, "vACSearch", vAC);
 		if (sSearchAC.equals("ParentConceptVM"))
 			sUISearchType = "tree";

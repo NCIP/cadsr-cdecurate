@@ -447,7 +447,7 @@ public class SearchServlet extends CurationServlet {
             DataManager.setAttribute(session, "vSelRows", vResult);
             DataManager.setAttribute(session, "CheckList", vResult);
             DataManager.setAttribute(session, "AppendAction", "Not Appended");
-            m_classReq.setAttribute("recsFound", "No ");
+            session.setAttribute("recsFound", "No ");
             DataManager.setAttribute(session, "serKeyword", "");
             DataManager.setAttribute(session, "serProtoID", "");
             DataManager.setAttribute(session, "LastAppendWord", "");
@@ -1574,7 +1574,7 @@ public class SearchServlet extends CurationServlet {
             DataManager.setAttribute(session, "selCS", "");
             DataManager.setAttribute(session, "serSelectedCD", "");
             // reset the appened attributes
-            m_classReq.setAttribute("recsFound", "No ");
+            session.setAttribute("recsFound", "No ");
             DataManager.setAttribute(session, "CheckList", new Vector());
             DataManager.setAttribute(session, "AppendAction", "Not Appended");
             DataManager.setAttribute(session, "vSelRows", new Vector());
@@ -1892,7 +1892,7 @@ public class SearchServlet extends CurationServlet {
         // sets the default attributes and resets to empty result vector
         Vector vResult = new Vector();
         DataManager.setAttribute(session, "results", vResult);
-        m_classReq.setAttribute("recsFound", "No ");
+        session.setAttribute("recsFound", "No ");
         DataManager.setAttribute(session, "serKeyword", "");
         DataManager.setAttribute(session, "serProtoID", "");
         DataManager.setAttribute(session, "LastAppendWord", "");

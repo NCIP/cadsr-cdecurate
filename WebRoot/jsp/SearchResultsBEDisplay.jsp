@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBEDisplay.jsp,v 1.2 2008-06-20 17:05:50 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBEDisplay.jsp,v 1.3 2008-12-09 21:47:03 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -35,7 +35,7 @@
   // String sMAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
  //  session.setAttribute("MenuAction", "searchForCreate");
    sKeyword = (String)session.getAttribute("creKeyword");
-   nRecs = (String)request.getAttribute("recsFound");
+   nRecs = (String)session.getAttribute("recsFound");
    sSelAC = (String)session.getAttribute("searchAC");  //done now in CDEHomePage
    vSelAttr = (Vector)session.getAttribute("selectedAttr");
 

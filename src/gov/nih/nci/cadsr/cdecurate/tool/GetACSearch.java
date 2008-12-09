@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.71 2008-12-09 20:15:29 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.72 2008-12-09 21:44:51 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2642,12 +2642,12 @@ public class GetACSearch implements Serializable
             String sKeyword = "";
             if (menuAction.equals("searchForCreate"))
             {
-                req.setAttribute("creRecsFound", recs2);
+            	session.setAttribute("creRecsFound", recs2);
                 sKeyword = (String) session.getAttribute("creKeyword");
             }
             else
             {
-                req.setAttribute("recsFound", recs2);
+            	session.setAttribute("recsFound", recs2);
                 sKeyword = (String) session.getAttribute("serKeyword");
             }
             // make keyWordLabel label request session
@@ -3228,12 +3228,12 @@ public class GetACSearch implements Serializable
             String sKeyword = "";
             if (menuAction.equals("searchForCreate"))
             {
-                req.setAttribute("creRecsFound", recs2);
+            	session.setAttribute("creRecsFound", recs2);
                 sKeyword = (String) session.getAttribute("creKeyword");
             }
             else
             {
-                req.setAttribute("recsFound", recs2);
+            	session.setAttribute("recsFound", recs2);
                 sKeyword = (String) session.getAttribute("serKeyword");
             }
             // make keyWordLabel label request session
@@ -3374,12 +3374,12 @@ public class GetACSearch implements Serializable
             String sKeyword = "";
             if (menuAction.equals("searchForCreate"))
             {
-                req.setAttribute("creRecsFound", recs2);
+            	session.setAttribute("creRecsFound", recs2);
                 sKeyword = (String) session.getAttribute("creKeyword");
             }
             else
             {
-                req.setAttribute("recsFound", recs2);
+            	session.setAttribute("recsFound", recs2);
                 sKeyword = (String) session.getAttribute("serKeyword");
             }
             // make keyWordLabel label request session
@@ -3551,12 +3551,12 @@ public class GetACSearch implements Serializable
             String sKeyword = "";
             if (menuAction.equals("searchForCreate"))
             {
-                req.setAttribute("creRecsFound", recs2);
+            	session.setAttribute("creRecsFound", recs2);
                 sKeyword = (String) session.getAttribute("creKeyword");
             }
             else
             {
-                req.setAttribute("recsFound", recs2);
+            	session.setAttribute("recsFound", recs2);
                 sKeyword = (String) session.getAttribute("serKeyword");
             }
             // make keyWordLabel label request session
@@ -6101,12 +6101,12 @@ public class GetACSearch implements Serializable
             String sKeyword = "";
             if (menuAction.equals("searchForCreate"))
             {
-                req.setAttribute("creRecsFound", recs2);
+            	session.setAttribute("creRecsFound", recs2);
                 sKeyword = (String) session.getAttribute("creKeyword");
             }
             else
             {
-                req.setAttribute("recsFound", recs2);
+            	session.setAttribute("recsFound", recs2);
                 sKeyword = (String) session.getAttribute("serKeyword");
             }
             // make keyWordLabel label request session
@@ -6463,12 +6463,12 @@ public class GetACSearch implements Serializable
             String sKeyword = "";
             if (menuAction.equals("searchForCreate"))
             {
-                req.setAttribute("creRecsFound", recs2);
+            	session.setAttribute("creRecsFound", recs2);
                 sKeyword = (String) session.getAttribute("creKeyword");
             }
             else
             {
-                req.setAttribute("recsFound", recs2);
+            	session.setAttribute("recsFound", recs2);
                 sKeyword = (String) session.getAttribute("serKeyword");
             }
             // make keyWordLabel label request session
@@ -8681,7 +8681,7 @@ public class GetACSearch implements Serializable
             Integer recs = new Integer(vRSel.size());
             String recs2 = recs.toString();
             String sKeyword = "";
-            req.setAttribute("recsFound", recs2);
+            session.setAttribute("recsFound", recs2);
             Vector vSearchID = new Vector();
             Vector vSearchName = new Vector();
             Vector vSearchLongName = new Vector();
@@ -9238,7 +9238,7 @@ public class GetACSearch implements Serializable
             Integer recs = new Integer(vAC.size());
             String recs2 = recs.toString();
             String sKeyword = "";
-            req.setAttribute("creRecsFound", recs2);
+            session.setAttribute("creRecsFound", recs2);
         }
         catch (Exception e)
         {

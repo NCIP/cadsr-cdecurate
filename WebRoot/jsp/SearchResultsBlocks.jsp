@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.13 2008-07-03 21:37:45 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.14 2008-12-09 21:47:03 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -51,7 +51,7 @@
    if (sMAction != null && sMAction.equals("searchForCreate"))  // || sMAction.equals("BEDisplay"))
    {
        sKeyword = (String)session.getAttribute("creKeyword");
-       nRecs = (String)request.getAttribute("creRecsFound");
+       nRecs = (String)session.getAttribute("creRecsFound");
        sSelAC = (String)session.getAttribute("creSearchAC");
        if (sSelAC == null) sSelAC = "";
        sSelectedParentName = (String)session.getAttribute("SelectedParentName");
