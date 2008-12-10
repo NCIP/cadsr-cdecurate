@@ -30,7 +30,7 @@ public class ObjMenuTag extends MenuTag {
 			try {
 				objMenu.println("<table style = \"border-collapse: collapse; bgcolor: #d8d8df\">");
 				objMenu.println("<tr><td colspan=\"3\"><p style=\"margin: 0px 0px 5px 0px; color: red\"><span id=\"selCnt\">" + rowsChecked + "</span> Record(s) Selected</p></td></tr>");
-				objMenu.println("<tr style = \"background-color:#4876FF\"><td class=\"cell\"><input type=\"checkbox\" disabled></td><td class=\"cell\"><b><font color = \"#FFFFFF\">Action</b></td><td class=\"cell\"><input type=\"checkbox\" checked disabled></td></tr>");
+				objMenu.println("<tr style = \"background-color:#4876FF\"><td class=\"cell\" align=\"center\"><input type=\"checkbox\" onclick=\"this.checked=false;\"></td><td class=\"cell\" align=\"center\"><b><font color = \"#FFFFFF\">Action</b></td><td class=\"cell\" align=\"center\"><input type=\"checkbox\" checked onclick=\"this.checked=true;\"></td></tr>");
                 
 			if ((selACType).equals("DataElement")) {
 					objMenu.println(displayEdit()
