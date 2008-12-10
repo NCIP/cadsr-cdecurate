@@ -824,39 +824,38 @@ function LoadKeyHandler(){
       SetSortTypeJS(sortBy, "<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
   }
   
-  function SelectAllCheckBox()
-  {
+  function SelectAllCheckBox(){
     var numRows2 = "<%=numRows%>";
     var CK = "";
-    if(SelectAllOn == false){
-       for(k=0; k<numRows2; k++){
+    for(k=0; k<numRows2; k++){
         CK = "CK" + k;
         formObj= eval("document.searchResultsForm."+CK);
         if(formObj && formObj.checked == false)
         {
           formObj.checked=true;
         }
-      }
-      SelectAllOn = "true";
-      if (document.searchResultsForm.CheckGif != null)
-          document.searchResultsForm.CheckGif.alt = "Unselect All";
-      ShowSelectedRows(true);
-    }
-    else{
-       for(m=0; m<numRows2; m++){
+     }
+     SelectAllOn = "true";
+     if (document.searchResultsForm.CheckGif != null)
+         document.searchResultsForm.CheckGif.alt = "Unselect All";
+     ShowSelectedRows(true);
+   }
+   function UnSelectAllCheckBox(){
+    var numRows2 = "<%=numRows%>";
+    var CK = "";
+    for(m=0; m<numRows2; m++){
         CK = "CK" + m;
         formObj= eval("document.searchResultsForm."+CK);
         if(formObj && formObj.checked==true)
         {
           formObj.checked=false;
         }
-      }
-      SelectAllOn = "false";
-       if (document.searchResultsForm.CheckGif != null)
-          document.searchResultsForm.CheckGif.alt = "Select All";
-       ShowSelectedRows(false);
-    }
-  }
+     }
+     SelectAllOn = "false";
+     if (document.searchResultsForm.CheckGif != null)
+         document.searchResultsForm.CheckGif.alt = "Select All";
+     ShowSelectedRows(false);
+   }
 <% String strNothing ="nothing"; %>
 <%String userName = (String) session.getAttribute("Username");%>
 function performAction(type){
