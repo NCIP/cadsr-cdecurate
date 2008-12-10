@@ -909,7 +909,7 @@ function enableDisableMenuItems(){
 						if (!sMenuAction.equals("searchForCreate")) {
 						%>
 						
-						<select name="listSearchFor" size="1" style="width: 172"
+						<select name="listSearchFor" size="1" style="width: 185"
 							onChange="doSearchForChange();"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="ClassSchemeItems"
@@ -959,7 +959,7 @@ function enableDisableMenuItems(){
 						} else {
 						%>
 						
-						<select name="listSearchFor" size="1" style="width: 172"
+						<select name="listSearchFor" size="1" style="width: 185"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="<%=StringEscapeUtils.escapeHtml(sSearchAC)%>" selected>
 								<%=StringEscapeUtils.escapeHtml(sLongAC)%>
@@ -989,7 +989,7 @@ function enableDisableMenuItems(){
                      <tr>
                         <td>       
                                 <div style="padding-left: 20px">
-                                    <select name="listSearchIn" size="1" style="width: 172"
+                                    <select name="listSearchIn" size="1" style="width: 185"
 							onChange="doSearchInChange();"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<!-- include names&definition only if not questions-->
@@ -1150,7 +1150,7 @@ function enableDisableMenuItems(){
                       <tr>
                          <td>
                              <div style="padding-left: 20px">
-                             <select name="listRDType" size="3" style="width: 172" valign="top"	multiple
+                             <select name="listRDType" size="3" style="width: 185" valign="top"	multiple
                               onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<%
 									if (vDocType != null) {
@@ -1224,7 +1224,7 @@ function enableDisableMenuItems(){
                      <!-- same input box for crf name and other keyword searches -->      
                      <tr>     
                       <td><div style="padding-left: 20px">
-						<input type="text" name="keyword" size="24"
+						<input type="text" name="keyword" size="24" style="width: 185"
 							value="<%=sLastKeyword%>"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 					  </div>
@@ -1290,7 +1290,7 @@ function enableDisableMenuItems(){
                  <tr>
                    <td>
                        <div style="padding-left: 20px">    
-                        <select name="listMultiContextFilter" size="5" style="width: 172"
+                        <select name="listMultiContextFilter" size="5" style="width: 185"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="AllContext"
@@ -1459,7 +1459,7 @@ function enableDisableMenuItems(){
                  </tr>                  
                  <tr>
                    <td><div style="padding-left: 20px">
-						<select name="listCSName" size="1" style="width: 172" valign="top"
+						<select name="listCSName" size="1" style="width: 185" valign="top"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="AllSchemes" selected>
 								All Schemes
@@ -1497,7 +1497,7 @@ function enableDisableMenuItems(){
                  </tr>     
                  <tr>
                   <td><div style="padding-left: 20px">
-						<select name="listCDName" size="1" style="width: 172" valign="top"
+						<select name="listCDName" size="1" style="width: 185" valign="top"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="All Domains" <%if(selCD.equals("All Domains")){%>
 								selected <%}%>>
@@ -1536,7 +1536,7 @@ function enableDisableMenuItems(){
                  </tr>    
                  <tr>
 					<td><div style="padding-left: 20px">
-						<select name="listStatusFilter" size="5" style="width: 172"
+						<select name="listStatusFilter" size="5" style="width: 185"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<!--store the status list as per the CONCEPT SEARCH  -->
@@ -1651,7 +1651,7 @@ function enableDisableMenuItems(){
                 </tr>
                 <tr>
                    <td><div style="padding-left: 20px">
-						<select name="listRegStatus" size="1" style="width: 172"
+						<select name="listRegStatus" size="1" style="width: 185"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allReg"
 								<%if (vRegStatus == null || vRegStatus.size()==0 
@@ -1692,7 +1692,7 @@ function enableDisableMenuItems(){
                 </tr>     
                 <tr>
                   <td><div style="padding-left: 20px">
-						<select name="listDataType" size="1" style="width: 172"
+						<select name="listDataType" size="1" style="width: 185"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allData"
 								<%if (vDataType == null || vDataType.size()==0 
@@ -1740,7 +1740,7 @@ function enableDisableMenuItems(){
                 </tr>        
                 <tr>
                     <td> <div style="padding-left: 20px">
-						<select name="listDeriveType" size="1" style="width: 172"
+						<select name="listDeriveType" size="1" style="width: 185"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allDer"
 								<%if (vDerType == null || vDerType.size()==0 
@@ -1856,7 +1856,7 @@ function enableDisableMenuItems(){
 									&nbsp;
 								</td>
 								<td style="height: 20" colspan=4 valign=top><div style="padding-left: 20px">
-									<select name="creator" size="1" style="width: 172" valign="top"
+									<select name="creator" size="1" style="width: 185" valign="top"
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 										<option value="allUsers"
 											<%if (vUsers == null || vUsers.size()==0 
@@ -1964,7 +1964,7 @@ function enableDisableMenuItems(){
 								
 								<td style="height: 35" colspan=4 valign=top>
 									<div style="padding-left: 20px">
-									<select name="modifier" size="1" style="width: 172"
+									<select name="modifier" size="1" style="width: 185"
 										valign="top"
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 										<option value="allUsers"
@@ -2006,7 +2006,7 @@ function enableDisableMenuItems(){
                       <div class="scItem">
                          <b>Display Attributes</b> &nbsp;
                          <input type="button" name="updateDisplayBtn" value="Update"
-								onClick="<%=updFunction%>" style="width: 50"
+								onClick="<%=updFunction%>" 
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">                              
                        </div>  
                   </td>       
@@ -2014,7 +2014,7 @@ function enableDisableMenuItems(){
                <tr>
                 <td>
                    <div style="padding-left: 20px">
-                      <select name="listAttrFilter" size="5" style="width: 175"
+                      <select name="listAttrFilter" size="5" style="width: 185"
 								multiple valign="bottom"
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
 								<%
