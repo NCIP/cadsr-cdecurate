@@ -12,7 +12,7 @@ var menuRootBackgroundColor = "#5c5c5c";
 var menuTextColor = "#000000";
 var menuFocusColor = "#ffffff";
 var menuDisabledColor = "#777777";
-var menuRootFocusColor = "#475B82";
+var menuRootFocusColor = "#3A5894";
 
 function loaded(menus){
     var menu = document.getElementById(menus);
