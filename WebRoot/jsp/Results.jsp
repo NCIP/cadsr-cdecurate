@@ -706,7 +706,40 @@ function LoadKeyHandler(){
         var num = 0;
         checkClickJS(cb,'<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', num); 
     }   
- }   
+ }  
+ function SelectUnSelectCheckBox()
+  {
+    var numRows2 = "<%=numRows%>";
+    var CK = "";
+    if(SelectAllOn == false){
+       for(k=0; k<numRows2; k++){
+        CK = "CK" + k;
+        formObj= eval("document.searchResultsForm."+CK);
+        if(formObj && formObj.checked == false)
+        {
+          formObj.checked=true;
+        }
+      }
+      SelectAllOn = "true";
+      if (document.searchResultsForm.CheckGif != null)
+          document.searchResultsForm.CheckGif.alt = "Unselect All";
+      ShowSelectedRows(true);
+    }
+    else{
+       for(m=0; m<numRows2; m++){
+        CK = "CK" + m;
+        formObj= eval("document.searchResultsForm."+CK);
+        if(formObj && formObj.checked==true)
+        {
+          formObj.checked=false;
+        }
+      }
+      SelectAllOn = "false";
+       if (document.searchResultsForm.CheckGif != null)
+          document.searchResultsForm.CheckGif.alt = "Select All";
+       ShowSelectedRows(false);
+    }
+  } 
   function Back()
   {
     hourglass();
@@ -823,6 +856,7 @@ function LoadKeyHandler(){
   {
       SetSortTypeJS(sortBy, "<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
   }
+  
   
   function SelectAllCheckBox(){
     var numRows2 = "<%=numRows%>";
@@ -2129,7 +2163,7 @@ function enableDisableMenuItems(){
 				 <tr valign="middle">
 					<%    if (sSelAC.equals("Data Element") || !sMAction.equals("searchForCreate")) {     %>
 					<th class="rsCell">
-						<a href="javascript:SelectAllCheckBox()">
+						<a href="javascript:SelectUnSelectCheckBox()">
 							<img id="CheckGif" src="images/CheckBox.gif" border="0" alt="Select All" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 						</a>
 					</th>
