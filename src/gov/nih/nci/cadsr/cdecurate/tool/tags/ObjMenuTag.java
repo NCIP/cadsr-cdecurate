@@ -101,12 +101,9 @@ public class ObjMenuTag extends MenuTag {
 				}
 				
 				objMenu.println(generateTR("","","","new","ShowSelectedRows(true)","Show Selected Rows"));
-						         
-				if (sSelectAll.equals("true")){
-					objMenu.println(generateTR("","","","new","SelectAllCheckBox()","Unselect All"));
-                 }else{
-                	 objMenu.println(generateTR("","","","new","SelectAllCheckBox()","Select All"));  
-                 }
+				objMenu.println(generateTR("","","","new","SelectAllCheckBox()","Select All")); 		         
+				objMenu.println(generateTR("","","","new","UnSelectAllCheckBox()","Unselect All"));
+                        
 				objMenu.println("</table></div>");
 
 			} catch (IOException e) {
