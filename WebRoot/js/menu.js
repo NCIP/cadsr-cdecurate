@@ -27,7 +27,20 @@ function menuHide() {
 	menuHoldElement = null;
 	menuSrcElementHold = null;
 }
+function setHighlightRow(obj){
+    if (obj.nodeName == "TR"){
+        if (prevRowObj != null){
+            prevRowObj.style.backgroundColor = prevRowBGColor;
+        }
+        prevRowBGColor = obj.style.backgroundColor;
+        prevRowObj = obj;
+        prevRowObj.style.backgroundColor = "#FFE87C"; 
+        return;
+    }
+    setHighlightRow(obj.parentNode);
+}
 function menuShow(obj, evnt) {
+	setHighlightRow(obj);
 	var menuID = obj.getAttribute("menuID");
 	var rowId = obj.getAttribute("rowId");
 	document.searchResultsForm.selectedRowId.value = rowId;
