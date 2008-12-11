@@ -14,6 +14,9 @@ var menuFocusColor = "#ffffff";
 var menuDisabledColor = "#777777";
 var menuRootFocusColor = "#3A5894";
 
+var prevRowObj = null;
+var prevRowBGColor;
+
 function loaded(menus){
     var menu = document.getElementById(menus);
     menuCheckEnabled(menu);
