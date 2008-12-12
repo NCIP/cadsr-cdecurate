@@ -3924,7 +3924,7 @@ public class CurationServlet
             if (reqMsg != null && !reqMsg.equals(""))
                 errMsg = reqMsg;
             DataManager.setAttribute(session, "ErrorMessage", errMsg);
-            if (!(errMsg).equals("Logged out."))
+            if ((errMsg).equals("Incorrect Username or Password. Please re-enter."))
                fullPage = "/jsp/ErrorPage.jsp";
             //ServletContext sc = this.getServletContext();
             RequestDispatcher rd = m_servletContext.getRequestDispatcher(fullPage);
