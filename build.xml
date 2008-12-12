@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.42 2008-12-01 20:04:02 hegdes Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.43 2008-12-12 05:36:34 veerlah Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -8,6 +8,11 @@
         Build and deploy the CDE Curation Tool
     </description>
 	<!-- set global properties for this build  -->
+	<tstamp/>
+	
+	<property name="appl.release" value="4.0.0.2" />
+	<property name="appl.version" value="${appl.release}.${DSTAMP}${TSTAMP}"/>
+	
 	<property name="PROP.FILE" location="DEV.build.properties" />
 	<property file="${PROP.FILE}" />
 	<echo>
@@ -98,6 +103,7 @@
 	<filter token="TIER.NAME" value="${TIER.NAME}" />
 	<filter token="TOOL.LOG.DIR" value="${TOOL.LOG.DIR}" />
     <filter token="JBOSS.LOG.DIR" value="${JBOSS.LOG.DIR}" />
+	<filter token="appl.version" value="${appl.version}" />
 
 	<path id="libpath">
 		<fileset dir="${lib.dir}" includes="**/*.jar" />
@@ -144,11 +150,15 @@
 	<target name="-assemble" depends="-compile,-prop-check" description="Assembles the deployment parts into the artifacts folders.">
 		<echo>Assembling artifacts ...</echo>
 		<delete>
+			<fileset file="${root.dir}/curationtool.properties" />
 			<fileset file="${web.dir}/web.xml" />
 		</delete>
 		<copy todir="${artifacts.dir}">
 			<fileset file="build.xml" />
 			<fileset file="${PROP.FILE}" />
+		</copy>
+		<copy tofile="${root.dir}/curationtool.properties" filtering="true">
+					<fileset file="conf/template.curationtool.properties" />
 		</copy>
 		<copy tofile="${web.dir}/web.xml" filtering="true">
 			<fileset file="conf/template.web.xml" />
