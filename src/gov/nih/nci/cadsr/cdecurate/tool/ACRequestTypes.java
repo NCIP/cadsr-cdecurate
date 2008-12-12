@@ -31,6 +31,7 @@ public enum ACRequestTypes {
 	createNewVD("gov.nih.nci.cadsr.cdecurate.tool.ValueDomainServlet"),
 	validateVDFromForm("gov.nih.nci.cadsr.cdecurate.tool.ValueDomainServlet"),
 	viewVALUEDOMAIN("gov.nih.nci.cadsr.cdecurate.tool.ValueDomainServlet"),
+	viewVDPVSTab("gov.nih.nci.cadsr.cdecurate.tool.ValueDomainServlet"),
 
 	//search Requests
 	homePage("gov.nih.nci.cadsr.cdecurate.tool.SearchServlet"),

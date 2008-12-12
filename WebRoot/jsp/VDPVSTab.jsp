@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.2 2008-12-12 01:02:29 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -8,12 +8,21 @@
 <link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 
 <%  
+		String sTabFocus = (String) session.getAttribute("TabFocus");
+		//for view only page
+		String bodyPage = (String) request.getAttribute("IncludeViewPage");
+		boolean isView = false;
+		if (bodyPage != null && !bodyPage.equals(""))
+		{
+			isView = true;
+			if (bodyPage.equals("PermissibleValue.jsp"))
+				sTabFocus = "PV";
+		}
       UtilService serUtil = new UtilService();
       String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
       String sOriginAction = (String) session.getAttribute("originAction");
       String vdTabFocus = "TABX";
       String pvTabFocus = "TABX";
-      String sTabFocus = (String) session.getAttribute("TabFocus");
       if (sTabFocus == null || sTabFocus.equals(""))
       	sTabFocus = "VD";
       if (sTabFocus.equals("VD"))
@@ -39,13 +48,14 @@
       	vdNameDisplay = " - " + sLongName + "  [" + sVDID + "v" + sVersion + "]";
 
 	    //these are for value/meaning search.
+	    if (!isView) {
 	    session.setAttribute(Session_Data.SESSION_MENU_ACTION, "searchForCreate");
 	    Vector vResult = new Vector();
 	    session.setAttribute("results", vResult);
 	    session.setAttribute("creRecsFound", "No ");
 	    //for altnames and ref docs
 	    session.setAttribute("dispACType", "ValueDomain");
-
+	    }
 
    // System.out.println(sOriginAction + " action " + sMenuAction);
 
@@ -53,6 +63,7 @@
 <table width="100%" border="0">
 	<tr height="25">
 		<td height="26" align="left" valign="top">
+			<% if (!isView) { %>
 			<input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('validate')">
 			&nbsp;&nbsp;
 			<!--no need for clear button in the block edit-->
@@ -65,11 +76,27 @@
 			<%if(sOriginAction.equals("BlockEditVD")){%>
 			<input type="button" name="btnDetails" value="Details" style="width: 125" onClick="openBEDisplayWindow();">
 			&nbsp;&nbsp;
-			<%}%>
-			<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" onClick="openDesignateWindow('Alternate Names');">
+			<%} } %>
+			<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" 
+				<% if (isView) { %>
+					onClick="openAltNameViewWindow();"
+				<% } else { %>
+					onClick="openDesignateWindow('Alternate Names');" 
+				<% } %>
+			>
 			&nbsp;&nbsp;
-			<input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');">
+			<input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" 
+				<% if (isView) { %>
+					onClick="openRefDocViewWindow();"
+				<% } else { %>
+					onClick="openDesignateWindow('Reference Documents');" 
+				<% } %>
+			>
 			&nbsp;&nbsp;
+			<%	if (isView) {	%>
+				<input type="button" name="btnClose" value="Close" style="width: 125" onClick="window.close();">
+				&nbsp;&nbsp;
+			<% } %>
 			<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
 		</td>
 	</tr>
@@ -102,7 +129,7 @@
 				<% } else {%>
 				<label>
 					<font size=4>
-						Edit Existing
+						<%if (isView) { %>View <% } else { %>Edit <%} %>Existing
 						<font color="#FF0000">
 							Value Domain
 						</font>
@@ -134,13 +161,13 @@
 		<col />
 	</colgroup>
 	<tr>
-		<td id="vddetailstab" class="<%=vdTabFocus%>" onclick="SubmitValidate('vddetailstab');">
+		<td id="vddetailstab" class="<%=vdTabFocus%>" <% if (isView) { %>onclick="changeTab('VD');"<% } else { %>onclick="SubmitValidate('vddetailstab');"<%} %>>
 			<b>
 				Value Domain Details
 			</b>
 		</td>
 		<% if(!sOriginAction.equals("BlockEditVD")){%>
-		<td id="vdpvstab" class="<%=pvTabFocus%>" onclick="SubmitValidate('vdpvstab');">
+		<td id="vdpvstab" class="<%=pvTabFocus%>" <% if (isView) { %>onclick="changeTab('PV');"<% } else { %>onclick="SubmitValidate('vdpvstab');"<%} %>>
 			<b>
 				Permissible Values
 			</b>

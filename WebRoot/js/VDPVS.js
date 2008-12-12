@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/VDPVS.js,v 1.2 2007-09-19 16:59:34 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/VDPVS.js,v 1.3 2008-12-12 01:02:13 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -103,3 +103,22 @@
   }
 
  
+//open viewonly refe doc
+function openRefDocViewWindow()
+{
+	var refWindow = window.open("../../cdecurate/NCICurationServlet?reqType=getRefDocument&acID="+document.SearchActionForm.acID.value, "ReferenceDocuments", "width=700,height=300,top=0,left=0,resizable=yes,scrollbars=yes");
+}
+
+//open viewonly alt name with something to tell view 
+function openAltNameViewWindow()
+{
+	var refWindow = window.open("../../cdecurate/NCICurationServlet?reqType=getAltNames&acID="+document.SearchActionForm.acID.value, "AlternateNames", "width=700,height=300,top=0,left=0,resizable=yes,scrollbars=yes");
+	//var refWindow = window.open("../../cdecurate/NCICurationServlet?reqType=viewAltNamesDefs&searchEVS=" + document.SearchActionForm.searchEVS.value, "viewDesignate", "width=900,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
+}
+ 
+ //change the tabs
+ function changeTab(tab)
+ {
+    document.createVDForm.action = "../../cdecurate/NCICurationServlet?reqType=viewVDPVSTab&vdpvstab=" +tab;
+    document.createVDForm.submit();	
+ }

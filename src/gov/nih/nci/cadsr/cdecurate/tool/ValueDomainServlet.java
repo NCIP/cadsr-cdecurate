@@ -38,7 +38,12 @@ public class ValueDomainServlet extends CurationServlet {
 			case validateVDFromForm:
                 doInsertVD();
 				break;
-			
+			case viewVALUEDOMAIN:
+				doOpenViewPage();
+				break;
+			case viewVDPVSTab:
+				doViewPageTab();
+				break;
 		}
 	}	
 	
@@ -2253,5 +2258,42 @@ public class ValueDomainServlet extends CurationServlet {
     return "/CreateVDPage.jsp";    
   }
 
+  public void doOpenViewPage() throws Exception
+  {
+  	System.out.println("I am here open view page");
+  	HttpSession session = m_classReq.getSession();
+  	String acID = (String) m_classReq.getAttribute("acIdseq");
+  	if (acID.equals(""))
+  		acID = m_classReq.getParameter("idseq");
+      Vector<VD_Bean> vList = new Vector<VD_Bean>();
+      // get DE's attributes from the database again
+      GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
+      if (acID != null && !acID.equals(""))
+      {
+          serAC.doVDSearch(acID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "",
+                  "", "", "", vList);
+      }
+      if (vList.size() > 0) // get all attributes
+      {
+    	  VD_Bean VDBean = (VD_Bean) vList.elementAt(0);
+          VDBean = serAC.getVDAttributes(VDBean, "openView", "viewVD");
+          DataManager.setAttribute(session, "m_VD", VDBean);
+         	m_classReq.setAttribute("IncludeViewPage", "EditVD.jsp") ;
+     }
+   }
 	
+  public void doViewPageTab() throws Exception
+  {
+	  String tab = m_classReq.getParameter("vdpvstab");
+	  if (tab != null && tab.equals("PV"))
+	  {
+		  m_classReq.setAttribute("IncludeViewPage", "PermissibleValue.jsp") ;
+          ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
+	  }
+	  else
+	  {
+		  m_classReq.setAttribute("IncludeViewPage", "EditVD.jsp") ;
+          ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
+	  }
+  }	
 }
