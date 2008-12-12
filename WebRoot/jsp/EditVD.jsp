@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.8 2008-12-12 01:02:29 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.9 2008-12-12 16:13:55 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -1530,7 +1530,7 @@ function setup()
 								<% } %>
 							</select>
 								<%	} else { %>
-									<p style="width=20"><%=sUOML%></p>
+									<p style="width=20%"><%=sUOML%></p>
 								<% } %>
 						</td>
 					</tr>
@@ -1566,7 +1566,7 @@ function setup()
 								<% } %>
 							</select>
 							<%	} else { %>
-									<p style="width=20"><%=sFORML%></p>
+									<p style="width=20%"><%=sFORML%></p>
 							<% } %>
 						</td>
 					</tr>
