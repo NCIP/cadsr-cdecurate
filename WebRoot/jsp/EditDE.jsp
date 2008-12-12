@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.4 2008-12-08 19:30:39 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.5 2008-12-12 01:02:29 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -836,7 +836,7 @@
 					</td>
 					<td>
 						<font color="#C0C0C0">
-							Update Data Element Short Name
+							Public ID
 						</font>
 					</td>
 					<%
@@ -1362,7 +1362,7 @@
 									&nbsp;
 								</td>
 								<td align="left">
-									<input type="button" name="btnViewCt" value="<%	if (!isView) {	%>Edit Item <%	}  else { %>View Item<% } %>" style="width:100" onClick="javascript:editContact('view');" disabled>
+									<input type="button" name="btnViewCt" value="<%	if (!isView) {%>Edit <%}  else { %>View <% } %> Item" style="width:100" onClick="javascript:editContact('view');" disabled>
 								</td>
 								<% if (!isView) { %>
 								<td align="left">

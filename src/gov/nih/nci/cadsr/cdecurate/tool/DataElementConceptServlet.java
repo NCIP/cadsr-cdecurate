@@ -38,6 +38,9 @@ public class DataElementConceptServlet extends CurationServlet {
 			case validateDECFromForm:
                 doInsertDEC();
                 break;
+			case viewDE_CONCEPT:
+				doOpenViewPage();
+				break;
                   
 		}
 	}	
@@ -1887,5 +1890,29 @@ public class DataElementConceptServlet extends CurationServlet {
       DataManager.setAttribute(session, "m_DEC", m_DEC);
   } // end of doRemoveQualifier
 
+  public void doOpenViewPage() throws Exception
+  {
+  	System.out.println("I am here open view page");
+  	HttpSession session = m_classReq.getSession();
+  	String acID = (String) m_classReq.getAttribute("acIdseq");
+  	if (acID.equals(""))
+  		acID = m_classReq.getParameter("idseq");
+      Vector<DEC_Bean> vList = new Vector<DEC_Bean>();
+      // get DE's attributes from the database again
+      GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
+      if (acID != null && !acID.equals(""))
+      {
+          serAC.doDECSearch(acID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "",
+                  "", "", vList);
+      }
+      if (vList.size() > 0) // get all attributes
+      {
+    	  DEC_Bean DECBean = (DEC_Bean) vList.elementAt(0);
+          DECBean = serAC.getDECAttributes(DECBean, "openView", "viewDEC");
+          DataManager.setAttribute(session, "m_DEC", DECBean);
+         	m_classReq.setAttribute("IncludeViewPage", "EditDEC.jsp") ;
+     }
+   }
+	
     	
 }

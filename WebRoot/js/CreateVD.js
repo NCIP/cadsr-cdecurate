@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.4 2008-01-23 22:13:20 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.5 2008-12-12 01:02:13 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 var evsWindow = null;
@@ -203,8 +203,10 @@ function enableContButtons()
     	var sCont = document.createVDForm.selContact[selInd].value;
     	if (sCont != null && sCont != "")
     	{
-    		document.createVDForm.btnViewCt.disabled = false;
-    		document.createVDForm.btnRmvCt.disabled = false;
+    		if (document.createVDForm.btnViewCt != null)
+    			document.createVDForm.btnViewCt.disabled = false;
+    		if (document.createVDForm.btnRmvCt != null)
+    			document.createVDForm.btnRmvCt.disabled = false;
     	}
     }
 }
