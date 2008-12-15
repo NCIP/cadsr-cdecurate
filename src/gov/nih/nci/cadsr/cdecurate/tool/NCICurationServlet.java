@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.56 2008-10-20 13:30:52 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.57 2008-12-15 18:46:09 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -16,6 +16,7 @@ import java.sql.Statement;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -203,7 +204,15 @@ public class NCICurationServlet extends HttpServlet
         { 
         	String reqType = req.getParameter("reqType"); 
         	HttpSession session = req.getSession();
-        	//add the forwarding to request to session (to go after login)
+        	String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
+        	if (menuAction != null) {
+			}else if (reqType.equals("homePage")) {
+			}else{	
+				RequestDispatcher rd = this.getServletContext().getRequestDispatcher("/");
+				rd.forward(req, res);
+				return;
+			}
+		   	// add the forwarding to request to session (to go after login)
         	String forwardReq = (String)session.getAttribute("forwardReq");
         	if (forwardReq == null || !forwardReq.equals("login"))
         		session.setAttribute("forwardReq", reqType);
