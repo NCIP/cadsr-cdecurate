@@ -12,7 +12,12 @@ td.menuItemNormal {
 	cursor: default;
 	border-left: 1px dotted #f0f0f0
 }
-
+td.menuNormal {
+	color: #f0f0f0;
+	padding: 0px 0px 0px 0px;
+	background-color: #5C5C5C;
+	cursor: default;
+}
 td.footerItem {
 	color: #f0f0f0;
 	font-size: 8pt;
