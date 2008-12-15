@@ -1162,8 +1162,11 @@ public class SearchServlet extends CurationServlet {
             // make keyword empty and label for search result page.
             DataManager.setAttribute(session, "serKeyword", "");
             String labelWord = "";
+            String labelWord2 = "";
             labelWord = " associated with " + oldSearch + " - " + sName; // make the label
-            m_classReq.setAttribute("labelKeyword", newSearch + labelWord); // make the label
+            labelWord2 = " associated to " + oldSearch + " - " + sName;
+            m_classReq.setAttribute("labelKeyword", oldSearch); // make the label
+            m_classReq.setAttribute("labelKeyword2", labelWord2);
             // save the last word in the request attribute
             DataManager.setAttribute(session, "LastAppendWord", labelWord);
             DataManager.setAttribute(session, "results", vResult); // store result vector in the attribute
