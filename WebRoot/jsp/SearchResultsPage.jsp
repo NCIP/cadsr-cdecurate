@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsPage.jsp,v 1.7 2008-12-04 21:35:24 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsPage.jsp,v 1.8 2008-12-16 18:36:04 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -15,6 +15,7 @@
         <script language="javascript" src="js/SearchResults.js"></script>
         <script language="JavaScript" src="js/menu.js"></script>
         <script language="JavaScript" src="js/header.js"></script>
+        <script language="JavaScript" src="js/date-picker.js"></script>
         <script language="javascript" type="text/javascript">
            history.forward();
         </script>
