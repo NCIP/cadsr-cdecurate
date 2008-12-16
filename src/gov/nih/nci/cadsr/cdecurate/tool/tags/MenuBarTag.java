@@ -29,15 +29,16 @@ public class MenuBarTag extends TagSupport {
                             +"<col style=\"width: 1px\"/><col style=\"width: 1px\"/><col style=\"width: 1px\"/><col style=\"width: 1px\"/>"
                             +"<col /><col style=\"width: 1px\"/>"
                             +"<tr>"
-                            +generateTD("searchMenu","Search") 
+                            +"<td class=\"menuItemNormal\" onmouseover=\"menuOver(this, event);\" onmouseout=\"menuRootOut(this, event);\" onclick=\"showHomePage();\">Home</td>"
                             +generateTD("createMenu","Create") 
-                            +generateTD("editMenu","Edit") 
-                            +generateTD("linksMenu","Links") 
+                            +generateTD("linksMenu","Links")
                             +"<td class=\"menuItemNormal\">&nbsp;</td>"
+                            +"<td class=\"menuNormal\">&nbsp;</td>"
                             +generateTD(helpLink,"","Help")  
                             +"</tr>"
                             +"</table>"
                             +"</td></tr>");
+			menuBar.println("<form name=\"homePageForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=getSearchFilter\"></form>");
 			
 		} catch (IOException e) {
 			e.printStackTrace();

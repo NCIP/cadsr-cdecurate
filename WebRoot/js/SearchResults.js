@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.14 2008-12-09 20:16:23 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.15 2008-12-16 15:14:22 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -356,8 +356,6 @@
   function UnCheckAllCheckBoxes() 
   {
   	var dCount =0;
-  	alert("in function UnCheckAllCheckBoxes");
-  	alert("length----->" + document.searchResultsForm.hiddenSelectedRow.length);
   	if(document.searchResultsForm.hiddenSelectedRow != null)
         dCount = document.searchResultsForm.hiddenSelectedRow.length;  	
 		for (k=0; k<dCount; k++)

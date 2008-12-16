@@ -370,6 +370,7 @@
 		else
 			sSelectAll = "false";
 	}
+   String labelKeyword2 = (String)request.getAttribute("labelKeyword2");
 %>
 
 <SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
@@ -2136,11 +2137,33 @@ function enableDisableMenuItems(){
            <input type="hidden" name="unCheckedRowId" value="">
            
            <table style="width: 100%; border-collapse: collapse">
-								<tr>
+			<%if (((vResultStack.size()>0 && sBackFromGetAssociated.equals("backFromGetAssociated") && !pushBoolean.equals("true"))
+                   || vResultStack.size()>1) && !sMAction.equals("searchForCreate")){%>
+				<tr>
 					<td>
 						<font size="4">
 							<b>
-								Search Results for
+								<a href="javascript:Back()">Search Results for
+								<%=StringEscapeUtils.escapeHtml(sLabelKeyword)%></a><img name="Message" src="images/SearchMessage.gif" width="180" height="25" alt="WaitMessage" style="visibility:hidden;">
+							</b>
+						</font>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<font size="2">
+							&nbsp;
+							<%=nRecs%>
+							Records Found <%if (labelKeyword2 != null){%><%=labelKeyword2%><%}%>
+						</font>
+						</td>				
+				</tr>
+				<%}else{%>
+				<tr>
+					<td>
+						<font size="4">
+							<b>
+								 Search Results for
 								<%=StringEscapeUtils.escapeHtml(sLabelKeyword)%><img name="Message" src="images/SearchMessage.gif" width="180" height="25" alt="WaitMessage" style="visibility:hidden;">
 							</b>
 						</font>
@@ -2155,6 +2178,7 @@ function enableDisableMenuItems(){
 						</font>
 						</td>				
 				</tr>
+				<%}%>
 				<tr>
 					<td height="7">
 				</tr>
