@@ -34,7 +34,7 @@ public class MenuBarTag extends TagSupport {
                             +generateTD("linksMenu","Links")
                             +"<td class=\"menuItemNormal\">&nbsp;</td>"
                             +"<td class=\"menuNormal\">&nbsp;</td>"
-                            +generateTD(helpLink,"","Help")  
+                            +"<td class=\"menuItemNormal\" onmouseover=\"menuOver(this, event);\" onmouseout=\"menuRootOut(this, event);\" onclick=\""+helpLink+";\">Help</td>"  
                             +"</tr>"
                             +"</table>"
                             +"</td></tr>");
@@ -60,21 +60,4 @@ public class MenuBarTag extends TagSupport {
                        + value +"</td>";
 		return tdTag;
 	}
-	/*This method will generate the td tag
-	 * @param link
-	 * @param menuId 
-	 * @param value - actual text to display on the page
-	 * @return  returns the String which contains td tag
-	 * 
-	 */
-	public String generateTD(String link, String menuId, String value){
-		String tdTag = "<td class=\"menuItemNormal\""
-                       +"onmouseover=\"menuRootOver(this, event);\""
-                       +"onmouseout=\"menuRootOut(this, event);\""
-                       +"onclick=\""+link+";\""
-                       +"menuID=\""+ menuId +"\">"
-                       + value +"</td>";
-		return tdTag;
-	}
-
 }
