@@ -55,15 +55,6 @@ public class MenuTag extends TagSupport {
 		return tag;
 	}
 	
-	/*
-	 * This method will generate the dt tag. It makes the text disabled
-	 * @param value - actual text to display on the page
-	 * @return  returns the String which contains dt tag
-	 */
-	public String generateDTDisabled(String value){
-		String tag ="<dt menuEnable=\"false\" onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\">" + value;
-		return tag;
-	}
 	//This method generates the separator
 	public String separator(){
 		String tag ="</dl><div class=\"hrWrap\" align=\"center\"><hr class=\"xyz\"/></div><dl class=\"menu\">";

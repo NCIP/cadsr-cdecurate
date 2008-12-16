@@ -123,7 +123,7 @@ function menuRootOver(obj, evnt) {
 	obj.style.backgroundColor = menuRootFocusColor;
 	if (menuVisibleElement !== null) {
 		var menuID = obj.getAttribute("menuID");
-		if (menuID !== null) {
+	    if (menuID !== null) {
 			if (evnt.srcElement === undefined) {
 				menuSrcElement = evnt.currentTarget;
 			} else {
@@ -264,8 +264,8 @@ function menuObjPos(obj) {
     document.homePageForm.submit();
  } 
  function displayStepsToFollow(){
-     alert("Please follow the steps below.\n 1. Do the Search.\n 2. Click on the action menu icon on the selected row.\n 3. Click on 'New Using Existing' on the pop up action menu.");
+     alert("Please follow the steps below.\n 1. Do the Search.\n 2. Click on the action icon on the selected row.\n 3. Select 'New Using Existing' on the pop up action menu.");
  }
  function displayStepsToFollow2(){
-     alert("Please follow the steps below.\n 1. Do the Search \n 2. Click on the action menu icon on the selected row. \n 3. Click on 'New Version' on the pop up action menu.");
+     alert("Please follow the steps below.\n 1. Do the Search. \n 2. Click on the action icon on the selected row. \n 3. Select 'New Version' on the pop up action menu.");
  }  
