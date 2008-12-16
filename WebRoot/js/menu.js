@@ -12,7 +12,7 @@ var menuRootBackgroundColor = "#5c5c5c";
 var menuTextColor = "#000000";
 var menuFocusColor = "#ffffff";
 var menuDisabledColor = "#777777";
-var menuRootFocusColor = "#3A5894";
+var menuRootFocusColor = "#6B78B4";
 
 var prevRowObj = null;
 var prevRowBGColor;
@@ -169,6 +169,9 @@ function menuRootOver(obj, evnt) {
 function menuRootOut(obj, evnt) {
 	obj.style.backgroundColor = menuRootBackgroundColor;
 }
+function menuOver(obj, evnt) {
+	obj.style.backgroundColor = menuRootFocusColor;
+}	
 function menuCheckEnabled(menu) {
 	var len;
 	if (menu.children == undefined) {
@@ -256,3 +259,13 @@ function menuObjPos(obj) {
      document.newCCForm.submit();
   }
  } 
+//submits the form to display 'Home Page'
+ function showHomePage(){
+    document.homePageForm.submit();
+ } 
+ function displayStepsToFollow(){
+     alert("Please follow the steps below.\n 1. Do the Search.\n 2. Click on the action menu icon on the selected row.\n 3. Click on 'New Using Existing' on the pop up action menu.");
+ }
+ function displayStepsToFollow2(){
+     alert("Please follow the steps below.\n 1. Do the Search \n 2. Click on the action menu icon on the selected row. \n 3. Click on 'New Version' on the pop up action menu.");
+ }  
