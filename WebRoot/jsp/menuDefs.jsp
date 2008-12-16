@@ -8,12 +8,6 @@
             <div id="createMenu" class="menu">
                <curate:createMenu/>   
             </div>
-            <div id="editMenu" class="menu">
-               <curate:editMenu/>  
-            </div>
-            <div id="searchMenu" class="menu">
-               <curate:searchMenu/> 
-            </div>
             <div id="objMenu" class="menu" menuType="float">
                <curate:objMenu/>
             </div>

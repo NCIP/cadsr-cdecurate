@@ -22,29 +22,15 @@ public class CreateMenuTag extends MenuTag {
 		   userName = (String) session.getAttribute("Username");
 		}
 		try {
-			createMenu.println("<div class=\"popMenu\">"
-					            +"<b>Data Element</b>"
-					            +"<dl class=\"menu2\">"
-					            +generateDT("","callDENew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","New")
-					            +generateDT("New Using Existing")
-					            +generateDT("New Version")
-					            +"</dl>"
-					            +"<b>Data Element Concept</b>"
-					            +"<dl class=\"menu2\">"
-					            +generateDT("","callDECNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","New")
-					            +generateDT("New Using Existing")
-					            +generateDT("New Version")
-					            +"</dl>"
-					            +"<b>Value Domain</b>"
-					            +"<dl class=\"menu2\">"
-					            +generateDT("","callVDNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","New")
-					            +generateDT("New Using Existing")
-					            +generateDT("New Version")
-					            +"</dl>" +
-					            "<b>Concept Class</b>"
-					            +"<dl class=\"menu2\">"
-					            +generateDT("","callCCNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","New")
-					            +"</dl></div>");
+			createMenu.println("<dl class=\"menu\">"
+			    				+generateDT("","displayStepsToFollow()","New Using Existing")
+					            +generateDT("","displayStepsToFollow2()","New Version")
+					            +separator()
+					            +generateDT("","callCCNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","Concept Class")
+					            +generateDT("","callDENew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","Data Element")
+					            +generateDT("","callDECNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","Data Element Concept")
+					            +generateDT("","callVDNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","Value Domain")
+					            +"</dl>");
 			createMenu.println("<form name=\"newDEForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newDEFromMenu\"></form>"
                     + "<form name=\"newDECForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newDECFromMenu\"></form>"
                     + "<form name=\"newVDForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newVDFromMenu\"></form>"

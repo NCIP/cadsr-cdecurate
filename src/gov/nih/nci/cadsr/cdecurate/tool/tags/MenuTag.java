@@ -54,15 +54,7 @@ public class MenuTag extends TagSupport {
 		String tag ="<dt id = \"" + id + "\" onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\"  onclick=\"javascript:" + jsMethod + ";\">" + value ;
 		return tag;
 	}
-	/*
-	 * This method will generate the dt tag
-	 * @param value - actual text to display on the page
-	 * @return  returns the String which contains dt tag
-	 */
-	public String generateDT(String value){
-		String tag ="<dt onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\">" + value;;
-		return tag;
-	}
+	
 	/*
 	 * This method will generate the dt tag. It makes the text disabled
 	 * @param value - actual text to display on the page
