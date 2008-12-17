@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/date-picker.js,v 1.1 2007-09-10 16:16:48 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/date-picker.js,v 1.2 2008-12-17 15:37:42 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 var weekend = [0,6];
@@ -591,19 +591,19 @@ function show_yearly_calendar(p_item, p_year, p_format) {
      endDate2.setDate(endDay);
      endDate2.setFullYear(endYear);
 
-	     if (isNaN(begDayInt)) { alert("Begin day must be a number 01 to 31.");return false;};
-           else if (beginDate.length>10) { alert("Begin Date must be of the format dd/mm/yyyy. Please enter a valid date.");return false;};
-           else if (endDate.length>10) { alert("End Date must be of the format dd/mm/yyyy. Please enter a valid date.");return false;};
-           else if (isNaN(begMonthInt)) { alert("Begin month must be a number 01 to 12.");return false;};
-           else if (isNaN(begYearInt)) { alert("Begin year should be a number between 1000 and 9999.");return false;};
-           else if (endDay != "" && isNaN(endDayInt)) { alert("End day must be a number 01 to 31.");return false;};
-           else if (endMonth != "" && isNaN(endMonthInt)) { alert("End month must be a number 01 to 12.");return false;};
-           else if (endYear != "" && isNaN(endYearInt)) { alert("End year should be a number between 1000 and 9999.");return false;};
-	         else if (begDay < 1 || begDay > 31) { alert("Begin day must be a number 01 to 31.");return false;};
-           else if (begMonth < 1 || begMonth > 12) { alert("Begin month must be a number 01 to 12.");return false;};
-           else if (begYear < 1000 || begYear > 9999) { alert("Begin year should be between 1000 and 9999.");return false;}; 
-           else if (endDate != "" && (endDay < 1 || endDay > 31)) { alert("End day must be a number 01 to 31.");return false;};
-           else if (endMonth != "" && (endMonth < 1 || endMonth > 12)) { alert("End month must be a number 01 to 12.");return false;};
+	     if (isNaN(begDayInt)) { alert("Begin day must be a number 01 to 31.");return false;}
+           else if (beginDate.length>10) { alert("Begin Date must be of the format dd/mm/yyyy. Please enter a valid date.");return false;}
+           else if (endDate.length>10) { alert("End Date must be of the format dd/mm/yyyy. Please enter a valid date.");return false;}
+           else if (isNaN(begMonthInt)) { alert("Begin month must be a number 01 to 12.");return false;}
+           else if (isNaN(begYearInt)) { alert("Begin year should be a number between 1000 and 9999.");return false;}
+           else if (endDay != "" && isNaN(endDayInt)) { alert("End day must be a number 01 to 31.");return false;}
+           else if (endMonth != "" && isNaN(endMonthInt)) { alert("End month must be a number 01 to 12.");return false;}
+           else if (endYear != "" && isNaN(endYearInt)) { alert("End year should be a number between 1000 and 9999.");return false;}
+	         else if (begDay < 1 || begDay > 31) { alert("Begin day must be a number 01 to 31.");return false;}
+           else if (begMonth < 1 || begMonth > 12) { alert("Begin month must be a number 01 to 12.");return false;}
+           else if (begYear < 1000 || begYear > 9999) { alert("Begin year should be between 1000 and 9999.");return false;} 
+           else if (endDate != "" && (endDay < 1 || endDay > 31)) { alert("End day must be a number 01 to 31.");return false;}
+           else if (endMonth != "" && (endMonth < 1 || endMonth > 12)) { alert("End month must be a number 01 to 12.");return false;}
            else if (endYear != "" && (endYear < 1000 || endYear > 9999)) { alert("End year should be between 1000 and 9999.");return false;} 
   	     else if ((beginDate2.getTime() > endDate2.getTime()) && endDate != "") 
            { 
@@ -735,19 +735,19 @@ function show_yearly_calendar(p_item, p_year, p_format) {
      endDate2.setDate(endDay);
      endDate2.setFullYear(endYear);
 
-	   if (isNaN(endDayInt)) { alert("Begin day must be a number 01 to 31.");return false;};
-  //   else if (beginDate.length>10) { alert("Begin Date must be of the format dd/mm/yyyy. Please enter a valid date.");return false;};
-     else if (endDate.length>10) { alert("End Date must be of the format dd/mm/yyyy. Please enter a valid date.");return false;};
- //    else if (isNaN(begMonthInt)) { alert("Begin month must be a number 01 to 12.");return false;};
-  //   else if (isNaN(begYearInt)) { alert("Begin year should be a number between 1000 and 9999.");return false;};
-     else if (endDay != "" && isNaN(endDayInt)) { alert("End day must be a number 01 to 31.");return false;};
-     else if (endMonth != "" && isNaN(endMonthInt)) { alert("End month must be a number 01 to 12.");return false;};
-     else if (endYear != "" && isNaN(endYearInt)) { alert("End year should be a number between 1000 and 9999.");return false;};
-//     else if (begDay < 1 || begDay > 31) { alert("Begin day must be a number 01 to 31.");return false;};
- //    else if (begMonth < 1 || begMonth > 12) { alert("Begin month must be a number 01 to 12.");return false;};
- //    else if (begYear < 1000 || begYear > 9999) { alert("Begin year should be between 1000 and 9999.");return false;}; 
-     else if (endDate != "" && (endDay < 1 || endDay > 31)) { alert("End day must be a number 01 to 31.");return false;};
-     else if (endMonth != "" && (endMonth < 1 || endMonth > 12)) { alert("End month must be a number 01 to 12.");return false;};
+	   if (isNaN(endDayInt)) { alert("Begin day must be a number 01 to 31.");return false;}
+  //   else if (beginDate.length>10) { alert("Begin Date must be of the format dd/mm/yyyy. Please enter a valid date.");return false;}
+     else if (endDate.length>10) { alert("End Date must be of the format dd/mm/yyyy. Please enter a valid date.");return false;}
+ //    else if (isNaN(begMonthInt)) { alert("Begin month must be a number 01 to 12.");return false;}
+  //   else if (isNaN(begYearInt)) { alert("Begin year should be a number between 1000 and 9999.");return false;}
+     else if (endDay != "" && isNaN(endDayInt)) { alert("End day must be a number 01 to 31.");return false;}
+     else if (endMonth != "" && isNaN(endMonthInt)) { alert("End month must be a number 01 to 12.");return false;}
+     else if (endYear != "" && isNaN(endYearInt)) { alert("End year should be a number between 1000 and 9999.");return false;}
+//     else if (begDay < 1 || begDay > 31) { alert("Begin day must be a number 01 to 31.");return false;}
+ //    else if (begMonth < 1 || begMonth > 12) { alert("Begin month must be a number 01 to 12.");return false;}
+ //    else if (begYear < 1000 || begYear > 9999) { alert("Begin year should be between 1000 and 9999.");return false;} 
+     else if (endDate != "" && (endDay < 1 || endDay > 31)) { alert("End day must be a number 01 to 31.");return false;}
+     else if (endMonth != "" && (endMonth < 1 || endMonth > 12)) { alert("End month must be a number 01 to 12.");return false;}
      else if (endYear != "" && (endYear < 1000 || endYear > 9999)) { alert("End year should be between 1000 and 9999.");return false;} 
   /*   else if ((beginDate2.getTime() > endDate2.getTime()) && endDate != "") 
            { 
