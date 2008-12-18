@@ -123,4 +123,28 @@ public class Admin_Components_Mgr extends DBManager {
 		}
 		return list;
 	}
+	public ArrayList<String> getPublicIDVersion(String acIDSEQ, Connection conn) throws DBException{
+		ArrayList<String> list = new ArrayList<String>();
+		PreparedStatement statement = null;
+		ResultSet rs = null;
+		try {
+			String sql ="select public_id, version from sbr.admin_components_view where ac_idseq = ?";
+			statement = conn.prepareStatement(sql);
+			statement.setString(1,acIDSEQ);
+			rs = statement.executeQuery();
+			while (rs.next()) {
+				 list.add(rs.getString(1));
+				 list.add(rs.getString(2));
+			}
+	    } catch (SQLException e) {
+			logger.error(DBException.DEFAULT_ERROR_MSG + " in getPublicIDVersion() method of Admin_Components_Mgr class " + e);
+			throw new DBException("Cannot able to get PublicID and Version");
+		} finally {
+			try {
+				DBHelper.close(rs, statement);
+			} catch (Exception e) {
+			}
+		}
+		return list;
+	}
 }
