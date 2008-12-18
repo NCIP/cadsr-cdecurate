@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/date-picker.js,v 1.2 2008-12-17 15:37:42 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/date-picker.js,v 1.3 2008-12-18 22:23:34 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 var weekend = [0,6];
@@ -619,7 +619,7 @@ function show_yearly_calendar(p_item, p_year, p_format) {
            		return false;
         		}
      		}
-	      else if ((endMonthInt == 2 || endMonthInt == 02)&&((endYear%4==0)&&((endYear%100!=0)||(endYear%400==0))))
+	      else if ((endMonthInt == 2)&&((endYear%4==0)&&((endYear%100!=0)||(endYear%400==0))))
      		{
         		if ( endDay >29 ||  endDay <1)
         		{
@@ -628,7 +628,7 @@ function show_yearly_calendar(p_item, p_year, p_format) {
            		return false;
         		}
      		}
-	      else if (begMonthInt == 2 || begMonthInt == 02)
+	      else if (begMonthInt == 2)
      		{
         		if ( begDay >28 ||  begDay <1)
         		{
@@ -637,7 +637,7 @@ function show_yearly_calendar(p_item, p_year, p_format) {
            		return false;
         		}
      		}
-	      else if (endMonthInt == 2 || endMonthInt == 02)
+	      else if (endMonthInt == 2)
      		{
         		if ( endDay >28 ||  endDay <1)
         		{
@@ -646,7 +646,7 @@ function show_yearly_calendar(p_item, p_year, p_format) {
            		return false;
         		}
      		}
-	     else if (begMonthInt == 1 || begMonthInt == 3 ||begMonthInt == 5 ||begMonthInt == 7 || begMonthInt == 01 || begMonthInt == 03 ||begMonthInt == 05 ||begMonthInt == 07)
+	     else if (begMonthInt == 1 || begMonthInt == 3 ||begMonthInt == 5 ||begMonthInt == 7 || begMonthInt == 01)
      	     {
         		if ( begDay > 31 ||  begDay < 1)
         		{
@@ -655,7 +655,7 @@ function show_yearly_calendar(p_item, p_year, p_format) {
            		return false;
         		}
      	     }
-     		else if (begMonthInt == 8 || begMonthInt == 10 ||begMonthInt == 12 || begMonthInt == 08)
+     		else if (begMonthInt == 8 || begMonthInt == 10 ||begMonthInt == 12)
      		{
         		if ( begDay > 31 ||  begDay < 1)
         		{
@@ -664,7 +664,7 @@ function show_yearly_calendar(p_item, p_year, p_format) {
            		return false;
         		}
      		}
-     		else if (begMonthInt == 4 || begMonthInt == 6 ||begMonthInt == 9 ||begMonthInt == 11 || begMonthInt == 04 || begMonthInt == 06 ||begMonthInt == 09)
+     		else if (begMonthInt == 4 || begMonthInt == 6 ||begMonthInt == 9 ||begMonthInt == 11)
      		{
         		if ( begDay > 30 ||  begDay < 1)
         		{
@@ -673,7 +673,7 @@ function show_yearly_calendar(p_item, p_year, p_format) {
            		return false;
         		}
      		}
-	      if (endMonthInt == 1 || endMonthInt == 3 ||endMonthInt == 5 ||endMonthInt == 7 || endMonthInt == 01 || endMonthInt == 03 ||endMonthInt == 05 ||endMonthInt == 07)
+	      if (endMonthInt == 1 || endMonthInt == 3 ||endMonthInt == 5 ||endMonthInt == 7)
      	      {
         		if ( endDay > 31 ||  endDay < 1)
         		{
@@ -682,7 +682,7 @@ function show_yearly_calendar(p_item, p_year, p_format) {
            		return false;
         		}
      	      }
-     		else if (endMonthInt == 8 || endMonthInt == 10 ||endMonthInt == 12 || endMonthInt == 08)
+     		else if (endMonthInt == 8 || endMonthInt == 10 ||endMonthInt == 12)
      		{
         		if ( endDay > 31 ||  endDay < 1)
         		{
@@ -691,7 +691,7 @@ function show_yearly_calendar(p_item, p_year, p_format) {
            		return false;
         		}
      		}
-     		else if (endMonthInt == 4 || endMonthInt == 6 ||endMonthInt == 9 ||endMonthInt == 11 || endMonthInt == 04 || endMonthInt == 06 ||endMonthInt == 09)
+     		else if (endMonthInt == 4 || endMonthInt == 6 ||endMonthInt == 9 ||endMonthInt == 11)
      		{
         		if (endDay > 30 ||  endDay < 1)
         		{
@@ -763,7 +763,7 @@ function show_yearly_calendar(p_item, p_year, p_format) {
            		return false;
         		}
      		}*/
-	      else if ((endMonthInt == 2 || endMonthInt == 02)&&((endYear%4==0)&&((endYear%100!=0)||(endYear%400==0))))
+	      else if ((endMonthInt == 2 )&&((endYear%4==0)&&((endYear%100!=0)||(endYear%400==0))))
      		{
         		if ( endDay >29 ||  endDay <1)
         		{
@@ -781,7 +781,7 @@ function show_yearly_calendar(p_item, p_year, p_format) {
            		return false;
         		}
      		}  */
-	      else if (endMonthInt == 2 || endMonthInt == 02)
+	      else if (endMonthInt == 2)
      		{
         		if ( endDay >28 ||  endDay <1)
         		{
@@ -817,7 +817,7 @@ function show_yearly_calendar(p_item, p_year, p_format) {
            		return false;
         		}
      		}  */
-	      else if (endMonthInt == 1 || endMonthInt == 3 ||endMonthInt == 5 ||endMonthInt == 7 || endMonthInt == 01 || endMonthInt == 03 ||endMonthInt == 05 ||endMonthInt == 07)
+	      else if (endMonthInt == 1 || endMonthInt == 3 ||endMonthInt == 5 ||endMonthInt == 7)
      	  {
         		if ( endDay > 31 ||  endDay < 1)
         		{
@@ -826,7 +826,7 @@ function show_yearly_calendar(p_item, p_year, p_format) {
            		return false;
         		}
      	  }
-     		else if (endMonthInt == 8 || endMonthInt == 10 ||endMonthInt == 12 || endMonthInt == 08)
+     		else if (endMonthInt == 8 || endMonthInt == 10 ||endMonthInt == 12 )
      		{
         		if ( endDay > 31 ||  endDay < 1)
         		{
@@ -835,7 +835,7 @@ function show_yearly_calendar(p_item, p_year, p_format) {
            		return false;
         		}
      		}
-     		else if (endMonthInt == 4 || endMonthInt == 6 ||endMonthInt == 9 ||endMonthInt == 11 || endMonthInt == 04 || endMonthInt == 06 ||endMonthInt == 09)
+     		else if (endMonthInt == 4 || endMonthInt == 6 ||endMonthInt == 9 ||endMonthInt == 11)
      		{
         		if (endDay > 30 ||  endDay < 1)
         		{
