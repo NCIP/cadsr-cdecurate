@@ -894,11 +894,11 @@ function LoadKeyHandler(){
 <% String strNothing ="nothing"; %>
 <%String userName = (String) session.getAttribute("Username");%>
 function performAction(type){
-   performActionJS('<%=StringEscapeUtils.escapeJavaScript(userName)%>', type);
+   performActionJS('<%=StringEscapeUtils.escapeJavaScript(userName)%>', '<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', type);
 }
 function performUncheckedCkBoxAction(type){
    document.searchResultsForm.unCheckedRowId.value = document.searchResultsForm.selectedRowId.value;
-   performActionJS('<%=StringEscapeUtils.escapeJavaScript(userName)%>', type);
+   performActionJS('<%=StringEscapeUtils.escapeJavaScript(userName)%>', '<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', type);
 }
 function createNew(type){
   document.searchResultsForm.unCheckedRowId.value = document.searchResultsForm.selectedRowId.value;
@@ -2143,8 +2143,8 @@ function enableDisableMenuItems(){
 					<td>
 						<font size="4">
 							<b>
-								<a href="javascript:Back()">Search Results for
-								<%=StringEscapeUtils.escapeHtml(sLabelKeyword)%></a><img name="Message" src="images/SearchMessage.gif" width="180" height="25" alt="WaitMessage" style="visibility:hidden;">
+								 Search Results for
+								<%=StringEscapeUtils.escapeHtml(sLabelKeyword)%>&nbsp;&nbsp;<input type="button" value="Back" style="width: 65" onClick="Back();"><img name="Message" src="images/SearchMessage.gif" width="180" height="25" alt="WaitMessage" style="visibility:hidden;">
 							</b>
 						</font>
 					</td>
