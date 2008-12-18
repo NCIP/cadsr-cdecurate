@@ -31,11 +31,11 @@ public class CreateMenuTag extends MenuTag {
 					            +generateDT("","callDECNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","Data Element Concept")
 					            +generateDT("","callVDNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","Value Domain")
 					            +"</dl>");
-			createMenu.println("<form name=\"newDEForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newDEFromMenu\"></form>"
-                    + "<form name=\"newDECForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newDECFromMenu\"></form>"
-                    + "<form name=\"newVDForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newVDFromMenu\"></form>"
-                    + "<form name=\"newCCForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=newCCFromMenu\"></form>");
-		} catch (IOException e) {
+			createMenu.println(generateForm("newDEForm", "../../cdecurate/NCICurationServlet?reqType=newDEFromMenu")
+			                    +generateForm("newDECForm", "../../cdecurate/NCICurationServlet?reqType=newDECFromMenu")
+			                    +generateForm("newVDForm", ".../../cdecurate/NCICurationServlet?reqType=newVDFromMenu")
+			                    +generateForm("newCCForm", "../../cdecurate/NCICurationServlet?reqType=newCCFromMenu"));
+        } catch (IOException e) {
 			e.printStackTrace();
 		}
 

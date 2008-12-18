@@ -70,5 +70,13 @@ public class MenuTag extends TagSupport {
 		return tag;
 		
 	}
+	/*This method will generate the <form> tag
+	 * @param name - identifier to form
+	 * @param action - URL that defines where to send  
+	 */
+	public String generateForm(String name, String action){
+		String tag = "<form style=\"margin: 0px; padding: 0px;\"  name=\""+ name +"\" method=\"post\" action=\""+ action +"\"></form>";
+		return tag;	
+	}
 
 }
