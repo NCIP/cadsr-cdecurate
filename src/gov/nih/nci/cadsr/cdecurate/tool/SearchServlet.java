@@ -3,12 +3,15 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
+import gov.nih.nci.cadsr.persist.ac.Admin_Components_Mgr;
+import gov.nih.nci.cadsr.persist.exception.DBException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -398,7 +401,7 @@ public class SearchServlet extends CurationServlet {
     private void doSearchResultsAction() throws Exception
     {
     	String hidaction = (String)m_classReq.getParameter("hidaction");
-        if (hidaction.equals("newUsingExisting") || hidaction.equals("newVersion")){
+        if (hidaction.equals("newUsingExisting") || hidaction.equals("newVersion") || hidaction.equals("edit")){
         	doMenuAction();
         }
     	HttpSession session = m_classReq.getSession();
@@ -1012,6 +1015,8 @@ public class SearchServlet extends CurationServlet {
                     throws Exception
     {
         HttpSession session = m_classReq.getSession();
+        Admin_Components_Mgr acMgr = new Admin_Components_Mgr();
+        ArrayList list = null;
         int thisInd = 0;
         // get the searched ID and Name vectors
         Vector vIDs = (Vector) session.getAttribute("SearchID");
@@ -1046,7 +1051,12 @@ public class SearchServlet extends CurationServlet {
         }
         if (sID != null && !sID.equals(""))
         {
-            // reset the default attributes
+        	try{
+          	  list = acMgr.getPublicIDVersion(sID, m_conn);
+          	}catch (DBException e){
+          		logger.error(e.getMessage());
+      	   	}
+        	// reset the default attributes
             Vector vSelVector = new Vector();
             String sSearchIn = (String) session.getAttribute("serSearchIn");
             GetACSearch getACSearch = new GetACSearch(m_classReq, m_classRes, this);
@@ -1057,6 +1067,7 @@ public class SearchServlet extends CurationServlet {
             String pvID = "", cdID = "", deID = "", decID = "", vdID = "", cscsiID = "", ocID = "", propID = "", conID = "";
             String vmID="";
             // get the search results from the database.
+           
             if (assocAC.equals("AssocDEs"))
             {
                 m_classReq.setAttribute("GetAssocSearchAC", "true");
@@ -1164,8 +1175,9 @@ public class SearchServlet extends CurationServlet {
             String labelWord = "";
             String labelWord2 = "";
             labelWord = " associated with " + oldSearch + " - " + sName; // make the label
-            labelWord2 = " associated to " + oldSearch + " - " + sName;
-            m_classReq.setAttribute("labelKeyword", oldSearch); // make the label
+            String version = (String)list.get(1);
+            labelWord2 = " associated to " + oldSearch + " - " + sName + " [" + list.get(0)+ "v" +Double.parseDouble(version)+"]";
+            m_classReq.setAttribute("labelKeyword", newSearch); // make the label
             m_classReq.setAttribute("labelKeyword2", labelWord2);
             // save the last word in the request attribute
             DataManager.setAttribute(session, "LastAppendWord", labelWord);

@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.15 2008-12-16 15:14:22 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.16 2008-12-18 17:26:08 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -335,21 +335,41 @@
   } 
   
   // for edit/template/version/Question submits the page with action selected as Edit
-  function ShowEditSelection()
+  function ShowEditSelection(selAC)
   { 
      window.status = "Opening the page, it may take a minute, please wait....."
 	 document.searchResultsForm.Message.style.visibility="visible";
      document.searchResultsForm.actSelected.value = "Edit";
+     document.searchResultsForm.hidaction.value = "edit";
+     if (selAC == "Data Element"){
+        document.searchResultsForm.hidMenuAction.value = "editDE";
+      }
+     if (selAC == "Data Element Concept"){
+        document.searchResultsForm.hidMenuAction.value = "editDEC";
+     }
+     if (selAC ==  "Value Domain"){
+        document.searchResultsForm.hidMenuAction.value = "editVD";
+     }
      document.searchResultsForm.submit();
   }
 
   // Block edit multiple rows of DE's, DEC's, or VD's
-  function BlockEdit()
+  function BlockEdit(selAC)
   {
        getRowAttributes();   //get the values of each row.
        window.status = "Opening the page, it may take a minute, please wait....."
        document.searchResultsForm.Message.style.visibility="visible";
        document.searchResultsForm.actSelected.value = "BlockEdit";
+       document.searchResultsForm.hidaction.value = "edit";
+       if (selAC == "Data Element"){
+          document.searchResultsForm.hidMenuAction.value = "editDE";
+        }
+       if (selAC == "Data Element Concept"){
+          document.searchResultsForm.hidMenuAction.value = "editDEC";
+       }
+       if (selAC ==  "Value Domain"){
+          document.searchResultsForm.hidMenuAction.value = "editVD";
+       }
        document.searchResultsForm.numSelected.value = numRowsSelected;
        document.searchResultsForm.submit();
   }
@@ -753,7 +773,7 @@ function uploadCmd()
    }
   // This function will display the alert message to the user if he/she is not logged in 
   // or will call the appropriate function if he/she is already logged in
-   function  performActionJS(user, type){
+   function  performActionJS(user, selAC, type){
     if (user == "null"){
        alert("Please Login to use this feature.");
     }else{
@@ -773,10 +793,10 @@ function uploadCmd()
            setAppendAction();
         }
         if (type == "edit"){
-           ShowEditSelection();
+           ShowEditSelection(selAC);
         }
         if (type == "blockEdit"){
-           BlockEdit();
+           BlockEdit(selAC);
         }
      }    
   
