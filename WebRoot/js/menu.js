@@ -30,7 +30,7 @@ function menuHide() {
 	menuHoldElement = null;
 	menuSrcElementHold = null;
 }
-function setColor(obj, j){
+function setBorder(obj, j){
 	     if ((j%2) === 0){
 	       obj.style.border = '1px solid #dfdfdf' ;
 	     }else{

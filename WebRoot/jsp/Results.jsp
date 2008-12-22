@@ -2683,8 +2683,8 @@ function enableDisableMenuItems(){
 				   <td class="rsCell">
 						<input type="checkbox" onClick="javascript:checkClick(this);" name="<%=ckName%>" <%if((vCheckList != null && vCheckList.contains(ckName))){%> checked <%}%> onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 					</td>
-					<td  class="rsCell" onmouseover="this.style.backgroundColor = '#FFE87C'" onmouseout="setColor(this, <%=j%>)">
-					 <img onclick="menuShow(this, event);" menuID="objMenu" rowId="<%=j%>" src="images/actionicon.gif" border="0"/>
+					<td  class="rsCell">
+					<img onclick="menuShow(this, event);" onmouseover="style.border=('1px solid #4876FF');" onmouseout="setBorder(this, <%=j%>)" menuID="objMenu" rowId="<%=j%>" src="images/actionicon.gif" border="0"/>
 					 </td>
 					<%     if (sSelAC.equals("Questions") && !sMAction.equals("searchForCreate"))
        {
