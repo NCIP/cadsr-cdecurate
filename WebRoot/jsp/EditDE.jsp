@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.5 2008-12-12 01:02:29 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.6 2008-12-22 17:08:08 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -329,7 +329,7 @@
     {%>
       displayStatusWindow();
     <% }
-    else if (statusMessage != null && !statusMessage.equals(""))
+    else if (!isView && statusMessage != null && !statusMessage.equals(""))
     {%>
 	       alert("<%=statusMessage%>");
     <% }
@@ -353,6 +353,10 @@
 			<input type="hidden" name="itemType" value="">
 		</form>
 		<form name="newCDEForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=editDE">
+		  <%String displayErrorMessage = (String)session.getAttribute("displayErrorMessage");
+		    if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
+		  	 <b><font  size="3">Not Authorized for Edits in this Context.</font></b></br></br>
+	       <%}%>
 			<table width="100%" border=0>
 				<!--DWLayoutTable-->
 				<tr>
@@ -392,6 +396,10 @@
 							<input type="button" name="btnClose" value="Close" style="width: 125" onClick="window.close();">
 							&nbsp;&nbsp;
 						<% } %>
+						<%	if((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){	%>
+							<input type="button" name="btnClose" value="Back" style="width: 125" onClick="Back();">
+							&nbsp;&nbsp;
+						<% }session.setAttribute("displayErrorMessage", "No"); %>
 						<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
 					</td>
 				</tr>

@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.74 2008-12-18 16:54:19 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.75 2008-12-22 17:04:12 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -4178,6 +4178,7 @@ public class GetACSearch implements Serializable
                                 Vector vResult = new Vector();
                                 getDEResult(req, res, vResult, "");
                                 DataManager.setAttribute(session, "results", vResult);
+                                session.setAttribute("editID", DEBean.getIDSEQ());
                                 isValid = false;
                                 break;
                             }
@@ -4219,6 +4220,7 @@ public class GetACSearch implements Serializable
                                 Vector vResult = new Vector();
                                 getDECResult(req, res, vResult, "");
                                 DataManager.setAttribute(session, "results", vResult);
+                                session.setAttribute("editID", DECBean.getIDSEQ());
                                 isValid = false;
                                 break;
                             }
@@ -4264,6 +4266,7 @@ public class GetACSearch implements Serializable
                                 Vector vResult = new Vector();
                                 getVDResult(req, res, vResult, "");
                                 DataManager.setAttribute(session, "results", vResult);
+                                session.setAttribute("editID", VDBean.getIDSEQ());
                                 isValid = false;
                                 break;
                             }
