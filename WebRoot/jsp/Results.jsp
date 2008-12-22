@@ -534,7 +534,6 @@ function LoadKeyHandler(){
  	<%
         String statusMessage = (String)session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
         if (statusMessage == null) statusMessage = "";
-        //statusMessage = "Value Domain Name : Malignant Neoplasm Neoplastic Cell\\nPublic ID : 2296135\\n\\t Successfully created New Value Domain";
         String sSubmitAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
         if (sSubmitAction == null) sSubmitAction = "nothing";
         Vector vStat = (Vector)session.getAttribute("vStatMsg");
@@ -2684,7 +2683,7 @@ function enableDisableMenuItems(){
 				   <td class="rsCell">
 						<input type="checkbox" onClick="javascript:checkClick(this);" name="<%=ckName%>" <%if((vCheckList != null && vCheckList.contains(ckName))){%> checked <%}%> onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 					</td>
-					<td class="rsCell">
+					<td  onclass="rsCell" onmouseover="this.style.backgroundColor = '#FFE87C'" onmouseout="setColor(this, <%=j%>)">
 					 <img onclick="menuShow(this, event);" menuID="objMenu" rowId="<%=j%>" src="images/actionicon.gif" border="0"/>
 					 </td>
 					<%     if (sSelAC.equals("Questions") && !sMAction.equals("searchForCreate"))

@@ -30,14 +30,35 @@ function menuHide() {
 	menuHoldElement = null;
 	menuSrcElementHold = null;
 }
+function setColor(obj, j){
+	var exit = false;
+	rowColor = obj.parentNode.style.backgroundColor;
+	if (rowColor == "rgb(255, 232, 124)") {
+		exit = true;
+	}
+	else if (rowColor == "#ffe87c") {
+		exit = true;
+	}
+	
+	if(!exit) {
+	     if ((j%2) === 0){
+	       obj.style.backgroundColor = "#dfdfdf";
+	     }else{
+	       obj.style.backgroundColor = "#FFFFFF";
+	     } 
+     } 
+}
 function setHighlightRow(obj){
+    var child;
     if (obj.nodeName == "TR"){
         if (prevRowObj != null){
             prevRowObj.style.backgroundColor = prevRowBGColor;
-        }
+            child = prevRowObj.childNodes[1];
+	        child.style.backgroundColor = prevRowBGColor;
+         }
         prevRowBGColor = obj.style.backgroundColor;
         prevRowObj = obj;
-        prevRowObj.style.backgroundColor = "#FFE87C"; 
+        prevRowObj.style.backgroundColor = "#FFE87C";
         return;
     }
     setHighlightRow(obj.parentNode);
