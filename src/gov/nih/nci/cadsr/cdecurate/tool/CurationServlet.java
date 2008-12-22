@@ -27,6 +27,7 @@ import java.util.Vector;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -3279,12 +3280,22 @@ public class CurationServlet
     protected void doSearchSelectionAction(HttpServletRequest req, HttpServletResponse res) throws Exception
     {
         HttpSession session = req.getSession();
+        String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
+        ServletConfig config;
         String sSearchAC = (String) session.getAttribute("searchAC"); // get the selected component
         CurationServlet acServlet = getACServlet(sSearchAC);
         // gets the bean for the row selected
         GetACSearch getACSearch = new GetACSearch(req, res, acServlet);
-        if (getACSearch.getSelRowToEdit(req, res, "") == false)
-            ForwardJSP(req, res, "/SearchResultsPage.jsp");
+        if (getACSearch.getSelRowToEdit(req, res, "") == false){
+          	if (sMenuAction.equals("NewDEVersion") || sMenuAction.equals("NewDECVersion") || sMenuAction.equals("NewVDVersion"))
+          		ForwardJSP(req, res, "/SearchResultsPage.jsp");
+          	String editID = (String)session.getAttribute("editID");
+        	session.setAttribute("displayErrorMessage", "Yes"); 
+           	String path = "/NCICurationServlet?reqType=view&idseq=" + editID;
+        	RequestDispatcher rd = m_servletContext.getRequestDispatcher(path);
+		    rd.forward(req, res);
+		    return;
+		} 
         else
         {
            // String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION); // get the selected

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.2 2008-12-12 01:02:29 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.3 2008-12-22 17:09:04 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -97,6 +97,11 @@
 				<input type="button" name="btnClose" value="Close" style="width: 125" onClick="window.close();">
 				&nbsp;&nbsp;
 			<% } %>
+			<%	String displayErrorMessagee = (String)session.getAttribute("displayErrorMessage");
+			  if((displayErrorMessagee != null)&&(displayErrorMessagee).equals("Yes")){	%>
+							<input type="button" name="btnClose" value="Back" style="width: 125" onClick="Back();">
+							&nbsp;&nbsp;
+			<% }session.setAttribute("displayErrorMessage", "No"); %>
 			<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
 		</td>
 	</tr>

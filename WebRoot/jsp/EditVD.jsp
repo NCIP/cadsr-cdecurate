@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.9 2008-12-12 16:13:55 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.10 2008-12-22 17:08:26 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -476,14 +476,13 @@
     {%>
       displayStatusWindow();
     <% }
-    else if (statusMessage != null && !statusMessage.equals(""))
+    else if (!isView && statusMessage != null && !statusMessage.equals(""))
     {%>
 	       alert("<%=statusMessage%>");
     <% }
     //reset the status message to no message
-    if (!isView) {
-	    session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");
-    }
+        session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");
+   
 %>
   }
  
@@ -499,6 +498,10 @@ function setup()
 
 	<body <% if (!isView) { %>onLoad="setup();" <% } %>>
 		<form name="createVDForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=editVD">
+		    <% String displayErrorMessage = (String)session.getAttribute("displayErrorMessage");
+		      if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
+		  	 <b><font  size="3">Not Authorized for Edits in this Context.</font></b></br></br>
+	       <%}%>
 			<!-- include the vdpvstab.jsp here -->
 			<jsp:include page="VDPVSTab.jsp" flush="true" />
 			<div style="margin-left: 0in; margin-right: 0in; border-left: 2px solid black; border-bottom: 2px solid black; border-right: 2px solid black; width: 100%; padding: 0.1in 0in 0.1in 0in">
