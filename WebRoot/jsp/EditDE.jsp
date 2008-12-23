@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.6 2008-12-22 17:08:08 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.7 2008-12-23 20:58:01 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -392,12 +392,12 @@
 							<% } %>
 							onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return false">
 						&nbsp;&nbsp;
-						<%	if (isView) {	%>
-							<input type="button" name="btnClose" value="Close" style="width: 125" onClick="window.close();">
-							&nbsp;&nbsp;
-						<% } %>
+						
 						<%	if((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){	%>
 							<input type="button" name="btnClose" value="Back" style="width: 125" onClick="Back();">
+							&nbsp;&nbsp;
+						<% }else if (isView) {	%>
+							<input type="button" name="btnClose" value="Close" style="width: 125" onClick="window.close();">
 							&nbsp;&nbsp;
 						<% }session.setAttribute("displayErrorMessage", "No"); %>
 						<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">

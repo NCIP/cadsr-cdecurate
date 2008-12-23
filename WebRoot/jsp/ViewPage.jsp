@@ -15,7 +15,12 @@
 <title>View AC</title>
 </head>
 <body>
-	<curate:header displayUser = "false"/>
+	<%String displayErrorMessagee = (String)session.getAttribute("displayErrorMessage");
+	   if((displayErrorMessagee != null)&&(displayErrorMessagee).equals("Yes")){%>
+	       <curate:header displayUser = "true"/>
+	   <%}else{ %>
+	       <curate:header displayUser = "false"/>
+	<%}%>
 	<table width=100%><tr><td class="menuItemBlank">&nbsp;</td></tr></table>
 	<% String bodyPage = (String)request.getAttribute("IncludeViewPage") ;
 		  String errorMsg =  (String)request.getAttribute("errMsg") ;
