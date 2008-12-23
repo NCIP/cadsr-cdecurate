@@ -2684,8 +2684,7 @@ function enableDisableMenuItems(){
 						<input type="checkbox" onClick="javascript:checkClick(this);" name="<%=ckName%>" <%if((vCheckList != null && vCheckList.contains(ckName))){%> checked <%}%> onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 					</td>
 					<td  class="rsCell">
-					<img onclick="menuShow(this, event);" onmouseover="style.border=('1px solid #4876FF');" onmouseout="setBorder(this, <%=j%>)" menuID="objMenu" rowId="<%=j%>" src="images/actionicon.gif" border="0"/>
-					 </td>
+					<img <%if ((j%2) == 0){%>class="stripe"<%}else{%>class="white"<%}%> onclick="menuShow(this, event);" onmouseover="style.border=('1px solid #4876FF');" onmouseout="setBorder(this, <%=j%>)" menuID="objMenu" rowId="<%=j%>" src="images/actionicon.gif"  border="1"/></td>
 					<%     if (sSelAC.equals("Questions") && !sMAction.equals("searchForCreate"))
        {
           //if edit, display the status as complete, otherwise incomplete
