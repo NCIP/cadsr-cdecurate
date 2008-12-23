@@ -31,16 +31,36 @@ function menuHide() {
 	menuSrcElementHold = null;
 }
 function setBorder(obj, j){
+	var exit = false;
+	var parentObj = obj.parentNode;
+	rowColor = parentObj.parentNode.style.backgroundColor;
+	if (rowColor == "rgb(255, 232, 124)") {
+		obj.style.border = '1px solid #FFE87C' ;
+		exit = true;
+	}
+	else if (rowColor == "#ffe87c"){
+	     obj.style.border = '1px solid #FFE87C' ;
+	     exit = true;
+	}    
+    if(!exit) {
 	     if ((j%2) === 0){
 	       obj.style.border = '1px solid #dfdfdf' ;
 	     }else{
 	       obj.style.border = '1px solid #FFFFFF' ;
 	     } 
+	  }   
 }
+
 function setHighlightRow(obj){
      if (obj.nodeName == "TR"){
         if (prevRowObj != null){
             prevRowObj.style.backgroundColor = prevRowBGColor;
+            if (prevRowObj.childNodes[3].firstChild.nextSibling != null){
+                var object = prevRowObj.childNodes[3].firstChild.nextSibling;
+             }else{
+                var object = prevRowObj.childNodes[1].firstChild;
+             }   
+            object.style.borderColor = prevRowBGColor;
          }
         prevRowBGColor = obj.style.backgroundColor;
         prevRowObj = obj;
@@ -49,9 +69,10 @@ function setHighlightRow(obj){
     }
     setHighlightRow(obj.parentNode);
 }
+
 function menuShow(obj, evnt) {
-	setHighlightRow(obj);
-	var menuID = obj.getAttribute("menuID");
+    setHighlightRow(obj);
+    var menuID = obj.getAttribute("menuID");
 	var rowId = obj.getAttribute("rowId");
 	document.searchResultsForm.selectedRowId.value = rowId;
 	if (menuID == null) {
