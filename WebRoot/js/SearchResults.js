@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.16 2008-12-18 17:26:08 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.17 2008-12-24 18:07:29 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -349,6 +349,9 @@
      }
      if (selAC ==  "Value Domain"){
         document.searchResultsForm.hidMenuAction.value = "editVD";
+     }
+     if (selAC ==  "Value Meaning"){
+        document.searchResultsForm.hidaction.value = "editVM";
      }
      document.searchResultsForm.submit();
   }
