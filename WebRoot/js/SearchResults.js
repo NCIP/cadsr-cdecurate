@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.17 2008-12-24 18:07:29 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.18 2008-12-25 16:42:18 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -1046,6 +1046,260 @@ function enableDisableMenuItemsJS(sSelAC, checkCount){
    element.onclick = function () {createNew('newVersion')};
   }
    
+/* This function enables/disables the "Edit Selection" and
+  "Show Selected Rows Only" buttons based on checked items in the list.
+  Edit Selection:  enabled when one checked and disabled otherwise, except 
+  when the component is permissible value for searchforCreate
+  Show Selected Rows Only:  enabled when one or more items are checked 
+  designate record : enabled when not search for create and only one item checked.
+  details: enabled when one DE or DEC or VD is checked
+  */
+
+  function EnableCheckButtons(checked, currentField, editAction, sButtonPressed, sSelAC)
+  {      
+	   if (checked)
+		   ++numRowsSelected;
+	   else
+		   --numRowsSelected;
+	   
+	   //if called directly from the checkbox click takes the name value, otherwise it is a string value
+	   if (currentField.name == null)
+		   var rowNo = currentField;
+	   else
+		   var rowNo = currentField.name;
+	   
+	   if (numRowsSelected > 0)
+	   {
+		   //enable the append button
+		   if (document.searchResultsForm.AppendBtn != null)
+			   document.searchResultsForm.AppendBtn.disabled=false;
+               
+           if (document.searchResultsForm.monitorBtn != null)
+               document.searchResultsForm.monitorBtn.disabled = false;
+                      
+           if (document.searchResultsForm.unmonitorBtn != null)
+               document.searchResultsForm.unmonitorBtn.disabled = false;
+           
+		   if (document.searchResultsForm.uploadBtn != null)
+           	   document.searchResultsForm.uploadBtn.disabled = false;
+            
+		   if (numRowsSelected == 1)
+		   {
+			   if (editAction == "searchForCreate")
+			   {
+				   if (document.searchResultsForm.editSelectedBtn != null)
+					   document.searchResultsForm.editSelectedBtn.disabled=false;
+               }
+			   else
+			   {
+				   if (document.searchResultsForm.showSelectedBtn != null)
+					   document.searchResultsForm.showSelectedBtn.disabled=false;
+               			
+				   if (editAction != "nothing" || sButtonPressed == "Search")
+				   {
+					   if (document.searchResultsForm.editSelectedBtn != null  && 
+						   editAction != "Complete Selected DE" && editAction != "Create New Version" && editAction != "Create New from Existing")
+					   {
+						   document.searchResultsForm.editSelectedBtn.disabled=false;
+						   document.searchResultsForm.editSelectedBtn.value="Edit Selection";
+					   }
+					   if (document.searchResultsForm.editSelectedBtn != null  && 
+						   editAction == "Complete Selected DE" || editAction == "Create New Version" || editAction == "Create New from Existing")
+					   {
+						   document.searchResultsForm.editSelectedBtn.disabled=false;
+					   }
+				   }
+				   else if (editAction == "nothing" && sSelAC == "Data Element" || sSelAC == "Data Element Concept" || sSelAC == "Value Domain" || sSelAC == "Value Meaning")
+				   {
+					   document.searchResultsForm.editSelectedBtn.disabled=false;
+				   }
+				   if (editAction == "nothing" && sSelAC == "Data Element" || sSelAC == "Data Element Concept" || sSelAC == "Value Domain" || sSelAC == "Conceptual Domain" || sSelAC == "Value Meaning")
+				   {
+					   document.searchResultsForm.associateACBtn.value="Get Associated";
+					   document.searchResultsForm.associateACBtn.disabled=false;
+				   }
+			   }
+			   //both seachforcreate and regular the searches
+			   if (checked)
+				   StoreSelectedRow("true", rowNo, editAction);
+			   else
+				   StoreSelectedRow("false", rowNo, editAction);
+			   
+			   //disable the details button if not data element   
+			   if (document.searchResultsForm.detailsBtn != null)
+			   {
+				   if (document.searchParmsForm.listSearchFor.value == "DataElement")
+					   document.searchResultsForm.detailsBtn.disabled=false;
+				   else
+					   document.searchResultsForm.detailsBtn.disabled=true;
+			   }
+			   
+			   //enable designate button and change the label to undesignate if already designated
+			   if (document.searchParmsForm.listSearchFor.value != "PermissibleValue")
+			   {
+				   if (document.searchResultsForm.designateBtn != null)
+					   document.searchResultsForm.designateBtn.disabled=false;
+			   }
+			   
+			   //enable associate button if not questions
+			   if (document.searchParmsForm.listSearchFor.value != "Questions")
+			   {
+				   if (document.searchResultsForm.associateACBtn != null)
+					   document.searchResultsForm.associateACBtn.disabled=false;
+			   }
+		   }
+		   else    // numRowsSelected > 1
+		   {
+		      
+			   if (document.searchResultsForm.associateACBtn != null)
+			   {
+				   document.searchResultsForm.associateACBtn.disabled=true;
+			   }
+			   if (document.searchResultsForm.detailsBtn != null)
+				   document.searchResultsForm.detailsBtn.disabled=true;
+
+		   		if (document.searchResultsForm.uploadBtn != null)
+           			document.searchResultsForm.uploadBtn.disabled = true;
+               
+			   if (editAction != "searchForCreate")
+			   {
+			      
+				   document.searchResultsForm.showSelectedBtn.disabled=false;
+				  
+				   if (checked)
+					   StoreSelectedRow("true", rowNo, editAction);
+				   else
+					   StoreSelectedRow("false", rowNo, editAction);
+					   
+				   if (editAction != "nothing" || sButtonPressed == "Search" || sButtonPressed == "Edit")
+				   { 
+					   if (document.searchResultsForm.editSelectedBtn != null)
+					   {
+						   //enable the edit button if action is regular search or edit otherwise disable
+						   if (editAction != "Complete Selected DE" && editAction != "Create New Version" && editAction != "Create New from Existing" && sSelAC != "Value Meaning")
+						   {
+							 
+							   document.searchResultsForm.editSelectedBtn.value="Block Edit";
+							   document.searchResultsForm.editSelectedBtn.disabled=false;
+							}
+							//if(sSelAC == "Value Meaning")
+				   			//{
+			 		   
+				           	//	alert("Please check only one box at a time");
+					   	   	//	UnCheckAllCheckBoxes();
+				           	//	formObj= eval("document.searchResultsForm."+currentField.name);
+				           	//	formObj.checked=true;
+                   			 //  	--numRowsSelected;
+                   			//   	document.searchResultsForm.associateACBtn.disabled=false;
+                   			//   	document.searchResultsForm.editSelectedBtn.disabled=false;
+                   			   
+                   		  // 	}	
+						    else 
+						     {
+						  	   document.searchResultsForm.editSelectedBtn.disabled=true;
+							 }
+					   }
+				   }
+				   				   
+			   }
+			   else   // editAction == "searchForCreate"
+			   {
+				   if (document.searchParmsForm.listSearchFor.value == "PermissibleValue")
+				   {
+					   //search from create/edit pages
+					   if (opener.document != null)
+					   {
+						   var vOrigin = opener.document.getElementById("MenuAction").value;
+						   //searching pv for questions
+						   if (vOrigin == "Questions")
+						   {
+							   formObj= eval("document.searchResultsForm."+currentField.name);
+							   formObj.checked=false;
+							   --numRowsSelected;
+							   alert("Please select only one value at a time");
+						   }
+						   else    // vOrigin != "Questions"
+						   {
+							   if (checked)
+								   StoreSelectedRow("true", rowNo, editAction);
+							   else
+								   StoreSelectedRow("false", rowNo, editAction);
+						   }
+					   }
+					   //search from the regular search pages
+					   else
+					   {
+						   if (checked)
+							   StoreSelectedRow("true", rowNo, editAction);
+						   else
+							   StoreSelectedRow("false", rowNo, editAction);
+					   }
+				   }
+				   else if ( sSelAC == "Data Element")  // from CreateDE for DDE
+				   {
+							   if (checked)
+								   StoreSelectedRow("true", rowNo, editAction);
+							   else
+								   StoreSelectedRow("false", rowNo, editAction);
+				   }
+				   else  // editAction == "searchForCreate", document.searchParmsForm.listSearchFor.value != "PermissibleValue"
+				   {
+				   /* formObj= eval("document.searchResultsForm."+currentField.name);
+                   			formObj.checked=false;
+                  			 --numRowsSelected;
+					   alert("Please check only one box at a time");*/
+					   //allow to check more than one but disable the button if more selected
+					   if (document.searchResultsForm.editSelectedBtn != null)
+						   document.searchResultsForm.editSelectedBtn.disabled=true;
+					   if (checked)
+						   StoreSelectedRow("true", rowNo, editAction);
+					   else
+						   StoreSelectedRow("false", rowNo, editAction);
+				   }
+			   }
+			   if (document.searchResultsForm.designateBtn != null)
+				   document.searchResultsForm.designateBtn.disabled=false;
+		   }
+      }
+      else  // numRowsSelected == 0
+      {
+          if (document.searchResultsForm.monitorBtn != null)
+              document.searchResultsForm.monitorBtn.disabled = true;
+              
+          if (document.searchResultsForm.unmonitorBtn != null)
+              document.searchResultsForm.unmonitorBtn.disabled = true;  
+              
+         if (document.searchResultsForm.uploadBtn != null)
+               document.searchResultsForm.uploadBtn.disabled = true;            
+           
+		  if (document.searchResultsForm.associateACBtn != null)
+			  document.searchResultsForm.associateACBtn.disabled=true;
+		  
+		  // disable the Details button if no row is selected
+		  if (document.searchResultsForm.detailsBtn != null)
+			  document.searchResultsForm.detailsBtn.disabled=true;
+		  
+		  //keep the show selection button disabled if no row is checked
+          if (editAction != "searchForCreate")
+			  if (document.searchResultsForm.showSelectedBtn != null)
+				  document.searchResultsForm.showSelectedBtn.disabled=true;
+			  
+			  //disable edit button (use selection/edit/template/version)
+			  if (document.searchResultsForm.editSelectedBtn != null)
+				  document.searchResultsForm.editSelectedBtn.disabled=true;
+			  
+			  if (!checked)
+				  StoreSelectedRow("false", rowNo, editAction);
+			  
+			  //disable designate button
+			  if (document.searchResultsForm.designateBtn != null)
+				  document.searchResultsForm.designateBtn.disabled=true;
+			  
+			  //disable the append button
+			  if (document.searchResultsForm.AppendBtn != null)
+				  document.searchResultsForm.AppendBtn.disabled=true;
+	  }
+  }  // end of EnableCheckButtons
 		  
 			
      
