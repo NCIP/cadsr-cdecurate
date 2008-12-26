@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
 public class SQLHelper {
 	 public static final Logger  logger  = Logger.getLogger(SQLHelper.class.getName());
 		   
+    /**
+     * @param ps
+     */
     public static void closePreparedStatement(PreparedStatement ps) {
         if (ps != null) {
             try {
@@ -28,6 +31,9 @@ public class SQLHelper {
             }
         }
     }
+    /**
+     * @param stmt
+     */
     public static void closeStatement(Statement stmt) {
         if (stmt != null) {
             try {
@@ -37,6 +43,9 @@ public class SQLHelper {
             }
         }
     }
+    /**
+     * @param rs
+     */
     public static void closeResultSet(ResultSet rs) {
         if (rs != null) {
             try {
@@ -48,6 +57,9 @@ public class SQLHelper {
        
     }
     
+    /**
+     * @param cstmt
+     */
     public static void closeCallableStatement(CallableStatement cstmt) {
         if (cstmt != null) {
             try {
@@ -58,6 +70,9 @@ public class SQLHelper {
         }
     }  
         
+    /**
+     * @param con
+     */
     public static void closeConnection(Connection con){
             try
             {
