@@ -1,6 +1,6 @@
 //Copyright (c) 2000 ScenPro, Inc.
 
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.62 2008-12-09 21:44:18 veerlah Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.63 2008-12-26 19:14:35 chickerura Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -134,7 +134,7 @@ public class EVSSearch implements Serializable {
 			try {
 				codes2 = evsService.evsSearch(codequery2);
 			} catch (Exception ex) {
-				logger.fatal("Error do_getEVSCode: " + ex.toString(), ex);
+				logger.error("Error do_getEVSCode: " + ex.toString(), ex);
 			}
 			if (codes2 != null) {
 				MetaThesaurusConcept aMetaThesaurusConcept = new MetaThesaurusConcept();
@@ -174,7 +174,7 @@ public class EVSSearch implements Serializable {
 			try {
 				concepts = evsService.evsSearch(query);
 			} catch (Exception ex) {
-				logger.fatal("Error do_EVSSearch: " + ex.toString(), ex);
+				logger.error("Error do_EVSSearch: " + ex.toString(), ex);
 			}
 			if (concepts != null && concepts.size() > 0)
 				sConceptName = (String) concepts.get(0);
@@ -186,7 +186,7 @@ public class EVSSearch implements Serializable {
 			try {
 				concepts2 = evsService.evsSearch(query2);
 			} catch (Exception ex) {
-				logger.fatal("Error do_EVSSearch Meta: " + ex.toString(), ex);
+				logger.error("Error do_EVSSearch Meta: " + ex.toString(), ex);
 			}
 			if (concepts2 != null) {
 				MetaThesaurusConcept aMetaThesaurusConcept = new MetaThesaurusConcept();
@@ -411,7 +411,7 @@ public class EVSSearch implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal(
+			logger.error(
 					"ERROR - EVSSearch-getEVSIdentifierString for other : "
 					+ e.toString(), e);
 		}
@@ -445,7 +445,7 @@ public class EVSSearch implements Serializable {
 							Swap = 1;
 						}
 					} catch (Exception ee) {
-						logger.fatal("problem in EVSSearch-SortDLCObject: "
+						logger.error("problem in EVSSearch-SortDLCObject: "
 								+ ee, ee);
 					}
 				}
@@ -503,7 +503,7 @@ public class EVSSearch implements Serializable {
 					vocabRoots = this.sortDLCObjects(vocabRoots);
 			}
 		} catch (Exception ee) {
-			logger.fatal(
+			logger.error(
 					"ERROR - EVSSearch-getRootConcepts : " + ee.toString(), ee);
 		}
 		return vocabRoots;
@@ -551,7 +551,7 @@ public class EVSSearch implements Serializable {
 					}
 				}
 			} catch (Exception ee) {
-				logger.fatal(
+				logger.error(
 						"ERROR - EVSSearch-getSubConcepts for Thesaurus : "
 						+ ee.toString(), ee);
 				return vSub;
@@ -593,7 +593,7 @@ public class EVSSearch implements Serializable {
 					}
 				}
 			} catch (Exception ee) {
-				logger.fatal(
+				logger.error(
 						"ERROR - EVSSearch-getSubConcepts for Thesaurus : "
 						+ ee.toString(), ee);
 				return vSub;
@@ -636,7 +636,7 @@ public class EVSSearch implements Serializable {
 								query.getSubConcepts(dtsVocab, conceptCode);
 								subs = evsService.evsSearch(query);
 							} catch (Exception ex) {
-								logger.fatal("error getSubConcepts", ex);
+								logger.error("error getSubConcepts", ex);
 							}
 							if (subs != null && subs.size() > 0) {
 								for (int b = 0; b < subs.size(); b++) {
@@ -662,7 +662,7 @@ public class EVSSearch implements Serializable {
 							}
 						}
 					} catch (Exception ee) {
-						logger.fatal(
+						logger.error(
 								"problem0 in Thesaurus EVSSearch-getSubConceptNames: "
 								+ ee, ee);
 						stringArray = null;
@@ -703,7 +703,7 @@ public class EVSSearch implements Serializable {
 								stringArray, vSub);
 				}
 			} catch (Exception ee) {
-				logger.fatal(
+				logger.error(
 						"ERROR - EVSSearch-getSubConcepts for Thesaurus : "
 						+ ee.toString(), ee);
 				return vSub;
@@ -771,7 +771,7 @@ public class EVSSearch implements Serializable {
 							}
 						}
 					} catch (Exception ee) {
-						logger.fatal(
+						logger.error(
 								"problem in Thesaurus EVSSearch-getSubConceptCodes: "
 								+ ee, ee);
 						stringArray = null;
@@ -786,10 +786,7 @@ public class EVSSearch implements Serializable {
 							"All", conceptCode, sDefSource);
 				}
 			} catch (Exception ee) {
-				System.err
-				.println("problemYY in Thesaurus syn EVSSearch-getSubConceptCodes: "
-						+ ee);
-				logger.fatal(
+				logger.error(
 						"ERROR - EVSSearch-getSubConceptCodes for Thesaurus : "
 						+ ee.toString(), ee);
 				return vSub;
@@ -866,7 +863,7 @@ public class EVSSearch implements Serializable {
 							}
 						}
 					} catch (Exception ee) {
-						logger.fatal(
+						logger.error(
 								"problem2 in Thesaurus EVSSearch-getLevelDownFromParent: "
 								+ ee, ee);
 						stringArray = null;
@@ -945,7 +942,7 @@ public class EVSSearch implements Serializable {
 						try {
 							supers = evsService.evsSearch(query);
 						} catch (Exception ex) {
-							logger.fatal("ERROR findThePath: " + ex.toString(),
+							logger.error("ERROR findThePath: " + ex.toString(),
 									ex);
 						}
 						if (supers != null && supers.size() > 0) {
@@ -1030,7 +1027,7 @@ public class EVSSearch implements Serializable {
 							} else
 								stringArray2 = null;
 						} catch (Exception ee) {
-							logger.fatal(
+							logger.error(
 									"problem2a in Thesaurus EVSSearch-getAllSubConceptNames: "
 									+ ee, ee);
 						}
@@ -1042,7 +1039,7 @@ public class EVSSearch implements Serializable {
 				}
 			}
 		} catch (Exception f) {
-			logger.fatal(
+			logger.error(
 					"problem in Thesaurus EVSSearch-getAllSubConceptNames: "
 					+ f, f);
 		}
@@ -1136,7 +1133,7 @@ public class EVSSearch implements Serializable {
 				query.getSuperConcepts(dtsVocab, conceptCode);
 				sups = evsService.evsSearch(query);
 			} catch (Exception ex) {
-				logger.fatal("Error in EVSSearch getSuperConceptNames: "
+				logger.error("Error in EVSSearch getSuperConceptNames: "
 						+ ex.toString(), ex);
 			}
 			if (sups != null && sups.size() > 0) {
@@ -1154,7 +1151,7 @@ public class EVSSearch implements Serializable {
 			try {
 				sups = evsService.evsSearch(query);
 			} catch (Exception ex) {
-				logger.fatal("Error in EVSSearch getSuperConceptNames: "
+				logger.error("Error in EVSSearch getSuperConceptNames: "
 						+ ex.toString(), ex);
 			}
 			if (sups != null && sups.size() > 0) {
@@ -1217,7 +1214,7 @@ public class EVSSearch implements Serializable {
 					}
 				}
 			} catch (Exception ee) {
-				logger.fatal(
+				logger.error(
 						"problem2a in Thesaurus EVSSearch-getAllSuperConceptNames: "
 						+ ee, ee);
 				stringArray2 = null;
@@ -1266,7 +1263,7 @@ public class EVSSearch implements Serializable {
 			} else
 				return ""; // no source
 		} catch (Exception ee) {
-			logger.fatal("ERROR - EVSSearch-parseDefSource for Thesaurus : "
+			logger.error("ERROR - EVSSearch-parseDefSource for Thesaurus : "
 					+ ee.toString(), ee);
 			return termStr;
 		}
@@ -1296,7 +1293,7 @@ public class EVSSearch implements Serializable {
 				}
 			}
 		} catch (Exception ee) {
-			logger.fatal("ERROR - EVSSearch-parseDefSource for Thesaurus : "
+			logger.error("ERROR - EVSSearch-parseDefSource for Thesaurus : "
 					+ ee.toString(), ee);
 		}	
 		return termStr;
@@ -1322,7 +1319,7 @@ public class EVSSearch implements Serializable {
 			}
 			//logger.debug(" - parseDef - " + termStr);
 		} catch (Exception ee) {
-			logger.fatal("ERROR - EVSSearch-parseDefinition for Thesaurus : "
+			logger.error("ERROR - EVSSearch-parseDefinition for Thesaurus : "
 					+ ee.toString(), ee);
 			return termStr;
 		}
@@ -1524,7 +1521,7 @@ public class EVSSearch implements Serializable {
 				req.setAttribute("labelKeyword", " - " + sKeyword);
 
 		} catch (Exception e) {
-			logger.fatal("ERROR in EVSSearch-get_Result : " + e.toString(), e);
+			logger.error("ERROR in EVSSearch-get_Result : " + e.toString(), e);
 		}
 	}
 	  
@@ -1618,7 +1615,7 @@ public class EVSSearch implements Serializable {
 		try {
 			if (evsService == null) {
 				logger
-				.fatal("Error - EVSSearch-getMetaSources : no evs connection");
+				.error("Error - EVSSearch-getMetaSources : no evs connection");
 				return;
 			}
 			Vector vMetaSources = new Vector();
@@ -1638,7 +1635,7 @@ public class EVSSearch implements Serializable {
 			}
 			DataManager.setAttribute(session, "MetaSources", vMetaSources);
 		} catch (Exception ex) {
-			logger.fatal("Error - EVSSearch-getMetaSources : " + ex.toString(),
+			logger.error("Error - EVSSearch-getMetaSources : " + ex.toString(),
 					ex);
 		}
 	}
@@ -1793,7 +1790,7 @@ public class EVSSearch implements Serializable {
 						}
 					}
 				} catch (Exception ee) {
-					logger.fatal(
+					logger.error(
 							"ERROR - EVSSearch-doVocabSearch - vocab result : "
 							+ ee.toString(), ee);
 				}
@@ -1802,7 +1799,7 @@ public class EVSSearch implements Serializable {
 					vConList = this.doMetaSearch(vConList, termStr, sSearchIn,
 							sMetaSource, iMetaLimit, sMetaName);
 		} catch (Exception ee) {
-			logger.fatal("ERROR - EVSSearch-doVocabSearch : " + ee.toString(),
+			logger.error("ERROR - EVSSearch-doVocabSearch : " + ee.toString(),
 					ee);
 		}
 		return vConList;
@@ -1871,7 +1868,7 @@ public class EVSSearch implements Serializable {
 				}
 			}
 		} catch (Exception ee) {
-			logger.fatal("ERROR - EVSSearch-getDisplayName : " + ee.toString(),
+			logger.error("ERROR - EVSSearch-getDisplayName : " + ee.toString(),
 					ee);
 		}
 		return sName;
@@ -1929,7 +1926,7 @@ public class EVSSearch implements Serializable {
 					 lstResult = lstResult2;
 			}
 		} catch (Exception ex) {
-			logger.fatal(evsService.toString()
+			logger.error(evsService.toString()
 					+ " :conceptNameSearch lstResults: " + ex.toString(), ex);
 		}
 		return lstResult;
@@ -1997,7 +1994,7 @@ public class EVSSearch implements Serializable {
 				vCons.addElement(conBean);
 			}
 		} catch (Exception ex) {
-			logger.fatal("storeConceptToBean: " + ex.toString(), ex);
+			logger.error("storeConceptToBean: " + ex.toString(), ex);
 		}
 		return vCons;
 	}
@@ -2035,7 +2032,7 @@ public class EVSSearch implements Serializable {
 					//do the search
 					metaResults = evsService.evsSearch(query);
 				} catch (Exception ex) {
-					logger.fatal("doMetaSearch evsSearch: " + ex.toString(), ex);
+					logger.error("doMetaSearch evsSearch: " + ex.toString(), ex);
 				}
 				if (metaResults != null) {
 					String sConName = "";
@@ -2094,7 +2091,7 @@ public class EVSSearch implements Serializable {
 					}
 				}
 			} catch (Exception ex) {
-				logger.fatal("doMetaSearch exception : " + ex.toString(), ex);
+				logger.error("doMetaSearch exception : " + ex.toString(), ex);
 			}
 			return vList;
 	}
@@ -2301,7 +2298,7 @@ public class EVSSearch implements Serializable {
 			m_servlet.ForwardJSP(m_classReq, m_classRes,
 			"/OpenSearchWindowBlocks.jsp");
 		} catch (Exception ex) {
-			logger.fatal("doGetSuperConcepts : " + ex.toString(), ex);
+			logger.error("doGetSuperConcepts : " + ex.toString(), ex);
 		}
 	}
 
@@ -2349,7 +2346,7 @@ public class EVSSearch implements Serializable {
 			m_servlet.ForwardJSP(m_classReq, m_classRes,
 			"/OpenSearchWindowBlocks.jsp");
 		} catch (Exception e) {
-			logger.fatal("showConceptInTree : " + e.toString(), e);
+			logger.error("showConceptInTree : " + e.toString(), e);
 		}
 	}
 
@@ -2846,7 +2843,7 @@ public class EVSSearch implements Serializable {
 			m_servlet.ForwardJSP(m_classReq, m_classRes,
 			"/OpenSearchWindowBlocks.jsp");
 		} catch (Exception e) {
-			logger.fatal("Error - openTreeToConcept : " + e.toString(), e);
+			logger.error("Error - openTreeToConcept : " + e.toString(), e);
 		}
 	}
 
@@ -2877,7 +2874,7 @@ public class EVSSearch implements Serializable {
 			}
 		} catch (Exception e) {
 			logger
-			.fatal("Error - openTreeToParentConcept : " + e.toString(),
+			.error("Error - openTreeToParentConcept : " + e.toString(),
 					e);
 		}
 	}
@@ -2944,7 +2941,7 @@ public class EVSSearch implements Serializable {
 			this.get_Result(m_classReq, m_classRes, vResult, "");
 			DataManager.setAttribute(session, "results", vResult);
 		} catch (Exception e) {
-			logger.fatal("Error - doCallConceptSearch : " + e.toString(), e);
+			logger.error("Error - doCallConceptSearch : " + e.toString(), e);
 		}
 	}
 
@@ -3000,7 +2997,7 @@ public class EVSSearch implements Serializable {
 			}
 			DataManager.setAttribute(session, "strHTML", strHTML);
 		} catch (Exception e) {
-			logger.fatal("Error - doCallConceptSearch : " + e.toString(), e);
+			logger.error("Error - doCallConceptSearch : " + e.toString(), e);
 		}
 	}
 
@@ -3110,7 +3107,7 @@ public class EVSSearch implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("Error - getThesaurusConcept : " + e.toString(), e);
+			logger.error("Error - getThesaurusConcept : " + e.toString(), e);
 		}
 		return eBean;
 	}
@@ -3154,7 +3151,7 @@ public class EVSSearch implements Serializable {
 			}
 			eBean = getDefinition(vList);
 		} else
-			logger.fatal(eBean.getLONG_NAME() + " : " + firstRow + " & "
+			logger.error(eBean.getLONG_NAME() + " : " + firstRow + " & "
 					+ lastRow + " : " + eBean.getCONCEPT_NAME());
 		return eBean; //return the bean
 	}
@@ -3261,7 +3258,7 @@ public class EVSSearch implements Serializable {
 				query.addSecurityToken(vocab, token);
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR - addSecurityToken ", e);
+			logger.error("ERROR - addSecurityToken ", e);
 		}
 		return query;
 	}

@@ -67,7 +67,7 @@ public abstract class CommonACAction
         }
         catch (Exception e)
         {
-            logger.fatal("ERROR - : " + e.toString(), e);
+            logger.error("ERROR - : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closePreparedStatement(pstmt);
@@ -144,7 +144,7 @@ public abstract class CommonACAction
         }
         catch (Exception e)
         {
-            logger.fatal("ERROR for sortACs : ", e);
+            logger.error("ERROR for sortACs : ", e);
         }
     }
 
@@ -189,7 +189,7 @@ public abstract class CommonACAction
         }
         catch (Exception e)
         {
-            logger.fatal("ERROR for sortACs : ", e);
+            logger.error("ERROR for sortACs : ", e);
         }
         return vSorted;
     }

@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptServlet.java,v 1.13 2007-11-30 19:57:01 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptServlet.java,v 1.14 2008-12-26 19:13:25 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -140,7 +140,7 @@ public class ConceptServlet implements Serializable
     }
     catch (RuntimeException e)
     {
-      logger.fatal("Error - concept servlet search concept ", e);
+      logger.error("Error - concept servlet search concept ", e);
       data.setStatusMsg("Error : Unable to do concept search." + e.toString());
       data.setActionStatus(ConceptForm.ACTION_STATUS_FAIL);
     }

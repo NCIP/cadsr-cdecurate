@@ -228,12 +228,10 @@ public class CurationServlet
         catch (Exception e)
         {
             String stErr = "Error creating database pool[" + e.getMessage() + "].";
-            e.printStackTrace();
-            System.out.println(stErr);
             logger.fatal(stErr, e);
             return null;
         }
-        // Test connnection
+        // Open connection
         Connection con = null;
         try
         {
@@ -241,9 +239,7 @@ public class CurationServlet
         }
         catch (Exception e)
         {
-            System.err.println("Could not open database connection.");
-            e.printStackTrace();
-            logger.fatal(e.toString(), e);
+            logger.fatal("Could not open database connection.", e);
             return null;
         }
         return con;
@@ -264,12 +260,12 @@ public class CurationServlet
             }
             catch (Exception e)
             {
-                logger.fatal("Servlet error: no pool connection.", e);
+                logger.error("Servlet error: no pool connection.", e);
             }
         }
         catch (Exception e)
         {
-            logger.fatal("Servlet connectDB : " + e.toString(), e);
+            logger.error("Servlet connectDB : " + e.toString(), e);
         }
         return SBRDb_conn;
     }
@@ -569,14 +565,14 @@ public class CurationServlet
             }
             else
             {
-                this.logger.fatal("Service: no DB Connection");
+                this.logger.error("Service: no DB Connection");
                 ErrorLogin(m_classReq, m_classRes);
             }
             SQLHelper.closeConnection(m_conn);
         }
         catch (Exception e)
         {
-            logger.fatal("Service error : " + e.toString(), e);
+            logger.error("Service error : " + e.toString(), e);
             session = m_classReq.getSession();
             String msg = e.toString();
             try
@@ -588,7 +584,7 @@ public class CurationServlet
             }
             catch (Exception ee)
             {
-                logger.fatal("Service forward error : " + ee.toString(), ee);
+                logger.error("Service forward error : " + ee.toString(), ee);
             }
 
         }finally{
@@ -857,14 +853,14 @@ public class CurationServlet
             }
             else
             {
-                this.logger.fatal("Service: no DB Connection");
+                this.logger.error("Service: no DB Connection");
                 ErrorLogin(m_classReq, m_classRes);
             }
             SQLHelper.closeConnection(m_conn);
         }
         catch (Exception e)
         {
-            logger.fatal("Service error : " + e.toString(), e);
+            logger.error("Service error : " + e.toString(), e);
             session = m_classReq.getSession();
             String msg = e.toString();
             try
@@ -876,7 +872,7 @@ public class CurationServlet
             }
             catch (Exception ee)
             {
-                logger.fatal("Service forward error : " + ee.toString(), ee);
+                logger.error("Service forward error : " + ee.toString(), ee);
             }
 
         }finally{
@@ -902,7 +898,7 @@ public class CurationServlet
         UserBean userbean = (UserBean) session.getAttribute("Userbean");
         if (userbean == null)
         {
-            logger.fatal("User bean is null");
+            logger.error("User bean is null");
             // ForwardErrorJSP(req, res, "Please login again. Your session has been terminated. Possible reasons could
             // be a session timeout or an internal processing error.");
         }
@@ -1749,7 +1745,7 @@ public class CurationServlet
                 if (iRow < 0 || iRow > vRSel.size())
                 {
                     storeStatusMsg(iRow + " Row size is either too big or too small.");
-                    logger.fatal(iRow + " CurationServelt - getEVSSelRowVector:  Row size is either too big or too small.");
+                    logger.error(iRow + " CurationServelt - getEVSSelRowVector:  Row size is either too big or too small.");
                 }
                 else
                 {
@@ -1759,7 +1755,7 @@ public class CurationServlet
                     {
                         storeStatusMsg("Unable to obtain concept from the " + thisRow
                                         + " row of the search results.\\n" + "Please try again.");
-                        logger.fatal(thisRow + " CurationServelt - getEVSSelRowVector:  Unable to obtain concept from the results.");
+                        logger.error(thisRow + " CurationServelt - getEVSSelRowVector:  Unable to obtain concept from the results.");
                         continue;
                     }
                     vList.addElement(eBean);
@@ -1961,9 +1957,7 @@ public class CurationServlet
         }
         catch (Exception e)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            logger.fatal("ERROR - ", e);
+            logger.error("ERROR - ", e);
         }
     }
 
@@ -2021,7 +2015,7 @@ public class CurationServlet
         }
         catch (Exception e)
         {
-            logger.fatal("Error - store value and meaning in vdpv list: Value - " + sValue + " and Meaning - " + sMean, e);
+            logger.error("Error - store value and meaning in vdpv list: Value - " + sValue + " and Meaning - " + sMean, e);
         }
         return vVPList;
     }
@@ -2349,8 +2343,7 @@ public class CurationServlet
         }
         catch (Exception ex)
         {
-            // System.out.println("doEVSSearchActions : " + ex.toString());
-            logger.fatal("doEVSSearchActions : " + ex.toString(), ex);
+             logger.error("doEVSSearchActions : " + ex.toString(), ex);
             // this.ForwardErrorJSP(req, res, ex.getMessage());
         }
     }
@@ -2408,8 +2401,7 @@ public class CurationServlet
         }
         catch (Exception e)
         {
-            // System.err.println("EVS Search : " + e);
-            this.logger.fatal("ERROR - EVS Search : " + e.toString(), e);
+            this.logger.error("ERROR - EVS Search : " + e.toString(), e);
         }
         ForwardJSP(req, res, "/EVSSearchPage.jsp");
         // ForwardJSP(req, res, "/OpenSearchWindow.jsp");
@@ -2557,7 +2549,7 @@ public class CurationServlet
         }
         catch (Exception e)
         {
-            logger.fatal("Error - doContactACUpdates : " + e.toString(), e);
+            logger.error("Error - doContactACUpdates : " + e.toString(), e);
         }
         DataManager.setAttribute(session, "selContactKey", ""); // remove the attributes
         DataManager.setAttribute(session, "selACContact", null);
@@ -2681,7 +2673,7 @@ public class CurationServlet
             }
             catch (Exception e)
             {
-                logger.fatal("Error - doContactEditActions : " + e.toString(), e);
+                logger.error("Error - doContactEditActions : " + e.toString(), e);
             }
         }
         ForwardJSP(req, res, "/EditACContact.jsp");
@@ -2797,7 +2789,7 @@ public class CurationServlet
         }
         catch (Exception e)
         {
-            logger.fatal("Error - doContCommAction : " + e.toString(), e);
+            logger.error("Error - doContCommAction : " + e.toString(), e);
         }
         return ACBean;
     }
@@ -2950,7 +2942,7 @@ public class CurationServlet
         }
         catch (Exception e)
         {
-            logger.fatal("Error - doContAddrAction : " + e.toString(), e);
+            logger.error("Error - doContAddrAction : " + e.toString(), e);
         }
         return ACBean;
     }
@@ -3075,7 +3067,7 @@ public class CurationServlet
             catch (Exception e)
             {
                 msg = "An unexpected exception occurred, please notify the Help Desk. Details have been written to the log.";
-                logger.fatal("cdecurate: doMonitor(): " + e.toString(), e);
+                logger.error("cdecurate: doMonitor(): " + e.toString(), e);
             }
             finally{
             	SQLHelper.closeCallableStatement(stmt);
@@ -3174,7 +3166,7 @@ public class CurationServlet
                 catch (Exception e)
                 {
                     msg = "An unexpected exception occurred, please notify the Help Desk. Details have been written to the log.";
-                    logger.fatal("cdecurate: doUnmonitor(): " + e.toString(), e);
+                    logger.error("cdecurate: doUnmonitor(): " + e.toString(), e);
                 }finally{
                 	SQLHelper.closeCallableStatement(stmt);
                 }
@@ -3651,7 +3643,7 @@ public class CurationServlet
        }
        catch(Exception e)
        {
-         logger.fatal("ERROR in CurationServlet-storeStatusMsg for exception : " + e.toString(), e);
+         logger.error("ERROR in CurationServlet-storeStatusMsg for exception : " + e.toString(), e);
         // m_classReq.setAttribute("retcode", "Message Exception");
        }
      }
@@ -3829,7 +3821,7 @@ public class CurationServlet
         }
         catch (Exception e)
         {
-            logger.fatal("Error Caught : ", e);
+            logger.error("Error Caught : ", e);
         }
         // forward to error jsp
         try
@@ -3838,8 +3830,7 @@ public class CurationServlet
         }
         catch (Exception e)
         {
-            // System.err.println("ERROR - ErrorLogin: " + e);
-            this.logger.fatal("ERROR - ErrorLogin: " + e.toString(), e);
+            this.logger.error("ERROR - ErrorLogin: " + e.toString(), e);
         }
     }
 
@@ -3871,7 +3862,7 @@ public class CurationServlet
         }
         catch (Exception e)
         {
-            logger.fatal("ERROR - ErrorLogin: " + e.toString(), e);
+            logger.error("ERROR - ErrorLogin: " + e.toString(), e);
         }
     }
 
@@ -3909,7 +3900,7 @@ public class CurationServlet
         catch (Exception e)
         {
            // e.printStackTrace();
-            this.logger.fatal("Servlet-ForwardJSP : " + e.toString(), e);
+            this.logger.error("Servlet-ForwardJSP : " + e.toString(), e);
         }
     }
 
@@ -3943,7 +3934,7 @@ public class CurationServlet
         }
         catch (Exception e)
         {
-            logger.fatal("Servlet-ForwardErrorJSP : " + e.toString(), e);
+            logger.error("Servlet-ForwardErrorJSP : " + e.toString(), e);
         }
     }
 
@@ -4004,12 +3995,12 @@ public class CurationServlet
                 {
                     try
                     {
-                        logger.fatal("Reference Document Attachments Upload: Unknown Request Type.");
+                        logger.error("Reference Document Attachments Upload: Unknown Request Type.");
                         ForwardErrorJSP(req, res, "Unexpected Request. Session Terminated. Please login again.");
                     }
                     catch (Exception e)
                     {
-                        logger.fatal("ERROR - ErrorLogin: " + e.toString(), e);
+                        logger.error("ERROR - ErrorLogin: " + e.toString(), e);
                     }
                 }
             }
@@ -4019,11 +4010,11 @@ public class CurationServlet
                 try
                 {
                     ForwardErrorJSP(req, res, "Unexpected Request. Session Terminated. Please login again.");
-                    logger.fatal("Reference Document Attachments Upload: Unknown Origin Type.");
+                    logger.error("Reference Document Attachments Upload: Unknown Origin Type.");
                 }
                 catch (Exception e)
                 {
-                    logger.fatal("ERROR - ErrorLogin: " + e.toString(), e);
+                    logger.error("ERROR - ErrorLogin: " + e.toString(), e);
                 }
             }
         }

@@ -1,6 +1,6 @@
 // Copyright (c) 2002 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.52 2008-06-25 15:14:41 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_UserBean.java,v 1.53 2008-12-26 19:13:24 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -832,15 +832,14 @@ public final class EVS_UserBean implements Serializable
           }
           catch(Exception e)
           {
-            logger.fatal(" Error - get vocab names " + e.toString(), e);
+            logger.error(" Error - get vocab names " + e.toString(), e);
             return null;
           }
         }
       }
       catch(Exception ex)
       {
-        logger.fatal(" Error - get vocab names ex " + ex.toString(), ex);
-        ex.printStackTrace();
+        logger.error(" Error - get vocab names ex " + ex.toString(), ex);
       } 
       return vocabList;
   }
@@ -954,7 +953,7 @@ public final class EVS_UserBean implements Serializable
           //compare with evs vocab names  and also the vocab name that only does meta search
           if (!arrEVSVocab.contains(sVocab) && !metavocab.contains(sVocab))
           {
-            logger.fatal(sVocab + " from caDSR does not contain in EVS Vocab list.");
+            logger.error(sVocab + " from caDSR does not contain in EVS Vocab list.");
             vocabname.removeElement(sVocab);  //put this back later
             vocabdisp.removeElementAt(i);
           }  
@@ -1050,7 +1049,7 @@ public final class EVS_UserBean implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("Error: getEVSInfoFromDSR " + e.toString(), e);
+      logger.error("Error: getEVSInfoFromDSR " + e.toString(), e);
     }    
   }
   
@@ -1125,7 +1124,7 @@ public final class EVS_UserBean implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("Error: storeVocabAttr " + e.toString(), e);
+      logger.error("Error: storeVocabAttr " + e.toString(), e);
     }
     return vuBean;
   }

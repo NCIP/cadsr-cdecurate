@@ -1,5 +1,5 @@
 // Copyright (c) 2006 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/DesDEServlet.java,v 1.36 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/ui/DesDEServlet.java,v 1.37 2008-12-26 19:15:04 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.ui;
@@ -509,10 +509,10 @@ public class DesDEServlet
         }
 
         else if (sAction.equals("sortAlt"))
-            logger.fatal("sort alt");
+            logger.error("sort alt");
 
         else if (sAction.equals("sortRef"))
-            logger.fatal("sort ref");
+            logger.error("sort ref");
 
         // refresh page with session attributes
         else if (sAction.equalsIgnoreCase("open for Alternate Names") || sAction.equalsIgnoreCase("open for Reference Documents"))

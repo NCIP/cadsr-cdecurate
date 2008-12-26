@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.53 2008-06-11 22:44:21 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSMasterTree.java,v 1.54 2008-12-26 19:13:24 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -267,7 +267,7 @@ public class EVSMasterTree {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("Error in populateTreeRoots: " + e.toString(), e);
+			logger.error("Error in populateTreeRoots: " + e.toString(), e);
 		}
 		return rendHTML;
 	}
@@ -293,7 +293,7 @@ public class EVSMasterTree {
 					sSearchAC = "";
 			}
 		} catch (Exception e) {
-			logger.fatal("Error in renderHTML: ", e);
+			logger.error("Error in renderHTML: ", e);
 		}
 		StringBuffer buf = new StringBuffer();
 		boolean moreChildren = true;
@@ -935,7 +935,7 @@ public class EVSMasterTree {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR expandNode: " + e.toString(), e);
+			logger.error("ERROR expandNode: " + e.toString(), e);
 		}
 		return rendHTML;
 	}
@@ -1026,7 +1026,7 @@ public class EVSMasterTree {
 			}
 		} catch (Exception e) {
 			//System.out.println(e.toString());
-			logger.fatal(e.toString(), e);
+			logger.error(e.toString(), e);
 		}
 		return rendHTML;
 	}
@@ -1159,7 +1159,7 @@ public class EVSMasterTree {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal(e.toString(), e);
+			logger.error(e.toString(), e);
 		}
 	}
 
@@ -1297,7 +1297,7 @@ public class EVSMasterTree {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal(e.toString(), e);
+			logger.error(e.toString(), e);
 		}
 		return rendHTML;
 	}
@@ -1398,7 +1398,7 @@ public class EVSMasterTree {
 			if (!sRender.equals("false"))
 				rendHTML = this.populateTreeRoots(dtsVocab);
 		} catch (Exception e) {
-				logger.fatal(e.toString(), e);
+				logger.error(e.toString(), e);
 		}
 		return rendHTML;
 	}
@@ -1435,7 +1435,7 @@ public class EVSMasterTree {
 				} while (found.equals("false"));
 			}
 		} catch (Exception e) {
-			logger.fatal("Error in fillTreeIDtoNameHash: " + e.toString(), e);
+			logger.error("Error in fillTreeIDtoNameHash: " + e.toString(), e);
 		}
 	}
 
@@ -1486,7 +1486,7 @@ public class EVSMasterTree {
 			} while (found.equals("false"));
 
 		} catch (Exception e) {
-			logger.fatal("Error in getCorrectNodeID: " + e.toString(), e);
+			logger.error("Error in getCorrectNodeID: " + e.toString(), e);
 		}
 		return sRetNodeID;
 	}

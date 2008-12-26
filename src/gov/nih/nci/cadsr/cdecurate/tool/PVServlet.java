@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.32 2008-10-20 13:30:53 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.33 2008-12-26 19:14:34 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -194,7 +194,7 @@ public class PVServlet implements Serializable
       }
       catch (RuntimeException e)
       {
-        logger.fatal("ERROR - doEditPVAction ", e);
+        logger.error("ERROR - doEditPVAction ", e);
         //e.printStackTrace();
       }
       return retData;
@@ -666,7 +666,7 @@ public class PVServlet implements Serializable
       }
       catch (Exception e)
       {
-        logger.fatal("Error getPVattributes - " + e.toString(), e);
+        logger.error("Error getPVattributes - " + e.toString(), e);
       }
    }  //doPVACSearch search
 
@@ -797,7 +797,7 @@ public class PVServlet implements Serializable
        data.getRequest().setAttribute("retcode", data.getRetErrorCode()); 
        //log the error message
        if (!errMsg.equals(""))
-         logger.fatal("ERROR at submit - PV : " + errMsg);
+         logger.error("ERROR at submit - PV : " + errMsg);
 
        return errMsg; //data.getStatusMsg();
    }
@@ -834,7 +834,7 @@ public class PVServlet implements Serializable
      }
      //log the error message
      if (!errMsg.equals(""))
-       logger.fatal("ERROR at submit - doRemoveVDPV : " + errMsg);
+       logger.error("ERROR at submit - doRemoveVDPV : " + errMsg);
      return errMsg;
    }
 
@@ -906,7 +906,7 @@ public class PVServlet implements Serializable
      }
      catch (Exception e)
      {
-      logger.fatal("ERROR -load vm ", e);
+      logger.error("ERROR -load vm ", e);
      }
      return jsp;     
    }
@@ -939,7 +939,7 @@ public class PVServlet implements Serializable
        }
      catch (Exception e)
      {
-      logger.fatal("ERROR -load vm ", e);
+      logger.error("ERROR -load vm ", e);
      }
      return jsp;     
    } 
@@ -1140,7 +1140,7 @@ public class PVServlet implements Serializable
     }
     catch (RuntimeException e)
     {
-      logger.fatal("ERROR - appendSearch VM ", e);
+      logger.error("ERROR - appendSearch VM ", e);
     }
      return "/PermissibleValue.jsp";
    }
@@ -1174,7 +1174,7 @@ public class PVServlet implements Serializable
       }
       catch (Exception e)
       {
-        logger.fatal("ERROR - remove parents ", e);
+        logger.error("ERROR - remove parents ", e);
       }
       //forward teh page according to vdPage 
       return "/PermissibleValue.jsp";                 
@@ -1212,7 +1212,7 @@ public class PVServlet implements Serializable
      }
      catch (Exception e)
      {
-       logger.fatal("ERROR - " + e);
+       logger.error("ERROR - " + e);
      }
      //forward teh page according to vdPage 
      return "/PermissibleValue.jsp";                 
@@ -1254,7 +1254,7 @@ public class PVServlet implements Serializable
      }
      catch (RuntimeException e)
      {
-       logger.fatal("ERROR - selectNonEVSParents", e);
+       logger.error("ERROR - selectNonEVSParents", e);
      }
      //forward teh page according to vdPage 
      return "/PermissibleValue.jsp";                 
@@ -1292,7 +1292,7 @@ public class PVServlet implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR - getDuplicateVMUse", e);
+      logger.error("ERROR - getDuplicateVMUse", e);
     }
      return null;
    }

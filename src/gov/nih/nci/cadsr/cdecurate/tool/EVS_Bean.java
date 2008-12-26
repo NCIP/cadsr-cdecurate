@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_Bean.java,v 1.47 2007-09-10 17:18:21 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVS_Bean.java,v 1.48 2008-12-26 19:13:25 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -908,8 +908,7 @@ public class EVS_Bean implements Serializable
     }
     catch(Exception e)
     {
-      System.out.println("EVS_Bean.java setEVS " + e.toString());
-      logger.fatal("EVS_Bean.java setEVS " + e.toString(), e);
+       logger.error("EVS_Bean.java setEVS " + e.toString(), e);
     }
   }
 

@@ -155,7 +155,7 @@ public class SearchServlet extends CurationServlet {
                 }
                 catch (Exception ee)
                 {
-                    logger.fatal("Servlet-doHomePage-evsthread : " + ee.toString(), ee);
+                    logger.error("Servlet-doHomePage-evsthread : " + ee.toString(), ee);
                 }
             }
             else
@@ -171,7 +171,7 @@ public class SearchServlet extends CurationServlet {
             try
             {
                 // if error, forward to login page to re-enter username and password
-                logger.fatal("Servlet-doHomePage : " + e.toString(), e);
+                logger.error("Servlet-doHomePage : " + e.toString(), e);
                 String msg = e.getMessage().substring(0, 12);
                 if (msg.equals("Io exception"))
                     ForwardErrorJSP(m_classReq, m_classRes, "Io Exception. Session Terminated. Please log in again.");
@@ -180,7 +180,7 @@ public class SearchServlet extends CurationServlet {
             }
             catch (Exception ee)
             {
-                logger.fatal("Servlet-doHomePage, display error page : " + ee.toString(), ee);
+                logger.error("Servlet-doHomePage, display error page : " + ee.toString(), ee);
             }
         }
     }
@@ -1795,7 +1795,7 @@ public class SearchServlet extends CurationServlet {
         }
         catch (Exception e)
         {
-            logger.fatal("Error - getRepTermDefaultContext : " + e.toString(), e);
+            logger.error("Error - getRepTermDefaultContext : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
         	SQLHelper.closeStatement(stm);
@@ -1844,8 +1844,8 @@ public class SearchServlet extends CurationServlet {
 		}
 		finally{
 			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeResultSet(rs1);
 			SQLHelper.closeStatement(stm);
+			SQLHelper.closeResultSet(rs1);
 			SQLHelper.closeStatement(stm1);
 		}
 		EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);

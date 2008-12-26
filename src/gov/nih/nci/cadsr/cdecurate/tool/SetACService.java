@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.56 2008-10-20 13:30:53 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.57 2008-12-26 19:14:34 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -369,18 +369,16 @@ public class SetACService implements Serializable
       }
       catch(Exception e)
       {
-        logger.fatal("Error - Validate DE Values ", e);
+        logger.error("Error - Validate DE Values ", e);
         ValidateBean vbean = new ValidateBean();
         vbean.setACAttribute("Error Validate DE");
         vbean.setAttributeContent("Error message " + e.toString());
         vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
         vValidate.addElement(vbean);
       }
-      //store it in teh request
+      //store it in the request
       Vector<String> vValString = this.makeStringVector(vValidate);
       req.setAttribute("vValidate", vValString);        
-//System.out.println(sOriginAction + " end de page values " + sMenu);
-
   } // end of setValidatePageValues
 
   /**
@@ -441,7 +439,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error - addDatesToValidatePage " + e.toString(), e);
+      logger.error("Error - addDatesToValidatePage " + e.toString(), e);
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error addDatesToValidatePage");
       vbean.setAttributeContent("Error message " + e.toString());
@@ -522,7 +520,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error - addDDEToDEValidatePage " + e.toString(), e);
+      logger.error("Error - addDDEToDEValidatePage " + e.toString(), e);
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error addDDEToDEValidatePage");
       vbean.setAttributeContent("Error message " + e.toString());
@@ -777,7 +775,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error - setValidatePageValuesDEC " + e.toString(), e);
+      logger.error("Error - setValidatePageValuesDEC " + e.toString(), e);
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error setValidatePageValuesDEC");
       vbean.setAttributeContent("Error message " + e.toString());
@@ -785,11 +783,10 @@ public class SetACService implements Serializable
       vValidate.addElement(vbean);
     }
         
-      // finaly, send vector to JSP
+      // finally, send vector to JSP
     //store it in teh request
     Vector<String> vValString = this.makeStringVector(vValidate);
     req.setAttribute("vValidate", vValString);        
-// System.err.println("done validateDEC");
   }
 
  /**
@@ -1019,7 +1016,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error - setValidatePageValuesVD " + e.toString(), e);
+      logger.error("Error - setValidatePageValuesVD " + e.toString(), e);
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error setValidatePageValuesVD");
       vbean.setAttributeContent("Error message " + e.toString());
@@ -1027,10 +1024,10 @@ public class SetACService implements Serializable
       vValidate.addElement(vbean);
     }
         
-      // finaly, send vector to JSP
-    Vector<String> vValString = this.makeStringVector(vValidate);
-    req.setAttribute("vValidate", vValString);        
-    m_VD.setValidateList(vValidate);
+      	// finally, send vector to JSP
+    	Vector<String> vValString = this.makeStringVector(vValidate);
+    	req.setAttribute("vValidate", vValString);        
+    	m_VD.setValidateList(vValidate);
   }  // end of setValidatePageValuesVD
 
 
@@ -1161,7 +1158,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR in setValidatePrefNameType " + e.toString(), e);
+      logger.error("ERROR in setValidatePrefNameType " + e.toString(), e);
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error setValidatePrefNameType");
       vbean.setAttributeContent("Error message " + e.toString());
@@ -1395,15 +1392,15 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR in setValidateBlockEdit " + e.toString(), e);
+      logger.error("ERROR in setValidateBlockEdit " + e.toString(), e);
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error setValidateBlockEdit");
       vbean.setAttributeContent("Error message " + e.toString());
       vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
       vValidate.addElement(vbean);
     }
-    // finaly, send vector to JSP
-    //store it in teh request
+    // finally, send vector to JSP
+    //store it in the request
     Vector<String> vValString = this.makeStringVector(vValidate);
     req.setAttribute("vValidate", vValString); 
       
@@ -1609,7 +1606,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR in setValidateNameComp " + e.toString(), e);
+      logger.error("ERROR in setValidateNameComp " + e.toString(), e);
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error setValidateNameComp");
       vbean.setAttributeContent("Error message " + e.toString());
@@ -1672,7 +1669,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR in setValidateVDOtherAttr " + e.toString(), e);
+      logger.error("ERROR in setValidateVDOtherAttr " + e.toString(), e);
       ValidateBean vbean = new ValidateBean();
       vbean.setACAttribute("Error setValidateVDOtherAttr");
       vbean.setAttributeContent("Error message " + e.toString());
@@ -1746,7 +1743,7 @@ public class SetACService implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR in checkOCPropWorkFlowStatuses " + e.toString(), e);
+      logger.error("ERROR in checkOCPropWorkFlowStatuses " + e.toString(), e);
     } finally {
       SQLHelper.closeResultSet(rs);
       SQLHelper.closeStatement(cstmt);
@@ -1793,7 +1790,7 @@ public class SetACService implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR in checkPVVM " + e.toString(), e);
+      logger.error("ERROR in checkPVVM " + e.toString(), e);
     }finally {
         SQLHelper.closeResultSet(rs);
         SQLHelper.closeStatement(cstmt);
@@ -1831,7 +1828,7 @@ public class SetACService implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR in checkWritePermission " + e.toString(), e);
+      logger.error("ERROR in checkWritePermission " + e.toString(), e);
       sErrorMessage = "Error Occurred in checkWritePermission";
     }
     return sErrorMessage;
@@ -1901,7 +1898,7 @@ public class SetACService implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR in validateBegDateVsEndDates " + e.toString(), e);
+      logger.error("ERROR in validateBegDateVsEndDates " + e.toString(), e);
       strInvalid += "Error Occurred in validateBegDateVsEndDates";
     }
     return strInvalid;
@@ -1995,7 +1992,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR in setacservice_compareDates  : " + e.toString(), e);
+      logger.error("ERROR in setacservice_compareDates  : " + e.toString(), e);
       return "Error Occurred in validating Begin and End Dates";
     }
     return strFail;
@@ -2020,7 +2017,7 @@ public class SetACService implements Serializable
       }
       catch (Exception e)
       {
-        logger.fatal("ERROR in validateDateFormat  : " + e.toString(), e);
+        logger.error("ERROR in validateDateFormat  : " + e.toString(), e);
         validDate = "Date must be of format MM/DD/YYYY.";        
       }
     }
@@ -2170,7 +2167,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR in checkBlockEditRules  : " + e.toString(), e);
+      logger.error("ERROR in checkBlockEditRules  : " + e.toString(), e);
     }
   }
 
@@ -2223,7 +2220,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR in checkValidAlphanumeric  : " + e.toString(), e);
+      logger.error("ERROR in checkValidAlphanumeric  : " + e.toString(), e);
       strString = "ERROR in checkValidAlphanumeric ";
     }
     // return the string value
@@ -2296,7 +2293,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR in checkUniqueOCPropPair  : " + e.toString(), e);
+      logger.error("ERROR in checkUniqueOCPropPair  : " + e.toString(), e);
       return "ERROR in checkUniqueOCPropPair ";
     }
   }
@@ -2355,7 +2352,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR in checkUniqueDECVDPair  : " + e.toString(), e);
+      logger.error("ERROR in checkUniqueDECVDPair  : " + e.toString(), e);
       return "ERROR in checkUniqueDECVDPair ";
     }
   }
@@ -2534,7 +2531,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR in checkUniqueInContext  : " + e.toString(), e);
+      logger.error("ERROR in checkUniqueInContext  : " + e.toString(), e);
       return "ERROR in checkUniqueInContext ";
     }
   }
@@ -2568,7 +2565,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("SetACService_checkDECOCExist- Unable to check if OC exists " + e.toString(), e);
+      logger.error("SetACService_checkDECOCExist- Unable to check if OC exists " + e.toString(), e);
       return "ERROR Occurred in checkDECOCExist ";
     }
     return strInvalid;
@@ -2630,7 +2627,7 @@ public class SetACService implements Serializable
    }
     catch (Exception e)
     {
-      logger.fatal("SetACService_checkConceptCodeExistsInOtherDB- Unable to check if CC exists " + e.toString(), e);
+      logger.error("SetACService_checkConceptCodeExistsInOtherDB- Unable to check if CC exists " + e.toString(), e);
       return "ERROR Occurred in checkConceptCodeExistsInOtherDB ";
     }
     return strInValid;
@@ -2687,7 +2684,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error in SetACService_checkDEUsingDEC " + e.toString(), e);
+      logger.error("Error in SetACService_checkDEUsingDEC " + e.toString(), e);
       return "ERROR Occurred in checkDEUsingDEC ";
     }
     return strInValid;
@@ -2743,7 +2740,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error- checkReleasedWFS " + e.toString(), e);
+      logger.error("Error- checkReleasedWFS " + e.toString(), e);
       return "Error Occurred in checkReleasedWFS";
     }
     return sValid;
@@ -2830,7 +2827,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error- checkUniqueBlock " + e.toString(), e);
+      logger.error("Error- checkUniqueBlock " + e.toString(), e);
       return "Error Occurred in checkUniqueBlock";
     }
   }
@@ -2994,7 +2991,7 @@ public class SetACService implements Serializable
      }
      catch (Exception e)
      {
-       logger.fatal("Error- checkVersionDimension " + e.toString(), e);
+       logger.error("Error- checkVersionDimension " + e.toString(), e);
        return "Error Occurred in checkVersionDimension";
      }
    }
@@ -3037,7 +3034,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error- checkValueIsNumeric " + e.toString(), e);
+      logger.error("Error- checkValueIsNumeric " + e.toString(), e);
       return "Error Occurred in checkValueIsNumeric";
     }
   }
@@ -3367,7 +3364,7 @@ public class SetACService implements Serializable
    }
    catch (Exception e)
    {
-     logger.fatal("Error - setDEValueFromPage " + e.toString(), e);
+     logger.error("Error - setDEValueFromPage " + e.toString(), e);
    }
 //System.out.println("end de page values " );
  } // end of setDEValueFromPage
@@ -3592,7 +3589,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error - setDECValueFromPage " + e.toString(), e);
+      logger.error("Error - setDECValueFromPage " + e.toString(), e);
     }
   } // end of setDECValueFromPage
 
@@ -3620,7 +3617,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error - setDECValueFromPage " + e.toString(), e);
+      logger.error("Error - setDECValueFromPage " + e.toString(), e);
     }
     return vSelections;
   }
@@ -3694,7 +3691,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error Occurred in getACCSIFromPage " + e.toString(), e);
+      logger.error("Error Occurred in getACCSIFromPage " + e.toString(), e);
     }
     return vACCSIList;   
   }
@@ -3770,7 +3767,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR in setacservice_setdecscsivaluefrompage  : " + e.toString(), e);      
+      logger.error("ERROR in setacservice_setdecscsivaluefrompage  : " + e.toString(), e);      
     }    
     //return the bean
     return deBean;
@@ -4073,7 +4070,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error - setVDValueFromPage " + e.toString(), e);
+      logger.error("Error - setVDValueFromPage " + e.toString(), e);
     }      
   } // end of setVDValueFromPage
 
@@ -4142,7 +4139,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error Occurred in setPVValueFromPage " + e.toString(), e);
+      logger.error("Error Occurred in setPVValueFromPage " + e.toString(), e);
     }
   } // end of setPVValueFromPage
 
@@ -4189,7 +4186,7 @@ public class SetACService implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("Error Occurred in getModifiedPV " + e.toString(), e);
+      logger.error("Error Occurred in getModifiedPV " + e.toString(), e);
     }
     return pv;
   }
@@ -4278,7 +4275,7 @@ public class SetACService implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR in setACService-getPV for other : " + e.toString(), e);
+      logger.error("ERROR in setACService-getPV for other : " + e.toString(), e);
     }finally {
         SQLHelper.closeResultSet(rs);
         SQLHelper.closeStatement(cstmt);
@@ -4323,7 +4320,7 @@ public class SetACService implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR in setACService-checkPVQCExists for other : " + e.toString(), e);
+      logger.error("ERROR in setACService-checkPVQCExists for other : " + e.toString(), e);
     }finally {
         SQLHelper.closeResultSet(rs);
         SQLHelper.closePreparedStatement(pstmt);
@@ -4447,7 +4444,7 @@ public class SetACService implements Serializable
     }
     catch(Exception ee)
     {
-      logger.fatal("ERROR in setACService-addRemovePageVDPVs : " + ee.toString(), ee);
+      logger.error("ERROR in setACService-addRemovePageVDPVs : " + ee.toString(), ee);
     }
   }  //end addremovepagevdpvs
 

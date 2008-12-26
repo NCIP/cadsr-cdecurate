@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.75 2008-12-22 17:04:12 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.76 2008-12-26 19:14:35 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -148,7 +148,7 @@ public class GetACSearch implements Serializable
                     String sValid = setAC.checkValueIsNumeric(txVersion, "Version");
                     if (sValid != null && !sValid.equals(""))
                     {
-                        logger.fatal("not a good version " + sValid);
+                        logger.error("not a good version " + sValid);
                         DataManager.setAttribute(session, "serVersionNum", "0");
                     }
                     else
@@ -561,7 +561,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            logger.fatal("ERROR - GetACSearch-getKeywordResult!! : " + e.toString(), e);
+            logger.error("ERROR - GetACSearch-getKeywordResult!! : " + e.toString(), e);
         }
     }
 
@@ -712,7 +712,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-pushAllOntoStack: " + e);
-            logger.fatal("ERROR in GetACSearch-pushAllOntoStack : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-pushAllOntoStack : " + e.toString(), e);
         }
     }
 
@@ -809,7 +809,7 @@ public class GetACSearch implements Serializable
             catch (Exception e)
             {
                 // System.err.println("ERROR in GetACSearch-stackSearchComponents: " + e);
-                logger.fatal("ERROR in GetACSearch-stackSearchComponents : " + e.toString(), e);
+                logger.error("ERROR in GetACSearch-stackSearchComponents : " + e.toString(), e);
             }
         }
     }
@@ -916,7 +916,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR - in GetACSearch-showResult: " + e);
-            logger.fatal("ERROR - GetACSearch-showResult : " + e.toString(), e);
+            logger.error("ERROR - GetACSearch-showResult : " + e.toString(), e);
         }
     }
 
@@ -1072,7 +1072,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR - in GetACSearch-sortedResult: " + e);
-            logger.fatal("ERROR - GetACSearch-sortedResult : " + e.toString(), e);
+            logger.error("ERROR - GetACSearch-sortedResult : " + e.toString(), e);
         }
     }
 
@@ -1193,7 +1193,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            logger.fatal("ERROR - GetACSearch-QuestionSearch for other : " + e.toString(), e);
+            logger.error("ERROR - GetACSearch-QuestionSearch for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -1494,7 +1494,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-          logger.fatal("ERROR - GetACSearch-DESearch for other : " + e.toString(), e);
+          logger.error("ERROR - GetACSearch-DESearch for other : " + e.toString(), e);
         }
         try
         {
@@ -1731,7 +1731,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-          logger.fatal("ERROR - GetACSearch-DECSearch for other : " + e.toString(), e);
+          logger.error("ERROR - GetACSearch-DECSearch for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -1936,7 +1936,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-          logger.fatal("ERROR - GetACSearch-doVDSearch for other : " + e.toString(), e);
+          logger.error("ERROR - GetACSearch-doVDSearch for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -2078,7 +2078,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-           logger.fatal("ERROR - GetACSearch-CDSearch for other : " + e.toString(), e);
+           logger.error("ERROR - GetACSearch-CDSearch for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -2148,7 +2148,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-           logger.fatal("ERROR - GetACSearch-CSISearch for other : " + e.toString(), e);
+           logger.error("ERROR - GetACSearch-CSISearch for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -2220,7 +2220,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-setAttribute: " + e);
-            logger.fatal("ERROR in GetACSearch-setAttribute : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-setAttribute : " + e.toString(), e);
         }
     }
 
@@ -2314,7 +2314,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getMultiReqValues: " + e);
-            logger.fatal("ERROR in GetACSearch-getMultiReqValues : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getMultiReqValues : " + e.toString(), e);
         }
         return sValues;
     }
@@ -2404,7 +2404,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getStatusValues: " + e);
-            logger.fatal("ERROR in GetACSearch-setStatusValues : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-setStatusValues : " + e.toString(), e);
         }
         return sStatus;
     }
@@ -2446,7 +2446,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            logger.fatal("Error - selVerWFStatBlock " + e.toString(), e);
+            logger.error("Error - selVerWFStatBlock " + e.toString(), e);
         }
     }
 
@@ -2761,7 +2761,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getDEResult: " + e);
-            logger.fatal("ERROR in GetACSearch-getDEResult : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getDEResult : " + e.toString(), e);
         }
     }
 
@@ -3168,7 +3168,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            logger.fatal("ERROR - getDDEInfo : " + e.toString(), e);
+            logger.error("ERROR - getDDEInfo : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -3318,7 +3318,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getDECResult: " + e);
-            logger.fatal("ERROR in GetACSearch-getDECResult : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getDECResult : " + e.toString(), e);
         }
     }
 
@@ -3498,7 +3498,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getVDResult: " + e);
-            logger.fatal("ERROR in GetACSearch-getVDResult : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getVDResult : " + e.toString(), e);
         }
     }
 
@@ -3633,7 +3633,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getCDResult: " + e);
-            logger.fatal("ERROR in GetACSearch-getCDResult : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getCDResult : " + e.toString(), e);
         }
     }
 
@@ -3754,7 +3754,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-           logger.fatal("ERROR - GetACSearch-do_caDSRSearch for other : " + e.toString(), e);
+           logger.error("ERROR - GetACSearch-do_caDSRSearch for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -3880,7 +3880,7 @@ public class GetACSearch implements Serializable
           }
         catch (Exception e)
         {
-            logger.fatal("ERROR - GetACSearch-do_conceptSearch for other : " + e.toString(), e);
+            logger.error("ERROR - GetACSearch-do_conceptSearch for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -3927,7 +3927,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-rowSelectedBEDisplay: " + e);
-            logger.fatal("ERROR in GetACSearch-rowSelectedBEDispay : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-rowSelectedBEDispay : " + e.toString(), e);
         }
     }
 
@@ -4059,7 +4059,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-rowSelected: " + e);
-            logger.fatal("ERROR in GetACSearch-rowSelected : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-rowSelected : " + e.toString(), e);
         }
     }
 
@@ -4354,7 +4354,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getSelRowToEdit: " + e);
-            logger.fatal("ERROR in GetACSearch-getSelRowToEdit : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getSelRowToEdit : " + e.toString(), e);
             DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create/Edit page. Please try again.");
             return false;
         }
@@ -4973,7 +4973,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-checkWritePermission: " + e);
-            logger.fatal("ERROR in GetACSearch-checkWritePermission : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-checkWritePermission : " + e.toString(), e);
         }
         return sErrorMessage;
     }
@@ -5189,7 +5189,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-           logger.fatal("ERROR in GetACSearch-doCSCSI_ACSearch for other : " + e.toString(), e);
+           logger.error("ERROR in GetACSearch-doCSCSI_ACSearch for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -5304,7 +5304,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-DEsortedRows: " + e);
-            logger.fatal("ERROR in GetACSearch-DEsortedRows : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-DEsortedRows : " + e.toString(), e);
         }
     }
 
@@ -5392,7 +5392,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-DEsortedRows: " + e);
-            logger.fatal("ERROR in GetACSearch-DEsortedRows : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-DEsortedRows : " + e.toString(), e);
         }
     }
 
@@ -5496,7 +5496,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getDEField: " + e);
-            logger.fatal("ERROR in GetACSearch-getDEField : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getDEField : " + e.toString(), e);
         }
         return returnValue;
     }
@@ -5606,7 +5606,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-DECsortedRows: " + e);
-            logger.fatal("ERROR in GetACSearch-DECsortedRows : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-DECsortedRows : " + e.toString(), e);
         }
     }
 
@@ -5679,7 +5679,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getDECField: " + e);
-            logger.fatal("ERROR in GetACSearch-getDECField : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getDECField : " + e.toString(), e);
         }
         return returnValue;
     }
@@ -5790,7 +5790,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-VDSortedRows: " + e);
-            logger.fatal("ERROR in GetACSearch-VDSortedRows : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-VDSortedRows : " + e.toString(), e);
         }
     }
 
@@ -5883,7 +5883,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getVDField: " + e);
-            logger.fatal("ERROR in GetACSearch-getVDField : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getVDField : " + e.toString(), e);
         }
         return returnValue;
     }
@@ -5997,7 +5997,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-CDsortedRows: " + e);
-            logger.fatal("ERROR in GetACSearch-CDsortedRows : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-CDsortedRows : " + e.toString(), e);
         }
     }
 
@@ -6054,7 +6054,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getCDField: " + e);
-            logger.fatal("ERROR in GetACSearch-getCDField : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getCDField : " + e.toString(), e);
         }
         return returnValue;
     }
@@ -6164,7 +6164,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getCSIResult: " + e);
-            logger.fatal("ERROR in GetACSearch-getCSIResult : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getCSIResult : " + e.toString(), e);
         }
     }
 
@@ -6199,7 +6199,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getCSIField: " + e);
-            logger.fatal("ERROR in GetACSearch-getCSIField : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getCSIField : " + e.toString(), e);
         }
         return returnValue;
     }
@@ -6312,7 +6312,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-          logger.fatal("ERROR in GetACSearch-CSIsortedRows : " + e.toString(), e);
+          logger.error("ERROR in GetACSearch-CSIsortedRows : " + e.toString(), e);
         }
     }
 
@@ -6406,7 +6406,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("other problem in GetACSearch-searchPVVM: " + e);
-            logger.fatal("ERROR - GetACSearch-searchPVVM for other : " + e.toString(), e);
+            logger.error("ERROR - GetACSearch-searchPVVM for other : " + e.toString(), e);
         }
         try
         {
@@ -6419,7 +6419,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception ee)
         {
-            logger.fatal("ERROR - GetACSearch-searchPVVM for close : " + ee.toString(), ee);
+            logger.error("ERROR - GetACSearch-searchPVVM for close : " + ee.toString(), ee);
         }
     }
 */
@@ -6565,7 +6565,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getPVVMResult: " + e);
-            logger.fatal("ERROR in GetACSearch-getPVVMResult : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getPVVMResult : " + e.toString(), e);
         }
     }
 
@@ -6664,7 +6664,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getPVField: " + e);
-            logger.fatal("ERROR in GetACSearch-getPVField : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getPVField : " + e.toString(), e);
         }
         return returnValue;
     }
@@ -6776,7 +6776,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-PVVMsortedRows: " + e);
-            logger.fatal("ERROR in GetACSearch-PVVMsortedRows : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-PVVMsortedRows : " + e.toString(), e);
         }
     }
 
@@ -6845,7 +6845,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-VDPVsortedRows: " + e);
-            logger.fatal("ERROR in GetACSearch-VDPVsortedRows : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-VDPVsortedRows : " + e.toString(), e);
         }
     }
 
@@ -7268,7 +7268,7 @@ public class GetACSearch implements Serializable
             {
                 sSearchAC = (String) session.getAttribute("searchAC");
                 if (sSearchAC == null)
-                    logger.fatal("In GetACSearch-getKeywordResult : no Component is selected");
+                    logger.error("In GetACSearch-getKeywordResult : no Component is selected");
             }
             DataManager.setAttribute(session, "creSearchAC", sSearchAC);
             // get the search in data
@@ -7362,7 +7362,7 @@ public class GetACSearch implements Serializable
                 String sValid = setAC.checkVersionDimension(txVersion);
                 if (sValid != null && !sValid.equals(""))
                 {
-                    logger.fatal("not a good version ;" + sValid);
+                    logger.error("not a good version ;" + sValid);
                 }
                 else
                 {
@@ -7871,8 +7871,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            System.err.println("ERROR in GetACSearch-getACSearchForCreate: " + e);
-            logger.fatal("ERROR - GetACSearch-getACSearchForCreate: " + e.toString(), e);
+           logger.error("ERROR - GetACSearch-getACSearchForCreate: " + e.toString(), e);
         }
     }
 
@@ -7931,7 +7930,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR - in GetACSearch-BlockSortedResult: " + e);
-            logger.fatal("ERROR - GetACSearch-BlockSortedResult : " + e.toString(), e);
+            logger.error("ERROR - GetACSearch-BlockSortedResult : " + e.toString(), e);
         }
     }
 
@@ -8016,7 +8015,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-EVSsortedRows: " + e);
-            logger.fatal("ERROR in GetACSearch-EVSsortedRows : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-EVSsortedRows : " + e.toString(), e);
         }
     }
 
@@ -8062,7 +8061,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            logger.fatal("ERROR in GetACSearch-sortConcepts : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-sortConcepts : " + e.toString(), e);
         }
         return vSortedRows;
     }
@@ -8159,7 +8158,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-sortEVSStringValue: " + e);
-            logger.fatal("ERROR in GetACSearch-sortEVSStringValue : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-sortEVSStringValue : " + e.toString(), e);
         }
     }
 
@@ -8240,7 +8239,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-sortEVSIntValue: " + e);
-            logger.fatal("ERROR in GetACSearch-sortEVSIntValue : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-sortEVSIntValue : " + e.toString(), e);
         }
     }
 
@@ -8296,7 +8295,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getEVSField: " + e);
-            logger.fatal("ERROR in GetACSearch-getEVSField : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getEVSField : " + e.toString(), e);
         }
         return returnValue;
     }
@@ -8413,7 +8412,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-OCsortedRows: " + e);
-            logger.fatal("ERROR in GetACSearch-OCsortedRows : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-OCsortedRows : " + e.toString(), e);
         }
     }
 
@@ -8458,7 +8457,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getOCField: " + e);
-            logger.fatal("ERROR in GetACSearch-getOCField : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getOCField : " + e.toString(), e);
         }
         return returnValue;
     }
@@ -8600,7 +8599,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-PCsortedRows: " + e);
-            logger.fatal("ERROR in GetACSearch-PCsortedRows : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-PCsortedRows : " + e.toString(), e);
         }
     }
 
@@ -8645,7 +8644,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getPCField: " + e);
-            logger.fatal("ERROR in GetACSearch-getPCField : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getPCField : " + e.toString(), e);
         }
         return returnValue;
     }
@@ -8739,7 +8738,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getQuestionResult: " + e);
-            logger.fatal("ERROR in GetACSearch-getQuestionResult : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getQuestionResult : " + e.toString(), e);
         }
     }
 
@@ -8784,7 +8783,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getQuestField: " + e);
-            logger.fatal("ERROR in GetACSearch-getQuestField : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getQuestField : " + e.toString(), e);
         }
         return returnValue;
     }
@@ -8896,7 +8895,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-QuestionsortedRows: " + e);
-            logger.fatal("ERROR in GetACSearch-QuestionsortedRows : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-QuestionsortedRows : " + e.toString(), e);
         }
     }
 
@@ -9007,7 +9006,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-           logger.fatal("ERROR - GetACSearch-QuestionValueSearch for other : " + e.toString(), e);
+           logger.error("ERROR - GetACSearch-QuestionValueSearch for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -9059,7 +9058,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getQuestValueResult: " + e);
-            logger.fatal("ERROR in GetACSearch-getQuestValueResult : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getQuestValueResult : " + e.toString(), e);
         }
     }
 
@@ -9090,7 +9089,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getQuestValueField: " + e);
-            logger.fatal("ERROR in GetACSearch-getQuestValueField : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getQuestValueField : " + e.toString(), e);
         }
         return returnValue;
     }
@@ -9172,7 +9171,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-QuestValuesortedRows: " + e);
-            logger.fatal("ERROR in GetACSearch-QuestValuesortedRows : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-QuestValuesortedRows : " + e.toString(), e);
         }
     }
 
@@ -9246,7 +9245,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            // System.err.println("EVS Definition Search : " + e);
+            logger.error("doSearchEVS :EVS Definition Search : " + e);
         }
     }
 
@@ -9326,7 +9325,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-          logger.fatal("ERROR - GetACSearch-doAltNameSearch for other : " + e.toString(), e);
+          logger.error("ERROR - GetACSearch-doAltNameSearch for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -9417,7 +9416,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            logger.fatal("ERROR - GetACSearch-doRefDocSearch for other : " + e.toString(), e);
+            logger.error("ERROR - GetACSearch-doRefDocSearch for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -9470,7 +9469,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-           logger.fatal("ERROR - GetACSearch-updatePVBean: " + e.toString(), e);
+           logger.error("ERROR - GetACSearch-updatePVBean: " + e.toString(), e);
         }
         return newBean;
     }
@@ -9538,7 +9537,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-           logger.fatal("ERROR - GetACSearch-doProtoCRFSearch for other : " + e.toString(), e);
+           logger.error("ERROR - GetACSearch-doProtoCRFSearch for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -9644,7 +9643,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            logger.fatal("ERROR - GetACSearch-searchACContact for other : " + e.toString(), e);
+            logger.error("ERROR - GetACSearch-searchACContact for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -9707,7 +9706,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            logger.fatal("ERROR - GetACSearch-getContactComm for other : " + e.toString(), e);
+            logger.error("ERROR - GetACSearch-getContactComm for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -9775,7 +9774,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-            logger.fatal("ERROR - GetACSearch-getContactAddr for other : " + e.toString(), e);
+            logger.error("ERROR - GetACSearch-getContactAddr for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -9888,7 +9887,7 @@ public class GetACSearch implements Serializable
         catch (Exception e)
         {
             // System.err.println("ERROR in GetACSearch-getSelRowToEdit: " + e);
-            logger.fatal("ERROR in GetACSearch-getSelRowToEdit : " + e.toString(), e);
+            logger.error("ERROR in GetACSearch-getSelRowToEdit : " + e.toString(), e);
             DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create/Edit page. Please try again.");
             return false;
         }
@@ -9956,7 +9955,7 @@ public class GetACSearch implements Serializable
         }
         catch (Exception e)
         {
-          logger.fatal("ERROR - GetACSearch-do_caDSRSearch for other : " + e.toString(), e);
+          logger.error("ERROR - GetACSearch-do_caDSRSearch for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closePreparedStatement(pstmt);
