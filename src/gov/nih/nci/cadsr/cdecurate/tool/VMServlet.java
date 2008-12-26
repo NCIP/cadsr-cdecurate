@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.40 2008-12-09 21:46:05 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.41 2008-12-26 19:14:35 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -122,7 +122,7 @@ public class VMServlet extends GenericServlet
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR - execute ", e);
+      logger.error("ERROR - execute ", e);
     }  
     finally
     {
@@ -247,7 +247,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
 		// String sValid = setAC.checkVersionDimension(txVersion);
 		String sValid = setAC.checkValueIsNumeric(txVersion, "Version");
 		if (sValid != null && !sValid.equals("")) {
-			logger.fatal("not a good version " + sValid);
+			logger.error("not a good version " + sValid);
 			DataManager.setAttribute(session, "serVersionNum", "0");
 		} else {
 			Double DVersion = new Double(txVersion);
@@ -413,7 +413,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR - submitting vm ", e);
+      logger.error("ERROR - submitting vm ", e);
     }
     finally
     {
@@ -624,7 +624,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR - ", e);
+      logger.error("ERROR - ", e);
     }
   }
 
@@ -648,7 +648,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
     }
     catch (RuntimeException e)
     {
-        logger.fatal("ERROR - back to pv ", e);
+        logger.error("ERROR - back to pv ", e);
     }
     return VMForm.JSP_PV_DETAIL;
   }
@@ -838,7 +838,7 @@ private String goBackToSearch()
     //call the method to submit
     String errmsg = this.submitVM(selVM);
     if (errmsg != null && !errmsg.equals(""))      
-      logger.fatal("ERROR message at submitEditVM : " + errmsg);
+      logger.error("ERROR message at submitEditVM : " + errmsg);
     else
       selVM.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_NONE);  
     

@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.46 2008-11-14 17:31:19 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.47 2008-12-26 19:14:35 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -105,7 +105,7 @@ public class VMAction implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR - VMAction-searchVM for other : " + e.toString(), e);
+      logger.error("ERROR - VMAction-searchVM for other : " + e.toString(), e);
       data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to search VM." + e.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
    }finally {
@@ -209,7 +209,7 @@ public class VMAction implements Serializable
      }
     catch(Exception e)
     {
-      logger.fatal("ERROR in VMAction-getVMResult : " + e.toString(), e);
+      logger.error("ERROR in VMAction-getVMResult : " + e.toString(), e);
       data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to search VM." + e.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
     }
@@ -309,7 +309,7 @@ public class VMAction implements Serializable
       }
     catch(Exception e)
     {
-      logger.fatal("ERROR in VMAction-getVMResult : " + e.toString(), e);
+      logger.error("ERROR in VMAction-getVMResult : " + e.toString(), e);
       data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to search VM." + e.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
     }
@@ -404,7 +404,7 @@ public class VMAction implements Serializable
       }
     catch(Exception e)
     {
-      logger.fatal("ERROR in VMAction-getVMResult : " + e.toString(), e);
+      logger.error("ERROR in VMAction-getVMResult : " + e.toString(), e);
       data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to search VM." + e.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
     }
@@ -470,7 +470,7 @@ public class VMAction implements Serializable
               }
               catch (RuntimeException e)
               {
-                logger.fatal("Error - Compare Value in Value Meaning sort", e);
+                logger.error("Error - Compare Value in Value Meaning sort", e);
               }
             }
             vSRows.removeElementAt(tempInd);
@@ -483,7 +483,7 @@ public class VMAction implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR in VMAction-VMsortedRows : ", e);
+      logger.error("ERROR in VMAction-VMsortedRows : ", e);
       data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to search VM." + e.toString());
       data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
     }
@@ -515,7 +515,7 @@ public class VMAction implements Serializable
     }
     //log the errr message
     if (!errMsg.equals(""))
-      logger.fatal("Error msg : doAppendSelectVM " + errMsg);
+      logger.error("Error msg : doAppendSelectVM " + errMsg);
   }
 
   /** saves and marks the VM changes to store it in the database
@@ -795,7 +795,7 @@ public class VMAction implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR - doDeleteConcept : ", e);
+      logger.error("ERROR - doDeleteConcept : ", e);
     }
     return errMsg;
   }
@@ -840,7 +840,7 @@ public class VMAction implements Serializable
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR - doMoveConcept : ", e);
+      logger.error("ERROR - doMoveConcept : ", e);
     }
     return errMsg;
   }
@@ -864,7 +864,7 @@ public class VMAction implements Serializable
       makeVMNameFromConcept(selVM, ConceptForm.FOR_VM_PAGE_OPEN);
     //get the vd, de and crf associate only when opening the page ; act = 0
     if (toAct == 0)
-      System.out.println("get other acs");
+      logger.debug("get other acs");
 
     return selVM;
   }
@@ -960,7 +960,7 @@ public String checkVMNameExists(VM_Bean selVM,VMForm data)
      }
      catch (Exception e)
      {
-       logger.fatal("ERROR in setValidatePageValuesVM " + e.toString(), e);
+       logger.error("ERROR in setValidatePageValuesVM " + e.toString(), e);
        ValidateBean vbean = new ValidateBean();
        vbean.setACAttribute("Error setValidatePageValuesVM");
        vbean.setAttributeContent("Error message " + e.toString());
@@ -1054,11 +1054,11 @@ public String checkVMNameExists(VM_Bean selVM,VMForm data)
      }
      catch (SQLException e)
      {
-       logger.fatal("ERROR - -doSetVMAttributes for close : " + e.toString(), e);
+       logger.error("ERROR - -doSetVMAttributes for close : " + e.toString(), e);
      }
      catch (ToolException e1)
      {
-       logger.fatal("ERROR - -doSetVMAttributes for close : " + e1.toString(), e1);
+       logger.error("ERROR - -doSetVMAttributes for close : " + e1.toString(), e1);
      }
      return vm;
    }
@@ -1231,7 +1231,7 @@ private String setNewVersionVM(VMForm data)
 				}
 	      }
 	    }catch (Exception e){
-	            logger.fatal("ERROR in creating new VM Version: " + e.toString(), e);
+	            logger.error("ERROR in creating new VM Version: " + e.toString(), e);
 	    }finally {
 	        SQLHelper.closeCallableStatement(cstmt);
 	      }
@@ -1340,7 +1340,7 @@ private String setNewVersionVM(VMForm data)
      }
     catch (Exception e)
     {
-      logger.fatal("ERROR in setVM for other : " + e.toString(), e);
+      logger.error("ERROR in setVM for other : " + e.toString(), e);
       data.setRetErrorCode("Exception");
       stMsg += "\\tException : Unable to update VM attributes.";
     }finally {
@@ -1404,14 +1404,14 @@ private String setNewVersionVM(VMForm data)
              data.setStatusMsg(data.getStatusMsg() + "\\t " + sReturnCode + " : Unable to update Conceptual Domain and Value Meaning relationship - "
                //  + vm.getVM_CD_NAME() + " and " + vm.getVM_SHORT_MEANING() + ".");
             		  + vm.getVM_CD_NAME() + " and " + vm.getVM_LONG_NAME()+ ".");
-             logger.fatal(data.getStatusMsg());
+             logger.error(data.getStatusMsg());
              //data.setRetErrorCode(sReturnCode);
            }
        }
      }
      catch(Exception e)
      {
-       logger.fatal("ERROR in setCDVMS for other : " + e.toString(), e);
+       logger.error("ERROR in setCDVMS for other : " + e.toString(), e);
        data.setRetErrorCode("Exception");
        data.setStatusMsg(data.getStatusMsg() + "\\tException : Unable to update CD and VM relationship.");
      }finally{
@@ -1457,7 +1457,7 @@ private String setNewVersionVM(VMForm data)
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR in VMAction-getVMField : " + e.toString(), e);
+      logger.error("ERROR in VMAction-getVMField : " + e.toString(), e);
     }
     return returnValue;
   }
@@ -1619,7 +1619,7 @@ private String setNewVersionVM(VMForm data)
     }
     catch (SQLException e)
     {
-      logger.fatal("ERROR - getVMVersion ", e);
+      logger.error("ERROR - getVMVersion ", e);
     }
   }
 
@@ -1706,7 +1706,7 @@ private String setNewVersionVM(VMForm data)
       }
       catch (Exception e)
       {
-          logger.fatal("ERROR - : " + e.toString(), e);
+          logger.error("ERROR - : " + e.toString(), e);
       } finally{
           SQLHelper.closeResultSet(rs);
     	  SQLHelper.closePreparedStatement(pstmt);
@@ -1894,7 +1894,7 @@ private String setNewVersionVM(VMForm data)
       }
       catch (Exception e)
       {
-         logger.fatal("ERROR - VMAction-CDSearch for other : " + e.toString(), e);
+         logger.error("ERROR - VMAction-CDSearch for other : " + e.toString(), e);
       }finally{
     	  SQLHelper.closeResultSet(rs);
     	  SQLHelper.closeCallableStatement(cstmt);

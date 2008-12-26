@@ -611,7 +611,7 @@ public class DataElementConceptServlet extends CurationServlet {
         }
         catch (Exception e)
         {
-            this.logger.fatal("ERROR - splitintoConcept : " + e.toString(), e);
+            this.logger.error("ERROR - splitintoConcept : " + e.toString(), e);
         }
     }
 
@@ -970,7 +970,7 @@ public class DataElementConceptServlet extends CurationServlet {
        }
        catch (Exception e)
        {
-           this.logger.fatal("ERROR - doDECUseSelection : " + e.toString(), e);
+           this.logger.error("ERROR - doDECUseSelection : " + e.toString(), e);
        }
    } // end of doDECUseSelection
 

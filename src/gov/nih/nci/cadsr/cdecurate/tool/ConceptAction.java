@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptAction.java,v 1.20 2008-05-04 19:32:21 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptAction.java,v 1.21 2008-12-26 19:13:24 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -125,7 +125,7 @@ public class ConceptAction implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR - doconceptSearch for other : ", e);
+      logger.error("ERROR - doconceptSearch for other : ", e);
       data.setStatusMsg("Error : Unable to do concept search." + e.toString());
       data.setActionStatus(ConceptForm.ACTION_STATUS_FAIL);
     }finally{
@@ -165,7 +165,7 @@ public class ConceptAction implements Serializable
       }
       catch(Exception e)
       {
-        logger.fatal("ERROR - doconceptSearch for other : ", e);
+        logger.error("ERROR - doconceptSearch for other : ", e);
         data.setStatusMsg("Error : Unable to do concept search." + e.toString());
         data.setActionStatus(ConceptForm.ACTION_STATUS_FAIL);
       }finally{
@@ -203,7 +203,7 @@ public class ConceptAction implements Serializable
               String sret = this.setConcept(data, con, ConceptForm.CADSR_ACTION_INS);
               if (!sret.equals(""))
               {
-                logger.fatal("ERROR concept create " + sret);
+                logger.error("ERROR concept create " + sret);
                 errMsg += "\\n" + sret;
               }
             }
@@ -229,7 +229,7 @@ public class ConceptAction implements Serializable
     }
     catch (Exception e)
     {
-        logger.fatal("ERROR - getConArray : ", e);
+        logger.error("ERROR - getConArray : ", e);
     }
 
     return conArray;
@@ -324,7 +324,7 @@ public class ConceptAction implements Serializable
      }
      catch(Exception e)
      {
-       logger.fatal("ERROR in setConcept for other : " + e.toString(), e);
+       logger.error("ERROR in setConcept for other : " + e.toString(), e);
        sMsg += "\\t Exception : Unable to update Concept attributes.";
      }finally{
          	SQLHelper.closeResultSet(rs);
@@ -414,7 +414,7 @@ public class ConceptAction implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR in getACConcepts for exception : " + e.toString(), e);
+      logger.error("ERROR in getACConcepts for exception : " + e.toString(), e);
     }finally{
     	SQLHelper.closeResultSet(rs);
         SQLHelper.closeCallableStatement(cstmt);
@@ -441,7 +441,7 @@ public class ConceptAction implements Serializable
         {
           errMsg += "Unable to obtain concept from the " + selRow + " row of the search results.\\n" + 
               "Please try again.";
-          logger.fatal("ERROR - getSelectedConcept " + errMsg);
+          logger.error("ERROR - getSelectedConcept " + errMsg);
           data.setStatusMsg(errMsg);
           return null;
         }
@@ -468,7 +468,7 @@ public class ConceptAction implements Serializable
       }
       catch (Exception e)
       {
-        logger.fatal("ERROR - getSelectedConcept : ", e);
+        logger.error("ERROR - getSelectedConcept : ", e);
       }
       return eBean;
   }
@@ -540,7 +540,7 @@ public class ConceptAction implements Serializable
         if (!errMsg.equals(""))
         {
             data.setStatusMsg(data.getStatusMsg() + errMsg);
-            logger.fatal("ERROR in getCaDSRConcept - " + errMsg);
+            logger.error("ERROR in getCaDSRConcept - " + errMsg);
         }
         //take the first one and move on
         eBean = (EVS_Bean)vCon.elementAt(0);  
@@ -604,7 +604,7 @@ public class ConceptAction implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("ERROR in ERROR -setStatusValues : " + e.toString(), e);
+      logger.error("ERROR in ERROR -setStatusValues : " + e.toString(), e);
     }
     return sStatus;
   }
@@ -634,7 +634,7 @@ public class ConceptAction implements Serializable
     }
     catch(Exception e)
     {
-      logger.fatal("Error - selVerWFStatBlock " + e.toString(), e);
+      logger.error("Error - selVerWFStatBlock " + e.toString(), e);
     }
   }
 
@@ -699,8 +699,7 @@ public void getApprovedRepTermConcepts(ResultSet rs,ConceptForm data)
 		 }
 		
 	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		 logger.error("Error - getApprovedRepTermConcepts " + e.toString(), e);
 	}
 	data.setConceptList(vList);
    // return vList;

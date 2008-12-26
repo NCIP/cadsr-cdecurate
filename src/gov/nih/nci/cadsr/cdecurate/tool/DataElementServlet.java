@@ -1235,7 +1235,7 @@ public class DataElementServlet extends CurationServlet{
         }
         catch (Exception e)
         {
-            logger.fatal("Error - InsertEditsIntoDEBeanSR ", e);
+            logger.error("Error - InsertEditsIntoDEBeanSR ", e);
         }
     }
 

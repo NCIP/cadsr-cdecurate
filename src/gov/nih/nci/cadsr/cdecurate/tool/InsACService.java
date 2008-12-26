@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.60 2008-10-28 20:14:32 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.61 2008-12-26 19:14:35 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -159,7 +159,7 @@ public class InsACService implements Serializable {
 		try {
 			m_servlet.storeStatusMsg(sMsg);
 		} catch (Exception e) {
-			logger.fatal(
+			logger.error(
 					"ERROR in InsACService-storeStatusMsg for exception : "
 							+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Message Exception");
@@ -481,7 +481,7 @@ public class InsACService implements Serializable {
 									+ sReturnCode
 									+ " : Unable to create new Value Domain Successfully.");
 					logger
-							.fatal(sReturnCode
+							.error(sReturnCode
 									+ " Unable to create new Value Domain Successfully.");
 				} else if ((sReturnCode == null || (sReturnCode != null && sAction
 						.equals("UPD")))
@@ -640,7 +640,7 @@ public class InsACService implements Serializable {
 					this
 							.storeStatusMsg("\\t Unable to update the Short Name of the Value Domain.");
 					logger
-							.fatal(sReturnCode
+							.error(sReturnCode
 									+ " Unable to update the Short Name of the Value Domain.");
 				}
 			}
@@ -649,8 +649,8 @@ public class InsACService implements Serializable {
 			// logger.info(m_servlet.getLogMessage(m_classReq, "setVD", "done
 			// set", startDate, new java.util.Date()));
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.fatal("ERROR in InsACService-setVD for other : "
+			
+			logger.error("ERROR in InsAerrorice-setVD for other : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
@@ -685,9 +685,7 @@ public class InsACService implements Serializable {
 					ret = setQuestContent(null, sVVid, sVPid);
 			}
 		} catch (RuntimeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			logger.fatal("Error - " + e);
+			logger.error("Error - " + e);
 		}
 	} // end of UpdateCRFValue
 
@@ -1146,7 +1144,7 @@ public class InsACService implements Serializable {
 			// logger.info(m_servlet.getLogMessage(m_classReq, "setDEC", "end
 			// set", startDate, new java.util.Date()));
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-setDEC for other : "
+			logger.error("ERROR in InsACService-setDEC for other : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
@@ -1533,7 +1531,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-setObjectClassDEC for other : "
+			logger.error("ERROR in InsACService-setObjectClassDEC for other : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
@@ -1716,7 +1714,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal(
+			logger.error(
 					"ERROR in InsACService-setPropertyClassDEC for other : "
 							+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
@@ -1899,7 +1897,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-setRepresentation for other : "
+			logger.error("ERROR in InsACService-setRepresentation for other : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
@@ -1989,7 +1987,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal(
+			logger.error(
 					"ERROR in InsACService-checkUniqueOCPropPair for exception : "
 							+ e.toString(), e);
 		}finally{
@@ -2563,7 +2561,7 @@ public class InsACService implements Serializable {
 			this.storeStatusMsg("\\n");
 		
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-setDE for other : "
+			logger.error("ERROR in InsACService-setDE for other : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
@@ -2659,7 +2657,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-AC_version for exception : "
+			logger.error("ERROR in InsACService-AC_version for exception : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
@@ -2729,13 +2727,13 @@ public class InsACService implements Serializable {
 					String stmsg = sReturnCode
 							+ " : Unable to version an Administered Component - "
 							+ ACType + ".";
-					logger.fatal(stmsg);
+					logger.error(stmsg);
 					m_classReq.setAttribute("retcode", sReturnCode);
 					this.storeStatusMsg("\\t : " + stmsg);
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal(
+			logger.error(
 					"ERROR in InsACService-setOC_PROP_REP_VERSION for exception : "
 							+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
@@ -2918,7 +2916,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-setDES for exception : "
+			logger.error("ERROR in InsACService-setDES for exception : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
@@ -2957,7 +2955,7 @@ public class InsACService implements Serializable {
 		String sDDERepType = (String) session.getAttribute("sRepType");
 		if ((sRulesAction == null || sRulesAction.equals("newRule"))
 				&& (sDDERepType == null || sDDERepType.length() < 1)) {
-			// logger.fatal(" setDDE return nada");
+			// logger.error(" setDDE return nada");
 			return "";
 		}
 
@@ -3106,7 +3104,7 @@ public class InsACService implements Serializable {
 			} // end of if (conn == null)
 		} // end of try
 		catch (Exception e) {
-			logger.fatal("ERROR in InsACService-setDEComp for exception : "
+			logger.error("ERROR in InsACService-setDEComp for exception : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
@@ -3183,7 +3181,7 @@ public class InsACService implements Serializable {
 			}
 		vDECompDelete.clear();
 		} catch (Exception ee) {
-			logger.fatal("ERROR in InsACService-deleteDEComp : "
+			logger.error("ERROR in InsACService-deleteDEComp : "
 					+ ee.toString(), ee);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
@@ -3322,7 +3320,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-setRD for exception : "
+			logger.error("ERROR in InsACService-setRD for exception : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
@@ -3373,7 +3371,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-getCSCSI for exception : "
+			logger.error("ERROR in InsACService-getCSCSI for exception : "
 					+ e.toString(), e);
 		}finally{
 			SQLHelper.closeResultSet(rs);
@@ -3466,7 +3464,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-setACCSI for exception : "
+			logger.error("ERROR in InsACService-setACCSI for exception : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
@@ -3527,7 +3525,7 @@ public class InsACService implements Serializable {
 				sACCSI = cstmt.getString(2);
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-setACCSI for exception : "
+			logger.error("ERROR in InsACService-setACCSI for exception : "
 					+ e.toString(), e);
 		}finally{
 			SQLHelper.closeResultSet(rs);
@@ -3593,7 +3591,7 @@ public class InsACService implements Serializable {
 				cstmt.execute();
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-setACSRC for exception : "
+			logger.error("ERROR in InsACService-setACSRC for exception : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
@@ -3640,7 +3638,7 @@ public class InsACService implements Serializable {
 				cstmt.execute();
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-updCSCSI for exception : "
+			logger.error("ERROR in InsACService-updCSCSI for exception : "
 					+ e.toString(), e);
 		}finally{
 			SQLHelper.closeResultSet(rs);
@@ -3695,7 +3693,7 @@ public class InsACService implements Serializable {
 					sPV_IDSEQ = "";
 			}
 		} catch (Exception e) {
-			logger.fatal(
+			logger.error(
 					"ERROR in InsACService- getExistingPV for exception : "
 							+ e.toString(), e);
 		}finally{
@@ -3733,7 +3731,7 @@ public class InsACService implements Serializable {
 				cstmt.execute();
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-copyACID for exception : "
+			logger.error("ERROR in InsACService-copyACID for exception : "
 					+ e.toString(), e);
 		}finally{
 			SQLHelper.closeCallableStatement(cstmt);
@@ -3774,7 +3772,7 @@ public class InsACService implements Serializable {
 				cstmt.execute();
 			}
 		} catch (Exception e) {
-			logger.fatal(
+			logger.error(
 					"ERROR in InsACService-createACHistory for exception : "
 							+ e.toString(), e);
 		}finally{
@@ -3816,7 +3814,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-getversionac for exception : "
+			logger.error("ERROR in InsACService-getversionac for exception : "
 					+ e.toString(), e);
 		}finally{
 			SQLHelper.closeResultSet(rs);
@@ -3964,7 +3962,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal(
+			logger.error(
 					"ERROR in InsACService-setQuestContent for exception : "
 							+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
@@ -4011,7 +4009,7 @@ public class InsACService implements Serializable {
 					rd_ID = "";
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-getRD_ID for exception : "
+			logger.error("ERROR in InsACService-getRD_ID for exception : "
 					+ e.toString(), e);
 		}finally{
 			SQLHelper.closeResultSet(rs);
@@ -4049,7 +4047,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-getFullName for exception : "
+			logger.error("ERROR in InsACService-getFullName for exception : "
 					+ e.toString(), e);
 		}finally{
 			SQLHelper.closeResultSet(rs);
@@ -4094,7 +4092,7 @@ public class InsACService implements Serializable {
 					Desig_ID = "";
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-getDesig_ID for exception : "
+			logger.error("ERROR in InsACService-getDesig_ID for exception : "
 					+ e.toString(), e);
 		}finally{
 			SQLHelper.closeResultSet(rs);
@@ -4186,7 +4184,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-setReg_Status for exception : "
+			logger.error("ERROR in InsACService-setReg_Status for exception : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
@@ -4225,7 +4223,7 @@ public class InsACService implements Serializable {
 				}// end of while
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in getAC_REG : " + e.toString(), e);
+			logger.error("ERROR in getAC_REG : " + e.toString(), e);
 		}finally{
 			SQLHelper.closeResultSet(rs);
 			SQLHelper.closeStatement(cstmt);
@@ -4331,7 +4329,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-getOneAltName for exception : "
+			logger.error("ERROR in InsACService-getOneAltName for exception : "
 					+ e.toString(), e);
 		}finally{
 			SQLHelper.closeResultSet(rs);
@@ -4367,7 +4365,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-getOneRDName for exception : "
+			logger.error("ERROR in InsACService-getOneRDName for exception : "
 					+ e.toString(), e);
 		}finally{
 			SQLHelper.closeResultSet(rs);
@@ -4406,7 +4404,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-getOneConName for exception : "
+			logger.error("ERROR in InsACService-getOneConName for exception : "
 					+ e.toString(), e);
 		}finally{
 			SQLHelper.closeResultSet(rs);
@@ -4513,7 +4511,7 @@ public class InsACService implements Serializable {
 			}
 			// }
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-getPublicID for exception : "
+			logger.error("ERROR in InsACService-getPublicID for exception : "
 					+ e.toString(), e);
 		}finally{
 			SQLHelper.closeResultSet(rs);
@@ -4552,7 +4550,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-getPublicID for exception : "
+			logger.error("ERROR in InsACService-getPublicID for exception : "
 					+ e.toString(), e);
 		}finally{
 			SQLHelper.closeResultSet(rs);
@@ -4765,7 +4763,7 @@ public class InsACService implements Serializable {
 			// get one alt name for the AC after ins or del actions
 			oneAltName = this.getOneAltName(sDE);
 		} catch (Exception e) {
-			logger.fatal(
+			logger.error(
 					"ERROR in InsACService-addRemoveAltNames for exception : "
 							+ e.toString(), e);
 		}
@@ -4860,7 +4858,7 @@ public class InsACService implements Serializable {
 			}
 			oneRD = this.getOneRDName(sDE); // get the one rd name for the ac
 		} catch (Exception e) {
-			logger.fatal(
+			logger.error(
 					"ERROR in InsACService-addRemoveRefDocs for exception : "
 							+ e.toString(), e);
 		}
@@ -4901,7 +4899,7 @@ public class InsACService implements Serializable {
 	 * sDefinition.substring(5,20); else if(sDefinition.length()>15) sDefinition =
 	 * sDefinition.substring(5,15); if(sName.equalsIgnoreCase(sConceptName)) {
 	 * if(sDefinition.equalsIgnoreCase(sConceptDefinition)) return OCBean; } } }
-	 * catch(Exception e) { logger.fatal("ERROR in
+	 * catch(Exception e) { logger.error("ERROR in
 	 * InsACService-takeThesaurusConcep for other : " + e.toString()); } return
 	 * evsBean; }
 	 */
@@ -5064,7 +5062,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService-setConcept for other : "
+			logger.error("ERROR in InsACService-setConcept for other : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
@@ -5199,7 +5197,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in InsACService- getConcept for exception : "
+			logger.error("ERROR in InsACService- getConcept for exception : "
 					+ e.toString(), e);
 		}finally{
 			SQLHelper.closeResultSet(rs);
@@ -5229,7 +5227,7 @@ public class InsACService implements Serializable {
 				// handle the only evs parent
 				if (parBean.getEVS_DATABASE() == null)
 					logger
-							.fatal("setEVSParentConcept - parent why database null?");
+							.error("setEVSParentConcept - parent why database null?");
 				else if (!parBean.getEVS_DATABASE().equals("Non_EVS")) {
 					if (!parBean.getCON_AC_SUBMIT_ACTION().equals("DEL")) {
 						String sRet = "";
@@ -5331,7 +5329,7 @@ public class InsACService implements Serializable {
 			if (parBean != null) {
 				// handle the add/remove of non evs parent
 				if (parBean.getEVS_DATABASE() == null)
-					logger.fatal("setNonEVSParentConcept - why no database?");
+					logger.error("setNonEVSParentConcept - why no database?");
 				else if (parBean.getEVS_DATABASE().equals("Non_EVS")) {
 					String sCont = vd.getVD_CONTE_IDSEQ();
 					String sACid = vd.getVD_VD_IDSEQ();
@@ -5394,7 +5392,7 @@ public class InsACService implements Serializable {
 			if (parBean != null) {
 				// handle the add/remove of non evs parent
 				if (parBean.getEVS_DATABASE() == null)
-					logger.fatal("setRDMetaConceptSource - why no database?");
+					logger.error("setRDMetaConceptSource - why no database?");
 				else if (parBean.getEVS_DATABASE() != null
 						&& parBean.getEVS_DATABASE()
 								.equals("NCI Metathesaurus")) {
@@ -5469,7 +5467,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("Error - setAC_Contacts : " + e.toString(), e);
+			logger.error("Error - setAC_Contacts : " + e.toString(), e);
 		}
 		return hConts;
 	}
@@ -5576,7 +5574,7 @@ public class InsACService implements Serializable {
 							}
 						}
 					} catch (Exception ee) {
-						logger.fatal(
+						logger.error(
 								"ERROR in InsACService-setContact_Comms for bean : "
 										+ ee.toString(), ee);
 						m_classReq.setAttribute("retcode", "Exception");
@@ -5587,7 +5585,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("Error - setContact_Comms : " + e.toString(), e);
+			logger.error("Error - setContact_Comms : " + e.toString(), e);
 		}
 		finally{
 			SQLHelper.closeResultSet(rs);
@@ -5724,7 +5722,7 @@ public class InsACService implements Serializable {
 							}
 						}
 					} catch (Exception ee) {
-						logger.fatal(
+						logger.error(
 								"ERROR in InsACService-setContact_Addrs for bean : "
 										+ ee.toString(), ee);
 						m_classReq.setAttribute("retcode", "Exception");
@@ -5735,7 +5733,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("Error - setContact_Addrs : " + e.toString(), e);
+			logger.error("Error - setContact_Addrs : " + e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception ee : Unable to update or remove Address attributes.");
@@ -5835,7 +5833,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("Error - setAC_Contact : " + e.toString(), e);
+			logger.error("Error - setAC_Contact : " + e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
 					.storeStatusMsg("\\t Exception ee : Unable to update or remove contact attributes.");

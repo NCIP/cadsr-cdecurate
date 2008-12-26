@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.52 2008-12-08 22:46:03 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.53 2008-12-26 19:14:35 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -271,9 +271,7 @@ public void doOpen (){
 						
 		  			DataManager.setAttribute(session, "RefDocRows", vRefDocDocs);
 					} catch (SQLException e) {
-						StringWriter sw = new StringWriter();
-						e.printStackTrace(new PrintWriter(sw));
-						logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+						logger.error("ERROR - RefDocAttachment: " + e.getMessage());
 						msg = "Unable to access the database.";
 					}
 					finally{
@@ -384,10 +382,10 @@ public void doFileUpload ()
 				doFiletoBlob(m_servlet.getConn(), dbfileName);
 
 			}
-			// Commit and close the connection
+			// Commit
 			m_servlet.getConn().commit();
 		} catch (SQLException e) {
-			logger.fatal(e.toString(), e);
+			logger.error(e.toString(), e);
 		}finally{
 			SQLHelper.closePreparedStatement(pstmt);
 		
@@ -435,7 +433,7 @@ public void doDeleteAttachment (){
 		pstmt.setString(1, fileName);
 		pstmt.execute();
     } catch (SQLException e) {
-		logger.fatal(e.toString(), e);
+		logger.error(e.toString(), e);
 		msg = "Reference Document Attachment: Unable to delete the Attachment from the database.";
 	}finally{
 	  SQLHelper.closePreparedStatement(pstmt);
@@ -460,7 +458,7 @@ public void doDeleteAttachment (){
       pstmt.setString(1, rd_idseq);
       pstmt.execute();
     } catch (SQLException e) {
-      logger.fatal("Error - doDeleteAllAttachments: " + e.toString(), e);
+      logger.error("Error - doDeleteAllAttachments: " + e.toString(), e);
       msg = "Unable to delete all the Attachments from the database for the selected Reference Document.";
     }finally{
 	  SQLHelper.closePreparedStatement(pstmt);
@@ -498,7 +496,7 @@ public void doDeleteAttachment (){
 				File fileLocation = new File(RefDocFileCache + fileDirectory);
 				if (!fileLocation.isDirectory()){
 					if (!fileLocation.mkdir()) {
-						logger.fatal("Can not create directory: " + RefDocFileCache + fileDirectory);
+						logger.error("Cannot create directory: " + RefDocFileCache + fileDirectory);
 						fileDirectory = "";
 					}
 					else
@@ -526,19 +524,13 @@ public void doDeleteAttachment (){
 			is.close();
 			is = null;
 		} catch (FileNotFoundException e) {
-			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+			logger.error("ERROR - RefDocAttachment: " + e.getMessage());
 			msg = "Unable to save file from database.";
-		} catch (SQLException e) {
-			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+		} catch (SQLException se) {
+			logger.error("ERROR - RefDocAttachment: " + se.getMessage());
 			msg = "Unable to access the database to download file data.";
-		} catch (IOException e) {
-			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+		} catch (IOException ioe) {
+			logger.error("ERROR - RefDocAttachment: " + ioe.getMessage());
 			msg = "Problem accessing file.";
 		}
   }
@@ -562,7 +554,6 @@ public void doDeleteAttachment (){
     PreparedStatement pstmt = null;
     ResultSet rs = null;
   	try {
-  		pstmt = con.prepareStatement(UpdateObjSQL);
   		pstmt = con.prepareStatement(UpdateObjSQL);
   		
   		String[] fileNameString = fileName.split("/");
@@ -589,19 +580,13 @@ public void doDeleteAttachment (){
   	  os.close();
       os = null;
   } catch (FileNotFoundException e) {
-  		StringWriter sw = new StringWriter();
-  		e.printStackTrace(new PrintWriter(sw));
-  		logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+  		logger.error("ERROR - RefDocAttachment: " + e.getMessage());
   		msg = "File not found. Can not upload file to database.";
   	} catch (SQLException e) {
-  		StringWriter sw = new StringWriter();
-  		e.printStackTrace(new PrintWriter(sw));
-  		logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+  		logger.error("ERROR - RefDocAttachment: " + e.getMessage());
   		msg = "Unable to access database for file upload.";
   	} catch (IOException e) {
-  		StringWriter sw = new StringWriter();
-  		e.printStackTrace(new PrintWriter(sw));
-  		logger.fatal("ERROR - RefDocAttachment: " + sw.toString());
+  		logger.error("ERROR - RefDocAttachment: " + e.getMessage());
   		msg = "Unable to access file for upload to the database.";
   	}finally{
   	  SQLHelper.closeResultSet(rs);	

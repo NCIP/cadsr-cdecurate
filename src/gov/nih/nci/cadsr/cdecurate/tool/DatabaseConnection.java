@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DatabaseConnection.java,v 1.12 2008-05-04 19:32:20 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DatabaseConnection.java,v 1.13 2008-12-26 19:13:24 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -124,8 +124,7 @@ public class DatabaseConnection extends HttpServlet
      }
     catch (Exception e)
     {
-      System.err.println("Could not close database connection.");
-      logger.fatal("Could not close database connection." + e.toString(), e);
+     logger.fatal("Could not close database connection." + e.toString(), e);
     }
   }
 
@@ -150,9 +149,7 @@ public class DatabaseConnection extends HttpServlet
     }
     catch (RuntimeException e)
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      logger.fatal("setuserbean ", e);
+       logger.error("setuserbean ", e);
     }
   }
   /**
@@ -190,7 +187,7 @@ public class DatabaseConnection extends HttpServlet
      }
      catch(Exception e)
      {
-         logger.fatal("ERROR in GetACService-verifyConnection : " + e.toString(), e);
+         logger.error("ERROR in GetACService-verifyConnection : " + e.toString(), e);
      }finally{
          freeConnection(conn);
      }

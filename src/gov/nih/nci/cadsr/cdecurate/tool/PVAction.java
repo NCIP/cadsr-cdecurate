@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.29 2008-06-04 19:04:47 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.30 2008-12-26 19:14:35 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -138,7 +138,7 @@ public class PVAction implements Serializable {
 			vdpvs.setElementAt(selPV, pvInd);
 			vd.setVD_PV_List(vdpvs);
 		} catch (RuntimeException e) {
-			logger.fatal("ERROR at changePVQCAttributes: ", e);
+			logger.error("ERROR at changePVQCAttributes: ", e);
 		}
 
 		return sCRFmsg;
@@ -178,7 +178,7 @@ public class PVAction implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR - checkPVQCExists for other : ", e);
+			logger.error("ERROR - checkPVQCExists for other : ", e);
 			data
 					.setStatusMsg(data.getStatusMsg()
 							+ "\\tError : Unable to get existing pv-qc."
@@ -278,7 +278,7 @@ public class PVAction implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("Error Occurred in addValidateVDPVS " + e.toString(),
+			logger.error("Error Occurred in addValidateVDPVS " + e.toString(),
 					e);
 			ValidateBean vbean = new ValidateBean();
 			vbean.setACAttribute("Error addValidateVDPVS");
@@ -433,7 +433,7 @@ public class PVAction implements Serializable {
 				} //END IF
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR - doPVACSearch for other : " + e.toString(), e);
+			logger.error("ERROR - doPVACSearch for other : " + e.toString(), e);
 		}
 		finally{
 			SQLHelper.closeResultSet(rs);
@@ -587,7 +587,7 @@ public class PVAction implements Serializable {
 				} //END IF
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR - GetACSearch-searchPVVM for other : "
+			logger.error("ERROR - GetACSearch-searchPVVM for other : "
 					+ e.toString(), e);
 		}finally{
 			SQLHelper.closeResultSet(rs);
@@ -694,7 +694,7 @@ public class PVAction implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in setPV for other : " + e.toString(), e);
+			logger.error("ERROR in setPV for other : " + e.toString(), e);
 			data.setRetErrorCode("Exception");
 			sMsg += "\\t Exception : Unable to update Permissible Value attributes.";
 		}
@@ -749,7 +749,7 @@ public class PVAction implements Serializable {
 					sPV_IDSEQ = "";
 			}
 		} catch (Exception e) {
-			logger.fatal("ERROR in getExistingPV for exception : "
+			logger.error("ERROR in getExistingPV for exception : "
 					+ e.toString(), e);
 		}finally{
 			SQLHelper.closeResultSet(rs);
@@ -857,7 +857,7 @@ public class PVAction implements Serializable {
 			}
 			
 		} catch (Exception e) {
-			logger.fatal("ERROR in setVD_PVS for other : " + e.toString(), e);
+			logger.error("ERROR in setVD_PVS for other : " + e.toString(), e);
 			data.setRetErrorCode("Exception");
 			sMsg += "\\t Exception : Unable to update or remove PV of VD.";
 		}finally{
@@ -1112,7 +1112,7 @@ public class PVAction implements Serializable {
 			vd.setReferenceConceptList(vList);
 			data.setVD(vd);
 		} catch (Exception e) {
-			logger.fatal("ERROR - ", e);
+			logger.error("ERROR - ", e);
 		}
 	}
 
@@ -1158,7 +1158,7 @@ public class PVAction implements Serializable {
 			vd.setReferenceConceptList(vParentCon);
 			data.setVD(vd);
 		} catch (RuntimeException e) {
-			logger.fatal("ERROR - ", e);
+			logger.error("ERROR - ", e);
 		}
 	} // end
 
@@ -1199,7 +1199,7 @@ public class PVAction implements Serializable {
 			if (vVMs.size() < 1)
 				vNames = "";
 		} catch (Exception e) {
-			logger.fatal("ERROR - : " + e.toString(), e);
+			logger.error("ERROR - : " + e.toString(), e);
 		}
 		return vNames;
 	}

@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.57 2008-12-15 18:46:09 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.58 2008-12-26 19:14:34 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -173,9 +173,7 @@ public class NCICurationServlet extends HttpServlet
             }
             catch (Exception e)
             {
-                System.err.println("Could not open database connection.");
-                e.printStackTrace();
-                logger.fatal(e.toString(), e);
+                logger.fatal("Could not open database connection.", e);
             }
             finally{
     			SQLHelper.closeResultSet(rset);
@@ -275,7 +273,7 @@ public class NCICurationServlet extends HttpServlet
         catch (Exception e)
         {
             // System.err.println("ERROR - Got exception reading properties " + e);
-            logger.fatal("Servlet-getProperties : " + e.hashCode() + " : " + e.toString(), e);
+            logger.error("Servlet-getProperties : " + e.hashCode() + " : " + e.toString(), e);
         }
     }
 

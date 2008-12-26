@@ -663,7 +663,7 @@ public class ValueDomainServlet extends CurationServlet {
         }
         catch (Exception e)
         {
-            logger.fatal("Error - doSetVDPage " + e.toString(), e);
+            logger.error("Error - doSetVDPage " + e.toString(), e);
         }
     } // end of doValidateVD
 
@@ -728,7 +728,7 @@ public class ValueDomainServlet extends CurationServlet {
         }
         catch (Exception e)
         {
-            this.logger.fatal("ERROR - getSystemName : " + e.toString(), e);
+            this.logger.error("ERROR - getSystemName : " + e.toString(), e);
         }
         return vd;
     }
@@ -889,7 +889,7 @@ public class ValueDomainServlet extends CurationServlet {
         }
         catch (Exception e)
         {
-            this.logger.fatal("ERROR - splitintoConceptVD : " + e.toString(), e);
+            this.logger.error("ERROR - splitintoConceptVD : " + e.toString(), e);
         }
     }
 
@@ -1203,7 +1203,7 @@ public class ValueDomainServlet extends CurationServlet {
        }
        catch (Exception e)
        {
-           this.logger.fatal("ERROR - doVDUseSelection : " + e.toString(), e);
+           this.logger.error("ERROR - doVDUseSelection : " + e.toString(), e);
        }
    } // end of doVDUseSelection
 
@@ -2211,7 +2211,7 @@ public class ValueDomainServlet extends CurationServlet {
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR - ", e);
+      logger.error("ERROR - ", e);
     }
     
     return "";
@@ -2253,7 +2253,7 @@ public class ValueDomainServlet extends CurationServlet {
     }
     catch (Exception e)
     {
-      logger.fatal("ERROR - ", e);
+      logger.error("ERROR - ", e);
     }
     return "/CreateVDPage.jsp";    
   }
