@@ -1018,6 +1018,7 @@ public class SearchServlet extends CurationServlet {
         Admin_Components_Mgr acMgr = new Admin_Components_Mgr();
         ArrayList list = null;
         int thisInd = 0;
+        Vector vSRows = (Vector) session.getAttribute("vSelRows");
         // get the searched ID and Name vectors
         Vector vIDs = (Vector) session.getAttribute("SearchID");
         // get the long / names of the selected ac
@@ -1066,6 +1067,37 @@ public class SearchServlet extends CurationServlet {
            // String retCode = "";
             String pvID = "", cdID = "", deID = "", decID = "", vdID = "", cscsiID = "", ocID = "", propID = "", conID = "";
             String vmID="";
+            PV_Bean pvBean = null;
+            CSI_Bean csiBean = null;
+            DE_Bean deBean = null;
+            DEC_Bean decBean = null;
+            VD_Bean vdBean = null;
+            VM_Bean vmBean = null;
+            if (sSearchAC.equals("PermissibleValue")){
+           	  	 if ((vSRows != null) && (vSRows.size()>0))
+             	   pvBean = (PV_Bean) vSRows.elementAt(thisInd);
+            } 
+            if (sSearchAC.equals("ClassSchemeItems")){
+          	  	 if ((vSRows != null) && (vSRows.size()>0))
+          	       csiBean = (CSI_Bean) vSRows.elementAt(thisInd);
+            } 
+            if (sSearchAC.equals("DataElement")){
+         	  	 if ((vSRows != null) && (vSRows.size()>0))
+         	  		deBean = (DE_Bean) vSRows.elementAt(thisInd);
+            } 
+            if (sSearchAC.equals("DataElementConcept")){
+        	  	 if ((vSRows != null) && (vSRows.size()>0))
+        	  		decBean = (DEC_Bean) vSRows.elementAt(thisInd);
+            } 
+            if (sSearchAC.equals("ValueDomain")){
+        	  	 if ((vSRows != null) && (vSRows.size()>0))
+        	  		vdBean = (VD_Bean) vSRows.elementAt(thisInd);
+            } 
+            if (sSearchAC.equals("ValueMeaning")){
+       	  	   if ((vSRows != null) && (vSRows.size()>0))
+       	  		  vmBean = (VM_Bean) vSRows.elementAt(thisInd);
+            } 
+    
             // get the search results from the database.
            
             if (assocAC.equals("AssocDEs"))
@@ -1073,7 +1105,7 @@ public class SearchServlet extends CurationServlet {
                 m_classReq.setAttribute("GetAssocSearchAC", "true");
                 // retCode = getACSearch.doAssociatedDESearch(sID, sSearchAC);
                 if (sSearchAC.equals("PermissibleValue"))
-                    pvID = sID;
+                	 pvID = sID;
                 else if (sSearchAC.equals("DataElementConcept"))
                     decID = sID;
                 else if (sSearchAC.equals("ValueDomain"))
@@ -1170,13 +1202,36 @@ public class SearchServlet extends CurationServlet {
                 oldSearch = "Data Element";
             else if (sSearchAC.equals("ClassSchemeItems"))
                 oldSearch = "Class Scheme Items";
+            else if (sSearchAC.equals("ConceptClass"))
+                oldSearch = "Concept Class";
+            else if (sSearchAC.equals("ObjectClass"))
+                oldSearch = "Object Class";
+            else if (sSearchAC.equals("Property"))
+                oldSearch = "Property ";
+            else if (sSearchAC.equals("ValueMeaning"))
+                oldSearch = "Value Meaning";
             // make keyword empty and label for search result page.
             DataManager.setAttribute(session, "serKeyword", "");
             String labelWord = "";
             String labelWord2 = "";
             labelWord = " associated with " + oldSearch + " - " + sName; // make the label
-            String version = (String)list.get(1);
-            labelWord2 = " associated to " + oldSearch + " - " + sName + " [" + list.get(0)+ "v" +Double.parseDouble(version)+"]";
+            labelWord2 = " associated to " + oldSearch + " - " + sName ;
+            if (sSearchAC.equals("PermissibleValue") && (pvBean != null) ){
+              labelWord2 = labelWord2 + " [" + pvBean.getPV_VM().getVM_ID()+ "v" +pvBean.getPV_VM().getVM_VERSION()+"]";
+            }else if (sSearchAC.equals("ClassSchemeItems") && (csiBean != null)){
+              labelWord2 = labelWord2 + " [" + csiBean.getCSI_CS_PUBLICID()+ "v" +csiBean.getCSI_CS_VERSION()+"]";
+            }else if (sSearchAC.equals("DataElement") && (deBean != null)){
+                labelWord2 = labelWord2 + " [" + deBean.getDE_MIN_CDE_ID()+ "v" +deBean.getDE_VERSION()+"]";
+            }else if (sSearchAC.equals("DataElementConcept") && (decBean != null)){
+                labelWord2 = labelWord2 + " [" + decBean.getDEC_DEC_ID()+ "v" +decBean.getDEC_VERSION()+"]";
+            }else if (sSearchAC.equals("ValueDomain") && (vdBean != null)){
+                labelWord2 = labelWord2 + " [" + vdBean.getVD_VD_ID()+ "v" +vdBean.getVD_VERSION()+"]";
+            }else if (sSearchAC.equals("ValueMeaning") && (vmBean != null)){
+                labelWord2 = labelWord2 + " [" + vmBean.getVM_ID()+ "v" +vmBean.getVM_VERSION()+"]";   
+            }else if(list != null && list.size()>0){	
+              String version = (String)list.get(1);
+              labelWord2 =labelWord2 + " [" + list.get(0)+ "v" +Double.parseDouble(version)+"]";
+            }
             m_classReq.setAttribute("labelKeyword", newSearch); // make the label
             m_classReq.setAttribute("labelKeyword2", labelWord2);
             // save the last word in the request attribute
