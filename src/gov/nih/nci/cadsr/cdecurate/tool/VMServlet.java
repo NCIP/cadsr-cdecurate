@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.41 2008-12-26 19:14:35 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.42 2008-12-29 17:35:18 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -964,7 +964,7 @@ private String goBackToSearch()
     //store the result back in request/session attributes
     DataManager.setAttribute(session, "results", vmData.getResultList());
     session.setAttribute("creRecsFound", vmData.getNumRecFound());
-    req.setAttribute("labelKeyword", vmData.getResultLabel());  
+    session.setAttribute("labelKeyword", vmData.getResultLabel());  
     session.setAttribute("recsFound", vmData.getNumRecFound());
   }
   
@@ -982,7 +982,7 @@ private String goBackToSearch()
     //store teh result back in request/session attributes
     DataManager.setAttribute(session, "results", vmData.getResultList());
     session.setAttribute("creRecsFound", vmData.getNumRecFound());
-    req.setAttribute("labelKeyword", vmData.getResultLabel());  
+    session.setAttribute("labelKeyword", vmData.getResultLabel());  
     session.setAttribute("recsFound", vmData.getNumRecFound());
   }
 

@@ -1232,7 +1232,7 @@ public class SearchServlet extends CurationServlet {
               String version = (String)list.get(1);
               labelWord2 =labelWord2 + " [" + list.get(0)+ "v" +Double.parseDouble(version)+"]";
             }
-            m_classReq.setAttribute("labelKeyword", newSearch); // make the label
+            m_classReq.setAttribute("labelKeyword1", newSearch); // make the label
             m_classReq.setAttribute("labelKeyword2", labelWord2);
             // save the last word in the request attribute
             DataManager.setAttribute(session, "LastAppendWord", labelWord);

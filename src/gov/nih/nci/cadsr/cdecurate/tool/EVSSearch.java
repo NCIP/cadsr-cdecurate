@@ -1,6 +1,6 @@
 //Copyright (c) 2000 ScenPro, Inc.
 
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.63 2008-12-26 19:14:35 chickerura Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.64 2008-12-29 17:34:00 veerlah Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1516,9 +1516,9 @@ public class EVSSearch implements Serializable {
 					|| evsDB.equals("Thesaurus/Metathesaurus"))
 				sKeyword = filterName(sKeyword, "display");
 			if (!sSearchAC.equals("ParentConcept"))
-				req.setAttribute("labelKeyword", sSearchAC + " - " + sKeyword); //make the label
+				session.setAttribute("labelKeyword", sSearchAC + " - " + sKeyword); //make the label
 			else if (sSearchAC.equals("ParentConcept"))
-				req.setAttribute("labelKeyword", " - " + sKeyword);
+				session.setAttribute("labelKeyword", " - " + sKeyword);
 
 		} catch (Exception e) {
 			logger.error("ERROR in EVSSearch-get_Result : " + e.toString(), e);
@@ -2286,7 +2286,7 @@ public class EVSSearch implements Serializable {
 			this.get_Result(m_classReq, m_classRes, vResult, "");
 			DataManager.setAttribute(session, "results", vResult);
 			DataManager.setAttribute(session, "creKeyword", sConceptCode);
-			m_classReq.setAttribute("labelKeyword", sConceptName);
+			session.setAttribute("labelKeyword", sConceptName);
 			Integer recs = new Integer(vAC.size());
 			String recs2 = recs.toString();
 			session.setAttribute("creRecsFound", recs2);
@@ -2342,7 +2342,7 @@ public class EVSSearch implements Serializable {
 				this.doTreeSearch(actType, "Blocks");
 				return;
 			}
-			m_classReq.setAttribute("labelKeyword", sCCodeName);
+			session.setAttribute("labelKeyword", sCCodeName);
 			m_servlet.ForwardJSP(m_classReq, m_classRes,
 			"/OpenSearchWindowBlocks.jsp");
 		} catch (Exception e) {
@@ -2527,7 +2527,7 @@ public class EVSSearch implements Serializable {
 			this.get_Result(m_classReq, m_classRes, vResult, "");
 			DataManager.setAttribute(session, "results", vResult);
 
-			m_classReq.setAttribute("labelKeyword", sKeywordName);
+			session.setAttribute("labelKeyword", sKeywordName);
 			DataManager.setAttribute(session, "labelKeyword", sKeywordName);
 			Integer recs = new Integer(vAC.size());
 			String recs2 = recs.toString();
@@ -2635,7 +2635,7 @@ public class EVSSearch implements Serializable {
 				nodeID);
 		DataManager.setAttribute(session, "strHTML", strHTML);
 		m_classReq.setAttribute("UISearchType", "tree");
-		m_classReq.setAttribute("labelKeyword", nodeName);
+		session.setAttribute("labelKeyword", nodeName);
 		m_servlet.ForwardJSP(m_classReq, m_classRes,
 		"/OpenSearchWindowBlocks.jsp");
 	}
@@ -2668,7 +2668,7 @@ public class EVSSearch implements Serializable {
 		String strHTML = tree.collapseNode(nodeID, vocab, "", nodeName);
 		DataManager.setAttribute(session, "strHTML", strHTML);
 		m_classReq.setAttribute("UISearchType", "tree");
-		m_classReq.setAttribute("labelKeyword", nodeName);
+		session.setAttribute("labelKeyword", nodeName);
 		m_servlet.ForwardJSP(m_classReq, m_classRes,
 		"/OpenSearchWindowBlocks.jsp");
 	}
@@ -2761,7 +2761,7 @@ public class EVSSearch implements Serializable {
 		DataManager.setAttribute(session, "results", vResult);
 
 		DataManager.setAttribute(session, "creKeyword", sConceptCode);
-		m_classReq.setAttribute("labelKeyword", sConceptName);
+		session.setAttribute("labelKeyword", sConceptName);
 		Integer recs = new Integer(vAC.size());
 		String recs2 = recs.toString();
 		session.setAttribute("creRecsFound", recs2);
@@ -2839,7 +2839,7 @@ public class EVSSearch implements Serializable {
 				this.doCollapseAllNodes(dtsVocab);
 				this.doTreeSearch(actType, "Blocks");
 			}
-			m_classReq.setAttribute("labelKeyword", sCCodeName);
+			session.setAttribute("labelKeyword", sCCodeName);
 			m_servlet.ForwardJSP(m_classReq, m_classRes,
 			"/OpenSearchWindowBlocks.jsp");
 		} catch (Exception e) {

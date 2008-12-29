@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EVSSearchResults.jsp,v 1.4 2008-12-09 21:47:03 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EVSSearchResults.jsp,v 1.5 2008-12-29 17:36:35 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -32,7 +32,7 @@
     if (nRecs == null)
       nRecs = "No ";
 
-   String sLabelKeyword =  (String)request.getAttribute("labelKeyword");
+   String sLabelKeyword =  (String)session.getAttribute("labelKeyword");
    if (sLabelKeyword == null)
       sLabelKeyword = "";
 %>

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.14 2008-12-09 21:47:03 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.15 2008-12-29 17:36:35 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -63,7 +63,7 @@
    Vector vSearchRes = (Vector)session.getAttribute("vACSearch");
    if (vSearchRes == null) vSearchRes = new Vector();
    if (sSelAC == null || sSelAC.equals("ConceptualDomain")) vSearchRes = new Vector();
-   String sLabelKeyword =  (String)request.getAttribute("labelKeyword");
+   String sLabelKeyword =  (String)session.getAttribute("labelKeyword");
    if (sLabelKeyword == null)
       sLabelKeyword = "";
    if (sKeyword == null)
