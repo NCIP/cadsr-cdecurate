@@ -286,7 +286,7 @@
 	    rowsChecked = vCheckList.size();
 	}
 	// if sLabelKeyword has word "associated" then a getAssociated search was just done
-	String sLabelKeyword = (String) request.getAttribute("labelKeyword");
+	String sLabelKeyword = (String) session.getAttribute("labelKeyword");
 	if (sLabelKeyword == null) {
 		sLabelKeyword = "";
 	}
@@ -370,6 +370,7 @@
 		else
 			sSelectAll = "false";
 	}
+   String labelKeyword1 = (String)request.getAttribute("labelKeyword1");	
    String labelKeyword2 = (String)request.getAttribute("labelKeyword2");
 %>
 
@@ -2143,7 +2144,7 @@ function enableDisableMenuItems(){
 						<font size="4">
 							<b>
 								 Search Results for
-								<%=StringEscapeUtils.escapeHtml(sLabelKeyword)%>&nbsp;&nbsp;<input type="button" value="Back" style="width: 65" onClick="Back();"><img name="Message" src="images/SearchMessage.gif" width="180" height="25" alt="WaitMessage" style="visibility:hidden;">
+								<%if (labelKeyword1 != null){%><%=StringEscapeUtils.escapeHtml(labelKeyword1)%><%}%>&nbsp;&nbsp;<input type="button" value="Back" style="width: 65" onClick="Back();"><img name="Message" src="images/SearchMessage.gif" width="180" height="25" alt="WaitMessage" style="visibility:hidden;">
 							</b>
 						</font>
 					</td>

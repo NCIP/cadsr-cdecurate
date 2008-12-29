@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.12 2008-12-09 21:47:03 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.13 2008-12-29 17:36:35 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -87,7 +87,7 @@
        vCheckList = (Vector)session.getAttribute("CheckList");
    }
    // if sLabelKeyword has word "associated" then a getAssociated search was just done
-   String sLabelKeyword =  (String)request.getAttribute("labelKeyword");
+   String sLabelKeyword =  (String)session.getAttribute("labelKeyword");
    if (sLabelKeyword == null)
    {
       sLabelKeyword = "";

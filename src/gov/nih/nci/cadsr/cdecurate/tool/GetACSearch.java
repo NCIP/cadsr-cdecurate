@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.76 2008-12-26 19:14:35 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.77 2008-12-29 17:35:18 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2664,7 +2664,7 @@ public class GetACSearch implements Serializable
                 else
                     sKeyword = sProtoID;
             }
-            req.setAttribute("labelKeyword", "Data Element - " + sKeyword);
+            session.setAttribute("labelKeyword", "Data Element - " + sKeyword);
             Vector vSearchID = new Vector();
             Vector vSearchName = new Vector();
             Vector vSearchLongName = new Vector();
@@ -3241,7 +3241,7 @@ public class GetACSearch implements Serializable
                 sKeyword = (String) session.getAttribute("LastAppendWord");
             if (sKeyword == null)
                 sKeyword = "";
-            req.setAttribute("labelKeyword", "Data Element Concept - " + sKeyword);
+            session.setAttribute("labelKeyword", "Data Element Concept - " + sKeyword);
             Vector<String> vSearchID = new Vector<String>();
             Vector<String> vSearchName = new Vector<String>();
             Vector<String> vSearchLongName = new Vector<String>();
@@ -3387,7 +3387,7 @@ public class GetACSearch implements Serializable
                 sKeyword = (String) session.getAttribute("LastAppendWord");
             if (sKeyword == null)
                 sKeyword = "";
-            req.setAttribute("labelKeyword", "Value Domain - " + sKeyword);
+            session.setAttribute("labelKeyword", "Value Domain - " + sKeyword);
             Vector<String> vSearchID = new Vector<String>();
             Vector<String> vSearchName = new Vector<String>();
             Vector<String> vSearchLongName = new Vector<String>();
@@ -3564,7 +3564,7 @@ public class GetACSearch implements Serializable
                 sKeyword = (String) session.getAttribute("LastAppendWord");
             if (sKeyword == null)
                 sKeyword = "";
-            req.setAttribute("labelKeyword", "Conceptual Domain - " + sKeyword);
+            session.setAttribute("labelKeyword", "Conceptual Domain - " + sKeyword);
             Vector<String> vSearchID = new Vector<String>();
             Vector<String> vSearchName = new Vector<String>();
             Vector<String> vSearchLongName = new Vector<String>();
@@ -6117,7 +6117,7 @@ public class GetACSearch implements Serializable
                 sKeyword = (String) session.getAttribute("LastAppendWord");
             if (sKeyword == null)
                 sKeyword = "";
-            req.setAttribute("labelKeyword", "Class Scheme Items - " + sKeyword);
+            session.setAttribute("labelKeyword", "Class Scheme Items - " + sKeyword);
             Vector vSearchID = new Vector();
             Vector vSearchName = new Vector();
             Vector vSearchLongName = new Vector();
@@ -6479,7 +6479,7 @@ public class GetACSearch implements Serializable
                 sKeyword = (String) session.getAttribute("LastAppendWord");
             if (sKeyword == null)
                 sKeyword = "";
-            req.setAttribute("labelKeyword", "Permissible Value - " + sKeyword);
+            session.setAttribute("labelKeyword", "Permissible Value - " + sKeyword);
             Vector vSearchID = new Vector();
             Vector vSearchName = new Vector();
             Vector vSearchLongName = new Vector();
@@ -8728,7 +8728,7 @@ public class GetACSearch implements Serializable
                 String crfName = QuestBean.getCRF_NAME();
                 if (crfName == null)
                     crfName = "";
-                req.setAttribute("labelKeyword", "Draft New Questions in CRF: - " + crfName);
+                session.setAttribute("labelKeyword", "Draft New Questions in CRF: - " + crfName);
             }
             DataManager.setAttribute(session, "SearchID", vSearchID);
             DataManager.setAttribute(session, "SearchName", vSearchName);
@@ -9039,7 +9039,7 @@ public class GetACSearch implements Serializable
             // make keyWordLabel label request session
             Quest_Bean QuestBean = (Quest_Bean) session.getAttribute("m_Quest");
             String sQuestion = QuestBean.getQUEST_NAME();
-            req.setAttribute("labelKeyword", "CRF Values - " + sQuestion);
+            session.setAttribute("labelKeyword", "CRF Values - " + sQuestion);
             Vector vSearchID = new Vector();
             Vector vSearchName = new Vector();
             for (int i = 0; i < (vQuestValue.size()); i++)
@@ -9237,7 +9237,7 @@ public class GetACSearch implements Serializable
             DataManager.setAttribute(session, "vACSearch", vAC);
             evs.get_Result(req, res, vResult, "DEF");
             DataManager.setAttribute(session, "EVSresults", vResult);
-            req.setAttribute("labelKeyword", termStr);
+            session.setAttribute("labelKeyword", termStr);
             Integer recs = new Integer(vAC.size());
             String recs2 = recs.toString();
             String sKeyword = "";
