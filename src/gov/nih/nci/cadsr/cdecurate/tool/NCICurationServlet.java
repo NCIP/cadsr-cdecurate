@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.58 2008-12-26 19:14:34 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.59 2008-12-29 16:18:59 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -204,8 +204,7 @@ public class NCICurationServlet extends HttpServlet
         	HttpSession session = req.getSession();
         	String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
         	if (menuAction != null) {
-			}else if (reqType.equals("homePage")) {
-			}else{	
+			}else if(!(reqType.equals("homePage"))) {
 				RequestDispatcher rd = this.getServletContext().getRequestDispatcher("/");
 				rd.forward(req, res);
 				return;
@@ -227,7 +226,7 @@ public class NCICurationServlet extends HttpServlet
 				   curObj.execute(acrt);
 				}
 			} catch (RuntimeException e) {
-				logger.info(e.toString(), e);
+				//logger.info(e.toString(), e);
 			}
 	        finally
 	        {
