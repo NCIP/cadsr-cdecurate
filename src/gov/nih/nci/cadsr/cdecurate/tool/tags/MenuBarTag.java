@@ -55,7 +55,7 @@ public class MenuBarTag extends TagSupport {
 		String tdTag = "<td class=\"menuItemNormal\""
                        +"onmouseover=\"menuRootOver(this, event);\""
                        +"onmouseout=\"menuRootOut(this, event);\""
-                       +"onclick=\"menuShow(this, event);\""
+                       +"onclick=\"menuShow(this, event, 'no');\""
                        +"menuID=\""+ menuId +"\">"
                        + value +"</td>";
 		return tdTag;

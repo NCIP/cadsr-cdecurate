@@ -70,8 +70,10 @@ function setHighlightRow(obj){
     setHighlightRow(obj.parentNode);
 }
 
-function menuShow(obj, evnt) {
-    setHighlightRow(obj);
+function menuShow(obj, evnt, highlight) {
+    if(highlight == "yes"){
+      setHighlightRow(obj);
+    }  
     var menuID = obj.getAttribute("menuID");
 	var rowId = obj.getAttribute("rowId");
 	document.searchResultsForm.selectedRowId.value = rowId;
