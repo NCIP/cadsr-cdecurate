@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.19 2008-12-30 16:51:17 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.20 2008-12-30 19:26:36 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -532,16 +532,15 @@
       document.searchResultsForm.submit();
   }
 
-  function designateRecordd(numRowsChecked){
+  function updateHiddenSelectedRow(numRowsChecked){
      if ((document.searchResultsForm.selectAll.value == "true") && (document.searchResultsForm.flag.value == "true")){
-         for (k=0; k<numRowsChecked; k++){
+        for (k=0; k<numRowsChecked; k++){
             var rowNo = "CK"+k;
 	        StoreRow("true", rowNo);
          }
-       document.searchResultsForm.flag.value = "false";
+         document.searchResultsForm.flag.value = "false";
      }
-     designateRecord();
-    }
+  }
   // opens the designate window to get the context and alias, comes back to this page to submit
   function designateRecord()
   {    
@@ -799,10 +798,8 @@ function uploadCmd()
 	document.searchResultsForm.menuDefs.objMenu.selCnt.value = count;
 		   
    }
-  // This function will display the alert message to the user if he/she is not logged in 
-  // or will call the appropriate function if he/she is already logged in
-   function  performActionJS(user, selAC, type){
-    if (checkUser(user)){
+  // This function will call the appropriate function if he/she is already logged in
+   function  performActionJS(useselAC, type){
         if (type == "uploadDoc"){
           uploadCmd();
         }
@@ -824,8 +821,6 @@ function uploadCmd()
         if (type == "blockEdit"){
            BlockEdit(selAC);
         }
-     }    
-  
   }
   function checkUser(user){
     if (user == "null"){
@@ -835,16 +830,9 @@ function uploadCmd()
        return true;
     }
   }
-// This function will display the alert message to the user if he/she is not logged in 
-// or will call the appropriate function if he/she is already logged in
-function createNewJS(user, selAC, type){
-    if (checkUser(user)){ 
-        createNewAC(selAC,type);
-    }    
-}
    
 //submits the page to display 'Create New Using Existing' window or 'Creat New Version' window
-function createNewAC(selAC, type){
+function createNewJS(selAC, type){
          
          window.status = "Opening the page, it may take a minute, please wait....."
 		 document.searchResultsForm.Message.style.visibility="visible";
@@ -1333,7 +1321,15 @@ function enableDisableMenuItemsJS(sSelAC, checkCount){
   }  // end of EnableCheckButtons
 		  
 			
-     
+ function isCheckboxChecked(){
+    var rowCount = document.searchResultsForm.hiddenSelectedRow.length;
+    if (rowCount < 1){
+      alert("Please check atleast one checkbox.");
+      return false;
+    }else {
+      return true; 
+    }   
+ }  
       
            
    
