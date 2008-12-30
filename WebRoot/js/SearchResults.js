@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.20 2008-12-30 19:26:36 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.21 2008-12-30 19:47:34 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -799,7 +799,7 @@ function uploadCmd()
 		   
    }
   // This function will call the appropriate function if he/she is already logged in
-   function  performActionJS(useselAC, type){
+   function  performActionJS(selAC, type){
         if (type == "uploadDoc"){
           uploadCmd();
         }
