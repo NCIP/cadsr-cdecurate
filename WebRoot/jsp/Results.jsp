@@ -893,8 +893,22 @@ function LoadKeyHandler(){
    }
 <% String strNothing ="nothing"; %>
 <%String userName = (String) session.getAttribute("Username");%>
+function update(){
+ var select = "<%=sSelectAll%>";
+ if (select == "true"){
+  document.searchResultsForm.selectAll.value = "true";
+ }
+}
 function performAction(type){
-   performActionJS('<%=StringEscapeUtils.escapeJavaScript(userName)%>', '<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', type);
+    if (type == "designate"){
+      if(checkUser('<%=StringEscapeUtils.escapeJavaScript(userName)%>')){
+        document.searchResultsForm.unCheckedRowId.value = "";
+        var numRowsChecked = <%=rowsChecked%>;
+        designateRecordd(numRowsChecked);
+      }
+   }else{
+       performActionJS('<%=StringEscapeUtils.escapeJavaScript(userName)%>', '<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', type);
+   } 
 }
 function performUncheckedCkBoxAction(type){
    document.searchResultsForm.unCheckedRowId.value = document.searchResultsForm.selectedRowId.value;
@@ -2135,6 +2149,8 @@ function enableDisableMenuItems(){
            <input type="hidden" name="hidMenuAction" value="nothing">
            <input type="hidden" name="selectedRowId" value="">
            <input type="hidden" name="unCheckedRowId" value="">
+           <input type="hidden" name="selectAll" value="false">
+           <input type="hidden" name="flag" value="true">
            
            <table style="width: 100%; border-collapse: collapse">
 			<%if (((vResultStack.size()>0 && sBackFromGetAssociated.equals("backFromGetAssociated") && !pushBoolean.equals("true"))
