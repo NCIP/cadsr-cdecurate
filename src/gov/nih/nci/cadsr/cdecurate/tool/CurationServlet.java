@@ -102,7 +102,7 @@ public class CurationServlet
     public HttpServletRequest  m_classReq       = null;
     public HttpServletResponse m_classRes       = null;
     protected ServletContext m_servletContext;
-    public Connection m_conn=null;
+    protected Connection m_conn=null;
 
     public static final Logger  logger  = Logger.getLogger(CurationServlet.class.getName());
     /** declare the global variable sessionData */
