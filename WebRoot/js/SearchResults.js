@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.18 2008-12-25 16:42:18 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.19 2008-12-30 16:51:17 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -532,26 +532,51 @@
       document.searchResultsForm.submit();
   }
 
+  function designateRecordd(numRowsChecked){
+     if ((document.searchResultsForm.selectAll.value == "true") && (document.searchResultsForm.flag.value == "true")){
+         for (k=0; k<numRowsChecked; k++){
+            var rowNo = "CK"+k;
+	        StoreRow("true", rowNo);
+         }
+       document.searchResultsForm.flag.value = "false";
+     }
+     designateRecord();
+    }
   // opens the designate window to get the context and alias, comes back to this page to submit
   function designateRecord()
-  {
-	   getRowAttributes();   //get the values of each row.
-	   
-	   var dCount = document.searchResultsForm.hiddenSelectedRow.length;    //document.searchResultsForm.hiddenACIDStatus.length;
-	   var isStatusValid = true;
-	   var ACNames = "";
-	   for (k=0; k<dCount; k++)
-	   {
-		   var ACStatus = document.searchResultsForm.hiddenACIDStatus[k].text;
+  {    
+       var isStatusValid = true;
+       var ACNames = "";
+	   if (!(document.searchResultsForm.unCheckedRowId.value == "")){
+	       var rowNo = "CK"+document.searchResultsForm.unCheckedRowId.value;
+	       StoreRow("true", rowNo);
+	       getRowAttributes();  
+	       var dCount = document.searchResultsForm.hiddenSelectedRow.length;  //document.searchResultsForm.hiddenACIDStatus.length;
+	       for (k=0; k<dCount; k++) {
+		      var ACStatus = document.searchResultsForm.hiddenACIDStatus[k].text;
+		      ACNames =  document.searchResultsForm.hiddenDesIDName[k].value;
+		   } 
 		   if (!(ACStatus == "RELEASED" || ACStatus == "APPRVD FOR TRIAL USE" || ACStatus == "CMTE SUBMTD USED" || 
-			   ACStatus == "DRAFT MOD" || ACStatus == "CMTE APPROVED" || ACStatus == "RELEASED-NON-CMPLNT"))
-		   {
+			   ACStatus == "DRAFT MOD" || ACStatus == "CMTE APPROVED" || ACStatus == "RELEASED-NON-CMPLNT")){
+			    isStatusValid = false;
+		   }
+	    }else{
+	       getRowAttributes();   //get the values of each row.
+       	   var dCount = document.searchResultsForm.hiddenSelectedRow.length;  //document.searchResultsForm.hiddenACIDStatus.length;
+	       for (k=0; k<dCount; k++){
+		     var ACStatus = document.searchResultsForm.hiddenACIDStatus[k].text;
+		     if (!(ACStatus == "RELEASED" || ACStatus == "APPRVD FOR TRIAL USE" || ACStatus == "CMTE SUBMTD USED" || 
+			   ACStatus == "DRAFT MOD" || ACStatus == "CMTE APPROVED" || ACStatus == "RELEASED-NON-CMPLNT")){
 			   ACNames = ACNames + document.searchResultsForm.hiddenDesIDName[k].value + "\n\t"
 				   isStatusValid = false;
-		   }
+		     }
+	       }
 	   }
-	   if (isStatusValid == true)
-	   {
+	   if (!(document.searchResultsForm.unCheckedRowId.value == "")){
+	      var rowNo = "CK"+document.searchResultsForm.unCheckedRowId.value;
+	      StoreRow("false", rowNo);
+	   }  
+	   if (isStatusValid == true){
 		   if (desWindow && !desWindow.closed)
 			   desWindow.close();
 		   //open the window.
@@ -777,9 +802,7 @@ function uploadCmd()
   // This function will display the alert message to the user if he/she is not logged in 
   // or will call the appropriate function if he/she is already logged in
    function  performActionJS(user, selAC, type){
-    if (user == "null"){
-       alert("Please Login to use this feature.");
-    }else{
+    if (checkUser(user)){
         if (type == "uploadDoc"){
           uploadCmd();
         }
@@ -804,12 +827,18 @@ function uploadCmd()
      }    
   
   }
+  function checkUser(user){
+    if (user == "null"){
+       alert("Please Login to use this feature.");
+       return false;
+    }else{
+       return true;
+    }
+  }
 // This function will display the alert message to the user if he/she is not logged in 
 // or will call the appropriate function if he/she is already logged in
 function createNewJS(user, selAC, type){
-    if (user == "null"){
-       alert("Please Login to use this feature.");
-    }else{
+    if (checkUser(user)){ 
         createNewAC(selAC,type);
     }    
 }
@@ -876,8 +905,10 @@ function checkClickJS(cb,selAC,rowsChecked)  {
                 }
                 if (cb.checked == true) {
                     ++checkCnt;
+                    ++numRowsSelected;
                 }  else   {
                     --checkCnt;
+                    --numRowsSelected;
                 }
                 var msg = document.getElementById("selCnt");
                 msg.innerText = checkCnt;

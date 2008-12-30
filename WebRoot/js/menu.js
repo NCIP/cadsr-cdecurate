@@ -258,34 +258,26 @@ function menuObjPos(obj) {
 }
  //submits the form to display 'Create New DE' window
  function callDENew(user){
-  if (user == "null"){
-       alert("Please Login to use this feature.");
-  }else{     
+   if (checkUser(user)) {    
      document.newDEForm.submit();
   }   
  }
  //submits the form to display 'Create New DEC' window
  function callDECNew(user){
-  if (user == "null"){
-       alert("Please Login to use this feature.");
-  }else{  
+  if (checkUser(user)) {
      document.newDECForm.submit();
   }
  }
 //submits the form to display 'create New VD window'
  function callVDNew(user){
-  if (user == "null"){
-       alert("Please Login to use this feature.");
-  }else{  
+  if (checkUser(user)) {
      document.newVDForm.submit();
-  }
+  }   
  }  
  
  //submits the form to display 'create New Concept Class window'
  function callCCNew(user){
-  if (user == "null"){
-       alert("Please Login to use this feature.");
-  }else{  
+  if (checkUser(user)){
      document.newCCForm.submit();
   }
  } 
