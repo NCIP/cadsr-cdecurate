@@ -897,33 +897,42 @@ function update(){
  var select = "<%=sSelectAll%>";
  if (select == "true"){
   document.searchResultsForm.selectAll.value = "true";
+  var numRowsChecked = <%=rowsChecked%>;
+  updateHiddenSelectedRow(numRowsChecked);
  }
 }
+// This function will display the alert message to the user if he/she is not logged in 
+// or will call the appropriate function if he/she is already logged in
 function performAction(type){
-    if (type == "designate"){
-      if(checkUser('<%=StringEscapeUtils.escapeJavaScript(userName)%>')){
+  if(checkUser('<%=StringEscapeUtils.escapeJavaScript(userName)%>')){
+      if (isCheckboxChecked()){
         document.searchResultsForm.unCheckedRowId.value = "";
-        var numRowsChecked = <%=rowsChecked%>;
-        designateRecordd(numRowsChecked);
-      }
-   }else{
-       performActionJS('<%=StringEscapeUtils.escapeJavaScript(userName)%>', '<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', type);
-   } 
+        performActionJS('<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', type);
+      } 
+   }    
 }
+// This function will display the alert message to the user if he/she is not logged in 
+// or will call the appropriate function if he/she is already logged in
 function performUncheckedCkBoxAction(type){
-   document.searchResultsForm.unCheckedRowId.value = document.searchResultsForm.selectedRowId.value;
-   performActionJS('<%=StringEscapeUtils.escapeJavaScript(userName)%>', '<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', type);
+   if(checkUser('<%=StringEscapeUtils.escapeJavaScript(userName)%>')){
+      document.searchResultsForm.unCheckedRowId.value = document.searchResultsForm.selectedRowId.value;
+      performActionJS('<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', type);
+   }   
 }
+// This function will display the alert message to the user if he/she is not logged in 
+// or will call the appropriate function if he/she is already logged in
 function createNew(type){
-  document.searchResultsForm.unCheckedRowId.value = document.searchResultsForm.selectedRowId.value;
-  createNewJS('<%=StringEscapeUtils.escapeJavaScript(userName)%>','<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', type);
+  if(checkUser('<%=StringEscapeUtils.escapeJavaScript(userName)%>')){
+    document.searchResultsForm.unCheckedRowId.value = document.searchResultsForm.selectedRowId.value;
+    createNewJS('<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', type);
+  }
 }
 function enableDisableMenuItems(){
   var numRowsChecked = <%=rowsChecked%>;
   enableDisableMenuItemsJS('<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>',numRowsChecked);
 }
 
- function viewAC(){
+function viewAC(){
  		editID = document.searchResultsForm.hiddenSearch[document.searchResultsForm.selectedRowId.value].value;
  		var viewWindow = window.open("../../cdecurate/NCICurationServlet?reqType=view&idseq=" +editID, "ViewAC", "width=1000,height=1000,top=0,left=0,resizable=yes,scrollbars=yes");
  }
@@ -2149,9 +2158,9 @@ function enableDisableMenuItems(){
            <input type="hidden" name="hidMenuAction" value="nothing">
            <input type="hidden" name="selectedRowId" value="">
            <input type="hidden" name="unCheckedRowId" value="">
-           <input type="hidden" name="selectAll" value="false">
+            <input type="hidden" name="selectAll" value="false">
            <input type="hidden" name="flag" value="true">
-           
+         
            <table style="width: 100%; border-collapse: collapse">
 			<%if (((vResultStack.size()>0 && sBackFromGetAssociated.equals("backFromGetAssociated") && !pushBoolean.equals("true"))
                    || vResultStack.size()>1) && !sMAction.equals("searchForCreate")){%>
