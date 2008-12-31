@@ -471,6 +471,7 @@ public class SearchServlet extends CurationServlet {
             DataManager.setAttribute(session, "CheckList", null);
             DataManager.setAttribute(session, "LastAppendWord", "");
             DataManager.setAttribute(session, "serProtoID", "");
+            DataManager.setAttribute(session, "labelKeyword", "");
             ForwardJSP(m_classReq, m_classRes, "/SearchResultsPage.jsp");
         }
         else if (!menuAction.equals("searchForCreate") && actType.equals("Monitor"))
