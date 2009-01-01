@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.59 2008-12-29 16:18:59 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.60 2009-01-01 21:27:38 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -203,8 +203,7 @@ public class NCICurationServlet extends HttpServlet
         	String reqType = req.getParameter("reqType"); 
         	HttpSession session = req.getSession();
         	String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
-        	if (menuAction != null) {
-			}else if(!(reqType.equals("homePage"))) {
+        	if((menuAction == null) && !(reqType.equals("homePage")) && !(reqType.equals("login"))) {
 				RequestDispatcher rd = this.getServletContext().getRequestDispatcher("/");
 				rd.forward(req, res);
 				return;
@@ -212,7 +211,10 @@ public class NCICurationServlet extends HttpServlet
 		   	// add the forwarding to request to session (to go after login)
         	String forwardReq = (String)session.getAttribute("forwardReq");
         	if (forwardReq == null || !forwardReq.equals("login"))
-        		session.setAttribute("forwardReq", reqType);
+        	   session.setAttribute("forwardReq", reqType);
+        	if (forwardReq == null && reqType.equals("login"))
+        		session.setAttribute("directLogin", "yes");
+        	
         	ACRequestTypes acrt = null;
         	CurationServlet curObj = null;        	
         	try {

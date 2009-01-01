@@ -288,6 +288,9 @@ public class CurationServlet
     	    userbean.setUsername(username);
     	    userbean.setPassword(password);
      		uc.validateCredentials(NCICurationServlet._userName, NCICurationServlet._password, username, password);
+     		if (m_conn == null){
+     			get_m_conn();
+     		}
      		userbean.setUserFullName(userAccountMgr.getUserFullName(username, m_conn));
     	    userbean.setPassword("");
             userbean.setDBAppContext("/cdecurate");
@@ -306,8 +309,8 @@ public class CurationServlet
     		  logger.error("Failed credential validation, code is " + uc.getCheckCode());
     	      logger.error("Redirecting the user to Login Page");
 			  ForwardErrorJSP(req, res, "Incorrect Username or Password. Please re-enter.");				
-    	  }      	  
-     }
+    	  } 
+      }
 
     /**
      * Authenticates the user login credentials with the jboss authentication
@@ -417,7 +420,13 @@ public class CurationServlet
                     	 if (cancelLogin.equals("No")){
                            login(m_classReq,m_classRes,session);
                     	 }  
-                         String prevReq = m_classReq.getParameter("previousReqType");
+                    	 String directLogin = (String)session.getAttribute("directLogin");
+                    	 if ((directLogin != null) && (directLogin).equals("yes")){
+                    		RequestDispatcher rd = this.m_servletContext.getRequestDispatcher("/");
+             				rd.forward(m_classReq, m_classRes);
+             				return;
+                    	 }
+                    	 String prevReq = m_classReq.getParameter("previousReqType");
                          if (prevReq == null) prevReq = "/SearchResultsPage.jsp";
                          ForwardJSP(m_classReq, m_classRes, prevReq);
                          break;
@@ -3677,6 +3686,7 @@ public class CurationServlet
         DataManager.setAttribute(session, "vSelRows", null);
         DataManager.setAttribute(session, "selCS", "");
         DataManager.setAttribute(session, "serSelectedCD", "");
+        DataManager.setAttribute(session, "labelKeyword", "");
         // parent concept for the VD
         // DataManager.setAttribute(session, "VDParentConcept", new Vector());
         DataManager.setAttribute(session, "vParentList", null);
