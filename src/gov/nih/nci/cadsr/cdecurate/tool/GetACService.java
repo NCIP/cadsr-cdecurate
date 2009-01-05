@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.60 2008-12-26 19:12:36 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.61 2009-01-05 19:21:48 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -107,8 +107,7 @@ public class GetACService implements Serializable
                     DataManager.setAttribute(session, "vContext", v);
                     DataManager.setAttribute(session, "vContext_ID", vID);
                 }
-//Later***                
-/*                if (session.getAttribute("vWriteContextDE") == null)
+                if (session.getAttribute("vWriteContextDE") == null)
                 {
                     String sUser = (String) session.getAttribute("Username");
                     v = new Vector<String>();
@@ -127,7 +126,7 @@ public class GetACService implements Serializable
                     DataManager.setAttribute(session, "vWriteContextVD", v);
                     DataManager.setAttribute(session, "vWriteContextVD_ID", vID);
                 }
-*/                if (session.getAttribute("vUsers") == null)
+                if (session.getAttribute("vUsers") == null)
                 {
                     v = new Vector<String>();
                     vID = new Vector<String>();
@@ -290,41 +289,16 @@ public class GetACService implements Serializable
               }
             else
             {
-                logger.error("getAClist: no db connection");
+                logger.fatal("getAClist: no db connection");
                 DataManager.setAttribute(session, "ConnectedToDB", "No");
             }
         }
         catch (Exception e)
         {
-            logger.error("ERROR in GetACService-getACList : " + e.toString(), e);
+            logger.fatal("ERROR in GetACService-getACList : " + e.toString(), e);
         }
     }
 
-    public void getWriteContextList()
-    {
-    	HttpSession session = m_classReq.getSession();
-    	Vector<String> v;
-    	Vector<String> vID;
-        if (session.getAttribute("vWriteContextDE") == null)
-        {
-            String sUser = (String) session.getAttribute("Username");
-            v = new Vector<String>();
-            vID = new Vector<String>();
-            getWriteContextList(vID, v, sUser, "DATAELEMENT");
-            DataManager.setAttribute(session, "vWriteContextDE", v);
-            DataManager.setAttribute(session, "vWriteContextDE_ID", vID);
-            v = new Vector<String>();
-            vID = new Vector<String>();
-            getWriteContextList(vID, v, sUser, "DE_CONCEPT");
-            DataManager.setAttribute(session, "vWriteContextDEC", v);
-            DataManager.setAttribute(session, "vWriteContextDEC_ID", vID);
-            v = new Vector<String>();
-            vID = new Vector<String>();
-            getWriteContextList(vID, v, sUser, "VALUEDOMAIN");
-            DataManager.setAttribute(session, "vWriteContextVD", v);
-            DataManager.setAttribute(session, "vWriteContextVD_ID", vID);
-        }     	
-    }
     /**
      * The verifyConnection method queries the db to test the connection and sets the ConnectedToDB variable.
      * 
@@ -348,13 +322,13 @@ public class GetACService implements Serializable
             }
             else
             {
-                logger.error("verifyConnection: no db connection");
+                logger.fatal("verifyConnection: no db connection");
                 DataManager.setAttribute(session, "ConnectedToDB", "No");
             }
         }
         catch (Exception e)
         {
-        	logger.error("ERROR in GetACService-verifyConnection : " + e.toString(), e);
+        	logger.fatal("ERROR in GetACService-verifyConnection : " + e.toString(), e);
         }
     }
 
@@ -377,7 +351,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-           logger.error("ERROR in GetACService-getUserList : " + e.toString(), e);
+           logger.fatal("ERROR in GetACService-getUserList : " + e.toString(), e);
         }
     }
 
@@ -400,7 +374,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-           logger.error("ERROR in GetACService-getContextList : " + e.toString(), e);
+           logger.fatal("ERROR in GetACService-getContextList : " + e.toString(), e);
         }
     }
 
@@ -428,7 +402,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-           logger.error("ERROR in GetACService-getWriteContextList : " + e.toString(), e);
+           logger.fatal("ERROR in GetACService-getWriteContextList : " + e.toString(), e);
         }
     }
 
@@ -452,7 +426,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-           logger.error("ERROR in GetACService-getStatusList : " + e.toString(), e);
+           logger.fatal("ERROR in GetACService-getStatusList : " + e.toString(), e);
         }
     }
 
@@ -489,7 +463,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            logger.error("ERROR in GetACService-getConceptualDomainList : " + e.toString(), e);
+            logger.fatal("ERROR in GetACService-getConceptualDomainList : " + e.toString(), e);
         }
     }
 
@@ -551,7 +525,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            logger.error("ERROR - GetACService getCSList for other : " + e.toString(), e);
+            logger.fatal("ERROR - GetACService getCSList for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -615,7 +589,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-          logger.error("ERROR - GetACService-getCSCSIListBean for other : " + e.toString(), e);
+          logger.fatal("ERROR - GetACService-getCSCSIListBean for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -639,7 +613,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-           logger.error("ERROR in GetACService-getLanguageList : " + e.toString(), e);
+           logger.fatal("ERROR in GetACService-getLanguageList : " + e.toString(), e);
         }
     }
 
@@ -664,7 +638,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            logger.error("ERROR in GetACService-getDataTypesList : " + e.toString(), e);
+            logger.fatal("ERROR in GetACService-getDataTypesList : " + e.toString(), e);
         }
     }
 
@@ -701,7 +675,7 @@ public class GetACService implements Serializable
         catch (Exception e)
         {
             // System.err.println("Problem getRDocTypesList: " + e);
-            logger.error("ERROR in GetACService-getRDocTypesList : " + e.toString(), e);
+            logger.fatal("ERROR in GetACService-getRDocTypesList : " + e.toString(), e);
         }
         return vList;
     }
@@ -724,7 +698,7 @@ public class GetACService implements Serializable
         catch (Exception e)
         {
             // System.err.println("Problem getUOMList: " + e);
-            logger.error("ERROR in GetACService-getUOMList : " + e.toString(), e);
+            logger.fatal("ERROR in GetACService-getUOMList : " + e.toString(), e);
         }
     }
 
@@ -745,7 +719,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            logger.error("ERROR in GetACService-getFormatList : " + e.toString(), e);
+            logger.fatal("ERROR in GetACService-getFormatList : " + e.toString(), e);
         }
     }
 
@@ -774,7 +748,7 @@ public class GetACService implements Serializable
         catch (Exception e)
         {
             // System.err.println("Problem getSourceList: " + e);
-            logger.error("ERROR in GetACService-getSourceList : " + e.toString(), e);
+            logger.fatal("ERROR in GetACService-getSourceList : " + e.toString(), e);
         }
     }
 
@@ -795,7 +769,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-             logger.error("ERROR in GetACService-getRegStatusList : " + e.toString(), e);
+             logger.fatal("ERROR in GetACService-getRegStatusList : " + e.toString(), e);
         }
     }
 
@@ -856,7 +830,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            logger.error("ERROR in GetACService-hasPrivilege for other : " + e.toString(), e);
+            logger.fatal("ERROR in GetACService-hasPrivilege for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeStatement(cstmt);
@@ -900,7 +874,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-           logger.error("ERROR in GetACService-getDataListSQL for other : " + e.toString(), e);
+           logger.fatal("ERROR in GetACService-getDataListSQL for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeStatement(cstmt);
@@ -1034,7 +1008,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-           logger.error("ERROR in GetACService-getDataListStoreProcedure for other : " + e.toString(), e);
+           logger.fatal("ERROR in GetACService-getDataListStoreProcedure for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -1074,7 +1048,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-           logger.error("ERROR in doComponentExist : " + e.toString(), e);
+           logger.fatal("ERROR in doComponentExist : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeStatement(cstmt);
@@ -1117,7 +1091,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-           logger.error("ERROR in isUniqueInContext : " + e.toString(), e);
+           logger.fatal("ERROR in isUniqueInContext : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeStatement(cstmt);
@@ -1210,7 +1184,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            logger.error("ERROR in GetACService- getACConcepts for exception : " + e.toString(), e);
+            logger.fatal("ERROR in GetACService- getACConcepts for exception : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -1257,7 +1231,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            logger.error("Error - getAltNamesList : " + e.toString(), e);
+            logger.fatal("Error - getAltNamesList : " + e.toString(), e);
         }
     }
 
@@ -1277,7 +1251,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            logger.error("Error - getRefDocsList : " + e.toString(), e);
+            logger.fatal("Error - getRefDocsList : " + e.toString(), e);
         }
     }
 
@@ -1296,7 +1270,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            logger.error("Error - getASLFilterList : " + e.toString(), e);
+            logger.fatal("Error - getASLFilterList : " + e.toString(), e);
         }
     }
 
@@ -1332,7 +1306,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            logger.error("Error - getDerTypesList : " + e.toString(), e);
+            logger.fatal("Error - getDerTypesList : " + e.toString(), e);
         }
     }
 
@@ -1377,7 +1351,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-           logger.error("ERROR - GetACService-getToolOptionData for other : " + e.toString(), e);
+           logger.fatal("ERROR - GetACService-getToolOptionData for other : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -1470,7 +1444,7 @@ public class GetACService implements Serializable
             }
             catch (SQLException ex)
             {
-            	logger.error(ex.toString());
+            	logger.fatal(ex.toString());
             }finally{
             	SQLHelper.closeResultSet(rs);
                 SQLHelper.closePreparedStatement(pstmt);
@@ -1517,7 +1491,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            logger.error("ERROR in GetACService- getHashListFromAPI for exception : " + sAPI + " : " + e.toString(), e);
+            logger.fatal("ERROR in GetACService- getHashListFromAPI for exception : " + sAPI + " : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
@@ -1612,7 +1586,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-            logger.error("ERROR in GetACService- getPersonsList for exception : " + e.toString(), e);
+            logger.fatal("ERROR in GetACService- getPersonsList for exception : " + e.toString(), e);
         }finally{
         	SQLHelper.closeResultSet(rs);
             SQLHelper.closeCallableStatement(cstmt);
