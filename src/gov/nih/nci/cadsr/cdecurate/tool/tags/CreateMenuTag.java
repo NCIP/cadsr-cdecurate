@@ -33,7 +33,7 @@ public class CreateMenuTag extends MenuTag {
 					            +"</dl>");
 			createMenu.println(generateForm("newDEForm", "../../cdecurate/NCICurationServlet?reqType=newDEFromMenu")
 			                    +generateForm("newDECForm", "../../cdecurate/NCICurationServlet?reqType=newDECFromMenu")
-			                    +generateForm("newVDForm", ".../../cdecurate/NCICurationServlet?reqType=newVDFromMenu")
+			                    +generateForm("newVDForm", "../../cdecurate/NCICurationServlet?reqType=newVDFromMenu")
 			                    +generateForm("newCCForm", "../../cdecurate/NCICurationServlet?reqType=newCCFromMenu"));
         } catch (IOException e) {
 			e.printStackTrace();
