@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.3 2008-07-03 21:31:21 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.4 2009-01-05 22:34:18 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -31,9 +31,21 @@
     Vector vSource = (Vector)session.getAttribute("vSource");
     Vector vCS = (Vector)session.getAttribute("vCS");
     Vector vCS_ID = (Vector)session.getAttribute("vCS_ID");
-
+     
+    //for view only page
+	String bodyPage = (String) request.getAttribute("IncludeViewPage");
+	boolean isView = false;
+	if (bodyPage != null && !bodyPage.equals(""))
+		isView = true;
+    
     UtilService serUtil = new UtilService();
     String sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
+    if (!isView) {
+		if (sMenuAction.equals("nothing")) {
+			sMenuAction = "editDEC";
+		    session.setAttribute(Session_Data.SESSION_MENU_ACTION, "editDEC");
+		}
+	}
     String sOriginAction = (String)session.getAttribute("originAction");
  
     DEC_Bean m_DEC = (DEC_Bean)session.getAttribute("m_DEC");
@@ -170,6 +182,7 @@
     //get the contact hashtable for the de
     Hashtable hContacts = m_DEC.getAC_CONTACTS();
     if (hContacts == null) hContacts = new Hashtable();
+    if (!isView) {
     session.setAttribute("AllContacts", hContacts);
 
      //these are for DEC and VD searches.
@@ -179,7 +192,7 @@
     session.setAttribute("creRecsFound", "No ");
     //for altnames and ref docs
     session.setAttribute("dispACType", "DataElementConcept");
-    
+    }
     session.setAttribute("parentAC", "DEC");
     int item = 1;
 %>
@@ -289,7 +302,7 @@
     {%>
       displayStatusWindow();
     <% }
-    else if (statusMessage != null && !statusMessage.equals(""))
+    else if (!isView && statusMessage != null && !statusMessage.equals(""))
     {%>
 	       alert("<%=statusMessage%>");
     <% }
@@ -319,9 +332,14 @@
 			<input type="hidden" name="itemType" value="">
 		</form>
 		<form name=newDECForm method="POST" action="../../cdecurate/NCICurationServlet?reqType=editDEC">
+		    <%String displayErrorMessage = (String)session.getAttribute("displayErrorMessage");
+		    if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
+		  	 <b><font  size="3">Not Authorized for Edits in this Context.</font></b></br></br>
+	       <%}%>
 			<table border="0">
 				<tr>
 					<td height="26" align="left" valign="top">
+						<%	if (!isView) { %>
 						<input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('validate');" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_Validation',helpUrl); return false">
 						&nbsp;&nbsp;
 						<input type="button" name="btnClear" value="Clear" style="width:125" onClick="ClearBoxes();">
@@ -333,11 +351,31 @@
 						<%if(sOriginAction.equals("BlockEditDEC")){%>
 						<input type="button" name="btnDetails" value="Details" style="width:125" onClick="openBEDisplayWindow();" onHelp="showHelp('html/Help_Updates.html#newDECForm_details',helpUrl); return false">
 						&nbsp;&nbsp;
-						<%}%>
-						<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" onClick="openDesignateWindow('Alternate Names');" onHelp="showHelp('html/Help_Updates.html#newDECForm_altNames',helpUrl); return false">
+						<%}}%>
+						<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" 
+						<% if (isView) { %>
+								onClick="openAltNameViewWindow();"
+						<% } else { %>
+						     onClick="openDesignateWindow('Alternate Names');" 
+						 <% } %>   
+						onHelp="showHelp('html/Help_Updates.html#newDECForm_altNames',helpUrl); return false">
 						&nbsp;&nbsp;
-						<input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');" onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return false">
+						<input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" 
+						<% if (isView) { %>
+								onClick="openRefDocViewWindow();"
+						<% } else { %>
+						        onClick="openDesignateWindow('Reference Documents');" 
+						 <% } %>        
+						onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return false">
 						&nbsp;&nbsp;
+						
+						<%	if((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){	%>
+							<input type="button" name="btnClose" value="Back" style="width: 125" onClick="Back();">
+							&nbsp;&nbsp;
+						<% }else if (isView) {	%>
+							<input type="button" name="btnClose" value="Close" style="width: 125" onClick="window.close();">
+							&nbsp;&nbsp;
+						<% }session.setAttribute("displayErrorMessage", "No"); %>
 						<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
 					</td>
 				</tr>
@@ -353,11 +391,16 @@
 							<font color="#FF0000">
 								Data Element Concepts
 							</font>
+							<% } else if(isView) {%>	
+							      View Existing
+							      <font color="#FF0000">
+								     Data Element Concept
+							      </font>
 							<% } else {%>
-							Edit Existing
-							<font color="#FF0000">
-								Data Element Concept
-							</font>
+							          Edit Existing
+							          <font color="#FF0000">
+								         Data Element Concept
+							          </font>
 							<% } %>
 						</font>
 					</th>
@@ -409,9 +452,11 @@
 					</td>
 					<!-- label to allow changing only one.  Grey out the other one if changed.-->
 					<td>
+					<% if (!isView) { %>
 						<font color="#FF0000">
 							Select
 						</font>
+				     <% } %>		
 						Data Element Concept Name Components
 						<%if(sOriginAction.equals("BlockEditDEC")){%>
 						(You may change either Object Class or Property. Click Clear button to restore to the original.)
@@ -459,9 +504,10 @@
 													Concepts
 												</font>
 											</td>
+											<% if (!isView){ %>
 											<td align="center" valign="middle">
 												<!-- <input type="button" name="btnSerSecOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('ObjectQualifier', 'false');">-->
-												<%if (sOCFont.equals("#000000")) {%>
+											  <%if (sOCFont.equals("#000000")) {%>
 												<font color="#FF0000">
 													<a href="javascript:SearchBuildingBlocks('ObjectQualifier', 'false')">
 														Search
@@ -469,6 +515,7 @@
 												</font>
 												<%}%>
 											</td>
+											
 											<td align="center" valign="middle">
 												<!-- <input type="button" name="btnRmSecOC" value="Remove" style="width:90%" onClick="javascript:removeQualifier();">-->
 												<%if (sOCFont.equals("#000000")) {%>
@@ -479,6 +526,7 @@
 												</font>
 												<%}%>
 											</td>
+										    <% } %>	
 											<td align="left" valign="top">
 												<font color="<%=sOCFont%>">
 													Primary
@@ -486,6 +534,7 @@
 													Concept
 												</font>
 											</td>
+										   <% if (!isView){ %>	
 											<td align="center" valign="middle">
 												<!--<input type="button" name="btnSerPriOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('ObjectClass', 'false');">-->
 												<%if (sOCFont.equals("#000000")) {%>
@@ -506,6 +555,7 @@
 												</font>
 												<%}%>
 											</td>
+										   <% } %>	
 										</tr>
 										<tr align="left">
 											<td colspan="3" valign="top">
@@ -595,6 +645,7 @@
 													Concepts
 												</font>
 											</td>
+										   <% if (!isView){ %>	
 											<td align="center" valign="middle">
 												<!--<input type="button" name="btnSerSecProp" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('PropertyQualifier', 'false');">-->
 												<%if (sPropFont.equals("#000000")) {%>
@@ -615,6 +666,7 @@
 												</font>
 												<%}%>
 											</td>
+											<% } %>
 											<td align="left" valign="top">
 												<font color="<%=sPropFont%>">
 													Primary
@@ -622,6 +674,7 @@
 													Concept
 												</font>
 											</td>
+										   <% if (!isView){ %>	
 											<td align="center" valign="middle">
 												<!-- <input type="button" name="btnSerPriOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('PropertyClass', 'false');">-->
 												<%if (sPropFont.equals("#000000")) {%>
@@ -642,6 +695,7 @@
 												</font>
 												<%}%>
 											</td>
+										   <%}%>	
 										</tr>
 
 										<tr align="left">
@@ -724,9 +778,11 @@
 						)
 					</td>
 					<td>
+					  <% if (!isView) { %>
 						<font color="#FF0000">
 							Verify
 						</font>
+					  <%}%>	
 						Data Element Concept Long Name (* ISO Preferred Name)
 					</td>
 					<% } %>
@@ -737,7 +793,7 @@
 						&nbsp;
 					</td>
 					<td height="24" valign="top">
-						<input name="txtLongName" type="text" size="80" maxlength=255 value="<%=sLongName%>" onKeyUp="changeCountLN();" <%if(sOriginAction.equals("BlockEditDEC")){%> readonly <%}%> onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_txtLongName'); return false">
+						<input name="txtLongName" type="text" size="80" maxlength=255 value="<%=sLongName%>" onKeyUp="changeCountLN();" <%if(sOriginAction.equals("BlockEditDEC") || isView ){%> readonly <%}%> onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_txtLongName'); return false">
 						&nbsp;&nbsp;&nbsp;
 						<input name="txtLongNameCount" type="text" size="1" readonly onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_txtLongName'); return false">
 						<%if(sOriginAction.equals("BlockEditDEC")){%>
@@ -762,9 +818,11 @@
 						)
 					</td>
 					<td>
+					  <% if (!isView) { %>	
 						<font color="#FF0000">
 							Update
 						</font>
+					  <%}%>	
 						<font color="#000000">
 							Data Element Concept Short Name
 						</font>
@@ -789,7 +847,7 @@
 						Abbreviated &nbsp;&nbsp;&nbsp;
 						<input name="rNameConv" type="radio" value="USER" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("USER")) {%> checked <%}%>>
 						<%=lblUserType%>
-						<!--Existing Name <%if(sOriginAction.equals("BlockEditDEC")){%>(Not Editable)<% } else { %>(Editable)<% } %>  -->
+						<!--Existing Name <%/*if(sOriginAction.equals("BlockEditDEC")){*/%>(Not Editable)<% /*} else { */%>(Editable)<% /*} */%>  -->
 					</td>
 				</tr>
 				<tr>
@@ -862,9 +920,11 @@
 						)
 					</td>
 					<td>
+					  <% if (!isView) { %>	
 						<font color="#FF0000">
 							Create/Edit
 						</font>
+					  <% } %>	
 						Definition
 					</td>
 					<% }%>
@@ -874,7 +934,7 @@
 						&nbsp;
 					</td>
 					<td valign="top" align="left">
-						<%if(sOriginAction.equals("BlockEditDEC")){%>
+						<%if(sOriginAction.equals("BlockEditDEC") || isView){%>
 						<textarea name="CreateDefinition" style="width:80%" rows=6 readonly onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
 						<!-- &nbsp;&nbsp; <font color="#C0C0C0">Search</a></font> -->
 						<% } else { %>
@@ -894,9 +954,11 @@
 						)
 					</td>
 					<td>
+					   <% if (!isView) { %>	
 						<font color="#FF0000">
 							Select
 						</font>
+					   <%}%>	
 						Conceptual Domain
 					</td>
 				</tr>
@@ -911,11 +973,13 @@
 							</option>
 						</select>
 						&nbsp;&nbsp;
+					   <% if (!isView){ %>	
 						<font color="#FF0000">
 							<a href="javascript:SearchCDValue()">
 								Search
 							</a>
 						</font>
+				      <% } %>		
 					</td>
 				</tr>
 				<tr height="25" valign="bottom">
@@ -929,9 +993,11 @@
 						)
 					</td>
 					<td>
+					   <% if (!isView) { %>	 
 						<font color="#FF0000">
 							Select
 						</font>
+					   <% } %>	
 						Workflow Status
 					</td>
 				</tr>
@@ -941,6 +1007,7 @@
 					</td>
 					<td valign="top">
 						<select name="selStatus" size="1" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selStatus'); return false">
+						<%	if (!isView) {	%>	
 							<option value="" selected="selected"></option>
 							<%          for (int i = 0; vStatus.size()>i; i++)
           {
@@ -965,7 +1032,9 @@
 							<%
              }
           }
-%>
+	}  else { 	%>
+							<option value="<%=sStatus%>"><%=sStatus%></option>	
+						<% } %>	
 						</select>
 					</td>
 				</tr>
@@ -1049,9 +1118,11 @@
 						)
 					</td>
 					<td>
+					   <% if (!isView) { %>	
 						<font color="#FF0000">
 							Enter/Select
 						</font>
+					   <% } %>	
 						Effective Begin Date
 					</td>
 				</tr>
@@ -1060,11 +1131,12 @@
 						&nbsp;
 					</td>
 					<td valign="top">
-						<input type="text" name="BeginDate" value="<%=sBeginDate%>" size=12 maxlength=10 onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_BeginDate'); return false">
+						<input type="text" name="BeginDate" value="<%=sBeginDate%>" size=12 maxlength=10 <% if (isView) { %>readonly<%} %> onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_BeginDate'); return false">
 						<font color="#0099FF" size="3"></font>
+						<% if (!isView) { %>
 						<a href="javascript:show_calendar('newDECForm.BeginDate', null, null, 'MM/DD/YYYY');">
 							<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
-						</a>
+						</a> <% } %>
 						&nbsp;&nbsp;MM/DD/YYYY
 					</td>
 				</tr>
@@ -1074,9 +1146,11 @@
 						)
 					</td>
 					<td>
+					   <% if (!isView) { %>	
 						<font color="#FF0000">
 							Enter/Select
 						</font>
+					   <% } %>	
 						Effective End Date
 					</td>
 				</tr>
@@ -1085,11 +1159,12 @@
 						&nbsp;
 					</td>
 					<td height="25" valign="top">
-						<input type="text" name="EndDate" value="<%=sEndDate%>" size=12 maxlength=10 onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_EndDate'); return false">
+						<input type="text" name="EndDate" value="<%=sEndDate%>" size=12 maxlength=10 <% if (isView) { %>readonly<%} %> onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_EndDate'); return false">
 						<font color="#0099FF" size="3"></font>
+						<% if (!isView) { %>
 						<a href="javascript:show_calendar('newDECForm.EndDate', null, null, 'MM/DD/YYYY');">
 							<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
-						</a>
+						</a><% } %>
 						&nbsp;&nbsp;MM/DD/YYYY
 					</td>
 				</tr>
@@ -1100,9 +1175,11 @@
 						)
 					</td>
 					<td>
+					   <% if (!isView) { %>	
 						<font color="#FF0000">
 							Select
 						</font>
+				      <%}%>
 						Classification Schemes and Classification Scheme Items
 					</td>
 				</tr>
@@ -1117,6 +1194,7 @@
 							<col width="12%">
 							<col width="32%">
 							<col width="12%">
+						   <%	if (!isView) {	%>	
 							<tr>
 								<td colspan=3 valign=top>
 									<%if (sOriginAction.equals("BlockEditDEC")){%>
@@ -1147,6 +1225,7 @@
 										</select>
 								</td>
 							</tr>
+						  <% } %>	
 							<tr>
 								<td height="10" valign="top">
 							</tr>
@@ -1158,13 +1237,17 @@
 									&nbsp;Selected Classification Schemes
 								</td>
 								<td>
+								 <%	if (!isView) {	%>
 									<input type="button" name="btnRemoveCS" value="Remove Item" style="width: 85,height: 9" onClick="removeCSList();">
+								 <% } %>	
 								</td>
 								<td>
 									&nbsp;&nbsp;Associated Classification Scheme Items
 								</td>
 								<td>
+								 <%	if (!isView) {	%>
 									<input type="button" name="btnRemoveCSI" value="Remove Item" style="width: 85,height: 9" onClick="removeCSIList();">
+								 <% } %>
 								</td>
 							</tr>
 							<tr>
@@ -1200,7 +1283,7 @@
 									<%if (sOriginAction.equals("BlockEditDEC")){%>
 									<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_BlockselCS'); return false">
 										<% } else { %>
-										<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selCS'); return false">
+										<select name="selectedCSI" size="5" style="width:100%" multiple <% if (!isView) { %>onchange="addSelectedAC();" <% } %>onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selCS'); return false">
 											<% } %>
 										</select>
 								</td>
@@ -1241,9 +1324,11 @@
 						)
 					</td>
 					<td valign="bottom">
+					   <% if (!isView) { %>	
 						<font color="#FF0000">
 							Select
 						</font>
+					   <% } %>	
 						Contacts
 						<br>
 						<table width=50% border="0">
@@ -1256,14 +1341,16 @@
 									&nbsp;
 								</td>
 								<td align="left">
-									<input type="button" name="btnViewCt" value="Edit Item" style="width:100" onClick="javascript:editContact('view');" disabled>
+									<input type="button" name="btnViewCt" value="<%	if (!isView) {%>Edit <%}  else { %>View <% } %> Item" style="width:100" onClick="javascript:editContact('view');" disabled>
 								</td>
+							   <% if (!isView) { %>
 								<td align="left">
 									<input type="button" name="btnCreateCt" value="Create New" style="width:100" onClick="javascript:editContact('new');">
 								</td>
 								<td align="center">
 									<input type="button" name="btnRmvCt" value="Remove Item" style="width:100" onClick="javascript:editContact('remove');" disabled>
 								</td>
+							   <% } %>	
 							</tr>
 							<tr>
 								<td colspan=4 valign="top">
@@ -1303,9 +1390,11 @@
 						)
 					</td>
 					<td>
+					  <% if (!isView) { %>	
 						<font color="#FF0000">
 							Select
 						</font>
+					  <% } %>	
 						Data Element Concept Origin
 					</td>
 				</tr>
@@ -1314,28 +1403,32 @@
 						&nbsp;
 					</td>
 					<td>
-						<select name="selSource" size="1" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selSource',helpUrl); return false">
+						<select name="selSource" size="1" style="width:70%" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selSource',helpUrl); return false">
+						<%		
+							boolean isFound = false;							
+							if (!isView) {	%>
 							<option value=""></option>
-							<%         
-		   boolean isFound = false;
-		   for (int i = 0; vSource.size()>i; i++)
-           {
-              String sSor = (String)vSource.elementAt(i);
-              if(sSor.equals(sSource)) isFound = true;
-%>
+							<%
+								for (int i = 0; vSource.size() > i; i++) {
+									String sSor = (String) vSource.elementAt(i);
+									if (sSor.equals(sSource))
+										isFound = true;
+							%>
 							<option value="<%=sSor%>" <%if(sSor.equals(sSource)){%> selected <%}%>>
 								<%=sSor%>
 							</option>
-							<%         }
-		   //add the user entered if not found in the drop down list
-		   if (!isFound) 
-		   {  
-		   	  sSource = serUtil.parsedStringDoubleQuoteJSP(sSource);     //call the function to handle doubleQuote  
-%>
+							<%
+								} }
+								//add the user entered if not found in the drop down list
+								if (!isFound || isView) {
+									sSource = serUtil.parsedStringDoubleQuoteJSP(sSource); //call the function to handle doubleQuote
+							%>
 							<option value="<%=sSource%>" selected>
 								<%=sSource%>
 							</option>
-							<%		   } %>
+							<%
+								}
+							%>
 						</select>
 					</td>
 				</tr>
@@ -1345,9 +1438,11 @@
 						)
 					</td>
 					<td>
+					  <% if (!isView) { %>	
 						<font color="#FF0000">
 							Create
 						</font>
+					  <% } %>	
 						Change Note
 					</td>
 				</tr>
@@ -1356,10 +1451,11 @@
 						&nbsp;
 					</td>
 					<td height="35" valign="top">
-						<textarea name="CreateChangeNote" cols="69" rows=2 onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_CreateComment',helpUrl); return false"><%=sChangeNote%></textarea>
+						<textarea name="CreateChangeNote" cols="69" rows=2 <% if (isView) { %>readonly<%} %>  onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_CreateComment',helpUrl); return false"><%=sChangeNote%></textarea>
 					</td>
 
 				</tr>
+				<%	if (!isView) {	%>
 				<tr height="25" valign="bottom">
 					<td align=right>
 						<%=item++%>
@@ -1374,6 +1470,7 @@
 						the Data Element Concept(s)
 					</td>
 				</tr>
+				<% } %>
 			</table>
 
 			<input type="hidden" name="pageAction" value="nothing">
@@ -1495,7 +1592,7 @@ This is refilled with ac id from ac-csi to use it for block edit-->
 				<option value="<%=sPropQualifierDB%>">
 					<%=sPropQualifierDB%>
 				</option>
-				<%  }
+				<%}
   }   
 %>
 			</select>
