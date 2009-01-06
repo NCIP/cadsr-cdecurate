@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.17 2008-05-29 19:16:50 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.18 2009-01-06 21:09:33 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -22,6 +22,12 @@
       String sSearchAC = (String) session.getAttribute("creSearchAC");
       String vocab= (String)session.getAttribute("preferredVocab");
       System.out.println("preferred vocab"+ vocab);
+      
+      //for view only page
+	  String bodyPage = (String) request.getAttribute("IncludeViewPage");
+	  boolean isView = false;
+	  if (bodyPage != null && !bodyPage.equals(""))
+		isView = true;
       	
       VD_Bean m_VD = new VD_Bean();
       m_VD = (VD_Bean) session.getAttribute("m_VD");
@@ -34,8 +40,11 @@
       String sConDom = m_VD.getVD_CD_NAME();
       if (sConDom == null) sConDom = ""; //"";
       String sTypeFlag = m_VD.getVD_TYPE_FLAG();
-      if (sTypeFlag == null) sTypeFlag = "E";
-      session.setAttribute("pageVDType", sTypeFlag);
+      if (!isView) {
+				if (sTypeFlag == null)
+					sTypeFlag = "E";
+				session.setAttribute("pageVDType", sTypeFlag);
+	  }
       //get parent attributes
       String sLastAction = (String) request.getAttribute("LastAction");
       if (sLastAction == null) sLastAction = "";
@@ -100,7 +109,9 @@
       if (pgAction == null) pgAction = "";
       String elmFocus = (String)request.getAttribute("focusElement");
       if (elmFocus == null) elmFocus = "";
-      session.setAttribute("PVAction", "");
+      if (!isView) {
+				session.setAttribute("PVAction", "");
+	  }
       //moved to vdpvs tab
       session.setAttribute(VMForm.SESSION_SELECT_VM, new VM_Bean());  //should clear when refreshed
       Vector vEMsg = (Vector)session.getAttribute("VMEditMsg");
@@ -139,7 +150,7 @@
         }
         
         function displayStatus()
-        {
+        { 
          <%
 					  String statusMessage = (String)session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
     				Vector vStat = (Vector)session.getAttribute("vStatMsg");
@@ -150,7 +161,7 @@
 				    {%>
 				      	displayStatusWindow();
 				    <%}
-				    else if (statusMessage != null && !statusMessage.equals(""))
+				    else if (!isView && statusMessage != null && !statusMessage.equals(""))
 					  {%>
 					  	alert("<%=statusMessage%>");
 					  <%}
@@ -160,16 +171,22 @@
 		</SCRIPT>
 	</head>
 
-	<body onload="onLoad('<%=elmFocus%>');">
+	<body <% if (!isView) { %> onload="onLoad('<%=elmFocus%>');" <% } %>>
 		<table width="100%" border="2" cellpadding="0" cellspacing="0">
+			<% if (!isView) { %>
 			<tr>
 				<td height="95" valign="top">
 					<%@ include file="TitleBar.jsp"%>
 				</td>
 			</tr>
+			<% } %>
 			<tr>
 				<td width="100%" valign="top">
 					<form name="PVForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=pvEdits">
+					    <% String displayErrorMessage = (String)session.getAttribute("displayErrorMessage");
+		                  if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
+		  	                <b><font  size="3">Not Authorized for Edits in this Context.</font></b></br></br>
+	                    <%}%>
 						<jsp:include page="VDPVSTab.jsp" flush="true" />
 						<div style="margin-left: 0in; margin-right: 0in; border-left: 2px solid black; border-bottom: 2px solid black; border-right: 2px solid black; width: 100%; padding: 0.1in 0in 0.1in 0in">
 							<table border="0" width="100%">
@@ -200,6 +217,7 @@
 								<tr height="20">
 									<td></td>
 								</tr>
+						
 								<tr>
 									<td align=right>
 										<%if (sTypeFlag.equals("E")){%>
@@ -209,6 +227,7 @@
 										<%}%>
 									</td>
 									<td align=left>
+									  <% if (!isView) { %>	
 										<font color="#FF0000">
 											Create
 										</font>
@@ -217,8 +236,16 @@
 										<% } else { %>
 										Referenced Value
 										<% } %>
+									  <%} else {%>	
+										<% if (sTypeFlag.equals("E")) { %>
+										Permissible Values
+										<% } else { %>
+										Referenced Values
+										<% } %>
+									 <% } %>	
 									</td>
 								</tr>
+							
 								<tr>
 									<td>
 										&nbsp;
@@ -233,11 +260,12 @@
 											<tr>
 												<td>
 													<% if(sTypeFlag.equals("E")){%>
-													Select Parent Concept to Constrain Permissible Values
+													<% if (!isView) { %>Select<%}%> Parent Concept to Constrain Permissible Values
 													<%}else{%>
-													Select Non-enumerated Value Domain Reference Concept
+													<% if (!isView) { %>Select<%}%>  Non-enumerated Value Domain Reference Concept
 													<%}%>
 												</td>
+											  <% if (!isView) { %>		
 												<td align="left">
 													<input type="button" name="btnSelectValues" style="width:90" value="Select Values" disabled onClick="javascript:selectValues('<%=vocab%>');">
 												</td>
@@ -247,11 +275,12 @@
 												<td>
 													&nbsp;
 												</td>
+											  <% } %>	
 											</tr>
 											<tr valign="top">
 												<td colspan=3>
-													<select name="listParentConcept" size="2" style="width:100%" onclick="javascript:selectParent();">
-														<%if (vdParent != null) 
+												 	<select name="listParentConcept" size="2" style="width:100%" onclick="javascript:selectParent();">
+												<%if (vdParent != null) 
 			              {
 			                for (int i = 0; vdParent.size()>i; i++)
 			                {
@@ -301,6 +330,7 @@
 			              %>
 													</select>
 												</td>
+											  <% if (!isView) { %>	
 												<td align="center">
 													<!-- do not allow to pick parent if pvs exist but no parent   -->
 													<% //if (!(vdCONs < 1 && vdPVs > 0)) { %>
@@ -309,6 +339,7 @@
 													</a>
 													<% //} %>
 												</td>
+											 <% } %>
 											</tr>
 										</table>
 									</td>
@@ -356,7 +387,8 @@
 										&nbsp;
 									</td>
 								</tr>
-								<%if (sTypeFlag.equals("E")) { %>
+								<%if (sTypeFlag.equals("E")){ %>
+								<% if (!isView) { %>
 								<tr>
 									<td>
 										&nbsp;
@@ -398,7 +430,7 @@
 										</div>
 									</td>
 								</tr>
-
+                                <% } %>
 								<%if (pgAction.equals("openNewPV")) { %>
 								<tr>
 									<td>
@@ -781,7 +813,7 @@
 										<div style="display:inline">
 											<b><%=sPVRecs%></b>  Records &nbsp;&nbsp;&nbsp;&nbsp;
 										</div> 
-										<% if (vVDPVList.size() > 0) { %>
+										<% if ((vVDPVList.size() > 0) && (!isView)){ %>
 											<div class="ind3" align="right" style="display:inline">
 												<input style="width:80px" onclick="javascript:confirmRM('All', 'remove', 'all Permissible Values');" type="button" value="Delete All" name="btnDeleteAll">
 											</div>
@@ -793,6 +825,7 @@
 										&nbsp;
 									</td>
 								</tr>
+					
 								<tr>
 									<td>
 										&nbsp;
@@ -847,36 +880,36 @@
 															</th>
 															<%} %>
 															<th align="center">
-																<a href="javascript:sortPV('value');">
+																<% if (!isView) { %><a href="javascript:sortPV('value');"><%}%>
 																	Permissible Value
-																</a>
+																<% if (!isView) { %></a><%}%>
 															</th>
 															<th align="center">
-																<a href="javascript:sortPV('meaning');">
+																<% if (!isView) { %><a href="javascript:sortPV('meaning');"><%}%>
 																	Value Meaning
-																</a>
+																<% if (!isView) { %></a><%}%>
 															</th>
 															<%if (vdCONs > 0){%>
 															<th align="center">
-																<a href="javascript:sortPV('ParConcept');">
+																<% if (!isView) { %><a href="javascript:sortPV('ParConcept');"><%}%>
 																	Parent Concept
-																</a>
+																<% if (!isView) { %></a><%}%>
 															</th>
 															<%}%>
 															<th align="center">
-																<a href="javascript:sortPV('Origin');">
+																<% if (!isView) { %><a href="javascript:sortPV('Origin');"><%}%>
 																	Value Origin
-																</a>
+																<% if (!isView) { %></a><%}%>
 															</th>
 															<th align="center">
-																<a href="javascript:sortPV('BeginDate');">
+																<% if (!isView) { %><a href="javascript:sortPV('BeginDate');"><%}%>
 																	Begin Date
-																</a>
+																<% if (!isView) { %></a><%}%>
 															</th>
 															<th align="center">
-																<a href="javascript:sortPV('EndDate');">
+																<% if (!isView) { %><a href="javascript:sortPV('EndDate');"><%}%>
 																	End Date
-																</a>
+																<% if (!isView) { %></a><%}%>
 															</th>
 														</tr>
 														<tr valign="top">
@@ -904,6 +937,7 @@
 															<td align="center">
 															</td>
 															<%} %>
+														  <% if (!isView) { %> 
 															<td align="center">
 																<a <%if (vVDPVList != null && vVDPVList.size() > 1){%> href="javascript:selectOrigin('allOrigin', 'all');" <%}%>>
 																	<img src="images/block_edit.gif" border="0" alt="Change All Origin">
@@ -919,6 +953,7 @@
 																	<img src="images/block_edit.gif" border="0" alt="Change All End Date">
 																</a>
 															</td>
+														  <%}%>	
 														</tr>
 													</table>
 												</td>
@@ -1029,6 +1064,7 @@
 																	<div id="<%=pvCount%>ImgOpen" style="display: <%if (viewType.equals("expand")) {%>inline <% } else { %> none <% } %>"">
 																		<a href="javascript:view(<%=pvCount%>View, <%=pvCount%>ImgOpen, <%=pvCount%>ImgClose, 'view', '<%=pvCount%>');"><img src="images/folderOpen.gif" border="0" alt="Collapse"></a>
 																	</div>
+																 <%if (!isView){ %>	
 																	<div id="<%=pvCount%>ImgEdit" style="display: inline">
 																		<a href="javascript:view(<%=pvCount%>View, <%=pvCount%>ImgEdit, <%=pvCount%>ImgSave, 'edit', '<%=pvCount%>');"><img src="images/edit.gif" border="0" alt="Edit"></a>
 																	</div>
@@ -1041,6 +1077,7 @@
 																	<div id="<%=pvCount%>ImgRestore" style="display: none">
 																		<a href="javascript:confirmRM('<%=pvCount%>', 'restore', 'restore');"><img src="images/restore.gif" border="0" alt="Restore"></a>
 																	</div>
+																  <% } %>	
 																</td>
 																<%if (sMenuAction.equals("Questions")){%>
 																<td valign="top">
@@ -1102,12 +1139,13 @@
 																	<% } %>
 																	<div id="<%=pvCount%>VMAltView" style="display: inline; text-align:right">
 																		<span style="padding-left:0.3in; padding-right:0.1in; text-align:right">
-																			<a href="javascript:openDesignateWindowVM('Alternate Names', <%=i%>);">
+																			<a disabled href="javascript:openDesignateWindowVM('Alternate Names', <%=i%>);" >
 																				Alt Names/Defs
 																			</a>
 																		</span>
 																	</div>
 																	<div id="<%=pvCount%>VMEditLink" style="display: inline; text-align:right">
+																	  <%if (!isView){ %>	
 																		<span style="padding-left:0.3in; padding-right:0.1in; text-align:right">
 																			<% if (submit != null && (submit.length()==0 || submit.equals("INS"))) { %>
 																				  [Edit VM]
@@ -1117,6 +1155,7 @@
 																				</a>
 																			<% } %>
 																		</span>
+																	   <% } %>	
 																	</div>
 																	<br>
 																	<div id="<%=pvCount%>VMView" style="display: <%if (viewType.equals("expand")) {%>block <% } else { %> none <% } %>">
@@ -1238,7 +1277,7 @@
 																									<%=conType%>
 																									&nbsp;&nbsp;&nbsp;&nbsp;
 																								</td>
-																								<td valign="top" nowrap="nowrap" style="visibility:hidden" width="0.1px">
+																								<td valign="top" nowrap="nowrap" style="visibility:hidden" width="0.1px">&quot;
 																									<div style="display:none; width:0.1px">
 																										<%=conDesc%>
 																									</div>
