@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.58 2008-08-07 14:29:44 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.61 2009-01-05 19:21:48 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1638,6 +1638,8 @@ public class GetACService implements Serializable
     			defaultCount = rs.getInt(1);
     			DataManager.setAttribute(session, "defaultCount", defaultCount);
     		}
+    		SQLHelper.closeResultSet(rs);
+    		SQLHelper.closeStatement(stmt);
     		//get DE count
     		String sqlDECount = "select count(*) from sbr.data_elements_view";
     		stmt =m_servlet.getConn().createStatement();
