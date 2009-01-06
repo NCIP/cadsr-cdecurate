@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDEC.js,v 1.2 2007-09-19 16:59:34 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDEC.js,v 1.4 2008-12-18 16:49:37 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 var searchWindow = null;
@@ -327,7 +327,7 @@ function TrimDefinition(type)
 	function SearchCDValue()
  	{
 		document.SearchActionForm.searchComp.value = "ConceptualDomain";
-		document.SearchActionForm.SelContext.value = document.newDECForm.selContext.options[document.newDECForm.selContext.selectedIndex].text;   //get the context 
+		document.SearchActionForm.SelContext.value =""; //document.newDECForm.selContext.options[document.newDECForm.selContext.selectedIndex].text;   //get the context 
 		document.SearchActionForm.isValidSearch.value = "false";
 
 		if (searchWindow && !searchWindow.closed)

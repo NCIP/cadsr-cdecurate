@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.40 2008-07-24 19:31:07 chickerura Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.44 2009-01-06 15:23:59 chickerura Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -71,6 +71,12 @@
 	<condition property="remote.deploy">
 		<equals arg1="${DEPLOY.LOCATION}" arg2="remote" />
 	</condition>
+	
+	<condition property="trackStatements" value="true" else="false">
+			<or><equals arg1="${TIER.UPPER}" arg2="DEV" />
+				<equals arg1="${TIER.UPPER}" arg2="QA" />
+			</or>	
+	</condition>
 	<property name="root.dir" location="${basedir}/WebRoot" />
 	<property name="artifacts.dir" location="${basedir}/deployment-artifacts" />
 	<property name="doc.dir" location="${artifacts.dir}/javadoc" />
@@ -98,7 +104,8 @@
 	<filter token="TIER.NAME" value="${TIER.NAME}" />
 	<filter token="TOOL.LOG.DIR" value="${TOOL.LOG.DIR}" />
     <filter token="JBOSS.LOG.DIR" value="${JBOSS.LOG.DIR}" />
-
+    <filter token="trackStatements" value="${trackStatements}" />
+	
 	<path id="libpath">
 		<fileset dir="${lib.dir}" includes="**/*.jar" />
 		<fileset dir="${wlib.dir}" includes="**/*.jar" />

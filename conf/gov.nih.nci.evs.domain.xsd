@@ -196,7 +196,7 @@
   <xs:complexType name="DescLogicConcept">
     <xs:sequence>
       <xs:element name="semanticTypeVector" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element name="associationCollection" minOccurs="0" maxOccurs="1">
+      <xs:element name="inverseAssociationCollection" minOccurs="0" maxOccurs="1">
         <xs:complexType>
           <xs:sequence>
             <xs:element ref="Association" minOccurs="0" maxOccurs="unbounded" />
@@ -210,7 +210,7 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="roleCollection" minOccurs="0" maxOccurs="1">
+      <xs:element name="inverseRoleCollection" minOccurs="0" maxOccurs="1">
         <xs:complexType>
           <xs:sequence>
             <xs:element ref="Role" minOccurs="0" maxOccurs="unbounded" />
