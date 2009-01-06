@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.56 2008-05-29 19:19:45 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.59 2008-10-28 18:55:39 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2629,17 +2629,17 @@ public class InsACService implements Serializable {
 				// call the methods according to the ac componenets
 				if (ACName.equals("DataElement")) {
 					cstmt = m_servlet.getConn().prepareCall(
-							"{call META_CONFIG_MGMT.DE_VERSION(?,?,?,?)}");
+							"{call META_CONFIG_MGMT.DE_VERSION(?,?,?,?,?)}");
 					ACID = de.getDE_DE_IDSEQ();
 					sVersion = de.getDE_VERSION();
 				} else if (ACName.equals("DataElementConcept")) {
 					cstmt = m_servlet.getConn().prepareCall(
-							"{call META_CONFIG_MGMT.DEC_VERSION(?,?,?,?)}");
+							"{call META_CONFIG_MGMT.DEC_VERSION(?,?,?,?,?)}");
 					ACID = dec.getDEC_DEC_IDSEQ();
 					sVersion = dec.getDEC_VERSION();
 				} else if (ACName.equals("ValueDomain")) {
 					cstmt = m_servlet.getConn().prepareCall(
-							"{call META_CONFIG_MGMT.VD_VERSION(?,?,?,?)}");
+							"{call META_CONFIG_MGMT.VD_VERSION(?,?,?,?,?)}");
 					ACID = vd.getVD_VD_IDSEQ();
 					sVersion = vd.getVD_VERSION();
 				}
@@ -2656,6 +2656,10 @@ public class InsACService implements Serializable {
 				// to double type
 				double dVersion = DVersion.doubleValue();
 				cstmt.setDouble(2, dVersion); // version
+				
+				// Get the username from the session.
+				String userName = (String) m_classReq.getSession().getAttribute("Username");
+				cstmt.setString(5, userName); // username
 
 				// Now we are ready to call the stored procedure
 				cstmt.execute();
