@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.18 2009-01-06 21:09:33 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.19 2009-01-12 22:06:09 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -1137,16 +1137,16 @@
 																		<textarea name="txt<%=pvCount%>Mean" style="width: 100%" rows="2" onblur="javascript:checkNameLen(this, 255);" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vm');"><%=sPVMeanJsp%></textarea>
 																	</div>
 																	<% } %>
+																	<%if (!isView){ %>
 																	<div id="<%=pvCount%>VMAltView" style="display: inline; text-align:right">
 																		<span style="padding-left:0.3in; padding-right:0.1in; text-align:right">
-																			<a disabled href="javascript:openDesignateWindowVM('Alternate Names', <%=i%>);" >
+																			<a href="javascript:openDesignateWindowVM('Alternate Names', <%=i%>);" >
 																				Alt Names/Defs
 																			</a>
 																		</span>
 																	</div>
 																	<div id="<%=pvCount%>VMEditLink" style="display: inline; text-align:right">
-																	  <%if (!isView){ %>	
-																		<span style="padding-left:0.3in; padding-right:0.1in; text-align:right">
+																	  	<span style="padding-left:0.3in; padding-right:0.1in; text-align:right">
 																			<% if (submit != null && (submit.length()==0 || submit.equals("INS"))) { %>
 																				  [Edit VM]
 																			<% } else { %>
@@ -1155,8 +1155,17 @@
 																				</a>
 																			<% } %>
 																		</span>
-																	   <% } %>	
 																	</div>
+																   <% } else{%>
+																     <div id="<%=pvCount%>VMViewLink" style="display: inline; text-align:right">
+																	  	<span style="padding-left:0.3in; padding-right:0.1in; text-align:right">
+																	    		<a href="javascript:openViewVMWindow('<%=pvCount%>');">
+																					View VM
+																				</a>
+																	
+																		</span>
+																	</div>
+																   <% } %>	
 																	<br>
 																	<div id="<%=pvCount%>VMView" style="display: <%if (viewType.equals("expand")) {%>block <% } else { %> none <% } %>">
 																		&nbsp;&nbsp;&nbsp;&nbsp;<%=sPVMean%>
