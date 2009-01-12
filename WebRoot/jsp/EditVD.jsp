@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.10 2008-12-22 17:08:26 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.11 2009-01-12 22:06:09 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -1892,22 +1892,22 @@ function setup()
 								<col width="15%">
 								<col width="15%">
 								<col width="15%">
+							<% if (!isView) { %>
 								<tr>
 									<td>
 										&nbsp;
 									</td>
 									<td align="left">
-										<input type="button" name="btnViewCt" value="<%	if (!isView) {%>Edit <%}  else { %>View <% } %> Item" style="width:100" onClick="javascript:editContact('view');" disabled>
+										<input type="button" name="btnViewCt" value="Edit Item" style="width:100" onClick="javascript:editContact('view');" disabled>
 									</td>
-								<% if (!isView) { %>
 									<td align="left">
 										<input type="button" name="btnCreateCt" value="Create New" style="width:100" onClick="javascript:editContact('new');">
 									</td>
 									<td align="center">
 										<input type="button" name="btnRmvCt" value="Remove Item" style="width:100" onClick="javascript:editContact('remove');" disabled>
 									</td>
-								<% } %>
 								</tr>
+							 <% } %>
 								<tr>
 									<td colspan=4 valign="top">
 										<select name="selContact" size="4" style="width:100%" onchange="javascript:enableContButtons();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContact',helpUrl); return false">
