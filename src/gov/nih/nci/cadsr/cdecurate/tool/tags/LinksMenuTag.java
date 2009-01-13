@@ -30,15 +30,15 @@ public class LinksMenuTag extends MenuTag {
         String cadsrApiDName = ToolURL.getCadsrAPIDispalyName(this.pageContext);
 		try {
 			linksMenu.println("<dl class=\"menu\">"
+					          + generateDT("",adminToolLink,adminToolDName)         
 					          + generateDT("",cdeBrowserLink,cdeBrowserDName)
 					          + generateDT("",freeStyleLink,freeStyleDName)
 					          + generateDT("",sentinelToolLink,sentinelToolDName)
 					          + generateDT("",umlBrowserLink,umlBrowserDName)
-					          + generateDT("",adminToolLink,adminToolDName)
 					          + separator()
 					          + generateDT("",cadsrApiLink,cadsrApiDName)
-					          + generateDT("","window.open('https://wiki.nci.nih.gov', '_blank')","NCICB Wiki")
-					          + generateDT("","window.open('https://gforge.nci.nih.gov', '_blank')","NCICB GForge")
+					          + generateDT("","window.open('https://wiki.nci.nih.gov', '_blank')","NCI Wiki")
+					          + generateDT("","window.open('https://gforge.nci.nih.gov', '_blank')","NCI GForge")
 					          +"</dl>");
 		} catch (IOException e) {
 			e.printStackTrace();
