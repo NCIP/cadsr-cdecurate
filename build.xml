@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.45 2009-01-06 15:26:08 chickerura Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.46 2009-01-13 17:02:22 chickerura Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -8,11 +8,6 @@
         Build and deploy the CDE Curation Tool
     </description>
 	<!-- set global properties for this build  -->
-	<tstamp/>
-	
-	<property name="appl.release" value="4.0.0.2" />
-	<property name="appl.version" value="${appl.release}.${DSTAMP}${TSTAMP}"/>
-		
 	<property name="PROP.FILE" location="DEV.build.properties" />
 	<property file="${PROP.FILE}" />
 	<echo>
@@ -78,12 +73,15 @@
 	</condition>
 	
 	<condition property="trackStatements" value="true" else="false">
-		<or><equals arg1="${TIER.UPPER}" arg2="DEV" />
-			<equals arg1="${TIER.UPPER}" arg2="QA" />
-		</or>	
+			<or><equals arg1="${TIER.UPPER}" arg2="DEV" />
+				<equals arg1="${TIER.UPPER}" arg2="QA" />
+			</or>	
 	</condition>
-
-	
+	<condition property="logLevel" value="DEBUG" else="INFO">
+			<or><equals arg1="${TIER.UPPER}" arg2="DEV" />
+				<equals arg1="${TIER.UPPER}" arg2="QA" />
+			</or>	
+	</condition>
 	<property name="root.dir" location="${basedir}/WebRoot" />
 	<property name="artifacts.dir" location="${basedir}/deployment-artifacts" />
 	<property name="doc.dir" location="${artifacts.dir}/javadoc" />
@@ -111,9 +109,10 @@
 	<filter token="TIER.NAME" value="${TIER.NAME}" />
 	<filter token="TOOL.LOG.DIR" value="${TOOL.LOG.DIR}" />
     <filter token="JBOSS.LOG.DIR" value="${JBOSS.LOG.DIR}" />
-	<filter token="appl.version" value="${appl.version}" />
-	<filter token="trackStatements" value="${trackStatements}" />
-
+    <filter token="trackStatements" value="${trackStatements}" />
+	<filter token="logLevel" value="${logLevel}" />
+	
+	
 	<path id="libpath">
 		<fileset dir="${lib.dir}" includes="**/*.jar" />
 		<fileset dir="${wlib.dir}" includes="**/*.jar" />
@@ -159,15 +158,11 @@
 	<target name="-assemble" depends="-compile,-prop-check" description="Assembles the deployment parts into the artifacts folders.">
 		<echo>Assembling artifacts ...</echo>
 		<delete>
-			<fileset file="${root.dir}/curationtool.properties" />
 			<fileset file="${web.dir}/web.xml" />
 		</delete>
 		<copy todir="${artifacts.dir}">
 			<fileset file="build.xml" />
 			<fileset file="${PROP.FILE}" />
-		</copy>
-		<copy tofile="${root.dir}/curationtool.properties" filtering="true">
-					<fileset file="conf/template.curationtool.properties" />
 		</copy>
 		<copy tofile="${web.dir}/web.xml" filtering="true">
 			<fileset file="conf/template.web.xml" />
