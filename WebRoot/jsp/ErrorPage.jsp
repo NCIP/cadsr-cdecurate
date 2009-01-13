@@ -56,7 +56,7 @@
 
 						<h3 align="center">
 							<font face="Arial, Helvetica, sans-serif" style="font-size: 14pt">
-								Error on page: <%=errMessage%> </font>
+								 <%=errMessage%> </font>
 						</h3>
 						<%}
 						%>

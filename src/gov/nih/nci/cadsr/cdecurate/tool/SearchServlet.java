@@ -176,7 +176,7 @@ public class SearchServlet extends CurationServlet {
                 if (msg.equals("Io exception"))
                     ForwardErrorJSP(m_classReq, m_classRes, "Io Exception. Session Terminated. Please log in again.");
                 else
-                    ForwardErrorJSP(m_classReq, m_classRes, "Incorrect Username or Password. Please re-enter.");
+                    ForwardErrorJSP(m_classReq, m_classRes, "Could not validate the User Name and Password, please try again.");
             }
             catch (Exception ee)
             {
