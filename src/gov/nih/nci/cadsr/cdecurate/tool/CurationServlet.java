@@ -308,7 +308,7 @@ public class CurationServlet
     		  userbean=null;
     		  logger.error("Failed credential validation, code is " + uc.getCheckCode());
     	      logger.error("Redirecting the user to Login Page");
-			  ForwardErrorJSP(req, res, "Incorrect Username or Password. Please re-enter.");				
+			  ForwardErrorJSP(req, res, "Could not validate the User Name and Password, please try again.");				
     	  } 
       }
 
@@ -435,6 +435,14 @@ public class CurationServlet
                     {
                         doLogout(m_classReq, m_classRes);
                         break;
+                    }
+                    if (reqType.equals("viewVMAction")){
+                    	doViewVMAction(m_classReq, m_classRes);
+                    	break;
+                    }
+                    if (reqType.equals("pvView")){
+                    	doViewPVActions(m_classReq, m_classRes);
+                    	break;
                     }
                     // do the requests
                     ub = checkUserBean(m_classReq, m_classRes);
@@ -3936,7 +3944,7 @@ public class CurationServlet
             if (reqMsg != null && !reqMsg.equals(""))
                 errMsg = reqMsg;
             DataManager.setAttribute(session, "ErrorMessage", errMsg);
-            if ((errMsg).equals("Incorrect Username or Password. Please re-enter."))
+            if ((errMsg).equals("Could not validate the User Name and Password, please try again."))
                fullPage = "/jsp/ErrorPage.jsp";
             //ServletContext sc = this.getServletContext();
             RequestDispatcher rd = m_servletContext.getRequestDispatcher(fullPage);
@@ -4069,15 +4077,19 @@ public class CurationServlet
 			logger.error("ac query", e);
 			errMsg = e.getMessage();
 		}
-		
 		//get the details for the selected AC
 		if (ac != null) {
 			String actlReq = "view"+ac.get(0);  //"DATAELEMENT";  //DE_CONCEPT ;  VALUEDOMAIN  ;  VALUEMEANING
 			acIDSEQ = ac.get(1);
 			if (acIDSEQ != null || !acIDSEQ.equals("")) {
 				m_classReq.setAttribute("acIdseq", acIDSEQ);
-				CurationServlet servObj = getACServlet(actlReq);
-				servObj.execute(getACType(actlReq));
+				if ((actlReq).equals("viewVALUEMEANING")){
+				       VMServlet vmServlet = new VMServlet(m_classReq, m_classRes, this);
+				       vmServlet.doOpenViewPage();
+				 }else{
+					  CurationServlet servObj = getACServlet(actlReq);
+					  servObj.execute(getACType(actlReq));
+				}  
 			} else {
 				errMsg = "Unable to determine the administered components used to view the data";
 				logger.error(errMsg);
@@ -4134,5 +4146,18 @@ public class CurationServlet
 		}		
 		return servObj;
 	}
-
+	private void doViewVMAction(HttpServletRequest req, HttpServletResponse res) throws Exception{
+        VMServlet vmSer = new VMServlet(req, res, this);
+        vmSer.doViewVMAction(); 
+        ForwardJSP(req, res, "/ViewPage.jsp");
+    }
+	private void doViewPVActions(HttpServletRequest req, HttpServletResponse res) throws Exception{
+	    	ValueDomainServlet vdServ = (ValueDomainServlet) this.getACServlet("ValueDomain");
+	        PVServlet pvSer = new PVServlet(req, res, vdServ);
+	        String vmIDSEQ = pvSer.getViewVMId();
+	        RequestDispatcher rd = m_servletContext.getRequestDispatcher("/NCICurationServlet?reqType=view&idseq=" +vmIDSEQ);
+			rd.forward(req, res);
+			return;
+	}
+	
 } // end of class

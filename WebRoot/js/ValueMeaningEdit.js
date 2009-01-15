@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.5 2008-03-26 22:01:53 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.6 2009-01-15 16:21:51 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 	var secondWindow;
@@ -203,4 +203,42 @@
 	  	SubmitValidate(actionFilter);
   	
   	}
+  //change the tabs
+ function viewVMChangeTab(tab){
+   if (tab == "whereUsedTab" && document.VMDetail != null){
+      document.VMDetail.action = "../../cdecurate/NCICurationServlet?reqType=viewVMAction&action=" +tab;
+      document.VMDetail.submit();
+   }else if (tab == "detailsTab" && document.VMUse != null){
+      document.VMUse.action = "../../cdecurate/NCICurationServlet?reqType=viewVMAction&action=" +tab;
+      document.VMUse.submit();	
+   }
+  } 
+  
+  function viewVMSort(acType, fieldType){
+     //ac type
+     var selACObj = document.getElementById(elmACType);
+     if (selACObj != null)
+    	selACObj.value = acType;
+     //field type
+     var selFiedlObj = document.getElementById(elmFieldType);
+     if (selFiedlObj != null)
+    	selFiedlObj.value = fieldType;
+      document.VMUse.action = "../../cdecurate/NCICurationServlet?reqType=viewVMAction&action=sort";
+      document.VMUse.submit();	
+  }
+  
+  function viewVMShow(acType, filterType){
+      //ac type
+      var selACObj = document.getElementById(elmACType);
+      if (selACObj != null)
+    	selACObj.value = acType;
+      //field type
+      var selFiedlObj = document.getElementById(elmFieldType);
+      if (selFiedlObj != null)
+    	selFiedlObj.value = filterType;
+      document.VMUse.action = "../../cdecurate/NCICurationServlet?reqType=viewVMAction&action=show";
+      document.VMUse.submit();	
+ } 
+  
+   
 	
