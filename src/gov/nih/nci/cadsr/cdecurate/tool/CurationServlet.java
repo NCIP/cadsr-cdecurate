@@ -3875,8 +3875,12 @@ public class CurationServlet
         try
         {
             HttpSession session = req.getSession();
-            session.invalidate();
-            ForwardErrorJSP(req, res, "Logged out.");
+            DataManager.setAttribute(session, "Userbean", null);
+          	DataManager.setAttribute(session, "Username", null);
+          	sessionData.UsrBean = null;
+          	String prevReq = m_classReq.getParameter("previousReqType");
+            if (prevReq == null) prevReq = "/SearchResultsPage.jsp";
+            ForwardJSP(m_classReq, m_classRes, prevReq);
         }
         catch (Exception e)
         {
