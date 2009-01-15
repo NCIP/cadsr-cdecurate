@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.44 2009-01-15 18:29:19 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.45 2009-01-15 21:59:18 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1034,6 +1034,9 @@ public void doOpenViewPage() throws Exception{
     HttpServletRequest req = httpRequest;
    	HttpSession session = req.getSession();
 	String acID = (String) req.getParameter("idseq");
+	if (acID == null){
+		acID = (String) req.getAttribute("acIdseq");
+	}
 	try{
 	    Value_Meanings_Mgr vmMgr = new Value_Meanings_Mgr();
 		vmVO = vmMgr.getVm(acID, "", "", "", this.curationServlet.m_conn);

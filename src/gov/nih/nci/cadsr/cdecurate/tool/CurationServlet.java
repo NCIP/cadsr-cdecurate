@@ -4059,21 +4059,26 @@ public class CurationServlet
 
     public void doOpenViewPage() throws Exception
     {
-    	System.out.println("I am here open view page");
+    	Admin_Components_Mgr acMgr = new Admin_Components_Mgr();
     	//read the parameters idseq, public id and version from the request
+    	long publicID =  0;
+    	double version = 0;
 		String acIDSEQ = m_classReq.getParameter("idseq");
-		String sValue = m_classReq.getParameter("id");
-		long publicID =  0; 
-		if (sValue != null)
-			publicID = Long.parseLong(sValue); 
-		sValue = m_classReq.getParameter("version");
-		double version = 0;
-		if (sValue != null)
-			version = Double.parseDouble(sValue);
-		
-    	//query the ac table to get the actl name
+		if (acIDSEQ == null){
+			String sValue = m_classReq.getParameter("publicId");
+			if (sValue != null)
+				publicID = Long.parseLong(sValue); 
+			sValue = m_classReq.getParameter("version");
+			if (sValue != null)
+				version = Double.parseDouble(sValue);
+			try {
+			  acIDSEQ = acMgr.getACIdseq(publicID, version, m_conn);
+			} catch (DBException e) {
+				logger.error("ac query", e);
+			}  
+		}
+	   	//query the ac table to get the actl name
 		String errMsg = "";
-		Admin_Components_Mgr acMgr = new Admin_Components_Mgr();
 		ArrayList<String> ac = null;
 		try {
 			ac = acMgr.getActlName(acIDSEQ, publicID, version, m_conn);
