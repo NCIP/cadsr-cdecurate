@@ -437,10 +437,10 @@ public class CurationServlet
                         break;
                     }
                     if (reqType.equals("viewVMAction")){
-                    	doViewVMAction(m_classReq, m_classRes);
+                    	doViewVMActions(m_classReq, m_classRes);
                     	break;
                     }
-                    if (reqType.equals("pvView")){
+                    if (reqType.equals("viewPVAction")){
                     	doViewPVActions(m_classReq, m_classRes);
                     	break;
                     }
@@ -4146,18 +4146,18 @@ public class CurationServlet
 		}		
 		return servObj;
 	}
-	private void doViewVMAction(HttpServletRequest req, HttpServletResponse res) throws Exception{
+	private void doViewVMActions(HttpServletRequest req, HttpServletResponse res) throws Exception{
         VMServlet vmSer = new VMServlet(req, res, this);
-        vmSer.doViewVMAction(); 
+        vmSer.doViewVMActions(); 
         ForwardJSP(req, res, "/ViewPage.jsp");
     }
 	private void doViewPVActions(HttpServletRequest req, HttpServletResponse res) throws Exception{
 	    	ValueDomainServlet vdServ = (ValueDomainServlet) this.getACServlet("ValueDomain");
 	        PVServlet pvSer = new PVServlet(req, res, vdServ);
-	        String vmIDSEQ = pvSer.getViewVMId();
-	        RequestDispatcher rd = m_servletContext.getRequestDispatcher("/NCICurationServlet?reqType=view&idseq=" +vmIDSEQ);
-			rd.forward(req, res);
-			return;
-	}
+	        String path = pvSer.doViewPVActions();
+	        RequestDispatcher rd = this.m_servletContext.getRequestDispatcher(path);
+            rd.forward(req, res);
+            return;
+   }
 	
 } // end of class

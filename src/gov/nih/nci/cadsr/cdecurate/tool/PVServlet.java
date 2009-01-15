@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.34 2009-01-15 16:19:02 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.35 2009-01-15 18:29:19 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -12,6 +12,8 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -1340,5 +1342,24 @@ public class PVServlet implements Serializable
 		}
 			return vmIdseq;
     }
+   public String doViewPVActions(){
+	   String action = data.getRequest().getParameter("action");
+	   String path = null;
+	   HttpSession session = data.getRequest().getSession();
+	   if (action != null){
+		   if (action.equals("sort")){
+			 GetACSearch serAC = new GetACSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
+	         String sField = (String)data.getRequest().getParameter("pvSortColumn");
+	         serAC.getVDPVSortedRows(sField);  //call the method to sort pv attribute
+	         data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv0"); 
+			 data.getRequest().setAttribute("IncludeViewPage", "PermissibleValue.jsp");  
+			 path = "/jsp/ViewPage.jsp" ;  
+		   }else if (action.equals("viewVM")){
+		     String vmIDSEQ = getViewVMId();
+		     path = "/NCICurationServlet?reqType=view&idseq=" +vmIDSEQ ;
+		   }
+	   }
+	   return path;
+   }
 	
 } //end of teh class
