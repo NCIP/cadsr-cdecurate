@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.14 2008-04-04 16:14:14 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.15 2009-01-15 16:22:42 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -15,6 +15,12 @@
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/date-picker.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/ValueMeaningEdit.js"></SCRIPT>
 		<%  
+			
+			//for view only page
+			String bodyPage = (String) request.getAttribute("IncludeViewPage");
+			boolean isView = false;
+			if (bodyPage != null && !bodyPage.equals(""))
+				isView = true;
 			//get the focus element
 		  String elmFocus = (String)request.getAttribute(VMForm.REQUEST_FOCUS_ELEMENT);
 		  if (elmFocus == null) elmFocus = "";
@@ -66,11 +72,13 @@
 	</head>
 	<body onload="javascript:setFocusTo('<%=elmFocus%>');displayStatus();">
 		<table width="99%" border=1>
+		   <%if (!isView){%>	
 			<tr>
 				<td height="95" valign="top" width="100%">
 					<jsp:include page="<%=VMForm.JSP_TITLE_BAR%>" flush="true" />
 				</td>
 			</tr>
+		   <% } %>	
 			<tr>
 				<td>
 					<form name="VMDetail" method="POST" action="../../cdecurate/NCICurationServlet?reqType=<%=VMForm.ELM_FORM_REQ_DETAIL%>">
@@ -81,7 +89,7 @@
 									<%=VMForm.ELM_LBL_NAME%>
 								</b>
 							</div>
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" style="width:40%" id ="name" name="<%=VMForm.ELM_LONG_NAME%>" value="<%=thisForm.getVMBean().getVM_LONG_NAME()%>"/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" style="width:40%" id ="name" name="<%=VMForm.ELM_LONG_NAME%>" value="<%=thisForm.getVMBean().getVM_LONG_NAME()%>" <%if (isView){%>readonly<%}%>/>
 							<div class="ind2">
 								<b>
 									Public ID
@@ -96,10 +104,11 @@
     							if (sVersion == null) sVersion = "1.0"; %>
 							<div class="ind2">
 								<b>
-									Enter Version
+									<%if (!isView){%>
+									Enter <%}%> Version
 								</b>
 							</div>
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="Version" id="version" type="text" value="<%=sVersion%>" size="5" maxlength=5>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="Version" id="version" type="text" value="<%=sVersion%>" size="5" maxlength=5 <%if (isView){%>readonly<%}%>>
 							&nbsp;&nbsp;&nbsp;
 							<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
 							Business Rules
@@ -109,21 +118,23 @@
 									WorkFlow Status
 								</b>
 							</div>
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select name="selStatus" id="ws" size="1">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <%  String sStatus = thisForm.getVMBean().getASL_NAME();%>
+						  <select name="selStatus" id="ws" size="1">
+						  <%	if (!isView) {	%>
 							<option value="" selected="selected"></option>
 							<% if(vStatus!=null){  
-							   for (int i = 0; vStatus.size()>i; i++)
-     							{
+							   for (int i = 0; vStatus.size()>i; i++){
         						String sStatusName = (String)vStatus.elementAt(i); 
-        						String sStatus = thisForm.getVMBean().getASL_NAME();
-    							if (sStatus == null) sStatus = "";  
+        						if (sStatus == null) sStatus = "";  
     							%>
 								<option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%> selected <%}%>>
 								<%=sStatusName%>
 								</option>
-								<%
-        }}
-     %>
+								<%  }}  %>
+							<%	}  else { 	%>
+							<option value="<%=sStatus%>"><%=sStatus%></option>	
+						<% } %>	
 							</select>
 							<div class="ind2">
 								<b>
@@ -131,7 +142,7 @@
 								</b>
 							</div>
 							<div class="ind3">
-								<textarea name="<%=VMForm.ELM_DEFINITION%>" id="def" rows="4" style="width:95%"><%=thisForm.description%></textarea>
+								<textarea name="<%=VMForm.ELM_DEFINITION%>" <% if (isView) { %>readonly<%} %> id="def" rows="4" style="width:95%"><%=thisForm.description%></textarea>
 							</div>
 							<%if (conExist) { %>
 							<div class="ind2">
@@ -149,7 +160,7 @@
 								</b>
 							</div>
 							<div class="ind3">
-								<textarea name="<%=VMForm.ELM_CHANGE_NOTE%>" id= "cn" rows="3" style="width:80%"><%=thisForm.changeNote%></textarea>
+								<textarea name="<%=VMForm.ELM_CHANGE_NOTE%>" <% if (isView) { %>readonly<%} %> id= "cn" rows="3" style="width:80%"><%=thisForm.changeNote%></textarea>
 							</div>
 							<hr>
 							<div id="<%=VMForm.ELM_LABEL_CON%>" class="ind2" style="display:inline">
@@ -157,15 +168,19 @@
 									Concept(s): 
 								</b> <%=vmCon.size()%> Found
 							</div>
+						   <%if (!isView){%>
 							<div class="ind3" style="display:inline">
 								<a title="Search" href="javascript:searchConcepts('<%=vocab%>');">
 									Search
 								</a>
 							</div>
+						   <%}%>
 							<%if (conExist) { %>
+							<%if (!isView){%>
 							<div class="ind3" align="right" style="display:inline">
 								<input style="width:80px" onclick="javascript:deleteConcept('-99', 'allConcepts');" type="button" value="Delete All" name="btnDeleteAll">
 							</div>
+						    <%}%>
 							<div class="table">
 								<b>
 									<%=VMForm.ELM_LBL_CON_SUM%>
@@ -184,10 +199,12 @@
 									</colgroup>
 									<tbody>
 										<tr style="padding-bottom:0.05in">
+										
 											<th>
-												Action
+											  <%if (!isView){ %>		
+												Action <%}%>
 											</th>
-											<th>
+										    <th>
 												<%=VMForm.ELM_LBL_CON_NAME%>
 											</th>
 											<th>
@@ -205,7 +222,8 @@
                 		EVS_Bean cBean = (EVS_Bean)vmCon.elementAt(i);  
 								%>
 										<tr <% if (i%2 == 0) { %> class="rowColor" <% } %>>
-											<td>
+										
+											<td> <%if (!isView){ %>	
 												<a href="javascript:deleteConcept('<%=i%>', '<%=cBean.getLONG_NAME()%>');" title="Remove Item">
 													<img src="images/delete_white.gif" border="0" alt="Remove Item">
 												</a>
@@ -218,8 +236,9 @@
 												<a href="javascript:moveConcept('<%=i%>', '<%=VMForm.ACT_CON_MOVEDOWN%>');" title="Move Down">
 													<img src="images/downArrow.gif" border="0" alt="Move Down">
 												</a>
-												<% } %>
+												<% } %><%}%>
 											</td>
+											
 											<td>
 												<%=cBean.getLONG_NAME()%>
 											</td>
@@ -234,7 +253,7 @@
 											</td>
 										</tr>
 										<tr <% if (i%2 == 0) { %> class="rowColor" <% } %>>
-											<td></td>
+												<td></td>
 											<td colspan="4">
 												<div class="ind3">
 													<b>
@@ -279,9 +298,11 @@
 									<tbody>
 										<tr style="padding-bottom:0.05in">
 										<tr valign="middle">
+										 	 
 										   <th>
 										   
 										   </th>
+										  
 										   <th>
 												<%=VMForm.ELM_LBL_CONDOMAIN_NAME%>
 											</th>
@@ -304,9 +325,10 @@
        										 CD_Bean cd = (CD_Bean)cdResult.elementAt(i);
 								%>
 										<tr <% if (i%2 == 0) { %> class="rowColor" <% } %>>
-											<td>
+										    <td>
 												
 											</td>
+											
 											<td>
 												<%=cd.getCD_LONG_NAME()%>
 											</td>
@@ -324,7 +346,7 @@
 											</td>
 										</tr>
 										<tr <% if (i%2 == 0) { %> class="rowColor" <% } %>>
-											<td></td>
+												<td></td>
 											<td colspan="5">
 												<div class="ind3">
 													<b>

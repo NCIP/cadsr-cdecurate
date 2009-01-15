@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.4 2008-03-25 17:40:29 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.5 2009-01-15 16:21:51 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -1483,4 +1483,8 @@
     {
     	document.getElementById("editPVInd").value = curPV;
     	SubmitValidate('openEditVM');
+    }
+    function openViewVMWindow(curPV)
+    {
+    	var viewWindow = window.open("../../cdecurate/NCICurationServlet?reqType=pvView&viewPVInd=" +curPV, "", "width=1000,height=1000,top=0,left=0,resizable=yes,scrollbars=yes");
     }

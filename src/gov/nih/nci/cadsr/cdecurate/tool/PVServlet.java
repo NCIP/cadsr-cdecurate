@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.33 2008-12-26 19:14:34 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.34 2009-01-15 16:19:02 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1316,4 +1316,29 @@ public class PVServlet implements Serializable
        data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv" + pvInd);
    }
    
+   public String getViewVMId() {
+	   String vmIdseq = null;
+	   HttpSession session = data.getRequest().getSession();
+	   int pvInd = -1;
+	   String selPVInd = (String) data.getRequest().getParameter("viewPVInd"); //index
+	   if (selPVInd != null && !selPVInd.equals("")) {
+			selPVInd = selPVInd.substring(2);
+			if (selPVInd != null && !selPVInd.equals("")) {
+				if (selPVInd.equalsIgnoreCase("New"))
+					pvInd = -1;
+				else
+					pvInd = new Integer(selPVInd).intValue();
+			}
+		}
+	   	if (pvInd > -1) {
+			VD_Bean vd = (VD_Bean) session.getAttribute("m_VD");
+			Vector<PV_Bean> vVDPVList = vd.getVD_PV_List(); 
+			if (vVDPVList != null){
+				PV_Bean selectPV = (PV_Bean) vVDPVList.elementAt(pvInd);
+			    vmIdseq = selectPV.getPV_VM().getIDSEQ();
+			}    
+		}
+			return vmIdseq;
+    }
+	
 } //end of teh class

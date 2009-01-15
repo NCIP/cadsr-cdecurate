@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningUsed.jsp,v 1.4 2008-04-04 16:14:14 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningUsed.jsp,v 1.5 2009-01-15 16:22:42 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -16,7 +16,13 @@
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/ValueMeaningEdit.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 		<%  
-			//get the focus element
+		  //for view only page
+	       String bodyPage = (String) request.getAttribute("IncludeViewPage");
+	       boolean isView = false;
+           if (bodyPage != null && !bodyPage.equals(""))
+			  isView = true;
+		  
+		  //get the focus element
 		  String elmFocus = (String)request.getAttribute(VMForm.REQUEST_FOCUS_ELEMENT);
 		  if (elmFocus == null) elmFocus = "";
 			VMForm thisForm = (VMForm)request.getAttribute(VMForm.REQUEST_FORM_DATA); 
@@ -72,11 +78,13 @@
 	</head>
 	<body onload="javascript:setFocusTo('<%=elmFocus%>');">
 		<table id="startTop" width="99%" border=1>
+		  <%if (!isView){%>		
 			<tr>
-				<td>
-					<jsp:include page="<%=VMForm.JSP_TITLE_BAR%>" flush="true" />
+			 	<td>
+				   	<jsp:include page="<%=VMForm.JSP_TITLE_BAR%>" flush="true" />
 				</td>
 			</tr>
+		  <%}%>
 			<tr>
 				<td>
 					<form name="VMUse" method="POST" action="../../cdecurate/NCICurationServlet?reqType=<%=VMForm.ELM_FORM_REQ_USED%>">
@@ -111,7 +119,7 @@
 								<%=vCRF.size()%> Found 
 							</div>
 							<div class="ind2" style="display:inline;">  <!--  text-align:right; width:49%;"> -->
-									<input style="width: 160px" onclick="javascript:showReleased('<%=VMForm.ELM_CRF_NAME%>', '<%=crfFilter%>');" type="button" value="<%=crfFilter%>" name="btnshowRELCRF" <% if (vCRF.size() > 0 || crfFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> enabled <% } else { %> disabled<%}%>>
+									<input style="width: 160px" <% if (isView) { %>onclick="viewVMShow('<%=VMForm.ELM_CRF_NAME%>', '<%=crfFilter%>');"<% } else { %>onclick="javascript:showReleased('<%=VMForm.ELM_CRF_NAME%>', '<%=crfFilter%>');" <%}%>type="button" value="<%=crfFilter%>" name="btnshowRELCRF" <% if (vCRF.size() > 0 || crfFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> enabled <% } else { %> disabled<%}%>>
 							</div>
 							
 							<% if (vCRF.size() > 0) { %> 
@@ -131,55 +139,55 @@
 										<tbody>
 											<tr>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_LONG_NAME%>" href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_LONG_NAME%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_LONG_NAME%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_LONG_NAME%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_LONG_NAME%>');" <%}%>>
 														<%=CommonACBean.COLUMN_LONG_NAME%>
 														<%if (crfSort.equals(CommonACBean.COLUMN_LONG_NAME)) { %> <%=sortImgLink%> <% } %>
 													</a>
 												</th>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_PUBLIC_ID%>" href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_PUBLIC_ID%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_PUBLIC_ID%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_PUBLIC_ID%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_PUBLIC_ID%>');" <%}%>>
 														<%=CommonACBean.COLUMN_PUBLIC_ID%>
 														<%if (crfSort.equals(CommonACBean.COLUMN_PUBLIC_ID)) { %> <%=sortImgLink%> <% } %>
 													</a>
 												</th>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_VERSION%>" href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_VERSION%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_VERSION%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_VERSION%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_VERSION%>');" <%}%>>
 														<%=CommonACBean.COLUMN_VERSION%>
 														<%if (crfSort.equals(CommonACBean.COLUMN_VERSION)) { %> <%=sortImgLink%> <% } %>
 													</a>
 												</th>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_STATUS%>" href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_STATUS%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_STATUS%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_STATUS%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_STATUS%>');" <%}%>>
 														<%=CommonACBean.COLUMN_STATUS%>
 														<%if (crfSort.equals(CommonACBean.COLUMN_STATUS)) { %> <%=sortImgLink%> <% } %>
 													</a>
 												</th>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_CONTEXT%>" href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_CONTEXT%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_CONTEXT%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_CONTEXT%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_CONTEXT%>');" <%}%>>
 														<%=CommonACBean.COLUMN_CONTEXT%>
 														<%if (crfSort.equals(CommonACBean.COLUMN_CONTEXT)) { %> <%=sortImgLink%> <% } %>
 													</a>
 												</th>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_TYPE%>" href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_TYPE%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_TYPE%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_TYPE%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_TYPE%>');" <%}%>>
 														<%=CommonACBean.COLUMN_TYPE%>
 														<%if (crfSort.equals(CommonACBean.COLUMN_TYPE)) { %> <%=sortImgLink%> <% } %>
 													</a>
 												</th>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_CATEGORY%>" href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_CATEGORY%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_CATEGORY%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_CATEGORY%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_CATEGORY%>');" <%}%>>
 														<%=CommonACBean.COLUMN_CATEGORY%>
 														<%if (crfSort.equals(CommonACBean.COLUMN_CATEGORY)) { %> <%=sortImgLink%> <% } %>
 													</a>
 												</th>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_PROTO_NAME%>" href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_PROTO_NAME%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_PROTO_NAME%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_PROTO_NAME%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_PROTO_NAME%>');" <%}%>>
 														<%=CommonACBean.COLUMN_PROTO_NAME%>
 														<%if (crfSort.equals(CommonACBean.COLUMN_PROTO_NAME)) { %> <%=sortImgLink%> <% } %>
 													</a>
 												</th>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_PROTO_ID%>" href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_PROTO_ID%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_PROTO_ID%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_PROTO_ID%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_CRF_NAME%>','<%=CommonACBean.COLUMN_PROTO_ID%>');" <%}%>>
 														<%=CommonACBean.COLUMN_PROTO_ID%>
 														<%if (crfSort.equals(CommonACBean.COLUMN_PROTO_ID)) { %> <%=sortImgLink%> <% } %>
 													</a>
@@ -238,7 +246,7 @@
 							</div>
 							
 								<div class="ind2" style="display:inline;">  <!--  width:49%; text-align:right;">  -->
-									<input style="width: 160px" onclick="javascript:showReleased('<%=VMForm.ELM_VD_NAME%>', '<%=vdFilter%>');" type="button" value="<%=vdFilter%>" name="btnshowRELVD" <% if (vVD.size() > 0 || vdFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> enabled <%}else { %>disabled<%}%>>
+									<input style="width: 160px" <% if (isView) { %>onclick="viewVMShow('<%=VMForm.ELM_VD_NAME%>', '<%=vdFilter%>');"<% } else { %>onclick="javascript:showReleased('<%=VMForm.ELM_VD_NAME%>', '<%=vdFilter%>');" <%}%> type="button" value="<%=vdFilter%>" name="btnshowRELVD" <% if (vVD.size() > 0 || vdFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> enabled <%}else { %>disabled<%}%>>
 								</div>
 							<% if (vVD.size() > 0) { %> 
 								<div class="table">
@@ -253,31 +261,31 @@
 										<tbody>
 											<tr>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_LONG_NAME%>" href="javascript:sort('<%=VMForm.ELM_VD_NAME%>','<%=CommonACBean.COLUMN_LONG_NAME%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_LONG_NAME%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_VD_NAME%>','<%=CommonACBean.COLUMN_LONG_NAME%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_VD_NAME%>','<%=CommonACBean.COLUMN_LONG_NAME%>');" <%}%>>
 														<%=CommonACBean.COLUMN_LONG_NAME%>
 														<%if (vdSort.equals(CommonACBean.COLUMN_LONG_NAME)) { %> <%=sortImgLink%> <% } %>
 													</a>
 												</th>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_PUBLIC_ID%>" href="javascript:sort('<%=VMForm.ELM_VD_NAME%>','<%=CommonACBean.COLUMN_PUBLIC_ID%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_PUBLIC_ID%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_VD_NAME%>','<%=CommonACBean.COLUMN_PUBLIC_ID%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_VD_NAME%>','<%=CommonACBean.COLUMN_PUBLIC_ID%>');" <%}%>>
 														<%=CommonACBean.COLUMN_PUBLIC_ID%>
 														<%if (vdSort.equals(CommonACBean.COLUMN_PUBLIC_ID)) { %> <%=sortImgLink%> <% } %>
 													</a>
 												</th>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_VERSION%>" href="javascript:sort('<%=VMForm.ELM_VD_NAME%>','<%=CommonACBean.COLUMN_VERSION%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_VERSION%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_VD_NAME%>','<%=CommonACBean.COLUMN_VERSION%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_VD_NAME%>','<%=CommonACBean.COLUMN_VERSION%>');" <%}%>>
 														<%=CommonACBean.COLUMN_VERSION%>
 														<%if (vdSort.equals(CommonACBean.COLUMN_VERSION)) { %> <%=sortImgLink%> <% } %>
 													</a>
 												</th>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_STATUS%>" href="javascript:sort('<%=VMForm.ELM_VD_NAME%>','<%=CommonACBean.COLUMN_STATUS%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_STATUS%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_VD_NAME%>','<%=CommonACBean.COLUMN_STATUS%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_VD_NAME%>','<%=CommonACBean.COLUMN_STATUS%>');" <%}%>>
 														<%=CommonACBean.COLUMN_STATUS%>
 														<%if (vdSort.equals(CommonACBean.COLUMN_STATUS)) { %> <%=sortImgLink%> <% } %>
 													</a>
 												</th>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_CONTEXT%>" href="javascript:sort('<%=VMForm.ELM_VD_NAME%>','<%=CommonACBean.COLUMN_CONTEXT%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_CONTEXT%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_VD_NAME%>','<%=CommonACBean.COLUMN_CONTEXT%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_VD_NAME%>','<%=CommonACBean.COLUMN_CONTEXT%>');" <%}%>>
 														<%=CommonACBean.COLUMN_CONTEXT%>
 														<%if (vdSort.equals(CommonACBean.COLUMN_CONTEXT)) { %> <%=sortImgLink%> <% } %>
 													</a>
@@ -334,7 +342,7 @@
 							</div>
 							
 								<div class="ind2" style="display:inline;">  <!-- text-align:right; width:49%;"> -->
-									<input style="width: 160px" onclick="javascript:showReleased('<%=VMForm.ELM_DE_NAME%>', '<%=deFilter%>');" type="button" value="<%=deFilter%>" name="btnshowRELDE" <% if (vDE.size() > 0 || deFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> enabled <%}else { %> disabled<%}%>>
+									<input style="width: 160px" <% if (isView) { %>onclick="viewVMShow('<%=VMForm.ELM_DE_NAME%>', '<%=deFilter%>');"<% } else { %>onclick="javascript:showReleased('<%=VMForm.ELM_DE_NAME%>', '<%=deFilter%>');" <%}%> type="button" value="<%=deFilter%>" name="btnshowRELDE" <% if (vDE.size() > 0 || deFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> enabled <%}else { %> disabled<%}%>>
 								</div>
 							<% if (vDE.size() > 0) { %> 
 								<div class="table">
@@ -349,31 +357,31 @@
 										<tbody>
 											<tr style="padding-bottom:0.05in">
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_LONG_NAME%>" href="javascript:sort('<%=VMForm.ELM_DE_NAME%>','<%=CommonACBean.COLUMN_LONG_NAME%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_LONG_NAME%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_DE_NAME%>','<%=CommonACBean.COLUMN_LONG_NAME%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_DE_NAME%>','<%=CommonACBean.COLUMN_LONG_NAME%>');" <%}%>>
 														<%=CommonACBean.COLUMN_LONG_NAME%>
 														<%if (deSort.equals(CommonACBean.COLUMN_LONG_NAME)) { %> <%=sortImgLink%> <% } %>
 													</a>
 												</th>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_PUBLIC_ID%>" href="javascript:sort('<%=VMForm.ELM_DE_NAME%>','<%=CommonACBean.COLUMN_PUBLIC_ID%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_PUBLIC_ID%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_DE_NAME%>','<%=CommonACBean.COLUMN_PUBLIC_ID%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_DE_NAME%>','<%=CommonACBean.COLUMN_PUBLIC_ID%>');" <%}%>>
 														<%=CommonACBean.COLUMN_PUBLIC_ID%>
 														<%if (deSort.equals(CommonACBean.COLUMN_PUBLIC_ID)) { %> <%=sortImgLink%> <% } %>
 													</a>
 												</th>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_VERSION%>" href="javascript:sort('<%=VMForm.ELM_DE_NAME%>','<%=CommonACBean.COLUMN_VERSION%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_VERSION%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_DE_NAME%>','<%=CommonACBean.COLUMN_VERSION%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_DE_NAME%>','<%=CommonACBean.COLUMN_VERSION%>');" <%}%>>
 														<%=CommonACBean.COLUMN_VERSION%>
 														<%if (deSort.equals(CommonACBean.COLUMN_VERSION)) { %> <%=sortImgLink%> <% } %>
 													</a>
 												</th>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_STATUS%>" href="javascript:sort('<%=VMForm.ELM_DE_NAME%>','<%=CommonACBean.COLUMN_STATUS%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_STATUS%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_DE_NAME%>','<%=CommonACBean.COLUMN_STATUS%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_DE_NAME%>','<%=CommonACBean.COLUMN_STATUS%>');" <%}%>>
 														<%=CommonACBean.COLUMN_STATUS%>
 														<%if (deSort.equals(CommonACBean.COLUMN_STATUS)) { %> <%=sortImgLink%> <% } %>
 													</a>
 												</th>
 												<th>
-													<a title="Sort by <%=CommonACBean.COLUMN_CONTEXT%>" href="javascript:sort('<%=VMForm.ELM_DE_NAME%>','<%=CommonACBean.COLUMN_CONTEXT%>');">
+													<a title="Sort by <%=CommonACBean.COLUMN_CONTEXT%>" <% if (isView) { %>href="javascript:viewVMSort('<%=VMForm.ELM_DE_NAME%>','<%=CommonACBean.COLUMN_CONTEXT%>');"<% } else { %>href="javascript:sort('<%=VMForm.ELM_DE_NAME%>','<%=CommonACBean.COLUMN_CONTEXT%>');" <%}%>>
 														<%=CommonACBean.COLUMN_CONTEXT%>
 														<%if (deSort.equals(CommonACBean.COLUMN_CONTEXT)) { %> <%=sortImgLink%> <% } %>
 													</a>

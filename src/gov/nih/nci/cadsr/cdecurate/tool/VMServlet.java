@@ -1,13 +1,19 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.42 2008-12-29 17:35:18 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.43 2009-01-15 16:19:35 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
+import gov.nih.nci.cadsr.cdecurate.database.Alternates;
+import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
+import gov.nih.nci.cadsr.persist.exception.DBException;
+import gov.nih.nci.cadsr.persist.vm.Value_Meanings_Mgr;
+import gov.nih.nci.cadsr.persist.vm.VmVO;
 
+import java.sql.Connection;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
@@ -1021,4 +1027,82 @@ public VMForm getVmData() {
 public void setVmData(VMForm vmData) {
 	this.vmData = vmData;
 }
+public void doOpenViewPage() throws Exception{
+	VMForm vmForm = new VMForm();
+	VM_Bean vmBean = new VM_Bean();
+	VmVO vmVO = new VmVO();
+    HttpServletRequest req = httpRequest;
+   	HttpSession session = req.getSession();
+	String acID = (String) req.getParameter("idseq");
+	try{
+	    Value_Meanings_Mgr vmMgr = new Value_Meanings_Mgr();
+		vmVO = vmMgr.getVm(acID, "", "", "", this.curationServlet.m_conn);
+	}catch(DBException e){
+		logger.error(e.getMessage());
+	}
+	if (vmVO.getBegin_date() != null){
+	  vmBean.setVM_BEGIN_DATE(vmVO.getBegin_date().toString());
+	}
+	if (vmVO.getEnd_date() != null){
+	  vmBean.setVM_END_DATE(vmVO.getEnd_date().toString());
+	}  
+	vmBean.setVM_PREFERRED_DEFINITION(vmVO.getPrefferred_def());
+	vmBean.setVM_LONG_NAME(vmVO.getLong_name());
+	vmBean.setVM_IDSEQ(vmVO.getVm_IDSEQ());
+	Long id = new Long(vmVO.getVm_ID());
+	vmBean.setVM_ID(id.toString());
+	vmBean.setVM_CONTE_IDSEQ(vmVO.getConte_IDSEQ());
+	vmBean.setVM_CHANGE_NOTE(vmVO.getChange_note());
+	vmBean.setASL_NAME(vmVO.getAsl_name());
+	Double version =  new Double(vmVO.getVersion());
+	vmBean.setVM_VERSION(version.toString());
+	String sCondr = vmVO.getCondr_IDSEQ();
+	vmBean.setVM_CONDR_IDSEQ(vmVO.getCondr_IDSEQ());
+	//get vm concepts
+	if (sCondr != null && !sCondr.equals("")){
+      ConceptForm cdata = new ConceptForm();
+      cdata.setDBConnection(this.curationServlet.m_conn);
+      ConceptAction cact = new ConceptAction();
+      Vector<EVS_Bean> conList = cact.getAC_Concepts(sCondr, cdata);
+      vmBean.setVM_CONCEPT_LIST(conList);
+      DBAccess db =new DBAccess(this.curationServlet.m_conn);
+      Alternates[] altList = db.getAlternates(new String[] {acID}, true, true);
+      vmBean.setVM_ALT_LIST(altList);
+    }
+	DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, vmBean);
+	//AltNamesDefsServlet altSer = new AltNamesDefsServlet(curationServlet,  curationServlet.sessionData.UsrBean);
+    //Alternates alt = altSer.getManualDefinition(req, VMForm.ELM_FORM_SEARCH_EVS);
+  //  if (alt != null && !alt.getName().equals(""))
+   	//    vmBean.setVM_ALT_DEFINITION(alt.getName());
+    writeDetailJsp();
+    req.setAttribute("IncludeViewPage", "ValueMeaningDetail.jsp") ;
 }
+public void doViewVMAction(){
+	String action = httpRequest.getParameter("action");
+	HttpSession session = httpRequest.getSession();
+	if (action != null){
+	   if (action.equals("detailsTab")){
+		  DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
+		  writeDetailJsp(); 
+		  httpRequest.setAttribute("IncludeViewPage", VMForm.JSP_VM_DETAIL) ;
+       }else if (action.equals("whereUsedTab")){
+    	  DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_USED_TAB);
+    	  VM_Bean selVM = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
+	      this.readAllUsedComponents(selVM, false, "");
+		  writeUsedJsp(); 
+		  httpRequest.setAttribute("IncludeViewPage", VMForm.JSP_VM_USED) ;
+      }else if (action.equals("sort")){
+    	  String page = sortUsedAC();
+    	  writeUsedJsp();
+    	  httpRequest.setAttribute("IncludeViewPage", page) ;
+      }else if (action.equals("show")){
+    	  String page = filterUsedAC();
+    	  writeUsedJsp();
+    	  httpRequest.setAttribute("IncludeViewPage", page) ;
+      }
+    }
+}
+
+}
+
+
