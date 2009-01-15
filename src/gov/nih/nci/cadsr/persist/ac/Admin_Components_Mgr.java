@@ -147,4 +147,32 @@ public class Admin_Components_Mgr extends DBManager {
 		}
 		return list;
 	}
+	/*
+	 * This method returns idseq 
+	 */
+	public String getACIdseq(long publicID, double version, Connection conn) throws DBException{
+		String acIdseq = null;
+		PreparedStatement statement = null;
+		ResultSet rs = null;
+		try {
+			String sql ="select ac_idseq from sbr.admin_components_view where public_id = ? and version = ?";
+			statement = conn.prepareStatement(sql);
+			statement.setLong(1,publicID);
+			statement.setDouble(2,version);
+			rs = statement.executeQuery();
+			while (rs.next()) {
+				acIdseq = rs.getString(1);
+			}
+	    } catch (SQLException e) {
+			logger.error(DBException.DEFAULT_ERROR_MSG + " in getACIdseq() method of Admin_Components_Mgr class " + e);
+			throw new DBException("Cannot able to get AC Idseq");
+		} finally {
+			try {
+				DBHelper.close(rs, statement);
+			} catch (Exception e) {
+		}
+		
+	  }
+		return acIdseq;
+	}
 }
