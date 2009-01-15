@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.6 2009-01-15 16:21:51 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.7 2009-01-15 16:57:28 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 	var secondWindow;
@@ -239,6 +239,10 @@
       document.VMUse.action = "../../cdecurate/NCICurationServlet?reqType=viewVMAction&action=show";
       document.VMUse.submit();	
  } 
-  
+ //open viewonly alt name with something to tell view 
+function openAltNameViewWindow(){
+	var refWindow = window.open("../../cdecurate/NCICurationServlet?reqType=getAltNames&acID="+document.SearchActionForm.acID.value, "AlternateNames", "width=700,height=300,top=0,left=0,resizable=yes,scrollbars=yes");
+	//var refWindow = window.open("../../cdecurate/NCICurationServlet?reqType=viewAltNamesDefs&searchEVS=" + document.SearchActionForm.searchEVS.value, "viewDesignate", "width=900,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
+}
    
 	

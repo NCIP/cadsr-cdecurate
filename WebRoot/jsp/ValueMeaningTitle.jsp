@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.5 2009-01-15 16:22:42 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.6 2009-01-15 16:57:26 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -56,7 +56,11 @@
 	<input type="button" name="btnBack" value="Back" style="width:125" onClick="SubmitValidate('<%=retPage%>');">
 	&nbsp;&nbsp;
    <% } %>	
-	<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:150" onClick="openDesignateWindow('Alternate Names');">
+	<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:150" <% if (isView) { %>
+					onClick="openAltNameViewWindow();"
+				<% } else { %>
+					onClick="openDesignateWindow('Alternate Names');" 
+				<% } %> >
 	&nbsp;&nbsp;
    <%if (isView) {%>
 	 <input type="button" name="btnClose" value="Close" style="width: 125" onClick="window.close();">
