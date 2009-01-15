@@ -1,10 +1,11 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.4 2008-12-23 20:58:01 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.5 2009-01-15 20:00:40 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 
 <%  
@@ -56,7 +57,12 @@
 	    //for altnames and ref docs
 	    session.setAttribute("dispACType", "ValueDomain");
 	    }
-
+        String displayErrorMessagee = (String)session.getAttribute("displayErrorMessage");
+        String from = "view";
+        if ((displayErrorMessagee != null)&&(displayErrorMessagee).equals("Yes")){
+          from = "edit";
+        }
+        
    // System.out.println(sOriginAction + " action " + sMenuAction);
 
 		%>
@@ -93,8 +99,7 @@
 				<% } %>
 			>
 			&nbsp;&nbsp;
-			<%	String displayErrorMessagee = (String)session.getAttribute("displayErrorMessage");
-			  if((displayErrorMessagee != null)&&(displayErrorMessagee).equals("Yes")){	%>
+			<% if((displayErrorMessagee != null)&&(displayErrorMessagee).equals("Yes")){	%>
 							<input type="button" name="btnClose" value="Back" style="width: 125" onClick="Back();">
 							&nbsp;&nbsp;
 			<% }else if (isView) {	%>
@@ -165,13 +170,13 @@
 		<col />
 	</colgroup>
 	<tr>
-		<td id="vddetailstab" class="<%=vdTabFocus%>" <% if (isView) { %>onclick="changeTab('VD');"<% } else { %>onclick="SubmitValidate('vddetailstab');"<%} %>>
+		<td id="vddetailstab" class="<%=vdTabFocus%>" <% if (isView) { %>onclick="changeTab('VD','<%=StringEscapeUtils.escapeJavaScript(from)%>');"<% } else { %>onclick="SubmitValidate('vddetailstab');"<%} %>>
 			<b>
 				Value Domain Details
 			</b>
 		</td>
 		<% if(!sOriginAction.equals("BlockEditVD")){%>
-		<td id="vdpvstab" class="<%=pvTabFocus%>" <% if (isView) { %>onclick="changeTab('PV');"<% } else { %>onclick="SubmitValidate('vdpvstab');"<%} %>>
+		<td id="vdpvstab" class="<%=pvTabFocus%>" <% if (isView) { %>onclick="changeTab('PV','<%=StringEscapeUtils.escapeJavaScript(from)%>');"<% } else { %>onclick="SubmitValidate('vdpvstab');"<%} %>>
 			<b>
 				Permissible Values
 			</b>

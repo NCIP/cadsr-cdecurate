@@ -2282,16 +2282,16 @@ public class ValueDomainServlet extends CurationServlet {
      }
    }
 	
-  public void doViewPageTab() throws Exception
-  {
+  public void doViewPageTab() throws Exception{
 	  String tab = m_classReq.getParameter("vdpvstab");
-	  if (tab != null && tab.equals("PV"))
-	  {
+	  String from = m_classReq.getParameter("from");
+	  if (from.equals("edit")){
+		  m_classReq.getSession().setAttribute("displayErrorMessage", "Yes");  
+	  }
+	  if (tab != null && tab.equals("PV")) {
 		  m_classReq.setAttribute("IncludeViewPage", "PermissibleValue.jsp") ;
           ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
-	  }
-	  else
-	  {
+	  }else{
 		  m_classReq.setAttribute("IncludeViewPage", "EditVD.jsp") ;
           ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
 	  }
