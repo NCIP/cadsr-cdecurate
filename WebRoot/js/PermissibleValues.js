@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.5 2009-01-15 16:21:51 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.6 2009-01-15 18:29:43 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -939,7 +939,7 @@
       SubmitValidate("sortPV");
     }
   }
-
+  
   //disables the valid value selection
   function disableSelect()
   {
@@ -1486,5 +1486,16 @@
     }
     function openViewVMWindow(curPV)
     {
-    	var viewWindow = window.open("../../cdecurate/NCICurationServlet?reqType=pvView&viewPVInd=" +curPV, "", "width=1000,height=1000,top=0,left=0,resizable=yes,scrollbars=yes");
+    	var viewWindow = window.open("../../cdecurate/NCICurationServlet?reqType=viewPVAction&action=viewVM&viewPVInd=" +curPV, "", "width=1000,height=1000,top=0,left=0,resizable=yes,scrollbars=yes");
     }
+    
+   //sort the pv attributes
+  function viewPVSort(fieldName)
+  {
+    if (document.getElementById("PVViewTypes").length > 0)
+    {
+      document.getElementById("pvSortColumn").value = fieldName;
+      document.PVForm.action = "../../cdecurate/NCICurationServlet?reqType=viewPVAction&action=sort";
+      document.PVForm.submit();
+    }
+  }

@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.43 2009-01-15 16:19:35 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.44 2009-01-15 18:29:19 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1077,7 +1077,7 @@ public void doOpenViewPage() throws Exception{
     writeDetailJsp();
     req.setAttribute("IncludeViewPage", "ValueMeaningDetail.jsp") ;
 }
-public void doViewVMAction(){
+public void doViewVMActions(){
 	String action = httpRequest.getParameter("action");
 	HttpSession session = httpRequest.getSession();
 	if (action != null){

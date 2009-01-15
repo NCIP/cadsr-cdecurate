@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.19 2009-01-12 22:06:09 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.20 2009-01-15 18:30:02 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -880,36 +880,36 @@
 															</th>
 															<%} %>
 															<th align="center">
-																<% if (!isView) { %><a href="javascript:sortPV('value');"><%}%>
+																<% if (!isView) { %><a href="javascript:sortPV('value');"><%}else {%><a href="javascript:viewPVSort('value');"><%}%>
 																	Permissible Value
-																<% if (!isView) { %></a><%}%>
+																</a>
 															</th>
 															<th align="center">
-																<% if (!isView) { %><a href="javascript:sortPV('meaning');"><%}%>
+																<% if (!isView) { %><a href="javascript:sortPV('meaning');"><%}else {%><a href="javascript:viewPVSort('meaning');"><%}%>
 																	Value Meaning
-																<% if (!isView) { %></a><%}%>
+																</a>
 															</th>
 															<%if (vdCONs > 0){%>
 															<th align="center">
-																<% if (!isView) { %><a href="javascript:sortPV('ParConcept');"><%}%>
+																<% if (!isView) { %><a href="javascript:sortPV('ParConcept');"><%}else {%><a href="javascript:viewPVSort('ParConcept');"><%}%>
 																	Parent Concept
-																<% if (!isView) { %></a><%}%>
+																</a>
 															</th>
 															<%}%>
 															<th align="center">
-																<% if (!isView) { %><a href="javascript:sortPV('Origin');"><%}%>
+																<% if (!isView) { %><a href="javascript:sortPV('Origin');"><%}else {%><a href="javascript:viewPVSort('Origin');"><%}%>
 																	Value Origin
-																<% if (!isView) { %></a><%}%>
+																</a>
 															</th>
 															<th align="center">
-																<% if (!isView) { %><a href="javascript:sortPV('BeginDate');"><%}%>
+																<% if (!isView) { %><a href="javascript:sortPV('BeginDate');"><%}else {%><a href="javascript:viewPVSort('BeginDate');"><%}%>
 																	Begin Date
-																<% if (!isView) { %></a><%}%>
+																</a>
 															</th>
 															<th align="center">
-																<% if (!isView) { %><a href="javascript:sortPV('EndDate');"><%}%>
+																<% if (!isView) { %><a href="javascript:sortPV('EndDate');"><%}else {%><a href="javascript:viewPVSort('EndDate');"><%}%>
 																	End Date
-																<% if (!isView) { %></a><%}%>
+																</a>
 															</th>
 														</tr>
 														<tr valign="top">
