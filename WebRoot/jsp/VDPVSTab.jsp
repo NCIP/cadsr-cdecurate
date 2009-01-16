@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.6 2009-01-16 16:46:10 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.7 2009-01-16 21:54:48 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -22,6 +22,8 @@
       UtilService serUtil = new UtilService();
       String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
       String sOriginAction = (String) session.getAttribute("originAction");
+      if (sOriginAction == null)
+          sOriginAction = "";
       String vdTabFocus = "TABX";
       String pvTabFocus = "TABX";
       if (sTabFocus == null || sTabFocus.equals(""))

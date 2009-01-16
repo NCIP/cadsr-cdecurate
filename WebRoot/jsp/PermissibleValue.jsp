@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.20 2009-01-15 18:30:02 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.21 2009-01-16 21:54:48 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -21,6 +21,7 @@
       String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
       String sSearchAC = (String) session.getAttribute("creSearchAC");
       String vocab= (String)session.getAttribute("preferredVocab");
+      if (vocab == null) vocab = "";
       System.out.println("preferred vocab"+ vocab);
       
       //for view only page
@@ -349,7 +350,7 @@
 										&nbsp;
 									</td>
 								</tr>
-								<% if (sMenuAction.equals("Questions") && vQVList.size() > 0) { %>
+								<% if ((sMenuAction != null) && sMenuAction.equals("Questions") && vQVList.size() > 0) { %>
 								<!-- when questions -->
 								<tr height="25" valign="bottom">
 									<td>
@@ -451,7 +452,7 @@
 											<input type="button" name="btnCancelNew" value="Cancel" style="width: 130" onclick="javascript:CancelNewPV();" />
 											<br>
 											<table width="99%" border="1" cellpadding="15" style="border-collapse: collapse;">
-												<%if (sMenuAction.equals("Questions") && vQVList.size() > 0){%>
+												<%if ((sMenuAction != null) && sMenuAction.equals("Questions") && vQVList.size() > 0){%>
 												<col width="10%">
 												<% } %>
 												<col width="20%">
@@ -460,7 +461,7 @@
 												<col width="9%">
 												<col width="9%">
 												<tr height="30" valign="middle">
-													<%if (sMenuAction.equals("Questions") && vQVList.size() > 0){%>
+													<%if ( (sMenuAction != null) && (sMenuAction.equals("Questions") && vQVList.size() > 0) ){%>
 													<th align="left">
 														Valid Value
 													</th>
@@ -489,7 +490,7 @@
 													</th>
 												</tr>
 												<tr>
-													<%if (sMenuAction.equals("Questions")){%>
+													<%if ( (sMenuAction != null) && (sMenuAction.equals("Questions")) ){%>
 													<td valign="top">
 														&nbsp;&nbsp;
 														<select name="selValidValue" size=1 style="width:150" onchange="javascript:getORsetEdited('pvNew', 'pv');">
@@ -835,7 +836,7 @@
 											<tr>
 												<td>
 													<table width="99%" border="0">
-														<%if (vdCONs > 0 && sMenuAction.equals("Questions")){%>
+														<%if (vdCONs > 0 && (sMenuAction != null) && sMenuAction.equals("Questions")){%>
 														<col width="5%">
 														<col width="7%">
 														<col width="11%">
@@ -844,7 +845,7 @@
 														<col width="10%">
 														<col width="8%">
 														<col width="7%">
-														<%} else if (sMenuAction.equals("Questions")){%>
+														<%} else if ( (sMenuAction != null) && (sMenuAction.equals("Questions"))){%>
 														<col width="5%">
 														<col width="7%">
 														<col width="11%">
@@ -872,7 +873,7 @@
 															<th>
 																Actions
 															</th>
-															<%if (sMenuAction.equals("Questions")){%>
+															<%if (( (sMenuAction != null) && sMenuAction.equals("Questions"))){%>
 															<th align="center">
 																<a href="javascript:sortPV('ValidValue');">
 																	Valid Value
@@ -925,7 +926,7 @@
 																	</a>
 																</div>
 															</td>
-															<%if (sMenuAction.equals("Questions")){%>
+															<%if ( (sMenuAction != null) && (sMenuAction.equals("Questions"))){%>
 															<td align="center">
 															</td>
 															<%} %>
@@ -962,7 +963,7 @@
 												<td>
 													<div id="Layer1" style="position:relative; z-index:1; overflow:auto; height:480;">
 														<table border="1" style="border-collapse: collapse; width: 100%" cellpadding="0.1in, 0.05in, 0.1in, 0.05in">
-															<%if (vdCONs > 0 && sMenuAction.equals("Questions")){%>
+															<%if (vdCONs > 0 && (sMenuAction != null) &&  sMenuAction.equals("Questions")){%>
 															<col width="5%">
 															<col width="7%">
 															<col width="11%">
@@ -971,7 +972,7 @@
 															<col width="10%">
 															<col width="8%">
 															<col width="7%">
-															<%} else if (sMenuAction.equals("Questions")){%>
+															<%} else if ( (sMenuAction != null) && (sMenuAction.equals("Questions"))){%>
 															<col width="5%">
 															<col width="7%">
 															<col width="11%">
@@ -1079,7 +1080,7 @@
 																	</div>
 																  <% } %>	
 																</td>
-																<%if (sMenuAction.equals("Questions")){%>
+																<%if ( (sMenuAction != null) && (sMenuAction.equals("Questions"))){%>
 																<td valign="top">
 																	<div id="<%=pvCount%>ValidView" style="display: block">
 																		<%=sVValue%>
@@ -1531,8 +1532,8 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 							<input type="hidden" name="selectedParentConceptCode" value="">
 							<input type="hidden" name="selectedParentConceptDB" value="">
 							<input type="hidden" name="selectedParentConceptMetaSource" value="">
-
-							<input type="hidden" name="MenuAction" value="<%=sMenuAction%>">
+                            <%if (sMenuAction != null) %> 
+							  <input type="hidden" name="MenuAction" value="<%=sMenuAction%>">
 							<input type="hidden" name="pvSortColumn" value="">
 							<input type="hidden" name="openToTree" value="">
 							<input type="hidden" name="actSelect" value="">
@@ -1548,6 +1549,7 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 		</table>
 		<div style="display:none">
 			<form name="SearchActionForm" method="post" action="">
+			   <%if (sSearchAC != null) %>
 				<input type="hidden" name="searchComp" value="<%=sSearchAC%>">
 				<input type="hidden" name="searchEVS" value="ValueDomain">
 				<input type="hidden" name="isValidSearch" value="true">

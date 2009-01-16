@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.11 2009-01-12 22:06:09 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.12 2009-01-16 21:54:48 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -31,24 +31,22 @@
 			if (bodyPage != null && !bodyPage.equals(""))
 				isView = true;
 
-			String sOriginAction = (String) session
-					.getAttribute("originAction");
+			String sOriginAction = (String) session.getAttribute("originAction");
+			if (sOriginAction == null)
+			   sOriginAction = "";
 			Vector vStatus = (Vector) session.getAttribute("vStatusVD");
-			Vector vDataTypes = (Vector) session.getAttribute("vDataType");
-			Vector vDataTypeDesc = (Vector) session
-					.getAttribute("vDataTypeDesc");
-			Vector vDataTypeCom = (Vector) session
-					.getAttribute("vDataTypeComment");
+	        Vector vDataTypes = (Vector) session.getAttribute("vDataType");
+			Vector vDataTypeDesc = (Vector) session.getAttribute("vDataTypeDesc");
+			Vector vDataTypeCom = (Vector) session.getAttribute("vDataTypeComment");
 
 			Vector vUOM = (Vector) session.getAttribute("vUOM");
 			Vector vUOMFormat = (Vector) session.getAttribute("vUOMFormat");
-			Vector vCD = (Vector) session.getAttribute("vCD");
-			Vector vCDID = (Vector) session.getAttribute("vCD_ID");
-			Vector vLanguage = (Vector) session.getAttribute("vLanguage");
+	      //Vector vCD = (Vector) session.getAttribute("vCD");
+		  //Vector vCDID = (Vector) session.getAttribute("vCD_ID");
+		  //Vector vLanguage = (Vector) session.getAttribute("vLanguage");
 			Vector vSource = (Vector) session.getAttribute("vSource");
 			Vector vContext = (Vector) session.getAttribute("vWriteContextVD");
-			Vector vContextID = (Vector) session
-					.getAttribute("vWriteContextVD_ID");
+		  //Vector vContextID = (Vector) session.getAttribute("vWriteContextVD_ID");
 			Vector vCS = (Vector) session.getAttribute("vCS");
 			Vector vCS_ID = (Vector) session.getAttribute("vCS_ID");
 
@@ -58,8 +56,7 @@
 				m_VD = new VD_Bean();
 
 			UtilService serUtil = new UtilService();
-			String sMenuAction = (String) session
-					.getAttribute(Session_Data.SESSION_MENU_ACTION);
+			String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
 
 			String sVDIDSEQ = m_VD.getVD_VD_IDSEQ();
 			if (sVDIDSEQ == null)
@@ -380,6 +377,7 @@
   {
   <%
     Vector vCSIList = (Vector)session.getAttribute("CSCSIList");
+    if (vCSIList != null){
     for (int i=0; i<vCSIList.size(); i++)  //loop csi vector
     {
       thisCSI = (CSI_Bean)vCSIList.elementAt(i);  //get the csi bean
@@ -400,6 +398,7 @@
     <%  }    %>
       loadSelCSCSI();  //load the existing relationship
       loadWriteContextArray();  //load the writable contexts 
+     <%  }    %>  
   }
 
    function loadSelCSCSI()
@@ -1370,11 +1369,15 @@ function setup()
 								<% } %>										
 									</td>
 									<% String sDTDesc = "", sDTComm = ""; 
-											int iDT = vDataTypes.indexOf(sDataType);
+										   int iDT = 0;
+										   if (vDataTypes != null)
+											  iDT = vDataTypes.indexOf(sDataType);
 											if (iDT > 0)
 											{
-												sDTDesc = (String) vDataTypeDesc.elementAt(iDT);
-												sDTComm = (String) vDataTypeCom.elementAt(iDT);
+												if (vDataTypeDesc != null)
+												  sDTDesc = (String) vDataTypeDesc.elementAt(iDT);
+												if (vDataTypeCom != null)
+												  sDTComm = (String) vDataTypeCom.elementAt(iDT);
 												if (sDTDesc == null) sDTDesc = "";
 												if (sDTComm == null) sDTComm = "";
 											}
@@ -1730,10 +1733,12 @@ function setup()
 													}
 												%>
 												<option value="" selected></option>
-												<%
+												<%if (vCS != null) 
 													for (int i = 0; vCS.size() > i; i++) {
 														String sCSName = (String) vCS.elementAt(i);
-														String sCS_ID = (String) vCS_ID.elementAt(i);
+														String sCS_ID = "";
+														if (vCS_ID != null)
+														  sCS_ID = (String) vCS_ID.elementAt(i);
 												%>
 												<option value="<%=sCS_ID%>">
 													<%=sCSName%>
@@ -2066,7 +2071,8 @@ function setup()
 					<%
 						}
 					%>
-					<input type="hidden" name="MenuAction" value="<%=sMenuAction%>">
+					<%if (sMenuAction != null) %>
+					  <input type="hidden" name="MenuAction" value="<%=sMenuAction%>">
 					<input type="hidden" name="valueCount" value="0">
 					<input type="hidden" name="selObjRow" value="<%=selObjRow%>">
 					<input type="hidden" name="selPropRow" value="<%=selPropRow%>">
@@ -2151,11 +2157,11 @@ function setup()
 								for (int i = 0; vDataTypes.size() > i; i++) {
 									String sDType = (String) vDataTypes.elementAt(i);
 								//	String sDTDesc = "", sDTComm = "";
-									if (i < vDataTypeDesc.size())
+									if ((vDataTypeDesc != null)&&(i < vDataTypeDesc.size()))
 										sDTDesc = (String) vDataTypeDesc.elementAt(i);
 									if (sDTDesc == null || sDTDesc.equals(""))
 										sDTDesc = sDType;
-									if (i < vDataTypeCom.size())
+									if ((vDataTypeCom != null) && (i < vDataTypeCom.size()))
 										sDTComm = (String) vDataTypeCom.elementAt(i);
 									if (sDTComm == null)
 										sDTComm = "";
