@@ -4064,16 +4064,17 @@ public class CurationServlet
     	HttpSession session = m_classReq.getSession();
     	session.setAttribute("originAction", "");
     	Admin_Components_Mgr acMgr = new Admin_Components_Mgr();
+    	String errMsg = "";
     	//read the parameters idseq, public id and version from the request
     	long publicID =  0;
     	double version = 0;
 		String acIDSEQ = m_classReq.getParameter("idseq");
 		if (acIDSEQ == null){
 			String sValue = m_classReq.getParameter("publicId");
-			if (sValue != null)
+			if ((sValue != null) && (!sValue.equals("")))
 				publicID = Long.parseLong(sValue); 
 			sValue = m_classReq.getParameter("version");
-			if (sValue != null)
+			if ((sValue != null) && (!sValue.equals("")))
 				version = Double.parseDouble(sValue);
 			try {
 			  acIDSEQ = acMgr.getACIdseq(publicID, version, m_conn);
@@ -4081,8 +4082,17 @@ public class CurationServlet
 				logger.error("ac query", e);
 			}  
 		}
+		try {
+		  boolean isExists = acMgr.isAcExists(acIDSEQ, m_conn);
+		  if (!isExists){
+		    errMsg = "Unable to determine the administered components used to view the data";
+		    m_classReq.setAttribute("errMsg", errMsg);
+	     	ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
+		  }	
+		} catch (DBException e) {
+			logger.error("ac query", e);
+		}
 	   	//query the ac table to get the actl name
-		String errMsg = "";
 		ArrayList<String> ac = null;
 		try {
 			ac = acMgr.getActlName(acIDSEQ, publicID, version, m_conn);
