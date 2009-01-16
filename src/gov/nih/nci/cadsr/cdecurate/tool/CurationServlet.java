@@ -4065,42 +4065,34 @@ public class CurationServlet
     	session.setAttribute("originAction", "");
     	Admin_Components_Mgr acMgr = new Admin_Components_Mgr();
     	String errMsg = "";
+    	ArrayList<String> ac = null;
     	//read the parameters idseq, public id and version from the request
     	long publicID =  0;
     	double version = 0;
 		String acIDSEQ = m_classReq.getParameter("idseq");
-		if (acIDSEQ == null){
-			String sValue = m_classReq.getParameter("publicId");
-			if ((sValue != null) && (!sValue.equals("")))
-				publicID = Long.parseLong(sValue); 
-			sValue = m_classReq.getParameter("version");
-			if ((sValue != null) && (!sValue.equals("")))
-				version = Double.parseDouble(sValue);
-			try {
-			  acIDSEQ = acMgr.getACIdseq(publicID, version, m_conn);
-			} catch (DBException e) {
-				logger.error("ac query", e);
-			}  
-		}
 		try {
-		  boolean isExists = acMgr.isAcExists(acIDSEQ, m_conn);
-		  if (!isExists){
-		    errMsg = "Unable to determine the administered components used to view the data";
-		    m_classReq.setAttribute("errMsg", errMsg);
-	     	ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
-		  }	
-		} catch (DBException e) {
-			logger.error("ac query", e);
-		}
-	   	//query the ac table to get the actl name
-		ArrayList<String> ac = null;
-		try {
+			if (acIDSEQ == null) {
+				String sValue = m_classReq.getParameter("publicId");
+				if ((sValue != null) && (!sValue.equals("")))
+					publicID = Long.parseLong(sValue);
+				sValue = m_classReq.getParameter("version");
+				if ((sValue != null) && (!sValue.equals("")))
+					version = Double.parseDouble(sValue);
+				acIDSEQ = acMgr.getACIdseq(publicID, version, m_conn);
+			}
+			boolean isExists = acMgr.isAcExists(acIDSEQ, m_conn);
+			if (!isExists) {
+				errMsg = "Unable to determine the administered components used to view the data";
+				m_classReq.setAttribute("errMsg", errMsg);
+				ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
+			}
+			// query the ac table to get the actl name
 			ac = acMgr.getActlName(acIDSEQ, publicID, version, m_conn);
 		} catch (DBException e) {
 			logger.error("ac query", e);
 			errMsg = e.getMessage();
 		}
-		//get the details for the selected AC
+		// get the details for the selected AC
 		if (ac != null) {
 			String actlReq = "view"+ac.get(0);  //"DATAELEMENT";  //DE_CONCEPT ;  VALUEDOMAIN  ;  VALUEMEANING
 			acIDSEQ = ac.get(1);
