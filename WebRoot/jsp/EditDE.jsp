@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.8 2009-01-08 20:03:57 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.9 2009-01-16 18:58:51 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -37,8 +37,7 @@
 			Vector vSource = (Vector) session.getAttribute("vSource");
 
 			Vector results = (Vector) session.getAttribute("results");
-			String sMenuAction = (String) session
-					.getAttribute(Session_Data.SESSION_MENU_ACTION);
+			String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
 			if (!isView) {
 				if (sMenuAction.equals("nothing")) {
 					sMenuAction = "editDE";
@@ -46,8 +45,7 @@
 				}
 			}
 
-			String sOriginAction = (String) session
-					.getAttribute("originAction");
+			String sOriginAction = (String) session.getAttribute("originAction");
 			if (sOriginAction == null)
 				sOriginAction = "";
 			String sDDEAction = (String) session.getAttribute("DDEAction");
@@ -199,8 +197,7 @@
 			String sNVType = (String) session.getAttribute("NotValidDBType");
 			if (sNVType == null)
 				sNVType = "";
-			String sSelConcatChar = (String) session
-					.getAttribute("sConcatChar");
+			String sSelConcatChar = (String) session.getAttribute("sConcatChar");
 			String sSelRule = (String) session.getAttribute("sRule");
 			String sSelMethod = (String) session.getAttribute("sMethod");
 			Vector vRepType = new Vector();
@@ -208,7 +205,7 @@
 			Vector vDECompID = new Vector();
 			Vector vDECompOrder = new Vector();
 			Vector vDECompRelID = new Vector();
-			if (sDDEAction != "CreateNewDEFComp") {
+			if ((sDDEAction != null) && (sDDEAction != "CreateNewDEFComp")) {
 				vRepType = (Vector) session.getAttribute("vRepType");
 				vDEComp = (Vector) session.getAttribute("vDEComp");
 				vDECompID = (Vector) session.getAttribute("vDECompID");
@@ -240,6 +237,7 @@
     createObject("document.newCDEForm");
   <%
     Vector vCSIList = (Vector)session.getAttribute("CSCSIList");
+     if (vCSIList != null){
     for (int i=0; i<vCSIList.size(); i++)  //loop csi vector
     {
       thisCSI = (CSI_Bean)vCSIList.elementAt(i);  //get the csi bean
@@ -260,6 +258,7 @@
     <%  }    %>
       loadSelCSCSI();  //load the existing relationship
       loadWriteContextArray();  //load the writable contexts 
+    <%  }    %>
   }
 
    function loadSelCSCSI()
@@ -967,7 +966,7 @@
 								for (int i = 0; vStatus.size() > i; i++) {
 									String sStatusName = (String) vStatus.elementAt(i);
 									//add only draft new and retired phased out if creating new
-									if (sMenuAction.equals("Questions")) {
+									if ((sMenuAction != null) && (sMenuAction.equals("Questions"))) {
 										if (sStatusName.equals("DRAFT NEW")
 												|| sStatusName.equals("RETIRED PHASED OUT")
 												&& !sOriginAction.equals("BlockEditDEC")) {
@@ -1812,7 +1811,9 @@
 			<input type="hidden" name="selDECText" value="<%=sDEC%>">
 			<input type="hidden" name="selVDText" value="<%=sVD%>">
 			<input type="hidden" name="nameTypeChange" value="<%=decvdChanged%>">
-			<input type="hidden" name="MenuAction" value="<%=sMenuAction%>">
+			<%if (sMenuAction != null){ %>
+			  <input type="hidden" name="MenuAction" value="<%=sMenuAction%>">
+			<%}%>  
 			<select name="hiddenSelCSI" style="visibility:hidden;"></select>
 			<!-- stores the selected rows to get the bean from the search results -->
 			<select name="hiddenSelRow" size="1" style="visibility:hidden;width:160" multiple></select>
@@ -1851,7 +1852,7 @@ This is refilled with ac id from ac-csi to use it for block edit-->
 			<select name="selDECompDeleteHidden" size="1" style="visibility:hidden;" multiple></select>
 			<select name="selDECompDelNameHidden" size="1" style="visibility:hidden;" multiple></select>
 			<%
-				if (sDDEAction.equals("CreateNewDEFComp"))
+				if ((sDDEAction != null) && (sDDEAction.equals("CreateNewDEFComp")))
 					sOriginAction = sDDEAction;
 			%>
 			<input type="hidden" name="originActionHidden" value="<%=sOriginAction%>">

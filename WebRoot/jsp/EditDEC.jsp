@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.5 2009-01-08 20:03:57 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.6 2009-01-16 18:58:50 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -23,15 +23,14 @@
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<%
     Vector vContext = (Vector)session.getAttribute("vWriteContextDEC");
-    Vector vContextID = (Vector)session.getAttribute("vWriteContextDEC_ID");
+  //Vector vContextID = (Vector)session.getAttribute("vWriteContextDEC_ID");
     Vector vStatus = (Vector)session.getAttribute("vStatusDEC");
-    Vector vCD = (Vector)session.getAttribute("vCD");
-    Vector vCDID = (Vector)session.getAttribute("vCD_ID");
-    Vector vLanguage = (Vector)session.getAttribute("vLanguage");
+  //Vector vCD = (Vector)session.getAttribute("vCD");
+  //Vector vCDID = (Vector)session.getAttribute("vCD_ID");
+  //Vector vLanguage = (Vector)session.getAttribute("vLanguage");
     Vector vSource = (Vector)session.getAttribute("vSource");
     Vector vCS = (Vector)session.getAttribute("vCS");
     Vector vCS_ID = (Vector)session.getAttribute("vCS_ID");
-     
     //for view only page
 	String bodyPage = (String) request.getAttribute("IncludeViewPage");
 	boolean isView = false;
@@ -47,6 +46,7 @@
 		}
 	}
     String sOriginAction = (String)session.getAttribute("originAction");
+    if (sOriginAction == null) sOriginAction="";
  
     DEC_Bean m_DEC = (DEC_Bean)session.getAttribute("m_DEC");
     if (m_DEC == null) m_DEC = new DEC_Bean();
@@ -211,6 +211,7 @@
   {
 <%
     Vector vCSIList = (Vector)session.getAttribute("CSCSIList");
+    if ((vCSIList != null) && (vACCSIList != null)){   
     for (int i=0; i<vCSIList.size(); i++)  //loop csi vector
     {
       thisCSI = (CSI_Bean)vCSIList.elementAt(i);  //get the csi bean
@@ -231,7 +232,8 @@
       csiArray[aIndex] = new Array(csID, csiID, cscsiID, p_cscsiID, disp, label, csi_name, cs_name, level);       
     <%  }    %>
       loadSelCSCSI();  //load the existing relationship
-      loadWriteContextArray();  //load the writable contexts 
+      loadWriteContextArray();  //load the writable contexts
+    <%  }    %>  
   }
 
    function loadSelCSCSI()
@@ -1013,7 +1015,7 @@
           {
              String sStatusName = (String)vStatus.elementAt(i);
              //add only draft new and retired phased out if creating new
-             if (sMenuAction.equals("Questions"))
+             if ((sMenuAction != null) && (sMenuAction.equals("Questions")))
              {
                 if (sStatusName.equals("DRAFT NEW") || sStatusName.equals("RETIRED PHASED OUT") && !sOriginAction.equals("BlockEditDEC"))
                 {
@@ -1503,7 +1505,8 @@
 			<input type="hidden" name="selConceptualDomainText" value="<%=sConDom%>">
 			<input type="hidden" name="DECAction" value="EditDEC">
 			<% } %>
-			<input type="hidden" name="MenuAction" value="<%=sMenuAction%>">
+			<% if (sMenuAction != null){ %>
+			<input type="hidden" name="MenuAction" value="<%=sMenuAction%>"><%}%>
 
 			<input type="hidden" name="selObjRow" value="">
 			<input type="hidden" name="selPropRow" value="">
