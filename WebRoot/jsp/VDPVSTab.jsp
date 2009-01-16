@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.5 2009-01-15 20:00:40 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.6 2009-01-16 16:46:10 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -112,6 +112,7 @@
 	<tr valign="middle">
 		<th colspan=2 height="40">
 			<div align="left">
+				<%if (!isView){ %>
 				<%if (sOriginAction.contains("NewVD") || sMenuAction.contains("NewVD")) {%>
 				<label>
 					<font size=4>
@@ -144,7 +145,17 @@
 						</font>
 					</font>
 				</label>
-				<% } %>
+				<% }}else{%>
+				   <label>
+					<font size=4>
+						View Existing
+						<font color="#FF0000">
+							Value Domain
+						</font>
+					</font>
+				</label>
+				
+				<%}%>
 					<font size=3>
 						<%=vdNameDisplay%>
 					</font>	
