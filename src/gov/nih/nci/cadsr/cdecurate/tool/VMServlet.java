@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.45 2009-01-15 21:59:18 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.46 2009-01-16 15:08:39 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1077,7 +1077,8 @@ public void doOpenViewPage() throws Exception{
     //Alternates alt = altSer.getManualDefinition(req, VMForm.ELM_FORM_SEARCH_EVS);
   //  if (alt != null && !alt.getName().equals(""))
    	//    vmBean.setVM_ALT_DEFINITION(alt.getName());
-    writeDetailJsp();
+	DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
+	writeDetailJsp();
     req.setAttribute("IncludeViewPage", "ValueMeaningDetail.jsp") ;
 }
 public void doViewVMActions(){
