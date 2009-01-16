@@ -3297,9 +3297,11 @@ public class CurationServlet
         GetACSearch getACSearch = new GetACSearch(req, res, acServlet);
         if (getACSearch.getSelRowToEdit(req, res, "") == false){
           	if (sMenuAction.equals("NewDEVersion") || sMenuAction.equals("NewDECVersion") || sMenuAction.equals("NewVDVersion"))
-          		ForwardJSP(req, res, "/SearchResultsPage.jsp");
+          	   ForwardJSP(req, res, "/SearchResultsPage.jsp");
+          	else{
+          	   session.setAttribute("displayErrorMessage", "Yes"); 
+          	}    
           	String editID = (String)session.getAttribute("editID");
-        	session.setAttribute("displayErrorMessage", "Yes"); 
            	String path = "/NCICurationServlet?reqType=view&idseq=" + editID;
         	RequestDispatcher rd = m_servletContext.getRequestDispatcher(path);
 		    rd.forward(req, res);
