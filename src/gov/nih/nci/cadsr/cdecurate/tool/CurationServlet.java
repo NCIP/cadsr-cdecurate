@@ -4059,6 +4059,8 @@ public class CurationServlet
 
     public void doOpenViewPage() throws Exception
     {
+    	HttpSession session = m_classReq.getSession();
+    	session.setAttribute("originAction", "");
     	Admin_Components_Mgr acMgr = new Admin_Components_Mgr();
     	//read the parameters idseq, public id and version from the request
     	long publicID =  0;
