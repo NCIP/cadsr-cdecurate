@@ -256,14 +256,14 @@ public class Data_Elements_Mgr extends ACBase {
 
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		long version = 0;
+		double version = 0;
 		try {
 			String sql = "select version from data_elements_view where de_idseq = ?";
 			stmt = conn.prepareStatement(sql.toString());
 			stmt.setString(1, deIDSEQ);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				version = rs.getLong(1);
+				version = rs.getDouble(1);
 			}
 		} catch (SQLException e) {
 			logger.error(DBException.DEFAULT_ERROR_MSG + " in getDeVersionByIdseq() method in Data_Elements_Mgr " + e);
