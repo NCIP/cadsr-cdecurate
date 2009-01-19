@@ -152,7 +152,7 @@ public class ObjMenuTag extends MenuTag {
 		return tag;	
 	}
 	public String displayDesignate(){
-		String tag = generateTR("","16_designate","performUncheckedCkBoxAction('designate')","16_designate","performAction('designate')","Designate");
+		String tag = generateTR("","16_designate","performUncheckedCkBoxAction('designate')","16_designate_multi","performAction('designate')","Designate");
 		return tag;	
 	}
 	public String displayViewDetiails(){
