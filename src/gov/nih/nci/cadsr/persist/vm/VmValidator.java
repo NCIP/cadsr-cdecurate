@@ -114,8 +114,8 @@ public class VmValidator extends BaseValidator{
 		//check if version equals to retrieved version. If retrieved version not equals to version
 		//then throw exception since version cannot be updated
 		if (vmVO.getVersion()>0) {
-			String version = vmMgr.getVmVersionByIdseq(vmVO.getVm_IDSEQ(), conn);
-			if (!(version.equals(vmVO.getVersion()))) {
+			double version = vmMgr.getVmVersionByIdseq(vmVO.getVm_IDSEQ(), conn);
+			if (version != vmVO.getVersion()) {
 				errorList.add(VmErrorCodes.API_VM_402);
 				Utils.logVm(errorList);
 				throw new ValidationException(this.errorList);

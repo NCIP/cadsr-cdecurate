@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.46 2009-01-16 15:08:39 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.47 2009-01-19 21:52:35 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1039,7 +1039,8 @@ public void doOpenViewPage() throws Exception{
 	}
 	try{
 	    Value_Meanings_Mgr vmMgr = new Value_Meanings_Mgr();
-		vmVO = vmMgr.getVm(acID, "", "", "", this.curationServlet.m_conn);
+	    double version = 0;
+		vmVO = vmMgr.getVm(acID, "",version, "", this.curationServlet.m_conn);
 	}catch(DBException e){
 		logger.error(e.getMessage());
 	}
