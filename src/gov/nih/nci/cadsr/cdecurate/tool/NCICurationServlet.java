@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.62 2009-01-16 21:54:48 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.63 2009-01-19 15:32:05 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -203,7 +203,7 @@ public class NCICurationServlet extends HttpServlet
         	String reqType = req.getParameter("reqType"); 
         	HttpSession session = req.getSession();
         	String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
-        	if((menuAction == null) && !(reqType.equals("homePage")) && !(reqType.equals("login"))&& !(reqType.equals("view")) && !(reqType.equals("viewVDPVSTab"))&& !(reqType.equals("viewVMAction")) && !(reqType.equals("viewPVAction"))) {
+        	if((menuAction == null) && !(reqType.equals("homePage")) && !(reqType.equals("login"))&& !(reqType.equals("view")) && !(reqType.equals("viewVDPVSTab"))&& !(reqType.equals("viewVMAction")) && !(reqType.equals("viewPVAction")) && !(reqType.equals("getAltNames")) && !(reqType.equals("getRefDocument"))){
 				RequestDispatcher rd = this.getServletContext().getRequestDispatcher("/");
 				rd.forward(req, res);
 				return;
