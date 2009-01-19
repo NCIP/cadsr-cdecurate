@@ -26,7 +26,7 @@ public class CreateMenuTag extends MenuTag {
 			    				+generateDT("","displayStepsToFollow()","New Using Existing")
 					            +generateDT("","displayStepsToFollow2()","New Version")
 					            +separator()
-					            +generateDT("","callCCNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","Concept Class")
+					            //+generateDT("","callCCNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","Concept Class")
 					            +generateDT("","callDENew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","Data Element")
 					            +generateDT("","callDECNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","Data Element Concept")
 					            +generateDT("","callVDNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","Value Domain")
