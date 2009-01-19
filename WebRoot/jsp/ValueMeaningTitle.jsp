@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.6 2009-01-15 16:57:26 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.7 2009-01-19 20:19:32 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -69,22 +69,22 @@
 	<img name="Message" src="images/WaitMessage1.gif" width="250" height="20" alt="WaitMessage" style="visibility:hidden;">
 </div>
 <div class="ind1">
+	<b>
 	<font size=4>
-		<b>
-		   <% if(!isView){ %>	
-			 Edit
+	      <% if(isView){ %>	
+			  View [<font color="#FF0000">Value Meaning</font>] -
 		   <%}else{%> 
-		     View
-		   <%}%>
-			<font color="#FF0000">
+		     Edit Existing
+			 <font color="#FF0000">
 				Value Meaning
-			</font>
+			 </font>
 			-
-		</b>
-	</font>
+		   <%}%>
+    </font>
 	<font size=3>
 		<%=vmNameDisplay%>
 	</font>
+	</b>
 </div>
 <div class="ind1">
 	<table style="width: 100%;">
