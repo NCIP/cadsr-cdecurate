@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.9 2009-01-16 18:58:51 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.10 2009-01-19 20:19:22 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -219,6 +219,9 @@
 				sDECompOrder = (String) vDECompOrder.elementAt(0);
 
 			int item = 1;
+			String vdNameDisplay = "";
+            if (!sLongName.equals(""))
+      	       vdNameDisplay = " - " + sLongName + "  [" + sCDEID + "v" + sVersion + "]";
 		%>
 
 		<Script Language="JavaScript">
@@ -411,25 +414,33 @@
 						<div align="left">
 							<label>
 								<font size=4>
+							<%if (isView){%>
+							   View [<font color="#FF0000">Data Element</font>]
+							<%}else{ %>
 								<%
 									if (sOriginAction.equals("BlockEditDE")) {
 								%>
 									Block Edit Existing
-								<%
-									} else if (isView) {
-								%>
-									View Existing
+									<font color="#FF0000">
+										Data Elements
+									</font>
 								<%
 									} else {
 								%>
 									Edit Existing
+									<font color="#FF0000">
+										Data Element
+									</font>
 								<%
 									}
 								%>
-									<font color="#FF0000">
-										Data Elements
-									</font>
+									
+							 <%}%>		
 								</font>
+								
+							   <font size=3>
+						         <%=vdNameDisplay%>
+					           </font>		
 							</label>
 						</div>
 					</th>
