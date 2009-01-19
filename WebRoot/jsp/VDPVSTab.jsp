@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.7 2009-01-16 21:54:48 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.8 2009-01-19 20:37:04 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -141,19 +141,20 @@
 				<% } else {%>
 				<label>
 					<font size=4>
-						<%if (isView) { %>View <% } else { %>Edit <%} %>Existing
+						<%if (isView) { %>
+						   View [<font color="#FF0000">Value Domain</font>]
+						<% } else { %>
+						   Edit Existing
 						<font color="#FF0000">
 							Value Domain
 						</font>
+						<%} %>
 					</font>
 				</label>
 				<% }}else{%>
 				   <label>
 					<font size=4>
-						View Existing
-						<font color="#FF0000">
-							Value Domain
-						</font>
+						View [<font color="#FF0000">Value Domain</font>]
 					</font>
 				</label>
 				
