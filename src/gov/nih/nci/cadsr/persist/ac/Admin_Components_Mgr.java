@@ -175,4 +175,34 @@ public class Admin_Components_Mgr extends DBManager {
 	  }
 		return acIdseq;
 	}
+
+/*
+ * This method returns long name 
+ */
+public String getACLongName(long publicID, double version, Connection conn) throws DBException{
+	String longName = null;
+	PreparedStatement statement = null;
+	ResultSet rs = null;
+	try {
+		String sql ="select long_name from sbr.admin_components_view where public_id = ? and version = ?";
+		statement = conn.prepareStatement(sql);
+		statement.setLong(1,publicID);
+		statement.setDouble(2,version);
+		rs = statement.executeQuery();
+		while (rs.next()) {
+			longName = rs.getString(1);
+		}
+    } catch (SQLException e) {
+		logger.error(DBException.DEFAULT_ERROR_MSG + " in getACLongName() method of Admin_Components_Mgr class " + e);
+		throw new DBException("Cannot able to get AC long_name");
+	} finally {
+		try {
+			DBHelper.close(rs, statement);
+		} catch (Exception e) {
+	}
+	
+  }
+	return longName;
+}
+
 }
