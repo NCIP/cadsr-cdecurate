@@ -30,7 +30,7 @@ public class Value_Meanings_Mgr extends DBManager{
  * @param conn
  * @return
  */
-	public VmVO getVm(String vm_IDSEQ, String long_name, String version, String vm_ID, Connection conn) throws DBException{
+	public VmVO getVm(String vm_IDSEQ, String long_name, double version, String vm_ID, Connection conn) throws DBException{
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		VmVO vmvo = null;
@@ -44,11 +44,11 @@ public class Value_Meanings_Mgr extends DBManager{
 				String sql = "select * from value_meanings_view where vm_idseq = ?";
 			    stmt = conn.prepareStatement(sql);
 				stmt.setString(1, vm_IDSEQ);
-    		}else if ((vm_ID != null)&& !((vm_ID).equals("")) && (version != null) && (!(version).equals(""))){
+    		}else if ((vm_ID != null)&& !((vm_ID).equals("")) && (version > 0)){
     			String sql = "select * from value_meanings_view where vm_id = ? and version = ?";
 			    stmt = conn.prepareStatement(sql);
 				stmt.setString(1, vm_ID);
-				stmt.setString(2, version);
+				stmt.setDouble(2, version);
     		}else{
     			errorList.add(VmErrorCodes.API_VM_001);
     			throw new DBException(errorList);
@@ -117,11 +117,11 @@ public class Value_Meanings_Mgr extends DBManager{
 	 * @return
 	 * @throws DBException
 	 */
-	public String getVmVersionByIdseq(String vmIDSEQ, Connection conn) throws DBException {
+	public double getVmVersionByIdseq(String vmIDSEQ, Connection conn) throws DBException {
 
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String version = null;
+		double version = 0;
 		try {
 			StringBuffer sql = new StringBuffer();
 			sql.append("select version from value_meanings_view where de_idseq = ?");
@@ -129,7 +129,7 @@ public class Value_Meanings_Mgr extends DBManager{
 			stmt.setString(1, vmIDSEQ);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				version = rs.getString(1);
+				version = rs.getDouble(1);
 			}
 		} catch (SQLException e) {
 			logger.error(DBException.DEFAULT_ERROR_MSG + " in getDeVersionByIdseq() method in Data_Elements_Mgr "+ e);
