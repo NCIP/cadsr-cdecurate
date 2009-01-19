@@ -4069,6 +4069,7 @@ public class CurationServlet
     	//read the parameters idseq, public id and version from the request
     	long publicID =  0;
     	double version = 0;
+    	String actlReq = null;
 		String acIDSEQ = m_classReq.getParameter("idseq");
 		try {
 			if (acIDSEQ == null) {
@@ -4082,34 +4083,41 @@ public class CurationServlet
 			}
 			boolean isExists = acMgr.isAcExists(acIDSEQ, m_conn);
 			if (!isExists) {
-				errMsg = "Unable to determine the administered components used to view the data";
+				errMsg = "The Administered Item with Public Id [" +publicID + "] and Version [" + version +"] can not be found.";
 				m_classReq.setAttribute("errMsg", errMsg);
 				ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
 			}
 			// query the ac table to get the actl name
 			ac = acMgr.getActlName(acIDSEQ, publicID, version, m_conn);
+			// get the details for the selected AC
+			if (ac != null) {
+				String actlName = ac.get(0); //"DATAELEMENT";  //DE_CONCEPT ;  VALUEDOMAIN  ;  VALUEMEANING
+				if ( !(actlName.equals("DATAELEMENT")) && !(actlName.equals("DE_CONCEPT")) && !(actlName.equals("VALUEDOMAIN")) && !(actlName.equals("VALUEMEANING"))){
+					String longName = acMgr.getACLongName(publicID, version, m_conn);
+					errMsg = "Viewing [" + actlName + "] [" + longName + "] [" + publicID + "] [" + version +"] is not supported at this time.";
+					m_classReq.setAttribute("errMsg", errMsg);
+					ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");	
+				}
+				actlReq = "view"+ actlName;
+				acIDSEQ = ac.get(1);	
+			}	
 		} catch (DBException e) {
 			logger.error("ac query", e);
 			errMsg = e.getMessage();
 		}
-		// get the details for the selected AC
-		if (ac != null) {
-			String actlReq = "view"+ac.get(0);  //"DATAELEMENT";  //DE_CONCEPT ;  VALUEDOMAIN  ;  VALUEMEANING
-			acIDSEQ = ac.get(1);
-			if (acIDSEQ != null || !acIDSEQ.equals("")) {
-				m_classReq.setAttribute("acIdseq", acIDSEQ);
-				if ((actlReq).equals("viewVALUEMEANING")){
-				       VMServlet vmServlet = new VMServlet(m_classReq, m_classRes, this);
-				       vmServlet.doOpenViewPage();
-				 }else{
-					  CurationServlet servObj = getACServlet(actlReq);
-					  servObj.execute(getACType(actlReq));
-				}  
-			} else {
-				errMsg = "Unable to determine the administered components used to view the data";
-				logger.error(errMsg);
-			}			
-		}
+		if (acIDSEQ != null || !acIDSEQ.equals("")) {
+			m_classReq.setAttribute("acIdseq", acIDSEQ);
+			if ((actlReq).equals("viewVALUEMEANING")){
+			       VMServlet vmServlet = new VMServlet(m_classReq, m_classRes, this);
+			       vmServlet.doOpenViewPage();
+			 }else{
+				  CurationServlet servObj = getACServlet(actlReq);
+				  servObj.execute(getACType(actlReq));
+			}  
+		} else {
+			errMsg = "Unable to determine the administered components used to view the data";
+			logger.error(errMsg);
+		}			
 		m_classReq.setAttribute("errMsg", errMsg);
      	ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
     }
