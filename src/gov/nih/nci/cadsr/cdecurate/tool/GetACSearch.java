@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.79 2009-01-20 18:28:24 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.80 2009-01-20 20:54:21 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -852,7 +852,7 @@ public class GetACSearch implements Serializable
                 DataManager.setAttribute(session, "AppendAction", sAppendAct);
                 // save the last word in the request attribute
                 DataManager.setAttribute(session, "LastAppendWord", (String) session.getAttribute("serKeyword"));
-                DataManager.setAttribute(session, "serKeyword", "");
+               //DataManager.setAttribute(session, "serKeyword", "");
             }
             // call the method to get the selected rows
             if (menuAction.equals("BEDisplay"))

@@ -1212,7 +1212,7 @@ public class SearchServlet extends CurationServlet {
             else if (sSearchAC.equals("ValueMeaning"))
                 oldSearch = "Value Meaning";
             // make keyword empty and label for search result page.
-            DataManager.setAttribute(session, "serKeyword", "");
+            //DataManager.setAttribute(session, "serKeyword", "");
             String labelWord = "";
             String labelWord2 = "";
             labelWord = " associated with " + oldSearch + " - " + sName; // make the label
@@ -1964,7 +1964,8 @@ public class SearchServlet extends CurationServlet {
         Vector vResult = new Vector();
         DataManager.setAttribute(session, "results", vResult);
         session.setAttribute("recsFound", "No ");
-        DataManager.setAttribute(session, "serKeyword", "");
+       
+        //DataManager.setAttribute(session, "serKeyword", "");
         DataManager.setAttribute(session, "serProtoID", "");
         DataManager.setAttribute(session, "LastAppendWord", "");
         // remove the status message if any
