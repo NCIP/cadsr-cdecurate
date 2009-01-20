@@ -2195,13 +2195,13 @@ function viewAC(){
 					</td>
 				</tr>
 				<tr>
-					<td>
+					<td><input type="button" name="defaultSortBtn" value="Default Sort" onClick="doSearchDE();">
 						<font size="2">
 							&nbsp;
 							<%=nRecs%>
 							Records Found
 						</font>
-						</td>				
+					</td>				
 				</tr>
 				<%}%>
 				<tr>
