@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.21 2009-01-16 21:54:48 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.22 2009-01-20 18:26:42 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -31,7 +31,11 @@
 		isView = true;
       	
       VD_Bean m_VD = new VD_Bean();
-      m_VD = (VD_Bean) session.getAttribute("m_VD");
+      if (isView){
+		   m_VD = (VD_Bean) session.getAttribute("viewVD");
+	  }else{
+		   m_VD = (VD_Bean) session.getAttribute("m_VD");
+    	}   
       if (m_VD == null) m_VD = new VD_Bean();
       UtilService util = new UtilService();
       String sVDIDSEQ = m_VD.getVD_VD_IDSEQ();

@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.36 2009-01-20 14:58:29 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.37 2009-01-20 18:30:22 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -177,7 +177,8 @@ public class PVServlet implements Serializable
            //System.out.println("sort the pvs by the heading");
            GetACSearch serAC = new GetACSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
            String sField = (String)data.getRequest().getParameter("pvSortColumn");
-           serAC.getVDPVSortedRows(sField);          //call the method to sort pv attribute
+           VD_Bean vd = (VD_Bean) session.getAttribute("m_VD");
+           serAC.getVDPVSortedRows(vd,sField,"edit");          //call the method to sort pv attribute
            data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv0");  //"pv0View");
            return "/PermissibleValue.jsp";
          }
@@ -1335,7 +1336,7 @@ public class PVServlet implements Serializable
 			}
 		}
 	   	if (pvInd > -1) {
-			VD_Bean vd = (VD_Bean) session.getAttribute("m_VD");
+			VD_Bean vd = (VD_Bean) session.getAttribute("viewVD");
 			Vector<PV_Bean> vVDPVList = vd.getVD_PV_List(); 
 			if (vVDPVList != null){
 				PV_Bean selectPV = (PV_Bean) vVDPVList.elementAt(pvInd);
@@ -1352,12 +1353,13 @@ public class PVServlet implements Serializable
 		   if (action.equals("sort")){
 			 GetACSearch serAC = new GetACSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
 	         String sField = (String)data.getRequest().getParameter("pvSortColumn");
-	         serAC.getVDPVSortedRows(sField);  //call the method to sort pv attribute
+	         VD_Bean m_VD = (VD_Bean) session.getAttribute("viewVD");
+	         serAC.getVDPVSortedRows(m_VD,sField,"view");  //call the method to sort pv attribute
 	         data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv0"); 
 			 data.getRequest().setAttribute("IncludeViewPage", "PermissibleValue.jsp");  
 			 path = "/jsp/ViewPage.jsp" ;  
 		   }else if (action.equals("viewVM")){
-		     String vmIDSEQ = getViewVMId();
+			 String vmIDSEQ = getViewVMId();
 		     path = "/NCICurationServlet?reqType=view&idseq=" +vmIDSEQ ;
 		   }
 	   }

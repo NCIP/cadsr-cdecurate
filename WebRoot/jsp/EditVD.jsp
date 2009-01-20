@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.12 2009-01-16 21:54:48 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.13 2009-01-20 18:26:18 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -51,7 +51,11 @@
 			Vector vCS_ID = (Vector) session.getAttribute("vCS_ID");
 
 			VD_Bean m_VD = new VD_Bean();
-			m_VD = (VD_Bean) session.getAttribute("m_VD");
+			if (isView){
+			   m_VD = (VD_Bean) session.getAttribute("viewVD");
+			}else{
+			   m_VD = (VD_Bean) session.getAttribute("m_VD");
+			}   
 			if (m_VD == null)
 				m_VD = new VD_Bean();
 

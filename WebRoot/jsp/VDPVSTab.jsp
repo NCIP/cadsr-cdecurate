@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.8 2009-01-19 20:37:04 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.9 2009-01-20 18:27:02 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -35,7 +35,12 @@
       	
   //  System.out.println(pvTabFocus + " tab " + vdTabFocus);
       //get the name for the tab display
-      VD_Bean mVD = (VD_Bean) session.getAttribute("m_VD");
+      VD_Bean mVD = new VD_Bean();
+      if (isView){
+		   mVD = (VD_Bean) session.getAttribute("viewVD");
+	  }else{
+		   mVD = (VD_Bean) session.getAttribute("m_VD");
+     }   
       if (mVD == null) mVD = new VD_Bean();
       String sLongName = mVD.getVD_LONG_NAME();
       if (sLongName == null) sLongName = "";
