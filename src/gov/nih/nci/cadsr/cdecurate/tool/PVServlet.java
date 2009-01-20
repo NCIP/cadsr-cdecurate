@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.35 2009-01-15 18:29:19 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.36 2009-01-20 14:58:29 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -902,7 +902,8 @@ public class PVServlet implements Serializable
            selVM.setVM_ALT_DEFINITION(alt.getName());
          //write the jsp
          VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
-         vmser.writeDetailJsp();
+         VM_Bean vm = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
+         vmser.writeDetailJsp(vm);
          jsp = VMForm.JSP_VM_DETAIL;     
        }
      }
@@ -936,7 +937,8 @@ public class PVServlet implements Serializable
            selVM.setVM_ALT_DEFINITION(alt.getName());
          //write the jsp
          VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
-         vmser.writeDetailJsp();
+         VM_Bean vm = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
+         vmser.writeDetailJsp(vm);
          jsp = VMForm.JSP_VM_DETAIL;     
        }
      catch (Exception e)
