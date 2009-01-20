@@ -3807,7 +3807,7 @@ public class CurationServlet
         // DataManager.setAttribute(session, "VDPVList", new Vector());
         DataManager.setAttribute(session, "PVIDList", new Vector());
         DataManager.setAttribute(session, "creKeyword", "");
-        DataManager.setAttribute(session, "serKeyword", "");
+       //DataManager.setAttribute(session, "serKeyword", "");
         DataManager.setAttribute(session, "EVSresults", null);
         DataManager.setAttribute(session, "OpenTreeToConcept", "");
         DataManager.setAttribute(session, "labelKeyword", "");
