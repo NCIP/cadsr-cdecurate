@@ -186,7 +186,8 @@ public class ValueDomainServlet extends CurationServlet {
         {
             GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
             String sField = (String) m_classReq.getParameter("pvSortColumn");
-            serAC.getVDPVSortedRows(sField); // call the method to sort pv attribute
+            VD_Bean vd = (VD_Bean) session.getAttribute("m_VD");
+            serAC.getVDPVSortedRows(vd,sField,"create"); // call the method to sort pv attribute
             ForwardJSP(m_classReq, m_classRes, "/CreateVDPage.jsp");
             return;
         }
@@ -284,7 +285,8 @@ public class ValueDomainServlet extends CurationServlet {
         {
             GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
             String sField = (String) m_classReq.getParameter("pvSortColumn");
-            serAC.getVDPVSortedRows(sField); // call the method to sort pv attribute
+            VD_Bean vd = (VD_Bean) session.getAttribute("m_VD");
+            serAC.getVDPVSortedRows(vd,sField,"edit"); // call the method to sort pv attribute
             ForwardJSP(m_classReq, m_classRes, "/EditVDPage.jsp");
             return;
         }
@@ -2277,8 +2279,8 @@ public class ValueDomainServlet extends CurationServlet {
       {
     	  VD_Bean VDBean = (VD_Bean) vList.elementAt(0);
           VDBean = serAC.getVDAttributes(VDBean, "openView", "viewVD");
-          DataManager.setAttribute(session, "m_VD", VDBean);
-         	m_classReq.setAttribute("IncludeViewPage", "EditVD.jsp") ;
+          DataManager.setAttribute(session, "viewVD", VDBean);
+          m_classReq.setAttribute("IncludeViewPage", "EditVD.jsp") ;
      }
    }
 	
