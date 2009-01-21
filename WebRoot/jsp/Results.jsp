@@ -372,7 +372,8 @@
 	}
    String labelKeyword1 = (String)request.getAttribute("labelKeyword1");	
    String labelKeyword2 = (String)request.getAttribute("labelKeyword2");
-%>
+   String show = (String)session.getAttribute("showDefaultSortBtn");
+ %>
 
 <SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
   var bUnAppendWarning = false;
@@ -860,6 +861,7 @@ function LoadKeyHandler(){
   
   
   function SelectAllCheckBox(){
+    document.searchResultsForm.show.value = "Yes";
     var numRows2 = "<%=numRows%>";
     var CK = "";
     for(k=0; k<numRows2; k++){
@@ -876,6 +878,7 @@ function LoadKeyHandler(){
      ShowSelectedRows(true);
    }
    function UnSelectAllCheckBox(){
+    document.searchResultsForm.show.value = "Yes";
     var numRows2 = "<%=numRows%>";
     var CK = "";
     for(m=0; m<numRows2; m++){
@@ -2158,8 +2161,9 @@ function viewAC(){
            <input type="hidden" name="hidMenuAction" value="nothing">
            <input type="hidden" name="selectedRowId" value="">
            <input type="hidden" name="unCheckedRowId" value="">
-            <input type="hidden" name="selectAll" value="false">
+           <input type="hidden" name="selectAll" value="false">
            <input type="hidden" name="flag" value="true">
+           <input type="hidden" name="show" value="No">
          
            <table style="width: 100%; border-collapse: collapse">
 			<%if (((vResultStack.size()>0 && sBackFromGetAssociated.equals("backFromGetAssociated") && !pushBoolean.equals("true"))
@@ -2195,7 +2199,7 @@ function viewAC(){
 					</td>
 				</tr>
 				<tr>
-					<td><input type="button" name="defaultSortBtn" value="Default Sort" onClick="doSearchDE();">
+					<td><%if ((show != null) && (show.equals("Yes")) ){ %><input type="button" name="defaultSortBtn" value="Default Sort" onClick="doSearchDE();"><%}%>
 						<font size="2">
 							&nbsp;
 							<%=nRecs%>

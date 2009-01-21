@@ -209,7 +209,8 @@ public class SearchServlet extends CurationServlet {
             // start a new search from search parameter
             if (actType.equals("Search"))
             {
-                // search is from create page
+                session.setAttribute("showDefaultSortBtn", "Yes");
+            	// search is from create page
                 if (menuAction.equals("searchForCreate"))
                 {
                     getACSearch.getACSearchForCreate(m_classReq, m_classRes, false);
@@ -259,9 +260,10 @@ public class SearchServlet extends CurationServlet {
             else if (actType.equals("searchInSelect"))
                 doRefreshPageForSearchIn();
             // set the attribute send the page back to refresh.
-            else if (actType.equals("searchForSelectOther"))
+            else if (actType.equals("searchForSelectOther")){
+            	session.setAttribute("showDefaultSortBtn", "No");
                 doRefreshPageOnSearchFor("Other");
-            // set the attribute send the page back to refresh.
+            }// set the attribute send the page back to refresh.
             else if (actType.equals("searchForSelectCRF"))
                 doRefreshPageOnSearchFor("CRFValue");
             // call method to UI filter change when hyperlink if pressed.
@@ -480,7 +482,11 @@ public class SearchServlet extends CurationServlet {
             doUnmonitor(m_classReq, m_classRes);
         else
         { // show selected rows only.
-             getACSearch.getACShowResult(m_classReq, m_classRes, actType);
+        	getACSearch.getACShowResult(m_classReq, m_classRes, actType);
+            String show = (String) m_classReq.getParameter("show");
+            if ((show != null)&&(show.equals("No"))){
+            	session.setAttribute("showDefaultSortBtn", "No");
+            }
             if (menuAction.equals("searchForCreate"))
                 ForwardJSP(m_classReq, m_classRes, "/OpenSearchWindow.jsp");
             else
