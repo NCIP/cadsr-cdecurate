@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.66 2008-08-04 21:44:42 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.73 2008-12-18 16:49:37 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2025,7 +2025,7 @@ public class GetACSearch implements Serializable
                 cstmt.setDouble(16, dVersion);
                 cstmt.setString(17, conName);
                 cstmt.setString(18, conID);
-                cstmt.setString(19, sVM);
+                cstmt.setString(19, m_util.parsedStringSingleQuoteOracle(sVM));
                 // Now we are ready to call the stored procedure
                 cstmt.execute();
                 // store the output in the resultset
@@ -7618,8 +7618,8 @@ public class GetACSearch implements Serializable
             else if (sSearchAC.equals("ConceptualDomain"))
             {
                 // search only if not the first time or if the first time and not all contexts
-                if (isIntSearch == false || (isIntSearch == true && !sContext.equals("")))
-                {
+              //  if (isIntSearch == false || (isIntSearch == true && !sContext.equals("")))
+               // {
                     if (sSearchIn.equals("minID"))
                     {
                         doCDSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sModifiedFrom,
@@ -7639,7 +7639,8 @@ public class GetACSearch implements Serializable
                     }
                     DataManager.setAttribute(session, "vACSearch", vAC);
                     getCDResult(req, res, vResult, "");
-                }
+              //  }
+                
             }
             else if (sSearchAC.equals("PermissibleValue"))
             {
