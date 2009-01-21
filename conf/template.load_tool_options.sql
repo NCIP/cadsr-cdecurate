@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.21 2008-08-05 14:39:45 chickerura Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.22 2009-01-21 16:21:00 chickerura Exp $
    $Name: not supported by cvs2svn $
 
    Author: Anupama Chickerur
@@ -42,7 +42,7 @@ MERGE INTO SBREXT.TOOL_OPTIONS_VIEW_EXT S
 USING (
 SELECT 'CURATION' AS TOOL_NAME, 'URL' AS PROPERTY, 'https://cdecurate@TIER@.nci.nih.gov' AS VALUE, 'Store curation tool url' AS DESCRIPTION FROM DUAL
 UNION SELECT 'CURATION' AS TOOL_NAME, 'HELP.HOME' AS PROPERTY, 'https://cdecurate@TIER@.nci.nih.gov/help' AS VALUE, 'Store curation tool help url' AS DESCRIPTION FROM DUAL
-UNION SELECT 'CURATION' AS TOOL_NAME, 'EVS.URL' AS PROPERTY,'http://evsapi.nci.nih.gov/evsapi41' AS VALUE,'Store evs alternate url specific to curation tool if needed' AS DESCRIPTION FROM DUAL 
+UNION SELECT 'CURATION' AS TOOL_NAME, 'EVS.URL' AS PROPERTY,'http://lexevsapi-stage.nci.nih.gov/lexevsapi42' AS VALUE,'Store evs alternate url specific to curation tool if needed' AS DESCRIPTION FROM DUAL 
 UNION SELECT 'CURATION' AS TOOL_NAME, 'CSI.PACKAGE.ALIAS' AS PROPERTY,'UML_PACKAGE_ALIAS' AS VALUE,'The special CSI type for the UML Package Alias' AS DESCRIPTION FROM DUAL
 UNION SELECT 'CURATION' AS TOOL_NAME, 'CSI.PACKAGE.NAME' AS PROPERTY,'UML_PACKAGE_NAME' AS VALUE,'The special CSI type for the UML Package Name' AS DESCRIPTION FROM DUAL  
 )T
@@ -92,7 +92,7 @@ UNION SELECT 'CURATION' AS TOOL_NAME, 'EVS.VOCAB.1.SEARCH_IN.NAME' AS PROPERTY,'
 UNION SELECT 'CURATION' AS TOOL_NAME, 'EVS.VOCAB.1.SEARCH_IN.CONCODE' AS PROPERTY,'Concept Code' AS VALUE,'Store vocab search in concode for the first vocabulary' AS DESCRIPTION FROM DUAL    
 UNION SELECT 'CURATION' AS TOOL_NAME, 'EVS.VOCAB.1.RETSEARCH' AS PROPERTY,'true' AS VALUE,'Store vocab include filter for retired concept for the first vocabulary' AS DESCRIPTION FROM DUAL    
 UNION SELECT 'CURATION' AS TOOL_NAME, 'EVS.VOCAB.1.SEARCHTYPE' AS PROPERTY,'PropType' AS VALUE,'Store vocab Search type of the name for the first vocabulary' AS DESCRIPTION FROM DUAL    
-UNION SELECT 'CURATION' AS TOOL_NAME, 'EVS.VOCAB.1.PROPERTY.NAMESEARCH' AS PROPERTY,'Synonym' AS VALUE,'Store vocab property to search name for the first vocabulary' AS DESCRIPTION FROM DUAL    
+UNION SELECT 'CURATION' AS TOOL_NAME, 'EVS.VOCAB.1.PROPERTY.NAMESEARCH' AS PROPERTY,'FULL_SYN' AS VALUE,'Store vocab property to search name for the first vocabulary' AS DESCRIPTION FROM DUAL    
 UNION SELECT 'CURATION' AS TOOL_NAME, 'EVS.VOCAB.1.PROPERTY.NAMEDISPLAY' AS PROPERTY,'Preferred_Name' AS VALUE,'Store vocab property to display name for the first vocabulary' AS DESCRIPTION FROM DUAL   
 )T
 ON(S.TOOL_NAME = T.TOOL_NAME AND S.PROPERTY = T.PROPERTY)
