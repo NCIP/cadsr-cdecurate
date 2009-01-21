@@ -3780,7 +3780,7 @@ public class CurationServlet
         DataManager.setAttribute(session, "ConceptLevel", "0");
         DataManager.setAttribute(session, "creMetaCodeSearch", null);
         DataManager.setAttribute(session, "creKeyword", "");
-        DataManager.setAttribute(session, "serKeyword", "");
+      //DataManager.setAttribute(session, "serKeyword", "");
         DataManager.setAttribute(session, "EVSresults", null);
         DataManager.setAttribute(session, "ParentMetaSource", null);
         DataManager.setAttribute(session, "ParentConceptCode", null);
