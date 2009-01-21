@@ -2279,6 +2279,7 @@ public class ValueDomainServlet extends CurationServlet {
       {
     	  VD_Bean VDBean = (VD_Bean) vList.elementAt(0);
           VDBean = serAC.getVDAttributes(VDBean, "openView", "viewVD");
+          DataManager.setAttribute(session, "TabFocus", "VD");
           DataManager.setAttribute(session, "viewVD", VDBean);
           m_classReq.setAttribute("IncludeViewPage", "EditVD.jsp") ;
      }
@@ -2287,13 +2288,16 @@ public class ValueDomainServlet extends CurationServlet {
   public void doViewPageTab() throws Exception{
 	  String tab = m_classReq.getParameter("vdpvstab");
 	  String from = m_classReq.getParameter("from");
+	  HttpSession session = m_classReq.getSession();
 	  if (from.equals("edit")){
 		  m_classReq.getSession().setAttribute("displayErrorMessage", "Yes");  
 	  }
 	  if (tab != null && tab.equals("PV")) {
+		  DataManager.setAttribute(session, "TabFocus", "PV");
 		  m_classReq.setAttribute("IncludeViewPage", "PermissibleValue.jsp") ;
           ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
 	  }else{
+		  DataManager.setAttribute(session, "TabFocus", "VD");
 		  m_classReq.setAttribute("IncludeViewPage", "EditVD.jsp") ;
           ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
 	  }
