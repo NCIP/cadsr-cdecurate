@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.40 2008-08-07 14:30:45 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMAction.java,v 1.46 2008-11-14 17:31:19 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -57,25 +57,32 @@ public class VMAction implements Serializable
     try
     {
       //do not continue search if no search filter
-      if (data.getSearchTerm().equals("") && data.getSearchFilterConName().equals("") && data.getSearchFilterID().equals("") && data.getSearchFilterCD().equals("") && data.getSearchFilterCondr().equals("") && data.getSearchFilterDef().equals(""))
+     /* if (data.getSearchFilterConName().equals("") && data.getSearchFilterID().equals("") && data.getSearchFilterCD().equals("") && data.getSearchFilterCondr().equals("") && data.getSearchFilterDef().equals(""))
         return;
-
+*/
       Vector<VM_Bean> vmList = data.getVMList();
       if (vmList == null) vmList = new Vector<VM_Bean>();
       if (data.getCurationServlet().getConn() != null)
       {
+    	  //parse the string.
+    	  String sDef = util.parsedStringSingleQuoteOracle(data.getSearchFilterDef());
+    	  String sTerm = util.parsedStringSingleQuoteOracle(data.getSearchTerm());
+    	  String sCon = util.parsedStringSingleQuoteOracle(data.getSearchFilterConName());
+    	  
       //  cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?,?,?)}");
-    	  cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?,?,?,?)}");
+    	  cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?,?,?,?,?,?)}");
         // Now tie the placeholders for out parameters.
         cstmt.registerOutParameter(5, OracleTypes.CURSOR);
         // Now tie the placeholders for In parameters.
-        cstmt.setString(1, data.getSearchTerm());  //name
+        cstmt.setString(1, sTerm);  //name
         cstmt.setString(2, data.getSearchFilterCD());
-        cstmt.setString(3, data.getSearchFilterDef());
+        cstmt.setString(3, sDef);
         cstmt.setString(4, data.getSearchFilterCondr());
-        cstmt.setString(6, data.getSearchFilterConName());
+        cstmt.setString(6, sCon);
         cstmt.setString(7, data.getSearchFilterCondr());
         cstmt.setString(8, data.getSearchFilterID());
+        cstmt.setString(9, data.getVersionInd());
+        cstmt.setDouble(10, data.getVersionNumber());
          // Now we are ready to call the stored procedure
         cstmt.execute();
         // store the output in the resultset
@@ -531,8 +538,10 @@ public class VMAction implements Serializable
   //  if (vm.getVM_IDSEQ() == null || vm.getVM_IDSEQ().equals(""))
    //   this.doChangeVM(data);
     VM_Bean exVM = validateVMData(data);
-    if (exVM == null)
+    if (exVM == null){
         vm.setVM_IDSEQ("");
+    	vm.setVM_SUBMIT_ACTION(data.CADSR_ACTION_INS);
+    }	
   }
 
   /**to submit the VM changes to the database.
@@ -1187,7 +1196,7 @@ private String setNewVersionVM(VMForm data)
 	      VM_Bean vm = data.getVMBean();
 	      if (data.getCurationServlet().getConn() != null)
 	      {
-	    	  cstmt = data.getCurationServlet().getConn().prepareCall("{call sbr.meta_Config_mgmt.VM_VERSION(?,?,?,?)}");
+	    	  cstmt = data.getCurationServlet().getConn().prepareCall("{call sbr.meta_Config_mgmt.VM_VERSION(?,?,?,?,?)}");
 	    	  
 	          // Set the out parameters (which are inherited from the
 				// PreparedStatement class)
@@ -1202,6 +1211,10 @@ private String setNewVersionVM(VMForm data)
 				double dVersion = DVersion.doubleValue();
 				cstmt.setDouble(2,dVersion);
 
+				// Get the username from the session.
+				String userName = data.getCurationServlet().sessionData.UsrBean.getUsername();
+				cstmt.setString(5, userName); // username
+				
 				// Now we are ready to call the stored procedure
 				cstmt.execute();
 				sReturnCode = cstmt.getString(4);
@@ -1828,7 +1841,7 @@ private String setNewVersionVM(VMForm data)
               cstmt.setDouble(16, dVersion);
               cstmt.setString(17, conName);
               cstmt.setString(18, conID);
-              cstmt.setString(19, sVM);
+              cstmt.setString(19, util.parsedStringSingleQuoteOracle(sVM));
               // Now we are ready to call the stored procedure
               cstmt.execute();
               // store the output in the resultset

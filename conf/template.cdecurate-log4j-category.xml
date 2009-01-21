@@ -3,6 +3,6 @@
     <!-- ============================ -->
 
     <category name="gov.nih.nci.cadsr.cdecurate" additivity="false">
-        <priority value="DEBUG" />
+        <priority value="@logLevel@" />
         <appender-ref ref="CDECURATE_FILE" />
     </category>
