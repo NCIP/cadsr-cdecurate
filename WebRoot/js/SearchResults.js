@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.21 2008-12-30 19:47:34 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.22 2009-01-22 15:00:45 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -1324,7 +1324,7 @@ function enableDisableMenuItemsJS(sSelAC, checkCount){
  function isCheckboxChecked(){
     var rowCount = document.searchResultsForm.hiddenSelectedRow.length;
     if (rowCount < 1){
-      alert("Please check atleast one checkbox.");
+      alert("Please check one or more rows.");
       return false;
     }else {
       return true; 
