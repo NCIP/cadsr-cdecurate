@@ -286,8 +286,8 @@ function menuObjPos(obj) {
     document.homePageForm.submit();
  } 
  function displayStepsToFollow(){
-     alert("Please follow the steps below.\n 1. Do the Search.\n 2. Click on the action icon on the selected row.\n 3. Select 'New Using Existing' on the pop up action menu.");
+     alert("Please follow the steps below.\n 1. Perform a Search.\n 2. Click on the action icon for desired result.\n 3. Select 'New Using Existing' in the pop up action menu.");
  }
  function displayStepsToFollow2(){
-     alert("Please follow the steps below.\n 1. Do the Search. \n 2. Click on the action icon on the selected row. \n 3. Select 'New Version' on the pop up action menu.");
+     alert("Please follow the steps below.\n 1. Perform a Search. \n 2.  Click on the action icon for desired result. \n 3. Select 'New Version' in the pop up action menu.");
  }  
