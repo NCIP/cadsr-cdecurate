@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.7 2009-01-19 20:19:32 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.8 2009-01-22 17:05:10 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -37,6 +37,7 @@
         System.out.println("retPAge"+retPage);
       }  
 	 VMForm dispForm = (VMForm)request.getAttribute(VMForm.REQUEST_FORM_DATA); 
+	 String id = dispForm.getVMBean().getVM_IDSEQ();
       String vmNameDisplay = dispForm.vmDisplayName;
         String oldVer = (String)session.getAttribute("prevVMVersion");
    			String oldLN = (String)session.getAttribute("prevVMLN");
@@ -72,7 +73,7 @@
 	<b>
 	<font size=4>
 	      <% if(isView){ %>	
-			  View [<font color="#FF0000">Value Meaning</font>] -
+			  View Value Meaning -
 		   <%}else{%> 
 		     Edit Existing
 			 <font color="#FF0000">

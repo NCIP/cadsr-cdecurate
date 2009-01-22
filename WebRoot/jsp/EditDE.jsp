@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.10 2009-01-19 20:19:22 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.11 2009-01-22 17:05:10 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -415,7 +415,7 @@
 							<label>
 								<font size=4>
 							<%if (isView){%>
-							   View [<font color="#FF0000">Data Element</font>]
+							   View Data Element
 							<%}else{ %>
 								<%
 									if (sOriginAction.equals("BlockEditDE")) {

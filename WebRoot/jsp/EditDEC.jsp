@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.7 2009-01-19 20:19:22 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.8 2009-01-22 17:05:10 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -392,7 +392,7 @@
 					<th colspan=2 height="40" align=left>
 						<font size=4>
 						<%if (isView){%>
-							  View [<font color="#FF0000">Data Element Concept</font>]
+							  View Data Element Concept
 						<%}else{ %>
 							<%if(sOriginAction.equals("BlockEditDEC")){%>
 							    Block Edit Existing
