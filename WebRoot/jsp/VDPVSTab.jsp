@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.10 2009-01-22 17:05:10 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.11 2009-01-22 17:33:20 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -159,7 +159,7 @@
 				<% }}else{%>
 				   <label>
 					<font size=4>
-						View [<font color="#FF0000">Value Domain</font>]
+						View Value Domain
 					</font>
 				</label>
 				
