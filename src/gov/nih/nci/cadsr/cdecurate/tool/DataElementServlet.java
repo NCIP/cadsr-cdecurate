@@ -1666,6 +1666,8 @@ public class DataElementServlet extends CurationServlet{
             DEBean = serAC.getDEAttributes(DEBean, "openView", "viewDE");
             serAC.getDDEInfo(DEBean.getDE_DE_IDSEQ()); // clear dde
             DataManager.setAttribute(session, "m_DE", DEBean);
+            m_classReq.setAttribute("publicID", DEBean.getDE_MIN_CDE_ID());
+            m_classReq.setAttribute("version",DEBean.getDE_VERSION());
            	m_classReq.setAttribute("IncludeViewPage", "EditDE.jsp") ;
        }
      	//ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");

@@ -4,6 +4,8 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+	String publicID = (String)request.getAttribute("publicID");
+	String version = (String)request.getAttribute("version");
 %>
 <html>
 <head>
@@ -12,7 +14,12 @@
 	<link href="css/style.css" rel="stylesheet" type="text/css">
     <script language="JavaScript" src="js/menu.js"></script>
     <script language="JavaScript" src="js/header.js"></script>
-<title>View AC</title>
+<title>
+  <%if ((publicID != null)&&(version != null)){%>
+  <%=publicID%>v<%=version%>
+  <%}else{%>
+    View AC<%}%>
+</title>
 </head>
 <body>
 	<%String displayErrorMessagee = (String)session.getAttribute("displayErrorMessage");

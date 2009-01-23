@@ -1910,7 +1910,9 @@ public class DataElementConceptServlet extends CurationServlet {
     	  DEC_Bean DECBean = (DEC_Bean) vList.elementAt(0);
           DECBean = serAC.getDECAttributes(DECBean, "openView", "viewDEC");
           DataManager.setAttribute(session, "m_DEC", DECBean);
-         	m_classReq.setAttribute("IncludeViewPage", "EditDEC.jsp") ;
+          m_classReq.setAttribute("publicID", DECBean.getDEC_DEC_ID());
+          m_classReq.setAttribute("version",DECBean.getDEC_VERSION());
+          m_classReq.setAttribute("IncludeViewPage", "EditDEC.jsp") ;
      }
    }
 	
