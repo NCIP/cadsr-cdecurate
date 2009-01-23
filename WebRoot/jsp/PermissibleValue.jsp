@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.22 2009-01-20 18:26:42 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.23 2009-01-23 19:22:10 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -31,11 +31,14 @@
 		isView = true;
       	
       VD_Bean m_VD = new VD_Bean();
+      String vdId = "";
       if (isView){
-		   m_VD = (VD_Bean) session.getAttribute("viewVD");
+		  vdId = (String)request.getAttribute("viewVDId");
+		  String viewVD = "viewVD" + vdId;
+		  m_VD = (VD_Bean) session.getAttribute(viewVD);
 	  }else{
 		   m_VD = (VD_Bean) session.getAttribute("m_VD");
-    	}   
+      }   
       if (m_VD == null) m_VD = new VD_Bean();
       UtilService util = new UtilService();
       String sVDIDSEQ = m_VD.getVD_VD_IDSEQ();
@@ -885,34 +888,34 @@
 															</th>
 															<%} %>
 															<th align="center">
-																<% if (!isView) { %><a href="javascript:sortPV('value');"><%}else {%><a href="javascript:viewPVSort('value');"><%}%>
+																<% if (!isView) { %><a href="javascript:sortPV('value');"><%}else {%><a href="javascript:viewPVSort('value','<%=vdId%>');"><%}%>
 																	Permissible Value
 																</a>
 															</th>
 															<th align="center">
-																<% if (!isView) { %><a href="javascript:sortPV('meaning');"><%}else {%><a href="javascript:viewPVSort('meaning');"><%}%>
+																<% if (!isView) { %><a href="javascript:sortPV('meaning');"><%}else {%><a href="javascript:viewPVSort('meaning','<%=vdId%>');"><%}%>
 																	Value Meaning
 																</a>
 															</th>
 															<%if (vdCONs > 0){%>
 															<th align="center">
-																<% if (!isView) { %><a href="javascript:sortPV('ParConcept');"><%}else {%><a href="javascript:viewPVSort('ParConcept');"><%}%>
+																<% if (!isView) { %><a href="javascript:sortPV('ParConcept');"><%}else {%><a href="javascript:viewPVSort('ParConcept','<%=vdId%>');"><%}%>
 																	Parent Concept
 																</a>
 															</th>
 															<%}%>
 															<th align="center">
-																<% if (!isView) { %><a href="javascript:sortPV('Origin');"><%}else {%><a href="javascript:viewPVSort('Origin');"><%}%>
+																<% if (!isView) { %><a href="javascript:sortPV('Origin');"><%}else {%><a href="javascript:viewPVSort('Origin','<%=vdId%>');"><%}%>
 																	Value Origin
 																</a>
 															</th>
 															<th align="center">
-																<% if (!isView) { %><a href="javascript:sortPV('BeginDate');"><%}else {%><a href="javascript:viewPVSort('BeginDate');"><%}%>
+																<% if (!isView) { %><a href="javascript:sortPV('BeginDate');"><%}else {%><a href="javascript:viewPVSort('BeginDate','<%=vdId%>');"><%}%>
 																	Begin Date
 																</a>
 															</th>
 															<th align="center">
-																<% if (!isView) { %><a href="javascript:sortPV('EndDate');"><%}else {%><a href="javascript:viewPVSort('EndDate');"><%}%>
+																<% if (!isView) { %><a href="javascript:sortPV('EndDate');"><%}else {%><a href="javascript:viewPVSort('EndDate','<%=vdId%>');"><%}%>
 																	End Date
 																</a>
 															</th>
@@ -1164,7 +1167,7 @@
 																   <% } else{%>
 																     <div id="<%=pvCount%>VMViewLink" style="display: inline; text-align:right">
 																	  	<span style="padding-left:0.3in; padding-right:0.1in; text-align:right">
-																	    		<a href="javascript:openViewVMWindow('<%=pvCount%>');">
+																	    		<a href="javascript:openViewVMWindow('<%=pvCount%>','<%=vdId%>');">
 																					View VM
 																				</a>
 																	

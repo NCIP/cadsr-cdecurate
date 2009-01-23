@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/VDPVS.js,v 1.7 2009-01-15 20:00:40 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/VDPVS.js,v 1.8 2009-01-23 19:21:27 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -117,13 +117,13 @@ function openAltNameViewWindow()
 }
  
  //change the tabs
- function changeTab(tab, from)
+ function changeTab(tab, from, id)
  {
    if(tab == "PV"){
-      document.createVDForm.action = "../../cdecurate/NCICurationServlet?reqType=viewVDPVSTab&vdpvstab=" +tab+ "&from=" +from;
+      document.createVDForm.action = "../../cdecurate/NCICurationServlet?reqType=viewVDPVSTab&vdpvstab=" +tab+ "&from=" +from+ "&id=" +id;
       document.createVDForm.submit();	
    }else if (tab == "VD"){
-      document.PVForm.action = "../../cdecurate/NCICurationServlet?reqType=viewVDPVSTab&vdpvstab=" +tab+ "&from=" +from;;
+      document.PVForm.action = "../../cdecurate/NCICurationServlet?reqType=viewVDPVSTab&vdpvstab=" +tab+ "&from=" +from+ "&id=" +id;
       document.PVForm.submit();	
    } 
  

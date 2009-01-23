@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.8 2009-01-22 17:05:10 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.9 2009-01-23 19:22:10 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -95,14 +95,14 @@
 			<col />
 		</colgroup>
 		<tr>
-			<td id="<%=VMForm.ELM_ACT_DETAIL_TAB%>" class="<%=detailFocus%>" <% if (isView) { %>onclick="viewVMChangeTab('detailsTab');"<% } else { %>onclick="SubmitValidate('<%=VMForm.ELM_ACT_DETAIL_TAB%>');" <%}%>>
+			<td id="<%=VMForm.ELM_ACT_DETAIL_TAB%>" class="<%=detailFocus%>" <% if (isView) { %>onclick="viewVMChangeTab('detailsTab','<%=id%>');"<% } else { %>onclick="SubmitValidate('<%=VMForm.ELM_ACT_DETAIL_TAB%>');" <%}%>>
 				<font size=2>
 					<b>
 						Details
 					</b>
 				</font>
 			</td>
-			<td id="<%=VMForm.ELM_ACT_USED_TAB%>" class="<%=usedFocus%>" <% if (isView) { %>onclick="viewVMChangeTab('whereUsedTab');"<% } else { %>onclick="SubmitValidate('<%=VMForm.ELM_ACT_USED_TAB%>');" <%}%>>
+			<td id="<%=VMForm.ELM_ACT_USED_TAB%>" class="<%=usedFocus%>" <% if (isView) { %>onclick="viewVMChangeTab('whereUsedTab','<%=id%>');"<% } else { %>onclick="SubmitValidate('<%=VMForm.ELM_ACT_USED_TAB%>');" <%}%>>
 				<font size=2>
 					<b>
 						Where Used

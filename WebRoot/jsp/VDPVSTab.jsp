@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.11 2009-01-22 17:33:20 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.12 2009-01-23 19:22:10 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -36,8 +36,11 @@
   //  System.out.println(pvTabFocus + " tab " + vdTabFocus);
       //get the name for the tab display
       VD_Bean mVD = new VD_Bean();
+      String id = "";
       if (isView){
-		   mVD = (VD_Bean) session.getAttribute("viewVD");
+		   id = (String)request.getAttribute("viewVDId");
+		   String viewVD = "viewVD" + id;
+		   mVD = (VD_Bean) session.getAttribute(viewVD);
 	  }else{
 		   mVD = (VD_Bean) session.getAttribute("m_VD");
      }   
@@ -189,13 +192,13 @@
 		<col />
 	</colgroup>
 	<tr>
-		<td id="vddetailstab" class="<%=vdTabFocus%>" <% if (isView) { %>onclick="changeTab('VD','<%=StringEscapeUtils.escapeJavaScript(from)%>');"<% } else { %>onclick="SubmitValidate('vddetailstab');"<%} %>>
+		<td id="vddetailstab" class="<%=vdTabFocus%>" <% if (isView) { %>onclick="changeTab('VD','<%=StringEscapeUtils.escapeJavaScript(from)%>', '<%=id%>');"<% } else { %>onclick="SubmitValidate('vddetailstab');"<%} %>>
 			<b>
 				Value Domain Details
 			</b>
 		</td>
 		<% if(!sOriginAction.equals("BlockEditVD")){%>
-		<td id="vdpvstab" class="<%=pvTabFocus%>" <% if (isView) { %>onclick="changeTab('PV','<%=StringEscapeUtils.escapeJavaScript(from)%>');"<% } else { %>onclick="SubmitValidate('vdpvstab');"<%} %>>
+		<td id="vdpvstab" class="<%=pvTabFocus%>" <% if (isView) { %>onclick="changeTab('PV','<%=StringEscapeUtils.escapeJavaScript(from)%>', '<%=id%>');"<% } else { %>onclick="SubmitValidate('vdpvstab');"<%} %>>
 			<b>
 				Permissible Values
 			</b>

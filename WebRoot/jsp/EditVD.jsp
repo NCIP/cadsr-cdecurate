@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.13 2009-01-20 18:26:18 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.14 2009-01-23 19:23:14 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -52,7 +52,9 @@
 
 			VD_Bean m_VD = new VD_Bean();
 			if (isView){
-			   m_VD = (VD_Bean) session.getAttribute("viewVD");
+			   String id = (String)request.getAttribute("viewVDId");
+		       String viewVD = "viewVD" + id;
+		       m_VD = (VD_Bean) session.getAttribute(viewVD);
 			}else{
 			   m_VD = (VD_Bean) session.getAttribute("m_VD");
 			}   
@@ -1519,7 +1521,7 @@ function setup()
 							Select
 						</font>
 						<% } %>
-							the Unit of Measure (UOM)
+							 Unit of Measure (UOM)
 						</td>
 					</tr>
 					<tr>

@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.80 2009-01-20 20:54:21 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.81 2009-01-23 19:20:19 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -6787,7 +6787,7 @@ public class GetACSearch implements Serializable
      * @param sortField
      *            String the column to sort
      */
-    public void getVDPVSortedRows(VD_Bean vd, String sortField, String action)
+    public void getVDPVSortedRows(VD_Bean vd, String sortField, String action, String id)
     {
         try
         {
@@ -6839,8 +6839,9 @@ public class GetACSearch implements Serializable
                     }
                     // DataManager.setAttribute(session, "VDPVList", vSortedRows);
                     vd.setVD_PV_List(vSortedRows);
-                    if (action.equals("view")){
-                       DataManager.setAttribute(session, "viewVD", vd);
+                    if (id != null && action != null && action.equals("view")){
+                        String viewVD = "viewVD" + id;
+                    	DataManager.setAttribute(session, viewVD, vd);
                     }else{
                        DataManager.setAttribute(session, "m_VD", vd);
                     }   
