@@ -936,8 +936,8 @@ function enableDisableMenuItems(){
 }
 
 function viewAC(){
- 		editID = document.searchResultsForm.hiddenSearch[document.searchResultsForm.selectedRowId.value].value;
- 		var viewWindow = window.open("../../cdecurate/NCICurationServlet?reqType=view&idseq=" +editID, "", "width=1000,height=1000,top=0,left=0,resizable=yes,scrollbars=yes");
+ 	   var acIdseq = document.searchResultsForm.hiddenSearch[document.searchResultsForm.selectedRowId.value].value;
+ 	   var viewWindow = window.open("../../cdecurate/NCICurationServlet?reqType=view&idseq=" +acIdseq, "", "width=1000,height=1000,top=0,left=0,resizable=yes,scrollbars=yes");
  }
 
 </SCRIPT>
