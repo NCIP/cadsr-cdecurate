@@ -2283,6 +2283,8 @@ public class ValueDomainServlet extends CurationServlet {
           m_classReq.setAttribute("viewVDId", VDBean.getIDSEQ());
           String viewVD = "viewVD" + VDBean.getIDSEQ();
           DataManager.setAttribute(session, viewVD, VDBean);
+          m_classReq.setAttribute("publicID", VDBean.getVD_VD_ID());
+		  m_classReq.setAttribute("version", VDBean.getVD_VERSION());
           m_classReq.setAttribute("IncludeViewPage", "EditVD.jsp") ;
      }
    }
@@ -2291,18 +2293,23 @@ public class ValueDomainServlet extends CurationServlet {
 	  String tab = m_classReq.getParameter("vdpvstab");
 	  String from = m_classReq.getParameter("from");
 	  String id = m_classReq.getParameter("id");
+	  String viewVD = "viewVD" + id;
 	  HttpSession session = m_classReq.getSession();
+	  VD_Bean VDBean = (VD_Bean)session.getAttribute(viewVD);
+	  String publicId = VDBean.getVD_VD_ID();
+	  String version = VDBean.getVD_VERSION();
+	  m_classReq.setAttribute("viewVDId", id);
+	  m_classReq.setAttribute("publicID", VDBean.getVD_VD_ID());
+	  m_classReq.setAttribute("version", VDBean.getVD_VERSION());
 	  if (from.equals("edit")){
 		  m_classReq.getSession().setAttribute("displayErrorMessage", "Yes");  
 	  }
 	  if (tab != null && tab.equals("PV")) {
 		  DataManager.setAttribute(session, "TabFocus", "PV");
-		  m_classReq.setAttribute("viewVDId", id);
 		  m_classReq.setAttribute("IncludeViewPage", "PermissibleValue.jsp") ;
           ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
 	  }else{
 		  DataManager.setAttribute(session, "TabFocus", "VD");
-		  m_classReq.setAttribute("viewVDId", id);
 		  m_classReq.setAttribute("IncludeViewPage", "EditVD.jsp") ;
           ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
 	  }

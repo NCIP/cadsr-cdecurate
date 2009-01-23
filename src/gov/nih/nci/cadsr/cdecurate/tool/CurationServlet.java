@@ -4084,6 +4084,8 @@ public class CurationServlet
 			boolean isExists = acMgr.isAcExists(acIDSEQ, m_conn);
 			if (!isExists) {
 				errMsg = "The Administered Item with Public Id [" +publicID + "] and Version [" + version +"] can not be found.";
+				m_classReq.setAttribute("publicId", publicID);
+				m_classReq.setAttribute("version", version);
 				m_classReq.setAttribute("errMsg", errMsg);
 				ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
 			}
@@ -4096,6 +4098,8 @@ public class CurationServlet
 					actlName = getUserFriendlyActlName(actlName);
 					String longName = acMgr.getACLongName(publicID, version, m_conn);
 					errMsg = "<b>View " + actlName + " - " + longName + "[" + publicID + "v" + version +"]</b></br></br> Is not supported at this time.";
+					m_classReq.setAttribute("publicId", publicID);
+					m_classReq.setAttribute("version", version);
 					m_classReq.setAttribute("errMsg", errMsg);
 					m_classReq.setAttribute("showCloseBtn", "yes");
 					ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");	
