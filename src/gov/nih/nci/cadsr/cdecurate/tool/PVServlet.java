@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.37 2009-01-20 18:30:22 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.38 2009-01-23 19:20:19 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -178,7 +178,7 @@ public class PVServlet implements Serializable
            GetACSearch serAC = new GetACSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
            String sField = (String)data.getRequest().getParameter("pvSortColumn");
            VD_Bean vd = (VD_Bean) session.getAttribute("m_VD");
-           serAC.getVDPVSortedRows(vd,sField,"edit");          //call the method to sort pv attribute
+           serAC.getVDPVSortedRows(vd,sField,"edit","");          //call the method to sort pv attribute
            data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv0");  //"pv0View");
            return "/PermissibleValue.jsp";
          }
@@ -1325,6 +1325,7 @@ public class PVServlet implements Serializable
 	   String vmIdseq = null;
 	   HttpSession session = data.getRequest().getSession();
 	   int pvInd = -1;
+	   String id = (String) data.getRequest().getParameter("id"); 
 	   String selPVInd = (String) data.getRequest().getParameter("viewPVInd"); //index
 	   if (selPVInd != null && !selPVInd.equals("")) {
 			selPVInd = selPVInd.substring(2);
@@ -1336,7 +1337,8 @@ public class PVServlet implements Serializable
 			}
 		}
 	   	if (pvInd > -1) {
-			VD_Bean vd = (VD_Bean) session.getAttribute("viewVD");
+			String viewVD = "viewVD" + id;
+	   		VD_Bean vd = (VD_Bean) session.getAttribute(viewVD);
 			Vector<PV_Bean> vVDPVList = vd.getVD_PV_List(); 
 			if (vVDPVList != null){
 				PV_Bean selectPV = (PV_Bean) vVDPVList.elementAt(pvInd);
@@ -1347,16 +1349,19 @@ public class PVServlet implements Serializable
     }
    public String doViewPVActions(){
 	   String action = data.getRequest().getParameter("action");
+	   String id = data.getRequest().getParameter("id");
 	   String path = null;
 	   HttpSession session = data.getRequest().getSession();
 	   if (action != null){
 		   if (action.equals("sort")){
 			 GetACSearch serAC = new GetACSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
 	         String sField = (String)data.getRequest().getParameter("pvSortColumn");
-	         VD_Bean m_VD = (VD_Bean) session.getAttribute("viewVD");
-	         serAC.getVDPVSortedRows(m_VD,sField,"view");  //call the method to sort pv attribute
+	         String viewVD = "viewVD" + id;
+	         VD_Bean m_VD = (VD_Bean) session.getAttribute(viewVD);
+	         serAC.getVDPVSortedRows(m_VD,sField,"view",id);  //call the method to sort pv attribute
 	         data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv0"); 
-			 data.getRequest().setAttribute("IncludeViewPage", "PermissibleValue.jsp");  
+	         data.getRequest().setAttribute("viewVDId", id);
+			 data.getRequest().setAttribute("IncludeViewPage", "PermissibleValue.jsp"); 
 			 path = "/jsp/ViewPage.jsp" ;  
 		   }else if (action.equals("viewVM")){
 			 String vmIDSEQ = getViewVMId();

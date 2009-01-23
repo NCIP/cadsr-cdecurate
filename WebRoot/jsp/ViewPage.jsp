@@ -24,12 +24,17 @@
 	<table width=100%><tr><td class="menuItemBlank">&nbsp;</td></tr></table>
 	<% String bodyPage = (String)request.getAttribute("IncludeViewPage") ;
 		  String errorMsg =  (String)request.getAttribute("errMsg") ;
+		  String show =  (String)request.getAttribute("showCloseBtn") ;
 		  if (errorMsg == null || errorMsg.equals(""))
 				  errorMsg = " Error Occurred. ";
 		  if (bodyPage != null && !bodyPage.equals("")) {
 	%>
 			<jsp:include  page = "<%=bodyPage%>" />
 	<%	  } else { %>
+	        <%if ((show != null) && (show.equals("yes"))){%>
+	          </br>
+	          <input type="button" name="closeBtn" value="Close" style="width: 125" onClick="window.close();">
+	        <%}%>
 			<p> <font size=4>
 			<%=errorMsg %>
 			</font></p>

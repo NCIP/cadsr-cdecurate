@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.48 2009-01-20 14:58:30 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.49 2009-01-23 19:20:19 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -122,7 +122,7 @@ public class VMServlet extends GenericServlet
       //to sort the used ac
       else if (pageAction.equals(VMForm.ACT_SORT_AC)){
         VM_Bean vm = (VM_Bean)httpRequest.getSession().getAttribute(VMForm.SESSION_SELECT_VM);
-        retData = sortUsedAC(vm, "edit"); 
+        retData = sortUsedAC(vm, "edit", ""); 
       }
       //to sort the used ac
       else if (pageAction.equals(VMForm.ACT_FILTER_AC)){
@@ -904,7 +904,7 @@ private String goBackToSearch()
    * forwards to pv page
    * @return String jsp to go back
    */
-  private String sortUsedAC(VM_Bean selVM, String action)
+  private String sortUsedAC(VM_Bean selVM, String action, String id)
   {
     String sJsp = VMForm.JSP_VM_USED;
     HttpSession session = httpRequest.getSession();
@@ -925,10 +925,13 @@ private String goBackToSearch()
     //VM_Bean selVM = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
     dbac.sortACs(selVM, fieldType);
     //store it in the vm
-    if (action.equals("view"))
-      DataManager.setAttribute(session, "viewVM", selVM);
-    else	
+  //store it in the vm
+    if (id!=null && action.equals("view")){
+        String viewVM = "viewVM" + id;
+    	DataManager.setAttribute(session, viewVM, selVM);
+    }else{	
       DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, selVM);
+    }  
     //return the jsp
     DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_USED_TAB);
     httpRequest.setAttribute(VMForm.REQUEST_FOCUS_ELEMENT, acType);
@@ -1084,7 +1087,8 @@ public void doOpenViewPage() throws Exception{
       Alternates[] altList = db.getAlternates(new String[] {acID}, true, true);
       vmBean.setVM_ALT_LIST(altList);
     }
-	DataManager.setAttribute(session, "viewVM", vmBean);
+	String viewVM = "viewVM" + vmBean.getIDSEQ();
+	DataManager.setAttribute(session, viewVM, vmBean);
 	//AltNamesDefsServlet altSer = new AltNamesDefsServlet(curationServlet,  curationServlet.sessionData.UsrBean);
     //Alternates alt = altSer.getManualDefinition(req, VMForm.ELM_FORM_SEARCH_EVS);
   //  if (alt != null && !alt.getName().equals(""))
@@ -1094,29 +1098,28 @@ public void doOpenViewPage() throws Exception{
     req.setAttribute("IncludeViewPage", "ValueMeaningDetail.jsp") ;
 }
 public void doViewVMActions(){
-	String action = httpRequest.getParameter("action");
 	HttpSession session = httpRequest.getSession();
+	String action = httpRequest.getParameter("action");
+	String id = httpRequest.getParameter("id");
+	String viewVM = "viewVM"+id;
+	VM_Bean vm = (VM_Bean)session.getAttribute(viewVM);
 	if (action != null){
 	   if (action.equals("detailsTab")){
 		  DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
-		  VM_Bean selVM = (VM_Bean)session.getAttribute("viewVM");
-		  writeDetailJsp(selVM); 
+		  writeDetailJsp(vm); 
 		  httpRequest.setAttribute("IncludeViewPage", VMForm.JSP_VM_DETAIL) ;
        }else if (action.equals("whereUsedTab")){
     	  DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_USED_TAB);
-    	  VM_Bean selVM = (VM_Bean)session.getAttribute("viewVM");
-	      this.readAllUsedComponents(selVM, false, "");
-		  writeUsedJsp(selVM); 
+    	  this.readAllUsedComponents(vm, false, "");
+		  writeUsedJsp(vm); 
 		  httpRequest.setAttribute("IncludeViewPage", VMForm.JSP_VM_USED) ;
       }else if (action.equals("sort")){
-    	  VM_Bean selVM = (VM_Bean)session.getAttribute("viewVM");
-    	  String page = sortUsedAC(selVM, "view");
-    	  writeUsedJsp(selVM);
+    	  String page = sortUsedAC(vm, "view", id);
+    	  writeUsedJsp(vm);
     	  httpRequest.setAttribute("IncludeViewPage", page) ;
       }else if (action.equals("show")){
-    	  VM_Bean selVM = (VM_Bean)session.getAttribute("viewVM");
-    	  String page = filterUsedAC(selVM);
-    	  writeUsedJsp(selVM);
+    	  String page = filterUsedAC(vm);
+    	  writeUsedJsp(vm);
     	  httpRequest.setAttribute("IncludeViewPage", page) ;
       }
     }
