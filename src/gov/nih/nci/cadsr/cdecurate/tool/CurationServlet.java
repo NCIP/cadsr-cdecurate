@@ -4093,9 +4093,11 @@ public class CurationServlet
 			if (ac != null) {
 				String actlName = ac.get(0); //"DATAELEMENT";  //DE_CONCEPT ;  VALUEDOMAIN  ;  VALUEMEANING
 				if ( !(actlName.equals("DATAELEMENT")) && !(actlName.equals("DE_CONCEPT")) && !(actlName.equals("VALUEDOMAIN")) && !(actlName.equals("VALUEMEANING"))){
+					actlName = getUserFriendlyActlName(actlName);
 					String longName = acMgr.getACLongName(publicID, version, m_conn);
-					errMsg = "Viewing [" + actlName + "] [" + longName + "] [" + publicID + "] [" + version +"] is not supported at this time.";
+					errMsg = "<b>View " + actlName + " - " + longName + "[" + publicID + "v" + version +"]</b></br></br> Is not supported at this time.";
 					m_classReq.setAttribute("errMsg", errMsg);
+					m_classReq.setAttribute("showCloseBtn", "yes");
 					ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");	
 				}
 				actlReq = "view"+ actlName;
@@ -4182,5 +4184,19 @@ public class CurationServlet
             rd.forward(req, res);
             return;
    }
-	
+   private String getUserFriendlyActlName(String name){
+	   String actlName= name;
+	   if (name.equals("CLASSIFICATION")){
+		   actlName = "Class Scheme Item";
+	   }else if (name.equals("CONCEPT")){
+		   actlName = "Concept Class";
+	   }else if (name.equals("CONCEPTUALDOMAIN")){
+		   actlName = "Conceptual Domain";
+	   }else if (name.equals("OBJECTCLASS")){
+		   actlName = "Object Class";
+	   }else if (name.equals("PROPERTY")){
+		   actlName = "Property";
+	   }
+	   return actlName;
+   }
 } // end of class
