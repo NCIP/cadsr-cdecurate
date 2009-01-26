@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.9 2009-01-23 19:22:10 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.10 2009-01-26 20:38:05 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -47,6 +47,9 @@
    <script Language="JavaScript">
 			var actionClear = "<%=VMForm.ACT_CLEAR_VM%>";
 			var elmPageAction = "<%=VMForm.ELM_PAGE_ACTION%>";
+	function BackFromEditVM(){
+	 SubmitValidate('<%=retPage%>');
+	}		
  </script>
 <div class="ind1">
    <% if(!isView){ %>	

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.7 2008-10-20 13:30:26 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.8 2009-01-26 20:38:05 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -11,6 +11,7 @@
    String sentinelURL = (String)session.getAttribute("SentinelURL");
    String UMLBrowserURL = (String)session.getAttribute("UMLBrowserURL");
    String strNothing ="nothing";
+   
  %>
 <script language="JavaScript">
 <!--
@@ -20,6 +21,7 @@ var helpWindow = null;
 var aboutWindow = null;
 var sentinelWindow = null;
 
+   
    function callLogout()
    {
       if(confirm("Are you sure you want to logout?"))
@@ -151,6 +153,14 @@ var sentinelWindow = null;
   //   document.Form5.Message.style.visibility="visible";
      document.Form4.hidMenuAction.value = "editVD";
      document.Form4.submit();
+   }
+   function BackToSearch(){
+     <%String searchAC = (String) session.getAttribute("searchAC");
+       if((searchAC).equals("ValueMeaning")){%>
+         BackFromEditVM();
+       <%}else{%>
+         Back(); 
+       <%}%>
    }
 
 function MM_reloadPage(init) {  //reloads the window if Nav4 resized
