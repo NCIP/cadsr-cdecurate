@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.11 2009-01-22 17:05:10 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.12 2009-01-26 18:59:18 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -598,7 +598,12 @@
 						<a href="javascript:CreateNewDECValue();">
 							Create New DEC
 						</a>
-						<%	}	}  %>
+						<%	}}else{ %>
+						&nbsp;&nbsp;
+						<a href="javascript:viewDEC();">
+							View DEC
+						</a>
+						<%}%>
 					</td>
 				</tr>
 				<tr valign="bottom" height="25">
@@ -683,7 +688,12 @@
 						<a href="javascript:CreateNewVDValue()">
 							Create New VD
 						</a>
-						<%	}	} %>
+						<%	}}else{ %>
+						&nbsp;&nbsp;
+						<a href="javascript:viewVD();">
+							View VD
+						</a>
+						<%}%>
 					</td>
 				</tr>
 				<tr valign="bottom" height="25">
