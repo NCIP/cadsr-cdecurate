@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDE.js,v 1.3 2008-12-08 19:30:39 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDE.js,v 1.4 2009-01-26 18:59:00 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 var searchWindow = null;
@@ -136,6 +136,11 @@ function EditDECValue()
 	window.status = "Validating data, it may take a minute, please wait.....";
 	document.newCDEForm.submit();
 }
+function viewDEC(){
+  var decIdseq = document.newCDEForm.selDEC[0].value;
+  alert (decIdseq);
+  var viewWindow = window.open("../../cdecurate/NCICurationServlet?reqType=view&idseq=" +decIdseq, "", "width=1000,height=1000,top=0,left=0,resizable=yes,scrollbars=yes");
+}
 
 function EditVDValue()
 {
@@ -153,6 +158,10 @@ function EditVDValue()
 	document.newCDEForm.Message.style.visibility="visible";
 	window.status = "Validating data, it may take a minute, please wait.....";
 	document.newCDEForm.submit();
+}
+function viewVD(){
+  var vdIdseq = document.newCDEForm.selVD[0].value;
+  var viewWindow = window.open("../../cdecurate/NCICurationServlet?reqType=view&idseq=" +vdIdseq, "", "width=1000,height=1000,top=0,left=0,resizable=yes,scrollbars=yes");
 }
 
 function fillNames()
