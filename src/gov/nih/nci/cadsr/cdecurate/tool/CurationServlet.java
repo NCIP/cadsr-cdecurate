@@ -4069,23 +4069,25 @@ public class CurationServlet
     	//read the parameters idseq, public id and version from the request
     	long publicID =  0;
     	double version = 0;
+    	String sPublicId = null;
+    	String sVersion =null;
     	String actlReq = null;
 		String acIDSEQ = m_classReq.getParameter("idseq");
 		try {
 			if (acIDSEQ == null) {
-				String sValue = m_classReq.getParameter("publicId");
-				if ((sValue != null) && (!sValue.equals("")))
-					publicID = Long.parseLong(sValue);
-				sValue = m_classReq.getParameter("version");
-				if ((sValue != null) && (!sValue.equals("")))
-					version = Double.parseDouble(sValue);
+				sPublicId = m_classReq.getParameter("publicId");
+				if ((sPublicId != null) && (!sPublicId.equals("")))
+					publicID = Long.parseLong(sPublicId);
+				sVersion = m_classReq.getParameter("version");
+				if ((sVersion != null) && (!sVersion.equals("")))
+					version = Double.parseDouble(sVersion);
 				acIDSEQ = acMgr.getACIdseq(publicID, version, m_conn);
 			}
 			boolean isExists = acMgr.isAcExists(acIDSEQ, m_conn);
 			if (!isExists) {
 				errMsg = "The Administered Item with Public Id [" +publicID + "] and Version [" + version +"] can not be found.";
-				m_classReq.setAttribute("publicId", publicID);
-				m_classReq.setAttribute("version", version);
+				m_classReq.setAttribute("publicId", sPublicId);
+				m_classReq.setAttribute("version", sVersion);
 				m_classReq.setAttribute("errMsg", errMsg);
 				ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
 			}
@@ -4098,8 +4100,8 @@ public class CurationServlet
 					actlName = getUserFriendlyActlName(actlName);
 					String longName = acMgr.getACLongName(publicID, version, m_conn);
 					errMsg = "<b>View " + actlName + " - " + longName + "[" + publicID + "v" + version +"]</b></br></br> Is not supported at this time.";
-					m_classReq.setAttribute("publicId", publicID);
-					m_classReq.setAttribute("version", version);
+					m_classReq.setAttribute("publicId", sPublicId);
+					m_classReq.setAttribute("version", sVersion);
 					m_classReq.setAttribute("errMsg", errMsg);
 					m_classReq.setAttribute("showCloseBtn", "yes");
 					ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");	
