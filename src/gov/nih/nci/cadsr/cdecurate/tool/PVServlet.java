@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.39 2009-01-23 21:22:32 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.40 2009-01-26 22:52:57 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1362,9 +1362,9 @@ public class PVServlet implements Serializable
 	         serAC.getVDPVSortedRows(m_VD,sField,"view",id);  //call the method to sort pv attribute
 	         data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv0"); 
 	         data.getRequest().setAttribute("viewVDId", id);
-	         data.getRequest().setAttribute("publicID", m_VD.getVD_VD_ID());
-	         data.getRequest().setAttribute("version", m_VD.getVD_VERSION());
-			 data.getRequest().setAttribute("IncludeViewPage", "PermissibleValue.jsp"); 
+	         String title = "CDE Curation View VD "+m_VD.getVD_LONG_NAME()+ " [" + m_VD.getVD_VD_ID() + "v" + m_VD.getVD_VERSION() +"]";
+	         data.getRequest().setAttribute("title", title);
+	         data.getRequest().setAttribute("IncludeViewPage", "PermissibleValue.jsp"); 
 			 path = "/jsp/ViewPage.jsp" ;  
 		   }else if (action.equals("viewVM")){
 			 String vmIDSEQ = getViewVMId();

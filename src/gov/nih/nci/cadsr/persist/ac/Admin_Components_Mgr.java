@@ -180,7 +180,7 @@ public class Admin_Components_Mgr extends DBManager {
  * This method returns long name 
  */
 public String getACLongName(long publicID, double version, Connection conn) throws DBException{
-	String longName = null;
+	String longName = "";
 	PreparedStatement statement = null;
 	ResultSet rs = null;
 	try {
