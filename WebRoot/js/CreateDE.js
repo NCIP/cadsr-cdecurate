@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDE.js,v 1.4 2009-01-26 18:59:00 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDE.js,v 1.5 2009-01-26 19:15:17 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 var searchWindow = null;
@@ -138,7 +138,6 @@ function EditDECValue()
 }
 function viewDEC(){
   var decIdseq = document.newCDEForm.selDEC[0].value;
-  alert (decIdseq);
   var viewWindow = window.open("../../cdecurate/NCICurationServlet?reqType=view&idseq=" +decIdseq, "", "width=1000,height=1000,top=0,left=0,resizable=yes,scrollbars=yes");
 }
 
