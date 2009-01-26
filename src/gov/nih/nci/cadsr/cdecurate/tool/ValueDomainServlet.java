@@ -2283,8 +2283,8 @@ public class ValueDomainServlet extends CurationServlet {
           m_classReq.setAttribute("viewVDId", VDBean.getIDSEQ());
           String viewVD = "viewVD" + VDBean.getIDSEQ();
           DataManager.setAttribute(session, viewVD, VDBean);
-          m_classReq.setAttribute("publicID", VDBean.getVD_VD_ID());
-		  m_classReq.setAttribute("version", VDBean.getVD_VERSION());
+          String title = "CDE Curation View VD "+VDBean.getVD_LONG_NAME()+ " [" + VDBean.getVD_VD_ID() + "v" + VDBean.getVD_VERSION() +"]";
+		  m_classReq.setAttribute("title", title);
           m_classReq.setAttribute("IncludeViewPage", "EditVD.jsp") ;
      }
    }
@@ -2299,8 +2299,8 @@ public class ValueDomainServlet extends CurationServlet {
 	  String publicId = VDBean.getVD_VD_ID();
 	  String version = VDBean.getVD_VERSION();
 	  m_classReq.setAttribute("viewVDId", id);
-	  m_classReq.setAttribute("publicID", VDBean.getVD_VD_ID());
-	  m_classReq.setAttribute("version", VDBean.getVD_VERSION());
+	  String title = "CDE Curation View VD "+VDBean.getVD_LONG_NAME()+ " [" + VDBean.getVD_VD_ID() + "v" + VDBean.getVD_VERSION() +"]";
+	  m_classReq.setAttribute("title", title);
 	  if (from.equals("edit")){
 		  m_classReq.getSession().setAttribute("displayErrorMessage", "Yes");  
 	  }

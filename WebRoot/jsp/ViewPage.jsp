@@ -4,8 +4,7 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-	String publicID = (String)request.getAttribute("publicID");
-	String version = (String)request.getAttribute("version");
+	String title = (String)request.getAttribute("title");
 %>
 <html>
 <head>
@@ -15,10 +14,10 @@
     <script language="JavaScript" src="js/menu.js"></script>
     <script language="JavaScript" src="js/header.js"></script>
 <title>
-  <%if ((publicID != null)&&(version != null)){%>
-  <%=publicID%>v<%=version%>
+  <%if (title!= null){%>
+   <%=title%>
   <%}else{%>
-    View AC<%}%>
+    CDE Curation View AC<%}%>
 </title>
 </head>
 <body>

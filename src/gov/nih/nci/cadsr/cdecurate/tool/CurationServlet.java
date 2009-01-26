@@ -4086,8 +4086,8 @@ public class CurationServlet
 			boolean isExists = acMgr.isAcExists(acIDSEQ, m_conn);
 			if (!isExists) {
 				errMsg = "The Administered Item with Public Id [" +publicID + "] and Version [" + version +"] can not be found.";
-				m_classReq.setAttribute("publicId", sPublicId);
-				m_classReq.setAttribute("version", sVersion);
+				String title = "CDE Curation View AC [" + publicID + "v" + version +"]";
+				m_classReq.setAttribute("title", title);	
 				m_classReq.setAttribute("errMsg", errMsg);
 				ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
 			}
@@ -4097,11 +4097,11 @@ public class CurationServlet
 			if (ac != null) {
 				String actlName = ac.get(0); //"DATAELEMENT";  //DE_CONCEPT ;  VALUEDOMAIN  ;  VALUEMEANING
 				if ( !(actlName.equals("DATAELEMENT")) && !(actlName.equals("DE_CONCEPT")) && !(actlName.equals("VALUEDOMAIN")) && !(actlName.equals("VALUEMEANING"))){
-					actlName = getUserFriendlyActlName(actlName);
+					ArrayList actlName1 = getUserFriendlyActlName(actlName);
 					String longName = acMgr.getACLongName(publicID, version, m_conn);
-					errMsg = "<b>View " + actlName + " - " + longName + "[" + publicID + "v" + version +"]</b></br></br> Is not supported at this time.";
-					m_classReq.setAttribute("publicId", sPublicId);
-					m_classReq.setAttribute("version", sVersion);
+					errMsg = "<b>View " + actlName1.get(0) + " - " + longName + "[" + publicID + "v" + version +"]</b></br></br> Is not supported at this time.";
+					String title = "CDE Curation View "+actlName1.get(1)+" "+longName+ " [" + publicID + "v" + version +"]";
+					m_classReq.setAttribute("title", title);
 					m_classReq.setAttribute("errMsg", errMsg);
 					m_classReq.setAttribute("showCloseBtn", "yes");
 					ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");	
@@ -4190,18 +4190,23 @@ public class CurationServlet
             rd.forward(req, res);
             return;
    }
-   private String getUserFriendlyActlName(String name){
-	   String actlName= name;
+   private ArrayList getUserFriendlyActlName(String name){
+	   ArrayList<String> actlName= new ArrayList();
 	   if (name.equals("CLASSIFICATION")){
-		   actlName = "Class Scheme Item";
+		   actlName.add("Class Scheme Item");
+		   actlName.add("CSI");
 	   }else if (name.equals("CONCEPT")){
-		   actlName = "Concept Class";
+		   actlName.add("Concept Class");
+		   actlName.add("CC");
 	   }else if (name.equals("CONCEPTUALDOMAIN")){
-		   actlName = "Conceptual Domain";
+		   actlName.add("Conceptual Domain");
+		   actlName.add("CD");
 	   }else if (name.equals("OBJECTCLASS")){
-		   actlName = "Object Class";
+		   actlName.add("Object Class");
+		   actlName.add("OC");
 	   }else if (name.equals("PROPERTY")){
-		   actlName = "Property";
+		   actlName.add("Property");
+		   actlName.add("PROP");
 	   }
 	   return actlName;
    }
