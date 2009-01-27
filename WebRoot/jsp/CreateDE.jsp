@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDE.jsp,v 1.3 2008-07-03 21:24:19 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDE.jsp,v 1.4 2009-01-27 20:34:24 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -663,7 +663,7 @@
 					<td valign="top">
 						<input name="Version" type="text" value="<%=sVersion%>" size="5" maxlength=5 onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Version',helpUrl); return false">
 						&nbsp;&nbsp;&nbsp;
-						<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
+						<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
 							Business Rules
 						</a>
 					</td>

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.13 2009-01-27 17:19:20 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.14 2009-01-27 20:34:24 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -227,7 +227,7 @@
 		<Script Language="JavaScript">
  var evsWindow2 = null;
   var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
- 
+  
   //get all the cs_csi from the bean to array.
   var csiArray = new Array();  
   var selCSIArray = new Array();  //for selected csi list
@@ -1020,7 +1020,7 @@
 					</td>
 					<td height="25" valign="bottom">
 						Check Box to Create New Version &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
+						<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
 							Business Rules
 						</a>
 					</td>
@@ -1082,7 +1082,7 @@
 							<input type="text" name="Version" value="<%=sVersion%>" size=5 readonly onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Version',helpUrl); return false">
 						&nbsp;&nbsp;&nbsp;
 					 <% if (!isView){ %>	
-						<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
+						<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
 							Business Rules
 						</a>
 					   <%}%>	

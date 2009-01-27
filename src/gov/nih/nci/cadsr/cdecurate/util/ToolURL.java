@@ -1,6 +1,6 @@
 // Copyright (c) 2007 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/ToolURL.java,v 1.10 2008-11-25 22:20:31 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/ToolURL.java,v 1.11 2009-01-27 20:33:08 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.util;
@@ -24,12 +24,14 @@ public class ToolURL {
 	public static final String adminToolUrl = "AdminToolURL";
 	public static final String cadsrAPIURL = "CadsrAPIURL";
 	public static final String curationToolHelpURL = "curationToolHelpURL";
+	public static final String curationToolBusinessRulesURL = "curationToolBusinessRulesURL";
 	public static final String browserDispalyName = "BrowserDispalyName";
 	public static final String sentinelDispalyName = "SentinelDispalyName";
 	public static final String umlBrowserDispalyName = "UMLBrowserDispalyName";
 	public static final String freeStyleDispalyName = "FreeStyleDispalyName";
 	public static final String adminToolDispalyName = "AdminToolDispalyName";
 	public static final String cadsrAPIDispalyName = "CadsrAPIDispalyName";
+	
 	
 	/**
 	 * Constructor
@@ -165,5 +167,15 @@ public class ToolURL {
 
 	public static final String getCurationToolHelpURL(PageContext context_) {
 		return (String) context_.getSession().getAttribute(curationToolHelpURL);
+	}
+	
+	public static final void setCurationToolBusinessRulesURL(HttpSession session_,
+			String url_) {
+		DataManager.setAttribute(session_, curationToolBusinessRulesURL,
+				(url_ == null) ? defaultUrl : url_);
+	}
+
+	public static final String getCurationToolBusinessRulesURL(PageContext context_) {
+		return (String) context_.getSession().getAttribute(curationToolBusinessRulesURL);
 	}
 }
