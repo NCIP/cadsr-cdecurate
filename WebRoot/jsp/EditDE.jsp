@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.14 2009-01-27 20:34:24 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.15 2009-01-27 21:25:10 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -447,7 +447,7 @@
 				</tr>
 
 				<%
-					if (!sOriginAction.equals("BlockEditDE")) {
+					if (!sOriginAction.equals("BlockEditDE") && !isView) {
 				%>
 				<tr valign="bottom" height="25">
 					<td align="left" colspan=2 height="11">
@@ -492,10 +492,11 @@
 	  <% } else { %>
 				<tr height="25" valign="bottom">
 					<td align=right>
+					   <%if (!isView){%>
 						<font color="#FF0000">
 							*
 							&nbsp;&nbsp;
-						</font>
+						</font><%}%>
 						<%=item++%>
 						)
 					</td>
@@ -539,7 +540,7 @@
 					<td align=right>
 						<font color="#FF0000">
 							<%
-								if (!sOriginAction.equals("BlockEditDE")) {
+								if (!sOriginAction.equals("BlockEditDE") && (!isView)) {
 							%>
 							*
 							<%
@@ -629,7 +630,7 @@
 					<td align=right>
 						<font color="#FF0000">
 							<%
-								if (!sOriginAction.equals("BlockEditDE")) {
+								if (!sOriginAction.equals("BlockEditDE") && (!isView)) {
 							%>
 							*
 							<%
@@ -715,9 +716,10 @@
 						} else {
 					%>
 					<td align=right>
+					   <%if (!isView){%>
 						<font color="#FF0000">
 							*&nbsp;&nbsp;
-						</font>
+						</font><%}%>
 						<%=item++%>
 						)
 					</td>
@@ -776,9 +778,9 @@
 						} else {
 					%>
 					<td align=right>
-						<font color="#FF0000">
+						<%if (!isView){%><font color="#FF0000">
 							*&nbsp;&nbsp;
-						</font>
+						</font><%}%>
 						<%=item++%>
 						)
 					</td>
@@ -871,9 +873,10 @@
 						} else {
 					%>
 					<td align=right>
+					   <%if (!isView){%>
 						<font color="#FF0000">
 							*&nbsp;&nbsp;
-						</font>
+						</font><%}%>
 							<%=item++%>
 							)
 					</td>
@@ -913,9 +916,10 @@
 						} else {
 					%>
 					<td align=right>
+					   <%if (!isView){%>
 						<font color="#FF0000">
 							*&nbsp;&nbsp;
-						</font>
+						</font><%}%>
 						<%=item++%>
 						)
 					</td>
@@ -955,7 +959,7 @@
 				<tr valign="bottom" height="25">
 					<td align=right>
 						<%
-							if (!sOriginAction.equals("BlockEditDE")) {
+							if (!sOriginAction.equals("BlockEditDE") && (!isView)) {
 						%>
 						<font color="#FF0000">
 							*&nbsp;&nbsp;
@@ -1028,9 +1032,10 @@
 						} else {
 					%>
 					<td align=right>
+					   <%if (!isView){%>	
 						<font color="#FF0000">
 							*&nbsp;&nbsp;
-						</font>
+						</font><%}%>
 							<%=item++%>
 							)
 					</td>
@@ -1547,20 +1552,22 @@
 								</label>
 					</th>
 				</tr>
+				<%if (!isView){%>	
 				<tr height="25" valign="bottom">
 					<td align=left colspan=4>
-						<font color="#FF0000">
+					   	<font color="#FF0000">
 							&nbsp;*&nbsp;
 						</font>
 						Indicates Required Fields for Derived Data Elements
 					</td>
-				</tr>
+				</tr><%}%>
 				<tr height="25" valign="bottom">
 					<td align=right>
+					   <%if (!isView){%>
 						<font color="#FF0000">
 							*
-						</font>
-						<%=item++%>
+						</font><%}%>	
+						 <%=item++%>
 						)
 					</td>
 					<td colspan=3>
@@ -1597,9 +1604,10 @@
 				</tr>
 				<tr height="25" valign="bottom">
 					<td align=right>
+					   <%if (!isView){%>	
 						<font color="#FF0000">
 							*
-						</font>
+						</font><%}%>
 						<%=item++%>
 						)
 					</td>

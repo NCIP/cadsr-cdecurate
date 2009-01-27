@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.12 2009-01-23 19:22:10 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.13 2009-01-27 21:25:10 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -173,7 +173,7 @@
 			</div>
 		</th>
 	</tr>
-	<%if(!sOriginAction.equals("BlockEditVD")){%>
+	<%if(!sOriginAction.equals("BlockEditVD") && (!isView)){%>
 	<tr height="25" valign="bottom">
 		<td align="left" colspan=2 height="11">
 			<font color="#FF0000">
