@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.16 2009-01-27 20:34:24 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.17 2009-01-27 21:25:10 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -547,11 +547,11 @@ function setup()
 	  	} else {
 	  %>
 				<tr height="25" valign="bottom">
-					<td align=right>
+					<td align=right><%if (!isView){%>
 						<font color="#FF0000">
 							*
 							&nbsp;&nbsp;
-						</font>
+						</font><%}%>
 						<%=item++%>
 						)
 					</td>
@@ -598,9 +598,10 @@ function setup()
 							} else {
 						%>
 						<td align="right">
+						   <%if (!isView){%>
 							<font color="#FF0000">
 								* &nbsp;&nbsp;
-							</font>
+							</font><%}%>
 							<%=item++%>
 							)
 						</td>
@@ -653,9 +654,10 @@ function setup()
 					</tr>
 					<tr height="25" valign="bottom">
 						<td align=right>
+					   <%if (!isView){%>	
 						<font color="#FF0000">
 								* &nbsp;&nbsp;
-							</font>
+							</font><%}%>
 							<%=item++%>
 							)
 						</td>
@@ -879,9 +881,10 @@ function setup()
 							} else {
 						%>
 						<td align="right">
+						   <%if (!isView){%>
 							<font color="#FF0000">
 								* &nbsp;
-							</font>
+							</font><%}%>
 							<%=item++%>
 							)
 						</td>
@@ -947,9 +950,10 @@ function setup()
 							} else {
 						%>
 						<td align=right>
+						   <%if (!isView){%>
 							<font color="#FF0000">
 								* &nbsp;
-							</font>
+							</font><%}%>
 							<%=item++%>
 							)
 						</td>
@@ -1045,9 +1049,10 @@ function setup()
 						} else {
 					%>
 					<td align=right>
+					   <%if (!isView){%>	
 						<font color="#FF0000">
 							*&nbsp;&nbsp;
-						</font>
+						</font><%}%>
 							<%=item++%>
 							)
 					</td>
@@ -1090,9 +1095,10 @@ function setup()
 							} else {
 						%>
 						<td align=right>
+						   <%if (!isView){%>	
 							<font color="#FF0000">
 								* &nbsp;
-							</font>
+							</font><%}%>
 							<%=item++%>
 							)
 						</td>
@@ -1135,7 +1141,7 @@ function setup()
 					<tr height="25" valign="bottom">
 						<td align=right>
 							<%
-								if (!sOriginAction.equals("BlockEditVD")) {
+								if (!sOriginAction.equals("BlockEditVD") && (!isView)) {
 							%>
 							<font color="#FF0000">
 								*&nbsp;&nbsp;&nbsp;
@@ -1193,7 +1199,7 @@ function setup()
 					<tr height="25" valign="bottom">
 						<td align=right>
 							<%
-								if (!sOriginAction.equals("BlockEditVD")) {
+								if (!sOriginAction.equals("BlockEditVD") && (!isView)) {
 							%>
 							<font color="#FF0000">
 								*&nbsp;
@@ -1325,7 +1331,7 @@ function setup()
 					<tr height="25" valign="bottom">
 						<td align=right>
 							<%
-								if (!sOriginAction.equals("BlockEditVD")) {
+								if (!sOriginAction.equals("BlockEditVD") && (!isView)) {
 							%>
 							<font color="#FF0000">
 								*&nbsp;
@@ -1417,9 +1423,10 @@ function setup()
 					</tr>
 					<tr valign="top">
 						<td align=right>
+						   <%if (!isView){%>
 							<font color="#FF0000">
 								*
-							</font>
+							</font><%}%>
 							<%=item++%>
 							)
 						</td>
