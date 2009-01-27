@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.15 2009-01-15 16:22:42 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.16 2009-01-27 17:19:20 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -110,9 +110,11 @@
 							</div>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="Version" id="version" type="text" value="<%=sVersion%>" size="5" maxlength=5 <%if (isView){%>readonly<%}%>>
 							&nbsp;&nbsp;&nbsp;
+						   <% if (!isView){ %>
 							<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
 							Business Rules
-						</a><br>
+						   </a>
+						<%}%><br>
 						<div class="ind2">
 								<b>
 									WorkFlow Status

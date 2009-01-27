@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.12 2009-01-26 18:59:18 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.13 2009-01-27 17:19:20 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -1081,9 +1081,11 @@
 					<td valign="top" colspan=4>
 							<input type="text" name="Version" value="<%=sVersion%>" size=5 readonly onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Version',helpUrl); return false">
 						&nbsp;&nbsp;&nbsp;
+					 <% if (!isView){ %>	
 						<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
 							Business Rules
 						</a>
+					   <%}%>	
 					</td>
 					<%
 						}
