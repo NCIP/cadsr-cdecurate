@@ -2163,7 +2163,18 @@ public class SearchServlet extends CurationServlet {
         }
         ToolURL.setCurationToolHelpURL(session, aURL);
         session.setAttribute("curationToolHelpURL", aURL);
-            
+        
+        vList = new Vector();
+        vList = getAC.getToolOptionData("CURATION", "BUSINESS.RULES.URL", "");
+        aURL = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+                aURL = tob.getVALUE();
+        }
+        ToolURL.setCurationToolBusinessRulesURL(session, aURL);
+      
     }
     
     /**

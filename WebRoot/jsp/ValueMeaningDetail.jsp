@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.16 2009-01-27 17:19:20 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.17 2009-01-27 20:34:24 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -12,6 +12,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/date-picker.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/ValueMeaningEdit.js"></SCRIPT>
 		<%  
@@ -111,7 +112,7 @@
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="Version" id="version" type="text" value="<%=sVersion%>" size="5" maxlength=5 <%if (isView){%>readonly<%}%>>
 							&nbsp;&nbsp;&nbsp;
 						   <% if (!isView){ %>
-							<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
+							<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
 							Business Rules
 						   </a>
 						<%}%><br>

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.9 2009-01-27 17:19:20 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.10 2009-01-27 20:34:24 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -1058,7 +1058,7 @@
 							Check
 						</font>
 						Box to Create New Version &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
+						<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
 							Business Rules
 						</a>
 					</td>
@@ -1116,7 +1116,7 @@
 						</font>
 						&nbsp;&nbsp;&nbsp;
 					   <% if (!isView){ %>
-						<a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules" target="_blank">
+						<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
 							Business Rules
 						</a>
 					   <%}%>	
