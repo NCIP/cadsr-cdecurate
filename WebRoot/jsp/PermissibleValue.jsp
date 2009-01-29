@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.23 2009-01-23 19:22:10 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.24 2009-01-29 22:35:19 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -78,8 +78,7 @@
       if (vQVList == null) vQVList = new Vector();
       String sPVRecs = "No ";
       int vdPVs = 0;
-      if (vVDPVList.size() > 0)
-      {
+      if (vVDPVList.size() > 0){
         //loop through the list to get no of non deleted pvs
         for (int i = 0; i < vVDPVList.size(); i++)
         {
