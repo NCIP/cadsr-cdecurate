@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.62 2009-01-05 19:46:09 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.63 2009-01-29 22:27:39 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1821,5 +1821,11 @@ public class GetACService implements Serializable
     		SQLHelper.closeResultSet(rs);
     		SQLHelper.closeStatement(stmt);
     	}
+    }
+    public void getASLFilterListForView(HttpSession session){
+    	this.getASLFilterList(session);
+    }
+    public  void getOrganizeListforView(){
+    	this.getOrganizeList();
     }
 }
