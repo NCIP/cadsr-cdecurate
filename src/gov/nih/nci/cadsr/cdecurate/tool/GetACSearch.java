@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.81 2009-01-23 19:20:19 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.82 2009-01-29 20:29:43 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -9642,7 +9642,8 @@ public class GetACSearch implements Serializable
                         accBean.setACC_COMM_List(vComm);
                         Vector vAddr = getContactAddr(null, sOrgID, sPerID);
                         accBean.setACC_ADDR_List(vAddr);
-                        vList.put(contName, accBean);
+                        if (contName != null)
+                         vList.put(contName, accBean);
                     }
                 }
             }
