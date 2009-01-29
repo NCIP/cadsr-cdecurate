@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.11 2009-01-27 21:25:10 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.12 2009-01-29 18:14:04 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -316,12 +316,13 @@
 %>
  }
 
- function setup()
-  {
+ function setup(){
+   <%if (!isView){%>
     ObjClass.innerText = "<%=sOCCCodeDB%>";
     ObjClassID.innerText = "<%=sOCCCode%>";
     PropClass.innerText = "<%=sPCCCodeDB%>";
     PropClassID.innerText = "<%=sPCCCode%>"; 
+   <%}%> 
   }
   
 </Script>
