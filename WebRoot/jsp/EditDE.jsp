@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.15 2009-01-27 21:25:10 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.16 2009-01-29 16:22:43 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -215,7 +215,7 @@
 
 			String sDEID = "";
 			String sDECompOrder = "";
-			if (vDECompOrder.size() > 0)
+			if ((vDECompOrder != null) && (vDECompOrder.size() > 0))
 				sDECompOrder = (String) vDECompOrder.elementAt(0);
 
 			int item = 1;

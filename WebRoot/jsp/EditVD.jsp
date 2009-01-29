@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.17 2009-01-27 21:25:10 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.18 2009-01-29 16:22:42 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -51,9 +51,10 @@
 			Vector vCS_ID = (Vector) session.getAttribute("vCS_ID");
 
 			VD_Bean m_VD = new VD_Bean();
+			String vdID = "";
 			if (isView){
-			   String id = (String)request.getAttribute("viewVDId");
-		       String viewVD = "viewVD" + id;
+			   vdID = (String)request.getAttribute("viewVDId");
+		       String viewVD = "viewVD" + vdID;
 		       m_VD = (VD_Bean) session.getAttribute(viewVD);
 			}else{
 			   m_VD = (VD_Bean) session.getAttribute("m_VD");
@@ -364,6 +365,11 @@
 			int item = 1;
 
 			String sSearchAC = (String) session.getAttribute("creSearchAC");
+		    String displayErrorMessage = (String)session.getAttribute("displayErrorMessage");
+		    String fromm = "view";
+            if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){
+               fromm = "edit";
+            }
 		%>
 
 		<SCRIPT LANGUAGE="JavaScript">
@@ -503,8 +509,7 @@ function setup()
 
 	<body <% if (!isView) { %>onLoad="setup();" <% } %>>
 		<form name="createVDForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=editVD">
-		    <% String displayErrorMessage = (String)session.getAttribute("displayErrorMessage");
-		      if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
+		    <% if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
 		  	 <b><font  size="3">Not Authorized for Edits in this Context.</font></b></br></br>
 	       <%}%>
 			<!-- include the vdpvstab.jsp here -->
@@ -1448,8 +1453,8 @@ function setup()
 								}
 							%>
 							<br>
-							To view or maintain Permissible Values,
-							<a href="javascript:SubmitValidate('vdpvstab');">
+							To view or maintain Permissible Values,<%if (isView){ %><a href="javascript:changeTab('PV','<%=StringEscapeUtils.escapeJavaScript(fromm)%>', '<%=vdID%>');"><%}else{%>
+							<a href="javascript:SubmitValidate('vdpvstab');"><%}%>
 								[click here]
 							</a>
 							&nbsp;&nbsp;&nbsp;&nbsp;
