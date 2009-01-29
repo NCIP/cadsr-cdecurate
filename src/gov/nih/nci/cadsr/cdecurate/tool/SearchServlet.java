@@ -673,6 +673,7 @@ public class SearchServlet extends CurationServlet {
         clearSessionAttributes(m_classReq, m_classRes);
         // call the method to get attribute list for the selected AC
         getCompAttrList(searchAC, "nothing");
+        session.setAttribute("showDefaultSortBtn", "No");
         ForwardJSP(m_classReq, m_classRes, "/SearchResultsPage.jsp");
     }
 
