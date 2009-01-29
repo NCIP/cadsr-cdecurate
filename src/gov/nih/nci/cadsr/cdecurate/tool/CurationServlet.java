@@ -4064,6 +4064,7 @@ public class CurationServlet
     	HttpSession session = m_classReq.getSession();
     	session.setAttribute("originAction", "");
     	Admin_Components_Mgr acMgr = new Admin_Components_Mgr();
+    	GetACService serviceAC = new GetACService(m_classReq, m_classRes, this);
     	String errMsg = "";
     	ArrayList<String> ac = null;
     	//read the parameters idseq, public id and version from the request
@@ -4116,9 +4117,13 @@ public class CurationServlet
 		if (acIDSEQ != null || !acIDSEQ.equals("")) {
 			m_classReq.setAttribute("acIdseq", acIDSEQ);
 			if ((actlReq).equals("viewVALUEMEANING")){
-			       VMServlet vmServlet = new VMServlet(m_classReq, m_classRes, this);
-			       vmServlet.doOpenViewPage();
+				if (session.getAttribute(Session_Data.SESSION_ASL_FILTER) == null)
+			    	 serviceAC.getASLFilterListForView(session);   
+				VMServlet vmServlet = new VMServlet(m_classReq, m_classRes, this);
+			    vmServlet.doOpenViewPage();
 			 }else{
+				  if (session.getAttribute("Organizations") == null)
+			    	  serviceAC.getOrganizeListforView();      
 				  CurationServlet servObj = getACServlet(actlReq);
 				  servObj.execute(getACType(actlReq));
 			}  
