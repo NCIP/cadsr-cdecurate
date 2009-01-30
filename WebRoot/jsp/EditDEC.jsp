@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.13 2009-01-29 19:54:39 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.14 2009-01-30 15:06:52 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -839,6 +839,7 @@
 						</font>
 					</td>
 				</tr>
+				<% if (!isView) { %>	
 				<tr>
 					<td>
 						&nbsp;
@@ -860,7 +861,7 @@
 						<%=lblUserType%>
 						<!--Existing Name <%/*if(sOriginAction.equals("BlockEditDEC")){*/%>(Not Editable)<% /*} else { */%>(Editable)<% /*} */%>  -->
 					</td>
-				</tr>
+				</tr><%}%>	
 				<tr>
 					<td>
 						&nbsp;
