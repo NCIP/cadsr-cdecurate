@@ -403,7 +403,7 @@ public class SearchServlet extends CurationServlet {
     private void doSearchResultsAction() throws Exception
     {
     	String hidaction = (String)m_classReq.getParameter("hidaction");
-        if (hidaction.equals("newUsingExisting") || hidaction.equals("newVersion") || hidaction.equals("edit")){
+        if ((hidaction != null) && (hidaction.equals("newUsingExisting") || hidaction.equals("newVersion") || hidaction.equals("edit"))){
         	doMenuAction();
         }
     	HttpSession session = m_classReq.getSession();
