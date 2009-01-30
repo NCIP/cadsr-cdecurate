@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.18 2009-01-29 16:22:42 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.19 2009-01-30 15:06:51 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -2036,7 +2036,7 @@ function setup()
 							&nbsp;
 						</td>
 						<td>
-							<textarea name="CreateChangeNote" cols="70%" 	<% if (!isView) { %> readonly <%} %> onHelp="showHelp('html/Help_CreateVD.html#createVDForm_CreateComment',helpUrl); return false" rows=2><%=sChangeNote%></textarea>
+							<textarea name="CreateChangeNote" cols="70%" 	<% if (isView) { %> readonly <%} %> onHelp="showHelp('html/Help_CreateVD.html#createVDForm_CreateComment',helpUrl); return false" rows=2><%=sChangeNote%></textarea>
 						</td>
 					</tr>
 					<% if (!isView) { %>
