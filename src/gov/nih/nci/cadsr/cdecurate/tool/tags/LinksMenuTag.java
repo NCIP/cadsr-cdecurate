@@ -28,15 +28,21 @@ public class LinksMenuTag extends MenuTag {
         String adminToolDName = ToolURL.getAdminToolDispalyName(this.pageContext);
         String cadsrApiLink = "window.open('" + ToolURL.getCadsrAPIUrl(this.pageContext) +"', '_blank')";
         String cadsrApiDName = ToolURL.getCadsrAPIDispalyName(this.pageContext);
+        String formBuilderLink = "window.open('" + ToolURL.getFormBuilderUrl(this.pageContext) +"', '_blank')";
+        String formBuilderDName = ToolURL.getFormBuilderDisplayName(this.pageContext);
+        String evsBioPortalLink = "window.open('" + ToolURL.getEVSBioPortalUrl(this.pageContext) +"', '_blank')";
+        String evsBioPortalDName = ToolURL.getEVSBioPortalDisplayName(this.pageContext);
 		try {
 			linksMenu.println("<dl class=\"menu\">"
 					          + generateDT("",adminToolLink,adminToolDName)         
-					          + generateDT("",cdeBrowserLink,cdeBrowserDName)
 					          + generateDT("",freeStyleLink,freeStyleDName)
 					          + generateDT("",sentinelToolLink,sentinelToolDName)
+					          + generateDT("",cdeBrowserLink,cdeBrowserDName)
+					          + generateDT("",formBuilderLink,formBuilderDName)
 					          + generateDT("",umlBrowserLink,umlBrowserDName)
 					          + separator()
 					          + generateDT("",cadsrApiLink,cadsrApiDName)
+					          + generateDT("",evsBioPortalLink,evsBioPortalDName)
 					          + generateDT("","window.open('https://wiki.nci.nih.gov', '_blank')","NCI Wiki")
 					          + generateDT("","window.open('https://gforge.nci.nih.gov', '_blank')","NCI GForge")
 					          +"</dl>");

@@ -1,6 +1,6 @@
 // Copyright (c) 2007 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/ToolURL.java,v 1.11 2009-01-27 20:33:08 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/ToolURL.java,v 1.12 2009-01-30 17:09:43 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.util;
@@ -23,6 +23,8 @@ public class ToolURL {
 	public static final String freeStyleUrl = "FreeStyleURL";
 	public static final String adminToolUrl = "AdminToolURL";
 	public static final String cadsrAPIURL = "CadsrAPIURL";
+	public static final String formBuilderURL = "FormBuilderURL";
+	public static final String evsBioPortalURL = "EVSBioPortalURL";
 	public static final String curationToolHelpURL = "curationToolHelpURL";
 	public static final String curationToolBusinessRulesURL = "curationToolBusinessRulesURL";
 	public static final String browserDispalyName = "BrowserDispalyName";
@@ -31,6 +33,8 @@ public class ToolURL {
 	public static final String freeStyleDispalyName = "FreeStyleDispalyName";
 	public static final String adminToolDispalyName = "AdminToolDispalyName";
 	public static final String cadsrAPIDispalyName = "CadsrAPIDispalyName";
+	public static final String formBuilderDisplayName = "FormBuilderDisplayName";
+	public static final String evsBioPortalDisplayName = "EVSBioPortalDisplayName";
 	
 	
 	/**
@@ -177,5 +181,36 @@ public class ToolURL {
 
 	public static final String getCurationToolBusinessRulesURL(PageContext context_) {
 		return (String) context_.getSession().getAttribute(curationToolBusinessRulesURL);
+	}
+	public static final void setFormBuilderUrl(HttpSession session_,
+			String url_) {
+		DataManager.setAttribute(session_, formBuilderURL,
+				(url_ == null) ? defaultUrl : url_);
+	}
+	public static final String getFormBuilderUrl(PageContext context_) {
+		return (String) context_.getSession().getAttribute(formBuilderURL);
+	}
+	public static final void setEVSBioPortalUrl(HttpSession session_,
+			String url_) {
+		DataManager.setAttribute(session_, evsBioPortalURL,
+				(url_ == null) ? defaultUrl : url_);
+	}
+	public static final String getEVSBioPortalUrl(PageContext context_) {
+		return (String) context_.getSession().getAttribute(evsBioPortalURL);
+	}
+	
+	public static final void setFormBuilderDisplayName(HttpSession session_, String name_) {
+		DataManager.setAttribute(session_, formBuilderDisplayName, name_);
+	}
+
+	public static final String getFormBuilderDisplayName(PageContext context_) {
+		return (String) context_.getSession().getAttribute(formBuilderDisplayName);
+	}
+	public static final void setEVSBioPortalDisplayName(HttpSession session_, String name_) {
+		DataManager.setAttribute(session_, evsBioPortalDisplayName, name_);
+	}
+
+	public static final String getEVSBioPortalDisplayName(PageContext context_) {
+		return (String) context_.getSession().getAttribute(evsBioPortalDisplayName);
 	}
 }

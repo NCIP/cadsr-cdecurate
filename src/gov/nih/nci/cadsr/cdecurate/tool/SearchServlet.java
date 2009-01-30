@@ -2154,6 +2154,56 @@ public class SearchServlet extends CurationServlet {
         }
         
         vList = new Vector();
+        vList = getAC.getToolOptionData("FormBuilder", "URL", "");
+        aURL = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+                aURL = tob.getVALUE();
+        }
+        ToolURL.setFormBuilderUrl(session, aURL);
+        vList = new Vector();
+        vList = getAC.getToolOptionData("FormBuilder", "DISPLAY.NAME", "");
+        dName = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+            	dName = tob.getVALUE();
+        }
+        if(dName != null){
+           ToolURL.setFormBuilderDisplayName(session, dName);
+        }else{
+           ToolURL.setFormBuilderDisplayName(session, "Form Builder");
+        }
+        
+        vList = new Vector();
+        vList = getAC.getToolOptionData("EVSBrowser", "URL", "");
+        aURL = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+                aURL = tob.getVALUE();
+        }
+        ToolURL.setEVSBioPortalUrl(session, aURL);
+        vList = new Vector();
+        vList = getAC.getToolOptionData("EVSBrowser", "DISPLAY.NAME", "");
+        dName = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+            	dName = tob.getVALUE();
+        }
+        if(dName != null){
+           ToolURL.setEVSBioPortalDisplayName(session, dName);
+        }else{
+           ToolURL.setEVSBioPortalDisplayName(session, "EVS BioPortal");
+        }
+        
+        vList = new Vector();
         vList = getAC.getToolOptionData("CURATION", "HELP.HOME", "");
         aURL = null;
         if (vList != null && vList.size() > 0)
