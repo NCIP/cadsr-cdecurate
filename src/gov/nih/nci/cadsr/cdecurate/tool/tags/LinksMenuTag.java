@@ -43,8 +43,8 @@ public class LinksMenuTag extends MenuTag {
 					          + generateDT("",umlBrowserLink,umlBrowserDName)
 					          + separator()
 					          + generateDT("",evsBioPortalLink,evsBioPortalDName)
-					          + generateDT("","window.open('https://wiki.nci.nih.gov', '_blank')","NCI Wiki")
 					          + generateDT("","window.open('https://gforge.nci.nih.gov', '_blank')","NCI GForge")
+					          + generateDT("","window.open('https://wiki.nci.nih.gov', '_blank')","NCI Wiki")
 					          +"</dl>");
 		} catch (IOException e) {
 			e.printStackTrace();
