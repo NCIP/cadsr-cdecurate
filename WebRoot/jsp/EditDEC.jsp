@@ -1,8 +1,7 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.14 2009-01-30 15:06:52 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.15 2009-02-03 17:25:06 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 	<head>
@@ -445,16 +444,18 @@
 						&nbsp;
 					</td>
 					<td valign="top">
+					   <%if (!isView){%>	
 						<select name="selContext" size="1" readonly onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selContext'); return false">
 							<option value="<%=sContID%>">
 								<font color="#C0C0C0">
 									<%=sContext%>
 								</font>
 							</option>
-						</select>
+						</select><%}else{%>
+						<input type="text" size="8" value="<%=sContext%>" readonly>
+					  <%}%>
 					</td>
 				</tr>
-
 				<tr height="25" valign="bottom">
 					<td align=right>
 						<%=item++%>
@@ -536,7 +537,7 @@
 												</font>
 												<%}%>
 											</td>
-										    <% } %>	
+										    <% }else{%>	<td></td><td></td><%}%>
 											<td align="left" valign="top">
 												<font color="<%=sOCFont%>">
 													Primary
@@ -569,27 +570,34 @@
 										</tr>
 										<tr align="left">
 											<td colspan="3" valign="top">
+											 
+											  <%if(!isView){%>
 												<select name="selObjectQualifier" size="2" style="width=98%" valign="top" onClick="ShowEVSInfo('ObjectQualifier')" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<%if (vOCQualifierNames.size()<1) {%>
 													<option value=""></option>
 													<% } else { %>
-													<%for (int i = 0; vOCQualifierNames.size()>i; i++)
-                              {
-                                String sQualName = (String)vOCQualifierNames.elementAt(i);
-                              %>
-													<option value="<%=sQualName%>" <%if(i==0){%> selected <%}%>>
-														<%=sQualName%>
-													</option>
+													  <%for (int i = 0; vOCQualifierNames.size()>i; i++){
+                                                          String   sQualName = (String)vOCQualifierNames.elementAt(i); %>
+													    <option value="<%=sQualName%>" <%if(i==0){%> selected <%}%>>
+														    <%=sQualName%>
+													    </option>
+													  <%}%>
 													<%}%>
-													<%}%>
-												</select>
+												</select><%}else{%>
+												 <%if (vOCQualifierNames.size()<1){%>
+												   <input type="text" size="45" value="" readonly>
+												<%}else{ for (int i = 0; vOCQualifierNames.size()>i; i++){
+                                                          String   sQualName = (String)vOCQualifierNames.elementAt(i); %>
+												         <input type="text" size="45" value="<%=sQualName%>" readonly><%}}
+												         }%>
 											</td>
 											<td colspan="3" valign="top">
+											  <%if(!isView){%>	
 												<select name="selObjectClass" style="width=98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<option value="<%=sObjClassPrimary%>">
 														<%=sObjClassPrimary%>
 													</option>
-												</select>
+												</select><%}else{%><input type="text" size="45" value="<%=sObjClassPrimary%>" readonly><%}%>
 											</td>
 										</tr>
 										<tr>
@@ -676,7 +684,7 @@
 												</font>
 												<%}%>
 											</td>
-											<% } %>
+											<% }else{%>	<td></td><td></td><%}%>
 											<td align="left" valign="top">
 												<font color="<%=sPropFont%>">
 													Primary
@@ -710,27 +718,35 @@
 
 										<tr align="left">
 											<td colspan="3" valign="top">
+												
+												<%if(!isView){%>
 												<select name="selPropertyQualifier" size="2" style="width=98%" valign="top" onClick="ShowEVSInfo('PropertyQualifier')" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<%if (vPropQualifierNames.size()<1) {%>
 													<option value=""></option>
 													<% } else { %>
-													<%for (int i = 0; vPropQualifierNames.size()>i; i++)
-                            {
-                              String sQualName = (String)vPropQualifierNames.elementAt(i);
-                          %>
-													<option value="<%=sQualName%>" <% if(i==0){%> selected <%}%>>
-														<%=sQualName%>
-													</option>
+													  <%											     
+													     for (int i = 0; vPropQualifierNames.size()>i; i++){ 
+                                                          String sQualName = (String)vPropQualifierNames.elementAt(i);%>
+													      <option value="<%=sQualName%>" <% if(i==0){%> selected <%}%>>
+														     <%=sQualName%>
+													      </option>
+													  <%}%>
 													<%}%>
-													<%}%>
-												</select>
+												</select><%}else{%>
+												  <%if (vPropQualifierNames.size()<1){ %>
+												       <input type="text" size="45" value="" readonly>
+																							  
+												  <%}else{for (int i = 0; vPropQualifierNames.size()>i; i++){ 
+                                                          String sQualName = (String)vPropQualifierNames.elementAt(i);%> 
+												          <input type="text" size="45" value="<%=sQualName%>" readonly><%}}}%>
 											</td>
 											<td colspan="3" valign="top">
+											   <%if(!isView){%>
 												<select name="selPropertyClass" style="width=98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<option value="<%=sPropClassPrimary%>">
 														<%=sPropClassPrimary%>
 													</option>
-												</select>
+												</select><%}else{%><input type="text" size="45" value="<%=sPropClassPrimary%>" readonly><%}%>
 											</td>
 										</tr>
 										<tr>
@@ -980,11 +996,14 @@
 						&nbsp;
 					</td>
 					<td>
+					   <% if (!isView) { %>		
 						<select name="selConceptualDomain" size="1" style="width:430" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selConceptualDomain'); return false">
 							<option value=<%=sConDomID%>>
 								<%=sConDom%>
 							</option>
-						</select>
+						</select><%}else{%>
+						  <input type="text" size="69" value="<%=sConDom%>"readonly>
+						<%}%>
 						&nbsp;&nbsp;
 					   <% if (!isView){ %>	
 						<font color="#FF0000">
@@ -1019,36 +1038,25 @@
 						&nbsp;
 					</td>
 					<td valign="top">
+					  <%if (!isView) {	%>	
 						<select name="selStatus" size="1" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selStatus'); return false">
-						<%	if (!isView) {	%>	
 							<option value="" selected="selected"></option>
-							<%          for (int i = 0; vStatus.size()>i; i++)
-          {
-             String sStatusName = (String)vStatus.elementAt(i);
-             //add only draft new and retired phased out if creating new
-             if ((sMenuAction != null) && (sMenuAction.equals("Questions")))
-             {
-                if (sStatusName.equals("DRAFT NEW") || sStatusName.equals("RETIRED PHASED OUT") && !sOriginAction.equals("BlockEditDEC"))
-                {
-%>
-							<option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%> selected <%}%>>
-								<%=sStatusName%>
-							</option>
-							<%              }
-             }
-             else
-             {
-%>
-							<option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%> selected <%}%>>
-								<%=sStatusName%>
-							</option>
-							<%
-             }
-          }
-	}  else { 	%>
-							<option value="<%=sStatus%>"><%=sStatus%></option>	
-						<% } %>	
-						</select>
+							<% for (int i = 0; vStatus.size()>i; i++){
+                                    String sStatusName = (String)vStatus.elementAt(i);
+                                    //add only draft new and retired phased out if creating new
+                                    if ((sMenuAction != null) && (sMenuAction.equals("Questions"))){
+                                        if (sStatusName.equals("DRAFT NEW") || sStatusName.equals("RETIRED PHASED OUT") && !sOriginAction.equals("BlockEditDEC")){
+%>                   						<option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%> selected <%}%>>
+								                <%=sStatusName%>
+							                </option>
+							       <%   }
+                                    }else{%>
+							         <option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%> selected <%}%>>
+								        <%=sStatusName%>
+							        </option>
+						          <%} 
+						       }%>
+						</select><%}else{%><input type="text" size="22" value="<%=sStatus%>" readonly> <%}%>
 					</td>
 				</tr>
 				<tr height="25" valign="bottom">
@@ -1369,8 +1377,10 @@
 						   <% } %>	
 							<tr>
 								<td colspan=4 valign="top">
+									<%if (!isView){%>	
 									<select name="selContact" size="4" style="width:100%" onchange="javascript:enableContButtons();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContact'); return false">
-										<%	
+									<%}else{%><p class="inset">	
+										<%}
 				Enumeration enum1 = hContacts.keys();
 				while (enum1.hasMoreElements())
 				{
@@ -1384,14 +1394,11 @@
 				  String contName = acCont.getORG_NAME();
 				  if (contName == null || contName.equals(""))
 				    contName = acCont.getPERSON_NAME(); */
-%>
+      if (!isView){%>	
 										<option value="<%=contName%>">
 											<%=contName%>
-										</option>
-										<%				  
-				}
-%>
-									</select>
+										</option><%}else{%><%=contName%><br><%}
+										}if (!isView){%></select><%}else{%><br></p><%}%>
 								</td>
 							</tr>
 						</table>
@@ -1418,10 +1425,11 @@
 						&nbsp;
 					</td>
 					<td>
+						<%if (!isView){%>
 						<select name="selSource" size="1" style="width:70%" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selSource',helpUrl); return false">
 						<%		
-							boolean isFound = false;							
-							if (!isView) {	%>
+							boolean isFound = false;
+							%>
 							<option value=""></option>
 							<%
 								for (int i = 0; vSource.size() > i; i++) {
@@ -1433,9 +1441,9 @@
 								<%=sSor%>
 							</option>
 							<%
-								} }
+								 }
 								//add the user entered if not found in the drop down list
-								if (!isFound || isView) {
+								if (!isFound) {
 									sSource = serUtil.parsedStringDoubleQuoteJSP(sSource); //call the function to handle doubleQuote
 							%>
 							<option value="<%=sSource%>" selected>
@@ -1444,7 +1452,7 @@
 							<%
 								}
 							%>
-						</select>
+						</select><%}else{%><input type="text" size="143" value="<%=sSource%>" readonly><%}%>
 					</td>
 				</tr>
 				<tr height="25" valign="bottom">

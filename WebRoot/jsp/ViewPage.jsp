@@ -8,17 +8,20 @@
 %>
 <html>
 <head>
+	<title>
+         <%if (title!= null){%>
+            <%=title%>
+         <%}else{%>
+             CDE Curation View AC<%}%>
+    </title> 
 	<base href="<%=basePath%>">
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<link href="css/style.css" rel="stylesheet" type="text/css">
     <script language="JavaScript" src="js/menu.js"></script>
     <script language="JavaScript" src="js/header.js"></script>
-<title>
-  <%if (title!= null){%>
-   <%=title%>
-  <%}else{%>
-    CDE Curation View AC<%}%>
-</title>
+    <style type="text/css">
+             p.inset {border-style: inset}
+    </style>
 </head>
 <body>
 	<%String displayErrorMessagee = (String)session.getAttribute("displayErrorMessage");

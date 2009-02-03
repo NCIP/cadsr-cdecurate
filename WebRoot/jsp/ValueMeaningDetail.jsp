@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.17 2009-01-27 20:34:24 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.18 2009-02-03 17:25:06 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -123,22 +123,22 @@
 							</div>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						 <%  String sStatus = thisForm.getVMBean().getASL_NAME();%>
-						  <select name="selStatus" id="ws" size="1">
+						  <%String sStatusName = "";%>
 						  <%	if (!isView) {	%>
+						  <select name="selStatus" id="ws" size="1">
+						  
 							<option value="" selected="selected"></option>
 							<% if(vStatus!=null){  
 							   for (int i = 0; vStatus.size()>i; i++){
-        						String sStatusName = (String)vStatus.elementAt(i); 
+        						 sStatusName = (String)vStatus.elementAt(i); 
         						if (sStatus == null) sStatus = "";  
     							%>
 								<option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%> selected <%}%>>
 								<%=sStatusName%>
 								</option>
 								<%  }}  %>
-							<%	}  else { 	%>
-							<option value="<%=sStatus%>"><%=sStatus%></option>	
-						<% } %>	
-							</select>
+							
+							</select><%}else{%><input type="text" size="22" value="<%=sStatusName%>" readonly><%}%>
 							<div class="ind2">
 								<b>
 									<%=thisForm.descriptionLabel%>

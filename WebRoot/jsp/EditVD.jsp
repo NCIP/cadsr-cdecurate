@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.19 2009-01-30 15:06:51 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.20 2009-02-03 17:25:06 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -21,9 +21,6 @@
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/SelectCS_CSI.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/VDPVS.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
-		<style>
-			p { border: 1px solid black; }
-		</style>
 		<%
 			//for view only page
 			String bodyPage = (String) request.getAttribute("IncludeViewPage");
@@ -576,7 +573,7 @@ function setup()
 							</option>
 						</select>
 						<% } else { %>
-							<p style="width:40%"><%=sContext%></p>
+							<input type="text" size="8" value="<%=sContext%>" readonly>
 						<% } %>
 					</td>
 				</tr>
@@ -650,11 +647,8 @@ function setup()
 								</option>
 							</select>
 							<% } else { %>
-							<p style="width:40%">	<%	if (sTypeFlag.equals("E")) {%>Enumerated
-									<%	} else  {	%>Non-Enumerated
-									<%	}	%>
-							</p>
-						<% } %>
+							 <input type="text" size="20" value=<%if(sTypeFlag.equals("E")){%>"Enumerated"<%}else{%>"Non-Enumerated"<%}%> readonly>
+						   <% } %>
 						</td>
 					</tr>
 					<tr height="25" valign="bottom">
@@ -713,11 +707,7 @@ function setup()
 														</tr>
 														<tr>
 															<td colspan="5" align="left">
-																<% if (!isView) { %>
 																<input type="text" name="txtRepTerm" value="<%=sRepTerm%>" style="width=100%" valign="top" readonly="readonly">
-																<% } else { %>
-																	<p style="width:90%"><%=sRepTerm%></p>
-																<% } %>
 															</td>
 														</tr>
 														<tr height="8">
@@ -807,16 +797,15 @@ function setup()
 																		}	}	%>
 																</select>
 																<% } else { %>
-																		<p> 
-																	<% for (int i = 0; vRepQualifierNames.size() > i; i++) {
-																				String sQualName = (String) vRepQualifierNames.elementAt(i);
-																				String sCode = (String) vRepQualifierCodes.elementAt(i);
-																				String sDB = (String) vRepQualifierDB.elementAt(i);
-																	%>
-																	<%=sQualName%> &nbsp;&nbsp; <%=sCode%> &nbsp;&nbsp; <%=sDB%> <br>
-																	<%	}	%>
-																		&nbsp;&nbsp; </p>
-																<% } %>
+																	
+																	<% if (vRepQualifierNames.size() < 1){%>
+																	   <input type="text" size="71" value="" readonly>
+																	<%}else{for (int i = 0; vRepQualifierNames.size() > i; i++) {
+																		String sQualName = (String) vRepQualifierNames.elementAt(i);%>
+																	  <input type="text" size="71" value="<%=sQualName%>" readonly>
+																	<%	}}	}%>
+														
+																
 															</td>
 															<td colspan="3" valign="top">
 																<% if (!isView) { %>
@@ -826,8 +815,9 @@ function setup()
 																	</option>
 																</select>
 																<% } else { %>
-																	<p><%=sRepTermPrimary%> &nbsp;&nbsp; <%=sRepTerm_ID%> &nbsp;&nbsp; <%=sRepTermVocab%></p>
-																<% } %>	
+																    <input type="text" size="71" value="<%=sRepTermPrimary%>" readonly>
+															    <%}%>
+																														
 															</td>
 														</tr>
 														<tr>
@@ -1184,7 +1174,7 @@ function setup()
 								</option>
 							</select>
 							<% } else { %>
-								<p style="width=60%"><%=sConDom%></p>
+								<input type="text" size="69" value="<%=sConDom%>"readonly>
 							<% } %>
 							&nbsp;&nbsp;
 						<%
@@ -1248,7 +1238,7 @@ function setup()
 								<% } %>
 								</select>
 								<%	} else { %>
-									<p style="width=50%"><%=sStatus%></p>
+									<input type="text" size="22" value="<%=sStatus%>" readonly>
 								<% } %>
 						</td>
 					</tr>
@@ -1384,7 +1374,8 @@ function setup()
 											<% } %>
 										</select>
 								<%	} else { %>
-									<p><%=sDataType%></p>
+								    <input type="text" size="35" value="<%=sDataType%>" readonly>
+								
 								<% } %>										
 									</td>
 									<% String sDTDesc = "", sDTComm = ""; 
@@ -1556,7 +1547,7 @@ function setup()
 								<% } %>
 							</select>
 								<%	} else { %>
-									<p style="width=20%"><%=sUOML%></p>
+								     <input type="text" size="20" value="<%=sUOML%>" readonly>
 								<% } %>
 						</td>
 					</tr>
@@ -1592,7 +1583,7 @@ function setup()
 								<% } %>
 							</select>
 							<%	} else { %>
-									<p style="width=20%"><%=sFORML%></p>
+							        <input type="text" size="20" value="<%=sFORML%>" readonly>
 							<% } %>
 						</td>
 					</tr>
@@ -1935,8 +1926,11 @@ function setup()
 							 <% } %>
 								<tr>
 									<td colspan=4 valign="top">
+										
+										<%if (!isView){%>
 										<select name="selContact" size="4" style="width:100%" onchange="javascript:enableContButtons();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContact',helpUrl); return false">
-											<%
+										<%}else{%><p class="inset">
+											<%}
 												Enumeration enum1 = hContacts.keys();
 													while (enum1.hasMoreElements()) {
 														String contName = (String) enum1.nextElement();
@@ -1951,14 +1945,12 @@ function setup()
 														String contName = acCont.getORG_NAME();
 														if (contName == null || contName.equals(""))
 														  contName = acCont.getPERSON_NAME(); */
-											%>
+											if (!isView){%>	
 											<option value="<%=contName%>">
 												<%=contName%>
-											</option>
-											<%
-												}
-											%>
-										</select>
+											</option><%}else{%><%=contName%><br>
+											<%}
+											}if (!isView){%></select><%}else{%><br></p><%}%>
 									</td>
 								</tr>
 							</table>
@@ -2013,8 +2005,8 @@ function setup()
 								%>
 							</select>
 							<% } else { %>
-								<p style="width=60%"><%=sSource%></p>
-							<% } %>
+							    <input type="text" size="107" value="<%=sSource%>" readonly>
+					    	<% } %>
 						</td>
 					</tr>
 					<tr height="25" valign="bottom">
