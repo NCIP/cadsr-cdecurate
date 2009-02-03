@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.17 2009-02-03 17:25:06 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.18 2009-02-03 19:34:53 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -577,7 +577,7 @@
 							<option value="<%=sDECID%>">
 								<%=sDEC%>
 							</option>
-						</select><%}else{%>
+						</select><%}else{%><input type="hidden" name="viewDECId" value="<%=sDECID%>">
 						   <input type="text" size="68" value=<%=sDEC%> readonly>
 						<%}%>
 						<!-- add the hyperlink do not allow search if alredy vd selected in the block edit-->
@@ -669,7 +669,8 @@
 							<option value="<%=sVDID%>">
 								<%=sVD%>
 							</option>
-						</select><%}else{%><input type="text" size="68" value="<%=sVD%>" readonly><%}%>
+						</select><%}else{%> <input type="hidden" name="viewVDId" value="<%=sVDID%>">
+											<input type="text" size="68" value="<%=sVD%>" readonly><%}%>
 						<!-- add the hyperlink do not allow search if alredy dec selected in the block edit-->
 						<!--  no lins for view only page -->
 						<%
