@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.16 2009-01-29 16:22:43 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.17 2009-02-03 17:25:06 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -509,11 +509,14 @@
 						&nbsp;
 					</td>
 					<td height="26">
+					   <%if (!isView){%>
 						<select name="selContext" size="1" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContext',helpUrl); return false">
 							<option value="<%=sContID%>">
 									<%=sContext%>
 							</option>
-						</select>
+						</select><%}else{%>
+						<input type="text" size="8" value="<%=sContext%>" readonly>
+				      <%}%>
 					</td>
 				</tr>
 	 <%	}	%>
@@ -569,11 +572,14 @@
 						&nbsp;
 					</td>
 					<td>
+					   <%if (!isView){%>	
 						<select name="selDEC" size="1" multiple style="width:430" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selDEC',helpUrl); return false">
 							<option value="<%=sDECID%>">
 								<%=sDEC%>
 							</option>
-						</select>
+						</select><%}else{%>
+						   <input type="text" size="68" value=<%=sDEC%> readonly>
+						<%}%>
 						<!-- add the hyperlink do not allow search if alredy vd selected in the block edit-->
 						<!--  no lins for view only page -->
 						<%
@@ -658,11 +664,12 @@
 						&nbsp;
 					</td>
 					<td>
+					   <%if (!isView){%>	
 						<select name="selVD" size="1" multiple style="width:430" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selVD',helpUrl); return false">
 							<option value="<%=sVDID%>">
 								<%=sVD%>
 							</option>
-						</select>
+						</select><%}else{%><input type="text" size="68" value="<%=sVD%>" readonly><%}%>
 						<!-- add the hyperlink do not allow search if alredy dec selected in the block edit-->
 						<!--  no lins for view only page -->
 						<%
@@ -984,12 +991,14 @@
 						&nbsp;
 					</td>
 					<td height="26" valign="top">
+					  <%String sStatusName = "";%> 
+					   <%	if (!isView) {%>		
+						
 						<select name="selStatus" size="1" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selStatus',helpUrl); return false">
-						<%	if (!isView) {	%>
 							<option value="" selected="selected"></option>
 							<%
 								for (int i = 0; vStatus.size() > i; i++) {
-									String sStatusName = (String) vStatus.elementAt(i);
+									 sStatusName = (String) vStatus.elementAt(i);
 									//add only draft new and retired phased out if creating new
 									if ((sMenuAction != null) && (sMenuAction.equals("Questions"))) {
 										if (sStatusName.equals("DRAFT NEW")
@@ -1007,10 +1016,7 @@
 								<%=sStatusName%>
 							</option>
 							<%	}	}	%>
-						<%	}  else { 	%>
-							<option value="<%=sStatus%>"><%=sStatus%></option>	
-						<% } %>					
-						</select>
+						</select><%}else{%><input type="text" size="22" value="<%=sStatus%>" readonly><%}%>
 					</td>
 				</tr>
 
@@ -1115,9 +1121,10 @@
 						&nbsp;
 					</td>
 					<td height="25" valign="top">
+						<%	if (!isView) {	%>
 						<select name="selRegStatus" size="1" style="Width: 50%"
 							onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selRegStatus',helpUrl); return false">
-						<%	if (!isView) {	%>
+						
 							<option value="" selected></option>
 							<%	if (vRegStatus != null) {
 										for (int i = 0; vRegStatus.size() > i; i++) {
@@ -1126,10 +1133,8 @@
 											if (isOK) {	%>
 											<option value="<%=sReg%>" <%if(sReg.equals(sRegStatus)){%>selected <%}%>><%=sReg%></option>
 										<%	}	}	} %>
-						<%	}  else { 	%>
-							<option value="<%=sRegStatus%>"><%=sRegStatus%></option>	
-						<% } %>
-						</select>
+						
+						</select><%}else{%><input type="text" size="100" value="<%=sRegStatus%>" readonly><%}%>
 					</td>
 				</tr>
 				<tr valign="bottom" height="25">
@@ -1410,10 +1415,12 @@
 					    <%} %>
 							<tr>
 								<td colspan=4 valign="top">
+								  								  
+								  <%if (!isView){%>	
 									<select name="selContact" size="4" style="width:100%" onchange="javascript:enableContButtons();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContact',helpUrl); return false">
-										<%
-											Enumeration enum1 = hContacts.keys();
-												while (enum1.hasMoreElements()) {
+									<%}else{%><p class="inset">	
+									<%}    Enumeration enum1 = hContacts.keys();
+									       while (enum1.hasMoreElements()) {
 													String contName = (String) enum1.nextElement();
 													AC_CONTACT_Bean acCont = (AC_CONTACT_Bean) hContacts
 															.get(contName);
@@ -1426,14 +1433,14 @@
 													String contName = acCont.getORG_NAME();
 													if (contName == null || contName.equals(""))
 													  contName = acCont.getPERSON_NAME(); */
-										%>
+										
+									    if (!isView){%>	
 										<option value="<%=contName%>">
 											<%=contName%>
-										</option>
-										<%
-											}
-										%>
-									</select>
+										</option><%}else{%><%=contName%><br><%}}
+										
+									if (!isView){%></select><%}else{%><br></p><%}%>
+									
 								</td>
 							</tr>
 						</table>
@@ -1462,10 +1469,11 @@
 						&nbsp;
 					</td>
 					<td>
+						<%if (!isView){%>
 						<select name="selSource" size="1" style="width:70%" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selSource',helpUrl); return false">
 						<%		
 							boolean isFound = false;							
-							if (!isView) {	%>
+								%>
 							<option value=""></option>
 							<%
 								for (int i = 0; vSource.size() > i; i++) {
@@ -1477,9 +1485,9 @@
 								<%=sSor%>
 							</option>
 							<%
-								} }
+								 }
 								//add the user entered if not found in the drop down list
-								if (!isFound || isView) {
+								if (!isFound) {
 									sSource = serUtil.parsedStringDoubleQuoteJSP(sSource); //call the function to handle doubleQuote
 							%>
 							<option value="<%=sSource%>" selected>
@@ -1488,7 +1496,7 @@
 							<%
 								}
 							%>
-						</select>
+						</select><%}else{%><input type="text" size="143" value="<%=sSource%>" readonly><%}%>
 					</td>
 				</tr>
 				<tr valign="bottom" height="25">
@@ -1584,8 +1592,9 @@
 						&nbsp;
 					</td>
 					<td height="26" valign="top" colspan=3>
+					  <% if (!isView) { %>	
 						<select name="selRepType" size="1" onChange="javascript:changeRepType('change')" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selRepType',helpUrl); return false">
-							<% if (!isView) { %>
+							
 							<option value="" selected></option>
 							<%
 								for (int i = 0; vRepType.size() > i; i++) {
@@ -1595,11 +1604,11 @@
 								<%=sRepType%>
 							</option>
 							<%
-								} } else { 
+								} 
 							%>
-							<option value="<%=sSelRepType%>" selected><%=sSelRepType%></option>
-							<%} %>						
-						</select>
+												
+						</select><%} else {  %><input type="text" size="17" value="<%=sSelRepType%>"readonly><%=sSelRepType%></option>
+							<%}%>	
 					</td>
 				</tr>
 				<tr height="25" valign="bottom">

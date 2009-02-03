@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.24 2009-01-29 22:35:19 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.25 2009-02-03 17:25:06 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -213,12 +213,15 @@
 									<td>
 										&nbsp;
 									</td>
-									<td>
+									
+									<td><%if (!isView){ %>
 										<select name="selConceptualDomain" size="1" style="width:430" multiple>
 											<option value="<%=sConDomID%>">
 												<%=sConDom%>
 											</option>
-										</select>
+										</select><%}else{%>
+										   <input type="text" size="67" value="<%=sConDom%>" readonly>
+										<%}%>
 									</td>
 								</tr>
 								<tr height="20">
@@ -286,8 +289,9 @@
 											</tr>
 											<tr valign="top">
 												<td colspan=3>
-												 	<select name="listParentConcept" size="2" style="width:100%" onclick="javascript:selectParent();">
-												<%if (vdParent != null) 
+												 	<%if (!isView){%><select name="listParentConcept" size="2" style="width:100%" onclick="javascript:selectParent();">
+												<%}else{%><p class="inset">	
+												<%}if (vdParent != null) 
 			              {
 			                for (int i = 0; vdParent.size()>i; i++)
 			                {
@@ -328,14 +332,15 @@
 			                  vdCONs += 1;
 			
 			                  //keep the last parent selected if page's last action was selecting a parent
-			              %>
+			              if (!isView){%>
 														<option value="<%=pDB%>" <%if(sLastAction.equals("parSelected") && i == vdParent.size()-1){%> selected <%}%>>
 															<%=sParListString%>
-														</option>
+														</option><%}else{%><%=sParListString%><br><%}%>
 														<%  }
 			              } 
 			              %>
-													</select>
+													
+										<%if (!isView){%></select><%}else{%><br></p><%}%>
 												</td>
 											  <% if (!isView) { %>	
 												<td align="center">
