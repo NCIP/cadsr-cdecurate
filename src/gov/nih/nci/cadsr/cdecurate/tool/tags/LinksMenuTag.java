@@ -34,14 +34,14 @@ public class LinksMenuTag extends MenuTag {
         String evsBioPortalDName = ToolURL.getEVSBioPortalDisplayName(this.pageContext);
 		try {
 			linksMenu.println("<dl class=\"menu\">"
-					          + generateDT("",adminToolLink,adminToolDName)         
+					          + generateDT("",adminToolLink,adminToolDName)  
+					          + generateDT("",cadsrApiLink,cadsrApiDName)
 					          + generateDT("",freeStyleLink,freeStyleDName)
 					          + generateDT("",sentinelToolLink,sentinelToolDName)
 					          + generateDT("",cdeBrowserLink,cdeBrowserDName)
 					          + generateDT("",formBuilderLink,formBuilderDName)
 					          + generateDT("",umlBrowserLink,umlBrowserDName)
 					          + separator()
-					          + generateDT("",cadsrApiLink,cadsrApiDName)
 					          + generateDT("",evsBioPortalLink,evsBioPortalDName)
 					          + generateDT("","window.open('https://wiki.nci.nih.gov', '_blank')","NCI Wiki")
 					          + generateDT("","window.open('https://gforge.nci.nih.gov', '_blank')","NCI GForge")
