@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.22 2009-01-22 15:00:45 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.23 2009-02-03 18:25:31 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -398,7 +398,7 @@
         dCount = document.searchResultsForm.hiddenSelectedRow.length;
 //alert("StoreSelectedRow dCount1: " + dCount);
 	   if (addRow == "true")
-		   searchResultsForm.hiddenSelectedRow.options[dCount] = new Option(selRow,rowNo); //store the row number in the hidden vector
+		   document.searchResultsForm.hiddenSelectedRow.options[dCount] = new Option(selRow,rowNo); //store the row number in the hidden vector
 	   //remove the row if not selected anymore
 	   else
 	   {
@@ -406,7 +406,7 @@
 		   {
 			   if (document.searchResultsForm.hiddenSelectedRow[k].value == rowNo)
 			   {
-				   searchResultsForm.hiddenSelectedRow.options[k] = null;
+				   document.searchResultsForm.hiddenSelectedRow.options[k] = null;
 				   break;
 			   }
 		   }
@@ -452,10 +452,10 @@
 		   if ((editLongName != null || editLongName != "") && (selComp == "DataElement" || selComp == "DataElementConcept" || selComp == "ValueDomain"))
 		   {
 			   var dCount = document.searchResultsForm.hiddenDesIDName.length;
-			   searchResultsForm.hiddenDesIDName.options[i] = new Option(editUsedby,editLongName); //name must be stored both in text and value to handle special characters
-			   searchResultsForm.hiddenACIDStatus.options[i] = new Option(editASL, editID);
-			   searchResultsForm.hiddenACIDStatus.options[i].selected = true;
-			   searchResultsForm.hiddenDesIDName.options[i].selected = true;
+			   document.searchResultsForm.hiddenDesIDName.options[i] = new Option(editUsedby,editLongName); //name must be stored both in text and value to handle special characters
+			   document.searchResultsForm.hiddenACIDStatus.options[i] = new Option(editASL, editID);
+			   document.searchResultsForm.hiddenACIDStatus.options[i].selected = true;
+			   document.searchResultsForm.hiddenDesIDName.options[i].selected = true;
 		   } 
 		   //for permissible value store in hidden selectbox, multiple name, id, longname, if checked, remove for unchecked.
 		   if (document.searchParmsForm.listSearchFor.value == "PermissibleValue" || document.searchParmsForm.listSearchFor.value == "ReferenceValue")
@@ -464,9 +464,9 @@
 			   {
 				   var selCount = document.searchResultsForm.hiddenPVValue.length;
 				   var selRow = document.searchResultsForm.hiddenSelectedRow[i].text;
-				   searchResultsForm.hiddenPVValue.options[selCount]= new Option(editID,selRow);
-				   searchResultsForm.hiddenPVMean.options[selCount]= new Option(editLongName,editName);
-				   searchResultsForm.hiddenPVMeanDesc.options[selCount]= new Option(editDescription,editDescription);
+				   document.searchResultsForm.hiddenPVValue.options[selCount]= new Option(editID,selRow);
+				   document.searchResultsForm.hiddenPVMean.options[selCount]= new Option(editLongName,editName);
+				   document.searchResultsForm.hiddenPVMeanDesc.options[selCount]= new Option(editDescription,editDescription);
 			   }
 		   }
 	   }
@@ -871,7 +871,7 @@ function createNewJS(selAC, type){
      if(document.searchResultsForm.hiddenSelectedRow != null)
         dCount = document.searchResultsForm.hiddenSelectedRow.length;
      if (addRow == "true")
-		   searchResultsForm.hiddenSelectedRow.options[dCount] = new Option(selRow,rowNo); //store the row number in the hidden vector
+		   document.searchResultsForm.hiddenSelectedRow.options[dCount] = new Option(selRow,rowNo); //store the row number in the hidden vector
 	   //remove the row if not selected anymore
 	   else
 	   {
@@ -879,7 +879,7 @@ function createNewJS(selAC, type){
 		   {
 			   if (document.searchResultsForm.hiddenSelectedRow[k].value == rowNo)
 			   {
-				   searchResultsForm.hiddenSelectedRow.options[k] = null;
+				   document.searchResultsForm.hiddenSelectedRow.options[k] = null;
 				   break;
 			   }
 		   }
