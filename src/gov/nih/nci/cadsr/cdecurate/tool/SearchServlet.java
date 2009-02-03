@@ -2125,7 +2125,7 @@ public class SearchServlet extends CurationServlet {
         if (dName != null){
            ToolURL.setAdminToolDispalyName(session, dName);
         }else{
-           ToolURL.setAdminToolDispalyName(session, "Admin Tool");
+           ToolURL.setAdminToolDispalyName(session, "caDSR Admin Tool");
         }
         
         vList = new Vector();
