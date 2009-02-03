@@ -20,7 +20,7 @@
     <script language="JavaScript" src="js/menu.js"></script>
     <script language="JavaScript" src="js/header.js"></script>
     <style type="text/css">
-             p.inset {border-style: inset}
+             p.inset {border-style: inset; border-width: 2px;}
     </style>
 </head>
 <body>
@@ -39,7 +39,7 @@
 		  String errorMsg =  (String)request.getAttribute("errMsg") ;
 		  String show =  (String)request.getAttribute("showCloseBtn") ;
 		  if (errorMsg == null || errorMsg.equals(""))
-				  errorMsg = " Error Occurred. ";
+				  errorMsg = " Error Occurred. ";	
 		  if (bodyPage != null && !bodyPage.equals("")) {
 	%>
 			<jsp:include  page = "<%=bodyPage%>" />
