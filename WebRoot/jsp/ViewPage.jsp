@@ -30,7 +30,11 @@
 	   <%}else{ %>
 	       <curate:header displayUser = "false"/>
 	<%}%>
-	<table width=100%><tr><td class="menuItemBlank">&nbsp;</td></tr></table>
+	<div class="xyz">
+	  <table style="border-collapse: collapse; width: 100%" border="0" cellspacing="0" cellpadding="0">
+	     <tr><td class="menuItemBlank">&nbsp;</td></tr>
+	  </table>
+	</div>
 	<% String bodyPage = (String)request.getAttribute("IncludeViewPage") ;
 		  String errorMsg =  (String)request.getAttribute("errMsg") ;
 		  String show =  (String)request.getAttribute("showCloseBtn") ;
