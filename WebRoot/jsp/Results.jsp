@@ -2289,6 +2289,8 @@ function ShowSelectedRowss(){
 							Value Domain Long Name
 							<%                } else if(sSelAC.equals("Conceptual Domain"))   { %>
 							Conceptual Domain Long Name
+							<%                } else if(sSelAC.equals("Value Meaning"))   { %>
+							Value Meaning Long Name
 							<%                } else   { %>
 							Long Name
 							<%                } %>
@@ -2648,7 +2650,13 @@ function ShowSelectedRowss(){
 					<%        }   else if (sAttr == null || sAttr.equals("Concept Name")) { %>
 					<th class="rsCell" method="get">
 						<a href="javascript:SetSortType('conName')" onHelp="showHelp('html/../Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
-							Concept Name
+							<% if(sSelAC.equals("ObjectClass"))   { %>
+							      Object Class Long Name
+							<% } else if(sSelAC.equals("Property"))   { %>
+							     Property Long Name
+							<%}else{ %>
+							     Concept Name
+							<%} %>
 						</a>
 					</th>
 					<%        }   else if (sAttr == null || sAttr.equals("EVS Identifier")) { %>
