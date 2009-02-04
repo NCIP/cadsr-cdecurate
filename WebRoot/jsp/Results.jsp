@@ -2775,8 +2775,7 @@ function ShowSelectedRowss(){
 	                <%}else { %>				
 				        <tr>
 			        <%} %>
-				<td class="rsCell">&nbsp;</td><td class="rsCell">&nbsp;</td><td class="rsCell" colspan="<%=k%>"><dl style="margin-left: 0.5in"><dt>Definition<dd>
-				<%=def%></dl></td></tr>
+				<td class="rsCell">&nbsp;</td><td class="rsCell">&nbsp;</td><td class="rsCell" colspan="<%=k%>"><p style="margin: 0in 0in 0in 0.5in">Definition: <%=def%></td></tr>
 				<%}%>
 				<%
          j++;
