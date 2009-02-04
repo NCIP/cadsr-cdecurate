@@ -940,6 +940,11 @@ function viewAC(){
  	   var name = "ViewAC"+document.searchResultsForm.selectedRowId.value;
  	   var viewWindow = window.open("../../cdecurate/NCICurationServlet?reqType=view&idseq=" +acIdseq, name, "width=1000,height=1000,top=0,left=0,resizable=yes,scrollbars=yes");
  }
+function openEditVMWindow(curPV){
+  if (checkUser('<%=StringEscapeUtils.escapeJavaScript(userName)%>')) 
+      openEditVMWindowJS(curPV);	
+}
+ 
 
 </SCRIPT>
 
