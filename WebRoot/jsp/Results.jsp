@@ -944,6 +944,10 @@ function openEditVMWindow(curPV){
   if (checkUser('<%=StringEscapeUtils.escapeJavaScript(userName)%>')) 
       openEditVMWindowJS(curPV);	
 }
+function ShowSelectedRowss(){
+  if (isCheckboxChecked())
+     ShowSelectedRows(true);
+}    
  
 
 </SCRIPT>
@@ -2246,6 +2250,8 @@ function openEditVMWindow(curPV){
 					<% } %>
 					<!-- add other headings -->
 					<%    int k = 0;
+					 boolean defExists = false;
+                     int defIndex = 0;
       if (vSelAttr != null)
       {
          //for review status increase the k size to 1
@@ -2254,6 +2260,8 @@ function openEditVMWindow(curPV){
         else
            k = vSelAttr.size();
 
+       
+        
         for (int i =0; i < vSelAttr.size(); i++) {
           String sAttr = (String)vSelAttr.elementAt(i);
 
@@ -2310,13 +2318,11 @@ function openEditVMWindow(curPV){
 							Highlight Indicator
 						</a>
 					</th>
-					<%        } else if (sAttr.equals("Definition")) { %>
-					<th  class="rsCell" method="get">
-						<a href="javascript:SetSortType('def')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
-							Definition
-						</a>
-					</th>
-					<%        } else if (sAttr.equals("Owned By Context")) { %>
+					<%        } else if (sAttr.equals("Definition")) { 
+					         defExists = true;
+					         defIndex = i;
+					        
+					        } else if (sAttr.equals("Owned By Context")) { %>
 					<th  class="rsCell" method="get">
 						<a href="javascript:SetSortType('context')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							Owned By Context
@@ -2526,19 +2532,17 @@ function openEditVMWindow(curPV){
 							VM Version
 						</a>
 					</th>
-					<%        } else if (sAttr.equals("VM Description")) { %>
-					<th class="rsCell" method="get">
-						<a href="javascript:SetSortType('MeanDesc')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
-							Value Meaning Description
-						</a>
-					</th>
-					<%        } else if (sAttr.equals("Meaning Description")) { %>
-					<th class="rsCell" method="get">
-						<a href="javascript:SetSortType('MeanDesc')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
-							Value Meaning Description
-						</a>
-					</th>
-					<%        }   else if (sAttr == null || sAttr.equals("caDSR Component")) { %>
+					<%        } else if (sAttr.equals("VM Description")) { 
+					
+						     defExists = true;
+					         defIndex = i;
+					
+				       } else if (sAttr.equals("Meaning Description")) { 
+					
+						     defExists = true;
+					         defIndex = i;
+					
+					        }   else if (sAttr == null || sAttr.equals("caDSR Component")) { %>
 					<th class="rsCell" method="get">
 						<a href="javascript:SetSortType('cadsrComp')" onHelp="showHelp('html/../Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							caDSR Component
@@ -2580,13 +2584,12 @@ function openEditVMWindow(curPV){
 							CSI Type
 						</a>
 					</th>
-					<%        } else if (sAttr.equals("CSI Definition")) { %>
-					<th class="rsCell" method="get">
-						<a href="javascript:SetSortType('def')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
-							CSI Definition
-						</a>
-					</th>
-					<%        } else if (sAttr.equals("Permissible Value")) { %>
+					<%        } else if (sAttr.equals("CSI Definition")) { 
+					
+						     defExists = true;
+					         defIndex = i;
+					
+					       } else if (sAttr.equals("Permissible Value")) { %>
 					<th class="rsCell" method="get">
 						<a href="javascript:SetSortType('permValue')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							Permissible Value
@@ -2738,20 +2741,34 @@ function openEditVMWindow(curPV){
 						<%=strResult%>
 					</td>
 					<%     }
-          // add other attributes
+		 String def = "";
+		 // add other attributes
 		 for (int m = 1; m < k; m++)
 		 {
            strResult = (String)results.get(i+m);
            if (strResult == null) strResult = "";
+           if ((defExists)&&(m==defIndex)){
+              def = strResult;
+            }else{
 %>
+          
 					<td class="rsCell">
 						<%=strResult%>
 					</td>
 					<%
-       }
+       }}
 %>
 					<!-- <td><a href="javascript:openAltNameWindow('DocTextLongName','abcd')">More >></a></td> -->
 				</tr>
+				<%if (defExists){ %>
+				     <%if ((j%2) == 0){%>	
+           			   <tr class="stripe">
+	                <%}else { %>				
+				        <tr>
+			        <%} %>
+				<td class="rsCell">&nbsp;</td><td class="rsCell">&nbsp;</td><td class="rsCell" colspan="<%=k%>"><dl style="margin-left: 0.5in"><dt>Definition<dd>
+				<%=def%></dl></td></tr>
+				<%}%>
 				<%
          j++;
     }
