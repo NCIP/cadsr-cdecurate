@@ -2723,9 +2723,10 @@ function ShowSelectedRowss(){
            strResult = (String)results.get(i);
            if (strResult == null) strResult = "";
            if ((j%2) == 0){%>	
-           			<tr class="stripe">
+           			<tr class="stripe" <%if (defExists){%>style="font-weight: bold"<%}%>>
 	       <%}else { %>				
-				<tr>
+				<tr <%if (defExists){%>style="font-weight: bold"<%}%>>
+		
 			<%} %>	
 				   <td class="rsCell" align="center">
 						<input type="checkbox" onClick="javascript:checkClick(this);" name="<%=ckName%>" <%if((vCheckList != null && vCheckList.contains(ckName))){%> checked <%}%> onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
