@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.15 2009-02-03 17:25:06 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.16 2009-02-04 18:37:58 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -428,15 +428,15 @@
 
 				<tr height="25" valign="bottom">
 					<td align=right>
-						<font color="#C0C0C0">
+						<%if (!isView){%><font color="#C0C0C0"><%}%>
 							<%=item++%>
 							)
-						</font>
+						<%if (!isView){%></font><%}%>
 					</td>
 					<td>
-						<font color="#C0C0C0">
+					   <%if (!isView){%><font color="#C0C0C0"><%}%>
 							Context
-						</font>
+						<%if (!isView){%></font><%}%>
 					</td>
 				</tr>
 				<tr>
@@ -901,15 +901,15 @@
 
 				<tr height="25" valign="bottom">
 					<td align=right>
-						<font color="#C0C0C0">
+						<%if (!isView){%><font color="#C0C0C0"><%}%>
 							<%=item++%>
 							)
-						</font>
+						<%if (!isView){%></font><%}%>
 					</td>
 					<td>
-						<font color="#C0C0C0">
+						<%if (!isView){%><font color="#C0C0C0"><%}%>
 							Public ID
-						</font>
+						<%if (!isView){%></font><%}%>
 					</td>
 				</tr>
 				<tr>
@@ -1076,15 +1076,15 @@
 					</td>
 					<% } else {%>
 					<td align=right>
-						<font color="#C0C0C0">
+						<%if (!isView){%><font color="#C0C0C0"><%}%>
 							<%=item++%>
 							)
-						</font>
+						<%if (!isView){%></font><%}%>
 					</td>
 					<td>
-						<font color="#C0C0C0">
+						<%if (!isView){%><font color="#C0C0C0"><%}%>
 							Version
-						</font>
+						<%if (!isView){%></font><%}%>
 					</td>
 					<% } %>
 				</tr>
