@@ -1,6 +1,6 @@
 // Copyright (c) 2008 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/CaDsrUserCredentials.java,v 1.1 2008-06-17 14:49:38 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/CaDsrUserCredentials.java,v 1.2 2009-02-05 20:56:40 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -404,12 +404,15 @@ public class CaDsrUserCredentials
          */
         public void execute() throws SQLException
         {
-            // Reset the lock count if the timer has expired.
+         
+         try{
+        	 // Reset the lock count if the timer has expired.
+         
             _pstmt = _conn.prepareStatement(RESETLOCK);
             _pstmt.setString(1, _localUser);
             _pstmt.execute();
             _pstmt.close();
-            
+            _pstmt = null;
             // Check the lock.
             _pstmt = _conn.prepareStatement(CHECKLOCK);
             _pstmt.setString(1, _localUser);
@@ -419,7 +422,12 @@ public class CaDsrUserCredentials
             _locked = _rs.next();
             if (_locked)
                 _logger.warn(_rs.getString(1) + " " + _localUser);
+         }
+         finally{
+        	 closeConn();
+         }
         }
+        
         
         /**
          * Get the locked value
@@ -543,12 +551,20 @@ public class CaDsrUserCredentials
 
         public void execute() throws SQLException
         {
-            // Update the lock count appropriately.
+           try
+           {
+        	   // Update the lock count appropriately.
             _pstmt = _conn.prepareStatement(_sql);
             _pstmt.setString(1, _localUser);
             _pstmt.execute();
             _failed = (_pstmt.getUpdateCount() == 0);
+           }
+           finally
+           {
+        	   closeConn();
+           }
         }
+        
         
         public void failure()
         {
