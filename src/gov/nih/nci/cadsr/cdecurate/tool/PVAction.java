@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.31 2009-02-05 03:01:10 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.32 2009-02-05 20:55:24 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -717,7 +717,7 @@ public class PVAction implements Serializable {
 	 *  @return String existing pv_idseq from the stored procedure call.
 	 */
 	public String getExistingPV(PVForm data, String sValue, String sMeaning,String vmidseq) {
-		ResultSet rs = null;
+		
 		String sPV_IDSEQ = "";
 		CallableStatement cstmt = null;
 		try {
@@ -752,7 +752,6 @@ public class PVAction implements Serializable {
 			logger.error("ERROR in getExistingPV for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeResultSet(rs);
 			SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sPV_IDSEQ;
