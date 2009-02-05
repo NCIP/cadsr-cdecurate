@@ -29,7 +29,7 @@ public class ObjMenuTag extends MenuTag {
 		if (selACType != null) {
 			try {
 				objMenu.println("<table style = \"border-collapse: collapse; background-color: #d8d8df\">");
-				objMenu.println("<tr><td colspan=\"2\"><p style=\"margin: 0px 0px 5px 0px; color: red\"><span id=\"selCnt\">" + rowsChecked + "</span> Record(s) Selected</p></td><td align=\"center\"><span style=\"border: 1px solid black; cursor:default;\">X</span></td></tr>");
+				objMenu.println("<tr><td colspan=\"2\"><p style=\"margin: 0px 0px 5px 0px; color: red\"><span id=\"selCnt\">" + rowsChecked + "</span> Record(s) Selected</p></td><td align=\"center\"><span style=\"border: 1px solid black; padding: 0.5px 1px 0.5px 1px;cursor:default;\">x</span></td></tr>");
 				objMenu.println("<tr style = \"background-color:#4876FF\"><td class=\"cell\" align=\"center\"><input type=\"checkbox\" onclick=\"this.checked=false;\"></td><td class=\"cell\" align=\"center\"><b><font color = \"#FFFFFF\">Action</b></td><td class=\"cell\" align=\"center\"><input type=\"checkbox\" checked onclick=\"this.checked=true;\"></td></tr>");
                 
 			if ((selACType).equals("DataElement")) {
