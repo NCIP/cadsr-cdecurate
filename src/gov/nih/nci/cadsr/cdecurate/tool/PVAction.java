@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.30 2008-12-26 19:14:35 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.31 2009-02-05 03:01:10 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1181,6 +1181,10 @@ public class PVAction implements Serializable {
 					vNames = setName(vmHash, vmName, vNames, i);
 				}
 			}
+		
+			int index = vNames.lastIndexOf(",") ;
+			vNames = vNames.substring(0,index);
+			
 			Vector<VM_Bean> vVMs = new Vector<VM_Bean>();
 			//query the database
 			if (!vNames.equals("")) {
@@ -1225,9 +1229,8 @@ public class PVAction implements Serializable {
 		//add name and index to the hashtable and to names since it doesn't exist
 		if (vmName.equals(multiName)) {
 			vmHash.put(vmName, ind);
-			if (!vNames.equals("")) //add the quotes
-				vNames += "', '";
-			vNames += vmName;
+			vNames +=  vmName + ",";
+					
 		} else
 			vmHash.put(multiName, ind);
 
