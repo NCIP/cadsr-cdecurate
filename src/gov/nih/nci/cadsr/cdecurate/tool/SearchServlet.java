@@ -1876,28 +1876,35 @@ public class SearchServlet extends CurationServlet {
 		ConceptAction conact = new ConceptAction();
 		ResultSet rs =null;
 		Statement stm=null;
-		ResultSet rs1 =null;
-		Statement stm1=null;
+		
 		try {
 			 stm = m_conn.createStatement();
 			rs = stm
 					.executeQuery("SELECT rep.Preferred_name FROM (SELECT xx.rep_idseq, COUNT(*) AS cnt FROM sbrext.representations_view_ext xx, sbrext.component_concepts_view_ext cc WHERE xx.asl_name = 'RELEASED' AND cc.condr_idseq = xx.condr_idseq GROUP BY xx.rep_idseq ORDER BY cnt ASC) hits, sbrext.representations_view_ext rep, sbr.ac_registrations_view reg WHERE hits.cnt = 1 AND rep.rep_idseq = hits.rep_idseq AND reg.ac_idseq = rep.rep_idseq AND reg.registration_status = 'Standard'");
-			if (rs.next()) {
+			if (rs.next()) 
+			{
 				do {
 					valueString += "'" + rs.getString(1) + "',";
 				} while (rs.next());
+				
+				//close the rs and stm
+				SQLHelper.closeResultSet(rs);
+				SQLHelper.closeStatement(stm);
+				
 				String valu = valueString
 						.substring(0, valueString.length() - 1);
 				String sql = "SELECT con.*,cont.name as Context FROM CONCEPTS_VIEW_EXT con,CONTEXTS_VIEW cont WHERE con.CONTE_IDSEQ=cont.CONTE_IDSEQ and PREFERRED_NAME IN ("
 						+ valu + ") ORDER BY con.long_name ASC";
-			   stm1 = m_conn.createStatement();
-			   rs1 = stm1.executeQuery(sql);
-				if (rs1 != null) {
-					conact.getApprovedRepTermConcepts(rs1, conSer.getData());
+			   stm = m_conn.createStatement();
+			   rs = stm.executeQuery(sql);
+				if (rs != null) {
+					conact.getApprovedRepTermConcepts(rs, conSer.getData());
 					DataManager.setAttribute(session, "vACSearch", conSer
 							.getData().getConceptList());
 				}
-			} else {
+			} 
+			else 
+			{
 				Boolean approvedRep = new Boolean(false);
 				session.setAttribute("ApprovedRepTerm", approvedRep);
 			}
@@ -1908,8 +1915,6 @@ public class SearchServlet extends CurationServlet {
 		finally{
 			SQLHelper.closeResultSet(rs);
 			SQLHelper.closeStatement(stm);
-			SQLHelper.closeResultSet(rs1);
-			SQLHelper.closeStatement(stm1);
 		}
 		EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
 		evs.get_Result(m_classReq, m_classRes, vResult, "");

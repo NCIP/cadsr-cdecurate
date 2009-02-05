@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.61 2008-12-26 19:14:35 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.62 2009-02-05 20:55:23 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1964,6 +1964,10 @@ public class InsACService implements Serializable {
 				rs = pstmt.executeQuery(); // call teh query
 				while (rs.next())
 					sReturnID = rs.getString(1);
+				
+				SQLHelper.closeResultSet(rs);
+	            SQLHelper.closePreparedStatement(pstmt);
+	          
 				// oc-prop-context is not unique
 				if (sReturnID != null && !sReturnID.equals(""))
 					uniqueMsg = "Combination of Object Class, Property and Context already exists in DEC with Public ID(s): "
@@ -3224,7 +3228,6 @@ public class InsACService implements Serializable {
 	public String setRD(String sAction, String sRDName, String sDE_ID,
 			String sDocText, String sRDType, String sRDURL, String sRDCont,
 			String rdIDSEQ, String sLang) {
-		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		HttpSession session = m_classReq.getSession();
 		String sReturnCode = "";
@@ -3489,7 +3492,6 @@ public class InsACService implements Serializable {
 	 * 
 	 */
 	public String getACCSI(String sCSCSIID, String sDE_ID) {
-		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		String sACCSI = "";
 		try {
@@ -3528,7 +3530,6 @@ public class InsACService implements Serializable {
 			logger.error("ERROR in InsACService-setACCSI for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeResultSet(rs);
 			SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sACCSI;
@@ -3548,7 +3549,6 @@ public class InsACService implements Serializable {
 	 * 
 	 */
 	public void setACSRC(String sAction, String sDE_ID) {
-		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		HttpSession session = m_classReq.getSession();
 		try {
@@ -3597,7 +3597,6 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception : Unable to update or remove Origin.");
 		}finally{
-			SQLHelper.closeResultSet(rs);
 			SQLHelper.closeCallableStatement(cstmt);
 			}
 	} // end of setACSRC
@@ -3616,7 +3615,6 @@ public class InsACService implements Serializable {
 	 *            classification scheme items idseq.
 	 */
 	public void updCSCSI(String sDE_ID, String sCS_ID, String sCSI_ID) {
-		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		try {
 			if (m_servlet.getConn() == null)
@@ -3641,7 +3639,6 @@ public class InsACService implements Serializable {
 			logger.error("ERROR in InsACService-updCSCSI for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeResultSet(rs);
 			SQLHelper.closeCallableStatement(cstmt);
 		}
 	} // end of setACSRC
@@ -3846,7 +3843,6 @@ public class InsACService implements Serializable {
 	public String setQuestContent(Quest_Bean questBean, String QCid, String VPid) {
 		// capture the duration
 		java.util.Date startDate = new java.util.Date();
-		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		HttpSession session = m_classReq.getSession();
 		String sReturnCode = "";
@@ -3969,7 +3965,6 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception : Unable to update Question attributes.");
 		}finally{
-			SQLHelper.closeResultSet(rs);
 			SQLHelper.closeCallableStatement(cstmt);
 			}
 		return sReturnCode;

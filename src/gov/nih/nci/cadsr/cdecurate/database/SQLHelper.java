@@ -26,11 +26,15 @@ public class SQLHelper {
         if (ps != null) {
             try {
                 ps.close();
+              
             } catch (SQLException e1) {
             	logger.error("Failed to close PreparedStatement", e1);
             }
+            ps=null;
         }
+       
     }
+  
     /**
      * @param stmt
      */
@@ -38,9 +42,11 @@ public class SQLHelper {
         if (stmt != null) {
             try {
             	stmt.close();
+            	
             } catch (SQLException e1) {
             	logger.error("Failed to close Statement", e1);
             }
+            stmt=null;
         }
     }
     /**
@@ -50,10 +56,13 @@ public class SQLHelper {
         if (rs != null) {
             try {
                 rs.close();
+               
             } catch (SQLException e1) {
             	logger.error("Failed to close ResultSet", e1);
             }
+            rs =null;
         }
+        
        
     }
     
@@ -64,9 +73,11 @@ public class SQLHelper {
         if (cstmt != null) {
             try {
             	cstmt.close();
+           
             } catch (SQLException e1) {
             	logger.error("Failed to close CallableStatement", e1);
             }
+         	cstmt=null;
         }
     }  
         
@@ -83,6 +94,8 @@ public class SQLHelper {
             }catch (Exception e){
                 logger.fatal("Error closing the connection ", e);
             }
+            
+            con = null;
         }
   
  }

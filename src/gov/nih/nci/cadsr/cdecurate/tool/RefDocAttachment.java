@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.53 2008-12-26 19:14:35 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.54 2009-02-05 20:55:24 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -376,8 +376,7 @@ public void doFileUpload ()
 				// get BLOB_CONTENT
 				pstmt.execute();
 				SQLHelper.closePreparedStatement(pstmt);
-                pstmt = null;
-
+                
 				// upload blob
 				doFiletoBlob(m_servlet.getConn(), dbfileName);
 
