@@ -2750,14 +2750,14 @@ function ShowSelectedRowss(){
 						<%=strResult%>
 					</td>
 					<%     }
-		 String def = "";
+		 String definition = "";
 		 // add other attributes
 		 for (int m = 1; m < k; m++)
 		 {
            strResult = (String)results.get(i+m);
            if (strResult == null) strResult = "";
            if ((defExists)&&(m==defIndex)){
-              def = strResult;
+              definition = strResult;
             }else{
 %>
           
@@ -2768,16 +2768,44 @@ function ShowSelectedRowss(){
        }}
 %>
 					<!-- <td><a href="javascript:openAltNameWindow('DocTextLongName','abcd')">More >></a></td> -->
+	</tr>
+	<%if (defExists){ 
+		 int colspan = k-1;
+		 String id1 = "def" + j;
+		 String id2 = "definition" + j;
+		 String def = "";
+		 int defSize = definition.length();
+		 if (defSize >  100){
+	          def = definition.substring(0,100);%>
+			   <%if ((j%2) == 0){%>	
+      			   <tr class="stripe" id="<%=id1%>">
+               <%}else { %>				
+			        <tr id="<%=id1%>">
+		        <%} %>
+                <td class="rsCell">&nbsp;</td><td class="rsCell">&nbsp;</td><td class="rsCell" colspan="<%=colspan%>"><p style="margin-left: 0.5in"><span onclick="hideShowDef('<%=id2%>', '<%=id1%>');" style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img src="images/plus_12.gif" border="0"></span> Definition: <%=def%>
+                           &hellip;</p></td>
+                </tr>
+                <%if ((j%2) == 0){%>	
+           		    <tr class="stripe" id="<%=id2%>" style="display: none">
+	            <%}else { %>				
+			        <tr id="<%=id2%>" style="display: none">
+			    <%} %>
+			    <td class="rsCell">&nbsp;</td><td class="rsCell">&nbsp;</td><td class="rsCell" colspan="<%=colspan%>"><p style="margin-left: 0.5in">
+				 <span onclick="hideShowDef('<%=id1%>', '<%=id2%>');" style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img src="images/minus_12.gif" border="0"></span>
+				Definition: <%=definition%></td>
 				</tr>
-				<%if (defExists){ %>
-				     <%if ((j%2) == 0){%>	
-           			   <tr class="stripe">
-	                <%}else { %>				
-				        <tr>
-			        <%} int colspan = k-1;%>
-				<td class="rsCell">&nbsp;</td><td class="rsCell">&nbsp;</td><td class="rsCell" colspan="<%=colspan%>"><p style="margin: 0in 0in 0in 0.5in">Definition: <%=def%></td></tr>
-				<%}%>
-				<%
+	     <%}else{%>
+		        <%if ((j%2) == 0){%>	
+           	       <tr class="stripe">
+	            <%}else { %>				
+			        <tr>
+			    <%} %>
+			    <td class="rsCell">&nbsp;</td><td class="rsCell">&nbsp;</td><td class="rsCell" colspan="<%=colspan%>"><p style="margin-left: 0.5in">
+			    Definition: <%=definition%></td>
+			    </tr>
+		<%}%>
+    <%}%>
+			<%
          j++;
     }
 	 }
