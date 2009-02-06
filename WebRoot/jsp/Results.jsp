@@ -2587,11 +2587,9 @@ function ShowSelectedRowss(){
 						</a>
 					</th>
 					<%        } else if (sAttr.equals("CSI Definition")) { 
-					
 						     defExists = true;
 					         defIndex = i;
-					
-					       } else if (sAttr.equals("Permissible Value")) { %>
+					         } else if (sAttr.equals("Permissible Value")) { %>
 					<th class="rsCell" method="get">
 						<a href="javascript:SetSortType('permValue')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 							Permissible Value
@@ -2758,15 +2756,11 @@ function ShowSelectedRowss(){
            if (strResult == null) strResult = "";
            if ((defExists)&&(m==defIndex)){
               definition = strResult;
-            }else{
-%>
-          
-					<td class="rsCell">
-						<%=strResult%>
-					</td>
-					<%
-       }}
-%>
+            }else{%>
+            	<td class="rsCell">
+					<%=strResult%>
+	    		</td>
+     <% }} %>
 					<!-- <td><a href="javascript:openAltNameWindow('DocTextLongName','abcd')">More >></a></td> -->
 	</tr>
 	<%if (defExists){ 
