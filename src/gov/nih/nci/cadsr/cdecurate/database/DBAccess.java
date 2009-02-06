@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.43 2008-05-05 18:31:20 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.44 2009-02-06 21:07:12 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -419,6 +419,9 @@ public class DBAccess
                     // Flag to start processing CS records.
                     extra = true;
                 }
+                SQLHelper.closeResultSet(rs);
+                pstmt.clearParameters();
+                
            }
           return list;
         }
