@@ -1668,6 +1668,8 @@ public class DataElementServlet extends CurationServlet{
             DataManager.setAttribute(session, "m_DE", DEBean);
             String title = "CDE Curation View DE "+DEBean.getDE_LONG_NAME()+ " [" + DEBean.getDE_MIN_CDE_ID() + "v" + DEBean.getDE_VERSION() +"]";
 			m_classReq.setAttribute("title", title);
+			m_classReq.setAttribute("publicID", DEBean.getDE_MIN_CDE_ID());
+			m_classReq.setAttribute("version", DEBean.getDE_VERSION());
            	m_classReq.setAttribute("IncludeViewPage", "EditDE.jsp") ;
        }
      	//ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
