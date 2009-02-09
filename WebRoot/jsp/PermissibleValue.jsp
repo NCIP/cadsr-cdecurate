@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.25 2009-02-03 17:25:06 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.26 2009-02-09 22:59:54 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -161,8 +161,8 @@
          <%
 					  String statusMessage = (String)session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
     				Vector vStat = (Vector)session.getAttribute("vStatMsg");
-    				if (vStat != null)
-					  	System.out.println("pv status " + statusMessage + " vector " + vStat.size());
+    				//if (vStat != null)
+					  	//System.out.println("pv status " + statusMessage + " vector " + vStat.size());
 				    //check if the status message is too long
 				    if (vStat != null && vStat.size() > 20)
 				    {%>
@@ -1198,7 +1198,7 @@
 																					&nbsp;&nbsp;
 																				</td>
 																				<td>
-																				<%System.out.println("Submit" +submit); 
+																				<%//System.out.println("Submit" +submit); 
 																				 if (submit != null &&(submit.length()==0 || submit.equals("INS"))) { %>
 																				  [System Assigned after Value Domain Submission]
 																			<% } else { %>

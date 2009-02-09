@@ -887,7 +887,7 @@ public class DataElementConceptServlet extends CurationServlet {
                    blockBean.setLONG_NAME(sName + "::" + sNVP);
                    blockBean.setPREFERRED_DEFINITION(blockBean.getPREFERRED_DEFINITION() + "::" + sNVP);
                }
-               System.out.println(sNVP + sComp + blockBean.getLONG_NAME() + blockBean.getPREFERRED_DEFINITION());
+               //System.out.println(sNVP + sComp + blockBean.getLONG_NAME() + blockBean.getPREFERRED_DEFINITION());
            }
            else
            {
@@ -1892,7 +1892,7 @@ public class DataElementConceptServlet extends CurationServlet {
 
   public void doOpenViewPage() throws Exception
   {
-  	System.out.println("I am here open view page");
+  	//System.out.println("I am here open view page");
   	HttpSession session = m_classReq.getSession();
   	String acID = (String) m_classReq.getAttribute("acIdseq");
   	if (acID.equals(""))

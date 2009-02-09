@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.62 2009-02-05 20:55:23 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.63 2009-02-09 22:59:18 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1488,8 +1488,8 @@ public class InsACService implements Serializable {
 					cstmt.registerOutParameter(21, java.sql.Types.VARCHAR); // deleted_ind
 					cstmt.registerOutParameter(22, java.sql.Types.VARCHAR); // oc_condr_idseq
 					cstmt.registerOutParameter(23, java.sql.Types.VARCHAR); // oc_id
-					System.out.println(OCBean.getLONG_NAME()
-							+ " oc submit ready " + sOCCondrString);
+					//System.out.println(OCBean.getLONG_NAME()
+							//+ " oc submit ready " + sOCCondrString);
 
 					// Set the In parameters (which are inherited from the
 					// PreparedStatement class)

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.16 2008-07-03 21:36:31 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.17 2009-02-09 23:00:35 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -41,7 +41,7 @@
 			//gets the session attributes for action searchForCreate
 			if (sMenuAction.equals("searchForCreate")) {
 				sSearchAC = (String) session.getAttribute("creSearchAC"); //done now in CDEHomePage
-				System.out.println("search parameters jsp sfc sSearchAC: "
+				//System.out.println("search parameters jsp sfc sSearchAC: "
 				+ sSearchAC);
 				sLastKeyword = (String) session.getAttribute("creKeyword");
 				sContext = (String) session.getAttribute("creContext");
@@ -80,7 +80,7 @@
 			{
 				//  System.out.println("inside if ");
 				sSearchAC = (String) session.getAttribute("searchAC"); //done now in CDEHomePage
-				System.out.println("search parameters else jsp sSearchAC: "
+				//System.out.println("search parameters else jsp sSearchAC: "
 				+ sSearchAC);
 				sLastKeyword = (String) session.getAttribute("serKeyword");
 				sProtoKeyword = (String) session.getAttribute("serProtoID");
@@ -89,10 +89,10 @@
 				sContextUse = (String) session.getAttribute("serContextUse");
 				vStatus = (Vector) session.getAttribute("serStatus");
 				vSelectedAttr = (Vector) session.getAttribute("selectedAttr");
-				System.out.println("Selected Attributes size: "
+				//System.out.println("Selected Attributes size: "
 				+ vSelectedAttr.size());
 				vACAttr = (Vector) session.getAttribute("serAttributeList");
-				System.out.println("vACAttr: " + vACAttr.size());
+				//System.out.println("vACAttr: " + vACAttr.size());
 				selCD = (String) session.getAttribute("serSelectedCD");
 				sSearchIn = (String) session.getAttribute("serSearchIn");
 				sRegStatus = (String) session.getAttribute("serRegStatus");
@@ -242,8 +242,8 @@
 			String temp8 = (String) session.getAttribute("UnqualifiedsearchCC");
 			String temp9 = (String) session
 					.getAttribute("UnqualifiedsearchProp");
-			System.out.println(temp + " " + temp1 + " " + temp2 + " " + temp3
-					+ " ");
+			//System.out.println(temp + " " + temp1 + " " + temp2 + " " + temp3
+					//+ " ");
 		%>
 
 		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">

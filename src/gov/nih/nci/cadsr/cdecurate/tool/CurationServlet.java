@@ -1904,7 +1904,7 @@ public class CurationServlet
                         storeStatusMsg(errMsg + "\\n");
                     String sValue = eBean.getLONG_NAME();
                     String sMean = eBean.getLONG_NAME();
-                    System.out.println(sValue + " selectVMConcept " + sMean);
+                    //System.out.println(sValue + " selectVMConcept " + sMean);
                     // add the level to the value if parent exists to update the value
                     if (sSelectedParentName != null && !sSelectedParentName.equals(""))
                     {
@@ -2022,7 +2022,7 @@ public class CurationServlet
             vm.setVM_CONCEPT_LIST(vmCon);
             vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
             pBean.setPV_VM(vm);
-            System.out.println(eBean.getCONCEPT_IDENTIFIER() + " vm concepts " + vmCon.size());
+            //System.out.println(eBean.getCONCEPT_IDENTIFIER() + " vm concepts " + vmCon.size());
             // pBean.setVM_CONCEPT(eBean);
             pBean.setPARENT_CONCEPT(parBean);
             if (isUpdated)
@@ -4151,7 +4151,7 @@ public class CurationServlet
 	
 	
 	public void execute(ACRequestTypes reqType) throws Exception {		
-		System.out.println("curation servlet");	
+		//System.out.println("curation servlet");	
 		switch (reqType){
 			case view:
 				doOpenViewPage(); 
