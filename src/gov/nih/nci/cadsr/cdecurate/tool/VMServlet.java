@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.51 2009-01-26 22:52:57 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.52 2009-02-09 22:17:40 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1097,6 +1097,8 @@ public void doOpenViewPage() throws Exception{
 	writeDetailJsp(vmBean);
 	String title = "CDE Curation View VM "+vmBean.getVM_LONG_NAME()+ " [" + vmBean.getVM_ID() + "v" + vmBean.getVM_VERSION() +"]";
 	req.setAttribute("title", title);
+	req.setAttribute("publicID", vmBean.getVM_ID());
+	req.setAttribute("version", vmBean.getVM_VERSION());
 	req.setAttribute("IncludeViewPage", "ValueMeaningDetail.jsp") ;
 }
 public void doViewVMActions(){
@@ -1107,6 +1109,8 @@ public void doViewVMActions(){
 	VM_Bean vm = (VM_Bean)session.getAttribute(viewVM);
 	String title = "CDE Curation View VM "+vm.getVM_LONG_NAME()+ " [" + vm.getVM_ID() + "v" + vm.getVM_VERSION() +"]";
 	httpRequest.setAttribute("title", title);
+	httpRequest.setAttribute("publicID", vm.getVM_ID());
+	httpRequest.setAttribute("version", vm.getVM_VERSION());
 	if (action != null){
 	   if (action.equals("detailsTab")){
 		  DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);

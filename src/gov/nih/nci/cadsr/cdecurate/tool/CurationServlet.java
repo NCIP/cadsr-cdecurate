@@ -4073,24 +4073,36 @@ public class CurationServlet
     	String sPublicId = null;
     	String sVersion =null;
     	String actlReq = null;
+    	boolean  flag = false;
 		String acIDSEQ = m_classReq.getParameter("idseq");
 		try {
 			if (acIDSEQ == null) {
 				sPublicId = m_classReq.getParameter("publicId");
+				for (int i=0; i<sPublicId.length(); i++){
+					if (Character.isLetter(sPublicId.charAt(i))){
+						flag = true;
+						break;
+					}
+				}
+				sVersion = m_classReq.getParameter("version");
+				for (int i=0; i<sVersion.length(); i++){
+					if (Character.isLetter(sVersion.charAt(i))){
+						flag = true;
+						break;
+					}
+				}
+			    if(flag){
+			    	forwardErrorViewJSP(sPublicId, sVersion);
+			    }
 				if ((sPublicId != null) && (!sPublicId.equals("")))
 					publicID = Long.parseLong(sPublicId);
-				sVersion = m_classReq.getParameter("version");
 				if ((sVersion != null) && (!sVersion.equals("")))
 					version = Double.parseDouble(sVersion);
 				acIDSEQ = acMgr.getACIdseq(publicID, version, m_conn);
 			}
 			boolean isExists = acMgr.isAcExists(acIDSEQ, m_conn);
 			if (!isExists) {
-				errMsg = "The Administered Item with Public Id [" +publicID + "] and Version [" + version +"] can not be found.";
-				String title = "CDE Curation View AC [" + publicID + "v" + version +"]";
-				m_classReq.setAttribute("title", title);	
-				m_classReq.setAttribute("errMsg", errMsg);
-				ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
+				forwardErrorViewJSP(sPublicId, sVersion);
 			}
 			// query the ac table to get the actl name
 			ac = acMgr.getActlName(acIDSEQ, publicID, version, m_conn);
@@ -4103,6 +4115,8 @@ public class CurationServlet
 					errMsg = "<b>View " + actlName1.get(0) + " - " + longName + "[" + publicID + "v" + version +"]</b></br></br> Is not supported at this time.";
 					String title = "CDE Curation View "+actlName1.get(1)+" "+longName+ " [" + publicID + "v" + version +"]";
 					m_classReq.setAttribute("title", title);
+					m_classReq.setAttribute("publicID", sPublicId);
+					m_classReq.setAttribute("version", sVersion);
 					m_classReq.setAttribute("errMsg", errMsg);
 					m_classReq.setAttribute("showCloseBtn", "yes");
 					ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");	
@@ -4215,4 +4229,14 @@ public class CurationServlet
 	   }
 	   return actlName;
    }
+  private void forwardErrorViewJSP(String id, String version){
+	    String errMsg = "The Administered Item with Public Id [" +id + "] and Version [" + version +"] can not be found.";
+		String title = "CDE Curation View AC [" + id + "v" + version +"]";
+		m_classReq.setAttribute("title", title);
+		m_classReq.setAttribute("publicID", id);
+		m_classReq.setAttribute("version", version);
+		m_classReq.setAttribute("errMsg", errMsg);
+		ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
+	  
+  }
 } // end of class
