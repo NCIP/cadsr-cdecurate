@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UtilService.java,v 1.49 2008-10-17 14:11:17 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UtilService.java,v 1.50 2009-02-09 22:59:18 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -127,7 +127,7 @@ public class UtilService implements Serializable
     }
     catch(Exception e)
     {
-        System.out.println("setMultSelection, size: " + i);
+        //System.out.println("setMultSelection, size: " + i);
     }
   } //end setMultSelection
 
@@ -162,7 +162,7 @@ public class UtilService implements Serializable
     }
     catch(Exception e)
     {
-        System.out.println("setMultSelectionByIDs, size: " + iID_Size);
+        //System.out.println("setMultSelectionByIDs, size: " + iID_Size);
     }
 
     try
@@ -184,7 +184,7 @@ public class UtilService implements Serializable
     }
     catch(Exception e)
     {
-        System.out.println("Error in setMultSelectionByIDs: " + e);
+        //System.out.println("Error in setMultSelectionByIDs: " + e);
     }
   } //end setMultSelectionByIDs
 
@@ -207,7 +207,7 @@ public class UtilService implements Serializable
     }
     catch(Exception e)
     {
-        System.out.println("Error in getName: " + e);
+        //System.out.println("Error in getName: " + e);
         return null;
     }
     
@@ -265,7 +265,7 @@ public class UtilService implements Serializable
     }
     catch(Exception e)
     {
-        System.out.println("Error in getIDByName: " + e);
+        //System.out.println("Error in getIDByName: " + e);
         return null;
     }
     
@@ -343,7 +343,7 @@ public class UtilService implements Serializable
     }
     catch(Exception e)
     {
-        System.out.println("Error in getOracleDate: " + e);
+       // System.out.println("Error in getOracleDate: " + e);
         return null;
     }
 
@@ -426,7 +426,7 @@ public class UtilService implements Serializable
     }
     catch(Exception e)
     {
-        System.out.println("Error in getCurationDate: " + e);
+       //System.out.println("Error in getCurationDate: " + e);
         return null;
     }
     return sDate;
@@ -965,7 +965,7 @@ public class UtilService implements Serializable
     }
     catch (Exception e)
     {
-      System.out.println("Unable to get the log message - " + sMsg);
+      //System.out.println("Unable to get the log message - " + sMsg);
     }
     return sMsg;
   }
@@ -1144,7 +1144,7 @@ public class UtilService implements Serializable
 			}
 
 		} catch (Exception e) {
-			System.out.println("Error in getSQLTimestamp: " + e);
+			//System.out.println("Error in getSQLTimestamp: " + e);
 			return null;
 		}
 
@@ -1165,7 +1165,7 @@ public class UtilService implements Serializable
 				curationDate = output.format(sqlTimestamp);
 			}
 		} catch (Exception e) {
-			System.out.println("Error in getCurationDateFromSQLTimestamp: " + e);
+			//System.out.println("Error in getCurationDateFromSQLTimestamp: " + e);
 			return null;
 		}
 		return curationDate;

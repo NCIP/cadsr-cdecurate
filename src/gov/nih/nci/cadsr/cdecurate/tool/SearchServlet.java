@@ -341,7 +341,7 @@ public class SearchServlet extends CurationServlet {
                 //to display the pre-populated table with the list of approved Rep Terms.
                 if(sSearchFor.equals("RepTerm"))
                 {
-                System.out.println(m_classReq.getParameter("nonEVSRepTermSearch"));
+                //System.out.println(m_classReq.getParameter("nonEVSRepTermSearch"));
                  this.getRepTermDefaultContext();
                  approvedRep=true;
                  session.setAttribute("ApprovedRepTerm", approvedRep);

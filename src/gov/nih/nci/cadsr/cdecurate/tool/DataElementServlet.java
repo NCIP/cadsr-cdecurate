@@ -1647,7 +1647,7 @@ public class DataElementServlet extends CurationServlet{
 
     public void doOpenViewPage() throws Exception
     {
-    	System.out.println("I am here open view page");
+    	//System.out.println("I am here open view page");
     	HttpSession session = m_classReq.getSession();
     	String acID = (String) m_classReq.getAttribute("acIdseq");
     	if (acID.equals(""))

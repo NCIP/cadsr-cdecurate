@@ -1,6 +1,6 @@
 //Copyright (c) 2000 ScenPro, Inc.
 
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.64 2008-12-29 17:34:00 veerlah Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.65 2009-02-09 22:59:18 veerlah Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -229,8 +229,8 @@ public class EVSSearch implements Serializable {
 					EVS_Bean m_OCQ = (EVS_Bean) vOCConcepts.elementAt(i);
 					if (m_OCQ == null)
 						m_OCQ = new EVS_Bean();
-					System.out.println(m_OCQ.getCONCEPT_IDENTIFIER()
-							+ " con Name " + m_OCQ.getLONG_NAME());
+					//System.out.println(m_OCQ.getCONCEPT_IDENTIFIER()
+							//+ " con Name " + m_OCQ.getLONG_NAME());
 					Vector<String> vOCQualifierNames = m_DEC
 					.getDEC_OC_QUALIFIER_NAMES();
 					if (vOCQualifierNames == null)
@@ -293,8 +293,8 @@ public class EVSSearch implements Serializable {
 					EVS_Bean m_PCQ = (EVS_Bean) vPCConcepts.elementAt(i);
 					if (m_PCQ == null)
 						m_PCQ = new EVS_Bean();
-					System.out.println(m_PCQ.getCONCEPT_IDENTIFIER()
-							+ " con Name " + m_PCQ.getLONG_NAME());
+					//System.out.println(m_PCQ.getCONCEPT_IDENTIFIER()
+							//+ " con Name " + m_PCQ.getLONG_NAME());
 					Vector vPropQualifierNames = m_DEC
 					.getDEC_PROP_QUALIFIER_NAMES();
 					if (vPropQualifierNames == null)

@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.82 2009-01-29 20:29:43 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.83 2009-02-09 22:59:18 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -7796,7 +7796,7 @@ public class GetACSearch implements Serializable
             {
                 String sConteIdseq = (String) req.getParameter("sConteIdseq");
                 String nonEVSSearchInd = (String)req.getParameter("nonEVSRepTermSearch");
-                System.out.println(nonEVSSearchInd);
+               // System.out.println(nonEVSSearchInd);
                 if (sConteIdseq == null)
                     sConteIdseq = "";
                 if(nonEVSSearchInd!= null && nonEVSSearchInd.equals("true"))

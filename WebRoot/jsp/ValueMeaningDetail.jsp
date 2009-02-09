@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.19 2009-02-09 16:29:17 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.20 2009-02-09 23:00:35 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -101,7 +101,7 @@
 							</div>
 							<br>
 							<% String sVersion = thisForm.getVMBean().getVM_VERSION();
-							    System.out.println("version"+sVersion);
+							    //System.out.println("version"+sVersion);
     							if (sVersion == null) sVersion = "1.0"; %>
 							<div class="ind2">
 								<b>

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.11 2009-02-09 22:14:55 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.12 2009-02-09 23:00:35 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -33,7 +33,7 @@
            retPage = VMForm.ACT_BACK_PV;
         else
            retPage = VMForm.ACT_BACK_SEARCH;
-        System.out.println("retPAge"+retPage);
+        //System.out.println("retPAge"+retPage);
       }  
 	 VMForm dispForm = (VMForm)request.getAttribute(VMForm.REQUEST_FORM_DATA); 
 	 String id = dispForm.getVMBean().getVM_IDSEQ();

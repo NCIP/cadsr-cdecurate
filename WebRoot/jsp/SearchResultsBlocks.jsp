@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.15 2008-12-29 17:36:35 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.16 2009-02-09 23:00:35 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -319,7 +319,7 @@
 	}
 	catch (Exception e)
 	{
-	  System.out.println("Exception in search results blocks " + e.toString());
+	  //System.out.println("Exception in search results blocks " + e.toString());
 	}
 %>
     //also store other variables

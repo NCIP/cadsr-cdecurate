@@ -115,7 +115,7 @@ public class ValueDomainServlet extends CurationServlet {
         String sSubAction = (String) m_classReq.getParameter("VDAction");
         DataManager.setAttribute(session, "VDAction", sSubAction);
         String sOriginAction = (String) session.getAttribute("originAction");
-        System.out.println("create vd " + sAction);
+        //System.out.println("create vd " + sAction);
        /* if (sAction.equals("changeContext"))
             doChangeContext(req, res, "vd");
         else */if (sAction.equals("validate"))
@@ -1128,7 +1128,7 @@ public class ValueDomainServlet extends CurationServlet {
                        m_REP.setLONG_NAME(sName + "::" + sNVP);
                        m_REP.setPREFERRED_DEFINITION(m_REP.getPREFERRED_DEFINITION() + "::" + sNVP);
                    }
-                   System.out.println(sNVP + sComp + m_REP.getLONG_NAME());
+                   //System.out.println(sNVP + sComp + m_REP.getLONG_NAME());
                }
                else
                {
@@ -1476,7 +1476,7 @@ public class ValueDomainServlet extends CurationServlet {
        String sNewRep = (String) session.getAttribute("newRepTerm");
        if (sNewRep == null)
            sNewRep = "";
-       System.out.println(" new rep " + sNewRep);
+       //System.out.println(" new rep " + sNewRep);
        Vector vBERows = (Vector) session.getAttribute("vBEResult");
        int vBESize = vBERows.size();
        Integer vBESize2 = new Integer(vBESize);
@@ -2262,7 +2262,7 @@ public class ValueDomainServlet extends CurationServlet {
 
   public void doOpenViewPage() throws Exception
   {
-  	System.out.println("I am here open view page");
+  	//System.out.println("I am here open view page");
   	HttpSession session = m_classReq.getSession();
   	String acID = (String) m_classReq.getAttribute("acIdseq");
   	if (acID.equals(""))
