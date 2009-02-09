@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.17 2009-02-09 23:00:35 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.18 2009-02-09 23:09:05 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -41,8 +41,6 @@
 			//gets the session attributes for action searchForCreate
 			if (sMenuAction.equals("searchForCreate")) {
 				sSearchAC = (String) session.getAttribute("creSearchAC"); //done now in CDEHomePage
-				//System.out.println("search parameters jsp sfc sSearchAC: "
-				+ sSearchAC);
 				sLastKeyword = (String) session.getAttribute("creKeyword");
 				sContext = (String) session.getAttribute("creContext");
 				vContext = (Vector) session.getAttribute("creMultiContext");
@@ -80,8 +78,6 @@
 			{
 				//  System.out.println("inside if ");
 				sSearchAC = (String) session.getAttribute("searchAC"); //done now in CDEHomePage
-				//System.out.println("search parameters else jsp sSearchAC: "
-				+ sSearchAC);
 				sLastKeyword = (String) session.getAttribute("serKeyword");
 				sProtoKeyword = (String) session.getAttribute("serProtoID");
 				sContext = (String) session.getAttribute("serContext");
@@ -89,8 +85,6 @@
 				sContextUse = (String) session.getAttribute("serContextUse");
 				vStatus = (Vector) session.getAttribute("serStatus");
 				vSelectedAttr = (Vector) session.getAttribute("selectedAttr");
-				//System.out.println("Selected Attributes size: "
-				+ vSelectedAttr.size());
 				vACAttr = (Vector) session.getAttribute("serAttributeList");
 				//System.out.println("vACAttr: " + vACAttr.size());
 				selCD = (String) session.getAttribute("serSelectedCD");
@@ -1817,7 +1811,7 @@ function LoadKeyHandler()
 
 			<input type="hidden" name="outPrint" value="Print"
 				style="visibility: hidden;"
-				<% out.println(""+vACAttr.size());// leave this in, it slows jsp load down so no jasper error%>>
+				<%out.println(""+vACAttr.size());// leave this in, it slows jsp load down so no jasper error%>>
 
 			<script language="javascript">
 populateAttr();
