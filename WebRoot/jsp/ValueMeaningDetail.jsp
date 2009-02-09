@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.18 2009-02-03 17:25:06 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.19 2009-02-09 16:29:17 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -138,7 +138,7 @@
 								</option>
 								<%  }}  %>
 							
-							</select><%}else{%><input type="text" size="22" value="<%=sStatusName%>" readonly><%}%>
+							</select><%}else{%><input type="text" size="22" value="<%=sStatus%>" readonly><%}%>
 							<div class="ind2">
 								<b>
 									<%=thisForm.descriptionLabel%>
