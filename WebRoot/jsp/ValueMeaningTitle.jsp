@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.10 2009-01-26 20:38:05 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.11 2009-02-09 22:14:55 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -13,10 +13,9 @@
 			isView = true;
       //UtilService serUtil = new UtilService();
       Session_Data sData = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
-      String disabled = null;
-      if(!isView){
+      String disabled = "";
+      if (!isView)
        disabled = (sData.UsrBean.isSuperuser()) ? "" : "disabled";
-      } 
       String sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
       String detailFocus = "TABX";
       String usedFocus = "TABX";
