@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.44 2009-02-06 21:07:12 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.45 2009-02-09 23:21:45 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -418,16 +418,17 @@ public class DBAccess
                     
                     // Flag to start processing CS records.
                     extra = true;
-                }
+                }//end of while
                 SQLHelper.closeResultSet(rs);
                 pstmt.clearParameters();
-                
-           }
+             }//end of for loop
           return list;
         }
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
+            SQLHelper.closeResultSet(rs);
+        	SQLHelper.closePreparedStatement(pstmt);
             throw new ToolException(ex);
         }
         finally{
@@ -511,6 +512,8 @@ public class DBAccess
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
+            SQLHelper.closeResultSet(rs);
+        	SQLHelper.closePreparedStatement(pstmt);
             throw new ToolException(ex);
         }finally{
         	SQLHelper.closeResultSet(rs);
@@ -541,6 +544,7 @@ public class DBAccess
         }
         catch (SQLException ex)
         {
+        	SQLHelper.closeResultSet(rs);
             throw new ToolException(ex);
         }        
         return rs;
@@ -596,6 +600,8 @@ public class DBAccess
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
+            SQLHelper.closeResultSet(rs);
+        	SQLHelper.closePreparedStatement(pstmt);
             throw new ToolException(ex);
         }
         catch (ToolException ex)
@@ -661,6 +667,8 @@ public class DBAccess
         catch (ToolException ex)
         {
             _log.error("SQL: " + select, ex);
+            SQLHelper.closeResultSet(rs);
+        	SQLHelper.closePreparedStatement(pstmt);
             throw ex;
         }finally{
         	SQLHelper.closeResultSet(rs);
@@ -697,6 +705,7 @@ public class DBAccess
          }
         catch (SQLException ex)
         {
+        	SQLHelper.closePreparedStatement(pstmt);
             throw ex;
         }finally{
            	SQLHelper.closePreparedStatement(pstmt);
@@ -746,6 +755,8 @@ public class DBAccess
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
+            SQLHelper.closeResultSet(rs);
+        	SQLHelper.closePreparedStatement(pstmt);
              throw new ToolException(ex);
         }finally{
         	SQLHelper.closeResultSet(rs);
@@ -774,6 +785,7 @@ public class DBAccess
         catch (SQLException ex)
         {
            _log.error("SQL: " + select, ex);
+           	SQLHelper.closePreparedStatement(pstmt);
            throw new ToolException(ex);
         }finally{
            	SQLHelper.closePreparedStatement(pstmt);
@@ -799,6 +811,7 @@ public class DBAccess
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
+            SQLHelper.closePreparedStatement(pstmt);
             throw new ToolException(ex);
         }finally{
           	SQLHelper.closePreparedStatement(pstmt);
@@ -888,6 +901,8 @@ public class DBAccess
         catch (SQLException ex)
         {
         	_log.error("SQL: " + select);
+        	SQLHelper.closeResultSet(rs);
+        	SQLHelper.closeStatement(stmt);
             throw new ToolException(ex);
         }finally{
         	SQLHelper.closeResultSet(rs);
@@ -921,6 +936,7 @@ public class DBAccess
          }
         catch (SQLException ex)
         {
+        	SQLHelper.closeCallableStatement(cstmt);
             throw ex;
         }finally{
         	SQLHelper.closeCallableStatement(cstmt);
@@ -994,6 +1010,7 @@ public class DBAccess
         }
         catch (SQLException ex)
         {
+        	SQLHelper.closePreparedStatement(pstmt);
             throw ex;
         }finally{
         	SQLHelper.closePreparedStatement(pstmt);
@@ -1219,6 +1236,7 @@ public class DBAccess
         }
         catch (SQLException ex)
         {
+        	SQLHelper.closeCallableStatement(cstmt);
             // If the record already exists then great, just ignore the duplicate, otherwise
             // it's not good.
             if (ex.getErrorCode() != 1)
@@ -1414,7 +1432,9 @@ public class DBAccess
         }
         catch (SQLException ex)
         {
-            _log.error("SQL: " + select_, ex);
+        	_log.error("SQL: " + select_, ex);
+        	SQLHelper.closeResultSet(rs);
+        	SQLHelper.closePreparedStatement(pstmt);
             throw new ToolException(ex);
         }finally{
         	SQLHelper.closeResultSet(rs);
