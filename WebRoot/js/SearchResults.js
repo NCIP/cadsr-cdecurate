@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.25 2009-02-06 15:19:55 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.26 2009-02-10 14:49:12 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -1331,19 +1331,22 @@ function enableDisableMenuItemsJS(sSelAC, checkCount){
     }   
  }  
     
-function hideShowDef(r1, r2) {
+function hideShowDef(r0, r1, r2)
+    {
+        var d0 = document.getElementById(r0);
         var d1 = document.getElementById(r1);
         var d2 = document.getElementById(r2);
-        if (navigator.appName == "Microsoft Internet Explorer") {
-            d1.style.display = 'block';
+        if (d1.style.display == "none") {
+            d0.src = "images/plus_12.gif";
+            d1.style.display = "inline";
+            d2.style.display = "none";
         }
         else {
-            d1.style.display = 'table-row';
+           d0.src = "images/minus_12.gif";
+           d1.style.display = "none";
+           d2.style.display = "inline";
         }
-        d2.style.display = 'none';
-    }      
-           
-   
+    }
  
    
   
