@@ -5,6 +5,8 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 	String title = (String)request.getAttribute("title");
+	String id = (String)request.getAttribute("publicID");
+	String version = (String)request.getAttribute("version");
 %>
 <html>
 <head>
