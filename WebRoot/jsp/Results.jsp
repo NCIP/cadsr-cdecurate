@@ -23,7 +23,7 @@
 	//gets the session attributes for action searchForCreate
 	if (sMenuAction.equals("searchForCreate")) {
 		sSearchAC = (String) session.getAttribute("creSearchAC"); //done now in CDEHomePage
-		System.out.println("search parameters jsp sfc sSearchAC: "+ sSearchAC);
+		//System.out.println("search parameters jsp sfc sSearchAC: "+ sSearchAC);
 		sLastKeyword = (String) session.getAttribute("creKeyword");
 		sContext = (String) session.getAttribute("creContext");
 		vContext = (Vector) session.getAttribute("creMultiContext");
@@ -56,7 +56,7 @@
 	} else //gets the session attributes for all other searches
 	{
 		sSearchAC = (String) session.getAttribute("searchAC"); //done now in CDEHomePage
-		System.out.println("search parameters else jsp sSearchAC: "	+ sSearchAC);
+		//System.out.println("search parameters else jsp sSearchAC: "	+ sSearchAC);
 		sLastKeyword = (String) session.getAttribute("serKeyword");
 		sProtoKeyword = (String) session.getAttribute("serProtoID");
 		sContext = (String) session.getAttribute("serContext");
@@ -64,9 +64,9 @@
 		sContextUse = (String) session.getAttribute("serContextUse");
 		vStatus = (Vector) session.getAttribute("serStatus");
 		vSelectedAttr = (Vector) session.getAttribute("selectedAttr");
-		System.out.println("Selected Attributes size: "	+ vSelectedAttr.size());
+		//System.out.println("Selected Attributes size: "	+ vSelectedAttr.size());
 		vACAttr = (Vector) session.getAttribute("serAttributeList");
-		System.out.println("vACAttr: " + vACAttr.size());
+		//System.out.println("vACAttr: " + vACAttr.size());
 		selCD = (String) session.getAttribute("serSelectedCD");
 		sSearchIn = (String) session.getAttribute("serSearchIn");
 		sRegStatus = (String) session.getAttribute("serRegStatus");
@@ -202,7 +202,7 @@
 	String temp7 = (String) session.getAttribute("UnqualifiedsearchOC");
 	String temp8 = (String) session.getAttribute("UnqualifiedsearchCC");
 	String temp9 = (String) session	.getAttribute("UnqualifiedsearchProp");
-	System.out.println(temp + " " + temp1 + " " + temp2 + " " + temp3 + " ");
+	//System.out.println(temp + " " + temp1 + " " + temp2 + " " + temp3 + " ");
    //mm
 	UtilService serUtil = new UtilService();
 	//capture the duration
@@ -2766,28 +2766,29 @@ function ShowSelectedRowss(){
 	<%if (defExists){ 
 		 int colspan = k-1;
 		 String id1 = "def" + j;
-		 String id2 = "definition" + j;
+		 String id2 = "ellipsis" + j;
+		 String id3 = "definition" + j;
 		 String def = "";
 		 int defSize = definition.length();
 		 if (defSize >  100){
-	          def = definition.substring(0,100);%>
+		      def = definition.substring(0,100);
+	          definition = definition.substring(100,defSize);
+	          %>
 			   <%if ((j%2) == 0){%>	
-      			   <tr class="stripe" id="<%=id1%>">
+      			   <tr class="stripe">
                <%}else { %>				
-			        <tr id="<%=id1%>">
+			        <tr>
 		        <%} %>
-                <td class="rsCell">&nbsp;</td><td class="rsCell">&nbsp;</td><td class="rsCell" colspan="<%=colspan%>"><p style="margin-left: 0.5in"><span onclick="hideShowDef('<%=id2%>', '<%=id1%>');" style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img src="images/plus_12.gif" border="0"></span> Definition: <%=def%>
-                           &hellip;</p></td>
-                </tr>
-                <%if ((j%2) == 0){%>	
-           		    <tr class="stripe" id="<%=id2%>" style="display: none">
-	            <%}else { %>				
-			        <tr id="<%=id2%>" style="display: none">
-			    <%} %>
-			    <td class="rsCell">&nbsp;</td><td class="rsCell">&nbsp;</td><td class="rsCell" colspan="<%=colspan%>"><p style="margin-left: 0.5in">
-				 <span onclick="hideShowDef('<%=id1%>', '<%=id2%>');" style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img src="images/minus_12.gif" border="0"></span>
-				Definition: <%=definition%></td>
-				</tr>
+                <td class="rsCell">&nbsp;</td><td class="rsCell">&nbsp;</td><td class="rsCell" colspan="<%=colspan%>">
+                
+                <p style="margin-left: 0.5in">
+						<span onclick="hideShowDef('<%=id1%>', '<%=id2%>', '<%=id3%>');"
+							style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img
+								id="<%=id1%>" src="images/plus_12.gif"
+								style="margin: 0px 0px 0px 0px">
+						</span> Definition: <%=def%>
+						<span id="<%=id2%>">&hellip;</span><span id="<%=id3%>" style="display: none"><%=definition%>
+				</span></p></td></tr>			
 	     <%}else{%>
 		        <%if ((j%2) == 0){%>	
            	       <tr class="stripe">
