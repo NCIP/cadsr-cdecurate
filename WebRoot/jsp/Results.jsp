@@ -2783,9 +2783,9 @@ function ShowSelectedRowss(){
                 
                 <p style="margin-left: 0.5in">
 						<span onclick="hideShowDef('<%=id1%>', '<%=id2%>', '<%=id3%>');"
-							style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img
-								id="<%=id1%>" src="images/plus_8.gif"
-								style="margin: 0px 0px 0px 0px"></span> Definition: <%=def%><span id="<%=id2%>">&hellip;</span><span id="<%=id3%>" style="display: none"><%=definition%>
+							style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img <%if ((j%2) == 0){%>class="stripe"<%}else{%>class="white"<%}%> 
+								id="<%=id1%>" src="images/plus_8.gif" border="1"
+								style="margin: 0px 0px 0px 0px" onmouseover="style.border=('1px solid #4876FF');" onmouseout="setBorder(this, <%=j%>);"></span> Definition: <%=def%><span id="<%=id2%>">&hellip;</span><span id="<%=id3%>" style="display: none"><%=definition%>
 				</span></p></td></tr>			
 	     <%}else{%>
 		        <%if ((j%2) == 0){%>	
@@ -2795,9 +2795,9 @@ function ShowSelectedRowss(){
 			    <%} %>
 			    <td class="rsCell">&nbsp;</td><td class="rsCell">&nbsp;</td><td class="rsCell" colspan="<%=colspan%>"><p style="margin-left: 0.5in">
 			    <span onclick="changeImage('<%=id1%>','<%=id2%>');"
-							style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img
-								id="<%=id1%>" src="images/plus_8.gif"
-								style="margin: 0px 0px 0px 0px"></span>Definition: <%=definition%></td><span id="<%=id2%>" style="display: none"></span>
+							style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img <%if ((j%2) == 0){%>class="stripe"<%}else{%>class="white"<%}%> 
+								id="<%=id1%>" src="images/plus_8.gif" border="1"
+								style="margin: 0px 0px 0px 0px" onmouseover="style.border=('1px solid #4876FF');" onmouseout="setBorder(this, <%=j%>);"></span>Definition: <%=definition%></td><span id="<%=id2%>" style="display: none"></span>
 			    </tr>
 		<%}%>
     <%}%>
