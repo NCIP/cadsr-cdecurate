@@ -69,8 +69,8 @@ public abstract class CommonACAction
         {
             logger.error("ERROR - : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closePreparedStatement(pstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
         }
         return vACs;
     }

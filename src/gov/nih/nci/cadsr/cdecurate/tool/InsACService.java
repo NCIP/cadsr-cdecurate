@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.63 2009-02-09 22:59:18 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.64 2009-02-10 19:15:27 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -656,8 +656,8 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception : Unable to update Value Domain attributes.");
 		}finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
         	}
 		return sReturnCode;
 	}
@@ -1151,8 +1151,8 @@ public class InsACService implements Serializable {
 					.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes.");
 		}
 		finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sReturnCode;
 	}
@@ -1537,8 +1537,8 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("Exception Error : Unable to create Object Class.");
 		}finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
         	}
 		return dec;
 	}
@@ -1720,8 +1720,8 @@ public class InsACService implements Serializable {
 			m_classReq.setAttribute("retcode", "Exception");
 			this.storeStatusMsg("Exception Error : Unable to create Property.");
 		}finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
         	}
 		return dec;
 	}
@@ -1903,8 +1903,8 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception : Unable to update or remove Representation Term.");
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 			}
 		return sReturnCode;
 	}
@@ -1965,8 +1965,8 @@ public class InsACService implements Serializable {
 				while (rs.next())
 					sReturnID = rs.getString(1);
 				
-				SQLHelper.closeResultSet(rs);
-	            SQLHelper.closePreparedStatement(pstmt);
+				rs = SQLHelper.closeResultSet(rs);
+	            pstmt = SQLHelper.closePreparedStatement(pstmt);
 	          
 				// oc-prop-context is not unique
 				if (sReturnID != null && !sReturnID.equals(""))
@@ -1995,8 +1995,8 @@ public class InsACService implements Serializable {
 					"ERROR in InsACService-checkUniqueOCPropPair for exception : "
 							+ e.toString(), e);
 		}finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closePreparedStatement(pstmt);
+			rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
         }
 		return uniqueMsg;
 	}
@@ -2571,8 +2571,8 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception : Unable to update Data Element Attributes.");
 		}finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
 		return sReturnCode;
 	} // end set DE
@@ -2667,8 +2667,8 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception : Unable to version an Administered Component.");
 		}finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
         	}
 		return sReturnCode;
 	}
@@ -2744,8 +2744,8 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception : Unable to version an Administered Component.");
 		}finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
         	}
 		return newACID;
 	}
@@ -2926,8 +2926,8 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception e : Unable to update or remove an Alternate Name.");
 		}finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
         	}
 		return sReturnCode;
 	} // end set DES
@@ -3049,7 +3049,7 @@ public class InsACService implements Serializable {
 							vDECompDelName);
 				// insert or update DEComp
 				if (!vDEComp.isEmpty()) {
-					SQLHelper.closeCallableStatement(cstmt);
+					cstmt = SQLHelper.closeCallableStatement(cstmt);
 					// cstmt = conn.prepareCall("{call
 					// SBREXT_Set_Row.Set_CDE_Relationship(?,?,?,?,?,?,?,?,?,?,?)}");
 					cstmt = m_servlet
@@ -3114,7 +3114,7 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception : Unable to update or remove Derived Data Elements");
 		}finally{
-            SQLHelper.closeCallableStatement(cstmt);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         	}
 		return sReturnCode;
 	} // end setDEComp
@@ -3191,7 +3191,7 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception : Unable to remove Derived Data Element Component.");
 		}finally{
-          SQLHelper.closeCallableStatement(cstmt);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
 	} // end of deleteDEComp()
 
@@ -3329,7 +3329,7 @@ public class InsACService implements Serializable {
 			this
 			.storeStatusMsg("\\t Exception : Unable to update or remove Reference Documents");
 		}finally{
-			SQLHelper.closeCallableStatement(cstmt);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sReturnCode;
 	} // end set RD
@@ -3377,8 +3377,8 @@ public class InsACService implements Serializable {
 			logger.error("ERROR in InsACService-getCSCSI for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 	} // end cscsi
 
@@ -3473,8 +3473,8 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception : Unable to update or remove AC_CSI relationship.");
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sAC_CSI_ID;
 	}
@@ -3530,7 +3530,7 @@ public class InsACService implements Serializable {
 			logger.error("ERROR in InsACService-setACCSI for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeCallableStatement(cstmt);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sACCSI;
 	}
@@ -3597,7 +3597,7 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception : Unable to update or remove Origin.");
 		}finally{
-			SQLHelper.closeCallableStatement(cstmt);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 			}
 	} // end of setACSRC
 
@@ -3639,7 +3639,7 @@ public class InsACService implements Serializable {
 			logger.error("ERROR in InsACService-updCSCSI for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeCallableStatement(cstmt);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 	} // end of setACSRC
 
@@ -3694,7 +3694,7 @@ public class InsACService implements Serializable {
 					"ERROR in InsACService- getExistingPV for exception : "
 							+ e.toString(), e);
 		}finally{
-			SQLHelper.closeCallableStatement(cstmt);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sPV_IDSEQ;
 	}
@@ -3731,7 +3731,7 @@ public class InsACService implements Serializable {
 			logger.error("ERROR in InsACService-copyACID for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeCallableStatement(cstmt);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}	}
 
 	/**
@@ -3773,7 +3773,7 @@ public class InsACService implements Serializable {
 					"ERROR in InsACService-createACHistory for exception : "
 							+ e.toString(), e);
 		}finally{
-			SQLHelper.closeCallableStatement(cstmt);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}	
 	}
 
@@ -3814,8 +3814,8 @@ public class InsACService implements Serializable {
 			logger.error("ERROR in InsACService-getversionac for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closePreparedStatement(pstmt);
+			rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
 		}
 		return sReturnID;
 	}
@@ -3965,7 +3965,7 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception : Unable to update Question attributes.");
 		}finally{
-			SQLHelper.closeCallableStatement(cstmt);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 			}
 		return sReturnCode;
 	} // end set quest content
@@ -4007,8 +4007,8 @@ public class InsACService implements Serializable {
 			logger.error("ERROR in InsACService-getRD_ID for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 		return rd_ID;
 	} // end RD_ID
@@ -4045,8 +4045,8 @@ public class InsACService implements Serializable {
 			logger.error("ERROR in InsACService-getFullName for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closePreparedStatement(pstmt);
+			rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
 		}
 		return sFullName;
 	} // end getFullName
@@ -4090,8 +4090,8 @@ public class InsACService implements Serializable {
 			logger.error("ERROR in InsACService-getDesig_ID for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);;
 		}
 		return Desig_ID;
 	} // end Desig_ID
@@ -4185,7 +4185,7 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception : Unable to update or remove Registration Status.");
 		}finally{
-			SQLHelper.closeCallableStatement(cstmt);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 			}
 		return ret;
 	}
@@ -4220,8 +4220,8 @@ public class InsACService implements Serializable {
 		} catch (Exception e) {
 			logger.error("ERROR in getAC_REG : " + e.toString(), e);
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeStatement(cstmt);
 		}
 		return regID;
 	} // end getAC_REG
@@ -4327,8 +4327,8 @@ public class InsACService implements Serializable {
 			logger.error("ERROR in InsACService-getOneAltName for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closePreparedStatement(pstmt);
+			rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
 		}
 		return sName;
 	} // end getOneAltName
@@ -4363,8 +4363,8 @@ public class InsACService implements Serializable {
 			logger.error("ERROR in InsACService-getOneRDName for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closePreparedStatement(pstmt);
+			rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
 		}
 		return sName;
 	} // end getOneRDName
@@ -4402,8 +4402,8 @@ public class InsACService implements Serializable {
 			logger.error("ERROR in InsACService-getOneConName for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closePreparedStatement(pstmt);
+			rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
 		}return sName;
 	} // end getOneConName
 
@@ -4509,8 +4509,8 @@ public class InsACService implements Serializable {
 			logger.error("ERROR in InsACService-getPublicID for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closePreparedStatement(pstmt);
+			rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
 		}
 		return sysName;
 	} // end getDEC system name
@@ -4548,8 +4548,8 @@ public class InsACService implements Serializable {
 			logger.error("ERROR in InsACService-getPublicID for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closePreparedStatement(pstmt);
+			rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
 		}
 		return sPublicID;
 	} // end getPublicID
@@ -5063,8 +5063,8 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception : Unable to update Concept attributes.");
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 			}
 		return conIdseq;
 	} // end concept
@@ -5195,8 +5195,8 @@ public class InsACService implements Serializable {
 			logger.error("ERROR in InsACService- getConcept for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}		
 		return sCON_IDSEQ; // TODO check what is parent concept id
 	} // end get concept
@@ -5583,8 +5583,8 @@ public class InsACService implements Serializable {
 			logger.error("Error - setContact_Comms : " + e.toString(), e);
 		}
 		finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 			}
 		return vCom;
 	}
@@ -5733,8 +5733,8 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception ee : Unable to update or remove Address attributes.");
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 		return vAdr;
 	}
@@ -5833,8 +5833,8 @@ public class InsACService implements Serializable {
 			this
 					.storeStatusMsg("\\t Exception ee : Unable to update or remove contact attributes.");
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 			}
 		return accB;
 	}

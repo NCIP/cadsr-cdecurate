@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.45 2009-02-09 23:21:45 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.46 2009-02-10 19:15:27 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -161,8 +161,8 @@ public class DBAccess
                 _log.error(ex.toString());                
             }
             finally{
-            	SQLHelper.closeResultSet(rs);
-            	SQLHelper.closePreparedStatement(pstmt);
+            	rs = SQLHelper.closeResultSet(rs);
+            	pstmt = SQLHelper.closePreparedStatement(pstmt);
             }
                         
             // This only has to be done once. And either both are read or both are set blank.
@@ -276,8 +276,8 @@ public class DBAccess
             throw new ToolException(ex);
         }
         finally{
-        	SQLHelper.closeResultSet(rs);
-        	SQLHelper.closePreparedStatement(pstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
         }
     }
 
@@ -419,21 +419,22 @@ public class DBAccess
                     // Flag to start processing CS records.
                     extra = true;
                 }//end of while
-                SQLHelper.closeResultSet(rs);
+                rs = SQLHelper.closeResultSet(rs);
                 pstmt.clearParameters();
              }//end of for loop
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
           return list;
         }
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
-            SQLHelper.closeResultSet(rs);
-        	SQLHelper.closePreparedStatement(pstmt);
+            rs = SQLHelper.closeResultSet(rs);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
             throw new ToolException(ex);
         }
         finally{
-        	SQLHelper.closeResultSet(rs);
-        	SQLHelper.closePreparedStatement(pstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
         }
     }
 
@@ -512,12 +513,12 @@ public class DBAccess
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
-            SQLHelper.closeResultSet(rs);
-        	SQLHelper.closePreparedStatement(pstmt);
+            rs = SQLHelper.closeResultSet(rs);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
             throw new ToolException(ex);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-        	SQLHelper.closePreparedStatement(pstmt);
+        	 rs = SQLHelper.closeResultSet(rs);
+        	 pstmt = SQLHelper.closePreparedStatement(pstmt);
         }
     }
 
@@ -544,7 +545,7 @@ public class DBAccess
         }
         catch (SQLException ex)
         {
-        	SQLHelper.closeResultSet(rs);
+        	rs = SQLHelper.closeResultSet(rs);
             throw new ToolException(ex);
         }        
         return rs;
@@ -600,8 +601,8 @@ public class DBAccess
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
-            SQLHelper.closeResultSet(rs);
-        	SQLHelper.closePreparedStatement(pstmt);
+            rs = SQLHelper.closeResultSet(rs);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
             throw new ToolException(ex);
         }
         catch (ToolException ex)
@@ -609,8 +610,8 @@ public class DBAccess
             _log.error("SQL: " + select, ex);
             throw ex;
         }finally{
-        	SQLHelper.closeResultSet(rs);
-        	SQLHelper.closePreparedStatement(pstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
         }        
         // Return the Tree (This is normally viewed on the UI from the "View by CS/CSI" tab.
         return root;
@@ -648,7 +649,7 @@ public class DBAccess
                 {
                     temp.add(SQLSelectAlts.copyFromRS(rs, showMC_));
                 }
-                SQLHelper.closeResultSet(rs);
+               rs = SQLHelper.closeResultSet(rs);
             }
              // Convert the result Vector to an array and get the CSI hierarchy for each Alternate Name
             // or Definition.
@@ -662,17 +663,19 @@ public class DBAccess
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
+            rs = SQLHelper.closeResultSet(rs);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
             throw new ToolException(ex);
         }
         catch (ToolException ex)
         {
             _log.error("SQL: " + select, ex);
-            SQLHelper.closeResultSet(rs);
-        	SQLHelper.closePreparedStatement(pstmt);
+            rs = SQLHelper.closeResultSet(rs);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
             throw ex;
         }finally{
-        	SQLHelper.closeResultSet(rs);
-        	SQLHelper.closePreparedStatement(pstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
         }
 
         // Return the result list complete with CSI information.
@@ -696,7 +699,7 @@ public class DBAccess
             pstmt = _conn.prepareStatement(delete);
             pstmt.setString(1, idseq_);
             pstmt.executeUpdate();
-        	SQLHelper.closePreparedStatement(pstmt);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
             
             delete = "delete from sbr.definitions_view where ac_idseq = ?";
             pstmt = _conn.prepareStatement(delete);
@@ -705,10 +708,10 @@ public class DBAccess
          }
         catch (SQLException ex)
         {
-        	SQLHelper.closePreparedStatement(pstmt);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
             throw ex;
         }finally{
-           	SQLHelper.closePreparedStatement(pstmt);
+           	pstmt = SQLHelper.closePreparedStatement(pstmt);
         }
     }
 
@@ -755,12 +758,12 @@ public class DBAccess
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
-            SQLHelper.closeResultSet(rs);
-        	SQLHelper.closePreparedStatement(pstmt);
+            rs = SQLHelper.closeResultSet(rs);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
              throw new ToolException(ex);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-        	SQLHelper.closePreparedStatement(pstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
         }
         // Return a formatted result or null if the AC was not found.
         return title;
@@ -785,10 +788,10 @@ public class DBAccess
         catch (SQLException ex)
         {
            _log.error("SQL: " + select, ex);
-           	SQLHelper.closePreparedStatement(pstmt);
+           pstmt =	SQLHelper.closePreparedStatement(pstmt);
            throw new ToolException(ex);
         }finally{
-           	SQLHelper.closePreparedStatement(pstmt);
+           	pstmt = SQLHelper.closePreparedStatement(pstmt);
         }
     }
 
@@ -811,10 +814,10 @@ public class DBAccess
         catch (SQLException ex)
         {
             _log.error("SQL: " + select, ex);
-            SQLHelper.closePreparedStatement(pstmt);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
             throw new ToolException(ex);
         }finally{
-          	SQLHelper.closePreparedStatement(pstmt);
+          	pstmt = SQLHelper.closePreparedStatement(pstmt);
         }
     }
     
@@ -901,12 +904,12 @@ public class DBAccess
         catch (SQLException ex)
         {
         	_log.error("SQL: " + select);
-        	SQLHelper.closeResultSet(rs);
-        	SQLHelper.closeStatement(stmt);
+        	rs = SQLHelper.closeResultSet(rs);
+        	stmt = SQLHelper.closeStatement(stmt);
             throw new ToolException(ex);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-        	SQLHelper.closeStatement(stmt);
+        	rs = SQLHelper.closeResultSet(rs);
+        	stmt = SQLHelper.closeStatement(stmt);
         }
         // Return the Tree root.
         return root;
@@ -936,10 +939,10 @@ public class DBAccess
          }
         catch (SQLException ex)
         {
-        	SQLHelper.closeCallableStatement(cstmt);
+        	cstmt = SQLHelper.closeCallableStatement(cstmt);
             throw ex;
         }finally{
-        	SQLHelper.closeCallableStatement(cstmt);
+        	cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
         
     }
@@ -1010,10 +1013,10 @@ public class DBAccess
         }
         catch (SQLException ex)
         {
-        	SQLHelper.closePreparedStatement(pstmt);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
             throw ex;
         }finally{
-        	SQLHelper.closePreparedStatement(pstmt);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
         }
         
     }
@@ -1104,7 +1107,7 @@ public class DBAccess
             }
     
             // Done with the new ones.
-            SQLHelper.closePreparedStatement(pstmt);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
         }
 
         // Remove ones we don't want to keep.
@@ -1133,7 +1136,7 @@ public class DBAccess
                         stmt.setString(2, alt_.getAltIdseq());
                         stmt.setString(3, "DESIGNATION");
                         stmt.executeUpdate();
-                        SQLHelper.closePreparedStatement(stmt);
+                       stmt = SQLHelper.closePreparedStatement(stmt);
                     }
                 }
             }
@@ -1141,8 +1144,8 @@ public class DBAccess
          }
     }
    finally{
-    	SQLHelper.closePreparedStatement(pstmt);
-    	SQLHelper.closePreparedStatement(stmt);
+    	pstmt = SQLHelper.closePreparedStatement(pstmt);
+    	stmt = SQLHelper.closePreparedStatement(stmt);
     }
     }
 
@@ -1162,7 +1165,7 @@ public class DBAccess
         pstmt.executeUpdate();
       }
       finally{
-        	SQLHelper.closePreparedStatement(pstmt);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
             }
      }
 
@@ -1236,14 +1239,14 @@ public class DBAccess
         }
         catch (SQLException ex)
         {
-        	SQLHelper.closeCallableStatement(cstmt);
+        	cstmt = SQLHelper.closeCallableStatement(cstmt);
             // If the record already exists then great, just ignore the duplicate, otherwise
             // it's not good.
             if (ex.getErrorCode() != 1)
                 throw ex;
         }
         finally{
-        	SQLHelper.closeCallableStatement(cstmt);
+        	cstmt = SQLHelper.closeCallableStatement(cstmt);
             }
     }
 
@@ -1433,12 +1436,12 @@ public class DBAccess
         catch (SQLException ex)
         {
         	_log.error("SQL: " + select_, ex);
-        	SQLHelper.closeResultSet(rs);
-        	SQLHelper.closePreparedStatement(pstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
             throw new ToolException(ex);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-        	SQLHelper.closePreparedStatement(pstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+        	pstmt = SQLHelper.closePreparedStatement(pstmt);
         }
         // Return the result set
         return list;

@@ -1860,8 +1860,8 @@ public class SearchServlet extends CurationServlet {
         {
             logger.error("Error - getRepTermDefaultContext : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-        	SQLHelper.closeStatement(stm);
+        	rs = SQLHelper.closeResultSet(rs);
+        	stm = SQLHelper.closeStatement(stm);
         }
     }
 
@@ -1888,8 +1888,8 @@ public class SearchServlet extends CurationServlet {
 				} while (rs.next());
 				
 				//close the rs and stm
-				SQLHelper.closeResultSet(rs);
-				SQLHelper.closeStatement(stm);
+				rs = SQLHelper.closeResultSet(rs);
+				stm = SQLHelper.closeStatement(stm);
 				
 				String valu = valueString
 						.substring(0, valueString.length() - 1);
@@ -1913,8 +1913,8 @@ public class SearchServlet extends CurationServlet {
 			logger.error("Error getting the Approved Rep Terms",e);
 		}
 		finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeStatement(stm);
+			rs = SQLHelper.closeResultSet(rs);
+			stm = SQLHelper.closeStatement(stm);
 		}
 		EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
 		evs.get_Result(m_classReq, m_classRes, vResult, "");

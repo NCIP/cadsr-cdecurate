@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.57 2008-12-26 19:14:34 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.58 2009-02-10 19:15:26 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1745,8 +1745,8 @@ public class SetACService implements Serializable
     {
       logger.error("ERROR in checkOCPropWorkFlowStatuses " + e.toString(), e);
     } finally {
-      SQLHelper.closeResultSet(rs);
-      SQLHelper.closeStatement(cstmt);
+    	rs = SQLHelper.closeResultSet(rs);
+		cstmt = SQLHelper.closeStatement(cstmt);
     }
     return strInvalid;
   } //end checkOCPropWorkFlowStatuses
@@ -1792,8 +1792,8 @@ public class SetACService implements Serializable
     {
       logger.error("ERROR in checkPVVM " + e.toString(), e);
     }finally {
-        SQLHelper.closeResultSet(rs);
-        SQLHelper.closeStatement(cstmt);
+    	rs = SQLHelper.closeResultSet(rs);
+		cstmt = SQLHelper.closeStatement(cstmt);
       }
     return pvIdseq;
   } //end checkPVVM
@@ -4277,8 +4277,8 @@ public class SetACService implements Serializable
     {
       logger.error("ERROR in setACService-getPV for other : " + e.toString(), e);
     }finally {
-        SQLHelper.closeResultSet(rs);
-        SQLHelper.closeStatement(cstmt);
+        rs = SQLHelper.closeResultSet(rs);
+        cstmt = SQLHelper.closeCallableStatement(cstmt);
       }
     return sReturnCode;
   }
@@ -4322,8 +4322,8 @@ public class SetACService implements Serializable
     {
       logger.error("ERROR in setACService-checkPVQCExists for other : " + e.toString(), e);
     }finally {
-        SQLHelper.closeResultSet(rs);
-        SQLHelper.closePreparedStatement(pstmt);
+    	rs = SQLHelper.closeResultSet(rs);
+        pstmt = SQLHelper.closePreparedStatement(pstmt);
       }
     return isValid;
    }   //end checkPVQCExists

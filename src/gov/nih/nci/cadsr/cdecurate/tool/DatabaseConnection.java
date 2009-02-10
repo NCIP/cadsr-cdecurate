@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DatabaseConnection.java,v 1.13 2008-12-26 19:13:24 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/DatabaseConnection.java,v 1.14 2009-02-10 19:15:26 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -73,8 +73,8 @@ public class DatabaseConnection extends HttpServlet
       {
         logger.fatal("Could not open database connection." + e.toString(), e);
       }finally{
-    	  SQLHelper.closeResultSet(rset);
-          SQLHelper.closeStatement(stmt);      
+    	  rset = SQLHelper.closeResultSet(rset);
+          stmt = SQLHelper.closeStatement(stmt);      
           freeConnection(con);
       }
     }

@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptAction.java,v 1.21 2008-12-26 19:13:24 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/ConceptAction.java,v 1.22 2009-02-10 19:15:26 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -129,8 +129,8 @@ public class ConceptAction implements Serializable
       data.setStatusMsg("Error : Unable to do concept search." + e.toString());
       data.setActionStatus(ConceptForm.ACTION_STATUS_FAIL);
     }finally{
-    	SQLHelper.closeResultSet(rs);
-        SQLHelper.closeCallableStatement(cstmt);
+    	rs = SQLHelper.closeResultSet(rs);
+        cstmt = SQLHelper.closeCallableStatement(cstmt);
     }    
   }  //endconcept search
 
@@ -169,8 +169,8 @@ public class ConceptAction implements Serializable
         data.setStatusMsg("Error : Unable to do concept search." + e.toString());
         data.setActionStatus(ConceptForm.ACTION_STATUS_FAIL);
       }finally{
-      	SQLHelper.closeResultSet(rs);
-        SQLHelper.closeStatement(stmt);
+      	rs = SQLHelper.closeResultSet(rs);
+        stmt = SQLHelper.closeStatement(stmt);
     }
      }
     return condr;
@@ -327,8 +327,8 @@ public class ConceptAction implements Serializable
        logger.error("ERROR in setConcept for other : " + e.toString(), e);
        sMsg += "\\t Exception : Unable to update Concept attributes.";
      }finally{
-         	SQLHelper.closeResultSet(rs);
-             SQLHelper.closeCallableStatement(cstmt);
+    	 rs = SQLHelper.closeResultSet(rs);
+         cstmt = SQLHelper.closeCallableStatement(cstmt);
          }
       return sMsg;
   }  //end concept
@@ -416,8 +416,8 @@ public class ConceptAction implements Serializable
     {
       logger.error("ERROR in getACConcepts for exception : " + e.toString(), e);
     }finally{
-    	SQLHelper.closeResultSet(rs);
-        SQLHelper.closeCallableStatement(cstmt);
+    	rs = SQLHelper.closeResultSet(rs);
+        cstmt = SQLHelper.closeCallableStatement(cstmt);
     }
     return vList;
   } //end get concept

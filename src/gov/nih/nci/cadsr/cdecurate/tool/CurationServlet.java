@@ -585,7 +585,7 @@ public class CurationServlet
                 this.logger.error("Service: no DB Connection");
                 ErrorLogin(m_classReq, m_classRes);
             }
-            SQLHelper.closeConnection(m_conn);
+            m_conn = SQLHelper.closeConnection(m_conn);
         }
         catch (Exception e)
         {
@@ -605,7 +605,7 @@ public class CurationServlet
             }
 
         }finally{
-            SQLHelper.closeConnection(m_conn);
+            m_conn = SQLHelper.closeConnection(m_conn);
         }
     } // end of service
 
@@ -873,7 +873,7 @@ public class CurationServlet
                 this.logger.error("Service: no DB Connection");
                 ErrorLogin(m_classReq, m_classRes);
             }
-            SQLHelper.closeConnection(m_conn);
+            m_conn = SQLHelper.closeConnection(m_conn);
         }
         catch (Exception e)
         {
@@ -893,7 +893,7 @@ public class CurationServlet
             }
 
         }finally{
-            SQLHelper.closeConnection(m_conn);
+            m_conn = SQLHelper.closeConnection(m_conn);
         }
     } // end of service
 
@@ -3087,7 +3087,7 @@ public class CurationServlet
                 logger.error("cdecurate: doMonitor(): " + e.toString(), e);
             }
             finally{
-            	SQLHelper.closeCallableStatement(stmt);
+            	stmt = SQLHelper.closeCallableStatement(stmt);
               }
             break;
         }
@@ -3177,7 +3177,7 @@ public class CurationServlet
                     stmt = m_conn.prepareCall("begin SBREXT_CDE_CURATOR_PKG.REMOVE_FROM_SENTINEL_CS('"
                                     + temp + "','" + user + "'); END;");
                     stmt.execute();
-                    SQLHelper.closeCallableStatement(stmt);
+                    stmt = SQLHelper.closeCallableStatement(stmt);
                     msg = "The selected item is no longer monitored by the Alert Definition";
                 }
                 catch (Exception e)
@@ -3185,7 +3185,7 @@ public class CurationServlet
                     msg = "An unexpected exception occurred, please notify the Help Desk. Details have been written to the log.";
                     logger.error("cdecurate: doUnmonitor(): " + e.toString(), e);
                 }finally{
-                	SQLHelper.closeCallableStatement(stmt);
+                	stmt = SQLHelper.closeCallableStatement(stmt);
                 }
             }
             break;
@@ -3859,7 +3859,7 @@ public class CurationServlet
      */
     public void destroy()
     {
-    	SQLHelper.closeConnection(m_conn);
+    	m_conn = SQLHelper.closeConnection(m_conn);
     }
 
     /**
