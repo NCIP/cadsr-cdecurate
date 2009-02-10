@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.20 2009-02-03 17:25:06 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.21 2009-02-10 20:57:56 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -504,7 +504,7 @@ function setup()
 </SCRIPT>
 	</head>
 
-	<body <% if (!isView) { %>onLoad="setup();" <% } %>>
+	<body onLoad="setup();">
 		<form name="createVDForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=editVD">
 		    <% if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
 		  	 <b><font  size="3">Not Authorized for Edits in this Context.</font></b></br></br>
@@ -779,7 +779,7 @@ function setup()
 														</tr>
 														<tr align="left">
 															<td colspan="3" valign="top">
-																<% if (!isView) { %>
+																
 																<select name="selRepQualifier" size="2" style="width=98%" valign="top" onClick="ShowEVSInfo('RepQualifier')" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_nameBlocks',helpUrl); return false">
 																	<%
 																		if (vRepQualifierNames.size() < 1) {
@@ -796,28 +796,15 @@ function setup()
 																	<%
 																		}	}	%>
 																</select>
-																<% } else { %>
-																	
-																	<% if (vRepQualifierNames.size() < 1){%>
-																	   <input type="text" size="71" value="" readonly>
-																	<%}else{for (int i = 0; vRepQualifierNames.size() > i; i++) {
-																		String sQualName = (String) vRepQualifierNames.elementAt(i);%>
-																	  <input type="text" size="71" value="<%=sQualName%>" readonly>
-																	<%	}}	}%>
-														
-																
-															</td>
+													</td>
+															
 															<td colspan="3" valign="top">
-																<% if (!isView) { %>
 																<select name="selRepTerm" style="width=98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateVD.html#createVDForm_nameBlocks',helpUrl); return false">
 																	<option value="<%=sRepTermPrimary%>">
 																		<%=sRepTermPrimary%>
 																	</option>
 																</select>
-																<% } else { %>
-																    <input type="text" size="71" value="<%=sRepTermPrimary%>" readonly>
-															    <%}%>
-																														
+																										
 															</td>
 														</tr>
 														<tr>
@@ -833,15 +820,15 @@ function setup()
 														<tr>
 															<td colspan="3">
 																&nbsp;&nbsp;
-																<a href="">
-																	<label id="RepQualID" for="selRepQualifier" title="" onclick="javascript:SearchBuildingBlocks('RepQualifier', 'true')"></label>
-																</a>
+																<%if (!isView){%><a href=""><%}%>
+																	<label id="RepQualID" for="selRepQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('RepQualifier', 'true')"<%}%>></label>
+																<%if (!isView){%></a><%}%>
 															</td>
 															<td colspan="3">
 																&nbsp;&nbsp;
-																<a href="">
-																	<label id="RepTermID" for="selRepTerm" title="" onclick="javascript:SearchBuildingBlocks('RepTerm', 'true')"></label>
-																</a>
+																<%if (!isView){%><a href=""><%}%>
+																	<label id="RepTermID" for="selRepTerm" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('RepTerm', 'true')"<%}%>></label>
+																<%if (!isView){%></a><%}%>
 															</td>
 														</tr>
 														<tr height="1">
