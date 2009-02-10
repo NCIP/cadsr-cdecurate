@@ -2785,9 +2785,7 @@ function ShowSelectedRowss(){
 						<span onclick="hideShowDef('<%=id1%>', '<%=id2%>', '<%=id3%>');"
 							style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img
 								id="<%=id1%>" src="images/plus_12.gif"
-								style="margin: 0px 0px 0px 0px">
-						</span> Definition: <%=def%>
-						<span id="<%=id2%>">&hellip;</span><span id="<%=id3%>" style="display: none"><%=definition%>
+								style="margin: 0px 0px 0px 0px"></span> Definition: <%=def%><span id="<%=id2%>">&hellip;</span><span id="<%=id3%>" style="display: none"><%=definition%>
 				</span></p></td></tr>			
 	     <%}else{%>
 		        <%if ((j%2) == 0){%>	
@@ -2796,7 +2794,10 @@ function ShowSelectedRowss(){
 			        <tr>
 			    <%} %>
 			    <td class="rsCell">&nbsp;</td><td class="rsCell">&nbsp;</td><td class="rsCell" colspan="<%=colspan%>"><p style="margin-left: 0.5in">
-			    Definition: <%=definition%></td>
+			    <span onclick="changeImage('<%=id1%>','<%=id2%>');"
+							style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img
+								id="<%=id1%>" src="images/plus_12.gif"
+								style="margin: 0px 0px 0px 0px"></span>Definition: <%=definition%></td><span id="<%=id2%>" style="display: none"></span>
 			    </tr>
 		<%}%>
     <%}%>
