@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.20 2009-02-09 23:00:35 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.21 2009-02-10 20:10:49 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -349,7 +349,7 @@
 											</td>
 										</tr>
 										<tr <% if (i%2 == 0) { %> class="rowColor" <% } %>>
-												<td></td>
+												<td>=</td>
 											<td colspan="5">
 												<div class="ind3">
 													<b>
@@ -376,7 +376,7 @@
 							<input type="hidden" name="isValidSearch" value="true">
 							<input type="hidden" name="CDVDcontext" value="">
 							<input type="hidden" name="SelContext" value="">
-							<input type="hidden" name="acID" value="">
+							<input type="hidden" name="acID" value="<%=thisForm.getVMBean().getIDSEQ()%>">
 							<input type="hidden" name="CD_ID" value="">
 							<input type="hidden" name="itemType" value="">
 							<input type="hidden" name="SelCDid" value="">
