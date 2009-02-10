@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.32 2009-02-05 20:55:24 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.33 2009-02-10 19:15:26 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -185,8 +185,8 @@ public class PVAction implements Serializable {
 							+ e.toString());
 			data.setActionStatus(ConceptForm.ACTION_STATUS_FAIL);
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closePreparedStatement(pstmt);
+			rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
 		}
 		return isValid;
 	} //end checkPVQCExists
@@ -436,8 +436,8 @@ public class PVAction implements Serializable {
 			logger.error("ERROR - doPVACSearch for other : " + e.toString(), e);
 		}
 		finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 		return vList;
 	} //doPVACSearch search
@@ -590,8 +590,8 @@ public class PVAction implements Serializable {
 			logger.error("ERROR - GetACSearch-searchPVVM for other : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 		return vList;
 	} //endPVVM search
@@ -699,8 +699,8 @@ public class PVAction implements Serializable {
 			sMsg += "\\t Exception : Unable to update Permissible Value attributes.";
 		}
 		finally{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sMsg;
 	}
@@ -752,7 +752,7 @@ public class PVAction implements Serializable {
 			logger.error("ERROR in getExistingPV for exception : "
 					+ e.toString(), e);
 		}finally{
-			SQLHelper.closeCallableStatement(cstmt);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sPV_IDSEQ;
 	}
@@ -860,7 +860,7 @@ public class PVAction implements Serializable {
 			data.setRetErrorCode("Exception");
 			sMsg += "\\t Exception : Unable to update or remove PV of VD.";
 		}finally{
-		  SQLHelper.closeCallableStatement(cstmt);
+		  cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sMsg;
 	} //END setVD_PVS

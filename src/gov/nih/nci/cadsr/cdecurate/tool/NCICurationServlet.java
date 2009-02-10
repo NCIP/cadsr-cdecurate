@@ -1,6 +1,6 @@
 // Copyright (c) 2005 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.63 2009-01-19 15:32:05 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/NCICurationServlet.java,v 1.64 2009-02-10 19:15:26 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -176,9 +176,9 @@ public class NCICurationServlet extends HttpServlet
                 logger.fatal("Could not open database connection.", e);
             }
             finally{
-    			SQLHelper.closeResultSet(rset);
-    			SQLHelper.closeStatement(stmt);
-    			SQLHelper.closeConnection(con);
+    			rset = SQLHelper.closeResultSet(rset);
+    			stmt = SQLHelper.closeStatement(stmt);
+    			con = SQLHelper.closeConnection(con);
             }
         }
         catch (Exception e)

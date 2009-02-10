@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.54 2009-02-05 20:55:24 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.55 2009-02-10 19:15:27 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -275,8 +275,8 @@ public void doOpen (){
 						msg = "Unable to access the database.";
 					}
 					finally{
-						SQLHelper.closeResultSet(rs);
-						SQLHelper.closePreparedStatement(pstmt);
+						rs = SQLHelper.closeResultSet(rs);
+			            pstmt = SQLHelper.closePreparedStatement(pstmt);
 					
 					}			    	
 			  }//end of for
@@ -375,7 +375,7 @@ public void doFileUpload ()
 
 				// get BLOB_CONTENT
 				pstmt.execute();
-				SQLHelper.closePreparedStatement(pstmt);
+				pstmt = SQLHelper.closePreparedStatement(pstmt);
                 
 				// upload blob
 				doFiletoBlob(m_servlet.getConn(), dbfileName);
@@ -386,7 +386,7 @@ public void doFileUpload ()
 		} catch (SQLException e) {
 			logger.error(e.toString(), e);
 		}finally{
-			SQLHelper.closePreparedStatement(pstmt);
+			pstmt = SQLHelper.closePreparedStatement(pstmt);
 		
     }
     //forward the page
@@ -435,7 +435,7 @@ public void doDeleteAttachment (){
 		logger.error(e.toString(), e);
 		msg = "Reference Document Attachment: Unable to delete the Attachment from the database.";
 	}finally{
-	  SQLHelper.closePreparedStatement(pstmt);
+	  pstmt = SQLHelper.closePreparedStatement(pstmt);
     }
   // Forward back to the open method
 	doOpen();
@@ -460,7 +460,7 @@ public void doDeleteAttachment (){
       logger.error("Error - doDeleteAllAttachments: " + e.toString(), e);
       msg = "Unable to delete all the Attachments from the database for the selected Reference Document.";
     }finally{
-	  SQLHelper.closePreparedStatement(pstmt);
+	  pstmt = SQLHelper.closePreparedStatement(pstmt);
     }
     return msg;
   }
@@ -588,8 +588,8 @@ public void doDeleteAttachment (){
   		logger.error("ERROR - RefDocAttachment: " + e.getMessage());
   		msg = "Unable to access file for upload to the database.";
   	}finally{
-  	  SQLHelper.closeResultSet(rs);	
-	  SQLHelper.closePreparedStatement(pstmt);
+  		rs = SQLHelper.closeResultSet(rs);
+        pstmt = SQLHelper.closePreparedStatement(pstmt);
     }
   }
 

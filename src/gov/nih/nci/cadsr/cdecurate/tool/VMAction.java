@@ -131,8 +131,8 @@ public class VMAction implements Serializable
 		}
 		finally
 		{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 	} // endVM search
 
@@ -1484,7 +1484,7 @@ public class VMAction implements Serializable
 		}
 		finally
 		{
-			SQLHelper.closeCallableStatement(cstmt);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sReturnCode;
 	}
@@ -1628,8 +1628,8 @@ public class VMAction implements Serializable
 		}
 		finally
 		{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 		return stMsg;
 	}
@@ -1728,7 +1728,7 @@ public class VMAction implements Serializable
 		}
 		finally
 		{
-			SQLHelper.closeCallableStatement(cstmt);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 		return sReturnCode;
 	}
@@ -2099,8 +2099,8 @@ public class VMAction implements Serializable
 		}
 		finally
 		{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closePreparedStatement(pstmt);
+			rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
 		}
 		return vVMs;
 	}
@@ -2300,8 +2300,8 @@ public class VMAction implements Serializable
 		}
 		finally
 		{
-			SQLHelper.closeResultSet(rs);
-			SQLHelper.closeCallableStatement(cstmt);
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
 		return vList;
 	}

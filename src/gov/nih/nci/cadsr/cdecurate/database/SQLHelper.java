@@ -22,7 +22,7 @@ public class SQLHelper {
     /**
      * @param ps
      */
-    public static void closePreparedStatement(PreparedStatement ps) {
+    public static PreparedStatement closePreparedStatement(PreparedStatement ps) {
         if (ps != null) {
             try {
                 ps.close();
@@ -30,15 +30,16 @@ public class SQLHelper {
             } catch (SQLException e1) {
             	logger.error("Failed to close PreparedStatement", e1);
             }
-            ps=null;
+            ps = null;
         }
+        return ps;
        
     }
   
     /**
      * @param stmt
      */
-    public static void closeStatement(Statement stmt) {
+    public static Statement closeStatement(Statement stmt) {
         if (stmt != null) {
             try {
             	stmt.close();
@@ -46,13 +47,14 @@ public class SQLHelper {
             } catch (SQLException e1) {
             	logger.error("Failed to close Statement", e1);
             }
-            stmt=null;
+            stmt = null;
         }
+        return stmt;
     }
     /**
      * @param rs
      */
-    public static void closeResultSet(ResultSet rs) {
+    public static ResultSet closeResultSet(ResultSet rs) {
         if (rs != null) {
             try {
                 rs.close();
@@ -60,16 +62,16 @@ public class SQLHelper {
             } catch (SQLException e1) {
             	logger.error("Failed to close ResultSet", e1);
             }
-            rs =null;
+            rs = null;
         }
         
-       
+        return rs;
     }
     
     /**
      * @param cstmt
      */
-    public static void closeCallableStatement(CallableStatement cstmt) {
+    public static CallableStatement closeCallableStatement(CallableStatement cstmt) {
         if (cstmt != null) {
             try {
             	cstmt.close();
@@ -77,14 +79,15 @@ public class SQLHelper {
             } catch (SQLException e1) {
             	logger.error("Failed to close CallableStatement", e1);
             }
-         	cstmt=null;
+         	cstmt = null;
         }
+        return cstmt;
     }  
         
     /**
      * @param con
      */
-    public static void closeConnection(Connection con){
+    public static Connection closeConnection(Connection con){
             try
             {
               if (con != null && !con.isClosed())
@@ -96,7 +99,7 @@ public class SQLHelper {
             }
             
             con = null;
-        }
-  
+         return con;
+    }
  }
 

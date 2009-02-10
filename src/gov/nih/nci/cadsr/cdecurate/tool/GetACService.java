@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.63 2009-01-29 22:27:39 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.64 2009-02-10 19:15:27 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -553,8 +553,8 @@ public class GetACService implements Serializable
         {
             logger.error("ERROR - GetACService getCSList for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
     }
 
@@ -617,8 +617,8 @@ public class GetACService implements Serializable
         {
           logger.error("ERROR - GetACService-getCSCSIListBean for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
     }
 
@@ -858,8 +858,8 @@ public class GetACService implements Serializable
         {
             logger.error("ERROR in GetACService-hasPrivilege for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeStatement(cstmt);
         }
         return sPrivilege;
     }
@@ -902,8 +902,8 @@ public class GetACService implements Serializable
         {
            logger.error("ERROR in GetACService-getDataListSQL for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeStatement(cstmt);
         }
         return vList;
     }
@@ -1036,8 +1036,8 @@ public class GetACService implements Serializable
         {
            logger.error("ERROR in GetACService-getDataListStoreProcedure for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
     }
 
@@ -1076,8 +1076,8 @@ public class GetACService implements Serializable
         {
            logger.error("ERROR in doComponentExist : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeStatement(cstmt);
         }
         return isExist;
     }
@@ -1119,8 +1119,8 @@ public class GetACService implements Serializable
         {
            logger.error("ERROR in isUniqueInContext : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeStatement(cstmt);
         }
         return sName;
     }
@@ -1212,8 +1212,8 @@ public class GetACService implements Serializable
         {
             logger.error("ERROR in GetACService- getACConcepts for exception : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
         return vList;
     }
@@ -1379,8 +1379,8 @@ public class GetACService implements Serializable
         {
            logger.error("ERROR - GetACService-getToolOptionData for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
         return vList;
     }
@@ -1439,8 +1439,8 @@ public class GetACService implements Serializable
   	 {
   		 logger.error("SQL Exception", e);
   	 }finally{
-     	SQLHelper.closeResultSet(rs);
-        SQLHelper.closePreparedStatement(stm);
+     	rs = SQLHelper.closeResultSet(rs);
+        stm = SQLHelper.closePreparedStatement(stm);
     }
   	 int ind = vocab.lastIndexOf(".");
   	 vocabInd = vocab.substring(0, ind);
@@ -1472,8 +1472,8 @@ public class GetACService implements Serializable
             {
             	logger.error(ex.toString());
             }finally{
-            	SQLHelper.closeResultSet(rs);
-                SQLHelper.closePreparedStatement(pstmt);
+            	rs = SQLHelper.closeResultSet(rs);
+                pstmt = SQLHelper.closePreparedStatement(pstmt);
             }
         }
         return flag;
@@ -1519,8 +1519,8 @@ public class GetACService implements Serializable
         {
             logger.error("ERROR in GetACService- getHashListFromAPI for exception : " + sAPI + " : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
         return hRes;
     }
@@ -1614,8 +1614,8 @@ public class GetACService implements Serializable
         {
             logger.error("ERROR in GetACService- getPersonsList for exception : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
         // store it in the session attributes
         HttpSession session = (HttpSession) m_classReq.getSession();
@@ -1664,8 +1664,8 @@ public class GetACService implements Serializable
     			defaultCount = rs.getInt(1);
     			DataManager.setAttribute(session, "defaultCount", defaultCount);
     		}
-    		SQLHelper.closeResultSet(rs);
-    		SQLHelper.closeStatement(stmt);
+    		rs = SQLHelper.closeResultSet(rs);
+    		stmt = SQLHelper.closeStatement(stmt);
     		//get DE count
     		String sqlDECount = "select count(*) from sbr.data_elements_view";
     		stmt =m_servlet.getConn().createStatement();
@@ -1678,8 +1678,8 @@ public class GetACService implements Serializable
     			else
     				DataManager.setAttribute(session, "UnqualifiedsearchDE", "Y");	
     		}
-    		SQLHelper.closeResultSet(rs);
-    		SQLHelper.closeStatement(stmt);
+    		rs = SQLHelper.closeResultSet(rs);
+    		stmt = SQLHelper.closeStatement(stmt);
     		//get DEC count
     		String sqlDECCount = "select count(*) from sbr.data_element_Concepts_view";
     		stmt =m_servlet.getConn().createStatement();
@@ -1693,8 +1693,8 @@ public class GetACService implements Serializable
        			 DataManager.setAttribute(session, "UnqualifiedsearchDEC", "Y");	
     		
     		}
-    		SQLHelper.closeResultSet(rs);
-    		SQLHelper.closeStatement(stmt);
+    		rs = SQLHelper.closeResultSet(rs);
+    		stmt = SQLHelper.closeStatement(stmt);
     		//get VD count
     		String sqlVDCount = "select count(*) from sbr.value_domains_view";
     		stmt =m_servlet.getConn().createStatement();
@@ -1707,8 +1707,8 @@ public class GetACService implements Serializable
           			else
           			 DataManager.setAttribute(session, "UnqualifiedsearchVD", "Y");
     		}
-    		SQLHelper.closeResultSet(rs);
-    		SQLHelper.closeStatement(stmt);
+    		rs = SQLHelper.closeResultSet(rs);
+    		stmt = SQLHelper.closeStatement(stmt);
     		
     		//get VM count
     		String sqlVMCount = "select count(*) from sbr.value_meanings_view";
@@ -1722,8 +1722,8 @@ public class GetACService implements Serializable
          			else
          			 DataManager.setAttribute(session, "UnqualifiedsearchVM", "Y");
     		}
-    		SQLHelper.closeResultSet(rs);
-    		SQLHelper.closeStatement(stmt);
+    		rs = SQLHelper.closeResultSet(rs);
+    		stmt = SQLHelper.closeStatement(stmt);
     		
     		//get CD count
     		String sqlCDCount = "select count(*) from sbr.conceptual_domains_view";
@@ -1737,8 +1737,8 @@ public class GetACService implements Serializable
          			else
          			 DataManager.setAttribute(session, "UnqualifiedsearchCD", "Y");
     		}
-    		SQLHelper.closeResultSet(rs);
-    		SQLHelper.closeStatement(stmt);
+    		rs = SQLHelper.closeResultSet(rs);
+    		stmt = SQLHelper.closeStatement(stmt);
     		
     		//get PV count
     		String sqlPVCount = "select count(*) from sbr.permissible_values_view";
@@ -1752,8 +1752,8 @@ public class GetACService implements Serializable
          			else
          			 DataManager.setAttribute(session, "UnqualifiedsearchPV", "Y");
     		}
-    		SQLHelper.closeResultSet(rs);
-    		SQLHelper.closeStatement(stmt);
+    		rs = SQLHelper.closeResultSet(rs);
+    		stmt = SQLHelper.closeStatement(stmt);
     		
     		//get OC count
     		String sqlOCCount = "select count(*) from sbrext.object_classes_view_ext";
@@ -1767,8 +1767,8 @@ public class GetACService implements Serializable
          			else
          			 DataManager.setAttribute(session, "UnqualifiedsearchOC", "Y");
     		}
-    		SQLHelper.closeResultSet(rs);
-    		SQLHelper.closeStatement(stmt);
+    		rs = SQLHelper.closeResultSet(rs);
+    		stmt = SQLHelper.closeStatement(stmt);
     		
     		//get Property count
     		String sqlPropertyCount = "select count(*) from sbrext.properties_view_ext";
@@ -1782,8 +1782,8 @@ public class GetACService implements Serializable
          			else
          			 DataManager.setAttribute(session, "UnqualifiedsearchProp", "Y");
     		}
-    		SQLHelper.closeResultSet(rs);
-    		SQLHelper.closeStatement(stmt);
+    		rs = SQLHelper.closeResultSet(rs);
+    		stmt = SQLHelper.closeStatement(stmt);
     		
     		//get Concept Class count
     		String sqlCCCount = "select count(*) from sbrext.concepts_view_ext";
@@ -1797,8 +1797,8 @@ public class GetACService implements Serializable
          			else
          			 DataManager.setAttribute(session, "UnqualifiedsearchCC", "Y");
     		}
-    		SQLHelper.closeResultSet(rs);
-    		SQLHelper.closeStatement(stmt);
+    		rs = SQLHelper.closeResultSet(rs);
+    		stmt = SQLHelper.closeStatement(stmt);
 
     		//get CSI count
     		String sqlCSICount = "select count(*) from sbr.cs_items_view";
@@ -1812,14 +1812,14 @@ public class GetACService implements Serializable
          			else
          			 DataManager.setAttribute(session, "UnqualifiedsearchCSI", "Y");
     		}
-    		SQLHelper.closeResultSet(rs);
-    		SQLHelper.closeStatement(stmt);
+    		rs = SQLHelper.closeResultSet(rs);
+    		stmt = SQLHelper.closeStatement(stmt);
     			
     	}catch(SQLException se){
     		logger.error("SQL Exception while retreiving counts",se);
     	}finally{
-    		SQLHelper.closeResultSet(rs);
-    		SQLHelper.closeStatement(stmt);
+    		rs = SQLHelper.closeResultSet(rs);
+    		stmt = SQLHelper.closeStatement(stmt);
     	}
     }
     public void getASLFilterListForView(HttpSession session){

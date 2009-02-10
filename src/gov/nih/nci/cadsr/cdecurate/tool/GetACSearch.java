@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.83 2009-02-09 22:59:18 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.84 2009-02-10 19:15:27 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1195,8 +1195,8 @@ public class GetACSearch implements Serializable
         {
             logger.error("ERROR - GetACSearch-QuestionSearch for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
     }
 
@@ -1500,8 +1500,8 @@ public class GetACSearch implements Serializable
         {
            DataManager.setAttribute(session, "desHashTable", desTable);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
         
     }
@@ -1733,8 +1733,8 @@ public class GetACSearch implements Serializable
         {
           logger.error("ERROR - GetACSearch-DECSearch for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
     }
 
@@ -1938,8 +1938,8 @@ public class GetACSearch implements Serializable
         {
           logger.error("ERROR - GetACSearch-doVDSearch for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
     }
 
@@ -2080,8 +2080,8 @@ public class GetACSearch implements Serializable
         {
            logger.error("ERROR - GetACSearch-CDSearch for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
         return vList;
     }
@@ -2150,8 +2150,8 @@ public class GetACSearch implements Serializable
         {
            logger.error("ERROR - GetACSearch-CSISearch for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
     }
 
@@ -3170,8 +3170,8 @@ public class GetACSearch implements Serializable
         {
             logger.error("ERROR - getDDEInfo : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
     }
 
@@ -3756,8 +3756,8 @@ public class GetACSearch implements Serializable
         {
            logger.error("ERROR - GetACSearch-do_caDSRSearch for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
     }
 
@@ -3882,8 +3882,8 @@ public class GetACSearch implements Serializable
         {
             logger.error("ERROR - GetACSearch-do_conceptSearch for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
         return vList;
     }
@@ -5192,8 +5192,8 @@ public class GetACSearch implements Serializable
         {
            logger.error("ERROR in GetACSearch-doCSCSI_ACSearch for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
         return vAC_CSI;
     }
@@ -9014,8 +9014,8 @@ public class GetACSearch implements Serializable
         {
            logger.error("ERROR - GetACSearch-QuestionValueSearch for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
     }
 
@@ -9333,8 +9333,8 @@ public class GetACSearch implements Serializable
         {
           logger.error("ERROR - GetACSearch-doAltNameSearch for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
         return vList;
     }
@@ -9424,8 +9424,8 @@ public class GetACSearch implements Serializable
         {
             logger.error("ERROR - GetACSearch-doRefDocSearch for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
         return vList;
     }
@@ -9545,8 +9545,8 @@ public class GetACSearch implements Serializable
         {
            logger.error("ERROR - GetACSearch-doProtoCRFSearch for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
         return qCount;
     }
@@ -9652,8 +9652,8 @@ public class GetACSearch implements Serializable
         {
             logger.error("ERROR - GetACSearch-searchACContact for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
         return vList;
     }
@@ -9715,8 +9715,8 @@ public class GetACSearch implements Serializable
         {
             logger.error("ERROR - GetACSearch-getContactComm for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }  
         return vList;
     }
@@ -9783,8 +9783,8 @@ public class GetACSearch implements Serializable
         {
             logger.error("ERROR - GetACSearch-getContactAddr for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closeCallableStatement(cstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
         return vList;
     }
@@ -9964,8 +9964,8 @@ public class GetACSearch implements Serializable
         {
           logger.error("ERROR - GetACSearch-do_caDSRSearch for other : " + e.toString(), e);
         }finally{
-        	SQLHelper.closeResultSet(rs);
-            SQLHelper.closePreparedStatement(pstmt);
+        	rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
         }
     }
     
