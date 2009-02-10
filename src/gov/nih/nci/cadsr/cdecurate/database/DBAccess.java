@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.46 2009-02-10 19:15:27 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/database/DBAccess.java,v 1.47 2009-02-10 19:54:00 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.database;
@@ -295,12 +295,11 @@ public class DBAccess
         
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-
+        Vector<CSIData> list = new Vector<CSIData>();
         try
         {
-            Vector<CSIData> list = new Vector<CSIData>();
-
-            // First retrieve the intersection records.
+            
+           // First retrieve the intersection records.
             Vector<ATTData> adata = getAlternatesCSI1(idseq_);
             if (adata.size() == 0)
             {
@@ -422,8 +421,7 @@ public class DBAccess
                 rs = SQLHelper.closeResultSet(rs);
                 pstmt.clearParameters();
              }//end of for loop
-            pstmt = SQLHelper.closePreparedStatement(pstmt);
-          return list;
+                    
         }
         catch (SQLException ex)
         {
@@ -436,6 +434,7 @@ public class DBAccess
         	rs = SQLHelper.closeResultSet(rs);
         	pstmt = SQLHelper.closePreparedStatement(pstmt);
         }
+        return list;
     }
 
     /**
