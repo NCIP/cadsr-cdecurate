@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.27 2009-02-10 16:03:26 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.28 2009-02-10 16:16:30 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -1337,12 +1337,12 @@ function hideShowDef(r0, r1, r2)
         var d1 = document.getElementById(r1);
         var d2 = document.getElementById(r2);
         if (d1.style.display == "none") {
-            d0.src = "images/plus_12.gif";
+            d0.src = "images/plus_8.gif";
             d1.style.display = "inline";
             d2.style.display = "none";
         }
         else {
-           d0.src = "images/minus_12.gif";
+           d0.src = "images/minus_8.gif";
            d1.style.display = "none";
            d2.style.display = "inline";
         }
@@ -1351,10 +1351,10 @@ function hideShowDef(r0, r1, r2)
         var d0 = document.getElementById(r0);
         var d1 = document.getElementById(r1);
         if (d1.style.display == "none") {
-            d0.src = "images/minus_12.gif";
+            d0.src = "images/minus_8.gif";
             d1.style.display = "inline";
         }else {
-           d0.src = "images/plus_12.gif";
+           d0.src = "images/plus_8.gif";
            d1.style.display = "none";
         }
  }
