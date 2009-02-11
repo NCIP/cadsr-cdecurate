@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.41 2009-02-09 22:17:40 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVServlet.java,v 1.42 2009-02-11 17:25:41 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -211,7 +211,9 @@ public class PVServlet implements Serializable
    {
      HttpSession session = (HttpSession)data.getRequest().getSession(); 
      VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
-     Vector<PV_Bean> vVDPV = vd.getVD_PV_List();  // (Vector<PV_Bean>)session.getAttribute("VDPVList");
+     Vector<PV_Bean> vVDPV = null;
+     if (vd != null) 
+    	 vVDPV = vd.getVD_PV_List();  // (Vector<PV_Bean>)session.getAttribute("VDPVList");
      if (vVDPV == null) vVDPV = new Vector<PV_Bean>();
      String[] vwTypes = data.getRequest().getParameterValues("PVViewTypes"); 
      if (vwTypes != null)
