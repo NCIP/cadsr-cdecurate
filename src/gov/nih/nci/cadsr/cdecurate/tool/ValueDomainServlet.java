@@ -2203,6 +2203,8 @@ public class ValueDomainServlet extends CurationServlet {
         || (butPress.equals("Search") && !actype.equals("DataElement")))
         {
            VD_Bean VDBean = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
+           if (VDBean == null)
+        	   VDBean = new VD_Bean();
            GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
            serAC.refreshData(m_classReq, m_classRes, null, null, VDBean, null, "Refresh", "");
            return "/SearchResultsPage.jsp";
