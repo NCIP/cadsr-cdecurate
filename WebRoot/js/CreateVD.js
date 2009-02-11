@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.5 2008-12-12 01:02:13 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.6 2009-02-11 17:31:06 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 var evsWindow = null;
@@ -261,7 +261,7 @@ function enableContButtons()
   
   function SubmitValidate(origin)
   {
- // alert("submitValidate origin: " + origin);
+    //alert("submitValidate origin: " + origin);
  	if (origin == "goBack")
  		Back();
     //check if the date is valid
@@ -386,7 +386,8 @@ function enableContButtons()
     document.createVDForm.pageAction.value  = "goBack";
     document.createVDForm.submit();
   }
-
+  
+ 
 function enableValueNum()
 {
    var sDataType = document.createVDForm.selDataType.options[document.createVDForm.selDataType.selectedIndex].text;   
@@ -540,5 +541,5 @@ function ShowEVSInfo(thisBlock)
           document.createVDForm.RepQualCCode.value = RepQCode;
         }
       }
-} 
-
+   
+}

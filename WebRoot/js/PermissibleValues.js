@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.8 2009-01-29 23:15:33 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.9 2009-02-11 17:26:19 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -1499,9 +1499,14 @@
       document.PVForm.submit();
     }
   }
-  function Back(){
+   function hourglass(){
+    document.body.style.cursor = "wait";
+   }
+   function Back()
+   {
     hourglass();
     document.PVForm.pageAction.value  = "goBack";
     document.PVForm.submit();
-  }
+   }
+  
   
