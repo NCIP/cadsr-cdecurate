@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.16 2009-02-04 18:37:58 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.17 2009-02-11 20:25:30 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -316,13 +316,11 @@
  }
 
  function setup(){
-   <%if (!isView){%>
     ObjClass.innerText = "<%=sOCCCodeDB%>";
     ObjClassID.innerText = "<%=sOCCCode%>";
     PropClass.innerText = "<%=sPCCCodeDB%>";
     PropClassID.innerText = "<%=sPCCCode%>"; 
-   <%}%> 
-  }
+ }
   
 </Script>
 	</head>
@@ -571,7 +569,7 @@
 										<tr align="left">
 											<td colspan="3" valign="top">
 											 
-											  <%if(!isView){%>
+											  
 												<select name="selObjectQualifier" size="2" style="width=98%" valign="top" onClick="ShowEVSInfo('ObjectQualifier')" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<%if (vOCQualifierNames.size()<1) {%>
 													<option value=""></option>
@@ -583,21 +581,15 @@
 													    </option>
 													  <%}%>
 													<%}%>
-												</select><%}else{%>
-												 <%if (vOCQualifierNames.size()<1){%>
-												   <input type="text" size="45" value="" readonly>
-												<%}else{ for (int i = 0; vOCQualifierNames.size()>i; i++){
-                                                          String   sQualName = (String)vOCQualifierNames.elementAt(i); %>
-												         <input type="text" size="45" value="<%=sQualName%>" readonly><%}}
-												         }%>
+												</select>
 											</td>
 											<td colspan="3" valign="top">
-											  <%if(!isView){%>	
+											  	
 												<select name="selObjectClass" style="width=98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<option value="<%=sObjClassPrimary%>">
 														<%=sObjClassPrimary%>
 													</option>
-												</select><%}else{%><input type="text" size="45" value="<%=sObjClassPrimary%>" readonly><%}%>
+												</select>
 											</td>
 										</tr>
 										<tr>
@@ -613,15 +605,15 @@
 										<tr>
 											<td colspan="3">
 												&nbsp;&nbsp;
-												<a href="">
-													<label id="ObjQualID" for="selObjectQualifier" title="" onclick="javascript:SearchBuildingBlocks('ObjectQualifier', 'true')"></label>
-												</a>
+												<%if (!isView){%><a href=""><%}%>
+													<label id="ObjQualID" for="selObjectQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('ObjectQualifier', 'true')<%}%>"></label>
+												<%if (!isView){%></a><%}%>
 											</td>
 											<td colspan="3">
 												&nbsp;&nbsp;
-												<a href="">
-													<label id="ObjClassID" for="selObjectClass" title="" onclick="javascript:SearchBuildingBlocks('ObjectClass', 'true')"></label>
-												</a>
+												<%if (!isView){%><a href=""><%}%>
+													<label id="ObjClassID" for="selObjectClass" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('ObjectClass', 'true')"<%}%>></label>
+												<%if (!isView){%></a><%}%>
 											</td>
 										</tr>
 										<tr height="6">
@@ -719,7 +711,6 @@
 										<tr align="left">
 											<td colspan="3" valign="top">
 												
-												<%if(!isView){%>
 												<select name="selPropertyQualifier" size="2" style="width=98%" valign="top" onClick="ShowEVSInfo('PropertyQualifier')" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<%if (vPropQualifierNames.size()<1) {%>
 													<option value=""></option>
@@ -732,21 +723,15 @@
 													      </option>
 													  <%}%>
 													<%}%>
-												</select><%}else{%>
-												  <%if (vPropQualifierNames.size()<1){ %>
-												       <input type="text" size="45" value="" readonly>
-																							  
-												  <%}else{for (int i = 0; vPropQualifierNames.size()>i; i++){ 
-                                                          String sQualName = (String)vPropQualifierNames.elementAt(i);%> 
-												          <input type="text" size="45" value="<%=sQualName%>" readonly><%}}}%>
+												</select>
 											</td>
 											<td colspan="3" valign="top">
-											   <%if(!isView){%>
+											  
 												<select name="selPropertyClass" style="width=98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<option value="<%=sPropClassPrimary%>">
 														<%=sPropClassPrimary%>
 													</option>
-												</select><%}else{%><input type="text" size="45" value="<%=sPropClassPrimary%>" readonly><%}%>
+												</select>
 											</td>
 										</tr>
 										<tr>
@@ -762,15 +747,15 @@
 										<tr>
 											<td colspan="3">
 												&nbsp;&nbsp;
-												<a href="">
-													<label id="PropQualID" for="selPropertyQualifier" title="" onclick="javascript:SearchBuildingBlocks('PropertyQualifier', 'true')"></label>
-												</a>
+												<%if (!isView){%><a href=""><%}%>
+													<label id="PropQualID" for="selPropertyQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('PropertyQualifier', 'true')"<%}%>></label>
+												<%if (!isView){%></a><%}%>
 											</td>
 											<td colspan="3">
 												&nbsp;&nbsp;
-												<a href="">
-													<label id="PropClassID" for="selPropertyClass" title="" onclick="javascript:SearchBuildingBlocks('PropertyClass', 'true')"></label>
-												</a>
+												<%if (!isView){%><a href=""><%}%>
+													<label id="PropClassID" for="selPropertyClass" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('PropertyClass', 'true')"<%}%>></label>
+												<%if (!isView){%></a><%}%>
 											</td>
 										</tr>
 										<tr height="6">
@@ -1626,10 +1611,8 @@ displayStatusMessage();
 changeCountLN();
 changeCountPN();
 loadCSCSI();
-<%if (!isView){%>
 ShowEVSInfo('ObjectQualifier');
 ShowEVSInfo('PropertyQualifier');
-<%}%>
 </script>
 		</form>
 	</body>
