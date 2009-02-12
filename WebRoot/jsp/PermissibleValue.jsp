@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.26 2009-02-09 22:59:54 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.27 2009-02-12 18:38:15 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -178,7 +178,7 @@
 		</SCRIPT>
 	</head>
 
-	<body <% if (!isView) { %> onload="onLoad('<%=elmFocus%>');" <% } %>>
+	<body  onload="onLoad('<%=elmFocus%>');">
 		<table width="100%" border="2" cellpadding="0" cellspacing="0">
 			<% if (!isView) { %>
 			<tr>
