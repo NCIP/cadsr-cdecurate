@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.17 2009-02-11 20:25:30 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.18 2009-02-12 17:49:07 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -606,7 +606,7 @@
 											<td colspan="3">
 												&nbsp;&nbsp;
 												<%if (!isView){%><a href=""><%}%>
-													<label id="ObjQualID" for="selObjectQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('ObjectQualifier', 'true')<%}%>"></label>
+													<label id="ObjQualID" for="selObjectQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('ObjectQualifier', 'true')"<%}%>></label>
 												<%if (!isView){%></a><%}%>
 											</td>
 											<td colspan="3">
