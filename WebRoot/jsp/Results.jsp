@@ -1926,7 +1926,7 @@ function ShowSelectedRowss(){
 									&nbsp;
 								</td>
 								<td style="height: 20" colspan=4 valign=top><div style="padding-left: 20px">
-									<select name="creator" size="1" style="width: 185" valign="top"
+									<select name="creator" size="1" style="width: 173" valign="top"
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 										<option value="allUsers"
 											<%if (vUsers == null || vUsers.size()==0 
@@ -2034,7 +2034,7 @@ function ShowSelectedRowss(){
 								
 								<td style="height: 35" colspan=4 valign=top>
 									<div style="padding-left: 20px">
-									<select name="modifier" size="1" style="width: 185"
+									<select name="modifier" size="1" style="width: 173"
 										valign="top"
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 										<option value="allUsers"
