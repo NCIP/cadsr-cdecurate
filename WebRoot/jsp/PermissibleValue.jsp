@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.27 2009-02-12 18:38:15 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.28 2009-02-12 18:41:13 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -22,7 +22,7 @@
       String sSearchAC = (String) session.getAttribute("creSearchAC");
       String vocab= (String)session.getAttribute("preferredVocab");
       if (vocab == null) vocab = "";
-      System.out.println("preferred vocab"+ vocab);
+      //System.out.println("preferred vocab"+ vocab);
       
       //for view only page
 	  String bodyPage = (String) request.getAttribute("IncludeViewPage");
