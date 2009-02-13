@@ -2770,7 +2770,7 @@ function ShowSelectedRowss(){
 		 String id3 = "definition" + j;
 		 String def = "";
 		 int defSize = definition.length();
-		 if (defSize >  100){
+		 if (defSize >  120){
 		      def = definition.substring(0,100);
 	          definition = definition.substring(100,defSize);
 	          %>
@@ -2794,10 +2794,7 @@ function ShowSelectedRowss(){
 			        <tr>
 			    <%} %>
 			    <td class="rsCell">&nbsp;</td><td class="rsCell">&nbsp;</td><td class="rsCell" colspan="<%=colspan%>"><p style="margin-left: 0.5in">
-			    <span onclick="changeImage('<%=id1%>','<%=id2%>');"
-							style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img <%if ((j%2) == 0){%>class="stripe"<%}else{%>class="white"<%}%> 
-								id="<%=id1%>" src="images/plus_8.gif" border="1"
-								style="margin: 0px 0px 0px 0px" onmouseover="style.border=('1px solid #4876FF');" onmouseout="setBorder(this, <%=j%>);"></span>Definition: <%=definition%></td><span id="<%=id2%>" style="display: none"></span>
+			    <span style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img src="images/blank_8.gif" style="margin: 0px 0px 0px 0px"></span>Definition: <%=definition%></td><span id="<%=id2%>" style="display: none"></span>
 			    </tr>
 		<%}%>
     <%}%>
