@@ -126,8 +126,9 @@ function menuShow(obj, evnt, highlight) {
 		left = left - rX + offsetX;
 	} else {
 		var scrollTop = document.documentElement.scrollTop > document.body.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop; 
+		var scrollLeft = document.documentElement.scrollLeft > document.body.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft; 
 		top = scrollTop + evnt.clientY - evnt.offsetY + offsetY;
-		left = document.body.parentElement.scrollLeft + evnt.clientX - evnt.offsetX + offsetX;
+		left = scrollLeft + evnt.clientX - evnt.offsetX + offsetX;
 	}
 	menu.style.top = top + "px";
 	menu.style.left = left + "px";
