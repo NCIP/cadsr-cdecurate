@@ -2794,7 +2794,7 @@ function ShowSelectedRowss(){
 			        <tr>
 			    <%} %>
 			    <td class="rsCell">&nbsp;</td><td class="rsCell">&nbsp;</td><td class="rsCell" colspan="<%=colspan%>"><p style="margin-left: 0.5in">
-			    <span style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img src="images/blank_8.gif" style="margin: 0px 0px 0px 0px"></span>Definition: <%=definition%></td><span id="<%=id2%>" style="display: none"></span>
+			    <span style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img src="images/blank_8.gif" style="margin: 0px 0px 0px 0px"></span> Definition: <%=definition%></td><span id="<%=id2%>" style="display: none"></span>
 			    </tr>
 		<%}%>
     <%}%>
