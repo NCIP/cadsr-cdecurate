@@ -44,6 +44,8 @@ public class ObjMenuTag extends MenuTag {
 									  + displayUnMonitor()
 									  + displayNewUsingExisting()
 									  + displayNewVersion()
+									  + displayShowAll()
+									  + displayHideAll()
 									  + displayAppend());
 				}
 				if ((selACType).equals("DataElementConcept")) {
@@ -55,6 +57,8 @@ public class ObjMenuTag extends MenuTag {
 									  + displayUnMonitor()
 									  + displayNewUsingExisting()
 									  + displayNewVersion()
+									  + displayShowAll()
+									  + displayHideAll()
 									  + displayAppend());
 				}
 				if ((selACType).equals("ValueDomain")) {
@@ -66,38 +70,55 @@ public class ObjMenuTag extends MenuTag {
 									  + displayUnMonitor()
 									  + displayNewUsingExisting()
 									  + displayNewVersion()
+									  + displayShowAll()
+									  + displayHideAll()
 									  + displayAppend());
 				}
 				if ((selACType).equals("ConceptualDomain")) {
 					objMenu.println(displayGetAssociatedDE()
 							          + displayGetAssociatedDEC()
-							          + displayGetAssociatedVD());
+							          + displayGetAssociatedVD()
+					                  + displayShowAll()
+					                  + displayHideAll());
 				}
 				if ((selACType).equals("PermissibleValue")) {
 					objMenu.println(displayGetAssociatedDE()
-							          + displayGetAssociatedVD());
+							          + displayGetAssociatedVD()
+					                  + displayShowAll()
+					                  + displayHideAll());
 				}
 				if ((selACType).equals("ClassSchemeItems")){
 					objMenu.println(displayGetAssociatedDE()
 							          + displayGetAssociatedDEC()
-							          + displayGetAssociatedVD());
+							          + displayGetAssociatedVD()
+							          + displayShowAll()
+							          + displayHideAll());
 				}          
 				if ((selACType).equals("ValueMeaning")) {
 					objMenu.println(generateTR("edit","edit","performUncheckedCkBoxAction('edit')","","","Edit")
 							          + displayView()
 							          + displayGetAssociatedDE()
-							          + displayGetAssociatedVD());
+							          + displayGetAssociatedVD()
+					                  + displayShowAll()
+					                  + displayHideAll());
 				}
 				if ((selACType).equals("ConceptClass")) {
 					objMenu.println(displayGetAssociatedDE()
 							          + displayGetAssociatedDEC()
-							          + displayGetAssociatedVD());
+							          + displayGetAssociatedVD()
+					                  + displayShowAll()
+					                  + displayHideAll());
 			    }
 				if ((selACType).equals("ObjectClass")){
-					objMenu.println(displayGetAssociatedDEC());
+					objMenu.println(displayGetAssociatedDEC()
+							         + displayShowAll()
+							         + displayHideAll());
+					
 				}
 				if ((selACType).equals("Property")) {
-					objMenu.println(displayGetAssociatedDEC());
+					objMenu.println(displayGetAssociatedDEC()
+							          + displayShowAll()
+							          + displayHideAll());
 				}
 				
 				objMenu.println(generateTR("","","","16_show_rows","ShowSelectedRowss()","Show Selected Rows"));
@@ -189,6 +210,14 @@ public class ObjMenuTag extends MenuTag {
 	}
 	public String displayNewVersion(){
 		String tag = generateTR("newVersion","16_new_version","createNew('newVersion')","","","New Version");
+		return tag;	
+	}
+	public String displayShowAll(){
+		String tag = generateTR("","","","plus_12","hideShowAllDef(true)","Show All");
+		return tag;	
+	}
+	public String displayHideAll(){
+		String tag = generateTR("","","","minus_12","hideShowAllDef(false)","Hide All");
 		return tag;	
 	}
 	public String displayAppend(){
