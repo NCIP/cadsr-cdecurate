@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.28 2009-02-10 16:16:30 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.29 2009-02-17 20:52:34 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -1345,6 +1345,45 @@ function hideShowDef(r0, r1, r2)
            d0.src = "images/minus_8.gif";
            d1.style.display = "none";
            d2.style.display = "inline";
+        }
+    }
+    
+    
+  /* Hide/Show All
+    */
+    function hideShowDef2(r0, r1, r2, flag)
+    {
+        var d0 = document.getElementById(r0);
+        var d1 = document.getElementById(r1);
+        var d2 = document.getElementById(r2);
+        if (d0 === null || d1 === null || d2 === null) {
+            return;
+        }
+        if (flag === true) {
+            d0.src = "images/minus_8.gif";
+            d1.style.display = "none";
+            d2.style.display = "inline";
+        }
+        else {
+            d0.src = "images/plus_8.gif";
+            d1.style.display = "inline";
+            d2.style.display = "none";
+        }
+    }
+
+    var preImg = "def";
+    var preDef1 = "ellipsis";
+    var preDef2 = "definition";
+    function hideShowAllDef(flag)
+    {
+        var cnt = 0;
+        while (true) {
+            var spn = document.getElementById(preImg + cnt);
+            if (spn == null) {
+                break;
+            }
+            hideShowDef2(preImg + cnt, preDef1 + cnt, preDef2 + cnt, flag);
+            ++cnt;
         }
     }
  function changeImage(r0, r1){

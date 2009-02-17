@@ -2712,6 +2712,7 @@ function ShowSelectedRowss(){
 				<%
     String strResult = "";
     String definition = "";
+    int r = 0;
     if (results != null)
 	  {
       int rsize = results.size();
@@ -2769,12 +2770,14 @@ function ShowSelectedRowss(){
 	</tr>
 	<%if (defExists){ 
 		 int colspan = k-1;
-		 String id1 = "def" + j;
-		 String id2 = "ellipsis" + j;
-		 String id3 = "definition" + j;
+		 
 		 String def = "";
 		 int defSize = definition.length();
 		 if (defSize >  120){
+		      String id1 = "def" + r;
+		      String id2 = "ellipsis" + r;
+		      String id3 = "definition" + r;
+		      r++;
 		      def = definition.substring(0,100);
 	          definition = definition.substring(100,defSize);
 	          %>
@@ -2798,8 +2801,8 @@ function ShowSelectedRowss(){
 			        <tr>
 			    <%} %>
 			    <td class="rsCell">&nbsp;</td><td class="rsCell">&nbsp;</td><td class="rsCell" colspan="<%=colspan%>"><p style="margin-left: 0.5in">
-			    <span style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img src="images/blank_8.gif" style="margin: 0px 0px 0px 0px"></span> Definition: <%=definition%></td><span id="<%=id2%>" style="display: none"></span>
-			    </tr>
+			    <span style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img src="images/blank_8.gif" style="margin: 0px 0px 0px 0px"></span> Definition: <%=definition%></td>
+			     </tr>
 		<%}%>
     <%}%>
 			<%
