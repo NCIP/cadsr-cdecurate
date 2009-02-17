@@ -2711,6 +2711,7 @@ function ShowSelectedRowss(){
 				</tr>
 				<%
     String strResult = "";
+    String definition = "";
     if (results != null)
 	  {
       int rsize = results.size();
@@ -2743,12 +2744,15 @@ function ShowSelectedRowss(){
 						Incomplete
 					</td>
 					<%        }
-       } else {  %>
-					<td class="rsCell">
+         } else { 
+             if ((defExists)&&(defIndex == 0)){
+                definition = strResult;
+             }else{%>
+	    			<td class="rsCell">
 						<%=strResult%>
 					</td>
-					<%     }
-		 String definition = "";
+					<%  }   }
+		
 		 // add other attributes
 		 for (int m = 1; m < k; m++)
 		 {
