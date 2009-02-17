@@ -213,11 +213,11 @@ public class ObjMenuTag extends MenuTag {
 		return tag;	
 	}
 	public String displayShowAll(){
-		String tag = generateTR("","","","plus_12","hideShowAllDef(true)","Show All");
+		String tag = generateTR("","","","plus_12","hideShowAllDef(true)","Show All Definitions");
 		return tag;	
 	}
 	public String displayHideAll(){
-		String tag = generateTR("","","","minus_12","hideShowAllDef(false)","Hide All");
+		String tag = generateTR("","","","minus_12","hideShowAllDef(false)","Hide All Definitions");
 		return tag;	
 	}
 	public String displayAppend(){
