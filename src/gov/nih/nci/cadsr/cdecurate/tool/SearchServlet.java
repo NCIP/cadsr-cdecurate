@@ -138,25 +138,7 @@ public class SearchServlet extends CurationServlet {
                 getAC.getACList(m_classReq, m_classRes, "", true, "ALL");
                 doOpenSearchPage();
                 getCompAttrList("DataElement", "searchForCreate");
-                   
-                
-                // get EVS info
-                try
-                {
-                    EVS_UserBean eUser = new EVS_UserBean();
-                    eUser.getEVSInfoFromDSR(m_classReq, m_classRes, this);
-                    EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
-                    evs.getMetaSources();
-                    session.setAttribute("preferredVocab", eUser.getPrefVocab());
-                    // m_EVS_CONNECT = euBean.getEVSConURL();
-                    // getVocabHandles(m_classReq, m_classRes);
-                    // DoHomepageThread thread = new DoHomepageThread(m_classReq, m_classRes, this);
-                    // thread.start();
-                }
-                catch (Exception ee)
-                {
-                    logger.error("Servlet-doHomePage-evsthread : " + ee.toString(), ee);
-                }
+               
             }
             else
             {

@@ -299,6 +299,7 @@ public class CurationServlet
           	sessionData.UsrBean = userbean;
             GetACService getAC = new GetACService(m_classReq, m_classRes, this);
             getAC.getWriteContextList();
+            getEVSInfo();
     	  }
 	      catch(DBException e){
 	    	 logger.error("Unable to get User FullName" + e);
@@ -419,7 +420,7 @@ public class CurationServlet
                     	 String cancelLogin = (String)m_classReq.getParameter("cancelLogin");
                     	 if (cancelLogin.equals("No")){
                            login(m_classReq,m_classRes,session);
-                    	 }  
+                         }  
                     	 String directLogin = (String)session.getAttribute("directLogin");
                     	 if ((directLogin != null) && (directLogin).equals("yes")){
                     		RequestDispatcher rd = this.m_servletContext.getRequestDispatcher("/");
@@ -4238,5 +4239,25 @@ public class CurationServlet
 		m_classReq.setAttribute("errMsg", errMsg);
 		ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
 	  
+  }
+  private void getEVSInfo(){
+	  // get EVS info
+      try
+      {
+          HttpSession session = m_classReq.getSession();
+    	  EVS_UserBean eUser = new EVS_UserBean();
+          eUser.getEVSInfoFromDSR(m_classReq, m_classRes, this);
+          EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
+          evs.getMetaSources();
+          session.setAttribute("preferredVocab", eUser.getPrefVocab());
+          // m_EVS_CONNECT = euBean.getEVSConURL();
+          // getVocabHandles(m_classReq, m_classRes);
+          // DoHomepageThread thread = new DoHomepageThread(m_classReq, m_classRes, this);
+          // thread.start();
+      }
+      catch (Exception ee)
+      {
+          logger.error("Servlet-Login-evsthread : " + ee.toString(), ee);
+      }
   }
 } // end of class
