@@ -142,17 +142,17 @@ public class ObjMenuTag extends MenuTag {
 		if (imageSingle != null && !(imageSingle == "" ))
 		  image_single = "<img src=\""+ request.getContextPath() +"/images/"+imageSingle+".gif\" border=\"0\">";
 		else
-			image_single = "---";
+			image_single = "&middot;";
 		if (imageMultiple != null && !(imageMultiple == "" ))
 			image_multiple = "<img src=\""+ request.getContextPath() +"/images/"+imageMultiple+".gif\" border=\"0\">";
 		else
-			image_multiple = "---";
-		if (image_single == "---"){
+			image_multiple = "&middot;";
+		if (image_single == "&middot;"){
 			tdTag1 = "<td class=\"cell\" align = \"center\" style = \"cursor:default\">"+image_single+"</td>";
 		}else{
 			tdTag1 = "<td class=\"cell\" align = \"center\" onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\" onclick=\"javascript:" + jsMethodSingle + ";\">"+image_single+"</td>";
 		}
-        if (image_multiple == "---"){
+        if (image_multiple == "&middot;"){
         	tdTag2 = "<td class=\"cell\" align = \"center\" style = \"cursor:default\">"+image_multiple+"</td>" ;
 		}else{
 			tdTag2 = "<td class=\"cell\" align = \"center\" onmouseover=\"menuItemFocus(this);\" onmouseout=\"menuItemNormal(this);\" onclick=\"javascript:" + jsMethodMultiple + ";\">"+image_multiple+"</td>";
