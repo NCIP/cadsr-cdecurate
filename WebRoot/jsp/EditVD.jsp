@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.21 2009-02-10 20:57:56 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.22 2009-02-18 15:28:17 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -2182,7 +2182,7 @@ function setup()
 createObject("document.createVDForm");
 displayStatusMessage();
 loadCSCSI();
-//ShowEVSInfo('RepQualifier');
+ShowEVSInfo('RepQualifier');
 //changeDataType();
 </script>
 		</form>
