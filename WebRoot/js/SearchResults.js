@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.29 2009-02-17 20:52:34 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.30 2009-02-18 19:13:42 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -249,7 +249,6 @@
 		{
       //handle selected pv for cd change 
       editLongName = editLongName + " - " + editUsedby;
-    //  var isCDVDValid = opener.doCDNameChangeAction(editLongName);
       var isCDVDValid = true;
       if (isCDVDValid == true)
       {
@@ -261,7 +260,7 @@
 		else if (opener.document.newDECForm != null)
 		{
 			opener.document.newDECForm.selConceptualDomain[0].value = editID;
-      editLongName = editLongName + " - " + editUsedby;
+            editLongName = editLongName + " - " + editUsedby;
 			opener.document.newDECForm.selConceptualDomain[0].text = editLongName;
 			opener.document.newDECForm.selConceptualDomainText.value = editLongName;            
 		}
@@ -679,23 +678,9 @@
 			   detailWindow.close();
 		   
 		   //open browser in dev server if localhost or protocol, use the server from the hgeost name
-//		   serverName = serverName.toLowerCase();
-       var cdeServer = serverName;   //defaults to curation tool server
-/*       if (serverName == "localhost")
-          cdeServer = "cdebrowser-qa.nci.nih.gov";
-       else if (serverName == "protocol.scenpro.net")
-          cdeServer = "cdebrowser-dev.nci.nih.gov";
-		   else if (serverName == "ncicb-dev.nci.nih.gov" || serverName == "cdecurate-dev.nci.nih.gov")
-          cdeServer = "cdebrowser-dev.nci.nih.gov";
-       else if (serverName == "ncicb-qa.nci.nih.gov" || serverName == "cdecurate-qa.nci.nih.gov")
-          cdeServer = "cdebrowser-qa.nci.nih.gov";
-       else if (serverName == "ncicb-stage.nci.nih.gov" || serverName == "cdecurate-stage.nci.nih.gov")
-          cdeServer = "cdebrowser-stage.nci.nih.gov";
-       else if (serverName == "ncicb.nci.nih.gov" || serverName == "cdecurate.nci.nih.gov")
-          cdeServer = "cdebrowser.nci.nih.gov";*/
-          
-		   //open cde browser	
-			 detailWindow = window.open(cdeServer + "search?dataElementDetails=9&p_de_idseq=" + editID + "&PageId=DataElementsGroup&queryDE=yes&FirstTimer=0", "detailComponent", "width=850,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
+           var cdeServer = serverName;   //defaults to curation tool server
+     	   //open cde browser	
+		   detailWindow = window.open(cdeServer + "search?dataElementDetails=9&p_de_idseq=" + editID + "&PageId=DataElementsGroup&queryDE=yes&FirstTimer=0", "detailComponent", "width=850,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
 	   }
 	   else
 		   alert("Unable to determine the server name of the browser.");	
@@ -911,159 +896,9 @@ function checkClickJS(cb,selAC,rowsChecked)  {
 			     }else{
 			        StoreRow("false", rowNo);
 			     } 
-			     //enableDisableMenuItemsJS(selAC, checkCnt);
-   
+			        
 }
-  //This function enables or disables the menu items depending on the num of items checked          
-function enableDisableMenuItemsJS(sSelAC, checkCount){
-           
-           if (checkCount > 1)  {
-                
-                   //document.searchResultsForm.numOfRowsSelected.value = ">1";
-                   if ( (sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain") ){
-                      var doc = document.getElementById("uploadDoc");
-                      var newUE = document.getElementById("newUE");
-                      var newVersion = document.getElementById("newVersion");
-                      disable(doc);
-                      disable(newUE); 
-                      disable(newVersion); 
-                   }
-                   if ( (sSelAC == "Value Domain")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Meaning")||(sSelAC == "Values/Meanings")
-                         ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass") ){
-                      var aDe = document.getElementById("associatedDE");
-                      var menuADe = document.getElementById("menuAssociatedDE");
-                      disable(aDe);
-                      disable(menuADe); 
-                   }
-                  if ( (sSelAC == "Data Element")||(sSelAC == "ObjectClass")||(sSelAC == "Property")
-                         ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass")){
-                      var aDec = document.getElementById("associatedDEC");
-                      var menuADec = document.getElementById("menuAssociatedDEC");
-                      disable(aDec);
-                      disable(menuADec);
-                   }
-                   if( (sSelAC == "Data Element") || (sSelAC == "ObjectClass")||(sSelAC == "Property")
-                         ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass")){
-                       var aVd = document.getElementById("associatedVD"); 
-                       var menuAVd = document.getElementById("menuAssociatedVD");
-                       disable(aVd);
-                       disable(menuAVd);
-                   }
-                   if (sSelAC == "Data Element"){
-                       var details = document.getElementById("details");
-                       var sMenudetails = document.getElementById("searchMenuDetails");
-                       disable(details);
-                       disable(sMenudetails);
-                   }
-                    if ((sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain")||(sSelAC == "Value Meaning")){
-                       var view = document.getElementById("view");
-                       disable(view);
-                   }
-                 }else{
-                  //document.searchResultsForm.numOfRowsSelected.value = "1";
-                 if ( (sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain") ){
-                      var doc = document.getElementById("uploadDoc");
-                      var newUE = document.getElementById("newUE");
-                      var newVersion = document.getElementById("newVersion");
-                      enableUploadDoc(doc);
-                      enableNewUsingExisting(newUE);
-                      enableNewVersion(newVersion);
-                   }
-                  if ( (sSelAC == "Value Domain")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Meaning")||(sSelAC == "Values/Meanings")
-                         ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass") ){
-                      var aDe = document.getElementById("associatedDE");
-                      var menuADe = document.getElementById("menuAssociatedDE");
-                      enableGetAssDE(aDe);
-                      enableGetAssDE(menuADe);
-                    }
-                   if ( (sSelAC == "Data Element")||(sSelAC == "ObjectClass")||(sSelAC == "Property")
-                         ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass")){
-                      var aDec = document.getElementById("associatedDEC");
-                      var menuADec = document.getElementById("menuAssociatedDEC");
-                      enableGetAssDEC(aDec);
-                      enableGetAssDEC(menuADec);
-                   }
-                   if( (sSelAC == "Data Element") || (sSelAC == "ObjectClass")||(sSelAC == "Property")
-                         ||(sSelAC == "Class Scheme Items")||(sSelAC == "Conceptual Domain")||(sSelAC == "ConceptClass")){
-                       var aVd = document.getElementById("associatedVD");
-                       var menuAVd = document.getElementById("menuAssociatedVD"); 
-                       enableGetAssVD(aVd);
-                       enableGetAssVD(menuAVd);
-                   }
-                   if (sSelAC == "Data Element"){
-                       var details = document.getElementById("details");
-                       var sMenudetails = document.getElementById("searchMenuDetails");
-                       enableViewDetails(details);
-                       enableViewDetails(sMenudetails);
-                   }
-                   if ((sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain")||(sSelAC == "Value Meaning")){
-                       var view = document.getElementById("view");
-                       enableView(view);
-                   }
-                 }
-                 if( (checkCount == 1) || (checkCount == 0)){
-                   if ( (sSelAC == "Data Element")||(sSelAC == "Data Element Concept")||(sSelAC == "Value Domain") ){
-                       var blockEdit = document.getElementById("blockEdit");
-                       var sMenublockEdit = document.getElementById("searchMenuBlockEdit");
-                       var eMenublockEdit = document.getElementById("editMenuBlockEdit");
-                       enableBlockEdit(blockEdit);
-                       enableBlockEdit(sMenublockEdit);
-                       enableBlockEdit(eMenublockEdit);
-                    } 
-                }
-                
-         
-}      
- //This function disables the menu item
- function disable(element){
-   element.style.color = menuDisabledColor;
-   element.onclick = "";
- }
- //This function enables the menu item 'Block Edit'
- function enableBlockEdit(element){
-   element.style.color = menuTextColor;
-   element.onclick = function () {performAction('blockEdit')};
-  }
-  //This function enables the menu item 'View'
- function enableView(element){
-   element.style.color = menuTextColor;
-   element.onclick = function () {};
-  }
- //This function enables the menu item 'View Details'
- function enableViewDetails(element){
-   element.style.color = menuTextColor;
-   element.onclick = function () {GetDetails()};
-  }
-  //This function enables the menu item 'Get Associated DE'
-  function enableGetAssDE(element){
-   element.style.color = menuTextColor;
-   element.onclick = function () {getAssocDEs()};
-  }
-  //This function enables the menu item 'Get Associated DEC'
-  function enableGetAssDEC(element){
-   element.style.color = menuTextColor;
-   element.onclick = function () {getAssocDECs()};
-  }
-  //This function enables the menu item 'Get Associated VD'
-  function enableGetAssVD(element){
-   element.style.color = menuTextColor;
-   element.onclick = function () {getAssocVDs()};
-  }
-  //This function enables the menu item 'Upload Document'
-  function enableUploadDoc(element){
-   element.style.color = menuTextColor;
-   element.onclick = function () {performAction('uploadDoc')};
-  }
-  //This function enables the menu item 'New Using Existing'
-  function enableNewUsingExisting(element){
-   element.style.color = menuTextColor;
-   element.onclick = function () {createNew('newUsingExisting')};
-  }
-  //This function enables the menu item 'New Version'
-  function enableNewVersion(element){
-   element.style.color = menuTextColor;
-   element.onclick = function () {createNew('newVersion')};
-  }
+  
    
 /* This function enables/disables the "Edit Selection" and
   "Show Selected Rows Only" buttons based on checked items in the list.
@@ -1201,19 +1036,7 @@ function enableDisableMenuItemsJS(sSelAC, checkCount){
 							   document.searchResultsForm.editSelectedBtn.value="Block Edit";
 							   document.searchResultsForm.editSelectedBtn.disabled=false;
 							}
-							//if(sSelAC == "Value Meaning")
-				   			//{
-			 		   
-				           	//	alert("Please check only one box at a time");
-					   	   	//	UnCheckAllCheckBoxes();
-				           	//	formObj= eval("document.searchResultsForm."+currentField.name);
-				           	//	formObj.checked=true;
-                   			 //  	--numRowsSelected;
-                   			//   	document.searchResultsForm.associateACBtn.disabled=false;
-                   			//   	document.searchResultsForm.editSelectedBtn.disabled=false;
-                   			   
-                   		  // 	}	
-						    else 
+							else 
 						     {
 						  	   document.searchResultsForm.editSelectedBtn.disabled=true;
 							 }
@@ -1263,11 +1086,7 @@ function enableDisableMenuItemsJS(sSelAC, checkCount){
 				   }
 				   else  // editAction == "searchForCreate", document.searchParmsForm.listSearchFor.value != "PermissibleValue"
 				   {
-				   /* formObj= eval("document.searchResultsForm."+currentField.name);
-                   			formObj.checked=false;
-                  			 --numRowsSelected;
-					   alert("Please check only one box at a time");*/
-					   //allow to check more than one but disable the button if more selected
+				   	   //allow to check more than one but disable the button if more selected
 					   if (document.searchResultsForm.editSelectedBtn != null)
 						   document.searchResultsForm.editSelectedBtn.disabled=true;
 					   if (checked)
@@ -1386,16 +1205,5 @@ function hideShowDef(r0, r1, r2)
             ++cnt;
         }
     }
- function changeImage(r0, r1){
-        var d0 = document.getElementById(r0);
-        var d1 = document.getElementById(r1);
-        if (d1.style.display == "none") {
-            d0.src = "images/minus_8.gif";
-            d1.style.display = "inline";
-        }else {
-           d0.src = "images/plus_8.gif";
-           d1.style.display = "none";
-        }
- }
-   
+ 
   
