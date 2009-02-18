@@ -930,10 +930,6 @@ function createNew(type){
     createNewJS('<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', type);
   }
 }
-function enableDisableMenuItems(){
-  var numRowsChecked = <%=rowsChecked%>;
-  enableDisableMenuItemsJS('<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>',numRowsChecked);
-}
 
 function viewAC(){
  	   var acIdseq = document.searchResultsForm.hiddenSearch[document.searchResultsForm.selectedRowId.value].value;

@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchParameters.js,v 1.3 2008-12-01 21:28:27 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchParameters.js,v 1.4 2009-02-18 19:13:42 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
     function hourglass()
@@ -11,17 +11,7 @@
     // submits the page when clicked on updatedisplaybutton to get the data for selected attributes.
     function displayAttributes(isSubmitOk)
     {
-     /* var isSubmitOk = true;
-      bSParmSubmited = 0;
-      if (opener && opener.document != null && opener.document.SearchActionForm != null)
-      {
-        if (opener.document.SearchActionForm.isValidSearch.value == "false")
-        {
-          alert("Please make sure that initial search has been done before the update attribute action");
-          isSubmitOk = false;
-        } 
-      } */
-      if (isSubmitOk == "true")
+     if (isSubmitOk == "true")
       { 
          hourglass();
          window.status = "Displaying selected attributes, it may take a minute, please wait....."
@@ -32,8 +22,7 @@
       }
       else
         alert("Search results must be present before updating the attributes"); 
-        //alert("Please make sure that search is done before the update attribute action");
-    }
+     }
 
    //fuction to refresh the page for simple/advanced filter
    function refreshFilter(filterAction)
@@ -162,23 +151,14 @@
          }
          else if (sSelComp == "ParentConcept")
          {
-          // var selIdx = opener.document.createVDForm.selContext.selectedIndex;
-          // var conte_idseq = opener.document.createVDForm.selContext[selIdx].value;
-          // if(conte_idseq == null) conte_idseq = "";
-          // document.searchParmsForm.sConteIdseq.value = conte_idseq;
            document.searchParmsForm.listSearchFor[0].value = "ParentConcept";
            document.searchParmsForm.listSearchFor[0].text = "Parent Concept";
          }
          else if (sSelComp == "ParentConceptVM")
          {
-          // var selIdx = opener.document.createVDForm.selContext.selectedIndex;
-          // var conte_idseq = opener.document.createVDForm.selContext[selIdx].value;
-          // if(conte_idseq == null) conte_idseq = "";
-          // document.searchParmsForm.sConteIdseq.value = conte_idseq;
            document.searchParmsForm.listSearchFor[0].value = "ParentConceptVM";
            document.searchParmsForm.listSearchFor[0].text = "Value Meaning";
-          // document.searchParmsForm.listSearchFor[0].selected = true;
-          //make the search as parent concept when viewing the parent for non enum vd
+           //make the search as parent concept when viewing the parent for non enum vd
          }
          else if (sSelComp == "ObjectQualifier")
          {
@@ -244,16 +224,12 @@
          {
            document.searchParmsForm.listSearchFor[0].value = "ValueMeaning";
            document.searchParmsForm.listSearchFor[0].text = "Value Meaning";
-           // document.searchParmsForm.openToTree.value = opener.document.createVDForm.openToTree.value;
-          // opener.document.createVDForm.openToTree.value = ""; // reset this
-         }
+          }
           else if (sSelComp == "EVSValueMeaning")
          {
            document.searchParmsForm.listSearchFor[0].value = "EVSValueMeaning";
            document.searchParmsForm.listSearchFor[0].text = "Value Meaning";
-          //  document.searchParmsForm.openToTree.value = opener.document.createVDForm.openToTree.value;
-          // opener.document.createVDForm.openToTree.value = ""; // reset this
-         }
+          }
           else if (sSelComp == "VMConcept")
          {
            document.searchParmsForm.listSearchFor[0].value = "VMConcept";
@@ -267,27 +243,6 @@
       }
     }
   }
-
-//adds options for attributes list and keeps it selected if it was selected before
-/*function selectAttr(idx, vAttr)
-{
-	if (vAttr == "Name" && document.searchParmsForm.listAttrFilter != null) 
-      	document.searchParmsForm.listAttrFilter[idx]= new Option("Short Name",vAttr);
-	else if (vAttr == "Alias Name" && document.searchParmsForm.listAttrFilter != null) 
-      	document.searchParmsForm.listAttrFilter[idx]= new Option("Name/Alias Name",vAttr);
-	else if (document.searchParmsForm.listAttrFilter != null) 
-      	document.searchParmsForm.listAttrFilter[idx]= new Option(vAttr,vAttr);
-
-	//var selIdx = document.searchParmsForm.listSearchIn.selectedIndex;
-  if (document.searchParmsForm.listAttrFilter != null) 
-  {
-    for(k=0; k<document.searchParmsForm.hidListAttr.length; k++)
-    {
-      if (document.searchParmsForm.hidListAttr[k].value == vAttr)
-        searchParmsForm.listAttrFilter[idx].selected = true;
-    }
-  }
-}	*/
 
   //submits the page if selected searchIn CRFName to create two input fields.
   function doSearchInChange()
@@ -573,8 +528,7 @@
     if (document.searchParmsForm.tVersion != null)
       document.searchParmsForm.tVersion.value = "";
   }
-  
-  //do conceptual domain searh for dec or vd search
+    //do conceptual domain searh for dec or vd search
   function doCDSearch()
   {
     document.SearchActionForm.searchComp.value = "ConceptualDomain";
@@ -584,8 +538,7 @@
       anotherSearchWindow.close()
     anotherSearchWindow = window.open("jsp/OpenSearchWindow2.jsp", "AnothersearchWindow", "width=975,height=570,top=0,left=0,resizable=yes,scrollbars=yes")
     anotherSearchWindow.alert("inside search window");
-    //anotherSearchWindow.document.searchParmsForm.listSearchFor.value = "ConceptualDomain";
-    //anotherSearchWindow.document.searchParmsForm.listSearchFor.text = "Conceptual Domain";    
+   
   }
   
   // check to see if input is whitespace only or empty
