@@ -2728,10 +2728,10 @@ function ShowSelectedRowss(){
 				<tr <%if (defExists){%>style="font-weight: bold"<%}%>>
 		
 			<%} %>	
-				   <td class="rsCell" align="center">
+				   <td class="rsCell" align="center" style="width: 1px">
 						<input type="checkbox" onClick="javascript:checkClick(this);" name="<%=ckName%>" <%if((vCheckList != null && vCheckList.contains(ckName))){%> checked <%}%> onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 					</td>
-					<td  class="rsCell" align="center">
+					<td  class="rsCell" align="center" style="width: 1px">
 					<img <%if ((j%2) == 0){%>class="stripe"<%}else{%>class="white"<%}%> onclick="menuShow(this, event, 'yes');" onmouseover="style.border=('1px solid #4876FF');" onmouseout="setBorder(this, <%=j%>)" menuID="objMenu" rowId="<%=j%>" src="images/actionicon.gif"  border="1"/></td>
 					<%     if (sSelAC.equals("Questions") && !sMAction.equals("searchForCreate"))
        {
