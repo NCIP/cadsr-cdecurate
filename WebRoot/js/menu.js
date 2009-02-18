@@ -137,9 +137,7 @@ function menuItemFocus(mitem) {
 	var miEnable = mitem.getAttribute("menuEnable");
 	if (miEnable == null || miEnable != "false") {
 		mitem.style.backgroundColor = menuFocusColor;
-		//mitem.style.color = menuTextColor;
 	} else {
-		//mitem.style.color = menuDisabledColor;
 	}
 	mitem.style.cursor = "default";
 }
