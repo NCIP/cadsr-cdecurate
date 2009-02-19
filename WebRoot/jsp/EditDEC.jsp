@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.18 2009-02-12 17:49:07 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.19 2009-02-19 21:55:08 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -47,7 +47,15 @@
     String sOriginAction = (String)session.getAttribute("originAction");
     if (sOriginAction == null) sOriginAction="";
  
-    DEC_Bean m_DEC = (DEC_Bean)session.getAttribute("m_DEC");
+    DEC_Bean m_DEC = new DEC_Bean();
+    String decID = "";
+    if (isView){
+	   decID = (String)request.getAttribute("viewDECId");
+	   String viewDEC = "viewDEC" + decID;
+	   m_DEC = (DEC_Bean) session.getAttribute(viewDEC);
+	}else{
+       m_DEC = (DEC_Bean)session.getAttribute("m_DEC");
+    }  
     if (m_DEC == null) m_DEC = new DEC_Bean();
     
      String sDECIDSEQ = m_DEC.getDEC_DEC_IDSEQ();
