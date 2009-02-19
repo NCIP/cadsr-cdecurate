@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.23 2009-01-27 20:33:08 veerlah Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.24 2009-02-19 18:59:19 veerlah Exp $
    $Name: not supported by cvs2svn $
 
    Author: Anupama Chickerur
@@ -463,7 +463,7 @@ SELECT 'CURATION' AS TOOL_NAME, 'REFDOC_FILEURL' AS PROPERTY, 'https://cdecurate
 )T
 ON(S.TOOL_NAME = T.TOOL_NAME AND S.PROPERTY = T.PROPERTY)
 WHEN MATCHED THEN 
-      UPDATE SET S.VALUE = S.VALUE, S.DESCRIPTION = T.DESCRIPTION
+      UPDATE SET S.VALUE = T.VALUE, S.DESCRIPTION = T.DESCRIPTION
 WHEN NOT MATCHED THEN INSERT (TOOL_NAME, PROPERTY, VALUE, DESCRIPTION) VALUES (T.TOOL_NAME, T.PROPERTY, T.VALUE, T.DESCRIPTION);
 
 /*
