@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.24 2009-02-19 18:59:19 veerlah Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.25 2009-02-19 19:16:49 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Anupama Chickerur
@@ -40,7 +40,10 @@ DELETE FROM SBREXT.TOOL_OPTIONS_VIEW_EXT WHERE TOOL_NAME = 'CURATION';
  */	   
 MERGE INTO SBREXT.TOOL_OPTIONS_VIEW_EXT S
 USING (
-SELECT 'CURATION' AS TOOL_NAME, 'URL' AS PROPERTY, 'https://cdecurate@TIER@.nci.nih.gov' AS VALUE, 'Store curation tool url' AS DESCRIPTION FROM DUAL
+SELECT 'CURATION' AS TOOL_NAME, 'URL' AS PROPERTY, 'https://cdecurate@TIER@.nci.nih.gov' AS VALUE, 'Deprecated - Store curation tool url' AS DESCRIPTION FROM DUAL
+UNION SELECT 'CURATION' AS TOOL_NAME, 'URN' AS PROPERTY, 'https://cdecurate@TIER@.nci.nih.gov/cdecurate/' AS VALUE, 'Store curation tool urn' AS DESCRIPTION FROM DUAL
+UNION SELECT 'CURATION' AS TOOL_NAME, 'VERSION' AS PROPERTY, '@appl.version@' AS VALUE, 'Store curation tool urn' AS DESCRIPTION FROM DUAL
+UNION SELECT 'CURATION' AS TOOL_NAME, 'NAME' AS PROPERTY, 'CDE Curation Tool' AS VALUE, 'Store curation tool urn' AS DESCRIPTION FROM DUAL
 UNION SELECT 'CURATION' AS TOOL_NAME, 'HELP.HOME' AS PROPERTY, 'https://cdecurate@TIER@.nci.nih.gov/help' AS VALUE, 'Store curation tool help url' AS DESCRIPTION FROM DUAL
 UNION SELECT 'CURATION' AS TOOL_NAME, 'EVS.URL' AS PROPERTY,'http://lexevsapi-stage.nci.nih.gov/lexevsapi42' AS VALUE,'Store evs alternate url specific to curation tool if needed' AS DESCRIPTION FROM DUAL 
 UNION SELECT 'CURATION' AS TOOL_NAME, 'CSI.PACKAGE.ALIAS' AS PROPERTY,'UML_PACKAGE_ALIAS' AS VALUE,'The special CSI type for the UML Package Alias' AS DESCRIPTION FROM DUAL
