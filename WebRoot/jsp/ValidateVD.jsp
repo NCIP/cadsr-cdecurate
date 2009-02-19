@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateVD.jsp,v 1.2 2007-09-19 16:59:35 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateVD.jsp,v 1.3 2009-02-19 17:07:57 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -23,7 +23,7 @@
     for (int i = 0; vValidate.size()>i; i = i+3)
     {
       String sStat = (String)vValidate.elementAt(i+2);
-      if(sStat.equals("Valid") || sStat.equals("No Change") || sStat.contains("Warning:"))
+      if(sStat.startsWith("Valid") || sStat.equals("No Change") || sStat.contains("Warning:"))
           isValid = true; // this just keeps the status quo
       else
           isValidFlag = false; // we have true failure here

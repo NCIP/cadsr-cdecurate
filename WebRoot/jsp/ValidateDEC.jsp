@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateDEC.jsp,v 1.2 2007-09-19 16:59:35 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateDEC.jsp,v 1.3 2009-02-19 17:07:57 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -29,7 +29,7 @@
       if(sStat.length()>24)
         sStat2 = sStat.substring(0,24);
       if(sStat2 == null) sStat2 = "";
-      if(sStat.equals("Valid") || sStat.equals("No Change") || sStat2.equals("Warning: This DEC should")
+      if(sStat.startsWith("Valid") || sStat.equals("No Change") || sStat2.equals("Warning: This DEC should")
       || sStat2.equals("Warning: a Data Element ") || sStat2.equals("Warning: DEC's with comb"))  
           isValid = true; // this just keeps the status quo
       else
