@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateDE.jsp,v 1.4 2008-07-16 17:26:51 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateDE.jsp,v 1.5 2009-02-19 17:07:57 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -38,7 +38,7 @@
         if(sStat2 == null) sStat2 = "";
        // if(sStat.equals("Valid") || sStat.equals("Warning: A Data Element with a duplicate DEC and VD pair already exists within the selected context. ")
        // || sStat.equals("No Change") || sStat2.equals("Warning: Combination of DEC, VD and Context"))
-        if(sStat.equals("Valid") || sStat.equals("No Change") || sStat.indexOf("Warning: ") > -1)
+        if(sStat.startsWith("Valid") || sStat.equals("No Change") || sStat.indexOf("Warning: ") > -1)
           isValid = true; // this just keeps the status quo
         else
           isValidFlag = false; // we have true failure here
