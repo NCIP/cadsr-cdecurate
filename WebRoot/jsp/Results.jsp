@@ -933,7 +933,7 @@ function createNew(type){
 
 function viewAC(){
  	   var acIdseq = document.searchResultsForm.hiddenSearch[document.searchResultsForm.selectedRowId.value].value;
- 	   var name = "ViewAC"+document.searchResultsForm.selectedRowId.value;
+ 	   var name = "ViewAC"+acIdseq.replace(/-/g,"");
  	   var viewWindow = window.open("../../cdecurate/NCICurationServlet?reqType=view&idseq=" +acIdseq, name, "width=1000,height=1000,top=0,left=0,resizable=yes,scrollbars=yes");
  }
 function openEditVMWindow(curPV){
