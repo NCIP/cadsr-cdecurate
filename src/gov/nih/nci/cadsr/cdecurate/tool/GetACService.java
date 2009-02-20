@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.65 2009-02-18 17:04:52 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.66 2009-02-20 18:48:13 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -11,9 +11,12 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import java.io.Serializable;
 import java.util.*;
 import java.sql.*;
+
 import oracle.jdbc.driver.*;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
+
 import java.io.*;
 import org.apache.log4j.*;
 
@@ -557,7 +560,69 @@ public class GetACService implements Serializable
             cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
     }
-
+    /**
+     * To get List for Class Scheme Items from database called from ?. Gets the attributes from Cs_csi table adds them
+     * to the bean then to vector in the session.
+     * 
+     * calls oracle stored procedure "{call SBREXT_CDE_CURATOR_PKG.get_cscsi_list(OracleTypes.CURSOR)}"
+     * 
+     * loop through the ResultSet and add them to bean which is added to the vector to return
+     * 
+     */
+    private void getCSCSIListBean()
+    {
+        ResultSet rs = null;
+        CallableStatement cstmt = null;
+        Vector<CSI_Bean> vList = new Vector<CSI_Bean>();
+        try
+        {
+            if (m_servlet.getConn() == null)
+                m_servlet.ErrorLogin(m_classReq, m_classRes);
+            else
+            {
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.GET_CSCSI_LIST(?)}");
+                cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+                // Now we are ready to call the stored procedure
+                cstmt.execute();
+                // store the output in the resultset
+                rs = (ResultSet) cstmt.getObject(1);
+                if (rs != null)
+                {
+                    // loop through the resultSet and add them to the bean
+                    while (rs.next())
+                    {
+                        CSI_Bean CSIBean = new CSI_Bean();
+                        CSIBean.setCSI_CS_IDSEQ(rs.getString("cs_idseq"));
+                        CSIBean.setCSI_CSI_IDSEQ(rs.getString("csi_idseq"));
+                        CSIBean.setCSI_CSCSI_IDSEQ(rs.getString("cs_csi_idseq"));
+                        CSIBean.setP_CSCSI_IDSEQ(rs.getString("p_cs_csi_idseq"));
+                        CSIBean.setCSI_DISPLAY_ORDER(rs.getString("display_order"));
+                        CSIBean.setCSI_LABEL(rs.getString("label"));
+                        String csName = rs.getString("cs_name");
+                        csName = m_util.removeNewLineChar(csName);
+                        csName = m_util.parsedStringDoubleQuote(csName);
+                        CSIBean.setCSI_CS_NAME(csName);
+                        CSIBean.setCSI_CS_LONG_NAME(csName);
+                        String csiName = rs.getString("csi_name");
+                        csiName = m_util.removeNewLineChar(csiName);
+                        csiName = m_util.parsedStringDoubleQuote(csiName);
+                        CSIBean.setCSI_NAME(csiName);
+                        CSIBean.setCSI_LEVEL(rs.getString("lvl"));
+                        vList.addElement(CSIBean);
+                    }
+                }
+            }
+            HttpSession session = m_classReq.getSession();
+            DataManager.setAttribute(session, "CSCSIList", vList);
+        }
+        catch (Exception e)
+        {
+          logger.error("ERROR - GetACService-getCSCSIListBean for other : " + e.toString(), e);
+        }finally{
+        	rs = SQLHelper.closeResultSet(rs);
+            cstmt = SQLHelper.closeCallableStatement(cstmt);
+        }
+    }
     
     /**
      * The getLanguageList method queries the db for a list of Languages, stored in a vector. Calls the stored
@@ -1762,7 +1827,11 @@ public class GetACService implements Serializable
     public void getASLFilterListForView(HttpSession session){
     	this.getASLFilterList(session);
     }
-    public  void getOrganizeListforView(){
+    public void getOrganizeListforView(){
     	this.getOrganizeList();
     }
+    public void getCSCSIListBeann(){
+    	this.getCSCSIListBean();
+    }
+    
 }
