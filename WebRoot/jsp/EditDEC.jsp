@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.19 2009-02-19 21:55:08 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.20 2009-02-20 20:27:37 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -21,20 +21,29 @@
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<%
-    Vector vContext = (Vector)session.getAttribute("vWriteContextDEC");
-  //Vector vContextID = (Vector)session.getAttribute("vWriteContextDEC_ID");
-    Vector vStatus = (Vector)session.getAttribute("vStatusDEC");
-  //Vector vCD = (Vector)session.getAttribute("vCD");
-  //Vector vCDID = (Vector)session.getAttribute("vCD_ID");
-  //Vector vLanguage = (Vector)session.getAttribute("vLanguage");
-    Vector vSource = (Vector)session.getAttribute("vSource");
-    Vector vCS = (Vector)session.getAttribute("vCS");
-    Vector vCS_ID = (Vector)session.getAttribute("vCS_ID");
-    //for view only page
-	String bodyPage = (String) request.getAttribute("IncludeViewPage");
-	boolean isView = false;
-	if (bodyPage != null && !bodyPage.equals(""))
-		isView = true;
+		
+		//for view only page
+	    String bodyPage = (String) request.getAttribute("IncludeViewPage");
+	    boolean isView = false;
+	    if (bodyPage != null && !bodyPage.equals(""))
+		  isView = true;
+    
+		Vector vContext = null;
+        Vector vStatus = null;
+        Vector vSource = null;
+        Vector vCS = null;
+        Vector vCS_ID = null;
+        if (!isView){
+            vContext = (Vector)session.getAttribute("vWriteContextDEC");
+            //Vector vContextID = (Vector)session.getAttribute("vWriteContextDEC_ID");
+            vStatus = (Vector)session.getAttribute("vStatusDEC");
+            //Vector vCD = (Vector)session.getAttribute("vCD");
+            //Vector vCDID = (Vector)session.getAttribute("vCD_ID");
+            //Vector vLanguage = (Vector)session.getAttribute("vLanguage");
+            vSource = (Vector)session.getAttribute("vSource");
+            vCS = (Vector)session.getAttribute("vCS");
+            vCS_ID = (Vector)session.getAttribute("vCS_ID");
+        }
     
     UtilService serUtil = new UtilService();
     String sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
@@ -240,10 +249,10 @@
       var level = "<%=thisCSI.getCSI_LEVEL()%>";
       //create multi dimentional array with csi attributes 
       csiArray[aIndex] = new Array(csID, csiID, cscsiID, p_cscsiID, disp, label, csi_name, cs_name, level);       
-    <%  }    %>
+    <%  }   } %>
       loadSelCSCSI();  //load the existing relationship
       loadWriteContextArray();  //load the writable contexts
-    <%  }    %>  
+    
   }
 
    function loadSelCSCSI()
@@ -292,7 +301,7 @@
   //make the context array
   function loadWriteContextArray()
   {
-    <% if (vContext != null) 
+    <% if ((vContext != null)&&(!isView)) 
     {
       for (int i = 0; vContext.size()>i; i++)
       {

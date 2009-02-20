@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.18 2009-02-03 19:34:53 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.19 2009-02-20 20:27:37 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -28,14 +28,21 @@
 			if (bodyPage != null && !bodyPage.equals(""))
 				isView = true;
 
-			//load the lists
-			Vector vContext = (Vector) session.getAttribute("vWriteContextDE");
-			Vector vStatus = (Vector) session.getAttribute("vStatusDE");
-			Vector vRegStatus = (Vector) session.getAttribute("vRegStatus");
-			Vector vCS = (Vector) session.getAttribute("vCS");
-			Vector vCS_ID = (Vector) session.getAttribute("vCS_ID");
-			Vector vSource = (Vector) session.getAttribute("vSource");
-
+			Vector vContext = null;
+		    Vector vStatus = null;
+		    Vector vRegStatus = null;
+		    Vector vCS = null;
+		    Vector vCS_ID = null;
+		    Vector vSource = null;
+			if(!isView){
+			   //load the lists
+			    vContext = (Vector) session.getAttribute("vWriteContextDE");
+			    vStatus = (Vector) session.getAttribute("vStatusDE");
+			    vRegStatus = (Vector) session.getAttribute("vRegStatus");
+			    vCS = (Vector) session.getAttribute("vCS");
+			    vCS_ID = (Vector) session.getAttribute("vCS_ID");
+			    vSource = (Vector) session.getAttribute("vSource");
+            }
 			Vector results = (Vector) session.getAttribute("results");
 			String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
 			if (!isView) {
@@ -240,7 +247,7 @@
     createObject("document.newCDEForm");
   <%
     Vector vCSIList = (Vector)session.getAttribute("CSCSIList");
-     if (vCSIList != null){
+     if ((vCSIList != null)){
     for (int i=0; i<vCSIList.size(); i++)  //loop csi vector
     {
       thisCSI = (CSI_Bean)vCSIList.elementAt(i);  //get the csi bean
@@ -258,16 +265,15 @@
       var level = "<%=thisCSI.getCSI_LEVEL()%>";
       //create multi dimentional array with csi attributes 
       csiArray[aIndex] = new Array(csID, csiID, cscsiID, p_cscsiID, disp, label, csi_name, cs_name, level);       
-    <%  }    %>
+    <%  }  } %>
       loadSelCSCSI();  //load the existing relationship
       loadWriteContextArray();  //load the writable contexts 
-    <%  }    %>
   }
 
    function loadSelCSCSI()
    {
 <%    
-      if (vACCSIList != null)
+      if ((vACCSIList != null))
       {      
         for (int j=0; j<vACCSIList.size(); j++)  //loop csi vector
         {
@@ -309,7 +315,7 @@
   //make the context array
   function loadWriteContextArray()
   {
-    <% if (vContext != null) 
+    <% if ((vContext != null) && (!isView))
     {
       for (int i = 0; vContext.size()>i; i++)
       {

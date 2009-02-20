@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.22 2009-02-18 15:28:17 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.23 2009-02-20 20:27:37 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -31,22 +31,42 @@
 			String sOriginAction = (String) session.getAttribute("originAction");
 			if (sOriginAction == null)
 			   sOriginAction = "";
-			Vector vStatus = (Vector) session.getAttribute("vStatusVD");
-	        Vector vDataTypes = (Vector) session.getAttribute("vDataType");
-			Vector vDataTypeDesc = (Vector) session.getAttribute("vDataTypeDesc");
-			Vector vDataTypeCom = (Vector) session.getAttribute("vDataTypeComment");
+			
+			
+			Vector vStatus = null;
+	        Vector vDataTypes = null;
+			Vector vDataTypeDesc = null;
+			Vector vDataTypeCom = null;
 
-			Vector vUOM = (Vector) session.getAttribute("vUOM");
-			Vector vUOMFormat = (Vector) session.getAttribute("vUOMFormat");
+			Vector vUOM = null;
+			Vector vUOMFormat = null;
 	      //Vector vCD = (Vector) session.getAttribute("vCD");
 		  //Vector vCDID = (Vector) session.getAttribute("vCD_ID");
 		  //Vector vLanguage = (Vector) session.getAttribute("vLanguage");
-			Vector vSource = (Vector) session.getAttribute("vSource");
-			Vector vContext = (Vector) session.getAttribute("vWriteContextVD");
+			Vector vSource = null;
+			Vector vContext = null;
 		  //Vector vContextID = (Vector) session.getAttribute("vWriteContextVD_ID");
-			Vector vCS = (Vector) session.getAttribute("vCS");
-			Vector vCS_ID = (Vector) session.getAttribute("vCS_ID");
+			Vector vCS = null;
+			Vector vCS_ID = null;
+			
+		   if (!isView){
+			 vStatus = (Vector) session.getAttribute("vStatusVD");
+	         vDataTypes = (Vector) session.getAttribute("vDataType");
+			 vDataTypeDesc = (Vector) session.getAttribute("vDataTypeDesc");
+			 vDataTypeCom = (Vector) session.getAttribute("vDataTypeComment");
 
+			 vUOM = (Vector) session.getAttribute("vUOM");
+			 vUOMFormat = (Vector) session.getAttribute("vUOMFormat");
+	         //Vector vCD = (Vector) session.getAttribute("vCD");
+		     //Vector vCDID = (Vector) session.getAttribute("vCD_ID");
+		     //Vector vLanguage = (Vector) session.getAttribute("vLanguage");
+			 vSource = (Vector) session.getAttribute("vSource");
+			 vContext = (Vector) session.getAttribute("vWriteContextVD");
+		     //Vector vContextID = (Vector) session.getAttribute("vWriteContextVD_ID");
+			 vCS = (Vector) session.getAttribute("vCS");
+			 vCS_ID = (Vector) session.getAttribute("vCS_ID");
+           }
+           
 			VD_Bean m_VD = new VD_Bean();
 			String vdID = "";
 			if (isView){
@@ -404,10 +424,9 @@
       var level = "<%=thisCSI.getCSI_LEVEL()%>";
       //create multi dimentional array with csi attributes 
       csiArray[aIndex] = new Array(csID, csiID, cscsiID, p_cscsiID, disp, label, csi_name, cs_name, level);       
-    <%  }    %>
+    <%  }  }  %>
       loadSelCSCSI();  //load the existing relationship
       loadWriteContextArray();  //load the writable contexts 
-     <%  }    %>  
   }
 
    function loadSelCSCSI()
@@ -455,7 +474,7 @@
   //make the context array
   function loadWriteContextArray()
   {
-    <% if (vContext != null) 
+    <% if ((vContext != null) && (!isView)) 
     {
       for (int i = 0; vContext.size()>i; i++)
       {
