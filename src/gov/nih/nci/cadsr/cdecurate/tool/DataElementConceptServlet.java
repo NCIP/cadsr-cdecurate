@@ -301,6 +301,9 @@ public class DataElementConceptServlet extends CurationServlet {
                             || sButtonPressed.equals("Search") || sOriginAction.equalsIgnoreCase("EditDEC"))
             {
                 DEC_Bean DECBean = (DEC_Bean) session.getAttribute("m_DEC");
+                if (DECBean == null){
+                	DECBean = new DEC_Bean();
+                }
                 GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
                 serAC.refreshData(m_classReq, m_classRes, null, DECBean, null, null, "Refresh", "");
                 ForwardJSP(m_classReq, m_classRes, "/SearchResultsPage.jsp");
