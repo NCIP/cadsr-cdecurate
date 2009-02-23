@@ -130,15 +130,11 @@ public class SearchServlet extends CurationServlet {
             String ConnectedToDB = (String) session.getAttribute("ConnectedToDB");
             if (ConnectedToDB != null && !ConnectedToDB.equals("No"))
             {
-            	if (userbean != null)
-            	userbean.setSuperuser(getAC.getSuperUserFlag(userbean.getUsername()));
-
-                // get initial list from cadsr
+            	// get initial list from cadsr
             	getInitialListFromCadsr(getAC);
                 getAC.getACList(m_classReq, m_classRes, "", true, "ALL");
                 doOpenSearchPage();
                 getCompAttrList("DataElement", "searchForCreate");
-               
             }
             else
             {

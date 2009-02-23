@@ -286,6 +286,7 @@ public class CurationServlet
     	String username = req.getParameter("Username").toUpperCase();
         String password = req.getParameter("Password");
     	CaDsrUserCredentials uc = new CaDsrUserCredentials();
+    	GetACService getAC = new GetACService(m_classReq, m_classRes, this);
 	    UserBean userbean = new UserBean();
 	    User_Accounts_Mgr userAccountMgr = new User_Accounts_Mgr();
 	    try
@@ -299,10 +300,10 @@ public class CurationServlet
      		userbean.setUserFullName(userAccountMgr.getUserFullName(username, m_conn));
     	    userbean.setPassword("");
             userbean.setDBAppContext("/cdecurate");
+            userbean.setSuperuser(getAC.getSuperUserFlag(userbean.getUsername()));
           	DataManager.setAttribute(session, "Userbean", userbean);
           	DataManager.setAttribute(session, "Username", userbean.getUsername());
           	sessionData.UsrBean = userbean;
-            GetACService getAC = new GetACService(m_classReq, m_classRes, this);
             getAC.getWriteContextList();
             getEVSInfo();
            //get cs-csi relationship data
