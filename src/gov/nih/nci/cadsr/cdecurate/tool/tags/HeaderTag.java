@@ -46,6 +46,7 @@ public class HeaderTag extends TagSupport {
 		if (session != null) {
 			userBean = (UserBean) session.getAttribute("Userbean");
 		}
+			
 		try {
 			if(displayUser){
 			  NCIHeader.println("<form name=\"LogoutForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=logout\"></form>");
@@ -65,7 +66,11 @@ public class HeaderTag extends TagSupport {
     			NCIHeader.println("<td align=\"right\"> ");
 				if (userBean != null) {
 					NCIHeader.println("<a href=\"javascript:callLogout();\">Logout</a><br/><br/><span>User&nbsp;Name&nbsp;:&nbsp;</span>"
-									+ userBean.getUserFullName() + "</td>");
+									+ userBean.getUserFullName());
+					if (userBean.isSuperuser()){
+						NCIHeader.println(" [Admin]");
+					}
+					NCIHeader.println("</td>");
 				} else {
 					NCIHeader.println("<a href=\"" + request.getContextPath()
 							+ "/jsp/Login.jsp\">Login</a></td>");
