@@ -2041,6 +2041,7 @@ public class SearchServlet extends CurationServlet {
         DataManager.setAttribute(session, "selectedAttr", vSelVector);
         this.getDefaultFilterAtt(); // default filter by attributes
         this.getCompAttrList(searchAC, sMAction); // call the method to get attribute list for the selected AC
+        session.setAttribute("showDefaultSortBtn", "No");
         ForwardJSP(m_classReq, m_classRes, "/SearchResultsPage.jsp");
     }
     
