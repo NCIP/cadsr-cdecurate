@@ -382,7 +382,7 @@ public class SearchServlet extends CurationServlet {
     {
     	String hidaction = (String)m_classReq.getParameter("hidaction");
         if ((hidaction != null) && (hidaction.equals("newUsingExisting") || hidaction.equals("newVersion") || hidaction.equals("edit"))){
-        	doMenuAction();
+        	doAction();
         }
     	HttpSession session = m_classReq.getSession();
         String actType = (String) m_classReq.getParameter("actSelected");
@@ -1912,7 +1912,7 @@ public class SearchServlet extends CurationServlet {
      *
      * @throws Exception
      */
-    private void doMenuAction() throws Exception
+    private void doAction() throws Exception
     {
         HttpSession session = m_classReq.getSession();
        // this.clearSessionAttributes(m_classReq, m_classRes);
@@ -1971,6 +1971,79 @@ public class SearchServlet extends CurationServlet {
         //this.getCompAttrList(searchAC, sMAction); // call the method to get attribute list for the selected AC
         //ForwardJSP(m_classReq, m_classRes, "/SearchResultsPage.jsp");
     }
+    /**
+     * To open search page when clicked on edit, create new from template, new version on the menu. Called from
+     * 'service' method where reqType is 'actionFromMenu' Sets the attribte 'searchAC' to the selected component. Sets
+     * the attribte 'MenuAction' to the selected menu action. Makes empty 'results' session vector. stores 'No ' to
+     * 'recsFound' session attribute. forwards page 'SearchResultsPage.jsp'.
+     *
+     * @param req
+     *            The HttpServletRequest from the client
+     * @param res
+     *            The HttpServletResponse back to the client
+     *
+     * @throws Exception
+     */
+    private void doMenuAction() throws Exception
+    {
+        HttpSession session = m_classReq.getSession();
+        this.clearSessionAttributes(m_classReq, m_classRes);
+        this.clearBuildingBlockSessionAttributes(m_classReq, m_classRes);
+        this.clearCreateSessionAttributes(m_classReq, m_classRes);
+        String sMAction = (String) m_classReq.getParameter("hidMenuAction");
+        if (sMAction == null)
+            sMAction = "nothing";
+        DataManager.setAttribute(session, "DDEAction", "nothing"); // reset from "CreateNewDEFComp"
+        String searchAC = "DataElement";
+        // sets the session attributes of the selection menu action and selected component
+        if (sMAction.equals("editDE") || sMAction.equals("editDEC") || sMAction.equals("editVD"))
+            DataManager.setAttribute(session, "LastMenuButtonPressed", "Edit");
+        else if (sMAction.equals("NewDETemplate") || sMAction.equals("NewDEVersion")
+                        || sMAction.equals("NewDECTemplate") || sMAction.equals("NewDECVersion")
+                        || sMAction.equals("NewVDTemplate") || sMAction.equals("NewVDVersion"))
+            DataManager.setAttribute(session, "LastMenuButtonPressed", "CreateTemplateVersion");
+        if ((sMAction == null) || (sMAction.equals("nothing")) || (sMAction.equals("Questions")))
+            sMAction = "nothing";
+        else
+        {
+            if ((sMAction.equals("NewDETemplate")) || (sMAction.equals("NewDEVersion")) || (sMAction.equals("editDE")))
+                searchAC = "DataElement";
+            else if ((sMAction.equals("NewDECTemplate")) || (sMAction.equals("NewDECVersion"))
+                            || (sMAction.equals("editDEC")))
+                searchAC = "DataElementConcept";
+            else if ((sMAction.equals("NewVDTemplate")) || (sMAction.equals("NewVDVersion"))
+                            || (sMAction.equals("editVD")))
+            {
+                searchAC = "ValueDomain";
+                DataManager.setAttribute(session, "originAction", "NewVDTemplate");
+                DataManager.setAttribute(session, "VDEditAction", "editVD");
+                this.clearBuildingBlockSessionAttributes(m_classReq, m_classRes);
+            }
+        }
+        DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMAction);
+        DataManager.setAttribute(session, "searchAC", searchAC);
+        // sets the default attributes and resets to empty result vector
+        Vector vResult = new Vector();
+        DataManager.setAttribute(session, "results", vResult);
+        session.setAttribute("recsFound", "No ");
+       
+        DataManager.setAttribute(session, "serKeyword", "");
+        DataManager.setAttribute(session, "serProtoID", "");
+        DataManager.setAttribute(session, "LastAppendWord", "");
+        // remove the status message if any
+        DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "");
+        DataManager.setAttribute(session, "vStatMsg", new Vector());
+        // set it to longname be default
+        String sSearchIn = "longName";
+        Vector vSelVector = new Vector();
+        // call the method to get default attributes
+        vSelVector = getDefaultAttr(searchAC, sSearchIn);
+        DataManager.setAttribute(session, "selectedAttr", vSelVector);
+        this.getDefaultFilterAtt(); // default filter by attributes
+        this.getCompAttrList(searchAC, sMAction); // call the method to get attribute list for the selected AC
+        ForwardJSP(m_classReq, m_classRes, "/SearchResultsPage.jsp");
+    }
+    
     
     public void getInitialListFromCadsr(GetACService getAC){
     	HttpSession session = m_classReq.getSession();

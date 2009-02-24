@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/biztech_button.js,v 1.2 2009-01-26 20:38:05 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/biztech_button.js,v 1.3 2009-02-24 15:32:01 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 if(typeof(loc)=="undefined"||loc==""){var loc="";if(document.body&&document.body.innerHTML){var tt=document.body.innerHTML.toLowerCase();var last=tt.indexOf("biztech_button.js\"");if(last>0){var first=tt.lastIndexOf("\"",last);if(first>0&&first<last)loc=document.body.innerHTML.substr(first+1,last-first-1);}}}
@@ -36,27 +36,27 @@ submenuItem("UML Model Browser","javascript:callUMLBrowser();","","biztech_butto
 endSubmenu("../images/biztech_button_b5");
 
 startSubmenu("../images/biztech_button_b3","biztech_button_menu",204);
-submenuItem("Data Element","javascript:BackToSearch();","","biztech_button_plain");
-submenuItem("Data Element Concept","javascript:BackToSearch();","","biztech_button_plain");
-submenuItem("Value Domain","javascript:BackToSearch();","","biztech_button_plain");
+submenuItem("Data Element","javascript:callMessageGifDEedit();","","biztech_button_plain");
+submenuItem("Data Element Concept","javascript:callMessageGifDECedit();","","biztech_button_plain");
+submenuItem("Value Domain","javascript:callMessageGifVDedit();","","biztech_button_plain");
 endSubmenu("../images/biztech_button_b3");
 
 startSubmenu("biztech_button_b2_3","biztech_button_menu",280);
 submenuItem("New","javascript:callMessageGifVDNew();","","biztech_button_plain");
-submenuItem("New Using Existing Value Domain","javascript:BackToSearch();","","biztech_button_plain");
-submenuItem("New Version","javascript:BackToSearch();","","biztech_button_plain");
+submenuItem("New Using Existing Value Domain","javascript:callMessageGifVDTemplate();","","biztech_button_plain");
+submenuItem("New Version","javascript:callMessageGifVDVersion();","","biztech_button_plain");
 endSubmenu("biztech_button_b2_3");
 
 startSubmenu("biztech_button_b2_2","biztech_button_menu",340);
 submenuItem("New","javascript:callMessageGifDECNew();","","biztech_button_plain");
-submenuItem("New Using Existing Data Element Concept", "javascript:BackToSearch();","","biztech_button_plain");
-submenuItem("New Version","javascript:BackToSearch();","","biztech_button_plain");
+submenuItem("New Using Existing Data Element Concept", "javascript:callMessageGifDECTemplate();","","biztech_button_plain");
+submenuItem("New Version","javascript:callMessageGifDECVersion();","","biztech_button_plain");
 endSubmenu("biztech_button_b2_2");
 
 startSubmenu("biztech_button_b2_1","biztech_button_menu",270);
 submenuItem("New","javascript:callMessageGifDENew();","","biztech_button_plain");
-submenuItem("New Using Existing Data Element", "javascript:BackToSearch();","","biztech_button_plain");
-submenuItem("New Version","javascript:BackToSearch();","","biztech_button_plain");
+submenuItem("New Using Existing Data Element", "javascript:callMessageGifDETemplate();","","biztech_button_plain");
+submenuItem("New Version","javascript:callMessageGifDEVersion();","","biztech_button_plain");
 endSubmenu("biztech_button_b2_1");
 
 startSubmenu("../images/biztech_button_b2","biztech_button_menu",204);
