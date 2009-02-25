@@ -1605,11 +1605,22 @@ public class SearchServlet extends CurationServlet {
     {
         HttpSession session = m_classReq.getSession();
         String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
+        // Modified the context default value from All Contexts to Standard Contexts
+        Vector<String> serMultiContext = new Vector<String>();
+        Vector<String> defaultContext = (Vector) session.getAttribute("vContext");
+    	for (int i = 0; defaultContext.size() > i; i++) {
+    		String sContextName = (String) defaultContext.elementAt(i);
+    		if((!sContextName.equalsIgnoreCase("TEST"))
+    				&& (!sContextName.equalsIgnoreCase("Training"))){	
+    			serMultiContext.addElement(sContextName);
+    		}
+    	}
         // reset to default filter by criteria
         if (!menuAction.equals("searchForCreate"))
         {
             DataManager.setAttribute(session, "serStatus", new Vector());
-            DataManager.setAttribute(session, "serMultiContext", new Vector());
+            // Modified the context default value from All Contexts to Standard Contexts
+            DataManager.setAttribute(session, "serMultiContext", serMultiContext);
             DataManager.setAttribute(session, "serContext", ""); // keep the old context criteria
             DataManager.setAttribute(session, "serContextUse", ""); // store contextUse in the session
             DataManager.setAttribute(session, "serVersion", ""); // store version in the session
@@ -1639,7 +1650,8 @@ public class SearchServlet extends CurationServlet {
         else
         {
             DataManager.setAttribute(session, "creStatus", new Vector());
-            DataManager.setAttribute(session, "creMultiContext", new Vector()); // keep the old context criteria
+            // Modified the context default value from All Contexts to Standard Contexts
+            DataManager.setAttribute(session, "creMultiContext", serMultiContext); // keep the old context criteria
             DataManager.setAttribute(session, "creContext", ""); // keep the old context criteria
             DataManager.setAttribute(session, "creContextUse", ""); // store contextUse in the session
             DataManager.setAttribute(session, "creVersion", ""); // store version in the session
