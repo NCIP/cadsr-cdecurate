@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.21 2009-02-25 20:00:34 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.22 2009-02-25 21:19:23 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -351,6 +351,22 @@
     PropClass.innerText = "<%=sPCCCodeDB%>";
     PropClassID.innerText = "<%=sPCCCode%>"; 
  }
+ 
+ function openEVSConceptsWindow(text){
+  var conceptUrl = "<%=evsConceptUrl%>";
+  var vocab = "";
+  var code = "";
+  if (text == "ObjectQualifier"){
+     vocab = ObjQual.innerText;
+     code = ObjQualID.innerText; 
+  }else if(text == "PropertyQualifier"){
+     vocab = PropQual.innerText;
+     code = PropQualID.innerText;
+  }
+  conceptUrl = conceptUrl.replace("$VOCAB$",vocab);
+  conceptUrl = conceptUrl.replace("$CODE$",code);
+  window.open(conceptUrl,'','');
+}
   
 </Script>
 	</head>
@@ -635,9 +651,9 @@
 										<tr>
 											<td colspan="3">
 												&nbsp;&nbsp;
-												<%if (!isView){%><a href=""><%}%>
-													<label id="ObjQualID" for="selObjectQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('ObjectQualifier', 'true')"<%}%>></label>
-												<%if (!isView){%></a><%}%>
+												<a href="">
+													<label id="ObjQualID" for="selObjectQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('ObjectQualifier', 'true')"<%}else{%>onclick="javascript:openEVSConceptsWindow('ObjectQualifier');"<% }%></label>
+												</a>
 											</td>
 											<td colspan="3">
 												&nbsp;&nbsp;
@@ -777,9 +793,9 @@
 										<tr>
 											<td colspan="3">
 												&nbsp;&nbsp;
-												<%if (!isView){%><a href=""><%}%>
-													<label id="PropQualID" for="selPropertyQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('PropertyQualifier', 'true')"<%}%>></label>
-												<%if (!isView){%></a><%}%>
+												<a href="">
+													<label id="PropQualID" for="selPropertyQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('PropertyQualifier', 'true')"<%}else{%>onclick="javascript:openEVSConceptsWindow('PropertyQualifier');"<% }%></label>
+												</a>
 											</td>
 											<td colspan="3">
 												&nbsp;&nbsp;
