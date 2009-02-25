@@ -1,6 +1,6 @@
 // Copyright (c) 2007 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/ToolURL.java,v 1.12 2009-01-30 17:09:43 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/util/ToolURL.java,v 1.13 2009-02-25 19:58:13 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.util;
@@ -27,6 +27,7 @@ public class ToolURL {
 	public static final String evsBioPortalURL = "EVSBioPortalURL";
 	public static final String curationToolHelpURL = "curationToolHelpURL";
 	public static final String curationToolBusinessRulesURL = "curationToolBusinessRulesURL";
+	public static final String evsBrowserConceptURL = "evsBrowserConceptURL";
 	public static final String browserDispalyName = "BrowserDispalyName";
 	public static final String sentinelDispalyName = "SentinelDispalyName";
 	public static final String umlBrowserDispalyName = "UMLBrowserDispalyName";
@@ -213,4 +214,13 @@ public class ToolURL {
 	public static final String getEVSBioPortalDisplayName(PageContext context_) {
 		return (String) context_.getSession().getAttribute(evsBioPortalDisplayName);
 	}
+	public static final void setEVSBrowserConceptUrl(HttpSession session_,
+			String url_) {
+		DataManager.setAttribute(session_, evsBrowserConceptURL,
+				(url_ == null) ? defaultUrl : url_);
+	}
+	public static final String getEVSBrowserConceptUrl(PageContext context_) {
+		return (String) context_.getSession().getAttribute(evsBrowserConceptURL);
+	}
+	
 }

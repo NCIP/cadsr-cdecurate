@@ -2282,6 +2282,17 @@ public class SearchServlet extends CurationServlet {
                 aURL = tob.getVALUE();
         }
         ToolURL.setCurationToolBusinessRulesURL(session, aURL);
+        
+        vList = new Vector();
+        vList = getAC.getToolOptionData("EVSBrowser", "CONCEPT.DETAILS.URL", "");
+        aURL = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+                aURL = tob.getVALUE();
+        }
+        ToolURL.setEVSBrowserConceptUrl(session, aURL);
       
     }
     
