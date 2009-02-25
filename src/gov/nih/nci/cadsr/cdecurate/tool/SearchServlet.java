@@ -2293,7 +2293,7 @@ public class SearchServlet extends CurationServlet {
                 aURL = tob.getVALUE();
         }
         ToolURL.setEVSBrowserConceptUrl(session, aURL);
-      
+        session.setAttribute("evsBrowserConceptURL", aURL);
     }
     
     /**
