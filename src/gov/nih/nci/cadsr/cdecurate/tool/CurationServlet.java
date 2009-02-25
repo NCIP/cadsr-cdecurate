@@ -10,6 +10,7 @@ import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
 import gov.nih.nci.cadsr.persist.ac.Admin_Components_Mgr;
 import gov.nih.nci.cadsr.persist.exception.DBException;
 import gov.nih.nci.cadsr.persist.user.User_Accounts_Mgr;
@@ -4147,7 +4148,23 @@ public class CurationServlet
 			    vmServlet.doOpenViewPage();
 			 }else{
 				  if (session.getAttribute("Organizations") == null)
-			    	  serviceAC.getOrganizeListforView();      
+			    	  serviceAC.getOrganizeListforView(); 
+				  if ( ((actlReq).equals("viewDE_CONCEPT")) || ((actlReq).equals("viewVALUEDOMAIN"))){
+					  String evsConceptUrl = (String)session.getAttribute("evsBrowserConceptURL");
+				  	  if (evsConceptUrl == null){
+				  		Vector vList = new Vector();
+				        vList = serviceAC.getToolOptionData("EVSBrowser", "CONCEPT.DETAILS.URL", "");
+				        String aURL = null;
+				        if (vList != null && vList.size() > 0)
+				        {
+				            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+				            if (tob != null)
+				                aURL = tob.getVALUE();
+				        }
+				        ToolURL.setEVSBrowserConceptUrl(session, aURL);
+				        session.setAttribute("evsBrowserConceptURL", aURL);
+				  	  }
+				  }
 				  CurationServlet servObj = getACServlet(actlReq);
 				  servObj.execute(getACType(actlReq));
 			}  
