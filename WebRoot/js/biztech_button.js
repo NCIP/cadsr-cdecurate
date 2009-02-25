@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/biztech_button.js,v 1.3 2009-02-24 15:32:01 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/biztech_button.js,v 1.4 2009-02-25 19:51:16 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 if(typeof(loc)=="undefined"||loc==""){var loc="";if(document.body&&document.body.innerHTML){var tt=document.body.innerHTML.toLowerCase();var last=tt.indexOf("biztech_button.js\"");if(last>0){var first=tt.lastIndexOf("\"",last);if(first>0&&first<last)loc=document.body.innerHTML.substr(first+1,last-first-1);}}}
@@ -26,7 +26,7 @@ mainMenuItem("../images/biztech_button_b2",".gif",30,78,"javascript:;","","Creat
 mainMenuItem("../images/biztech_button_b3",".gif",30,78,"javascript:;","","Edit",2,2,"biztech_button_plain");
 mainMenuItem("../images/biztech_button_b5",".gif",30,78,"javascript:;","","Options",2,2,"biztech_button_plain");
 mainMenuItem("../images/biztech_button_b6",".gif",30,78,"javascript:callHelp();","","Help",2,2,"biztech_button_plain");
-mainMenuItem("../images/biztech_button_b7",".gif",30,78,"javascript:callLogout();","","Logout",2,2,"biztech_button_plain");
+mainMenuItem("../images/biztech_button_b7",".gif",30,78,"javascript:logout();","","Logout",2,2,"biztech_button_plain");
 endMainMenu("",0,0);
 
 startSubmenu("../images/biztech_button_b5","biztech_button_menu",175);
