@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.24 2009-02-25 20:00:34 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.25 2009-02-25 21:19:22 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -526,6 +526,15 @@ function setup()
     var selDType = document.createVDForm.tfLowValue.value;
 }
 
+function openEVSConceptsWindow(){
+  var conceptUrl = "<%=evsConceptUrl%>";
+  var vocab = RepQual.innerText;
+  var code = RepQualID.innerText;
+  conceptUrl = conceptUrl.replace("$VOCAB$",vocab);
+  conceptUrl = conceptUrl.replace("$CODE$",code);
+  window.open(conceptUrl,'','');
+}
+
 </SCRIPT>
 	</head>
 
@@ -845,14 +854,14 @@ function setup()
 														<tr>
 															<td colspan="3">
 																&nbsp;&nbsp;
-																<%if (!isView){%><a href=""><%}%>
-																	<label id="RepQualID" for="selRepQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('RepQualifier', 'true')"<%}%>></label>
-																<%if (!isView){%></a><%}%>
+																<a href="">
+																	<label id="RepQualID" for="selRepQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('RepQualifier', 'true');"<%}else{%>onclick="javascript:openEVSConceptsWindow();"<% }%></label>
+																</a>
 															</td>
 															<td colspan="3">
 																&nbsp;&nbsp;
 																<%if (!isView){%><a href=""><%}else{ if(repTermUrl != null){%><a href=""><%}}%>
-																	<label id="RepTermID" for="selRepTerm" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('RepTerm', 'true')"<%}else{ if(repTermUrl != null){%>onclick="window.open('<%=repTermUrl%>','','')"<%}}%></label>
+																	<label id="RepTermID" for="selRepTerm" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('RepTerm', 'true');"<%}else{ if(repTermUrl != null){%>onclick="window.open('<%=repTermUrl%>','','');"<%}}%></label>
 																<%if (!isView){%></a><%}else{ if(repTermUrl != null){%></a><%}}%>
 															</td>
 														</tr>
