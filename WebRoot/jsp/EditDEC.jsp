@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.20 2009-02-20 20:27:37 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.21 2009-02-25 20:00:34 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -101,6 +101,19 @@
     if(sObjClassPrimary == null) sObjClassPrimary = "";
     if(sPropClassPrimary == null) sPropClassPrimary = "";
  
+    String evsConceptUrl = ToolURL.getEVSBrowserConceptUrl(pageContext);
+    String objectClassUrl = null;
+    String propClassUrl = null;
+    
+    if ((sOCCCodeDB != null) && (sOCCCode != null) && evsConceptUrl != null){
+        objectClassUrl = evsConceptUrl.replace("$VOCAB$",sOCCCodeDB);
+        objectClassUrl = objectClassUrl.replace("$CODE$",sOCCCode);
+    }
+    if ((sPCCCodeDB != null) && (sPCCCode != null) &&  evsConceptUrl != null){
+        propClassUrl = evsConceptUrl.replace("$VOCAB$",sPCCCodeDB);
+        propClassUrl = propClassUrl.replace("$CODE$",sPCCCode);
+    }
+    
     if(sOCCCodeDB == null) sOCCCodeDB = "";
     if(sOCCCode == null) sOCCCode = "";
     if(sPCCCodeDB == null) sPCCCodeDB = "";
@@ -628,9 +641,9 @@
 											</td>
 											<td colspan="3">
 												&nbsp;&nbsp;
-												<%if (!isView){%><a href=""><%}%>
-													<label id="ObjClassID" for="selObjectClass" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('ObjectClass', 'true')"<%}%>></label>
-												<%if (!isView){%></a><%}%>
+												<%if (!isView){%><a href=""><%}else{ if(objectClassUrl != null){%><a href=""><%}}%>
+													<label id="ObjClassID" for="selObjectClass" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('ObjectClass', 'true')"<%}else{ if(objectClassUrl != null){%>onclick="window.open('<%=objectClassUrl%>','','')"<%}}%></label>
+												<%if (!isView){%></a><%}else{ if(objectClassUrl != null){%></a><%}}%>
 											</td>
 										</tr>
 										<tr height="6">
@@ -770,9 +783,9 @@
 											</td>
 											<td colspan="3">
 												&nbsp;&nbsp;
-												<%if (!isView){%><a href=""><%}%>
-													<label id="PropClassID" for="selPropertyClass" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('PropertyClass', 'true')"<%}%>></label>
-												<%if (!isView){%></a><%}%>
+												<%if (!isView){%><a href=""><%}else{ if(propClassUrl != null){%><a href=""><%}}%>
+													<label id="PropClassID" for="selPropertyClass" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('PropertyClass', 'true')"<%}else{ if(propClassUrl != null){%>onclick="window.open('<%=propClassUrl%>','','')"><%}}%></label>
+												<%if (!isView){%></a><%}else{ if(propClassUrl != null){%></a><%}}%>
 											</td>
 										</tr>
 										<tr height="6">

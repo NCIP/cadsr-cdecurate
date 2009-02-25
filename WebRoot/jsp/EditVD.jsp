@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.23 2009-02-20 20:27:37 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.24 2009-02-25 20:00:34 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -137,11 +137,17 @@
 			if (sRepTermID == null)
 				sRepTermID = "";
 			String sRepTerm = ""; //make the rep term using the concepts
-
+            
+            String evsConceptUrl = ToolURL.getEVSBrowserConceptUrl(pageContext);
+            String repTermUrl = null;
 			String sRepTermVocab = m_VD.getVD_REP_EVS_CUI_ORIGEN();
+			String sRepTerm_ID = m_VD.getVD_REP_CONCEPT_CODE();
+			if ( (sRepTermVocab != null) && (sRepTerm_ID != null) && (evsConceptUrl!=null)){
+			  repTermUrl = evsConceptUrl.replace("$VOCAB$",sRepTermVocab);
+              repTermUrl = repTermUrl.replace("$CODE$",sRepTerm_ID);
+			}
 			if (sRepTermVocab == null || sRepTermVocab.equals("null"))
 				sRepTermVocab = "";
-			String sRepTerm_ID = m_VD.getVD_REP_CONCEPT_CODE();
 			if (sRepTerm_ID == null || sRepTerm_ID.equals("null"))
 				sRepTerm_ID = "";
 			String sRepQualVocab = m_VD.getVD_REP_QUAL_EVS_CUI_ORIGEN();
@@ -845,9 +851,9 @@ function setup()
 															</td>
 															<td colspan="3">
 																&nbsp;&nbsp;
-																<%if (!isView){%><a href=""><%}%>
-																	<label id="RepTermID" for="selRepTerm" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('RepTerm', 'true')"<%}%>></label>
-																<%if (!isView){%></a><%}%>
+																<%if (!isView){%><a href=""><%}else{ if(repTermUrl != null){%><a href=""><%}}%>
+																	<label id="RepTermID" for="selRepTerm" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('RepTerm', 'true')"<%}else{ if(repTermUrl != null){%>onclick="window.open('<%=repTermUrl%>','','')"<%}}%></label>
+																<%if (!isView){%></a><%}else{ if(repTermUrl != null){%></a><%}}%>
 															</td>
 														</tr>
 														<tr height="1">
