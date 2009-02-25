@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.8 2009-01-26 20:38:05 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.9 2009-02-25 19:51:41 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -21,11 +21,14 @@ var helpWindow = null;
 var aboutWindow = null;
 var sentinelWindow = null;
 
-   
-   function callLogout()
+   function NoConfirm(){
+       window.open('','_self','');
+       window.close();
+   }
+   function logout()
    {
-      if(confirm("Are you sure you want to logout?"))
-        document.LogoutForm.submit();
+      if(confirm("Are you sure you want to logout and close the window?"))
+        NoConfirm();
    }
    function callTimeout()
    {
