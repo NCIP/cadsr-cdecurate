@@ -507,7 +507,7 @@ public class DataElementServlet extends CurationServlet{
             pageDE.setDEC_VD_CHANGED(true); // mark as changed
         }
         // update session attributes
-        DataManager.setAttribute(session, "m_DE", pageDE);
+        //DataManager.setAttribute(session, "m_DE", pageDE);
         return pageDE;
     }
 
@@ -1663,9 +1663,11 @@ public class DataElementServlet extends CurationServlet{
         if (vList.size() > 0) // get all attributes
         {
         	DE_Bean DEBean = (DE_Bean) vList.elementAt(0);
-            DEBean = serAC.getDEAttributes(DEBean, "openView", "viewDE");
+        	DEBean = serAC.getDEAttributes(DEBean, "openView", "viewDE");
             serAC.getDDEInfo(DEBean.getDE_DE_IDSEQ()); // clear dde
-            DataManager.setAttribute(session, "m_DE", DEBean);
+            m_classReq.setAttribute("viewDEId", DEBean.getIDSEQ());
+            String viewDE = "viewDE" + DEBean.getIDSEQ();
+            DataManager.setAttribute(session, viewDE, DEBean);
             String title = "CDE Curation View DE "+DEBean.getDE_LONG_NAME()+ " [" + DEBean.getDE_MIN_CDE_ID() + "v" + DEBean.getDE_VERSION() +"]";
 			m_classReq.setAttribute("title", title);
 			m_classReq.setAttribute("publicID", DEBean.getDE_MIN_CDE_ID());
