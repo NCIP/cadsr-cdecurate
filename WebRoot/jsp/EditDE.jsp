@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.19 2009-02-20 20:27:37 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.20 2009-02-26 17:45:54 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -56,8 +56,15 @@
 			if (sOriginAction == null)
 				sOriginAction = "";
 			String sDDEAction = (String) session.getAttribute("DDEAction");
-
-			DE_Bean m_DE = (DE_Bean) session.getAttribute("m_DE");
+            DE_Bean m_DE = new DE_Bean();
+            String deID = ""; 
+			if (isView){
+	            deID = (String)request.getAttribute("viewDEId");
+	            String viewDE = "viewDE" + deID;
+	            m_DE = (DE_Bean) session.getAttribute(viewDE);
+	        }else{
+                m_DE = (DE_Bean)session.getAttribute("m_DE");
+            }  
 			if (m_DE == null)
 				m_DE = new DE_Bean();
 			// session.setAttribute("DEEditAction", "");
