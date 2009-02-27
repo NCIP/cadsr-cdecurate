@@ -441,11 +441,14 @@ function unQualifiedSearch(ac){
  }
     return flag;
 }
+
 function searchAll(){
         
         var ac = document.searchParmsForm.listSearchFor.value;
         var unQualifiedSearchflag = unQualifiedSearch(ac);
-        var checkDefaultSearch = checkIfDefaultSearch();
+        var allValues=new Array(); 
+        allValues = selectedContextsfunction(this);
+        var checkDefaultSearch = checkIfDefaultSearch(allValues);
    	    if(checkDefaultSearch && !unQualifiedSearchflag)
     	{
     		confirmation =  confirm("The Search will cause all caDSR content for "+ ac +" to be retrieved.\n"

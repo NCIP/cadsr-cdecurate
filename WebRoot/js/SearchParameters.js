@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchParameters.js,v 1.4 2009-02-18 19:13:42 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchParameters.js,v 1.5 2009-02-27 16:49:36 guthikondak Exp $
 // $Name: not supported by cvs2svn $
 
     function hourglass()
@@ -566,15 +566,18 @@ function testIsValidObject(objToTest) {
 	}
 
 //check if the user is performing a default search or he/she has selected any search criteria
-function checkIfDefaultSearch(){
+function checkIfDefaultSearch(allValues){
  
  var validObj = testIsValidObject(document.searchParmsForm.keyword)  
  if(validObj)
      var cond1 = (document.searchParmsForm.keyword.value==null || isEmpty(document.searchParmsForm.keyword.value));
   
  validObj = testIsValidObject(document.searchParmsForm.listMultiContextFilter)
- if(validObj) 
-  	cond1 = cond1 &&  document.searchParmsForm.listMultiContextFilter.value == "AllContext";
+ if(validObj) {
+  		//cond1 = cond1 &&  document.searchParmsForm.listMultiContextFilter.value == "AllContext";
+  		var selectedlistMultiContext = getSelections(document.searchParmsForm.elements["listMultiContextFilter"]);	
+		cond1 = cond1 &&  selectedlistMultiContext.length == allValues.length;
+  	}
 
  validObj = testIsValidObject(document.searchParmsForm.enumBox)
  if(validObj) 
@@ -640,3 +643,29 @@ function checkIfDefaultSearch(){
    }
 }
 
+
+function selectedContextsfunction(elm)
+{
+var listMultiContext = elm.searchParmsForm.elements["listMultiContextFilter"];
+var selectedlistMultiContext = getSelections(listMultiContext);
+var allValues=new Array(); 
+// test run through of returned array
+for(var k=0;k<selectedlistMultiContext.length;k++){
+allValues[k] = selectedlistMultiContext[k].value;
+}
+//alert(allValues);
+return allValues;
+}
+
+// returns references to the
+// actual option elements (not values)
+function getSelections(select)
+{
+var options = select.options,
+sOptions = [],
+opt, k=0;
+while(opt = options[k++])
+if(opt.selected)
+sOptions[sOptions.length] = opt
+return sOptions
+} 
