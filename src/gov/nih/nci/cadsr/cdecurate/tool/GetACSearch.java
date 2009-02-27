@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.84 2009-02-10 19:15:27 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.85 2009-02-27 23:30:11 guthikondak Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -4129,7 +4129,8 @@ public class GetACSearch implements Serializable
             if (sAction.equals("EditDesDE"))
                 sMenuAction = sAction;
             // reset cs/csi vectors prior to each block edit
-           
+            req.setAttribute("designateMenu", sMenuAction);
+            req.setAttribute("designateBE", "");
             Vector selectedRows = new Vector();
             String unCheckedRowId = (String) m_classReq.getParameter("unCheckedRowId");
             if (unCheckedRowId != null && !(unCheckedRowId == "")){
@@ -4143,6 +4144,7 @@ public class GetACSearch implements Serializable
                     	DataManager.setAttribute(session, "ckName", ckName);
                         vCheckList.addElement(ckName);
                         selectedRows.add(vSRows.elementAt(i));
+                        req.setAttribute("designateBE", "BlockEditDE");
                     }
             	}
             }
@@ -4199,6 +4201,9 @@ public class GetACSearch implements Serializable
                                 DEBean.setDE_BEGIN_DATE("");
                                 DEBean.setDE_END_DATE("");
                                 }
+                                String desigHeading = DEBean.getDE_LONG_NAME()+ " ["
+                                + DEBean.getDE_MIN_CDE_ID()+"v"+DEBean.getDE_VERSION()+"]";
+                                req.setAttribute("desigHeading", desigHeading);
                                 DataManager.setAttribute(session, "m_DE", DEBean);
                             }
                         }
