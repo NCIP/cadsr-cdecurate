@@ -1605,7 +1605,7 @@ public class SearchServlet extends CurationServlet {
     {
         HttpSession session = m_classReq.getSession();
         String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
-        // Modified the context default value from All Contexts to Standard Contexts
+        // to retrieve the context values
         Vector<String> serMultiContext = new Vector<String>();
         Vector<String> defaultContext = (Vector) session.getAttribute("vContext");
     	for (int i = 0; defaultContext.size() > i; i++) {
@@ -1615,6 +1615,7 @@ public class SearchServlet extends CurationServlet {
     			serMultiContext.addElement(sContextName);
     		}
     	}
+    	DataManager.setAttribute(session, "standardContexts", serMultiContext);
         // reset to default filter by criteria
         if (!menuAction.equals("searchForCreate"))
         {
