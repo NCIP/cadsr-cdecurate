@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDesignateDE.jsp,v 1.3 2008-07-03 21:31:42 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDesignateDE.jsp,v 1.4 2009-02-27 23:30:11 guthikondak Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -35,6 +35,9 @@
     if (acType == null) acType = "";
     String sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
     String sOriginAction = (String)session.getAttribute("originAction");
+    String desigMenuAction = (String)request.getAttribute("designateMenu");
+    String desigOriginAction = (String)request.getAttribute("designateBE");
+    String desigHeading = (String)request.getAttribute("desigHeading");
     if (sOriginAction == null) sOriginAction = "";
     String sACIDSEQ = "", sLongName = "";
     DE_Bean m_DE = null;
@@ -357,7 +360,7 @@
 					<th colspan=2 height="40">
 						<div align="left">
 							<%if (dispType.equals("Designation")) { %>
-							<% if (sMenuAction.equals("EditDesDE") && sOriginAction.equals("BlockEditDE")){%>
+							<% if (desigMenuAction.equals("EditDesDE") && desigOriginAction.equals("BlockEditDE")){%>
 							<label>
 								<font size=4>
 									Block Designate
@@ -366,13 +369,13 @@
 									</font>
 								</font>
 							</label>
-							<% } else if (sMenuAction.equals("EditDesDE")){%>
+							<% } else if (desigMenuAction.equals("EditDesDE")){%>
 							<label>
 								<font size=4>
 									Designate
 									<font color="#FF0000">
-										Data Element
-									</font>
+										Data Element 
+									</font>- <%=desigHeading%>
 								</font>
 							</label>
 							<% } %>
