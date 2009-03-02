@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.21 2009-02-26 18:14:32 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.22 2009-03-02 22:34:16 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -42,7 +42,7 @@
 			    vCS = (Vector) session.getAttribute("vCS");
 			    vCS_ID = (Vector) session.getAttribute("vCS_ID");
 			    vSource = (Vector) session.getAttribute("vSource");
-            }
+	        }
 			Vector results = (Vector) session.getAttribute("results");
 			String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
 			if (!isView) {
@@ -212,8 +212,14 @@
 			if (sNVType == null)
 				sNVType = "";
 			String sSelConcatChar = (String) session.getAttribute("sConcatChar");
+			if (sSelConcatChar == null)
+				sSelConcatChar = "";
 			String sSelRule = (String) session.getAttribute("sRule");
+			if (sSelRule == null)
+				sSelRule = "";
 			String sSelMethod = (String) session.getAttribute("sMethod");
+			if (sSelMethod == null)
+				sSelMethod = "";
 			Vector vRepType = new Vector();
 			Vector vDEComp = new Vector();
 			Vector vDECompID = new Vector();
@@ -222,12 +228,19 @@
 			if ((sDDEAction != null) && (sDDEAction != "CreateNewDEFComp")) {
 				vRepType = (Vector) session.getAttribute("vRepType");
 				vDEComp = (Vector) session.getAttribute("vDEComp");
+				if (vDEComp == null)
+				  vDEComp = new Vector();
 				vDECompID = (Vector) session.getAttribute("vDECompID");
+				if (vDECompID == null)
+				   vDECompID = new Vector();
 				vDECompOrder = (Vector) session.getAttribute("vDECompOrder");
-				vDECompRelID = (Vector) session.getAttribute("vDECompRelID");
+				if (vDECompOrder == null)
+				   vDECompOrder = new Vector();
+			    vDECompRelID = (Vector) session.getAttribute("vDECompRelID");
+			    if (vDECompRelID == null)
+			       vDECompRelID = new Vector(); 
 			}
-
-			String sDEID = "";
+            String sDEID = "";
 			String sDECompOrder = "";
 			if ((vDECompOrder != null) && (vDECompOrder.size() > 0))
 				sDECompOrder = (String) vDECompOrder.elementAt(0);
