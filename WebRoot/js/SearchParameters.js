@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchParameters.js,v 1.5 2009-02-27 16:49:36 guthikondak Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchParameters.js,v 1.6 2009-03-02 20:51:24 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
     function hourglass()
@@ -566,8 +566,8 @@ function testIsValidObject(objToTest) {
 	}
 
 //check if the user is performing a default search or he/she has selected any search criteria
-function checkIfDefaultSearch(allValues){
- 
+function checkIfDefaultSearch(numOfDefaultContexts){
+
  var validObj = testIsValidObject(document.searchParmsForm.keyword)  
  if(validObj)
      var cond1 = (document.searchParmsForm.keyword.value==null || isEmpty(document.searchParmsForm.keyword.value));
@@ -576,7 +576,7 @@ function checkIfDefaultSearch(allValues){
  if(validObj) {
   		//cond1 = cond1 &&  document.searchParmsForm.listMultiContextFilter.value == "AllContext";
   		var selectedlistMultiContext = getSelections(document.searchParmsForm.elements["listMultiContextFilter"]);	
-		cond1 = cond1 &&  selectedlistMultiContext.length == allValues.length;
+		cond1 = cond1 &&  selectedlistMultiContext.length == numOfDefaultContexts;
   	}
 
  validObj = testIsValidObject(document.searchParmsForm.enumBox)
