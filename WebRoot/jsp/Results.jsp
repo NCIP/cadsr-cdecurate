@@ -446,9 +446,8 @@ function searchAll(){
         
         var ac = document.searchParmsForm.listSearchFor.value;
         var unQualifiedSearchflag = unQualifiedSearch(ac);
-        var allValues=new Array(); 
-        allValues = selectedContextsfunction(this);
-        var checkDefaultSearch = checkIfDefaultSearch(allValues);
+        var numOfDefaultContexts = <%=vContext.size()%>;
+        var checkDefaultSearch = checkIfDefaultSearch(numOfDefaultContexts);
    	    if(checkDefaultSearch && !unQualifiedSearchflag)
     	{
     		confirmation =  confirm("The Search will cause all caDSR content for "+ ac +" to be retrieved.\n"
