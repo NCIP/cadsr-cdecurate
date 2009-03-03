@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.33 2009-02-10 19:15:26 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/PVAction.java,v 1.34 2009-03-03 20:12:32 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1181,9 +1181,13 @@ public class PVAction implements Serializable {
 				}
 			}
 		
-			int index = vNames.lastIndexOf(",") ;
-			vNames = vNames.substring(0,index);
-			
+			if (!(vNames.equals(""))){
+			  int index = vNames.lastIndexOf(",") ;
+			  if (index>0){
+			    vNames = vNames.substring(0,index);
+			  }  
+			}  
+		
 			Vector<VM_Bean> vVMs = new Vector<VM_Bean>();
 			//query the database
 			if (!vNames.equals("")) {
