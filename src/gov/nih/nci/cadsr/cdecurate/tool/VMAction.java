@@ -166,6 +166,8 @@ public class VMAction implements Serializable
 			if (iRecs != null)
 				sRecs = iRecs.toString();
 			data.setNumRecFound(sRecs);
+			httpReq.getSession().setAttribute("recsFound", data.getNumRecFound());
+			
 
 			// make keyWordLabel label request session
 			String sKeyword = "";
