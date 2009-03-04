@@ -7,10 +7,10 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
-import gov.nih.nci.cadsr.persist.common.DBHelper;
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.persist.exception.DBException;
 
-public class User_Accounts_Mgr extends DBHelper {
+public class User_Accounts_Mgr{
 	
 	private Logger logger = Logger.getLogger(this.getClass());
 	
@@ -38,7 +38,8 @@ public class User_Accounts_Mgr extends DBHelper {
 			throw new DBException("Cannot able to get userFullName");
 		} finally {
 			try {
-				DBHelper.close(rs, statement);
+				rs = SQLHelper.closeResultSet(rs);
+				statement = SQLHelper.closePreparedStatement(statement);
 			} catch (Exception e) {
 			}
 		}

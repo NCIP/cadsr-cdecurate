@@ -1,6 +1,6 @@
 package gov.nih.nci.cadsr.persist.ac;
 
-import gov.nih.nci.cadsr.persist.common.DBHelper;
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.persist.common.DBManager;
 import gov.nih.nci.cadsr.persist.de.DeErrorCodes;
 import gov.nih.nci.cadsr.persist.exception.DBException;
@@ -53,7 +53,7 @@ public class Ac_Histories_Mgr extends DBManager {
 			errorList.add(DeErrorCodes.API_DE_504);
 			throw new DBException(errorList);
 		} finally {
-			DBHelper.close(statement);
+			statement = SQLHelper.closePreparedStatement(statement);
 		}
 	}
 }

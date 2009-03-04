@@ -1,9 +1,9 @@
 package gov.nih.nci.cadsr.persist.de;
 
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.persist.common.BaseVO;
 import gov.nih.nci.cadsr.persist.common.DBConstants;
 import gov.nih.nci.cadsr.persist.common.ACBase;
-import gov.nih.nci.cadsr.persist.common.DBHelper;
 import gov.nih.nci.cadsr.persist.exception.DBException;
 
 import java.sql.Connection;
@@ -78,7 +78,7 @@ public class Data_Elements_Mgr extends ACBase {
 			errorList.add(DeErrorCodes.API_DE_500);
 			throw new DBException(errorList);
 		} finally {
-			DBHelper.close(statement);
+			statement = SQLHelper.closePreparedStatement(statement);
 		}
 		return primaryKey;
 	}
@@ -120,7 +120,7 @@ public class Data_Elements_Mgr extends ACBase {
 				sql.append(", dec_idseq = '" + deVO.getDec_IDSEQ() + "'");
 			}
 			if (deVO.getPrefferred_def() != null) {
-				sql.append(", preferred_definition = '"	+ deVO.getPrefferred_def() + "'");
+				sql.append(", preferred_definition = '"	+ deVO.getPrefferred_def().replace("'","\"") + "'");
 			}
 			if (deVO.getAsl_name() != null) {
 				sql.append(", asl_name = '" + deVO.getAsl_name() + "'");
@@ -155,7 +155,7 @@ public class Data_Elements_Mgr extends ACBase {
 				if (deVO.getChange_note() == "") {
 					sql.append(",  change_note = ''");
 				} else {
-					sql.append(",  change_note = '" + deVO.getChange_note()	+ "'");
+					sql.append(",  change_note = '" + deVO.getChange_note().replace("'","\"")	+ "'");
 				}
 			}
 			if (deVO.getOrigin() != null) {
@@ -180,7 +180,7 @@ public class Data_Elements_Mgr extends ACBase {
 			errorList.add(DeErrorCodes.API_DE_501);
 			throw new DBException(errorList);
 		} finally {
-			DBHelper.close(statement);
+			statement = SQLHelper.closeStatement(statement);
 		}
 
 	}
@@ -220,7 +220,7 @@ public class Data_Elements_Mgr extends ACBase {
 			errorList.add(DeErrorCodes.API_DE_502);
 			throw new DBException(errorList);
 		} finally {
-			DBHelper.close(statement);
+			statement = SQLHelper.closePreparedStatement(statement);
 		}
 
 	}
@@ -270,7 +270,8 @@ public class Data_Elements_Mgr extends ACBase {
 			errorList.add(DeErrorCodes.API_DE_000);
 			throw new DBException(errorList);
 		} finally {
-			DBHelper.close(rs, stmt);
+			rs = SQLHelper.closeResultSet(rs);
+			stmt = SQLHelper.closePreparedStatement(stmt);
 		}
 		return version;
 
@@ -301,7 +302,8 @@ public class Data_Elements_Mgr extends ACBase {
 			errorList.add(DeErrorCodes.API_DE_000);
 			throw new DBException(errorList);
 		} finally {
-			DBHelper.close(rs, stmt);
+			rs = SQLHelper.closeResultSet(rs);
+			stmt = SQLHelper.closePreparedStatement(stmt);
 		}
 		return aslName;
 
@@ -350,7 +352,8 @@ public class Data_Elements_Mgr extends ACBase {
 			throw new DBException("API_DE_000");
 		} finally {
 			try {
-				DBHelper.close(rs, stmt);
+				rs = SQLHelper.closeResultSet(rs);
+				stmt = SQLHelper.closePreparedStatement(stmt);
 			} catch (Exception e) {
 			}
 		}

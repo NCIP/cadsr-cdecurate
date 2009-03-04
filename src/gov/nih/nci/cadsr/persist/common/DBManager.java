@@ -1,6 +1,6 @@
 package gov.nih.nci.cadsr.persist.common;
 
-import gov.nih.nci.cadsr.persist.common.DBHelper;
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.persist.de.DeErrorCodes;
 import gov.nih.nci.cadsr.persist.exception.DBException;
 
@@ -41,7 +41,8 @@ public abstract class DBManager {
 			errorList.add(DeErrorCodes.API_DE_400);
 			throw new DBException(errorList);
 		} finally {
-			DBHelper.close(rs, stmt);
+			rs = SQLHelper.closeResultSet(rs);
+			stmt = SQLHelper.closePreparedStatement(stmt);
 		}
 		return key;
 
@@ -70,7 +71,8 @@ public abstract class DBManager {
 			this.errorList.add(DeErrorCodes.API_DE_000);
 			throw new DBException(this.errorList);
 		} finally {
-			DBHelper.close(rs, statement);
+			rs = SQLHelper.closeResultSet(rs);
+			statement = SQLHelper.closeStatement(statement);
 		}
 		return version;
 	}
@@ -99,7 +101,8 @@ public abstract class DBManager {
 			errorList.add(DeErrorCodes.API_DE_000);
 			throw new DBException(errorList);
 		} finally {
-			DBHelper.close(rs, statement);
+			rs = SQLHelper.closeResultSet(rs);
+			statement = SQLHelper.closeStatement(statement);
 		}
 
 		return isExists;
@@ -127,7 +130,7 @@ public abstract class DBManager {
 			errorList.add(DeErrorCodes.API_DE_503);
 			throw new DBException(errorList);
 		} finally {
-			DBHelper.close(statement);
+			statement = SQLHelper.closeStatement(statement);
 		}
 
 	}
@@ -155,7 +158,8 @@ public abstract class DBManager {
 			this.errorList.add(DeErrorCodes.API_DE_000);
 			throw new DBException(this.errorList);
 		} finally {
-			DBHelper.close(rs, statement);
+			rs = SQLHelper.closeResultSet(rs);
+			statement = SQLHelper.closeStatement(statement);
 		}
 		return sourceIDSEQ;
 	}

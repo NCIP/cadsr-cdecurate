@@ -1,7 +1,7 @@
 package gov.nih.nci.cadsr.persist.ac;
 
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.persist.common.DBConstants;
-import gov.nih.nci.cadsr.persist.common.DBHelper;
 import gov.nih.nci.cadsr.persist.common.DBManager;
 import gov.nih.nci.cadsr.persist.exception.DBException;
 
@@ -117,7 +117,8 @@ public class Admin_Components_Mgr extends DBManager {
 			throw new DBException("Cannot able to get ActlName");
 		} finally {
 			try {
-				DBHelper.close(rs, statement);
+				rs = SQLHelper.closeResultSet(rs);
+				statement = SQLHelper.closePreparedStatement(statement);
 			} catch (Exception e) {
 			}
 		}
@@ -141,7 +142,8 @@ public class Admin_Components_Mgr extends DBManager {
 			throw new DBException("Cannot able to get PublicID and Version");
 		} finally {
 			try {
-				DBHelper.close(rs, statement);
+				rs = SQLHelper.closeResultSet(rs);
+				statement = SQLHelper.closePreparedStatement(statement);
 			} catch (Exception e) {
 			}
 		}
@@ -168,7 +170,8 @@ public class Admin_Components_Mgr extends DBManager {
 			throw new DBException("Cannot able to get AC Idseq");
 		} finally {
 			try {
-				DBHelper.close(rs, statement);
+				rs = SQLHelper.closeResultSet(rs);
+				statement = SQLHelper.closePreparedStatement(statement);
 			} catch (Exception e) {
 		}
 		
@@ -197,7 +200,8 @@ public String getACLongName(long publicID, double version, Connection conn) thro
 		throw new DBException("Cannot able to get AC long_name");
 	} finally {
 		try {
-			DBHelper.close(rs, statement);
+			rs = SQLHelper.closeResultSet(rs);
+			statement = SQLHelper.closePreparedStatement(statement);
 		} catch (Exception e) {
 	}
 	
