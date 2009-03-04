@@ -8,8 +8,8 @@ import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.persist.common.DBConstants;
-import gov.nih.nci.cadsr.persist.common.DBHelper;
 import gov.nih.nci.cadsr.persist.common.DBManager;
 import gov.nih.nci.cadsr.persist.vm.VmErrorCodes;
 import gov.nih.nci.cadsr.persist.exception.DBException;
@@ -82,7 +82,8 @@ public class Value_Meanings_Mgr extends DBManager{
 			throw new DBException(errorList);
 		} finally {
 			try {
-				DBHelper.close(rs, stmt);
+				rs = SQLHelper.closeResultSet(rs);
+				stmt = SQLHelper.closePreparedStatement(stmt);
 			} catch (Exception e) {
 			}
 		}
@@ -136,7 +137,8 @@ public class Value_Meanings_Mgr extends DBManager{
 			errorList.add(VmErrorCodes.API_VM_000);
 			throw new DBException(errorList);
 		} finally {
-			DBHelper.close(rs, stmt);
+			rs = SQLHelper.closeResultSet(rs);
+			stmt = SQLHelper.closePreparedStatement(stmt);
 		}
 		return version;
 
@@ -200,7 +202,7 @@ public class Value_Meanings_Mgr extends DBManager{
 			errorList.add(VmErrorCodes.API_VM_500);
 			throw new DBException(errorList);
 		} finally {
-			DBHelper.close(statement);
+			statement = SQLHelper.closePreparedStatement(statement);
 		}
 		return primaryKey;
 	}
@@ -235,7 +237,7 @@ public class Value_Meanings_Mgr extends DBManager{
 			}
 			if (vmVO.getPrefferred_def() != null) {
 				sql.append(", preferred_definition = '"
-						+ vmVO.getPrefferred_def() + "'");
+						+ vmVO.getPrefferred_def().replace("'","\"") + "'");
 			}
 			if (vmVO.getLong_name() != null) {
 				sql.append(", long_name = '" + vmVO.getLong_name() + "'");
@@ -268,7 +270,7 @@ public class Value_Meanings_Mgr extends DBManager{
 				if (vmVO.getChange_note() == "") {
 					sql.append(",  change_note = ''");
 				} else {
-					sql.append(",  change_note = '" + vmVO.getChange_note()	+ "'");
+					sql.append(",  change_note = '" + vmVO.getChange_note().replace("'","\"")	+ "'");
 				}
 			}
 			if (vmVO.getOrigin() != null) {
@@ -294,7 +296,7 @@ public class Value_Meanings_Mgr extends DBManager{
 			errorList.add(VmErrorCodes.API_VM_501);
 			throw new DBException(errorList);
 		} finally {
-			DBHelper.close(statement);
+			statement = SQLHelper.closeStatement(statement);
 		}
 
 	}
