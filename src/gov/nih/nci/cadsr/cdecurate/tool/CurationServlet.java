@@ -4273,6 +4273,7 @@ public class CurationServlet
           HttpSession session = m_classReq.getSession();
     	  EVS_UserBean eUser = new EVS_UserBean();
           eUser.getEVSInfoFromDSR(m_classReq, m_classRes, this);
+          session.setAttribute("EvsUserBean", this.sessionData.EvsUsrBean);
           EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
           evs.getMetaSources();
           session.setAttribute("preferredVocab", eUser.getPrefVocab());
