@@ -135,6 +135,10 @@ public class SearchServlet extends CurationServlet {
                 getAC.getACList(m_classReq, m_classRes, "", true, "ALL");
                 doOpenSearchPage();
                 getCompAttrList("DataElement", "searchForCreate");
+                EVS_UserBean eUser = (EVS_UserBean) session.getAttribute("EvsUserBean");
+                if (eUser != null){
+                	this.sessionData.EvsUsrBean = eUser;
+                }
             }
             else
             {
