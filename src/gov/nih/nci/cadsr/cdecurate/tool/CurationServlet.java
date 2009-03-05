@@ -430,16 +430,23 @@ public class CurationServlet
                     	 if (cancelLogin.equals("No")){
                            login(m_classReq,m_classRes,session);
                          }  
+                    	 String userName = (String)session.getAttribute("Username");
                     	 String directLogin = (String)session.getAttribute("directLogin");
-                    	 if ((directLogin != null) && (directLogin).equals("yes")){
-                    		RequestDispatcher rd = this.m_servletContext.getRequestDispatcher("/");
-             				rd.forward(m_classReq, m_classRes);
-             				return;
-                    	 }
-                    	 String prevReq = m_classReq.getParameter("previousReqType");
-                         if (prevReq == null) prevReq = "/SearchResultsPage.jsp";
-                         ForwardJSP(m_classReq, m_classRes, prevReq);
-                         break;
+                    	 if ((directLogin != null) && (directLogin).equals("yes")) {
+							if ((userName != null) || ((userName == null) && (!cancelLogin.equals("No")))) {
+								session.setAttribute("directLogin", "No");
+								RequestDispatcher rd = this.m_servletContext.getRequestDispatcher("/");
+								rd.forward(m_classReq, m_classRes);
+								return;
+							}
+						}
+						if ((userName != null) || ((userName == null) && (!cancelLogin.equals("No")))) {
+							String prevReq = m_classReq.getParameter("previousReqType");
+							if (prevReq == null)
+								prevReq = "/SearchResultsPage.jsp";
+							ForwardJSP(m_classReq, m_classRes, prevReq);
+						} 
+                        break;
                     }
                     if ("heartbeat".equals(reqType))
                     {
