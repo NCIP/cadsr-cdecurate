@@ -377,6 +377,10 @@ public class CurationServlet
         {
         	m_conn = connectDB();
         	setConn(m_conn);
+        	String userName = (String)session.getAttribute("Username");
+        	if (userName != null){
+        		setEffectiveUser(userName);
+        	}
         }
     }
     
@@ -4294,6 +4298,16 @@ public class CurationServlet
           logger.error("Servlet-Login-evsthread : " + ee.toString(), ee);
       }
   }
-  
-
+  private void setEffectiveUser(String userName){
+	  CallableStatement cstmt=null;
+	  try{
+		  cstmt = this.m_conn.prepareCall("{call admin_security_util.seteffectiveuser(?)}");
+		  cstmt.setString(1, userName);
+		  cstmt.execute();
+	  }catch (SQLException e){
+		     logger.error("ERROR in setEffectiveUser: " + e.toString(), e);
+	  }finally{
+	       	cstmt = SQLHelper.closeCallableStatement(cstmt);
+	  }
+  }
 } // end of class
