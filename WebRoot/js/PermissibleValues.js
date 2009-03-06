@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.10 2009-02-20 21:17:37 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.11 2009-03-06 20:15:13 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -1486,7 +1486,7 @@
     }
     function openViewVMWindow(curPV, id)
     {
-    	var name = "ViewAC"+id.replace(/-/g,"");
+    	var name = "ViewAC"+id.replace(/-/g,"")+curPV;
     	var viewWindow = window.open("../../cdecurate/NCICurationServlet?reqType=viewPVAction&action=viewVM&viewPVInd=" +curPV+ "&id=" +id, name, "width=1000,height=1000,top=0,left=0,resizable=yes,scrollbars=yes");
     }
     
