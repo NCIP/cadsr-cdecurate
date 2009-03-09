@@ -43,9 +43,8 @@
                         </table>
                     </td>
                 </tr>
-                <br/>
-				<tr>
-					<td colspan="2" align="center">
+         		<tr>
+					<td colspan="2" align="center"><br/>
 						<%if (errMessage.equals("")) {%>
 
 						<h3 align="center" valign="center">
