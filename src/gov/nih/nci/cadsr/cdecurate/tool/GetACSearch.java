@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.85 2009-02-27 23:30:11 guthikondak Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.86 2009-03-11 21:11:16 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -256,6 +256,9 @@ public class GetACSearch implements Serializable
                 if (sSearchIn.equals("minID"))
                 {
                     String sMinID = sKeyword;
+                    if (sMinID != null){
+                       int publicId = Integer.parseInt(sMinID);
+                    }   
                     // if ((sMinID != "") && sSearchAC.equals("DataElement"))
                     // sMinID could be empty when search all Public ID for, example, a creator
                     if (sSearchAC.equals("DataElement"))
@@ -558,6 +561,8 @@ public class GetACSearch implements Serializable
             // capture the duration
             // logger.info(m_servlet.getLogMessage(req, "getKeywordResult", "ending search", startDate, new
             // java.util.Date()));
+        }catch(NumberFormatException e){
+        	
         }
         catch (Exception e)
         {
