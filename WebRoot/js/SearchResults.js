@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.30 2009-02-18 19:13:42 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.31 2009-03-11 19:45:40 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -872,7 +872,7 @@ function createNewJS(selAC, type){
    } 
   
  //This function calculates the number of checkboxes checked
-function checkClickJS(cb,selAC,rowsChecked)  {
+function checkClickJS(cb,selAC,rowsChecked,totalRecs)  {
                 if (rowsChecked > 0){
                    checkCnt = rowsChecked;
                 }
@@ -882,6 +882,9 @@ function checkClickJS(cb,selAC,rowsChecked)  {
                 }  else   {
                     --checkCnt;
                     --numRowsSelected;
+                }
+                if (checkCnt == totalRecs){
+                   document.searchResultsForm.allCK.checked = true;
                 }
                 var msg = document.getElementById("selCnt");
                 msg.innerText = checkCnt;

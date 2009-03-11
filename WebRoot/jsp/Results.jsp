@@ -281,6 +281,11 @@
 		vSelAttr = (Vector) session.getAttribute("selectedAttr");
 		vCheckList = (Vector) session.getAttribute("CheckList");
 	}
+	int totolNumRec = 0;
+	if ((nRecs != null) && !(nRecs.equals("No "))){
+	  totolNumRec = Integer.parseInt(nRecs);
+	}
+	
 	int rowsChecked = 0;
 	if (vCheckList!=null){
 	    rowsChecked = vCheckList.size();
@@ -702,13 +707,17 @@ function LoadKeyHandler(){
         %>
   
    function checkClick(cb){
+   if ((cb.checked == false) && (document.searchResultsForm.allCK.checked == true)){
+     document.searchResultsForm.allCK.checked = false;
+   }
    var numRowsChecked = <%=rowsChecked%>;
+   var totalRec = <%=totolNumRec%>;
    if((numRowsChecked > 0) && (document.searchResultsForm.count.value == "1")){
-       checkClickJS(cb,'<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>',numRowsChecked);
+       checkClickJS(cb,'<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>',numRowsChecked, totalRec);
        document.searchResultsForm.count.value = ">1";
     }else{
         var num = 0;
-        checkClickJS(cb,'<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', num); 
+        checkClickJS(cb,'<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', num, totalRec); 
     }   
  }  
  function SelectUnSelectCheckBox()
@@ -725,8 +734,6 @@ function LoadKeyHandler(){
         }
       }
       SelectAllOn = "true";
-      if (document.searchResultsForm.CheckGif != null)
-          document.searchResultsForm.CheckGif.alt = "Unselect All";
       ShowSelectedRows(true);
     }
     else{
@@ -739,9 +746,7 @@ function LoadKeyHandler(){
         }
       }
       SelectAllOn = "false";
-       if (document.searchResultsForm.CheckGif != null)
-          document.searchResultsForm.CheckGif.alt = "Select All";
-       ShowSelectedRows(false);
+      ShowSelectedRows(false);
     }
   } 
   function Back()
@@ -2224,11 +2229,8 @@ function ShowSelectedRowss(){
 				 <tr valign="middle">
 					<%    if (sSelAC.equals("Data Element") || !sMAction.equals("searchForCreate")) {     %>
 					<th class="rsCell">
-						<a href="javascript:SelectUnSelectCheckBox()">
-							<img id="CheckGif" src="images/CheckBox.gif" border="0" alt="Select All" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
-						</a>
+						    <input type="checkbox" <%if((sSelectAll).equals("true")){%>checked<%}%> onClick="javascript:SelectUnSelectCheckBox();" name = "allCK" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 					</th>
-					
 					<th class="rsCell">
 					</th>
 					<%    } else   { %>
