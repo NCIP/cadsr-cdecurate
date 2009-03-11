@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.86 2009-03-11 21:11:16 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.87 2009-03-11 22:34:36 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -256,10 +256,7 @@ public class GetACSearch implements Serializable
                 if (sSearchIn.equals("minID"))
                 {
                     String sMinID = sKeyword;
-                    if (sMinID != null){
-                       int publicId = Integer.parseInt(sMinID);
-                    }   
-                    // if ((sMinID != "") && sSearchAC.equals("DataElement"))
+                     // if ((sMinID != "") && sSearchAC.equals("DataElement"))
                     // sMinID could be empty when search all Public ID for, example, a creator
                     if (sSearchAC.equals("DataElement"))
                     {
@@ -561,9 +558,8 @@ public class GetACSearch implements Serializable
             // capture the duration
             // logger.info(m_servlet.getLogMessage(req, "getKeywordResult", "ending search", startDate, new
             // java.util.Date()));
-        }catch(NumberFormatException e){
-        	
-        }
+        }    	
+        
         catch (Exception e)
         {
             logger.error("ERROR - GetACSearch-getKeywordResult!! : " + e.toString(), e);
@@ -1295,7 +1291,10 @@ public class GetACSearch implements Serializable
         HttpSession session = m_classReq.getSession();
         try
         {
-            int g = 0;
+            if ((CDE_ID != null) && !(CDE_ID.equals(""))){
+               int id = Integer.parseInt(CDE_ID);	
+            }
+        	int g = 0;
             // check if search in is protocol/crf name
             boolean isProtoCRF = false;
             if (sProtoId != null && !sProtoId.equals(""))
@@ -1496,7 +1495,7 @@ public class GetACSearch implements Serializable
                     }
                 }
             }
-        }
+        }catch (NumberFormatException e){}
         catch (Exception e)
         {
           logger.error("ERROR - GetACSearch-DESearch for other : " + e.toString(), e);
@@ -1629,7 +1628,10 @@ public class GetACSearch implements Serializable
         CallableStatement cstmt = null;
         try
         {
-            if (m_servlet.getConn() == null)
+        	if ((DEC_ID != null) && !(DEC_ID.equals(""))){
+                int id = Integer.parseInt(DEC_ID);	
+             }
+        	if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
@@ -1733,7 +1735,7 @@ public class GetACSearch implements Serializable
                     }
                 }
             }
-        }
+        }catch (NumberFormatException e){}
         catch (Exception e)
         {
           logger.error("ERROR - GetACSearch-DECSearch for other : " + e.toString(), e);
@@ -1814,7 +1816,11 @@ public class GetACSearch implements Serializable
         CallableStatement cstmt = null;
         try
         {
-            if (m_servlet.getConn() == null)
+        	if ((VD_ID != null) && !VD_ID.equals("")){
+            	int id = Integer.parseInt(VD_ID);
+             }
+
+        	if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
@@ -1939,6 +1945,7 @@ public class GetACSearch implements Serializable
                 }
             }
         }
+        catch (NumberFormatException e){}
         catch (Exception e)
         {
           logger.error("ERROR - GetACSearch-doVDSearch for other : " + e.toString(), e);
@@ -2006,7 +2013,10 @@ public class GetACSearch implements Serializable
         CallableStatement cstmt = null;
         try
         {
-            if (m_servlet.getConn() == null)
+            if ((CD_ID != null) && !CD_ID.equals("")){
+            	int id = Integer.parseInt(CD_ID);
+             }
+        	if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
@@ -2080,7 +2090,7 @@ public class GetACSearch implements Serializable
                     }
                 }
             }
-        }
+        }catch (NumberFormatException e){}
         catch (Exception e)
         {
            logger.error("ERROR - GetACSearch-CDSearch for other : " + e.toString(), e);
@@ -3675,7 +3685,11 @@ public class GetACSearch implements Serializable
         String compType = "";
         try
         {
-            // Create a Callable Statement object.
+        	if ((ID != null) && !ID.equals("")){
+            	int id = Integer.parseInt(ID);
+             }
+ 
+        	// Create a Callable Statement object.
            // conn = m_servlet.connectDB(m_classReq, m_classRes);
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
@@ -3756,7 +3770,7 @@ public class GetACSearch implements Serializable
                     vList.addElement(OCBean);
                 }
             }
-        }
+        }catch (NumberFormatException e){}
         catch (Exception e)
         {
            logger.error("ERROR - GetACSearch-do_caDSRSearch for other : " + e.toString(), e);
@@ -3790,7 +3804,10 @@ public class GetACSearch implements Serializable
         CallableStatement cstmt = null;
         try
         {
-            HttpSession session = (HttpSession) m_classReq.getSession();
+        	if ((conID != null) && !conID.equals("")){
+            	int id = Integer.parseInt(conID);
+            }
+        	HttpSession session = (HttpSession) m_classReq.getSession();
             EVS_UserBean eUser = (EVS_UserBean) m_servlet.sessionData.EvsUsrBean;
             String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             if (menuAction == null)
@@ -3883,6 +3900,7 @@ public class GetACSearch implements Serializable
                 }
             }
           }
+        catch (NumberFormatException e){}
         catch (Exception e)
         {
             logger.error("ERROR - GetACSearch-do_conceptSearch for other : " + e.toString(), e);

@@ -63,6 +63,9 @@ public class VMAction implements Serializable
 		CallableStatement cstmt = null;
 		try
 		{
+			if ((data.getSearchFilterID() != null) && !data.getSearchFilterID().equals("")){
+            	int id = Integer.parseInt(data.getSearchFilterID());
+             }
 			// do not continue search if no search filter
 			/*
 			 * if (data.getSearchFilterConName().equals("") &&
@@ -71,6 +74,8 @@ public class VMAction implements Serializable
 			 * data.getSearchFilterCondr().equals("") &&
 			 * data.getSearchFilterDef().equals("")) return;
 			 */
+			
+		
 			Vector<VM_Bean> vmList = data.getVMList();
 			if (vmList == null)
 				vmList = new Vector<VM_Bean>();
@@ -122,6 +127,7 @@ public class VMAction implements Serializable
 			}
 			data.setVMList(vmList);
 		}
+		catch (NumberFormatException e){}
 		catch (Exception e)
 		{
 			logger.error("ERROR - VMAction-searchVM for other : " + e.toString(), e);
