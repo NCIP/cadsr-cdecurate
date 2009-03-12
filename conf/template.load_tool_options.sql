@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.26 2009-02-19 19:17:34 hebell Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.27 2009-03-12 20:50:26 veerlah Exp $
    $Name: not supported by cvs2svn $
 
    Author: Anupama Chickerur
@@ -535,7 +535,19 @@ SELECT 'CURATION' AS TOOL_NAME, 'BUSINESS.RULES.URL' AS PROPERTY, 'https://wiki.
 ON(S.TOOL_NAME = T.TOOL_NAME AND S.PROPERTY = T.PROPERTY)
 WHEN MATCHED THEN 
       UPDATE SET S.VALUE = T.VALUE, S.DESCRIPTION = T.DESCRIPTION
-WHEN NOT MATCHED THEN INSERT (TOOL_NAME, PROPERTY, VALUE, DESCRIPTION) VALUES (T.TOOL_NAME, T.PROPERTY, T.VALUE, T.DESCRIPTION);     
+WHEN NOT MATCHED THEN INSERT (TOOL_NAME, PROPERTY, VALUE, DESCRIPTION) VALUES (T.TOOL_NAME, T.PROPERTY, T.VALUE, T.DESCRIPTION);   
+
+/*
+--Store DataElements Details URL for CDEBrowser.
+*/
+MERGE INTO SBREXT.TOOL_OPTIONS_VIEW_EXT S
+USING (
+SELECT 'CDEBrowser' AS TOOL_NAME, 'VIEWDEIDSEQ.URL' AS PROPERTY, 'search?dataElementDetails=9&p_de_idseq=$IDSEQ$&PageId=DataElementsGroup&queryDE=yes&FirstTimer=0' AS VALUE,'Store the DataElements Details URL for CDEBrowser.' AS DESCRIPTION FROM DUAL
+)T
+ON(S.TOOL_NAME = T.TOOL_NAME AND S.PROPERTY = T.PROPERTY)
+WHEN MATCHED THEN 
+      UPDATE SET S.VALUE = T.VALUE, S.DESCRIPTION = T.DESCRIPTION
+WHEN NOT MATCHED THEN INSERT (TOOL_NAME, PROPERTY, VALUE, DESCRIPTION) VALUES (T.TOOL_NAME, T.PROPERTY, T.VALUE, T.DESCRIPTION); 
 
 --commit the inserts
 COMMIT;
