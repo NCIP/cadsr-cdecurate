@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.27 2009-03-12 20:50:26 veerlah Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.28 2009-03-13 15:44:15 veerlah Exp $
    $Name: not supported by cvs2svn $
 
    Author: Anupama Chickerur
@@ -542,7 +542,7 @@ WHEN NOT MATCHED THEN INSERT (TOOL_NAME, PROPERTY, VALUE, DESCRIPTION) VALUES (T
 */
 MERGE INTO SBREXT.TOOL_OPTIONS_VIEW_EXT S
 USING (
-SELECT 'CDEBrowser' AS TOOL_NAME, 'VIEWDEIDSEQ.URL' AS PROPERTY, 'search?dataElementDetails=9&p_de_idseq=$IDSEQ$&PageId=DataElementsGroup&queryDE=yes&FirstTimer=0' AS VALUE,'Store the DataElements Details URL for CDEBrowser.' AS DESCRIPTION FROM DUAL
+SELECT 'CDEBrowser' AS TOOL_NAME, 'VIEWDEIDSEQ.URL' AS PROPERTY, 'search?dataElementDetails=9'|| chr(38) ||'p_de_idseq=$IDSEQ$'|| chr(38) ||'PageId=DataElementsGroup'|| chr(38) ||'queryDE=yes'|| chr(38) ||'FirstTimer=0' AS VALUE,'Store the DataElements Details URL for CDEBrowser.' AS DESCRIPTION FROM DUAL
 )T
 ON(S.TOOL_NAME = T.TOOL_NAME AND S.PROPERTY = T.PROPERTY)
 WHEN MATCHED THEN 
