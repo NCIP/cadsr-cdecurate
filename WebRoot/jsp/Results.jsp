@@ -858,7 +858,7 @@ function LoadKeyHandler(){
   
   //get detail button and calls the function in the js passing server name from the request.
   function GetDetails(){
-     GetDetailsJS("<%=browserURL%>");
+     GetDetailsJS("<%=browserURL%>" + "<%=ToolURL.getDEDetailsCDEBrowserURL(pageContext)%>");
   }
   //sorts by heading.  called from column heading Hyperlink click event
   function SetSortType(sortBy)
