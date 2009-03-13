@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.31 2009-03-11 19:45:40 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.32 2009-03-13 15:57:32 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -671,6 +671,7 @@
   function GetDetailsJS(serverName)
   {
 	   editID = document.searchResultsForm.hiddenSearch[document.searchResultsForm.selectedRowId.value].value;
+	   serverName = serverName.replace("$IDSEQ$",editID);
 	   if (serverName != null && serverName != "")
 	   {
 		  	   
@@ -680,7 +681,7 @@
 		   //open browser in dev server if localhost or protocol, use the server from the hgeost name
            var cdeServer = serverName;   //defaults to curation tool server
      	   //open cde browser	
-		   detailWindow = window.open(cdeServer + "search?dataElementDetails=9&p_de_idseq=" + editID + "&PageId=DataElementsGroup&queryDE=yes&FirstTimer=0", "detailComponent", "width=850,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
+		   detailWindow = window.open(cdeServer, "detailComponent", "width=850,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
 	   }
 	   else
 		   alert("Unable to determine the server name of the browser.");	
