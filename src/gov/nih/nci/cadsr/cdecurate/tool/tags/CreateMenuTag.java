@@ -23,8 +23,8 @@ public class CreateMenuTag extends MenuTag {
 		}
 		try {
 			createMenu.println("<dl class=\"menu\">"
-			    				+generateDT("","displayStepsToFollow()","New Using Existing")
-					            +generateDT("","displayStepsToFollow2()","New Version")
+			    				+generateDT("","displayStepsToFollow('"+StringEscapeUtils.escapeJavaScript(userName)+"')","New Using Existing")
+					            +generateDT("","displayStepsToFollow2('"+StringEscapeUtils.escapeJavaScript(userName)+"')","New Version")
 					            +separator()
 					            //+generateDT("","callCCNew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","Concept Class")
 					            +generateDT("","callDENew('"+StringEscapeUtils.escapeJavaScript(userName)+"')","Data Element")

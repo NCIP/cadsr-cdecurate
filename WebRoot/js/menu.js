@@ -284,9 +284,13 @@ function menuObjPos(obj) {
  function showHomePage(){
     document.homePageForm.submit();
  } 
- function displayStepsToFollow(){
+ function displayStepsToFollow(user){
+   if (checkUser(user)){
      alert("Please follow the steps below.\n 1. Perform a Search.\n 2. Click on the action icon for desired result.\n 3. Select 'New Using Existing' in the pop up action menu.");
+   } 
  }
- function displayStepsToFollow2(){
+ function displayStepsToFollow2(user){
+   if (checkUser(user)){
      alert("Please follow the steps below.\n 1. Perform a Search. \n 2. Click on the action icon for desired result. \n 3. Select 'New Version' in the pop up action menu.");
+   }  
  }  
