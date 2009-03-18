@@ -221,7 +221,7 @@ public class ObjMenuTag extends MenuTag {
 		return tag;	
 	}
 	public String displayAppend(){
-		String tag = generateTR("","","","16_append","performAction('append')","Append");
+		String tag = generateTR("","","","16_append","append()","Append");
 		return tag;	
 	}
 }

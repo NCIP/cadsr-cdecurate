@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.32 2009-03-13 15:57:32 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.33 2009-03-18 17:57:01 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -797,9 +797,6 @@ function uploadCmd()
         }
         if (type == "designate"){
            designateRecord();
-        }
-        if (type == "append"){
-           setAppendAction();
         }
         if (type == "edit"){
            ShowEditSelection(selAC);

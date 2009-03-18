@@ -921,6 +921,12 @@ function performAction(type){
       } 
    }    
 }
+function append(){
+ if (isCheckboxChecked()){
+      document.searchResultsForm.unCheckedRowId.value = "";
+      setAppendAction();
+ }
+}
 // This function will display the alert message to the user if he/she is not logged in 
 // or will call the appropriate function if he/she is already logged in
 function performUncheckedCkBoxAction(type){
