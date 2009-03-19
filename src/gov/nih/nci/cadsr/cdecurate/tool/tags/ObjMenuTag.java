@@ -217,7 +217,7 @@ public class ObjMenuTag extends MenuTag {
 		return tag;	
 	}
 	public String displayHideAll(){
-		String tag = generateTR("","","","minus_12","hideShowAllDef(false)","Hide All Definitions");
+		String tag = generateTR("","","","minus_12","hideShowAllDef(false)","Contract All Definitions");
 		return tag;	
 	}
 	public String displayAppend(){
