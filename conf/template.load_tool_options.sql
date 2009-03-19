@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.28 2009-03-13 15:44:15 veerlah Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.load_tool_options.sql,v 1.29 2009-03-19 17:15:16 veerlah Exp $
    $Name: not supported by cvs2svn $
 
    Author: Anupama Chickerur
@@ -530,7 +530,7 @@ WHEN NOT MATCHED THEN INSERT (TOOL_NAME, PROPERTY, VALUE, DESCRIPTION) VALUES (T
 */
 MERGE INTO SBREXT.TOOL_OPTIONS_VIEW_EXT S
 USING (
-SELECT 'CURATION' AS TOOL_NAME, 'BUSINESS.RULES.URL' AS PROPERTY, 'https://wiki.nci.nih.gov/x/_pR8' AS VALUE,'Store the curation tool Business Rules URL' AS DESCRIPTION FROM DUAL
+SELECT 'CURATION' AS TOOL_NAME, 'BUSINESS.RULES.URL' AS PROPERTY, 'https://wiki.nci.nih.gov/display/caDSR/Business+Rules+for+Versioning+Metadata' AS VALUE,'Store the curation tool Business Rules URL' AS DESCRIPTION FROM DUAL
 )T
 ON(S.TOOL_NAME = T.TOOL_NAME AND S.PROPERTY = T.PROPERTY)
 WHEN MATCHED THEN 
