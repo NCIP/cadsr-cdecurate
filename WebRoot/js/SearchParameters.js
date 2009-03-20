@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchParameters.js,v 1.6 2009-03-02 20:51:24 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchParameters.js,v 1.7 2009-03-20 18:21:08 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
     function hourglass()
@@ -261,16 +261,9 @@
     hourglass();
     window.status = "Refreshing the page, it may take a minute, please wait....."
     document.searchParmsForm.actSelect.value = "searchForSelectOther";
-    if(opener)
-    {
-      document.searchParmsForm.listSearchFor[0].selected = true;     
-    }
-    else
-    {
-       var selIdx = document.searchParmsForm.listSearchFor.selectedIndex;
-       document.searchParmsForm.listSearchFor[selIdx].selected = true;
-    }
-  	if (document.searchResultsForm != null)
+    var selIdx = document.searchParmsForm.listSearchFor.selectedIndex;
+    document.searchParmsForm.listSearchFor[selIdx].selected = true;
+    if (document.searchResultsForm != null)
     	document.searchResultsForm.Message.style.visibility="visible";
     document.searchParmsForm.submit();
   }
