@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.47 2009-01-13 17:05:29 chickerura Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.43 2008-12-12 05:36:34 veerlah Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -12,7 +12,7 @@
 	
 	<property name="appl.release" value="4.0.0.2" />
 	<property name="appl.version" value="${appl.release}.${DSTAMP}${TSTAMP}"/>
-		
+	
 	<property name="PROP.FILE" location="DEV.build.properties" />
 	<property file="${PROP.FILE}" />
 	<echo>
@@ -76,20 +76,6 @@
 	<condition property="remote.deploy">
 		<equals arg1="${DEPLOY.LOCATION}" arg2="remote" />
 	</condition>
-	
-	<condition property="trackStatements" value="true" else="false">
-		<or><equals arg1="${TIER.UPPER}" arg2="DEV" />
-			<equals arg1="${TIER.UPPER}" arg2="QA" />
-		</or>	
-	</condition>
-	
-	<condition property="logLevel" value="DEBUG" else="INFO">
-			<or><equals arg1="${TIER.UPPER}" arg2="DEV" />
-				<equals arg1="${TIER.UPPER}" arg2="QA" />
-			</or>	
-		</condition>
-
-	
 	<property name="root.dir" location="${basedir}/WebRoot" />
 	<property name="artifacts.dir" location="${basedir}/deployment-artifacts" />
 	<property name="doc.dir" location="${artifacts.dir}/javadoc" />
@@ -118,8 +104,6 @@
 	<filter token="TOOL.LOG.DIR" value="${TOOL.LOG.DIR}" />
     <filter token="JBOSS.LOG.DIR" value="${JBOSS.LOG.DIR}" />
 	<filter token="appl.version" value="${appl.version}" />
-	<filter token="trackStatements" value="${trackStatements}" />
-	<filter token="logLevel" value="${logLevel}" />
 
 	<path id="libpath">
 		<fileset dir="${lib.dir}" includes="**/*.jar" />
