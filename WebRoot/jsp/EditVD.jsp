@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.25 2009-02-25 21:19:22 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.26 2009-03-31 16:55:04 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -37,7 +37,8 @@
 	        Vector vDataTypes = null;
 			Vector vDataTypeDesc = null;
 			Vector vDataTypeCom = null;
-
+			Vector vDataTypeSRef = null;
+            Vector VDataTypeAnnotation = null;
 			Vector vUOM = null;
 			Vector vUOMFormat = null;
 	      //Vector vCD = (Vector) session.getAttribute("vCD");
@@ -54,6 +55,8 @@
 	         vDataTypes = (Vector) session.getAttribute("vDataType");
 			 vDataTypeDesc = (Vector) session.getAttribute("vDataTypeDesc");
 			 vDataTypeCom = (Vector) session.getAttribute("vDataTypeComment");
+			 vDataTypeSRef= (Vector) session.getAttribute("vDataTypeSReference");
+             VDataTypeAnnotation = (Vector) session.getAttribute("vDataTypeAnnotation");
 
 			 vUOM = (Vector) session.getAttribute("vUOM");
 			 vUOMFormat = (Vector) session.getAttribute("vUOMFormat");
@@ -1378,8 +1381,10 @@ function openEVSConceptsWindow(){
 						<td>
 							<table width="90%" border="1">
 								<col width="20%">
-								<col width="35%">
-								<col width="35%">
+								<col width="20%">
+								<col width="20%">
+								<col width="20%">
+								<col width="20%">
 								<tr>
 									<td valign="top">
 									<%	if (!isView) { %>
@@ -1399,7 +1404,7 @@ function openEVSConceptsWindow(){
 								
 								<% } %>										
 									</td>
-									<% String sDTDesc = "", sDTComm = ""; 
+									<% String sDTDesc = "", sDTComm = "", sDTSRef = "", sDTAnnotation = "";; 
 										   int iDT = 0;
 										   if (vDataTypes != null)
 											  iDT = vDataTypes.indexOf(sDataType);
@@ -1409,23 +1414,43 @@ function openEVSConceptsWindow(){
 												  sDTDesc = (String) vDataTypeDesc.elementAt(iDT);
 												if (vDataTypeCom != null)
 												  sDTComm = (String) vDataTypeCom.elementAt(iDT);
+												if (vDataTypeSRef != null)
+												  sDTSRef = (String) vDataTypeSRef.elementAt(iDT);
+												if (VDataTypeAnnotation != null)
+												  sDTAnnotation = (String) VDataTypeAnnotation.elementAt(iDT);
 												if (sDTDesc == null) sDTDesc = "";
 												if (sDTComm == null) sDTComm = "";
+												if (sDTSRef == null) sDTSRef = "";
+												if (sDTAnnotation == null) sDTAnnotation = "";
 											}
 									%>
 									<td valign="top" height="25">
 										<b>
-											Data Type Description:
+											Description:
 										</b>
 										<br>
 										<label id="lblDTDesc" for="selDataType" style="width:95%" title=""><%=sDTDesc%></label>
 									</td>
 									<td valign="top" height="25">
 										<b>
-											Data Type Comment:
+											Comment:
 										</b>
 										<br>
 										<label id="lblDTComment" for="selDataType" style="width:95%" title=""><%=sDTComm%></label>
+									</td>
+									<td valign="top" height="25">
+										<b>
+											Scheme-Reference:
+										</b>
+										<br>
+										<label id="lblDTSRef" for="selDataType" style="width:95%" title=""><%=sDTSRef%></label>
+									</td>
+									<td valign="top" height="25">
+										<b>
+										    Annotation:
+										</b>
+										<br>
+										<label id="lblDTAnnotation" for="selDataType" style="width:95%" title=""><%=sDTAnnotation%></label>
 									</td>
 								</tr>
 							</table>
@@ -2186,11 +2211,9 @@ function openEVSConceptsWindow(){
 					<select name="datatypeDesc" size="1" style="visibility:hidden;width:100;" multiple>
 						<%
 							if (vDataTypes != null) {
-								//System.out.println("datatypeDesc vDataTypes.size(): " + vDataTypes.size());
 								for (int i = 0; vDataTypes.size() > i; i++) {
 									String sDType = (String) vDataTypes.elementAt(i);
-								//	String sDTDesc = "", sDTComm = "";
-									if ((vDataTypeDesc != null)&&(i < vDataTypeDesc.size()))
+								    if ((vDataTypeDesc != null)&&(i < vDataTypeDesc.size()))
 										sDTDesc = (String) vDataTypeDesc.elementAt(i);
 									if (sDTDesc == null || sDTDesc.equals(""))
 										sDTDesc = sDType;
@@ -2201,6 +2224,29 @@ function openEVSConceptsWindow(){
 						%>
 						<option value="<%=sDTDesc%>">
 							<%=sDTComm%>
+						</option>
+						<%
+							}
+							}
+						%>
+					</select>
+					<!-- store datatype scheme-ref and annotation to use later -->
+					<select name="datatypeSRef" size="1" style="visibility:hidden;width:100;" multiple>
+						<%
+							if (vDataTypes != null) {
+								for (int i = 0; vDataTypes.size() > i; i++) {
+									String sDType = (String) vDataTypes.elementAt(i);
+								    if ((vDataTypeSRef != null)&&(i < vDataTypeSRef.size()))
+										sDTSRef = (String) vDataTypeSRef.elementAt(i);
+									if (sDTSRef == null)
+										sDTSRef = "";
+									if ((VDataTypeAnnotation != null) && (i < VDataTypeAnnotation.size()))
+										sDTAnnotation = (String) VDataTypeAnnotation.elementAt(i);
+									if (sDTAnnotation == null)
+										sDTAnnotation = "";
+						%>
+						<option value="<%=sDTSRef%>">
+							<%=sDTAnnotation%>
 						</option>
 						<%
 							}

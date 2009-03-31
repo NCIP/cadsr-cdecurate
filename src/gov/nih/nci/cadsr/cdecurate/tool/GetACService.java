@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.66 2009-02-20 18:48:13 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.67 2009-03-31 16:54:41 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -7,6 +7,9 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.AddOns;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.persist.ac.DataTypeVO;
+import gov.nih.nci.cadsr.persist.ac.DataTypes_Lov_Mgr;
+import gov.nih.nci.cadsr.persist.exception.DBException;
 
 import java.io.Serializable;
 import java.util.*;
@@ -236,14 +239,21 @@ public class GetACService implements Serializable
                     v = new Vector<String>();
                     Vector<String> vDesc = new Vector<String>();
                     Vector<String> vComm = new Vector<String>();
-                    getDataTypesList(v, vDesc, vComm);
+                    Vector<String> vSRef = new Vector<String>();
+                    Vector<String> vAnnotation = new Vector<String>();
+                    getDataTypesList(v, vDesc, vComm, vSRef, vAnnotation);
                     // add emtpy data at the beginning
                     v.insertElementAt("", 0);
                     vDesc.insertElementAt("", 0);
                     vComm.insertElementAt("", 0);
+                    vSRef.insertElementAt("", 0);
+                    vAnnotation.insertElementAt("", 0);
                     DataManager.setAttribute(session, "vDataType", v);
                     DataManager.setAttribute(session, "vDataTypeDesc", vDesc);
                     DataManager.setAttribute(session, "vDataTypeComment", vComm);
+                    DataManager.setAttribute(session, "vDataTypeSReference", vSRef);
+                    DataManager.setAttribute(session, "vDataTypeAnnotation", vAnnotation);
+              
                 }
                 // list of uoml list
                 if (session.getAttribute("vUOM") == null)
@@ -657,17 +667,25 @@ public class GetACService implements Serializable
      *            vector of comment attributes
      * 
      */
-    private void getDataTypesList(Vector<String> vList, Vector<String> vDesc, Vector<String> vComment)
+    private void getDataTypesList(Vector<String> vList, Vector<String> vDesc, Vector<String> vComment, Vector<String> vSRef, Vector<String> vAnnotation)
     {
-        try
-        {
-            String sAPI = "{call SBREXT_CDE_CURATOR_PKG.get_datatypes_list(?)}";
-            getDataListStoreProcedure(vList, vDesc, vComment, null, sAPI, "", "", 1);
-        }
-        catch (Exception e)
-        {
-            logger.error("ERROR in GetACService-getDataTypesList : " + e.toString(), e);
-        }
+    	 try
+         {
+         	DataTypes_Lov_Mgr dtMgr = new DataTypes_Lov_Mgr();
+         	Vector<DataTypeVO> vdatatypes = dtMgr.getDatatypesList(m_servlet.getConn());
+         	for (int i = 0; i < vdatatypes.size(); i++){
+         		DataTypeVO dataTypeVO = vdatatypes.get(i);
+         		vList.addElement(dataTypeVO.getDtl_name());
+         		vDesc.addElement(dataTypeVO.getDescription());
+         		vComment.addElement(dataTypeVO.getComments());
+         		vSRef.addElement(dataTypeVO.getScheme_reference());
+         		vAnnotation.addElement(dataTypeVO.getAnnotation());
+         	}
+         }
+         catch (DBException e)
+         {
+             logger.error("ERROR in GetACService-getDataTypesList : " + e.toString(), e);
+         }
     }
 
     /**
@@ -1833,5 +1851,4 @@ public class GetACService implements Serializable
     public void getCSCSIListBeann(){
     	this.getCSCSIListBean();
     }
-    
 }

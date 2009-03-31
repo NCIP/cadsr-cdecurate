@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.6 2009-02-11 17:31:06 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.7 2009-03-31 16:55:04 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 var evsWindow = null;
@@ -421,8 +421,12 @@ function enableValueNum()
     {
       var sDTDesc = document.createVDForm.datatypeDesc[dtInd].value;
       var sDTComm = document.createVDForm.datatypeDesc[dtInd].text;
+      var sDTSRef = document.createVDForm.datatypeSRef[dtInd].value;
+      var sDTAnnotation = document.createVDForm.datatypeSRef[dtInd].text;
       lblDTDesc.innerText = sDTDesc;
       lblDTComment.innerText = sDTComm;
+      lblDTSRef.innerText = sDTSRef;
+      lblDTAnnotation.innerText = sDTAnnotation;
     }
     //call function to handle enabling
     enableValueNum();

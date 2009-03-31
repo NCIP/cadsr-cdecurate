@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVD.jsp,v 1.8 2009-01-27 20:34:24 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVD.jsp,v 1.9 2009-03-31 16:55:04 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -29,6 +29,8 @@
       Vector vDataTypes = (Vector) session.getAttribute("vDataType");
       Vector vDataTypeDesc = (Vector) session.getAttribute("vDataTypeDesc");
       Vector vDataTypeCom = (Vector) session.getAttribute("vDataTypeComment");
+      Vector vDataTypeSRef= (Vector) session.getAttribute("vDataTypeSReference");
+      Vector VDataTypeAnnotation = (Vector) session.getAttribute("vDataTypeAnnotation");
       Vector vUOM = (Vector) session.getAttribute("vUOM");
       Vector vUOMFormat = (Vector) session.getAttribute("vUOMFormat");
       Vector vCD = (Vector) session.getAttribute("vCD");
@@ -900,8 +902,10 @@
 						<td>
 							<table width="90%" border="1">
 								<col width="20%">
-								<col width="35%">
-								<col width="35%">
+								<col width="20%">
+								<col width="20%">
+								<col width="20%">
+								<col width="20%">
 								<tr>
 									<td valign="top">
 										<select name="selDataType" size="1" onChange="javascript:changeDataType();" style="width:90%" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selDataType',helpUrl); return false">
@@ -918,17 +922,31 @@
 									</td>
 									<td valign="top" height="25">
 										<b>
-											Data Type Description:
+											Description:
 										</b>
 										<br>
 										<label id="lblDTDesc" for="selDataType" style="width:95%" title=""></label>
 									</td>
 									<td valign="top" height="25">
 										<b>
-											Data Type Comment:
+											Comment:
 										</b>
 										<br>
 										<label id="lblDTComment" for="selDataType" style="width:95%" title=""></label>
+									</td>
+									<td valign="top" height="25">
+										<b>
+											Scheme-Reference:
+										</b>
+										<br>
+										<label id="lblDTSRef" for="selDataType" style="width:95%" title=""></label>
+									</td>
+									<td valign="top" height="25">
+										<b>
+										    Annotation:
+										</b>
+										<br>
+										<label id="lblDTAnnotation" for="selDataType" style="width:95%" title=""></label>
 									</td>
 								</tr>
 							</table>
@@ -1536,6 +1554,27 @@
 %>
 					<option value="<%=sDTDesc%>">
 						<%=sDTComm%>
+					</option>
+					<%}
+      }
+      %>
+				</select>
+				
+				<!-- store datatype scheme-ref and annotation to use later -->
+				<select name="datatypeSRef" size="1" style="visibility:hidden;width:100;" multiple>
+					<%if (vDataTypes != null)
+      {
+        for (int i = 0; vDataTypes.size() > i; i++)
+        {
+          String sDType = (String) vDataTypes.elementAt(i);
+          String sDTSRef = "", sDTAnnotation = "";
+          if (i < vDataTypeSRef.size()) sDTSRef = (String) vDataTypeSRef.elementAt(i);
+          if (sDTSRef == null) sDTSRef = "";
+          if (i <VDataTypeAnnotation.size()) sDTAnnotation = (String) VDataTypeAnnotation.elementAt(i);
+          if (sDTAnnotation == null) sDTAnnotation = "";
+%>
+					<option value="<%=sDTSRef%>">
+						<%=sDTAnnotation%>
 					</option>
 					<%}
       }
