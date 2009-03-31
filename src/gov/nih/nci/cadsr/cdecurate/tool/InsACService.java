@@ -1,13 +1,21 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.64 2009-02-10 19:15:27 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.65 2009-03-31 14:08:01 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.persist.concept.Con_Derivation_Rules_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.de.DeComp;
 import gov.nih.nci.cadsr.persist.de.DeErrorCodes;
 import gov.nih.nci.cadsr.persist.de.DeVO;
+import gov.nih.nci.cadsr.persist.evs.EvsVO;
+import gov.nih.nci.cadsr.persist.evs.Evs_Mgr;
+import gov.nih.nci.cadsr.persist.evs.ResultVO;
+import gov.nih.nci.cadsr.persist.exception.DBException;
+import gov.nih.nci.cadsr.persist.oc.Object_Classes_Ext_Mgr;
+import gov.nih.nci.cadsr.persist.prop.Properties_Ext_Mgr;
+import gov.nih.nci.cadsr.persist.rep.Representations_Ext_Mgr;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -17,6 +25,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -5838,6 +5847,342 @@ public class InsACService implements Serializable {
 			}
 		return accB;
 	}
+	
+	
+	public ArrayList getConBeanList(Vector evsBean, boolean isAllConceptsExists){
+		   ArrayList<ConBean> conBeanList = new ArrayList();
+		   if (evsBean != null){
+		   int display_order = evsBean.size() - 1;
+			for (int i = 1; i < evsBean.size(); i++) {
+				EVS_Bean ocBean = (EVS_Bean) evsBean.elementAt(i);
+				String conIdseq = ocBean.getIDSEQ();
+				if((!isAllConceptsExists) && (conIdseq == null || conIdseq.equals(""))){
+					conIdseq = this.setConcept("INS", "", ocBean);
+				}
+				if (conIdseq != null || conIdseq.equals("")) {
+					ConBean conBean = new ConBean();
+					conBean.setCon_IDSEQ(conIdseq);
+					conBean.setConcept_value(ocBean.getNVP_CONCEPT_VALUE());
+					conBean.setDisplay_order(display_order);
+					display_order = display_order - 1;
+					conBeanList.add(conBean);
+					logger.debug(ocBean.getCONCEPT_IDENTIFIER() + "-----> "	+ conBean.getDisplay_order());
+				}
+			}
+			// primary
+			EVS_Bean ocBean = (EVS_Bean) evsBean.elementAt(0);
+			String conIdseq = ocBean.getIDSEQ();
+			if((!isAllConceptsExists) && (conIdseq == null || conIdseq.equals(""))){
+				conIdseq = this.setConcept("INS", "", ocBean);
+			}
+			if (conIdseq != null || conIdseq.equals("")) {
+				ConBean conBean = new ConBean();
+				conBean.setCon_IDSEQ(ocBean.getIDSEQ());
+				conBean.setConcept_value(ocBean.getNVP_CONCEPT_VALUE());
+				conBean.setDisplay_order(0);
+				conBeanList.add(conBean);
+				logger.debug(ocBean.getCONCEPT_IDENTIFIER() + "-----> "	+ conBean.getDisplay_order());
+			}
+		}
+		   return conBeanList;
+	}
+	
+	public String getName(Vector evsBean){
+		   String name ="";
+		   if (evsBean != null) {
+			for (int i = 1; i < evsBean.size(); i++) {
+				EVS_Bean eBean = (EVS_Bean) evsBean.elementAt(i);
+				if (name.equals("")) {
+					name = eBean.getCONCEPT_IDENTIFIER();
+				} else {
+					name = name + ":" + eBean.getCONCEPT_IDENTIFIER();
+				}
+			}
+			// primary
+			EVS_Bean eBean = (EVS_Bean) evsBean.elementAt(0);
+			if (name.equals("")) {
+				name = eBean.getCONCEPT_IDENTIFIER();
+			} else {
+				name = name + ":" + eBean.getCONCEPT_IDENTIFIER();
+			}
+		}
+		   logger.debug("Name--->" + name);
+           return name;
+   }
+   
+	public String doSetDEC(String sAction, DEC_Bean dec, String sInsertFor, DEC_Bean oldDEC){
+		String sReturnCode = "";
+	    HttpSession session = m_classReq.getSession();
+		ValidationStatusBean ocStatusBean = new ValidationStatusBean();
+        ValidationStatusBean propStatusBean = new ValidationStatusBean();
+		Vector vObjectClass = (Vector) session.getAttribute("vObjectClass");
+		Vector vProperty = (Vector) session.getAttribute("vProperty");
+	    String userName = (String)session.getAttribute("Username");
+		HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
+		String conteIdseq= (String)defaultContext.get("idseq");
+    	try{	
+		    m_classReq.setAttribute("retcode", "");
+    		if ((vObjectClass != null && vObjectClass.size()>0) && (defaultContext != null && defaultContext.size()>0)){
+        	   ocStatusBean = this.evsBeanCheck(vObjectClass, defaultContext, "", "Object Class");
+         	}
+         	if ((vProperty != null && vProperty.size()>0) && (defaultContext != null && defaultContext.size()>0)){
+        	  propStatusBean = this.evsBeanCheck(vProperty, defaultContext, "", "Property");
+         	}  
+           	//set OC if it is null
+         	if ((vObjectClass != null && vObjectClass.size()>0)){
+         	 if (!ocStatusBean.isEvsBeanExists()){
+        				if (ocStatusBean.isCondrExists()) {
+							dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean.getCondrIDSEQ());
+						    // Create Object Class
+							String ocIdseq = this.createEvsBean(userName, ocStatusBean.getCondrIDSEQ(), conteIdseq, "Object Class");
+							if (ocIdseq != null && !ocIdseq.equals("")) {
+								dec.setDEC_OCL_IDSEQ(ocIdseq);
+							}
+						} else {
+							// Create Condr
+							String condrIdseq = this.createCondr(vObjectClass, ocStatusBean.isAllConceptsExists());
+							String ocIdseq = "";
+							// Create Object Class
+							if (condrIdseq != null && !condrIdseq.equals("")) {
+								dec.setDEC_OC_CONDR_IDSEQ(condrIdseq);
+								ocIdseq = this.createEvsBean(userName, condrIdseq, conteIdseq, "Object Class");
+							}
+							if (ocIdseq != null && !ocIdseq.equals("")) {
+								dec.setDEC_OCL_IDSEQ(ocIdseq);
+							}
+						}
+				
+           	 }else{
+           		if (ocStatusBean.isNewVersion()) {
+         	        if (ocStatusBean.getEvsBeanIDSEQ() != null && !ocStatusBean.getEvsBeanIDSEQ().equals("")){
+         	             String newID = "";
+         	             newID = this.setOC_PROP_REP_VERSION(ocStatusBean.getEvsBeanIDSEQ(), "ObjectClass");
+         	             if (newID != null && !newID.equals("")){
+         	            	dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean.getCondrIDSEQ());
+         	                dec.setDEC_OCL_IDSEQ(newID);
+         	             }   
+         	          }
+				} else { 
+           		      dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean.getCondrIDSEQ());
+           		      dec.setDEC_OCL_IDSEQ(ocStatusBean.getEvsBeanIDSEQ());
+				} 
+           	 }
+         	}
+            //set property if it is null
+            if ((vProperty != null && vProperty.size()>0)){
+         	 if (!propStatusBean.isEvsBeanExists()){
+       				if (propStatusBean.isCondrExists()) {
+							dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean.getCondrIDSEQ());
+						    // Create Property
+							String propIdseq = this.createEvsBean(userName, propStatusBean.getCondrIDSEQ(), conteIdseq, "Property");
+							if (propIdseq != null && !propIdseq.equals("")) {
+								dec.setDEC_PROPL_IDSEQ(propIdseq);
+							}
+						} else {
+							// Create Condr
+							String condrIdseq = this.createCondr(vProperty, propStatusBean.isAllConceptsExists());
+							String propIdseq = "";
+							// Create Property
+							if (condrIdseq != null && !condrIdseq.equals("")) {
+								dec.setDEC_PROP_CONDR_IDSEQ(condrIdseq);
+								propIdseq = this.createEvsBean(userName, condrIdseq, conteIdseq,"Property");
+							}
+							if (propIdseq != null && !propIdseq.equals("")) {
+								dec.setDEC_PROPL_IDSEQ(propIdseq);
+							}
+						}
+	       	 }else{
+           		if (propStatusBean.isNewVersion()) {
+         	        if (propStatusBean.getEvsBeanIDSEQ() != null && !propStatusBean.getEvsBeanIDSEQ().equals("")){
+         	             String newID = "";
+         	             newID = this.setOC_PROP_REP_VERSION(propStatusBean.getEvsBeanIDSEQ(), "Property");
+         	             if (newID != null && !newID.equals("")){
+         	            	dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean.getCondrIDSEQ());
+         	                dec.setDEC_PROPL_IDSEQ(newID);
+         	             }   
+         	          }
+				} else {
+           		     dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean.getCondrIDSEQ());
+           		     dec.setDEC_PROPL_IDSEQ(propStatusBean.getEvsBeanIDSEQ());
+				}
+           	 }
+         }
+    	 sReturnCode = this.setDEC(sAction, dec, sInsertFor, oldDEC);
+    	}catch(Exception e){
+    		logger.error("ERROR in InsACService-setDEC for other : "+ e.toString(), e);
+			m_classReq.setAttribute("retcode", "Exception");
+			this.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes.");
+    	}
+    	return sReturnCode;
+	}
+	public String createCondr(Vector vConceptList, boolean isAllConceptsExists){
+		String condrIdseq = "";
+		try {
+			ArrayList<ConBean> conBeanList = this.getConBeanList(vConceptList, isAllConceptsExists);
+			String name = this.getName(vConceptList);
+			Con_Derivation_Rules_Ext_Mgr mgr = new Con_Derivation_Rules_Ext_Mgr();
+			condrIdseq = mgr.setCondr(conBeanList, name, m_servlet.getConn());
+		} catch (DBException e) {
+			logger.error("ERROR in InsACService-createCondr: "+ e.toString(), e);
+			m_classReq.setAttribute("retcode", "Exception");
+			this.storeStatusMsg("Exception Error : Unable to create Condr");
+		}
+		return condrIdseq;
+	}
+   
+	public ValidationStatusBean evsBeanCheck(Vector evsBeanList, HashMap<String,String> defaultContext, String lName, String type)throws Exception{
+		  ValidationStatusBean statusBean = new ValidationStatusBean();
+		  ArrayList<ResultVO>  resultList = new ArrayList();
+		  Evs_Mgr mgr = null;
+		  if (type.equals("Object Class")){
+			  mgr = new Object_Classes_Ext_Mgr();
+		  }else if (type.equals("Property")){
+			  mgr = new Properties_Ext_Mgr();
+		  }else if (type.equals("Representation Term")){
+		      mgr = new Representations_Ext_Mgr();
+		  }  
+	      statusBean.setAllConceptsExists(true);
+       
+	      for(int i=0; i<evsBeanList.size(); i++){
+    	    EVS_Bean conceptBean = (EVS_Bean) evsBeanList.elementAt(i);
+    	    String conIdseq = this.getConcept("", conceptBean, false);
+    	    if (conIdseq == null || conIdseq.equals("")){
+    		  statusBean.setAllConceptsExists(false);
+    		  break;
+    	   }
+       }
+	     if (statusBean.isAllConceptsExists()) {
+			ArrayList<ConBean> conBeanList = this.getConBeanList(evsBeanList, statusBean.isAllConceptsExists());
+			try {
+				 resultList = mgr.isCondrExists(conBeanList, m_servlet.getConn());
+			} catch (DBException e) {
+				logger.error("ERROR in InsACService-evsBeanCheck : "+ e.toString(), e);
+				throw new Exception(e);
+			}
 
+			if (resultList == null || resultList.size() < 1) {
+				statusBean.setStatusMessage("Valid  Creating a new "+type+" (" + lName + ")" );	
+				statusBean.setCondrExists(false);
+				statusBean.setEvsBeanExists(false);
+			} else {
+				String idseq = null;
+				String condrIDSEQ = null;
+				String longName = null;
+				String publicID = null;
+				String version = null;
+				String idseqM = null;
+				String condrIDSEQM = null;
+				String longNameM = null;
+				String publicIDM = null;
+				String versionM = null;
+
+				ArrayList<ResultVO> foundBeanList = new ArrayList();
+				for (int i = 0; i < resultList.size(); i++) {
+					ResultVO vo = resultList.get(i);
+					if (vo.getContext() != null) {
+						if (vo.getContext().equals(defaultContext.get("name"))) {
+							foundBeanList.add(vo);
+						}
+					} else {
+						if (vo.getCondr_IDSEQ() != null) {
+							statusBean.setStatusMessage("Valid  Creating a new "+type+" (" + lName + ")" );
+							statusBean.setCondrExists(true);
+							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
+							statusBean.setEvsBeanExists(false);
+							break;
+						}
+					}
+				}
+				if (foundBeanList == null) {
+					ResultVO vo = resultList.get(0);
+					statusBean.setStatusMessage("Valid  Matched "+type+" ("
+							+ vo.getLong_name() + ", " + vo.getPublicId()
+							+ ", " + vo.getVersion() + "' " + vo.getContext()
+							+ ") will create a new "+type+" in caBIG.");
+					statusBean.setCondrExists(true);
+					statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
+					statusBean.setEvsBeanExists(false);
+				} else if (foundBeanList != null && foundBeanList.size() > 0) {
+					for (int i = 0; i < foundBeanList.size(); i++) {
+						ResultVO vo = foundBeanList.get(i);
+						if (vo.getAsl_name().equals("RELEASED")) {
+							condrIDSEQ = vo.getCondr_IDSEQ();
+							idseq = vo.getIDSEQ();
+							longName = vo.getLong_name();
+							publicID = vo.getPublicId();
+							version = vo.getVersion();
+							break;
+						}
+					}
+					if ((idseq != null) && !(idseq.equals(""))) {
+						statusBean.setStatusMessage("Valid  Using "+type+" ("+longName+", "+publicID+", "+version+") from caBIG");
+						statusBean.setCondrExists(true);
+						statusBean.setCondrIDSEQ(condrIDSEQ);
+						statusBean.setEvsBeanExists(true);
+						statusBean.setEvsBeanIDSEQ(idseq);
+					} else {
+						if (foundBeanList != null && foundBeanList.size() > 0) {
+							for (int i = 0; i < foundBeanList.size(); i++) {
+								ResultVO vo = foundBeanList.get(i);
+								if (vo.getAsl_name().equals("DRAFT NEW") || vo.getAsl_name().equals("DRAFT MOD")) {
+									condrIDSEQM = vo.getCondr_IDSEQ();
+									idseqM = vo.getIDSEQ();
+									longNameM = vo.getLong_name();
+									publicIDM = vo.getPublicId();
+									versionM = vo.getVersion();
+									break;
+		    					}
+							}
+						}
+
+						if ((idseqM != null) && !(idseqM.equals(""))) {
+							statusBean.setStatusMessage("Valid  Recommended "+type+" ("+longNameM+", "+publicIDM+", "+versionM+")");
+							statusBean.setCondrExists(true);
+							statusBean.setCondrIDSEQ(condrIDSEQM);
+							statusBean.setEvsBeanExists(true);
+							statusBean.setEvsBeanIDSEQ(idseqM);
+						} else {
+							ResultVO vo = foundBeanList.get(0);
+							statusBean.setStatusMessage("Valid  Creating new "+type+" Version ("+vo.getLong_name()+", "+vo.getPublicId()+", "+vo.getVersion()+") in caBIG");
+							statusBean.setNewVersion(true);
+							statusBean.setCondrExists(true);
+							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
+							statusBean.setEvsBeanExists(true);
+							statusBean.setEvsBeanIDSEQ(vo.getIDSEQ());
+						}
+
+					}
+				}
+			}
+		} else {
+			statusBean.setStatusMessage("Valid  Creating new a "+type+" (" + lName + ")" );
+		}
+	      return statusBean;
+	}
+	public String createEvsBean(String userName, String condrIdseq, String defaultContextIdseq, String type){
+		String idseq= "";
+		Evs_Mgr mgr = null;
+		try{
+			if (type.equals("Object Class")){
+				  mgr = new Object_Classes_Ext_Mgr();
+			  }else if (type.equals("Property")){
+				  mgr = new Properties_Ext_Mgr();
+			  }else if (type.equals("Representation Term")){
+			      mgr = new Representations_Ext_Mgr();
+			  }  
+			EvsVO vo = new EvsVO();
+			vo.setCondr_IDSEQ(condrIdseq);
+			vo.setConte_IDSEQ(defaultContextIdseq);
+			vo.setCreated_by(userName);
+			idseq = mgr.insert(vo, m_servlet.getConn());
+		}catch (DBException e){
+			logger.error("ERROR in InsACService-createEvsBean: "+ e.toString(), e);
+			m_classReq.setAttribute("retcode", "Exception");
+			this.storeStatusMsg("Exception Error : Unable to create " + type);
+		}
+		return idseq;
+		
+	}
+	
 }// close the class
 

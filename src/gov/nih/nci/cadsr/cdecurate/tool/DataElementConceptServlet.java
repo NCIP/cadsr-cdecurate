@@ -1237,7 +1237,7 @@ public class DataElementConceptServlet extends CurationServlet {
        storeStatusMsg("Data Element Concept Name : " + DECBean.getDEC_LONG_NAME());
        storeStatusMsg("Public ID : " + DECBean.getDEC_DEC_ID());
        // call stored procedure to update attributes
-       String ret = insAC.setDEC("UPD", DECBean, "Edit", oldDECBean);
+       String ret = insAC.doSetDEC("UPD", DECBean, "Edit", oldDECBean);
        // after succcessful update
        if ((ret == null) || ret.equals(""))
        {
@@ -1296,7 +1296,7 @@ public class DataElementConceptServlet extends CurationServlet {
        DEC_Bean oldDECBean = (DEC_Bean) session.getAttribute("oldDECBean");
       // String sMenu = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
        // doInsertDECBlocks(m_classReq, m_classRes, null); //insert any building blocks from Thesaurus first
-       String ret = insAC.setDEC("INS", DECBean, "New", oldDECBean);
+       String ret = insAC.doSetDEC("INS", DECBean, "New", oldDECBean);
        // add new dec attributes to de bean and forward to create de page if success.
        if ((ret == null) || ret.equals(""))
        {
@@ -1357,7 +1357,7 @@ public class DataElementConceptServlet extends CurationServlet {
            if (ret == null || ret.equals(""))
            {
                // update other attributes
-               ret = insAC.setDEC("UPD", DECBean, "Version", oldDECBean);
+               ret = insAC.doSetDEC("UPD", DECBean, "Version", oldDECBean);
                // resetEVSBeans(m_classReq, m_classRes);
                if (ret != null && !ret.equals(""))
                {
@@ -1382,7 +1382,7 @@ public class DataElementConceptServlet extends CurationServlet {
        }
        else
        {
-           ret = insAC.setDEC("INS", DECBean, "New", oldDECBean);
+           ret = insAC.doSetDEC("INS", DECBean, "New", oldDECBean);
        }
        if ((ret == null) || ret.equals(""))
        {
@@ -1689,7 +1689,7 @@ public class DataElementConceptServlet extends CurationServlet {
                        ret = insAC.setAC_VERSION(null, DECBeanSR, null, "DataElementConcept");
                    if (ret == null || ret.equals(""))
                    {
-                       ret = insAC.setDEC("UPD", DECBeanSR, "BlockVersion", oldDECBean);
+                       ret = insAC.doSetDEC("UPD", DECBeanSR, "BlockVersion", oldDECBean);
                        // resetEVSBeans(m_classReq, m_classRes);
                        // add this bean into the session vector
                        if (ret == null || ret.equals(""))
@@ -1714,7 +1714,7 @@ public class DataElementConceptServlet extends CurationServlet {
                else
                // block edit
                {
-                   ret = insAC.setDEC("UPD", DECBeanSR, "BlockEdit", oldDECBean);
+                   ret = insAC.doSetDEC("UPD", DECBeanSR, "BlockEdit", oldDECBean);
                    // forward to search page with refreshed list after successful update
                    if ((ret == null) || ret.equals(""))
                    {

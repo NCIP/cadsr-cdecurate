@@ -12,6 +12,8 @@ import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
 import gov.nih.nci.cadsr.persist.ac.Admin_Components_Mgr;
+import gov.nih.nci.cadsr.persist.ac.Tool_Options_View_Ext_Mgr;
+import gov.nih.nci.cadsr.persist.evs.Evs_Mgr;
 import gov.nih.nci.cadsr.persist.exception.DBException;
 import gov.nih.nci.cadsr.persist.user.User_Accounts_Mgr;
 import gov.nih.nci.cadsr.sentinel.util.DSRAlert;
@@ -23,6 +25,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -309,6 +312,7 @@ public class CurationServlet
             getEVSInfo();
            //get cs-csi relationship data
             getAC.getCSCSIListBeann(); 
+            getDefaultContext();
     	  }
 	      catch(DBException e){
 	    	 logger.error("Unable to get User FullName" + e);
@@ -4309,5 +4313,16 @@ public class CurationServlet
 	  }finally{
 	       	cstmt = SQLHelper.closeCallableStatement(cstmt);
 	  }
+  }
+  
+  private void getDefaultContext(){
+	  HttpSession session =  m_classReq.getSession();
+	  try{
+		  Tool_Options_View_Ext_Mgr mgr = new Tool_Options_View_Ext_Mgr();
+		  HashMap<String, String> defaultContext = mgr.getDefaultContext(this.m_conn);
+		  session.setAttribute("defaultContext", defaultContext);
+	  }catch (DBException e) {
+			logger.error("Error in getDefaultContext() in CurationServlet", e);
+	  }	  
   }
 } // end of class
