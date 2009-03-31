@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.58 2009-02-10 19:15:26 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.59 2009-03-31 14:08:02 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -604,10 +605,10 @@ public class SetACService implements Serializable
       String nameType = m_DEC.getAC_PREF_NAME_TYPE();
       if (nameType != null && nameType.equals("SYS"))
       {
-        String ocID = m_DEC.getDEC_OCL_IDSEQ();
-        String propID = m_DEC.getDEC_PROPL_IDSEQ();
+    	Vector vObjectClass = (Vector) session.getAttribute("vObjectClass");
+      	Vector vProperty = (Vector) session.getAttribute("vProperty");
         //no object and no property
-        if ((ocID == null || ocID.equals("")) && (propID == null || propID.equals("")))
+        if ( (vObjectClass == null || vObjectClass.size()<1) && (vProperty == null || vProperty.size()<1) )
         {
           strInValid = "Requires Object Class or Property to create System Generated Short Name.";
           s = "";
@@ -1426,7 +1427,6 @@ public class SetACService implements Serializable
   {
     try
     {
-//System.out.println("setValidateNameComp");
       HttpSession session = req.getSession();
       GetACSearch getACSer = new GetACSearch(req, res, m_servlet);
       InsACService insAC = new InsACService(req, res, m_servlet);
@@ -1441,21 +1441,19 @@ public class SetACService implements Serializable
       if (vPROP == null) vPROP = new Vector();
       if (vREP == null) vREP = new Vector();
       String s = "";
-     // boolean bMandatory = true;
       boolean bNotMandatory = false;
       String strInValid = "";
-      //int iLengthLimit = 30;
-      //int iNoLengthLimit = -1;
-      if (acType.equals("DataElementConcept"))
-      {
+      String strOCValid = "";
+      String strPropValid = "";
+      if (acType.equals("DataElementConcept")){
         String sDECAction = (String)session.getAttribute("DECAction");
-        //String sDECActionOriginal = sDECAction;
         //check edit or create
         if (sDECAction.equals("EditDEC"))
            sDECAction = "Edit";
         else
            sDECAction = "Create";
-        //String ss = "";
+       
+      //check validity of object class 
         String sP = m_DEC.getDEC_OCL_NAME_PRIMARY();
         if (sP == null) sP = "";
         String sQ = "";
@@ -1463,20 +1461,21 @@ public class SetACService implements Serializable
         if (vQ != null && vQ.size() > 0)
           sQ = (String)vQ.elementAt(0);
         if (sQ == null) sQ = "";
-        //check validity of object class before creating one
         String sOCL = m_DEC.getDEC_OCL_NAME();
+        s = m_DEC.getDEC_PROPL_NAME();
         String strOCInvalid = "";
         if(!sQ.equals("") && sP.equals(""))
           strOCInvalid = "Cannot have Qualifier Concepts without a Primary Concept.\n";
+        
         if (!sQ.equals("") || !sP.equals("") && m_OC != null)
           strOCInvalid = strOCInvalid + checkConceptCodeExistsInOtherDB(vOC, insAC, null);
-//System.out.println("setValidateNameComp05");
+        
         if ((sOCL == null || sOCL.equals("")) && sDECAction.equals("Edit"))  
           strOCInvalid = strOCInvalid + checkDEUsingDEC("ObjectClass", m_DEC, getACSer);
         else if (sOCL == null || sOCL.equals(""))
           m_DEC.setDEC_OCL_IDSEQ("");
-
-        //check vaiidity of property before createing one
+      
+        //check validity of property
         String strPropInvalid = "";
         String sProp = m_DEC.getDEC_PROPL_NAME_PRIMARY();
         if (sProp == null) sProp = "";
@@ -1487,23 +1486,61 @@ public class SetACService implements Serializable
         String sPropL = m_DEC.getDEC_PROPL_NAME();
         if (sPropL == null || sPropL.equals(""))
           m_DEC.setDEC_PROPL_IDSEQ("");
-          
-        if(!sQual.equals("") && sProp.equals(""))
+         if(!sQual.equals("") && sProp.equals(""))
           strPropInvalid = "Cannot have Qualifier Concepts without a Primary Concept.\n"; 
+      
          if(!sQual.equals("") || !sProp.equals("") && m_PC != null)
           strPropInvalid = strPropInvalid + checkConceptCodeExistsInOtherDB(vPROP, insAC, null);
-        //create object class and property only if valid
-        if ((strOCInvalid == null || strOCInvalid.equals("")) && (strPropInvalid == null || strPropInvalid.equals("")))
-            m_DEC = insAC.doInsertDECBlocks(m_DEC);        
-        //check oc prop combination already exists in the database         
-        String objID = m_DEC.getDEC_OCL_IDSEQ();
-        String propID = m_DEC.getDEC_PROPL_IDSEQ();
-        //display error if not created properly.
+        
+        ValidationStatusBean ocStatusBean = new ValidationStatusBean();
+        ValidationStatusBean propStatusBean = new ValidationStatusBean();
+        //check the validity of oc and prop
+        if ((strOCInvalid == null || strOCInvalid.equals("")) && (strPropInvalid == null || strPropInvalid.equals(""))){
+         	HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
+         	if ((vOC != null && vOC.size()>0) && (defaultContext != null && defaultContext.size()>0)){
+        	   ocStatusBean = insAC.evsBeanCheck(vOC, defaultContext, sOCL, "Object Class");
+         	}
+         	if ((vPROP != null && vPROP.size()>0) && (defaultContext != null && defaultContext.size()>0)){
+        	  propStatusBean = insAC.evsBeanCheck(vPROP, defaultContext, s, "Property");
+         	}  
+        }
+        
+        if (ocStatusBean.getStatusMessage() != null && !ocStatusBean.getStatusMessage().equals("")){
+          strOCValid = ocStatusBean.getStatusMessage();
+        }  
+        if (propStatusBean.getStatusMessage() != null && !propStatusBean.getStatusMessage().equals("")){
+          strPropValid = propStatusBean.getStatusMessage();
+        }  
+       if (ocStatusBean.isAllConceptsExists()){
+        if (!ocStatusBean.isNewVersion()) {
+			if (ocStatusBean.isCondrExists() && ocStatusBean.getCondrIDSEQ() != null && !ocStatusBean.getCondrIDSEQ().equals("")){
+				m_DEC.setDEC_OC_CONDR_IDSEQ(ocStatusBean.getCondrIDSEQ());
+			}
+        	if (ocStatusBean.isEvsBeanExists()&& ocStatusBean.getEvsBeanIDSEQ() != null && !ocStatusBean.getEvsBeanIDSEQ().equals("")){
+				m_DEC.setDEC_OCL_IDSEQ(ocStatusBean.getEvsBeanIDSEQ());
+        	}			
+        } 
+       }
+       if (propStatusBean.isAllConceptsExists()){
+        if (!propStatusBean.isNewVersion()) {
+           if (propStatusBean.isCondrExists() && propStatusBean.getCondrIDSEQ() != null && !propStatusBean.getCondrIDSEQ().equals("")){
+        	   	m_DEC.setDEC_PROP_CONDR_IDSEQ(propStatusBean.getCondrIDSEQ());
+        	}
+			if (propStatusBean.isEvsBeanExists() && propStatusBean.getEvsBeanIDSEQ() != null && !propStatusBean.getEvsBeanIDSEQ().equals("")){
+				m_DEC.setDEC_PROPL_IDSEQ(propStatusBean.getEvsBeanIDSEQ());
+			}
+        }
+       } 
+        //display error if not verified properly.
         String retCode = (String)req.getAttribute("retcode");
- // System.out.println(retCode + " : " + objID + " : " + propID);
+                 
+        //check oc prop combination already exists in the database         
+        String objID = ocStatusBean.getEvsBeanIDSEQ();
+        String propID = propStatusBean.getEvsBeanIDSEQ();
+        
         if (retCode != null && !retCode.equals(""))
         {
-          //display error if unable to create object class.
+          //display error if not verified properly.
           String sMsg = (String)session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
           if (sMsg == null) sMsg = "";
           if (sOCL != null && !sOCL.equals("") && (objID == null || objID.equals("")))
@@ -1511,72 +1548,28 @@ public class SetACService implements Serializable
           if (sPropL != null && !sPropL.equals("") && (propID == null || propID.equals("")))
             strPropInvalid = strPropInvalid + sMsg;
         }
-        //do only new version of oc/prop if necessary for DEC without unique check
+      //check oc prop combination already exists in the database 
         else if (!sOriginAction.equals("BlockEditDEC"))
         {
-          if ((objID != null && !objID.equals("")) || (propID != null && !propID.equals("")))
-            strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction); 
+          	if ((objID != null && !objID.equals("")) && (propID != null && !propID.equals(""))){
+        	   strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction); 
+        	}else if ((objID != null && !objID.equals("")) &&  (vPROP == null || vPROP.size()<1)){
+        	   strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction); 
+        	}else if ((vOC == null || vOC.size()<1) && (propID != null && !propID.equals(""))){
+        	   strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction); 
+        	}
            // strInValid = checkUniqueOCPropPair(m_DEC, req, res, sOriginAction); 
         }
-   // System.out.println(sOriginAction + " oc prop invalid " + strInValid);
-        //create new version if unique for single or block edit dec
-        if (strInValid == null || strInValid.equals("") || strInValid.indexOf("Warning") > -1)
-        {
-          //allow creating new version of object class here if asl name is not released
-          if (objID != null && !objID.equals(""))
-          {
-            req.setAttribute("retcode", "");
-            String sOCasl = m_DEC.getDEC_OBJ_ASL_NAME();
-            String newID = "";
-            //System.out.println(sOCasl + " create block OC new version here");
-            if (sOCasl != null && !sOCasl.equals("RELEASED"))
-            {
-              newID = insAC.setOC_PROP_REP_VERSION(objID, "ObjectClass");
-              if (newID != null && !newID.equals(""))
-                m_DEC.setDEC_OCL_IDSEQ(newID);
-              else
-              {
-                String errCode = (String)req.getAttribute("retcode");
-                strOCInvalid += errCode + " : Unable to create new version of the Object Class";
-              }
-            }
-            //TODO - comment these two lines later to fix error in the back button on dec for oc prop
-           // if (m_OC != null)
-            //  m_OC.setIDSEQ(m_DEC.getDEC_OCL_IDSEQ());
-          }
-          //allow creating new version of property here if asl name is not released
-          if (propID != null && !propID.equals(""))
-          {
-            req.setAttribute("retcode", "");
-            String sPROPasl = m_DEC.getDEC_PROP_ASL_NAME();
-            String newID = "";
-            //System.out.println(sPROPasl + " create block PROP new version here");
-            if (sPROPasl != null && !sPROPasl.equals("RELEASED"))
-            {
-              newID = insAC.setOC_PROP_REP_VERSION(propID, "Property");
-              if (newID != null && !newID.equals(""))
-                m_DEC.setDEC_PROPL_IDSEQ(newID);
-              else
-              {
-                String errCode = (String)req.getAttribute("retcode");
-                strPropInvalid += errCode + " : Unable to create new version of the Property";
-              }
-            }
-            //TODO - comment these two lines later to fix error in the back button on dec for oc prop
-            //if (m_PC != null)
-             // m_PC.setIDSEQ(m_DEC.getDEC_PROPL_IDSEQ());        
-          }
-        }
+   
         //append it to oc invalid
         strOCInvalid = strOCInvalid + strInValid; 
         //check for warning of oc existance          
         if((sOCL == null || sOCL.equals("")) && !sOriginAction.equals("BlockEditDEC"))
           strOCInvalid = strOCInvalid + "Warning: a Data Element Concept should have an Object Class.\n";
-        UtilService.setValPageVector(vValidate, "Object Class", sOCL, bNotMandatory, 255, strOCInvalid, sOriginAction);
+        UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Object Class", sOCL, bNotMandatory, 255, strOCInvalid, sOriginAction, strOCValid);
         //append it to prop invalid
         strPropInvalid  = strPropInvalid + strInValid; 
-        s = m_DEC.getDEC_PROPL_NAME();
-        UtilService.setValPageVector(vValidate, "Property", s, bNotMandatory, 255, strPropInvalid, sOriginAction);
+        UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Property", s, bNotMandatory, 255, strPropInvalid, sOriginAction, strPropValid);
 
       }
       else
@@ -1589,6 +1582,8 @@ public class SetACService implements Serializable
            sVDAction = "Create";
 
         String ss = "";
+        String strRepValid ="";
+        ss = m_VD.getVD_REP_TERM();
         //String repID = m_VD.getVD_REP_IDSEQ();
         String sP = m_VD.getVD_REP_NAME_PRIMARY();
         if (sP == null || sP.equals(" ")) sP = "";
@@ -1600,8 +1595,18 @@ public class SetACService implements Serializable
           strInValid = "Cannot have Qualifier Concepts without a Primary Concept.\n";
         if(!sQ.equals("") || !sP.equals("") && m_REP != null)
           strInValid = strInValid + checkConceptCodeExistsInOtherDB(vREP, insAC, null);
-        ss = m_VD.getVD_REP_TERM();
-        UtilService.setValPageVector(vValidate, "Rep Term", ss, bNotMandatory, 255, strInValid, sOriginAction);
+        //check the validity of Rep Term
+        ValidationStatusBean repStatusBean = new ValidationStatusBean();
+        if ((strInValid == null || strInValid.equals(""))){
+         	HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
+         	if ((vREP != null && vREP.size()>0) && (defaultContext != null && defaultContext.size()>0)){
+        	   repStatusBean = insAC.evsBeanCheck(vREP, defaultContext, ss, "Representation Term");
+         	}
+         }
+        if (repStatusBean.getStatusMessage() != null && !repStatusBean.getStatusMessage().equals("")){
+          strRepValid = repStatusBean.getStatusMessage();
+        }  
+        UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Rep Term", ss, bNotMandatory, 255, strInValid, sOriginAction, strRepValid);
       }
     }
     catch (Exception e)

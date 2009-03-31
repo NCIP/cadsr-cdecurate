@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UtilService.java,v 1.50 2009-02-09 22:59:18 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/UtilService.java,v 1.51 2009-03-31 14:08:02 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1170,6 +1170,75 @@ public class UtilService implements Serializable
 		}
 		return curationDate;
 	}
+	
+	public static void setValPageVectorForOC_Prop_Rep(Vector<ValidateBean> vb, String sItem, String sContent, 
+	        boolean bMandatory, int iLengLimit, String strInValid, String sOriginAction, String strValid)
+	    {
+	       String sValid = "Valid";
+	       String sNoChange = "No Change";
+	       String sMandatory = "This field is Mandatory. \n";
+	       if (strValid != null && !strValid.equals("")){
+	    	   sValid = strValid;
+	       }
+	       
+	       if(sItem.equals("Effective End Date"))
+	         sMandatory = "Effective End Date field is Mandatory for this workflow status. \n";
+	       
+	       String attCon = "";
+	       String attStatus = "";
+	       if(sContent == null || sContent.equals("") || sContent.length() < 1)   // content emplty
+	       {
+	           attCon = "";  // content           
+	           if(bMandatory)
+	           {
+	               attStatus = sMandatory + strInValid;   //status, required field
+	               
+	           }
+	           else if(strInValid.equals(""))
+	           {
+	               if (sOriginAction.equals("BlockEditDE") || sOriginAction.equals("BlockEditDEC") || sOriginAction.equals("BlockEditVD"))
+	                 attStatus = sNoChange;   //status, OK, even empty, not require
+	               else
+	                 attStatus = sValid;
+	           }
+	           else
+	             attStatus = strInValid;
+	       }
+	       else                      // have something in content
+	       {
+	           attCon = sContent;   // content
+	           if(iLengLimit > 0)    // has length limit
+	           {
+	               if(sContent.length() > iLengLimit)  // not valid
+	               {
+	                 attStatus = sItem + " is too long. \n" + strInValid;
+	               }
+	               else
+	               {
+	                 if (strInValid.equals(""))
+	                   attStatus = sValid;   //status, OK, not exceed limit
+	                 else if (strInValid.startsWith("Warning"))
+	                	 attStatus = sValid +" " +strInValid; //Ok, but warning
+	                 else
+	                   attStatus = strInValid;
+	               }
+	           }
+	           else
+	           {
+	             if(strInValid.equals(""))
+	               attStatus = sValid;   //status, OK, not exceed limit
+	             else
+	               attStatus = strInValid;
+	           }
+	          }
+	       //fill in the bean
+	       ValidateBean vdBean = new ValidateBean();
+	       vdBean.setACAttribute(sItem);
+	       vdBean.setAttributeContent(attCon);
+	       vdBean.setAttributeStatus(attStatus);
+	       vb.addElement(vdBean);
+	   }
+
 
     //close the class
 }

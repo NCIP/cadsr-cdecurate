@@ -14,5 +14,11 @@ public class DBConstants {
 	public static final String ASTL_NAME_DATA_ELEMENT = "DATAELEMENT";
 	
 	public static final String AL_NAME_VERSIONED = "VERSIONED";
+	
+	public static final String CRTL_NAME_SIMPLE = "Simple Concept";
+	public static final String CRTL_NAME_CONCAT = "CONCATENATION";
+	
+	public static final String PRIMARY_FLAG_YES = "Yes";
+	public static final String PRIMARY_FLAG_NO = "No";
 
 }

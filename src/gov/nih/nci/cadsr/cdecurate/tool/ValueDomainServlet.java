@@ -1,5 +1,6 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import java.util.HashMap;
 import java.util.Vector;
 
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
@@ -1858,7 +1859,7 @@ public class ValueDomainServlet extends CurationServlet {
    }
 
    /**
-    * to create object class, property, rep term and qualifier value from EVS into cadsr. Retrieves the session bean
+    * to create rep term and qualifier value from EVS into cadsr. Retrieves the session bean
     * m_VD. calls 'insAC.setDECQualifier' to insert the database.
     *
      * @param VDBeanSR
@@ -1871,51 +1872,64 @@ public class ValueDomainServlet extends CurationServlet {
        HttpSession session = m_classReq.getSession();
        if (VDBeanSR == null)
            VDBeanSR = (VD_Bean) session.getAttribute("m_VD");
-       String sRemoveRepBlock = (String) session.getAttribute("RemoveRepBlock");
-       if (sRemoveRepBlock == null)
-           sRemoveRepBlock = "";
-       EVS_Bean REPBean = (EVS_Bean) session.getAttribute("m_REP");
-       if (REPBean == null)
-           REPBean = new EVS_Bean();
-       EVS_Bean REPQBean = (EVS_Bean) session.getAttribute("m_REPQ");
-       if (REPQBean == null)
-           REPQBean = new EVS_Bean();
-       String sNewRep = (String) session.getAttribute("newRepTerm");
-       if (sNewRep == null)
-           sNewRep = "";
-       String sREP_IDSEQ = "";
-       @SuppressWarnings("unused") String retObj = "";
-    //   String retProp = "";
-    //   String retRep = "";
-    //  String retObjQual = "";
-    //   String retPropQual = "";
-    //   String retRepQual = "";
+       ValidationStatusBean repStatusBean = new ValidationStatusBean();
+       Vector vRepTerm = (Vector) session.getAttribute("vRepTerm");
        InsACService insAC = new InsACService(m_classReq, m_classRes, this);
-       /*
-        * if (sNewRep.equals("true")) retRepQual = insAC.setRepresentation("INS", sREP_IDSEQ, VDBeanSR, REPQBean, req);
-        * else if(sRemoveRepBlock.equals("true"))
-        */
-       String sRep = VDBeanSR.getVD_REP_TERM();
-       if (sRep != null && !sRep.equals(""))
-           retObj = insAC.setRepresentation("INS", sREP_IDSEQ, VDBeanSR, REPBean, m_classReq);
-       // create new version if not released
-       sREP_IDSEQ = VDBeanSR.getVD_REP_IDSEQ();
-       if (sREP_IDSEQ != null && !sREP_IDSEQ.equals(""))
-       {
-           // CALL to create new version if not released
-           if (VDBeanSR.getVD_REP_ASL_NAME() != null && !VDBeanSR.getVD_REP_ASL_NAME().equals("RELEASED"))
-           {
-               sREP_IDSEQ = insAC.setOC_PROP_REP_VERSION(sREP_IDSEQ, "RepTerm");
-               if (sREP_IDSEQ != null && !sREP_IDSEQ.equals(""))
-                   VDBeanSR.setVD_REP_IDSEQ(sREP_IDSEQ);
-           }
-       }
-       else
-       {
-           if (VDBeanSR.getVD_REP_CONDR_IDSEQ() != null && !VDBeanSR.getVD_REP_CONDR_IDSEQ().equals(""))
-               VDBeanSR.setVD_REP_CONDR_IDSEQ("");
-       }
-       DataManager.setAttribute(session, "newRepTerm", "");
+       String userName = (String)session.getAttribute("Username");
+	   HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
+	   String conteIdseq= (String)defaultContext.get("idseq");
+       try {
+			if ((vRepTerm != null && vRepTerm.size() > 0) && (defaultContext != null && defaultContext.size() > 0)) {
+				repStatusBean = insAC.evsBeanCheck(vRepTerm, defaultContext, "", "Representation Term");
+			}
+    		// set Rep if it is null
+			if ((vRepTerm != null && vRepTerm.size() > 0)) {
+				if (!repStatusBean.isEvsBeanExists()) {
+		    			if (repStatusBean.isCondrExists()) {
+							VDBeanSR.setVD_REP_CONDR_IDSEQ(repStatusBean.getCondrIDSEQ());
+							// Create Representation Term
+							String repIdseq = insAC.createEvsBean(userName, repStatusBean.getCondrIDSEQ(), conteIdseq, "Representaiton Term");
+							if (repIdseq != null && !repIdseq.equals("")) {
+								VDBeanSR.setVD_REP_IDSEQ(repIdseq);
+							}
+						} else {
+							// Create Condr
+							String condrIdseq = insAC.createCondr(vRepTerm,	repStatusBean.isAllConceptsExists());
+							String repIdseq = "";
+							// Create Representation Term
+							if (condrIdseq != null && !condrIdseq.equals("")) {
+								VDBeanSR.setVD_REP_CONDR_IDSEQ(condrIdseq);
+								repIdseq = insAC.createEvsBean(userName, condrIdseq, conteIdseq, "Representation Term");
+							}
+							if (repIdseq != null && !repIdseq.equals("")) {
+								VDBeanSR.setVD_REP_IDSEQ(repIdseq);
+							}
+						}
+
+				} else {
+					if (repStatusBean.isNewVersion()) {
+						if (repStatusBean.getEvsBeanIDSEQ() != null	&& !repStatusBean.getEvsBeanIDSEQ().equals("")) {
+							String newID = "";
+							newID = insAC.setOC_PROP_REP_VERSION(repStatusBean.getEvsBeanIDSEQ(), "RepTerm");
+							if (newID != null && !newID.equals("")) {
+								VDBeanSR.setVD_REP_CONDR_IDSEQ(repStatusBean.getCondrIDSEQ());
+								VDBeanSR.setVD_REP_IDSEQ(newID);
+							}
+						}
+					}else{	
+					   VDBeanSR.setVD_REP_CONDR_IDSEQ(repStatusBean.getCondrIDSEQ());
+					   VDBeanSR.setVD_REP_IDSEQ(repStatusBean.getEvsBeanIDSEQ());
+					} 
+				}
+			}
+
+			m_classReq.setAttribute("REP_IDSEQ", repStatusBean.getEvsBeanIDSEQ());
+		} catch (Exception e) {
+			logger.error("ERROR in ValueDoaminServlet-doInsertVDBlocks : " + e.toString(), e);
+			m_classReq.setAttribute("retcode", "Exception");
+			this.storeStatusMsg("\\t Exception : Unable to update or remove Representation Term.");
+		}
+       DataManager.setAttribute(session, "newRepTerm", ""); 
    }
 
    /**
