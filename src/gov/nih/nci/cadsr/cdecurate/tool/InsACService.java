@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.65 2009-03-31 14:08:01 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.66 2009-04-01 22:09:31 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -6093,11 +6093,11 @@ public class InsACService implements Serializable {
 						}
 					}
 				}
-				if (foundBeanList == null) {
+				if (foundBeanList == null || foundBeanList.size() < 1) {
 					ResultVO vo = resultList.get(0);
 					statusBean.setStatusMessage("Valid  Matched "+type+" ("
 							+ vo.getLong_name() + ", " + vo.getPublicId()
-							+ ", " + vo.getVersion() + "' " + vo.getContext()
+							+ ", " + vo.getVersion() + ", " + vo.getContext()
 							+ ") will create a new "+type+" in caBIG.");
 					statusBean.setCondrExists(true);
 					statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
