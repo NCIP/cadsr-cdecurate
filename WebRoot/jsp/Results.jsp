@@ -315,6 +315,15 @@
 		sSelAC = "Class Scheme Items";
 	else if (sSelAC.equals("ValueMeaning"))
 		sSelAC = "Value Meaning";
+	else if (sSelAC.equals("ObjectClass"))
+		sSelAC = "ObjectClass";
+    else if (sSelAC.equals("ConceptClass"))
+		sSelAC = "ConceptClass";
+    else if (sSelAC.equals("Property"))
+		sSelAC = "Property";
+    else 
+		sSelAC = "Data Element";
+    
 
 	//for button label text
 	if ((sMAction == null) || (sMAction.equals("nothing")))
