@@ -5,8 +5,22 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 	String title = (String)request.getAttribute("title");
-	String id = (String)request.getAttribute("publicID");
+	String sId = (String)request.getAttribute("publicID");
 	String version = (String)request.getAttribute("version");
+	int id = 0;
+	try{
+	   id = Integer.parseInt(sId);
+	}catch (Exception e){	   
+	}   
+	String ver = "1";
+    String[] aVer = version.split("[^0-9]");
+    if (aVer.length > 0 && aVer[0] != null) {
+      ver = aVer[0];
+      if (aVer.length > 1 && aVer[1] != null){
+        ver = ver + "." + aVer[1];
+      }
+   }
+	
 %>
 <html>
 <head>
@@ -34,7 +48,7 @@
 	<%}%>
 	<div class="xyz">
 	  <table class="footerBanner1" cellspacing="0" cellpadding="0">
-	     <tr><td align="right" style="padding: 2px 4px 2px 2px;"><a href="../../cdecurate/View?publicId=<%=id%>&version=<%=version%>" onclick = "return false;"><font color="#FFFFFF">Page Shortcut</font></a></tr>
+	     <tr><td align="right" style="padding: 2px 4px 2px 2px;"><a href="../../cdecurate/View?publicId=<%=id%>&version=<%=ver%>" onclick = "return false;"><font color="#FFFFFF">Page Shortcut</font></a></tr>
 	  </table>
 	</div>
 	<% String bodyPage = (String)request.getAttribute("IncludeViewPage") ;
