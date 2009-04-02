@@ -1,6 +1,6 @@
 //Copyright (c) 2000 ScenPro, Inc.
 
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.65 2009-02-09 22:59:18 veerlah Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.66 2009-04-02 16:43:59 veerlah Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -22,6 +22,7 @@ import gov.nih.nci.system.client.ApplicationServiceProvider;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Stack;
@@ -3263,5 +3264,18 @@ public class EVSSearch implements Serializable {
 		return query;
 	}
 
+	
+	public Vector<EVS_Bean> getThesaurusConceptBean(Vector vEvsBean){
+		  Vector<EVS_Bean>  vEvsBeann = new Vector<EVS_Bean>();
+		  if (vEvsBean != null){  
+		   	for (int i = 0; i < vEvsBean.size(); i++) {
+				EVS_Bean eBean = (EVS_Bean) vEvsBean.elementAt(i);
+				eBean = this.getThesaurusConcept(eBean);
+			    vEvsBeann.addElement(eBean);
+		    }
+		}
+	   return vEvsBeann;
+	}
+	
 	//close the class
 }

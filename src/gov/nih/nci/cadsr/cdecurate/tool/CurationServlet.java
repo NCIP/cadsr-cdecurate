@@ -4325,4 +4325,22 @@ public class CurationServlet
 			logger.error("Error in getDefaultContext() in CurationServlet", e);
 	  }	  
   }
+  
+  public Vector getMatchingThesarusconcept(Vector beanList, String type){
+	  HttpSession session = m_classReq.getSession();
+	  InsACService ins = new InsACService(m_classReq, m_classRes, this);
+	  EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
+      HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
+      ValidationStatusBean ocStatusBean  = null;
+     try{
+    	 ocStatusBean = ins.evsBeanCheck(beanList, defaultContext, "", type);
+        // get its matching thesaurus concept
+         if (ocStatusBean != null && !ocStatusBean.isEvsBeanExists()){
+    	    beanList = evs.getThesaurusConceptBean(beanList);
+         }
+     }catch(Exception e){
+    	 logger.error("Error in getMatchingThesarusconcept" + e);
+     }
+	  return beanList;
+  }
 } // end of class
