@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.8 2009-01-23 19:21:27 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.9 2009-04-02 22:00:13 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 	var secondWindow;
@@ -204,17 +204,17 @@
   	
   	}
   //change the tabs
- function viewVMChangeTab(tab, id){
+ function viewVMChangeTab(tab, id, from){
    if (tab == "whereUsedTab" && document.VMDetail != null){
-      document.VMDetail.action = "../../cdecurate/NCICurationServlet?reqType=viewVMAction&action=" +tab+ "&id=" +id;
+      document.VMDetail.action = "../../cdecurate/NCICurationServlet?reqType=viewVMAction&action=" +tab+ "&id=" +id+ "&from=" +from;
       document.VMDetail.submit();
    }else if (tab == "detailsTab" && document.VMUse != null){
-      document.VMUse.action = "../../cdecurate/NCICurationServlet?reqType=viewVMAction&action=" +tab+ "&id=" +id;
+      document.VMUse.action = "../../cdecurate/NCICurationServlet?reqType=viewVMAction&action=" +tab+ "&id=" +id+ "&from=" +from;
       document.VMUse.submit();	
    }
   } 
   
-  function viewVMSort(acType, fieldType, id){
+  function viewVMSort(acType, fieldType, id, from){
      //ac type
      var selACObj = document.getElementById(elmACType);
      if (selACObj != null)
@@ -223,11 +223,11 @@
      var selFiedlObj = document.getElementById(elmFieldType);
      if (selFiedlObj != null)
     	selFiedlObj.value = fieldType;
-      document.VMUse.action = "../../cdecurate/NCICurationServlet?reqType=viewVMAction&action=sort&id=" +id;
+      document.VMUse.action = "../../cdecurate/NCICurationServlet?reqType=viewVMAction&action=sort&id=" +id+ "&from=" +from;
       document.VMUse.submit();	
   }
   
-  function viewVMShow(acType, filterType, id){
+  function viewVMShow(acType, filterType, id, from){
       //ac type
       var selACObj = document.getElementById(elmACType);
       if (selACObj != null)
@@ -236,7 +236,7 @@
       var selFiedlObj = document.getElementById(elmFieldType);
       if (selFiedlObj != null)
     	selFiedlObj.value = filterType;
-      document.VMUse.action = "../../cdecurate/NCICurationServlet?reqType=viewVMAction&action=show&id=" +id;
+      document.VMUse.action = "../../cdecurate/NCICurationServlet?reqType=viewVMAction&action=show&id=" +id+ "&from=" +from;
       document.VMUse.submit();	
  } 
  //open viewonly alt name with something to tell view 

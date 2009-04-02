@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.87 2009-03-11 22:34:36 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.88 2009-04-02 21:59:55 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -4318,28 +4318,39 @@ public class GetACSearch implements Serializable
                             }
                         }else if (sSearchAC.equals("ValueMeaning"))
                         {
-                            VM_Bean VMBean = new VM_Bean();
-                            VMBean = (VM_Bean) selectedRows.elementAt(i);
-                            DataManager.setAttribute(session, "results", vSRows);
-                            DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, VMBean);
-                            DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
-                            DataManager.setAttribute(session, VMForm.SESSION_RET_PAGE, VMForm.ACT_BACK_SEARCH);
-                            AltNamesDefsServlet altSer = new AltNamesDefsServlet( m_servlet,  m_servlet.sessionData.UsrBean);
-                            Alternates alt = altSer.getManualDefinition( m_classReq, VMForm.ELM_FORM_SEARCH_EVS);
-                            if (alt != null && !alt.getName().equals(""))
-                            VMBean.setVM_ALT_DEFINITION(alt.getName());
-                           
-                           /* String sVM = VMBean.getVM_LONG_NAME(); // ac name for pv
-                            // call the api to return concept attributes according to ac type and ac idseq
-                            Vector cdList = new Vector();
-                            cdList = this.doCDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", sVM, cdList); // get
-                                                                                                                             // Domains
-                            req.setAttribute("ConDomainList", cdList);
-                            req.setAttribute("VMName", sVM);*/
-                            //write the jsp
-                            VMServlet vmser = new VMServlet( m_classReq,  m_classRes,  m_servlet);
-                            VM_Bean vm = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
-                            vmser.writeDetailJsp(vm);
+                        	Session_Data sData = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
+                        	boolean isSuperUser = sData.UsrBean.isSuperuser();
+                        	VM_Bean VMBean = new VM_Bean();
+							VMBean = (VM_Bean) selectedRows.elementAt(i);
+							if (isSuperUser) {
+							DataManager.setAttribute(session, "results", vSRows);
+							DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, VMBean);
+							DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
+							DataManager.setAttribute(session, VMForm.SESSION_RET_PAGE, VMForm.ACT_BACK_SEARCH);
+							AltNamesDefsServlet altSer = new AltNamesDefsServlet(m_servlet, m_servlet.sessionData.UsrBean);
+							Alternates alt = altSer.getManualDefinition(m_classReq, VMForm.ELM_FORM_SEARCH_EVS);
+							if (alt != null && !alt.getName().equals(""))
+								VMBean.setVM_ALT_DEFINITION(alt.getName());
+
+							/*
+							 * String sVM = VMBean.getVM_LONG_NAME(); // ac name
+							 * for pv // call the api to return concept
+							 * attributes according to ac type and ac idseq
+							 * Vector cdList = new Vector(); cdList =
+							 * this.doCDSearch("", "", "", "", "", "", "", "",
+							 * "", "", "", "", "", "", 0, "", "", sVM, cdList); //
+							 * get // Domains req.setAttribute("ConDomainList",
+							 * cdList); req.setAttribute("VMName", sVM);
+							 */
+							// write the jsp
+							VMServlet vmser = new VMServlet(m_classReq,	m_classRes, m_servlet);
+							VM_Bean vm = (VM_Bean) session.getAttribute(VMForm.SESSION_SELECT_VM);
+							vmser.writeDetailJsp(vm);
+						} else {
+							session.setAttribute("editID", VMBean.getIDSEQ());
+							isValid = false;
+                            break;
+						}
                           
                         }
                         

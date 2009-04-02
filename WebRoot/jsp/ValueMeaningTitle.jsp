@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.13 2009-02-10 18:20:54 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.14 2009-04-02 21:59:55 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -46,6 +46,11 @@
    			String oldLN = (String)session.getAttribute("prevVMLN");
    			String oldWS = (String)session.getAttribute("prevVMWS");
    			String oldCN = (String)session.getAttribute("prevVMCN");
+   	 String displayErrorMessagee = (String)session.getAttribute("displayErrorMessage");
+     String fromm = "view";
+    if ((displayErrorMessagee != null)&&(displayErrorMessagee).equals("Yes")){
+       fromm = "edit";
+    }		
 		%>
    <script Language="JavaScript">
 			var actionClear = "<%=VMForm.ACT_CLEAR_VM%>";
@@ -55,6 +60,7 @@
 	}		
  </script>
 <div class="ind1">
+     
    <% if(!isView){ %>	
 	<input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('<%=VMForm.ACT_VALIDATE_VM%>')" <%=disabled%>>
 	&nbsp;&nbsp;
@@ -69,10 +75,13 @@
 					onClick="openDesignateWindow('Alternate Names');" 
 				<% } %> >
 	&nbsp;&nbsp;
-   <%if (isView) {%>
+	<%	if((displayErrorMessagee != null)&&(displayErrorMessagee).equals("Yes")){	%>
+		<input type="button" name="btnBack" value="Back" style="width:125" <%if (isView){%>onClick="SubmitValidate('<%=VMForm.ACT_BACK_SEARCH%>');" <%}else{%>onClick="SubmitValidate('<%=retPage%>');"<%}%>>
+		&nbsp;&nbsp;
+	<% }else if (isView) {%>
 	 <input type="button" name="btnClose" value="Close" style="width: 125" onClick="window.close();">
 	 &nbsp;&nbsp;
-   <% } %> 	
+   <% } session.setAttribute("displayErrorMessage", "No");%> 	
 	<img name="Message" src="images/WaitMessage1.gif" width="250" height="20" alt="WaitMessage" style="visibility:hidden;">
 </div>
 <div class="ind1">
@@ -101,14 +110,14 @@
 			<col />
 		</colgroup>
 		<tr>
-			<td id="<%=VMForm.ELM_ACT_DETAIL_TAB%>" class="<%=detailFocus%>" <% if (isView) { %>onclick="viewVMChangeTab('detailsTab','<%=id%>');"<% } else { %>onclick="SubmitValidate('<%=VMForm.ELM_ACT_DETAIL_TAB%>');" <%}%>>
+			<td id="<%=VMForm.ELM_ACT_DETAIL_TAB%>" class="<%=detailFocus%>" <% if (isView) { %>onclick="viewVMChangeTab('detailsTab','<%=id%>','<%=StringEscapeUtils.escapeJavaScript(fromm)%>');"<% } else { %>onclick="SubmitValidate('<%=VMForm.ELM_ACT_DETAIL_TAB%>');" <%}%>>
 				<font size=2>
 					<b>
 						Details
 					</b>
 				</font>
 			</td>
-			<td id="<%=VMForm.ELM_ACT_USED_TAB%>" class="<%=usedFocus%>" <% if (isView) { %>onclick="viewVMChangeTab('whereUsedTab','<%=id%>');"<% } else { %>onclick="SubmitValidate('<%=VMForm.ELM_ACT_USED_TAB%>');" <%}%>>
+			<td id="<%=VMForm.ELM_ACT_USED_TAB%>" class="<%=usedFocus%>" <% if (isView) { %>onclick="viewVMChangeTab('whereUsedTab','<%=id%>','<%=StringEscapeUtils.escapeJavaScript(fromm)%>');"<% } else { %>onclick="SubmitValidate('<%=VMForm.ELM_ACT_USED_TAB%>');" <%}%>>
 				<font size=2>
 					<b>
 						Where Used
