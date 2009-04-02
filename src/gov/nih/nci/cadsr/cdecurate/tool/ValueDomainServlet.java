@@ -1196,6 +1196,12 @@ public class ValueDomainServlet extends CurationServlet {
                        m_VD = (VD_Bean) this.getACNames(eBean, "Search", m_VD);
                }
            }
+           vRepTerm = (Vector) session.getAttribute("vRepTerm");
+           if (vRepTerm != null && vRepTerm.size() > 0){
+             vRepTerm = this.getMatchingThesarusconcept(vRepTerm, "Representation Term");
+             m_VD = this.updateRepAttribues(vRepTerm, m_VD);
+           }  
+           DataManager.setAttribute(session, "vRepTerm", vRepTerm);
            // rebuild new name if not appending
            EVS_Bean nullEVS = null; 
            if (nameAction.equals("newName"))
@@ -1250,8 +1256,8 @@ public class ValueDomainServlet extends CurationServlet {
            eBean.setEVS_DATABASE(eDB); // eBean.getEVS_ORIGIN());
        }
        // System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for REP " + eDB);
-       EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
-       eBean = evs.getThesaurusConcept(eBean);
+      // EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
+       //eBean = evs.getThesaurusConcept(eBean);
        // add to the vector and store it in the session, reset if primary and alredy existed, add otehrwise
        if (repType.equals("Primary") && vRepTerm.size() > 0)
            vRepTerm.setElementAt(eBean, 0);
@@ -1259,38 +1265,6 @@ public class ValueDomainServlet extends CurationServlet {
            vRepTerm.addElement(eBean);
        DataManager.setAttribute(session, "vRepTerm", vRepTerm);
        DataManager.setAttribute(session, "newRepTerm", "true");
-       // add rep primary attributes to the vd bean
-       if (repType.equals("Primary"))
-       {
-           vdBean.setVD_REP_NAME_PRIMARY(eBean.getLONG_NAME());
-           vdBean.setVD_REP_CONCEPT_CODE(eBean.getCONCEPT_IDENTIFIER());
-           vdBean.setVD_REP_EVS_CUI_ORIGEN(eBean.getEVS_DATABASE());
-           vdBean.setVD_REP_IDSEQ(eBean.getIDSEQ());
-           DataManager.setAttribute(session, "m_REP", eBean);
-       }
-       else
-       {
-           // add rep qualifiers to the vector
-           Vector<String> vRepQualifierNames = vdBean.getVD_REP_QUALIFIER_NAMES();
-           if (vRepQualifierNames == null)
-               vRepQualifierNames = new Vector<String>();
-           vRepQualifierNames.addElement(eBean.getLONG_NAME());
-           Vector<String> vRepQualifierCodes = vdBean.getVD_REP_QUALIFIER_CODES();
-           if (vRepQualifierCodes == null)
-               vRepQualifierCodes = new Vector<String>();
-           vRepQualifierCodes.addElement(eBean.getCONCEPT_IDENTIFIER());
-           Vector<String> vRepQualifierDB = vdBean.getVD_REP_QUALIFIER_DB();
-           if (vRepQualifierDB == null)
-               vRepQualifierDB = new Vector<String>();
-           vRepQualifierDB.addElement(eBean.getEVS_DATABASE());
-           vdBean.setVD_REP_QUALIFIER_NAMES(vRepQualifierNames);
-           vdBean.setVD_REP_QUALIFIER_CODES(vRepQualifierCodes);
-           vdBean.setVD_REP_QUALIFIER_DB(vRepQualifierDB);
-           // if(vRepQualifierNames.size()>0)
-           // vdBean.setVD_REP_QUAL((String)vRepQualifierNames.elementAt(0));
-           DataManager.setAttribute(session, "vRepQResult", null);
-           DataManager.setAttribute(session, "m_REPQ", eBean);
-       }
        // DataManager.setAttribute(session, "selRepQRow", sSelRow);
        // add to name if appending
        if (nameAction.equals("appendName"))
@@ -2173,6 +2147,14 @@ public class ValueDomainServlet extends CurationServlet {
           m_VD.setVD_PROP_CLASS("");
           DataManager.setAttribute(session, "m_PC", new EVS_Bean());
       }
+      if (sComp.equals("RepTerm") || sComp.equals("RepQualifier")){
+        vRepTerm = (Vector)session.getAttribute("vRepTerm");
+        if (vRepTerm != null && vRepTerm.size() > 0){
+           vRepTerm = this.getMatchingThesarusconcept(vRepTerm, "Representation Term");
+           m_VD = this.updateRepAttribues(vRepTerm, m_VD);
+        }  
+        DataManager.setAttribute(session, "vRepTerm", vRepTerm);
+      }
       m_setAC.setVDValueFromPage(m_classReq, m_classRes, m_VD);
       DataManager.setAttribute(session, "m_VD", m_VD);
   } // end of doRemoveQualifier
@@ -2334,4 +2316,45 @@ public class ValueDomainServlet extends CurationServlet {
           ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
 	  }
   }	
+  private VD_Bean updateRepAttribues(Vector vRep, VD_Bean vdBean) {
+		 
+	  HttpSession session = m_classReq.getSession();
+	  // add rep primary attributes to the vd bean
+	  EVS_Bean pBean =(EVS_Bean)vRep.get(0); 
+	  vdBean.setVD_REP_NAME_PRIMARY(pBean.getLONG_NAME());
+      vdBean.setVD_REP_CONCEPT_CODE(pBean.getCONCEPT_IDENTIFIER());
+      vdBean.setVD_REP_EVS_CUI_ORIGEN(pBean.getEVS_DATABASE());
+      vdBean.setVD_REP_IDSEQ(pBean.getIDSEQ());
+      DataManager.setAttribute(session, "m_REP", pBean);
+  
+      // update qualifier vectors
+      vdBean.setVD_REP_QUALIFIER_NAMES(null);
+      vdBean.setVD_REP_QUALIFIER_CODES(null);
+      vdBean.setVD_REP_QUALIFIER_DB(null);
+     
+      for (int i=1; i<vRep.size();i++){
+		  EVS_Bean eBean =(EVS_Bean)vRep.get(i);
+		  // add rep qualifiers to the vector
+          Vector<String> vRepQualifierNames = vdBean.getVD_REP_QUALIFIER_NAMES();
+          if (vRepQualifierNames == null)
+              vRepQualifierNames = new Vector<String>();
+          vRepQualifierNames.addElement(eBean.getLONG_NAME());
+          Vector<String> vRepQualifierCodes = vdBean.getVD_REP_QUALIFIER_CODES();
+          if (vRepQualifierCodes == null)
+              vRepQualifierCodes = new Vector<String>();
+          vRepQualifierCodes.addElement(eBean.getCONCEPT_IDENTIFIER());
+          Vector<String> vRepQualifierDB = vdBean.getVD_REP_QUALIFIER_DB();
+          if (vRepQualifierDB == null)
+              vRepQualifierDB = new Vector<String>();
+          vRepQualifierDB.addElement(eBean.getEVS_DATABASE());
+          vdBean.setVD_REP_QUALIFIER_NAMES(vRepQualifierNames);
+          vdBean.setVD_REP_QUALIFIER_CODES(vRepQualifierCodes);
+          vdBean.setVD_REP_QUALIFIER_DB(vRepQualifierDB);
+          // if(vRepQualifierNames.size()>0)
+          // vdBean.setVD_REP_QUAL((String)vRepQualifierNames.elementAt(0));
+          DataManager.setAttribute(session, "vRepQResult", null);
+          DataManager.setAttribute(session, "m_REPQ", eBean);
+      }
+      return vdBean;  
+  }
 }

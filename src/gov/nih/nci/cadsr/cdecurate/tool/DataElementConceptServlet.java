@@ -924,13 +924,15 @@ public class DataElementConceptServlet extends CurationServlet {
                        {
                            if (sComp.equals("ObjectClass"))
                                m_DEC = this.addOCConcepts(nameAction, m_DEC, blockBean, "Primary");
+                          
                            else
                                m_DEC = this.addPropConcepts(nameAction, m_DEC, blockBean, "Primary");
                        }
                    }
-                   else
-                       // split it into concepts for object class or property search results
+                   else{
+                      // split it into concepts for object class or property search results
                        splitIntoConcepts(sComp, blockBean, nameAction);
+                   }    
                }
                else
                // evs search results
@@ -962,6 +964,22 @@ public class DataElementConceptServlet extends CurationServlet {
                    DataManager.setAttribute(session, "vProperty", vProperty);
                }
                m_DEC = this.addPropConcepts(nameAction, m_DEC, blockBean, "Qualifier");
+           }
+           if ( sComp.equals("ObjectClass") || sComp.equals("ObjectQualifier")){
+               vObjectClass = (Vector) session.getAttribute("vObjectClass");
+               if (vObjectClass != null && vObjectClass.size()>0){
+                 vObjectClass = this.getMatchingThesarusconcept(vObjectClass, "Object Class");
+   		         m_DEC = this.updateOCAttribues(vObjectClass, m_DEC);
+               }  
+   		       DataManager.setAttribute(session, "vObjectClass", vObjectClass);
+           }
+           if (sComp.equals("Property") || sComp.equals("PropertyClass") || sComp.equals("PropertyQualifier")){
+   		       vProperty = (Vector) session.getAttribute("vProperty");
+   		       if (vProperty != null && vProperty.size()>0){
+   		         vProperty  = this.getMatchingThesarusconcept(vProperty, "Property");
+ 		         m_DEC = this.updatePropAttribues(vProperty, m_DEC);
+   		       }  
+ 		       DataManager.setAttribute(session, "vProperty", vProperty);
            }
            // rebuild new name if not appending
            EVS_Bean nullEVS = null; 
@@ -1020,10 +1038,12 @@ public class DataElementConceptServlet extends CurationServlet {
                eDB = eBean.getEVS_ORIGIN();
            eBean.setEVS_DATABASE(eDB); // eBean.getEVS_ORIGIN());
        }
+       
        // get its matching thesaurus concept
        // System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for OC " + eDB);
-       EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
-       eBean = evs.getThesaurusConcept(eBean);
+       //EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
+       //eBean = evs.getThesaurusConcept(eBean);
+    
        // add to the vector and store it in the session, reset if primary and alredy existed, add otehrwise
        if (ocType.equals("Primary") && vObjectClass.size() > 0)
            vObjectClass.setElementAt(eBean, 0);
@@ -1031,39 +1051,6 @@ public class DataElementConceptServlet extends CurationServlet {
            vObjectClass.addElement(eBean);
        DataManager.setAttribute(session, "vObjectClass", vObjectClass);
        DataManager.setAttribute(session, "newObjectClass", "true");
-       // add rep primary attributes to the vd bean
-       if (ocType.equals("Primary"))
-       {
-           decBean.setDEC_OCL_NAME_PRIMARY(eBean.getLONG_NAME());
-           decBean.setDEC_OC_CONCEPT_CODE(eBean.getCONCEPT_IDENTIFIER());
-           decBean.setDEC_OC_EVS_CUI_ORIGEN(eBean.getEVS_DATABASE());
-           decBean.setDEC_OCL_IDSEQ(eBean.getIDSEQ());
-           DataManager.setAttribute(session, "m_OC", eBean);
-       }
-       // update qualifier vectors
-       else
-       {
-           // add it othe qualifiers attributes of the selected DEC
-           Vector<String> vOCQualifierNames = decBean.getDEC_OC_QUALIFIER_NAMES();
-           if (vOCQualifierNames == null)
-               vOCQualifierNames = new Vector<String>();
-           vOCQualifierNames.addElement(eBean.getLONG_NAME());
-           Vector<String> vOCQualifierCodes = decBean.getDEC_OC_QUALIFIER_CODES();
-           if (vOCQualifierCodes == null)
-               vOCQualifierCodes = new Vector<String>();
-           vOCQualifierCodes.addElement(eBean.getCONCEPT_IDENTIFIER());
-           Vector<String> vOCQualifierDB = decBean.getDEC_OC_QUALIFIER_DB();
-           if (vOCQualifierDB == null)
-               vOCQualifierDB = new Vector<String>();
-           vOCQualifierDB.addElement(eBean.getEVS_DATABASE());
-           decBean.setDEC_OC_QUALIFIER_NAMES(vOCQualifierNames);
-           decBean.setDEC_OC_QUALIFIER_CODES(vOCQualifierCodes);
-           decBean.setDEC_OC_QUALIFIER_DB(vOCQualifierDB);
-           // if (vOCQualifierNames.size()>0)
-           // decBean.setDEC_OBJ_CLASS_QUALIFIER((String)vOCQualifierNames.elementAt(0));
-           // store it in the session
-           DataManager.setAttribute(session, "m_OCQ", eBean);
-       }
        // DataManager.setAttribute(session, "selObjQRow", sSelRow);
        // add to name if appending
        if (nameAction.equals("appendName"))
@@ -1115,8 +1102,8 @@ public class DataElementConceptServlet extends CurationServlet {
            eBean.setEVS_DATABASE(eDB); // eBean.getEVS_ORIGIN());
        }
        // System.out.println(eBean.getEVS_ORIGIN() + " before thes concept for PROP " + eDB);
-       EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
-       eBean = evs.getThesaurusConcept(eBean);
+       // EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
+       //eBean = evs.getThesaurusConcept(eBean);
        // add to the vector and store it in the session, reset if primary and alredy existed, add otehrwise
        if (propType.equals("Primary") && vProperty.size() > 0)
            vProperty.setElementAt(eBean, 0);
@@ -1124,37 +1111,6 @@ public class DataElementConceptServlet extends CurationServlet {
            vProperty.addElement(eBean);
        DataManager.setAttribute(session, "vProperty", vProperty);
        DataManager.setAttribute(session, "newProperty", "true");
-       // add rep primary attributes to the vd bean
-       if (propType.equals("Primary"))
-       {
-           decBean.setDEC_PROPL_NAME_PRIMARY(eBean.getLONG_NAME());
-           decBean.setDEC_PROP_CONCEPT_CODE(eBean.getCONCEPT_IDENTIFIER());
-           decBean.setDEC_PROP_EVS_CUI_ORIGEN(eBean.getEVS_DATABASE());
-           decBean.setDEC_PROPL_IDSEQ(eBean.getIDSEQ());
-           DataManager.setAttribute(session, "m_PC", eBean);
-       }
-       // update qualifier vectors
-       else
-       {
-           Vector<String> vPropQualifierNames = decBean.getDEC_PROP_QUALIFIER_NAMES();
-           if (vPropQualifierNames == null)
-               vPropQualifierNames = new Vector<String>();
-           vPropQualifierNames.addElement(eBean.getLONG_NAME());
-           Vector<String> vPropQualifierCodes = decBean.getDEC_PROP_QUALIFIER_CODES();
-           if (vPropQualifierCodes == null)
-               vPropQualifierCodes = new Vector<String>();
-           vPropQualifierCodes.addElement(eBean.getCONCEPT_IDENTIFIER());
-           Vector<String> vPropQualifierDB = decBean.getDEC_PROP_QUALIFIER_DB();
-           if (vPropQualifierDB == null)
-               vPropQualifierDB = new Vector<String>();
-           vPropQualifierDB.addElement(eBean.getEVS_DATABASE());
-           decBean.setDEC_PROP_QUALIFIER_NAMES(vPropQualifierNames);
-           decBean.setDEC_PROP_QUALIFIER_CODES(vPropQualifierCodes);
-           decBean.setDEC_PROP_QUALIFIER_DB(vPropQualifierDB);
-           // if(vPropQualifierNames.size()>0)
-           // decBean.setDEC_PROPERTY_QUALIFIER((String)vPropQualifierNames.elementAt(0));
-           DataManager.setAttribute(session, "m_PCQ", eBean);
-       }
        // DataManager.setAttribute(session, "selObjQRow", sSelRow);
        // add to name if appending
        if (nameAction.equals("appendName"))
@@ -1848,6 +1804,7 @@ public class DataElementConceptServlet extends CurationServlet {
               DataManager.setAttribute(session, "RemoveOCBlock", "true");
               DataManager.setAttribute(session, "newObjectClass", "true");
               DataManager.setAttribute(session, "m_OCQ", null);
+             
           }
       }
       else if (sComp.equals("PropertyQualifier"))
@@ -1889,6 +1846,23 @@ public class DataElementConceptServlet extends CurationServlet {
               DataManager.setAttribute(session, "m_PCQ", null);
           }
       }
+      if ( sComp.equals("ObjectClass") || sComp.equals("ObjectQualifier")){
+        vObjectClass = (Vector)session.getAttribute("vObjectClass");
+        if (vObjectClass != null && vObjectClass.size()>0){
+          vObjectClass = this.getMatchingThesarusconcept(vObjectClass, "Object Class");
+          m_DEC = this.updateOCAttribues(vObjectClass, m_DEC);
+        } 
+        DataManager.setAttribute(session, "vObjectClass", vObjectClass);
+      }
+      if (sComp.equals("Property") || sComp.equals("PropertyClass") || sComp.equals("PropertyQualifier")){
+        vProperty = (Vector)session.getAttribute("vProperty");
+        if (vProperty != null && vProperty.size()>0){
+          vProperty = this.getMatchingThesarusconcept(vProperty, "Property");
+          m_DEC = this.updatePropAttribues(vProperty, m_DEC);
+        } 
+        DataManager.setAttribute(session, "vProperty", vProperty);
+      }
+     
       m_setAC.setDECValueFromPage(m_classReq, m_classRes, m_DEC);
       DataManager.setAttribute(session, "m_DEC", m_DEC);
   } // end of doRemoveQualifier
@@ -1922,6 +1896,88 @@ public class DataElementConceptServlet extends CurationServlet {
           m_classReq.setAttribute("IncludeViewPage", "EditDEC.jsp") ;
      }
    }
-	
-    	
+   
+  
+  private DEC_Bean updateOCAttribues(Vector vObjectClass, DEC_Bean decBean) {
+	 
+	  HttpSession session = m_classReq.getSession();
+	  // add oc primary attributes to the dec bean
+	  EVS_Bean pBean =(EVS_Bean)vObjectClass.get(0); 
+	  decBean.setDEC_OCL_NAME_PRIMARY(pBean.getLONG_NAME());
+      decBean.setDEC_OC_CONCEPT_CODE(pBean.getCONCEPT_IDENTIFIER());
+      decBean.setDEC_OC_EVS_CUI_ORIGEN(pBean.getEVS_DATABASE());
+      decBean.setDEC_OCL_IDSEQ(pBean.getIDSEQ());
+      DataManager.setAttribute(session, "m_OC", pBean);
+      
+      // update qualifier vectors
+      decBean.setDEC_OC_QUALIFIER_NAMES(null);
+      decBean.setDEC_OC_QUALIFIER_CODES(null);
+      decBean.setDEC_OC_QUALIFIER_DB(null);
+      for (int i=1; i<vObjectClass.size();i++){
+		  EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
+         // update qualifier vectors
+         // add it othe qualifiers attributes of the selected DEC
+          Vector<String> vOCQualifierNames = decBean.getDEC_OC_QUALIFIER_NAMES();
+          if (vOCQualifierNames == null)
+              vOCQualifierNames = new Vector<String>();
+          vOCQualifierNames.addElement(eBean.getLONG_NAME());
+          Vector<String> vOCQualifierCodes = decBean.getDEC_OC_QUALIFIER_CODES();
+          if (vOCQualifierCodes == null)
+              vOCQualifierCodes = new Vector<String>();
+          vOCQualifierCodes.addElement(eBean.getCONCEPT_IDENTIFIER());
+          Vector<String> vOCQualifierDB = decBean.getDEC_OC_QUALIFIER_DB();
+          if (vOCQualifierDB == null)
+              vOCQualifierDB = new Vector<String>();
+          vOCQualifierDB.addElement(eBean.getEVS_DATABASE());
+          decBean.setDEC_OC_QUALIFIER_NAMES(vOCQualifierNames);
+          decBean.setDEC_OC_QUALIFIER_CODES(vOCQualifierCodes);
+          decBean.setDEC_OC_QUALIFIER_DB(vOCQualifierDB);
+          // if (vOCQualifierNames.size()>0)
+          // decBean.setDEC_OBJ_CLASS_QUALIFIER((String)vOCQualifierNames.elementAt(0));
+          // store it in the session
+          DataManager.setAttribute(session, "m_OCQ", eBean);
+     }
+	return decBean;  
+  }
+  private DEC_Bean updatePropAttribues(Vector vProperty, DEC_Bean decBean) {
+		 
+	  HttpSession session = m_classReq.getSession();
+	  // add prop primary attributes to the dec bean
+	  EVS_Bean pBean =(EVS_Bean)vProperty.get(0); 
+	  decBean.setDEC_PROPL_NAME_PRIMARY(pBean.getLONG_NAME());
+      decBean.setDEC_PROP_CONCEPT_CODE(pBean.getCONCEPT_IDENTIFIER());
+      decBean.setDEC_PROP_EVS_CUI_ORIGEN(pBean.getEVS_DATABASE());
+      decBean.setDEC_PROPL_IDSEQ(pBean.getIDSEQ());
+      DataManager.setAttribute(session, "m_PC", pBean);
+  
+      // update qualifier vectors
+      decBean.setDEC_PROP_QUALIFIER_NAMES(null);
+      decBean.setDEC_PROP_QUALIFIER_CODES(null);
+      decBean.setDEC_PROP_QUALIFIER_DB(null);
+      for (int i=1; i<vProperty.size();i++){
+		  EVS_Bean eBean =(EVS_Bean)vProperty.get(i);
+         // update qualifier vectors
+         // add it the qualifiers attributes of the selected DEC
+		  Vector<String> vPropQualifierNames = decBean.getDEC_PROP_QUALIFIER_NAMES();
+          if (vPropQualifierNames == null)
+              vPropQualifierNames = new Vector<String>();
+          vPropQualifierNames.addElement(eBean.getLONG_NAME());
+          Vector<String> vPropQualifierCodes = decBean.getDEC_PROP_QUALIFIER_CODES();
+          if (vPropQualifierCodes == null)
+              vPropQualifierCodes = new Vector<String>();
+          vPropQualifierCodes.addElement(eBean.getCONCEPT_IDENTIFIER());
+          Vector<String> vPropQualifierDB = decBean.getDEC_PROP_QUALIFIER_DB();
+          if (vPropQualifierDB == null)
+              vPropQualifierDB = new Vector<String>();
+          vPropQualifierDB.addElement(eBean.getEVS_DATABASE());
+          decBean.setDEC_PROP_QUALIFIER_NAMES(vPropQualifierNames);
+          decBean.setDEC_PROP_QUALIFIER_CODES(vPropQualifierCodes);
+          decBean.setDEC_PROP_QUALIFIER_DB(vPropQualifierDB);
+          // if(vPropQualifierNames.size()>0)
+          // decBean.setDEC_PROPERTY_QUALIFIER((String)vPropQualifierNames.elementAt(0));
+          DataManager.setAttribute(session, "m_PCQ", eBean);
+      }
+      return decBean;  
+  }
+      	
 }
