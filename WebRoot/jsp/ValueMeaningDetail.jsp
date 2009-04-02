@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.21 2009-02-10 20:10:49 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.22 2009-04-02 21:59:55 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -72,6 +72,10 @@
 </SCRIPT>
 	</head>
 	<body onload="javascript:setFocusTo('<%=elmFocus%>');displayStatus();">
+		 <%String displayErrorMessage = (String)session.getAttribute("displayErrorMessage");
+		    if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
+		  	 </br></br><b><font  size="3">Not Authorized for Edits in this Context.</font></b></br></br>
+	     <%}%>
 		<table width="99%" border=1>
 		   <%if (!isView){%>	
 			<tr>
@@ -349,7 +353,7 @@
 											</td>
 										</tr>
 										<tr <% if (i%2 == 0) { %> class="rowColor" <% } %>>
-												<td>=</td>
+												<td>&nbsp;</td>
 											<td colspan="5">
 												<div class="ind3">
 													<b>

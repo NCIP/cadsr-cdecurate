@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.52 2009-02-09 22:17:40 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.53 2009-04-02 21:59:55 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -77,8 +77,9 @@ public class VMServlet extends GenericServlet
     		   else
     			   vmData.setSearchTerm((String)httpRequest.getSession().getAttribute("creKeyword"));
     	   }
+    	   String  srPage =  (String)httpRequest.getSession().getAttribute(VMForm.SESSION_RET_PAGE);
     	   //if(((String)httpRequest.getSession().getAttribute(VMForm.SESSION_RET_PAGE)).equals(VMForm.JSP_PV_DETAIL))
-    	   if (pageAction.equals(VMForm.ACT_VALIDATE_VM)||((String)httpRequest.getSession().getAttribute(VMForm.SESSION_RET_PAGE)).equals(VMForm.JSP_PV_DETAIL))
+    	   if  ((pageAction.equals(VMForm.ACT_VALIDATE_VM))||(srPage != null && srPage.equals(VMForm.JSP_PV_DETAIL) ))
     	    {
     		   //call the method to capture user entered data
     		   captureUserEntered(pageAction);
@@ -140,11 +141,13 @@ public class VMServlet extends GenericServlet
       if (to == null) to = "";
       if (to.equals(VMForm.ELM_ACT_USED_TAB)){
     	  VM_Bean vm = (VM_Bean)httpRequest.getSession().getAttribute(VMForm.SESSION_SELECT_VM);
-    	  writeUsedJsp(vm);
+    	  if (vm != null)
+    	   writeUsedJsp(vm);
       }  
       else if (to.equals(VMForm.ELM_ACT_DETAIL_TAB)){
         VM_Bean vm = (VM_Bean)httpRequest.getSession().getAttribute(VMForm.SESSION_SELECT_VM);
-        writeDetailJsp(vm);
+        if (vm != null)
+          writeDetailJsp(vm);
       } 
     }
     //send back to servlet
@@ -1103,6 +1106,7 @@ public void doOpenViewPage() throws Exception{
 }
 public void doViewVMActions(){
 	HttpSession session = httpRequest.getSession();
+	String from = httpRequest.getParameter("from");
 	String action = httpRequest.getParameter("action");
 	String id = httpRequest.getParameter("id");
 	String viewVM = "viewVM"+id;
@@ -1111,6 +1115,9 @@ public void doViewVMActions(){
 	httpRequest.setAttribute("title", title);
 	httpRequest.setAttribute("publicID", vm.getVM_ID());
 	httpRequest.setAttribute("version", vm.getVM_VERSION());
+	if (from != null && from.equals("edit")){
+		httpRequest.getSession().setAttribute("displayErrorMessage", "Yes");  
+	}
 	if (action != null){
 	   if (action.equals("detailsTab")){
 		  DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
