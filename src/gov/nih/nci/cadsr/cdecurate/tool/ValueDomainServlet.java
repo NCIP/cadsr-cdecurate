@@ -1862,7 +1862,7 @@ public class ValueDomainServlet extends CurationServlet {
 		    			if (repStatusBean.isCondrExists()) {
 							VDBeanSR.setVD_REP_CONDR_IDSEQ(repStatusBean.getCondrIDSEQ());
 							// Create Representation Term
-							String repIdseq = insAC.createEvsBean(userName, repStatusBean.getCondrIDSEQ(), conteIdseq, "Representaiton Term");
+							String repIdseq = insAC.createEvsBean(userName, repStatusBean.getCondrIDSEQ(), conteIdseq, "Representation Term");
 							if (repIdseq != null && !repIdseq.equals("")) {
 								VDBeanSR.setVD_REP_IDSEQ(repIdseq);
 							}
