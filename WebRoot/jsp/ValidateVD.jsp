@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateVD.jsp,v 1.3 2009-02-19 17:07:57 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateVD.jsp,v 1.4 2009-04-03 15:34:33 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -175,7 +175,7 @@
       //System.out.println("content " + sContent);
       String sStat = (String)vValidate.elementAt(i+2);
       String sFont = "#000000";
-      if (sStat.equals("Valid") || sStat.equals("No Change"))
+      if (sStat.startsWith("Valid") || sStat.equals("No Change"))
         sFont = "#238E23";
      
 %>
