@@ -2,6 +2,7 @@ package gov.nih.nci.cadsr.cdecurate.tool.tags;
 
 
 import gov.nih.nci.cadsr.cdecurate.util.CurationToolProperties;
+import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
 
 import java.io.IOException;
 
@@ -24,6 +25,7 @@ public class FooterTag extends TagSupport {
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		JspWriter NCIFooter = this.pageContext.getOut();
 		String jbossVersion = Version.getInstance().getMajor() + "." + Version.getInstance().getMinor() + "." + Version.getInstance().getRevision();
+		String helpLink = "window.open('" + ToolURL.getCurationToolHelpURL(this.pageContext) +"', '_blank')";
 		try {
 			NCIFooter.println("<div class=\"xyz\">"
 							+ "<table class=\"footerBanner1\" cellspacing=\"0\" cellpadding=\"0\">"
@@ -56,7 +58,7 @@ public class FooterTag extends TagSupport {
 							+ "</span><span CLASS=\"footerItemSep\">|</span><span CLASS=\"footerItemNormal\""
 							+ "onmouseover=\"this.className = 'footerItemFocus';\""
 							+ "onmouseout=\"this.className = 'footerItemNormal';\""
-							+ "onclick=\"window.open('https://cdecurate-stage2.nci.nih.gov/help/', '_blank');\">"
+							+ "onclick=\""+ helpLink + ";\">"
 							+ "  HELP"
 							+ "</span><span CLASS=\"footerItemSep\">|</span>"
 							+ "</td>"
