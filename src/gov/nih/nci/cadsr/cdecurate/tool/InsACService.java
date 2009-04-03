@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.67 2009-04-03 16:33:11 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.68 2009-04-03 17:46:47 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -5866,7 +5866,6 @@ public class InsACService implements Serializable {
 					conBean.setDisplay_order(display_order);
 					display_order = display_order - 1;
 					conBeanList.add(conBean);
-					logger.debug(ocBean.getCONCEPT_IDENTIFIER() + "-----> "	+ conBean.getDisplay_order());
 				}
 			}
 			// primary
@@ -5881,7 +5880,6 @@ public class InsACService implements Serializable {
 				conBean.setConcept_value(ocBean.getNVP_CONCEPT_VALUE());
 				conBean.setDisplay_order(0);
 				conBeanList.add(conBean);
-				logger.debug(ocBean.getCONCEPT_IDENTIFIER() + "-----> "	+ conBean.getDisplay_order());
 			}
 		}
 		   return conBeanList;
@@ -5906,8 +5904,7 @@ public class InsACService implements Serializable {
 				name = name + ":" + eBean.getCONCEPT_IDENTIFIER();
 			}
 		}
-		   logger.debug("Name--->" + name);
-           return name;
+		   return name;
    }
    
 	public String doSetDEC(String sAction, DEC_Bean dec, String sInsertFor, DEC_Bean oldDEC){
