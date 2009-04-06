@@ -34,8 +34,8 @@ public class Concepts_Ext_Mgr  extends DBManager {
 				evsVO.setPrefferred_name(rs.getString("PREFERRED_NAME"));
 				evsVO.setLong_name(rs.getString("LONG_NAME"));
 				evsVO.setPrefferred_def(rs.getString("PREFERRED_DEFINITION"));
-				evsVO.setAsl_name(rs.getString("DEFINITION_SOURCE"));
-				evsVO.setAsl_name(rs.getString("ORIGIN"));
+				evsVO.setDefinition_source(rs.getString("DEFINITION_SOURCE"));
+				evsVO.setOrigin(rs.getString("ORIGIN"));
 			}
 		} catch (SQLException e) {
 			logger.error(DBException.DEFAULT_ERROR_MSG + " in getConceptByIdseq() method of Concepts_Ext_Mgr class " + e);
