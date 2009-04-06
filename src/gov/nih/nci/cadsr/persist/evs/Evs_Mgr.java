@@ -51,7 +51,7 @@ private Logger logger = Logger.getLogger(this.getClass());
 		// generate IDSEQ(primary key) 	
 		evsVO.setIDSEQ(this.generatePrimaryKey(conn));
 		evsVO.setDeleted_ind(DBConstants.RECORD_DELETED_NO);
-		evsVO.setDate_created(new java.sql.Timestamp(new java.util.Date().getTime()));
+		evsVO.setBegin_date(new java.sql.Timestamp(new java.util.Date().getTime()));
 		
 		try {
 			int column = 0;
