@@ -1629,8 +1629,7 @@ function ShowSelectedRowss(){
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<!--store the status list as per the CONCEPT SEARCH  -->
 							<%
-									if (sSearchAC.equals("ConceptClass")
-									|| sSearchAC.equals("ValueMeaning")) {
+									if (sSearchAC.equals("ConceptClass")){
 							%>
 							<option value="RELEASED"
 								<%if (vStatus != null && vStatus.contains("RELEASED")){%>
@@ -1890,13 +1889,8 @@ function ShowSelectedRowss(){
 										size="8" readonly
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
-								<td align=center>
-									<a
-										href="javascript:show_calendar('searchParmsForm.createdFrom', null, null, 'MM/DD/YYYY');">
-										<img name="Calendar"
-											src="../../cdecurate/images/calendarbutton.gif" border=1
-											width="18" height="18" alt="Calendar"
-											style="vertical-align: top;"> </a>
+								<td align=center><img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('createdFrom', event);">
+									
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('createdFrom');"> Clear </a>
@@ -1916,12 +1910,7 @@ function ShowSelectedRowss(){
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center>
-									<a
-										href="javascript:show_calendar('searchParmsForm.createdTo', null, null, 'MM/DD/YYYY');">
-										<img name="Calendar"
-											src="../../cdecurate/images/calendarbutton.gif" border=1
-											width="18" height="18" alt="Calendar"
-											style="vertical-align: top"> </a>
+									<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('createdTo', event);">
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('createdTo');"> Clear </a>
@@ -1998,12 +1987,7 @@ function ShowSelectedRowss(){
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center>
-									<a
-										href="javascript:show_calendar('searchParmsForm.modifiedFrom', null, null, 'MM/DD/YYYY');">
-										<img name="Calendar"
-											src="../../cdecurate/images/calendarbutton.gif" border="1"
-											width="18" height="18" alt="Calendar"
-											style="vertical-align: center"> </a>
+									<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('modifiedFrom', event);">
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('modifiedFrom');"> Clear </a>
@@ -2023,12 +2007,7 @@ function ShowSelectedRowss(){
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center>
-									<a
-										href="javascript:show_calendar('searchParmsForm.modifiedTo', null, null, 'MM/DD/YYYY');">
-										<img name="Calendar"
-											src="../../cdecurate/images/calendarbutton.gif" border=1
-											width="18" height="18" alt="Calendar"
-											style="vertical-align: center"> </a>
+									<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('modifiedTo', event);">
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('modifiedTo');"> Clear </a>
