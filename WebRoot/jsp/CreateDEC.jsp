@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDEC.jsp,v 1.4 2009-01-27 20:34:24 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDEC.jsp,v 1.5 2009-04-08 19:04:19 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -291,10 +291,21 @@
   
   function setup()
   {
-    ObjClass.innerText = "<%=sOCCCodeDB%>";
-    ObjClassID.innerText = "<%=sOCCCode%>";
-    PropClass.innerText = "<%=sPCCCodeDB%>";
-    PropClassID.innerText = "<%=sPCCCode%>"; 
+     var oc = document.getElementById("ObjClass");
+     oc.innerText = "<%=sOCCCodeDB%>";
+     oc.textContent = "<%=sOCCCodeDB%>";
+     
+     var ocId = document.getElementById("ObjClassID");   
+     ocId.innerText = "<%=sOCCCode%>";
+     ocId.textContent = "<%=sOCCCode%>";
+     
+     var prop = document.getElementById("PropClass"); 
+     prop.innerText = "<%=sPCCCodeDB%>";
+     prop.textContent  = "<%=sPCCCodeDB%>";
+      
+     var propId = document.getElementById("PropClassID"); 
+     PropClassID.innerText = "<%=sPCCCode%>"; 
+     propId.textContent = "<%=sPCCCode%>"; 
   }
   
 </Script>
