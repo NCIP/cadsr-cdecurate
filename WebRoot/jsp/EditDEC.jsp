@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.23 2009-04-08 19:12:18 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.24 2009-04-08 20:59:36 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -559,7 +559,7 @@
 												</font>
 											</td>
 											<td colspan="5" align="left">
-												<input type="text" name="txtObjClass" value="<%=sObjClass%>" style="width=95%" valign="top" readonly="readonly">
+												<input type="text" name="txtObjClass" value="<%=sObjClass%>" style="width: 95%" valign="top" readonly="readonly">
 											</td>
 										</tr>
 										<tr height="8">
@@ -630,7 +630,7 @@
 											<td colspan="3" valign="top">
 											 
 											  
-												<select name="selObjectQualifier" size="2" style="width=98%" valign="top" onClick="ShowEVSInfo('ObjectQualifier')" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
+												<select name="selObjectQualifier" size="2" style="width: 98%" valign="top" onClick="ShowEVSInfo('ObjectQualifier')" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<%if (vOCQualifierNames.size()<1) {%>
 													<option value=""></option>
 													<% } else { %>
@@ -645,7 +645,7 @@
 											</td>
 											<td colspan="3" valign="top">
 											  	
-												<select name="selObjectClass" style="width=98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
+												<select name="selObjectClass" style="width: 98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<option value="<%=sObjClassPrimary%>">
 														<%=sObjClassPrimary%>
 													</option>
@@ -701,7 +701,7 @@
 												</font>
 											</td>
 											<td colspan="5" align="left">
-												<input type="text" name="txtPropClass" value="<%=sPropClass%>" style="width=95%" valign="top" readonly="readonly">
+												<input type="text" name="txtPropClass" value="<%=sPropClass%>" style="width: 95%" valign="top" readonly="readonly">
 											</td>
 										</tr>
 										<tr height="6">
@@ -771,7 +771,7 @@
 										<tr align="left">
 											<td colspan="3" valign="top">
 												
-												<select name="selPropertyQualifier" size="2" style="width=98%" valign="top" onClick="ShowEVSInfo('PropertyQualifier')" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
+												<select name="selPropertyQualifier" size="2" style="width: 98%" valign="top" onClick="ShowEVSInfo('PropertyQualifier')" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<%if (vPropQualifierNames.size()<1) {%>
 													<option value=""></option>
 													<% } else { %>
@@ -787,7 +787,7 @@
 											</td>
 											<td colspan="3" valign="top">
 											  
-												<select name="selPropertyClass" style="width=98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
+												<select name="selPropertyClass" style="width: 98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<option value="<%=sPropClassPrimary%>">
 														<%=sPropClassPrimary%>
 													</option>

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.28 2009-02-12 18:41:13 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.29 2009-04-08 21:01:26 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -585,7 +585,7 @@
 																	</div>
 																	<div id="pvNewVMDEdit" style="display: <%if (newVMCon.size() > 0) { %>none<%} else {%>block<% } %>">
 																		<!-- javascript:disableSearch('pvNew'); -->
-																		 <textarea name="pvNewVMD" style="width=98%" rows="4" style="width: 100%" onkeyup="javascript:getORsetEdited('pvNew', 'pv');"><%=newVM.getVM_PREFERRED_DEFINITION().trim()%></textarea>																</div>
+																		 <textarea name="pvNewVMD" style="width: 98%" rows="4" style="width: 100%" onkeyup="javascript:getORsetEdited('pvNew', 'pv');"><%=newVM.getVM_PREFERRED_DEFINITION().trim()%></textarea>																</div>
 																</td>
 															</tr>
 															<tr>
