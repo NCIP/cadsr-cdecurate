@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.27 2009-04-08 19:11:41 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.28 2009-04-08 21:00:40 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -752,7 +752,7 @@ function openEVSConceptsWindow(){
 														</tr>
 														<tr>
 															<td colspan="5" align="left">
-																<input type="text" name="txtRepTerm" value="<%=sRepTerm%>" style="width=100%" valign="top" readonly="readonly">
+																<input type="text" name="txtRepTerm" value="<%=sRepTerm%>" style="width: 100%" valign="top" readonly="readonly">
 															</td>
 														</tr>
 														<tr height="8">
@@ -825,7 +825,7 @@ function openEVSConceptsWindow(){
 														<tr align="left">
 															<td colspan="3" valign="top">
 																
-																<select name="selRepQualifier" size="2" style="width=98%" valign="top" onClick="ShowEVSInfo('RepQualifier')" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_nameBlocks',helpUrl); return false">
+																<select name="selRepQualifier" size="2" style="width: 98%" valign="top" onClick="ShowEVSInfo('RepQualifier')" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_nameBlocks',helpUrl); return false">
 																	<%
 																		if (vRepQualifierNames.size() < 1) {
 																	%>
@@ -844,7 +844,7 @@ function openEVSConceptsWindow(){
 													</td>
 															
 															<td colspan="3" valign="top">
-																<select name="selRepTerm" style="width=98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateVD.html#createVDForm_nameBlocks',helpUrl); return false">
+																<select name="selRepTerm" style="width: 98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateVD.html#createVDForm_nameBlocks',helpUrl); return false">
 																	<option value="<%=sRepTermPrimary%>">
 																		<%=sRepTermPrimary%>
 																	</option>

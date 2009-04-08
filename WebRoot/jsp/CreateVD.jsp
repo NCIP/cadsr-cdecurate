@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVD.jsp,v 1.10 2009-04-08 19:07:04 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVD.jsp,v 1.11 2009-04-08 20:57:54 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -551,7 +551,7 @@
 														</tr>
 														<tr>
 															<td colspan="5" align="left">
-																<input type="text" name="txtRepTerm" value="<%=sRepTerm%>" style="width=100%" maxlength=255 valign="top" readonly="readonly">
+																<input type="text" name="txtRepTerm" value="<%=sRepTerm%>" style="width: 100%" maxlength=255 valign="top" readonly="readonly">
 															</td>
 														</tr>
 														<tr height="8">
@@ -603,7 +603,7 @@
 														</tr>
 														<tr align="left">
 															<td colspan="3" valign="top">
-																<select name="selRepQualifier" size="2" style="width=98%" valign="top" onClick="ShowEVSInfo('RepQualifier')" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_nameBlocks',helpUrl); return false">
+																<select name="selRepQualifier" size="2" style="width: 98%" valign="top" onClick="ShowEVSInfo('RepQualifier')" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_nameBlocks',helpUrl); return false">
 																	<%if (vRepQualifierNames.size() < 1)
       {%>
 																	<option value=""></option>
@@ -624,7 +624,7 @@
 																</select>
 															</td>
 															<td colspan="3" valign="top">
-																<select name="selRepTerm" style="width=98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateVD.html#createVDForm_nameBlocks',helpUrl); return false">
+																<select name="selRepTerm" style="width: 98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateVD.html#createVDForm_nameBlocks',helpUrl); return false">
 																	<option value="<%=sRepTermPrimary%>">
 																		<%=sRepTermPrimary%>
 																	</option>
