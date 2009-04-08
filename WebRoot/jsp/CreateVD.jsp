@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVD.jsp,v 1.9 2009-03-31 16:55:04 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVD.jsp,v 1.10 2009-04-08 19:07:04 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -401,8 +401,13 @@
   
 	function setup()
 	{
-	    RepTerm.innerText = "<%=sRepTermVocab%>";
-	    RepTermID.innerText = "<%=sRepTerm_ID%>";
+	    var repTerm = document.getElementById("RepTerm");
+	    repTerm.innerText = "<%=sRepTermVocab%>";
+	    repTerm.textContent = "<%=sRepTermVocab%>";
+	    
+	    var repTermId = document.getElementById("RepTermID");
+	    repTermId.innerText = "<%=sRepTerm_ID%>";
+	    repTermId.textContent = "<%=sRepTerm_ID%>";
 	}
 
 	function closeDep() 

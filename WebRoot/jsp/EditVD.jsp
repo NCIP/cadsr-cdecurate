@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.26 2009-03-31 16:55:04 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.27 2009-04-08 19:11:41 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -524,15 +524,23 @@
  
 function setup()
 {
-    RepTerm.innerText = "<%=sRepTermVocab%>";
-    RepTermID.innerText = "<%=sRepTerm_ID%>";
+    var repTerm = document.getElementById("RepTerm");
+    repTerm.innerText = "<%=sRepTermVocab%>";
+    repTerm.textContent = "<%=sRepTermVocab%>";
+	    
+	var repTermId = document.getElementById("RepTermID");
+	repTermId.innerText = "<%=sRepTerm_ID%>";
+	repTermId.textContent = "<%=sRepTerm_ID%>";
+	
     var selDType = document.createVDForm.tfLowValue.value;
 }
 
 function openEVSConceptsWindow(){
   var conceptUrl = "<%=evsConceptUrl%>";
   var vocab = RepQual.innerText;
+  var vocab = RepQual.textContent;
   var code = RepQualID.innerText;
+  var code = RepQualID.textContent;
   conceptUrl = conceptUrl.replace("$VOCAB$",vocab);
   conceptUrl = conceptUrl.replace("$CODE$",code);
   window.open(conceptUrl,'','');

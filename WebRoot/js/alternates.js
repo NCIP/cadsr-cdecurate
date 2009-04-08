@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/alternates.js,v 1.1 2007-09-10 16:16:48 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/alternates.js,v 1.2 2009-04-08 19:13:48 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 // Perform a general action and remember the previous action. The previous action
@@ -35,6 +35,7 @@ function doSubmit()
 {
     eobj = document.getElementById("process");
     eobj.innerText = "working...";
+    eobj.textContent = "working...";
     alternatesForm.submit();
 }
 
@@ -98,7 +99,7 @@ function filterCSI(tobj)
     {
         // If the text entered by the user appears in the row.
         var tt = eobj.children[i];
-        if (tt.innerText.toLowerCase().indexOf(tlow) > -1)
+        if ((tt.innerText.toLowerCase().indexOf(tlow) > -1) || (tt.textContent.toLowerCase().indexOf(tlow) > -1))
         {
             // Make the row visible as well as its ancetors and
             // offspring

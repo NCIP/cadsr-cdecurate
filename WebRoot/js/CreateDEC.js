@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDEC.js,v 1.5 2008-12-18 16:56:23 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDEC.js,v 1.6 2009-04-08 19:14:18 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 var searchWindow = null;
@@ -313,8 +313,12 @@ function TrimDefinition(type)
           if (OCQCode == null || OCQCode == "null") OCQCode = "";
           var OCQCodeDB = document.newDECForm.vOCQualifierDB.options[selIdx].text
           if (OCQCodeDB == null || OCQCodeDB == "null") OCQCodeDB = "";
-          ObjQual.innerText = OCQCodeDB;
-          ObjQualID.innerText = OCQCode;
+          var obQual = document.getElementById("ObjQual");
+          obQual.innerText = OCQCodeDB;
+          obQual.textContent = OCQCodeDB;
+          var obQualId = document.getElementById("ObjQualID");
+          obQualId.innerText = OCQCode;
+          obQualId.textContent = OCQCode;   
           document.newDECForm.OCQualCCodeDB.value = OCQCodeDB;
           document.newDECForm.OCQualCCode.value = OCQCode;
         }
@@ -328,8 +332,12 @@ function TrimDefinition(type)
           if (PQCode == null || PQCode == "null") PQCode = "";
           var PQCodeDB = document.newDECForm.vPropQualifierDB.options[selIdx].text
           if (PQCodeDB == null || PQCodeDB == "null") PQCodeDB = "";
-          PropQual.innerText = PQCodeDB;
-          PropQualID.innerText = PQCode;
+          var propQual = document.getElementById("PropQual");
+          propQual.innerText = PQCodeDB;
+          propQual.textContent = PQCodeDB;  
+          var propQualId = document.getElementById("PropQualID");
+          propQualId.innerText = PQCode;
+          propQualId.textContent = PQCode;  
           document.newDECForm.PCQualCCodeDB.value = PQCodeDB;
           document.newDECForm.PCQualCCode.value = PQCode;
         }

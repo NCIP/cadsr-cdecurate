@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/MakeEditable.js,v 1.1 2007-09-10 16:16:47 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/MakeEditable.js,v 1.2 2009-04-08 19:15:45 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 //
@@ -40,10 +40,13 @@ this.value); };
 
 }
 function setCell (cell, value) {
-  if (document.all)
+  if (document.all){
     cell.innerText = value;
-  else if (document.getElementById)
+    cell.textContent = value;
+  }  
+  else if (document.getElementById){
     cell.replaceChild(document.createTextNode(value), cell.firstChild);
+  }  
 }
 
 

@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.11 2009-03-06 20:15:13 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.12 2009-04-08 19:15:32 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -203,8 +203,10 @@
     	if (txtVM == null || txtVM == "")
     	{
     		vmDiv = document.getElementById("pvNewVMView");
-    		if (vmDiv != null)
+    		if (vmDiv != null){
     			txtVM = vmDiv.innerText;
+    			txtVM = vmDiv.textContent;
+    	    }		
     	}
     	if (txtVM == null || txtVM == "")
 	    	alertMsg += "Please enter the text for Value Meaning. \n";
@@ -1226,6 +1228,7 @@
   				vmedit.style.display = "none";
   		}
   		vm.innerText = appName;  // vmName;
+  		vm.textContent = appName; 
   		document.getElementById("currentVM").value = appName;
   		
   		//get the vm description object
@@ -1238,6 +1241,7 @@
   				vmdedit.style.display = "none";
   		}
   		vmd.innerText = appDesc;  // vmDesc;
+  		vmd.textContent = appDesc; 
   		//make sure to disable the search link also when vm name exists
   		if (appName != "")
   			disableSearch('pvNew');  
@@ -1376,8 +1380,10 @@
   		 	var vmT = document.getElementById(pvId + "VMEdit");
   		 	var vmText = "";
   		 	vmT = document.getElementById(pvId + "VMView");
-  		 	if (vmT != null)
+  		 	if (vmT != null){
   		 		vmText = vmT.innerText;
+  		 		vmText = vmT.textContent;
+  		    }		
   		 	if (vmText == "")
   		 	{
   		 		vmInput = document.getElementById("txt" + pvId + "Mean");
