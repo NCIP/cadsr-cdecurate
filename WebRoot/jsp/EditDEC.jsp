@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.24 2009-04-08 20:59:36 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.25 2009-04-08 21:03:28 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -358,7 +358,7 @@
      prop.textContent  = "<%=sPCCCodeDB%>";
       
      var propId = document.getElementById("PropClassID"); 
-     PropClassID.innerText = "<%=sPCCCode%>"; 
+     propId.innerText = "<%=sPCCCode%>"; 
      propId.textContent = "<%=sPCCCode%>"; 
  }
  
