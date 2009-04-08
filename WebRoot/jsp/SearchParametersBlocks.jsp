@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.11 2008-07-03 21:36:54 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.12 2009-04-08 19:10:42 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -316,9 +316,9 @@
   }
   
   
-function keypress_handler()
+function keypress_handler(evt)
 {
-    var keycode = window.event.keyCode;
+    var keycode = (window.event)?event.keyCode:evt.which;
     if(keycode != 13)
     {
         return true;  // only interest on return kay

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.18 2009-02-09 23:09:05 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.19 2009-04-08 19:11:03 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -470,9 +470,9 @@ function testIsValidObject(objToTest) {
 //    Pressing the enter key
 //  This piece of code ensures that the WaitMessage is
 //  displayed when the enter key is pressed.
-function keypress_handler()
+function keypress_handler(evt)
 {
-    var keycode = window.event.keyCode;
+    var keycode = (window.event)?event.keyCode:evt.which;
     if(keycode != 13)
     {
         return true;  // only interest on return kay

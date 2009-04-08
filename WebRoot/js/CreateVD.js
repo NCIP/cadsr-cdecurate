@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.7 2009-03-31 16:55:04 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.8 2009-04-08 19:14:51 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 var evsWindow = null;
@@ -423,10 +423,18 @@ function enableValueNum()
       var sDTComm = document.createVDForm.datatypeDesc[dtInd].text;
       var sDTSRef = document.createVDForm.datatypeSRef[dtInd].value;
       var sDTAnnotation = document.createVDForm.datatypeSRef[dtInd].text;
-      lblDTDesc.innerText = sDTDesc;
-      lblDTComment.innerText = sDTComm;
-      lblDTSRef.innerText = sDTSRef;
-      lblDTAnnotation.innerText = sDTAnnotation;
+      var lDesc = document.getElementById("lblDTDesc");
+      lDesc.innerText = sDTDesc;
+      lDesc.textContent = sDTDesc;
+      var lComm = document.getElementById("lblDTComment");
+      lComm.innerText = sDTComm;
+      lComm.textContent = sDTComm;
+      var lRef = document.getElementById("lblDTSRef");
+      lRef.innerText = sDTSRef;
+      lRef.textContent = sDTSRef;
+      var lAnnotation = document.getElementById("lblDTAnnotation");
+      lAnnotation.innerText = sDTAnnotation;
+      lAnnotation.textContent = sDTAnnotation;
     }
     //call function to handle enabling
     enableValueNum();
@@ -539,8 +547,12 @@ function ShowEVSInfo(thisBlock)
           if (RepQCode == null || RepQCode == "null") RepQCode = "";
           var RepQCodeDB = document.createVDForm.vRepQualifierDB.options[selIdx].text
           if (RepQCodeDB == null || RepQCodeDB == "null") RepQCodeDB = "";
-          RepQual.innerText = RepQCodeDB;
-          RepQualID.innerText = RepQCode;
+          var repQual = document.getElementById("RepQual");
+          repQual.innerText = RepQCodeDB;
+          repQual.textContent = RepQCodeDB;
+          var repQualId = document.getElementById("RepQualID");
+          repQualId.innerText = RepQCode;
+          repQualId.textContent = RepQCode;
           document.createVDForm.RepQualCCodeDB.value = RepQCodeDB;
           document.createVDForm.RepQualCCode.value = RepQCode;
         }

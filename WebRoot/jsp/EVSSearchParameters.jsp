@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EVSSearchParameters.jsp,v 1.3 2008-07-03 21:34:29 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EVSSearchParameters.jsp,v 1.4 2009-04-08 19:11:26 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -63,9 +63,9 @@ vOCAttr.addElement("Definition");
   }
 
 //  displayed when the enter key is pressed.
-function keypress_handler()
+function keypress_handler(evt)
 {
-    var keycode = window.event.keyCode;
+    var keycode = (window.event)?event.keyCode:evt.which;
     if(keycode != 13)
     {
         return true;  // only interest on return kay

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.22 2009-02-25 21:19:23 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.23 2009-04-08 19:12:18 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -11,7 +11,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<%@ page import="java.util.*"%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
-		<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 		<%@ page session="true"%>
 		<script language="JavaScript" src="js/date-picker.js"></script>
@@ -346,10 +345,21 @@
  }
 
  function setup(){
-    ObjClass.innerText = "<%=sOCCCodeDB%>";
-    ObjClassID.innerText = "<%=sOCCCode%>";
-    PropClass.innerText = "<%=sPCCCodeDB%>";
-    PropClassID.innerText = "<%=sPCCCode%>"; 
+     var oc = document.getElementById("ObjClass");
+     oc.innerText = "<%=sOCCCodeDB%>";
+     oc.textContent = "<%=sOCCCodeDB%>";
+     
+     var ocId = document.getElementById("ObjClassID");   
+     ocId.innerText = "<%=sOCCCode%>";
+     ocId.textContent = "<%=sOCCCode%>";
+     
+     var prop = document.getElementById("PropClass"); 
+     prop.innerText = "<%=sPCCCodeDB%>";
+     prop.textContent  = "<%=sPCCCodeDB%>";
+      
+     var propId = document.getElementById("PropClassID"); 
+     PropClassID.innerText = "<%=sPCCCode%>"; 
+     propId.textContent = "<%=sPCCCode%>"; 
  }
  
  function openEVSConceptsWindow(text){
@@ -358,10 +368,14 @@
   var code = "";
   if (text == "ObjectQualifier"){
      vocab = ObjQual.innerText;
+     vocab = ObjQual.textContent;
      code = ObjQualID.innerText; 
+     code = ObjQualID.textContent;
   }else if(text == "PropertyQualifier"){
      vocab = PropQual.innerText;
+     vocab = PropQual.textContent;
      code = PropQualID.innerText;
+     code = PropQualID.textContent;
   }
   conceptUrl = conceptUrl.replace("$VOCAB$",vocab);
   conceptUrl = conceptUrl.replace("$CODE$",code);
