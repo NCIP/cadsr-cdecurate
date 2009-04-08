@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/alternates.js,v 1.2 2009-04-08 19:13:48 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/alternates.js,v 1.3 2009-04-08 20:46:18 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 // Perform a general action and remember the previous action. The previous action
@@ -8,8 +8,10 @@
 
 function doAction(aobj)
 {
-    alternatesForm.prevAlternatesAction.value = alternatesForm.alternatesAction.value;
-    alternatesForm.alternatesAction.value = aobj;
+    var prevAltAction = document.getElementById("prevAlternatesAction");
+    var altAction = document.getElementById("alternatesAction");
+    prevAltAction.value = altAction.value;
+    altAction.value = aobj;
     doSubmit();
 }
 
@@ -17,7 +19,8 @@ function doAction(aobj)
 
 function doActionDirect(aobj)
 {
-    alternatesForm.alternatesAction.value = aobj;
+    var altAction = document.getElementById("alternatesAction");
+    altAction.value = aobj;
     doSubmit();
 }
 
@@ -25,7 +28,9 @@ function doActionDirect(aobj)
 
 function doActionCancel()
 {
-    alternatesForm.alternatesAction.value = alternatesForm.prevAlternatesAction.value;
+    var prevAltAction = document.getElementById("prevAlternatesAction");
+    var altAction = document.getElementById("alternatesAction");
+    altAction.value = prevAltAction.value;
     doSubmit();
 }
 
