@@ -1,9 +1,9 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDEC.jsp,v 1.5 2009-04-08 19:04:19 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDEC.jsp,v 1.6 2009-04-08 20:53:32 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page session="true"%>
+<%@ page session="true"%>s
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 	<head>
@@ -304,7 +304,7 @@
      prop.textContent  = "<%=sPCCCodeDB%>";
       
      var propId = document.getElementById("PropClassID"); 
-     PropClassID.innerText = "<%=sPCCCode%>"; 
+     propId.innerText = "<%=sPCCCode%>"; 
      propId.textContent = "<%=sPCCCode%>"; 
   }
   
