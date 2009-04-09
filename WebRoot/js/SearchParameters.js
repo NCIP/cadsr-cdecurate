@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchParameters.js,v 1.10 2009-04-09 21:14:07 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchParameters.js,v 1.11 2009-04-09 21:37:54 hebell Exp $
 // $Name: not supported by cvs2svn $
 
     function hourglass()
@@ -103,7 +103,7 @@
            document.searchParmsForm.sConteIdseq.value = conte_idseq;
            document.searchParmsForm.listSearchFor[0].value = "ObjectClass";
            document.searchParmsForm.listSearchFor[0].text = "Object Class";
-           document.searchParmsForm.sCCode.value = (opener.document.getElementById("ObjClassID").innerText) ? opener.opener.document.getElementById("ObjClassID").innerText : opener.opener.document.getElementById("ObjClassID").textContent;
+           document.searchParmsForm.sCCode.value = (opener.document.getElementById("ObjClassID").innerText) ? opener.document.getElementById("ObjClassID").innerText : opener.document.getElementById("ObjClassID").textContent;
            document.searchParmsForm.sCCodeDB.value = (opener.document.getElementById("ObjClass").innerText) ? opener.document.getElementById("ObjClass").innerText : opener.document.getElementById("ObjClass").textContent;
            document.searchParmsForm.openToTree.value = opener.document.newDECForm.openToTree.value;
            opener.document.newDECForm.openToTree.value = ""; // reset this
