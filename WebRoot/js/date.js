@@ -6,6 +6,7 @@ var calStyleSpanHdr = "padding: 0px 5px 0px 5px; cursor: default";
 var calStyleBGColor1 = "#ffffff";
 var calStyleBGColor2 = "#dfdf99";
 var calStyleBGColor3 = "#d8d8d8";
+var calStyleAncColor = "#aa0066";
 
 // Main entry point, provide the "name" of the input control.
 function calendar(input, evnt)
@@ -74,7 +75,8 @@ function calDisplay(today, input)
     var eom = calDays(today);
     var tmon = today.getMonth();
     var tyr = today.getFullYear();
-    var dow = Math.abs(today.getDay() - (today.getDate() - 1)) % 7;
+    today.setFullYear(tyr, tmon, 1);
+    var dow = today.getDay();
     var table = "";
     for (var cnt = 0; cnt < dow; ++cnt) {
         table = table + "<td>&nbsp;</td>";
@@ -86,7 +88,7 @@ function calDisplay(today, input)
     // Put numbers in the calendar.
     var day = 1;
     for (; cnt < 42; ++cnt) {
-        if ((cnt % 7) == 0) {
+        if ((cnt % 7) === 0) {
             table = table + "</tr>";
             if (day > eom) {
                 // Stop when starting a new row and the last day of the month has already been added to the calendar
@@ -102,7 +104,7 @@ function calDisplay(today, input)
             // This is today's date, the anchor day for user reference
             table = table + "<td align=\"center\" onmouseover=\"this.style.backgroundColor = '" + calStyleBGColor2 + "';\" " +
                 "onmouseout=\"this.style.backgroundColor = '" + calStyleBGColor1 + "';\" " +
-                "onclick=\"calSelect(this, " + day + ");\"><span style=\"" + calStyleSpanDay + "\"><b><i><u>" + day + "</u></i></b></span></td>";
+                "onclick=\"calSelect(this, " + day + ");\"><span style=\"color: " + calStyleAncColor + "; " + calStyleSpanDay + "\"><b><i><u>" + day + "</u></i></b></span></td>";
         }
         else {
             // Just another day in the month
