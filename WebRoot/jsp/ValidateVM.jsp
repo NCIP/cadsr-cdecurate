@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateVM.jsp,v 1.3 2008-03-13 18:07:44 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateVM.jsp,v 1.4 2009-04-09 21:31:20 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -40,10 +40,10 @@
    //defaultStatus = "Validate Data Element status, go back to modify it or submit to create it"
    function submitPage(sAction)
    {
-			var actObject = document.getElementById(elmPageAction);
-			if ( actObject != null && sAction != "")
+			var actObject = document.getElementsByName(elmPageAction);
+			if ( actObject[0] != null && sAction != "")
 			{
-      	actObject.value = sAction;  // "reEditVM""submitVM";
+      	actObject[0].value = sAction;  // "reEditVM""submitVM";
 	      hourglass();
 	      document.validateVMForm.Message.style.visibility="visible";
 	      defaultStatus = "Submitting data, it may take a minute, please wait....."
