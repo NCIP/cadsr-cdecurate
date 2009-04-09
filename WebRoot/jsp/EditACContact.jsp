@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditACContact.jsp,v 1.4 2008-12-08 19:30:39 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditACContact.jsp,v 1.5 2009-04-09 20:37:42 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -103,11 +103,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<!--DWLayoutTable-->
 				<tr>
 					<td align="left" valign="top" colspan=2>
-						<input type="button" name="btnUpdate" value="Update Attributes" style="width:170" onClick="javascript:submitForm('updContact');">
+						<input type="button" name="btnUpdate" value="Update Attributes" style="width: 170px" onClick="javascript:submitForm('updContact');">
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="button" name="btnClose" value="Close Window" onClick="window.close();">
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+						<img name="Message" src="images/WaitMessage1.gif" width="250px" height="25" alt="WaitMessage" style="visibility:hidden;">
 					</td>
 				</tr>
 			</table>
@@ -416,7 +416,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							</tr>
 							<tr height="30" valign="middle">
 								<td align="left">
-									<input type="button" name="btnAddComm" value="Add Selection" style="width:100" onClick="javascript:editCommune('add');">
+									<input type="button" name="btnAddComm" value="Add Selection" style="width: 100%" onClick="javascript:editCommune('add');">
 								</td>
 								<td>
 									&nbsp;
@@ -430,9 +430,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									Selected Communication Attributes
 								</td>
 								<td align="left">
-									<input type="button" name="btnUpdComm" value="Edit Item" style="width:85,height:9" onClick="javascript:editCommune('edit');" disabled>
+									<input type="button" name="btnUpdComm" value="Edit Item" style="width: 85px; height: 9px" onClick="javascript:editCommune('edit');" disabled>
 									&nbsp;&nbsp;&nbsp;
-									<input type="button" name="btnRemComm" value="Remove Item" style="width:85,height:9" onClick="javascript:editCommune('remove');" disabled>
+									<input type="button" name="btnRemComm" value="Remove Item" style="width: 85px; height: 9px" onClick="javascript:editCommune('remove');" disabled>
 									&nbsp;&nbsp;&nbsp;
 								</td>
 							</tr>
@@ -681,7 +681,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							</tr>
 							<tr height="30" valign="middle">
 								<td align="left" colspan="3">
-									<input type="button" name="btnAddAddr" value="Add Selection" style="width:100" onClick="javascript:editAddress('add');">
+									<input type="button" name="btnAddAddr" value="Add Selection" style="width: 100%" onClick="javascript:editAddress('add');">
 								</td>
 							</tr>
 							<tr>
@@ -692,9 +692,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									Selected Address Attributes
 								</td>
 								<td align="right">
-									<input type="button" name="btnUpdAddr" value="Edit Item" style="width:100" onClick="javascript:editAddress('edit');" disabled>
+									<input type="button" name="btnUpdAddr" value="Edit Item" style="width: 100%" onClick="javascript:editAddress('edit');" disabled>
 									&nbsp;&nbsp;&nbsp;
-									<input type="button" name="btnRemAddr" value="Remove Item" style="width:100" onClick="javascript:editAddress('remove');" disabled>
+									<input type="button" name="btnRemAddr" value="Remove Item" style="width: 100%" onClick="javascript:editAddress('remove');" disabled>
 									&nbsp;&nbsp;&nbsp;
 								</td>
 							</tr>
