@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResultsBlocks.js,v 1.3 2008-01-23 22:13:36 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResultsBlocks.js,v 1.4 2009-04-09 21:39:38 hebell Exp $
 // $Name: not supported by cvs2svn $
 
    var numRowsSelected = 0;
@@ -885,14 +885,14 @@ function createNames(acType)
       if (document.searchResultsForm.hiddenSelectedRow != null)
         dCount = document.searchResultsForm.hiddenSelectedRow.length;
       if (addRow == "true")
-         searchResultsForm.hiddenSelectedRow.options[dCount] = new Option(selRow,rowNo); //store the row number in the hidden vector	    
+         document.searchResultsForm.hiddenSelectedRow.options[dCount] = new Option(selRow,rowNo); //store the row number in the hidden vector	    
       else  //remove the row if not selected anymore
       {
          for (k=0; k<dCount; k++)
          {
 			     if (document.searchResultsForm.hiddenSelectedRow[k].value == rowNo)
 			     {
-				     searchResultsForm.hiddenSelectedRow.options[k] = null;
+				     document.searchResultsForm.hiddenSelectedRow.options[k] = null;
 				     break;
 			     }
 		    }
