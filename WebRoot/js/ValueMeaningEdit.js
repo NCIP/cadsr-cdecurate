@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.12 2009-04-09 20:27:32 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.13 2009-04-09 21:31:46 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 	var secondWindow;
@@ -9,7 +9,7 @@
 	function SubmitValidate(sAction)
 	{   
 		var actObject = document.getElementsByName(elmPageAction);
-		if ( actObject[0] == null || sAction[0] == "")
+		if ( actObject[0] == null || sAction == "")
 		{
 			alert("what is the action");
 			return;
