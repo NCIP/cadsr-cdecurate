@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDEC.jsp,v 1.8 2009-04-09 15:26:35 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDEC.jsp,v 1.9 2009-04-09 15:50:54 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -14,10 +14,9 @@
 		<%@ page import="java.util.*"%>
 		<%@ page import="java.text.*"%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
-		<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 		
-		<script language="JavaScript" src="js/date-picker.js"></script>
+		<script language="JavaScript" src="js/date.js"></script>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/AddNewListOption.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/CreateDEC.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/SelectCS_CSI.js"></SCRIPT>
@@ -929,9 +928,7 @@
 					<td valign="top">
 						<input type="text" name="BeginDate" value="<%=sBeginDate%>" size=12 maxlength=10 onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_BeginDate',helpUrl); return false">
 						<font color="#0099FF" size="3"></font>
-						<a href="javascript:show_calendar('newDECForm.BeginDate', null, null, 'MM/DD/YYYY');">
-							<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
-						</a>
+						<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('BeginDate', event);">
 						&nbsp;&nbsp;MM/DD/YYYY
 					</td>
 				</tr>
@@ -957,9 +954,7 @@
 						<p>
 							<input type="text" name="EndDate" value="<%=sEndDate%>" size=12 maxlength=10 onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_EndDate',helpUrl); return false">
 							<font color="#0099FF" size="3"></font>
-							<a href="javascript:show_calendar('newDECForm.EndDate', null, null, 'MM/DD/YYYY');">
-								<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
-							</a>
+							<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('EndDate', event);">
 							&nbsp;&nbsp;MM/DD/YYYY
 						</p>
 					</td>

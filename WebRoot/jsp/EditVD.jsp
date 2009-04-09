@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.29 2009-04-09 15:25:41 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.30 2009-04-09 15:50:54 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -16,7 +16,7 @@
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 		<%@ page import="java.util.*"%>
 		<%@ page session="true"%>
-		<SCRIPT LANGUAGE="JavaScript" SRC="js/date-picker.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="js/date.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/CreateVD.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/SelectCS_CSI.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/VDPVS.js"></SCRIPT>
@@ -1534,9 +1534,7 @@ function openEVSConceptsWindow(){
 						<td valign="top">
 							<input type="text" name="BeginDate" value="<%=sBeginDate%>" size="12" maxlength=10  <% if (isView) { %>readonly<%} %> onHelp="showHelp('html/Help_CreateVD.html#createVDForm_BeginDate',helpUrl); return false">
 						<% if (!isView) { %>
-							<a href="javascript:show_calendar('createVDForm.BeginDate', null, null, 'MM/DD/YYYY');">
-								<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
-							</a>
+							<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('BeginDate', event);">
 						<% } %>
 							&nbsp;&nbsp;MM/DD/YYYY
 						</td>
@@ -1563,9 +1561,7 @@ function openEVSConceptsWindow(){
 						<td>
 							<input type="text" name="EndDate" value="<%=sEndDate%>" size="12" maxlength=10  <% if (isView) { %>readonly<%} %> onHelp="showHelp('html/Help_CreateVD.html#createVDForm_EndDate',helpUrl); return false">
 						<% if (!isView) { %>
-							<a href="javascript:show_calendar('createVDForm.EndDate', null, null, 'MM/DD/YYYY');">
-								<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
-							</a>
+							<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('EndDate', event);">
 						<% } %>
 							&nbsp;&nbsp;MM/DD/YYYY
 						</td>
