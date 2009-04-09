@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.9 2009-04-02 22:00:13 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.10 2009-04-09 16:57:41 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 	var secondWindow;
@@ -8,14 +8,14 @@
 	//submit the page
 	function SubmitValidate(sAction)
 	{   
-		var actObject = document.getElementById(elmPageAction);
-		if ( actObject == null || sAction == "")
+		var actObject = document.getElementsByName(elmPageAction);
+		if ( actObject[0] == null || sAction[0] == "")
 		{
 			alert("what is the action");
 			return;
 		}
 		//validate the data before submitting
-		actObject.value = sAction;
+		actObject[0].value = sAction;
 		//disable the button and display wait message
 		DisableButtons();
 		//submit the form
