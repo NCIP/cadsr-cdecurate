@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.19 2009-04-08 19:11:03 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.20 2009-04-09 22:10:59 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -550,7 +550,7 @@ function LoadKeyHandler()
 						<%
 						if (!sMenuAction.equals("searchForCreate")) {
 						%>
-						<select name="listSearchFor" size="1" style="width: 172"
+						<select name="listSearchFor" size="1" style="width: 172px"
 							onChange="doSearchForChange();"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="ClassSchemeItems"
@@ -601,7 +601,7 @@ function LoadKeyHandler()
 						<%
 						} else {
 						%>
-						<select name="listSearchFor" size="1" style="width: 172"
+						<select name="listSearchFor" size="1" style="width: 172px"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="<%=StringEscapeUtils.escapeHtml(sSearchAC)%>" selected>
 								<%=StringEscapeUtils.escapeHtml(sLongAC)%>
@@ -636,7 +636,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listSearchIn" size="1" style="width: 172"
+						<select name="listSearchIn" size="1" style="width: 172px"
 							onChange="doSearchInChange();"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<!-- include names&definition only if not questions-->
@@ -776,7 +776,7 @@ function LoadKeyHandler()
 					<td>
 						&nbsp;
 					</td>
-					<td align=left style="width: 170">
+					<td align=left style="width: 170px">
 						<font size=1> Doc Text searches in Document Text of type
 							Preferred Question Text and HISTORIC SHORT CDE NAME. </font>
 					</td>
@@ -810,7 +810,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listRDType" size="3" style="width: 172" valign="top"
+						<select name="listRDType" size="3" style="width: 172px" valign="top"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<%
@@ -1001,7 +1001,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listMultiContextFilter" size="3" style="width: 172"
+						<select name="listMultiContextFilter" size="3" style="width: 172px"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="AllContext"
@@ -1191,7 +1191,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listCSName" size="1" style="width: 172" valign="top"
+						<select name="listCSName" size="1" style="width: 172px" valign="top"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="AllSchemes" selected>
 								All Schemes
@@ -1234,7 +1234,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listCDName" size="1" style="width: 172" valign="top"
+						<select name="listCDName" size="1" style="width: 172px" valign="top"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="All Domains" <%if(selCD.equals("All Domains")){%>
 								selected <%}%>>
@@ -1276,7 +1276,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listStatusFilter" size="3" style="width: 172"
+						<select name="listStatusFilter" size="3" style="width: 172px"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<!--store the status list as per the CONCEPT SEARCH  -->
@@ -1394,7 +1394,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listRegStatus" size="1" style="width: 172"
+						<select name="listRegStatus" size="1" style="width: 172px"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allReg"
 								<%if (vRegStatus == null || vRegStatus.size()==0 
@@ -1438,7 +1438,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listDataType" size="1" style="width: 172"
+						<select name="listDataType" size="1" style="width: 172px"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allData"
 								<%if (vDataType == null || vDataType.size()==0 
@@ -1490,7 +1490,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listDeriveType" size="1" style="width: 172"
+						<select name="listDeriveType" size="1" style="width: 172px"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allDer"
 								<%if (vDerType == null || vDerType.size()==0 
@@ -1548,12 +1548,7 @@ function LoadKeyHandler()
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center>
-									<a
-										href="javascript:show_calendar('searchParmsForm.createdFrom', null, null, 'MM/DD/YYYY');">
-										<img name="Calendar"
-											src="../../cdecurate/images/calendarbutton.gif" border=1
-											width="18" height="18" alt="Calendar"
-											style="vertical-align: top;"> </a>
+									<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('createdFrom', event);">
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('createdFrom');"> Clear </a>
@@ -1572,12 +1567,7 @@ function LoadKeyHandler()
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center>
-									<a
-										href="javascript:show_calendar('searchParmsForm.createdTo', null, null, 'MM/DD/YYYY');">
-										<img name="Calendar"
-											src="../../cdecurate/images/calendarbutton.gif" border=1
-											width="18" height="18" alt="Calendar"
-											style="vertical-align: top"> </a>
+									<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('createdTo', event);">
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('createdTo');"> Clear </a>
@@ -1598,7 +1588,7 @@ function LoadKeyHandler()
 									&nbsp;
 								</td>
 								<td style="height: 20" colspan=4 valign=top>
-									<select name="creator" size="1" style="width: 172" valign="top"
+									<select name="creator" size="1" style="width: 172px" valign="top"
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 										<option value="allUsers"
 											<%if (vUsers == null || vUsers.size()==0 
@@ -1647,12 +1637,7 @@ function LoadKeyHandler()
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center>
-									<a
-										href="javascript:show_calendar('searchParmsForm.modifiedFrom', null, null, 'MM/DD/YYYY');">
-										<img name="Calendar"
-											src="../../cdecurate/images/calendarbutton.gif" border="1"
-											width="18" height="18" alt="Calendar"
-											style="vertical-align: center"> </a>
+									<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('modifiedFrom', event);">
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('modifiedFrom');"> Clear </a>
@@ -1671,12 +1656,7 @@ function LoadKeyHandler()
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center>
-									<a
-										href="javascript:show_calendar('searchParmsForm.modifiedTo', null, null, 'MM/DD/YYYY');">
-										<img name="Calendar"
-											src="../../cdecurate/images/calendarbutton.gif" border=1
-											width="18" height="18" alt="Calendar"
-											style="vertical-align: center"> </a>
+									<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('modifiedTo', event);">
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('modifiedTo');"> Clear </a>
@@ -1696,7 +1676,7 @@ function LoadKeyHandler()
 									&nbsp;
 								</td>
 								<td style="height: 35" colspan=4 valign=top>
-									<select name="modifier" size="1" style="width: 172"
+									<select name="modifier" size="1" style="width: 172px"
 										valign="top"
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 										<option value="allUsers"
@@ -1740,12 +1720,12 @@ function LoadKeyHandler()
 						<div align="left">
 							<b> <%=item++%> )&nbsp;&nbsp;Display Attributes: </b> &nbsp;
 							<input type="button" name="updateDisplayBtn" value="Update"
-								onClick="<%=updFunction%>" style="width: 50"
+								onClick="<%=updFunction%>" style="width: 50px"
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
 						</div>
 						<br>
 						<div align="right" valign="bottom">
-							<select name="listAttrFilter" size="4" style="width: 175"
+							<select name="listAttrFilter" size="4" style="width: 175px"
 								multiple valign="bottom"
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
 								<%
@@ -1782,7 +1762,7 @@ function LoadKeyHandler()
 					<td height="35" valign="bottom" colspan=2>
 						<div align="center">
 							<input type="button" name="startSearchBtn" value="Start Search"
-								onClick="doSearchDE();" style="width: 150"
+								onClick="doSearchDE();" style="width: 150px"
 								, "height: 30"
             onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 						</div>
@@ -1790,7 +1770,7 @@ function LoadKeyHandler()
 				</tr>
 			</table>
 			<select size="1" name="hidListAttr"
-				style="visibility: hidden; width: 150">
+				style="visibility: hidden; width: 150px">
 				<%
 						for (int i = 0; vSelectedAttr.size() > i; i++) {
 						String sName = (String) vSelectedAttr.elementAt(i);

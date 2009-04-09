@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.15 2009-04-09 20:18:44 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.16 2009-04-09 22:10:01 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -117,8 +117,8 @@
 		  if (action == "save")
 		  {
 		  	//check current vm has the data
-		  	var curVM = document.getElementById("currentVM");
-		  	if (curVM == null || curVM.value == null || curVM.value == "")
+		   	var curVM = document.getElementsByName("currentVM");
+		  	if (curVM[0] == null || curVM[0].value == null || curVM[0].value == "")
 		  		editedPV = getORsetEdited(editedPV, "vm");
 		  	SubmitValidate("save");
 		  	return false;
@@ -173,9 +173,9 @@
     {	
     	if (pvNo == "pvNew")
     	{
-    		var vmEDiv = document.getElementById("pvNewVMLblEdit");
-    		if (vmEDiv != null && vmEDiv.style.display == "inline")
-    			vmEDiv.style.display = "none";
+    		var vmEDiv = document.getElementsByName("pvNewVMLblEdit");
+    		if (vmEDiv[0] != null && vmEDiv[0].style.display == "inline")
+    			vmEDiv[0].style.display = "none";
     	//	var vmVDiv = document.getElementById("pvNewVMLblView");
     	//	if (vmVDiv != null && vmVDiv.style.display == "none")
     	//		vmVDiv.style.display = "block";    		
@@ -183,9 +183,9 @@
     }
     function CancelNewPV()
     {
-		var vmNewDiv = document.getElementById("divpvnew");
-		if (vmNewDiv != null)
-			vmNewDiv.style.display = "none";
+		var vmNewDiv = document.getElementsByName("divpvnew");
+		if (vmNewDiv[0] != null)
+			vmNewDiv[0].style.display = "none";
 		SubmitValidate("cancelNewPV");		
     }
     
