@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EVSSearchResults.jsp,v 1.5 2008-12-29 17:36:35 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EVSSearchResults.jsp,v 1.6 2009-04-09 20:50:35 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -277,11 +277,11 @@ if (results.size() > 0)
 			<table width="100%" border="0">
 				<tr height="40" valign="bottom">
 					<td>
-						<input type="button" name="useSelectedBtn" value="Use Selection" onClick="PasteDefinition()" disabled style="width: 92", "height: 30">
+						<input type="button" name="useSelectedBtn" value="Use Selection" onClick="PasteDefinition()" disabled style="width: 92px">
 						&nbsp;&nbsp;
-						<input type="button" name="btnSubmitToEVS" value="Submit Suggestion to EVS" onclick="javascript:NewTermSuggested();" style="width: 170", "height: 30">
+						<input type="button" name="btnSubmitToEVS" value="Submit Suggestion to EVS" onclick="javascript:NewTermSuggested();" style="width: 170px">
 						&nbsp;&nbsp;
-						<input type="button" name="btnClose" value="Close" onclick=window.close() style="width: 50", "height: 30">
+						<input type="button" name="btnClose" value="Close" onclick=window.close() style="width: 50px">
 						&nbsp;&nbsp;
 						<b>
 							<font size="2">
@@ -359,10 +359,10 @@ if (results.size() > 0)
            if (strResult == null) strResult = "";
 %>
 						<tr>
-							<td width="5">
+							<td width="5px">
 								<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnablePasteButton(checked,this);"/>
 							</td>
-							<td width="100">
+							<td width="100px">
 								<%=strResult%>
 							</td>
 							<%    
@@ -385,7 +385,7 @@ if (results.size() > 0)
     }
 	 }
 %>
-						<select size="1" name="hiddenResults" style="visibility:hidden;" style="width:145">
+						<select size="1" name="hiddenResults" style="visibility:hidden;" style="width: 145px">
 							<%        for (int m = 0; results.size()>m; m++)
           {
              String sName = (String)results.elementAt(m);
@@ -397,7 +397,7 @@ if (results.size() > 0)
           }
 %>
 						</select>
-						<select size="1" name="hiddenName" style="visibility:hidden;" style="width:145">
+						<select size="1" name="hiddenName" style="visibility:hidden;" style="width: 145px">
 							<%        for (int i = 0; i<results.size(); i+=k)
           {
              String sName = (String)results.elementAt(i);
