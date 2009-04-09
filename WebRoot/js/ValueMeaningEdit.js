@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.11 2009-04-09 17:48:46 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.12 2009-04-09 20:27:32 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 	var secondWindow;
@@ -174,13 +174,13 @@
   	function sort(acType, fieldType)
   	{
   		//ac type
-    	var selACObj = document.getElementById(elmACType);
-    	if (selACObj != null)
-    		selACObj.value = acType;
+    	var selACObj = document.getElementsByName(elmACType);
+    	if (selACObj[0] != null)
+    		selACObj[0].value = acType;
     	//field type
-    	var selFiedlObj = document.getElementById(elmFieldType);
-    	if (selFiedlObj != null)
-    		selFiedlObj.value = fieldType;
+    	var selFiedlObj = document.getElementsByName(elmFieldType);
+    	if (selFiedlObj[0] != null)
+    		selFiedlObj[0].value = fieldType;
 
     	//submit form
 	  	SubmitValidate(actionSort);
@@ -191,13 +191,14 @@
   	function showReleased(acType, filterType)
   	{
   		//ac type
-    	var selACObj = document.getElementById(elmACType);
-    	if (selACObj != null)
-    		selACObj.value = acType;
+    	
+    	var selACObj = document.getElementsByName(elmACType);
+    	if (selACObj[0] != null)
+    		selACObj[0].value = acType;
     	//field type
-    	var selFiedlObj = document.getElementById(elmFieldType);
-    	if (selFiedlObj != null)
-    		selFiedlObj.value = filterType;
+    	var selFiedlObj = document.getElementsByName(elmFieldType);
+    	if (selFiedlObj[0] != null)
+    		selFiedlObj[0].value = filterType;
 
     	//submit form
 	  	SubmitValidate(actionFilter);
