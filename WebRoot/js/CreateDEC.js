@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDEC.js,v 1.6 2009-04-08 19:14:18 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDEC.js,v 1.7 2009-04-09 22:16:25 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 var searchWindow = null;
@@ -143,28 +143,32 @@ function openAltNameViewWindow()
     var vAction = document.newDECForm.DECAction.value;
     var selIdx = document.newDECForm.selContext.selectedIndex;
     var vocab = "NCI_Thesaurus";  //default vocab
+    var ocText = (document.getElementById("ObjClass").innerText) ? document.getElementById("ObjClass").innerText : document.getElementById("ObjClass").textContent;
+    var propText = (document.getElementById("PropClass").innerText) ? document.getElementById("PropClass").innerText : document.getElementById("PropClass").textContent;
+    var ocQText = (document.getElementById("ObjQual").innerText) ? document.getElementById("ObjQual").innerText : document.getElementById("ObjQual").textContent;
+    var propQText = (document.getElementById("PropQual").innerText) ? document.getElementById("PropQual").innerText : document.getElementById("PropQual").textContent;
     if(openToTree == "true")
     { //remove this and add meta search display
-      if(thisBlock == "ObjectClass" && (ObjClass.innerText == null || ObjClass.innerText == ""
-        || ObjClass.innerText == "caDSR"))   //|| ObjClass.innerText == "NCI Metathesaurus" 
+      if(thisBlock == "ObjectClass" && (ocText == null || ocText == ""
+        || ocText == "caDSR"))   //|| ObjClass.innerText == "NCI Metathesaurus" 
       {      
         alert("Cannot open to tree for this database.");
         return;
       }
-      else if(thisBlock == "PropertyClass" && (PropClass.innerText == null || PropClass.innerText == ""
-        || PropClass.innerText == "caDSR"))   //|| PropClass.innerText == "NCI Metathesaurus" 
+      else if(thisBlock == "PropertyClass" && (propText == null || propText == ""
+        || propText == "caDSR"))   //|| PropClass.innerText == "NCI Metathesaurus" 
       {
         alert("Cannot open to tree for this database.");
         return;
       }
-      else if(thisBlock == "ObjectQualifier" && (ObjQual.innerText == null || ObjQual.innerText == ""
-        || ObjQual.innerText == "caDSR"))   //|| ObjQual.innerText == "NCI Metathesaurus" 
+      else if(thisBlock == "ObjectQualifier" && (ocQText == null || ocQText == ""
+        || ocQText == "caDSR"))   //|| ObjQual.innerText == "NCI Metathesaurus" 
       {
         alert("Cannot open to tree for this database.");
         return;
       }
-      else if(thisBlock == "PropertyQualifier" && (PropQual.innerText == null || PropQual.innerText == ""
-        || PropQual.innerText == "caDSR"))  //|| PropQual.innerText == "NCI Metathesaurus" 
+      else if(thisBlock == "PropertyQualifier" && (propQText == null || propQText == ""
+        || propQText == "caDSR"))  //|| PropQual.innerText == "NCI Metathesaurus" 
       {
         alert("Cannot open to tree for this database.");
         return;
