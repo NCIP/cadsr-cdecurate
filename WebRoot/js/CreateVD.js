@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.8 2009-04-08 19:14:51 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.9 2009-04-09 21:50:40 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 var evsWindow = null;
@@ -112,16 +112,18 @@ function removeAllText(thisBlock)
  {
     var vAction = document.createVDForm.VDAction.value;
     var selIdx = document.createVDForm.selContext.selectedIndex;
+    var rtTxt = (document.getElementById("RepTerm").innerText) ? document.getElementById("RepTerm").innerText : document.getElementById("RepTerm").textContent;
+    var rqTxt = (document.getElementById("RepQual").innerText) ? document.getElementById("RepQual").innerText : document.getElementById("RepQual").textContent;
      if(openToTree == "true")
     {
-      if(thisBlock == "RepTerm" && (RepTerm.innerText == null || RepTerm.innerText == ""
-        || RepTerm.innerText == "caDSR"))  //|| RepTerm.innerText == "NCI Metathesaurus" 
+      if(thisBlock == "RepTerm" && (rtTxt == null || rtTxt == ""
+        || rtTxt == "caDSR"))  //|| rtTxt == "NCI Metathesaurus" 
       {
         alert("Cannot open to tree for this database.");
         return;
       }
-      else if(thisBlock == "RepQualifier" && (RepQual.innerText == null || RepQual.innerText == ""
-        || RepQual.innerText == "caDSR"))  //|| RepQual.innerText == "NCI Metathesaurus" 
+      else if(thisBlock == "RepQualifier" && (rqTxt == null || rqTxt == ""
+        || rqTxt == "caDSR"))  //|| rqTxt == "NCI Metathesaurus" 
       {
         alert("Cannot open to tree for this database.");
         return;
