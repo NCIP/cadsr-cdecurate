@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ACOrigin.jsp,v 1.3 2008-10-20 13:30:25 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ACOrigin.jsp,v 1.4 2009-04-09 15:25:58 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -20,7 +20,7 @@
       UtilService util = new UtilService();
     %>
 
-		<Script Language="JavaScript">
+		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
 			var sSource = "";
 			
 			function getSource(sSrc)
