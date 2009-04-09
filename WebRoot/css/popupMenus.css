@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc 2007
 
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/css/popupMenus.css,v 1.2 2009-04-09 19:52:17 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/css/popupMenus.css,v 1.3 2009-04-09 20:14:00 hebell Exp $
     $Name: not supported by cvs2svn $
 
     the CSS to control appearance
@@ -12,16 +12,12 @@ color: #000000;
 }
 
 h3, p {
-//font-family: verdana, sans-serif;
 }
 
 h3 {
-//font-size: 20px;
 }
 
 p {
-//font-size: 12px;
-//line-height: 20px;
 }
 
 p.textlinks {
@@ -29,7 +25,6 @@ visibility: hidden;
 }
 
 p.footnote {
-//font-size: 10px;
 }
 
 a.link:visited {
@@ -73,27 +68,3 @@ font-size: 12px;
 padding-left: 1px;
 border: 1px solid #003366;
 }
-
-/* The styles for the dropdown menu item ID selectors */  // prefer define it in JSP body, not here
-
-//#divAssociateACs {
-//	position: absolute;
-//	z-index: 1;
-//  visibility: hidden;
-//	border: 2px solid #003366;
-//	}
-
-//#divAssACsBtn, #subscribe, #members, #contact {
-//	position: absolute;
-//	z-index: 2;
-//	width: 100px;
-//	visibility: hidden;
-//	}
-
-//#membersmusic, #membersteacher, #membersstudent {
-//	position: absolute;
-//	z-index: 3;
-//	width: 100px;
-//	visibility: hidden;
-//	}
-
