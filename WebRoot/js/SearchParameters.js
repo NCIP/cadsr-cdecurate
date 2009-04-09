@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchParameters.js,v 1.8 2009-04-08 19:15:07 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchParameters.js,v 1.9 2009-04-09 20:58:31 hebell Exp $
 // $Name: not supported by cvs2svn $
 
     function hourglass()
@@ -224,10 +224,8 @@
            document.searchParmsForm.sConteIdseq.value = conte_idseq;
            document.searchParmsForm.listSearchFor[0].value = "RepQualifier";
            document.searchParmsForm.listSearchFor[0].text = "Rep Qualifier";
-           document.searchParmsForm.sCCodeDB.value = opener.RepQual.innerText;
-           document.searchParmsForm.sCCodeDB.value = opener.RepQual.textContent;
-           document.searchParmsForm.sCCode.value = opener.RepQualID.innerText; 
-           document.searchParmsForm.sCCode.value = opener.RepQualID.textContent;  
+           document.searchParmsForm.sCCodeDB.value = (opener.document.getElementById("RepQual").innerText) ? opener.document.getElementById("RepQual").innerText : opener.document.getElementById("RepQual").textContent;
+           document.searchParmsForm.sCCode.value = (opener.document.getElementById("RepQualID").innerText) ? opener.document.getElementById("RepQualID").innerText : opener.document.getElementById("RepQualID").textContent; 
            document.searchParmsForm.sCCodeName.value = qualRep;
            document.searchParmsForm.openToTree.value = opener.document.createVDForm.openToTree.value;
            opener.document.createVDForm.openToTree.value = "";
