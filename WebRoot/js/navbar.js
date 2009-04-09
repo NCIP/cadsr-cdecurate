@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/navbar.js,v 1.1 2007-09-10 16:16:48 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/navbar.js,v 1.2 2009-04-09 17:03:35 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 if(typeof(loc)=="undefined"||loc==""){var loc="";if(document.body&&document.body.innerHTML){var tt=document.body.innerHTML.toLowerCase();var last=tt.indexOf("navbar.js\"");if(last>0){var first=tt.lastIndexOf("\"",last);if(first>0&&first<last)loc=document.body.innerHTML.substr(first+1,last-first-1);}}}
@@ -9,10 +9,10 @@ var bd=0
 document.write("<style type=\"text/css\">");
 document.write("\n<!--\n");
 document.write(".navbar_menu {border-color:black;border-style:solid;border-width:"+bd+"px 0px "+bd+"px 0px;background-color:#3300cc;position:absolute;left:0px;top:0px;visibility:hidden;}");
-document.write("a.navbar_plain:link, a.navbar_plain:visited{text-align:left;background-color:#3300cc;color:#ffffff;text-decoration:none;border-color:black;border-style:solid;border-width:0px "+bd+"px 0px "+bd+"px;padding:2px 0px 2px 0px;cursor:hand;display:block;font-size:15pt;font-family:Arial, Helvetica, sans-serif;}");
-document.write("a.navbar_plain:hover, a.navbar_plain:active{background-color:#ff9900;color:#000000;text-decoration:none;border-color:black;border-style:solid;border-width:0px "+bd+"px 0px "+bd+"px;padding:2px 0px 2px 0px;cursor:hand;display:block;font-size:15pt;font-family:Arial, Helvetica, sans-serif;}");
-document.write("a.navbar_l:link, a.navbar_l:visited{text-align:left;background:#3300cc url("+loc+"navbar_l.gif) no-repeat right;color:#ffffff;text-decoration:none;border-color:black;border-style:solid;border-width:0px "+bd+"px 0px "+bd+"px;padding:2px 0px 2px 0px;cursor:hand;display:block;font-size:15pt;font-family:Arial, Helvetica, sans-serif;}");
-document.write("a.navbar_l:hover, a.navbar_l:active{background:#ff9900 url("+loc+"navbar_l2.gif) no-repeat right;color: #000000;text-decoration:none;border-color:black;border-style:solid;border-width:0px "+bd+"px 0px "+bd+"px;padding:2px 0px 2px 0px;cursor:hand;display:block;font-size:15pt;font-family:Arial, Helvetica, sans-serif;}");
+document.write("a.navbar_plain:link, a.navbar_plain:visited{text-align:left;background-color:#3300cc;color:#ffffff;text-decoration:none;border-color:black;border-style:solid;border-width:0px "+bd+"px 0px "+bd+"px;padding:2px 0px 2px 0px;cursor:pointer;display:block;font-size:15pt;font-family:Arial, Helvetica, sans-serif;}");
+document.write("a.navbar_plain:hover, a.navbar_plain:active{background-color:#ff9900;color:#000000;text-decoration:none;border-color:black;border-style:solid;border-width:0px "+bd+"px 0px "+bd+"px;padding:2px 0px 2px 0px;cursor:pointer;display:block;font-size:15pt;font-family:Arial, Helvetica, sans-serif;}");
+document.write("a.navbar_l:link, a.navbar_l:visited{text-align:left;background:#3300cc url("+loc+"navbar_l.gif) no-repeat right;color:#ffffff;text-decoration:none;border-color:black;border-style:solid;border-width:0px "+bd+"px 0px "+bd+"px;padding:2px 0px 2px 0px;cursor:pointer;display:block;font-size:15pt;font-family:Arial, Helvetica, sans-serif;}");
+document.write("a.navbar_l:hover, a.navbar_l:active{background:#ff9900 url("+loc+"navbar_l2.gif) no-repeat right;color: #000000;text-decoration:none;border-color:black;border-style:solid;border-width:0px "+bd+"px 0px "+bd+"px;padding:2px 0px 2px 0px;cursor:pointer;display:block;font-size:15pt;font-family:Arial, Helvetica, sans-serif;}");
 document.write("\n-->\n");
 document.write("</style>");
 
