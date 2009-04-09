@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.10 2009-04-09 16:57:41 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.11 2009-04-09 17:48:46 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 	var secondWindow;
@@ -216,26 +216,26 @@
   
   function viewVMSort(acType, fieldType, id, from){
      //ac type
-     var selACObj = document.getElementById(elmACType);
-     if (selACObj != null)
-    	selACObj.value = acType;
+     var selACObj = document.getElementsByName(elmACType);
+     if (selACObj[0] != null)
+    	selACObj[0].value = acType;
      //field type
-     var selFiedlObj = document.getElementById(elmFieldType);
-     if (selFiedlObj != null)
-    	selFiedlObj.value = fieldType;
+     var selFiedlObj = document.getElementsByName(elmFieldType);
+     if (selFiedlObj[0] != null)
+    	selFiedlObj[0].value = fieldType;
       document.VMUse.action = "../../cdecurate/NCICurationServlet?reqType=viewVMAction&action=sort&id=" +id+ "&from=" +from;
       document.VMUse.submit();	
   }
   
   function viewVMShow(acType, filterType, id, from){
       //ac type
-      var selACObj = document.getElementById(elmACType);
-      if (selACObj != null)
-    	selACObj.value = acType;
+      var selACObj = document.getElementsByName(elmACType);
+      if (selACObj[0] != null)
+    	selACObj[0].value = acType;
       //field type
-      var selFiedlObj = document.getElementById(elmFieldType);
-      if (selFiedlObj != null)
-    	selFiedlObj.value = filterType;
+      var selFiedlObj = document.getElementsByName(elmFieldType);
+      if (selFiedlObj[0] != null)
+    	selFiedlObj[0].value = filterType;
       document.VMUse.action = "../../cdecurate/NCICurationServlet?reqType=viewVMAction&action=show&id=" +id+ "&from=" +from;
       document.VMUse.submit();	
  } 
