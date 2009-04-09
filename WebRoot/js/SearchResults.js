@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.33 2009-03-18 17:57:01 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResults.js,v 1.34 2009-04-09 16:02:39 hebell Exp $
 // $Name: not supported by cvs2svn $
 
   var numRowsSelected = 0;
@@ -768,7 +768,8 @@ function uploadCmd()
   }  
    function openEditVMWindowJS(curPV)
     {
-    	document.getElementById("editPVInd").value = curPV;
+        var objs = document.getElementsByName("editPVInd");
+        objs[0].value = curPV;
     	document.searchResultsForm.actSelected.value = "pvEdits";
     	document.getElementById("pageAction").value = "openEditVM";
     	StoreSelectedRow("true",curPV,"ValueMeaning");
