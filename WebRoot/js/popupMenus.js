@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/popupMenus.js,v 1.1 2007-09-10 16:16:48 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/popupMenus.js,v 1.2 2009-04-09 19:51:22 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 /* define variables for "if n4 (Netscape 4), if IE (IE 4.x), 
@@ -95,7 +95,7 @@ function disableMenu(sSearchAC)
   if (sSearchAC == "DataElement" || sSearchAC == "ObjectClass" || sSearchAC == "Property")
   {
     disMenu = "assDE";
-    divObj = eval (doc + disMenu);
+    divObj = eval (doc + disMenu + doc2);
     if(divObj != null)
       divObj.disabled = 'true';
   }
@@ -104,7 +104,7 @@ function disableMenu(sSearchAC)
 	  || sSearchAC == "ObjectClass" || sSearchAC == "Property")
   {
     disMenu = "assVD";
-    divObj = eval (doc + disMenu);
+    divObj = eval (doc + disMenu + doc2);
     if(divObj != null)
       divObj.disabled = 'true';
   }
@@ -113,7 +113,7 @@ function disableMenu(sSearchAC)
 	  || sSearchAC == "PermissibleValue")
   {
     disMenu = "assDEC";
-    divObj = eval (doc + disMenu);
+    divObj = eval (doc + disMenu + doc2);
     if(divObj != null)
     {
       divObj.disabled = 'true';

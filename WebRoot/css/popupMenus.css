@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc 2007
 
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/css/popupMenus.css,v 1.1 2007-09-10 16:16:46 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/css/popupMenus.css,v 1.2 2009-04-09 19:52:17 veerlah Exp $
     $Name: not supported by cvs2svn $
 
     the CSS to control appearance
@@ -8,7 +8,6 @@
 
 body {
 background-color: #ffffff;
-//color: #000080;
 color: #000000;
 }
 
@@ -34,26 +33,20 @@ p.footnote {
 }
 
 a.link:visited {
-//text-decoration: underline;
-//color: #990000;
 text-decoration: none;
 color: #000000;
 background-color: #ffffff;
 }
 
 a.link {
-//text-decoration: underline;
-//color: #666666;
 text-decoration: none;
 color: #000000;
 background-color: #ffffff;
 }
 
 a.link:hover {
-//text-decoration: underline;
 text-decoration: none;
 color: #ffffff;
-//background-color: #990000;
 background-color: #000000;
 font-weight: bold;
 }
@@ -73,11 +66,9 @@ text-decoration: none;
 }
 
 td.menu {
-//background-color: #6699cc;
 background-color: #cccccc;
 color: black;
 height: 20px;
-//font-family: verdana, sans-serif;
 font-size: 12px;
 padding-left: 1px;
 border: 1px solid #003366;

@@ -1,13 +1,13 @@
 /* Copyright ScenPro, Inc 2007
 
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/css/FullDesignArial2.css,v 1.1 2007-09-10 16:16:46 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/css/FullDesignArial2.css,v 1.2 2009-04-09 19:53:03 veerlah Exp $
     $Name: not supported by cvs2svn $
 */
 
 body
   {
      background-color: #FFFFFF;
-     font-color: #000000;
+      color: #000000;
 	  font-family: Arial, Helvetica, sans-serif;
 	  font-size: 12px;
   }
@@ -77,8 +77,6 @@ body
   }
 
 
-  // Specific to the login pages
-
   table.login
   {
      background-color: #CCCCCC;
@@ -102,11 +100,11 @@ body
 
   .F1 
   {
-     filter: blur(direction=-150,Strength=220); width=70px;
+     filter: blur(direction=-150,Strength=220); width:70px;
   }
   .F2
   {
-     filter:""; width=70px;
+     filter:""; width:70px;
   }
 
   p.indentLevel1
