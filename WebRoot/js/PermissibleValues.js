@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.12 2009-04-08 19:15:32 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.13 2009-04-09 18:30:46 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -42,8 +42,8 @@
 	//submit the page
 	function SubmitValidate(sAction)
 	{
-		var actObject = document.getElementById("pageAction");
-		if ( actObject == null)
+		var actObject = document.getElementsByName("pageAction");
+		if ( actObject[0] == null)
 			alert("what is the object");
 		else
 		{
@@ -54,7 +54,7 @@
 	  				return;
   			}
 			//continue with submission	
-			actObject.value = sAction;
+			actObject[0].value = sAction;
 			beforeRefresh(sAction);
 			if (secondWindow && !secondWindow.closed)
 	            secondWindow.close();
@@ -77,12 +77,12 @@
 	
 	function reSubmitValidate(sAction)
 	{
-		var actObject = document.getElementById("pageAction");
-		if ( actObject == null)
+		var actObject = document.getElementsByName("pageAction");
+		if ( actObject[0] == null)
 			alert("what is the object");
 		else
 		{
-			actObject.value = sAction;
+			actObject[0].value = sAction;
 	    	disableHyperlink(sAction);
 			DisableButtons();
 			document.PVForm.submit(); 
@@ -91,14 +91,14 @@
 	
 	function disableHyperlink(action)
 	{
-	  var pvObj = document.getElementById("editPVInd");
-	  if (pvObj != null)
+	  var pvObj = document.getElemenstByName("editPVInd");
+	  if (pvObj[0] != null)
 	  {
-	  	var pvNo = pvObj.value;
-		var hlObj = document.getElementById(pvNo + "ImgSaveLink");
-		if (hlObj != null)
+	  	var pvNo = pvObj[0].value;
+		var hlObj = document.getElemenstByName(pvNo + "ImgSaveLink");
+		if (hlObj[0] != null)
 		{
-			hlObj.href = "javascript:disabled();";
+			hlObj[0].href = "javascript:disabled();";
 		}
 	  }
 	}
@@ -160,7 +160,8 @@
 		   		itmAct += pvNo;
 		   		pvNo = "";
 		   }
-		   document.getElementById("editPVInd").value = pvNo;		   
+		   var editPVInd = document.getElementsByName("editPVInd");
+		   editPVInd[0].value = pvNo;		   
 
 		   //submit the form
 		   SubmitValidate(itmAct);   
@@ -886,10 +887,12 @@
   function createParent(vocab)
   {
 	  if (!validatePVAction('createParent'))  //check if any pv is in edit mode
-	  	return;  
+	  	return; 
+	  var pvViewTypes = document.getElementsByName("PVViewTypes");	
+	  var listPConcept = document.getElementsByName("listParentConcept"); 
       //do not allow to create parent if pvs exist without parents
-      var pvCount = document.getElementById("PVViewTypes").length;
-      var parCount = document.getElementById("listParentConcept").length;
+      var pvCount = pvViewTypes[0].length;
+      var parCount = listPConcept[0].length;
       if (pvCount >0 && parCount < 1)
       {
         alert("Please remove existing Permissible Values before selecting parents to constrain the values");
@@ -906,8 +909,8 @@
 	  if (!validatePVAction('createMultipleValues'))  //check if any pv is in edit mode
 	  	return;  
 	  //continue  	
-  	  var vdtypeObj = document.getElementById("listVDType");
-      if (vdtypeObj.value == "E")
+  	  var vdtypeObj = document.getElementsByName("listVDType");
+      if (vdtypeObj[0].value == "E")
       {
           openConceptSearchWindow("EVSValueMeaning", "term", vocab);
       }
@@ -918,7 +921,8 @@
   function openConceptSearchWindow(serComp, treeOpen, vocab)
   {
 	  document.SearchActionForm.searchComp.value = serComp;
-	  document.getElementById("openToTree").value = treeOpen;
+	  var openToTree =  document.getElementsByName("openToTree")
+	  openToTree[0].value = treeOpen;
 	  document.SearchActionForm.isValidSearch.value = "false";
 	  if (secondWindow && !secondWindow.closed)
 	    secondWindow.close()
@@ -935,9 +939,11 @@
     //sort the pv attributes
   function sortPV(fieldName)
   {
-    if (document.getElementById("PVViewTypes").length > 0)
+    var pvViewTypes = document.getElementsByName("PVViewTypes")
+    if (pvViewTypes[0].length > 0)
     {
-      document.getElementById("pvSortColumn").value = fieldName;
+      var pvSortColumn = document.getElementsByName("pvSortColumn")
+      pvSortColumn[0].value = fieldName;
       SubmitValidate("sortPV");
     }
   }
@@ -1343,7 +1349,8 @@
   	//store the Edited concepts of the VM in hidden select box
   	function storeVMConcept(sAct)
   	{
-  		var pvId = document.getElementById("editPVInd").value;
+  		var id = document.getElementsByName("editPVInd");
+  		var pvId = id[0].value;
   		if (pvId != null && pvId != "")
   		{
   			//make sure vm text exists and no duplicate pvvm
@@ -1487,7 +1494,8 @@
     
     function openEditVMWindow(curPV)
     {
-    	document.getElementById("editPVInd").value = curPV;
+    	var editPVInd = document.getElementsByName("editPVInd");
+    	editPVInd[0].value = curPV;
     	SubmitValidate('openEditVM');
     }
     function openViewVMWindow(curPV, id)
