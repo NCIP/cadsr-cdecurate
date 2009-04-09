@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.26 2009-04-09 15:50:54 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.27 2009-04-09 18:56:57 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -361,7 +361,9 @@
      propId.innerText = "<%=sPCCCode%>"; 
      propId.textContent = "<%=sPCCCode%>"; 
  }
- 
+ function disabled(){
+		return;
+ }
  function openEVSConceptsWindow(text){
   var conceptUrl = "<%=evsConceptUrl%>";
   var vocab = "";
@@ -665,13 +667,13 @@
 										<tr>
 											<td colspan="3">
 												&nbsp;&nbsp;
-												<a href="">
+												<a href="javascript:disabled();">
 													<label id="ObjQualID" for="selObjectQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('ObjectQualifier', 'true')"<%}else{%>onclick="javascript:openEVSConceptsWindow('ObjectQualifier');"<% }%></label>
 												</a>
 											</td>
 											<td colspan="3">
 												&nbsp;&nbsp;
-												<%if (!isView){%><a href=""><%}else{ if(objectClassUrl != null){%><a href=""><%}}%>
+												<%if (!isView){%><a href="javascript:disabled();"><%}else{ if(objectClassUrl != null){%><a href="javascript:disabled();"><%}}%>
 													<label id="ObjClassID" for="selObjectClass" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('ObjectClass', 'true')"<%}else{ if(objectClassUrl != null){%>onclick="window.open('<%=objectClassUrl%>','','')"<%}}%></label>
 												<%if (!isView){%></a><%}else{ if(objectClassUrl != null){%></a><%}}%>
 											</td>
@@ -807,13 +809,13 @@
 										<tr>
 											<td colspan="3">
 												&nbsp;&nbsp;
-												<a href="">
+												<a href="javascript:disabled();">
 													<label id="PropQualID" for="selPropertyQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('PropertyQualifier', 'true')"<%}else{%>onclick="javascript:openEVSConceptsWindow('PropertyQualifier');"<% }%></label>
 												</a>
 											</td>
 											<td colspan="3">
 												&nbsp;&nbsp;
-												<%if (!isView){%><a href=""><%}else{ if(propClassUrl != null){%><a href=""><%}}%>
+												<%if (!isView){%><a href="javascript:disabled();"><%}else{ if(propClassUrl != null){%><a href="javascript:disabled();"><%}}%>
 													<label id="PropClassID" for="selPropertyClass" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('PropertyClass', 'true')"<%}else{ if(propClassUrl != null){%>onclick="window.open('<%=propClassUrl%>','','')"><%}}%></label>
 												<%if (!isView){%></a><%}else{ if(propClassUrl != null){%></a><%}}%>
 											</td>
