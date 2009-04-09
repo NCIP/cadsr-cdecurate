@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.14 2009-04-09 18:56:37 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.15 2009-04-09 20:18:44 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -1507,9 +1507,11 @@
    //sort the pv attributes
   function viewPVSort(fieldName, id)
   {
-    if (document.getElementById("PVViewTypes").length > 0)
+    var pvViewTypes = document.getElementsByName("PVViewTypes");
+    if (pvViewTypes[0].length > 0)
     {
-      document.getElementById("pvSortColumn").value = fieldName;
+      var pvSortcol = document.getElementsByName("pvSortColumn");
+      pvSortcol[0].value = fieldName;
       document.PVForm.action = "../../cdecurate/NCICurationServlet?reqType=viewPVAction&action=sort&id=" +id;
       document.PVForm.submit();
     }
