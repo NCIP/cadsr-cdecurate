@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchParameters.js,v 1.9 2009-04-09 20:58:31 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchParameters.js,v 1.10 2009-04-09 21:14:07 hebell Exp $
 // $Name: not supported by cvs2svn $
 
     function hourglass()
@@ -103,10 +103,8 @@
            document.searchParmsForm.sConteIdseq.value = conte_idseq;
            document.searchParmsForm.listSearchFor[0].value = "ObjectClass";
            document.searchParmsForm.listSearchFor[0].text = "Object Class";
-           document.searchParmsForm.sCCode.value = opener.ObjClassID.innerText;
-           document.searchParmsForm.sCCode.value = opener.ObjClassID.textContent;
-           document.searchParmsForm.sCCodeDB.value = opener.ObjClass.innerText;
-           document.searchParmsForm.sCCodeDB.value = opener.ObjClass.textContent;
+           document.searchParmsForm.sCCode.value = (opener.document.getElementById("ObjClassID").innerText) ? opener.opener.document.getElementById("ObjClassID").innerText : opener.opener.document.getElementById("ObjClassID").textContent;
+           document.searchParmsForm.sCCodeDB.value = (opener.document.getElementById("ObjClass").innerText) ? opener.document.getElementById("ObjClass").innerText : opener.document.getElementById("ObjClass").textContent;
            document.searchParmsForm.openToTree.value = opener.document.newDECForm.openToTree.value;
            opener.document.newDECForm.openToTree.value = ""; // reset this
            }
@@ -126,10 +124,8 @@
            document.searchParmsForm.sConteIdseq.value = conte_idseq;
            document.searchParmsForm.listSearchFor[0].value = "Property";
            document.searchParmsForm.listSearchFor[0].text = "Property";
-           document.searchParmsForm.sCCodeDB.value = opener.PropClass.innerText;
-           document.searchParmsForm.sCCodeDB.value = opener.PropClass.textContent;
-           document.searchParmsForm.sCCode.value = opener.PropClassID.innerText;
-           document.searchParmsForm.sCCode.value = opener.PropClassID.textContent;
+           document.searchParmsForm.sCCodeDB.value = (opener.document.getElementById("PropClass").innerText) ? opener.document.getElementById("PropClass").innerText : opener.document.getElementById("PropClass").textContent;
+           document.searchParmsForm.sCCode.value = (opener.document.getElementById("PropClassID").innerText) ? opener.document.getElementById("PropClassID").innerText : opener.document.getElementById("PropClassID").textContent;
            document.searchParmsForm.sCCodeName.value = Prop;
            document.searchParmsForm.openToTree.value = opener.document.newDECForm.openToTree.value;
            opener.document.newDECForm.openToTree.value = "";
@@ -147,10 +143,8 @@
            document.searchParmsForm.sConteIdseq.value = conte_idseq;
            document.searchParmsForm.listSearchFor[0].value = "RepTerm";
            document.searchParmsForm.listSearchFor[0].text = "Rep Term";
-           document.searchParmsForm.sCCodeDB.value = opener.RepTerm.innerText;
-           document.searchParmsForm.sCCodeDB.value = opener.RepTerm.textContent;
-           document.searchParmsForm.sCCode.value = opener.RepTermID.innerText;
-           document.searchParmsForm.sCCode.value = opener.RepTermID.textContent;
+           document.searchParmsForm.sCCodeDB.value = (opener.document.getElementById("RepTerm").innerText) ? opener.document.getElementById("RepTerm").innerText : opener.document.getElementById("RepTerm").textContent;
+           document.searchParmsForm.sCCode.value = (opener.document.getElementById("RepTermID").innerText) ? opener.document.getElementById("RepTermID").innerText : opener.document.getElementById("RepTermID").textContent;
            document.searchParmsForm.sCCodeName.value = opener.document.createVDForm.selRepTerm.value;
            document.searchParmsForm.openToTree.value = opener.document.createVDForm.openToTree.value;
            opener.document.createVDForm.openToTree.value = "";
@@ -178,10 +172,8 @@
            document.searchParmsForm.sConteIdseq.value = conte_idseq;
            document.searchParmsForm.listSearchFor[0].value = "ObjectQualifier";
            document.searchParmsForm.listSearchFor[0].text = "Object Qualifier";
-           document.searchParmsForm.sCCodeDB.value = opener.ObjQual.innerText;
-           document.searchParmsForm.sCCodeDB.value = opener.ObjQual.textContent;
-           document.searchParmsForm.sCCode.value = opener.ObjQualID.innerText;
-           document.searchParmsForm.sCCode.value = opener.ObjQualID.textContent;
+           document.searchParmsForm.sCCodeDB.value = (opener.document.getElementById("ObjQual").innerText) ? opener.document.getElementById("ObjQual").innerText : opener.document.getElementById("ObjQual").textContent;
+           document.searchParmsForm.sCCode.value = (opener.document.getElementById("ObjQualID").innerText) ? opener.document.getElementById("ObjQualID").innerText : opener.document.getElementById("ObjQualID").textContent;
            document.searchParmsForm.sCCodeName.value = qual;
            document.searchParmsForm.openToTree.value = opener.document.newDECForm.openToTree.value;
            opener.document.newDECForm.openToTree.value = "";
@@ -201,10 +193,8 @@
            document.searchParmsForm.sConteIdseq.value = conte_idseq;
            document.searchParmsForm.listSearchFor[0].value = "PropertyQualifier";
            document.searchParmsForm.listSearchFor[0].text = "Property Qualifier";
-           document.searchParmsForm.sCCodeDB.value = opener.PropQual.innerText;
-           document.searchParmsForm.sCCodeDB.value = opener.PropQual.textContent;
-           document.searchParmsForm.sCCode.value = opener.PropQualID.innerText;
-            document.searchParmsForm.sCCode.value = opener.PropQualID.textContent;
+           document.searchParmsForm.sCCodeDB.value = (opener.document.getElementById("PropQual").innerText) ? opener.document.getElementById("PropQual").innerText : opener.document.getElementById("PropQual").textContent;
+           document.searchParmsForm.sCCode.value = (opener.document.getElementById("PropQualID").innerText) ? opener.document.getElementById("PropQualID").innerText : opener.document.getElementById("PropQualID").textContent;
            document.searchParmsForm.sCCodeName.value = qualProp;
            document.searchParmsForm.openToTree.value = opener.document.newDECForm.openToTree.value;
            opener.document.newDECForm.openToTree.value = "";
