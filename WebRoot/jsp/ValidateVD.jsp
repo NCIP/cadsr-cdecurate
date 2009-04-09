@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateVD.jsp,v 1.5 2009-04-08 21:00:47 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateVD.jsp,v 1.6 2009-04-09 19:51:48 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -68,8 +68,8 @@
 
    function EditVD()
    {
-       var valVDPageAction = document.getElementById("ValidateVDPageAction");
-       valVDPageAction.value = "reEditVD";
+       var valVDPageAction = document.getElementsByName("ValidateVDPageAction");
+       valVDPageAction[0].value = "reEditVD";
        submit();
    }
 
