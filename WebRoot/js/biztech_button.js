@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/biztech_button.js,v 1.4 2009-02-25 19:51:16 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/biztech_button.js,v 1.5 2009-04-09 17:03:34 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 if(typeof(loc)=="undefined"||loc==""){var loc="";if(document.body&&document.body.innerHTML){var tt=document.body.innerHTML.toLowerCase();var last=tt.indexOf("biztech_button.js\"");if(last>0){var first=tt.lastIndexOf("\"",last);if(first>0&&first<last)loc=document.body.innerHTML.substr(first+1,last-first-1);}}}
@@ -9,10 +9,10 @@ var bd=0
 document.write("<style type=\"text/css\">");
 document.write("\n<!--\n");
 document.write(".biztech_button_menu {border-color:black;border-style:solid;border-width:"+bd+"px 0px "+bd+"px 0px;background-color:#7f7fad;position:absolute;left:0px;top:0px;visibility:hidden;}");
-document.write("a.biztech_button_plain:link, a.biztech_button_plain:visited{text-align:left;background-color:#7f7fad;color:#ffff99;text-decoration:none;border-color:black;border-style:solid;border-width:0px "+bd+"px 0px "+bd+"px;padding:0px 0px 0px 0px;cursor:hand;display:block;font-size:12pt;font-family:Arial, Helvetica, sans-serif;font-weight:bold;}");
-document.write("a.biztech_button_plain:hover, a.biztech_button_plain:active{background-color:#ffff99;color:#3c0323;text-decoration:none;border-color:black;border-style:solid;border-width:0px "+bd+"px 0px "+bd+"px;padding:0px 0px 0px 0px;cursor:hand;display:block;font-size:12pt;font-family:Arial, Helvetica, sans-serif;font-weight:bold;}");
-document.write("a.biztech_button_l:link, a.biztech_button_l:visited{text-align:left;background:#7f7fad url("+loc+"../images/biztech_button_l.gif) no-repeat right;color:#ffff99;text-decoration:none;border-color:black;border-style:solid;border-width:0px "+bd+"px 0px "+bd+"px;padding:0px 0px 0px 0px;cursor:hand;display:block;font-size:12pt;font-family:Arial, Helvetica, sans-serif;font-weight:bold;}");
-document.write("a.biztech_button_l:hover, a.biztech_button_l:active{background:#ffff99 url("+loc+"../images/biztech_button_l2.gif) no-repeat right;color: #3c0323;text-decoration:none;border-color:black;border-style:solid;border-width:0px "+bd+"px 0px "+bd+"px;padding:0px 0px 0px 0px;cursor:hand;display:block;font-size:12pt;font-family:Arial, Helvetica, sans-serif;font-weight:bold;}");
+document.write("a.biztech_button_plain:link, a.biztech_button_plain:visited{text-align:left;background-color:#7f7fad;color:#ffff99;text-decoration:none;border-color:black;border-style:solid;border-width:0px "+bd+"px 0px "+bd+"px;padding:0px 0px 0px 0px;cursor:pointer;display:block;font-size:12pt;font-family:Arial, Helvetica, sans-serif;font-weight:bold;}");
+document.write("a.biztech_button_plain:hover, a.biztech_button_plain:active{background-color:#ffff99;color:#3c0323;text-decoration:none;border-color:black;border-style:solid;border-width:0px "+bd+"px 0px "+bd+"px;padding:0px 0px 0px 0px;cursor:pointer;display:block;font-size:12pt;font-family:Arial, Helvetica, sans-serif;font-weight:bold;}");
+document.write("a.biztech_button_l:link, a.biztech_button_l:visited{text-align:left;background:#7f7fad url("+loc+"../images/biztech_button_l.gif) no-repeat right;color:#ffff99;text-decoration:none;border-color:black;border-style:solid;border-width:0px "+bd+"px 0px "+bd+"px;padding:0px 0px 0px 0px;cursor:pointer;display:block;font-size:12pt;font-family:Arial, Helvetica, sans-serif;font-weight:bold;}");
+document.write("a.biztech_button_l:hover, a.biztech_button_l:active{background:#ffff99 url("+loc+"../images/biztech_button_l2.gif) no-repeat right;color: #3c0323;text-decoration:none;border-color:black;border-style:solid;border-width:0px "+bd+"px 0px "+bd+"px;padding:0px 0px 0px 0px;cursor:pointer;display:block;font-size:12pt;font-family:Arial, Helvetica, sans-serif;font-weight:bold;}");
 document.write("\n-->\n");
 document.write("</style>");
 
