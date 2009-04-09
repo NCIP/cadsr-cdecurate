@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.13 2009-04-09 18:30:46 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.14 2009-04-09 18:56:37 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -91,11 +91,11 @@
 	
 	function disableHyperlink(action)
 	{
-	  var pvObj = document.getElemenstByName("editPVInd");
+	  var pvObj = document.getElementsByName("editPVInd");
 	  if (pvObj[0] != null)
 	  {
 	  	var pvNo = pvObj[0].value;
-		var hlObj = document.getElemenstByName(pvNo + "ImgSaveLink");
+		var hlObj = document.getElementsByName(pvNo + "ImgSaveLink");
 		if (hlObj[0] != null)
 		{
 			hlObj[0].href = "javascript:disabled();";
