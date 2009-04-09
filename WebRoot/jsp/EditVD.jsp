@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.30 2009-04-09 15:50:54 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.31 2009-04-09 21:19:53 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -535,7 +535,9 @@ function setup()
 	
     var selDType = document.createVDForm.tfLowValue.value;
 }
-
+function disabled(){
+		return;
+}
 function openEVSConceptsWindow(){
   var conceptUrl = "<%=evsConceptUrl%>";
   var vocab = RepQual.innerText;
@@ -866,13 +868,13 @@ function openEVSConceptsWindow(){
 														<tr>
 															<td colspan="3">
 																&nbsp;&nbsp;
-																<a href="">
+																<a href="javascript:disabled();">
 																	<label id="RepQualID" for="selRepQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('RepQualifier', 'true');"<%}else{%>onclick="javascript:openEVSConceptsWindow();"<% }%></label>
 																</a>
 															</td>
 															<td colspan="3">
 																&nbsp;&nbsp;
-																<%if (!isView){%><a href=""><%}else{ if(repTermUrl != null){%><a href=""><%}}%>
+																<%if (!isView){%><a href="javascript:disabled();"><%}else{ if(repTermUrl != null){%><a href="javascript:disabled();"><%}}%>
 																	<label id="RepTermID" for="selRepTerm" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('RepTerm', 'true');"<%}else{ if(repTermUrl != null){%>onclick="window.open('<%=repTermUrl%>','','');"<%}}%></label>
 																<%if (!isView){%></a><%}else{ if(repTermUrl != null){%></a><%}}%>
 															</td>
