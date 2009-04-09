@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.16 2009-02-09 23:00:35 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.17 2009-04-09 21:21:02 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -347,19 +347,19 @@
 			<table border="0">
 				<tr align="left">
 					<td>
-						<input type="button" name="editSelectedBtn" value="Use Selection" onClick="ShowSelection();" disabled style="width: 100,height: 30">
+						<input type="button" name="editSelectedBtn" value="Use Selection" onClick="ShowSelection();" disabled style="width: 100px; height: 30px">
 						&nbsp;&nbsp;
-						<!--   <input type="button" name="btnUseParent" value="Set Reference" onclick="javascript:getSubConcepts();" style="width: 95">
+						<!--   <input type="button" name="btnUseParent" value="Set Reference" onclick="javascript:getSubConcepts();" style="width: 95px">
       &nbsp;&nbsp; -->
-						<input type="button" name="btnSubConcepts" value="Get Subconcepts" onmouseover="controlsubmenu2(event,'divAssACMenu',null,null,null)" onmouseout="closeall()" style="width: 115" disabled>
+						<input type="button" name="btnSubConcepts" value="Get Subconcepts" onmouseover="controlsubmenu2(event,'divAssACMenu',null,null,null)" onmouseout="closeall()" style="width: 115px" disabled>
 						&nbsp;&nbsp;
-						<input type="button" name="btnSuperConcepts" value="Get Superconcepts" disabled onclick="javascript:getSuperConcepts();" style="width: 130">
+						<input type="button" name="btnSuperConcepts" value="Get Superconcepts" disabled onclick="javascript:getSuperConcepts();" style="width: 130px">
 						&nbsp;&nbsp;
-						<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();" style="width: 93,height: 30">
+						<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();" style="width: 93px; height: 30px">
 						&nbsp;&nbsp;
-						<input type="button" name="btnSubmitToEVS" value="Suggest to EVS" onclick="javascript:NewTermSuggested();" style="width:108">
+						<input type="button" name="btnSubmitToEVS" value="Suggest to EVS" onclick="javascript:NewTermSuggested();" style="width:108px">
 						&nbsp;&nbsp;
-						<img name="Message" src="images/SearchMessage.gif" width="180" height="25" alt="WaitMessage" style="visibility:hidden;" align="top">
+						<img name="Message" src="images/SearchMessage.gif" width="180px" height="25" alt="WaitMessage" style="visibility:hidden;" align="top">
 					</td>
 				</tr>
 			</table>
@@ -418,21 +418,21 @@
 			<table width="100%" border="1" valign="top">
 				<tr valign="middle">
 					<%    if (isSelAll) { %>
-					<th height="30" width="30">
+					<th height="30px" width="30px">
 						<a href="javascript:SelectAll('<%=nRecs%>')">
 							<img id="CheckGif" src="images/CheckBox.gif" border="0" alt="Select All">
 						</a>
 					</th>
 					<%    } else   { %>
-					<th height="30" width="30">
+					<th height="30px" width="30px">
 						<img src="images/CheckBox.gif" border="0">
 					</th>
 					<%    } %>
 					<% if(sSelAC.equals("Rep Term") && temp.booleanValue()){ %>
-					<th height="30" width="30">
+					<th height="30px" width="30px">
 						<img src="images/CheckBox.gif" border="0">
 					</th>
-					<th height="30" width="30">
+					<th height="30px" width="30px">
 						<img src="images/CheckBox.gif" border="0">
 					</th>
 					<!-- add other headings -->
@@ -569,18 +569,18 @@
          if (hasLink == false) {
   %>
 				<tr>
-				 	<td width="5" valign="top">
+				 	<td width="5px" valign="top">
 						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);">
 					</td>
 					<% if(sSelAC.equals("Rep Term") && temp.booleanValue()){ %>
-					<td width="5" valign="top">
+					<td width="5px" valign="top">
 						<img src="images/search_light.gif" border="0" alt="Perform a Rep Term search using the primary concept." onClick="javascript:EnableButtonWithTxt1('<%=ckName%>');">
 					</td>
-					<td width="5" valign="top">
+					<td width="5px" valign="top">
 						 <img src="images/copy.gif" border="0" alt="Paste the concept name into Search Term field." onClick="javascript:EnableButtonWithTxt('<%=ckName%>');">
 					</td>
 					<%} %>
-					<td width="150" valign="top">
+					<td width="150px" valign="top">
 						<%=strResult%>
 						<br>
 						<% //add the text box for NVP under concept name
@@ -596,10 +596,10 @@
 					</td>
 					<%    }else{%>
 				<tr>
-					<td width="5" valign="top">
+					<td width="5px" valign="top">
 						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);">
 					</td>
-					<td width="150" valign="top">
+					<td width="150px" valign="top">
 						<a href="<%=showConceptInTree%>">
 							<%=strResult%>
 						</a>
@@ -612,7 +612,7 @@
 						&nbsp;&nbsp;Enter Concept Value
 						<br>
 						&nbsp;&nbsp;
-						<input type="text" name="nvp_<%=ckName%>" maxlength="10" width="30" onkeyup="" value="">
+						<input type="text" name="nvp_<%=ckName%>" maxlength="10" size="30" onkeyup="" value="">
 						<% }	%>
 					</td>
 					<%    } %>
@@ -657,7 +657,7 @@
 				<select size="1" name="hiddenPVValue" style="visibility:hidden;"></select>
 				<select size="1" name="hiddenPVMean" style="visibility:hidden;"></select>
 
-				<select size="1" name="hiddenResults" style="visibility:hidden;width:145">
+				<select size="1" name="hiddenResults" style="visibility:hidden;width:145px">
 					<%  for (int m = 0; results.size()>m; m++)
     {
        String sName = (String)results.elementAt(m);
