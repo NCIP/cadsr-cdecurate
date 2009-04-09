@@ -6,8 +6,6 @@
 <link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 <%@ page import="java.text.*" %>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
-<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 
 <SCRIPT LANGUAGE="JavaScript" SRC="js/date-picker.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="js/CreatePV.js"></SCRIPT>

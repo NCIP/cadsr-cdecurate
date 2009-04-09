@@ -1,9 +1,9 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDEC.jsp,v 1.7 2009-04-08 20:56:58 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDEC.jsp,v 1.8 2009-04-09 15:26:35 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page session="true"%>s
+<%@ page session="true"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 	<head>
