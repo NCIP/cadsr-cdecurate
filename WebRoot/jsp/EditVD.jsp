@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.28 2009-04-08 21:00:40 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.29 2009-04-09 15:25:41 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -49,15 +49,16 @@
 		  //Vector vContextID = (Vector) session.getAttribute("vWriteContextVD_ID");
 			Vector vCS = null;
 			Vector vCS_ID = null;
-			
-		   if (!isView){
-			 vStatus = (Vector) session.getAttribute("vStatusVD");
-	         vDataTypes = (Vector) session.getAttribute("vDataType");
+			 
+			 vDataTypes = (Vector) session.getAttribute("vDataType");
 			 vDataTypeDesc = (Vector) session.getAttribute("vDataTypeDesc");
 			 vDataTypeCom = (Vector) session.getAttribute("vDataTypeComment");
 			 vDataTypeSRef= (Vector) session.getAttribute("vDataTypeSReference");
              VDataTypeAnnotation = (Vector) session.getAttribute("vDataTypeAnnotation");
-
+				
+		   if (!isView){
+			 vStatus = (Vector) session.getAttribute("vStatusVD");
+	         
 			 vUOM = (Vector) session.getAttribute("vUOM");
 			 vUOMFormat = (Vector) session.getAttribute("vUOMFormat");
 	         //Vector vCD = (Vector) session.getAttribute("vCD");

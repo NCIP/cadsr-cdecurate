@@ -4180,6 +4180,12 @@ public class CurationServlet
 				        session.setAttribute("evsBrowserConceptURL", aURL);
 				  	  }
 				  }
+				  if ((actlReq).equals("viewVALUEDOMAIN")){
+					  Vector dataTypes = (Vector)session.getAttribute("vDataType");
+					  if (session.getAttribute("vDataType") == null){
+						  serviceAC.getDataTypesList();
+		                }
+				  }
 				  CurationServlet servObj = getACServlet(actlReq);
 				  servObj.execute(getACType(actlReq));
 			}  
