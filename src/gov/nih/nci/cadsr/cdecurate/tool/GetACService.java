@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.67 2009-03-31 16:54:41 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.68 2009-04-09 15:20:16 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -236,24 +236,7 @@ public class GetACService implements Serializable
                 }
                 if (session.getAttribute("vDataType") == null)
                 {
-                    v = new Vector<String>();
-                    Vector<String> vDesc = new Vector<String>();
-                    Vector<String> vComm = new Vector<String>();
-                    Vector<String> vSRef = new Vector<String>();
-                    Vector<String> vAnnotation = new Vector<String>();
-                    getDataTypesList(v, vDesc, vComm, vSRef, vAnnotation);
-                    // add emtpy data at the beginning
-                    v.insertElementAt("", 0);
-                    vDesc.insertElementAt("", 0);
-                    vComm.insertElementAt("", 0);
-                    vSRef.insertElementAt("", 0);
-                    vAnnotation.insertElementAt("", 0);
-                    DataManager.setAttribute(session, "vDataType", v);
-                    DataManager.setAttribute(session, "vDataTypeDesc", vDesc);
-                    DataManager.setAttribute(session, "vDataTypeComment", vComm);
-                    DataManager.setAttribute(session, "vDataTypeSReference", vSRef);
-                    DataManager.setAttribute(session, "vDataTypeAnnotation", vAnnotation);
-              
+                	getDataTypesList();
                 }
                 // list of uoml list
                 if (session.getAttribute("vUOM") == null)
@@ -667,7 +650,7 @@ public class GetACService implements Serializable
      *            vector of comment attributes
      * 
      */
-    private void getDataTypesList(Vector<String> vList, Vector<String> vDesc, Vector<String> vComment, Vector<String> vSRef, Vector<String> vAnnotation)
+    private void getDataTypesListDB(Vector<String> vList, Vector<String> vDesc, Vector<String> vComment, Vector<String> vSRef, Vector<String> vAnnotation)
     {
     	 try
          {
@@ -1851,4 +1834,24 @@ public class GetACService implements Serializable
     public void getCSCSIListBeann(){
     	this.getCSCSIListBean();
     }
+    public void getDataTypesList() {
+		HttpSession session = (HttpSession) m_classReq.getSession();
+		Vector v = new Vector<String>();
+		Vector<String> vDesc = new Vector<String>();
+		Vector<String> vComm = new Vector<String>();
+		Vector<String> vSRef = new Vector<String>();
+		Vector<String> vAnnotation = new Vector<String>();
+		getDataTypesListDB(v, vDesc, vComm, vSRef, vAnnotation);
+		// add emtpy data at the beginning
+		v.insertElementAt("", 0);
+		vDesc.insertElementAt("", 0);
+		vComm.insertElementAt("", 0);
+		vSRef.insertElementAt("", 0);
+		vAnnotation.insertElementAt("", 0);
+		DataManager.setAttribute(session, "vDataType", v);
+		DataManager.setAttribute(session, "vDataTypeDesc", vDesc);
+		DataManager.setAttribute(session, "vDataTypeComment", vComm);
+		DataManager.setAttribute(session, "vDataTypeSReference", vSRef);
+		DataManager.setAttribute(session, "vDataTypeAnnotation", vAnnotation);
+	} 
 }
