@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDesignateDE.jsp,v 1.4 2009-02-27 23:30:11 guthikondak Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDesignateDE.jsp,v 1.5 2009-04-10 15:08:11 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -14,7 +14,6 @@
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 		<%@ page session="true"%>
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
-		<script language="JavaScript" src="js/date-picker.js"></script>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/AddNewListOption.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/SelectCS_CSI.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>

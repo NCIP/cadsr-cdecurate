@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateConceptClass.jsp,v 1.2 2008-12-04 20:53:17 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateConceptClass.jsp,v 1.3 2009-04-10 15:08:11 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -14,8 +14,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<link href="css/style.css" rel="stylesheet" type="text/css">
         <script language="JavaScript" src="js/menu.js"></script>
+        <script language="JavaScript" src="js/date.js"></script>
         <script language="JavaScript" src="js/header.js"></script>
-        <SCRIPT LANGUAGE="JavaScript" SRC="js/date-picker.js"></SCRIPT>
 	<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
         <script language="javascript" type="text/javascript">
            history.forward();
@@ -535,9 +535,7 @@
 												
 											</div>
 											<input type="text" name="beginDate" value="" size="12" maxlength=10>
-										      <a href="javascript:show_calendar('createConceptClassForm.beginDate', null, null, 'MM/DD/YYYY');">
-											<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top", "background-color: #FF0000">
-										</a>
+											<img name="Calendar" src="images/calendarbutton.gif" alt="Calendar" onclick="calendar('beginDate', event);">
 										&nbsp;&nbsp;MM/DD/YYYY<br/><br/>
 											<div class="ind2">
 												
@@ -545,9 +543,7 @@
 												
 											</div>
 												<input type="text" name="endDate" value="" size="12" maxlength=10>
-											  <a href="javascript:show_calendar('createConceptClassForm.endDate', null, null, 'MM/DD/YYYY');">
-											<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top", "background-color: #FF0000">
-										</a>
+											<img name="Calendar" src="images/calendarbutton.gif" alt="Calendar" onclick="calendar('endDate', event);">
 										&nbsp;&nbsp;MM/DD/YYYY<br/><br/>
 											<div class="ind2">
 												

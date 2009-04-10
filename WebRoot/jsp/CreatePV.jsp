@@ -7,8 +7,8 @@
 <%@ page import="java.text.*" %>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*" %>
 
-<SCRIPT LANGUAGE="JavaScript" SRC="js/date-picker.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="js/CreatePV.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" SRC="js/date.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 <Script Language="JavaScript">
 
@@ -285,9 +285,7 @@ function ViewConceptInTree()
       <td valign="top"  colspan=2>
         <input type="text" name="BeginDate" size="12" maxlength=10 value="<%=sBeginDate%>"
           onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_BeginDate',helpUrl); return false">
-        <a href="javascript:show_calendar('createPVForm.BeginDate', null, null, 'MM/DD/YYYY');">
-        <img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
-        </a>
+        <img name="Calendar" src="images/calendarbutton.gif" alt="Calendar" onclick="calendar('BeginDate', event);">
         <font size="2">&nbsp;&nbsp;MM/DD/YYYY</font>
       </td>
     </tr>
@@ -301,9 +299,7 @@ function ViewConceptInTree()
       <td valign="top"  colspan=2>
         <input type="text" name="EndDate" size="12" maxlength=10 value="<%=sEndDate%>"
           onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_EndDate',helpUrl); return false">
-        <a href="javascript:show_calendar('createPVForm.EndDate', null, null, 'MM/DD/YYYY');">
-        <img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
-        </a>
+        <img name="Calendar" src="images/calendarbutton.gif" alt="Calendar" onclick="calendar('EndDate', event);">
         <font size="2">&nbsp;&nbsp;MM/DD/YYYY</font>
       </td>
     </tr>

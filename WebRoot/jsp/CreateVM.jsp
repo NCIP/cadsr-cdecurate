@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVM.jsp,v 1.4 2008-07-03 21:27:15 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVM.jsp,v 1.5 2009-04-10 15:08:11 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -16,7 +16,7 @@
 		<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
-		<SCRIPT LANGUAGE="JavaScript" SRC="js/date-picker.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="js/date.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/CreateVM.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 		<%
@@ -245,9 +245,7 @@ function displayStatusMessage()
 					</td>
 					<td valign="top">
 						<input type="text" name="BeginDate" size="12" maxlength=10 value="<%=sBeginDate%>" onHelp="showHelp('html/Help_CreateVD.html#createVMForm_BeginDate',helpUrl); return false">
-						<a href="javascript:show_calendar('createVMForm.BeginDate', null, null, 'MM/DD/YYYY');">
-							<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
-						</a>
+							<img name="Calendar" src="images/calendarbutton.gif" alt="Calendar" onclick="calendar('BeginDate', event);">
 						<font size="2">
 							&nbsp;&nbsp;MM/DD/YYYY
 						</font>
@@ -270,9 +268,7 @@ function displayStatusMessage()
 					</td>
 					<td valign="top">
 						<input type="text" name="EndDate" size="12" maxlength=10 value="<%=sEndDate%>" onHelp="showHelp('html/Help_CreateVD.html#createVMForm_EndDate',helpUrl); return false">
-						<a href="javascript:show_calendar('createVMForm.EndDate', null, null, 'MM/DD/YYYY');">
-							<img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
-						</a>
+							<img name="Calendar" src="images/calendarbutton.gif" alt="Calendar" onclick="calendar('EndDate', event);">
 						<font size="2">
 							&nbsp;&nbsp;MM/DD/YYYY
 						</font>
