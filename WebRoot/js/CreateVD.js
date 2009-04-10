@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.10 2009-04-10 14:30:10 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.11 2009-04-10 14:48:01 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 var evsWindow = null;
@@ -148,13 +148,13 @@ function removeAllText(thisBlock)
   {
     for (var i = 0; iCount > i; i++)
     {
-      createVDForm.selVMConCode[i] = new Option("","");
-      createVDForm.selVMConName[i] = new Option("","");
-      createVDForm.selVMConDef[i] = new Option("","");
-      createVDForm.selVMConDefSource[i] = new Option("","");
-      createVDForm.selVMConOrigin[i] = new Option("","");
-      createVDForm.selVMParentCC[i] = new Option("","");
-      createVDForm.selVMParentName[i] = new Option("","");  
+      document.createVDForm.selVMConCode[i] = new Option("","");
+      document.createVDForm.selVMConName[i] = new Option("","");
+      document.createVDForm.selVMConDef[i] = new Option("","");
+      document.createVDForm.selVMConDefSource[i] = new Option("","");
+      document.createVDForm.selVMConOrigin[i] = new Option("","");
+      document.createVDForm.selVMParentCC[i] = new Option("","");
+      document.createVDForm.selVMParentName[i] = new Option("","");  
     }
   } 
   //adds new option for the hidden vm select fields from new window
@@ -162,8 +162,8 @@ function removeAllText(thisBlock)
   {
     for (var i = 0; rowArray.length > i; i++)
     {
-      createVDForm.hiddenSelRow[i] = new Option(rowArray[i],rowArray[i]);
-      createVDForm.hiddenSelRow[i].selected = true;
+      document.createVDForm.hiddenSelRow[i] = new Option(rowArray[i],rowArray[i]);
+      document.createVDForm.hiddenSelRow[i].selected = true;
 //alert("createvd AllocSel");
     }
   } 
