@@ -36,7 +36,7 @@ function calendar(input, evnt)
     var today = new Date();
     var fld = document.getElementsByName(input);
     if (fld !== null && fld[0].value !== null) {
-        var list = fld[0].value.split("/");
+        var list = fld[0].value.split(/[^0-9]/);
         if (list.length == 3) {
             today.setFullYear(list[2], Math.floor(list[0]) - 1, list[1]);
         }
@@ -56,6 +56,11 @@ function calSelect(cal, day)
     if (input.length > 0) {
         var mon = Math.floor(cal.getAttribute("calMon")) + 1;
         input[0].value = mon + "/" + day + "/" + cal.getAttribute("calYear");
+        
+        var fire = input[0].getAttribute("oncalendar");
+        if (fire) {
+            eval(fire.replace(/this[.]/, "input[0]."));
+        }
     }
     var div = document.getElementById(calDivID);
     div.style.display = "none";
