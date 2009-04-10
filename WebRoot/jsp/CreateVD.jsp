@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVD.jsp,v 1.12 2009-04-09 15:50:54 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVD.jsp,v 1.13 2009-04-10 14:30:24 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -643,13 +643,13 @@
 														<tr>
 															<td colspan="3">
 																&nbsp;&nbsp;
-																<a href="">
+																<a href="javascript:disabled();">
 																	<label id="RepQualID" for="selRepQualifier" title="" onclick="javascript:SearchBuildingBlocks('RepQualifier', 'true')"></label>
 																</a>
 															</td>
 															<td colspan="3">
 																&nbsp;&nbsp;
-																<a href="">
+																<a href="javascript:disabled();">
 																	<label id="RepTermID" for="selRepTerm" title="" onclick="javascript:SearchBuildingBlocks('RepTerm', 'true')"></label>
 																</a>
 															</td>
