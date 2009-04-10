@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.22 2009-04-02 21:59:55 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.23 2009-04-10 15:08:11 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -13,7 +13,6 @@
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
-		<SCRIPT LANGUAGE="JavaScript" SRC="js/date-picker.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/ValueMeaningEdit.js"></SCRIPT>
 		<%  
 			

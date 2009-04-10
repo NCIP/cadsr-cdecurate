@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.29 2009-04-08 21:01:26 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.30 2009-04-10 15:08:11 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -13,7 +13,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
-		<SCRIPT LANGUAGE="JavaScript" SRC="js/date-picker.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/PermissibleValues.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/VDPVS.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
