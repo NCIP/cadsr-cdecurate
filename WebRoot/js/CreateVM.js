@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVM.js,v 1.2 2008-03-13 18:03:05 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVM.js,v 1.3 2009-04-10 14:53:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 var evsWindow = null;
@@ -97,20 +97,10 @@ var evsWindow = null;
     var beginDate = document.createVMForm.BeginDate.value;
     var endDate = document.createVMForm.EndDate.value;
     return areDatesValid(beginDate, endDate, "EditVM");
-    
-   /* if(document.createVMForm.BeginDate.value != "")
-    {
-      var beginDate = document.createVMForm.BeginDate.value;
-      var endDate = document.createVMForm.EndDate.value;
-      var status = validateDate(beginDate, endDate); //validateDate is in date-picker.js
-      if (!status) return "invalid";
-    }
-    return "valid";	*/
 }
  
    function fillCDName()
   {
-  //  document.createVMForm.selConceptualDomainText.value = document.createVMForm.selConceptualDomain.options[document.createVMForm.selConceptualDomain.selectedIndex].text;
  }
 
 
@@ -126,7 +116,6 @@ var evsWindow = null;
   function Back()
   {
     hourglass();
-   // document.createVMForm.pageAction.value  = "backToPV";
     document.createVMForm.submit();
   }
 

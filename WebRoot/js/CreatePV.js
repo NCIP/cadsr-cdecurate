@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreatePV.js,v 1.1 2007-09-10 16:16:47 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreatePV.js,v 1.2 2009-04-10 14:53:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
  var searchWindow = null;
@@ -90,15 +90,6 @@
     var acAction = document.createPVForm.PVAction.value;
     if (acAction == "editPV" || acAction == "EditPV") acAction = "Edit";
     return areDatesValid(beginDate, endDate, acAction);
-    
-   /* if (document.createPVForm.BeginDate.value != "")
-    {
-      var beginDate = document.createPVForm.BeginDate.value
-      var endDate = document.createPVForm.EndDate.value
-      var status = validateDate(beginDate, endDate); //validateDate is in date-picker.js
-      if (!status) return "invalid";
-    }
-    return "valid";	*/
  }
 
 
