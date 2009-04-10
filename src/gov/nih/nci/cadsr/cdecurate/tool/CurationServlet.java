@@ -458,7 +458,7 @@ public class CurationServlet
                     }
                     if ("heartbeat".equals(reqType))
                     {
-                        doLogout(m_classReq, m_classRes);
+                        doLogout(m_classReq, m_classRes, false);
                         break;
                     }
                     if (reqType.equals("viewVMAction")){
@@ -500,7 +500,11 @@ public class CurationServlet
                         }
                         else if (reqType.equals("logout"))
                         {
-                            doLogout(m_classReq, m_classRes);
+                            doLogout(m_classReq, m_classRes, false);
+                        }
+                        else if (reqType.equals("logoutfull"))
+                        {
+                            doLogout(m_classReq, m_classRes, true);
                         }
                         else if (reqType.equals("searchEVS"))
                         {
@@ -634,293 +638,6 @@ public class CurationServlet
         }
     } // end of service
 
-    
-    /**
-     * The service method services all requests to this servlet.
-     *
-     */
-    public void serviceOLD()
-    {
-        UserBean ub = null;
-        HttpSession session;
-        session = m_classReq.getSession(true);
-        try
-        {
-        	// get the session data object from the session
-            sessionData = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
-            if (sessionData == null)
-                     	sessionData = new Session_Data();
-            else
-        	m_conn = connectDB();
-            String reqType = m_classReq.getParameter("reqType");
-            m_classReq.setAttribute("LatestReqType", reqType);
-            if (reqType != null)
-            {
-                while (true)
-                {
-                   // check the validity of the user login
-                    if (reqType.equals("login"))
-                    {
-                        DataManager.clearSessionAttributes(session);
-                        sessionData = new Session_Data();
-                         login(m_classReq,m_classRes,session);
-                         break;
-                    }
-                    if ("heartbeat".equals(reqType))
-                    {
-                        doLogout(m_classReq, m_classRes);
-                        break;
-                    }
-                    // do the requests
-                    ub = checkUserBean(m_classReq, m_classRes);
-                    if (ub != null)
-                    {
-/*                        if (reqType.equals("homePage"))
-                        {
-                            doHomePage(m_classReq, m_classRes);
-                        }
-                        else if (DERequestTypes.valueOf(reqType) != null)  
-                        {
-                           DE_Servlet deServ = new DE_Servlet(m_classReq, m_classRes); // doOpenCreateNewPages(m_classReq, m_classRes, "de");
-                           deServ.AC_Service(DERequestTypes.valueOf(reqType));
-                        }
-                        else if (reqType.equals("newDECFromMenu"))
-                        {
-                           // doOpenCreateNewPages(m_classReq, m_classRes, "dec");
-                        }
-                        else if (reqType.equals("newVDFromMenu"))
-                        {
-                           // doOpenCreateNewPages(m_classReq, m_classRes, "vd");
-                        }
-                        else if (reqType.equals("newDECfromForm")) // when DEC form is submitted
-                        {
-                            doCreateDECActions(m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("newVDfromForm")) // when Edit VD form is submitted
-                        {
-                            doCreateVDActions(m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("editDEC")) // when Edit DEC form is submitted
-                        {
-                            doEditDECActions(m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("editVD"))
-                        {
-                            doEditVDActions(m_classReq, m_classRes);
-                        }
-  else*/                if (reqType.equals("newPV")) // fromForm
-                        {
-                            doCreatePVActions(m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("pvEdits")) // fromForm
-                        {
-                            doEditPVActions(m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals(VMForm.ELM_FORM_REQ_DETAIL) || reqType.equals(VMForm.ELM_FORM_REQ_USED)
-                                        || reqType.equals(VMForm.ELM_FORM_REQ_VAL)) // fromForm
-                        {
-                            doEditVMActions(m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("createPV") || reqType.equals("editPV"))
-                        {
-                            doOpenCreatePVPage(m_classReq, m_classRes, reqType, "");
-                        }
-                   /*     else if (reqType.equals("createNewDEC"))
-                        {
-                            doOpenCreateDECPage(m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("createNewVD"))
-                        {
-                            doOpenCreateVDPage(m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("validateDECFromForm"))
-                        {
-                            doInsertDEC(m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("validateVDFromForm"))
-                        {
-                            doInsertVD(m_classReq, m_classRes);
-                        } */
-/*                        else if (reqType.equals("searchACs"))
-                        {
-                            doGetACSearchActions(m_classReq, m_classRes); // m_classReq for search parameters page
-                        }
-                        else if (reqType.equals("showResult"))
-                        {
-                            doSearchResultsAction(m_classReq, m_classRes, ub); // m_classReq from search results page
-                        }
-                        else if (reqType.equals("showBEDisplayResult"))
-                        {
-                            doDisplayWindowBEAction(m_classReq, m_classRes); // m_classReq from search results page showBEDisplayResult
-                        }
-                        else if (reqType.equals("showDECDetail"))
-                        {
-                            doDECDetailDisplay(m_classReq, m_classRes); // m_classReq from DECDetailsWindow page
-                        }
-                        else if (reqType.equals("doSortCDE"))
-                        {
-                            doSortACActions(m_classReq, m_classRes); // on sort by heading for search
-                        }
-                        else if (reqType.equals("doSortBlocks"))
-                        {
-                            doSortBlockActions(m_classReq, m_classRes, "Blocks"); // on sort by heading for search
-                        }
-                        else if (reqType.equals("doSortQualifiers"))
-                        {
-                            doSortBlockActions(m_classReq, m_classRes, "Qualifiers"); // on sort by heading for search
-                        }
-                        else if (reqType.equals("getSearchFilter"))
-                        {
-                            doOpenSearchPage(m_classReq, m_classRes); // on click on the search from menu
-                        }
-                        else if (reqType.equals("actionFromMenu"))
-                        {
-                            doMenuAction(m_classReq, m_classRes); // on click on the edit/create from menu
-                        }
-*/                        else if (reqType.equals("errorPageForward"))
-                        {
-                            doJspErrorAction(m_classReq, m_classRes); // on click on the edit/create from menu
-                        }
-                        else if (reqType.equals("logout"))
-                        {
-                            doLogout(m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("searchEVS"))
-                        {
-                            doSearchEVS(m_classReq, m_classRes);
-                        }
-/*                        else if (reqType.equals("searchBlocks"))
-                        {
-                            doBlockSearchActions(m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("searchQualifiers"))
-                        {
-                            doQualifierSearchActions(m_classReq, m_classRes);
-                        }
-                       // get more records of Doc Text
-                        else if (reqType.equals("getRefDocument"))
-                        {
-                            this.doRefDocSearchActions(m_classReq, m_classRes);
-                        }
-                        // get more records of alternate names
-                        else if (reqType.equals("getAltNames"))
-                        {
-                            this.doAltNameSearchActions(m_classReq, m_classRes);
-                        }
-                        // get more records of permissible values
-                        else if (reqType.equals("getPermValue"))
-                        {
-                            this.doPermValueSearchActions(m_classReq, m_classRes);
-                        }
-                        // get more records of protocol crf
-                        else if (reqType.equals("getProtoCRF"))
-                        {
-                            this.doProtoCRFSearchActions(m_classReq, m_classRes);
-                        }
-                        // get detailed records of concept class
-                        else if (reqType.equals("getConClassForAC"))
-                        {
-                            this.doConClassSearchActions(m_classReq, m_classRes);
-                        }
-                        // get cd details for vm
-                        else if (reqType.equals("showCDDetail"))
-                        {
-                            this.doConDomainSearchActions(m_classReq, m_classRes);
-                        }
- */                        
-                        else if (reqType.equals("treeSearch"))
-                        {
-                            this.doEVSSearchActions(reqType, m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("treeRefresh"))
-                        {
-                            this.doEVSSearchActions(reqType, m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("treeExpand"))
-                        {
-                            this.doEVSSearchActions(reqType, m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("treeCollapse"))
-                        {
-                           this.doEVSSearchActions(reqType, m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("getSubConcepts"))
-                        {
-                           this.doEVSSearchActions(reqType, m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("getSuperConcepts"))
-                        {
-                            this.doEVSSearchActions(reqType, m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("designateDE"))
-                        {
-                            new DesDEServlet(this, ub).doAction(m_classReq, m_classRes, "Edit");
-                        }
-                        else if (reqType.equals(AltNamesDefsServlet._reqType))
-                        {
-                            new AltNamesDefsServlet(this, ub).doAction(m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("RefDocumentUpload"))
-                        {
-                            this.doRefDocumentUpload(m_classReq, m_classRes, "Request");
-                        }
-                        else if (reqType.equals("nonEVSSearch"))
-                        {
-                            this.doNonEVSPageAction(m_classReq, m_classRes);
-                        }
-                        else if (reqType.equals("ACcontact"))
-                        {
-                            this.doContactEditActions(m_classReq, m_classRes);
-                        }
-                        break;
-                    }
-                    if (!reqType.equals("login"))
-                    {
-                        String errMsg = getDBConnectMessage("Session Terminated"); // "Please login again. Your session has
-                                                                                    // been terminated. Possible reasons
-                                                                                    // could be a session timeout or an
-                                                                                    // internal processing error.";
-                        DataManager.setAttribute(session, "ErrorMessage", errMsg);
-                        // get the menu action from request
-                        String mnReq = (String) m_classReq.getParameter("serMenuAct");
-                        if (mnReq == null)
-                            mnReq = "";
-                        DataManager.setAttribute(session, "serMenuAct", mnReq);
-                        // forward the error page
-                        ForwardErrorJSP(m_classReq, m_classRes, errMsg);
-                        break;
-                    }
-                    break;
-                }
-            }
-            else
-            {
-                this.logger.error("Service: no DB Connection");
-                ErrorLogin(m_classReq, m_classRes);
-            }
-            m_conn = SQLHelper.closeConnection(m_conn);
-        }
-        catch (Exception e)
-        {
-            logger.error("Service error : " + e.toString(), e);
-            session = m_classReq.getSession();
-            String msg = e.toString();
-            try
-            {
-                if (msg != null)
-                    ForwardErrorJSP(m_classReq, m_classRes, msg);
-                else
-                    ForwardErrorJSP(m_classReq, m_classRes, "A page error has occurred. Please login again.");
-            }
-            catch (Exception ee)
-            {
-                logger.error("Service forward error : " + ee.toString(), ee);
-            }
-
-        }finally{
-            m_conn = SQLHelper.closeConnection(m_conn);
-        }
-    } // end of service
 
     /**
      * The checkUserBean method gets the session then checks whether a Userbean exits. Called from 'service' method.
@@ -3894,10 +3611,12 @@ public class CurationServlet
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
+     * @param flag
+     *            true resets back to an empty home page, false retains search results
      *
      * @throws Exception
      */
-    private void doLogout(HttpServletRequest req, HttpServletResponse res) throws Exception
+    private void doLogout(HttpServletRequest req, HttpServletResponse res, boolean flag) throws Exception
     {
         try
         {
@@ -3907,7 +3626,16 @@ public class CurationServlet
           	sessionData.UsrBean = null;
           	session.setAttribute("vWriteContextDE", null);
           	String prevReq = m_classReq.getParameter("previousReqType");
-            if (prevReq == null) prevReq = "/SearchResultsPage.jsp";
+          	if (flag)
+          	{
+                RequestDispatcher rd = this.m_servletContext.getRequestDispatcher("/NCICurationServlet?reqType=homePage");
+                rd.forward(req, res);
+                return;
+          	}
+            if (prevReq == null)
+            {
+                prevReq = "/SearchResultsPage.jsp";
+            }
             ForwardJSP(m_classReq, m_classRes, prevReq);
         }
         catch (Exception e)
