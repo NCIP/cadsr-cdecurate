@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningUsed.jsp,v 1.8 2009-04-10 15:08:11 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningUsed.jsp,v 1.9 2009-04-10 15:40:33 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -85,7 +85,7 @@
 	   <% if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
 		 </br></br><b><font  size="3">Not Authorized for Edits in this Context.</font></b></br></br>
 	    <%}%>
-		<table id="startTop" width="99%" border=1>
+		<a name="startTop"></a><table width="99%" border=1>
 		  <%if (!isView){%>		
 			<tr>
 			 	<td>
@@ -117,7 +117,7 @@
 							<div class="ind2">
 								All associated items are displayed by default. Click the "Show Released Only" button to display items with a Workflow Status of RELEASED only.
 							</div>
-							<hr id="<%=VMForm.ELM_CRF_NAME%>" width="100%">
+							<hr width="100%"><a name="<%=VMForm.ELM_CRF_NAME%>"></a>
 							<br>
 							<!--Forms/Templates-->
 							<div class="ind2" style="display:inline; width: 4in">  <!--  width:49%;"> -->
@@ -240,7 +240,7 @@
 								</div>
 							<% } %>
 							<br clear="all">
-							<hr id="<%=VMForm.ELM_VD_NAME%>" width="100%">
+							<hr width="100%"><a name="<%=VMForm.ELM_VD_NAME%>"></a>
 							<div align="right">
 								 <a href="javascript:setFocusTo('startTop');"><img src="images/returntotop.gif" border="0" alt="Return to Top"> Return to Top</a>
 							</div>
@@ -337,7 +337,7 @@
 								</div>
 							<% } %>
 							<br clear="all">
-							<hr id="<%=VMForm.ELM_DE_NAME%>" width="100%">
+							<hr width="100%"><a name="<%=VMForm.ELM_DE_NAME%>"></a>
 							<div align="right">
 								 <a href="javascript:setFocusTo('startTop');"><img src="images/returntotop.gif" border="0" alt="Return to Top"> Return to Top</a>
 							</div>
