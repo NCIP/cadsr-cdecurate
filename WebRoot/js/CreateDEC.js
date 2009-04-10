@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDEC.js,v 1.7 2009-04-09 22:16:25 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDEC.js,v 1.8 2009-04-10 14:30:10 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 var searchWindow = null;
@@ -614,5 +614,7 @@ function Back()
   }
 }
 
-
+function disabled(){
+		return;
+ }
 

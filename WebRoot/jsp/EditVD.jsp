@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.31 2009-04-09 21:19:53 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.32 2009-04-10 14:30:24 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -535,9 +535,7 @@ function setup()
 	
     var selDType = document.createVDForm.tfLowValue.value;
 }
-function disabled(){
-		return;
-}
+
 function openEVSConceptsWindow(){
   var conceptUrl = "<%=evsConceptUrl%>";
   var vocab = RepQual.innerText;

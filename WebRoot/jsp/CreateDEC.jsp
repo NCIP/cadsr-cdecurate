@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDEC.jsp,v 1.9 2009-04-09 15:50:54 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDEC.jsp,v 1.10 2009-04-10 14:30:24 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -183,7 +183,7 @@
    var selCSIArray = new Array();  //for selected cs list
    var selACCSIArray = new Array();  //for selected AC-csi list
    var writeContArray = new Array();
-
+  
    function loadCSCSI()
    {
 <%
@@ -535,13 +535,13 @@
 										<tr>
 											<td colspan="3">
 												&nbsp;&nbsp;
-												<a href="">
+												<a href="javascript:disabled();">
 													<label id="ObjQualID" for="selObjectQualifier" title="" onclick="javascript:SearchBuildingBlocks('ObjectQualifier', 'true')"></label>
 												</a>
 											</td>
 											<td colspan="3">
 												&nbsp;&nbsp;
-												<a href="">
+												<a href="javascript:disabled();">
 													<label id="ObjClassID" for="selObjectClass" title="" onclick="javascript:SearchBuildingBlocks('ObjectClass', 'true')"></label>
 												</a>
 											</td>
@@ -657,13 +657,13 @@
 										<tr>
 											<td colspan="3">
 												&nbsp;&nbsp;
-												<a href="">
+												<a href="javascript:disabled();">
 													<label id="PropQualID" for="selPropertyQualifier" title="" onclick="javascript:SearchBuildingBlocks('PropertyQualifier', 'true')"></label>
 												</a>
 											</td>
 											<td colspan="3">
 												&nbsp;&nbsp;
-												<a href="">
+												<a href="javascript:disabled();">
 													<label id="PropClassID" for="selPropertyClass" title="" onclick="javascript:SearchBuildingBlocks('PropertyClass', 'true')"></label>
 												</a>
 											</td>
