@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.9 2009-02-25 19:51:41 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.10 2009-04-10 14:11:16 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -27,8 +27,10 @@ var sentinelWindow = null;
    }
    function logout()
    {
-      if(confirm("Are you sure you want to logout and close the window?"))
-        NoConfirm();
+      if(confirm("Are you sure you want to logout?")) {
+        document.LogoutForm.action = document.LogoutForm.action.replace(/logout/, "logoutfull");
+        document.LogoutForm.submit();
+      }
    }
    function callTimeout()
    {
