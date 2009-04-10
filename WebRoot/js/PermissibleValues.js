@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.16 2009-04-09 22:10:01 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.17 2009-04-10 15:53:23 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -373,14 +373,14 @@
     //set or get the editing pv indicator            
 	function getORsetEdited(pvNo, field)
 	{
-		var pvIndHidden = document.getElementById("editPVInd");
-		if (pvIndHidden != null)
+		var pvIndHidden = document.getElementsByName("editPVInd");
+		if (pvIndHidden[0] != null)
 		{
 			if (pvNo == "none")
-				return pvIndHidden.value;
+				return pvIndHidden[0].value;
 			else
 			{
-				pvIndHidden.value = pvNo;
+				pvIndHidden[0].value = pvNo;
 				if ((field == "vm" || field == "vmd") && document.getElementById("txt" + pvNo + "Mean") != null)
 					document.getElementById("currentVM").value = document.getElementById("txt" + pvNo + "Mean").value;
 			}
@@ -961,10 +961,11 @@
   {
   	if (rowArray != null)
   	{
+	    var hiddenSelRow = document.getElementsByName("hiddenSelRow");
 	    for (var i = 0; rowArray.length > i; i++)
 	    {
-	      document.getElementById("hiddenSelRow")[i] = new Option(rowArray[i],rowArray[i]);
-	      document.getElementById("hiddenSelRow")[i].selected = true;
+	      hiddenSelRow[0][i] = new Option(rowArray[i],rowArray[i]);
+	      hiddenSelRow[0][i].selected = true;
 	    }
     }
   } 
