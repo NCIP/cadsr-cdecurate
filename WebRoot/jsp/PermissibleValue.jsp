@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.31 2009-04-10 17:01:25 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.32 2009-04-10 20:55:01 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -15,6 +15,7 @@
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/PermissibleValues.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/VDPVS.js"></SCRIPT>
+        <SCRIPT LANGUAGE="JavaScript" SRC="js/date.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 		<%  
       String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
@@ -146,6 +147,13 @@
 //System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus " + elmFocus);		
 		%>
 		<Script Language="JavaScript">
+        function calendarSetup(eid, evnt)
+        {
+            selectDate(eid,'pvNew');
+            document.PVForm.hideDatePick.value = document.getElementById(eid).innerHTML;
+            calendar('hideDatePick', evnt);
+        }
+        
         function checkNameLen(cobj, mlen)
         {
             if (cobj.value.length > mlen)
@@ -798,11 +806,11 @@
 															<%=newPVorg%>
 														</a>
 													</td>
-													<td id="newBD" valign="top">
-														<a href="javascript:selectDate('newBD','pvNew');javascript:show_calendar('PVForm', null, null, 'MM/DD/YYYY');"><%=newPV.getPV_BEGIN_DATE()%></a>
+													<td valign="top">
+														<span id="newBD"><%=newPV.getPV_BEGIN_DATE()%></span><br><img src="../../cdecurate/images/calendarbutton.gif" onclick="calendarSetup('newBD', event);">
 													</td>
-													<td id="newED" valign="top">
-														<a href="javascript:selectDate('newED','pvNew');javascript:show_calendar('PVForm', null, null, 'MM/DD/YYYY');"><%=newPVed%></a>
+													<td valign="top">
+														<span id="newED"><%=newPVed%></span><br><img src="../../cdecurate/images/calendarbutton.gif" onclick="calendarSetup('newED', event);">
 													</td>
 												</tr>
 											</table>
@@ -955,14 +963,12 @@
 																</a>
 															</td>
 															<td align="center">
-																<a <%if (vVDPVList != null && vVDPVList.size() > 1){%> href="javascript:selectDate('allBeginDate', 'all');" <%}%>>
-																	<img src="images/block_edit.gif" border="0" alt="Change All Begin Date">
-																</a>
+															    <img src="images/block_edit.gif" border="0" alt="Change All Begin Date"
+                                                                <%if (vVDPVList != null && vVDPVList.size() > 1){%>onclick="selectDate('allBeginDate', 'all');calendar('hideDatePick', event);"<%}%> >
 															</td>
 															<td align="center">
-																<a <%if (vVDPVList != null && vVDPVList.size() > 1){%> href="javascript:selectDate('allEndDate', 'all');" <%}%>>
-																	<img src="images/block_edit.gif" border="0" alt="Change All End Date">
-																</a>
+																<img src="images/block_edit.gif" border="0" alt="Change All End Date"
+                                                                <%if (vVDPVList != null && vVDPVList.size() > 1){%>onclick="selectDate('allEndDate', 'all');calendar('hideDatePick', event);"<%}%> >
 															</td>
 														  <%}%>	
 														</tr>
@@ -1454,6 +1460,7 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 							</table>
 						</div>
 						<div style="display:none;">
+                            <input type="hidden" name="hideDatePick" oncalendar="appendDate(this.value);">
 							<input type="hidden" name="pageAction" value="nothing">
 							<input type="hidden" name="editPVInd" value="<%=sEditPV%>">
 							<!-- keep this if there was error -->
@@ -1574,12 +1581,12 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 <script language="javascript">
 //put the pv in edit mode after cancel the duplicate to make sure that user completes the action
 <% if (pgAction.equals("restore") || pgAction.equals("openNewPV")) { %>
+    var objs = document.getElementsByName("editPVInd");
 	<% if (!sEditPV.equals("") && !sEditPV.equals("pvNew")) { %>
-	    var editPVInd = document.getElementsByName("editPVInd");
-		editPVInd[0].value = "";
+		objs[0].value = "";
 		view(<%=sEditPV%>View, <%=sEditPV%>ImgEdit, <%=sEditPV%>ImgSave, 'edit', '<%=sEditPV%>');
 	<% } %>
-	editPVInd[0].value = "<%=sEditPV%>";
+	objs[0].value = "<%=sEditPV%>";
 <% } %>
 </script>
 	</body>

@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.17 2009-04-10 15:53:23 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.18 2009-04-10 20:54:44 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -42,8 +42,8 @@
 	//submit the page
 	function SubmitValidate(sAction)
 	{
-		var actObject = document.getElementsByName("pageAction");
-		if ( actObject[0] == null)
+		var actObject = document.PVForm.pageAction;
+		if ( actObject == null)
 			alert("what is the object");
 		else
 		{
@@ -54,7 +54,7 @@
 	  				return;
   			}
 			//continue with submission	
-			actObject[0].value = sAction;
+			actObject.value = sAction;
 			beforeRefresh(sAction);
 			if (secondWindow && !secondWindow.closed)
 	            secondWindow.close();
@@ -77,12 +77,12 @@
 	
 	function reSubmitValidate(sAction)
 	{
-		var actObject = document.getElementsByName("pageAction");
-		if ( actObject[0] == null)
+		var actObject = document.PVForm.pageAction;
+		if ( actObject == null)
 			alert("what is the object");
 		else
 		{
-			actObject[0].value = sAction;
+			actObject.value = sAction;
 	    	disableHyperlink(sAction);
 			DisableButtons();
 			document.PVForm.submit(); 
@@ -91,10 +91,10 @@
 	
 	function disableHyperlink(action)
 	{
-	  var pvObj = document.getElementsByName("editPVInd");
-	  if (pvObj[0] != null)
+	  var pvObj = document.PVForm.editPVInd;
+	  if (pvObj != null)
 	  {
-	  	var pvNo = pvObj[0].value;
+	  	var pvNo = pvObj.value;
 		var hlObj = document.getElementsByName(pvNo + "ImgSaveLink");
 		if (hlObj[0] != null)
 		{
@@ -117,8 +117,8 @@
 		  if (action == "save")
 		  {
 		  	//check current vm has the data
-		   	var curVM = document.getElementsByName("currentVM");
-		  	if (curVM[0] == null || curVM[0].value == null || curVM[0].value == "")
+		   	var curVM = document.PVForm.currentVM;
+		  	if (curVM == null || curVM.value == null || curVM.value == "")
 		  		editedPV = getORsetEdited(editedPV, "vm");
 		  	SubmitValidate("save");
 		  	return false;
@@ -160,8 +160,7 @@
 		   		itmAct += pvNo;
 		   		pvNo = "";
 		   }
-		   var editPVInd = document.getElementsByName("editPVInd");
-		   editPVInd[0].value = pvNo;		   
+		   document.PVForm.editPVInd.value = pvNo;		   
 
 		   //submit the form
 		   SubmitValidate(itmAct);   
@@ -173,9 +172,9 @@
     {	
     	if (pvNo == "pvNew")
     	{
-    		var vmEDiv = document.getElementsByName("pvNewVMLblEdit");
-    		if (vmEDiv[0] != null && vmEDiv[0].style.display == "inline")
-    			vmEDiv[0].style.display = "none";
+    		var vmEDiv = document.PVForm.pvNewVMLblEdit;
+    		if (vmEDiv != null && vmEDiv.style.display == "inline")
+    			vmEDiv.style.display = "none";
     	//	var vmVDiv = document.getElementById("pvNewVMLblView");
     	//	if (vmVDiv != null && vmVDiv.style.display == "none")
     	//		vmVDiv.style.display = "block";    		
@@ -183,9 +182,9 @@
     }
     function CancelNewPV()
     {
-		var vmNewDiv = document.getElementsByName("divpvnew");
-		if (vmNewDiv[0] != null)
-			vmNewDiv[0].style.display = "none";
+		var vmNewDiv = document.PVForm.divpvnew;
+		if (vmNewDiv != null)
+			vmNewDiv.style.display = "none";
 		SubmitValidate("cancelNewPV");		
     }
     
@@ -198,15 +197,14 @@
     	var vmDiv = document.getElementById("pvNewVMEdit");
     	if (vmDiv != null && vmDiv.style.display == "block")
     	{
-	    	txtVM = document.getElementById("pvNewVM").value;
+	    	txtVM = document.PVForm.pvNewVM.value;
     	}
     	//may be using concepts
     	if (txtVM == null || txtVM == "")
     	{
     		vmDiv = document.getElementById("pvNewVMView");
     		if (vmDiv != null){
-    			txtVM = vmDiv.innerText;
-    			txtVM = vmDiv.textContent;
+    			txtVM = (vmDiv.innerText) ? vmDiv.innerText : vmDiv.textContent;
     	    }		
     	}
     	if (txtVM == null || txtVM == "")
@@ -216,18 +214,18 @@
     	var vmdDiv = document.getElementById("pvNewVMDEdit");
     	if (vmdDiv != null && vmdDiv.style.display == "block")
     	{
-	    	var txtVMD = document.getElementById("pvNewVMD").value;
+	    	var txtVMD = document.PVForm.pvNewVMD.value;
 	    	if (txtVMD == null || txtVMD == "")
 	    		alertMsg += "Please enter the text for Value Meaning Description. \n";
     	}
     	//get vm pv if not exists
-    	var txtPV = document.getElementById("pvNewValue").value;
+    	var txtPV = document.PVForm.pvNewValue.value;
     	if ((txtPV == null || txtPV == "") && alertMsg == "")
     	{
 			if (txtVM != "")
 			{
 				txtVM = txtVM.replace(/\r\n/g, " "); 
-				document.getElementById("pvNewValue").value = txtVM;
+				document.PVForm.pvNewValue.value = txtVM;
 				txtPV = txtVM;
 			}
     	}
@@ -373,16 +371,18 @@
     //set or get the editing pv indicator            
 	function getORsetEdited(pvNo, field)
 	{
-		var pvIndHidden = document.getElementsByName("editPVInd");
-		if (pvIndHidden[0] != null)
+		var pvIndHidden = document.PVForm.editPVInd;
+		if (pvIndHidden != null)
 		{
 			if (pvNo == "none")
-				return pvIndHidden[0].value;
+				return pvIndHidden.value;
 			else
 			{
-				pvIndHidden[0].value = pvNo;
-				if ((field == "vm" || field == "vmd") && document.getElementById("txt" + pvNo + "Mean") != null)
-					document.getElementById("currentVM").value = document.getElementById("txt" + pvNo + "Mean").value;
+				pvIndHidden.value = pvNo;
+                var obj = document.getElementsByName("txt" + pvNo + "Mean");
+                var txtMean = obj[0];
+				if ((field == "vm" || field == "vmd") && txtMean != null)
+					document.PVForm.currentVM.value = txtMean.value;
 			}
 		}
 	}
@@ -555,11 +555,11 @@
 		    	var linkNode = document.createElement("a");
 		    	var linkText = "";
 		    	if (elmObjName.match("Org") != null)
-		    		linkText = "javascript:selectOrigin('" + elmObjName + "','" + curPV + "');";		//"javascript:selectOrigin('pv1Org','pv1');"
-		    	else if ((elmObjName.match("ED") != null) || (elmObjName.match("BD") != null))			//"javascript:selectDate('pv1ED','pv1');javascript:show_calendar('PVForm', null, null, 'MM/DD/YYYY');"
-		    		linkText = "javascript:selectDate('" + elmObjName + "','" + curPV + "');";
+		    		linkText = "javascript:selectOrigin('" + elmObjName + "','" + curPV + "');";
+		    	else if ((elmObjName.match("ED") != null) || (elmObjName.match("BD") != null))
+		    		linkText = "javascript:selectDate('" + elmObjName + "','" + curPV + "');javascript:calendar('hideDatePick', event);";
 		    	else if (elmObjName.match("Con") != null)
-		    		linkText = "javascript:selectConcept('" + elmObjName + "','" + curPV + "');";		//"javascript:selectConcept('pv1Con','pv1');"
+		    		linkText = "javascript:selectConcept('" + elmObjName + "','" + curPV + "');";
 		    	
 		    	linkNode.setAttribute("href", linkText);
 		    	linkNode.appendChild(textNode);
@@ -762,7 +762,7 @@
 
   function selectParent()
   {
-  	var parObj = document.getElementById("listParentConcept");
+  	var parObj = document.PVForm.listParentConcept;
 	if (parObj != null)
 	{
 	  var sInd = parObj.selectedIndex;
@@ -778,12 +778,12 @@
       		serpvObj.style.display = "none";
       		
         //handle non evs parent or non enumerated parent
-        var parType = parObj[sInd].value;
-        var vdObj = document.getElementById("listVDType");
+        var parType = parObj.options[sInd].value;
+        var vdObj = document.PVForm.listVDType;
         var vdType = vdObj.value;
-        var selValObj = document.getElementById("btnSelectValues");
+        var selValObj = document.PVForm.btnSelectValues;
         selValObj.disabled = false;
-        var rmParObj = document.getElementById("btnRemoveConcept");
+        var rmParObj = document.PVForm.btnRemoveConcept;
         rmParObj.disabled = false;
         if ((parType != null && parType == "Non_EVS") || (vdType != null && vdType == "N"))
         {
@@ -806,13 +806,13 @@
 	  if (!validatePVAction('selectValues'))  //check if any pv is in edit mode
 	  	return;  
 	  //continue  	
-  	  var parObj = document.getElementById("listParentConcept");
+  	  var parObj = document.PVForm.listParentConcept;
 	  if (parObj != null)
 	  {
 	      var sInd = parObj.selectedIndex;
 	      //store the concept information in hidden selected fields
 	      storeConceptInfo(sInd);  //call the function	      
-	      var parType = parObj[sInd].value;
+	      var parType = parObj.options[sInd].value;
 	      document.SearchActionForm.isValidSearch.value = "false";   //reset it to false
 	      //non evs parent is to only view
 	      if (parType != null && parType == "Non_EVS")
@@ -823,7 +823,7 @@
 	      }
 	      else
 	      {
-	        document.getElementById("actSelect").value = "OpenTreeToParentConcept";
+	        document.PVForm.actSelect.value = "OpenTreeToParentConcept";
 			openConceptSearchWindow("ParentConceptVM", "true",vocab);
 	      }
       }
@@ -836,7 +836,7 @@
 	  if (!validatePVAction('removeParent'))  //check if any pv is in edit mode
 	  	return;  
 	  //continue  	
-  	  var parObj = document.getElementById("listParentConcept");
+  	  var parObj = document.PVForm.listParentConcept;
 	  if (parObj != null)
 	  {
 	    var sInd = parObj.selectedIndex;
@@ -844,8 +844,8 @@
 	    {
 	      //make a msg string according to evs or non evs parent 
 	      var parString = parObj[sInd].text;
-	      var parType = parObj[sInd].value;
-          var vdObj = document.getElementById("listVDType");
+	      var parType = parObj.options[sInd].value;
+          var vdObj = document.PVForm.listVDType;
 	      var vdType = vdObj.value;
 	      var sAct = "removeParent";  //default to remove parent
 	      var strMsg = "Removing Referenced Parent \n  " + parString;
@@ -874,25 +874,25 @@
   
   function storeConceptInfo(sInd)
   {
-	  var sParentCode = document.getElementById("ParentCodes").options[sInd].value;
-	  var sParentName = document.getElementById("ParentNames").options[sInd].text;
-	  var sParentDB = document.getElementById("ParentDB").options[sInd].text; 
-	  var sParentMetaSource = document.getElementById("listParentConcept").options[sInd].text;
-	  document.getElementById("selectedParentConceptCode").value = sParentCode;
-	  document.getElementById("selectedParentConceptName").value = sParentName;
-	  document.getElementById("selectedParentConceptDB").value = sParentDB;
-	  document.getElementById("selectedParentConceptMetaSource").value = sParentMetaSource;
+	  var sParentCode = document.PVForm.ParentCodes.options[sInd].value;
+	  var sParentName = document.PVForm.ParentNames.options[sInd].text;
+	  var sParentDB = document.PVForm.ParentDB.options[sInd].text; 
+	  var sParentMetaSource = document.PVForm.listParentConcept.options[sInd].text;
+	  document.PVForm.selectedParentConceptCode.value = sParentCode;
+	  document.PVForm.selectedParentConceptName.value = sParentName;
+	  document.PVForm.selectedParentConceptDB.value = sParentDB;
+	  document.PVForm.selectedParentConceptMetaSource.value = sParentMetaSource;
   }
 
   function createParent(vocab)
   {
 	  if (!validatePVAction('createParent'))  //check if any pv is in edit mode
 	  	return; 
-	  var pvViewTypes = document.getElementsByName("PVViewTypes");	
-	  var listPConcept = document.getElementsByName("listParentConcept"); 
+	  var pvViewTypes = document.PVForm.PVViewTypes;	
+	  var listPConcept = document.PVForm.listParentConcept; 
       //do not allow to create parent if pvs exist without parents
-      var pvCount = pvViewTypes[0].length;
-      var parCount = listPConcept[0].length;
+      var pvCount = pvViewTypes.length;
+      var parCount = listPConcept.length;
       if (pvCount >0 && parCount < 1)
       {
         alert("Please remove existing Permissible Values before selecting parents to constrain the values");
@@ -909,8 +909,8 @@
 	  if (!validatePVAction('createMultipleValues'))  //check if any pv is in edit mode
 	  	return;  
 	  //continue  	
-  	  var vdtypeObj = document.getElementsByName("listVDType");
-      if (vdtypeObj[0].value == "E")
+  	  var vdtypeObj = document.PVForm.listVDType;
+      if (vdtypeObj.value == "E")
       {
           openConceptSearchWindow("EVSValueMeaning", "term", vocab);
       }
@@ -921,8 +921,7 @@
   function openConceptSearchWindow(serComp, treeOpen, vocab)
   {
 	  document.SearchActionForm.searchComp.value = serComp;
-	  var openToTree =  document.getElementsByName("openToTree")
-	  openToTree[0].value = treeOpen;
+	  document.PVForm.openToTree.value = treeOpen;
 	  document.SearchActionForm.isValidSearch.value = "false";
 	  if (secondWindow && !secondWindow.closed)
 	    secondWindow.close()
@@ -939,11 +938,10 @@
     //sort the pv attributes
   function sortPV(fieldName)
   {
-    var pvViewTypes = document.getElementsByName("PVViewTypes")
-    if (pvViewTypes[0].length > 0)
+    var pvViewTypes = document.PVForm.PVViewTypes;
+    if (pvViewTypes.length > 0)
     {
-      var pvSortColumn = document.getElementsByName("pvSortColumn")
-      pvSortColumn[0].value = fieldName;
+      document.PVForm.pvSortColumn.value = fieldName;
       SubmitValidate("sortPV");
     }
   }
@@ -961,11 +959,10 @@
   {
   	if (rowArray != null)
   	{
-	    var hiddenSelRow = document.getElementsByName("hiddenSelRow");
 	    for (var i = 0; rowArray.length > i; i++)
 	    {
-	      hiddenSelRow[0][i] = new Option(rowArray[i],rowArray[i]);
-	      hiddenSelRow[0][i].selected = true;
+	      document.getElementById("hiddenSelRow")[i] = new Option(rowArray[i],rowArray[i]);
+	      document.getElementById("hiddenSelRow")[i].selected = true;
 	    }
     }
   } 
@@ -978,18 +975,12 @@
 	  	{
 		  if (!validatePVAction('allOrigin'))  //check if any pv is in edit mode
 		  	return;  
-		  /*	var editElm = document.getElementById("editPVInd").value
-		  	if (editElm != null && editElm != "")
-		  	{
-		  		alert("One of the Permissible Values is changed. Do save the changes before block editing.");
-		  		return;
-		  	} */
 	  	}
-	  	var curInd = document.getElementById("currentElmID");
+	  	var curInd = document.PVForm.currentElmID;
 	  	if (curInd != null)
 	  	{
 	  		curInd.value = curElm;
-	  		document.getElementById("currentPVInd").value = curPV;
+	  		document.PVForm.currentPVInd.value = curPV;
 		  	if (secondWindow && !secondWindow.closed)
 		    	secondWindow.close()
 		  	secondWindow = window.open("jsp/ACOrigin.jsp", "SelectOrigin", "width=750,height=700,top=0,left=0,resizable=yes,scrollbars=yes")	  		
@@ -1004,21 +995,13 @@
 	  	{
 		  if (!validatePVAction('allDate'))  //check if any pv is in edit mode
 		  	return;  
-		  /*	var editElm = document.getElementById("editPVInd").value
-		  	if (editElm != null && editElm != "")
-		  	{
-		  		alert("One of the Permissible Values is changed. Do save the changes before block editing.");
-		  		return;
-		  	} */
 	  	}
-	  	var curInd = document.getElementById("currentElmID");
-	  	if (curInd != null)
+	  	var curInd = document.PVForm.currentElmID;
+	  	if (curInd !== null)
 	  	{
-	  		curInd.value = curElm;  		
-	  		document.getElementById("currentPVInd").value = curPV;
+	  		curInd.value = curElm;
+            document.PVForm.currentPVInd.value = curPV;
 	  	}
-	  	//call javascript to show calender
-	  	show_calendar('PVForm', null, null, 'MM/DD/YYYY');
     }
   
   	//append the selected date to the respective table data and hidden fields
@@ -1026,8 +1009,8 @@
 	{
 		var success = false;
 		var curelm;
-		var curelmInd = document.getElementById("currentElmID");
-		if (curelmInd != null)
+		var curelmInd = document.PVForm.currentElmID;
+		if (curelmInd !== null)
 		{
 			curelm = curelmInd.value;
 			if (curelm != null && curelm != "")
@@ -1039,16 +1022,19 @@
 				}
 				else
 				{
-					var curPV = document.getElementById("currentPVInd");
-					changeElementText(curPV, curelm, false, sDate, "replace");
+					var curPV = document.PVForm.currentPVInd;
+					document.getElementById(curelm).innerHTML = sDate; // changeElementText(curPV, curelm, false, sDate, "replace");
 					success = true;
 					//udate the hidden fields
-					if (curPV != null && curPV.value != null)
-						document.getElementById("editPVInd").value = curPV.value;
-					if (curelm.match("ED") != null)
-						document.getElementById("currentED").value = sDate;
-					if (curelm.match("BD") != null)
-						document.getElementById("currentBD").value = sDate;
+					if (curPV !== null && curPV.value != null) {
+                        document.PVForm.editPVInd.value = curPV.value;
+                    }
+					if (curelm.match("ED") != null) {
+                        document.PVForm.currentED.value = sDate;
+                    }
+					if (curelm.match("BD") != null) {
+                        document.PVForm.currentBD.value = sDate;
+                    }
 				}
 			}
 		}
@@ -1061,11 +1047,11 @@
     {
    // alert(fType + fData);
     	if (fType == "allOrigin")
-			document.getElementById("currentOrg").value = fData;
+			document.PVForm.currentOrg.value = fData;
 		else if (fType == "allBeginDate")
-			document.getElementById("currentBD").value = fData;
+			document.PVForm.currentBD.value = fData;
 		else if (fType == "allEndDate")
-			document.getElementById("currentED").value = fData;
+			document.PVForm.currentED.value = fData;
     	SubmitValidate('changeAll');
     }
     
@@ -1073,11 +1059,11 @@
 	//to add concepts to the vm, store the editing element and pv number in the hidden field
   function selectConcept(curElm, curPV,vocab)
   {
-  	var curInd = document.getElementById("currentElmID");
+  	var curInd = document.PVForm.currentElmID;
   	if (curInd != null)
   	{
   		curInd.value = curElm;
-  		document.getElementById("currentPVInd").value = curPV;
+  		document.PVForm.currentPVInd.value = curPV;
         openConceptSearchWindow("VMConcept", "term",vocab);
   	}
   }
@@ -1085,12 +1071,12 @@
   	//add a row to append the selected concept to teh vm
   	function appendConcept(txName, txId, txVocab, vmName, vmDesc)
 	{
-		var curPV = document.getElementById("currentPVInd");
+		var curPV = document.PVForm.currentPVInd;
 		if (curPV != null && curPV.value != null)
 		{
 			changeConceptText(curPV.value, txName, txId, txVocab, vmDesc);
 			//update the hidden fields
-			document.getElementById("editPVInd").value = curPV.value;
+			document.PVForm.editPVInd.value = curPV.value;
 			//update vm name and description
 			appendVMNameDesc(curPV.value, vmName, vmDesc)
 		}
@@ -1217,13 +1203,26 @@
   		for (var i =0; i<tblLen; i++)
   		{
   			var nameCell = curTbl.rows(i).cells(1);
-  			if (appName != "") appName += " ";
-  			if (nameCell != null && nameCell.innerText != null && nameCell.innerText != "")
-  				appName += nameCell.innerText;
+  			if (appName != "") {
+                appName += " ";
+            }
+            if (nameCell !== null) {
+                var nameCellT = (nameCell.innerText) ? nameCell.innerText : nameCell.textContent;
+                if (nameCellT !== null && nameCellT !== "") {
+                    appName += nameCellT;
+                }
+            }
+
   			var descCell = curTbl.rows(i).cells(5);
-  			if (appDesc != "") appDesc += ": ";
-  			if (descCell != null && descCell.innerText != null && descCell.innerText != "")
-  				appDesc += descCell.innerText;
+  			if (appDesc != "") {
+                appDesc += ": ";
+            }
+  			if (descCell != null) {
+                var descCellT = (descCell.innerText) ? descCell.innerText : descCell.textContent;
+                if (descCellT != null && descCellT != "") {
+  				    appDesc += descCellT;
+                }
+            }
   		}
   		
   		var vm = document.getElementById(pvInd + "VMView");
@@ -1236,7 +1235,7 @@
   		}
   		vm.innerText = appName;  // vmName;
   		vm.textContent = appName; 
-  		document.getElementById("currentVM").value = appName;
+  		document.PVForm.currentVM.value = appName;
   		
   		//get the vm description object
   		var vmd = document.getElementById(pvInd + "VMDView");
@@ -1268,8 +1267,7 @@
   		}
   		var vmTE = document.getElementById("txt" +pvInd + "Mean");  		
   		if (vmTE != null)
-  			document.getElementById("currentVM").value = vmTE.value;
-  	//	vm.innerText = "";  // vmName;
+  			document.PVForm.currentVM.value = vmTE.value;
   		
   		//get the vm description object
   		var vmd = document.getElementById(pvInd + "VMDEdit");
@@ -1281,9 +1279,6 @@
   				vmdedit.style.display = "none";
   		}
   		var vmDE = document.getElementById("txt" +pvInd + "Def");  
-  		
-  	//	if (vmT != null)
-  	//	vmd.innerText = "";  // vmDesc;  		
   	}
   	
   	function deleteConcept(trId, pvId)
@@ -1299,7 +1294,7 @@
   				var parPrim = "";
   				var par = document.getElementById(pvId + "Par");
   				if (par != null)
-  					parPrim = par.innerText;
+  					parPrim = (par.innerText) ? par.innerText : par.testContent;
 		  		//do not remove if the primary concept that is associated to a parent
 		  		if (parPrim != null && parPrim != "" && i == totalCon -1)
 		  		{
@@ -1316,7 +1311,7 @@
   					replaceDelDiv(nextTr, j, j-1, pvId, trId);
   				} 
   				curTbl.deleteRow(i);  				
-  				document.getElementById("editPVInd").value = pvId;
+  				document.PVForm.editPVInd.value = pvId;
   				appendVMNameDesc(pvId, "", "")
   				isDelete = true;
   				break;
@@ -1350,8 +1345,8 @@
   	//store the Edited concepts of the VM in hidden select box
   	function storeVMConcept(sAct)
   	{
-  		var id = document.getElementsByName("editPVInd");
-  		var pvId = id[0].value;
+  		var id = document.PVForm.editPVInd;
+  		var pvId = id.value;
   		if (pvId != null && pvId != "")
   		{
   			//make sure vm text exists and no duplicate pvvm
@@ -1371,7 +1366,7 @@
 		  			var curTr = curTbl.rows(i);
 		  			if (curTr != null && curTr.cells(2) != null)
 		  			{
-		  				var oText = curTr.cells(2).innerText;
+		  				var oText = (curTr.cells(2).innerText) ? curTr.cells(2).innerText : curTr.cells(2).textContent;
 			  			var elmLen = hidElm.length;
 			  			hidElm[elmLen] = new Option(oText, oText);
 			  			hidElm[elmLen].selected = true;
@@ -1387,6 +1382,7 @@
   			//get the vm object
   		 	var vmT = document.getElementById(pvId + "VMEdit");
   		 	var vmText = "";
+            var objs;
   		 	vmT = document.getElementById(pvId + "VMView");
   		 	if (vmT != null){
   		 		vmText = vmT.innerText;
@@ -1394,7 +1390,8 @@
   		    }		
   		 	if (vmText == "")
   		 	{
-  		 		vmInput = document.getElementById("txt" + pvId + "Mean");
+  		 		objs = document.getElementsByName("txt" + pvId + "Mean");
+                var vmInput = objs[0];
   		 		if (vmInput != null)
   		 			vmText = vmInput.value;
   		 	}
@@ -1406,7 +1403,8 @@
   		 	}
 	  		//check if pv vm comb is valid
 	  		var vText = "";
-	  		var pvT = document.getElementById("txt" + pvId + "Value");
+	  		objs = document.getElementsByName("txt" + pvId + "Value");
+            var pvT = objs[0];
 	  		if (pvT != null)
 	  			vText = pvT.value;
 	  		
@@ -1438,31 +1436,37 @@
   			{
   				//loop through existing ones to check for duplicate pv vm
 	  			var pvTr = document.getElementById(pvCount + "ValueView");
-	  			if (pvTr != null && pvTr.innerText != "")
-	  			{
-	  				var val = pvTr.innerText;
-			  		val = val.toLowerCase();  //make it lower case no space for matching
-			  		while (val.indexOf(' ') > 0)
-					{
-						val = val.replace(' ', '');
-					}
-	  				
-	  				var vm = "";
-	  				var vmTr = document.getElementById(pvCount + "VMView");
-		  			if (vmTr != null && vmTr.innerText != "")
-	  					vm = vmTr.innerText;
-			  		vm = vm.toLowerCase();   //make it lower case no space for matching
-			  		while (vm.indexOf(' ') > 0)
-					{
-						vm = vm.replace(' ', '');
-					}
-	  				if (sVal == val && sVM == vm)
-	  				{
-	  					alert("The Value and the Value Meaning combination must be unique in the Value Domain." +
-	  						"\n Modify either the Value or the Value Meaning to create new Permissible Value.");
-	  					return false; 
-	  				}
-	  			}
+                if (pvTr !== null) {
+                    var pvTrT = (pvTr.innerText) ? pvTr.innerText : pvTr.textContent;
+    	  			if (pvTrT !== "")
+    	  			{
+    	  				var val = pvTrT;
+    			  		val = val.toLowerCase();  //make it lower case no space for matching
+    			  		while (val.indexOf(' ') > 0)
+    					{
+    						val = val.replace(' ', '');
+    					}
+    	  				
+    	  				var vm = "";
+    	  				var vmTr = document.getElementById(pvCount + "VMView");
+                        if (vmTr !== null) {
+                            var vmTrT = (vmTr.innerText) ? vmTr.innerText : vmTr.textContent;
+        		  			if (vmTrT !== "")
+        	  					vm = vmTrT;
+        			  		vm = vm.toLowerCase();   //make it lower case no space for matching
+        			  		while (vm.indexOf(' ') > 0)
+        					{
+        						vm = vm.replace(' ', '');
+        					}
+        	  				if (sVal == val && sVM == vm)
+        	  				{
+        	  					alert("The Value and the Value Meaning combination must be unique in the Value Domain." +
+        	  						"\n Modify either the Value or the Value Meaning to create new Permissible Value.");
+        	  					return false; 
+        	  				}
+                        }
+    	  			}
+                }
 	  			else  //may be no more rows
 	  				return true;  
   			}
@@ -1490,13 +1494,12 @@
   		var usElm = document.getElementById("btnUseSelect");
   		if (usElm != null)
     		usElm.disabled = false;
-    	document.getElementById("currentVM").value = "selected one";
+    	document.PVForm.currentVM.value = "selected one";
     }
     
     function openEditVMWindow(curPV)
     {
-    	var editPVInd = document.getElementsByName("editPVInd");
-    	editPVInd[0].value = curPV;
+    	document.PVForm.editPVInd.value = curPV;
     	SubmitValidate('openEditVM');
     }
     function openViewVMWindow(curPV, id)
@@ -1508,11 +1511,10 @@
    //sort the pv attributes
   function viewPVSort(fieldName, id)
   {
-    var pvViewTypes = document.getElementsByName("PVViewTypes");
-    if (pvViewTypes[0].length > 0)
+    var pvViewTypes = document.PVForm.PVViewTypes;
+    if (pvViewTypes !== null)
     {
-      var pvSortcol = document.getElementsByName("pvSortColumn");
-      pvSortcol[0].value = fieldName;
+      document.PVForm.pvSortColumn.value = fieldName;
       document.PVForm.action = "../../cdecurate/NCICurationServlet?reqType=viewPVAction&action=sort&id=" +id;
       document.PVForm.submit();
     }
