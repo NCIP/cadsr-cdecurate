@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.13 2009-04-09 21:31:46 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.14 2009-04-10 15:40:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 	var secondWindow;
@@ -107,9 +107,7 @@
 	  //focus to this element
 	  if (focusElm != null && focusElm != "")
 	  {
-		var focusObj = document.getElementById(focusElm);
-		if (focusObj != null)
-			focusObj.scrollIntoView();
+		location.hash = focusElm;
 	  }
 	}
 	
