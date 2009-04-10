@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.30 2009-04-10 15:08:11 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.31 2009-04-10 17:01:25 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -1575,10 +1575,11 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 //put the pv in edit mode after cancel the duplicate to make sure that user completes the action
 <% if (pgAction.equals("restore") || pgAction.equals("openNewPV")) { %>
 	<% if (!sEditPV.equals("") && !sEditPV.equals("pvNew")) { %>
-		document.getElementById("editPVInd").value = "";
+	    var editPVInd = document.getElementsByName("editPVInd");
+		editPVInd[0].value = "";
 		view(<%=sEditPV%>View, <%=sEditPV%>ImgEdit, <%=sEditPV%>ImgSave, 'edit', '<%=sEditPV%>');
 	<% } %>
-	document.getElementById("editPVInd").value = "<%=sEditPV%>";
+	editPVInd[0].value = "<%=sEditPV%>";
 <% } %>
 </script>
 	</body>
