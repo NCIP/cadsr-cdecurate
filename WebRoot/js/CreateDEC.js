@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDEC.js,v 1.8 2009-04-10 14:30:10 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDEC.js,v 1.9 2009-04-10 14:53:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 var searchWindow = null;
@@ -527,39 +527,6 @@ function Back()
       var acAction = document.newDECForm.DECAction.value;
       if (acAction == "EditDEC" || acAction == "BlockEdit") acAction = "Edit";
       return areDatesValid(beginDate, endDate, acAction);
-      
-  /*  if(document.newDECForm.BeginDate.value != "")
-    {
-      var beginDate = document.newDECForm.BeginDate.value
-      var endDate = document.newDECForm.EndDate.value
-      var status = validateDate(beginDate, endDate); //validateDate is in date-picker.js
-      if (status) status = "valid";
-      return status;
-    }
-    //if not empty 
-    else if (document.newDECForm.DECAction.value == "EditDEC")  // || document.newDECForm.DECAction.value == "BlockEdit")
-    {	//end date must be empty if begin date empty
-      if (document.newDECForm.EndDate.value != "")
-        alert("If you select an End Date, you must also select a Begin Date");
-      else
-        return "valid"
-    }
-    else if (document.newDECForm.DECAction.value == "BlockEdit")  //do the date validation in java
-    {
-      if(document.newDECForm.EndDate.value != "")
-      {
-        var endDate = document.newDECForm.EndDate.value
-        var status = validateEndDate(endDate);
-        if (status) status = "valid";
-        return status;
-      }
-      else
-        return "valid";
-    }
-    else
-      alert("Begin Date cannot be empty");
-  
-    return "invalid";	*/
   }
 
  function EnableChecks(checked, currentField)
