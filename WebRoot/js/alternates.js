@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/alternates.js,v 1.5 2009-04-10 14:55:25 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/alternates.js,v 1.6 2009-04-10 15:04:46 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 // Perform a general action and remember the previous action. The previous action
@@ -41,7 +41,7 @@ function doSubmit()
     eobj = document.getElementById("process");
     eobj.innerText = "working...";
     eobj.textContent = "working...";
-    alternatesForm.submit();
+    document.alternatesForm.submit();
 }
 
 // Manage the selection of the CSI on the Add/Edit page
