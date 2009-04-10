@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDE.js,v 1.7 2009-02-20 21:17:37 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDE.js,v 1.8 2009-04-10 14:42:42 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 var searchWindow = null;
@@ -205,7 +205,7 @@ function changeCountLN()
 
 function submit()
 {
-    newCDEForm.submit();
+    document.newCDEForm.submit();
 }
 
 function SubmitValidate(origin)
@@ -554,8 +554,8 @@ function AllocSelRowOptions(rowArray)
 {
   for (var i = 0; rowArray.length > i; i++)
   {
-    newCDEForm.hiddenSelRow[i] = new Option(rowArray[i],rowArray[i]);
-    newCDEForm.hiddenSelRow[i].selected = true;
+    document.newCDEForm.hiddenSelRow[i] = new Option(rowArray[i],rowArray[i]);
+    document.newCDEForm.hiddenSelRow[i].selected = true;
   }
 } 
 
@@ -568,9 +568,9 @@ function AllocOptions(iCount)
     for (var i = 0; count>i; i++)
     {
 		idx = i+iStart;
-		newCDEForm.selDEComp[idx] = new Option("","");
-		newCDEForm.selOrderedDEComp[idx] = new Option("","");
-		newCDEForm.selOrderList[idx] = new Option("","");
+		document.newCDEForm.selDEComp[idx] = new Option("","");
+		document.newCDEForm.selOrderedDEComp[idx] = new Option("","");
+		document.newCDEForm.selOrderList[idx] = new Option("","");
     }
 }
 
@@ -637,7 +637,7 @@ function SaveDDEInfor()
     document.newCDEForm.selDECompRelIDHidden.length = 0;
     for(i=0; i < document.newCDEForm.selOrderedDEComp.length; i++)
     {
-        if(newCDEForm.selOrderedDEComp[i].text != "")
+        if(document.newCDEForm.selOrderedDEComp[i].text != "")
         {
           var sT = document.newCDEForm.selOrderedDEComp[i].text;   //name
           var sV = document.newCDEForm.selOrderedDEComp[i].value;  //ID
