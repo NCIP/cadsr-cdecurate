@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.11 2009-04-10 14:48:01 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateVD.js,v 1.12 2009-04-10 16:08:20 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 var evsWindow = null;
@@ -559,8 +559,8 @@ function ShowEVSInfo(thisBlock)
           document.createVDForm.RepQualCCode.value = RepQCode;
         }
       }
+  
+}
 function disabled(){
 		return;
  }      
-   
-}
