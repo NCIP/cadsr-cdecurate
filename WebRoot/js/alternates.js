@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/alternates.js,v 1.4 2009-04-09 16:51:22 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/alternates.js,v 1.5 2009-04-10 14:55:25 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 // Perform a general action and remember the previous action. The previous action
@@ -79,9 +79,9 @@ function findRoot(eobj)
     if (eobj.getAttribute(nodeLevel) != null)
         return eobj.parentNode;
 
-    for (var i = 0; i < eobj.children.length; ++i)
+    for (var i = 0; i < eobj.childNodes.length; ++i)
     {
-        var xobj = findRoot(eobj.children[i]);
+        var xobj = findRoot(eobj.childNodes[i]);
         if (xobj != null)
             return xobj;
     }
