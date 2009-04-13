@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/alternates.js,v 1.6 2009-04-10 15:04:46 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/alternates.js,v 1.7 2009-04-13 14:42:39 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 // Perform a general action and remember the previous action. The previous action
@@ -44,19 +44,35 @@ function doSubmit()
     document.alternatesForm.submit();
 }
 
+function getAlreadySelCSI(tobj){
+	if (navigator.userAgent.indexOf('Firefox') != -1){
+		for (var i=0; i<tobj.parentNode.rows.length; i++){	
+	       var robj = tobj.parentNode.rows[i];
+	       if (robj.getAttribute("selected") == "selected")
+	         return robj;
+	    }
+	 } else {
+	 	for (var i=0; i<tobj.children.length; i++) {
+	 	   var robj = tobj.children[i];
+	 	   if (robj.getAttribute("selected") == "selected")
+	         return robj;
+	 	}
+	 }
+
+}
+
 // Manage the selection of the CSI on the Add/Edit page
 
 function selCSI(aobj)
 {
     var pn = aobj.parentNode;
-    var eobj = pn.getAttribute("nodeSelection");
-    if (eobj != null)
-    {
-        eobj.style.backgroundColor = pn.getAttribute("nodeColor");
+    var sel = getAlreadySelCSI(pn);
+    if(sel != null) {
+    	sel.setAttribute("selected","none");
+    	sel.style.backgroundColor="";
     }
-    pn.setAttribute("nodeSelection", aobj);
-    pn.setAttribute("nodeColor", aobj.style.backgroundColor);
-    aobj.style.backgroundColor = "#ffff00";
+    aobj.style.backgroundColor = "#ffff00"
+    aobj.setAttribute("selected","selected");
 }
 
 // Post process the Add/Edit page load
@@ -79,9 +95,9 @@ function findRoot(eobj)
     if (eobj.getAttribute(nodeLevel) != null)
         return eobj.parentNode;
 
-    for (var i = 0; i < eobj.childNodes.length; ++i)
+    for (var i = 0; i < eobj.children.length; ++i)
     {
-        var xobj = findRoot(eobj.childNodes[i]);
+        var xobj = findRoot(eobj.children[i]);
         if (xobj != null)
             return xobj;
     }
@@ -91,20 +107,20 @@ function findRoot(eobj)
 
 // Filter the CSI tree dynamically as the user types in the Filter Text
 
-function filterCSI(tobj)
+function filterCSIIE(tobj)
 {
-    // Get the tree root
+    
+   // Get the tree root
     var eobj = findRoot(document.getElementById("csiList"));
-    
-    // Make the text lower case so simplify the comparisons
+   // Make the text lower case so simplify the comparisons
     var tlow = tobj.value.toLowerCase();
-    
-    // Go through all the rows in the table (nodes in the tree)
+   // Go through all the rows in the table (nodes in the tree)
     for (var i = 0; i < eobj.children.length; ++i)
     {
         // If the text entered by the user appears in the row.
         var tt = eobj.children[i];
-        if ((tt.innerText.toLowerCase().indexOf(tlow) > -1) || (tt.textContent.toLowerCase().indexOf(tlow) > -1))
+        
+        if ((tt.innerText.toLowerCase().indexOf(tlow) > -1))
         {
             // Make the row visible as well as its ancetors and
             // offspring
@@ -189,9 +205,16 @@ function doSave()
 
 function doClassify()
 {
+    var last;
     // Find the root and verify the user selected a CSI and not a CS
-    var last = findRoot(document.getElementById("csiList"));
-    var eobj = last.getAttribute("nodeSelection");
+    if (navigator.userAgent.indexOf('Firefox') != -1){
+        var div = document.getElementById("csiList");
+        if (div.childNodes[1]!= null)
+             last = div.childNodes[1].childNodes[1];
+    }else{
+       last = findRoot(document.getElementById("csiList"));
+    }
+    var eobj = getAlreadySelCSI(last);
     if (eobj == null)
     {
         alert("Please select a Class Scheme Item from the hierarchy at the bottom of the page.");
@@ -309,3 +332,66 @@ function doRestore(aobj)
     eobj[0].value = idseq;
     doAction(actionRestoreNameDef);
 }
+
+function filterCSI(tobj){
+ if (navigator.userAgent.indexOf('Firefox') != -1){
+    filterCSIFireFox(tobj);
+ }else{
+    filterCSIIE(tobj);
+ }
+}
+
+// Filter the CSI tree dynamically as the user types in the Filter Text
+
+function filterCSIFireFox(tobj)
+{
+    
+    var tlow = tobj.value.toLowerCase();
+    var eobj;
+    var div = document.getElementById("csiList");
+    if (div.childNodes[1]!= null)
+           eobj = div.childNodes[1];
+    // Go through all the rows in the table (nodes in the tree)
+    for (var i = 0; i < eobj.rows.length; ++i)
+    {
+        // If the text entered by the user appears in the row.
+        var tt = eobj.rows[i];           
+        if ((tt.textContent.toLowerCase().indexOf(tlow) > -1))
+        {
+            // Make the row visible as well as its ancetors and
+            // offspring
+            var b;
+            tt.style.display = "block";
+            var level = parseInt(tt.getAttribute(nodeLevel));
+            var compLevel = level;
+            for (b = i - 1; b >= 0; --b)
+            {
+                var prev = eobj.rows[b];
+                var prevLevel = parseInt(prev.getAttribute(nodeLevel));
+                if (prevLevel < compLevel)
+                {
+                    prev.style.display = "block";
+                    compLevel = prevLevel;
+                }
+                if (prevLevel == 1)
+                    break;
+            }
+            for (b = i + 1; b < eobj.rows.length; ++b)
+            {
+                var prev = eobj.rows[b];
+                var prevLevel = parseInt(prev.getAttribute(nodeLevel));
+                if (prevLevel <= level)
+                    break;
+                prev.style.display = "block";
+            }
+            i = b - 1;
+        }
+        
+        // If the text doesn't appear, hide the row.
+        else
+        {
+            tt.style.display = "none";
+        }
+    }
+}
+
