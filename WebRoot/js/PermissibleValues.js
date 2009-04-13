@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.18 2009-04-10 20:54:44 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.19 2009-04-13 14:42:54 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -961,8 +961,8 @@
   	{
 	    for (var i = 0; rowArray.length > i; i++)
 	    {
-	      document.getElementById("hiddenSelRow")[i] = new Option(rowArray[i],rowArray[i]);
-	      document.getElementById("hiddenSelRow")[i].selected = true;
+	      document.PVForm.hiddenSelRow[i] = new Option(rowArray[i],rowArray[i]);
+	      document.PVForm.hiddenSelRow[i].selected = true;
 	    }
     }
   } 
