@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResultsBlocks.js,v 1.5 2009-04-13 14:43:11 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResultsBlocks.js,v 1.6 2009-04-13 16:02:19 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
    var numRowsSelected = 0;
@@ -224,11 +224,11 @@
       else
       {          
         //submit vd form for parent selection
-        if (opener.document.getElementById("hiddenParentName") != null)
+        if (opener.document.PVForm.hiddenParentName != null)
         {
-          opener.document.getElementById("hiddenParentName").value = editNameLong;
-          opener.document.getElementById("hiddenParentCode").value = sCCode;
-          opener.document.getElementById("hiddenParentDB").value = sCCodeDB;
+          opener.document.PVForm.hiddenParentName.value = editNameLong;
+          opener.document.PVForm.hiddenParentCode.value = sCCode;
+          opener.document.PVForm.hiddenParentDB.value = sCCodeDB;
           //store the selrow in an array 
           var selRowArray = new Array();
           var rowNo = document.searchResultsForm.hiddenSelectedRow[0].value;
