@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ACOrigin.jsp,v 1.5 2009-04-13 18:46:17 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ACOrigin.jsp,v 1.6 2009-04-13 20:06:14 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -59,13 +59,12 @@
 							}
 							else
 							{
-									var curPV = opener.document.getElementById("currentPVInd");
+									var curPV = opener.document.PVForm.currentPVInd;
 									opener.changeElementText(curPV, curelm, false, sSource, "replace");
 									success = true;
 									if (curPV != null && curPV.value != null)
-										opener.document.getElementById("editPVInd").value = curPV.value;
-										
-									opener.document.getElementById("currentOrg").value = sSource;
+										opener.document.PVForm.editPVInd.value = curPV.value;
+									opener.document.PVForm.currentOrg.value = sSource;
 							 }
 						}
 					}

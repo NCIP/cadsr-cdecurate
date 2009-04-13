@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.19 2009-04-13 14:42:54 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.20 2009-04-13 20:05:13 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -509,10 +509,14 @@
     function changeElementText(curPV, elmObjName, isBold, nodeText, action)
     {
 		var elmObj = document.getElementById(elmObjName);
- 		if (elmObj != null)
+		if (elmObj != null)
 		{
     		//get the node text if empty -  toggling 
-  			var thisObj = elmObj.firstChild;
+  			var thisObj;
+  			if (elmObj.firstChild.nextSibling != null)
+  			   thisObj = elmObj.firstChild.nextSibling;
+  			else
+  			   thisObj = elmObj.firstChild;
   			if (thisObj != null)
   			{
 	  			while (thisObj.nodeType != 3)
@@ -536,7 +540,8 @@
   			//replace the text when changing the data
   			if (action == "replace")
   			{
-  				thisObj.replaceNode(textNode);
+  				thisObj.parentNode.replaceChild(textNode,thisObj);
+  				//thisObj.replaceNode(textNode);
   				return;
   			}		
 			else  //remove all nodes first when toggling
