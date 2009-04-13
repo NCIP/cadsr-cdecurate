@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ACOrigin.jsp,v 1.4 2009-04-09 15:25:58 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ACOrigin.jsp,v 1.5 2009-04-13 18:46:17 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -28,9 +28,9 @@
 				if (sSrc != null && sSrc != "")
 				{
 					sSource = sSrc;  //store it in the variable
-					var useSel = document.getElementById("editSelectedBtn");					//enable the use selection button
-					if (useSel != null)
-						useSel.disabled = false;
+					var useSel = document.getElementsByName("editSelectedBtn");//enable the use selection button
+					if (useSel[0] != null)
+						useSel[0].disabled = false;
 				}
 			}
 			
@@ -46,7 +46,7 @@
 				var curelm;
 				if (opener != null && opener.document != null)
 				{
-					var curelmInd = opener.document.getElementById("currentElmID");
+					var curelmInd = opener.document.PVForm.currentElmID;
 					if (curelmInd != null)
 					{
 						curelm = curelmInd.value;
