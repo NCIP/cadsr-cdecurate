@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateVD.jsp,v 1.6 2009-04-09 19:51:48 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateVD.jsp,v 1.7 2009-04-13 20:50:51 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -75,8 +75,8 @@
 
    function SubmitValidate()
    {
-      var valVDPageAction = document.getElementById("ValidateVDPageAction");
-      valVDPageAction.ValidateVDPageAction.value = "submitVD";
+      var valVDPageAction = document.validateVDForm.ValidateVDPageAction;
+      valVDPageAction.value = "submitVD";
       submit();
    }
 
