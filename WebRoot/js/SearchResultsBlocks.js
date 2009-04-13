@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResultsBlocks.js,v 1.4 2009-04-09 21:39:38 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResultsBlocks.js,v 1.5 2009-04-13 14:43:11 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
    var numRowsSelected = 0;
@@ -214,7 +214,7 @@
       if (useStatus != "valid") 
         return;
       //do not allow to use the meta term if enum parent
-      var vdtype = opener.document.getElementById("listVDType").value;   //createVDForm.listVDType[opener.document.createVDForm.listVDType.selectedIndex].value;
+      var vdtype = opener.document.PVForm.listVDType.value;   //createVDForm.listVDType[opener.document.createVDForm.listVDType.selectedIndex].value;
       if (vdtype == "E" && (sCCodeDB == null || sCCodeDB == "" || sCCodeDB == metaName))  // "NCI Metathesaurus"))
       {
         alert("Concepts from the " + metaName + " may not be used to reference an Enumerated Value Domain.\n" + 
@@ -281,7 +281,7 @@
       //make sure it is valid; get the editing pv; call function to create new row of concept for each concept; submit this page to add the bean to pv - vd - session; close window or come back to allow more selection
       if (sComp == "VMConcept")
       {
-      	var pvInd = opener.document.getElementById("currentPVInd").value;
+      	var pvInd = opener.PVForm.currentPVInd.value;
       	if (pvInd != null)
       	{
 		    document.getElementById("editPVInd").value = pvInd;
