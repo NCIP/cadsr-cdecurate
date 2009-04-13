@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResultsBlocks.js,v 1.6 2009-04-13 16:02:19 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResultsBlocks.js,v 1.7 2009-04-13 18:46:32 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
    var numRowsSelected = 0;
@@ -281,10 +281,10 @@
       //make sure it is valid; get the editing pv; call function to create new row of concept for each concept; submit this page to add the bean to pv - vd - session; close window or come back to allow more selection
       if (sComp == "VMConcept")
       {
-      	var pvInd = opener.PVForm.currentPVInd.value;
+      	var pvInd = opener.document.PVForm.currentPVInd.value;
       	if (pvInd != null)
       	{
-		    document.getElementById("editPVInd").value = pvInd;
+		    document.searchResultsForm.editPVInd.value = pvInd;
 	  		//add teh concept info on the page
 	      	document.searchResultsForm.actSelected.value = "appendConcept";
         	document.searchResultsForm.Message.style.visibility="visible";
