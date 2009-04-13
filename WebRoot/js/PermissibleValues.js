@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.20 2009-04-13 20:05:13 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.21 2009-04-13 22:20:13 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -1104,17 +1104,17 @@
   		{
   			curTrCount = (totalCon-1);
   			//use the empty one if exists
-  			var trP = curTbl.rows(curTrCount);
+  			var trP = curTbl.rows[curTrCount];
   			if (trP != null && (trP.getAttribute("id") == null || trP.getAttribute("id") == ""))
   			{
   				txType = "Primary";
-  			 	trCur = curTbl.rows(curTrCount);
-  			 	trCur.deleteCell(); 
+  			 	trCur = curTbl.rows[curTrCount];
+  			    //trCur.deleteCell(); 
   			}
   			else //if (trP != null)  //push forward the last one in the list 
   			{
   				trCur = curTbl.insertRow(curTrCount);
-  				trP = curTbl.rows(totalCon);
+  				trP = curTbl.rows[totalCon];
   				trP.setAttribute("id", pvInd + "tr" + totalCon);
   				//change the id of the delete div 
   				replaceDelDiv(trP, curTrCount, totalCon, pvInd, trP.getAttribute("id"));
@@ -1136,8 +1136,7 @@
   		var tdT = createTD("conType", txType, "", trID, pvInd);
   		//create conVocab column
   		var tdD = createTD("conDesc", txDesc, "", trID, pvInd);
-  		
-		//append the cells to the row
+  		//append the cells to the row
 		trCur.appendChild(tdIm);																			
 		trCur.appendChild(tdN);																			
 		trCur.appendChild(tdId);																			
@@ -1186,9 +1185,16 @@
   	{
   		delDiv.setAttribute("id", divId);
   		delDiv.setAttribute("style", "display:inline");
-  		var linkElm = "<a href=\"javascript:deleteConcept('" + trID + "', '" + pvInd + "');\" title=\"Remove Item\"></a>";
-  		var divLink = document.createElement(linkElm);
-  		var divImg = document.createElement("<img src=\"images/delete_small.gif\" border=\"0\" alt=\"Remove\">");
+  		
+  		var divLink = document.createElement("a");
+  		divLink.href = "javascript:deleteConcept('" + trID + "', '" + pvInd + "');";
+  		divLink.title = "Remove Item";
+  	  	
+  	  	var divImg = document.createElement("img");
+  		divImg.src = "images/delete_small.gif";
+  		divImg.border = "0";
+  		divImg.alt = "Remove";
+  		
   		divLink.appendChild(divImg);
   		delDiv.appendChild(divLink);
   		//put extra space
@@ -1207,7 +1213,7 @@
   		var appDesc = "";
   		for (var i =0; i<tblLen; i++)
   		{
-  			var nameCell = curTbl.rows(i).cells(1);
+  			var nameCell = curTbl.rows[i].cells[1];
   			if (appName != "") {
                 appName += " ";
             }
@@ -1218,7 +1224,7 @@
                 }
             }
 
-  			var descCell = curTbl.rows(i).cells(5);
+  			var descCell = curTbl.rows[i].cells[5];
   			if (appDesc != "") {
                 appDesc += ": ";
             }
@@ -1293,7 +1299,7 @@
   		var totalCon = curTbl.rows.length;
   		for (var i=0; i<totalCon; i++)
   		{
-  			var curTr = curTbl.rows(i);
+  			var curTr = curTbl.rows[i];
   			if (curTr != null && curTr.getAttribute("id") == trId)
   			{
   				var parPrim = "";
@@ -1311,7 +1317,7 @@
   				//change the id of the other rows
   				for (var j = i+1; j<totalCon; j++)
   				{
-  					var nextTr = curTbl.rows(j);
+  					var nextTr = curTbl.rows[j];
   					nextTr.setAttribute("id", pvId + "tr" + (j-1));
   					replaceDelDiv(nextTr, j, j-1, pvId, trId);
   				} 
@@ -1368,7 +1374,7 @@
 		  		var totalCon = curTbl.rows.length;
 		  		for (var i=0; i<totalCon; i++)
 		  		{
-		  			var curTr = curTbl.rows(i);
+		  			var curTr = curTbl.rows[i];
 		  			if (curTr != null && curTr.cells(2) != null)
 		  			{
 		  				var oText = (curTr.cells(2).innerText) ? curTr.cells(2).innerText : curTr.cells(2).textContent;
