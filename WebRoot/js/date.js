@@ -249,11 +249,16 @@ function calSetPosition(div, evnt)
         targ = evnt.srcElement;
     }
     
-    var scrollTop = document.documentElement.scrollTop > document.body.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop; 
-	var scrollLeft = document.documentElement.scrollLeft > document.body.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft; 
+    var scrollTop = (document.documentElement.scrollTop > document.body.scrollTop) ? document.documentElement.scrollTop : document.body.scrollTop; 
+	var scrollLeft = (document.documentElement.scrollLeft > document.body.scrollLeft) ? document.documentElement.scrollLeft : document.body.scrollLeft; 
+
+    var offLeft = 0;
+    if (evnt.clientX > (document.body.clientWidth - 250)) {
+        offLeft = 0 - ((evnt.clientX < 250) ? evnt.clientX : 250);
+    }
  
-    var left = scrollLeft + (evnt.clientX + targ.width) + "px";
-    var top = scrollTop + evnt.clientY + "px";
+    var left = (scrollLeft + evnt.clientX + targ.width + offLeft) + "px";
+    var top = (scrollTop + evnt.clientY) + "px";
     div.style.top = top;
     div.style.left = left;
 }
