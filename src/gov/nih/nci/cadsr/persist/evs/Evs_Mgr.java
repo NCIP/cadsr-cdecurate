@@ -134,9 +134,9 @@ private Logger logger = Logger.getLogger(this.getClass());
 			//errorList.add();
 			throw new DBException(errorList);
 		} finally {
+			rs = SQLHelper.closeResultSet(rs);
 			statement = SQLHelper.closeStatement(statement);
-		
-		}
+     	}
 		return resultList;
 	}
 		

@@ -83,6 +83,7 @@ public class Component_Concepts_Ext_Mgr extends DBManager{
 			//errorList.add("Error in getConceptsByCondrIdseq() ");
 			throw new DBException(errorList);
 		} finally {
+			rs = SQLHelper.closeResultSet(rs);
 			statement = SQLHelper.closePreparedStatement(statement);
 		}
 		return conceptsList;
