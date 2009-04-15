@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.24 2009-04-15 14:21:36 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.25 2009-04-15 14:34:16 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -184,7 +184,7 @@
     }
     function CancelNewPV()
     {
-		var vmNewDiv = document.PVForm.divpvnew;
+		var vmNewDiv = document.getElementById("divpvnew");
 		if (vmNewDiv !== null) {
 			vmNewDiv.style.display = "none";
         }
