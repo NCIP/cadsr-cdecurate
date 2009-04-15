@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.32 2009-04-10 20:55:01 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.33 2009-04-15 11:59:28 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -1076,17 +1076,17 @@
 															<tr id="<%=pvCount%>">
 																<td align="center" valign="top">
 																	<div id="<%=pvCount%>ImgClose" style="display: <%if (viewType.equals("collapse")) {%>inline <% } else { %> none <% } %>">
-																		<a href="javascript:view(<%=pvCount%>View, <%=pvCount%>ImgClose, <%=pvCount%>ImgOpen, 'view', '<%=pvCount%>');"><img src="images/folderClosed.gif" border="0" alt="Expand"></a>
+																		<a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgClose', '<%=pvCount%>ImgOpen', 'view', '<%=pvCount%>');"><img src="images/folderClosed.gif" border="0" alt="Expand"></a>
 																	</div>
 																	<div id="<%=pvCount%>ImgOpen" style="display: <%if (viewType.equals("expand")) {%>inline <% } else { %> none <% } %>"">
-																		<a href="javascript:view(<%=pvCount%>View, <%=pvCount%>ImgOpen, <%=pvCount%>ImgClose, 'view', '<%=pvCount%>');"><img src="images/folderOpen.gif" border="0" alt="Collapse"></a>
+																		<a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgOpen', '<%=pvCount%>ImgClose', 'view', '<%=pvCount%>');"><img src="images/folderOpen.gif" border="0" alt="Collapse"></a>
 																	</div>
 																 <%if (!isView){ %>	
 																	<div id="<%=pvCount%>ImgEdit" style="display: inline">
-																		<a href="javascript:view(<%=pvCount%>View, <%=pvCount%>ImgEdit, <%=pvCount%>ImgSave, 'edit', '<%=pvCount%>');"><img src="images/edit.gif" border="0" alt="Edit"></a>
+																		<a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>');"><img src="images/edit.gif" border="0" alt="Edit"></a>
 																	</div>
 																	<div id="<%=pvCount%>ImgSave" style="display: none">
-																		<a id="<%=pvCount%>ImgSaveLink" href="javascript:view(<%=pvCount%>View, <%=pvCount%>ImgSave, <%=pvCount%>ImgEdit, 'save', '<%=pvCount%>');"><img src="images/save.gif" border="0" alt="Save"></a>
+																		<a id="<%=pvCount%>ImgSaveLink" href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgSave', '<%=pvCount%>ImgEdit', 'save', '<%=pvCount%>');"><img src="images/save.gif" border="0" alt="Save"></a>
 																	</div>
 																	<div id="<%=pvCount%>ImgDelete" style="display: inline">
 																	 <a href="javascript:confirmRM('<%=pvCount%>', 'remove', 'the Permissible Value : <%=sPVValJ%>');"><img src="images/delete.gif" border="0" alt="Remove"></a>
@@ -1336,7 +1336,7 @@
 																				<table cellpadding="0.1in,0.1in,0.1in,0.1in">
 																					<tr>
 																						<td>
-																							<input type="button" name="btnUseSelect" style="width:100" value="Use Selection" disabled onClick="javascript:view(<%=sEditPV%>View, <%=sEditPV%>ImgSave, <%=sEditPV%>ImgEdit, 'save', '<%=sEditPV%>');">
+																							<input type="button" name="btnUseSelect" style="width:100" value="Use Selection" disabled onClick="javascript:view('<%=sEditPV%>View', '<%=sEditPV%>ImgSave', '<%=sEditPV%>ImgEdit', 'save', '<%=sEditPV%>');">
 																						</td>
 																						<td>
 																							&nbsp;&nbsp;

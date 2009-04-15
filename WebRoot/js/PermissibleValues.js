@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.22 2009-04-15 11:53:50 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.23 2009-04-15 11:59:44 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -387,8 +387,11 @@
 		}
 	}
 
-    function view(pvdiv, imgdivhide, imgdivdisp, action, pvNo)
+    function view(pvd, imgdhide, imgddisp, action, pvNo)
     {
+        var pvdiv = document.getElementById(pvd);
+        var imgdivhide = document.getElementById(imgdhide);
+        var imgdivdisp = document.getElementById(imgddisp);
   		if (validatePVAction(action) == false)
   			return;
   			
