@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.15 2009-04-15 17:40:41 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.16 2009-04-15 17:56:46 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 	var secondWindow;
@@ -79,20 +79,20 @@
 	
 	function moveConcept(iRow, mAct)
 	{
-    	var selRowObj = document.getElementById(elmSelectRow);
-    	if (selRowObj != null)
+    	var selRowObj = document.getElementsByName(elmSelectRow);
+    	if (selRowObj[0] != null)
     	{
-    		selRowObj.value = iRow;
+    		selRowObj[0].value = iRow;
 	  		SubmitValidate(mAct);
 	    }
 	}
 	
 	function appendConcept(iRow, nvpValue)
 	{
-    	var selRowObj = document.getElementById(elmSelectRow);
-    	if (selRowObj != null)
+    	var selRowObj = document.getElementsByName(elmSelectRow);
+       	if (selRowObj[0] != null)
     	{
-    		selRowObj.value = iRow;
+    		selRowObj[0].value = iRow;
     		//get the nvp value
     		var nvpObj = document.getElementById(elmNVP);
     		if (nvpObj != null)
