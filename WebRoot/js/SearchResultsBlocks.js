@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResultsBlocks.js,v 1.7 2009-04-13 18:46:32 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SearchResultsBlocks.js,v 1.8 2009-04-15 20:05:49 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
    var numRowsSelected = 0;
@@ -316,9 +316,9 @@
         //get teh nvp value from teh text field
         var ckField = "nvp_CK"+rowNo;
 		var nvpObj = document.getElementById(ckField);
-		if (nvpObj != null && nvpObj.value != null)
+		if (nvpObj !== null && nvpObj.value !== null)
 			sNVP = nvpObj.value;
-		//submit the page
+	   //submit the page
 		opener.appendConcept(rowNo, sNVP);
 		window.close();
 	}
