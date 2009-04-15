@@ -1,15 +1,15 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/RefDocumentUpload.jsp,v 1.3 2009-04-15 15:38:23 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/RefDocumentUpload.jsp,v 1.4 2009-04-15 17:53:50 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <%@ page import="java.util.Vector"%>
-<SCRIPT LANGUAGE="JavaScript" SRC="js/RefDocumentUpload.js"></SCRIPT>
-<FORM ENCTYPE="multipart/form-data" name="RefDocumentUploadForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=RefDocumentUpload">
+<script LANGUAGE="JavaScript" SRC="js/RefDocumentUpload.js"></SCRIPT>
+<form enctype="multipart/form-data" name="RefDocumentUploadForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=RefDocumentUpload">
 
 	<%
-    
+
     session = request.getSession();
     String filename = "Document.doc";
     String dispType = (String)session.getAttribute("displayType");
@@ -106,11 +106,7 @@
 		To view an attachment, select the desired link to the right of the Reference Document.
 	</p>
 	<p>
-		To delete an attachment, select the Delete Icon (
-		<span style="font-family: Webdings; font-size: 12pt; font-weight: bold">
-			&#114;
-		</span>
-		) next to the desired link.
+		To delete an attachment, select the Delete Icon (<img src="images/delete_small.gif">) next to the desired link.
 	</p>
 	<table style="text-align: left ; 
 	border-collapse: collapse; 
