@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/sorttable.js,v 1.1 2007-09-10 16:16:48 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/sorttable.js,v 1.2 2009-04-15 21:25:11 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 addEvent(window, "load", sortables_init);
@@ -80,11 +80,11 @@ function ts_resortTable(lnk) {
     newRows.sort(sortfn);
 
     if (span.getAttribute("sortdir") == 'down') {
-        ARROW = '&nbsp;<span Style="font-family:Wingdings">&#217;</span>';
+        ARROW = '&nbsp;<span><img src="images/arrow_16_up.gif"></span>';
         newRows.reverse();
         span.setAttribute('sortdir','up');
     } else {
-        ARROW = '&nbsp;<span Style="font-family:Wingdings">&#218;</span>';
+        ARROW = '&nbsp;<span><img src="images/arrow_16_down.gif"></span>';
         span.setAttribute('sortdir','down');
     }
     
@@ -99,8 +99,8 @@ function ts_resortTable(lnk) {
     }
     for (i=0;i<newRows.length;i++) {
         if (!newRows[i].className || (newRows[i].className && (newRows[i].className.indexOf('sortbottom') == -1))) {
-            table.tBodies[0].appendChild(newRows[i]);
-            table.tBodies[0].children[1].style.backgroundColor = stripe;
+            var child = table.tBodies[0].appendChild(newRows[i]);
+            child.style.backgroundColor = stripe;
             if (flip)
                 stripe = "#f5f5dc";
             else
@@ -111,8 +111,8 @@ function ts_resortTable(lnk) {
     // do sortbottom rows only
     for (i=0;i<newRows.length;i++) {
         if (newRows[i].className && (newRows[i].className.indexOf('sortbottom') != -1)) {
-            table.tBodies[0].appendChild(newRows[i]);
-            table.tBodies[0].children[i+1].style.backgroundColor = stripe;
+            var child = table.tBodies[0].appendChild(newRows[i]);
+            child.style.backgroundColor = stripe;
             if (flip)
                 stripe = "#f5f5dc";
             else

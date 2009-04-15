@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/RefDocumentUploadPage.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/RefDocumentUploadPage.jsp,v 1.2 2009-04-15 21:25:11 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -18,6 +18,7 @@ history.forward();
 		<script type="text/javascript" src="js/sorttable.js"></script>
 
 		<LINK href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
+		<link href="css/style.css" rel="stylesheet" type="text/css">
 	</head>
 
 	<body>
