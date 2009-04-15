@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.14 2009-04-10 15:40:45 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/ValueMeaningEdit.js,v 1.15 2009-04-15 17:40:41 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 	var secondWindow;
@@ -69,10 +69,10 @@
 	    if (confirmOK == false) 
 	    	return;
 	    	
-    	var selRowObj = document.getElementById(elmSelectRow);
-    	if (selRowObj != null)
+    	var selRowObj = document.getElementsByName(elmSelectRow);
+    	if (selRowObj[0] != null)
     	{
-    		selRowObj.value = iRow;
+    		selRowObj[0].value = iRow;
 	  		SubmitValidate(actionDelete);
 	    }
 	}
