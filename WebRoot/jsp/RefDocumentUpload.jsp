@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/RefDocumentUpload.jsp,v 1.2 2007-09-19 16:59:34 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/RefDocumentUpload.jsp,v 1.3 2009-04-15 15:38:23 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -128,28 +128,28 @@
 		</colgroup>
 		<tbody style="padding: 0.1in 0.1in 0.1in 0.1in" />
 			<tr>
-				<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 10pt;" height="30">
+				<th style="border-bottom: black solid 1px; font-family: Arial, Helvetica, sans-serif; font-size: 10pt;" height="30">
 					<div>
 						<!-- <img id="CheckGif" src="images/CheckBox.gif" border="0" alt="Select One"/> -->
 
 					</div>
 				</th>
-				<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">
+				<th style="border-bottom: black solid 1px; font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">
 					Reference Document Name
 				</th>
-				<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">
+				<th style="border-bottom: black solid 1px; font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">
 					Reference Document Type
 				</th>
-				<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">
+				<th style="border-bottom: black solid 1px; font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">
 					Reference Document Text
 				</th>
-				<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">
+				<th style="border-bottom: black solid 1px; font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">
 					Reference Document URL
 				</th>
-				<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">
+				<th style="border-bottom: black solid 1px; font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">
 					Context
 				</th>
-				<th style="border-bottom: black solid 1px font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">
+				<th style="border-bottom: black solid 1px; font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">
 					Links
 				</th>
 			</tr>
