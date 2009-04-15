@@ -1,11 +1,11 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.23 2009-04-15 11:59:44 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.24 2009-04-15 14:21:36 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 
 	var secondWindow;
-	var statusWindow;	
+	var statusWindow;
 	//store values that need warning if pvs are in edit mode
 	var arrValidate = new Array();
 	arrValidate[0] = 'view';
@@ -29,97 +29,99 @@
 	arrValidate[18] = 'viewAll';
 	arrValidate[19] = 'createMultipleValues';
 	arrValidate[20] = 'createParent';
-	
   //  opens a window for large status messages
     function displayStatusWindow()
     {
-      if (statusWindow && !statusWindow.closed)
-          statusWindow.close()
+      if (statusWindow && !statusWindow.closed) {
+          statusWindow.close();
+      }
       var windowW = (screen.width/2) - 230;
-      statusWindow = window.open("jsp/OpenStatusWindow.jsp", "statusWindow", "width=475,height=545,top=0,left=" + windowW + ",resizable=yes,scrollbars=yes")      
+      statusWindow = window.open("jsp/OpenStatusWindow.jsp", "statusWindow", "width=475,height=545,top=0,left=" + windowW + ",resizable=yes,scrollbars=yes");
     }
-
 	//submit the page
 	function SubmitValidate(sAction)
 	{
 		var actObject = document.PVForm.pageAction;
-		if ( actObject == null)
+		if ( actObject === null) {
 			alert("what is the object");
+        }
 		else
 		{
 			//make sure that no pv was in edit mode
 			if (sAction != "save" && sAction != "remove")
 			{
-	  			if (!validatePVAction(sAction))
+	  			if (!validatePVAction(sAction)) {
 	  				return;
+                }
   			}
-			//continue with submission	
+			//continue with submission
 			actObject.value = sAction;
 			beforeRefresh(sAction);
-			if (secondWindow && !secondWindow.closed)
+			if (secondWindow && !secondWindow.closed) {
 	            secondWindow.close();
+            }
 			var isValid = true;
-			if (sAction != "openEditVM")
+			if (sAction != "openEditVM") {
 				isValid = storeVMConcept(sAction);
+            }
 			if (isValid)  //submit only if valid
 			{
-				if (sAction == "save")
+				if (sAction == "save") {
 					disableHyperlink(sAction);
+                }
 				DisableButtons();
 				var msgObj = document.getElementById("Message2");
-				if (msgObj != null)
+				if (msgObj !== null) {
 				   msgObj.style.visibility="visible";
-				
+                }
 				document.PVForm.submit();
 			}
-		}	
+		}
 	}
-	
 	function reSubmitValidate(sAction)
 	{
 		var actObject = document.PVForm.pageAction;
-		if ( actObject == null)
+		if ( actObject === null) {
 			alert("what is the object");
+        }
 		else
 		{
 			actObject.value = sAction;
 	    	disableHyperlink(sAction);
 			DisableButtons();
-			document.PVForm.submit(); 
-		}   	
+			document.PVForm.submit();
+		}
 	}
-	
 	function disableHyperlink(action)
 	{
 	  var pvObj = document.PVForm.editPVInd;
-	  if (pvObj != null)
+	  if (pvObj !== null)
 	  {
 	  	var pvNo = pvObj.value;
 		var hlObj = document.getElementsByName(pvNo + "ImgSaveLink");
-		if (hlObj[0] != null)
+		if (hlObj[0] !== null)
 		{
 			hlObj[0].href = "javascript:disabled();";
 		}
 	  }
 	}
-	
 	function disabled()
 	{
 		return;
 	}
-	
 	//make sure none of the PVs are in edit mode
 	function validatePVAction(action)
 	{
 		var editedPV = getORsetEdited("none", "");
-		if (editedPV != null && editedPV != "")
+		if (editedPV !== null && editedPV !== "")
 		{
 		  if (action == "save")
 		  {
 		  	//check current vm has the data
 		   	var curVM = document.PVForm.currentVM;
-		  	if (curVM == null || curVM.value == null || curVM.value == "")
+		  	if (curVM === null || curVM.value === null || curVM.value === "") {
 		  		editedPV = getORsetEdited(editedPV, "vm");
+            }
 		  	SubmitValidate("save");
 		  	return false;
 		  }
@@ -139,137 +141,144 @@
 		}
 		return true;
 	}
-	
-	//confirm the remove item			
+	//confirm the remove item
     function confirmRM(pvNo, itmAct, itmMsg)
     {
 		var confirmOK = true;
 		if (itmAct == "remove")
 		{
-		  	if (!validatePVAction('remove'))  //check if any pv is in edit mode
-		  		return;  
+		  	if (!validatePVAction('remove')) {
+		  		return;
+            }
 	    	confirmOK = confirm("Click OK to remove " + itmMsg + ".");
-	    	if (confirmOK == false) 
+	    	if (confirmOK === false) {
 	    		return;
+            }
 		}
 		if (confirmOK)
 		{
-			//mark to remove all 
+			//mark to remove all
 		   if (itmAct == "remove" && pvNo == "All")
 		   {
 		   		itmAct += pvNo;
 		   		pvNo = "";
 		   }
-		   document.PVForm.editPVInd.value = pvNo;		   
-
+		   document.PVForm.editPVInd.value = pvNo;
 		   //submit the form
-		   SubmitValidate(itmAct);   
-		} 		
+		   SubmitValidate(itmAct);
+		}
     }
-    
     //disable vm search if data exist
     function disableSearch(pvNo)
-    {	
+    {
     	if (pvNo == "pvNew")
     	{
     		var vmEDiv = document.PVForm.pvNewVMLblEdit;
-    		if (vmEDiv != null && vmEDiv.style.display == "inline")
+    		if (vmEDiv !== null && vmEDiv.style.display == "inline") {
     			vmEDiv.style.display = "none";
+            }
     	//	var vmVDiv = document.getElementById("pvNewVMLblView");
     	//	if (vmVDiv != null && vmVDiv.style.display == "none")
-    	//		vmVDiv.style.display = "block";    		
+    	//		vmVDiv.style.display = "block";
     	}
     }
     function CancelNewPV()
     {
 		var vmNewDiv = document.PVForm.divpvnew;
-		if (vmNewDiv != null)
+		if (vmNewDiv !== null) {
 			vmNewDiv.style.display = "none";
-		SubmitValidate("cancelNewPV");		
+        }
+		SubmitValidate("cancelNewPV");
     }
-    
-    //when Add new pv button clicked; check if mandatory values exist  
+    //when Add new pv button clicked; check if mandatory values exist
     function AddNewPV()
     {
     	var alertMsg = "";
     	var txtVM = "";
     	//first if user entered
     	var vmDiv = document.getElementById("pvNewVMEdit");
-    	if (vmDiv != null && vmDiv.style.display == "block")
+    	if (vmDiv !== null && vmDiv.style.display == "block")
     	{
 	    	txtVM = document.PVForm.pvNewVM.value;
     	}
     	//may be using concepts
-    	if (txtVM == null || txtVM == "")
+    	if (txtVM === null || txtVM === "")
     	{
     		vmDiv = document.getElementById("pvNewVMView");
-    		if (vmDiv != null){
+    		if (vmDiv !== null) {
     			txtVM = (vmDiv.innerText) ? vmDiv.innerText : vmDiv.textContent;
-    	    }		
+    	    }
     	}
-    	if (txtVM == null || txtVM == "")
+    	if (txtVM === null || txtVM === "") {
 	    	alertMsg += "Please enter the text for Value Meaning. \n";
-	    	
+        }
     	//check user entered description
     	var vmdDiv = document.getElementById("pvNewVMDEdit");
-    	if (vmdDiv != null && vmdDiv.style.display == "block")
+    	if (vmdDiv !== null && vmdDiv.style.display == "block")
     	{
 	    	var txtVMD = document.PVForm.pvNewVMD.value;
-	    	if (txtVMD == null || txtVMD == "")
+	    	if (txtVMD === null || txtVMD === "") {
 	    		alertMsg += "Please enter the text for Value Meaning Description. \n";
+            }
     	}
     	//get vm pv if not exists
     	var txtPV = document.PVForm.pvNewValue.value;
-    	if ((txtPV == null || txtPV == "") && alertMsg == "")
+    	if ((txtPV === null || txtPV === "") && alertMsg === "")
     	{
-			if (txtVM != "")
+			if (txtVM !== "")
 			{
-				txtVM = txtVM.replace(/\r\n/g, " "); 
+				txtVM = txtVM.replace(/\r\n/g, " ");
 				document.PVForm.pvNewValue.value = txtVM;
 				txtPV = txtVM;
 			}
     	}
-    	if (txtPV == null || txtPV == "")  //still empty
+    	if (txtPV === null || txtPV === "") {
     		alertMsg += "Please enter the text for Permissible Value. \n";
-
-    	if (alertMsg != "")
+        }
+    	if (alertMsg !== "") {
     		alert(alertMsg);
+        }
     	else
     	{
     		if (checkPVVMCombDuplicate(txtPV, txtVM, "newPV"))
     		{
     			var bSave = document.getElementById("btnCreateNew");
-    			if (bSave != null && !bSave.disabled)
+    			if (bSave !== null && !bSave.disabled) {
     				bSave.disabled = true;
+                }
     			SubmitValidate("addNewPV");
     		}
     	}
     }
-    
     function ContinueDuplicateVM()
     {
     	reSubmitValidate("continueVM");
     }
-    
-    //viewall image clicked; collapse or expand each pv and its image according the expected action    
+    //viewall image clicked; collapse or expand each pv and its image according the expected action
     function viewAll(changeTo)
     {
-    	if (!validatePVAction('viewAll'))
+    	if (!validatePVAction('viewAll')) {
 	  		return;
+        }
     	var vmCount = 0;
     	do
     	{
     		var vmObjID = "pv" + vmCount + "View";
     		var vmObj = document.getElementById(vmObjID);
-    		if (vmObj == null)
+    		if (vmObj === null) {
     		  break;
+            }
     		else
     		{
     			var sType = vmObj.getAttribute("viewType");
-    			if (sType == null) 
+    			if (sType === null) {
     				alert("unable to find the view type");
+                }
     			else if (!((changeTo == "collapseAll" && sType == "collapse") || (changeTo == "expandAll" && sType == "expand")))
-    			{        			
+    			{
+                    var pvImgC;
+                    var pvImgO;
+                    var pvNo;
         			switch (changeTo)
         			{
         				case "collapseAll":
@@ -277,49 +286,56 @@
         					vmObj.style.display = "none";
 		        			//make the edit icon change if needed
 			        		var pvImgS = document.getElementById(vmCount + "ImgSave");
-			        		if (pvImgS != null && pvImgS.style.display == "inline")
+			        		if (pvImgS !== null && pvImgS.style.display == "inline")
 			        		{
 			        			var pvImgE = document.getElementById(vmCount + "ImgEdit");
-			        			var pvNo = "pv" + vmCount;
+			        			pvNo = "pv" + vmCount;
 			        			view(vmObj, pvImgS, pvImgE, 'open', pvNo);
 			        		}
         					//change the individual icons
-		        			var pvImgC = document.getElementById(vmCount + "ImgClose");
-		        			if (pvImgC != null) pvImgC.style.display = "inline";
-		        			var pvImgO = document.getElementById(vmCount + "ImgOpen");
-		        			if (pvImgO != null) pvImgO.style.display = "none";
+		        			pvImgC = document.getElementById(vmCount + "ImgClose");
+		        			if (pvImgC !== null) {
+                                pvImgC.style.display = "inline";
+                            }
+		        			pvImgO = document.getElementById(vmCount + "ImgOpen");
+		        			if (pvImgO !== null) {
+                                pvImgO.style.display = "none";
+                            }
         					break;
         				case "expandAll":
         					vmObj.setAttribute("viewType", "expand");
         					vmObj.style.display = "block";
-		        			var pvImgC = document.getElementById(vmCount + "ImgClose");
-		        			if (pvImgC != null) pvImgC.style.display = "none";
-		        			var pvImgO = document.getElementById(vmCount + "ImgOpen");
-		        			if (pvImgO != null) pvImgO.style.display = "inline";
+		        			pvImgC = document.getElementById(vmCount + "ImgClose");
+		        			if (pvImgC !== null) {
+                                pvImgC.style.display = "none";
+                            }
+		        			pvImgO = document.getElementById(vmCount + "ImgOpen");
+		        			if (pvImgO !== null) {
+                                pvImgO.style.display = "inline";
+                            }
         					break;
         				case "uneditAll":
         					if (sType == "edit")
         					{
 			        			var pvImgHide = document.getElementById(vmCount + "ImgSave");
 			        			var pvImgDisp = document.getElementById(vmCount + "ImgEdit");
-			        			var pvNo = "pv" + vmCount;
+			        			pvNo = "pv" + vmCount;
 			        			view(vmObj, pvImgHide, pvImgDisp, 'open', pvNo);
         					}
         					break;
         			}
     			}
     		}
-    		vmCount += 1;        		        		
+    		vmCount += 1;
     	} while (vmCount > 0);
-    	
     	//make the action image toggle
-    	if (changeTo == "collapseAll" || changeTo == "expandAll")
+    	if (changeTo == "collapseAll" || changeTo == "expandAll") {
     		toggleActionAll(changeTo);
+        }
     }
-        
-    //display close all or open all image for the action 
+    //display close all or open all image for the action
     function toggleActionAll(changeTo)
-    {	
+    {
     	//check if all were collapsed to toggle all action image to collapse
     	if (changeTo == "collapse")
     	{
@@ -329,8 +345,9 @@
         	{
         		var vmObjID = "pv" + vmCount + "View";
         		var vmObj = document.getElementById(vmObjID);
-        		if (vmObj == null)
+        		if (vmObj === null) {
         		  break;
+                }
         		else
         		{
         			var vT = vmObj.getAttribute("viewType");
@@ -340,16 +357,15 @@
         				break;
         			}
         		}
-        		vmCount += 1;   
-        	} while (vmCount > 0); 
-        	
-  			if (isAllCollapse == false)
+        		vmCount += 1;
+        	} while (vmCount > 0);
+  			if (isAllCollapse === false) {
   				return;
+            }
     	}
-    	displayViewAllImage(changeTo);		     		
-    } 
-    
-    //change the image of the view all	      
+    	displayViewAllImage(changeTo);
+    }
+    //change the image of the view all
     function displayViewAllImage(changeTo)
     {
     	//display proper image
@@ -363,39 +379,41 @@
     		case "expand":
     		case "expandAll":
     			document.getElementById("imgCloseAll").style.display = "none";
-    			document.getElementById("imgOpenAll").style.display = "inline"; 
+    			document.getElementById("imgOpenAll").style.display = "inline";
     			break;
-    	}        	
+    	}
     }
-    
-    //set or get the editing pv indicator            
+    //set or get the editing pv indicator
 	function getORsetEdited(pvNo, field)
 	{
 		var pvIndHidden = document.PVForm.editPVInd;
-		if (pvIndHidden != null)
+		if (pvIndHidden !== null)
 		{
-			if (pvNo == "none")
+			if (pvNo == "none") {
 				return pvIndHidden.value;
+            }
 			else
 			{
 				pvIndHidden.value = pvNo;
                 var obj = document.getElementsByName("txt" + pvNo + "Mean");
                 var txtMean = obj[0];
-				if ((field == "vm" || field == "vmd") && txtMean != null)
+				if ((field == "vm" || field == "vmd") && txtMean !== null) {
 					document.PVForm.currentVM.value = txtMean.value;
+                }
 			}
 		}
 	}
-
     function view(pvd, imgdhide, imgddisp, action, pvNo)
     {
         var pvdiv = document.getElementById(pvd);
         var imgdivhide = document.getElementById(imgdhide);
         var imgdivdisp = document.getElementById(imgddisp);
-  		if (validatePVAction(action) == false)
+  		if (validatePVAction(action) === false) {
   			return;
-  			
-    	if (action == "save") action = "open";	
+        }
+    	if (action == "save") {
+            action = "open";
+        }
     	viewVM = pvdiv;
     	var currDisp = viewVM.style.display;
     	if (currDisp == "block" && action != "open" && action != "edit")
@@ -407,82 +425,95 @@
     	else if (currDisp == "none")
     	{
     		viewVM.style.display = "block";
-    		if (action == "edit")
+    		if (action == "edit") {
     			viewVM.setAttribute("viewType", "edit");
-    		else
+            }
+    		else {
     			viewVM.setAttribute("viewType", "expand");
+            }
     		toggleActionAll("expand");
     	}
     	//view icons
-    	if (imgdivhide != null)
+    	if (imgdivhide !== null) {
     		imgdivhide.style.display = "none";
-    	if (imgdivdisp != null)
+        }
+    	if (imgdivdisp !== null) {
     		imgdivdisp.style.display = "inline";
+        }
     	//collpase the view while edit more will changes back to edit icon
     	if (currDisp == "block" && action == "view")
     	{
     		imgdivhide = document.getElementById(pvNo + "ImgSave");
-    		if (imgdivhide != null)
+    		if (imgdivhide !== null) {
     			imgdivhide.style.display = "none";
+            }
     		imgdivdisp = document.getElementById(pvNo + "ImgEdit");
-        	if (imgdivdisp != null)
+        	if (imgdivdisp !== null) {
         		imgdivdisp.style.display = "inline";
+            }
     	}
     	//do actions; mark to view if pv was opened already when done with editing
-    	if ((action == "open" || action == "edit") && pvNo != null)
+    	if ((action == "open" || action == "edit") && pvNo !== null)
     	{
     		imgdivhide = document.getElementById(pvNo + "ImgClose");
-    		if (imgdivhide != null)
+    		if (imgdivhide !== null) {
     			imgdivhide.style.display = "none";
+            }
     		imgdivdisp = document.getElementById(pvNo + "ImgOpen");
-        	if (imgdivdisp != null)
+        	if (imgdivdisp !== null) {
         		imgdivdisp.style.display = "inline";
-        	if (action == "open")
-    			action = "view";	        	
+            }
+        	if (action == "open") {
+    			action = "view";
+            }
     	}
     	//display delete icon when not editing
-    	if (action == "view" && pvNo != null)
+    	if (action == "view" && pvNo !== null)
     	{
     		imgdivhide = document.getElementById(pvNo + "ImgRestore");
-    		if (imgdivhide != null)
+    		if (imgdivhide !== null) {
     			imgdivhide.style.display = "none";
+            }
     		imgdivdisp = document.getElementById(pvNo + "ImgDelete");
-        	if (imgdivdisp != null)
+        	if (imgdivdisp !== null) {
         		imgdivdisp.style.display = "inline";
+            }
     	}
     	//display restore icon for undo the action while editing
-    	else if (action == "edit" && pvNo != null)
+    	else if (action == "edit" && pvNo !== null)
     	{
     		imgdivhide = document.getElementById(pvNo + "ImgDelete");
-    		if (imgdivhide != null)
+    		if (imgdivhide !== null) {
     			imgdivhide.style.display = "none";
+            }
     		imgdivdisp = document.getElementById(pvNo + "ImgRestore");
-        	if (imgdivdisp != null)
+        	if (imgdivdisp !== null) {
         		imgdivdisp.style.display = "inline";
+            }
     	}
     	//set the display value according to the action
-    	if (action == "view" || action == "edit")	
+    	if (action == "view" || action == "edit") {
     		changeDepDivDisplay(pvNo, action);
+        }
     }
-
 	function changeDepDivDisplay(pvNo, action)
 	{
 		var editDisp = "none";
-		if (action == "edit") 
+		if (action == "edit") {
 			editDisp = "block";
-			
+        }
 		//toggle value, vm and vmd displays
 		vvmvmdDisplay(pvNo, action);
-		
 		//concept label toggle
 		//changeElementText(pvNo, pvNo + "ConLbl", true, "", action);
 		var divConLink = document.getElementById(pvNo + "ConLink");
-		if (action == "edit")
+		if (action == "edit") {
 			divConLink.style.display = "inline";
-		else
+        }
+		else {
 			divConLink.style.display = "none";
-			
-    	//draw a line around concepts when editing	
+        }
+    	//draw a line around concepts when editing
     	var divCon = document.getElementById(pvNo + "Con");
     	if (action == "edit")
     	{
@@ -490,12 +521,12 @@
     		divCon.style.borderColor = "gray";
     		divCon.style.borderStyle = "solid";
     	}
-    	else
+    	else {
     		divCon.style.border = "0px";
-		    		
-	    	//display or undisplay the delete icon for concepts	
+        }
+	    	//display or undisplay the delete icon for concepts
     	count = 0;
-    	while (document.getElementById(pvNo + "con" + count) != null) 
+    	while (document.getElementById(pvNo + "con" + count) !== null)
     	{
     		var divConEdit = document.getElementById(pvNo + "con" + count);
     		divConEdit.style.display = editDisp;
@@ -507,35 +538,40 @@
 		changeElementText(pvNo, pvNo + "BD", false, "", action);
 		//end date data toggle (add hyperlink if editing)
 		changeElementText(pvNo, pvNo + "ED", false, "", action);
-	}        
-         
+	}
+
     function changeElementText(curPV, elmObjName, isBold, nodeText, action)
     {
 		var elmObj = document.getElementById(elmObjName);
-		if (elmObj != null)
+		if (elmObj !== null)
 		{
-    		//get the node text if empty -  toggling 
+    		//get the node text if empty -  toggling
   			var thisObj;
-  			if (elmObj.firstChild.nextSibling != null)
+  			if (elmObj.firstChild.nextSibling !== null) {
   			   thisObj = elmObj.firstChild.nextSibling;
-  			else
+            }
+  			else {
   			   thisObj = elmObj.firstChild;
-  			if (thisObj != null)
+            }
+  			if (thisObj !== null)
   			{
 	  			while (thisObj.nodeType != 3)
 	  			{
-  					if (thisObj.firstChild != null)
+  					if (thisObj.firstChild !== null) {
   						thisObj = thisObj.firstChild;
-  					else
+                    }
+  					else {
   						thisObj = thisObj.nextSibling;
+                    }
 	  			}
   			}
-  			else
-  				thisObj = elmObj;
+  			else {
+                thisObj = elmObj;
+            }
   			//get the text from the object
-  			if (nodeText == "" && thisObj.nodeValue != null)
+  			if (nodeText === "" && thisObj.nodeValue !== null) {
   				nodeText = thisObj.nodeValue;
-  						
+             }
 			//get the default text for viewing or editing
 			nodeText = getDefaultNodeText(elmObjName, action, nodeText);
 			//create object for node text
@@ -546,50 +582,49 @@
   				thisObj.parentNode.replaceChild(textNode,thisObj);
   				//thisObj.replaceNode(textNode);
   				return;
-  			}		
+  			}
 			else  //remove all nodes first when toggling
 			{
-			    while (elmObj.childNodes.length > 0) 
+			    while (elmObj.childNodes.length > 0)
 			    {
 			        elmObj.removeChild(elmObj.firstChild);
 			    }
 			}
+
 			var parentNode;
-			if (isBold)
+			if (isBold) {
 				parentNode = document.createElement("b");
+                elmObj.appendChild(parentNode);
+            }
+            else {
+                parentNode = elmObj;
+            }
+
 	 		//add the link if editing
 	    	if (action == "edit")
 	    	{
 		    	var linkNode = document.createElement("a");
 		    	var linkText = "";
-		    	if (elmObjName.match("Org") != null)
+		    	if (elmObjName.match("Org") !== null) {
 		    		linkText = "javascript:selectOrigin('" + elmObjName + "','" + curPV + "');";
-		    	else if ((elmObjName.match("ED") != null) || (elmObjName.match("BD") != null))
+                }
+		    	else if ((elmObjName.match("ED") !== null) || (elmObjName.match("BD") !== null)) {
 		    		linkText = "javascript:selectDate('" + elmObjName + "','" + curPV + "');javascript:calendar('hideDatePick', event);";
-		    	else if (elmObjName.match("Con") != null)
+                }
+		    	else if (elmObjName.match("Con") !== null) {
 		    		linkText = "javascript:selectConcept('" + elmObjName + "','" + curPV + "');";
-		    	
+                }
 		    	linkNode.setAttribute("href", linkText);
 		    	linkNode.appendChild(textNode);
-		    	if (isBold)
-		    		parentNode.appendChild(linkNode);
-		    	else
-		    		parentNode = linkNode;
-		    	//append it to the main object
-		    	elmObj.appendChild(parentNode);
+        		parentNode.appendChild(linkNode);
 	    	}
     		else if (action == "view")
     		{
-		    	if (isBold)
-		    		parentNode.appendChild(textNode);
-		    	else
-		    		parentNode = textNode;
-		    	//append it to the main object
-		    	elmObj.appendChild(parentNode);
+	    		parentNode.appendChild(textNode);
     		}
 		}
 	}
-    
+
 	function vvmvmdDisplay(pvNo, action)
 	{
 		//value, vm and vmd display
@@ -601,94 +636,115 @@
 		var divVMView = document.getElementById(pvNo + "VMView");
 		var divVMDEdit = document.getElementById(pvNo + "VMDEdit");
 		var divVMDView = document.getElementById(pvNo + "VMDView");
-		var divVMAltView = document.getElementById(pvNo + "VMAltView");		
+		var divVMAltView = document.getElementById(pvNo + "VMAltView");
 		var divVMEditLink = document.getElementById(pvNo + "VMEditLink");
 		var divcon = document.getElementById(pvNo + "con0");
 		if (action == "edit")
 		{
-			if (divValEdit != null)
+			if (divValEdit !== null) {
 				divValEdit.style.display = "block";
-			if (divValView != null)
+            }
+			if (divValView !== null) {
 				divValView.style.display = "none";
-			if (divVMAltView != null)
+            }
+			if (divVMAltView !== null) {
 				divVMAltView.style.display = "none";
-			if (divVMEditLink != null)
+            }
+			if (divVMEditLink !== null) {
 				divVMEditLink.style.display = "none";
+            }
 			//change the display only if it was existed (con does not exist)
-			if (divVMEdit != null)
+			if (divVMEdit !== null)
 			{
 				divVMEdit.style.display = "inline";
-				if (divVMView != null)
+				if (divVMView !== null) {
 					divVMView.style.display = "none";
-				if (divVMDEdit != null)
+                }
+				if (divVMDEdit !== null) {
 					divVMDEdit.style.display = "block";
-				if (divVMDView != null)
+                }
+				if (divVMDView !== null) {
 					divVMDView.style.display = "none";
+                }
 			}
 			//change valid value to edit only if exists
-			if (divVVEdit != null)
+			if (divVVEdit !== null)
 			{
 				divVVEdit.style.display = "block";
-				if (divVVView != null)
+				if (divVVView !== null) {
 					divVVView.style.display = "none";
-			}			
+                }
+			}
 		}
 		else
 		{
-			if (divVVEdit != null)
+			if (divVVEdit !== null) {
 				divVVEdit.style.display = "none";
-			if (divVVView != null)
+            }
+			if (divVVView !== null) {
 				divVVView.style.display = "block";
-			if (divValEdit != null)
+            }
+			if (divValEdit !== null) {
 				divValEdit.style.display = "none";
-			if (divValView != null)
+            }
+			if (divValView !== null) {
 				divValView.style.display = "block";
-			if (divVMEdit != null)
+            }
+			if (divVMEdit !== null) {
 				divVMEdit.style.display = "none";
-			if (divVMView != null)
+            }
+			if (divVMView !== null) {
 				divVMView.style.display = "inline";
-			if (divVMDEdit != null)
+            }
+			if (divVMDEdit !== null) {
 				divVMDEdit.style.display = "none";
-			if (divVMDView != null)
+            }
+			if (divVMDView !== null) {
 				divVMDView.style.display = "block";
-			if (divVMAltView != null)
+            }
+			if (divVMAltView !== null) {
 				divVMAltView.style.display = "inline";
-			if (divVMEditLink != null)
+            }
+			if (divVMEditLink !== null) {
 				divVMEditLink.style.display = "inline";
+            }
 		}
 	}
-    		
    function getDefaultNodeText(objName, action, nodeText)
    {
 	  	 //add text to the hyperlink if empty while editing
-	  	 if (action == "edit" && nodeText == "")
+	  	 if (action == "edit" && nodeText.replace(/\s*/, "").length === 0)
 	  	 {
-	  		 if (objName.match("Org") != null)
+	  		 if (objName.match("Org") !== null) {
 	  			 nodeText = "Search";
-	  		 else if (objName.match("BD") != null || objName.match("ED") != null)
+             }
+	  		 else if (objName.match("BD") !== null || objName.match("ED") !== null) {
 	  			 nodeText = "MM/DD/YYYY";
+             }
   		 }
   		 else if (action == "view")
   		 {
-  			 if (objName.match("Org") != null && nodeText == "Search")
+  			 if (objName.match("Org") !== null && nodeText == "Search") {
   				 nodeText = "";
-  			 else if ((objName.match("BD") != null || objName.match("ED") != null) && nodeText == "MM/DD/YYYY")
+            }
+  			 else if ((objName.match("BD") !== null || objName.match("ED") !== null) && nodeText == "MM/DD/YYYY") {
   				 nodeText = "";
+            }
   		 }
   		 return nodeText;
     }
-    		
 	function onLoad(focusElm)
 	{
-		//set the attributes of mode type for VM div 
+		//set the attributes of mode type for VM div
 		var vmCount = 0;
 		var expanded = false;
 		do
 		{
 			var vmObjID = "pv" + vmCount + "View";
 			var vmObj = document.getElementById(vmObjID);
-			if (vmObj == null)
+			if (vmObj === null) {
 			  break;
+            }
 			else
 			{
 				if (vmObj.style.display == "block")
@@ -696,60 +752,61 @@
 					vmObj.setAttribute("viewType", "expand");
 					expanded = true;
 				}
-				else
+				else {
 					vmObj.setAttribute("viewType", "collapse");
+                }
 			}
-			vmCount += 1;   
-		} while (vmCount > 0);  
+			vmCount += 1;
+		} while (vmCount > 0);
 		//make the allviews image as needed
-		if (expanded)
+		if (expanded) {
 	 		displayViewAllImage("expandAll");
- 			         		
+        }
 		//focus to this element
         if (focusElm !== null && focusElm.length > 0) {
     		var focusObj = document.getElementById(focusElm);
-    		if (focusObj != null)
+    		if (focusObj !== null) {
     			focusObj.scrollIntoView();
+            }
         }
-			
-		//do the parent select action if the parent was selected.	
-		selectParent();   
-		
+		//do the parent select action if the parent was selected.
+		selectParent();
 		//display error message for pv if exists
 		displayStatus();
 	}
-    		
 	function beforeRefresh(submitAct)
 	{
-		var pvViewTypes = document.getElementById("PVViewTypes");    
-		if (pvViewTypes != null)
-		{  
-			//make the first one expanded if adding new 
+        var vType;
+		var pvViewTypes = document.getElementById("PVViewTypes");
+		if (pvViewTypes !== null)
+		{
+			//make the first one expanded if adding new
 			if (submitAct == "addNewPV")
 			{
 				var firstRow = 0;
-				pvViewTypes = createRow(pvViewTypes, firstRow, vType)        		
-			} 	
+				pvViewTypes = createRow(pvViewTypes, firstRow, vType); // ERROR what is vType equal?
+			}
 			var vmCount = 0;
 			do
 			{
 	    		var vmObjID = "pv" + vmCount + "View";
 	    		var vmObj = document.getElementById(vmObjID);
-	    		if (vmObj == null)
+	    		if (vmObj === null) {
 	    		  break;
+                }
 	    		else
 	    		{
-	    			var vType = vmObj.getAttribute("viewType");
+	    			vType = vmObj.getAttribute("viewType");
 	    			var pvCount = vmCount;
-	    			if (submitAct == "addNewPV")
+	    			if (submitAct == "addNewPV") {
 	    				pvCount += 1;  //increase by one of adding new
-					pvViewTypes = createRow(pvViewTypes, pvCount, vType);  
+                    }
+					pvViewTypes = createRow(pvViewTypes, pvCount, vType);
 	    		}
 	    		vmCount += 1;
-			} while (vmCount > 0); 
+			} while (vmCount > 0);
 		}
 	}
-    		
   function createRow(obj, rowNo, vType)
   {
   	if (obj.length > rowNo)
@@ -764,29 +821,28 @@
 	obj[rowNo].selected = true;
     return obj;
   }
-
   function ClearBoxes()
   {
      SubmitValidate("clearBoxes");
   }
-
   function selectParent()
   {
   	var parObj = document.PVForm.listParentConcept;
-	if (parObj != null)
+	if (parObj !== null)
 	{
 	  var sInd = parObj.selectedIndex;
       if (sInd > -1)
       {
       	//enable unavailable label by default
       	var crepvObj = document.getElementById("divpvcreate_disable");
-      	if (crepvObj != null)  
+      	if (crepvObj !== null) {
       		crepvObj.style.display = "block";
+        }
       	 //disable available label by default
       	var serpvObj = document.getElementById("divpvcreate_enable");
-      	if (serpvObj != null) 
+      	if (serpvObj !== null) {
       		serpvObj.style.display = "none";
-      		
+        }
         //handle non evs parent or non enumerated parent
         var parType = parObj.options[sInd].value;
         var vdObj = document.PVForm.listVDType;
@@ -795,41 +851,44 @@
         selValObj.disabled = false;
         var rmParObj = document.PVForm.btnRemoveConcept;
         rmParObj.disabled = false;
-        if ((parType != null && parType == "Non_EVS") || (vdType != null && vdType == "N"))
+        if ((parType !== null && parType == "Non_EVS") || (vdType !== null && vdType == "N"))
         {
           selValObj.value = "View Parent";
           //make create value enabled if non evs parent
-          if (crepvObj != null)
-            crepvObj.style.display = "none";        
-      	  if (serpvObj != null) 
+          if (crepvObj !== null) {
+            crepvObj.style.display = "none";
+          }
+      	  if (serpvObj !== null) {
       		serpvObj.style.display = "block";
+          }
         }
-        else
+        else {
             selValObj.value = "Select Values";
+        }
       }
-	}  	
+	}
   }
-
   function selectValues(vocab)
   {
-     
-	  if (!validatePVAction('selectValues'))  //check if any pv is in edit mode
-	  	return;  
-	  //continue  	
+	  if (!validatePVAction('selectValues')) {  //check if any pv is in edit mode
+	  	return;
+      }
+	  //continue
   	  var parObj = document.PVForm.listParentConcept;
-	  if (parObj != null)
+	  if (parObj !== null)
 	  {
 	      var sInd = parObj.selectedIndex;
 	      //store the concept information in hidden selected fields
-	      storeConceptInfo(sInd);  //call the function	      
+	      storeConceptInfo(sInd);  //call the function
 	      var parType = parObj.options[sInd].value;
 	      document.SearchActionForm.isValidSearch.value = "false";   //reset it to false
 	      //non evs parent is to only view
-	      if (parType != null && parType == "Non_EVS")
+	      if (parType !== null && parType == "Non_EVS")
 	      {
-	        if (secondWindow && !secondWindow.closed)
-	            secondWindow.close()
-	        secondWindow = window.open("jsp/NonEVSSearchPage.jsp", "NonEVSParentView", "width=750,height=500,top=0,left=0,resizable=yes,scrollbars=yes")
+	        if (secondWindow && !secondWindow.closed) {
+	            secondWindow.close();
+            }
+	        secondWindow = window.open("jsp/NonEVSSearchPage.jsp", "NonEVSParentView", "width=750,height=500,top=0,left=0,resizable=yes,scrollbars=yes");
 	      }
 	      else
 	      {
@@ -837,69 +896,71 @@
 			openConceptSearchWindow("ParentConceptVM", "true",vocab);
 	      }
       }
-      
   }
-
   //submits the form to mark as removed
   function removeParent()
   {
-	  if (!validatePVAction('removeParent'))  //check if any pv is in edit mode
-	  	return;  
-	  //continue  	
+	  if (!validatePVAction('removeParent')) {  //check if any pv is in edit mode
+	  	return;
+      }
+	  //continue
   	  var parObj = document.PVForm.listParentConcept;
-	  if (parObj != null)
+	  if (parObj !== null)
 	  {
 	    var sInd = parObj.selectedIndex;
 	    if (sInd != -1)
 	    {
-	      //make a msg string according to evs or non evs parent 
+	      //make a msg string according to evs or non evs parent
 	      var parString = parObj[sInd].text;
 	      var parType = parObj.options[sInd].value;
           var vdObj = document.PVForm.listVDType;
 	      var vdType = vdObj.value;
 	      var sAct = "removeParent";  //default to remove parent
 	      var strMsg = "Removing Referenced Parent \n  " + parString;
-	      if ((parType != null && parType == "Non_EVS") || (vdType != null && vdType == "N"))
+	      if ((parType !== null && parType == "Non_EVS") || (vdType !== null && vdType == "N")) {
 	        strMsg += ".\n\n";
-	      else
+          }
+	      else {
 	        strMsg += "\n and all its restricted values.\n\n";
+          }
 	      strMsg = strMsg + "Click OK to remove.";
-	      //check if ok continue removing       
+	      //check if ok continue removing
 	      var remPVs = false;
 	      remPVs = confirm(strMsg);
-	      if (remPVs == false)
+	      if (remPVs === false) {
 	      	return;
-	      else if (vdType != null && vdType != "N")
+          }
+	      else if (vdType !== null && vdType != "N") {
 	        sAct = "removePVandParent";  //remove both parent and children
-	        
+          }
 	      //store the concept information in hidden selected fields
-	      storeConceptInfo(sInd);  
+	      storeConceptInfo(sInd);
 	      //submit the form to refresh.
 	      SubmitValidate(sAct);
 	    }
-	    else
+	    else {
 	      alert("Please select a parent to remove");
+        }
       }
   }
-  
   function storeConceptInfo(sInd)
   {
 	  var sParentCode = document.PVForm.ParentCodes.options[sInd].value;
 	  var sParentName = document.PVForm.ParentNames.options[sInd].text;
-	  var sParentDB = document.PVForm.ParentDB.options[sInd].text; 
+	  var sParentDB = document.PVForm.ParentDB.options[sInd].text;
 	  var sParentMetaSource = document.PVForm.listParentConcept.options[sInd].text;
 	  document.PVForm.selectedParentConceptCode.value = sParentCode;
 	  document.PVForm.selectedParentConceptName.value = sParentName;
 	  document.PVForm.selectedParentConceptDB.value = sParentDB;
 	  document.PVForm.selectedParentConceptMetaSource.value = sParentMetaSource;
   }
-
   function createParent(vocab)
   {
-	  if (!validatePVAction('createParent'))  //check if any pv is in edit mode
-	  	return; 
-	  var pvViewTypes = document.PVForm.PVViewTypes;	
-	  var listPConcept = document.PVForm.listParentConcept; 
+	  if (!validatePVAction('createParent')) {  //check if any pv is in edit mode
+	  	return;
+      }
+	  var pvViewTypes = document.PVForm.PVViewTypes;
+	  var listPConcept = document.PVForm.listParentConcept;
       //do not allow to create parent if pvs exist without parents
       var pvCount = pvViewTypes.length;
       var parCount = listPConcept.length;
@@ -913,38 +974,39 @@
       	openConceptSearchWindow("ParentConcept", "term",vocab);
       }
   }
-  
   function createMultipleValues(vocab)
   {
-	  if (!validatePVAction('createMultipleValues'))  //check if any pv is in edit mode
-	  	return;  
-	  //continue  	
+	  if (!validatePVAction('createMultipleValues')) {  //check if any pv is in edit mode
+	  	return;
+      }
+	  //continue
   	  var vdtypeObj = document.PVForm.listVDType;
       if (vdtypeObj.value == "E")
       {
           openConceptSearchWindow("EVSValueMeaning", "term", vocab);
       }
-      else
+      else {
           alert("Type must be 'Enumerated' to create/edit/remove Permissible Values.");
+      }
   }
-  
   function openConceptSearchWindow(serComp, treeOpen, vocab)
   {
 	  document.SearchActionForm.searchComp.value = serComp;
 	  document.PVForm.openToTree.value = treeOpen;
 	  document.SearchActionForm.isValidSearch.value = "false";
-	  if (secondWindow && !secondWindow.closed)
-	    secondWindow.close()
-      if(treeOpen == "true")
-    	  searchWindow = window.open("jsp/OpenSearchWindowBlocks.jsp", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes")
+	  if (secondWindow && !secondWindow.closed) {
+	    secondWindow.close();
+      }
+      if(treeOpen == "true") {
+    	  searchWindow = window.open("jsp/OpenSearchWindowBlocks.jsp", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
+      }
       else
       {
           document.SearchActionForm.isValidSearch.value = "true";
     	  var url = "../../cdecurate/NCICurationServlet?reqType=searchBlocks&actSelect=FirstSearch" + "&listSearchFor=" + serComp + "&listContextFilterVocab=" + vocab;
     	  searchWindow = window.open(url ,  "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
-      }	
+      }
   }
-  
     //sort the pv attributes
   function sortPV(fieldName)
   {
@@ -955,19 +1017,18 @@
       SubmitValidate("sortPV");
     }
   }
-  
   //disables the valid value selection
   function disableSelect()
   {
     var sInd = document.getElementById("selValidValue").selectedIndex;
-    if (sInd >-1)
+    if (sInd >-1) {
       document.getElementById("selValidValue").selectedIndex = -1;
+    }
   }
-
   //adds new option for the hidden vm select fields from new window
   function AllocSelRowOptions(rowArray)
   {
-  	if (rowArray != null)
+  	if (rowArray !== null)
   	{
 	    for (var i = 0; rowArray.length > i; i++)
 	    {
@@ -975,36 +1036,37 @@
 	      document.PVForm.hiddenSelRow[i].selected = true;
 	    }
     }
-  } 
-  
+  }
 	//to change the origin value, store the editing element and pv number in the hidden field
     function selectOrigin(curElm, curPV)
     {
 	  	//check if any item was in edit mode
 	  	if (curPV == "all")
 	  	{
-		  if (!validatePVAction('allOrigin'))  //check if any pv is in edit mode
-		  	return;  
+		  if (!validatePVAction('allOrigin')) {  //check if any pv is in edit mode
+		  	return;
+          }
 	  	}
 	  	var curInd = document.PVForm.currentElmID;
-	  	if (curInd != null)
+	  	if (curInd !== null)
 	  	{
 	  		curInd.value = curElm;
 	  		document.PVForm.currentPVInd.value = curPV;
-		  	if (secondWindow && !secondWindow.closed)
-		    	secondWindow.close()
-		  	secondWindow = window.open("jsp/ACOrigin.jsp", "SelectOrigin", "width=750,height=700,top=0,left=0,resizable=yes,scrollbars=yes")	  		
+		  	if (secondWindow && !secondWindow.closed) {
+		    	secondWindow.close();
+            }
+		  	secondWindow = window.open("jsp/ACOrigin.jsp", "SelectOrigin", "width=750,height=700,top=0,left=0,resizable=yes,scrollbars=yes");
 	  	}
     }
-
 	//to change the date value, store the editing element and pv number in the hidden field
     function selectDate(curElm, curPV)
     {
 	  	//check if any item was in edit mode
 	  	if (curPV == "all")
 	  	{
-		  if (!validatePVAction('allDate'))  //check if any pv is in edit mode
-		  	return;  
+		  if (!validatePVAction('allDate')) { //check if any pv is in edit mode
+		  	return;
+          }
 	  	}
 	  	var curInd = document.PVForm.currentElmID;
 	  	if (curInd !== null)
@@ -1013,7 +1075,6 @@
             document.PVForm.currentPVInd.value = curPV;
 	  	}
     }
-  
   	//append the selected date to the respective table data and hidden fields
   	function appendDate(sDate)
 	{
@@ -1023,7 +1084,7 @@
 		if (curelmInd !== null)
 		{
 			curelm = curelmInd.value;
-			if (curelm != null && curelm != "")
+			if (curelm !== null && curelm !== "")
 			{
 				if (curelm == "allBeginDate" || curelm == "allEndDate")
 				{
@@ -1036,64 +1097,64 @@
 					document.getElementById(curelm).innerHTML = sDate; // changeElementText(curPV, curelm, false, sDate, "replace");
 					success = true;
 					//udate the hidden fields
-					if (curPV !== null && curPV.value != null) {
+					if (curPV !== null && curPV.value !== null) {
                         document.PVForm.editPVInd.value = curPV.value;
                     }
-					if (curelm.match("ED") != null) {
+					if (curelm.match("ED") !== null) {
                         document.PVForm.currentED.value = sDate;
                     }
-					if (curelm.match("BD") != null) {
+					if (curelm.match("BD") !== null) {
                         document.PVForm.currentBD.value = sDate;
                     }
 				}
 			}
 		}
-		if (success == false)
-			alert(curelm + " Unable to append the Date for the selected Permissible Value " + sDate);		
+		if (success === false) {
+			alert(curelm + " Unable to append the Date for the selected Permissible Value " + sDate);
+        }
 	}
-	
 	//submit the page to change all the data
     function changeAll(fType, fData)
     {
    // alert(fType + fData);
-    	if (fType == "allOrigin")
+    	if (fType == "allOrigin") {
 			document.PVForm.currentOrg.value = fData;
-		else if (fType == "allBeginDate")
+        }
+		else if (fType == "allBeginDate") {
 			document.PVForm.currentBD.value = fData;
-		else if (fType == "allEndDate")
+        }
+		else if (fType == "allEndDate") {
 			document.PVForm.currentED.value = fData;
+        }
     	SubmitValidate('changeAll');
     }
-    
-
 	//to add concepts to the vm, store the editing element and pv number in the hidden field
   function selectConcept(curElm, curPV,vocab)
   {
   	var curInd = document.PVForm.currentElmID;
-  	if (curInd != null)
+  	if (curInd !== null)
   	{
   		curInd.value = curElm;
   		document.PVForm.currentPVInd.value = curPV;
         openConceptSearchWindow("VMConcept", "term",vocab);
   	}
   }
-  
   	//add a row to append the selected concept to teh vm
   	function appendConcept(txName, txId, txVocab, vmName, vmDesc)
 	{
 		var curPV = document.PVForm.currentPVInd;
-		if (curPV != null && curPV.value != null)
+		if (curPV !== null && curPV.value !== null)
 		{
 			changeConceptText(curPV.value, txName, txId, txVocab, vmDesc);
 			//update the hidden fields
 			document.PVForm.editPVInd.value = curPV.value;
 			//update vm name and description
-			appendVMNameDesc(curPV.value, vmName, vmDesc)
+			appendVMNameDesc(curPV.value, vmName, vmDesc);
 		}
-		else
-			alert(curPV.value + " Unable to append the Date for the selected Permissible Value " + txName);		
+		else {
+			alert(curPV.value + " Unable to append the Date for the selected Permissible Value " + txName);
+        }
 	}
-
 	function changeConceptText(pvInd, txName, txId, txVocab, txDesc)
 	{
   		//get teh con count
@@ -1103,29 +1164,30 @@
    		var trCur;
    		var curTrCount = totalCon;
   		var txType = "Qualifier";
-  		if (totalCon < 1) 			//(isNewP)
+  		if (totalCon < 1) {			//(isNewP)
   			trCur = curTbl.insertRow();
+        }
   		else
   		{
   			curTrCount = (totalCon-1);
   			//use the empty one if exists
   			var trP = curTbl.rows[curTrCount];
-  			if (trP != null && (trP.getAttribute("id") == null || trP.getAttribute("id") == ""))
+  			if (trP !== null && (trP.getAttribute("id") === null || trP.getAttribute("id") === ""))
   			{
   				txType = "Primary";
   			 	trCur = curTbl.rows[curTrCount];
-  			    //trCur.deleteCell(); 
+  			    //trCur.deleteCell();
   			}
-  			else //if (trP != null)  //push forward the last one in the list 
+  			else //if (trP != null)  //push forward the last one in the list
   			{
   				trCur = curTbl.insertRow(curTrCount);
   				trP = curTbl.rows[totalCon];
   				trP.setAttribute("id", pvInd + "tr" + totalCon);
-  				//change the id of the delete div 
+  				//change the id of the delete div
   				replaceDelDiv(trP, curTrCount, totalCon, pvInd, trP.getAttribute("id"));
   			}
   		}
-  		//add id to the row	
+  		//add id to the row
   		var trID = pvInd + "tr" + curTrCount;
   		trCur.setAttribute("id", trID);
   		//create first column
@@ -1142,14 +1204,13 @@
   		//create conVocab column
   		var tdD = createTD("conDesc", txDesc, "", trID, pvInd);
   		//append the cells to the row
-		trCur.appendChild(tdIm);																			
-		trCur.appendChild(tdN);																			
-		trCur.appendChild(tdId);																			
-		trCur.appendChild(tdV);																			
-		trCur.appendChild(tdT);																			
-		trCur.appendChild(tdD);																			
+		trCur.appendChild(tdIm);
+		trCur.appendChild(tdN);
+		trCur.appendChild(tdId);
+		trCur.appendChild(tdV);
+		trCur.appendChild(tdT);
+		trCur.appendChild(tdD);
  	}
-  
   	function createTD(tdType, sText, divId, trID, pvInd)
   	{
   		var tdElm = document.createElement("td");
@@ -1165,8 +1226,9 @@
   		{
   			var nodeText = document.createTextNode(sText);
   			var spText = document.createTextNode("\u00a0");
-  			if (tdType == "conId")
+  			if (tdType == "conId") {
   				tdElm.appendChild(spText);
+            }
   			//make description invisible
   			if (tdType == "conDesc")
   			{
@@ -1180,35 +1242,29 @@
   			else
   			{
   				tdElm.appendChild(nodeText);
-  			  	tdElm.appendChild(spText);  
-  			}			
+  			  	tdElm.appendChild(spText);
+  			}
   		}
   		return tdElm;
   	}
-  	
   	function appendDelDiv(delDiv, divId, trID, pvInd)
   	{
   		delDiv.setAttribute("id", divId);
   		delDiv.setAttribute("style", "display:inline");
-  		
   		var divLink = document.createElement("a");
   		divLink.href = "javascript:deleteConcept('" + trID + "', '" + pvInd + "');";
   		divLink.title = "Remove Item";
-  	  	
   	  	var divImg = document.createElement("img");
   		divImg.src = "images/delete_small.gif";
   		divImg.border = "0";
   		divImg.alt = "Remove";
-  		
   		divLink.appendChild(divImg);
   		delDiv.appendChild(divLink);
   		//put extra space
   		var spText = document.createTextNode("\u00a0");
   		delDiv.appendChild(spText);
-  		
   		return delDiv;
   	}
-  	
   	function appendVMNameDesc(pvInd, vmName, vmDesc)
   	{
   		//append the current desc to the vm description
@@ -1219,7 +1275,7 @@
   		for (var i =0; i<tblLen; i++)
   		{
   			var nameCell = curTbl.rows[i].cells[1];
-  			if (appName != "") {
+  			if (appName !== "") {
                 appName += " ";
             }
             if (nameCell !== null) {
@@ -1228,75 +1284,75 @@
                     appName += nameCellT;
                 }
             }
-
   			var descCell = curTbl.rows[i].cells[5];
-  			if (appDesc != "") {
+  			if (appDesc !== "") {
                 appDesc += ": ";
             }
-  			if (descCell != null) {
+  			if (descCell !== null) {
                 var descCellT = (descCell.innerText) ? descCell.innerText : descCell.textContent;
-                if (descCellT != null && descCellT != "") {
+                if (descCellT !== null && descCellT !== "") {
   				    appDesc += descCellT;
                 }
             }
   		}
-  		
   		var vm = document.getElementById(pvInd + "VMView");
-  		if (vm != null && vm.style.display == "none")
+  		if (vm !== null && vm.style.display == "none")
   		{
   			vm.style.display = "inline";
   			vmedit = document.getElementById(pvInd + "VMEdit");
-  			if (vmedit != null)
+  			if (vmedit !== null) {
   				vmedit.style.display = "none";
+            }
   		}
   		vm.innerText = appName;  // vmName;
-  		vm.textContent = appName; 
+  		vm.textContent = appName;
   		document.PVForm.currentVM.value = appName;
-  		
   		//get the vm description object
   		var vmd = document.getElementById(pvInd + "VMDView");
-  		if (vmd != null && vmd.style.display == "none")
+  		if (vmd !== null && vmd.style.display == "none")
   		{
   			vmd.style.display = "block";
   			vmdedit = document.getElementById(pvInd + "VMDEdit");
-  			if (vmdedit != null)
+  			if (vmdedit !== null) {
   				vmdedit.style.display = "none";
+            }
   		}
   		vmd.innerText = appDesc;  // vmDesc;
-  		vmd.textContent = appDesc; 
+  		vmd.textContent = appDesc;
   		//make sure to disable the search link also when vm name exists
-  		if (appName != "")
-  			disableSearch('pvNew');  
+  		if (appName !== "") {
+  			disableSearch('pvNew');
+        }
   		return;
   	}
-  	
   	function enableEditVM(pvInd)
-  	{  		
+  	{
   		//get value meaning object
   		var vm = document.getElementById(pvInd + "VMEdit");
-  		if (vm != null && vm.style.display == "none")
+  		if (vm !== null && vm.style.display == "none")
   		{
   			vm.style.display = "block";
   			vmedit = document.getElementById(pvInd + "VMView");
-  			if (vmedit != null)
+  			if (vmedit !== null) {
   				vmedit.style.display = "none";
+            }
   		}
-  		var vmTE = document.getElementById("txt" +pvInd + "Mean");  		
-  		if (vmTE != null)
+  		var vmTE = document.getElementById("txt" +pvInd + "Mean");
+  		if (vmTE !== null) {
   			document.PVForm.currentVM.value = vmTE.value;
-  		
+        }
   		//get the vm description object
   		var vmd = document.getElementById(pvInd + "VMDEdit");
-  		if (vmd != null && vmd.style.display == "none")
+  		if (vmd !== null && vmd.style.display == "none")
   		{
   			vmd.style.display = "block";
   			vmdedit = document.getElementById(pvInd + "VMDView");
-  			if (vmdedit != null)
+  			if (vmdedit !== null) {
   				vmdedit.style.display = "none";
+            }
   		}
-  		var vmDE = document.getElementById("txt" +pvInd + "Def");  
+  		var vmDE = document.getElementById("txt" +pvInd + "Def");
   	}
-  	
   	function deleteConcept(trId, pvId)
   	{
   		//get teh con count
@@ -1305,37 +1361,37 @@
   		for (var i=0; i<totalCon; i++)
   		{
   			var curTr = curTbl.rows[i];
-  			if (curTr != null && curTr.getAttribute("id") == trId)
+  			if (curTr !== null && curTr.getAttribute("id") == trId)
   			{
   				var parPrim = "";
   				var par = document.getElementById(pvId + "Par");
-  				if (par != null)
+  				if (par !== null) {
   					parPrim = (par.innerText) ? par.innerText : par.testContent;
+                }
 		  		//do not remove if the primary concept that is associated to a parent
-		  		if (parPrim != null && parPrim != "" && i == totalCon -1)
+		  		if (parPrim !== null && parPrim !== "" && i == totalCon -1)
 		  		{
 		  			alert("The primary concept cannot be removed when the Permissible Value is referenced by a parent concept." +
 		  				"\nTo remove this concept, you must remove the Permissible Value.");
-		  			break;  			
+		  			break;
 		  		}
-		  		
   				//change the id of the other rows
   				for (var j = i+1; j<totalCon; j++)
   				{
   					var nextTr = curTbl.rows[j];
   					nextTr.setAttribute("id", pvId + "tr" + (j-1));
   					replaceDelDiv(nextTr, j, j-1, pvId, trId);
-  				} 
-  				curTbl.deleteRow(i);  				
+  				}
+  				curTbl.deleteRow(i);
   				document.PVForm.editPVInd.value = pvId;
-  				appendVMNameDesc(pvId, "", "")
+  				appendVMNameDesc(pvId, "", "");
   				isDelete = true;
   				break;
   			}
   		}
   		//enable text box if no concepts exist
-  		var totalCon = curTbl.rows.length;
-  		if (totalCon == 0)
+  		totalCon = curTbl.rows.length;
+  		if (totalCon === 0)
   		{
   			//create empty row
   			var trCur = curTbl.insertRow();
@@ -1343,56 +1399,54 @@
   			trCur.appendChild(tdN);
   			//make vm edit mode do this later
   			//enableEditVM(pvId);
-  		}  		
+  		}
   	}
-  	
   	function replaceDelDiv(selTr, cD, nD, pvId, trId)
   	{
   		var delDiv = document.getElementById(pvId + "Con" + cD);
-  		if (delDiv != null)
+  		if (delDiv !== null)
   		{
 			var newDiv = document.createElement("div");
 			var divId = pvId + "Con" + nD;
 			newDiv = appendDelDiv(newDiv, divId, trId, pvId);
-			var delDiv = selTr.cells(0).replaceChild(newDiv, delDiv);
+			delDiv = selTr.cells(0).replaceChild(newDiv, delDiv);
   		}
   	}
-  	
   	//store the Edited concepts of the VM in hidden select box
   	function storeVMConcept(sAct)
   	{
   		var id = document.PVForm.editPVInd;
   		var pvId = id.value;
-  		if (pvId != null && pvId != "")
+  		if (pvId !== null && pvId !== "")
   		{
   			//make sure vm text exists and no duplicate pvvm
 	  		if (sAct == "save" || sAct == "edit")
 	  		{
-	  			if (checkVMText(pvId) == false)
+	  			if (checkVMText(pvId) === false) {
 	  				return false;
+                }
 	  		}
-  			//add the concepts to the hidden field	
+  			//add the concepts to the hidden field
 	  		var hidElm = document.getElementById("hiddenConVM");
-	  		if (hidElm != null)
+	  		if (hidElm !== null)
 	  		{
 		  		var curTbl = document.getElementById(pvId + "TBL");
 		  		var totalCon = curTbl.rows.length;
 		  		for (var i=0; i<totalCon; i++)
 		  		{
 		  			var curTr = curTbl.rows[i];
-		  			if (curTr != null && curTr.cells(2) != null)
+		  			if (curTr !== null && curTr.cells(2) !== null)
 		  			{
 		  				var oText = (curTr.cells(2).innerText) ? curTr.cells(2).innerText : curTr.cells(2).textContent;
 			  			var elmLen = hidElm.length;
 			  			hidElm[elmLen] = new Option(oText, oText);
 			  			hidElm[elmLen].selected = true;
 		  			}
-		  		}		  		
+		  		}
 	  		}
   		}
   		return true;
   	}
-  	
   	function checkVMText(pvId)
   	{
   			//get the vm object
@@ -1400,19 +1454,20 @@
   		 	var vmText = "";
             var objs;
   		 	vmT = document.getElementById(pvId + "VMView");
-  		 	if (vmT != null){
+  		 	if (vmT !== null) {
   		 		vmText = vmT.innerText;
   		 		vmText = vmT.textContent;
-  		    }		
-  		 	if (vmText == "")
+  		    }
+  		 	if (vmText === "")
   		 	{
   		 		objs = document.getElementsByName("txt" + pvId + "Mean");
                 var vmInput = objs[0];
-  		 		if (vmInput != null)
+  		 		if (vmInput !== null) {
   		 			vmText = vmInput.value;
+                }
   		 	}
   		 	//now check if vm exists
-  		 	if (vmText == null || vmText == "")
+  		 	if (vmText === null || vmText === "")
   		 	{
   		 		alert("Value Meaning is mandatory for a Permissible Value.  Please add a Value Meaning.");
   		 		return false;
@@ -1421,18 +1476,14 @@
 	  		var vText = "";
 	  		objs = document.getElementsByName("txt" + pvId + "Value");
             var pvT = objs[0];
-	  		if (pvT != null)
+	  		if (pvT !== null) {
 	  			vText = pvT.value;
-	  		
+            }
   			return checkPVVMCombDuplicate(vText, vmText, pvId);
-  			
-  		//finally	
-  		return true;
   	}
-  	
   	function checkPVVMCombDuplicate(sVal, sVM, pvId)
   	{
-		//make it lower case no space for matching  		
+		//make it lower case no space for matching
 		sVal = sVal.toLowerCase();
   		while (sVal.indexOf(' ') > 0)
 		{
@@ -1462,13 +1513,13 @@
     					{
     						val = val.replace(' ', '');
     					}
-    	  				
     	  				var vm = "";
     	  				var vmTr = document.getElementById(pvCount + "VMView");
                         if (vmTr !== null) {
                             var vmTrT = (vmTr.innerText) ? vmTr.innerText : vmTr.textContent;
-        		  			if (vmTrT !== "")
+        		  			if (vmTrT !== "") {
         	  					vm = vmTrT;
+                            }
         			  		vm = vm.toLowerCase();   //make it lower case no space for matching
         			  		while (vm.indexOf(' ') > 0)
         					{
@@ -1478,41 +1529,41 @@
         	  				{
         	  					alert("The Value and the Value Meaning combination must be unique in the Value Domain." +
         	  						"\n Modify either the Value or the Value Meaning to create new Permissible Value.");
-        	  					return false; 
+        	  					return false;
         	  				}
                         }
     	  			}
                 }
-	  			else  //may be no more rows
-	  				return true;  
+	  			else { //may be no more rows
+	  				return true;
+                }
   			}
   			i += 1;
   		}
-  		while (i > 0)
+  		while (i > 0);
   		//none found
   		return true;
   	}
-  	
   	function searchVM()
     {
-	    if (document.SearchActionForm.searchComp != null)
+	    if (document.SearchActionForm.searchComp !== null)
 	    {
 	        document.SearchActionForm.searchComp.value = "ValueMeaning";
 	        document.SearchActionForm.isValidSearch.value = "false";
 	    }
-	    if (secondWindow && !secondWindow.closed)
-	      secondWindow.close()
-	    secondWindow = window.open("jsp/OpenSearchWindow.jsp", "searchWindow", "width=875,height=570,top=0,left=0,resizable=yes,scrollbars=yes")
+	    if (secondWindow && !secondWindow.closed) {
+	      secondWindow.close();
+        }
+	    secondWindow = window.open("jsp/OpenSearchWindow.jsp", "searchWindow", "width=875,height=570,top=0,left=0,resizable=yes,scrollbars=yes");
     }
-    
     function enableUSE()
     {
   		var usElm = document.getElementById("btnUseSelect");
-  		if (usElm != null)
+  		if (usElm !== null) {
     		usElm.disabled = false;
+        }
     	document.PVForm.currentVM.value = "selected one";
     }
-    
     function openEditVMWindow(curPV)
     {
     	document.PVForm.editPVInd.value = curPV;
@@ -1521,9 +1572,8 @@
     function openViewVMWindow(curPV, id)
     {
     	var name = "ViewAC"+id.replace(/-/g,"")+curPV;
-    	var viewWindow = window.open("../../cdecurate/NCICurationServlet?reqType=viewPVAction&action=viewVM&viewPVInd=" +curPV+ "&id=" +id, name, "width=1000,height=1000,top=0,left=0,resizable=yes,scrollbars=yes");
+    	window.open("../../cdecurate/NCICurationServlet?reqType=viewPVAction&action=viewVM&viewPVInd=" +curPV+ "&id=" +id, name, "width=1000,height=1000,top=0,left=0,resizable=yes,scrollbars=yes");
     }
-    
    //sort the pv attributes
   function viewPVSort(fieldName, id)
   {
@@ -1544,5 +1594,3 @@
     document.PVForm.pageAction.value  = "goBack";
     document.PVForm.submit();
    }
-  
-  
