@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.55 2009-02-10 19:15:27 chickerura Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/RefDocAttachment.java,v 1.56 2009-04-15 17:53:38 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -236,10 +236,10 @@ public void doOpen (){
 
 							//  if the ref doc is in a writable context add the delete X
 							if (refBean.getIswritable())	{
-							Doclist = Doclist + "<span title=\"Delete Attachment\" onclick=\"onDocDelete('" 
+							Doclist = Doclist + "<img src=\"images/delete_small.gif\" title=\"Delete Attachment\" onclick=\"onDocDelete('" 
 											  + fileName + "' , '" 
 											  + fileName2[1] 
-											  + "' )\"; style=\" font-family: Webdings; cursor: pointer; font-size: 12pt; font-weight: bold\">&#114;</span>"
+											  + "' );\">"
 											  + "&nbsp;&nbsp;"
 											  + "<a href=\""
 											  + RefDocFileUrl 
