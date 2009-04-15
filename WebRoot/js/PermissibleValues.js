@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.25 2009-04-15 14:34:16 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.26 2009-04-15 20:00:32 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -98,10 +98,10 @@
 	  if (pvObj !== null)
 	  {
 	  	var pvNo = pvObj.value;
-		var hlObj = document.getElementsByName(pvNo + "ImgSaveLink");
-		if (hlObj[0] !== null)
+		var hlObj = document.getElementById(pvNo + "ImgSaveLink");
+		if (hlObj !== null)
 		{
-			hlObj[0].href = "javascript:disabled();";
+			hlObj.href = "javascript:disabled();";
 		}
 	  }
 	}
@@ -173,7 +173,7 @@
     {
     	if (pvNo == "pvNew")
     	{
-    		var vmEDiv = document.PVForm.pvNewVMLblEdit;
+    		var vmEDiv = document.getElementById("pvNewVMLblEdit");
     		if (vmEDiv !== null && vmEDiv.style.display == "inline") {
     			vmEDiv.style.display = "none";
             }
@@ -242,7 +242,7 @@
     	{
     		if (checkPVVMCombDuplicate(txtPV, txtVM, "newPV"))
     		{
-    			var bSave = document.getElementById("btnCreateNew");
+    			var bSave = document.PVForm.btnCreateNew.value;
     			if (bSave !== null && !bSave.disabled) {
     				bSave.disabled = true;
                 }
@@ -1176,7 +1176,11 @@
   			{
   				txType = "Primary";
   			 	trCur = curTbl.rows[curTrCount];
-  			    //trCur.deleteCell();
+  			    if (navigator.userAgent.indexOf('Firefox') != -1){
+  			      trCur.deleteCell(trCur.firstChild.nextSibling); 
+  			    }else{
+  			      trCur.deleteCell();
+  			    } 
   			}
   			else //if (trP != null)  //push forward the last one in the list
   			{
@@ -1409,7 +1413,7 @@
 			var newDiv = document.createElement("div");
 			var divId = pvId + "Con" + nD;
 			newDiv = appendDelDiv(newDiv, divId, trId, pvId);
-			delDiv = selTr.cells(0).replaceChild(newDiv, delDiv);
+			delDiv = selTr.cells[0].replaceChild(newDiv, delDiv);
   		}
   	}
   	//store the Edited concepts of the VM in hidden select box
