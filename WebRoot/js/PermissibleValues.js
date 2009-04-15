@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.21 2009-04-13 22:20:13 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.22 2009-04-15 11:53:50 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -703,9 +703,11 @@
 	 		displayViewAllImage("expandAll");
  			         		
 		//focus to this element
-		var focusObj = document.getElementById(focusElm);
-		if (focusObj != null)
-			focusObj.scrollIntoView();
+        if (focusElm !== null && focusElm.length > 0) {
+    		var focusObj = document.getElementById(focusElm);
+    		if (focusObj != null)
+    			focusObj.scrollIntoView();
+        }
 			
 		//do the parent select action if the parent was selected.	
 		selectParent();   
