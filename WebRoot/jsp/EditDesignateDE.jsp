@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDesignateDE.jsp,v 1.4 2009-02-27 23:30:11 guthikondak Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDesignateDE.jsp,v 1.6 2009-04-16 18:10:36 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -10,7 +10,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<%@ page import="java.util.*"%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
-		<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 		<%@ page session="true"%>
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
@@ -35,10 +34,13 @@
     if (acType == null) acType = "";
     String sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
     String sOriginAction = (String)session.getAttribute("originAction");
-    String desigMenuAction = (String)request.getAttribute("designateMenu");
-    String desigOriginAction = (String)request.getAttribute("designateBE");
-    String desigHeading = (String)request.getAttribute("desigHeading");
+    String desigMenuAction = (String)session.getAttribute("designateMenu");
+    String desigOriginAction = (String)session.getAttribute("designateBE");
+    String desigHeading = (String)session.getAttribute("desigHeading");
     if (sOriginAction == null) sOriginAction = "";
+    if (desigMenuAction == null) desigMenuAction = "";
+    if (desigOriginAction == null) desigOriginAction = "";
+    if (desigHeading == null) desigHeading = "";
     String sACIDSEQ = "", sLongName = "";
     DE_Bean m_DE = null;
     DEC_Bean m_DEC = null;
