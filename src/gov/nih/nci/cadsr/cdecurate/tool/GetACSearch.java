@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.91 2009-04-16 18:42:48 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.92 2009-04-16 18:49:40 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -4346,7 +4346,13 @@ public class GetACSearch implements Serializable
 							VMServlet vmser = new VMServlet(m_classReq,	m_classRes, m_servlet);
 							VM_Bean vm = (VM_Bean) session.getAttribute(VMForm.SESSION_SELECT_VM);
 							vmser.writeDetailJsp(vm);
-						}
+							} else {
+								session.setAttribute("editID", VMBean.getIDSEQ());
+								isValid = false;
+	                            break;
+							}
+	                          
+	                        }
                         
                         else if (sSearchAC.equals("Questions"))
                         {
