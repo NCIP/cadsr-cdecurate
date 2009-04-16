@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.89 2009-04-15 21:25:11 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.90 2009-04-16 18:33:09 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -4152,8 +4152,8 @@ public class GetACSearch implements Serializable
             if (sAction.equals("EditDesDE"))
                 sMenuAction = sAction;
             // reset cs/csi vectors prior to each block edit
-            req.setAttribute("designateMenu", sMenuAction);
-            req.setAttribute("designateBE", "");
+            session.setAttribute("designateMenu", sMenuAction);
+            session.setAttribute("designateBE", "");
             Vector selectedRows = new Vector();
             String unCheckedRowId = (String) m_classReq.getParameter("unCheckedRowId");
             if (unCheckedRowId != null && !(unCheckedRowId == "")){
@@ -4167,7 +4167,7 @@ public class GetACSearch implements Serializable
                     	DataManager.setAttribute(session, "ckName", ckName);
                         vCheckList.addElement(ckName);
                         selectedRows.add(vSRows.elementAt(i));
-                        req.setAttribute("designateBE", "BlockEditDE");
+                        session.setAttribute("designateBE", "BlockEditDE");
                     }
             	}
             }
@@ -4226,7 +4226,7 @@ public class GetACSearch implements Serializable
                                 }
                                 String desigHeading = DEBean.getDE_LONG_NAME()+ " ["
                                 + DEBean.getDE_MIN_CDE_ID()+"v"+DEBean.getDE_VERSION()+"]";
-                                req.setAttribute("desigHeading", desigHeading);
+                                session.setAttribute("desigHeading", desigHeading);
                                 DataManager.setAttribute(session, "m_DE", DEBean);
                             }
                         }
@@ -4318,39 +4318,28 @@ public class GetACSearch implements Serializable
                             }
                         }else if (sSearchAC.equals("ValueMeaning"))
                         {
-                        	Session_Data sData = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
-                        	boolean isSuperUser = sData.UsrBean.isSuperuser();
-                        	VM_Bean VMBean = new VM_Bean();
-							VMBean = (VM_Bean) selectedRows.elementAt(i);
-							if (isSuperUser) {
-							DataManager.setAttribute(session, "results", vSRows);
-							DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, VMBean);
-							DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
-							DataManager.setAttribute(session, VMForm.SESSION_RET_PAGE, VMForm.ACT_BACK_SEARCH);
-							AltNamesDefsServlet altSer = new AltNamesDefsServlet(m_servlet, m_servlet.sessionData.UsrBean);
-							Alternates alt = altSer.getManualDefinition(m_classReq, VMForm.ELM_FORM_SEARCH_EVS);
-							if (alt != null && !alt.getName().equals(""))
-								VMBean.setVM_ALT_DEFINITION(alt.getName());
-
-							/*
-							 * String sVM = VMBean.getVM_LONG_NAME(); // ac name
-							 * for pv // call the api to return concept
-							 * attributes according to ac type and ac idseq
-							 * Vector cdList = new Vector(); cdList =
-							 * this.doCDSearch("", "", "", "", "", "", "", "",
-							 * "", "", "", "", "", "", 0, "", "", sVM, cdList); //
-							 * get // Domains req.setAttribute("ConDomainList",
-							 * cdList); req.setAttribute("VMName", sVM);
-							 */
-							// write the jsp
-							VMServlet vmser = new VMServlet(m_classReq,	m_classRes, m_servlet);
-							VM_Bean vm = (VM_Bean) session.getAttribute(VMForm.SESSION_SELECT_VM);
-							vmser.writeDetailJsp(vm);
-						} else {
-							session.setAttribute("editID", VMBean.getIDSEQ());
-							isValid = false;
-                            break;
-						}
+                            VM_Bean VMBean = new VM_Bean();
+                            VMBean = (VM_Bean) selectedRows.elementAt(i);
+                            DataManager.setAttribute(session, "results", vSRows);
+                            DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, VMBean);
+                            DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
+                            DataManager.setAttribute(session, VMForm.SESSION_RET_PAGE, VMForm.ACT_BACK_SEARCH);
+                            AltNamesDefsServlet altSer = new AltNamesDefsServlet( m_servlet,  m_servlet.sessionData.UsrBean);
+                            Alternates alt = altSer.getManualDefinition( m_classReq, VMForm.ELM_FORM_SEARCH_EVS);
+                            if (alt != null && !alt.getName().equals(""))
+                            VMBean.setVM_ALT_DEFINITION(alt.getName());
+                           
+                           /* String sVM = VMBean.getVM_LONG_NAME(); // ac name for pv
+                            // call the api to return concept attributes according to ac type and ac idseq
+                            Vector cdList = new Vector();
+                            cdList = this.doCDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", sVM, cdList); // get
+                                                                                                                             // Domains
+                            req.setAttribute("ConDomainList", cdList);
+                            req.setAttribute("VMName", sVM);*/
+                            //write the jsp
+                            VMServlet vmser = new VMServlet( m_classReq,  m_classRes,  m_servlet);
+                            VM_Bean vm = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
+                            vmser.writeDetailJsp(vm);
                           
                         }
                         
@@ -9855,57 +9844,80 @@ public class GetACSearch implements Serializable
             String sSearchAC = (String) session.getAttribute("searchAC");
             Vector vSRows = (Vector) session.getAttribute("vSelRows");
             Vector vCheckList = new Vector();
-            int selectedRowID = -1;
+            int selectedRowID = 0;
             String unCheckedRowId = (String) m_classReq.getParameter("unCheckedRowId");
             if (unCheckedRowId != null && !(unCheckedRowId == "")){
                 selectedRowID = new Integer(unCheckedRowId);
            }
             if (selectedRowID>=0)
             {
-                // reset the bean with selected row for the selected component
-                String ckName = ("CK" + selectedRowID);            
-                DataManager.setAttribute(session, "ckName", ckName);
-                //get the checked bean and store it in the session
-                if (sSearchAC.equals("DataElement"))
-                {
-                    DE_Bean DEBean = new DE_Bean();
-                    DEBean = DEBean.cloneDE_Bean((DE_Bean) vSRows.elementAt(selectedRowID), "Complete");
-                    DataManager.setAttribute(session, "m_DE", DEBean);
-                }
-                else if (sSearchAC.equals("DataElementConcept"))
-                {
-                    DEC_Bean DECBean = new DEC_Bean();
-                    DECBean = DECBean.cloneDEC_Bean((DEC_Bean) vSRows.elementAt(selectedRowID));
-                    DataManager.setAttribute(session, "m_DEC", DECBean);
-                }
-                else if (sSearchAC.equals("ValueDomain"))
-                {
-                    VD_Bean VDBean = new VD_Bean();
-                    VDBean = VDBean.cloneVD_Bean((VD_Bean) vSRows.elementAt(selectedRowID));
-                    DataManager.setAttribute(session, "m_VD", VDBean);
-                }
-                else
-                {
-                    // No action type....
-                }
-            
-                // capture the duration                
-                vCheckList = new Vector();
-                for (int m = 0; m < (vSRows.size()); m++)
-                {
-                    String ckName2 = ("CK" + m);
-                    String rSel2 = (String) req.getParameter(ckName2);
-                    if (rSel2 != null)
-                        vCheckList.addElement(ckName2);
-                }
-            
+                String sContext = "";
+                String sStatus = "";
+                String strInValid = "";
+                
+                    String ckName = ("CK" + selectedRowID);
+                    
+                        // reset the bean with selected row for the selected component
+                        DataManager.setAttribute(session, "ckName", ckName);
+                       // vCheckList.addElement(ckName);
+                        if (sSearchAC.equals("DataElement"))
+                        {
+                            DE_Bean DEBean = new DE_Bean();
+                            // DEBean = (DE_Bean)vSRows.elementAt(i);
+                            DEBean = DEBean.cloneDE_Bean((DE_Bean) vSRows.elementAt(selectedRowID), "Complete");
+                            Vector vRefDoc = doRefDocSearch(DEBean.getDE_DE_IDSEQ(), "ALL TYPES", "open");
+                            req.setAttribute("RefDocList", vRefDoc);
+                            DataManager.setAttribute(session, "m_DE", DEBean);
+                        }
+                        else if (sSearchAC.equals("DataElementConcept"))
+                        {
+                            DEC_Bean DECBean = new DEC_Bean();
+                            DECBean = DECBean.cloneDEC_Bean((DEC_Bean) vSRows.elementAt(selectedRowID));
+                            String sContextID = "";
+                            if (DECBean != null)
+                                sContextID = DECBean.getDEC_CONTE_IDSEQ();
+                            Vector vRefDoc = doRefDocSearch(DECBean.getDEC_DEC_IDSEQ(), "ALL TYPES", "open");
+                            req.setAttribute("RefDocList", vRefDoc);
+                            DataManager.setAttribute(session, "m_DEC", DECBean);
+                        }
+                        else if (sSearchAC.equals("ValueDomain"))
+                        {
+                            VD_Bean VDBean = new VD_Bean();
+                            VD_Bean VDBean2 = new VD_Bean();
+                            VDBean2 = (VD_Bean) vSRows.elementAt(selectedRowID);
+                            VDBean = VDBean.cloneVD_Bean((VD_Bean) vSRows.elementAt(selectedRowID));
+                            if (VDBean != null)
+                                sContext = VDBean.getVD_CONTEXT_NAME();
+                            if (VDBean != null)
+                                sStatus = VDBean.getVD_ASL_NAME();
+                            String sContextID = "";
+                            if (VDBean != null)
+                                sContextID = VDBean.getVD_CONTE_IDSEQ();
+                            Vector vRefDoc = doRefDocSearch(VDBean.getIDSEQ(), "ALL TYPES", "open");
+                            req.setAttribute("RefDocList", vRefDoc);
+                            DataManager.setAttribute(session, "m_VD", VDBean);
+                        }
+                        else
+                        {
+                            // No action type....
+                        }
+                    
+                // capture the duration
+                
+                    vCheckList = new Vector();
+                    for (int m = 0; m < (vSRows.size()); m++)
+                    {
+                        String ckName2 = ("CK" + m);
+                        String rSel2 = (String) req.getParameter(ckName2);
+                        if (rSel2 != null)
+                            vCheckList.addElement(ckName2);
+                    }
+                
                 DataManager.setAttribute(session, "CheckList", vCheckList);
-                DataManager.setAttribute(session, "vBEResult", vBEResult);
-                DataManager.setAttribute(session, "vACId", (Vector) m_classReq.getAttribute("vACId"));
-                DataManager.setAttribute(session, "vACName", (Vector) m_classReq.getAttribute("vACName"));
             }
-            //get the ref doc list for the AC
-            refreshUploadRefDoc(req, sSearchAC);
+            DataManager.setAttribute(session, "vBEResult", vBEResult);
+            DataManager.setAttribute(session, "vACId", (Vector) m_classReq.getAttribute("vACId"));
+            DataManager.setAttribute(session, "vACName", (Vector) m_classReq.getAttribute("vACName"));
         }
         catch (Exception e)
         {
@@ -9915,41 +9927,6 @@ public class GetACSearch implements Serializable
             return false;
         }
         return true;
-    }
-    
-    /**
-     * Refreshes the Reference documents list after selecting the DE, deleting the attachment or uploading the attachment.
-     * 
-     * @param req The HttpServletRequest object.
-     * @param String acType.
-     * 
-      */
-    public void refreshUploadRefDoc(HttpServletRequest req, String acType)
-    {
-    	HttpSession session = req.getSession();
-    	String acIdseq = "";
-    	
-        //get the acidseq from the session as per selected AC
-    	if (acType.equals("DataElement"))
-        {
-        	DE_Bean DEBean = (DE_Bean)session.getAttribute("m_DE");
-        	acIdseq = DEBean.getDE_DE_IDSEQ();
-        }
-        else if (acType.equals("DataElementConcept"))
-        {
-        	DEC_Bean DECBean = (DEC_Bean)session.getAttribute("m_DEC");
-        	acIdseq = DECBean.getDEC_DEC_IDSEQ();
-        }
-        else if (acType.equals("ValueDomain"))
-        {
-        	VD_Bean VDBean = (VD_Bean)session.getAttribute("m_VD");
-        	acIdseq = VDBean.getVD_VD_IDSEQ();
-        }
-    	//get the ref docs using the ac idseq
-        if (!acIdseq.equals("")) {
-        	Vector vRefDoc = doRefDocSearch(acIdseq, "ALL TYPES", "open");
-        	req.setAttribute("RefDocList", vRefDoc);
-        }
     }
     
     public void do_nonEVSRepTermSearch(String InString, String ContName, String ASLName, String ID, Vector<EVS_Bean> vList,
