@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.10 2009-04-10 14:11:16 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/TitleBar.jsp,v 1.11 2009-04-16 17:22:44 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -42,7 +42,6 @@ var sentinelWindow = null;
       if (helpWindow && !helpWindow.closed)
            helpWindow.focus();
       else
-           // helpWindow = window.open("html/Help.htm", "Help", "width=750,height=620,top=0,left=0,resizable=yes,scrollbars=yes,titlebar=false");
            helpWindow = window.open(helpUrl, "Help");
    }
 
@@ -59,7 +58,7 @@ var sentinelWindow = null;
     if (aboutWindow && !aboutWindow.closed)
        aboutWindow.focus();
     else
-       aboutWindow = window.open("jsp/SplashScreenAbout.jsp", "CurationTool", "width=900,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
+       aboutWindow = window.open("jsp/SplashScreenAbout.jsp", "CurationTool", "width=900;height=600,top=0,left=0,resizable=yes,scrollbars=yes");
   }
   
   function callSentinel()
@@ -185,21 +184,21 @@ function linkNCI()
   if (winNCI && !winNCI.closed)
      winNCI.focus();
   else
-       winNCI = window.open("http://www.nci.nih.gov", "NCI", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+       winNCI = window.open("http://www.nci.nih.gov", "NCI", "width=680;height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 function link_caDSR()
 {
   if (wincaDSR && !wincaDSR.closed)
      wincaDSR.focus();
   else
-       wincaDSR = window.open("http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr", "caDSR", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+       wincaDSR = window.open("http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr", "caDSR", "width=680;height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 function linkNCICB()
 {
   if (winNCICB && !winNCICB.closed)
      winNCICB.focus();
   else
-       winNCICB = window.open("http://ncicb.nci.nih.gov", "NCICB", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+       winNCICB = window.open("http://ncicb.nci.nih.gov", "NCICB", "width=680;height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 
 </script>
