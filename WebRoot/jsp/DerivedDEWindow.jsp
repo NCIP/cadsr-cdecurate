@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/DerivedDEWindow.jsp,v 1.3 2008-12-08 19:30:39 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/DerivedDEWindow.jsp,v 1.4 2009-04-16 17:14:26 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -49,7 +49,7 @@
 				<tr height="20" valign="top">
 					<!-- Close Window button   -->
 					<td align="right">
-						<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();" style="width: 100", "height: 30">
+						<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();">
 						&nbsp;&nbsp;
 					</td>
 					<td>
