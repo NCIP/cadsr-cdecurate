@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.26 2009-04-15 20:00:32 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.27 2009-04-16 17:14:27 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -770,7 +770,7 @@
             }
         }
 		//do the parent select action if the parent was selected.
-		selectParent();
+		//selectParent();  no need to do this at load
 		//display error message for pv if exists
 		displayStatus();
 	}

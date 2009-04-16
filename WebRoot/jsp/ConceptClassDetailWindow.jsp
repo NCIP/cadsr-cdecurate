@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ConceptClassDetailWindow.jsp,v 1.2 2008-12-08 19:30:39 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ConceptClassDetailWindow.jsp,v 1.3 2009-04-16 17:14:27 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -56,7 +56,7 @@
 			<table width="100%" border="0">
 				<tr height="20" valign="top">
 					<td align="right">
-						<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();" style="width: 100, height: 30">
+						<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();">
 						&nbsp;&nbsp;
 					</td>
 					<td>
