@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDesignateDE.jsp,v 1.6 2009-04-16 18:10:36 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDesignateDE.jsp,v 1.7 2009-04-16 18:12:34 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -13,7 +13,6 @@
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 		<%@ page session="true"%>
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
-		<script language="JavaScript" src="js/date-picker.js"></script>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/AddNewListOption.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/SelectCS_CSI.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
@@ -592,7 +591,7 @@
 									Selected Alternate Name Attributes
 								</td>
 								<td align="right">
-									<input type="button" name="btnRemAltName" value="Remove Item" style="width:85,height:9" onClick="removeAltName();" disabled>
+									<input type="button" name="btnRemAltName" value="Remove Item" onClick="removeAltName();" disabled>
 									&nbsp;&nbsp;&nbsp;
 								</td>
 							</tr>
