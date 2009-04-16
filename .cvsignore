@@ -7,3 +7,4 @@ DEV.build.properties
 .myumldata
 .settings
 dev.properties
+qa.properties
