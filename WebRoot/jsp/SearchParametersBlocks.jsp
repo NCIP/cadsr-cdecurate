@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.12 2009-04-08 19:10:42 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.13 2009-04-17 21:28:29 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -955,7 +955,7 @@ function doMetaCodeSearch()
 						<div align="left">
 							<b> <%=iItem++%> ) Display Attributes: </b> &nbsp;&nbsp;
 							<input type="button" name="updateDisplayBtn" value="Update"
-								onClick="<%=updFunction%>" style="width: 50"
+								onClick="<%=updFunction%>"
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
 						</div>
 						<br>
@@ -994,7 +994,6 @@ function doMetaCodeSearch()
 						<div align="center">
 							<input type="button" name="startSearchBtn" value="Start Search"
 								onClick="doSearchBuildingBlocks();"
-								style="width: 150; height: 30"
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
 						</div>
 					</td>

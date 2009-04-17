@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.27 2009-04-16 17:14:27 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.28 2009-04-17 21:28:29 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -225,9 +225,9 @@
     	var txtPV = document.PVForm.pvNewValue.value;
     	if ((txtPV === null || txtPV === "") && alertMsg === "")
     	{
-			if (txtVM !== "")
+ 			if (txtVM !== "")
 			{
-				txtVM = txtVM.replace(/\r\n/g, " ");
+				txtVM = txtVM.replace(/(\r\n)|(\n)/g, "");
 				document.PVForm.pvNewValue.value = txtVM;
 				txtPV = txtVM;
 			}
@@ -397,7 +397,7 @@
 				pvIndHidden.value = pvNo;
                 var obj = document.getElementsByName("txt" + pvNo + "Mean");
                 var txtMean = obj[0];
-				if ((field == "vm" || field == "vmd") && txtMean !== null) {
+				if ((field == "vm" || field == "vmd") && txtMean != null) {
 					document.PVForm.currentVM.value = txtMean.value;
                 }
 			}
@@ -603,20 +603,28 @@
 	 		//add the link if editing
 	    	if (action == "edit")
 	    	{
-		    	var linkNode = document.createElement("a");
 		    	var linkText = "";
-		    	if (elmObjName.match("Org") !== null) {
-		    		linkText = "javascript:selectOrigin('" + elmObjName + "','" + curPV + "');";
-                }
-		    	else if ((elmObjName.match("ED") !== null) || (elmObjName.match("BD") !== null)) {
+	    		//add the text and icon for the dates
+		    	if ((elmObjName.match("ED") !== null) || (elmObjName.match("BD") !== null)) {
+		    		parentNode.appendChild(textNode);
+		    		var linkImg = document.createElement("img");
 		    		linkText = "javascript:selectDate('" + elmObjName + "','" + curPV + "');javascript:calendar('hideDatePick', event);";
+		    		linkImg.setAttribute("src", "../../cdecurate/images/calendarbutton.gif");
+		    		linkImg.setAttribute("onclick", linkText);
+		    		parentNode.appendChild(linkImg);
                 }
-		    	else if (elmObjName.match("Con") !== null) {
-		    		linkText = "javascript:selectConcept('" + elmObjName + "','" + curPV + "');";
-                }
-		    	linkNode.setAttribute("href", linkText);
-		    	linkNode.appendChild(textNode);
-        		parentNode.appendChild(linkNode);
+		    	else {
+		    		var linkNode = document.createElement("a");		    	
+			    	if (elmObjName.match("Org") !== null) {
+			    		linkText = "javascript:selectOrigin('" + elmObjName + "','" + curPV + "');";
+	                }
+			    	else if (elmObjName.match("Con") !== null) {
+			    		linkText = "javascript:selectConcept('" + elmObjName + "','" + curPV + "');";
+	                }
+			    	linkNode.setAttribute("href", linkText);
+			    	linkNode.appendChild(textNode);
+	        		parentNode.appendChild(linkNode);
+		    	}
 	    	}
     		else if (action == "view")
     		{
@@ -1432,17 +1440,17 @@
 	  		}
   			//add the concepts to the hidden field
 	  		var hidElm = document.getElementById("hiddenConVM");
-	  		if (hidElm !== null)
+	  		if (hidElm != null)
 	  		{
 		  		var curTbl = document.getElementById(pvId + "TBL");
 		  		var totalCon = curTbl.rows.length;
 		  		for (var i=0; i<totalCon; i++)
 		  		{
 		  			var curTr = curTbl.rows[i];
-		  			if (curTr !== null && curTr.cells(2) !== null)
+		  			if (curTr != null && curTr.cells[2] != null)
 		  			{
-		  				var oText = (curTr.cells(2).innerText) ? curTr.cells(2).innerText : curTr.cells(2).textContent;
-			  			var elmLen = hidElm.length;
+		  				var oText = (curTr.cells[2].innerText) ? curTr.cells[2].innerText : curTr.cells[2].textContent;
+		  				var elmLen = hidElm.length;
 			  			hidElm[elmLen] = new Option(oText, oText);
 			  			hidElm[elmLen].selected = true;
 		  			}
@@ -1497,7 +1505,7 @@
   		while (sVM.indexOf(' ') > 0)
 		{
 			sVM = sVM.replace(' ', '');
-		}
+		}  		
   		//get the value and meaning from each row and compare it to the text of the saving pv
   		var i = 0;
   		do

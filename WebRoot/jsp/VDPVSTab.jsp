@@ -1,9 +1,9 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.13 2009-01-27 21:25:10 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.14 2009-04-17 21:28:29 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java" import="java.util.*"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
@@ -80,20 +80,20 @@
 	<tr height="25">
 		<td height="26" align="left" valign="top">
 			<% if (!isView) { %>
-			<input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('validate')">
+			<input type="button" name="btnValidate" value="Validate" onClick="SubmitValidate('validate')">
 			&nbsp;&nbsp;
 			<!--no need for clear button in the block edit-->
-			<input type="button" name="btnClear" value="Clear" style="width:125" onClick="ClearBoxes();">
+			<input type="button" name="btnClear" value="Clear" onClick="ClearBoxes();">
 			&nbsp;&nbsp;
 			<% if (!sOriginAction.equals("NewVDFromMenu")){%>
-			<input type="button" name="btnBack" value="Back" style="width:125" onClick="SubmitValidate('goBack');">
+			<input type="button" name="btnBack" value="Back" onClick="SubmitValidate('goBack');">
 			&nbsp;&nbsp;
 			<% } %>
 			<%if(sOriginAction.equals("BlockEditVD")){%>
-			<input type="button" name="btnDetails" value="Details" style="width: 125" onClick="openBEDisplayWindow();">
+			<input type="button" name="btnDetails" value="Details" onClick="openBEDisplayWindow();">
 			&nbsp;&nbsp;
 			<%} } %>
-			<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" 
+			<input type="button" name="btnAltName" value="Alt Names/Defs" 
 				<% if (isView) { %>
 					onClick="openAltNameViewWindow();"
 				<% } else { %>
@@ -101,7 +101,7 @@
 				<% } %>
 			>
 			&nbsp;&nbsp;
-			<input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" 
+			<input type="button" name="btnRefDoc" value="Reference Documents" 
 				<% if (isView) { %>
 					onClick="openRefDocViewWindow();"
 				<% } else { %>
@@ -110,13 +110,13 @@
 			>
 			&nbsp;&nbsp;
 			<% if((displayErrorMessagee != null)&&(displayErrorMessagee).equals("Yes")){	%>
-							<input type="button" name="btnClose" value="Back" style="width: 125" onClick="Back();">
+							<input type="button" name="btnClose" value="Back" onClick="Back();">
 							&nbsp;&nbsp;
 			<% }else if (isView) {	%>
-				<input type="button" name="btnClose" value="Close" style="width: 125" onClick="window.close();">
+				<input type="button" name="btnClose" value="Close" onClick="window.close();">
 				&nbsp;&nbsp;
 			<% }session.setAttribute("displayErrorMessage", "No"); %>
-			<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+			<img name="Message" src="images/WaitMessage1.gif" width="250px" height="25px" alt="WaitMessage" style="visibility:hidden;">
 		</td>
 	</tr>
 	<tr valign="middle">
