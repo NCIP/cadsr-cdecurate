@@ -1,5 +1,5 @@
 <!--
-        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.47 2009-01-13 17:05:29 chickerura Exp $
+        $Header: /cvsshare/content/cvsroot/cdecurate/build.xml,v 1.48 2009-04-17 20:03:33 hebell Exp $
         $Name: not supported by cvs2svn $
     -->
 
@@ -10,7 +10,7 @@
 	<!-- set global properties for this build  -->
 	<tstamp/>
 	
-	<property name="appl.release" value="4.0.0.2" />
+	<property name="appl.release" value="4.0.1.0" />
 	<property name="appl.version" value="${appl.release}.${DSTAMP}${TSTAMP}"/>
 		
 	<property name="PROP.FILE" location="DEV.build.properties" />
