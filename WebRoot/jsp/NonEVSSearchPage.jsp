@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/NonEVSSearchPage.jsp,v 1.3 2008-07-03 21:35:35 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/NonEVSSearchPage.jsp,v 1.4 2009-04-17 14:20:26 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -117,15 +117,17 @@
   //open window to browse
   function openBrowse()
   {
-    if (browseWindow && !browseWindow.closed)
-        browseWindow.close();
-    browseWindow = window.open("", "browseWindow")
-    if (browseWindow.document != null)
-    {
-      browseWindow.document.writeln('<font size=4><b>');
-      browseWindow.document.writeln("Navigate to desired URL and then use copy and paste method to select document URL");
-      browseWindow.document.writeln('</b></font>');
-    }
+    var sURL = document.designateDEForm.txtRefURL.value;
+    sURL = sURL.replace(/\r\n/g, " ");
+    if (sURL != null && sURL != "" && (sURL.length < 8 || (sURL.substring(0,7) != "http://" && sURL.substring(0,8) != "https://"))){
+        alert("Reference Document URL Text must begin with 'http:// or https://'");
+        return;
+    }    
+    if (sURL != null){
+     window.open(sURL,"_blank","");
+    }else{
+     window.open("","_blank","");
+    } 
   } 
 </script>
 	</head>
@@ -259,7 +261,7 @@
 									<b>
 										Reference URL
 									</b>
-									(maximum 240 characters)
+									(maximum 240 characters, enter the desired URL in to this text box)
 								</td>
 								<td></td>
 							</tr>
