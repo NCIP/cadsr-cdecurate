@@ -1,9 +1,9 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.23 2009-04-10 15:08:11 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.24 2009-04-17 21:28:29 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java" import="java.util.*"%>
 <html>
 	<head>
 		<title>

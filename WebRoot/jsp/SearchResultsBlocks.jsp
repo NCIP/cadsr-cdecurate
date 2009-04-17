@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.17 2009-04-09 21:21:02 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.18 2009-04-17 21:28:28 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -347,17 +347,15 @@
 			<table border="0">
 				<tr align="left">
 					<td>
-						<input type="button" name="editSelectedBtn" value="Use Selection" onClick="ShowSelection();" disabled style="width: 100px; height: 30px">
+						<input type="button" name="editSelectedBtn" value="Use Selection" onClick="ShowSelection();" disabled>
 						&nbsp;&nbsp;
-						<!--   <input type="button" name="btnUseParent" value="Set Reference" onclick="javascript:getSubConcepts();" style="width: 95px">
-      &nbsp;&nbsp; -->
-						<input type="button" name="btnSubConcepts" value="Get Subconcepts" onmouseover="controlsubmenu2(event,'divAssACMenu',null,null,null)" onmouseout="closeall()" style="width: 115px" disabled>
+						<input type="button" name="btnSubConcepts" value="Get Subconcepts" onmouseover="controlsubmenu2(event,'divAssACMenu',null,null,null)" onmouseout="closeall()" disabled>
 						&nbsp;&nbsp;
-						<input type="button" name="btnSuperConcepts" value="Get Superconcepts" disabled onclick="javascript:getSuperConcepts();" style="width: 130px">
+						<input type="button" name="btnSuperConcepts" value="Get Superconcepts" disabled onclick="javascript:getSuperConcepts();">
 						&nbsp;&nbsp;
-						<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();" style="width: 93px; height: 30px">
+						<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();">
 						&nbsp;&nbsp;
-						<input type="button" name="btnSubmitToEVS" value="Suggest to EVS" onclick="javascript:NewTermSuggested();" style="width:108px">
+						<input type="button" name="btnSubmitToEVS" value="Suggest to EVS" onclick="javascript:NewTermSuggested();">
 						&nbsp;&nbsp;
 						<img name="Message" src="images/SearchMessage.gif" width="180px" height="25" alt="WaitMessage" style="visibility:hidden;" align="top">
 					</td>
@@ -411,9 +409,6 @@
 						</font>
 					</td>
 				</tr>
-				<!--  <tr>
-    <td><a href=""><b>Use Concept to limit the Values</b></a></td>
-  </tr>  -->
 			</table>
 			<table width="100%" border="1" valign="top">
 				<tr valign="middle">

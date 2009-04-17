@@ -1,9 +1,9 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.33 2009-04-15 11:59:28 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.34 2009-04-17 21:28:29 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java" import="java.util.*"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.database.Alternates" %>
 <html>
 	<head>
@@ -22,7 +22,6 @@
       String sSearchAC = (String) session.getAttribute("creSearchAC");
       String vocab= (String)session.getAttribute("preferredVocab");
       if (vocab == null) vocab = "";
-      //System.out.println("preferred vocab"+ vocab);
       
       //for view only page
 	  String bodyPage = (String) request.getAttribute("IncludeViewPage");
@@ -284,10 +283,10 @@
 												</td>
 											  <% if (!isView) { %>		
 												<td align="left">
-													<input type="button" name="btnSelectValues" style="width:90" value="Select Values" disabled onClick="javascript:selectValues('<%=vocab%>');">
+													<input type="button" name="btnSelectValues" value="Select Values" disabled onClick="javascript:selectValues('<%=vocab%>');">
 												</td>
 												<td align="center">
-													<input type="button" name="btnRemoveConcept" style="width:100%" value="Remove Parent" disabled onClick="javascript:removeParent();">
+													<input type="button" name="btnRemoveConcept" value="Remove Parent" disabled onClick="javascript:removeParent();">
 												</td>
 												<td>
 													&nbsp;
@@ -1473,12 +1472,12 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 							<input type="hidden" name="currentVM" value="">
 							<select name="PVViewTypes" size="1" style="visibility:hidden;width:100;" multiple>
 								<%for (int i = 0; vVDPVList.size() > i; i++)
-	    {
-	      PV_Bean pvBean = (PV_Bean)vVDPVList.elementAt(i);
-	      String viewType = "expand";
-	      if (pvBean != null && pvBean.getPV_VIEW_TYPE() != null)
-	        viewType = (String)pvBean.getPV_VIEW_TYPE();
-		%>
+							    {
+							      PV_Bean pvBean = (PV_Bean)vVDPVList.elementAt(i);
+							      String viewType = "expand";
+							      if (pvBean != null && pvBean.getPV_VIEW_TYPE() != null)
+							        viewType = (String)pvBean.getPV_VIEW_TYPE();
+								%>
 								<option value="<%=viewType%>" selected>
 									<%=viewType%>
 								</option>
@@ -1557,7 +1556,8 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 							<input type="hidden" name="listVDType" value="<%=sTypeFlag%>">
 							<!-- stores the selected rows to get the bean from the search results -->
 							<select name="hiddenSelRow" size="1" style="visibility:hidden;width:160" multiple></select>
-							<select name="hiddenConVM" size="1" style="visibility:hidden;width:160" multiple></select>
+							<!-- use both name and id -->
+							<select id="hiddenConVM" name="hiddenConVM" size="1" style="visibility:hidden;width:160" multiple></select>
 							<input type="hidden" name="acSearch" value="">
 						</div>
 					</form>

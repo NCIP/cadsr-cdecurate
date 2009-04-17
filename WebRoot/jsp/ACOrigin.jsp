@@ -1,9 +1,9 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ACOrigin.jsp,v 1.7 2009-04-14 19:50:55 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ACOrigin.jsp,v 1.8 2009-04-17 21:28:29 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java" import="java.util.*"%>
 <html>
 	<head>
 		<title>
@@ -80,9 +80,9 @@
 
 	<body marginwidth='2px' marginheight="2px">
 		<p>
-			<input type="button" name="editSelectedBtn" value="Use Selection" onClick="javascript:appendOrigin();" " disabled style="width: 100;height: 30">
+			<input type="button" name="editSelectedBtn" value="Use Selection" onClick="javascript:appendOrigin();" " disabled>
 			&nbsp;&nbsp;
-			<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();" style="width: 93;height: 30">
+			<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();">
 			&nbsp;&nbsp;
 		</p>
 		<p>
