@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDesignateDE.jsp,v 1.7 2009-04-16 18:12:34 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDesignateDE.jsp,v 1.8 2009-04-17 14:19:53 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -806,7 +806,7 @@
 							</tr>
 							<tr valign="bottom" height="25">
 								<td>
-									Create Reference Document URL (maximum 240 characters)
+									Create Reference Document URL (maximum 240 characters, enter the desired URL in to this text box)
 								</td>
 								<td></td>
 							</tr>
@@ -969,7 +969,7 @@
 																<%=refDocText%>
 															</td>
 															<td valign="top">
-																<%=refDocURL%>
+																<a target="_blank" href= "<%=refDocURL%>"><%=refDocURL%></a>
 															</td>
 															<td valign="top">
 																<%=refDocContext%>

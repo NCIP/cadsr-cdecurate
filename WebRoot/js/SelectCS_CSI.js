@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SelectCS_CSI.js,v 1.2 2008-12-08 19:30:39 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/SelectCS_CSI.js,v 1.3 2009-04-17 14:19:32 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -734,15 +734,17 @@ fill selectedCSI options.
   //open window to browse
   function openBrowse()
   {
-    if (browseWindow && !browseWindow.closed)
-        browseWindow.close();
-    browseWindow = window.open("", "browseWindow")
-    if (browseWindow.document != null)
-    {
-      browseWindow.document.writeln('<font size=4><b>');
-      browseWindow.document.writeln("Navigate to desired URL and then use copy and paste method to select document URL");
-      browseWindow.document.writeln('</b></font>');
-    }
+    var sURL = document.designateDEForm.txtRefURL.value;
+    sURL = sURL.replace(/\r\n/g, " ");
+    if (sURL != null && sURL != "" && (sURL.length < 8 || (sURL.substring(0,7) != "http://" && sURL.substring(0,8) != "https://"))){
+        alert("Reference Document URL Text must begin with 'http:// or https://'");
+        return;
+    }    
+    if (sURL != null){
+     window.open(sURL,"_blank","");
+    }else{
+     window.open("","_blank","");
+    } 
   } 
   
   function submitDesignate(sAction)
