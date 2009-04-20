@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.34 2009-04-17 21:28:29 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.35 2009-04-20 18:32:49 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -146,10 +146,11 @@
 //System.out.println(sEditPV + " jsp " + sErrAC + " action " + pgAction + " focus " + elmFocus);		
 		%>
 		<Script Language="JavaScript">
-        function calendarSetup(eid, evnt)
+        function calendarSetup(eid, evnt, indicator)
         {
-            selectDate(eid,'pvNew');
-            document.PVForm.hideDatePick.value = document.getElementById(eid).innerHTML;
+            selectDate(eid,indicator);  //'pvNew');
+            //trim the innerHtml value and paste it to hideDatePick field
+            document.PVForm.hideDatePick.value = document.getElementById(eid).innerHTML.replace(/^\s+|\s+$/g,"");
             calendar('hideDatePick', evnt);
         }
         
@@ -692,14 +693,14 @@
 																	<table cellpadding="0.1in,0.1in,0.1in,0.1in">
 																		<tr>
 																			<td>
-																				<input type="button" name="btnUseSelect" style="width:100" value="Use Selection" disabled onClick="javascript:AddNewPV('addNewPV');">
+																				<input type="button" id="btnUseSelect" value="Use Selection" disabled onClick="javascript:AddNewPV('addNewPV');">
 																			</td>
 																			<td>
 																				&nbsp;&nbsp;
 																				<!-- <input type="checkbox" name="saveAlt"/>  -->
 																			</td>
 																			<td>
-																				<input type="button" name="btnContinue" style="width:90" value="Create" 
+																				<input type="button" id="btnContinue" value="Create" 
 																					onClick="javascript:ContinueDuplicateVM('continueVM');" <% if (conceptMatch) { %>disabled <% } %>>
 																			</td>
 																			<td>
@@ -707,7 +708,7 @@
 																				<!-- Save the current Name and Description as Alternate Name and Definition <br>  -->
 																			</td>
 																			<td>
-																				<input type="button" name="btnCancelUS" style="width:80" value="Cancel" onClick="javascript:confirmRM('<%=sEditPV%>', 'restore', 'restore');">
+																				<input type="button" id="btnCancelUS" value="Cancel" onClick="javascript:confirmRM('<%=sEditPV%>', 'restore', 'restore');">
 																			</td>
 																		</tr>
 																	</table>
@@ -806,10 +807,10 @@
 														</a>
 													</td>
 													<td valign="top">
-														<span id="newBD"><%=newPV.getPV_BEGIN_DATE()%></span><br><img src="../../cdecurate/images/calendarbutton.gif" onclick="calendarSetup('newBD', event);">
+														<span id="newBD"><%=newPV.getPV_BEGIN_DATE()%></span><br><img src="../../cdecurate/images/calendarbutton.gif" onclick="calendarSetup('newBD', event, 'pvNew');">
 													</td>
 													<td valign="top">
-														<span id="newED"><%=newPVed%></span><br><img src="../../cdecurate/images/calendarbutton.gif" onclick="calendarSetup('newED', event);">
+														<span id="newED"><%=newPVed%></span><br><img src="../../cdecurate/images/calendarbutton.gif" onclick="calendarSetup('newED', event, 'pvNew');">
 													</td>
 												</tr>
 											</table>
@@ -976,7 +977,7 @@
 											</tr>
 											<tr>
 												<td>
-													<div id="Layer1" style="position:relative; z-index:1; overflow:auto; height:480;">
+													<div id="Layer1" style="position:relative; overflow:auto; height:480;">
 														<table border="1" style="border-collapse: collapse; width: 100%" cellpadding="0.1in, 0.05in, 0.1in, 0.05in">
 															<%if (vdCONs > 0 && (sMenuAction != null) &&  sMenuAction.equals("Questions")){%>
 															<col width="5%">
@@ -1335,14 +1336,14 @@
 																				<table cellpadding="0.1in,0.1in,0.1in,0.1in">
 																					<tr>
 																						<td>
-																							<input type="button" name="btnUseSelect" style="width:100" value="Use Selection" disabled onClick="javascript:view('<%=sEditPV%>View', '<%=sEditPV%>ImgSave', '<%=sEditPV%>ImgEdit', 'save', '<%=sEditPV%>');">
+																							<input type="button" id="btnUseSelect" value="Use Selection" disabled onClick="javascript:view('<%=sEditPV%>View', '<%=sEditPV%>ImgSave', '<%=sEditPV%>ImgEdit', 'save', '<%=sEditPV%>');">
 																						</td>
 																						<td>
 																							&nbsp;&nbsp;
 																							<!-- <input type="checkbox" name="saveAlt"/>  -->
 																						</td>
 																						<td>
-																							<input type="button" name="btnContinue" style="width:100" value="Create" <% if (conceptMatch) { %>disabled <% } %>
+																							<input type="button" id="btnContinue"  value="Create" <% if (conceptMatch) { %>disabled <% } %>
 																								onClick="javascript:ContinueDuplicateVM('continueVM');">
 																						</td>
 																						<td>
@@ -1350,7 +1351,7 @@
 																							<!-- Save the current Name and Description as Alternate Name and Definition <br>  -->
 																						</td>
 																						<td align="right">
-																							<input type="button" name="btnCancelUS" style="width:80" value="Cancel" onClick="javascript:confirmRM('<%=sEditPV%>', 'restore', 'restore');">
+																							<input type="button" id="btnCancelUS" value="Cancel" onClick="javascript:confirmRM('<%=sEditPV%>', 'restore', 'restore');">
 																						</td>
 																					</tr>
 																				</table>
