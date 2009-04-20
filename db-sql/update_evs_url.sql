@@ -1,6 +1,6 @@
 /* COPYRIGHT SCENPRO, INC, 2007
 
-   $Header: /cvsshare/content/cvsroot/cdecurate/db-sql/update_evs_url.sql,v 1.2 2008-01-23 22:48:38 hebell Exp $
+   $Header: /cvsshare/content/cvsroot/cdecurate/db-sql/update_evs_url.sql,v 1.3 2009-04-20 12:49:22 hebell Exp $
    $Name: not supported by cvs2svn $
 */
 
@@ -12,9 +12,9 @@ MERGE INTO SBREXT.TOOL_OPTIONS_VIEW_EXT S USING (
 
 --Store evs  url specific to curation tool if needed. 
 
-SELECT 'EVS' AS TOOL_NAME, 'URL' AS PROPERTY, 'http://cabio.nci.nih.gov/cacore32/http/remoteService' AS VALUE, 'Store evs alternate url specific to curation tool if needed' AS DESCRIPTION FROM DUAL
+SELECT 'EVS' AS TOOL_NAME, 'URL' AS PROPERTY, 'http://lexevsapi.nci.nih.gov/lexevsapi42' AS VALUE, 'Store evs alternate url specific to curation tool if needed' AS DESCRIPTION FROM DUAL
 UNION
-SELECT 'CURATION' AS TOOL_NAME, 'EVS.URL' AS PROPERTY, 'http://cabio.nci.nih.gov/cacore32/http/remoteService' AS VALUE, 'Store evs alternate url specific to curation tool if needed' AS DESCRIPTION FROM DUAL
+SELECT 'CURATION' AS TOOL_NAME, 'EVS.URL' AS PROPERTY, 'http://lexevsapi.nci.nih.gov/lexevsapi42' AS VALUE, 'Store evs alternate url specific to curation tool if needed' AS DESCRIPTION FROM DUAL
 )T 
 ON (S.TOOL_NAME = T.TOOL_NAME AND S.PROPERTY = T.PROPERTY) 
 WHEN MATCHED THEN 

@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc 2007
 
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/css/alternates.css,v 1.1 2007-09-10 16:16:46 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/css/alternates.css,v 1.2 2009-04-20 12:49:22 hebell Exp $
     $Name: not supported by cvs2svn $
 */
 
@@ -22,7 +22,7 @@ P.TITLE2 { font-size: 12pt; font-weight: bold; color: #0000aa; text-align: right
 SPAN.MANDATORY { color: #ff0000; font-weight: bold; padding-right: 0.07in }
 SPAN.PROMPT { font-weight: bold }
 SPAN.REMOVE { font-weight: bold; font-family: webdings; cursor: default }
-SPAN.RESTORE { font-weight: bold; font-family: wingdings 3; cursor: default }
+SPAN.RESTORE { font-weight: bold; font-family: "wingdings 3"; cursor: default }
 TABLE { font-size: 10pt; width: 100%; border-collapse: collapse }
 TD { vertical-align: top; text-align: left }
 TD.ALT0 { padding-top: 0.2in }
