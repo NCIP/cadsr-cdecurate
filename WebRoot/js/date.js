@@ -128,11 +128,11 @@ function calDisplay(today, input)
         "<col style=\"text-align: center\">" +
         "<tr><td align=\"center\" colspan=\"7\">" +
         "<span onclick=\"calShowToday(this);\" title=\"Today\" style=\"" + calStyleSpanHdr + "\">&equiv;</span>" +
-        "<span style=\"" + calStyleSpanHdr + "\"><img title=\"Prev Year\" src=\"https://cdecurate-stage.nci.nih.gov/cdecurate/images/arrow_16_down.gif\" onclick=\"calChgYear(this, -1);\"></span>" +
-        "<span style=\"" + calStyleSpanHdr + "\"><img title=\"Prev Month\" src=\"https://cdecurate-stage.nci.nih.gov/cdecurate/images/arrow_16_left.gif\" onclick=\"calPrev(this);\"></span>" +
+        "<span style=\"" + calStyleSpanHdr + "\"><img title=\"Prev Year\" src=\"images/arrow_16_down.gif\" onclick=\"calChgYear(this, -1);\"></span>" +
+        "<span style=\"" + calStyleSpanHdr + "\"><img title=\"Prev Month\" src=\"images/arrow_16_left.gif\" onclick=\"calPrev(this);\"></span>" +
         "<span style=\"" + calStyleSpanHdr + "\"><b>" + calMonNames[tmon] + "&nbsp;" + tyr + "</b></span>" +
-        "<span style=\"" + calStyleSpanHdr + "\"><img title=\"Next Month\" src=\"https://cdecurate-stage.nci.nih.gov/cdecurate/images/arrow_16_right.gif\" onclick=\"calNext(this);\"></span>" +
-        "<span style=\"" + calStyleSpanHdr + "\"><img title=\"Next Year\" src=\"https://cdecurate-stage.nci.nih.gov/cdecurate/images/arrow_16_up.gif\" onclick=\"calChgYear(this, 1);\"></span>" +
+        "<span style=\"" + calStyleSpanHdr + "\"><img title=\"Next Month\" src=\"images/arrow_16_right.gif\" onclick=\"calNext(this);\"></span>" +
+        "<span style=\"" + calStyleSpanHdr + "\"><img title=\"Next Year\" src=\"images/arrow_16_up.gif\" onclick=\"calChgYear(this, 1);\"></span>" +
         "<span onclick=\"calClose();\" title=\"Close\" style=\"color: white; background-color: #aa0000; " + calStyleSpanHdr + "\">&Chi;</span>" +
         "</td></tr>" +
         "<tr style=\"background-color: " + calStyleBGColor3 + "\"><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr>" + table + "</table>";
