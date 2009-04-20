@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.28 2009-04-17 21:28:29 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.29 2009-04-20 18:32:49 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -606,9 +606,16 @@
 		    	var linkText = "";
 	    		//add the text and icon for the dates
 		    	if ((elmObjName.match("ED") !== null) || (elmObjName.match("BD") !== null)) {
-		    		parentNode.appendChild(textNode);
+		    		elmObjName += "Cal";
+		    		//add span node
+		    		var linkSpan = document.createElement("span");
+		    		linkSpan.setAttribute("id", elmObjName);
+		    		linkSpan.appendChild(textNode);
+		    		parentNode.appendChild(linkSpan);
+		    		//add the calendar image node
 		    		var linkImg = document.createElement("img");
-		    		linkText = "javascript:selectDate('" + elmObjName + "','" + curPV + "');javascript:calendar('hideDatePick', event);";
+		    		linkText = "javascript:calendarSetup('" + elmObjName + "', event,'" + curPV + "');";
+		    		//alert(linkText);
 		    		linkImg.setAttribute("src", "../../cdecurate/images/calendarbutton.gif");
 		    		linkImg.setAttribute("onclick", linkText);
 		    		parentNode.appendChild(linkImg);
@@ -1077,7 +1084,7 @@
           }
 	  	}
 	  	var curInd = document.PVForm.currentElmID;
-	  	if (curInd !== null)
+	  	if (curInd != null)
 	  	{
 	  		curInd.value = curElm;
             document.PVForm.currentPVInd.value = curPV;
@@ -1571,7 +1578,7 @@
     function enableUSE()
     {
   		var usElm = document.getElementById("btnUseSelect");
-  		if (usElm !== null) {
+  		if (usElm != null) {
     		usElm.disabled = false;
         }
     	document.PVForm.currentVM.value = "selected one";
