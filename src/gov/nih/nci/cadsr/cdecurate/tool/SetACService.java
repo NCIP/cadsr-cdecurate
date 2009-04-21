@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.61 2009-04-21 03:52:53 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.62 2009-04-21 15:54:14 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1522,12 +1522,14 @@ public class SetACService implements Serializable
         
         //add appropriate message to attributes of oc and prop
         if (ocStatusBean.getStatusMessage() != null && !ocStatusBean.getStatusMessage().equals("")){
-          strOCValid = "Valid";		//ocStatusBean.getStatusMessage();
-          sOCL += "<br> " + ocStatusBean.getStatusMessage();
+       //   strOCValid = "Valid";		//ocStatusBean.getStatusMessage();
+       //   sOCL += "<br> " + ocStatusBean.getStatusMessage();
+          strOCValid = "Valid"+ "<br>" + ocStatusBean.getStatusMessage();
         }  
         if (propStatusBean.getStatusMessage() != null && !propStatusBean.getStatusMessage().equals("")){
-          strPropValid = "Valid";		//propStatusBean.getStatusMessage();
-          s += "<br> " + propStatusBean.getStatusMessage();
+         // strPropValid = "Valid";		//propStatusBean.getStatusMessage();
+        //  s += "<br> " + propStatusBean.getStatusMessage();
+          strPropValid = "Valid"+ "<br>" + propStatusBean.getStatusMessage();
         }  
         
         //set the condr idseq of OC to DEC
