@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.22 2009-04-21 03:47:35 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.23 2009-04-21 15:54:14 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -532,10 +532,7 @@ function LoadKeyHandler()
 					<td height="7" colspan=2 valign="top">
 				</tr>
 				<tr>
-					<th align=right>
-						<%=item++%>
-						)
-					</th>
+					<th align=right><%=item++%>)</th>
 					<th valign="top" align="left">
 						Search For:
 					</th>
@@ -620,10 +617,7 @@ function LoadKeyHandler()
 					<td height="7" colspan=2 valign="top">
 				</tr>
 				<tr>
-					<th valign="top" align=right>
-						<%=item++%>
-						)
-					</th>
+					<th valign="top" align=right><%=item++%>)</th>
 					<th valign="bottom">
 						<div align="left">
 							Search In:
@@ -794,12 +788,7 @@ function LoadKeyHandler()
 					<td height="7" colspan=2 valign="top">
 				</tr>
 				<tr>
-					<th>
-						<div valign="top" align=right>
-							<%=item++%>
-							)
-						</div>
-					</th>
+					<th><div valign="top" align=right><%=item++%>)</div></th>
 					<th valign="bottom" align=left>
 						Select Document Types:
 					</th>
@@ -848,12 +837,7 @@ function LoadKeyHandler()
 					<td height="7" colspan=2 valign="top"></td>
 				</tr>
 				<tr>
-					<th>
-						<div valign="top" align=right>
-							<%=item++%>
-							)
-						</div>
-					</th>
+					<th><div valign="top" align=right><%=item++%>)</div></th>
 					<th valign="bottom">
 						<div align="left">
 							Enter Protocol ID:
@@ -874,12 +858,7 @@ function LoadKeyHandler()
 					<td height="7" colspan=2 valign="top">
 				</tr>
 				<tr>
-					<th>
-						<div valign="top" align=right>
-							<%=item++%>
-							)
-						</div>
-					</th>
+					<th><div valign="top" align=right><%=item++%>)</div></th>
 					<th valign="bottom">
 						<div align="left">
 							Enter CRF Name:
@@ -894,12 +873,7 @@ function LoadKeyHandler()
 					<td height="7" colspan=2 valign="top">
 				</tr>
 				<tr>
-					<th>
-						<div valign="top" align=right>
-							<%=item++%>
-							)
-						</div>
-					</th>
+					<th><div valign="top" align=right><%=item++%>)</div></th>
 					<th valign="bottom">
 						<div align="left">
 							Enter Search Term:
@@ -939,12 +913,7 @@ function LoadKeyHandler()
 					<td height="7" colspan=2 valign="top">
 				</tr>
 				<tr>
-					<th>
-						<div valign="top" align=right>
-							<%=item++%>
-							)
-						</div>
-					</th>
+					<th><div valign="top" align=right><%=item++%>)</div></th>
 					<th valign="bottom">
 						<div align="left">
 							Filter By:
@@ -1717,8 +1686,7 @@ function LoadKeyHandler()
 				<tr>
 					<td class="dashed-black" colspan=2>
 						<div align="left">
-							<b> <%=item++%> )&nbsp;&nbsp;Display Attributes: </b> &nbsp;
-							<input type="button" name="updateDisplayBtn" value="Update"
+							<b> <%=item++%> )&nbsp;&nbsp;Display Attributes: </b> &nbsp;<input type="button" name="updateDisplayBtn" value="Update"
 								onClick="<%=updFunction%>"
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
 						</div>
