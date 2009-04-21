@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDE.jsp,v 1.5 2009-04-09 15:50:54 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDE.jsp,v 1.6 2009-04-21 03:47:36 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -313,17 +313,17 @@
 				<col width="95%">
 				<tr>
 					<td align="left" valign="top" colspan=2>
-						<input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate')" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Validation',helpUrl); return false">
+						<input type="button" name="btnValidate" value="Validate" onClick="SubmitValidate('validate')" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Validation',helpUrl); return false">
 						&nbsp;&nbsp; &nbsp;&nbsp;
-						<input type="button" name="btnClear" value="Clear" style="width: 125" onClick="ClearBoxes();">
+						<input type="button" name="btnClear" value="Clear" onClick="ClearBoxes();">
 						&nbsp;&nbsp;
 						<% if (sMenuAction.equals("Questions") || sMenuAction.equals("NewDETemplate") || sMenuAction.equals("NewDEVersion") || sDDEAction.equals("CreateNewDEFComp")){%>
-						<input type="button" name="btnBack" value="Back" style="width: 125" onClick="Back();">
+						<input type="button" name="btnBack" value="Back" onClick="Back();">
 						&nbsp;&nbsp;
 						<% } %>
-						<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" onClick="openDesignateWindow('Alternate Names');" onHelp="showHelp('html/Help_Updates.html#newDECForm_altNames',helpUrl); return false">
+						<input type="button" name="btnAltName" value="Alt Names/Defs" onClick="openDesignateWindow('Alternate Names');" onHelp="showHelp('html/Help_Updates.html#newDECForm_altNames',helpUrl); return false">
 						&nbsp;&nbsp;
-						<input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');" onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return false">
+						<input type="button" name="btnRefDoc" value="Reference Documents" onClick="openDesignateWindow('Reference Documents');" onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return false">
 						&nbsp;&nbsp;
 						<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
 					</td>
@@ -823,13 +823,13 @@
 									Selected Classification Schemes
 								</td>
 								<td align=left>
-									<input type="button" name="btnRemoveCS" value="Remove Item" style="width: 85" , "height: 9" onClick="removeCSList();">
+									<input type="button" name="btnRemoveCS" value="Remove Item" onClick="removeCSList();">
 								</td>
 								<td align="left">
 									Associated Classification Scheme Items
 								</td>
 								<td align=left>
-									<input type="button" name="btnRemoveCSI" value="Remove Item" style="width: 85" , "height: 9" onClick="removeCSIList();">
+									<input type="button" name="btnRemoveCSI" value="Remove Item" onClick="removeCSIList();">
 								</td>
 							</tr>
 							<tr>
@@ -888,13 +888,13 @@
 									&nbsp;
 								</td>
 								<td align="left">
-									<input type="button" name="btnViewCt" value="Edit Item" style="width:100" onClick="javascript:editContact('view');" disabled>
+									<input type="button" name="btnViewCt" value="Edit Item" onClick="javascript:editContact('view');" disabled>
 								</td>
 								<td align="left">
-									<input type="button" name="btnCreateCt" value="Create New" style="width:100" onClick="javascript:editContact('new');">
+									<input type="button" name="btnCreateCt" value="Create New" onClick="javascript:editContact('new');">
 								</td>
 								<td align="center">
-									<input type="button" name="btnRmvCt" value="Remove Item" style="width:100" onClick="javascript:editContact('remove');" disabled>
+									<input type="button" name="btnRmvCt" value="Remove Item" onClick="javascript:editContact('remove');" disabled>
 								</td>
 							</tr>
 							<tr>
@@ -1222,7 +1222,7 @@
 						&nbsp;&nbsp;&nbsp;Selected Data Elements Components
 					</td>
 					<td align=left>
-						<input type="button" name="btnClearList1" value="Remove Item" style="width: 85" , "height: 9" onClick="removeDEComp();">
+						<input type="button" name="btnClearList1" value="Remove Item" onClick="removeDEComp();">
 					</td>
 					<td>
 						Display Order

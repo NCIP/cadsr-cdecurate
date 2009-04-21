@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc 2007
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/LoginE.jsp,v 1.6 2008-10-20 13:30:26 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/LoginE.jsp,v 1.7 2009-04-21 03:47:35 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 <html>
@@ -268,7 +268,7 @@ function callHelp()
           </tr>  
           <tr height="40">
             <td width="100%" colspan="1" align="center" valign="middle"> 
-              <input type="button" name="closeBtn" value="Close Window" onClick="javascript:CloseWindow();" style="width: 95, height: 26">
+              <input type="button" name="closeBtn" value="Close Window" onClick="javascript:CloseWindow();">
             </td>
           </tr>
         </table>

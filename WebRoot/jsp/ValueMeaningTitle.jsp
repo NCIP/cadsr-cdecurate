@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.14 2009-04-02 21:59:55 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningTitle.jsp,v 1.15 2009-04-21 03:47:34 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -62,27 +62,27 @@
 <div class="ind1">
      
    <% if(!isView){ %>	
-	<input type="button" name="btnValidate" value="Validate" style="width:125" onClick="SubmitValidate('<%=VMForm.ACT_VALIDATE_VM%>')" <%=disabled%>>
+	<input type="button" name="btnValidate" value="Validate" onClick="SubmitValidate('<%=VMForm.ACT_VALIDATE_VM%>')" <%=disabled%>>
 	&nbsp;&nbsp;
-	<input type="button" name="btnClear" value="Clear" style="width:125" onClick="ClearBoxes();">
+	<input type="button" name="btnClear" value="Clear" onClick="ClearBoxes();">
 	&nbsp;&nbsp;
-	<input type="button" name="btnBack" value="Back" style="width:125" onClick="SubmitValidate('<%=retPage%>');">
+	<input type="button" name="btnBack" value="Back" onClick="SubmitValidate('<%=retPage%>');">
 	&nbsp;&nbsp;
    <% } %>	
-	<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:150" <% if (isView) { %>
+	<input type="button" name="btnAltName" value="Alt Names/Defs" <% if (isView) { %>
 					onClick="openAltNameViewWindow();"
 				<% } else { %>
 					onClick="openDesignateWindow('Alternate Names');" 
 				<% } %> >
 	&nbsp;&nbsp;
 	<%	if((displayErrorMessagee != null)&&(displayErrorMessagee).equals("Yes")){	%>
-		<input type="button" name="btnBack" value="Back" style="width:125" <%if (isView){%>onClick="SubmitValidate('<%=VMForm.ACT_BACK_SEARCH%>');" <%}else{%>onClick="SubmitValidate('<%=retPage%>');"<%}%>>
+		<input type="button" name="btnBack" value="Back" <%if (isView){%>onClick="SubmitValidate('<%=VMForm.ACT_BACK_SEARCH%>');" <%}else{%>onClick="SubmitValidate('<%=retPage%>');"<%}%>>
 		&nbsp;&nbsp;
 	<% }else if (isView) {%>
-	 <input type="button" name="btnClose" value="Close" style="width: 125" onClick="window.close();">
+	 <input type="button" name="btnClose" value="Close" onClick="window.close();">
 	 &nbsp;&nbsp;
    <% } session.setAttribute("displayErrorMessage", "No");%> 	
-	<img name="Message" src="images/WaitMessage1.gif" width="250" height="20" alt="WaitMessage" style="visibility:hidden;">
+	<img name="Message" src="images/WaitMessage1.gif" width="250px" height="20px" alt="WaitMessage" style="visibility:hidden;">
 </div>
 <div class="ind1">
 	<b>

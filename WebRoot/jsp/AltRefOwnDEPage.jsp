@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/AltRefOwnDEPage.jsp,v 1.4 2009-04-10 15:08:11 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/AltRefOwnDEPage.jsp,v 1.5 2009-04-21 03:47:36 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -187,7 +187,7 @@
 				<!--DWLayoutTable-->
 				<tr>
 					<td align="left" valign="top" colspan=2>
-						<input type="button" name="btnUpdate" value="Update Attributes" style="width:170" onClick="javascript:submitAltRefDE();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Validation',helpUrl); return false">
+						<input type="button" name="btnUpdate" value="Update Attributes" onClick="javascript:submitAltRefDE();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Validation',helpUrl); return false">
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="button" name="btnClear" value="Clear" onClick="ClearBoxes();">
 						&nbsp;&nbsp;&nbsp;&nbsp;
@@ -276,7 +276,7 @@
 							</tr>
 							<tr height="30" valign="middle">
 								<td align="left">
-									<input type="button" name="btnAddAltName" value="Add Selection" style="width:100" onClick="addAltName();">
+									<input type="button" name="btnAddAltName" value="Add Selection" onClick="addAltName();">
 								</td>
 								<td colspan="2">
 									&nbsp;
@@ -293,7 +293,7 @@
 									&nbsp;Alternate Name
 								</td>
 								<td align="right">
-									<input type="button" name="btnRemAltName" value="Remove Item" style="width:85,height:9" onClick="removeAltName();">
+									<input type="button" name="btnRemAltName" value="Remove Item"  onClick="removeAltName();">
 									&nbsp;&nbsp;&nbsp;
 								</td>
 							</tr>
@@ -397,7 +397,7 @@
 							</tr>
 							<tr height="30" valign="middle">
 								<td align="left" colspan="3">
-									<input type="button" name="btnAddRefDoc" value="Add Selection" style="width:100" onClick="addRefDoc();">
+									<input type="button" name="btnAddRefDoc" value="Add Selection" onClick="addRefDoc();">
 								</td>
 							</tr>
 							<tr>
@@ -411,7 +411,7 @@
 									&nbsp;Reference Document Name
 								</td>
 								<td align="center">
-									<input type="button" name="btnRemRefDoc" value="Remove Item" style="width:100" onClick="removeRefDoc();">
+									<input type="button" name="btnRemRefDoc" value="Remove Item" onClick="removeRefDoc();">
 								</td>
 							</tr>
 							<tr>

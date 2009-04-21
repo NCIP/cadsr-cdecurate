@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBEDisplay.jsp,v 1.3 2008-12-09 21:47:03 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBEDisplay.jsp,v 1.4 2009-04-21 03:47:35 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -105,7 +105,7 @@ function setup()
 				<tr>
 					<td width="80%" align="center"></td>
 					<td>
-						<input type="button" name="closeBtn" value="Close Window" onClick="javascript:closeWindow();" style="width: 97", "height: 30">
+						<input type="button" name="closeBtn" value="Close Window" onClick="javascript:closeWindow();">
 						&nbsp;
 					</td>
 				</tr>

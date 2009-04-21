@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/RefDocumentUpload.jsp,v 1.4 2009-04-15 17:53:50 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/RefDocumentUpload.jsp,v 1.5 2009-04-21 03:47:35 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -90,7 +90,7 @@
 
 %>
 
-	<INPUT type="button" name="btnBack" value="Back" style="width: 125; height: 30" onclick="javascript:Back();">
+	<INPUT type="button" name="btnBack" value="Back" onclick="javascript:Back();">
 
 
 	<p style="font-size: 12pt; font-weight: bold">

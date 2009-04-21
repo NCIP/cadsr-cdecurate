@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateCDAltName.jsp,v 1.3 2008-07-03 21:24:00 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateCDAltName.jsp,v 1.4 2009-04-21 03:47:36 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -310,10 +310,10 @@
 				</tr>
 				<tr>
 					<td align="left" colspan=2>
-						<input type="button" name="btnClose" value="Close Window" style="width: 150" , "height: 9" onClick="javascript:window.close();">
+						<input type="button" name="btnClose" value="Close Window" onClick="javascript:window.close();">
 					</td>
 					<td align="left" colspan=2>
-						<input type="button" name="btnAddAltName" value="Create Alternate Name" style="width: 150" , "height: 9" onClick="addAltName();">
+						<input type="button" name="btnAddAltName" value="Create Alternate Name" onClick="addAltName();">
 					</td>
 				</tr>
 				<!-- stores selected component ID and workflow status  -->

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ErrorPageWindow.jsp,v 1.3 2008-07-03 21:34:03 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ErrorPageWindow.jsp,v 1.4 2009-04-21 03:47:36 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -214,7 +214,7 @@ function callHelp()
 						</tr>
 						<tr height="40">
 							<td width="100%" colspan="1" align="center" valign="middle">
-								<input type="button" name="closeBtn" value="Close Window" onClick="window.close();" style="width: 95, height: 26">
+								<input type="button" name="closeBtn" value="Close Window" onClick="window.close();">
 							</td>
 						</tr>
 					</table>

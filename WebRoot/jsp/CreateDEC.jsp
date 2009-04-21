@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDEC.jsp,v 1.10 2009-04-10 14:30:24 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDEC.jsp,v 1.11 2009-04-21 03:47:36 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -324,20 +324,20 @@
 			<table width="100%" border="0">
 				<tr>
 					<td height="26" align="left" valign="top">
-						<input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate');" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_Validation',helpUrl); return false">
+						<input type="button" name="btnValidate" value="Validate" onClick="SubmitValidate('validate');" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_Validation',helpUrl); return false">
 						&nbsp;&nbsp;
-						<input type="button" name="btnClear" value="Clear" style="width: 125" onClick="ClearBoxes();">
+						<input type="button" name="btnClear" value="Clear" onClick="ClearBoxes();">
 						&nbsp;&nbsp;
 						<% if (sOriginAction.equals("CreateNewDECfromCreateDE") || sOriginAction.equals("CreateNewDECfromEditDE") || sOriginAction.equals("CreateNewDEC") 
             || sMenuAction.equals("NewDECTemplate") || sMenuAction.equals("NewDECVersion")){%>
-						<input type="button" name="btnBack" value="Back" style="width: 125" onClick="Back();">
+						<input type="button" name="btnBack" value="Back" onClick="Back();">
 						&nbsp;&nbsp;
 						<% } %>
-						<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" onClick="openDesignateWindow('Alternate Names');" onHelp="showHelp('html/Help_Updates.html#newDECForm_altNames',helpUrl); return false">
+						<input type="button" name="btnAltName" value="Alt Names/Defs" onClick="openDesignateWindow('Alternate Names');" onHelp="showHelp('html/Help_Updates.html#newDECForm_altNames',helpUrl); return false">
 						&nbsp;&nbsp;
-						<input type="button" name="btnRefDoc" value="Reference Documents" style="width:140" onClick="openDesignateWindow('Reference Documents');" onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return false">
+						<input type="button" name="btnRefDoc" value="Reference Documents" onClick="openDesignateWindow('Reference Documents');" onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return false">
 						&nbsp;&nbsp;
-						<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+						<img name="Message" src="images/WaitMessage1.gif" width="250px" height="25px" alt="WaitMessage" style="visibility:hidden;">
 					</td>
 				</tr>
 			</table>
@@ -460,7 +460,6 @@
 												Concepts
 											</td>
 											<td align="right" valign="middle">
-												<!-- <input type="button" name="btnSerSecOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('ObjectQualifier', 'false');">-->
 												<font color="#FF0000">
 													<a href="javascript:SearchBuildingBlocks('ObjectQualifier', 'false')">
 														Search
@@ -468,7 +467,6 @@
 												</font>
 											</td>
 											<td align="center" valign="middle">
-												<!-- <input type="button" name="btnRmSecOC" value="Remove" style="width:90%" onClick="javascript:removeQualifier();">-->
 												<font color="#FF0000">
 													<a href="javascript:RemoveBuildingBlocks('ObjectQualifier')">
 														Remove
@@ -481,7 +479,6 @@
 												Concept
 											</td>
 											<td align="center" valign="middle">
-												<!--<input type="button" name="btnSerPriOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('ObjectClass', 'false');">-->
 												<font color="#FF0000">
 													<a href="javascript:SearchBuildingBlocks('ObjectClass', 'false')">
 														Search
@@ -489,7 +486,6 @@
 												</font>
 											</td>
 											<td align="center" valign="middle">
-												<!--<input type="button" name="btnRmPriOC" value="Remove" style="width:90%" onClick="">-->
 												<font color="#FF0000">
 													<a href="javascript:RemoveBuildingBlocks('ObjectClass')">
 														Remove
@@ -582,7 +578,6 @@
 												Concepts
 											</td>
 											<td align="right" valign="middle">
-												<!--<input type="button" name="btnSerSecProp" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('PropertyQualifier', 'false');">-->
 												<font color="#FF0000">
 													<a href="javascript:SearchBuildingBlocks('PropertyQualifier', 'false')">
 														Search
@@ -590,7 +585,6 @@
 												</font>
 											</td>
 											<td align="center" valign="middle">
-												<!-- <input type="button" name="btnRmSecProp" value="Remove" style="width:90%" onClick="javascript:removeQualifier();"> -->
 												<font color="#FF0000">
 													<a href="javascript:RemoveBuildingBlocks('PropertyQualifier')">
 														Remove
@@ -603,7 +597,6 @@
 												Concept
 											</td>
 											<td align="center" valign="middle">
-												<!-- <input type="button" name="btnSerPriOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('PropertyClass', 'false');">-->
 												<font color="#FF0000">
 													<a href="javascript:SearchBuildingBlocks('PropertyClass', 'false')">
 														Search
@@ -611,7 +604,6 @@
 												</font>
 											</td>
 											<td align="center" valign="middle">
-												<!--<input type="button" name="btnRmPriOC" value="Remove" style="width:90%" onClick="">-->
 												<font color="#FF0000">
 													<a href="javascript:RemoveBuildingBlocks('Property')">
 														Remove
@@ -1017,13 +1009,13 @@
 									&nbsp;Selected Classification Schemes
 								</td>
 								<td align=center>
-									<input type="button" name="btnRemoveCS" value="Remove Item" style="width: 85" , "height: 9" onClick="removeCSList();">
+									<input type="button" name="btnRemoveCS" value="Remove Item" onClick="removeCSList();">
 								</td>
 								<td>
 									&nbsp;&nbsp;Associated Classification Scheme Items
 								</td>
 								<td align=center>
-									<input type="button" name="btnRemoveCSI" value="Remove Item" style="width: 85" , "height: 9" onClick="removeCSIList();">
+									<input type="button" name="btnRemoveCSI" value="Remove Item" onClick="removeCSIList();">
 								</td>
 							</tr>
 							<tr>
@@ -1083,13 +1075,13 @@
 									&nbsp;
 								</td>
 								<td align="left">
-									<input type="button" name="btnViewCt" value="Edit Item" style="width:100" onClick="javascript:editContact('view');" disabled>
+									<input type="button" name="btnViewCt" value="Edit Item" onClick="javascript:editContact('view');" disabled>
 								</td>
 								<td align="left">
-									<input type="button" name="btnCreateCt" value="Create New" style="width:100" onClick="javascript:editContact('new');">
+									<input type="button" name="btnCreateCt" value="Create New" onClick="javascript:editContact('new');">
 								</td>
 								<td align="center">
-									<input type="button" name="btnRmvCt" value="Remove Item" style="width:100" onClick="javascript:editContact('remove');" disabled>
+									<input type="button" name="btnRmvCt" value="Remove Item" onClick="javascript:editContact('remove');" disabled>
 								</td>
 							</tr>
 							<tr>

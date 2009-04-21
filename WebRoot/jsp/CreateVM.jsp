@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVM.jsp,v 1.5 2009-04-10 15:08:11 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVM.jsp,v 1.6 2009-04-21 03:47:35 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -139,11 +139,11 @@ function displayStatusMessage()
 				<col width="95%">
 				<tr>
 					<td colspan="6" align="left" valign="top">
-						<input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate');" onHelp="showHelp('html/Help_CreateVD.html#createVMForm_Validation',helpUrl); return false">
+						<input type="button" name="btnValidate" value="Validate" onClick="SubmitValidate('validate');" onHelp="showHelp('html/Help_CreateVD.html#createVMForm_Validation',helpUrl); return false">
 						&nbsp;&nbsp;
-						<input type="button" name="btnClear" value="Clear" style="width: 125" onClick="clearBoxes();">
+						<input type="button" name="btnClear" value="Clear" onClick="clearBoxes();">
 						&nbsp;&nbsp;
-						<input type="button" name="btnBack" value="Back" style="width: 125" onClick="Back();">
+						<input type="button" name="btnBack" value="Back" onClick="Back();">
 						&nbsp;&nbsp;
 						<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
 					</td>

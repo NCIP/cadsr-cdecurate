@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateVM.jsp,v 1.4 2009-04-09 21:31:20 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateVM.jsp,v 1.5 2009-04-21 03:47:36 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -61,11 +61,11 @@
 			<table width="100%" border="0">
 				<tr>
 					<td valign="top">
-						<input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="submitPage('<%=VMForm.ACT_SUBMIT_VM%>');" <% if (!isValid) { %> disabled <% } %>>
+						<input type="button" name="btnSubmit" value="Submit" onClick="submitPage('<%=VMForm.ACT_SUBMIT_VM%>');" <% if (!isValid) { %> disabled <% } %>>
 						&nbsp;&nbsp;
-						<input type="button" name="btnBack" value="Back" style="width:125" onClick="submitPage('<%=VMForm.ACT_REEDIT_VM%>');">
+						<input type="button" name="btnBack" value="Back" onClick="submitPage('<%=VMForm.ACT_REEDIT_VM%>');">
 						&nbsp;&nbsp;
-						<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+						<img name="Message" src="images/WaitMessage1.gif" width="250px" height="25px" alt="WaitMessage" style="visibility:hidden;">
 					</td>
 				</tr>
 			</table>

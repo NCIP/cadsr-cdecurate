@@ -62,7 +62,7 @@
 	<%	  } else { %>
 	        <%if ((show != null) && (show.equals("yes"))){%>
 	          </br>
-	          <input type="button" name="closeBtn" value="Close" style="width: 125" onClick="window.close();">
+	          <input type="button" name="closeBtn" value="Close" onClick="window.close();">
 	        <%}%>
 			<p> <font size=4>
 			<%=errorMsg %>

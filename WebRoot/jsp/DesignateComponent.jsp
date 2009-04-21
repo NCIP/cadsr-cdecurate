@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/DesignateComponent.jsp,v 1.3 2008-07-03 21:30:32 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/DesignateComponent.jsp,v 1.4 2009-04-21 03:47:35 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -368,7 +368,7 @@
 						&nbsp;
 					</td>
 					<td align="left" colspan=2>
-						<input type="button" name="btnAddAltName" value="Add Selection" style="width: 100" , "height: 9" onClick="addAltName();">
+						<input type="button" name="btnAddAltName" value="Add Selection" onClick="addAltName();">
 					</td>
 				</tr>
 				<tr>
@@ -386,7 +386,7 @@
 					</td>
 					<td align="center">
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="button" name="btnRemAltName" value="Remove Item" style="width:85,height:9" onClick="removeAltName();">
+						<input type="button" name="btnRemAltName" value="Remove Item" onClick="removeAltName();">
 					</td>
 				</tr>
 				<tr>
@@ -431,11 +431,11 @@
 				</tr>
 				<tr>
 					<td colspan=4 align="center">
-						<input type="button" name="btnDesignate" value="Create Designation" style="width:130,height:30" onClick="CreateDesignation();" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage',helpUrl); return false">
+						<input type="button" name="btnDesignate" value="Create Designation" onClick="CreateDesignation();" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage',helpUrl); return false">
 						&nbsp;&nbsp;
-						<input type="button" name="btnUnDesignate" value="Remove Designation" style="width:130,height:30" onClick="RemoveDesignation();" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage',helpUrl); return false">
+						<input type="button" name="btnUnDesignate" value="Remove Designation" onClick="RemoveDesignation();" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage',helpUrl); return false">
 						&nbsp;&nbsp;
-						<input type="button" name="btnClose" value="Close Window" style="width:130,height:30" onClick="window.close();" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage',helpUrl); return false">
+						<input type="button" name="btnClose" value="Close Window" onClick="window.close();" onHelp="showHelp('html/Help_DesignateAC.html#designateForm_DesignateComponentPage',helpUrl); return false">
 					</td>
 				</tr>
 				<!-- stores selected component ID and workflow status  -->

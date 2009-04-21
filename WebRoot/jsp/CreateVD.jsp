@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVD.jsp,v 1.13 2009-04-10 14:30:24 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateVD.jsp,v 1.14 2009-04-21 03:47:35 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -563,7 +563,6 @@
 																Concepts
 															</td>
 															<td align="right" valign="middle">
-																<!-- <input type="button" name="btnSerSecOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('ObjectQualifier', 'false');">-->
 																<font color="#FF0000">
 																	<a href="javascript:SearchBuildingBlocks('RepQualifier', 'false')">
 																		Search
@@ -571,7 +570,6 @@
 																</font>
 															</td>
 															<td align="center" valign="middle">
-																<!-- <input type="button" name="btnRmSecOC" value="Remove" style="width:90%" onClick="javascript:removeQualifier();">-->
 																<font color="#FF0000">
 																	<a href="javascript:RemoveBuildingBlocks('RepQualifier')">
 																		Remove
@@ -584,7 +582,6 @@
 																Concept
 															</td>
 															<td align="right" valign="middle">
-																<!--<input type="button" name="btnSerPriOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('ObjectClass', 'false');">-->
 																<font color="#FF0000">
 																	<a href="javascript:SearchBuildingBlocks('RepTerm', 'false')">
 																		Search
@@ -592,7 +589,6 @@
 																</font>
 															</td>
 															<td align="center" valign="middle">
-																<!--<input type="button" name="btnRmPriOC" value="Remove" style="width:90%" onClick="">-->
 																<font color="#FF0000">
 																	<a href="javascript:RemoveBuildingBlocks('RepTerm')">
 																		Remove
@@ -1255,13 +1251,13 @@
 										&nbsp;Selected Classification Schemes
 									</td>
 									<td>
-										<input type="button" name="btnRemoveCS" value="Remove Item" style="width: 85" onClick="removeCSList();">
+										<input type="button" name="btnRemoveCS" value="Remove Item" onClick="removeCSList();">
 									</td>
 									<td>
 										&nbsp;&nbsp;Associated Classification Scheme Items
 									</td>
 									<td>
-										<input type="button" name="btnRemoveCSI" value="Remove Item" style="width: 85" onClick="removeCSIList();">
+										<input type="button" name="btnRemoveCSI" value="Remove Item" onClick="removeCSIList();">
 									</td>
 								</tr>
 								<tr>
@@ -1323,13 +1319,13 @@
 										&nbsp;
 									</td>
 									<td align="left">
-										<input type="button" name="btnViewCt" value="Edit Item" style="width:100" onClick="javascript:editContact('view');" disabled>
+										<input type="button" name="btnViewCt" value="Edit Item" onClick="javascript:editContact('view');" disabled>
 									</td>
 									<td align="left">
-										<input type="button" name="btnCreateCt" value="Create New" style="width:100" onClick="javascript:editContact('new');">
+										<input type="button" name="btnCreateCt" value="Create New" onClick="javascript:editContact('new');">
 									</td>
 									<td align="center">
-										<input type="button" name="btnRmvCt" value="Remove Item" style="width:100" onClick="javascript:editContact('remove');" disabled>
+										<input type="button" name="btnRmvCt" value="Remove Item" onClick="javascript:editContact('remove');" disabled>
 									</td>
 								</tr>
 								<tr>

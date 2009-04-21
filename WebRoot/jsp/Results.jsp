@@ -2180,7 +2180,7 @@ function ShowSelectedRowss(){
 						<font size="4">
 							<b>
 								 Search Results for
-								<%if (labelKeyword1 != null){%><%=StringEscapeUtils.escapeHtml(labelKeyword1)%><%}%>&nbsp;&nbsp;<input type="button" value="Back" style="width: 65" onClick="Back();"><img name="Message" src="images/SearchMessage.gif" width="180" height="25" alt="WaitMessage" style="visibility:hidden;">
+								<%if (labelKeyword1 != null){%><%=StringEscapeUtils.escapeHtml(labelKeyword1)%><%}%>&nbsp;&nbsp;<input type="button" value="Back" onClick="Back();"><img name="Message" src="images/SearchMessage.gif" width="180" height="25" alt="WaitMessage" style="visibility:hidden;">
 							</b>
 						</font>
 					</td>

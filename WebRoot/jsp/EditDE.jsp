@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.23 2009-04-09 15:50:54 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDE.jsp,v 1.24 2009-04-21 03:47:35 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -390,21 +390,21 @@
 				<tr>
 					<td align="left" valign="top" colspan=2>
 						<%	if (!isView) { %>
-						<input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate')" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Validation',helpUrl); return false">
+						<input type="button" name="btnValidate" value="Validate" onClick="SubmitValidate('validate')" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Validation',helpUrl); return false">
 						&nbsp;&nbsp;
-						<input type="button" name="btnClear" value="Clear" style="width: 125" onClick="ClearBoxes();">
+						<input type="button" name="btnClear" value="Clear" onClick="ClearBoxes();">
 						&nbsp;&nbsp;
-						<input type="button" name="btnBack" value="Back" style="width: 125" onClick="Back();">
+						<input type="button" name="btnBack" value="Back" onClick="Back();">
 						&nbsp;&nbsp;
 						<%
 							if (sOriginAction.equals("BlockEditDE")) {
 						%>
-						<input type="button" name="btnDetails" value="Details" style="width: 125" onClick="openBEDisplayWindow();" onHelp="showHelp('html/Help_Updates.html#newCDEForm_details',helpUrl); return false">
+						<input type="button" name="btnDetails" value="Details" onClick="openBEDisplayWindow();" onHelp="showHelp('html/Help_Updates.html#newCDEForm_details',helpUrl); return false">
 						&nbsp;&nbsp;
 						<%
 							} }
 						%>
-						<input type="button" name="btnAltName" value="Alt Names/Defs" style="width:125" 
+						<input type="button" name="btnAltName" value="Alt Names/Defs" 
 							<% if (isView) { %>
 								onClick="openAltNameViewWindow();"
 							<% } else { %>
@@ -412,7 +412,7 @@
 							<% } %>
 							onHelp="showHelp('html/Help_Updates.html#newDECForm_altNames',helpUrl); return false">
 						&nbsp;&nbsp;
-						<input type="button" name="btnRefDoc" value="Reference Documents" style="width:160" 
+						<input type="button" name="btnRefDoc" value="Reference Documents" 
 							<% if (isView) { %>
 								onClick="openRefDocViewWindow();"
 							<% } else { %>
@@ -422,13 +422,13 @@
 						&nbsp;&nbsp;
 						
 						<%	if((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){	%>
-							<input type="button" name="btnClose" value="Back" style="width: 125" onClick="Back();">
+							<input type="button" name="btnClose" value="Back" onClick="Back();">
 							&nbsp;&nbsp;
 						<% }else if (isView) {	%>
-							<input type="button" name="btnClose" value="Close" style="width: 125" onClick="window.close();">
+							<input type="button" name="btnClose" value="Close" onClick="window.close();">
 							&nbsp;&nbsp;
 						<% }session.setAttribute("displayErrorMessage", "No"); %>
-						<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+						<img name="Message" src="images/WaitMessage1.gif" width="250px" height="25px" alt="WaitMessage" style="visibility:hidden;">
 					</td>
 				</tr>
 			</table>
@@ -1322,7 +1322,7 @@
 								</td>
 								<td align="left">
 								<%	if (!isView) {	%>
-									<input type="button" name="btnRemoveCS" value="Remove Item" style="width: 85" onClick="removeCSList();">
+									<input type="button" name="btnRemoveCS" value="Remove Item" onClick="removeCSList();">
 								<% } %>								
 								</td>
 								<td align="left">
@@ -1330,7 +1330,7 @@
 								</td>
 								<td align="left">
 								<%	if (!isView) {	%>
-									<input type="button" name="btnRemoveCSI" value="Remove Item" style="width: 85" onClick="removeCSIList();">
+									<input type="button" name="btnRemoveCSI" value="Remove Item" onClick="removeCSIList();">
 								<% } %>
 								</td>
 							</tr>
@@ -1426,13 +1426,13 @@
 									&nbsp;
 								</td>
 								<td align="left">
-									<input type="button" name="btnViewCt" value="Edit Item" style="width:100" onClick="javascript:editContact('view');" disabled>
+									<input type="button" name="btnViewCt" value="Edit Item" onClick="javascript:editContact('view');" disabled>
 								</td>
 								<td align="left">
-									<input type="button" name="btnCreateCt" value="Create New" style="width:100" onClick="javascript:editContact('new');">
+									<input type="button" name="btnCreateCt" value="Create New" onClick="javascript:editContact('new');">
 								</td>
 								<td align="center">
-									<input type="button" name="btnRmvCt" value="Remove Item" style="width:100" onClick="javascript:editContact('remove');" disabled>
+									<input type="button" name="btnRmvCt" value="Remove Item" onClick="javascript:editContact('remove');" disabled>
 								</td>
 							</tr>
 					    <%} %>

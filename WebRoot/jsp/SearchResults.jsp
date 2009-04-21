@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.13 2008-12-29 17:36:35 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResults.jsp,v 1.14 2009-04-21 03:47:36 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -548,61 +548,61 @@ if(!sSelAC.equals("ValueMeaning"))
     String buttons[] = new String[17];
     if (sMAction.equals("searchForCreate")) {
         buttons[0] = "<!-- searchForCreate -->\n"
-            + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Use Selection\" onClick=\"ShowUseSelection();\" disabled style=\"width: 97\">\n&nbsp;\n";
+            + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Use Selection\" onClick=\"ShowUseSelection();\" disabled>\n&nbsp;\n";
     } else if (((sMAction.equals("Edit Selection")) || (sMAction.equals("nothing"))) && ((sSelAC.equals("Value Meaning"))||(sSelAC.equals("Data Element")) || (sSelAC.equals("Data Element Concept")) || (sSelAC.equals("Value Domain")))){
         buttons[1] = "<!-- nothing -->\n"
             + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Edit Selection\" onClick=\"ShowEditSelection();\" disabled "
-			+ "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_Editing',helpUrl); return false\" style=\"width: 97\">\n&nbsp;\n";
+			+ "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_Editing',helpUrl); return false\">\n&nbsp;\n";
     } else if (!sMAction.equals("Create New from Existing") && !sMAction.equals("Create New Version") &&(sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain"))) {
         buttons[2] = "<!-- Create New from Existing -->\n"
             + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Edit Selection\" onClick=\"ShowEditSelection();\" disabled "
-			+ "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_Editing',helpUrl); return false\" style=\"width: 97\">\n&nbsp;\n";
+			+ "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_Editing',helpUrl); return false\">\n&nbsp;\n";
     } else if (!sMAction.equals("nothing") && !sSelAC.equals("Questions") && !sSelAC.equals("Class Scheme Items") && !sSelAC.equals("Conceptual Domain") && !sSelAC.equals("ConceptClass")) {
         buttons[3] = "<!-- other -->\n"
-            + "<input type=\"button\" name=\"editSelectedBtn\" value=\"" + sMAction + "\" onClick=\"ShowEditSelection();\" disabled style=\"width: 165\">\n&nbsp;\n";
+            + "<input type=\"button\" name=\"editSelectedBtn\" value=\"" + sMAction + "\" onClick=\"ShowEditSelection();\" disabled>\n&nbsp;\n";
     } else if (sMAction.equals("Complete Selected DE") && sSelAC.equals("Questions")) {
         buttons[4] = "<!-- Complete Selected DE -->\n"
             + "<input type=\"button\" name=\"editSelectedBtn\" value=\"" + sMAction + "\" onClick=\"ShowEditSelection();\" disabled "
-			+ "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_completeSelectedDE',helpUrl); return false\" style=\"width: 165\">\n&nbsp;\n";
+			+ "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_completeSelectedDE',helpUrl); return false\">\n&nbsp;\n";
     } else if (sButtonPressed.equals("Search") && (sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")||sSelAC.equals("Value Meaning"))) {
         buttons[5] = "<!-- Search -->\n"
-            + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Edit Selection\" onClick=\"ShowEditSelection();\" disabled style=\"width: 97\">\n&nbsp;\n";
+            + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Edit Selection\" onClick=\"ShowEditSelection();\" disabled>\n&nbsp;\n";
     }
     if ((sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")) && !sMAction.equals("searchForCreate")) {
         buttons[16] = "<!-- !searchForCreate -->\n"
-            + "<br/><input type=\"button\" name=\"monitorBtn\" value=\"Monitor\" style=\"width:60\" onClick=\"monitorCmd();\" disabled "
+            + "<br/><input type=\"button\" name=\"monitorBtn\" value=\"Monitor\" onClick=\"monitorCmd();\" disabled "
             + "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_monitor',helpUrl); return false\">\n&nbsp;\n"
-            + "<input type=\"button\" name=\"unmonitorBtn\" value=\"Unmonitor\" style=\"width:70\" onClick=\"unmonitorCmd();\" disabled "
+            + "<input type=\"button\" name=\"unmonitorBtn\" value=\"Unmonitor\" onClick=\"unmonitorCmd();\" disabled "
             + "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_monitor',helpUrl); return false\">\n&nbsp;\n"
-            + "<input type=\"button\" name=\"uploadBtn\" value=\"Upload Document(s)\" style=\"width:130\" onClick=\"uploadCmd();\" disabled "
+            + "<input type=\"button\" name=\"uploadBtn\" value=\"Upload Document(s)\" onClick=\"uploadCmd();\" disabled "
             + "onHelp = \"showHelp('html/Help_SearchAC.html#Upload_Attachments',helpUrl); return false\">\n&nbsp;\n";
     } 
     if (sSelAC.equals("Data Element") && !sMAction.equals("searchForCreate"))  // || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain") || (sSelAC.equals("Questions") && sMAction.equals("searchForCreate")))
     {
         buttons[7] = "<!-- designation button only for DE, DEC, VD in both the searches, exclude DDE  -->\n"
             + "<input type=\"button\" name=\"designateBtn\" value=\"Designations\" onClick=\"designateRecord();\" disabled "
-			+ "onHelp = \"showHelp('html/Help_DesignateDE.html#searchResultsForm_designateDE',helpUrl); return false\" style=\"width: 85\">\n&nbsp;\n";
+			+ "onHelp = \"showHelp('html/Help_DesignateDE.html#searchResultsForm_designateDE',helpUrl); return false\" >\n&nbsp;\n";
     } 
     if (sSelAC.equals("Data Element") && !sMAction.equals("searchForCreate")) {
         buttons[8] = "<!-- details button only for DE, exclude DDE  -->\n"
             + "<input type=\"button\" name=\"detailsBtn\" value=\"Details\" onClick=\"GetDetails();\" disabled "
-			+ "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_Details',helpUrl); return false\" style=\"width: 65\">\n&nbsp;\n";
+			+ "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_Details',helpUrl); return false\">\n&nbsp;\n";
     } 
     if ((sSelAC.equals("Data Element") || sSelAC.equals("Data Element Concept") || sSelAC.equals("Value Domain")) && !sMAction.equals("searchForCreate")) {
         buttons[9] = "<!-- Append button only for DE, DEC, VD in only the main search  -->\n"
             + "<input type=\"button\" name=\"AppendBtn\" value=\"Append\" onClick=\"setAppendAction();\" disabled "
-			+ "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_append',helpUrl); return false\" style=\"width: 65\">\n&nbsp;\n";
+			+ "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_append',helpUrl); return false\">\n&nbsp;\n";
     } 
     if (sMAction.equals("searchForCreate")) {
         buttons[11] = "<!-- makes close button only if page opened from createDE or VD pages   -->\n"
-            + "<input type=\"button\" name=\"closeBtn\" value=\"Close Window\" onClick=\"javascript:closeWindow();\" style=\"width: 97\">\n&nbsp;\n";
+            + "<input type=\"button\" name=\"closeBtn\" value=\"Close Window\" onClick=\"javascript:closeWindow();\">\n&nbsp;\n";
     } else{
         buttons[12] = "<!-- makes showSelection, designate, clear buttons otherwise   -->\n"
             + "<input type=\"button\" name=\"showSelectedBtn\" value=\"Show Selected Rows\" onClick=\"ShowSelectedRows(true);\" disabled "
-            + "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_showSelectedBtn',helpUrl); return false\" style=\"width: 135\">\n&nbsp;\n";
+            + "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_showSelectedBtn',helpUrl); return false\">\n&nbsp;\n";
         if (!sSelAC.equals("Questions")) {
             buttons[13] = "<!-- button get Associated with popup menu   -->\n"
-                + "<input id=\"assACBtn\" type=button name=\"associateACBtn\" value=\"Get Associated\"  onmouseover=\"controlsubmenu(event,'divAssACMenu',null,null,null)\" onmouseout=\"closeall()\" style=\"width:130;\" disabled "
+                + "<input id=\"assACBtn\" type=button name=\"associateACBtn\" value=\"Get Associated\"  onmouseover=\"controlsubmenu(event,'divAssACMenu',null,null,null)\" onmouseout=\"closeall()\" disabled "
 				+ "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_getAssociated',helpUrl); return false\">\n&nbsp;\n";
         }
         buttons[14] = "<input type=\"button\" name=\"clearBtn\" value=\"Clear Records\" onClick=\"clearRecords();\" ";
@@ -611,12 +611,12 @@ if(!sSelAC.equals("ValueMeaning"))
             buttons[14] = buttons[14] + "disabled ";
         }
         buttons[14] = buttons[14]
-            + "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_clearBtn',helpUrl); return false\" style=\"width: 100\">\n&nbsp;\n";
+            + "onHelp = \"showHelp('html/Help_SearchAC.html#searchResultsForm_clearBtn',helpUrl); return false\">\n&nbsp;\n";
     } 
     //System.out.println("SR.jsp!!! vResultStack.size: " + vResultStack.size()+""+sBackFromGetAssociated.equals("backFromGetAssociated")+""+sMAction); 
     if (((vResultStack.size()>0 && sBackFromGetAssociated.equals("backFromGetAssociated") && !pushBoolean.equals("true"))
           || vResultStack.size()>1) && !sMAction.equals("searchForCreate")) {
-        buttons[15] = "<input type=\"button\" name=\"btnBack\" value=\"Back\" style=\"width: 65\" onClick=\"Back();\">\n&nbsp;&nbsp;\n";
+        buttons[15] = "<input type=\"button\" name=\"btnBack\" value=\"Back\" onClick=\"Back();\">\n&nbsp;&nbsp;\n";
     }
     for (int i = 0; i < buttons.length; ++i)
     {
@@ -628,7 +628,7 @@ if(!sSelAC.equals("ValueMeaning"))
         }
     }
     %>
-						<img name="Message" src="images/SearchMessage.gif" width="180" height="25" alt="WaitMessage" style="visibility:hidden;">
+						<img name="Message" src="images/SearchMessage.gif" width="180px" height="25px" alt="WaitMessage" style="visibility:hidden;">
 					</td>
 				</tr>
 			</table>

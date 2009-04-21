@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CRFValueResults.jsp,v 1.3 2008-07-03 21:28:03 chickerura Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CRFValueResults.jsp,v 1.4 2009-04-21 03:47:36 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -141,9 +141,7 @@
 				<tr height="20" valign="top">
 					<!-- makes Create New  button to create new    -->
 					<td align="left">
-						<!-- <input type="button" name="CreateNewBtn" value="Create New" onClick="javascript:CreateNewSelection();" style="width: 100", "height: 30">
-        &nbsp;&nbsp;     -->
-						<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();" style="width: 100", "height: 30">
+						<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();">
 						&nbsp;&nbsp;
 						<img name="Message" src="images/SearchMessage.gif" width="180" height="25" alt="WaitMessage" style="visibility:hidden;" valign="bottom">
 					</td>
