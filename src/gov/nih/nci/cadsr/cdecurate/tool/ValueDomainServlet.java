@@ -2303,6 +2303,7 @@ public class ValueDomainServlet extends CurationServlet {
 	  m_classReq.setAttribute("title", title);
 	  m_classReq.setAttribute("publicID", VDBean.getVD_VD_ID());
 	  m_classReq.setAttribute("version", VDBean.getVD_VERSION());
+	  DataManager.setAttribute(session, "VDAction", "");
 	  if (from.equals("edit")){
 		  m_classReq.getSession().setAttribute("displayErrorMessage", "Yes");  
 	  }
