@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.68 2009-04-03 17:46:47 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.69 2009-04-21 03:52:53 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -6027,6 +6027,15 @@ public class InsACService implements Serializable {
 		return condrIdseq;
 	}
    
+	/**
+	 * Gets validation string for rep term, object class and property
+	 * @param evsBeanList
+	 * @param defaultContext
+	 * @param lName
+	 * @param type
+	 * @return
+	 * @throws Exception
+	 */
 	public ValidationStatusBean evsBeanCheck(Vector evsBeanList, HashMap<String,String> defaultContext, String lName, String type)throws Exception{
 		  ValidationStatusBean statusBean = new ValidationStatusBean();
 		  ArrayList<ResultVO>  resultList = new ArrayList();
@@ -6058,7 +6067,7 @@ public class InsACService implements Serializable {
 			}
 
 			if (resultList == null || resultList.size() < 1) {
-				statusBean.setStatusMessage("Valid  Creating a new "+type+" (" + lName + ")" );	
+				statusBean.setStatusMessage("**  Creating a new "+type);	
 				statusBean.setCondrExists(false);
 				statusBean.setEvsBeanExists(false);
 			} else {
@@ -6082,7 +6091,7 @@ public class InsACService implements Serializable {
 						}
 					} else {
 						if (vo.getCondr_IDSEQ() != null) {
-							statusBean.setStatusMessage("Valid  Creating a new "+type+" (" + lName + ")" );
+							statusBean.setStatusMessage("**  Creating a new "+type);
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
 							statusBean.setEvsBeanExists(false);
@@ -6093,7 +6102,7 @@ public class InsACService implements Serializable {
 				}
 				if (foundBeanList == null || foundBeanList.size() < 1) {
 					ResultVO vo = resultList.get(0);
-					statusBean.setStatusMessage("Valid  Matched "+type+" ("
+					statusBean.setStatusMessage("**  Matched "+type+" ("
 							+ vo.getLong_name() + ", " + vo.getPublicId()
 							+ ", " + vo.getVersion() + ", " + vo.getContext()
 							+ ") will create a new "+type+" in caBIG.");
@@ -6113,7 +6122,7 @@ public class InsACService implements Serializable {
 						}
 					}
 					if ((idseq != null) && !(idseq.equals(""))) {
-						statusBean.setStatusMessage("Valid  Using "+type+" ("+longName+", "+publicID+", "+version+") from caBIG");
+						statusBean.setStatusMessage("**  Using existing "+type+" ("+longName+", "+publicID+", "+version+") from caBIG");
 						statusBean.setCondrExists(true);
 						statusBean.setCondrIDSEQ(condrIDSEQ);
 						statusBean.setEvsBeanExists(true);
@@ -6134,14 +6143,14 @@ public class InsACService implements Serializable {
 						}
 
 						if ((idseqM != null) && !(idseqM.equals(""))) {
-							statusBean.setStatusMessage("Valid  Recommended "+type+" ("+longNameM+", "+publicIDM+", "+versionM+")");
+							statusBean.setStatusMessage("**  Recommended "+type+" ("+longNameM+", "+publicIDM+", "+versionM+")");
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(condrIDSEQM);
 							statusBean.setEvsBeanExists(true);
 							statusBean.setEvsBeanIDSEQ(idseqM);
 						} else {
 							ResultVO vo = foundBeanList.get(0);
-							statusBean.setStatusMessage("Valid  Creating new "+type+" Version ("+vo.getLong_name()+", "+vo.getPublicId()+", "+vo.getVersion()+") in caBIG");
+							statusBean.setStatusMessage("**  Creating new "+type+" Version ("+vo.getLong_name()+", "+vo.getPublicId()+", "+vo.getVersion()+") in caBIG");
 							statusBean.setNewVersion(true);
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
@@ -6153,10 +6162,19 @@ public class InsACService implements Serializable {
 				}
 			}
 		} else {
-			statusBean.setStatusMessage("Valid  Creating new a "+type+" (" + lName + ")" );
+			statusBean.setStatusMessage("**  Creating new a "+type);
 		}
 	      return statusBean;
 	}
+	
+	/**
+	 * 
+	 * @param userName
+	 * @param condrIdseq
+	 * @param defaultContextIdseq
+	 * @param type
+	 * @return
+	 */
 	public String createEvsBean(String userName, String condrIdseq, String defaultContextIdseq, String type){
 		String idseq= "";
 		Evs_Mgr mgr = null;
