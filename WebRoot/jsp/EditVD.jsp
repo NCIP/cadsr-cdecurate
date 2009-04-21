@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.33 2009-04-21 03:47:36 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.34 2009-04-21 19:08:14 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -550,7 +550,7 @@ function openEVSConceptsWindow(){
 </SCRIPT>
 	</head>
 
-	<body onLoad="setup();">
+	<body onLoad="setup();hideCloseButton(<%=isView%>);">
 		<form name="createVDForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=editVD">
 		    <% if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
 		  	 <b><font  size="3">Not Authorized for Edits in this Context.</font></b></br></br>

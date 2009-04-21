@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.14 2009-04-17 21:28:29 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/VDPVSTab.jsp,v 1.15 2009-04-21 19:08:14 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -110,10 +110,10 @@
 			>
 			&nbsp;&nbsp;
 			<% if((displayErrorMessagee != null)&&(displayErrorMessagee).equals("Yes")){	%>
-							<input type="button" name="btnClose" value="Back" onClick="Back();">
+							<input type="button" value="Back" onClick="Back();">
 							&nbsp;&nbsp;
 			<% }else if (isView) {	%>
-				<input type="button" name="btnClose" value="Close" onClick="window.close();">
+				<input type="button" id="btnClose" value="Close" onClick="window.close();">
 				&nbsp;&nbsp;
 			<% }session.setAttribute("displayErrorMessage", "No"); %>
 			<img name="Message" src="images/WaitMessage1.gif" width="250px" height="25px" alt="WaitMessage" style="visibility:hidden;">

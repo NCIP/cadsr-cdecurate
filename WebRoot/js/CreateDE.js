@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDE.js,v 1.8 2009-04-10 14:42:42 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDE.js,v 1.9 2009-04-21 19:06:49 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 var searchWindow = null;
@@ -846,7 +846,13 @@ function removeDEComp()
   		alert("Please select a DE Comp to remove.");
     }
 }
-
+function hideCloseButton(isView){
+  if (isView && (window.opener == null)){
+    var closeBtn = document.getElementById("btnClose");
+    if (closeBtn != null)
+     closeBtn.style.display="none"; 
+  }
+}
 function isDECompOrderValid()
 {
  /* if(document.newCDEForm.MenuAction.value == "EditDesDE" ||
@@ -871,6 +877,7 @@ function isDECompOrderValid()
   } 
   return "valid";	
 }
+
 
 //------------ for DDE end ----------------------------
 
