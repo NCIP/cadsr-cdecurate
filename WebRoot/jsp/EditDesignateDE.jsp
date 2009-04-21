@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDesignateDE.jsp,v 1.8 2009-04-17 14:19:53 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDesignateDE.jsp,v 1.9 2009-04-21 03:47:35 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -331,9 +331,9 @@
 				<tr>
 					<td align="left" valign="top" colspan=2>
 						<%if (dispType.equals("Designation")) { %>
-						<input type="button" name="btnUpdate" value="Update Used By Attributes" style="width:170" onClick="javascript:submitDesignate('create');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Validation',helpUrl); return false">
+						<input type="button" name="btnUpdate" value="Update Used By Attributes" onClick="javascript:submitDesignate('create');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Validation',helpUrl); return false">
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="button" name="btnRemove" value="Remove Used By Attributes" style="width:175" onClick="javascript:submitDesignate('remove');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Validation',helpUrl); return false">
+						<input type="button" name="btnRemove" value="Remove Used By Attributes" onClick="javascript:submitDesignate('remove');" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Validation',helpUrl); return false">
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="button" name="btnClear" value="Clear" onClick="javascript:ClearBoxes();">
 						&nbsp;&nbsp;&nbsp;&nbsp;
@@ -343,14 +343,14 @@
 						&nbsp;&nbsp;
 						<% } %>
 						<%if (!dispType.equals("") && !dispType.equals("Designation")) { %>
-						<input type="button" name="btnUpdate" value="Update Attributes" style="width:170" onClick="<%=updLink%>" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Validation',helpUrl); return false">
+						<input type="button" name="btnUpdate" value="Update Attributes" onClick="<%=updLink%>" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Validation',helpUrl); return false">
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<% } %>
 						<%if (!dispType.equals("Designation")) { %>
 						<input type="button" name="btnClose" value="Close Window" onClick="window.close();">
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<% } %>
-						<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+						<img name="Message" src="images/WaitMessage1.gif" width="250px" height="25px" alt="WaitMessage" style="visibility:hidden;">
 					</td>
 				</tr>
 			</table>
@@ -577,7 +577,7 @@
 							</tr>
 							<tr height="30" valign="middle">
 								<td align="left">
-									<input type="button" name="btnAddAltName" value="Add Selection" style="width:100" onClick="addAltName();">
+									<input type="button" name="btnAddAltName" value="Add Selection" onClick="addAltName();">
 								</td>
 								<td colspan="2">
 									&nbsp;
@@ -822,7 +822,7 @@
 							</tr>
 							<tr height="30" valign="middle">
 								<td align="left" colspan="3">
-									<input type="button" name="btnAddRefDoc" value="Add Selection" style="width:100" onClick="addRefDoc();">
+									<input type="button" name="btnAddRefDoc" value="Add Selection" onClick="addRefDoc();">
 								</td>
 							</tr>
 							<tr>
@@ -833,7 +833,7 @@
 									Selected Reference Document Attributes
 								</td>
 								<td align="right">
-									<input type="button" name="btnRemRefDoc" value="Remove Item" style="width:100" onClick="removeRefDoc();" disabled>
+									<input type="button" name="btnRemRefDoc" value="Remove Item" onClick="removeRefDoc();" disabled>
 									&nbsp;&nbsp;&nbsp;
 								</td>
 							</tr>
@@ -1082,13 +1082,13 @@
 									Selected Classification Schemes
 								</td>
 								<td align="left">
-									<input type="button" name="btnRemoveCS" value="Remove Item" style="width:100" onClick="removeCSList();">
+									<input type="button" name="btnRemoveCS" value="Remove Item" onClick="removeCSList();">
 								</td>
 								<td align="left">
 									Associated Classification Scheme Items
 								</td>
 								<td align="center">
-									<input type="button" name="btnRemoveCSI" value="Remove Item" style="width:100" onClick="removeCSIList();">
+									<input type="button" name="btnRemoveCSI" value="Remove Item" onClick="removeCSIList();">
 								</td>
 							</tr>
 							<tr>

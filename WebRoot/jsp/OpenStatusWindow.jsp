@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/OpenStatusWindow.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/OpenStatusWindow.jsp,v 1.2 2009-04-21 03:47:36 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -44,7 +44,7 @@ session.setAttribute("vStatMsg", null);
 					&nbsp;
 				</td>
 				<td align="center">
-					<input type="button" name="btnClose" value="Close Window" style="width: 100,height:30" onClick="window.close();">
+					<input type="button" name="btnClose" value="Close Window" onClick="window.close();">
 				</td>
 			</tr>
 			<tr>
@@ -86,7 +86,7 @@ session.setAttribute("vStatMsg", null);
 					&nbsp;
 				</td>
 				<td align="center">
-					<input type="button" name="btnClose" value="Close Window" style="width: 100,height:30" onClick="window.close();">
+					<input type="button" name="btnClose" value="Close Window" onClick="window.close();">
 				</td>
 			</tr>
 		</table>

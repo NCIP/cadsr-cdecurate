@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.35 2009-04-20 18:32:49 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValue.jsp,v 1.36 2009-04-21 03:47:36 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -465,9 +465,9 @@
 												Create New Permissible Value
 											</b>
 											&nbsp;&nbsp;&nbsp;
-											<input type="button" name="btnCreateNew" value="Save" style="width: 130" <% if (vEMsg.size() > 0 && sEditPV.equals("pvNew")) { %> disabled <%}%> onclick="javascript:AddNewPV('addNewPV');">
+											<input type="button" name="btnCreateNew" value="Save" <% if (vEMsg.size() > 0 && sEditPV.equals("pvNew")) { %> disabled <%}%> onclick="javascript:AddNewPV('addNewPV');">
 											&nbsp;&nbsp;&nbsp;
-											<input type="button" name="btnCancelNew" value="Cancel" style="width: 130" onclick="javascript:CancelNewPV();" />
+											<input type="button" name="btnCancelNew" value="Cancel" onclick="javascript:CancelNewPV();" />
 											<br>
 											<table width="99%" border="1" cellpadding="15" style="border-collapse: collapse;">
 												<%if ((sMenuAction != null) && sMenuAction.equals("Questions") && vQVList.size() > 0){%>
@@ -834,7 +834,7 @@
 										</div> 
 										<% if ((vVDPVList.size() > 0) && (!isView)){ %>
 											<div class="ind3" align="right" style="display:inline">
-												<input style="width:80px" onclick="javascript:confirmRM('All', 'remove', 'all Permissible Values');" type="button" value="Delete All" name="btnDeleteAll">
+												<input onclick="javascript:confirmRM('All', 'remove', 'all Permissible Values');" type="button" value="Delete All" name="btnDeleteAll">
 											</div>
 										<% } %>
 									</td>

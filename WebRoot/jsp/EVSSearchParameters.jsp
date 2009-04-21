@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EVSSearchParameters.jsp,v 1.5 2009-04-09 20:50:44 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EVSSearchParameters.jsp,v 1.6 2009-04-21 03:47:36 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -157,7 +157,7 @@ function hourglass()
 				</tr>
 				<tr height="50">
 					<td align="center">
-						<input type="button" name="btnSearch" value="Start Search" onclick="JavaScript:Search()" disabled style="width: 150px">
+						<input type="button" name="btnSearch" value="Start Search" onclick="JavaScript:Search()" disabled>
 					</td>
 				</tr>
 				<tr>

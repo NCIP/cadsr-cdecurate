@@ -1,7 +1,7 @@
 <!--
     Copyright (c) 2006 ScenPro, Inc.
 
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/alternates2.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/alternates2.jsp,v 1.2 2009-04-21 03:47:35 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -129,8 +129,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				</table>
 			</div>
 			<div style="margin-left: 0in; margin-right: 0in; border-left: 2px solid black; border-bottom: 2px solid black; border-right: 2px solid black; width: 100%; padding: 0.1in 0.1in 0.1in 0.1in">
-				<input type="button" name="btnAddName" value="Add Name" style="width: 1.5in" onclick="doAction('<%=AltNamesDefsServlet._actionAddName%>');">
-				<input type="button" name="btnAddDef" value="Add Definition" style="width: 1.5in" onclick="doAction('<%=AltNamesDefsServlet._actionAddDef%>');">
+				<input type="button" name="btnAddName" value="Add Name" onclick="doAction('<%=AltNamesDefsServlet._actionAddName%>');">
+				<input type="button" name="btnAddDef" value="Add Definition" onclick="doAction('<%=AltNamesDefsServlet._actionAddDef%>');">
 				<br />
 				<p style="margin: 0.1in 0in 0in 0in">
 					&nbsp;

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.21 2009-04-10 15:08:11 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParameters.jsp,v 1.22 2009-04-21 03:47:35 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -1719,7 +1719,7 @@ function LoadKeyHandler()
 						<div align="left">
 							<b> <%=item++%> )&nbsp;&nbsp;Display Attributes: </b> &nbsp;
 							<input type="button" name="updateDisplayBtn" value="Update"
-								onClick="<%=updFunction%>" style="width: 50px"
+								onClick="<%=updFunction%>"
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
 						</div>
 						<br>
@@ -1761,8 +1761,7 @@ function LoadKeyHandler()
 					<td height="35" valign="bottom" colspan=2>
 						<div align="center">
 							<input type="button" name="startSearchBtn" value="Start Search"
-								onClick="doSearchDE();" style="width: 150px"
-								, "height: 30"
+								onClick="doSearchDE();"
             onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 						</div>
 					</td>

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/NonEVSSearchPage.jsp,v 1.4 2009-04-17 14:20:26 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/NonEVSSearchPage.jsp,v 1.5 2009-04-21 03:47:35 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -196,11 +196,11 @@
 							</tr>
 							<tr>
 								<td align="left" valign="top">
-									<input type="button" name="useSelectedBtn" value="Set Reference" onClick="useSelection();" disabled style="width:100;height:30">
+									<input type="button" name="useSelectedBtn" value="Set Reference" onClick="useSelection();" disabled>
 									&nbsp;&nbsp;
-									<input type="button" name="btnClose" value="Close" onclick="window.close();" style="width:50;height:30">
+									<input type="button" name="btnClose" value="Close" onclick="window.close();">
 									&nbsp;&nbsp;
-									<img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+									<img name="Message" src="images/WaitMessage1.gif" width="250px" height="25px" alt="WaitMessage" style="visibility:hidden;">
 								</td>
 							<tr>
 								<td height="7" valign="top">
@@ -211,9 +211,6 @@
 							<col width="60%">
 							<col width="25%">
 							<col width="15%">
-							<!--    <tr valign="middle" height="55">
-                <td colspan="3"><font size="4"><b>Reference Document Type : Value Domain Reference</b></font></td>
-            </tr>  -->
 							<tr valign="bottom" height="25">
 								<td colspan="3">
 									<b>

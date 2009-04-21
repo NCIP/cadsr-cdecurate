@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/DefSearchResults.jsp,v 1.5 2008-12-29 17:36:35 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/DefSearchResults.jsp,v 1.6 2009-04-21 03:47:36 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -278,11 +278,11 @@ if (results.size() > 0)
 			<table width="100%" border="0">
 				<tr height="40" valign="bottom">
 					<td>
-						<input type="button" name="useSelectedBtn" value="Use Selection" onClick="PasteDefinition()" disabled style="width: 92", "height: 30">
+						<input type="button" name="useSelectedBtn" value="Use Selection" onClick="PasteDefinition()" disabled>
 						&nbsp;&nbsp;
-						<input type="button" name="btnSubmitToEVS" value="Submit Suggestion to EVS" onclick="javascript:NewTermSuggested();" style="width: 170", "height: 30">
+						<input type="button" name="btnSubmitToEVS" value="Submit Suggestion to EVS" onclick="javascript:NewTermSuggested();">
 						&nbsp;&nbsp;
-						<input type="button" name="btnClose" value="Close" onclick=window.close() style="width: 50", "height: 30">
+						<input type="button" name="btnClose" value="Close" onclick="window.close();">
 						&nbsp;&nbsp;
 						<b>
 							<font size="2">

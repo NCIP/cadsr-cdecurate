@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.24 2009-04-17 21:28:29 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningDetail.jsp,v 1.25 2009-04-21 03:47:34 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -184,7 +184,7 @@
 							<%if (conExist) { %>
 							<%if (!isView){%>
 							<div class="ind3" align="right" style="display:inline">
-								<input style="width:80px" onclick="javascript:deleteConcept('-99', 'allConcepts');" type="button" value="Delete All" name="btnDeleteAll">
+								<input onclick="javascript:deleteConcept('-99', 'allConcepts');" type="button" value="Delete All" name="btnDeleteAll">
 							</div>
 						    <%}%>
 							<div class="table">

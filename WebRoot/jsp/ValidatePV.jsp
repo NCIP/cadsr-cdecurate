@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidatePV.jsp,v 1.2 2007-09-19 16:59:35 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidatePV.jsp,v 1.3 2009-04-21 03:47:36 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -76,14 +76,14 @@
 				<tr>
 					<td width="764" height="29" valign="top">
 						<% if (isValid == true) { %>
-						<input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()">
+						<input type="button" name="btnSubmit" value="Submit" onClick="SubmitValidate()">
 						<% } else { %>
-						<input type="button" name="btnSubmit" value="Submit" style="width:125" onClick="SubmitValidate()" disabled>
+						<input type="button" name="btnSubmit" value="Submit" onClick="SubmitValidate()" disabled>
 						<% } %>
 						&nbsp;&nbsp;
-						<input type="button" name="btnBack" value="Back" style="width:125" onClick="EditPV();">
+						<input type="button" name="btnBack" value="Back" onClick="EditPV();">
 						&nbsp;&nbsp;
-						<img name="Message" src="images/WaitMessage1.gif" width="400" height="25" alt="WaitMessage" style="visibility:hidden;">
+						<img name="Message" src="images/WaitMessage1.gif" width="400px" height="25px" alt="WaitMessage" style="visibility:hidden;">
 					</td>
 				</tr>
 				<!--  <tr  height="40">

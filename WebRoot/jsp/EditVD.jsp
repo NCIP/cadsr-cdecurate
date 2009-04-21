@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.32 2009-04-10 14:30:24 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditVD.jsp,v 1.33 2009-04-21 03:47:36 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -764,7 +764,6 @@ function openEVSConceptsWindow(){
 																Qualifier	Concepts
 															</td>
 															<td align="right" valign="middle">
-																<!-- <input type="button" name="btnSerSecOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('ObjectQualifier', 'false');">-->
 																<%
 																	if (!isView) {
 																%>
@@ -778,7 +777,6 @@ function openEVSConceptsWindow(){
 																%>
 															</td>
 															<td align="center" valign="middle">
-																<!-- <input type="button" name="btnRmSecOC" value="Remove" style="width:90%" onClick="javascript:removeQualifier();">-->
 																<%
 																	if (!isView) {
 																%>
@@ -795,7 +793,6 @@ function openEVSConceptsWindow(){
 																Primary	Concept
 															</td>
 															<td align="right" valign="middle">
-																<!--<input type="button" name="btnSerPriOC" value="Search" style="width:95%" onClick="javascript:SearchBuildingBlocks('ObjectClass', 'false');">-->
 																<%
 																	if (!isView) {
 																%>
@@ -809,7 +806,6 @@ function openEVSConceptsWindow(){
 																%>
 															</td>
 															<td align="center" valign="middle">
-																<!--<input type="button" name="btnRmPriOC" value="Remove" style="width:90%" onClick="">-->
 																<%
 																	if (!isView) {
 																%>
@@ -1155,12 +1151,10 @@ function openEVSConceptsWindow(){
 								if (sOriginAction.equals("BlockEditVD") || isView) {
 							%>
 							<textarea name="CreateDefinition" style="width:80%" rows=6 readonly onHelp="showHelp('html/Help_CreateVD.html#createVDForm_CreateDefinition',helpUrl); return false"><%=sDefinition%></textarea>
-							<!--  &nbsp;&nbsp; <font color="#C0C0C0">Search</a></font> -->
 							<%
 								} else {
 							%>
 							<textarea name="CreateDefinition" style="width:80%" rows=6 onHelp="showHelp('html/Help_CreateVD.html#createVDForm_CreateDefinition',helpUrl); return false"><%=sDefinition%></textarea>
-							<!-- &nbsp;&nbsp; <font color="#FF0000"> <a href="javascript:OpenEVSWindow()">Search</a></font> -->
 							<%
 								}
 							%>
@@ -1965,13 +1959,13 @@ function openEVSConceptsWindow(){
 										&nbsp;
 									</td>
 									<td align="left">
-										<input type="button" name="btnViewCt" value="Edit Item" style="width:100" onClick="javascript:editContact('view');" disabled>
+										<input type="button" name="btnViewCt" value="Edit Item" onClick="javascript:editContact('view');" disabled>
 									</td>
 									<td align="left">
-										<input type="button" name="btnCreateCt" value="Create New" style="width:100" onClick="javascript:editContact('new');">
+										<input type="button" name="btnCreateCt" value="Create New" onClick="javascript:editContact('new');">
 									</td>
 									<td align="center">
-										<input type="button" name="btnRmvCt" value="Remove Item" style="width:100" onClick="javascript:editContact('remove');" disabled>
+										<input type="button" name="btnRmvCt" value="Remove Item" onClick="javascript:editContact('remove');" disabled>
 									</td>
 								</tr>
 							 <% } %>

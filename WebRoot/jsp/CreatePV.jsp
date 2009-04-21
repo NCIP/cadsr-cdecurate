@@ -120,12 +120,12 @@ function ViewConceptInTree()
   <col width="3%"><col width="50%"><col width="25%">
     <tr>
       <td colspan="6" align="left" valign="top">
-        <input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate');"
+        <input type="button" name="btnValidate" value="Validate" onClick="SubmitValidate('validate');"
 				onHelp = "showHelp('html/Help_CreateVD.html#createPVForm_Validation',helpUrl); return false">
           &nbsp;&nbsp;
-        <input type="button" name="btnClear" value="Clear" style="width: 125" onClick="clearBoxes();">
+        <input type="button" name="btnClear" value="Clear" onClick="clearBoxes();">
           &nbsp;&nbsp;
-        <input type="button" name="btnBack" value="Back" style="width: 125" onClick="Back();">
+        <input type="button" name="btnBack" value="Back" onClick="Back();">
           &nbsp;&nbsp;
 	     <img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
       </td>

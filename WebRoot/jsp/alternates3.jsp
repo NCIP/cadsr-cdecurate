@@ -1,7 +1,7 @@
 <!--
     Copyright (c) 2006 ScenPro, Inc.
 
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/alternates3.jsp,v 1.1 2007-09-10 16:16:48 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/alternates3.jsp,v 1.2 2009-04-21 03:47:36 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -168,8 +168,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</div>
 			<div style="margin-left: 0in; margin-right: 0in; border-left: 2px solid black; border-bottom: 2px solid black; border-right: 2px solid black; width: 100%; padding: 0.1in 0.1in 0.1in 0.1in">
 				<div>
-					<input type="button" name="btnSave" value="Save" style="width: 0.8in" onclick="doSave();">
-					<input type="button" name="btnCancel" value="Cancel" style="width: 0.8in" onclick="doActionCancel();">
+					<input type="button" name="btnSave" value="Save" onclick="doSave();">
+					<input type="button" name="btnCancel" value="Cancel" onclick="doActionCancel();">
 				</div>
 				<div>
 					<table style="margin-top: 0.2in">
@@ -253,7 +253,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<table style="margin-top: 0.2in">
 					<tr>
 						<td>
-							<input type="button" name="btnClass" value="Classify" style="width: 0.8in" onclick="doClassify();">
+							<input type="button" name="btnClass" value="Classify" onclick="doClassify();">
 						</td>
         <%
             text = (String) req.getAttribute(AltNamesDefsServlet._parmFilterText);

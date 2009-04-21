@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningUsed.jsp,v 1.10 2009-04-17 21:28:28 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningUsed.jsp,v 1.11 2009-04-21 03:47:34 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -127,7 +127,7 @@
 								<%=vCRF.size()%> Found 
 							</div>
 							<div class="ind2" style="display:inline;">  <!--  text-align:right; width:49%;"> -->
-									<input style="width: 160px" <% if (isView) { %>onclick="viewVMShow('<%=VMForm.ELM_CRF_NAME%>', '<%=crfFilter%>', '<%=vmId%>', '<%=StringEscapeUtils.escapeJavaScript(from)%>');"<% } else { %>onclick="javascript:showReleased('<%=VMForm.ELM_CRF_NAME%>', '<%=crfFilter%>');" <%}%>type="button" value="<%=crfFilter%>" name="btnshowRELCRF" <% if (vCRF.size() > 0 || crfFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> enabled <% } else { %> disabled<%}%>>
+									<input <% if (isView) { %>onclick="viewVMShow('<%=VMForm.ELM_CRF_NAME%>', '<%=crfFilter%>', '<%=vmId%>', '<%=StringEscapeUtils.escapeJavaScript(from)%>');"<% } else { %>onclick="javascript:showReleased('<%=VMForm.ELM_CRF_NAME%>', '<%=crfFilter%>');" <%}%>type="button" value="<%=crfFilter%>" name="btnshowRELCRF" <% if (vCRF.size() > 0 || crfFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> enabled <% } else { %> disabled<%}%>>
 							</div>
 							
 							<% if (vCRF.size() > 0) { %> 
@@ -254,7 +254,7 @@
 							</div>
 							
 								<div class="ind2" style="display:inline;">  <!--  width:49%; text-align:right;">  -->
-									<input style="width: 160px" <% if (isView) { %>onclick="viewVMShow('<%=VMForm.ELM_VD_NAME%>', '<%=vdFilter%>', '<%=vmId%>', '<%=StringEscapeUtils.escapeJavaScript(from)%>');"<% } else { %>onclick="javascript:showReleased('<%=VMForm.ELM_VD_NAME%>', '<%=vdFilter%>');" <%}%> type="button" value="<%=vdFilter%>" name="btnshowRELVD" <% if (vVD.size() > 0 || vdFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> enabled <%}else { %>disabled<%}%>>
+									<input <% if (isView) { %>onclick="viewVMShow('<%=VMForm.ELM_VD_NAME%>', '<%=vdFilter%>', '<%=vmId%>', '<%=StringEscapeUtils.escapeJavaScript(from)%>');"<% } else { %>onclick="javascript:showReleased('<%=VMForm.ELM_VD_NAME%>', '<%=vdFilter%>');" <%}%> type="button" value="<%=vdFilter%>" name="btnshowRELVD" <% if (vVD.size() > 0 || vdFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> enabled <%}else { %>disabled<%}%>>
 								</div>
 							<% if (vVD.size() > 0) { %> 
 								<div class="table">
@@ -350,7 +350,7 @@
 							</div>
 							
 								<div class="ind2" style="display:inline;">  <!-- text-align:right; width:49%;"> -->
-									<input style="width: 160px" <% if (isView) { %>onclick="viewVMShow('<%=VMForm.ELM_DE_NAME%>', '<%=deFilter%>', '<%=vmId%>', '<%=StringEscapeUtils.escapeJavaScript(from)%>');"<% } else { %>onclick="javascript:showReleased('<%=VMForm.ELM_DE_NAME%>', '<%=deFilter%>');" <%}%> type="button" value="<%=deFilter%>" name="btnshowRELDE" <% if (vDE.size() > 0 || deFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> enabled <%}else { %> disabled<%}%>>
+									<input <% if (isView) { %>onclick="viewVMShow('<%=VMForm.ELM_DE_NAME%>', '<%=deFilter%>', '<%=vmId%>', '<%=StringEscapeUtils.escapeJavaScript(from)%>');"<% } else { %>onclick="javascript:showReleased('<%=VMForm.ELM_DE_NAME%>', '<%=deFilter%>');" <%}%> type="button" value="<%=deFilter%>" name="btnshowRELDE" <% if (vDE.size() > 0 || deFilter.equals(VMForm.ELM_LBL_SHOW_ALL)) { %> enabled <%}else { %> disabled<%}%>>
 								</div>
 							<% if (vDE.size() > 0) { %> 
 								<div class="table">
