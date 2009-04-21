@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDEC.js,v 1.9 2009-04-10 14:53:45 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/CreateDEC.js,v 1.10 2009-04-21 19:06:49 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 var searchWindow = null;
@@ -584,4 +584,11 @@ function Back()
 function disabled(){
 		return;
  }
+function hideCloseButton(isView){
+  if (isView && (window.opener == null)){
+    var closeBtn = document.getElementById("btnClose");
+    if (closeBtn != null)
+     closeBtn.style.display="none"; 
+  }
+}
 

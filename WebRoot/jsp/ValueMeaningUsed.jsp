@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningUsed.jsp,v 1.11 2009-04-21 03:47:34 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValueMeaningUsed.jsp,v 1.12 2009-04-21 19:08:14 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -81,7 +81,7 @@
         }
 		</SCRIPT>
 	</head>
-	<body onload="javascript:setFocusTo('<%=elmFocus%>');">
+	<body onload="javascript:setFocusTo('<%=elmFocus%>');hideCloseButton(<%=isView%>);">
 	   <% if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
 		 </br></br><b><font  size="3">Not Authorized for Edits in this Context.</font></b></br></br>
 	    <%}%>

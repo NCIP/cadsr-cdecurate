@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/VDPVS.js,v 1.8 2009-01-23 19:21:27 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/VDPVS.js,v 1.9 2009-04-21 19:06:49 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 
@@ -128,3 +128,11 @@ function openAltNameViewWindow()
    } 
  
  }
+ 
+function hideCloseButton(isView){
+  if (isView && (window.opener == null)){
+    var closeBtn = document.getElementById("btnClose");
+    if (closeBtn != null)
+     closeBtn.style.display="none"; 
+  }
+}

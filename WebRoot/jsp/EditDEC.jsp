@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.31 2009-04-21 03:47:34 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.32 2009-04-21 19:08:14 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -383,7 +383,7 @@
 }
 </Script>
 	</head>
-	<body onLoad="setup();" onUnload="closeDep();">
+	<body onLoad="setup();hideCloseButton(<%=isView%>);" onUnload="closeDep();">
 
 		<form name="SearchActionForm" method="post" action="">
 			<input type="hidden" name="searchComp" value="">
@@ -432,10 +432,10 @@
 						&nbsp;&nbsp;
 						
 						<%	if((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){	%>
-							<input type="button" name="btnClose" value="Back" onClick="Back();">
+							<input type="button" value="Back" onClick="Back();">
 							&nbsp;&nbsp;
 						<% }else if (isView) {	%>
-							<input type="button" name="btnClose" value="Close" onClick="window.close();">
+							<input type="button" id="btnClose" value="Close" onClick="window.close();">
 							&nbsp;&nbsp;
 						<% }session.setAttribute("displayErrorMessage", "No"); %>
 						<img name="Message" src="images/WaitMessage1.gif" width="250px" height="25px" alt="WaitMessage" style="visibility:hidden;">
