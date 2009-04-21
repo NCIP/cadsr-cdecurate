@@ -118,10 +118,11 @@ public abstract class DBManager {
 
 	public void setAcLatesVersionIndicator(String sql, Connection conn)	throws DBException {
 		Statement statement = null;
+		ResultSet rs = null;
 
 		try {
 			statement = conn.createStatement();
-			statement.executeQuery(sql);
+			rs = statement.executeQuery(sql);
 			if (logger.isDebugEnabled()) {
 				logger.debug("updated so that all other versions have the indicator set to 'No'");
 			}
@@ -130,6 +131,7 @@ public abstract class DBManager {
 			errorList.add(DeErrorCodes.API_DE_503);
 			throw new DBException(errorList);
 		} finally {
+			rs = SQLHelper.closeResultSet(rs);
 			statement = SQLHelper.closeStatement(statement);
 		}
 
