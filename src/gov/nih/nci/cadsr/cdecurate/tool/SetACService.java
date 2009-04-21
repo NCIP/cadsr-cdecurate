@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.62 2009-04-21 15:54:14 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.63 2009-04-21 22:58:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1423,7 +1423,6 @@ public class SetACService implements Serializable
   private void setValidateNameComp(Vector<ValidateBean> vValidate, String acType, HttpServletRequest req,
           HttpServletResponse res, DEC_Bean m_DEC, EVS_Bean m_OC, EVS_Bean m_PC, 
           VD_Bean m_VD, EVS_Bean m_REP) 
-          //throws ServletException,IOException, Exception
   {
     try
     {
@@ -1465,9 +1464,11 @@ public class SetACService implements Serializable
         String sOCL = m_DEC.getDEC_OCL_NAME();
         s = m_DEC.getDEC_PROPL_NAME();
         String strOCInvalid = "";
+        String strWarning = "";
+        String strOCWarning = "";
         //rule - must have primary if qualifier exists
         if(!sQ.equals("") && sP.equals(""))
-          strOCInvalid = "Cannot have Qualifier Concepts without a Primary Concept.\n";
+          strOCInvalid = "Cannot have Qualifier Concepts without a Primary Concept. <br>";
         
         //checks if concept code used in oc exists in other vocabulary (** need to review this rule **)
         if (!sQ.equals("") || !sP.equals("") && m_OC != null)
@@ -1481,7 +1482,7 @@ public class SetACService implements Serializable
       
         //check for warning of oc existance          
         if((sOCL == null || sOCL.equals("")) && !sOriginAction.equals("BlockEditDEC"))
-          strOCInvalid = strOCInvalid + "Warning: a Data Element Concept should have an Object Class.\n";
+          strOCWarning = "Warning: a Data Element Concept should have an Object Class.  <br>";
 
         //check validity of property
         String strPropInvalid = "";
@@ -1497,7 +1498,7 @@ public class SetACService implements Serializable
         
         //rule - must have primary if qualifier exists
         if(!sQual.equals("") && sProp.equals(""))
-          strPropInvalid = "Cannot have Qualifier Concepts without a Primary Concept.\n"; 
+          strPropInvalid = "Cannot have Qualifier Concepts without a Primary Concept. <br>"; 
       
         //checks if concept code used in prop exists in other vocabulary (** need to review this rule **)
         if(!sQual.equals("") || !sProp.equals("") && m_PC != null)
@@ -1506,31 +1507,19 @@ public class SetACService implements Serializable
         //checks if new or using existing of oc and prop
         ValidationStatusBean ocStatusBean = new ValidationStatusBean();
         ValidationStatusBean propStatusBean = new ValidationStatusBean();
-        //check the validity of oc
+        //check the validity of oc if there is no warning or invalid
      	HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
-        if (strOCInvalid == null || strOCInvalid.equals("")) {
+        if ((strOCInvalid == null || strOCInvalid.equals("")) && strOCWarning.equals("")) {
          	if ((vOC != null && vOC.size()>0) && (defaultContext != null && defaultContext.size()>0)){
         	   ocStatusBean = insAC.evsBeanCheck(vOC, defaultContext, sOCL, "Object Class");
          	}
         }
-        //check the validity of prop
+        //check the validity of prop if no error
         if (strPropInvalid == null || strPropInvalid.equals("")) {
          	if ((vPROP != null && vPROP.size()>0) && (defaultContext != null && defaultContext.size()>0)){
         	  propStatusBean = insAC.evsBeanCheck(vPROP, defaultContext, s, "Property");
          	}  
         }
-        
-        //add appropriate message to attributes of oc and prop
-        if (ocStatusBean.getStatusMessage() != null && !ocStatusBean.getStatusMessage().equals("")){
-       //   strOCValid = "Valid";		//ocStatusBean.getStatusMessage();
-       //   sOCL += "<br> " + ocStatusBean.getStatusMessage();
-          strOCValid = "Valid"+ "<br>" + ocStatusBean.getStatusMessage();
-        }  
-        if (propStatusBean.getStatusMessage() != null && !propStatusBean.getStatusMessage().equals("")){
-         // strPropValid = "Valid";		//propStatusBean.getStatusMessage();
-        //  s += "<br> " + propStatusBean.getStatusMessage();
-          strPropValid = "Valid"+ "<br>" + propStatusBean.getStatusMessage();
-        }  
         
         //set the condr idseq of OC to DEC
         if (ocStatusBean.isAllConceptsExists()){
@@ -1581,19 +1570,38 @@ public class SetACService implements Serializable
         	}else if ((vOC == null || vOC.size()<1) && (propID != null && !propID.equals(""))){
         	   strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction); 
         	}
-           // strInValid = checkUniqueOCPropPair(m_DEC, req, res, sOriginAction); 
+          	if (strInValid.startsWith("Warning")) {
+          		strWarning += strInValid;
+          	} else {
+          		strOCInvalid = strOCInvalid + strInValid;
+          		strPropInvalid  = strPropInvalid + strInValid;
+          	}
         }
    
-        //append it to oc invalid
-        strOCInvalid = strOCInvalid + strInValid; 
-        //check for warning of oc existance          
-     //   if((sOCL == null || sOCL.equals("")) && !sOriginAction.equals("BlockEditDEC"))
-     //     strOCInvalid = strOCInvalid + "Warning: a Data Element Concept should have an Object Class.\n";
+        //add appropriate message to attributes of oc and prop only if there is no invalid message
+        if (strOCInvalid.equals("") && strPropInvalid.equals("")) {
+        	//add the warning message to valid
+        	strOCValid = strOCWarning + strWarning;
+        	strPropValid = strWarning;
+        	//add valid word if no warning
+        	if (strOCValid.equals(""))
+        		strOCValid = "Valid"+ "<br>";
+        	if (strPropValid.equals(""))
+        		strPropValid = "Valid"+ "<br>";
+       	
+        	//add the valid message
+	        if (ocStatusBean.getStatusMessage() != null && !ocStatusBean.getStatusMessage().equals("")){
+	          strOCValid += ocStatusBean.getStatusMessage();
+	        }  
+	        if (propStatusBean.getStatusMessage() != null && !propStatusBean.getStatusMessage().equals("")){
+	          strPropValid += propStatusBean.getStatusMessage();
+	        }  
+        } else {  //add the warning to invalid message
+        	strOCInvalid = strOCInvalid + strOCWarning + strWarning;
+        	strPropInvalid  = strPropInvalid + strWarning;
+        }
         UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Object Class", sOCL, bNotMandatory, 255, strOCInvalid, sOriginAction, strOCValid);
-        //append it to prop invalid
-        strPropInvalid  = strPropInvalid + strInValid; 
         UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Property", s, bNotMandatory, 255, strPropInvalid, sOriginAction, strPropValid);
-
       }
       else
       {
@@ -1615,21 +1623,20 @@ public class SetACService implements Serializable
         if (vQual != null && vQual.size() > 0)
           sQ = (String)vQual.elementAt(0);
         if(!sQ.equals("") && sP.equals(""))
-          strInValid = "Cannot have Qualifier Concepts without a Primary Concept.\n";
+          strInValid = "Cannot have Qualifier Concepts without a Primary Concept.<br>";
         if(!sQ.equals("") || !sP.equals("") && m_REP != null)
           strInValid = strInValid + checkConceptCodeExistsInOtherDB(vREP, insAC, null);
-        //check the validity of Rep Term
+        //check the validity of Rep Term if there is no error
         ValidationStatusBean repStatusBean = new ValidationStatusBean();
         if ((strInValid == null || strInValid.equals(""))){
          	HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
          	if ((vREP != null && vREP.size()>0) && (defaultContext != null && defaultContext.size()>0)){
         	   repStatusBean = insAC.evsBeanCheck(vREP, defaultContext, ss, "Representation Term");
          	}
-         }
-        if (repStatusBean.getStatusMessage() != null && !repStatusBean.getStatusMessage().equals("")){
-          strRepValid = "Valid";		//repStatusBean.getStatusMessage();
-          ss += "<br> " + repStatusBean.getStatusMessage();
-        }  
+            if (repStatusBean.getStatusMessage() != null && !repStatusBean.getStatusMessage().equals("")){
+                strRepValid = "Valid" + "<br> " + repStatusBean.getStatusMessage();
+            }  
+        }
         UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Rep Term", ss, bMandatory, 255, strInValid, sOriginAction, strRepValid);
       }
     }

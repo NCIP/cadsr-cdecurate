@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.69 2009-04-21 03:52:53 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.70 2009-04-21 22:58:18 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1980,7 +1980,7 @@ public class InsACService implements Serializable {
 				// oc-prop-context is not unique
 				if (sReturnID != null && !sReturnID.equals(""))
 					uniqueMsg = "Combination of Object Class, Property and Context already exists in DEC with Public ID(s): "
-							+ sReturnID;
+							+ sReturnID + "<br>";
 				else // check if it exists in other contexts
 				{
 					pstmt = m_servlet
@@ -1996,7 +1996,7 @@ public class InsACService implements Serializable {
 					// oc-prop is not unique in other contexts
 					if (sReturnID != null && !sReturnID.equals(""))
 						uniqueMsg = "Warning: DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
-								+ sReturnID;
+								+ sReturnID + "<br>";
 				}
 			}
 		} catch (Exception e) {
@@ -5171,7 +5171,7 @@ public class InsACService implements Serializable {
 									+ evsBean.getCONCEPT_IDENTIFIER()
 									+ ", but in a different Vocabulary ("
 									+ dbOrigin
-									+ "). New concept therefore cannot be created. Please choose another concept.";
+									+ "). New concept therefore cannot be created. Please choose another concept. <br>";
 						}
 					} else {
 						String dbOrigin = (String) cstmt.getObject(13);
@@ -6065,9 +6065,9 @@ public class InsACService implements Serializable {
 				logger.error("ERROR in InsACService-evsBeanCheck : "+ e.toString(), e);
 				throw new Exception(e);
 			}
-
+			//creating new record 
 			if (resultList == null || resultList.size() < 1) {
-				statusBean.setStatusMessage("**  Creating a new "+type);	
+				statusBean.setStatusMessage("**  Creating a new "+type + " in caBIG");	
 				statusBean.setCondrExists(false);
 				statusBean.setEvsBeanExists(false);
 			} else {
@@ -6090,8 +6090,9 @@ public class InsACService implements Serializable {
 							foundBeanList.add(vo);
 						}
 					} else {
+						//creating new record
 						if (vo.getCondr_IDSEQ() != null) {
-							statusBean.setStatusMessage("**  Creating a new "+type);
+							statusBean.setStatusMessage("**  Creating a new "+type + " in caBIG");
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
 							statusBean.setEvsBeanExists(false);
@@ -6100,16 +6101,18 @@ public class InsACService implements Serializable {
 						
 					}
 				}
+				//found existing one in another context
 				if (foundBeanList == null || foundBeanList.size() < 1) {
 					ResultVO vo = resultList.get(0);
-					statusBean.setStatusMessage("**  Matched "+type+" ("
-							+ vo.getLong_name() + ", " + vo.getPublicId()
-							+ ", " + vo.getVersion() + ", " + vo.getContext()
-							+ ") will create a new "+type+" in caBIG.");
+					statusBean.setStatusMessage("**  Matched "+type+" with "
+							+ vo.getLong_name() + " (" + vo.getPublicId()
+							+ "v" + vo.getVersion() + ") in " + vo.getContext()
+							+ " context; will create a new "+type+" in caBIG.");
 					statusBean.setCondrExists(true);
 					statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
-					statusBean.setEvsBeanExists(false);
+					statusBean.setEvsBeanExists(false);				
 				} else if (foundBeanList != null && foundBeanList.size() > 0) {
+					//get the released one if found multiple
 					for (int i = 0; i < foundBeanList.size(); i++) {
 						ResultVO vo = foundBeanList.get(i);
 						if (vo.getAsl_name().equals("RELEASED")) {
@@ -6121,14 +6124,16 @@ public class InsACService implements Serializable {
 							break;
 						}
 					}
+					//use the released existing one if exists
 					if ((idseq != null) && !(idseq.equals(""))) {
-						statusBean.setStatusMessage("**  Using existing "+type+" ("+longName+", "+publicID+", "+version+") from caBIG");
+						statusBean.setStatusMessage("**  Using existing "+type+" "+longName+" ("+publicID+"v"+version+") from caBIG");
 						statusBean.setCondrExists(true);
 						statusBean.setCondrIDSEQ(condrIDSEQ);
 						statusBean.setEvsBeanExists(true);
 						statusBean.setEvsBeanIDSEQ(idseq);
 					} else {
 						if (foundBeanList != null && foundBeanList.size() > 0) {
+							//get the draft new or draft mod from the existing list
 							for (int i = 0; i < foundBeanList.size(); i++) {
 								ResultVO vo = foundBeanList.get(i);
 								if (vo.getAsl_name().equals("DRAFT NEW") || vo.getAsl_name().equals("DRAFT MOD")) {
@@ -6141,16 +6146,16 @@ public class InsACService implements Serializable {
 		    					}
 							}
 						}
-
+						//use the recommended existing data
 						if ((idseqM != null) && !(idseqM.equals(""))) {
-							statusBean.setStatusMessage("**  Recommended "+type+" ("+longNameM+", "+publicIDM+", "+versionM+")");
+							statusBean.setStatusMessage("**  Recommending to use "+type+" "+longNameM+" ("+publicIDM+"v"+versionM+") from caBIG");
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(condrIDSEQM);
 							statusBean.setEvsBeanExists(true);
 							statusBean.setEvsBeanIDSEQ(idseqM);
 						} else {
 							ResultVO vo = foundBeanList.get(0);
-							statusBean.setStatusMessage("**  Creating new "+type+" Version ("+vo.getLong_name()+", "+vo.getPublicId()+", "+vo.getVersion()+") in caBIG");
+							statusBean.setStatusMessage("**  Creating new Version of "+type+" "+vo.getLong_name()+" ("+vo.getPublicId()+"v"+vo.getVersion()+") in caBIG");
 							statusBean.setNewVersion(true);
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
@@ -6162,7 +6167,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} else {
-			statusBean.setStatusMessage("**  Creating new a "+type);
+			statusBean.setStatusMessage("**  Creating new a "+type + " in caBIG");
 		}
 	      return statusBean;
 	}
