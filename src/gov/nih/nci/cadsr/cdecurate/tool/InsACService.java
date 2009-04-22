@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.70 2009-04-21 22:58:18 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.71 2009-04-22 17:54:53 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -6056,8 +6056,9 @@ public class InsACService implements Serializable {
     		  statusBean.setAllConceptsExists(false);
     		  break;
     	   }
-       }
-	     if (statusBean.isAllConceptsExists()) {
+          }
+	      //if all the concepts exists
+          if (statusBean.isAllConceptsExists()) {
 			ArrayList<ConBean> conBeanList = this.getConBeanList(evsBeanList, statusBean.isAllConceptsExists());
 			try {
 				 resultList = mgr.isCondrExists(conBeanList, m_servlet.getConn());
@@ -6065,7 +6066,7 @@ public class InsACService implements Serializable {
 				logger.error("ERROR in InsACService-evsBeanCheck : "+ e.toString(), e);
 				throw new Exception(e);
 			}
-			//creating new record 
+			//if nothing found, create new oc or prop or rep term
 			if (resultList == null || resultList.size() < 1) {
 				statusBean.setStatusMessage("**  Creating a new "+type + " in caBIG");	
 				statusBean.setCondrExists(false);
@@ -6083,36 +6084,44 @@ public class InsACService implements Serializable {
 				String versionM = null;
 
 				ArrayList<ResultVO> foundBeanList = new ArrayList();
+				//select all which are owned by the default(caBIG) Context
 				for (int i = 0; i < resultList.size(); i++) {
 					ResultVO vo = resultList.get(i);
 					if (vo.getContext() != null) {
 						if (vo.getContext().equals(defaultContext.get("name"))) {
 							foundBeanList.add(vo);
 						}
-					} else {
-						//creating new record
-						if (vo.getCondr_IDSEQ() != null) {
+					} 
+				}
+				//If none are found owned by the default(caBIG) Context 
+				if (foundBeanList == null || foundBeanList.size() < 1) {
+					for (int i = 0; i < resultList.size(); i++) {
+						ResultVO vo = resultList.get(i);
+						//select the one in different context, create new (oc or prop or rep term) in default(caBIG) context
+						if (vo.getContext() != null) {
+							statusBean.setStatusMessage("**  Matched "+type+" with "
+							+ vo.getLong_name() + " (" + vo.getPublicId()
+							+ "v" + vo.getVersion() + ") in " + vo.getContext()
+							+ " context; will create a new "+type+" in caBIG.");
+							statusBean.setCondrExists(true);
+							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
+							statusBean.setEvsBeanExists(false);
+							return statusBean;
+						}
+					}
+					//if none are found in different context and condr exists, create new (oc or prop or rep term) in caBIG	
+					ResultVO vo = resultList.get(0);
+					if (vo.getCondr_IDSEQ() != null) {
 							statusBean.setStatusMessage("**  Creating a new "+type + " in caBIG");
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
 							statusBean.setEvsBeanExists(false);
 							return statusBean;
 						}
-						
-					}
-				}
-				//found existing one in another context
-				if (foundBeanList == null || foundBeanList.size() < 1) {
-					ResultVO vo = resultList.get(0);
-					statusBean.setStatusMessage("**  Matched "+type+" with "
-							+ vo.getLong_name() + " (" + vo.getPublicId()
-							+ "v" + vo.getVersion() + ") in " + vo.getContext()
-							+ " context; will create a new "+type+" in caBIG.");
-					statusBean.setCondrExists(true);
-					statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
-					statusBean.setEvsBeanExists(false);				
-				} else if (foundBeanList != null && foundBeanList.size() > 0) {
-					//get the released one if found multiple
+    				
+				}//go thru all the records owned by the default(caBIG) Context
+	    		else if (foundBeanList != null && foundBeanList.size() > 0) {
+	    			//select the one with a Workflow Status RELEASED
 					for (int i = 0; i < foundBeanList.size(); i++) {
 						ResultVO vo = foundBeanList.get(i);
 						if (vo.getAsl_name().equals("RELEASED")) {
@@ -6133,7 +6142,7 @@ public class InsACService implements Serializable {
 						statusBean.setEvsBeanIDSEQ(idseq);
 					} else {
 						if (foundBeanList != null && foundBeanList.size() > 0) {
-							//get the draft new or draft mod from the existing list
+							//if none are found with a Workflow Status RELEASED, select one with a Workflow Status DRAFT NEW or DRAFT MOD.
 							for (int i = 0; i < foundBeanList.size(); i++) {
 								ResultVO vo = foundBeanList.get(i);
 								if (vo.getAsl_name().equals("DRAFT NEW") || vo.getAsl_name().equals("DRAFT MOD")) {
@@ -6154,6 +6163,7 @@ public class InsACService implements Serializable {
 							statusBean.setEvsBeanExists(true);
 							statusBean.setEvsBeanIDSEQ(idseqM);
 						} else {
+							//If none are found, select any other Workflow Status and create a New Version of it. 
 							ResultVO vo = foundBeanList.get(0);
 							statusBean.setStatusMessage("**  Creating new Version of "+type+" "+vo.getLong_name()+" ("+vo.getPublicId()+"v"+vo.getVersion()+") in caBIG");
 							statusBean.setNewVersion(true);
@@ -6166,7 +6176,7 @@ public class InsACService implements Serializable {
 					}
 				}
 			}
-		} else {
+		} else {//if all the concepts does not exist
 			statusBean.setStatusMessage("**  Creating new a "+type + " in caBIG");
 		}
 	      return statusBean;
