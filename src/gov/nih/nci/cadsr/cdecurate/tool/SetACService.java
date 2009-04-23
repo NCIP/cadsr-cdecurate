@@ -1,6 +1,6 @@
 // Copyright (c) 2000 ScenPro, Inc.
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.63 2009-04-21 22:58:18 hegdes Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.64 2009-04-23 17:41:28 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1637,7 +1637,11 @@ public class SetACService implements Serializable
                 strRepValid = "Valid" + "<br> " + repStatusBean.getStatusMessage();
             }  
         }
-        UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Rep Term", ss, bMandatory, 255, strInValid, sOriginAction, strRepValid);
+        if (sOriginAction != null && sOriginAction.equals("BlockEditVD")){
+        	UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Rep Term", ss, bNotMandatory, 255, strInValid, sOriginAction, strRepValid);
+        }else{
+           UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Rep Term", ss, bMandatory, 255, strInValid, sOriginAction, strRepValid);
+        }   
       }
     }
     catch (Exception e)
