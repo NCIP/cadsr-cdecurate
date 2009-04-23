@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.71 2009-04-22 17:54:53 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.72 2009-04-23 14:14:03 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -1287,7 +1287,7 @@ public class InsACService implements Serializable {
 					acName = acCSI.getAC_LONG_NAME();
 
 				if (acCSI.getAC_CSI_IDSEQ() == null
-						|| acCSI.getAC_CSI_IDSEQ().equals(""))
+						|| acCSI.getAC_CSI_IDSEQ().equals("") || acCSI.getAC_CSI_IDSEQ().equals("undefined"))
 					accsiID = setACCSI(csiBean.getCSI_CSCSI_IDSEQ(), "INS",
 							ac_id, "", acName, accsiName);
 				// insert it if ac of the old one doesn't match new ac
