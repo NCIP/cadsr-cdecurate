@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.32 2009-04-21 19:08:14 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.33 2009-04-23 18:06:53 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -459,10 +459,10 @@
 							 
 							<% } else {%>
 							     Edit Existing
-							<% } %>         
-							     <font color="#FF0000">
+							      <font color="#FF0000">
 								     Data Element Concept
 							     </font>
+							<% } %>         
 						<% } %>	
 						</font>
 						
