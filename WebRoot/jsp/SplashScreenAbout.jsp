@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SplashScreenAbout.jsp,v 1.8 2009-03-04 15:55:20 veerlah Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SplashScreenAbout.jsp,v 1.9 2009-04-27 14:34:35 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -21,7 +21,7 @@
             style="width: 722px; height: 490px; background-repeat: no-repeat; background-image: url('../../cdecurate/images/Splashlarge.gif')">
             <tr>
                 <td style="width: 330px">&nbsp;</td>
-                <td valign="top" align="center"><br/><font color="#ffffff" size="4" face="Arial, sans-serif">Version 4.0.0.2</font></td>
+                <td valign="top" align="center"><br/><font color="#ffffff" size="4" face="Arial, sans-serif">Version 4.0.1</font></td>
             </tr>
             <tr>
                 <td style="width: 330px">&nbsp;</td>
