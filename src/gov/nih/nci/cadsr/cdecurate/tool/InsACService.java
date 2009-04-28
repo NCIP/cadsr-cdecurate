@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.73 2009-04-27 19:46:23 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.74 2009-04-28 13:17:17 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -3031,6 +3031,7 @@ public class InsACService implements Serializable {
 				// PreparedStatement class)
 				// Get the username from the session.
 				String userName = (String) session.getAttribute("Username");
+				/*
 				logger.info("Arguments to sbrext_set_row.set_complex_de()\nuserName\t" + userName
 				    + "\nsAction\t" + sAction
 				    + "\nsP_DE_IDSEQ\t" + sP_DE_IDSEQ
@@ -3038,6 +3039,7 @@ public class InsACService implements Serializable {
 				    + "\nsDDERule\t" + sDDERule
 				    + "\nsDDEConcatChar\t" + sDDEConcatChar
 				    + "\nsDDERepType\t" + sDDERepType);
+				    */
 				cstmt.setString(1, userName); // set ua_name
 				cstmt.setString(2, sAction); // action
 				cstmt.setString(3, sP_DE_IDSEQ); // primary DE idseq
