@@ -3663,7 +3663,17 @@ public class CurationServlet
             String sMsg = (String) session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
             if (sMsg != null && !sMsg.equals(""))
             {
-                sMsg += "\\n\\nPlease use Ctrl+C to copy the message to a text file";
+                String userAgent = req.getHeader("User-Agent");
+                if (userAgent.toLowerCase().indexOf("msie") > 0)
+                {
+                    // Internet Explorer
+                    sMsg += "\\n\\nPlease use Ctrl+C to copy the message to a text file";
+                }
+                else
+                {
+                    // Not IE
+                    sMsg += "\\n\\nPlease right click, Select All and Copy to paste the message to a text file";
+                }
                 DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, sMsg);
             }
             // store the session data object in the session at the end of the request
