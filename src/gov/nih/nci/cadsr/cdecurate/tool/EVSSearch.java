@@ -1,6 +1,6 @@
 //Copyright (c) 2000 ScenPro, Inc.
 
-//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.66 2009-04-02 16:43:59 veerlah Exp $
+//$Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/EVSSearch.java,v 1.67 2009-04-28 15:22:31 veerlah Exp $
 //$Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -349,9 +349,9 @@ public class EVSSearch implements Serializable {
 				m_VD.setVD_REP_NAME_PRIMARY(m_Rep.getLONG_NAME());
 				m_VD.setVD_REP_CONCEPT_CODE(m_Rep.getCONCEPT_IDENTIFIER());
 				m_VD.setVD_REP_EVS_CUI_ORIGEN(m_Rep.getEVS_DATABASE());
-				if (!sMenu.equals("NewVDTemplate")
-						&& !sMenu.equals("NewVDVersion"))
-					m_VD.setVD_REP_IDSEQ(m_Rep.getIDSEQ());
+				//if (!sMenu.equals("NewVDTemplate")
+						//&& !sMenu.equals("NewVDVersion"))
+					//m_VD.setVD_REP_IDSEQ(m_Rep.getIDSEQ());
 
 				// Secondary 
 				for (int i = 1; i < vRepConcepts.size(); i++) {

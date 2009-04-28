@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.92 2009-04-16 18:49:40 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.93 2009-04-28 15:22:30 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -4268,6 +4268,8 @@ public class GetACSearch implements Serializable
                                 DECBean.setDEC_END_DATE("");
                                 }
                                 DataManager.setAttribute(session, "m_DEC", DECBean);
+                                DataManager.setAttribute(session, "oldOCIdseq", DECBean.getDEC_OCL_IDSEQ());
+                                DataManager.setAttribute(session, "oldPropIdseq", DECBean.getDEC_PROPL_IDSEQ());
                             }
                         }
                         else if (sSearchAC.equals("ValueDomain"))
@@ -4315,7 +4317,8 @@ public class GetACSearch implements Serializable
                                 VDBean.setVD_END_DATE("");
                                 }
                                 DataManager.setAttribute(session, "m_VD", VDBean);
-                            }
+                                DataManager.setAttribute(session, "oldRepIdseq", VDBean.getVD_REP_IDSEQ());
+                           }
                         }else if (sSearchAC.equals("ValueMeaning"))
                         {
                         	Session_Data sData = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);

@@ -529,9 +529,12 @@ public class ValueDomainServlet extends CurationServlet {
     private void doValidateVD() throws Exception
     {
         HttpSession session = m_classReq.getSession();
+        String oldRepIdseq = (String)session.getAttribute("oldRepIdseq");
+        String checkValidityRep = "Yes";
         String sAction = (String) m_classReq.getParameter("pageAction");
         if (sAction == null)
             sAction = "";
+        String sOriginAction = (String) session.getAttribute("originAction");
         // do below for versioning to check whether these two have changed
         VD_Bean m_VD = (VD_Bean) session.getAttribute("m_VD"); // new VD_Bean();
         EVS_Bean m_OC = new EVS_Bean();
@@ -543,6 +546,12 @@ public class ValueDomainServlet extends CurationServlet {
         GetACService getAC = new GetACService(m_classReq, m_classRes, this);
         DataManager.setAttribute(session, "VDPageAction", "validate"); // store the page action in attribute
         m_setAC.setVDValueFromPage(m_classReq, m_classRes, m_VD);
+        if (sOriginAction!= null && !sOriginAction.equals("NewVDFromMenu")){
+          if (m_VD.getVD_REP_IDSEQ() != null && !m_VD.getVD_REP_IDSEQ().equals("") && m_VD.getVD_REP_IDSEQ().equals(oldRepIdseq)){
+        	 checkValidityRep = "No";
+          }
+        }
+        DataManager.setAttribute(session, "checkValidityRep", checkValidityRep);
         m_OC = (EVS_Bean) session.getAttribute("m_OC");
         m_PC = (EVS_Bean) session.getAttribute("m_PC");
         m_OCQ = (EVS_Bean) session.getAttribute("m_OCQ");
@@ -1174,6 +1183,7 @@ public class ValueDomainServlet extends CurationServlet {
                        vRepTerm.addElement(OCBean);
                        DataManager.setAttribute(session, "vRepTerm", vRepTerm);
                    }
+                   m_VD.setVD_REP_IDSEQ("");
                    m_VD = this.addRepConcepts(nameAction, m_VD, m_REP, "Qualifier");
                }
            }
@@ -1832,7 +1842,7 @@ public class ValueDomainServlet extends CurationServlet {
        }
    }
 
-   /**
+  /**
     * to create rep term and qualifier value from EVS into cadsr. Retrieves the session bean
     * m_VD. calls 'insAC.setDECQualifier' to insert the database.
     *
@@ -1846,6 +1856,8 @@ public class ValueDomainServlet extends CurationServlet {
        HttpSession session = m_classReq.getSession();
        if (VDBeanSR == null)
            VDBeanSR = (VD_Bean) session.getAttribute("m_VD");
+       String checkValidityRep = (String)session.getAttribute("checkValidityRep");
+       if (checkValidityRep != null && checkValidityRep.equals("Yes")){
        ValidationStatusBean repStatusBean = new ValidationStatusBean();
        Vector vRepTerm = (Vector) session.getAttribute("vRepTerm");
        InsACService insAC = new InsACService(m_classReq, m_classRes, this);
@@ -1903,6 +1915,9 @@ public class ValueDomainServlet extends CurationServlet {
 			m_classReq.setAttribute("retcode", "Exception");
 			this.storeStatusMsg("\\t Exception : Unable to update or remove Representation Term.");
 		}
+       }else{
+    	   m_classReq.setAttribute("REP_IDSEQ", VDBeanSR.getVD_REP_IDSEQ()); 
+       }
        DataManager.setAttribute(session, "newRepTerm", ""); 
    }
 
@@ -2133,6 +2148,7 @@ public class ValueDomainServlet extends CurationServlet {
               m_VD.setVD_REP_QUALIFIER_NAMES(vRepQualifierNames);
               m_VD.setVD_REP_QUALIFIER_CODES(vRepQualifierCodes);
               m_VD.setVD_REP_QUALIFIER_DB(vRepQualifierDB);
+              m_VD.setVD_REP_IDSEQ("");
               DataManager.setAttribute(session, "RemoveRepBlock", "true");
               DataManager.setAttribute(session, "newRepTerm", "true");
           }
@@ -2325,7 +2341,7 @@ public class ValueDomainServlet extends CurationServlet {
 	  vdBean.setVD_REP_NAME_PRIMARY(pBean.getLONG_NAME());
       vdBean.setVD_REP_CONCEPT_CODE(pBean.getCONCEPT_IDENTIFIER());
       vdBean.setVD_REP_EVS_CUI_ORIGEN(pBean.getEVS_DATABASE());
-      vdBean.setVD_REP_IDSEQ(pBean.getIDSEQ());
+      //vdBean.setVD_REP_IDSEQ(pBean.getIDSEQ());
       DataManager.setAttribute(session, "m_REP", pBean);
   
       // update qualifier vectors

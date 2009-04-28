@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.74 2009-04-28 13:17:17 hebell Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.75 2009-04-28 15:22:30 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -5926,15 +5926,22 @@ public class InsACService implements Serializable {
 	    String userName = (String)session.getAttribute("Username");
 		HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
 		String conteIdseq= (String)defaultContext.get("idseq");
-    	try{	
+		String checkValidityOC = (String)session.getAttribute("checkValidityOC");
+        String checkValidityProp = (String)session.getAttribute("checkValidityProp");
+		try{	
 		    m_classReq.setAttribute("retcode", "");
-    		if ((vObjectClass != null && vObjectClass.size()>0) && (defaultContext != null && defaultContext.size()>0)){
-        	   ocStatusBean = this.evsBeanCheck(vObjectClass, defaultContext, "", "Object Class");
+    		if (checkValidityOC.equals("Yes")){
+		      if ((vObjectClass != null && vObjectClass.size()>0) && (defaultContext != null && defaultContext.size()>0)){
+        	     ocStatusBean = this.evsBeanCheck(vObjectClass, defaultContext, "", "Object Class");
+         	  }
+    		}
+         	if (checkValidityProp.equals("Yes")){
+    		  if ((vProperty != null && vProperty.size()>0) && (defaultContext != null && defaultContext.size()>0)){
+        	    propStatusBean = this.evsBeanCheck(vProperty, defaultContext, "", "Property");
+         	  } 
          	}
-         	if ((vProperty != null && vProperty.size()>0) && (defaultContext != null && defaultContext.size()>0)){
-        	  propStatusBean = this.evsBeanCheck(vProperty, defaultContext, "", "Property");
-         	}  
-           	//set OC if it is null
+         	if (checkValidityOC.equals("Yes")){
+         	//set OC if it is null
          	if ((vObjectClass != null && vObjectClass.size()>0)){
          	 if (!ocStatusBean.isEvsBeanExists()){
         				if (ocStatusBean.isCondrExists()) {
@@ -5974,7 +5981,9 @@ public class InsACService implements Serializable {
 				} 
            	 }
          	}
-            //set property if it is null
+         	}
+         	if (checkValidityProp.equals("Yes")){
+         	//set property if it is null
             if ((vProperty != null && vProperty.size()>0)){
          	 if (!propStatusBean.isEvsBeanExists()){
        				if (propStatusBean.isCondrExists()) {
@@ -6013,6 +6022,7 @@ public class InsACService implements Serializable {
 				}
            	 }
          }
+         }   
     	 sReturnCode = this.setDEC(sAction, dec, sInsertFor, oldDEC);
     	}catch(Exception e){
     		logger.error("ERROR in InsACService-setDEC for other : "+ e.toString(), e);
@@ -6186,7 +6196,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} else {//if all the concepts does not exist
-			statusBean.setStatusMessage("**  Creating new a "+type + " in caBIG");
+			statusBean.setStatusMessage("**  Creating a new "+type + " in caBIG");
 		}
 	      return statusBean;
 	}

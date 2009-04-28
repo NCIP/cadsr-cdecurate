@@ -494,14 +494,33 @@ public class DataElementConceptServlet extends CurationServlet {
         // do below for versioning to check whether these two have changed
         DataManager.setAttribute(session, "DECPageAction", "validate"); // store the page action in attribute
         DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
+        String sOriginAction = (String)session.getAttribute("originAction");
         if (m_DEC == null)
             m_DEC = new DEC_Bean();
+        String oldOCIdseq = (String)session.getAttribute("oldOCIdseq");
+        String oldPropIdseq = (String)session.getAttribute("oldPropIdseq");
+        String checkValidityOC = "Yes";
+        String checkValidityProp = "Yes";
         EVS_Bean m_OC = new EVS_Bean();
         EVS_Bean m_PC = new EVS_Bean();
         EVS_Bean m_OCQ = new EVS_Bean();
         EVS_Bean m_PCQ = new EVS_Bean();
         GetACService getAC = new GetACService(m_classReq, m_classRes, this);
         m_setAC.setDECValueFromPage(m_classReq, m_classRes, m_DEC);
+        if ( (m_DEC.getDEC_PROPL_NAME_PRIMARY()== null ||  m_DEC.getDEC_PROPL_NAME_PRIMARY()!= null && m_DEC.getDEC_PROPL_NAME_PRIMARY().equals("")) 
+        		&& (m_DEC.getDEC_PROP_QUALIFIER_NAMES()==null || m_DEC.getDEC_PROP_QUALIFIER_NAMES()!=null && m_DEC.getDEC_PROP_QUALIFIER_NAMES().equals(""))){
+     	   checkValidityProp = "No"; 
+        }
+        if (sOriginAction!= null && !sOriginAction.equals("NewDECFromMenu")){
+           if (m_DEC.getDEC_OCL_IDSEQ() != null && !m_DEC.getDEC_OCL_IDSEQ().equals("") && m_DEC.getDEC_OCL_IDSEQ().equals(oldOCIdseq)){
+        	 checkValidityOC = "No";
+           }
+           if  (m_DEC.getDEC_PROPL_IDSEQ() != null && !m_DEC.getDEC_PROPL_IDSEQ().equals("") && m_DEC.getDEC_PROPL_IDSEQ().equals(oldPropIdseq)){
+             checkValidityProp = "No";
+           }
+        }
+        DataManager.setAttribute(session, "checkValidityOC", checkValidityOC);
+        DataManager.setAttribute(session, "checkValidityProp", checkValidityProp);
         m_OC = (EVS_Bean) session.getAttribute("m_OC");
         m_PC = (EVS_Bean) session.getAttribute("m_PC");
         m_OCQ = (EVS_Bean) session.getAttribute("m_OCQ");
@@ -952,6 +971,7 @@ public class DataElementConceptServlet extends CurationServlet {
                    vObjectClass.addElement(OCBean);
                    DataManager.setAttribute(session, "vObjectClass", vObjectClass);
                }
+               m_DEC.setDEC_OCL_IDSEQ("");
                m_DEC = this.addOCConcepts(nameAction, m_DEC, blockBean, "Qualifier");
            }
            else if (sComp.equals("PropertyQualifier"))
@@ -963,6 +983,7 @@ public class DataElementConceptServlet extends CurationServlet {
                    vProperty.addElement(PCBean);
                    DataManager.setAttribute(session, "vProperty", vProperty);
                }
+               m_DEC.setDEC_PROPL_IDSEQ("");
                m_DEC = this.addPropConcepts(nameAction, m_DEC, blockBean, "Qualifier");
            }
            if ( sComp.equals("ObjectClass") || sComp.equals("ObjectQualifier")){
@@ -1801,6 +1822,7 @@ public class DataElementConceptServlet extends CurationServlet {
               m_DEC.setDEC_OC_QUALIFIER_NAMES(vOCQualifierNames);
               m_DEC.setDEC_OC_QUALIFIER_CODES(vOCQualifierCodes);
               m_DEC.setDEC_OC_QUALIFIER_DB(vOCQualifierDB);
+              m_DEC.setDEC_OCL_IDSEQ("");
               DataManager.setAttribute(session, "RemoveOCBlock", "true");
               DataManager.setAttribute(session, "newObjectClass", "true");
               DataManager.setAttribute(session, "m_OCQ", null);
@@ -1841,6 +1863,7 @@ public class DataElementConceptServlet extends CurationServlet {
               m_DEC.setDEC_PROP_QUALIFIER_NAMES(vPropQualifierNames);
               m_DEC.setDEC_PROP_QUALIFIER_CODES(vPropQualifierCodes);
               m_DEC.setDEC_PROP_QUALIFIER_DB(vPropQualifierDB);
+              m_DEC.setDEC_PROPL_IDSEQ("");
               DataManager.setAttribute(session, "RemovePropBlock", "true");
               DataManager.setAttribute(session, "newObjectClass", "true");
               DataManager.setAttribute(session, "m_PCQ", null);
@@ -1906,7 +1929,7 @@ public class DataElementConceptServlet extends CurationServlet {
 	  decBean.setDEC_OCL_NAME_PRIMARY(pBean.getLONG_NAME());
       decBean.setDEC_OC_CONCEPT_CODE(pBean.getCONCEPT_IDENTIFIER());
       decBean.setDEC_OC_EVS_CUI_ORIGEN(pBean.getEVS_DATABASE());
-      decBean.setDEC_OCL_IDSEQ(pBean.getIDSEQ());
+    //  decBean.setDEC_OCL_IDSEQ(pBean.getIDSEQ());
       DataManager.setAttribute(session, "m_OC", pBean);
       
       // update qualifier vectors
@@ -1947,7 +1970,7 @@ public class DataElementConceptServlet extends CurationServlet {
 	  decBean.setDEC_PROPL_NAME_PRIMARY(pBean.getLONG_NAME());
       decBean.setDEC_PROP_CONCEPT_CODE(pBean.getCONCEPT_IDENTIFIER());
       decBean.setDEC_PROP_EVS_CUI_ORIGEN(pBean.getEVS_DATABASE());
-      decBean.setDEC_PROPL_IDSEQ(pBean.getIDSEQ());
+      //decBean.setDEC_PROPL_IDSEQ(pBean.getIDSEQ());
       DataManager.setAttribute(session, "m_PC", pBean);
   
       // update qualifier vectors
