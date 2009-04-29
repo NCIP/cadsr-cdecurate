@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.75 2009-04-28 15:22:30 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.76 2009-04-29 14:51:49 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -6057,9 +6057,39 @@ public class InsACService implements Serializable {
 	 */
 	public ValidationStatusBean evsBeanCheck(Vector evsBeanList, HashMap<String,String> defaultContext, String lName, String type)throws Exception{
 		  ValidationStatusBean statusBean = new ValidationStatusBean();
-		  ArrayList<ResultVO>  resultList = new ArrayList();
-		  Evs_Mgr mgr = null;
+		  HttpSession session = m_classReq.getSession();
+		  String id = null;
+		  String name =null;
 		  if (type.equals("Object Class")){
+			  DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
+			  id = m_DEC.getDEC_OCL_IDSEQ();
+			  name = "OCStatusBean";
+		  }
+		  if (type.equals("Property")){
+			  DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
+			  id = m_DEC.getDEC_PROPL_IDSEQ();
+			  name = "PropStatusBean";
+		  }
+		  if (type.equals("Representation Term")){
+			  VD_Bean m_VD = (VD_Bean) session.getAttribute("m_VD");
+			  id = m_VD.getVD_REP_IDSEQ();
+			  name = "VdStatusBean";
+		  }
+		  //If user selected existing OC or Prop or Rep Term in what ever context
+		  if (id != null && !id.equals("")){
+			  statusBean = (ValidationStatusBean)session.getAttribute(name);  
+		  }else{
+			  //If user selected by concepts
+			  statusBean = this.evsBeanCheckDB(evsBeanList, defaultContext, lName, type);
+		  }  
+	      return statusBean;
+	}
+	
+	public ValidationStatusBean evsBeanCheckDB(Vector evsBeanList, HashMap<String,String> defaultContext, String lName, String type)throws Exception{
+		ValidationStatusBean statusBean = new ValidationStatusBean();
+		ArrayList<ResultVO>  resultList = new ArrayList();
+		Evs_Mgr mgr = null;
+		if (type.equals("Object Class")){
 			  mgr = new Object_Classes_Ext_Mgr();
 		  }else if (type.equals("Property")){
 			  mgr = new Properties_Ext_Mgr();
@@ -6067,17 +6097,17 @@ public class InsACService implements Serializable {
 		      mgr = new Representations_Ext_Mgr();
 		  }  
 	      statusBean.setAllConceptsExists(true);
-       
-	      for(int i=0; i<evsBeanList.size(); i++){
-    	    EVS_Bean conceptBean = (EVS_Bean) evsBeanList.elementAt(i);
-    	    String conIdseq = this.getConcept("", conceptBean, false);
-    	    if (conIdseq == null || conIdseq.equals("")){
-    		  statusBean.setAllConceptsExists(false);
-    		  break;
-    	   }
-          }
+      
+	   for(int i=0; i<evsBeanList.size(); i++){
+   	    EVS_Bean conceptBean = (EVS_Bean) evsBeanList.elementAt(i);
+   	    String conIdseq = this.getConcept("", conceptBean, false);
+   	    if (conIdseq == null || conIdseq.equals("")){
+   		  statusBean.setAllConceptsExists(false);
+   		  break;
+   	   }
+         }
 	      //if all the concepts exists
-          if (statusBean.isAllConceptsExists()) {
+         if (statusBean.isAllConceptsExists()) {
 			ArrayList<ConBean> conBeanList = this.getConBeanList(evsBeanList, statusBean.isAllConceptsExists());
 			try {
 				 resultList = mgr.isCondrExists(conBeanList, m_servlet.getConn());
@@ -6091,6 +6121,7 @@ public class InsACService implements Serializable {
 				statusBean.setCondrExists(false);
 				statusBean.setEvsBeanExists(false);
 			} else {
+				
 				String idseq = null;
 				String condrIDSEQ = null;
 				String longName = null;
@@ -6137,7 +6168,7 @@ public class InsACService implements Serializable {
 							statusBean.setEvsBeanExists(false);
 							return statusBean;
 						}
-    				
+   				
 				}//go thru all the records owned by the default(caBIG) Context
 	    		else if (foundBeanList != null && foundBeanList.size() > 0) {
 	    			//select the one with a Workflow Status RELEASED
@@ -6198,7 +6229,7 @@ public class InsACService implements Serializable {
 		} else {//if all the concepts does not exist
 			statusBean.setStatusMessage("**  Creating a new "+type + " in caBIG");
 		}
-	      return statusBean;
+        return statusBean;
 	}
 	
 	/**

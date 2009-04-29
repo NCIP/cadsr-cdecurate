@@ -1210,7 +1210,18 @@ public class ValueDomainServlet extends CurationServlet {
            if (vRepTerm != null && vRepTerm.size() > 0){
              vRepTerm = this.getMatchingThesarusconcept(vRepTerm, "Representation Term");
              m_VD = this.updateRepAttribues(vRepTerm, m_VD);
-           }  
+           } 
+           if (m_REP.getcaDSR_COMPONENT()!= null && m_REP.getcaDSR_COMPONENT().equals("Concept Class")){
+        	  m_VD.setVD_REP_IDSEQ("");
+           }else{
+        	   ValidationStatusBean statusBean = new ValidationStatusBean();
+        	   statusBean.setStatusMessage("**  Using existing "+m_REP.getcaDSR_COMPONENT()+" "+m_REP.getLONG_NAME()+" ("+m_REP.getID()+"v"+m_REP.getVERSION()+") from "+m_REP.getCONTEXT_NAME());
+			   statusBean.setCondrExists(true);
+			   statusBean.setCondrIDSEQ(m_REP.getCONDR_IDSEQ());
+			   statusBean.setEvsBeanExists(true);
+			   statusBean.setEvsBeanIDSEQ(m_REP.getIDSEQ());
+			   session.setAttribute("VdStatusBean", statusBean);
+           }
            DataManager.setAttribute(session, "vRepTerm", vRepTerm);
            // rebuild new name if not appending
            EVS_Bean nullEVS = null; 
