@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.76 2009-04-29 14:51:49 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.77 2009-04-29 16:15:00 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -6075,7 +6075,7 @@ public class InsACService implements Serializable {
 			  id = m_VD.getVD_REP_IDSEQ();
 			  name = "VdStatusBean";
 		  }
-		  //If user selected existing OC or Prop or Rep Term in what ever context
+		  //If user selected existing OC or Prop or Rep Term in any context
 		  if (id != null && !id.equals("")){
 			  statusBean = (ValidationStatusBean)session.getAttribute(name);  
 		  }else{
