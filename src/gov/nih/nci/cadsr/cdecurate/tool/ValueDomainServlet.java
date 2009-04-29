@@ -1213,7 +1213,7 @@ public class ValueDomainServlet extends CurationServlet {
            } 
            if (m_REP.getcaDSR_COMPONENT()!= null && m_REP.getcaDSR_COMPONENT().equals("Concept Class")){
         	  m_VD.setVD_REP_IDSEQ("");
-           }else{//Rep Term
+           }else{//Rep Term or from vocabulary
         	  if(m_REP.getcaDSR_COMPONENT()!= null && vRepTerm.size()==1){//if selected existing rep term
         	   ValidationStatusBean statusBean = new ValidationStatusBean();
         	   statusBean.setStatusMessage("**  Using existing "+m_REP.getcaDSR_COMPONENT()+" "+m_REP.getLONG_NAME()+" ("+m_REP.getID()+"v"+m_REP.getVERSION()+") from "+m_REP.getCONTEXT_NAME());
