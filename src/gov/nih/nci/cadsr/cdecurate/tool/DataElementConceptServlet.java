@@ -997,7 +997,7 @@ public class DataElementConceptServlet extends CurationServlet {
                if (blockBean.getcaDSR_COMPONENT() != null && blockBean.getcaDSR_COMPONENT().equals("Concept Class")){
             	  m_DEC.setDEC_OCL_IDSEQ("");  
                }else {//Object Class
-            	  if(vObjectClass.size()==1){//if selected existing object class 
+            	  if(blockBean.getcaDSR_COMPONENT() != null && vObjectClass.size()==1){//if selected existing object class 
             	   ValidationStatusBean statusBean = new ValidationStatusBean();
             	   statusBean.setStatusMessage("**  Using existing "+blockBean.getcaDSR_COMPONENT()+" "+blockBean.getLONG_NAME()+" ("+blockBean.getID()+"v"+blockBean.getVERSION()+") from "+blockBean.getCONTEXT_NAME());
 				   statusBean.setCondrExists(true);
@@ -1020,7 +1020,7 @@ public class DataElementConceptServlet extends CurationServlet {
    		       if (blockBean.getcaDSR_COMPONENT()!= null && blockBean.getcaDSR_COMPONENT().equals("Concept Class")){
    		    	 m_DEC.setDEC_PROPL_IDSEQ("");  
    		       }else{//Property
-            	  if(vProperty.size()==1){//if selected existing property
+            	  if(blockBean.getcaDSR_COMPONENT() != null && vProperty.size()==1){//if selected existing property
    		    	   ValidationStatusBean statusBean = new ValidationStatusBean();
             	   statusBean.setStatusMessage("**  Using existing "+blockBean.getcaDSR_COMPONENT()+" "+blockBean.getLONG_NAME()+" ("+blockBean.getID()+"v"+blockBean.getVERSION()+") from "+blockBean.getCONTEXT_NAME());
 				   statusBean.setCondrExists(true);
