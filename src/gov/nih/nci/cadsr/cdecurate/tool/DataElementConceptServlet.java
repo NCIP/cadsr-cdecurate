@@ -889,7 +889,7 @@ public class DataElementConceptServlet extends CurationServlet {
            String sComp = (String) m_classReq.getParameter("sCompBlocks");
            if (sComp == null)
                sComp = "";
-           // get the search bean from teh selected row
+           // get the search bean from the selected row
            sSelRow = (String) m_classReq.getParameter("selCompBlockRow");
            vAC = (Vector) session.getAttribute("vACSearch");
            if (vAC == null)
@@ -991,7 +991,18 @@ public class DataElementConceptServlet extends CurationServlet {
                if (vObjectClass != null && vObjectClass.size()>0){
                  vObjectClass = this.getMatchingThesarusconcept(vObjectClass, "Object Class");
    		         m_DEC = this.updateOCAttribues(vObjectClass, m_DEC);
-               }  
+               } 
+               if (blockBean.getcaDSR_COMPONENT() != null && blockBean.getcaDSR_COMPONENT().equals("Concept Class")){
+            	  m_DEC.setDEC_OCL_IDSEQ("");  
+               }else{
+            	   ValidationStatusBean statusBean = new ValidationStatusBean();
+            	   statusBean.setStatusMessage("**  Using existing "+blockBean.getcaDSR_COMPONENT()+" "+blockBean.getLONG_NAME()+" ("+blockBean.getID()+"v"+blockBean.getVERSION()+") from "+blockBean.getCONTEXT_NAME());
+				   statusBean.setCondrExists(true);
+				   statusBean.setCondrIDSEQ(blockBean.getCONDR_IDSEQ());
+				   statusBean.setEvsBeanExists(true);
+				   statusBean.setEvsBeanIDSEQ(blockBean.getIDSEQ());
+				   session.setAttribute("OCStatusBean", statusBean);
+               }
    		       DataManager.setAttribute(session, "vObjectClass", vObjectClass);
            }
            if (sComp.equals("Property") || sComp.equals("PropertyClass") || sComp.equals("PropertyQualifier")){
@@ -999,7 +1010,18 @@ public class DataElementConceptServlet extends CurationServlet {
    		       if (vProperty != null && vProperty.size()>0){
    		         vProperty  = this.getMatchingThesarusconcept(vProperty, "Property");
  		         m_DEC = this.updatePropAttribues(vProperty, m_DEC);
-   		       }  
+   		       }
+   		       if (blockBean.getcaDSR_COMPONENT()!= null && blockBean.getcaDSR_COMPONENT().equals("Concept Class")){
+   		    	 m_DEC.setDEC_PROPL_IDSEQ("");  
+   		       }else{
+            	   ValidationStatusBean statusBean = new ValidationStatusBean();
+            	   statusBean.setStatusMessage("**  Using existing "+blockBean.getcaDSR_COMPONENT()+" "+blockBean.getLONG_NAME()+" ("+blockBean.getID()+"v"+blockBean.getVERSION()+") from "+blockBean.getCONTEXT_NAME());
+				   statusBean.setCondrExists(true);
+				   statusBean.setCondrIDSEQ(blockBean.getCONDR_IDSEQ());
+				   statusBean.setEvsBeanExists(true);
+				   statusBean.setEvsBeanIDSEQ(blockBean.getIDSEQ());
+				   session.setAttribute("PropStatusBean", statusBean);
+               }
  		       DataManager.setAttribute(session, "vProperty", vProperty);
            }
            // rebuild new name if not appending

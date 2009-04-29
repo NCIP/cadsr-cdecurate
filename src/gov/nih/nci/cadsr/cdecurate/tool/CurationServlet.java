@@ -4077,7 +4077,7 @@ public class CurationServlet
       HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
       ValidationStatusBean ocStatusBean  = null;
      try{
-    	 ocStatusBean = ins.evsBeanCheck(beanList, defaultContext, "", type);
+    	 ocStatusBean = ins.evsBeanCheckDB(beanList, defaultContext, "", type);
         // get its matching thesaurus concept
          if (ocStatusBean != null && !ocStatusBean.isEvsBeanExists()){
     	    beanList = evs.getThesaurusConceptBean(beanList);
