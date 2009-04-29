@@ -1213,14 +1213,18 @@ public class ValueDomainServlet extends CurationServlet {
            } 
            if (m_REP.getcaDSR_COMPONENT()!= null && m_REP.getcaDSR_COMPONENT().equals("Concept Class")){
         	  m_VD.setVD_REP_IDSEQ("");
-           }else{
+           }else{//Rep Term
+        	  if(vRepTerm.size()==0){//if selected existing rep term
         	   ValidationStatusBean statusBean = new ValidationStatusBean();
         	   statusBean.setStatusMessage("**  Using existing "+m_REP.getcaDSR_COMPONENT()+" "+m_REP.getLONG_NAME()+" ("+m_REP.getID()+"v"+m_REP.getVERSION()+") from "+m_REP.getCONTEXT_NAME());
 			   statusBean.setCondrExists(true);
 			   statusBean.setCondrIDSEQ(m_REP.getCONDR_IDSEQ());
 			   statusBean.setEvsBeanExists(true);
 			   statusBean.setEvsBeanIDSEQ(m_REP.getIDSEQ());
-			   session.setAttribute("VdStatusBean", statusBean);
+			   session.setAttribute("vdStatusBean", statusBean);
+        	  }else{
+        		 m_VD.setVD_REP_IDSEQ("");  
+        	  }
            }
            DataManager.setAttribute(session, "vRepTerm", vRepTerm);
            // rebuild new name if not appending
