@@ -1,4 +1,4 @@
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.77 2009-04-29 16:15:00 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/InsACService.java,v 1.78 2009-04-29 17:59:15 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -6063,17 +6063,17 @@ public class InsACService implements Serializable {
 		  if (type.equals("Object Class")){
 			  DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
 			  id = m_DEC.getDEC_OCL_IDSEQ();
-			  name = "OCStatusBean";
+			  name = "ocStatusBean";
 		  }
 		  if (type.equals("Property")){
 			  DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
 			  id = m_DEC.getDEC_PROPL_IDSEQ();
-			  name = "PropStatusBean";
+			  name = "propStatusBean";
 		  }
 		  if (type.equals("Representation Term")){
 			  VD_Bean m_VD = (VD_Bean) session.getAttribute("m_VD");
 			  id = m_VD.getVD_REP_IDSEQ();
-			  name = "VdStatusBean";
+			  name = "vdStatusBean";
 		  }
 		  //If user selected existing OC or Prop or Rep Term in any context
 		  if (id != null && !id.equals("")){

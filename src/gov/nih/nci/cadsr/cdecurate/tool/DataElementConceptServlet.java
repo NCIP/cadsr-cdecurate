@@ -996,14 +996,18 @@ public class DataElementConceptServlet extends CurationServlet {
                } 
                if (blockBean.getcaDSR_COMPONENT() != null && blockBean.getcaDSR_COMPONENT().equals("Concept Class")){
             	  m_DEC.setDEC_OCL_IDSEQ("");  
-               }else{
+               }else {//Object Class
+            	  if(vObjectClass.size()==1){//if selected existing object class 
             	   ValidationStatusBean statusBean = new ValidationStatusBean();
             	   statusBean.setStatusMessage("**  Using existing "+blockBean.getcaDSR_COMPONENT()+" "+blockBean.getLONG_NAME()+" ("+blockBean.getID()+"v"+blockBean.getVERSION()+") from "+blockBean.getCONTEXT_NAME());
 				   statusBean.setCondrExists(true);
 				   statusBean.setCondrIDSEQ(blockBean.getCONDR_IDSEQ());
 				   statusBean.setEvsBeanExists(true);
 				   statusBean.setEvsBeanIDSEQ(blockBean.getIDSEQ());
-				   session.setAttribute("OCStatusBean", statusBean);
+				   session.setAttribute("ocStatusBean", statusBean);
+            	  }else{
+            		 m_DEC.setDEC_OCL_IDSEQ("");   
+            	  }
                }
    		       DataManager.setAttribute(session, "vObjectClass", vObjectClass);
            }
@@ -1015,14 +1019,18 @@ public class DataElementConceptServlet extends CurationServlet {
    		       }
    		       if (blockBean.getcaDSR_COMPONENT()!= null && blockBean.getcaDSR_COMPONENT().equals("Concept Class")){
    		    	 m_DEC.setDEC_PROPL_IDSEQ("");  
-   		       }else{
-            	   ValidationStatusBean statusBean = new ValidationStatusBean();
+   		       }else{//Property
+            	  if(vProperty.size()==1){//if selected existing property
+   		    	   ValidationStatusBean statusBean = new ValidationStatusBean();
             	   statusBean.setStatusMessage("**  Using existing "+blockBean.getcaDSR_COMPONENT()+" "+blockBean.getLONG_NAME()+" ("+blockBean.getID()+"v"+blockBean.getVERSION()+") from "+blockBean.getCONTEXT_NAME());
 				   statusBean.setCondrExists(true);
 				   statusBean.setCondrIDSEQ(blockBean.getCONDR_IDSEQ());
 				   statusBean.setEvsBeanExists(true);
 				   statusBean.setEvsBeanIDSEQ(blockBean.getIDSEQ());
-				   session.setAttribute("PropStatusBean", statusBean);
+				   session.setAttribute("propStatusBean", statusBean);
+            	  }else{
+            		  m_DEC.setDEC_PROPL_IDSEQ("");   
+            	  }
                }
  		       DataManager.setAttribute(session, "vProperty", vProperty);
            }
