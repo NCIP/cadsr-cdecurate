@@ -875,6 +875,8 @@ public class DataElementConceptServlet extends CurationServlet {
        {
            HttpSession session = m_classReq.getSession();
            String sSelRow = "";
+           boolean selectedOCQualifiers = false;
+           boolean selectedPropQualifiers =  false;
         //   InsACService insAC = new InsACService(m_classReq, m_classRes, this);
            DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
            if (m_DEC == null)
@@ -886,6 +888,12 @@ public class DataElementConceptServlet extends CurationServlet {
            Vector<EVS_Bean> vProperty = (Vector) session.getAttribute("vProperty");
            if (vProperty == null)
                vProperty = new Vector<EVS_Bean>();
+           if (vObjectClass.size()>1){
+        	   selectedOCQualifiers = true; 
+           }
+           if (vProperty.size()>1){
+        	   selectedPropQualifiers = true;
+           }
            Vector vAC = null;
            EVS_Bean blockBean = new EVS_Bean();
            String sComp = (String) m_classReq.getParameter("sCompBlocks");
@@ -997,7 +1005,7 @@ public class DataElementConceptServlet extends CurationServlet {
                if (blockBean.getcaDSR_COMPONENT() != null && blockBean.getcaDSR_COMPONENT().equals("Concept Class")){
             	  m_DEC.setDEC_OCL_IDSEQ("");  
                }else {//Object Class or from vocabulary
-            	  if(blockBean.getcaDSR_COMPONENT() != null && vObjectClass.size()==1){//if selected existing object class 
+            	  if(blockBean.getcaDSR_COMPONENT() != null && !selectedOCQualifiers){//if selected existing object class 
             	   ValidationStatusBean statusBean = new ValidationStatusBean();
             	   statusBean.setStatusMessage("**  Using existing "+blockBean.getcaDSR_COMPONENT()+" "+blockBean.getLONG_NAME()+" ("+blockBean.getID()+"v"+blockBean.getVERSION()+") from "+blockBean.getCONTEXT_NAME());
 				   statusBean.setCondrExists(true);
@@ -1020,7 +1028,7 @@ public class DataElementConceptServlet extends CurationServlet {
    		       if (blockBean.getcaDSR_COMPONENT()!= null && blockBean.getcaDSR_COMPONENT().equals("Concept Class")){
    		    	 m_DEC.setDEC_PROPL_IDSEQ("");  
    		       }else{//Property or from vocabulary
-            	  if(blockBean.getcaDSR_COMPONENT() != null && vProperty.size()==1){//if selected existing property
+            	  if(blockBean.getcaDSR_COMPONENT() != null && !selectedPropQualifiers){//if selected existing property
    		    	   ValidationStatusBean statusBean = new ValidationStatusBean();
             	   statusBean.setStatusMessage("**  Using existing "+blockBean.getcaDSR_COMPONENT()+" "+blockBean.getLONG_NAME()+" ("+blockBean.getID()+"v"+blockBean.getVERSION()+") from "+blockBean.getCONTEXT_NAME());
 				   statusBean.setCondrExists(true);
