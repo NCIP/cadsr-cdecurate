@@ -1,6 +1,6 @@
 // Copyright ScenPro, Inc 2007
 
-// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/popupMenus.js,v 1.2 2009-04-09 19:51:22 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/popupMenus.js,v 1.3 2009-05-01 19:04:04 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 /* define variables for "if n4 (Netscape 4), if IE (IE 4.x), 
@@ -40,14 +40,34 @@ else if (document.getElementById) {
 //position the element on the page.
 function placeIt(elem,leftPos,topPos) 
 {
-    leftPos = leftPos - window.screenLeft - 8;
-    topPos = topPos - window.screenTop;
-    docObj = eval(doc + elem + sty);
-    if(docObj != null)
-    {
-      docObj.pixelLeft = leftPos;
-      docObj.pixelTop = topPos;
+    var left;
+    var top;
+    if (navigator.userAgent.indexOf('Firefox') != -1){
+       left = window.screenX;
+       top  = window.screenY;
+       leftPos = leftPos - left- 8;
+       topPos = topPos - top - 50; 
+       docObj = eval(doc + elem + sty);
+       if(docObj != null)
+       {
+         docObj.left = leftPos + "px";
+         docObj.top = topPos + "px";
+       }
+    }else{
+       left = window.screenLeft;
+       top  = window.screenTop;
+       leftPos = leftPos - left- 8;
+       topPos = topPos - top;
+       docObj = eval(doc + elem + sty);
+       if(docObj != null)
+       {
+         docObj.pixelLeft = leftPos;
+         docObj.pixelTop = topPos;
+       }
     }
+    
+   
+    
 // window.status = "elem:" + elem + ", leftPos:" + leftPos + ", topPos:" + topPos + ", x:" + window.screenLeft + ", y:" + window.screenTop
 // window.status = "docObj:" +item + "top:" + topPos;
 // item = ttt;
