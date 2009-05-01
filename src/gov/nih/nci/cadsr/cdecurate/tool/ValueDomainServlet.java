@@ -1102,6 +1102,7 @@ public class ValueDomainServlet extends CurationServlet {
        {
            HttpSession session = m_classReq.getSession();
            String sSelRow = "";
+           boolean selectedRepQualifiers = false;
          //  InsACService insAC = new InsACService(req, res, this);
            VD_Bean m_VD = (VD_Bean) session.getAttribute("m_VD");
            if (m_VD == null)
@@ -1110,8 +1111,10 @@ public class ValueDomainServlet extends CurationServlet {
            Vector<EVS_Bean> vRepTerm = (Vector) session.getAttribute("vRepTerm");
            if (vRepTerm == null)
                vRepTerm = new Vector<EVS_Bean>();
+           if (vRepTerm.size()>1){
+        	   selectedRepQualifiers = true; 
+           }  
            Vector vAC = new Vector();
-           ;
            EVS_Bean m_REP = new EVS_Bean();
            String sComp = (String) m_classReq.getParameter("sCompBlocks");
            // get rep term components
@@ -1214,7 +1217,7 @@ public class ValueDomainServlet extends CurationServlet {
            if (m_REP.getcaDSR_COMPONENT()!= null && m_REP.getcaDSR_COMPONENT().equals("Concept Class")){
         	  m_VD.setVD_REP_IDSEQ("");
            }else{//Rep Term or from vocabulary
-        	  if(m_REP.getcaDSR_COMPONENT()!= null && vRepTerm.size()==1){//if selected existing rep term
+        	  if(m_REP.getcaDSR_COMPONENT()!= null && !selectedRepQualifiers){//if selected existing rep term
         	   ValidationStatusBean statusBean = new ValidationStatusBean();
         	   statusBean.setStatusMessage("**  Using existing "+m_REP.getcaDSR_COMPONENT()+" "+m_REP.getLONG_NAME()+" ("+m_REP.getID()+"v"+m_REP.getVERSION()+") from "+m_REP.getCONTEXT_NAME());
 			   statusBean.setCondrExists(true);
