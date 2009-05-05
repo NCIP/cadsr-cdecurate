@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.13 2009-04-17 21:28:29 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.14 2009-05-05 20:52:07 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -272,13 +272,13 @@
     <% if(sSearchAC.equals("ParentConceptVM")) {%>
       if(opener.document != null)
       {      	
-        if(opener.document.getElementById("selectedParentConceptCode") != null && 
-        			opener.document.getElementById("selectedParentConceptCode").value != "")
+        if(opener.document.PVForm.selectedParentConceptCode != null && 
+        			opener.document.PVForm.selectedParentConceptCode.value != "")
         {
-          var code = opener.document.getElementById("selectedParentConceptCode").value;
-          var name = opener.document.getElementById("selectedParentConceptName").value
-          var db = opener.document.getElementById("selectedParentConceptDB").value
-          actSelect = opener.document.getElementById("actSelect").value
+          var code = opener.document.PVForm.selectedParentConceptCode.value;
+          var name = opener.document.PVForm.selectedParentConceptName.value
+          var db = opener.document.PVForm.selectedParentConceptDB.value;
+          actSelect = opener.document.PVForm.actSelect.value
           document.searchParmsForm.sCCodeDB.value = db;
           document.searchParmsForm.sCCode.value = code;
           document.searchParmsForm.sCCodeName.value = name;
@@ -292,9 +292,9 @@
             document.searchParmsForm.openToTree.value = "true";
             if(opener.document != null)
             {
-              opener.document.getElementById("selectedParentConceptCode").value = "";
-              opener.document.getElementById("selectedParentConceptName").value = ""; 
-              opener.document.getElementById("selectedParentConceptDB").value = "";
+              opener.document.PVForm.selectedParentConceptCode.value = "";
+              opener.document.PVForm.selectedParentConceptName.value = ""; 
+              opener.document.PVForm.selectedParentConceptDB.value = "";
             }
            // document.searchParmsForm.submit();
            return true;
