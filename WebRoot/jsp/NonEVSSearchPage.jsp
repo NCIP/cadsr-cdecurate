@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/NonEVSSearchPage.jsp,v 1.7 2009-05-05 13:08:47 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/NonEVSSearchPage.jsp,v 1.8 2009-05-05 13:16:25 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -59,7 +59,7 @@
       opener.document.PVForm.hiddenParentCode.value = document.nonEVSSearchPage.txtRefText.value;
       opener.document.PVForm.hiddenParentDB.value = document.nonEVSSearchPage.txtRefURL.value;
       opener.document.PVForm.pageAction.value = "CreateNonEVSRef";
-      opener.document.getElementById("Message").style.visibility="visible";
+      // opener.document.getElementById("Message").style.visibility="visible";
       opener.document.body.style.cursor = "wait";
       opener.SubmitValidate("CreateNonEVSRef");
 
