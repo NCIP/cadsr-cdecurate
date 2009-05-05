@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/NonEVSSearchPage.jsp,v 1.5 2009-04-21 03:47:35 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/NonEVSSearchPage.jsp,v 1.6 2009-05-05 12:56:16 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -90,7 +90,7 @@
     if (opener.document != null && opener.document.SearchActionForm != null)
     {
       //resubmit to get the data if search action is false and parent is selected
-      var sInd = opener.document.getElementById("listParentConcept").selectedIndex;
+      var sInd = opener.document.PVForm.listParentConcept.selectedIndex;
       var isFirst = opener.document.SearchActionForm.isValidSearch.value;
       if (isFirst == "false" && sInd > -1)
       {
