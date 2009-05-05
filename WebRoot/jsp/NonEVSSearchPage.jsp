@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/NonEVSSearchPage.jsp,v 1.8 2009-05-05 13:16:25 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/NonEVSSearchPage.jsp,v 1.9 2009-05-05 15:50:53 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -117,7 +117,7 @@
   //open window to browse
   function openBrowse()
   {
-    var sURL = document.designateDEForm.txtRefURL.value;
+    var sURL = document.nonEVSSearchPage.txtRefURL.value;
     sURL = sURL.replace(/\r\n/g, " ");
     if (sURL != null && sURL != "" && (sURL.length < 8 || (sURL.substring(0,7) != "http://" && sURL.substring(0,8) != "https://"))){
         alert("Reference Document URL Text must begin with 'http:// or https://'");
