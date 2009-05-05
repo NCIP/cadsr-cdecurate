@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/NonEVSSearchPage.jsp,v 1.6 2009-05-05 12:56:16 hebell Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/NonEVSSearchPage.jsp,v 1.7 2009-05-05 13:08:47 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -55,10 +55,10 @@
     }
     if (opener.document != null)
     {
-      opener.document.getElementById("hiddenParentName").value = document.nonEVSSearchPage.txtRefName.value;
-      opener.document.getElementById("hiddenParentCode").value = document.nonEVSSearchPage.txtRefText.value;
-      opener.document.getElementById("hiddenParentDB").value = document.nonEVSSearchPage.txtRefURL.value;
-      opener.document.getElementById("pageAction").value = "CreateNonEVSRef";
+      opener.document.PVForm.hiddenParentName.value = document.nonEVSSearchPage.txtRefName.value;
+      opener.document.PVForm.hiddenParentCode.value = document.nonEVSSearchPage.txtRefText.value;
+      opener.document.PVForm.hiddenParentDB.value = document.nonEVSSearchPage.txtRefURL.value;
+      opener.document.PVForm.pageAction.value = "CreateNonEVSRef";
       opener.document.getElementById("Message").style.visibility="visible";
       opener.document.body.style.cursor = "wait";
       opener.SubmitValidate("CreateNonEVSRef");
@@ -96,7 +96,7 @@
       {
         opener.document.SearchActionForm.isValidSearch.value = "true";
         //fill the refname to get matching parent from the list of parents.
-        document.nonEVSSearchPage.txtRefName.value = opener.document.getElementById("selectedParentConceptName").value;
+        document.nonEVSSearchPage.txtRefName.value = opener.document.PVForm.selectedParentConceptName.value;
         hourglass();
         window.status = "Refereshing the page, it may take a minute, please wait....."
         document.nonEVSSearchPage.actSelect.value ="viewParent";
