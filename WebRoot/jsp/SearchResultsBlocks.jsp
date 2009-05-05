@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2006 ScenPro, Inc.
-    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.18 2009-04-17 21:28:28 hegdes Exp $
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.19 2009-05-05 19:39:27 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
 
@@ -7,7 +7,6 @@
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
-<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 <html>
 	<head>
 		<title>
@@ -142,7 +141,6 @@
  var nonEVSRepTermSearch = "false";
    function setup()
    {
- // alert("start setUp");
  <%
 	    String statusMessage = (String)session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
 	    if (statusMessage == null) statusMessage = "";
@@ -169,7 +167,7 @@
       sComp = opener.document.SearchActionForm.searchComp.value;
       if (sComp == "ParentConceptVM")
       {
-        var sComp2 = opener.document.getElementById("selectedParentConceptMetaSource").value;
+        var sComp2 = opener.document.PVForm.selectedParentConceptMetaSource.value;
         if (sComp2 == null) sComp2 = "";
         document.searchResultsForm.selectedParentConceptMetaSource.value = sComp2;
       }
