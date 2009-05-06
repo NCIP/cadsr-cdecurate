@@ -1,5 +1,5 @@
 // Copyright (c) 2000 ScenPro, Inc.
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.93 2009-04-28 15:22:30 veerlah Exp $
+// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACSearch.java,v 1.94 2009-05-06 14:35:30 veerlah Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
@@ -2445,13 +2445,13 @@ public class GetACSearch implements Serializable
             int iInd = -1;
             if (vDisp.contains("Version"))
                 iInd = vDisp.indexOf("Version");
-            if (!vSel.contains("Version") && iInd > 0)
+            if (!vSel.contains("Version") && iInd > 0 && vSel.size()== iInd)
                 vSel.insertElementAt("Version", iInd);
             // get index of wf status and add it to vsel
             iInd = -1;
             if (vDisp.contains("Workflow Status"))
                 iInd = vDisp.indexOf("Workflow Status");
-            if (!vSel.contains("Workflow Status") && iInd > 0)
+            if (!vSel.contains("Workflow Status") && iInd > 0 && vSel.size()== iInd)
                 vSel.insertElementAt("Workflow Status", iInd);
             // store it back in teh session
             if (sAction.equals("searchForCreate"))
