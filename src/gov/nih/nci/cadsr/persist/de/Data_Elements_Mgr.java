@@ -20,7 +20,7 @@ public class Data_Elements_Mgr extends ACBase {
 	private Logger logger = Logger.getLogger(this.getClass());
 
 	/**
-	 * Inserts a single row of Data Element and returns primary key de_IDSEQ
+	 * Inserts a single row of Data Element in data_elements_view table and returns primary key de_IDSEQ
 	 * 
 	 * @param deVO
 	 * @param conn
@@ -84,7 +84,7 @@ public class Data_Elements_Mgr extends ACBase {
 	}
 
 	/**
-	 * Updates single row of Data Element
+	 * Updates single row of Data Element 
 	 * 
 	 * @param deVO
 	 * @param conn
