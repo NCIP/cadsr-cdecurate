@@ -15,7 +15,9 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -4473,12 +4475,29 @@ public class GetACSearch implements Serializable
             {
                 DataManager.setAttribute(session, "vObjectClass", null);
                 evs.fillOCVectors(oc_condr_idseq, DECBean, sMenu);
+                
+                //need to create the ocStatusBean also, the OC is presumably valid at this point.
+                HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
+                InsACService insAC = new InsACService(m_classReq, m_classRes, m_servlet);
+                ValidationStatusBean statusBean = new ValidationStatusBean();
+                Vector vOC = (Vector) session.getAttribute("vObjectClass");
+                statusBean = insAC.evsBeanCheckDB(vOC, defaultContext, DECBean.getDEC_OCL_NAME(), "Object Class");
+                DataManager.setAttribute(session, "ocStatusBean", statusBean);
             }
             String prop_condr_idseq = DECBean.getDEC_PROP_CONDR_IDSEQ();
             if (prop_condr_idseq != null)
             {
                 DataManager.setAttribute(session, "vProperty", null);
                 evs.fillPropVectors(prop_condr_idseq, DECBean, sMenu);
+                //need to create the propStatusBean also
+                
+                HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
+                InsACService insAC = new InsACService(m_classReq, m_classRes, m_servlet);
+                ValidationStatusBean statusBean = new ValidationStatusBean();
+                Vector vP = (Vector) session.getAttribute("vProperty");
+                statusBean = insAC.evsBeanCheckDB(vP, defaultContext, DECBean.getDEC_PROPL_NAME(), "Property");
+                DataManager.setAttribute(session, "propStatusBean", statusBean);
+                
             }
             DECBean.setAC_USER_PREF_NAME(DECBean.getDEC_PREFERRED_NAME());
             DECBean.setAC_PREF_NAME_TYPE("");
@@ -4710,6 +4729,15 @@ public class GetACSearch implements Serializable
         {
             DataManager.setAttribute(session, "vRepTerm", null);
             evs.fillRepVectors(rep_condr_idseq, VDBean, sMenu);
+            
+            //Create VD status bean
+            HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
+            InsACService insAC = new InsACService(m_classReq, m_classRes, m_servlet);
+            ValidationStatusBean statusBean = new ValidationStatusBean();
+            Vector vREP = (Vector) session.getAttribute("vRepTerm");
+            statusBean = insAC.evsBeanCheckDB(vREP, defaultContext, VDBean.getVD_REP_TERM(), "Representation Term");
+            DataManager.setAttribute(session, "vdStatusBean", statusBean);
+            
             // make the abbreviated name if existing one is system name
             EVS_Bean nullEVS = null; 
             VDBean = (VD_Bean) m_servlet.getACNames(nullEVS, "OpenVD", VDBean);
@@ -7383,6 +7411,9 @@ public class GetACSearch implements Serializable
                 DataManager.setAttribute(session, "creContextBlocks", sContext);
                 if (sContext == null || sContext.equals("AllContext"))
                     sContext = "";
+                if (sContext.equals("ProdContext"))
+                	sContext = getNonTestContexts(session);
+                	
             }
             else
                 sContext = getMultiReqValues(sSearchAC, "searchForCreate", "Context");
@@ -9952,6 +9983,26 @@ public class GetACSearch implements Serializable
         	Vector vRefDoc = doRefDocSearch(acIdseq, "ALL TYPES", "open");
         	req.setAttribute("RefDocList", vRefDoc);
         }
+    }
+    
+    //Creates a list of Contexts as a string of comma separated values (for inclusion in SELECT statement)
+    //Excludes Test and Training contexts.
+    private String getNonTestContexts(HttpSession session) {
+    	String ret = "";
+    	
+    	Vector vContext = (Vector) session.getAttribute("vContext");
+    	if (vContext != null) {
+    		for(Object c: vContext) {
+    			String context = (String)c;
+    			
+    			//Skip Test and Training
+    			if (!context.equalsIgnoreCase("test") && !context.equalsIgnoreCase("training"))
+    			ret += (String)c + ",";
+    		}
+    		//remove trailing comma.
+    		ret = ret.substring(0,ret.length());
+    	}
+    	return ret;
     }
 
     public void do_nonEVSRepTermSearch(String InString, String ContName, String ASLName, String ID, Vector<EVS_Bean> vList,
