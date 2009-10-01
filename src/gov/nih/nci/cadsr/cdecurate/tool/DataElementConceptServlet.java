@@ -1969,7 +1969,8 @@ public class DataElementConceptServlet extends CurationServlet {
 	  decBean.setDEC_OCL_NAME_PRIMARY(pBean.getLONG_NAME());
       decBean.setDEC_OC_CONCEPT_CODE(pBean.getCONCEPT_IDENTIFIER());
       decBean.setDEC_OC_EVS_CUI_ORIGEN(pBean.getEVS_DATABASE());
-    //  decBean.setDEC_OCL_IDSEQ(pBean.getIDSEQ());
+      //if (pBean.getIDSEQ() != null && pBean.getIDSEQ().length() > 0)
+    //	  decBean.setDEC_OCL_IDSEQ(pBean.getIDSEQ());
       DataManager.setAttribute(session, "m_OC", pBean);
       
       // update qualifier vectors

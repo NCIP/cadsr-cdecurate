@@ -139,7 +139,7 @@
 			sLastKeyword = sLastKeyword.trim();
 			String sContext = (String) session.getAttribute("creContextBlocks");
 			if (sContext == null)
-				sContext = "All Contexts";
+				sContext = "Production Contexts";
 			String sSearchIn = (String) session
 					.getAttribute("creSearchInBlocks");
 			if (sSearchIn == null)
@@ -790,6 +790,11 @@ function doMetaCodeSearch()
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<select name="listContextFilter" size="1" style="width: 160"
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
+								
+								<option value="ProdContext"
+									<%if(sContext.equals("Production Contexts")){%> selected <%}%>>
+									Production Contexts
+								</option>
 								<option value="AllContext"
 									<%if(sContext.equals("All Contexts")){%> selected <%}%>>
 									All Contexts

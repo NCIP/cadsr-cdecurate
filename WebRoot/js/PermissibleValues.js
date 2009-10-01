@@ -546,13 +546,16 @@
 		if (elmObj !== null)
 		{
     		//get the node text if empty -  toggling
-  			var thisObj;
-  			if (elmObj.firstChild.nextSibling !== null) {
-  			   thisObj = elmObj.firstChild.nextSibling;
-            }
-  			else {
-  			   thisObj = elmObj.firstChild;
-            }
+  			var thisObj = null;
+  			
+  			if (elmObj.firstChild !== null) {
+	  			if (elmObj.firstChild.nextSibling !== null) {
+	  			   thisObj = elmObj.firstChild.nextSibling;
+	            }
+	  			else {
+	  			   thisObj = elmObj.firstChild;
+	            }
+  			}
   			if (thisObj !== null)
   			{
 	  			while (thisObj.nodeType != 3)

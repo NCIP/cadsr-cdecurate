@@ -37,9 +37,11 @@
     UtilService serUtil = new UtilService();
     String sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
     String sOriginAction = (String)session.getAttribute("originAction");
-    
+   
     DEC_Bean m_DEC = new DEC_Bean();
     m_DEC = (DEC_Bean)session.getAttribute("m_DEC");
+
+
     if (m_DEC == null) m_DEC = new DEC_Bean();
 
     String sDECIDSEQ = m_DEC.getDEC_DEC_IDSEQ();
