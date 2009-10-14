@@ -4478,11 +4478,14 @@ public class GetACSearch implements Serializable
                 
                 //need to create the ocStatusBean also, the OC is presumably valid at this point.
                 HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
-                InsACService insAC = new InsACService(m_classReq, m_classRes, m_servlet);
-                ValidationStatusBean statusBean = new ValidationStatusBean();
-                Vector vOC = (Vector) session.getAttribute("vObjectClass");
-                statusBean = insAC.evsBeanCheckDB(vOC, defaultContext, DECBean.getDEC_OCL_NAME(), "Object Class");
-                DataManager.setAttribute(session, "ocStatusBean", statusBean);
+                
+                if (defaultContext != null){
+	                InsACService insAC = new InsACService(m_classReq, m_classRes, m_servlet);
+	                ValidationStatusBean statusBean = new ValidationStatusBean();
+	                Vector vOC = (Vector) session.getAttribute("vObjectClass");
+	                statusBean = insAC.evsBeanCheckDB(vOC, defaultContext, DECBean.getDEC_OCL_NAME(), "Object Class");
+	                DataManager.setAttribute(session, "ocStatusBean", statusBean);
+                }
             }
             String prop_condr_idseq = DECBean.getDEC_PROP_CONDR_IDSEQ();
             if (prop_condr_idseq != null)
@@ -4490,13 +4493,16 @@ public class GetACSearch implements Serializable
                 DataManager.setAttribute(session, "vProperty", null);
                 evs.fillPropVectors(prop_condr_idseq, DECBean, sMenu);
                 //need to create the propStatusBean also
+
                 
                 HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
-                InsACService insAC = new InsACService(m_classReq, m_classRes, m_servlet);
-                ValidationStatusBean statusBean = new ValidationStatusBean();
-                Vector vP = (Vector) session.getAttribute("vProperty");
-                statusBean = insAC.evsBeanCheckDB(vP, defaultContext, DECBean.getDEC_PROPL_NAME(), "Property");
-                DataManager.setAttribute(session, "propStatusBean", statusBean);
+                if (defaultContext != null){
+	                InsACService insAC = new InsACService(m_classReq, m_classRes, m_servlet);
+	                ValidationStatusBean statusBean = new ValidationStatusBean();
+	                Vector vP = (Vector) session.getAttribute("vProperty");
+	                statusBean = insAC.evsBeanCheckDB(vP, defaultContext, DECBean.getDEC_PROPL_NAME(), "Property");
+	                DataManager.setAttribute(session, "propStatusBean", statusBean);
+                }
                 
             }
             DECBean.setAC_USER_PREF_NAME(DECBean.getDEC_PREFERRED_NAME());
@@ -4732,12 +4738,13 @@ public class GetACSearch implements Serializable
             
             //Create VD status bean
             HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
-            InsACService insAC = new InsACService(m_classReq, m_classRes, m_servlet);
-            ValidationStatusBean statusBean = new ValidationStatusBean();
-            Vector vREP = (Vector) session.getAttribute("vRepTerm");
-            statusBean = insAC.evsBeanCheckDB(vREP, defaultContext, VDBean.getVD_REP_TERM(), "Representation Term");
-            DataManager.setAttribute(session, "vdStatusBean", statusBean);
-            
+            if (defaultContext != null){
+	            InsACService insAC = new InsACService(m_classReq, m_classRes, m_servlet);
+	            ValidationStatusBean statusBean = new ValidationStatusBean();
+	            Vector vREP = (Vector) session.getAttribute("vRepTerm");
+	            statusBean = insAC.evsBeanCheckDB(vREP, defaultContext, VDBean.getVD_REP_TERM(), "Representation Term");
+	            DataManager.setAttribute(session, "vdStatusBean", statusBean);
+            }
             // make the abbreviated name if existing one is system name
             EVS_Bean nullEVS = null; 
             VDBean = (VD_Bean) m_servlet.getACNames(nullEVS, "OpenVD", VDBean);
