@@ -21,7 +21,7 @@
             style="width: 722px; height: 490px; background-repeat: no-repeat; background-image: url('../../cdecurate/images/Splashlarge.gif')">
             <tr>
                 <td style="width: 330px">&nbsp;</td>
-                <td valign="top" align="center"><br/><font color="#ffffff" size="4" face="Arial, sans-serif">Version 4.0.1</font></td>
+                <td valign="top" align="center"><br/><font color="#ffffff" size="4" face="Arial, sans-serif">Version 4.0.2</font></td>
             </tr>
             <tr>
                 <td style="width: 330px">&nbsp;</td>

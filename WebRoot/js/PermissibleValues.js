@@ -1477,8 +1477,7 @@
             var objs;
   		 	vmT = document.getElementById(pvId + "VMView");
   		 	if (vmT !== null) {
-  		 		vmText = vmT.innerText;
-  		 		vmText = vmT.textContent;
+  		 		vmText = (vmT.innerText) ? vmT.innerText : vmT.textContent;
   		    }
   		 	if (vmText === "")
   		 	{
