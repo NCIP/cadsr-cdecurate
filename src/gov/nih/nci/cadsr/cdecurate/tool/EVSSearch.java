@@ -1734,7 +1734,8 @@ public class EVSSearch implements Serializable {
 									String propValue = property.getValue();
 									if (propValue == null)
 										propValue = "";
-									if (propName.indexOf(retConProp) >= 0) //"Concept_Status" retired concept
+									//Use getIsRetired() for Retired status instead of checking property Name for now.										
+									if (propName.indexOf(retConProp) >= 0 || oDLC.getIsRetired()) //"Concept_Status" retired concept
 									{
 										if (sIncludeRet != null
 												&& sIncludeRet.equals("Include"))
