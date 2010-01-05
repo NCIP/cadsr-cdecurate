@@ -6,17 +6,7 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
-import gov.nih.nci.evs.domain.Atom;
-import gov.nih.nci.evs.domain.Definition;
-import gov.nih.nci.evs.domain.DescLogicConcept;
-import gov.nih.nci.evs.domain.MetaThesaurusConcept;
-import gov.nih.nci.evs.domain.Property;
-import gov.nih.nci.evs.domain.Qualifier;
-import gov.nih.nci.evs.domain.SemanticType;
-import gov.nih.nci.evs.domain.Source;
-import gov.nih.nci.evs.query.EVSQuery;
-import gov.nih.nci.evs.query.EVSQueryImpl;
-import gov.nih.nci.system.applicationservice.EVSApplicationService;
+import gov.nih.nci.evs.security.SecurityToken;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 
 import java.io.Serializable;
@@ -33,6 +23,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.LexGrid.LexBIG.DataModel.Collections.AssociatedConceptList;
+import org.LexGrid.LexBIG.DataModel.Collections.AssociationList;
+import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
+import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
+import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
+import org.LexGrid.LexBIG.Exceptions.LBException;
+import org.LexGrid.LexBIG.Extensions.Generic.LexBIGServiceConvenienceMethods;
+import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
+import org.LexGrid.LexBIG.DataModel.Core.Association;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
+import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.LexGrid.LexBIG.DataModel.enums.SearchDesignationOption;
+import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeGraph;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.LexBIG.LexBIGService.LexBIGServiceManager;
+import org.LexGrid.LexBIG.LexBIGService.LexBIGServiceMetadata;
+import org.LexGrid.LexBIG.Utility.Constructors;
+import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
+import org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService;
+import org.LexGrid.codingSchemes.CodingScheme;
+import org.LexGrid.commonTypes.Property;
+import org.LexGrid.commonTypes.Source;
+import org.LexGrid.concepts.Definition;
+import org.LexGrid.concepts.Presentation;
+import org.LexGrid.naming.SupportedSource;
 import org.apache.log4j.Logger;
 
 /**
@@ -63,7 +80,7 @@ public class EVSSearch implements Serializable {
 	HttpServletRequest m_classReq = null;
 	HttpServletResponse m_classRes = null;
 	UtilService m_util = new UtilService();
-	EVSApplicationService evsService = null;
+	LexBIGService evsService = null;
 	EVS_UserBean m_eUser = null;
 	EVS_Bean m_eBean = null;
 	Logger logger = Logger.getLogger(EVSSearch.class.getName());
@@ -103,9 +120,10 @@ public class EVSSearch implements Serializable {
 				m_eUser = new EVS_UserBean(); //to be safe use the default props
 			if (m_eUser.getEVSConURL() != null
 					&& !m_eUser.getEVSConURL().equals(""))
-				evsService = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(m_eUser.getEVSConURL(), "EvsServiceInfo");
+				evsService = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(m_eUser.getEVSConURL(), "EvsServiceInfo");	
 				
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error("EVS Service not obtained from the URL");
 		}
 
@@ -126,33 +144,53 @@ public class EVSSearch implements Serializable {
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");    
 		String CCode = "";
+
+		//TODO what does MetaValue search?
+		//TODO why does this return possible many results when it requires only one?
+
 		if (dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
 		{
-			EVSQuery codequery2 = new EVSQueryImpl();
-			List codes2 = null;
-			codequery2.searchMetaThesaurus(prefName, 100, "", false, false,
-					false);
+
+			ResolvedConceptReferenceList codes2 = null;
+			int codesSize = 0;
+
 			try {
-				codes2 = evsService.evsSearch(codequery2);
+				CodedNodeSet metaNodes = evsService.getNodeSet("NCI MetaThesaurus", null, null); 
+
+				metaNodes = metaNodes.restrictToMatchingDesignations(prefName, //the text to match 
+						CodedNodeSet.SearchDesignationOption.PREFERRED_ONLY,  //whether to search all designation, only Preferred or only Non-Preferred
+						"exactMatch", //the match algorithm to use
+						null); //the language to match (null matches all)
+
+
+				codes2 = metaNodes.resolveToList(
+						null, //Sorts used to sort results (null means sort by match score)
+						null, //PropertyNames to resolve (null resolves all)
+						null,  //PropertyTypess to resolve (null resolves all)
+						10	  //cap the number of results returned (-1 resolves all)
+				);
+				codesSize = codes2.getResolvedConceptReferenceCount();
+
 			} catch (Exception ex) {
-				logger.error("Error do_getEVSCode: " + ex.toString(), ex);
+				logger.error("Error do_getEVSCode:resolveToList: " + ex.toString(), ex);
 			}
+
 			if (codes2 != null) {
-				MetaThesaurusConcept aMetaThesaurusConcept = new MetaThesaurusConcept();
-				for (int i = 0; i < codes2.size(); i++) {
-					aMetaThesaurusConcept = (MetaThesaurusConcept) codes2
-					.get(i);
-					CCode = (String) aMetaThesaurusConcept.getCui();
-					
+				ResolvedConceptReference conceptReference = new ResolvedConceptReference();
+				logger.debug("Got "+codesSize+" results for the do_getEVSCode search using prefName and exactMatch");
+				for (int i = 0; i < codesSize; i++) {
+					conceptReference = (ResolvedConceptReference) codes2.getResolvedConceptReference(i);
+					CCode = (String) conceptReference.getConceptCode();
+
 				}
 			}
 		}else
 		{	
-			 CCode = prefName;
+			CCode = prefName;
 		}
 		return CCode;
 	}
-	
+
 	/**
 	 * does evs code search
 	 * @param CCode string to search for
@@ -166,35 +204,39 @@ public class EVSSearch implements Serializable {
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");
 		String sConceptName = "";
-		if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
-		{
-			EVSQuery query = new EVSQueryImpl();
-			List concepts = null;
-			query = this.addSecurityToken(query, "", dtsVocab);
-			query.getDescLogicConceptNameByCode(dtsVocab, CCode);
-			try {
-				concepts = evsService.evsSearch(query);
-			} catch (Exception ex) {
-				logger.error("Error do_EVSSearch: " + ex.toString(), ex);
-			}
-			if (concepts != null && concepts.size() > 0)
-				sConceptName = (String) concepts.get(0);
-		} else // if(dtsVocab.equals("NCI Metathesaurus"))
-		{
-			EVSQuery query2 = new EVSQueryImpl();
-			List concepts2 = null;
-			query2.searchMetaThesaurus(CCode, 10, "", true, false, false);
-			try {
-				concepts2 = evsService.evsSearch(query2);
-			} catch (Exception ex) {
-				logger.error("Error do_EVSSearch Meta: " + ex.toString(), ex);
-			}
-			if (concepts2 != null) {
-				MetaThesaurusConcept aMetaThesaurusConcept = new MetaThesaurusConcept();
-				aMetaThesaurusConcept = (MetaThesaurusConcept) concepts2.get(0);
-				sConceptName = (String) aMetaThesaurusConcept.getName();
+
+		ResolvedConceptReferenceList concepts2 = null;
+		int codesSize = 0;
+
+		try {
+			CodedNodeSet metaNodes = evsService.getNodeSet(dtsVocab, null, null); 
+
+			this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab, "");
+			ConceptReferenceList crefs = ConvenienceMethods.
+        	createConceptReferenceList(new String[]{CCode}, dtsVocab);
+			metaNodes = metaNodes.restrictToCodes(crefs);
+
+
+			concepts2 = metaNodes.resolveToList(
+					null, //Sorts used to sort results (null means sort by match score)
+					null, //PropertyNames to resolve (null resolves all)
+					null,  //PropertyTypess to resolve (null resolves all)
+					10	  //cap the number of results returned (-1 resolves all)
+			);
+			codesSize = concepts2.getResolvedConceptReferenceCount();
+
+		} catch (Exception ex) {
+			logger.error("Error do_getConceptName:resolveToList: " + ex.toString(), ex);
+		}
+
+		if (concepts2 != null) {
+			ResolvedConceptReference conceptReference = new ResolvedConceptReference();
+			for (int i = 0; i < codesSize; i++) {
+				conceptReference = (ResolvedConceptReference) concepts2.getResolvedConceptReference(i);
+				sConceptName = conceptReference.getEntityDescription().getContent();   //To see the name of the code, use 'getEntityDescription' on the resulting ResolvedConceptReference. The 'EntityDescription' will always be equal to the Preferred Presentation in the Default Language. 					
 			}
 		}
+
 		return sConceptName;
 	}
 
@@ -231,7 +273,7 @@ public class EVSSearch implements Serializable {
 					if (m_OCQ == null)
 						m_OCQ = new EVS_Bean();
 					//System.out.println(m_OCQ.getCONCEPT_IDENTIFIER()
-							//+ " con Name " + m_OCQ.getLONG_NAME());
+					//+ " con Name " + m_OCQ.getLONG_NAME());
 					Vector<String> vOCQualifierNames = m_DEC
 					.getDEC_OC_QUALIFIER_NAMES();
 					if (vOCQualifierNames == null)
@@ -295,7 +337,7 @@ public class EVSSearch implements Serializable {
 					if (m_PCQ == null)
 						m_PCQ = new EVS_Bean();
 					//System.out.println(m_PCQ.getCONCEPT_IDENTIFIER()
-							//+ " con Name " + m_PCQ.getLONG_NAME());
+					//+ " con Name " + m_PCQ.getLONG_NAME());
 					Vector vPropQualifierNames = m_DEC
 					.getDEC_PROP_QUALIFIER_NAMES();
 					if (vPropQualifierNames == null)
@@ -350,8 +392,8 @@ public class EVSSearch implements Serializable {
 				m_VD.setVD_REP_CONCEPT_CODE(m_Rep.getCONCEPT_IDENTIFIER());
 				m_VD.setVD_REP_EVS_CUI_ORIGEN(m_Rep.getEVS_DATABASE());
 				//if (!sMenu.equals("NewVDTemplate")
-						//&& !sMenu.equals("NewVDVersion"))
-					//m_VD.setVD_REP_IDSEQ(m_Rep.getIDSEQ());
+				//&& !sMenu.equals("NewVDVersion"))
+				//m_VD.setVD_REP_IDSEQ(m_Rep.getIDSEQ());
 
 				// Secondary 
 				for (int i = 1; i < vRepConcepts.size(); i++) {
@@ -425,24 +467,25 @@ public class EVSSearch implements Serializable {
 	 * @return sort list of vocab roots
 	 */
 	@SuppressWarnings("unchecked")
-	private List sortDLCObjects(List vocabRoots) {
+	private ResolvedConceptReferenceList sortDLCObjects(ResolvedConceptReferenceList vocabRoots) {
 		int Swap = 0;
-		if (vocabRoots != null && vocabRoots.size() > 0) {
+		if (vocabRoots != null && vocabRoots.getResolvedConceptReferenceCount() > 0) {
 			do {
-				DescLogicConcept dlc1 = new DescLogicConcept();
-				DescLogicConcept dlc2 = new DescLogicConcept();
-				DescLogicConcept dlcT = new DescLogicConcept();
+				ResolvedConceptReference dlc1 = new ResolvedConceptReference();
+				ResolvedConceptReference dlc2 = new ResolvedConceptReference();
+				ResolvedConceptReference dlcT = new ResolvedConceptReference();
 				Swap = 0;
-				for (int m = 0; m < vocabRoots.size() - 1; m++) {
-					dlc1 = (DescLogicConcept) vocabRoots.get(m);
-					dlc2 = (DescLogicConcept) vocabRoots.get(m + 1);
-					String name1 = dlc1.getName();
-					String name2 = dlc2.getName();
+				for (int m = 0; m < vocabRoots.getResolvedConceptReferenceCount() - 1; m++) {
+					dlc1 = vocabRoots.getResolvedConceptReference(m);
+					dlc2 = vocabRoots.getResolvedConceptReference(m + 1);
+					String name1 = dlc1.getEntityDescription().getContent();
+					String name2 = dlc2.getEntityDescription().getContent();
+
 					try {
 						if (ComparedValue("", name1, name2) > 0) {
 							dlcT = dlc1;
-							vocabRoots.set(m, dlc2);
-							vocabRoots.set(m + 1, dlc1);
+							vocabRoots.setResolvedConceptReference(m, dlc2);
+							vocabRoots.setResolvedConceptReference(m + 1, dlc1);
 							Swap = 1;
 						}
 					} catch (Exception ee) {
@@ -487,26 +530,39 @@ public class EVSSearch implements Serializable {
 	 * @param dtsVocab
 	 * @return vRoot vector of Root concepts
 	 */
-	public List getRootConcepts(String dtsVocab) //, boolean codeOrNames) 
+	public ResolvedConceptReferenceList getRootConcepts(String dtsVocab) //, boolean codeOrNames) 
 	{
-		List vocabRoots = null;
+		ResolvedConceptReferenceList vocabRoots = null;
 		//check if valid dts vocab
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");
-		try {
-			if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))  //not for meta
-			{
-				EVSQuery query = new EVSQueryImpl();
-				query = this.addSecurityToken(query, "", dtsVocab);
-				query.getRootConcepts(dtsVocab, true); //define query
-				vocabRoots = evsService.evsSearch(query); //call api
-				if (vocabRoots != null && vocabRoots.size() > 0)
+
+		if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))  //not for meta
+		{
+
+			try {
+				//TODO Add security token
+				this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab,"");
+
+				//Getting Convenience methods for root concepts
+				LexBIGServiceConvenienceMethods lbscm = 
+					(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 						
+				
+				lbscm.setLexBIGService(evsService);
+
+				vocabRoots = lbscm.getHierarchyRoots(
+						dtsVocab, 
+						null,
+						null);
+
+				if (vocabRoots != null && vocabRoots.getResolvedConceptReferenceCount() > 0)
 					vocabRoots = this.sortDLCObjects(vocabRoots);
-			}
-		} catch (Exception ee) {
-			logger.error(
-					"ERROR - EVSSearch-getRootConcepts : " + ee.toString(), ee);
+
+			} catch (Exception ex) {
+				logger.error("Error EVSSearch-getRootConcepts :resolveToList: " + ex.toString(), ex);
+			}			
 		}
+
 		return vocabRoots;
 	}
 
@@ -525,10 +581,7 @@ public class EVSSearch implements Serializable {
 	private Vector getAllSubConceptCodes(String dtsVocab, String conceptName,
 			String type, String conceptCode, String defSource) {
 		//logger.debug("getAllSubConceptCodes conceptName: " + conceptName);
-		String[] stringArray = new String[10000];
 		Vector vSub = new Vector();
-		EVSQuery query = new EVSQueryImpl();
-		List subs = null;
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");   //check if valid dts vocab 
 		if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
@@ -537,17 +590,28 @@ public class EVSSearch implements Serializable {
 				String prefName = "";
 				if (!conceptCode.equals(""))//try it with ConceptCode
 				{
-					try {
-						query = this.addSecurityToken(query, "", dtsVocab);
-						query.getAllSubConceptCodes(dtsVocab, conceptCode);
-						subs = evsService.evsSearch(query);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-					if (subs != null && subs.size() > 0) {
-						for (int c = 0; c < subs.size(); c++) {
-							stringArray[c] = (String) subs.get(c);
-							vSub.addElement((String) subs.get(c));
+					LexBIGServiceConvenienceMethods lbscm = 
+						(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 						
+
+					lbscm.setLexBIGService(evsService);
+					
+					AssociationList al = lbscm.getHierarchyLevelNext(dtsVocab, 
+							null, //CodingScheme Version or Tag
+							null, //hierarchy id
+							conceptCode, // Concept code
+							true, //Resolve concepts?
+							null); //Any qualifiers for the association?
+
+					int size = al.getAssociationCount();
+
+					for (int i = 0; i < size; i++) {
+						Association assn = al.getAssociation(i);
+						AssociatedConceptList acl = assn.getAssociatedConcepts();
+						AssociatedConcept[] aca = acl.getAssociatedConcept();
+						for (AssociatedConcept ac:aca) {
+							String temp = ac.getCode();
+							if (temp != null && !temp.equals(conceptCode))
+								vSub.addElement(temp);
 						}
 					}
 				}
@@ -572,8 +636,6 @@ public class EVSSearch implements Serializable {
 	@SuppressWarnings("unchecked")
 	public Vector getAllSubConceptCodes(String dtsVocab, String conceptCode) {
 		Vector vSub = new Vector();
-		EVSQuery query = new EVSQueryImpl();
-		List subs = null;
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");   //check if valid dts vocab 
 		if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
@@ -581,15 +643,29 @@ public class EVSSearch implements Serializable {
 			try {
 				if (!conceptCode.equals(""))//try it with ConceptCode
 				{
-					try {
-						query.getAllSubConceptCodes(dtsVocab, conceptCode);
-						subs = evsService.evsSearch(query);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-					if (subs != null && subs.size() > 0) {
-						for (int c = 0; c < subs.size(); c++) {
-							vSub.addElement((String) subs.get(c));
+					LexBIGServiceConvenienceMethods lbscm = 
+						(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 						
+
+					lbscm.setLexBIGService(evsService);
+
+					
+					AssociationList al = lbscm.getHierarchyLevelNext(dtsVocab, 
+							null, //CodingScheme Version or Tag
+							null, //hierarchy id
+							conceptCode, // Concept code
+							true, //Resolve concepts?
+							null); //Any qualifiers for the association?
+
+					int size = al.getAssociationCount();
+
+					for (int i = 0; i < size; i++) {
+						Association assn = al.getAssociation(i);
+						AssociatedConceptList acl = assn.getAssociatedConcepts();
+						AssociatedConcept[] aca = acl.getAssociatedConcept();
+						for (AssociatedConcept ac:aca) {
+							String temp = ac.getCode();
+							if (temp != null && !temp.equals(conceptCode))
+								vSub.addElement(temp);
 						}
 					}
 				}
@@ -606,6 +682,8 @@ public class EVSSearch implements Serializable {
 	/**
 	 * This method searches EVS vocabularies and returns subconcepts, which are used
 	 * to construct an EVS Tree. 
+	 * 
+	 * 
 	 * @param dtsVocab the EVS Vocabulary
 	 * @param conceptName the root concept.
 	 * @param type
@@ -615,12 +693,9 @@ public class EVSSearch implements Serializable {
 	 *
 	 */
 	@SuppressWarnings("unchecked")
-	public Vector getSubConceptNames(String dtsVocab, String conceptName,
+	public Vector getSubConceptCodes(String dtsVocab, String conceptName,
 			String type, String conceptCode, String defSource) {
-		String[] stringArray = new String[10000];
 		Vector vSub = new Vector();
-		EVSQuery query = new EVSQueryImpl();
-		List subs = null;
 		//check if valid dts vocab
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");
@@ -629,79 +704,150 @@ public class EVSSearch implements Serializable {
 			try {
 				//String prefName = "";
 				if (type.equals("Immediate") || type.equals("")) {
-					try {
-						if (!conceptCode.equals("")) //try it with ConceptCode
-						{
-							try {
-								query = this.addSecurityToken(query, "",dtsVocab);
-								query.getSubConcepts(dtsVocab, conceptCode);
-								subs = evsService.evsSearch(query);
-							} catch (Exception ex) {
-								logger.error("error getSubConcepts", ex);
-							}
-							if (subs != null && subs.size() > 0) {
-								for (int b = 0; b < subs.size(); b++) {
-									stringArray[b] = (String) subs.get(b);
-									vSub.addElement((String) subs.get(b));
-								}
-							}
-						} else if (conceptName != null
-								&& !conceptName.equals("")) {
-							try {
-								query = this.addSecurityToken(query, "",
-										dtsVocab);
-								query.getSubConcepts(dtsVocab, conceptName);
-								subs = evsService.evsSearch(query);
-							} catch (Exception ex) {
-								ex.printStackTrace();
-							}
-							if (subs != null && subs.size() > 0) {
-								for (int i = 0; i < subs.size(); i++) {
-									stringArray[i] = (String) subs.get(i);
-									vSub.addElement((String) subs.get(i));
-								}
-							}
-						}
-					} catch (Exception ee) {
-						logger.error(
-								"problem0 in Thesaurus EVSSearch-getSubConceptNames: "
-								+ ee, ee);
-						stringArray = null;
-					}
-				} else if (type.equals("All")) {
-					if (!conceptCode.equals(""))//try it with ConceptCode
+
+					if (!conceptCode.equals("")) //try it with ConceptCode
 					{
 						try {
-							query = this.addSecurityToken(query, "", dtsVocab);
-							query.getSubConcepts(dtsVocab, conceptCode);
-							subs = evsService.evsSearch(query);
-						} catch (Exception ex) {
-							ex.printStackTrace();
+							LexBIGServiceConvenienceMethods lbscm = 
+								(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 						
+
+							lbscm.setLexBIGService(evsService);
+							
+							AssociationList al = lbscm.getHierarchyLevelNext(dtsVocab, 
+									null, //CodingScheme Version or Tag
+									null, //hierarchy id
+									conceptCode, // Concept code
+									true, //Resolve concepts?
+									null); //Any qualifiers for the association?
+
+							int size = al.getAssociationCount();
+
+							for (int i = 0; i < size; i++) {
+								Association assn = al.getAssociation(i);
+								AssociatedConceptList acl = assn.getAssociatedConcepts();
+								AssociatedConcept[] aca = acl.getAssociatedConcept();
+								for (AssociatedConcept ac:aca) {
+									String temp = ac.getCode();
+									if (temp != null && !temp.equals(conceptCode))
+										vSub.addElement(ac.getCode());
+								}
+							}
+
+						} catch (Exception ee) {
+							logger.error(
+									"ERROR - EVSSearch-getSubConcepts for Thesaurus : "
+									+ ee.toString(), ee);
 						}
-						if (subs != null && subs.size() > 0) {
-							for (int c = 0; c < subs.size(); c++) {
-								stringArray[c] = (String) subs.get(c);
-								vSub.addElement((String) subs.get(c));
+					} else if (conceptName != null
+							&& !conceptName.equals("")) {
+						try {  System.out.println("asking for subconcepts using concept Name");
+
+						LexBIGServiceConvenienceMethods lbscm = 
+							(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 
+
+						lbscm.setLexBIGService(evsService);
+						
+						String retrievedCode = this.do_getEVSCode(conceptName, dtsVocab);
+
+						AssociationList al = lbscm.getHierarchyLevelNext(dtsVocab, 
+								null, //CodingScheme Version or Tag
+								null, //hierarchy id
+								retrievedCode, // Concept code
+								true, //Resolve concepts?
+								null); //Any qualifiers for the association?
+
+						int size = al.getAssociationCount();
+
+						for (int i = 0; i < size; i++) {
+							Association assn = al.getAssociation(i);
+							AssociatedConceptList acl = assn.getAssociatedConcepts();
+							AssociatedConcept[] aca = acl.getAssociatedConcept();
+							for (AssociatedConcept ac:aca) {
+								String temp = ac.getCode();
+								if (temp != null && !temp.equals(retrievedCode))
+									vSub.addElement(ac.getEntityDescription().getContent());
 							}
 						}
-					} else if (conceptName != null && !conceptName.equals("")) {
-						try {
-							query = this.addSecurityToken(query, "", dtsVocab);
-							query.getSubConcepts(dtsVocab, conceptName);
-							subs = evsService.evsSearch(query);
-						} catch (Exception ex) {
-							ex.printStackTrace();
+
+
+						} catch (Exception ee) {
+							logger.error(
+									"problem0 in Thesaurus EVSSearch-getSubConceptNames: "
+									+ ee, ee);
 						}
-						if (subs != null && subs.size() > 0) {
-							for (int i = 0; i < subs.size(); i++) {
-								stringArray[i] = (String) subs.get(i);
-								vSub.addElement((String) subs.get(i));
+					} else if (type.equals("All")) {
+
+						String[] codesToExpand = null;
+						if (!conceptCode.equals(""))//try it with ConceptCode
+						{
+
+							try {
+								LexBIGServiceConvenienceMethods lbscm = 
+									(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 						
+
+								lbscm.setLexBIGService(evsService);
+
+								AssociationList al = lbscm.getHierarchyLevelNext(dtsVocab, 
+										null, //CodingScheme Version or Tag
+										null, //hierarchy id
+										conceptCode, // Concept code
+										true, //Resolve concepts?
+										null); //Any qualifiers for the association?
+
+								int size = al.getAssociationCount();
+								codesToExpand = new String[size];
+								for (int i = 0; i < size; i++) {
+									Association assn = al.getAssociation(i);
+									AssociatedConceptList acl = assn.getAssociatedConcepts();
+									AssociatedConcept[] aca = acl.getAssociatedConcept();
+									for (AssociatedConcept ac:aca) {
+										String temp = ac.getCode();
+										if (temp != null && !temp.equals(conceptCode))
+											codesToExpand[i] = temp;
+									}
+								}
+							} catch (Exception ee) {
+								logger.error(
+										"ERROR - EVSSearch-getSubConcepts for Thesaurus : "
+										+ ee.toString(), ee);
+							}
+						} else if (conceptName != null && !conceptName.equals("")) {
+							try {
+								LexBIGServiceConvenienceMethods lbscm = 
+									(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 
+								lbscm.setLexBIGService(evsService);
+
+								String retrievedCode = this.do_getEVSCode(conceptName, dtsVocab);
+
+								AssociationList al = lbscm.getHierarchyLevelNext(dtsVocab, 
+										null, //CodingScheme Version or Tag
+										null, //hierarchy id
+										retrievedCode, // Concept code
+										true, //Resolve concepts?
+										null); //Any qualifiers for the association?
+
+								int size = al.getAssociationCount();
+								codesToExpand = new String[size];
+								for (int i = 0; i < size; i++) {
+									Association assn = al.getAssociation(i);
+									AssociatedConceptList acl = assn.getAssociatedConcepts();
+									AssociatedConcept[] aca = acl.getAssociatedConcept();
+									for (AssociatedConcept ac:aca) {
+										String temp = ac.getCode();
+										if (temp != null && !temp.equals(conceptCode))
+											codesToExpand[i] = temp;
+									}
+								}
+							} catch (Exception ee) {
+								logger.error(
+										"ERROR - EVSSearch-getSubConcepts for Thesaurus : "
+										+ ee.toString(), ee);
 							}
 						}
+						if (codesToExpand != null)
+							codesToExpand = getAllSubConceptNames(dtsVocab,
+									codesToExpand, vSub);
 					}
-					if (stringArray != null)
-						stringArray = getAllSubConceptNames(dtsVocab,
-								stringArray, vSub);
 				}
 			} catch (Exception ee) {
 				logger.error(
@@ -724,13 +870,15 @@ public class EVSSearch implements Serializable {
 	 * @return Vector of concept objectgs
 	 *
 	 */
+	//Seems to be unused method
+	/*
 	@SuppressWarnings("unchecked")
 	private Vector getSubConceptCodes(String dtsVocab, String conceptName,
 			String type, String conceptCode, String defSource) {
 		String[] stringArray = new String[10000];
 		Vector vSub = new Vector();
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
-		EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");
+				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");
 		EVSQuery query = new EVSQueryImpl();
 		List subs = null;
 		if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))  
@@ -741,7 +889,7 @@ public class EVSSearch implements Serializable {
 					try {
 						if (conceptCode != null && !conceptCode.equals("")) {
 							try {
-								query = this.addSecurityToken(query, "",
+								query = this.registerSecurityToken(query, "",
 										dtsVocab);
 								query.getSubConcepts(dtsVocab, conceptCode);
 								subs = evsService.evsSearch(query);
@@ -756,7 +904,7 @@ public class EVSSearch implements Serializable {
 							} else if (!conceptName.equals("")) //try it with ConceptName
 							{
 								try {
-									query = this.addSecurityToken(query, "",
+									query = this.registerSecurityToken(query, "",
 											dtsVocab);
 									query.getSubConcepts(dtsVocab, conceptName);
 									subs = evsService.evsSearch(query);
@@ -764,7 +912,7 @@ public class EVSSearch implements Serializable {
 									ex.printStackTrace();
 								}
 								if (subs != null && subs.size() > 0) {
-										for (int b = 0; b < subs.size(); b++) {
+									for (int b = 0; b < subs.size(); b++) {
 										stringArray[b] = (String) subs.get(b);
 										vSub.addElement((String) subs.get(b));
 									}
@@ -795,7 +943,7 @@ public class EVSSearch implements Serializable {
 		}
 		return vSub;
 	}
-
+	 */
 	/**
 	 * For a referenced value domain, this method calculates how many levels down in
 	 * the heirarchy a subconcept is from the parent concept
@@ -803,6 +951,7 @@ public class EVSSearch implements Serializable {
 	 * @param dtsVocab string of vocab name
 	 * @return int level
 	 */
+	/*
 	private int getLevelDownFromParent(String CCode, String dtsVocab) {
 		int level = 0;
 		//check if valid dts vocab and get out if meta search
@@ -840,7 +989,7 @@ public class EVSSearch implements Serializable {
 					try {
 						if (CCode != null && !CCode.equals("")) {
 							EVSQuery query = new EVSQueryImpl();
-							query = this.addSecurityToken(query, "", dtsVocab);
+							query = this.registerSecurityToken(query, "", dtsVocab);
 							query.getSuperConcepts(dtsVocab, CCode);
 							List supers = null;
 							try {
@@ -896,7 +1045,7 @@ public class EVSSearch implements Serializable {
 		}
 		return level;
 	}
-
+	 */
 	/**
 	 * When getting superConcepts, sometimes more than one is returned in the superConcepts array. 
 	 * This method looks at each member of the array and checks which one leads up
@@ -908,6 +1057,7 @@ public class EVSSearch implements Serializable {
 	 * @return sCorrectSuperConceptCode
 	 *
 	 */
+	/*
 	private String findThePath(String dtsVocab, String[] stringArray,
 			String sParent) {
 		Boolean flagOne = new java.lang.Boolean(true);
@@ -918,7 +1068,7 @@ public class EVSSearch implements Serializable {
 		String matchParent = "false";
 		String prefName = "";
 		String prefNameCurrent = "";
-		
+
 		//check if valid dts vocab and get out if meta search
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");
@@ -937,7 +1087,7 @@ public class EVSSearch implements Serializable {
 				try {
 					if (prefName != null && !prefName.equals("")) {
 						EVSQuery query = new EVSQueryImpl();
-						query = this.addSecurityToken(query, "", dtsVocab);
+						query = this.registerSecurityToken(query, "", dtsVocab);
 						query.getSuperConcepts(dtsVocab, prefName);
 						List supers = null;
 						try {
@@ -989,6 +1139,7 @@ public class EVSSearch implements Serializable {
 		}
 		return sCorrectSuperConceptCode;
 	}
+	 */
 
 	/**
 	 * This method returns all subconcepts of a concept
@@ -998,13 +1149,37 @@ public class EVSSearch implements Serializable {
 	 * @return stringArray
 	 *
 	 */
+
+
+	public int getSubConceptCount(String dtsVocab, CodingSchemeVersionOrTag csvt, ResolvedConceptReference rcr) {
+
+		int ret = 0;
+		try {
+//			LexBIGServiceConvenienceMethods lbscm = 
+//				(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods");
+//			lbscm.setLexBIGService(evsService);
+
+			ResolvedConceptReferenceList matches = 
+				evsService.getNodeGraph(dtsVocab, csvt, null).resolveAsList(
+							ConvenienceMethods.createConceptReference(rcr.getCode(), dtsVocab),
+							false, true, 1, 1, new LocalNameList(), null, null, 1024);
+			
+			ret = matches.getResolvedConceptReferenceCount();
+			
+		} catch (LBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+
+		return ret;
+	}
+
 	@SuppressWarnings("unchecked")
 	public String[] getAllSubConceptNames(String dtsVocab,
 			String[] stringArray, Vector vSub) {
 		String[] stringArray2 = null;
 		String[] stringArray3 = new String[10000];
-		String prefName = "";
-		EVSQuery query = new EVSQueryImpl();
+		String conceptCode = "";
 		List subs = null;
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");
@@ -1014,19 +1189,38 @@ public class EVSSearch implements Serializable {
 			if (stringArray != null && stringArray.length > 0) {
 				for (int j = 0; j < stringArray.length; j++) {
 					if (stringArray[j] != null) {
-						prefName = stringArray[j];
+						conceptCode = stringArray[j];
 						try {
-							query = this.addSecurityToken(query, "", dtsVocab);
-							query.getSubConcepts(dtsVocab, prefName);
-							subs = evsService.evsSearch(query);
-							if (subs != null && subs.size() > 0) {
-								stringArray2 = new String[subs.size()];
-								for (int i = 0; i < subs.size(); i++) {
-									stringArray2[i] = (String) subs.get(i);
-									vSub.addElement((String) subs.get(i));
+							this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab,"");
+							LexBIGServiceConvenienceMethods lbscm = 
+								(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 
+							lbscm.setLexBIGService(evsService);
+
+							AssociationList al = lbscm.getHierarchyLevelNext(dtsVocab, 
+									null, //CodingScheme Version or Tag
+									null, //hierarchy id
+									conceptCode, // Concept code
+									true, //Resolve concepts?
+									null); //Any qualifiers for the association?
+
+							int size = al.getAssociationCount();
+							if (size > 0)
+								stringArray2 = new String[size];
+							else 
+								stringArray = null;
+
+							for (int i = 0; i < size; i++) {
+								Association assn = al.getAssociation(i);
+								AssociatedConceptList acl = assn.getAssociatedConcepts();
+								AssociatedConcept[] aca = acl.getAssociatedConcept();
+								for (AssociatedConcept ac:aca) {
+									String temp = ac.getCode();
+									if (temp != null && !temp.equals(conceptCode)) {
+										stringArray2[i] = temp;
+										vSub.addElement(ac.getEntityDescription().getContent());
+									}
 								}
-							} else
-								stringArray2 = null;
+							}
 						} catch (Exception ee) {
 							logger.error(
 									"problem2a in Thesaurus EVSSearch-getAllSubConceptNames: "
@@ -1077,29 +1271,48 @@ public class EVSSearch implements Serializable {
 		//check if valid dts vocab and get out if meta search
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");
+
+		this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab,"");
+		
 		if (dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue")) 
 			return vSub;
 
-		EVSQuery query = new EVSQueryImpl();
-		query = this.addSecurityToken(query, "", dtsVocab);
-		if (!conceptCode.equals(""))
-			query.getSuperConcepts(dtsVocab, conceptCode);
-		else if (!conceptName.equals(""))
-			query.getSuperConcepts(dtsVocab, conceptName);
-
-		List subs = null;
 		try {
-			subs = evsService.evsSearch(query);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		if (subs != null && subs.size() > 0) {
-			for (int i = 0; i < subs.size(); i++) {
-				if (!vSub.contains(subs.get(i)))
-					vSub.addElement((String) subs.get(i));
+			LexBIGServiceConvenienceMethods lbscm = 
+				(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 
+			lbscm.setLexBIGService(evsService);
+
+			if (conceptCode.equals("") && !conceptName.equals(""))
+				conceptCode = this.do_getEVSCode(conceptName, dtsVocab);
+
+			AssociationList al = lbscm.getHierarchyLevelPrev(dtsVocab, 
+					null, //CodingScheme Version or Tag
+					null, //hierarchy id
+					conceptCode, // Concept code
+					true, //Resolve concepts?
+					null); //Any qualifiers for the association?
+
+			int size = al.getAssociationCount();
+
+			for (int i = 0; i < size; i++) {
+				Association assn = al.getAssociation(i);
+				AssociatedConceptList acl = assn.getAssociatedConcepts();
+				AssociatedConcept[] aca = acl.getAssociatedConcept();
+				for (AssociatedConcept ac:aca) {
+					String temp = ac.getCode();
+					if (temp != null && !temp.equals(conceptCode)) {
+						vSub.addElement(ac.getEntityDescription().getContent());
+					}
+				}
 			}
+		} catch (IndexOutOfBoundsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (LBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		//  evsService = null;
+
 		return vSub;
 	}
 
@@ -1117,57 +1330,52 @@ public class EVSSearch implements Serializable {
 		String[] stringArray = new String[50];
 		Vector vSub = new Vector();
 		String[] stringArray2;
-		
+
 		//check if valid dts vocab and get out if meta search
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");
 		if (dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue")) 
 			return vSub;
 
-		EVSQuery query = new EVSQueryImpl();
-		// Now get superConcepts
-		List sups = null;
-		if (!conceptCode.equals(""))//try it with ConceptCode
-		{
-			try {
-				query = this.addSecurityToken(query, "", dtsVocab);
-				query.getSuperConcepts(dtsVocab, conceptCode);
-				sups = evsService.evsSearch(query);
-			} catch (Exception ex) {
-				logger.error("Error in EVSSearch getSuperConceptNames: "
-						+ ex.toString(), ex);
-			}
-			if (sups != null && sups.size() > 0) {
-				for (int c = 0; c < sups.size(); c++) {
-					stringArray[c] = (String) sups.get(c);
-					if (!vSub.contains(sups.get(c)))
-						vSub.addElement((String) sups.get(c));
-				}
-				stringArray2 = getAllSuperConceptNames(dtsVocab, stringArray,
-						vSub);
-			}
-		} else if (!conceptName.equals("")) {
-			query = this.addSecurityToken(query, "", dtsVocab);
-			query.getSuperConcepts(dtsVocab, conceptName);
-			try {
-				sups = evsService.evsSearch(query);
-			} catch (Exception ex) {
-				logger.error("Error in EVSSearch getSuperConceptNames: "
-						+ ex.toString(), ex);
-			}
-			if (sups != null && sups.size() > 0) {
-				for (int i = 0; i < sups.size(); i++) {
-					if (!vSub.contains((String) sups.get(i))) {
-						if (!vSub.contains(sups.get(i)))
-							vSub.addElement((String) sups.get(i));
-						stringArray[i] = (String) sups.get(i);
+		try {
+			LexBIGServiceConvenienceMethods lbscm = 
+				(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 
+			lbscm.setLexBIGService(evsService);
+
+			if (conceptCode.equals("") && !conceptName.equals(""))
+				conceptCode = this.do_getEVSCode(conceptName, dtsVocab);
+
+			AssociationList al = lbscm.getHierarchyLevelPrev(dtsVocab, 
+					null, //CodingScheme Version or Tag
+					null, //hierarchy id
+					conceptCode, // Concept code
+					true, //Resolve concepts?
+					null); //Any qualifiers for the association?
+
+			int size = al.getAssociationCount();
+			stringArray = new String[size];
+			for (int i = 0; i < size; i++) {
+				Association assn = al.getAssociation(i);
+				AssociatedConceptList acl = assn.getAssociatedConcepts();
+				AssociatedConcept[] aca = acl.getAssociatedConcept();
+				for (AssociatedConcept ac:aca) {
+					String temp = ac.getCode();
+					if (temp != null && !temp.equals(conceptCode) && !vSub.contains(ac.getEntityDescription().getContent())) {
+						vSub.addElement(ac.getEntityDescription().getContent());
 					}
 				}
-				stringArray2 = getAllSuperConceptNames(dtsVocab, stringArray,
-						vSub);
 			}
+		} catch (IndexOutOfBoundsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (LBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		// evsService = null;
+
+		stringArray2 = getAllSuperConceptNames(dtsVocab, stringArray,
+				vSub);
+
 		return vSub;
 	}
 
@@ -1182,6 +1390,7 @@ public class EVSSearch implements Serializable {
 	@SuppressWarnings("unchecked")
 	private String[] getAllSuperConceptNames(String dtsVocab,
 			String[] stringArray, Vector vSub) {
+		ArrayList<String> compoundResults = new ArrayList<String>();
 		String[] stringArray2 = new String[60];
 		String[] stringArray3 = null;
 		String[] stringArray4 = null;
@@ -1192,7 +1401,6 @@ public class EVSSearch implements Serializable {
 		if (dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue")) 
 			return stringArray;
 
-		EVSQuery query = new EVSQueryImpl();
 		List subs = null;
 		int index = 0;
 		if (stringArray != null && stringArray.length > 0) {
@@ -1201,16 +1409,38 @@ public class EVSSearch implements Serializable {
 					if (stringArray[j] != null) {
 						if (!vSub.contains(stringArray[j]))
 							vSub.addElement(stringArray[j]);
-						query = this.addSecurityToken(query, "", dtsVocab);
-						query.getSuperConcepts(dtsVocab, stringArray[j]);
-						subs = evsService.evsSearch(query);
-						if (subs != null && subs.size() > 0) {
-							for (int i = 0; i < subs.size(); i++) {
-								stringArray2[index] = (String) subs.get(i);
-								if (!vSub.contains(stringArray2[index]))
-									vSub.addElement(stringArray2[index]);
-								index++;
+						try {
+							LexBIGServiceConvenienceMethods lbscm = 
+								(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 
+							lbscm.setLexBIGService(evsService);
+
+							AssociationList al = lbscm.getHierarchyLevelPrev(dtsVocab, 
+									null, //CodingScheme Version or Tag
+									null, //hierarchy id
+									stringArray[j], // Concept code
+									true, //Resolve concepts?
+									null); //Any qualifiers for the association?
+
+							int size = al.getAssociationCount();
+
+							for (int i = 0; i < size; i++) {
+								Association assn = al.getAssociation(i);
+								AssociatedConceptList acl = assn.getAssociatedConcepts();
+								AssociatedConcept[] aca = acl.getAssociatedConcept();
+								for (AssociatedConcept ac:aca) {
+									String temp = ac.getCode();
+									if (temp != null && !temp.equals(stringArray[j]) && !vSub.contains(ac.getEntityDescription().getContent())) {
+										vSub.addElement(ac.getEntityDescription().getContent());
+										compoundResults.add(temp);
+									}
+								}
 							}
+						} catch (IndexOutOfBoundsException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (LBException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
 					}
 				}
@@ -1218,139 +1448,15 @@ public class EVSSearch implements Serializable {
 				logger.error(
 						"problem2a in Thesaurus EVSSearch-getAllSuperConceptNames: "
 						+ ee, ee);
-				stringArray2 = null;
 			}
-			// See how many non-null names there are
-			int index2 = 0;
-			for (int m = 0; m < stringArray2.length; m++) {
-				if (stringArray2[m] != null)
-					index2++;
-			}
-			if (index2 > 0) {
-				int index3 = 0;
-				// create a string array of just the right size
-				stringArray4 = new String[index2];
-				for (int n = 0; n < stringArray2.length; n++) {
-					if (stringArray2[n] != null) {
-						stringArray4[index3] = stringArray2[n];
-						index3++;
-					}
-				}
-			}
-			if (stringArray4 != null && stringArray4.length > 0) {
-				stringArray3 = getAllSuperConceptNames(dtsVocab, stringArray4,
-						vSub);
-			}
+			stringArray2 = compoundResults.toArray(stringArray2);
+
+			stringArray3 = getAllSuperConceptNames(dtsVocab, stringArray2,
+					vSub);
 		}
 		return stringArray;
 	}
 
-	/** 
-	 *  The EVS API returns def source from Thesaurus inside of xml tags <>. This methods
-	 *  extracts the def source from the tags
-	 *  @param termStr
-	 *  @return source
-	 *
-	 */
-	private String parseDefSource(String termStr) {
-		try {
-			if (termStr == null || termStr.equals(""))
-				return "";
-			if (termStr.indexOf("<def-source>") >= 0) {
-				termStr = termStr.replaceAll("<def-source>", "");
-				int iEnd = termStr.indexOf('<', 0);
-				if (iEnd > 0)
-					termStr = termStr.substring(0, iEnd);
-			} else
-				return ""; // no source
-		} catch (Exception ee) {
-			logger.error("ERROR - EVSSearch-parseDefSource for Thesaurus : "
-					+ ee.toString(), ee);
-			return termStr;
-		}
-		return termStr;
-	}
-	
-	/**
-	 * The EVS API returns def source from the Qualifier Collection. This method
-	 * extracts the def source from the collection
-	 * @param prop
-	 * @return source
-	 */
-	private String parseDefSource(Property prop) {
-		String termStr="";
-		try {
-			if (prop == null)
-				return termStr;
-			if (prop.getQualifierCollection()!=null)
-			{
-				for(Qualifier qual:prop.getQualifierCollection()){
-					if(qual.getName().equals("Source"))
-						{
-						termStr= qual.getValue();
-						break;
-						}
-					   
-				}
-			}
-		} catch (Exception ee) {
-			logger.error("ERROR - EVSSearch-parseDefSource for Thesaurus : "
-					+ ee.toString(), ee);
-		}	
-		return termStr;
-	}
-
-	/** 
-	 *  The EVS API returns definitions from Thesaurus inside of xml tags <>. This methods
-	 *  extracts the definition from the tags
-	 *  @param termStr String 
-	 *  @return definition
-	 *
-	 */
-	private String parseDefinition(String termStr) {
-		try {
-			if (termStr == null || termStr.equals(""))
-				return "";
-			int iStartDef = termStr.indexOf("<def-definition>");
-			if (iStartDef >= 0) {
-				termStr = termStr.replaceAll("<def-definition>", "");
-				int iEnd = termStr.indexOf("</def-definition>", iStartDef + 1);
-				if (iEnd > 0)
-					termStr = termStr.substring(iStartDef, iEnd);
-			}
-			//logger.debug(" - parseDef - " + termStr);
-		} catch (Exception ee) {
-			logger.error("ERROR - EVSSearch-parseDefinition for Thesaurus : "
-					+ ee.toString(), ee);
-			return termStr;
-		}
-		return termStr;
-	}
-	
-	/**
-	 * To trim "Source => Name:" from Definition Source.
-	 *
-	 * @param termStr
-	 * @return String def source
-	 *
-	 */
-	private String trimDefSource(String termStr) {
-		int length = 0;
-		length = termStr.length();
-		// Take off "," form end of term
-		String strLastLetter = termStr.substring(length - 2, length - 1);
-		if (strLastLetter.equals(","))
-			termStr = termStr.substring(0, length - 2);
-		// Take off opening phrase
-		if (length > 17) {
-			length = termStr.length();
-			String strOpeningPhrase = termStr.substring(0, 16);
-			if (strOpeningPhrase.equals("Source => Name: "))
-				termStr = termStr.substring(16, length);
-		}
-		//logger.debug(termStr + " - parseDef - ");
-		return termStr;
-	}
 
 	/**
 	 * To get final result vector of selected attributes/rows to display for Object Class component,
@@ -1525,71 +1631,71 @@ public class EVSSearch implements Serializable {
 			logger.error("ERROR in EVSSearch-get_Result : " + e.toString(), e);
 		}
 	}
-	  
-	  /**
-	   * gets the non evs parent from reference documents table for the vd
-	   * @param sParent String parent name
-	   * @param sCui String meta cui
-	   * @param PageVD String page VD
-	   * @return String document name 
-	   * @throws java.lang.Exception
-	   */
-	  private String getMetaParentSource(String sParent, String sCui, VD_Bean PageVD) throws Exception
-	  { 
-	    //search the existing reference document 
-	    String sRDMetaCUI = "";
-	     
-	    if(PageVD != null)
-	    {
-	      GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
-	      Vector vRef = serAC.doRefDocSearch(PageVD.getVD_VD_IDSEQ(), "META_CONCEPT_SOURCE", "open");
-	      Vector vList = (Vector)m_classReq.getAttribute("RefDocList");
-	      if (vList != null && vList.size() > 0)
-	      {
-	        for (int i=0; i<vList.size(); i++)
-	        {
-	          REF_DOC_Bean RDBean = (REF_DOC_Bean)vList.elementAt(i);
-	          //copy rd attributes to evs attribute
-	          if (RDBean != null && RDBean.getDOCUMENT_NAME() != null && !RDBean.getDOCUMENT_NAME().equals(""))
-	          {
-	            sRDMetaCUI = RDBean.getDOCUMENT_TEXT();
-	            if(sRDMetaCUI.equals(sCui))
-	              return RDBean.getDOCUMENT_NAME();
-	            else if(sCui.equals("None"))
-	              return RDBean.getDOCUMENT_NAME();
-	          }
-	        }
-	      }
-	    }
-	    return "";
-	  }
-	  
-	  /**
-	   * makes the comma delimited context name for used by contexts
-	   * @param sUsed
-	   * @param desContext
-	   * @return subUsed
-	   */
-	   private String ParseString (String sUsed, String desContext)
-	   {
-	      String subUsed = "";
-	      if ((sUsed != null) && (!sUsed.equals("")))
-	      {
-	         StringTokenizer desTokens = new StringTokenizer(sUsed, ",");
-	         while (desTokens.hasMoreTokens())
-	         {
-	            String thisToken = desTokens.nextToken().trim();
-	            if (!thisToken.equalsIgnoreCase(desContext))
-	            {
-	               if (subUsed.equals(""))
-	                  subUsed = thisToken;
-	               else
-	                  subUsed = subUsed + ", " + thisToken;
-	            }
-	         }
-	      }
-	      return subUsed;
-	   }
+
+	/**
+	 * gets the non evs parent from reference documents table for the vd
+	 * @param sParent String parent name
+	 * @param sCui String meta cui
+	 * @param PageVD String page VD
+	 * @return String document name 
+	 * @throws java.lang.Exception
+	 */
+	private String getMetaParentSource(String sParent, String sCui, VD_Bean PageVD) throws Exception
+	{ 
+		//search the existing reference document 
+		String sRDMetaCUI = "";
+
+		if(PageVD != null)
+		{
+			GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
+			Vector vRef = serAC.doRefDocSearch(PageVD.getVD_VD_IDSEQ(), "META_CONCEPT_SOURCE", "open");
+			Vector vList = (Vector)m_classReq.getAttribute("RefDocList");
+			if (vList != null && vList.size() > 0)
+			{
+				for (int i=0; i<vList.size(); i++)
+				{
+					REF_DOC_Bean RDBean = (REF_DOC_Bean)vList.elementAt(i);
+					//copy rd attributes to evs attribute
+					if (RDBean != null && RDBean.getDOCUMENT_NAME() != null && !RDBean.getDOCUMENT_NAME().equals(""))
+					{
+						sRDMetaCUI = RDBean.getDOCUMENT_TEXT();
+						if(sRDMetaCUI.equals(sCui))
+							return RDBean.getDOCUMENT_NAME();
+						else if(sCui.equals("None"))
+							return RDBean.getDOCUMENT_NAME();
+					}
+				}
+			}
+		}
+		return "";
+	}
+
+	/**
+	 * makes the comma delimited context name for used by contexts
+	 * @param sUsed
+	 * @param desContext
+	 * @return subUsed
+	 */
+	private String ParseString (String sUsed, String desContext)
+	{
+		String subUsed = "";
+		if ((sUsed != null) && (!sUsed.equals("")))
+		{
+			StringTokenizer desTokens = new StringTokenizer(sUsed, ",");
+			while (desTokens.hasMoreTokens())
+			{
+				String thisToken = desTokens.nextToken().trim();
+				if (!thisToken.equalsIgnoreCase(desContext))
+				{
+					if (subUsed.equals(""))
+						subUsed = thisToken;
+					else
+						subUsed = subUsed + ", " + thisToken;
+				}
+			}
+		}
+		return subUsed;
+	}
 
 	/**
 	 * 
@@ -1622,17 +1728,14 @@ public class EVSSearch implements Serializable {
 			Vector vMetaSources = new Vector();
 			HttpSession session = m_classReq.getSession();
 			String source = "";
-			EVSQuery query = new EVSQueryImpl();
-			query.getMetaSources();
-			List concepts = null;
-			concepts = evsService.evsSearch(query);
-			if (concepts != null) {
-				for (int i = 0; i < concepts.size(); i++) {
-					Source mSource = null;
-					mSource = (Source) concepts.get(i);
-					source = mSource.getAbbreviation();
-					vMetaSources.addElement(source);
-				}
+
+			CodingScheme cs = evsService.resolveCodingScheme("NCI MetaThesaurus", null);
+			SupportedSource[] ssa = cs.getMappings().getSupportedSource();
+
+
+			for (SupportedSource ss: ssa) {
+				String sourceName = ss.getLocalId();	
+				vMetaSources.addElement(sourceName);
 			}
 			DataManager.setAttribute(session, "MetaSources", vMetaSources);
 		} catch (Exception ex) {
@@ -1698,7 +1801,7 @@ public class EVSSearch implements Serializable {
 				String sDefDefault = vocabBean.getDefDefaultValue(); // "No Value Exists.";
 				try {
 					//call method to do the search from EVS vocab
-					List lstResults = null;
+					ResolvedConceptReferenceList lstResults = null;
 					//do not do vocab search if it is meta code search
 					if (!sSearchIn.equals("MetaCode")
 							&& !sMetaName.equals(vocabDisp))
@@ -1710,69 +1813,76 @@ public class EVSSearch implements Serializable {
 						Hashtable hType = m_eUser.getMetaCodeType();
 						if (hType == null)
 							hType = new Hashtable();
-						skipConcept: for (int i = 0; i < lstResults.size(); i++) {
-							DescLogicConcept oDLC = new DescLogicConcept();
-							oDLC = (DescLogicConcept) lstResults.get(i);
-							String sConName = oDLC.getName();
+						skipConcept: for (int i = 0; i < lstResults.getResolvedConceptReferenceCount(); i++) {
+
+							String sFullSyn = "", sSemantic = "", sStatus = "Active"; //sPrefName = "", 
+							String sDispName = "";
+							String vocabMetaType = "", vocabMetaCode = "";
+
+							ResolvedConceptReference rcr = new ResolvedConceptReference();
+							rcr = (ResolvedConceptReference) lstResults.getResolvedConceptReference(i);
+							if (!rcr.getEntity().isIsActive()){
+								if (sIncludeRet != null
+										&& sIncludeRet.equals("Include"))
+									sStatus = "Retired"; //property.getValue();
+								else
+									continue skipConcept;
+							}
+
+							String sConName = rcr.getEntityDescription().getContent();
 							if (sConName == null)
 								sConName = "";
-							String sConID = oDLC.getCode();
+							String sConID = rcr.getCode();
 							if (sConID == null)
 								sConID = "";
-							String sFullSyn = "", sSemantic = "", sStatus = "Active"; //sPrefName = "", 
-							String sDispName = sConName;
-							String vocabMetaType = "", vocabMetaCode = "";
-							Vector properties = oDLC.getPropertyCollection();
-							if (properties == null)
-								properties = new Vector();
-							for (int k = 0; k < properties.size(); k++) {
-								Property property = (Property) properties.get(k);
-								if (property != null) {
-									String propName = property.getName();
-									if (propName == null)
-										propName = "";
-									String propValue = property.getValue();
-									if (propValue == null)
-										propValue = "";
-									//Use getIsRetired() for Retired status instead of checking property Name for now.										
-									if (propName.indexOf(retConProp) >= 0 || oDLC.getIsRetired()) //"Concept_Status" retired concept
-									{
-										if (sIncludeRet != null
-												&& sIncludeRet.equals("Include"))
-											sStatus = "Retired"; //property.getValue();
-										else
-											continue skipConcept; //do not add to the list if exclued from teh search filter
-									}
-									//test full syn only if parentconcept search "FULL_SYN"
-									if (propName.indexOf(hdSynProp) >= 0
-											&& sSearchAC.equals("ParentConceptVM")) {
-										sFullSyn = propValue; // property.getValue();
-										String isHeader = this
-										.parseSynonymForHD(sFullSyn);
-										if (isHeader.equals("true"))
-											continue skipConcept; //do not add to the list if header concept for parent
-									}
-									if (propName.indexOf(semProp) >= 0) //"Semantic" property
-									{
-										if (!sSemantic.equals(""))
-											sSemantic += ", ";
-										sSemantic += propValue; // property.getValue();
-									}
-									if (!namePropDisp.equals("")
-											&& propName.indexOf(namePropDisp) >= 0) //"Preferred_Name" prop for concept name if not emtpy
-										sDispName = propValue; // property.getValue();
-									String sMeta = this.getNCIMetaCodeType(
-											propName, "byKey");
-									if (sMeta != null && !sMeta.equals("")) // (hType.containsKey(propName))  //evs source type for nci- meta
-									{
-										vocabMetaType = propName;
-										vocabMetaCode = propValue; // property.getValue();
+							sDispName = sConName;
+
+							Property[] props = rcr.getEntity().getProperty();
+							Presentation[] presentations = rcr.getEntity().getPresentation();
+							Definition[] definitions = rcr.getEntity().getDefinition();
+
+							sDispName = rcr.getEntityDescription().getContent();
+
+							if (sSearchAC.equals("ParentConceptVM")){
+								for (Presentation presentation: presentations) {
+									if (presentation.getPropertyName().indexOf(hdSynProp) > 0)
+										sFullSyn = presentation.getValue().getContent();
+									String isHeader = this.parseSynonymForHD(sFullSyn);
+									if (isHeader.equals("true"))
+										continue skipConcept; //do not add to the list if header concept for parent
+								}
+
+								for (Property property: props) {
+									if (property != null) {
+										String propName = property.getPropertyName();
+										if (propName == null)
+											propName = "";
+										String propValue = property.getValue().getContent();
+										if (propValue == null)
+											propValue = "";
+
+										if (propName.indexOf(semProp) >= 0) //"Semantic" property
+										{
+											if (!sSemantic.equals(""))
+												sSemantic += ", ";
+											sSemantic += propValue; // property.getValue();
+										}
+										//									if (!namePropDisp.equals("")
+										//											&& propName.indexOf(namePropDisp) >= 0) //"Preferred_Name" prop for concept name if not emtpy
+										//										sDispName = propValue; // property.getValue();
+										String sMeta = this.getNCIMetaCodeType(
+												propName, "byKey");
+										if (sMeta != null && !sMeta.equals("")) // (hType.containsKey(propName))  //evs source type for nci- meta
+										{
+											vocabMetaType = propName;
+											vocabMetaCode = propValue; // property.getValue();
+										}
 									}
 								}
 							}
 							//store to concept according to the number of defitions exist for a concept
 							vConList = this.storeConceptToBean(vConList,
-									properties, dtsVocab, sConName, sDispName,
+									definitions, dtsVocab, sConName, sDispName,
 									conCodeType, sConID, ilevel, sStatus,
 									sSemantic, sDefDefault, defnProp,
 									vocabMetaType, vocabMetaCode);
@@ -1780,8 +1890,19 @@ public class EVSSearch implements Serializable {
 							if (sSearchIn.equals("subConcept")
 									&& subConType.equals("All")) {
 								Boolean bHasChildren = new Boolean(false);
-								bHasChildren = oDLC.getHasChildren();
-								boolean bool = bHasChildren.booleanValue();
+								LexBIGServiceConvenienceMethods lbscm = 
+									(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 						
+								lbscm.setLexBIGService(evsService);
+
+								AssociationList al = lbscm.getHierarchyLevelNext(dtsVocab, 
+										null, //CodingScheme Version or Tag
+										null, //hierarchy id
+										rcr.getCode(), // Concept code
+										true, //Resolve concepts?
+										null); //Any qualifiers for the association?
+
+
+								boolean bool = al.getAssociationCount() > 0;
 								if (bool) {
 									this.doVocabSearch(vConList, sConID, dtsVocab,
 											sSearchIn, "", sSearchAC, sIncludeRet,
@@ -1814,11 +1935,11 @@ public class EVSSearch implements Serializable {
 	 * @param sName name of the concept
 	 * @return String display name
 	 */
-	public String getDisplayName(String dtsVocab, DescLogicConcept dlc,
+	public String getDisplayName(String dtsVocab, ResolvedConceptReference dlc,
 			String sName) {
 		sName = this.do_getConceptName(sName,dtsVocab);
 		String dispName = sName;
-		
+
 		try {
 			Vector vVocabs = (Vector) m_eUser.getVocabNameList();
 			if (vVocabs == null)
@@ -1839,35 +1960,21 @@ public class EVSSearch implements Serializable {
 			if (dlc == null) //get it from evs query
 			{
 				/*EVSQuery query = new EVSQueryImpl();
-				query = this.addSecurityToken(query, "", dtsVocab);
+				query = this.registerSecurityToken(query, "", dtsVocab);
 				//getPropertyValues(String vocabularyName,String conceptCode, String propertyName)
 				 query.getPropertyValues(dtsVocab, sName, sPropDisp);
 				List lstResult = evsService.evsSearch(query);
 				if (lstResult != null && lstResult.size() > 0)
 					return (String) lstResult.get(0);
 				else*/
-					return sName;
+				return sName;
 			} else //get it from dlc object
-			{//loop through prop to get the name
-				Vector properties = dlc.getPropertyCollection();
-				if (properties == null)
-					properties = new Vector();
-				for (int k = 0; k < properties.size(); k++) {
-					Property property = (Property) properties.get(k);
-					if (property != null) {
-						String propName = property.getName();
-						if (propName == null)
-							propName = "";
-						if (propName.indexOf(sPropDisp) >= 0) //"Preferred_Name" prop for concept name if not emtpy
-						{
-							dispName = property.getValue();
-							if (dispName != null && !dispName.equals(""))
-								return dispName;
-							else
-								return sName;
-						}
-					}
-				}
+			{//get Preferred Name (stored in entity description)
+				dispName = dlc.getEntityDescription().getContent();
+				if (dispName != null && !dispName.equals(""))
+					return dispName;
+				else
+					return sName;
 			}
 		} catch (Exception ee) {
 			logger.error("ERROR - EVSSearch-getDisplayName : " + ee.toString(),
@@ -1885,9 +1992,9 @@ public class EVSSearch implements Serializable {
 	 * @param sPropIn
 	 * @return
 	 */
-	private List doConceptQuery(String vocabAccess, String termStr,
+	private ResolvedConceptReferenceList doConceptQuery(String vocabAccess, String termStr,
 			String dtsVocab, String sSearchIn, String vocabType, String sPropIn) {
-		List lstResult = null;
+		ResolvedConceptReferenceList lstResult = null;
 		List lstResult1 = null;
 		List lstResult2= new ArrayList();
 
@@ -1898,34 +2005,78 @@ public class EVSSearch implements Serializable {
 			// "vocabName");
 			if (dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
 				return lstResult;
-			EVSQuery query = new EVSQueryImpl();
-			query = this.addSecurityToken(query, vocabAccess, dtsVocab);
-			if (sSearchIn.equals("ConCode"))
-				query.getDescLogicConcept(dtsVocab, termStr);
+
+			this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab,vocabAccess);
+			
+			CodedNodeSet nodeSet = evsService.getNodeSet(dtsVocab, null, null);
+
+			if (sSearchIn.equals("ConCode")) {
+				
+				ConceptReferenceList crefs = ConvenienceMethods.
+                	createConceptReferenceList(new String[]{termStr}, "NCI Thesaurus");
+				nodeSet = nodeSet.restrictToCodes(crefs);
+
+			}
 			else if (sSearchIn.equals("subConcept"))
 				//query.getChildConcepts(dtsVocab, termStr);
-				query.getSubConcepts(dtsVocab, termStr);
-			else {
-				if (vocabType.equals("") || vocabType.equals("NameType")) // do concept name search
-					query.searchDescLogicConcepts(dtsVocab, termStr, 10000);
-				else if (vocabType.equals("PropType")) // do concept prop search
-					query.searchDescLogicConcepts(dtsVocab, termStr, 10000, 2,
-							sPropIn, 1);
-			}
-			// call the evs to get resutls
-			lstResult = evsService.evsSearch(query);
-			if(sSearchIn.equals("subConcept"))
-			{
-				EVSQuery query1 = new EVSQueryImpl();
-				query1= this.addSecurityToken(query1, vocabAccess, dtsVocab);
-				for(int i=0;i<lstResult.size();i++)
-				{
-					query1.getDescLogicConcept(dtsVocab,(String)lstResult.get(i));
-					lstResult1 = evsService.evsSearch(query1);
-					lstResult2.add(lstResult1.get(0));
+				try {
+					LexBIGServiceConvenienceMethods lbscm = 
+						(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 
+					lbscm.setLexBIGService(evsService);
+
+					AssociationList al = lbscm.getHierarchyLevelPrev(dtsVocab, 
+							null, //CodingScheme Version or Tag
+							null, //hierarchy id
+							termStr, // Concept code
+							true, //Resolve concepts?
+							null); //Any qualifiers for the association?
+
+					int size = al.getAssociationCount();
+					lstResult = new ResolvedConceptReferenceList();
+					for (int i = 0; i < size; i++) {
+						Association assn = al.getAssociation(i);
+						AssociatedConceptList acl = assn.getAssociatedConcepts();
+						AssociatedConcept[] aca = acl.getAssociatedConcept();
+						for (AssociatedConcept ac:aca) {
+							String temp = ac.getCode();
+							if (temp != null && !temp.equals(termStr)) {
+								lstResult.addResolvedConceptReference(ac);
+							}
+						}
+					}
+				} catch (IndexOutOfBoundsException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (LBException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				 if(lstResult1!=null)
-					 lstResult = lstResult2;
+				else {
+					if (vocabType.equals("") || vocabType.equals("NameType")) // do concept name search
+						nodeSet = nodeSet.restrictToMatchingDesignations(termStr, //the text to match 
+								CodedNodeSet.SearchDesignationOption.PREFERRED_ONLY,  //whether to search all designation, only Preferred or only Non-Preferred
+								"contains", //the match algorithm to use
+								null); //the language to match (null matches all)
+					else if (vocabType.equals("PropType")) { // do concept prop search
+						LocalNameList lnl = new LocalNameList();
+						lnl.addEntry(sPropIn);
+						nodeSet = nodeSet.restrictToMatchingProperties(
+								lnl, //the Property Name to match
+								null, //the Property Type to match (null matches all)
+								termStr, //the text to match
+								"contains", //the match algorithm to use
+								null );//the language to match (null matches all)
+					}
+				}
+			// call the evs to get resutls
+			if(!sSearchIn.equals("subConcept"))
+			{
+				lstResult = nodeSet.resolveToList(
+						null, //Sorts used to sort results (null means sort by match score)
+						null, //PropertyNames to resolve (null resolves all)
+						null,  //PropertyTypess to resolve (null resolves all)
+						10	  //cap the number of results returned (-1 resolves all)
+				);
 			}
 		} catch (Exception ex) {
 			logger.error(evsService.toString()
@@ -1952,7 +2103,7 @@ public class EVSSearch implements Serializable {
 	 * @return
 	 */
 	private Vector<EVS_Bean> storeConceptToBean(Vector<EVS_Bean> vCons,
-			Vector vProp, String dtsVocab, String sConName, String sDispName,
+			Definition[] definitions, String dtsVocab, String sConName, String sDispName,
 			String conCodeType, String sConID, int ilevel, String sStatus,
 			String sSemantic, String sDefDefault, String defnProp,
 			String sMType, String sMCode) {
@@ -1965,25 +2116,23 @@ public class EVSSearch implements Serializable {
 			HttpSession session = m_classReq.getSession();
 			//do the definition separatly so that concept for each definition is displayed in new row and bean.
 			boolean defExists = false;
-			for (int k = 0; k < vProp.size(); k++) {
-				Property property = (Property) vProp.get(k);
-				String sDef = sDefDefault; // "No Value Exists.";
-				if (property != null) {
-					if (property.getName().indexOf(defnProp) >= 0) //"DEFINITION"
-					{
-						sDef = this.parseDefinition(property.getValue()); //get def value
-						String sDefSrc = this.parseDefSource(property); //get def source
-						defExists = true;
-						//add the properties to the bean
-						conBean = new EVS_Bean();
-						conBean.setEVSBean(sDef, sDefSrc, sConName, sDispName,
-								conCodeType, sConID, dtsVocab, dbVocab, ilevel,
-								"", "", "", sStatus, sSemantic, sMType, sMCode);
-						conBean.markNVPConcept(conBean, session);
-						vCons.addElement(conBean); //add concept bean to the vector
-					}
+			for (Definition def: definitions) {
+
+				String sDef = def.getValue().getContent();
+				String sDefSrc = "";
+				if (def.getSourceCount() > 0) {
+					sDefSrc = def.getSource()[0].getContent(); //get def source
 				}
+				defExists = true;
+				//add the properties to the bean
+				conBean = new EVS_Bean();
+				conBean.setEVSBean(sDef, sDefSrc, sConName, sDispName,
+						conCodeType, sConID, dtsVocab, dbVocab, ilevel,
+						"", "", "", sStatus, sSemantic, sMType, sMCode);
+				conBean.markNVPConcept(conBean, session);
+				vCons.addElement(conBean); //add concept bean to the vector
 			}
+
 			//add concept to the bean if not done by definition loop already
 			if (!defExists) {
 				//add the properties to the bean
@@ -2013,65 +2162,109 @@ public class EVSSearch implements Serializable {
 	private Vector<EVS_Bean> doMetaSearch(Vector<EVS_Bean> vList,
 			String termStr, String sSearchIn, String sMetaSource,
 			int iMetaLimit, String sVocab) {
+
+		ResolvedConceptReferenceList concepts = null;
+
 		if (vList == null)
 			vList = new Vector<EVS_Bean>();
 			try {
 				if (termStr == null || termStr.equals(""))
 					return vList;
 				List metaResults = null;
-				EVSQuery query = new EVSQueryImpl();
+				CodedNodeSet nodeSet = evsService.getNodeSet("NCI MetaThesaurus", null, null);
 				try {
-					if (sSearchIn.equalsIgnoreCase("MetaCode")) //do meta code specific to vocabulary source
-						query.searchSourceByAtomCode(termStr, sMetaSource);
+					if (sSearchIn.equalsIgnoreCase("MetaCode")) { //do meta code specific to vocabulary source
+						// In the NCI MetaThesaurus, fidning the 'source' of an 'Atom' is equivalent to finding the 
+						//'source' of a given Property of an Entity. Each CUI (which is equivalent to an Entity in 
+						//LexEVS) may contain several Presentation Properties (Atoms or AUI's of that CUI). 
+						//Each of these Presentation Properties is Qualified by a 'source-code' Qualifier, 
+						//which reflects the code of this Atom in its original source, and a 'source' qualifier, 
+						//which states the source itself that this Atom came from
+
+						//query.searchSourceByAtomCode(termStr, sMetaSource);
+
+						CodedNodeSet.PropertyType[] types = new CodedNodeSet.PropertyType[1];
+						types[0] = CodedNodeSet.PropertyType.PRESENTATION;
+
+						nodeSet = nodeSet.restrictToProperties(
+								Constructors.createLocalNameList("propertyType"), 
+								types, 
+								Constructors.createLocalNameList(sMetaSource), 
+								null, 
+								null);
+
+						nodeSet = nodeSet.restrictToMatchingProperties(
+								Constructors.createLocalNameList("value"), //the Property Name to match
+								null, //the Property Type to match (null matches all)
+								termStr, //the text to match
+								"contains", //the match algorithm to use
+								null );//the language to match (null matches all)
+
+					}
 					else if (sSearchIn.equalsIgnoreCase("ConCode")) //meta cui search
-						query.searchMetaThesaurus(termStr, iMetaLimit, sMetaSource,
-								true, false, false);
+						nodeSet = nodeSet.restrictToMatchingProperties(
+								Constructors.createLocalNameList("code"), //the Property Name to match
+								null, //the Property Type to match (null matches all)
+								termStr, //the text to match
+								"exactMatch", //the match algorithm to use
+								null //the language to match (null matches all)
+						);
 					else
 						//meta keyword search
-						query.searchMetaThesaurus(termStr, iMetaLimit, sMetaSource,
-								false, false, false);
-						
-					//do the search
-					metaResults = evsService.evsSearch(query);
+						nodeSet = nodeSet.restrictToMatchingDesignations(termStr, //the text to match 
+								CodedNodeSet.SearchDesignationOption.PREFERRED_ONLY,  //whether to search all designation, only Preferred or only Non-Preferred
+								"contains", //the match algorithm to use
+								null); //the language to match (null matches all)
+
+
+					concepts = nodeSet.resolveToList(
+							null, //Sorts used to sort results (null means sort by match score)
+							null, //PropertyNames to resolve (null resolves all)
+							null,  //PropertyTypess to resolve (null resolves all)
+							10000	  //cap the number of results returned (-1 resolves all)
+					);
+
 				} catch (Exception ex) {
 					logger.error("doMetaSearch evsSearch: " + ex.toString(), ex);
 				}
-				if (metaResults != null) {
+				if (concepts != null && concepts.getResolvedConceptReferenceCount() > 0) {
 					String sConName = "";
 					String sConID = "";
 					String sCodeType = "";
 					String sSemantic = "";
 					String sCodeSrc = "";
 					int iLevel = 0;
-					for (int i = 0; i < metaResults.size(); i++) {
+					for (int i = 0; i < concepts.getResolvedConceptReferenceCount(); i++) {
 						// Do this so only one result is returned on Meta code search (API is dupicating a result)
 						if (sSearchIn.equals("MetaCode") && i > 0)
 							break;
 						//get concept properties
-						MetaThesaurusConcept metaCon = (MetaThesaurusConcept) metaResults
-						.get(i);
-						if (metaCon != null) {
-							sConName = metaCon.getName();
-							sConID = metaCon.getCui();
+						ResolvedConceptReference rcr = concepts.getResolvedConceptReference(i);
+
+						if (rcr != null) {
+							Property[] props = rcr.getEntity().getProperty();
+							Presentation[] presentations = rcr.getEntity().getPresentation();
+							Definition[] definitions = rcr.getEntity().getDefinition();
+
+							sConName = rcr.getEntityDescription().getContent();
+							sConID = rcr.getCode();
+
 							sCodeType = this.getNCIMetaCodeType(sConID, "byID");
 
 							//get semantic types
-							sSemantic = this.getMetaSemantics(metaCon);
+							sSemantic = this.getMetaSemantics(props);
 							//get preferred source code from atom collection
-							sCodeSrc = this.getPrefMetaCode(metaCon);
+							sCodeSrc = this.getPrefMetaCode(presentations);
 
 							//get definition attributes
 							String sDefSource = "";
 							String sDefinition = m_eUser.getDefDefaultValue();
 							//add sepeate record for each definition
-							ArrayList<Definition> arrDef = metaCon
-							.getDefinitionCollection();
-							if (arrDef != null && arrDef.size() > 0) {
-								for (int k = 0; k < arrDef.size(); k++) {
-									Definition defType = (Definition) arrDef.get(k);
-									sDefinition = defType.getDefinition();
-									sDefSource = defType.getSource()
-									.getAbbreviation();
+							if (definitions != null && definitions.length > 0) {
+								for (Definition defType: definitions) {
+									sDefinition = defType.getValue().getContent();
+									sDefSource = defType.getSource()[0].getContent();
+
 									EVS_Bean conBean = new EVS_Bean();
 									conBean.setEVSBean(sDefinition, sDefSource,
 											sConName, sConName, sCodeType, sConID,
@@ -2148,18 +2341,15 @@ public class EVSSearch implements Serializable {
 	 * @param mtcCon MetaThesaurusConcept object
 	 * @return sSemantic
 	 */
-	private String getMetaSemantics(MetaThesaurusConcept mtcCon) {
+	private String getMetaSemantics(Property[] properties) {
 		String sSemantic = "";
-		ArrayList semanticTypes = mtcCon.getSemanticTypeCollection();
-		if (semanticTypes != null) {
-			for (int k = 0; k < semanticTypes.size(); k++) {
-				SemanticType semanticType = (SemanticType) semanticTypes.get(k);
-				if (semanticType.getName() != null
-						&& !semanticType.getName().equals("")) {
-					if (!sSemantic.equals(""))
-						sSemantic += "; ";
-					sSemantic += semanticType.getName();
-				}
+
+		for (Property prop: properties) {
+			String name = prop.getPropertyName();
+			if (name != null && name.equals("Semantic_Type")) {
+				if (!sSemantic.equals(""))
+					sSemantic += "; ";
+				sSemantic += prop.getValue().getContent();
 			}
 		}
 		return sSemantic;
@@ -2170,27 +2360,23 @@ public class EVSSearch implements Serializable {
 	 * @param mtcCon MetaThesaurusConcept object
 	 * @return sCode
 	 */
-	private String getPrefMetaCode(MetaThesaurusConcept mtcCon) {
+	private String getPrefMetaCode(Presentation[] presentations) {
 		String sCode = "";
 		String prefSrc = "";
-		try {
-			ArrayList<Atom> atomTypes = mtcCon.getAtomCollection();
-			if (atomTypes != null) {
-				prefSrc = m_eUser.getPrefVocabSrc();
-				if (prefSrc != null) {
-					for (Atom atomType : atomTypes) {
-						String sConSrc = atomType.getOrigin();
-						if (sConSrc != null && !sConSrc.equals("")) {
-							if (sConSrc.contains(prefSrc))
-								sCode = atomType.getCode();
-							if (sCode == null)
-								sCode = "";
-						}
+		for (Presentation pres: presentations) {
+			Source[] sources = pres.getSource();
+			prefSrc = m_eUser.getPrefVocabSrc();
+			if (prefSrc != null) {
+				for (Source src : sources) {
+					String sConSrc = src.getContent();
+					if (src != null && !sConSrc.equals("")) {
+						if (sConSrc.contains(prefSrc))
+							System.out.println("GOT THE PREFSRC");
+						if (sCode == null)
+							sCode = "";
 					}
 				}
 			}
-		} catch (RuntimeException e) {
-			logger.error("Class cast exception", e);
 		}
 		return sCode;
 	}
@@ -2503,9 +2689,9 @@ public class EVSSearch implements Serializable {
 						|| sSearchAC.equals("Property")
 						|| sSearchAC.equals("RepTerm"))
 					serAC.do_caDSRSearch(sKeywordID, "", "RELEASED", "", vAC,
-							sSearchType, "", "");
+							sSearchType, "", "", "0");
 				vAC = serAC.do_ConceptSearch(sKeywordID, "", "", "RELEASED",
-						"", "", "", vAC);
+						"", "", "", vAC, "0");
 			}
 
 			DataManager.setAttribute(session, "creKeyword", sKeywordID);
@@ -2775,28 +2961,28 @@ public class EVSSearch implements Serializable {
 		"/OpenSearchWindowBlocks.jsp");
 	}
 
-    /**
-     * @param sDefSource
-     *            string def source selected
-     * @return String defintion source
-     * @throws Exception
-     */
-    private String getSourceToken(String sDefSource) throws Exception
-    {
-        int index = -1;
-        int length = 0;
-        if (sDefSource != null)
-            length = sDefSource.length();
-        String pointStr = ": Concept Source ";
-        index = sDefSource.indexOf(pointStr);
-        if (index == -1)
-            index = 0;
-        if (index > 0 && length > 18)
-            sDefSource = sDefSource.substring((index + 17), sDefSource.length());
-        return sDefSource;
-    }
+	/**
+	 * @param sDefSource
+	 *            string def source selected
+	 * @return String defintion source
+	 * @throws Exception
+	 */
+	private String getSourceToken(String sDefSource) throws Exception
+	{
+		int index = -1;
+		int length = 0;
+		if (sDefSource != null)
+			length = sDefSource.length();
+		String pointStr = ": Concept Source ";
+		index = sDefSource.indexOf(pointStr);
+		if (index == -1)
+			index = 0;
+		if (index > 0 && length > 18)
+			sDefSource = sDefSource.substring((index + 17), sDefSource.length());
+		return sDefSource;
+	}
 
-	
+
 	/**
 	 * to open the tree to the selected concept 
 	 * @param actType String action type
@@ -2918,9 +3104,9 @@ public class EVSSearch implements Serializable {
 							|| sSearchAC.equals("Property")
 							|| sSearchAC.equals("RepTerm"))
 						serAC.do_caDSRSearch(searchID, "", "RELEASED", "", vAC,
-								sSearchType, "", "");
+								sSearchType, "", "", "0");
 					vAC = serAC.do_ConceptSearch(searchID, "", "", "RELEASED",
-							"", "", "", vAC);
+							"", "", "", vAC, "0");
 				}
 			}
 
@@ -3238,7 +3424,28 @@ public class EVSSearch implements Serializable {
 	 * @param vocab
 	 * @return evsquery
 	 */
-	private EVSQuery addSecurityToken(EVSQuery query, String vocabAccess,
+
+
+	public static LexEVSApplicationService registerSecurityToken(LexEVSApplicationService lexevsService, String codingScheme, String token) {
+		SecurityToken securityToken = new SecurityToken();
+		securityToken.setAccessToken(token);
+		Boolean retval = null;
+		try {
+			retval = lexevsService.registerSecurityToken(codingScheme, securityToken);
+			if(retval != null && retval.equals(Boolean.TRUE)) {
+				//System.out.println("Registration of SecurityToken was successful.");
+			}
+			else {
+				System.out.println("WARNING: Registration of SecurityToken failed.");
+			}
+		} catch (Exception e) {
+			System.out.println("WARNING: Registration of SecurityToken failed.");
+		}
+		return lexevsService;
+	}
+
+
+	/*	private EVSQuery registerSecurityToken(EVSQuery query, String vocabAccess,
 			String vocab) {
 		try {
 			if (vocabAccess == null || vocabAccess.equals("")) {
@@ -3257,26 +3464,26 @@ public class EVSSearch implements Serializable {
 			if (vocabAccess != null && vocabAccess.length()>0) {
 				token = new gov.nih.nci.evs.security.SecurityToken();
 				token.setAccessToken(vocabAccess);
-				query.addSecurityToken(vocab, token);
+				query.registerSecurityToken(vocab, token);
 			}
 		} catch (Exception e) {
-			logger.error("ERROR - addSecurityToken ", e);
+			logger.error("ERROR - registerSecurityToken ", e);
 		}
 		return query;
-	}
+	}*/
 
-	
+
 	public Vector<EVS_Bean> getThesaurusConceptBean(Vector vEvsBean){
-		  Vector<EVS_Bean>  vEvsBeann = new Vector<EVS_Bean>();
-		  if (vEvsBean != null){  
-		   	for (int i = 0; i < vEvsBean.size(); i++) {
+		Vector<EVS_Bean>  vEvsBeann = new Vector<EVS_Bean>();
+		if (vEvsBean != null){  
+			for (int i = 0; i < vEvsBean.size(); i++) {
 				EVS_Bean eBean = (EVS_Bean) vEvsBean.elementAt(i);
 				eBean = this.getThesaurusConcept(eBean);
-			    vEvsBeann.addElement(eBean);
-		    }
+				vEvsBeann.addElement(eBean);
+			}
 		}
-	   return vEvsBeann;
+		return vEvsBeann;
 	}
-	
+
 	//close the class
 }

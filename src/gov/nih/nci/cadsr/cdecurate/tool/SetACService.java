@@ -2645,7 +2645,7 @@ public class SetACService implements Serializable
 			Vector vList = new Vector();
 			//get the DEC attributes from the ID
 			GetACSearch serAC = new GetACSearch(req, res, m_servlet);
-			serAC.doDECSearch(sDECid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", vList); 
+			serAC.doDECSearch(sDECid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", vList, "0"); 
 			if (vList != null)
 			{
 				//loop through hte list and find if oc exists
@@ -2751,7 +2751,7 @@ public class SetACService implements Serializable
 				Vector vRes = new Vector();
 				String sID = m_DEC.getDEC_DEC_IDSEQ();
 				if (sID != null && !sID.equals(""))
-					getAC.doDESearch("", "", "","","","", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", sID, "", "", "", "", "", "", vRes);
+					getAC.doDESearch("", "", "","","","", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", sID, "", "", "", "", "", "", vRes,"0");
 				if (vRes != null && vRes.size()>0)
 				{
 					String sRegStatus = "", sDEName = "";
@@ -2864,7 +2864,7 @@ public class SetACService implements Serializable
 			Vector<EVS_Bean> vList = new Vector<EVS_Bean>();
 			if (ACType != null && ACType.equals("ObjectClass"))
 			{
-				getAC.do_caDSRSearch(sValue, sContext, sASLName, "", vList, "OC", "", "");
+				getAC.do_caDSRSearch(sValue, sContext, sASLName, "", vList, "OC", "", "", "0");
 				if (vList.size() > 0)
 				{
 					EVS_Bean OCBean = new EVS_Bean();
@@ -2878,7 +2878,7 @@ public class SetACService implements Serializable
 			}
 			else if (ACType.equals("Property"))
 			{
-				getAC.do_caDSRSearch(sValue, sContext, sASLName, "", vList, "PROP", "", "");
+				getAC.do_caDSRSearch(sValue, sContext, sASLName, "", vList, "PROP", "", "", "0");
 				if (vList.size() > 0)
 				{
 					EVS_Bean PCBean = new EVS_Bean();
@@ -2892,7 +2892,7 @@ public class SetACService implements Serializable
 			}
 			else if (ACType.equals("RepTerm"))
 			{
-				getAC.do_caDSRSearch(sValue, sContext, sASLName, "", vList, "REP", "", "");
+				getAC.do_caDSRSearch(sValue, sContext, sASLName, "", vList, "REP", "", "", "0");
 				if (vList.size() > 0)
 				{
 					EVS_Bean PCBean = new EVS_Bean();
@@ -2906,7 +2906,7 @@ public class SetACService implements Serializable
 			}
 			else if (ACType.equals("ObjectQualifier") || ACType.equals("PropertyQualifier") || ACType.equals("RepQualifier"))
 			{
-				getAC.do_caDSRSearch(sValue, sContext, "", "", vList, "Q", "", "");
+				getAC.do_caDSRSearch(sValue, sContext, "", "", vList, "Q", "", "", "0");
 				if (vList.size() > 0)
 				{
 					EVS_Bean PCBean = new EVS_Bean();

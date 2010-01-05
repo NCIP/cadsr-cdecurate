@@ -5,12 +5,14 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
-import gov.nih.nci.evs.domain.DescLogicConcept;
+//import gov.nih.nci.evs.domain.DescLogicConcept;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 import org.apache.log4j.Logger;
 
 /**
@@ -347,7 +349,7 @@ public class EVSSearchStub implements Serializable
      *            name of the concept
      * @return String display name
      */
-    public String getDisplayName(String dtsVocab, DescLogicConcept dlc, String sName)
+    public String getDisplayName(String dtsVocab, ResolvedConceptReference rcr, String sName)
     {
         logger.debug("here");
         return sName;

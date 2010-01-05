@@ -1493,7 +1493,7 @@ function LoadKeyHandler()
 				%>
 				<tr>
 					<td colspan=2>
-						<table>
+						<table width="285" height="293">
 							<col width=5%>
 							<col width=20%>
 							<col width=32%>
@@ -1726,6 +1726,14 @@ function LoadKeyHandler()
 									}
 								%>
 							</select>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td height="35" valign="bottom" colspan="2">
+						<div align="left">
+							Display First <input type="text" name="recordsDisplayed" value="1000"/> Results
+							<br>(0 will display all)
 						</div>
 					</td>
 				</tr>

@@ -522,10 +522,10 @@ public class SearchServlet extends CurationServlet {
         {
             if (acName != null && acName.equals("ObjectClass"))
                 getACSearch.doDECSearch("", "", "", "", "", "", "", "", "", "", "", "", "", acID, "", "", 0, "", "",
-                                "", "", "", vList);
+                                "", "", "", vList, "0");
             if (acName != null && acName.equals("Property"))
                 getACSearch.doDECSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", acID, "", 0, "", "",
-                                "", "", "", vList);
+                                "", "", "", vList, "0");
         }
         m_classReq.setAttribute("pageAct", acName);
         m_classReq.setAttribute("lstDECResult", vList);
@@ -1112,7 +1112,7 @@ public class SearchServlet extends CurationServlet {
                 Vector vRes = new Vector();
                 if (sID != null && !sID.equals(""))
                 	getACSearch.doDESearch("", "", "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "",
-                                    "", "", "", "", pvID, vdID,vmID,decID, cdID, cscsiID, conID, "", "", vRes);
+                                    "", "", "", "", pvID, vdID,vmID,decID, cdID, cscsiID, conID, "", "", vRes, "0");
                 DataManager.setAttribute(session, "vSelRows", vRes);
                 // do attributes after the search so no "two simultaneous request" errors
                 vSelVector = this.getDefaultAttr("DataElement", sSearchIn);
@@ -1141,7 +1141,7 @@ public class SearchServlet extends CurationServlet {
                     conID = sID;
                 Vector vRes = new Vector();
                 getACSearch.doDECSearch("", "", "", "", "", "", "", "", "", "", "", "", "", ocID, propID, "", 0, cdID,
-                                deID, cscsiID, conID, "", vRes);
+                                deID, cscsiID, conID, "", vRes, "0");
                 DataManager.setAttribute(session, "vSelRows", vRes);
                 // do attributes after the search so no "two simultaneous request" errors
                 vSelVector = this.getDefaultAttr("DataElementConcept", sSearchIn);
@@ -1169,7 +1169,7 @@ public class SearchServlet extends CurationServlet {
                 	vmID = sID;
                 Vector vRes = new Vector();
                 getACSearch.doVDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, cdID, pvID,
-                                deID, cscsiID, conID,vmID, "", "", vRes);
+                                deID, cscsiID, conID,vmID, "", "", vRes, "0");
                 DataManager.setAttribute(session, "vSelRows", vRes);
                 // do attributes after the search so no "two simultaneous request" errors
                 vSelVector = this.getDefaultAttr("ValueDomain", sSearchIn);
@@ -2414,7 +2414,7 @@ public class SearchServlet extends CurationServlet {
         String acName = m_classReq.getParameter("acName"); // ac name for pv
         // call the api to return concept attributes according to ac type and ac idseq
         Vector<EVS_Bean> conList = new Vector<EVS_Bean>();
-        conList = getAC.do_ConceptSearch("", "", "", "", "", acID, ac2ID, conList);
+        conList = getAC.do_ConceptSearch("", "", "", "", "", acID, ac2ID, conList, "0");
         m_classReq.setAttribute("ConceptClassList", conList);
         m_classReq.setAttribute("ACName", acName);
         // store them in request parameter to display and forward the page
@@ -2436,7 +2436,7 @@ public class SearchServlet extends CurationServlet {
         String sVM = m_classReq.getParameter("acName"); // ac name for pv
         // call the api to return concept attributes according to ac type and ac idseq
         Vector cdList = new Vector();
-        cdList = getAC.doCDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", sVM, cdList); 
+        cdList = getAC.doCDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", sVM, cdList, "0"); 
         m_classReq.setAttribute("ConDomainList", cdList);
         m_classReq.setAttribute("VMName", sVM);
         // store them in request parameter to display and forward the page
