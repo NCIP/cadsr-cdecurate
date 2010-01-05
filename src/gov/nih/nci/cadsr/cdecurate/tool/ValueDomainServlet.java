@@ -412,7 +412,7 @@ public class ValueDomainServlet extends CurationServlet {
 			Vector vList = new Vector();
 			GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
 			serAC.doVDSearch(sVDID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", "",
-					"", "", vList);
+					"", "", vList, "0");
 			// forward editVD page with this bean
 			if (vList.size() > 0)
 			{
@@ -2269,7 +2269,7 @@ public class ValueDomainServlet extends CurationServlet {
 			//get VD's attributes from the database again
 			GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
 			if (sVDID != null && !sVDID.equals(""))
-				serAC.doVDSearch(sVDID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", "", "", "",vList);
+				serAC.doVDSearch(sVDID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", "", "", "",vList, "0");
 			//forward editVD page with this bean
 			if (vList.size() > 0)
 			{
@@ -2305,7 +2305,7 @@ public class ValueDomainServlet extends CurationServlet {
 		if (acID != null && !acID.equals(""))
 		{
 			serAC.doVDSearch(acID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "",
-					"", "", "", vList);
+					"", "", "", vList, "0");
 		}
 		if (vList.size() > 0) // get all attributes
 		{

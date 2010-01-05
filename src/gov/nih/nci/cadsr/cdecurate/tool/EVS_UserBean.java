@@ -6,9 +6,9 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 //import gov.nih.nci.evs.domain.Source;
-import gov.nih.nci.evs.query.EVSQuery;
+/*import gov.nih.nci.evs.query.EVSQuery;
 import gov.nih.nci.evs.query.EVSQueryImpl;
-import gov.nih.nci.system.applicationservice.EVSApplicationService;
+import gov.nih.nci.system.applicationservice.EVSApplicationService;*/
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 
 import java.io.Serializable;
@@ -18,6 +18,10 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeRenderingList;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
+import org.LexGrid.LexBIG.DataModel.InterfaceElements.CodingSchemeRendering;
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 import org.apache.log4j.Logger;
 
 /**
@@ -815,27 +819,24 @@ public final class EVS_UserBean implements Serializable
   public java.util.List getEVSVocabs(String eURL)
   {
       //ApplicationService evsService = ApplicationService.getRemoteInstance(eURL);
-	  java.util.List vocabList = null;
+	  java.util.List<String> vocabList = null;
 	  try
       {
-	  EVSApplicationService evsService = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(eURL,"EvsServiceInfo");
-      EVSQuery query = new EVSQueryImpl();
-      query.getVocabularyNames();
-     
+		  LexBIGService lbs = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(eURL, "EvsServiceInfo");
+		  CodingSchemeRenderingList csrl = lbs.getSupportedCodingSchemes();
       
-        vocabList = evsService.evsSearch(query);
-        if (vocabList != null)
-        {
-          try
-          {
-            String sName = (String)vocabList.get(0);
-          }
-          catch(Exception e)
-          {
-            logger.error(" Error - get vocab names " + e.toString(), e);
-            return null;
-          }
-        }
+		  CodingSchemeRendering[] csra = csrl.getCodingSchemeRendering();
+		  
+		  if (csra != null)
+			  vocabList = new Vector<String>();
+		  for (CodingSchemeRendering csr: csra) {
+			  CodingSchemeSummary css = csr.getCodingSchemeSummary();
+			  String formalName = css.getFormalName();
+			  String localName = css.getLocalName();
+			  String descriptionContent = css.getCodingSchemeDescription().getContent();
+			  //System.out.println(formalName + " - " +localName + " - " + descriptionContent);
+			  vocabList.add(formalName);
+		  }
       }
       catch(Exception ex)
       {

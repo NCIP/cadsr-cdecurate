@@ -9,7 +9,7 @@ import gov.nih.nci.cadsr.cdecurate.tool.EVSSearch;
 import gov.nih.nci.cadsr.cdecurate.tool.EVS_UserBean;
 import gov.nih.nci.cadsr.cdecurate.tool.GetACService;
 import gov.nih.nci.cadsr.cdecurate.tool.TOOL_OPTION_Bean;
-import gov.nih.nci.evs.domain.DescLogicConcept;
+//import gov.nih.nci.evs.domain.DescLogicConcept;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -19,6 +19,10 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
+
+import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
+import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+
 import oracle.jdbc.pool.OracleDataSource;
 
 /**
@@ -300,7 +304,7 @@ public class EVSTest1
             }
 
             // Check the connectivity by getting the root concepts.
-            List<DescLogicConcept> vals = evs.getRootConcepts(vocab);
+            ResolvedConceptReferenceList vals = evs.getRootConcepts(vocab);
             if (metaFlag == false && vals == null)
             {
                 _logger.fatal("No Root Concepts - CHECK CONNECTIVITY");
@@ -349,9 +353,10 @@ public class EVSTest1
                 getSub = false;
             if (vals != null)
             {
-                for (DescLogicConcept concept : vals)
+                for (int i = 0; i < vals.getResolvedConceptReferenceCount(); i++)
                 {
-                    _logger.info("Concept: " + concept.getName() + " : " + concept.getCode());
+                	ResolvedConceptReference concept = vals.getResolvedConceptReference(i);
+                    _logger.info("Concept: " + concept.getEntityDescription() + " : " + concept.getCode());
                     if (getSub)
                     {
                         Vector<String> subs = evs.getAllSubConceptCodes(vocab, concept.getCode());
