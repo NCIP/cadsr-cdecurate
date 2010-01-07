@@ -234,7 +234,7 @@ public class EVSMasterTree {
 							int childrenCount = evs.getSubConceptCount(dtsVocab, csvt, rcr);
 
 							if (childrenCount > 0) {
-								TreeNode tn = new TreeNode(lastNodeID++, "N "+sDispName, "D "+sDispName, rcr.getCode(),
+								TreeNode tn = new TreeNode(lastNodeID++, sDispName, sDispName, rcr.getCode(),
 										level);
 								tn.setExpanded(false);
 								tn.setVisible(true);
