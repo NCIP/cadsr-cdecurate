@@ -1732,8 +1732,24 @@ function LoadKeyHandler()
 				<tr>
 					<td height="35" valign="bottom" colspan="2">
 						<div align="left">
-							Display First <input type="text" name="recordsDisplayed" value="1000"/> Results
-							<br>(0 will display all)
+							Results Displayed:
+							<select name="recordsDisplayed" size="1" style="width: 160">
+								<option value="100">
+									100
+								</option>
+								<option value="250" >
+									250
+								</option>
+								<option value="500" >
+									500
+								</option>
+								<option value="750"> 
+									750
+								</option>
+								<option value="0"> 
+									All
+								</option>
+							</select>
 						</div>
 					</td>
 				</tr>

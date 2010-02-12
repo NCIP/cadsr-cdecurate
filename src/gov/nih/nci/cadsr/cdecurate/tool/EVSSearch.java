@@ -33,6 +33,7 @@ import org.LexGrid.LexBIG.Extensions.Generic.LexBIGServiceConvenienceMethods;
 import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
 import org.LexGrid.LexBIG.DataModel.Core.Association;
 import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
+import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 import org.LexGrid.LexBIG.DataModel.enums.SearchDesignationOption;
 import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
@@ -73,6 +74,10 @@ public class EVSSearch implements Serializable {
 	/** constant value to return database vocab name*/
 	public static final int VOCAB_NAME = 3;
 
+	public static final String NCIT_SCHEME_NAME = "NCI Thesaurus";
+	
+	public static LexBIGServiceConvenienceMethods conMthds = null;
+	public static ConceptReference retiredRootCon = null;
 	/** constant value to recorgnize meta data */
 	public static final String META_VALUE = "MetaValue";
 	//class variables
@@ -1362,6 +1367,7 @@ public class EVSSearch implements Serializable {
 					String temp = ac.getCode();
 					if (temp != null && !temp.equals(conceptCode) && !vSub.contains(ac.getEntityDescription().getContent())) {
 						vSub.addElement(ac.getEntityDescription().getContent());
+						stringArray[i] = temp;
 					}
 				}
 			}
@@ -3417,6 +3423,94 @@ public class EVSSearch implements Serializable {
 		return eBean; //return teh bean
 	}
 
+	public boolean isRetired(ResolvedConceptReference conRef) throws Exception {
+		
+		if (!conRef.getEntity().isIsActive() || isRetiredConcept(conRef) || hasRetiredProperty(conRef) || hasRetiredStatus(conRef))
+			return false;
+			else return true;
+		
+	}
+	
+	public boolean hasRetiredStatus (ResolvedConceptReference conRef) {
+		String status = conRef.getEntity().getStatus();
+		
+		if (status.equals("Retired") || status.equals("Deprecated") || status.equals("Removed"))
+			return true;
+		else 
+			return false;
+	}
+	
+	public boolean hasRetiredProperty(ResolvedConceptReference conRef) {
+		Property[] props = conRef.getEntity().getProperty();
+		for (int i = 0; i < props.length; i++) {
+			if (props[i].getPropertyName().equals("Concept_Status")){
+				String value = props[i].getValue().getContent();
+				if (value.equals("Retired") || value.equals("Removed"))
+					return true;
+				else 
+					return false;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isRetiredConcept(ConceptReference conRef) throws Exception {
+        ConceptReference retiredCon = getRetiredRootConcept();
+        
+        if (retiredCon != null) {
+              CodedNodeGraph cng = evsService.getNodeGraph(NCIT_SCHEME_NAME, null, null);
+              ConceptReferenceList refList = cng.listCodeRelationships(conRef, retiredCon, false);
+              for (int i=0;i<refList.getConceptReferenceCount();i++) {
+                    if(refList.getConceptReference(i).getConceptCode().equalsIgnoreCase("subClassOf")) {
+                          return true;
+                    }
+              }
+        }
+        
+        return false;
+  }
+  
+	  private ConceptReference getRetiredRootConcept() throws Exception {
+	        if (retiredRootCon == null) {
+	              ResolvedConceptReferenceList rootConcepts = getRootConcepts();
+	              for (int i=0;i<rootConcepts.getResolvedConceptReferenceCount();i++) {
+	                    ResolvedConceptReference resConRef = rootConcepts.getResolvedConceptReference(i);
+	                    Presentation[] presentations = resConRef.getEntity().getPresentation();
+	                    for (Presentation pres: presentations) {
+	                          if (pres.getIsPreferred() && pres.getValue().getContent().contains("Retired")) {
+	                                retiredRootCon = resConRef;
+	                                break;
+	                          }
+	                    }
+	                    
+	                    if (retiredRootCon != null) break;
+	              }
+	        }
+	        
+	        return retiredRootCon;
+	  }
+	  
+	  private ResolvedConceptReferenceList getRootConcepts() throws Exception {
+	        LexBIGServiceConvenienceMethods  conMthds = getConvenienceMethods();
+	        
+	        String[] hirearchyIds = conMthds.getHierarchyIDs(NCIT_SCHEME_NAME, null);
+	        ResolvedConceptReferenceList rootConcepts = conMthds.getHierarchyRoots(NCIT_SCHEME_NAME, null, hirearchyIds[0]);
+	        
+	        return rootConcepts;
+	  }
+	  
+	  private LexBIGServiceConvenienceMethods getConvenienceMethods() throws Exception {
+	        
+	        if(conMthds == null) {
+	              conMthds = (LexBIGServiceConvenienceMethods)evsService.getGenericExtension("LexBIGServiceConvenienceMethods");
+	              conMthds.setLexBIGService(evsService);
+	        }
+	        
+	        return conMthds;
+	  }
+
+	
+	
 	/**
 	 * adds the security token to the query for some vocabularies
 	 * @param query
