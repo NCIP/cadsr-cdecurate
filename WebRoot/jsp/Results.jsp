@@ -1381,10 +1381,7 @@ function ShowSelectedRowss(){
                         <select name="listMultiContextFilter" size="5" style="width: 185"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-															<option value="ProdContext"
-									<%if(sContext.equals("Production Contexts")){%> selected <%}%>>
-									Production Contexts
-								</option>
+															
 							<option value="AllContext"
 								<%if (vContext.size() == 0 || vContext.contains("AllContext")){%>
 								selected <%}%>>
@@ -2117,7 +2114,15 @@ function ShowSelectedRowss(){
 							</select>
 						</div>          
                    </td>
-                 </tr>               
+                 </tr>              
+                 				<tr>
+					<td align="center" class="scItem">
+						<div align="left">
+							Display First <input type="text" name="recordsDisplayed" value="1000"/> Results
+							<br>(0 will display all)
+						</div>
+					</td>
+				</tr> 
                  <tr>
                   <td>
                        <div align="center" class="scItem">

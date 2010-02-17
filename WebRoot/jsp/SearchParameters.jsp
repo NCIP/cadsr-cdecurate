@@ -1493,7 +1493,7 @@ function LoadKeyHandler()
 				%>
 				<tr>
 					<td colspan=2>
-						<table>
+						<table width="285" height="293">
 							<col width=5%>
 							<col width=20%>
 							<col width=32%>
@@ -1725,6 +1725,30 @@ function LoadKeyHandler()
 									}
 									}
 								%>
+							</select>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td height="35" valign="bottom" colspan="2">
+						<div align="left">
+							Results Displayed:
+							<select name="recordsDisplayed" size="1" style="width: 160">
+								<option value="100">
+									100
+								</option>
+								<option value="250" >
+									250
+								</option>
+								<option value="500" >
+									500
+								</option>
+								<option value="750"> 
+									750
+								</option>
+								<option value="0"> 
+									All
+								</option>
 							</select>
 						</div>
 					</td>

@@ -6,7 +6,8 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
-import gov.nih.nci.evs.domain.DescLogicConcept;
+import gov.nih.nci.system.client.ApplicationServiceProvider;
+//import gov.nih.nci.evs.domain.DescLogicConcept;
 
 import java.util.Hashtable;
 import java.util.List;
@@ -17,6 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
+import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.LexGrid.LexBIG.Extensions.Generic.LexBIGServiceConvenienceMethods;
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.codingSchemes.CodingScheme;
 import org.apache.log4j.Logger;
 
 /**
@@ -73,14 +80,14 @@ public class EVSMasterTree {
 				DataManager.setAttribute(session, "treesHash", m_treesHash);
 			}
 			m_treesHashParent = (Hashtable) session
-					.getAttribute("treesHashParent");
+			.getAttribute("treesHashParent");
 			if (m_treesHashParent == null) {
 				m_treesHashParent = new Hashtable();
 				DataManager.setAttribute(session, "treesHashParent",
 						m_treesHashParent);
 			}
 			m_treeNodesHashParent = (Hashtable) session
-					.getAttribute("treeNodesHashParent");
+			.getAttribute("treeNodesHashParent");
 			if (m_treeNodesHashParent == null) {
 				m_treeNodesHashParent = new Hashtable();
 				DataManager.setAttribute(session, "treeNodesHashParent",
@@ -93,42 +100,42 @@ public class EVSMasterTree {
 						m_treeNodesHash);
 			}
 			m_treeLeafsHashParent = (Hashtable) session
-					.getAttribute("treeLeafsHashParent");
+			.getAttribute("treeLeafsHashParent");
 			if (m_treeLeafsHashParent == null) {
 				m_treeLeafsHashParent = new Hashtable();
 				DataManager.setAttribute(session, "treeLeafsHashParent",
 						m_treeLeafsHashParent);
 			}
 			m_treeIDtoNameHash = (Hashtable) session
-					.getAttribute("treeIDtoNameHash");
+			.getAttribute("treeIDtoNameHash");
 			if (m_treeIDtoNameHash == null) {
 				m_treeIDtoNameHash = new Hashtable();
 				DataManager.setAttribute(session, "treeIDtoNameHash",
 						m_treeIDtoNameHash);
 			}
 			m_treeIDtoNameHashParent = (Hashtable) session
-					.getAttribute("treeIDtoNameHashParent");
+			.getAttribute("treeIDtoNameHashParent");
 			if (m_treeIDtoNameHashParent == null) {
 				m_treeIDtoNameHashParent = new Hashtable();
 				DataManager.setAttribute(session, "treeIDtoNameHashParent",
 						m_treeIDtoNameHashParent);
 			}
 			m_expandedTreeNodes = (Stack) session
-					.getAttribute("expandedTreeNodes");
+			.getAttribute("expandedTreeNodes");
 			if (m_expandedTreeNodes == null) {
 				m_expandedTreeNodes = new Stack();
 				DataManager.setAttribute(session, "expandedTreeNodes",
 						m_expandedTreeNodes);
 			}
 			m_expandedTreeNodesParent = (Stack) session
-					.getAttribute("expandedTreeNodesParent");
+			.getAttribute("expandedTreeNodesParent");
 			if (m_expandedTreeNodesParent == null) {
 				m_expandedTreeNodesParent = new Stack();
 				DataManager.setAttribute(session, "expandedTreeNodesParent",
 						m_expandedTreeNodesParent);
 			}
 			m_expandedTreeNodesVector = (Vector) session
-					.getAttribute("expandedTreeNodesVector");
+			.getAttribute("expandedTreeNodesVector");
 			if (m_expandedTreeNodesVector == null) {
 				m_expandedTreeNodesVector = new Vector();
 				DataManager.setAttribute(session, "expandedTreeNodesVector",
@@ -169,19 +176,19 @@ public class EVSMasterTree {
 		if (m_treesHashParent == null)
 			m_treesHashParent = new Hashtable();
 		m_treeNodesHashParent = (Hashtable) session
-				.getAttribute("treeNodesHashParent");
+		.getAttribute("treeNodesHashParent");
 		if (m_treeNodesHashParent == null)
 			m_treeNodesHashParent = new Hashtable();
 		m_treeLeafsHashParent = (Hashtable) session
-				.getAttribute("treeLeafsHashParent");
+		.getAttribute("treeLeafsHashParent");
 		if (m_treeLeafsHashParent == null)
 			m_treeLeafsHashParent = new Hashtable();
 		m_treeIDtoNameHashParent = (Hashtable) session
-				.getAttribute("treeIDtoNameHashParent");
+		.getAttribute("treeIDtoNameHashParent");
 		if (m_treeIDtoNameHashParent == null)
 			m_treeIDtoNameHashParent = new Hashtable();
 		m_expandedTreeNodesParent = (Stack) session
-				.getAttribute("expandedTreeNodesParent");
+		.getAttribute("expandedTreeNodesParent");
 		if (m_expandedTreeNodesParent == null)
 			m_expandedTreeNodesParent = new Stack();
 
@@ -198,25 +205,36 @@ public class EVSMasterTree {
 		if (id == null)
 			id = new Integer(0);
 		int lastNodeID = id.intValue();
-		
+
 		try {
 			// See if this Vocab's tree already has been built and stored in ServletContext
 			Tree vocabTree = (Tree) m_treesHash.get(dtsVocab);
+
 			if (vocabTree != null) {
 				rendHTML = renderHTML(vocabTree);
 			} else {
-				 List vRoots = evs.getRootConcepts(dtsVocab);
+
+				ResolvedConceptReferenceList vRoots = evs.getRootConcepts(dtsVocab);
 				// For each Root, get the Subconcepts. If subconcepts exist, build a Node
 				// object, else build a Leaf object
+
+
+				LexBIGService evsService = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(m_eUser.getEVSConURL(), "EvsServiceInfo");		
+				CodingScheme cs = evsService.resolveCodingScheme(dtsVocab, null);
+				CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+				csvt.setVersion(cs.getRepresentsVersion());
+
 				if (vRoots != null) {
-					for (int j = 0; j < vRoots.size(); j++) {
-						DescLogicConcept oDLC = (DescLogicConcept) vRoots.get(j);
-						if (oDLC != null) {
+					for (int j = 0; j < vRoots.getResolvedConceptReferenceCount(); j++) {
+						ResolvedConceptReference rcr = vRoots.getResolvedConceptReference(j);
+						if (rcr != null) {
 							String sDispName = evs.getDisplayName(dtsVocab,
-									oDLC, oDLC.getCode());
-							if (oDLC.getHasChildren().booleanValue()) {
-								TreeNode tn = new TreeNode(lastNodeID++, oDLC
-										.getName(), sDispName, oDLC.getCode(),
+									rcr, rcr.getCode());
+
+							int childrenCount = evs.getSubConceptCount(dtsVocab, csvt, rcr);
+
+							if (childrenCount > 0) {
+								TreeNode tn = new TreeNode(lastNodeID++, sDispName, sDispName, rcr.getCode(),
 										level);
 								tn.setExpanded(false);
 								tn.setVisible(true);
@@ -237,8 +255,8 @@ public class EVSMasterTree {
 									m_treesHash.put(sNodeID, tn.getChildren()); //add the node's children tree to hash table      
 								}
 							} else {
-								TreeLeaf tl = new TreeLeaf(lastNodeID++, oDLC
-										.getName(), sDispName, oDLC.getCode(),
+								TreeLeaf tl = new TreeLeaf(lastNodeID++, sDispName, 
+										sDispName, rcr.getCode(),
 										level);
 								//Each leaf is added to the vocab tree
 								dtsTree.addChild(tl);
@@ -417,51 +435,51 @@ public class EVSMasterTree {
 			buf.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (node.getLevel() == 4)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (node.getLevel() == 5)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (node.getLevel() == 6)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (node.getLevel() == 7)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (node.getLevel() == 8)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (node.getLevel() == 9)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (node.getLevel() == 10)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (node.getLevel() == 11)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (node.getLevel() == 12)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		String js = "\"javascript:doTreeAction('search','";
 		String jsEnd = "');\"";
 		String nodeLvl = String.valueOf(node.getLevel() - 2);
 		sSearch = js + nodeCCode + "','" + m_dtsVocab + "','" + sJSName + "','"
-				+ sNodeID + "','" + nodeLvl + jsEnd;
+		+ sNodeID + "','" + nodeLvl + jsEnd;
 		buf.append("<a ");
 		if (node.isExpanded()) {
 			js = "\"javascript:doTreeAction('collapse','";
 			sCollapse = js + nodeCCode + "','" + m_dtsVocab + "','" + sJSName
-					+ "','" + sNodeID + "','" + nodeLvl + jsEnd;
+			+ "','" + sNodeID + "','" + nodeLvl + jsEnd;
 			buf.append("href=").append(sCollapse).append(" >");
 			buf.append("<img src='images/").append(openedImage).append(
-					"' border='0'>");
+			"' border='0'>");
 		} else {
 			js = "\"javascript:doTreeAction('expand','";
 			sExpand = js + nodeCCode + "','" + m_dtsVocab + "','" + sJSName
-					+ "','" + sNodeID + "','" + nodeLvl + jsEnd;
+			+ "','" + sNodeID + "','" + nodeLvl + jsEnd;
 			buf.append("href=").append(sExpand).append(" >");
 			buf.append("<img src='images/").append(collapsedImage).append(
-					"' border='0'>");
+			"' border='0'>");
 		}
 		buf.append("</a>");
 		buf.append("&nbsp;");
@@ -483,11 +501,11 @@ public class EVSMasterTree {
 	 *  @return nodeName  The new name of the node
 	 */
 	private String filterName(String nodeName, String type) {
-		
+
 		if (type.equals("display")) {
 			nodeName = nodeName.replaceAll("_", " ");
 		} else if (type.equals("js")) {
-				nodeName = nodeName.replaceAll(" ", "_");
+			nodeName = nodeName.replaceAll(" ", "_");
 		}
 		return nodeName;
 	}
@@ -517,38 +535,38 @@ public class EVSMasterTree {
 			buf.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (leaf.getLevel() == 4)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (leaf.getLevel() == 5)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (leaf.getLevel() == 6)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (leaf.getLevel() == 7)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (leaf.getLevel() == 8)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (leaf.getLevel() == 9)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (leaf.getLevel() == 10)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (leaf.getLevel() == 11)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		else if (leaf.getLevel() == 12)
 			buf
-					.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		String js = "\"javascript:doTreeAction('search','";
 		String jsEnd = "');\"";
 		String leafLvl = String.valueOf(leaf.getLevel() - 2);
 		String sSearch = js + nodeCCode + "','" + m_dtsVocab + "','" + sJSName
-				+ "','" + sLeafID + "','" + leafLvl + jsEnd;
+		+ "','" + sLeafID + "','" + leafLvl + jsEnd;
 		buf.append("<img src='images/").append(leafImage).append(
-				"' border='0'>");
+		"' border='0'>");
 		buf.append("&nbsp;");
 		buf.append("<a ");
 		buf.append("href=").append(sSearch).append(">");
@@ -625,7 +643,7 @@ public class EVSMasterTree {
 			nodeCode = evs.do_getEVSCode(nodeName, dtsVocab);
 
 		String sLastNodeIDExpanded = (String) session
-				.getAttribute("LastNodeIDExpanded");
+		.getAttribute("LastNodeIDExpanded");
 		if (sLastNodeIDExpanded == null || sLastNodeIDExpanded.equals(""))
 			sLastNodeIDExpanded = "0";
 		DataManager.setAttribute(session, "LastNodeIDExpanded", null);
@@ -684,7 +702,7 @@ public class EVSMasterTree {
 			if (m_treeNodesHash != null) {
 				if (sSearchAC.equals("ParentConceptVM"))
 					expandedNode = (TreeNode) m_treeNodesHashParent
-							.get(nodeName);
+					.get(nodeName);
 				else
 					expandedNode = (TreeNode) m_treeNodesHash.get(nodeID);
 			}
@@ -754,14 +772,14 @@ public class EVSMasterTree {
 				}
 			} else // numChildren == 0; nodes not stored so create
 			{
-				vSubNames = evs.getSubConceptNames(dtsVocab, nodeName, "",
+				vSubNames = evs.getSubConceptCodes(dtsVocab, nodeName, "",
 						nodeCode, "");
 				if (vSubNames != null && vSubNames.size() > 0
 						&& vSubNames.size() < 20) {
 					for (int j = 0; j < vSubNames.size(); j++) {
 						subNodeName = evs.do_getConceptName((String) vSubNames.elementAt(j),dtsVocab);
 						subNodeCode = evs.do_getEVSCode((String) vSubNames.elementAt(j), dtsVocab);
-						vSubConcepts2 = evs.getSubConceptNames(dtsVocab,
+						vSubConcepts2 = evs.getSubConceptCodes(dtsVocab,
 								subNodeName, "", subNodeCode, "");
 						String subDispName = evs.getDisplayName(dtsVocab, null,
 								subNodeCode);
@@ -793,7 +811,7 @@ public class EVSMasterTree {
 								m_treesHash.put(sNodeID, tn.getChildren()); //add the node's children tree to hash table      
 							}
 						} else {
-								TreeLeaf tl = new TreeLeaf(lastNodeID++,
+							TreeLeaf tl = new TreeLeaf(lastNodeID++,
 									subNodeName, subDispName, subNodeCode,
 									nodeLevel + 1);
 							tl.setLevel(nodeLevel + 1);
@@ -926,7 +944,7 @@ public class EVSMasterTree {
 							baseTree = new Tree("parentTree" + nodeName);
 						}
 						m_treesHashParent
-								.put("parentTree" + nodeName, baseTree);
+						.put("parentTree" + nodeName, baseTree);
 					}
 				}
 				if (!strRenderHTML.equals("No")
@@ -1039,16 +1057,16 @@ public class EVSMasterTree {
 		HttpSession session = m_classReq.getSession();
 		String sSearchAC = (String) session.getAttribute("creSearchAC");
 		Stack m_expandedTreeNodes = (Stack) session
-				.getAttribute("expandedTreeNodes");
+		.getAttribute("expandedTreeNodes");
 		Stack m_expandedTreeNodesParent = (Stack) session
-				.getAttribute("expandedTreeNodesParent");
+		.getAttribute("expandedTreeNodesParent");
 		Hashtable m_treeNodesHash = (Hashtable) session
-				.getAttribute("treeNodesHash");
+		.getAttribute("treeNodesHash");
 		Hashtable m_treeNodesHashParent = (Hashtable) session
-				.getAttribute("treeNodesHashParent");
+		.getAttribute("treeNodesHashParent");
 		Hashtable m_treesHash = (Hashtable) session.getAttribute("treesHash");
 		Hashtable m_treesHashParent = (Hashtable) session
-				.getAttribute("treesHashParent");
+		.getAttribute("treesHashParent");
 		if (m_expandedTreeNodes == null)
 			m_expandedTreeNodes = new Stack();
 		if (m_expandedTreeNodesParent == null)
@@ -1088,13 +1106,13 @@ public class EVSMasterTree {
 							if (nodeChildrenTree.getChild(i).getType() == 0) //node
 							{
 								TreeNode tn = (TreeNode) nodeChildrenTree
-										.getChild(i);
+								.getChild(i);
 								tn.setExpanded(false);
 								tn.setVisible(false);
 								tn.setBold(false);
 							} else {
 								TreeLeaf tl = (TreeLeaf) nodeChildrenTree
-										.getChild(i);
+								.getChild(i);
 								tl.setVisible(false);
 								tl.setBold(false);
 							}
@@ -1112,21 +1130,21 @@ public class EVSMasterTree {
 						nodeName = (String) m_expandedTreeNodesParent.pop();
 						if (m_treeNodesHashParent != null)
 							expandedNode = (TreeNode) m_treeNodesHashParent
-									.get(nodeName);
+							.get(nodeName);
 					}
 					// if null, look for the nodeName with "_"
 					if (expandedNode == null) {
 						//nodeName = filterName(nodeName, "js");
 						if (sSearchAC.equals("ParentConceptVM"))
 							expandedNode = (TreeNode) m_treeNodesHashParent
-									.get(nodeName);
+							.get(nodeName);
 					}
 					if (expandedNode != null)
 						expandedNode.setExpanded(false);
 					Tree nodeChildrenTree = new Tree(1);
 					if (sSearchAC.equals("ParentConceptVM"))
 						nodeChildrenTree = (Tree) m_treesHashParent
-								.get(nodeName);
+						.get(nodeName);
 
 					int numChildren = nodeChildrenTree.size();
 					if (numChildren > 0) //children already exist, set them visible
@@ -1135,13 +1153,13 @@ public class EVSMasterTree {
 							if (nodeChildrenTree.getChild(i).getType() == 0) //node
 							{
 								TreeNode tn = (TreeNode) nodeChildrenTree
-										.getChild(i);
+								.getChild(i);
 								tn.setExpanded(false);
 								tn.setVisible(false);
 								tn.setBold(false);
 							} else {
 								TreeLeaf tl = (TreeLeaf) nodeChildrenTree
-										.getChild(i);
+								.getChild(i);
 								tl.setVisible(false);
 								tl.setBold(false);
 							}
@@ -1232,9 +1250,9 @@ public class EVSMasterTree {
 					sCCode = evs.do_getEVSCode(sCCodeName, dtsVocab);
 					stackSuperConcepts2.push(sCCodeName);
 					vStackVector2 = this
-							.buildVectorOfSuperConceptStacks(
-									stackSuperConcepts2, sCCodeDB, sCCode,
-									vStackVector);
+					.buildVectorOfSuperConceptStacks(
+							stackSuperConcepts2, sCCodeDB, sCCode,
+							vStackVector);
 				}
 			}
 		}
@@ -1259,15 +1277,15 @@ public class EVSMasterTree {
 		String rendHTML = "";
 		try {
 			parentTree = (Tree) m_treesHashParent
-					.get("parentTree" + sCCodeName);
+			.get("parentTree" + sCCodeName);
 			if (parentTree != null) {
 				rendHTML = renderHTML(parentTree);
 			} else {
 				parentTree = new Tree("parentTree" + sCCodeName);
-				vSubConceptNames = evs.getSubConceptNames(sCCodeDB, sCCodeName,
+				vSubConceptNames = evs.getSubConceptCodes(sCCodeDB, sCCodeName,
 						"", sCCode, "");
 				String dispName = evs
-						.getDisplayName(sCCodeDB, null, sCCode);
+				.getDisplayName(sCCodeDB, null, sCCode);
 				if (vSubConceptNames.size() > 0) {
 					TreeNode tn = new TreeNode(lastNodeID++, sCCodeName,
 							dispName, sCCode, level);
@@ -1330,7 +1348,7 @@ public class EVSMasterTree {
 			sSuperConceptName = evs.do_getConceptName(sSuperConceptCode,sCCodeDB);
 			if (nodeLevel == 1)
 				sTopOfStack = sSuperConceptCode;
-			 if (sSuperConceptCode != null && !sSuperConceptCode.equals("")) {
+			if (sSuperConceptCode != null && !sSuperConceptCode.equals("")) {
 				nodeCode = evs.do_getEVSCode(sSuperConceptCode, sCCodeDB);
 				if (stackSuperConcepts.size() > 0) {
 					rendHTML = this.expandNode(sSuperConceptName, sCCodeDB,
@@ -1398,7 +1416,7 @@ public class EVSMasterTree {
 			if (!sRender.equals("false"))
 				rendHTML = this.populateTreeRoots(dtsVocab);
 		} catch (Exception e) {
-				logger.error(e.toString(), e);
+			logger.error(e.toString(), e);
 		}
 		return rendHTML;
 	}
@@ -1447,7 +1465,7 @@ public class EVSMasterTree {
 	 * @return string 
 	 */
 	public String getCorrectNodeID(String nodeName, int iLast) {
-		
+
 		String sRetNodeID = "";
 		String sRetNodeIDTemp = "none";
 		String found = "false";
@@ -1471,7 +1489,7 @@ public class EVSMasterTree {
 					break;
 				} else {
 					TreeNode exNode = (TreeNode) m_treeNodesHash
-							.get(sRetNodeID);
+					.get(sRetNodeID);
 					if (exNode != null)
 						iPar = exNode.getParentNodeID();
 					if (iLast == iPar) {
