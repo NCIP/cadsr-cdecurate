@@ -15,6 +15,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.Properties;
@@ -340,7 +342,7 @@ public class EVSTest1
                 _logger.info("Super Concept: " + snam);
             }
     
-            sup = evs.getSuperConceptNames(vocab, name, code);
+            sup = evs.getSuperConceptNames(vocab, name, code, new HashMap<String,String>());
             for (String snam : sup)
             {
                 _logger.info("Super Concept: " + snam);
