@@ -393,6 +393,7 @@ public class GetACService implements Serializable
         {
             String sAPI = "{call SBREXT_SS_API.get_context_list(?)}";
             getDataListStoreProcedure(vIDList, vList, null, null, sAPI, "", "", 1);
+            
         }
         catch (Exception e)
         {

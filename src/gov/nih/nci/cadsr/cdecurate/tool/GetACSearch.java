@@ -2302,6 +2302,7 @@ public class GetACSearch implements Serializable
             else
                 sSelectList = m_classReq.getParameterValues("listMultiContextFilter");
             boolean bAllValues = false;
+            boolean noTest = false;
             if (sSelectList == null)
                 bAllValues = true;
             if (sSelectList != null)
@@ -2319,11 +2320,16 @@ public class GetACSearch implements Serializable
                         // set the value and break if all statuses or contexts selected
                         if (sValues.equals("AllContext") || sValues.equals("AllStatus"))
                         {
-                            bAllValues = true;
-                            break;
+                        	if (sSelectList.length > 1)    	
+                        		noTest = true;
+                        	else {	
+                        		bAllValues = true;
+                        		break;
+                        	}
                         }
                         // store it in vector to refresh list on the page
-                        vSelectList.addElement(sSelectList[i]);
+                        if (noTest && !sValues.equalsIgnoreCase("allcontext") && !sValues.equalsIgnoreCase("test") && !sValues.equalsIgnoreCase("training"))
+                        	vSelectList.addElement(sSelectList[i]);
                     }
                 }
             }

@@ -35,13 +35,9 @@ import org.LexGrid.LexBIG.DataModel.Core.Association;
 import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
 import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
-import org.LexGrid.LexBIG.DataModel.enums.SearchDesignationOption;
-import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeGraph;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
-import org.LexGrid.LexBIG.LexBIGService.LexBIGServiceManager;
-import org.LexGrid.LexBIG.LexBIGService.LexBIGServiceMetadata;
 import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
 import org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService;
@@ -1331,7 +1327,7 @@ public class EVSSearch implements Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	public Vector getSuperConceptNames(String dtsVocab, String conceptName,
-			String conceptCode) {
+			String conceptCode, HashMap<String,String> concepts) {
 		String[] stringArray = new String[50];
 		Vector vSub = new Vector();
 		String[] stringArray2;
@@ -1365,8 +1361,9 @@ public class EVSSearch implements Serializable {
 				AssociatedConcept[] aca = acl.getAssociatedConcept();
 				for (AssociatedConcept ac:aca) {
 					String temp = ac.getCode();
-					if (temp != null && !temp.equals(conceptCode) && !vSub.contains(ac.getEntityDescription().getContent())) {
-						vSub.addElement(ac.getEntityDescription().getContent());
+					if (temp != null && !temp.equals(conceptCode) && !vSub.contains(temp)) {
+						vSub.addElement(temp);
+						concepts.put(temp, ac.getEntityDescription().getContent());
 						stringArray[i] = temp;
 					}
 				}
@@ -1380,7 +1377,7 @@ public class EVSSearch implements Serializable {
 		}
 
 		stringArray2 = getAllSuperConceptNames(dtsVocab, stringArray,
-				vSub);
+				vSub, concepts);
 
 		return vSub;
 	}
@@ -1395,9 +1392,9 @@ public class EVSSearch implements Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	private String[] getAllSuperConceptNames(String dtsVocab,
-			String[] stringArray, Vector vSub) {
+			String[] stringArray, Vector vSub, HashMap<String,String> concepts) {
 		ArrayList<String> compoundResults = new ArrayList<String>();
-		String[] stringArray2 = new String[60];
+		String[] stringArray2 = null;
 		String[] stringArray3 = null;
 		String[] stringArray4 = null;
 
@@ -1413,8 +1410,9 @@ public class EVSSearch implements Serializable {
 			try {
 				for (int j = 0; j < stringArray.length; j++) {
 					if (stringArray[j] != null) {
-						if (!vSub.contains(stringArray[j]))
-							vSub.addElement(stringArray[j]);
+						//vSub contains 
+//						if (!vSub.contains(stringArray[j]))
+//							vSub.addElement(stringArray[j]);
 						try {
 							LexBIGServiceConvenienceMethods lbscm = 
 								(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 
@@ -1435,8 +1433,9 @@ public class EVSSearch implements Serializable {
 								AssociatedConcept[] aca = acl.getAssociatedConcept();
 								for (AssociatedConcept ac:aca) {
 									String temp = ac.getCode();
-									if (temp != null && !temp.equals(stringArray[j]) && !vSub.contains(ac.getEntityDescription().getContent())) {
-										vSub.addElement(ac.getEntityDescription().getContent());
+									if (temp != null && !temp.equals(stringArray[j]) && !vSub.contains(temp)) {
+										vSub.addElement(temp);
+										concepts.put(temp, ac.getEntityDescription().getContent());
 										compoundResults.add(temp);
 									}
 								}
@@ -1455,10 +1454,12 @@ public class EVSSearch implements Serializable {
 						"problem2a in Thesaurus EVSSearch-getAllSuperConceptNames: "
 						+ ee, ee);
 			}
+			stringArray2 = new String[compoundResults.size()];
 			stringArray2 = compoundResults.toArray(stringArray2);
 
+			if (stringArray2.length > 0)
 			stringArray3 = getAllSuperConceptNames(dtsVocab, stringArray2,
-					vSub);
+					vSub, concepts);
 		}
 		return stringArray;
 	}
@@ -2037,6 +2038,14 @@ public class EVSSearch implements Serializable {
 							true, //Resolve concepts?
 							null); //Any qualifiers for the association?
 
+					AssociationList an = lbscm.getHierarchyLevelNext(dtsVocab, 
+							null, //CodingScheme Version or Tag
+							null, //hierarchy id
+							termStr, // Concept code
+							true, //Resolve concepts?
+							null); //Any qualifiers for the association?
+					
+					int nextSize = an.getAssociationCount();
 					int size = al.getAssociationCount();
 					lstResult = new ResolvedConceptReferenceList();
 					for (int i = 0; i < size; i++) {
@@ -2453,14 +2462,15 @@ public class EVSSearch implements Serializable {
 					EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME); // "vocabDBOrigin", "vocabName");
 			if (sSearchAC.equals("ParentConceptVM"))
 				sParentName = (String) session.getAttribute("ParentConcept");
+			HashMap<String,String> mConcepts = new HashMap<String,String>();
 			vSuperConceptNames = this.getSuperConceptNames(dtsVocab,
-					sConceptName, sConceptCode);
+					sConceptName, sConceptCode, mConcepts);
 			for (int j = 0; j < vSuperConceptNames.size(); j++) {
-				sName = (String) vSuperConceptNames.elementAt(j);
+				sName = (String) mConcepts.get((String)vSuperConceptNames.get(j));
 				if (!vSuperConceptNamesUnique.contains(sName)) {
 					vSuperConceptNamesUnique.addElement(sName);
 					if (sName != null && !sName.equals(""))
-						sCode = this.do_getEVSCode(sName, dtsVocab);
+						sCode = (String)vSuperConceptNames.get(j);
 					if (sCode != null && !sCode.equals(""))
 						vAC = this.doVocabSearch(vAC, sCode, dtsVocab,
 								"ConCode", "", sSearchAC, sRetired, "", 100,

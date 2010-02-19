@@ -1817,7 +1817,7 @@ public class SearchServlet extends CurationServlet {
         DataManager.setAttribute(session, "dtsVocab", dtsVocab);
         DataManager.setAttribute(session, "SearchInEVS", sSearchInEVS);
         DataManager.setAttribute(session, "creSearchInBlocks", "longName");
-        DataManager.setAttribute(session, "creContextBlocks", "All Contexts");
+        DataManager.setAttribute(session, "creContextBlocks", "Production Contexts");
         DataManager.setAttribute(session, "creStatusBlocks", "RELEASED");
         DataManager.setAttribute(session, "creRetired", "Exclude");
         DataManager.setAttribute(session, "MetaSource", "All Sources");
