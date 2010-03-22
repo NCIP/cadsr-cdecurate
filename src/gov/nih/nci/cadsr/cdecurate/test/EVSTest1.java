@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -348,16 +349,16 @@ public class EVSTest1
                 _logger.fatal("Failed: " + msg);
 
             // Get the super concepts for our test data.
-            Vector<String> sup;
+            HashMap<String, String> sup;
     
             sup = evs.getSuperConceptNamesImmediate(vocab, name, code);
-            for (String snam : sup)
+            for (String snam: sup.values())
             {
                 _logger.info("Super Concept: " + snam);
             }
     
-            sup = evs.getSuperConceptNames(vocab, name, code, new HashMap<String,String>());
-            for (String snam : sup)
+            sup = evs.getSuperConceptNames(vocab, name, code);
+            for (String snam : sup.values())
             {
                 _logger.info("Super Concept: " + snam);
             }
