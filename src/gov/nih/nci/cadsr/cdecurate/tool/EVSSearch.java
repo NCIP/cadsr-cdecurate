@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
@@ -27,25 +28,33 @@ import org.LexGrid.LexBIG.DataModel.Collections.AssociatedConceptList;
 import org.LexGrid.LexBIG.DataModel.Collections.AssociationList;
 import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
+import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
 import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
 import org.LexGrid.LexBIG.Exceptions.LBException;
+import org.LexGrid.LexBIG.Exceptions.LBResourceUnavailableException;
 import org.LexGrid.LexBIG.Extensions.Generic.LexBIGServiceConvenienceMethods;
 import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
 import org.LexGrid.LexBIG.DataModel.Core.Association;
 import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
 import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
+import org.LexGrid.LexBIG.DataModel.Core.NameAndValue;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeGraph;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.ActiveOption;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
 import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
+import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 import org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService;
 import org.LexGrid.codingSchemes.CodingScheme;
 import org.LexGrid.commonTypes.Property;
 import org.LexGrid.commonTypes.Source;
 import org.LexGrid.concepts.Definition;
 import org.LexGrid.concepts.Presentation;
+import org.LexGrid.naming.Mappings;
+import org.LexGrid.naming.SupportedHierarchy;
 import org.LexGrid.naming.SupportedSource;
 import org.apache.log4j.Logger;
 
@@ -156,6 +165,7 @@ public class EVSSearch implements Serializable {
 			int codesSize = 0;
 
 			try {
+				this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab, m_eUser);
 				CodedNodeSet metaNodes = evsService.getNodeSet("NCI MetaThesaurus", null, null); 
 
 				metaNodes = metaNodes.restrictToMatchingDesignations(prefName, //the text to match 
@@ -167,7 +177,7 @@ public class EVSSearch implements Serializable {
 				codes2 = metaNodes.resolveToList(
 						null, //Sorts used to sort results (null means sort by match score)
 						null, //PropertyNames to resolve (null resolves all)
-						null,  //PropertyTypess to resolve (null resolves all)
+						new CodedNodeSet.PropertyType[] {PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
 						10	  //cap the number of results returned (-1 resolves all)
 				);
 				codesSize = codes2.getResolvedConceptReferenceCount();
@@ -212,7 +222,7 @@ public class EVSSearch implements Serializable {
 		try {
 			CodedNodeSet metaNodes = evsService.getNodeSet(dtsVocab, null, null); 
 
-			this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab, "");
+			this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab, m_eUser);
 			ConceptReferenceList crefs = ConvenienceMethods.
         	createConceptReferenceList(new String[]{CCode}, dtsVocab);
 			metaNodes = metaNodes.restrictToCodes(crefs);
@@ -221,7 +231,7 @@ public class EVSSearch implements Serializable {
 			concepts2 = metaNodes.resolveToList(
 					null, //Sorts used to sort results (null means sort by match score)
 					null, //PropertyNames to resolve (null resolves all)
-					null,  //PropertyTypess to resolve (null resolves all)
+					new CodedNodeSet.PropertyType[] {PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
 					10	  //cap the number of results returned (-1 resolves all)
 			);
 			codesSize = concepts2.getResolvedConceptReferenceCount();
@@ -531,7 +541,7 @@ public class EVSSearch implements Serializable {
 	 * @param dtsVocab
 	 * @return vRoot vector of Root concepts
 	 */
-	public ResolvedConceptReferenceList getRootConcepts(String dtsVocab) //, boolean codeOrNames) 
+	public ResolvedConceptReferenceList getRootConcepts(String dtsVocab, CodingScheme cs) //, boolean codeOrNames) 
 	{
 		ResolvedConceptReferenceList vocabRoots = null;
 		//check if valid dts vocab
@@ -543,19 +553,49 @@ public class EVSSearch implements Serializable {
 
 			try {
 				//TODO Add security token
-				this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab,"");
-
-				//Getting Convenience methods for root concepts
-				LexBIGServiceConvenienceMethods lbscm = 
-					(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 						
+				this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab,m_eUser);
+				CodedNodeSet ret = null;
 				
-				lbscm.setLexBIGService(evsService);
-
-				vocabRoots = lbscm.getHierarchyRoots(
-						dtsVocab, 
-						null,
-						null);
-
+		        if (cs == null) {
+		            throw new LBResourceUnavailableException("Coding scheme not found.");
+		        }
+		        Mappings mappings = cs.getMappings();
+		        SupportedHierarchy[] shs =  mappings.getSupportedHierarchy();
+		        for (int i = 0; i < shs.length; i++) {
+		        	SupportedHierarchy sh = shs[i];
+		        	String[] assns = sh.getAssociationNames();
+		        	String code = sh.getRootCode();
+		            if (code.equals("@") || code.equals("@@")) {
+		                // Need to resolve first level; only want to return 'real'
+		                // concepts ...
+		                ConceptReference cr = new ConceptReference();
+		                cr.setCodingSchemeName(cs.getCodingSchemeName());
+		                cr.setCode(code);
+		                CodedNodeGraph cng = evsService.getNodeGraph(dtsVocab, null, null);
+		                cng = cng.restrictToAssociations(ConvenienceMethods.createNameAndValueList(sh.getAssociationNames()),
+		                        null);
+		                try {
+		                    CodedNodeSet cns = cng.toNodeList(cr, sh.getIsForwardNavigable(), !sh.getIsForwardNavigable(), 0, -1);
+		                    if (ret == null)
+		                    	ret = cns;
+		                    else
+		                    	ret.union(cns);
+		                } catch (Exception e) {
+		                    logger.error("Unable to resolve hierarchy root nodes.", e);
+		                }
+		            } else {
+		                // Root was a real concept; add it explicitly ...
+		                CodedNodeSet toCode = evsService.getCodingSchemeConcepts(dtsVocab, null);
+		                toCode.restrictToCodes(ConvenienceMethods.createConceptReferenceList(new String[] { sh.getRootCode() },
+		                        dtsVocab));
+		                if (ret == null)
+		                	ret = toCode;
+		                else 
+		                	ret.union(toCode);
+		            }
+		        }
+				vocabRoots =  ret.resolveToList(null, null, new CodedNodeSet.PropertyType[] {PropertyType.PRESENTATION}, -1);
+				
 				if (vocabRoots != null && vocabRoots.getResolvedConceptReferenceCount() > 0)
 					vocabRoots = this.sortDLCObjects(vocabRoots);
 
@@ -578,53 +618,55 @@ public class EVSSearch implements Serializable {
 	 * @return vector of concept objects
 	 *
 	 */
-	@SuppressWarnings("unchecked")
-	private Vector getAllSubConceptCodes(String dtsVocab, String conceptName,
-			String type, String conceptCode, String defSource) {
-		//logger.debug("getAllSubConceptCodes conceptName: " + conceptName);
-		Vector vSub = new Vector();
-		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
-				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");   //check if valid dts vocab 
-		if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
-		{
-			try {
-				String prefName = "";
-				if (!conceptCode.equals(""))//try it with ConceptCode
-				{
-					LexBIGServiceConvenienceMethods lbscm = 
-						(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 						
-
-					lbscm.setLexBIGService(evsService);
-					
-					AssociationList al = lbscm.getHierarchyLevelNext(dtsVocab, 
-							null, //CodingScheme Version or Tag
-							null, //hierarchy id
-							conceptCode, // Concept code
-							true, //Resolve concepts?
-							null); //Any qualifiers for the association?
-
-					int size = al.getAssociationCount();
-
-					for (int i = 0; i < size; i++) {
-						Association assn = al.getAssociation(i);
-						AssociatedConceptList acl = assn.getAssociatedConcepts();
-						AssociatedConcept[] aca = acl.getAssociatedConcept();
-						for (AssociatedConcept ac:aca) {
-							String temp = ac.getCode();
-							if (temp != null && !temp.equals(conceptCode))
-								vSub.addElement(temp);
-						}
-					}
-				}
-			} catch (Exception ee) {
-				logger.error(
-						"ERROR - EVSSearch-getSubConcepts for Thesaurus : "
-						+ ee.toString(), ee);
-				return vSub;
-			}
-		}
-		return vSub;
-	}
+//	@SuppressWarnings("unchecked")
+//	private Vector getAllSubConceptCodes(String dtsVocab, String conceptName,
+//			String type, String conceptCode, String defSource) {
+//		//logger.debug("getAllSubConceptCodes conceptName: " + conceptName);
+//		Vector vSub = new Vector();
+//		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
+//				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");   //check if valid dts vocab 
+//		if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
+//		{
+//			try {
+//				String prefName = "";
+//				if (!conceptCode.equals(""))//try it with ConceptCode
+//				{
+//					this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab,m_eUser);
+//					
+//					LexBIGServiceConvenienceMethods lbscm = 
+//						(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 						
+//
+//					lbscm.setLexBIGService(evsService);
+//					
+//					AssociationList al = lbscm.getHierarchyLevelNext(dtsVocab, 
+//							null, //CodingScheme Version or Tag
+//							null, //hierarchy id
+//							conceptCode, // Concept code
+//							true, //Resolve concepts?
+//							null); //Any qualifiers for the association?
+//
+//					int size = al.getAssociationCount();
+//
+//					for (int i = 0; i < size; i++) {
+//						Association assn = al.getAssociation(i);
+//						AssociatedConceptList acl = assn.getAssociatedConcepts();
+//						AssociatedConcept[] aca = acl.getAssociatedConcept();
+//						for (AssociatedConcept ac:aca) {
+//							String temp = ac.getCode();
+//							if (temp != null && !temp.equals(conceptCode))
+//								vSub.addElement(temp);
+//						}
+//					}
+//				}
+//			} catch (Exception ee) {
+//				logger.error(
+//						"ERROR - EVSSearch-getSubConcepts for Thesaurus : "
+//						+ ee.toString(), ee);
+//				return vSub;
+//			}
+//		}
+//		return vSub;
+//	}
 
 	/**
 	 * This method searches EVS vocabularies and returns subconcepts, which are used
@@ -634,51 +676,53 @@ public class EVSSearch implements Serializable {
 	 * @return vector of concept objects
 	 *
 	 */
-	@SuppressWarnings("unchecked")
-	public Vector getAllSubConceptCodes(String dtsVocab, String conceptCode) {
-		Vector vSub = new Vector();
-		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
-				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");   //check if valid dts vocab 
-		if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
-		{
-			try {
-				if (!conceptCode.equals(""))//try it with ConceptCode
-				{
-					LexBIGServiceConvenienceMethods lbscm = 
-						(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 						
-
-					lbscm.setLexBIGService(evsService);
-
-					
-					AssociationList al = lbscm.getHierarchyLevelNext(dtsVocab, 
-							null, //CodingScheme Version or Tag
-							null, //hierarchy id
-							conceptCode, // Concept code
-							true, //Resolve concepts?
-							null); //Any qualifiers for the association?
-
-					int size = al.getAssociationCount();
-
-					for (int i = 0; i < size; i++) {
-						Association assn = al.getAssociation(i);
-						AssociatedConceptList acl = assn.getAssociatedConcepts();
-						AssociatedConcept[] aca = acl.getAssociatedConcept();
-						for (AssociatedConcept ac:aca) {
-							String temp = ac.getCode();
-							if (temp != null && !temp.equals(conceptCode))
-								vSub.addElement(temp);
-						}
-					}
-				}
-			} catch (Exception ee) {
-				logger.error(
-						"ERROR - EVSSearch-getSubConcepts for Thesaurus : "
-						+ ee.toString(), ee);
-				return vSub;
-			}
-		}
-		return vSub;
-	}
+//	@SuppressWarnings("unchecked")
+//	public Vector getAllSubConceptCodes(String dtsVocab, String conceptCode) {
+//		Vector vSub = new Vector();
+//		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
+//				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");   //check if valid dts vocab 
+//		if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
+//		{
+//			try {
+//				if (!conceptCode.equals(""))//try it with ConceptCode
+//				{
+//					
+//					
+//					LexBIGServiceConvenienceMethods lbscm = 
+//						(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 						
+//
+//					lbscm.setLexBIGService(evsService);
+//
+//					
+//					AssociationList al = lbscm.getHierarchyLevelNext(dtsVocab, 
+//							null, //CodingScheme Version or Tag
+//							null, //hierarchy id
+//							conceptCode, // Concept code
+//							true, //Resolve concepts?
+//							null); //Any qualifiers for the association?
+//
+//					int size = al.getAssociationCount();
+//
+//					for (int i = 0; i < size; i++) {
+//						Association assn = al.getAssociation(i);
+//						AssociatedConceptList acl = assn.getAssociatedConcepts();
+//						AssociatedConcept[] aca = acl.getAssociatedConcept();
+//						for (AssociatedConcept ac:aca) {
+//							String temp = ac.getCode();
+//							if (temp != null && !temp.equals(conceptCode))
+//								vSub.addElement(temp);
+//						}
+//					}
+//				}
+//			} catch (Exception ee) {
+//				logger.error(
+//						"ERROR - EVSSearch-getSubConcepts for Thesaurus : "
+//						+ ee.toString(), ee);
+//				return vSub;
+//			}
+//		}
+//		return vSub;
+//	}
 
 	/**
 	 * This method searches EVS vocabularies and returns subconcepts, which are used
@@ -694,12 +738,14 @@ public class EVSSearch implements Serializable {
 	 *
 	 */
 	@SuppressWarnings("unchecked")
-	public Vector getSubConceptCodes(String dtsVocab, String conceptName,
-			String type, String conceptCode, String defSource) {
-		Vector vSub = new Vector();
+	public HashMap<String, String> getSubConcepts(String dtsVocab, String conceptName,
+			String type, String conceptCode) {
+		//Vector vSub = new Vector();
+		HashMap<String, String> hSub = new HashMap<String,String>();
 		//check if valid dts vocab
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");
+		this.registerSecurityToken((LexEVSApplicationService) evsService, dtsVocab, m_eUser);
 		if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))  
 		{
 			try {
@@ -709,30 +755,35 @@ public class EVSSearch implements Serializable {
 					if (!conceptCode.equals("")) //try it with ConceptCode
 					{
 						try {
-							LexBIGServiceConvenienceMethods lbscm = 
-								(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 						
-
-							lbscm.setLexBIGService(evsService);
 							
-							AssociationList al = lbscm.getHierarchyLevelNext(dtsVocab, 
-									null, //CodingScheme Version or Tag
-									null, //hierarchy id
-									conceptCode, // Concept code
-									true, //Resolve concepts?
-									null); //Any qualifiers for the association?
+							String associationToNavigate = returnAssociations(dtsVocab);
+							
+							HashMap<String, String> hSubs = returnSubConceptNames(conceptCode, associationToNavigate, dtsVocab);
 
-							int size = al.getAssociationCount();
-
-							for (int i = 0; i < size; i++) {
-								Association assn = al.getAssociation(i);
-								AssociatedConceptList acl = assn.getAssociatedConcepts();
-								AssociatedConcept[] aca = acl.getAssociatedConcept();
-								for (AssociatedConcept ac:aca) {
-									String temp = ac.getCode();
-									if (temp != null && !temp.equals(conceptCode))
-										vSub.addElement(ac.getCode());
-								}
-							}
+							hSub.putAll(hSubs);
+//							LexBIGServiceConvenienceMethods lbscm = 
+//								(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 						
+//							lbscm.setLexBIGService(evsService);
+//							
+//							AssociationList al = lbscm.getHierarchyLevelNext(dtsVocab, 
+//									null, //CodingScheme Version or Tag
+//									null, //hierarchy id
+//									conceptCode, // Concept code
+//									true, //Resolve concepts?
+//									null); //Any qualifiers for the association?
+//
+//							int size = al.getAssociationCount();
+//
+//							for (int i = 0; i < size; i++) {
+//								Association assn = al.getAssociation(i);
+//								AssociatedConceptList acl = assn.getAssociatedConcepts();
+//								AssociatedConcept[] aca = acl.getAssociatedConcept();
+//								for (AssociatedConcept ac:aca) {
+//									String temp = ac.getCode();
+//									if (temp != null && !temp.equals(conceptCode))
+//										hSub.put(temp, ac.getEntityDescription().getContent());
+//								}
+//							}
 
 						} catch (Exception ee) {
 							logger.error(
@@ -766,7 +817,7 @@ public class EVSSearch implements Serializable {
 							for (AssociatedConcept ac:aca) {
 								String temp = ac.getCode();
 								if (temp != null && !temp.equals(retrievedCode))
-									vSub.addElement(ac.getEntityDescription().getContent());
+									hSub.put(temp,ac.getEntityDescription().getContent());
 							}
 						}
 
@@ -847,17 +898,17 @@ public class EVSSearch implements Serializable {
 						}
 						if (codesToExpand != null)
 							codesToExpand = getAllSubConceptNames(dtsVocab,
-									codesToExpand, vSub);
+									codesToExpand, hSub);
 					}
 				}
 			} catch (Exception ee) {
 				logger.error(
 						"ERROR - EVSSearch-getSubConcepts for Thesaurus : "
 						+ ee.toString(), ee);
-				return vSub;
+				return hSub;
 			}
 		}
-		return vSub;
+		return hSub;
 	}
 
 	/**
@@ -1152,32 +1203,33 @@ public class EVSSearch implements Serializable {
 	 */
 
 
-	public int getSubConceptCount(String dtsVocab, CodingSchemeVersionOrTag csvt, ResolvedConceptReference rcr) {
+	public boolean getSubConceptCount(String dtsVocab, ResolvedConceptReference rcr) {
 
-		int ret = 0;
+		ResolvedConceptReferencesIterator ret = null;
 		try {
 //			LexBIGServiceConvenienceMethods lbscm = 
 //				(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods");
 //			lbscm.setLexBIGService(evsService);
 
-			ResolvedConceptReferenceList matches = 
-				evsService.getNodeGraph(dtsVocab, csvt, null).resolveAsList(
-							ConvenienceMethods.createConceptReference(rcr.getCode(), dtsVocab),
-							false, true, 1, 1, new LocalNameList(), null, null, 1024);
-			
-			ret = matches.getResolvedConceptReferenceCount();
-			
+			CodedNodeSet matches = 
+				evsService.getCodingSchemeConcepts(dtsVocab, null)
+							.restrictToCodes(ConvenienceMethods.createConceptReferenceList(new String[] { rcr.getCode() }));
+						
+			ret = matches.resolve(null, null, null);
+			if (ret != null && ret.hasNext())
+				return true;
+			else 
+				return false;
 		} catch (LBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-
-		return ret;
+		return false;
 	}
 
 	@SuppressWarnings("unchecked")
 	public String[] getAllSubConceptNames(String dtsVocab,
-			String[] stringArray, Vector vSub) {
+			String[] stringArray, HashMap<String, String> hSub) {
 		String[] stringArray2 = null;
 		String[] stringArray3 = new String[10000];
 		String conceptCode = "";
@@ -1192,7 +1244,7 @@ public class EVSSearch implements Serializable {
 					if (stringArray[j] != null) {
 						conceptCode = stringArray[j];
 						try {
-							this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab,"");
+							this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab,m_eUser);
 							LexBIGServiceConvenienceMethods lbscm = 
 								(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 
 							lbscm.setLexBIGService(evsService);
@@ -1218,7 +1270,7 @@ public class EVSSearch implements Serializable {
 									String temp = ac.getCode();
 									if (temp != null && !temp.equals(conceptCode)) {
 										stringArray2[i] = temp;
-										vSub.addElement(ac.getEntityDescription().getContent());
+										hSub.put(temp, ac.getEntityDescription().getContent());
 									}
 								}
 							}
@@ -1229,7 +1281,7 @@ public class EVSSearch implements Serializable {
 						}
 						if (stringArray2 != null && stringArray2.length > 0) {
 							stringArray3 = getAllSubConceptNames(dtsVocab,
-									stringArray2, vSub);
+									stringArray2, hSub);
 						}
 					}
 				}
@@ -1266,17 +1318,17 @@ public class EVSSearch implements Serializable {
 	 * @return vSub
 	 */
 	@SuppressWarnings("unchecked")
-	public Vector getSuperConceptNamesImmediate(String dtsVocab,
+	public HashMap<String, String> getSuperConceptNamesImmediate(String dtsVocab,
 			String conceptName, String conceptCode) {
-		Vector vSub = new Vector();
+		HashMap<String, String> concepts = new HashMap<String, String>();
 		//check if valid dts vocab and get out if meta search
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");
 
-		this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab,"");
+		this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab,m_eUser);
 		
 		if (dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue")) 
-			return vSub;
+			return concepts;
 
 		try {
 			LexBIGServiceConvenienceMethods lbscm = 
@@ -1286,26 +1338,10 @@ public class EVSSearch implements Serializable {
 			if (conceptCode.equals("") && !conceptName.equals(""))
 				conceptCode = this.do_getEVSCode(conceptName, dtsVocab);
 
-			AssociationList al = lbscm.getHierarchyLevelPrev(dtsVocab, 
-					null, //CodingScheme Version or Tag
-					null, //hierarchy id
-					conceptCode, // Concept code
-					true, //Resolve concepts?
-					null); //Any qualifiers for the association?
-
-			int size = al.getAssociationCount();
-
-			for (int i = 0; i < size; i++) {
-				Association assn = al.getAssociation(i);
-				AssociatedConceptList acl = assn.getAssociatedConcepts();
-				AssociatedConcept[] aca = acl.getAssociatedConcept();
-				for (AssociatedConcept ac:aca) {
-					String temp = ac.getCode();
-					if (temp != null && !temp.equals(conceptCode)) {
-						vSub.addElement(ac.getEntityDescription().getContent());
-					}
-				}
-			}
+			String associationToNavigate = returnAssociations(dtsVocab);
+			
+			concepts = returnSuperConceptNames(conceptCode, associationToNavigate, dtsVocab);
+			
 		} catch (IndexOutOfBoundsException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1314,7 +1350,7 @@ public class EVSSearch implements Serializable {
 			e.printStackTrace();
 		}
 
-		return vSub;
+		return concepts;
 	}
 
 	/**
@@ -1326,17 +1362,17 @@ public class EVSSearch implements Serializable {
 	 * @return vSub
 	 */
 	@SuppressWarnings("unchecked")
-	public Vector getSuperConceptNames(String dtsVocab, String conceptName,
-			String conceptCode, HashMap<String,String> concepts) {
-		String[] stringArray = new String[50];
-		Vector vSub = new Vector();
-		String[] stringArray2;
-
+	public HashMap<String,String> getSuperConceptNames(String dtsVocab, String conceptName,
+			String conceptCode) {
+		
+		HashMap<String,String> compound = new HashMap<String,String>();
+		 HashMap<String,String> concepts = new HashMap<String,String>();
+		 
 		//check if valid dts vocab and get out if meta search
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");
 		if (dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue")) 
-			return vSub;
+			return compound;
 
 		try {
 			LexBIGServiceConvenienceMethods lbscm = 
@@ -1346,7 +1382,13 @@ public class EVSSearch implements Serializable {
 			if (conceptCode.equals("") && !conceptName.equals(""))
 				conceptCode = this.do_getEVSCode(conceptName, dtsVocab);
 
-			AssociationList al = lbscm.getHierarchyLevelPrev(dtsVocab, 
+			
+			String associationToNavigate = returnAssociations(dtsVocab);
+			
+			concepts = returnSuperConceptNames(conceptCode, associationToNavigate, dtsVocab);
+
+			compound.putAll(concepts);
+			/*AssociationList al = lbscm.getHierarchyLevelPrev(dtsVocab, 
 					null, //CodingScheme Version or Tag
 					null, //hierarchy id
 					conceptCode, // Concept code
@@ -1367,7 +1409,7 @@ public class EVSSearch implements Serializable {
 						stringArray[i] = temp;
 					}
 				}
-			}
+			}*/
 		} catch (IndexOutOfBoundsException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1376,10 +1418,10 @@ public class EVSSearch implements Serializable {
 			e.printStackTrace();
 		}
 
-		stringArray2 = getAllSuperConceptNames(dtsVocab, stringArray,
-				vSub, concepts);
+		getAllSuperConceptNames(dtsVocab,
+				compound, concepts);
 
-		return vSub;
+		return compound;
 	}
 
 	/**
@@ -1391,9 +1433,8 @@ public class EVSSearch implements Serializable {
 	 *
 	 */
 	@SuppressWarnings("unchecked")
-	private String[] getAllSuperConceptNames(String dtsVocab,
-			String[] stringArray, Vector vSub, HashMap<String,String> concepts) {
-		ArrayList<String> compoundResults = new ArrayList<String>();
+	private void getAllSuperConceptNames(String dtsVocab, HashMap<String, String> compound, HashMap<String,String> concepts) {
+		HashMap<String,String> compoundLevel = new HashMap<String, String>();
 		String[] stringArray2 = null;
 		String[] stringArray3 = null;
 		String[] stringArray4 = null;
@@ -1402,23 +1443,28 @@ public class EVSSearch implements Serializable {
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");
 		if (dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue")) 
-			return stringArray;
+			return;
 
 		List subs = null;
 		int index = 0;
-		if (stringArray != null && stringArray.length > 0) {
+		Iterator<String> conceptIter = concepts.keySet().iterator();
+		if (conceptIter.hasNext()) {
 			try {
-				for (int j = 0; j < stringArray.length; j++) {
-					if (stringArray[j] != null) {
-						//vSub contains 
-//						if (!vSub.contains(stringArray[j]))
-//							vSub.addElement(stringArray[j]);
+				while (conceptIter.hasNext()) {
 						try {
 							LexBIGServiceConvenienceMethods lbscm = 
 								(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 
 							lbscm.setLexBIGService(evsService);
 
-							AssociationList al = lbscm.getHierarchyLevelPrev(dtsVocab, 
+							String associationToNavigate = returnAssociations(dtsVocab);
+							
+							concepts = returnSuperConceptNames(conceptIter.next(), associationToNavigate, dtsVocab);
+
+							if (concepts.size() > 0 ){
+								compound.putAll(concepts);	
+								compoundLevel.putAll(concepts);
+							}
+							/*AssociationList al = lbscm.getHierarchyLevelPrev(dtsVocab, 
 									null, //CodingScheme Version or Tag
 									null, //hierarchy id
 									stringArray[j], // Concept code
@@ -1439,7 +1485,7 @@ public class EVSSearch implements Serializable {
 										compoundResults.add(temp);
 									}
 								}
-							}
+							}*/
 						} catch (IndexOutOfBoundsException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -1447,21 +1493,16 @@ public class EVSSearch implements Serializable {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-					}
 				}
 			} catch (Exception ee) {
 				logger.error(
 						"problem2a in Thesaurus EVSSearch-getAllSuperConceptNames: "
 						+ ee, ee);
 			}
-			stringArray2 = new String[compoundResults.size()];
-			stringArray2 = compoundResults.toArray(stringArray2);
-
-			if (stringArray2.length > 0)
-			stringArray3 = getAllSuperConceptNames(dtsVocab, stringArray2,
-					vSub, concepts);
+			if (compoundLevel.size() > 0)
+				getAllSuperConceptNames(dtsVocab, compound, compoundLevel);
 		}
-		return stringArray;
+		return;
 	}
 
 
@@ -1814,7 +1855,7 @@ public class EVSSearch implements Serializable {
 							&& !sMetaName.equals(vocabDisp))
 						lstResults = this.doConceptQuery(
 								vocabBean.getVocabAccess(), termStr, dtsVocab,
-								sSearchIn, vocabType, namePropIn);
+								sSearchIn, vocabType, namePropIn, sSearchAC);
 					//get the desc object from the list
 					if (lstResults != null) {
 						Hashtable hType = m_eUser.getMetaCodeType();
@@ -1894,22 +1935,12 @@ public class EVSSearch implements Serializable {
 									sSemantic, sDefDefault, defnProp,
 									vocabMetaType, vocabMetaCode);
 							//repeat the sub concept query for child concepts if all sub concept action
+							
 							if (sSearchIn.equals("subConcept")
-									&& subConType.equals("All")) {
-								Boolean bHasChildren = new Boolean(false);
-								LexBIGServiceConvenienceMethods lbscm = 
-									(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 						
-								lbscm.setLexBIGService(evsService);
+									&& subConType.equals("All")) {						
 
-								AssociationList al = lbscm.getHierarchyLevelNext(dtsVocab, 
-										null, //CodingScheme Version or Tag
-										null, //hierarchy id
-										rcr.getCode(), // Concept code
-										true, //Resolve concepts?
-										null); //Any qualifiers for the association?
+								boolean bool = getSubConceptCount(dtsVocab, rcr);
 
-
-								boolean bool = al.getAssociationCount() > 0;
 								if (bool) {
 									this.doVocabSearch(vConList, sConID, dtsVocab,
 											sSearchIn, "", sSearchAC, sIncludeRet,
@@ -2000,11 +2031,14 @@ public class EVSSearch implements Serializable {
 	 * @return
 	 */
 	private ResolvedConceptReferenceList doConceptQuery(String vocabAccess, String termStr,
-			String dtsVocab, String sSearchIn, String vocabType, String sPropIn) {
+			String dtsVocab, String sSearchIn, String vocabType, String sPropIn, String sSearchAC) {
 		ResolvedConceptReferenceList lstResult = null;
 		List lstResult1 = null;
 		List lstResult2= new ArrayList();
 
+		String algorithm = getAlgorithm(termStr);
+		termStr = cleanTerm(termStr);
+		
 		try {
 			// check if valid dts vocab
 			dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
@@ -2013,7 +2047,7 @@ public class EVSSearch implements Serializable {
 			if (dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
 				return lstResult;
 
-			this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab,vocabAccess);
+			this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab, m_eUser);
 			
 			CodedNodeSet nodeSet = evsService.getNodeSet(dtsVocab, null, null);
 
@@ -2027,36 +2061,18 @@ public class EVSSearch implements Serializable {
 			else if (sSearchIn.equals("subConcept"))
 				//query.getChildConcepts(dtsVocab, termStr);
 				try {
-					LexBIGServiceConvenienceMethods lbscm = 
-						(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 
-					lbscm.setLexBIGService(evsService);
-
-					AssociationList al = lbscm.getHierarchyLevelPrev(dtsVocab, 
-							null, //CodingScheme Version or Tag
-							null, //hierarchy id
-							termStr, // Concept code
-							true, //Resolve concepts?
-							null); //Any qualifiers for the association?
-
-					AssociationList an = lbscm.getHierarchyLevelNext(dtsVocab, 
-							null, //CodingScheme Version or Tag
-							null, //hierarchy id
-							termStr, // Concept code
-							true, //Resolve concepts?
-							null); //Any qualifiers for the association?
 					
-					int nextSize = an.getAssociationCount();
-					int size = al.getAssociationCount();
+					String associationToNavigate = returnAssociations(dtsVocab);
+					
+					HashMap<String, ResolvedConceptReference> hSubs = returnSubConcepts(termStr, associationToNavigate, dtsVocab);
+
 					lstResult = new ResolvedConceptReferenceList();
-					for (int i = 0; i < size; i++) {
-						Association assn = al.getAssociation(i);
-						AssociatedConceptList acl = assn.getAssociatedConcepts();
-						AssociatedConcept[] aca = acl.getAssociatedConcept();
-						for (AssociatedConcept ac:aca) {
-							String temp = ac.getCode();
-							if (temp != null && !temp.equals(termStr)) {
-								lstResult.addResolvedConceptReference(ac);
-							}
+					Iterator<String> iter = hSubs.keySet().iterator();
+					while (iter.hasNext()) {
+						String code = iter.next();
+						ResolvedConceptReference ac = hSubs.get(code);													
+							if (code != null && !code.equals(termStr)) {
+								lstResult.addResolvedConceptReference(ac);	
 						}
 					}
 				} catch (IndexOutOfBoundsException e) {
@@ -2070,7 +2086,7 @@ public class EVSSearch implements Serializable {
 					if (vocabType.equals("") || vocabType.equals("NameType")) // do concept name search
 						nodeSet = nodeSet.restrictToMatchingDesignations(termStr, //the text to match 
 								CodedNodeSet.SearchDesignationOption.PREFERRED_ONLY,  //whether to search all designation, only Preferred or only Non-Preferred
-								"contains", //the match algorithm to use
+								algorithm, //the match algorithm to use
 								null); //the language to match (null matches all)
 					else if (vocabType.equals("PropType")) { // do concept prop search
 						LocalNameList lnl = new LocalNameList();
@@ -2079,19 +2095,36 @@ public class EVSSearch implements Serializable {
 								lnl, //the Property Name to match
 								null, //the Property Type to match (null matches all)
 								termStr, //the text to match
-								"contains", //the match algorithm to use
+								algorithm, //the match algorithm to use
 								null );//the language to match (null matches all)
 					}
 				}
 			// call the evs to get resutls
 			if(!sSearchIn.equals("subConcept"))
 			{
+				LocalNameList lnl = new LocalNameList();
+				Hashtable hType = m_eUser.getMetaCodeType();
+				Iterator iter = hType.keySet().iterator();
+				while (iter.hasNext()){
+					String propName = (String) iter.next();
+					lnl.addEntry(propName);
+				}
+				
+				if (sSearchAC.equals("ParentConceptVM"))
 				lstResult = nodeSet.resolveToList(
 						null, //Sorts used to sort results (null means sort by match score)
-						null, //PropertyNames to resolve (null resolves all)
-						null,  //PropertyTypess to resolve (null resolves all)
-						10	  //cap the number of results returned (-1 resolves all)
+						lnl, //PropertyNames to resolve (null resolves all)
+						new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)  //PropertyTypess to resolve (null resolves all)
+						100	  //cap the number of results returned (-1 resolves all)
 				);
+				else
+					lstResult = nodeSet.resolveToList(
+							null, //Sorts used to sort results (null means sort by match score)
+							null, //PropertyNames to resolve (null resolves all)
+							new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
+							100	  //cap the number of results returned (-1 resolves all)
+					);
+					
 			}
 		} catch (Exception ex) {
 			logger.error(evsService.toString()
@@ -2236,7 +2269,7 @@ public class EVSSearch implements Serializable {
 							null, //Sorts used to sort results (null means sort by match score)
 							null, //PropertyNames to resolve (null resolves all)
 							null,  //PropertyTypess to resolve (null resolves all)
-							10000	  //cap the number of results returned (-1 resolves all)
+							1000	  //cap the number of results returned (-1 resolves all)
 					);
 
 				} catch (Exception ex) {
@@ -2462,15 +2495,17 @@ public class EVSSearch implements Serializable {
 					EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME); // "vocabDBOrigin", "vocabName");
 			if (sSearchAC.equals("ParentConceptVM"))
 				sParentName = (String) session.getAttribute("ParentConcept");
-			HashMap<String,String> mConcepts = new HashMap<String,String>();
-			vSuperConceptNames = this.getSuperConceptNames(dtsVocab,
-					sConceptName, sConceptCode, mConcepts);
-			for (int j = 0; j < vSuperConceptNames.size(); j++) {
-				sName = (String) mConcepts.get((String)vSuperConceptNames.get(j));
+			HashMap<String,String> compound = this.getSuperConceptNames(dtsVocab,
+					sConceptName, sConceptCode);
+			Iterator<String> compoundIter = compound.keySet().iterator();
+			
+			while (compoundIter.hasNext()) {
+				String tCode = compoundIter.next();
+				sName = compound.get(tCode);
 				if (!vSuperConceptNamesUnique.contains(sName)) {
 					vSuperConceptNamesUnique.addElement(sName);
 					if (sName != null && !sName.equals(""))
-						sCode = (String)vSuperConceptNames.get(j);
+						sCode = tCode;
 					if (sCode != null && !sCode.equals(""))
 						vAC = this.doVocabSearch(vAC, sCode, dtsVocab,
 								"ConCode", "", sSearchAC, sRetired, "", 100,
@@ -2592,8 +2627,9 @@ public class EVSSearch implements Serializable {
 			Vector vStackVector2 = new Vector();
 			strHTML = tree.populateTreeRoots(sCCodeDB);
 			Stack stackSuperConcepts = new Stack();
-			Vector vSuperImmediate = this.getSuperConceptNamesImmediate(
+			HashMap<String, String> hSuperImmediate = this.getSuperConceptNamesImmediate(
 					sCCodeDB, sCCodeName, sCCode);
+			Vector vSuperImmediate = (Vector) hSuperImmediate.values();
 			DataManager.setAttribute(session, "vSuperImmediate",
 					vSuperImmediate);
 			vStackVector2 = tree.buildVectorOfSuperConceptStacks(
@@ -3168,8 +3204,9 @@ public class EVSSearch implements Serializable {
 				Vector vStackVector2 = new Vector();
 				strHTML = tree.populateTreeRoots(dtsVocab);
 				Stack stackSuperConcepts = new Stack();
-				Vector vSuperImmediate = this.getSuperConceptNamesImmediate(
+				HashMap<String, String> hSuperImmediate = this.getSuperConceptNamesImmediate(
 						dtsVocab, sCodeName, sCode);
+				Vector vSuperImmediate = (Vector) hSuperImmediate.values();
 				DataManager.setAttribute(session, "vSuperImmediate",
 						vSuperImmediate);
 				vStackVector2 = tree.buildVectorOfSuperConceptStacks(
@@ -3432,95 +3469,6 @@ public class EVSSearch implements Serializable {
 		}
 		return eBean; //return teh bean
 	}
-
-	public boolean isRetired(ResolvedConceptReference conRef) throws Exception {
-		
-		if (!conRef.getEntity().isIsActive() || isRetiredConcept(conRef) || hasRetiredProperty(conRef) || hasRetiredStatus(conRef))
-			return false;
-			else return true;
-		
-	}
-	
-	public boolean hasRetiredStatus (ResolvedConceptReference conRef) {
-		String status = conRef.getEntity().getStatus();
-		
-		if (status.equals("Retired") || status.equals("Deprecated") || status.equals("Removed"))
-			return true;
-		else 
-			return false;
-	}
-	
-	public boolean hasRetiredProperty(ResolvedConceptReference conRef) {
-		Property[] props = conRef.getEntity().getProperty();
-		for (int i = 0; i < props.length; i++) {
-			if (props[i].getPropertyName().equals("Concept_Status")){
-				String value = props[i].getValue().getContent();
-				if (value.equals("Retired") || value.equals("Removed"))
-					return true;
-				else 
-					return false;
-			}
-		}
-		return false;
-	}
-	
-	public boolean isRetiredConcept(ConceptReference conRef) throws Exception {
-        ConceptReference retiredCon = getRetiredRootConcept();
-        
-        if (retiredCon != null) {
-              CodedNodeGraph cng = evsService.getNodeGraph(NCIT_SCHEME_NAME, null, null);
-              ConceptReferenceList refList = cng.listCodeRelationships(conRef, retiredCon, false);
-              for (int i=0;i<refList.getConceptReferenceCount();i++) {
-                    if(refList.getConceptReference(i).getConceptCode().equalsIgnoreCase("subClassOf")) {
-                          return true;
-                    }
-              }
-        }
-        
-        return false;
-  }
-  
-	  private ConceptReference getRetiredRootConcept() throws Exception {
-	        if (retiredRootCon == null) {
-	              ResolvedConceptReferenceList rootConcepts = getRootConcepts();
-	              for (int i=0;i<rootConcepts.getResolvedConceptReferenceCount();i++) {
-	                    ResolvedConceptReference resConRef = rootConcepts.getResolvedConceptReference(i);
-	                    Presentation[] presentations = resConRef.getEntity().getPresentation();
-	                    for (Presentation pres: presentations) {
-	                          if (pres.getIsPreferred() && pres.getValue().getContent().contains("Retired")) {
-	                                retiredRootCon = resConRef;
-	                                break;
-	                          }
-	                    }
-	                    
-	                    if (retiredRootCon != null) break;
-	              }
-	        }
-	        
-	        return retiredRootCon;
-	  }
-	  
-	  private ResolvedConceptReferenceList getRootConcepts() throws Exception {
-	        LexBIGServiceConvenienceMethods  conMthds = getConvenienceMethods();
-	        
-	        String[] hirearchyIds = conMthds.getHierarchyIDs(NCIT_SCHEME_NAME, null);
-	        ResolvedConceptReferenceList rootConcepts = conMthds.getHierarchyRoots(NCIT_SCHEME_NAME, null, hirearchyIds[0]);
-	        
-	        return rootConcepts;
-	  }
-	  
-	  private LexBIGServiceConvenienceMethods getConvenienceMethods() throws Exception {
-	        
-	        if(conMthds == null) {
-	              conMthds = (LexBIGServiceConvenienceMethods)evsService.getGenericExtension("LexBIGServiceConvenienceMethods");
-	              conMthds.setLexBIGService(evsService);
-	        }
-	        
-	        return conMthds;
-	  }
-
-	
-	
 	/**
 	 * adds the security token to the query for some vocabularies
 	 * @param query
@@ -3530,7 +3478,12 @@ public class EVSSearch implements Serializable {
 	 */
 
 
-	public static LexEVSApplicationService registerSecurityToken(LexEVSApplicationService lexevsService, String codingScheme, String token) {
+	public static LexEVSApplicationService registerSecurityToken(LexEVSApplicationService lexevsService, String codingScheme, EVS_UserBean userBean) {
+		
+		String token = "";
+		Hashtable ht = userBean.getVocab_Attr();
+		EVS_UserBean eu = (EVS_UserBean) ht.get(codingScheme);
+		token = eu.getVocabAccess();
 		SecurityToken securityToken = new SecurityToken();
 		securityToken.setAccessToken(token);
 		Boolean retval = null;
@@ -3589,5 +3542,243 @@ public class EVSSearch implements Serializable {
 		return vEvsBeann;
 	}
 
+	private HashMap<String,ResolvedConceptReference> returnSubConcepts(String code, String relation, String scheme) throws LBException {
+        HashMap<String, ResolvedConceptReference> ret = new HashMap<String, ResolvedConceptReference>();
+        
+		// Perform the query ...
+        NameAndValue nv = new NameAndValue();
+        NameAndValueList nvList = new NameAndValueList();
+        nv.setName(relation);
+        nvList.addNameAndValue(nv);
+ 
+        ResolvedConceptReferenceList matches = evsService.getNodeGraph(scheme, null, null).restrictToAssociations(nvList,
+                null).resolveAsList(ConvenienceMethods.createConceptReference(code, scheme), false, true, 1, 1,
+                new LocalNameList(), null, null, 1024);
+ 
+        // Analyze the result ...
+        if (matches.getResolvedConceptReferenceCount() > 0) {
+            ResolvedConceptReference ref = (ResolvedConceptReference) matches.enumerateResolvedConceptReference()
+                    .nextElement();
+ 
+            // Print the associations
+            AssociationList targetof = ref.getTargetOf();
+            if (targetof != null) {
+	            Association[] associations = targetof.getAssociation();
+	            for (int i = 0; i < associations.length; i++) {
+	                Association assoc = associations[i];
+	                AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+	                for (int j = 0; j < acl.length; j++) {
+	                    AssociatedConcept ac = acl[j];
+	                    ret.put(ac.getCode(), ac);
+	                }
+	            }    
+            }
+        }
+        return ret;
+    }
+
+	private HashMap<String,ResolvedConceptReference> returnSuperConcepts(String code, String relation, String scheme) throws LBException {
+        HashMap<String, ResolvedConceptReference> ret = new HashMap<String, ResolvedConceptReference>();
+        
+		// Perform the query ...
+        NameAndValue nv = new NameAndValue();
+        NameAndValueList nvList = new NameAndValueList();
+        nv.setName(relation);
+        nvList.addNameAndValue(nv);
+ 
+        ResolvedConceptReferenceList matches = evsService.getNodeGraph(scheme, null, null).restrictToAssociations(nvList,
+                null).resolveAsList(ConvenienceMethods.createConceptReference(code, scheme), true, false, 1, 1,
+                new LocalNameList(), null, null, 1024);
+ 
+        // Analyze the result ...
+        if (matches.getResolvedConceptReferenceCount() > 0) {
+            ResolvedConceptReference ref = (ResolvedConceptReference) matches.enumerateResolvedConceptReference()
+                    .nextElement();
+ 
+            // Print the associations
+            AssociationList targetof = ref.getTargetOf();
+            if (targetof != null) {
+	            Association[] associations = targetof.getAssociation();
+	            for (int i = 0; i < associations.length; i++) {
+	                Association assoc = associations[i];
+	                AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+	                for (int j = 0; j < acl.length; j++) {
+	                    AssociatedConcept ac = acl[j];
+	                    ret.put(ac.getCode(), ac);
+	                }
+	            }    
+            }
+        }
+        return ret;
+    }
+	
+	private HashMap<String,String> returnSubConceptNames(String code, String relation, String scheme) throws LBException {
+        HashMap<String, String> ret = new HashMap<String, String>();
+        
+		// Perform the query ...
+        NameAndValue nv = new NameAndValue();
+        NameAndValueList nvList = new NameAndValueList();
+        nv.setName(relation);
+        nvList.addNameAndValue(nv);
+ 
+        ResolvedConceptReferenceList matches = evsService.getNodeGraph(scheme, null, null).restrictToAssociations(nvList,
+                null).resolveAsList(ConvenienceMethods.createConceptReference(code, scheme), false, true, 1, 1,
+                new LocalNameList(), new PropertyType[]{PropertyType.PRESENTATION},null, 1024);
+ 
+        // Analyze the result ...
+        if (matches.getResolvedConceptReferenceCount() > 0) {
+            ResolvedConceptReference ref = (ResolvedConceptReference) matches.enumerateResolvedConceptReference()
+                    .nextElement();
+ 
+            // Print the associations
+            AssociationList targetof = ref.getTargetOf();
+            if (targetof != null) {
+	            Association[] associations = targetof.getAssociation();
+	            for (int i = 0; i < associations.length; i++) {
+	                Association assoc = associations[i];
+	                AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+	                for (int j = 0; j < acl.length; j++) {
+	                    AssociatedConcept ac = acl[j];
+	                    ret.put(ac.getCode(), ac.getEntityDescription().getContent());
+	                }
+	            }    
+            }
+        }
+        return ret;
+    }
+	
+	private HashMap<String,String> returnSuperConceptNames(String code, String relation, String scheme) throws LBException {
+        HashMap<String, String> ret = new HashMap<String, String>();
+        
+		// Perform the query ...
+        NameAndValue nv = new NameAndValue();
+        NameAndValueList nvList = new NameAndValueList();
+        nv.setName(relation);
+        nvList.addNameAndValue(nv);
+ 
+        ResolvedConceptReferenceList matches = evsService.getNodeGraph(scheme, null, null).restrictToAssociations(nvList,
+                null).resolveAsList(ConvenienceMethods.createConceptReference(code, scheme), true, false, 1, 1,
+                new LocalNameList(), new PropertyType[]{PropertyType.PRESENTATION},null, 1024);
+ 
+        // Analyze the result ...
+        if (matches.getResolvedConceptReferenceCount() > 0) {
+            ResolvedConceptReference ref = (ResolvedConceptReference) matches.enumerateResolvedConceptReference()
+                    .nextElement();
+ 
+            // Print the associations
+            AssociationList targetof = ref.getTargetOf();
+            if (targetof != null) {
+	            Association[] associations = targetof.getAssociation();
+	            for (int i = 0; i < associations.length; i++) {
+	                Association assoc = associations[i];
+	                AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+	                for (int j = 0; j < acl.length; j++) {
+	                    AssociatedConcept ac = acl[j];
+	                    ret.put(ac.getCode(), ac.getEntityDescription().getContent());
+	                }
+	            }    
+            }
+        }
+        return ret;
+    }
+	
+	private String returnAssociations(String dtsVocab) throws LBException {
+		
+		CodingScheme cs = evsService.resolveCodingScheme(dtsVocab, null);
+		String ret = new String();
+		
+		Mappings mappings = cs.getMappings();
+		SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
+		SupportedHierarchy hierarchyDefn = hierarchies[0];
+		String[] associationsToNavigate = hierarchyDefn.getAssociationNames();   // associations
+		for (String assn:associationsToNavigate ) 
+		{
+			if (assn.equals("subClassOf")){
+				ret = assn;
+				//we prefer this association
+				break;
+			}
+			if (assn.equals("is_a")) 
+				ret = assn;
+			
+			
+		}
+		boolean associationsNavigatedFwd = hierarchyDefn.getIsForwardNavigable();  // traverse direction
+		
+		return ret;
+
+	}
+	
+	private static ResolvedConceptReferenceList searchPrefTerm(LexEVSApplicationService evsService, String dtsVocab, String prefName, int sMetaLimit, String algorithm, String designation) {
+
+
+		ResolvedConceptReferenceList concepts = new ResolvedConceptReferenceList();
+		int codesSize = 0;
+		try {
+			CodedNodeSet metaNodes = evsService.getNodeSet(dtsVocab, null, null); 
+
+			metaNodes = metaNodes.restrictToMatchingDesignations(prefName, //the text to match 
+					CodedNodeSet.SearchDesignationOption.ALL,  //whether to search all designation, only Preferred or only Non-Preferred
+					algorithm, //the match algorithm to use
+					null); //the language to match (null matches all)
+
+			metaNodes = metaNodes.restrictToStatus(ActiveOption.ACTIVE_ONLY, null);
+			
+			concepts = metaNodes.resolveToList(
+					null, //Sorts used to sort results (null means sort by match score)
+					null, //PropertyNames to resolve (null resolves all)
+					new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
+					sMetaLimit	  //cap the number of results returned (-1 resolves all)
+			);
+			codesSize = concepts.getResolvedConceptReferenceCount();
+		} catch (Exception ex) {
+			//ex.printStackTrace();
+			System.out.println("Error searchPrefTerm: " + 
+					ex.toString());
+		}
+
+		return concepts;
+	}
+	
+	private String getAlgorithm(String termStr) {
+		
+		String algorithm = "exactMatch";
+		
+		boolean starts = false;
+		boolean ends = false;
+		boolean contains = false;
+		boolean multiple = false;
+		boolean embed = false;
+		
+		termStr = termStr.trim();
+		ends = termStr.startsWith("*"); // Term ends with rest of the string
+		starts = termStr.endsWith("*"); // Term starts with rest of the string
+		
+		contains = termStr.substring(1,termStr.length()-1).indexOf(" *") >= 0 ||
+					termStr.substring(1,termStr.length()-1).indexOf("* ") >= 0;
+		if (!contains)		
+			embed = termStr.substring(1,termStr.length()-1).indexOf("*") >= 0;
+		
+		multiple = termStr.indexOf(' ') > 0;
+		
+		
+		if (starts)
+			algorithm = "startsWith";
+		if (contains || ends)
+			algorithm = "contains";
+		if (multiple && starts && ends)
+			algorithm = "nonLeadingWildcardLiteralSubString";
+		if (multiple && starts && ends && contains)
+			algorithm = "contains";
+		
+		return algorithm;
+	}
+	
+	private String cleanTerm(String termStr) {		
+		termStr = termStr.trim();
+		termStr = termStr.replace("*","");
+		return termStr;
+	}
+	
 	//close the class
 }

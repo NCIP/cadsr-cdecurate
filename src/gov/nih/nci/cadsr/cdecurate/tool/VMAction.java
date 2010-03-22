@@ -56,7 +56,7 @@ public class VMAction implements Serializable
 	 * @param data
 	 *            VMForm object
 	 */
-	public void searchVMValues(VMForm data)
+	public void searchVMValues(VMForm data, String sRecordsDisplayed)
 	{
 
 		ResultSet rs = null;
@@ -114,6 +114,8 @@ public class VMAction implements Serializable
 
 				if (rs != null)
 				{
+					int g = 0;
+					int resultsDisplayed = GetACSearch.getInt(sRecordsDisplayed);
 					// loop through the resultSet and add them to the bean
 					while (rs.next())
 					{
@@ -1081,7 +1083,7 @@ public class VMAction implements Serializable
 		vmForm.setCurationServlet(data.getCurationServlet());
 		vmForm.setVMBean(selVM);
 		vmForm.setSearchTerm(selVM.getVM_LONG_NAME());
-		this.searchVMValues(vmForm);
+		this.searchVMValues(vmForm, "0");
 		if (vmForm.getVMList().size() > 0)
 		{
 			for (int i = 0; i < vmForm.getVMList().size(); i++)
@@ -1941,7 +1943,7 @@ public class VMAction implements Serializable
 		data.setSearchFilterDef(sDef); // search by defintion
 		// call method
 		data.setVMList(new Vector<VM_Bean>());
-		searchVMValues(data);
+		searchVMValues(data, "0");
 		// set teh flag
 		Vector<VM_Bean> vmList = data.getVMList();
 		if (vmList != null && vmList.size() > 0)
