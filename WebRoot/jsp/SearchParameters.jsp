@@ -396,7 +396,12 @@ function unQualifiedSearch(ac)
           <%}%>
           
     }
-    return flag;
+    var resultsToDisplay = document.searchParmsForm.recordsDisplayed.value;
+     
+    if (resultsToDisplay > 0)
+     	return true;
+    else
+    	return flag;
 }
 
 

@@ -158,7 +158,7 @@ public class VMServlet extends GenericServlet
    * start the search
    */
   @SuppressWarnings("unchecked")
-  public void readDataForSearch(GetACSearch getac)
+  public void readDataForSearch(GetACSearch getac, String sRecordsDisplayed)
   {
     HttpServletRequest req = httpRequest;
     HttpSession session = req.getSession();
@@ -225,7 +225,7 @@ public class VMServlet extends GenericServlet
     //set the version indicator
      setVersionValues(vmData,req,session);
     //call the action to do the search
-    vmAction.searchVMValues(vmData);
+    vmAction.searchVMValues(vmData, sRecordsDisplayed);
 
     //put the results back in the session
     Vector<VM_Bean> vAC = vmData.getVMList();

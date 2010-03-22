@@ -453,8 +453,14 @@ function unQualifiedSearch(ac){
             flag =false;
           <%}%>
  }
-    return flag;
-}
+ 
+     var resultsToDisplay = document.searchParmsForm.recordsDisplayed.value;
+     
+     if (resultsToDisplay > 0)
+     	return true;
+    else
+    	return flag;
+}	
 
 function searchAll(){
         
@@ -462,6 +468,7 @@ function searchAll(){
         var unQualifiedSearchflag = unQualifiedSearch(ac);
         var numOfDefaultContexts = <%=vContext.size()%>;
         var checkDefaultSearch = checkIfDefaultSearch(numOfDefaultContexts);
+        
    	    if(checkDefaultSearch && !unQualifiedSearchflag)
     	{
     		confirmation =  confirm("The Search will cause all caDSR content for "+ ac +" to be retrieved.\n"

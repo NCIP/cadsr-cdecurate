@@ -9,7 +9,9 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 //import gov.nih.nci.evs.domain.DescLogicConcept;
 
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
@@ -23,6 +25,7 @@ import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 import org.LexGrid.LexBIG.Extensions.Generic.LexBIGServiceConvenienceMethods;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService;
 import org.LexGrid.codingSchemes.CodingScheme;
 import org.apache.log4j.Logger;
 
@@ -214,15 +217,16 @@ public class EVSMasterTree {
 				rendHTML = renderHTML(vocabTree);
 			} else {
 
-				ResolvedConceptReferenceList vRoots = evs.getRootConcepts(dtsVocab);
+				
+				LexBIGService evsService = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(m_eUser.getEVSConURL(), "EvsServiceInfo");		
+				
+				EVSSearch.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab, m_eUser);
+				
+				CodingScheme cs = evsService.resolveCodingScheme(dtsVocab, null);
+				
+				ResolvedConceptReferenceList vRoots = evs.getRootConcepts(dtsVocab, cs);
 				// For each Root, get the Subconcepts. If subconcepts exist, build a Node
 				// object, else build a Leaf object
-
-
-				LexBIGService evsService = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(m_eUser.getEVSConURL(), "EvsServiceInfo");		
-				CodingScheme cs = evsService.resolveCodingScheme(dtsVocab, null);
-				CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
-				csvt.setVersion(cs.getRepresentsVersion());
 
 				if (vRoots != null) {
 					for (int j = 0; j < vRoots.getResolvedConceptReferenceCount(); j++) {
@@ -231,9 +235,9 @@ public class EVSMasterTree {
 							String sDispName = evs.getDisplayName(dtsVocab,
 									rcr, rcr.getCode());
 
-							int childrenCount = evs.getSubConceptCount(dtsVocab, csvt, rcr);
+							boolean hasChildren = evs.getSubConceptCount(dtsVocab, rcr);
 
-							if (childrenCount > 0) {
+							if (hasChildren) {
 								TreeNode tn = new TreeNode(lastNodeID++, sDispName, sDispName, rcr.getCode(),
 										level);
 								tn.setExpanded(false);
@@ -618,8 +622,8 @@ public class EVSMasterTree {
 		HttpSession session = m_classReq.getSession();
 		EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
 		String rendHTML = "";
-		Vector vSubNames = new Vector();
-		Vector vSubConcepts2 = new Vector();
+		HashMap<String, String> hSubConcepts = new HashMap<String, String>();
+		HashMap<String, String> hSubConcepts2 = new HashMap<String, String>();
 		int nodeLevel = 0;
 		int numChildren = 0;
 		String subNodeCode = "";
@@ -772,18 +776,23 @@ public class EVSMasterTree {
 				}
 			} else // numChildren == 0; nodes not stored so create
 			{
-				vSubNames = evs.getSubConceptCodes(dtsVocab, nodeName, "",
-						nodeCode, "");
-				if (vSubNames != null && vSubNames.size() > 0
-						&& vSubNames.size() < 20) {
-					for (int j = 0; j < vSubNames.size(); j++) {
-						subNodeName = evs.do_getConceptName((String) vSubNames.elementAt(j),dtsVocab);
-						subNodeCode = evs.do_getEVSCode((String) vSubNames.elementAt(j), dtsVocab);
-						vSubConcepts2 = evs.getSubConceptCodes(dtsVocab,
-								subNodeName, "", subNodeCode, "");
-						String subDispName = evs.getDisplayName(dtsVocab, null,
-								subNodeCode);
-						if (vSubConcepts2.size() > 0) {
+				hSubConcepts =  evs.getSubConcepts(dtsVocab, nodeName, "",
+						nodeCode);
+				
+				Iterator<String> iter = hSubConcepts.keySet().iterator();
+				if (hSubConcepts != null && hSubConcepts.size() > 0
+						&& hSubConcepts.size() < 20) {
+					while (iter.hasNext()){
+						subNodeCode = iter.next();
+						subNodeName = hSubConcepts.get(subNodeCode);
+						
+						hSubConcepts2 = evs.getSubConcepts(dtsVocab,
+								subNodeName, "", subNodeCode);
+						//String subDispName = evs.getDisplayName(dtsVocab, null,
+						//		subNodeCode);
+						String subDispName = subNodeName;
+						
+						if (hSubConcepts2.size() > 0) {
 							TreeNode tn = new TreeNode(newNodeID++,
 									subNodeName, subDispName, subNodeCode,
 									nodeLevel + 1);
@@ -826,14 +835,13 @@ public class EVSMasterTree {
 								m_treeLeafsHashParent.put(tl.getName(), tl);
 						}
 					}
-				} else if (vSubNames != null && vSubNames.size() > 19
+				} else if (hSubConcepts != null && hSubConcepts.size() > 19
 						&& nodeName.equals("OrphanConcepts")) //MGED OrphanConcepts should all be leafs
 				{
-					for (int n = 0; n < vSubNames.size(); n++) {
-						subNodeName = evs.do_getConceptName((String) vSubNames.elementAt(n),dtsVocab);
-						subNodeCode = evs.do_getEVSCode((String) vSubNames.elementAt(n), dtsVocab);
-						String subDispName = evs.getDisplayName(dtsVocab, null,
-								subNodeCode);
+					while (iter.hasNext()) {
+						subNodeCode = iter.next();
+						subNodeName = hSubConcepts.get(subNodeCode);
+						String subDispName = subNodeName;
 						TreeLeaf tl = new TreeLeaf(lastNodeID++, subNodeName,
 								subDispName, subNodeCode, nodeLevel + 1);
 						tl.setLevel(nodeLevel + 1);
@@ -847,14 +855,14 @@ public class EVSMasterTree {
 						if (sSearchAC.equals("ParentConceptVM"))
 							m_treeLeafsHashParent.put(tl.getName(), tl);
 					}
-				} else if (vSubNames != null && vSubNames.size() > 19) {
-					for (int j = 0; j < vSubNames.size(); j++) {
-						subNodeName = evs.do_getConceptName((String) vSubNames.elementAt(j),dtsVocab);
-						subNodeCode = (String) vSubNames.elementAt(j); //serAC.do_getEVSCode(subNodeName, dtsVocab);   
+				} else if (hSubConcepts != null && hSubConcepts.size() > 19) {
+					while (iter.hasNext()) {
+						subNodeCode = iter.next();
+						subNodeName = hSubConcepts.get(subNodeCode);
+						String subDispName = subNodeName;
 						//String subDispName = evs.getDisplayName(dtsVocab, null,
 						//		subNodeCode);
-						String subDispName = evs.getDisplayName(dtsVocab, null,
-								subNodeName);
+
 						TreeNode tn = new TreeNode(newNodeID++, subNodeName,
 								subDispName, subNodeCode, nodeLevel + 1);
 						tn.getChildren().setLevel(nodeLevel + 2);
@@ -1210,8 +1218,9 @@ public class EVSMasterTree {
 		sCCodeName = evs.do_getConceptName(sCCode, sCCodeDB);
 
 		do {
-			vSuperConceptNamesImmediate = evs.getSuperConceptNamesImmediate(
-					sCCodeDB, sCCodeName, sCCode);
+			vSuperConceptNamesImmediate = (Vector) evs.getSuperConceptNamesImmediate(
+					sCCodeDB, sCCodeName, sCCode).values();
+			
 			if (vSuperConceptNamesImmediate.size() == 1) {
 				sCCodeName = (String) vSuperConceptNamesImmediate.elementAt(0);
 				if (!sCCodeName.equals("") && sCCodeName != null) {
@@ -1273,7 +1282,7 @@ public class EVSMasterTree {
 		Tree parentTree = new Tree("parentTree" + sCCodeName);
 		parentTree.setName("parentTree" + sCCodeName);
 		EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
-		Vector vSubConceptNames = new Vector();
+		HashMap<String, String> hSubConcepts = new HashMap<String, String>();
 		String rendHTML = "";
 		try {
 			parentTree = (Tree) m_treesHashParent
@@ -1282,11 +1291,11 @@ public class EVSMasterTree {
 				rendHTML = renderHTML(parentTree);
 			} else {
 				parentTree = new Tree("parentTree" + sCCodeName);
-				vSubConceptNames = evs.getSubConceptCodes(sCCodeDB, sCCodeName,
-						"", sCCode, "");
+				hSubConcepts = evs.getSubConcepts(sCCodeDB, sCCodeName,
+						"", sCCode);
 				String dispName = evs
 				.getDisplayName(sCCodeDB, null, sCCode);
-				if (vSubConceptNames.size() > 0) {
+				if (hSubConcepts.size() > 0) {
 					TreeNode tn = new TreeNode(lastNodeID++, sCCodeName,
 							dispName, sCCode, level);
 					tn.setExpanded(false);

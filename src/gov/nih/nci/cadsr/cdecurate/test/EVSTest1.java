@@ -9,6 +9,7 @@ import gov.nih.nci.cadsr.cdecurate.tool.EVSSearch;
 import gov.nih.nci.cadsr.cdecurate.tool.EVS_UserBean;
 import gov.nih.nci.cadsr.cdecurate.tool.GetACService;
 import gov.nih.nci.cadsr.cdecurate.tool.TOOL_OPTION_Bean;
+import gov.nih.nci.system.client.ApplicationServiceProvider;
 //import gov.nih.nci.evs.domain.DescLogicConcept;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,6 +25,8 @@ import java.util.Vector;
 
 import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.codingSchemes.CodingScheme;
 
 import oracle.jdbc.pool.OracleDataSource;
 
@@ -304,15 +307,26 @@ public class EVSTest1
                 else
                     _logger.warn("Vocabulary " + vocab + " is not used by the Curation Tool.");
             }
-
-            // Check the connectivity by getting the root concepts.
-            ResolvedConceptReferenceList vals = evs.getRootConcepts(vocab);
+            
+            ResolvedConceptReferenceList vals = null;
+            
+            try {
+            	LexBIGService evsService = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");		
+            	CodingScheme cs = evsService.resolveCodingScheme(vocab, null);
+            
+            	// Check the connectivity by getting the root concepts.
+            	vals = evs.getRootConcepts(vocab, cs);
+            } catch (Exception e) 
+            {
+            	_logger.fatal("Exception getting service");
+            }
+            
             if (metaFlag == false && vals == null)
             {
                 _logger.fatal("No Root Concepts - CHECK CONNECTIVITY");
                 continue;
             }
-
+            
             // The code must match the name for the vocabulary in the set.
             String result = evs.do_getEVSCode(name, vocab);
             msg = name + " in " + vocab;
@@ -361,14 +375,14 @@ public class EVSTest1
                     _logger.info("Concept: " + concept.getEntityDescription() + " : " + concept.getCode());
                     if (getSub)
                     {
-                        Vector<String> subs = evs.getAllSubConceptCodes(vocab, concept.getCode());
+                        HashMap<String, String> subs = evs.getSubConcepts(vocab, concept.getEntityDescription().getContent(), "All", concept.getCode());
                         int cnt = 0;
-                        for (String snam : subs)
+                        for (String cc : subs.keySet())
                         {
                             if (++cnt > 2)
                                 break;
-                            result = evs.do_getConceptName(snam, vocab);
-                            _logger.info("Sub Concepts: " + result + " : " + snam);
+                            result = subs.get(cc);
+                            _logger.info("Sub Concepts: " + result + " : " + cc);
                         }
                     }
                 }

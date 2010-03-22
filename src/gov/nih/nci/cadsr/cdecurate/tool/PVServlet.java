@@ -682,9 +682,9 @@ public class PVServlet implements Serializable
    * @param conID String concept id filter
    * @return vector of PV Bean object from search results
    */
-   public Vector<PV_Bean> searchPVAttributes(String InString, String cd_idseq, String conName, String conID)
+   public Vector<PV_Bean> searchPVAttributes(String InString, String cd_idseq, String conName, String conID, String sRecordsDisplayed)
    {
-     Vector<PV_Bean> vdpv = pvAction.doPVVMSearch(InString, cd_idseq, conName, conID, data);
+     Vector<PV_Bean> vdpv = pvAction.doPVVMSearch(InString, cd_idseq, conName, conID, data, sRecordsDisplayed);
      return vdpv;
    }
 

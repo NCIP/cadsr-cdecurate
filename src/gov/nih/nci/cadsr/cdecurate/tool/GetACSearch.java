@@ -288,7 +288,7 @@ public class GetACSearch implements Serializable
                     else if (sSearchAC.equals("ValueMeaning"))
                     {
                         VMServlet vmSer = new VMServlet(req, res, m_servlet);
-                        vmSer.readDataForSearch(this);
+                        vmSer.readDataForSearch(this, sRecordsDisplayed);
                         vAC = (Vector)session.getAttribute("vACSearch");
                     }
                     else if (sSearchAC.equals("ObjectClass"))
@@ -440,12 +440,12 @@ public class GetACSearch implements Serializable
                     else if (sSearchAC.equals("PermissibleValue"))
                     {
                         PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
-                        vAC = pvser.searchPVAttributes("", sCDid, sCon, "");
+                        vAC = pvser.searchPVAttributes("", sCDid, sCon, "", sRecordsDisplayed);
                     }
                     else if (sSearchAC.equals("ValueMeaning"))
                     {
                         VMServlet vmSer = new VMServlet(req, res, m_servlet);
-                        vmSer.readDataForSearch(this);
+                        vmSer.readDataForSearch(this, sRecordsDisplayed);
                         vAC = (Vector)session.getAttribute("vACSearch");
                     }
                     else if (sSearchAC.equals("ObjectClass"))
@@ -481,7 +481,7 @@ public class GetACSearch implements Serializable
                     else if (sSearchAC.equals("PermissibleValue"))
                     {
                         PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
-                        vAC = pvser.searchPVAttributes(sKeyword, sCDid, "", "");
+                        vAC = pvser.searchPVAttributes(sKeyword, sCDid, "", "", sRecordsDisplayed);
                     }
                     else if (sSearchAC.equals("ObjectClass"))
                     {
@@ -501,11 +501,11 @@ public class GetACSearch implements Serializable
                     {
                     	initializeStack(session);
                     	VMServlet vmSer = new VMServlet(req, res, m_servlet);
-                        vmSer.readDataForSearch(this);
+                        vmSer.readDataForSearch(this, sRecordsDisplayed);
                         vAC = (Vector)session.getAttribute("vACSearch");
                     }
                     else if (sSearchAC.equals("ClassSchemeItems"))
-                        doCSISearch(sKeyword, sContext, sSchemes, vAC);
+                        doCSISearch(sKeyword, sContext, sSchemes, vAC, sRecordsDisplayed);
                     else if (sSearchAC.equals("ConceptClass"))
                         vAC = do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC, sRecordsDisplayed);
                 }
@@ -1382,9 +1382,9 @@ public class GetACSearch implements Serializable
                     recordsDisplayed = getInt(sRecordsDisplayed);
                     
                     // loop through the resultSet and add them to the bean                
-                    while (rs.next() && g <= recordsDisplayed)
+                    while (rs.next() && g < recordsDisplayed)
                     {
-               
+                    	
                         boolean isFound = false;
                         Vector usedBy = new Vector();
                         // check if ID is found in the map.
@@ -1691,7 +1691,7 @@ public class GetACSearch implements Serializable
                     recordsDisplayed = getInt(sRecordsDisplayed);
                     
                     // loop through the resultSet and add them to the bean                
-                    while (rs.next() && g <= recordsDisplayed)
+                    while (rs.next() && g < recordsDisplayed)
                     {
                     	g = g + 1;
                         DECBean = new DEC_Bean();
@@ -1887,8 +1887,9 @@ public class GetACSearch implements Serializable
                     recordsDisplayed = getInt(sRecordsDisplayed);
                     
                     // loop through the resultSet and add them to the bean                
-                    while (rs.next() && g <= recordsDisplayed)
+                    while (rs.next() && g < recordsDisplayed)
                     {
+                    	g = g + 1;
                         VDBean = new VD_Bean();
                         VDBean.setVD_PREFERRED_NAME(rs.getString("preferred_name"));
                         VDBean.setVD_LONG_NAME(rs.getString("long_name"));
@@ -2079,8 +2080,9 @@ public class GetACSearch implements Serializable
                     recordsDisplayed = getInt(sRecordsDisplayed);
                     
                     // loop through the resultSet and add them to the bean                
-                    while (rs.next() && g <= recordsDisplayed)
+                    while (rs.next() && g < recordsDisplayed)
                     {
+                    	g = g + 1;
                         CD_Bean CDBean = new CD_Bean();
                         CDBean.setCD_PREFERRED_NAME(rs.getString("preferred_name"));
                         CDBean.setCD_LONG_NAME(rs.getString("long_name"));
@@ -2149,7 +2151,7 @@ public class GetACSearch implements Serializable
      *            returns Vector of DEbean.
      * 
      */
-    private void doCSISearch(String InString, String ContName, String CSName, Vector vList)
+    private void doCSISearch(String InString, String ContName, String CSName, Vector vList, String sRecordsDisplayed)
     {
         ResultSet rs = null;
         CallableStatement cstmt = null;
@@ -2170,9 +2172,13 @@ public class GetACSearch implements Serializable
                 rs = (ResultSet) cstmt.getObject(4);
                 if (rs != null)
                 {
+                	 int recordsDisplayed = 0;
+                     int g = 0;
+                     recordsDisplayed = getInt(sRecordsDisplayed);
                     // loop through the resultSet and add them to the bean
-                    while (rs.next())
+                    while (rs.next() && g < recordsDisplayed)
                     {
+                    	g = g + 1;
                         CSI_Bean CSIBean = new CSI_Bean();
                         CSIBean.setCSI_CS_IDSEQ(rs.getString(1));
                         CSIBean.setCSI_CS_NAME(rs.getString(2));
@@ -3763,10 +3769,11 @@ public class GetACSearch implements Serializable
                 int recordsDisplayed = 0;
                 int g = 0;
                 recordsDisplayed = getInt(sRecordsDisplayed);
-                
+                EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
                 // loop through the resultSet and add them to the bean                
-                while (rs.next() && g <= recordsDisplayed)
+                while (rs.next() && g < recordsDisplayed)
                 {
+                	g = g + 1;
                     EVS_Bean OCBean = new EVS_Bean();
                     String sName = m_util.removeNewLineChar(rs.getString(1));
                     OCBean.setCONCEPT_NAME(sName);
@@ -3802,7 +3809,7 @@ public class GetACSearch implements Serializable
                     }
                     OCBean.setDEC_USING(decUseURL);
                     // get concatenated string of concept codes for EVS Identifier
-                    EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
+                    
                     sCUIString = evs.getEVSIdentifierString(rs.getString("condr_idseq"));
                     if (sCUIString == null)
                         sCUIString = "";
@@ -3882,8 +3889,9 @@ public class GetACSearch implements Serializable
                 recordsDisplayed = getInt(sRecordsDisplayed);
                 
                 // loop through the resultSet and add them to the bean                
-                while (rs.next() && g <= recordsDisplayed)
+                while (rs.next() && g < recordsDisplayed)
                 {
+                	g = g + 1;
                     EVS_Bean conBean = new EVS_Bean();
                     String sConName = m_util.removeNewLineChar(rs.getString("long_name"));
                     conBean.setCONCEPT_NAME(sConName);
@@ -7794,7 +7802,7 @@ public class GetACSearch implements Serializable
                     DataManager.setAttribute(session, "selQCValueName", crfValueName);
                 }
                 PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
-                vAC = pvser.searchPVAttributes(sKeyword, sStatus, "", "");
+                vAC = pvser.searchPVAttributes(sKeyword, sStatus, "", "", sRecordsDisplayed);
                 if (isIntSearch == false)
                 {
                     // **************why is this needed******************
@@ -7812,7 +7820,7 @@ public class GetACSearch implements Serializable
                 // DataManager.setAttribute(session, "vACSearch", vAC);
                 // getVMResult(req, res, vResult);
                 VMServlet vmSer = new VMServlet(req, res, m_servlet);
-                vmSer.readDataForSearch(this);
+                vmSer.readDataForSearch(this, sRecordsDisplayed);
             }
             else if (sSearchAC.equals("EVSValueMeaning") || sSearchAC.equals("VMConcept") || sSearchAC.equals("EditVMConcept"))
             {
@@ -10079,7 +10087,8 @@ public class GetACSearch implements Serializable
              rs = pstmt.executeQuery();
 
             if (rs != null)
-            {
+            {	
+            	EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
                 // loop through to printout the outstrings
                 while (rs.next())
                 {
@@ -10106,7 +10115,7 @@ public class GetACSearch implements Serializable
                     OCBean.setID(rs.getString(13));
                     OCBean.setCONTEXT_NAME(rs.getString(15));
                     // get concatenated string of concept codes for EVS Identifier
-                    EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
+                    
                     sCUIString = evs.getEVSIdentifierString(rs.getString("condr_idseq"));
                     if (sCUIString == null)
                         sCUIString = "";
@@ -10125,16 +10134,15 @@ public class GetACSearch implements Serializable
         }
     }
 
-    private int getInt ( String sRecordsDisplayed ) {
+    public static int getInt ( String sRecordsDisplayed ) {
     	int recordsDisplayed = 0;
     	try {
     		recordsDisplayed = Integer.parseInt(sRecordsDisplayed);
     	} catch (NumberFormatException e) {
-    		e.printStackTrace();
     		recordsDisplayed = 0;
     	}
 
-    	if (recordsDisplayed == 0)
+    	if (recordsDisplayed == 0  )
     		recordsDisplayed = Integer.MAX_VALUE;
 
     	return recordsDisplayed;

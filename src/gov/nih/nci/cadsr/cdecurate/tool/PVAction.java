@@ -528,7 +528,7 @@ public class PVAction implements Serializable {
 	 *
 	 */
 	public Vector<PV_Bean> doPVVMSearch(String InString, String cd_idseq,
-			String conName, String conID, PVForm data) // returns list of Data Elements
+			String conName, String conID, PVForm data, String sRecordsDisplayed) // returns list of Data Elements
 	{
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
@@ -554,8 +554,11 @@ public class PVAction implements Serializable {
 
 				String s;
 				if (rs != null) {
+					int g = 0;
+					int recordsDisplayed = GetACSearch.getInt(sRecordsDisplayed);
 					//loop through the resultSet and add them to the bean
-					while (rs.next()) {
+					while (rs.next() && g < recordsDisplayed) {
+						g = g + 1;
 						PV_Bean PVBean = new PV_Bean();
 						PVBean.setPV_PV_IDSEQ(rs.getString("pv_idseq"));
 						PVBean.setPV_VALUE(rs.getString("value"));
