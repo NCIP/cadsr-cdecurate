@@ -256,6 +256,7 @@ public class EVSTest1
         
         _logger.info("EVS: " + user.getEVSConURL());
         
+        
         // Attempt to use every Vocabulary defined in the properties and match it to the Curation Tool
         // defined Vocabularies.
         EVSSearch evs = new EVSSearch(user);

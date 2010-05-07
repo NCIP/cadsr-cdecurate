@@ -198,7 +198,8 @@
 		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
   //submits the page if Vocab changed.
    var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
-  
+   var treeActionStarted = false;
+   
   function doVocabChange()
   {
     hourglass();
@@ -472,12 +473,14 @@ function searchType(type)
 //fuction to search or expand or collapse tree
 function doTreeAction(type, nodeCode, vocab, nodeName, nodeID, nodeLvl)
 {
+
+	if (!treeActionStarted){
     var url = "";
     hourglass();
     window.status = "Refreshing the page, it may take a minute, please wait.....";
     document.searchResultsForm.Message.style.visibility="visible";
-//alert(type + nodeCode + vocab);
-//alert(nodeName + nodeID);
+  // alert(type + nodeCode + vocab);
+  // alert(nodeName + nodeID);
   //  opener.document.SearchActionForm.searchComp.value = "<%=sSearchAC%>";
     if(type == 'search')
       url = "../../cdecurate/NCICurationServlet?reqType=treeSearch&&keywordID=" + nodeCode + "&&vocab=" + vocab + "&&keywordName=" + nodeName + "&&nodeID=" + nodeID + "&&nodeLevel=" + nodeLvl;
@@ -487,9 +490,11 @@ function doTreeAction(type, nodeCode, vocab, nodeName, nodeID, nodeLvl)
       url = "../../cdecurate/NCICurationServlet?reqType=treeCollapse&&nodeName=" + nodeName + "&&vocab=" + vocab + "&&nodeCode=" + nodeCode + "&&nodeID=" + nodeID + "&&nodeLevel=" + nodeLvl;
     document.searchParmsForm.action = url;
     window.status = "Submitting the page, please wait.....";
+    treeActionStarted = true;
     if (document.searchResultsForm != null)
       document.searchResultsForm.Message.style.visibility="visible";
     document.searchParmsForm.submit();
+    }
 }
 
 
