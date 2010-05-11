@@ -31,16 +31,16 @@ import org.apache.log4j.Logger;
 /**
  * The NCICurationServlet is the main servlet for communicating between the client and the server.
  * <P>
- * 
+ *
  * @author Joe Zhou, Sumana Hegde, Tom Phillips, Jesse McKean
  * @version 3.0
  */
 /*
- * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. (“ScenPro”) Copyright Notice. The software subject to this notice and license
- * includes both human readable source code form and machine readable, binary, object code form (“the CaCORE Software”). The CaCORE Software was developed in
- * conjunction with the National Cancer Institute (“NCI”) by NCI employees and employees of SCENPRO. To the extent government employees are authors, any rights
- * in such works shall be subject to Title 17 of the United States Code, section 105. This CaCORE Software License (the “License”) is between NCI and You. “You
- * (or “Your”) shall mean a person or an entity, and all other entities that control, are controlled by, or are under common control with the entity. “Control”
+ * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. ("ScenPro") Copyright Notice. The software subject to this notice and license
+ * includes both human readable source code form and machine readable, binary, object code form ("the CaCORE Software"). The CaCORE Software was developed in
+ * conjunction with the National Cancer Institute ("NCI") by NCI employees and employees of SCENPRO. To the extent government employees are authors, any rights
+ * in such works shall be subject to Title 17 of the United States Code, section 105. This CaCORE Software License (the "License") is between NCI and You. "You
+ * (or "Your") shall mean a person or an entity, and all other entities that control, are controlled by, or are under common control with the entity. "Control"
  * for purposes of this definition means (i) the direct or indirect power to cause the direction or management of such entity, whether by contract or otherwise,
  * or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial ownership of such entity. This License is granted provided
  * that You agree to the conditions described below. NCI grants You a non-exclusive, worldwide, perpetual, fully-paid-up, no-charge, irrevocable, transferable
@@ -52,9 +52,9 @@ import org.apache.log4j.Logger;
  * redistributions of the source code for the Software must retain the above copyright notice, this list of conditions and the disclaimer and limitation of
  * liability of Article 6, below. Your redistributions in object code form must reproduce the above copyright notice, this list of conditions and the disclaimer
  * of Article 6 in the documentation and/or other materials provided with the distribution, if any. 2. Your end-user documentation included with the
- * redistribution, if any, must include the following acknowledgment: “This product includes software developed by SCENPRO and the National Cancer Institute.”
+ * redistribution, if any, must include the following acknowledgment: "This product includes software developed by SCENPRO and the National Cancer Institute."
  * If You do not include such end-user documentation, You shall include this acknowledgment in the Software itself, wherever such third-party acknowledgments
- * normally appear. 3. You may not use the names "The National Cancer Institute", "NCI" “ScenPro, Inc.” and "SCENPRO" to endorse or promote products derived
+ * normally appear. 3. You may not use the names "The National Cancer Institute", "NCI" "ScenPro, Inc." and "SCENPRO" to endorse or promote products derived
  * from this Software. This License does not authorize You to use any trademarks, service marks, trade names, logos or product names of either NCI or SCENPRO,
  * except as required to comply with the terms of this License. 4. For sake of clarity, and not by way of limitation, You may incorporate this Software into
  * Your proprietary programs and into any third party proprietary programs. However, if You incorporate the Software into third party proprietary programs, You
@@ -85,12 +85,12 @@ public class NCICurationServlet extends HttpServlet
     public static String _authenticateDSName = null;
     public static String _userName = null;
     public static String _password = null;
-    
+
     public static final Logger logger = Logger.getLogger(NCICurationServlet.class.getName());
 
     /**
      * To initialize global variables and load the Oracle driver.
-     * 
+     *
      * @param config
      *        The ServletConfig object that has the server configuration
      * @throws ServletException
@@ -129,10 +129,10 @@ public class NCICurationServlet extends HttpServlet
         // call the method to make oracle connection **database connection class requires lot of changes everywhere;
         // leave it right now */
         this.initOracleConnect();
-        
-        
+
+
     }
-    
+
 
     /**
      * initilize the oracle connect
@@ -189,7 +189,7 @@ public class NCICurationServlet extends HttpServlet
 
     /**
      * The service method services all requests to this servlet.
-     * 
+     *
      * @param req
      *        The HttpServletRequest object that contains the request
      * @param res
@@ -199,8 +199,8 @@ public class NCICurationServlet extends HttpServlet
     {
         ClockTime clock = new ClockTime();
         try
-        { 
-        	String reqType = req.getParameter("reqType"); 
+        {
+        	String reqType = req.getParameter("reqType");
         	HttpSession session = req.getSession();
         	String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
         	if((menuAction == null) && !(reqType.equals("homePage")) && !(reqType.equals("login"))&& !(reqType.equals("view")) && !(reqType.equals("viewVDPVSTab"))&& !(reqType.equals("viewVMAction")) && !(reqType.equals("viewPVAction")) && !(reqType.equals("getAltNames")) && !(reqType.equals("getRefDocument"))){
@@ -214,12 +214,12 @@ public class NCICurationServlet extends HttpServlet
         	   session.setAttribute("forwardReq", reqType);
         	if (forwardReq == null && reqType.equals("login"))
         		session.setAttribute("directLogin", "yes");
-        	
+
         	ACRequestTypes acrt = null;
-        	CurationServlet curObj = null;        	
+        	CurationServlet curObj = null;
         	try {
         		acrt = ACRequestTypes.valueOf(reqType);
-				if (acrt != null)   
+				if (acrt != null)
 				{
 				   String className = acrt.getClassName();
 				   curObj = (CurationServlet) Class.forName(className).newInstance();
@@ -233,7 +233,7 @@ public class NCICurationServlet extends HttpServlet
 	        finally
 	        {
 	        	if (curObj != null)
-					curObj.destroy();	        		
+					curObj.destroy();
 	        }
 			if (acrt == null)
 			{
@@ -280,7 +280,7 @@ public class NCICurationServlet extends HttpServlet
 
     /**
      * Get Servlet information
-     * 
+     *
      * @return java.lang.String
      */
     public String getServletInfo()
@@ -296,7 +296,7 @@ public class NCICurationServlet extends HttpServlet
         logger.info(" ");
         logger.info("Stopping " + this.getClass().getName());
         logger.info(" ");
-        
+
      }
-    
+
 }

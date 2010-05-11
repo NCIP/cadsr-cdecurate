@@ -9,18 +9,18 @@ import gov.nih.nci.cadsr.cdecurate.database.ACTypes;
 /**
  * The CSI_Bean encapsulates the CSI (Class Scheme Items) information
  * <P>
- * 
+ *
  * @author Sumana Hegde
  * @version 3.0
  */
 /*
- * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. (“ScenPro”) Copyright Notice. The software
+ * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. ("ScenPro") Copyright Notice. The software
  * subject to this notice and license includes both human readable source code form and machine readable, binary, object
- * code form (“the CaCORE Software”). The CaCORE Software was developed in conjunction with the National Cancer
- * Institute (“NCI”) by NCI employees and employees of SCENPRO. To the extent government employees are authors, any
+ * code form ("the CaCORE Software"). The CaCORE Software was developed in conjunction with the National Cancer
+ * Institute ("NCI") by NCI employees and employees of SCENPRO. To the extent government employees are authors, any
  * rights in such works shall be subject to Title 17 of the United States Code, section 105. This CaCORE Software
- * License (the “License”) is between NCI and You. “You (or “Your”) shall mean a person or an entity, and all other
- * entities that control, are controlled by, or are under common control with the entity. “Control” for purposes of this
+ * License (the "License") is between NCI and You. "You (or "Your") shall mean a person or an entity, and all other
+ * entities that control, are controlled by, or are under common control with the entity. "Control" for purposes of this
  * definition means (i) the direct or indirect power to cause the direction or management of such entity, whether by
  * contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii)
  * beneficial ownership of such entity. This License is granted provided that You agree to the conditions described
@@ -36,10 +36,10 @@ import gov.nih.nci.cadsr.cdecurate.database.ACTypes;
  * liability of Article 6, below. Your redistributions in object code form must reproduce the above copyright notice,
  * this list of conditions and the disclaimer of Article 6 in the documentation and/or other materials provided with the
  * distribution, if any. 2. Your end-user documentation included with the redistribution, if any, must include the
- * following acknowledgment: “This product includes software developed by SCENPRO and the National Cancer Institute.” If
+ * following acknowledgment: "This product includes software developed by SCENPRO and the National Cancer Institute." If
  * You do not include such end-user documentation, You shall include this acknowledgment in the Software itself,
  * wherever such third-party acknowledgments normally appear. 3. You may not use the names "The National Cancer
- * Institute", "NCI" “ScenPro, Inc.” and "SCENPRO" to endorse or promote products derived from this Software. This
+ * Institute", "NCI" "ScenPro, Inc." and "SCENPRO" to endorse or promote products derived from this Software. This
  * License does not authorize You to use any trademarks, service marks, trade names, logos or product names of either
  * NCI or SCENPRO, except as required to comply with the terms of this License. 4. For sake of clarity, and not by way
  * of limitation, You may incorporate this Software into Your proprietary programs and into any third party proprietary
@@ -119,9 +119,9 @@ public class CSI_Bean extends AC_Bean
     private String            CSI_LABEL;
 
     private String            CSI_LEVEL;
-    
+
     private String 			 CSI_CS_VERSION;
-    
+
     private String 			 CSI_CS_PUBLICID;
 
     /**
@@ -158,13 +158,13 @@ public class CSI_Bean extends AC_Bean
     public CSI_Bean()
     {
         super();
-        
+
         _type = ACTypes.ClassSchemeItem;
     }
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -175,7 +175,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_CSCSI_IDSEQ method sets the CSI_CSCSI_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The CSI_CSCSI_IDSEQ to set
      */
@@ -186,7 +186,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_CSI_IDSEQ method sets the CSI_CSI_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The CSI_CSI_IDSEQ to set
      */
@@ -197,7 +197,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_NAME method sets the CSI_NAME for this bean.
-     * 
+     *
      * @param s
      *            The CSI_NAME to set
      */
@@ -208,7 +208,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_CONTE_IDSEQ method sets the CSI_CONTE_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The CSI_CONTE_IDSEQ to set
      */
@@ -219,7 +219,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_DEFINITION method sets the CSI_DEFINITION for this bean.
-     * 
+     *
      * @param s
      *            The CSI_DEFINITION to set
      */
@@ -230,7 +230,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_CS_NAME method sets the CSI_CS_NAME for this bean.
-     * 
+     *
      * @param s
      *            The CSI_CS_NAME to set
      */
@@ -241,7 +241,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_CS_LONG_NAME method sets the CSI_CS_LONG_NAME for this bean.
-     * 
+     *
      * @param s
      *            The CSI_CS_LONG_NAME to set
      */
@@ -252,7 +252,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_ASL_NAME method sets the CSI_ASL_NAME for this bean.
-     * 
+     *
      * @param s
      *            The CSI_ASL_NAME to set
      */
@@ -263,7 +263,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_LATEST_VERSION_IND method sets the CSI_LATEST_VERSION_IND for this bean.
-     * 
+     *
      * @param s
      *            The CSI_LATEST_VERSION_IND to set
      */
@@ -274,7 +274,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_BEGIN_DATE method sets the CSI_BEGIN_DATE for this bean.
-     * 
+     *
      * @param s
      *            The CSI_BEGIN_DATE to set
      */
@@ -285,7 +285,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_END_DATE method sets the CSI_END_DATE for this bean.
-     * 
+     *
      * @param s
      *            The CSI_END_DATE to set
      */
@@ -296,7 +296,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_CHANGE_NOTE method sets the CSI_CHANGE_NOTE for this bean.
-     * 
+     *
      * @param s
      *            The CSI_CHANGE_NOTE to set
      */
@@ -307,7 +307,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_CREATED_BY method sets the CSI_CREATED_BY for this bean.
-     * 
+     *
      * @param s
      *            The CSI_CREATED_BY to set
      */
@@ -318,7 +318,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_DATE_CREATED method sets the CSI_DATE_CREATED for this bean.
-     * 
+     *
      * @param s
      *            The CSI_DATE_CREATED to set
      */
@@ -329,7 +329,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_MODIFIED_BY method sets the CSI_MODIFIED_BY for this bean.
-     * 
+     *
      * @param s
      *            The CSI_MODIFIED_BY to set
      */
@@ -340,7 +340,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_DATE_MODIFIED method sets the CSI_DATE_MODIFIED for this bean.
-     * 
+     *
      * @param s
      *            The CSI_DATE_MODIFIED to set
      */
@@ -351,7 +351,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_DELETED_IND method sets the CSI_DELETED_IND for this bean.
-     * 
+     *
      * @param s
      *            The CSI_DELETED_IND to set
      */
@@ -362,7 +362,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_CONTEXT_NAME method sets the CSI_CONTEXT_NAME for this bean.
-     * 
+     *
      * @param s
      *            The CSI_CONTEXT_NAME to set
      */
@@ -373,7 +373,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_CS_IDSEQ method sets the CSI_CS_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The CSI_CS_IDSEQ to set
      */
@@ -384,7 +384,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_CSITL_NAME method sets the CSI_CSITL_NAME for this bean.
-     * 
+     *
      * @param s
      *            The CSI_CSITL_NAME to set
      */
@@ -395,7 +395,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_DIMENSIONALITY method sets the CSI_DIMENSIONALITY for this bean.
-     * 
+     *
      * @param s
      *            The CSI_DIMENSIONALITY to set
      */
@@ -406,7 +406,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_CHECKED method sets the CSI_CHECKED for this bean.
-     * 
+     *
      * @param b
      *            The CSI_CHECKED to set
      */
@@ -417,7 +417,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setP_CSCSI_IDSEQ method sets the P_CSCSI_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The P_CSCSI_IDSEQ to set
      */
@@ -428,7 +428,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_DISPLAY_ORDER method sets the CSI_DISPLAY_ORDER for this bean.
-     * 
+     *
      * @param s
      *            The CSI_DISPLAY_ORDER to set
      */
@@ -439,7 +439,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_LABEL method sets the CSI_LABEL for this bean.
-     * 
+     *
      * @param s
      *            The CSI_LABEL to set
      */
@@ -450,7 +450,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The setCSI_LEVEL method sets the CSI_LEVEL for this bean.
-     * 
+     *
      * @param s
      *            The CSI_LEVEL to set
      */
@@ -462,7 +462,7 @@ public class CSI_Bean extends AC_Bean
     // Get Properties
     /**
      * The getRETURN_CODE method returns the RETURN_CODE for this bean.
-     * 
+     *
      * @return String The RETURN_CODE
      */
     public String getRETURN_CODE()
@@ -472,7 +472,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_CSCSI_IDSEQ method returns the CSI_CSCSI_IDSEQ for this bean.
-     * 
+     *
      * @return String The CSI_CSCSI_IDSEQ
      */
     public String getCSI_CSCSI_IDSEQ()
@@ -482,7 +482,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_CSI_IDSEQ method returns the CSI_CSI_IDSEQ for this bean.
-     * 
+     *
      * @return String The CSI_CSI_IDSEQ
      */
     public String getCSI_CSI_IDSEQ()
@@ -492,7 +492,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * (non-Javadoc)
-     * 
+     *
      * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getIDSEQ()
      */
     public String getIDSEQ()
@@ -502,7 +502,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_NAME method returns the CSI_NAME for this bean.
-     * 
+     *
      * @return String The CSI_NAME
      */
     public String getCSI_NAME()
@@ -512,7 +512,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_CONTE_IDSEQ method returns the CSI_CONTE_IDSEQ for this bean.
-     * 
+     *
      * @return String The CSI_CONTE_IDSEQ
      */
     public String getCSI_CONTE_IDSEQ()
@@ -522,7 +522,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * (non-Javadoc)
-     * 
+     *
      * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextIDSEQ()
      */
     @Override
@@ -533,7 +533,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_DEFINITION method returns the CSI_DEFINITION for this bean.
-     * 
+     *
      * @return String The CSI_DEFINITION
      */
     public String getCSI_DEFINITION()
@@ -543,7 +543,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_CS_NAME method returns the CSI_CS_NAME for this bean.
-     * 
+     *
      * @return String The CSI_CS_NAME
      */
     public String getCSI_CS_NAME()
@@ -553,7 +553,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_CS_LONG_NAME method returns the CSI_CS_LONG_NAME for this bean.
-     * 
+     *
      * @return String The CSI_CS_LONG_NAME
      */
     public String getCSI_CS_LONG_NAME()
@@ -563,7 +563,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_ASL_NAME method returns the CSI_ASL_NAME for this bean.
-     * 
+     *
      * @return String The CSI_ASL_NAME
      */
     public String getCSI_ASL_NAME()
@@ -573,7 +573,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_LATEST_VERSION_IND method returns the CSI_LATEST_VERSION_IND for this bean.
-     * 
+     *
      * @return String The CSI_LATEST_VERSION_IND
      */
     public String getCSI_LATEST_VERSION_IND()
@@ -583,7 +583,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_BEGIN_DATE method returns the CSI_BEGIN_DATE for this bean.
-     * 
+     *
      * @return String The CSI_BEGIN_DATE
      */
     public String getCSI_BEGIN_DATE()
@@ -593,7 +593,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_END_DATE method returns the CSI_END_DATE for this bean.
-     * 
+     *
      * @return String The CSI_END_DATE
      */
     public String getCSI_END_DATE()
@@ -603,7 +603,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_CHANGE_NOTE method returns the CSI_CHANGE_NOTE for this bean.
-     * 
+     *
      * @return String The CSI_CHANGE_NOTE
      */
     public String getCSI_CHANGE_NOTE()
@@ -613,7 +613,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_CREATED_BY method returns the CSI_CREATED_BY for this bean.
-     * 
+     *
      * @return String The CSI_CREATED_BY
      */
     public String getCSI_CREATED_BY()
@@ -623,7 +623,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_DATE_CREATED method returns the CSI_DATE_CREATED for this bean.
-     * 
+     *
      * @return String The CSI_DATE_CREATED
      */
     public String getCSI_DATE_CREATED()
@@ -633,7 +633,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_MODIFIED_BY method returns the CSI_MODIFIED_BY for this bean.
-     * 
+     *
      * @return String The CSI_MODIFIED_BY
      */
     public String getCSI_MODIFIED_BY()
@@ -643,7 +643,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_DATE_MODIFIED method returns the CSI_DATE_MODIFIED for this bean.
-     * 
+     *
      * @return String The CSI_DATE_MODIFIED
      */
     public String getCSI_DATE_MODIFIED()
@@ -653,7 +653,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_DELETED_IND method returns the CSI_DELETED_IND for this bean.
-     * 
+     *
      * @return String The CSI_DELETED_IND
      */
     public String getCSI_DELETED_IND()
@@ -663,7 +663,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_CONTEXT_NAME method returns the CSI_CONTEXT_NAME for this bean.
-     * 
+     *
      * @return String The CSI_CONTEXT_NAME
      */
     public String getCSI_CONTEXT_NAME()
@@ -673,7 +673,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * (non-Javadoc)
-     * 
+     *
      * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextName()
      */
     @Override
@@ -684,7 +684,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_CS_IDSEQ method returns the CSI_CS_IDSEQ for this bean.
-     * 
+     *
      * @return String The CSI_CS_IDSEQ
      */
     public String getCSI_CS_IDSEQ()
@@ -694,7 +694,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_CSITL_NAME method returns the CSI_CSITL_NAME for this bean.
-     * 
+     *
      * @return String The CSI_CSITL_NAME
      */
     public String getCSI_CSITL_NAME()
@@ -704,7 +704,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_DIMENSIONALITY method returns the CSI_DIMENSIONALITY for this bean.
-     * 
+     *
      * @return String The CSI_DIMENSIONALITY
      */
     public String getCSI_DIMENSIONALITY()
@@ -714,7 +714,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_CHECKED method returns the CSI_CHECKED for this bean.
-     * 
+     *
      * @return boolean The CSI_CHECKED
      */
     public boolean getCSI_CHECKED()
@@ -724,7 +724,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getP_CSCSI_IDSEQ method returns the P_CSCSI_IDSEQ for this bean.
-     * 
+     *
      * @return String The P_CSCSI_IDSEQ
      */
     public String getP_CSCSI_IDSEQ()
@@ -734,7 +734,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_DISPLAY_ORDER method returns the CSI_DISPLAY_ORDER for this bean.
-     * 
+     *
      * @return String The CSI_DISPLAY_ORDER
      */
     public String getCSI_DISPLAY_ORDER()
@@ -744,7 +744,7 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_LABEL method returns the CSI_LABEL for this bean.
-     * 
+     *
      * @return String The CSI_LABEL
      */
     public String getCSI_LABEL()
@@ -754,12 +754,12 @@ public class CSI_Bean extends AC_Bean
 
     /**
      * The getCSI_LEVEL method returns the CSI_LEVEL for this bean.
-     * 
+     *
      * @return String The CSI_LEVEL
      */
     public String getCSI_LEVEL()
     {
         return this.CSI_LEVEL;
     }
-    
+
 }
