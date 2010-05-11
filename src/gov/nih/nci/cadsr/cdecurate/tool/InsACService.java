@@ -44,24 +44,24 @@ import org.apache.log4j.Logger;
  * where all calls to insert or update to the database after the validation is
  * done here.
  * <P>
- * 
+ *
  * @author Sumana Hegde
  * @version 3.0
- * 
+ *
  */
 
 /*
  * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc.
- * (“ScenPro”) Copyright Notice. The software subject to this notice and license
+ * ("ScenPro") Copyright Notice. The software subject to this notice and license
  * includes both human readable source code form and machine readable, binary,
- * object code form (“the CaCORE Software”). The CaCORE Software was developed
- * in conjunction with the National Cancer Institute (“NCI”) by NCI employees
+ * object code form ("the CaCORE Software"). The CaCORE Software was developed
+ * in conjunction with the National Cancer Institute ("NCI") by NCI employees
  * and employees of SCENPRO. To the extent government employees are authors, any
  * rights in such works shall be subject to Title 17 of the United States Code,
- * section 105. This CaCORE Software License (the “License”) is between NCI and
- * You. “You (or “Your”) shall mean a person or an entity, and all other
+ * section 105. This CaCORE Software License (the "License") is between NCI and
+ * You. "You (or "Your") shall mean a person or an entity, and all other
  * entities that control, are controlled by, or are under common control with
- * the entity. “Control” for purposes of this definition means (i) the direct or
+ * the entity. "Control" for purposes of this definition means (i) the direct or
  * indirect power to cause the direction or management of such entity, whether
  * by contract or otherwise, or (ii) ownership of fifty percent (50%) or more of
  * the outstanding shares, or (iii) beneficial ownership of such entity. This
@@ -84,12 +84,12 @@ import org.apache.log4j.Logger;
  * copyright notice, this list of conditions and the disclaimer of Article 6 in
  * the documentation and/or other materials provided with the distribution, if
  * any. 2. Your end-user documentation included with the redistribution, if any,
- * must include the following acknowledgment: “This product includes software
- * developed by SCENPRO and the National Cancer Institute.” If You do not
+ * must include the following acknowledgment: "This product includes software
+ * developed by SCENPRO and the National Cancer Institute." If You do not
  * include such end-user documentation, You shall include this acknowledgment in
  * the Software itself, wherever such third-party acknowledgments normally
  * appear. 3. You may not use the names "The National Cancer Institute", "NCI"
- * “ScenPro, Inc.” and "SCENPRO" to endorse or promote products derived from
+ * "ScenPro, Inc." and "SCENPRO" to endorse or promote products derived from
  * this Software. This License does not authorize You to use any trademarks,
  * service marks, trade names, logos or product names of either NCI or SCENPRO,
  * except as required to comply with the terms of this License. 4. For sake of
@@ -126,7 +126,7 @@ import org.apache.log4j.Logger;
 // @SuppressWarnings("unchecked")
 public class InsACService implements Serializable {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 738251122350261121L;
 
@@ -142,7 +142,7 @@ public class InsACService implements Serializable {
 
 	/**
 	 * Constructs a new instance.
-	 * 
+	 *
 	 * @param req
 	 *            The HttpServletRequest object.
 	 * @param res
@@ -159,7 +159,7 @@ public class InsACService implements Serializable {
 
 	/**
 	 * stores status message in the session
-	 * 
+	 *
 	 * @param sMsg
 	 *            string message to append to.
 	 */
@@ -185,7 +185,7 @@ public class InsACService implements Serializable {
 	 * make relationship between Permissible values and value domain, calls
 	 * 'setDES' to store selected rep term, rep qualifier, and language in the
 	 * database,
-	 * 
+	 *
 	 * @param sAction
 	 *            Insert or update Action.
 	 * @param vd
@@ -194,7 +194,7 @@ public class InsACService implements Serializable {
 	 *            for Versioning.
 	 * @param oldVD
 	 *            VD IDseq.
-	 * 
+	 *
 	 * @return String return code from the stored procedure call. null if no
 	 *         error occurred.
 	 */
@@ -658,7 +658,7 @@ public class InsACService implements Serializable {
 			// logger.info(m_servlet.getLogMessage(m_classReq, "setVD", "done
 			// set", startDate, new java.util.Date()));
 		} catch (Exception e) {
-			
+
 			logger.error("ERROR in InsAerrorice-setVD for other : "
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
@@ -674,7 +674,7 @@ public class InsACService implements Serializable {
 	/**
 	 * The UpdateCRFValue method updates the quest contents table with the vp
 	 * idseq. calls setQuestContent to update.
-	 * 
+	 *
 	 * @param pv
 	 *            PVid idseq of the permissible value
 	 */
@@ -706,7 +706,7 @@ public class InsACService implements Serializable {
 	 * SBREXT_Set_Row.SET_DEC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}"
 	 * to submit If no error occurs from query execute calls 'setDES' to store
 	 * selected language in the database,
-	 * 
+	 *
 	 * @param sAction
 	 *            Insert or update Action.
 	 * @param dec
@@ -715,7 +715,7 @@ public class InsACService implements Serializable {
 	 *            for Versioning.
 	 * @param oldDEC
 	 *            string dec idseq
-	 * 
+	 *
 	 * @return String return code from the stored procedure call. null if no
 	 *         error occurred.
 	 */
@@ -1211,8 +1211,8 @@ public class InsACService implements Serializable {
 				if (dec.getDEC_PROP_CONDR_IDSEQ() != null
 						&& !dec.getDEC_PROP_CONDR_IDSEQ().equals(""))
 					evs.fillPropVectors(dec.getDEC_PROP_CONDR_IDSEQ(), dec,
-							sAction);	
-				EVS_Bean nullEVS = null; 
+							sAction);
+				EVS_Bean nullEVS = null;
  				dec = (DEC_Bean) m_servlet.getACNames(nullEVS, "SubmitDEC", dec);
 				dec.setDEC_PREFERRED_NAME(dec.getAC_ABBR_PREF_NAME());
 			}
@@ -1252,7 +1252,7 @@ public class InsACService implements Serializable {
 	/**
 	 * to add or remove cs-csi relationship for the selected AC. Called from
 	 * setDE, setVD, setDEC.
-	 * 
+	 *
 	 * @param ac_id
 	 *            string ac_idseq.
 	 * @param vAC_CS
@@ -1263,7 +1263,7 @@ public class InsACService implements Serializable {
 	 * @param acAction
 	 * @param acName
 	 * @throws Exception
-	 * 
+	 *
 	 */
 	public void addRemoveACCSI(String ac_id, Vector<AC_CSI_Bean> vAC_CS,
 			Vector<AC_CSI_Bean> vRemove_ACCSI, Vector vACID, String acAction,
@@ -1330,10 +1330,10 @@ public class InsACService implements Serializable {
 	} // end addRemoveCSCSI
 
 	/**
-	 * 
+	 *
 	 * @param sCondrString
 	 *            string condr idseq
-	 * 
+	 *
 	 * @return sCondrString
 	 */
 	public String prepCondrStringForSubmit(String sCondrString) {
@@ -1376,14 +1376,14 @@ public class InsACService implements Serializable {
 	 * values from the bean, sets in parameters, and registers output parameter.
 	 * Calls oracle stored procedure "{call
 	 * SBREXT_Set_Row.SET_OBJECT_CLASS(?,?,?,?,?,?)}" to submit
-	 * 
+	 *
 	 * @param sAction
 	 *            Insert or update Action.
 	 * @param dec
 	 *            DEC Bean.
 	 * @param req
 	 *            HttpServletRequest Object.
-	 * 
+	 *
 	 * @return DEC_Bean return bean updated with change attributes.
 	 */
 	public DEC_Bean setObjectClassDEC(String sAction, DEC_Bean dec,
@@ -1558,14 +1558,14 @@ public class InsACService implements Serializable {
 	 * values from the bean, sets in parameters, and registers output parameter.
 	 * Calls oracle stored procedure "{call
 	 * SBREXT_Set_Row.SET_PROP_CONDR(?,?,?,?,?,?)}" to submit
-	 * 
+	 *
 	 * @param sAction
 	 *            Insert or update Action.
 	 * @param dec
 	 *            DEC Bean.
 	 * @param req
 	 *            HttpServletRequest Object.
-	 * 
+	 *
 	 * @return DEC_Bean return bean updated with change attributes.
 	 */
 	public DEC_Bean setPropertyDEC(String sAction, DEC_Bean dec,
@@ -1741,7 +1741,7 @@ public class InsACService implements Serializable {
 	 * attribute values from the bean, sets in parameters, and registers output
 	 * parameter. Calls oracle stored procedure "{call
 	 * SBREXT_Set_Row.SET_representation(?,?,?,?,?,?)}" to submit
-	 * 
+	 *
 	 * @param sAction
 	 *            Insert or update Action.
 	 * @param sREP_IDSEQ
@@ -1752,7 +1752,7 @@ public class InsACService implements Serializable {
 	 *            rep bean
 	 * @param req
 	 *            HttpServletRequest Object.
-	 * 
+	 *
 	 * @return String return code from the stored procedure call. null if no
 	 *         error occurred.
 	 */
@@ -1924,14 +1924,14 @@ public class InsACService implements Serializable {
 	 * setValidatePageValuesVD methods. Creates the sql queries for the selected
 	 * field, to check if the value exists in the database. Calls
 	 * 'getAC.doComponentExist' to execute the query.
-	 * 
+	 *
 	 * @param mDEC
 	 *            Data Element Concept Bean.
 	 * @param editAct
 	 *            string edit action
 	 * @param setAction
 	 *            string set action
-	 * 
+	 *
 	 * @return String retValue message if exists already. Otherwise empty
 	 *         string.
 	 */
@@ -1973,10 +1973,10 @@ public class InsACService implements Serializable {
 				rs = pstmt.executeQuery(); // call teh query
 				while (rs.next())
 					sReturnID = rs.getString(1);
-				
+
 				rs = SQLHelper.closeResultSet(rs);
 	            pstmt = SQLHelper.closePreparedStatement(pstmt);
-	          
+
 				// oc-prop-context is not unique
 				if (sReturnID != null && !sReturnID.equals(""))
 					uniqueMsg = "Combination of Object Class, Property and Context already exists in DEC with Public ID(s): "
@@ -2061,14 +2061,14 @@ public class InsACService implements Serializable {
 	       return DECBeanSR;
 	   }
 
-	
+
 	/**
 	 * To insert a Qualifier Term or update the existing one in the database
 	 * after the validation. Called from CurationServlet. Gets all the attribute
 	 * values from the bean, sets in parameters, and registers output parameter.
 	 * Calls oracle stored procedure "{call
 	 * SBREXT_Set_Row.SET_QUAL(?,?,?,?,?,?,?,?,?)}" to submit
-	 * 
+	 *
 	 * @param sAction
 	 *            Insert or update Action.
 	 * @param sREP_IDSEQ.
@@ -2076,7 +2076,7 @@ public class InsACService implements Serializable {
 	 *            VD Bean.
 	 * @param req
 	 *            HttpServletRequest Object.
-	 * 
+	 *
 	 * @return String return code from the stored procedure call. null if no
 	 *         error occurred.
 	 */
@@ -2132,7 +2132,7 @@ public class InsACService implements Serializable {
 	 * values from the bean, sets in parameters, and registers output parameter.
 	 * Calls oracle stored procedure "{call
 	 * SBREXT_Set_Row.SET_QUAL(?,?,?,?,?,?,?,?,?)}" to submit
-	 * 
+	 *
 	 * @param sAction
 	 *            Insert or update Action.
 	 * @param sREP_IDSEQ.
@@ -2140,7 +2140,7 @@ public class InsACService implements Serializable {
 	 *            VD Bean.
 	 * @param req
 	 *            HttpServletRequest Object.
-	 * 
+	 *
 	 * @return String return code from the stored procedure call. null if no
 	 *         error occurred.
 	 */
@@ -2200,7 +2200,7 @@ public class InsACService implements Serializable {
 	 * 'getCSCSI' to insert in CSCSI relationship table for Classification
 	 * Scheme/items/DE relationship. calls 'updCSCSI' to update in CSCSI
 	 * relationship for edit.
-	 * 
+	 *
 	 * @param sAction
 	 *            Insert or update Action.
 	 * @param de
@@ -2209,7 +2209,7 @@ public class InsACService implements Serializable {
 	 *            for Versioning.
 	 * @param oldDE
 	 *            DE IDseq
-	 * 
+	 *
 	 * @return String return code from the stored procedure call. null if no
 	 *         error occurred.
 	 */
@@ -2393,7 +2393,7 @@ public class InsACService implements Serializable {
 
 					de.setDE_MODIFIED_BY(getFullName(deVO.getModified_by()));
 					de.setDE_DATE_MODIFIED(m_util.getCurationDateFromSQLTimestamp(deVO.getDate_created()));
-			
+
 					// insert row into DES (designation) to create CDEID for new
 					// DE or copies from old if new version
 					if (sInsertFor.equals("Version")) {
@@ -2572,7 +2572,7 @@ public class InsACService implements Serializable {
 				}
 			}
 			this.storeStatusMsg("\\n");
-		
+
 		} catch (Exception e) {
 			logger.error("ERROR in InsACService-setDE for other : "
 					+ e.toString(), e);
@@ -2591,7 +2591,7 @@ public class InsACService implements Serializable {
 	 * CurationServlet. Calls oracle stored procedure according to the selected
 	 * AC. "{call META_CONFIG_MGMT.DE_VERSION(?,?,?,?)}" to create new version
 	 * update the respective bean with the new idseq if successful
-	 * 
+	 *
 	 * @param de
 	 *            DE_Bean.
 	 * @param dec
@@ -2600,7 +2600,7 @@ public class InsACService implements Serializable {
 	 *            VD_Bean.
 	 * @param ACName
 	 *            String administerd component.
-	 * 
+	 *
 	 * @return String return code from the stored procedure call. null if no
 	 *         error occurred.
 	 */
@@ -2645,7 +2645,7 @@ public class InsACService implements Serializable {
 				// to double type
 				double dVersion = DVersion.doubleValue();
 				cstmt.setDouble(2, dVersion); // version
-				
+
 				// Get the username from the session.
 				String userName = (String) m_classReq.getSession().getAttribute("Username");
 				cstmt.setString(5, userName); // username
@@ -2687,12 +2687,12 @@ public class InsACService implements Serializable {
 	 * CurationServlet. Calls oracle stored procedure according to the selected
 	 * AC. "{call META_CONFIG_MGMT.DE_VERSION(?,?,?,?)}" to create new version
 	 * update the respective bean with the new idseq if successful
-	 * 
+	 *
 	 * @param acIDseq
 	 *            string ac idseq
 	 * @param ACType
 	 *            String AC type
-	 * 
+	 *
 	 * @return String return code from the stored procedure call. null if no
 	 *         error occurred.
 	 */
@@ -2765,7 +2765,7 @@ public class InsACService implements Serializable {
 	 * in parameters, and registers output parameter. Calls oracle stored
 	 * procedure "{call SBREXT_Set_Row.SET_DES(?,?,?,?,?,?,?,?,?,?,?,?)}" to
 	 * submit
-	 * 
+	 *
 	 * @param sAction
 	 *            Insert or update Action.
 	 * @param sAC_ID
@@ -2782,7 +2782,7 @@ public class InsACService implements Serializable {
 	 *            language name.
 	 * @param desIDSEQ
 	 *            designation idseq for update.
-	 * 
+	 *
 	 * @return String return code from the stored procedure call. null if no
 	 *         error occurred.
 	 */
@@ -2947,12 +2947,12 @@ public class InsACService implements Serializable {
 	 * Component Calls oracle stored procedure: set_complex_de,
 	 * set_cde_relationship This method is call by doInsertDEfromMenuAction in
 	 * servlet
-	 * 
+	 *
 	 * @param sP_DE_IDSEQ
 	 *            string de idseq new created primary DE.
 	 * @param sOverRideAction
 	 *            string for New DE Version/Template, use INS instead of UPD
-	 * 
+	 *
 	 * @return String return code from the stored procedure call. null if no
 	 *         error occurred.
 	 */
@@ -3140,13 +3140,13 @@ public class InsACService implements Serializable {
 	/**
 	 * Delete DE Component Calls oracle stored procedure: set_cde_relationship
 	 * This method is call by setDEComp
-	 * 
+	 *
 	 * @param conn
 	 * @param session
 	 * @param vDECompDelete
 	 * @param vDECompDelName
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public void deleteDEComp(Connection conn, HttpSession session,
 			Vector vDECompDelete, Vector vDECompDelName) {
@@ -3219,7 +3219,7 @@ public class InsACService implements Serializable {
 	 * method. Sets in parameters, and registers output parameter. Calls oracle
 	 * stored procedure "{call SBREXT_Set_Row.SET_RD(?,?,?,?,?,?,?,?,?,?,?,?)}"
 	 * to submit
-	 * 
+	 *
 	 * @param sAction
 	 *            Insert or update Action.
 	 * @param sRDName
@@ -3239,7 +3239,7 @@ public class InsACService implements Serializable {
 	 *            reference document's idseq for update.
 	 * @param sLang
 	 *            Rd language to set
-	 * 
+	 *
 	 * @return String return code from the stored procedure call. null if no
 	 *         error occurred.
 	 */
@@ -3358,7 +3358,7 @@ public class InsACService implements Serializable {
 	 * cs_csi_idseq FROM cs_Csi_view WHERE cs_idseq = '" + csID + "' AND
 	 * csi_idseq = '" + csiID + "'"; Calls 'setACCSI' to add a row in
 	 * relationship table.
-	 * 
+	 *
 	 * @param csID
 	 *            classification scheme idseq.
 	 * @param csiID
@@ -3367,7 +3367,7 @@ public class InsACService implements Serializable {
 	 *            Insert or update Action.
 	 * @param sDE_ID
 	 *            DE idseq.
-	 * 
+	 *
 	 */
 	public void getCSCSI(String csID, String csiID, String sAction,
 			String sDE_ID) {
@@ -3405,7 +3405,7 @@ public class InsACService implements Serializable {
 	 * Called from 'getCSCSI' method. Sets in parameters, and registers output
 	 * parameter. Calls oracle stored procedure "{call
 	 * SBREXT_Set_Row.SET_ACCSI(?,?,?,?,?,?,?,?,?)}" to submit
-	 * 
+	 *
 	 * @param CSCSIID
 	 *            cscsi idseq from cs_csi table.
 	 * @param sAction
@@ -3418,7 +3418,7 @@ public class InsACService implements Serializable {
 	 *            String ac name
 	 * @param csiName
 	 *            String csi name
-	 * 
+	 *
 	 * @return String ACCSI id
 	 */
 	public String setACCSI(String CSCSIID, String sAction, String sAC_ID,
@@ -3501,13 +3501,13 @@ public class InsACService implements Serializable {
 	 * To retrieve a row in AC_CSI table. Called from 'setDE' method. Calls
 	 * oracle stored procedure "{call
 	 * SBREXT_Get_Row.SET_ACCSI(?,?,?,?,?,?,?,?,?)}" to submit
-	 * 
+	 *
 	 * @param sCSCSIID
 	 *            cscsi idseq from cs_csi table.
 	 * @param sDE_ID
 	 *            DE idseq.
 	 * @return String accsi idseq
-	 * 
+	 *
 	 */
 	public String getACCSI(String sCSCSIID, String sDE_ID) {
 		CallableStatement cstmt = null;
@@ -3559,12 +3559,12 @@ public class InsACService implements Serializable {
 	 * from 'setDE' method. Sets in parameters, and registers output parameter.
 	 * Calls oracle stored procedure "{call
 	 * SBREXT_Set_Row.SET_ACSRC(?,?,?,?,?,?,?,?,?,?)}" to submit
-	 * 
+	 *
 	 * @param sAction
 	 *            Insert or update Action.
 	 * @param sDE_ID
 	 *            DE idseq.
-	 * 
+	 *
 	 */
 	public void setACSRC(String sAction, String sDE_ID) {
 		CallableStatement cstmt = null;
@@ -3624,7 +3624,7 @@ public class InsACService implements Serializable {
 	 * for update. Sets in parameters, and registers output parameter. Calls
 	 * oracle stored procedure "{call
 	 * SBREXT_CDE_CURATOR_PKG.UPD_CS(?,?,?,?,?,?)}" to submit
-	 * 
+	 *
 	 * @param sDE_ID
 	 *            DE idseq.
 	 * @param sCS_ID
@@ -3665,12 +3665,12 @@ public class InsACService implements Serializable {
 	 * Called from 'setPV' method for insert of PV. Sets in parameters, and
 	 * registers output parameter. Calls oracle stored procedure "{call
 	 * SBREXT_GET_ROW.GET_PV(?,?,?,?,?,?,?,?,?,?,?,?,?)}" to submit
-	 * 
+	 *
 	 * @param sValue
 	 *            existing Value.
 	 * @param sMeaning
 	 *            existing meaning.
-	 * 
+	 *
 	 * @return String existing pv_idseq from the stored procedure call.
 	 */
 	public String getExistingPV(String sValue, String sMeaning)
@@ -3722,7 +3722,7 @@ public class InsACService implements Serializable {
 	 * method for insert at version. Sets in parameters, and registers output
 	 * parameter. Calls oracle stored procedure "{call META_CONFIG_MGMT(?,?,?)}"
 	 * to submit
-	 * 
+	 *
 	 * @param sOldACID
 	 *            OLD DE idseq.
 	 * @param sNewACID
@@ -3757,7 +3757,7 @@ public class InsACService implements Serializable {
 	 * from 'setDE' method for insert at version. Sets in parameters, and
 	 * registers output parameter. Calls oracle stored procedure "{call
 	 * META_CONFIG_MGMT.DE_VERSION(?,?,?)}" to submit
-	 * 
+	 *
 	 * @param sNewID
 	 *            New DE idseq.
 	 * @param sOldID
@@ -3792,13 +3792,13 @@ public class InsACService implements Serializable {
 							+ e.toString(), e);
 		}finally{
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
-		}	
+		}
 	}
 
 	/**
 	 * To get ac_idseq of latest version. Called from 'setDE' method. Sets in
 	 * parameters, and registers output parameter.
-	 * 
+	 *
 	 * @param sName
 	 *            Short Name.
 	 * @param sContextID .
@@ -3845,7 +3845,7 @@ public class InsACService implements Serializable {
 	 * procedure "{call
 	 * SBREXT_Set_Row.SET_QC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}"
 	 * to submit
-	 * 
+	 *
 	 * @param questBean
 	 *            Quest_Bean when this is used for questions update, else null.
 	 * @param QCid
@@ -3854,7 +3854,7 @@ public class InsACService implements Serializable {
 	 * @param VPid
 	 *            string vd_pvs idseq when this is used for valid value update,
 	 *            else null
-	 * 
+	 *
 	 * @return String return code from the stored procedure call. null if no
 	 *         error occurred.
 	 */
@@ -3992,10 +3992,10 @@ public class InsACService implements Serializable {
 	 * To get RDidseq from get_RD_ID for the selected AC. Called from 'setDE'
 	 * method. Uses the stored Proc call
 	 * SBREXT_COMMON_ROUTINES.GET_RD_IDSEQ(?,?,?)}
-	 * 
+	 *
 	 * @param acID
 	 *            administed componenet idseq.
-	 * 
+	 *
 	 * @return String RD_ID.
 	 */
 	public String getRD_ID(String acID) {
@@ -4034,10 +4034,10 @@ public class InsACService implements Serializable {
 	/**
 	 * To get UA_FullName from a UserName. Called from 'set' methods. Uses the
 	 * stored Proc call SBREXT_COMMON_ROUTINES.GET_UA_FULL_NAME(?,?,?)}
-	 * 
+	 *
 	 * @param sName
 	 *            short Name.
-	 * 
+	 *
 	 * @return String sFullName.
 	 */
 	public String getFullName(String sName) {
@@ -4073,12 +4073,12 @@ public class InsACService implements Serializable {
 	 * To get language idseq from get_Desig_ID for the selected AC . Called from
 	 * 'setDE', 'setDEC', 'setVD' methods. Uses the stored Proc call
 	 * SBREXT_COMMON_ROUTINES.GET_DESIG_IDSEQ(?,?,?)}
-	 * 
+	 *
 	 * @param acID
 	 *            administed componenet idseq.
 	 * @param DesType
 	 *            type of designation
-	 * 
+	 *
 	 * @return String Desig_ID.
 	 */
 	public String getDesig_ID(String acID, String DesType) {
@@ -4119,7 +4119,7 @@ public class InsACService implements Serializable {
 	 * reg_status and DE. Called from 'setDE' method. Sets in parameters, and
 	 * registers output parameter. Calls oracle stored procedure "{call
 	 * SBREXT_Set_Row.SET_REGISTRATION(?,?,?,?,?,?,?,?,?)}" to submit
-	 * 
+	 *
 	 * @param sAction
 	 *            Insert or update Action.
 	 * @param sAR_ID
@@ -4128,7 +4128,7 @@ public class InsACService implements Serializable {
 	 *            AC idseq.
 	 * @param regStatus
 	 *            registration status
-	 * 
+	 *
 	 * @return String sAR_ID
 	 */
 	public String setReg_Status(String sAction, String sAR_ID, String sAC_ID,
@@ -4211,10 +4211,10 @@ public class InsACService implements Serializable {
 	/**
 	 * The getAC_REG method queries the db, checking whether component exists
 	 * and gets idseq if exists.
-	 * 
+	 *
 	 * @param ac_id
 	 *            string ac idseq
-	 * 
+	 *
 	 * @return String idseq indicating whether component exists.
 	 */
 	public String getAC_REG(String ac_id) // returns idseq
@@ -4248,7 +4248,7 @@ public class InsACService implements Serializable {
 	 * Classifies designated data element(s), called from servlet calls
 	 * addRemoveACCSI to add or remove the selected cs and csi for each element.
 	 * goes back to search results page
-	 * 
+	 *
 	 * @param desAction
 	 * @throws Exception
 	 */
@@ -4317,7 +4317,7 @@ public class InsACService implements Serializable {
 
 	/**
 	 * to get one alternate name for the selected ac
-	 * 
+	 *
 	 * @param acID
 	 *            ac idseq
 	 * @return altname from the database
@@ -4353,7 +4353,7 @@ public class InsACService implements Serializable {
 
 	/**
 	 * to get one reference documents for the selected ac
-	 * 
+	 *
 	 * @param acID
 	 *            ac idseq
 	 * @return ref doc from the database
@@ -4389,7 +4389,7 @@ public class InsACService implements Serializable {
 
 	/**
 	 * to get one concept name for the selected ac
-	 * 
+	 *
 	 * @param decID
 	 *            String dec idseq
 	 * @param vdID
@@ -4429,7 +4429,7 @@ public class InsACService implements Serializable {
 	 * submits to add or remove the designation for the selected ac Called from
 	 * 'classifyde' method gets the 'desHashTable' table from the session and
 	 * gets the desID using desContext and ACID.
-	 * 
+	 *
 	 * @param CompID
 	 *            String component ID
 	 * @param desAction
@@ -4441,7 +4441,7 @@ public class InsACService implements Serializable {
 	 * @param useContName
 	 *            String context name
 	 * @return String return code
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	private String addRemoveDesignation(String CompID, String desAction,
@@ -4487,10 +4487,10 @@ public class InsACService implements Serializable {
 	/**
 	 * To get public id of an administerd component. Called from 'set' methods.
 	 * Uses the stored Proc call SBREXT_COMMON_ROUTINES.GET_PUBLIC_ID(?)}
-	 * 
+	 *
 	 * @param dec
 	 *            dec bean object
-	 * 
+	 *
 	 * @return String public ID.
 	 */
 	public String getDECSysName(DEC_Bean dec) {
@@ -4536,10 +4536,10 @@ public class InsACService implements Serializable {
 	/**
 	 * To get public id of an administerd component. Called from 'set' methods.
 	 * Uses the stored Proc call SBREXT_COMMON_ROUTINES.GET_PUBLIC_ID(?)}
-	 * 
+	 *
 	 * @param ac_idseq
 	 *            unique id of an AC.
-	 * 
+	 *
 	 * @return String public ID.
 	 */
 	public String getPublicID(String ac_idseq) {
@@ -4706,7 +4706,7 @@ public class InsACService implements Serializable {
 	 * add revove alternate name attributes for the selected ac loops through
 	 * the list of selected types and looks for the matching ac calls setDES to
 	 * create or insert according to the submit action
-	 * 
+	 *
 	 * @param sDE
 	 *            unique id of an AC.
 	 * @param deCont
@@ -4787,7 +4787,7 @@ public class InsACService implements Serializable {
 	 * add revove reference documents attributes for the selected ac loops
 	 * through the list of selected types and looks for the matching ac calls
 	 * setRD to create or insert according to the submit action
-	 * 
+	 *
 	 * @param sDE
 	 *            unique id of an AC.
 	 * @param deCont
@@ -4880,7 +4880,7 @@ public class InsACService implements Serializable {
 
 	/***************************************************************************
 	 * / takes the thesaurus concept if meta was selected
-	 * 
+	 *
 	 * @param evsBean
 	 *            EVS_Bean of the selected concept
 	 * @return EVS_Bean
@@ -4919,7 +4919,7 @@ public class InsACService implements Serializable {
 
 	/***************************************************************************
 	 * / Puts in and takes out "_"
-	 * 
+	 *
 	 * @param String
 	 *            nodeName.
 	 * @param String
@@ -4937,14 +4937,14 @@ public class InsACService implements Serializable {
 	 * from the bean, sets in parameters, and registers output parameter. Calls
 	 * oracle stored procedure "{call
 	 * SBREXT_Set_Row.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?)}" to submit
-	 * 
+	 *
 	 * @param sAction
 	 *            Insert or update Action.
 	 * @param sReturnCode
 	 *            string oracle error code
 	 * @param evsBean
 	 *            EVS_Bean.
-	 * 
+	 *
 	 * @return String concept idseq from the table.
 	 */
 	public String setConcept(String sAction, String sReturnCode,
@@ -5092,14 +5092,14 @@ public class InsACService implements Serializable {
 	 * parameters, and registers output parameters and returns concept id of
 	 * found one. Calls oracle stored procedure "{call
 	 * SBREXT_GET_ROW.GET_CON(?,?,?,?,?,?,?,?,?,?,?,?,?)}" to submit
-	 * 
+	 *
 	 * @param sReturn
 	 *            return code to catpure errors if any
 	 * @param evsBean
 	 *            EVS_Bean.
 	 * @param bValidateConceptCodeUnique
 	 *            boolean to check if unique
-	 * 
+	 *
 	 * @return String con_idseq from the stored procedure call.
 	 */
 	public String getConcept(String sReturn, EVS_Bean evsBean,
@@ -5215,13 +5215,13 @@ public class InsACService implements Serializable {
 		}finally{
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
-		}		
+		}
 		return sCON_IDSEQ; // TODO check what is parent concept id
 	} // end get concept
 
 	/**
 	 * handles add remove actionof the vd.
-	 * 
+	 *
 	 * @param vd
 	 *            page vd bean
 	 * @return string comma delimited conidseqs or remove parent string
@@ -5276,7 +5276,7 @@ public class InsACService implements Serializable {
 
 	/**
 	 * removes the meta parent concept filter source from reference documents
-	 * 
+	 *
 	 * @param vd
 	 *            page vd bean
 	 * @param parBean
@@ -5322,7 +5322,7 @@ public class InsACService implements Serializable {
 
 	/**
 	 * creates non evs parents
-	 * 
+	 *
 	 * @param vd
 	 *            current VD_Bean
 	 * @return returns success message
@@ -5387,7 +5387,7 @@ public class InsACService implements Serializable {
 
 	/**
 	 * creates filtered concept source for the meta parent
-	 * 
+	 *
 	 * @param vd
 	 *            VD_Bean
 	 * @return string success message
@@ -5856,8 +5856,8 @@ public class InsACService implements Serializable {
 			}
 		return accB;
 	}
-	
-	
+
+
 	public ArrayList getConBeanList(Vector evsBean, boolean isAllConceptsExists){
 		   ArrayList<ConBean> conBeanList = new ArrayList();
 		   if (evsBean != null){
@@ -5893,7 +5893,7 @@ public class InsACService implements Serializable {
 		}
 		   return conBeanList;
 	}
-	
+
 	public String getName(Vector evsBean){
 		   String name ="";
 		   if (evsBean != null) {
@@ -5915,7 +5915,7 @@ public class InsACService implements Serializable {
 		}
 		   return name;
    }
-   
+
 	public String doSetDEC(String sAction, DEC_Bean dec, String sInsertFor, DEC_Bean oldDEC){
 		String sReturnCode = "";
 	    HttpSession session = m_classReq.getSession();
@@ -5928,7 +5928,7 @@ public class InsACService implements Serializable {
 		String conteIdseq= (String)defaultContext.get("idseq");
 		String checkValidityOC = (String)session.getAttribute("checkValidityOC");
         String checkValidityProp = (String)session.getAttribute("checkValidityProp");
-		try{	
+		try{
 		    m_classReq.setAttribute("retcode", "");
     		if (checkValidityOC.equals("Yes")){
 		      if ((vObjectClass != null && vObjectClass.size()>0) && (defaultContext != null && defaultContext.size()>0)){
@@ -5938,7 +5938,7 @@ public class InsACService implements Serializable {
          	if (checkValidityProp.equals("Yes")){
     		  if ((vProperty != null && vProperty.size()>0) && (defaultContext != null && defaultContext.size()>0)){
         	    propStatusBean = this.evsBeanCheck(vProperty, defaultContext, "", "Property");
-         	  } 
+         	  }
          	}
          	if (checkValidityOC.equals("Yes")){
          	//set OC if it is null
@@ -5964,7 +5964,7 @@ public class InsACService implements Serializable {
 								dec.setDEC_OCL_IDSEQ(ocIdseq);
 							}
 						}
-				
+
            	 }else{
            		if (ocStatusBean.isNewVersion()) {
          	        if (ocStatusBean.getEvsBeanIDSEQ() != null && !ocStatusBean.getEvsBeanIDSEQ().equals("")){
@@ -5973,12 +5973,12 @@ public class InsACService implements Serializable {
          	             if (newID != null && !newID.equals("")){
          	            	dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean.getCondrIDSEQ());
          	                dec.setDEC_OCL_IDSEQ(newID);
-         	             }   
+         	             }
          	          }
-				} else { 
+				} else {
            		      dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean.getCondrIDSEQ());
            		      dec.setDEC_OCL_IDSEQ(ocStatusBean.getEvsBeanIDSEQ());
-				} 
+				}
            	 }
          	}
          	}
@@ -6014,7 +6014,7 @@ public class InsACService implements Serializable {
          	             if (newID != null && !newID.equals("")){
          	            	dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean.getCondrIDSEQ());
          	                dec.setDEC_PROPL_IDSEQ(newID);
-         	             }   
+         	             }
          	          }
 				} else {
            		     dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean.getCondrIDSEQ());
@@ -6022,7 +6022,7 @@ public class InsACService implements Serializable {
 				}
            	 }
          }
-         }   
+         }
     	 sReturnCode = this.setDEC(sAction, dec, sInsertFor, oldDEC);
     	}catch(Exception e){
     		logger.error("ERROR in InsACService-setDEC for other : "+ e.toString(), e);
@@ -6045,7 +6045,7 @@ public class InsACService implements Serializable {
 		}
 		return condrIdseq;
 	}
-   
+
 	/**
 	 * Gets validation string for rep term, object class and property
 	 * @param evsBeanList
@@ -6077,14 +6077,14 @@ public class InsACService implements Serializable {
 		  }
 		  //If user selected existing OC or Prop or Rep Term in any context
 		  if (id != null && !id.equals("")){
-			  statusBean = (ValidationStatusBean)session.getAttribute(name);  
+			  statusBean = (ValidationStatusBean)session.getAttribute(name);
 		  }else{
 			  //If user selected by concepts
 			  statusBean = this.evsBeanCheckDB(evsBeanList, defaultContext, lName, type);
-		  }  
+		  }
 	      return statusBean;
 	}
-	
+
 	public ValidationStatusBean evsBeanCheckDB(Vector evsBeanList, HashMap<String,String> defaultContext, String lName, String type)throws Exception{
 		ValidationStatusBean statusBean = new ValidationStatusBean();
 		ArrayList<ResultVO>  resultList = new ArrayList();
@@ -6095,9 +6095,9 @@ public class InsACService implements Serializable {
 			  mgr = new Properties_Ext_Mgr();
 		  }else if (type.equals("Representation Term")){
 		      mgr = new Representations_Ext_Mgr();
-		  }  
+		  }
 	      statusBean.setAllConceptsExists(true);
-      
+
 	   for(int i=0; i<evsBeanList.size(); i++){
    	    EVS_Bean conceptBean = (EVS_Bean) evsBeanList.elementAt(i);
    	    String conIdseq = this.getConcept("", conceptBean, false);
@@ -6117,11 +6117,11 @@ public class InsACService implements Serializable {
 			}
 			//if nothing found, create new oc or prop or rep term
 			if (resultList == null || resultList.size() < 1) {
-				statusBean.setStatusMessage("**  Creating a new "+type + " in caBIG");	
+				statusBean.setStatusMessage("**  Creating a new "+type + " in caBIG");
 				statusBean.setCondrExists(false);
 				statusBean.setEvsBeanExists(false);
 			} else {
-				
+
 				String idseq = null;
 				String condrIDSEQ = null;
 				String longName = null;
@@ -6141,9 +6141,9 @@ public class InsACService implements Serializable {
 						if (vo.getContext().equals(defaultContext.get("name"))) {
 							foundBeanList.add(vo);
 						}
-					} 
+					}
 				}
-				//If none are found owned by the default(caBIG) Context 
+				//If none are found owned by the default(caBIG) Context
 				if (foundBeanList == null || foundBeanList.size() < 1) {
 					for (int i = 0; i < resultList.size(); i++) {
 						ResultVO vo = resultList.get(i);
@@ -6159,7 +6159,7 @@ public class InsACService implements Serializable {
 							return statusBean;
 						}
 					}
-					//if none are found in different context and condr exists, create new (oc or prop or rep term) in caBIG	
+					//if none are found in different context and condr exists, create new (oc or prop or rep term) in caBIG
 					ResultVO vo = resultList.get(0);
 					if (vo.getCondr_IDSEQ() != null) {
 							statusBean.setStatusMessage("**  Creating a new "+type + " in caBIG");
@@ -6168,7 +6168,7 @@ public class InsACService implements Serializable {
 							statusBean.setEvsBeanExists(false);
 							return statusBean;
 						}
-   				
+
 				}//go thru all the records owned by the default(caBIG) Context
 	    		else if (foundBeanList != null && foundBeanList.size() > 0) {
 	    			//select the one with a Workflow Status RELEASED
@@ -6213,7 +6213,7 @@ public class InsACService implements Serializable {
 							statusBean.setEvsBeanExists(true);
 							statusBean.setEvsBeanIDSEQ(idseqM);
 						} else {
-							//If none are found, select any other Workflow Status and create a New Version of it. 
+							//If none are found, select any other Workflow Status and create a New Version of it.
 							ResultVO vo = foundBeanList.get(0);
 							statusBean.setStatusMessage("**  Creating new Version of "+type+" "+vo.getLong_name()+" ("+vo.getPublicId()+"v"+vo.getVersion()+") in caBIG");
 							statusBean.setNewVersion(true);
@@ -6231,9 +6231,9 @@ public class InsACService implements Serializable {
 		}
         return statusBean;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param userName
 	 * @param condrIdseq
 	 * @param defaultContextIdseq
@@ -6250,7 +6250,7 @@ public class InsACService implements Serializable {
 				  mgr = new Properties_Ext_Mgr();
 			  }else if (type.equals("Representation Term")){
 			      mgr = new Representations_Ext_Mgr();
-			  }  
+			  }
 			EvsVO vo = new EvsVO();
 			vo.setCondr_IDSEQ(condrIdseq);
 			vo.setConte_IDSEQ(defaultContextIdseq);
@@ -6262,8 +6262,8 @@ public class InsACService implements Serializable {
 			this.storeStatusMsg("Exception Error : Unable to create " + type);
 		}
 		return idseq;
-		
+
 	}
-	
+
 }// close the class
 
