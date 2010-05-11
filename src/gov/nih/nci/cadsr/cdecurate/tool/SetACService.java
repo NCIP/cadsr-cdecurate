@@ -33,74 +33,74 @@ import org.apache.log4j.Logger;
  */
 
 /*
-The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. (“ScenPro”)  
+The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. ("ScenPro")
 Copyright Notice.  The software subject to this notice and license includes both
 human readable source code form and machine readable, binary, object code form
-(“the CaCORE Software”).  The CaCORE Software was developed in conjunction with
-the National Cancer Institute (“NCI”) by NCI employees and employees of SCENPRO.
+("the CaCORE Software").  The CaCORE Software was developed in conjunction with
+the National Cancer Institute ("NCI") by NCI employees and employees of SCENPRO.
 To the extent government employees are authors, any rights in such works shall
-be subject to Title 17 of the United States Code, section 105.    
-This CaCORE Software License (the “License”) is between NCI and You.  “You (or “Your”)
-shall mean a person or an entity, and all other entities that control, are 
-controlled by, or are under common control with the entity.  “Control” for purposes
+be subject to Title 17 of the United States Code, section 105.
+This CaCORE Software License (the "License") is between NCI and You.  "You (or "Your")
+shall mean a person or an entity, and all other entities that control, are
+controlled by, or are under common control with the entity.  "Control" for purposes
 of this definition means (i) the direct or indirect power to cause the direction
 or management of such entity, whether by contract or otherwise, or (ii) ownership
-of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial 
-ownership of such entity.  
+of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial
+ownership of such entity.
 This License is granted provided that You agree to the conditions described below.
 NCI grants You a non-exclusive, worldwide, perpetual, fully-paid-up, no-charge,
 irrevocable, transferable and royalty-free right and license in its rights in the
-CaCORE Software to (i) use, install, access, operate, execute, copy, modify, 
-translate, market, publicly display, publicly perform, and prepare derivative 
-works of the CaCORE Software; (ii) distribute and have distributed to and by 
-third parties the CaCORE Software and any modifications and derivative works 
-thereof; and (iii) sublicense the foregoing rights set out in (i) and (ii) to 
+CaCORE Software to (i) use, install, access, operate, execute, copy, modify,
+translate, market, publicly display, publicly perform, and prepare derivative
+works of the CaCORE Software; (ii) distribute and have distributed to and by
+third parties the CaCORE Software and any modifications and derivative works
+thereof; and (iii) sublicense the foregoing rights set out in (i) and (ii) to
 third parties, including the right to license such rights to further third parties.
-For sake of clarity, and not by way of limitation, NCI shall have no right of 
-accounting or right of payment from You or Your sublicensees for the rights 
+For sake of clarity, and not by way of limitation, NCI shall have no right of
+accounting or right of payment from You or Your sublicensees for the rights
 granted under this License.  This License is granted at no charge to You.
 1.	Your redistributions of the source code for the Software must retain the above
 copyright notice, this list of conditions and the disclaimer and limitation of
 liability of Article 6, below.  Your redistributions in object code form must
 reproduce the above copyright notice, this list of conditions and the disclaimer
-of Article 6 in the documentation and/or other materials provided with the 
+of Article 6 in the documentation and/or other materials provided with the
 distribution, if any.
-2.	Your end-user documentation included with the redistribution, if any, must 
-include the following acknowledgment: “This product includes software developed 
-by SCENPRO and the National Cancer Institute.”  If You do not include such end-user
-documentation, You shall include this acknowledgment in the Software itself, 
+2.	Your end-user documentation included with the redistribution, if any, must
+include the following acknowledgment: "This product includes software developed
+by SCENPRO and the National Cancer Institute."  If You do not include such end-user
+documentation, You shall include this acknowledgment in the Software itself,
 wherever such third-party acknowledgments normally appear.
-3.	You may not use the names "The National Cancer Institute", "NCI" “ScenPro, Inc.”
-and "SCENPRO" to endorse or promote products derived from this Software.  
+3.	You may not use the names "The National Cancer Institute", "NCI" "ScenPro, Inc."
+and "SCENPRO" to endorse or promote products derived from this Software.
 This License does not authorize You to use any trademarks, service marks, trade names,
 logos or product names of either NCI or SCENPRO, except as required to comply with
 the terms of this License.
 4.	For sake of clarity, and not by way of limitation, You may incorporate this
-Software into Your proprietary programs and into any third party proprietary 
+Software into Your proprietary programs and into any third party proprietary
 programs.  However, if You incorporate the Software into third party proprietary
 programs, You agree that You are solely responsible for obtaining any permission
 from such third parties required to incorporate the Software into such third party
-proprietary programs and for informing Your sublicensees, including without 
+proprietary programs and for informing Your sublicensees, including without
 limitation Your end-users, of their obligation to secure any required permissions
 from such third parties before incorporating the Software into such third party
 proprietary software programs.  In the event that You fail to obtain such permissions,
-You agree to indemnify NCI for any claims against NCI by such third parties, 
+You agree to indemnify NCI for any claims against NCI by such third parties,
 except to the extent prohibited by law, resulting from Your failure to obtain
 such permissions.
-5.	For sake of clarity, and not by way of limitation, You may add Your own 
-copyright statement to Your modifications and to the derivative works, and You 
+5.	For sake of clarity, and not by way of limitation, You may add Your own
+copyright statement to Your modifications and to the derivative works, and You
 may provide additional or different license terms and conditions in Your sublicenses
-of modifications of the Software, or any derivative works of the Software as a 
-whole, provided Your use, reproduction, and distribution of the Work otherwise 
+of modifications of the Software, or any derivative works of the Software as a
+whole, provided Your use, reproduction, and distribution of the Work otherwise
 complies with the conditions stated in this License.
 6.	THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES,
-(INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, 
-NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED.  
-IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE, SCENPRO, OR THEIR AFFILIATES 
-BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+(INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED.
+IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE, SCENPRO, OR THEIR AFFILIATES
+BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
 CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
 GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -108,7 +108,7 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 public class SetACService implements Serializable
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	UtilService m_util = new UtilService();
@@ -132,7 +132,7 @@ public class SetACService implements Serializable
 		m_vRetWFS.addElement("RETIRED WITHDRAWN");
 		//released workflow statuses list
 		m_ReleaseWFS.addElement("RELEASED");
-		m_ReleaseWFS.addElement("RELEASED-NON-CMPLNT");   
+		m_ReleaseWFS.addElement("RELEASED-NON-CMPLNT");
 		m_ReleaseWFS.addElement("CMTE APPROVED");
 		m_ReleaseWFS.addElement("CMTE SUBMTD");
 		m_ReleaseWFS.addElement("CMTE SUBMTD USED");
@@ -186,7 +186,7 @@ public class SetACService implements Serializable
 			else
 				sDEAction = "Create";
 			//get the right label for pref type
-			if (sDEAction.equals("Create") && (sMenu.equalsIgnoreCase("nothing") 
+			if (sDEAction.equals("Create") && (sMenu.equalsIgnoreCase("nothing")
 					|| sMenu.equalsIgnoreCase("NewDEFromMenu") || sDDEAction.equals("CreateNewDEFComp")))
 				isUserEnter = true;
 
@@ -258,8 +258,8 @@ public class SetACService implements Serializable
 			strInValid = "";
 			if (s.equals("")==false)
 			{
-				//strInValid = strUnique + this.checkVersionDimension(s);   //checkValueIsNumeric(s);                
-				strInValid = this.checkVersionDimension(s);   //checkValueIsNumeric(s);                
+				//strInValid = strUnique + this.checkVersionDimension(s);   //checkValueIsNumeric(s);
+				strInValid = this.checkVersionDimension(s);   //checkValueIsNumeric(s);
 				DE_Bean oldDE = (DE_Bean)session.getAttribute("oldDEBean");
 				String menuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
 				if (oldDE != null && menuAction.equals("NewDEVersion"))
@@ -272,7 +272,7 @@ public class SetACService implements Serializable
 				}
 			}
 			UtilService.setValPageVector(vValidate, "Version", s, bMandatory, iNoLengthLimit, strInValid, sOriginAction);
-			//make it empty 
+			//make it empty
 			strInValid = "";
 
 			//registration status
@@ -295,10 +295,10 @@ public class SetACService implements Serializable
 			//add question text
 			s = m_DE.getDOC_TEXT_PREFERRED_QUESTION();
 			if (s == null) s = "";
-			UtilService.setValPageVector(vValidate, "Preferred Question Text", s, bNotMandatory, 4000, "", sOriginAction);        
+			UtilService.setValPageVector(vValidate, "Preferred Question Text", s, bNotMandatory, 4000, "", sOriginAction);
 
 			//add cs-csi to validate page
-			String sCS = ""; 
+			String sCS = "";
 			String sCSI = "";
 			String sAC = "";
 			if(m_DE.getAC_CS_NAME() != null)
@@ -310,7 +310,7 @@ public class SetACService implements Serializable
 					{
 						AC_CSI_Bean accsiBean = (AC_CSI_Bean)vACCSI.elementAt(i);
 						CSI_Bean csiBean = (CSI_Bean)accsiBean.getCSI_BEAN();
-						if (i>0) 
+						if (i>0)
 						{
 							sCS += ", ";
 							sCSI += ", ";
@@ -350,7 +350,7 @@ public class SetACService implements Serializable
 						if (!s.equals("")) s += ", ";
 						s += sKey;
 					}
-				}          
+				}
 			}
 			UtilService.setValPageVector(vValidate, "Contacts", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
 
@@ -379,7 +379,7 @@ public class SetACService implements Serializable
 		}
 		//store it in the request
 		Vector<String> vValString = this.makeStringVector(vValidate);
-		req.setAttribute("vValidate", vValString);        
+		req.setAttribute("vValidate", vValString);
 	} // end of setValidatePageValues
 
 	/**
@@ -390,7 +390,7 @@ public class SetACService implements Serializable
 	 * @param vValidate
 	 * @param sOriginAction
 	 */
-	public void addDatesToValidatePage(String sBegin, String sEnd, String sWFS, String editAction, 
+	public void addDatesToValidatePage(String sBegin, String sEnd, String sWFS, String editAction,
 			Vector<ValidateBean> vValidate, String sOriginAction)
 	{
 		try
@@ -410,7 +410,7 @@ public class SetACService implements Serializable
 
 			String endValid = "";
 			//there should be begin date if end date is not null  (8/28 removed)
-			/*if (!sEnd.equals("") && sBegin.equals("")) 
+			/*if (!sEnd.equals("") && sBegin.equals(""))
         endValid = "If you select an End Date, you must also select a Begin Date.";
       else*/ if (!sEnd.equals(""))
       {
@@ -425,7 +425,7 @@ public class SetACService implements Serializable
     	  if (notValid.equalsIgnoreCase("true"))
     		  endValid = "Begin Date must be before the End Date";
     	  else if (!notValid.equalsIgnoreCase("false"))
-    		  endValid = notValid;  // "Error Occurred in validating Begin and End Dates";          
+    		  endValid = notValid;  // "Error Occurred in validating Begin and End Dates";
       }
       sWFS = sWFS.toUpperCase();
       // if (wfs.equals("RETIRED ARCHIVED") || wfs.equals("RETIRED DELETED") || wfs.equals("RETIRED PHASED OUT"))
@@ -435,7 +435,7 @@ public class SetACService implements Serializable
       }
       else
       {
-    	  UtilService.setValPageVector(vValidate, "Effective End Date", sEnd, false, -1, endValid, sOriginAction); 
+    	  UtilService.setValPageVector(vValidate, "Effective End Date", sEnd, false, -1, endValid, sOriginAction);
       }
 		}
 		catch (Exception e)
@@ -446,7 +446,7 @@ public class SetACService implements Serializable
 			vbean.setAttributeContent("Error message " + e.toString());
 			vbean.setAttributeStatus("Error Occurred.  Please report to the help desk");
 			vValidate.addElement(vbean);
-		}   
+		}
 	}
 
 	/**
@@ -500,7 +500,7 @@ public class SetACService implements Serializable
 			String sOrder = "";
 			if(sDEComps != null)
 			{
-				for (int i = 0; i<sDEComps.length; i++) 
+				for (int i = 0; i<sDEComps.length; i++)
 				{
 					String sDEComp = sDEComps[i];
 					String sDECompOrder = sDECompOrders[i];
@@ -540,16 +540,16 @@ public class SetACService implements Serializable
 	 * @param req The HttpServletRequest object.
 	 * @param res HttpServletResponse object.
 	 * @param m_DEC DataElementConcept Bean.
-	 * @param m_OC 
-	 * @param m_PC 
+	 * @param m_OC
+	 * @param m_PC
 	 * @param getAC reference to GetACService class.
-	 * @param m_OCQ 
-	 * @param m_PCQ 
+	 * @param m_OCQ
+	 * @param m_PCQ
 	 *
 	 */
 	public void setValidatePageValuesDEC(HttpServletRequest req,
-			HttpServletResponse res, DEC_Bean m_DEC, EVS_Bean m_OC, EVS_Bean m_PC, 
-			GetACService getAC, EVS_Bean m_OCQ, EVS_Bean m_PCQ) 
+			HttpServletResponse res, DEC_Bean m_DEC, EVS_Bean m_OC, EVS_Bean m_PC,
+			GetACService getAC, EVS_Bean m_OCQ, EVS_Bean m_PCQ)
 	//throws ServletException,IOException, Exception
 	{
 		Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
@@ -571,7 +571,7 @@ public class SetACService implements Serializable
 				sDECAction = "Create";
 
 			//get the right label for pref type
-			if (sDECAction.equals("Create") && (sMenu.equalsIgnoreCase("nothing") 
+			if (sDECAction.equals("Create") && (sMenu.equalsIgnoreCase("nothing")
 					|| sMenu.equalsIgnoreCase("NewDECFromMenu") || sOriginAction.indexOf("CreateNewDEC") > -1))
 				isUserEnter = true;
 
@@ -643,7 +643,7 @@ public class SetACService implements Serializable
 			UtilService.setValPageVector(vValidate, "Conceptual Domain", s, bMandatory, iNoLengthLimit, "", sOriginAction);
 
 			s = m_DEC.getDEC_ASL_NAME();
-			if (s == null) s = "";  
+			if (s == null) s = "";
 			if(s.equals("Released") || s.equals("RELEASED"))
 			{
 				if (sDECAction.equals("Edit") || sDECAction.equals("Create"))
@@ -662,9 +662,9 @@ public class SetACService implements Serializable
             prop_id = m_PC.getIDSEQ();
           strInValid = checkOCPropWorkFlowStatuses(req, res, oc_id, prop_id, strInValid);
         }
-				 */      
+				 */
 			}
-			UtilService.setValPageVector(vValidate, "Workflow Status", s, bMandatory, 20, strInValid, sOriginAction);   
+			UtilService.setValPageVector(vValidate, "Workflow Status", s, bMandatory, 20, strInValid, sOriginAction);
 
 			s = m_DEC.getDEC_VERSION();
 			strInValid = "";
@@ -710,7 +710,7 @@ public class SetACService implements Serializable
         UtilService.setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);  */
 
 			//add cs-csi to validate page
-			String sCS = ""; 
+			String sCS = "";
 			String sCSI = "";
 			String sAC = "";
 			if(m_DEC.getAC_CS_NAME() != null)
@@ -722,7 +722,7 @@ public class SetACService implements Serializable
 					{
 						AC_CSI_Bean accsiBean = (AC_CSI_Bean)vACCSI.elementAt(i);
 						CSI_Bean csiBean = (CSI_Bean)accsiBean.getCSI_BEAN();
-						if (i>0) 
+						if (i>0)
 						{
 							sCS += ", ";
 							sCSI += ", ";
@@ -762,7 +762,7 @@ public class SetACService implements Serializable
 						if (!s.equals("")) s += ", ";
 						s += sKey;
 					}
-				}          
+				}
 			}
 			UtilService.setValPageVector(vValidate, "Contacts", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
 
@@ -787,7 +787,7 @@ public class SetACService implements Serializable
 		// finally, send vector to JSP
 		//store it in teh request
 		Vector<String> vValString = this.makeStringVector(vValidate);
-		req.setAttribute("vValidate", vValString);        
+		req.setAttribute("vValidate", vValString);
 	}
 
 	/**
@@ -800,17 +800,17 @@ public class SetACService implements Serializable
 	 * @param req The HttpServletRequest object.
 	 * @param res HttpServletResponse object.
 	 * @param m_VD ValueDomain Bean.
-	 * @param m_OC 
-	 * @param m_PC 
-	 * @param m_REP 
-	 * @param m_OCQ 
-	 * @param m_PCQ 
-	 * @param m_REPQ 
+	 * @param m_OC
+	 * @param m_PC
+	 * @param m_REP
+	 * @param m_OCQ
+	 * @param m_PCQ
+	 * @param m_REPQ
 	 * @param getAC reference to GetACService class.
 	 *
 	 */
-	public void setValidatePageValuesVD(HttpServletRequest req, HttpServletResponse res, 
-			VD_Bean m_VD, EVS_Bean m_OC, EVS_Bean m_PC, EVS_Bean m_REP, EVS_Bean m_OCQ, 
+	public void setValidatePageValuesVD(HttpServletRequest req, HttpServletResponse res,
+			VD_Bean m_VD, EVS_Bean m_OC, EVS_Bean m_PC, EVS_Bean m_REP, EVS_Bean m_OCQ,
 			EVS_Bean m_PCQ, EVS_Bean m_REPQ, GetACService getAC) //throws ServletException,IOException, Exception
 	{
 		Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
@@ -839,7 +839,7 @@ public class SetACService implements Serializable
 				sVDAction = "Create";
 
 			//get the right label for pref type
-			if (sVDAction.equals("Create") && (sMenu.equalsIgnoreCase("nothing") 
+			if (sVDAction.equals("Create") && (sMenu.equalsIgnoreCase("nothing")
 					|| sMenu.equalsIgnoreCase("NewVDFromMenu") || sOriginAction.indexOf("CreateNewVD") > -1))
 				isUserEnter = true;
 
@@ -907,11 +907,11 @@ public class SetACService implements Serializable
 
 			//same for both edit and new
 			s = m_VD.getVD_CD_NAME();
-			if (s == null) s = "";  
+			if (s == null) s = "";
 			UtilService.setValPageVector(vValidate, "Conceptual Domain", s, bMandatory, iNoLengthLimit, "", sOriginAction);
 
 			s = m_VD.getVD_ASL_NAME();
-			if (s == null) s = "";  
+			if (s == null) s = "";
 			UtilService.setValPageVector(vValidate, "Workflow Status", s, bMandatory, 20, "", sOriginAction);
 
 			s = m_VD.getVD_VERSION();
@@ -955,7 +955,7 @@ public class SetACService implements Serializable
 			this.setValidateVDOtherAttr(vValidate, m_VD, sOriginAction);
 
 			//add cs-csi to validate page
-			String sCS = ""; 
+			String sCS = "";
 			String sCSI = "";
 			String sAC = "";
 			if(m_VD.getAC_CS_NAME() != null)
@@ -967,7 +967,7 @@ public class SetACService implements Serializable
 					{
 						AC_CSI_Bean accsiBean = (AC_CSI_Bean)vACCSI.elementAt(i);
 						CSI_Bean csiBean = (CSI_Bean)accsiBean.getCSI_BEAN();
-						if (i>0) 
+						if (i>0)
 						{
 							sCS += ", ";
 							sCSI += ", ";
@@ -1006,7 +1006,7 @@ public class SetACService implements Serializable
 						if (!s.equals("")) s += ", ";
 						s += sKey;
 					}
-				}          
+				}
 			}
 			UtilService.setValPageVector(vValidate, "Contacts", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
 
@@ -1031,7 +1031,7 @@ public class SetACService implements Serializable
 
 		// finally, send vector to JSP
 		Vector<String> vValString = this.makeStringVector(vValidate);
-		req.setAttribute("vValidate", vValString);        
+		req.setAttribute("vValidate", vValString);
 		m_VD.setValidateList(vValidate);
 	}  // end of setValidatePageValuesVD
 
@@ -1049,9 +1049,9 @@ public class SetACService implements Serializable
 	 *
 	 * @throws IOException  If an input or output exception occurred
 	 * @throws ServletException  If servlet exception Occurred
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	/*  public void setValidatePageValuesPV(HttpServletRequest req, HttpServletResponse res, 
+	/*  public void setValidatePageValuesPV(HttpServletRequest req, HttpServletResponse res,
         PV_Bean m_PV, GetACService getAC) //throws ServletException,IOException, Exception
   {
     Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
@@ -1092,10 +1092,10 @@ public class SetACService implements Serializable
         EVS_Bean evs = (EVS_Bean)m_PV.getVM_CONCEPT();
         if (evs == null) evs = new EVS_Bean();
         s = evs.getCONCEPT_IDENTIFIER();
-        if (s != null && !s.equals("") && evs.getEVS_DATABASE() != null) 
+        if (s != null && !s.equals("") && evs.getEVS_DATABASE() != null)
           s = s + " : " + evs.getEVS_DATABASE();
         if (s == null) s = "";
-        UtilService.setValPageVector(vValidate, "EVS Concept Code", s, bNotMandatory, iNoLengthLimit, "", "");        
+        UtilService.setValPageVector(vValidate, "EVS Concept Code", s, bNotMandatory, iNoLengthLimit, "", "");
       }
 
       s = m_PV.getPV_VALUE_ORIGIN();
@@ -1119,7 +1119,7 @@ public class SetACService implements Serializable
 
       s = m_PV.getPV_END_DATE();
       if (s == null) s = "";
-      setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", ""); 
+      setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", "");
 
     }
     catch (Exception e)
@@ -1135,7 +1135,7 @@ public class SetACService implements Serializable
       // finaly, send vector to JSP
     //store it in teh request
     Vector<String> vValString = this.makeStringVector(vValidate);
-    req.setAttribute("vValidate", vValString);        
+    req.setAttribute("vValidate", vValString);
    }  // end of setValidatePageValuesPV
 	 */
 	/**
@@ -1145,7 +1145,7 @@ public class SetACService implements Serializable
 	 * @param vValidate Vector validate message vector
 	 * @param sOrigin String originAction
 	 */
-	private void setValidatePrefNameType(String sType, boolean isUser, Vector<ValidateBean> vValidate, 
+	private void setValidatePrefNameType(String sType, boolean isUser, Vector<ValidateBean> vValidate,
 			String sOrigin)
 	{
 		try
@@ -1178,7 +1178,7 @@ public class SetACService implements Serializable
 	 * @param res
 	 * @param sACType
 	 */
-	public void setValidateBlockEdit(HttpServletRequest req, HttpServletResponse res, 
+	public void setValidateBlockEdit(HttpServletRequest req, HttpServletResponse res,
 			String sACType) //throws Exception
 	{
 		Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
@@ -1194,8 +1194,8 @@ public class SetACService implements Serializable
 			//String sDEAction = (String)session.getAttribute("DEAction");
 			String sOriginAction = (String)session.getAttribute("originAction");
 			//String sMenu = (String)session.getAttribute("MenuAction");
-			String s = "", sVer = "", sWF = "", sOrigin = "", sBD = "", sED = "", sCN = "";  //sLan = "", 
-			Vector vACCSI = new Vector(), vAC_CS = new Vector(), vACNames = new Vector();   
+			String s = "", sVer = "", sWF = "", sOrigin = "", sBD = "", sED = "", sCN = "";  //sLan = "",
+			Vector vACCSI = new Vector(), vAC_CS = new Vector(), vACNames = new Vector();
 			//call the method to check validation rules
 			this.checkBlockEditRules(req, res, sACType);
 			//get request and session attributes
@@ -1225,7 +1225,7 @@ public class SetACService implements Serializable
 				vACNames = de.getAC_CS_NAME();
 				vACCSI = (Vector)de.getAC_AC_CSI_VECTOR();
 				vAC_CS = de.getAC_AC_CSI_VECTOR();
-			} 
+			}
 			else if (sACType.equals("DataElementConcept"))
 			{
 				sVer = dec.getDEC_VERSION();
@@ -1257,18 +1257,18 @@ public class SetACService implements Serializable
 				//dec attribute
 				s = de.getDE_DEC_NAME();
 				if (s == null) s = "";
-				UtilService.setValPageVector(vValidate, "Data Element Concept", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
+				UtilService.setValPageVector(vValidate, "Data Element Concept", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
 				//vd attribute
 				s = de.getDE_VD_NAME();
 				if (s == null) s = "";
-				UtilService.setValPageVector(vValidate, "Value Domain", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
+				UtilService.setValPageVector(vValidate, "Value Domain", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
 				//pref name type
 				s = de.getAC_PREF_NAME_TYPE();
 				if (s != null && !s.equals("")) //add the value only if was selected
-					this.setValidatePrefNameType(s, false, vValidate, sOriginAction); 
+					this.setValidatePrefNameType(s, false, vValidate, sOriginAction);
 				else
 					UtilService.setValPageVector(vValidate, "Short Name Type", "", false, -1, "", sOriginAction);
-			} 
+			}
 			else if (sACType.equals("DataElementConcept"))
 			{
 				session.setAttribute("checkValidityOC", "Yes");
@@ -1278,13 +1278,13 @@ public class SetACService implements Serializable
 				//pref name type only if was selected
 				s = dec.getAC_PREF_NAME_TYPE();
 				if (s != null && !s.equals("")) //add the value only if was selected
-					this.setValidatePrefNameType(s, false, vValidate, sOriginAction); 
+					this.setValidatePrefNameType(s, false, vValidate, sOriginAction);
 				else
 					UtilService.setValPageVector(vValidate, "Short Name Type", "", false, -1, "", sOriginAction);
 				//cd attribute
 				s = dec.getDEC_CD_NAME();
 				if (s == null) s = "";
-				UtilService.setValPageVector(vValidate, "Conceptual Domain", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
+				UtilService.setValPageVector(vValidate, "Conceptual Domain", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
 			}
 			else if (sACType.equals("ValueDomain"))
 			{
@@ -1294,7 +1294,7 @@ public class SetACService implements Serializable
 				//cd attribute
 				s = vd.getVD_CD_NAME();
 				if (s == null) s = "";
-				UtilService.setValPageVector(vValidate, "Conceptual Domain", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
+				UtilService.setValPageVector(vValidate, "Conceptual Domain", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
 			}
 			//workflow status
 			if (sWF == null) sWF = "";
@@ -1312,13 +1312,13 @@ public class SetACService implements Serializable
 				if (s == null) s = "";
 				strInValid = "";
 				UtilService.setValPageVector(vValidate, "Registration Status", s, bNotMandatory, 50, strInValid, sOriginAction);
-			}     
+			}
 			//data type attributes
 			if (sACType.equals("ValueDomain"))
 			{
 				s = vd.getVD_DATA_TYPE();
 				if (s == null) s = "";
-				UtilService.setValPageVector(vValidate, "Data Type", s, bNotMandatory, 20, "", sOriginAction);        
+				UtilService.setValPageVector(vValidate, "Data Type", s, bNotMandatory, 20, "", sOriginAction);
 			}
 			//begin date
 			if (sBD == null) sBD = "";
@@ -1342,15 +1342,15 @@ public class SetACService implements Serializable
 			{
 				s = de.getDOC_TEXT_PREFERRED_QUESTION();
 				if (s == null) s = "";
-				UtilService.setValPageVector(vValidate, "Preferred Question Text", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);        
+				UtilService.setValPageVector(vValidate, "Preferred Question Text", s, bNotMandatory, iNoLengthLimit, "", sOriginAction);
 			}
 			//other value domain attributes
 			if (sACType.equals("ValueDomain"))
 			{
-				this.setValidateVDOtherAttr(vValidate, vd, sOriginAction);    
+				this.setValidateVDOtherAttr(vValidate, vd, sOriginAction);
 			}
 			//add cs-csi to validate page
-			String sCS = ""; 
+			String sCS = "";
 			String sCSI = "";
 			String sAC = "";
 			if(vACNames != null)
@@ -1362,7 +1362,7 @@ public class SetACService implements Serializable
 					{
 						AC_CSI_Bean accsiBean = (AC_CSI_Bean)vACCSI.elementAt(i);
 						CSI_Bean csiBean = (CSI_Bean)accsiBean.getCSI_BEAN();
-						if (i>0) 
+						if (i>0)
 						{
 							sCS += ", ";
 							sCSI += ", ";
@@ -1373,7 +1373,7 @@ public class SetACService implements Serializable
 						sAC += accsiBean.getAC_LONG_NAME();
 					}
 				}
-			}   
+			}
 			//Vector vAC_CS = de.getAC_AC_CSI_VECTOR();
 			Vector vOriginal_ACCS = (Vector)session.getAttribute("vAC_CSI");
 			if (vAC_CS == null) vAC_CS = new Vector();
@@ -1386,7 +1386,7 @@ public class SetACService implements Serializable
 			else if (vAC_CS.size() != vOriginal_ACCS.size())
 				strInValid = "Valid";
 			UtilService.setValPageVector(vValidate, "Classification Scheme", "", bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
-			UtilService.setValPageVector(vValidate, "Classification Scheme Items", "", bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);     
+			UtilService.setValPageVector(vValidate, "Classification Scheme Items", "", bNotMandatory, iNoLengthLimit, strInValid, sOriginAction);
 
 			//origin or source
 			if (sOrigin == null) sOrigin = "";
@@ -1410,7 +1410,7 @@ public class SetACService implements Serializable
 		// finally, send vector to JSP
 		//store it in the request
 		Vector<String> vValString = this.makeStringVector(vValidate);
-		req.setAttribute("vValidate", vValString); 
+		req.setAttribute("vValidate", vValString);
 
 		// }
 	}
@@ -1428,8 +1428,8 @@ public class SetACService implements Serializable
 	 * @param m_REP REP_Bean
 	 */
 	private void setValidateNameComp(Vector<ValidateBean> vValidate, String acType, HttpServletRequest req,
-			HttpServletResponse res, DEC_Bean m_DEC, EVS_Bean m_OC, EVS_Bean m_PC, 
-			VD_Bean m_VD, EVS_Bean m_REP) 
+			HttpServletResponse res, DEC_Bean m_DEC, EVS_Bean m_OC, EVS_Bean m_PC,
+			VD_Bean m_VD, EVS_Bean m_REP)
 	{
 		try
 		{
@@ -1479,7 +1479,7 @@ public class SetACService implements Serializable
 				ValidationStatusBean ocStatusBean = new ValidationStatusBean();
 				HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
 
-				//check validity of object class 
+				//check validity of object class
 				if (checkValidityOC.equals("Yes")){
 					//rule - must have primary if qualifier exists
 					if(!sQ.equals("") && sP.equals(""))
@@ -1490,23 +1490,23 @@ public class SetACService implements Serializable
 						strOCInvalid = strOCInvalid + checkConceptCodeExistsInOtherDB(vOC, insAC, null);
 
 					//rule - OCL must be present if associated DE with some Reg Status exist
-					if ((sOCL == null || sOCL.equals("")) && sDECAction.equals("Edit"))  
+					if ((sOCL == null || sOCL.equals("")) && sDECAction.equals("Edit"))
 						strOCInvalid = strOCInvalid + checkDEUsingDEC("ObjectClass", m_DEC, getACSer);
 					else if (sOCL == null || sOCL.equals(""))
 						m_DEC.setDEC_OCL_IDSEQ("");
 
-					//check for warning of oc existance          
+					//check for warning of oc existance
 					if((sOCL == null || sOCL.equals("")) && !sOriginAction.equals("BlockEditDEC"))
 						strOCWarning = "Warning: a Data Element Concept should have an Object Class.  <br>";
 
-					//checks if new or using existing of oc 
+					//checks if new or using existing of oc
 					//check the validity of oc if there is no warning or invalid
 					if ((strOCInvalid == null || strOCInvalid.equals("")) && strOCWarning.equals("")) {
 						if ((vOC != null && vOC.size()>0) && (defaultContext != null && defaultContext.size()>0)){
 							ocStatusBean = insAC.evsBeanCheck(vOC, defaultContext, sOCL, "Object Class");
 						}
 					}
-					
+
 					//set the condr idseq of OC to DEC
 					if (ocStatusBean.isAllConceptsExists()){
 						if (!ocStatusBean.isNewVersion()) {
@@ -1515,9 +1515,9 @@ public class SetACService implements Serializable
 							}
 							if (ocStatusBean.isEvsBeanExists()&& ocStatusBean.getEvsBeanIDSEQ() != null && !ocStatusBean.getEvsBeanIDSEQ().equals("")){
 								m_DEC.setDEC_OCL_IDSEQ(ocStatusBean.getEvsBeanIDSEQ());
-							}			
+							}
 							DataManager.setAttribute(session, "ocStatusBean", ocStatusBean);
-						} 
+						}
 					}
 
 				}
@@ -1539,7 +1539,7 @@ public class SetACService implements Serializable
 				if (checkValidityProp.equals("Yes")){
 					//rule - must have primary if qualifier exists
 					if(!sQual.equals("") && sProp.equals(""))
-						strPropInvalid = "Cannot have Qualifier Concepts without a Primary Concept. <br>"; 
+						strPropInvalid = "Cannot have Qualifier Concepts without a Primary Concept. <br>";
 
 					//checks if concept code used in prop exists in other vocabulary (** need to review this rule **)
 					if(!sQual.equals("") || !sProp.equals("") && m_PC != null)
@@ -1551,7 +1551,7 @@ public class SetACService implements Serializable
 					if (strPropInvalid == null || strPropInvalid.equals("")) {
 						if ((vPROP != null && vPROP.size()>0) && (defaultContext != null && defaultContext.size()>0)){
 							propStatusBean = insAC.evsBeanCheck(vPROP, defaultContext, s, "Property");
-						} 
+						}
 					}
 					//set the condr idseq of prop to DEC
 					if (propStatusBean.isAllConceptsExists()){
@@ -1564,7 +1564,7 @@ public class SetACService implements Serializable
 							}
 							DataManager.setAttribute(session, "propStatusBean", propStatusBean);
 						}
-					} 
+					}
 				}
 				String retCode = "";
 				if (checkValidityOC.equals("Yes") || checkValidityProp.equals("Yes")){
@@ -1573,7 +1573,7 @@ public class SetACService implements Serializable
 				}
 
 				if (checkValidityOC.equals("Yes") || checkValidityProp.equals("Yes")){
-					//check oc prop combination already exists in the database         
+					//check oc prop combination already exists in the database
 					String objID = "";
 					if (checkValidityOC.equals("Yes")){
 						objID = ocStatusBean.getEvsBeanIDSEQ();
@@ -1597,15 +1597,15 @@ public class SetACService implements Serializable
 						if (sPropL != null && !sPropL.equals("") && (propID == null || propID.equals("")))
 							strPropInvalid = strPropInvalid + sMsg;
 					}
-					//check oc prop combination already exists in the database 
+					//check oc prop combination already exists in the database
 					else if (!sOriginAction.equals("BlockEditDEC"))
 					{
 						if ((objID != null && !objID.equals("")) && (propID != null && !propID.equals(""))){
-							strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction); 
+							strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction);
 						}else if ((objID != null && !objID.equals("")) &&  (vPROP == null || vPROP.size()<1)){
-							strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction); 
+							strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction);
 						}else if ((vOC == null || vOC.size()<1) && (propID != null && !propID.equals(""))){
-							strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction); 
+							strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction);
 						}
 						if (strInValid.startsWith("Warning")) {
 							strWarning += strInValid;
@@ -1627,13 +1627,13 @@ public class SetACService implements Serializable
 						//add the valid message
 						if (ocStatusBean.getStatusMessage() != null && !ocStatusBean.getStatusMessage().equals("")){
 							strOCValid += ocStatusBean.getStatusMessage();
-						}  
+						}
 					} else {  //add the warning to invalid message
 						strOCInvalid = strOCInvalid + strOCWarning + strWarning;
 					}
 
 
-				} 
+				}
 
 				if (checkValidityProp.equals("Yes")){
 					//add appropriate message to attributes of oc and prop only if there is no invalid message
@@ -1646,7 +1646,7 @@ public class SetACService implements Serializable
 						//add the valid message
 						if (propStatusBean.getStatusMessage() != null && !propStatusBean.getStatusMessage().equals("")){
 							strPropValid += propStatusBean.getStatusMessage();
-						}  
+						}
 					} else {  //add the warning to invalid message
 						strOCInvalid = strOCInvalid + strOCWarning + strWarning;
 						strPropInvalid  = strPropInvalid + strWarning;
@@ -1688,15 +1688,15 @@ public class SetACService implements Serializable
 					}
 					if (repStatusBean.getStatusMessage() != null && !repStatusBean.getStatusMessage().equals("")){
 						strRepValid = "Valid" + "<br> " + repStatusBean.getStatusMessage();
-					}  
+					}
 				}
 				DataManager.setAttribute(session, "vdStatusBean", repStatusBean);
-				
+
 				if (sOriginAction != null && sOriginAction.equals("BlockEditVD")){
 					UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Rep Term", ss, bNotMandatory, 255, strInValid, sOriginAction, strRepValid);
 				}else{
 					UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Rep Term", ss, bMandatory, 255, strInValid, sOriginAction, strRepValid);
-				}   
+				}
 			}
 		}
 		catch (Exception e)
@@ -1777,7 +1777,7 @@ public class SetACService implements Serializable
 	/**
 	 * @param req The HttpServletRequest object.
 	 * @param res HttpServletResponse object
-	 * @param oc_idseq String 
+	 * @param oc_idseq String
 	 * @param prop_idseq  String
 	 * @param strInvalid  String
 	 * @return String value of the invalid message
@@ -1810,7 +1810,7 @@ public class SetACService implements Serializable
 						//loop through to printout the outstrings
 						while(rs.next())
 						{
-							sOC_WFS = rs.getString(1); 
+							sOC_WFS = rs.getString(1);
 						}
 						if (sOC_WFS == null) sOC_WFS = "";
 						sOC_WFS = sOC_WFS.toUpperCase();
@@ -1819,13 +1819,13 @@ public class SetACService implements Serializable
 							"the Object Class and Property Work Flow Statuses must be 'Released'.";
 					}
 					else if(!prop_idseq.equals(""))
-					{    
-						// Now check Property WFStatus  
+					{
+						// Now check Property WFStatus
 						cstmt = m_servlet.getConn().createStatement();
 						rs = cstmt.executeQuery(sPropSQL);
 						while(rs.next())
 						{
-							sProp_WFS = rs.getString(1); 
+							sProp_WFS = rs.getString(1);
 						}
 						if (sProp_WFS == null) sProp_WFS = "";
 						sProp_WFS = sProp_WFS.toUpperCase();
@@ -2002,7 +2002,7 @@ public class SetACService implements Serializable
 	/**
 	 * For Block Edit, checks whether End Date is before any Begin dates being edited.
 	 * called from setValidatePageValuesDE, setValidatePageValuesDEC, setValidatePageValuesVD methods.
-	 * @param req HttpServletRequest 
+	 * @param req HttpServletRequest
 	 * @param sEnd String end date
 	 * @param sACType String ac type
 	 *
@@ -2077,7 +2077,7 @@ public class SetACService implements Serializable
 			java.util.Date begDate;
 			java.util.Date endDate;
 			java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("MM/dd/yyyy");
-			dateFormat.setLenient(false); 
+			dateFormat.setLenient(false);
 			begDate = dateFormat.parse(sBegDate);
 			endDate = dateFormat.parse(sEndDate);
 			if (endDate.before(begDate))
@@ -2102,7 +2102,7 @@ public class SetACService implements Serializable
 			{
 				java.util.Date dDate;
 				java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("MM/dd/yyyy");
-				dateFormat.setLenient(false); 
+				dateFormat.setLenient(false);
 				Calendar dCal = Calendar.getInstance();
 				dDate = dateFormat.parse(sDate);
 				dCal.setTime(dDate);
@@ -2113,25 +2113,25 @@ public class SetACService implements Serializable
 			catch (Exception e)
 			{
 				logger.error("ERROR in validateDateFormat  : " + e.toString(), e);
-				validDate = "Date must be of format MM/DD/YYYY.";        
+				validDate = "Date must be of format MM/DD/YYYY.";
 			}
 		}
 		return validDate;
 	}
 	/**
 	 * For Block Edit, check for various business rules.
-	 * 
+	 *
 	 * @param req  HttpServletRequest
 	 * @param res  HttpServletResponse
 	 * @param sACType type ac for the validation
 	 */
-	public void checkBlockEditRules(HttpServletRequest req, HttpServletResponse res, 
+	public void checkBlockEditRules(HttpServletRequest req, HttpServletResponse res,
 			String sACType)
 	{
 		try
 		{
 			HttpSession session = req.getSession();
-			String dvValid = "";  //sDECVal = "", sVDVal = "", 
+			String dvValid = "";  //sDECVal = "", sVDVal = "",
 			String regValid = "";  //, sReg = "";
 			String pgBDate = "", pgEDate = "", bdValid = "", edValid = "";
 			String pgWFStatus = "", wfValid = "";
@@ -2154,14 +2154,14 @@ public class SetACService implements Serializable
 				DEC_Bean pageDEC = (DEC_Bean)session.getAttribute("m_DEC");
 				pgBDate = pageDEC.getDEC_BEGIN_DATE();
 				pgEDate = pageDEC.getDEC_END_DATE();
-				pgWFStatus = pageDEC.getDEC_ASL_NAME();      
+				pgWFStatus = pageDEC.getDEC_ASL_NAME();
 			}
 			else if (sACType.equals("ValueDomain"))
 			{
 				VD_Bean pageVD = (VD_Bean)session.getAttribute("m_VD");
 				pgBDate = pageVD.getVD_BEGIN_DATE();
 				pgEDate = pageVD.getVD_END_DATE();
-				pgWFStatus = pageVD.getVD_ASL_NAME();      
+				pgWFStatus = pageVD.getVD_ASL_NAME();
 			}
 			//check for validity of the dates
 			String pgDateValid = "";
@@ -2191,18 +2191,18 @@ public class SetACService implements Serializable
 						if (de == null) de = new DE_Bean();
 						acName = de.getDE_LONG_NAME();
 						//dec and vd attributes
-						sWF = de.getDE_ASL_NAME();    //workflow status attributes   
-						sBD = de.getDE_BEGIN_DATE();    //begin date attribute             
-						sED = de.getDE_END_DATE();      //end date attributes          
+						sWF = de.getDE_ASL_NAME();    //workflow status attributes
+						sBD = de.getDE_BEGIN_DATE();    //begin date attribute
+						sED = de.getDE_END_DATE();      //end date attributes
 					}
 					else if (sACType.equals("DataElementConcept"))
 					{
 						DEC_Bean dec = (DEC_Bean)vBERows.elementAt(i);
 						if (dec == null) dec = new DEC_Bean();
 						acName = dec.getDEC_LONG_NAME();   //long name
-						sWF = dec.getDEC_ASL_NAME();    //workflow status attributes          
-						sBD = dec.getDEC_BEGIN_DATE();    //begin date attribute          
-						sED = dec.getDEC_END_DATE();      //end date attributes 
+						sWF = dec.getDEC_ASL_NAME();    //workflow status attributes
+						sBD = dec.getDEC_BEGIN_DATE();    //begin date attribute
+						sED = dec.getDEC_END_DATE();      //end date attributes
 						// String sCont = dec.getDEC_CONTE_IDSEQ();
 						// req.setAttribute("blockContext", sCont);
 					}
@@ -2211,9 +2211,9 @@ public class SetACService implements Serializable
 						VD_Bean vd = (VD_Bean)vBERows.elementAt(i);
 						if (vd == null) vd = new VD_Bean();
 						acName = vd.getVD_LONG_NAME();     //long name
-						sWF = vd.getVD_ASL_NAME();    //workflow status attributes          
-						sBD = vd.getVD_BEGIN_DATE();    //begin date attribute          
-						sED = vd.getVD_END_DATE();      //end date attributes          
+						sWF = vd.getVD_ASL_NAME();    //workflow status attributes
+						sBD = vd.getVD_BEGIN_DATE();    //begin date attribute
+						sED = vd.getVD_END_DATE();      //end date attributes
 					}
 					//below validation is same for all acs
 					//store page attribute in the bean attr variable according to its value on page
@@ -2236,7 +2236,7 @@ public class SetACService implements Serializable
 								edValid = edValid + acName;
 							}
 							else if (!dValid.equals("false"))  //dValid.equals("error"))
-								edValid = "End date is not a valid date."; 
+								edValid = "End date is not a valid date.";
 						}
 					}
 					else  //end date cannot be null for some workflow status
@@ -2253,7 +2253,7 @@ public class SetACService implements Serializable
 				if (pgDateValid.equals("") && !edValid.equals(""))
 					edValid = "Begin Date is not before the End Date for " + edValid;
 				//store teh error messages in teh request
-				req.setAttribute("DECVDValid", dvValid);  
+				req.setAttribute("DECVDValid", dvValid);
 				req.setAttribute("REGValid", regValid);
 				req.setAttribute("BEGValid", bdValid);
 				req.setAttribute("ENDValid", edValid);
@@ -2335,7 +2335,7 @@ public class SetACService implements Serializable
 	 *
 	 * @return String retValue message if exists already. Otherwise empty string.
 	 */
-	public String checkUniqueOCPropPair(DEC_Bean mDEC, HttpServletRequest req, 
+	public String checkUniqueOCPropPair(DEC_Bean mDEC, HttpServletRequest req,
 			HttpServletResponse res, String setAction)
 	{
 		try
@@ -2343,38 +2343,38 @@ public class SetACService implements Serializable
 			//boolean bValidFlag = false;
 			HttpSession session = req.getSession();
 			GetACService getAC = new GetACService(req, res, m_servlet);
-			String sSQL="", editSQL="", propSQL = "", ocSQL = "";  //versSQL="", 
+			String sSQL="", editSQL="", propSQL = "", ocSQL = "";  //versSQL="",
 			String menuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
 			//check unique if id is not the same for update
 			String sContID = mDEC.getDEC_CONTE_IDSEQ();
 			// String sPublicID = mDEC.getDEC_DEC_ID();
 
-			if (setAction.equalsIgnoreCase("EditDEC") || setAction.equalsIgnoreCase("editDECfromDE") 
+			if (setAction.equalsIgnoreCase("EditDEC") || setAction.equalsIgnoreCase("editDECfromDE")
 					|| menuAction.equals("NewDECVersion"))
 				editSQL = " AND DEC.DEC_ID <> '" +  mDEC.getDEC_DEC_ID() + "'";
 
 			String sOCID = mDEC.getDEC_OCL_IDSEQ();
 			String sPropID = mDEC.getDEC_PROPL_IDSEQ();
 			//get oc sql
-			if (sOCID != null && !sOCID.equals("")) 
+			if (sOCID != null && !sOCID.equals(""))
 				ocSQL = " AND DEC.OC_IDSEQ = '" + sOCID + "'";
 			else
 				ocSQL = " AND DEC.OC_IDSEQ IS NULL";
 			//get prop sql
-			if (sPropID != null && !sPropID.equals("")) 
-				propSQL = " AND DEC.PROP_IDSEQ = '" + sPropID + "'";  
+			if (sPropID != null && !sPropID.equals(""))
+				propSQL = " AND DEC.PROP_IDSEQ = '" + sPropID + "'";
 			else
 				propSQL = " AND DEC.PROP_IDSEQ IS NULL";
-			//make the query 
-			sSQL = "SELECT distinct DEC_ID FROM DATA_ELEMENT_CONCEPTS_VIEW DEC WHERE DEC.CONTE_IDSEQ = '" + sContID + "'" 
-			+ ocSQL + propSQL + editSQL;      //versSQL + editSQL;           
-			//logger.debug("oc prop pair " + sSQL); 
+			//make the query
+			sSQL = "SELECT distinct DEC_ID FROM DATA_ELEMENT_CONCEPTS_VIEW DEC WHERE DEC.CONTE_IDSEQ = '" + sContID + "'"
+			+ ocSQL + propSQL + editSQL;      //versSQL + editSQL;
+			//logger.debug("oc prop pair " + sSQL);
 
 			String sDECID = getAC.isUniqueInContext(sSQL);
 			if (sDECID == null || sDECID.equals(""))
 			{
-				sSQL = "SELECT distinct DEC_ID FROM DATA_ELEMENT_CONCEPTS_VIEW DEC WHERE DEC.CONTE_IDSEQ <> '" + sContID + "'" 
-				+ ocSQL + propSQL + editSQL;      //versSQL + editSQL;           
+				sSQL = "SELECT distinct DEC_ID FROM DATA_ELEMENT_CONCEPTS_VIEW DEC WHERE DEC.CONTE_IDSEQ <> '" + sContID + "'"
+				+ ocSQL + propSQL + editSQL;      //versSQL + editSQL;
 				String sContexts = getAC.isUniqueInContext(sSQL);
 				if(sContexts == null || sContexts.equals(""))
 					return "";
@@ -2407,7 +2407,7 @@ public class SetACService implements Serializable
 	 * @return String retValue message if exists already. Otherwise empty string.
 	 */
 	public String checkUniqueDECVDPair(DE_Bean mDE, GetACService getAC, String setAction, String sMenu)
-	{ 
+	{
 		try
 		{
 			String sSQL="", editSQL="";  //, versSQL="";
@@ -2425,9 +2425,9 @@ public class SetACService implements Serializable
 			String sDECID = mDE.getDE_DEC_IDSEQ();
 			String sContID = mDE.getDE_CONTE_IDSEQ();
 			if (sPublicID == null) sPublicID = "";
-			sSQL = "SELECT LONG_NAME FROM DATA_ELEMENTS_VIEW DE WHERE DE.VD_IDSEQ = '" + sVDID + 
+			sSQL = "SELECT LONG_NAME FROM DATA_ELEMENTS_VIEW DE WHERE DE.VD_IDSEQ = '" + sVDID +
 			"' AND DE.DEC_IDSEQ = '" + sDECID +   //versSQL +
-			"' AND DE.CONTE_IDSEQ = '" + sContID + 
+			"' AND DE.CONTE_IDSEQ = '" + sContID +
 			"'" + editSQL ;
 
 			String sRegStat = mDE.getDE_REG_STATUS();
@@ -2513,7 +2513,7 @@ public class SetACService implements Serializable
         else if (sField.equals("Version"))
         {
         	String deID = mDE.getDE_MIN_CDE_ID();
-        	sSQL = "SELECT COUNT(*) FROM DATA_ELEMENTS_VIEW DE WHERE DE.CDE_ID = '" + deID + 
+        	sSQL = "SELECT COUNT(*) FROM DATA_ELEMENTS_VIEW DE WHERE DE.CDE_ID = '" + deID +
         	"' AND DE.VERSION = '" + sVersion + "'";
         	retValue = "Not unique within the Public ID.";
 
@@ -2552,7 +2552,7 @@ public class SetACService implements Serializable
         else if (sField.equals("Version"))
         {
         	String decID = mDEC.getDEC_DEC_ID();
-        	sSQL = "SELECT COUNT(*) FROM DATA_ELEMENT_CONCEPTS_VIEW DEC WHERE DEC.DEC_ID = '" + decID + 
+        	sSQL = "SELECT COUNT(*) FROM DATA_ELEMENT_CONCEPTS_VIEW DEC WHERE DEC.DEC_ID = '" + decID +
         	"' AND DEC.VERSION = '" + sVersion + "'";
         	retValue = "Not unique within the Public ID.";
         }
@@ -2593,7 +2593,7 @@ public class SetACService implements Serializable
         else if (sField.equals("Version"))
         {
         	String vdID = mVD.getVD_VD_ID();
-        	sSQL = "SELECT COUNT(*) FROM VALUE_DOMAINS_VIEW VD WHERE VD.VD_ID = '" + vdID + 
+        	sSQL = "SELECT COUNT(*) FROM VALUE_DOMAINS_VIEW VD WHERE VD.VD_ID = '" + vdID +
         	"' AND VD.VERSION = '" + sVersion + "'";
         	retValue = "Not unique within the Public ID.";
         }
@@ -2645,7 +2645,7 @@ public class SetACService implements Serializable
 			Vector vList = new Vector();
 			//get the DEC attributes from the ID
 			GetACSearch serAC = new GetACSearch(req, res, m_servlet);
-			serAC.doDECSearch(sDECid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", vList, "0"); 
+			serAC.doDECSearch(sDECid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", vList, "0");
 			if (vList != null)
 			{
 				//loop through hte list and find if oc exists
@@ -2674,7 +2674,7 @@ public class SetACService implements Serializable
 	 * @param vAC vector of concepts in the search results
 	 * @param insAC class object
 	 * @param m_VM vm bean
-	 *  
+	 *
 	 * @return String retValue message if exists already. Otherwise empty string.
 	 */
 	public String checkConceptCodeExistsInOtherDB(Vector vAC, InsACService insAC, VM_Bean m_VM) //throws Exception
@@ -2736,7 +2736,7 @@ public class SetACService implements Serializable
 	 * Calls 'getAC.doBlockExist' to execute the query.
 	 *
 	 * @param ACType String selected block type.
-	 * @param m_DEC 
+	 * @param m_DEC
 	 * @param getAC reference to GetACService class.
 	 *
 	 * @return String retValue message if exists already. Otherwise empty string.
@@ -2769,11 +2769,11 @@ public class SetACService implements Serializable
 							sRegStatus = sRegStatus + sReg;
 							if (!sDEName.equals("")) sDEName = sDEName + ", ";
 							sDEName = sDEName + sDE;
-						}            
+						}
 					}
 					if (!sDEName.equals(""))
 						strInValid = "A Data Element of name " + sDEName + " uses this DEC " +
-						"and the DE has a Registration Status of " + sRegStatus + " so the DEC must have an Object Class. \n";          
+						"and the DE has a Registration Status of " + sRegStatus + " so the DEC must have an Object Class. \n";
 				}
 			}
 		}
@@ -2805,7 +2805,7 @@ public class SetACService implements Serializable
 			if (dec == null) dec = new DEC_Bean();
 			String sDECWF = dec.getDEC_ASL_NAME();
 			if (sDECWF == null || !m_ReleaseWFS.contains(sDECWF))
-				sDEC_valid = "DEC";      
+				sDEC_valid = "DEC";
 			//check if vd has valid workflow status
 			VD_Bean vd = de.getDE_VD_Bean();
 			if (vd == null) vd = new VD_Bean();
@@ -2814,7 +2814,7 @@ public class SetACService implements Serializable
 				sVD_valid = "VD";
 			//if not valid_dec or valid_vd, check if de reg status if one of the three
 			if (!sDEC_valid.equals("") || !sVD_valid.equals(""))
-			{      
+			{
 				String sReg = de.getDE_REG_STATUS(); //get the selected reg status
 				if (sReg == null) sReg = "";
 				sValid = sDEC_valid; //add dec
@@ -2828,10 +2828,10 @@ public class SetACService implements Serializable
 					strWFS += m_ReleaseWFS.elementAt(i);
 				}
 				if (m_vRegStatus.contains(sReg))
-					sValid = "Associated " + sValid + " must be RELEASED or (" + strWFS + ").";     
+					sValid = "Associated " + sValid + " must be RELEASED or (" + strWFS + ").";
 				else  //give warning otherwise
-					sValid = "Warning: Associated " + sValid + " should be RELEASED or (" + strWFS + ").";               
-			} 
+					sValid = "Warning: Associated " + sValid + " should be RELEASED or (" + strWFS + ").";
+			}
 		}
 		catch (Exception e)
 		{
@@ -3038,12 +3038,12 @@ public class SetACService implements Serializable
 	 * @return String strValid message if character is greater than 8 characters. otherwise empty string.
 	 */
 	public String checkLessThan8Chars(String s)
-	{ 
+	{
 		int s_length = s.length();
 		if(s_length < 9)
 			return "";
 		else
-			return " Maximum Length must be less than 100,000,000. \n"; 
+			return " Maximum Length must be less than 100,000,000. \n";
 	}
 
 	/**
@@ -3055,7 +3055,7 @@ public class SetACService implements Serializable
 	 * @return String strValid message if character is greater than 99.99. otherwise empty string.
 	 */
 	public String checkVersionDimension(String sValue)
-	{ 
+	{
 		try
 		{
 			String strValid = this.checkValueIsNumeric(sValue, "Version");
@@ -3069,7 +3069,7 @@ public class SetACService implements Serializable
 				//invalid if length is greater than five
 				if (sValue.length()>5)
 					return strValid; //isValid = false;
-				//invalid if point is not found and whole number is greater than 2.  
+				//invalid if point is not found and whole number is greater than 2.
 				else if (sValue.indexOf(".") == -1 && sValue.length()>2)
 					return strValid;
 				//invalid if first half from the point is greater than 2
@@ -3252,11 +3252,11 @@ public class SetACService implements Serializable
 			if (sOriginAction == null) sOriginAction.equals("");
 
 			//get the selected contexts from the DE bean
-			DE_Bean selDE = (DE_Bean)session.getAttribute("m_DE");      
+			DE_Bean selDE = (DE_Bean)session.getAttribute("m_DE");
 			//keep the seach de attributes if menu action is editdesde
-			//make sure the selected context is saved 
+			//make sure the selected context is saved
 			m_DE.setAC_SELECTED_CONTEXT_ID(selDE.getAC_SELECTED_CONTEXT_ID());
-			String sID;  //sIdx, 
+			String sID;  //sIdx,
 			String sName = "";
 
 			if(sOriginAction.equals("BlockEditDE"))
@@ -3301,7 +3301,7 @@ public class SetACService implements Serializable
 				m_DE.setDE_VD_IDSEQ(sID);
 				sName = (String)req.getParameter("selVDText");
 				if (sName != null) m_DE.setDE_VD_NAME(sName);
-			} 
+			}
 
 			//set LONG_NAME
 			// String sTmp;
@@ -3330,7 +3330,7 @@ public class SetACService implements Serializable
       String sSysName = m_DE.getAC_SYS_PREF_NAME();
       String sAbbName = m_DE.getAC_ABBR_PREF_NAME();
       //make sure to capture the user typed name at any page refresh.
-      if (sName != null && !sName.equals("") && !sName.equals("(Generated by the System)") 
+      if (sName != null && !sName.equals("") && !sName.equals("(Generated by the System)")
         && !sName.equals(sSysName) && !sName.equals(sAbbName) && sNameType != null && sNameType.equals("USER"))
         m_DE.setAC_USER_PREF_NAME(sName);  */
 			}
@@ -3420,8 +3420,8 @@ public class SetACService implements Serializable
 					String isNum = this.checkValueIsNumeric(sName, "Version");
 					//if numeric and no . and less than 2 length add .0 in the end.
 					if ((isNum == null || isNum.equals("")) && (sName.indexOf(".") == -1 && sName.length() < 3))
-						sName = sName + ".0";          
-					m_DE.setDE_VERSION(sName);          
+						sName = sName + ".0";
+					m_DE.setDE_VERSION(sName);
 				}
 			}
 
@@ -3481,10 +3481,10 @@ public class SetACService implements Serializable
 			if (sOriginAction == null) sOriginAction.equals("");
 
 			//get the selected contexts from the DE bean
-			DEC_Bean selDEC = (DEC_Bean)session.getAttribute("m_DEC");  
+			DEC_Bean selDEC = (DEC_Bean)session.getAttribute("m_DEC");
 			m_DEC.setAC_SELECTED_CONTEXT_ID(selDEC.getAC_SELECTED_CONTEXT_ID());
 
-			String sID;  //sIdx, 
+			String sID;  //sIdx,
 			String sName = "";
 
 			sID = (String)req.getParameter("decIDSEQ");
@@ -3608,8 +3608,8 @@ public class SetACService implements Serializable
 					String isNum = this.checkValueIsNumeric(sName, "Version");
 					//if numeric and no . and less than 2 length add .0 in the end.
 					if ((isNum == null || isNum.equals("")) && (sName.indexOf(".") == -1 && sName.length() < 3))
-						sName = sName + ".0";          
-					m_DEC.setDEC_VERSION(sName);          
+						sName = sName + ".0";
+					m_DEC.setDEC_VERSION(sName);
 				}
 			}
 
@@ -3656,11 +3656,11 @@ public class SetACService implements Serializable
 						vCSCSIs.addElement(sID);
 						vACCSIs.addElement(sACCSI);
 						vACs.addElement(sAC);
-						//get the ac name   
+						//get the ac name
 						String acName = m_DEC.getDEC_LONG_NAME();
 						if (sAC != null && vNames != null && vIDs != null)
 						{
-							if (vIDs.indexOf(sAC) >= 0)              
+							if (vIDs.indexOf(sAC) >= 0)
 								acName = (String)vNames.elementAt(vIDs.indexOf(sAC));
 						}
 						vACNames.addElement(acName);
@@ -3680,7 +3680,7 @@ public class SetACService implements Serializable
 
 			//get associated cs-id
 			sIDs = req.getParameterValues("selectedCS");
-			m_DEC.setAC_CS_ID(this.getSelectionFromPage(sIDs));    
+			m_DEC.setAC_CS_ID(this.getSelectionFromPage(sIDs));
 		}
 		catch (Exception e)
 		{
@@ -3691,7 +3691,7 @@ public class SetACService implements Serializable
 	/**
 	 * stores the values from string array into a vector
 	 * returns back the vector.
-	 * 
+	 *
 	 * @param sSelectionList array of string.
 	 * @return Vector of elements from the array.
 	 */
@@ -3718,7 +3718,7 @@ public class SetACService implements Serializable
 	}
 
 	/**
-	 * 
+	 *
 	 * @param vCSCSIs
 	 * @param vACCSIs
 	 * @param vCSCSIList
@@ -3726,7 +3726,7 @@ public class SetACService implements Serializable
 	 * @param vAC_Name
 	 * @return vector of accsi object
 	 */
-	private Vector<AC_CSI_Bean> getACCSIFromPage(Vector vCSCSIs, Vector vACCSIs, Vector vCSCSIList, 
+	private Vector<AC_CSI_Bean> getACCSIFromPage(Vector vCSCSIs, Vector vACCSIs, Vector vCSCSIList,
 			Vector vACs, Vector vAC_Name) //throws ServletException,IOException
 			{
 		Vector<AC_CSI_Bean> vACCSIList = new Vector<AC_CSI_Bean>();   //get selected CSCSI atributes of this AC
@@ -3734,7 +3734,7 @@ public class SetACService implements Serializable
 		{
 			//loop through the cscsilist to get csi attributes
 			if (vCSCSIs != null && vCSCSIs.size()>0)
-			{        
+			{
 				Vector<String> vCSINames = new Vector<String>();
 				Vector<String> vCSNames = new Vector<String>();
 				//get all cs-csi attributes from the list
@@ -3759,9 +3759,9 @@ public class SetACService implements Serializable
 							if (vACCSIs != null)
 							{
 								ACCSI = (String)vACCSIs.elementAt(j);
-								if (ACCSI == null) ACCSI = "";                
+								if (ACCSI == null) ACCSI = "";
 							}
-							accsiBean.setAC_CSI_IDSEQ(ACCSI);              //get its ac-csi id 
+							accsiBean.setAC_CSI_IDSEQ(ACCSI);              //get its ac-csi id
 							//ac id
 							String sAC = "";
 							if (vACs != null)
@@ -3788,16 +3788,16 @@ public class SetACService implements Serializable
 		{
 			logger.error("Error Occurred in getACCSIFromPage " + e.toString(), e);
 		}
-		return vACCSIList;   
+		return vACCSIList;
 			}
 
 	/**
-	 * 
+	 *
 	 * @param req
 	 * @param deBean
-	 * @return de bean 
+	 * @return de bean
 	 */
-	public DE_Bean setDECSCSIfromPage(HttpServletRequest req, DE_Bean deBean)  
+	public DE_Bean setDECSCSIfromPage(HttpServletRequest req, DE_Bean deBean)
 	{
 		try
 		{
@@ -3832,12 +3832,12 @@ public class SetACService implements Serializable
 						vCSCSIs.addElement(sID);
 						vACCSIs.addElement(sACCSI);
 						vACs.addElement(sAC);
-						//get the ac name            
+						//get the ac name
 						String acName = deBean.getDE_LONG_NAME();
 						//  System.out.println(sID + " : " + sACCSI + " : " + sAC + " : " + vIDs.indexOf(sAC) + " : " + vNames.size());
 						if (sAC != null && vNames != null && vIDs != null)
 						{
-							if (vIDs.indexOf(sAC) >= 0)              
+							if (vIDs.indexOf(sAC) >= 0)
 								acName = (String)vNames.elementAt(vIDs.indexOf(sAC));
 						}
 						vACNames.addElement(acName);
@@ -3862,8 +3862,8 @@ public class SetACService implements Serializable
 		}
 		catch (Exception e)
 		{
-			logger.error("ERROR in setacservice_setdecscsivaluefrompage  : " + e.toString(), e);      
-		}    
+			logger.error("ERROR in setacservice_setdecscsivaluefrompage  : " + e.toString(), e);
+		}
 		//return the bean
 		return deBean;
 	}
@@ -3886,10 +3886,10 @@ public class SetACService implements Serializable
 			if (sOriginAction == null) sOriginAction.equals("");
 
 			//get the selected contexts from the DE bean
-			VD_Bean selVD = (VD_Bean)session.getAttribute("m_VD");      
-			m_VD.setAC_SELECTED_CONTEXT_ID(selVD.getAC_SELECTED_CONTEXT_ID());   
+			VD_Bean selVD = (VD_Bean)session.getAttribute("m_VD");
+			m_VD.setAC_SELECTED_CONTEXT_ID(selVD.getAC_SELECTED_CONTEXT_ID());
 			String sName = "";
-			String sID;  //sIdx, 
+			String sID;  //sIdx,
 			sID = (String)req.getParameter("vdIDSEQ");
 			if(sID != null)
 				m_VD.setVD_VD_IDSEQ(sID);
@@ -3907,7 +3907,7 @@ public class SetACService implements Serializable
 				sName = m_util.getNameByID((Vector)session.getAttribute("vContext"), (Vector)session.getAttribute("vContext_ID"), sID);
 				m_VD.setVD_CONTE_IDSEQ(sID);
 				m_VD.setVD_CONTEXT_NAME(sName);
-			}  
+			}
 
 			String s = (String)req.getParameter("txtRepTerm");
 			if(s != null)
@@ -3989,7 +3989,7 @@ public class SetACService implements Serializable
 					String isNum = this.checkValueIsNumeric(sName, "Version");
 					//if numeric and no . and less than 2 length add .0 in the end.
 					if ((isNum == null || isNum.equals("")) && (sName.indexOf(".") == -1 && sName.length() < 3))
-						sName = sName + ".0";          
+						sName = sName + ".0";
 					m_VD.setVD_VERSION(sName);
 				}
 			}
@@ -4124,11 +4124,11 @@ public class SetACService implements Serializable
 						vCSCSIs.addElement(sID);
 						vACCSIs.addElement(sACCSI);
 						vACs.addElement(sAC);
-						//get the ac name   
+						//get the ac name
 						String acName = m_VD.getVD_LONG_NAME();
 						if (sAC != null && vNames != null && vIDs != null)
 						{
-							if (vIDs.indexOf(sAC) >= 0)              
+							if (vIDs.indexOf(sAC) >= 0)
 								acName = (String)vNames.elementAt(vIDs.indexOf(sAC));
 						}
 						vACNames.addElement(acName);
@@ -4166,7 +4166,7 @@ public class SetACService implements Serializable
 		catch (Exception e)
 		{
 			logger.error("Error - setVDValueFromPage " + e.toString(), e);
-		}      
+		}
 	} // end of setVDValueFromPage
 
 	/**
@@ -4191,11 +4191,11 @@ public class SetACService implements Serializable
 
 			sName = (String)req.getParameter("selValidValue");
 			if(sName == null) sName = "";
-			m_PV.setQUESTION_VALUE_IDSEQ(sName); 
+			m_PV.setQUESTION_VALUE_IDSEQ(sName);
 
 			sName = (String)req.getParameter("txValidValue");
 			if(sName == null) sName = "";
-			m_PV.setQUESTION_VALUE(sName); 
+			m_PV.setQUESTION_VALUE(sName);
 
 			//set PV_VALUE
 			sName = (String)req.getParameter("txtPermValue");
@@ -4239,8 +4239,8 @@ public class SetACService implements Serializable
 	} // end of setPVValueFromPage
 
 	/**
-	 * need to allow editing of the existing pv. mark the pv as new and 
-	 * update vdpvs list with the old one marking as deleted to remove its relationship with the vd. 
+	 * need to allow editing of the existing pv. mark the pv as new and
+	 * update vdpvs list with the old one marking as deleted to remove its relationship with the vd.
 	 * @param pv current pv bean
 	 * @param oldPV old PV bean
 	 * @param req request variable.
@@ -4265,7 +4265,7 @@ public class SetACService implements Serializable
 				// sName = m_util.parsedStringJSPDoubleQuote(sName);
 				//System.out.println(sName + " modify " + sOldName);
 				pv.setPV_PV_IDSEQ("EVS_" + sName);
-				pv.setVP_SUBMIT_ACTION("INS");  
+				pv.setVP_SUBMIT_ACTION("INS");
 				pv.setPV_VDPVS_IDSEQ("");
 				//mark the old pv as deleted and add it the vector in the end.
 				oldPV.setVP_SUBMIT_ACTION("DEL");
@@ -4274,7 +4274,7 @@ public class SetACService implements Serializable
 				Vector<PV_Bean> vVDPVList = vd.getVD_PV_List();  // (Vector)session.getAttribute("VDPVList");
 				if (vVDPVList == null) vVDPVList = new Vector<PV_Bean>();
 				vVDPVList.addElement(oldPV);
-				// DataManager.setAttribute(session, "VDPVList", vVDPVList);  
+				// DataManager.setAttribute(session, "VDPVList", vVDPVList);
 				vd.setVD_PV_List(vVDPVList);
 				DataManager.setAttribute(session, "m_VD", vd);
 			}
@@ -4326,7 +4326,7 @@ public class SetACService implements Serializable
 	 *
 	 * @return String return code from the stored procedure call. null if no error occurred.
 	 */
-	public String getPV(HttpServletRequest req, HttpServletResponse res, PV_Bean pv)  
+	public String getPV(HttpServletRequest req, HttpServletResponse res, PV_Bean pv)
 	{
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
@@ -4362,7 +4362,7 @@ public class SetACService implements Serializable
 				cstmt.setString(4,sShortMeaning);
 
 				// Now we are ready to call the stored procedure
-				//boolean bExcuteOk = 
+				//boolean bExcuteOk =
 				cstmt.execute();
 				sReturnCode = cstmt.getString(1);
 				pv.setPV_PV_IDSEQ(cstmt.getString(2));
@@ -4378,17 +4378,17 @@ public class SetACService implements Serializable
 		return sReturnCode;
 	}
 
-	/** 
+	/**
 	 * Check if the permissible values associated with the form for the selected VD
-	 * 
+	 *
 	 * @param req The HttpServletRequest object.
 	 * @param res HttpServletResponse object.
 	 * @param vdIDseq string unique id for value domain.
 	 * @param vpIDseq string unique id for vd pvs table.
-	 * 
+	 *
 	 * @return boolean true if pv is associated with the form false otherwise
 	 */
-	public boolean checkPVQCExists(HttpServletRequest req, HttpServletResponse res, 
+	public boolean checkPVQCExists(HttpServletRequest req, HttpServletResponse res,
 			String vdIDseq, String vpIDseq) //throws Exception
 	{
 		ResultSet rs = null;
@@ -4424,9 +4424,9 @@ public class SetACService implements Serializable
 	}   //end checkPVQCExists
 
 	/**
-	 * gets pv ids from the page and checks if there are any new ones or any removed ones 
+	 * gets pv ids from the page and checks if there are any new ones or any removed ones
 	 * updates the pv list vector both for id and bean and stores them in the session.
-	 * 
+	 *
 	 * @param req servlet request
 	 * @param res servlet response
 	 */
@@ -4435,7 +4435,7 @@ public class SetACService implements Serializable
 	{
 		try
 		{
-			HttpSession session = req.getSession(); 
+			HttpSession session = req.getSession();
 			//get the current pvs on the page
 			String pvAction = (String)session.getAttribute("PVAction");
 			if (pvAction == null) pvAction = "";
@@ -4449,7 +4449,7 @@ public class SetACService implements Serializable
 			{
 				if (vVDPVList != null && vVDPVList.size() > 0)
 				{
-					//do the following only if edit or remove  
+					//do the following only if edit or remove
 					int iPVChecked = 0;
 					int iPVLoop = 0;
 					//for (int j=0; j<sPV_IDs.length; j++)  //loop through pvid lists
@@ -4463,14 +4463,14 @@ public class SetACService implements Serializable
 							continue;
 						//check if this id is selected
 						String rSel = (String)req.getParameter("ck"+iPVLoop);
-						//increase the pvloop count 
+						//increase the pvloop count
 						iPVLoop += 1;
 						if (rSel != null)
-						{                
-							//since double quote from remove the double quote to match id from the jsp.  
+						{
+							//since double quote from remove the double quote to match id from the jsp.
 							String pvID = pvBean.getPV_PV_IDSEQ();
 							if (pvID == null) pvID = "";
-							pvID = pvID.replace('"', ' ');    
+							pvID = pvID.replace('"', ' ');
 							//store match pv id in the vector
 							if (pvAction.equals("removePV"))
 							{
@@ -4510,10 +4510,10 @@ public class SetACService implements Serializable
 								// vCheckRow.addElement(pvID);
 								iPVChecked += 1;
 								if (iPVChecked == 1)
-									DataManager.setAttribute(session, "m_PV", pvBean);                
-							} 
+									DataManager.setAttribute(session, "m_PV", pvBean);
+							}
 							vVDPVList.setElementAt(pvBean, j);  //reset the attribute with the bean attributes
-						}  //end rsel check      
+						}  //end rsel check
 					} //end vdpv loop
 					if (iPVChecked >1)
 						DataManager.setAttribute(session, "m_PV", new PV_Bean());
