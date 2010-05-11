@@ -1,0 +1,426 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- Copyright ScenPro, Inc 2007
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/html/Help_EVS.html,v 1.6 2008-04-15 15:35:59 chickerura Exp $
+    $Name: not supported by cvs2svn $
+-->
+<html>
+	<head>
+				<title>Curation Tool Help - EVS
+				</title>
+				<meta http-equiv="Content-Type" content=
+				"text/html; charset=us-ascii">
+				<link href="../css/Help.css" type="text/css" rel="stylesheet">
+				<meta content="MSHTML 6.00.2900.2802" name="GENERATOR">
+	</head>
+	<body>
+	<h2 class="main">CDE Curation Tool<br>
+			User&rsquo;s Guide Version 4.0.0.0
+	</h2>
+			<br>
+			<p class="returnLink"><a href="Help.htm">Return to the Table of
+				 Contents</a>
+			</p>
+	<div align="center">
+	<div class="container">
+	<div class="header"><a name="Search for Exact Version"></a><a href="TOP"></a> Integration
+			 with NCI EVS
+	</div><br>
+	<div class="bodyText">
+	<!-- ****************************************************** -->
+	<!--                       Overview                         -->
+	<!-- ****************************************************** -->
+	<a name="Overview" id="Overview"></a> <span class=
+	"standOutHeading">Overview of EVS/DTS </span>
+	<hr>
+	<p>A wealth of clinical and scientific and clinical research data
+			 exists within the cancer research community. The NCI's Center for
+			 Bioinformatics (NCICB) has developed an evolving core infrastructure
+			 designed to provide the ability to seamlessly translate and
+			 interchange semantically immutable information. The caCORE
+			 infrastructure provides researchers, developers and statisticians
+			 with the ability to plug their existing data, sources and methods
+			 into a standardized sharable framework that supports information
+			 exchange, regardless of source, location or format.
+	</p>
+	<p>Different biomedical domains have their own terminologies and
+			ontological resources, each focused on different concepts within
+			their domain. A common terminology is the foundation for
+			interoperability between systems, indexing repositories of
+			information, and querying and integrating information sources
+			across research areas. The Enterprise Vocabulary Services (EVS)
+			is a set of vocabulary resources that are being used to provide a
+			common terminology across the cancer research domain, improving
+			communication between the people, organizations, data and data
+			sources in it.
+	</p>
+	<p>NCICB's clinical trials informatics efforts draw on EVS
+			whenever domain terminology is required. This reliance on
+			controlled vocabulary ensures that term meanings remain clear and
+			can be related to other terms with similar concepts.
+	</p>
+	<p>The EVS Project is a collaborative effort of the Center for
+			Bioinformatics and the NCI Office of Communications. EVS includes
+			Distributed Terminology System (DTS) Vocabularies and the NCI
+			Metathesaurus. The DTS Vocabularies include:
+	</p>
+		<ul>
+				<li><b>NCI Thesaurus:</b> a biomedical thesaurus created
+									 specifically to meet the needs of the NCI, is produced by the NCI
+									 EVS project. This knowledgebase contains the working vocabulary
+									 used in NCI data systems. It covers clinical, translational and
+									 basic research as well as administrative terminology. 
+				</li>
+				<li><b>GO:</b> GO Ontology, published by the Gene Ontology
+									Consortium.
+				</li>
+				<li><b>VA NDFRT:</b> Published by the US Veterans'
+									Administration, the National Drug File Reference Terminology
+									covers clinical drugs used at the VA.
+				</li>
+				<li><b>LOINC:</b> Published by the Regenstrief Institute, the
+									Logical Observation Identifier Names and Codes covers clinical
+									laboratory terminology. 
+				</li>
+				<li><b>MGED Ontology:</b> The MGED (Microarray Gene Expression
+									Data) Ontology, produced by the MGED Society, contains concepts,
+									definitions, terms, and resources for standardized description of
+									a microarray experiment in support of MAGE v.1. The MGED ontology
+									is divided into the MGED Core ontology which is intended to be
+									stable and in synch with MAGE v.1; and the MGED Extended ontology
+									which adds further associations and classes not found in MAGEv.1.
+				</li>
+				<li><b>MedDRA:</b> MedDRA (Medical Dictionary for Regulatory
+									Activities) is an international medical terminology developed
+									under the auspices of the International Conference on
+									Harmonization of Technical Requirements for Registration of
+									Pharmaceuticals for Human Use (ICH).
+				</li>
+				<li><b>SnoMed:</b> SnoMed is the universal health care
+									terminology maintained by SNOMED&reg; International, a division
+									of the College of American Pathologists (CAP).
+				</li>
+			</ul>
+			The EVS Project also produces the NCI Metathesaurus, which is
+			based on NLM's Unified Medical Language System Metathesaurus
+			supplemented with additional cancer-centric vocabulary. The
+			public version of NCI Metathesaurus currently contains all public
+			domain vocabularies from the National Library of Medicine's UMLS
+			Metathesaurus, as well as a growing number of NCI-specific
+			vocabularies developed by the National Cancer Institute.<br>
+			<br>
+			In the CDE Curation Tool, the EVS Vocabularies can be searched
+			for primary and qualifier concepts that can be used to create
+ 			the names for Object Class, Property, and
+			Representation Terms. These are the building blocks for Data
+			Element Concepts and Value Domains. EVS Vocabularies are also
+			searched when creating Parent Concepts and Value Meanings for Value Domains.
+<!-- ***** SECTION BREAK ***** -->
+ 		 <a name="EVSSearchDef" id="EVSSearchDef"></a>
+		 <h4>Search EVS
+		 </h4>
+		 <p>The NCI Thesaurus and Metathesaurus search screen is accessed
+		 by clicking the Search links for the individual building
+		 block (i.e. Object class, Property (DEC and VD) or Representation Term (VD)), 
+		 and for the  Parent Concept and Value Meanings field on the create or edit Value
+		 Domain screens. Following are detailed instructions
+		 about how to search the NCI Thesaurus and Metathesaurus.
+		 <span class="figureText">Figure 1</span> is an overview of the
+		 EVS Search screen when searching for an Object Class. All search
+		 screens have similar layouts and functionality.</p>
+		 <p class="centeredImage">
+		 <img alt="Search EVS for an Object Class" src="../images/Help/EVS/image001.png" class="screenShot" height="713" width="937" />
+		 </p>
+		 <p class="imageText">FIGURE 1<br>
+		 		Search EVS for an Object Class
+		 </p>
+		 <h4>Naming a Data Element Concept
+		 </h4>
+		 <p>Object Classes and Properties are the building blocks from
+		 			which a Data Element Concept name is made. When creating a new
+		 			Data Element Concept, the use of Object Classes and Properties is
+		 			strongly encouraged but not strictly mandatory. The CDE Curation
+					Tool enables you to search caDSR and the NCI EVS (Enterprise
+					Vocabulary Services) for Concepts. The Primary Concepts may
+					represent existing Object Classes and Properties, or Concepts may
+					be combined to create new Object Classes and Properties. Object
+					Class and Property Long Names are also created from this
+					interface.<br>
+					<br>
+					An Object Class or Property may consist of one Primary Concept
+					and one or more Qualifier Concepts. Each of these Concepts must
+					be selected separately. Once selected, the Concept's source
+					database and Concept Code will be shown below the Concept. You
+					may highlight Qualifier Concepts one at a time to see their
+					source database and Concept Code.<br>
+					<br>
+					The Object Class and Property Long Names will be constructed from
+					the names of the Qualifier and Primary Concepts that have been
+					chosen. The Long Name will be built left to right starting with
+					the Concept at the top of the Qualifier Concepts list and ending
+					with the Primary Concept. Once you have built the Object Class
+					and Property Long Names they are not editable.<br>
+					<br>
+					Please note that if you select only a Primary Concept from the
+					caDSR database and select no Qualifier Concepts you have in
+					effect selected an existing Object Class (or Property). In this
+					case, no new Object Class (or Property) will be created in caDSR
+					when you submit your Data Element Concept.<br>
+					<br>
+			</p>
+		<h4>Naming a Value Domain
+		</h4>
+			<p>Representation Term is the building block from which a Value
+					Domain name is made. When creating a new Value Domain, the use of
+					a Representation Term is strongly encouraged but not strictly
+					mandatory. The CDE Curation Tool enables you to search caDSR and
+					the NCI EVS (Enterprise Vocabulary Services) for Concepts.
+					The Primary Concepts may represent existing Representation Terms,
+					or Concepts may be combined to create a new Representation Term.
+					The Representation Term Long Name is also created from this
+					interface.<br>
+					<br>
+					A Representation Term may consist of one Primary Concept and one
+					or more Qualifier Concepts. Each of these must be selected
+					separately. Once selected the Concept's source database and
+					Concept Code will be shown below the Concept. You may highlight
+					Qualifier Concepts one at a time to see their source database and
+					Concept Code.<br>
+					<br>
+					The Representation Term Long Names will be constructed from the
+					names of the Qualifier and Primary Concepts that have been
+					chosen. The Long Name will be built left to right starting with
+					the Object Class and ending with the Primary Concept. Once you
+					have built the Representation Term Long Name, it is not editable.
+					Optionally, a user may choose to search for Object Class and
+					Properties to assist in the creation of a Value Domain's Long
+					Name.<br>
+					<br>
+					Please note that if you select only a Primary Concept from the
+					caDSR database and select no Qualifier Concepts you have in
+					effect selected an existing Representation Term. In this case, no
+					new Representation Term will be created in caDSR when you submit
+					your Value Domain.
+			</p>
+			<h4>Naming a Value Meaning
+		</h4>
+			<p>
+			A Value Meaning is the meaning or semantic content of a Permissible Value.
+			A Value Meaning may consist of one Primary Concept and one or more Qualifier 
+			Concepts. Each of these must be selected separately. Once selected the 
+			Concept's source database and Concept Code will be shown next to the Concept in the PV table. 
+			<br>
+			<br>
+			The Value Meaning Name will be constructed from the names of the Qualifier 
+			and Primary Concepts that have been chosen. The Name will be built left to 
+			right starting with the Qualifier Concepts and ending with the Primary Concept.
+			</p> 
+		<span class="standOutHeading">Search EVS for Concepts (Primary, Qualifier and Parent
+ 					Concepts) via Term Search</span>
+	<hr>
+			<p>Searching EVS for Concepts using the regular Term Search is
+			very similar to searching for any other Administered Component in the CDE Curation Tool.
+			</p>
+			<p>To Search EVS using the Term Search:
+				<ul>
+						<li>Select the EVS Vocabulary.
+						</li>
+						<li>Select what to Search In (Synonym, Concept Code/CUI or Code).
+						</li>
+						<li>Enter a Search Term or Click the link for a Tree-based Search.
+						</li>
+						<li>Select EVS Filters.
+						</li>
+						<li>Set the Return Limit from Metathesaurus (100-750) records.
+						</li>
+						<li>Select/Update Display Attributes.
+						</li>
+						<li>Click <input style="WIDTH: 120px" type="button" value=
+            					"Start Search" name="editSelectedBtn">.
+						</li>
+						<li>The Search Results screen will appear to the right of the
+										search criteria. Next to each concept that is returned is a check
+										box. In order to use a term that you have identified, check the
+										box next to it.
+						</li>
+						<li>Click the <input style="WIDTH: 165px" type="button" value=
+           						 "Use Selection" name="editSelectedBtn"> button.
+						</li>
+				</ul>
+		</p>
+	<span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span>You may now restrict your search to
+						exclude Retired Concepts, or you may include all Concepts in your search.
+	<p><span class="standOutHeading">Search EVS for Concepts (Primary, Qualifier and Parent
+ Concepts) via Tree Search</span>
+ </p>
+ <hr>
+ 		<p>You may also search for Concepts in the NCI Thesaurus portion
+		of EVS using a tree-based search. To
+		access the tree-based search click on the <span style=
+						"COLOR: blue; TEXT-DECORATION: underline">Tree Search</span> 
+		link in the &lsquo;Search In:&rsquo; section of the search screen.
+		</p>
+		<p class="centeredImage">
+			 <img alt="EVS Tree Search Hyperlink" src="../images/Help/EVS/image002.png" 
+			 class="screenShot" height="139" width="282" />
+		</p>
+		<p class="imageText">FIGURE 2<br>
+			 EVS Tree Search Hyperlink
+		</p>
+		<p>When the Tree Search first appears all of the NCI Thesaurus
+						Root Concepts will appear on the left side of the screen. Each
+						Root Concept may have one or more Subconcepts. A Concept's
+						Subconcepts may be seen by clicking on the plus sign next to the
+						Concept name. Some Subconcepts will have Subconcepts of their own
+						which may be seen by clicking on a plus sign that appears next to
+						the Subconcept name. If no plus sign appears then the Subconcept
+						has no Subconcepts of its own.<br>
+						<br>
+						To select a Root Concept or Subconcept, click on its name. The
+						Concept's details will appear in the Search Results window to the
+						right. The Concept may appear more than once if it has multiple
+						definitions. There will be one row for each definition. If no
+						definition is associated with the Concept, the definition field
+						will read &lsquo;No Value Exists.&rsquo;<br>
+						<br>
+						Once Concepts appear in the Search Results area, one may be
+						selected by clicking on the check box next to its Concept Name.
+						When a Concept is selected in this way several options are
+						enabled. The Concept may be used for your Data Element Concept by
+						clicking on the <input style="WIDTH: 120px" type="button" value=
+            "Use Selection" name="editSelectedBtn">button above the
+						search results. A Concept's Subconcepts may be retrieved to the
+						Search Results area by clicking on one of the selections from the 
+						<input style="WIDTH: 165px" type="button" value=
+            "Get Subconcepts" name="editSelectedBtn">
+ 						button. You have the option of getting only the
+						immediate Subconcepts or all Subconcepts.
+ 						A third option is to retrieve all of
+						the selected Concept's Superconcepts by clicking on the 
+						<input style="WIDTH: 170px" type="button" value=
+            "Get Superconcepts" name="editSelectedBtn">
+ 						button.
+		</p>
+		<p class="centeredImage"><img alt="EVS Tree Search" src="../images/Help/EVS/image003.png" 
+			 			class="screenShot" height="713" width="922" />
+		</p>
+		<p class="imageText">FIGURE 3<br>
+			 EVS Tree Search
+		</p>
+		<p>To Use the EVS Tree Search:
+		<ol>
+			<li>Expand the tree by clicking on the plus signs.
+			</li>
+			<li>Click links to display Concepts.
+			</li>
+			<li>Select Concept.
+			</li>
+			<li>Click <input style="WIDTH: 170px" type="button" value=
+            "Get Subconcepts" name="editSelectedBtn"> or <input style="WIDTH: 170px" type="button" value=
+            "Get Superconcepts" name="editSelectedBtn"> to navigate the tree.
+			</li>
+			<li>Click <input style="WIDTH: 170px" type="button" value=
+            "Use Selection" name="editSelectedBtn">.
+			</li>
+		</ol>
+		</p>
+		<p><span style=
+				"font-family: webdings; font-size: 16pt; font-weight: bold; color: blue;">
+				i</span> 
+				When selecting a Concept to use as an Object Class,
+				Property or Qualifier, it is important to remember that the caDSR
+				database has a 30 character limit on building blocks. If you
+				choose a Concept from the NCI Thesaurus or Metathesaurus that is
+				LONGER than 30 characters, the CDE Curation Tool will
+				automatically truncate that Concept to 30 characters.</p>
+	<h4><a name="EVSSubmitSuggestion" id=
+				 "EVSSubmitSuggestion"></a>Submit Suggestion</h4>
+			<p>If you cannot find an appropriate concept, you
+						may suggest a term to EVS by Clicking the <input style="WIDTH: 165px" type="button" value=
+            "Suggest to EVS" name="editSelectedBtn"> button found at the top 
+						of all EVS Search screens in the Curation Tool.<br> 
+						A window will be displayed
+						where you can fill in the required fields and then submit your concept 
+						suggestion to EVS.
+			</p>
+			<p class="centeredImage"><img alt="image008 (58K)" src="../images/Help/EVS/image008.png" 
+				 class="screenShot" height="611" width="762" />
+			</p>
+			<p class="imageText">FIGURE 8<br>
+				 Suggest a Term to EVS
+			</p>
+			<p>To Suggest a New Term to EVS:
+			<ol>
+					<li>If no appropriate concept is found in EVS, Click <input style="WIDTH: 165px" type="button" value=
+            "Suggest to EVS" name="editSelectedBtn">. Clicking this button opens a
+						window to the Enterprise Vocabulary Services that will allow you
+						to suggest that a new term be added to EVS.
+	 				</li>
+	 				<li>Fill in the required fields.
+	 				</li>
+	 				<li>Click <input style="WIDTH: 165px" type="button" value=
+            "Submit for Review" name="editSelectedBtn"> to send the request to EVS or <input style="WIDTH: 80px" type="button" value=
+            "Cancel" name="editSelectedBtn"> to return to the EVS search screen. 
+					</li>
+			</ol>
+			</p>
+			<span class="standOutHeading">caDSR Business Rules for Concept Selection</span>
+			<hr>
+			<p>When selecting EVS Concepts for caDSR metadata (e.g. Object Class, Property, 
+			Representation Term, Permissible Value, Value Meaning, and all Qualifier and Primary), 
+			there are a few business rules to be aware of. 
+			</p>
+			<p>For all concept searches (e.g. Object Class, Property, Representation Term, Permissible Value,
+			Value Meaning, and all Qualifier and Primary), if the selected concept is from Metathesaurus
+			but also exists in the NCI Thesaurus, the Curation Tool will use the concept name
+			and definition from NCI Thesaurus. A message is displayed stating that the NCI 
+			Thesaurus concept will be used.
+			</p>
+			<p class="centeredImage"><img alt="image009" src="../images/Help/EVS/image009.png" 
+				 class="screenShot" />
+			</p>
+			<p class="imageText">FIGURE 9<br>
+				 Metathesaurus Concept Replaced by Thesaurus Concept
+			</p>
+			<p>For all concept searches, if the selected 
+			concept name or definition already exists in the caDSR, the Curation 
+			Tool will use the caDSR name or definition regardless of the source
+			of the selected concept.
+			</p>
+			<p class="centeredImage"><img alt="image010" src="../images/Help/EVS/image010.png" 
+				 class="screenShot" />
+			</p>
+			<p class="imageText">FIGURE 10<br>
+				 Selected Concept Replaced by caDSR
+			</p>
+			<p>When selecting multiple concepts to use for Permissible Values, there is an additional
+			rule. If duplicate concepts are selected, the Curation Tool will use the concept
+			from the NCI Thesaurus in a preferred order. Users have the ability to de-select unwanted
+			duplicate concepts to use the desired concept.
+			</p>
+			<p class="centeredImage"><img alt="image011" src="../images/Help/EVS/image011.png" 
+				 class="screenShot" />
+			</p>
+			<p class="imageText">FIGURE 11<br>
+				 Duplicates Selected - Use NCI Thesaurus
+			</p>
+			<p>When selecting a concept to use for a Value Meaning, if the concept already exists
+			in the caDSR, a warning message will be displayed on the validation page stating
+			that the Curation Tool will use the existing Value Meaning and that one or more of 
+			the attributes may not match the selected concept. The user has the option to go back 
+			and modify their selection.
+			</p>
+			<p class="centeredImage"><img alt="image012" src="../images/Help/EVS/image012.png" 
+				 class="screenShot"/>
+			</p>
+			<p class="imageText">FIGURE 12<br>
+				 Existing Value Meaning - Use Existing
+			</p>
+		</div>
+	</div>
+<p class="returnLink"><a href="Help.htm">Return to the Table of
+Contents</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,530 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- Copyright ScenPro, Inc 2007
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/html/Help_SearchAC.html,v 1.7 2008-04-15 15:35:59 chickerura Exp $
+    $Name: not supported by cvs2svn $
+-->
+<html>
+  <head>
+    <title>
+      Curation Tool Help - Search
+    </title>
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=us-ascii">
+    <link href="../css/Help.css"
+          type="text/css"
+          rel="stylesheet">
+    <meta content="MSHTML 6.00.2900.2802"
+          name="GENERATOR">
+  </head>
+  <body>
+    <h2 class="main">
+      CDE Curation Tool<br>
+      User&rsquo;s Guide Version 4.0.0.0
+    </h2><br>
+    <p class="returnLink">
+      <a href="Help.htm">Return to the Table of Contents</a>
+    </p>
+    <div align="center">
+      <div class="container">
+        <div class="header">
+          Curation Tool Help - Search
+        </div><br>
+        <div class="bodyText">
+          <!-- ****************************************************** -->
+          <!--                       Overview                         -->
+          <!-- ****************************************************** -->
+          <span class="standOutHeading">Overview</span>
+					<hr>
+          <p>
+            The CDE Curation Tool has an easy-to-use Search
+            screen to help you identify and retrieve existing
+            Administered Components from the caDSR. The tool
+            supports <span class="standOut">Search</span> and
+            <span class="standOut">Create/Edit</span>
+            capabilities for the following Administered
+            Components:
+          </p>
+          <ul>
+            <li>Data Element
+            </li>
+            <li>Data Element Concept
+            </li>
+            <li>Value Domain
+            </li>
+             <li>Value Meaning
+            </li>
+          </ul>The Curation Tool supports <span class=
+          "standOut">Search</span> and <span class=
+          "standOut">Create</span> capabilities for:
+          <ul>
+            <li>Permissible Values (create from a Value Domain)
+            </li>
+           </ul>The Curation Tool supports <span class=
+          "standOut">Search</span> capabilities for the
+          following:
+          <ul>
+            <li>Conceptual Domain
+            </li>
+            <li>Classification Scheme Items
+            </li>
+            <li>Case Report Form (CRF) Questions
+            </li>
+            <li>Object Class
+            </li>
+            <li>Property
+            </li>
+            <li>Concept Class
+            </li>
+            <li>Concept Code
+            </li>
+          </ul><b>General Search Rules:</b>
+          <ul>
+            <li>Term search is not case sensitive.
+            </li>
+            <li>The search 'wild card' is an asterisk: * . (For
+            example, to find all terms that start with the letter
+            'A', you would enter 'A*' in the search field.)
+            </li>
+            <li>During searches of the NCI Enterprise Vocabulary
+            System (EVS), the maximum number of search results
+            returned from the Metathesaurus is 750. The limit can
+            be set to 100, 250, 500, or 750 records.
+            </li>
+          </ul>
+					<p>Figure 1 is an overview of the main search screen.
+					</p>
+          <p class="centeredImage">
+            <img class="screenShot"
+               height="831"
+               alt="Search Screen Overview"
+               src="../images/Help/Search/image001.png"
+               width="945">
+          </p>
+          <p class="imageText">
+            FIGURE 1<br>
+            Search Screen Overview<br>
+          </p>
+          <p>
+            <a name="searchParmsForm_SearchParameters"
+               id="searchParmsForm_SearchParameters"></a><a name=
+               "searchForAC"
+               id="searchForAC"></a>
+          </p>
+          <p>
+            Main Menu buttons appear on every screen. Toggle
+            over each button for sub-menus. The action Menu
+            Buttons are enabled when results are selected. Search
+            results are displayed in table format to the right of
+            the search criteria pane. These fields refresh
+            according to what you Search For.
+          </p>
+          <p>
+            <a name="searchParmsForm_SearchFilters"
+               id="searchParmsForm_SearchFilters"></a>
+          </p>
+					<p>
+            <span class="standOutHeading"> Search Criteria Details</span>
+					<hr>
+          </p>
+          <p>
+            The only two search criteria entered as text are the
+            Search Term and a specific Version. All other search
+            criteria are selected from a list or by selecting a
+            radio button.
+          </p>
+          <p>
+            Filtering your search means that you are entering
+            additional information about what Administered
+            Components you are seeking. Filtering will
+            potentially reduce the number of search results
+            returned and increase the likelihood that the results
+            contain what you seek. Simple and/or Advanced Filters
+            are included on most search pages.
+          </p>
+          <p>
+            <b>Simple and Advanced Filters:</b> The Advanced
+            Filter includes date created, date modified, creator,
+            and modifier to assist the user find the exact term
+            more efficiently. Information is not retained on the
+            Advanced Filter when switching to the Simple Filter
+            or vice versa. <span class="figureText">Figures 2 and
+            3</span> illustrate the Simple and Advanced search
+            filters. <!--<span class="figureText">Figure 4</span>
+            displays a matrix that illustrates the complete set
+            of Search and Filter criteria for the CDE Curation
+            Tool.-->
+          </p>
+          <p class="centeredImage">
+            <img class="screenShot"
+               height="638"
+               alt="image002 (20K)"
+               src="../images/Help/Search/image002.png"
+               width="270">
+          </p>
+          <p class="imageText">
+            FIGURE 2<br>
+            Simple Filter
+          </p>
+					</p>
+          <p class="centeredImage">
+            <img class="screenShot"
+               height="907"
+               alt="Advanced Filter (27K)"
+               src="../images/Help/Search/image003.png"
+               width="275">
+          </p>
+          <p class="imageText">
+            FIGURE 3<br>
+            Advanced Filter
+          </p>
+					<p>To <b>Search</b> for an item in the Curation Tool:
+						<ol>
+								<li>Select what you want to <b> Search For:</b> from the drop down list.
+								</li>
+								<li>Select what to <b>Search In:</b> from the drop down list. (Varies on what is Searched For)
+          			</li>
+								<li><b>Enter</b> Text as a Search Term. (* is the wildcard)
+								</li>
+								<li>Click the <span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Simple Filter </span> or <span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Advanced Filter</span> link.
+								</li>
+								<li><b>Select</b> additional attributes to display
+            		with your search results by holding down the shift
+            		(or ctrl) key and click the left mouse button on the
+            		attribute. 
+								</li>
+								<li>Click the <input style=
+              	"WIDTH: 90px" type="button" value="Update"
+             		 name="dummy"> button to refresh display
+            		attributes.
+            		</li> 
+								<li> Click <input style=
+              "WIDTH: 120px" type="button" value="Start Search"
+              name="dummy">.
+								</li>
+						</ol>		
+          </p>
+          <p >
+            <span style="font-family: webdings; font-size: 14pt; font-weight: bold; color: blue;">&#105;</span> You can filter by more than one
+            Context. Hold down the shift or Ctrl key for
+            multi-selections.
+          </p>
+          <p >
+            <span style="font-family: webdings; font-size: 14pt; font-weight: bold; color: blue;">&#105;</span> You can filter by an exact Version
+            number when searching for DE, DEC, or VD.
+          </p>
+					
+					<p>
+            <span class="standOutHeading"> Advanced Filter Details</span>
+					<hr>
+          </p>
+          <p>
+            Anything entered in the Advanced Filter will not
+            affect the search results if the search is started
+            from the Simple Filter. The Advanced Filter allows you
+            to filter by All Creators/Modifiers, by Derivation
+            Type and by Version number. You can also filter by
+            Date Created or Modified by entering the date in the
+            format displayed or by clicking the calendar icon and
+            selecting a date. The <span style=
+              "COLOR: blue; TEXT-DECORATION: underline">Clear</span> link will clear the
+            field.
+          </p><span style=
+          "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+          i</span> For a full list of search properties see the
+          <a href="Search_Matrix.html"
+               target="_blank"
+               name="Search Matrix">Search Matrix.</a>
+          <p>
+            The Curation Tool now provides you with the ability
+            to search for Administered Components by one or more
+            Contexts. To do this, left-click on the first context
+            (from the lists of Contexts in item 4 of the Search
+            interface), then press and hold down the [Ctrl]
+            button on your keyboard. Left-click again to select
+            additional Contexts from the list.
+          </p>
+          <p>
+            Additionally, users now have the ability to filter
+            their search by a specific version. Located next to
+            the 'All' and 'Latest' radio buttons in the Search
+            interface, the third radio button is next to a text
+            field. Enter the version number of the desired
+            Administered Component(s) into the text field.
+            Version number should be entered as a positive
+            number, with or without a decimal.
+						
+					<p>
+            <span class="standOutHeading">Search Results Details</span>
+					<hr>
+          </p>
+          <p>
+            The search results appear in table format on the
+            right side of the Search screen. You may need to
+            scroll down or to the right to view all search
+            results. <span class="figureText">Figure 4</span> is
+            an example of the results based on a Data Element
+            with the search term of "lung*".
+          </p>
+          <p class="centeredImage">
+            <img class="screenShot"
+               height="258"
+               alt="Search Results"
+               src="../images/Help/Search/image004.png"
+               width="1068">
+          </p>
+          <p class="imageText">
+            FIGURE 4<br>
+            Search Results
+          </p>
+					<p><span style="font-family: webdings; font-size: 14pt; font-weight: bold; color: blue;">&#105;</span> The total number of records that
+          matched your criteria will appear as a number on the
+          top of the search screen. Our "lung*" search shows "12
+          Records Found."</p>
+          <p>
+            <span class="standOutHeading">Update Display
+            Attributes</span>
+					<hr>
+          </p>
+          <p>
+            You have the ability to show attributes or details
+            related to the Administered Components in your search
+            results. Detailed instructions are described below.
+            <span class="figureText">Figure 5</span> highlights
+            the area related to showing additional attributes.
+          </p>
+					<p class="centeredImage">
+            <img class="screenShot"
+               height="122"
+               alt="image005 (130K)"
+               src="../images/Help/Search/image005.png"
+               width="271">
+          </p>
+          <p class="imageText">
+            FIGURE 5<br>
+            Update Display Attributes
+          </p>		
+          <p>
+            <b>Before You Search - Selecting Attributes:</b>
+						<ol>
+								<li>Select one or more attributes from the list of
+            display attributes at the bottom of the search screen
+            (hold down the control or shift key to select more
+            than one). 
+								 </li>
+								 <li>Click <input style=
+              "WIDTH: 120px" type="button" value="Start Search"
+              name="dummy">.
+							</li>
+							</ol>
+          </p>
+          <p>
+            <b>After You Search - Updating Attributes</b>
+						<ol> 
+						<li>Select one or more attributes from the list of
+            display attributes at the bottom of the search
+            screen. 
+						</li>
+						<li>Highlight the current attribute by holding
+            down the shift or control key if you wish to retain
+            them. 
+						</li>
+						<li>Click <input style=
+              "WIDTH: 120px" type="button" value="Update"
+              name="dummy">.
+							</li>
+							<li>Attributes are displayed as an additional column
+            in the search results table.
+						</li>
+						</ol>
+          </p>
+					<p>
+            <span class="standOutHeading"> Sort Records</span>
+					<hr>
+          </p>
+          <p>
+            The column headings of the search results table are
+            active links. When you click the column heading,
+            the entire column is resorted (alphabetically or
+            numerically). Records that have blank fields will be
+            sorted to the bottom of the search results. The
+            checkmark on the top of the checkbox column can be
+            used to Select All or Deselect All records. Hover the 
+						mouse over the checkmark to display a tool-tip that describes 
+						this new functionality. <span class=
+            "figureText">Figure 6</span> illustrates the
+            functionality of the column headings on the search
+            results screen.
+          </p>
+          <p class="centeredImage">
+            <img class="screenShot"
+               height="575"
+               alt="Sort Search Results"
+               src="../images/Help/Search/image006.png"
+               width="812">
+          </p>
+          <p class="imageText">
+            FIGURE 6<br>
+            Sort Search Results
+          </p>
+					<p>
+            <span class="standOutHeading"> Show Selected Rows</span>
+					<hr>
+          </p>
+          <p>
+            If your search returns more items than you desire,
+            you have the option to view a subset of your search
+            results. 
+						<ol>
+							<li>Select the check box next to the
+            Administered Components you want to KEEP.
+							</li>
+							<li>Click <input style=
+              "WIDTH: 165px" type="button" value="Show Selected Rows"
+              name="dummy"> at the top of the
+            screen. 
+							</li>
+						</ol>
+          </p>
+          <p class="subTopic1">
+            <a name="index2.7"
+               id="index2.7"></a><a name=
+               "searchResultsForm_append"
+               id="searchResultsForm_append"></a>
+          </p>
+					<p>
+            <span class="standOutHeading"> Append Results</span>
+					<hr>
+          </p>
+          <p>
+            You may also append search results (i.e. keep a set
+            of search results, conduct a new search, and add the
+            new results to the total list). To keep selected
+            records from a search result and append records from
+            additional searches:
+          </p>
+          <ol>
+            <li>Perform a search and choose the records to keep
+            by selecting the check box next to each record
+            </li>
+            <li>Press the Append button
+            </li>
+            <li>Perform another search of the same type of
+            Administered Component
+            </li>
+            <li>Repeat these steps until you have all the records
+            you are interested in
+            </li>
+          </ol>Append only works for one type of Administered
+          Component at a time (i.e. Data Element, Data Element
+          Concept, or Value Domain). For example, you cannot
+          append search results from a Value Domain search to a
+          Data Element search result.<br>
+          <br>
+          To stop the append process, either click the <input style=
+              "WIDTH: 165px" type="button" value="Clear Records"
+              name="dummy"> button, click the Search menu button, select a
+          different type of Administered Component (Search For),
+          or change the Search In selection.
+					<p>
+            <span class="standOutHeading"> Details Button</span>
+					<hr>
+          </p>
+          <p>
+            At the top of the Search Results screen is a <input style=
+              "WIDTH: 80px" type="button" value="Details"
+              name="dummy"> button. This button is active when you
+            have a single search result checked. The <input style=
+              "WIDTH: 80px" type="button" value="Details"
+              name="dummy"> button
+            uses the CDE Browser's http API to
+            open detailed view of the selected Data Element. The new
+            window contains all of the available metadata and
+            attributes related to the selected administered
+            component.
+          </p>
+          <p class="centeredImage">
+            <img class="screenShot"
+               height="825"
+               alt="Metadata Details"
+               src="../images/Help/Search/image009.png"
+               width="777">
+          </p>
+          <p class="imageText">
+            FIGURE 7<br>
+            Metadata Details
+          </p>
+					<p>
+            <span class="standOutHeading"> Get Associated Data Elements, Data Element Concepts,
+            or Value Domains</span>
+					<hr>
+          </p>
+          <p>
+            Once a Data Element Concept, Value Domain, Value Meaning,
+            Permissible Value, Conceptual Domain, Classification
+            Scheme Item, Object Class or Property is selected in
+            the Search Results table, the Get Associated button
+            is enabled.
+          </p>
+          <ul>
+            <li>For a Data Element you may get the associated
+            Data Element Concepts or Value Domains.
+            </li>
+            <li>For a Classification Scheme Item you may get the
+            associated Data Elements, Data Element Concepts or Value Domains
+            </li>
+            <li>For a Data Element Concept and Value Domain you may get the associated
+            Data Elements.
+            </li>
+            <li>For a Conceptual Domain you may get associated
+            Data Elements, Data Element Concepts, or Value
+            Domains.
+            </li>
+            <li>For a Permissible Value you may get the
+            associated Data Elements or Value Domains.
+            </li>
+            <li>For Object Class or Property you may get
+            associated Data Element Concepts.
+            </li>
+						 <li>For a Concept Class you may get
+            associated Data Elements, Data Element Concepts, or Value Domains.
+            </li>
+             <li>For a Value Meaning you may get the associated
+            Data Elements or Value Domains.
+            </li>
+          </ul>
+          <p class="centeredImage">
+            <img class="screenShot"
+               height="168"
+               alt="Get Associated"
+               src="../images/Help/Search/image010.png"
+               width="339">
+          </p>
+          <p class="imageText">
+            FIGURE 8<br>
+            Get Associated
+          </p>
+										<p>
+            <span class="standOutHeading"> Clear Records</span>
+					<hr>
+          </p>
+          <p>
+            At the top of the Search Results screen is a <input style=
+              "WIDTH: 150px" type="button" value="Clear Records"
+              name="dummy"> button. Clicking this
+            button clears ALL of your current and
+            appended search results, removes all search
+            parameters from the Search fields, and returns you to
+            the default search screen for the current
+            Administered Component.
+          </p>
+<!-- ......................................................................... -->
+        </div>
+      </div>
+      <p class="returnLink">
+        <a href="Help.htm">Return to the Table of Contents</a>
+      </p>
+    </div>
+  </body>
+</html>
