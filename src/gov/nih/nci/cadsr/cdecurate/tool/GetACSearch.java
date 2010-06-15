@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Stack;
@@ -103,6 +104,7 @@ public class GetACSearch implements Serializable
             String sComponent = (String) req.getParameter("listSearchFor");
             String sSearchAC = (String) session.getAttribute("searchAC");
             
+            DataManager.setAttribute(session, "sessionRecordsDisplayed", sRecordsDisplayed);
             if (sComponent != null)
                 DataManager.setAttribute(session, "searchAC", sComponent);
             else {
@@ -2308,7 +2310,7 @@ public class GetACSearch implements Serializable
             else
                 sSelectList = m_classReq.getParameterValues("listMultiContextFilter");
             boolean bAllValues = false;
-            boolean noTest = false;
+
             if (sSelectList == null)
                 bAllValues = true;
             if (sSelectList != null)
@@ -2326,16 +2328,11 @@ public class GetACSearch implements Serializable
                         // set the value and break if all statuses or contexts selected
                         if (sValues.equals("AllContext") || sValues.equals("AllStatus"))
                         {
-                        	if (sSelectList.length > 1)    	
-                        		noTest = true;
-                        	else {	
-                        		bAllValues = true;
-                        		break;
-                        	}
+                            bAllValues = true;
+                            break;
                         }
                         // store it in vector to refresh list on the page
-                        if (noTest && !sValues.equalsIgnoreCase("allcontext") && !sValues.equalsIgnoreCase("test") && !sValues.equalsIgnoreCase("training"))
-                        	vSelectList.addElement(sSelectList[i]);
+                        vSelectList.addElement(sSelectList[i]);
                     }
                 }
             }
@@ -7807,7 +7804,7 @@ public class GetACSearch implements Serializable
                 {
                     // **************why is this needed******************
                     vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired,
-                                    sMetaSource, intMetaLimit, true, -1, "");
+                                    sMetaSource, intMetaLimit, true, -1, "", new HashSet<String>());
                     evs.get_Result(req, res, vResult, "DEF");
                 }
                 DataManager.setAttribute(session, "vACSearch", vAC);
@@ -7832,7 +7829,7 @@ public class GetACSearch implements Serializable
                 // now the evs search
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
-                                intMetaLimit, true, -1, "");
+                                intMetaLimit, true, -1, "", new HashSet<String>());
                 // make sure that name value pair is not allowed for primary concepts
                 markNVPForPrimaryConcept(vAC);
                 // store it in the session
@@ -7849,7 +7846,7 @@ public class GetACSearch implements Serializable
                 // now the evs search
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
-                                intMetaLimit, true, -1, "");
+                                intMetaLimit, true, -1, "", new HashSet<String>());
                 DataManager.setAttribute(session, "vACSearch", vAC);
                 if (vAC != null)
                     DataManager.setAttribute(session, "vCreateVM_EVSValueMeaning", vAC);
@@ -7862,7 +7859,7 @@ public class GetACSearch implements Serializable
                     sConteIdseq = "";
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
-                                intMetaLimit, true, -1, "");
+                                intMetaLimit, true, -1, "", new HashSet<String>());
                 DataManager.setAttribute(session, "vACSearch", vAC);
                 if (vAC != null)
                     DataManager.setAttribute(session, "vParentConcept", vAC);
@@ -7875,7 +7872,7 @@ public class GetACSearch implements Serializable
                     sConteIdseq = "";
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
-                                intMetaLimit, false, -1, "");
+                                intMetaLimit, false, -1, "", new HashSet<String>());
                 DataManager.setAttribute(session, "vACSearch", vAC);
                 if (vAC != null)
                     DataManager.setAttribute(session, "vParentConceptVM", vAC);
@@ -7899,7 +7896,7 @@ public class GetACSearch implements Serializable
                 // To search Synonym in EVS, need to filter
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
-                                intMetaLimit, true, -1, "");
+                                intMetaLimit, true, -1, "", new HashSet<String>());
                 DataManager.setAttribute(session, "vACSearch", vAC);
                 evs.get_Result(req, res, vResult, "");
             }
@@ -7921,7 +7918,7 @@ public class GetACSearch implements Serializable
                 // To search synonym you need to filter
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
-                                intMetaLimit, true, -1, "");
+                                intMetaLimit, true, -1, "", new HashSet<String>());
                 DataManager.setAttribute(session, "vACSearch", vAC);
                 evs.get_Result(req, res, vResult, "");
             }
@@ -7951,7 +7948,7 @@ public class GetACSearch implements Serializable
                 // To search Synonym in EVS, need to filter
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
-                                intMetaLimit, true, -1, "");
+                                intMetaLimit, true, -1, "", new HashSet<String>());
                 }
                 DataManager.setAttribute(session, "vACSearch", vAC);
                 evs.get_Result(req, res, vResult, "");
@@ -7968,7 +7965,7 @@ public class GetACSearch implements Serializable
                 // To search synonym you need to filter
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
-                                intMetaLimit, true, -1, "");
+                                intMetaLimit, true, -1, "", new HashSet<String>());
                 DataManager.setAttribute(session, "vACSearch", vAC);
                 evs.get_Result(req, res, vResult, "");
             }
@@ -7984,7 +7981,7 @@ public class GetACSearch implements Serializable
                 // To search synonym you need to filter
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
-                                intMetaLimit, true, -1, "");
+                                intMetaLimit, true, -1, "", new HashSet<String>());
                 DataManager.setAttribute(session, "vACSearch", vAC);
                 evs.get_Result(req, res, vResult, "");
             }
@@ -8000,7 +7997,7 @@ public class GetACSearch implements Serializable
                 // To search synonym you need to filter
                 sKeyword = (String) session.getAttribute("creKeyword");
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
-                                intMetaLimit, true, -1, "");
+                                intMetaLimit, true, -1, "", new HashSet<String>());
                 DataManager.setAttribute(session, "vACSearch", vAC);
                 evs.get_Result(req, res, vResult, "");
             }
@@ -9372,7 +9369,7 @@ public class GetACSearch implements Serializable
             // evs.do_EVSSearch(termStr, vAC, dtsVocab, sSearchInEVS, sMetaSource,
             // intMetaLimit, sUISearchType, sRetired, sConteIdseq, -1);
             vAC = evs.doVocabSearch(vAC, termStr, dtsVocab, sSearchInEVS, "", "", sRetired, sMetaSource, intMetaLimit,
-                            true, -1, "");
+                            true, -1, "", new HashSet<String>());
             DataManager.setAttribute(session, "vACSearch", vAC);
             evs.get_Result(req, res, vResult, "DEF");
             DataManager.setAttribute(session, "EVSresults", vResult);
