@@ -26,6 +26,8 @@
 			Vector vACAttr = new Vector();
 			String sMenuAction = (String) session
 					.getAttribute(Session_Data.SESSION_MENU_ACTION);
+					
+			String sessionRecordsDisplayed = (String) session.getAttribute("sessionRecordsDisplayed");
 			//System.out.println("inside search param " + sMenuAction);
 			String sInitiatedFrom = (String) session
 					.getAttribute("initiatedFrom");
@@ -1735,19 +1737,17 @@ function LoadKeyHandler()
 						<div align="left">
 							Results Displayed:
 							<select name="recordsDisplayed" size="1" style="width: 160">
-								<option value="100">
-									100
-								</option>
-								<option value="250" >
-									250
-								</option>
-								<option value="500" >
+							
+								<option value="500" <% if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && sessionRecordsDisplayed.equals("500")){ %>
+								selected<%} %>>
 									500
 								</option>
-								<option value="750"> 
-									750
+								<option value="1000" <% if (sessionRecordsDisplayed == null || sessionRecordsDisplayed.equals("") || sessionRecordsDisplayed.equals("1000")){ %>
+								selected<%} %>> 
+									1000
 								</option>
-								<option value="0"> 
+								<option value="0" <% if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && sessionRecordsDisplayed.equals("0")){ %>
+								selected<%} %>> 
 									All
 								</option>
 							</select>

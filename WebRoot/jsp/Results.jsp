@@ -11,6 +11,7 @@
 	Vector vContext = new Vector();
 	Vector vDocs = new Vector();
 	Vector vACAttr = new Vector();
+	String sessionRecordsDisplayed = (String) session.getAttribute("sessionRecordsDisplayed");
 	String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
 	String sInitiatedFrom = (String) session.getAttribute("initiatedFrom");
 	String sLastKeyword, sSearchIn, sContextUse = "", sContext = "";
@@ -2127,19 +2128,17 @@ function ShowSelectedRowss(){
 						<div align="left">
 							Results Displayed:
 							<select name="recordsDisplayed" size="1" style="width: 160">
-								<option value="100">
-									100
-								</option>
-								<option value="250" >
-									250
-								</option>
-								<option value="500" >
+							
+								<option value="500" <% if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && sessionRecordsDisplayed.equals("500")){ %>
+								selected<%} %>>
 									500
 								</option>
-								<option value="750"> 
-									750
+								<option value="1000" <% if (sessionRecordsDisplayed == null || sessionRecordsDisplayed.equals("") || sessionRecordsDisplayed.equals("1000")){ %>
+								selected<%} %>> 
+									1000
 								</option>
-								<option value="0"> 
+								<option value="0" <% if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && sessionRecordsDisplayed.equals("0")){ %>
+								selected<%} %>> 
 									All
 								</option>
 							</select>
@@ -2222,7 +2221,10 @@ function ShowSelectedRowss(){
 						<font size="2">
 							&nbsp;
 							<%=nRecs%>
-							Records Found <%if (labelKeyword2 != null){%><%=labelKeyword2%><%}%>
+							Records Found <%if (labelKeyword2 != null){%><%=labelKeyword2%><%}%> 
+										   <%if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && !sessionRecordsDisplayed.equals("0")) { %>
+										    (search limited to first <%=sessionRecordsDisplayed %> results) <%} else if (sessionRecordsDisplayed != null && sessionRecordsDisplayed.equals("0")) {%>
+										    (search not limited)<% } %>
 						</font>
 						</td>				
 				</tr>
