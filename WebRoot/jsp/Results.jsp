@@ -2244,7 +2244,9 @@ function ShowSelectedRowss(){
 						<font size="2">
 							&nbsp;
 							<%=nRecs%>
-							Records Found
+							Records Found <%if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && !sessionRecordsDisplayed.equals("0")) { %>
+										    (search limited to first <%=sessionRecordsDisplayed %> results) <%} else if (sessionRecordsDisplayed != null && sessionRecordsDisplayed.equals("0")) {%>
+										    (search not limited)<% } %>
 						</font>
 					</td>				
 				</tr>
