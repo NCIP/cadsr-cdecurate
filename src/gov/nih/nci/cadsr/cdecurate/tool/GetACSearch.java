@@ -2331,6 +2331,10 @@ public class GetACSearch implements Serializable
                             bAllValues = true;
                             break;
                         }
+                        if (sValues.equals("All(No Test/Train)")){
+                        	sValues = this.getNonTestContexts(session);
+                        	break;
+                        }
                         // store it in vector to refresh list on the page
                         vSelectList.addElement(sSelectList[i]);
                     }
@@ -2339,6 +2343,7 @@ public class GetACSearch implements Serializable
             if (bAllValues == true)
             {
                 vSelectList = new Vector();
+                vSelectList.add("AllContext");
                 sValues = "";
                 if (sSearchAC.equals("Questions") && sAttr.equals("WFStatus"))
                 {
@@ -7468,7 +7473,7 @@ public class GetACSearch implements Serializable
                 DataManager.setAttribute(session, "creContextBlocks", sContext);
                 if (sContext == null || sContext.equals("AllContext"))
                     sContext = "";
-                if (sContext.equals("ProdContext"))
+                if (sContext.equals("NoTestContext"))
                 	sContext = getNonTestContexts(session);
                 	
             }
