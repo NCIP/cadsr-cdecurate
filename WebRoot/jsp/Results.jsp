@@ -141,7 +141,7 @@
 	if (vContext == null)
 		vContext = new Vector();
 	if (sContext == null)
-		sContext = "AllContext";
+		sContext = "All(No Test/Train)";
 	if (sContextUse == null || sContextUse == "")
 		sContextUse = "BOTH";
 	// if (sSearchIn.equals("CRFName")) sContextUse = "OWNED_BY";
@@ -1389,9 +1389,15 @@ function ShowSelectedRowss(){
                         <select name="listMultiContextFilter" size="5" style="width: 185"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
+								<option value="All(No Test/Train)"
+								<%if (vContext.size() == 0 || vContext.contains("All(No Test/Train)")){%>
+								selected <%}%>>
+								All(No Test/Train)
+							</option>
+									
 															
 							<option value="AllContext"
-								<%if (vContext.size() == 0 || vContext.contains("AllContext")){%>
+								<%if (vContext != null && vContext.contains("AllContext")){%>
 								selected <%}%>>
 								All Contexts
 							</option>
