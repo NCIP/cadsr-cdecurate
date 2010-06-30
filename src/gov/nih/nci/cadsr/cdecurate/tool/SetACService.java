@@ -2751,7 +2751,7 @@ public class SetACService implements Serializable
 				Vector vRes = new Vector();
 				String sID = m_DEC.getDEC_DEC_IDSEQ();
 				if (sID != null && !sID.equals(""))
-					getAC.doDESearch("", "", "","","","", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", sID, "", "", "", "", "", "", vRes,"0");
+					getAC.doDESearch("", "", "","","","", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", sID, "", "", "", "", "", "", vRes,"0", 0);
 				if (vRes != null && vRes.size()>0)
 				{
 					String sRegStatus = "", sDEName = "";

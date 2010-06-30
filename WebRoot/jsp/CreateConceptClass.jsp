@@ -444,10 +444,10 @@
 											</div>
 											<select style='width: 150px;' id ="context" name="context">
 											
-											<option value="All(No Test/Train)"
+											<option value="All (No Test/Train)"
 												
 												selected >
-												All(No Test/Train)
+												All (No Test/Train)
 											</option>
 											
 											<option value="AllContext"
