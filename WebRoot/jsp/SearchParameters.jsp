@@ -165,10 +165,10 @@
 				hasRecords = true;
 			String updFunction = "displayAttributes('" + hasRecords + "');";
 
-			if (vContext == null)
+			if (vContext == null) 
 				vContext = new Vector();
 			if (sContext == null)
-				sContext = "All(No Test/Train)";
+				sContext = "All (No Test/Train)";
 			if (sContextUse == null || sContextUse == "")
 				sContextUse = "BOTH";
 			// if (sSearchIn.equals("CRFName")) sContextUse = "OWNED_BY";
@@ -979,8 +979,8 @@ function LoadKeyHandler()
 						<select name="listMultiContextFilter" size="3" style="width: 172px"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-							<option value="All(No Test/Train)"
-								<%if (vContext.size() == 0 || vContext.contains("All(No Test/Train)")){%>
+							<option value="All (No Test/Train)"
+								<%if (vContext.size() == 0 || vContext.contains("All (No Test/Train)")){%>
 								selected <%}%>>
 								All(Not Test/Train)
 							</option>

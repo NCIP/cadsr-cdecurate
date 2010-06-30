@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -258,6 +259,16 @@ public class GetACSearch implements Serializable
                 if (sSearchIn == null)
                     sSearchIn = "longName";
                 DataManager.setAttribute(session, "serSearchIn", sSearchIn);
+                
+              //Retrieve result offset
+                String sOffset = (String) req.getAttribute("offset");
+                int iOffset = 0;
+                if (sOffset == null || sOffset.equals(""))
+                	sOffset = "0";
+                
+                iOffset = Integer.parseInt(sOffset);
+                //TODO change other searches for iOffset and iTotalRecords
+                
                 // search in by public id
                 if (sSearchIn.equals("minID"))
                 {
@@ -268,7 +279,7 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",
-                                        "", sMinID, "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed);
+                                        "", sMinID, "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed, iOffset);
                     }
                     else if (sSearchAC.equals("DataElementConcept"))
                     {
@@ -315,7 +326,7 @@ public class GetACSearch implements Serializable
                         doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",
                                         "", "", "", "", "", sProtoID, sCRFName, "", "", "", "", "", "", "", "", sDerType,
-                                        vAC, sRecordsDisplayed);
+                                        vAC, sRecordsDisplayed, iOffset);
                     }
                     // doDE_CRFSearch(sProtoID, sKeyword, sContext, sVersion, sStatus, sRegStatus,
                     // sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, vAC);
@@ -336,7 +347,7 @@ public class GetACSearch implements Serializable
                         doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier,
                                         sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                                        sDerType, vAC, sRecordsDisplayed);
+                                        sDerType, vAC, sRecordsDisplayed, iOffset);
                     }
                 }
                 // search in by names adn doc text long name and historic short cde name
@@ -352,7 +363,7 @@ public class GetACSearch implements Serializable
                         doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier,
                                         sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                                        sDerType, vAC, sRecordsDisplayed);
+                                        sDerType, vAC, sRecordsDisplayed, iOffset);
                     }
                 }
                 // search in by historical cde id
@@ -364,7 +375,7 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",
-                                        "", "", sHistID, "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed);
+                                        "", "", sHistID, "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed, iOffset);
                     }
                 }
                 // search in by permissible value
@@ -375,7 +386,7 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",
-                                        "", "", "", permValue, "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed);
+                                        "", "", "", permValue, "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed, iOffset);
                     }
                     else if (sSearchAC.equals("ValueDomain"))
                     {
@@ -392,7 +403,7 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",
-                                        "", "", "", "", sOrigin, "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed);
+                                        "", "", "", "", sOrigin, "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed, iOffset);
                     }
                     else if (sSearchAC.equals("DataElementConcept"))
                     {
@@ -420,7 +431,7 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",
-                                        "", "", "", "", "", "", "", "", "", "", "", "", "", "", sCon, sDerType, vAC, sRecordsDisplayed);
+                                        "", "", "", "", "", "", "", "", "", "", "", "", "", "", sCon, sDerType, vAC, sRecordsDisplayed, iOffset);
                     }
                     else if (sSearchAC.equals("DataElementConcept"))
                     {
@@ -466,7 +477,7 @@ public class GetACSearch implements Serializable
                     {
                         doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "",
-                                        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed);
+                                        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed, iOffset);
                     }
                     else if (sSearchAC.equals("DataElementConcept"))
                     {
@@ -559,6 +570,8 @@ public class GetACSearch implements Serializable
                         evs.get_Result(req, res, vResult, "");
                     // store result vector in the attribute
                     DataManager.setAttribute(session, "results", vResult);
+            
+                    DataManager.setAttribute(session, "offset", Integer.valueOf(iOffset));
                 }
             }
             // capture the duration
@@ -1289,7 +1302,7 @@ public class GetACSearch implements Serializable
                     String sCreatedTo, String sModifiedFrom, String sModifiedTo, String sCreator, String sModifier,
                     String DocText, String docTypes, String CDE_ID, String histID, String permValue, String sOrigin,
                     String sProtoId, String crfName, String pvIDseq, String vdIDseq, String vmIDSeq, String decIDseq, String cdIDseq,
-                    String cscsiIDseq, String conIDseq, String conName, String derType, Vector vList, String sRecordsDisplayed)
+                    String cscsiIDseq, String conIDseq, String conName, String derType, Vector vList, String sRecordsDisplayed, int iOffset)
     {
         ResultSet rs = null;
         CallableStatement cstmt = null;
@@ -1373,16 +1386,19 @@ public class GetACSearch implements Serializable
                 java.util.Date()));
                 String s;
                 if (rs != null)
-                {
+                {     	
                 	HashMap recordMap = new HashMap();
                     DE_Bean DEBean = new DE_Bean();
                     // capture the duration
                     logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "begin search resultset", startDate, new java.util.Date()));
                     
+                    int totalRecords = 0;
                     int recordsDisplayed = 0;
                     int g = 0;
                     recordsDisplayed = getInt(sRecordsDisplayed);
-                    
+                    //If offset exists then apply it.
+                    if (iOffset > 0)
+                    	rs.absolute(iOffset);
                     // loop through the resultSet and add them to the bean                
                     while (rs.next() && g < recordsDisplayed)
                     {
@@ -1505,6 +1521,12 @@ public class GetACSearch implements Serializable
                             }
                         }
                     }
+                    if (g == recordsDisplayed){
+                    	totalRecords = getResultSetSize(rs);
+                    	DataManager.setAttribute(session, "totalRecords", Integer.toString(totalRecords));
+                    } else 
+                    	DataManager.setAttribute(session, "totalRecords", Integer.toString(g));
+                    
                     logger.info(m_servlet.getLogMessage(m_classReq, "doDESearch", "end search resultset", startDate, new java.util.Date()));
                     logger.info(g + "records retrieved.");
                 }
@@ -1755,6 +1777,13 @@ public class GetACSearch implements Serializable
                         else if (sProperty != null && !sProperty.equals(""))
                             m_classReq.setAttribute("resultLabel", reslabel + DECBean.getDEC_PROPL_NAME());
                     }
+                    HttpSession session = m_classReq.getSession();
+                    if (g == recordsDisplayed){
+                    	int totalRecords = getResultSetSize(rs);
+                    	DataManager.setAttribute(session, "totalRecords", Integer.toString(totalRecords));
+                    } else 
+                    	DataManager.setAttribute(session, "totalRecords", Integer.toString(g));
+                    
                 }
             }
         }catch (NumberFormatException e){}
@@ -1970,6 +1999,14 @@ public class GetACSearch implements Serializable
                         VDBean.setVD_CRF_NAME("");
                         vList.addElement(VDBean);
                     }
+                    
+                    HttpSession session = m_classReq.getSession();
+                    if (g == recordsDisplayed){
+                    	int totalRecords = getResultSetSize(rs);
+                    	DataManager.setAttribute(session, "totalRecords", Integer.toString(totalRecords));
+                    } else 
+                    	DataManager.setAttribute(session, "totalRecords", Integer.toString(g));
+                    
                 }
             }
         }
@@ -2122,6 +2159,13 @@ public class GetACSearch implements Serializable
                         CDBean.setCD_MODIFIED_BY(rs.getString("modified_by"));
                         vList.addElement(CDBean);
                     }
+                    HttpSession session = m_classReq.getSession();
+                    if (g == recordsDisplayed){
+                    	int totalRecords = getResultSetSize(rs);
+                    	DataManager.setAttribute(session, "totalRecords", Integer.toString(totalRecords));
+                    } else 
+                    	DataManager.setAttribute(session, "totalRecords", Integer.toString(g));
+                    
                 }
             }
         }catch (NumberFormatException e){}
@@ -2196,6 +2240,13 @@ public class GetACSearch implements Serializable
                        
                         vList.addElement(CSIBean);
                     }
+                    HttpSession session = m_classReq.getSession();
+                    if (g == recordsDisplayed){
+                    	int totalRecords = getResultSetSize(rs);
+                    	DataManager.setAttribute(session, "totalRecords", Integer.toString(totalRecords));
+                    } else 
+                    	DataManager.setAttribute(session, "totalRecords", Integer.toString(g));
+                    
                 }
             }
         }
@@ -2310,9 +2361,9 @@ public class GetACSearch implements Serializable
             else
                 sSelectList = m_classReq.getParameterValues("listMultiContextFilter");
             boolean bAllValues = false;
-
+            boolean bNoTestValues = false;
             if (sSelectList == null)
-                bAllValues = true;
+                bNoTestValues = true;
             if (sSelectList != null)
             {
                 // loop through the string array to extract values.
@@ -2331,8 +2382,8 @@ public class GetACSearch implements Serializable
                             bAllValues = true;
                             break;
                         }
-                        if (sValues.equals("All(No Test/Train)")){
-                        	sValues = this.getNonTestContexts(session);
+                        if (sValues.equals("All (No Test/Train)")){
+                        	bNoTestValues = true;
                         	break;
                         }
                         // store it in vector to refresh list on the page
@@ -2346,6 +2397,18 @@ public class GetACSearch implements Serializable
                 vSelectList.add("AllContext");
                 sValues = "";
                 if (sSearchAC.equals("Questions") && sAttr.equals("WFStatus"))
+                {
+                    sValues = "DRAFT NEW";
+                    vSelectList.addElement("DRAFT NEW");
+                }
+            }
+            
+            if (bNoTestValues == true) {
+            	vSelectList = new Vector();
+            	vSelectList.add("All (No Test/Train)");
+            	sValues = this.getNonTestContexts(session);
+            	
+            	if (sSearchAC.equals("Questions") && sAttr.equals("WFStatus"))
                 {
                     sValues = "DRAFT NEW";
                     vSelectList.addElement("DRAFT NEW");
@@ -3819,6 +3882,14 @@ public class GetACSearch implements Serializable
                     OCBean.setCONCEPT_IDENTIFIER(sCUIString);
                     vList.addElement(OCBean);
                 }
+                
+                HttpSession session = m_classReq.getSession();
+                if (g == recordsDisplayed){
+                	int totalRecords = getResultSetSize(rs);
+                	DataManager.setAttribute(session, "totalRecords", Integer.toString(totalRecords));
+                } else 
+                	DataManager.setAttribute(session, "totalRecords", Integer.toString(g));
+                
             }
         }catch (NumberFormatException e){}
         catch (Exception e)
@@ -3954,6 +4025,13 @@ public class GetACSearch implements Serializable
                     if (isExist == false)
                         vList.addElement(conBean);
                 }
+                
+                if (g == recordsDisplayed){
+                	int totalRecords = getResultSetSize(rs);
+                	DataManager.setAttribute(session, "totalRecords", Integer.toString(totalRecords));
+                } else 
+                	DataManager.setAttribute(session, "totalRecords", Integer.toString(g));
+                
             }
           }
         catch (NumberFormatException e){}
@@ -5134,7 +5212,7 @@ public class GetACSearch implements Serializable
         {
             Vector vList = new Vector();
             doDESearch(sDEID, "", "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                            "", "", "", "", "", "", "", "", vList,"0");
+                            "", "", "", "", "", "", "", "", vList,"0", 0);
             if (vList != null && vList.size() > 0)
                 DEBean = (DE_Bean) vList.elementAt(0);
             // check permission, get cs and csi, check create or edit
@@ -7473,7 +7551,7 @@ public class GetACSearch implements Serializable
                 DataManager.setAttribute(session, "creContextBlocks", sContext);
                 if (sContext == null || sContext.equals("AllContext"))
                     sContext = "";
-                if (sContext.equals("NoTestContext"))
+                if (sContext.equals("All (No Test/Train)"))
                 	sContext = getNonTestContexts(session);
                 	
             }
@@ -7617,6 +7695,14 @@ public class GetACSearch implements Serializable
             String sUISearchType = (String) req.getAttribute("UISearchType");
             if (sUISearchType == null || sUISearchType.equals("nothing"))
                 sUISearchType = "term";
+            //Retrieve result offset
+            String sOffset = (String) req.getAttribute("offset");
+            int iOffset = 0;
+            if (sOffset == null || sOffset.equals(""))
+            	sOffset = "0";
+            
+            iOffset = Integer.parseInt(sOffset);
+            
             // call the method to get the data from the database and to get the final result vector
             Vector vResult = new Vector();
             String sMinID = sKeyword;
@@ -7626,14 +7712,14 @@ public class GetACSearch implements Serializable
                 {
                     doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                     sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "",
-                                    sMinID, "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed);
+                                    sMinID, "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed, iOffset);
                 }
                 else if (sSearchIn.equals("histID"))
                 {
                     String sHistID = sKeyword;
                     doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                     sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "",
-                                    "", sHistID, "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed);
+                                    "", sHistID, "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed, iOffset);
                 }
                 // search in by doc text
                 else if (sSearchIn.equals("docText"))
@@ -7648,7 +7734,7 @@ public class GetACSearch implements Serializable
                         doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier,
                                         sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                                        sDerType, vAC, sRecordsDisplayed);
+                                        sDerType, vAC, sRecordsDisplayed, iOffset);
                     }
                 }
                 // search in by names adn doc text long name and historic short cde name
@@ -7661,7 +7747,7 @@ public class GetACSearch implements Serializable
                         doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                         sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier,
                                         sDocText, sDocTypes, "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                                        sDerType, vAC, sRecordsDisplayed);
+                                        sDerType, vAC, sRecordsDisplayed, iOffset);
                     }
                 }
                 // search in for origin
@@ -7670,7 +7756,7 @@ public class GetACSearch implements Serializable
                     String sOrigin = sKeyword;
                     doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                     sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "",
-                                    "", "", "", sOrigin, "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed);
+                                    "", "", "", sOrigin, "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed, iOffset);
                 }
                 // search in by permissible value
                 else if (sSearchIn.equals("permValue"))
@@ -7678,7 +7764,7 @@ public class GetACSearch implements Serializable
                     String permValue = sKeyword;
                     doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                     sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "",
-                                    "", "", permValue, "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed);
+                                    "", "", permValue, "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed, iOffset);
                 }
                 // search in by concept name/identifier
                 else if (sSearchIn.equals("concept"))
@@ -7686,19 +7772,22 @@ public class GetACSearch implements Serializable
                     String sCon = sKeyword;
                     doDESearch("", "", "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                     sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "",
-                                    "", "", "", "", "", "", "", "", "", "", "", "", "", sCon, sDerType, vAC, sRecordsDisplayed);
+                                    "", "", "", "", "", "", "", "", "", "", "", "", "", sCon, sDerType, vAC, sRecordsDisplayed, iOffset);
                 }
                 else
                 {
                     doDESearch("", sKeyword, "", sContext, sContextUse, sVersion, dVersion, sStatus, sRegStatus,
                                     sCreatedFrom, sCreatedTo, sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "",
-                                    "", "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed);
+                                    "", "", "", "", "", "", "", "", "", "", "", "", "", "", sDerType, vAC, sRecordsDisplayed, iOffset);
                 }
                 DataManager.setAttribute(session, "vACSearch", vAC);
+                DataManager.setAttribute(session, "offset", Integer.toString(iOffset));
                 getDEResult(req, res, vResult, "");
             }
             else if (sSearchAC.equals("DataElementConcept"))
             {
+            	
+            	//TODO Add iOffset and iTotalRecords
                 if (sSearchIn.equals("minID"))
                 {
                     doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sModifiedFrom,
@@ -10148,5 +10237,14 @@ public class GetACSearch implements Serializable
     		recordsDisplayed = Integer.MAX_VALUE;
 
     	return recordsDisplayed;
+    }
+    
+    private int getResultSetSize(ResultSet rs) throws SQLException {
+    	int size = 0;
+    	size = rs.getRow();
+    	while(rs.next())
+    		size++;
+    	
+    	return size;
     }
 }
