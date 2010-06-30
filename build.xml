@@ -289,7 +289,8 @@
 		<echo>Building deployable WAR file ...</echo>
 		<delete file="${artifacts.dir}/jboss/cdecurate.war" />
 		<cvs command="status -v" output="${jsp.dir}/cvsdeploy.txt" />
-		<war destfile="${artifacts.dir}/jboss/cdecurate.war" basedir="${root.dir}" update="true" webxml="${web.dir}/web.xml">
+		<war destfile="${artifacts.dir}/jboss/cdecurate.war" basedir="${root.dir}" update="true" 
+			webxml="${web.dir}/web.xml" excludes="**/log4j*.jar,**/commons-logging*.jar">
 		</war>
 		<delete file="${jsp.dir}/cvsdeploy.txt" />
 	</target>
