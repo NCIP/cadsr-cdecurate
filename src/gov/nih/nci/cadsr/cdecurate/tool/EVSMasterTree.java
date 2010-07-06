@@ -1218,8 +1218,9 @@ public class EVSMasterTree {
 		sCCodeName = evs.do_getConceptName(sCCode, sCCodeDB);
 
 		do {
-			vSuperConceptNamesImmediate = (Vector) evs.getSuperConceptNamesImmediate(
-					sCCodeDB, sCCodeName, sCCode).values();
+			vSuperConceptNamesImmediate = new Vector();
+			vSuperConceptNamesImmediate.addAll(evs.getSuperConceptNamesImmediate(
+					sCCodeDB, sCCodeName, sCCode).values());
 			
 			if (vSuperConceptNamesImmediate.size() == 1) {
 				sCCodeName = (String) vSuperConceptNamesImmediate.elementAt(0);

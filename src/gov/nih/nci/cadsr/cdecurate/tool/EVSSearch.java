@@ -13,9 +13,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -1806,7 +1808,7 @@ public class EVSSearch implements Serializable {
 			String termStr, String dtsVocab, String sSearchIn,
 			String namePropIn, String sSearchAC, String sIncludeRet,
 			String sMetaSource, int iMetaLimit, boolean isMetaSearch,
-			int ilevel, String subConType) {
+			int ilevel, String subConType, HashSet<String> sConSet) {
 		try {
 			//do not continue if empty string search.
 			if (termStr == null || termStr.equals(""))
@@ -1921,24 +1923,28 @@ public class EVSSearch implements Serializable {
 									}
 								}
 							}
-							//store to concept according to the number of defitions exist for a concept
-							vConList = this.storeConceptToBean(vConList,
-									definitions, dtsVocab, sConName, sDispName,
-									conCodeType, sConID, ilevel, sStatus,
-									sSemantic, sDefDefault, defnProp,
-									vocabMetaType, vocabMetaCode);
-							//repeat the sub concept query for child concepts if all sub concept action
-							
-							if (sSearchIn.equals("subConcept")
-									&& subConType.equals("All")) {						
-
-								boolean bool = getSubConceptCount(dtsVocab, rcr);
-
-								if (bool) {
-									this.doVocabSearch(vConList, sConID, dtsVocab,
-											sSearchIn, "", sSearchAC, sIncludeRet,
-											sMetaSource, iMetaLimit, isMetaSearch,
-											ilevel, subConType);
+							//store to concept according to the number of defitions exist for a concept if already not stored
+							if (!sConSet.contains(sConID)) {
+								vConList = this.storeConceptToBean(vConList,
+										definitions, dtsVocab, sConName, sDispName,
+										conCodeType, sConID, ilevel, sStatus,
+										sSemantic, sDefDefault, defnProp,
+										vocabMetaType, vocabMetaCode);
+								
+								sConSet.add(sConID);
+								//repeat the sub concept query for child concepts if all sub concept action
+								
+								if (sSearchIn.equals("subConcept")
+										&& subConType.equals("All")) {						
+	
+									boolean bool = getSubConceptCount(dtsVocab, rcr);
+	
+									if (bool) {
+										this.doVocabSearch(vConList, sConID, dtsVocab,
+												sSearchIn, "", sSearchAC, sIncludeRet,
+												sMetaSource, iMetaLimit, isMetaSearch,
+												ilevel, subConType, sConSet);
+									}
 								}
 							}
 						}
@@ -2500,7 +2506,7 @@ public class EVSSearch implements Serializable {
 					if (sCode != null && !sCode.equals(""))
 						vAC = this.doVocabSearch(vAC, sCode, dtsVocab,
 								"ConCode", "", sSearchAC, sRetired, "", 100,
-								false, -1, "");
+								false, -1, "", new HashSet<String>());
 					if (sName.equals(sParentName))
 						break;
 				}
@@ -2744,11 +2750,11 @@ public class EVSSearch implements Serializable {
 			if (sKeywordID != null && !sKeywordID.equals(""))
 				vAC = this.doVocabSearch(vAC, sKeywordID, dtsVocab, "ConCode",
 						"", sSearchAC, sRetired, sMetaSource, intMetaLimit,
-						false, iLevel, "");
+						false, iLevel, "", new HashSet<String>());
 			else if (sKeywordName != null && !sKeywordName.equals(""))
 				vAC = this.doVocabSearch(vAC, sKeywordName, dtsVocab, "Name",
 						"", sSearchAC, sRetired, sMetaSource, intMetaLimit,
-						false, iLevel, "");
+						false, iLevel, "", new HashSet<String>());
 
 			DataManager.setAttribute(session, "vACSearch", vAC);
 			if (sSearchAC.equals("ParentConcept"))
@@ -2975,7 +2981,7 @@ public class EVSSearch implements Serializable {
 		EVSMasterTree tree = new EVSMasterTree(m_classReq, dtsVocab, m_servlet);
 		vAC = this.doVocabSearch(vAC, sConceptCode, dtsVocab, "subConcept", "",
 				sSearchAC, "Exclude", "", 0, false, ilevelStartingConcept,
-				sSearchType);
+				sSearchType, new HashSet<String>());
 		DataManager.setAttribute(session, "vACSearch", vAC);
 		if (sSearchAC.equals("ParentConcept"))
 			DataManager.setAttribute(session, "vParResult", vAC);
@@ -3158,7 +3164,7 @@ public class EVSSearch implements Serializable {
 			Vector vVocabs = m_eUser.getVocabNameList();
 			if (vVocabs.contains(dtsVocab)) {
 				vAC = this.doVocabSearch(vAC, searchID, dtsVocab, "ConCode",
-						"", sSearchAC, "Include", "", 10, false, -1, "");
+						"", sSearchAC, "Include", "", 10, false, -1, "", new HashSet<String>());
 				m_classReq.setAttribute("UISearchType", "tree");
 			} else if (dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
 			{
@@ -3274,7 +3280,7 @@ public class EVSSearch implements Serializable {
 						conName = eBean.getLONG_NAME();
 						vList = this.doVocabSearch(vList, conID, nciVocab,
 								"Name", conType, "", "Exclude", "", 10, false,
-								-1, "");
+								-1, "", new HashSet<String>());
 						if (vList != null && vList.size() > 0) {
 							eBean = this
 							.getNCIDefinition(vList, conID, conName); //get the right definition
@@ -3324,7 +3330,7 @@ public class EVSSearch implements Serializable {
 				//call the search by concode method to get the Thes concept 
 				vList = new Vector<EVS_Bean>();
 				vList = this.doVocabSearch(vList, NCISrcCode, prefVocab,
-						"ConCode", "", "", "Exclude", "", 10, false, -1, "");
+						"ConCode", "", "", "Exclude", "", 10, false, -1, "", new HashSet<String>());
 				if (vList != null && vList.size() > 0)
 					eBean = this.getNCIDefinition(vList, NCISrcCode, conName); // (EVS_Bean)vList.elementAt(0);        
 				else {
@@ -3336,7 +3342,7 @@ public class EVSSearch implements Serializable {
 					conType = this.getNCIMetaCodeType(conID, "byID");
 					vList = new Vector<EVS_Bean>();
 					vList = this.doVocabSearch(vList, conID, prefVocab, "Name",
-							conType, "", "Exclude", "", 10, false, -1, "");
+							conType, "", "Exclude", "", 10, false, -1, "", new HashSet<String>());
 					if (vList != null && vList.size() > 0)
 						eBean = this.getNCIDefinition(vList, conID, conName); // (EVS_Bean)vList.elementAt(0);   
 				}
