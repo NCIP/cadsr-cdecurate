@@ -796,7 +796,7 @@ function doMetaCodeSearch()
 							<select name="listContextFilter" size="1" style="width: 160"
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
 								
-								<option value="NoTestContext"
+								<option value="All (No Test/Train)"
 									<%if(sContext.equals("All (No Test/Train)")){%> selected <%}%>>
 									All (No Test/Train)
 								</option>
