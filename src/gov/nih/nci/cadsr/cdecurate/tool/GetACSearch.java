@@ -7547,13 +7547,18 @@ public class GetACSearch implements Serializable
             if (isBlockSearch == true)
             {
                 sContext = (String) req.getParameter("listContextFilter");
-                DataManager.setAttribute(session, "creContext", sContext);
-                DataManager.setAttribute(session, "creContextBlocks", sContext);
-                if (sContext == null || sContext.equals("AllContext"))
+                String setContext = sContext;
+                
+                if (sContext == null || sContext.equals("AllContext")) {
                     sContext = "";
+                    setContext = "All Contexts";
+                }
                 if (sContext.equals("All (No Test/Train)"))
                 	sContext = getNonTestContexts(session);
                 	
+                
+                DataManager.setAttribute(session, "creContext", setContext);
+                DataManager.setAttribute(session, "creContextBlocks", setContext);
             }
             else
                 sContext = getMultiReqValues(sSearchAC, "searchForCreate", "Context");
