@@ -303,6 +303,8 @@ public class GetACSearch implements Serializable
                         VMServlet vmSer = new VMServlet(req, res, m_servlet);
                         vmSer.readDataForSearch(this, sRecordsDisplayed);
                         vAC = (Vector)session.getAttribute("vACSearch");
+                        DataManager.setAttribute(session, "totalRecords", Integer.toString(vAC.size()));
+                        
                     }
                     else if (sSearchAC.equals("ObjectClass"))
                         do_caDSRSearch("", sContext, sStatus, sMinID, vAC, "OC", "", "", sRecordsDisplayed);
@@ -454,12 +456,16 @@ public class GetACSearch implements Serializable
                     {
                         PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
                         vAC = pvser.searchPVAttributes("", sCDid, sCon, "", sRecordsDisplayed);
+                        DataManager.setAttribute(session, "totalRecords", Integer.toString(vAC.size()));
+                        
                     }
                     else if (sSearchAC.equals("ValueMeaning"))
                     {
                         VMServlet vmSer = new VMServlet(req, res, m_servlet);
                         vmSer.readDataForSearch(this, sRecordsDisplayed);
                         vAC = (Vector)session.getAttribute("vACSearch");
+                        DataManager.setAttribute(session, "totalRecords", Integer.toString(vAC.size()));
+                        
                     }
                     else if (sSearchAC.equals("ObjectClass"))
                         do_caDSRSearch("", sContext, sStatus, "", vAC, "OC", sCon, "", sRecordsDisplayed);
@@ -495,6 +501,8 @@ public class GetACSearch implements Serializable
                     {
                         PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
                         vAC = pvser.searchPVAttributes(sKeyword, sCDid, "", "", sRecordsDisplayed);
+                        DataManager.setAttribute(session, "totalRecords", Integer.toString(vAC.size()));
+                         
                     }
                     else if (sSearchAC.equals("ObjectClass"))
                     {
@@ -516,6 +524,8 @@ public class GetACSearch implements Serializable
                     	VMServlet vmSer = new VMServlet(req, res, m_servlet);
                         vmSer.readDataForSearch(this, sRecordsDisplayed);
                         vAC = (Vector)session.getAttribute("vACSearch");
+                        DataManager.setAttribute(session, "totalRecords", Integer.toString(vAC.size()));
+                        
                     }
                     else if (sSearchAC.equals("ClassSchemeItems"))
                         doCSISearch(sKeyword, sContext, sSchemes, vAC, sRecordsDisplayed);
@@ -570,7 +580,7 @@ public class GetACSearch implements Serializable
                         evs.get_Result(req, res, vResult, "");
                     // store result vector in the attribute
                     DataManager.setAttribute(session, "results", vResult);
-            
+                    DataManager.setAttribute(session, "totalRecords", Integer.toString(vAC.size()));
                     DataManager.setAttribute(session, "offset", Integer.valueOf(iOffset));
                 }
             }
@@ -7899,6 +7909,7 @@ public class GetACSearch implements Serializable
                 }
                 PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
                 vAC = pvser.searchPVAttributes(sKeyword, sStatus, "", "", sRecordsDisplayed);
+                
                 if (isIntSearch == false)
                 {
                     // **************why is this needed******************
@@ -7909,6 +7920,8 @@ public class GetACSearch implements Serializable
                 DataManager.setAttribute(session, "vACSearch", vAC);
                 DataManager.setAttribute(session, "vPVVMResult", vAC);
                 getPVVMResult(req, res, vResult, "");
+                DataManager.setAttribute(session, "totalRecords", Integer.toString(vAC.size()));
+                
             }
             else if (sSearchAC.equals("ValueMeaning"))
             {
@@ -7917,6 +7930,8 @@ public class GetACSearch implements Serializable
                 // getVMResult(req, res, vResult);
                 VMServlet vmSer = new VMServlet(req, res, m_servlet);
                 vmSer.readDataForSearch(this, sRecordsDisplayed);
+                DataManager.setAttribute(session, "totalRecords", Integer.toString(vAC.size()));
+                
             }
             else if (sSearchAC.equals("EVSValueMeaning") || sSearchAC.equals("VMConcept") || sSearchAC.equals("EditVMConcept"))
             {
