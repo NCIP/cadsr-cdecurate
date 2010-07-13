@@ -1112,7 +1112,7 @@ public class SearchServlet extends CurationServlet {
                 Vector vRes = new Vector();
                 if (sID != null && !sID.equals(""))
                 	getACSearch.doDESearch("", "", "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "",
-                                    "", "", "", "", pvID, vdID,vmID,decID, cdID, cscsiID, conID, "", "", vRes, "0");
+                                    "", "", "", "", pvID, vdID,vmID,decID, cdID, cscsiID, conID, "", "", vRes, "0", 0);
                 DataManager.setAttribute(session, "vSelRows", vRes);
                 // do attributes after the search so no "two simultaneous request" errors
                 vSelVector = this.getDefaultAttr("DataElement", sSearchIn);
@@ -1612,13 +1612,16 @@ public class SearchServlet extends CurationServlet {
         // to retrieve the context values
         Vector<String> serMultiContext = new Vector<String>();
         Vector<String> defaultContext = (Vector) session.getAttribute("vContext");
-    	for (int i = 0; defaultContext.size() > i; i++) {
-    		String sContextName = (String) defaultContext.elementAt(i);
-    		if((!sContextName.equalsIgnoreCase("TEST"))
-    				&& (!sContextName.equalsIgnoreCase("Training"))){	
-    			serMultiContext.addElement(sContextName);
-    		}
-    	}
+
+        //Selecting All (No Test/Train) by default
+        serMultiContext.addElement("All (No Test/Train)");
+//        for (int i = 0; defaultContext.size() > i; i++) {
+//    		String sContextName = (String) defaultContext.elementAt(i);
+//    		if((!sContextName.equalsIgnoreCase("TEST"))
+//    				&& (!sContextName.equalsIgnoreCase("Training"))){	
+//    			serMultiContext.addElement(sContextName);
+//    		}
+//    	}
     	DataManager.setAttribute(session, "standardContexts", serMultiContext);
         // reset to default filter by criteria
         if (!menuAction.equals("searchForCreate"))
@@ -1817,7 +1820,7 @@ public class SearchServlet extends CurationServlet {
         DataManager.setAttribute(session, "dtsVocab", dtsVocab);
         DataManager.setAttribute(session, "SearchInEVS", sSearchInEVS);
         DataManager.setAttribute(session, "creSearchInBlocks", "longName");
-        DataManager.setAttribute(session, "creContextBlocks", "Production Contexts");
+        DataManager.setAttribute(session, "creContextBlocks", "All (No Test/Train)");
         DataManager.setAttribute(session, "creStatusBlocks", "RELEASED");
         DataManager.setAttribute(session, "creRetired", "Exclude");
         DataManager.setAttribute(session, "MetaSource", "All Sources");

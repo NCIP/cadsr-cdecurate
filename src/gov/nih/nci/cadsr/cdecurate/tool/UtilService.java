@@ -22,74 +22,74 @@ import javax.servlet.http.HttpSession;
  */
 
  /*
-The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. (“ScenPro”)  
+The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. ("ScenPro")
 Copyright Notice.  The software subject to this notice and license includes both
 human readable source code form and machine readable, binary, object code form
-(“the CaCORE Software”).  The CaCORE Software was developed in conjunction with
-the National Cancer Institute (“NCI”) by NCI employees and employees of SCENPRO.
+("the CaCORE Software").  The CaCORE Software was developed in conjunction with
+the National Cancer Institute ("NCI") by NCI employees and employees of SCENPRO.
 To the extent government employees are authors, any rights in such works shall
-be subject to Title 17 of the United States Code, section 105.    
-This CaCORE Software License (the “License”) is between NCI and You.  “You (or “Your”)
-shall mean a person or an entity, and all other entities that control, are 
-controlled by, or are under common control with the entity.  “Control” for purposes
+be subject to Title 17 of the United States Code, section 105.
+This CaCORE Software License (the "License") is between NCI and You.  "You (or "Your")
+shall mean a person or an entity, and all other entities that control, are
+controlled by, or are under common control with the entity.  "Control" for purposes
 of this definition means (i) the direct or indirect power to cause the direction
 or management of such entity, whether by contract or otherwise, or (ii) ownership
-of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial 
-ownership of such entity.  
+of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial
+ownership of such entity.
 This License is granted provided that You agree to the conditions described below.
 NCI grants You a non-exclusive, worldwide, perpetual, fully-paid-up, no-charge,
 irrevocable, transferable and royalty-free right and license in its rights in the
-CaCORE Software to (i) use, install, access, operate, execute, copy, modify, 
-translate, market, publicly display, publicly perform, and prepare derivative 
-works of the CaCORE Software; (ii) distribute and have distributed to and by 
-third parties the CaCORE Software and any modifications and derivative works 
-thereof; and (iii) sublicense the foregoing rights set out in (i) and (ii) to 
+CaCORE Software to (i) use, install, access, operate, execute, copy, modify,
+translate, market, publicly display, publicly perform, and prepare derivative
+works of the CaCORE Software; (ii) distribute and have distributed to and by
+third parties the CaCORE Software and any modifications and derivative works
+thereof; and (iii) sublicense the foregoing rights set out in (i) and (ii) to
 third parties, including the right to license such rights to further third parties.
-For sake of clarity, and not by way of limitation, NCI shall have no right of 
-accounting or right of payment from You or Your sublicensees for the rights 
+For sake of clarity, and not by way of limitation, NCI shall have no right of
+accounting or right of payment from You or Your sublicensees for the rights
 granted under this License.  This License is granted at no charge to You.
 1.	Your redistributions of the source code for the Software must retain the above
 copyright notice, this list of conditions and the disclaimer and limitation of
 liability of Article 6, below.  Your redistributions in object code form must
 reproduce the above copyright notice, this list of conditions and the disclaimer
-of Article 6 in the documentation and/or other materials provided with the 
+of Article 6 in the documentation and/or other materials provided with the
 distribution, if any.
-2.	Your end-user documentation included with the redistribution, if any, must 
-include the following acknowledgment: “This product includes software developed 
-by SCENPRO and the National Cancer Institute.”  If You do not include such end-user
-documentation, You shall include this acknowledgment in the Software itself, 
+2.	Your end-user documentation included with the redistribution, if any, must
+include the following acknowledgment: "This product includes software developed
+by SCENPRO and the National Cancer Institute."  If You do not include such end-user
+documentation, You shall include this acknowledgment in the Software itself,
 wherever such third-party acknowledgments normally appear.
-3.	You may not use the names "The National Cancer Institute", "NCI" “ScenPro, Inc.”
-and "SCENPRO" to endorse or promote products derived from this Software.  
+3.	You may not use the names "The National Cancer Institute", "NCI" "ScenPro, Inc."
+and "SCENPRO" to endorse or promote products derived from this Software.
 This License does not authorize You to use any trademarks, service marks, trade names,
 logos or product names of either NCI or SCENPRO, except as required to comply with
 the terms of this License.
 4.	For sake of clarity, and not by way of limitation, You may incorporate this
-Software into Your proprietary programs and into any third party proprietary 
+Software into Your proprietary programs and into any third party proprietary
 programs.  However, if You incorporate the Software into third party proprietary
 programs, You agree that You are solely responsible for obtaining any permission
 from such third parties required to incorporate the Software into such third party
-proprietary programs and for informing Your sublicensees, including without 
+proprietary programs and for informing Your sublicensees, including without
 limitation Your end-users, of their obligation to secure any required permissions
 from such third parties before incorporating the Software into such third party
 proprietary software programs.  In the event that You fail to obtain such permissions,
-You agree to indemnify NCI for any claims against NCI by such third parties, 
+You agree to indemnify NCI for any claims against NCI by such third parties,
 except to the extent prohibited by law, resulting from Your failure to obtain
 such permissions.
-5.	For sake of clarity, and not by way of limitation, You may add Your own 
-copyright statement to Your modifications and to the derivative works, and You 
+5.	For sake of clarity, and not by way of limitation, You may add Your own
+copyright statement to Your modifications and to the derivative works, and You
 may provide additional or different license terms and conditions in Your sublicenses
-of modifications of the Software, or any derivative works of the Software as a 
-whole, provided Your use, reproduction, and distribution of the Work otherwise 
+of modifications of the Software, or any derivative works of the Software as a
+whole, provided Your use, reproduction, and distribution of the Work otherwise
 complies with the conditions stated in this License.
 6.	THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES,
-(INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, 
-NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED.  
-IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE, SCENPRO, OR THEIR AFFILIATES 
-BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+(INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED.
+IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE, SCENPRO, OR THEIR AFFILIATES
+BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
 CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
 GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
@@ -97,7 +97,7 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 public class UtilService implements Serializable
 {
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1L;
 
@@ -210,7 +210,7 @@ public class UtilService implements Serializable
         //System.out.println("Error in getName: " + e);
         return null;
     }
-    
+
     return sName;
   } //end setMultSelection
 
@@ -268,7 +268,7 @@ public class UtilService implements Serializable
         //System.out.println("Error in getIDByName: " + e);
         return null;
     }
-    
+
     return sIDSEQ;
   } //end getIDBYName
 
@@ -438,7 +438,7 @@ public class UtilService implements Serializable
   *
   * @param v  A Vector.
   * @param s  A string.
-  * @return int 
+  * @return int
   *
   */
   //
@@ -518,7 +518,7 @@ public class UtilService implements Serializable
       //System.out.println("string " + sPrName);
       return sPrName;
     }
-    
+
   /**
    * parse the string for single quote
    * @param sPrName string to format
@@ -597,7 +597,7 @@ public class UtilService implements Serializable
    * remove newline character from the string
    * @param sValue string to format
    * @return formatted string
-   */  
+   */
     public String removeNewLineChar(String sValue)
     {
       if (sValue != null && !sValue.equals(""))
@@ -613,7 +613,7 @@ public class UtilService implements Serializable
       //else
         return "";
     }
-    
+
   /**
    * remove newline character from the string for javascript alert messages to make sure new line characters from oracle is fixed properly.
    * @param sPrName
@@ -632,7 +632,7 @@ public class UtilService implements Serializable
             if (index < 0)
               index = sPrName.indexOf('\r',index);
             if (index < 0)
-              index = sPrName.indexOf('\n',index);            
+              index = sPrName.indexOf('\n',index);
           }
           else
           {
@@ -640,7 +640,7 @@ public class UtilService implements Serializable
             if (index < 0)
               index = sPrName.indexOf('\r');
             if (index < 0)
-              index = sPrName.indexOf('\n');            
+              index = sPrName.indexOf('\n');
           }
           if (index > -1)
           {
@@ -678,7 +678,7 @@ public class UtilService implements Serializable
         while (index > 0);
       }
       return sMsg;
-    } 
+    }
   /**
    * remove tab and new line from teh vector from the string for success messages.
    * @param sMsg
@@ -718,10 +718,10 @@ public class UtilService implements Serializable
             index = index + 3;
           }
         }
-        while (index > 0);    
+        while (index > 0);
       }
       return sMsg;
-    } 
+    }
     /**
      * remove tab and new line from teh vector from the string for success messages.
      * @param sMsg string message to append
@@ -752,7 +752,7 @@ public class UtilService implements Serializable
               //put indent for the tab at the begginning of the msg for vector.
               int iTab = newMsg.indexOf("\\t");
               if (iTab > -1 && iTab < 5)
-                  newMsg = "<ul>".concat(newMsg.substring(2));  //.concat("</ul>"); 
+                  newMsg = "<ul>".concat(newMsg.substring(2));  //.concat("</ul>");
               //sMsg = sMsg.substring(0, index) + " " + sMsg.substring(index+2);
               vMsg.addElement(newMsg);
           }
@@ -780,16 +780,16 @@ public class UtilService implements Serializable
           index = index + 3;
         }
       }
-      while (index > 0);    
+      while (index > 0);
     }
     return sMsg;
-  } 
+  }
   /**
   * sort DE Component vectors against last vector: vDECompOrder
   *
   * @param vDEComp  A Vector.
   * @param vDECompID  A Vector.
-  * @param vDECompRelID 
+  * @param vDECompRelID
   * @param vDECompOrder  A Vector.
   * @return int
   *
@@ -865,7 +865,7 @@ public class UtilService implements Serializable
       //return the string
       return sDate;
     }
-    else if (sField.equals("Source") || sField.equals("ChangeNote") || sField.equals("UOMLName") 
+    else if (sField.equals("Source") || sField.equals("ChangeNote") || sField.equals("UOMLName")
          || sField.equals("UOMLDesc") || sField.equals("FORMLName") || sField.equals("LowValue")
          || sField.equals("HighValue") || sField.equals("RepTerm"))
     {
@@ -891,7 +891,7 @@ public class UtilService implements Serializable
        if (sField.equals("LowValue")) sNewName = newVD.getVD_LOW_VALUE_NUM();
        if (sField.equals("HighValue")) sNewName = newVD.getVD_HIGH_VALUE_NUM();
        if (sField.equals("RepTerm")) sNewName = newVD.getVD_REP_TERM();
-       
+
        //check for validity
        if(sOldName == null) sOldName = "";
        if(sNewName == null) sNewName = "";
@@ -916,18 +916,18 @@ public class UtilService implements Serializable
        if (sField.equals("MaxLen")) sNewName = newVD.getVD_MAX_LENGTH_NUM();
        if (sField.equals("MinLen")) sNewName = newVD.getVD_MIN_LENGTH_NUM();
        if (sField.equals("Decimal")) sNewName = newVD.getVD_DECIMAL_PLACE();
-       
+
        //check for validity
        if(sOldName == null) sOldName = "";
        if (sNewName == null) sNewName = "";
        if(sNewName.equals("") && sAct.equals("UPD")&& !sNewName.equals(sOldName))
-         sNewName = "-1"; 
+         sNewName = "-1";
        //return string
        return sNewName;
     }
     return "";  //incase
   }
-  
+
   /**
    * makes the log message so can be used by jsp too.
    * @param session
@@ -938,21 +938,21 @@ public class UtilService implements Serializable
    * @return string log message
    */
   public String makeLogMessage(HttpSession session, String sMethod, String endMsg,
-     java.util.Date bDate, java.util.Date eDate) 
+     java.util.Date bDate, java.util.Date eDate)
   {
     String sMsg = "";
     try
     {
       //add Method name
-      sMsg += "Function: " + sMethod;      
+      sMsg += "Function: " + sMethod;
       //add user
       String sUser = (String)session.getAttribute("Username");
       if (sUser == null) sUser = "";
-      sMsg += "; User: " + sUser;      
+      sMsg += "; User: " + sUser;
       //add session id
       String ssID = session.getId();
       if (ssID == null) ssID = "";
-      sMsg += "; Session-ID: " + ssID;      
+      sMsg += "; Session-ID: " + ssID;
       //add duration
       //java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat ("MM/dd/yyyy");
       long lDur = eDate.getTime() - bDate.getTime();
@@ -961,7 +961,7 @@ public class UtilService implements Serializable
       else
         sMsg += "; Duration: " + lDur + " milliseconds";
       //add end message
-      sMsg += "; " + endMsg;      
+      sMsg += "; " + endMsg;
     }
     catch (Exception e)
     {
@@ -984,7 +984,7 @@ public class UtilService implements Serializable
    * @param sOriginAction String origin action
    *
    */
-    public static void setValPageVector(Vector<ValidateBean> vb, String sItem, String sContent, 
+    public static void setValPageVector(Vector<ValidateBean> vb, String sItem, String sContent,
         boolean bMandatory, int iLengLimit, String strInValid, String sOriginAction)
     {
        String sValid = "Valid";
@@ -992,16 +992,16 @@ public class UtilService implements Serializable
        String sMandatory = "This field is Mandatory. \n";
        if(sItem.equals("Effective End Date"))
          sMandatory = "Effective End Date field is Mandatory for this workflow status. \n";
-       
+
        String attCon = "";
        String attStatus = "";
        if(sContent == null || sContent.equals("") || sContent.length() < 1)   // content emplty
        {
-           attCon = "";  // content           
+           attCon = "";  // content
            if(bMandatory)
            {
                attStatus = sMandatory + strInValid;   //status, required field
-               
+
            }
            else if(strInValid.equals(""))
            {
@@ -1052,7 +1052,7 @@ public class UtilService implements Serializable
      * To get compared value to sort.
      * empty strings are considered as strings.
      * according to the fields, converts the string object into integer, double or dates.
-     * @param sField 
+     * @param sField
      * @param firstName first name to compare.
      * @param SecondName second name to compare.
      *
@@ -1065,7 +1065,7 @@ public class UtilService implements Serializable
     {
         firstName = firstName.trim();
         SecondName = SecondName.trim();
-        //this allows to put empty cells at the bottom by specify the return 
+        //this allows to put empty cells at the bottom by specify the return
         if (firstName.equals(""))
            return 1;
         else if (SecondName.equals(""))
@@ -1083,7 +1083,7 @@ public class UtilService implements Serializable
            Double dName2 = new Double(SecondName);
            return dName1.compareTo(dName2);
         }
-        else if (sFieldType.equals("Date"))        
+        else if (sFieldType.equals("Date"))
         {
            SimpleDateFormat dteFormat = new SimpleDateFormat("MM/dd/yyyy");
            java.util.Date dtName1 = dteFormat.parse(firstName);
@@ -1117,23 +1117,23 @@ public class UtilService implements Serializable
       for (int cc =0; cc < vmCon.size(); cc++)
       {
         EVS_Bean conBean = (EVS_Bean)vmCon.elementAt(cc);
-        if (!evsID.equals("")) 
+        if (!evsID.equals(""))
           evsID += "; &nbsp;";
         String conDB = conBean.getEVS_DATABASE();
-        if (conDB.equals(EVSSearch.META_VALUE)) // "MetaValue")) 
+        if (conDB.equals(EVSSearch.META_VALUE)) // "MetaValue"))
           conDB = conBean.getEVS_ORIGIN();
         String conID = conBean.getCONCEPT_IDENTIFIER();
-        if (conID != null && !conID.equals("")) 
-          evsID += conID + "&nbsp;&nbsp;" + conDB;        
+        if (conID != null && !conID.equals(""))
+          evsID += conID + "&nbsp;&nbsp;" + conDB;
       }
       return evsID;
     }
-    
+
    /**
 	 * The getSQLTimestamp method: returns date in java.sql.Timestamp format (yyyy-MM-dd  hh:mm:ss)
-	 * 
+	 *
 	 * @param curationDate
-	 * @return A sqlTimestamp is returned. 
+	 * @return A sqlTimestamp is returned.
 	 */
 	public Timestamp getSQLTimestamp(String curationDate) {
 		Timestamp sqlTimestamp = null;
@@ -1153,7 +1153,7 @@ public class UtilService implements Serializable
 
 	/**
 	 * The getCurationDateFromSQLTimestamp method: returns date in MM/dd/yyyy format
-	 * 
+	 *
 	 * @param sqlTimestamp
 	 * @return A string date is returned, in Curation format.
 	 */
@@ -1170,8 +1170,8 @@ public class UtilService implements Serializable
 		}
 		return curationDate;
 	}
-	
-	public static void setValPageVectorForOC_Prop_Rep(Vector<ValidateBean> vb, String sItem, String sContent, 
+
+	public static void setValPageVectorForOC_Prop_Rep(Vector<ValidateBean> vb, String sItem, String sContent,
 	        boolean bMandatory, int iLengLimit, String strInValid, String sOriginAction, String strValid)
 	    {
 	       String sValid = "Valid";
@@ -1180,19 +1180,19 @@ public class UtilService implements Serializable
 	       if (strValid != null && !strValid.equals("")){
 	    	   sValid = strValid;
 	       }
-	       
+
 	       if(sItem.equals("Effective End Date"))
 	         sMandatory = "Effective End Date field is Mandatory for this workflow status. \n";
-	       
+
 	       String attCon = "";
 	       String attStatus = "";
 	       if(sContent == null || sContent.equals("") || sContent.length() < 1)   // content emplty
 	       {
-	           attCon = "";  // content           
+	           attCon = "";  // content
 	           if(bMandatory)
 	           {
 	               attStatus = sMandatory + strInValid;   //status, required field
-	               
+
 	           }
 	           else if(strInValid.equals(""))
 	           {
