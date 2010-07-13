@@ -9,19 +9,19 @@ import gov.nih.nci.cadsr.cdecurate.database.ACTypes;
 /**
  * The CD_Bean encapsulates the CD information
  * <P>
- * 
+ *
  * @author Sumana Hegde
  * @version 3.0
- * 
+ *
  */
 /*
- * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. (“ScenPro”) Copyright Notice. The software
+ * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. ("ScenPro") Copyright Notice. The software
  * subject to this notice and license includes both human readable source code form and machine readable, binary, object
- * code form (“the CaCORE Software”). The CaCORE Software was developed in conjunction with the National Cancer
- * Institute (“NCI”) by NCI employees and employees of SCENPRO. To the extent government employees are authors, any
+ * code form ("the CaCORE Software"). The CaCORE Software was developed in conjunction with the National Cancer
+ * Institute ("NCI") by NCI employees and employees of SCENPRO. To the extent government employees are authors, any
  * rights in such works shall be subject to Title 17 of the United States Code, section 105. This CaCORE Software
- * License (the “License”) is between NCI and You. “You (or “Your”) shall mean a person or an entity, and all other
- * entities that control, are controlled by, or are under common control with the entity. “Control” for purposes of this
+ * License (the "License") is between NCI and You. "You (or "Your") shall mean a person or an entity, and all other
+ * entities that control, are controlled by, or are under common control with the entity. "Control" for purposes of this
  * definition means (i) the direct or indirect power to cause the direction or management of such entity, whether by
  * contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii)
  * beneficial ownership of such entity. This License is granted provided that You agree to the conditions described
@@ -37,10 +37,10 @@ import gov.nih.nci.cadsr.cdecurate.database.ACTypes;
  * liability of Article 6, below. Your redistributions in object code form must reproduce the above copyright notice,
  * this list of conditions and the disclaimer of Article 6 in the documentation and/or other materials provided with the
  * distribution, if any. 2. Your end-user documentation included with the redistribution, if any, must include the
- * following acknowledgment: “This product includes software developed by SCENPRO and the National Cancer Institute.” If
+ * following acknowledgment: "This product includes software developed by SCENPRO and the National Cancer Institute." If
  * You do not include such end-user documentation, You shall include this acknowledgment in the Software itself,
  * wherever such third-party acknowledgments normally appear. 3. You may not use the names "The National Cancer
- * Institute", "NCI" “ScenPro, Inc.” and "SCENPRO" to endorse or promote products derived from this Software. This
+ * Institute", "NCI" "ScenPro, Inc." and "SCENPRO" to endorse or promote products derived from this Software. This
  * License does not authorize You to use any trademarks, service marks, trade names, logos or product names of either
  * NCI or SCENPRO, except as required to comply with the terms of this License. 4. For sake of clarity, and not by way
  * of limitation, You may incorporate this Software into Your proprietary programs and into any third party proprietary
@@ -117,16 +117,16 @@ public class CD_Bean extends AC_Bean
     public CD_Bean()
     {
         super();
-        
+
         _type = ACTypes.CONCEPTUALDOMAIN;
     }
 
     /**
      * makes a copy of the bean
-     * 
+     *
      * @param copyBean
      *            passin the bean whose attributes need to be copied and returned.
-     * 
+     *
      * @return CD_Bean returns this bean after copying its attributes
      */
     public CD_Bean cloneCD_Bean(CD_Bean copyBean)
@@ -147,7 +147,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -158,7 +158,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_CD_IDSEQ method sets the CD_CD_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The CD_CD_IDSEQ to set
      */
@@ -169,7 +169,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_PREFERRED_NAME method sets the CD_PREFERRED_NAME for this bean.
-     * 
+     *
      * @param s
      *            The CD_PREFERRED_NAME to set
      */
@@ -180,7 +180,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_CONTE_IDSEQ method sets the CD_CONTE_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The CD_CONTE_IDSEQ to set
      */
@@ -191,7 +191,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_VERSION method sets the CD_VERSION for this bean.
-     * 
+     *
      * @param s
      *            The CD_VERSION to set
      */
@@ -202,7 +202,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_PREFERRED_DEFINITION method sets the CD_PREFERRED_DEFINITION for this bean.
-     * 
+     *
      * @param s
      *            The CD_PREFERRED_DEFINITION to set
      */
@@ -213,7 +213,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_LONG_NAME method sets the CD_LONG_NAME for this bean.
-     * 
+     *
      * @param s
      *            The CD_LONG_NAME to set
      */
@@ -224,7 +224,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_ASL_NAME method sets the CD_ASL_NAME for this bean.
-     * 
+     *
      * @param s
      *            The CD_ASL_NAME to set
      */
@@ -235,7 +235,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_LATEST_VERSION_IND method sets the CD_LATEST_VERSION_IND for this bean.
-     * 
+     *
      * @param s
      *            The CD_LATEST_VERSION_IND to set
      */
@@ -246,7 +246,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_BEGIN_DATE method sets the CD_BEGIN_DATE for this bean.
-     * 
+     *
      * @param s
      *            The CD_BEGIN_DATE to set
      */
@@ -257,7 +257,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_END_DATE method sets the CD_END_DATE for this bean.
-     * 
+     *
      * @param s
      *            The CD_END_DATE to set
      */
@@ -268,7 +268,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_CHANGE_NOTE method sets the CD_CHANGE_NOTE for this bean.
-     * 
+     *
      * @param s
      *            The CD_CHANGE_NOTE to set
      */
@@ -279,7 +279,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_CREATED_BY method sets the CD_CREATED_BY for this bean.
-     * 
+     *
      * @param s
      *            The CD_CREATED_BY to set
      */
@@ -290,7 +290,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_DATE_CREATED method sets the CD_DATE_CREATED for this bean.
-     * 
+     *
      * @param s
      *            The CD_DATE_CREATED to set
      */
@@ -301,7 +301,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_MODIFIED_BY method sets the CD_MODIFIED_BY for this bean.
-     * 
+     *
      * @param s
      *            The CD_MODIFIED_BY to set
      */
@@ -312,7 +312,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_DATE_MODIFIED method sets the CD_DATE_MODIFIED for this bean.
-     * 
+     *
      * @param s
      *            The CD_DATE_MODIFIED to set
      */
@@ -323,7 +323,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_DELETED_IND method sets the CD_DELETED_IND for this bean.
-     * 
+     *
      * @param s
      *            The CD_DELETED_IND to set
      */
@@ -334,7 +334,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_CONTEXT_NAME method sets the CD_CONTEXT_NAME for this bean.
-     * 
+     *
      * @param s
      *            The CD_CONTEXT_NAME to set
      */
@@ -345,7 +345,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_CD_ID method sets the CD_CD_ID for this bean.
-     * 
+     *
      * @param s
      *            The CD_CD_ID to set
      */
@@ -356,7 +356,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_SOURCE method sets the CD_SOURCE for this bean.
-     * 
+     *
      * @param s
      *            The CD_SOURCE to set
      */
@@ -367,7 +367,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_DIMENSIONALITY method sets the CD_DIMENSIONALITY for this bean.
-     * 
+     *
      * @param s
      *            The CD_DIMENSIONALITY to set
      */
@@ -378,7 +378,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The setCD_CHECKED method sets the CD_CHECKED for this bean.
-     * 
+     *
      * @param b
      *            The CD_CHECKED to set
      */
@@ -390,7 +390,7 @@ public class CD_Bean extends AC_Bean
     // Get Properties
     /**
      * The getRETURN_CODE method returns the RETURN_CODE for this bean.
-     * 
+     *
      * @return String The RETURN_CODE
      */
     public String getRETURN_CODE()
@@ -400,7 +400,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_CD_IDSEQ method returns the CD_CD_IDSEQ for this bean.
-     * 
+     *
      * @return String The CD_CD_IDSEQ
      */
     public String getCD_CD_IDSEQ()
@@ -410,7 +410,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * (non-Javadoc)
-     * 
+     *
      * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getIDSEQ()
      */
     public String getIDSEQ()
@@ -420,7 +420,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_PREFERRED_NAME method returns the CD_PREFERRED_NAME for this bean.
-     * 
+     *
      * @return String The CD_PREFERRED_NAME
      */
     public String getCD_PREFERRED_NAME()
@@ -430,7 +430,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_CONTE_IDSEQ method returns the CD_CONTE_IDSEQ for this bean.
-     * 
+     *
      * @return String The CD_CONTE_IDSEQ
      */
     public String getCD_CONTE_IDSEQ()
@@ -440,7 +440,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * (non-Javadoc)
-     * 
+     *
      * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextIDSEQ()
      */
     @Override
@@ -451,7 +451,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_VERSION method returns the CD_VERSION for this bean.
-     * 
+     *
      * @return String The CD_VERSION
      */
     public String getCD_VERSION()
@@ -461,7 +461,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_PREFERRED_DEFINITION method returns the CD_PREFERRED_DEFINITION for this bean.
-     * 
+     *
      * @return String The CD_PREFERRED_DEFINITION
      */
     public String getCD_PREFERRED_DEFINITION()
@@ -471,7 +471,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_LONG_NAME method returns the CD_LONG_NAME for this bean.
-     * 
+     *
      * @return String The CD_LONG_NAME
      */
     public String getCD_LONG_NAME()
@@ -481,7 +481,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_ASL_NAME method returns the CD_ASL_NAME for this bean.
-     * 
+     *
      * @return String The CD_ASL_NAME
      */
     public String getCD_ASL_NAME()
@@ -491,7 +491,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_LATEST_VERSION_IND method returns the CD_LATEST_VERSION_IND for this bean.
-     * 
+     *
      * @return String The CD_LATEST_VERSION_IND
      */
     public String getCD_LATEST_VERSION_IND()
@@ -501,7 +501,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_BEGIN_DATE method returns the CD_BEGIN_DATE for this bean.
-     * 
+     *
      * @return String The CD_BEGIN_DATE
      */
     public String getCD_BEGIN_DATE()
@@ -511,7 +511,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_END_DATE method returns the CD_END_DATE for this bean.
-     * 
+     *
      * @return String The CD_END_DATE
      */
     public String getCD_END_DATE()
@@ -521,7 +521,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_CHANGE_NOTE method returns the CD_CHANGE_NOTE for this bean.
-     * 
+     *
      * @return String The CD_CHANGE_NOTE
      */
     public String getCD_CHANGE_NOTE()
@@ -531,7 +531,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_CREATED_BY method returns the CD_CREATED_BY for this bean.
-     * 
+     *
      * @return String The CD_CREATED_BY
      */
     public String getCD_CREATED_BY()
@@ -541,7 +541,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_DATE_CREATED method returns the CD_DATE_CREATED for this bean.
-     * 
+     *
      * @return String The CD_DATE_CREATED
      */
     public String getCD_DATE_CREATED()
@@ -551,7 +551,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_MODIFIED_BY method returns the CD_MODIFIED_BY for this bean.
-     * 
+     *
      * @return String The CD_MODIFIED_BY
      */
     public String getCD_MODIFIED_BY()
@@ -561,7 +561,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_DATE_MODIFIED method returns the CD_DATE_MODIFIED for this bean.
-     * 
+     *
      * @return String The CD_DATE_MODIFIED
      */
     public String getCD_DATE_MODIFIED()
@@ -571,7 +571,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_DELETED_IND method returns the CD_DELETED_IND for this bean.
-     * 
+     *
      * @return String The CD_DELETED_IND
      */
     public String getCD_DELETED_IND()
@@ -581,7 +581,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_CONTEXT_NAME method returns the CD_CONTEXT_NAME for this bean.
-     * 
+     *
      * @return String The CD_CONTEXT_NAME
      */
     public String getCD_CONTEXT_NAME()
@@ -591,7 +591,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * (non-Javadoc)
-     * 
+     *
      * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextName()
      */
     @Override
@@ -602,7 +602,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_CD_ID method returns the CD_CD_ID for this bean.
-     * 
+     *
      * @return String The CD_CD_ID
      */
     public String getCD_CD_ID()
@@ -612,7 +612,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_SOURCE method returns the CD_SOURCE for this bean.
-     * 
+     *
      * @return String The CD_SOURCE
      */
     public String getCD_SOURCE()
@@ -622,7 +622,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_DIMENSIONALITY method returns the CD_DIMENSIONALITY for this bean.
-     * 
+     *
      * @return String The CD_DIMENSIONALITY
      */
     public String getCD_DIMENSIONALITY()
@@ -632,7 +632,7 @@ public class CD_Bean extends AC_Bean
 
     /**
      * The getCD_CHECKED method returns the CD_CHECKED for this bean.
-     * 
+     *
      * @return boolean The CD_CHECKED
      */
     public boolean getCD_CHECKED()
