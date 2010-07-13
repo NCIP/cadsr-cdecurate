@@ -564,8 +564,11 @@ public class GetACSearch implements Serializable
                         getDECResult(req, res, vResult, "");
                     else if (sSearchAC.equals("ValueDomain"))
                         getVDResult(req, res, vResult, "");
-                    else if (sSearchAC.equals("PermissibleValue"))
+                    else if (sSearchAC.equals("PermissibleValue")) {
                         getPVVMResult(req, res, vResult, "");
+                        DataManager.setAttribute(session, "totalRecords", Integer.toString(vAC.size()));
+                        
+                    }
                     else if (sSearchAC.equals("ObjectClass"))
                         evs.get_Result(req, res, vResult, "");
                     else if (sSearchAC.equals("Property"))
@@ -580,7 +583,7 @@ public class GetACSearch implements Serializable
                         evs.get_Result(req, res, vResult, "");
                     // store result vector in the attribute
                     DataManager.setAttribute(session, "results", vResult);
-                    DataManager.setAttribute(session, "totalRecords", Integer.toString(vAC.size()));
+                    
                     DataManager.setAttribute(session, "offset", Integer.valueOf(iOffset));
                 }
             }
