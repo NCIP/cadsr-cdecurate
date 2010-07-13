@@ -23,6 +23,7 @@
 	String totalRecords = "";
 	Vector vMultiContext = (Vector) session.getAttribute("multiContextAC");
 	totalRecords = (String) session.getAttribute("totalRecords");
+	
 	if (totalRecords == null)
 		totalRecords = "";
 	
