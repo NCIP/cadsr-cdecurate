@@ -684,7 +684,7 @@ public class PVServlet implements Serializable
    */
    public Vector<PV_Bean> searchPVAttributes(String InString, String cd_idseq, String conName, String conID, String sRecordsDisplayed)
    {
-     Vector<PV_Bean> vdpv = pvAction.doPVVMSearch(InString, cd_idseq, conName, conID, data, sRecordsDisplayed);
+     Vector<PV_Bean> vdpv = pvAction.doPVVMSearch(InString, cd_idseq, conName, conID, data, sRecordsDisplayed);     
      return vdpv;
    }
 

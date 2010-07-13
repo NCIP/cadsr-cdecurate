@@ -26,6 +26,8 @@
 			Vector vACAttr = new Vector();
 			String sMenuAction = (String) session
 					.getAttribute(Session_Data.SESSION_MENU_ACTION);
+					
+			String sessionRecordsDisplayed = (String) session.getAttribute("sessionRecordsDisplayed");
 			//System.out.println("inside search param " + sMenuAction);
 			String sInitiatedFrom = (String) session
 					.getAttribute("initiatedFrom");
@@ -163,10 +165,10 @@
 				hasRecords = true;
 			String updFunction = "displayAttributes('" + hasRecords + "');";
 
-			if (vContext == null)
+			if (vContext == null) 
 				vContext = new Vector();
 			if (sContext == null)
-				sContext = "AllContext";
+				sContext = "All (No Test/Train)";
 			if (sContextUse == null || sContextUse == "")
 				sContextUse = "BOTH";
 			// if (sSearchIn.equals("CRFName")) sContextUse = "OWNED_BY";
@@ -977,8 +979,13 @@ function LoadKeyHandler()
 						<select name="listMultiContextFilter" size="3" style="width: 172px"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
+							<option value="All (No Test/Train)"
+								<%if (vContext.size() == 0 || vContext.contains("All (No Test/Train)")){%>
+								selected <%}%>>
+								All(Not Test/Train)
+							</option>
 							<option value="AllContext"
-								<%if (vContext.size() == 0 || vContext.contains("AllContext")){%>
+								<%if (vContext != null && vContext.contains("AllContext")){%>
 								selected <%}%>>
 								All Contexts
 							</option>
@@ -1735,19 +1742,17 @@ function LoadKeyHandler()
 						<div align="left">
 							Results Displayed:
 							<select name="recordsDisplayed" size="1" style="width: 160">
-								<option value="100">
-									100
-								</option>
-								<option value="250" >
-									250
-								</option>
-								<option value="500" >
+							
+								<option value="500" <% if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && sessionRecordsDisplayed.equals("500")){ %>
+								selected<%} %>>
 									500
 								</option>
-								<option value="750"> 
-									750
+								<option value="1000" <% if (sessionRecordsDisplayed == null || sessionRecordsDisplayed.equals("") || sessionRecordsDisplayed.equals("1000")){ %>
+								selected<%} %>> 
+									1000
 								</option>
-								<option value="0"> 
+								<option value="0" <% if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && sessionRecordsDisplayed.equals("0")){ %>
+								selected<%} %>> 
 									All
 								</option>
 							</select>

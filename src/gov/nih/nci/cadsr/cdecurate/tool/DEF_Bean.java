@@ -9,18 +9,18 @@ import gov.nih.nci.cadsr.cdecurate.database.ACTypes;
 /**
  * The DEF_Bean encapsulates the DEFINITION information and is stored in the session.
  * <P>
- * 
+ *
  * @author Joe Zhou
  * @version 3.0
  */
 /*
- * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. (“ScenPro”) Copyright Notice. The software
+ * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. ("ScenPro") Copyright Notice. The software
  * subject to this notice and license includes both human readable source code form and machine readable, binary, object
- * code form (“the CaCORE Software”). The CaCORE Software was developed in conjunction with the National Cancer
- * Institute (“NCI”) by NCI employees and employees of SCENPRO. To the extent government employees are authors, any
+ * code form ("the CaCORE Software"). The CaCORE Software was developed in conjunction with the National Cancer
+ * Institute ("NCI") by NCI employees and employees of SCENPRO. To the extent government employees are authors, any
  * rights in such works shall be subject to Title 17 of the United States Code, section 105. This CaCORE Software
- * License (the “License”) is between NCI and You. “You (or “Your”) shall mean a person or an entity, and all other
- * entities that control, are controlled by, or are under common control with the entity. “Control” for purposes of this
+ * License (the "License") is between NCI and You. "You (or "Your") shall mean a person or an entity, and all other
+ * entities that control, are controlled by, or are under common control with the entity. "Control" for purposes of this
  * definition means (i) the direct or indirect power to cause the direction or management of such entity, whether by
  * contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii)
  * beneficial ownership of such entity. This License is granted provided that You agree to the conditions described
@@ -36,10 +36,10 @@ import gov.nih.nci.cadsr.cdecurate.database.ACTypes;
  * liability of Article 6, below. Your redistributions in object code form must reproduce the above copyright notice,
  * this list of conditions and the disclaimer of Article 6 in the documentation and/or other materials provided with the
  * distribution, if any. 2. Your end-user documentation included with the redistribution, if any, must include the
- * following acknowledgment: “This product includes software developed by SCENPRO and the National Cancer Institute.” If
+ * following acknowledgment: "This product includes software developed by SCENPRO and the National Cancer Institute." If
  * You do not include such end-user documentation, You shall include this acknowledgment in the Software itself,
  * wherever such third-party acknowledgments normally appear. 3. You may not use the names "The National Cancer
- * Institute", "NCI" “ScenPro, Inc.” and "SCENPRO" to endorse or promote products derived from this Software. This
+ * Institute", "NCI" "ScenPro, Inc." and "SCENPRO" to endorse or promote products derived from this Software. This
  * License does not authorize You to use any trademarks, service marks, trade names, logos or product names of either
  * NCI or SCENPRO, except as required to comply with the terms of this License. 4. For sake of clarity, and not by way
  * of limitation, You may incorporate this Software into Your proprietary programs and into any third party proprietary
@@ -108,13 +108,13 @@ public class DEF_Bean extends AC_Bean
     public DEF_Bean()
     {
         super();
-        
+
         _type = ACTypes.UNKNOWN;
     }
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -125,7 +125,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setDEF_DEF_IDSEQ method sets the DEF_DEF_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The DEF_DEF_IDSEQ to set
      */
@@ -136,7 +136,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setDEF_PREFERRED_NAME method sets the DEF_PREFERRED_NAME for this bean.
-     * 
+     *
      * @param s
      *            The DEF_PREFERRED_NAME to set
      */
@@ -147,7 +147,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setDEF_LONG_NAME method sets the DEF_LONG_NAME for this bean.
-     * 
+     *
      * @param s
      *            The DEF_LONG_NAME to set
      */
@@ -158,7 +158,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setDEF_CONTE_IDSEQ method sets the DEF_CONTE_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The DEF_CONTE_IDSEQ to set
      */
@@ -169,7 +169,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setDEF_VERSION method sets the DEF_VERSION for this bean.
-     * 
+     *
      * @param s
      *            The DEF_VERSION to set
      */
@@ -180,7 +180,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setDEF_PREFERRED_DEFINITION method sets the DEF_PREFERRED_DEFINITION for this bean.
-     * 
+     *
      * @param s
      *            The DEF_PREFERRED_DEFINITION to set
      */
@@ -191,7 +191,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setDEF_ASL_NAME method sets the DEF_ASL_NAME for this bean.
-     * 
+     *
      * @param s
      *            The DEF_ASL_NAME to set
      */
@@ -202,7 +202,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setDEF_CONTEXT_NAME method sets the DEF_CONTEXT_NAME for this bean.
-     * 
+     *
      * @param s
      *            The DEF_CONTEXT_NAME to set
      */
@@ -213,7 +213,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setNCI_CC_TYPE method sets the NCI_CC_TYPE for this bean.
-     * 
+     *
      * @param s
      *            The NCI_CC_TYPE to set
      */
@@ -224,7 +224,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setCONCEPT_IDENTIFIER method sets the CONCEPT_IDENTIFIER for this bean.
-     * 
+     *
      * @param s
      *            The CONCEPT_IDENTIFIER to set
      */
@@ -235,7 +235,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setUMLS_CUI_TYPE method sets the UMLS_CUI_TYPE for this bean.
-     * 
+     *
      * @param s
      *            The UMLS_CUI_TYPE to set
      */
@@ -246,7 +246,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setUMLS_CUI_VAL method sets the UMLS_CUI_VAL for this bean.
-     * 
+     *
      * @param s
      *            The UMLS_CUI_VAL to set
      */
@@ -257,7 +257,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setTEMP_CUI_TYPE method sets the TEMP_CUI_TYPE for this bean.
-     * 
+     *
      * @param s
      *            The TEMP_CUI_TYPE to set
      */
@@ -268,7 +268,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setTEMP_CUI_VAL method sets the TEMP_CUI_VAL for this bean.
-     * 
+     *
      * @param s
      *            The TEMP_CUI_VAL to set
      */
@@ -279,7 +279,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setDEF_EVS_SOURCE method sets the DEF_EVS_SOURCE for this bean.
-     * 
+     *
      * @param s
      *            The DEF_EVS_SOURCE to set
      */
@@ -290,7 +290,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setDEF_EVS_DATABASE method sets the EVS_DATABASE for this bean.
-     * 
+     *
      * @param s
      *            The EVS_DATABASE to set
      */
@@ -301,7 +301,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The setDEF_DEF_ID method sets the DEF_DEF_ID for this bean.
-     * 
+     *
      * @param s
      *            The DEF_DEF_ID to set
      */
@@ -313,7 +313,7 @@ public class DEF_Bean extends AC_Bean
     // Get Properties
     /**
      * The getRETURN_CODE method returns the RETURN_CODE for this bean.
-     * 
+     *
      * @return String The RETURN_CODE
      */
     public String getRETURN_CODE()
@@ -323,7 +323,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_DEF_IDSEQ method returns the DEF_DEF_IDSEQ for this bean.
-     * 
+     *
      * @return String The DEF_DEF_IDSEQ
      */
     public String getDEF_DEF_IDSEQ()
@@ -333,7 +333,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * (non-Javadoc)
-     * 
+     *
      * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getIDSEQ()
      */
     public String getIDSEQ()
@@ -343,7 +343,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_PREFERRED_NAME method returns the DEF_PREFERRED_NAME for this bean.
-     * 
+     *
      * @return String The DEF_PREFERRED_NAME
      */
     public String getDEF_PREFERRED_NAME()
@@ -353,7 +353,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_LONG_NAME method returns the DEF_LONG_NAME for this bean.
-     * 
+     *
      * @return String The DEF_LONG_NAME
      */
     public String getDEF_LONG_NAME()
@@ -363,7 +363,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_CONTE_IDSEQ method returns the DEF_CONTE_IDSEQ for this bean.
-     * 
+     *
      * @return String The DEF_CONTE_IDSEQ
      */
     public String getDEF_CONTE_IDSEQ()
@@ -373,7 +373,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * (non-Javadoc)
-     * 
+     *
      * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextIDSEQ()
      */
     @Override
@@ -384,7 +384,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_VERSION method returns the DEF_VERSION for this bean.
-     * 
+     *
      * @return String The DEF_VERSION
      */
     public String getDEF_VERSION()
@@ -394,7 +394,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_PREFERRED_DEFINITION method returns the DEF_PREFERRED_DEFINITION for this bean.
-     * 
+     *
      * @return String The DEF_PREFERRED_DEFINITION
      */
     public String getDEF_PREFERRED_DEFINITION()
@@ -404,7 +404,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_ASL_NAME method returns the DEF_ASL_NAME for this bean.
-     * 
+     *
      * @return String The DEF_ASL_NAME
      */
     public String getDEF_ASL_NAME()
@@ -414,7 +414,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_CONTEXT_NAME method returns the DEF_CONTEXT_NAME for this bean.
-     * 
+     *
      * @return String The DEF_CONTEXT_NAME
      */
     public String getDEF_CONTEXT_NAME()
@@ -424,7 +424,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * (non-Javadoc)
-     * 
+     *
      * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextName()
      */
     @Override
@@ -435,7 +435,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_NCI_CC_TYPE method returns the DEF_NCI_CC_TYPE for this bean.
-     * 
+     *
      * @return String The DEF_NCI_CC_TYPE
      */
     public String getDEF_NCI_CC_TYPE()
@@ -445,7 +445,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_CONCEPT_IDENTIFIER method returns the DEF_CONCEPT_IDENTIFIER for this bean.
-     * 
+     *
      * @return String The DEF_CONCEPT_IDENTIFIER
      */
     public String getDEF_CONCEPT_IDENTIFIER()
@@ -455,7 +455,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_UMLS_CUI_TYPE method returns the DEF_UMLS_CUI_TYPE for this bean.
-     * 
+     *
      * @return String The DEF_UMLS_CUI_TYPE
      */
     public String getDEF_UMLS_CUI_TYPE()
@@ -465,7 +465,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_UMLS_CUI_VAL method returns the DEF_UMLS_CUI_VAL for this bean.
-     * 
+     *
      * @return String The DEF_UMLS_CUI_VAL
      */
     public String getDEF_UMLS_CUI_VAL()
@@ -475,7 +475,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_TEMP_CUI_TYPE method returns the DEF_TEMP_CUI_TYPE for this bean.
-     * 
+     *
      * @return String The DEF_TEMP_CUI_TYPE
      */
     public String getDEF_TEMP_CUI_TYPE()
@@ -485,7 +485,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_TEMP_CUI_VAL method returns the DEF_TEMP_CUI_VAL for this bean.
-     * 
+     *
      * @return String The DEF_TEMP_CUI_VAL
      */
     public String getDEF_TEMP_CUI_VAL()
@@ -495,7 +495,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_EVS_SOURCE method returns the DEF_EVS_SOURCE for this bean.
-     * 
+     *
      * @return String The DEF_EVS_SOURCE
      */
     public String getDEF_EVS_SOURCE()
@@ -505,7 +505,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_EVS_DATABASE method returns the EVS_EVS_DATABASE for this bean.
-     * 
+     *
      * @return String The EVS_EVS_DATABASE
      */
     public String getDEF_EVS_DATABASE()
@@ -515,7 +515,7 @@ public class DEF_Bean extends AC_Bean
 
     /**
      * The getDEF_DEF_ID method returns the DEF_DEF_ID for this bean.
-     * 
+     *
      * @return String The DEF_DEF_ID
      */
     public String getDEF_DEF_ID()

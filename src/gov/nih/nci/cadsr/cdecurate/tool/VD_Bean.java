@@ -12,18 +12,18 @@ import java.util.*;
  * The VD_Bean encapsulates the VD information and is stored in the session after the user has created a new Value
  * Domain.
  * <P>
- * 
+ *
  * @author Tom Phillips
  * @version 3.0
  */
 /*
- * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. (“ScenPro”) Copyright Notice. The software
+ * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. ("ScenPro") Copyright Notice. The software
  * subject to this notice and license includes both human readable source code form and machine readable, binary, object
- * code form (“the CaCORE Software”). The CaCORE Software was developed in conjunction with the National Cancer
- * Institute (“NCI”) by NCI employees and employees of SCENPRO. To the extent government employees are authors, any
+ * code form ("the CaCORE Software"). The CaCORE Software was developed in conjunction with the National Cancer
+ * Institute ("NCI") by NCI employees and employees of SCENPRO. To the extent government employees are authors, any
  * rights in such works shall be subject to Title 17 of the United States Code, section 105. This CaCORE Software
- * License (the “License”) is between NCI and You. “You (or “Your”) shall mean a person or an entity, and all other
- * entities that control, are controlled by, or are under common control with the entity. “Control” for purposes of this
+ * License (the "License") is between NCI and You. "You (or "Your") shall mean a person or an entity, and all other
+ * entities that control, are controlled by, or are under common control with the entity. "Control" for purposes of this
  * definition means (i) the direct or indirect power to cause the direction or management of such entity, whether by
  * contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii)
  * beneficial ownership of such entity. This License is granted provided that You agree to the conditions described
@@ -39,10 +39,10 @@ import java.util.*;
  * liability of Article 6, below. Your redistributions in object code form must reproduce the above copyright notice,
  * this list of conditions and the disclaimer of Article 6 in the documentation and/or other materials provided with the
  * distribution, if any. 2. Your end-user documentation included with the redistribution, if any, must include the
- * following acknowledgment: “This product includes software developed by SCENPRO and the National Cancer Institute.” If
+ * following acknowledgment: "This product includes software developed by SCENPRO and the National Cancer Institute." If
  * You do not include such end-user documentation, You shall include this acknowledgment in the Software itself,
  * wherever such third-party acknowledgments normally appear. 3. You may not use the names "The National Cancer
- * Institute", "NCI" “ScenPro, Inc.” and "SCENPRO" to endorse or promote products derived from this Software. This
+ * Institute", "NCI" "ScenPro, Inc." and "SCENPRO" to endorse or promote products derived from this Software. This
  * License does not authorize You to use any trademarks, service marks, trade names, logos or product names of either
  * NCI or SCENPRO, except as required to comply with the terms of this License. 4. For sake of clarity, and not by way
  * of limitation, You may incorporate this Software into Your proprietary programs and into any third party proprietary
@@ -297,13 +297,13 @@ public class VD_Bean extends AC_Bean
     public VD_Bean()
     {
         super();
-        
+
         _type = ACTypes.ValueDomain;
     }
 
     /**
      * makes a copy of the bean
-     * 
+     *
      * @param copyBean
      *            passin the bean whose attributes need to be copied and returned.
      * @return VD_Bean returns this bean after copying its attributes
@@ -423,7 +423,7 @@ public class VD_Bean extends AC_Bean
     // Set Properties
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -434,7 +434,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_VD_IDSEQ method sets the VD_VD_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The VD_VD_IDSEQ to set
      */
@@ -445,7 +445,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PREFERRED_NAME method sets the VD_PREFERRED_NAME for this bean.
-     * 
+     *
      * @param s
      *            The VD_PREFERRED_NAME to set
      */
@@ -456,7 +456,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_CONTE_IDSEQ method sets the VD_CONTE_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The VD_CONTE_IDSEQ to set
      */
@@ -467,7 +467,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_VERSION method sets the VD_VERSION for this bean.
-     * 
+     *
      * @param s
      *            The VD_VERSION to set
      */
@@ -478,7 +478,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PREFERRED_DEFINITION method sets the VD_PREFERRED_DEFINITION for this bean.
-     * 
+     *
      * @param s
      *            The VD_PREFERRED_DEFINITION to set
      */
@@ -489,7 +489,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_CD_IDSEQ method sets the VD_CD_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The VD_CD_IDSEQ to set
      */
@@ -500,7 +500,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_ASL_NAME method sets the VD_ASL_NAME for this bean.
-     * 
+     *
      * @param s
      *            The VD_ASL_NAME to set
      */
@@ -511,7 +511,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_LATEST_VERSION_IND method sets the VD_LATEST_VERSION_IND for this bean.
-     * 
+     *
      * @param s
      *            The VD_LATEST_VERSION_IND to set
      */
@@ -522,7 +522,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_DTL_NAME method sets the VD_DTL_NAME for this bean.
-     * 
+     *
      * @param s
      *            The VD_DTL_NAME to set
      */
@@ -533,7 +533,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_MAX_LENGTH_NUM method sets the VD_MAX_LENGTH_NUM for this bean.
-     * 
+     *
      * @param s
      *            The VD_MAX_LENGTH_NUM to set
      */
@@ -544,7 +544,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_LONG_NAME method sets the VD_LONG_NAME for this bean.
-     * 
+     *
      * @param s
      *            The VD_LONG_NAME to set
      */
@@ -555,7 +555,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_FORML_NAME method sets the VD_FORML_NAME for this bean.
-     * 
+     *
      * @param s
      *            The VD_FORML_NAME to set
      */
@@ -566,7 +566,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_FORML_DESCRIPTION method sets the VD_FORML_DESCRIPTION for this bean.
-     * 
+     *
      * @param s
      *            The VD_FORML_DESCRIPTION to set
      */
@@ -577,7 +577,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_FORML_COMMENT method sets the VD_FORML_COMMENT for this bean.
-     * 
+     *
      * @param s
      *            The VD_FORML_COMMENT to set
      */
@@ -588,7 +588,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_UOML_NAME method sets the VD_UOML_NAME for this bean.
-     * 
+     *
      * @param s
      *            The VD_UOML_NAME to set
      */
@@ -599,7 +599,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_UOML_DESCRIPTION method sets the VD_UOML_DESCRIPTION for this bean.
-     * 
+     *
      * @param s
      *            The VD_UOML_DESCRIPTION to set
      */
@@ -610,7 +610,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_UOML_COMMENT method sets the VD_UOML_COMMENT for this bean.
-     * 
+     *
      * @param s
      *            The VD_UOML_COMMENT to set
      */
@@ -621,7 +621,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_LOW_VALUE_NUM method sets the VD_LOW_VALUE_NUM for this bean.
-     * 
+     *
      * @param s
      *            The VD_LOW_VALUE_NUM to set
      */
@@ -632,7 +632,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_HIGH_VALUE_NUM method sets the VD_HIGH_VALUE_NUM for this bean.
-     * 
+     *
      * @param s
      *            The VD_HIGH_VALUE_NUM to set
      */
@@ -643,7 +643,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_MIN_LENGTH_NUM method sets the VD_MIN_LENGTH_NUM for this bean.
-     * 
+     *
      * @param s
      *            The VD_MIN_LENGTH_NUM to set
      */
@@ -654,7 +654,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_DECIMAL_PLACE method sets the VD_DECIMAL_PLACE for this bean.
-     * 
+     *
      * @param s
      *            The VD_DECIMAL_PLACE to set
      */
@@ -665,7 +665,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_CHAR_SET_NAME method sets the VD_CHAR_SET_NAME for this bean.
-     * 
+     *
      * @param s
      *            The VD_CHAR_SET_NAME to set
      */
@@ -676,7 +676,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_BEGIN_DATE method sets the VD_BEGIN_DATE for this bean.
-     * 
+     *
      * @param s
      *            The VD_BEGIN_DATE to set
      */
@@ -687,7 +687,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_END_DATE method sets the VD_END_DATE for this bean.
-     * 
+     *
      * @param s
      *            The VD_END_DATE to set
      */
@@ -698,7 +698,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_CHANGE_NOTE method sets the VD_CHANGE_NOTE for this bean.
-     * 
+     *
      * @param s
      *            The VD_CHANGE_NOTE to set
      */
@@ -709,7 +709,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_TYPE_FLAG method sets the VD_TYPE_FLAG for this bean.
-     * 
+     *
      * @param s
      *            The VD_TYPE_FLAG to set
      */
@@ -720,7 +720,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_CREATED_BY method sets the VD_CREATED_BY for this bean.
-     * 
+     *
      * @param s
      *            The VD_CREATED_BY to set
      */
@@ -731,7 +731,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_DATE_CREATED method sets the VD_DATE_CREATED for this bean.
-     * 
+     *
      * @param s
      *            The VD_DATE_CREATED to set
      */
@@ -742,7 +742,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_MODIFIED_BY method sets the VD_MODIFIED_BY for this bean.
-     * 
+     *
      * @param s
      *            The VD_MODIFIED_BY to set
      */
@@ -753,7 +753,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_DATE_MODIFIED method sets the VD_DATE_MODIFIED for this bean.
-     * 
+     *
      * @param s
      *            The VD_DATE_MODIFIED to set
      */
@@ -764,7 +764,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_DELETED_IND method sets the VD_DELETED_IND for this bean.
-     * 
+     *
      * @param s
      *            The VD_DELETED_IND to set
      */
@@ -776,7 +776,7 @@ public class VD_Bean extends AC_Bean
     // Not required by SET_VD
     /**
      * The setVD_CONTEXT_NAME method sets the VD_CONTEXT_NAME for this bean.
-     * 
+     *
      * @param s
      *            The VD_CONTEXT_NAME to set
      */
@@ -787,7 +787,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_CD_NAME method sets the VD_CD_NAME for this bean.
-     * 
+     *
      * @param s
      *            The VD_CD_NAME to set
      */
@@ -798,7 +798,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_LANGUAGE method sets the VD_LANGUAGE for this bean.
-     * 
+     *
      * @param s
      *            The VD_LANGUAGE to set
      */
@@ -809,7 +809,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_LANGUAGE_IDSEQ method sets the VD_LANGUAGE_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The VD_LANGUAGE_IDSEQ to set
      */
@@ -820,7 +820,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_DATA_TYPE method sets the VD_DATA_TYPE for this bean.
-     * 
+     *
      * @param s
      *            The VD_DATA_TYPE to set
      */
@@ -831,7 +831,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PV_ID method sets the VD_PV_ID for this bean.
-     * 
+     *
      * @param v
      *            VEctor to set
      */
@@ -842,7 +842,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PV_NAME method sets the VD_PV_NAME for this bean.
-     * 
+     *
      * @param v
      *            VEctor to set
      */
@@ -853,7 +853,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PV_MEANING method sets the VD_PV_MEANING for this bean.
-     * 
+     *
      * @param v
      *            VEctor to set
      */
@@ -864,7 +864,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PV_MEANING_DESCRIPTION method sets the VD_PV_MEANING_DESCRIPTION for this bean.
-     * 
+     *
      * @param v
      *            The VD_PV_MEANING_DESCRIPTION to set
      */
@@ -875,7 +875,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PV_ORIGIN method sets the VD_PV_ORIGIN for this bean.
-     * 
+     *
      * @param v
      *            The VD_PV_ORIGIN to set
      */
@@ -886,7 +886,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_OBJ_QUAL method sets the VD_OBJ_QUAL for this bean.
-     * 
+     *
      * @param s
      *            The VD_OBJ_QUAL to set
      */
@@ -897,7 +897,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_OBJ_CLASS method sets the VD_OBJ_CLASS for this bean.
-     * 
+     *
      * @param s
      *            The VD_OBJ_CLASS to set
      */
@@ -908,7 +908,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_OBJ_IDSEQ method sets the VD_OBJ_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The VD_OBJ_IDSEQ to set
      */
@@ -919,7 +919,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PROP_QUAL method sets the VD_PROP_QUAL for this bean.
-     * 
+     *
      * @param s
      *            The VD_PROP_QUAL to set
      */
@@ -930,7 +930,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PROP_CLASS method sets the VD_PROP_CLASS for this bean.
-     * 
+     *
      * @param s
      *            The VD_PROP_CLASS to set
      */
@@ -941,7 +941,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PROP_IDSEQ method sets the VD_PROP_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The VD_PROP_IDSEQ to set
      */
@@ -952,7 +952,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_REP_ASL_NAME method sets the VD_REP_ASL_NAME for this bean.
-     * 
+     *
      * @param s
      *            The VD_REP_ASL_NAME to set
      */
@@ -963,7 +963,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_REP_TERM method sets the VD_REP_TERM for this bean.
-     * 
+     *
      * @param s
      *            The VD_REP_TERM to set
      */
@@ -974,7 +974,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_REP_IDSEQ method sets the VD_REP_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The VD_REP_IDSEQ to set
      */
@@ -985,7 +985,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PROTOCOL_ID method sets the VD_PROTOCOL_ID for this bean.
-     * 
+     *
      * @param s
      *            The VD_PROTOCOL_ID to set
      */
@@ -996,7 +996,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_CRF_NAME method sets the VD_CRF_NAME for this bean.
-     * 
+     *
      * @param s
      *            The VD_CRF_NAME to set
      */
@@ -1007,7 +1007,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_TYPE_NAME method sets the VD_TYPE_NAME for this bean.
-     * 
+     *
      * @param s
      *            The VD_TYPE_NAME to set
      */
@@ -1018,7 +1018,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_DES_ALIAS_ID method sets the VD_DES_ALIAS_ID for this bean.
-     * 
+     *
      * @param s
      *            The VD_DES_ALIAS_ID to set
      */
@@ -1029,7 +1029,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_ALIAS_NAME method sets the VD_ALIAS_NAME for this bean.
-     * 
+     *
      * @param s
      *            The VD_ALIAS_NAME to set
      */
@@ -1040,7 +1040,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_USEDBY_CONTEXT method sets the VD_USEDBY_CONTEXT for this bean.
-     * 
+     *
      * @param s
      *            The VD_USEDBY_CONTEXT to set
      */
@@ -1051,7 +1051,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_Obj_Definition method sets the VD_Obj_Definition for this bean.
-     * 
+     *
      * @param s
      *            The VD_Obj_Definition to set
      */
@@ -1062,7 +1062,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_Prop_Definition method sets the VD_Prop_Definition for this bean.
-     * 
+     *
      * @param s
      *            The VD_Prop_Definition to set
      */
@@ -1073,7 +1073,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_Rep_Definition method sets the VD_Rep_Definition for this bean.
-     * 
+     *
      * @param s
      *            The VD_Rep_Definition to set
      */
@@ -1084,7 +1084,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_VD_ID method sets the VD_VD_ID for this bean.
-     * 
+     *
      * @param s
      *            The VD_VD_ID to set
      */
@@ -1095,7 +1095,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_Permissible_Value method sets the VD_Permissible_Value for this bean.
-     * 
+     *
      * @param s
      *            The VD_Permissible_Value to set
      */
@@ -1106,7 +1106,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_Permissible_Value method_Count sets the VD_Permissible_Value_Count for this bean.
-     * 
+     *
      * @param i
      *            The VD_Permissible_Value_Count to set
      */
@@ -1117,7 +1117,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_SOURCE method sets the VD_SOURCE for this bean.
-     * 
+     *
      * @param s
      *            The VD_SOURCE to set
      */
@@ -1128,7 +1128,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_CHECKED method sets the VD_CHECKED for this bean.
-     * 
+     *
      * @param b
      *            The VD_CHECKED to set
      */
@@ -1139,7 +1139,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setAC_SELECTED_CONTEXT_ID method sets the VD_SELECTED_CONTEXT_ID for this bean.
-     * 
+     *
      * @param s
      *            The VD_SELECTED_CONTEXT_ID to set
      */
@@ -1150,7 +1150,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setAC_CS method sets the VD_CS for this bean.
-     * 
+     *
      * @param v
      *            The VD_CS to set
      */
@@ -1161,7 +1161,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setAC_CS_ID method sets the VD_CS_ID for this bean.
-     * 
+     *
      * @param v
      *            The VD_CS_ID to set
      */
@@ -1172,7 +1172,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setAC_CSI method sets the VD_CSI for this bean.
-     * 
+     *
      * @param v
      *            The VD_CSI to set
      */
@@ -1183,7 +1183,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setAC_CSI_ID method sets the VD_CSI_ID for this bean.
-     * 
+     *
      * @param v
      *            The VD_CSI_ID to set
      */
@@ -1194,7 +1194,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setAC_AC_CSI_VECTOR method sets the VD_AC_CSI_VECTOR for this bean.
-     * 
+     *
      * @param v
      *            The VD_AC_CSI_VECTOR to set
      */
@@ -1205,7 +1205,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setAC_AC_CSI_ID method sets the VD_AC_CSI_ID for this bean.
-     * 
+     *
      * @param v
      *            The VD_AC_CSI_ID to set
      */
@@ -1216,7 +1216,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setAC_CS_CSI_ID method sets the VD_CS_CSI_ID for this bean.
-     * 
+     *
      * @param v
      *            The VD_CS_CSI_ID to set
      */
@@ -1227,7 +1227,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setAC_ALT_NAMES method sets the AC_ALT_NAMES for this bean.
-     * 
+     *
      * @param v
      *            The AC_ALT_NAMES to set
      */
@@ -1238,7 +1238,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setAC_REF_DOCS method sets the AC_REF_DOCS for this bean.
-     * 
+     *
      * @param v
      *            The AC_REF_DOCS to set
      */
@@ -1249,7 +1249,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setAC_CONCEPT_NAME method sets the AC_CONCEPT_NAME for this bean.
-     * 
+     *
      * @param s
      *            The AC_CONCEPT_NAME to set
      */
@@ -1269,7 +1269,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setREFERENCE_DOCUMENT_ method sets the REFERENCE_DOCUMENT for this bean.
-     * 
+     *
      * @param s
      *            The REFERENCE_DOCUMENT to set
      */
@@ -1289,7 +1289,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_REP_CONCEPT_CODE method sets the VD_REP_CONCEPT_CODE for this bean.
-     * 
+     *
      * @param s
      *            The VD_REP_CONCEPT_CODE to set
      */
@@ -1300,7 +1300,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_REP_EVS_CUI_ORIGEN method sets the VD_REP_EVS_CUI_ORIGEN for this bean.
-     * 
+     *
      * @param s
      *            The VD_EVS_CUI_ORIGEN to set
      */
@@ -1311,7 +1311,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_REP_EVS_CUI_SOURCE method sets the VD_REP_EVS_CUI_SOURCE for this bean.
-     * 
+     *
      * @param s
      *            The VD_REP_EVS_CUI_SOURCE to set
      */
@@ -1322,7 +1322,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_REP_DEFINITION_SOURCE method sets the VD_REP_DEFINITION_SOURCE for this bean.
-     * 
+     *
      * @param s
      *            The VD_REP_DEFINITION_SOURCE to set
      */
@@ -1333,7 +1333,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_REP_ASL_NAME_CONCEPT_CODE method sets the VD_REP_QUAL_CONCEPT_CODE for this bean.
-     * 
+     *
      * @param s
      *            The VD_REP_QUAL_CONCEPT_CODE to set
      */
@@ -1344,7 +1344,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_REP_QUAL_EVS_CUI_ORIGEN method sets the VD_REP_QUAL_EVS_CUI_ORIGEN for this bean.
-     * 
+     *
      * @param s
      *            The VD_REP_QUAL_EVS_CUI_ORIGEN to set
      */
@@ -1355,7 +1355,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_REP_QUAL_EVS_CUI_SOURCE method sets the VD_REP_QUAL_EVS_CUI_SOURCE for this bean.
-     * 
+     *
      * @param s
      *            The VD_REP_QUAL_EVS_CUI_SOURCE to set
      */
@@ -1366,7 +1366,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_REP_QUAL_DEFINITION_SOURCE method sets the VD_REP_QUAL_DEFINITION_SOURCE for this bean.
-     * 
+     *
      * @param s
      *            The VD_REP_QUAL_DEFINITION_SOURCE to set
      */
@@ -1377,7 +1377,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PARENT_CODES method sets the VD_PARENT_CODES for this bean.
-     * 
+     *
      * @param v
      *            The VD_PARENT_CODES to set
      */
@@ -1388,7 +1388,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PARENT_NAMES method sets the VD_PARENT_NAMES for this bean.
-     * 
+     *
      * @param v
      *            The VD_PARENT_NAMES to set
      */
@@ -1399,7 +1399,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PARENT_META_SOURCE method sets the VD_PARENT_META_SOURCE for this bean.
-     * 
+     *
      * @param v
      *            The VD_PARENT_META_SOURCE to set
      */
@@ -1410,7 +1410,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PARENT_DB method sets the VD_PARENT_DB for this bean.
-     * 
+     *
      * @param v
      *            The VD_PARENT_DB to set
      */
@@ -1421,7 +1421,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PARENT_LIST method sets the VD_PARENT_LIST for this bean.
-     * 
+     *
      * @param v
      *            The VD_PARENT_LIST to set
      */
@@ -1432,7 +1432,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_REP_CONDR_IDSEQ method sets the VD_REP_CONDR_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The VD_REP_CONDR_IDSEQ to set
      */
@@ -1443,7 +1443,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_PAR_CONDR_IDSEQ method sets the VD_PAR_CONDR_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The VD_PAR_CONDR_IDSEQ to set
      */
@@ -1454,7 +1454,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_REP_NAME_PRIMARY method sets the VD_REP_NAME_PRIMARY for this bean.
-     * 
+     *
      * @param s
      *            The VD_REP_NAME_PRIMARY to set
      */
@@ -1465,7 +1465,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_REP_QUALIFIER_NAMES method sets the VD_REP_QUALIFIER_NAMES for this bean.
-     * 
+     *
      * @param v
      *            The VD_REP_QUALIFIER_NAMES to set
      */
@@ -1476,7 +1476,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_REP_QUALIFIER_CODES method sets the VD_REP_QUALIFIER_CODES for this bean.
-     * 
+     *
      * @param v
      *            The VD_REP_QUALIFIER_CODES to set
      */
@@ -1487,7 +1487,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVD_REP_QUALIFIER_DB method sets the VD_REP_QUALIFIER_DB for this bean.
-     * 
+     *
      * @param v
      *            The VD_REP_QUALIFIER_DB to set
      */
@@ -1498,7 +1498,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setAC_SYS_PREF_NAME method sets the AC_SYS_PREF_NAME for this bean.
-     * 
+     *
      * @param s
      *            The AC_SYS_PREF_NAME to set
      */
@@ -1509,7 +1509,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setAC_ABBR_PREF_NAME method sets the AC_ABBR_PREF_NAME for this bean.
-     * 
+     *
      * @param s
      *            The AC_ABBR_PREF_NAME to set
      */
@@ -1520,7 +1520,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setAC_USER_PREF_NAME method sets the AC_USER_PREF_NAME for this bean.
-     * 
+     *
      * @param s
      *            The AC_USER_PREF_NAME to set
      */
@@ -1531,7 +1531,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setAC_PREF_NAME_TYPE method sets the AC_PREF_NAME_TYPE for this bean.
-     * 
+     *
      * @param s
      *            The AC_PREF_NAME_TYPE to set
      */
@@ -1542,7 +1542,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The setVDNAME_CHANGED method sets the VDNAME_CHANGED for this bean.
-     * 
+     *
      * @param b
      *            The VDNAME_CHANGED to set
      */
@@ -1554,7 +1554,7 @@ public class VD_Bean extends AC_Bean
     // Get Properties
     /**
      * The getRETURN_CODE method returns the RETURN_CODE for this bean.
-     * 
+     *
      * @return String The RETURN_CODE
      */
     public String getRETURN_CODE()
@@ -1564,7 +1564,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_VD_IDSEQ method returns the VD_VD_IDSEQ for this bean.
-     * 
+     *
      * @return String The VD_VD_IDSEQ
      */
     public String getVD_VD_IDSEQ()
@@ -1574,7 +1574,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * (non-Javadoc)
-     * 
+     *
      * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getIDSEQ()
      */
     public String getIDSEQ()
@@ -1584,7 +1584,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PREFERRED_NAME method returns the VD_PREFERRED_NAME for this bean.
-     * 
+     *
      * @return String The VD_PREFERRED_NAME
      */
     public String getVD_PREFERRED_NAME()
@@ -1594,7 +1594,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_CONTE_IDSEQ method returns the VD_CONTE_IDSEQ for this bean.
-     * 
+     *
      * @return String The VD_CONTE_IDSEQ
      */
     public String getVD_CONTE_IDSEQ()
@@ -1604,7 +1604,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * (non-Javadoc)
-     * 
+     *
      * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextIDSEQ()
      */
     @Override
@@ -1615,7 +1615,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_VERSION method returns the VD_VERSION for this bean.
-     * 
+     *
      * @return String The VD_VERSION
      */
     public String getVD_VERSION()
@@ -1625,7 +1625,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PREFERRED_DEFINITION method returns the VD_PREFERRED_DEFINITION for this bean.
-     * 
+     *
      * @return String The VD_PREFERRED_DEFINITION
      */
     public String getVD_PREFERRED_DEFINITION()
@@ -1635,7 +1635,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_CD_IDSEQ method returns the VD_CD_IDSEQ for this bean.
-     * 
+     *
      * @return String The VD_CD_IDSEQ
      */
     public String getVD_CD_IDSEQ()
@@ -1645,7 +1645,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_ASL_NAME method returns the VD_ASL_NAME for this bean.
-     * 
+     *
      * @return String The VD_ASL_NAME
      */
     public String getVD_ASL_NAME()
@@ -1655,7 +1655,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_LATEST_VERSION_IND method returns the VD_LATEST_VERSION_IND for this bean.
-     * 
+     *
      * @return String The VD_LATEST_VERSION_IND
      */
     public String getVD_LATEST_VERSION_IND()
@@ -1665,7 +1665,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_DTL_NAME method returns the VD_DTL_NAME for this bean.
-     * 
+     *
      * @return String The VD_DTL_NAME
      */
     public String getVD_DTL_NAME()
@@ -1675,7 +1675,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_MAX_LENGTH_NUM method returns the VD_MAX_LENGTH_NUM for this bean.
-     * 
+     *
      * @return String The VD_MAX_LENGTH_NUM
      */
     public String getVD_MAX_LENGTH_NUM()
@@ -1685,7 +1685,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_LONG_NAME method returns the VD_LONG_NAME for this bean.
-     * 
+     *
      * @return String The VD_LONG_NAME
      */
     public String getVD_LONG_NAME()
@@ -1695,7 +1695,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_FORML_NAME method returns the VD_FORML_NAME for this bean.
-     * 
+     *
      * @return String The VD_FORML_NAME
      */
     public String getVD_FORML_NAME()
@@ -1705,7 +1705,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_FORML_DESCRIPTION method returns the VD_FORML_DESCRIPTION for this bean.
-     * 
+     *
      * @return String The VD_FORML_DESCRIPTION
      */
     public String getVD_FORML_DESCRIPTION()
@@ -1715,7 +1715,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_FORML_COMMENT method returns the VD_FORML_COMMENT for this bean.
-     * 
+     *
      * @return String The VD_FORML_COMMENT
      */
     public String getVD_FORML_COMMENT()
@@ -1725,7 +1725,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_UOML_NAME method returns the VD_UOML_NAME for this bean.
-     * 
+     *
      * @return String The VD_UOML_NAME
      */
     public String getVD_UOML_NAME()
@@ -1735,7 +1735,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_UOML_DESCRIPTION method returns the VD_UOML_DESCRIPTION for this bean.
-     * 
+     *
      * @return String The VD_UOML_DESCRIPTION
      */
     public String getVD_UOML_DESCRIPTION()
@@ -1745,7 +1745,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_UOML_COMMENT method returns the VD_UOML_COMMENT for this bean.
-     * 
+     *
      * @return String The VD_UOML_COMMENT
      */
     public String getVD_UOML_COMMENT()
@@ -1755,7 +1755,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_LOW_VALUE_NUM method returns the VD_LOW_VALUE_NUM for this bean.
-     * 
+     *
      * @return String The VD_LOW_VALUE_NUM
      */
     public String getVD_LOW_VALUE_NUM()
@@ -1765,7 +1765,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_HIGH_VALUE_NUM method returns the VD_HIGH_VALUE_NUM for this bean.
-     * 
+     *
      * @return String The VD_HIGH_VALUE_NUM
      */
     public String getVD_HIGH_VALUE_NUM()
@@ -1775,7 +1775,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_MIN_LENGTH_NUM method returns the VD_MIN_LENGTH_NUM for this bean.
-     * 
+     *
      * @return String The VD_MIN_LENGTH_NUM
      */
     public String getVD_MIN_LENGTH_NUM()
@@ -1785,7 +1785,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_DECIMAL_PLACE method returns the VD_DECIMAL_PLACE for this bean.
-     * 
+     *
      * @return String The VD_DECIMAL_PLACE
      */
     public String getVD_DECIMAL_PLACE()
@@ -1795,7 +1795,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_CHAR_SET_NAME method returns the VD_CHAR_SET_NAME for this bean.
-     * 
+     *
      * @return String The VD_CHAR_SET_NAME
      */
     public String getVD_CHAR_SET_NAME()
@@ -1805,7 +1805,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_BEGIN_DATE method returns the VD_BEGIN_DATE for this bean.
-     * 
+     *
      * @return String The VD_BEGIN_DATE
      */
     public String getVD_BEGIN_DATE()
@@ -1815,7 +1815,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_END_DATE method returns the VD_END_DATE for this bean.
-     * 
+     *
      * @return String The VD_END_DATE
      */
     public String getVD_END_DATE()
@@ -1825,7 +1825,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_CHANGE_NOTE method returns the VD_CHANGE_NOTE for this bean.
-     * 
+     *
      * @return String The VD_CHANGE_NOTE
      */
     public String getVD_CHANGE_NOTE()
@@ -1835,7 +1835,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_TYPE_FLAG method returns the VD_TYPE_FLAG for this bean.
-     * 
+     *
      * @return String The VD_TYPE_FLAG
      */
     public String getVD_TYPE_FLAG()
@@ -1845,7 +1845,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_CREATED_BY method returns the VD_CREATED_BY for this bean.
-     * 
+     *
      * @return String The VD_CREATED_BY
      */
     public String getVD_CREATED_BY()
@@ -1855,7 +1855,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_DATE_CREATED method returns the VD_DATE_CREATED for this bean.
-     * 
+     *
      * @return String The VD_DATE_CREATED
      */
     public String getVD_DATE_CREATED()
@@ -1865,7 +1865,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_MODIFIED_BY method returns the VD_MODIFIED_BY for this bean.
-     * 
+     *
      * @return String The VD_MODIFIED_BY
      */
     public String getVD_MODIFIED_BY()
@@ -1875,7 +1875,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_DATE_MODIFIED method returns the VD_DATE_MODIFIED for this bean.
-     * 
+     *
      * @return String The VD_DATE_MODIFIED
      */
     public String getVD_DATE_MODIFIED()
@@ -1885,7 +1885,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_DELETED_IND method returns the VD_DELETED_IND for this bean.
-     * 
+     *
      * @return String The VD_DELETED_IND
      */
     public String getVD_DELETED_IND()
@@ -1895,7 +1895,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_CD_NAME method returns the VD_CD_NAME for this bean.
-     * 
+     *
      * @return String The VD_CD_NAME
      */
     public String getVD_CD_NAME()
@@ -1905,7 +1905,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_CONTEXT_NAME method returns the VD_CONTEXT_NAME for this bean.
-     * 
+     *
      * @return String The VD_CONTEXT_NAME
      */
     public String getVD_CONTEXT_NAME()
@@ -1915,7 +1915,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_LANGUAGE method returns the VD_LANGUAGE for this bean.
-     * 
+     *
      * @return String The VD_LANGUAGE
      */
     public String getVD_LANGUAGE()
@@ -1925,7 +1925,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_LANGUAGE_IDSEQ method returns the VD_LANGUAGE_IDSEQ for this bean.
-     * 
+     *
      * @return String The VD_LANGUAGE_IDSEQ
      */
     public String getVD_LANGUAGE_IDSEQ()
@@ -1935,7 +1935,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PV_ID method returns the VD_PV_ID for this bean.
-     * 
+     *
      * @return String The VD_PV_ID
      */
     public Vector getVD_PV_ID()
@@ -1945,7 +1945,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PV_NAME method returns the VD_PV_NAME for this bean.
-     * 
+     *
      * @return String The VD_PV_NAME
      */
     public Vector getVD_PV_NAME()
@@ -1955,7 +1955,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PV_MEANING method returns the VD_PV_MEANING for this bean.
-     * 
+     *
      * @return String The VD_PV_MEANING
      */
     public Vector getVD_PV_MEANING()
@@ -1965,7 +1965,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PV_MEANING_DESCRIPTION method returns the VD_PV_MEANING_DESCRIPTION for this bean.
-     * 
+     *
      * @return String The VD_PV_MEANING_DESCRIPTION
      */
     public Vector getVD_PV_MEANING_DESCRIPTION()
@@ -1975,7 +1975,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PV_ORIGIN method returns the VD_PV_ORIGIN for this bean.
-     * 
+     *
      * @return String The VD_PV_ORIGIN
      */
     public Vector getVD_PV_ORIGIN()
@@ -1985,7 +1985,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_DATA_TYPE method returns the VD_DATA_TYPE for this bean.
-     * 
+     *
      * @return String The VD_DATA_TYPE
      */
     public String getVD_DATA_TYPE()
@@ -1995,7 +1995,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_OBJ_QUAL method returns the VD_OBJ_QUAL for this bean.
-     * 
+     *
      * @return String The VD_OBJ_QUAL
      */
     public String getVD_OBJ_QUAL()
@@ -2005,7 +2005,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_OBJ_CLASS method returns the VD_OBJ_CLASS for this bean.
-     * 
+     *
      * @return String The VD_OBJ_CLASS
      */
     public String getVD_OBJ_CLASS()
@@ -2015,7 +2015,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_OBJ_IDSEQ method returns the VD_OBJ_IDSEQ for this bean.
-     * 
+     *
      * @return String The VD_OBJ_IDSEQ
      */
     public String getVD_OBJ_IDSEQ()
@@ -2025,7 +2025,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PROP_QUAL method returns the VD_PROP_QUAL for this bean.
-     * 
+     *
      * @return String The VD_PROP_QUAL
      */
     public String getVD_PROP_QUAL()
@@ -2035,7 +2035,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PROP_CLASS method returns the VD_PROP_CLASS for this bean.
-     * 
+     *
      * @return String The VD_PROP_CLASS
      */
     public String getVD_PROP_CLASS()
@@ -2045,7 +2045,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PROP_IDSEQ method returns the VD_PROP_IDSEQ for this bean.
-     * 
+     *
      * @return String The VD_PROP_IDSEQ
      */
     public String getVD_PROP_IDSEQ()
@@ -2055,7 +2055,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_REP_ASL_NAME method returns the VD_REP_ASL_NAME for this bean.
-     * 
+     *
      * @return String The VD_REP_ASL_NAME
      */
     public String getVD_REP_ASL_NAME()
@@ -2065,7 +2065,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_REP_TERM method returns the VD_REP_TERM for this bean.
-     * 
+     *
      * @return String The VD_REP_TERM
      */
     public String getVD_REP_TERM()
@@ -2075,7 +2075,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_REP_IDSEQ method returns the VD_REP_IDSEQ for this bean.
-     * 
+     *
      * @return String The VD_REP_IDSEQ
      */
     public String getVD_REP_IDSEQ()
@@ -2085,7 +2085,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PROTOCOL_ID method returns the VD_PROTOCOL_ID for this bean.
-     * 
+     *
      * @return String The VD_PROTOCOL_ID
      */
     public String getVD_PROTOCOL_ID()
@@ -2095,7 +2095,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_CRF_NAME method returns the VD_CRF_NAME for this bean.
-     * 
+     *
      * @return String The VD_CRF_NAME
      */
     public String getVD_CRF_NAME()
@@ -2105,7 +2105,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_TYPE_NAME method returns the VD_TYPE_NAME for this bean.
-     * 
+     *
      * @return String The VD_TYPE_NAME
      */
     public String getVD_TYPE_NAME()
@@ -2115,7 +2115,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_DES_ALIAS_ID method returns the VD_DES_ALIAS_ID for this bean.
-     * 
+     *
      * @return String The VD_DES_ALIAS_ID
      */
     public String getVD_DES_ALIAS_ID()
@@ -2125,7 +2125,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_ALIAS_NAME method returns the VD_ALIAS_NAME for this bean.
-     * 
+     *
      * @return String The VD_ALIAS_NAME
      */
     public String getVD_ALIAS_NAME()
@@ -2135,7 +2135,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_USEDBY_CONTEXT method returns the VD_USEDBY_CONTEXT for this bean.
-     * 
+     *
      * @return String The VD_USEDBY_CONTEXT
      */
     public String getVD_USEDBY_CONTEXT()
@@ -2145,7 +2145,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_Obj_Definition method returns the VD_Obj_Definition for this bean.
-     * 
+     *
      * @return String The VD_Obj_Definition
      */
     public String getVD_Obj_Definition()
@@ -2155,7 +2155,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_Prop_Definition method returns the VD_Prop_Definition for this bean.
-     * 
+     *
      * @return String The VD_Prop_Definition
      */
     public String getVD_Prop_Definition()
@@ -2165,7 +2165,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_Rep_Definition method returns the VD_Rep_Definition for this bean.
-     * 
+     *
      * @return String The VD_Rep_Definition
      */
     public String getVD_Rep_Definition()
@@ -2175,7 +2175,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_VD_ID method returns the VD_VD_ID for this bean.
-     * 
+     *
      * @return String The VD_VD_ID
      */
     public String getVD_VD_ID()
@@ -2185,7 +2185,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_Permissible_Value method returns the VD_Permissible_Value for this bean.
-     * 
+     *
      * @return String The VD_Permissible_Value
      */
     public String getVD_Permissible_Value()
@@ -2195,7 +2195,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_Permissible_Value_Count method returns the VD_Permissible_Value_Count for this bean.
-     * 
+     *
      * @return Integer The VD_Permissible_Value_Count
      */
     public Integer getVD_Permissible_Value_Count()
@@ -2205,7 +2205,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_SOURCE method returns the VD_SOURCE for this bean.
-     * 
+     *
      * @return String The VD_SOURCE
      */
     public String getVD_SOURCE()
@@ -2215,7 +2215,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_CHECKED method returns the VD_CHECKED for this bean.
-     * 
+     *
      * @return boolean The VD_CHECKED
      */
     public boolean getVD_CHECKED()
@@ -2225,7 +2225,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getAC_SELECTED_CONTEXT_ID method returns the VD_SELECTED_CONTEXT_ID for this bean.
-     * 
+     *
      * @return Vector The VD_SELECTED_CONTEXT_ID
      */
     public Vector getAC_SELECTED_CONTEXT_ID()
@@ -2235,7 +2235,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getAC_CS method returns the VD_CS for this bean.
-     * 
+     *
      * @return Vector The VD_CS
      */
     public Vector getAC_CS_NAME()
@@ -2245,7 +2245,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getAC_CS_ID method returns the VD_CS_ID for this bean.
-     * 
+     *
      * @return Vector The VD_CS_ID
      */
     public Vector getAC_CS_ID()
@@ -2255,7 +2255,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getAC_CSI method returns the VD_CSI for this bean.
-     * 
+     *
      * @return String The VD_CSI
      */
     public Vector getAC_CSI_NAME()
@@ -2265,7 +2265,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getAC_CSI_ID method returns the VD_CSI_ID for this bean.
-     * 
+     *
      * @return String The VD_CSI_ID
      */
     public Vector getAC_CSI_ID()
@@ -2275,7 +2275,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getAC_AC_CSI_VECTOR method returns the VD_AC_CSI_VECTOR for this bean.
-     * 
+     *
      * @return Vector The VD_AC_CSI_VECTOR
      */
     public Vector getAC_AC_CSI_VECTOR()
@@ -2285,7 +2285,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getAC_AC_CSI_ID method returns the VD_AC_CSI_ID for this bean.
-     * 
+     *
      * @return Vector The VD_AC_CSI_ID
      */
     public Vector getAC_AC_CSI_ID()
@@ -2295,7 +2295,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getAC_CS_CSI_ID method returns the VD_CS_CSI_ID for this bean.
-     * 
+     *
      * @return Vector The VD_CS_CSI_ID
      */
     public Vector getAC_CS_CSI_ID()
@@ -2305,7 +2305,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getAC_ALT_NAMES method returns the AC_ALT_NAMES for this bean.
-     * 
+     *
      * @return Vector The AC_ALT_NAMES
      */
     public Vector getAC_ALT_NAMES()
@@ -2315,7 +2315,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getAC_REF_DOCS method returns the AC_REF_DOCS for this bean.
-     * 
+     *
      * @return Vector The AC_REF_DOCS
      */
     public Vector getAC_REF_DOCS()
@@ -2325,7 +2325,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getAC_CONCEPT_NAME method returns the AC_CONCEPT_NAME for this bean.
-     * 
+     *
      * @return String The AC_CONCEPT_NAME
      */
     public String getAC_CONCEPT_NAME()
@@ -2335,7 +2335,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * (non-Javadoc)
-     * 
+     *
      * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextName()
      */
     @Override
@@ -2354,7 +2354,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getREFERENCE_DOCUMENT method returns the REFERENCE_DOCUMENT for this bean.
-     * 
+     *
      * @return String The REFERENCE_DOCUMENT
      */
     public String getREFERENCE_DOCUMENT()
@@ -2372,7 +2372,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_REP_CONCEPT_CODE method returns the VD_REP_CONCEPT_CODE for this bean.
-     * 
+     *
      * @return String The VD_REP_CONCEPT_CODE
      */
     public String getVD_REP_CONCEPT_CODE()
@@ -2382,7 +2382,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_REP_EVS_CUI_ORIGEN method returns the VD_REP_EVS_CUI_ORIGEN for this bean.
-     * 
+     *
      * @return String The VD_REP_EVS_CUI_ORIGEN
      */
     public String getVD_REP_EVS_CUI_ORIGEN()
@@ -2392,7 +2392,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_REP_EVS_CUI_SOURCE method returns the VD_REP_EVS_CUI_SOURCE for this bean.
-     * 
+     *
      * @return String The VD_REP_EVS_CUI_SOURCE
      */
     public String getVD_REP_EVS_CUI_SOURCE()
@@ -2402,7 +2402,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_REP_DEFINITION_SOURCE method returns the VD_REP_DEFINITION_SOURCE for this bean.
-     * 
+     *
      * @return String The VD_REP_DEFINITION_SOURCE
      */
     public String getVD_REP_DEFINITION_SOURCE()
@@ -2412,7 +2412,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_REP_QUAL_CONCEPT_CODE method returns the VD_REP_QUAL_CONCEPT_CODE for this bean.
-     * 
+     *
      * @return String The VD_REP_QUAL_CONCEPT_CODE
      */
     public String getVD_REP_QUAL_CONCEPT_CODE()
@@ -2422,7 +2422,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_REP_QUAL_EVS_CUI_ORIGEN method returns the VD_REP_QUAL_EVS_CUI_ORIGEN for this bean.
-     * 
+     *
      * @return String The VD_REP_QUAL_EVS_CUI_ORIGEN
      */
     public String getVD_REP_QUAL_EVS_CUI_ORIGEN()
@@ -2432,7 +2432,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_REP_QUAL_EVS_CUI_SOURCE method returns the VD_REP_QUAL_EVS_CUI_SOURCE for this bean.
-     * 
+     *
      * @return String The VD_REP_QUAL_EVS_CUI_SOURCE
      */
     public String getVD_REP_QUAL_EVS_CUI_SOURCE()
@@ -2442,7 +2442,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_REP_QUAL_DEFINITION_SOURCE method returns the VD_REP_QUAL_DEFINITION_SOURCE for this bean.
-     * 
+     *
      * @return String The VD_REP_QUAL_DEFINITION_SOURCE
      */
     public String getVD_REP_QUAL_DEFINITION_SOURCE()
@@ -2452,7 +2452,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PARENT_CODES method returns the VD_PARENT_CODES for this bean.
-     * 
+     *
      * @return Vector The VD_PARENT_CODES
      */
     public Vector getVD_PARENT_CODES()
@@ -2462,7 +2462,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PARENT_NAMES method returns the VD_PARENT_NAMES for this bean.
-     * 
+     *
      * @return Vector The VD_PARENT_NAMES
      */
     public Vector getVD_PARENT_NAMES()
@@ -2472,7 +2472,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PARENT_META_SOURCE method returns the VD_PARENT_META_SOURCE for this bean.
-     * 
+     *
      * @return Vector The VD_PARENT_META_SOURCE
      */
     public Vector getVD_PARENT_META_SOURCE()
@@ -2482,7 +2482,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PARENT_DB method returns the VD_PARENT_DB for this bean.
-     * 
+     *
      * @return Vector The VD_PARENT_DB
      */
     public Vector getVD_PARENT_DB()
@@ -2492,7 +2492,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PARENT_LIST method returns the VD_PARENT_LIST for this bean.
-     * 
+     *
      * @return Vector The VD_PARENT_LIST
      */
     public Vector getVD_PARENT_LIST()
@@ -2502,7 +2502,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_REP_CONDR_IDSEQ method returns the VD_REP_CONDR_IDSEQ for this bean.
-     * 
+     *
      * @return String The VD_REP_CONDR_IDSEQ
      */
     public String getVD_REP_CONDR_IDSEQ()
@@ -2512,7 +2512,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_PAR_CONDR_IDSEQ method returns the VD_PAR_CONDR_IDSEQ for this bean.
-     * 
+     *
      * @return String The VD_PAR_CONDR_IDSEQ
      */
     public String getVD_PAR_CONDR_IDSEQ()
@@ -2522,7 +2522,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_REP_NAME_PRIMARY method returns the VD_REP_NAME_PRIMARY for this bean.
-     * 
+     *
      * @return String The VD_REP_NAME_PRIMARY
      */
     public String getVD_REP_NAME_PRIMARY()
@@ -2532,7 +2532,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_REP_QUALIFIER_NAMES method returns the VD_REP_QUALIFIER_NAMES for this bean.
-     * 
+     *
      * @return Vector The VD_REP_QUALIFIER_NAMES
      */
     public Vector getVD_REP_QUALIFIER_NAMES()
@@ -2542,7 +2542,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_REP_QUALIFIER_CODES method returns the VD_REP_QUALIFIER_CODES for this bean.
-     * 
+     *
      * @return Vector The VD_REP_QUALIFIER_CODES
      */
     public Vector getVD_REP_QUALIFIER_CODES()
@@ -2552,7 +2552,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVD_REP_QUALIFIER_DB method returns the VD_REP_QUALIFIER_DB for this bean.
-     * 
+     *
      * @return Vector The VD_REP_QUALIFIER_DB
      */
     public Vector getVD_REP_QUALIFIER_DB()
@@ -2562,7 +2562,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getAC_SYS_PREF_NAME method returns the AC_SYS_PREF_NAME for this bean.
-     * 
+     *
      * @return String The AC_SYS_PREF_NAME
      */
     public String getAC_SYS_PREF_NAME()
@@ -2572,7 +2572,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getAC_USER_PREF_NAME method returns the AC_USER_PREF_NAME for this bean.
-     * 
+     *
      * @return String The AC_USER_PREF_NAME
      */
     public String getAC_USER_PREF_NAME()
@@ -2582,7 +2582,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getAC_ABBR_PREF_NAME method returns the AC_ABBR_PREF_NAME for this bean.
-     * 
+     *
      * @return String The AC_ABBR_PREF_NAME
      */
     public String getAC_ABBR_PREF_NAME()
@@ -2592,7 +2592,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getAC_PREF_NAME_TYPE method returns the AC_PREF_NAME_TYPE for this bean.
-     * 
+     *
      * @return String The AC_PREF_NAME_TYPE
      */
     public String getAC_PREF_NAME_TYPE()
@@ -2602,7 +2602,7 @@ public class VD_Bean extends AC_Bean
 
     /**
      * The getVDNAME_CHANGED method returns the VDNAME_CHANGED for this bean.
-     * 
+     *
      * @return boolean The VDNAME_CHANGED
      */
     public boolean getVDNAME_CHANGED()
@@ -2677,7 +2677,7 @@ public class VD_Bean extends AC_Bean
     {
         this.removed_VDPVList = removed_VDPVList;
     }
-    
+
     public String getDisplayName()
     {
     	String displayName = this.VD_LONG_NAME + "   "+ this.VD_VD_ID+ " v " + this.VD_VERSION;
