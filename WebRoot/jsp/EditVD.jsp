@@ -2145,8 +2145,8 @@ function openEVSConceptsWindow(){
 					<input type="hidden" name="RepQualVocab" value="<%=sRepQualVocab%>">
 					<input type="hidden" name="RepTerm_ID" value="<%=sRepTerm_ID%>">
 					<input type="hidden" name="RepTermVocab" value="<%=sRepTermVocab%>">
-					<input type="hidden" name="sCompBlocks" value="">
-					<input type="hidden" name="nvpConcept" value="">
+					<input type="hidden" name="sCompBlocks" id="sCompBlocks" value="">
+					<input type="hidden" name="nvpConcept" id="nvpConcept" value="">
 
 					<input type="hidden" name="RepQualCCode" value="">
 					<input type="hidden" name="RepQualCCodeDB" value="">

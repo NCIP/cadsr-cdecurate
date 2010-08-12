@@ -2356,13 +2356,16 @@ public class ValueDomainServlet extends CurationServlet {
 		HttpSession session = m_classReq.getSession();
 		// add rep primary attributes to the vd bean
 		EVS_Bean pBean =(EVS_Bean)vRep.get(0); 
-		vdBean.setVD_REP_NAME_PRIMARY(pBean.getLONG_NAME());
+		String nvpValue = "";
+		  if (pBean.getNAME_VALUE_PAIR_IND() > 0)
+			  nvpValue="::"+pBean.getNVP_CONCEPT_VALUE();
+		vdBean.setVD_REP_NAME_PRIMARY(pBean.getLONG_NAME()+nvpValue);
 		vdBean.setVD_REP_CONCEPT_CODE(pBean.getCONCEPT_IDENTIFIER());
 		vdBean.setVD_REP_EVS_CUI_ORIGEN(pBean.getEVS_DATABASE());
 		
 		vdBean.setVD_REP_IDSEQ(pBean.getIDSEQ());
 		DataManager.setAttribute(session, "m_REP", pBean);
-
+		
 		// update qualifier vectors
 		vdBean.setVD_REP_QUALIFIER_NAMES(null);
 		vdBean.setVD_REP_QUALIFIER_CODES(null);
@@ -2370,11 +2373,14 @@ public class ValueDomainServlet extends CurationServlet {
 
 		for (int i=1; i<vRep.size();i++){
 			EVS_Bean eBean =(EVS_Bean)vRep.get(i);
+			nvpValue = "";
+			  if (eBean.getNAME_VALUE_PAIR_IND() > 0)
+				  nvpValue="::"+eBean.getNVP_CONCEPT_VALUE();
 			// add rep qualifiers to the vector
 			Vector<String> vRepQualifierNames = vdBean.getVD_REP_QUALIFIER_NAMES();
 			if (vRepQualifierNames == null)
 				vRepQualifierNames = new Vector<String>();
-			vRepQualifierNames.addElement(eBean.getLONG_NAME());
+			vRepQualifierNames.addElement(eBean.getLONG_NAME()+nvpValue);
 			Vector<String> vRepQualifierCodes = vdBean.getVD_REP_QUALIFIER_CODES();
 			if (vRepQualifierCodes == null)
 				vRepQualifierCodes = new Vector<String>();
