@@ -11,18 +11,18 @@ import java.util.*;
  * The DEC_Bean encapsulates the DEC information and is stored in the session after the user has created a new Data
  * Element Concept.
  * <P>
- * 
+ *
  * @author Joe Zhou
  * @version 3.0
  */
 /*
- * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. (“ScenPro”) Copyright Notice. The software
+ * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. ("ScenPro") Copyright Notice. The software
  * subject to this notice and license includes both human readable source code form and machine readable, binary, object
- * code form (“the CaCORE Software”). The CaCORE Software was developed in conjunction with the National Cancer
- * Institute (“NCI”) by NCI employees and employees of SCENPRO. To the extent government employees are authors, any
+ * code form ("the CaCORE Software"). The CaCORE Software was developed in conjunction with the National Cancer
+ * Institute ("NCI") by NCI employees and employees of SCENPRO. To the extent government employees are authors, any
  * rights in such works shall be subject to Title 17 of the United States Code, section 105. This CaCORE Software
- * License (the “License”) is between NCI and You. “You (or “Your”) shall mean a person or an entity, and all other
- * entities that control, are controlled by, or are under common control with the entity. “Control” for purposes of this
+ * License (the "License") is between NCI and You. "You (or "Your") shall mean a person or an entity, and all other
+ * entities that control, are controlled by, or are under common control with the entity. "Control" for purposes of this
  * definition means (i) the direct or indirect power to cause the direction or management of such entity, whether by
  * contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii)
  * beneficial ownership of such entity. This License is granted provided that You agree to the conditions described
@@ -38,10 +38,10 @@ import java.util.*;
  * liability of Article 6, below. Your redistributions in object code form must reproduce the above copyright notice,
  * this list of conditions and the disclaimer of Article 6 in the documentation and/or other materials provided with the
  * distribution, if any. 2. Your end-user documentation included with the redistribution, if any, must include the
- * following acknowledgment: “This product includes software developed by SCENPRO and the National Cancer Institute.” If
+ * following acknowledgment: "This product includes software developed by SCENPRO and the National Cancer Institute." If
  * You do not include such end-user documentation, You shall include this acknowledgment in the Software itself,
  * wherever such third-party acknowledgments normally appear. 3. You may not use the names "The National Cancer
- * Institute", "NCI" “ScenPro, Inc.” and "SCENPRO" to endorse or promote products derived from this Software. This
+ * Institute", "NCI" "ScenPro, Inc." and "SCENPRO" to endorse or promote products derived from this Software. This
  * License does not authorize You to use any trademarks, service marks, trade names, logos or product names of either
  * NCI or SCENPRO, except as required to comply with the terms of this License. 4. For sake of clarity, and not by way
  * of limitation, You may incorporate this Software into Your proprietary programs and into any third party proprietary
@@ -245,16 +245,16 @@ public class DEC_Bean extends AC_Bean
     public DEC_Bean()
     {
         super();
-        
+
         _type = ACTypes.DataElementConcept;
     }
 
     /**
      * makes a copy of the bean
-     * 
+     *
      * @param copyBean
      *            passin the bean whose attributes need to be copied and returned.
-     * 
+     *
      * @return DEC_Bean returns this bean after copying its attributes
      */
     public DEC_Bean cloneDEC_Bean(DEC_Bean copyBean)
@@ -342,7 +342,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -353,7 +353,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -364,7 +364,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -375,7 +375,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -386,7 +386,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -397,7 +397,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -408,7 +408,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -419,7 +419,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -430,7 +430,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -441,7 +441,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -452,7 +452,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -463,7 +463,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -474,7 +474,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -485,7 +485,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -496,7 +496,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -507,7 +507,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -518,7 +518,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -529,7 +529,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -540,7 +540,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -551,7 +551,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -562,7 +562,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -573,7 +573,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -584,7 +584,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_PROTOCOL_ID method sets the DEC_PROTOCOL_ID for this bean.
-     * 
+     *
      * @param s
      *            The DEC_PROTOCOL_ID to set
      */
@@ -595,7 +595,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_CRF_NAME method sets the DEC_CRF_NAME for this bean.
-     * 
+     *
      * @param s
      *            The DEC_CRF_NAME to set
      */
@@ -606,7 +606,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_TYPE_NAME method sets the DEC_TYPE_NAME for this bean.
-     * 
+     *
      * @param s
      *            The DEC_TYPE_NAME to set
      */
@@ -617,7 +617,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_DES_ALIAS_ID method sets the DEC_DES_ALIAS_ID for this bean.
-     * 
+     *
      * @param s
      *            The DEC_DES_ALIAS_ID to set
      */
@@ -628,7 +628,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRDEC_ALIAS_NAME method sets the ALIAS_NAME for this bean.
-     * 
+     *
      * @param s
      *            The ALIAS_NAME to set
      */
@@ -639,7 +639,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRDEC_USEDBY_CONTEXT method sets the USEDBY_CONTEXT for this bean.
-     * 
+     *
      * @param s
      *            The USEDBY_CONTEXT to set
      */
@@ -650,7 +650,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -661,7 +661,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -672,7 +672,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -683,7 +683,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -694,7 +694,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -705,7 +705,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
-     * 
+     *
      * @param s
      *            The RETURN_CODE to set
      */
@@ -716,7 +716,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_Obj_Definition method sets the DEC_Obj_Definition for this bean.
-     * 
+     *
      * @param s
      *            The DEC_Obj_Definition to set
      */
@@ -727,7 +727,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_Prop_Definition method sets the DEC_Prop_Definition for this bean.
-     * 
+     *
      * @param s
      *            The DEC_Prop_Definition to set
      */
@@ -738,7 +738,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_DEC_ID method sets the DEC_DEC_ID for this bean.
-     * 
+     *
      * @param s
      *            The DEC_DEC_ID to set
      */
@@ -749,7 +749,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_SOURCE method sets the DEC_SOURCE for this bean.
-     * 
+     *
      * @param s
      *            The DEC_SOURCE to set
      */
@@ -760,7 +760,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_CHECKED method sets the DEC_CHECKED for this bean.
-     * 
+     *
      * @param b
      *            The DEC_CHECKED to set
      */
@@ -771,7 +771,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setAC_SELECTED_CONTEXT_ID method sets the DEC_SELECTED_CONTEXT_ID for this bean.
-     * 
+     *
      * @param s
      *            The DEC_SELECTED_CONTEXT_ID to set
      */
@@ -782,7 +782,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setAC_CS method sets the DEC_CS for this bean.
-     * 
+     *
      * @param v
      *            The DEC_CS to set
      */
@@ -793,7 +793,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setAC_CS_ID method sets the DEC_CS_ID for this bean.
-     * 
+     *
      * @param v
      *            The DEC_CS_ID to set
      */
@@ -804,7 +804,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setAC_CSI method sets the DEC_CSI for this bean.
-     * 
+     *
      * @param v
      *            The DEC_CSI to set
      */
@@ -815,7 +815,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setAC_CSI_ID method sets the DEC_CSI_ID for this bean.
-     * 
+     *
      * @param v
      *            The DEC_CSI_ID to set
      */
@@ -826,7 +826,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setAC_AC_CSI_VECTOR method sets the DEC_AC_CSI_VECTOR for this bean.
-     * 
+     *
      * @param v
      *            The DEC_AC_CSI_VECTOR to set
      */
@@ -837,7 +837,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setAC_AC_CSI_ID method sets the DEC_AC_CSI_ID for this bean.
-     * 
+     *
      * @param v
      *            The DEC_AC_CSI_ID to set
      */
@@ -848,7 +848,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setAC_CS_CSI_ID method sets the DEC_CS_CSI_ID for this bean.
-     * 
+     *
      * @param v
      *            The DEC_CS_CSI_ID to set
      */
@@ -859,7 +859,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setAC_ALT_NAMES method sets the AC_ALT_NAMES for this bean.
-     * 
+     *
      * @param v
      *            The AC_ALT_NAMES to set
      */
@@ -870,7 +870,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setAC_REF_DOCS method sets the AC_REF_DOCS for this bean.
-     * 
+     *
      * @param v
      *            The AC_REF_DOCS to set
      */
@@ -881,7 +881,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setAC_CONCEPT_NAME method sets the AC_CONCEPT_NAME for this bean.
-     * 
+     *
      * @param s
      *            The AC_CONCEPT_NAME to set
      */
@@ -901,7 +901,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setREFERENCE_DOCUMENT_ method sets the REFERENCE_DOCUMENT for this bean.
-     * 
+     *
      * @param s
      *            The REFERENCE_DOCUMENT to set
      */
@@ -921,7 +921,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_OC_CONCEPT_CODE method sets the DEC_OC_CONCEPT_CODE for this bean.
-     * 
+     *
      * @param s
      *            The DEC_OC_CONCEPT_CODE to set
      */
@@ -932,7 +932,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_OC_EVS_CUI_ORIGEN method sets the DEC_OC_EVS_CUI_ORIGEN for this bean.
-     * 
+     *
      * @param s
      *            The DEC_OC_EVS_CUI_ORIGEN to set
      */
@@ -943,7 +943,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_PROP_OC_EVS_CUI_SOURCE method sets the DEC_OC_EVS_CUI_SOURCE for this bean.
-     * 
+     *
      * @param s
      *            The DEC_OC_EVS_CUI_SOURCE to set
      */
@@ -954,7 +954,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_OC_DEFINITION_SOURCE method sets the DEC_OC_DEFINITION_SOURCE for this bean.
-     * 
+     *
      * @param s
      *            The DEC_OC_DEFINITION_SOURCE to set
      */
@@ -965,7 +965,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_OC_QUAL_CONCEPT_CODE method sets the DEC_OC_QUAL_CONCEPT_CODE for this bean.
-     * 
+     *
      * @param s
      *            The DEC_OC_QUAL_CONCEPT_CODE to set
      */
@@ -976,7 +976,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_OC_QUAL_EVS_CUI_ORIGEN method sets the DEC_OC_QUAL_EVS_CUI_ORIGEN for this bean.
-     * 
+     *
      * @param s
      *            The DEC_OC_EVS_CUI_ORIGEN to set
      */
@@ -987,7 +987,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_PROP_OC_QUAL_EVS_CUI_SOURCE method sets the DEC_OC_QUAL_EVS_CUI_SOURCE for this bean.
-     * 
+     *
      * @param s
      *            The DEC_OC_QUAL_EVS_CUI_SOURCE to set
      */
@@ -998,7 +998,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_OC_QUAL_DEFINITION_SOURCE method sets the DEC_OC_QUAL_DEFINITION_SOURCE for this bean.
-     * 
+     *
      * @param s
      *            The DEC_OC_QUAL_DEFINITION_SOURCE to set
      */
@@ -1009,7 +1009,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_PROP_CONCEPT_CODE method sets the DEC_PROP_CONCEPT_CODE for this bean.
-     * 
+     *
      * @param s
      *            The DEC_PROP_CONCEPT_CODE to set
      */
@@ -1020,7 +1020,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_PROP_EVS_CUI_ORIGEN method sets the DEC_PROP_EVS_CUI_ORIGEN for this bean.
-     * 
+     *
      * @param s
      *            The DEC_PROP_EVS_CUI_ORIGEN to set
      */
@@ -1031,7 +1031,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_PROP_PROP_EVS_CUI_SOURCE method sets the DEC_PROP_EVS_CUI_SOURCE for this bean.
-     * 
+     *
      * @param s
      *            The DEC_PROP_EVS_CUI_SOURCE to set
      */
@@ -1042,7 +1042,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_PROP_DEFINITION_SOURCE method sets the DEC_PROP_DEFINITION_SOURCE for this bean.
-     * 
+     *
      * @param s
      *            The DEC_PROP_DEFINITION_SOURCE to set
      */
@@ -1053,7 +1053,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_PROP_QUAL_CONCEPT_CODE method sets the DEC_PROP_QUAL_CONCEPT_CODE for this bean.
-     * 
+     *
      * @param s
      *            The DEC_PROP_QUAL_CONCEPT_CODE to set
      */
@@ -1064,7 +1064,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_PROP_QUAL_EVS_CUI_ORIGEN method sets the DEC_PROP_QUAL_EVS_CUI_ORIGEN for this bean.
-     * 
+     *
      * @param s
      *            The DEC_PROP_EVS_CUI_ORIGEN to set
      */
@@ -1075,7 +1075,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_PROP_PROP_QUAL_EVS_CUI_SOURCE method sets the DEC_PROP_QUAL_EVS_CUI_SOURCE for this bean.
-     * 
+     *
      * @param s
      *            The DEC_PROP_QUAL_EVS_CUI_SOURCE to set
      */
@@ -1086,7 +1086,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_PROP_QUAL_DEFINITION_SOURCE method sets the DEC_PROP_QUAL_DEFINITION_SOURCE for this bean.
-     * 
+     *
      * @param s
      *            The DEC_PROP_QUAL_DEFINITION_SOURCE to set
      */
@@ -1097,7 +1097,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_OC_QUALIFIER_NAMES method sets the DEC_OC_QUALIFIER_NAMES for this bean.
-     * 
+     *
      * @param v
      *            The DEC_OC_QUALIFIER_NAMES to set
      */
@@ -1108,7 +1108,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_OC_QUALIFIER_CODES method sets the DEC_OC_QUALIFIER_CODES for this bean.
-     * 
+     *
      * @param v
      *            The DEC_OC_QUALIFIER_CODES to set
      */
@@ -1119,7 +1119,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_OC_QUALIFIER_DB method sets the DEC_OC_QUALIFIER_DB for this bean.
-     * 
+     *
      * @param v
      *            The DEC_OC_QUALIFIER_DB to set
      */
@@ -1130,7 +1130,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_PROP_QUALIFIER_NAMES method sets the DEC_PROP_QUALIFIER_NAMES for this bean.
-     * 
+     *
      * @param v
      *            The DEC_PROP_QUALIFIER_NAMES to set
      */
@@ -1141,7 +1141,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_PROP_QUALIFIER_CODES method sets the DEC_PROP_QUALIFIER_CODES for this bean.
-     * 
+     *
      * @param v
      *            The DEC_PROP_QUALIFIER_CODES to set
      */
@@ -1152,7 +1152,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_PROP_QUALIFIER_DB method sets the DEC_PROP_QUALIFIER_DB for this bean.
-     * 
+     *
      * @param v
      *            The DEC_PROP_QUALIFIER_DB to set
      */
@@ -1163,7 +1163,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_OC_CONDR_IDSEQ method sets the DEC_OC_CONDR_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The DEC_OC_CONDR_IDSEQ to set
      */
@@ -1174,7 +1174,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_PROP_CONDR_IDSEQ method sets the DEC_PROP_CONDR_IDSEQ for this bean.
-     * 
+     *
      * @param s
      *            The DEC_PROP_CONDR_IDSEQ to set
      */
@@ -1185,7 +1185,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_OCL_NAME_PRIMARY method sets the DEC_OCL_NAME_PRIMARY for this bean.
-     * 
+     *
      * @param s
      *            The DEC_OCL_NAME_PRIMARY to set
      */
@@ -1196,7 +1196,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setDEC_PROPL_NAME_PRIMARY method sets the DEC_PROPL_NAME_PRIMARY for this bean.
-     * 
+     *
      * @param s
      *            The DEC_PROPL_NAME_PRIMARY to set
      */
@@ -1207,7 +1207,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setAC_SYS_PREF_NAME method sets the AC_SYS_PREF_NAME for this bean.
-     * 
+     *
      * @param s
      *            The AC_SYS_PREF_NAME to set
      */
@@ -1218,7 +1218,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setAC_ABBR_PREF_NAME method sets the AC_ABBR_PREF_NAME for this bean.
-     * 
+     *
      * @param s
      *            The AC_ABBR_PREF_NAME to set
      */
@@ -1229,7 +1229,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setAC_USER_PREF_NAME method sets the AC_USER_PREF_NAME for this bean.
-     * 
+     *
      * @param s
      *            The AC_USER_PREF_NAME to set
      */
@@ -1240,7 +1240,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The setAC_PREF_NAME_TYPE method sets the AC_PREF_NAME_TYPE for this bean.
-     * 
+     *
      * @param s
      *            The AC_PREF_NAME_TYPE to set
      */
@@ -1252,7 +1252,7 @@ public class DEC_Bean extends AC_Bean
     // Get Properties
     /**
      * The getRETURN_CODE method returns the RETURN_CODE for this bean.
-     * 
+     *
      * @return String The RETURN_CODE
      */
     public String getRETURN_CODE()
@@ -1262,7 +1262,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_DEC_IDSEQ method returns the DEC_DEC_IDSEQ for this bean.
-     * 
+     *
      * @return String The DEC_DEC_IDSEQ
      */
     public String getDEC_DEC_IDSEQ()
@@ -1272,7 +1272,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * (non-Javadoc)
-     * 
+     *
      * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getIDSEQ()
      */
     public String getIDSEQ()
@@ -1282,7 +1282,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PREFERRED_NAME method returns the DEC_PREFERRED_NAME for this bean.
-     * 
+     *
      * @return String The DEC_PREFERRED_NAME
      */
     public String getDEC_PREFERRED_NAME()
@@ -1292,7 +1292,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_CONTE_IDSEQ method returns the DEC_CONTE_IDSEQ for this bean.
-     * 
+     *
      * @return String The DEC_CONTE_IDSEQ
      */
     public String getDEC_CONTE_IDSEQ()
@@ -1302,7 +1302,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * (non-Javadoc)
-     * 
+     *
      * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextIDSEQ()
      */
     @Override
@@ -1313,7 +1313,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_VERSION method returns the DEC_VERSION for this bean.
-     * 
+     *
      * @return String The DEC_VERSION
      */
     public String getDEC_VERSION()
@@ -1323,7 +1323,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PREFERRED_DEFINITION method returns the DEC_PREFERRED_DEFINITION for this bean.
-     * 
+     *
      * @return String The DEC_PREFERRED_DEFINITION
      */
     public String getDEC_PREFERRED_DEFINITION()
@@ -1333,7 +1333,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_LONG_NAME method returns the DEC_LONG_NAME for this bean.
-     * 
+     *
      * @return String The DEC_LONG_NAME
      */
     public String getDEC_LONG_NAME()
@@ -1343,7 +1343,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_ASL_NAME method returns the DEC_ASL_NAME for this bean.
-     * 
+     *
      * @return String The DEC_ASL_NAME
      */
     public String getDEC_ASL_NAME()
@@ -1353,7 +1353,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_CD_IDSEQ method returns the DEC_CD_IDSEQ for this bean.
-     * 
+     *
      * @return String The DEC_CD_IDSEQ
      */
     public String getDEC_CD_IDSEQ()
@@ -1363,7 +1363,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_CD_NAME method returns the DEC_CD_NAME for this bean.
-     * 
+     *
      * @return String The DEC_CD_NAME
      */
     public String getDEC_CD_NAME()
@@ -1373,7 +1373,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_LATEST_VERSION_IND method returns the DEC_LATEST_VERSION_IND for this bean.
-     * 
+     *
      * @return String The DEC_LATEST_VERSION_IND
      */
     public String getDEC_LATEST_VERSION_IND()
@@ -1383,7 +1383,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_OCL_NAME method returns the DEC_OCL_NAME for this bean.
-     * 
+     *
      * @return String The DEC_OCL_NAME
      */
     public String getDEC_OCL_NAME()
@@ -1393,7 +1393,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PROPL_IDSEQ method returns the DEC_PROPL_IDSEQ for this bean.
-     * 
+     *
      * @return String The DEC_PROPL_IDSEQ
      */
     public String getDEC_PROPL_IDSEQ()
@@ -1403,7 +1403,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_OCL_IDSEQ method returns the DEC_OCL_IDSEQ for this bean.
-     * 
+     *
      * @return String The DEC_OCL_IDSEQ
      */
     public String getDEC_OCL_IDSEQ()
@@ -1413,7 +1413,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_OBJ_ASL_NAME method returns the DEC_OBJ_ASL_NAME for this bean.
-     * 
+     *
      * @return String The DEC_OBJ_ASL_NAME
      */
     public String getDEC_OBJ_ASL_NAME()
@@ -1423,7 +1423,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PROP_ASL_NAME method returns the DEC_PROP_ASL_NAME for this bean.
-     * 
+     *
      * @return String The DEC_PROP_ASL_NAME
      */
     public String getDEC_PROP_ASL_NAME()
@@ -1433,7 +1433,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PROPL_NAME method returns the DEC_PROPL_NAME for this bean.
-     * 
+     *
      * @return String The DEC_PROPL_NAME
      */
     public String getDEC_PROPL_NAME()
@@ -1443,7 +1443,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_BEGIN_DATE method returns the DEC_BEGIN_DATE for this bean.
-     * 
+     *
      * @return String The DEC_BEGIN_DATE
      */
     public String getDEC_BEGIN_DATE()
@@ -1453,7 +1453,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_END_DATE method returns the DEC_END_DATE for this bean.
-     * 
+     *
      * @return String The DEC_END_DATE
      */
     public String getDEC_END_DATE()
@@ -1463,7 +1463,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_CHANGE_NOTE method returns the DEC_CHANGE_NOTE for this bean.
-     * 
+     *
      * @return String The DEC_CHANGE_NOTE
      */
     public String getDEC_CHANGE_NOTE()
@@ -1473,7 +1473,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_CREATED_BY method returns the DEC_CREATED_BY for this bean.
-     * 
+     *
      * @return String The DEC_CREATED_BY
      */
     public String getDEC_CREATED_BY()
@@ -1483,7 +1483,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_DATE_CREATED method returns the DEC_DATE_CREATED for this bean.
-     * 
+     *
      * @return String The DEC_DATE_CREATED
      */
     public String getDEC_DATE_CREATED()
@@ -1493,7 +1493,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_MODIFIED_BY method returns the DEC_MODIFIED_BY for this bean.
-     * 
+     *
      * @return String The DEC_MODIFIED_BY
      */
     public String getDEC_MODIFIED_BY()
@@ -1503,7 +1503,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_DATE_MODIFIED method returns the DEC_DATE_MODIFIED for this bean.
-     * 
+     *
      * @return String The DEC_DATE_MODIFIED
      */
     public String getDEC_DATE_MODIFIED()
@@ -1513,7 +1513,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_DELETED_IND method returns the DEC_DELETED_IND for this bean.
-     * 
+     *
      * @return String The DEC_DELETED_IND
      */
     public String getDEC_DELETED_IND()
@@ -1523,7 +1523,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_CONTEXT_NAME method returns the DEC_CONTEXT_NAME for this bean.
-     * 
+     *
      * @return String The DEC_CONTEXT_NAME
      */
     public String getDEC_CONTEXT_NAME()
@@ -1533,7 +1533,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * (non-Javadoc)
-     * 
+     *
      * @see gov.nih.nci.cadsr.cdecurate.tool.AC_Bean#getContextName()
      */
     @Override
@@ -1544,7 +1544,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_LANGUAGE method returns the DEC_LANGUAGE for this bean.
-     * 
+     *
      * @return String The DEC_LANGUAGE
      */
     public String getDEC_LANGUAGE()
@@ -1554,7 +1554,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_LANGUAGE_IDSEQ method returns the DEC_LANGUAGE_IDSEQ for this bean.
-     * 
+     *
      * @return String The DEC_LANGUAGE_IDSEQ
      */
     public String getDEC_LANGUAGE_IDSEQ()
@@ -1564,7 +1564,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PROTOCOL_ID method returns the DEC_PROTOCOL_ID for this bean.
-     * 
+     *
      * @return String The DEC_PROTOCOL_ID
      */
     public String getDEC_PROTOCOL_ID()
@@ -1574,7 +1574,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_CRF_NAME method returns the DEC_CRF_NAME for this bean.
-     * 
+     *
      * @return String The DEC_CRF_NAME
      */
     public String getDEC_CRF_NAME()
@@ -1584,7 +1584,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_TYPE_NAME method returns the DEC_TYPE_NAME for this bean.
-     * 
+     *
      * @return String The DEC_TYPE_NAME
      */
     public String getDEC_TYPE_NAME()
@@ -1594,7 +1594,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_DES_ALIAS_ID method returns the DEC_DES_ALIAS_ID for this bean.
-     * 
+     *
      * @return String The DEC_DES_ALIAS_ID
      */
     public String getDEC_DES_ALIAS_ID()
@@ -1604,7 +1604,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_ALIAS_NAME method returns the DEC_ALIAS_NAME for this bean.
-     * 
+     *
      * @return String The DEC_ALIAS_NAME
      */
     public String getDEC_ALIAS_NAME()
@@ -1614,7 +1614,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_USEDBY_CONTEXT method returns the DEC_USEDBY_CONTEXT for this bean.
-     * 
+     *
      * @return String The DEC_USEDBY_CONTEXT
      */
     public String getDEC_USEDBY_CONTEXT()
@@ -1624,7 +1624,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_Obj_Definition method returns the DEC_Obj_Definition for this bean.
-     * 
+     *
      * @return String The DEC_Obj_Definition
      */
     public String getDEC_Obj_Definition()
@@ -1634,7 +1634,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_Prop_Definition method returns the DEC_Prop_Definition for this bean.
-     * 
+     *
      * @return String The DEC_Prop_Definition
      */
     public String getDEC_Prop_Definition()
@@ -1644,7 +1644,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_DEC_ID method returns the DEC_DEC_ID for this bean.
-     * 
+     *
      * @return String The DEC_DEC_ID
      */
     public String getDEC_DEC_ID()
@@ -1654,7 +1654,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_SOURCE method returns the DEC_SOURCE for this bean.
-     * 
+     *
      * @return String The DEC_SOURCE
      */
     public String getDEC_SOURCE()
@@ -1664,7 +1664,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_CHECKED method returns the DEC_CHECKED for this bean.
-     * 
+     *
      * @return String The DEC_CHECKED
      */
     public boolean getDEC_CHECKED()
@@ -1674,7 +1674,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getAC_SELECTED_CONTEXT_ID method returns the DEC_SELECTED_CONTEXT_ID for this bean.
-     * 
+     *
      * @return Vector The DEC_SELECTED_CONTEXT_ID
      */
     public Vector getAC_SELECTED_CONTEXT_ID()
@@ -1684,7 +1684,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getAC_CS method returns the DEC_CS for this bean.
-     * 
+     *
      * @return Vector The DEC_CS
      */
     public Vector getAC_CS_NAME()
@@ -1694,7 +1694,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getAC_CS_ID method returns the DEC_CS_ID for this bean.
-     * 
+     *
      * @return Vector The DEC_CS_ID
      */
     public Vector getAC_CS_ID()
@@ -1704,7 +1704,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getAC_CSI method returns the DEC_CSI for this bean.
-     * 
+     *
      * @return String The DEC_CSI
      */
     public Vector getAC_CSI_NAME()
@@ -1714,7 +1714,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getAC_CSI_ID method returns the DEC_CSI_ID for this bean.
-     * 
+     *
      * @return String The DEC_CSI_ID
      */
     public Vector getAC_CSI_ID()
@@ -1724,7 +1724,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getAC_AC_CSI_VECTOR method returns the DEC_AC_CSI_VECTOR for this bean.
-     * 
+     *
      * @return Vector The DEC_AC_CSI_VECTOR
      */
     public Vector<AC_CSI_Bean> getAC_AC_CSI_VECTOR()
@@ -1734,7 +1734,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getAC_AC_CSI_ID method returns the DEC_AC_CSI_ID for this bean.
-     * 
+     *
      * @return Vector The DEC_AC_CSI_ID
      */
     public Vector getAC_AC_CSI_ID()
@@ -1744,7 +1744,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getAC_CS_CSI_ID method returns the DEC_CS_CSI_ID for this bean.
-     * 
+     *
      * @return Vector The DEC_CS_CSI_ID
      */
     public Vector getAC_CS_CSI_ID()
@@ -1754,7 +1754,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getAC_ALT_NAMES method returns the AC_ALT_NAMES for this bean.
-     * 
+     *
      * @return Vector The AC_ALT_NAMES
      */
     public Vector getAC_ALT_NAMES()
@@ -1764,7 +1764,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getAC_REF_DOCS method returns the AC_REF_DOCS for this bean.
-     * 
+     *
      * @return Vector The AC_REF_DOCS
      */
     public Vector getAC_REF_DOCS()
@@ -1774,7 +1774,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getAC_CONCEPT_NAME method returns the AC_CONCEPT_NAME for this bean.
-     * 
+     *
      * @return String The AC_CONCEPT_NAME
      */
     public String getAC_CONCEPT_NAME()
@@ -1792,7 +1792,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getREFERENCE_DOCUMENT method returns the REFERENCE_DOCUMENT for this bean.
-     * 
+     *
      * @return String The REFERENCE_DOCUMENT
      */
     public String getREFERENCE_DOCUMENT()
@@ -1810,7 +1810,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_OC_CONCEPT_CODE method returns the DEC_OC_CONCEPT_CODE for this bean.
-     * 
+     *
      * @return String The DEC_OC_CONCEPT_CODE
      */
     public String getDEC_OC_CONCEPT_CODE()
@@ -1820,7 +1820,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_OC_EVS_CUI_ORIGEN method returns the DEC_OC_EVS_CUI_ORIGEN for this bean.
-     * 
+     *
      * @return String The DEC_OC_EVS_CUI_ORIGEN
      */
     public String getDEC_OC_EVS_CUI_ORIGEN()
@@ -1830,7 +1830,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_EVS_OC_CUI_SOURCE method returns the DEC_OC_EVS_CUI_SOURCE for this bean.
-     * 
+     *
      * @return String The DEC_OC_EVS_CUI_SOURCE
      */
     public String getDEC_OC_EVS_CUI_SOURCE()
@@ -1840,7 +1840,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_OC_DEFINITION_SOURCE method returns the DEC_OC_DEFINITION_SOURCE for this bean.
-     * 
+     *
      * @return String The DEC_OC_DEFINITION_SOURCE
      */
     public String getDEC_OC_DEFINITION_SOURCE()
@@ -1850,7 +1850,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_OC_QUAL_CONCEPT_CODE method returns the DEC_OC_QUAL_CONCEPT_CODE for this bean.
-     * 
+     *
      * @return String The DEC_OC_QUAL_CONCEPT_CODE
      */
     public String getDEC_OC_QUAL_CONCEPT_CODE()
@@ -1860,7 +1860,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_OC_QUAL_EVS_CUI_ORIGEN method returns the DEC_OC_QUAL_EVS_CUI_ORIGEN for this bean.
-     * 
+     *
      * @return String The DEC_OC_QUAL_EVS_CUI_ORIGEN
      */
     public String getDEC_OC_QUAL_EVS_CUI_ORIGEN()
@@ -1870,7 +1870,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_EVS_OC_QUAL_CUI_SOURCE method returns the DEC_OC_QUAL_EVS_CUI_SOURCE for this bean.
-     * 
+     *
      * @return String The DEC_OC_QUAL_EVS_CUI_SOURCE
      */
     public String getDEC_OC_QUAL_EVS_CUI_SOURCE()
@@ -1880,7 +1880,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_OC_QUAL_DEFINITION_SOURCE method returns the DEC_OC_QUAL_DEFINITION_SOURCE for this bean.
-     * 
+     *
      * @return String The DEC_OC_QUAL_DEFINITION_SOURCE
      */
     public String getDEC_OC_QUAL_DEFINITION_SOURCE()
@@ -1890,7 +1890,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PROP_CONCEPT_CODE method returns the DEC_PROP_CONCEPT_CODE for this bean.
-     * 
+     *
      * @return String The DEC_PROP_CONCEPT_CODE
      */
     public String getDEC_PROP_CONCEPT_CODE()
@@ -1900,7 +1900,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PROP_EVS_CUI_ORIGEN method returns the DEC_PROP_EVS_CUI_ORIGEN for this bean.
-     * 
+     *
      * @return String The DEC_PROP_EVS_CUI_ORIGEN
      */
     public String getDEC_PROP_EVS_CUI_ORIGEN()
@@ -1910,7 +1910,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_EVS_PROP_CUI_SOURCE method returns the DEC_PROP_EVS_CUI_SOURCE for this bean.
-     * 
+     *
      * @return String The DEC_PROP_EVS_CUI_SOURCE
      */
     public String getDEC_PROP_EVS_CUI_SOURCE()
@@ -1920,7 +1920,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PROP_DEFINITION_SOURCE method returns the DEC_PROP_DEFINITION_SOURCE for this bean.
-     * 
+     *
      * @return String The DEC_PROP_DEFINITION_SOURCE
      */
     public String getDEC_PROP_DEFINITION_SOURCE()
@@ -1930,7 +1930,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PROP_QUAL_CONCEPT_CODE method returns the DEC_PROP_QUAL_CONCEPT_CODE for this bean.
-     * 
+     *
      * @return String The DEC_PROP_QUAL_CONCEPT_CODE
      */
     public String getDEC_PROP_QUAL_CONCEPT_CODE()
@@ -1940,7 +1940,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PROP_QUAL_EVS_CUI_ORIGEN method returns the DEC_PROP_QUAL_EVS_CUI_ORIGEN for this bean.
-     * 
+     *
      * @return String The DEC_PROP_QUAL_EVS_CUI_ORIGEN
      */
     public String getDEC_PROP_QUAL_EVS_CUI_ORIGEN()
@@ -1950,7 +1950,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_EVS_PROP_QUAL_CUI_SOURCE method returns the DEC_PROP_QUAL_EVS_CUI_SOURCE for this bean.
-     * 
+     *
      * @return String The DEC_PROP_QUAL_EVS_CUI_SOURCE
      */
     public String getDEC_PROP_QUAL_EVS_CUI_SOURCE()
@@ -1960,7 +1960,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PROP_QUAL_DEFINITION_SOURCE method returns the DEC_PROP_QUAL_DEFINITION_SOURCE for this bean.
-     * 
+     *
      * @return String The DEC_PROP_QUAL_DEFINITION_SOURCE
      */
     public String getDEC_PROP_QUAL_DEFINITION_SOURCE()
@@ -1970,7 +1970,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_OC_QUALIFIER_NAMES method returns the DEC_OC_QUALIFIER_NAMES for this bean.
-     * 
+     *
      * @return Vector The DEC_OC_QUALIFIER_NAMES
      */
     public Vector<String> getDEC_OC_QUALIFIER_NAMES()
@@ -1980,7 +1980,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_OC_QUALIFIER_CODES method returns the DEC_OC_QUALIFIER_CODES for this bean.
-     * 
+     *
      * @return Vector The DEC_OC_QUALIFIER_CODES
      */
     public Vector<String> getDEC_OC_QUALIFIER_CODES()
@@ -1990,7 +1990,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_OC_QUALIFIER_DB method returns the DEC_OC_QUALIFIER_DB for this bean.
-     * 
+     *
      * @return Vector The DEC_OC_QUALIFIER_DB
      */
     public Vector<String> getDEC_OC_QUALIFIER_DB()
@@ -2000,7 +2000,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PROP_QUALIFIER_NAMES method returns the DEC_PROP_QUALIFIER_NAMES for this bean.
-     * 
+     *
      * @return Vector The DEC_PROP_QUALIFIER_NAMES
      */
     public Vector getDEC_PROP_QUALIFIER_NAMES()
@@ -2010,7 +2010,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PROP_QUALIFIER_CODES method returns the DEC_PROP_QUALIFIER_CODES for this bean.
-     * 
+     *
      * @return Vector The DEC_PROP_QUALIFIER_CODES
      */
     public Vector getDEC_PROP_QUALIFIER_CODES()
@@ -2020,7 +2020,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PROP_QUALIFIER_DB method returns the DEC_PROP_QUALIFIER_DB for this bean.
-     * 
+     *
      * @return Vector The DEC_PROP_QUALIFIER_DB
      */
     public Vector getDEC_PROP_QUALIFIER_DB()
@@ -2030,7 +2030,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_OC_CONDR_IDSEQ method returns the DEC_OC_CONDR_IDSEQ for this bean.
-     * 
+     *
      * @return String The DEC_OC_CONDR_IDSEQ
      */
     public String getDEC_OC_CONDR_IDSEQ()
@@ -2040,7 +2040,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PROP_CONDR_IDSEQ method returns the DEC_PROP_CONDR_IDSEQ for this bean.
-     * 
+     *
      * @return String The DEC_PROP_CONDR_IDSEQ
      */
     public String getDEC_PROP_CONDR_IDSEQ()
@@ -2050,7 +2050,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_OCL_NAME_PRIMARY method returns the DEC_OCL_NAME_PRIMARY for this bean.
-     * 
+     *
      * @return String The DEC_OCL_NAME_PRIMARY
      */
     public String getDEC_OCL_NAME_PRIMARY()
@@ -2060,7 +2060,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getDEC_PROPL_NAME_PRIMARY method returns the DEC_PROPL_NAME_PRIMARY for this bean.
-     * 
+     *
      * @return String The DEC_PROPL_NAME_PRIMARY
      */
     public String getDEC_PROPL_NAME_PRIMARY()
@@ -2070,7 +2070,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getAC_SYS_PREF_NAME method returns the AC_SYS_PREF_NAME for this bean.
-     * 
+     *
      * @return String The AC_SYS_PREF_NAME
      */
     public String getAC_SYS_PREF_NAME()
@@ -2080,7 +2080,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getAC_USER_PREF_NAME method returns the AC_USER_PREF_NAME for this bean.
-     * 
+     *
      * @return String The AC_USER_PREF_NAME
      */
     public String getAC_USER_PREF_NAME()
@@ -2090,7 +2090,7 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getAC_ABBR_PREF_NAME method returns the AC_ABBR_PREF_NAME for this bean.
-     * 
+     *
      * @return String The AC_ABBR_PREF_NAME
      */
     public String getAC_ABBR_PREF_NAME()
@@ -2100,14 +2100,14 @@ public class DEC_Bean extends AC_Bean
 
     /**
      * The getAC_PREF_NAME_TYPE method returns the AC_PREF_NAME_TYPE for this bean.
-     * 
+     *
      * @return String The AC_PREF_NAME_TYPE
      */
     public String getAC_PREF_NAME_TYPE()
     {
         return this.AC_PREF_NAME_TYPE;
     }
-    
+
     /**
      * The getDisplayName method returns the displayName for this bean.
      * @return displayName

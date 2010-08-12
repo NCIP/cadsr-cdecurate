@@ -1565,8 +1565,8 @@
 			<input type="hidden" name="selPropQRow" value="">
 
 			<input type="hidden" name="selCompBlockRow" value="">
-			<input type="hidden" name="sCompBlocks" value="">
-			<input type="hidden" name="nvpConcept" value="">
+			<input type="hidden" name="sCompBlocks" id="sCompBlocks" value="">
+			<input type="hidden" name="nvpConcept" id="nvpConcept" value="">
 			<!-- oc and prop change status -->
 			<input type="hidden" name="nameTypeChange" value="<%=nameTypeChange%>">
 
