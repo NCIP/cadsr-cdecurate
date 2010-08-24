@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
 @SuppressWarnings("unchecked")
@@ -92,85 +93,126 @@ public class Data_Elements_Mgr extends ACBase {
 	 */
 	public void update(BaseVO vo, Connection conn) throws DBException {
 		DeVO deVO = (DeVO) vo;
-		Statement statement = null;
+		PreparedStatement ps = null;
 		deVO.setDeleted_ind(DBConstants.RECORD_DELETED_NO);
 		
 		deVO.setDate_modified(new java.sql.Timestamp(new java.util.Date().getTime()));
 		
 		// logger.debug("updateClient()");
 		try {
+
 			StringBuffer sql = new StringBuffer();
 			sql.append(" update data_elements_view ");
-			sql.append("set date_modified = timestamp '" + deVO.getDate_modified() +"'");
-			sql.append(", modified_by = '" + deVO.getModified_by() + "'");
-			
-			
-			sql.append(", deleted_ind = '" + deVO.getDeleted_ind() + "'");
+			sql.append("set date_modified = ?");
+			sql.append(", modified_by = ?");		
+			sql.append(", deleted_ind = ?");
 
 			if (deVO.getConte_IDSEQ() != null) {
-				sql.append(", conte_idseq = '" + deVO.getConte_IDSEQ() + "'");
+				sql.append(", conte_idseq = ?");
 			}
 			if (deVO.getPrefferred_name() != null) {
-				sql.append(", preferred_name = '" + deVO.getPrefferred_name() + "'");
+				sql.append(", preferred_name = ?");
 			}
 			if (deVO.getVd_IDSEQ() != null) {
-				sql.append(", vd_idseq = '" + deVO.getVd_IDSEQ() + "'");
+				sql.append(", vd_idseq = ?");
 			}
 			if (deVO.getDec_IDSEQ() != null) {
-				sql.append(", dec_idseq = '" + deVO.getDec_IDSEQ() + "'");
+				sql.append(", dec_idseq = ?");
 			}
 			if (deVO.getPrefferred_def() != null) {
-				sql.append(", preferred_definition = '"	+ deVO.getPrefferred_def().replace("'","\"") + "'");
+				sql.append(", preferred_definition = ?");
 			}
 			if (deVO.getAsl_name() != null) {
-				sql.append(", asl_name = '" + deVO.getAsl_name() + "'");
+				sql.append(", asl_name = ?");
 			}
 			if (deVO.getLong_name() != null) {
 				// allow null update
-				if (deVO.getLong_name() == "") {
-					sql.append(", long_name = ''");
-				} else {
-					sql.append(", long_name = '" + deVO.getLong_name() + "'");
-				}
+				sql.append(", long_name = ?");
+				
 			}
 			if (deVO.getLastest_version_ind() != null) {
-				sql.append(", latest_version_ind = '" + deVO.getLastest_version_ind() + "'");
+				sql.append(", latest_version_ind = ?");
 			}
 			
 			if (deVO.getBegin_date() != null){
-				sql.append(", begin_date = timestamp '" + deVO.getBegin_date() + "'");
-			}else
-				// allow null updates
-				sql.append(", begin_date = ''");
+				sql.append(", begin_date = ?");
+			}
 			
 			if (deVO.getEnd_date() != null){
-				sql.append(",  end_date = timestamp '" + deVO.getEnd_date() + "'");
-			}else
-				// allow null updates
-				sql.append(",  end_date = ''");
+				sql.append(",  end_date = ?");
+			}
 			
 			
 			if (deVO.getChange_note() != null) {
 				// allow null updates
-				if (deVO.getChange_note() == "") {
-					sql.append(",  change_note = ''");
-				} else {
-					sql.append(",  change_note = '" + deVO.getChange_note().replace("'","\"")	+ "'");
-				}
+
+					sql.append(",  change_note = ?");
+				
 			}
 			if (deVO.getOrigin() != null) {
 				// allow null updates
-				if (deVO.getOrigin() == "") {
-					sql.append(",  origin= ''");
-				} else {
-					sql.append(",  origin= '" + deVO.getOrigin() + "'");
-				}
+					sql.append(",  origin= ?");
 			}
 
-			sql.append(" where de_idseq = '" + deVO.getDe_IDSEQ() + "'");
+			sql.append(" where de_idseq = ?");
 
-			statement = conn.createStatement();
-			int result = statement.executeUpdate(sql.toString());
+			ps = conn.prepareStatement(sql.toString());
+
+			int placeIndicator = 1;  //Here to account for dynamic sql
+			ps.setTimestamp(placeIndicator++,deVO.getDate_modified());
+			ps.setString(placeIndicator++, deVO.getModified_by());
+			ps.setString(placeIndicator++, deVO.getDeleted_ind());
+
+			if (deVO.getConte_IDSEQ() != null) {
+				ps.setString(placeIndicator++,deVO.getConte_IDSEQ());
+			}
+			if (deVO.getPrefferred_name() != null) {
+				ps.setString(placeIndicator++, deVO.getPrefferred_name());
+			}
+			if (deVO.getVd_IDSEQ() != null) {
+				ps.setString(placeIndicator++, deVO.getVd_IDSEQ());
+			}
+			if (deVO.getDec_IDSEQ() != null) {
+				ps.setString(placeIndicator++, deVO.getDec_IDSEQ());
+			}
+			if (deVO.getPrefferred_def() != null) {
+				ps.setString(placeIndicator++, deVO.getPrefferred_def());
+			}
+			if (deVO.getAsl_name() != null) {
+				ps.setString(placeIndicator++, deVO.getAsl_name());
+			}
+			if (deVO.getLong_name() != null) {
+				// allow null update
+					ps.setString(placeIndicator++, deVO.getLong_name());
+				
+			}
+			if (deVO.getLastest_version_ind() != null) {
+				ps.setString(placeIndicator++, deVO.getLastest_version_ind());
+			}
+			
+			if (deVO.getBegin_date() != null){
+				ps.setTimestamp(placeIndicator++, deVO.getBegin_date());
+			}
+			
+			if (deVO.getEnd_date() != null){
+				ps.setTimestamp(placeIndicator++, deVO.getEnd_date());
+			}
+			
+			
+			if (deVO.getChange_note() != null) {
+				// allow null updates
+
+					ps.setString(placeIndicator++, deVO.getChange_note());
+			}
+			if (deVO.getOrigin() != null) {
+
+					ps.setString(placeIndicator++, deVO.getOrigin());
+			}
+
+			ps.setString(placeIndicator++, deVO.getDe_IDSEQ());
+			
+			//statement = conn.createStatement();
+			int result = ps.executeUpdate();
 
 			if (result == 0) {
 				throw new Exception("Unable to Update");
@@ -180,7 +222,7 @@ public class Data_Elements_Mgr extends ACBase {
 			errorList.add(DeErrorCodes.API_DE_501);
 			throw new DBException(errorList);
 		} finally {
-			statement = SQLHelper.closeStatement(statement);
+			ps = SQLHelper.closePreparedStatement(ps);
 		}
 
 	}

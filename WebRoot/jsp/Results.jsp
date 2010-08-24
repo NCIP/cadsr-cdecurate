@@ -11,6 +11,7 @@
 	Vector vContext = new Vector();
 	Vector vDocs = new Vector();
 	Vector vACAttr = new Vector();
+	String sessionRecordsDisplayed = (String) session.getAttribute("sessionRecordsDisplayed");
 	String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
 	String sInitiatedFrom = (String) session.getAttribute("initiatedFrom");
 	String sLastKeyword, sSearchIn, sContextUse = "", sContext = "";
@@ -19,7 +20,13 @@
 	String selCD = "", sProtoKeyword = "", sUIFilter = "simple", sVersion = "", txVersion = "";
 	String sSearchAC = "";
 	String typeEnum = "", typeNonEnum = "", typeRef = "";
+	String totalRecords = "";
 	Vector vMultiContext = (Vector) session.getAttribute("multiContextAC");
+	totalRecords = (String) session.getAttribute("totalRecords");
+	
+	if (totalRecords == null)
+		totalRecords = "";
+	
 	//gets the session attributes for action searchForCreate
 	if (sMenuAction.equals("searchForCreate")) {
 		sSearchAC = (String) session.getAttribute("creSearchAC"); //done now in CDEHomePage
@@ -140,7 +147,7 @@
 	if (vContext == null)
 		vContext = new Vector();
 	if (sContext == null)
-		sContext = "AllContext";
+		sContext = "All (No Test/Train)";
 	if (sContextUse == null || sContextUse == "")
 		sContextUse = "BOTH";
 	// if (sSearchIn.equals("CRFName")) sContextUse = "OWNED_BY";
@@ -1388,9 +1395,15 @@ function ShowSelectedRowss(){
                         <select name="listMultiContextFilter" size="5" style="width: 185"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
+								<option value="All (No Test/Train)"
+								<%if (vContext.size() == 0 || vContext.contains("All (No Test/Train)")){%>
+								selected <%}%>>
+								All (No Test/Train)
+							</option>
+									
 															
 							<option value="AllContext"
-								<%if (vContext.size() == 0 || vContext.contains("AllContext")){%>
+								<%if (vContext != null && vContext.contains("AllContext")){%>
 								selected <%}%>>
 								All Contexts
 							</option>
@@ -2127,19 +2140,17 @@ function ShowSelectedRowss(){
 						<div align="left">
 							Results Displayed:
 							<select name="recordsDisplayed" size="1" style="width: 160">
-								<option value="100">
-									100
-								</option>
-								<option value="250" >
-									250
-								</option>
-								<option value="500" >
+							
+								<option value="500" <% if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && sessionRecordsDisplayed.equals("500")){ %>
+								selected<%} %>>
 									500
 								</option>
-								<option value="750"> 
-									750
+								<option value="1000" <% if (sessionRecordsDisplayed == null || sessionRecordsDisplayed.equals("") || sessionRecordsDisplayed.equals("1000")){ %>
+								selected<%} %>> 
+									1000
 								</option>
-								<option value="0"> 
+								<option value="0" <% if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && sessionRecordsDisplayed.equals("0")){ %>
+								selected<%} %>> 
 									All
 								</option>
 							</select>
@@ -2222,7 +2233,10 @@ function ShowSelectedRowss(){
 						<font size="2">
 							&nbsp;
 							<%=nRecs%>
-							Records Found <%if (labelKeyword2 != null){%><%=labelKeyword2%><%}%>
+							of <%=totalRecords%> Records Displayed <%if (labelKeyword2 != null){%><%=labelKeyword2%><%}%> 
+										   <%if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && !sessionRecordsDisplayed.equals("0")) { %>
+										    (search limited to first <%=sessionRecordsDisplayed %> results) <%} else if (sessionRecordsDisplayed != null && sessionRecordsDisplayed.equals("0")) {%>
+										    (search not limited)<% } %>
 						</font>
 						</td>				
 				</tr>
@@ -2242,7 +2256,9 @@ function ShowSelectedRowss(){
 						<font size="2">
 							&nbsp;
 							<%=nRecs%>
-							Records Found
+							of <%=totalRecords%> Records Displayed <%if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && !sessionRecordsDisplayed.equals("0")) { %>
+										    (search limited to first <%=sessionRecordsDisplayed %> results) <%} else if (sessionRecordsDisplayed != null && sessionRecordsDisplayed.equals("0")) {%>
+										    (search not limited)<% } %>
 						</font>
 					</td>				
 				</tr>

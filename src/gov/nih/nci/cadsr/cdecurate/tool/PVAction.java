@@ -6,12 +6,14 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -587,6 +589,13 @@ public class PVAction implements Serializable {
 						PVBean.setPV_EVS_DATABASE("caDSR");
 						vList.addElement(PVBean); //add the bean to a vector
 					} //END WHILE
+					if (g == recordsDisplayed){
+                    	int totalRecords = getResultSetSize(rs);
+                    	DataManager.setAttribute(data.getRequest().getSession(), "pvTotalRecords", Integer.toString(totalRecords));
+                    } else 
+                    	DataManager.setAttribute(data.getRequest().getSession(), "pvTotalRecords", Integer.toString(g));
+                    
+					
 				} //END IF
 			}
 		} catch (Exception e) {
@@ -1280,5 +1289,14 @@ public class PVAction implements Serializable {
 		//return chagnged names to display
 		return vNames;
 	}
+	
+    private int getResultSetSize(ResultSet rs) throws SQLException {
+    	int size = 0;
+    	size = rs.getRow();
+    	while(rs.next())
+    		size++;
+    	
+    	return size;
+    }
 
 }//end of class
