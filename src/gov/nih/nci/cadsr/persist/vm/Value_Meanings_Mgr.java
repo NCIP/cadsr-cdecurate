@@ -216,7 +216,7 @@ public class Value_Meanings_Mgr extends DBManager{
 	 */
 	public void update(VmVO vmVO, Connection conn) throws DBException {
 
-		Statement statement = null;
+		PreparedStatement statement = null;
 		vmVO.setDeleted_ind(DBConstants.RECORD_DELETED_NO);
 		vmVO.setDate_modified(new java.sql.Timestamp(new java.util.Date().getTime()));
 
@@ -224,68 +224,93 @@ public class Value_Meanings_Mgr extends DBManager{
 		try {
 			StringBuffer sql = new StringBuffer();
 			sql.append(" update value_meanings_view ");
-			sql.append(" set date_modified ='" + vmVO.getDate_modified() + "'");
-			sql.append(", modified_by = '" + vmVO.getModified_by() + "'");
-			sql.append(", deleted_ind = '" + vmVO.getDeleted_ind() + "'");
+			sql.append(" set date_modified = ?");
+			sql.append(", modified_by = ?");
+			sql.append(", deleted_ind = ?");
 
 			if (vmVO.getPrefferred_name() != null) {
-				sql.append(", preferred_name = '" + vmVO.getPrefferred_name()
-						+ "'");
+				sql.append(", preferred_name = ?");
 			}
 			if (vmVO.getConte_IDSEQ() != null) {
-				sql.append(", conte_idseq = '" + vmVO.getConte_IDSEQ() + "'");
+				sql.append(", conte_idseq = ?");
 			}
 			if (vmVO.getPrefferred_def() != null) {
-				sql.append(", preferred_definition = '"
-						+ vmVO.getPrefferred_def().replace("'","\"") + "'");
+				sql.append(", preferred_definition = ?");
 			}
 			if (vmVO.getLong_name() != null) {
-				sql.append(", long_name = '" + vmVO.getLong_name() + "'");
+				sql.append(", long_name = ?");
 			}
 			if (vmVO.getAsl_name() != null) {
-				sql.append(", asl_name = '" + vmVO.getAsl_name() + "'");
+				sql.append(", asl_name = ?");
 			}
 			
 			if (vmVO.getCondr_IDSEQ() != null) {
-				sql.append(", vd_idseq = '" + vmVO.getCondr_IDSEQ() + "'");
+				sql.append(", vd_idseq = ?");
 			}
 			if (vmVO.getLatest_version_ind() != null) {
-				sql.append(", latest_version_ind = '"
-						+ vmVO.getLatest_version_ind() + "'");
+				sql.append(", latest_version_ind = ?");
 			}
 			if (vmVO.getBegin_date() != null) {
-				sql.append(", begin_date = '" + vmVO.getBegin_date() + "'");
-			}else{	
-				//allow null update
-		    	sql.append(", begin_date = ''");
+				sql.append(", begin_date = ?");
 			}
 			if (vmVO.getEnd_date() != null) {
-				sql.append(",  end_date = '" + vmVO.getEnd_date() + "'");
-			}else{	
-				//allow null update
-			 	sql.append(",  end_date = ''");
+				sql.append(",  end_date = ?");
 			}
 			if (vmVO.getChange_note() != null) {
-				//allow null updates
-				if (vmVO.getChange_note() == "") {
-					sql.append(",  change_note = ''");
-				} else {
-					sql.append(",  change_note = '" + vmVO.getChange_note().replace("'","\"")	+ "'");
-				}
+				sql.append(",  change_note = ?");
 			}
 			if (vmVO.getOrigin() != null) {
-				//allow null updates
-				if (vmVO.getOrigin() == "") {
-					sql.append(",  origin= ''");
-				} else {
-					sql.append(",  origin= '" + vmVO.getOrigin() + "'");
-				}
+				sql.append(",  origin= ?");		
 			}
 	
-			sql.append(" where vm_idseq = '" + vmVO.getVm_IDSEQ() + "'");
+			sql.append(" where vm_idseq = ?");
 
-			statement = conn.createStatement();
-			int result = statement.executeUpdate(sql.toString());
+			statement = conn.prepareStatement(sql.toString());
+			
+			int placeIndicator = 1;
+			statement.setTimestamp(placeIndicator++, vmVO.getDate_modified());
+			statement.setString(placeIndicator++, vmVO.getModified_by());
+			statement.setString(placeIndicator++, vmVO.getDeleted_ind());
+
+			if (vmVO.getPrefferred_name() != null) {
+				statement.setString(placeIndicator++, vmVO.getPrefferred_name());
+			}
+			if (vmVO.getConte_IDSEQ() != null) {
+				statement.setString(placeIndicator++, vmVO.getConte_IDSEQ());
+			}
+			if (vmVO.getPrefferred_def() != null) {
+				statement.setString(placeIndicator++, vmVO.getPrefferred_def());
+			}
+			if (vmVO.getLong_name() != null) {
+				statement.setString(placeIndicator++, vmVO.getLong_name());
+			}
+			if (vmVO.getAsl_name() != null) {
+				statement.setString(placeIndicator++, vmVO.getAsl_name() );
+			}
+			
+			if (vmVO.getCondr_IDSEQ() != null) {
+				statement.setString(placeIndicator++, vmVO.getCondr_IDSEQ());
+			}
+			if (vmVO.getLatest_version_ind() != null) {
+				statement.setString(placeIndicator++, vmVO.getLatest_version_ind());
+			}
+			if (vmVO.getBegin_date() != null) {
+				statement.setTimestamp(placeIndicator++, vmVO.getBegin_date() );
+			}
+			if (vmVO.getEnd_date() != null) {
+				statement.setTimestamp(placeIndicator++, vmVO.getEnd_date());
+			}
+			if (vmVO.getChange_note() != null) {
+				statement.setString(placeIndicator++, vmVO.getChange_note());
+			}
+			if (vmVO.getOrigin() != null) {
+				statement.setString(placeIndicator++, vmVO.getOrigin());
+			}
+	
+			statement.setString(placeIndicator++, vmVO.getVm_IDSEQ());
+			
+	
+			int result = statement.executeUpdate();
 
 			if (result == 0) {
 				throw new Exception("Unable to Update");
@@ -296,7 +321,7 @@ public class Value_Meanings_Mgr extends DBManager{
 			errorList.add(VmErrorCodes.API_VM_501);
 			throw new DBException(errorList);
 		} finally {
-			statement = SQLHelper.closeStatement(statement);
+			statement = SQLHelper.closePreparedStatement(statement);
 		}
 
 	}
