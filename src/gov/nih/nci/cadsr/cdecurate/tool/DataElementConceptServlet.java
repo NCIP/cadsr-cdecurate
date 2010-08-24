@@ -699,15 +699,20 @@ public class DataElementConceptServlet extends CurationServlet {
                 conName = "";
             if (!conName.equals(""))
             {
+            	String nvpValue = "";
+            	if (this.checkNVP(eCon))
+            		nvpValue = "::" + eCon.getNVP_CONCEPT_VALUE();
+            	
                 // rearrange it long name and definition
                 if (newBean == null)
                 {
                     if (!sLongName.equals(""))
                         sLongName += " ";
-                    sLongName += conName;
+                    sLongName += conName + nvpValue;
                     if (!sDef.equals(""))
                         sDef += "_"; // add definition
-                    sDef += eCon.getPREFERRED_DEFINITION();
+                    sDef += eCon.getPREFERRED_DEFINITION() + nvpValue;
+                    
                 }
                 if (!sAbbName.equals(""))
                     sAbbName += "_";
@@ -718,7 +723,7 @@ public class DataElementConceptServlet extends CurationServlet {
                 // add object qualifiers to object class name
                 if (!sOCName.equals(""))
                     sOCName += " ";
-                sOCName += conName;
+                sOCName += conName + nvpValue;
             }
         }
         // add the Object Class primary
@@ -732,15 +737,19 @@ public class DataElementConceptServlet extends CurationServlet {
                 sPrimary = "";
             if (!sPrimary.equals(""))
             {
+            	String nvpValue = "";
+            	if (this.checkNVP(eCon))
+            		nvpValue = "::" + eCon.getNVP_CONCEPT_VALUE();
+            	
                 // rearrange it only long name and definition
                 if (newBean == null)
                 {
                     if (!sLongName.equals(""))
                         sLongName += " ";
-                    sLongName += sPrimary;
+                    sLongName += sPrimary + nvpValue;
                     if (!sDef.equals(""))
                         sDef += "_"; // add definition
-                    sDef += eCon.getPREFERRED_DEFINITION();
+                    sDef += eCon.getPREFERRED_DEFINITION() + nvpValue;
                 }
                 if (!sAbbName.equals(""))
                     sAbbName += "_";
@@ -751,7 +760,7 @@ public class DataElementConceptServlet extends CurationServlet {
                 // add primary object to object name
                 if (!sOCName.equals(""))
                     sOCName += " ";
-                sOCName += sPrimary;
+                sOCName += sPrimary + nvpValue;
             }
         }
         // get the Property into the long name and abbr name
@@ -769,15 +778,19 @@ public class DataElementConceptServlet extends CurationServlet {
                 conName = "";
             if (!conName.equals(""))
             {
+            	String nvpValue = "";
+            	if (this.checkNVP(eCon))
+            		nvpValue = "::" + eCon.getNVP_CONCEPT_VALUE();
+            	
                 // rearrange it long name and definition
                 if (newBean == null)
                 {
                     if (!sLongName.equals(""))
                         sLongName += " ";
-                    sLongName += conName;
+                    sLongName += conName + nvpValue;
                     if (!sDef.equals(""))
                         sDef += "_"; // add definition
-                    sDef += eCon.getPREFERRED_DEFINITION();
+                    sDef += eCon.getPREFERRED_DEFINITION() + nvpValue;
                 }
                 if (!sAbbName.equals(""))
                     sAbbName += "_";
@@ -788,7 +801,7 @@ public class DataElementConceptServlet extends CurationServlet {
                 // add property qualifiers to property name
                 if (!sPropName.equals(""))
                     sPropName += " ";
-                sPropName += conName;
+                sPropName += conName + nvpValue;
             }
         }
         // add the property primary
@@ -802,15 +815,19 @@ public class DataElementConceptServlet extends CurationServlet {
                 sPrimary = "";
             if (!sPrimary.equals(""))
             {
+            	String nvpValue = "";
+            	if (this.checkNVP(eCon))
+            		nvpValue = "::" + eCon.getNVP_CONCEPT_VALUE();
+            	
                 // rearrange it only long name and definition
                 if (newBean == null)
                 {
                     if (!sLongName.equals(""))
                         sLongName += " ";
-                    sLongName += sPrimary;
+                    sLongName += sPrimary + nvpValue;
                     if (!sDef.equals(""))
                         sDef += "_"; // add definition
-                    sDef += eCon.getPREFERRED_DEFINITION();
+                    sDef += eCon.getPREFERRED_DEFINITION() + nvpValue;
                 }
                 if (!sAbbName.equals(""))
                     sAbbName += "_";
@@ -821,7 +838,7 @@ public class DataElementConceptServlet extends CurationServlet {
                 // add primary property to property name
                 if (!sPropName.equals(""))
                     sPropName += " ";
-                sPropName += sPrimary;
+                sPropName += sPrimary + nvpValue;
             }
         }
         // truncate to 30 characters
@@ -1967,9 +1984,10 @@ public class DataElementConceptServlet extends CurationServlet {
 	  // add oc primary attributes to the dec bean
 	  EVS_Bean pBean =(EVS_Bean)vObjectClass.get(0); 
 	  String nvpValue = "";
-	  if (pBean.getNAME_VALUE_PAIR_IND() > 0)
+	  if (checkNVP(pBean))
 		  nvpValue="::"+pBean.getNVP_CONCEPT_VALUE();
-	  decBean.setDEC_OCL_NAME_PRIMARY(pBean.getLONG_NAME()+nvpValue);
+	  if (pBean.getLONG_NAME() != null)
+		  decBean.setDEC_OCL_NAME_PRIMARY(pBean.getLONG_NAME()+nvpValue);
       decBean.setDEC_OC_CONCEPT_CODE(pBean.getCONCEPT_IDENTIFIER());
       decBean.setDEC_OC_EVS_CUI_ORIGEN(pBean.getEVS_DATABASE());
       //if (pBean.getIDSEQ() != null && pBean.getIDSEQ().length() > 0)
@@ -1983,7 +2001,7 @@ public class DataElementConceptServlet extends CurationServlet {
       for (int i=1; i<vObjectClass.size();i++){
 		  EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
 		  nvpValue = "";
-		  if (eBean.getNAME_VALUE_PAIR_IND() > 0)
+		  if (checkNVP(eBean))
 			  nvpValue="::"+eBean.getNVP_CONCEPT_VALUE();
          // update qualifier vectors
          // add it othe qualifiers attributes of the selected DEC
@@ -2002,8 +2020,8 @@ public class DataElementConceptServlet extends CurationServlet {
           decBean.setDEC_OC_QUALIFIER_NAMES(vOCQualifierNames);
           decBean.setDEC_OC_QUALIFIER_CODES(vOCQualifierCodes);
           decBean.setDEC_OC_QUALIFIER_DB(vOCQualifierDB);
-          // if (vOCQualifierNames.size()>0)
-          // decBean.setDEC_OBJ_CLASS_QUALIFIER((String)vOCQualifierNames.elementAt(0));
+//           if (vOCQualifierNames.size()>0)
+//           decBean.setDEC_OBJ_CLASS_QUALIFIER((String)vOCQualifierNames.elementAt(0));
           // store it in the session
           DataManager.setAttribute(session, "m_OCQ", eBean);
      }
@@ -2015,9 +2033,10 @@ public class DataElementConceptServlet extends CurationServlet {
 	  // add prop primary attributes to the dec bean
 	  EVS_Bean pBean =(EVS_Bean)vProperty.get(0); 
 	  String nvpValue = "";
-	  if (pBean.getNAME_VALUE_PAIR_IND() > 0)
+	  if (checkNVP(pBean))
 		  nvpValue="::"+pBean.getNVP_CONCEPT_VALUE();
-	  decBean.setDEC_PROPL_NAME_PRIMARY(pBean.getLONG_NAME()+nvpValue);
+	  if (pBean.getLONG_NAME() != null)
+		  decBean.setDEC_PROPL_NAME_PRIMARY(pBean.getLONG_NAME()+nvpValue);
       decBean.setDEC_PROP_CONCEPT_CODE(pBean.getCONCEPT_IDENTIFIER());
       decBean.setDEC_PROP_EVS_CUI_ORIGEN(pBean.getEVS_DATABASE());
       //decBean.setDEC_PROPL_IDSEQ(pBean.getIDSEQ());
@@ -2030,7 +2049,7 @@ public class DataElementConceptServlet extends CurationServlet {
       for (int i=1; i<vProperty.size();i++){
 		  EVS_Bean eBean =(EVS_Bean)vProperty.get(i);
 		  nvpValue="";
-		  if (eBean.getNAME_VALUE_PAIR_IND() > 0)
+		  if (checkNVP(eBean))
 			  nvpValue="::"+eBean.getNVP_CONCEPT_VALUE();
          // update qualifier vectors
          // add it the qualifiers attributes of the selected DEC
@@ -2056,4 +2075,8 @@ public class DataElementConceptServlet extends CurationServlet {
       return decBean;  
   }
       	
+  public boolean checkNVP(EVS_Bean eCon) {
+	  
+	  return (eCon.getNAME_VALUE_PAIR_IND() > 0 && eCon.getLONG_NAME().indexOf("::") < 1 && eCon.getNVP_CONCEPT_VALUE().length() > 0);
+  }
 }
