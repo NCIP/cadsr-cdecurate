@@ -1018,12 +1018,16 @@ public class ValueDomainServlet extends CurationServlet {
 				// rearrange it long name and definition
 				if (newBean == null)
 				{
+					String nvpValue = "";
+	            	if (this.checkNVP(eCon))
+	            		nvpValue = "::" + eCon.getNVP_CONCEPT_VALUE();
+	            	
 					if (!sLongName.equals(""))
 						sLongName += " ";
-					sLongName += conName;
+					sLongName += conName + nvpValue;
 					if (!sDef.equals(""))
 						sDef += "_"; // add definition
-					sDef += eCon.getPREFERRED_DEFINITION();
+					sDef += eCon.getPREFERRED_DEFINITION() + nvpValue;
 				}
 				if (!sAbbName.equals(""))
 					sAbbName += "_";
@@ -1047,12 +1051,16 @@ public class ValueDomainServlet extends CurationServlet {
 				// rearrange it only long name and definition
 				if (newBean == null)
 				{
+					String nvpValue = "";
+	            	if (this.checkNVP(eCon))
+	            		nvpValue = "::" + eCon.getNVP_CONCEPT_VALUE();
+	            	
 					if (!sLongName.equals(""))
 						sLongName += " ";
-					sLongName += sPrimary;
+					sLongName += sPrimary + nvpValue;
 					if (!sDef.equals(""))
 						sDef += "_"; // add definition
-					sDef += eCon.getPREFERRED_DEFINITION();
+					sDef += eCon.getPREFERRED_DEFINITION() + nvpValue;
 				}
 				if (!sAbbName.equals(""))
 					sAbbName += "_";
@@ -2357,9 +2365,10 @@ public class ValueDomainServlet extends CurationServlet {
 		// add rep primary attributes to the vd bean
 		EVS_Bean pBean =(EVS_Bean)vRep.get(0); 
 		String nvpValue = "";
-		  if (pBean.getNAME_VALUE_PAIR_IND() > 0)
-			  nvpValue="::"+pBean.getNVP_CONCEPT_VALUE();
-		vdBean.setVD_REP_NAME_PRIMARY(pBean.getLONG_NAME()+nvpValue);
+		if (checkNVP(pBean))
+			nvpValue="::"+pBean.getNVP_CONCEPT_VALUE();
+		if (pBean.getLONG_NAME() != null)
+			vdBean.setVD_REP_NAME_PRIMARY(pBean.getLONG_NAME()+nvpValue);
 		vdBean.setVD_REP_CONCEPT_CODE(pBean.getCONCEPT_IDENTIFIER());
 		vdBean.setVD_REP_EVS_CUI_ORIGEN(pBean.getEVS_DATABASE());
 		
@@ -2374,8 +2383,8 @@ public class ValueDomainServlet extends CurationServlet {
 		for (int i=1; i<vRep.size();i++){
 			EVS_Bean eBean =(EVS_Bean)vRep.get(i);
 			nvpValue = "";
-			  if (eBean.getNAME_VALUE_PAIR_IND() > 0)
-				  nvpValue="::"+eBean.getNVP_CONCEPT_VALUE();
+			if (checkNVP(eBean))
+				nvpValue="::"+eBean.getNVP_CONCEPT_VALUE();
 			// add rep qualifiers to the vector
 			Vector<String> vRepQualifierNames = vdBean.getVD_REP_QUALIFIER_NAMES();
 			if (vRepQualifierNames == null)
@@ -2399,4 +2408,9 @@ public class ValueDomainServlet extends CurationServlet {
 		}
 		return vdBean;  
 	}
+	
+	public boolean checkNVP(EVS_Bean eCon) {
+		  
+		  return (eCon.getNAME_VALUE_PAIR_IND() > 0 && eCon.getLONG_NAME().indexOf("::") < 1 && eCon.getNVP_CONCEPT_VALUE().length() > 0);
+	  }
 }
