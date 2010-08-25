@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.util.Vector;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author shegde
  *
@@ -73,6 +75,7 @@ public class VMForm implements Serializable
   private Vector<VM_Bean> errorMsgList;
   private double versionNumber;
   private String versionInd;
+  private HttpServletRequest request;
   
   /**
  * @return the versionNumber
@@ -704,6 +707,14 @@ public String getSearchFilterConName() {
  */
 public void setSearchFilterConName(String searchFilterConName) {
 	this.searchFilterConName = searchFilterConName;
+}
+
+public void setRequest(HttpServletRequest request) {
+	this.request = request;
+}
+
+public HttpServletRequest getRequest() {
+	return request;
 }  
   
 }

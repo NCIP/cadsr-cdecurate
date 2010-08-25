@@ -278,6 +278,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
 	
 	vmData.setVersionInd(sVersion);
 	vmData.setVersionNumber(dVersion);
+	vmData.setRequest(req);
 
 }
 
