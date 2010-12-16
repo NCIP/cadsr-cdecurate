@@ -1,0 +1,1121 @@
+<!-- CreatePVPage.jsp -->
+<!-- goes to login page if error occurs -->
+
+
+<html>
+<head>
+<title>CDE Curation: Create Value</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<script>
+history.forward();
+</script>
+</head>
+
+<body>
+<table width="100%" border="1" cellpadding="0" cellspacing="0">
+  <tr>
+    <td height="95" valign="top" colspan="2">
+
+    <table width="100%" border="1" cellpadding="0" cellspacing="0">
+      <tr>
+        <td height="95" valign="top">
+<html>
+<head>
+
+<script language="JavaScript">
+<!--
+var dotCntr = -1;
+var helpWindow = null;
+var aboutWindow = null;
+var sentinelWindow = null;
+
+   function callLogout()
+   {
+      if(confirm("Are you sure you want to logout?"))
+        document.LogoutForm.submit();
+   }
+   function callTimeout()
+   {
+      document.LogoutForm.submit();
+   }
+
+   function callHelp()
+   {
+      if (helpWindow && !helpWindow.closed)
+       	helpWindow.focus();
+      else
+       	// helpWindow = window.open("Help.htm", "Help", "width=750,height=620,top=0,left=0,resizable=yes,scrollbars=yes,titlebar=false");
+       	helpWindow = window.open("Help.htm", "Help");
+   }
+
+    function callManageAlert()
+   {
+    alert("Manage Page is under development");
+   }
+ 
+
+  
+  function callAboutAlert()
+  {
+    //open the window
+    if (aboutWindow && !aboutWindow.closed)
+       aboutWindow.focus();
+    else
+       aboutWindow = window.open("jsp/SplashScreenAbout.jsp", "CurationTool", "width=900,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
+  }
+  
+  function callSentinel()
+  {
+      callSentinelJS("http://cadsrsentinel-stage.nci.nih.gov");
+  }
+  
+  
+  function callSentinelJS(serverName)
+  {
+  	   
+	   if (serverName != null && serverName != "")  
+	   {
+//		   serverName = serverName.toLowerCase();
+		   var cdeServer = serverName
+/*       var cdeServer = serverName;   //defaults to curation tool server
+       if (serverName == "localhost")
+          cdeServer = "biotite.scenpro.net:8080";
+       else if (serverName == "protocol.scenpro.net")
+          cdeServer = "protocol.scenpro.net:8080/cadsrsentinel/do/logon";
+       else if (serverName == "ncicb-dev.nci.nih.gov" || serverName == "cdecurate-dev.nci.nih.gov")
+          cdeServer = "ncicb-dev.nci.nih.gov/cadsrsentinel"; 
+       else if (serverName == "ncicb-qa.nci.nih.gov" || serverName == "cdecurate-qa.nci.nih.gov")
+          cdeServer = "ncicb-qa.nci.nih.gov/cadsrsentinel";
+       else if (serverName == "ncicb-stage.nci.nih.gov" || serverName == "cdecurate-stage.nci.nih.gov")
+          cdeServer =  "cadsrsentinel-stage.nci.nih.gov/";   //"ncicb-stage.nci.nih.gov/cadsrsentinel";
+       else if (serverName == "ncicb.nci.nih.gov" || serverName == "cdecurate.nci.nih.gov")
+          cdeServer = "cadsrsentinel.nci.nih.gov/"; //"ncicb-nci.nih.gov/cadsrsentinel";*/
+		    //open the window
+        if (sentinelWindow && !sentinelWindow.closed)
+          sentinelWindow.focus();
+        else
+          sentinelWindow = window.open(cdeServer);
+        //  sentinelWindow = window.open("http://" + cdeServer + "/cadsrsentinel/do/cdecuration", "_blank");
+	   }
+	   else
+		   alert("Unable to determine the server name for the Sentinel Tool.");	
+  } 
+  
+   function callMessageGifDENew()
+   {
+     document.Form1.submit();
+   }
+
+   function callMessageGifDETemplate()
+   {
+     document.Form4.hidMenuAction.value = "NewDETemplate";
+     document.Form4.submit();
+   }
+
+   function callMessageGifDEVersion()
+   {
+     document.Form4.hidMenuAction.value = "NewDEVersion";
+     document.Form4.submit();
+   }
+
+   function callMessageGifDECNew()
+   {
+     document.Form2.submit();
+   }
+
+   function callMessageGifDECTemplate()
+   {
+     document.Form4.hidMenuAction.value = "NewDECTemplate";
+     document.Form4.submit();
+   }
+
+   function callMessageGifDECVersion()
+   {
+     document.Form4.hidMenuAction.value = "NewDECVersion";
+     document.Form4.submit();
+   }
+
+   function callMessageGifVDNew()
+   {
+     document.Form3.submit();
+   }
+
+   function callMessageGifVDTemplate()
+   {
+     document.Form4.hidMenuAction.value = "NewVDTemplate";
+     document.Form4.submit();
+   }
+
+   function callMessageGifVDVersion()
+   {
+     document.Form4.hidMenuAction.value = "NewVDVersion";
+     document.Form4.submit();
+   }
+
+   function callMessageGifDEedit()
+   {
+     document.Form4.hidMenuAction.value = "editDE";
+     document.Form4.submit();
+   }
+
+   function callMessageGifDECedit()
+   {
+  //   document.Form5.Message.style.visibility="visible";
+     document.Form4.hidMenuAction.value = "editDEC";
+     document.Form4.submit();
+   }
+
+   function callMessageGifVDedit()
+   {
+  //   document.Form5.Message.style.visibility="visible";
+     document.Form4.hidMenuAction.value = "editVD";
+     document.Form4.submit();
+   }
+
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+// -->
+//links to logos
+var winNCI;
+var winNCICB;
+var wincaDSR;
+
+function linkNCI()
+{
+  if (winNCI && !winNCI.closed)
+     winNCI.focus();
+  else
+   	winNCI = window.open("http://www.nci.nih.gov", "NCI", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+}
+function link_caDSR()
+{
+  if (wincaDSR && !wincaDSR.closed)
+     wincaDSR.focus();
+  else
+   	wincaDSR = window.open("http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr", "caDSR", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+}
+function linkNCICB()
+{
+  if (winNCICB && !winNCICB.closed)
+     winNCICB.focus();
+  else
+   	winNCICB = window.open("http://ncicb.nci.nih.gov", "NCICB", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+}
+
+</script>
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+<form name="Form1" method="post" action="/cdecurate/NCICurationServlet?reqType=newDEFromMenu"></form>
+<form name="Form2" method="post" action="/cdecurate/NCICurationServlet?reqType=newDECFromMenu"></form>
+<form name="Form3" method="post" action="/cdecurate/NCICurationServlet?reqType=newVDFromMenu"></form>
+<form name="LogoutForm" method="post" action="/cdecurate/NCICurationServlet?reqType=logout"></form>
+<form name="Form4" method="post" action="/cdecurate/NCICurationServlet?reqType=actionFromMenu">
+<input type="hidden" name="hidMenuAction" value="nothing">
+</form>
+
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" >
+	<col width="1px">
+	<col width="*">
+	<tr bgcolor="#A90101">
+		<td align="left"><a href="http://www.cancer.gov" target=_blank><img src="images/brandtype.gif" border="0"></a></td>
+		<td align="right"><a href="http://www.cancer.gov" target=_blank><img src="images/tagline_nologo.gif" border="0"></a></td>
+	</tr>
+	
+	<tr>
+	<td colspan="2"><a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr"><img src="images/curation_banner2.gif" border="0" alt="caDSR Logo"></a>
+	</td>	
+	</tr>
+	
+	<tr>	
+	<td colspan="2">
+	<table style="border-collapse: collapse">
+	<colgroup>
+	<col />
+	<col />
+	</colgroup><TBODY/>
+	<tr>
+	<td style="padding: 0in 1in 0in 0in">User&nbsp;Name&nbsp;:&nbsp;sbrext</td>
+	<td style="padding: 0in 0in 0in 0in"><script webstyle3>document.write('<scr'+'ipt src="js/xaramenu.js">'+'</scr'+'ipt>');document.write('<scr'+'ipt 				src="js/biztech_button.js">'+'</scr'+'ipt>');/*img src="images/biztech_button.gif" moduleid="myzara 					(project)\biztech_button_off.xws"*/</script></td>
+	</tr>	
+	</table>
+	</td>
+	</tr>	
+	</table>
+</body>
+</html>
+</td>
+      </tr>
+    </table width="100%" border="1" cellpadding="0" cellspacing="0"></td>
+
+  </tr>
+  <tr>
+    <td width="100%" valign="top">
+<html>
+<head>
+<title>Create Value Item/Meaning</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="FullDesignArial.css" rel="stylesheet" type="text/css">
+
+
+<SCRIPT LANGUAGE="JavaScript" SRC="js/date-picker.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" SRC="js/CreatePV.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" SRC="../../cdecurate/js/HelpFunctions.js"></SCRIPT>
+<Script Language="JavaScript">
+
+function displayStatusMessage()
+{
+ 
+    window.status = "Create new Permissible Value";
+}
+  
+function ViewConceptInTree()
+{
+  document.SearchActionForm.searchComp.value = "PV_ValueMeaning";
+  document.SearchActionForm.openToTree.value = "true";
+	document.SearchActionForm.isValidSearch.value = "false";
+  if (searchWindow && !searchWindow.closed)
+    searchWindow.close();
+  searchWindow = window.open("jsp/OpenSearchWindowBlocks.jsp", "BlockSearch", "width=975,height=700,top=0,left=0,resizable=yes,scrollbars=yes")
+}
+
+</SCRIPT>
+</head>
+<body>
+<form name="createPVForm" method="POST" action="/cdecurate/NCICurationServlet?reqType=newPV">
+
+  <table width="90%" border="0">
+  <col width="3%"><col width="50%"><col width="25%">
+    <tr>
+      <td colspan="6" align="left" valign="top">
+        <input type="button" name="btnValidate" value="Validate" style="width: 125" onClick="SubmitValidate('validate');"
+				onHelp = "showHelp('Help_CreateVD.html#createPVForm_Validation'); return false">
+          &nbsp;&nbsp;
+        <input type="button" name="btnClear" value="Clear" style="width: 125" onClick="clearBoxes();">
+          &nbsp;&nbsp;
+        <input type="button" name="btnBack" value="Back" style="width: 125" onClick="Back();">
+          &nbsp;&nbsp;
+	     <img name="Message" src="images/WaitMessage1.gif" width="250" height="25" alt="WaitMessage" style="visibility:hidden;">
+      </td>
+    </tr>
+    <tr>
+      <th colspan=3 height="40"> <div align="left">
+       <label><font size=4>
+          <!-- label for block edit, single edit, or create new pvs -->
+           Create New  
+            <font color="#FF0000">Permissible Value
+            </font></font></label></div>
+      </th>
+    </tr>
+    <tr height="25" valign="middle">
+      <td colspan=3><font color="#FF0000">&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;</font>Indicates Required Field</td>
+    </tr>
+    
+    <tr height="25" valign="bottom">
+       
+        <td align=right><font color="#FF0000">* &nbsp;</font> 1)</td>
+        <td colspan=2><font color="#FF0000">Create</font> New Value</td>
+      
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td valign="bottom"  colspan=2>
+        
+        <input type="text" name="txtPermValue" style="width:50%" size="20" maxlength=255 value="" 
+          onHelp = "showHelp('Help_CreateVD.html#createPVForm_CreateValue'); return false">
+       
+     </td>
+    </tr>
+    <tr height="25" valign="bottom">
+       
+        <td align=right><font color="#FF0000">* &nbsp;</font> 2)</td>
+        <td colspan=2><font color="#FF0000">Select or Create </font>Value Meaning</td>
+      
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td  align="left">
+        <textarea name="selShortMeanings" cols="100%" style="color:#696969" readonly
+          onHelp = "showHelp('Help_CreateVD.html#createVMForm_CreateVM'); return false" rows="2"></textarea>
+      </td>
+      <td align="left">
+      
+          <font color="#FF0000"> <a href="javascript:searchVM()">Select / Create New</a></font>  
+      
+      </td>
+    </tr>
+    <tr height="25" valign="bottom">
+      <td align=right><font color="#C0C0C0">3)</font></td>
+      <td colspan=2><font color="#C0C0C0">Display Value Meaning Description</font></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+	    <td  valign="top" align="left"  colspan=2> 
+        <textarea name="CreateDescription" rows="4" style="color:#696969; width:80%" readonly
+            onHelp = "showHelp('Help_CreateVD.html#createPVForm_CreateValue'); return false"></textarea>
+      </td>
+	  </tr>
+    <tr height="25" valign="bottom">
+      <td align=right><font color="#C0C0C0">4)</font></td>
+      <td colspan=2><font color="#C0C0C0">Display VM Concept Code</font></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+	    <td valign="top" align="left" colspan=2> 
+        <input type="text" name="EVSConceptID" size="25"  value="" style="color:#696969" readonly
+            onHelp = "showHelp('Help_CreateVD.html#createPVForm_CreateValue'); return false">
+        &nbsp;&nbsp;&nbsp;
+      </td>
+	  </tr>
+
+    <tr height="25" valign="bottom">
+      <td align=right>&nbsp; 5) </td>
+      <td colspan="2"> <font color="#FF0000">Select </font>Permissible Value Origin</td>
+    </tr>     
+    <tr>
+      <td>&nbsp;</td>
+      <td height="24"  valign="top" colspan="2">
+        <select name="selPVSource" size="1"
+              onHelp = "showHelp('Help_CreateVD.html#createVDForm_ValueOrigin'); return false">
+            <option value="" selected></option>
+
+              <option value="AJCC" >AJCC</option>
+
+              <option value="BREAST FORM COMMITTEE (ADVANCED ONSTUDY FORM" >BREAST FORM COMMITTEE (ADVANCED ONSTUDY FORM</option>
+
+              <option value="BREAST FORMS COMITTEE (FOLLOW-UP FORM" >BREAST FORMS COMITTEE (FOLLOW-UP FORM</option>
+
+              <option value="BREAST FORMS COMMITTE (RADIOTHERAPY REPORT FORM" >BREAST FORMS COMMITTE (RADIOTHERAPY REPORT FORM</option>
+
+              <option value="BREAST FORMS COMMITTEE" >BREAST FORMS COMMITTEE</option>
+
+              <option value="Breast Forms Committee" >Breast Forms Committee</option>
+
+              <option value="BREAST FORMS COMMITTEE  (ADVANCED FOLLOW-UP FORM" >BREAST FORMS COMMITTEE  (ADVANCED FOLLOW-UP FORM</option>
+
+              <option value="BREAST FORMS COMMITTEE (ADJ FOLLOW-UP FORM" >BREAST FORMS COMMITTEE (ADJ FOLLOW-UP FORM</option>
+
+              <option value="BREAST FORMS COMMITTEE (ADJUVANT ON-STUDY FORM" >BREAST FORMS COMMITTEE (ADJUVANT ON-STUDY FORM</option>
+
+              <option value="BREAST FORMS COMMITTEE (ADJUVANT TREATMENT SUMMARY FORM-ALL PATIENT S" >BREAST FORMS COMMITTEE (ADJUVANT TREATMENT SUMMARY FORM-ALL PATIENT S</option>
+
+              <option value="BREAST FORMS COMMITTEE (ADJUVANT TREATMENT SUMMARY FORM-ALL PATIENTS" >BREAST FORMS COMMITTEE (ADJUVANT TREATMENT SUMMARY FORM-ALL PATIENTS</option>
+
+              <option value="BREAST FORMS COMMITTEE (ADJUVANT TREATMENT SUMMARY FORMS-ALL PATIENTS" >BREAST FORMS COMMITTEE (ADJUVANT TREATMENT SUMMARY FORMS-ALL PATIENTS</option>
+
+              <option value="BREAST FORMS COMMITTEE (ADJUVANT TREATMENT SUMMARY-ALL PATIENTS" >BREAST FORMS COMMITTEE (ADJUVANT TREATMENT SUMMARY-ALL PATIENTS</option>
+
+              <option value="BREAST FORMS COMMITTEE (ADV.  FOLLOW-UP FORM" >BREAST FORMS COMMITTEE (ADV.  FOLLOW-UP FORM</option>
+
+              <option value="BREAST FORMS COMMITTEE (ADVANCED FOLLOW-UP FORM" >BREAST FORMS COMMITTEE (ADVANCED FOLLOW-UP FORM</option>
+
+              <option value="BREAST FORMS COMMITTEE (ADVANCED ON-STUDY FORM" >BREAST FORMS COMMITTEE (ADVANCED ON-STUDY FORM</option>
+
+              <option value="BREAST FORMS COMMITTEE (ADVANCED ONSTUDY FORM" >BREAST FORMS COMMITTEE (ADVANCED ONSTUDY FORM</option>
+
+              <option value="BREAST FORMS COMMITTEE (ADVANCED TREATMENT SUMMARY FORM" >BREAST FORMS COMMITTEE (ADVANCED TREATMENT SUMMARY FORM</option>
+
+              <option value="BREAST FORMS COMMITTEE (ALL BREAST FORMS" >BREAST FORMS COMMITTEE (ALL BREAST FORMS</option>
+
+              <option value="BREAST FORMS COMMITTEE (CYCLE FORM" >BREAST FORMS COMMITTEE (CYCLE FORM</option>
+
+              <option value="BREAST FORMS COMMITTEE (FOLLOW-UP FORM" >BREAST FORMS COMMITTEE (FOLLOW-UP FORM</option>
+
+              <option value="BREAST FORMS COMMITTEE (FOLLOW_UP FORM" >BREAST FORMS COMMITTEE (FOLLOW_UP FORM</option>
+
+              <option value="BREAST FORMS COMMITTEE (HEADER ON ALL FORMS" >BREAST FORMS COMMITTEE (HEADER ON ALL FORMS</option>
+
+              <option value="BREAST FORMS COMMITTEE (RADIOTHERAPY FORM" >BREAST FORMS COMMITTEE (RADIOTHERAPY FORM</option>
+
+              <option value="BREAST FORMS COMMITTEE (RADIOTHERAPY REPORT FORM" >BREAST FORMS COMMITTEE (RADIOTHERAPY REPORT FORM</option>
+
+              <option value="BREAST FORMS COMMITTEE (TOXICITY SUMMARY FORM" >BREAST FORMS COMMITTEE (TOXICITY SUMMARY FORM</option>
+
+              <option value="BREAST FORMS COMMITTEE (TREATMENT SUMMARY - ALL PATIENTS" >BREAST FORMS COMMITTEE (TREATMENT SUMMARY - ALL PATIENTS</option>
+
+              <option value="BREAST FORMS COMMITTEE (TREATMENT SUMMARY FORM" >BREAST FORMS COMMITTEE (TREATMENT SUMMARY FORM</option>
+
+              <option value="BREAST FORMS COMMITTEE (TREATMENT SUMMARY FORM - ALL PATIENTS" >BREAST FORMS COMMITTEE (TREATMENT SUMMARY FORM - ALL PATIENTS</option>
+
+              <option value="BREAST FORMS COMMITTEE (TREATMENT SUMMARY FORM - SUBSET OF PATIENTS" >BREAST FORMS COMMITTEE (TREATMENT SUMMARY FORM - SUBSET OF PATIENTS</option>
+
+              <option value="BREAST FROMS COMMITTEE (ADJUVANT ON-STUDY FORM" >BREAST FROMS COMMITTEE (ADJUVANT ON-STUDY FORM</option>
+
+              <option value="caBIG - Clinical Trials Management Systems Workspace" >caBIG - Clinical Trials Management Systems Workspace</option>
+
+              <option value="caBIG - Integrative Cancer Research Workspace" >caBIG - Integrative Cancer Research Workspace</option>
+
+              <option value="caBIG - Tissue Banks and Pathology Tools Workspace" >caBIG - Tissue Banks and Pathology Tools Workspace</option>
+
+              <option value="caBIG - Vocabularies and Common Data Elements Workspace" >caBIG - Vocabularies and Common Data Elements Workspace</option>
+
+              <option value="CALGB  (ADJUVANT BREAST CANCER:ON-STUDY FORM" >CALGB  (ADJUVANT BREAST CANCER:ON-STUDY FORM</option>
+
+              <option value="CALGB (ADJUV ON-STUDY" >CALGB (ADJUV ON-STUDY</option>
+
+              <option value="CALGB (ADJUVANT BREAST CANCER:ON-STUDY FORM" >CALGB (ADJUVANT BREAST CANCER:ON-STUDY FORM</option>
+
+              <option value="CALGB (ADJUVANT BREAST CANCER:ON-STYUDY FORM" >CALGB (ADJUVANT BREAST CANCER:ON-STYUDY FORM</option>
+
+              <option value="CALGB (ADVANCED PROSTATE CANCER ON-STUDY" >CALGB (ADVANCED PROSTATE CANCER ON-STUDY</option>
+
+              <option value="CALGB (ADVANCED PROSTATE CANCER ON-STUDY FORM" >CALGB (ADVANCED PROSTATE CANCER ON-STUDY FORM</option>
+
+              <option value="CALGB (ADVANCED PROSTATE FOLLOW-UP" >CALGB (ADVANCED PROSTATE FOLLOW-UP</option>
+
+              <option value="CALGB (ADVANCED PROSTATE MEASUREMENT" >CALGB (ADVANCED PROSTATE MEASUREMENT</option>
+
+              <option value="CALGB (ADVANCED PROSTATE ON-STUDY" >CALGB (ADVANCED PROSTATE ON-STUDY</option>
+
+              <option value="CALGB (ADVANCTE PROSTATE FOLLOW-UP" >CALGB (ADVANCTE PROSTATE FOLLOW-UP</option>
+
+              <option value="CALGB (ANTIANDROGEN WITHDRAWAL DATA" >CALGB (ANTIANDROGEN WITHDRAWAL DATA</option>
+
+              <option value="CALGB (BACKGROUND FORM" >CALGB (BACKGROUND FORM</option>
+
+              <option value="CALGB (BACKGROUND INFORMATION" >CALGB (BACKGROUND INFORMATION</option>
+
+              <option value="CALGB (GI ADJUVANT ONSTUDY FORM" >CALGB (GI ADJUVANT ONSTUDY FORM</option>
+
+              <option value="CALGB (PATHOLOGY ROUTING FORM" >CALGB (PATHOLOGY ROUTING FORM</option>
+
+              <option value="CALGB (PATHOLOGY SUBMISSION FORM" >CALGB (PATHOLOGY SUBMISSION FORM</option>
+
+              <option value="CALGB (PROSTATE FOLLOW-UP" >CALGB (PROSTATE FOLLOW-UP</option>
+
+              <option value="CALGB (PROSTATE PATHOLOGY WORK-UP" >CALGB (PROSTATE PATHOLOGY WORK-UP</option>
+
+              <option value="CALGB (RESP FOLLOW-UP" >CALGB (RESP FOLLOW-UP</option>
+
+              <option value="CALGB (RESP FOLLOW-UP FORM" >CALGB (RESP FOLLOW-UP FORM</option>
+
+              <option value="CALGB (RESP ON-STUDY" >CALGB (RESP ON-STUDY</option>
+
+              <option value="CALGB (RESP. FOLLOW-UP" >CALGB (RESP. FOLLOW-UP</option>
+
+              <option value="CALGB (RESP. ON-STUDY" >CALGB (RESP. ON-STUDY</option>
+
+              <option value="CALGB (RESP. ON-STUDY FORM" >CALGB (RESP. ON-STUDY FORM</option>
+
+              <option value="CALGB (RESPIRATORY ADJUVANT ON-STUDY" >CALGB (RESPIRATORY ADJUVANT ON-STUDY</option>
+
+              <option value="CALGB (RESPIRATORY ADJUVANT ON-STUDY FORM" >CALGB (RESPIRATORY ADJUVANT ON-STUDY FORM</option>
+
+              <option value="CALGB (RESPIRATORY ON-STUDY" >CALGB (RESPIRATORY ON-STUDY</option>
+
+              <option value="CALGB (RESPIRATORY ON-STUDY FORM" >CALGB (RESPIRATORY ON-STUDY FORM</option>
+
+              <option value="CALGB (SURG ADDENDUM TO RESP ON-STUDY" >CALGB (SURG ADDENDUM TO RESP ON-STUDY</option>
+
+              <option value="CALGB (SURGICAL ADDENDUM TO RESP ON-STUDY" >CALGB (SURGICAL ADDENDUM TO RESP ON-STUDY</option>
+
+              <option value="CALGB (TISSUE SAMPLE TRACKING FORM - BLOCKS" >CALGB (TISSUE SAMPLE TRACKING FORM - BLOCKS</option>
+
+              <option value="CALGB (TRACKING FORM:  TISSUE BLOCKS" >CALGB (TRACKING FORM:  TISSUE BLOCKS</option>
+
+              <option value="CALGB (TRACKING FORM: TISSUE BLOCKS" >CALGB (TRACKING FORM: TISSUE BLOCKS</option>
+
+              <option value="CALGB ADVANCED PROSTATE CANCER" >CALGB ADVANCED PROSTATE CANCER</option>
+
+              <option value="Cancer Family Registry Data Committee" >Cancer Family Registry Data Committee</option>
+
+              <option value="CAP Cancer Protocols" >CAP Cancer Protocols</option>
+
+              <option value="CAP CURE" >CAP CURE</option>
+
+              <option value="CAPCURE" >CAPCURE</option>
+
+              <option value="CCR" >CCR</option>
+
+              <option value="CDE COMMITTEE" >CDE COMMITTEE</option>
+
+              <option value="CDE Committee" >CDE Committee</option>
+
+              <option value="CDUS" >CDUS</option>
+
+              <option value="CDUS GUIDELINES" >CDUS GUIDELINES</option>
+
+              <option value="CDUS GUIDELINES
+" >CDUS GUIDELINES
+</option>
+
+              <option value="CFR" >CFR</option>
+
+              <option value="CIP" >CIP</option>
+
+              <option value="COC" >COC</option>
+
+              <option value="COC
+" >COC
+</option>
+
+              <option value="College of American Pathologists" >College of American Pathologists</option>
+
+              <option value="COOPERATIVE GROUP FORMS COMMITTEE (REGISTRATION FORM" >COOPERATIVE GROUP FORMS COMMITTEE (REGISTRATION FORM</option>
+
+              <option value="Cooperative Group-Forms Committee" >Cooperative Group-Forms Committee</option>
+
+              <option value="COOPERATIVE GROUP-FORMS COMMITTEE (REGISTRATION FORM" >COOPERATIVE GROUP-FORMS COMMITTEE (REGISTRATION FORM</option>
+
+              <option value="CTEP CDE Committee" >CTEP CDE Committee</option>
+
+              <option value="DICOM" >DICOM</option>
+
+              <option value="DICOM, UMLS, SNOMED" >DICOM, UMLS, SNOMED</option>
+
+              <option value="DICOM, UMLS- C0011008" >DICOM, UMLS- C0011008</option>
+
+              <option value="DICOM, UMLS- C0205090, SNOMED-" >DICOM, UMLS- C0205090, SNOMED-</option>
+
+              <option value="DICOM, UMLS- C0205094, SNOMED- G-A105" >DICOM, UMLS- C0205094, SNOMED- G-A105</option>
+
+              <option value="DICOM, UMLS- C0439200" >DICOM, UMLS- C0439200</option>
+
+              <option value="ECOG" >ECOG</option>
+
+              <option value="ECOG  (ADJUVANT BREAST ABBREVIATED ON-STUDY FORM" >ECOG  (ADJUVANT BREAST ABBREVIATED ON-STUDY FORM</option>
+
+              <option value="ECOG (ADJUVANT BREAST ABBREVIATED FOLLOW-UP FORM" >ECOG (ADJUVANT BREAST ABBREVIATED FOLLOW-UP FORM</option>
+
+              <option value="ECOG (ADJUVANT BREAST ABBREVIATED ON-STUDY FORM" >ECOG (ADJUVANT BREAST ABBREVIATED ON-STUDY FORM</option>
+
+              <option value="ECOG (BASELINE DATA FORM - DRAFT" >ECOG (BASELINE DATA FORM - DRAFT</option>
+
+              <option value="ECOG (BASELINE DATE" >ECOG (BASELINE DATE</option>
+
+              <option value="ECOG (EB193 ON-STUDY FORM" >ECOG (EB193 ON-STUDY FORM</option>
+
+              <option value="ECOG (FOLLOW-UP" >ECOG (FOLLOW-UP</option>
+
+              <option value="ECOG (FOLLOW-UP FORM" >ECOG (FOLLOW-UP FORM</option>
+
+              <option value="ECOG (GU SERUM EVALUATION FORM" >ECOG (GU SERUM EVALUATION FORM</option>
+
+              <option value="ECOG (HEMATOLOGY/CHEMISTRY FORM - DRAFT" >ECOG (HEMATOLOGY/CHEMISTRY FORM - DRAFT</option>
+
+              <option value="ECOG (INTERGROUP ADVANCED BREAST CANCER PRESTUDY" >ECOG (INTERGROUP ADVANCED BREAST CANCER PRESTUDY</option>
+
+              <option value="ECOG (LONG-TERM FOLLOW-UP FORM" >ECOG (LONG-TERM FOLLOW-UP FORM</option>
+
+              <option value="ECOG (LUNG ON-STUDY" >ECOG (LUNG ON-STUDY</option>
+
+              <option value="ECOG (MEASUREMENT FORM" >ECOG (MEASUREMENT FORM</option>
+
+              <option value="ECOG (MENOPAUSAL SYMPTOM ASSESSMENT FORM" >ECOG (MENOPAUSAL SYMPTOM ASSESSMENT FORM</option>
+
+              <option value="ECOG (METASTATIC SOLID TUMOR MASTER ON-STUDY FORM" >ECOG (METASTATIC SOLID TUMOR MASTER ON-STUDY FORM</option>
+
+              <option value="ECOG (OFF TREATMENT FORM" >ECOG (OFF TREATMENT FORM</option>
+
+              <option value="ECOG (PATHOLOGY MATERIAL SUBMISSION FORM" >ECOG (PATHOLOGY MATERIAL SUBMISSION FORM</option>
+
+              <option value="ECOG (PRESTUDY FORM" >ECOG (PRESTUDY FORM</option>
+
+              <option value="ECOG (PROSTATE ON-STUDY" >ECOG (PROSTATE ON-STUDY</option>
+
+              <option value="ECOG (PROSTATE ON-STUDY FORM" >ECOG (PROSTATE ON-STUDY FORM</option>
+
+              <option value="ECOG (QUALITY OF LIFE BATTERY REPORT FORM" >ECOG (QUALITY OF LIFE BATTERY REPORT FORM</option>
+
+              <option value="ECOG (SOLID TUMOR NON-ADJUVANT DISEASE ASSESSMENT FORM - DRAFT" >ECOG (SOLID TUMOR NON-ADJUVANT DISEASE ASSESSMENT FORM - DRAFT</option>
+
+              <option value="ECOG (TREATMENT FORM - DRAFT" >ECOG (TREATMENT FORM - DRAFT</option>
+
+              <option value="EDRN" >EDRN</option>
+
+              <option value="ELCAP" >ELCAP</option>
+
+              <option value="EPP  (BIOCHEMICAL MEASUREMENT FORM" >EPP  (BIOCHEMICAL MEASUREMENT FORM</option>
+
+              <option value="EPP  (FOLLOW-UP FORM" >EPP  (FOLLOW-UP FORM</option>
+
+              <option value="EPP  (REPONSE/PROGRESSION FORM" >EPP  (REPONSE/PROGRESSION FORM</option>
+
+              <option value="EPP  (RESPONSE/PROGRESSION FORM" >EPP  (RESPONSE/PROGRESSION FORM</option>
+
+              <option value="EPP ( RESPONSE/PREGRESSION FORM" >EPP ( RESPONSE/PREGRESSION FORM</option>
+
+              <option value="EPP ((TUMOR EVALUATION FORM/MEASURABLE LESIONS" >EPP ((TUMOR EVALUATION FORM/MEASURABLE LESIONS</option>
+
+              <option value="EPP (ADVERSE REACTION FORM FOR INVESTIGATIONAL DRUGS" >EPP (ADVERSE REACTION FORM FOR INVESTIGATIONAL DRUGS</option>
+
+              <option value="EPP (BIOCHEMICAL MEASUREMENT FORM" >EPP (BIOCHEMICAL MEASUREMENT FORM</option>
+
+              <option value="EPP (CHEMO/IMMU/HORMT FORM" >EPP (CHEMO/IMMU/HORMT FORM</option>
+
+              <option value="EPP (CHEMO/IMMUNO/ HORMONAL THERAPY FORM" >EPP (CHEMO/IMMUNO/ HORMONAL THERAPY FORM</option>
+
+              <option value="EPP (CHEMO/IMMUNO/HORM THERAPY FORM" >EPP (CHEMO/IMMUNO/HORM THERAPY FORM</option>
+
+              <option value="EPP (CHEMO/IMMUNO/HORMONAL THERAPY FORM" >EPP (CHEMO/IMMUNO/HORMONAL THERAPY FORM</option>
+
+              <option value="EPP (CHEMOTHERAPY/IMMUNOTHERAPY/HORMONAL THERAPY FORM" >EPP (CHEMOTHERAPY/IMMUNOTHERAPY/HORMONAL THERAPY FORM</option>
+
+              <option value="EPP (CRF HEADER" >EPP (CRF HEADER</option>
+
+              <option value="EPP (DEATH FORM" >EPP (DEATH FORM</option>
+
+              <option value="EPP (EVALUATION/MEASURABLE LESIONS FORM" >EPP (EVALUATION/MEASURABLE LESIONS FORM</option>
+
+              <option value="EPP (FOLLOW-UP FORM" >EPP (FOLLOW-UP FORM</option>
+
+              <option value="EPP (FORMS HEADER" >EPP (FORMS HEADER</option>
+
+              <option value="EPP (HEADER" >EPP (HEADER</option>
+
+              <option value="EPP (MEASURABLE LESIONS FORM" >EPP (MEASURABLE LESIONS FORM</option>
+
+              <option value="EPP (NCI/CTEP SECONDARY AML/MDS REPORT FORM" >EPP (NCI/CTEP SECONDARY AML/MDS REPORT FORM</option>
+
+              <option value="EPP (NOTICE OF SECONDARY MALIGNANCY" >EPP (NOTICE OF SECONDARY MALIGNANCY</option>
+
+              <option value="EPP (NOTICE OF SECONDARY MALIGNANCY FORM" >EPP (NOTICE OF SECONDARY MALIGNANCY FORM</option>
+
+              <option value="EPP (OFF-TREATMENT FORM" >EPP (OFF-TREATMENT FORM</option>
+
+              <option value="EPP (RECURRENCE FORM" >EPP (RECURRENCE FORM</option>
+
+              <option value="EPP (RESPONSE/PROGRESSION FORM" >EPP (RESPONSE/PROGRESSION FORM</option>
+
+              <option value="EPP (TOXICITY FORM" >EPP (TOXICITY FORM</option>
+
+              <option value="EPP (TUMOR EVALUATION FORM" >EPP (TUMOR EVALUATION FORM</option>
+
+              <option value="EPP (TUMOR EVALUATION FORM- MEASURABLE LESION" >EPP (TUMOR EVALUATION FORM- MEASURABLE LESION</option>
+
+              <option value="EPP (TUMOR EVALUATION FORM-MEASURABLE LESION" >EPP (TUMOR EVALUATION FORM-MEASURABLE LESION</option>
+
+              <option value="EPP (TUMOR EVALUATION FORM/MEASURABLE LESIONS" >EPP (TUMOR EVALUATION FORM/MEASURABLE LESIONS</option>
+
+              <option value="EPP (TUMOR EVALUATION FORM/NON-MEASURABLE LESIONS" >EPP (TUMOR EVALUATION FORM/NON-MEASURABLE LESIONS</option>
+
+              <option value="EPP (TUMOR EVALUATION/MEASURABLE LESIONS FORM" >EPP (TUMOR EVALUATION/MEASURABLE LESIONS FORM</option>
+
+              <option value="FDA" >FDA</option>
+
+              <option value="FDA (ADR FORM" >FDA (ADR FORM</option>
+
+              <option value="G-A100" >G-A100</option>
+
+              <option value="Gene Ontology (GO)" >Gene Ontology (GO)</option>
+
+              <option value="GI FORMS COMMITTEE" >GI FORMS COMMITTEE</option>
+
+              <option value="GI Forms Committee" >GI Forms Committee</option>
+
+              <option value="GI FORMS COMMITTEE (ADJUVANT COLORECTAL ON-STUDY FORM" >GI FORMS COMMITTEE (ADJUVANT COLORECTAL ON-STUDY FORM</option>
+
+              <option value="GI FORMS COMMITTEE (ADJUVANT FOLLOW-UP FORM" >GI FORMS COMMITTEE (ADJUVANT FOLLOW-UP FORM</option>
+
+              <option value="GI FORMS COMMITTEE (ADJUVANT ON-STUDY FORM" >GI FORMS COMMITTEE (ADJUVANT ON-STUDY FORM</option>
+
+              <option value="GI FORMS COMMITTEE (ADVANCED COLON ON-STUDY FORM" >GI FORMS COMMITTEE (ADVANCED COLON ON-STUDY FORM</option>
+
+              <option value="GI FORMS COMMITTEE (ADVANCED ON-STUDY FORM" >GI FORMS COMMITTEE (ADVANCED ON-STUDY FORM</option>
+
+              <option value="GI FORMS COMMITTEE (ADVANCED ONSTUDY FORM" >GI FORMS COMMITTEE (ADVANCED ONSTUDY FORM</option>
+
+              <option value="GI FORMS COMMITTEE (FOLLOW-UP FORM" >GI FORMS COMMITTEE (FOLLOW-UP FORM</option>
+
+              <option value="GI FORMS COMMITTEE (REGISTRATION FORM" >GI FORMS COMMITTEE (REGISTRATION FORM</option>
+
+              <option value="GI FORMS COMMITTEE (TOXICITY FORM" >GI FORMS COMMITTEE (TOXICITY FORM</option>
+
+              <option value="GI FORMS COMMITTEE (TREATMENT FORM" >GI FORMS COMMITTEE (TREATMENT FORM</option>
+
+              <option value="GYN FORMS COMMITTEE (FOLLOW-UP FORM" >GYN FORMS COMMITTEE (FOLLOW-UP FORM</option>
+
+              <option value="HL7" >HL7</option>
+
+              <option value="ICD" >ICD</option>
+
+              <option value="ICH" >ICH</option>
+
+              <option value="INFORMED CONSENT" >INFORMED CONSENT</option>
+
+              <option value="INTERNATIONAL MEDICAL TERMINOLOGY (PRIOR THERAPY" >INTERNATIONAL MEDICAL TERMINOLOGY (PRIOR THERAPY</option>
+
+              <option value="LCBCC Forms Committee" >LCBCC Forms Committee</option>
+
+              <option value="LIDC" >LIDC</option>
+
+              <option value="LOINC" >LOINC</option>
+
+              <option value="LUNG FORM COMMITTEE (FOLLOW-UP FORM" >LUNG FORM COMMITTEE (FOLLOW-UP FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE" >LUNG FORMS COMMITTEE</option>
+
+              <option value="Lung Forms Committee" >Lung Forms Committee</option>
+
+              <option value="LUNG FORMS COMMITTEE (2ND LINE NSCLC ON-STUDY FORM" >LUNG FORMS COMMITTEE (2ND LINE NSCLC ON-STUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (2ND LINE NSCLC ON-STUDY FORMS" >LUNG FORMS COMMITTEE (2ND LINE NSCLC ON-STUDY FORMS</option>
+
+              <option value="LUNG FORMS COMMITTEE (2ND LINE NSCLC ONSTUDY FORM" >LUNG FORMS COMMITTEE (2ND LINE NSCLC ONSTUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (2ND LINE NSCLS ONSTUDY FORM" >LUNG FORMS COMMITTEE (2ND LINE NSCLS ONSTUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (2ND LINE SCLC ON-STUDY FORM" >LUNG FORMS COMMITTEE (2ND LINE SCLC ON-STUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (2ND LINE SCLC ON-STUDY FORMS" >LUNG FORMS COMMITTEE (2ND LINE SCLC ON-STUDY FORMS</option>
+
+              <option value="LUNG FORMS COMMITTEE (2ND LINE SCLC ONSTUDY FORM" >LUNG FORMS COMMITTEE (2ND LINE SCLC ONSTUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (ADVANCED NSCLC ON-STUDY FORM" >LUNG FORMS COMMITTEE (ADVANCED NSCLC ON-STUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (ADVANCED NSCLC ONSTUDY FORM" >LUNG FORMS COMMITTEE (ADVANCED NSCLC ONSTUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (ALL  NSCLC ON-STUDY FORM" >LUNG FORMS COMMITTEE (ALL  NSCLC ON-STUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (ALL NSCLC ON-STUDY FORM" >LUNG FORMS COMMITTEE (ALL NSCLC ON-STUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (ALL SCLC ON-STUDY FORM" >LUNG FORMS COMMITTEE (ALL SCLC ON-STUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (EXTENSIVE SCLC ON-STUDY FORM" >LUNG FORMS COMMITTEE (EXTENSIVE SCLC ON-STUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (EXTENSIVE SCLC ON-STUDY FORMS" >LUNG FORMS COMMITTEE (EXTENSIVE SCLC ON-STUDY FORMS</option>
+
+              <option value="LUNG FORMS COMMITTEE (EXTENSIVE SCLC ONSTUDY FORM" >LUNG FORMS COMMITTEE (EXTENSIVE SCLC ONSTUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (FOLLOW-UP FORM" >LUNG FORMS COMMITTEE (FOLLOW-UP FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (FOLOW-UP FORM" >LUNG FORMS COMMITTEE (FOLOW-UP FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (LIMITED SCLC ON-STUDY FORM" >LUNG FORMS COMMITTEE (LIMITED SCLC ON-STUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (LIMITED SCLC ON-STUDY FORMS" >LUNG FORMS COMMITTEE (LIMITED SCLC ON-STUDY FORMS</option>
+
+              <option value="LUNG FORMS COMMITTEE (LIMITED SCLC ONSTUDY FORM" >LUNG FORMS COMMITTEE (LIMITED SCLC ONSTUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (NSCLC 2ND LINE ON-STUDY FORM" >LUNG FORMS COMMITTEE (NSCLC 2ND LINE ON-STUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (NSCLC 2ND LINE ONSTUDY FORM" >LUNG FORMS COMMITTEE (NSCLC 2ND LINE ONSTUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (NSCLC ADVANCED ON-STUDY FORM" >LUNG FORMS COMMITTEE (NSCLC ADVANCED ON-STUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (NSCLC ON-STUDY FORM" >LUNG FORMS COMMITTEE (NSCLC ON-STUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (NSCLC ON-STUDY FORMS" >LUNG FORMS COMMITTEE (NSCLC ON-STUDY FORMS</option>
+
+              <option value="LUNG FORMS COMMITTEE (NSCLC ONSTUDY FORMS" >LUNG FORMS COMMITTEE (NSCLC ONSTUDY FORMS</option>
+
+              <option value="LUNG FORMS COMMITTEE (NSCLC STAGE I/III ON-STUDY FORM" >LUNG FORMS COMMITTEE (NSCLC STAGE I/III ON-STUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (NSCLC STAGE I/III ONSTUDY FORM" >LUNG FORMS COMMITTEE (NSCLC STAGE I/III ONSTUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (REGISTRATION FORM" >LUNG FORMS COMMITTEE (REGISTRATION FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (SCLC  2ND LINE ONSTUDY FORM" >LUNG FORMS COMMITTEE (SCLC  2ND LINE ONSTUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (SCLC 2ND LINE ONSTUDY FORM" >LUNG FORMS COMMITTEE (SCLC 2ND LINE ONSTUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (SCLC ON-STUDY FORMS" >LUNG FORMS COMMITTEE (SCLC ON-STUDY FORMS</option>
+
+              <option value="LUNG FORMS COMMITTEE (SCLC ONSTUDY FORMS" >LUNG FORMS COMMITTEE (SCLC ONSTUDY FORMS</option>
+
+              <option value="LUNG FORMS COMMITTEE (SCLS ONSTUDY FORMS" >LUNG FORMS COMMITTEE (SCLS ONSTUDY FORMS</option>
+
+              <option value="LUNG FORMS COMMITTEE (STAGE I/III NSCLC ON-STUDY FORM" >LUNG FORMS COMMITTEE (STAGE I/III NSCLC ON-STUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (STAGE I/III NSCLC ONSTUDY FORM" >LUNG FORMS COMMITTEE (STAGE I/III NSCLC ONSTUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (STAGE L/LLL NSCLC ON-STUDY FORM" >LUNG FORMS COMMITTEE (STAGE L/LLL NSCLC ON-STUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (STAGE L/LLL NSCLC ONSTUDY FORM" >LUNG FORMS COMMITTEE (STAGE L/LLL NSCLC ONSTUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (STATE L/LLL NSCLC ON-STUDY FORM" >LUNG FORMS COMMITTEE (STATE L/LLL NSCLC ON-STUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (STATE L/LLL NSCLC ONSTUDY FORM" >LUNG FORMS COMMITTEE (STATE L/LLL NSCLC ONSTUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (SURGICAL ONSTUDY FORM" >LUNG FORMS COMMITTEE (SURGICAL ONSTUDY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (TREATMENT FORM" >LUNG FORMS COMMITTEE (TREATMENT FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE (TREATMENT SUMMARY FORM" >LUNG FORMS COMMITTEE (TREATMENT SUMMARY FORM</option>
+
+              <option value="LUNG FORMS COMMITTEE(EXTENSIVE SCLC ONSTUDY FORM" >LUNG FORMS COMMITTEE(EXTENSIVE SCLC ONSTUDY FORM</option>
+
+              <option value="Lung Forms Committee/CDE Committee" >Lung Forms Committee/CDE Committee</option>
+
+              <option value="LUNG FROMS COMMITTEE  (NSCLC ON-STUDY FORMS" >LUNG FROMS COMMITTEE  (NSCLC ON-STUDY FORMS</option>
+
+              <option value="LUNG FROMS COMMITTEE (FOLLOW-UP FORM" >LUNG FROMS COMMITTEE (FOLLOW-UP FORM</option>
+
+              <option value="M-09030" >M-09030</option>
+
+              <option value="MedDRA" >MedDRA</option>
+
+              <option value="MGED Ontology" >MGED Ontology</option>
+
+              <option value="NAACCR" >NAACCR</option>
+
+              <option value="NCCTG (ACTIVE MONITORING FORM" >NCCTG (ACTIVE MONITORING FORM</option>
+
+              <option value="NCCTG (END OF ACTIVE TREATMENT FORM" >NCCTG (END OF ACTIVE TREATMENT FORM</option>
+
+              <option value="NCCTG (EVENT MONITORING" >NCCTG (EVENT MONITORING</option>
+
+              <option value="NCCTG (EVENT MONITORING FORM" >NCCTG (EVENT MONITORING FORM</option>
+
+              <option value="NCCTG (MEASUREMENT FORM" >NCCTG (MEASUREMENT FORM</option>
+
+              <option value="NCCTG (ON-STUDY, NSCLC" >NCCTG (ON-STUDY, NSCLC</option>
+
+              <option value="NCCTG (ON-STUDY, SCLC" >NCCTG (ON-STUDY, SCLC</option>
+
+              <option value="NCI NetTrials" >NCI NetTrials</option>
+
+              <option value="NCI Thesaurus" >NCI Thesaurus</option>
+
+              <option value="NCI/COOPERATIVE GROUP" >NCI/COOPERATIVE GROUP</option>
+
+              <option value="NCI/COOPERATIVE GROUP FORMS COMMITTEE (REGISTRATION FORM" >NCI/COOPERATIVE GROUP FORMS COMMITTEE (REGISTRATION FORM</option>
+
+              <option value="NCI/COOPERATIVE GROUP-FORMS COMMITTEE (REGISTRATION FORM" >NCI/COOPERATIVE GROUP-FORMS COMMITTEE (REGISTRATION FORM</option>
+
+              <option value="NCI/COPERATIVE GROUP REGISTRATION FORM" >NCI/COPERATIVE GROUP REGISTRATION FORM</option>
+
+              <option value="NCI/CTEP Adverse Event Expedited Report System (AdEERS)" >NCI/CTEP Adverse Event Expedited Report System (AdEERS)</option>
+
+              <option value="NCI/DCTD/CTEP CTMS v.3.02" >NCI/DCTD/CTEP CTMS v.3.02</option>
+
+              <option value="NCI/DCTD/CTEP CTMS v.3.10" >NCI/DCTD/CTEP CTMS v.3.10</option>
+
+              <option value="NCI/DCTD/CTEP CTMS v.3.12" >NCI/DCTD/CTEP CTMS v.3.12</option>
+
+              <option value="NDC" >NDC</option>
+
+              <option value="NHANES" >NHANES</option>
+
+              <option value="NSAB (P2 FOLLOW-UP STATUS FORM" >NSAB (P2 FOLLOW-UP STATUS FORM</option>
+
+              <option value="NSABP (B-21 FORM A, PREENTRY" >NSABP (B-21 FORM A, PREENTRY</option>
+
+              <option value="NSABP (B-21: FORM A PRE-ENTRY" >NSABP (B-21: FORM A PRE-ENTRY</option>
+
+              <option value="NSABP (B-21: FORM A, PRE-ENTRY" >NSABP (B-21: FORM A, PRE-ENTRY</option>
+
+              <option value="NSABP (B-21:FORM A , PREENETRY" >NSABP (B-21:FORM A , PREENETRY</option>
+
+              <option value="NSABP (B-21:FORM A, PREENTRY" >NSABP (B-21:FORM A, PREENTRY</option>
+
+              <option value="NSABP (B-27: FORM A, PREENTRY" >NSABP (B-27: FORM A, PREENTRY</option>
+
+              <option value="NSABP (B-29: FORM A, PRE-ENTRY" >NSABP (B-29: FORM A, PRE-ENTRY</option>
+
+              <option value="NSABP (ESTROGEN/PROGESTRONE RECEPTOR ASSAY:SPECIMEN IDENT.,FORM EP" >NSABP (ESTROGEN/PROGESTRONE RECEPTOR ASSAY:SPECIMEN IDENT.,FORM EP</option>
+
+              <option value="NSABP (P2 ADVERSE EVENT FORM" >NSABP (P2 ADVERSE EVENT FORM</option>
+
+              <option value="NSABP (P2 ALERT FOR UNEXPECTED AE AND ALL DEATHS FORM" >NSABP (P2 ALERT FOR UNEXPECTED AE AND ALL DEATHS FORM</option>
+
+              <option value="NSABP (P2 BREAST DISEASE EVENT FORM" >NSABP (P2 BREAST DISEASE EVENT FORM</option>
+
+              <option value="NSABP (P2 FOLLOW-UP STATUS FORM" >NSABP (P2 FOLLOW-UP STATUS FORM</option>
+
+              <option value="NSABP (P2 GYNECOLOGIC EVENT FORM" >NSABP (P2 GYNECOLOGIC EVENT FORM</option>
+
+              <option value="NSABP (P2 RISK ASSESSMENT FORM" >NSABP (P2 RISK ASSESSMENT FORM</option>
+
+              <option value="NSABP (P2 SEMI-ANNUAL FOLLOW-UP REPORT FORM" >NSABP (P2 SEMI-ANNUAL FOLLOW-UP REPORT FORM</option>
+
+              <option value="NSABP (PATHOLOGY REPORT FORM" >NSABP (PATHOLOGY REPORT FORM</option>
+
+              <option value="NSABP (PATIENT HISTORY FORM: FORM A" >NSABP (PATIENT HISTORY FORM: FORM A</option>
+
+              <option value="NSABP (PATIENT HISTORY FORM: FORM B5" >NSABP (PATIENT HISTORY FORM: FORM B5</option>
+
+              <option value="NSABP (PATIENT HISTORY FROM: FORM B5" >NSABP (PATIENT HISTORY FROM: FORM B5</option>
+
+              <option value="OMB" >OMB</option>
+
+              <option value="PROSTAE FORMS COMMITTEE (NON-LOCALIZED OR RECURRENT ONSTUDY FORM" >PROSTAE FORMS COMMITTEE (NON-LOCALIZED OR RECURRENT ONSTUDY FORM</option>
+
+              <option value="PROSTAE FORMS COMMITTEE (TREATMENT FORM" >PROSTAE FORMS COMMITTEE (TREATMENT FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE" >PROSTATE FORMS COMMITTEE</option>
+
+              <option value="PROSTATE FORMS COMMITTEE (FOLLOW-UP FORM" >PROSTATE FORMS COMMITTEE (FOLLOW-UP FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE (LOCALIZED PROSTATE CANCER ON-STUDY FORM" >PROSTATE FORMS COMMITTEE (LOCALIZED PROSTATE CANCER ON-STUDY FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE (LOCALIZED PROSTATE ON-STUDY FORM" >PROSTATE FORMS COMMITTEE (LOCALIZED PROSTATE ON-STUDY FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE (NON-LOCALIZED ON-STUDY FORM" >PROSTATE FORMS COMMITTEE (NON-LOCALIZED ON-STUDY FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE (NON-LOCALIZED OR RECURRENT ON-STUDY FORM" >PROSTATE FORMS COMMITTEE (NON-LOCALIZED OR RECURRENT ON-STUDY FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE (NON-LOCALIZED OR RECURRENT ONSTUDY FORM" >PROSTATE FORMS COMMITTEE (NON-LOCALIZED OR RECURRENT ONSTUDY FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE (NON-LOCALIZED OR RECURRENT PROSTAE ONSTUDY FORM" >PROSTATE FORMS COMMITTEE (NON-LOCALIZED OR RECURRENT PROSTAE ONSTUDY FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE (NON-LOCALIZED OR RECURRENT PROSTATE CANCER ON-STUDY FORM" >PROSTATE FORMS COMMITTEE (NON-LOCALIZED OR RECURRENT PROSTATE CANCER ON-STUDY FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE (NON-LOCALIZED OR RECURRENT PROSTATE CANCER ONSTUDY FORM" >PROSTATE FORMS COMMITTEE (NON-LOCALIZED OR RECURRENT PROSTATE CANCER ONSTUDY FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE (NON-LOCALIZED OR RECURRENT PROSTATE ONSTUDY FORM" >PROSTATE FORMS COMMITTEE (NON-LOCALIZED OR RECURRENT PROSTATE ONSTUDY FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE (TOXICITY FORM" >PROSTATE FORMS COMMITTEE (TOXICITY FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE (TREATMENT FORM" >PROSTATE FORMS COMMITTEE (TREATMENT FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE (TREATMENT SUMAMRY FORM" >PROSTATE FORMS COMMITTEE (TREATMENT SUMAMRY FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE (TREATMENT SUMMARY FORM" >PROSTATE FORMS COMMITTEE (TREATMENT SUMMARY FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE (TRETAMENT SUMMARY FORM" >PROSTATE FORMS COMMITTEE (TRETAMENT SUMMARY FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE FOLLOW-UP FORM" >PROSTATE FORMS COMMITTEE FOLLOW-UP FORM</option>
+
+              <option value="PROSTATE FORMS COMMITTEE(NON-LOCALIZED OR RECURRENT ON-STUDY FORM" >PROSTATE FORMS COMMITTEE(NON-LOCALIZED OR RECURRENT ON-STUDY FORM</option>
+
+              <option value="PROSTATE FROMS COMMITTEE (FOLOW-UP FORM" >PROSTATE FROMS COMMITTEE (FOLOW-UP FORM</option>
+
+              <option value="PROSTATE FROMS COMMITTEE (TREATMENT SUMMARY FORM" >PROSTATE FROMS COMMITTEE (TREATMENT SUMMARY FORM</option>
+
+              <option value="Radiology Committee" >Radiology Committee</option>
+
+              <option value="Radiology Committee, UMLS- C0439200" >Radiology Committee, UMLS- C0439200</option>
+
+              <option value="RECIST" >RECIST</option>
+
+              <option value="RTOG (CHEMO/RT LSCLC INITIAL EVALUATION" >RTOG (CHEMO/RT LSCLC INITIAL EVALUATION</option>
+
+              <option value="RTOG (CHEMO/RT LSCLC INITIAL EVALUATION FORM" >RTOG (CHEMO/RT LSCLC INITIAL EVALUATION FORM</option>
+
+              <option value="RTOG (DEMOGRAPHIC DATA FORM" >RTOG (DEMOGRAPHIC DATA FORM</option>
+
+              <option value="RTOG (PATHOLOGY SUBMISSION FORM" >RTOG (PATHOLOGY SUBMISSION FORM</option>
+
+              <option value="RTOG (PHASE III LUNG FOR NSCLC INITIAL EVAL FORM" >RTOG (PHASE III LUNG FOR NSCLC INITIAL EVAL FORM</option>
+
+              <option value="RTOG (PHASE III PROSTATE INITIAL EVALUATION FORM" >RTOG (PHASE III PROSTATE INITIAL EVALUATION FORM</option>
+
+              <option value="RTOG (PHASE III, INITIAL EVALUATION FORM" >RTOG (PHASE III, INITIAL EVALUATION FORM</option>
+
+              <option value="RTOG (URINARY INCONTINENCE" >RTOG (URINARY INCONTINENCE</option>
+
+              <option value="RTPG (PATHOLOGY SUBMISSION FORM" >RTPG (PATHOLOGY SUBMISSION FORM</option>
+
+              <option value="SEER" >SEER</option>
+
+              <option value="SIC" >SIC</option>
+
+              <option value="SWOG  (REGISTRATION FORM" >SWOG  (REGISTRATION FORM</option>
+
+              <option value="SWOG (ADJUVANT COLON CARCINOMA PRESTUDY" >SWOG (ADJUVANT COLON CARCINOMA PRESTUDY</option>
+
+              <option value="SWOG (COLORECTAL CARCINOMA PRESTUDY" >SWOG (COLORECTAL CARCINOMA PRESTUDY</option>
+
+              <option value="SWOG (COLORECTAL CARCINOMA PRESUDY" >SWOG (COLORECTAL CARCINOMA PRESUDY</option>
+
+              <option value="SWOG (INTERGROUP ADJUVANT BREAST CANCER PRESTUDY" >SWOG (INTERGROUP ADJUVANT BREAST CANCER PRESTUDY</option>
+
+              <option value="SWOG (INTERGROUP ADJUVANT BREAST CANCER PRESTUDY FORM" >SWOG (INTERGROUP ADJUVANT BREAST CANCER PRESTUDY FORM</option>
+
+              <option value="SWOG (INTERGROUP HORMONE RECEPTOR ASSAY FORM" >SWOG (INTERGROUP HORMONE RECEPTOR ASSAY FORM</option>
+
+              <option value="SWOG (OFF TREATMENT NOTICE" >SWOG (OFF TREATMENT NOTICE</option>
+
+              <option value="SWOG (PRE-PROSTATECTOMY PRESTUDY" >SWOG (PRE-PROSTATECTOMY PRESTUDY</option>
+
+              <option value="SWOG (REGISTRATION FORM" >SWOG (REGISTRATION FORM</option>
+
+              <option value="SWOG (SPECIMEN SUBMISSION FORM" >SWOG (SPECIMEN SUBMISSION FORM</option>
+
+              <option value="SWOG(REGISTRATION FORM" >SWOG(REGISTRATION FORM</option>
+
+              <option value="UMLS" >UMLS</option>
+
+              <option value="UWD Visual Anatomist" >UWD Visual Anatomist</option>
+
+              <option value="VA-NDFRT" >VA-NDFRT</option>
+
+              <option value="WHO" >WHO</option>
+
+              <option value="WHODD" >WHODD</option>
+
+        </select>
+      </td>
+    </tr> 
+	
+    <tr height="25" valign="bottom">
+      <td align=right><font color="#FF0000"> * &nbsp;</font> 6) </td>
+      <td colspan=2><font color="#FF0000">Enter/Select</font> Effective Begin Date</td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td valign="top"  colspan=2>
+        <input type="text" name="BeginDate" size="12" maxlength=10 value="07/21/2006"
+          onHelp = "showHelp('Help_CreateVD.html#createPVForm_BeginDate'); return false">
+        <a href="javascript:show_calendar('createPVForm.BeginDate', null, null, 'MM/DD/YYYY');">
+        <img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
+        </a>
+        <font size="2">&nbsp;&nbsp;MM/DD/YYYY</font>
+      </td>
+    </tr>
+
+    <tr height="25" valign="bottom">
+      <td align=right>&nbsp; 7) </td>
+      <td colspan=2><font color="#FF0000">Enter/Select</font> Effective End Date</td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td valign="top"  colspan=2>
+        <input type="text" name="EndDate" size="12" maxlength=10 value=""
+          onHelp = "showHelp('Help_CreateVD.html#createPVForm_EndDate'); return false">
+        <a href="javascript:show_calendar('createPVForm.EndDate', null, null, 'MM/DD/YYYY');">
+        <img name="Calendar" src="images/calendarbutton.gif" width="22" height="22" alt="Calendar" style="vertical-align: top">
+        </a>
+        <font size="2">&nbsp;&nbsp;MM/DD/YYYY</font>
+      </td>
+    </tr>
+    <tr height="25" valign="bottom">
+      <td align=right>&nbsp; 8) </td>
+      <td colspan=2><font color="#FF0000"> <A HREF="javascript:SubmitValidate('validate')">
+          Validate</A></font> Permissible Value</td>
+    </tr>
+    <!-- leave some space -->
+    <tr height="75"><td>&nbsp;</td></tr>
+  </table>
+
+<script language = "javascript">
+displayStatusMessage();
+</script>
+<input type="hidden" name="pageAction" value="nothing">
+<input type="hidden" name="MenuAction" value="nothing">
+<input type="hidden" name="VMOrigin" value="Permissible">
+<input type="hidden" name="VMEvsDB" value="">
+<input type="hidden" name="pvID" value="">
+<input type="hidden" name="txValidValue" value="">
+<input type="hidden" name="PVAction" value="createPV">
+</form>
+
+<form name="SearchActionForm" method="post" action="">
+  <input type="hidden" name="searchComp" value="ValueMeaning">
+  <input type="hidden" name="searchEVS" value="PermissibleValue">
+  <input type="hidden" name="isValidSearch" value="false">
+  <input type="hidden" name="SelCDid" value="B227ED46-D8B2-4A76-E034-0003BA12F5E7">
+   <input type="hidden" name="sCCodeDB" value="">
+  <input type="hidden" name="sCCode" value="">
+  <input type="hidden" name="sCCodeName" value="">
+  <input type="hidden" name="openToTree" value=""> 
+  <input type="hidden" name="sConteIdseq" value="">
+</form>
+<form name="FormVM" method="post" action="/cdecurate/NCICurationServlet?reqType=createVM">
+  <input type="hidden" name="hiddenPValue" value="">
+  <input type="hidden" name="VMOrigin" value="Permissible">
+</form>
+</body>
+</html></td>
+  </tr>
+</table>
+
+        <script language="JavaScript"> defaultStatus = "Create a new Value"; </script>
+
+</body>
+</html>

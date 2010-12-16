@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" xmlns:gov.nih.nci.evs.security="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.security" targetNamespace="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.domain" elementFormDefault="qualified">
+  <xs:import namespace="gme://caCORE.caCORE/3.2/gov.nih.nci.evs.security" schemaLocation="gov.nih.nci.evs.security.xsd" />
+  <xs:element name="EditActionDate" type="EditActionDate" />
+  <xs:complexType name="EditActionDate">
+    <xs:sequence />
+    <xs:attribute name="action" type="xs:int" />
+    <xs:attribute name="editDate" type="xs:dateTime" />
+  </xs:complexType>
+  <xs:element name="TreeNode" type="TreeNode" />
+  <xs:complexType name="TreeNode">
+    <xs:sequence>
+      <xs:element name="links" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="isA" type="xs:boolean" />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="traverseDown" type="xs:boolean" />
+  </xs:complexType>
+  <xs:element name="Association" type="Association" />
+  <xs:complexType name="Association">
+    <xs:sequence>
+      <xs:element name="qualifierCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Qualifier" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="value" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="SemanticType" type="SemanticType" />
+  <xs:complexType name="SemanticType">
+    <xs:sequence />
+    <xs:attribute name="id" type="xs:string" />
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Silo" type="Silo" />
+  <xs:complexType name="Silo">
+    <xs:sequence />
+    <xs:attribute name="id" type="xs:int" />
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Vocabulary" type="Vocabulary" />
+  <xs:complexType name="Vocabulary">
+    <xs:sequence>
+      <xs:element name="siloCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Silo" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="description" type="xs:string" />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="namespaceId" type="xs:int" />
+  </xs:complexType>
+  <xs:element name="Property" type="Property" />
+  <xs:complexType name="Property">
+    <xs:sequence>
+      <xs:element name="qualifierCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Qualifier" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="value" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Source" type="Source" />
+  <xs:complexType name="Source">
+    <xs:sequence />
+    <xs:attribute name="abbreviation" type="xs:string" />
+    <xs:attribute name="code" type="xs:string" />
+    <xs:attribute name="description" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="AttributeSetDescriptor" type="AttributeSetDescriptor" />
+  <xs:complexType name="AttributeSetDescriptor">
+    <xs:sequence>
+      <xs:element name="roleCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Role" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="propertyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Property" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="MetaThesaurusConcept" type="MetaThesaurusConcept" />
+  <xs:complexType name="MetaThesaurusConcept">
+    <xs:sequence>
+      <xs:element name="synonymCollection" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="definitionCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Definition" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="atomCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Atom" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="sourceCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Source" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="semanticTypeCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="SemanticType" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="cui" type="xs:string" />
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Qualifier" type="Qualifier" />
+  <xs:complexType name="Qualifier">
+    <xs:sequence />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="value" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="History" type="History" />
+  <xs:complexType name="History">
+    <xs:sequence />
+    <xs:attribute name="editAction" type="xs:string" />
+    <xs:attribute name="editActionDate" type="xs:dateTime" />
+    <xs:attribute name="namespaceId" type="xs:int" />
+    <xs:attribute name="referenceCode" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="HistoryRecord" type="HistoryRecord" />
+  <xs:complexType name="HistoryRecord">
+    <xs:sequence>
+      <xs:element name="historyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="History" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="descLogicConceptCode" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="EdgeProperties" type="EdgeProperties" />
+  <xs:complexType name="EdgeProperties">
+    <xs:sequence>
+      <xs:element name="links" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="isA" type="xs:boolean" />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="traverseDown" type="xs:boolean" />
+  </xs:complexType>
+  <xs:element name="Role" type="Role" />
+  <xs:complexType name="Role">
+    <xs:sequence />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="value" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Atom" type="Atom" />
+  <xs:complexType name="Atom">
+    <xs:sequence>
+      <xs:element name="source" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Source" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="code" type="xs:string" />
+    <xs:attribute name="lui" type="xs:string" />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="origin" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="DescLogicConcept" type="DescLogicConcept" />
+  <xs:complexType name="DescLogicConcept">
+    <xs:sequence>
+      <xs:element name="semanticTypeVector" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="inverseAssociationCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Association" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="edgeProperties" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="EdgeProperties" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="inverseRoleCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Role" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="vocabulary" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Vocabulary" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="historyRecord" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="HistoryRecord" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="propertyCollection" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Property" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="treeNode" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="TreeNode" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="code" type="xs:string" />
+    <xs:attribute name="hasChildren" type="xs:boolean" />
+    <xs:attribute name="hasParents" type="xs:boolean" />
+    <xs:attribute name="isRetired" type="xs:boolean" />
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="namespaceId" type="xs:int" />
+  </xs:complexType>
+  <xs:element name="Definition" type="Definition" />
+  <xs:complexType name="Definition">
+    <xs:sequence>
+      <xs:element name="source" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Source" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="definition" type="xs:string" />
+  </xs:complexType>
+</xs:schema>
+
