@@ -181,7 +181,7 @@ public class DataElementServlet extends CurationServlet{
             if (sDEID != null && !sDEID.equals(""))
             {
                 serAC.doDESearch(sDEID, "", "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                                "", "", "", "", "", "", "", "", "", "", "", vList, "0");
+                                "", "", "", "", "", "", "", "", "", "", "", vList, "0", 0);
             }
             if (vList.size() > 0) // get all attributes
             {
@@ -310,7 +310,7 @@ public class DataElementServlet extends CurationServlet{
             GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
             if (sDEID != null && !sDEID.equals(""))
                 serAC.doDESearch(sDEID, "", "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                                "", "", "", "", "", "", "", "", "", "", "", vList, "0");
+                                "", "", "", "", "", "", "", "", "", "", "", vList, "0", 0);
             if (vList.size() > 0) // get all attributes
             {
                 DEBean = (DE_Bean) vList.elementAt(0);
@@ -1658,7 +1658,7 @@ public class DataElementServlet extends CurationServlet{
         if (acID != null && !acID.equals(""))
         {
             serAC.doDESearch(acID, "", "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                            "", "", "", "", "", "", "", "", "", "", "", vList, "0");
+                            "", "", "", "", "", "", "", "", "", "", "", vList, "0", 0);
         }
         if (vList.size() > 0) // get all attributes
         {

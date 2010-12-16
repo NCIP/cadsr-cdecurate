@@ -115,16 +115,23 @@ public class VMAction implements Serializable
 				if (rs != null)
 				{
 					int g = 0;
-					int resultsDisplayed = GetACSearch.getInt(sRecordsDisplayed);
+					int recordsDisplayed = GetACSearch.getInt(sRecordsDisplayed);
 					// loop through the resultSet and add them to the bean
-					while (rs.next())
+					while (rs.next() && g < recordsDisplayed)
 					{
+						g = g + 1;
 						VM_Bean vmBean = doSetVMAttributes(rs, data.getCurationServlet().getConn());
 						vmBean.setVM_BEGIN_DATE(rs.getString("begin_date"));
 						vmBean.setVM_END_DATE(rs.getString("end_date"));
 						vmBean.setVM_CD_NAME(rs.getString("cd_name"));
 						vmList.addElement(vmBean); // add the bean to a vector
 					} // END WHILE
+					if (g == recordsDisplayed){
+                    	int totalRecords = getResultSetSize(rs);
+                    	DataManager.setAttribute(data.getRequest().getSession(), "totalRecords", Integer.toString(totalRecords));
+                    } else 
+                    	DataManager.setAttribute(data.getRequest().getSession(), "totalRecords", Integer.toString(g));
+                    
 				} // END IF
 			}
 			data.setVMList(vmList);
@@ -2315,5 +2322,14 @@ public class VMAction implements Serializable
 		}
 		return vList;
 	}
+	
+    private int getResultSetSize(ResultSet rs) throws SQLException {
+    	int size = 0;
+    	size = rs.getRow();
+    	while(rs.next())
+    		size++;
+    	
+    	return size;
+    }
 
 }// end of the class

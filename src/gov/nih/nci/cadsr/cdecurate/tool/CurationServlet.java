@@ -52,13 +52,13 @@ import org.apache.log4j.Logger;
  *
  */
 /*
- * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. (“ScenPro”) Copyright Notice. The software
+ * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. ("ScenPro") Copyright Notice. The software
  * subject to this notice and license includes both human readable source code form and machine readable, binary, object
- * code form (“the CaCORE Software”). The CaCORE Software was developed in conjunction with the National Cancer
- * Institute (“NCI”) by NCI employees and employees of SCENPRO. To the extent government employees are authors, any
+ * code form ("the CaCORE Software"). The CaCORE Software was developed in conjunction with the National Cancer
+ * Institute ("NCI") by NCI employees and employees of SCENPRO. To the extent government employees are authors, any
  * rights in such works shall be subject to Title 17 of the United States Code, section 105. This CaCORE Software
- * License (the “License”) is between NCI and You. “You (or “Your”) shall mean a person or an entity, and all other
- * entities that control, are controlled by, or are under common control with the entity. “Control” for purposes of this
+ * License (the "License") is between NCI and You. "You (or "Your") shall mean a person or an entity, and all other
+ * entities that control, are controlled by, or are under common control with the entity. "Control" for purposes of this
  * definition means (i) the direct or indirect power to cause the direction or management of such entity, whether by
  * contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii)
  * beneficial ownership of such entity. This License is granted provided that You agree to the conditions described
@@ -74,10 +74,10 @@ import org.apache.log4j.Logger;
  * liability of Article 6, below. Your redistributions in object code form must reproduce the above copyright notice,
  * this list of conditions and the disclaimer of Article 6 in the documentation and/or other materials provided with the
  * distribution, if any. 2. Your end-user documentation included with the redistribution, if any, must include the
- * following acknowledgment: “This product includes software developed by SCENPRO and the National Cancer Institute.” If
+ * following acknowledgment: "This product includes software developed by SCENPRO and the National Cancer Institute." If
  * You do not include such end-user documentation, You shall include this acknowledgment in the Software itself,
  * wherever such third-party acknowledgments normally appear. 3. You may not use the names "The National Cancer
- * Institute", "NCI" “ScenPro, Inc.” and "SCENPRO" to endorse or promote products derived from this Software. This
+ * Institute", "NCI" "ScenPro, Inc." and "SCENPRO" to endorse or promote products derived from this Software. This
  * License does not authorize You to use any trademarks, service marks, trade names, logos or product names of either
  * NCI or SCENPRO, except as required to comply with the terms of this License. 4. For sake of clarity, and not by way
  * of limitation, You may incorporate this Software into Your proprietary programs and into any third party proprietary
@@ -114,7 +114,7 @@ public class CurationServlet
     public static final Logger  logger  = Logger.getLogger(CurationServlet.class.getName());
     /** declare the global variable sessionData */
     public Session_Data        sessionData;
-    
+
     private UtilService  m_util = new UtilService();
 
     /**
@@ -151,7 +151,7 @@ public class CurationServlet
         m_servletContext = sc;
     }
 
-    
+
     /**
      * makes the login message with all the information
      *
@@ -215,7 +215,7 @@ public class CurationServlet
      * We copied this name to the /conf/template.web.xml file in the <param-value> element.
      * The <param-name> for this initialization value appears in the code
      * NCICurationServlet.initOracleConnect() method.
-     * The data source pool name is then saved in a class variable “_dataSourceName”.     *
+     * The data source pool name is then saved in a class variable "_dataSourceName".     *
      * The variable is used by the CurationServlet.getConnFromDS() method which
      * is used by the CurationServlet.connectDB() method.
      * @return
@@ -286,7 +286,7 @@ public class CurationServlet
      * @param session
      */
     private void login(HttpServletRequest req, HttpServletResponse res,HttpSession session)throws Exception
-    {    	
+    {
     	String username = req.getParameter("Username").toUpperCase();
         String password = req.getParameter("Password");
     	CaDsrUserCredentials uc = new CaDsrUserCredentials();
@@ -311,7 +311,7 @@ public class CurationServlet
             getAC.getWriteContextList();
             getEVSInfo();
            //get cs-csi relationship data
-            getAC.getCSCSIListBeann(); 
+            getAC.getCSCSIListBeann();
             getDefaultContext();
     	  }
 	      catch(DBException e){
@@ -322,8 +322,8 @@ public class CurationServlet
     		  userbean=null;
     		  logger.error("Failed credential validation, code is " + uc.getCheckCode());
     	      logger.error("Redirecting the user to Login Page");
-			  ForwardErrorJSP(req, res, "Could not validate the User Name and Password, please try again.");				
-    	  } 
+			  ForwardErrorJSP(req, res, "Could not validate the User Name and Password, please try again.");
+    	  }
       }
 
     /**
@@ -387,7 +387,7 @@ public class CurationServlet
         	}
         }
     }
-    
+
     protected UserBean checkLoggedIn() throws Exception
     {
     	UserBean ub = checkUserBean(m_classReq, m_classRes);
@@ -437,7 +437,7 @@ public class CurationServlet
                     	 String cancelLogin = (String)m_classReq.getParameter("cancelLogin");
                     	 if (cancelLogin.equals("No")){
                            login(m_classReq,m_classRes,session);
-                         }  
+                         }
                     	 String userName = (String)session.getAttribute("Username");
                     	 String directLogin = (String)session.getAttribute("directLogin");
                     	 if ((directLogin != null) && (directLogin).equals("yes")) {
@@ -453,7 +453,7 @@ public class CurationServlet
 							if (prevReq == null)
 								prevReq = "/SearchResultsPage.jsp";
 							ForwardJSP(m_classReq, m_classRes, prevReq);
-						} 
+						}
                         break;
                     }
                     if ("heartbeat".equals(reqType))
@@ -688,13 +688,13 @@ public class CurationServlet
     }
 */
     /**
-     * Gets the Help URL from Tool options table. 
+     * Gets the Help URL from Tool options table.
      * @param req
      * @param res
      */
     public String getHelpURL(Connection con)
     {
-    	 GetACService getAC = new GetACService(); 
+    	 GetACService getAC = new GetACService();
     	Vector vList = new Vector();
         vList = getAC.getToolOptionData(con,"CURATION", "HELP.HOME", "");
         String aURL = null;
@@ -706,7 +706,7 @@ public class CurationServlet
         }
        return aURL;
     }
-    
+
     /**
      * @param req
      * @param res
@@ -2765,7 +2765,7 @@ public class CurationServlet
                             if (rSel2 != null)
                                 vCheckList.addElement(ckName2);
                         }
-                     }else if(vSRows.size() > 0){ 
+                     }else if(vSRows.size() > 0){
                       for (ndx = 0; ndx < vSRows.size(); ++ndx){
                          String temp;
                          String ckName = ("CK" + ndx);
@@ -2781,8 +2781,8 @@ public class CurationServlet
                                 csi_idseq = temp;
                          }
                        }
-                    } 
-                   
+                    }
+
                     DataManager.setAttribute(session, "CheckList", vCheckList); // add the check list in the session.
                 }
                 catch (ClassCastException e)
@@ -2883,7 +2883,7 @@ public class CurationServlet
                     if (rSel2 != null)
                         vCheckList.addElement(ckName2);
                 }
-            }else if(vSRows.size() > 0){ 
+            }else if(vSRows.size() > 0){
                for (int ndx = 0; ndx < vSRows.size(); ++ndx){
                  try{
                     String temp;
@@ -2900,7 +2900,7 @@ public class CurationServlet
                 }
               }
             }
-            
+
             DataManager.setAttribute(session, "CheckList", vCheckList); // add the check list in the session.
             if (list.size() == 0)
             {
@@ -3041,14 +3041,14 @@ public class CurationServlet
           	if (sMenuAction.equals("NewDEVersion") || sMenuAction.equals("NewDECVersion") || sMenuAction.equals("NewVDVersion"))
           	   ForwardJSP(req, res, "/SearchResultsPage.jsp");
           	else{
-          	   session.setAttribute("displayErrorMessage", "Yes"); 
-          	}    
+          	   session.setAttribute("displayErrorMessage", "Yes");
+          	}
           	String editID = (String)session.getAttribute("editID");
            	String path = "/NCICurationServlet?reqType=view&idseq=" + editID;
         	RequestDispatcher rd = m_servletContext.getRequestDispatcher(path);
 		    rd.forward(req, res);
 		    return;
-		} 
+		}
         else
         {
            // String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION); // get the selected
@@ -3477,7 +3477,7 @@ public class CurationServlet
         DataManager.setAttribute(session, "ParentConceptCode", null);
         DataManager.setAttribute(session, "VMForm.SESSION_RET_PAGE", null);
         // DataManager.setAttribute(session, "OpenTreeToConcept", "");
-        
+
 
     }
 
@@ -3883,11 +3883,11 @@ public class CurationServlet
 					m_classReq.setAttribute("version", sVersion);
 					m_classReq.setAttribute("errMsg", errMsg);
 					m_classReq.setAttribute("showCloseBtn", "yes");
-					ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");	
+					ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
 				}
 				actlReq = "view"+ actlName;
-				acIDSEQ = ac.get(1);	
-			}	
+				acIDSEQ = ac.get(1);
+			}
 		} catch (DBException e) {
 			logger.error("ac query", e);
 			errMsg = e.getMessage();
@@ -3896,12 +3896,12 @@ public class CurationServlet
 			m_classReq.setAttribute("acIdseq", acIDSEQ);
 			if ((actlReq).equals("viewVALUEMEANING")){
 				if (session.getAttribute(Session_Data.SESSION_ASL_FILTER) == null)
-			    	 serviceAC.getASLFilterListForView(session);   
+			    	 serviceAC.getASLFilterListForView(session);
 				VMServlet vmServlet = new VMServlet(m_classReq, m_classRes, this);
 			    vmServlet.doOpenViewPage();
 			 }else{
 				  if (session.getAttribute("Organizations") == null)
-			    	  serviceAC.getOrganizeListforView(); 
+			    	  serviceAC.getOrganizeListforView();
 				  if ( ((actlReq).equals("viewDE_CONCEPT")) || ((actlReq).equals("viewVALUEDOMAIN"))){
 					  String evsConceptUrl = (String)session.getAttribute("evsBrowserConceptURL");
 				  	  if (evsConceptUrl == null){
@@ -3926,25 +3926,25 @@ public class CurationServlet
 				  }
 				  CurationServlet servObj = getACServlet(actlReq);
 				  servObj.execute(getACType(actlReq));
-			}  
+			}
 		} else {
 			errMsg = "Unable to determine the administered components used to view the data";
 			logger.error(errMsg);
-		}			
+		}
 		m_classReq.setAttribute("errMsg", errMsg);
      	ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
     }
-	
-	
-	public void execute(ACRequestTypes reqType) throws Exception {		
-		//System.out.println("curation servlet");	
+
+
+	public void execute(ACRequestTypes reqType) throws Exception {
+		//System.out.println("curation servlet");
 		switch (reqType){
 			case view:
-				doOpenViewPage(); 
+				doOpenViewPage();
 				break;
 		}
 	}
-	
+
 	public AC_Bean getACNames(EVS_Bean newBean, String nameAct, AC_Bean pageAC) {
 		logger.debug("get name " + nameAct);
 		return pageAC;
@@ -3953,7 +3953,7 @@ public class CurationServlet
 		logger.debug("get name " + nameAct);
 		return bean;
 	}
-	
+
 	public AC_Bean getSystemName(AC_Bean ac, Vector<EVS_Bean> vParent) {
 		logger.debug("get name ");
 		return ac;
@@ -3963,13 +3963,13 @@ public class CurationServlet
 		ACRequestTypes acrt = ACRequestTypes.valueOf(ac);
 		return acrt;
 	}
-	
+
 	public CurationServlet getACServlet(String ac)
 	{
 		CurationServlet servObj = this;
     	try {
     		ACRequestTypes acrt = getACType(ac);
-			if (acrt != null)   
+			if (acrt != null)
 			{
 			   String className = acrt.getClassName();
 			   servObj = (CurationServlet) Class.forName(className).newInstance();
@@ -3979,12 +3979,12 @@ public class CurationServlet
 			}
 		} catch (Exception e) {
 			logger.error("Which AC " + e.toString());
-		}		
+		}
 		return servObj;
 	}
 	private void doViewVMActions(HttpServletRequest req, HttpServletResponse res) throws Exception{
         VMServlet vmSer = new VMServlet(req, res, this);
-        vmSer.doViewVMActions(); 
+        vmSer.doViewVMActions();
         ForwardJSP(req, res, "/ViewPage.jsp");
     }
 	private void doViewPVActions(HttpServletRequest req, HttpServletResponse res) throws Exception{
@@ -4023,7 +4023,7 @@ public class CurationServlet
 		m_classReq.setAttribute("version", version);
 		m_classReq.setAttribute("errMsg", errMsg);
 		ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
-	  
+
   }
   private void getEVSInfo(){
 	  // get EVS info
@@ -4058,7 +4058,7 @@ public class CurationServlet
 	       	cstmt = SQLHelper.closeCallableStatement(cstmt);
 	  }
   }
-  
+
   private void getDefaultContext(){
 	  HttpSession session =  m_classReq.getSession();
 	  try{
@@ -4067,9 +4067,9 @@ public class CurationServlet
 		  session.setAttribute("defaultContext", defaultContext);
 	  }catch (DBException e) {
 			logger.error("Error in getDefaultContext() in CurationServlet", e);
-	  }	  
+	  }
   }
-  
+
   public Vector getMatchingThesarusconcept(Vector beanList, String type){
 	  HttpSession session = m_classReq.getSession();
 	  InsACService ins = new InsACService(m_classReq, m_classRes, this);
