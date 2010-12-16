@@ -119,7 +119,7 @@ function menuShow(obj, evnt, highlight) {
 	var left = 0;
 	if (evnt.offsetX == undefined || evnt.offsetY == undefined) {
 		menuObjPos(srcElementHold);
-	    top = rY;
+	    	top = rY;
 		left = rX;
 		menuObjPos(menu.parentNode);
 		top = top - rY + offsetY;
@@ -130,9 +130,30 @@ function menuShow(obj, evnt, highlight) {
 		top = scrollTop + evnt.clientY - evnt.offsetY + offsetY;
 		left = scrollLeft + evnt.clientX - evnt.offsetX + offsetX;
 	}
+	
+	var windowHeight = f_clientHeight();
+	var heightOfMenu = menu.clientHeight;
+	var topOfWindow = evnt.pageY - evnt.clientY;
+	var bottomOfMenu = top + heightOfMenu;
+	var bottomOfWindow = topOfWindow + windowHeight;
+	
+	var difference = bottomOfMenu - bottomOfWindow;
+	
+	if (difference > 0 && menuType == "float") {
+		if (top - difference < 0) {
+			top = 0;
+		} else {
+			if (top - difference < topOfWindow) {
+				top = topOfWindow;
+			} else {
+				top = top - difference;
+			}
+		}
+	}
 	menu.style.top = top + "px";
 	menu.style.left = left + "px";
 }
+
 function menuItemFocus(mitem) {
 	var miEnable = mitem.getAttribute("menuEnable");
 	if (miEnable == null || miEnable != "false") {
@@ -190,6 +211,7 @@ function menuRootOver(obj, evnt) {
 				top = document.body.parentElement.scrollTop + evnt.clientY - evnt.offsetY + offsetY;
 				left = document.body.parentElement.scrollLeft + evnt.clientX - evnt.offsetX + offsetX;
 			}
+
 			menu.style.top = top + "px";
 			menu.style.left = left + "px";
 		}
@@ -294,3 +316,39 @@ function menuObjPos(obj) {
      alert("Please follow the steps below.\n 1. Perform a Search. \n 2. Click on the action icon for desired result. \n 3. Select 'New Version' in the pop up action menu.");
    }  
  }  
+
+ //functions for determining window height and width.
+ function f_clientWidth() {
+	return f_filterResults (
+		window.innerWidth ? window.innerWidth : 0,
+		document.documentElement ? document.documentElement.clientWidth : 0,
+		document.body ? document.body.clientWidth : 0
+	);
+}
+function f_clientHeight() {
+	return f_filterResults (
+		window.innerHeight ? window.innerHeight : 0,
+		document.documentElement ? document.documentElement.clientHeight : 0,
+		document.body ? document.body.clientHeight : 0
+	);
+}
+function f_scrollLeft() {
+	return f_filterResults (
+		window.pageXOffset ? window.pageXOffset : 0,
+		document.documentElement ? document.documentElement.scrollLeft : 0,
+		document.body ? document.body.scrollLeft : 0
+	);
+}
+function f_scrollTop() {
+	return f_filterResults (
+		window.pageYOffset ? window.pageYOffset : 0,
+		document.documentElement ? document.documentElement.scrollTop : 0,
+		document.body ? document.body.scrollTop : 0
+	);
+}
+function f_filterResults(n_win, n_docel, n_body) {
+	var n_result = n_win ? n_win : 0;
+	if (n_docel && (!n_result || (n_result > n_docel)))
+		n_result = n_docel;
+	return n_body && (!n_result || (n_result > n_body)) ? n_body : n_result;
+}

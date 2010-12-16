@@ -102,7 +102,7 @@
 	<property name="jsp.dir" location="${root.dir}/jsp" />
 	<property name="prop.dir" location="${classes.dir}/gov/nih/nci/cadsr/cdecurate" />
 	<property name="src.dir" location="${basedir}/src" />
-	<property name="lib.dir" location="${basedir}/lib" />
+	<property name="lib.dir" location="${basedir}/lib/" />
     <property name="scpPath.dir" location="${SCP.PATH}/cdecurate" />
 	<condition property="check.test">
 		<equals arg1="${TEST}" arg2="true" trim="true" />
@@ -289,7 +289,8 @@
 		<echo>Building deployable WAR file ...</echo>
 		<delete file="${artifacts.dir}/jboss/cdecurate.war" />
 		<cvs command="status -v" output="${jsp.dir}/cvsdeploy.txt" />
-		<war destfile="${artifacts.dir}/jboss/cdecurate.war" basedir="${root.dir}" update="true" webxml="${web.dir}/web.xml">
+		<war destfile="${artifacts.dir}/jboss/cdecurate.war" basedir="${root.dir}" update="true" 
+			webxml="${web.dir}/web.xml" excludes="**/log4j*.jar,**/commons-logging*.jar,**/Grobo*.jar">
 		</war>
 		<delete file="${jsp.dir}/cvsdeploy.txt" />
 	</target>
@@ -301,7 +302,7 @@
 		<cvs command="status -v" output="${jsp.dir}/cvsdeploy.txt" />
 		<war destfile="${artifacts.dir}/jboss/cdecurate.war" basedir="${root.dir}" update="true" 
 			webxml="${web.dir}/web.xml"
-			excludes="**/log4j*.jar,**/commons-logging*.jar">
+			excludes="**/log4j*.jar,**/commons-logging*.jar,**/Grobo*.jar">
 		</war>
 		<delete file="${jsp.dir}/cvsdeploy.txt" />
 	</target>

@@ -584,7 +584,7 @@
 						&nbsp;&nbsp;Enter Concept Value
 						<br>
 						&nbsp;&nbsp;
-						<input type="text" name="nvp_<%=ckName%>" maxlength="10" width="80%" onkeyup="" value="">
+						<input type="text" name="nvp_<%=ckName%>" id="nvp_<%=ckName%>" maxlength="10" width="80%" onkeyup="" value="">
 						<% }	%>
 					</td>
 					<%    }else{%>
@@ -605,7 +605,7 @@
 						&nbsp;&nbsp;Enter Concept Value
 						<br>
 						&nbsp;&nbsp;
-						<input type="text" name="nvp_<%=ckName%>" maxlength="10" size="30" onkeyup="" value="">
+						<input type="text" name="nvp_<%=ckName%>" id="nvp_<%=ckName%>" maxlength="10" size="30" onkeyup="" value="">
 						<% }	%>
 					</td>
 					<%    } %>
