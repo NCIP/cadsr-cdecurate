@@ -46,7 +46,8 @@ public class ObjMenuTag extends MenuTag {
 									  + displayNewVersion()
 									  + displayShowAll()
 									  + displayHideAll()
-									  + displayAppend());
+									  + displayAppend()
+									  + displayCustomDownload());
 				}
 				if ((selACType).equals("DataElementConcept")) {
 					objMenu.println(displayEdit()
@@ -222,6 +223,10 @@ public class ObjMenuTag extends MenuTag {
 	}
 	public String displayAppend(){
 		String tag = generateTR("","","","16_append","append()","Append");
+		return tag;	
+	}
+	public String displayCustomDownload(){
+		String tag = generateTR("","","","16_uploading","createDownload()","Create Download");
 		return tag;	
 	}
 }
