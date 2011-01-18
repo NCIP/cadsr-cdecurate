@@ -130,6 +130,7 @@ public class PV_Bean implements Serializable
   private String PV_VM_IDSEQ;
   private String PV_VM_CONDR_IDSEQ;
   private String PV_VIEW_TYPE;
+  private boolean PV_IN_FORM = false;
 
 
   /**
@@ -166,6 +167,7 @@ public class PV_Bean implements Serializable
       this.setPV_EVS_DATABASE(fromBean.getPV_EVS_DATABASE());
       this.setPV_VM_CONDR_IDSEQ(fromBean.getPV_VM_CONDR_IDSEQ());
       this.setPARENT_CONCEPT(fromBean.getPARENT_CONCEPT());
+      this.setPV_IN_FORM(fromBean.getPV_IN_FORM());
     }
     //send the to bean back
     return this;
@@ -798,5 +800,13 @@ public void setPV_VM_IDSEQ(String pv_vm_idseq) {
 	PV_VM_IDSEQ = pv_vm_idseq;
 }
 
+public void setPV_IN_FORM(boolean inForm) {
+	PV_IN_FORM = inForm;
+}
+
+public boolean getPV_IN_FORM() {
+
+	return PV_IN_FORM;
+}
 
 } //end of class

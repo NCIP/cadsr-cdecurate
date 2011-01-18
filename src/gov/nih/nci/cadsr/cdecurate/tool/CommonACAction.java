@@ -74,6 +74,7 @@ public abstract class CommonACAction
         }
         return vACs;
     }
+    
 
     public CommonACBean getAttributes(ResultSet rs) throws SQLException
     {

@@ -57,6 +57,7 @@ public enum ACRequestTypes {
 	createExcelDownload("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
 	cdlColumns("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
 	jsonLayout("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
+	showVDfromSearch("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
 	jsonRequest("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet");
 	
 	private String className;
