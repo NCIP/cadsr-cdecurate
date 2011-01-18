@@ -708,6 +708,15 @@
 	   document.searchResultsForm.submit();
   }
   
+  function setVDCustomDownloadAction()
+  {
+	   document.searchResultsForm.action="../../cdecurate/NCICurationServlet?reqType=showVDfromSearch";
+	   window.status = "Submitting the page, it may take a minute, please wait....."
+		 document.searchResultsForm.Message.style.visibility="visible";
+	   document.searchResultsForm.numSelected.value = numRowsSelected;
+	   document.searchResultsForm.submit();
+  }
+  
   //submits the form to create new vm from pv page
   function createNewVM()
   {
