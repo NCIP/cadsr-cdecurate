@@ -73,7 +73,8 @@ public class ObjMenuTag extends MenuTag {
 									  + displayNewVersion()
 									  + displayShowAll()
 									  + displayHideAll()
-									  + displayAppend());
+									  + displayAppend()
+									  + displayCustomDownload());
 				}
 				if ((selACType).equals("ConceptualDomain")) {
 					objMenu.println(displayGetAssociatedDE()
