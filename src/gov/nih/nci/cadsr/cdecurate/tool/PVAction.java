@@ -15,6 +15,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -159,6 +161,7 @@ public class PVAction implements Serializable {
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
 		boolean isValid = false;
+		
 		try {
 			if ((vpIDseq != null && !vpIDseq.equals(""))
 					|| (vdIDseq != null && !vdIDseq.equals(""))) {
@@ -193,6 +196,77 @@ public class PVAction implements Serializable {
 		return isValid;
 	} //end checkPVQCExists
 
+	
+	public HashMap<String,ArrayList<String[]>> getAssociatedForms(String vpIDseq, PVForm data, HashMap<String,ArrayList<String[]>> ret, boolean isVD){
+		
+		String[] headerContent = new String[2];
+		
+		//Are we adding to the existing list?	
+		if (ret == null) {
+			ret = new HashMap<String,ArrayList<String[]>>();
+		
+			ArrayList<String[]> head = new ArrayList<String[]>();
+			headerContent[0]="Form Long Name";
+			headerContent[1]="Form Public ID";
+			head.add(headerContent);
+			ret.put("Head", head);
+		}
+		String idseqString = "VP_IDSEQ";
+		if (isVD)
+			idseqString = "VD_IDSEQ";
+		
+		String sql = "SELECT crf.long_name, crf.public_id"       
+	        +" FROM"
+	        +" SBREXT.FB_FORMS_VIEW crf"
+	        +" ,SBREXT.QUEST_CONTENTS_EXT qc"
+	        +" ,SBR.VD_PVS vdpvs"
+	        +" WHERE"
+	        +" (qc.VP_IDSEQ = vdpvs.VP_IDSEQ)"
+	        +" AND (qc.DN_CRF_IDSEQ = crf.QC_IDSEQ)"
+	        +" AND (VDPVS."+idseqString+" = ?)"
+	        +" group by crf.public_id, crf.long_name"
+	        +" order by crf.public_id desc";
+		
+		ResultSet rs = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			if (vpIDseq != null && !vpIDseq.equals("")) {
+				if (data.getCurationServlet().getConn() != null) {
+					pstmt = data
+							.getCurationServlet()
+							.getConn()
+							.prepareStatement(sql);
+					// register the Out parameters
+					pstmt.setString(1, vpIDseq);
+					ArrayList<String[]> usedInForms = new ArrayList<String[]>();
+					// Now we are ready to call the function
+					rs = pstmt.executeQuery();
+					while (rs.next()) {
+						String[] rowContent = new String[headerContent.length];
+						for (int i = 0; i < headerContent.length; i++)
+							rowContent[i] = rs.getString(i+1);
+						
+						usedInForms.add(rowContent);
+					}
+				
+				ret.put(vpIDseq, usedInForms);
+				}
+			}
+		} catch (Exception e) {
+			logger.error("ERROR - getAssociatedForms for other : ", e);
+			data
+					.setStatusMsg(data.getStatusMsg()
+							+ "\\tError : Unable to get existing pv-qc information."
+							+ e.toString());
+			data.setActionStatus(ConceptForm.ACTION_STATUS_FAIL);
+		}finally{
+			rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
+		}
+		
+		return ret;
+	}
 	/**
 	 * checks if removed pvs are associated with the form
 	 * send back the validation message for pv vds data.
@@ -535,6 +609,7 @@ public class PVAction implements Serializable {
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		Vector<PV_Bean> vList = new Vector<PV_Bean>();
+		
 		try {
 			if (data.getCurationServlet().getConn() != null) {
 				cstmt = data
@@ -860,6 +935,7 @@ public class PVAction implements Serializable {
 								+ " : Unable to remove permissible value "
 								+ sPValue + ".";
 
+					
 					data.setRetErrorCode(retCode);
 				} else {
 					retCode = "";

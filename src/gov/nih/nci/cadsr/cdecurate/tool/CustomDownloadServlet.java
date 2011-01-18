@@ -8,6 +8,7 @@ import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
@@ -24,6 +25,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.SystemOutLogger;
 import org.codehaus.jettison.json.JSONObject;
 
 public class CustomDownloadServlet extends CurationServlet {
@@ -55,6 +57,9 @@ public class CustomDownloadServlet extends CurationServlet {
 				break;
 			case createExcelDownload:
 				createDownload();
+				break;
+			case showVDfromSearch:
+				prepVDpage(); 
 				break;
 		}	
 			
@@ -123,6 +128,110 @@ public class CustomDownloadServlet extends CurationServlet {
 	                ArrayList<String> columnHeaders = new ArrayList<String>();
 	                ArrayList<String> columnTypes = new ArrayList<String>();
 	                ArrayList<String[]> rows = new ArrayList<String[]>();
+	                HashMap<String,HashMap<String,ArrayList<String[]>>> typeMap = new HashMap<String,HashMap<String,ArrayList<String[]>>>();
+	                
+	                // Get the column names and types; column indices start from 1
+	                for (int i=1; i<numColumns+1; i++) {
+	                    String columnName = rsmd.getColumnName(i);
+	                    columnHeaders.add(columnName);
+	                    String columnType = rsmd.getColumnTypeName(i);
+	                    columnTypes.add(columnType);
+	                    if (columnType.endsWith("LIST_T"))
+	                    	typeMap.put(columnType,new HashMap<String,ArrayList<String[]>>());
+	                }   
+	                
+	                
+	                
+	                
+	                while (rs.next()) {
+	                	String[] row = new String[numColumns];
+	                	for (int i=0; i<numColumns; i++) {
+	                		row[i] = rs.getString(i+1);
+	                		if (columnTypes.get(i).endsWith("LIST_T"))
+	                			typeMap = putInMap(columnTypes.get(i),i,rs.getObject(i+1),typeMap);
+	                	}
+	                	rows.add(row);
+	                }
+	                
+	                m_classReq.getSession().setAttribute("headers",columnHeaders);
+	                m_classReq.getSession().setAttribute("types", columnTypes);
+	                m_classReq.getSession().setAttribute("rows", rows);
+	            }
+	    	 	
+	    	 	rs.close();
+	        	ps.close();
+	        	
+	        } catch (Exception e) {
+	        	e.printStackTrace();
+	        } 
+		
+		ForwardJSP(m_classReq, m_classRes, "/CustomDownload.jsp");
+	}
+	
+	
+	private void prepVDpage() {
+		
+		//Set of all param names, this will have CK (checked) indexes indicating which Search ID is checked.
+		Set<String> paramNames = this.m_classReq.getParameterMap().keySet();
+		Vector<String> searchID= (Vector<String>) this.m_classReq.getSession().getAttribute("SearchID");
+		StringBuffer whereBuffer = new StringBuffer();
+		ArrayList<String> downloadID = new ArrayList<String>();
+		
+		for(String name:paramNames) {
+			if (name.startsWith("CK")) {
+				int ndx = Integer.valueOf(name.substring(2));
+				downloadID.add(searchID.get(ndx));
+			}
+		}
+		
+		/*		
+		Enumeration<String> attNames = this.m_classReq.getSession().getAttributeNames();
+		
+		System.out.println("******Session Attributes**************");
+		
+		while (attNames.hasMoreElements()) {
+			String name = attNames.nextElement();
+			System.out.print("Name: "+name);
+			System.out.println("  Value: " + this.m_classReq.getSession().getAttribute(name));
+		}
+		*/
+
+		
+		 ResultSet rs = null;
+	     PreparedStatement ps = null;
+	     try
+	        {
+	    	 	if (getConn() == null)
+	                ErrorLogin(m_classReq, m_classRes);
+	            else
+	            {
+	            	boolean first = true;
+	        		for (String id:downloadID) {
+	        			
+	        			if (first) {
+	        				whereBuffer.append("'" + id + "'");
+
+	        				first = false;
+	        			}
+	        			else
+	        			{
+	        				whereBuffer.append(",'" + id + "'");
+	        			}
+	        		}
+	        		
+	        		String sqlStmt =
+	        			"SELECT * FROM VD_EXCEL_GENERATOR_VIEW " + "WHERE VD_IDSEQ IN " +
+	        			" ( " + whereBuffer.toString() + " )  ";
+	            
+	                ps = getConn().prepareStatement(sqlStmt);
+	                rs = ps.executeQuery();
+
+	                ResultSetMetaData rsmd = rs.getMetaData();
+	                int numColumns = rsmd.getColumnCount();
+
+	                ArrayList<String> columnHeaders = new ArrayList<String>();
+	                ArrayList<String> columnTypes = new ArrayList<String>();
+	                ArrayList<String[]> rows = new ArrayList<String[]>();
 	                
 	                // Get the column names and types; column indices start from 1
 	                for (int i=1; i<numColumns+1; i++) {
@@ -133,6 +242,7 @@ public class CustomDownloadServlet extends CurationServlet {
 	                }   
 	                
 	                while (rs.next()) {
+	                	
 	                	String[] row = new String[numColumns];
 	                	for (int i=0; i<numColumns; i++) {
 	                		row[i] = rs.getString(i+1);
@@ -154,6 +264,7 @@ public class CustomDownloadServlet extends CurationServlet {
 		
 		ForwardJSP(m_classReq, m_classRes, "/CustomDownload.jsp");
 	}
+	
 	
 	private void returnJSONFromSession(String JSPName) {
 		
@@ -239,5 +350,46 @@ public class CustomDownloadServlet extends CurationServlet {
 		
 		
 		ForwardJSP(m_classReq, m_classRes, "/DownloadComplete.jsp");
+	}
+	
+	private HashMap<String,HashMap<String, ArrayList<String[]>>> putInMap(String type, int row, Object rsObject, HashMap<String,HashMap<String, ArrayList<String[]>>> typeMap) {
+		
+		oracle.sql.ARRAY arr = (oracle.sql.ARRAY)rsObject;
+		HashMap<String, ArrayList<String[]>> typeRowData;
+		if (typeMap.containsKey(type))
+			typeRowData = typeMap.get(type);
+		else 
+			typeRowData = new HashMap<String, ArrayList<String[]>>();
+		
+		ArrayList<String[]> data = new ArrayList<String[]>();
+		try {
+			ResultSet rs = arr.getResultSet();
+			ResultSetMetaData rsmd = rs.getMetaData();
+            int numColumns = rsmd.getColumnCount();
+            String[] columnHeaders = new String[numColumns];
+            // First row of data is the column headers
+            for (int i=1; i<numColumns+1; i++) {
+                String columnName = rsmd.getColumnName(i);
+                columnHeaders[i-1] = columnName;
+            }
+            data.add(columnHeaders);
+            
+            // Get the column names and types; column indices start from 1		
+            while (rs.next()) {
+            	String[] rowData = new String[numColumns];
+            	for (int i=1; i<numColumns+1; i++) {
+            		   String columnName = rsmd.getColumnName(i);                
+                       String columnType = rsmd.getColumnTypeName(i);
+                       System.out.println(columnName+":"+columnType);
+                       rowData[i-1] = rs.getString(i);
+            	}
+            	data.add(rowData);
+            }
+            
+		} catch (Exception e)
+		{e.printStackTrace();}
+		
+		typeRowData.put(Integer.toString(row), data);
+		return typeMap;
 	}
 }

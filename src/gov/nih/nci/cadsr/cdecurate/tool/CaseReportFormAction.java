@@ -4,6 +4,10 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -59,6 +63,60 @@ public class CaseReportFormAction extends CommonACAction
         return sSQL;
     }
 
+    public boolean hasAssociated(Connection conn, String vmID)
+    {
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+        boolean existsResultSet = false;
+        try
+        {
+            // make sql
+            String sSQL = getExistsSelect(vmID);
+            // prepare statement
+            pstmt = conn.prepareStatement(sSQL);
+            // Now we are ready to call the function
+            rs = pstmt.executeQuery();
+            // get attributes from the recorset
+            if (rs.next())
+	            existsResultSet = true;
+        }
+        catch (Exception e)
+        {
+            logger.error("ERROR - : " + e.toString(), e);
+        }finally{
+        	rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
+        }
+        return existsResultSet;
+    }
+    
+    public String getExistsSelect(String vmID)
+    {
+        String sSelect = "SELECT crf.qc_idseq idseq " + ", crf.long_name long_name " + ", crf.qc_id ac_id"
+                        + ", crf.version " + ", crf.asl_name workflow " + ", c.name context " + ", crf.qtl_name "
+                        + ", crf.qcdl_name " + ", p.long_name proto_name " + ", p.protocol_id ";
+        /*String sFrom = " FROM (SELECT qc.dn_crf_idseq AS ID FROM quest_contents_view_ext qc, sbr.vd_pvs_view vp,"
+                        + " sbr.permissible_values_view pv WHERE vp.pv_idseq = pv.pv_idseq AND qc.vp_idseq = vp.vp_idseq"
+                        + " AND pv.short_meaning = '" + vmID + "' GROUP BY qc.dn_crf_idseq) quest, "
+                        + " sbrext.quest_contents_view_ext crf, sbrext.protocols_view_ext p, sbr.contexts_view c";*/
+        String sFrom = " FROM (SELECT qc.dn_crf_idseq AS ID FROM quest_contents_view_ext qc, sbr.vd_pvs_view vp,"
+            + " sbr.permissible_values_view pv WHERE vp.pv_idseq = pv.pv_idseq AND qc.vp_idseq = vp.vp_idseq"
+            + " AND pv.vm_idseq = '" + vmID + "' GROUP BY qc.dn_crf_idseq) quest, "
+            + " sbrext.quest_contents_view_ext crf, sbrext.protocols_view_ext p, sbr.contexts_view c";
+        String sWhere = " WHERE crf.qc_idseq = quest.ID AND crf.proto_idseq = p.proto_idseq(+) AND crf.conte_idseq = c.conte_idseq";
+        /*
+         * String sFrom = " FROM sbrext.quest_contents_view_ext crf, sbrext.protocols_view_ext p, sbr.contexts_view c ";
+         * String sWhere = " WHERE crf.proto_idseq = p.proto_idseq AND crf.conte_idseq = c.conte_idseq " + " AND
+         * crf.qc_idseq IN (SELECT qc.dn_crf_idseq " + " FROM sbrext.quest_contents_view_ext qc, sbr.vd_pvs_view vp,
+         * sbr.permissible_values_view pv " + " WHERE qc.vp_idseq = vp.vp_idseq AND vp.pv_idseq = pv.pv_idseq " + " AND
+         * upper(pv.short_meaning) = upper('" + vmID + "') GROUP BY qc.dn_crf_idseq)";
+         */
+        
+        String sSQL = sSelect + sFrom + sWhere;
+        
+        return sSQL;
+    }
+    
     /*
      * (non-Javadoc)
      * 
