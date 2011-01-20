@@ -1994,6 +1994,7 @@ public class GetACSearch implements Serializable
                         VDBean.setAC_CONCEPT_NAME(rs.getString("con_name"));
                         VDBean.setALTERNATE_NAME(rs.getString("alt_name"));
                         VDBean.setREFERENCE_DOCUMENT(rs.getString("rd_name"));
+                        VDBean.setVD_IN_FORM(isVDinForm(VDBean.getVD_VD_IDSEQ()));
                         // get permissible value
                         s = rs.getString("min_value");
                         if (s != null && !s.equals(""))
@@ -2033,6 +2034,41 @@ public class GetACSearch implements Serializable
         }
     }
 
+    public boolean isVDinForm(String vdIDseq) {
+    	
+    	
+		ResultSet rs = null;
+		PreparedStatement pstmt = null;
+		boolean isValid = false;
+		
+		try {
+			if ((vdIDseq != null && !vdIDseq.equals(""))) {
+				if (m_servlet.getConn() != null) {
+					pstmt = m_servlet.getConn()
+							.prepareStatement(
+									"select SBREXT_COMMON_ROUTINES.VD_PVS_QC_EXISTS(?,?) from DUAL");
+					// register the Out parameters
+					pstmt.setString(1, "");
+					pstmt.setString(2, vdIDseq);
+					// Now we are ready to call the function
+					rs = pstmt.executeQuery();
+					while (rs.next()) {
+						if (rs.getString(1).equalsIgnoreCase("TRUE"))
+							isValid = true;
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.error("ERROR - checkVDQCExists for other : ", e);
+		}finally{
+			rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
+		}
+		return isValid;
+    
+    }
+    
+    
     /**
      * To get Search results for Conceptual Domain from database called from getACKeywordResult.
      * 

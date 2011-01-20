@@ -70,6 +70,7 @@
       //use the pv bean to store vd-pv related attributes
       Vector vVDPVList = m_VD.getVD_PV_List();  // (Vector) session.getAttribute("VDPVList");
       if (vVDPVList == null) vVDPVList = new Vector();
+      boolean[] editingDisabled = new boolean[vVDPVList.size()];
       Vector vPVIDList = new Vector();
 	    Vector vQuest = (Vector)session.getAttribute("vQuestValue");
 	    if (vQuest == null) vQuest = new Vector();
@@ -162,7 +163,17 @@
                 cobj.focus();
             }
         }
-        
+        var newwindow;
+        function openUsedWindowVM(idseq, type)
+		{
+        	var newUrl = '../../cdecurate/NCICurationServlet?reqType=showUsedBy';
+        	newUrl = newUrl + '&idseq=' +idseq+'&type='+type;
+
+			newwindow=window.open(newUrl,'Used By Forms','height=400,width=500');
+			if (window.focus) {newwindow.focus()}
+        	
+        	
+		}
         function displayStatus()
         { 
          <%
@@ -1016,6 +1027,7 @@
 										if (vdPVs > 0 && vVDPVList != null && vVDPVList.size() > 0)
 						        {
 						          int ckCount = 0;
+						         
 						          for (int i = 0; i < vVDPVList.size(); i++)
 						          {
 						            PV_Bean pvBean = (PV_Bean) vVDPVList.elementAt(i);
@@ -1066,6 +1078,9 @@
 						            if (sPVEndDate == null || sPVEndDate.equals("")) sPVEndDate = "";
 						            String viewType = (String)pvBean.getPV_VIEW_TYPE();
 						            if (viewType.equals("")) viewType = "expand";
+						    		boolean inForm = pvBean.getPV_IN_FORM();
+						    		String sVDPVSIDseq = pvBean.getPV_VDPVS_IDSEQ();
+						    		
 						            //get the pvvm combination to use it later
 						        //    String sPVVM = sPVVal.toLowerCase() + sPVMean.toLowerCase();
 						        //    sPVVM = sPVVM.replace(" ", "");  //remove spaces
@@ -1083,7 +1098,10 @@
 																	</div>
 																 <%if (!isView){ %>	
 																	<div id="<%=pvCount%>ImgEdit" style="display: inline">
-																		<a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>');"><img src="images/edit.gif" border="0" alt="Edit"></a>
+																		<% if (inForm) {%> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>');" onclick="return confirm('This element is used in a form. Any edits will put the form out of sync. Are you sure you want to edit?');"><img src="images/edit.gif" border="0" alt="Edit"></a>
+																		<% } else { %> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>');"><img src="images/edit.gif" border="0" alt="Edit"></a>
+																		<% } %>
+																		
 																	</div>
 																	<div id="<%=pvCount%>ImgSave" style="display: none">
 																		<a id="<%=pvCount%>ImgSaveLink" href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgSave', '<%=pvCount%>ImgEdit', 'save', '<%=pvCount%>');"><img src="images/save.gif" border="0" alt="Save"></a>
@@ -1167,12 +1185,25 @@
 																			<% if (submit != null && (submit.length()==0 || submit.equals("INS"))) { %>
 																				  [Edit VM]
 																			<% } else { %>
-																				<a href="javascript:openEditVMWindow('<%=pvCount%>');">
+																				 
+																					<% if (inForm) {%> <a href="javascript:openEditVMWindow('<%=pvCount%>');" onclick="return confirm('This element is used in a form. Any edits will put the form out of sync. Are you sure you want to edit?');">
+																					<% } else { %> <a href="javascript:openEditVMWindow('<%=pvCount%>');">
+																					<% } %>
 																					Edit VM
 																				</a>
 																			<% } %>
 																		</span>
 																	</div>
+																	<% if (inForm){%>
+																	<div id="<%=pvCount%>PVVMInForm" style="display: inline; text-align:right">
+																		<span style="padding-left:0.3in; padding-right:0.1in; text-align:right">
+																			<a href="javascript:openUsedWindowVM('<%=sVDPVSIDseq%>','PV');" >
+																				Used by Forms
+																			</a>
+																		</span>
+																	</div>
+																	
+																	<%} %>
 																   <% } else{%>
 																     <div id="<%=pvCount%>VMViewLink" style="display: inline; text-align:right">
 																	  	<span style="padding-left:0.3in; padding-right:0.1in; text-align:right">
@@ -1461,7 +1492,7 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 						</div>
 						<div style="display:none;">
                             <input type="hidden" name="hideDatePick" oncalendar="appendDate(this.value);">
-							<input type="hidden" name="pageAction" value="nothing">
+							<input type="hidden" name="pageAction" value="nothing">									
 							<input type="hidden" name="editPVInd" value="<%=sEditPV%>">
 							<!-- keep this if there was error -->
 							<input type="hidden" name="currentPVInd" value="">

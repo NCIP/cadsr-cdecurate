@@ -197,76 +197,7 @@ public class PVAction implements Serializable {
 	} //end checkPVQCExists
 
 	
-	public HashMap<String,ArrayList<String[]>> getAssociatedForms(String vpIDseq, PVForm data, HashMap<String,ArrayList<String[]>> ret, boolean isVD){
-		
-		String[] headerContent = new String[2];
-		
-		//Are we adding to the existing list?	
-		if (ret == null) {
-			ret = new HashMap<String,ArrayList<String[]>>();
-		
-			ArrayList<String[]> head = new ArrayList<String[]>();
-			headerContent[0]="Form Long Name";
-			headerContent[1]="Form Public ID";
-			head.add(headerContent);
-			ret.put("Head", head);
-		}
-		String idseqString = "VP_IDSEQ";
-		if (isVD)
-			idseqString = "VD_IDSEQ";
-		
-		String sql = "SELECT crf.long_name, crf.public_id"       
-	        +" FROM"
-	        +" SBREXT.FB_FORMS_VIEW crf"
-	        +" ,SBREXT.QUEST_CONTENTS_EXT qc"
-	        +" ,SBR.VD_PVS vdpvs"
-	        +" WHERE"
-	        +" (qc.VP_IDSEQ = vdpvs.VP_IDSEQ)"
-	        +" AND (qc.DN_CRF_IDSEQ = crf.QC_IDSEQ)"
-	        +" AND (VDPVS."+idseqString+" = ?)"
-	        +" group by crf.public_id, crf.long_name"
-	        +" order by crf.public_id desc";
-		
-		ResultSet rs = null;
-		PreparedStatement pstmt = null;
-		
-		try {
-			if (vpIDseq != null && !vpIDseq.equals("")) {
-				if (data.getCurationServlet().getConn() != null) {
-					pstmt = data
-							.getCurationServlet()
-							.getConn()
-							.prepareStatement(sql);
-					// register the Out parameters
-					pstmt.setString(1, vpIDseq);
-					ArrayList<String[]> usedInForms = new ArrayList<String[]>();
-					// Now we are ready to call the function
-					rs = pstmt.executeQuery();
-					while (rs.next()) {
-						String[] rowContent = new String[headerContent.length];
-						for (int i = 0; i < headerContent.length; i++)
-							rowContent[i] = rs.getString(i+1);
-						
-						usedInForms.add(rowContent);
-					}
-				
-				ret.put(vpIDseq, usedInForms);
-				}
-			}
-		} catch (Exception e) {
-			logger.error("ERROR - getAssociatedForms for other : ", e);
-			data
-					.setStatusMsg(data.getStatusMsg()
-							+ "\\tError : Unable to get existing pv-qc information."
-							+ e.toString());
-			data.setActionStatus(ConceptForm.ACTION_STATUS_FAIL);
-		}finally{
-			rs = SQLHelper.closeResultSet(rs);
-            pstmt = SQLHelper.closePreparedStatement(pstmt);
-		}
-		
-		return ret;
-	}
+	
 	/**
 	 * checks if removed pvs are associated with the form
 	 * send back the validation message for pv vds data.
@@ -515,9 +446,24 @@ public class PVAction implements Serializable {
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
+		
+		vList = populateFormInfo(vList, data);
 		return vList;
 	} //doPVACSearch search
 
+	
+	public Vector<PV_Bean> populateFormInfo(Vector<PV_Bean> vList, PVForm data) {
+		
+		Vector<PV_Bean> newList = new Vector<PV_Bean>();
+		
+		for (int i = 0; i < vList.size(); i++) {
+			PV_Bean temp = vList.get(i);
+			temp.setPV_IN_FORM(this.checkPVQCExists("", temp.getPV_VDPVS_IDSEQ(), data));
+			newList.add(temp);
+		}
+		
+		return newList;
+	}
 	/** reset the version value domain with pv idseqs
 	 * @param vd VD Bean object
 	 * @param verList PVBEan vector of the existing in cadsr
