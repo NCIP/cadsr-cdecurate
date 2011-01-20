@@ -291,6 +291,7 @@ public class VD_Bean extends AC_Bean
 
     private Vector<PV_Bean>      removed_VDPVList;
 
+    private boolean 			 VD_IN_FORM = false;
     /**
      * Constructor
      */
@@ -401,6 +402,7 @@ public class VD_Bean extends AC_Bean
         this.setVD_PV_List(copyBean.cloneVDPVVector(copyBean.getVD_PV_List()));
         this.setReferenceConceptList(copyBean.getReferenceConceptList());
         this.setRemoved_VDPVList(copyBean.cloneVDPVVector(copyBean.getRemoved_VDPVList()));
+        this.setVD_IN_FORM(copyBean.getVD_IN_FORM());
         return this;
     }
 
@@ -2678,6 +2680,15 @@ public class VD_Bean extends AC_Bean
         this.removed_VDPVList = removed_VDPVList;
     }
 
+    public void setVD_IN_FORM(boolean vdInForm) {
+    	
+    	this.VD_IN_FORM = vdInForm;
+    }
+    
+    public boolean getVD_IN_FORM() {
+    	return this.VD_IN_FORM;
+    }
+    
     public String getDisplayName()
     {
     	String displayName = this.VD_LONG_NAME + "   "+ this.VD_VD_ID+ " v " + this.VD_VERSION;
