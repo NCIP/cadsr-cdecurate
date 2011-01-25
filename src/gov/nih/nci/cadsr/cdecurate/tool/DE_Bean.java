@@ -177,6 +177,8 @@ public class DE_Bean extends AC_Bean
 
   private boolean DEC_VD_CHANGED;
   private String DE_BROWSER_URL;
+  private boolean DE_IN_FORM;
+  
  /**
    * Constructor
   */
@@ -292,6 +294,7 @@ public class DE_Bean extends AC_Bean
       this.setAC_PREF_NAME_TYPE(copyBean.getAC_PREF_NAME_TYPE());
 
       this.setDEC_VD_CHANGED(copyBean.getDEC_VD_CHANGED());
+      this.setDE_IN_FORM(copyBean.getDE_IN_FORM());
       return this;
   }
 
@@ -1671,6 +1674,13 @@ public class DE_Bean extends AC_Bean
   {
   	String displayName = this.DE_LONG_NAME + "   "+ this.DE_MIN_CDE_ID+ " v " + this.DE_VERSION;
   	return displayName;
+  }
+  
+  public boolean getDE_IN_FORM() {
+	  return DE_IN_FORM;
+  }
+  public void setDE_IN_FORM(boolean inForm) {
+	  DE_IN_FORM = inForm;
   }
 
 //end of class
