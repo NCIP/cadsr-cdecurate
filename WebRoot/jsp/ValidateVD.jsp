@@ -20,6 +20,10 @@
     boolean isValidFlag = true;
     Vector vValidate = new Vector();
     vValidate = (Vector)request.getAttribute("vValidate");
+    String vdIDSEQ = (String) request.getAttribute("vdIDSEQ");
+    boolean inForm = false;
+    if (vdIDSEQ != null && vdIDSEQ.length() > 0)
+    	inForm = true;
     for (int i = 0; vValidate.size()>i; i = i+3)
     {
       String sStat = (String)vValidate.elementAt(i+2);
@@ -87,7 +91,19 @@
       else
        	evsWindow = window.open("jsp/EVSSearch.jsp", "EVSWindow", "width=600,height=400,resizable=yes,scrollbars=yes");
    }
+    var newwindow;
+function openUsedWindowVM(idseq, type)
+{
+var newUrl = '../../cdecurate/NCICurationServlet?reqType=showUsedBy';
+newUrl = newUrl + '&idseq=' +idseq+'&type='+type;
+
+	newwindow=window.open(newUrl,'Used By Forms','height=400,width=500');
+	if (window.focus) {newwindow.focus()}
+
+
+}
 </script>
+
 	</head>
 
 	<body bgcolor="#666666">
@@ -130,6 +146,11 @@
 						</font>
 						Attributes
 					</h3>
+					<%if (inForm){%>
+						<br>
+						<font size=4 color="#FF0000">Note:</font>
+						<font size=4> Value Domain is used in a form. <a href="javascript:openUsedWindowVM('<%=vdIDSEQ%>','VD');">View Usage</a></font>
+					<%}%>
 				</caption>
 				<% } %>
 				<tr>

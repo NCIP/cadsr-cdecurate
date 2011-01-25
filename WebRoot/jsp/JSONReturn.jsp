@@ -8,7 +8,7 @@
   	ArrayList<String> headers = (ArrayList<String>) session.getAttribute("headers");
   	ArrayList<String> types = (ArrayList<String>) session.getAttribute("types");
   	ArrayList<String[]> rows = (ArrayList<String[]>) session.getAttribute("rows");
-
+	JSONObject container = new JSONObject();
   	JSONArray jArray = new JSONArray();
 	
 	for (int rowLoop = 0; rowLoop < rows.size(); rowLoop++) {	    
@@ -20,10 +20,10 @@
 		    
     	}
     	jArray.put(row);
-	
-    }
+	container.put("items",jArray);
+}
     
     //Done constructing array, printing it:
-    out.print(jArray.toString());
+    out.print(container.toString());
     out.flush();
   %>
