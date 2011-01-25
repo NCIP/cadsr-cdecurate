@@ -34,6 +34,7 @@
 		    Vector vCS = null;
 		    Vector vCS_ID = null;
 		    Vector vSource = null;
+		    boolean inForm = false;
 			if(!isView){
 			   //load the lists
 			    vContext = (Vector) session.getAttribute("vWriteContextDE");
@@ -71,6 +72,7 @@
 			String sDEIDSEQ = m_DE.getDE_DE_IDSEQ();
 			if (sDEIDSEQ == null)
 				sDEIDSEQ = "";
+			inForm = m_DE.getDE_IN_FORM();
 
 			String sContext = m_DE.getDE_CONTEXT_NAME();
 			if (sOriginAction.equals("BlockEditDE"))
@@ -368,6 +370,21 @@
   }
 
 </Script>
+
+<script>
+
+ var newwindow;
+function openUsedWindowVM(idseq, type)
+{
+var newUrl = '../../cdecurate/NCICurationServlet?reqType=showUsedBy';
+newUrl = newUrl + '&idseq=' +idseq+'&type='+type;
+
+	newwindow=window.open(newUrl,'Used By Forms','height=400,width=500');
+	if (window.focus) {newwindow.focus()}
+
+
+}
+</script>
 	</head>
 
 	<body onLoad = "hideCloseButton(<%=isView%>);" onUnload="closeDep();">
@@ -466,7 +483,12 @@
 								
 							   <font size=3>
 						         <%=vdNameDisplay%>
-					           </font>		
+					           </font>	
+						           <%if (inForm){%>
+									<br>
+									<font size=4 color="#FF0000">Note:</font>
+									<font size=4> Data Element is used in a form. <a href="javascript:openUsedWindowVM('<%=sDEIDSEQ%>','DE');">View Usage</a></font>
+									<%}%>	
 							</label>
 						</div>
 					</th>
