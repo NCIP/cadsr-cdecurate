@@ -12,6 +12,7 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -1511,6 +1512,8 @@ public class GetACSearch implements Serializable
                                 desTable.put(rs.getString("used_by_context") + "," + rs.getString("de_idseq"), rs
                                                 .getString("u_desig_idseq"));
                             recordMap.put(DEBean.getDE_DE_IDSEQ(), null);
+                           
+                            
                             vList.addElement(DEBean);
                         }
                         else
@@ -1556,9 +1559,56 @@ public class GetACSearch implements Serializable
         	rs = SQLHelper.closeResultSet(rs);
             cstmt = SQLHelper.closeCallableStatement(cstmt);
         }
-        
+        vList = updateFormInfo(vList);
     }
 
+    private Vector updateFormInfo (Vector vList) {
+    	
+    	Vector newList = new Vector();
+    	for (int i = 0; i < vList.size(); i++) {
+    		DE_Bean de = (DE_Bean) vList.get(i);
+    		de.setDE_IN_FORM(isDEinForm(de.getDE_DE_IDSEQ()));
+    		newList.add(de);
+    	}
+    	return newList;
+    }
+    
+    private boolean isDEinForm(String idseq) {
+    	
+    	String sql = "SELECT distinct qc.de_idseq" +
+    			" FROM SBREXT.QUEST_CONTENTS_VIEW_EXT qc " +
+    			" WHERE (qc.DE_IDSEQ = ?)";
+    	
+    	boolean ret = false;
+    	Connection conn = null;
+    	PreparedStatement ps = null;
+    	ResultSet rs = null;
+    	
+    	try {
+    		 conn = m_servlet.connectDB();
+    		 ps = conn.prepareStatement(sql);
+    		ps.setString(1, idseq);
+    	
+    		ps.execute();
+    		 rs = ps.getResultSet();
+    	
+    		if (rs.next())
+    			ret = true;
+    		
+    	} catch (Exception e) 
+    		{
+    	          logger.error("ERROR - isDEinForm : " + e.toString(), e);
+    	        }
+    	  finally{
+    		  	SQLHelper.closeResultSet(rs);
+    	    	SQLHelper.closePreparedStatement(ps);
+    	    	SQLHelper.closeConnection(conn);
+    	        }
+	return ret;
+    	
+    }
+    
+    
     /**
      * to get the records perm value, histID with the counts from the RS into the Bean
      * 
