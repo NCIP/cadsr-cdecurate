@@ -223,18 +223,34 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             var cdlLayout = [
             <%   
             ArrayList<String> headers = (ArrayList<String>) session.getAttribute("headers");
-            ArrayList<String> names = (ArrayList<String>) session.getAttribute("names");
+            ArrayList<String> types = (ArrayList<String>) session.getAttribute("types");
+            HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String,ArrayList<String[]>>) session.getAttribute("typeMap");
             
             for (int colLoop = 0; colLoop < headers.size(); colLoop++) {
             
-            out.println("{");
-            //Take Column Name from headers and take correct column from current row
-            out.println("field:\""+headers.get(colLoop)+"\",");
-            out.println("name:\""+""+headers.get(colLoop)+"\",");
-            out.println("width:"+"10");
-            out.println("}");
-            if (colLoop != headers.size()-1)
-            out.println(",");
+            if (typeMap.get(types.get(colLoop)) != null) {
+            	String[] subHeaders = typeMap.get(types.get(colLoop)).get(0);
+            	
+            	for (int i = 0; i < subHeaders.length; i++) {
+			out.println("{");
+			//Take Column Name from headers and take correct column from current row
+			out.println("field:\""+subHeaders[i]+"\",");
+			out.println("name:\""+""+subHeaders[i]+"\",");
+			out.println("width:"+"10");
+			out.println("}");
+			out.println(",");
+		    
+            	}
+            } else {
+		    out.println("{");
+		    //Take Column Name from headers and take correct column from current row
+		    out.println("field:\""+headers.get(colLoop)+"\",");
+		    out.println("name:\""+""+headers.get(colLoop)+"\",");
+		    out.println("width:"+"10");
+		    out.println("}");
+		    if (colLoop != headers.size()-1)
+		    out.println(",");
+		    }
             }
             %>	    ];
             
@@ -243,9 +259,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 
                 <% for (int colLoop = 0; colLoop < headers.size(); colLoop++) { %>
                     var c = dojo.doc.createElement('option');
-                    c.innerHTML = '<%=headers.get(colLoop)%>';
-                    c.value = '<%=headers.get(colLoop)%>';
-                    notSel.appendChild(c);
+                    
+			<% if (typeMap.get(types.get(colLoop)) != null) {
+				String[] subHeaders = typeMap.get(types.get(colLoop)).get(0);
+	
+				for (int i = 0; i < subHeaders.length; i++) { %>
+					c = dojo.doc.createElement('option');
+					c.innerHTML = '<%=subHeaders[i]%>';
+					c.value = '<%=subHeaders[i]%>';
+					notSel.appendChild(c);
+				<%  } %>
+
+			<%} else {%>
+				c.innerHTML = '<%=headers.get(colLoop)%>';
+				c.value = '<%=headers.get(colLoop)%>';
+				notSel.appendChild(c);
+                    <%  } %>
+                    
                 <%  } %>
                 
                 var sel = dojo.byId('selectedCols');
