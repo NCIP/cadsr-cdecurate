@@ -54,9 +54,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                   </td>
                   <td align="center" valign="middle">
                       <input type="button" value="--&gt;"
-                          onclick="moveOptions(this.form.notSelectedCols, this.form.selectedCols);" /><br />
+                          onclick="moveOptions(this.form.notSelectedCols, this.form.selectedCols, 0);" /><br />
                       <input type="button" value="&lt;--"
-                          onclick="moveOptions(this.form.selectedCols, this.form.notSelectedCols);" />
+                          onclick="moveOptions(this.form.selectedCols, this.form.notSelectedCols, 1);" />
                   </td>
                   <td>
                       
@@ -78,7 +78,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <script src="js/dojo/dojo/dojo.js"></script>
         
         <script type="text/javascript">
-            
+        	var cdGrid;
+            var dndPlugin;
+            var gdHeaderMap;
             function addOption(theSel, theText, theValue)
             {
 		    var newOpt = new Option(theText, theValue);
@@ -95,7 +97,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    }
             }
             
-            function moveOptions(theSelFrom, theSelTo)
+            function moveOptions(theSelFrom, theSelTo, dir)
             {
             
 		    var selLength = theSelFrom.length;
@@ -176,13 +178,89 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 {
                     cust.style.display = "none";
                     simp.style.display = "block";
+                    syncFromGrid();
                 }
                 else
                 {
                     cust.style.display = "block";
                     simp.style.display = "none";
+                    selectInGrid();
                 }
             }
+
+            function selectInGrid() {
+            	dndPlugin.cleanCellSelection();
+            	var sel = document.forms[1].selectedCols;
+            	for (var i=0;i<sel.options.length;i++) {
+            		var col = getCol(sel.options[i].text);
+            		if (col != null) dndPlugin.selectColumn(col.index);
+            	}
+            }
+
+            function getCol(colName) {
+				if (cdGrid != null && dndPlugin != null) {
+					return getGdHeaderMap()[colName];
+				}
+
+				return null;
+            }
+
+            function getGdHeaderMap() {
+				if (gdHeaderMap == null) {
+					gdHeaderMap = {};
+					for (var i=0;i<dndPlugin.getHeaderNodes().length;i++) {
+						var nme = cdGrid.getCell(i).name;
+						gdHeaderMap[nme] = cdGrid.getCell(i);
+					}
+				}
+
+				return gdHeaderMap;
+            }
+
+            function syncFromGrid() {
+            	var sel = document.forms[1].selectedCols;
+            	var notSel = document.forms[1].notSelectedCols;
+            	moveAllLeft();
+            	var leftMap = getNotSelectedMap();
+            	for (var i=0;i<dndPlugin.getHeaderNodes().length;i++) {
+					if (dndPlugin.isColSelected(i)) {
+						var colName = cdGrid.getCell(i).name;
+						var optn = leftMap[colName];
+						if (optn != null) {
+							addOption(sel, optn.text, optn.value);
+							deleteOption(notSel, optn.index);
+						}
+					}
+                }
+            }
+
+            function moveAllLeft() {
+                var sel = document.forms[1].selectedCols;
+                var notSel = document.forms[1].notSelectedCols;
+            	var len = sel.length
+            	while (sel.options.length > 0) {
+					addOption(notSel, sel.options[0].text, sel.options[0].value);
+					deleteOption(sel, 0);
+                }
+            }
+
+            function getNotSelectedMap() {
+				var notSelMap = {};
+				var notSel = document.forms[1].notSelectedCols;
+				var len = notSel.length;
+				for (var i=0;i<len;i++) {
+					nme = notSel.options[i].text;
+					notSelMap[nme] = notSel.options[i];
+				}
+
+				return notSelMap;
+            }
+
+            function selectColumn(evt) {
+        		var nme = evt.target.firstChild.nodeValue;
+        		var headCell = getGdHeaderMap()[nme];
+        		if (headCell != null) dndPlugin.selectColumn(headCell.index); 
+        	}
             
             function submitSelectedColumnNames() {
                 var allSelectedSpans = dojo.query(".dojoxGridHeaderSelected div > span[id^='caption'] ");
@@ -294,7 +372,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             
             
             // create a new grid:
-            var cdGrid = new dojox.grid.EnhancedGrid({
+            cdGrid = new dojox.grid.EnhancedGrid({
             query: {},
             store: completeData,
             clientSort: true,
@@ -305,10 +383,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             document.createElement('gridDiv'));
             // append the new grid to the div "customDownloadContainer":
             dojo.byId("customDownloadContainer").appendChild(cdGrid.domNode);
-            
+            dndPlugin = new dojox.grid.enhanced.plugins.DnD(cdGrid);
+            cdGrid.pluginMgr.preInit();
+            cdGrid.pluginMgr.postInit();
             // Call startup, in order to render the grid:
             cdGrid.startup();
-            
+            dojo.connect(cdGrid, "onHeaderCellClick", selectColumn);
            
         </script>	
         
