@@ -15,6 +15,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -159,6 +161,7 @@ public class PVAction implements Serializable {
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
 		boolean isValid = false;
+		
 		try {
 			if ((vpIDseq != null && !vpIDseq.equals(""))
 					|| (vdIDseq != null && !vdIDseq.equals(""))) {
@@ -193,6 +196,8 @@ public class PVAction implements Serializable {
 		return isValid;
 	} //end checkPVQCExists
 
+	
+	
 	/**
 	 * checks if removed pvs are associated with the form
 	 * send back the validation message for pv vds data.
@@ -441,9 +446,24 @@ public class PVAction implements Serializable {
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
 		}
+		
+		vList = populateFormInfo(vList, data);
 		return vList;
 	} //doPVACSearch search
 
+	
+	public Vector<PV_Bean> populateFormInfo(Vector<PV_Bean> vList, PVForm data) {
+		
+		Vector<PV_Bean> newList = new Vector<PV_Bean>();
+		
+		for (int i = 0; i < vList.size(); i++) {
+			PV_Bean temp = vList.get(i);
+			temp.setPV_IN_FORM(this.checkPVQCExists("", temp.getPV_VDPVS_IDSEQ(), data));
+			newList.add(temp);
+		}
+		
+		return newList;
+	}
 	/** reset the version value domain with pv idseqs
 	 * @param vd VD Bean object
 	 * @param verList PVBEan vector of the existing in cadsr
@@ -535,6 +555,7 @@ public class PVAction implements Serializable {
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		Vector<PV_Bean> vList = new Vector<PV_Bean>();
+		
 		try {
 			if (data.getCurationServlet().getConn() != null) {
 				cstmt = data
@@ -860,6 +881,7 @@ public class PVAction implements Serializable {
 								+ " : Unable to remove permissible value "
 								+ sPValue + ".";
 
+					
 					data.setRetErrorCode(retCode);
 				} else {
 					retCode = "";

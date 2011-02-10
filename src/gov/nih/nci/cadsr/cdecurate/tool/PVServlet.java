@@ -794,8 +794,6 @@ public class PVServlet implements Serializable
                 insac.UpdateCRFValue(pvBean);
              }
              //update teh collection
-             pvBean.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_NONE);
-             vVDPVS.setElementAt(pvBean, j);
          }
        }  //end loop
        vd.setVD_PV_List(vVDPVS);

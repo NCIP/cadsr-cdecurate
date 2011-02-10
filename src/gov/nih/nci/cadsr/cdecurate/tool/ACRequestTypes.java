@@ -51,14 +51,17 @@ public enum ACRequestTypes {
 	getProtoCRF("gov.nih.nci.cadsr.cdecurate.tool.SearchServlet"),
 	getConClassForAC("gov.nih.nci.cadsr.cdecurate.tool.SearchServlet"),
 	showCDDetail("gov.nih.nci.cadsr.cdecurate.tool.SearchServlet"),
-
+	showUsedBy("gov.nih.nci.cadsr.cdecurate.tool.SearchServlet"),
+	
 	//CustomizableDownload
 	showDEfromSearch("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
 	createExcelDownload("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
 	cdlColumns("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
 	jsonLayout("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
+	showVDfromSearch("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
 	jsonRequest("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet");
 	
+
 	private String className;
 
 	private ACRequestTypes(String sType) {

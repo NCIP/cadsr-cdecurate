@@ -1,9 +1,12 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Vector;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
@@ -80,6 +83,9 @@ public class SearchServlet extends CurationServlet {
 			case showCDDetail:
                doConDomainSearchActions();
                break;
+			case showUsedBy:
+			   doShowUsedBy();
+			   break;
  		}
 	}
 	
@@ -2468,5 +2474,177 @@ public class SearchServlet extends CurationServlet {
         ForwardJSP(m_classReq, m_classRes, "/ProtoCRFWindow.jsp");
     }
 
+    private void doShowUsedBy() throws Exception
+    {
+    	String idseq = m_classReq.getParameter("idseq");
+    	String type = m_classReq.getParameter("type");
+    	m_classReq.getSession().setAttribute("usedByResults", null);
+    	HashMap<String,ArrayList<String[]>> crfResults = null;
+    	
+    	if (type != null && type.equals("PV"))
+    		crfResults = getAssociatedForms(idseq, crfResults, false);
+    	if (type != null && type.equals("VD"))
+    		crfResults = getAssociatedForms(idseq, crfResults, true);
+    	if (type != null && type.equals("DE"))
+    		crfResults = getDEAssociatedForms(idseq, crfResults);
+    	
+    	m_classReq.getSession().setAttribute("usedByResults", crfResults);
+    	ForwardJSP(m_classReq, m_classRes, "/ShowUsedBy.jsp");
+    }
     
+    public HashMap<String,ArrayList<String[]>> getAssociatedForms(String vpIDseq, HashMap<String,ArrayList<String[]>> ret, boolean isVD){
+
+		String idseqString = "VP_IDSEQ";
+		if (isVD)
+			idseqString = "VD_IDSEQ";
+		//ADD DE FORMS
+		
+		String sql = "SELECT DISTINCT " +
+				"crf.long_name as \"Form Name\", " +
+				"crf.public_id as \"Pub. Id\", " +
+				"CRF.VERSION as \"Ver.\", " +
+				"CRF.WORKFLOW as \"Workflow Status\", " +
+				"CRF.CONTEXT_NAME as \"Context\", " +
+				"UA.NAME as \"Created By\", " +
+				"CRF.CREATED_BY, " +
+				"crf.qc_idseq "
+			+" FROM"
+           +" SBREXT.FB_FORMS_VIEW crf"
+           +" ,SBREXT.QUEST_CONTENTS_VIEW_EXT qc"
+           +" ,SBR.VD_PVS_VIEW vdpvs"
+           +" ,SBR.USER_ACCOUNTS_VIEW ua"
+           +" WHERE"
+           +" (qc.VP_IDSEQ = vdpvs.VP_IDSEQ)"
+           +" AND (qc.DN_CRF_IDSEQ = crf.QC_IDSEQ)"
+           +" AND (CRF.CREATED_BY = UA.UA_NAME)"
+           +" AND (VDPVS."+idseqString+" = ?)"
+           +" order by crf.long_name desc";
+		
+		ResultSet rs = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			if (vpIDseq != null && !vpIDseq.equals("")) {
+				if (this.getConn() != null) {
+					pstmt = this
+							.getConn()
+							.prepareStatement(sql);
+					// register the Out parameters
+					pstmt.setString(1, vpIDseq);
+					ArrayList<String[]> usedInForms = new ArrayList<String[]>();
+					// Now we are ready to call the function
+					rs = pstmt.executeQuery();
+					
+					ResultSetMetaData rsmd = rs.getMetaData();
+		            int numColumns = rsmd.getColumnCount();
+		            String[] headerContent = new String[numColumns];
+		    		
+		         // Get the column names; column indices start from 1
+	                for (int i=1; i<numColumns+1; i++) {
+	                    String columnName = rsmd.getColumnName(i);
+	                    headerContent[i-1] = columnName;
+	                }
+	        		//Are we adding to the existing list?	
+	        		if (ret == null) {
+	        			ret = new HashMap<String,ArrayList<String[]>>();
+	        			ArrayList<String[]> head = new ArrayList<String[]>();
+	        			head.add(headerContent);
+	        			ret.put("Head", head);
+	        		}
+	        		
+					while (rs.next()) {
+						String[] rowContent = new String[numColumns];
+						for (int i = 1; i < numColumns+1; i++)
+							rowContent[i-1] = rs.getString(i);
+						
+						usedInForms.add(rowContent);
+					}
+				
+				ret.put("Content", usedInForms);
+				}
+			}
+		} catch (Exception e) {
+			logger.error("ERROR - getAssociatedForms for other : ", e);
+		}finally{
+			rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
+		}
+		
+		return ret;
+	}
+    
+    public HashMap<String,ArrayList<String[]>> getDEAssociatedForms(String vpIDseq, HashMap<String,ArrayList<String[]>> ret){
+		
+		String sql = "SELECT DISTINCT " +
+				"crf.long_name as \"Form Name\", " +
+				"crf.public_id as \"Pub. Id\", " +
+				"CRF.VERSION as \"Ver.\", " +
+				"CRF.WORKFLOW as \"Workflow Status\", " +
+				"CRF.CONTEXT_NAME as \"Context\", " +
+				"UA.NAME as \"Created By\", " +
+				"CRF.CREATED_BY, " +
+				"crf.qc_idseq "
+			+" FROM"
+           +" SBREXT.FB_FORMS_VIEW crf"
+           +" ,SBREXT.QUEST_CONTENTS_VIEW_EXT qc"
+           +" ,SBR.USER_ACCOUNTS_VIEW ua"
+           +" WHERE"
+           +" (qc.DE_IDSEQ = ?)"
+           +" AND (qc.DN_CRF_IDSEQ = crf.QC_IDSEQ)"
+           +" AND (CRF.CREATED_BY = UA.UA_NAME)"
+           +" order by crf.long_name desc";
+		
+		
+		ResultSet rs = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			if (vpIDseq != null && !vpIDseq.equals("")) {
+				if (this.getConn() != null) {
+					pstmt = this
+							.getConn()
+							.prepareStatement(sql);
+					// register the Out parameters
+					pstmt.setString(1, vpIDseq);
+					ArrayList<String[]> usedInForms = new ArrayList<String[]>();
+					// Now we are ready to call the function
+					rs = pstmt.executeQuery();
+					
+					ResultSetMetaData rsmd = rs.getMetaData();
+		            int numColumns = rsmd.getColumnCount();
+		            String[] headerContent = new String[numColumns];
+		    		
+		         // Get the column names; column indices start from 1
+	                for (int i=1; i<numColumns+1; i++) {
+	                    String columnName = rsmd.getColumnName(i);
+	                    headerContent[i-1] = columnName;
+	                }
+	        		//Are we adding to the existing list?	
+	        		if (ret == null) {
+	        			ret = new HashMap<String,ArrayList<String[]>>();
+	        			ArrayList<String[]> head = new ArrayList<String[]>();
+	        			head.add(headerContent);
+	        			ret.put("Head", head);
+	        		}
+	        		
+					while (rs.next()) {
+						String[] rowContent = new String[numColumns];
+						for (int i = 1; i < numColumns+1; i++)
+							rowContent[i-1] = rs.getString(i);
+						
+						usedInForms.add(rowContent);
+					}
+				
+				ret.put("Content", usedInForms);
+				}
+			}
+		} catch (Exception e) {
+			logger.error("ERROR - getDEAssociatedForms for other : ", e);
+		}finally{
+			rs = SQLHelper.closeResultSet(rs);
+            pstmt = SQLHelper.closePreparedStatement(pstmt);
+		}
+		
+		return ret;
+	}
 }

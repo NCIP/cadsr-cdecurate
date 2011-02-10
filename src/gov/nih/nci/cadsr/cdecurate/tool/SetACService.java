@@ -380,6 +380,9 @@ public class SetACService implements Serializable
 		//store it in the request
 		Vector<String> vValString = this.makeStringVector(vValidate);
 		req.setAttribute("vValidate", vValString);
+		if(m_DE.getDE_IN_FORM())
+			req.setAttribute("deIDSEQ", m_DE.getDE_DE_IDSEQ());
+		
 	} // end of setValidatePageValues
 
 	/**
@@ -1032,7 +1035,11 @@ public class SetACService implements Serializable
 		// finally, send vector to JSP
 		Vector<String> vValString = this.makeStringVector(vValidate);
 		req.setAttribute("vValidate", vValString);
+		if(m_VD.getVD_IN_FORM())
+			req.setAttribute("vdIDSEQ", m_VD.getVD_VD_IDSEQ());
+		
 		m_VD.setValidateList(vValidate);
+		
 	}  // end of setValidatePageValuesVD
 
 

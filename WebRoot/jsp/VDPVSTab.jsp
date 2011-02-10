@@ -45,6 +45,8 @@
 		   mVD = (VD_Bean) session.getAttribute("m_VD");
      }   
       if (mVD == null) mVD = new VD_Bean();
+      String sVDIDseq = mVD.getVD_VD_IDSEQ();
+      boolean inForm = mVD.getVD_IN_FORM();
       String sLongName = mVD.getVD_LONG_NAME();
       if (sLongName == null) sLongName = "";
       if (!sLongName.equals(""))
@@ -76,6 +78,22 @@
    // System.out.println(sOriginAction + " action " + sMenuAction);
 
 		%>
+		
+
+<script>
+
+ var newwindow;
+function openUsedWindowVM(idseq, type)
+{
+var newUrl = '../../cdecurate/NCICurationServlet?reqType=showUsedBy';
+newUrl = newUrl + '&idseq=' +idseq+'&type='+type;
+
+	newwindow=window.open(newUrl,'Used By Forms','height=400,width=500');
+	if (window.focus) {newwindow.focus()}
+
+
+}
+</script>
 <table width="100%" border="0">
 	<tr height="25">
 		<td height="26" align="left" valign="top">
@@ -170,6 +188,11 @@
 					<font size=3>
 						<%=vdNameDisplay%>
 					</font>	
+					<%if (inForm){%>
+					<br>
+					<font size=4 color="#FF0000">Note:</font>
+					<font size=4> Value Domain is used in a form. <a href=""javascript:openUsedWindowVM('<%=sVDIDseq%>','VD');">View Usage</a></font>
+					<%}%>	
 			</div>
 		</th>
 	</tr>
