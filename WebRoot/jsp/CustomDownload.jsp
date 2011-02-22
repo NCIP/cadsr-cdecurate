@@ -62,7 +62,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                       
                       <select id="selectedCols"></select>
                   </td>
-                  <td><input type="button" value="up" /><input type="button" value="down"/></td>
+                  <td><input type="button" value="up" onclick="moveOption(this.form.selectedCols,'up');"/>
+                  <input type="button" value="down" onclick="moveOption(this.form.selectedCols, 'down');"/></td>
               </tr>
               
           </table>
@@ -149,25 +150,28 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    
             }
             
-            function swap(theSel,i, direction) 
+            function swap(element,i, direction) 
             {
-            	var current = theSel.options[i]
-            	var selLength = theSel.length;
+            	
+            	var selLength = element.length;
             	
             	if (direction == 'up' && i > 0)
             	{
-            		var toSwap = theSel.options[i-1];
-            		theSel.options[i-1] = current;
-            		theSel.options[i] = toSwap;
+            		var temp = new Option(element.options[i-1].text,element.options[i-1].value);
+			        var temp2 = new Option(element.options[i].text,element.options[i].value);
+			        element.options[i-1] = temp2;
+			        element.options[i-1].selected = true;
+			        element.options[i] = temp;
             	}
-            	if (direction == 'down' && i < selLength)
+            	if (direction == 'down' && i < selLength- 1)
             	{
-            		var toSwap = theSel.options[i+1];
-			theSel.options[i+1] = current;
-            		theSel.options[i] = toSwap;
+            		 var temp = new Option(element.options[i+1].text,element.options[i+1].value);
+			        var temp2 = new Option(element.options[i].text,element.options[i].value);
+			        element.options[i+1] = temp2;
+			        element.options[i+1].selected = true;
+			        element.options[i] = temp;
             	}
             }
-            
             
             function toggleView() {
                 var cust = dojo.byId("customDownloadContainer"); 
