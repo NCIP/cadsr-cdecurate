@@ -192,12 +192,15 @@ public class CustomDownloadServlet extends CurationServlet {
 										rowArrayData.add(values);
 										System.out.println(columnHeaders.get(i)+":"+columnTypes.get(i) + ":" + Arrays.toString(values));
 	    							}
-	    							if (arrayData.get(rowNum) == null) {
+	    							if (arrayData.size() == rowNum) {
 	    								HashMap<String,ArrayList<String[]>> typeArrayData = new HashMap<String,ArrayList<String[]>>();
 	    								typeArrayData.put(columnTypes.get(i), rowArrayData);
+	    								arrayData.add(typeArrayData);
 	    							} else {
 	    								HashMap<String,ArrayList<String[]>> typeArrayData = arrayData.get(rowNum);
 	    								typeArrayData.put(columnTypes.get(i), rowArrayData);
+	    								arrayData.remove(rowNum);
+	    								arrayData.add(rowNum, typeArrayData);
 	    							}
 	    						}
 	                		} else {
@@ -313,7 +316,7 @@ public class CustomDownloadServlet extends CurationServlet {
 		int[] colIndices = new int[columns.length];
 		for (int i=0; i < columns.length; i++) {
 			String colName = columns[i];
-			if (allHeaders.indexOf(colName) == 0){
+			if (allHeaders.indexOf(colName) < 0){
 				String tempType = arrayColumnTypes.get(colName);
 				int temp = allTypes.indexOf(tempType);
 				colIndices[i]=temp;
@@ -355,28 +358,29 @@ public class CustomDownloadServlet extends CurationServlet {
             for (int j = 0; j < colIndices.length; j++) {
             	int slide = 0;
                 cell = row.createCell(j+slide);
-                
-        		if (allTypes.get(colIndices[j]).endsWith("_T"))
+                String currentType = allTypes.get(colIndices[j]);
+        		if (currentType.endsWith("_T"))
         		{
-        			String[] originalArrColNames = typeMap.get(allTypes.get(colIndices[j])).get(0);
+        			String[] originalArrColNames = typeMap.get(currentType).get(0);
         			
         			//Check how many columns are array columns in a row
         			int arrayCols = 0;
-        			while (allTypes.get(colIndices[j]).endsWith("_T")) {
+        			int position = j;
+        			while (position < colIndices.length && allTypes.get(colIndices[position]).equals(currentType)) {
         				arrayCols++;
-        				j++;
+        				position++;
         			}
         			
         			int[] arrColIndices = new int[arrayCols];
         			
         			for (int a = arrColIndices.length-1; a >= 0 ; a--) {
         				for (int b = 0; b < originalArrColNames.length; b++) {
-        					if (columns[j-a].equals(originalArrColNames[b]))
-        						arrColIndices[j-a]=b;
+        					if (columns[position-a-1].equals(originalArrColNames[b]))
+        						arrColIndices[position-a-1]=b;
         				}
         			}
         			HashMap<String,ArrayList<String[]>> typeArrayData = arrayData.get(i);
-        			ArrayList<String[]> rowArrayData = typeArrayData.get(allTypes.get(colIndices[j-arrayCols]));
+        			ArrayList<String[]> rowArrayData = typeArrayData.get(currentType);
         			
         			for (int arrIndex = 0; arrIndex < rowArrayData.size(); arrIndex++) {
         				
@@ -386,7 +390,7 @@ public class CustomDownloadServlet extends CurationServlet {
         					cell.setCellValue(data);
         					if (colIndex < arrColIndices.length-1){
         						slide++;
-        						cell = row.createCell(j+slide);       		                
+        						cell = row.createCell(position+slide);       		                
         					}
         				}
         				tempBump++;
