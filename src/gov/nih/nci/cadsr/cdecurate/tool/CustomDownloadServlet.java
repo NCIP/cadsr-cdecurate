@@ -2,15 +2,12 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.io.OutputStream;
 import java.sql.Array;
-import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Struct;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Enumeration;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,18 +19,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.lucene.search.ReqExclScorer;
-import org.apache.poi.POIDocument;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.util.SystemOutLogger;
-import org.codehaus.jettison.json.JSONObject;
 
 public class CustomDownloadServlet extends CurationServlet {
 
@@ -136,43 +126,117 @@ public class CustomDownloadServlet extends CurationServlet {
 	                ArrayList<String> columnHeaders = new ArrayList<String>();
 	                ArrayList<String> columnTypes = new ArrayList<String>();
 	                ArrayList<String[]> rows = new ArrayList<String[]>();
-	                HashMap<String,HashMap<String,ArrayList<String[]>>> typeMap = new HashMap<String,HashMap<String,ArrayList<String[]>>>();
+	                HashMap<String,ArrayList<String[]>> typeMap = new HashMap<String,ArrayList<String[]>>();
+	               	ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = new ArrayList<HashMap<String,ArrayList<String[]>>>();
+	                HashMap<String,String> arrayColumnTypes = new HashMap<String,String>();
 	                
 	                // Get the column names and types; column indices start from 1
 	                for (int i=1; i<numColumns+1; i++) {
 	                    String columnName = rsmd.getColumnName(i);
 	                    columnHeaders.add(columnName);
+	                    
 	                    String columnType = rsmd.getColumnTypeName(i);
 	                    columnTypes.add(columnType);
-	                    if (columnType.endsWith("LIST_T")) {
-	                    	ArrayList<String[]> typeBreakdown = getType(columnType);
-	                    	String[] typeColNames = typeBreakdown.get(0);
-	                    	String[] typeColTypes = typeBreakdown.get(1);
+	                    System.out.println(columnName+"-"+columnType);
+	                    if (columnType.endsWith("_T") && !typeMap.containsKey(columnType)) {
 	                    	
-	                    	for (int c = 0; c<typeColNames.length; c++) {
-	                    		columnHeaders.add("-"+typeColNames[c]);
-	                    		columnTypes.add(typeColTypes[c]);
-	                    	}
+		                    	typeMap.put(columnType,null);
+	                    	
 	                    }
-	                }   
-	                
+	                }        
+	                int rowNum = 0;
 	                while (rs.next()) {
+	                	
 	                	String[] row = new String[numColumns];
 	                	for (int i=0; i<numColumns; i++) {
-	                		row[i] = rs.getString(i+1);
-	                		if (columnTypes.get(i).endsWith("LIST_T"))
-	                		{}//typeMap = putInMap(columnTypes.get(i),i,rs.getObject(i+1),typeMap);
+	                		ArrayList<String[]> rowArrayData = new ArrayList<String[]>();
+	                		
+	                		if (columnTypes.get(i).endsWith("_T"))
+	                		{
+	                			Array array = null;
+	    						if (columnTypes.get(i).indexOf("DERIVED") > 0) {
+	    							
+	    							Struct struct =
+	    								(Struct)rs.getObject(i+1);
+	    							
+	    							Object[] valueStruct = struct.getAttributes();
+	    							array = (Array) valueStruct[5];
+	    						} else {
+	    							array = rs.getArray(i+1);
+	    						}
+	    						
+	    						if (array != null) {
+	    							ResultSet nestedRs = array.getResultSet(); 
+
+	    							while (nestedRs.next()) {
+		    							Struct valueStruct = (Struct) nestedRs.getObject(2);
+										Object[] valueDatum = valueStruct.getAttributes();
+										String[] values = new String[valueDatum.length];
+										for (int a = 0; a < valueDatum.length; a++) {
+											if (valueDatum[a] != null) {
+												Class c = valueDatum[a].getClass();
+												String s = c.getName();
+												
+												if (c.getName().toUpperCase().contains("STRUCT"))
+												{
+													Struct str = (Struct) valueDatum[a];
+													Object[] strValues = str.getAttributes();
+												}
+												else {
+													values[a]= valueDatum[a].toString();
+												}
+													
+											} else 
+												values[a]= "";
+										}
+										rowArrayData.add(values);
+										System.out.println(columnHeaders.get(i)+":"+columnTypes.get(i) + ":" + Arrays.toString(values));
+	    							}
+	    							if (arrayData.get(rowNum) == null) {
+	    								HashMap<String,ArrayList<String[]>> typeArrayData = new HashMap<String,ArrayList<String[]>>();
+	    								typeArrayData.put(columnTypes.get(i), rowArrayData);
+	    							} else {
+	    								HashMap<String,ArrayList<String[]>> typeArrayData = arrayData.get(rowNum);
+	    								typeArrayData.put(columnTypes.get(i), rowArrayData);
+	    							}
+	    						}
+	                		} else {
+	                			
+	                			row[i] = rs.getString(i+1);
+	                			System.out.println(columnHeaders.get(i)+":"+columnTypes.get(i) + ":" + rs.getString(i+1));
+	                		}
 	                	}
 	                	rows.add(row);
+	                	rowNum++;
+	                }
+	                
+	                Iterator<String> iter = typeMap.keySet().iterator();
+	                
+	                while (iter.hasNext()) {
+	                	String typeKey = iter.next();
+	                	if (typeMap.get(typeKey) == null) {
+			                ArrayList<String[]> typeBreakdown = getType(typeKey);
+		                	if (typeBreakdown.size() >0) {
+		                    	String[] typeColNames = typeBreakdown.get(0);
+		                    	String[] typeColTypes = typeBreakdown.get(1);
+		                    	
+		                    	for (int c = 0; c<typeColNames.length; c++) {
+		                    		arrayColumnTypes.put(typeColNames[c], typeKey);
+		                    		System.out.println("-"+typeColNames[c]+":"+typeColTypes[c]);
+		                    	}
+		                	}
+		                	typeMap.put(typeKey, typeBreakdown);
+	                	}
 	                }
 	                
 	                m_classReq.getSession().setAttribute("headers",columnHeaders);
 	                m_classReq.getSession().setAttribute("types", columnTypes);
 	                m_classReq.getSession().setAttribute("rows", rows);
 	                m_classReq.getSession().setAttribute("typeMap", typeMap);
+	                m_classReq.getSession().setAttribute("arrayData", arrayData);
+	                m_classReq.getSession().setAttribute("arrayColumnTypes", arrayColumnTypes);
 	                
 	            }
-	    	 	
 	    	 	rs.close();
 	        	ps.close();
 	        	
@@ -183,15 +247,56 @@ public class CustomDownloadServlet extends CurationServlet {
 		ForwardJSP(m_classReq, m_classRes, "/CustomDownload.jsp");
 	}
 	
+	private ArrayList<String[]> getType(String type) {
+		
+		ArrayList<String[]> colNamesAndTypes = new ArrayList<String[]>();
+	   	
+	   	ArrayList<String> attrName = new ArrayList<String>();
+	   	ArrayList<String> attrTypeName = new ArrayList<String>();
+	   	
+	   	PreparedStatement ps = null;
+	   	ResultSet rs = null;
+	   	String sqlStmt = "select * from sbrext.custom_download_types c where UPPER(c.type_name) = ? order by c.column_index";
+	   	String[] splitType = type.split("\\.");
+	   	
+	   	type = splitType[1];
+	   	
+	   	try {
+	   		ps = getConn().prepareStatement(sqlStmt);
+	   		ps.setString(1, type);
+            rs = ps.executeQuery();
+	   		int i = 0;		
+            while (rs.next()) {
+            	i++;
+            	String col = rs.getString("DISPLAY_NAME");
+            	String ctype = rs.getString("DISPLAY_TYPE");
+            	attrName.add(col);
+            	attrTypeName.add(ctype);
+            }
+            System.out.println(type + " "+i);
+	   		rs.close();
+	   		ps.close();
+	   	} catch (Exception e) {
+	   		e.printStackTrace();
+	   	}
+	   	String[] attrNames = new String[attrName.size()];
+	   	String[] attrTypeNames = new String[attrTypeName.size()];
+	   	
+	   	for (int i=0; i < attrName.size(); i++) {
+	   		attrNames[i] = attrName.get(i);
+	   		attrTypeNames[i] = attrTypeName.get(i);
+	   	}
+	   	colNamesAndTypes.add(attrNames);
+	   	colNamesAndTypes.add(attrTypeNames);
+	   	
+	   	return colNamesAndTypes;
+	}
+	
 	
 	
 	private void returnJSONFromSession(String JSPName) {
-		
-		
-		
 		ForwardJSP(m_classReq, m_classRes, "/JSON"+JSPName+".jsp");
-        
-	}
+    }
 	
 	private void createDownloadColumns(){
 		
@@ -200,13 +305,22 @@ public class CustomDownloadServlet extends CurationServlet {
 		ArrayList<String> allHeaders = (ArrayList<String>) m_classReq.getSession().getAttribute("headers");
 		ArrayList<String> allTypes = (ArrayList<String>) m_classReq.getSession().getAttribute("types");
 		ArrayList<String[]> allRows = (ArrayList<String[]>) m_classReq.getSession().getAttribute("rows");
+		HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String,ArrayList<String[]>>) m_classReq.getSession().getAttribute("typeMap");
+		ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = (ArrayList<HashMap<String,ArrayList<String[]>>>) m_classReq.getSession().getAttribute("arrayData"); 
+		HashMap<String, String> arrayColumnTypes = (HashMap<String,String>) m_classReq.getSession().getAttribute("arrayColumnTypes");
 		
 		String[] columns = colString.split(",");
 		int[] colIndices = new int[columns.length];
 		for (int i=0; i < columns.length; i++) {
 			String colName = columns[i];
-			int temp = allHeaders.indexOf(colName);
-			colIndices[i]=temp;
+			if (allHeaders.indexOf(colName) == 0){
+				String tempType = arrayColumnTypes.get(colName);
+				int temp = allTypes.indexOf(tempType);
+				colIndices[i]=temp;
+			} else {
+				int temp = allHeaders.indexOf(colName);
+				colIndices[i]=temp;
+			}
 		}
 		
 		Workbook wb =  new HSSFWorkbook();
@@ -224,17 +338,77 @@ public class CustomDownloadServlet extends CurationServlet {
       //freeze the first row
         sheet.createFreezePane(0, 1);
         
-        Row row;
+        Row row = null;
         Cell cell;
         int rownum = 1;
+        int bump = 0;
+        boolean fillRow = false;
+        
         for (int i = 0; i < allRows.size(); i++, rownum++) {
-            row = sheet.createRow(rownum);
+        	//Check if row already exists
+        	int maxBump = 0;
+        	if (sheet.getRow(rownum+bump) == null)
+        		row = sheet.createRow(rownum+bump);
+        	
             if(allRows.get(i) == null) continue;
 
             for (int j = 0; j < colIndices.length; j++) {
-                cell = row.createCell(j);
-                cell.setCellValue(allRows.get(i)[colIndices[j]]);
+            	int slide = 0;
+                cell = row.createCell(j+slide);
+                
+        		if (allTypes.get(colIndices[j]).endsWith("_T"))
+        		{
+        			String[] originalArrColNames = typeMap.get(allTypes.get(colIndices[j])).get(0);
+        			
+        			//Check how many columns are array columns in a row
+        			int arrayCols = 0;
+        			while (allTypes.get(colIndices[j]).endsWith("_T")) {
+        				arrayCols++;
+        				j++;
+        			}
+        			
+        			int[] arrColIndices = new int[arrayCols];
+        			
+        			for (int a = arrColIndices.length-1; a >= 0 ; a--) {
+        				for (int b = 0; b < originalArrColNames.length; b++) {
+        					if (columns[j-a].equals(originalArrColNames[b]))
+        						arrColIndices[j-a]=b;
+        				}
+        			}
+        			HashMap<String,ArrayList<String[]>> typeArrayData = arrayData.get(i);
+        			ArrayList<String[]> rowArrayData = typeArrayData.get(allTypes.get(colIndices[j-arrayCols]));
+        			
+        			for (int arrIndex = 0; arrIndex < rowArrayData.size(); arrIndex++) {
+        				
+        				int tempBump = 0;
+        				for (int colIndex = 0; colIndex < arrColIndices.length; colIndex++) {
+        					String data = rowArrayData.get(arrIndex)[arrColIndices[colIndex]];
+        					cell.setCellValue(data);
+        					if (colIndex < arrColIndices.length-1){
+        						slide++;
+        						cell = row.createCell(j+slide);       		                
+        					}
+        				}
+        				tempBump++;
+        				
+        				if (arrIndex < rowArrayData.size()-1){
+        					row = sheet.getRow(rownum+bump+tempBump);
+        		        	if (row == null)	
+        		        		row = sheet.createRow(rownum+bump+tempBump);
+        					        				
+        				} else {
+        					//Go back to top row 
+        					row = sheet.getRow(rownum + bump);
+        					if (tempBump > maxBump)
+        						maxBump = tempBump;
+        				}
+        			}
+        		} else {
+        			cell.setCellValue(allRows.get(i)[colIndices[j]]);
+        		}
+        
             }
+            bump = bump + maxBump;
         }
         
         //group rows for each phase, row numbers are 0-based
@@ -243,9 +417,6 @@ public class CustomDownloadServlet extends CurationServlet {
 //        sheet.groupRow(16, 18);
 
         //set column widths, the width is measured in units of 1/256th of a character width
-        sheet.setColumnWidth(0, 256*6);
-        sheet.setColumnWidth(1, 256*33);
-        sheet.setColumnWidth(2, 256*20);
         sheet.setZoom(3, 4);
 
 
@@ -270,44 +441,7 @@ public class CustomDownloadServlet extends CurationServlet {
 		ForwardJSP(m_classReq, m_classRes, "/DownloadComplete.jsp");
 	}
 	
-	private ArrayList<String[]> getType(String type) throws Exception {
-		
-		ArrayList<String[]> colNamesAndTypes = new ArrayList<String[]>();
-		
-		ResultSet rsType = null;
-	     PreparedStatement ps = null;
-	     String sqlStmt =
-			"SELECT attr_name, " +
-			"attr_type_name, length, " +
-			"precision, scale FROM all_type_attrs " +
-			"WHERE type_name = ?";
 
-	    ps = getConn().prepareStatement(sqlStmt);
-	   	ps.setString(1, type);
-	   	rsType = ps.executeQuery();
-	   	
-	   	ArrayList<String> attrName = new ArrayList<String>();
-	   	ArrayList<String> attrTypeName = new ArrayList<String>();
-	   	
-	   	while (rsType.next()) {
-	   		attrName.add(rsType.getString("attr_name"));
-	   		attrTypeName.add(rsType.getString("attr_type_name"));
-	   	}
-	   	
-	   	String[] attrNames = new String[attrName.size()];
-	   	String[] attrTypeNames = new String[attrTypeName.size()];
-	   	
-	   	for (int i=0; i < attrName.size(); i++) {
-	   		attrNames[i] = attrName.get(i);
-	   		attrTypeNames[i] = attrTypeName.get(i);
-	   	}
-	   	
-	   	colNamesAndTypes.add(attrNames);
-	   	colNamesAndTypes.add(attrTypeNames);
-	   	rsType.close();
-    	ps.close();
-	   	return colNamesAndTypes;
-	}
 	
 	//initiate the column information as per the source
 	private List initColumnInfo() {
@@ -500,10 +634,9 @@ public class CustomDownloadServlet extends CurationServlet {
 
 		//Classification Scheme
 		List<ColumnInfo> csInfo = new ArrayList<ColumnInfo>();
-		/*if ("deSearch".equals(source)|| "cdeCart".equals(source)){
+		
     	csInfo.add(new ColumnInfo(0, 3, "Preferred Name", "String"));
-    }else{*/
-		csInfo.add(new ColumnInfo(0, 3, "Short Name", "String"));
+    
 		//}
 		csInfo.add(new ColumnInfo(0, 4, "Version","Number"));
 		csInfo.add(new ColumnInfo(0, 1, "Context Name", "String"));
