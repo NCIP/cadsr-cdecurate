@@ -192,7 +192,7 @@ public class CustomDownloadServlet extends CurationServlet {
 										rowArrayData.add(values);
 										System.out.println(columnHeaders.get(i)+":"+columnTypes.get(i) + ":" + Arrays.toString(values));
 	    							}
-	    							if (arrayData.get(rowNum) == null) {
+	    							if (arrayData.size() == rowNum) {
 	    								HashMap<String,ArrayList<String[]>> typeArrayData = new HashMap<String,ArrayList<String[]>>();
 	    								typeArrayData.put(columnTypes.get(i), rowArrayData);
 	    							} else {
