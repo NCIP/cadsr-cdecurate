@@ -39,6 +39,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         </form>
       <button type="button" onClick="submitSelectedColumnNames();">Submit Selected Columns</button>
       <button type="button" onClick="toggleView();">Toggle View</button>
+      <input type="checkbox" name="fillIn" value="true"/> Check to fill in all values.
       <br></br>
       <br></br>
       <% ArrayList<String> rows = (ArrayList<String>) session.getAttribute("rows"); %>
@@ -79,14 +80,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <script src="js/dojo/dojo/dojo.js"></script>
         
         <script type="text/javascript">
+        
         	var cdGrid;
             var dndPlugin;
             var gdHeaderMap;
+            var gdHeaderArray;
             function addOption(theSel, theText, theValue)
             {
-		    var newOpt = new Option(theText, theValue);
-		    var selLength = theSel.length;
-		    theSel.options[selLength] = newOpt;
+		    	var newOpt = new Option(theText, theValue);
+		    	var selLength = theSel.length;
+		    	theSel.options[selLength] = newOpt;
             }
             
             function deleteOption(theSel, theIndex)
@@ -221,13 +224,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				return gdHeaderMap;
             }
 
+            function getGdHeaderArray() {
+				if (gdHeaderArray == null) {
+					gdHeaderArray = new Array();
+					for (var i=0;i<dndPlugin.getHeaderNodes().length;i++) {
+						var nme = cdGrid.getCell(i).name;
+						gdHeaderArray[i] = nme;
+					}
+				}
+
+				return gdHeaderArray;
+            }
+            
             function syncFromGrid() {
             	var sel = document.forms[1].selectedCols;
             	var notSel = document.forms[1].notSelectedCols;
             	moveAllLeft();
             	var leftMap = getNotSelectedMap();
+            	var selectedCols = getSelectedSpans();
+            	var gdHeaderArray = getGdHeaderArray();
             	for (var i=0;i<dndPlugin.getHeaderNodes().length;i++) {
-					if (dndPlugin.isColSelected(i)) {
+					if (selectedCols.indexOf(gdHeaderArray[i]) != -1) {
 						var colName = cdGrid.getCell(i).name;
 						var optn = leftMap[colName];
 						if (optn != null) {
@@ -267,26 +284,42 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         	}
             
             function submitSelectedColumnNames() {
-                var allSelectedSpans = dojo.query(".dojoxGridHeaderSelected div > span[id^='caption'] ");
                 
-                var cols = "";
+                var cols = {};
+                var returnCols = "";
                 var i=0;
-                    for (i=0; i < allSelectedSpans.length; i++){
-                        var mySpan = allSelectedSpans[i];
-                        var spanText;
-                        
-                        if (mySpan.innerText == undefined)
-                        	spanText = mySpan.textContent;
-                        else
-                        	spanText = mySpan.innerText;
-                        	
-                        cols = cols + spanText;
-                        if (i < allSelectedSpans.length-1) {
-                        cols = cols+",";    
-                        }
-                    }
+				
+                cols = getSelectedSpans();
+                
+                for (i=0; i < cols.length; i++) {
+                 	returnCols = returnCols + cols[i];
+	                  if (i < cols.length-1) {
+	                  	returnCols = returnCols+",";    
+             	     }
+                }
+                
                 document.columnSubmission.cdlColumns.value = cols;
                 document.columnSubmission.submit();
+            }
+            
+            
+            function getSelectedSpans() {
+	      	   var allSelectedSpans = dojo.query(".dojoxGridHeaderSelected div > span[id^='caption'] ");
+	       	   var cols = new Array();
+	       	   var i = 0;
+	           for (i=0; i < allSelectedSpans.length; i++){
+	                  var mySpan = allSelectedSpans[i];
+	                  var spanText;
+	                  
+	                  if (mySpan.innerText == undefined)
+	                  	spanText = mySpan.textContent;
+	                  else
+	                  	spanText = mySpan.innerText;
+	                  
+	                  cols[i] = spanText;
+	                 
+              	}
+	           return cols;
             }
             
             dojo.require("dijit.form.MultiSelect");

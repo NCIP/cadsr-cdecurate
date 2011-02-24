@@ -137,7 +137,7 @@ public class CustomDownloadServlet extends CurationServlet {
 	                    
 	                    String columnType = rsmd.getColumnTypeName(i);
 	                    columnTypes.add(columnType);
-	                    System.out.println(columnName+"-"+columnType);
+	                    //System.out.println(columnName+"-"+columnType);
 	                    if (columnType.endsWith("_T") && !typeMap.containsKey(columnType)) {
 	                    	
 		                    	typeMap.put(columnType,null);
@@ -206,9 +206,13 @@ public class CustomDownloadServlet extends CurationServlet {
 	                		} else {
 	                			
 	                			row[i] = rs.getString(i+1);
-	                			System.out.println(columnHeaders.get(i)+":"+columnTypes.get(i) + ":" + rs.getString(i+1));
+	                			//System.out.println(columnHeaders.get(i)+":"+columnTypes.get(i) + ":" + rs.getString(i+1));
 	                		}
 	                	}
+	                	//If there were no arrayData added, add null to keep parity with rows.
+	                	if (arrayData.size() == rowNum)
+	                		arrayData.add(null);
+	                	
 	                	rows.add(row);
 	                	rowNum++;
 	                }
@@ -225,7 +229,7 @@ public class CustomDownloadServlet extends CurationServlet {
 		                    	
 		                    	for (int c = 0; c<typeColNames.length; c++) {
 		                    		arrayColumnTypes.put(typeColNames[c], typeKey);
-		                    		System.out.println("-"+typeColNames[c]+":"+typeColTypes[c]);
+		                    		//System.out.println("-"+typeColNames[c]+":"+typeColTypes[c]);
 		                    	}
 		                	}
 		                	typeMap.put(typeKey, typeBreakdown);
@@ -276,7 +280,7 @@ public class CustomDownloadServlet extends CurationServlet {
             	attrName.add(col);
             	attrTypeName.add(ctype);
             }
-            System.out.println(type + " "+i);
+            //System.out.println(type + " "+i);
 	   		rs.close();
 	   		ps.close();
 	   	} catch (Exception e) {
@@ -304,6 +308,7 @@ public class CustomDownloadServlet extends CurationServlet {
 	private void createDownloadColumns(){
 		
 		String colString = (String) this.m_classReq.getParameter("cdlColumns");
+		String fillIn = (String) this.m_classReq.getParameter("fillIn");
 		
 		ArrayList<String> allHeaders = (ArrayList<String>) m_classReq.getSession().getAttribute("headers");
 		ArrayList<String> allTypes = (ArrayList<String>) m_classReq.getSession().getAttribute("types");
@@ -355,57 +360,56 @@ public class CustomDownloadServlet extends CurationServlet {
         	
             if(allRows.get(i) == null) continue;
 
+            
+            if (fillIn != null && (fillIn.equals("true") || fillIn.equals("yes") && bump > 0)) {
+            	sheet = fillInBump(sheet, i-1, rownum, bump, allRows, allTypes, colIndices);
+            	rownum = rownum + bump;
+            	bump = 0;
+            }
+            
             for (int j = 0; j < colIndices.length; j++) {
-            	int slide = 0;
-                cell = row.createCell(j+slide);
+            	
+                cell = row.createCell(j);
                 String currentType = allTypes.get(colIndices[j]);
         		if (currentType.endsWith("_T"))
         		{
         			String[] originalArrColNames = typeMap.get(currentType).get(0);
         			
-        			//Check how many columns are array columns in a row
-        			int arrayCols = 0;
-        			int position = j;
-        			while (position < colIndices.length && allTypes.get(colIndices[position]).equals(currentType)) {
-        				arrayCols++;
-        				position++;
+        			//Find current column in original data
+        			
+        			int originalColumnIndex = -1;
+        			for (int a = 0; a < originalArrColNames.length ; a++) { 
+        				if (columns[j].equals(originalArrColNames[a]))
+        					originalColumnIndex = a;
         			}
         			
-        			int[] arrColIndices = new int[arrayCols];
-        			
-        			for (int a = arrColIndices.length-1; a >= 0 ; a--) {
-        				for (int b = 0; b < originalArrColNames.length; b++) {
-        					if (columns[position-a-1].equals(originalArrColNames[b]))
-        						arrColIndices[position-a-1]=b;
-        				}
-        			}
         			HashMap<String,ArrayList<String[]>> typeArrayData = arrayData.get(i);
         			ArrayList<String[]> rowArrayData = typeArrayData.get(currentType);
         			
-        			for (int arrIndex = 0; arrIndex < rowArrayData.size(); arrIndex++) {
-        				
+        			if (rowArrayData != null) {
         				int tempBump = 0;
-        				for (int colIndex = 0; colIndex < arrColIndices.length; colIndex++) {
-        					String data = rowArrayData.get(arrIndex)[arrColIndices[colIndex]];
+	        			for (int nestedRowIndex = 0; nestedRowIndex < rowArrayData.size(); nestedRowIndex++) {
+	        				
+	        				
+	        				String[] nestedData = rowArrayData.get(nestedRowIndex);
+        					String data = nestedData[originalColumnIndex];
         					cell.setCellValue(data);
-        					if (colIndex < arrColIndices.length-1){
-        						slide++;
-        						cell = row.createCell(position+slide);       		                
-        					}
-        				}
-        				tempBump++;
+        					
+        					tempBump++;
         				
-        				if (arrIndex < rowArrayData.size()-1){
-        					row = sheet.getRow(rownum+bump+tempBump);
-        		        	if (row == null)	
-        		        		row = sheet.createRow(rownum+bump+tempBump);
-        					        				
-        				} else {
-        					//Go back to top row 
-        					row = sheet.getRow(rownum + bump);
-        					if (tempBump > maxBump)
-        						maxBump = tempBump;
-        				}
+	        				if (nestedRowIndex < rowArrayData.size()-1){
+	        					row = sheet.getRow(rownum+bump+tempBump);
+	        		        	if (row == null) {
+	        		        		row = sheet.createRow(rownum+bump+tempBump);
+	        		        		cell = row.createCell(j);
+	        		        	}	
+	        				} else {
+	        					//Go back to top row 
+	        					row = sheet.getRow(rownum + bump);
+	        					if (tempBump > maxBump)
+	        						maxBump = tempBump;
+	        				}
+	        			}
         			}
         		} else {
         			cell.setCellValue(allRows.get(i)[colIndices[j]]);
@@ -439,6 +443,27 @@ public class CustomDownloadServlet extends CurationServlet {
 		ForwardJSP(m_classReq, m_classRes, "/DisplayColumns.jsp");
 	}
 	
+	private Sheet fillInBump(Sheet sheet, int originalRow, int rownum, int bump, ArrayList<String[]> allRows, ArrayList<String> allTypes, int[] colIndices) {
+		
+		for (int a = rownum; a < rownum+bump; a++) {
+			Row row = sheet.getRow(a);
+			
+			for (int j = 0; j < colIndices.length; j++) {
+	        	
+				
+	            String currentType = allTypes.get(colIndices[j]);
+	    		if (currentType.endsWith("_T"))
+	    		{
+	    			//Do nothing
+	    		} else {
+	    			Cell cell = row.createCell(j);
+	    			cell.setCellValue(allRows.get(originalRow)[colIndices[j]]);
+	    		}
+	    
+	        }
+		}
+		return sheet;
+	}
 	private void createDownload() {
 		
 		
