@@ -36,10 +36,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         
       <form name="columnSubmission" method="post" action="../../cdecurate/NCICurationServlet?reqType=cdlColumns">
             <input type="hidden" name="cdlColumns" value=""/>
-        </form>
-      <button type="button" onClick="submitSelectedColumnNames();">Submit Selected Columns</button>
-      <button type="button" onClick="toggleView();">Toggle View</button>
-      <input type="checkbox" name="fillIn" value="true"/> Check to fill in all values.
+       
+	      <button type="button" onClick="submitSelectedColumnNames();">Submit Selected Columns</button>
+	      <button type="button" onClick="toggleView();">Toggle View</button>
+	      <input type="checkbox" name="fillIn" value="true"/> Check to fill in all values.
+      </form>
       <br></br>
       <br></br>
       <% ArrayList<String> rows = (ArrayList<String>) session.getAttribute("rows"); %>

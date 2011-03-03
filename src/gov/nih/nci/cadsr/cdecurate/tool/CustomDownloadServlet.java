@@ -122,7 +122,7 @@ public class CustomDownloadServlet extends CurationServlet {
 		        		}
 	            	} else {
 	            		int buffSize = 0;
-	            		buffSize = (int) Math.ceil(downloadID.size()/1000);
+	            		buffSize = (int) Math.ceil(downloadID.size()/1000) + 1;
 	            		whereBuffers = new StringBuffer[buffSize];
 	            		int counter = 0;
 	            		whereBuffer = new StringBuffer();
@@ -177,13 +177,14 @@ public class CustomDownloadServlet extends CurationServlet {
 		                    columnHeaders.add(columnName);
 		                    
 		                    String columnType = rsmd.getColumnTypeName(i);
-		                    columnTypes.add(columnType);
+		                    
 		                    //System.out.println(columnName+"-"+columnType);
 		                    if (columnType.endsWith("_T") && !typeMap.containsKey(columnType)) {
+		                    		columnTypes.add(i+":"+columnType);
+			                    	typeMap.put(i+":"+columnType,null);
 		                    	
-			                    	typeMap.put(columnType,null);
-		                    	
-		                    }
+		                    } else
+		                    	columnTypes.add(columnType);
 		                }        
 		                
 		                while (rs.next()) {
@@ -213,6 +214,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			    							Struct valueStruct = (Struct) nestedRs.getObject(2);
 											Object[] valueDatum = valueStruct.getAttributes();
 											String[] values = new String[valueDatum.length];
+											int slide = 0;
 											for (int a = 0; a < valueDatum.length; a++) {
 												if (valueDatum[a] != null) {
 													Class c = valueDatum[a].getClass();
@@ -222,9 +224,14 @@ public class CustomDownloadServlet extends CurationServlet {
 													{
 														Struct str = (Struct) valueDatum[a];
 														Object[] strValues = str.getAttributes();
+														values = new String[valueDatum.length+strValues.length];
+														for (int b = 0; b < strValues.length; b++){
+															values[b] = strValues[b].toString();
+															slide++;
+														}
 													}
 													else {
-														values[a]= valueDatum[a].toString();
+														values[a+slide]= valueDatum[a].toString();
 													}
 														
 												} else 
@@ -394,6 +401,8 @@ public class CustomDownloadServlet extends CurationServlet {
         int bump = 0;
         boolean fillRow = false;
         
+        try {
+        
         for (int i = 0; i < allRows.size(); i++, rownum++) {
         	//Check if row already exists
         	int maxBump = 0;
@@ -401,13 +410,6 @@ public class CustomDownloadServlet extends CurationServlet {
         		row = sheet.createRow(rownum+bump);
         	
             if(allRows.get(i) == null) continue;
-
-            
-            if (fillIn != null && (fillIn.equals("true") || fillIn.equals("yes") && bump > 0)) {
-            	sheet = fillInBump(sheet, i-1, rownum, bump, allRows, allTypes, colIndices);
-            	rownum = rownum + bump;
-            	bump = 0;
-            }
             
             for (int j = 0; j < colIndices.length; j++) {
             	
@@ -415,14 +417,17 @@ public class CustomDownloadServlet extends CurationServlet {
                 String currentType = allTypes.get(colIndices[j]);
         		if (currentType.endsWith("_T"))
         		{
+        			//Deal with CS/CSI
         			String[] originalArrColNames = typeMap.get(currentType).get(0);
         			
         			//Find current column in original data
         			
         			int originalColumnIndex = -1;
         			for (int a = 0; a < originalArrColNames.length ; a++) { 
-        				if (columns[j].equals(originalArrColNames[a]))
+        				if (columns[j].equals(originalArrColNames[a])){
         					originalColumnIndex = a;
+        					break;
+        				}
         			}
         			
         			HashMap<String,ArrayList<String[]>> typeArrayData = arrayData.get(i);
@@ -443,8 +448,10 @@ public class CustomDownloadServlet extends CurationServlet {
 	        					row = sheet.getRow(rownum+bump+tempBump);
 	        		        	if (row == null) {
 	        		        		row = sheet.createRow(rownum+bump+tempBump);
-	        		        		cell = row.createCell(j);
-	        		        	}	
+	        		        	}
+	        		        	
+        		        		cell = row.createCell(j);
+	        		        	
 	        				} else {
 	        					//Go back to top row 
 	        					row = sheet.getRow(rownum + bump);
@@ -458,8 +465,20 @@ public class CustomDownloadServlet extends CurationServlet {
         		}
         
             }
+            
+            
             bump = bump + maxBump;
+            
+            if (fillIn != null && (fillIn.equals("true") || fillIn.equals("yes") && bump > 0)) {
+            	sheet = fillInBump(sheet, i, rownum, bump, allRows, allTypes, colIndices);
+            	rownum = rownum + bump;
+            	bump = 0;
+            }
         }
+        } catch (Exception e){
+        	e.printStackTrace();
+        }
+
         
         //group rows for each phase, row numbers are 0-based
 //        sheet.groupRow(4, 6);
