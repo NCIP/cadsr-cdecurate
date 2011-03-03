@@ -701,6 +701,7 @@
   //sets custom upload attributes and submits the form
   function setCustomDownloadAction()
   {
+	   document.SearchResultsForm.target="_blank";
 	   document.searchResultsForm.action="../../cdecurate/NCICurationServlet?reqType=showDEfromSearch";
 	   window.status = "Submitting the page, it may take a minute, please wait....."
 		 document.searchResultsForm.Message.style.visibility="visible";
@@ -710,6 +711,7 @@
   
   function setVDCustomDownloadAction()
   {
+	  document.SearchResultsForm.target="_blank";
 	   document.searchResultsForm.action="../../cdecurate/NCICurationServlet?reqType=showVDfromSearch";
 	   window.status = "Submitting the page, it may take a minute, please wait....."
 		 document.searchResultsForm.Message.style.visibility="visible";
