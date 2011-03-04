@@ -56,10 +56,12 @@ public class CustomDownloadServlet extends CurationServlet {
 				createDownload();
 				break;
 			case showVDfromSearch:
-				prepDisplayPage("VD");; 
+				prepDisplayPage("VD"); 
 				break;
-		}	
-			
+			case createFullDEDownload:
+				prepDisplayPage("F-DE");
+				break;
+			}	
 	}
 	
 	private void prepDisplayPage(String type) {
@@ -89,6 +91,12 @@ public class CustomDownloadServlet extends CurationServlet {
 			System.out.println("  Value: " + this.m_classReq.getSession().getAttribute(name));
 		}
 		*/
+		boolean full = false;
+		if (type.contains("-")){
+			type = type.substring(2);
+			full = true;
+		}
+			
 		ArrayList<String> columnHeaders = new ArrayList<String>();
         ArrayList<String> columnTypes = new ArrayList<String>();
         ArrayList<String[]> rows = new ArrayList<String[]>();
@@ -106,7 +114,7 @@ public class CustomDownloadServlet extends CurationServlet {
 	            {
 	            	boolean first = true;
 	            	
-	            	if (downloadID.size() <= 1000){
+	            	if (downloadID.size() <= 1000 ){
 	            		whereBuffer = new StringBuffer();
 		        		for (String id:downloadID) {
 		        			
@@ -160,10 +168,15 @@ public class CustomDownloadServlet extends CurationServlet {
 	            	}
 	            	
 	            	for (StringBuffer wBuffer: whereBuffers) {
-		        		String sqlStmt =
+	            		
+	            		String sqlStmt = null;
+		        		if (!full){
+		        			sqlStmt =
 		        			"SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW " + "WHERE "+type+"_IDSEQ IN " +
 		        			" ( " + wBuffer.toString() + " )  ";
-		            
+		        		} else {
+		        			sqlStmt = "SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW ";
+		        		}
 		                ps = getConn().prepareStatement(sqlStmt);
 		                rs = ps.executeQuery();
 		                	
@@ -190,6 +203,8 @@ public class CustomDownloadServlet extends CurationServlet {
 		                while (rs.next()) {
 		                	System.out.println(rowNum);
 		                	String[] row = new String[numColumns];
+		                	HashMap<String,ArrayList<String[]>> typeArrayData = null;
+		                	
 		                	for (int i=0; i<numColumns; i++) {
 		                		ArrayList<String[]> rowArrayData = new ArrayList<String[]>();
 		                		
@@ -240,16 +255,10 @@ public class CustomDownloadServlet extends CurationServlet {
 											rowArrayData.add(values);
 											//System.out.println(columnHeaders.get(i)+":"+columnTypes.get(i) + ":" + Arrays.toString(values));
 		    							}
-		    							if (arrayData.size() == rowNum) {
-		    								HashMap<String,ArrayList<String[]>> typeArrayData = new HashMap<String,ArrayList<String[]>>();
-		    								typeArrayData.put(columnTypes.get(i), rowArrayData);
-		    								arrayData.add(typeArrayData);
-		    							} else {
-		    								HashMap<String,ArrayList<String[]>> typeArrayData = arrayData.get(rowNum);
-		    								typeArrayData.put(columnTypes.get(i), rowArrayData);
-		    								arrayData.remove(rowNum);
-		    								arrayData.add(rowNum, typeArrayData);
+		    							if (typeArrayData == null) {
+		    								typeArrayData = new HashMap<String,ArrayList<String[]>>();
 		    							}
+		    							typeArrayData.put(columnTypes.get(i), rowArrayData);
 		    						}
 		                		} else {
 		                			
@@ -258,8 +267,12 @@ public class CustomDownloadServlet extends CurationServlet {
 		                		}
 		                	}
 		                	//If there were no arrayData added, add null to keep parity with rows.
-		                	if (arrayData.size() == rowNum)
+		                	if (typeArrayData == null)
 		                		arrayData.add(null);
+		                	else
+		                		arrayData.add(rowNum, typeArrayData);
+		                	
+		                	
 		                	
 		                	rows.add(row);
 		                	rowNum++;
@@ -299,8 +312,11 @@ public class CustomDownloadServlet extends CurationServlet {
 	        } catch (Exception e) {
 	        	e.printStackTrace();
 	        } 
-		
-		ForwardJSP(m_classReq, m_classRes, "/CustomDownload.jsp");
+	        
+		if (!full)
+			ForwardJSP(m_classReq, m_classRes, "/CustomDownload.jsp");
+		else 
+			createDownloadColumns();
 	}
 	
 	private ArrayList<String[]> getType(String type) {
