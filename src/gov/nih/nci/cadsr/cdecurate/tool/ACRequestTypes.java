@@ -60,8 +60,8 @@ public enum ACRequestTypes {
 	jsonLayout("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
 	showVDfromSearch("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
 	jsonRequest("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
-	createFullDEDownload("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet");
-	
+	createFullDEDownload("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
+	showDEfromOutside("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet");
 
 	private String className;
 

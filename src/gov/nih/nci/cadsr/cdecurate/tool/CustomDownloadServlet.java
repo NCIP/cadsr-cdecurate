@@ -40,6 +40,9 @@ public class CustomDownloadServlet extends CurationServlet {
 	public void execute(ACRequestTypes reqType) throws Exception {	
 
 			switch (reqType){
+			case showDEfromOutside:
+				prepDisplayPage("O-DE");
+				break;
 			case showDEfromSearch:
 				prepDisplayPage("DE"); 
 				break;
@@ -67,19 +70,38 @@ public class CustomDownloadServlet extends CurationServlet {
 	private void prepDisplayPage(String type) {
 		
 		//Set of all param names, this will have CK (checked) indexes indicating which Search ID is checked.
-		Set<String> paramNames = this.m_classReq.getParameterMap().keySet();
-		Vector<String> searchID= (Vector<String>) this.m_classReq.getSession().getAttribute("SearchID");
-		StringBuffer whereBuffer = null;
-		StringBuffer[] whereBuffers = null;
-		ArrayList<String> downloadID = new ArrayList<String>();
 		
-		for(String name:paramNames) {
-			if (name.startsWith("CK")) {
-				int ndx = Integer.valueOf(name.substring(2));
-				downloadID.add(searchID.get(ndx));
-			}
+		boolean full = false;
+		boolean outside = false;
+		if (type.startsWith("F")){
+			type = type.substring(2);
+			full = true;
+		} else if (type.startsWith("O")){
+			type = type.substring(2);
+			outside = true;
 		}
 		
+		ArrayList<String> downloadID = new ArrayList<String>();
+		StringBuffer whereBuffer = null;
+		StringBuffer[] whereBuffers = null;
+
+		
+		if (!outside) {
+			Set<String> paramNames = this.m_classReq.getParameterMap().keySet();
+			Vector<String> searchID= (Vector<String>) this.m_classReq.getSession().getAttribute("SearchID");
+			
+			for(String name:paramNames) {
+				if (name.startsWith("CK")) {
+					int ndx = Integer.valueOf(name.substring(2));
+					downloadID.add(searchID.get(ndx));
+				}
+			}
+		} else {
+			String searchIDCSV= (String) this.m_classReq.getParameter("SearchID");			
+			String[] ids = searchIDCSV.split(",");
+			for(String id: ids) 
+				downloadID.add(id);
+		}
 		/*		
 		Enumeration<String> attNames = this.m_classReq.getSession().getAttributeNames();
 		
@@ -91,11 +113,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			System.out.println("  Value: " + this.m_classReq.getSession().getAttribute(name));
 		}
 		*/
-		boolean full = false;
-		if (type.contains("-")){
-			type = type.substring(2);
-			full = true;
-		}
+		
 			
 		ArrayList<String> columnHeaders = new ArrayList<String>();
         ArrayList<String> columnTypes = new ArrayList<String>();
