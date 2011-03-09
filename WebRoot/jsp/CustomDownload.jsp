@@ -37,9 +37,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
       <form name="columnSubmission" method="post" action="../../cdecurate/NCICurationServlet?reqType=cdlColumns">
             <input type="hidden" name="cdlColumns" value=""/>
        
-	      <button type="button" onClick="submitSelectedColumnNames();">Submit Selected Columns</button>
+	      <button type="button" onClick="submitSelectedColumnNames('Excel');">Download Excel</button>
+		  <button type="button" onClick="submitSelectedColumnNames('XML');">Download XML</button>
 	      <button type="button" onClick="toggleView();">Toggle View</button>
-	      <input type="checkbox" name="fillIn" value="true"/> Check to fill in all values.
+	      	<input type="checkbox" name="fillIn" value="true"/> Check to fill in all values.
       </form>
       <br></br>
       <br></br>
@@ -284,8 +285,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         		if (headCell != null) dndPlugin.selectColumn(headCell.index); 
         	}
             
-            function submitSelectedColumnNames() {
+            function submitSelectedColumnNames(action) {
                 
+            	var cust = dojo.byId("customDownloadContainer"); 
+                
+                divstyle = cust.style.display;
+                if(divstyle.toLowerCase()=="block" || divstyle == "")
+                    syncFromGrid();
+                else
+                   selectInGrid();
+                      	
                 var cols = {};
                 var returnCols = "";
                 var i=0;
@@ -298,6 +307,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                  	returnCols = returnCols+",";    
              	     }
                 }
+                
+                if (action = "XML")
+                	document.columnSubmission.action.value = "../../cdecurate/NCICurationServlet?reqType=xmlColumns";
                 
                 document.columnSubmission.cdlColumns.value = cols;
                 document.columnSubmission.submit();
