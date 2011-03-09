@@ -53,7 +53,7 @@ public class CustomDownloadServlet extends CurationServlet {
 				returnJSONFromSession("Layout");
 				break;
 			case cdlColumns:
-				createDownloadColumns();
+				createDownloadColumns("Excel");
 				break;
 			case createExcelDownload:
 				createDownload();
@@ -219,7 +219,6 @@ public class CustomDownloadServlet extends CurationServlet {
 		                }        
 		                
 		                while (rs.next()) {
-		                	System.out.println(rowNum);
 		                	String[] row = new String[numColumns];
 		                	HashMap<String,ArrayList<String[]>> typeArrayData = null;
 		                	
@@ -334,7 +333,7 @@ public class CustomDownloadServlet extends CurationServlet {
 		if (!full)
 			ForwardJSP(m_classReq, m_classRes, "/CustomDownload.jsp");
 		else 
-			createDownloadColumns();
+			createDownloadColumns("Excel");
 	}
 	
 	private ArrayList<String[]> getType(String type) {
@@ -388,7 +387,12 @@ public class CustomDownloadServlet extends CurationServlet {
 		ForwardJSP(m_classReq, m_classRes, "/JSON"+JSPName+".jsp");
     }
 	
-	private void createDownloadColumns(){
+	private void createDownloadColumns(String type){
+		
+		
+		boolean XML = false;
+		if (type != null && type.equals("XML"))
+			XML = true;
 		
 		String colString = (String) this.m_classReq.getParameter("cdlColumns");
 		String fillIn = (String) this.m_classReq.getParameter("fillIn");
@@ -413,6 +417,7 @@ public class CustomDownloadServlet extends CurationServlet {
 				colIndices[i]=temp;
 			}
 		}
+		
 		
 		Workbook wb =  new HSSFWorkbook();
 		
