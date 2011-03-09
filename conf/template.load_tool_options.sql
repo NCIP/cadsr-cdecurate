@@ -555,7 +555,318 @@ WHEN MATCHED THEN
       UPDATE SET S.VALUE = T.VALUE, S.DESCRIPTION = T.DESCRIPTION
 WHEN NOT MATCHED THEN INSERT (TOOL_NAME, PROPERTY, VALUE, DESCRIPTION) VALUES (T.TOOL_NAME, T.PROPERTY, T.VALUE, T.DESCRIPTION); 
 
+--Create correct views for Customized Download
+
+DROP VIEW VD_EXCEL_GENERATOR_VIEW;
+
+/* Formatted on 3/8/2011 2:23:48 PM (QP5 v5.115.810.9015) */
+CREATE OR REPLACE FORCE VIEW vd_excel_generator_view (
+   vd_idseq,
+   vd_id,
+   vd_preferred_name,
+   vd_version,
+   vd_conte_name,
+   vd_conte_version,
+   vd_type,
+   workflow_status,
+   registration_status,
+   dtl_name,
+   max_length_num,
+   min_length_num,
+   high_value_num,
+   low_value_num,
+   decimal_place,
+   forml_name,
+   vd_long_name,
+   cd_id,
+   cd_preferred_name,
+   cd_version,
+   cd_conte_name,
+   vd_wk_flow_status,
+   valid_values,
+   classifications,
+   vd_concepts,
+   rep_id,
+   rep_preferred_name,
+   rep_long_name,
+   rep_version,
+   rep_conte_name,
+   rep_concepts
+   )
+AS
+   SELECT vd.vd_idseq,
+          vd.vd_id,
+          vd.preferred_name vd_preferred_name,
+          vd.version vd_version,
+          vd_conte.name vd_conte_name,
+          vd_conte.version vd_conte_version,
+          DECODE (vd.vd_type_flag,
+             'E', 'Enumerated',
+             'N', 'Non Enumerated',
+             'Unknown')
+             vd_type,
+          vd.asl_name workflow_status,
+          acr.registration_status,
+          vd.dtl_name,
+          vd.max_length_num,
+          vd.min_length_num,
+          vd.high_value_num,
+          vd.low_value_num,
+          vd.decimal_place,
+          vd.forml_name,
+          vd.long_name vd_long_name,
+          cd.cd_id,
+          cd.preferred_name cd_preferred_name,
+          cd.version cd_version,
+          cd_conte.name cd_conte_name,
+          vd.asl_name vd_wk_flow_status,
+          CAST (MULTISET (SELECT pv.VALUE,
+                                 vm.long_name short_meaning,
+                                 vm.preferred_definition,
+                                 sbrext_common_routines.get_concepts(vm.condr_idseq)
+                                    meaningconcepts,
+                                 pv.begin_date,
+                                 pv.end_date,
+                                 vm.vm_id,
+                                 vm.version
+                          FROM sbr.permissible_values pv,
+                               sbr.vd_pvs vp,
+                               value_meanings vm
+                          WHERE     vp.vd_idseq = vd.vd_idseq
+                                AND vp.pv_idseq = pv.pv_idseq
+                                AND pv.vm_idseq = vm.vm_idseq
+                ) AS valid_value_list_t
+          )
+             valid_values,
+          CAST (MULTISET (SELECT admin_component_with_id_t (csv.cs_id,
+                                                            csv.cs_context_name,
+                                                            csv.cs_context_version,
+                                                            csv.preferred_name,
+                                                            csv.version
+                                 ),
+                                 csv.csi_name,
+                                 csv.csitl_name,
+                                 csv.csi_id,
+                                 csv.csi_version
+                          FROM sbrext.cdebrowser_cs_view csv
+                          WHERE vd.vd_idseq = csv.ac_idseq
+                ) AS cdebrowser_csi_list_t
+          )
+             classifications,
+          CAST (MULTISET (SELECT con.preferred_name,
+                                 con.long_name,
+                                 con.con_id,
+                                 con.definition_source,
+                                 con.origin,
+                                 con.evs_source,
+                                 com.primary_flag_ind,
+                                 com.display_order
+                          FROM component_concepts_ext com, concepts_ext con
+                          WHERE vd.condr_idseq = com.condr_idseq(+)
+                                AND com.con_idseq = con.con_idseq(+)
+                          ORDER BY display_order DESC
+                ) AS concepts_list_t
+          )
+             vd_concepts,
+          rep.rep_id,
+          rep.preferred_name rep_preferred_name,
+          rep.long_name rep_long_name,
+          rep.version rep_version,
+          rep_conte.name rep_conte_name,
+          CAST (MULTISET (SELECT con.preferred_name,
+                                 con.long_name,
+                                 con.con_id,
+                                 con.definition_source,
+                                 con.origin,
+                                 con.evs_source,
+                                 com.primary_flag_ind,
+                                 com.display_order
+                          FROM component_concepts_ext com, concepts_ext con
+                          WHERE rep.condr_idseq = com.condr_idseq(+)
+                                AND com.con_idseq = con.con_idseq(+)
+                          ORDER BY display_order DESC
+                ) AS concepts_list_t
+          )
+             rep_concepts
+   FROM sbr.value_domains vd,
+        sbr.contexts vd_conte,
+        sbr.ac_registrations acr,
+        conceptual_domains cd,
+        contexts cd_conte,
+        representations_ext rep,
+        contexts rep_conte
+   WHERE     vd.conte_idseq = vd_conte.conte_idseq
+         AND vd.vd_idseq = acr.ac_idseq(+)
+         AND vd.cd_idseq = cd.cd_idseq
+         AND cd.conte_idseq = cd_conte.conte_idseq
+         AND vd.rep_idseq = rep.rep_idseq(+)
+         AND rep.conte_idseq = rep_conte.conte_idseq(+);
+
+
+DROP SYNONYM CDECURATE.VD_EXCEL_GENERATOR_VIEW;
+
+CREATE SYNONYM CDECURATE.VD_EXCEL_GENERATOR_VIEW FOR VD_EXCEL_GENERATOR_VIEW;
+
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON VD_EXCEL_GENERATOR_VIEW TO CDECURATE;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON VD_EXCEL_GENERATOR_VIEW TO DER_USER;
+
+GRANT DELETE, INSERT, REFERENCES, SELECT, UPDATE, ON COMMIT REFRESH, QUERY REWRITE, DEBUG, FLASHBACK ON VD_EXCEL_GENERATOR_VIEW TO SBR WITH GRANT OPTION;
+
+
+
+--DEC
+
+
+CREATE OR REPLACE FORCE VIEW sbrext.dec_excel_generator_view (
+   dec_id,
+   dec_preferred_name,
+   dec_version,
+   dec_conte_name,
+   dec_conte_version,
+   oc_id,
+   oc_preferred_name,
+   oc_long_name,
+   oc_version,
+   oc_conte_name,
+   prop_id,
+   prop_preferred_name,
+   prop_long_name,
+   prop_version,
+   prop_conte_name,
+   dec_long_name,
+   dec_wk_flow_status,
+   registration_status,
+   reference_docs,
+   classifications,
+   designations,
+   oc_concepts,
+   prop_concepts
+   )
+AS
+   SELECT dec.dec_id,
+          dec.preferred_name dec_preferred_name,
+          dec.version dec_version,
+          dec_conte.name dec_conte_name,
+          dec_conte.version dec_conte_version,
+          oc.oc_id,
+          oc.preferred_name oc_preferred_name,
+          oc.long_name oc_long_name,
+          oc.version oc_version,
+          oc_conte.name oc_conte_name,
+          prop.prop_id,
+          prop.preferred_name prop_preferred_name,
+          prop.long_name prop_long_name,
+          prop.version prop_version,
+          prop_conte.name prop_conte_name,
+          dec.long_name dec_long_name,
+          DEC.ASL_NAME dec_wk_flow_status,
+          acr.registration_status,
+          CAST (MULTISET (SELECT rd.name,
+                                 org.name,
+                                 rd.dctl_name,
+                                 rd.doc_text,
+                                 rd.url,
+                                 rd.lae_name,
+                                 rd.display_order
+                          FROM sbr.reference_documents rd,
+                               sbr.organizations org
+                          WHERE dec.dec_idseq = rd.ac_idseq(+)
+                                AND rd.org_idseq = org.org_idseq(+)
+                ) AS cdebrowser_rd_list_t
+          )
+             reference_docs,
+          CAST (MULTISET (SELECT admin_component_with_id_t (csv.cs_id,
+                                                            csv.cs_context_name,
+                                                            csv.cs_context_version,
+                                                            csv.preferred_name,
+                                                            csv.version
+                                 ),
+                                 csv.csi_name,
+                                 csv.csitl_name,
+                                 csv.csi_id,
+                                 csv.csi_version
+                          FROM sbrext.cdebrowser_cs_view csv
+                          WHERE dec.dec_idseq = csv.ac_idseq
+                ) AS cdebrowser_csi_list_t
+          )
+             classifications,
+          CAST (MULTISET (SELECT des_conte.name,
+                                 des_conte.version,
+                                 des.name,
+                                 des.detl_name,
+                                 des.lae_name
+                          FROM sbr.designations des, sbr.contexts des_conte
+                          WHERE dec.dec_idseq = des.ac_idseq(+)
+                                AND des.conte_idseq = des_conte.conte_idseq(+)
+                ) AS designations_list_t
+          )
+             designations,
+          CAST (MULTISET (SELECT con.preferred_name,
+                                 con.long_name,
+                                 con.con_id,
+                                 con.definition_source,
+                                 con.origin,
+                                 con.evs_source,
+                                 com.primary_flag_ind,
+                                 com.display_order
+                          FROM component_concepts_ext com, concepts_ext con
+                          WHERE oc.condr_idseq = com.condr_idseq(+)
+                                AND com.con_idseq = con.con_idseq(+)
+                          ORDER BY display_order DESC
+                ) AS concepts_list_t
+          )
+             oc_concepts,
+          CAST (MULTISET (SELECT con.preferred_name,
+                                 con.long_name,
+                                 con.con_id,
+                                 con.definition_source,
+                                 con.origin,
+                                 con.evs_source,
+                                 com.primary_flag_ind,
+                                 com.display_order
+                          FROM component_concepts_ext com, concepts_ext con
+                          WHERE prop.condr_idseq = com.condr_idseq(+)
+                                AND com.con_idseq = con.con_idseq(+)
+                          ORDER BY display_order DESC
+                ) AS concepts_list_t
+          )
+             prop_concepts
+   FROM sbr.data_element_concepts dec,
+        sbr.contexts dec_conte,
+        sbr.ac_registrations acr,
+        conceptual_domains cd,
+        contexts cd_conte,
+        object_classes_ext oc,
+        contexts oc_conte,
+        properties_ext prop,
+        representations_ext rep,
+        contexts prop_conte,
+        contexts rep_conte
+   WHERE     dec.conte_idseq = dec_conte.conte_idseq
+         AND dec.dec_idseq = acr.ac_idseq(+)
+         AND cd.conte_idseq = cd_conte.conte_idseq
+         AND dec.oc_idseq = oc.oc_idseq(+)
+         AND oc.conte_idseq = oc_conte.conte_idseq(+)
+         AND dec.prop_idseq = prop.prop_idseq(+)
+         AND prop.conte_idseq = prop_conte.conte_idseq(+);
+        
+   
+GRANT DELETE, INSERT, SELECT, UPDATE ON DEC_EXCEL_GENERATOR_VIEW TO CDECURATE;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON DEC_EXCEL_GENERATOR_VIEW TO DER_USER;
+
+GRANT DELETE, INSERT, REFERENCES, SELECT, UPDATE, ON COMMIT REFRESH, QUERY REWRITE, DEBUG, FLASHBACK ON DEC_EXCEL_GENERATOR_VIEW TO SBR WITH GRANT OPTION;
+
+
+
+
+
+
 --commit the inserts
+
+
 COMMIT;
 
 

@@ -85,10 +85,10 @@
  var newwindow;
 function openUsedWindowVM(idseq, type)
 {
-var newUrl = '../../cdecurate/NCICurationServlet?reqType=showUsedBy';
-newUrl = newUrl + '&idseq=' +idseq+'&type='+type;
+var newUrl = "../../cdecurate/NCICurationServlet?reqType=showUsedBy";
+newUrl = newUrl + "&idseq=" +idseq+"&type="+type;
 
-	newwindow=window.open(newUrl,'Used By Forms','height=400,width=500');
+	newwindow=window.open(newUrl,"UsedByForms","height=400,width=500");
 	if (window.focus) {newwindow.focus()}
 
 
@@ -191,7 +191,7 @@ newUrl = newUrl + '&idseq=' +idseq+'&type='+type;
 					<%if (inForm){%>
 					<br>
 					<font size=4 color="#FF0000">Note:</font>
-					<font size=4> Value Domain is used in a form. <a href=""javascript:openUsedWindowVM('<%=sVDIDseq%>','VD');">View Usage</a></font>
+					<font size=4> Value Domain is used in a form. <a href="javascript:openUsedWindowVM('<%=sVDIDseq%>','VD');">View Usage</a></font>
 					<%}%>	
 			</div>
 		</th>
