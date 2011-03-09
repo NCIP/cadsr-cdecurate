@@ -1,0 +1,601 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- Copyright ScenPro, Inc 2007
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/html/Help_DesignateDE.html,v 1.6 2008-04-15 15:35:59 chickerura Exp $
+    $Name: not supported by cvs2svn $
+-->
+<html>
+  <head>
+    <title>
+      Curation Tool Help - Designate Data Element
+    </title>
+    <meta http-equiv="Content-Type" content=
+    "text/html; charset=us-ascii">
+    <link href="../css/Help.css" type="text/css" rel="stylesheet">
+    <meta content="MSHTML 6.00.2900.2802" name="GENERATOR">
+  </head>
+  <body>
+    <h2 class="main">
+      CDE Curation Tool<br>
+      User&rsquo;s Guide Version 4.0.0.0
+    </h2><br>
+    <p class="returnLink">
+      <a href="Help.htm">Return to the Table of Contents</a>
+    </p>
+    <div align="center">
+      <div class="container">
+        <div class="header">
+          <a id="searchResultsForm_designateDE" name=
+          "searchResultsForm_designateDE"></a>Designating Data
+          Elements
+        </div><br>
+        <div class="bodyText">
+          <!-- ****************************************************** -->
+          <!--                       Overview                         -->
+          <!-- ****************************************************** -->
+					<span class="standOutHeading">
+          Overview</span>
+          <hr>
+          <p>
+            Before you go to the trouble of creating a new Data
+            Element in your Context, you may choose to Designate
+            an existing Data Element instead. Designating means
+            that you have identified a Data Element in another
+            Context that is appropriate for reuse. In
+            other words, you are willing to use it for your
+            curation needs, but it was created and will be
+            maintained by another Context. The designated Data
+            Element is now being &lsquo;Used By&rsquo; your
+            Context. A complete listing of Designation rules can
+            be found on the <a href=
+            "http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr/business_rules/#Designations"
+            target="blank">NCI Center for Bioinformatics</a>
+            Business Rules page.
+          </p>
+          <ol>
+            <li>Only Data Elements with the following Workflow
+            Statuses can be designated: APPRVD FOR TRIAL USE, CMTE APPROVED, CMTE
+            SUBMTD USED, DRAFT MOD, RELEASED, OR
+            RELEASED-NON-CMPLNT.
+            </li>
+            <li>You are designating to a current version of a
+            Data Element. If the owning context creates a new version of the Data
+            Element, your "designation" remains associated to the
+            previous version.
+            </li>
+            <li>If you designate a Data Element to your Context,
+            you will have write privileges for only a few
+            attributes for that Data Element in its current
+            version. All other changes to the Data Element will
+            be the responsibility of the "owning" Context. This
+            is usually the Context for which the Data Element was
+            originally created.
+            </li>
+          </ol>
+          <p>
+            <b>Designate</b> a Data Element(s) using the CDE Curation
+            Tool:
+						<ul>
+						<li> Use the <a href=
+            "Help_SearchAC.html#Overview">Search</a> feature to
+            locate the Data Element(s) that you would like to
+            designate. 
+						</li>
+						<li>Select the desired Data Element(s) from
+            the search results by clicking the box next to the
+            Data Element's name. 
+						</li>
+						<li>Click the <input style="WIDTH: 100px" type="button" value=
+            "Designations" name="designateBtn">
+            button at the top
+            of the main search screen. This will open the
+            Designations screen. All the currently designated items will appear
+            in the appropriate fields. Figure 1 illustrates where
+            to find the Designations button.
+						</li>
+						</ul>
+          </p>
+          <p class="centeredImage">
+            <img class="screenShot" height="265" alt=
+            "Designations Button" src=
+            "../images/Help/Designate/image001.png" width="880">
+          </p>
+          <p class="imageText">
+            FIGURE 1<br>
+            Designations Button
+          </p>
+					<p>
+          <span style=
+          "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+          i</span> Use the Designations button to block designate multiple Data
+          Elements at the same time.
+					</p>
+          <p>
+            <span class="standOutHeading">Designations</span>
+          </p>
+          <hr>
+          <p>
+            On the Designations screen you have the opportunity
+            to Designate or Undesignate a Data Element for your
+            Context. You may also Create and/or Remove Alternate
+            Names and Select and/or Remove Classification
+            Schemes/ Classification Scheme Items for the selected
+            Data Elements(s). Figure 2 is an overview of the
+            Designations screen.
+          </p>
+          <p class="centeredImage">
+            <img class="screenShot" height="346" alt=
+            "Designations Screen Overview" src=
+            "../images/Help/Designate/image002.png" width="824">
+          </p>
+          <p class="imageText">
+            FIGURE 2<br>
+            Designations Screen Overview
+          </p>
+          <!--<p>
+            <span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span> Reference Documents are now handled via the
+            Reference Documents action button on the search
+            screen.
+          </p>-->
+          <p>
+            Actions performed on the Designations
+            screen include:<br>
+            <ul>
+              <li>Designate or Undesignate Data Elements for use
+              in a Context.
+              </li>
+              <li>Create or Remove Alternate Names.
+              </li>
+              <li>Select or Remove Classification Schemes and
+              Classification Scheme Items.
+              </li>
+            </ul>
+          </p>
+          <!-- ****************************************************** -->
+          <!--                      Designations                      -->
+          <!-- ****************************************************** -->
+          <p>
+            The first step for creating designations or any other
+            "Used By" attributes is to select a designation
+            Context. This is done by selecting a Context from the
+            first drop down list. The Contexts in the drop down
+            list vary from user to user depending on the
+            Context(s) for which they have permissions. Figure 4
+            shows how to select the "Used By" Context for the
+            Designated Data Element.
+          </p>
+          <p class="centeredImage">
+            <img class="screenShot" height="446" alt=
+            "Select A Context (36K)" src=
+            "../images/Help/Designate/image004.png" width="473">
+          </p>
+          <p class="imageText">
+            FIGURE 3<br>
+            Select A Context
+          </p>
+       		<p>
+            <b>Designate</b> a Data Element to the
+            selected Context:<br>
+            <ol>
+              <li>Select a Context from the drop down list
+              <select>
+                  <option value="1" selected>
+                    
+                  </option>
+                  <option value="2">
+                    SPORES
+                  </option>
+                   <option value="4">
+                    Your Context
+                  </option>
+                 </select>.
+              </li>
+              <li>Click the <input style="WIDTH: 200px"
+                type="button" value="Update Used By Attributes"> action
+              button to Designate the Data Element to the
+              selected Context.
+              </li>
+            </ol>
+          </p>
+          <p>
+            <b>Undesignate</b> a Data Element to the
+            selected Context:<br>
+            <ol>
+              <li>Select a Context from the drop down list (
+              <select>
+                  <option value="1" selected>
+                    
+                  </option>
+                  <option value="2">
+                    SPORES
+                  </option>
+                  <option value="4">
+                    Your Context
+                  </option>
+                </select>.
+              </li>
+              <li>Click the <input style="WIDTH: 210px"
+                type="button" value="Remove Used By Attributes"> action
+              button to Undesignate the Data Element from the
+              selected Context.
+              </li>
+            </ol>
+          </p>
+          <!-- ****************************************************** -->
+          <!--           Creating Alternate Name Attributes           -->
+          <!-- ****************************************************** -->
+					<span class="standOutHeading">
+          <a name="Alternate Names"></a>Creating Alternate Name
+          Attributes</span>
+          <hr>
+          <p>
+            When there is a need to assign an Administered
+            Component a label or name other then its ISO/IEC
+            11179 compliant name, you may choose to assign the
+            Administered Component an Alternate Name. Figure 4
+            is overview of the Alternate Name attributes that can
+            be accessed in the Curation tool.
+          </p>
+          <p class="centeredImage">
+            <img class="screenShot" height="284" alt=
+            "Creating/Removing Alternate Names" src=
+            "../images/Help/Designate/image005.png" width="820">
+          </p>
+          <p class="imageText">
+            FIGURE 4<br>
+            Creating/Removing Alternate Names
+          </p>
+          <p>
+            <b>Create</b> an Alternate Name for an
+            Administered Component:<br>
+            <ol>
+              <li>Select a Context from the drop down list 
+              <select>
+                  <option value="2">
+                    Test
+                  </option>
+                  <option value="3">
+                    Training
+                  </option>
+                  <option value="4">
+                    Your Context
+                  </option>
+                  <option value="5">
+                    caCORE
+                  </option>
+                </select> .
+              </li>
+              <li>Select an Alternate Name Type from the drop
+              down list <select size="1" name="dummy">
+                  <option value="CONTEXT NAME">
+                    CONTEXT NAME
+                  </option>
+                  <option value="Context Short Name">
+                    Context Short Name
+                  </option>
+                  <option value="CRITERION_NAME">
+                    CRITERION_NAME
+                  </option>
+                  <option value="ABBREVIATION">
+                    ABBREVIATION
+                  </option>
+                  <option value="C3PR Name">
+                    C3PR Name
+                  </option>
+                  <option value="C3D Name">
+                    C3D Name
+                  </option>
+                  <option value="New Designation">
+                    New Designation
+                  </option>
+                  <option value="Prior Preferred Name">
+                    Prior Preferred Name
+                  </option>
+                </select> .
+              </li>
+              <li>Enter desired text for the selected Alternate
+              Name Type.
+              </li>
+              <li>Click <input style=
+              "WIDTH: 120px" type="button" value="Add Selection"
+                name="dummy"> button.
+              </li>
+              <li>Click the <input style="WIDTH: 200px" type="button" value=
+              "Update Used By Attributes"> button
+              to save the changes to the used by attributes.
+              </li>
+            </ol>
+          </p>
+          <p>
+            <b>Remove</b> an Alternate Name for an
+            Administered Component:<br>
+            <ol>
+              <li>Select desired Alternate Name by clicking the
+              check box (<input type="checkbox" size="5" name=
+              "ACK0">) next to it.
+              </li>
+              <li>Click <input type="button" value=
+              "Remove Item" name="dummy">.
+              </li>
+              <li>Click the <input style="WIDTH: 200px" type="button" value=
+              "Update Used By Attributes"> button
+              to save the changes to the used by attributes.
+              </li>
+            </ol>
+						</p>
+						<p><span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span> Alternate Names must be removed
+            individually.
+						</p>
+          <!-- ****************************************************** -->
+          <!--         Creating Reference Document Attributes         -->
+          <!-- ****************************************************** --><span class="standOutHeading">
+          <a name="Reference Document Attributes"></a>Creating Reference
+          Document Attributes</span>
+          <hr>
+          <p>
+            A Reference Document or a link to a Reference Document can be created
+						for Administered Components. Figure 5 is an illustration of the Reference
+            Document attributes interface. 
+					</p>
+					<p class="centeredImage">
+            <img class="screenShot" height="397" alt=
+            "Reference Document Attributes" src=
+            "../images/Help/Designate/image006.png" width="962">
+          </p>
+          <p class="imageText">
+            FIGURE 5<br>
+            Reference Document Attributes
+          </p>  
+          <p>
+            <b>Add</b> Reference Document attributes for
+            your Context:<br>
+            <ol>
+              <li>Select a Context from the drop down list 
+              <select>
+                  <option value="2">
+                    Test
+                  </option>
+                  <option value="3">
+                    Training
+                  </option>
+                  <option value="4">
+                    Your Context
+                  </option>
+                  <option value="5">
+                    caCORE
+                  </option>
+                </select> .
+              </li>
+              <li>Select a Reference Document Type from the drop
+              down list <select size="1" name="selRefType">
+                  <option value="REFERENCE">
+                    REFERENCE
+                  </option>
+                  <option value="EXAMPLE">
+                    EXAMPLE
+                  </option>
+                  <option value="COMMENT">
+                    COMMENT
+                  </option>
+                  <option value="NOTE">
+                    NOTE
+                  </option>
+                  <option value="DESCRIPTION">
+                    DESCRIPTION
+                  </option>
+                  <option value="IMAGE_FILE">
+                    IMAGE_FILE
+                  </option>
+                  <option value="VALID_VALUE_SOURCE">
+                    VALID_VALUE_SOURCE
+                  </option>
+                  <option value="DATA_ELEMENT_SOURCE">
+                    DATA_ELEMENT_SOURCE
+                  </option>
+                  <option value="HISTORIC SHORT CDE NAME">
+                    HISTORIC SHORT CDE NAME
+                  </option>
+                  <option value="DETAIL_DESCRIPTION">
+                    DETAIL_DESCRIPTION
+                  </option>
+                  <option value="LABEL">
+                    LABEL
+                  </option>
+                  <option value="Alternate Question Text">
+                    Alternate Question Text
+                  </option>
+                  <option value="Source">
+                    Source
+                  </option>
+                </select> .
+              </li>
+              <li>Enter desired text for the Reference Document
+              Name.
+              </li>
+							<li>Enter desired text for the Reference Document
+              Text.
+              </li>
+              <li>Enter text or click the Browse link to create
+              the Reference Document URL.
+              </li>
+              <li>Click <input style=
+              "WIDTH: 120px" type="button" value="Add Selection"
+                name="dummy"> .
+              </li>
+              <li>Click the <input style="WIDTH: 200px" type="button" value=
+              "Update Used By Attributes"> button
+              to save the changes to the used by attributes.
+              </li>
+            </ol>
+          </p>
+          <p>
+            <b>Remove</b> Reference Document attributes
+            from your Context:<br>
+            <ol>
+              <li>Select desired Reference Document Attribute by
+              clicking the check box (<input type="checkbox"
+              size="5" name="ACK0">) next to it.
+              </li>
+              <li>Click <input style=
+              "WIDTH: 100px" type="button" value="Remove Item"
+              name="dummy"> button.
+              </li>
+              <li>Click the <input style="WIDTH: 200px" type="button" value=
+              "Update Used By Attributes"> button
+              to save the changes to the used by attributes.
+              </li>
+            </ol>
+          </p>
+          <!-- ****************************************************** -->
+          <!-- Classification Schemes and Classification Scheme Items -->
+          <!-- ****************************************************** --><span class="standOutHeading">
+          <a name="Classify ACs"></a>Classifications</span>
+          <hr>
+          <p>
+            Classifications give you the ability to create
+            logical groupings of Administered Components for any
+            reason. (i.e. a taxonomy, a network, an ontology or
+            any other terminology system). ISO/IEC 11179 defines
+            classifications as a Classification Scheme (think of
+            this as the &lsquo;bucket&rdquo;) that contains
+            Classification Scheme Items (these are the specific
+            categories in the bucket):
+          </p>
+          <p>
+						<ul>
+              <li>Classification Scheme: an arrangement or division of
+              objects into groups based on characteristics that
+              the objects have in common (e.g. origin,
+              composition, structure, application and function).
+							</li><br><br>
+            	<li>
+              Classification Scheme Item: a component of content in
+              a Classification Scheme.
+							</li>
+						</ul>
+          </p>
+          <p>
+            You can use Classifications for applications, forms,
+            reporting requirements, protocols, or any other
+            institution specific reason where grouping
+            Administered Components would be useful. You may
+            classify any type of Administered Component,
+            including Data Elements, Data Element Concepts, Value
+            Domains, Object Classes, Properties and
+            Representation Terms. Classifications are a primary
+            means to indicate Administered Components that reused
+            across object models. Figure 6 shows how to select
+            Classification Schemes and Classification Scheme
+            Items for Designated Data Elements.
+          </p>
+          <p class="centeredImage">
+            <img class="screenShot" height="221" alt=
+            "CS/CSI" src=
+            "../images/Help/Designate/image007.png" width="844">
+          </p>
+          <p class="imageText">
+            FIGURE 6<br>
+            Creating/Removing Classification Schemes and
+            Classification Scheme Items
+          </p><span style=
+          "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+          i</span> When multiple Data Elements are selected to
+          block designate, the Data Elements containing selected
+          Classification Scheme Items dialog show the Data
+          Elements that the Classification Scheme Item is contained
+          in.
+          <p>
+            <b>Add</b> a Classification Scheme Item to a
+            Data Element in your Context:<br>
+            <ol>
+              <li>Select a Classification Scheme from the drop
+              down ( <select style="WIDTH: 300px" size="1"
+                name="selCS">
+                  <option value="" selected>
+                    
+                  </option>
+                 </select> ).
+              </li>
+              <li>The Classification Scheme Items are displayed
+              in a hierarchical manner (when appropriate).
+              </li>
+              <li>Click the <input style="WIDTH: 200px; HEIGHT: 30px" type=
+              "button" value="Update Used By Attributes"> button
+              to save the changes to the used by attributes.
+              </li>
+            </ol>
+          </p><span style=
+          "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+          i</span> Ensure that the selected
+          Classification Scheme's Context is within the user's
+          Context.
+          <p>
+            <b>Remove</b> a Classification Scheme Item
+            from a Data Element in your Context:<br>
+            <ol>
+              <li>Select the Classification Scheme or
+              Classification Scheme Item.
+              </li>
+              <li>Click the <input style="WIDTH: 100px" type=
+              "button" value="Remove Item" name="dummy"> button to remove the
+              selected Classification Scheme and Classification
+              Scheme Item.
+              </li>
+              <li>Click the <input style="WIDTH: 200px" type="button" value=
+              "Update Used By Attributes"> button to
+              save the changes to the used by attributes.
+              </li>
+            </ol>
+          </p>
+          <p>
+            <span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span> When a Classification Scheme Item is
+            selected from the list of items for the selected
+            Classification Scheme, it (and all its parents) is
+            added to the Associated Classification Scheme Items.
+          </p>
+					<p>
+					<span style=
+            "FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: blue; FONT-FAMILY: webdings">
+            i</span> <b>New for Curation Tool v3.2:</b> Users have the ability to
+						add Alternate Names, Alternate Definitions and Classifications to 
+						Value Meanings. Please refer to 
+					<a href=
+            "Help_CreateVD.html#AltNames">Add Alternate Names, Definitions and Classifications to Value Meanings</a>
+						for more information.
+          <p>
+            <br>
+            <span class="standOutHeading">Confirmation of
+            Update</span>
+          </p>
+          <hr>
+          <p>
+            Click the <input style="WIDTH: 200px" type="button" value=
+              "Update Used By Attributes"> or <input style="WIDTH: 210px" type="button" value=
+              "Remove Used By Attributes"> action buttons at the top of the screen to
+            save the changes to the used by attributes for the
+            selected Data Elements(s). Figure 7 illustrates the
+            successful update of a Data Element.
+          </p>
+          <p class="centeredImage">
+            <img class="screenShot" height="221" alt=
+            "Confirmation Message" src=
+            "../images/Help/Designate/image008.png" width="438">
+          </p>
+          <p class="imageText">
+            FIGURE 7<br>
+            Successful Update of Used By Attributes for a Data
+            Element
+          </p>
+        </div>
+      </div>
+      <p class="returnLink">
+        <a href="Help.htm">Return to the Table of Contents</a>
+      </p>
+    </div>
+  </body>
+</html>

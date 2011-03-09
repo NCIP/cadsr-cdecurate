@@ -1,0 +1,594 @@
+<!—Copyright …
+
+    $Header: /cvsshare/content/cvsroot/cdecurate/doc/inception/Designs/ValueMeaningUI/CDE_Curation_Edit_VM_No_Concepts.htm,v 1.1 2007-09-10 16:57:39 hebell Exp $
+
+    $Name: not supported by cvs2svn $
+
+-->
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <title>CDE Curation: Edit Value Meaning</title>
+  <meta content="Evrsoft First Page" name="GENERATOR">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+	<!--<style type="text/css">
+BODY {
+	FONT-SIZE: 10pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+TABLE {
+	FONT-SIZE: 10pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+TD.TABX {
+	BORDER-RIGHT: #aaaaaa 2px solid; PADDING-RIGHT: 0.05in; BORDER-TOP: #aaaaaa 2px solid; PADDING-LEFT: 0.05in; PADDING-BOTTOM: 0.05in; BORDER-LEFT: #aaaaaa 2px solid; CURSOR: default; PADDING-TOP: 0.05in; BORDER-BOTTOM: black 2px solid
+}
+TD.TABY {
+	BORDER-RIGHT: black 2px solid; PADDING-RIGHT: 0.05in; BORDER-TOP: black 2px solid; PADDING-LEFT: 0.05in; PADDING-BOTTOM: 0.05in; BORDER-LEFT: black 2px solid; CURSOR: default; MARGIN-RIGHT: -5px; PADDING-TOP: 0.05in
+}
+</style>-->
+  <link href="FullDesignArial.css" type="text/css" rel="stylesheet">
+<script type="text/javascript">
+        var tabFocusDiv = null;
+        var tabFocusTitle = null;
+        
+        function tabSetFocus(ctitle, cdiv)
+        {
+            tabFocusDiv.style.display = "none";
+            tabFocusDiv = cdiv;
+            tabFocusDiv.style.display = "block";
+            tabFocusTitle.className = "tabx";
+            tabFocusTitle = ctitle;
+            tabFocusTitle.className = "taby";
+        }
+        
+        function loaded()
+        {
+            tabFocusDiv = use;
+            tabFocusTitle = usetd;
+        }
+
+                              
+        function changeOrder(orderId) 
+        {
+                var ordDiv = document.getElementById(orderId + "select");
+                if (ordDiv != null)
+                {
+                        ordDiv.style.display = "inline";  
+	               var ordDivView = document.getElementById(orderId + "view");
+	               if (ordDivView != null)
+	                       ordDivView.style.display = "none";  
+                }
+        }
+        
+        function changeOrderSelect(ordType)
+        {
+                alert(ordType.id);
+                        ordType.style.display = "none";
+                        if (ordType = "straight")
+                                document.getElementById("reverse").style.display = "block";
+                        else if (ordType = "reverse")
+                                document.getElementById("straight").style.display = "block";
+                
+        }
+</script>
+</head>
+
+<body text="#000000" bgcolor="#FFFFFF" onload="loaded();">
+  <table cellspacing="0" cellpadding="0" width="100%" border="2">
+    <tbody>
+      <tr>
+        <td valign="top" width="100%" height="95">
+          <table cellspacing="0" cellpadding="0" width="100%" border="0">
+            <colgroup>
+              <col width="1">
+              <col width="*">
+            </colgroup>
+
+            <tbody>
+              <tr bgcolor="#A90101">
+                <td align="left"><a href="http://www.cancer.gov" target="_blank"><img src="brandtype.gif" border="0"></a></td>
+
+                <td align="right"><a href="http://www.cancer.gov" target="_blank"><img src="tagline_nologo.gif" border="0"></a></td>
+              </tr>
+
+              <tr>
+                <td colspan="2"><a href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr" target="_blank"><img alt="caDSR Logo" src="curation_banner2.gif" border="0"></a></td>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                  <table style="BORDER-COLLAPSE: collapse">
+                    <colgroup>
+                      <col>
+                      <col>
+                    </colgroup>
+
+                    <tbody>
+                      <tr>
+                        <td style="PADDING-RIGHT: 1in; PADDING-LEFT: 0in; PADDING-BOTTOM: 0in; PADDING-TOP: 0in">User&nbsp;Name&nbsp;:&nbsp;sbrext</td>
+
+                        <td style="PADDING-RIGHT: 0in; PADDING-LEFT: 0in; PADDING-BOTTOM: 0in; PADDING-TOP: 0in"><img alt="Menu Bar" src="menubar.gif" border="0"></td>
+                      </tr>
+                    </tbody>
+										
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top" width="100%">
+          <br>
+          <table width="100%" border="0">
+            <colgroup>
+              <col>
+            </colgroup>
+
+            <tbody>
+              <tr>
+                <td><b><font size="3">Edit <font color="#FF3300">Value Meaning</font></font></b> <font size="2">abdomen/pelvis [2575604v.1.0]</font></td>
+              </tr>
+
+              <tr>
+                <td height="10"></td>
+              </tr>
+
+              <tr>
+                <td>
+                  <table width="100%" border="0">
+                    <tbody>
+                      <tr>
+                        <td valign="top" align="left" height="26"><input style="WIDTH: 125px"  onclick=
+                        "window.open('Validate_VM_No_Concepts.htm')" type="button" value="Validate" name="btnValidate"> &nbsp;&nbsp; <input style="WIDTH: 125px" onclick="ClearBoxes();" type="button" value=
+                        "Clear" name="btnClear"> &nbsp;&nbsp; <input style="WIDTH: 125px" onclick="Back();" type="button" value="Back" name="btnBack"> &nbsp;&nbsp; <input style="WIDTH: 190px" 
+                         onclick="openDesignateWindow('Alternate Names');" type="button" value="Alternate Name/Definition" name=
+                        "btnAltName"> &nbsp;&nbsp; <input style="WIDTH: 140px" onclick=
+                        "openDesignateWindow('Reference Documents');" type="button" value="Suggest to EVS" name="btnRefDoc"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <table style="WIDTH: 100%; BORDER-COLLAPSE: collapse">
+                    <colgroup>
+                      <col style="WIDTH: 5%">
+                      <col style="WIDTH: 12%">
+                      <col>
+                    </colgroup>
+
+                    <tbody>
+                      <tr>
+                        <td class="taby" id="detailstd" onclick="tabSetFocus(this, details);"><b>Details</b></td>
+
+                        <td class="tabx" id="usetd" onclick="tabSetFocus(this, use);"><b>Where Used</b></td>
+
+                        <td style="BORDER-BOTTOM: black 2px solid" valign="center" align="left"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <div style="BORDER-RIGHT: black 2px solid; BORDER-LEFT: black 2px solid; WIDTH: 100%; BORDER-BOTTOM: black 2px solid">
+                    <div id="details">
+                      
+											<br>
+
+                      <div style="DISPLAY: inline; MARGIN-LEFT: 0.05in; MARGIN-RIGHT: 1in">
+                        <b>Long Name</b>
+                      </div>
+											
+											<br>
+
+                      <div style="DISPLAY: inline; MARGIN-LEFT: 0.15in; MARGIN-RIGHT: 1in; padding : 3px; WIDTH: 30%; border: black 2px solid; border-color: #d3d3d3" >
+													 abdomen/pelvis
+					 						</div>
+											
+											<br><br>
+
+                      <div style="DISPLAY: inline; MARGIN-LEFT: 0.05in; MARGIN-RIGHT: 1in">
+                        <b>Manually Curated Definition/Description</b>
+                      </div>
+											
+											<br>
+											
+                      &nbsp;&nbsp;&nbsp;&nbsp; 
+                      <textarea id="Def1" style="WIDTH: 97%" rows="4">abdomen/pelvis
+											</textarea>
+											
+											<br>
+											<div style="DISPLAY: inline; MARGIN-LEFT: 0.05in; MARGIN-RIGHT: 1in">
+					  							 <b>Change Note</b> <span style="padding-left: 1.5in"> </span>
+											</div>
+											
+                      <br>
+                      &nbsp;&nbsp;&nbsp;&nbsp;
+                      <textarea  rows="2" style= "width:97%">
+											</textarea>
+											
+											<br><br>
+                      <hr>
+
+                      <div style="DISPLAY: inline; MARGIN-LEFT: 0.05in; MARGIN-RIGHT: 1in">
+                        <b>Concepts</b>
+                      </div>
+
+                      <div style="DISPLAY: inline; MARGIN-LEFT: 0.1in">
+                        <a title="Search" href="">Search</a>
+                      </div>
+											
+											<br><br>
+											
+                    </div><!-- end details tab body -->		
+					
+					          <div id="use" style="DISPLAY: none">
+                      <br>
+                      &nbsp;&nbsp;
+											<b>Associated <a title="Form(s)/Template(s)" href="">Form(s)/Template(s)</a>, <a title="Value Domain(s)" href="">Value Domain(s)</a>, <a title="Data Element(s)" href="">Data Element(s)</a></b>
+											<br>
+                      <br>
+					  					&nbsp;&nbsp;
+											All associated items are displayed by default. Click the "Show Released Only" button to display items with a Workflow
+					  					Status of RELEASED only.
+					  					<hr>
+					  					<br>
+											
+											<!--Forms/Templates-->	
+									
+               						 &nbsp;&nbsp;<b><a title="Form(s)/Template(s)" href="">Form(s)/Template(s)</a>:</b>
+								
+													<div style="DISPLAY: inline; MARGIN-LEFT: 0.1in">
+													 			 <input style="WIDTH: 160px"
+                       					  onclick="ShowReleased();" type="button" value="Show Released Only" name="btnshowRELCRF">
+                					</div>
+									
+													<br>
+                                
+															<div style="MARGIN-LEFT: 0.1in; MARGIN-RIGHT: 0in">
+                      	 				<table style="BORDER-COLLAPSE: collapse" width="100%" cellpadding="5;0;0;0" border="0">
+                                    <!--<colgroup>
+                                      <col width="15%">
+                                      <col width="6%">
+                                      <col width="4%">
+                                      <col width="11%">
+                                      <col width="4%">
+                                      <col width="6%">
+                                      <col width="6%">
+									  									<col width="15%">
+									 										 <col width="15%">
+                                    </colgroup>-->
+
+                                    <tbody>
+                                      <tr>
+                                        <th align="left"><a title="Long Name" href="">Long Name</a></th>
+                                        <th align="left"><a title="Public_ID" href="">Public_ID</a></th>
+                                        <th align="left"><a title="Version" href="">Version</a></th>
+                                        <th align="left"><a title="Workflow Status" href="">Workflow Status</a></th>
+                                        <th align="left"><a title="Context" href="">Context</a></th>
+																				<th align="left"><a title="Type" href="">Type</a></th>
+                                        <th align="left"><a title="Category" href="">Category</a></th>
+                                        <th align="left"><a title="Protocol Long Name" href="">Protocol Long Name</a></th>
+																				<th align="left"><a title="Protocol ID" href="">Protocol ID</a></th>
+                                      </tr>
+
+                                      <tr bgcolor="#ECE9D8">
+                                        <td>EXTENT OF DISEASE</td>
+                                        <td align="left">2411517</td>
+                                        <td align="left">1.0</td>
+                                        <td align="left">RELEASED</td>
+                                        <td align="left">caBIG</td>
+																				<td align="left">CRF</td>
+                                        <td align="left">Response</td>
+                                        <td align="left">C3D Adopter Template Forms</td>
+																				<td align="left">C3D ATF</td>
+                                      </tr>
+
+                                      <tr>
+                                        <td>PRIOR SURGERY SUPPLEMENT</td>
+                                        <td align="left">2398212</td>
+                                        <td align="left">1.0</td>
+                                        <td align="left">RELEASED</td>
+                                        <td align="left">caBIG</td>
+																				<td align="left">CRF</td>
+                                        <td align="left">Pre-Study</td>
+                                        <td align="left">C3D Adopter Template Forms</td>
+																				<td align="left">C3D ATF</td>
+                                      </tr>
+
+                                      <tr bgcolor="#ECE9D8">
+                                        <td>PROCEDURES</td>
+                                        <td align="left">2406656</td>
+                                        <td align="left">1.0</td>
+                                        <td align="left">RELEASED</td>
+                                        <td align="left">caBIG</td>
+																				<td align="left">CRF</td>
+                                        <td align="left">On-Study</td>
+                                        <td align="left">C3D Adopter Template Forms</td>
+																				<td align="left">C3D ATF</td>
+                                      </tr>
+
+                                      <tr>
+                                        <td>SURVIVAL</td>
+                                        <td align="left">2407587</td>
+                                        <td align="left">1.0</td>
+                                        <td align="left">RELEASED</td>
+                                        <td align="left">caBIG</td>
+																				<td align="left">CRF</td>
+                                        <td align="left">Follow-Up</td>
+                                        <td align="left">C3D Adopter Template Forms</td>
+																				<td align="left">C3D ATF</td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+																<br>
+                  <hr>
+									<br>
+											
+																	<!--Value Domain-->
+                      &nbsp;&nbsp;<b><a title="Value Domain(s)" href="">Value Domain(s)</a>:</b>
+					 						<div style="DISPLAY: inline; MARGIN-LEFT: 0.1in">
+					  							 <input style="WIDTH: 160px"
+                        	 onclick="ShowReleased();" type="button" value="Show Released Only" name="btnshowRELVD">
+                      </div>
+											
+					  					<br>
+											
+                      <div style="MARGIN-LEFT: 0.1in; MARGIN-RIGHT: 0in">
+                        <table style="BORDER-COLLAPSE: collapse" width="100%" border="0">
+                          <colgroup>
+                            <col width="40%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="20%">
+                            <col width="20%">
+                          </colgroup>
+
+                          <tbody>
+                            <tr>
+                              <th align="left" height="25"><a title="Long Name" href="">Long Name</a></th>
+                              <th align="left"><a title="Public_ID" href="">Public_ID</a></th>
+                              <th align="left"><a title="Version" href="">Version</a></th>
+                              <th align="left"><a title="Workflow Status" href="">Workflow Status</a></th>
+                              <th align="left"><a title="Context" href="">Context</a></th>
+                            </tr>
+                            <tr>
+                              <td colspan="5">
+                                <table style="BORDER-COLLAPSE: collapse" width="100%" border="0">
+                                  <colgroup>
+                                    <col width="40%">
+                            				<col width="10%">
+                            				<col width="10%">
+                            				<col width="20%">
+																		<col width="20%">
+                                  </colgroup>
+
+                                  <tbody>
+                                    <tr bgcolor="#ECE9D8">
+                                      <td align="left" valign="bottom" height="20">Anatomic Site Name</td>
+                                      <td align="left" valign="bottom" height="20">2017282</td>
+									  									<td align="left" valign="bottom" height="20">1.1</td>
+                                      <td align="left" valign="bottom" height="20">RELEASED</td>
+                                      <td align="left" valign="bottom" height="20">CCR</td>
+                                    </tr>
+
+                                    <tr bgcolor="#ECE9D8">
+                                      <td colspan="5">
+                                        <div style="MARGIN-LEFT: 0.1in; MARGIN-RIGHT: 0in">
+                                          <b>Definition:</b>
+                                        </div>
+                                      </td>
+                                    </tr>
+
+                                    <tr bgcolor="#ECE9D8">
+                                      <td colspan="5" height="20" valign="top">
+                                        <div style="MARGIN-LEFT: 0.1in; MARGIN-RIGHT: 0in">
+                                          Name of the organ site (single) within the body; may be referenced in primary site of disease, surgical intervention, or extent of disease documentation.
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+															</td>
+														</tr>
+						</table>
+						</div>
+										<br>
+														<hr>
+														<br>	
+											
+											<!--Data Element-->
+					  					&nbsp;&nbsp;
+											<b><a title="Data Element(s)" href="">Data Element(s)</a>:</b>
+											
+					  					<div style="DISPLAY: inline; MARGIN-LEFT: 0.1in">
+					  							 <input style="WIDTH: 175px"
+                        	 onclick="ShowReleased();" type="button" value="Show Released Only" name="btnshowRELDE">
+                      </div>
+											
+					  					<br>
+											
+					  					<div style="MARGIN-LEFT: 0.1in; MARGIN-RIGHT: 0in">
+                        <table style="BORDER-COLLAPSE: collapse" width="100%" border="0">
+                          <colgroup>
+                            <col width="40%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="20%">
+                            <col width="20%">
+                          </colgroup>
+													
+						 							<tbody>
+                            <tr>
+                              <th align="left" height="25"><a title="Long Name" href=""> Long Name</a></th>
+                              <th align="left"><a title="Public_ID" href="">Public_ID</a></th>
+                              <th align="left"><a title="Version" href="">Version</a></th>
+                              <th align="left"><a title="Workflow Status" href="">Workflow Status</a></th>
+                              <th align="left"><a title="Context" href="">Context</a></th>
+                            </tr>
+														
+                            <tr>
+                              <td colspan="5">
+                                <table style="BORDER-COLLAPSE: collapse" width="100%" border="0">
+                                  <colgroup>
+                                    <col width="40%">
+                            				<col width="10%">
+                            				<col width="10%">
+                            				<col width="20%">
+																		<col width="20%">
+                                  </colgroup>
+
+                                  <tbody>
+                                    <tr bgcolor="#ECE9D8">
+                                      <td align="left" valign="bottom" height="20">Anatomic Site Name</td>
+                                      <td align="left" valign="bottom" height="20"><a title="2003987" a href="">2003987</a></td>
+									  									<td align="left" valign="bottom" height="20">2.0</td>
+                                      <td align="left" valign="bottom" height="20">RELEASED</td>
+                                      <td align="left" valign="bottom" height="20">CCR</td>
+                                    </tr>
+
+                                    <tr bgcolor="#ECE9D8">
+                                      <td colspan="5">
+                                        <div style="MARGIN-LEFT: 0.1in; MARGIN-RIGHT: 0in">
+                                          <b>Definition:</b>
+                                        </div>
+                                      </td>
+                                    </tr>
+
+                                    <tr bgcolor="#ECE9D8">
+                                      <td colspan="5" height="20" valign="top">
+                                        <div style="MARGIN-LEFT: 0.1in; MARGIN-RIGHT: 0in">
+                                          Text name of an anatomic organ site (single) within the body; 
+										  										may be referenced in primary site of disease, surgical intervention, or extent of disease documentation.
+                                        </div>
+                                      </td>
+                                    </tr>									
+                                  </tbody>
+								  
+								  								<tbody>
+                                    <tr>
+                                      <td align="left" valign="bottom" height="20">Autopsy Sites of Disease Name</td>
+                                      <td align="left" valign="bottom" height="20"><a title"2004156" a href="">2004156</a></td>
+									  									<td align="left" valign="bottom" height="20">4.0</td>
+                                      <td align="left" valign="bottom" height="20">RELEASED</td>
+                                      <td align="left" valign="bottom" height="20">CCR</td>
+                                    </tr>
+
+                                    <tr>
+                                      <td colspan="5">
+                                        <div style="MARGIN-LEFT: 0.1in; MARGIN-RIGHT: 0in">
+                                          <b>Definition:</b>
+                                        </div>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td colspan="5" height="20" valign="top">
+                                        <div style="MARGIN-LEFT: 0.1in; MARGIN-RIGHT: 0in">
+                                          Text names of natomic sites that are involved with the 
+										  										disease/condition under study at the time of death, and 
+										  										confirmed upon autopsy.
+                                        </div>
+                                      </td>
+                                    </tr>
+																	</tbody>
+																	
+																	<tbody>
+                                    <tr bgcolor="#ECE9D8">
+                                      <td align="left" valign="bottom" height="20">Chronic Graft Versus Host Disease Assessment Anatomic Site Name</td>
+                                      <td align="left" valign="bottom" height="20"><a title="2180969" a href="">2180969</a></td>
+									  									<td align="left" valign="bottom" height="20">2.0</td>
+                                      <td align="left" valign="bottom" height="20">RELEASED</td>
+                                      <td align="left" valign="bottom" height="20">CCR</td>
+                                    </tr>
+
+                                    <tr bgcolor="#ECE9D8">
+                                      <td colspan="5">
+                                        <div style="MARGIN-LEFT: 0.1in; MARGIN-RIGHT: 0in">
+                                          <b>Definition:</b>
+                                        </div>
+                                      </td>
+                                    </tr>
+
+                                    <tr bgcolor="#ECE9D8">
+                                      <td colspan="5" height="20" valign="top">
+                                        <div style="MARGIN-LEFT: 0.1in; MARGIN-RIGHT: 0in">
+                                          Text name(s) of the anatomic sites of the transplant recipient 
+										  										involved with chronic Graft versus Host Disease (GVHD).
+                                        </div>
+                                      </td>
+                                    </tr>									
+                                  </tbody>
+								
+																	<tbody>
+                                    <tr>
+                                      <td align="left" valign="bottom" height="20">Anatomic Assessment Site</td>
+                                      <td align="left" valign="bottom" height="20"><a title="65372" a href="">65372</a></td>
+									  									<td align="left" valign="bottom" height="20">4.0</td>
+                                      <td align="left" valign="bottom" height="20">RETIRED ARCHIVED</td>
+                                      <td align="left" valign="bottom" height="20">CTEP</td>
+                                    </tr>
+
+                                    <tr>
+                                      <td colspan="5">
+                                        <div style="MARGIN-LEFT: 0.1in; MARGIN-RIGHT: 0in">
+                                          <b>Definition:</b>
+                                        </div>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td colspan="5" height="20" valign="top">
+                                        <div style="MARGIN-LEFT: 0.1in; MARGIN-RIGHT: 0in">
+                                          a field which identifies a specific anatomic site.
+                                        </div>
+                                      </td>
+                                    </tr>									
+                                  </tbody>
+								
+																	<tbody>
+                                    <tr bgcolor="#ECE9D8">
+                                      <td align="left" valign="bottom" height="20">Body Site</td>
+                                      <td align="left" valign="bottom" height="20"><a title="2008494" a href="">2008494</a></td>
+									 										<td align="left" valign="bottom" height="20">1.0</td>
+                                      <td align="left" valign="bottom" height="20">RETIRED DELETED</td>
+                                      <td align="left" valign="bottom" height="20">CCR</td>
+                                    </tr>
+
+                                    <tr bgcolor="#ECE9D8">
+                                      <td colspan="5">
+                                        <div style="MARGIN-LEFT: 0.1in; MARGIN-RIGHT: 0in">
+                                          <b>Definition:</b>
+                                        </div>
+                                      </td>
+                                    </tr>
+
+                                    <tr bgcolor="#ECE9D8">
+                                      <td colspan="5" height="20" valign="top">
+                                        <div style="MARGIN-LEFT: 0.1in; MARGIN-RIGHT: 0in">
+                                          Site of the body being evaluated.
+                                        </div>
+                                      </td>
+                                    </tr>									
+                                  </tbody>
+							
+								
+                                </table>             
+                              </td>
+														</tr>
+						</table>
+						</div>
+						                   </div
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>
