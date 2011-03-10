@@ -10,7 +10,7 @@
 	<!-- set global properties for this build  -->
 	<tstamp/>
 	
-	<property name="appl.release" value="4.0.3" />
+	<property name="appl.release" value="4.1" />
 	<property name="appl.version" value="${appl.release}.${DSTAMP}${TSTAMP}"/>
 		
 	<property name="PROP.FILE" location="DEV.build.properties" />
