@@ -33,6 +33,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             <curate:header displayUser = "false"/>
         <!-- Main Area -->
     
+        <%=path %>
+        <%=basePath %>
         
       <form name="columnSubmission" method="post" action="../../cdecurate/NCICurationServlet?reqType=cdlColumns">
             <input type="hidden" name="cdlColumns" value=""/>
