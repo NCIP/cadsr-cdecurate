@@ -203,7 +203,17 @@ public class NCICurationServlet extends HttpServlet
         	String reqType = req.getParameter("reqType");
         	HttpSession session = req.getSession();
         	String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
-        	if((menuAction == null) && !(reqType.equals("homePage")) && !(reqType.equals("login"))&& !(reqType.equals("view")) && !(reqType.equals("viewVDPVSTab"))&& !(reqType.equals("viewVMAction")) && !(reqType.equals("viewPVAction")) && !(reqType.equals("getAltNames")) && !(reqType.equals("getRefDocument"))){
+        	if((menuAction == null) 
+        			&& !(reqType.equals("homePage")) 
+        			&& !(reqType.equals("login"))
+        			&& !(reqType.equals("view")) 
+        			&& !(reqType.equals("viewVDPVSTab"))
+        			&& !(reqType.equals("viewVMAction")) 
+        			&& !(reqType.equals("viewPVAction")) 
+        			&& !(reqType.equals("getAltNames")) 
+        			&& !(reqType.equals("getRefDocument")) 
+        			&& !(reqType.equals("jsonRequest")) 
+        			&& !(reqType.equals("showDEfromOutside"))) {
 				RequestDispatcher rd = this.getServletContext().getRequestDispatcher("/");
 				rd.forward(req, res);
 				return;
