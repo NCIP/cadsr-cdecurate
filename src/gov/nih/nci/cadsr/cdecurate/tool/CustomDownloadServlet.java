@@ -28,6 +28,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 public class CustomDownloadServlet extends CurationServlet {
 
 	 public static final Logger logger = Logger.getLogger(CustomDownloadServlet.class.getName());
+	 
+	 private static final int GRID_MAX_DISPLAY = 100;
 
 	 public CustomDownloadServlet() {
 		}
@@ -53,7 +55,8 @@ public class CustomDownloadServlet extends CurationServlet {
 				returnJSONFromSession("Layout");
 				break;
 			case cdlColumns:
-				createDownloadColumns("Excel");
+				ArrayList<String[]> downloadRows = doDownload(false, false);
+				createDownloadColumns(downloadRows, "Excel");
 				break;
 			case createExcelDownload:
 				createDownload();
@@ -62,29 +65,31 @@ public class CustomDownloadServlet extends CurationServlet {
 				prepDisplayPage("VD"); 
 				break;
 			case createFullDEDownload:
-				prepDisplayPage("F-DE");
+				//prepDisplayPage("F-DE");
+				setDownloadIDs("DE",false);
+				setColHeadersAndTypes("DE");
+				ArrayList<String[]> allRows = doDownload(true, false);
+				createDownloadColumns(allRows, "Excel");
 				break;
 			}	
 	}
 	
 	private void prepDisplayPage(String type) {
 		
-		//Set of all param names, this will have CK (checked) indexes indicating which Search ID is checked.
-		
-		boolean full = false;
 		boolean outside = false;
-		if (type.startsWith("F")){
-			type = type.substring(2);
-			full = true;
-		} else if (type.startsWith("O")){
+		if (type.startsWith("O")){
 			type = type.substring(2);
 			outside = true;
 		}
 		
+		setDownloadIDs(type, outside);
+		setColHeadersAndTypes(type);
+		
+		ForwardJSP(m_classReq, m_classRes, "/CustomDownload.jsp");
+	}
+	
+	private void setDownloadIDs(String type, boolean outside) {
 		ArrayList<String> downloadID = new ArrayList<String>();
-		StringBuffer whereBuffer = null;
-		StringBuffer[] whereBuffers = null;
-
 		
 		if (!outside) {
 			Set<String> paramNames = this.m_classReq.getParameterMap().keySet();
@@ -102,26 +107,23 @@ public class CustomDownloadServlet extends CurationServlet {
 			for(String id: ids) 
 				downloadID.add(id);
 		}
-		/*		
-		Enumeration<String> attNames = this.m_classReq.getSession().getAttributeNames();
 		
-		System.out.println("******Session Attributes**************");
+		m_classReq.getSession().setAttribute("downloadIDs", downloadID);
+		m_classReq.getSession().setAttribute("downloadType", type);
+	}
+	
+	private ArrayList<String[]> doDownload(boolean full, boolean imposeLimit) {
 		
-		while (attNames.hasMoreElements()) {
-			String name = attNames.nextElement();
-			System.out.print("Name: "+name);
-			System.out.println("  Value: " + this.m_classReq.getSession().getAttribute(name));
-		}
-		*/
-		
-			
-		ArrayList<String> columnHeaders = new ArrayList<String>();
-        ArrayList<String> columnTypes = new ArrayList<String>();
         ArrayList<String[]> rows = new ArrayList<String[]>();
-        HashMap<String,ArrayList<String[]>> typeMap = new HashMap<String,ArrayList<String[]>>();
+        
        	ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = new ArrayList<HashMap<String,ArrayList<String[]>>>();
         HashMap<String,String> arrayColumnTypes = new HashMap<String,String>();
-        
+        StringBuffer whereBuffer = null;
+		StringBuffer[] whereBuffers = null;
+		
+		ArrayList<String> downloadID = (ArrayList<String>)m_classReq.getSession().getAttribute("downloadIDs");
+		String type = (String)m_classReq.getSession().getAttribute("downloadType");
+		
 		 ResultSet rs = null;
 	     PreparedStatement ps = null;
 	     try
@@ -192,8 +194,10 @@ public class CustomDownloadServlet extends CurationServlet {
 		        			sqlStmt =
 		        			"SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW " + "WHERE "+type+"_IDSEQ IN " +
 		        			" ( " + wBuffer.toString() + " )  ";
+		        			if (imposeLimit) sqlStmt += " and ROWNUM <= "+GRID_MAX_DISPLAY;
 		        		} else {
 		        			sqlStmt = "SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW ";
+		        			if (imposeLimit) sqlStmt += " where ROWNUM <= "+GRID_MAX_DISPLAY;
 		        		}
 		                ps = getConn().prepareStatement(sqlStmt);
 		                rs = ps.executeQuery();
@@ -201,22 +205,9 @@ public class CustomDownloadServlet extends CurationServlet {
 		                ResultSetMetaData rsmd = rs.getMetaData();
 		                int numColumns = rsmd.getColumnCount();
 	
-		                
-		                // Get the column names and types; column indices start from 1
-		                for (int i=1; i<numColumns+1; i++) {
-		                    String columnName = rsmd.getColumnName(i);
-		                    columnHeaders.add(columnName);
-		                    
-		                    String columnType = rsmd.getColumnTypeName(i);
-		                    
-		                    //System.out.println(columnName+"-"+columnType);
-		                    if (columnType.endsWith("_T") && !typeMap.containsKey(columnType)) {
-		                    		columnTypes.add(i+":"+columnType);
-			                    	typeMap.put(i+":"+columnType,null);
-		                    	
-		                    } else
-		                    	columnTypes.add(columnType);
-		                }        
+		                ArrayList<String> columnTypes = (ArrayList<String>)m_classReq.getSession().getAttribute("types");
+		                HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String, ArrayList<String[]>>)m_classReq.getSession().getAttribute("typeMap");
+		                     
 		                
 		                while (rs.next()) {
 		                	String[] row = new String[numColumns];
@@ -313,14 +304,10 @@ public class CustomDownloadServlet extends CurationServlet {
 			                	typeMap.put(typeKey, typeBreakdown);
 		                	}
 		                }
-
-			    	 	rs.close();
-			        	ps.close();
+		                m_classReq.getSession().setAttribute("typeMap", typeMap);
+			    	 	
 	            	}
-	                m_classReq.getSession().setAttribute("headers",columnHeaders);
-	                m_classReq.getSession().setAttribute("types", columnTypes);
-	                m_classReq.getSession().setAttribute("rows", rows);
-	                m_classReq.getSession().setAttribute("typeMap", typeMap);
+	            	
 	                m_classReq.getSession().setAttribute("arrayData", arrayData);
 	                m_classReq.getSession().setAttribute("arrayColumnTypes", arrayColumnTypes);
 	                
@@ -328,12 +315,52 @@ public class CustomDownloadServlet extends CurationServlet {
 	        	
 	        } catch (Exception e) {
 	        	e.printStackTrace();
-	        } 
+	        } finally {
+	        	if (rs!=null) try{rs.close();}catch(Exception e) {}
+	        	if (ps!=null) try{ps.close();}catch(Exception e) {}
+	        }
 	        
-		if (!full)
-			ForwardJSP(m_classReq, m_classRes, "/CustomDownload.jsp");
-		else 
-			createDownloadColumns("Excel");
+	        return rows;
+	}
+	
+	private void setColHeadersAndTypes(String type)  {
+		ArrayList<String> columnHeaders = new ArrayList<String>();
+        ArrayList<String> columnTypes = new ArrayList<String>();
+        HashMap<String,ArrayList<String[]>> typeMap = new HashMap<String,ArrayList<String[]>>();
+        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+        	String qry = "SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW where 1=2";
+            ps = getConn().prepareStatement(qry);
+            rs = ps.executeQuery();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            
+    		int numColumns = rsmd.getColumnCount();
+    		// Get the column names and types; column indices start from 1
+            for (int i=1; i<numColumns+1; i++) {
+                String columnName = rsmd.getColumnName(i);
+                columnHeaders.add(columnName);
+                
+                String columnType = rsmd.getColumnTypeName(i);
+                
+                if (columnType.endsWith("_T") && !typeMap.containsKey(columnType)) {
+                		columnTypes.add(i+":"+columnType);
+                    	typeMap.put(i+":"+columnType,null);
+                	
+                } else
+                	columnTypes.add(columnType);
+            }
+        } catch (Exception e) {
+        	e.printStackTrace();
+        } finally {
+        	if (rs!=null) try{rs.close();}catch(Exception e) {}
+        	if (ps!=null) try{ps.close();}catch(Exception e) {}
+        }
+        
+        m_classReq.getSession().setAttribute("headers",columnHeaders);
+        m_classReq.getSession().setAttribute("types", columnTypes);
+        m_classReq.getSession().setAttribute("typeMap", typeMap);
 	}
 	
 	private ArrayList<String[]> getType(String type) {
@@ -384,10 +411,12 @@ public class CustomDownloadServlet extends CurationServlet {
 	
 	
 	private void returnJSONFromSession(String JSPName) {
+		ArrayList<String[]> displayRows = doDownload(false, false);
+		m_classReq.getSession().setAttribute("rows", displayRows);
 		ForwardJSP(m_classReq, m_classRes, "/JSON"+JSPName+".jsp");
     }
 	
-	private void createDownloadColumns(String type){
+	private void createDownloadColumns(ArrayList<String[]> allRows, String type){
 		
 		
 		boolean XML = false;
@@ -399,12 +428,18 @@ public class CustomDownloadServlet extends CurationServlet {
 		
 		ArrayList<String> allHeaders = (ArrayList<String>) m_classReq.getSession().getAttribute("headers");
 		ArrayList<String> allTypes = (ArrayList<String>) m_classReq.getSession().getAttribute("types");
-		ArrayList<String[]> allRows = (ArrayList<String[]>) m_classReq.getSession().getAttribute("rows");
 		HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String,ArrayList<String[]>>) m_classReq.getSession().getAttribute("typeMap");
 		ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = (ArrayList<HashMap<String,ArrayList<String[]>>>) m_classReq.getSession().getAttribute("arrayData"); 
 		HashMap<String, String> arrayColumnTypes = (HashMap<String,String>) m_classReq.getSession().getAttribute("arrayColumnTypes");
 		
-		String[] columns = colString.split(",");
+		String[] columns = null;
+		if (colString != null && !colString.trim().equals("")) {
+			columns = colString.split(",");
+		}
+		else {
+			columns = allHeaders.toArray(new String[allHeaders.size()]);
+		}
+		
 		int[] colIndices = new int[columns.length];
 		for (int i=0; i < columns.length; i++) {
 			String colName = columns[i];
