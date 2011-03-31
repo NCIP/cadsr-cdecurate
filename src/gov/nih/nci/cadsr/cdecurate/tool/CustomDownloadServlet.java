@@ -25,11 +25,18 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
+
+
+
 public class CustomDownloadServlet extends CurationServlet {
 
 	 public static final Logger logger = Logger.getLogger(CustomDownloadServlet.class.getName());
 	 
 	 private static final int GRID_MAX_DISPLAY = 100;
+	 private static int MAX_DOWNLOAD = 0;
 
 	 public CustomDownloadServlet() {
 		}
@@ -37,6 +44,21 @@ public class CustomDownloadServlet extends CurationServlet {
 	public CustomDownloadServlet(HttpServletRequest req, HttpServletResponse res,
 				ServletContext sc) {
 			super(req, res, sc);
+			GetACService getAC = new GetACService(req, res, this);
+			
+			if (this.MAX_DOWNLOAD == 0) { 
+				Vector vList = getAC.getToolOptionData("CURATION", "CUSTOM_DOWNLOAD_LIMIT", "");
+				
+				if (vList != null && vList.size()>0)
+			      {
+			        TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
+			        if (tob != null){
+			        	this.MAX_DOWNLOAD = Integer.valueOf(tob.getVALUE());
+			        	System.out.println("DL Limit: "+tob.getVALUE());
+			        	
+			        }
+			      }
+			}
 		}
     
 	public void execute(ACRequestTypes reqType) throws Exception {	
@@ -54,9 +76,12 @@ public class CustomDownloadServlet extends CurationServlet {
 			case jsonLayout:
 				returnJSONFromSession("Layout");
 				break;
-			case cdlColumns:
+			case dlExcelColumns:
 				ArrayList<String[]> downloadRows = doDownload(false, false);
 				createDownloadColumns(downloadRows, "Excel");
+				break;
+			case dlXMLColumns:
+				createDownloadColumns(null, "XML");
 				break;
 			case createExcelDownload:
 				createDownload();
@@ -423,6 +448,8 @@ public class CustomDownloadServlet extends CurationServlet {
 		if (type != null && type.equals("XML"))
 			XML = true;
 		
+		Document dom;
+		
 		String colString = (String) this.m_classReq.getParameter("cdlColumns");
 		String fillIn = (String) this.m_classReq.getParameter("fillIn");
 		
@@ -477,78 +504,94 @@ public class CustomDownloadServlet extends CurationServlet {
         
         try {
         
-        for (int i = 0; i < allRows.size(); i++, rownum++) {
-        	//Check if row already exists
-        	int maxBump = 0;
-        	if (sheet.getRow(rownum+bump) == null)
-        		row = sheet.createRow(rownum+bump);
-        	
-            if(allRows.get(i) == null) continue;
-            
-            for (int j = 0; j < colIndices.length; j++) {
-            	
-                cell = row.createCell(j);
-                String currentType = allTypes.get(colIndices[j]);
-        		if (currentType.endsWith("_T"))
-        		{
-        			//Deal with CS/CSI
-        			String[] originalArrColNames = typeMap.get(currentType).get(0);
-        			
-        			//Find current column in original data
-        			
-        			int originalColumnIndex = -1;
-        			for (int a = 0; a < originalArrColNames.length ; a++) { 
-        				if (columns[j].equals(originalArrColNames[a])){
-        					originalColumnIndex = a;
-        					break;
-        				}
-        			}
-        			
-        			HashMap<String,ArrayList<String[]>> typeArrayData = arrayData.get(i);
-        			ArrayList<String[]> rowArrayData = typeArrayData.get(currentType);
-        			
-        			if (rowArrayData != null) {
-        				int tempBump = 0;
-	        			for (int nestedRowIndex = 0; nestedRowIndex < rowArrayData.size(); nestedRowIndex++) {
-	        				
-	        				
-	        				String[] nestedData = rowArrayData.get(nestedRowIndex);
-        					String data = nestedData[originalColumnIndex];
-        					cell.setCellValue(data);
-        					
-        					tempBump++;
-        				
-	        				if (nestedRowIndex < rowArrayData.size()-1){
-	        					row = sheet.getRow(rownum+bump+tempBump);
-	        		        	if (row == null) {
-	        		        		row = sheet.createRow(rownum+bump+tempBump);
-	        		        	}
-	        		        	
-        		        		cell = row.createCell(j);
-	        		        	
-	        				} else {
-	        					//Go back to top row 
-	        					row = sheet.getRow(rownum + bump);
-	        					if (tempBump > maxBump)
-	        						maxBump = tempBump;
+	        for (int i = 0; i < allRows.size(); i++, rownum++) {
+	        	//Check if row already exists
+	        	int maxBump = 0;
+	        	
+	        	if (sheet.getRow(rownum+bump) == null ) {
+	        		row = sheet.createRow(rownum+bump);
+	        		if (XML){
+	        			
+	        		}//Add DE Element	
+	        	}
+	        	
+	            if(allRows.get(i) == null) continue;
+	            
+	            for (int j = 0; j < colIndices.length; j++) {
+	            	
+	            
+	           		cell = row.createCell(j);
+	            		
+	                String currentType = allTypes.get(colIndices[j]);
+	                
+	                if (currentType.endsWith("_T"))
+	        		{
+	                	
+	                	//Open XML list element
+	        			//Deal with CS/CSI
+	        			String[] originalArrColNames = typeMap.get(currentType).get(0);
+	        			
+	        			//Find current column in original data
+	        			
+	        			int originalColumnIndex = -1;
+	        			for (int a = 0; a < originalArrColNames.length ; a++) { 
+	        				if (columns[j].equals(originalArrColNames[a])){
+	        					originalColumnIndex = a;
+	        					break;
 	        				}
 	        			}
-        			}
-        		} else {
-        			cell.setCellValue(allRows.get(i)[colIndices[j]]);
-        		}
-        
-            }
-            
-            
-            bump = bump + maxBump;
-            
-            if (fillIn != null && (fillIn.equals("true") || fillIn.equals("yes") && bump > 0)) {
-            	sheet = fillInBump(sheet, i, rownum, bump, allRows, allTypes, colIndices);
-            	rownum = rownum + bump;
-            	bump = 0;
-            }
-        }
+	        			
+	        			HashMap<String,ArrayList<String[]>> typeArrayData = arrayData.get(i);
+	        			ArrayList<String[]> rowArrayData = typeArrayData.get(currentType);
+	        			
+	        			if (rowArrayData != null) {
+	        				int tempBump = 0;
+		        			for (int nestedRowIndex = 0; nestedRowIndex < rowArrayData.size(); nestedRowIndex++) {
+		        				
+		        				String[] nestedData = rowArrayData.get(nestedRowIndex);
+	        					String data = nestedData[originalColumnIndex];
+	        					
+	        					cell.setCellValue(data);
+	        					
+	        					if (XML){}
+	        						//Add element and data close element
+	        					
+	        					tempBump++;
+	        				
+		        				if (nestedRowIndex < rowArrayData.size()-1){
+		        					row = sheet.getRow(rownum+bump+tempBump);
+		        		        	if (row == null) {
+		        		        		row = sheet.createRow(rownum+bump+tempBump);
+		        		        	}
+		        		        	
+	        		        		cell = row.createCell(j);
+		        		        	
+		        				} else {
+		        					//Go back to top row 
+		        					row = sheet.getRow(rownum + bump);
+		        					if (tempBump > maxBump)
+		        						maxBump = tempBump;
+		        				}
+		        			}
+	        			}
+	        			//Close XML List element
+	        		} else {
+	        			
+	        			if (XML) {//Add element and Data, close element
+	        				}
+	        			cell.setCellValue(allRows.get(i)[colIndices[j]]);
+	        		}
+	            }
+	            
+	            
+	            bump = bump + maxBump;
+	            
+	            if (fillIn != null && (fillIn.equals("true") || fillIn.equals("yes") && bump > 0)) {
+	            	sheet = fillInBump(sheet, i, rownum, bump, allRows, allTypes, colIndices);
+	            	rownum = rownum + bump;
+	            	bump = 0;
+	            }
+	        }
         } catch (Exception e){
         	e.printStackTrace();
         }
