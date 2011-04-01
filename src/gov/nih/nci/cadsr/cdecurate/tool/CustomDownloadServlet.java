@@ -77,7 +77,7 @@ public class CustomDownloadServlet extends CurationServlet {
 				returnJSONFromSession("Layout");
 				break;
 			case dlExcelColumns:
-				ArrayList<String[]> downloadRows = doDownload(false, false);
+				ArrayList<String[]> downloadRows = getRecords(false, false);
 				createDownloadColumns(downloadRows, "Excel");
 				break;
 			case dlXMLColumns:
@@ -90,10 +90,9 @@ public class CustomDownloadServlet extends CurationServlet {
 				prepDisplayPage("VD"); 
 				break;
 			case createFullDEDownload:
-				//prepDisplayPage("F-DE");
 				setDownloadIDs("DE",false);
 				setColHeadersAndTypes("DE");
-				ArrayList<String[]> allRows = doDownload(true, false);
+				ArrayList<String[]> allRows = getRecords(true, false);
 				createDownloadColumns(allRows, "Excel");
 				break;
 			}	
@@ -137,221 +136,196 @@ public class CustomDownloadServlet extends CurationServlet {
 		m_classReq.getSession().setAttribute("downloadType", type);
 	}
 	
-	private ArrayList<String[]> doDownload(boolean full, boolean imposeLimit) {
+	private ArrayList<String[]> getRecords(boolean full, boolean restrict) {
 		
         ArrayList<String[]> rows = new ArrayList<String[]>();
         
-       	ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = new ArrayList<HashMap<String,ArrayList<String[]>>>();
-        HashMap<String,String> arrayColumnTypes = new HashMap<String,String>();
-        StringBuffer whereBuffer = null;
-		StringBuffer[] whereBuffers = null;
-		
-		ArrayList<String> downloadID = (ArrayList<String>)m_classReq.getSession().getAttribute("downloadIDs");
-		String type = (String)m_classReq.getSession().getAttribute("downloadType");
-		
+       	ArrayList<HashMap<String,List<String[]>>> arrayData = new ArrayList<HashMap<String,List<String[]>>>();
+        
 		 ResultSet rs = null;
-	     PreparedStatement ps = null;
-	     try
-	        {
-	    	 	if (getConn() == null)
-	                ErrorLogin(m_classReq, m_classRes);
-	            else
-	            {
-	            	boolean first = true;
-	            	
-	            	if (downloadID.size() <= 1000 ){
-	            		whereBuffer = new StringBuffer();
-		        		for (String id:downloadID) {
-		        			
-		        			if (first) {
-		        				whereBuffer.append("'" + id + "'");
-	
-		        				first = false;
-		        			}
-		        			else
-		        			{
-		        				whereBuffer.append(",'" + id + "'");
-		        			}
-		        		}
-	            	} else {
-	            		int buffSize = 0;
-	            		buffSize = (int) Math.ceil(downloadID.size()/1000) + 1;
-	            		whereBuffers = new StringBuffer[buffSize];
-	            		int counter = 0;
-	            		whereBuffer = new StringBuffer();
-	            		
-	            		for (String id:downloadID) {
-		        			
-		        			if (first) {
-		        				whereBuffer.append("'" + id + "'");
-	
-		        				first = false;
-		        			}
-		        			else
-		        			{
-		        				whereBuffer.append(",'" + id + "'");
-		        			}
-		        			
-		        			counter++;
-		        			
-		        			if (counter%1000 == 0) {
-		        				first = true;
-		        				whereBuffers[counter/1000 - 1] = whereBuffer;
-		        				whereBuffer = new StringBuffer();
-		        			}
-		        				
-		        		}
-	            		
-	            	}
-	            	
-	            	
-	            	int rowNum = 0;
-	            	
-	            	if (whereBuffers == null) {
-	            		whereBuffers = new StringBuffer[1];
-	            		whereBuffers[0] = whereBuffer;
-	            	}
-	            	
-	            	for (StringBuffer wBuffer: whereBuffers) {
-	            		
-	            		String sqlStmt = null;
-		        		if (!full){
-		        			sqlStmt =
-		        			"SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW " + "WHERE "+type+"_IDSEQ IN " +
-		        			" ( " + wBuffer.toString() + " )  ";
-		        			if (imposeLimit) sqlStmt += " and ROWNUM <= "+GRID_MAX_DISPLAY;
-		        		} else {
-		        			sqlStmt = "SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW ";
-		        			if (imposeLimit) sqlStmt += " where ROWNUM <= "+GRID_MAX_DISPLAY;
-		        		}
+		 PreparedStatement ps = null;
+		 try {
+			 	if (getConn() == null) {
+			 		ErrorLogin(m_classReq, m_classRes);
+			 	} else {
+		        	int rowNum = 0;
+		        	List<String> sqlStmts = getSQLStatements(full, restrict);
+		        	for (String sqlStmt: sqlStmts) {
 		                ps = getConn().prepareStatement(sqlStmt);
 		                rs = ps.executeQuery();
 		                	
 		                ResultSetMetaData rsmd = rs.getMetaData();
 		                int numColumns = rsmd.getColumnCount();
-	
+		
 		                ArrayList<String> columnTypes = (ArrayList<String>)m_classReq.getSession().getAttribute("types");
 		                HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String, ArrayList<String[]>>)m_classReq.getSession().getAttribute("typeMap");
-		                     
 		                
-		                while (rs.next()) {
-		                	String[] row = new String[numColumns];
-		                	HashMap<String,ArrayList<String[]>> typeArrayData = null;
-		                	
-		                	for (int i=0; i<numColumns; i++) {
-		                		ArrayList<String[]> rowArrayData = new ArrayList<String[]>();
-		                		
-		                		if (columnTypes.get(i).endsWith("_T"))
-		                		{
-		                			Array array = null;
-		    						if (columnTypes.get(i).indexOf("DERIVED") > 0) {
-		    							
-		    							Struct struct =
-		    								(Struct)rs.getObject(i+1);
-		    							
-		    							Object[] valueStruct = struct.getAttributes();
-		    							array = (Array) valueStruct[5];
-		    						} else {
-		    							array = rs.getArray(i+1);
-		    						}
-		    						
-		    						if (array != null) {
-		    							ResultSet nestedRs = array.getResultSet(); 
-	
-		    							while (nestedRs.next()) {
-			    							Struct valueStruct = (Struct) nestedRs.getObject(2);
-											Object[] valueDatum = valueStruct.getAttributes();
-											String[] values = new String[valueDatum.length];
-											int slide = 0;
-											for (int a = 0; a < valueDatum.length; a++) {
-												if (valueDatum[a] != null) {
-													Class c = valueDatum[a].getClass();
-													String s = c.getName();
-													
-													if (c.getName().toUpperCase().contains("STRUCT"))
-													{
-														Struct str = (Struct) valueDatum[a];
-														Object[] strValues = str.getAttributes();
-														values = new String[valueDatum.length+strValues.length];
-														for (int b = 0; b < strValues.length; b++){
-															values[b] = strValues[b].toString();
-															slide++;
-														}
-													}
-													else {
-														values[a+slide]= valueDatum[a].toString();
-													}
-														
-												} else 
-													values[a]= "";
-											}
-											rowArrayData.add(values);
-											//System.out.println(columnHeaders.get(i)+":"+columnTypes.get(i) + ":" + Arrays.toString(values));
-		    							}
-		    							if (typeArrayData == null) {
-		    								typeArrayData = new HashMap<String,ArrayList<String[]>>();
-		    							}
-		    							typeArrayData.put(columnTypes.get(i), rowArrayData);
-		    						}
-		                		} else {
-		                			
-		                			row[i] = rs.getString(i+1);
-		                			//System.out.println(columnHeaders.get(i)+":"+columnTypes.get(i) + ":" + rs.getString(i+1));
-		                		}
-		                	}
-		                	//If there were no arrayData added, add null to keep parity with rows.
-		                	if (typeArrayData == null)
-		                		arrayData.add(null);
-		                	else
-		                		arrayData.add(rowNum, typeArrayData);
-		                	
-		                	
-		                	
+			            while (rs.next()) {
+			            	String[] row = new String[numColumns];
+			            	HashMap<String,List<String[]>> typeArrayData = null;
+			            	
+			            	for (int i=0; i<numColumns; i++) {
+			            		if (columnTypes.get(i).endsWith("_T")) {
+			            			List<String[]> rowArrayData = getRowArrayData(rs, columnTypes.get(i), i);
+			            			
+			            			if (typeArrayData == null) {
+			            				typeArrayData = new HashMap<String,List<String[]>>();
+			            			}
+			            			typeArrayData.put(columnTypes.get(i), rowArrayData);
+			            		} else {
+			            			row[i] = rs.getString(i+1);
+			            		}
+			            	}
+			            	//If there were no arrayData added, add null to keep parity with rows.
+			            	if (typeArrayData == null) {
+			            		arrayData.add(null);
+			            	}	
+			            	else {
+			            		arrayData.add(rowNum, typeArrayData);
+			            	}
+			            	
 		                	rows.add(row);
 		                	rowNum++;
-		                }
-		                
-		                Iterator<String> iter = typeMap.keySet().iterator();
-		                
-		                while (iter.hasNext()) {
-		                	String typeKey = iter.next();
-		                	if (typeMap.get(typeKey) == null) {
-				                ArrayList<String[]> typeBreakdown = getType(typeKey);
-			                	if (typeBreakdown.size() >0) {
-			                    	String[] typeColNames = typeBreakdown.get(0);
-			                    	String[] typeColTypes = typeBreakdown.get(1);
-			                    	
-			                    	for (int c = 0; c<typeColNames.length; c++) {
-			                    		arrayColumnTypes.put(typeColNames[c], typeKey);
-			                    		//System.out.println("-"+typeColNames[c]+":"+typeColTypes[c]);
-			                    	}
-			                	}
-			                	typeMap.put(typeKey, typeBreakdown);
-		                	}
-		                }
-		                m_classReq.getSession().setAttribute("typeMap", typeMap);
-			    	 	
-	            	}
-	            	
-	                m_classReq.getSession().setAttribute("arrayData", arrayData);
-	                m_classReq.getSession().setAttribute("arrayColumnTypes", arrayColumnTypes);
-	                
-	            }
-	        	
-	        } catch (Exception e) {
-	        	e.printStackTrace();
-	        } finally {
-	        	if (rs!=null) try{rs.close();}catch(Exception e) {}
-	        	if (ps!=null) try{ps.close();}catch(Exception e) {}
-	        }
-	        
-	        return rows;
+			            }
+			    	}
+		    	
+		        m_classReq.getSession().setAttribute("arrayData", arrayData);
+		    }
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs!=null) try{rs.close();}catch(Exception e) {}
+			if (ps!=null) try{ps.close();}catch(Exception e) {}
+		}
+		
+		return rows;
+	}
+	
+	private List<String[]> getRowArrayData(ResultSet rs, String columnType, int index) throws Exception{
+		List<String[]> rowArrayData = new ArrayList<String[]>();
+		Array array = null;
+		if (columnType.indexOf("DERIVED") > 0) {
+			Struct struct = (Struct)rs.getObject(index+1);
+			Object[] valueStruct = struct.getAttributes();
+			array = (Array) valueStruct[5];
+		} else {
+			array = rs.getArray(index+1);
+		}
+		
+		if (array != null) {
+			ResultSet nestedRs = array.getResultSet(); 
+
+			while (nestedRs.next()) {
+				Struct valueStruct = (Struct) nestedRs.getObject(2);
+				Object[] valueDatum = valueStruct.getAttributes();
+				String[] values = new String[valueDatum.length];
+				int slide = 0;
+				for (int a = 0; a < valueDatum.length; a++) {
+					if (valueDatum[a] != null) {
+						Class c = valueDatum[a].getClass();
+						String s = c.getName();
+						
+						if (c.getName().toUpperCase().contains("STRUCT")) {
+							Struct str = (Struct) valueDatum[a];
+							Object[] strValues = str.getAttributes();
+							values = new String[valueDatum.length+strValues.length];
+							for (int b = 0; b < strValues.length; b++){
+								values[b] = strValues[b].toString();
+								slide++;
+							}
+						} else {
+							values[a+slide]= valueDatum[a].toString();
+						}
+							
+					} else {
+						values[a]= "";
+					}	
+				}
+				rowArrayData.add(values);
+			}
+		}
+		
+		return rowArrayData;
+	}
+	
+	private List<String> getSQLStatements(boolean full, boolean restrict) {
+		List<String> sqlStmts  = new ArrayList<String>();
+		ArrayList<String> downloadIDs = (ArrayList<String>)m_classReq.getSession().getAttribute("downloadIDs");
+		String type = (String)m_classReq.getSession().getAttribute("downloadType");
+		
+		String sqlStmt = null;
+		if (!full){
+			StringBuffer[] whereBuffers = getWhereBuffers(downloadIDs);
+			for (StringBuffer wBuffer: whereBuffers) {
+				sqlStmt =
+					"SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW " + "WHERE "+type+"_IDSEQ IN " +
+					" ( " + wBuffer.toString() + " )  ";
+				if (restrict) {
+					sqlStmt += " and ROWNUM <= "+GRID_MAX_DISPLAY;
+					sqlStmts.add(sqlStmt);
+					break;
+				} else {
+					sqlStmts.add(sqlStmt);
+				}
+			}
+		} else {
+			sqlStmt = "SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW";
+			if (restrict) sqlStmt += " where ROWNUM <= "+GRID_MAX_DISPLAY;
+			
+			sqlStmts.add(sqlStmt);
+		}
+		
+		return sqlStmts;
+	}
+	
+	private StringBuffer[] getWhereBuffers(ArrayList<String> downloadIds) {
+		StringBuffer whereBuffer = null;
+		List<StringBuffer> whereBuffers = null;
+		
+		if (downloadIds.size() <= 1000 ){ //make sure that there are no more than 1000 ids in each 'IN' clause
+    		whereBuffer = new StringBuffer();
+    		for (String id:downloadIds) {
+    			whereBuffer.append("'" + id + ",'");
+    		}
+    		whereBuffer.deleteCharAt(whereBuffer.length());
+    	} else {
+    		whereBuffers = new ArrayList<StringBuffer>();
+    		int counter = 0;
+    		whereBuffer = new StringBuffer();
+    		
+    		for (String id:downloadIds) {
+    			whereBuffer.append("'" + id + ",'");
+    			
+    			counter++;
+    			
+    			if (counter%1000 == 0) {
+    				whereBuffer.deleteCharAt(whereBuffer.length());
+    				whereBuffers.add(whereBuffer);
+    				whereBuffer = new StringBuffer();
+    			}
+    		}
+    		// add the final chunk to the list
+    		if (whereBuffer.length()>0) {
+    			whereBuffer.deleteCharAt(whereBuffer.length());
+				whereBuffers.add(whereBuffer);
+    		}
+    	}
+		
+		if (whereBuffers == null) {
+    		whereBuffers = new ArrayList<StringBuffer>(1);
+    		whereBuffers.add(whereBuffer);
+    	}
+		
+		return whereBuffers.toArray(new StringBuffer[0]);
 	}
 	
 	private void setColHeadersAndTypes(String type)  {
 		ArrayList<String> columnHeaders = new ArrayList<String>();
         ArrayList<String> columnTypes = new ArrayList<String>();
         HashMap<String,ArrayList<String[]>> typeMap = new HashMap<String,ArrayList<String[]>>();
+        HashMap<String,String> arrayColumnTypes = new HashMap<String,String>();
+        ArrayList<String> allExpandedColumnHeaders = new ArrayList<String>();
         
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -370,11 +344,26 @@ public class CustomDownloadServlet extends CurationServlet {
                 String columnType = rsmd.getColumnTypeName(i);
                 
                 if (columnType.endsWith("_T") && !typeMap.containsKey(columnType)) {
-                		columnTypes.add(i+":"+columnType);
-                    	typeMap.put(i+":"+columnType,null);
+                		String typeKey = i+":"+columnType;
+                		
+                		columnTypes.add(typeKey);
+                		ArrayList<String[]> typeBreakdown = getType(typeKey);
+                    	typeMap.put(i+":"+columnType,typeBreakdown);
+                    	
+                    	if (typeBreakdown.size() >0) {
+	                    	String[] typeColNames = typeBreakdown.get(0);
+	                    	
+	                    	for (int c = 0; c<typeColNames.length; c++) {
+	                    		arrayColumnTypes.put(typeColNames[c], typeKey);
+	                    		allExpandedColumnHeaders.add(typeColNames[c]);
+	                    	}
+	                	} else allExpandedColumnHeaders.add(columnName);
                 	
-                } else
+                } else {
                 	columnTypes.add(columnType);
+                	allExpandedColumnHeaders.add(columnName);
+                }
+                	
             }
         } catch (Exception e) {
         	e.printStackTrace();
@@ -384,8 +373,10 @@ public class CustomDownloadServlet extends CurationServlet {
         }
         
         m_classReq.getSession().setAttribute("headers",columnHeaders);
+        m_classReq.getSession().setAttribute("allExpandedHeaders",allExpandedColumnHeaders);
         m_classReq.getSession().setAttribute("types", columnTypes);
         m_classReq.getSession().setAttribute("typeMap", typeMap);
+        m_classReq.getSession().setAttribute("arrayColumnTypes", arrayColumnTypes);
 	}
 	
 	private ArrayList<String[]> getType(String type) {
@@ -436,13 +427,16 @@ public class CustomDownloadServlet extends CurationServlet {
 	
 	
 	private void returnJSONFromSession(String JSPName) {
-		ArrayList<String[]> displayRows = doDownload(false, false);
+		ArrayList<String[]> displayRows = getRecords(false, false);
 		m_classReq.getSession().setAttribute("rows", displayRows);
 		ForwardJSP(m_classReq, m_classRes, "/JSON"+JSPName+".jsp");
     }
 	
 	private void createDownloadColumns(ArrayList<String[]> allRows, String type){
+		final int MAX_ROWS = 65000;
 		
+		String sheetName = "Custom Download";
+		int sheetNum = 1;
 		
 		boolean XML = false;
 		if (type != null && type.equals("XML"))
@@ -454,6 +448,7 @@ public class CustomDownloadServlet extends CurationServlet {
 		String fillIn = (String) this.m_classReq.getParameter("fillIn");
 		
 		ArrayList<String> allHeaders = (ArrayList<String>) m_classReq.getSession().getAttribute("headers");
+		ArrayList<String> allExpandedHeaders = (ArrayList<String>) m_classReq.getSession().getAttribute("allExpandedHeaders");
 		ArrayList<String> allTypes = (ArrayList<String>) m_classReq.getSession().getAttribute("types");
 		HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String,ArrayList<String[]>>) m_classReq.getSession().getAttribute("typeMap");
 		ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = (ArrayList<HashMap<String,ArrayList<String[]>>>) m_classReq.getSession().getAttribute("arrayData"); 
@@ -464,7 +459,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			columns = colString.split(",");
 		}
 		else {
-			columns = allHeaders.toArray(new String[allHeaders.size()]);
+			columns = allExpandedHeaders.toArray(new String[allExpandedHeaders.size()]);
 		}
 		
 		int[] colIndices = new int[columns.length];
@@ -480,10 +475,9 @@ public class CustomDownloadServlet extends CurationServlet {
 			}
 		}
 		
-		
 		Workbook wb =  new HSSFWorkbook();
 		
-		Sheet sheet = wb.createSheet("Custom Download");
+		Sheet sheet = wb.createSheet(sheetName);
 
 		Row headerRow = sheet.createRow(0);
         headerRow.setHeightInPoints(12.75f);
@@ -501,108 +495,100 @@ public class CustomDownloadServlet extends CurationServlet {
         int rownum = 1;
         int bump = 0;
         boolean fillRow = false;
-        
+        int i = 0;
+        long startTime = System.currentTimeMillis();
         try {
-        
-	        for (int i = 0; i < allRows.size(); i++, rownum++) {
-	        	//Check if row already exists
-	        	int maxBump = 0;
-	        	
-	        	if (sheet.getRow(rownum+bump) == null ) {
-	        		row = sheet.createRow(rownum+bump);
-	        		if (XML){
+        	System.out.println("Total CDEs to download ["+allRows.size()+"]");
+        for (i = 0; i < allRows.size(); i++, rownum++) {
+        	//Check if row already exists
+        	int maxBump = 0;
+        	if (sheet.getRow(rownum+bump) == null) {
+        		row = sheet.createRow(rownum+bump);
+        		if (XML){
 	        			
-	        		}//Add DE Element	
-	        	}
-	        	
-	            if(allRows.get(i) == null) continue;
-	            
-	            for (int j = 0; j < colIndices.length; j++) {
-	            	
-	            
-	           		cell = row.createCell(j);
-	            		
-	                String currentType = allTypes.get(colIndices[j]);
-	                
-	                if (currentType.endsWith("_T"))
-	        		{
-	                	
-	                	//Open XML list element
-	        			//Deal with CS/CSI
-	        			String[] originalArrColNames = typeMap.get(currentType).get(0);
-	        			
-	        			//Find current column in original data
-	        			
-	        			int originalColumnIndex = -1;
-	        			for (int a = 0; a < originalArrColNames.length ; a++) { 
-	        				if (columns[j].equals(originalArrColNames[a])){
-	        					originalColumnIndex = a;
-	        					break;
-	        				}
-	        			}
-	        			
-	        			HashMap<String,ArrayList<String[]>> typeArrayData = arrayData.get(i);
-	        			ArrayList<String[]> rowArrayData = typeArrayData.get(currentType);
-	        			
-	        			if (rowArrayData != null) {
-	        				int tempBump = 0;
-		        			for (int nestedRowIndex = 0; nestedRowIndex < rowArrayData.size(); nestedRowIndex++) {
-		        				
-		        				String[] nestedData = rowArrayData.get(nestedRowIndex);
-	        					String data = nestedData[originalColumnIndex];
-	        					
-	        					cell.setCellValue(data);
-	        					
-	        					if (XML){}
-	        						//Add element and data close element
-	        					
-	        					tempBump++;
+	        	}//Add DE Element	
+        	}
+        	
+            if(allRows.get(i) == null) continue;
+            
+            for (int j = 0; j < colIndices.length; j++) {
+            	
+                cell = row.createCell(j);
+                String currentType = allTypes.get(colIndices[j]);
+        		if (currentType.endsWith("_T"))
+        		{
+        			//Deal with CS/CSI
+        			String[] originalArrColNames = typeMap.get(currentType).get(0);
+        			
+        			//Find current column in original data
+        			
+        			int originalColumnIndex = -1;
+        			for (int a = 0; a < originalArrColNames.length ; a++) { 
+        				if (columns[j].equals(originalArrColNames[a])){
+        					originalColumnIndex = a;
+        					break;
+        				}
+        			}
+        			
+        			HashMap<String,ArrayList<String[]>> typeArrayData = arrayData.get(i);
+        			ArrayList<String[]> rowArrayData = typeArrayData.get(currentType);
+        			
+        			if (rowArrayData != null) {
+        				int tempBump = 0;
+	        			for (int nestedRowIndex = 0; nestedRowIndex < rowArrayData.size(); nestedRowIndex++) {
 	        				
-		        				if (nestedRowIndex < rowArrayData.size()-1){
-		        					row = sheet.getRow(rownum+bump+tempBump);
-		        		        	if (row == null) {
-		        		        		row = sheet.createRow(rownum+bump+tempBump);
-		        		        	}
-		        		        	
-	        		        		cell = row.createCell(j);
-		        		        	
-		        				} else {
-		        					//Go back to top row 
-		        					row = sheet.getRow(rownum + bump);
-		        					if (tempBump > maxBump)
-		        						maxBump = tempBump;
-		        				}
-		        			}
-	        			}
-	        			//Close XML List element
-	        		} else {
-	        			
-	        			if (XML) {//Add element and Data, close element
+	        				String[] nestedData = rowArrayData.get(nestedRowIndex);
+        					String data = nestedData[originalColumnIndex];
+        					cell.setCellValue(data);
+        					
+        					if (XML){}
+	        						//Add element and data close element
+        					
+        					tempBump++;
+        				
+	        				if (nestedRowIndex < rowArrayData.size()-1){
+	        					row = sheet.getRow(rownum+bump+tempBump);
+	        		        	if (row == null) {
+	        		        		if (rownum+bump+tempBump >= MAX_ROWS) {
+	        		        			sheet = wb.createSheet(sheetName+"_"+sheetNum);
+	        		                	sheetNum++;
+	        		                	rownum = 1;
+	        		                	bump = 0;
+	        		                	tempBump = 0;
+	        		        		}
+	        		        		row = sheet.createRow(rownum+bump+tempBump);
+	        		        	}
+	        		        	
+        		        		cell = row.createCell(j);
+	        		        	
+	        				} else {
+	        					//Go back to top row 
+	        					row = sheet.getRow(rownum + bump);
+	        					if (tempBump > maxBump)
+	        						maxBump = tempBump;
 	        				}
-	        			cell.setCellValue(allRows.get(i)[colIndices[j]]);
-	        		}
-	            }
-	            
-	            
-	            bump = bump + maxBump;
-	            
-	            if (fillIn != null && (fillIn.equals("true") || fillIn.equals("yes") && bump > 0)) {
-	            	sheet = fillInBump(sheet, i, rownum, bump, allRows, allTypes, colIndices);
-	            	rownum = rownum + bump;
-	            	bump = 0;
-	            }
-	        }
+	        			}
+        			}
+        		} else {
+        			if (XML) {//Add element and Data, close element
+	        				}
+        			cell.setCellValue(allRows.get(i)[colIndices[j]]);
+        		}
+        
+            }
+            
+            bump = bump + maxBump;
+            
+            if (fillIn != null && (fillIn.equals("true") || fillIn.equals("yes") && bump > 0)) {
+            	sheet = fillInBump(sheet, i, rownum, bump, allRows, allTypes, colIndices);
+            	rownum = rownum + bump;
+            	bump = 0;
+            }
+        }
         } catch (Exception e){
         	e.printStackTrace();
         }
 
-        
-        //group rows for each phase, row numbers are 0-based
-//        sheet.groupRow(4, 6);
-//        sheet.groupRow(9, 13);
-//        sheet.groupRow(16, 18);
-
-        //set column widths, the width is measured in units of 1/256th of a character width
         sheet.setZoom(3, 4);
 
 
@@ -616,9 +602,7 @@ public class CustomDownloadServlet extends CurationServlet {
 	        out.close();
         } catch (Exception e) {
         	e.printStackTrace();
-        }
-        
-		ForwardJSP(m_classReq, m_classRes, "/DisplayColumns.jsp");
+        }        
 	}
 	
 	private Sheet fillInBump(Sheet sheet, int originalRow, int rownum, int bump, ArrayList<String[]> allRows, ArrayList<String> allTypes, int[] colIndices) {
