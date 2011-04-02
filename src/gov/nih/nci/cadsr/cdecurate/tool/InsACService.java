@@ -480,6 +480,7 @@ public class InsACService implements Serializable {
 				sVD_ID = cstmt.getString(5);
 				vd.setVD_VD_IDSEQ(sVD_ID);
 				String sReturn = "";
+				
 				if (sAction.equals("INS"))
 					this.storeStatusMsg("Value Domain Name : "
 							+ vd.getVD_LONG_NAME());
@@ -6074,6 +6075,12 @@ public class InsACService implements Serializable {
 			  VD_Bean m_VD = (VD_Bean) session.getAttribute("m_VD");
 			  id = m_VD.getVD_REP_IDSEQ();
 			  name = "vdStatusBean";
+			  String newRepTerm = "";
+			  newRepTerm = (String)session.getAttribute("newRepTerm");
+			  
+			  //Don't search for rep term if we're creating new one.
+			  if (newRepTerm != null && newRepTerm.equals("true"))
+				  id = "";
 		  }
 		  //If user selected existing OC or Prop or Rep Term in any context
 		  if (id != null && !id.equals("")){
