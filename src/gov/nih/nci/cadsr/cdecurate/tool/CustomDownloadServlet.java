@@ -1,5 +1,8 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Array;
 import java.sql.PreparedStatement;
@@ -17,6 +20,9 @@ import java.util.Vector;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -29,14 +35,18 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+
 
 
 public class CustomDownloadServlet extends CurationServlet {
-
+	
 	 public static final Logger logger = Logger.getLogger(CustomDownloadServlet.class.getName());
 	 
 	 private static final int GRID_MAX_DISPLAY = 100;
 	 private static int MAX_DOWNLOAD = 0;
+	 private static String xmlColumns = null;
 
 	 public CustomDownloadServlet() {
 		}
@@ -67,7 +77,8 @@ public class CustomDownloadServlet extends CurationServlet {
 				createDownloadColumns(downloadRows, "Excel");
 				break;
 			case dlXMLColumns:
-				createDownloadColumns(null, "XML");
+				ArrayList<String[]> xmlDownloadRows = getRecords(false, false);
+				createXMLDownload(xmlDownloadRows);
 				break;
 			case createExcelDownload:
 				createDownload();
@@ -105,6 +116,7 @@ public class CustomDownloadServlet extends CurationServlet {
 		        	System.out.println("DL Limit: "+tob.getVALUE());	
 		        }
 		      }
+			
 		}
 		
 		
@@ -440,6 +452,140 @@ public class CustomDownloadServlet extends CurationServlet {
 		ForwardJSP(m_classReq, m_classRes, "/JSON"+JSPName+".jsp");
     }
 	
+	private void createXMLDownload(ArrayList<String[]> allRows) {
+		//Limited columns?  If xmlColumns is not null
+		//Setup columns
+		ArrayList<String> allHeaders = (ArrayList<String>) m_classReq.getSession().getAttribute("headers");
+		ArrayList<String> allExpandedHeaders = (ArrayList<String>) m_classReq.getSession().getAttribute("allExpandedHeaders");
+		ArrayList<String> allTypes = (ArrayList<String>) m_classReq.getSession().getAttribute("types");
+		HashMap<String, String> arrayColumnTypes = (HashMap<String,String>) m_classReq.getSession().getAttribute("arrayColumnTypes");
+		HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String,ArrayList<String[]>>) m_classReq.getSession().getAttribute("typeMap");
+		ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = (ArrayList<HashMap<String,ArrayList<String[]>>>) m_classReq.getSession().getAttribute("arrayData"); 
+		
+		String[] columns = null;
+		if (xmlColumns != null && !xmlColumns.trim().equals("")) {
+			columns = xmlColumns.split(",");
+		}
+		else {
+			//Different from Excel.  Handling of nested columns is different
+			columns = allHeaders.toArray(new String[allHeaders.size()]);
+		}
+		
+		int[] colIndices = new int[columns.length];
+		for (int i=0; i < columns.length; i++) {
+			String colName = columns[i];
+			if (allHeaders.indexOf(colName) < 0){
+				String tempType = arrayColumnTypes.get(colName);
+				int temp = allTypes.indexOf(tempType);
+				colIndices[i]=temp;
+			} else {
+				int temp = allHeaders.indexOf(colName);
+				colIndices[i]=temp;
+			}
+		}
+		
+		Document dom = null;
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		try {
+		//get an instance of builder
+		DocumentBuilder db = dbf.newDocumentBuilder();
+
+		//create an instance of DOM
+		dom = db.newDocument();
+
+		Element rootEle = dom.createElement("DataElementCollection");
+		dom.appendChild(rootEle);
+
+		
+		for(int i = 0; i < allRows.size(); i++) {
+			
+			String[] row = allRows.get(i);
+			//For each row create approppriate element and attach it to root, pass all the column/type data to do this
+			Element deElement = createElement(row, i, dom, columns, colIndices, allTypes, typeMap, arrayData);
+			rootEle.appendChild(deElement);
+		}
+		
+		
+		OutputFormat format = new OutputFormat(dom);
+		format.setIndenting(true);
+
+		//generate output
+		XMLSerializer serializer = new XMLSerializer();
+		
+    	m_classRes.setContentType( "application/vnd.ms-excel" );
+    	m_classRes.setHeader( "Content-Disposition", "attachment; filename=\"customDownload.xls\"" );
+    	
+        OutputStream out = m_classRes.getOutputStream();
+		
+		serializer.setOutputByteStream(out);  
+		serializer.setOutputFormat(format);
+		serializer.serialize(dom);
+		
+		out.close();     
+		
+		}catch(ParserConfigurationException pce) {
+			//dump it
+			System.out.println("Error while trying to instantiate DocumentBuilder " + pce);
+			pce.printStackTrace();
+		} catch (IOException ioe){
+			System.out.println("Error while trying to serialize  " + ioe);
+			ioe.printStackTrace();
+		}
+		
+	}
+	
+	private Element createElement(String[] row, int rowNumber, Document dom, String[] columns, int[] colIndices, 
+			ArrayList<String> allTypes, HashMap<String,ArrayList<String[]>> typeMap, ArrayList<HashMap<String,ArrayList<String[]>>> arrayData){
+
+		
+		Element deElement = dom.createElement("DataElement");
+		deElement.setAttribute("","");
+
+		for (int j = 0; j < colIndices.length; j++) {
+        	
+            Element elem = dom.createElement(columns[j]);
+            String currentType = allTypes.get(colIndices[j]);
+            
+    		if (currentType.endsWith("_T"))
+    		{
+    			//Deal with CS/CSI
+    			String[] originalArrColNames = typeMap.get(currentType).get(0);
+    			
+    			//Find current column in original data
+    			
+    			int originalColumnIndex = -1;
+    			for (int a = 0; a < originalArrColNames.length ; a++) { 
+    				if (columns[j].equals(originalArrColNames[a])){
+    					originalColumnIndex = a;
+    					break;
+    				}
+    			}
+    			
+    			HashMap<String,ArrayList<String[]>> typeArrayData = arrayData.get(rowNumber);
+    			ArrayList<String[]> rowArrayData = typeArrayData.get(currentType);
+    							
+    			if (rowArrayData != null) {
+    				for (int nestedRowIndex = 0; nestedRowIndex < rowArrayData.size(); nestedRowIndex++) {
+        				//Get subType column names and iterate over those and create nested elements
+    					Element nestedElement = dom.createElement("");
+  						//Add element and data close element
+    					String[] nestedData = rowArrayData.get(nestedRowIndex);
+    					String data = nestedData[originalColumnIndex];
+    					nestedElement.setTextContent(data);
+    					elem.appendChild(nestedElement);
+        			}
+    			}
+    		} else {
+    			//Add element and Data, close element
+    			elem.setTextContent(row[colIndices[j]]);
+    			deElement.appendChild(elem);
+       		}
+        }
+		
+		return deElement;
+
+	}
+	
 	private void createDownloadColumns(ArrayList<String[]> allRows, String type){
 		final int MAX_ROWS = 65000;
 		
@@ -447,10 +593,6 @@ public class CustomDownloadServlet extends CurationServlet {
 		int sheetNum = 1;
 		
 		boolean XML = false;
-		if (type != null && type.equals("XML"))
-			XML = true;
-		
-		Document dom;
 		
 		String colString = (String) this.m_classReq.getParameter("cdlColumns");
 		String fillIn = (String) this.m_classReq.getParameter("fillIn");
@@ -579,6 +721,7 @@ public class CustomDownloadServlet extends CurationServlet {
         			}
         		} else {
         			if (XML) {//Add element and Data, close element
+        				
 	        				}
         			cell.setCellValue(allRows.get(i)[colIndices[j]]);
         		}
