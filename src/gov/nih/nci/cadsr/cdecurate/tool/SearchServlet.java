@@ -2554,6 +2554,7 @@ public class SearchServlet extends CurationServlet {
 	        		
 					while (rs.next()) {
 						String[] rowContent = new String[numColumns];
+						//TODO: Check for idseq and add the link
 						for (int i = 1; i < numColumns+1; i++)
 							rowContent[i-1] = rs.getString(i);
 						

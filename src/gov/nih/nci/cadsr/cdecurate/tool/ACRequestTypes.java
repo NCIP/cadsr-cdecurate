@@ -56,11 +56,13 @@ public enum ACRequestTypes {
 	//CustomizableDownload
 	showDEfromSearch("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
 	createExcelDownload("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
-	cdlColumns("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
+	dlExcelColumns("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
+	dlXMLColumns("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
 	jsonLayout("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
 	showVDfromSearch("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
-	jsonRequest("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet");
-	
+	jsonRequest("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
+	createFullDEDownload("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet"),
+	showDEfromOutside("gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet");
 
 	private String className;
 
