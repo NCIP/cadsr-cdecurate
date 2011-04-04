@@ -86,6 +86,9 @@ public class CustomDownloadServlet extends CurationServlet {
 			case showVDfromSearch:
 				prepDisplayPage("VD"); 
 				break;
+			case showDECfromSearch:
+				prepDisplayPage("DEC"); 
+				break;
 			case createFullDEDownload:
 				setDownloadIDs("DE",false);
 				setColHeadersAndTypes("DE");

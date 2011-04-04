@@ -960,6 +960,8 @@ function createDownload(){
       document.searchResultsForm.unCheckedRowId.value = "";
       if (document.searchParmsForm.listSearchFor.value == "DataElement")
       	setCustomDownloadAction();
+      else if (document.searchParmsForm.listSearchFor.value == "DataElementConcept")
+    	  setDECCustomDownloadAction();
       else
       	setVDCustomDownloadAction();	
  }
