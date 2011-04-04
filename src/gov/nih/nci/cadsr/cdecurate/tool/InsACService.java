@@ -464,6 +464,22 @@ public class InsACService implements Serializable {
 				// logger.info(m_servlet.getLogMessage(m_classReq, "setVD",
 				// "execute ok", startDate, new java.util.Date()));
 
+				if (vd.getVD_IN_FORM()) {
+					//Go through all the forms and set warnings for owners
+					SearchServlet ser = new SearchServlet(m_classReq, m_classRes, m_servlet.m_servletContext);
+					ser.get_m_conn();
+					HashMap<String,ArrayList<String[]>> display = ser.getAssociatedForms(vd.getIDSEQ(), null, true);
+					ArrayList<String[]> forms = display.get("Content");
+					String[] headers = display.get("Head").get(0);
+					//Last two spots.
+					int idseqNdx = headers.length-1;
+					int nameNdx = headers.length-2;
+					
+					for (String[] formInfo : forms) {
+						m_servlet.doMonitor(formInfo[nameNdx], formInfo[idseqNdx]);
+					}	
+				}
+					
 				sReturnCode = cstmt.getString(2);
 				String prefName = cstmt.getString(6);
 				if (prefName != null)
@@ -2574,6 +2590,22 @@ public class InsACService implements Serializable {
 			}
 			this.storeStatusMsg("\\n");
 
+			if (de.getDE_IN_FORM()) {
+				//Go through all the forms and set warnings for owners
+				SearchServlet ser = new SearchServlet(m_classReq, m_classRes, m_servlet.m_servletContext);
+				ser.get_m_conn();
+				HashMap<String,ArrayList<String[]>> display = ser.getDEAssociatedForms(de.getIDSEQ(), null);
+				ArrayList<String[]> forms = display.get("Content");
+				String[] headers = display.get("Head").get(0);
+				//Last two spots.
+				int idseqNdx = headers.length-1;
+				int nameNdx = headers.length-2;
+				
+				for (String[] formInfo : forms) {
+					m_servlet.doMonitor(formInfo[nameNdx], formInfo[idseqNdx]);
+				}	
+			}
+			
 		} catch (Exception e) {
 			logger.error("ERROR in InsACService-setDE for other : "
 					+ e.toString(), e);

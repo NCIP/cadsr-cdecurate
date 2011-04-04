@@ -7,6 +7,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
@@ -647,15 +648,15 @@ public class SetACService implements Serializable
 			String chosenDef = constructChosenDefinition(req.getSession(), "DEC");
 			if (!chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
-				String warningMessage = "\n Warning: Your chosen definitions are being replaced by standard definitions.  Your chosen definition is being added as an alternate definition if it does not exist already.";
+				String warningMessage = "Warning: Your chosen definitions are being replaced by standard definitions.  Your chosen definition is being added as an alternate definition if it does not exist already.";
 				UtilService.setValPageVector(vValidate, "Definition", s, bMandatory, 2000, warningMessage, sOriginAction);
-				
+			
 				//add Alt Def
-				AltNamesDefsSession altSession = m_DEC.getAlternates();
-				if (altSession == null)
-					altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);
+			
+				AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);
 				
-				altSession.addAlternateDefinition(chosenDef,m_DEC.getIDSEQ(), m_servlet.getConn());
+				altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());
+				
 				m_DEC.setAlternates(altSession);
 				
 			}
@@ -811,7 +812,6 @@ public class SetACService implements Serializable
 		Vector<String> vValString = this.makeStringVector(vValidate);
 		req.setAttribute("vValidate", vValString);
 	}
-
 	private String constructChosenDefinition(HttpSession session, String type) {
 		String def = "";
  
@@ -1042,16 +1042,14 @@ public class SetACService implements Serializable
 			String chosenDef = constructChosenDefinition(req.getSession(), "VD");
 			if (!chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
-				String warningMessage = "\n Warning: Your chosen definitions are being replaced by standard definitions.  Your chosen definition is being added as an alternate definition if it does not exist already.";
+				String warningMessage = "Warning: Your chosen definitions are being replaced by standard definitions.  Your chosen definition is being added as an alternate definition if it does not exist already.";
 				UtilService.setValPageVector(vValidate, "Definition", s, bMandatory, 2000, warningMessage, sOriginAction);
 				
 				//add Alt Def
-				AltNamesDefsSession altSession = m_VD.getAlternates();
 				
-				if (altSession == null)
-					altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchVD);
+				AltNamesDefsSession	altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchVD);
 			
-				altSession.addAlternateDefinition(chosenDef,m_VD.getIDSEQ(), m_servlet.getConn());
+				altSession.addAlternateDefinition(chosenDef,m_VD, m_servlet.getConn());
 				m_VD.setAlternates(altSession);
 			}
 			

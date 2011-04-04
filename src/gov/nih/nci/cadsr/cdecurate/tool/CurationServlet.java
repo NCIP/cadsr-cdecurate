@@ -2709,11 +2709,68 @@ public class CurationServlet
       /**
      * Monitor the user selected items with a Sentinel Alert.
      *
-     * @param req
-     *            The session request.
-     * @param res
-     *            The session response.
+     * @param user
+     *            The user which will have the alert set.
+     * @param idseqToMonitor
+     *            The idseq of item for which alert will be set.
      */
+    public void doMonitor(String user, String idseqToMonitor )
+    {
+            CallableStatement stmt = null;
+            try
+            {
+                user = user.toUpperCase();
+               // Add the selected items to the CSI
+                String csi_idseq = null;
+                int ndx = 0;
+                stmt = m_conn.prepareCall("begin SBREXT_CDE_CURATOR_PKG.ADD_TO_SENTINEL_CS(?,?,?); end;");
+                stmt.registerOutParameter(3, java.sql.Types.VARCHAR);
+                stmt.setString(2, user);
+                stmt.setString(1, idseqToMonitor);
+                stmt.execute();
+                if (stmt.getString(3) != null)
+                    csi_idseq = stmt.getString(3);
+             
+                if (csi_idseq == null)
+                {
+                    System.out.println("None of the selected items can be added to your Reserved CSI.");
+                }
+                else if (csi_idseq.length() == 0)
+                {
+                	System.out.println("The selected items is not supported for the Monitor feature.");
+                }
+                else
+                {
+                    // Have the Sentinel watch the CSI.
+                    DSRAlert sentinel = DSRAlertImpl.factory(m_conn);
+                    ndx = sentinel.createAlert(user, csi_idseq);
+                    switch (ndx)
+                    {
+                    case DSRAlert.RC_FAILED:
+                        System.out.println("An error occurred attempting to create the Alert Definition.");
+                        break;
+                    case DSRAlert.RC_INCOMPATIBLE:
+                    	System.out.println( "The Sentinel API server does not support this request.");
+                        break;
+                    case DSRAlert.RC_UNAUTHORIZED:
+                    	System.out.println( user+" is not authorized to create a Sentinel Alert.");
+                        break;
+                    default:
+                        break;
+                    }
+                }
+           }
+            catch (Exception e)
+            {
+            	System.out.println("An unexpected exception occurred");
+                logger.error("cdecurate: doMonitor(): " + e.toString(), e);
+            }
+            finally{
+            	stmt = SQLHelper.closeCallableStatement(stmt);
+              }
+     
+    }
+
     protected void doMonitor(HttpServletRequest req, HttpServletResponse res)
     {
         // Init main variables.
@@ -2839,7 +2896,7 @@ public class CurationServlet
         DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, msg);
         ForwardJSP(req, res, "/SearchResultsPage.jsp");
     }
-
+    
     /**
      * Unmonitor the user selected items with a Sentinel Alert.
      *
@@ -3526,6 +3583,19 @@ public class CurationServlet
         DataManager.setAttribute(session, "EVSresults", null);
         DataManager.setAttribute(session, "ParentMetaSource", null);
         DataManager.setAttribute(session, "ParentConceptCode", null);
+        
+        session.removeAttribute("chosenOCCodes");
+		session.removeAttribute("chosenOCDefs");
+		session.removeAttribute("changedOCDefsWarning");
+		
+		session.removeAttribute("chosenPropCodes");
+		session.removeAttribute("chosenPropDefs");
+		session.removeAttribute("changedPropDefsWarning");
+		
+		session.removeAttribute("chosenRepCodes");
+		session.removeAttribute("chosenRepDefs");
+		session.removeAttribute("changedRepDefsWarning");
+		
        }
 
     /**
