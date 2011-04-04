@@ -5,7 +5,9 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import java.io.Serializable;
@@ -640,6 +642,23 @@ public class SetACService implements Serializable
 			if (s == null) s = "";
 			strInValid = "";
 			UtilService.setValPageVector(vValidate, "Definition", s, bMandatory, 2000, strInValid, sOriginAction);
+			
+			//Check Definition against (constructed) chosen definition, add to Alt Def if not same, add Warning in vValidate vector.
+			String chosenDef = constructChosenDefinition(req.getSession(), "DEC");
+			if (!chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
+				//add Warning
+				String warningMessage = "\n Warning: Your chosen definitions are being replaced by standard definitions.  Your chosen definition is being added as an alternate definition if it does not exist already.";
+				UtilService.setValPageVector(vValidate, "Definition", s, bMandatory, 2000, warningMessage, sOriginAction);
+				
+				//add Alt Def
+				AltNamesDefsSession altSession = m_DEC.getAlternates();
+				if (altSession == null)
+					altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);
+				
+				altSession.addAlternateDefinition(chosenDef,m_DEC.getIDSEQ(), m_servlet.getConn());
+				m_DEC.setAlternates(altSession);
+				
+			}
 			//validation for both edit and DEc
 			s = m_DEC.getDEC_CD_NAME();
 			if (s == null) s = "";
@@ -793,6 +812,117 @@ public class SetACService implements Serializable
 		req.setAttribute("vValidate", vValString);
 	}
 
+	private String constructChosenDefinition(HttpSession session, String type) {
+		String def = "";
+ 
+		if (type.equals("DEC")) {
+			Vector<String> ocDefs = (Vector<String>) session.getAttribute("chosenOCDefs");
+			Vector<String> propDefs = (Vector<String>) session.getAttribute("chosenPropDefs");
+			
+			//If they're null, that means we didn't change objectClass/property
+			if (ocDefs == null)
+				ocDefs = getDefs((Vector<EVS_Bean>)session.getAttribute("vObjectClass"));
+			if (propDefs == null)
+				propDefs = getDefs((Vector<EVS_Bean>)session.getAttribute("vProperty"));
+			
+			def = getDECDef(ocDefs, propDefs);
+			
+		} else //VD
+		{
+			Vector<String> repDefs = (Vector<String>) session.getAttribute("chosenVDDefs");
+			
+			if (repDefs == null)
+				repDefs = getDefs((Vector<EVS_Bean>)session.getAttribute("vRepTerm"));
+			def = getVDDef(repDefs);
+		}
+		
+		return def;
+	}
+
+	public Vector<String> getDefs(Vector<EVS_Bean> vConcepts) {
+		Vector<String> defs = new Vector<String>();
+		
+		for (EVS_Bean eb: vConcepts) {
+			String definition = eb.getPREFERRED_DEFINITION();
+			defs.add(definition);
+		}
+		
+		return defs;
+	}
+	
+	public String getDECDef(Vector<String> vObjectClass, Vector<String> vProperty)
+	{	
+		String sDef = "";
+		// get the existing one if not restructuring the name but appending it
+		
+		// add the Object Class qualifiers first
+		for (int i = 1; vObjectClass.size() > i; i++)
+		{
+			String ocDef = vObjectClass.elementAt(i);
+							
+			if (!sDef.equals(""))
+				sDef += "_"; // add definition
+			sDef += ocDef;
+			
+		}
+		// add the Object Class primary
+		if (vObjectClass != null && vObjectClass.size() > 0)
+		{
+			String ocDef = vObjectClass.elementAt(0);
+			if (!sDef.equals(""))
+				sDef += "_"; // add definition
+			sDef += ocDef;			
+		}
+		// get the Property into the long name and abbr name
+		// add the property qualifiers first
+		for (int i = 1; vProperty.size() > i; i++)
+		{
+			String propDef = vProperty.elementAt(i);
+			if (!sDef.equals(""))
+				sDef += "_"; // add definition
+			sDef += propDef;
+				
+			
+		}
+		// add the property primary
+		if (vProperty != null && vProperty.size() > 0)
+		{
+			String propDef = vProperty.elementAt(0);
+			if (!sDef.equals(""))
+				sDef += "_"; // add definition
+			sDef += propDef;
+	
+		}
+		
+		return sDef;
+	}
+	
+	public String getVDDef(Vector<String> vRepTerm)
+	{	
+		String sDef = "";
+		// get the existing one if not restructuring the name but appending it
+		
+		// add the Object Class qualifiers first
+		for (int i = 1; vRepTerm.size() > i; i++)
+		{
+			String ocDef = vRepTerm.elementAt(i);
+							
+			if (!sDef.equals(""))
+				sDef += "_"; // add definition
+			sDef += ocDef;
+			
+		}
+		// add the Object Class primary
+		if (vRepTerm != null && vRepTerm.size() > 0)
+		{
+			String ocDef = vRepTerm.elementAt(0);
+			if (!sDef.equals(""))
+				sDef += "_"; // add definition
+			sDef += ocDef;			
+		}
+		
+		return sDef;
+	}
 	/**
 	 * To check validity of the data for Value Domain component before submission, called from CurationServlet.
 	 * Validation is done against Database restriction and ISO1179 standards.
@@ -908,6 +1038,23 @@ public class SetACService implements Serializable
 			strInValid = "";
 			UtilService.setValPageVector(vValidate, "Definition", s, bMandatory, 2000, strInValid, sOriginAction);
 
+			//Check Definition against (constructed) chosen definition, add to Alt Def if not same, add Warning in vValidate vector.
+			String chosenDef = constructChosenDefinition(req.getSession(), "VD");
+			if (!chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
+				//add Warning
+				String warningMessage = "\n Warning: Your chosen definitions are being replaced by standard definitions.  Your chosen definition is being added as an alternate definition if it does not exist already.";
+				UtilService.setValPageVector(vValidate, "Definition", s, bMandatory, 2000, warningMessage, sOriginAction);
+				
+				//add Alt Def
+				AltNamesDefsSession altSession = m_VD.getAlternates();
+				
+				if (altSession == null)
+					altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchVD);
+			
+				altSession.addAlternateDefinition(chosenDef,m_VD.getIDSEQ(), m_servlet.getConn());
+				m_VD.setAlternates(altSession);
+			}
+			
 			//same for both edit and new
 			s = m_VD.getVD_CD_NAME();
 			if (s == null) s = "";

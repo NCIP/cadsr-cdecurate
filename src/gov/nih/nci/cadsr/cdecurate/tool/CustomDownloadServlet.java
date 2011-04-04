@@ -44,21 +44,7 @@ public class CustomDownloadServlet extends CurationServlet {
 	public CustomDownloadServlet(HttpServletRequest req, HttpServletResponse res,
 				ServletContext sc) {
 			super(req, res, sc);
-			GetACService getAC = new GetACService(req, res, this);
 			
-			if (this.MAX_DOWNLOAD == 0) { 
-				Vector vList = getAC.getToolOptionData("CURATION", "CUSTOM_DOWNLOAD_LIMIT", "");
-				
-				if (vList != null && vList.size()>0)
-			      {
-			        TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
-			        if (tob != null){
-			        	this.MAX_DOWNLOAD = Integer.valueOf(tob.getVALUE());
-			        	System.out.println("DL Limit: "+tob.getVALUE());
-			        	
-			        }
-			      }
-			}
 		}
     
 	public void execute(ACRequestTypes reqType) throws Exception {	
@@ -101,10 +87,26 @@ public class CustomDownloadServlet extends CurationServlet {
 	private void prepDisplayPage(String type) {
 		
 		boolean outside = false;
+		
 		if (type.startsWith("O")){
 			type = type.substring(2);
 			outside = true;
 		}
+		
+		if (this.MAX_DOWNLOAD == 0) { 
+			GetACService getAC = new GetACService(m_classReq, m_classRes, this);
+			Vector vList = getAC.getToolOptionData("CURATION", "CUSTOM_DOWNLOAD_LIMIT", "");
+			System.out.println("DL Limit: ");
+			if (vList != null && vList.size()>0)
+		      {
+		        TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
+		        if (tob != null){
+		        	this.MAX_DOWNLOAD = Integer.valueOf(tob.getVALUE());
+		        	System.out.println("DL Limit: "+tob.getVALUE());	
+		        }
+		      }
+		}
+		
 		
 		setDownloadIDs(type, outside);
 		setColHeadersAndTypes(type);
@@ -132,8 +134,14 @@ public class CustomDownloadServlet extends CurationServlet {
 				downloadID.add(id);
 		}
 		
+	
 		m_classReq.getSession().setAttribute("downloadIDs", downloadID);
 		m_classReq.getSession().setAttribute("downloadType", type);
+		m_classReq.getSession().setAttribute("downloadLimit", Integer.toString(this.MAX_DOWNLOAD));
+		
+		if (downloadID.size() > this.MAX_DOWNLOAD)
+			ForwardJSP(m_classReq, m_classRes, "/CustomOverLimit.jsp");
+		
 	}
 	
 	private ArrayList<String[]> getRecords(boolean full, boolean restrict) {

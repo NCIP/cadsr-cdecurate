@@ -213,6 +213,8 @@ public class NCICurationServlet extends HttpServlet
         			&& !(reqType.equals("getAltNames")) 
         			&& !(reqType.equals("getRefDocument")) 
         			&& !(reqType.equals("jsonRequest")) 
+        			&& !(reqType.equals("dlExcelColumns"))
+        			&& !(reqType.equals("dlXMLColumns"))
         			&& !(reqType.equals("showDEfromOutside"))) {
 				RequestDispatcher rd = this.getServletContext().getRequestDispatcher("/");
 				rd.forward(req, res);
