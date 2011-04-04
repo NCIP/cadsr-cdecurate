@@ -1117,14 +1117,23 @@ public class ValueDomainServlet extends CurationServlet {
 				m_VD = new VD_Bean();
 			m_setAC.setVDValueFromPage(m_classReq, m_classRes, m_VD);
 			Vector<EVS_Bean> vRepTerm = (Vector) session.getAttribute("vRepTerm");
-			if (vRepTerm == null)
+			if (vRepTerm == null) {
 				vRepTerm = new Vector<EVS_Bean>();
+				
+				//reset the attributes for keeping track of non-caDSR choices...
+				session.removeAttribute("chosenRepCodes");
+				session.removeAttribute("chosenRepDefs");
+				session.removeAttribute("changedRepDefsWarning");
+			}
 				if (vRepTerm.size()>1){
 					selectedRepQualifiers = true; 
 				}  
 				Vector vAC = new Vector();
 				EVS_Bean m_REP = new EVS_Bean();
 				String sComp = (String) m_classReq.getParameter("sCompBlocks");
+				Vector<String> codes = null;
+				Vector<String> defs = null;
+				
 				// get rep term components
 				if (sComp.equals("RepTerm") || sComp.equals("RepQualifier"))
 				{
@@ -1163,6 +1172,26 @@ public class ValueDomainServlet extends CurationServlet {
 								+ " search results.\\n" + "Please try again.");
 						return;
 					}
+					
+					//Store chosen concept code and definition for later use in alt. definition.
+					String code = m_REP.getCONCEPT_IDENTIFIER();
+					String def = m_REP.getPREFERRED_DEFINITION();
+					
+					
+						if (session.getAttribute("chosenRepCodes") == null) {
+							codes = new Vector<String>();
+							defs = new Vector<String>();
+						} else {
+							codes =(Vector<String>) session.getAttribute("chosenRepCodes"); 
+							defs = (Vector<String>) session.getAttribute("chosenRepDefs");
+						}
+					
+
+					if (!codes.contains(code)) {
+						codes.add(code);    	   
+						defs.add(def);
+					}
+					
 					// handle the primary search
 					if (sComp.equals("RepTerm"))
 					{
@@ -1221,6 +1250,8 @@ public class ValueDomainServlet extends CurationServlet {
 				if (vRepTerm != null && vRepTerm.size() > 0){
 					vRepTerm = this.getMatchingThesarusconcept(vRepTerm, "Representation Term");
 					m_VD = this.updateRepAttribues(vRepTerm, m_VD);
+					DataElementConceptServlet.checkChosenConcepts(session, codes, defs, vRepTerm, "Rep");
+					
 				} 
 				if (m_REP.getcaDSR_COMPONENT()!= null && m_REP.getcaDSR_COMPONENT().equals("Concept Class")){
 					m_VD.setVD_REP_IDSEQ("");
@@ -2194,6 +2225,8 @@ public class ValueDomainServlet extends CurationServlet {
 				if (vRepTerm != null && vRepTerm.size() > 0){
 					vRepTerm = this.getMatchingThesarusconcept(vRepTerm, "Representation Term");
 					m_VD = this.updateRepAttribues(vRepTerm, m_VD);
+					
+					DataElementConceptServlet.checkChosenConcepts(session, null, null, vRepTerm, "Rep");
 				}  
 				DataManager.setAttribute(session, "vRepTerm", vRepTerm);
 			}

@@ -10,7 +10,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <head>
     <base href="<%=basePath%>">
     
-    <title>Customizable download</title>
+    <title>Customizable Download</title>
     
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
@@ -46,9 +46,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
       </form>
       <br></br>
       <br></br>
-      <% ArrayList<String> rows = (ArrayList<String>) session.getAttribute("rows"); %>
-      <font size="4"><%=rows.size()%> elements selected for download.</font>
-      
+      <% ArrayList<String> downloadIDs = (ArrayList<String>) session.getAttribute("downloadIDs"); %>
+      <font size="4"><%=downloadIDs.size()%> elements selected for download.</font>  
+     
       <div id="customDownloadContainer" style="width: 80%; height: 50%; display: block"></div> 
       <div id="simpleViewContainer" style="width: 80%; height: 50%; display: none">
           <form>
