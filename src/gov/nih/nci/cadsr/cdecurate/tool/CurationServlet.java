@@ -2716,6 +2716,7 @@ public class CurationServlet
      */
     public void doMonitor(String user, String idseqToMonitor )
     {
+    	System.out.println("Entering doMonitor()");
             CallableStatement stmt = null;
             try
             {
@@ -2728,6 +2729,7 @@ public class CurationServlet
                 stmt.setString(2, user);
                 stmt.setString(1, idseqToMonitor);
                 stmt.execute();
+                System.out.println("Done with CallableStatement: doMonitor()");
                 if (stmt.getString(3) != null)
                     csi_idseq = stmt.getString(3);
              
