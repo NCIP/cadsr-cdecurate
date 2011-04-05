@@ -46,8 +46,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
       </form>
       <br></br>
       <br></br>
-      <% ArrayList<String> downloadIDs = (ArrayList<String>) session.getAttribute("downloadIDs"); %>
-      <font size="4"><%=downloadIDs.size()%> elements selected for download.</font>  
+      <% ArrayList<String> rows = (ArrayList<String>) session.getAttribute("rows"); %>
+      <font size="4"><%=rows.size()%> elements selected for download.</font>  
      
       <div id="customDownloadContainer" style="width: 80%; height: 50%; display: block"></div> 
       <div id="simpleViewContainer" style="width: 80%; height: 50%; display: none">
