@@ -36,7 +36,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <%=path %>
         <%=basePath %>
         
-      <form name="columnSubmission" method="post" action="../../cdecurate/NCICurationServlet?reqType=cdlColumns">
+      <form name="columnSubmission" method="post" action="../../cdecurate/NCICurationServlet?reqType=dlExcelColumns">
             <input type="hidden" name="cdlColumns" value=""/>
        
 	      <button type="button" onClick="submitSelectedColumnNames('Excel');">Download Excel</button>
@@ -311,7 +311,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 }
                 
                 if (action = "XML")
-                	document.columnSubmission.action.value = "../../cdecurate/NCICurationServlet?reqType=xmlColumns";
+                	document.columnSubmission.action.value = "../../cdecurate/NCICurationServlet?reqType=dlXMLColumns";
                 
                 document.columnSubmission.cdlColumns.value = cols;
                 document.columnSubmission.submit();

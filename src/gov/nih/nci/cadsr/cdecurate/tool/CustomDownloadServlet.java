@@ -61,10 +61,10 @@ public class CustomDownloadServlet extends CurationServlet {
 
 			switch (reqType){
 			case showDEfromOutside:
-				prepDisplayPage("O-DE");
+				prepDisplayPage("O-CDE");
 				break;
 			case showDEfromSearch:
-				prepDisplayPage("DE"); 
+				prepDisplayPage("CDE"); 
 				break;
 			case jsonRequest:
 				returnJSONFromSession("Return");
@@ -90,8 +90,8 @@ public class CustomDownloadServlet extends CurationServlet {
 				prepDisplayPage("DEC"); 
 				break;
 			case createFullDEDownload:
-				setDownloadIDs("DE",false);
-				setColHeadersAndTypes("DE");
+				setDownloadIDs("CDE",false);
+				setColHeadersAndTypes("CDE");
 				ArrayList<String[]> allRows = getRecords(true, false);
 				createDownloadColumns(allRows, "Excel");
 				break;
@@ -110,7 +110,7 @@ public class CustomDownloadServlet extends CurationServlet {
 		if (this.MAX_DOWNLOAD == 0) { 
 			GetACService getAC = new GetACService(m_classReq, m_classRes, this);
 			Vector vList = getAC.getToolOptionData("CURATION", "CUSTOM_DOWNLOAD_LIMIT", "");
-			System.out.println("DL Limit: ");
+			
 			if (vList != null && vList.size()>0)
 		      {
 		        TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
@@ -363,6 +363,7 @@ public class CustomDownloadServlet extends CurationServlet {
     		// Get the column names and types; column indices start from 1
             for (int i=1; i<numColumns+1; i++) {
                 String columnName = rsmd.getColumnName(i);
+                columnName = prettyName(columnName);
                 columnHeaders.add(columnName);
                 
                 String columnType = rsmd.getColumnTypeName(i);
@@ -371,7 +372,7 @@ public class CustomDownloadServlet extends CurationServlet {
                 		String typeKey = i+":"+columnType;
                 		
                 		columnTypes.add(typeKey);
-                		ArrayList<String[]> typeBreakdown = getType(typeKey);
+                		ArrayList<String[]> typeBreakdown = getType(typeKey, columnName);
                     	typeMap.put(i+":"+columnType,typeBreakdown);
                     	
                     	if (typeBreakdown.size() >0) {
@@ -403,7 +404,24 @@ public class CustomDownloadServlet extends CurationServlet {
         m_classReq.getSession().setAttribute("arrayColumnTypes", arrayColumnTypes);
 	}
 	
-	private ArrayList<String[]> getType(String type) {
+	//Due to Col Name limit to 30 chars, we need to expand the names once we get them.
+	private String prettyName(String name) {
+		
+		if (name.startsWith("DE "))
+			return name.replace("DE ", "Data Element ");
+		else if (name.startsWith("DEC "))
+			return name.replace("DEC ", "Data Element Concept ");
+		else if (name.startsWith("VD "))
+			return name.replace("VD ", "Value Domain ");
+		else if (name.startsWith("OC "))
+			return name.replace("OC ", "Object Class ");
+		else if (name.startsWith("CD "))
+			return name.replace("CD ", "Conceptual Domain ");
+		
+		return name;
+	}
+	
+	private ArrayList<String[]> getType(String type, String name) {
 		
 		ArrayList<String[]> colNamesAndTypes = new ArrayList<String[]>();
 	   	
@@ -426,6 +444,19 @@ public class CustomDownloadServlet extends CurationServlet {
             	i++;
             	String col = rs.getString("DISPLAY_NAME");
             	String ctype = rs.getString("DISPLAY_TYPE");
+            	if (type.toUpperCase().contains("CONCEPT")) {
+            		if (name.toUpperCase().startsWith("REP"))
+            			name = "Representation Concept";
+            		else if (name.toUpperCase().startsWith("VD"))
+            			name = "Value Domain Concept";
+            		else if (name.toUpperCase().startsWith("OC"))
+            			name = "Object Class Concept";
+            		else if (name.startsWith("PROP"))
+            			name = "Property Concept";
+            		
+            		col = name+" "+col;
+            	}
+            	
             	attrName.add(col);
             	attrTypeName.add(ctype);
             }
@@ -516,8 +547,8 @@ public class CustomDownloadServlet extends CurationServlet {
 		//generate output
 		XMLSerializer serializer = new XMLSerializer();
 		
-    	m_classRes.setContentType( "application/vnd.ms-excel" );
-    	m_classRes.setHeader( "Content-Disposition", "attachment; filename=\"customDownload.xls\"" );
+    	m_classRes.setContentType( "text/xml" );
+    	m_classRes.setHeader( "Content-Disposition", "attachment; filename=\"customDownload.xml\"" );
     	
         OutputStream out = m_classRes.getOutputStream();
 		
