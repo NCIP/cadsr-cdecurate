@@ -704,7 +704,7 @@
 																	<table cellpadding="0.1in,0.1in,0.1in,0.1in">
 																		<tr>
 																			<td>
-																				<input type="button" id="btnUseSelect" value="Use Selection" disabled onClick="javascript:AddNewPV('addNewPV');">
+																				<input type="button" id="btnUseSelect" value="Link Concept" disabled onClick="javascript:AddNewPV('addNewPV');">
 																			</td>
 																			<td>
 																				&nbsp;&nbsp;
@@ -731,7 +731,7 @@
 																		The Value Meaning matches the name of another Value Meaning. Please (1) select from the list below and press the Use Selection button, (2) press the Create button to create a new Value Meaning as it appears above or (3) press Cancel to change the Value Meaning properties above then press Save again
 																	<% } else { %>
 																		The Value Meaning you are creating matches the definition or concepts of an existing Value Meaning.
-																		You may select an existing Value Meaning and click 'Use Selection', 
+																		You may select an existing Value Meaning and click 'Link Concept', 
 																		'Cancel' to edit the Value Meaning, or 'Create' to create a new Value Meaning.
 																	<% } %>
 																	<br>

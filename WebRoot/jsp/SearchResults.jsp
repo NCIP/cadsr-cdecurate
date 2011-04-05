@@ -548,7 +548,7 @@ if(!sSelAC.equals("ValueMeaning"))
     String buttons[] = new String[17];
     if (sMAction.equals("searchForCreate")) {
         buttons[0] = "<!-- searchForCreate -->\n"
-            + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Use Selection\" onClick=\"ShowUseSelection();\" disabled>\n&nbsp;\n";
+            + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Link Concept\" onClick=\"ShowUseSelection();\" disabled>\n&nbsp;\n";
     } else if (((sMAction.equals("Edit Selection")) || (sMAction.equals("nothing"))) && ((sSelAC.equals("Value Meaning"))||(sSelAC.equals("Data Element")) || (sSelAC.equals("Data Element Concept")) || (sSelAC.equals("Value Domain")))){
         buttons[1] = "<!-- nothing -->\n"
             + "<input type=\"button\" name=\"editSelectedBtn\" value=\"Edit Selection\" onClick=\"ShowEditSelection();\" disabled "
