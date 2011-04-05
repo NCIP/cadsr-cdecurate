@@ -119,13 +119,13 @@ public class CustomDownloadServlet extends CurationServlet {
 		        	System.out.println("DL Limit: "+tob.getVALUE());	
 		        }
 		      }
-			
-		}
-		
-		
+		}	
+	
 		setDownloadIDs(type, outside);
 		setColHeadersAndTypes(type);
+		ArrayList<String[]> rows = getRecords(false, true);
 		
+		m_classReq.getSession().setAttribute("rows", rows);
 		ForwardJSP(m_classReq, m_classRes, "/CustomDownload.jsp");
 	}
 	
@@ -309,28 +309,29 @@ public class CustomDownloadServlet extends CurationServlet {
 		if (downloadIds.size() <= 1000 ){ //make sure that there are no more than 1000 ids in each 'IN' clause
     		whereBuffer = new StringBuffer();
     		for (String id:downloadIds) {
-    			whereBuffer.append("'" + id + ",'");
+    			whereBuffer.append("'" + id + "',");
     		}
-    		whereBuffer.deleteCharAt(whereBuffer.length());
+    		whereBuffer.deleteCharAt(whereBuffer.length()-1);
     	} else {
     		whereBuffers = new ArrayList<StringBuffer>();
     		int counter = 0;
     		whereBuffer = new StringBuffer();
     		
     		for (String id:downloadIds) {
-    			whereBuffer.append("'" + id + ",'");
+    			whereBuffer.append("'" + id + "',");
     			
     			counter++;
     			
     			if (counter%1000 == 0) {
-    				whereBuffer.deleteCharAt(whereBuffer.length());
+    				whereBuffer.deleteCharAt(whereBuffer.length()-1);
     				whereBuffers.add(whereBuffer);
     				whereBuffer = new StringBuffer();
     			}
     		}
+    		
     		// add the final chunk to the list
     		if (whereBuffer.length()>0) {
-    			whereBuffer.deleteCharAt(whereBuffer.length());
+    			whereBuffer.deleteCharAt(whereBuffer.length()-1);
 				whereBuffers.add(whereBuffer);
     		}
     	}

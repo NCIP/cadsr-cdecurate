@@ -596,18 +596,18 @@ public class ValueDomainServlet extends CurationServlet {
 				boolean isExist = false;
 				if (sOrigin.equals("Edit"))
 				{
-					// call function to check if relationship exists
-					SetACService setAC = new SetACService(this);
-					isExist = setAC.checkPVQCExists(m_classReq, m_classRes, sVDid, "");
-					if (isExist)
-					{
-						String sMsg = "Unable to change Value Domain type to Non-Enumerated "
-							+ "because one or more Permissible Values are being used in a Case Report Form. \\n"
-							+ "Please create a new version of this Value Domain to change the type to Non-Enumerated.";
-						DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, sMsg);
-						vdBean.setVD_TYPE_FLAG("E");
-						DataManager.setAttribute(session, "m_VD", vdBean);
-					}
+					// call function to check if relationship exists (Changed with GF 7680)
+//					SetACService setAC = new SetACService(this);
+//					isExist = setAC.checkPVQCExists(m_classReq, m_classRes, sVDid, "");
+//					if (isExist)
+//					{
+//						String sMsg = "Unable to change Value Domain type to Non-Enumerated "
+//							+ "because one or more Permissible Values are being used in a Case Report Form. \\n"
+//							+ "Please create a new version of this Value Domain to change the type to Non-Enumerated.";
+//						DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, sMsg);
+//						vdBean.setVD_TYPE_FLAG("E");
+//						DataManager.setAttribute(session, "m_VD", vdBean);
+//					}
 				}
 				// mark all the pvs as deleted to remove them while submitting.
 				if (!isExist)
