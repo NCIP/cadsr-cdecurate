@@ -703,8 +703,7 @@
   {
 	   document.searchResultsForm.target="_blank";
 	   document.searchResultsForm.action="../../cdecurate/NCICurationServlet?reqType=showDEfromSearch";
-	   window.status = "Submitting the page, it may take a minute, please wait....."
-		 document.searchResultsForm.Message.style.visibility="visible";
+	    
 	   document.searchResultsForm.numSelected.value = numRowsSelected;
 	   document.searchResultsForm.submit();
   }
@@ -713,8 +712,7 @@
   {
 	  document.searchResultsForm.target="_blank";
 	   document.searchResultsForm.action="../../cdecurate/NCICurationServlet?reqType=showVDfromSearch";
-	   window.status = "Submitting the page, it may take a minute, please wait....."
-		 document.searchResultsForm.Message.style.visibility="visible";
+	    
 	   document.searchResultsForm.numSelected.value = numRowsSelected;
 	   document.searchResultsForm.submit();
   }
@@ -723,8 +721,6 @@
   {
 	  document.searchResultsForm.target="_blank";
 	   document.searchResultsForm.action="../../cdecurate/NCICurationServlet?reqType=showDECfromSearch";
-	   window.status = "Submitting the page, it may take a minute, please wait....."
-		 document.searchResultsForm.Message.style.visibility="visible";
 	   document.searchResultsForm.numSelected.value = numRowsSelected;
 	   document.searchResultsForm.submit();
   }
