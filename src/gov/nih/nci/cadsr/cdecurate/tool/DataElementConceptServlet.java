@@ -1148,6 +1148,10 @@ public class DataElementConceptServlet extends CurationServlet {
 		Vector<String> rebuiltCodes = new Vector<String>();
 		Vector<String> rebuiltDefs = new Vector<String>();
 
+		
+		//vConcepts is a list of all concepts currently used for this element
+		//The codes list should not include anything that's not in vConcept (in case of removal)
+		//Also need to make sure that the new concepts are at the end of the list, like they're supposed to be.
 		//added in 4.1 to check if OC exists and set alternate def. if used an EVS concept	   
 		for(EVS_Bean eb: vConcepts){
 			String usedCode = eb.getCONCEPT_IDENTIFIER();
@@ -1155,11 +1159,11 @@ public class DataElementConceptServlet extends CurationServlet {
 			boolean found = false;
 			for(int codeCounter = 0; codeCounter < codes.size(); codeCounter++){
 				String chosenCode = codes.get(codeCounter);
-				if (chosenCode.equals(usedCode)){
+				if (chosenCode.equals(usedCode) || chosenCode.equals("*"+usedCode)){
 					//Code is used, transfer to rebuilt list
 					found = true;
-					rebuiltCodes.add(chosenCode);
-					rebuiltDefs.add(defs.get(codeCounter));
+					rebuiltCodes.add("*"+chosenCode); //Adding * to mark a new concept (need to be added at the end of old definition)
+					rebuiltDefs.add("*"+defs.get(codeCounter));
 
 					//if definitions don't match, put up a warning.
 					if (!defs.get(codeCounter).equals(usedDef))
@@ -1173,8 +1177,9 @@ public class DataElementConceptServlet extends CurationServlet {
 				rebuiltCodes.add(usedCode);
 				rebuiltDefs.add(usedDef);
 			}
-			
 		}
+		
+		
 		session.setAttribute("chosen"+type+"Codes", rebuiltCodes);
 		session.setAttribute("chosen"+type+"Defs", rebuiltDefs);
 
