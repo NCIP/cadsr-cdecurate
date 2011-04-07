@@ -1117,6 +1117,7 @@ public class ValueDomainServlet extends CurationServlet {
 				m_VD = new VD_Bean();
 			m_setAC.setVDValueFromPage(m_classReq, m_classRes, m_VD);
 			Vector<EVS_Bean> vRepTerm = (Vector) session.getAttribute("vRepTerm");
+			
 			if (vRepTerm == null) {
 				vRepTerm = new Vector<EVS_Bean>();
 				
@@ -1133,6 +1134,8 @@ public class ValueDomainServlet extends CurationServlet {
 				String sComp = (String) m_classReq.getParameter("sCompBlocks");
 				Vector<String> codes = null;
 				Vector<String> defs = null;
+				
+				
 				
 				// get rep term components
 				if (sComp.equals("RepTerm") || sComp.equals("RepQualifier"))
@@ -1151,6 +1154,7 @@ public class ValueDomainServlet extends CurationServlet {
 							m_REP = (EVS_Bean) vAC.elementAt(intObjRow2);
 						// get name value pari
 						String sNVP = (String) m_classReq.getParameter("nvpConcept");
+				
 						if (sNVP != null && !sNVP.equals(""))
 						{
 							m_REP.setNVP_CONCEPT_VALUE(sNVP);

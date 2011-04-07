@@ -644,8 +644,18 @@ public class SetACService implements Serializable
 			strInValid = "";
 			UtilService.setValPageVector(vValidate, "Definition", s, bMandatory, 2000, strInValid, sOriginAction);
 			
+			String oldDef = null;
+			if (!s.equals(""))
+			{	
+				DEC_Bean oldDEC = (DEC_Bean)session.getAttribute("oldDECBean");
+				if (oldDEC != null && sDECAction.equals("Edit"))
+				{
+					oldDef = oldDEC.getDEC_PREFERRED_DEFINITION();
+				}
+			}
+			
 			//Check Definition against (constructed) chosen definition, add to Alt Def if not same, add Warning in vValidate vector.
-			String chosenDef = constructChosenDefinition(req.getSession(), "DEC");
+			String chosenDef = constructChosenDefinition(req.getSession(), "DEC", oldDef);
 			if (!chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
 				String warningMessage = "Warning: Your chosen definitions are being replaced by standard definitions.  Your chosen definition is being added as an alternate definition if it does not exist already.";
@@ -812,7 +822,7 @@ public class SetACService implements Serializable
 		Vector<String> vValString = this.makeStringVector(vValidate);
 		req.setAttribute("vValidate", vValString);
 	}
-	private String constructChosenDefinition(HttpSession session, String type) {
+	private String constructChosenDefinition(HttpSession session, String type, String oldDef) {
 		String def = "";
  
 		if (type.equals("DEC")) {
@@ -825,15 +835,19 @@ public class SetACService implements Serializable
 			if (propDefs == null)
 				propDefs = getDefs((Vector<EVS_Bean>)session.getAttribute("vProperty"));
 			
-			def = getDECDef(ocDefs, propDefs);
+			
+			def = getDECDef(oldDef, ocDefs, propDefs);
 			
 		} else //VD
 		{
-			Vector<String> repDefs = (Vector<String>) session.getAttribute("chosenVDDefs");
+			Vector<String> repDefs = (Vector<String>) session.getAttribute("chosenRepDefs");
 			
 			if (repDefs == null)
 				repDefs = getDefs((Vector<EVS_Bean>)session.getAttribute("vRepTerm"));
-			def = getVDDef(repDefs);
+			
+			VD_Bean oldVD = (VD_Bean)session.getAttribute("oldVDBean");
+		
+			def = getVDDef(oldDef, repDefs);
 		}
 		
 		return def;
@@ -850,9 +864,11 @@ public class SetACService implements Serializable
 		return defs;
 	}
 	
-	public String getDECDef(Vector<String> vObjectClass, Vector<String> vProperty)
+	public String getDECDef(String oldDef, Vector<String> vObjectClass, Vector<String> vProperty)
 	{	
 		String sDef = "";
+		if (oldDef != null && oldDef.length() > 0)
+			sDef = oldDef;
 		// get the existing one if not restructuring the name but appending it
 		
 		// add the Object Class qualifiers first
@@ -860,27 +876,36 @@ public class SetACService implements Serializable
 		{
 			String ocDef = vObjectClass.elementAt(i);
 							
-			if (!sDef.equals(""))
-				sDef += "_"; // add definition
-			sDef += ocDef;
+			if (ocDef.startsWith("*")) { //Add only if new 
+				ocDef = ocDef.substring(1); //peel off the *
+				if (!sDef.equals(""))
+					sDef += "_"; // add definition
+				sDef += ocDef;
+			}
 			
 		}
 		// add the Object Class primary
 		if (vObjectClass != null && vObjectClass.size() > 0)
 		{
 			String ocDef = vObjectClass.elementAt(0);
-			if (!sDef.equals(""))
-				sDef += "_"; // add definition
-			sDef += ocDef;			
+			if (ocDef.startsWith("*")) { //Add only if new 
+				ocDef = ocDef.substring(1); //peel off the *
+				if (!sDef.equals(""))
+					sDef += "_"; // add definition
+				sDef += ocDef;		
+			}
 		}
 		// get the Property into the long name and abbr name
 		// add the property qualifiers first
 		for (int i = 1; vProperty.size() > i; i++)
 		{
 			String propDef = vProperty.elementAt(i);
-			if (!sDef.equals(""))
-				sDef += "_"; // add definition
-			sDef += propDef;
+			if (propDef.startsWith("*")) { //Add only if new 
+				propDef = propDef.substring(1); //peel off the *
+				if (!sDef.equals(""))
+					sDef += "_"; // add definition
+				sDef += propDef;
+			}
 				
 			
 		}
@@ -888,37 +913,46 @@ public class SetACService implements Serializable
 		if (vProperty != null && vProperty.size() > 0)
 		{
 			String propDef = vProperty.elementAt(0);
-			if (!sDef.equals(""))
-				sDef += "_"; // add definition
-			sDef += propDef;
-	
+			if (propDef.startsWith("*")) { //Add only if new 
+				propDef = propDef.substring(1); //peel off the *
+				if (!sDef.equals(""))
+					sDef += "_"; // add definition
+				sDef += propDef;
+			}
 		}
 		
 		return sDef;
 	}
 	
-	public String getVDDef(Vector<String> vRepTerm)
+	public String getVDDef(String oldDef, Vector<String> vRepTerm)
 	{	
 		String sDef = "";
+		if (oldDef != null && oldDef.length() > 0)
+			sDef = oldDef;
 		// get the existing one if not restructuring the name but appending it
 		
 		// add the Object Class qualifiers first
 		for (int i = 1; vRepTerm.size() > i; i++)
 		{
 			String ocDef = vRepTerm.elementAt(i);
-							
-			if (!sDef.equals(""))
-				sDef += "_"; // add definition
-			sDef += ocDef;
+			if (ocDef.startsWith("*")) { //Add only if new 
+				ocDef = ocDef.substring(1); //peel off the *
+				if (!sDef.equals(""))
+					sDef += "_"; // add definition
+				sDef += ocDef;
+			}
 			
 		}
 		// add the Object Class primary
 		if (vRepTerm != null && vRepTerm.size() > 0)
 		{
 			String ocDef = vRepTerm.elementAt(0);
-			if (!sDef.equals(""))
-				sDef += "_"; // add definition
-			sDef += ocDef;			
+			if (ocDef.startsWith("*")) { //Add only if new 
+				ocDef = ocDef.substring(1); //peel off the *		
+				if (!sDef.equals(""))
+					sDef += "_"; // add definition
+				sDef += ocDef;			
+			}
 		}
 		
 		return sDef;
@@ -1037,9 +1071,18 @@ public class SetACService implements Serializable
 			if (s == null) s = "";
 			strInValid = "";
 			UtilService.setValPageVector(vValidate, "Definition", s, bMandatory, 2000, strInValid, sOriginAction);
-
+			String oldDef = null;
+			if (!s.equals(""))
+			{	
+				VD_Bean oldVD = (VD_Bean)session.getAttribute("oldVDBean");
+				if (oldVD != null && sVDAction.equals("Edit"))
+				{
+					oldDef = oldVD.getVD_PREFERRED_DEFINITION();
+				}
+			}
 			//Check Definition against (constructed) chosen definition, add to Alt Def if not same, add Warning in vValidate vector.
-			String chosenDef = constructChosenDefinition(req.getSession(), "VD");
+			String chosenDef = constructChosenDefinition(req.getSession(), "VD", oldDef);
+			
 			if (!chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
 				String warningMessage = "Warning: Your chosen definitions are being replaced by standard definitions.  Your chosen definition is being added as an alternate definition if it does not exist already.";
