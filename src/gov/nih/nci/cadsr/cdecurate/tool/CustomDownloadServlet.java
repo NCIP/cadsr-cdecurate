@@ -233,32 +233,33 @@ public class CustomDownloadServlet extends CurationServlet {
 			Object derivedObject = rs.getObject(index+1);
 			Struct struct = (Struct) derivedObject;
 			Object[] valueStruct = struct.getAttributes();
+			//Fifth entry is the array with DE's 
+			array = (Array) valueStruct[5];
 
-			String[] derivationInfo = new String[5];
-			for (int z = 0; z < 5; z++)
-				derivationInfo[z] =(valueStruct[z] != null)? valueStruct[z].toString(): "";
+			if (array != null){
+				String[] derivationInfo = new String[5];
+				for (int z = 0; z < 5; z++)
+					derivationInfo[z] =(valueStruct[z] != null)? valueStruct[z].toString(): "";
 
-				rowArrayData.add(derivationInfo);
-				
-				//Fifth entry is the array with DE's 
-				array = (Array) valueStruct[5];
+					rowArrayData.add(derivationInfo);
 
-				ResultSet nestedRs = array.getResultSet(); 
+					ResultSet nestedRs = array.getResultSet(); 
 
-				while (nestedRs.next()) {
-					Struct deStruct = (Struct) nestedRs.getObject(2);
-					Object[] valueDatum = deStruct.getAttributes();
-					String[] values = new String[valueDatum.length];
+					while (nestedRs.next()) {
+						Struct deStruct = (Struct) nestedRs.getObject(2);
+						Object[] valueDatum = deStruct.getAttributes();
+						String[] values = new String[valueDatum.length];
 
-					for (int a = 0; a < valueDatum.length; a++) {
-						if (valueDatum[a] != null) {
-							Class c = valueDatum[a].getClass();
-							String s = c.getName();
-							values[a]= valueDatum[a].toString();	
-						} 
+						for (int a = 0; a < valueDatum.length; a++) {
+							if (valueDatum[a] != null) {
+								Class c = valueDatum[a].getClass();
+								String s = c.getName();
+								values[a]= valueDatum[a].toString();	
+							} 
+						}
+						rowArrayData.add(values);
 					}
-					rowArrayData.add(values);
-				}
+			}
 		} else {
 			array = rs.getArray(index+1);
 			if (array != null) {
@@ -746,7 +747,7 @@ public class CustomDownloadServlet extends CurationServlet {
 						if (rowArrayData != null) {
 							int tempBump = 0;
 							for (int nestedRowIndex = 0; nestedRowIndex < rowArrayData.size(); nestedRowIndex++) {
-							
+
 								String[] nestedData = rowArrayData.get(nestedRowIndex);
 								String data = nestedData[originalColumnIndex];
 								cell.setCellValue(data);
