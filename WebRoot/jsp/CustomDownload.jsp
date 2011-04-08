@@ -311,7 +311,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 }
                 
                 if (action = "XML")
-                	document.columnSubmission.action.value = "../../cdecurate/NCICurationServlet?reqType=dlXMLColumns";
+                	document.columnSubmission.action = "../../cdecurate/NCICurationServlet?reqType=dlXMLColumns";
                 
                 document.columnSubmission.cdlColumns.value = cols;
                 document.columnSubmission.submit();
