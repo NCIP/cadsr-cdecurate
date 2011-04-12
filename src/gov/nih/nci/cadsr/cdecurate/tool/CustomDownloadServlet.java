@@ -308,7 +308,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			StringBuffer[] whereBuffers = getWhereBuffers(downloadIDs);
 			for (StringBuffer wBuffer: whereBuffers) {
 				sqlStmt =
-					"SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW " + "WHERE "+type+"_IDSEQ IN " +
+					"SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW2 " + "WHERE "+type+"_IDSEQ IN " +
 					" ( " + wBuffer.toString() + " )  ";
 				if (restrict) {
 					sqlStmt += " and ROWNUM <= "+GRID_MAX_DISPLAY;
@@ -516,6 +516,7 @@ public class CustomDownloadServlet extends CurationServlet {
 	private void createXMLDownload(ArrayList<String[]> allRows) {
 		//Limited columns?  If xmlColumns is not null
 		//Setup columns
+		String colString = (String) this.m_classReq.getParameter("cdlColumns");
 		ArrayList<String> allHeaders = (ArrayList<String>) m_classReq.getSession().getAttribute("headers");
 		ArrayList<String> allExpandedHeaders = (ArrayList<String>) m_classReq.getSession().getAttribute("allExpandedHeaders");
 		ArrayList<String> allTypes = (ArrayList<String>) m_classReq.getSession().getAttribute("types");
@@ -527,7 +528,9 @@ public class CustomDownloadServlet extends CurationServlet {
 		if (xmlColumns != null && !xmlColumns.trim().equals("")) {
 			columns = xmlColumns.split(",");
 		}
-		else {
+		else if (colString != null && !colString.trim().equals("")){
+			columns = colString.split(",");
+		} else {
 			//Different from Excel.  Handling of nested columns is different
 			columns = allHeaders.toArray(new String[allHeaders.size()]);
 		}
@@ -591,6 +594,10 @@ public class CustomDownloadServlet extends CurationServlet {
 		} catch (IOException ioe){
 			System.out.println("Error while trying to serialize  " + ioe);
 			ioe.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("Error  " + e);
+			e.printStackTrace();
+		
 		}
 
 	}
@@ -600,11 +607,11 @@ public class CustomDownloadServlet extends CurationServlet {
 
 
 		Element deElement = dom.createElement("DataElement");
-		deElement.setAttribute("","");
+		deElement.setAttribute("num",Integer.toString(rowNumber));
 
 		for (int j = 0; j < colIndices.length; j++) {
 
-			Element elem = dom.createElement(columns[j]);
+			Element elem = dom.createElement(columns[j].replace(" ", ""));
 			String currentType = allTypes.get(colIndices[j]);
 
 			if (currentType.endsWith("_T"))
@@ -628,7 +635,7 @@ public class CustomDownloadServlet extends CurationServlet {
 				if (rowArrayData != null) {
 					for (int nestedRowIndex = 0; nestedRowIndex < rowArrayData.size(); nestedRowIndex++) {
 						//Get subType column names and iterate over those and create nested elements
-						Element nestedElement = dom.createElement("");
+						Element nestedElement = dom.createElement(columns[j].replace(" ", ""));
 						//Add element and data close element
 						String[] nestedData = rowArrayData.get(nestedRowIndex);
 						String data = nestedData[originalColumnIndex];

@@ -89,6 +89,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             var dndPlugin;
             var gdHeaderMap;
             var gdHeaderArray;
+            
+            //Fix for: indexOf not implemented in IE.
+            if (!Array.prototype.indexOf) {
+	            Array.prototype.indexOf = function(obj, start) {
+				     for (var i = (start || 0), j = this.length; i < j; i++) {
+				         if (this[i] == obj) { return i; }
+				     }
+				     return -1;
+				}
+	        }
+            
             function addOption(theSel, theText, theValue)
             {
 		    	var newOpt = new Option(theText, theValue);
