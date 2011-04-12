@@ -11,7 +11,11 @@
 	JSONObject container = new JSONObject();
   	JSONArray jArray = new JSONArray();
 	
-	for (int rowLoop = 0; rowLoop < rows.size(); rowLoop++) {	    
+  	int limit = 100;
+  	if (rows.size() < 100)
+  		limit = rows.size();
+  	
+	for (int rowLoop = 0; rowLoop < limit; rowLoop++) {	    
 		JSONObject row=new JSONObject();
   		for (int colLoop = 0; colLoop < headers.size(); colLoop++) {
   			
