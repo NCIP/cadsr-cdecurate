@@ -314,10 +314,10 @@
              	     }
                 }
                 
-                if (action = "XML")
+                if (action == "XML")
                 	document.columnSubmission.action = "../../cdecurate/NCICurationServlet?reqType=dlXMLColumns";
                 
-                if (action = "Excel")
+                if (action == "Excel")
                 	document.columnSubmission.action = "../../cdecurate/NCICurationServlet?reqType=dlExcelColumns";
                 
                 document.columnSubmission.cdlColumns.value = cols;
