@@ -2716,7 +2716,24 @@ public class CurationServlet
      */
     public void doMonitor(String user, String idseqToMonitor )
     {
-    	System.out.println("Entering doMonitor()");
+    	
+    	
+    	String monitor = "";
+    	
+    	//Disable with property.
+    	GetACService getAC = new GetACService(this.m_classReq, this.m_classRes, this);
+    	Vector vList = getAC.getToolOptionData("CURATION", "MONITOR", "");
+        if (vList != null && vList.size()>0)
+        {
+          TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
+          if (tob != null) monitor = tob.getVALUE();
+        }
+        
+        if (monitor.length() > 0 && monitor.toUpperCase().equals("FALSE"))
+        	return;
+        
+        System.out.println("Entering doMonitor()");
+        
             CallableStatement stmt = null;
             try
             {

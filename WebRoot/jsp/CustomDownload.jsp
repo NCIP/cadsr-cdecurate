@@ -1,15 +1,9 @@
 <%@ page language="java" import="java.util.*" pageEncoding="ISO-8859-1"%>
 <%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
-<%
-String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <base href="<%=basePath%>">
-    
     <title>Customizable Download</title>
     
 	<meta http-equiv="pragma" content="no-cache">
@@ -32,9 +26,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
           <!-- Header -->
             <curate:header displayUser = "false"/>
         <!-- Main Area -->
-    
-        <%=path %>
-        <%=basePath %>
+ 
         
       <form name="columnSubmission" method="post" action="../../cdecurate/NCICurationServlet?reqType=dlExcelColumns">
             <input type="hidden" name="cdlColumns" value=""/>
@@ -46,8 +38,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
       </form>
       <br></br>
       <br></br>
-      <% ArrayList<String> rows = (ArrayList<String>) session.getAttribute("rows"); %>
+      <% ArrayList<String> rows = (ArrayList<String>) session.getAttribute("downloadIDs"); %>
       <font size="4"><%=rows.size()%> elements selected for download.</font>  
+	  <% if (rows.size() > 100) {%>  <font size="4">Displaying first 100 elements for verification.</font><%} %>
      
       <div id="customDownloadContainer" style="width: 80%; height: 50%; display: block"></div> 
       <div id="simpleViewContainer" style="width: 80%; height: 50%; display: none">
@@ -323,6 +316,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 
                 if (action = "XML")
                 	document.columnSubmission.action = "../../cdecurate/NCICurationServlet?reqType=dlXMLColumns";
+                
+                if (action = "Excel")
+                	document.columnSubmission.action = "../../cdecurate/NCICurationServlet?reqType=dlExcelColumns";
                 
                 document.columnSubmission.cdlColumns.value = cols;
                 document.columnSubmission.submit();
