@@ -74,7 +74,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			break;
 		case dlExcelColumns:
 			ArrayList<String[]> downloadRows = getRecords(false, false);
-			createDownloadColumns(downloadRows, "Excel");
+			createDownloadColumns(downloadRows);
 			break;
 		case dlXMLColumns:
 			ArrayList<String[]> xmlDownloadRows = getRecords(false, false);
@@ -93,7 +93,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			setDownloadIDs("CDE",false);
 			setColHeadersAndTypes("CDE");
 			ArrayList<String[]> allRows = getRecords(true, false);
-			createDownloadColumns(allRows, "Excel");
+			createDownloadColumns(allRows);
 			break;
 		}	
 	}
@@ -308,7 +308,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			StringBuffer[] whereBuffers = getWhereBuffers(downloadIDs);
 			for (StringBuffer wBuffer: whereBuffers) {
 				sqlStmt =
-					"SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW2 " + "WHERE "+type+"_IDSEQ IN " +
+					"SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW " + "WHERE "+type+"_IDSEQ IN " +
 					" ( " + wBuffer.toString() + " )  ";
 				if (restrict) {
 					sqlStmt += " and ROWNUM <= "+GRID_MAX_DISPLAY;
@@ -398,7 +398,7 @@ public class CustomDownloadServlet extends CurationServlet {
 					String typeKey = i+":"+columnType;
 
 					columnTypes.add(typeKey);
-					ArrayList<String[]> typeBreakdown = getType(typeKey, columnName);
+					ArrayList<String[]> typeBreakdown = getType(typeKey, columnName, type);
 					typeMap.put(i+":"+columnType,typeBreakdown);
 
 					if (typeBreakdown.size() >0) {
@@ -447,7 +447,7 @@ public class CustomDownloadServlet extends CurationServlet {
 		return name;
 	}
 
-	private ArrayList<String[]> getType(String type, String name) {
+	private ArrayList<String[]> getType(String type, String name, String download) {
 
 		ArrayList<String[]> colNamesAndTypes = new ArrayList<String[]>();
 
@@ -481,6 +481,16 @@ public class CustomDownloadServlet extends CurationServlet {
 						name = "Property Concept";
 
 					col = name+" "+col;
+				}
+				if (type.toUpperCase().contains("DESIGNATION")) {
+					if (download.equals("CDE"))
+						download = "Data Element";
+					else if (download.equals("VD"))
+						download = "Value Domain";
+					else if (download.equals("DEC"))
+						download = "Data Element Concept";
+					
+					col = download+" "+col;
 				}
 
 				attrName.add(col);
@@ -654,7 +664,7 @@ public class CustomDownloadServlet extends CurationServlet {
 
 	}
 
-	private void createDownloadColumns(ArrayList<String[]> allRows, String type){
+	private void createDownloadColumns(ArrayList<String[]> allRows){
 		final int MAX_ROWS = 65000;
 
 		String sheetName = "Custom Download";
@@ -677,7 +687,16 @@ public class CustomDownloadServlet extends CurationServlet {
 			columns = colString.split(",");
 		}
 		else {
-			columns = allExpandedHeaders.toArray(new String[allExpandedHeaders.size()]);
+			ArrayList<String> defaultHeaders = new ArrayList<String>();
+			
+			for (String cName: allExpandedHeaders){
+				if (cName.endsWith("IDSEQ") || cName.startsWith("CD ") || cName.startsWith("Conceptual Domain"))
+					{ /*skip*/ }
+				else 
+					defaultHeaders.add(cName);
+			}
+			columns = defaultHeaders.toArray(new String[allExpandedHeaders.size()]);	
+	
 		}
 
 		int[] colIndices = new int[columns.length];
