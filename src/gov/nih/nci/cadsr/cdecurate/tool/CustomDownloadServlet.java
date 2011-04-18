@@ -648,9 +648,24 @@ public class CustomDownloadServlet extends CurationServlet {
 						Element nestedElement = dom.createElement(columns[j].replace(" ", ""));
 						//Add element and data close element
 						String[] nestedData = rowArrayData.get(nestedRowIndex);
-						String data = nestedData[originalColumnIndex];
-						nestedElement.setTextContent(data);
-						elem.appendChild(nestedElement);
+						String data = "";
+						if (currentType.contains("DERIVED")) {
+							//Derived data element is special double nested, needs to be modified to be more general.
+							
+							//General DDE information is in the first 4 columns, but contained in the first row of the Row Array Data
+							if (originalColumnIndex < 4) {
+								if (nestedRowIndex == 0)
+									data = (originalColumnIndex > 0)? nestedData[originalColumnIndex]:nestedData[originalColumnIndex+1];  //This skips the 2nd entry, description, which is not to be shown.
+							} else {
+								if (nestedRowIndex+1 < rowArrayData.size()){
+									data = rowArrayData.get(nestedRowIndex+1)[originalColumnIndex-5];
+								}
+							}						
+						}else {
+							data = nestedData[originalColumnIndex];
+							nestedElement.setTextContent(data);
+							elem.appendChild(nestedElement);
+						}
 					}
 				}
 			} else {
@@ -669,8 +684,6 @@ public class CustomDownloadServlet extends CurationServlet {
 
 		String sheetName = "Custom Download";
 		int sheetNum = 1;
-
-		boolean XML = false;
 
 		String colString = (String) this.m_classReq.getParameter("cdlColumns");
 		String fillIn = (String) this.m_classReq.getParameter("fillIn");
@@ -695,7 +708,7 @@ public class CustomDownloadServlet extends CurationServlet {
 				else 
 					defaultHeaders.add(cName);
 			}
-			columns = defaultHeaders.toArray(new String[allExpandedHeaders.size()]);	
+			columns = defaultHeaders.toArray(new String[defaultHeaders.size()]);	
 	
 		}
 
@@ -740,10 +753,7 @@ public class CustomDownloadServlet extends CurationServlet {
 				//Check if row already exists
 				int maxBump = 0;
 				if (sheet.getRow(rownum+bump) == null) {
-					row = sheet.createRow(rownum+bump);
-					if (XML){
-
-					}//Add DE Element	
+					row = sheet.createRow(rownum+bump);	
 				}
 
 				if(allRows.get(i) == null) continue;
@@ -770,12 +780,28 @@ public class CustomDownloadServlet extends CurationServlet {
 						HashMap<String,ArrayList<String[]>> typeArrayData = arrayData.get(i);
 						ArrayList<String[]> rowArrayData = typeArrayData.get(currentType);
 
-						if (rowArrayData != null) {
+						if (rowArrayData != null ) {
 							int tempBump = 0;
 							for (int nestedRowIndex = 0; nestedRowIndex < rowArrayData.size(); nestedRowIndex++) {
 
 								String[] nestedData = rowArrayData.get(nestedRowIndex);
-								String data = nestedData[originalColumnIndex];
+								String data = "";
+								if (currentType.contains("DERIVED")) {
+									//Derived data element is special double nested, needs to be modified to be more general.
+									
+									//General DDE information is in the first 4 columns, but contained in the first row of the Row Array Data
+									if (originalColumnIndex < 4) {
+										if (nestedRowIndex == 0)
+											data = (originalColumnIndex > 0)? nestedData[originalColumnIndex]:nestedData[originalColumnIndex+1];  //This skips the 2nd entry, description, which is not to be shown.
+									} else {
+										if (nestedRowIndex+1 < rowArrayData.size()){
+											data = rowArrayData.get(nestedRowIndex+1)[originalColumnIndex-5];
+										}
+									}
+										
+										
+								}else 
+									data = nestedData[originalColumnIndex];
 								cell.setCellValue(data);
 
 								tempBump++;
@@ -835,6 +861,22 @@ public class CustomDownloadServlet extends CurationServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}        
+	}
+
+	private String getNestedData(ArrayList<String[]> rowArrayData, int originalColumnIndex,
+			String currentType, int nestedRowIndex) {
+		String ret = "";
+		String[] nestedData = rowArrayData.get(nestedRowIndex);
+		if (currentType.contains("DERIVED"))
+			{
+				if (originalColumnIndex > 4)
+					nestedData = rowArrayData.get(nestedRowIndex+1);
+				
+				ret = nestedData[originalColumnIndex-5];
+			}
+		else 
+			ret = nestedData[originalColumnIndex];
+		return ret;
 	}
 
 	private Sheet fillInBump(Sheet sheet, int originalRow, int rownum, int bump, ArrayList<String[]> allRows, ArrayList<String> allTypes, int[] colIndices) {
