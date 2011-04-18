@@ -543,6 +543,16 @@
 																Value Domain Attributes
 															</td>
 														</tr>
+														<% if (session.getAttribute("changedRepDefsWarning") != null) {%>
+														<tr height="8">
+															<td colspan=6>
+																
+																Warning: One or more Representation Term concepts you've selected already exist in caDSR with a different definition.
+																The existing standard caDSR definition will be used, and your chosen definition will be used to create an alternate definition for this element.
+																
+															</td>
+														</tr>
+														<%} %>
 														<tr>
 															<td colspan="2" align="left" valign="top">
 																Rep Term Long Name
