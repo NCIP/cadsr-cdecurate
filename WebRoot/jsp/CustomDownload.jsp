@@ -9,8 +9,7 @@
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
-	<link rel="stylesheet" type="text/css" href="js/dojo/dijit/themes/claro/claro.css"
-        />
+	<link rel="stylesheet" type="text/css" href="js/dojo/dijit/themes/claro/claro.css"/>
         <style type="text/css">
             body, html { font-family:helvetica,arial,sans-serif; font-size:90%; }
         </style>
@@ -22,18 +21,22 @@
 	    </style>
   </head>
   
-  <body class=" claro ">
+  <body>
           <!-- Header -->
             <curate:header displayUser = "false"/>
         <!-- Main Area -->
- 
+ 	<%ArrayList<String> headers = (ArrayList<String>) session.getAttribute("headers");
+      ArrayList<String> types = (ArrayList<String>) session.getAttribute("types");
+      ArrayList<String> defaultExcluded = (ArrayList<String>) session.getAttribute("excludedHeaders");
+      
+      HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String,ArrayList<String[]>>) session.getAttribute("typeMap");%>
         
       <form name="columnSubmission" method="post" action="../../cdecurate/NCICurationServlet?reqType=dlExcelColumns">
             <input type="hidden" name="cdlColumns" value=""/>
        
 	      <button type="button" onClick="submitSelectedColumnNames('Excel');">Download Excel</button>
 		  <button type="button" onClick="submitSelectedColumnNames('XML');">Download XML</button>
-	      <button type="button" onClick="toggleView();">Toggle View</button>
+	      <button type="button" onClick="toggleView();">Refresh Preview</button>
 	      	<input type="checkbox" name="fillIn" value="true"/> Check to fill in all values.
       </form>
       <br></br>
@@ -42,13 +45,13 @@
       <font size="4"><%=rows.size()%> elements selected for download.</font>  
 	  <% if (rows.size() > 100) {%>  <font size="4">Displaying first 100 elements for verification.</font><%} %>
      
-      <div id="customDownloadContainer" style="width: 80%; height: 50%; display: block"></div> 
-      <div id="simpleViewContainer" style="width: 80%; height: 50%; display: none">
-          <form>
-          <table border="0">
+      <form>
+      <div id="simpleViewContainer" style="width: 100%; height: 60%;">
+          
+          <table border="0" style="height: 100%;">
               <tr>
                   <td>
-                      <select id="notSelectedCols"></select>
+                      <select id="notSelectedCols" style="width:300px" size=15></select>
                   </td>
                   <td align="center" valign="middle">
                       <input type="button" value="--&gt;"
@@ -56,21 +59,25 @@
                       <input type="button" value="&lt;--"
                           onclick="moveOptions(this.form.selectedCols, this.form.notSelectedCols, 1);" />
                   </td>
-                  <td>
+                  <td >
                       
-                      <select id="selectedCols"></select>
+                      <select style="width:300px" id="selectedCols" size=15></select>
                   </td>
                   <td><input type="button" value="up" onclick="moveOption(this.form.selectedCols,'up');"/>
                   <input type="button" value="down" onclick="moveOption(this.form.selectedCols, 'down');"/></td>
               </tr>
               
           </table>
-          </form>
+          
       </div>
+      </form>
+      
+      <div id="customDownloadContainer" style="width: 100%; height: 40%;"></div> 
+      
         <script type="text/javascript">
             var djConfig = {
             parseOnLoad: true,
-            isDebug: true,
+            isDebug: false,
             locale: 'en-us'
             };
         </script>
@@ -82,6 +89,7 @@
             var dndPlugin;
             var gdHeaderMap;
             var gdHeaderArray;
+            var completeData;
             
             //Fix for: indexOf not implemented in IE.
             if (!Array.prototype.indexOf) {
@@ -185,33 +193,28 @@
             }
             
             function toggleView() {
-                var cust = dojo.byId("customDownloadContainer"); 
-                var simp = dojo.byId("simpleViewContainer");
-                
-                divstyle = cust.style.display;
-                if(divstyle.toLowerCase()=="block" || divstyle == "")
-                {
-                    cust.style.display = "none";
-                    simp.style.display = "block";
-                    syncFromGrid();
-                }
-                else
-                {
-                    cust.style.display = "block";
-                    simp.style.display = "none";
+            
                     selectInGrid();
-                }
+                
             }
 
             function selectInGrid() {
             	dndPlugin.cleanCellSelection();
-            	var sel = document.forms[1].selectedCols;
-            	for (var i=0;i<sel.options.length;i++) {
-            		var col = getCol(sel.options[i].text);
-            		if (col != null) dndPlugin.selectColumn(col.index);
-            	}
+            	
+            	//refresh the grid with new structure first
+            	
+            	restructure();
+            	
             }
 
+            function restructure() {
+            	
+            	var cdlLayout = getLayout('false');
+            	cdGrid.setStructure(cdlLayout);
+            	cdGrid.update();
+	            
+            }
+            
             function getCol(colName) {
 				if (cdGrid != null && dndPlugin != null) {
 					return getGdHeaderMap()[colName];
@@ -221,25 +224,25 @@
             }
 
             function getGdHeaderMap() {
-				if (gdHeaderMap == null) {
+				
 					gdHeaderMap = {};
 					for (var i=0;i<dndPlugin.getHeaderNodes().length;i++) {
 						var nme = cdGrid.getCell(i).name;
 						gdHeaderMap[nme] = cdGrid.getCell(i);
 					}
-				}
+				
 
 				return gdHeaderMap;
             }
 
             function getGdHeaderArray() {
-				if (gdHeaderArray == null) {
+				
 					gdHeaderArray = new Array();
 					for (var i=0;i<dndPlugin.getHeaderNodes().length;i++) {
 						var nme = cdGrid.getCell(i).name;
 						gdHeaderArray[i] = nme;
 					}
-				}
+				
 
 				return gdHeaderArray;
             }
@@ -290,6 +293,63 @@
         		var headCell = getGdHeaderMap()[nme];
         		if (headCell != null) dndPlugin.selectColumn(headCell.index); 
         	}
+            
+            function getLayout(newLayout) {
+            	
+		            
+            	if (newLayout == 'true') {
+            var cdlLayout = [
+		            <%   
+		            
+		            for (int colLoop = 0; colLoop < headers.size(); colLoop++) {
+		            
+		            if (typeMap.get(types.get(colLoop)) != null) {
+		            	String[] subHeaders = typeMap.get(types.get(colLoop)).get(0);
+		            	
+		            	for (int i = 0; i < subHeaders.length; i++) {
+							out.println("{");
+							//Take Column Name from headers and take correct column from current row
+							out.println("field:\""+subHeaders[i]+"\",");
+							out.println("name:\""+""+subHeaders[i]+"\",");
+							out.println("width:"+"10");
+							out.println("}");
+							out.println(",");
+				    
+		            	}
+		            } else {
+					    out.println("{");
+					    //Take Column Name from headers and take correct column from current row
+					    out.println("field:\""+headers.get(colLoop)+"\",");
+					    out.println("name:\""+""+headers.get(colLoop)+"\",");
+					    out.println("width:"+"10");
+					    out.println("}");
+					    if (colLoop != headers.size()-1)
+					    	out.println(",");
+					    }
+		            }
+		            %>	    ];
+           	 	return cdlLayout;
+            	} else {
+            		//Create array out of selected columns in form (in order) 
+            		//Create array out of the unselected columnns
+            		//Append the unselected array to the selected array
+            		//Go through the resulting array and find original column indices then
+            		//Create layout from the resulting array.
+            		var sel = document.forms[1].selectedCols;
+                	var notSel = document.forms[1].notSelectedCols;
+            		var cdlLayout = [];
+           	 		var s = 0;
+           	 		var n = 0;
+            		for (var s=0; s < sel.length; s++) {
+            			var tempPMap = {field:sel.options[s].text,
+            							name:sel.options[s].text,
+            							width:10}
+            			cdlLayout[s] = tempPMap;
+            		}
+
+            		return cdlLayout;            		
+            	}
+            }
             
             function submitSelectedColumnNames(action) {
                 
@@ -353,46 +413,15 @@
             dojo.require("dojox.grid.enhanced.plugins.NestedSorting");//This is a must as DnD depends on NestedSorting feature
             
             // our data store:
-            var completeData = new dojo.data.ItemFileReadStore({
+            completeData = new dojo.data.ItemFileReadStore({
             url:"NCICurationServlet?reqType=jsonRequest"
             });
             
-            var cdlLayout = [
-            <%   
-            ArrayList<String> headers = (ArrayList<String>) session.getAttribute("headers");
-            ArrayList<String> types = (ArrayList<String>) session.getAttribute("types");
-            HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String,ArrayList<String[]>>) session.getAttribute("typeMap");
-            
-            for (int colLoop = 0; colLoop < headers.size(); colLoop++) {
-            
-            if (typeMap.get(types.get(colLoop)) != null) {
-            	String[] subHeaders = typeMap.get(types.get(colLoop)).get(0);
-            	
-            	for (int i = 0; i < subHeaders.length; i++) {
-			out.println("{");
-			//Take Column Name from headers and take correct column from current row
-			out.println("field:\""+subHeaders[i]+"\",");
-			out.println("name:\""+""+subHeaders[i]+"\",");
-			out.println("width:"+"10");
-			out.println("}");
-			out.println(",");
-		    
-            	}
-            } else {
-		    out.println("{");
-		    //Take Column Name from headers and take correct column from current row
-		    out.println("field:\""+headers.get(colLoop)+"\",");
-		    out.println("name:\""+""+headers.get(colLoop)+"\",");
-		    out.println("width:"+"10");
-		    out.println("}");
-		    if (colLoop != headers.size()-1)
-		    out.println(",");
-		    }
-            }
-            %>	    ];
+			var cdlLayout = getLayout();
             
             dojo.addOnLoad(function() {
                 var notSel = dojo.byId('notSelectedCols');
+                var sel = dojo.byId('selectedCols');
                 
                 <% for (int colLoop = 0; colLoop < headers.size(); colLoop++) { %>
                     var c = dojo.doc.createElement('option');
@@ -404,13 +433,22 @@
 					c = dojo.doc.createElement('option');
 					c.innerHTML = '<%=subHeaders[i]%>';
 					c.value = '<%=subHeaders[i]%>';
+					
+					<%if (defaultExcluded.contains(subHeaders[i])){%>
 					notSel.appendChild(c);
+					<%} else {%>
+					sel.appendChild(c);
+					<%}%>
 				<%  } %>
 
 			<%} else {%>
 				c.innerHTML = '<%=headers.get(colLoop)%>';
 				c.value = '<%=headers.get(colLoop)%>';
-				notSel.appendChild(c);
+				<%if (defaultExcluded.contains(headers.get(colLoop))){%>
+					notSel.appendChild(c);
+					<%} else {%>
+					sel.appendChild(c);
+					<%}%>
                     <%  } %>
                     
                 <%  } %>

@@ -701,28 +701,48 @@
   //sets custom upload attributes and submits the form
   function setCustomDownloadAction()
   {
+	   var tmpTarget = document.searchResultsForm.target;
+	   var tmpAction = document.searchResultsForm.action;
+	  
 	   document.searchResultsForm.target="_blank";
 	   document.searchResultsForm.action="../../cdecurate/NCICurationServlet?reqType=showDEfromSearch";
 	    
 	   document.searchResultsForm.numSelected.value = numRowsSelected;
 	   document.searchResultsForm.submit();
+	   
+	   document.searchResultsForm.target=tmpTarget;
+	   document.searchResultsForm.action=tmpAction;
   }
   
   function setVDCustomDownloadAction()
   {
+	  
+	   var tmpTarget = document.searchResultsForm.target;
+	   var tmpAction = document.searchResultsForm.action;
+	   
 	  document.searchResultsForm.target="_blank";
 	   document.searchResultsForm.action="../../cdecurate/NCICurationServlet?reqType=showVDfromSearch";
 	    
 	   document.searchResultsForm.numSelected.value = numRowsSelected;
 	   document.searchResultsForm.submit();
+	   
+	   document.searchResultsForm.target=tmpTarget;
+	   document.searchResultsForm.action=tmpAction;
   }
   
     function setDECCustomDownloadAction()
   {
+    	
+	   var tmpTarget = document.searchResultsForm.target;
+	   var tmpAction = document.searchResultsForm.action;
+	   
 	  document.searchResultsForm.target="_blank";
 	   document.searchResultsForm.action="../../cdecurate/NCICurationServlet?reqType=showDECfromSearch";
 	   document.searchResultsForm.numSelected.value = numRowsSelected;
 	   document.searchResultsForm.submit();
+	   
+	   document.searchResultsForm.target=tmpTarget;
+	   document.searchResultsForm.action=tmpAction;
   }
   
   //submits the form to create new vm from pv page
