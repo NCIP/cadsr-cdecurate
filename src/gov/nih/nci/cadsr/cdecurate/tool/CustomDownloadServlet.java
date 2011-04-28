@@ -376,9 +376,33 @@ public class CustomDownloadServlet extends CurationServlet {
 		HashMap<String,ArrayList<String[]>> typeMap = new HashMap<String,ArrayList<String[]>>();
 		HashMap<String,String> arrayColumnTypes = new HashMap<String,String>();
 		ArrayList<String> allExpandedColumnHeaders = new ArrayList<String>();
-
+		Vector vList = new Vector();
+		String sList = new String();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
+		
+		GetACService getAC = new GetACService(this.m_classReq, m_classRes, this);
+		if (vList == null || vList.size()<1)
+	      {
+	        vList = getAC.getToolOptionData("CURATION", "CUSTOM.COLUMN.EXCLUDED", "");
+	      
+			if (vList != null && vList.size()>0)
+	        {
+	          TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
+	          if (tob != null) sList = tob.getVALUE();
+	        }
+	      }
+		
+		if (sList == "")
+			sList = "CDE_IDSEQ,DEC_IDSEQ,VD_IDSEQ,Conceptual Domain Public ID,Conceptual Domain Short Name,Conceptual Domain Version,Conceptual Domain Context Name";
+		
+		ArrayList<String> excluded = new ArrayList<String>();
+		
+		for (String col: sList.split(",")){
+			excluded.add(col);
+		}
+		
+		
 		try {
 			String qry = "SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW where 1=2";
 			ps = getConn().prepareStatement(qry);
@@ -423,6 +447,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			if (ps!=null) try{ps.close();}catch(Exception e) {}
 		}
 
+		m_classReq.getSession().setAttribute("excludedHeaders",excluded);
 		m_classReq.getSession().setAttribute("headers",columnHeaders);
 		m_classReq.getSession().setAttribute("allExpandedHeaders",allExpandedColumnHeaders);
 		m_classReq.getSession().setAttribute("types", columnTypes);
