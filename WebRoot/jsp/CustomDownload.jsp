@@ -354,22 +354,17 @@
             function submitSelectedColumnNames(action) {
                 
             	var cust = dojo.byId("customDownloadContainer"); 
-                
-                divstyle = cust.style.display;
-                if(divstyle.toLowerCase()=="block" || divstyle == "")
-                    syncFromGrid();
-                else
-                   selectInGrid();
                       	
                 var cols = {};
                 var returnCols = "";
                 var i=0;
 				
-                cols = getSelectedSpans();
+                var sel = document.forms[1].selectedCols;
                 
-                for (i=0; i < cols.length; i++) {
-                 	returnCols = returnCols + cols[i];
-	                  if (i < cols.length-1) {
+                
+                for (i=0; i < sel.length; i++) {
+                 	returnCols = returnCols + sel.options[s].text;
+	                  if (i < sel.length-1) {
 	                  	returnCols = returnCols+",";    
              	     }
                 }
@@ -380,7 +375,7 @@
                 if (action == "Excel")
                 	document.columnSubmission.action = "../../cdecurate/NCICurationServlet?reqType=dlExcelColumns";
                 
-                document.columnSubmission.cdlColumns.value = cols;
+                document.columnSubmission.cdlColumns.value = returnCols;
                 document.columnSubmission.submit();
             }
             
@@ -456,12 +451,16 @@
                 var sel = dojo.byId('selectedCols');
                 
                 new dijit.form.MultiSelect({
-                name: 'notSelectedCols'
+                name: 'notSelectedCols',
+                size: 15,
+                style: 'width:300px'
                 },
                 notSel);
                 
                 new dijit.form.MultiSelect({
-                name: 'selectedCols'
+                name: 'selectedCols',
+                size: 15,
+                style: 'width:300px'
                 },
                 sel);
                 });
