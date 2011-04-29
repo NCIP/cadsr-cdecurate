@@ -39,15 +39,11 @@
 	      <button type="button" onClick="toggleView();">Refresh Preview</button>
 	      	<input type="checkbox" name="fillIn" value="true"/> Check to fill in all values.
       </form>
-      <br></br>
-      <br></br>
       <% ArrayList<String> rows = (ArrayList<String>) session.getAttribute("downloadIDs"); %>
       <font size="4"><%=rows.size()%> elements selected for download.</font>  
-	  <% if (rows.size() > 100) {%>  <font size="4">Displaying first 100 elements for verification.</font><%} %>
-     
-      <form>
-      <div id="simpleViewContainer" style="width: 100%; height: 60%; display: block">
-          
+	       
+      <div id="simpleViewContainer" style="width: 100%; display: block">
+      <form>  
           <table border="0" style="height: 100%;">
               <tr>
                   <td>
@@ -68,11 +64,11 @@
               </tr>
               
           </table>
-          
+          </form>
       </div>
-      </form>
       
-      <div id="customDownloadContainer" style="width: 90%; height: 40%; display: block"></div> 
+      <font size="4">Preview of data from selected columns.</font><% if (rows.size() > 100) {%>  <font size="4"> Limited to first 10 records</font><%} %>
+      <div id="customDownloadContainer" style="width: 90%; display: block"></div> 
       
         <script type="text/javascript">
             var djConfig = {
