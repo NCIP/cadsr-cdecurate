@@ -1,0 +1,49 @@
+/* Copyright ScenPro, Inc 2007
+
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/css/alternates.css,v 1.2 2009-04-20 12:49:22 hebell Exp $
+    $Name: not supported by cvs2svn $
+*/
+
+BODY { font-family: arial; font-size: 10pt; background-color: #FFFFFF; color: #000000 }
+DIV { width: 100% }
+DIV.IND1 { padding-left: 1em }
+DIV.IND2 { padding-left: 2em }
+DIV.IND3 { padding-left: 3em }
+DIV.IND4 { padding-left: 4em }
+DIV.IND5 { padding-left: 5em }
+DIV.IND6 { padding-left: 6em }
+DIV.IND7 { padding-left: 7em }
+DIV.IND8 { padding-left: 8em }
+DIV.IND9 { padding-left: 9em }
+DIV.LIST { border: 1px solid black; height: 2in; overflow: auto; cursor: default }
+P.NOTE1 { font-size: 10pt; margin-left: 1.0in; font-weight: bold; color: #990000 }
+P.TITLE1 { font-size: 12pt; margin-left: 1.0in; text-indent: -1.0in }
+P.TITLE2 { font-size: 12pt; font-weight: bold; color: #0000aa; text-align: right }
+SPAN.MANDATORY { color: #ff0000; font-weight: bold; padding-right: 0.07in }
+SPAN.PROMPT { font-weight: bold }
+SPAN.REMOVE { font-weight: bold; font-family: webdings; cursor: default }
+SPAN.RESTORE { font-weight: bold; font-family: "wingdings 3"; cursor: default }
+TABLE { font-size: 10pt; width: 100%; border-collapse: collapse }
+TD { vertical-align: top; text-align: left }
+TD.ALT0 { padding-top: 0.2in }
+TD.ALT1 { padding-top: 0.2in; padding-left: 0.1in; width: 1px }
+TD.ALT2 { padding-left: 0.1in; width: 1px }
+TD.ALT3 { padding-left: 0.1in }
+TD.ALT9 { width: 1px; padding-right: 0.1in }
+TD.CS0 { padding-top: 0.1in }
+TD.CS1 { padding-top: 0.1in; padding-left: 0.1in; width: 1px }
+TD.CS2 { padding-top: 0.1in; padding-left: 0.1in }
+TD.CSI1 { padding-left: 0.1in }
+TD.IND1 { padding-left: 1em }
+TD.IND2 { padding-left: 2em }
+TD.IND3 { padding-left: 3em }
+TD.IND4 { padding-left: 4em }
+TD.IND5 { padding-left: 5em }
+TD.IND6 { padding-left: 6em }
+TD.IND7 { padding-left: 7em }
+TD.IND8 { padding-left: 8em }
+TD.IND9 { padding-left: 9em }
+TD.TABX { vertical-align: middle; font-weight: bold; border: 2px solid #aaaaaa; border-bottom: 2px solid black; padding: 0.05in 0.05in 0.05in 0.05in; cursor: default }
+TD.TABY { vertical-align: middle; font-weight: bold; border-left: 2px solid black; border-right: 2px solid black; border-top: 2px solid black; padding: 0.05in 0.05in 0.05in 0.05in; cursor: default }
+TD.TABZ { vertical-align: middle; border-bottom: 2px solid black }
+TEXTAREA { font-family: arial; font-size: 10pt }

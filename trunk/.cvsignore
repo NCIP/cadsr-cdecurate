@@ -1,0 +1,10 @@
+template.build.properties
+bin
+tmp
+deployment-artifacts
+.metadata
+DEV.build.properties
+.myumldata
+.settings
+dev.properties
+qa.properties

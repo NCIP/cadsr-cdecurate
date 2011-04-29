@@ -1,0 +1,300 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>example new vd.html</title>
+    
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+    
+    <style type="text/css">
+        BODY { font-family: Arial; font-size: 10pt }
+        TABLE { font-family: Arial; font-size: 10pt }
+        TD { vertical-align: top; text-align: left }
+        TD.TABX { border: 2px solid #aaaaaa; border-bottom: 2px solid black; padding: 0.1in 0.1in 0.1in 0.1in; cursor: default }
+        TD.TABY { border-left: 2px solid black; border-right: 2px solid black; border-top: 2px solid black; padding: 0.1in 0.1in 0.1in 0.1in; cursor: default }
+    </style>
+    
+    <script>
+        var tabFocusDiv = null;
+        var tabFocusTitle = null;
+        
+        function tabSetFocus(ctitle, cdiv)
+        {
+            tabFocusDiv.style.display = "none";
+            tabFocusDiv = cdiv;
+            tabFocusDiv.style.display = "block";
+            tabFocusTitle.className = "tabx";
+            tabFocusTitle = ctitle;
+            tabFocusTitle.className = "taby";
+        }
+        
+        function loaded()
+        {
+            tabFocusDiv = prop;
+            tabFocusTitle = proptd;
+        }
+        
+    </script>
+  </head>
+  
+  <body onload="loaded();">
+    <form>
+        <input type="button" value="Validate" /> <input type="button" value="Clear" />
+        <p style="font-size: 16pt">
+				<b>
+					<FONT color="#ff0000">
+						Create New
+					</FONT>
+					 Value Domain</b></p>
+        <table style="width: 100%; border-collapse: collapse">
+            <tr><td id="proptd" class="taby" onclick="tabSetFocus(this, prop);">Properties</td>
+            <td class="tabx" onclick="tabSetFocus(this, spec);">Specification</td>
+            <td class="tabx" onclick="tabSetFocus(this, classify);">Classifications</td>
+            <td class="tabx" onclick="tabSetFocus(this, alts);">Alternate Names</td>
+            <td class="tabx" onclick="tabSetFocus(this, refs);">Reference Documents</td>
+            <td class="tabx" onclick="tabSetFocus(this, contacts);">Contacts</td></tr>
+        </table>
+        <div style="margin-left: 0in; margin-right: 0in; border-left: 2px solid black; border-bottom: 2px solid black; border-right: 2px solid black; width: 100%; padding: 0.1in 0.1in 0.1in 0.1in">
+
+        <div id="prop">
+        <p><font color="#FF0000">Select </font>Context<br><select><option value="0">TEST</option><option value="1">Training</option></select></p>
+        <p><font color="#FF0000">Select </font>Value Domain Name Components<br>
+        <table border="0" width="100%">
+	        <col width="3%"><col width="45%"><col width="55%">
+	        <tr  valign="top">
+	          <td>&nbsp;</td>
+	          <td>
+	            <table border="1" width="100%">
+	              <tr  valign="top">
+	                <td>
+	                  <table border="0" width="100%" height="100%">
+	                    <col width="24%"><col width="12%"><col width="16%"><col width="20%"><col width="12%"><col width="16%">
+	                    <tr height="30" valign="middle">
+	                        <td colspan=6>Optional Name Components (will not be saved or displayed later)</td>
+	                    </tr>
+	                    <tr height="18"></tr>
+	                    <tr valign="top">
+	                      <td align="left">Object Class</td>
+	                      <td align="center"><a href="">Search</a></td>
+	                      <td align="center"><a href="">Remove</a></td>
+	                      <td align="left">Property</td>
+	                      <td align="center"><a href="">Search</a></td>
+	                      <td align="center"><a href="">Remove</a></td>
+	                    </tr>
+	                    <tr valign="top">
+	                      <td colspan="3">
+	                        <select name="selObjectClass" style="width:98%" size="1" multiple>
+	                           <option value=""></option>
+	                        </select>
+	                      </td>
+	                      <td colspan="3">
+	                         <select name="selPropertyClass" style="width:98%" size="1" multiple>
+	                            <option value=""></option>
+	                         </select>
+	                      </td>
+	                    </tr>
+	                    <tr height="105"><td>&nbsp;</td></tr>
+	                  </table>
+	                </td>
+	              </tr>
+	            </table>
+	          </td>
+	          <td>
+	            <table border="1" width="100%">
+	              <tr valign="top">
+	                <td>
+	                  <table border="0" width="99%">
+		                  <col width="26%"><col width="10%"><col width="14%"><col width="26%"><col width="10%"><col width="14%">
+		                  <tr height="30" valign="middle">
+		                        <td colspan=4>Value Domain Attributes</td>
+		                  </tr>
+		                  <tr><td colspan="2" align="left" valign="top">Rep Term Long Name </td></tr>
+		                  <tr>
+		                    <td colspan="5" align="left">
+		                      <input type="text" name="txtRepTerm" value="" maxlength=255 readonly="readonly">
+		                    </td>
+		                  </tr>
+		                  <tr height="8"><td></td></tr>
+		                  <tr valign="bottom">
+		                    <td align="left" valign="top">Qualifier <br> Concepts</td>
+		                    <td align="right" valign="middle"><a href="">Search</a></td>
+		                    <td align="center" valign="middle"><a href="">Remove</a></td>
+		                    <td align="left" valign="top">Primary <br>Concept</td>
+		                    <td align="right" valign="middle"><a href="">Search</a></td>
+		                    <td align="center" valign="middle"><a href="">Remove</a></td>
+		                  </tr>
+		                  <tr align="left">
+		                    <td colspan="3" valign="top">
+		                         <select name="selRepQualifier" size ="2" style="width=98%">
+		                            <option value=""></option>
+		                        </select>
+		                    </td>
+		                    <td colspan="3" valign="top">
+		                      <select name="selRepTerm" style="width=98%" size="1" multiple>
+		                            <option value=""></option>
+		                      </select>
+		                    </td>
+		                  </tr>
+		               </table>
+	                </td>
+	              </tr>
+	            </table>
+	          </td>
+	        </tr>
+	      </table>
+        <p><font color="#FF0000">Verify </font>Value Domain Long Name (* ISO Preferred Name)<br><input type="text" value="new value domain" /></p>
+        <p><font color="#FF0000">Update </font>Value Domain Short Name<br>Select Short Name Naming Standard<br>
+	      <input name="rNameConv" type="radio" value="SYS" checked/>System Generated &nbsp;&nbsp;&nbsp; 
+	      <input name="rNameConv" type="radio" value="ABBR"/>Abbreviated &nbsp;&nbsp;&nbsp; 
+	      <input name="rNameConv" type="radio" value="USER"/>User Entered<br>
+          <input type="text" value=""/>&nbsp;</p>
+        <p><font color="#FF0000">Create/Edit</font> Definition<br><textarea rows="5" style="width: 100%"></textarea></p>
+        <p><font color="#FF0000">Select</font> Conceptual Domain<br><select><option value="0">Demographics</option><option value="1">Training</option></select></p>
+        <p><font color="#FF0000">Select</font> Workflow Status<br><select><option value="0">DRAFT NEW</option><option value="1">RELEASED</option></select></p>
+        <p><font color="#FF0000">Enter</font> Version<br><input type="text" value="1.0" /></p>
+        <p><font color="#FF0000">Enter/Select</font> Effective Begin Date<br><input type="text" value="5/25/2006" /></p>
+        <p><font color="#FF0000">Enter/Select</font> Effective End Date<br><input type="text" value="" /></p>
+        </div>
+
+        <div id="spec" style="display: none">
+        <p><font color="#FF0000">Select </font>Value Domain Type<br><select><option value="0">Enumerated</option><option value="1">Non-enumerated</option></select></p>
+        <table><colgroup><col style="padding-right: 0.2in" /><col style="padding-right: 0.2in" /><col /></colgroup><tbody />
+            <tr><td><font color="#FF0000">Select</font> Data Type</td><td>Description</td><td>Comment</td></tr>
+            <tr><td><select><option value="0">Boolean</option><option value="1">Integer</option></select></td><td>The mathematical datatype associated with two-valued logic</td><td>ISO 111404 Datatypes</td></tr>
+        </table>
+        <p><font color="#FF0000">Create </font>Permissible Value</p>
+	      <table width="70%" border="0">
+	        <col width="50%"><col width="15%"><col width="15%"><col width="15%">
+	        <tr>
+	          <td>Select Parent Concept to Constrain Permissible Values</td>
+	          <td align="left">
+	            <input type="button" name="btnSelectValues" style="width:90" value="Select Values" disabled>
+	          </td>
+	          <td align="center">
+	            <input type="button" name="btnRemoveConcept" style="width:100%" value="Remove Parent" disabled>
+	          </td>
+	          <td>&nbsp;</td>
+	        </tr>
+	        <tr valign="top">
+	          <td colspan=3>
+	            <select name="listParentConcept" size ="4" style="width:100%">
+	                <option value=""></option> 
+	            </select> 
+	          </td>
+	          <td align="center">
+	              <a href="">Search Parent</a>
+	          </td>
+	        </tr>
+	      </table>
+	      <br>  
+	      <table width="100%" border="0">
+	        <col width="12%"><col width="14%"><col width="14%"><col width="60%"><!--<col width="74%">-->
+	        <tr>
+	          <td align="left"><input type="button" name="btnCreatePV" value="Create Value" style="width: 120"></td>
+	          <td align="left"><input type="button" name="btnSelectPV" value="Search Value(s)" style="width: 110"></td>
+	          <td align="left"><input type="button" name="btnRemovePV" value="Remove Value(s)" style="width: 125"></td>
+	          <td align="right"> Records </td>
+	        </tr>
+	      </table>
+	      <table width="100%" border="1">
+	        <tr>
+	          <td>
+	            <table width="99%" border="0">
+	              <col width="2%"><col width="15%"><col width="18%"><col width="24%">
+	              <col width="13%"><col width="12%"><col width="9%"><col width="8%">
+	              <tr height="33" valign="middle">
+	                <th>   </th>
+	                <th align="center"><a href=";">Permissible Value</a></th>
+	                <th align="center"><a href="">Value Meaning</a></th>
+	                <th align="center"><a href="">Value Meaning Description</a></th>
+	                <th align="center"><a href="">EVS Concept Code</a></th>       
+	                <th align="center"><a href="">Value Origin</a></th>       
+	                <th align="center"><a href="">Begin Date</a></th>       
+	                <th align="center"><a href="">End Date</a></th>       
+	             </tr>
+	            </table>
+	          </td>
+	        </tr>
+	        <tr>   
+	          <td>
+	            <div id="Layer1" style="position:relative; z-index:1; overflow:auto; width:100%; height:100%;">
+		           <table width="100%" border="1">
+		              <col width="1%"><col width="15%"><col width="18%"><col width="24%">
+		              <col width="14%"><col width="12%"><col width="7%"><col width="7%">
+	                  <tr>
+	                    <td align="right">&nbsp;</td>
+	                    <td valign="top">&nbsp;</td>
+	                    <td valign="top">&nbsp;</td>
+	                    <td valign="top">&nbsp;</td>
+	                    <td valign="top">&nbsp;</td>
+	                    <td valign="top">&nbsp;</td>
+	                    <td valign="top">&nbsp;</td>
+	                    <td valign="top">&nbsp;</td>
+	                  </tr>  
+	            	</table>
+	            </div>
+	          </td>
+	        </tr>
+	      </table>
+	      <br>  
+	      <table width="100%">
+	      	<tr><td><font color="#FF0000">Edit</font> Permissible Value(s) Attributes</td></tr>   
+	      	<tr><td>Create/Edit Value</td></tr>
+	      	<tr><td><input type="text" name="txtPermValue" size="20" maxlength=255 value=""></td></tr>     
+		    <tr><td>Create/Edit Value Meaning Attributes</td></tr>
+		    <tr><td>
+			  <TABLE border="1">
+		        <tr>
+		      	  <td>Add/Remove Concepts</td>
+		          <td align="left"></td>
+		          <td align="right"><input type="button" name="btnSelectCon" value="Search" style="width: 90"><input type="button" name="btnRemoveCon" value="Remove" style="width: 90"></td>
+		        </tr>
+				<TR><TH>Concept Name</TH><TH>EVS Identifier</TH><TH>Concept Description</TH></TR>
+				<TR><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+			  </TABLE>
+			</td></tr>
+		    <tr><td>Display Value Meaning Name</td></tr>
+		    <tr><td><input type="text" name="txtVM" style="color:#696969;" readonly size="20" maxlength=255 value=""/></td></tr>
+		    <tr><td>Display Value Meaning Description</td></tr>
+		    <tr><td><textarea name="CreateDescription" rows="3" style="color:#696969;" readonly></textarea></td></tr>
+		    <tr><td>Select Permissible Value Origin</td></tr>
+		    <TR><td><select><option value="0"></option></select></td></TR>
+		    <tr><td>Enter/Select Effective Begin Date</td></tr>
+		    <tr><td><input type="text" value="5/25/2006"></td></tr>
+		    <tr><td>Enter/Select Effective End Date</td></tr>
+			<tr><td><input type="text" value=""></td></tr>
+	      </table>
+	      <br>  
+          <p><font color="#FF0000"> Select</font> Unit of Measure (UOM)<br><select><option value="0"></option></select></p>
+          <p><font color="#FF0000"> Select</font> Display Format<br><select><option value="0"></option></select></p>
+          <p><font color="#FF0000">Enter</font> Minimum Length <br><input type="text" value="" /></p>
+          <p><font color="#FF0000">Enter</font> Maximum Length <br><input type="text" value="" /></p>
+          <p><font color="#FF0000">Enter</font> Low Value (for number data type) <br><input type="text" value="" /></p>
+          <p><font color="#FF0000">Enter</font> High Length <br><input type="text" value="" /></p>
+          <p><font color="#FF0000">Enter</font> Decimal Place <br><input type="text" value="" /></p>
+        </div>
+
+        <div id="classify" style="display: none">
+            <p>Classifications</p>
+        </div>
+
+        <div id="alts" style="display: none">
+            <p>Alternate names...</p>
+        </div>
+
+        <div id="refs" style="display: none">
+            <p>Reference documents...</p>
+        </div>
+
+        <div id="contacts" style="display: none">
+            <p>Contacts</p>
+        </div>
+
+      </div>
+    </form>
+  </body>
+</html>

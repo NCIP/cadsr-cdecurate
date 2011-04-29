@@ -1,0 +1,678 @@
+
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+        <title>Maintain DataElement Alternate Names and Definition Attributes</title>
+        <style type="text/css">
+        BODY { font-family: Arial; font-size: 10pt }
+        TABLE { font-family: Arial; font-size: 10pt }
+        TD { vertical-align: middle; text-align: left }
+        TH { font-weight: bold; vertical-align: middle; text-align: left }
+        TD.TABX { font-weight: bold; border: 2px solid #aaaaaa; border-bottom: 2px solid black; padding: 0.05in 0.05in 0.05in 0.05in; cursor: default }
+        TD.TABY { font-weight: bold; border-left: 2px solid black; border-right: 2px solid black; border-top: 2px solid black; padding: 0.05in 0.05in 0.05in 0.05in; cursor: default }
+        P.TITLE1 { font-size: 14pt }
+        P.TITLE2 { font-weight: bold; margin-top: 0.2in; margin-bottom: 0in }
+        P.TITLE3 { margin: 0in 0in 0in 0in }
+        P.SECT1 { font-size: 12pt; font-weight: bold; margin: 0.2in 0in 0.1in 0in }
+        P.LVL0 { margin: 0.2in 0.2in 0.05in 0in }
+        P.LVL0B { margin: 0.2in 0.2in 0.05in 0in }
+        P.LVL1 { margin: 0.05in 0.2in 0.05in 0.5in }
+        P.LVL2 { margin: 0.05in 0.2in 0.05in 1.0in }
+        P.LVL3 { margin: 0.05in 0.2in 0.05in 1.5in }
+        P.LVL4 { margin: 0.05in 0.2in 0.05in 2.0in }
+        SPAN.ICONS { font-weight: bold; font-size: 14pt; font-family: wingdings 2; cursor: default; background-color: #ffffff }
+        SPAN.ICONS3 { font-weight: bold; font-size: 14pt; font-family: wingdings 3; cursor: default; background-color: #ffffff }
+        DIV.TABS { margin: 0in 0in 0in 0in }
+    </style>
+
+        <script type="text/javascript">
+        history.forward();
+        
+        var tabFocusDiv = null;
+        var tabFocusTitle = null;
+        
+        function tabSetFocus(ctitle, cdiv)
+        {
+            if (addname.style.display == "block")
+            {
+                doCancel(addname);
+            }
+            else if (adddef.style.display == "block")
+            {
+                doCancel(adddef);
+            }
+            tabFocusDiv.style.display = "none";
+            tabFocusDiv = cdiv;
+            tabFocusDiv.style.display = "block";
+            tabFocusTitle.className = "tabx";
+            tabFocusTitle = ctitle;
+            tabFocusTitle.className = "taby";
+        }
+        
+        function loaded()
+        {
+            tabFocusDiv = altgrp;
+            tabFocusTitle = altgrptd;
+        }
+        
+        var cancelObj = null;
+        function doAddName(cobj)
+        {
+            tabFocusTitle.setAttribute("originalText", tabFocusTitle.innerHTML);
+            tabFocusTitle.innerHTML = "Add&nbsp;Name";
+            designateDEForm.selAltType.value = " ";
+            designateDEForm.altName.value = "";
+            cobj.style.display = "none";
+            cancelObj = cobj;
+            addname.style.display = "block";
+            addnamecs1.style.display = "none";
+            addnamecs2.style.display = "block";
+        }
+        
+        function doAddDef(cobj)
+        {
+            tabFocusTitle.setAttribute("originalText", tabFocusTitle.innerHTML);
+            tabFocusTitle.innerHTML = "Add&nbsp;Definition";
+            designateDEForm.defAltType.value = " ";
+            designateDEForm.altDefinition.value = "";
+            cobj.style.display = "none";
+            cancelObj = cobj;
+            adddef.style.display = "block";
+            adddefcs1.style.display = "none";
+            adddefcs2.style.display = "block";
+        }
+        
+        function doCancel(cobj)
+        {
+            cobj.style.display = "none";
+            cancelObj.style.display = "block";
+            cancelObj = null;
+            otxt = tabFocusTitle.getAttribute("originalText");
+            if (otxt != null)
+                tabFocusTitle.innerHTML = otxt;
+        }
+        
+        function editName(nobj, cobj)
+        {
+            tabFocusTitle.setAttribute("originalText", tabFocusTitle.innerHTML);
+            tabFocusTitle.innerHTML = "Edit&nbsp;Name";
+            designateDEForm.selAltType.value = "UML Class:UML Attr";
+            temp = nobj.parentNode.innerText.split(" ");
+            if (temp[6] == "Name:")
+                index = 7;
+            else
+                index = 6;
+            designateDEForm.altName.value = nobj.parentNode.innerText.substr(nobj.parentNode.innerText.indexOf(temp[index]));
+            cobj.style.display = "none";
+            cancelObj = cobj;
+            addname.style.display = "block";
+            addnamecs1.style.display = "block";
+            addnamecs2.style.display = "none";
+        }
+        
+        function editDefinition(nobj, cobj)
+        {
+            tabFocusTitle.setAttribute("originalText", tabFocusTitle.innerHTML);
+            tabFocusTitle.innerHTML = "Edit&nbsp;Definition";
+            designateDEForm.defAltType.value = "UML Class:UML Attr";
+            temp = nobj.parentNode.innerText.split(" ");
+            if (temp[6] == "Definition:")
+                index = 7;
+            else
+                index = 6;
+            designateDEForm.altDefinition.value = nobj.parentNode.innerText.substr(nobj.parentNode.innerText.indexOf(temp[index]));
+            cobj.style.display = "none";
+            cancelObj = cobj;
+            adddef.style.display = "block";
+            adddefcs1.style.display = "block";
+            adddefcs2.style.display = "none";
+        }
+        
+        function doSort(cobj)
+        {
+            order = cobj.getAttribute("order");
+            if (order == null || order == "1")
+            {
+                cobj.value = "Sort by Name/Definition";
+                cobj.setAttribute("order", "0");
+            }
+            else
+            {
+                cobj.value = "Sort by Type";
+                cobj.setAttribute("order", "1");
+            }
+        }
+        
+    </script>
+    </head>
+
+    <body onload="loaded();">
+        <table style="width: 100%; border-collapse: collapse">
+            <tr style="background-color: #A90101">
+                    <td  style="text-align: left"><a href="http://www.cancer.gov" target=_blank><img src="brandtype.gif" border="0" alt="NCI Logo"></a></td>
+                    <td  style="text-align: right"><a href="http://www.cancer.gov" target=_blank><img src="tagline_nologo.gif" border="0" alt="NCI Logo"></a></td>
+            </tr>
+            <tr style="background-color: #ffffff">
+                <td colspan="2"><img src="curation_banner2.gif"/></td>
+            </tr>
+        </table>
+        <form name="designateDEForm" method="post" action="">
+            <table style="width: 100%">
+                <tr>
+                    <td>
+                        <input type="button" name="btnClose" value="Back" style="width: 1.0n" onclick="window.close();">
+                    </td>
+                </tr>
+            </table>
+            <p class="title1">
+                Data Element Concept: Organization Name [2179555v2.0]
+            </p>
+            <p class="title1" style="margin-left: 0.5in">
+                Alternate Names and Alternate Definitions
+            </p>
+            <div class="tabs">
+            <table style="width: 100%; border-collapse: collapse">
+                <colgroup>
+                    <col style="width: 1px" />
+                    <col style="width: 1px" />
+                    <col />
+                </colgroup>
+                <tr>
+                    <td id="altgrptd" class="taby" onclick="tabSetFocus(this, altgrp);">
+                        View&nbsp;by&nbsp;Name/Definition
+                    </td>
+                    <td id="csigrptd" class="tabx" onclick="tabSetFocus(this, csigrp);">
+                        View&nbsp;by&nbsp;Classifications
+                    </td>
+                    <td style="border-bottom: 2px solid black">
+                        &nbsp;
+                    </td>
+                </tr>
+            </table>
+            </div>
+            <div style="margin-left: 0in; margin-right: 0in; border-left: 2px solid black; border-bottom: 2px solid black; border-right: 2px solid black; width: 100%; padding: 0.1in 0.1in 0.1in 0.1in">
+                <div id="altgrp">
+                    <table style="border-collapse: collapse; width: 100%"><colgroup><col style="width: 1px" /><col /></colgroup><tbody />
+                        <tr>
+                            <td>
+                                    <input type="button" name="btnSort" value="Sort by Type" style="width: 2in" onclick="doSort(this);">
+                            </td>
+                            <td>
+                                    <input type="button" name="btnAddName" value="Add Name" style="width: 1.0in" onclick="doAddName(altgrp);">
+                                    <input type="button" name="btnAddDef" value="Add Definition" style="width: 1.0in" onclick="doAddDef(altgrp);">
+                            </td>
+                        </tr>
+                    </table>
+                    <hr />
+
+                    <div style="overflow: auto">
+                        <p class="sect1">
+                            Names
+                        </p>
+
+                        <p class="lvl0">
+                            <span class="icons" title="Delete." onmouseover="this.style.color = 'red';" onmouseout="this.style.color = 'black';">&#208;</span> &nbsp; <span class="icons" title="Edit." onmouseover="this.style.color = 'red';"
+                                onmouseout="this.style.color = 'black';" onclick="editName(this, altgrp);">&#36;</span> &nbsp; ORG_NAM
+                        </p>
+                        <p class="lvl2">
+                            Type: C3D Name
+                        </p>
+                        <p class="lvl2">
+                            Context: CCR
+                        </p>
+                        <p class="lvl2">
+                            Classification: 
+                        </p>
+                        <p class="lvl2">
+                            Language: English
+                        </p>
+
+                        <p class="lvl0">
+                            <span class="icons" title="Delete." onmouseover="this.style.color = 'red';" onmouseout="this.style.color = 'black';">&#208;</span> &nbsp; <span class="icons" title="Edit." onmouseover="this.style.color = 'red';"
+                                onmouseout="this.style.color = 'black';" onclick="editName(this, altgrp);">&#36;</span> &nbsp; Organization:name
+                        </p>
+                        <p class="lvl2">
+                            Type: UML Class:UML Attr
+                        </p>
+                        <p class="lvl2">
+                            Context: caBIG
+                        </p>
+                        <p class="lvl2">
+                            Classification Scheme: CAP Cancer Checklists (Project) (200100v1)
+                        </p>
+                        <p class="lvl2">
+                            Class Scheme Item: edu.upmc.opi.cabig.caties.cap.domain.general (UML_PACKAGE_NAME)
+                        </p>
+                        <p class="lvl2">
+                            Language: English
+                        </p>
+
+                        <p class="lvl0">
+                            <span class="icons" title="Delete." onmouseover="this.style.color = 'red';" onmouseout="this.style.color = 'black';">&#208;</span> &nbsp; <span class="icons" title="Edit." onmouseover="this.style.color = 'red';"
+                                onmouseout="this.style.color = 'black';" onclick="editName(this, altgrp);">&#36;</span> &nbsp; Organization:name
+                        </p>
+                        <p class="lvl2">
+                            Type: UML Class:UML Attr
+                        </p>
+                        <p class="lvl2">
+                            Context: caBIG
+                        </p>
+                        <p class="lvl2">
+                            Classification Scheme: caTIES (Project) (2475251v2)
+                        </p>
+                        <p class="lvl2">
+                            Class Scheme Item: edu.upmc.opi.caBIG.caTIES.database.domain (UML_PACKAGE_NAME)
+                        </p>
+                        <p class="lvl2">
+                            Language: English
+                        </p>
+
+                        <p class="lvl0">
+                            <span class="icons" title="Delete." onmouseover="this.style.color = 'red';" onmouseout="this.style.color = 'black';">&#208;</span> &nbsp; <span class="icons" title="Edit." onmouseover="this.style.color = 'red';"
+                                onmouseout="this.style.color = 'black';" onclick="editName(this, altgrp);">&#36;</span> &nbsp; Org:name
+                        </p>
+                        <p class="lvl2">
+                            Type: UML Class:UML Attr
+                        </p>
+                        <p class="lvl2">
+                            Context: caBIG
+                        </p>
+                        <p class="lvl2">
+                            Classification Scheme: MicroArray Gene Expression Object Model (Mage-OM) (Project) (2321254v1)
+                        </p>
+                        <p class="lvl2">
+                            Class Scheme Item: gov.nih.nci.mageom.domain.Protocol (UML_PACKAGE_NAME)
+                        </p>
+                        <p class="lvl2">
+                            Language: Language
+                        </p>
+
+                        <hr style="margin-top: 0.2in" />
+
+                        <p class="sect1">
+                            Definitions</span>
+                        </p>
+                        <p class="lvl0">
+                            <span class="icons" title="Delete." onmouseover="this.style.color = 'red';" onmouseout="this.style.color = 'black';">&#208;</span> &nbsp; <span class="icons" title="Edit." onmouseover="this.style.color = 'red';"
+                                onmouseout="this.style.color = 'black';" onclick="editDefinition(this, altgrp);">&#36;</span> &nbsp; The responsible organization name.
+                        </p>
+                        <p class="lvl2">
+                            Type: UML Class:UML Attr
+                        </p>
+                        <p class="lvl2">
+                            Context: caBIG
+                        </p>
+                        <p class="lvl2">
+                            Classification Scheme: caTIES (Project) (2475251v2)
+                        </p>
+                        <p class="lvl2">
+                            Class Scheme Item: edu.upmc.opi.caBIG.caTIES.database.domain (UML_PACKAGE_NAME)
+                        </p>
+                        <p class="lvl2">
+                            Language: English
+                        </p>
+                    </div>
+
+                </div>
+                <div id="csigrp" style="display: none">
+                    <table style="border-collapse: collapse; width: 100%"><colgroup><col style="width: 1px" /><col /></colgroup>
+                        <tr>
+                            <td>
+                                <p style="text-align: left">
+                                    <input type="button" name="btnAddName" value="Add Name" style="width: 1.0in" onclick="doAddName(csigrp);">
+                                    <input type="button" name="btnAddDef" value="Add Definition" style="width: 1.0in" onclick="doAddDef(csigrp);">
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                    <hr />
+
+                    <p class="lvl0b">
+                        (unclassified)
+                    </p>
+                    <p class="lvl1">
+                        <span class="icons" title="Delete." onmouseover="this.style.color = 'red';" onmouseout="this.style.color = 'black';">&#208;</span> &nbsp; <span class="icons" title="Edit." onmouseover="this.style.color = 'red';"
+                            onmouseout="this.style.color = 'black';" onclick="editName(this, csigrp);">&#36;</span> &nbsp; Name: ORG_NAM
+                    </p>
+                    <p class="lvl2">
+                        Type: C3D Name
+                    </p>
+
+                    <p class="lvl0b">
+                        CAP Cancer Checklists (Project) (200100v1)
+                    </p>
+                    <p class="lvl1">
+                        edu.upmc.opi.cabig.caties.cap.domain.general (UML_PACKAGE_NAME)
+                    </p>
+                    <p class="lvl2">
+                        <span class="icons" title="Delete." onmouseover="this.style.color = 'red';" onmouseout="this.style.color = 'black';">&#208;</span> &nbsp; <span class="icons" title="Edit." onmouseover="this.style.color = 'red';"
+                            onmouseout="this.style.color = 'black';" onclick="editName(this, csigrp);">&#36;</span> &nbsp; Name: Organization:name
+                    </p>
+                    <p class="lvl4">
+                        Type: UML Class:UML Attr
+                    </p>
+
+                    <p class="lvl0b">
+                        caTIES (Project) (2475251v2)
+                    </p>
+                    <p class="lvl1">
+                        edu.upmc.opi.caBIG.caTIES.database.domain (UML_PACKAGE_NAME)
+                    </p>
+                    <p class="lvl2">
+                        <span class="icons" title="Delete." onmouseover="this.style.color = 'red';" onmouseout="this.style.color = 'black';">&#208;</span> &nbsp; <span class="icons" title="Edit." onmouseover="this.style.color = 'red';"
+                            onmouseout="this.style.color = 'black';" onclick="editName(this, csigrp);">&#36;</span> &nbsp; Name: Organization:name
+                    </p>
+                    <p class="lvl4">
+                        Type: UML Class:UML Attr
+                    </p>
+                    <p class="lvl2">
+                        <span class="icons" title="Delete." onmouseover="this.style.color = 'red';" onmouseout="this.style.color = 'black';">&#208;</span> &nbsp; <span class="icons" title="Edit." onmouseover="this.style.color = 'red';"
+                            onmouseout="this.style.color = 'black';" onclick="editDefinition(this, csigrp);">&#36;</span> &nbsp; Definition: The responsible organization name.
+                    </p>
+                    <p class="lvl4">
+                        Type: UML Class:UML Attr
+                    </p>
+
+                    <p class="lvl0b">
+                        MicroArray Gene Expression Object Model (Mage-OM) (Project) (2321254v1)
+                    </p>
+                    <p class="lvl1">
+                        gov.nih.nci.mageom.domain.Protocol (UML_PACKAGE_NAME)
+                    </p>
+                    <p class="lvl2">
+                        <span class="icons" title="Delete." onmouseover="this.style.color = 'red';" onmouseout="this.style.color = 'black';">&#208;</span> &nbsp; <span class="icons" title="Edit." onmouseover="this.style.color = 'red';"
+                            onmouseout="this.style.color = 'black';" onclick="editName(this, csigrp);">&#36;</span> &nbsp; Name: Org:name
+                    </p>
+                    <p class="lvl4">
+                        Type: UML Class:UML Attr
+                    </p>
+
+                </div>
+                <div id="addname" style="display: none">
+                    <table style="border-collapse: collapse; width: 100%"><colgroup><col style="width: 1px" /><col /></colgroup><tbody />
+                        <tr>
+                            <td>
+                                <p style="text-align: left">
+                                <input type="button" name="btnSave" value="Save" style="width: 1.0in">
+                                <input type="button" name="btnCancel" value="Cancel" style="width: 1.0in" onclick="doCancel(addname);">
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                    <hr />
+                    <table style="width: 100%; border-collapse: collapse">
+                        <colgroup>
+                            <col style="padding-right: 0.2in" />
+                            <col style="padding-right: 0.2in; width: 1px" />
+                            <col style="width: 1px" />
+                        </colgroup>
+                        <tr>
+                            <td>
+                                <p class="title2">
+                                    Name: <span style="font-weight: normal">(Required; 255 character limit)</span>
+                                </p>
+                                <p class="title3">
+                                    <input name="altName" type="text" style="width: 100%" value="AnalysisRoutine:serviceLink" />
+                                </p>
+                            </td>
+                            <td>
+                                <p class="title2">
+                                    Type:
+                                </p>
+                                <select name="selAltType" size="1">
+                                    <option value=" " selected>
+                                        
+                                    </option>
+
+                                    <option value="UML Class:UML Attr">
+                                        UML Class:UML Attr
+                                    </option>
+
+                                    <option value="Context Short Name">
+                                        Context Short Name
+                                    </option>
+
+                                    <option value="CRITERION_NAME">
+                                        CRITERION_NAME
+                                    </option>
+
+                                    <option value="ABBREVIATION">
+                                        ABBREVIATION
+                                    </option>
+
+                                    <option value="C3PR Name">
+                                        C3PR Name
+                                    </option>
+
+                                    <option value="C3D Name">
+                                        C3D Name
+                                    </option>
+
+                                    <option value="Prior Preferred Name">
+                                        Prior Preferred Name
+                                    </option>
+                                </select>
+                            </td>
+                            <td>
+                                <p class="title2">
+                                    Language:
+                                </p>
+                                <select name="dispLanguage" size="1">
+                                    <option value="ENGLISH" selected>
+                                        ENGLISH
+                                    </option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                                <p class="title2">
+                                    Classification Schemes and Class Scheme Items:
+                                </p>
+                    <div id="addnamecs1" style="border: 1px solid #aaaaaa; padding: 0.1in 0.1in 0.1in 0.1in">
+                        <p class="lvl0b">
+                            <span class="icons3" title="Unclassify." onmouseover="this.style.color = 'red';" onmouseout="this.style.color = 'black';">&#55;</span> &nbsp; TEST CLASSIFICATION SCHEME - TEST
+                        </p>
+                        <p class="lvl1">
+                            <span class="icons3" title="Unclassify." onmouseover="this.style.color = 'red';" onmouseout="this.style.color = 'black';">&#55;</span> &nbsp; 2-1st level in hierarchy
+                        </p>
+                        <p class="lvl2">
+                            <span class="icons3" title="Unclassify." onmouseover="this.style.color = 'red';" onmouseout="this.style.color = 'black';">&#55;</span> &nbsp; 2-2nd level in hierarchy
+                        </p>
+                    </div>
+                    <div id="addnamecs2" style="border: 1px solid #aaaaaa; padding: 0.1in 0.1in 0.1in 0.1in">
+                        <p class="lvl0b">
+                            &nbsp;
+                        </p>
+                        <p class="lvl1">
+                            &nbsp;
+                        </p>
+                        <p class="lvl2">
+                            &nbsp;
+                        </p>
+                    </div>
+                    <p style="margin: 0.2in 0in 0in 0in">
+                        <input type="button" name="btnAssociate" value="Classify" style="width: 1.0in">
+                    </p>
+                    <select name="selCS" size="1" style="width: 100%" onchange="ChangeCS();">
+                        <option value="" selected></option>
+                        <option value="">
+                            Adult Soft Tissue New - CTEP
+                        </option>
+                        <option value="">
+                            Advanced Training Examples - Training
+                        </option>
+                        <option value="">
+                            Adverse Events - CIP
+                        </option>
+                        <option value="" selected>
+                            TEST CLASSIFICATION SCHEME - TEST
+                        </option>
+                        <option value="">
+                            x - TEST
+                        </option>
+                    </select>
+                    <select name="selCSI" size="5" style="width:100%">
+                        <option value="">
+                            1st level in hierarchy
+                        </option>
+                        <option value="">
+                            &nbsp;&nbsp;&nbsp;&nbsp;2nd level in hierarchy
+                        </option>
+                        <option value="">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3rd level in hierarchy
+                        </option>
+                        <option value="">
+                            2-1st level in hierarchy
+                        </option>
+                        <option value="" selected>
+                            &nbsp;&nbsp;&nbsp;&nbsp;2-2nd level in hierarchy
+                        </option>
+                    </select>
+                </div>
+                <div id="adddef" style="display: none">
+                    <table style="border-collapse: collapse; width: 100%"><colgroup><col style="width: 1px" /><col /></colgroup><tbody />
+                        <tr>
+                            <td>
+                                <p style="text-align: left">
+                                <input type="button" name="btnRemAltName" value="Save" style="width: 1.0in">
+                                <input type="button" name="btnCancel" value="Cancel" style="width: 1.0in" onclick="doCancel(adddef);">
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                    <hr />
+                    <table style="width: 100%; border-collapse: collapse">
+                        <colgroup>
+                            <col style="padding-right: 0.2in" />
+                            <col style="padding-right: 0.2in; width: 1px" />
+                            <col style="width: 1px" />
+                        </colgroup>
+                        <tr>
+                            <td>
+                                <p class="title2">
+                                    Definition: <span style="font-weight: normal">(Required; 255 character limit)</span>
+                                </p>
+                                <p class="title3">
+                                    <input type="text" name="altDefinition" style="width: 100%" value="A link to the actual service invoked" />
+                                </p>
+                            </td>
+                            <td>
+                                <p class="title2">
+                                    Type:
+                                </p>
+                                <select name="defAltType" size="1">
+                                    <option value=" " selected>
+                                        
+                                    </option>
+
+                                    <option value="UML Class:UML Attr">
+                                        UML Class:UML Attr
+                                    </option>
+
+                                    <option value="Context Short Name">
+                                        Context Short Name
+                                    </option>
+
+                                    <option value="CRITERION_NAME">
+                                        CRITERION_NAME
+                                    </option>
+
+                                    <option value="ABBREVIATION">
+                                        ABBREVIATION
+                                    </option>
+
+                                    <option value="C3PR Name">
+                                        C3PR Name
+                                    </option>
+
+                                    <option value="C3D Name">
+                                        C3D Name
+                                    </option>
+
+                                    <option value="Prior Preferred Name">
+                                        Prior Preferred Name
+                                    </option>
+                                </select>
+                            </td>
+                            <td>
+                                <p class="title2">
+                                    Language:
+                                </p>
+                                <select name="dispLanguage" size="1">
+                                    <option value="ENGLISH" selected>
+                                        ENGLISH
+                                    </option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                                <p class="title2">
+                                    Classification Schemes and Class Scheme Items:
+                                </p>
+                    <div id="adddefcs1" style="border: 1px solid #aaaaaa; padding: 0.1in 0.1in 0.1in 0.1in">
+                        <p class="lvl0b">
+                            <span class="icons3" title="Unclassify." onmouseover="this.style.color = 'red';" onmouseout="this.style.color = 'black';">&#55;</span> &nbsp; TEST CLASSIFICATION SCHEME - TEST
+                        </p>
+                        <p class="lvl1">
+                            <span class="icons3" title="Unclassify." onmouseover="this.style.color = 'red';" onmouseout="this.style.color = 'black';">&#55;</span> &nbsp; 2-1st level in hierarchy
+                        </p>
+                        <p class="lvl2">
+                            <span class="icons3" title="Unclassify." onmouseover="this.style.color = 'red';" onmouseout="this.style.color = 'black';">&#55;</span> &nbsp; 2-2nd level in hierarchy
+                        </p>
+                    </div>
+                    <div id="adddefcs2" style="border: 1px solid #aaaaaa; padding: 0.1in 0.1in 0.1in 0.1in">
+                        <p class="lvl0b">
+                            &nbsp;
+                        </p>
+                        <p class="lvl1">
+                            &nbsp;
+                        </p>
+                        <p class="lvl2">
+                           &nbsp;
+                        </p>
+                    </div>
+                    <p style="margin: 0.2in 0in 0in 0in">
+                        <input type="button" name="btnAssociate" value="Associate" style="width: 1.0in">
+                    </p>
+                    <select name="selCS" size="1" style="width: 100%" onchange="ChangeCS();">
+                        <option value="" selected></option>
+                        <option value="">
+                            Adult Soft Tissue New - CTEP
+                        </option>
+                        <option value="">
+                            Advanced Training Examples - Training
+                        </option>
+                        <option value="">
+                            Adverse Events - CIP
+                        </option>
+                        <option value="" selected>
+                            TEST CLASSIFICATION SCHEME - TEST
+                        </option>
+                        <option value="">
+                            x - TEST
+                        </option>
+                    </select>
+                    <select name="selCSI" size="5" style="width:100%">
+                        <option value="">
+                            1st level in hierarchy
+                        </option>
+                        <option value="">
+                            &nbsp;&nbsp;&nbsp;&nbsp;2nd level in hierarchy
+                        </option>
+                        <option value="">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3rd level in hierarchy
+                        </option>
+                        <option value="">
+                            2-1st level in hierarchy
+                        </option>
+                        <option value="" selected>
+                            &nbsp;&nbsp;&nbsp;&nbsp;2-2nd level in hierarchy
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </body>
+</html>

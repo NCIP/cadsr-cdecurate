@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- Copyright ScenPro, Inc 2007
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/html/Help_DE_ISO.html,v 1.6 2008-04-15 15:35:59 chickerura Exp $
+    $Name: not supported by cvs2svn $
+-->
+<html>
+  <head>
+    <title>
+      Curation Tool Help - Data Elements and the ISO/IEC 11179
+      Standard
+    </title>
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=us-ascii">
+    <link href="../css/Help.css"
+          type="text/css"
+          rel="stylesheet">
+    <meta content="MSHTML 6.00.2900.2802"
+          name="GENERATOR">
+  </head>
+  <body>
+    <h2 class="main">
+      CDE Curation Tool<br>
+      User&rsquo;s Guide Version 4.0.0.0
+    </h2><br>
+    <p class="returnLink">
+      <a href="Help.htm">Return to the Table of Contents</a>
+    </p>
+    <div align="center">
+      <div class="container">
+        <div class="header">
+          <a name="Search for Exact Version"
+               id="Search for Exact Version"></a>Data Elements
+               and the ISO/IEC
+        </div><br>
+        <div class="bodyText">
+<!-- ****************************************************** -->
+<!--                       Overview                         -->
+<!-- ****************************************************** -->
+          <span class="standOutHeading">Data Elements and the
+          ISO/IEC</span>
+          <hr>
+          <h4>
+            <a name="Understanding Standard"
+                id="Understanding Standard">Understanding the
+                ISO/IEC 11179 Standard</a> (text taken from
+                ISO/IEC 11179-1:1999E)
+          </h4>
+          <p>
+            ISO (International Organization for Standardization)
+            and IEC (the International Electrotechnical
+            Commission) form the specialized system for worldwide
+            standardization. ISO/IEC 11179 describes the
+            standardizing and registering of data elements to
+            make data understandable and shareable.<br>
+            <br>
+            The purpose of ISO/IEC 11179 is to give concrete
+            guidance on the formulation and maintenance of
+            discrete data element descriptions and semantic
+            content (metadata) that shall be used to formulate
+            data elements in a consistent, standard manner.
+          </p>
+          <h4>
+            <a name="Data Elements Overview"
+                id="Data Elements Overview">Data Elements</a>
+                (text taken from ISO/IEC 11179-1:1999E)
+          </h4>
+          <p>
+            Humans are aware of anything that exists in the
+            natural world through its properties. Data represents
+            the properties of these things. A data element is a
+            special member of the broad notion called data.
+          </p>
+          <p>
+            Specifications of data elements, the basic units of
+            data, involves documenting relevant characteristics
+            of each data element to ensure its representation of
+            the natural world item is consistent and accurate.
+          </p>
+          <p>
+            Data that has been carefully specified and
+            standardized greatly enhances its usefulness and
+            share-ability across systems and environments.
+            Sharing data involves the ability to locate desired
+            data, retrieve the data, and to exchange the data
+            with others. When data elements are well documented,
+            and the documentation is managed in a Data Element
+            Registry, finding and retrieving them from disparate
+            databases as well as sending and receiving them via
+            electronic communications are made easier.
+          </p>
+          <p>
+            Data Elements are the fundamental units of data an
+            organization manages. When an organization needs to
+            transfer data to another organization, data elements
+            are the fundamental units that make up the
+            transaction sets.
+          </p>Data Elements are composed of three parts:<br>
+          <ul>
+            <li>Object Class: a set of ideas, abstractions, or
+            things in the real world that can be identified with
+            explicit boundaries and meaning and whose properties
+            and behavior follow the same rules.
+            </li>
+            <li style="list-style: none">
+              <br>
+            </li>
+            <li>Property: is a peculiarity common to all members
+            of an object class
+            </li>
+            <li style="list-style: none">
+              <br>
+            </li>
+            <li>Representation: describes how the data are
+            represented, i.e. the combination of a value domain,
+            data type, and if necessary, a unit of measure or a
+            character set.
+            </li>
+          </ul>
+          <p>
+            The combination of an Object Class and a Property
+            results in a Data Element Concept. A Value Domain
+            includes the Values and Value Meanings (i.e.
+            Representation) of the Data Element.
+          </p>
+          <p>
+            In other words, a Data Element is the result of
+            combining two Administered Components: a Data Element
+            Concept (the idea you are trying to represent) and a
+            Value Domain (how it should be represented).
+          </p>
+          <h4>
+            <a name="Administered Components"
+                id="Administered Components">Administered
+                Components</a> (text taken from ISO/IEC
+                11179-1:1999E)
+          </h4>
+          <p>
+            ISO 11179 defines an administered component as a
+            component for which administrative attributes are
+            collected. Administered Components include: Data
+            Element Concept, Value Domain, Data Element, Object
+            Class, Property, Representation Term, Conceptual
+            Domain, Classification Scheme, and Context.
+          </p>
+          <h4>
+            <a name=
+            "Relationship Between Administered Components"
+                id=
+                "Relationship Between Administered Components">Relationships
+                Between Administered Components</a>
+          </h4><span class="figureText">Figure 1</span> is an
+          illustration of the relationships between Administered
+          Components. The diagram also includes brief definitions
+          for each Administered Component.
+          <p class="centeredImage">
+            <img alt="DE_ISO (12K)"
+               src="../images/Help/ISO/DE_ISO.gif"
+               class="screenShot"
+               height="738"
+               width="518">
+          </p>
+          <p class="imageText">
+            FIGURE 1<br>
+            Relationships Between Administered Components
+          </p>
+          <h4>
+            <a name="Administered Components"
+                id="Administered Components">caDSR Implementation
+                of ISO/IEC 11179</a>
+          </h4>
+          <p>
+            The caDSR implementation of the ISO/IEC 11179
+            Standard, while it includes NCICB-specific
+            extensions, still maps to the mandatory and optional
+            metadata items prescribed by ISO/IEC 11179, Part 3.
+            There are various levels of conformance for ISO/IEC
+            11179 compliance. Because of NCICB's business needs
+            related extensions, caDSR is considered
+            &ldquo;conforming&rdquo; as opposed to
+            &ldquo;strictly conforming&rdquo; to the ISO/IEC
+            11179 Standard.
+          </p>
+          <h4>
+            <a name="Administered Components"
+                id="Administered Components">caDSR and the NCI
+                Enterprise Vocabulary Services (EVS)</a>
+          </h4>
+          <p>
+            A Data Element is formed by a concept that takes on a
+            specific representation. In ISO/IEC 11179 terms, this
+            translates into the combination of a specific Data
+            Element Concept and a specific Value Domain. caDSR
+            administered items are backed by the use of
+            externally defined terminologies and controlled
+            vocabularies. With UMLS as a framework, NCI has
+            developed vocabulary services that are accessed via
+            API (application to application interfaces) to
+            provide touch points during creation of content. This
+            results in administered components that are bound to
+            immutable concept codes. These touchpoints are
+            currently implemented at the Object Class, Property,
+            Representation Term, Value Domain and Valid Value
+            levels of the metadata model.
+          </p>
+        </div>
+      </div>
+      <p class="returnLink">
+        <a href="Help.htm">Return to the Table of Contents</a>
+      </p>
+    </div>
+  </body>
+</html>
