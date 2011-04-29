@@ -68,7 +68,7 @@
       </div>
       
       <font size="4">Preview of data from selected columns.</font><% if (rows.size() > 10) {%>  <font size="4"> Limited to first 10 records</font><%} %>
-      <div id="customDownloadContainer" style="width: 90%; height: 50% display: block"></div> 
+      <div id="customDownloadContainer" style="width: 90%; height: 50%; display: block"></div> 
       
         <script type="text/javascript">
             var djConfig = {
