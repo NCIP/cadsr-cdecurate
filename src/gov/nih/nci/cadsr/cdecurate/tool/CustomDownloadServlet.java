@@ -697,8 +697,8 @@ public class CustomDownloadServlet extends CurationServlet {
 							elem.appendChild(nestedElement);
 						}
 					}
-					deElement.appendChild(elem);
 				}
+				deElement.appendChild(elem);
 			} else {
 				//Add element and Data, close element
 				elem = dom.createElement(columns[j].replace(" ", ""));
