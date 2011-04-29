@@ -442,6 +442,16 @@
 										<tr height="8">
 											<td></td>
 										</tr>
+											<% if (session.getAttribute("changedOCDefsWarning") != null) {%>
+										<tr height="8">
+											<td colspan=6>
+												
+												Warning: One or more Object Class concepts you've selected already exist in caDSR with a different definition.
+												The existing standard caDSR definition will be used, and your chosen definition will be used to create an alternate definition for this element.
+												
+											</td>
+										</tr>
+										<%} %>
 										<tr>
 											<td colspan="1" align="left">
 												Object Class
@@ -560,6 +570,16 @@
 										<tr height="8">
 											<td></td>
 										</tr>
+											<% if (session.getAttribute("changedPropDefsWarning") != null) {%>
+										<tr height="8">
+											<td colspan=6>
+												
+												Warning: One or more Property concepts you've selected already exist in caDSR with a different definition.
+												The existing standard caDSR definition will be used, and your chosen definition will be used to create an alternate definition for this element.
+												
+											</td>
+										</tr>
+										<%} %>
 										<tr>
 											<td colspan="1">
 												Property

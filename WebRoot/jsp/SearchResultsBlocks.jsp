@@ -345,7 +345,7 @@
 			<table border="0">
 				<tr align="left">
 					<td>
-						<input type="button" name="editSelectedBtn" value="Use Selection" onClick="ShowSelection();" disabled>
+						<input type="button" name="editSelectedBtn" value="Link Concept" onClick="ShowSelection();" disabled>
 						&nbsp;&nbsp;
 						<input type="button" name="btnSubConcepts" value="Get Subconcepts" onmouseover="controlsubmenu2(event,'divAssACMenu',null,null,null)" onmouseout="closeall()" disabled>
 						&nbsp;&nbsp;
