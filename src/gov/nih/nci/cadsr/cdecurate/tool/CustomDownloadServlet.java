@@ -644,6 +644,7 @@ public class CustomDownloadServlet extends CurationServlet {
 		Element deElement = dom.createElement("DataElement");
 		deElement.setAttribute("num",Integer.toString(rowNumber));
 		String oldType = "";
+		Element collectionElement = null;
 		for (int j = 0; j < colIndices.length; j++) {
 
 			Element elem = null;
@@ -653,6 +654,8 @@ public class CustomDownloadServlet extends CurationServlet {
 			{
 				//Create collection only if new one
 				if (!currentType.equals(oldType)){
+					if (oldType.length() > 0)
+						deElement.appendChild(collectionElement);
 					oldType = currentType;
 					String collectionName = "";
 					String colNameArr[] = columns[j].split(" ");
@@ -663,7 +666,7 @@ public class CustomDownloadServlet extends CurationServlet {
 						collectionName = collectionName+colNameArr[nameIndex];
 					}
 					collectionName = collectionName+"Collection";
-					elem = dom.createElement(collectionName);
+					collectionElement = dom.createElement(collectionName);
 				}
 				//Deal with CS/CSI
 				String[] originalArrColNames = typeMap.get(currentType).get(0);
@@ -696,22 +699,22 @@ public class CustomDownloadServlet extends CurationServlet {
 								if (nestedRowIndex == 0)
 									data = (originalColumnIndex > 0)? nestedData[originalColumnIndex]:nestedData[originalColumnIndex+1];  //This skips the 2nd entry, description, which is not to be shown.
 									nestedElement.setTextContent(data);
-									elem.appendChild(nestedElement);
+									collectionElement.appendChild(nestedElement);
 							} else {
 								if (nestedRowIndex+1 < rowArrayData.size()){
 									data = rowArrayData.get(nestedRowIndex+1)[originalColumnIndex-4];
 									nestedElement.setTextContent(data);
-									elem.appendChild(nestedElement);
+									collectionElement.appendChild(nestedElement);
 								}
 							}						
 						}else {
 							data = nestedData[originalColumnIndex];
 							nestedElement.setTextContent(data);
-							elem.appendChild(nestedElement);
+							collectionElement.appendChild(nestedElement);
 						}
 					}
 				}
-				deElement.appendChild(elem);
+				
 			} else {
 				//Add element and Data, close element
 				elem = dom.createElement(columns[j].replace(" ", ""));
