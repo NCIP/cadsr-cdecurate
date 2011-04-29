@@ -5,6 +5,10 @@
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <%
+
+	long stime = System.currentTimeMillis();
+	System.out.println("Starting Results.jsp Processing");
+	
 	UtilService util = new UtilService();
 	Vector vSelectedAttr = new Vector();
 	Vector vStatus = new Vector();
@@ -956,6 +960,8 @@ function createDownload(){
       document.searchResultsForm.unCheckedRowId.value = "";
       if (document.searchParmsForm.listSearchFor.value == "DataElement")
       	setCustomDownloadAction();
+      else if (document.searchParmsForm.listSearchFor.value == "DataElementConcept")
+    	  setDECCustomDownloadAction();
       else
       	setVDCustomDownloadAction();	
  }
@@ -2767,7 +2773,11 @@ function ShowSelectedRowss(){
     int r = 0;
     if (results != null)
 	  {
+    	
       int rsize = results.size();
+
+  		System.out.println("Being processing "+rsize+" results");
+
       int j = 0;
 		  for (int i = 0; i < results.size(); i+=k)
 		  {
@@ -2861,6 +2871,7 @@ function ShowSelectedRowss(){
          j++;
     }
 	 }
+    System.out.println("End processing of results");
 %>
 			</table>
 			<table>
