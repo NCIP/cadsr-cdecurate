@@ -213,6 +213,7 @@ public class CustomDownloadServlet extends CurationServlet {
 				}
 
 				m_classReq.getSession().setAttribute("arrayData", arrayData);
+			
 			}
 
 		} catch (Exception e) {
@@ -427,10 +428,11 @@ public class CustomDownloadServlet extends CurationServlet {
 
 					if (typeBreakdown.size() >0) {
 						String[] typeColNames = typeBreakdown.get(0);
-
-						for (int c = 0; c<typeColNames.length; c++) {
-							arrayColumnTypes.put(typeColNames[c], typeKey);
-							allExpandedColumnHeaders.add(typeColNames[c]);
+						
+						String[] orderedTypeColNames = getOrderedTypeNames(typeKey, columnName,type);
+						for (int c = 0; c<orderedTypeColNames.length; c++) {
+							arrayColumnTypes.put(typeColNames[c], typeKey);  // 2 lists should be same length.
+							allExpandedColumnHeaders.add(orderedTypeColNames[c]);  //Adding sorted list to the display list
 						}
 					} else allExpandedColumnHeaders.add(columnName);
 
@@ -540,6 +542,66 @@ public class CustomDownloadServlet extends CurationServlet {
 		return colNamesAndTypes;
 	}
 
+	private String[] getOrderedTypeNames(String type, String name, String download) {
+
+		ArrayList<String> attrName = new ArrayList<String>();
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String sqlStmt = "select * from sbrext.custom_download_types c where UPPER(c.type_name) = ? order by c.display_column_index";
+		String[] splitType = type.split("\\.");
+
+		type = splitType[1];
+
+		try {
+			ps = getConn().prepareStatement(sqlStmt);
+			ps.setString(1, type);
+			rs = ps.executeQuery();
+			int i = 0;		
+			while (rs.next()) {
+				i++;
+				String col = rs.getString("DISPLAY_NAME");
+				String ctype = rs.getString("DISPLAY_TYPE");
+				if (type.toUpperCase().contains("CONCEPT")) {
+					if (name.toUpperCase().startsWith("REP"))
+						name = "Representation Concept";
+					else if (name.toUpperCase().startsWith("VD"))
+						name = "Value Domain Concept";
+					else if (name.toUpperCase().startsWith("OC"))
+						name = "Object Class Concept";
+					else if (name.startsWith("PROP"))
+						name = "Property Concept";
+
+					col = name+" "+col;
+				}
+				if (type.toUpperCase().contains("DESIGNATION")) {
+					if (download.equals("CDE"))
+						download = "Data Element";
+					else if (download.equals("VD"))
+						download = "Value Domain";
+					else if (download.equals("DEC"))
+						download = "Data Element Concept";
+					
+					col = download+" "+col;
+				}
+
+				attrName.add(col);
+			}
+			//System.out.println(type + " "+i);
+			rs.close();
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		String[] attrNames = new String[attrName.size()];
+		
+		for (int i=0; i < attrName.size(); i++) {
+			attrNames[i] = attrName.get(i);
+		
+		}
+		return attrNames;
+
+	}
 
 
 	private void returnJSONFromSession(String JSPName) {
