@@ -21,7 +21,7 @@
 	    </style>
   </head>
   
-  <body>
+  <body class=" claro ">
           <!-- Header -->
             <curate:header displayUser = "false"/>
         <!-- Main Area -->
@@ -46,7 +46,7 @@
 	  <% if (rows.size() > 100) {%>  <font size="4">Displaying first 100 elements for verification.</font><%} %>
      
       <form>
-      <div id="simpleViewContainer" style="width: 100%; height: 60%;">
+      <div id="simpleViewContainer" style="width: 100%; height: 60%; display: block">
           
           <table border="0" style="height: 100%;">
               <tr>
@@ -72,7 +72,7 @@
       </div>
       </form>
       
-      <div id="customDownloadContainer" style="width: 100%; height: 40%;"></div> 
+      <div id="customDownloadContainer" style="width: 90%; height: 40%; display: block"></div> 
       
         <script type="text/javascript">
             var djConfig = {
@@ -484,8 +484,10 @@
             cdGrid.pluginMgr.postInit();
             // Call startup, in order to render the grid:
             cdGrid.startup();
+            
             dojo.connect(cdGrid, "onHeaderCellClick", selectColumn);
            
+            toggleView();
         </script>	
         
            <!-- Footer -->

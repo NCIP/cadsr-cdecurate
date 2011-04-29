@@ -646,11 +646,12 @@ public class CustomDownloadServlet extends CurationServlet {
 
 		for (int j = 0; j < colIndices.length; j++) {
 
-			Element elem = dom.createElement(columns[j].replace(" ", ""));
+			Element elem = null;
 			String currentType = allTypes.get(colIndices[j]);
 
 			if (currentType.endsWith("_T"))
 			{
+				elem = dom.createElement(columns[j].replace(" ", "")+"Collection");
 				//Deal with CS/CSI
 				String[] originalArrColNames = typeMap.get(currentType).get(0);
 
@@ -681,9 +682,13 @@ public class CustomDownloadServlet extends CurationServlet {
 							if (originalColumnIndex < 4) {
 								if (nestedRowIndex == 0)
 									data = (originalColumnIndex > 0)? nestedData[originalColumnIndex]:nestedData[originalColumnIndex+1];  //This skips the 2nd entry, description, which is not to be shown.
+									nestedElement.setTextContent(data);
+									elem.appendChild(nestedElement);
 							} else {
 								if (nestedRowIndex+1 < rowArrayData.size()){
-									data = rowArrayData.get(nestedRowIndex+1)[originalColumnIndex-5];
+									data = rowArrayData.get(nestedRowIndex+1)[originalColumnIndex-4];
+									nestedElement.setTextContent(data);
+									elem.appendChild(nestedElement);
 								}
 							}						
 						}else {
@@ -692,9 +697,11 @@ public class CustomDownloadServlet extends CurationServlet {
 							elem.appendChild(nestedElement);
 						}
 					}
+					deElement.appendChild(elem);
 				}
 			} else {
 				//Add element and Data, close element
+				elem = dom.createElement(columns[j].replace(" ", ""));
 				elem.setTextContent(row[colIndices[j]]);
 				deElement.appendChild(elem);
 			}
@@ -820,7 +827,7 @@ public class CustomDownloadServlet extends CurationServlet {
 											data = (originalColumnIndex > 0)? nestedData[originalColumnIndex]:nestedData[originalColumnIndex+1];  //This skips the 2nd entry, description, which is not to be shown.
 									} else {
 										if (nestedRowIndex+1 < rowArrayData.size()){
-											data = rowArrayData.get(nestedRowIndex+1)[originalColumnIndex-5];
+											data = rowArrayData.get(nestedRowIndex+1)[originalColumnIndex-4];
 										}
 									}
 										
