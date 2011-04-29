@@ -44,7 +44,7 @@
 	       
       <div id="simpleViewContainer" style="width: 100%; display: block">
       <form>  
-          <table border="0" style="height: 100%;">
+          <table border="0">
               <tr>
                   <td>
                       <select id="notSelectedCols" style="width:300px" size=15></select>
