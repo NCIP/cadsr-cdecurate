@@ -408,13 +408,16 @@
             url:"NCICurationServlet?reqType=jsonRequest"
             });
             
-			var cdlLayout = getLayout();
+			var cdlLayout = getLayout('true');
             
             dojo.addOnLoad(function() {
                 var notSel = dojo.byId('notSelectedCols');
                 var sel = dojo.byId('selectedCols');
                 
-                <% for (int colLoop = 0; colLoop < headers.size(); colLoop++) { %>
+                <% for (int colLoop = 0; colLoop < headers.size(); colLoop++) { 
+                	if (!headers.get(colLoop).endsWith("IDSEQ")){
+                	
+                %>
                     var c = dojo.doc.createElement('option');
                     
 			<% if (typeMap.get(types.get(colLoop)) != null) {
@@ -442,8 +445,9 @@
 					<%}%>
                     <%  } %>
                     
-                <%  } %>
-                
+                <%  } } %>
+            	cdlLayout= getLayout();
+            	
                 var sel = dojo.byId('selectedCols');
                 
                 new dijit.form.MultiSelect({

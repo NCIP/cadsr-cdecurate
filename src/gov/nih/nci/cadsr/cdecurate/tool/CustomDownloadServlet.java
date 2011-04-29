@@ -543,7 +543,7 @@ public class CustomDownloadServlet extends CurationServlet {
 
 
 	private void returnJSONFromSession(String JSPName) {
-		ArrayList<String[]> displayRows = getRecords(false, false);
+		ArrayList<String[]> displayRows = getRecords(false, true);
 		m_classReq.getSession().setAttribute("rows", displayRows);
 		ForwardJSP(m_classReq, m_classRes, "/JSON"+JSPName+".jsp");
 	}
