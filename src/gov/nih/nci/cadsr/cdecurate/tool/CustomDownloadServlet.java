@@ -44,7 +44,7 @@ public class CustomDownloadServlet extends CurationServlet {
 
 	public static final Logger logger = Logger.getLogger(CustomDownloadServlet.class.getName());
 
-	private static final int GRID_MAX_DISPLAY = 100;
+	private static final int GRID_MAX_DISPLAY = 10;
 	private static int MAX_DOWNLOAD = 0;
 	private static String xmlColumns = null;
 
