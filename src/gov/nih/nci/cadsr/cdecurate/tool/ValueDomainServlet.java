@@ -596,18 +596,18 @@ public class ValueDomainServlet extends CurationServlet {
 				boolean isExist = false;
 				if (sOrigin.equals("Edit"))
 				{
-					// call function to check if relationship exists
-					SetACService setAC = new SetACService(this);
-					isExist = setAC.checkPVQCExists(m_classReq, m_classRes, sVDid, "");
-					if (isExist)
-					{
-						String sMsg = "Unable to change Value Domain type to Non-Enumerated "
-							+ "because one or more Permissible Values are being used in a Case Report Form. \\n"
-							+ "Please create a new version of this Value Domain to change the type to Non-Enumerated.";
-						DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, sMsg);
-						vdBean.setVD_TYPE_FLAG("E");
-						DataManager.setAttribute(session, "m_VD", vdBean);
-					}
+					// call function to check if relationship exists (Changed with GF 7680)
+//					SetACService setAC = new SetACService(this);
+//					isExist = setAC.checkPVQCExists(m_classReq, m_classRes, sVDid, "");
+//					if (isExist)
+//					{
+//						String sMsg = "Unable to change Value Domain type to Non-Enumerated "
+//							+ "because one or more Permissible Values are being used in a Case Report Form. \\n"
+//							+ "Please create a new version of this Value Domain to change the type to Non-Enumerated.";
+//						DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, sMsg);
+//						vdBean.setVD_TYPE_FLAG("E");
+//						DataManager.setAttribute(session, "m_VD", vdBean);
+//					}
 				}
 				// mark all the pvs as deleted to remove them while submitting.
 				if (!isExist)
@@ -1117,14 +1117,26 @@ public class ValueDomainServlet extends CurationServlet {
 				m_VD = new VD_Bean();
 			m_setAC.setVDValueFromPage(m_classReq, m_classRes, m_VD);
 			Vector<EVS_Bean> vRepTerm = (Vector) session.getAttribute("vRepTerm");
-			if (vRepTerm == null)
+			
+			if (vRepTerm == null) {
 				vRepTerm = new Vector<EVS_Bean>();
+				
+				//reset the attributes for keeping track of non-caDSR choices...
+				session.removeAttribute("chosenRepCodes");
+				session.removeAttribute("chosenRepDefs");
+				session.removeAttribute("changedRepDefsWarning");
+			}
 				if (vRepTerm.size()>1){
 					selectedRepQualifiers = true; 
 				}  
 				Vector vAC = new Vector();
 				EVS_Bean m_REP = new EVS_Bean();
 				String sComp = (String) m_classReq.getParameter("sCompBlocks");
+				Vector<String> codes = null;
+				Vector<String> defs = null;
+				
+				
+				
 				// get rep term components
 				if (sComp.equals("RepTerm") || sComp.equals("RepQualifier"))
 				{
@@ -1142,6 +1154,7 @@ public class ValueDomainServlet extends CurationServlet {
 							m_REP = (EVS_Bean) vAC.elementAt(intObjRow2);
 						// get name value pari
 						String sNVP = (String) m_classReq.getParameter("nvpConcept");
+				
 						if (sNVP != null && !sNVP.equals(""))
 						{
 							m_REP.setNVP_CONCEPT_VALUE(sNVP);
@@ -1163,6 +1176,26 @@ public class ValueDomainServlet extends CurationServlet {
 								+ " search results.\\n" + "Please try again.");
 						return;
 					}
+					
+					//Store chosen concept code and definition for later use in alt. definition.
+					String code = m_REP.getCONCEPT_IDENTIFIER();
+					String def = m_REP.getPREFERRED_DEFINITION();
+					
+					
+						if (session.getAttribute("chosenRepCodes") == null) {
+							codes = new Vector<String>();
+							defs = new Vector<String>();
+						} else {
+							codes =(Vector<String>) session.getAttribute("chosenRepCodes"); 
+							defs = (Vector<String>) session.getAttribute("chosenRepDefs");
+						}
+					
+
+					if (!codes.contains(code)) {
+						codes.add(code);    	   
+						defs.add(def);
+					}
+					
 					// handle the primary search
 					if (sComp.equals("RepTerm"))
 					{
@@ -1221,6 +1254,8 @@ public class ValueDomainServlet extends CurationServlet {
 				if (vRepTerm != null && vRepTerm.size() > 0){
 					vRepTerm = this.getMatchingThesarusconcept(vRepTerm, "Representation Term");
 					m_VD = this.updateRepAttribues(vRepTerm, m_VD);
+					DataElementConceptServlet.checkChosenConcepts(session, codes, defs, vRepTerm, "Rep");
+					
 				} 
 				if (m_REP.getcaDSR_COMPONENT()!= null && m_REP.getcaDSR_COMPONENT().equals("Concept Class")){
 					m_VD.setVD_REP_IDSEQ("");
@@ -2194,6 +2229,8 @@ public class ValueDomainServlet extends CurationServlet {
 				if (vRepTerm != null && vRepTerm.size() > 0){
 					vRepTerm = this.getMatchingThesarusconcept(vRepTerm, "Representation Term");
 					m_VD = this.updateRepAttribues(vRepTerm, m_VD);
+					
+					DataElementConceptServlet.checkChosenConcepts(session, null, null, vRepTerm, "Rep");
 				}  
 				DataManager.setAttribute(session, "vRepTerm", vRepTerm);
 			}

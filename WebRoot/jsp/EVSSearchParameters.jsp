@@ -137,7 +137,7 @@ function hourglass()
 					<td height="50">
 						<div style="margin-right: 10px">
 							<b>
-								4)&nbsp;&nbsp;Click the Use Selection
+								4)&nbsp;&nbsp;Click the Link Concept
 								<br>
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; button
 							</b>

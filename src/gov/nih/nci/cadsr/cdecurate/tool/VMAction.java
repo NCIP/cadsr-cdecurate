@@ -759,9 +759,15 @@ public class VMAction implements Serializable
 				// set setvm_evs method to set th edata
 				ret = this.setVM(data, conArray);
 			}
-			else
+			else {
+				//Remove old condr if it exists first, then continue on with the upd/insert function
+				ret = this.removeVMCondr(data);
+				if (ret != null && !ret.equals(""))
+					ret += "\\n" + ret;
+				
 				ret = this.setVM(data, null); // update or insert non evs vm
-
+			}
+			
 			if (ret != null && !ret.equals(""))
 				erMsg += "\\n" + ret;
 
@@ -1520,6 +1526,44 @@ public class VMAction implements Serializable
 	 * @param conArray
 	 * @return String return code
 	 */
+	
+	private String removeVMCondr(VMForm data) {
+		
+		ResultSet rs = null;
+		PreparedStatement ps = null;
+		String stMsg = ""; // out
+		try
+		{
+			VM_Bean vm = data.getVMBean();
+			String idseq = vm.getIDSEQ();
+			if (data.getCurationServlet().getConn() != null)
+			{
+				ps = data
+				.getCurationServlet()
+				.getConn()
+				.prepareStatement("update VALUE_MEANINGS_VIEW set condr_idseq = '' where vm_idseq = ?");
+				
+				ps.setString(1,idseq);
+				
+				boolean ret = ps.execute();
+				
+			}
+			
+		} catch (Exception e)
+		{
+			logger.error("ERROR in setVM for other : " + e.toString(), e);
+			data.setRetErrorCode("Exception");
+			stMsg += "\\tException : Unable to remove all VM concepts.";
+		}
+		finally
+		{
+			rs = SQLHelper.closeResultSet(rs);
+			ps = SQLHelper.closePreparedStatement(ps);
+		}
+		
+		return stMsg;
+	}
+	
 	private String setVM(VMForm data, String conArray)
 	{
 
