@@ -101,7 +101,7 @@ function openUsedWindowVM(idseq, type)
 var newUrl = '../../cdecurate/NCICurationServlet?reqType=showUsedBy';
 newUrl = newUrl + '&idseq=' +idseq+'&type='+type;
 
-	newwindow=window.open(newUrl,'Used By Forms','height=400,width=500');
+	newwindow=window.open(newUrl,'Used By Forms','height=400,width=600,toolbar=no,scrollbars=yes,menubar=no');
 	if (window.focus) {newwindow.focus()}
 
 
