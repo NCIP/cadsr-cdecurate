@@ -363,7 +363,7 @@
                 
                 
                 for (i=0; i < sel.length; i++) {
-                 	returnCols = returnCols + sel.options[s].text;
+                 	returnCols = returnCols + sel.options[i].text;
 	                  if (i < sel.length-1) {
 	                  	returnCols = returnCols+",";    
              	     }
